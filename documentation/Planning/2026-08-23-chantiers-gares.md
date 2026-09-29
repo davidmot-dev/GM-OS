@@ -5449,8 +5449,8 @@ explicitement, jamais le défaut.
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
 
 ⭐ **Où on en est — 2026-09-29** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
-à P1.5 faits**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
-soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.6** du
+à P1.6 faits**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
+soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.7** du
 [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
@@ -5786,6 +5786,12 @@ v1.2.
   `[data-theme=…]` d'`index.css` aux paquets (`texture-bg`, `texture-opacity`, et leur pose) ; le
   flou de `.glass-bento` lit `glass-blur`. 20 captures identiques. ⚠️ Pour P1.6 : une matière de
   jeu `url('matieres/…')` devra être réécrite en adresse complète par son chargeur.
+- ✅ **P1.6 fait le 2026-09-29** : **contrat v1.4**, 18 jetons passent à **LU ⚙** — appliqués au jeu
+  **seulement sous l'interrupteur des personnalités** (décision de David : les six thèmes de jeu les
+  déclaraient déjà, Blade Runner aurait changé du jour au lendemain). Accents `gm-*` dérivés (R7,
+  sous l'interrupteur aussi), garde de distinction, T0.3 sur les 12 paires. 20 captures identiques.
+  ⚠️ **La copie du cahier dans RPG Theme Builder est en v1.4 : à recharger dans ChatGPT.** Ce que
+  P1.7 doit brancher : liste dans le plan de la phase 1.
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.

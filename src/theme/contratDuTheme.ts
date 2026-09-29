@@ -18,10 +18,11 @@
  */
 
 /** La version du cahier des charges que ce fichier traduit. */
-export const VERSION_DU_CONTRAT = '1.3';
+export const VERSION_DU_CONTRAT = '1.4';
 
 /**
- * - **LU** : GM-OS l'applique aujourd'hui ;
+ * - **LU** : GM-OS l'applique aujourd'hui — ceux marqués `personnalites`
+ *   seulement quand le meneur a allumé les personnalités (v1.4) ;
  * - **V2** : le nouveau GM-OS l'appliquera — sans effet aujourd'hui, **et ce
  *   n'est pas un défaut** ;
  * - **SDK** : sans effet dans GM-OS, il ne sert qu'à la page de démonstration
@@ -74,6 +75,18 @@ export interface JetonDuContrat {
      * `glow-strength` règle l'opacité du halo dérivé de l'accent.
      */
     versLInterface?: string;
+    /**
+     * **Appliqué au jeu seulement sous l'interrupteur des personnalités** —
+     * contrat v1.4, 2026-09-29.
+     *
+     * Décision de David : *« je ne veux pas que mon interface change
+     * maintenant »*. Les six thèmes de jeu déclaraient déjà la forme, le
+     * relief, le verre, la matière et le cadre, en attendant la V2. Passés à
+     * LU, ils auraient changé l'écran de ses campagnes du jour au lendemain :
+     * ils ne s'appliquent donc que lorsque le meneur allume les personnalités,
+     * le même réglage qui compare « aujourd'hui » et « nouveau » (P1.7).
+     */
+    personnalites?: true;
 }
 
 const OPAQUE: FormatDeJeton = { type: 'couleur-opaque' };
@@ -121,7 +134,7 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     // § 4.3 · Typographie
     { cle: 'font-display', section: '4.3', statut: 'LU', obligatoire: true, format: PILE, versLInterface: '--font-display' },
     { cle: 'font-mono', section: '4.3', statut: 'LU', format: PILE, versLInterface: '--font-mono' },
-    { cle: 'font-body', section: '4.3', statut: 'V2', format: PILE, versLInterface: '--font-body' },
+    { cle: 'font-body', section: '4.3', statut: 'LU', personnalites: true, format: PILE, versLInterface: '--font-body' },
     { cle: 'font-ui', section: '4.3', statut: 'SDK', format: PILE },
     { cle: 'title-tracking', section: '4.3', statut: 'V2', format: em(0.5), versLInterface: '--titre-espacement' },
     { cle: 'kicker-tracking', section: '4.3', statut: 'V2', format: em(0.6), versLInterface: '--surtitre-espacement' },
@@ -138,35 +151,35 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'scale-mono', section: '4.4', statut: 'LU', format: ECHELLE },
 
     // § 4.5 · Forme
-    { cle: 'radius-sm', section: '4.5', statut: 'V2', format: px(12), versLInterface: '--rayon-sm' },
-    { cle: 'radius-md', section: '4.5', statut: 'V2', format: px(20), versLInterface: '--rayon-md' },
-    { cle: 'radius-lg', section: '4.5', statut: 'V2', format: px(32), versLInterface: '--rayon-lg' },
+    { cle: 'radius-sm', section: '4.5', statut: 'LU', personnalites: true, format: px(12), versLInterface: '--rayon-sm' },
+    { cle: 'radius-md', section: '4.5', statut: 'LU', personnalites: true, format: px(20), versLInterface: '--rayon-md' },
+    { cle: 'radius-lg', section: '4.5', statut: 'LU', personnalites: true, format: px(32), versLInterface: '--rayon-lg' },
     { cle: 'border-width', section: '4.5', statut: 'V2', format: px(3), versLInterface: '--bordure-largeur' },
     { cle: 'border-style', section: '4.5', statut: 'V2', format: { type: 'choix', valeurs: ['solid', 'double'] }, versLInterface: '--bordure-style' },
 
     // § 4.6 · Relief et lumière
-    { cle: 'elevation-1', section: '4.6', statut: 'V2', format: OMBRE, versLInterface: '--elev-1' },
-    { cle: 'elevation-2', section: '4.6', statut: 'V2', format: OMBRE, versLInterface: '--elev-2' },
-    { cle: 'elevation-3', section: '4.6', statut: 'V2', format: OMBRE, versLInterface: '--elev-3' },
-    { cle: 'shadow', section: '4.6', statut: 'V2', format: OMBRE },
-    { cle: 'glow', section: '4.6', statut: 'V2', format: { type: 'halo' }, versLInterface: '--app-accent-glow' },
-    { cle: 'glow-strength', section: '4.6', statut: 'V2', format: { type: 'nombre', min: 0, max: 1 } },
+    { cle: 'elevation-1', section: '4.6', statut: 'LU', personnalites: true, format: OMBRE, versLInterface: '--elev-1' },
+    { cle: 'elevation-2', section: '4.6', statut: 'LU', personnalites: true, format: OMBRE, versLInterface: '--elev-2' },
+    { cle: 'elevation-3', section: '4.6', statut: 'LU', personnalites: true, format: OMBRE, versLInterface: '--elev-3' },
+    { cle: 'shadow', section: '4.6', statut: 'LU', personnalites: true, format: OMBRE },
+    { cle: 'glow', section: '4.6', statut: 'LU', personnalites: true, format: { type: 'halo' }, versLInterface: '--app-accent-glow' },
+    { cle: 'glow-strength', section: '4.6', statut: 'LU', personnalites: true, format: { type: 'nombre', min: 0, max: 1 } },
 
     // § 4.7 · Transparence et verre
-    { cle: 'glass-bg', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.4, alphaMax: 0.95 }, versLInterface: '--glass-bg' },
-    { cle: 'glass-border', section: '4.7', statut: 'V2', format: { type: 'rgba', alphaMin: 0.05, alphaMax: 0.6 }, versLInterface: '--glass-border' },
-    { cle: 'glass-blur', section: '4.7', statut: 'V2', format: px(24), versLInterface: '--glass-blur' },
+    { cle: 'glass-bg', section: '4.7', statut: 'LU', personnalites: true, format: { type: 'rgba', alphaMin: 0.4, alphaMax: 0.95 }, versLInterface: '--glass-bg' },
+    { cle: 'glass-border', section: '4.7', statut: 'LU', personnalites: true, format: { type: 'rgba', alphaMin: 0.05, alphaMax: 0.6 }, versLInterface: '--glass-border' },
+    { cle: 'glass-blur', section: '4.7', statut: 'LU', personnalites: true, format: px(24), versLInterface: '--glass-blur' },
 
     // § 4.8 · Le cadre — absents, ils valent bg, text et accent
-    { cle: 'frame-bg', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-bg' },
-    { cle: 'frame-text', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-text' },
-    { cle: 'frame-accent', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-accent' },
+    { cle: 'frame-bg', section: '4.8', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--app-frame-bg' },
+    { cle: 'frame-text', section: '4.8', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--app-frame-text' },
+    { cle: 'frame-accent', section: '4.8', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--app-frame-accent' },
 
     // § 7 · Matières
-    { cle: 'texture-bg', section: '7', statut: 'V2', format: MATIERE, versLInterface: '--texture-fond' },
+    { cle: 'texture-bg', section: '7', statut: 'LU', personnalites: true, format: MATIERE, versLInterface: '--texture-fond' },
     { cle: 'texture-panel', section: '7', statut: 'V2', format: MATIERE, versLInterface: '--texture-panneau' },
     {
-        cle: 'texture-opacity', section: '7', statut: 'V2',
+        cle: 'texture-opacity', section: '7', statut: 'LU', personnalites: true,
         format: { type: 'nombre', min: 0, max: 0.35 }, versLInterface: '--texture-opacite',
     },
 ];

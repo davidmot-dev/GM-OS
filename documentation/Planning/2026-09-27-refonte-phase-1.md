@@ -213,6 +213,36 @@ tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, e
 - **T0.3 couvre toutes les paires** du contrat pour les quatre thèmes, cadre compris.
 - **Les accents dérivés `gm-*`** (T1.7 du 17/09, R7) : ils se calculent depuis l'accent effectif,
   avec contraste et distance entre frères.
+- ✅ **Fait le 2026-09-29 — mais pas tel qu'écrit, et c'est voulu.** 20 captures identiques,
+  480 fichiers d'essais. Deux constats ont changé l'étape :
+  - ⛔ **Le plan disait « P1.6 : rien ne change ». C'était vrai pour les thèmes de base, pas pour
+    les jeux** : les six thèmes de jeu déclarent déjà la forme, le relief, le verre, la matière et le
+    cadre. Passés à LU, Blade Runner aurait mis tout le texte en empattement et tous les angles à
+    0 px. **David : tout ce que la v1.4 ouvre au jeu attend l'interrupteur de P1.7**, et la dérivation
+    des `gm-*` aussi. Le contrat les marque **LU ⚙** (`personnalites: true`) ; `pontVersLInterface` et
+    `appliquerLeTheme` prennent une option `personnalites`, **éteinte partout**.
+  - **Seuls passent à LU les jetons qu'un élément de l'écran lit** (18) : `radius-*`,
+    `elevation-*`, `shadow`, `glow`, `glow-strength`, `font-body`, `glass-*`, `texture-bg`,
+    `texture-opacity`, `frame-*`. Restent **V2** ceux qu'aucun composant n'emploie encore —
+    `surface-2`, `accent-contrast`, `border-soft`, les états (phase 4), `border-*`, `title-*`,
+    `kicker-tracking`, `texture-panel` (phase 3). Les marquer LU aurait promis au constructeur un effet
+    qui n'existe pas.
+  - **Les `gm-*`** (`accentsDeModule.ts`) : chaque module garde **sa teinte** et prend la clarté et
+    la saturation de l'accent, en OKLCH ; clarté poussée jusqu'au contraste 3, saturation plancher
+    pour qu'un accent gris ne rende pas cinq gris. Sur dix cas (bases, personnalités, jeux, gris) :
+    contraste ≥ 3,85, distance entre frères ≥ 0,078 (aujourd'hui : 0,125 ; seuil de la garde : 0,07).
+    `gm-teal` et `gm-orange`, employés nulle part, sont retirés.
+  - **La garde de distinction** (`distinctionDesThemes.ts`, essai dans `electron/`) : RVB euclidienne
+    ≥ 60, arrondi ≥ 4 px, autre famille de police ; elle retrouve 7/7 et **3/7** sur les valeurs de
+    T2.3, et refuse Moderne/Clair sans le cadre.
+  - **T0.3** mesure les 12 paires pour les quatre thèmes, le cadre par ses replis.
+  - **Le validateur** range les jetons LU ⚙ à part (« appliqués avec les personnalités ») ; **le
+    chargeur** incorpore les matières `url('matieres/…svg')` en adresse `data:` et écarte PNG/WebP,
+    en le disant. Le cahier passe en **v1.4**, la copie de RPG Theme Builder suit — **à recharger
+    dans ChatGPT**.
+  - ⚠️ **Ce que P1.7 devra brancher** : le réglage vers `appliquerLeTheme` (`useThemeDuJeu`,
+    `main.tsx`, `AtelierDuTheme`) et vers `pontVersLInterface` ; l'atelier du thème, qui ne sait pas
+    encore régler les jetons LU ⚙ ; la vérification de `font-body` dans `verifierLesPolices`.
 
 ### P1.7 · Les personnalités — derrière un interrupteur
 

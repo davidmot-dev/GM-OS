@@ -137,11 +137,14 @@ const PONT: Record<string, string> = Object.fromEntries(
     JETONS_DU_CONTRAT.filter(j => j.versLInterface && j.statut === 'LU').map(j => [j.cle, j.versLInterface!]),
 );
 
+/** Les jetons LU que le jeu n'applique que sous l'interrupteur des personnalités (contrat v1.4). */
+const SOUS_L_INTERRUPTEUR = new Set(JETONS_DU_CONTRAT.filter(j => j.personnalites).map(j => j.cle));
+
 /**
  * Les jetons de police que le pont applique **réellement** à l'interface.
  *
- * Deux sur quatre : `font-body` et `font-ui` n'ont aucun équivalent dans GM-OS,
- * ils appartiennent aux fiches. **Il ne faut donc pas vérifier leur
+ * Deux sur quatre : `font-ui` n'appartient qu'à la démonstration du SDK, et
+ * `font-body` ne s'applique qu'avec les personnalités allumées (contrat v1.4). **Il ne faut donc pas vérifier leur
  * disponibilité** — une police que rien n'emploie n'est jamais téléchargée par
  * le navigateur, et la déclarer manquante serait crier sur le cas normal.
  *
@@ -149,14 +152,32 @@ const PONT: Record<string, string> = Object.fromEntries(
  * dériverait au premier jeton ajouté — c'est le motif que ce dépôt a payé cinq
  * fois le 2026-08-24.
  */
-export const POLICES_APPLIQUEES = Object.keys(PONT).filter(j => j.startsWith('font-'));
+export const POLICES_APPLIQUEES = Object.keys(PONT).filter(j => j.startsWith('font-') && !SOUS_L_INTERRUPTEUR.has(j));
 
-export function pontVersLInterface(jetons: Record<string, string>): Record<string, string> {
+export interface OptionsDuPont {
+    /**
+     * Les personnalités sont-elles allumées ? Éteintes (le défaut), le jeu
+     * n'applique que ce qu'il appliquait avant la v1.4 — décision de David,
+     * 2026-09-29. Le réglage arrive avec P1.7.
+     */
+    personnalites?: boolean;
+}
+
+export function pontVersLInterface(
+    jetons: Record<string, string>,
+    { personnalites = false }: OptionsDuPont = {},
+): Record<string, string> {
     const vars: Record<string, string> = {};
 
     for (const [jeton, variable] of Object.entries(PONT)) {
+        if (!personnalites && SOUS_L_INTERRUPTEUR.has(jeton)) continue;
         const valeur = jetons[jeton];
         if (valeur) vars[variable] = valeur;
+    }
+
+    // § 4.6 : l'ancienne ombre unique sert d'élévation 2 quand celle-ci manque.
+    if (personnalites && jetons.shadow && !jetons['elevation-2']) {
+        vars['--elev-2'] = jetons.shadow;
     }
 
     /*

@@ -125,7 +125,26 @@ describe('ce que GM-OS applique est dérivé du contrat', () => {
     it('le pont du jeu transporte exactement les jetons LU qui déclarent une variable de l\'interface', () => {
         const tous = Object.fromEntries(JETONS_DU_CONTRAT.map(j => [j.cle, 'x']));
         const attendues = JETONS_DU_CONTRAT.filter(j => j.versLInterface && j.statut === 'LU').map(j => j.versLInterface).sort();
+        expect(Object.keys(pontVersLInterface(tous, { personnalites: true })).sort()).toEqual(attendues);
+    });
+
+    /*
+      **Contrat v1.4 — décision de David, 2026-09-29.** Les jetons passés à LU
+      avec la v1.4 ne s'appliquent qu'avec les personnalités allumées : éteintes,
+      le jeu n'applique que ce qu'il appliquait avant.
+    */
+    it('éteintes, les personnalités laissent le jeu au contrat v1.3', () => {
+        const tous = Object.fromEntries(JETONS_DU_CONTRAT.map(j => [j.cle, 'x']));
+        const attendues = JETONS_DU_CONTRAT
+            .filter(j => j.versLInterface && j.statut === 'LU' && !j.personnalites)
+            .map(j => j.versLInterface).sort();
         expect(Object.keys(pontVersLInterface(tous)).sort()).toEqual(attendues);
+        expect(attendues).toEqual(['--app-accent', '--app-bg', '--app-border', '--app-surface', '--app-text',
+            '--app-text-muted', '--font-display', '--font-mono']);
+    });
+
+    it('seul un jeton LU peut attendre l\'interrupteur', () => {
+        for (const j of JETONS_DU_CONTRAT.filter(x => x.personnalites)) expect(j.statut, j.cle).toBe('LU');
     });
 
     /*
@@ -156,7 +175,8 @@ describe('ce que GM-OS applique est dérivé du contrat', () => {
         for (const e of JETONS_EDITABLES) {
             const j = JETONS_DU_CONTRAT.find(x => x.cle === e.cle);
             expect(j, `${e.cle} est éditable mais hors contrat`).toBeDefined();
-            expect(Boolean(e.surLInterface), e.cle).toBe(j!.statut === 'LU');
+            // Sous l'interrupteur éteint, un jeton LU de la v1.4 n'atteint pas encore l'écran.
+            expect(Boolean(e.surLInterface), e.cle).toBe(j!.statut === 'LU' && !j!.personnalites);
         }
     });
 });

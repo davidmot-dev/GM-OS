@@ -3,6 +3,7 @@ import {
     extraireJetons, pontVersLInterface, cheminDuTheme,
     extraireImportsDePolice, premiereFamille, POLICES_APPLIQUEES,
 } from './jetonsDeTheme';
+import { incorporerLesMatieres } from './themeDuJeu';
 
 /**
  * **Le thème du jeu — déposer un fichier doit suffire.**
@@ -168,5 +169,31 @@ describe('POLICES_APPLIQUEES', () => {
     it('n’inclut ni font-body ni font-ui, qui appartiennent aux fiches', () => {
         expect(POLICES_APPLIQUEES).not.toContain('font-body');
         expect(POLICES_APPLIQUEES).not.toContain('font-ui');
+    });
+});
+
+/**
+ * **P1.6 · Les matières du jeu** — une `url('matieres/…')` est relative au
+ * dossier du thème : posée telle quelle sur le document, elle ne trouverait rien.
+ */
+describe('incorporerLesMatieres', () => {
+    const SVG = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="4" height="4" fill="#000"/></svg>';
+    const lire = async (chemin: string) => (chemin === 'systems/alien/theme/matieres/grain.svg' ? SVG : null);
+
+    it('incorpore le SVG du dossier du thème', async () => {
+        const r = await incorporerLesMatieres({ 'texture-bg': "url('matieres/grain.svg')" }, lire, 'systems/alien');
+        expect(r['texture-bg']).toBe(`url("data:image/svg+xml,${encodeURIComponent(SVG)}")`);
+    });
+
+    it('laisse passer un dégradé et `none`', async () => {
+        const jetons = { 'texture-bg': 'repeating-linear-gradient(0deg, #000 0 1px, transparent 1px 4px)', 'texture-panel': 'none' };
+        expect(await incorporerLesMatieres(jetons, lire, 'systems/alien')).toEqual(jetons);
+    });
+
+    it('écarte ce qu’il ne sait pas lire, plutôt que de pointer dans le vide', async () => {
+        const r = await incorporerLesMatieres({
+            'texture-bg': "url('matieres/grain.png')", 'texture-panel': "url('matieres/absente.svg')", accent: '#ff0000',
+        }, lire, 'systems/alien');
+        expect(r).toEqual({ accent: '#ff0000' });
     });
 });

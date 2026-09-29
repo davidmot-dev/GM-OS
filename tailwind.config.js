@@ -18,14 +18,19 @@ export default {
                     light: '#1e293b',
                 },
                 // Les accents Neon par Module
+                /*
+                  **Les accents de module, dérivés de l'accent** (R7, P1.6) —
+                  `theme/accentsDeModule.ts`. Écrits seulement sous l'interrupteur
+                  des personnalités ; éteint, la valeur d'aujourd'hui en repli.
+                  `teal` et `orange` ne servaient nulle part : retirés plutôt que
+                  dérivés, *une règle pour des couleurs que personne ne regarde*.
+                */
                 gm: {
-                    gold: '#eab308',    // Session OS
-                    violet: '#8b5cf6',  // Music/Sound/Voice OS
-                    teal: '#0d9488',    // Ambient OS
-                    crimson: '#ef4444', // Combat OS
-                    cyan: '#06b6d4',    // Map OS
-                    emerald: '#10b981', // NPC/Table OS
-                    orange: '#f97316',  // Web/Dice OS
+                    gold: 'var(--gm-gold, #eab308)',       // Session OS
+                    violet: 'var(--gm-violet, #8b5cf6)',   // Music/Sound/Voice OS
+                    crimson: 'var(--gm-crimson, #ef4444)', // Combat OS
+                    cyan: 'var(--gm-cyan, #06b6d4)',       // Map OS
+                    emerald: 'var(--gm-emerald, #10b981)', // NPC/Table OS
                 },
                 // Splash Screen Themes
                 neonCyan: '#22d3ee',

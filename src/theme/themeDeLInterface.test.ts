@@ -482,3 +482,43 @@ describe('P1.5 · le verre et les matières', () => {
         for (const t of THEMES) expect(variablesDuTheme(PALETTES[t], PALETTES[t].jetons.accent)['--glass-blur'], t).toBeUndefined();
     });
 });
+
+/**
+ * **P1.6 · L'interrupteur des personnalités** — contrat v1.4, 2026-09-29.
+ *
+ * Décision de David : ce que la v1.4 ouvre au jeu, et la dérivation des
+ * accents de module, ne se voient qu'avec les personnalités allumées. Le
+ * réglage arrive avec P1.7 ; en attendant, l'option reste éteinte partout.
+ */
+describe('P1.6 · sous l’interrupteur des personnalités', () => {
+    const r = () => document.documentElement;
+    beforeEach(() => r().removeAttribute('style'));
+
+    it('éteint, aucun accent de module ne s’écrit : les `gm-*` gardent leur repli', () => {
+        appliquerLeTheme('cyberpunk');
+        expect(r().style.getPropertyValue('--gm-crimson')).toBe('');
+    });
+
+    it('allumé, les cinq accents dérivent de l’accent — puis s’effacent quand on l’éteint', () => {
+        appliquerLeTheme('cyberpunk', undefined, undefined, { personnalites: true });
+        for (const m of ['gold', 'violet', 'crimson', 'cyan', 'emerald']) {
+            expect(r().style.getPropertyValue(`--gm-${m}`), m).toMatch(/^#[0-9a-f]{6}$/);
+        }
+        appliquerLeTheme('cyberpunk');
+        expect(r().style.getPropertyValue('--gm-gold')).toBe('');
+    });
+
+    it('un halo fixe du jeu cède à l’accent choisi à la main', () => {
+        const jeu = { variables: { '--app-accent-glow': 'rgba(255, 95, 86, 0.28)' }, jetons: { glow: 'rgba(255, 95, 86, 0.28)', 'glow-strength': '0.4' } };
+        appliquerLeTheme('modern', '#14b8a6', jeu, { personnalites: true });
+        expect(r().style.getPropertyValue('--app-accent-glow')).toBe('rgba(20, 184, 166, 0.4)');
+        appliquerLeTheme('modern', undefined, jeu, { personnalites: true });
+        expect(r().style.getPropertyValue('--app-accent-glow')).toBe('rgba(255, 95, 86, 0.28)');
+    });
+
+    it('une matière du jeu se pose à sa taille, pas à celle de la grille du cyberpunk', () => {
+        const jeu = { variables: { '--texture-fond': 'linear-gradient(#000, #fff)' }, jetons: {} };
+        appliquerLeTheme('cyberpunk', undefined, jeu, { personnalites: true });
+        expect(r().style.getPropertyValue('--texture-taille')).toBe('auto');
+    });
+});

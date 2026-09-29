@@ -84,12 +84,16 @@ describe('l’atelier de thème sur les thèmes réels', () => {
          * Les régler n'aurait aucun effet à l'écran ; l'atelier les apprendra
          * avec la refonte qui les appliquera. Tout autre jeton hors atelier
          * reste une faute.
+         *
+         * **Contrat v1.4 (2026-09-29)** : même exception pour les jetons LU ⚙,
+         * qui ne s'appliquent qu'avec les personnalités allumées. L'atelier les
+         * apprendra avec l'interrupteur (P1.7).
          */
-        it('n’a aucun jeton que l’atelier ne saurait éditer — hors jetons V2', () => {
+        it('n’a aucun jeton que l’atelier ne saurait éditer — hors jetons V2 et LU ⚙', () => {
             const connus = new Set(JETONS_EDITABLES.map(j => j.cle));
             const inconnus = Object.keys(extraireJetons(lire(jeu)).jetons)
                 .filter(cle => !connus.has(cle))
-                .filter(cle => jetonDuContrat(cle)?.statut !== 'V2');
+                .filter(cle => jetonDuContrat(cle)?.statut !== 'V2' && !jetonDuContrat(cle)?.personnalites);
 
             expect(inconnus).toEqual([]);
         });

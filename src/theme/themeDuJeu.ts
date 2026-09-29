@@ -48,13 +48,55 @@ export async function chargerLeThemeDuJeu(racine: string): Promise<ThemeDuJeuCha
           relire le fichier pour les trouver, et surtout pas à savoir qu'un
           thème s'exprime en CSS.
         */
-        return { ...releve, polices: extraireImportsDePolice(css) };
+        const jetons = await incorporerLesMatieres(releve.jetons, lire, racine);
+        return { ...releve, jetons, polices: extraireImportsDePolice(css) };
     } catch (err) {
         console.error(`[ThèmeDuJeu] Lecture de « ${cheminDuTheme(racine)} » impossible :`, err);
         return null;
     }
 }
 
+
+/** Une matière du dossier du thème, en SVG : `url('matieres/grain.svg')`. */
+const MATIERE_SVG = /^url\(\s*['"]?matieres\/([\w.-]+\.svg)['"]?\s*\)$/i;
+
+/**
+ * **Les matières du jeu, rendues lisibles depuis la page** — contrat v1.4,
+ * P1.6, 2026-09-29.
+ *
+ * `url('matieres/grain.svg')` est relative au dossier du thème. Posée telle
+ * quelle en variable sur le document, elle se résoudrait depuis la page et ne
+ * trouverait rien — sans erreur visible. On lit donc le SVG par `readDoc`,
+ * comme le thème lui-même, et on l'incorpore en adresse `data:`.
+ *
+ * Un dégradé ou `none` passent tels quels. Une image PNG ou WebP, permise par
+ * le cahier, ne se lit pas en texte : écartée, et dite. *Un absent silencieux,
+ * un incident bruyant.*
+ */
+export async function incorporerLesMatieres(
+    jetons: Record<string, string>,
+    lire: (chemin: string) => Promise<string | null | undefined>,
+    racine: string,
+): Promise<Record<string, string>> {
+    const resultat = { ...jetons };
+    for (const cle of ['texture-bg', 'texture-panel']) {
+        const valeur = resultat[cle]?.trim();
+        if (!valeur || !/^url\(/i.test(valeur)) continue;
+
+        const m = MATIERE_SVG.exec(valeur);
+        const svg = m ? await lire(`${racine}/theme/matieres/${m[1]}`).catch(() => null) : null;
+        if (!svg) {
+            console.warn(
+                `[ThèmeDuJeu] Matière --rpg-${cle} écartée : ${valeur}. ` +
+                'GM-OS sait incorporer un SVG du dossier `matieres/` ; une image PNG ou WebP, pas encore.',
+            );
+            delete resultat[cle];
+            continue;
+        }
+        resultat[cle] = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+    }
+    return resultat;
+}
 
 /** L'attribut qui marque les feuilles de police posées par un thème de jeu. */
 const MARQUE_POLICES = 'data-polices-du-jeu';

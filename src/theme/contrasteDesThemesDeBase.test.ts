@@ -19,9 +19,14 @@ import { contraste } from './editionDuTheme';
  * (2026-09-29) ; le cadre y entrera avec les personnalités, qui le déclarent.
  */
 
-/** Ce que la palette d'un thème de base sait nommer aujourd'hui, sous les noms du contrat. */
+/**
+ * Ce que la palette d'un thème de base affiche, sous les noms du contrat —
+ * **le cadre compris** (P1.6) : absent, il vaut `bg`, `text` et `accent`
+ * (§ 4.8), et c'est ce qu'on mesure alors.
+ */
 function jetonsDeLaPalette(theme: ThemeID): Record<string, string> {
-    return PALETTES[theme].jetons;
+    const j = PALETTES[theme].jetons;
+    return { 'frame-bg': j.bg, 'frame-text': j.text, 'frame-accent': j.accent, ...j };
 }
 
 const THEMES = Object.keys(PALETTES) as ThemeID[];
@@ -34,6 +39,11 @@ describe('les quatre thèmes de base, devant les seuils du contrat', () => {
     for (const theme of THEMES) {
         const jetons = jetonsDeLaPalette(theme);
         const paires = PAIRES_DU_CONTRAT.filter(p => jetons[p.avant] && jetons[p.fond]);
+
+        // P1.6 : toutes les paires du contrat, pour les quatre thèmes. Une paire sautée ne protège rien.
+        it(`${theme} : les ${PAIRES_DU_CONTRAT.length} paires du contrat sont mesurées`, () => {
+            expect(paires.length).toBe(PAIRES_DU_CONTRAT.length);
+        });
 
         it.each(paires.map(p => [`${p.avant} sur ${p.fond}`, p] as const))(`${theme} : %s`, (nom, p) => {
             const ratio = contraste(jetons[p.avant], jetons[p.fond]);

@@ -85,6 +85,8 @@ export interface RapportDeTheme {
     /** Les jetons déclarés, rangés par ce que GM-OS en fait. */
     jetons: {
         appliques: string[];
+        /** LU depuis la v1.4, appliqués seulement quand le meneur allume les personnalités. */
+        avecLesPersonnalites: string[];
         annonces: string[];
         sansEffet: string[];
         lusParPersonne: string[];
@@ -267,10 +269,13 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
 
     /* ── § 4 · Les jetons ────────────────────────────────────────────────── */
 
-    const rangement: RapportDeTheme['jetons'] = { appliques: [], annonces: [], sansEffet: [], lusParPersonne: [] };
+    const rangement: RapportDeTheme['jetons'] = {
+        appliques: [], avecLesPersonnalites: [], annonces: [], sansEffet: [], lusParPersonne: [],
+    };
     for (const cle of Object.keys(jetons)) {
         const j = jetonDuContrat(cle);
         if (!j) rangement.lusParPersonne.push(cle);
+        else if (j.statut === 'LU' && j.personnalites) rangement.avecLesPersonnalites.push(cle);
         else if (j.statut === 'LU') rangement.appliques.push(cle);
         else if (j.statut === 'V2') rangement.annonces.push(cle);
         else rangement.sansEffet.push(cle);
@@ -611,6 +616,7 @@ export function rapportEnTexte(r: RapportDeTheme): string {
 
     lignes.push('', '## Ce que GM-OS fait des jetons déclarés', '');
     lignes.push(`- **Appliqués aujourd'hui (LU)** : ${liste(r.jetons.appliques)}`);
+    lignes.push(`- **Appliqués avec les personnalités (LU, v1.4)** — visibles quand le meneur les allume : ${liste(r.jetons.avecLesPersonnalites)}`);
     lignes.push(`- **Annoncés (V2)** — sans effet visible aujourd'hui, et c'est normal : ${liste(r.jetons.annonces)}`);
     lignes.push(`- **Sans effet dans GM-OS (SDK)** : ${liste(r.jetons.sansEffet)}`);
     if (r.jetons.lusParPersonne.length) lignes.push(`- **Hors contrat, lus par personne** : ${liste(r.jetons.lusParPersonne)}`);

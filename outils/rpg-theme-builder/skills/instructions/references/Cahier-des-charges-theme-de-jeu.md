@@ -1,6 +1,6 @@
 # Cahier des charges — thème de jeu pour GM-OS
 
-**Contrat v1.3 — 2026-09-27.** Destinataire : l'assistant qui construit les thèmes de jeu.
+**Contrat v1.4 — 2026-09-29.** Destinataire : l'assistant qui construit les thèmes de jeu.
 
 Ce document est une **contrainte**, pas une inspiration. Il dit exactement ce que GM-OS lit dans un
 thème, ce qu'il ignore et ce qu'il refuse. Tout ce qui n'y figure pas n'aura **aucun effet** dans
@@ -92,7 +92,10 @@ ne voit rien, et ne te le dit pas.
 
 **Statut** :
 
-- **LU** : GM-OS l'applique aujourd'hui ;
+- **LU** : GM-OS l'applique aujourd'hui. **LU ⚙** : GM-OS l'applique quand le meneur a allumé les
+  **personnalités** dans ses Paramètres — un seul réglage, qui lui fait comparer l'interface
+  d'aujourd'hui et la nouvelle. Livre ces jetons comme les autres : c'est là que ton thème prend sa
+  forme, son relief et sa matière ;
 - **V2** : le nouveau GM-OS l'appliquera. Livre-le dès maintenant : la version actuelle l'ignore
   sans erreur ;
 - **SDK** : sans effet dans GM-OS ; ne sert qu'à la page de démonstration du SDK. Facultatif.
@@ -152,7 +155,7 @@ choisit.
 | --- | --- | --- | --- |
 | `--rpg-font-display` | Titres, noms de module, grands nombres | LU — **obligatoire** | pile de polices |
 | `--rpg-font-mono` | Chiffres, dés, valeurs, code | LU | pile de polices |
-| `--rpg-font-body` | Texte courant de l'interface | V2 | pile de polices |
+| `--rpg-font-body` | Texte courant de l'interface | LU ⚙ | pile de polices |
 | `--rpg-font-ui` | Police d'interface de la démonstration | SDK | pile de polices |
 | `--rpg-title-tracking` | Espacement des lettres des titres | V2 | `0em` à `0.5em` |
 | `--rpg-kicker-tracking` | Espacement des petites étiquettes | V2 | `0em` à `0.6em` |
@@ -183,9 +186,9 @@ C'est ce qui distingue un thème d'une palette. Un jeu aux angles vifs **DOIT** 
 
 | Jeton | Rôle | Statut | Format |
 | --- | --- | --- | --- |
-| `--rpg-radius-sm` | Arrondi des petits éléments : badges, champs | V2 | `0px` à `12px` |
-| `--rpg-radius-md` | Arrondi des boutons et des cartes | V2 | `0px` à `20px` |
-| `--rpg-radius-lg` | Arrondi des panneaux | V2 | `0px` à `32px` |
+| `--rpg-radius-sm` | Arrondi des petits éléments : badges, champs | LU ⚙ | `0px` à `12px` |
+| `--rpg-radius-md` | Arrondi des boutons et des cartes | LU ⚙ | `0px` à `20px` |
+| `--rpg-radius-lg` | Arrondi des panneaux | LU ⚙ | `0px` à `32px` |
 | `--rpg-border-width` | Épaisseur des bordures de panneau | V2 | `0px` à `3px` |
 | `--rpg-border-style` | Style des bordures de panneau | V2 | `solid` ou `double` |
 
@@ -193,12 +196,12 @@ C'est ce qui distingue un thème d'une palette. Un jeu aux angles vifs **DOIT** 
 
 | Jeton | Rôle | Statut | Format |
 | --- | --- | --- | --- |
-| `--rpg-elevation-1` | Ombre d'un élément posé (carte, tuile) | V2 | valeur de `box-shadow`, ou `none` |
-| `--rpg-elevation-2` | Ombre d'un panneau flottant | V2 | idem |
-| `--rpg-elevation-3` | Ombre d'une boîte de dialogue | V2 | idem |
-| `--rpg-shadow` | Ancienne ombre unique : GM-OS s'en sert pour `elevation-2` si celle-ci manque | V2 | idem |
-| `--rpg-glow` | Couleur du halo autour de l'élément actif | V2 | `rgba()` ou `none` |
-| `--rpg-glow-strength` | Intensité du halo | V2 | `0` à `1` |
+| `--rpg-elevation-1` | Ombre d'un élément posé (carte, tuile) | LU ⚙ | valeur de `box-shadow`, ou `none` |
+| `--rpg-elevation-2` | Ombre d'un panneau flottant | LU ⚙ | idem |
+| `--rpg-elevation-3` | Ombre d'une boîte de dialogue | LU ⚙ | idem |
+| `--rpg-shadow` | Ancienne ombre unique : GM-OS s'en sert pour `elevation-2` si celle-ci manque | LU ⚙ | idem |
+| `--rpg-glow` | Couleur du halo autour de l'élément actif | LU ⚙ | `rgba()` ou `none` |
+| `--rpg-glow-strength` | Intensité du halo | LU ⚙ | `0` à `1` |
 
 `--rpg-glow: none;` est une vraie décision : un jeu sobre (papier, bois, métal mat) n'a pas de
 halo.
@@ -210,9 +213,9 @@ barre latérale quand le jeu ne déclare pas de cadre (§ 4.8).
 
 | Jeton | Rôle | Statut | Format |
 | --- | --- | --- | --- |
-| `--rpg-glass-bg` | Fond d'un panneau semi-transparent | V2 | `rgba()`, opacité **0.4 à 0.95** |
-| `--rpg-glass-border` | Bordure de ce panneau | V2 | `rgba()`, opacité 0.05 à 0.6 |
-| `--rpg-glass-blur` | Flou de ce qui est derrière | V2 | `0px` à `24px` |
+| `--rpg-glass-bg` | Fond d'un panneau semi-transparent | LU ⚙ | `rgba()`, opacité **0.4 à 0.95** |
+| `--rpg-glass-border` | Bordure de ce panneau | LU ⚙ | `rgba()`, opacité 0.05 à 0.6 |
+| `--rpg-glass-blur` | Flou de ce qui est derrière | LU ⚙ | `0px` à `24px` |
 
 ### 4.8 · Le cadre — nouveau
 
@@ -222,9 +225,9 @@ parchemin, une console noire autour de fiches blanches.
 
 | Jeton | Rôle | Statut | Format |
 | --- | --- | --- | --- |
-| `--rpg-frame-bg` | Fond de la barre latérale et du bandeau du haut | V2 | `#rrggbb`, opaque |
-| `--rpg-frame-text` | Texte et icônes du cadre | V2 | `#rrggbb`, opaque |
-| `--rpg-frame-accent` | Élément actif du cadre : module ouvert, bouton allumé | V2 | `#rrggbb`, opaque |
+| `--rpg-frame-bg` | Fond de la barre latérale et du bandeau du haut | LU ⚙ | `#rrggbb`, opaque |
+| `--rpg-frame-text` | Texte et icônes du cadre | LU ⚙ | `#rrggbb`, opaque |
+| `--rpg-frame-accent` | Élément actif du cadre : module ouvert, bouton allumé | LU ⚙ | `#rrggbb`, opaque |
 
 - **Absents, ils valent `bg`, `text` et `accent`** : le cadre suit le contenu, comme aujourd'hui.
   N'en déclare que si le jeu le justifie.
@@ -265,20 +268,21 @@ Calcule-les avant de livrer. Aujourd'hui, l'atelier de GM-OS **signale** les tro
 paires sous le minimum ; le contrôleur de thème en construction **refusera** tout thème sous le
 minimum.
 
-## 7 · Les matières — nouvelles, V2
+## 7 · Les matières — nouvelles
 
 Une texture donne sa matière au jeu : papier, métal brossé, grain de film, cuir.
 
-| Jeton | Rôle | Format |
-| --- | --- | --- |
-| `--rpg-texture-bg` | Matière du fond de l'application | `none`, `url('matieres/<fichier>.svg')` ou un dégradé CSS |
-| `--rpg-texture-panel` | Matière des panneaux | idem |
-| `--rpg-texture-opacity` | Opacité des deux matières | `0` à `0.35` |
+| Jeton | Rôle | Statut | Format |
+| --- | --- | --- | --- |
+| `--rpg-texture-bg` | Matière du fond de l'application | LU ⚙ | `none`, `url('matieres/<fichier>.svg')` ou un dégradé CSS |
+| `--rpg-texture-panel` | Matière des panneaux | V2 | idem |
+| `--rpg-texture-opacity` | Opacité des deux matières | LU ⚙ | `0` à `0.35` |
 
 - Le chemin **DOIT** être relatif et rester **dans** le dossier `theme/`. Tout chemin qui en sort
   (`../`, chemin absolu, adresse web) est refusé.
 - **SVG RECOMMANDÉ**, motif répétable, **200 Ko au plus**. Une image PNG ou WebP est permise
-  (500 Ko au plus).
+  (500 Ko au plus), mais **GM-OS ne sait pas encore l'afficher** : il l'écarte et le dit. Pour que la
+  matière se voie, livre un SVG ou un dégradé.
 - La matière **NE DOIT PAS** porter de texte ni d'information : elle est décor, et elle doit pouvoir
   disparaître sans rien perdre.
 
@@ -352,7 +356,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 ```css
 /* ==========================================================================
    RPG THEME — <NOM DU JEU>
-   Contrat GM-OS v1.3
+   Contrat GM-OS v1.4
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=<Police+Titre>:wght@500;700&family=<Police+Mono>:wght@400;600&display=swap');
@@ -451,6 +455,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 | **v1** | 2026-09-26 | Premier contrat écrit. GM-OS lit **13 réglages** (6 couleurs, 2 polices, 5 tailles), la polarité et les polices importées. Les jetons **V2** sont réservés et annoncés : forme, relief, verre, états, matières, ornements. |
 | **v1.1** | 2026-09-26 | ⛔ Le **piège « page de livre »** (§ 4.1) : dans GM-OS, le texte est posé sur `bg`, pas seulement sur `surface` — quatre des six thèmes existants y tombent. **Polarité vérifiable** (§ 3.5). **`intention.md` obligatoire**, avec les limites signalées et leur classe (§ 1.1). Le déroulé du travail vit dans [`Pipeline-des-themes.md`](./Pipeline-des-themes.md). |
 | **v1.2** | 2026-09-26 | ⛔ **Un seul consommateur** (§ 2) : les fiches de personnage sont **indépendantes des thèmes** (décision de David) et ne lisent jamais `theme.css` — la v1 affirmait l'inverse. Les composants `.rpg-*` et les jetons `paper`, `ink`, `accent-2`, `font-ui` passent au statut **SDK** : facultatifs, sans effet dans GM-OS. La classe de limite « fiches seulement » disparaît. |
+| **v1.4** | 2026-09-29 | ⭐ **Dix-huit jetons passent de V2 à LU ⚙** : la forme (`radius-*`), le relief (`elevation-*`, `shadow`, `glow`, `glow-strength`), le verre (`glass-*`), la police du corps (`font-body`), la matière de fond (`texture-bg`, `texture-opacity`) et le cadre (`frame-*`). GM-OS les applique quand le meneur allume les **personnalités** : éteintes, **aucun thème existant ne change** — décision du meneur, qui veut comparer avant d'adopter. Restent **V2** ceux qu'aucun élément de l'écran ne lit encore : `surface-2`, `accent-contrast`, `border-soft`, les états, `border-width`, `border-style`, `title-*`, `kicker-tracking`, `texture-panel`. Une matière `url('matieres/…')` doit être un **SVG** (§ 7). |
 | **v1.3** | 2026-09-27 | ⭐ **Le cadre** (§ 4.8) : trois jetons **V2**, `frame-bg`, `frame-text`, `frame-accent`, pour une barre latérale et un bandeau d'une autre polarité que le contenu, et leurs deux paires de contraste (§ 6). Absents, ils valent `bg`, `text` et `accent` : aucun thème existant ne change. Né du relevé des quatre thèmes de base de GM-OS, dont deux (Médiéval, Moderne) ont un cadre sombre autour d'un contenu clair. |
 
 Un jeton annoncé **V2** peut encore changer de nom ou de bornes avant d'être appliqué ; tout

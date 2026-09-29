@@ -44,6 +44,7 @@
 
 import { tailleDeRacine, echelleDeTexte } from './editionDuTheme';
 import { VARIABLE_DU_JETON } from './contratDuTheme';
+import { accentsDeModule, ACCENTS_D_AUJOURD_HUI } from './accentsDeModule';
 
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 
@@ -365,6 +366,7 @@ export function appliquerLeTheme(
     theme: string,
     accentSurcharge?: string,
     jeu?: ThemeDuJeuApplique,
+    { personnalites = false }: { personnalites?: boolean } = {},
 ): void {
     if (typeof document === 'undefined') return;
 
@@ -411,6 +413,38 @@ export function appliquerLeTheme(
         ...retirerLAccent(jeu?.variables),
     }, jeu?.variables['--app-text-muted']);
 
+    /*
+      **Sous l'interrupteur des personnalités** (contrat v1.4, P1.6 — éteint
+      jusqu'à P1.7, décision de David du 2026-09-29). Éteint, rien de ceci ne
+      s'écrit, et la boucle d'effacement plus bas retire ce qu'un passage
+      allumé aurait laissé.
+    */
+    if (personnalites) {
+        // R7 : les accents de module suivent l'accent effectif et le fond affiché.
+        const modules = accentsDeModule(accent, vars['--app-bg']);
+        if (modules) {
+            for (const [module, couleur] of Object.entries(modules)) vars[`--gm-${module}`] = couleur;
+        }
+        if (jeu) {
+            /*
+              « La main surcharge » vaut pour le halo, qui est l'ombre de
+              l'accent : un halo fixe du jeu à côté d'un accent choisi à la main
+              serait deux couleurs pour une même chose — le défaut du 2026-08-24.
+            */
+            const rvb = composantesRVB(accent);
+            const haloDuJeu = !!jeu.jetons.glow && !choisieALaMain;
+            if (rvb && !haloDuJeu && (choisieALaMain || jeu.jetons['glow-strength'] !== undefined)) {
+                vars['--app-accent-glow'] = `rgba(${rvb}, ${forceDuHalo(jeu.jetons['glow-strength'])})`;
+            }
+            // Une matière de jeu se pose à sa taille : la pose du thème de base ne la concerne pas.
+            if (jeu.variables['--texture-fond']) {
+                vars['--texture-taille'] = 'auto';
+                vars['--texture-position'] = '0% 0%';
+                vars['--texture-fusion'] = 'normal';
+            }
+        }
+    }
+
     for (const [nom, valeur] of Object.entries(vars)) {
         racine.style.setProperty(nom, valeur);
     }
@@ -423,7 +457,7 @@ export function appliquerLeTheme(
       laisserait à l'écran. *Ne rien dire doit laisser la même page que
       n'avoir jamais rien dit* : la règle des bandes de taille, plus bas.
     */
-    for (const variable of new Set(Object.values(VARIABLE_DU_JETON))) {
+    for (const variable of VARIABLES_EFFACABLES) {
         if (!(variable in vars)) racine.style.removeProperty(variable);
     }
 
@@ -461,6 +495,12 @@ export function appliquerLeTheme(
         else racine.style.setProperty(variable, String(facteur));
     }
 }
+
+/** Tout ce qu'un thème peut cesser de déclarer : les variables du contrat, et les accents de module. */
+const VARIABLES_EFFACABLES = new Set([
+    ...Object.values(VARIABLE_DU_JETON),
+    ...Object.keys(ACCENTS_D_AUJOURD_HUI).map(m => `--gm-${m}`),
+]);
 
 /**
  * Les quatre bandes réglables, et la variable CSS que chacune pilote.
