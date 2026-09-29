@@ -107,6 +107,10 @@ export interface ThemeDeBase {
   Chaque valeur est celle que l'écran montre AUJOURD'HUI, pour que rien ne
   bouge tant qu'un composant n'emploie pas l'alias :
   - `muted` et `subtil`, les `text-slate-400` et `text-slate-500` d'aujourd'hui ;
+  - ⛔ **les valeurs de Tailwind 4, pas celles de Tailwind 3** : sa palette est
+    écrite en `oklch` (`slate-400` = `oklch(70.4% .04 256.788)`, soit
+    `#90a1b9`), et le `#94a3b8` qu'on connaît par cœur est celui de la v3. Le
+    recopier aurait changé tout le texte secondaire en P1.3 ;
   - `accent-contrast`, le `text-app-bg` posé sur l'accent (86 emplois, contre
     62 `text-white`) — donc le fond du thème ;
   - les états, les emerald, red, amber et sky 500 écrits en dur ;
@@ -125,18 +129,18 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'font-mono': "'JetBrains Mono', monospace",
             'glass-bg': 'rgba(2, 6, 23, 0.6)',
             'glass-border': 'rgba(34, 211, 238, 0.15)',
-            muted: '#94a3b8',
+            muted: '#90a1b9',
             'surface-2': '#1b2235',
             'accent-contrast': '#020617',
             // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
-            success: '#10b981',
-            danger: '#ef4444',
-            warning: '#f59e0b',
-            info: '#0ea5e9',
+            success: '#00bc7d',
+            danger: '#fb2c36',
+            warning: '#fe9a00',
+            info: '#00a6f4',
         },
         clarte: 'dark',
         reflet: 'rgba(34, 211, 238, 0.25)',
-        subtil: '#64748b',
+        subtil: '#62748e',
         palettes: ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444'],
     },
 
@@ -151,18 +155,18 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'font-mono': "'UnifrakturMaguntia', cursive",
             'glass-bg': 'rgba(28, 25, 23, 0.65)',
             'glass-border': 'rgba(217, 119, 6, 0.12)',
-            muted: '#94a3b8',
+            muted: '#90a1b9',
             'surface-2': '#2e2a26',
             'accent-contrast': '#181411',
             // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
-            success: '#10b981',
-            danger: '#ef4444',
-            warning: '#f59e0b',
-            info: '#0ea5e9',
+            success: '#00bc7d',
+            danger: '#fb2c36',
+            warning: '#fe9a00',
+            info: '#00a6f4',
         },
         clarte: 'dark',
         reflet: 'rgba(217, 119, 6, 0.2)',
-        subtil: '#64748b',
+        subtil: '#62748e',
         palettes: ['#d4af37', '#b91c1c', '#7c2d12', '#4c1d95', '#1e40af'],
     },
 
@@ -177,18 +181,18 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'font-mono': "'JetBrains Mono', monospace",
             'glass-bg': 'rgba(15, 23, 42, 0.5)',
             'glass-border': 'rgba(255, 255, 255, 0.1)',
-            muted: '#94a3b8',
+            muted: '#90a1b9',
             'surface-2': '#293345',
             'accent-contrast': '#0f172a',
             // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
-            success: '#10b981',
-            danger: '#ef4444',
-            warning: '#f59e0b',
-            info: '#0ea5e9',
+            success: '#00bc7d',
+            danger: '#fb2c36',
+            warning: '#fe9a00',
+            info: '#00a6f4',
         },
         clarte: 'dark',
         reflet: 'rgba(255, 255, 255, 0.2)',
-        subtil: '#64748b',
+        subtil: '#62748e',
         palettes: ['#3b82f6', '#6366f1', '#14b8a6', '#f43f5e', '#64748b'],
     },
 
@@ -209,10 +213,10 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'surface-2': '#f4f4f4',
             'accent-contrast': '#fbfbf9',
             // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
-            success: '#10b981',
-            danger: '#ef4444',
-            warning: '#f59e0b',
-            info: '#0ea5e9',
+            success: '#00bc7d',
+            danger: '#fb2c36',
+            warning: '#fe9a00',
+            info: '#00a6f4',
         },
         clarte: 'light',
         reflet: 'rgba(255, 255, 255, 0.5)',

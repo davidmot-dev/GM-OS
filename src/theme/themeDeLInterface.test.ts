@@ -287,8 +287,8 @@ describe('P1.2 · les couleurs qui manquent', () => {
     it('le texte estompé et le subtil sont les slate-400 et slate-500 d’aujourd’hui', () => {
         for (const t of THEMES.filter(x => x !== 'claire')) {
             const v = variablesDuTheme(PALETTES[t], PALETTES[t].jetons.accent);
-            expect(v['--app-text-muted'], t).toBe('#94a3b8');
-            expect(v['--app-text-subtle'], t).toBe('#64748b');
+            expect(v['--app-text-muted'], t).toBe('#90a1b9');
+            expect(v['--app-text-subtle'], t).toBe('#62748e');
         }
     });
 
@@ -337,7 +337,7 @@ describe('P1.2 · les dérivées, une fois le jeu posé', () => {
     });
 
     it('sans `muted` du jeu, le subtil du thème de base reste', () => {
-        expect(completerLesDerivees(base())['--app-text-subtle']).toBe('#64748b');
+        expect(completerLesDerivees(base())['--app-text-subtle']).toBe('#62748e');
     });
 
     /**

@@ -504,6 +504,25 @@ body {
   color: var(--app-text) !important;
 }
 
+/*
+  **Le texte secondaire en jeton (P1.3, 2026-09-29) garde l'`!important` d'hier.**
+
+  La couleur, le jeton la donne déjà : dans ce thème, `--app-text-muted` et
+  `--app-text-subtle` valent le texte. Mais la règle du dessus faisait autre
+  chose, en passant : son `!important` **neutralisait les survols** posés sur le
+  même élément — 154 lignes, dont 51 `hover:text-white`. Sans lui, un survol
+  écrirait du blanc sur le fond crème. Tombe avec la personnalité du thème
+  clair (P1.7). Les tablettes et les écrans d'accueil gardent leurs classes
+  `slate` : la règle du dessus reste pour eux.
+*/
+:root[data-theme='claire'] .text-app-muted {
+  color: var(--app-text-muted) !important;
+}
+
+:root[data-theme='claire'] .text-app-subtle {
+  color: var(--app-text-subtle) !important;
+}
+
 :root[data-theme='claire'] .text-slate-600 {
   color: #78716c !important; /* Stone 500 equivalent */
 }
