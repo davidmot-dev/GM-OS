@@ -121,6 +121,24 @@ tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, e
   jeton fait leur travail.
 - **Les 2 048 couleurs d'état, elles, ne bougent pas** : c'est la phase 4, module par module, avec la
   garde T0.2. La phase 1 crée les jetons ; elle ne migre pas les états.
+- ✅ **Fait le 2026-09-29** : **461 substitutions** dans 18 modules. Les 20 captures passent, et un
+  essai dans Chromium montre que les couleurs `oklch` de Tailwind et leurs équivalents hexadécimaux
+  se peignent **au pixel près**. Ce qui a été tranché en route :
+  - ⛔ **les valeurs de P1.2 étaient celles de Tailwind 3** (`#94a3b8`) ; Tailwind 4 écrit sa palette
+    en `oklch` (`slate-400` = `#90a1b9`). Corrigé avant la substitution, états compris ;
+  - **David : le jeu pilote le texte secondaire dès maintenant.** Sous un thème de jeu, il prend le
+    `muted` du jeu (Blade Runner à peine, Dune et NOC en beige) ; sous le thème de base, rien ne
+    change ;
+  - **David : le Player Hub des tablettes reste hors P1.3** (`modules/remote`, `components/hub`),
+    comme les écrans d'accueil (`components/splash`) ;
+  - **la classe exacte seulement** : les variantes (`hover:text-slate-400`, `/60`) restent. Les règles
+    du thème clair ne visent que la classe exacte ;
+  - **un seul gris « désactivé » gardé**, dans `PlayerPrivateNotes.tsx`
+    (`text-slate-500 cursor-not-allowed`) ;
+  - ⚠️ **les règles `claire` ne tombent pas** : leur `!important` neutralisait les survols posés sur
+    le même élément (154 lignes, dont 51 `hover:text-white`, qui écriraient du blanc sur le crème).
+    `text-app-muted` et `text-app-subtle` reprennent donc cet `!important` dans le thème clair, et les
+    règles `slate` restent pour les tablettes. Tout cela tombe avec la personnalité claire (P1.7).
 
 ### P1.4 · La forme et le relief — à pixel constant, effet global
 

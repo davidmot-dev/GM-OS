@@ -5449,8 +5449,8 @@ explicitement, jamais le défaut.
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
 
 ⭐ **Où on en est — 2026-09-29** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
-et P1.2 faits**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
-soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.3** du
+à P1.3 faits**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
+soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.4** du
 [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
@@ -5774,6 +5774,10 @@ v1.2.
   branché sur la barre latérale et le bandeau (`STYLE_DU_CADRE`). 20 captures identiques. ⚠️ T0.3
   a trouvé trois états illisibles dans le thème clair (déjà à l'écran), figés en cliquet — détail
   dans le plan de la phase 1. ⛔ Les captures exigent **le Zenbook en écran principal**.
+- ✅ **P1.3 fait le 2026-09-29** : 461 `text-slate-400/500` deviennent `text-app-muted/subtle`,
+  20 captures identiques. **David : le jeu pilote le texte secondaire** (sous un thème de jeu, il
+  prend son `muted`) ; **les tablettes restent hors P1.3**. ⛔ Les valeurs de P1.2 étaient celles
+  de Tailwind 3 : corrigées pour celles de Tailwind 4 (`oklch`). Détail dans le plan de la phase 1.
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.
