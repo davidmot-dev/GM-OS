@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
 import { motion } from 'framer-motion';
+import TexteMarkdown from '../../../components/TexteMarkdown';
+import { reparerLeMojibake } from '../../../utils/reparerLeMojibake';
 
 const TimelineView: React.FC = () => {
     const { 
@@ -148,7 +150,7 @@ const TimelineView: React.FC = () => {
                                                     WIKI: {event.originalCategory}
                                                 </span>
                                             )}
-                                            <h3 className="text-base font-black text-app-text tracking-tight uppercase group-hover:text-accent transition-colors">{event.title}</h3>
+                                            <h3 className="text-base font-black text-app-text tracking-tight uppercase group-hover:text-accent transition-colors">{reparerLeMojibake(event.title)}</h3>
                                         </div>
                                         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
                                             {!event.isWikiSource ? (
@@ -180,9 +182,17 @@ const TimelineView: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    <p className="text-sm text-app-text/60 leading-relaxed mb-8 font-medium">
-                                        {event.description}
-                                    </p>
+                                    {/*
+                                      **La description est du Markdown** : le rapport de combat
+                                      (`combat.report.*`) l'écrit ainsi, et un extrait du wiki
+                                      aussi. Posée dans un `<p>`, elle s'affichait brute
+                                      (« ### … **Fin du Round** »), vitrine du 2026-09-28.
+                                      `reparerLeMojibake` rend lisibles les événements écrits
+                                      avant le 18/08, quand le fichier FR était abîmé.
+                                    */}
+                                    <div className="prose prose-invert prose-sm max-w-none mb-8 font-medium text-app-text/60 prose-headings:text-app-text prose-headings:mb-2 prose-headings:mt-4 prose-p:text-app-text/60 prose-p:my-1 prose-li:text-app-text/60 prose-li:my-0 prose-ul:my-1 prose-strong:text-app-text prose-a:text-accent">
+                                        <TexteMarkdown>{reparerLeMojibake(event.description)}</TexteMarkdown>
+                                    </div>
 
                                     <div className="flex flex-wrap gap-6 pt-6 border-t border-white/5">
                                         {event.locationId && (

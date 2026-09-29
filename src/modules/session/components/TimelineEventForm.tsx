@@ -3,6 +3,7 @@ import { useSessionOSStore, type TimelineEvent } from '../useSessionOSStore';
 import { useClockStore } from '../../../store/useClockStore';
 import { Save, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { reparerLeMojibake } from '../../../utils/reparerLeMojibake';
 
 
 interface TimelineEventFormProps {
@@ -16,9 +17,11 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
     const clock = useClockStore();
 
     
-    const [title, setTitle] = useState(event?.title || '');
+    // Un événement écrit avant le 18/08 peut porter du texte relu en cp1252 : on le
+    // montre réparé, et il ne s'enregistre réparé que si le meneur valide.
+    const [title, setTitle] = useState(reparerLeMojibake(event?.title || ''));
     const [date, setDate] = useState(event?.date || '');
-    const [description, setDescription] = useState(event?.description || '');
+    const [description, setDescription] = useState(reparerLeMojibake(event?.description || ''));
     const [type, setType] = useState<TimelineEvent['type']>(event?.type || 'lore');
     const [locationId, setLocationId] = useState(event?.locationId || '');
     const [involvedEntityIds, setInvolvedEntityIds] = useState<string[]>(event?.involvedEntityIds || []);
