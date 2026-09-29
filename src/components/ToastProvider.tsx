@@ -18,7 +18,7 @@ const TYPE_STYLES: Record<ToastType, { bg: string, icon: React.ReactNode }> = {
     },
     info: {
         bg: 'bg-slate-900/90 border-slate-500/50 text-slate-100',
-        icon: <Info size={18} className="text-slate-400" />
+        icon: <Info size={18} className="text-app-muted" />
     },
     loading: {
         bg: 'bg-indigo-950/90 border-indigo-500/50 text-indigo-100',

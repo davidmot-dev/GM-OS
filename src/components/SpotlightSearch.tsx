@@ -78,7 +78,7 @@ export const SpotlightSearch: React.FC = () => {
                 
                 {/* Search Header */}
                 <div className="flex items-center px-4 py-4 border-b border-slate-800 bg-slate-800/30">
-                    <Search className="w-5 h-5 text-slate-400 mr-3" />
+                    <Search className="w-5 h-5 text-app-muted mr-3" />
                     <input
                         ref={inputRef}
                         type="text"
@@ -88,13 +88,13 @@ export const SpotlightSearch: React.FC = () => {
                         className="flex-1 bg-transparent border-none outline-none text-slate-100 placeholder:text-slate-500 text-lg"
                     />
                     <div className="flex items-center space-x-2">
-                        <div className="flex items-center px-1.5 py-0.5 rounded border border-slate-700 bg-slate-800 text-ui-10 text-slate-400 font-medium">
+                        <div className="flex items-center px-1.5 py-0.5 rounded border border-slate-700 bg-slate-800 text-ui-10 text-app-muted font-medium">
                             ESC
                         </div>
                         <button 
                             onClick={() => setIsOpen(false)}
                             title={t('common:spotlight.close_tooltip')}
-                            className="p-1 hover:bg-slate-700 rounded-md transition-colors text-slate-400"
+                            className="p-1 hover:bg-slate-700 rounded-md transition-colors text-app-muted"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -119,12 +119,12 @@ export const SpotlightSearch: React.FC = () => {
                     ) : query.trim() ? (
                         <div className="px-6 py-12 text-center">
                             <Search className="w-12 h-12 text-slate-700 mx-auto mb-4 opacity-20" />
-                            <p className="text-slate-400 text-lg font-medium">{t('common:spotlight.no_results', { query })}</p>
-                            <p className="text-slate-500 text-sm mt-1">{t('common:spotlight.no_results_sub')}</p>
+                            <p className="text-app-muted text-lg font-medium">{t('common:spotlight.no_results', { query })}</p>
+                            <p className="text-app-subtle text-sm mt-1">{t('common:spotlight.no_results_sub')}</p>
                         </div>
                     ) : (
                         <div className="px-4 py-3 space-y-4">
-                            <div className="text-ui-10 uppercase tracking-wider text-slate-500 font-bold px-2">{t('common:spotlight.suggestions')}</div>
+                            <div className="text-ui-10 uppercase tracking-wider text-app-subtle font-bold px-2">{t('common:spotlight.suggestions')}</div>
                             <div className="grid grid-cols-2 gap-2">
                                 <QuickTip icon={User} label={t('common:spotlight.quick_tips.npcs')} />
                                 <QuickTip icon={Music} label={t('common:spotlight.quick_tips.audio')} />
@@ -134,7 +134,7 @@ export const SpotlightSearch: React.FC = () => {
                             <div className="flex items-center justify-center p-6 border border-dashed border-slate-800 rounded-xl bg-slate-800/10">
                                 <div className="text-center">
                                     <Sparkles className="w-5 h-5 text-accent mx-auto mb-2" />
-                                    <p className="text-xs text-slate-400">{t('common:spotlight.shortcut_hint_prefix')}<span className="text-slate-200 font-bold">CMD+K</span>{t('common:spotlight.shortcut_hint_suffix')} </p>
+                                    <p className="text-xs text-app-muted">{t('common:spotlight.shortcut_hint_prefix')}<span className="text-slate-200 font-bold">CMD+K</span>{t('common:spotlight.shortcut_hint_suffix')} </p>
                                 </div>
                             </div>
                         </div>
@@ -142,7 +142,7 @@ export const SpotlightSearch: React.FC = () => {
                 </div>
 
                 {/* Footer / Shortcuts */}
-                <div className="flex items-center justify-between px-4 py-2 bg-slate-950/40 border-t border-slate-800 text-ui-10 text-slate-500">
+                <div className="flex items-center justify-between px-4 py-2 bg-slate-950/40 border-t border-slate-800 text-ui-10 text-app-subtle">
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center">
                             <div className="flex items-center px-1 py-0.5 rounded border border-slate-800 bg-slate-900 mr-1.5 font-mono">↑↓</div>
@@ -153,7 +153,7 @@ export const SpotlightSearch: React.FC = () => {
                             <span>{t('common:spotlight.select_hint')}</span>
                         </div>
                     </div>
-                    <div className="flex items-center font-medium text-slate-400">
+                    <div className="flex items-center font-medium text-app-muted">
                         GM-OS <span className="text-accent ml-1 italic">Spotlight</span>
                     </div>
                 </div>
@@ -182,7 +182,7 @@ const ResultItem: React.FC<{
         >
             <div className={`
                 p-2 rounded-lg mr-4 transition-colors
-                ${isSelected ? 'bg-accent text-slate-900' : 'bg-slate-800 text-slate-400'}
+                ${isSelected ? 'bg-accent text-slate-900' : 'bg-slate-800 text-app-muted'}
             `}>
                 <Icon className="w-5 h-5" />
             </div>
@@ -191,7 +191,7 @@ const ResultItem: React.FC<{
                     {result.title}
                 </div>
                 {result.subtitle && (
-                    <div className="text-ui-11 text-slate-500 truncate mt-0.5 italic">
+                    <div className="text-ui-11 text-app-subtle truncate mt-0.5 italic">
                         {result.subtitle}
                     </div>
                 )}
@@ -207,7 +207,7 @@ const ResultItem: React.FC<{
 };
 
 const QuickTip: React.FC<{ icon: any; label: string }> = ({ icon: Icon, label }) => (
-    <div className="flex items-center p-2 rounded-lg bg-slate-800/30 border border-slate-800/50 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all cursor-default">
+    <div className="flex items-center p-2 rounded-lg bg-slate-800/30 border border-slate-800/50 text-app-muted hover:text-slate-200 hover:bg-slate-800/50 transition-all cursor-default">
         <Icon className="w-4 h-4 mr-2" />
         <span className="text-ui-11 font-medium">{label}</span>
     </div>

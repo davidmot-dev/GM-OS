@@ -61,14 +61,14 @@ const LobbyMonitor: React.FC = () => {
                                 setClients(prev => prev.filter(c => c.status === 'active'));
                             }
                         }}
-                        className="p-1.5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 rounded-lg transition-all"
+                        className="p-1.5 hover:bg-rose-500/20 text-app-subtle hover:text-rose-400 rounded-lg transition-all"
                         title={t('remote.lobby.clear_tooltip')}
                     >
                         <Trash2 size={14} />
                     </button>
                     <button 
                         onClick={() => window.appBridge?.remote?.requestClientSync?.()}
-                        className="p-1.5 hover:bg-white/10 text-slate-500 hover:text-white rounded-lg transition-all"
+                        className="p-1.5 hover:bg-white/10 text-app-subtle hover:text-white rounded-lg transition-all"
                         title={t('remote.lobby.refresh_tooltip')}
                     >
                         <RotateCw size={14} />
@@ -78,7 +78,7 @@ const LobbyMonitor: React.FC = () => {
 
             <div className="max-h-[300px] flex flex-col gap-2 overflow-y-auto custom-scrollbar p-3 relative">
                 {clients.length === 0 ? (
-                    <div className="py-8 text-center text-slate-500">
+                    <div className="py-8 text-center text-app-subtle">
                         <p className="text-ui-10 font-bold uppercase">{t('remote.lobby.no_devices')}</p>
                     </div>
                 ) : (
@@ -90,7 +90,7 @@ const LobbyMonitor: React.FC = () => {
                             }`}
                         >
                             <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-lg ${client.status === 'active' ? 'bg-gm-cyan/10 text-gm-cyan' : 'bg-slate-800 text-slate-500'}`}>
+                                <div className={`p-2 rounded-lg ${client.status === 'active' ? 'bg-gm-cyan/10 text-gm-cyan' : 'bg-slate-800 text-app-subtle'}`}>
                                     {getRoleIcon(client.role)}
                                 </div>
                                 <div>
@@ -102,7 +102,7 @@ const LobbyMonitor: React.FC = () => {
                                             </span>
                                         )}
                                     </p>
-                                    <p className="text-ui-9 font-medium text-slate-500 uppercase mt-1">
+                                    <p className="text-ui-9 font-medium text-app-subtle uppercase mt-1">
                                         {client.role} • {client.deviceId.substring(0, 8)}... • {formatRelativeTime(client.lastSeen)}
                                     </p>
                                 </div>
@@ -117,7 +117,7 @@ const LobbyMonitor: React.FC = () => {
             
             <div className="bg-slate-950/50 p-3 border-t border-white/5 shrink-0">
                 <div className="flex items-center justify-between gap-3 mb-2">
-                    <p className="text-ui-9 text-slate-500 italic flex-1">
+                    <p className="text-ui-9 text-app-subtle italic flex-1">
                         {t('remote.lobby.reconnect_note')}
                     </p>
                     <button

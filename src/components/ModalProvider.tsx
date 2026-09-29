@@ -168,7 +168,7 @@ const ModalProvider: React.FC = () => {
                             </div>
                             <h3 className="text-lg font-bold text-white">{t('common:prompt_title')}</h3>
                         </div>
-                        <p className="text-slate-400 text-sm mb-4">{message}</p>
+                        <p className="text-app-muted text-sm mb-4">{message}</p>
                         <input
                             type="text"
                             autoFocus
@@ -280,7 +280,7 @@ const ModalProvider: React.FC = () => {
                                 </div>
                                 <button 
                                     onClick={closeModal} 
-                                    className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-all"
+                                    className="p-2 hover:bg-slate-800 rounded-full text-app-muted hover:text-white transition-all"
                                     title={t('common:close_window')}
                                 >
                                     <X size={20} />
