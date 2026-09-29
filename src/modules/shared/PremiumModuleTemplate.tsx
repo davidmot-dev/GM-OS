@@ -88,7 +88,7 @@ export const PremiumModuleTemplate: React.FC = () => {
               className={`group relative w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 ${
                 activeSection === item.id 
                 ? `${item.bg} ${item.color} shadow-lg ring-1 ring-white/10` 
-                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                : 'text-app-subtle hover:text-slate-300 hover:bg-white/5'
               }`}
               title={item.label}
             >
@@ -112,7 +112,7 @@ export const PremiumModuleTemplate: React.FC = () => {
                     <Layout className="text-cyan-400" size={32} />
                     Section <span className="text-cyan-500/20 underline decoration-cyan-500/40">Générale</span>
                   </h2>
-                  <p className="text-slate-500 text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
+                  <p className="text-app-subtle text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
                     Description de la section et des fonctionnalités principales.
                   </p>
                 </header>
@@ -129,7 +129,7 @@ export const PremiumModuleTemplate: React.FC = () => {
                   </div>
 
                   <div className="p-8 bg-white/[0.03] border border-white/10 rounded-[2.5rem] backdrop-blur-sm flex flex-col justify-center">
-                    <p className="text-ui-11 text-slate-500 leading-relaxed italic px-2">
+                    <p className="text-ui-11 text-app-subtle leading-relaxed italic px-2">
                        Conseil : Utilisez ces cartes pour regrouper les paramètres logiques par thématique.
                     </p>
                   </div>
