@@ -18,7 +18,7 @@
  */
 
 /** La version du cahier des charges que ce fichier traduit. */
-export const VERSION_DU_CONTRAT = '1.4';
+export const VERSION_DU_CONTRAT = '1.5';
 
 /**
  * - **LU** : GM-OS l'applique aujourd'hui — ceux marqués `personnalites`
@@ -108,38 +108,38 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     // § 4.1 · Couleurs de base
     { cle: 'bg', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-bg' },
     { cle: 'surface', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-surface' },
-    { cle: 'surface-2', section: '4.1', statut: 'V2', format: OPAQUE, versLInterface: '--app-surface-2' },
+    { cle: 'surface-2', section: '4.1', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--app-surface-2' },
     { cle: 'text', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-text' },
     { cle: 'muted', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-text-muted' },
     { cle: 'accent', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-accent' },
     { cle: 'accent-2', section: '4.1', statut: 'SDK', format: LIBRE },
-    { cle: 'accent-contrast', section: '4.1', statut: 'V2', format: OPAQUE, versLInterface: '--app-accent-contrast' },
+    { cle: 'accent-contrast', section: '4.1', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--app-accent-contrast' },
     {
         cle: 'border', section: '4.1', statut: 'LU', obligatoire: true,
         format: { type: 'couleur-ou-rgba', alphaMin: 0.08, alphaMax: 1 }, versLInterface: '--app-border',
     },
     {
-        cle: 'border-soft', section: '4.1', statut: 'V2',
+        cle: 'border-soft', section: '4.1', statut: 'LU', personnalites: true,
         format: { type: 'couleur-ou-rgba', alphaMin: 0.08, alphaMax: 1 }, versLInterface: '--app-border-soft',
     },
     { cle: 'paper', section: '4.1', statut: 'SDK', format: LIBRE },
     { cle: 'ink', section: '4.1', statut: 'SDK', format: LIBRE },
 
     // § 4.2 · Couleurs d'état
-    { cle: 'success', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-succes' },
-    { cle: 'danger', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-danger' },
-    { cle: 'warning', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-alerte' },
-    { cle: 'info', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-info' },
+    { cle: 'success', section: '4.2', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--etat-succes' },
+    { cle: 'danger', section: '4.2', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--etat-danger' },
+    { cle: 'warning', section: '4.2', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--etat-alerte' },
+    { cle: 'info', section: '4.2', statut: 'LU', personnalites: true, format: OPAQUE, versLInterface: '--etat-info' },
 
     // § 4.3 · Typographie
     { cle: 'font-display', section: '4.3', statut: 'LU', obligatoire: true, format: PILE, versLInterface: '--font-display' },
     { cle: 'font-mono', section: '4.3', statut: 'LU', format: PILE, versLInterface: '--font-mono' },
     { cle: 'font-body', section: '4.3', statut: 'LU', personnalites: true, format: PILE, versLInterface: '--font-body' },
     { cle: 'font-ui', section: '4.3', statut: 'SDK', format: PILE },
-    { cle: 'title-tracking', section: '4.3', statut: 'V2', format: em(0.5), versLInterface: '--titre-espacement' },
-    { cle: 'kicker-tracking', section: '4.3', statut: 'V2', format: em(0.6), versLInterface: '--surtitre-espacement' },
+    { cle: 'title-tracking', section: '4.3', statut: 'LU', personnalites: true, format: em(0.5), versLInterface: '--titre-espacement' },
+    { cle: 'kicker-tracking', section: '4.3', statut: 'LU', personnalites: true, format: em(0.6), versLInterface: '--surtitre-espacement' },
     {
-        cle: 'title-transform', section: '4.3', statut: 'V2',
+        cle: 'title-transform', section: '4.3', statut: 'LU', personnalites: true,
         format: { type: 'choix', valeurs: ['none', 'uppercase', 'small-caps'] }, versLInterface: '--titre-casse',
     },
 
@@ -154,8 +154,8 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'radius-sm', section: '4.5', statut: 'LU', personnalites: true, format: px(12), versLInterface: '--rayon-sm' },
     { cle: 'radius-md', section: '4.5', statut: 'LU', personnalites: true, format: px(20), versLInterface: '--rayon-md' },
     { cle: 'radius-lg', section: '4.5', statut: 'LU', personnalites: true, format: px(32), versLInterface: '--rayon-lg' },
-    { cle: 'border-width', section: '4.5', statut: 'V2', format: px(3), versLInterface: '--bordure-largeur' },
-    { cle: 'border-style', section: '4.5', statut: 'V2', format: { type: 'choix', valeurs: ['solid', 'double'] }, versLInterface: '--bordure-style' },
+    { cle: 'border-width', section: '4.5', statut: 'LU', personnalites: true, format: px(3), versLInterface: '--bordure-largeur' },
+    { cle: 'border-style', section: '4.5', statut: 'LU', personnalites: true, format: { type: 'choix', valeurs: ['solid', 'double'] }, versLInterface: '--bordure-style' },
 
     // § 4.6 · Relief et lumière
     { cle: 'elevation-1', section: '4.6', statut: 'LU', personnalites: true, format: OMBRE, versLInterface: '--elev-1' },
@@ -177,7 +177,7 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
 
     // § 7 · Matières
     { cle: 'texture-bg', section: '7', statut: 'LU', personnalites: true, format: MATIERE, versLInterface: '--texture-fond' },
-    { cle: 'texture-panel', section: '7', statut: 'V2', format: MATIERE, versLInterface: '--texture-panneau' },
+    { cle: 'texture-panel', section: '7', statut: 'LU', personnalites: true, format: MATIERE, versLInterface: '--texture-panneau' },
     {
         cle: 'texture-opacity', section: '7', statut: 'LU', personnalites: true,
         format: { type: 'nombre', min: 0, max: 0.35 }, versLInterface: '--texture-opacite',

@@ -5450,7 +5450,7 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
 
 ⭐ **Où on en est — 2026-09-29** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
 à P1.7 faits**, **T2.5 tranché — David adopte les personnalités** (2026-09-29), et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
-soixantaine d'écrans retenus dans `stitch/`). **Reprendre à la phase 3** (grammaire d'écran, `<Panneau>`, éprouvés sur le lot L1) — voir le
+soixantaine d'écrans retenus dans `stitch/`). **Phase 3 faite le 2026-09-30** ([plan](./2026-09-30-refonte-phase-3.md)) : le socle, la vitrine, le contrat v1.5. **Reprendre à la phase 4, lot L1** (Combat, Dés, Image) — voir le
 [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
@@ -5843,6 +5843,12 @@ v1.2.
      système à dés ordinaires lance par la face (nom accessible « d20 d20 »).
   Le Secret de Milo prend le thème ; son interrupteur de campagne est éprouvé. Avertissements
   restants, pour RPG Theme Builder un jour : trois couleurs d'état trop proches (V2).
+- ✅ **Phase 3 faite le 2026-09-30** — [plan et bilan](./2026-09-30-refonte-phase-3.md). Le socle
+  (`src/components/socle/` : panneau, bouton, tuile, jauge, étiquette, en-tête, gabarit,
+  séparateur, ornement), les **ornements** (§ 8) chargés et posés, la **vitrine du socle**
+  (`Ctrl+K` → « vitrine »), et le **contrat v1.5 : plus aucun jeton V2**. Décisions de David : la
+  vitrine est un écran, les ornements avec parcimonie, ceux des thèmes de base dès maintenant.
+  40 références identiques. ⚠️ **Cahier v1.5 à recharger dans RPG Theme Builder.**
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.

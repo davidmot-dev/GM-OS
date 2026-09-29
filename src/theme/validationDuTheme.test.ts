@@ -72,8 +72,9 @@ describe('validerLeTheme — le cas normal', () => {
     it('range les jetons par ce que GM-OS en fait', () => {
         const { jetons } = valider(feuille({ 'font-scale': '1.1', invente: '#ffffff' }));
         expect(jetons.appliques).toEqual(expect.arrayContaining(['bg', 'accent', 'font-display', 'font-scale']));
-        expect(jetons.avecLesPersonnalites).toEqual(expect.arrayContaining(['radius-sm', 'glass-bg', 'texture-bg']));
-        expect(jetons.annonces).toEqual(expect.arrayContaining(['danger', 'texture-panel']));
+        expect(jetons.avecLesPersonnalites).toEqual(expect.arrayContaining(['radius-sm', 'glass-bg', 'texture-bg', 'danger', 'texture-panel']));
+        // Contrat v1.5 : plus aucun jeton annoncé — tout ce que le contrat promet est appliqué.
+        expect(jetons.annonces).toEqual([]);
         expect(jetons.sansEffet).toEqual(expect.arrayContaining(['paper', 'ink', 'accent-2', 'font-ui']));
         expect(jetons.lusParPersonne).toEqual(['invente']);
     });
