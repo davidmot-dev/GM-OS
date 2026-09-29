@@ -58,3 +58,25 @@ describe('les couleurs brutes', () => {
         },
     );
 });
+
+/**
+ * **Le socle naît sans couleur brute** — refonte, phase 3, 2026-09-30.
+ *
+ * Les composants de `components/socle/` sont les seuls à connaître la forme,
+ * et ils la lisent dans le thème. Une couleur de la palette Tailwind écrite en
+ * dur y serait une couleur que ni un thème de base ni un jeu ne peut habiller —
+ * et chaque module migré en hériterait. *Une garde posée après coup ne protège
+ * que ce qui reste à faire.*
+ */
+describe('le socle, sans couleur brute', () => {
+    const SOCLE = path.join(SRC, 'components', 'socle');
+    const fichiers = fs.readdirSync(SOCLE).filter(n => fichierCompte(n));
+
+    it('le socle existe', () => {
+        expect(fichiers.length).toBeGreaterThanOrEqual(8);
+    });
+
+    it.each(fichiers)('%s ne contient aucune couleur brute', (nom) => {
+        expect(compterLesCouleursBrutes(fs.readFileSync(path.join(SOCLE, nom), 'utf-8'))).toBe(0);
+    });
+});
