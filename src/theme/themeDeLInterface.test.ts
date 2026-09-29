@@ -8,7 +8,9 @@ import {
     STYLE_DU_CADRE,
     type ThemeID,
 } from './themeDeLInterface';
-import { VARIABLE_DU_JETON } from './contratDuTheme';
+import { VARIABLE_DU_JETON, JETONS_LUS_A_PART } from './contratDuTheme';
+// @ts-expect-error — la configuration Tailwind est du JavaScript, sans déclaration de types.
+import configTailwind from '../../tailwind.config.js';
 
 /**
  * **La réconciliation des deux tables de thèmes — étape 1 de l'axe « thème par
@@ -81,7 +83,7 @@ describe('la table unique', () => {
     it('un thème de base ne déclare que des jetons du contrat qui atteignent l’écran', () => {
         for (const t of THEMES) {
             for (const cle of Object.keys(PALETTES[t].jetons)) {
-                expect(VARIABLE_DU_JETON[cle], `${t} : --rpg-${cle}`).toBeTruthy();
+                expect(VARIABLE_DU_JETON[cle] || JETONS_LUS_A_PART.includes(cle), `${t} : --rpg-${cle}`).toBeTruthy();
             }
         }
     });
@@ -361,5 +363,78 @@ describe('P1.2 · les dérivées, une fois le jeu posé', () => {
         expect(r.style.getPropertyValue('--app-frame-bg')).toBe('#343434');
         expect(r.style.getPropertyValue('--app-frame-text')).toBe(PALETTES.cyberpunk.jetons.text);
         expect(r.style.getPropertyValue('--app-frame-accent')).toBe(PALETTES.cyberpunk.jetons.accent);
+    });
+});
+
+/**
+ * **P1.4 · La forme et le relief** — refonte, phase 1, 2026-09-29.
+ *
+ * Les arrondis, les ombres et la police du corps de Tailwind lisent désormais
+ * des variables du thème (`--rayon-*`, `--elev-*`, `--font-body`), avec **la
+ * valeur de Tailwind 4 en repli**. Aucun thème de base n'en déclare : l'écran
+ * ne change pas.
+ */
+describe('P1.4 · la forme et le relief', () => {
+    const extension = (configTailwind as { theme: { extend: Record<string, Record<string, string | string[]>> } }).theme.extend;
+
+    it('aucun thème de base ne déclare de rayon ni d’élévation — le repli de Tailwind reste', () => {
+        for (const t of THEMES) {
+            const v = variablesDuTheme(PALETTES[t], PALETTES[t].jetons.accent);
+            for (const nom of Object.keys(v)) expect(nom, t).not.toMatch(/^--(rayon|elev)-|^--font-body$/);
+        }
+    });
+
+    /** Un jeton écrit d'un côté et lu de l'autre : l'asymétrie que ce dépôt a payée trois fois. */
+    it('chaque variable lue par Tailwind est écrite par le contrat', () => {
+        const ecrites = new Set(Object.values(VARIABLE_DU_JETON));
+        const lues = [
+            ...Object.values(extension.borderRadius),
+            ...Object.values(extension.boxShadow),
+            ...extension.fontFamily.sans,
+        ].flatMap(v => [...String(v).matchAll(/var\((--(?:rayon|elev|font-body)[\w-]*)/g)].map(m => m[1]));
+        expect(lues.length).toBeGreaterThan(10);
+        for (const l of lues) expect(ecrites.has(l), l).toBe(true);
+    });
+
+    it('les sept crans d’arrondi se rangent en trois familles, repli de Tailwind 4', () => {
+        expect(extension.borderRadius).toMatchObject({
+            sm: 'var(--rayon-sm, 0.25rem)', DEFAULT: 'var(--rayon-sm, 0.25rem)', md: 'var(--rayon-sm, 0.375rem)',
+            lg: 'var(--rayon-md, 0.5rem)', xl: 'var(--rayon-md, 0.75rem)',
+            '2xl': 'var(--rayon-lg, 1rem)', '3xl': 'var(--rayon-lg, 1.5rem)',
+        });
+        expect(extension.borderRadius.full).toBeUndefined();
+    });
+
+    it('les ombres gardent la couleur d’ombre en repli — `shadow-lg shadow-accent/20` marche', () => {
+        for (const [cran, valeur] of Object.entries(extension.boxShadow)) {
+            if (cran.startsWith('glow')) continue;
+            expect(valeur, cran).toMatch(/^var\(--elev-[123], /);
+            expect(valeur, cran).toContain('var(--tw-shadow-color, #');
+        }
+    });
+
+    it('l’ancienne ombre unique sert d’élévation 2 quand celle-ci manque', () => {
+        const avec = { ...PALETTES.modern, jetons: { ...PALETTES.modern.jetons, shadow: '0 2px 4px #000' } };
+        expect(variablesDuTheme(avec, '#3b82f6')['--elev-2']).toBe('0 2px 4px #000');
+        const deux = { ...avec, jetons: { ...avec.jetons, 'elevation-2': '0 9px 9px #111' } };
+        expect(variablesDuTheme(deux, '#3b82f6')['--elev-2']).toBe('0 9px 9px #111');
+    });
+
+    it('le halo suit sa force déclarée, et `glow: none` l’éteint', () => {
+        const force = { ...PALETTES.modern, jetons: { ...PALETTES.modern.jetons, 'glow-strength': '0.2' } };
+        expect(variablesDuTheme(force, '#3b82f6')['--app-accent-glow']).toBe('rgba(59, 130, 246, 0.2)');
+        const eteint = { ...PALETTES.modern, jetons: { ...PALETTES.modern.jetons, glow: 'none' } };
+        expect(completerLesDerivees(variablesDuTheme(eteint, '#3b82f6'))['--app-accent-glow']).toBe('transparent');
+    });
+
+    it('un thème qui ne déclare plus un rayon l’efface du document', () => {
+        const r = document.documentElement;
+        r.removeAttribute('style');
+        r.style.setProperty('--rayon-md', '12px');
+        r.style.setProperty('--font-body', '"Garamond", serif');
+        appliquerLeTheme('cyberpunk');
+        expect(r.style.getPropertyValue('--rayon-md')).toBe('');
+        expect(r.style.getPropertyValue('--font-body')).toBe('');
+        expect(r.style.getPropertyValue('--app-accent')).toBe(PALETTES.cyberpunk.jetons.accent);
     });
 });

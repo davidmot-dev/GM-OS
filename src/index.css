@@ -420,15 +420,17 @@ pre {
   font-family: inherit;
 }
 
+/* Le texte courant prend la police du corps, qui retombe sur celle des titres
+   quand le thème n'en déclare pas — l'écran d'aujourd'hui (P1.4, 2026-09-29). */
 body, #root, .theme-root {
-  font-family: var(--font-display);
+  font-family: var(--font-body, var(--font-display));
 }
 
 
 body {
   background-color: var(--app-bg);
   color: var(--app-text);
-  font-family: var(--font-display);
+  font-family: var(--font-body, var(--font-display));
   letter-spacing: -0.01em;
   margin: 0;
   -webkit-font-smoothing: antialiased;

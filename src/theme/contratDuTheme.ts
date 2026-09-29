@@ -69,7 +69,9 @@ export interface JetonDuContrat {
      * sans que le jeu le pilote : c'est passer à LU qui le lui ouvre.
      *
      * Les échelles de taille sont LU sans variable : elles ont leur propre
-     * application, dans `themeDeLInterface.ts`.
+     * application, dans `themeDeLInterface.ts`. Deux jetons du relief aussi
+     * (`JETONS_LUS_A_PART`) : `shadow` sert d'`elevation-2` quand elle manque,
+     * `glow-strength` règle l'opacité du halo dérivé de l'accent.
      */
     versLInterface?: string;
 }
@@ -119,11 +121,14 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     // § 4.3 · Typographie
     { cle: 'font-display', section: '4.3', statut: 'LU', obligatoire: true, format: PILE, versLInterface: '--font-display' },
     { cle: 'font-mono', section: '4.3', statut: 'LU', format: PILE, versLInterface: '--font-mono' },
-    { cle: 'font-body', section: '4.3', statut: 'V2', format: PILE },
+    { cle: 'font-body', section: '4.3', statut: 'V2', format: PILE, versLInterface: '--font-body' },
     { cle: 'font-ui', section: '4.3', statut: 'SDK', format: PILE },
-    { cle: 'title-tracking', section: '4.3', statut: 'V2', format: em(0.5) },
-    { cle: 'kicker-tracking', section: '4.3', statut: 'V2', format: em(0.6) },
-    { cle: 'title-transform', section: '4.3', statut: 'V2', format: { type: 'choix', valeurs: ['none', 'uppercase', 'small-caps'] } },
+    { cle: 'title-tracking', section: '4.3', statut: 'V2', format: em(0.5), versLInterface: '--titre-espacement' },
+    { cle: 'kicker-tracking', section: '4.3', statut: 'V2', format: em(0.6), versLInterface: '--surtitre-espacement' },
+    {
+        cle: 'title-transform', section: '4.3', statut: 'V2',
+        format: { type: 'choix', valeurs: ['none', 'uppercase', 'small-caps'] }, versLInterface: '--titre-casse',
+    },
 
     // § 4.4 · Tailles du texte
     { cle: 'font-scale', section: '4.4', statut: 'LU', format: ECHELLE },
@@ -133,18 +138,18 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'scale-mono', section: '4.4', statut: 'LU', format: ECHELLE },
 
     // § 4.5 · Forme
-    { cle: 'radius-sm', section: '4.5', statut: 'V2', format: px(12) },
-    { cle: 'radius-md', section: '4.5', statut: 'V2', format: px(20) },
-    { cle: 'radius-lg', section: '4.5', statut: 'V2', format: px(32) },
-    { cle: 'border-width', section: '4.5', statut: 'V2', format: px(3) },
-    { cle: 'border-style', section: '4.5', statut: 'V2', format: { type: 'choix', valeurs: ['solid', 'double'] } },
+    { cle: 'radius-sm', section: '4.5', statut: 'V2', format: px(12), versLInterface: '--rayon-sm' },
+    { cle: 'radius-md', section: '4.5', statut: 'V2', format: px(20), versLInterface: '--rayon-md' },
+    { cle: 'radius-lg', section: '4.5', statut: 'V2', format: px(32), versLInterface: '--rayon-lg' },
+    { cle: 'border-width', section: '4.5', statut: 'V2', format: px(3), versLInterface: '--bordure-largeur' },
+    { cle: 'border-style', section: '4.5', statut: 'V2', format: { type: 'choix', valeurs: ['solid', 'double'] }, versLInterface: '--bordure-style' },
 
     // § 4.6 · Relief et lumière
-    { cle: 'elevation-1', section: '4.6', statut: 'V2', format: OMBRE },
-    { cle: 'elevation-2', section: '4.6', statut: 'V2', format: OMBRE },
-    { cle: 'elevation-3', section: '4.6', statut: 'V2', format: OMBRE },
+    { cle: 'elevation-1', section: '4.6', statut: 'V2', format: OMBRE, versLInterface: '--elev-1' },
+    { cle: 'elevation-2', section: '4.6', statut: 'V2', format: OMBRE, versLInterface: '--elev-2' },
+    { cle: 'elevation-3', section: '4.6', statut: 'V2', format: OMBRE, versLInterface: '--elev-3' },
     { cle: 'shadow', section: '4.6', statut: 'V2', format: OMBRE },
-    { cle: 'glow', section: '4.6', statut: 'V2', format: { type: 'halo' } },
+    { cle: 'glow', section: '4.6', statut: 'V2', format: { type: 'halo' }, versLInterface: '--app-accent-glow' },
     { cle: 'glow-strength', section: '4.6', statut: 'V2', format: { type: 'nombre', min: 0, max: 1 } },
 
     // § 4.7 · Transparence et verre
@@ -172,6 +177,12 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
 export const VARIABLE_DU_JETON: Readonly<Record<string, string>> = Object.fromEntries(
     JETONS_DU_CONTRAT.filter(j => j.versLInterface).map(j => [j.cle, j.versLInterface!]),
 );
+
+/**
+ * **Les jetons lus sans variable à eux** — ils modifient celle d'un autre.
+ * `themeDeLInterface.ts` les applique ; un thème de base peut les déclarer.
+ */
+export const JETONS_LUS_A_PART: readonly string[] = ['shadow', 'glow-strength'];
 
 /** Le jeton du contrat qui porte ce nom, ou `undefined` s'il n'est lu par personne. */
 export function jetonDuContrat(cle: string): JetonDuContrat | undefined {

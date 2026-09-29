@@ -157,6 +157,24 @@ tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, e
   `--font-body`, dont la valeur neutre est… la police des titres. Le Médiéval pourra ensuite écrire
   en Garamond et titrer en Cinzel.
 - **Preuve** : captures identiques.
+- ✅ **Fait le 2026-09-29.** Les 20 captures passent ; les replis sont **relevés dans le CSS
+  compilé par Tailwind 4**, pas de mémoire, et un essai les fige cran par cran. ⚠️ Le filet tolère
+  0,5 % de pixels : un arrondi faux de 1 px pourrait passer dessous. Ce qui a été tranché :
+  - **David : les crans se rangent par familles.** Petit (`sm`, `rounded`, `md`), moyen (`lg`, `xl`
+    — 1 462 emplois), grand (`2xl`, `3xl`). *« Les cartes font 12 px », toutes* ; `lg` et `xl` se
+    confondent sous une personnalité. Les ombres de même : posé (`sm`, `shadow`), flottant (`md`,
+    `lg`), dialogue (`xl`, `2xl`) ;
+  - **le repli des ombres garde `var(--tw-shadow-color)`** : c'est ce qui fait marcher
+    `shadow-lg shadow-accent/20`. Une élévation déclarée apporte ses propres couleurs ;
+  - `--rayon-*`, `--elev-*` et `--font-body` ne sont **écrits que si un thème les déclare** ;
+    `appliquerLeTheme` efface désormais toute variable du contrat que le thème ne déclare plus
+    (sans quoi quitter une personnalité laisserait ses arrondis) ;
+  - `shadow` sert d'`elevation-2` quand elle manque, `glow-strength` règle l'opacité du halo dérivé
+    (`JETONS_LUS_A_PART`) ; `glow: none` devient `transparent` — `none` n'est pas une couleur ;
+  - bordure et typographie des titres (`--bordure-*`, `--titre-*`, `--surtitre-espacement`) :
+    posées, lues par personne avant les primitives (phase 3) ;
+  - ⚠️ **pour P1.6** : quand ces jetons passeront à LU, un jeu pourra piloter le halo ; la
+    traduction de `none` est déjà faite après la fusion, pour lui aussi.
 
 ### P1.5 · Le verre et les matières — à pixel constant
 

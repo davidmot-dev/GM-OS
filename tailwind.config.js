@@ -67,7 +67,8 @@ export default {
                 outfit: ['Outfit', 'sans-serif'],
                 // Typographie technique et lisible
                 mono: ['"JetBrains Mono"', 'monospace'],
-                sans: ['var(--font-display)', 'Inter', 'sans-serif'],
+                // P1.4 : le corps a sa police, qui retombe sur celle des titres — l'écran d'aujourd'hui.
+                sans: ['var(--font-body, var(--font-display))', 'Inter', 'sans-serif'],
                 display: ['var(--font-display)', 'Outfit', 'Orbitron', 'sans-serif'],
 
                 cinematic: ['"Noto Serif"', 'serif'],
@@ -78,7 +79,41 @@ export default {
                 fraktur: ['"UnifrakturMaguntia"', 'cursive'],
                 cinzel: ['"Cinzel"', 'serif'],
             },
+            /*
+              **La forme, pilotée par le thème — P1.4 de la refonte, 2026-09-29.**
+
+              Les sept crans se rangent en trois familles, celles du contrat
+              (§ 4.5) — décision de David : *« les cartes font 12 px », toutes*.
+              Petit (badges, champs) : sm, DEFAULT, md. Moyen (boutons, cartes) :
+              lg, xl. Grand (panneaux) : 2xl, 3xl. `rounded-full` et
+              `rounded-none` ne bougent jamais.
+
+              **Le repli est la valeur de Tailwind 4, au caractère près** : tant
+              qu'un thème ne déclare pas de rayon, rien ne change à l'écran.
+            */
+            borderRadius: {
+                sm: 'var(--rayon-sm, 0.25rem)',
+                DEFAULT: 'var(--rayon-sm, 0.25rem)',
+                md: 'var(--rayon-sm, 0.375rem)',
+                lg: 'var(--rayon-md, 0.5rem)',
+                xl: 'var(--rayon-md, 0.75rem)',
+                '2xl': 'var(--rayon-lg, 1rem)',
+                '3xl': 'var(--rayon-lg, 1.5rem)',
+            },
             boxShadow: {
+                /*
+                  **Le relief, par trois élévations** (§ 4.6) : posé (sm, DEFAULT),
+                  flottant (md, lg), dialogue (xl, 2xl). Le repli est l'ombre de
+                  Tailwind 4, et il garde `var(--tw-shadow-color)` : c'est ce qui
+                  fait marcher `shadow-lg shadow-accent/20`. Une élévation déclarée
+                  par le thème apporte ses propres couleurs.
+                */
+                sm: 'var(--elev-1, 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a))',
+                DEFAULT: 'var(--elev-1, 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a))',
+                md: 'var(--elev-2, 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a))',
+                lg: 'var(--elev-2, 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a))',
+                xl: 'var(--elev-3, 0 20px 25px -5px var(--tw-shadow-color, #0000001a), 0 8px 10px -6px var(--tw-shadow-color, #0000001a))',
+                '2xl': 'var(--elev-3, 0 25px 50px -12px var(--tw-shadow-color, #00000040))',
                 // Effets de lueur Glow pour l'immersion
                 'glow-gold': '0 0 15px -3px rgba(234, 179, 8, 0.4)',
                 'glow-cyan': '0 0 15px -3px rgba(6, 182, 212, 0.4)',

@@ -257,6 +257,12 @@ export function composantesRVB(hex: string): string | null {
  * jeton ajouté au paquet d'un thème de base, et qui a sa variable dans le
  * contrat, atteint l'écran sans une ligne de plus ici.
  */
+/** L'opacité du halo : le jeton borné de 0 à 1, ou 0,45 s'il est absent ou illisible. */
+function forceDuHalo(jeton: string | undefined): number {
+    const n = jeton === undefined ? NaN : Number(jeton);
+    return Number.isFinite(n) ? Math.min(1, Math.max(0, n)) : 0.45;
+}
+
 export function variablesDuTheme(
     theme: ThemeDeBase,
     accentEffectif: string,
@@ -279,16 +285,26 @@ export function variablesDuTheme(
     if (!theme.jetons['border-soft']) {
         vars['--app-border-soft'] = 'color-mix(in oklab, var(--app-border) 50%, transparent)';
     }
+    // § 4.6 : l'ancienne ombre unique sert d'élévation 2 quand celle-ci manque.
+    if (theme.jetons.shadow && !theme.jetons['elevation-2']) {
+        vars['--elev-2'] = theme.jetons.shadow;
+    }
 
     /*
       **Dérivées, et seulement quand l'accent est lisible.** Une couleur qu'on
       n'a pas su décomposer laisse les deux variables intactes : mieux vaut une
       lueur d'un instant en retard qu'une lueur transparente sur toute
       l'interface.
+
+      Le halo déclaré par le thème (`glow`) passe devant ; sinon il se dérive
+      de l'accent, à la force du thème (`glow-strength`), 0,45 par défaut —
+      l'écran d'aujourd'hui.
     */
     if (rvb) {
         vars['--app-accent-rgb'] = rvb;
-        vars['--app-accent-glow'] = `rgba(${rvb}, 0.45)`;
+        if (!theme.jetons.glow) {
+            vars['--app-accent-glow'] = `rgba(${rvb}, ${forceDuHalo(theme.jetons['glow-strength'])})`;
+        }
     }
 
     return vars;
@@ -368,6 +384,18 @@ export function appliquerLeTheme(
     for (const [nom, valeur] of Object.entries(vars)) {
         racine.style.setProperty(nom, valeur);
     }
+    /*
+      **Ce que le thème ne déclare plus s'efface** — P1.4, 2026-09-29.
+
+      Les rayons, les élévations, la police du corps n'ont de valeur que si un
+      thème en déclare : absents, la feuille retombe sur Tailwind. Mais un
+      style posé reste posé — quitter un thème qui avait des rayons les
+      laisserait à l'écran. *Ne rien dire doit laisser la même page que
+      n'avoir jamais rien dit* : la règle des bandes de taille, plus bas.
+    */
+    for (const variable of new Set(Object.values(VARIABLE_DU_JETON))) {
+        if (!(variable in vars)) racine.style.removeProperty(variable);
+    }
 
     /*
       **L'échelle de texte du jeu — extension GM-OS, posée le 2026-09-03.**
@@ -441,6 +469,12 @@ export function completerLesDerivees(
 ): Record<string, string> {
     const v = { ...vars };
     if (mutedDuJeu) v['--app-text-subtle'] = `color-mix(in srgb, ${mutedDuJeu} 70%, ${v['--app-bg']})`;
+    /*
+      **`glow: none` éteint le halo** (§ 4.6). `none` n'est pas une couleur :
+      posé tel quel, il invaliderait chaque `box-shadow` qui le lit. Traduit ici,
+      après la fusion, pour le thème de base comme pour le jeu.
+    */
+    if (v['--app-accent-glow']?.trim() === 'none') v['--app-accent-glow'] = 'transparent';
 
     const cadreDeclare = v['--app-frame-bg'] !== undefined || v['--app-frame-text'] !== undefined;
     const fond = v['--app-frame-bg'] ??= v['--app-bg'];
