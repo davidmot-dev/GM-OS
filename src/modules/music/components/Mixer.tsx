@@ -140,7 +140,7 @@ const Mixer: React.FC = () => {
                 <div className="space-y-1">
                     <div className="flex items-center justify-between px-1">
                         <div className="flex flex-col">
-                            <span className="text-ui-9 font-black text-slate-500 uppercase tracking-widest">Master</span>
+                            <span className="text-ui-9 font-black text-app-subtle uppercase tracking-widest">Master</span>
                             <span className="text-ui-7 font-black text-accent uppercase tracking-widest opacity-60">Engine</span>
                         </div>
                         <div className="flex items-baseline gap-0.5">
@@ -195,7 +195,7 @@ const Mixer: React.FC = () => {
                     <div className="flex justify-between items-center w-full max-w-[200px] gap-3">
                         <button
                             onClick={async () => await triggerAutoFade('A')}
-                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-app-subtle hover:text-white hover:border-accent/30'}`}
                         >
                             A
                         </button>
@@ -204,7 +204,7 @@ const Mixer: React.FC = () => {
                         </div>
                         <button
                             onClick={async () => await triggerAutoFade('B')}
-                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-slate-500 hover:text-white hover:border-accent/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-app-subtle hover:text-white hover:border-accent/30'}`}
                         >
                             B
                         </button>
@@ -266,7 +266,7 @@ const Mixer: React.FC = () => {
                 <div className="space-y-1">
                     <div className="flex items-center justify-between px-1">
                         <div className="flex flex-col">
-                            <span className="text-ui-9 font-black text-slate-500 uppercase tracking-widest">Logic</span>
+                            <span className="text-ui-9 font-black text-app-subtle uppercase tracking-widest">Logic</span>
                             <span className="text-ui-7 font-black text-slate-600 uppercase tracking-widest opacity-60">Fade</span>
                         </div>
                         <div className="flex items-baseline gap-0.5">

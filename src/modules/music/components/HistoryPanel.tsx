@@ -9,7 +9,7 @@ const HistoryPanel: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 bg-slate-900/60 rounded-3xl border border-white/5 p-6 backdrop-blur-md">
             {/* History Section (Left) */}
             <div className="flex flex-col min-h-0">
-                <div className="flex items-center gap-2 mb-4 text-slate-400">
+                <div className="flex items-center gap-2 mb-4 text-app-muted">
                     <div className="size-6 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-500">
                         <History size={14} />
                     </div>
@@ -27,7 +27,7 @@ const HistoryPanel: React.FC = () => {
                                 style={{ opacity: 1 - (i * 0.1) }}
                             >
                                 <div className="size-1.5 rounded-full bg-slate-700 group-hover:bg-teal-500 transition-colors" />
-                                <span className="text-xs text-slate-400 truncate font-medium group-hover:text-white transition-colors">
+                                <span className="text-xs text-app-muted truncate font-medium group-hover:text-white transition-colors">
                                     {track}
                                 </span>
                             </div>
@@ -38,7 +38,7 @@ const HistoryPanel: React.FC = () => {
 
             {/* Console Logs Section (Right) */}
             <div className="flex flex-col min-h-0 border-l border-white/5 pl-6">
-                <div className="flex items-center gap-2 mb-4 text-slate-400">
+                <div className="flex items-center gap-2 mb-4 text-app-muted">
                     <div className="size-6 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                         <Terminal size={14} />
                     </div>
@@ -50,7 +50,7 @@ const HistoryPanel: React.FC = () => {
                         <p className="text-slate-700 italic">Engine initializing...</p>
                     ) : (
                         consoleLogs.map((log, i) => (
-                            <div key={i} className="text-slate-500 flex items-start gap-2 py-0.5 border-l-2 border-primary/20 pl-2 hover:bg-white/[0.02] transition-colors rounded-sm">
+                            <div key={i} className="text-app-subtle flex items-start gap-2 py-0.5 border-l-2 border-primary/20 pl-2 hover:bg-white/[0.02] transition-colors rounded-sm">
                                 <span className="text-primary/40 shrink-0">
                                     <Clock size={10} className="inline mr-1" />
                                 </span>

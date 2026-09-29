@@ -144,7 +144,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
 
                 <div className="flex-1 min-w-0 space-y-0.5">
                     <div className="flex items-center gap-2">
-                        <span className={`px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-accent/20 border-accent text-white shadow-glow-accent/20' : 'bg-app-surface/60 border-app-border/50 text-slate-500'}`}>
+                        <span className={`px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-accent/20 border-accent text-white shadow-glow-accent/20' : 'bg-app-surface/60 border-app-border/50 text-app-subtle'}`}>
                             DRK {side}
                         </span>
 
@@ -280,7 +280,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                             onClick={() => poserLePoint('entree')}
                             disabled={duration <= 0}
                             title="Poser l'entrée de la plage à la position actuelle"
-                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-slate-500 hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-app-subtle hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             Entrée
                         </button>
@@ -288,7 +288,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                             onClick={() => poserLePoint('sortie')}
                             disabled={duration <= 0}
                             title="Poser la sortie de la plage à la position actuelle"
-                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-slate-500 hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-app-subtle hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             Sortie
                         </button>

@@ -173,7 +173,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
 
             {/* Keybind Indicator */}
             {keyLabel && (
-                <div className={`absolute top-2 left-2 border text-ui-7 font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-cyan-900 text-cyan-400 border-cyan-500' : 'bg-app-bg text-slate-500 border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
+                <div className={`absolute top-2 left-2 border text-ui-7 font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-cyan-900 text-cyan-400 border-cyan-500' : 'bg-app-bg text-app-subtle border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
                     {keyLabel}
                 </div>
             )}
@@ -201,7 +201,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             </div>
 
             <div className="mt-3 px-3 w-full text-center">
-                <span className={`text-ui-10 font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-white drop-shadow-sm' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                <span className={`text-ui-10 font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-white drop-shadow-sm' : 'text-app-subtle group-hover:text-slate-300'}`}>
                     {pad.label}
                 </span>
                 {/*
@@ -272,7 +272,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                   auraient aggravé exactement ça.
                 */
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[13rem] max-h-[22rem] bg-app-bg/98 border border-app-border/60 shadow-2xl z-50 flex flex-col items-center justify-start p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200 overflow-y-auto custom-scrollbar">
-                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-9 font-black text-slate-500 mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
+                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-9 font-black text-app-subtle mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
                     <button
                         onClick={handleEdit}
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-accent hover:border-accent text-ui-10 font-black uppercase tracking-widest transition-all"
@@ -416,7 +416,7 @@ const PlaylistManager: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
                 <Music size={32} strokeWidth={1} className="text-slate-700" />
-                <p className="text-ui-10 font-black uppercase tracking-widest text-slate-500">
+                <p className="text-ui-10 font-black uppercase tracking-widest text-app-subtle">
                     Aucune atmosphère pour cette campagne
                 </p>
                 <p className="text-ui-10 text-slate-600 max-w-sm leading-relaxed">

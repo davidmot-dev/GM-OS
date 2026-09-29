@@ -141,7 +141,7 @@ const MusicHeader: React.FC = () => {
                                     }}
                                     className={`flex items-center gap-2.5 px-4 py-2 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all relative ${currentId === p.id
                                         ? 'bg-accent text-white shadow-glow-accent'
-                                        : 'text-slate-500 hover:text-slate-300 hover:bg-app-surface/5'}`}
+                                        : 'text-app-subtle hover:text-slate-300 hover:bg-app-surface/5'}`}
                                     title={`${infobulleDuGenre[genre]}\nDouble-clic pour renommer, Clic-droit pour supprimer`}
                                 >
                                     {getIcon(p.name)}
@@ -157,7 +157,7 @@ const MusicHeader: React.FC = () => {
                         title={campagneId
                             ? "Nouvelle atmosphère, rattachée à la campagne ouverte"
                             : "Nouvelle atmosphère commune (aucune campagne ouverte)"}
-                        className="size-9 shrink-0 flex items-center justify-center rounded-xl bg-app-surface/5 border border-app-border/50 text-slate-500 hover:text-white hover:bg-accent/20 hover:border-accent/30 transition-all"
+                        className="size-9 shrink-0 flex items-center justify-center rounded-xl bg-app-surface/5 border border-app-border/50 text-app-subtle hover:text-white hover:bg-accent/20 hover:border-accent/30 transition-all"
                     >
                         <Plus size={14} />
                     </button>
@@ -193,7 +193,7 @@ const MusicHeader: React.FC = () => {
                                                 : `Rattacher "${active.name}" à la campagne ouverte — elle n'apparaîtra plus ailleurs`}
                                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${actif
                                             ? 'bg-accent text-white shadow-glow-accent'
-                                            : 'text-slate-500 hover:text-slate-200 hover:bg-app-surface/60'}`}
+                                            : 'text-app-subtle hover:text-slate-200 hover:bg-app-surface/60'}`}
                                     >
                                         {icone}
                                         <span>{texte}</span>
@@ -222,7 +222,7 @@ const MusicHeader: React.FC = () => {
                             onClick={toggleKeyLearn}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${isKeyLearnActive 
                                 ? 'bg-cyan-900/40 border-cyan-500 text-cyan-400 shadow-glow-cyan' 
-                                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'}`}
+                                : 'text-app-subtle hover:text-slate-300 hover:bg-white/5'}`}
                         >
                             <Keyboard size={10} />
                             <span>KEY LEARN</span>
@@ -233,7 +233,7 @@ const MusicHeader: React.FC = () => {
                     <div className="relative device-selector">
                         <button
                             onClick={() => setIsDeviceMenuOpen(!isDeviceMenuOpen)}
-                            className={`flex items-center gap-3 bg-app-surface/40 border rounded-xl px-4 py-2 text-ui-8 font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-white shadow-glow-accent/30' : 'border-app-border/50 text-slate-500 hover:border-app-border/10 hover:text-slate-300'}`}
+                            className={`flex items-center gap-3 bg-app-surface/40 border rounded-xl px-4 py-2 text-ui-8 font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-white shadow-glow-accent/30' : 'border-app-border/50 text-app-subtle hover:border-app-border/10 hover:text-slate-300'}`}
                         >
                             <span className="truncate max-w-[120px]">{currentDeviceLabel}</span>
                             <ChevronDown size={12} className={`transition-transform duration-300 ${isDeviceMenuOpen ? 'rotate-180 text-accent' : ''}`} />
@@ -244,7 +244,7 @@ const MusicHeader: React.FC = () => {
                                 <div className="max-h-60 overflow-y-auto custom-scrollbar">
                                     <button
                                         onClick={() => { setOutputDevice('default'); setIsDeviceMenuOpen(false); }}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-white' : 'text-slate-400 hover:bg-app-surface/5 hover:text-white'}`}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-white' : 'text-app-muted hover:bg-app-surface/5 hover:text-white'}`}
                                     >
                                         <span>Default Speaker</span>
                                         {outputDeviceId === 'default' && <Check size={12} className="text-gm-violet" />}
@@ -256,7 +256,7 @@ const MusicHeader: React.FC = () => {
                                         <button
                                             key={device.deviceId}
                                             onClick={() => { setOutputDevice(device.deviceId); setIsDeviceMenuOpen(false); }}
-                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-app-muted hover:bg-white/5 hover:text-white'}`}
                                         >
                                             <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                             {outputDeviceId === device.deviceId && <Check size={12} className="text-gm-violet" />}

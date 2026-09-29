@@ -103,7 +103,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
     }, [touche, playlists, pad]);
 
     if (!pad) {
-        return <div className="text-ui-10 text-slate-500 p-4">Cette pastille n'existe plus.</div>;
+        return <div className="text-ui-10 text-app-subtle p-4">Cette pastille n'existe plus.</div>;
     }
 
     const enregistrer = () => {
@@ -136,7 +136,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
         <div className="flex flex-col gap-5 p-1">
             {/* Le nom */}
             <label className="flex flex-col gap-1.5">
-                <span className="text-ui-9 font-black uppercase tracking-widest text-slate-500">Nom</span>
+                <span className="text-ui-9 font-black uppercase tracking-widest text-app-subtle">Nom</span>
                 <input
                     ref={champDuNom}
                     value={nom}
@@ -148,7 +148,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
 
             {/* La couleur */}
             <div className="flex flex-col gap-1.5">
-                <span className="text-ui-9 font-black uppercase tracking-widest text-slate-500">Couleur</span>
+                <span className="text-ui-9 font-black uppercase tracking-widest text-app-subtle">Couleur</span>
                 <div className="flex flex-wrap gap-2">
                     {clesDeLaPalette().map((cle) => {
                         const teinte = COULEURS_DE_PASTILLE[cle];
@@ -173,7 +173,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
 
             {/* La touche */}
             <div className="flex flex-col gap-1.5">
-                <span className="text-ui-9 font-black uppercase tracking-widest text-slate-500">Touche</span>
+                <span className="text-ui-9 font-black uppercase tracking-widest text-app-subtle">Touche</span>
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => setEnEcoute(true)}
@@ -217,7 +217,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
             <div className="flex gap-2 pt-1">
                 <button
                     onClick={onClose}
-                    className="flex-1 py-2.5 rounded-xl bg-app-surface border border-app-border/50 text-ui-10 font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all"
+                    className="flex-1 py-2.5 rounded-xl bg-app-surface border border-app-border/50 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-white transition-all"
                 >
                     Annuler
                 </button>
