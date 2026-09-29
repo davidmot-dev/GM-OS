@@ -218,7 +218,7 @@ export const SceneGrid: React.FC = () => {
                                     title={estLEclairageNormal ? t('light.grid.default_unset_tooltip') : t('light.grid.default_set_tooltip')}
                                     className={`material-symbols-outlined text-sm transition-all ${estLEclairageNormal
                                         ? 'text-accent opacity-100'
-                                        : 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-accent'
+                                        : 'text-app-subtle opacity-0 group-hover:opacity-100 hover:text-accent'
                                         }`}
                                 >
                                     home
@@ -234,7 +234,7 @@ export const SceneGrid: React.FC = () => {
                                     title={scene.keyCode ? t('light.grid.key_change_tooltip') : t('light.grid.key_learn_tooltip')}
                                     className={`text-ui-10 font-mono font-bold leading-none px-1 py-0.5 rounded transition-all ${scene.keyCode
                                         ? 'bg-app-bg/80 text-accent opacity-100'
-                                        : 'text-slate-500 opacity-0 group-hover:opacity-100 hover:text-accent'
+                                        : 'text-app-subtle opacity-0 group-hover:opacity-100 hover:text-accent'
                                         }`}
                                 >
                                     {scene.keyCode ? toucheLisible(scene.keyCode) : '⌨'}
@@ -257,7 +257,7 @@ export const SceneGrid: React.FC = () => {
                                     <span className="text-ui-10 font-bold text-accent uppercase tracking-tight text-center px-2">
                                         {t('light.grid.key_press')}
                                     </span>
-                                    <span className="text-ui-10 text-slate-500">{t('light.grid.key_escape')}</span>
+                                    <span className="text-ui-10 text-app-subtle">{t('light.grid.key_escape')}</span>
                                 </div>
                             )}
 
@@ -286,7 +286,7 @@ export const SceneGrid: React.FC = () => {
                                 onDoubleClick={(e) => e.stopPropagation()}
                             >
                                 <span
-                                    className="material-symbols-outlined text-sm leading-none text-slate-400 shrink-0"
+                                    className="material-symbols-outlined text-sm leading-none text-app-muted shrink-0"
                                     style={{ color: teinte ?? undefined }}
                                 >
                                     light_mode
@@ -304,7 +304,7 @@ export const SceneGrid: React.FC = () => {
                                 <button
                                     onClick={() => handleIntensite(scene.id, INTENSITE_SCENE_DEFAUT)}
                                     title={t('light.grid.brightness_reset_tooltip')}
-                                    className="text-ui-10 font-mono font-bold text-slate-400 hover:text-accent transition-colors leading-none shrink-0 w-8 text-right"
+                                    className="text-ui-10 font-mono font-bold text-app-muted hover:text-accent transition-colors leading-none shrink-0 w-8 text-right"
                                 >
                                     {intensite}%
                                 </button>
@@ -341,7 +341,7 @@ export const SceneGrid: React.FC = () => {
                                         <button
                                             onClick={() => handleSpeed(scene.id, VITESSE_EFFET_DEFAUT)}
                                             title={t('light.grid.speed_reset_tooltip')}
-                                            className="text-ui-10 font-mono font-bold text-slate-400 hover:text-accent transition-colors leading-none"
+                                            className="text-ui-10 font-mono font-bold text-app-muted hover:text-accent transition-colors leading-none"
                                         >
                                             ×{vitesse.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                                         </button>
@@ -365,7 +365,7 @@ export const SceneGrid: React.FC = () => {
                                 className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                 title={t('light.grid.overwrite_tooltip')}
                             >
-                                <span className={`material-symbols-outlined text-sm ${captureEnCours === scene.id ? 'animate-spin text-accent' : 'text-slate-500 hover:text-white'}`}>
+                                <span className={`material-symbols-outlined text-sm ${captureEnCours === scene.id ? 'animate-spin text-accent' : 'text-app-subtle hover:text-white'}`}>
                                     {captureEnCours === scene.id ? 'progress_activity' : 'photo_camera'}
                                 </span>
                             </div>
@@ -375,7 +375,7 @@ export const SceneGrid: React.FC = () => {
                                 className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                 title={t('light.grid.clear_tooltip')}
                             >
-                                <span className="material-symbols-outlined text-slate-500 text-sm hover:text-red-500">close</span>
+                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-red-500">close</span>
                             </div>
 
                             <div
@@ -383,7 +383,7 @@ export const SceneGrid: React.FC = () => {
                                 className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                 title={t('light.grid.rename_tooltip')}
                             >
-                                <span className="material-symbols-outlined text-slate-500 text-sm hover:text-white">edit</span>
+                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-white">edit</span>
                             </div>
                         </div>
                     );
@@ -402,7 +402,7 @@ export const SceneGrid: React.FC = () => {
     const ratelier = (cle: string, titre: string, aide: string, tuiles: LightScene[]) => (
         <div key={cle} className="flex flex-col gap-3">
             <div className="flex items-baseline gap-3">
-                <h3 className="text-ui-10 font-bold uppercase tracking-widest text-slate-500">{titre}</h3>
+                <h3 className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle">{titre}</h3>
                 <span className="text-ui-10 text-slate-600">{aide}</span>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">

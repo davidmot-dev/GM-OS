@@ -118,7 +118,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">{t('light.editor.name')}</label>
+                    <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">{t('light.editor.name')}</label>
                     <input
                         ref={champDuNom}
                         value={nom}
@@ -129,7 +129,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">{t('light.editor.icon')}</label>
+                    <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">{t('light.editor.icon')}</label>
                     <div className="grid grid-cols-8 gap-1">
                         {ICONES.map(nomDIcone => (
                             <button
@@ -151,12 +151,12 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                         value={icone}
                         onChange={(e) => setIcone(e.target.value.trim())}
                         placeholder={t('light.editor.icon_free')}
-                        className="bg-app-bg border border-app-border rounded-lg px-3 py-1.5 text-ui-10 font-mono text-slate-400 focus:border-accent/50 outline-none"
+                        className="bg-app-bg border border-app-border rounded-lg px-3 py-1.5 text-ui-10 font-mono text-app-muted focus:border-accent/50 outline-none"
                     />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">{t('light.editor.color')}</label>
+                    <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">{t('light.editor.color')}</label>
                     <div className="flex items-center gap-2">
                         <div className="grid grid-cols-8 gap-1 flex-1">
                             {COULEURS.map(teinte => (
@@ -183,7 +183,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                             className="size-9 rounded-lg border border-app-border cursor-pointer p-0 bg-transparent shrink-0"
                         />
                     </div>
-                    <p className="text-ui-10 text-slate-500 leading-snug">
+                    <p className="text-ui-10 text-app-subtle leading-snug">
                         {apercu ? t('light.editor.color_hint') : t('light.editor.color_hint_none')}
                     </p>
                 </div>
@@ -203,7 +203,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                 */}
                 {campagneOuverte !== null && (
                     <div className="flex flex-col gap-2">
-                        <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">
+                        <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">
                             {t('light.editor.campaign')}
                         </label>
                         <div className="flex bg-app-bg p-1 rounded-lg border border-app-border">
@@ -219,7 +219,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                                         aria-pressed={actif}
                                         className={`flex-1 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-ui-10 font-bold uppercase tracking-widest transition-all ${actif
                                             ? 'bg-accent text-white shadow-lg'
-                                            : 'text-slate-500 hover:text-slate-200'}`}
+                                            : 'text-app-subtle hover:text-slate-200'}`}
                                     >
                                         <span className="material-symbols-outlined text-sm">{glyphe}</span>
                                         <span>{texte}</span>
@@ -227,7 +227,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                                 );
                             })}
                         </div>
-                        <p className="text-ui-10 text-slate-500 leading-snug">
+                        <p className="text-ui-10 text-app-subtle leading-snug">
                             {campagneId === null
                                 ? t('light.editor.campaign_hint_common')
                                 : t('light.editor.campaign_hint_this')}
@@ -238,7 +238,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                 <div className="flex justify-end gap-2 pt-1">
                     <button
                         onClick={onAnnuler}
-                        className="px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-app-text transition-colors"
+                        className="px-4 py-2 rounded-lg text-sm font-bold text-app-muted hover:text-app-text transition-colors"
                     >
                         {t('light.grid.cancel_button')}
                     </button>

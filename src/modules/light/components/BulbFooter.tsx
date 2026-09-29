@@ -219,7 +219,7 @@ export const BulbFooter: React.FC = () => {
           chercherait la panne ailleurs.
         */
         <footer className="bg-app-surface/50 border-t border-app-border p-4 h-24 shrink-0 flex items-center justify-center">
-                <span className="text-slate-500 font-bold text-xs">{t('light.footer.no_lights')}</span>
+                <span className="text-app-subtle font-bold text-xs">{t('light.footer.no_lights')}</span>
             </footer>
         );
     }
@@ -237,7 +237,7 @@ export const BulbFooter: React.FC = () => {
                                 className={`size-10 rounded-full flex items-center justify-center shrink-0 transition-all ${isOn ? 'bg-amber-500 shadow-glow-accent' : 'bg-app-surface'}
                                     }`}
                             >
-                                <span className={`material-symbols-outlined text-xl ${isOn ? 'text-white' : 'text-slate-500'}`}>lightbulb</span>
+                                <span className={`material-symbols-outlined text-xl ${isOn ? 'text-white' : 'text-app-subtle'}`}>lightbulb</span>
                             </button>
                             <div className="flex flex-col gap-1 flex-1 overflow-hidden">
                                 <span className="text-xs font-bold text-slate-200 truncate">{light.name}</span>
@@ -267,7 +267,7 @@ export const BulbFooter: React.FC = () => {
                                         className="flex items-center gap-2 bg-app-bg/80 border border-app-border rounded px-2 py-1 w-full hover:border-accent/30 transition-colors min-w-0"
                                         title={t('light.footer.selecteur.ouvrir')}
                                     >
-                                        <span className="material-symbols-outlined text-sm text-slate-500 shrink-0">tune</span>
+                                        <span className="material-symbols-outlined text-sm text-app-subtle shrink-0">tune</span>
                                         <span className="text-xs font-bold text-accent truncate">
                                             {nomDeLEffet(effect)}
                                         </span>
@@ -285,7 +285,7 @@ export const BulbFooter: React.FC = () => {
                                     {effect !== 'none' && effect !== 'colorloop' && !estUneVariante(effect) && (
                                         <button
                                             onClick={() => dupliquer(light.id, effect)}
-                                            className="shrink-0 size-7 rounded border border-app-border text-slate-400 hover:text-accent hover:border-accent/50 transition-colors flex items-center justify-center"
+                                            className="shrink-0 size-7 rounded border border-app-border text-app-muted hover:text-accent hover:border-accent/50 transition-colors flex items-center justify-center"
                                             title={t('light.footer.ambiances.duplicate')}
                                         >
                                             <span className="material-symbols-outlined text-sm">palette</span>
@@ -312,14 +312,14 @@ export const BulbFooter: React.FC = () => {
                                                     className="flex-1 bg-transparent border-none p-0 text-xs font-bold text-amber-200 outline-none min-w-0"
                                                     title={t('light.footer.ambiances.name')}
                                                 />
-                                                <span className="text-ui-10 text-slate-500 shrink-0">
+                                                <span className="text-ui-10 text-app-subtle shrink-0">
                                                     {t('light.footer.ambiances.from', {
                                                         source: t(`light.footer.effects.${v.source}`, { defaultValue: v.source }),
                                                     })}
                                                 </span>
                                                 <button
                                                     onClick={() => supprimerUneVariante(v.id)}
-                                                    className="shrink-0 text-slate-500 hover:text-red-400 transition-colors"
+                                                    className="shrink-0 text-app-subtle hover:text-red-400 transition-colors"
                                                     title={t('light.footer.ambiances.delete')}
                                                 >
                                                     <span className="material-symbols-outlined text-sm">delete</span>
@@ -342,13 +342,13 @@ export const BulbFooter: React.FC = () => {
                                                     title={t('light.footer.ambiances.force')}
                                                     className="flex-1 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent min-w-0"
                                                 />
-                                                <span className="text-ui-10 font-mono text-slate-400 w-8 text-right shrink-0">
+                                                <span className="text-ui-10 font-mono text-app-muted w-8 text-right shrink-0">
                                                     {Math.round(v.force * 100)}%
                                                 </span>
                                             </div>
 
                                             <div className="flex items-center gap-2">
-                                                <span className="material-symbols-outlined text-sm text-slate-500 shrink-0">speed</span>
+                                                <span className="material-symbols-outlined text-sm text-app-subtle shrink-0">speed</span>
                                                 <input
                                                     type="range"
                                                     min={VITESSE_EFFET_MIN} max={VITESSE_EFFET_MAX} step={0.25}
@@ -357,7 +357,7 @@ export const BulbFooter: React.FC = () => {
                                                     title={t('light.footer.ambiances.speed')}
                                                     className="flex-1 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent min-w-0"
                                                 />
-                                                <span className="text-ui-10 font-mono text-slate-400 w-8 text-right shrink-0">
+                                                <span className="text-ui-10 font-mono text-app-muted w-8 text-right shrink-0">
                                                     ×{v.vitesse}
                                                 </span>
                                             </div>
@@ -374,7 +374,7 @@ export const BulbFooter: React.FC = () => {
                                   enregistre.
                                 */}
                                 <div className="flex items-center gap-2 mt-1">
-                                    <span className="material-symbols-outlined text-sm text-slate-500 shrink-0">light_mode</span>
+                                    <span className="material-symbols-outlined text-sm text-app-subtle shrink-0">light_mode</span>
                                     <input
                                         type="range"
                                         min={BRI_MIN}
@@ -385,7 +385,7 @@ export const BulbFooter: React.FC = () => {
                                         title={t('light.footer.brightness')}
                                         className="flex-1 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
                                     />
-                                    <span className="text-ui-10 font-mono font-bold text-slate-400 w-8 text-right shrink-0">
+                                    <span className="text-ui-10 font-mono font-bold text-app-muted w-8 text-right shrink-0">
                                         {enPourcent(light.state.bri ?? BRI_MAX)}%
                                     </span>
                                 </div>

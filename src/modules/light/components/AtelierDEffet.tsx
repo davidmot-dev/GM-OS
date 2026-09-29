@@ -290,7 +290,7 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                                 )}
 
                             {justificationDeLaProposition(proposition) && (
-                                <p className="text-ui-10 text-slate-400 italic leading-snug">
+                                <p className="text-ui-10 text-app-muted italic leading-snug">
                                     {justificationDeLaProposition(proposition)}
                                 </p>
                             )}
@@ -306,13 +306,13 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                                 <button
                                     onClick={demanderALIA}
                                     disabled={enCours}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-app-text text-ui-10 font-bold uppercase tracking-widest disabled:opacity-40"
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-muted hover:text-app-text text-ui-10 font-bold uppercase tracking-widest disabled:opacity-40"
                                 >
                                     <Lightbulb size={12} /> Une autre
                                 </button>
                                 <button
                                     onClick={() => setProposition(null)}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-500 hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-subtle hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
                                 >
                                     <X size={12} /> Refuser
                                 </button>

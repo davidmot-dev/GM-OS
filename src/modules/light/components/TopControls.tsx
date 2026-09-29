@@ -72,26 +72,26 @@ export const TopControls: React.FC = () => {
         <header className="p-6 border-b border-app-border flex items-center justify-between bg-app-surface/50 backdrop-blur-sm z-10 font-sans">
             <div className="flex items-center gap-8">
                 <div className="flex flex-col gap-2">
-                    <span className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">{t('light.top.transition_time')}</span>
+                    <span className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">{t('light.top.transition_time')}</span>
                     <div className="flex bg-app-bg p-1 rounded-lg border border-app-border">
                         <button
                             onClick={() => setTransitionTime(0)}
-                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 0 ? 'bg-gm-cyan text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
+                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 0 ? 'bg-gm-cyan text-white shadow-lg' : 'text-app-muted hover:text-white'}`}>
                             {t('light.top.inst')}
                         </button>
                         <button
                             onClick={() => setTransitionTime(2000)}
-                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 2000 ? 'bg-gm-cyan text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
+                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 2000 ? 'bg-gm-cyan text-white shadow-lg' : 'text-app-muted hover:text-white'}`}>
                             2s
                         </button>
                         <button
                             onClick={() => setTransitionTime(5000)}
-                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 5000 ? 'bg-gm-cyan text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
+                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 5000 ? 'bg-gm-cyan text-white shadow-lg' : 'text-app-muted hover:text-white'}`}>
                             5s
                         </button>
                         <button
                             onClick={() => setTransitionTime(15000)}
-                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 15000 ? 'bg-gm-cyan text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}>
+                            className={`px-3 py-1 text-xs font-bold rounded-md ${transitionTimeMs === 15000 ? 'bg-gm-cyan text-white shadow-lg' : 'text-app-muted hover:text-white'}`}>
                             15s
                         </button>
                     </div>
@@ -112,7 +112,7 @@ export const TopControls: React.FC = () => {
                   qu'on cherche : le voisin, lui, débranche le pont.
                 */}
                 <div className="flex items-center gap-4">
-                    <span className={`text-ui-10 font-bold uppercase tracking-widest transition-colors ${isSyncEnabled ? 'text-accent' : 'text-slate-500'}`}>
+                    <span className={`text-ui-10 font-bold uppercase tracking-widest transition-colors ${isSyncEnabled ? 'text-accent' : 'text-app-subtle'}`}>
                         {t('light.top.sync')}
                     </span>
                     <button
@@ -134,7 +134,7 @@ export const TopControls: React.FC = () => {
                   étiquette maladroite.*
                 */}
                 <div className="flex items-center gap-4">
-                    <span className={`text-ui-10 font-bold uppercase tracking-widest transition-colors ${status === 'mock' ? 'text-amber-400' : 'text-slate-500'}`}>
+                    <span className={`text-ui-10 font-bold uppercase tracking-widest transition-colors ${status === 'mock' ? 'text-amber-400' : 'text-app-subtle'}`}>
                         {t('light.top.mock_mode')}
                     </span>
                     <button
@@ -197,7 +197,7 @@ export const TopControls: React.FC = () => {
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all active:scale-95 group ${
                     status === 'connected'
                         ? 'bg-accent/5 hover:bg-accent/20 border-accent/20 text-accent/70 hover:text-accent'
-                        : 'bg-app-surface/30 border-app-border text-slate-500 hover:text-slate-400'
+                        : 'bg-app-surface/30 border-app-border text-app-subtle hover:text-slate-400'
                 }`}
             >
                 <RefreshCw

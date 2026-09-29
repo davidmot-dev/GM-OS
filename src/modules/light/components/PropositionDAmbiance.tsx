@@ -237,7 +237,7 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                         )}
                     </div>
 
-                    <p className="text-ui-10 text-slate-400 italic leading-snug">
+                    <p className="text-ui-10 text-app-muted italic leading-snug">
                         {proposition.justification}
                     </p>
 
@@ -254,10 +254,10 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                                         plutôt que de laisser le meneur chercher pourquoi elle reste noire. */}
                                     {!lampeConnue(lampe?.lampe) && ' — inconnue, ignorée'}
                                 </span>
-                                <span className="text-ui-9 text-slate-500 uppercase tracking-widest">
+                                <span className="text-ui-9 text-app-subtle uppercase tracking-widest">
                                     {lampe?.effet && lampe.effet !== 'none' ? lampe.effet : 'fixe'}
                                 </span>
-                                <span className="text-ui-9 text-slate-500 w-10 text-right tabular-nums">
+                                <span className="text-ui-9 text-app-subtle w-10 text-right tabular-nums">
                                     {Math.round(lampe?.brillance ?? 0)} %
                                 </span>
                             </div>
@@ -300,13 +300,13 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                         <button
                             onClick={demander}
                             disabled={enCours}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-400 hover:text-app-text text-ui-10 font-bold uppercase tracking-widest disabled:opacity-40"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-muted hover:text-app-text text-ui-10 font-bold uppercase tracking-widest disabled:opacity-40"
                         >
                             <Lightbulb size={12} /> Une autre
                         </button>
                         <button
                             onClick={refuser}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-slate-500 hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-subtle hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
                         >
                             <X size={12} /> Refuser
                         </button>

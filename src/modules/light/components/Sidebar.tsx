@@ -118,7 +118,7 @@ export const Sidebar: React.FC = () => {
                         <span className="material-symbols-outlined text-accent">hub</span>
                         <div className="flex flex-col">
                             <span className="text-sm font-semibold">{t('light.sidebar.hue_bridge')}</span>
-                            {bridgeIp && <span className="text-xs text-slate-500">{bridgeIp}</span>}
+                            {bridgeIp && <span className="text-xs text-app-subtle">{bridgeIp}</span>}
                         </div>
                     </div>
                 </div>
@@ -158,7 +158,7 @@ export const Sidebar: React.FC = () => {
                                 await useLightStore.getState().forgetBridge();
                             }
                         }}
-                        className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                        className="py-2 bg-slate-800 hover:bg-slate-700 text-app-muted rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
                     >
                         <span className="material-symbols-outlined text-sm">delete_forever</span>
                         {t('light.sidebar.forget_bridge')}
@@ -195,7 +195,7 @@ export const Sidebar: React.FC = () => {
                     }`}
                 >
                     <div className="flex items-center gap-3">
-                        <span className={`material-symbols-outlined transition-transform group-hover:scale-110 ${suivreLaVoix ? 'text-accent' : 'text-slate-400'}`}>graphic_eq</span>
+                        <span className={`material-symbols-outlined transition-transform group-hover:scale-110 ${suivreLaVoix ? 'text-accent' : 'text-app-muted'}`}>graphic_eq</span>
                         <span className={`font-bold ${suivreLaVoix ? 'text-app-text' : 'text-slate-300'}`}>{t('light.sidebar.suivre_la_voix')}</span>
                     </div>
                     <span className={`text-ui-10 font-black uppercase tracking-widest ${suivreLaVoix ? 'text-accent' : 'text-slate-600'}`}>
@@ -206,13 +206,13 @@ export const Sidebar: React.FC = () => {
                     <p className="text-ui-11 text-amber-400/80 px-1">{t('light.sidebar.suivre_la_voix_sans_micro')}</p>
                 )}
                 {suivreLaVoix && (
-                    <p className="text-ui-11 text-slate-500 px-1">{t('light.sidebar.suivre_la_voix_note')}</p>
+                    <p className="text-ui-11 text-app-subtle px-1">{t('light.sidebar.suivre_la_voix_note')}</p>
                 )}
             </div>
 
             {/* Quick Flash Buttons */}
             <div className="flex flex-col gap-3">
-                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t('light.sidebar.quick_action_presets')}</h3>
+                <h3 className="text-xs font-bold text-app-subtle uppercase tracking-widest mb-1">{t('light.sidebar.quick_action_presets')}</h3>
                 <button onClick={() => handleFlash('#ff0000')} className="group flex items-center justify-between p-4 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-all">
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined text-red-500 group-hover:scale-110 transition-transform">local_fire_department</span>
@@ -251,7 +251,7 @@ export const Sidebar: React.FC = () => {
                   donnerait un réglage qui ne fait rien.
                 */}
                 <div className="flex flex-col gap-2">
-                    <label className="text-ui-10 font-bold text-slate-500 uppercase tracking-widest">
+                    <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">
                         {t('light.sidebar.default_scene')}
                     </label>
                     <select
@@ -264,7 +264,7 @@ export const Sidebar: React.FC = () => {
                             <option key={scene.id} value={scene.id}>{scene.name}</option>
                         ))}
                     </select>
-                    <p className="text-ui-10 text-slate-500 leading-snug">
+                    <p className="text-ui-10 text-app-subtle leading-snug">
                         {defaultSceneId
                             ? t('light.sidebar.default_scene_hint')
                             : t('light.sidebar.default_scene_hint_none')}
@@ -304,7 +304,7 @@ export const Sidebar: React.FC = () => {
                       d'une tuile se lit sur la tuile : *un raccourci qu'il faut
                       chercher dans un guide n'en est pas un.*
                     */}
-                    <span className="text-ui-10 font-mono font-normal text-slate-500 border border-app-border rounded px-1 py-0.5 leading-none">
+                    <span className="text-ui-10 font-mono font-normal text-app-subtle border border-app-border rounded px-1 py-0.5 leading-none">
                         Échap
                     </span>
                 </button>
