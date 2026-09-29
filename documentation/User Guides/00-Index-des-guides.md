@@ -10,7 +10,7 @@
 > casse. Le titre de chaque page reprend désormais son libellé ici — *nom de fichier, entrée
 > d'index et titre disaient trois choses différentes.*
 
-**Les 53 guides du dossier, rangés par ce que vous cherchez à faire.** Chaque ligne dit à quelle
+**Les 54 guides du dossier, rangés par ce que vous cherchez à faire.** Chaque ligne dit à quelle
 question la page répond — de quoi choisir sans ouvrir.
 
 > Vous cherchez plutôt *comment c'est fait* ? → [Index technique](../Technical%20Docs/00_Index_Technique.md)
@@ -27,6 +27,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Session-OS — le cockpit](./10-Session-OS-le-cockpit.md) | Comment créer une campagne, préparer une séance, la lancer. **Le plus complet : commencez ici.** |
 | [Recherche universelle](./94-Recherche-universelle.md) | Retrouver n'importe quoi d'une frappe (`Ctrl+K`) — entité, carte, son, règle. |
 | [Paramètres](./93-Reglages-et-theme-du-jeu.md) | Thème, matériel audio, clés d'API, écrans. |
+| [Créer un thème de jeu](./95-Creer-un-theme-de-jeu.md) | Habiller GM-OS aux couleurs d'un jeu **à partir d'images**, avec RPG Theme Builder dans ChatGPT : le déroulé pas à pas, le validateur, la vitrine, les pièges. |
 
 ## 📖 Préparer une histoire, et la raconter
 

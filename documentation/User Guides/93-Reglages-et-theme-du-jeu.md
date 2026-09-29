@@ -18,6 +18,10 @@ GM-OS s'adapte à l'ambiance de votre table :
 
 Chaque jeu peut habiller GM-OS à ses couleurs — et depuis la v6.5, **cela se règle dans l'application** : plus besoin d'éditer un fichier CSS à la main.
 
+> 🎨 **Pour créer un thème de toutes pièces à partir des images d'un jeu**, avec RPG Theme Builder
+> dans ChatGPT : voir [Créer un thème de jeu](./95-Creer-un-theme-de-jeu.md). L'atelier sert aux
+> retouches.
+
 L'atelier travaille sur le thème du **jeu de la campagne ouverte**, et propose ses réglages en quatre groupes :
 
 | Groupe | Ce que vous y réglez |
