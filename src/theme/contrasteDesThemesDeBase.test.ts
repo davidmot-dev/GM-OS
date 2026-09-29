@@ -14,9 +14,9 @@ import { contraste } from './editionDuTheme';
  *
  * Les seuils sont ceux que le contrat impose aux thèmes de jeu (§ 6 du cahier) :
  * **un thème de base n'a pas droit à moins qu'un thème de jeu**. Les paires
- * dont un membre n'existe pas encore dans les palettes de base — le texte
- * estompé, les états, le texte sur l'accent — entreront ici avec la phase 1,
- * quand les thèmes de base deviendront des paquets de jetons (décision D3).
+ * dont un membre n'existe pas dans une palette de base sont sautées : le texte
+ * estompé, les états et le texte sur l'accent y sont entrés avec P1.2
+ * (2026-09-29) ; le cadre y entrera avec les personnalités, qui le déclarent.
  */
 
 /** Ce que la palette d'un thème de base sait nommer aujourd'hui, sous les noms du contrat. */
@@ -35,9 +35,13 @@ describe('les quatre thèmes de base, devant les seuils du contrat', () => {
         const jetons = jetonsDeLaPalette(theme);
         const paires = PAIRES_DU_CONTRAT.filter(p => jetons[p.avant] && jetons[p.fond]);
 
-        it.each(paires.map(p => [`${p.avant} sur ${p.fond}`, p] as const))(`${theme} : %s`, (_nom, p) => {
+        it.each(paires.map(p => [`${p.avant} sur ${p.fond}`, p] as const))(`${theme} : %s`, (nom, p) => {
             const ratio = contraste(jetons[p.avant], jetons[p.fond]);
             expect(ratio, `${jetons[p.avant]} sur ${jetons[p.fond]}`).not.toBeNull();
+            if (PAIRES_ILLISIBLES[theme]?.includes(nom)) {
+                expect(ratio!, `${theme} : ${nom} passe désormais — la retirer de PAIRES_ILLISIBLES`).toBeLessThan(p.minimum);
+                return;
+            }
             expect(ratio!, `${theme} : ${p.avant} sur ${p.fond} — minimum ${p.minimum}`).toBeGreaterThanOrEqual(p.minimum);
         });
 
@@ -87,4 +91,21 @@ describe('les quatre thèmes de base, devant les seuils du contrat', () => {
  */
 const PASTILLES_ILLISIBLES: Partial<Record<ThemeID, string[]>> = {
     medieval: ['#b91c1c', '#7c2d12', '#4c1d95', '#1e40af'],
+};
+
+/**
+ * **Trouvé par cette garde le 2026-09-29, quand les états sont entrés (P1.2).**
+ *
+ * Le thème clair écrit ses états avec les couleurs en dur des thèmes sombres —
+ * emerald, amber et sky 500 — sur son fond crème `#fbfbf9` : succès 2,45,
+ * alerte 2,07, info 2,67 (seuil 3). Seul le danger (red-500, 3,63) passe.
+ * **C'est l'écran d'aujourd'hui** : les règles `claire` d'`index.css` ne
+ * repeignent pas ces couleurs.
+ *
+ * Laissé en l'état **exprès** : P1.2 se fait à pixel constant. Les remplaçantes
+ * se choisissent avec la personnalité du thème clair (P1.7). Un cliquet : la
+ * liste ne peut que raccourcir.
+ */
+const PAIRES_ILLISIBLES: Partial<Record<ThemeID, string[]>> = {
+    claire: ['success sur bg', 'warning sur bg', 'info sur bg'],
 };

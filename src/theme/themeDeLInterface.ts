@@ -89,10 +89,30 @@ export interface ThemeDeBase {
     clarte: 'dark' | 'light';
     /** Le reflet du verre, `--glass-highlight` : il n'a pas de jeton dans le contrat. */
     reflet: string;
+    /**
+     * Le texte le plus estompé, `--app-text-subtle` (le `slate-500` d'aujourd'hui).
+     *
+     * Le contrat n'en a pas : un thème de jeu déclare `muted`, et le subtil s'en
+     * **dérive** (`completerLesDerivees`). Un thème de base le pose en clair,
+     * parce qu'il doit reproduire l'écran d'aujourd'hui au pixel près.
+     */
+    subtil: string;
     /** Les pastilles proposées dans les réglages, pour surcharger l'accent à la main. */
     palettes: string[];
 }
 
+/*
+  **Les couleurs de P1.2 — posées le 2026-09-29, à pixel constant.**
+
+  Chaque valeur est celle que l'écran montre AUJOURD'HUI, pour que rien ne
+  bouge tant qu'un composant n'emploie pas l'alias :
+  - `muted` et `subtil`, les `text-slate-400` et `text-slate-500` d'aujourd'hui ;
+  - `accent-contrast`, le `text-app-bg` posé sur l'accent (86 emplois, contre
+    62 `text-white`) — donc le fond du thème ;
+  - les états, les emerald, red, amber et sky 500 écrits en dur ;
+  - `surface-2` n'a pas d'emploi : la surface éclaircie de 5 % vers le texte,
+    **provisoire**, à juger avec les personnalités (P1.7).
+*/
 export const PALETTES: Record<ThemeID, ThemeDeBase> = {
     cyberpunk: {
         jetons: {
@@ -105,9 +125,18 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'font-mono': "'JetBrains Mono', monospace",
             'glass-bg': 'rgba(2, 6, 23, 0.6)',
             'glass-border': 'rgba(34, 211, 238, 0.15)',
+            muted: '#94a3b8',
+            'surface-2': '#1b2235',
+            'accent-contrast': '#020617',
+            // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
+            success: '#10b981',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            info: '#0ea5e9',
         },
         clarte: 'dark',
         reflet: 'rgba(34, 211, 238, 0.25)',
+        subtil: '#64748b',
         palettes: ['#06b6d4', '#8b5cf6', '#ec4899', '#f59e0b', '#ef4444'],
     },
 
@@ -122,9 +151,18 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'font-mono': "'UnifrakturMaguntia', cursive",
             'glass-bg': 'rgba(28, 25, 23, 0.65)',
             'glass-border': 'rgba(217, 119, 6, 0.12)',
+            muted: '#94a3b8',
+            'surface-2': '#2e2a26',
+            'accent-contrast': '#181411',
+            // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
+            success: '#10b981',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            info: '#0ea5e9',
         },
         clarte: 'dark',
         reflet: 'rgba(217, 119, 6, 0.2)',
+        subtil: '#64748b',
         palettes: ['#d4af37', '#b91c1c', '#7c2d12', '#4c1d95', '#1e40af'],
     },
 
@@ -139,9 +177,18 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'font-mono': "'JetBrains Mono', monospace",
             'glass-bg': 'rgba(15, 23, 42, 0.5)',
             'glass-border': 'rgba(255, 255, 255, 0.1)',
+            muted: '#94a3b8',
+            'surface-2': '#293345',
+            'accent-contrast': '#0f172a',
+            // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
+            success: '#10b981',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            info: '#0ea5e9',
         },
         clarte: 'dark',
         reflet: 'rgba(255, 255, 255, 0.2)',
+        subtil: '#64748b',
         palettes: ['#3b82f6', '#6366f1', '#14b8a6', '#f43f5e', '#64748b'],
     },
 
@@ -157,9 +204,20 @@ export const PALETTES: Record<ThemeID, ThemeDeBase> = {
             'font-mono': "'JetBrains Mono', monospace",
             'glass-bg': 'rgba(255, 255, 255, 0.6)',
             'glass-border': 'rgba(0, 0, 0, 0.08)',
+            // Le thème clair ne montre pas de slate-400 : `index.css` le repeint en `--app-text`.
+            muted: '#2c2420',
+            'surface-2': '#f4f4f4',
+            'accent-contrast': '#fbfbf9',
+            // § 4.2 · Les états — ceux que l'interface écrit en dur aujourd'hui (emerald, red, amber, sky 500).
+            success: '#10b981',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            info: '#0ea5e9',
         },
         clarte: 'light',
         reflet: 'rgba(255, 255, 255, 0.5)',
+        // Comme `muted` : les règles `claire` d'`index.css` peignent slate-400 ET slate-500 en `--app-text`.
+        subtil: '#2c2420',
         palettes: ['#c2410c', '#0f766e', '#7c3aed', '#b91c1c', '#1e40af'],
     },
 };
@@ -208,6 +266,15 @@ export function variablesDuTheme(
     }
     vars['--app-accent'] = accentEffectif;
     vars['--glass-highlight'] = theme.reflet;
+    vars['--app-text-subtle'] = theme.subtil;
+    /*
+      **La bordure douce est la bordure à moitié** — ce que `border-app-border/50`
+      rend aujourd'hui, au même `color-mix` près (celui qu'écrit Tailwind 4). Par
+      la variable et non par la valeur : un jeu qui change `border` l'emmène.
+    */
+    if (!theme.jetons['border-soft']) {
+        vars['--app-border-soft'] = 'color-mix(in oklab, var(--app-border) 50%, transparent)';
+    }
 
     /*
       **Dérivées, et seulement quand l'accent est lisible.** Une couleur qu'on
@@ -283,7 +350,7 @@ export function appliquerLeTheme(
     */
     racine.style.colorScheme = jeu?.clarte ?? palette.clarte;
 
-    const vars = {
+    const vars = completerLesDerivees({
         // Le socle : la palette d'atelier, l'accent arbitré, et ses dérivées.
         ...variablesDuTheme(palette, accent),
         /*
@@ -292,7 +359,7 @@ export function appliquerLeTheme(
           ce qui marchait. Et jamais l'accent, qui vient d'être arbitré.
         */
         ...retirerLAccent(jeu?.variables),
-    };
+    }, jeu?.variables['--app-text-muted']);
 
     for (const [nom, valeur] of Object.entries(vars)) {
         racine.style.setProperty(nom, valeur);
@@ -345,6 +412,65 @@ const BANDES_DE_TAILLE: readonly (readonly [string, string])[] = [
     ['scale-titres', '--echelle-titres'],
     ['scale-mono', '--echelle-mono'],
 ];
+
+/**
+ * **Ce qui se dérive une fois le jeu posé sur le thème de base** — P1.2, 2026-09-29.
+ *
+ * Après la fusion, et pas avant : le fond qu'on mélange est celui qui
+ * s'affiche, celui du jeu s'il en déclare un.
+ *
+ * - **Le texte subtil** : un jeu déclare `muted`, pas de subtil. Il le suit
+ *   alors, fondu à 70 % dans le fond — la proportion qui mène du slate-400 au
+ *   slate-500 sur le fond de cyberpunk. Sans `muted` du jeu, celui du thème de
+ *   base reste.
+ * - **Le cadre** (§ 4.8), la barre latérale et le bandeau : absent, il vaut
+ *   `bg`, `text` et l'accent arbitré — l'écran d'aujourd'hui. Son texte estompé
+ *   se dérive **seulement s'il est déclaré** : sinon c'est celui du reste de
+ *   l'interface, et la barre latérale ne changera pas le jour où ses
+ *   `text-slate-400` deviendront `text-app-muted` (P1.3).
+ *
+ * `Shell.tsx` lit les `--app-frame-*` : ils sont donc **toujours** écrits.
+ */
+export function completerLesDerivees(
+    vars: Record<string, string>,
+    mutedDuJeu?: string,
+): Record<string, string> {
+    const v = { ...vars };
+    if (mutedDuJeu) v['--app-text-subtle'] = `color-mix(in srgb, ${mutedDuJeu} 70%, ${v['--app-bg']})`;
+
+    const cadreDeclare = v['--app-frame-bg'] !== undefined || v['--app-frame-text'] !== undefined;
+    const fond = v['--app-frame-bg'] ??= v['--app-bg'];
+    const texte = v['--app-frame-text'] ??= v['--app-text'];
+    v['--app-frame-accent'] ??= v['--app-accent'];
+    if (cadreDeclare) {
+        v['--app-frame-muted'] = `color-mix(in srgb, ${texte} 65%, ${fond})`;
+        v['--app-frame-subtle'] = `color-mix(in srgb, ${v['--app-frame-muted']} 70%, ${fond})`;
+    } else {
+        v['--app-frame-muted'] = v['--app-text-muted'];
+        v['--app-frame-subtle'] = v['--app-text-subtle'];
+    }
+    return v;
+}
+
+/**
+ * **Le cadre, posé sur la barre latérale et le bandeau** (`Shell.tsx`).
+ *
+ * Ces deux éléments redéfinissent les variables de l'interface à partir de
+ * celles du cadre : tout ce qu'ils contiennent suit, sans toucher un composant
+ * de plus. Ce sont des **renvois** (`var(--app-frame-bg)`), jamais
+ * `var(--app-bg)` sur `--app-bg` : une variable qui se cite elle-même est un
+ * cycle, et le moteur l'invalide — tout le cadre perdrait ses couleurs.
+ *
+ * `--app-accent-rgb` et la lueur ne suivent pas : un cadre qui change d'accent
+ * est l'affaire des personnalités (P1.7).
+ */
+export const STYLE_DU_CADRE = {
+    '--app-bg': 'var(--app-frame-bg)',
+    '--app-text': 'var(--app-frame-text)',
+    '--app-accent': 'var(--app-frame-accent)',
+    '--app-text-muted': 'var(--app-frame-muted)',
+    '--app-text-subtle': 'var(--app-frame-subtle)',
+} as const;
 
 /**
  * Les variables d'un thème de jeu **sauf** l'accent, arbitré à part.

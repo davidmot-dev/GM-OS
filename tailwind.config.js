@@ -45,6 +45,21 @@ export default {
                 'app-surface': 'var(--app-surface)',
                 'app-border': 'var(--app-border)',
                 'app-text': 'var(--app-text)',
+                /*
+                  **Les couleurs de P1.2** (refonte, phase 1) — écrites par
+                  `themeDeLInterface.ts`, seul écrivain. L'opacité passe par
+                  `color-mix` : `bg-etat-danger/15` donne le fond d'un état,
+                  `border-etat-danger/40` sa bordure, sans variable de plus.
+                */
+                'app-muted': 'var(--app-text-muted)',
+                'app-subtle': 'var(--app-text-subtle)',
+                'app-surface-2': 'var(--app-surface-2)',
+                'app-on-accent': 'var(--app-accent-contrast)',
+                'app-soft': 'var(--app-border-soft)',
+                'etat-succes': 'var(--etat-succes)',
+                'etat-danger': 'var(--etat-danger)',
+                'etat-alerte': 'var(--etat-alerte)',
+                'etat-info': 'var(--etat-info)',
             },
             fontFamily: {
                 // Typographie premium

@@ -93,6 +93,24 @@ tourne-t-il ? »*. Les essais : `npx vitest run --maxWorkers=4`, `npx tsc -b`, e
   **dérive** (`color-mix` du texte et du fond du cadre) : le contrat n'en a pas.
 - **Preuve** : captures identiques (aucun composant n'emploie encore les alias, sauf le cadre, dont
   les valeurs par défaut sont celles d'aujourd'hui). T0.3 s'étend aux nouvelles paires.
+- ✅ **Fait le 2026-09-29.** Les 20 captures sont identiques ; les nouveaux essais de
+  `themeDeLInterface.test.ts` figent les valeurs d'aujourd'hui et le cadre. Quatre écarts au texte
+  ci-dessus, tous voulus :
+  - **les états n'ont pas de variables « fond » et « bordure »** : Tailwind 4 écrit l'opacité en
+    `color-mix`, donc `bg-etat-danger/15` et `border-etat-danger/40` suffisent ;
+  - dans le thème clair, `muted` et `subtle` valent **le texte**, pas slate-400/500 : ses règles
+    de rattrapage d'`index.css` repeignent déjà ces deux classes en `--app-text` ;
+  - **le texte estompé du cadre ne se dérive que si le cadre est déclaré.** Sinon c'est celui du
+    reste de l'interface : la barre latérale ne changera pas en P1.3 ;
+  - `surface-2` n'ayant aucun emploi, sa valeur (la surface éclaircie de 5 % vers le texte) est
+    **provisoire**, à juger en P1.7.
+- ⭐ **T0.3 a trouvé un défaut déjà visible** : le thème clair écrit succès, alerte et info en
+  emerald, amber et sky 500 sur son fond crème — 2,45, 2,07 et 2,67 pour un seuil de 3. Figé en
+  cliquet (`PAIRES_ILLISIBLES`, à côté des pastilles du médiéval) ; les remplaçantes se choisissent
+  avec la personnalité du thème clair.
+- ⛔ **Les captures de référence exigent le Zenbook en écran principal**, comme le 27/09 : sur
+  l'écran externe (1920×1080, 100 %), elles sortent en 1440×900 au lieu de 1441×901 et échouent
+  **toutes**, avant toute modification.
 
 ### P1.3 · Le texte secondaire — la seule substitution de la phase
 

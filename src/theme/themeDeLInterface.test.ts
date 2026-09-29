@@ -4,6 +4,8 @@ import {
     composantesRVB,
     variablesDuTheme,
     appliquerLeTheme,
+    completerLesDerivees,
+    STYLE_DU_CADRE,
     type ThemeID,
 } from './themeDeLInterface';
 import { VARIABLE_DU_JETON } from './contratDuTheme';
@@ -260,5 +262,104 @@ describe('le thème du jeu par-dessus le thème d’atelier', () => {
 
         expect(r.style.getPropertyValue('--app-bg')).toBe(PALETTES.medieval.jetons.bg);
         expect(r.style.colorScheme).toBe('dark');
+    });
+});
+
+/**
+ * **P1.2 · Les couleurs qui manquent** — refonte, phase 1, 2026-09-29.
+ *
+ * Texte estompé et subtil, deuxième surface, texte sur l'accent, bordure
+ * douce, états et cadre : chaque thème de base les écrit, **aux valeurs que
+ * l'écran montre aujourd'hui**. Aucun composant ne les emploie encore, sauf le
+ * cadre, dont les valeurs par défaut sont celles d'aujourd'hui.
+ */
+describe('P1.2 · les couleurs qui manquent', () => {
+    const NOUVELLES = [
+        '--app-text-muted', '--app-text-subtle', '--app-surface-2', '--app-accent-contrast',
+        '--app-border-soft', '--etat-succes', '--etat-danger', '--etat-alerte', '--etat-info',
+    ];
+
+    it.each(THEMES)('%s écrit chacune des nouvelles variables', (t) => {
+        const v = variablesDuTheme(PALETTES[t], PALETTES[t].jetons.accent);
+        for (const nom of NOUVELLES) expect(v[nom], `${t} ${nom}`).toBeTruthy();
+    });
+
+    it('le texte estompé et le subtil sont les slate-400 et slate-500 d’aujourd’hui', () => {
+        for (const t of THEMES.filter(x => x !== 'claire')) {
+            const v = variablesDuTheme(PALETTES[t], PALETTES[t].jetons.accent);
+            expect(v['--app-text-muted'], t).toBe('#94a3b8');
+            expect(v['--app-text-subtle'], t).toBe('#64748b');
+        }
+    });
+
+    /** Les règles `claire` d'`index.css` repeignent slate-400 et slate-500 en `--app-text`. */
+    it('dans le thème clair, ils valent le texte — ce que montrent ses règles de rattrapage', () => {
+        const v = variablesDuTheme(PALETTES.claire, PALETTES.claire.jetons.accent);
+        expect(v['--app-text-muted']).toBe(PALETTES.claire.jetons.text);
+        expect(v['--app-text-subtle']).toBe(PALETTES.claire.jetons.text);
+    });
+
+    it('le texte sur l’accent est le fond du thème — le `text-app-bg` d’aujourd’hui', () => {
+        for (const t of THEMES) {
+            expect(PALETTES[t].jetons['accent-contrast'], t).toBe(PALETTES[t].jetons.bg);
+        }
+    });
+
+    it('la bordure douce suit la bordure, par la variable', () => {
+        const v = variablesDuTheme(PALETTES.modern, PALETTES.modern.jetons.accent);
+        expect(v['--app-border-soft']).toBe('color-mix(in oklab, var(--app-border) 50%, transparent)');
+    });
+});
+
+describe('P1.2 · les dérivées, une fois le jeu posé', () => {
+    const base = () => variablesDuTheme(PALETTES.cyberpunk, PALETTES.cyberpunk.jetons.accent);
+
+    it('sans cadre déclaré, le cadre est l’écran d’aujourd’hui', () => {
+        const v = completerLesDerivees(base());
+        expect(v['--app-frame-bg']).toBe(v['--app-bg']);
+        expect(v['--app-frame-text']).toBe(v['--app-text']);
+        expect(v['--app-frame-accent']).toBe(v['--app-accent']);
+        expect(v['--app-frame-muted']).toBe(v['--app-text-muted']);
+        expect(v['--app-frame-subtle']).toBe(v['--app-text-subtle']);
+    });
+
+    it('un cadre déclaré dérive son texte estompé de son texte et de son fond', () => {
+        const v = completerLesDerivees({ ...base(), '--app-frame-bg': '#101010', '--app-frame-text': '#eeeeee' });
+        expect(v['--app-frame-muted']).toBe('color-mix(in srgb, #eeeeee 65%, #101010)');
+        expect(v['--app-frame-subtle']).toContain('#101010');
+        expect(v['--app-frame-accent']).toBe(v['--app-accent']);
+    });
+
+    it('le subtil suit le `muted` du jeu, fondu dans le fond qui s’affiche', () => {
+        const v = completerLesDerivees({ ...base(), '--app-bg': '#343434' }, '#aabbcc');
+        expect(v['--app-text-subtle']).toBe('color-mix(in srgb, #aabbcc 70%, #343434)');
+        expect(v['--app-frame-subtle']).toBe(v['--app-text-subtle']);
+    });
+
+    it('sans `muted` du jeu, le subtil du thème de base reste', () => {
+        expect(completerLesDerivees(base())['--app-text-subtle']).toBe('#64748b');
+    });
+
+    /**
+     * ⛔ Une variable qui se cite elle-même est un cycle : le moteur l'invalide,
+     * et le cadre entier perdrait ses couleurs.
+     */
+    it('le style du cadre renvoie aux variables du cadre, jamais à lui-même', () => {
+        for (const [nom, valeur] of Object.entries(STYLE_DU_CADRE)) {
+            expect(valeur).toMatch(/^var\(--app-frame-[a-z]+\)$/);
+            expect(valeur).not.toContain(`(${nom})`);
+        }
+    });
+
+    it('appliquerLeTheme écrit le cadre, et il suit le fond du jeu', () => {
+        const r = document.documentElement;
+        r.removeAttribute('style');
+        appliquerLeTheme('cyberpunk', undefined, {
+            variables: { '--app-bg': '#343434' },
+            jetons: {},
+        });
+        expect(r.style.getPropertyValue('--app-frame-bg')).toBe('#343434');
+        expect(r.style.getPropertyValue('--app-frame-text')).toBe(PALETTES.cyberpunk.jetons.text);
+        expect(r.style.getPropertyValue('--app-frame-accent')).toBe(PALETTES.cyberpunk.jetons.accent);
     });
 });

@@ -37,6 +37,11 @@ import {
  *
  * ⚠️ Les images dépendent de la machine (polices installées, rendu du GPU) :
  * elles valent pour le poste de David. Elles ne tournent pas avant l'envoi.
+ *
+ * ⛔ **Et de l'écran principal : le Zenbook, à 200 %.** Le 2026-09-29, l'écran
+ * externe (1920×1080, 100 %) était principal : les captures sortaient en
+ * 1440×900 au lieu de 1441×901, et **toutes** échouaient avant la moindre
+ * modification. Un échec général sur la taille n'est pas un défaut du code.
  */
 
 const LARGEUR = 1440;

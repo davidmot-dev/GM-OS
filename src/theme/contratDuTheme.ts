@@ -93,25 +93,28 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     // § 4.1 · Couleurs de base
     { cle: 'bg', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-bg' },
     { cle: 'surface', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-surface' },
-    { cle: 'surface-2', section: '4.1', statut: 'V2', format: OPAQUE },
+    { cle: 'surface-2', section: '4.1', statut: 'V2', format: OPAQUE, versLInterface: '--app-surface-2' },
     { cle: 'text', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-text' },
     { cle: 'muted', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-text-muted' },
     { cle: 'accent', section: '4.1', statut: 'LU', obligatoire: true, format: OPAQUE, versLInterface: '--app-accent' },
     { cle: 'accent-2', section: '4.1', statut: 'SDK', format: LIBRE },
-    { cle: 'accent-contrast', section: '4.1', statut: 'V2', format: OPAQUE },
+    { cle: 'accent-contrast', section: '4.1', statut: 'V2', format: OPAQUE, versLInterface: '--app-accent-contrast' },
     {
         cle: 'border', section: '4.1', statut: 'LU', obligatoire: true,
         format: { type: 'couleur-ou-rgba', alphaMin: 0.08, alphaMax: 1 }, versLInterface: '--app-border',
     },
-    { cle: 'border-soft', section: '4.1', statut: 'V2', format: { type: 'couleur-ou-rgba', alphaMin: 0.08, alphaMax: 1 } },
+    {
+        cle: 'border-soft', section: '4.1', statut: 'V2',
+        format: { type: 'couleur-ou-rgba', alphaMin: 0.08, alphaMax: 1 }, versLInterface: '--app-border-soft',
+    },
     { cle: 'paper', section: '4.1', statut: 'SDK', format: LIBRE },
     { cle: 'ink', section: '4.1', statut: 'SDK', format: LIBRE },
 
     // § 4.2 · Couleurs d'état
-    { cle: 'success', section: '4.2', statut: 'V2', format: OPAQUE },
-    { cle: 'danger', section: '4.2', statut: 'V2', format: OPAQUE },
-    { cle: 'warning', section: '4.2', statut: 'V2', format: OPAQUE },
-    { cle: 'info', section: '4.2', statut: 'V2', format: OPAQUE },
+    { cle: 'success', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-succes' },
+    { cle: 'danger', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-danger' },
+    { cle: 'warning', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-alerte' },
+    { cle: 'info', section: '4.2', statut: 'V2', format: OPAQUE, versLInterface: '--etat-info' },
 
     // § 4.3 · Typographie
     { cle: 'font-display', section: '4.3', statut: 'LU', obligatoire: true, format: PILE, versLInterface: '--font-display' },
@@ -150,9 +153,9 @@ export const JETONS_DU_CONTRAT: readonly JetonDuContrat[] = [
     { cle: 'glass-blur', section: '4.7', statut: 'V2', format: px(24) },
 
     // § 4.8 · Le cadre — absents, ils valent bg, text et accent
-    { cle: 'frame-bg', section: '4.8', statut: 'V2', format: OPAQUE },
-    { cle: 'frame-text', section: '4.8', statut: 'V2', format: OPAQUE },
-    { cle: 'frame-accent', section: '4.8', statut: 'V2', format: OPAQUE },
+    { cle: 'frame-bg', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-bg' },
+    { cle: 'frame-text', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-text' },
+    { cle: 'frame-accent', section: '4.8', statut: 'V2', format: OPAQUE, versLInterface: '--app-frame-accent' },
 
     // § 7 · Matières
     { cle: 'texture-bg', section: '7', statut: 'V2', format: MATIERE },

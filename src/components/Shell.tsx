@@ -56,6 +56,7 @@ import { useLayoutManager } from '../modules/session/hooks/useLayoutManager';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { gmToast } from '../stores/useToastStore';
 import { adresseDeLaTablette } from '../utils/portsDuRenderer';
+import { STYLE_DU_CADRE } from '../theme/themeDeLInterface';
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -263,8 +264,8 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
     return (
         <div data-theme={theme} className="flex h-screen bg-app-bg text-app-text overflow-hidden font-sans selection:bg-accent/30 bg-texture-overlay theme-root">
 
-            {/* Sidebar */}
-            <aside className="w-64 border-r border-app-border/50 bg-app-surface/30 backdrop-blur-xl flex flex-col p-4 z-20">
+            {/* Sidebar — un des deux éléments du cadre (§ 4.8 du contrat), avec le bandeau */}
+            <aside style={STYLE_DU_CADRE as React.CSSProperties} className="w-64 border-r border-app-border/50 bg-app-surface/30 backdrop-blur-xl flex flex-col p-4 z-20">
                 <div className="flex items-center gap-3 px-2 mb-8 mt-2">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
                         theme === 'medieval' 
@@ -541,7 +542,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     ? 'bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.08),transparent_40%)]' 
                     : 'bg-[radial-gradient(circle_at_top_right,rgba(29,78,216,0.05),transparent_40%)]'
             }`}>
-                <header className={`h-16 border-b border-app-border/20 flex items-center justify-between px-8 backdrop-blur-md z-10 transition-all duration-500 ${
+                <header style={STYLE_DU_CADRE as React.CSSProperties} className={`h-16 border-b border-app-border/20 flex items-center justify-between px-8 backdrop-blur-md z-10 transition-all duration-500 ${
                     theme === 'medieval' ? 'bg-app-surface/95 border-b-app-border/60 shadow-lg' : 'bg-app-surface/10'
                 }`}>
                     <div className="flex items-center gap-4">

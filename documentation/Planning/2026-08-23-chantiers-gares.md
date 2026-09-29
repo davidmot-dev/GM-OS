@@ -5448,9 +5448,9 @@ explicitement, jamais le défaut.
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
 
-⭐ **Où on en est — 2026-09-28** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
-fait**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
-soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.2** du
+⭐ **Où on en est — 2026-09-29** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
+et P1.2 faits**, et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
+soixantaine d'écrans retenus dans `stitch/`). **Reprendre à P1.3** du
 [plan de la phase 1](./2026-09-27-refonte-phase-1.md). Détail à la fin de ce §. *(Le 17/09, rien n'était commencé : David jouait d'abord une partie.)*
 
 **Les deux documents**, et ils ne disent pas la même chose :
@@ -5768,6 +5768,12 @@ v1.2.
   20 captures identiques, et **`src/theme/apparenceDAujourdhui.test.ts`**, qui fige les variables
   des quatre thèmes relevées avant la modification — *les captures ne montrent que le thème par
   défaut*.
+- ✅ **P1.2 fait le 2026-09-29** : texte estompé et subtil, `surface-2`, texte sur l'accent,
+  bordure douce, les quatre états (`--etat-succes/danger/alerte/info`) et le cadre, aux valeurs
+  d'aujourd'hui, avec leurs alias Tailwind (`text-app-muted`, `bg-etat-danger/15`…). Le cadre est
+  branché sur la barre latérale et le bandeau (`STYLE_DU_CADRE`). 20 captures identiques. ⚠️ T0.3
+  a trouvé trois états illisibles dans le thème clair (déjà à l'écran), figés en cliquet — détail
+  dans le plan de la phase 1. ⛔ Les captures exigent **le Zenbook en écran principal**.
 - ⛔ **David, 2026-09-27 : « je ne veux pas que mon interface change maintenant ».** Jusqu'à P1.6,
   chaque étape se fait à pixel constant ; les personnalités n'arrivent qu'en P1.7, derrière le
   réglage, éteint par défaut.
