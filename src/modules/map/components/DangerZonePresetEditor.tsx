@@ -86,7 +86,7 @@ const DangerZonePresetEditor: React.FC = () => {
                             className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all relative group overflow-hidden ${
                                 selectedPresetId === preset.id 
                                 ? 'bg-cyan-500/10 border border-cyan-500/30' 
-                                : 'hover:bg-[#192540]/50 border border-transparent text-slate-400 hover:text-white'
+                                : 'hover:bg-[#192540]/50 border border-transparent text-app-muted hover:text-white'
                             }`}
                         >
                             {/* Accent Glow for selected */}
@@ -131,10 +131,10 @@ const DangerZonePresetEditor: React.FC = () => {
                                         {selectedPreset.name}
                                     </h2>
                                 </div>
-                                <div className="flex items-center gap-4 text-ui-10 font-bold text-slate-500 uppercase tracking-widest pl-1">
+                                <div className="flex items-center gap-4 text-ui-10 font-bold text-app-subtle uppercase tracking-widest pl-1">
                                     <span className="flex items-center gap-1.5 border-r border-slate-800 pr-4">
                                         <Activity size={12} className="text-cyan-500/50" />
-                                        Nexus ID: <span className="text-slate-400">{selectedPreset.id.substring(0, 8)}...</span>
+                                        Nexus ID: <span className="text-app-muted">{selectedPreset.id.substring(0, 8)}...</span>
                                     </span>
                                     <span className="flex items-center gap-1.5">
                                         <Shield size={12} className="text-emerald-500/50" />
@@ -193,7 +193,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                                         className="bg-transparent text-xl font-mono font-black text-white outline-none uppercase tracking-tighter w-28"
                                                         title={t('map.dangerEditor.hexCode') as string}
                                                     />
-                                                    <span className="text-ui-9 text-slate-500 font-bold uppercase tracking-widest italic">{t('map.dangerEditor.hexCode')}</span>
+                                                    <span className="text-ui-9 text-app-subtle font-bold uppercase tracking-widest italic">{t('map.dangerEditor.hexCode')}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -239,7 +239,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                                     className="w-full accent-emerald-500 hover:accent-emerald-400 transition-all cursor-pointer"
                                                 />
                                             </div>
-                                            <div className="flex justify-between text-ui-8 font-bold text-slate-500 uppercase">
+                                            <div className="flex justify-between text-ui-8 font-bold text-app-subtle uppercase">
                                                 <span>{t('map.dangerEditor.normal')}</span>
                                                 <span>{t('map.dangerEditor.lethal')}</span>
                                             </div>
@@ -307,8 +307,8 @@ const DangerZonePresetEditor: React.FC = () => {
                             <div className="absolute inset-0 animate-pulse bg-cyan-500/5 rounded-full blur-2xl" />
                         </div>
                         <div className="text-center space-y-2">
-                            <h3 className="text-xl font-bold text-slate-400 uppercase tracking-[0.3em]">{t('map.dangerEditor.initRequired')}</h3>
-                            <p className="text-sm italic text-slate-500 px-10">{t('map.dangerEditor.initDesc')}</p>
+                            <h3 className="text-xl font-bold text-app-muted uppercase tracking-[0.3em]">{t('map.dangerEditor.initRequired')}</h3>
+                            <p className="text-sm italic text-app-subtle px-10">{t('map.dangerEditor.initDesc')}</p>
                         </div>
                         <button 
                             onClick={handleCreate}
@@ -352,7 +352,7 @@ const TacticalSwitch = ({ label, description, active, onToggle, color = "cyan" }
         <div className="flex items-center justify-between group cursor-pointer" onClick={onToggle}>
             <div className="space-y-1">
                 <label className="text-sm font-black text-white group-hover:text-cyan-400 transition-colors uppercase tracking-wider">{label}</label>
-                <p className="text-ui-10 text-slate-500 font-bold italic">{description}</p>
+                <p className="text-ui-10 text-app-subtle font-bold italic">{description}</p>
             </div>
             <div className={`w-14 h-7 p-1 rounded-full transition-all duration-300 flex items-center ${active ? accents[color] : 'bg-[#060e20] border border-[#40485d]'}`}>
                 <div className={`w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-sm ${active ? 'translate-x-[26px]' : 'translate-x-0'}`} />
@@ -380,7 +380,7 @@ const ObsidianSelect = ({
         <div className="space-y-2 relative">
             <div className="flex items-center gap-2 mb-1">
                 <Icon size={12} className={accentClasses[accent].split(' ')[0]} />
-                <label className="text-ui-10 font-black text-slate-500 uppercase tracking-widest">{label}</label>
+                <label className="text-ui-10 font-black text-app-subtle uppercase tracking-widest">{label}</label>
             </div>
             
             <button
@@ -390,7 +390,7 @@ const ObsidianSelect = ({
                 <span className={`font-bold truncate ${selectedOption ? 'text-white' : 'text-slate-600 italic'}`}>
                     {selectedOption ? selectedOption.name : placeholder}
                 </span>
-                <ChevronDown size={14} className={`text-slate-500 group-hover:text-cyan-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`text-app-subtle group-hover:text-cyan-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isOpen && (
@@ -400,7 +400,7 @@ const ObsidianSelect = ({
                         <div className="max-h-60 overflow-y-auto custom-scrollbar p-1">
                             <button
                                 onClick={() => { onChange(''); setIsOpen(false); }}
-                                className="w-full text-left px-4 py-3 text-xs text-slate-500 hover:bg-[#192540] rounded-lg transition-colors italic font-bold"
+                                className="w-full text-left px-4 py-3 text-xs text-app-subtle hover:bg-[#192540] rounded-lg transition-colors italic font-bold"
                             >
                                 {placeholder}
                             </button>

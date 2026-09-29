@@ -34,7 +34,7 @@ const MapPresetGallery: React.FC = () => {
             {/* Quick Save Section */}
             <div className="bg-app-bg/40 border border-app-border rounded-xl p-3">
                 <div className="flex items-center justify-between mb-2">
-                    <span className="text-ui-10 font-black uppercase tracking-widest text-slate-500">{t('map.presets.new')}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-subtle">{t('map.presets.new')}</span>
                     {!isSaving && (
                         <button 
                             onClick={() => {
@@ -74,7 +74,7 @@ const MapPresetGallery: React.FC = () => {
                             <button 
                                 onClick={() => setIsSaving(false)}
                                 title={t('map.presets.cancel')}
-                                className="px-3 py-1.5 bg-app-surface border border-app-border rounded-lg text-slate-400 hover:text-white transition-all"
+                                className="px-3 py-1.5 bg-app-surface border border-app-border rounded-lg text-app-muted hover:text-white transition-all"
                             >
                                 <X size={14} />
                             </button>
@@ -116,11 +116,11 @@ const MapPresetGallery: React.FC = () => {
 
                             <div className="flex items-center justify-between mt-1">
                                 <div className="flex items-center gap-3">
-                                    <div className="flex items-center gap-1 text-ui-9 text-slate-500 font-bold uppercase">
+                                    <div className="flex items-center gap-1 text-ui-9 text-app-subtle font-bold uppercase">
                                         <Check size={10} className="text-gm-emerald" />
                                         <span>{t('map.presets.count.tokens', { count: preset.tokens.length, defaultValue: `${preset.tokens.length} Pions` })}</span>
                                     </div>
-                                    <div className="flex items-center gap-1 text-ui-9 text-slate-500 font-bold uppercase">
+                                    <div className="flex items-center gap-1 text-ui-9 text-app-subtle font-bold uppercase">
                                         <Check size={10} className="text-rose-500" />
                                         <span>{t('map.presets.count.zones', { count: preset.dangerZones.length, defaultValue: `${preset.dangerZones.length} Zones` })}</span>
                                     </div>
@@ -144,7 +144,7 @@ const MapPresetGallery: React.FC = () => {
                 )}
             </div>
 
-            <p className="text-ui-9 text-slate-500 italic px-2">
+            <p className="text-ui-9 text-app-subtle italic px-2">
                 {t('map.presets.note')}
             </p>
         </div>

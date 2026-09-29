@@ -223,7 +223,7 @@ const MapControls: React.FC = () => {
 
                 {/* Presets Section */}
                 <section>
-                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-bold px-1 flex items-center gap-2">
+                    <h3 className="text-xs text-app-muted uppercase tracking-wider mb-3 font-bold px-1 flex items-center gap-2">
                         <FolderOpen size={14} className="text-accent" />
                         {t('map.sidebar.presets')}
                     </h3>
@@ -234,7 +234,7 @@ const MapControls: React.FC = () => {
 
                 {/* Import Section */}
                 <section>
-                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-2 font-bold px-1">{t('map.sidebar.import.title')}</h3>
+                    <h3 className="text-xs text-app-muted uppercase tracking-wider mb-2 font-bold px-1">{t('map.sidebar.import.title')}</h3>
                     <div className="flex gap-2 mb-3">
                         <button
                             className="flex-1 bg-app-bg hover:bg-app-surface p-3 rounded-lg flex items-center justify-center gap-2 border border-app-border transition-colors text-sm"
@@ -283,7 +283,7 @@ const MapControls: React.FC = () => {
                 {/* Tools Section */}
                 <section>
                     <div className="flex justify-between items-end mb-3 px-1">
-                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold">{t('map.sidebar.fog.title')}</h3>
+                        <h3 className="text-xs text-app-muted uppercase tracking-wider font-bold">{t('map.sidebar.fog.title')}</h3>
                         <div className="flex gap-1">
                             {/*
                                 **Le geste le plus coûteux de tout le module.**
@@ -331,7 +331,7 @@ const MapControls: React.FC = () => {
                     {currentTool === 'magic' && (
                         <div className="bg-app-bg/20 p-3 rounded border border-app-border flex flex-col gap-3">
                             <div>
-                                <div className="flex justify-between text-ui-10 text-slate-400 mb-2 uppercase font-bold tracking-wider">
+                                <div className="flex justify-between text-ui-10 text-app-muted mb-2 uppercase font-bold tracking-wider">
                                     <span>{t('map.sidebar.magic.type')}</span>
                                     <button onClick={handleClearMagic} className="text-rose-500 hover:text-rose-400">{t('map.sidebar.magic.clearAll')}</button>
                                 </div>
@@ -352,7 +352,7 @@ const MapControls: React.FC = () => {
 
                                                 magicStyle === s.id 
                                                 ? 'bg-accent/20 border-accent text-accent' 
-                                                : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                                : 'bg-app-bg border-app-border text-app-subtle hover:bg-app-surface'
                                             }`}
                                         >
                                             <span>{s.icon}</span>
@@ -364,7 +364,7 @@ const MapControls: React.FC = () => {
                             </div>
                             
                             <div>
-                                <span className="text-ui-10 text-slate-400 mb-2 block uppercase font-bold tracking-wider">{t('map.sidebar.magic.shape')}</span>
+                                <span className="text-ui-10 text-app-muted mb-2 block uppercase font-bold tracking-wider">{t('map.sidebar.magic.shape')}</span>
                                 <div className="grid grid-cols-2 gap-2">
                                     {[
                                         { id: 'circle', icon: Circle, label: t('map.sidebar.magic.shapes.circle') },
@@ -380,7 +380,7 @@ const MapControls: React.FC = () => {
                                                 className={`p-2 rounded border flex items-center justify-center gap-2 transition-all ${
                                                     magicShape === sh.id 
                                                     ? 'bg-accent/20 border-accent text-accent' 
-                                                    : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                                    : 'bg-app-bg border-app-border text-app-subtle hover:bg-app-surface'
                                                 }`}
                                             >
                                                 <Icon size={14} />
@@ -396,7 +396,7 @@ const MapControls: React.FC = () => {
                             {magicEffects.length > 0 && (
                                 <div className="mt-2 border-t border-app-border pt-3">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-ui-10 text-slate-400 uppercase font-bold tracking-wider">{t('map.sidebar.magic.activeEffects')} ({magicEffects.length})</span>
+                                        <span className="text-ui-10 text-app-muted uppercase font-bold tracking-wider">{t('map.sidebar.magic.activeEffects')} ({magicEffects.length})</span>
                                     </div>
                                     <div className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
                                         {magicEffects.map((eff) => (
@@ -442,7 +442,7 @@ const MapControls: React.FC = () => {
                 {/* Danger Zones Section */}
                 <section>
                     <div className="flex items-center justify-between mb-3 px-1">
-                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold">{t('map.sidebar.danger.title', { defaultValue: 'Zones de Danger' })}</h3>
+                        <h3 className="text-xs text-app-muted uppercase tracking-wider font-bold">{t('map.sidebar.danger.title', { defaultValue: 'Zones de Danger' })}</h3>
                         <div className="flex gap-2">
                             <button
                                 onClick={() => gmCustom('danger-preset-editor')}
@@ -468,33 +468,33 @@ const MapControls: React.FC = () => {
                                 
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-ui-10 text-slate-500 uppercase font-bold block mb-1">{t('map.sidebar.danger.shape')}</label>
+                                        <label className="text-ui-10 text-app-subtle uppercase font-bold block mb-1">{t('map.sidebar.danger.shape')}</label>
                                         <div className="flex gap-1">
                                             <button 
                                                 onClick={() => setDangerShape('rect')}
                                                 title={t('map.sidebar.danger.shapes.rect')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'rect' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'rect' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
                                             >
                                                 <Square size={16} />
                                             </button>
                                             <button 
                                                 onClick={() => setDangerShape('circle')}
                                                 title={t('map.sidebar.danger.shapes.circle')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'circle' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'circle' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
                                             >
                                                 <Circle size={16} />
                                             </button>
                                             <button 
                                                 onClick={() => setDangerShape('cone')}
                                                 title={t('map.sidebar.danger.shapes.cone')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'cone' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'cone' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
                                             >
                                                 <Triangle size={16} className="rotate-180" />
                                             </button>
                                             <button 
                                                 onClick={() => setDangerShape('line')}
                                                 title={t('map.sidebar.danger.shapes.line')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'line' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-400 hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'line' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
                                             >
                                                 <GripHorizontal size={16} />
                                             </button>
@@ -505,7 +505,7 @@ const MapControls: React.FC = () => {
                                     <div className="flex gap-2">
                                         <button 
                                             onClick={() => setAuraOverride(!auraOverride)}
-                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-subtle hover:text-slate-300'}`}
                                             title={t('map.sidebar.danger.aura')}
                                         >
                                             <Link size={14} />
@@ -513,7 +513,7 @@ const MapControls: React.FC = () => {
                                         </button>
                                         <button 
                                             onClick={() => setDifficultTerrainOverride(!difficultTerrainOverride)}
-                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${difficultTerrainOverride ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'bg-app-bg/50 border-app-border/50 text-slate-500 hover:text-slate-300'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${difficultTerrainOverride ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'bg-app-bg/50 border-app-border/50 text-app-subtle hover:text-slate-300'}`}
                                             title={t('map.sidebar.danger.terrain')}
                                         >
                                             <Mountain size={14} />
@@ -523,7 +523,7 @@ const MapControls: React.FC = () => {
 
                                     {difficultTerrainOverride && (
                                         <div className="flex items-center justify-between px-1">
-                                            <span className="text-ui-10 text-slate-500 uppercase font-bold">{t('map.sidebar.danger.dtCost')}</span>
+                                            <span className="text-ui-10 text-app-subtle uppercase font-bold">{t('map.sidebar.danger.dtCost')}</span>
                                             <div className="flex items-center gap-2">
                                                 <input 
                                                     type="range" min="1" max="4" step="0.5" 
@@ -537,7 +537,7 @@ const MapControls: React.FC = () => {
                                     )}
 
                                     <div>
-                                        <label className="text-ui-10 text-slate-500 uppercase font-bold block mb-1">{t('map.sidebar.danger.presets')}</label>
+                                        <label className="text-ui-10 text-app-subtle uppercase font-bold block mb-1">{t('map.sidebar.danger.presets')}</label>
                                         <div className="grid grid-cols-1 gap-1">
                                             {dangerZonePresets.map(preset => {
                                                 const isActive = selectedDangerPresetId === preset.id;
@@ -590,7 +590,7 @@ const MapControls: React.FC = () => {
                                             </button>
                                         </div>
                                         {zone.isAura && (
-                                            <div className="text-ui-9 text-slate-500 flex items-center gap-1 px-1 italic">
+                                            <div className="text-ui-9 text-app-subtle flex items-center gap-1 px-1 italic">
                                                 <Users size={10} />
                                                 <span>{t('map.sidebar.danger.carrier')}: {zone.parentTokenId ? (tokens.find(t => t.id === zone.parentTokenId)?.name || t('map.sidebar.danger.unknown')) : t('map.sidebar.danger.none')}</span>
                                             </div>
@@ -611,7 +611,7 @@ const MapControls: React.FC = () => {
 
                 {/* Weather Section */}
                 <section>
-                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-bold px-1">{t('map.sidebar.weather.title')}</h3>
+                    <h3 className="text-xs text-app-muted uppercase tracking-wider mb-3 font-bold px-1">{t('map.sidebar.weather.title')}</h3>
                     <div className="flex gap-2 mb-4">
                         {[
                             { id: 'none', icon: EyeOff, label: t('map.sidebar.weather.none') },
@@ -628,7 +628,7 @@ const MapControls: React.FC = () => {
                                     className={`flex-1 flex flex-col items-center justify-center p-2 rounded border transition-all ${
                                         isActive 
                                         ? 'bg-accent/20 border-accent text-accent shadow-glow-accent/20' 
-                                        : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                        : 'bg-app-bg border-app-border text-app-subtle hover:bg-app-surface'
                                     }`}
                                     title={w.label}
                                 >
@@ -641,7 +641,7 @@ const MapControls: React.FC = () => {
 
                     {weatherType !== 'none' && (
                         <div className="bg-app-bg/20 p-3 rounded border border-app-border">
-                            <div className="flex justify-between text-xs text-slate-400 mb-2">
+                            <div className="flex justify-between text-xs text-app-muted mb-2">
                                 <span>{t('map.sidebar.weather.intensity')}</span>
                                 <span className="text-accent font-mono">{Math.round(weatherIntensity * 100)}%</span>
                             </div>
@@ -664,12 +664,12 @@ const MapControls: React.FC = () => {
 
                 {/* Time of Day Section */}
                 <section>
-                    <h3 className="text-xs text-slate-400 uppercase tracking-wider mb-3 font-bold px-1">{t('map.sidebar.time.title')}</h3>
+                    <h3 className="text-xs text-app-muted uppercase tracking-wider mb-3 font-bold px-1">{t('map.sidebar.time.title')}</h3>
                     <div className="flex gap-1.5 mb-2">
                         {[
                             { id: 'dawn', icon: Sunrise, label: t('map.sidebar.time.dawn'), color: 'text-orange-400' },
                             { id: 'day', icon: Sun, label: t('map.sidebar.time.day'), color: 'text-yellow-400' },
-                            { id: 'overcast', icon: Cloudy, label: t('map.sidebar.time.overcast'), color: 'text-slate-400' },
+                            { id: 'overcast', icon: Cloudy, label: t('map.sidebar.time.overcast'), color: 'text-app-muted' },
                             { id: 'dusk', icon: Sunset, label: t('map.sidebar.time.dusk'), color: 'text-purple-400' },
                             { id: 'night', icon: Moon, label: t('map.sidebar.time.night'), color: 'text-indigo-400' },
                         ].map((t) => {
@@ -682,7 +682,7 @@ const MapControls: React.FC = () => {
                                     className={`flex-1 flex flex-col items-center justify-center p-2 rounded border transition-all ${
                                         isActive 
                                         ? 'bg-accent/20 border-accent shadow-glow-accent/20 text-accent' 
-                                        : 'bg-app-bg border-app-border text-slate-500 hover:bg-app-surface'
+                                        : 'bg-app-bg border-app-border text-app-subtle hover:bg-app-surface'
                                     }`}
                                     title={t.label}
                                 >
@@ -699,7 +699,7 @@ const MapControls: React.FC = () => {
                 {/* Grid Settings */}
                 <section>
                     <div className="flex items-center justify-between mb-3 px-1">
-                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold">{t('map.sidebar.grid.title')}</h3>
+                        <h3 className="text-xs text-app-muted uppercase tracking-wider font-bold">{t('map.sidebar.grid.title')}</h3>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input 
                                 type="checkbox" 
@@ -714,7 +714,7 @@ const MapControls: React.FC = () => {
                     {isGridEnabled && (
                         <div className="flex flex-col gap-3 bg-app-bg/20 p-3 rounded border border-app-border">
                             <div className="flex flex-col gap-1">
-                                <div className="flex justify-between text-ui-10 text-slate-400 mb-1">
+                                <div className="flex justify-between text-ui-10 text-app-muted mb-1">
                                     <span>{t('map.sidebar.grid.size')}</span>
                                     <span className="text-accent font-mono">{gridSize}px</span>
                                 </div>
@@ -730,7 +730,7 @@ const MapControls: React.FC = () => {
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
-                                <div className="flex justify-between text-ui-10 text-slate-400 mb-1">
+                                <div className="flex justify-between text-ui-10 text-app-muted mb-1">
                                     <span>{t('map.sidebar.grid.opacity')}</span>
                                     <span className="text-accent font-mono">{Math.round(gridOpacity * 100)}%</span>
                                 </div>
@@ -760,7 +760,7 @@ const MapControls: React.FC = () => {
                               elles.
                             */}
                             <div className="flex items-center justify-between gap-3">
-                                <span className="text-ui-10 text-slate-400">{t('map.sidebar.grid.color')}</span>
+                                <span className="text-ui-10 text-app-muted">{t('map.sidebar.grid.color')}</span>
                                 <div className="flex items-center gap-2">
                                     <input
                                         type="color"
@@ -789,7 +789,7 @@ const MapControls: React.FC = () => {
                 {/* Combat Turn Section */}
                 <section>
                     <div className="flex items-center justify-between mb-3 px-1">
-                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold text-gm-crimson flex items-center gap-2">
+                        <h3 className="text-xs text-app-muted uppercase tracking-wider font-bold text-gm-crimson flex items-center gap-2">
                            <Swords size={12} /> {t('map.sidebar.combat.title')}
                         </h3>
                         {combatants.length > 0 && (
@@ -825,7 +825,7 @@ const MapControls: React.FC = () => {
                 {/* Tokens Section */}
                 <section className="flex-1 flex flex-col min-h-[300px]">
                     <div className="flex justify-between items-center mb-3 px-1">
-                        <h3 className="text-xs text-slate-400 uppercase tracking-wider font-bold text-gm-emerald">{t('map.sidebar.combatants.title')}</h3>
+                        <h3 className="text-xs text-app-muted uppercase tracking-wider font-bold text-gm-emerald">{t('map.sidebar.combatants.title')}</h3>
                         {/* Vider les jetons en plein combat efface la position de tout le monde. */}
                         <HorsDePortee regime={regime} libelle={t('map.sidebar.combatants.clear')} compact icone={<Trash2 size={14} />}>
                             <button
@@ -867,7 +867,7 @@ const MapControls: React.FC = () => {
                 {isVideo && (
                     <section className="mt-4 pt-4 border-t border-gray-800 flex flex-col gap-3 px-1">
                         <div className="flex items-center justify-between">
-                            <span className="text-ui-10 font-black uppercase tracking-widest text-slate-500">{t('map.sidebar.audio.title')}</span>
+                            <span className="text-ui-10 font-black uppercase tracking-widest text-app-subtle">{t('map.sidebar.audio.title')}</span>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setMapMuted(!isMapMuted)}
@@ -891,7 +891,7 @@ const MapControls: React.FC = () => {
                                     className="w-full accent-accent h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer"
                                 />
                             </div>
-                            <span className="text-ui-10 font-bold text-slate-400 tabular-nums w-8 text-right">
+                            <span className="text-ui-10 font-bold text-app-muted tabular-nums w-8 text-right">
                                 {Math.round(mapVolume * 100)}%
                             </span>
                         </div>
@@ -924,7 +924,7 @@ const MapControls: React.FC = () => {
                                     }
                                     clearProjectedState();
                                 }}
-                                className="w-full py-1 text-ui-10 text-slate-500 hover:text-rose-400 transition-colors uppercase font-bold tracking-widest"
+                                className="w-full py-1 text-ui-10 text-app-subtle hover:text-rose-400 transition-colors uppercase font-bold tracking-widest"
                             >
                                 {t('map.sidebar.projection.stop')}
                             </button>
@@ -953,18 +953,18 @@ const MapControls: React.FC = () => {
                         <button
                             onClick={() => gmCustom('map-projection-select')}
                             className={`group flex flex-col items-center justify-center gap-2 p-4 border rounded-xl transition-all shadow-lg ${projectionTarget
-                                ? 'bg-app-surface/50 border-app-border text-slate-400'
+                                ? 'bg-app-surface/50 border-app-border text-app-muted'
                                 : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-100 hover:bg-indigo-500/20 active:scale-95'
                                 }`}
                         >
-                            <Cast className={projectionTarget ? 'text-slate-500' : 'text-accent group-hover:scale-110 transition-transform'} />
+                            <Cast className={projectionTarget ? 'text-app-subtle' : 'text-accent group-hover:scale-110 transition-transform'} />
                             <span className="text-ui-10 font-bold uppercase tracking-tight">{t('map.sidebar.projection.project')}</span>
                         </button>
                         <button
                             onClick={resetView}
                             className="flex flex-col items-center justify-center gap-2 p-4 bg-app-surface/40 hover:bg-app-surface border border-app-border/50 rounded-xl transition-all group shadow-lg"
                         >
-                            <Maximize className="text-slate-400 group-hover:scale-110 transition-transform" />
+                            <Maximize className="text-app-muted group-hover:scale-110 transition-transform" />
                             <span className="text-ui-10 font-bold uppercase tracking-tight text-white/80">{t('map.sidebar.projection.resetView')}</span>
                         </button>
                     </div>
@@ -1007,7 +1007,7 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-full flex items-center justify-between gap-3 bg-app-surface/30 border rounded-xl px-4 py-2.5 text-ui-8 font-black uppercase tracking-widest transition-all ${isOpen ? 'border-accent text-white shadow-glow-accent/20' : 'border-app-border/50 text-slate-500 hover:border-app-border/10 hover:text-slate-300'}`}
+                className={`w-full flex items-center justify-between gap-3 bg-app-surface/30 border rounded-xl px-4 py-2.5 text-ui-8 font-black uppercase tracking-widest transition-all ${isOpen ? 'border-accent text-white shadow-glow-accent/20' : 'border-app-border/50 text-app-subtle hover:border-app-border/10 hover:text-slate-300'}`}
             >
                 <span className="truncate max-w-[140px]">{currentLabel}</span>
                 <ChevronDown size={12} className={`transition-transform duration-300 ${isOpen ? 'rotate-180 text-accent' : ''}`} />
@@ -1023,7 +1023,7 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
                         <div className="max-h-48 overflow-y-auto custom-scrollbar flex flex-col gap-0.5">
                             <button
                                 onClick={() => { onSelect('default'); setIsOpen(false); }}
-                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${currentId === 'default' ? 'bg-accent/20 text-white' : 'text-slate-400 hover:bg-app-surface/5 hover:text-white'}`}
+                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${currentId === 'default' ? 'bg-accent/20 text-white' : 'text-app-muted hover:bg-app-surface/5 hover:text-white'}`}
                             >
                                 <span>{t('map.sidebar.audio.defaultSpeaker')}</span>
                                 {currentId === 'default' && <Check size={10} className="text-gm-violet" />}
@@ -1035,7 +1035,7 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
                                 <button
                                     key={device.deviceId}
                                     onClick={() => { onSelect(device.deviceId); setIsOpen(false); }}
-                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all text-left ${currentId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all text-left ${currentId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-app-muted hover:bg-white/5 hover:text-white'}`}
                                 >
                                     <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                     {currentId === device.deviceId && <Check size={10} className="text-gm-violet" />}

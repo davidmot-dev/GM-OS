@@ -12,7 +12,7 @@ const MapLayersPanel: React.FC = () => {
     const { layerVisibility, toggleLayer } = useMapStore();
 
     const layers: { id: LayerId; label: string; icon: React.ReactNode }[] = [
-        { id: 'fog', label: t('map.sidebar.layers.fog'), icon: <Layers className="w-4 h-4 text-slate-400" /> },
+        { id: 'fog', label: t('map.sidebar.layers.fog'), icon: <Layers className="w-4 h-4 text-app-muted" /> },
         { id: 'grid', label: t('map.sidebar.layers.grid'), icon: <Grid className="w-4 h-4 text-blue-400" /> },
         { id: 'tokens', label: t('map.sidebar.layers.tokens'), icon: <Users className="w-4 h-4 text-green-400" /> },
         { id: 'magic', label: t('map.sidebar.layers.magic'), icon: <Zap className="w-4 h-4 text-purple-400" /> },
@@ -36,7 +36,7 @@ const MapLayersPanel: React.FC = () => {
                         className={`w-full flex items-center justify-between group px-2 py-1.5 rounded transition-all duration-200 ${
                             layerVisibility[layer.id] 
                                 ? 'bg-white/5 hover:bg-white/10 text-slate-200' 
-                                : 'bg-transparent hover:bg-white/5 text-slate-500'
+                                : 'bg-transparent hover:bg-white/5 text-app-subtle'
                         }`}
                     >
                         <div className="flex items-center gap-2">
@@ -53,7 +53,7 @@ const MapLayersPanel: React.FC = () => {
                 ))}
             </div>
             
-            <div className="mt-2 pt-2 border-t border-white/5 text-ui-10 text-slate-500 italic text-center">
+            <div className="mt-2 pt-2 border-t border-white/5 text-ui-10 text-app-subtle italic text-center">
                 {t('map.sidebar.layers.footer')}
             </div>
         </div>
