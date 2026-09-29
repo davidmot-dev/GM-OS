@@ -236,7 +236,7 @@ const AtmosphereManager: React.FC = () => {
 
             <button
                 onClick={handleAdd}
-                className="size-9 flex items-center justify-center bg-app-bg/40 border border-app-border/50 text-slate-500 rounded-2xl hover:border-accent/30 hover:text-accent hover:bg-accent/5 transition-all active:scale-95 shadow-lg flex-shrink-0"
+                className="size-9 flex items-center justify-center bg-app-bg/40 border border-app-border/50 text-app-subtle rounded-2xl hover:border-accent/30 hover:text-accent hover:bg-accent/5 transition-all active:scale-95 shadow-lg flex-shrink-0"
                 title="Nouvelle Atmosphère"
             >
                 <Plus size={18} />
@@ -274,7 +274,7 @@ const AtmosphereManager: React.FC = () => {
                                         : `Rattacher « ${active.name} » à la campagne ouverte — elle n'apparaîtra plus ailleurs`}
                                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${actif
                                     ? 'bg-accent text-white shadow-glow-accent'
-                                    : 'text-slate-500 hover:text-slate-200 hover:bg-app-surface/60'}`}
+                                    : 'text-app-subtle hover:text-slate-200 hover:bg-app-surface/60'}`}
                             >
                                 {icone}
                                 <span>{texte}</span>
