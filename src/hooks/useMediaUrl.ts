@@ -13,6 +13,22 @@ import { useMediaStore } from '../stores/useMediaStore';
 export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefined => {
     const [resolvedUrl, setResolvedUrl] = useState<string | undefined>(undefined);
     const { getMediaBlob } = useMediaStore();
+    /*
+      **Le média est-il en base ?** Trouvé par la vitrine le 2026-09-27 : les
+      tuiles d'Image-OS montées pendant « Restaurer depuis la sauvegarde »
+      cherchaient leur image AVANT que `restaurerUnMedia` ne la remette, et ne
+      réessayaient jamais — le chemin, seul déclencheur, ne change pas. Elles
+      restaient vides jusqu'à ce qu'on quitte le module.
+
+      `restaurerUnMedia`, `addMedia` et `initDB` inscrivent tous le média dans
+      `mediaList` : son arrivée relance la résolution. Seulement pour un
+      identifiant `m-`, les seuls que la base résout.
+    */
+    const estEnBase = useMediaStore(state =>
+        typeof sourceIdOrUrl === 'string'
+        && sourceIdOrUrl.startsWith('m-')
+        && state.mediaList.some(m => m.id === sourceIdOrUrl)
+    );
 
     useEffect(() => {
         let objectUrl: string | null = null;
@@ -169,7 +185,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                 }, 1000);
             }
         };
-    }, [sourceIdOrUrl]); // Removed getMediaBlob to prevent redundant cycles if the store is unstable
+    }, [sourceIdOrUrl, estEnBase]); // getMediaBlob exclu : le store instable relançait sans cesse
 
     return resolvedUrl;
 };
