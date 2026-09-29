@@ -205,7 +205,7 @@ const ClockDashboard: React.FC = () => {
                         {mode === 'fantasy' && (
                             <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                 <div>
-                                    <label className="text-xs text-slate-500 uppercase font-medium block mb-2">{t('clock.calendar')}</label>
+                                    <label className="text-xs text-app-subtle uppercase font-medium block mb-2">{t('clock.calendar')}</label>
                                     <div className="flex gap-2">
                                         <select
                                             className="flex-1 min-w-0 bg-app-bg border border-app-border rounded p-2 text-xs text-app-text focus:outline-none focus:border-accent"
@@ -240,7 +240,7 @@ const ClockDashboard: React.FC = () => {
                                     <div className="space-y-3 pt-2 border-t border-app-border/50">
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
-                                                <label className="text-ui-10 text-slate-500 uppercase block mb-1">{t('clock.year')}</label>
+                                                <label className="text-ui-10 text-app-subtle uppercase block mb-1">{t('clock.year')}</label>
                                                 <input
                                                     type="number"
                                                     className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
@@ -249,7 +249,7 @@ const ClockDashboard: React.FC = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label className="text-ui-10 text-slate-500 uppercase block mb-1">{t('clock.day')}</label>
+                                                <label className="text-ui-10 text-app-subtle uppercase block mb-1">{t('clock.day')}</label>
                                                 <input
                                                     type="number"
                                                     className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
@@ -259,7 +259,7 @@ const ClockDashboard: React.FC = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="text-ui-10 text-slate-500 uppercase block mb-1">{t('clock.month')}</label>
+                                            <label className="text-ui-10 text-app-subtle uppercase block mb-1">{t('clock.month')}</label>
                                             <select
                                                 className="w-full bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text"
                                                 value={fantasyDate.monthIndex}
@@ -302,7 +302,7 @@ const ClockDashboard: React.FC = () => {
 
                         {mode === 'static' && (
                             <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                                <label className="text-xs text-slate-500 uppercase font-medium block">{t('clock.manual_setting')}</label>
+                                <label className="text-xs text-app-subtle uppercase font-medium block">{t('clock.manual_setting')}</label>
                                 <div className="space-y-2">
                                     <input
                                         type="date"
@@ -532,7 +532,7 @@ const ClockDashboard: React.FC = () => {
                             >
                                 <button
                                     onClick={() => removeTensionClock(clock.id)}
-                                    className="absolute top-2 right-2 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute top-2 right-2 text-app-subtle hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                                 >
                                     <Trash2 size={14} />
                                 </button>
@@ -576,7 +576,7 @@ const ClockDashboard: React.FC = () => {
                                           Sans lui, rien dans la ligne ne dit
                                           si quatre est une bonne nouvelle.
                                         */}
-                                        <p className="text-ui-10 text-slate-500 font-mono italic">
+                                        <p className="text-ui-10 text-app-subtle font-mono italic">
                                             {clock.filledSegments} / {clock.totalSegments}{' '}
                                             {elleSeVide(clock) ? t('clock.remaining') : t('clock.segments')}
                                         </p>
@@ -742,7 +742,7 @@ const ClockDashboard: React.FC = () => {
                                             className="w-10 bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 text-center font-mono text-app-text/80 focus:outline-none focus:border-accent"
                                         />
                                         {!!clock.pasParScene && (
-                                            <span className="font-mono text-slate-500">
+                                            <span className="font-mono text-app-subtle">
                                                 {elleSeVide(clock) ? '−' : '+'}{clock.pasParScene}
                                             </span>
                                         )}
