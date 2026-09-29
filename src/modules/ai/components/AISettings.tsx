@@ -275,7 +275,7 @@ const AISettings: React.FC = () => {
       id: 'custom', 
       name: t('ai.providers.custom_label', 'Custom API'), 
       icon: <Settings2 size={24} />,
-      color: 'text-slate-400',
+      color: 'text-app-muted',
       desc: t('ai.providers.custom_desc', 'API compatible OpenAI/Custom')
     },
   ];
