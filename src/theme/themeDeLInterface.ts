@@ -45,6 +45,8 @@
 import { tailleDeRacine, echelleDeTexte } from './editionDuTheme';
 import { VARIABLE_DU_JETON } from './contratDuTheme';
 import { accentsDeModule, ACCENTS_D_AUJOURD_HUI } from './accentsDeModule';
+import { ORNEMENTS_DES_THEMES_DE_BASE, type Ornements, type Emplacement } from './ornements';
+import { EMPLACEMENTS_D_ORNEMENT } from './contratDuTheme';
 
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 
@@ -59,6 +61,8 @@ export interface ThemeDuJeuApplique {
     variables: Record<string, string>;
     jetons: Record<string, string>;
     clarte?: 'dark' | 'light';
+    /** Les ornements du jeu (§ 8), incorporés — sous l'interrupteur des personnalités. */
+    ornements?: Ornements;
 }
 
 /**
@@ -656,6 +660,15 @@ export function appliquerLeTheme(
         socle['--glass-highlight'] = `color-mix(in srgb, ${texteDuJeu} 18%, transparent)`;
         delete socle['--texture-fond'];
         delete socle['--texture-opacite'];
+        /*
+          **La deuxième surface et le texte sur l'accent suivent le jeu** (P3.9,
+          2026-09-30) : la vitrine du socle montrait des tuiles bleu nuit sur le
+          papier ivoire de Cthulhu Hack — la `surface-2` du Cyberpunk. Un jeu
+          qui les déclare passe devant (le pont) ; sinon, sa surface et son fond.
+        */
+        socle['--app-surface-2'] = jeu.variables['--app-surface'] ?? socle['--app-surface'];
+        socle['--app-accent-contrast'] = fondDuJeu;
+        delete socle['--texture-panneau'];
     }
 
     const vars = completerLesDerivees({
@@ -676,6 +689,16 @@ export function appliquerLeTheme(
       allumé aurait laissé.
     */
     if (personnalites) {
+        /*
+          **Les ornements** (§ 8, P3.1) : ceux du jeu s'il y en a un, sinon ceux
+          de la personnalité. Jamais un mélange : les coins en laiton du Médiéval
+          autour d'Alien seraient le défaut du cadre de bois, rejoué.
+        */
+        const ornements: Ornements = jeu ? (jeu.ornements ?? {}) : (ORNEMENTS_DES_THEMES_DE_BASE[theme] ?? {});
+        for (const [emplacement, adresse] of Object.entries(ornements)) {
+            vars[`--orne-${emplacement}`] = adresse;
+            vars[`--orne-${emplacement}-affichage`] = 'block';
+        }
         // R7 : les accents de module suivent l'accent effectif et le fond affiché.
         const modules = accentsDeModule(accent, vars['--app-bg']);
         if (modules) {
@@ -769,6 +792,7 @@ export function appliquerLeTheme(
 /** Tout ce qu'un thème peut cesser de déclarer : les variables du contrat, et les accents de module. */
 const VARIABLES_EFFACABLES = new Set([
     ...Object.values(VARIABLE_DU_JETON),
+    ...(EMPLACEMENTS_D_ORNEMENT as readonly Emplacement[]).flatMap(e => [`--orne-${e}`, `--orne-${e}-affichage`]),
     '--verre-premium',
     ...Object.keys(ACCENTS_D_AUJOURD_HUI).map(m => `--gm-${m}`),
 ]);

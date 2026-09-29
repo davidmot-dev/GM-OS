@@ -54,7 +54,10 @@ export function useThemeDuJeu(): void {
     const duJeu = (allumees: boolean): ThemeDuJeuApplique | undefined => {
         const releve = releveDuJeu.current;
         return releve
-            ? { variables: pontVersLInterface(releve.jetons, { personnalites: allumees }), jetons: releve.jetons, clarte: releve.clarte }
+            ? {
+                variables: pontVersLInterface(releve.jetons, { personnalites: allumees }),
+                jetons: releve.jetons, clarte: releve.clarte, ornements: releve.ornements,
+            }
             : undefined;
     };
     const campagneLue = useRef<string | null>(null);

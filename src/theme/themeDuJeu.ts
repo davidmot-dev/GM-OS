@@ -8,6 +8,7 @@ export {
     extraireImportsDePolice, premiereFamille,
 } from './jetonsDeTheme';
 export type { JetonsDuJeu } from './jetonsDeTheme';
+import { chargerLesOrnements, type Ornements } from './ornements';
 
 /**
  * Charge le thème d'un système, s'il en a un.
@@ -23,6 +24,8 @@ export type { JetonsDuJeu } from './jetonsDeTheme';
 export interface ThemeDuJeuCharge extends JetonsDuJeu {
     /** Les `@import` de polices retenus, à poser avec `poserLesPolices`. */
     polices: string[];
+    /** Les ornements du § 8, vérifiés et incorporés — `{}` quand le jeu n'en a pas. */
+    ornements: Ornements;
 }
 
 export async function chargerLeThemeDuJeu(racine: string): Promise<ThemeDuJeuCharge | null> {
@@ -49,7 +52,8 @@ export async function chargerLeThemeDuJeu(racine: string): Promise<ThemeDuJeuCha
           thème s'exprime en CSS.
         */
         const jetons = await incorporerLesMatieres(releve.jetons, lire, racine);
-        return { ...releve, jetons, polices: extraireImportsDePolice(css) };
+        const ornements = await chargerLesOrnements(lire, racine);
+        return { ...releve, jetons, polices: extraireImportsDePolice(css), ornements };
     } catch (err) {
         console.error(`[ThèmeDuJeu] Lecture de « ${cheminDuTheme(racine)} » impossible :`, err);
         return null;

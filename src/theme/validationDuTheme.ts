@@ -31,6 +31,7 @@ import {
     type FormatDeJeton, type JetonDuContrat,
 } from './contratDuTheme';
 import { blocsDeJetons, declarationsDuBloc, extraireJetons, nomDuBloc } from './jetonsDeTheme';
+import { problemesDuSvg } from './ornements';
 import { contraste, POLICES_CONNUES } from './editionDuTheme';
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -525,18 +526,8 @@ function verifierUnFichierJoint(
 
 /** Les règles des SVG du § 8, matières comprises. */
 function verifierLeSvg(nom: string, cle: string | undefined, chemin: string, svg: string, erreur: Signaler): void {
-    const dire = (quoi: string) => erreur('§ 8', `${nom}: « ${chemin} » ${quoi}`, cle);
-    if (!/<svg[^>]*\sviewBox\s*=/i.test(svg)) dire('n\'a pas de `viewBox`.');
-    if (!/currentColor/i.test(svg)) dire('ne dessine pas en `currentColor` : GM-OS ne pourra pas l\'accorder à l\'accent.');
-    if (/<script/i.test(svg)) dire('contient un `<script>`.');
-    if (/\son[a-z]+\s*=/i.test(svg)) dire('contient un attribut `on…`.');
-    if (/<foreignObject/i.test(svg)) dire('contient un `<foreignObject>`.');
-    for (const m of svg.matchAll(/\s(?:xlink:)?href\s*=\s*["']([^"']*)["']/gi)) {
-        const cible = m[1].trim();
-        if (!cible.startsWith('#') && !cible.startsWith('data:')) {
-            dire(`renvoie vers « ${cible} » : un SVG ne charge aucun autre fichier.`);
-        }
-    }
+    // Une seule vérification pour le validateur et pour le chargeur des ornements (`ornements.ts`).
+    for (const probleme of problemesDuSvg(svg)) erreur('§ 8', `${nom}: « ${chemin} » ${probleme}`, cle);
 }
 
 function verifierLesOrnements(fichier: FichierDuTheme, theme: ThemeAValider, erreur: Signaler): void {
