@@ -1,4 +1,5 @@
 import { faitDescendre, deDUnCranPlusBas } from './desDUsure';
+import { estUneSauvegarde, lireLaNotation } from './lectureDuPilote';
 import {
     degreDepuisLeBooleen, degreDuDe, estUneReussite,
     type DegreDeReussite, type EchelleDuJet,
@@ -795,8 +796,17 @@ export class DiceEngine {
           **La Sauvegarde de Cthulhu Hack** (2026-09-30) : un d20 sous la
           caractéristique, que l'appelant passe en `targetOverwrite` — c'est
           la seule valeur qu'il connaît. Sans elle, le seuil du pilote.
+          Nommée (`engine: 'sauvegarde'`) ou seulement DÉCRITE — un d20, « sous
+          ou égal » : voir `lectureDuPilote`. Avant, la description tombait
+          dans `count-success` et rendait « 1 succès », critiques perdus.
         */
-        if (config.engine === 'sauvegarde') {
+        const notation = lireLaNotation(config.defaultDice);
+        if (estUneSauvegarde({
+            engine: config.engine,
+            sens: config.sens,
+            faces: notation.faces,
+            nombre: options?.baseCount ?? notation.nombre,
+        })) {
             return this.rollSauvegarde(
                 options?.targetOverwrite ?? config.successThreshold ?? 10,
                 'aucun',

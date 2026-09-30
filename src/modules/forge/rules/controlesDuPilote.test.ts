@@ -1167,3 +1167,57 @@ describe('un pilote mal formé se dit, il ne fait pas tomber la revue', () => {
         expect(constats.some(c => c.ou === 'jet.cible.mecanique')).toBe(true);
     });
 });
+
+/**
+ * **Le moteur `sauvegarde`** — Cthulhu Hack, 2026-09-30 : un d20 SOUS la
+ * caractéristique. La Forge doit pouvoir le nommer sans se faire gronder.
+ */
+describe('le moteur de la Sauvegarde', () => {
+    const gabarit = { id: 't', name: 'T', sections: [{ id: 'sauvegardes', title: 'Sauvegardes', fields: [] }] } as unknown as SheetTemplate;
+    const surLeJet = (dice: Record<string, unknown>, sens: string) => controlerLePilote(
+        { dice, jet: { sens, seuil: [{ id: 's', label: 'Sauvegarde', sectionId: 'sauvegardes' }] } } as unknown as Partial<GameDriver>,
+        gabarit,
+    ).filter(c => c.ou === 'dice.engine' || c.ou === 'jet.sens');
+
+    it('est un moteur connu, qui ne dit rien quand tout est juste', () => {
+        expect(surLeJet({ defaultDice: '1d20', logic: 'count-success', engine: 'sauvegarde' }, 'sous-ou-egal')).toEqual([]);
+    });
+
+    it('se lance sous la caractéristique : « supérieur » est une contradiction', () => {
+        const constats = surLeJet({ defaultDice: '1d20', logic: 'count-success', engine: 'sauvegarde' }, 'superieur-ou-egal');
+        expect(constats.map(c => c.ou)).toEqual(['jet.sens']);
+    });
+
+    it('lance un d20 : une notation en d6 est recopiée d’ailleurs', () => {
+        const constats = surLeJet({ defaultDice: '1d6', logic: 'count-success', engine: 'sauvegarde' }, 'sous-ou-egal');
+        expect(constats.map(c => c.ou)).toEqual(['dice.engine']);
+    });
+});
+
+/**
+ * **Les ressources à dé d'usure** — Cthulhu Hack, 2026-09-30. Le champ doit
+ * exister (il porte le dé courant), et le plafond doit être un cran de l'échelle.
+ */
+describe('les dés d’usure déclarés par le pilote', () => {
+    const gabarit = {
+        id: 't', name: 'T',
+        sections: [{ id: 'ressources', title: 'Ressources', fields: [{ id: 'torche', label: 'Torche', type: 'text' }] }],
+    } as unknown as SheetTemplate;
+    const surLUsure = (desDUsure: unknown) => controlerLePilote(
+        { desDUsure } as unknown as Partial<GameDriver>,
+        gabarit,
+    ).filter(c => c.ou.startsWith('desDUsure'));
+
+    it('ne dit rien quand le champ existe et que le plafond est un cran', () => {
+        expect(surLUsure([{ fieldId: 'torche', label: 'Torche', plafond: 12 }])).toEqual([]);
+        expect(surLUsure([{ fieldId: 'torche', label: 'Matériel', plafond: 20 }])).toEqual([]);
+    });
+
+    it('signale un champ qu’aucune section ne porte', () => {
+        expect(surLUsure([{ fieldId: 'bagou', label: 'Bagou' }]).map(c => c.ou)).toEqual(['desDUsure[0].fieldId']);
+    });
+
+    it('signale un plafond hors de l’échelle', () => {
+        expect(surLUsure([{ fieldId: 'torche', label: 'Torche', plafond: 7 }]).map(c => c.ou)).toEqual(['desDUsure[0].plafond']);
+    });
+});

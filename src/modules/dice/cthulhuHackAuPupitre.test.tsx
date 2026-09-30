@@ -98,6 +98,25 @@ describe('le dé de ressource', () => {
 });
 
 describe('la Sauvegarde', () => {
+    /**
+     * **Le pilote de David, tel qu’il est** (sauvegarde du 2026-09-30) : il
+     * décrit un d20 sous la Sauvegarde sans nommer de moteur. Le pupitre en
+     * faisait une réserve de dés au seuil 8.
+     */
+    it('est le mode où s’ouvre le pupitre avec le pilote de Cthulhu Hack', () => {
+        useSessionOSStore.setState({
+            activeCampaignId: 'c-1',
+            campaigns: [{ id: 'c-1', name: 'Le Secret de Milo', system: 'ch-test' }],
+            customGameDrivers: [{
+                id: 'ch-test', name: 'Cthulhu Hack',
+                dice: { defaultDice: '1d20', logic: 'count-success', engine: 'standard' },
+                jet: { sens: 'sous-ou-egal', seuil: [{ id: 'sauvegarde', label: 'Sauvegarde', sectionId: 'sauvegardes' }], reserve: { base: 1, max: 1, faces: 20 }, critique: 1, complication: 20 },
+            }],
+        } as never);
+        render(<DiceBoard />);
+        expect((screen.getByLabelText('dice.inputs.mode') as HTMLSelectElement).value).toBe('sauvegarde');
+    });
+
     it('se lance sous la caractéristique, à l’avantage', () => {
         render(<DiceBoard />);
         choisirLeMode('sauvegarde');

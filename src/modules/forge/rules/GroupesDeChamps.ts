@@ -448,17 +448,23 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'd100-high. "d100-low" et "d100-high" lancent un d100 quoi que dise "defaultDice" : ne ' +
             'les choisis que sur un vrai système en pourcentage. Un jeu qui lance UN SEUL dé sous ' +
             'une valeur de la fiche prend "count-success" avec "defaultDice" à "1d20". ' +
+            // Cthulhu Hack, 2026-09-30 : le pilote décrivait tout juste, et le
+            // pupitre n'en lisait que le moteur. Nommer la famille évite de
+            // dépendre de cette lecture.
+            'Et s\'il lance UN d20 SOUS une caractéristique (« lance sous ta Sauvegarde », The Black ' +
+            'Hack, Cthulhu Hack), "dice.engine" vaut "sauvegarde". ' +
             '"dice.engine" NOMME LA FAMILLE et vaut EXACTEMENT : standard, formula, pool, ' +
             'pool_explode, threshold, advantage, disadvantage, exploding, fate, rolemaster, yze, ' +
             // Les deux variantes Year Zero se confondent au nom près, et les
             // confondre donne des réussites plausibles avec le meilleur dé du
             // personnage nulle part. Le rappel tient sur une ligne.
             'yze-echelonne, ' +
-            '2d20. "yze" est la variante à POOLS — des dés tous à six faces. Si tu as rempli ' +
+            '2d20, sauvegarde. "yze" est la variante à POOLS — des dés tous à six faces. Si tu as rempli ' +
             '"jet.desEchelonnes", le moteur est "yze-echelonne" et JAMAIS "yze". ' +
             '"2d20" désigne la FAMILLE MODIPHIUS — Dune, Star Trek, Conan —, où l\'on lance ' +
             'PLUSIEURS d20 en comptant les réussites ; ce n\'est pas « le jeu utilise un d20 ». ' +
-            'Un jeu qui n\'en lance qu\'un prend "standard". Dans le doute, "standard". ' +
+            'Un jeu qui n\'en lance qu\'un CONTRE une difficulté prend "standard" ; SOUS une valeur ' +
+            'de sa fiche, "sauvegarde". Dans le doute, "standard". ' +
             '"jet.reserve" décrit le nombre de dés lancés ; ses bornes ("base", "max", "faces") ' +
             'sont des NOMBRES. Si la réserve se compose depuis la fiche — « autant de dés que la ' +
             'somme de ton attribut et de ta compétence » —, mets "base" à 0 et donne une entrée ' +
@@ -567,7 +573,16 @@ export const GROUPES: readonly GroupeDeChamps[] = [
         label: 'Jauges suivies en combat',
         sujets: ['Jauges et ressources individuelles'],
         dependDuVocabulaire: true,
-        cible: '"driver" avec seulement combat.statsToTrack et ui_config.gauges',
+        cible: '"driver" avec seulement combat.statsToTrack et ui_config.gauges — ' +
+            // Cthulhu Hack, 2026-09-30 : ses Ressources sont des dés qui s'usent,
+            // et rien ne permettait de le dire. L'exemple (Dune) n'en a pas :
+            // la forme est donc écrite ici, avec des valeurs muettes.
+            'et "desDUsure" SEULEMENT si le jeu a des ressources qui SONT UN DÉ qu\'on lance et ' +
+            'qui DESCEND d\'un cran sur un 1 ou un 2 (d12 → d10 → d8 → d6 → d4 → épuisée) : ' +
+            '[{"fieldId":"<id du champ de la fiche qui porte ce dé>","label":"<son nom>",' +
+            '"plafond":12}], une entrée par ressource, "plafond" à 20 si les fiches le permettent. ' +
+            'OMETS "desDUsure" si aucune ressource ne s\'use ainsi : une jauge qu\'on coche ou ' +
+            'qu\'on dépense n\'est pas un dé d\'usure',
         exemple: '{"driver":{"combat":{"statsToTrack":[{"fieldId":"determination","label":"Détermination","isMainHP":false,"isResource":true}]},"ui_config":{"gauges":[{"fieldId":"determination","label":"Détermination","color":"#d97706","style":"segmented"}]}}}',
     },
     {

@@ -12,6 +12,7 @@ import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
 import { facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes } from './desEchelonnes';
 import { STYLES_DE_DES } from './logic/stylesDeDes';
 import { DES_D_USURE } from './desDUsure';
+import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 
@@ -217,6 +218,15 @@ const DiceBoard: React.FC = () => {
                   invérifiables l'un par l'autre.*
                 */
                 setMode('yze-echelonne');
+            } else if (estUneSauvegarde(decrireLeJetDuPilote(activeDriver))) {
+                /*
+                  **Un d20 sous une valeur de la fiche : la Sauvegarde.** Nommée
+                  ou seulement décrite — voir `lectureDuPilote`. Le pilote de
+                  Cthulhu Hack la décrivait parfaitement, et tombait plus bas
+                  dans « count-success » : réserve de dés, seuil 8.
+                */
+                setMode('sauvegarde');
+                setTarget(activeDriver.dice.successThreshold || 10);
             } else if (engine === 'yze' || engine === 'year-zero') {
                 setMode('yze');
                 const dCount = parseInt(activeDriver.dice.defaultDice) || 6;
@@ -244,9 +254,6 @@ const DiceBoard: React.FC = () => {
                     setMode('fate');
                 } else if (engine === 'exploding') {
                     setMode('exploding');
-                } else if (engine === 'sauvegarde') {
-                    setMode('sauvegarde');
-                    setTarget(activeDriver.dice.successThreshold || 10);
                 } else if (engine === 'formula') {
                     setMode('formula');
                 } else if (activeDriver.dice.logic === 'count-success') {

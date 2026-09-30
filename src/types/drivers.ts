@@ -122,6 +122,15 @@ export interface UIConfig {
     themeColor?: string; // Global accent for this system
 }
 
+/** Une ressource à dé d'usure, telle que le pilote la déclare. */
+export interface DeDUsureDuPilote {
+    /** Le champ de la fiche qui porte le dé courant. */
+    fieldId: string;
+    label: string;
+    /** Le plus gros dé que la ressource peut atteindre — 12, ou 20 pour le Matériel. */
+    plafond?: number;
+}
+
 export interface GameDriver {
     id: string;
     name: string;
@@ -249,6 +258,15 @@ export interface GameDriver {
      * s'affiche — plutôt qu'un bandeau vide qui suggérerait un oubli.
      */
     ressourcesDeTable?: import('../modules/table/RessourcesDeTable').RessourceDeTable[];
+    /**
+     * **Les ressources à dé d'usure** — Cthulhu Hack, 2026-09-30.
+     *
+     * Une ressource qui EST un dé : on la lance quand on la sollicite, et un 1
+     * ou un 2 la fait descendre d'un cran (d12 → d10 → … → épuisée, voir
+     * `desDUsure`). Chaque entrée désigne le champ de la fiche qui porte le dé
+     * courant (« d8 »). Absent : le jeu n'en a pas.
+     */
+    desDUsure?: DeDUsureDuPilote[];
     ragPath?: string; // Hérité : visait le dossier des fiches. Préférer `corpusId`.
     /**
      * Dossier de corpus sous `docs/systems/` — `dune`, `blade-runner`.

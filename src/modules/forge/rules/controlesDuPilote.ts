@@ -1,3 +1,4 @@
+import { ECHELLE_D_USURE } from '../../dice/desDUsure';
 import type { GameDriver, DiceRollLogic, DiceConfig } from '../../../types/drivers';
 import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
@@ -69,6 +70,8 @@ type MoteurDeDes = NonNullable<DiceConfig['engine']>;
 const MOTEURS_CONNUS: readonly MoteurDeDes[] = [
     'standard', 'formula', 'pool', 'pool_explode', 'threshold', 'advantage',
     'disadvantage', 'exploding', 'fate', 'rolemaster', 'yze', 'yze-echelonne', '2d20',
+    // Cthulhu Hack, 2026-09-30 : un d20 SOUS la caractéristique.
+    'sauvegarde',
 ];
 
 /**
@@ -77,7 +80,7 @@ const MOTEURS_CONNUS: readonly MoteurDeDes[] = [
  * Les autres — `pool`, `threshold`, `exploding`… — décrivent une façon de
  * compter, pas un dé : rien à confronter, donc rien à contrôler.
  */
-const FACES_DU_MOTEUR: Readonly<Record<string, number>> = { '2d20': 20, yze: 6, 'year-zero': 6 };
+const FACES_DU_MOTEUR: Readonly<Record<string, number>> = { '2d20': 20, yze: 6, 'year-zero': 6, sauvegarde: 20 };
 
 /**
  * Deux noms que le type ne déclare pas et que les trois lecteurs acceptent
@@ -307,6 +310,27 @@ export function controlerLePilote(
                 `combat.statsToTrack[${i}].fieldId`,
                 `« ${stat.fieldId} » (${stat.label}) n'est un champ d'aucune section de la fiche : ` +
                 'la jauge affichera zéro en séance, sans rien signaler.',
+            );
+        }
+    });
+
+    /*
+      **Les dés d'usure** (Cthulhu Hack, 2026-09-30) : le champ doit exister —
+      c'est lui qui porte le dé courant —, et le plafond doit être un cran de
+      l'échelle. Un « d7 » ne descendrait nulle part.
+    */
+    (driver.desDUsure ?? []).forEach((de, i) => {
+        if (!tousLesChamps.has(de.fieldId)) {
+            erreur(
+                `desDUsure[${i}].fieldId`,
+                `« ${de.fieldId} » (${de.label}) n'est un champ d'aucune section de la fiche : ` +
+                'le dé de cette ressource n\'aurait nulle part où s\'inscrire.',
+            );
+        }
+        if (de.plafond !== undefined && !(ECHELLE_D_USURE as readonly number[]).includes(de.plafond)) {
+            erreur(
+                `desDUsure[${i}].plafond`,
+                `« d${de.plafond} » n'est pas un cran de l'échelle d'usure (${ECHELLE_D_USURE.map(f => `d${f}`).join(', ')}).`,
             );
         }
     });
@@ -573,6 +597,20 @@ export function controlerLePilote(
             'dice.engine',
             `Le moteur « ${moteur} » lance des dés à ${facesAttendues} faces, mais le jet en ` +
             `compose à ${facesObservees}. L'un des deux est recopié de l'exemple.`,
+        );
+    }
+
+    /*
+      **Une Sauvegarde se lance SOUS la caractéristique**, par définition
+      (2026-09-30). Un pilote qui la dit « supérieur ou égal » se contredit : le
+      pupitre suivrait le moteur, la fiche suivrait le sens, et les deux
+      rendraient des verdicts inverses sur le même jet.
+    */
+    if (moteur === 'sauvegarde' && driver.jet?.sens === 'superieur-ou-egal') {
+        erreur(
+            'jet.sens',
+            'Le moteur « sauvegarde » lance un d20 SOUS la caractéristique, mais le jet est déclaré '
+            + '« superieur-ou-egal ». Le sens doit valoir « sous-ou-egal ».',
         );
     }
 
