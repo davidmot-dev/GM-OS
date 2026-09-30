@@ -71,7 +71,7 @@ const MasterAudioController: React.FC = () => {
                 : 'bg-app-surface/40 backdrop-blur-xl border-app-border/30 rounded-2xl hover:border-accent/40'
         }`}>
             {/* Master Volume Slider */}
-            <div className={`flex items-center gap-3 min-w-[180px] p-2 ${
+            <div className={`flex items-center gap-3 min-w-[110px] @min-[1000px]:min-w-[180px] p-2 ${
                 theme === 'medieval' ? 'bg-black/20 rounded border border-app-border/30' : ''
             }`}>
                 <button 
@@ -102,6 +102,7 @@ const MasterAudioController: React.FC = () => {
             {/* Focus Chat Button */}
             <button
                 onClick={toggleFocusMode}
+                title={isFocusMode ? 'Focus ACTIVE' : 'Focus Chat'}
                 className={`flex items-center gap-2.5 px-4 py-2 border transition-all duration-500 relative overflow-hidden group/btn ${
                     theme === 'medieval' ? 'rounded-md' : 'rounded-xl'
                 } ${
@@ -120,7 +121,7 @@ const MasterAudioController: React.FC = () => {
                     ) : (
                         <Mic size={16} className="group-hover/btn:scale-110 transition-transform" />
                     )}
-                    <span className="text-ui-10 font-black uppercase tracking-[0.2em]">
+                    <span className="text-ui-10 font-black uppercase tracking-[0.2em] hidden @min-[1000px]:inline">
                         {isFocusMode ? 'Focus ACTIVE' : 'Focus Chat'}
                     </span>
                 </div>
@@ -177,7 +178,7 @@ const MasterAudioController: React.FC = () => {
                 title={t('common:actions.stop_all')}
             >
                 <Power size={16} className="group-hover/panic:scale-110 transition-transform" />
-                <span className="text-ui-10 font-black uppercase tracking-[0.2em] hidden sm:inline">
+                <span className="text-ui-10 font-black uppercase tracking-[0.2em] hidden @min-[1000px]:inline">
                     Stop All
                 </span>
             </button>

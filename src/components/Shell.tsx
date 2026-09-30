@@ -58,6 +58,19 @@ import { gmToast } from '../stores/useToastStore';
 import { adresseDeLaTablette } from '../utils/portsDuRenderer';
 import { STYLE_DU_CADRE } from '../theme/themeDeLInterface';
 
+/**
+ * **Le titre du bandeau** : le nom du module, « OS » à la couleur de l'accent.
+ * Cinq modules le portent déjà dans leur nom (`Dice-OS`, `Combat-OS`…) : on
+ * colore le leur au lieu d'en ajouter un second — « DICE-OS OS », signalé par
+ * David le 2026-09-30.
+ */
+const TitreDuModule: React.FC<{ nom: string }> = ({ nom }) => {
+    const deja = /OS$/i.exec(nom);
+    return deja
+        ? <>{nom.slice(0, deja.index)}<span className="text-accent">{deja[0]}</span></>
+        : <>{nom} <span className="text-accent">OS</span></>;
+};
+
 interface NavItemProps {
     icon: React.ReactNode;
     label: string;
@@ -542,22 +555,34 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     ? 'bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.08),transparent_40%)]' 
                     : 'bg-[radial-gradient(circle_at_top_right,rgba(29,78,216,0.05),transparent_40%)]'
             }`}>
-                <header style={STYLE_DU_CADRE as React.CSSProperties} className={`cadre-gmos h-16 border-b border-app-border/20 flex items-center justify-between px-8 backdrop-blur-md z-10 transition-all duration-500 ${
+                <header style={STYLE_DU_CADRE as React.CSSProperties} className={`cadre-gmos @container h-16 border-b border-app-border/20 flex items-center justify-between px-8 backdrop-blur-md z-10 transition-all duration-500 ${
                     theme === 'medieval' ? 'bg-app-surface/95 border-b-app-border/60 shadow-lg' : 'bg-app-surface/10'
                 }`}>
-                    <div className="flex items-center gap-4">
-                        <h2 className={`text-lg tracking-widest text-app-text uppercase ${
+                    {/*
+                      ⚠️ **Le bandeau n'a pas la place de tout dire** (2026-09-30,
+                      signalé par David) : à 1 440 px, ses éléments demandaient
+                      1 624 px pour 1 223, et chacun se repliait sur deux ou trois
+                      lignes — pire sous les polices larges des jeux. Rien n'y
+                      revient donc à la ligne ; le titre, seul, s'abrège, et le
+                      décoratif (le lien système, la version, le libellé de
+                      « Connecter joueurs ») ne paraît qu'en très grand écran.
+                      Les seuils lisent la largeur du BANDEAU (`@container`), pas
+                      celle de l'écran : le panneau Cortex IA, ouvert, lui en
+                      reprend 380 px.
+                    */}
+                    <div className="flex items-center gap-4 min-w-0" title={`GM-OS v${__APP_VERSION__}`}>
+                        <h2 className={`text-lg tracking-widest text-app-text uppercase whitespace-nowrap truncate ${
                             theme === 'medieval' ? 'font-display' : 'font-bold italic'
                         }`}>
-                            {activeModule === 'dashboard' ? t('common:sessionMode') : t(`modules:names.${activeModule}`)} <span className="text-accent">OS</span>
+                            <TitreDuModule nom={activeModule === 'dashboard' ? t('common:sessionMode') : t(`modules:names.${activeModule}`)} />
                         </h2>
                     </div>
 
-                    <div className="flex-1 flex justify-center px-12">
+                    <div className="flex-1 flex justify-center px-4 shrink-0">
                         <MasterAudioController />
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 shrink-0 whitespace-nowrap">
                         {/*
                           **La porte de sortie du mode « table », et elle est ici
                           exprès.** Le régime replie cinq modules ; son propre
@@ -568,11 +593,14 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         */}
                         <IndicateurDeRegime />
 
-                         <div className={`flex items-center gap-4 px-4 py-1.5 border ${
+                         <div title={tacticalSettings.isEnabled
+                                    ? (theme === 'medieval' ? t('modules:tactical.seal_active') : t('modules:tactical.cortex_active'))
+                                    : (theme === 'medieval' ? t('modules:tactical.seal_broken') : t('modules:tactical.cortex_disabled'))}
+                            className={`flex items-center gap-4 px-4 py-1.5 border ${
                             theme === 'medieval' ? 'rounded-md border-app-border/40' : 'rounded-full border-app-accent/20'
                         } ${tacticalSettings.isEnabled ? 'bg-accent/10' : 'bg-app-surface opacity-50'}`}>
                             <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-emerald-400 animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
-                             <span className={`text-ui-10 uppercase tracking-[0.22em] ${theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent/80'}`}>
+                             <span className={`hidden @min-[1300px]:inline text-ui-10 uppercase tracking-[0.22em] ${theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent/80'}`}>
                                 {tacticalSettings.isEnabled 
                                     ? (theme === 'medieval' ? t('modules:tactical.seal_active') : t('modules:tactical.cortex_active')) 
                                     : (theme === 'medieval' ? t('modules:tactical.seal_broken') : t('modules:tactical.cortex_disabled'))}
@@ -584,15 +612,15 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             title="Ouvrir le code de connexion PWA"
                         >
                             <Wifi size={14} className="group-hover:scale-110 transition-transform" />
-                            <span className="text-ui-10 font-bold uppercase tracking-widest hidden md:inline">Connecter Joueurs</span>
+                            <span className="text-ui-10 font-bold uppercase tracking-widest hidden @min-[1600px]:inline">Connecter Joueurs</span>
                         </button>
-                        <div className="flex items-center gap-2">
+                        <div className="hidden @min-[1600px]:flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full bg-accent ${tacticalSettings.isEnabled ? 'animate-pulse' : 'animate-ping'}`} />
                              <span className={`text-ui-10 font-mono text-app-text/40 uppercase tracking-widest ${theme === 'medieval' ? 'font-display' : ''}`}>
                                 {theme === 'medieval' ? t('modules:tactical.eternal_link') : t('modules:tactical.system_link')}
                              </span>
                         </div>
-                        <div className={`px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-ui-9 text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>
+                        <div className={`hidden @min-[1600px]:block px-3 py-1.5 rounded-lg bg-app-bg border border-app-border text-ui-9 text-app-text/40 shadow-xl ${theme === 'medieval' ? 'font-display' : 'font-mono'}`}>
                             GM-OS_v{__APP_VERSION__}
                         </div>
                     </div>

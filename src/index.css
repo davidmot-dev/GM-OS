@@ -534,9 +534,9 @@ body {
 }
 
 /* Overlays and backdrops should be very subtle */
-:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-xl:not(:root[data-cadre] .cadre-gmos),
-:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-2xl:not(:root[data-cadre] .cadre-gmos),
-:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-3xl:not(:root[data-cadre] .cadre-gmos) {
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-xl:not(:root[data-cadre] .cadre-gmos):not(:root[data-cadre] .cadre-gmos *),
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-2xl:not(:root[data-cadre] .cadre-gmos):not(:root[data-cadre] .cadre-gmos *),
+:root[data-theme='claire'][data-clarte='light'] .backdrop-blur-3xl:not(:root[data-cadre] .cadre-gmos):not(:root[data-cadre] .cadre-gmos *) {
   background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
@@ -618,9 +618,9 @@ body {
   color: var(--app-text) !important;
 }
 
-:root[data-personnalites][data-clarte='light'] .backdrop-blur-xl:not(.cadre-gmos),
-:root[data-personnalites][data-clarte='light'] .backdrop-blur-2xl:not(.cadre-gmos),
-:root[data-personnalites][data-clarte='light'] .backdrop-blur-3xl:not(.cadre-gmos) {
+:root[data-personnalites][data-clarte='light'] .backdrop-blur-xl:not(.cadre-gmos):not(:root[data-cadre] .cadre-gmos *),
+:root[data-personnalites][data-clarte='light'] .backdrop-blur-2xl:not(.cadre-gmos):not(:root[data-cadre] .cadre-gmos *),
+:root[data-personnalites][data-clarte='light'] .backdrop-blur-3xl:not(.cadre-gmos):not(:root[data-cadre] .cadre-gmos *) {
   background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
@@ -658,6 +658,10 @@ body {
   du thème clair d'aujourd'hui **seulement quand un cadre est déclaré**
   (2026-09-30, Cthulhu Hack sous Clair : barre latérale délavée), sans quoi le
   Clair seul aurait perdu son voile.
+  Et **ce qui est posé dans le cadre** non plus (2026-09-30, Cthulhu Hack : le
+  contrôle du son en pavé gris, « STOP ALL » délavé) — du blanc à 40 % sur un
+  cadre sombre. Exclu seulement quand un cadre est déclaré : sans cadre, le
+  bandeau est clair et son contenu garde le voile.
 */
 :root[data-cadre] .cadre-gmos {
   background-color: var(--app-frame-bg) !important;
