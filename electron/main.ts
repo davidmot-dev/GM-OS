@@ -243,8 +243,12 @@ function createWindow() {
         sauvegarderAvantDeSortir(() => win?.close());
     })
 
-    // Open DevTools automatically to help debugging (at User's request)
-    win.webContents.openDevTools({ mode: 'detach' })
+    /*
+      **Les DevTools ne s'ouvrent plus au démarrage** — David, 2026-09-30 :
+      *« j'ouvrirai les DevTools quand c'est nécessaire »*. Leur fenêtre
+      détachée gênait les captures. Ctrl+Maj+I, ou View › Toggle Developer
+      Tools (le menu par défaut d'Electron), les ouvre à la demande.
+    */
 
     if (VITE_DEV_SERVER_URL) {
         win.loadURL(VITE_DEV_SERVER_URL)

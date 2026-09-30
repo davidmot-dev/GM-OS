@@ -272,10 +272,11 @@ function portsDeCeWorker(): { sync: number; fiches: number; variables: Record<st
 /**
  * La fenêtre de l'application, et non les DevTools.
  *
- * ⛔ **`main.ts` ouvre les DevTools en fenêtre DÉTACHÉE à chaque démarrage**
- * (`openDevTools({ mode: 'detach' })`, « at User's request »). C'est donc une
- * vraie fenêtre de plus, et `firstWindow()` tombait dessus : le test cherchait
- * les onglets de l'aide dans l'inspecteur de Chromium.
+ * ⛔ **`main.ts` a longtemps ouvert les DevTools en fenêtre DÉTACHÉE à chaque
+ * démarrage** (`openDevTools({ mode: 'detach' })`, retiré le 2026-09-30 à la
+ * demande de David). C'était une vraie fenêtre de plus, et `firstWindow()`
+ * tombait dessus : le test cherchait les onglets de l'aide dans l'inspecteur
+ * de Chromium. La garde reste : des DevTools ouverts à la main font pareil.
  *
  * On choisit donc par l'adresse plutôt que par l'ordre d'arrivée. *L'ordre des
  * fenêtres est un détail d'implémentation ; ce qu'on veut, c'est celle qui porte
