@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { EtiquetteDuDegre } from './EtiquetteDuDegre';
 import { DiceEngine } from './DiceEngine';
-import type { RollResult } from './DiceEngine';
+import type { RollResult, ModificateurDeSauvegarde } from './DiceEngine';
 import { Dices, RotateCcw, Zap, BookmarkPlus, X, Target, Info, XCircle, Cast, SlidersHorizontal } from 'lucide-react';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useMapStore } from '../map/useMapStore';
@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
 import { facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes } from './desEchelonnes';
 import { STYLES_DE_DES } from './logic/stylesDeDes';
+import { DES_D_USURE } from './desDUsure';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 
@@ -23,7 +24,9 @@ interface RollRecord extends RollResult {
     batchId?: string;
 }
 
-type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | 'yze-echelonne';
+type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | 'yze-echelonne'
+    /** Cthulhu Hack, 2026-09-30 : la Sauvegarde (d20 sous la caractéristique) et le dé de ressource. */
+    | 'sauvegarde' | 'usure';
 
 /**
  * Les niveaux que le pupitre propose, du meilleur au pire.
@@ -54,8 +57,15 @@ const LETTRES_ECHELONNEES = ['A', 'B', 'C', 'D'] as const;
  * sans se confondre — `formula` et `fate` sont ici et pas là-bas.
  */
 const MODES_SANS_CHOIX_DE_FACES: readonly DiceMode[] = [
-    'formula', 'fate', 'rolemaster', 'yze', 'yze-echelonne',
+    'formula', 'fate', 'rolemaster', 'yze', 'yze-echelonne', 'sauvegarde',
 ];
+
+/**
+ * **Les modes que le meneur choisit, et que le pilote ne remplace pas.** Un dé
+ * de ressource n'est jamais le jet principal du jeu ; la Sauvegarde se lance
+ * avec l'avantage que l'écran tient, et que `rollFromConfig` ne connaît pas.
+ */
+const MODES_HORS_DU_PILOTE: readonly DiceMode[] = ['usure', 'sauvegarde'];
 
 interface RemoteDiceOptions {
     sides?: number;
@@ -149,6 +159,7 @@ const DiceBoard: React.FC = () => {
     */
     const [niveauEquipement, setNiveauEquipement] = useState('');
     const [modificateurEchelonne, setModificateurEchelonne] = useState<ModificateurDeDes>('aucun');
+    const [modificateurSauvegarde, setModificateurSauvegarde] = useState<ModificateurDeSauvegarde>('aucun');
 
     /**
      * La poignée telle que le pupitre la lancera — modificateur et bornes du
@@ -233,6 +244,9 @@ const DiceBoard: React.FC = () => {
                     setMode('fate');
                 } else if (engine === 'exploding') {
                     setMode('exploding');
+                } else if (engine === 'sauvegarde') {
+                    setMode('sauvegarde');
+                    setTarget(activeDriver.dice.successThreshold || 10);
                 } else if (engine === 'formula') {
                     setMode('formula');
                 } else if (activeDriver.dice.logic === 'count-success') {
@@ -258,7 +272,7 @@ const DiceBoard: React.FC = () => {
         const finalTarget = (remoteOverrides?.target !== undefined) ? remoteOverrides.target : target;
         const finalGearCount = (remoteOverrides?.gearCount !== undefined) ? remoteOverrides.gearCount : gearCount;
 
-        if (useSystemDriver && activeDriver && !remoteOverrides) {
+        if (useSystemDriver && activeDriver && !remoteOverrides && !MODES_HORS_DU_PILOTE.includes(finalMode)) {
             const modVal = typeof finalModifier === 'string' ? (parseInt(finalModifier.replace('+', ''), 10) || 0) : finalModifier;
             // Le sens du comptage vit sur `jet`, pas sur `dice` : sans ce
             // passage, une réserve « sous le seuil » se résolvait à l'envers.
@@ -388,6 +402,18 @@ const DiceBoard: React.FC = () => {
                   à la main pour un PNJ improvisé. Rien n'oblige à avoir ouvert
                   une campagne Blade Runner pour lancer deux dés échelonnés.
                 */
+                /* Cthulhu Hack (2026-09-30) : voir `rollSauvegarde` et `desDUsure`. */
+                case 'sauvegarde':
+                    result = DiceEngine.rollSauvegarde(finalTarget, modificateurSauvegarde, modVal);
+                    title = t('dice.results.sauvegarde', { target: finalTarget })
+                        + (modificateurSauvegarde === 'avantage' ? ` · ${t('dice.agencement.avantage')}`
+                            : modificateurSauvegarde === 'desavantage' ? ` · ${t('dice.agencement.desavantage')}` : '');
+                    if (useSystemDriver && activeDriver) title = `${activeDriver.name} — ${title}`;
+                    break;
+                case 'usure':
+                    result = DiceEngine.rollUsure(sides);
+                    title = t('dice.results.usure', { faces: sides });
+                    break;
                 case 'yze-echelonne':
                     result = DiceEngine.rollYZEEchelonne(
                         poigneeEchelonnee.des.map(d => d.faces),
@@ -403,18 +429,20 @@ const DiceBoard: React.FC = () => {
     }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule,
         // Sans elles, un changement de niveau ne serait pas relu : le pupitre
         // lancerait la poignée d'avant, et le résultat resterait plausible.
-        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee]);
+        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde]);
 
-    const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions) => {
+    const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions): RollRecord | null => {
         try {
-            const batchId = batchCount > 1 ? generateId() : undefined;
+            /* Un dé de ressource se lance une fois : il change à chaque jet. */
+            const repetitions = mode === 'usure' ? 1 : batchCount;
+            const batchId = repetitions > 1 ? generateId() : undefined;
             const newRecords: RollRecord[] = [];
             
-            for (let i = 0; i < batchCount; i++) {
+            for (let i = 0; i < repetitions; i++) {
                 const { result, title } = executeRoll(sides, isFormulaText, customFormula, remoteOverrides);
 
                 let repTitle = title;
-                if (batchCount > 1) repTitle = t('dice.results.batch', { title, current: i + 1, total: batchCount });
+                if (repetitions > 1) repTitle = t('dice.results.batch', { title, current: i + 1, total: repetitions });
 
                 const record = {
                     ...result,
@@ -426,7 +454,7 @@ const DiceBoard: React.FC = () => {
                 newRecords.push(record);
                 
                 // Only set as last global roll the very last one of the batch
-                if (i === batchCount - 1) {
+                if (i === repetitions - 1) {
                     setLastRoll(record);
                     // Automatiquement projeter sur le Player Hub si le mode est activé
                     if (isDiceProjected) {
@@ -434,10 +462,12 @@ const DiceBoard: React.FC = () => {
                     }
                 }
             }
+            return newRecords[newRecords.length - 1] ?? null;
         } catch (error) {
             console.error("Erreur de lancer:", error);
+            return null;
         }
-    }, [batchCount, executeRoll, isDiceProjected, triggerDiceProjection, setLastRoll]);
+    }, [batchCount, mode, executeRoll, isDiceProjected, triggerDiceProjection, setLastRoll]);
 
     const handleQuickRoll = (formula: string, label: string) => {
         handleRoll(0, true, formula, { mode: 'formula', title: label });
@@ -489,7 +519,9 @@ const DiceBoard: React.FC = () => {
       Elle ne paraît donc que lorsqu'elle décide vraiment.
     */
     const jetDuSysteme = useSystemDriver && !!activeDriver;
-    const avecFaces = !MODES_SANS_CHOIX_DE_FACES.includes(mode) && !jetDuSysteme;
+    /* Le dé de ressource se choisit toujours, pilote ou pas : c'est lui qu'on lance. */
+    const avecFaces = mode === 'usure' || (!MODES_SANS_CHOIX_DE_FACES.includes(mode) && !jetDuSysteme);
+    const facesOffertes: readonly number[] = mode === 'usure' ? DES_D_USURE : diceTypes;
     const valeurDuModificateur = typeof modifier === 'number' ? modifier : (parseInt(String(modifier).replace('+', ''), 10) || 0);
     const avecLeModificateur = (des: string) => valeurDuModificateur === 0
         ? des
@@ -500,13 +532,27 @@ const DiceBoard: React.FC = () => {
     /** Ce que « Lancer » va lancer, écrit à côté du bouton. */
     const resumeDuJet = mode === 'formula' ? formulaInput
         : echelonne ? libelleDeLaPoignee
+        : mode === 'usure' ? `d${faces}`
+        : mode === 'sauvegarde' ? avecLeModificateur(`d20 ≤ ${target}`) + (modificateurSauvegarde === 'avantage' ? ' · avantage' : modificateurSauvegarde === 'desavantage' ? ' · désavantage' : '')
         : mode === 'yze' ? `${diceCount}B + ${gearCount}E`
         : mode === 'fate' ? avecLeModificateur(`${diceCount}dF`)
         : mode === 'rolemaster' ? avecLeModificateur('d100')
         : jetDuSysteme ? avecLeModificateur(activeDriver!.dice.defaultDice)
         : avecLeModificateur(`${diceCount}d${faces}`);
 
-    const lancer = () => handleRoll(avecFaces ? faces : 0, mode === 'formula');
+    /*
+      **Le dé de ressource descend tout seul** : un 1 ou un 2 au d8, et le
+      prochain jet part d'un d6 — ce que la table ferait à la main. Épuisée, la
+      ressource garde son dernier dé : le résultat dit « épuisée », au meneur de
+      décider de la suite.
+    */
+    const lancer = () => {
+        const jet = handleRoll(avecFaces ? faces : 0, mode === 'formula');
+        if (mode === 'usure' && jet?.usure?.apres) setFaces(jet.usure.apres);
+    };
+    React.useEffect(() => {
+        if (mode === 'usure' && !(DES_D_USURE as readonly number[]).includes(faces)) setFaces(12);
+    }, [mode, faces]);
 
     const libelleDuMode = (m: DiceMode) => m === 'yze-echelonne' ? 'Year Zero — dés échelonnés' : t(`dice.modes.${m}`);
     const etiquetteDeChamp = 'text-ui-11 font-semibold text-app-muted uppercase tracking-widest';
@@ -558,6 +604,8 @@ const DiceBoard: React.FC = () => {
                         <option value="yze-echelonne">Year Zero — dés échelonnés</option>
                         <option value="fate">{t('dice.modes.fate')}</option>
                         <option value="rolemaster">{t('dice.modes.rolemaster')}</option>
+                        <option value="sauvegarde">{t('dice.modes.sauvegarde')}</option>
+                        <option value="usure">{t('dice.modes.usure')}</option>
                     </select>
                 </div>
 
@@ -572,6 +620,69 @@ const DiceBoard: React.FC = () => {
                             />
                         </div>
                     </div>
+                ) : mode === 'sauvegarde' ? (
+                    /*
+                      **La Sauvegarde : d20 sous la caractéristique.** Le seuil
+                      est la caractéristique du personnage ; l'avantage et le
+                      désavantage se choisissent en boutons, comme pour les dés
+                      échelonnés — un seul mode, trois gestes.
+                    */
+                    <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{t('dice.agencement.caracteristique')}</label>
+                                <div className={champ}>
+                                    <button onClick={() => setTarget(target - 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
+                                    <input
+                                        type="number" value={target}
+                                        onChange={(e) => setTarget(parseInt(e.target.value) || 0)}
+                                        title={t('dice.agencement.caracteristique')} aria-label={t('dice.agencement.caracteristique')}
+                                        className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`}
+                                    />
+                                    <button onClick={() => setTarget(target + 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
+                                </div>
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{t('dice.inputs.mod')}</label>
+                                <div className={champ}>
+                                    <button onClick={() => setModifier(valeurDuModificateur - 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
+                                    <input
+                                        type="text"
+                                        value={modifier === 0 || modifier === "0" ? "0" : typeof modifier === 'number' && modifier > 0 ? `+${modifier}` : modifier}
+                                        onChange={(e) => {
+                                            const raw = e.target.value.replace(/[^0-9+-]/g, '');
+                                            if (raw === '' || raw === '-' || raw === '+') setModifier(raw);
+                                            else setModifier(parseInt(raw.replace('+', ''), 10) || 0);
+                                        }}
+                                        title={t('dice.inputs.mod')} aria-label={t('dice.inputs.mod')}
+                                        className="w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none"
+                                    />
+                                    <button onClick={() => setModifier(valeurDuModificateur + 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-1.5">
+                            {([
+                                { cle: 'aucun', titre: t('dice.agencement.normal') },
+                                { cle: 'avantage', titre: t('dice.agencement.avantage') },
+                                { cle: 'desavantage', titre: t('dice.agencement.desavantage') },
+                            ] as const).map(({ cle, titre }) => (
+                                <button
+                                    key={cle}
+                                    onClick={() => setModificateurSauvegarde(cle)}
+                                    aria-pressed={modificateurSauvegarde === cle}
+                                    className={`px-1 py-1.5 rounded-lg border text-ui-10 font-bold uppercase tracking-wider transition-all ${modificateurSauvegarde === cle
+                                        ? 'bg-accent/20 border-accent/60 text-accent'
+                                        : 'bg-app-bg border-app-border text-app-muted hover:text-app-text'}`}
+                                >
+                                    {titre}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ) : mode === 'usure' ? (
+                    /* Le dé de ressource n'a que son dé : la rangée ci-dessous. */
+                    <p className="text-ui-11 text-app-muted">{t('dice.agencement.usureAide')}</p>
                 ) : mode === 'yze-echelonne' ? (
                     /*
                       **Le meneur nomme les niveaux ; l'échelle reste dans
@@ -728,7 +839,7 @@ const DiceBoard: React.FC = () => {
                     </div>
                 )}
 
-                <div className="space-y-1.5">
+                {mode !== 'usure' && <div className="space-y-1.5">
                     <label className={etiquetteDeChamp}>{t('dice.inputs.repeat')}</label>
                     <div className={champ}>
                         <button onClick={() => setBatchCount(Math.max(1, batchCount - 1))} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
@@ -740,13 +851,13 @@ const DiceBoard: React.FC = () => {
                         />
                         <button onClick={() => setBatchCount(Math.min(20, batchCount + 1))} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
                     </div>
-                </div>
+                </div>}
 
                 {avecFaces ? (
                     <div className="space-y-1.5">
                         <label className={etiquetteDeChamp}>{t('dice.agencement.die')}</label>
                         <div className="grid grid-cols-4 gap-1.5">
-                            {diceTypes.map((sides) => (
+                            {facesOffertes.map((sides) => (
                                 <button
                                     key={sides}
                                     onClick={() => setFaces(sides)}

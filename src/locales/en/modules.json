@@ -282,6 +282,11 @@
   },
   "dice": {
     "agencement": {
+      "normal": "Normal",
+      "avantage": "Advantage",
+      "desavantage": "Disadvantage",
+      "caracteristique": "Attribute",
+      "usureAide": "Pick the resource die. A 1 or 2 steps it down; below d4, it is exhausted.",
       "last_roll": "Last roll",
       "parameters": "Roll parameters",
       "die": "Die",
@@ -297,6 +302,8 @@
     "system_mode": "SYSTEM MODE: {{name}}",
     "reset": "Reset",
     "modes": {
+      "sauvegarde": "Save (d20 roll-under)",
+      "usure": "Resource die (usage)",
       "standard": "Standard d20/d6",
       "exploding": "Exploding Sum",
       "formula": "Free Formula",
@@ -366,6 +373,8 @@
       "title": "History"
     },
     "results": {
+      "sauvegarde": "Save (≤ {{target}})",
+      "usure": "Resource d{{faces}}",
       "system": "System: {{name}}",
       "formula": "Formula: {{formula}}",
       "exploding": "Exploding {{count}}d{{sides}}",

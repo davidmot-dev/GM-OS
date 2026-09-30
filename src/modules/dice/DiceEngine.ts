@@ -1,3 +1,4 @@
+import { faitDescendre, deDUnCranPlusBas } from './desDUsure';
 import {
     degreDepuisLeBooleen, degreDuDe, estUneReussite,
     type DegreDeReussite, type EchelleDuJet,
@@ -39,7 +40,15 @@ export interface RollResult {
     degre?: DegreDeReussite;
     totalDisplay: string;
     fateRank?: number; // For Fate/Fudge results
+    /**
+     * **Un dé de ressource** : le dé lancé, et celui qu'il devient — `null`
+     * quand la ressource s'épuise. Absent sur tout autre jet. Voir `desDUsure`.
+     */
+    usure?: { avant: number; apres: number | null };
 }
+
+/** Le jet de sauvegarde se lance normalement, à l'avantage, ou au désavantage. */
+export type ModificateurDeSauvegarde = 'aucun' | 'avantage' | 'desavantage';
 
 export class DiceEngine {
     /**
@@ -346,6 +355,77 @@ export class DiceEngine {
             tagSuccess: echelle ? estUneReussite(degreDuDe(total, echelle, faces)) : success,
             degre: echelle ? degreDuDe(total, echelle, faces) : degreDepuisLeBooleen(success),
             totalDisplay: `${total} vs ${target}`
+        };
+    }
+
+    // --- 5 bis. SAUVEGARDE (Cthulhu Hack) ---
+    /**
+     * **La Sauvegarde : un d20 SOUS la caractéristique** — Cthulhu Hack,
+     * demandé par David le 2026-09-30.
+     *
+     * Réussie si le dé (plus un éventuel modificateur) est **inférieur ou égal**
+     * à la caractéristique. À l'avantage, on lance deux d20 et on garde **le
+     * plus bas** ; au désavantage, le plus haut — *en dessous, le petit dé est
+     * le bon.*
+     *
+     * Les critiques se lisent sur le dé **naturel** (« sans modificateur »,
+     * corpus du jeu, section « Dégâts ») : **un 1, réussite critique ; un 20,
+     * échec critique.** Ils ne changent pas le verdict — un 1 réussit déjà, un
+     * 20 échoue déjà —, ils le qualifient : le double des dégâts, infligés ou
+     * subis. On les écrit donc en toutes lettres dans le résultat.
+     *
+     * ⚠️ Sur le dé gardé, `isCritMax` marque le 1 et `isCritMin` le 20 : ces
+     * deux marques disent **bon** et **mauvais** à l'écran (vert, rouge), pas
+     * « la plus haute face ». Sous la caractéristique, la meilleure face est 1.
+     */
+    static rollSauvegarde(
+        caracteristique: number,
+        modificateurDeJet: ModificateurDeSauvegarde = 'aucun',
+        modifier: number = 0,
+    ): RollResult {
+        const premier = this.roll(20);
+        const second = modificateurDeJet === 'aucun' ? null : this.roll(20);
+        const garde = second === null ? premier
+            : modificateurDeJet === 'avantage' ? Math.min(premier, second) : Math.max(premier, second);
+        const ecarte = second === null ? null
+            : modificateurDeJet === 'avantage' ? Math.max(premier, second) : Math.min(premier, second);
+
+        const total = garde + modifier;
+        const reussi = total <= caracteristique;
+        const critique = garde === 1 ? 'réussite critique' : garde === 20 ? 'échec critique' : null;
+
+        return {
+            total,
+            rolls: [
+                { val: garde, sides: 20, isCritMax: garde === 1, isCritMin: garde === 20 },
+                ...(ecarte === null ? [] : [{ val: ecarte, sides: 20, isDropped: true, displayStr: `(${ecarte})` }]),
+            ],
+            modifier,
+            tagSuccess: reussi,
+            degre: degreDepuisLeBooleen(reussi),
+            totalDisplay: `${total} / ${caracteristique}${critique ? ` — ${critique}` : ''}`,
+        };
+    }
+
+    // --- 5 ter. DÉ DE RESSOURCE (Cthulhu Hack) ---
+    /**
+     * **Un dé de ressource qui s'use** — voir `desDUsure`. Ce n'est ni une
+     * réussite ni un échec : l'enquête avance toujours, c'est la ressource qui
+     * paie. Le résultat ne porte donc **aucun verdict** (`tagSuccess` absent),
+     * seulement ce que devient le dé.
+     */
+    static rollUsure(faces: number): RollResult {
+        const valeur = this.roll(faces);
+        const descend = faitDescendre(valeur);
+        const apres = descend ? deDUnCranPlusBas(faces) : faces;
+        return {
+            total: valeur,
+            rolls: [{ val: valeur, sides: faces, isCritMin: descend }],
+            modifier: 0,
+            usure: { avant: faces, apres },
+            totalDisplay: !descend ? `${valeur} — tient`
+                : apres !== null ? `${valeur} — descend au d${apres}`
+                : `${valeur} — épuisée`,
         };
     }
 
@@ -711,6 +791,19 @@ export class DiceEngine {
          * petit de l'échelle, **jamais un dé inventé plus gros**. Un meneur qui
          * veut la vraie poignée la lance depuis la fiche du personnage.
          */
+        /*
+          **La Sauvegarde de Cthulhu Hack** (2026-09-30) : un d20 sous la
+          caractéristique, que l'appelant passe en `targetOverwrite` — c'est
+          la seule valeur qu'il connaît. Sans elle, le seuil du pilote.
+        */
+        if (config.engine === 'sauvegarde') {
+            return this.rollSauvegarde(
+                options?.targetOverwrite ?? config.successThreshold ?? 10,
+                'aucun',
+                options?.modifier ?? 0,
+            );
+        }
+
         if (config.engine === 'yze-echelonne') {
             const tailles = options?.taillesDeBase?.length
                 ? options.taillesDeBase

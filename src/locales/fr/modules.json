@@ -282,6 +282,11 @@
   },
   "dice": {
     "agencement": {
+      "normal": "Normal",
+      "avantage": "Avantage",
+      "desavantage": "Désavantage",
+      "caracteristique": "Caractéristique",
+      "usureAide": "Choisissez le dé de la ressource. Un 1 ou un 2 le fait descendre d'un cran ; sous le d4, elle s'épuise.",
       "last_roll": "Dernier jet",
       "parameters": "Paramètres du jet",
       "die": "Dé",
@@ -297,6 +302,8 @@
     "system_mode": "MODE SYSTÈME : {{name}}",
     "reset": "Réinitialiser",
     "modes": {
+      "sauvegarde": "Sauvegarde (d20 sous la caractéristique)",
+      "usure": "Dé de ressource (usure)",
       "standard": "Standard d20/d6",
       "exploding": "Somme Explosive",
       "formula": "Formule Libre",
@@ -366,6 +373,8 @@
       "title": "Historique"
     },
     "results": {
+      "sauvegarde": "Sauvegarde (≤ {{target}})",
+      "usure": "Ressource d{{faces}}",
       "system": "Système : {{name}}",
       "formula": "Formule : {{formula}}",
       "exploding": "Explosif {{count}}d{{sides}}",

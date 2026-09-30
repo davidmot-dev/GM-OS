@@ -67,7 +67,9 @@ export interface DiceConfig {
      * et dix ou plus vaut deux réussites. *Les confondre donne des réussites
      * plausibles et le meilleur dé du personnage nulle part.*
      */
-    engine?: 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | 'yze-echelonne' | '2d20'; // Specific specialized logic
+    engine?: 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' | 'advantage' | 'disadvantage' | 'exploding' | 'fate' | 'rolemaster' | 'yze' | 'yze-echelonne' | '2d20'
+        /** Cthulhu Hack : un d20 SOUS la caractéristique (2026-09-30). */
+        | 'sauvegarde'; // Specific specialized logic
     successThreshold?: number; // e.g. 8 for WoD, or dynamic
 }
 
