@@ -44,10 +44,17 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
   const isLow = percentage <= 20;
 
   return (
-    <div className="w-full h-8 flex flex-col justify-center gap-1 px-1 relative group/hp">
+    /*
+      ⛔ **`min-h-8`, et la barre `shrink-0`** (2026-09-30). Le conteneur était
+      fixé à `h-8` : la ligne des chiffres et la barre n'y tenaient pas, et
+      flexbox comprimait la barre — qui coupe ce qui dépasse — jusqu'à un
+      trait. **La jauge de vie était vide à 148 / 155**, sur la carte de combat
+      comme sur la fiche de PNJ. Trouvé en réagençant Combat-OS.
+    */
+    <div className="w-full min-h-8 flex flex-col justify-center gap-1 px-1 relative group/hp">
         {/* PV Labels */}
         <div className="flex justify-between items-end px-0.5">
-            <span className="text-ui-10 font-display font-black text-white/40 uppercase tracking-tighter">Vitality</span>
+            <span className="text-ui-10 font-display font-black text-white/40 uppercase tracking-tighter">PV</span>
             <div className={`flex items-baseline gap-1 font-display font-black tracking-tight ${percentage <= 25 ? 'text-rose-500' : 'text-white/80'}`}>
                 <input 
                     type="number" 
@@ -68,13 +75,18 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
         </div>
 
         {/* Progress Container */}
-        <div className="h-3 w-full bg-black/60 rounded-full border border-white/10 overflow-hidden shadow-inner flex items-center p-[2px]">
+        <div className="h-3 shrink-0 w-full bg-black/60 rounded-full border border-white/10 overflow-hidden shadow-inner flex items-center p-[2px]">
             <div 
                 className={`h-full rounded-full bg-gradient-to-r transition-all duration-700 ease-out-back relative ${getBarColor()}`}
                 style={{ width: `${percentage}%` }}
             >
-                {/* Visual texture overlay */}
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+                {/*
+                  ⛔ Il y avait ici une texture « fibre de carbone » chargée
+                  depuis **un site externe** (transparenttextures.com), à chaque
+                  barre affichée : GM-OS contactait un tiers pendant la partie,
+                  et hors ligne l'image échouait sans un mot. Retirée le
+                  2026-09-30 — la matière d'un panneau vient du thème.
+                */}
                 
                 {/* Low health alert pulse */}
                 {isLow && (

@@ -21,6 +21,8 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { CSS } from '@dnd-kit/utilities';
 import { Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Etiquette } from '../../../components/socle';
+import { estHorsDeCombat } from '../logic/SanteDuCombattant';
 
 interface SortableCombatCardProps {
     combatant: Combatant;
@@ -88,29 +90,61 @@ const InitiativeList: React.FC = () => {
         );
     }
 
+    /*
+      **Les combattants hors de combat, regroupés en bas** — phase 4, L1, étape
+      2 de Combat (2026-09-30), d'après la maquette retenue. Ils restaient à leur
+      place d'initiative, grisés au milieu des vivants : l'œil devait les
+      enjamber à chaque tour. Ils gardent leur carte entière (un soin peut les
+      relever), mais ne se trient plus à la main.
+
+      Le compteur en tête se CALCULE — il n'est écrit nulle part.
+    */
+    const enLice = combatants.filter(c => !estHorsDeCombat(c));
+    const tombes = combatants.filter(c => estHorsDeCombat(c));
+    const estActif = (c: Combatant) => combatants.indexOf(c) === currentTurnIdx;
+
     return (
         <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
+            <div className="flex flex-wrap items-center gap-2 mb-3" data-compteur-du-combat="">
+                <Etiquette>{t('modules:combat.agencement.combattants', { count: combatants.length })}</Etiquette>
+                <Etiquette ton="succes">{t('modules:combat.agencement.enLice', { count: enLice.length })}</Etiquette>
+                {tombes.length > 0 && <Etiquette ton="danger">{t('modules:combat.agencement.horsDeCombat', { count: tombes.length })}</Etiquette>}
+            </div>
+
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext
-                    items={combatants.map(c => c.id)}
+                    items={enLice.map(c => c.id)}
                     strategy={isGrid ? rectSortingStrategy : verticalListSortingStrategy}
                 >
                     <div className={isGrid ? "grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4" : "space-y-1"}>
-                        {combatants.map((combatant, index) => (
+                        {enLice.map(combatant => (
                             <SortableCombatCard
                                 key={combatant.id}
                                 combatant={combatant}
-                                isActive={index === currentTurnIdx}
+                                isActive={estActif(combatant)}
                                 isGrid={isGrid}
                             />
                         ))}
                     </div>
                 </SortableContext>
             </DndContext>
+
+            {tombes.length > 0 && (
+                <section className="mt-6" aria-label={t('modules:combat.agencement.titreHorsDeCombat', { count: tombes.length })}>
+                    <h3 className="mb-2 text-ui-11 font-black uppercase tracking-widest text-app-muted">
+                        {t('modules:combat.agencement.titreHorsDeCombat', { count: tombes.length })}
+                    </h3>
+                    <div className={isGrid ? "grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4" : "space-y-1"}>
+                        {tombes.map(combatant => (
+                            <CombatCard key={combatant.id} combatant={combatant} isActive={estActif(combatant)} />
+                        ))}
+                    </div>
+                </section>
+            )}
         </div>
     );
 };

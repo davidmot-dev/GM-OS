@@ -426,3 +426,31 @@ export function pointsDeVieApres(c: PorteurDeSante, delta: number): number | nul
     if (!aUneJaugeDeVie(c)) return null;
     return Math.min((c.hpMax ?? c.maxHp)!, Math.max(0, c.hp! + delta));
 }
+
+/**
+ * **La santé que la carte affiche**, pour un combattant qui n'a que ses points
+ * de vie — phase 4, L1, étape 2 de Combat (2026-09-30).
+ *
+ * ⛔ La carte passait `healthSystem` au panneau de santé, et **rien d'autre** :
+ * un combattant qui n'avait que `hp` / `hpMax` s'affichait en 10 / 10 — la
+ * jauge par défaut —, pendant que `estHorsDeCombat`, qui lit bien les points de
+ * vie, le grisait à zéro. *La carte grise un mort dont la barre est pleine.*
+ *
+ * Même ordre d'autorité qu'`estHorsDeCombat` : le système de santé d'abord,
+ * la jauge de points de vie ensuite, **rien** sans l'un ni l'autre (le panneau
+ * garde alors son défaut, comme avant). L'état suit les seuils de
+ * `HealthInterpreter`.
+ */
+export function santeAffichee(c: PorteurDeSante): PorteurDeSante['healthSystem'] | undefined {
+    if (c.healthSystem) return c.healthSystem;
+    if (!aUneJaugeDeVie(c)) return undefined;
+    const max = (c.hpMax ?? c.maxHp)!;
+    const actuel = Math.max(0, Math.min(max, c.hp!));
+    const pct = (actuel / max) * 100;
+    const state = actuel === 0 ? 'dead'
+        : pct <= 25 ? 'critical'
+        : pct <= 50 ? 'wounded'
+        : pct <= 85 ? 'scratched'
+        : 'healthy';
+    return { type: 'hp', data: { current: actuel, max }, state };
+}

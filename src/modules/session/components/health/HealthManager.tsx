@@ -64,9 +64,17 @@ interface HealthManagerProps {
    * le panneau se comporte exactement comme avant.
    */
   cibleDesCoups?: CibleDesCoups | null;
+  /**
+   * `bloc` (par défaut) : la jauge et les commandes côte à côte — la fiche de
+   * PNJ. `carte` : la jauge sur toute la largeur, les commandes dessous — la
+   * carte d'un combattant (Combat-OS, 2026-09-30).
+   */
+  disposition?: 'bloc' | 'carte';
+  /** En disposition `carte`, les actions de la carte posées après les commandes. */
+  actionsDeCarte?: React.ReactNode;
 }
 
-export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, cibleDesCoups }) => {
+export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialHealthSystem, onHealthChange, cibleDesCoups, disposition = 'bloc', actionsDeCarte }) => {
   const { 
     players, 
     entities, 
@@ -305,17 +313,17 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     if (onHealthChange) onHealthChange(nextHealth);
   };
 
-  return (
-    <div className="flex flex-col gap-2 group/health-manager relative">
-      {/* HUD Header (Engine Switcher & Status) */}
+  /* ── Les pièces du panneau, arrangées plus bas selon la disposition ── */
+
+  const enTete = (
       <div className="flex justify-between items-center px-2">
-          <button 
+          <button
             onClick={handleCycleEngine}
-            className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-all cursor-pointer group/engine"
+            className="flex items-center gap-2 opacity-40 hover:opacity-100 transition-all cursor-pointer group/engine"
             title="Changer de moteur"
           >
             <Settings2 size={10} className="group-hover/engine:rotate-90 transition-transform duration-500" />
-            <span className="text-ui-9 font-black uppercase tracking-[0.2em]">
+            <span className="text-ui-10 font-black uppercase tracking-[0.2em]">
               {health.type === 'hp' && 'Points de Vie'}
               {health.type === 'clocks' && 'Horloges'}
               {health.type === 'anatomy' && 'Anatomie'}
@@ -324,12 +332,12 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
             </span>
           </button>
 
-          <div className={`px-2 py-0.5 rounded-md text-ui-8 font-black uppercase tracking-widest border transition-all ${
-              health.state === 'healthy' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-              health.state === 'dead' ? 'bg-slate-500/10 text-app-muted border-slate-500/20' : 
-              health.state === 'critical' ? 'bg-red-600/20 text-red-500 border-red-500/40 shadow-glow-red/40 animate-pulse' :
-              health.state === 'wounded' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
-              'bg-amber-500/10 text-amber-400 border-amber-500/20'
+          <div className={`px-2 py-0.5 rounded-md text-ui-10 font-black uppercase tracking-widest border transition-all ${
+              health.state === 'healthy' ? 'bg-etat-succes/10 text-etat-succes border-etat-succes/20' :
+              health.state === 'dead' ? 'bg-app-subtle/10 text-app-muted border-app-subtle/20' :
+              health.state === 'critical' ? 'bg-etat-danger/20 text-etat-danger border-etat-danger/40 animate-pulse' :
+              health.state === 'wounded' ? 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20' :
+              'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20'
           }`}>
               {health.state === 'healthy' && 'Stable'}
               {health.state === 'scratched' && 'Égratigné'}
@@ -338,15 +346,10 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
               {health.state === 'dead' && 'K.O'}
           </div>
       </div>
+  );
 
-      {/* Main Layout Row (Visual + Controls) */}
-      <div className={`flex items-center gap-6 bg-white/[0.03] border border-white/[0.05] p-2 px-4 rounded-2xl hover:bg-white/[0.05] transition-all duration-300 relative 
-        ${['anatomy', 'wounds'].includes(health.type) ? 'h-48' : 'h-20'}
-        ${isDamaged ? 'animate-gmos-shake animate-gmos-glitch-damage' : ''}
-        ${['wounded', 'critical'].includes(health.state) ? 'animate-gmos-pulse-warning select-none' : ''}
-        ${health.state === 'dead' ? 'grayscale opacity-50 saturate-0' : ''}
-      `}>
-        <div 
+  const visuel = (
+        <div
             className="flex-1 px-1 h-full flex flex-col justify-center min-w-0 cursor-pointer"
             onClick={() => triggerImpact(false)}
             onContextMenu={(e) => {
@@ -358,7 +361,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                 : 'Clic gauche : dégâts | Clic droit : soins'}
         >
             {health.type === 'hp' && (
-                <HealthBarDriver 
+                <HealthBarDriver
                     current={nombreOuRepli(health.data.current, nombreOuRepli((porteur as any)?.hp, 0))}
                     max={nombreOuRepli(health.data.max, nombreOuRepli((porteur as any)?.maxHp, 10))}
                     onCurrentChange={(val) => {
@@ -383,15 +386,15 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
             )}
             {health.type === 'clocks' && <ClockDriver filled={nombreOuRepli(health.data.filled, 0)} total={nombreOuRepli(health.data.segments, 6)} />}
             {health.type === 'anatomy' && (
-                <AnatomicalSilhouette 
-                    parts={objetOuVide<{ status: PartStatus }>(health.data.parts)} 
-                    onPartClick={(partId, isRecovery) => triggerImpact(isRecovery, partId)} 
+                <AnatomicalSilhouette
+                    parts={objetOuVide<{ status: PartStatus }>(health.data.parts)}
+                    onPartClick={(partId, isRecovery) => triggerImpact(isRecovery, partId)}
                 />
             )}
             {health.type === 'wounds' && (
-                <WoundLevelsDriver 
-                    levels={listeOuVide<string>(health.data.levels)} 
-                    currentIndex={nombreOuRepli(health.data.currentIndex, -1)} 
+                <WoundLevelsDriver
+                    levels={listeOuVide<string>(health.data.levels)}
+                    currentIndex={nombreOuRepli(health.data.currentIndex, -1)}
                     onLevelClick={(index) => {
                         const nextHealth = {
                             ...health,
@@ -400,7 +403,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                                    index >= (listeOuVide<string>(health.data.levels).length / 2) ? 'critical' :
                                    index >= 0 ? 'wounded' : 'healthy'
                         } as HealthSystem;
-                        
+
                         if (type === 'pc') {
                             const player = players.find(p => p.characters.some(c => c.id === id));
                             if (player) updateCharacterHealth(player.id, id, nextHealth);
@@ -411,80 +414,75 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                 />
             )}
             {health.type === 'boxes' && (
-                <HarmBoxesDriver 
-                    boxes={listeOuVide<{ label: string; filled: boolean }>(health.data.boxes)} 
+                <HarmBoxesDriver
+                    boxes={listeOuVide<{ label: string; filled: boolean }>(health.data.boxes)}
                 />
             )}
         </div>
+  );
 
-        {/* Vertical Divider Line (More subtle) */}
-        <div className="w-[1px] h-10 bg-white/5 shrink-0" />
+  /*
+    **Qui va encaisser, écrit noir sur blanc.** Les boutons font 44 px et ne
+    peuvent pas porter un nom ; la ligne, si. Sans elle, le meneur cliquerait
+    « Dégâts » sur la ligne de Tom en croyant frapper Tom, et ne s'en
+    apercevrait qu'au prochain regard sur Henri.
 
-        {/* MJ Direct Controls area (Readable & Compact) */}
-        <div className="flex-1 flex flex-col items-end justify-center gap-1 px-2">
-            {/*
-              **Qui va encaisser, écrit noir sur blanc.** Les boutons font 44 px
-              et ne peuvent pas porter un nom ; la ligne, si. Sans elle, le
-              meneur cliquerait « Dégâts » sur la ligne de Tom en croyant frapper
-              Tom, et ne s'en apercevrait qu'au prochain regard sur Henri.
-            */}
+    *Un coup borné à zéro reste un coup sans effet, et le silence le fait
+    passer pour une panne.* C'est le second message.
+  */
+  const cibleEtAvis = (
+      <>
             {cibleDesCoups && (
                 <div
-                    className="flex items-center gap-1 text-ui-8 font-black uppercase tracking-widest text-primary/90 pr-1"
+                    className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-accent pr-1"
                     title={`Les dégâts et les soins de cette ligne partent sur ${cibleDesCoups.nom}`}
                 >
-                    <Crosshair size={9} className="shrink-0" />
-                    <span className="truncate max-w-[120px]">→ {cibleDesCoups.nom}</span>
+                    <Crosshair size={10} className="shrink-0" />
+                    <span className="truncate max-w-[160px]">→ {cibleDesCoups.nom}</span>
                 </div>
             )}
-
-            {/*
-              *Un coup borné à zéro reste un coup sans effet, et le silence le
-              fait passer pour une panne.* C'est ce message qui manquait.
-            */}
             {sansEffet && (
-                <p role="status" className="text-ui-8 font-black uppercase tracking-widest text-amber-400 text-right max-w-[190px] leading-tight">
+                <p role="status" className="text-ui-10 font-black uppercase tracking-widest text-etat-alerte text-right max-w-[220px] leading-tight">
                     {sansEffet}
                 </p>
             )}
+      </>
+  );
 
-            {/* Action buttons (Stacked Icon + Value) */}
-            <div className="flex items-center gap-3 bg-black/40 p-1 px-2 rounded-xl border border-white/10">
+  const commandes = (
+            <div className="flex items-center gap-2 bg-app-bg/40 p-1 px-2 rounded-xl border border-app-border/60">
                 <button
                   onClick={() => triggerImpact(false, undefined, true)}
-                  className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-rose-500/20 transition-all group/dmg"
+                  className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-etat-danger/20 transition-all group/dmg"
                   title={cibleDesCoups ? `Infliger dégâts à ${cibleDesCoups.nom}` : 'Infliger dégâts'}
                 >
-                    <Swords size={18} className="text-rose-500 group-hover/dmg:rotate-12 transition-transform" />
-                    <span className="text-ui-7 font-black uppercase tracking-widest text-rose-500/80">Dégats</span>
+                    <Swords size={18} className="text-etat-danger group-hover/dmg:rotate-12 transition-transform" />
+                    <span className="text-ui-9 font-black uppercase tracking-wider text-etat-danger/80">Dégâts</span>
                 </button>
-                
-                {/* Impact value display area */}
-                <div className="flex flex-col items-center min-w-[60px] gap-0.5">
-                   <input 
-                        type="number" 
-                        value={impactValue} 
+
+                {/* L'intensité : − valeur +, assez large pour se lire à un mètre. */}
+                <div className="flex items-center gap-1">
+                    <button
+                        onClick={() => setImpactValue(v => Math.max(1, v - 1))}
+                        className="text-app-muted hover:text-app-text transition-colors p-1"
+                        title="Moins"
+                    >
+                        <Minus size={14} />
+                    </button>
+                   <input
+                        type="number"
+                        value={impactValue}
                         onChange={(e) => setImpactValue(parseInt(e.target.value) || 1)}
-                        className="w-14 bg-transparent text-center font-display font-black text-xl outline-none text-white focus:text-accent transition-all p-0 m-0 leading-none"
-                        style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                        className="w-12 bg-transparent text-center font-display font-black text-xl outline-none text-app-text focus:text-accent transition-all p-0 m-0 leading-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         title="Intensité"
                     />
-                    <div className="flex gap-4">
-                        <button 
-                            onClick={() => setImpactValue(v => Math.max(1, v - 1))} 
-                            className="text-white/40 hover:text-white transition-colors p-1"
-                            title="Moins"
-                        >
-                            <Minus size={14} />
-                        </button>
-                        <button 
-                            onClick={() => setImpactValue(v => v + 1)} 
-                            className="text-white/40 hover:text-white transition-colors p-1"
-                            title="Plus"
-                        >
-                            <Plus size={14} />
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => setImpactValue(v => v + 1)}
+                        className="text-app-muted hover:text-app-text transition-colors p-1"
+                        title="Plus"
+                    >
+                        <Plus size={14} />
+                    </button>
                 </div>
 
                 {/*
@@ -495,11 +493,11 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
                 <select
                     value={typeChoisi}
                     onChange={(e) => setImpactType(e.target.value)}
-                    className="max-w-[92px] bg-black/40 border border-white/10 rounded-lg px-1.5 py-1 text-ui-9 font-black uppercase tracking-wider text-slate-300 outline-none focus:border-primary/50 transition-colors cursor-pointer"
+                    className="max-w-[110px] bg-app-bg border border-app-border rounded-lg px-1.5 py-1 text-ui-10 font-black uppercase tracking-wider text-app-text outline-none focus:border-accent/50 transition-colors cursor-pointer"
                     title="Type de dégâts — appliqué aux résistances de la fiche"
                 >
                     {typesDisponibles.map(jeton => (
-                        <option key={jeton} value={jeton} className="bg-slate-900 normal-case">
+                        <option key={jeton} value={jeton} className="bg-app-bg normal-case">
                             {nommerLeType(jeton)}
                         </option>
                     ))}
@@ -507,23 +505,75 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
 
                 <button
                   onClick={() => triggerImpact(true, undefined, true)}
-                  className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-emerald-500/20 transition-all group/heal"
+                  className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-etat-succes/20 transition-all group/heal"
                   title={cibleDesCoups ? `Soigner ${cibleDesCoups.nom}` : 'Soigner'}
                 >
-                    <Heart size={18} className="text-emerald-400 group-hover/heal:scale-110 transition-transform" />
-                    <span className="text-ui-7 font-black uppercase tracking-widest text-emerald-400/80">Soins</span>
+                    <Heart size={18} className="text-etat-succes group-hover/heal:scale-110 transition-transform" />
+                    <span className="text-ui-9 font-black uppercase tracking-wider text-etat-succes/80">Soins</span>
                 </button>
             </div>
-        </div>
+  );
 
-        {/* Overlay Badges */}
-        {health.badges && health.badges.length > 0 && (
+  const pastilles = health.badges && health.badges.length > 0 && (
             <div className="absolute top-1 right-3 flex gap-1 pt-1 pr-1">
                 {health.badges.slice(0, 5).map((badge: PersistenceBadge) => (
                     <div key={badge.id} className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-glow-accent" title={badge.label} />
                 ))}
             </div>
-        )}
+  );
+
+  const animations = `${isDamaged ? 'animate-gmos-shake animate-gmos-glitch-damage' : ''}
+        ${['wounded', 'critical'].includes(health.state) ? 'animate-gmos-pulse-warning select-none' : ''}
+        ${health.state === 'dead' ? 'grayscale opacity-50 saturate-0' : ''}`;
+
+  /*
+    **La disposition « carte »** — Combat-OS, phase 4, L1, étape 2 (2026-09-30).
+
+    Dans la carte d'un combattant, le panneau se posait en bloc à côté du nom et
+    débordait sur la colonne de la cible (« Magique » par-dessus « Fiche »). La
+    carte le range désormais en deux lignes, comme la maquette retenue : la
+    jauge sur toute la largeur, puis les commandes — auxquelles la carte ajoute
+    les siennes (`actionsDeCarte` : Fiche, Calculer). **Même logique, mêmes
+    gestes** : seul l'arrangement change. La fiche de PNJ garde le bloc.
+  */
+  if (disposition === 'carte') {
+    return (
+      <div className="flex flex-col gap-2 relative min-w-0">
+        <div className={`relative rounded-lg bg-app-bg/40 border border-app-border/60 py-1.5 ${['anatomy', 'wounds'].includes(health.type) ? 'h-48' : ''} ${animations}`}>
+          {enTete}
+          <div className="px-2 min-h-9 flex">{visuel}</div>
+          {pastilles}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {commandes}
+          {actionsDeCarte}
+          <div className="ml-auto flex flex-col items-end gap-0.5">{cibleEtAvis}</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2 group/health-manager relative">
+      {enTete}
+
+      {/* Main Layout Row (Visual + Controls) */}
+      <div className={`flex items-center gap-6 bg-app-text/[0.03] border border-app-text/[0.05] p-2 px-4 rounded-2xl hover:bg-app-text/[0.05] transition-all duration-300 relative
+        ${['anatomy', 'wounds'].includes(health.type) ? 'h-48' : 'h-20'}
+        ${animations}
+      `}>
+        {visuel}
+
+        {/* Vertical Divider Line (More subtle) */}
+        <div className="w-[1px] h-10 bg-app-text/5 shrink-0" />
+
+        {/* MJ Direct Controls area (Readable & Compact) */}
+        <div className="flex-1 flex flex-col items-end justify-center gap-1 px-2">
+            {cibleEtAvis}
+            {commandes}
+        </div>
+
+        {pastilles}
       </div>
     </div>
   );

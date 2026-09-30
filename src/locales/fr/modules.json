@@ -139,6 +139,15 @@
     }
   },
   "combat": {
+    "agencement": {
+      "combattants_one": "{{count}} combattant",
+      "combattants_other": "{{count}} combattants",
+      "enLice_one": "{{count}} en lice",
+      "enLice_other": "{{count}} en lice",
+      "horsDeCombat_one": "{{count}} hors de combat",
+      "horsDeCombat_other": "{{count}} hors de combat",
+      "titreHorsDeCombat": "Hors de combat ({{count}})"
+    },
     "controls": {
       "title": "Contrôles",
       "title_full": "CONTRÔLES DE COMBAT",

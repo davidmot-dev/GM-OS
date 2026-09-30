@@ -139,6 +139,15 @@
     }
   },
   "combat": {
+    "agencement": {
+      "combattants_one": "{{count}} combatant",
+      "combattants_other": "{{count}} combatants",
+      "enLice_one": "{{count}} standing",
+      "enLice_other": "{{count}} standing",
+      "horsDeCombat_one": "{{count}} out of the fight",
+      "horsDeCombat_other": "{{count}} out of the fight",
+      "titreHorsDeCombat": "Out of the fight ({{count}})"
+    },
     "controls": {
       "title": "Controls",
       "title_full": "COMBAT CONTROLS",

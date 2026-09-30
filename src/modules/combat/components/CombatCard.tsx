@@ -6,7 +6,10 @@ import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
-import { estHorsDeCombat } from '../logic/SanteDuCombattant';
+import { estHorsDeCombat, santeAffichee } from '../logic/SanteDuCombattant';
+import type { HealthSystem } from '../../session/useSessionOSStore';
+import { Bouton } from '../../../components/socle';
+import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -54,6 +57,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     } = useCombatStore();
 
     const { t } = useTranslation(['modules', 'common']);
+    const regime = useRegimeDInterface();
 
     const { 
         entities, players, customSheetTemplates,
@@ -178,208 +182,143 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         }
     };
 
-    return (
-        <div className={`relative flex flex-col p-4 mb-3 transition-all duration-500 stitch-card rounded-xl ${
-            isActive ? 'ring-2 ring-primary/40 shadow-glow-gold scale-[1.01] z-10' : ''
-            } ${isDead && !isActive ? 'opacity-40 grayscale blur-[0.5px]' : ''}`}>
+    /*
+      **La hiérarchie de la carte** — phase 4, L1, étape 2 de Combat
+      (2026-09-30), d'après la maquette retenue avec Stitch.
 
-            <div className="flex items-center w-full">
-                {/* Initiative Block */}
-                <div className="flex flex-col items-center mr-6 shrink-0 bg-app-surface/40 rounded-lg p-3 border-l-4 border-gm-gold shadow-glow-gold">
-                    <span className="stitch-label mb-1 text-app-text/70">INIT</span>
+      Trois lignes : **qui** (initiative, nom, camp, altérations, cible), **sa
+      santé** (la jauge sur toute la largeur, puis les gestes : dégâts, soins,
+      fiche, calculer), et **les jauges du jeu** avec leurs chiffres. Avant, tout
+      tenait sur une ligne et le panneau de santé débordait sur la colonne de la
+      cible (« Magique » par-dessus « Fiche ») ; le nom s'arrêtait à « Roy ».
+
+      ⚠️ **Pas de `<Panneau>` ici** : il coupe ce qui dépasse, et les listes du
+      camp et de la cible s'ouvrent en position absolue, sans portail.
+    */
+    const nomDuCombattant = (
+        <button
+            type="button"
+            className={`min-w-0 max-w-[30ch] truncate text-left font-display font-black text-app-text tracking-tight hover:text-accent transition-colors flex items-center gap-2 group/name ${regime.aLaTable ? 'text-2xl' : 'text-lg'} ${isDead ? 'line-through decoration-2' : ''}`}
+            title={`${combatant.name} — ${t('combat.card.rename')}`}
+            onClick={() => {
+                gmPrompt(t('combat.card.rename_prompt', { name: combatant.name }), combatant.name, (newName: string) => {
+                    if (newName.trim()) updateCombatant(combatant.id, { name: newName.trim() });
+                });
+            }}
+        >
+            <span className="truncate">{combatant.name}</span>
+            <Edit2 size={13} className="shrink-0 opacity-0 group-hover/name:opacity-50 transition-opacity" />
+        </button>
+    );
+
+    return (
+        <article
+            data-combattant={combatant.id}
+            data-hors-de-combat={isDead ? '' : undefined}
+            className={`relative flex flex-col gap-3 p-4 mb-3 rounded-xl border bg-app-surface shadow-sm transition-all duration-500 ${
+            isActive ? 'border-accent border-l-4 ring-2 ring-accent/30 shadow-glow-accent/20' : 'border-app-border'
+            } ${isDead && !isActive ? 'opacity-75 grayscale' : ''}`}>
+
+            {/* ── 1. Qui : initiative, nom, camp, altérations — et la cible ── */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0">
+                <div className="flex flex-col items-center shrink-0 rounded-lg bg-app-bg/50 border border-app-border px-1.5 py-1">
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">INIT</span>
                     <input
                         type="number"
                         value={(!combatant.init || Number.isNaN(combatant.init)) ? '' : combatant.init}
                         placeholder="0"
                         onChange={handleInitChange}
-                        className="w-16 h-12 bg-transparent text-primary text-center text-2xl font-black outline-none transition-all placeholder:text-primary/20"
+                        title="Initiative"
+                        className={`bg-transparent text-accent text-center font-display font-black outline-none placeholder:text-accent/30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${regime.aLaTable ? 'w-16 h-10 text-3xl' : 'w-14 h-9 text-2xl'}`}
                     />
                 </div>
 
-                {/* Avatar / Icon */}
-                <div className="w-14 h-14 rounded-full overflow-hidden bg-app-surface/50 flex items-center justify-center border-2 border-primary/30 ring-4 ring-primary/5 shrink-0 shadow-lg">
-                    <ResolvedImage 
-                        src={combatant.avatar} 
-                        alt={combatant.name} 
-                        className="w-full h-full object-cover brightness-110" 
-                        fallback={<Shield className={combatant.isPlayer ? 'text-primary' : 'text-gm-crimson'} size={28} />}
+                <div className="w-11 h-11 rounded-full overflow-hidden bg-app-bg/50 flex items-center justify-center border border-app-border shrink-0">
+                    <ResolvedImage
+                        src={combatant.avatar}
+                        alt={combatant.name}
+                        className="w-full h-full object-cover"
+                        fallback={<Shield className={combatant.isPlayer ? 'text-accent' : 'text-gm-crimson'} size={22} />}
                     />
                 </div>
 
-                {/* Info : Name & Statuses */}
-                <div className="flex-initial ml-6 flex flex-col justify-center min-w-[180px] max-w-[320px]">
-                    <div className="flex items-center gap-3 relative group/name">
-                        <div 
-                            className="font-black text-xl text-app-text tracking-tight truncate max-w-[220px] cursor-pointer hover:text-primary transition-colors flex items-center gap-2" 
-                            title={t('combat.card.rename')}
-                            onClick={() => {
-                                gmPrompt(t('combat.card.rename_prompt', { name: combatant.name }), combatant.name, (newName: string) => {
-                                    if (newName.trim()) updateCombatant(combatant.id, { name: newName.trim() });
-                                });
-                            }}
-                        >
-                            {combatant.name}
-                            <Edit2 size={14} className="opacity-0 group-hover/name:opacity-50 transition-opacity" />
-                        </div>
-                        {combatant.isPlayer && <span className="text-ui-9 bg-primary text-app-on-accent px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{t('combat.card.faction.player')}</span>}
-                        
-                        <div className="relative">
-                            <Select
-                                value={combatant.faction}
-                                onChange={(value) => updateCombatant(combatant.id, { faction: value as any })}
-                                options={[
-                                    { value: 'player', label: t('combat.card.faction.player'), icon: <User size={12} /> },
-                                    { value: 'enemy', label: t('combat.card.faction.enemy'), icon: <Swords size={12} /> },
-                                    { value: 'ally', label: t('combat.card.faction.ally'), icon: <ShieldCheck size={12} /> },
-                                    { value: 'neutral', label: t('combat.card.faction.neutral'), icon: <Users size={12} /> }
-                                ]}
-                                className="min-w-[100px]"
-                                title={t('combat.card.faction_change')}
-                                renderOption={(opt) => (
-                                    <span className={`text-ui-10 font-black uppercase tracking-wider ${
-                                        opt.value === 'enemy' ? 'text-etat-danger' :
-                                        opt.value === 'ally' ? 'text-etat-succes' :
-                                        opt.value === 'player' ? 'text-etat-info' :
-                                        'text-app-text/70'
-                                    }`}>
-                                        {opt.label}
-                                    </span>
-                                )}
-                            />
-                        </div>
-                        
-                        <button
-                            className={`text-app-text/60 hover:text-primary transition-colors p-1 rounded hover:bg-app-surface/50 ${showStatusMenu ? 'text-primary bg-app-surface/50' : ''}`}
-                            onClick={() => setShowStatusMenu(!showStatusMenu)}
-                            title={t('combat.card.status_add')}
-                        >
-                            <PlusCircle size={18} />
-                        </button>
+                {nomDuCombattant}
 
-                        {!combatant.isPlayer && (
-                            <button
-                                className={`text-app-text/50 hover:text-accent transition-colors p-1 rounded hover:bg-app-surface/50 ${isSuggesting ? 'animate-pulse text-accent' : ''}`}
-                                onClick={handleSuggestAction}
-                                disabled={isSuggesting}
-                                title={t('combat.card.cortex_advice')}
-                            >
-                                {isSuggesting ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-                            </button>
-                        )}
-
-                        {/* Tactical Advice Badge */}
-                        {myAdvices.length > 0 && (
-                            <div 
-                                className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-ui-9 font-bold uppercase transition-all animate-pulse cursor-help ${
-                                    hasHighPriority ? 'bg-gm-crimson/20 text-gm-crimson border border-gm-crimson/30' : 'bg-accent/10 text-accent border border-accent/20'
-                                }`}
-                                title={myAdvices.map(a => a.message).join('\n')}
-                            >
-                                <Brain size={10} />
-                                <span>Tactical</span>
-                            </div>
-                        )}
-                    </div>
-
-                    {combatant.statuses.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-1">
-                            {combatant.statuses.map(status => (
-                                <span
-                                    key={status.id}
-                                    className="inline-flex items-center gap-1 bg-app-surface/60 px-2 py-0.5 rounded text-xs border border-app-border group cursor-pointer hover:bg-etat-danger/20 transition-colors"
-                                    onClick={() => removeStatus(combatant.id, status.id)}
-                                    title={t('combat.card.status_remove', { name: t(`combat.status.presets.${status.name.toLowerCase()}`, { defaultValue: status.name }) })}
-                                >
-                                    <span>{status.icon}</span>
-                                    <span className={status.duration > 0 ? "text-app-text/70" : "text-gm-cyan"}>
-                                        {status.duration > 0 ? `${status.duration}t` : '∞'}
-                                    </span>
-                                </span>
-                            ))}
-                        </div>
+                <Select
+                    value={combatant.faction}
+                    onChange={(value) => updateCombatant(combatant.id, { faction: value as any })}
+                    options={[
+                        { value: 'player', label: t('combat.card.faction.player'), icon: <User size={12} /> },
+                        { value: 'enemy', label: t('combat.card.faction.enemy'), icon: <Swords size={12} /> },
+                        { value: 'ally', label: t('combat.card.faction.ally'), icon: <ShieldCheck size={12} /> },
+                        { value: 'neutral', label: t('combat.card.faction.neutral'), icon: <Users size={12} /> }
+                    ]}
+                    className="min-w-[110px]"
+                    title={t('combat.card.faction_change')}
+                    renderOption={(opt) => (
+                        <span className={`text-ui-10 font-black uppercase tracking-wider ${
+                            opt.value === 'enemy' ? 'text-etat-danger' :
+                            opt.value === 'ally' ? 'text-etat-succes' :
+                            opt.value === 'player' ? 'text-etat-info' :
+                            'text-app-muted'
+                        }`}>
+                            {opt.label}
+                        </span>
                     )}
+                />
 
-                    {/* Cortex Suggested Action (Absolute Overlay) */}
-                    {(suggestedAction || isSuggesting) && (
-                        <div className="absolute bottom-2 left-6 right-6 z-50 text-ui-11 bg-app-surface/95 backdrop-blur-xl border border-accent/40 rounded-lg p-3 text-app-text/90 shadow-2xl flex items-start gap-2 animate-in zoom-in-95 slide-in-from-bottom-2 duration-300 motion-safe:scale-100 hover:scale-[1.02] transition-transform cursor-default">
-                            {suggestedAction && !isSuggesting && (
-                                <button 
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSuggestedAction(null);
-                                    }}
-                                    className="absolute -top-1 -right-1 bg-app-bg/80 rounded-full p-1 text-app-text/60 hover:text-etat-danger transition-colors shadow-lg border border-app-text/10"
-                                    title={t('combat.card.cortex_close')}
-                                >
-                                    <X size={12} />
-                                </button>
-                            )}
-                            <div className="bg-accent/20 p-1.5 rounded-full shrink-0 animate-pulse border border-accent/30 shadow-glow-accent/20">
-                                <Brain size={14} className="text-accent" />
-                            </div>
-                            <div className="flex-1 pr-4">
-                                {isSuggesting ? (
-                                    <div className="flex flex-col gap-1">
-                                        <span className="text-accent font-black uppercase tracking-widest animate-pulse flex items-center gap-2">
-                                            {t('combat.card.cortex_analyzing')}
-                                            <Loader2 size={10} className="animate-spin" />
-                                        </span>
-                                        <span className="text-ui-10 text-app-text/40 italic">{t('combat.card.cortex_thinking')}</span>
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col gap-1">
-                                        <span className="text-accent font-black uppercase tracking-widest text-ui-9 mb-0.5 opacity-80 flex items-center gap-1.5">
-                                            <Sparkles size={10} />
-                                            {t('combat.card.cortex_title')}
-                                        </span>
-                                        <span className="italic leading-normal text-app-text drop-shadow-sm">
-                                            {suggestedAction}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
+                {/* Les altérations, en badges ; un clic les retire. */}
+                {combatant.statuses.map(status => (
+                    <span
+                        key={status.id}
+                        className="inline-flex items-center gap-1 bg-app-bg/60 px-2 py-0.5 rounded text-xs border border-app-border cursor-pointer hover:bg-etat-danger/20 transition-colors"
+                        onClick={() => removeStatus(combatant.id, status.id)}
+                        title={t('combat.card.status_remove', { name: t(`combat.status.presets.${status.name.toLowerCase()}`, { defaultValue: status.name }) })}
+                    >
+                        <span>{status.icon}</span>
+                        <span className={status.duration > 0 ? "text-app-muted" : "text-gm-cyan"}>
+                            {status.duration > 0 ? `${status.duration}t` : '∞'}
+                        </span>
+                    </span>
+                ))}
 
-                {/* Modular Health Manager - Expanded to fill void */}
-                <div className="mx-6 flex-1 min-w-[200px] transition-all duration-500">
-                  <HealthManager
-                    id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!}
-                    type={combatant.isPlayer ? 'pc' : 'npc'}
-                    initialHealthSystem={combatant.healthSystem}
-                    onHealthChange={(newHealth) => {
-                      updateCombatant(combatant.id, { healthSystem: newHealth });
-                    }}
-                    /*
-                      **Les boutons Dégâts / Soins de cette ligne partent sur la
-                      cible** (décision de David, 2026-08-29) : Tom vise Henri,
-                      c'est Henri qui encaisse. Sans cible, ils retombent sur le
-                      porteur de la ligne, comme avant — la liste des cibles
-                      exclut le porteur, donc l'interdire rendrait un combattant
-                      intouchable depuis sa propre ligne.
+                <button
+                    className={`text-app-muted hover:text-accent transition-colors p-1 rounded hover:bg-app-bg/50 ${showStatusMenu ? 'text-accent bg-app-bg/50' : ''}`}
+                    onClick={() => setShowStatusMenu(!showStatusMenu)}
+                    title={t('combat.card.status_add')}
+                >
+                    <PlusCircle size={18} />
+                </button>
 
-                      La barre de vie, elle, ne suit pas : elle appartient au
-                      porteur, et la cliquer parle de lui.
-                    */
-                    cibleDesCoups={currentTarget ? {
-                      id: (currentTarget.isPlayer ? currentTarget.sourcePlayerId : currentTarget.sourceEntityId) ?? currentTarget.id,
-                      type: currentTarget.isPlayer ? 'pc' : 'npc',
-                      nom: currentTarget.name,
-                      healthSystem: currentTarget.healthSystem,
-                      onHealthChange: (newHealth) => {
-                        updateCombatant(currentTarget.id, { healthSystem: newHealth });
-                      },
-                    } : null}
-                  />
-                </div>
+                {!combatant.isPlayer && (
+                    <button
+                        className={`text-app-muted hover:text-accent transition-colors p-1 rounded hover:bg-app-bg/50 ${isSuggesting ? 'animate-pulse text-accent' : ''}`}
+                        onClick={handleSuggestAction}
+                        disabled={isSuggesting}
+                        title={t('combat.card.cortex_advice')}
+                    >
+                        {isSuggesting ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                    </button>
+                )}
 
-                {/* Targeting Indicator - Compact to leave space for Health */}
-                <div className="flex flex-col gap-1.5 min-w-[120px] shrink-0 items-end pr-2 group/target relative">
-                    <div className="flex items-center gap-2 stitch-label opacity-60">
-                        <Crosshair size={12} className={currentTarget ? 'text-primary animate-pulse' : ''} />
-                        <span>{t('combat.card.target')}</span>
+                {/* Tactical Advice Badge */}
+                {myAdvices.length > 0 && (
+                    <div
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-ui-10 font-bold uppercase transition-all animate-pulse cursor-help ${
+                            hasHighPriority ? 'bg-gm-crimson/20 text-gm-crimson border border-gm-crimson/30' : 'bg-accent/10 text-accent border border-accent/20'
+                        }`}
+                        title={myAdvices.map(a => a.message).join('\n')}
+                    >
+                        <Brain size={10} />
+                        <span>Tactical</span>
                     </div>
+                )}
+
+                <div className="ml-auto flex items-center gap-2 shrink-0">
+                    <span className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                        <Crosshair size={12} className={currentTarget ? 'text-accent' : ''} />
+                        {t('combat.card.target')}
+                    </span>
                     <Select
                         value={combatant.targetId || ''}
                         onChange={(value) => setTarget(combatant.id, value || null)}
@@ -394,61 +333,124 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     icon: <Crosshair size={12} />
                                 }))
                         ]}
-                        className="w-full max-w-[140px]"
+                        className="w-44"
                         title={t('combat.card.target_select')}
                     />
-
-                    {/*
-                      **Revoir la fiche — demande par David le 2026-09-03.**
-                      Il n'existait aucun moyen de relire les caracteristiques
-                      d'un adversaire fabrique : elles vivent sur le combattant,
-                      et seules les deux ou trois jauges du pilote etaient
-                      montrees.
-                    */}
                     <button
+                        className="w-8 h-8 flex items-center justify-center text-app-muted hover:text-etat-danger hover:bg-etat-danger/10 rounded-full transition-colors shrink-0"
+                        onClick={() => removeCombatant(combatant.id)}
+                        title={t('combat.card.delete')}
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
+            </div>
+
+            {/* Cortex Suggested Action (Absolute Overlay) */}
+            {(suggestedAction || isSuggesting) && (
+                <div className="absolute bottom-2 left-6 right-6 z-50 text-ui-11 bg-app-surface/95 backdrop-blur-xl border border-accent/40 rounded-lg p-3 text-app-text/90 shadow-2xl flex items-start gap-2 animate-in zoom-in-95 slide-in-from-bottom-2 duration-300 cursor-default">
+                    {suggestedAction && !isSuggesting && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSuggestedAction(null);
+                            }}
+                            className="absolute -top-1 -right-1 bg-app-bg/80 rounded-full p-1 text-app-text/60 hover:text-etat-danger transition-colors shadow-lg border border-app-text/10"
+                            title={t('combat.card.cortex_close')}
+                        >
+                            <X size={12} />
+                        </button>
+                    )}
+                    <div className="bg-accent/20 p-1.5 rounded-full shrink-0 animate-pulse border border-accent/30">
+                        <Brain size={14} className="text-accent" />
+                    </div>
+                    <div className="flex-1 pr-4">
+                        {isSuggesting ? (
+                            <div className="flex flex-col gap-1">
+                                <span className="text-accent font-black uppercase tracking-widest animate-pulse flex items-center gap-2">
+                                    {t('combat.card.cortex_analyzing')}
+                                    <Loader2 size={10} className="animate-spin" />
+                                </span>
+                                <span className="text-ui-10 text-app-text/40 italic">{t('combat.card.cortex_thinking')}</span>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-1">
+                                <span className="text-accent font-black uppercase tracking-widest text-ui-10 mb-0.5 opacity-80 flex items-center gap-1.5">
+                                    <Sparkles size={10} />
+                                    {t('combat.card.cortex_title')}
+                                </span>
+                                <span className="italic leading-normal text-app-text">
+                                    {suggestedAction}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* ── 2. Sa santé, puis les gestes : dégâts, soins, fiche, calculer ── */}
+            <HealthManager
+                id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!}
+                type={combatant.isPlayer ? 'pc' : 'npc'}
+                initialHealthSystem={santeAffichee(combatant) as HealthSystem | undefined}
+                onHealthChange={(newHealth) => {
+                  updateCombatant(combatant.id, { healthSystem: newHealth });
+                }}
+                disposition="carte"
+                /*
+                  **Les boutons Dégâts / Soins de cette ligne partent sur la
+                  cible** (décision de David, 2026-08-29) : Tom vise Henri,
+                  c'est Henri qui encaisse. Sans cible, ils retombent sur le
+                  porteur de la ligne, comme avant — la liste des cibles
+                  exclut le porteur, donc l'interdire rendrait un combattant
+                  intouchable depuis sa propre ligne.
+
+                  La barre de vie, elle, ne suit pas : elle appartient au
+                  porteur, et la cliquer parle de lui.
+                */
+                cibleDesCoups={currentTarget ? {
+                  id: (currentTarget.isPlayer ? currentTarget.sourcePlayerId : currentTarget.sourceEntityId) ?? currentTarget.id,
+                  type: currentTarget.isPlayer ? 'pc' : 'npc',
+                  nom: currentTarget.name,
+                  healthSystem: currentTarget.healthSystem,
+                  onHealthChange: (newHealth) => {
+                    updateCombatant(currentTarget.id, { healthSystem: newHealth });
+                  },
+                } : null}
+                actionsDeCarte={<>
+                    {/*
+                      **Revoir la fiche — demandé par David le 2026-09-03.**
+                      Il n'existait aucun moyen de relire les caractéristiques
+                      d'un adversaire fabriqué : elles vivent sur le combattant,
+                      et seules les deux ou trois jauges du pilote étaient
+                      montrées.
+                    */}
+                    <Bouton
+                        aLaTable={regime.aLaTable}
+                        icone={<ScrollText size={14} />}
                         onClick={() => gmCustom('fiche-combattant', { combatantId: combatant.id })}
-                        className="mt-2 flex items-center justify-center gap-2 w-full py-1.5 bg-app-surface/40 border border-app-border/60 hover:border-accent/40 text-app-text/60 hover:text-accent rounded-lg text-ui-9 font-black transition-all uppercase tracking-[0.2em]"
                         title="Revoir la fiche de ce combattant"
                     >
-                        <ScrollText size={12} />
-                        <span>Fiche</span>
-                    </button>
-
-                    {/* Quick Calculator Button */}
-                    <button
+                        Fiche
+                    </Bouton>
+                    <Bouton
+                        variante="accent"
+                        aLaTable={regime.aLaTable}
+                        icone={<Zap size={14} className="fill-current" />}
                         onClick={() => {
                             const ids = [combatant.id];
                             if (combatant.targetId) ids.push(combatant.targetId);
                             gmCustom('damage-calc', { targetIds: ids });
                         }}
-                        className="mt-2 flex items-center justify-center gap-2 w-full py-2 bg-app-surface/60 border border-primary/50 hover:bg-primary text-primary hover:text-app-on-accent rounded-lg text-ui-10 font-black transition-all uppercase tracking-[0.2em] shadow-glow-gold/20 active:scale-95"
                         title={t('combat.card.calculate_tooltip')}
                     >
-                        <Zap size={14} className="fill-current" />
-                        <span>{t('combat.card.calculate')}</span>
-                    </button>
-                    {currentTarget && (
-                        <div className="flex items-center gap-1 mt-0.5 max-w-[120px]">
-                             <div className="w-1.5 h-1.5 rounded-full bg-accent animate-ping shrink-0" />
-                             <span className="text-ui-9 text-accent font-black uppercase truncate" title={`Cible actuelle : ${currentTarget.name}`}>
-                                {currentTarget.name}
-                            </span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Delete button */}
-                <button
-                    className="w-8 h-8 flex items-center justify-center text-app-text/40 hover:text-etat-danger hover:bg-etat-danger/10 rounded-full transition-colors shrink-0"
-                    onClick={() => removeCombatant(combatant.id)}
-                    title={t('combat.card.delete')}
-                >
-                    <X size={18} />
-                </button>
-            </div>
+                        {t('combat.card.calculate')}
+                    </Bouton>
+                </>}
+            />
 
             {activeDriver?.ui_config?.gauges && activeDriver.ui_config.gauges.length > 0 ? (
-                <div className="mt-4 flex gap-6 px-3">
+                <div className="flex gap-6 px-3">
                     {activeDriver.ui_config.gauges.map((gaugeConfig: { fieldId: string; label: string; style: string; color: string }, idx: number) => {
                         // Extract value from sheetData (persistent or local)
                         const sheetData = (sourceCharacter?.sheetData || combatant.sheetData) as Record<string, string | number | boolean> | undefined;
@@ -504,7 +506,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex items-center justify-between px-1">
                                         <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
-                                        <span className="text-ui-12 font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val}</span>
+                                        <span className="text-ui-12 font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>
                                     </div>
                                     <div className="flex gap-1 h-2.5 bg-app-bg/40 p-0.5 rounded-sm border border-app-border/20">
                                         {Array.from({ length: segments }).map((_, sIdx) => (
@@ -535,7 +537,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex justify-between items-center px-1">
                                         <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
-                                        <span className="text-ui-12 font-black text-primary" style={styleDuChiffre}>{val}</span>
+                                        <span className="text-ui-12 font-black text-primary" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>
                                     </div>
                                     <div className="h-3 bg-app-bg/60 rounded-full overflow-hidden border border-app-border/30 p-[1.5px]">
                                         <div 
@@ -558,7 +560,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             >
                                 <div className="flex justify-between items-center px-0.5">
                                     <span className="text-ui-10 font-black uppercase tracking-wider text-app-text/80">{gaugeConfig.label}</span>
-                                    <span className="text-ui-10 font-bold text-app-text/90">{val}</span>
+                                    <span className="text-ui-10 font-bold text-app-text/90">{val} <span className="opacity-50">/ {max}</span></span>
                                 </div>
                                 <div className="h-2 bg-app-bg/40 border border-app-border/20 rounded-full overflow-hidden">
                                     <div 
@@ -571,8 +573,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     })}
                 </div>
             ) : (
-                /* Fallback to legacy stats mapping if no ui_config is present */
-                    <div className="mt-4 flex gap-6 px-3">
+                /*
+                  Fallback to legacy stats mapping if no ui_config is present.
+                  Rien à suivre : pas de rangée — elle laissait un vide en bas
+                  de chaque carte (2026-09-30).
+                */
+                    (activeDriver?.combat?.statsToTrack ?? []).some(stat => !stat.isMainHP) && <div className="flex gap-6 px-3">
                         {activeDriver?.combat?.statsToTrack
                             .filter(stat => !stat.isMainHP)
                             .map((stat, idx) => {
@@ -595,7 +601,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     >
                                         <div className="flex items-center justify-between px-1">
                                             <span className="stitch-label text-app-text/70">{stat.label}</span>
-                                            <span className="text-ui-11 font-black text-primary">{val}</span>
+                                            <span className="text-ui-11 font-black text-primary">{val} <span className="opacity-50">/ {max}</span></span>
                                         </div>
                                         <div className="flex gap-1 h-1.5 bg-app-bg/40 p-[1px] rounded-full border border-app-border/20">
                                             {Array.from({ length: segments }).map((_, sIdx) => {
@@ -662,7 +668,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     </div>
                 </div>
             )}
-        </div>
+        </article>
     );
 };
 
