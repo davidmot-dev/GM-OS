@@ -21,11 +21,11 @@ export const MediaItemThumbnail: React.FC<MediaItemThumbnailProps> = ({ media })
     }
     if (media.type === 'video') {
         return (
-            <div className="w-full h-full bg-black flex items-center justify-center relative">
+            <div className="w-full h-full bg-fixe-noir flex items-center justify-center relative">
                 <video src={url} className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Film size={20} className="text-white/70" />
+                    <div className="w-12 h-12 rounded-full bg-fixe-blanc/10 backdrop-blur-md border border-fixe-blanc/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Film size={20} className="text-fixe-blanc/70" />
                     </div>
                 </div>
             </div>

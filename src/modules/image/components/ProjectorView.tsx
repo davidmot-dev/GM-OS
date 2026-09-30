@@ -297,7 +297,7 @@ const ProjectorView: React.FC = () => {
     const isWhiteboardActive = isWhiteboardWindow; // Whiteboard doesn't need a URL to be "active" (blank canvas)
 
     return (
-        <div className="w-screen h-screen bg-black flex items-center justify-center overflow-hidden relative">
+        <div className="w-screen h-screen bg-fixe-noir flex items-center justify-center overflow-hidden relative">
             {/* LAYER 0: MAP */}
             {isMapActive && (
                 <div className="absolute inset-0 z-0">
@@ -312,7 +312,7 @@ const ProjectorView: React.FC = () => {
             {/* LAYER 1: WHITEBOARD */}
             {isWhiteboardActive && (
                 <div className={`absolute inset-0 z-10 transition-colors duration-500 ${
-                    backgroundMode === 'light' ? 'bg-white' : 'bg-black'
+                    backgroundMode === 'light' ? 'bg-fixe-blanc' : 'bg-fixe-noir'
                 }`}>
                     <PlayerDrawingCanvas />
                 </div>
@@ -321,7 +321,7 @@ const ProjectorView: React.FC = () => {
             {/* LAYER 2: IMAGES / VIDEOS (IMAGE-OS) */}
             {!isMapActive && !isWhiteboardActive && (
                 <>
-                    {!imagePath && <div className="text-white/10 uppercase text-xs tracking-widest">{t('common:standby')}</div>}
+                    {!imagePath && <div className="text-fixe-blanc/10 uppercase text-xs tracking-widest">{t('common:standby')}</div>}
                     
                     {mediaType === 'youtube' && videoDuMarqueur(imagePath ?? '') ? (
                         /*
@@ -512,7 +512,7 @@ const ProjectorView: React.FC = () => {
 
             {/* Subtle overlay for identity */}
             <div className="absolute bottom-4 right-4 flex flex-col items-end gap-1 z-50">
-                <div className="text-ui-10 text-white/20 uppercase tracking-[0.3em]">
+                <div className="text-ui-10 text-fixe-blanc/20 uppercase tracking-[0.3em]">
                     {isMapWindow ? 'Map-OS' : isWhiteboardWindow ? 'Whiteboard-OS' : 'Image-OS'}
                 </div>
             </div>

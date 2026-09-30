@@ -86,7 +86,7 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
                             <iframe
                                 src={url}
                                 title={media.name}
-                                className="w-full h-full rounded-[2.5rem] border border-app-border/10 bg-white shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative z-10"
+                                className="w-full h-full rounded-[2.5rem] border border-app-border/10 bg-fixe-blanc shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative z-10"
                             />
                         </div>
                     ) : (
@@ -109,7 +109,7 @@ export const FullScreenPreview: React.FC<FullScreenPreviewProps> = ({ media, onC
                 )}
             </div>
 
-            <div className="absolute bottom-12 px-8 py-3 bg-black/40 border border-app-border/5 rounded-full text-app-text/20 text-ui-10 uppercase font-black tracking-[0.5em] backdrop-blur-md font-display">
+            <div className="absolute bottom-12 px-8 py-3 bg-fixe-noir/40 border border-app-border/5 rounded-full text-app-text/20 text-ui-10 uppercase font-black tracking-[0.5em] backdrop-blur-md font-display">
                 {t('common:pressEscToClose')}
             </div>
         </div>

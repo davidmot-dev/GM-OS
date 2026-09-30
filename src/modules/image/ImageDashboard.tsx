@@ -151,20 +151,20 @@ const ImageDashboard: React.FC = () => {
                     <div className="grid grid-cols-2 gap-3">
                         <button
                             onClick={blackout}
-                            className="bg-rose-500/10 border border-rose-500/20 text-rose-500 hover:bg-rose-500/20 hover:border-rose-500/40 font-black py-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
+                            className="bg-etat-danger/10 border border-etat-danger/20 text-etat-danger hover:bg-etat-danger/20 hover:border-etat-danger/40 font-black py-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
                             title={t('image.dashboard.blackout.targetTooltip')}
                         >
-                            <div className="p-2 rounded-full bg-rose-500/10 group-hover:scale-110 transition-transform shadow-glow-rose">
+                            <div className="p-2 rounded-full bg-etat-danger/10 group-hover:scale-110 transition-transform shadow-glow-rose">
                                 <Ban size={18} />
                             </div>
                             {t('image.dashboard.blackout.target')}
                         </button>
                         <button
                             onClick={blackoutAll}
-                            className="bg-rose-600 hover:bg-rose-500 text-white font-black py-4 rounded-2xl shadow-glow-rose transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
+                            className="bg-etat-danger hover:bg-etat-danger/90 text-app-bg font-black py-4 rounded-2xl shadow-glow-rose transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
                             title={t('image.dashboard.blackout.allTooltip')}
                         >
-                            <div className="p-2 rounded-full bg-white/20 group-hover:scale-110 transition-transform shadow-lg">
+                            <div className="p-2 rounded-full bg-app-text/20 group-hover:scale-110 transition-transform shadow-lg">
                                 <Ban size={18} />
                             </div>
                             {t('image.dashboard.blackout.all')}
@@ -189,7 +189,7 @@ const ImageDashboard: React.FC = () => {
                     */}
                     <button
                         onClick={noirTotal}
-                        className="bg-app-bg border border-app-border text-app-text/60 hover:text-white hover:border-white/30 font-black py-3 rounded-2xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-[0.2em] group"
+                        className="bg-app-bg border border-app-border text-app-text/60 hover:text-app-text hover:border-app-text/30 font-black py-3 rounded-2xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-[0.2em] group"
                         title={t('image.dashboard.blackout.darkTooltip')}
                     >
                         <Moon size={16} className="group-hover:scale-110 transition-transform" />
@@ -198,7 +198,7 @@ const ImageDashboard: React.FC = () => {
 
                     <button
                         onClick={() => gmConfirm(t('image.dashboard.resetConfirm'), () => reset())}
-                        className="w-full bg-app-bg/60 border border-red-500/10 text-red-500/40 hover:bg-red-500/10 hover:text-red-500 font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-widest uppercase hover:border-red-500/30 group"
+                        className="w-full bg-app-bg/60 border border-etat-danger/10 text-etat-danger/40 hover:bg-etat-danger/10 hover:text-etat-danger font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-widest uppercase hover:border-etat-danger/30 group"
                         title={t('image.dashboard.resetTooltip')}
                     >
                         <RotateCcw size={14} className="group-hover:-rotate-180 transition-transform duration-500" />
@@ -249,13 +249,13 @@ const ImageDashboard: React.FC = () => {
                             <div
                                 key={folder.id}
                                 onClick={() => { setCurrentView('library'); setActiveFolderId(folder.id); }}
-                                className={`flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg cursor-pointer transition-colors group ${currentView === 'library' && activeFolderId === folder.id ? 'bg-app-surface text-accent' : 'text-app-muted hover:bg-app-surface/50 hover:text-white'}`}
+                                className={`flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg cursor-pointer transition-colors group ${currentView === 'library' && activeFolderId === folder.id ? 'bg-app-surface text-accent' : 'text-app-muted hover:bg-app-surface/50 hover:text-app-text'}`}
                             >
                                 <FolderIcon size={14} className={activeFolderId === folder.id ? "text-accent" : ""} />
                                 <span className="flex-1 truncate">{folder.name}</span>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); removeFolder(folder.id); }}
-                                    className="opacity-0 group-hover:opacity-100 text-app-subtle hover:text-red-400 transition-all p-1"
+                                    className="opacity-0 group-hover:opacity-100 text-app-subtle hover:text-etat-danger transition-all p-1"
                                     title={t('image.folders.delete')}
                                 >
                                     <Ban size={12} />
@@ -293,7 +293,7 @@ const ImageDashboard: React.FC = () => {
                                 aria-label="Niveau sonore des vidéos projetées"
                                 className="w-full accent-accent cursor-pointer"
                             />
-                            <p className="text-ui-9 text-slate-600 leading-snug normal-case">
+                            <p className="text-ui-9 text-app-subtle leading-snug normal-case">
                                 Le volume général, le Focus et la voix s'y appliquent aussi.
                             </p>
                         </div>
@@ -315,8 +315,8 @@ const ImageDashboard: React.FC = () => {
                         compte, annoncé avant.
                     */}
                     {aRestituer > 0 && (
-                        <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl space-y-2">
-                            <p className="text-ui-11 text-emerald-300/80 leading-relaxed normal-case">
+                        <div className="p-3 bg-etat-succes/5 border border-etat-succes/20 rounded-xl space-y-2">
+                            <p className="text-ui-11 text-etat-succes/80 leading-relaxed normal-case">
                                 {aRestituer} média{aRestituer > 1 ? 's' : ''} présent
                                 {aRestituer > 1 ? 's' : ''} dans la sauvegarde et absent
                                 {aRestituer > 1 ? 's' : ''} d'ici.
@@ -325,7 +325,7 @@ const ImageDashboard: React.FC = () => {
                                 type="button"
                                 disabled={restauration}
                                 onClick={lancerLaRestauration}
-                                className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-ui-10 font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
+                                className="w-full flex items-center justify-center gap-2 p-2 bg-etat-succes/10 border border-etat-succes/30 rounded-lg text-ui-10 font-black uppercase tracking-widest text-etat-succes hover:bg-etat-succes/20 transition-colors disabled:opacity-30"
                             >
                                 <RotateCcw size={13} />
                                 {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
@@ -346,8 +346,8 @@ const ImageDashboard: React.FC = () => {
                                 <button
                                     onClick={() => setProjectionTarget('hub')}
                                     className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${projectionTarget === 'hub'
-                                        ? 'bg-accent text-slate-950 shadow-glow-accent'
-                                        : 'text-app-subtle hover:text-white'
+                                        ? 'bg-accent text-app-on-accent shadow-glow-accent'
+                                        : 'text-app-subtle hover:text-app-text'
                                         }`}
                                 >
                                     {getDisplayLabel('hub')}
@@ -357,8 +357,8 @@ const ImageDashboard: React.FC = () => {
                                         key={d.id}
                                         onClick={() => setProjectionTarget(d.id)}
                                         className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${projectionTarget === d.id
-                                            ? 'bg-accent text-slate-950 shadow-glow-accent'
-                                            : 'text-app-subtle hover:text-white'
+                                            ? 'bg-accent text-app-on-accent shadow-glow-accent'
+                                            : 'text-app-subtle hover:text-app-text'
                                             }`}
                                     >
                                         {getDisplayLabel(d.id)}
@@ -372,7 +372,7 @@ const ImageDashboard: React.FC = () => {
                         <div className="relative">
                             <SearchIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle" />
                             <input
-                                className="bg-app-surface border-none rounded-xl pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-accent text-white"
+                                className="bg-app-surface border-none rounded-xl pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-accent text-app-text"
                                 placeholder={t('common:search')}
                                 type="text"
                             />
@@ -395,22 +395,22 @@ const ImageDashboard: React.FC = () => {
                             <div className="flex bg-app-surface/50 rounded-xl border border-app-border overflow-hidden">
                                 <button
                                     onClick={() => avancerLeDiaporama(-1)}
-                                    className="p-2 hover:bg-white/10 text-app-muted hover:text-white transition-colors"
+                                    className="p-2 hover:bg-app-text/10 text-app-muted hover:text-app-text transition-colors"
                                     title={t('common:previous')}
                                 >
                                     <ChevronLeft size={20} />
                                 </button>
                                 <button
                                     onClick={arreterLeDiaporama}
-                                    className="bg-emerald-500/20 text-emerald-300 px-6 py-2 font-bold text-sm tracking-wide hover:bg-emerald-500/30 active:scale-[0.98] transition-all flex items-center gap-2"
+                                    className="bg-etat-succes/20 text-etat-succes px-6 py-2 font-bold text-sm tracking-wide hover:bg-etat-succes/30 active:scale-[0.98] transition-all flex items-center gap-2"
                                     title={t('image.diaporama.arreter')}
                                 >
-                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                    <span className="w-2 h-2 rounded-full bg-etat-succes animate-pulse" />
                                     {nomDuDiaporamaEnCours}
                                 </button>
                                 <button
                                     onClick={() => avancerLeDiaporama(1)}
-                                    className="p-2 hover:bg-white/10 text-app-muted hover:text-white transition-colors border-l border-app-border"
+                                    className="p-2 hover:bg-app-text/10 text-app-muted hover:text-app-text transition-colors border-l border-app-border"
                                     title={t('common:next')}
                                 >
                                     <ChevronRight size={20} />
@@ -421,7 +421,7 @@ const ImageDashboard: React.FC = () => {
 
                         <div className="w-10 h-10 rounded-full bg-app-surface border border-app-border flex items-center justify-center overflow-hidden">
                             {/* Dummy Profile */}
-                            <div className="w-full h-full bg-app-surface flex items-center justify-center text-white font-bold">{t('common:gm')}</div>
+                            <div className="w-full h-full bg-app-surface flex items-center justify-center text-app-text font-bold">{t('common:gm')}</div>
                         </div>
                     </div>
                 </header>
@@ -435,7 +435,7 @@ const ImageDashboard: React.FC = () => {
                     </div>
                     <div className="flex gap-2">
                         <button 
-                            className="p-2 rounded-lg bg-app-bg border border-app-border text-app-muted hover:text-white transition-colors"
+                            className="p-2 rounded-lg bg-app-bg border border-app-border text-app-muted hover:text-app-text transition-colors"
                             title={t('common:filter')}
                         >
                             <Filter size={20} />

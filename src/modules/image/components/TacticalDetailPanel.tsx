@@ -27,10 +27,10 @@ interface TacticalDetailPanelProps {
 }
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
-    'image': <ImageIcon size={14} className="text-blue-400" />,
-    'audio': <Music size={14} className="text-amber-400" />,
-    'video': <Film size={14} className="text-purple-400" />,
-    'document': <FileText size={14} className="text-emerald-400" />,
+    'image': <ImageIcon size={14} className="text-gm-cyan" />,
+    'audio': <Music size={14} className="text-gm-violet" />,
+    'video': <Film size={14} className="text-gm-crimson" />,
+    'document': <FileText size={14} className="text-gm-emerald" />,
 };
 
 export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({ 
@@ -143,9 +143,9 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 
             <div className="flex-1 overflow-y-auto custom-scrollbar p-8 space-y-10">
                 {/* Large Preview */}
-                <div className="relative group aspect-video rounded-3xl overflow-hidden bg-black/40 border border-app-border/10 shadow-2xl">
+                <div className="relative group aspect-video rounded-3xl overflow-hidden bg-fixe-noir/40 border border-app-border/10 shadow-2xl">
                     <MediaItemThumbnail media={media} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-fixe-noir/80 via-transparent to-transparent opacity-60" />
                     <div className="absolute bottom-6 left-6 flex items-center gap-4">
                         <span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-lg text-ui-10 font-black text-accent uppercase tracking-widest">
                             {media.type}
@@ -158,7 +158,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     {/* Persistence Toggle Overlay */}
                     <button 
                         onClick={() => toggleMediaPersistence(media.id)}
-                        className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 backdrop-blur-md border ${media.isPersistent ? 'bg-accent/20 border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-black/40 border-app-border/10 text-app-text/20 hover:text-app-text/60 hover:bg-black/60'}`}
+                        className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 backdrop-blur-md border ${media.isPersistent ? 'bg-accent/20 border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-fixe-noir/40 border-app-border/10 text-app-text/20 hover:text-app-text/60 hover:bg-fixe-noir/60'}`}
                         title={media.isPersistent ? t('image.detail.actions.disablePersistence') : t('image.detail.actions.enablePersistence')}
                     >
                         {media.isPersistent ? <Lock size={20} /> : <Unlock size={20} />}
@@ -181,7 +181,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                 onClose();
                             }
                         }}
-                        className="flex items-center justify-center gap-3 py-4 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl font-black text-ui-11 uppercase tracking-widest hover:bg-red-500/20 transition-all"
+                        className="flex items-center justify-center gap-3 py-4 bg-etat-danger/10 text-etat-danger border border-etat-danger/20 rounded-2xl font-black text-ui-11 uppercase tracking-widest hover:bg-etat-danger/20 transition-all"
                     >
                         <Trash2 size={16} />
                         {t('image.detail.actions.delete')}
@@ -259,7 +259,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                     #{tagItem}
                                     <button 
                                         onClick={() => updateMediaTags(media.id, media.tags.filter(tag => tag !== tagItem))}
-                                        className="hover:text-red-400 opacity-40 hover:opacity-100 transition-all"
+                                        className="hover:text-etat-danger opacity-40 hover:opacity-100 transition-all"
                                         title={t('image.detail.actions.removeTag', { tag: tagItem })}
                                         aria-label={t('image.detail.actions.removeTag', { tag: tagItem })}
                                     >
@@ -288,14 +288,14 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         */}
                         {proches.length > 0 && (
                             <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-ui-9 font-bold uppercase tracking-widest text-amber-400/80">
+                                <span className="text-ui-9 font-bold uppercase tracking-widest text-etat-alerte/80">
                                     {t('image.detail.tags.proche')}
                                 </span>
                                 {proches.map(tag => (
                                     <button
                                         key={tag}
                                         onClick={() => void poserUnTag(tag)}
-                                        className="px-3 py-1.5 rounded-xl border border-amber-400/40 text-amber-400 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/10"
+                                        className="px-3 py-1.5 rounded-xl border border-etat-alerte/40 text-etat-alerte text-ui-10 font-black uppercase tracking-widest hover:bg-etat-alerte/10"
                                     >
                                         {tag}
                                     </button>
@@ -381,7 +381,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     )}
 
                     {!recensement.complet && (
-                        <p className="text-ui-10 text-amber-400/70 italic leading-tight">
+                        <p className="text-ui-10 text-etat-alerte/70 italic leading-tight">
                             {t('image.detail.usage.unknown', {
                                 modules: recensement.modulesEnEchec.join(', '),
                             })}
@@ -413,7 +413,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                                  : [...media.campaignIds, campaign.id];
                                              updateMediaCampaigns(media.id, newCampaignIds);
                                          }}
-                                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all duration-300 border ${isLinked ? 'bg-amber-500/20 text-amber-500 border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'bg-app-surface/5 text-app-text/20 border-transparent hover:border-app-border/10 hover:text-app-text/40'}`}
+                                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all duration-300 border ${isLinked ? 'bg-etat-alerte/20 text-etat-alerte border-etat-alerte/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'bg-app-surface/5 text-app-text/20 border-transparent hover:border-app-border/10 hover:text-app-text/40'}`}
                                          title={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
                                          aria-label={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
                                      >

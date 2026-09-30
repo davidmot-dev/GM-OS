@@ -74,8 +74,8 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
     const isProjected = activeTargets.length > 0;
 
     const borderClass = isProjected
-        ? "ring-4 ring-accent shadow-glow-accent border-white/5"
-        : "border-white/5 hover:border-accent/50 hover:shadow-glow-accent";
+        ? "ring-4 ring-accent shadow-glow-accent border-app-text/5"
+        : "border-app-text/5 hover:border-accent/50 hover:shadow-glow-accent";
 
     const resolvedUrl = useMediaUrl(media.path);
     const safePath = resolvedUrl || '';
@@ -183,7 +183,7 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
 
                 <button
                     onClick={(e) => { e.stopPropagation(); removeMedia(media.id); }}
-                    className="p-1 bg-red-500/20 hover:bg-red-500 text-app-text rounded-md transition-colors border border-red-500/20"
+                    className="p-1 bg-etat-danger/20 hover:bg-etat-danger text-app-text rounded-md transition-colors border border-etat-danger/20"
                     title={t('image.pad.remove')}
                 >
                     <X size={14} />

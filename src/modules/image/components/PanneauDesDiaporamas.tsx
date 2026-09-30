@@ -106,10 +106,10 @@ const PanneauDesDiaporamas: React.FC = () => {
                                         : 'text-app-muted hover:bg-app-surface/50'
                                 }`}
                             >
-                                <Images size={15} className={tourne ? 'text-emerald-400' : ''} />
+                                <Images size={15} className={tourne ? 'text-etat-succes' : ''} />
                                 <span className="flex-1 truncate text-sm font-medium">{d.nom}</span>
                                 {/* Un point vert vaut mieux qu'un mot : il se lit d'un coup d'œil. */}
-                                {tourne && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
+                                {tourne && <span className="w-2 h-2 rounded-full bg-etat-succes animate-pulse" />}
                                 <span className="text-ui-9 text-app-text/30">{d.imageIds.length}</span>
                             </div>
                         );
@@ -121,7 +121,7 @@ const PanneauDesDiaporamas: React.FC = () => {
             {choisi ? (
                 <div className="flex-1 min-w-0 flex flex-col gap-4">
                     <div className="flex items-center gap-3 bg-app-surface/50 p-4 rounded-2xl border border-app-border">
-                        <h2 className="text-lg font-bold text-white truncate flex-1">{choisi.nom}</h2>
+                        <h2 className="text-lg font-bold text-app-text truncate flex-1">{choisi.nom}</h2>
 
                         <button
                             onClick={() => gmPrompt(t('image.diaporama.nomDemande'), choisi.nom, (nom) => {
@@ -147,7 +147,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                 step={0.5}
                                 value={cadenceDuDiaporama(choisi) / 1000}
                                 onChange={(e) => reglerLaCadence(choisi.id, Number(e.target.value) * 1000)}
-                                className="w-20 bg-app-bg border border-app-border rounded-lg px-2 py-1.5 text-sm text-white text-right"
+                                className="w-20 bg-app-bg border border-app-border rounded-lg px-2 py-1.5 text-sm text-app-text text-right"
                             />
                             <span className="normal-case tracking-normal">{t('image.diaporama.secondes')}</span>
                         </label>
@@ -155,7 +155,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                         {diaporamaEnCours?.id === choisi.id ? (
                             <button
                                 onClick={arreterLeDiaporama}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-ui-10 font-black uppercase tracking-widest hover:bg-rose-500/30 transition-all"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-etat-danger/20 border border-etat-danger/40 text-etat-danger text-ui-10 font-black uppercase tracking-widest hover:bg-etat-danger/30 transition-all"
                             >
                                 <Square size={14} /> {t('image.diaporama.arreter')}
                             </button>
@@ -164,7 +164,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                 onClick={() => lancerLeDiaporama(choisi.id)}
                                 disabled={!peutTourner(images)}
                                 title={peutTourner(images) ? undefined : t('image.diaporama.deuxMinimum')}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-slate-950 text-ui-10 font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                                 <Play size={14} /> {t('image.diaporama.lancer', { ecran: getDisplayLabel(projectionTarget as string) })}
                             </button>
@@ -175,7 +175,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                 t('image.diaporama.supprimerConfirme', { nom: choisi.nom }),
                                 () => supprimerDiaporama(choisi.id),
                             )}
-                            className="p-2 rounded-lg text-app-subtle hover:text-rose-400 transition-colors"
+                            className="p-2 rounded-lg text-app-subtle hover:text-etat-danger transition-colors"
                             title={t('image.diaporama.supprimer')}
                         >
                             <Trash2 size={15} />
@@ -190,7 +190,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                       c'est cet écran qui le lui apprend.
                     */}
                     {manquantes > 0 && (
-                        <p className="text-ui-11 text-amber-300/80 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-2">
+                        <p className="text-ui-11 text-etat-alerte/80 bg-etat-alerte/10 border border-etat-alerte/20 rounded-xl px-4 py-2">
                             {t('image.diaporama.manquantes', { compte: manquantes })}
                         </p>
                     )}
@@ -207,7 +207,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                         key={`${media.id}-${rang}`}
                                         className={`flex items-center gap-3 p-2 rounded-xl border transition-colors ${
                                             diaporamaEnCours?.id === choisi.id && diaporamaEnCours.index === rang
-                                                ? 'border-emerald-400/50 bg-emerald-400/5'
+                                                ? 'border-etat-succes/50 bg-etat-succes/5'
                                                 : 'border-app-border bg-app-surface/40'
                                         }`}
                                     >
@@ -220,7 +220,7 @@ const PanneauDesDiaporamas: React.FC = () => {
                                         <button
                                             onClick={() => deplacerDansLeDiaporama(choisi.id, rang, -1)}
                                             disabled={rang === 0}
-                                            className="p-1.5 rounded-lg text-app-muted hover:text-white hover:bg-app-surface disabled:opacity-20 transition-colors"
+                                            className="p-1.5 rounded-lg text-app-muted hover:text-app-text hover:bg-app-surface disabled:opacity-20 transition-colors"
                                             title={t('image.diaporama.monter')}
                                         >
                                             <ChevronUp size={15} />
@@ -228,14 +228,14 @@ const PanneauDesDiaporamas: React.FC = () => {
                                         <button
                                             onClick={() => deplacerDansLeDiaporama(choisi.id, rang, 1)}
                                             disabled={rang === images.length - 1}
-                                            className="p-1.5 rounded-lg text-app-muted hover:text-white hover:bg-app-surface disabled:opacity-20 transition-colors"
+                                            className="p-1.5 rounded-lg text-app-muted hover:text-app-text hover:bg-app-surface disabled:opacity-20 transition-colors"
                                             title={t('image.diaporama.descendre')}
                                         >
                                             <ChevronDown size={15} />
                                         </button>
                                         <button
                                             onClick={() => retirerDuDiaporama(choisi.id, rang)}
-                                            className="p-1.5 rounded-lg text-app-subtle hover:text-rose-400 transition-colors"
+                                            className="p-1.5 rounded-lg text-app-subtle hover:text-etat-danger transition-colors"
                                             title={t('image.diaporama.retirer')}
                                         >
                                             <Trash2 size={14} />
@@ -264,11 +264,11 @@ const PanneauDesDiaporamas: React.FC = () => {
                                     >
                                         <Vignette media={media} />
                                         {estVideo ? (
-                                            <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-white/60">
+                                            <span className="absolute inset-0 flex items-center justify-center bg-fixe-noir/50 text-fixe-blanc/60">
                                                 <Film size={16} />
                                             </span>
                                         ) : (
-                                            <span className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity text-accent">
+                                            <span className="absolute inset-0 flex items-center justify-center bg-fixe-noir/60 opacity-0 group-hover:opacity-100 transition-opacity text-accent">
                                                 <Plus size={20} />
                                             </span>
                                         )}

@@ -65,6 +65,15 @@ export default {
                 'etat-danger': 'var(--etat-danger)',
                 'etat-alerte': 'var(--etat-alerte)',
                 'etat-info': 'var(--etat-info)',
+                /*
+                  **Les deux couleurs FIXES** (phase 4, L1, 2026-09-30) — ce qui
+                  est posé sur une photo, une vidéo, ou l'écran de projection des
+                  joueurs : un voile noir, une légende blanche. Elles ne suivent
+                  aucun thème, **exprès** : une légende thémée deviendrait
+                  illisible sur une photo claire. Nommées pour dire l'intention,
+                  et pour que la garde des couleurs brutes les distingue.
+                */
+                fixe: { blanc: '#ffffff', noir: '#000000' },
             },
             fontFamily: {
                 // Typographie premium
