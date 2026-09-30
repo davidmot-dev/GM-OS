@@ -535,6 +535,23 @@
     }
   },
   "image": {
+    "agencement": {
+      "enDirect": "En direct sur {{ecran}}",
+      "rienProjete": "Rien n'est projeté sur {{ecran}}",
+      "rienProjeteAide": "Touchez une vignette pour la projeter.",
+      "arreter": "Arrêter la projection",
+      "ecranCible": "Écran cible",
+      "urgence": "Commandes d'urgence",
+      "projectionActive": "Projection active",
+      "ecran": "Écran : {{ecran}}",
+      "medias_one": "{{count}} média",
+      "medias_other": "{{count}} médias",
+      "recherche": "Rechercher un média",
+      "aucunResultat": "Aucun média ne correspond à « {{recherche}} ».",
+      "fiche": "Fiche",
+      "source": "Source",
+      "reglages": "Réglages"
+    },
     "sidebar": {
       "navigation": "Navigation",
       "mediaLibrary": "Médiathèque",

@@ -535,6 +535,23 @@
     }
   },
   "image": {
+    "agencement": {
+      "enDirect": "Live on {{ecran}}",
+      "rienProjete": "Nothing projected on {{ecran}}",
+      "rienProjeteAide": "Tap a thumbnail to project it.",
+      "arreter": "Stop projecting",
+      "ecranCible": "Target screen",
+      "urgence": "Emergency controls",
+      "projectionActive": "Projection active",
+      "ecran": "Screen: {{ecran}}",
+      "medias_one": "{{count}} media",
+      "medias_other": "{{count}} media",
+      "recherche": "Search media",
+      "aucunResultat": "No media matches “{{recherche}}”.",
+      "fiche": "Sheet",
+      "source": "Source",
+      "reglages": "Settings"
+    },
     "sidebar": {
       "navigation": "Navigation",
       "mediaLibrary": "Media Library",

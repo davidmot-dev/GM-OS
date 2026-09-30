@@ -1,9 +1,8 @@
 import React from 'react';
 // Let's use Lucide icons since it's the standard in this project.
 import {
-    Ban, Folder as FolderIcon, History as HistoryIcon,
-    Star as StarIcon, Search as SearchIcon,
-    Filter, Plus, RotateCcw, ChevronLeft, ChevronRight, Film, Images, Moon
+    Ban, Folder as FolderIcon, Star as StarIcon, Search as SearchIcon,
+    Plus, RotateCcw, ChevronLeft, ChevronRight, Film, Images, Moon, Monitor, SlidersHorizontal, Power
 } from 'lucide-react';
 
 import { useImageStore } from './useImageStore';
@@ -17,10 +16,13 @@ import { mediasRestituables, restaurerLesMedias } from '../session/logic/MiroirD
 import { useHardwareStore } from '../../stores/useHardwareStore';
 import { estUneVideo } from '../../stores/typesDeMedia';
 import { useTranslation } from 'react-i18next';
+import { Bouton, Etiquette, EnTeteDeModule, GabaritDeModule, Panneau } from '../../components/socle';
+import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
+import EnDirect from './components/EnDirect';
 
 const ImageDashboard: React.FC = () => {
     const {
-        mediaList, projectionTarget, setProjectionTarget,
+        mediaList, projectionTarget, setProjectionTarget, projections,
         avancerLeDiaporama, arreterLeDiaporama, blackout, blackoutAll, noirTotal, addMedia, displays, fetchDisplays,
         folders, activeFolderId, setActiveFolderId, addFolder, removeFolder,
         currentView, setCurrentView, reset
@@ -112,11 +114,23 @@ const ImageDashboard: React.FC = () => {
         (m) => (m.type ? m.type === 'video' : estUneVideo(m.name)),
     );
 
+    /*
+      **La recherche filtre, enfin.** Le champ existait depuis longtemps et
+      n'était relié à rien — *un champ qui ne répond pas apprend à ne plus
+      chercher.* Le nom seul, sans casse ni accents.
+    */
+    const [recherche, setRecherche] = React.useState('');
+    const plier = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
     let displayedMedia = mediaList;
     if (currentView === 'favorites') {
         displayedMedia = mediaList.filter(m => m.isFavorite);
     } else if (activeFolderId) {
         displayedMedia = mediaList.filter(m => m.folderId === activeFolderId);
+    }
+    if (recherche.trim()) {
+        const cherche = plier(recherche.trim());
+        displayedMedia = displayedMedia.filter(m => plier(m.name).includes(cherche));
     }
 
     const currentFolderName = currentView === 'favorites'
@@ -126,8 +140,270 @@ const ImageDashboard: React.FC = () => {
             : t('image.sidebar.mediaLibrary'));
 
 
+    /*
+      **L'étape 2 du lot 1 — Image-OS réagencé dans la grammaire commune**
+      (2026-09-30). La barre porte l'action (ajouter, chercher, feuilleter le
+      diaporama qui tourne) ; le centre montre **ce qui est en direct** puis la
+      bibliothèque, où un clic projette ; à droite, ce qui se règle : l'écran
+      cible, les arrêts d'urgence, les dossiers, le son des vidéos, le stockage.
+
+      Retirés : le bouton « Filtre » et la pastille « GM », qui ne faisaient
+      rien, et « Derniers uploads », grisé depuis toujours. *Un bouton qui ne
+      fait rien est pire qu'un bouton absent.*
+    */
+    const regime = useRegimeDInterface();
+    const [reglagesOuverts, setReglagesOuverts] = React.useState(true);
+    const projectionActive = Object.values(projections).some(Boolean);
+    const titreDeSection = 'text-ui-11 font-semibold text-app-muted uppercase tracking-widest';
+
+    const onglet = (actif: boolean) => `flex items-center gap-2 px-4 py-2 border-b-2 text-ui-11 font-bold uppercase tracking-widest transition-colors ${actif
+        ? 'border-accent text-accent'
+        : 'border-transparent text-app-muted hover:text-app-text'}`;
+
+    const reglages = (
+        <>
+            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-3">
+                <h2 className={titreDeSection}>{t('image.agencement.ecranCible')}</h2>
+                <div className="grid grid-cols-2 gap-1.5">
+                    {['hub', ...displays.map(d => d.id)].map(id => (
+                        <button
+                            key={id}
+                            onClick={() => setProjectionTarget(id)}
+                            aria-pressed={projectionTarget === id}
+                            className={`flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg border text-ui-10 font-black uppercase tracking-widest transition-all ${projectionTarget === id
+                                ? 'bg-accent text-app-on-accent border-accent'
+                                : 'bg-app-bg border-app-border text-app-muted hover:text-app-text hover:border-accent/50'}`}
+                        >
+                            {getDisplayLabel(id)}
+                        </button>
+                    ))}
+                </div>
+            </Panneau>
+
+            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-2">
+                <h2 className={titreDeSection}>{t('image.agencement.urgence')}</h2>
+                <div className="grid grid-cols-2 gap-2">
+                    <button
+                        onClick={blackout}
+                        className="bg-etat-danger/10 border border-etat-danger/30 text-etat-danger hover:bg-etat-danger/20 font-black py-3 rounded-lg transition-all flex flex-col items-center justify-center gap-1 text-ui-10 tracking-[0.2em]"
+                        title={t('image.dashboard.blackout.targetTooltip')}
+                    >
+                        <Ban size={16} />
+                        {t('image.dashboard.blackout.target')}
+                    </button>
+                    <button
+                        onClick={blackoutAll}
+                        className="bg-etat-danger hover:bg-etat-danger/90 text-app-bg font-black py-3 rounded-lg transition-all flex flex-col items-center justify-center gap-1 text-ui-10 tracking-[0.2em]"
+                        title={t('image.dashboard.blackout.allTooltip')}
+                    >
+                        <Power size={16} />
+                        {t('image.dashboard.blackout.all')}
+                    </button>
+                </div>
+
+                {/*
+                  ⭐ **Le vrai noir a SON bouton, et il ne prend celui de
+                  personne.**
+
+                  ⛔ Le 2026-09-17 au soir, j'avais rebranché les deux boutons
+                  ci-dessus sur l'extinction, au motif que leur infobulle disait
+                  « Éteindre l'écran ». Or ce sont ceux que David utilise pour
+                  **arrêter une projection** : le lendemain matin, *« quand
+                  j'arrête de projeter je tombe sur un écran noir »*.
+
+                  ⭐ ***Un libellé décrit une intention ; un geste quotidien EST
+                  une intention.*** Quand les deux se contredisent, c'est le geste
+                  qui a raison — on corrige le libellé, on ne détourne pas le
+                  bouton.
+                */}
+                <div className="grid grid-cols-2 gap-2">
+                    <button
+                        onClick={noirTotal}
+                        className="bg-app-bg border border-app-border text-app-muted hover:text-app-text hover:border-app-text/30 font-black py-2 rounded-lg transition-all flex items-center justify-center gap-2 text-ui-10 tracking-[0.2em]"
+                        title={t('image.dashboard.blackout.darkTooltip')}
+                    >
+                        <Moon size={14} />
+                        {t('image.dashboard.blackout.dark')}
+                    </button>
+                    <button
+                        onClick={() => gmConfirm(t('image.dashboard.resetConfirm'), () => reset())}
+                        className="bg-app-bg border border-etat-danger/20 text-etat-danger/70 hover:bg-etat-danger/10 hover:text-etat-danger font-bold py-2 rounded-lg transition-all flex items-center justify-center gap-2 text-ui-10 tracking-widest uppercase"
+                        title={t('image.dashboard.resetTooltip')}
+                    >
+                        <RotateCcw size={13} />
+                        {t('image.dashboard.restoreDefault')}
+                    </button>
+                </div>
+            </Panneau>
+
+            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                    <h2 className={titreDeSection}>{t('image.sidebar.folderTree')}</h2>
+                    <button onClick={handleCreateFolder} className="text-app-muted hover:text-accent transition-colors" title={t('image.folders.new')}>
+                        <Plus size={14} />
+                    </button>
+                </div>
+                <div className="space-y-0.5">
+                    <button
+                        onClick={() => { setCurrentView('library'); setActiveFolderId(null); }}
+                        className={`w-full flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg transition-colors ${currentView === 'library' && activeFolderId === null ? 'bg-accent/15 text-accent' : 'text-app-muted hover:bg-app-surface-2 hover:text-app-text'}`}
+                    >
+                        <FolderIcon size={14} />
+                        <span className="flex-1 truncate text-left">{t('image.sidebar.mediaLibrary')}</span>
+                        <span className="text-ui-10 tabular-nums text-app-subtle">{mediaList.length}</span>
+                    </button>
+                    {folders.map(folder => (
+                        <div
+                            key={folder.id}
+                            onClick={() => { setCurrentView('library'); setActiveFolderId(folder.id); }}
+                            className={`flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg cursor-pointer transition-colors group ${currentView === 'library' && activeFolderId === folder.id ? 'bg-accent/15 text-accent' : 'text-app-muted hover:bg-app-surface-2 hover:text-app-text'}`}
+                        >
+                            <FolderIcon size={14} />
+                            <span className="flex-1 truncate">{folder.name}</span>
+                            <span className="text-ui-10 tabular-nums text-app-subtle group-hover:hidden">{mediaList.filter(m => m.folderId === folder.id).length}</span>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); removeFolder(folder.id); }}
+                                className="hidden group-hover:block text-app-subtle hover:text-etat-danger transition-all p-0.5"
+                                title={t('image.folders.delete')}
+                            >
+                                <Ban size={12} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </Panneau>
+
+            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-3">
+                {/*
+                    **Le niveau des vidéos — 2026-09-05.**
+
+                    Il ne remplace pas le volume général : il s'y multiplie,
+                    comme la tranche d'un module sur une console. *On calme une
+                    vidéo trop forte sans toucher à la musique, et on coupe toute
+                    la table d'un seul geste ailleurs.*
+
+                    Il n'apparaît que si la bibliothèque contient une vidéo : un
+                    réglage qui ne s'applique à rien n'apprend rien.
+                */}
+                {contientUneVideo && (
+                    <div className="flex flex-col gap-1.5">
+                        <div className="flex justify-between items-center text-ui-10 text-app-muted uppercase tracking-widest font-bold">
+                            <span className="flex items-center gap-1.5"><Film size={12} /> Son des vidéos</span>
+                            <span className="tabular-nums text-app-text">{Math.round(volumeVideo * 100)}%</span>
+                        </div>
+                        <input
+                            type="range"
+                            min={0}
+                            max={1}
+                            step={0.01}
+                            value={volumeVideo}
+                            onChange={(e) => setVolumeVideo(Number(e.target.value))}
+                            aria-label="Niveau sonore des vidéos projetées"
+                            className="w-full accent-accent cursor-pointer"
+                        />
+                        <p className="text-ui-10 text-app-subtle leading-snug normal-case">
+                            Le volume général, le Focus et la voix s'y appliquent aussi.
+                        </p>
+                    </div>
+                )}
+
+                <div className="flex justify-between items-center text-ui-10 text-app-muted uppercase tracking-widest font-bold">
+                    <span>{t('image.sidebar.localStorage')}</span>
+                    <span>{t('image.storage.itemsCount', { count: mediaList.length })}</span>
+                </div>
+
+                {/*
+                    **Le retour du miroir — chantier n° 4.**
+
+                    Il n'apparaît que quand le miroir porte des médias que cette
+                    bibliothèque n'a plus : le profil neuf, l'ordinateur changé,
+                    la base effacée. *Un bouton qui ne dit pas ce qu'il va faire
+                    n'est pas cliqué le jour où il faudrait, et il est cliqué le
+                    jour où il ne faudrait pas* — d'où le compte, annoncé avant.
+                */}
+                {aRestituer > 0 && (
+                    <div className="p-3 bg-etat-succes/5 border border-etat-succes/20 rounded-lg space-y-2">
+                        <p className="text-ui-11 text-etat-succes/80 leading-relaxed normal-case">
+                            {aRestituer} média{aRestituer > 1 ? 's' : ''} présent
+                            {aRestituer > 1 ? 's' : ''} dans la sauvegarde et absent
+                            {aRestituer > 1 ? 's' : ''} d'ici.
+                        </p>
+                        <button
+                            type="button"
+                            disabled={restauration}
+                            onClick={lancerLaRestauration}
+                            className="w-full flex items-center justify-center gap-2 p-2 bg-etat-succes/10 border border-etat-succes/30 rounded-lg text-ui-10 font-black uppercase tracking-widest text-etat-succes hover:bg-etat-succes/20 transition-colors disabled:opacity-30"
+                        >
+                            <RotateCcw size={13} />
+                            {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
+                        </button>
+                    </div>
+                )}
+            </Panneau>
+        </>
+    );
+
+    const barreDOutils = (
+        <>
+            <Bouton variante="accent" aLaTable={regime.aLaTable} icone={<Plus size={18} />} onClick={handleUploadClick}>
+                {t('image.dashboard.addNew')}
+            </Bouton>
+
+            <div className="relative">
+                <SearchIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle" />
+                <input
+                    value={recherche}
+                    onChange={e => setRecherche(e.target.value)}
+                    className="bg-app-surface border border-app-border rounded-lg pl-9 pr-3 py-2 text-sm w-64 focus:outline-none focus:border-accent text-app-text"
+                    placeholder={t('image.agencement.recherche')}
+                    aria-label={t('image.agencement.recherche')}
+                    type="search"
+                />
+            </div>
+
+            {/*
+              **Les flèches feuillettent le diaporama en cours.**
+
+              Elles pilotaient une « séquence » invisible : une case à cocher par
+              image, une seule liste globale, sans nom, sans cadence et sans
+              fondu. *Deux notions d'ordre dans un même module finissent toujours
+              par diverger* — absorbée le 2026-09-13, sur décision de David.
+
+              Elles ne se montrent que quand un diaporama tourne : un bouton qui
+              ne fait rien est pire qu'un bouton absent, on finit par ne plus le
+              voir.
+            */}
+            {diaporamaEnCours && (
+                <div className="flex bg-app-surface rounded-lg border border-app-border overflow-hidden">
+                    <button
+                        onClick={() => avancerLeDiaporama(-1)}
+                        className="px-2 hover:bg-app-surface-2 text-app-muted hover:text-app-text transition-colors"
+                        title={t('common:previous')}
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <button
+                        onClick={arreterLeDiaporama}
+                        className="bg-etat-succes/15 text-etat-succes px-5 py-2 font-bold text-sm tracking-wide hover:bg-etat-succes/25 transition-all flex items-center gap-2"
+                        title={t('image.diaporama.arreter')}
+                    >
+                        <span className="w-2 h-2 rounded-full bg-etat-succes animate-pulse" />
+                        {nomDuDiaporamaEnCours}
+                    </button>
+                    <button
+                        onClick={() => avancerLeDiaporama(1)}
+                        className="px-2 hover:bg-app-surface-2 text-app-muted hover:text-app-text transition-colors border-l border-app-border"
+                        title={t('common:next')}
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
+            )}
+        </>
+    );
+
     return (
-        <div className="flex h-full bg-app-bg font-display text-app-text overflow-hidden">
+        <>
             <MediaBrowser
                 isOpen={isBrowserOpen}
                 onClose={() => setIsBrowserOpen(false)}
@@ -142,328 +418,83 @@ const ImageDashboard: React.FC = () => {
                 title={t('image.sidebar.mediaLibrary')}
             />
 
-
-            {/* Left Sidebar */}
-            <aside className="w-80 bg-app-surface/90 backdrop-blur-md border-r border-app-border p-5 flex flex-col gap-6 flex-shrink-0">
-
-
-                <div className="flex flex-col gap-3 px-2">
-                    <div className="grid grid-cols-2 gap-3">
+            <GabaritDeModule
+                aLaTable={regime.aLaTable}
+                reglagesOuverts={reglagesOuverts}
+                className="text-app-text"
+                entete={
+                    <EnTeteDeModule
+                        titre={t('names.image')}
+                        etat={<>
+                            {projectionActive && <Etiquette ton="accent">{t('image.agencement.projectionActive')}</Etiquette>}
+                            <Etiquette><Monitor size={11} /> {t('image.agencement.ecran', { ecran: getDisplayLabel(projectionTarget as string) })}</Etiquette>
+                            <Etiquette>{t('image.agencement.medias', { count: mediaList.length })}</Etiquette>
+                        </>}
+                        actions={regime.aLaTable ? (
+                            <Bouton aLaTable icone={<SlidersHorizontal size={16} />} aria-pressed={reglagesOuverts} onClick={() => setReglagesOuverts(!reglagesOuverts)}>
+                                {t('image.agencement.reglages')}
+                            </Bouton>
+                        ) : undefined}
+                    />
+                }
+                barreDOutils={barreDOutils}
+                reglages={reglages}
+            >
+                <div className="flex flex-col gap-4 pb-4">
+                    <nav className="flex gap-1 border-b border-app-border" aria-label="Vues d'Image-OS">
                         <button
-                            onClick={blackout}
-                            className="bg-etat-danger/10 border border-etat-danger/20 text-etat-danger hover:bg-etat-danger/20 hover:border-etat-danger/40 font-black py-4 rounded-2xl transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
-                            title={t('image.dashboard.blackout.targetTooltip')}
-                        >
-                            <div className="p-2 rounded-full bg-etat-danger/10 group-hover:scale-110 transition-transform shadow-glow-rose">
-                                <Ban size={18} />
-                            </div>
-                            {t('image.dashboard.blackout.target')}
-                        </button>
-                        <button
-                            onClick={blackoutAll}
-                            className="bg-etat-danger hover:bg-etat-danger/90 text-app-bg font-black py-4 rounded-2xl shadow-glow-rose transition-all flex flex-col items-center justify-center gap-2 text-ui-10 tracking-[0.2em] group"
-                            title={t('image.dashboard.blackout.allTooltip')}
-                        >
-                            <div className="p-2 rounded-full bg-app-text/20 group-hover:scale-110 transition-transform shadow-lg">
-                                <Ban size={18} />
-                            </div>
-                            {t('image.dashboard.blackout.all')}
-                        </button>
-                    </div>
-
-                    {/*
-                      ⭐ **Le vrai noir a SON bouton, et il ne prend celui de
-                      personne.**
-
-                      ⛔ Le 2026-09-17 au soir, j'avais rebranché les deux boutons
-                      ci-dessus sur l'extinction, au motif que leur infobulle
-                      disait « Éteindre l'écran ». Or ce sont ceux que David
-                      utilise pour **arrêter une projection** : le lendemain
-                      matin, *« quand j'arrête de projeter je tombe sur un écran
-                      noir »*.
-
-                      ⭐ ***Un libellé décrit une intention ; un geste quotidien
-                      EST une intention.*** Quand les deux se contredisent, c'est
-                      le geste qui a raison — on corrige le libellé, on ne
-                      détourne pas le bouton.
-                    */}
-                    <button
-                        onClick={noirTotal}
-                        className="bg-app-bg border border-app-border text-app-text/60 hover:text-app-text hover:border-app-text/30 font-black py-3 rounded-2xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-[0.2em] group"
-                        title={t('image.dashboard.blackout.darkTooltip')}
-                    >
-                        <Moon size={16} className="group-hover:scale-110 transition-transform" />
-                        {t('image.dashboard.blackout.dark')}
-                    </button>
-
-                    <button
-                        onClick={() => gmConfirm(t('image.dashboard.resetConfirm'), () => reset())}
-                        className="w-full bg-app-bg/60 border border-etat-danger/10 text-etat-danger/40 hover:bg-etat-danger/10 hover:text-etat-danger font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-3 text-ui-10 tracking-widest uppercase hover:border-etat-danger/30 group"
-                        title={t('image.dashboard.resetTooltip')}
-                    >
-                        <RotateCcw size={14} className="group-hover:-rotate-180 transition-transform duration-500" />
-                        {t('image.dashboard.restoreDefault')}
-                    </button>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                    <h3 className="text-xs font-semibold text-app-subtle uppercase px-2 tracking-wider">Navigation</h3>
-                    <nav className="flex flex-col gap-1">
-                        <div
                             onClick={() => { setCurrentView('library'); setActiveFolderId(null); }}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${currentView === 'library' && activeFolderId === null ? 'bg-accent/20 text-accent' : 'text-app-muted hover:bg-app-surface/50'}`}
+                            aria-pressed={currentView === 'library'}
+                            className={onglet(currentView === 'library')}
                         >
-                            <FolderIcon size={18} />
-                            <span className="text-sm font-medium">{t('image.sidebar.mediaLibrary')}</span>
-                        </div>
-                        <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-app-muted hover:bg-app-surface/50 transition-colors cursor-pointer opacity-50">
-                            <HistoryIcon size={18} />
-                            <span className="text-sm font-medium">{t('image.sidebar.recentUploads')}</span>
-                        </div>
-                        <div
+                            <FolderIcon size={14} /> {t('image.sidebar.mediaLibrary')}
+                        </button>
+                        <button
                             onClick={() => setCurrentView('diaporamas')}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${currentView === 'diaporamas' ? 'bg-accent/20 text-accent' : 'text-app-muted hover:bg-app-surface/50'}`}
+                            aria-pressed={currentView === 'diaporamas'}
+                            className={onglet(currentView === 'diaporamas')}
                         >
-                            <Images size={18} />
-                            <span className="text-sm font-medium">{t('image.diaporama.titre')}</span>
-                        </div>
-                        <div
+                            <Images size={14} /> <span>{t('image.diaporama.titre')}</span>
+                        </button>
+                        <button
                             onClick={() => setCurrentView('favorites')}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${currentView === 'favorites' ? 'bg-accent/20 text-accent' : 'text-app-muted hover:bg-app-surface/50'}`}
+                            aria-pressed={currentView === 'favorites'}
+                            className={onglet(currentView === 'favorites')}
                         >
-                            <StarIcon size={18} />
-                            <span className="text-sm font-medium">{t('image.sidebar.favorites')}</span>
-                        </div>
+                            <StarIcon size={14} /> {t('image.sidebar.favorites')}
+                        </button>
                     </nav>
-                </div>
 
-                <div className="bg-app-surface/30 p-3 rounded-lg flex-grow overflow-y-auto custom-scrollbar flex flex-col">
-                    <div className="flex items-center justify-between mb-3 px-1">
-                        <h3 className="text-xs font-semibold text-app-subtle uppercase tracking-wider">{t('image.sidebar.folderTree')}</h3>
-                        <button onClick={handleCreateFolder} className="text-app-muted hover:text-accent transition-colors" title={t('image.folders.new')}>
-                            <Plus size={14} />
-                        </button>
-                    </div>
-                    <div className="space-y-1">
-                        {folders.map(folder => (
-                            <div
-                                key={folder.id}
-                                onClick={() => { setCurrentView('library'); setActiveFolderId(folder.id); }}
-                                className={`flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg cursor-pointer transition-colors group ${currentView === 'library' && activeFolderId === folder.id ? 'bg-app-surface text-accent' : 'text-app-muted hover:bg-app-surface/50 hover:text-app-text'}`}
-                            >
-                                <FolderIcon size={14} className={activeFolderId === folder.id ? "text-accent" : ""} />
-                                <span className="flex-1 truncate">{folder.name}</span>
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); removeFolder(folder.id); }}
-                                    className="opacity-0 group-hover:opacity-100 text-app-subtle hover:text-etat-danger transition-all p-1"
-                                    title={t('image.folders.delete')}
+                    {currentView === 'diaporamas' ? <PanneauDesDiaporamas /> : <>
+                        <EnDirect aLaTable={regime.aLaTable} />
+
+                        <h2 className="font-display text-lg font-bold text-app-text">{currentFolderName}</h2>
+
+                        <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
+                            {displayedMedia.map(media => (
+                                <ImagePad key={media.id} media={media} />
+                            ))}
+
+                            {/* Empty State / Add New */}
+                            {!recherche.trim() && (
+                                <div
+                                    onClick={handleUploadClick}
+                                    className="group aspect-video rounded-2xl bg-app-surface/20 border-2 border-dashed border-app-border flex flex-col items-center justify-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all cursor-pointer"
                                 >
-                                    <Ban size={12} />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="mt-auto pt-4 border-t border-app-border flex flex-col gap-3">
-                    {/*
-                        **Le niveau des vidéos — 2026-09-05.**
-
-                        Il ne remplace pas le volume général : il s'y multiplie,
-                        comme la tranche d'un module sur une console. *On calme une
-                        vidéo trop forte sans toucher à la musique, et on coupe
-                        toute la table d'un seul geste ailleurs.*
-
-                        Il n'apparaît que si la bibliothèque contient une vidéo :
-                        un réglage qui ne s'applique à rien n'apprend rien.
-                    */}
-                    {contientUneVideo && (
-                        <div className="flex flex-col gap-1.5">
-                            <div className="flex justify-between items-center text-ui-10 text-app-subtle uppercase tracking-widest font-bold">
-                                <span className="flex items-center gap-1.5"><Film size={12} /> Son des vidéos</span>
-                                <span className="tabular-nums text-app-muted">{Math.round(volumeVideo * 100)}%</span>
-                            </div>
-                            <input
-                                type="range"
-                                min={0}
-                                max={1}
-                                step={0.01}
-                                value={volumeVideo}
-                                onChange={(e) => setVolumeVideo(Number(e.target.value))}
-                                aria-label="Niveau sonore des vidéos projetées"
-                                className="w-full accent-accent cursor-pointer"
-                            />
-                            <p className="text-ui-9 text-app-subtle leading-snug normal-case">
-                                Le volume général, le Focus et la voix s'y appliquent aussi.
-                            </p>
+                                    <div className="w-12 h-12 rounded-full bg-app-surface flex items-center justify-center text-accent group-hover:bg-accent/20 transition-colors">
+                                        <Plus size={24} />
+                                    </div>
+                                    <p className="text-app-subtle font-bold text-sm group-hover:text-accent transition-colors">{t('image.dashboard.addNew')}</p>
+                                </div>
+                            )}
                         </div>
-                    )}
-
-                    <div className="flex justify-between items-center text-ui-10 text-app-subtle uppercase tracking-widest font-bold">
-                        <span>{t('image.sidebar.localStorage')}</span>
-                        <span>{t('image.storage.itemsCount', { count: mediaList.length })}</span>
-                    </div>
-
-                    {/*
-                        **Le retour du miroir — chantier n° 4.**
-
-                        Il n'apparaît que quand le miroir porte des médias que
-                        cette bibliothèque n'a plus : le profil neuf, l'ordinateur
-                        changé, la base effacée. *Un bouton qui ne dit pas ce
-                        qu'il va faire n'est pas cliqué le jour où il faudrait, et
-                        il est cliqué le jour où il ne faudrait pas* — d'où le
-                        compte, annoncé avant.
-                    */}
-                    {aRestituer > 0 && (
-                        <div className="p-3 bg-etat-succes/5 border border-etat-succes/20 rounded-xl space-y-2">
-                            <p className="text-ui-11 text-etat-succes/80 leading-relaxed normal-case">
-                                {aRestituer} média{aRestituer > 1 ? 's' : ''} présent
-                                {aRestituer > 1 ? 's' : ''} dans la sauvegarde et absent
-                                {aRestituer > 1 ? 's' : ''} d'ici.
-                            </p>
-                            <button
-                                type="button"
-                                disabled={restauration}
-                                onClick={lancerLaRestauration}
-                                className="w-full flex items-center justify-center gap-2 p-2 bg-etat-succes/10 border border-etat-succes/30 rounded-lg text-ui-10 font-black uppercase tracking-widest text-etat-succes hover:bg-etat-succes/20 transition-colors disabled:opacity-30"
-                            >
-                                <RotateCcw size={13} />
-                                {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
-                            </button>
-                        </div>
-                    )}
-                </div>
-            </aside>
-
-            {/* Central Grid */}
-            <main className="flex-1 bg-app-bg p-6 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
-                {/* Top Nav */}
-                <header className="flex items-center justify-between bg-app-surface/50 p-4 rounded-2xl border border-app-border">
-                    <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-3">
-                            <span className="text-xs font-bold text-app-subtle uppercase">Target Screen:</span>
-                            <div className="flex bg-app-surface p-1 rounded-xl">
-                                <button
-                                    onClick={() => setProjectionTarget('hub')}
-                                    className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${projectionTarget === 'hub'
-                                        ? 'bg-accent text-app-on-accent shadow-glow-accent'
-                                        : 'text-app-subtle hover:text-app-text'
-                                        }`}
-                                >
-                                    {getDisplayLabel('hub')}
-                                </button>
-                                {displays.map(d => (
-                                    <button
-                                        key={d.id}
-                                        onClick={() => setProjectionTarget(d.id)}
-                                        className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${projectionTarget === d.id
-                                            ? 'bg-accent text-app-on-accent shadow-glow-accent'
-                                            : 'text-app-subtle hover:text-app-text'
-                                            }`}
-                                    >
-                                        {getDisplayLabel(d.id)}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <div className="relative">
-                            <SearchIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle" />
-                            <input
-                                className="bg-app-surface border-none rounded-xl pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-accent text-app-text"
-                                placeholder={t('common:search')}
-                                type="text"
-                            />
-                        </div>
-
-                        {/*
-                          **Les flèches feuillettent le diaporama en cours.**
-
-                          Elles pilotaient une « séquence » invisible : une case à
-                          cocher par image, une seule liste globale, sans nom, sans
-                          cadence et sans fondu. *Deux notions d'ordre dans un même
-                          module finissent toujours par diverger* — absorbée le
-                          2026-09-13, sur décision de David.
-
-                          Elles ne se montrent que quand un diaporama tourne : un
-                          bouton qui ne fait rien est pire qu'un bouton absent, on
-                          finit par ne plus le voir.
-                        */}
-                        {diaporamaEnCours && (
-                            <div className="flex bg-app-surface/50 rounded-xl border border-app-border overflow-hidden">
-                                <button
-                                    onClick={() => avancerLeDiaporama(-1)}
-                                    className="p-2 hover:bg-app-text/10 text-app-muted hover:text-app-text transition-colors"
-                                    title={t('common:previous')}
-                                >
-                                    <ChevronLeft size={20} />
-                                </button>
-                                <button
-                                    onClick={arreterLeDiaporama}
-                                    className="bg-etat-succes/20 text-etat-succes px-6 py-2 font-bold text-sm tracking-wide hover:bg-etat-succes/30 active:scale-[0.98] transition-all flex items-center gap-2"
-                                    title={t('image.diaporama.arreter')}
-                                >
-                                    <span className="w-2 h-2 rounded-full bg-etat-succes animate-pulse" />
-                                    {nomDuDiaporamaEnCours}
-                                </button>
-                                <button
-                                    onClick={() => avancerLeDiaporama(1)}
-                                    className="p-2 hover:bg-app-text/10 text-app-muted hover:text-app-text transition-colors border-l border-app-border"
-                                    title={t('common:next')}
-                                >
-                                    <ChevronRight size={20} />
-                                </button>
-                            </div>
+                        {recherche.trim() && displayedMedia.length === 0 && (
+                            <p className="text-sm text-app-muted italic">{t('image.agencement.aucunResultat', { recherche: recherche.trim() })}</p>
                         )}
-
-
-                        <div className="w-10 h-10 rounded-full bg-app-surface border border-app-border flex items-center justify-center overflow-hidden">
-                            {/* Dummy Profile */}
-                            <div className="w-full h-full bg-app-surface flex items-center justify-center text-app-text font-bold">{t('common:gm')}</div>
-                        </div>
-                    </div>
-                </header>
-
-                {currentView === 'diaporamas' ? <PanneauDesDiaporamas /> : <>
-
-                {/* Filters & Tabs */}
-                <div className="flex items-center justify-between mt-2">
-                    <div className="mt-4 flex gap-6">
-                        <button className="text-app-text font-bold border-b-2 border-accent pb-2 text-sm">{currentFolderName}</button>
-                    </div>
-                    <div className="flex gap-2">
-                        <button 
-                            className="p-2 rounded-lg bg-app-bg border border-app-border text-app-muted hover:text-app-text transition-colors"
-                            title={t('common:filter')}
-                        >
-                            <Filter size={20} />
-                        </button>
-                    </div>
+                    </>}
                 </div>
-
-                {/* Image Grid */}
-                <div className="grid grid-cols-3 xl:grid-cols-4 gap-6">
-                    {displayedMedia.map(media => (
-                        <ImagePad key={media.id} media={media} />
-                    ))}
-
-                    {/* Empty State / Add New */}
-                    <div
-                        onClick={handleUploadClick}
-                        className="group aspect-video rounded-2xl bg-app-surface/20 border-2 border-dashed border-app-border flex flex-col items-center justify-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all cursor-pointer"
-                    >
-                        <div className="w-12 h-12 rounded-full bg-app-surface flex items-center justify-center text-accent group-hover:bg-accent/20 group-hover:text-accent transition-colors">
-                            <Plus size={24} />
-                        </div>
-                        <p className="text-app-subtle font-bold text-sm group-hover:text-accent transition-colors">{t('image.dashboard.addNew')}</p>
-                    </div>
-                </div>
-                </>}
-            </main>
-
-        </div>
+            </GabaritDeModule>
+        </>
     );
 };
 

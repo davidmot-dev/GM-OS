@@ -9,6 +9,7 @@ import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { gmPrompt } from '../../../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
+import { ecransDuMedia } from '../logic/ceQuiEstProjete';
 
 interface ImagePadProps {
     media: ImageMedia;
@@ -64,12 +65,15 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
     const { t } = useTranslation(['modules', 'common']);
     const { getDisplayLabel } = useHardwareStore();
 
-    // Calcul mémoïsé des cibles actives pour ce média spécifique
-    const activeTargets = useMemo(() => {
-        return Object.entries(projections)
-            .filter(([, mediaId]) => mediaId === media.id)
-            .map(([targetId]) => getDisplayLabel(targetId));
-    }, [projections, media.id, getDisplayLabel]);
+    /*
+      Les écrans qui montrent ce média. ⛔ La projection inscrit son `path`, pas
+      son `id` : comparer l'`id` n'allumait jamais le badge — voir
+      `ceQuiEstProjete`.
+    */
+    const activeTargets = useMemo(
+        () => ecransDuMedia(projections, media).map(getDisplayLabel),
+        [projections, media, getDisplayLabel],
+    );
 
     const isProjected = activeTargets.length > 0;
 
@@ -124,7 +128,7 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                 {activeTargets.map(targetLabel => (
                     <span
                         key={targetLabel}
-                        className={`bg-accent text-app-bg text-ui-8 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg whitespace-nowrap font-display`}
+                        className="bg-accent text-app-on-accent text-ui-10 font-black px-2 py-0.5 rounded uppercase tracking-wider shadow-lg whitespace-nowrap font-display"
                     >
                         {targetLabel}
                     </span>
@@ -209,7 +213,6 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                             {estVideo && <Film size={13} className="shrink-0 text-accent" aria-label="Vidéo" />}
                             <span className="truncate">{media.name}</span>
                         </h4>
-                        <div className="text-ui-7 font-black text-app-text/20 uppercase tracking-tighter">[{media.id}]</div>
                         <div className="flex items-center gap-2 mt-1">
                             {media.sizeInfo && (
                                 <span className="text-ui-10 text-app-text/60 font-mono bg-app-bg/40 px-1.5 py-0.5 rounded">
