@@ -42,7 +42,13 @@ export const Panneau: React.FC<PanneauProps> = ({
 }) => (
     <Balise
         data-panneau={niveau}
-        className={`relative overflow-hidden text-app-text border-app-border ${PAR_NIVEAU[niveau]} ${className}`}
+        /*
+          ⚠️ **Le contenu n'est jamais enveloppé** : un `flex`, un `items-center`
+          passés au panneau doivent agir sur SES enfants — trouvé en migrant
+          Dés (P4, L1), dont les blocs se seraient déformés. La matière et le
+          filigrane passent DERRIÈRE, par un contexte d'empilement isolé.
+        */
+        className={`relative isolate overflow-hidden text-app-text border-app-border ${PAR_NIVEAU[niveau]} ${className}`}
         style={{
             // La bordure du thème (§ 4.5) ; 1 px plein, celle d'aujourd'hui, en repli.
             borderWidth: 'var(--bordure-largeur, 1px)',
@@ -54,17 +60,17 @@ export const Panneau: React.FC<PanneauProps> = ({
         {/* La matière de panneau (§ 7), sous le contenu. Absente : rien. */}
         <span
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
+            className="pointer-events-none absolute inset-0 -z-10"
             style={{ backgroundImage: 'var(--texture-panneau, none)', opacity: 'var(--texture-opacite, 0)' }}
         />
         {orne && <CoinsOrnes />}
         {vide && (
             <Ornement
                 emplacement="fond"
-                className="absolute inset-0 m-auto opacity-15"
+                className="absolute inset-0 -z-10 m-auto opacity-15"
                 style={{ width: '40%', height: '40%' }}
             />
         )}
-        <div className="relative">{children}</div>
+        {children}
     </Balise>
 );

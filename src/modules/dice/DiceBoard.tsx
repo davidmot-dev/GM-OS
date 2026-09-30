@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
 import { facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes } from './desEchelonnes';
 import { STYLES_DE_DES } from './logic/stylesDeDes';
+import { Panneau } from '../../components/socle';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -455,7 +456,7 @@ const DiceBoard: React.FC = () => {
             <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-2">
 
                 {/* Top: Engine Config */}
-                <div className="bg-app-surface/60 p-5 rounded-2xl border border-app-border backdrop-blur-md shadow-xl">
+                <Panneau niveau={1} orne className="p-5">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-4">
                             {activeDriver && (
@@ -471,7 +472,7 @@ const DiceBoard: React.FC = () => {
                         <div className="flex items-center gap-2">
                             <button 
                                 onClick={() => setShowSettings(!showSettings)}
-                                className={`p-1.5 rounded-lg transition-all border ${showSettings ? 'bg-accent text-white border-accent' : 'bg-app-bg text-app-text/40 border-app-border hover:border-app-border/80'}`}
+                                className={`p-1.5 rounded-lg transition-all border ${showSettings ? 'bg-accent text-app-on-accent border-accent' : 'bg-app-bg text-app-text/40 border-app-border hover:border-app-border/80'}`}
                             >
                                 <Settings size={14} />
                             </button>
@@ -493,8 +494,8 @@ const DiceBoard: React.FC = () => {
                                             onChange={e => setEnable3D(e.target.checked)} 
                                             className="sr-only peer"
                                         />
-                                        <div className="w-10 h-5 bg-app-surface border border-app-border rounded-full peer peer-checked:bg-emerald-500/20 peer-checked:border-emerald-500/50 transition-all"></div>
-                                        <div className="absolute left-1 top-1 w-3 h-3 bg-app-text/20 rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-emerald-500 shadow-sm"></div>
+                                        <div className="w-10 h-5 bg-app-surface border border-app-border rounded-full peer peer-checked:bg-etat-succes/20 peer-checked:border-etat-succes/50 transition-all"></div>
+                                        <div className="absolute left-1 top-1 w-3 h-3 bg-app-text/20 rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-etat-succes shadow-sm"></div>
                                     </div>
                                     <div className="flex flex-col">
                                         <span className="text-xs font-bold text-app-text/80 group-hover:text-app-text">{t('dice.settings.enable_3d')}</span>
@@ -650,7 +651,7 @@ const DiceBoard: React.FC = () => {
                                           quelque chose, elle le dit.
                                         */}
                                         {poigneeEchelonnee.remarques.map((remarque, i) => (
-                                            <p key={i} className="text-ui-10 italic text-amber-500/80">{remarque}</p>
+                                            <p key={i} className="text-ui-10 italic text-etat-alerte/80">{remarque}</p>
                                         ))}
                                     </div>
                                 ) : mode === 'yze' ? (
@@ -658,7 +659,7 @@ const DiceBoard: React.FC = () => {
                                         <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.base_dice')} / {t('dice.inputs.gear_dice')}</label>
                                         <div className="flex space-x-2">
                                             <div className="flex flex-1 bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
-                                                <span className="bg-yellow-500/20 text-yellow-600 dark:text-yellow-500 text-xs px-2 flex items-center border-r border-app-border">B</span>
+                                                <span className="bg-accent/20 text-accent text-xs px-2 flex items-center border-r border-app-border">B</span>
                                                 <input 
                                                     type="number" 
                                                     value={diceCount} 
@@ -777,12 +778,12 @@ const DiceBoard: React.FC = () => {
 
 
                     </div>
-                </div>
+                </Panneau>
 
                 {/* Center: Dices Grid */}
-                <div className="bg-app-surface/60 p-5 rounded-2xl border border-app-border backdrop-blur-md shadow-xl flex flex-col items-center justify-center min-h-[160px]">
+                <Panneau niveau={1} className="p-5 flex flex-col items-center justify-center min-h-[160px]">
                     {MODES_SANS_CHOIX_DE_FACES.includes(mode) ? (
-                        <button onClick={() => handleRoll(0, mode === 'formula')} className="px-8 py-4 bg-accent hover:bg-accent/90 text-white shadow-lg shadow-accent/20 rounded-xl text-xl font-bold uppercase tracking-widest transition-transform active:scale-95">
+                        <button onClick={() => handleRoll(0, mode === 'formula')} className="px-8 py-4 bg-accent hover:bg-accent/90 text-app-on-accent shadow-lg shadow-accent/20 rounded-xl text-xl font-bold uppercase tracking-widest transition-transform active:scale-95">
                             {t('dice.actions.roll')}
                         </button>
                     ) : (
@@ -791,9 +792,9 @@ const DiceBoard: React.FC = () => {
                                 <button
                                     key={sides}
                                     onClick={() => handleRoll(sides)}
-                                    className="aspect-square flex flex-col items-center justify-center gap-2 rounded-2xl bg-app-surface hover:bg-accent/90 text-app-text/70 hover:text-white border border-app-border/80 hover:border-accent transition-all duration-300 group relative overflow-hidden shadow-lg"
+                                    className="aspect-square flex flex-col items-center justify-center gap-2 rounded-2xl bg-app-surface hover:bg-accent/90 text-app-text/70 hover:text-app-on-accent border border-app-border/80 hover:border-accent transition-all duration-300 group relative overflow-hidden shadow-lg"
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-app-text/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                     {/*
                                       ⛔ **Chemin RELATIF, et c'est tout le correctif.**
                                       Il a longtemps ete `/icons/...`, absolu depuis la
@@ -812,13 +813,13 @@ const DiceBoard: React.FC = () => {
                             ))}
                         </div>
                     )}
-                </div>
+                </Panneau>
 
                 {/* Bottom: Quick Rolls Panel */}
-                <div className="bg-app-surface/60 p-5 rounded-2xl border border-app-border backdrop-blur-md shadow-xl flex-1 flex flex-col">
+                <Panneau niveau={1} className="p-5 flex-1 flex flex-col">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
-                            <Zap className="text-amber-500" size={18} />
+                            <Zap className="text-accent" size={18} />
                             <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">{t('dice.quick_rolls.title')}</h3>
                         </div>
                         {!isAddingQuickRoll && (
@@ -838,8 +839,8 @@ const DiceBoard: React.FC = () => {
                                 type="text" placeholder={t('dice.quick_rolls.placeholder_formula')} value={newQuickRollFormula} onChange={(e) => setNewQuickRollFormula(e.target.value)}
                                 className="flex-1 bg-transparent border-b border-app-border focus:border-accent text-sm py-1 outline-none text-app-text"
                             />
-                            <button onClick={addQuickRoll} className="px-4 py-1.5 bg-accent hover:bg-accent/90 text-white rounded-lg text-xs font-semibold transition-colors">OK</button>
-                            <button onClick={() => setIsAddingQuickRoll(false)} title="Annuler" className="px-2 py-1.5 text-app-text/60 hover:text-rose-500 transition-colors"><X size={16} /></button>
+                            <button onClick={addQuickRoll} className="px-4 py-1.5 bg-accent hover:bg-accent/90 text-app-on-accent rounded-lg text-xs font-semibold transition-colors">OK</button>
+                            <button onClick={() => setIsAddingQuickRoll(false)} title="Annuler" className="px-2 py-1.5 text-app-text/60 hover:text-etat-danger transition-colors"><X size={16} /></button>
                         </div>
                     )}
 
@@ -853,14 +854,14 @@ const DiceBoard: React.FC = () => {
                                     <span className="text-sm font-semibold text-app-text">{t(qr.label)}</span>
                                     <span className="text-ui-10 text-accent font-mono tracking-wider">{qr.formula}</span>
                                 </button>
-                                <button onClick={() => removeQuickRoll(qr.id)} title={t('common:actions.delete') + " " + t(qr.label)} className="px-2 self-stretch hover:bg-rose-500/20 text-app-text/50 hover:text-rose-500 transition-colors">
+                                <button onClick={() => removeQuickRoll(qr.id)} title={t('common:actions.delete') + " " + t(qr.label)} className="px-2 self-stretch hover:bg-etat-danger/20 text-app-text/50 hover:text-etat-danger transition-colors">
                                     <X size={14} />
                                 </button>
                             </div>
                         ))}
                         {quickRolls.length === 0 && <p className="text-xs text-app-text/50 italic py-2">{t('dice.quick_rolls.empty')}</p>}
                     </div>
-                </div>
+                </Panneau>
             </div>
 
             {/* RIGHT COLUMN: Results & History */}
@@ -931,7 +932,7 @@ const DiceBoard: React.FC = () => {
                                 <Info size={12} /> {t('dice.tactical.hint')}
                             </div>
                         ) : lastSelectedTokenId === targetTokenId ? (
-                            <div className="text-ui-10 text-rose-400/50 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
+                            <div className="text-ui-10 text-etat-danger/50 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
                                 {t('dice.tactical.error_same')}
                             </div>
                         ) : null}
@@ -961,7 +962,7 @@ const DiceBoard: React.FC = () => {
                                 title={isDiceProjected ? t('dice.status.project_stop') : t('dice.status.project_start')}
                                 className={`p-2 rounded-lg border transition-all ${
                                     isDiceProjected 
-                                        ? 'bg-red-500/20 border-red-500/50 text-red-500 hover:bg-red-500/30' 
+                                        ? 'bg-etat-danger/20 border-etat-danger/50 text-etat-danger hover:bg-etat-danger/30' 
                                         : 'bg-accent/20 border-accent/50 text-accent hover:bg-accent/30'
                                 }`}
                             >
@@ -996,8 +997,8 @@ const DiceBoard: React.FC = () => {
                                 resultat={history[0]}
                                 classes={reussi => 'px-4 py-1 mb-2 rounded-full text-xs font-bold uppercase tracking-widest z-10 shadow-lg '
                                     + (reussi
-                                        ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/50'
-                                        : 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/50')}
+                                        ? 'bg-etat-succes/20 text-etat-succes border border-etat-succes/50'
+                                        : 'bg-etat-danger/20 text-etat-danger border border-etat-danger/50')}
                             />
                             <div className="flex flex-wrap gap-2 mt-2 justify-center z-10 max-h-[8rem] w-full overflow-y-auto custom-scrollbar px-2 py-1">
                                 {history[0].rolls.map((r, i) => (
@@ -1018,7 +1019,7 @@ const DiceBoard: React.FC = () => {
                 </div>
 
                 {/* History Log */}
-                <div className="flex-1 bg-app-surface/60 border border-app-border rounded-2xl p-5 flex flex-col overflow-hidden backdrop-blur-md shadow-xl">
+                <Panneau niveau={1} className="flex-1 p-5 flex flex-col">
                     <div className="flex items-center justify-between mb-4 pb-2 border-b border-app-border">
                         <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">{t('dice.history.title')}</h3>
                         <button
@@ -1033,7 +1034,7 @@ const DiceBoard: React.FC = () => {
                     <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
                         {history.map(record => (
                             <div key={record.id} className="flex flex-col gap-2 p-3 rounded-xl bg-app-bg/50 border border-app-border/50 hover:bg-app-bg transition-colors relative">
-                                {record.batchId && <div className="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500/20 rounded-l-xl"></div>}
+                                {record.batchId && <div className="absolute left-0 top-0 bottom-0 w-1 bg-etat-info/20 rounded-l-xl"></div>}
                                 <div className="flex items-center justify-between">
                                     <span className="text-xs text-app-text/50">{new Date(record.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                                     <span className="text-xs font-semibold text-accent max-w-[60%] truncate text-right">{record.title}</span>
@@ -1046,7 +1047,7 @@ const DiceBoard: React.FC = () => {
                                             </span>
                                         ))}
                                         {record.modifier !== 0 && (
-                                            <span className="text-ui-10 px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-600 dark:text-blue-400 font-bold ml-1">
+                                            <span className="text-ui-10 px-1.5 py-0.5 rounded bg-etat-info/20 text-etat-info font-bold ml-1">
                                                 {record.modifier > 0 ? '+' : ''}{record.modifier}
                                             </span>
                                         )}
@@ -1056,12 +1057,12 @@ const DiceBoard: React.FC = () => {
                                 <EtiquetteDuDegre
                                     resultat={record}
                                     classes={reussi => 'mt-1 text-ui-10 uppercase font-bold text-right '
-                                        + (reussi ? 'text-emerald-500' : 'text-rose-500')}
+                                        + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
                                 />
                             </div>
                         ))}
                     </div>
-                </div>
+                </Panneau>
             </div>
 
         </div>
