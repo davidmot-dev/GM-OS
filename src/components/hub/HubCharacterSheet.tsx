@@ -16,6 +16,8 @@ import { piloteDuPersonnage } from '../../modules/session/logic/piloteDuPersonna
 import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
 import PanneauDeJet from '../../modules/session/components/fields/PanneauDeJet';
 import type { GameDriver } from '../../types/drivers';
+import JetsDeLaFiche from './JetsDeLaFiche';
+import { estUneSauvegarde, decrireLeJetDuPilote } from '../../modules/dice/lectureDuPilote';
 
 interface HubCharacterSheetProps {
     onClose: () => void;
@@ -288,7 +290,27 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             quelle, plutôt qu'un bouton qui lancerait n'importe
                             quoi.
                         */}
-                        {pilote?.jet && (
+                        {/*
+                            **Sauvegardes et ressources, lancées par le meneur**
+                            (Cthulhu Hack, 2026-09-30). La tablette dit quoi ;
+                            le meneur lit la fiche et lance — voir `JetsDeLaFiche`.
+                        */}
+                        <JetsDeLaFiche
+                            playerId={playerId}
+                            characterId={character.id}
+                            sheetData={character.sheetData ?? {}}
+                            pilote={pilote}
+                            gabarit={template}
+                        />
+
+                        {/*
+                            ⚠️ **Pour un jeu à Sauvegarde, ce panneau s'efface
+                            devant le précédent.** Il lance CHEZ LE JOUEUR, et
+                            son jet n'atteint pas le meneur : deux façons de
+                            lancer la même Sauvegarde, dont une invisible pour
+                            la table, ce serait pire qu'une seule.
+                        */}
+                        {pilote?.jet && !estUneSauvegarde(decrireLeJetDuPilote(pilote)) && (
                             <PanneauDeJet
                                 descripteur={pilote.jet}
                                 dice={pilote.dice}

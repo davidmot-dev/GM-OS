@@ -100,6 +100,14 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
       du meneur.
     */
     'deck:piocher',
+    /*
+      **Lancer depuis sa propre fiche** — Cthulhu Hack, demandé par David le
+      2026-09-30. Le joueur ne dit que ce qu'il lance (« ma Sauvegarde de
+      Force », « ma Torche ») : c'est le meneur qui lit la valeur sur la fiche
+      qu'il détient, qui lance et qui écrit. Le contrôle de propriété ci-dessous
+      l'empêche de lancer pour le personnage d'un autre.
+    */
+    'fiche:jet',
 ]);
 
 /** Rôles qui peuvent tout déclencher — ceux qui ont présenté le secret d'appairage. */
@@ -132,6 +140,8 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     // magasin qui dira si cette proposition lui était bien adressée.
     'deck:accepter-don': 'characterId',
     'deck:refuser-don': 'characterId',
+    // Un joueur ne lance que pour lui : ni les Sauvegardes, ni la Torche d'un autre.
+    'fiche:jet': 'characterId',
 };
 
 export type DenialReason = 'role' | 'ownership';

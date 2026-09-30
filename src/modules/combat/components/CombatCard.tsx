@@ -14,6 +14,9 @@ import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { ficheDuCombattant } from '../logic/ficheDuCombattant';
+import { DiceEngine } from '../../dice/DiceEngine';
+import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
+import { useDiceStore } from '../../../stores/useDiceStore';
 import { useTranslation } from 'react-i18next';
 
 const PRESET_STATUSES = [
@@ -117,14 +120,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     // Target Info
     const currentTarget = combatants.find(c => c.id === combatant.targetId);
 
-    const handleGaugeClick = (e: React.MouseEvent, fieldId: string, delta: number) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const sheetData = (sourceCharacter?.sheetData || combatant.sheetData) as Record<string, string | number | boolean> | undefined;
-        const currentVal = Number(sheetData?.[fieldId] || 0);
-        const newVal = Math.max(0, currentVal + delta);
-        
+    /** Écrire un champ de la fiche, par le chemin de son porteur — PJ, PNJ, ou combattant autonome. */
+    const ecrireSurLaFiche = (fieldId: string, newVal: string | number) => {
         if (combatant.isPlayer && combatant.sourcePlayerId) {
             const player = players.find(p => p.characters.some(c => c.id === combatant.sourcePlayerId));
             if (player) {
@@ -135,9 +132,63 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         } else {
             // Standalone update
             updateCombatant(combatant.id, { 
-                sheetData: { ...(combatant.sheetData || {}), [fieldId]: newVal } 
+                sheetData: { ...(combatant.sheetData || {}), [fieldId]: newVal }
             });
         }
+    };
+
+    const handleGaugeClick = (e: React.MouseEvent, fieldId: string, delta: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const sheetData = (sourceCharacter?.sheetData || combatant.sheetData) as Record<string, string | number | boolean> | undefined;
+        const currentVal = Number(sheetData?.[fieldId] || 0);
+        /*
+          ⛔ **Un champ qui n'est pas un nombre ne se décrémente pas** (2026-09-30).
+          Chez Cthulhu Hack, la Torche vaut « D8 » : `Number("D8")` rend NaN, et
+          un clic écrivait NaN dans la fiche — le dé du personnage perdu. Un dé
+          de ressource se LANCE (voir `lancerLaRessource`), il ne se compte pas.
+        */
+        if (!Number.isFinite(currentVal)) return;
+        ecrireSurLaFiche(fieldId, Math.max(0, currentVal + delta));
+    };
+
+    /*
+      **Le dé de ressource, lancé depuis la carte** (Cthulhu Hack, 2026-09-30) :
+      un 1 ou un 2 le fait descendre, et la fiche le garde. Même moteur et même
+      écriture que Dice-OS et la tablette.
+    */
+    const lancerLaRessource = (fieldId: string, label: string, de: number) => {
+        const res = DiceEngine.rollUsure(de);
+        const apres = res.usure!.apres;
+        if (apres !== de) ecrireSurLaFiche(fieldId, ecrireLeDe(apres));
+        useDiceStore.getState().setLastRoll({
+            ...res,
+            id: Math.random().toString(36).substring(2, 9),
+            timestamp: new Date(),
+            title: `${combatant.name} — ${label} d${de}`,
+        });
+    };
+
+    /** Une ressource à dé d'usure : son dé, en bouton qui le lance. Rien d'autre ne s'y écrit. */
+    const deDeRessource = (fieldId: string, label: string, valeur: unknown) => {
+        const de = deCourant(valeur);
+        if (de === undefined) return null;
+        return (
+            <button
+                key={fieldId}
+                type="button"
+                disabled={de === null}
+                onClick={(e) => { e.stopPropagation(); if (de !== null) lancerLaRessource(fieldId, label, de); }}
+                title={de === null ? `${label} : épuisée` : `Lancer ${label} (d${de}) — un 1 ou un 2 la fait descendre`}
+                className="flex-1 flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg border border-app-border bg-app-bg/50 hover:border-accent/60 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                <span className="text-ui-10 font-black uppercase tracking-wider text-app-muted truncate">{label}</span>
+                <span className={`font-mono text-sm font-black ${de === null ? 'text-etat-danger' : 'text-accent'}`}>
+                    {de === null ? 'épuisée' : `d${de}`}
+                </span>
+            </button>
+        );
     };
 
     const handleSuggestAction = async () => {
@@ -455,7 +506,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         // Extract value from sheetData (persistent or local)
                         const sheetData = (sourceCharacter?.sheetData || combatant.sheetData) as Record<string, string | number | boolean> | undefined;
                         const sheetValRaw = sheetData?.[gaugeConfig.fieldId];
-                        const val = typeof sheetValRaw === 'number' ? sheetValRaw : parseInt(String(sheetValRaw || 0), 10);
+                        const ressource = deDeRessource(gaugeConfig.fieldId, gaugeConfig.label, sheetValRaw);
+                        if (ressource) return ressource;
+                        const val = typeof sheetValRaw === 'number'? sheetValRaw : parseInt(String(sheetValRaw || 0), 10);
                         
                         // Attempt to find max from template, default to 10
                         let max = 10;
@@ -582,6 +635,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         {activeDriver?.combat?.statsToTrack
                             .filter(stat => !stat.isMainHP)
                             .map((stat, idx) => {
+                                const ressource = deDeRessource(stat.fieldId, stat.label, ficheLue.valeurs[stat.fieldId]);
+                                if (ressource) return ressource;
                                 const val = Number(ficheLue.valeurs[stat.fieldId] ?? 0);
                                 let max = 10;
                                 const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean }) => f.id === stat.fieldId);

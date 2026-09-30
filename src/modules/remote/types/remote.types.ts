@@ -256,6 +256,8 @@ export type RemoteActionType =
     | 'session:update-character-narrative'
     /** Ce que la fiche HTML d'un joueur impose : champs du gabarit, notes, inventaire. */
     | 'session:update-character-sheet-data'
+    /** Un joueur lance depuis sa fiche : il dit quoi, le meneur lance (2026-09-30). */
+    | 'fiche:jet'
     | 'session:send-message'
     /** Le meneur parle depuis sa tablette — inscrit chez lui **et** diffusé aux joueurs. */
     | 'remote:session:gm-message'

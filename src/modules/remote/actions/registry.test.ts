@@ -75,6 +75,12 @@ const EXPECTED_TYPES = [
       du meneur, et le refus par défaut est le bon.
     */
     'ulanzi:quart-suivant', 'ulanzi:pause',
+    /*
+      Un joueur lance depuis SA fiche, sur sa tablette (Cthulhu Hack,
+      2026-09-30). La demande ne porte que ce qu'il choisit ; le meneur lit la
+      fiche qu'il détient et lance. Voir `ficheActions.ts`.
+    */
+    'fiche:jet',
 ];
 
 describe('actionRegistry', () => {

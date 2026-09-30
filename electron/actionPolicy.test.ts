@@ -182,6 +182,8 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             // Piocher soi-même — ajouté le 2026-08-30.
             'deck:piocher',
             'deck:refuser-don',
+            // Lancer depuis sa fiche — ajouté le 2026-09-30 (Cthulhu Hack).
+            'fiche:jet',
             'remote:request-sync',
             'session:remove-inventory-item',
             'session:request-item-transfer',
@@ -211,6 +213,19 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             expect(verdict.allowed, `${type} sur le personnage d'un autre`).toBe(false);
             expect(verdict.reason).toBe('ownership');
         }
+    });
+});
+
+describe('evaluateAction — lancer depuis sa fiche', () => {
+    /**
+     * Cthulhu Hack, 2026-09-30 : le joueur demande un jet depuis SA fiche. Le
+     * meneur le résout ; ici, on vérifie seulement qu'il le demande pour lui.
+     */
+    it('laisse un joueur lancer pour SON personnage, et seulement le sien', () => {
+        expect(evaluateAction('fiche:jet', { characterId: CHAR, genre: 'ressource', champ: 'torche' }, 'player', CHAR).allowed).toBe(true);
+        const verdict = evaluateAction('fiche:jet', { characterId: 'char-d-un-autre', genre: 'ressource', champ: 'torche' }, 'player', CHAR);
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
     });
 });
 
