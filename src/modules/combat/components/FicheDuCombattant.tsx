@@ -187,7 +187,7 @@ export const FicheDuCombattant: React.FC = () => {
                                     <span className="text-ui-11 text-app-muted truncate">{champ.label}</span>
                                     <span className="text-sm font-black font-mono text-app-text shrink-0">
                                         {affichage}
-                                        {champ.max ? <span className="text-ui-9 text-slate-600 font-bold"> / {champ.max}</span> : null}
+                                        {champ.max ? <span className="text-ui-9 text-app-subtle font-bold"> / {champ.max}</span> : null}
                                     </span>
                                 </div>
                             );
@@ -199,14 +199,14 @@ export const FicheDuCombattant: React.FC = () => {
             {combattant.roleplayingNotes && (
                 <section className="space-y-1">
                     <h4 className="text-ui-9 font-black uppercase tracking-[0.2em] text-app-subtle">Comment il se bat</h4>
-                    <p className="text-xs text-slate-300 italic">{combattant.roleplayingNotes}</p>
+                    <p className="text-xs text-app-text italic">{combattant.roleplayingNotes}</p>
                 </section>
             )}
 
             <div className="flex items-center gap-2 pt-2 border-t border-app-border/30">
                 <button
                     onClick={rangerAuBestiaire}
-                    className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-app-muted hover:text-amber-400 hover:border-amber-500/30 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
+                    className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-app-muted hover:text-etat-alerte hover:border-etat-alerte/30 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
                     title="Ranger ce modèle pour le refabriquer plus tard"
                 >
                     <BookMarked size={12} /> Au bestiaire
@@ -219,7 +219,7 @@ export const FicheDuCombattant: React.FC = () => {
                 {!dejaEnCampagne && (
                     <button
                         onClick={verserDansLaCampagne}
-                        className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-slate-300 hover:text-accent hover:border-accent/40 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
+                        className="flex-1 px-3 py-2 rounded-xl border border-app-border/50 text-app-text hover:text-accent hover:border-accent/40 transition-all text-ui-10 font-black uppercase tracking-widest flex items-center justify-center gap-1.5"
                         title="En faire un PNJ de la campagne, et l’y rattacher"
                     >
                         <Users size={12} /> Dans la campagne
@@ -227,7 +227,7 @@ export const FicheDuCombattant: React.FC = () => {
                 )}
             </div>
 
-            <footer className="pt-1 text-ui-9 font-bold uppercase tracking-widest text-slate-600">
+            <footer className="pt-1 text-ui-9 font-bold uppercase tracking-widest text-app-subtle">
                 {origine === 'campagne' && 'Valeurs lues sur la fiche de campagne — à jour.'}
                 {origine === 'combattant' && 'Valeurs portées par le combattant — il n’existe que sur ce plateau.'}
                 {origine === 'aucune' && 'Ce combattant n’a aucune caractéristique enregistrée.'}

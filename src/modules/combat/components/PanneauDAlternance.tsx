@@ -109,7 +109,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                 </p>
                 <button
                     onClick={clore}
-                    className="text-ui-9 font-bold uppercase tracking-widest text-app-text/30 hover:text-red-400 transition-colors"
+                    className="text-ui-9 font-bold uppercase tracking-widest text-app-text/30 hover:text-etat-danger transition-colors"
                 >
                     Clore
                 </button>
@@ -140,11 +140,11 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                                         if (cout) payer(cout.montant, cout.ressource);
                                         roundSuivant(payant);
                                     }}
-                                    className="px-3 py-2 rounded-lg border border-amber-500/30 hover:border-amber-400/60 text-amber-200/80 transition-colors"
+                                    className="px-3 py-2 rounded-lg border border-etat-alerte/30 hover:border-etat-alerte/60 text-etat-alerte/80 transition-colors"
                                 >
                                     <NomDuCamp camp={payant} />
                                     {cout && (
-                                        <span className="block text-ui-9 font-bold text-amber-300/60 mt-0.5">
+                                        <span className="block text-ui-9 font-bold text-etat-alerte/60 mt-0.5">
                                             {cout.montant} {cout.ressource}
                                         </span>
                                     )}
@@ -182,7 +182,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                             title={retention.raison}
                             className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border transition-colors text-ui-10 font-black uppercase tracking-widest ${
                                 retention.possible
-                                    ? 'border-amber-500/30 hover:border-amber-400/60 text-amber-200/80'
+                                    ? 'border-etat-alerte/30 hover:border-etat-alerte/60 text-etat-alerte/80'
                                     : 'border-app-border/20 text-app-text/20 cursor-not-allowed'
                             }`}
                         >
@@ -195,7 +195,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                         </button>
                     </div>
                     {!retention.possible && retention.raison && (
-                        <p className="text-ui-10 text-amber-300/60 leading-snug">{retention.raison}</p>
+                        <p className="text-ui-10 text-etat-alerte/60 leading-snug">{retention.raison}</p>
                     )}
                 </div>
             ) : (
@@ -204,7 +204,7 @@ const PanneauDAlternance: React.FC<PanneauDAlternanceProps> = ({
                     <p className="flex items-center gap-2 text-ui-11 text-app-text/50">
                         La main est à <NomDuCamp camp={tour.campActif} />
                         {tour.activationsConsecutives > 0 && (
-                            <span className="font-mono text-ui-10 text-amber-300/60">
+                            <span className="font-mono text-ui-10 text-etat-alerte/60">
                                 {tour.activationsConsecutives} d'affilée
                             </span>
                         )}

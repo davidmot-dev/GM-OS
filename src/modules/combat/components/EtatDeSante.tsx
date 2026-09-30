@@ -39,7 +39,7 @@ const Segments: React.FC<{ remplis: number; total: number }> = ({ remplis, total
                 key={i}
                 className={`h-6 flex-1 min-w-[1.25rem] rounded-md border transition-colors ${
                     i < remplis
-                        ? 'bg-rose-500 border-rose-400'
+                        ? 'bg-etat-danger border-etat-danger'
                         : 'bg-app-bg/60 border-app-border/40'
                 }`}
             />
@@ -62,8 +62,8 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
         <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
                 {sante && sante.type !== 'hp'
-                    ? <Activity size={18} className="text-rose-400" />
-                    : <Heart size={18} className="text-red-500" fill="currentColor" />}
+                    ? <Activity size={18} className="text-etat-danger" />
+                    : <Heart size={18} className="text-etat-danger" fill="currentColor" />}
                 <h3 className="text-xs font-black text-app-text uppercase tracking-widest">{titre}</h3>
             </div>
             <span className="text-xl font-black text-app-text font-mono">{valeur}</span>
@@ -118,7 +118,7 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
             {enTete('Anatomie', `${atteintes.length} atteinte${atteintes.length > 1 ? 's' : ''}`)}
             <div className="space-y-1">
                 {atteintes.map(([nom, p]) => (
-                    <p key={nom} className="text-ui-11 text-rose-300/80 font-mono">{nom} — {p.status}</p>
+                    <p key={nom} className="text-ui-11 text-etat-danger/80 font-mono">{nom} — {p.status}</p>
                 ))}
             </div>
         </>);
@@ -130,7 +130,7 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
         {enTete('Points de vie', `${porteur.hp} / ${porteur.maxHp ?? porteur.hpMax}`)}
         <div className="h-3 bg-app-bg/40 rounded-full border border-app-border/10 p-[1px] mb-6">
             <div
-                className="h-full rounded-full bg-gradient-to-r from-red-600 to-rose-400 transition-all duration-700"
+                className="h-full rounded-full bg-gradient-to-r from-etat-danger to-etat-danger/70 transition-all duration-700"
                 style={{ width: `${Math.max(0, Math.min(1, part)) * 100}%` }}
             />
         </div>
@@ -143,7 +143,7 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
                         title={`${d > 0 ? '+' : ''}${d} PV`}
                         className={`rounded-xl bg-app-surface border border-app-border flex items-center justify-center text-app-text/40 transition-all ${
                             Math.abs(d) === 5 ? 'w-12 h-12' : 'w-10 h-10'
-                        } ${d < 0 ? 'hover:text-red-500 hover:border-red-500/30' : 'hover:text-emerald-500 hover:border-emerald-500/30'}`}
+                        } ${d < 0 ? 'hover:text-etat-danger hover:border-etat-danger/30' : 'hover:text-etat-succes hover:border-etat-succes/30'}`}
                     >{d > 0 ? `+${d}` : d}</button>
                 ))}
             </div>

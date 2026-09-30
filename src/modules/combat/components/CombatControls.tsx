@@ -277,8 +277,8 @@ const CombatControls: React.FC = () => {
                     onClick={() => setIsCombatProjected(!isCombatProjected)}
                     className={`p-2 rounded-lg transition-all duration-300 flex items-center gap-2 group ${
                         isCombatProjected 
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-glow-emerald/20' 
-                        : 'bg-red-500/10 text-red-400/50 border border-red-500/10 opacity-60 grayscale'
+                        ? 'bg-etat-succes/20 text-etat-succes border border-etat-succes/30 shadow-glow-emerald/20' 
+                        : 'bg-etat-danger/10 text-etat-danger/50 border border-etat-danger/10 opacity-60 grayscale'
                     }`}
                     title={isCombatProjected ? t('modules:projection.deactivate') : t('modules:projection.activate')}
                 >
@@ -292,7 +292,7 @@ const CombatControls: React.FC = () => {
             {/* Active Driver Indicator */}
             <div className="mb-6 flex flex-col gap-1">
                 <span className="text-ui-10 text-app-text/30 font-black uppercase tracking-widest">{t('modules:combat.controls.active_system')}</span>
-                <div className={`px-3 py-2 rounded-lg border flex items-center gap-2 group transition-all ${activeDriver ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-app-bg/50 border-app-border/20 text-app-text/40'}`}>
+                <div className={`px-3 py-2 rounded-lg border flex items-center gap-2 group transition-all ${activeDriver ? 'bg-etat-alerte/10 border-etat-alerte/30 text-etat-alerte' : 'bg-app-bg/50 border-app-border/20 text-app-text/40'}`}>
                     <Sparkles size={14} className={activeDriver ? 'animate-pulse' : 'opacity-20'} />
                     <span className="text-xs font-black uppercase tracking-wider truncate">
                         {activeDriver?.name || t('modules:combat.controls.auto_init.standard_dice_os')}
@@ -310,7 +310,7 @@ const CombatControls: React.FC = () => {
                 </div>
                 <button
                     onClick={nextTurn}
-                    className={`w-full bg-gm-crimson hover:bg-red-500 text-white font-bold px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-glow-crimson group ${regime.aLaTable ? 'py-5' : 'py-3'}`}
+                    className={`w-full bg-gm-crimson hover:bg-gm-crimson/90 text-app-bg font-bold px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-glow-crimson group ${regime.aLaTable ? 'py-5' : 'py-3'}`}
                 >
                     {/* Le geste le plus répété du module : c'est lui qui doit grossir en premier. */}
                     <span className={taille(regime, 'nom')}>{t('modules:combat.controls.next_turn')}</span>
@@ -344,15 +344,15 @@ const CombatControls: React.FC = () => {
                 {initiativeDuSysteme && (
                     <button
                         onClick={handleAutoInitiative}
-                        className="group relative overflow-hidden flex flex-col items-center justify-center py-4 px-6 bg-gradient-to-br from-indigo-600 to-violet-700 hover:from-indigo-500 hover:to-violet-600 text-white rounded-xl border border-indigo-400/30 shadow-lg shadow-indigo-900/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                        className="group relative overflow-hidden flex flex-col items-center justify-center py-4 px-6 bg-gradient-to-br from-gm-violet to-gm-violet/70 hover:from-gm-violet/90 hover:to-gm-violet/60 text-app-bg rounded-xl border border-gm-violet/30 shadow-lg shadow-gm-violet/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                     >
-                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                        <div className="absolute inset-0 bg-fixe-blanc/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                         <div className="flex items-center gap-2 mb-1">
-                            <Zap className="w-5 h-5 text-yellow-300 animate-pulse" />
+                            <Zap className="w-5 h-5 text-etat-alerte animate-pulse" />
                             <span className="font-black tracking-tighter text-lg uppercase">{t('modules:combat.controls.auto_init.system')}</span>
                         </div>
-                        <div className="flex flex-col items-center gap-1 text-ui-9 text-indigo-100 font-medium opacity-90">
-                            <span className="px-2 py-0.5 bg-white/20 rounded-md backdrop-blur-sm border border-white/10 tracking-widest uppercase">
+                        <div className="flex flex-col items-center gap-1 text-ui-9 text-app-bg/80 font-medium opacity-90">
+                            <span className="px-2 py-0.5 bg-app-bg/20 rounded-md backdrop-blur-sm border border-app-bg/10 tracking-widest uppercase">
                                 {activeDriver.combat.initiativeCards 
                                     ? t('modules:combat.controls.auto_init.cards', { max: activeDriver.combat.initiativeCards }) 
                                     : t('modules:combat.controls.auto_init.formula', { formula: activeDriver.combat.initiativeFormula })}
@@ -447,7 +447,7 @@ const CombatControls: React.FC = () => {
                         syncCombatantHPToSession();
                         gmToast(t('modules:combat.messages.hp_synced'));
                     }}
-                    className="w-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
+                    className="w-full bg-etat-succes/10 hover:bg-etat-succes/20 border border-etat-succes/30 text-etat-succes px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
                     <RefreshCw size={18} />
                     <span>{t('modules:combat.controls.sync_hp')}</span>
@@ -477,7 +477,7 @@ const CombatControls: React.FC = () => {
                                 clearCombatants();
                             });
                         }}
-                        className="w-full mt-4 bg-red-500/10 hover:bg-red-500/20 text-red-600 py-2 border border-red-500/30 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                        className="w-full mt-4 bg-etat-danger/10 hover:bg-etat-danger/20 text-etat-danger py-2 border border-etat-danger/30 rounded-lg flex items-center justify-center gap-2 transition-colors"
                     >
                         <Skull size={16} />
                         <span>{t('modules:combat.controls.reset_combat')}</span>

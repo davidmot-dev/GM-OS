@@ -41,13 +41,13 @@ const BandeauDeLaScene: React.FC = () => {
     return (
         <div className={`px-4 py-2.5 border-b flex flex-wrap items-center gap-3 ${
             aChoisir
-                ? 'bg-amber-500/10 border-amber-500/30'
+                ? 'bg-etat-alerte/10 border-etat-alerte/30'
                 : 'bg-app-surface/40 border-app-border/20'
         }`}>
             {aChoisir ? (
                 <>
-                    <AlertTriangle size={14} className="text-amber-400 shrink-0" />
-                    <span className="text-ui-11 font-bold text-amber-200">
+                    <AlertTriangle size={14} className="text-etat-alerte shrink-0" />
+                    <span className="text-ui-11 font-bold text-etat-alerte">
                         Plusieurs scènes sont en cours — à laquelle ce combat appartient-il ?
                     </span>
                 </>
@@ -86,7 +86,7 @@ const BandeauDeLaScene: React.FC = () => {
                             {/* Le point dit qu'un plateau attend là, sans l'ouvrir :
                                 repartir sur un combat garé n'est pas le même geste
                                 que d'en commencer un. */}
-                            {gare && <span className="ml-1.5 text-emerald-400" title="Combat garé">●</span>}
+                            {gare && <span className="ml-1.5 text-etat-succes" title="Combat garé">●</span>}
                         </button>
                     );
                 })}

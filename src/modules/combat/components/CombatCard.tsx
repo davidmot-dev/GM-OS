@@ -221,7 +221,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             {combatant.name}
                             <Edit2 size={14} className="opacity-0 group-hover/name:opacity-50 transition-opacity" />
                         </div>
-                        {combatant.isPlayer && <span className="text-ui-9 bg-primary text-slate-900 px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{t('combat.card.faction.player')}</span>}
+                        {combatant.isPlayer && <span className="text-ui-9 bg-primary text-app-on-accent px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">{t('combat.card.faction.player')}</span>}
                         
                         <div className="relative">
                             <Select
@@ -237,9 +237,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 title={t('combat.card.faction_change')}
                                 renderOption={(opt) => (
                                     <span className={`text-ui-10 font-black uppercase tracking-wider ${
-                                        opt.value === 'enemy' ? 'text-red-500' :
-                                        opt.value === 'ally' ? 'text-emerald-500' :
-                                        opt.value === 'player' ? 'text-blue-500' :
+                                        opt.value === 'enemy' ? 'text-etat-danger' :
+                                        opt.value === 'ally' ? 'text-etat-succes' :
+                                        opt.value === 'player' ? 'text-etat-info' :
                                         'text-app-text/70'
                                     }`}>
                                         {opt.label}
@@ -286,7 +286,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             {combatant.statuses.map(status => (
                                 <span
                                     key={status.id}
-                                    className="inline-flex items-center gap-1 bg-app-surface/60 px-2 py-0.5 rounded text-xs border border-app-border group cursor-pointer hover:bg-red-500/20 transition-colors"
+                                    className="inline-flex items-center gap-1 bg-app-surface/60 px-2 py-0.5 rounded text-xs border border-app-border group cursor-pointer hover:bg-etat-danger/20 transition-colors"
                                     onClick={() => removeStatus(combatant.id, status.id)}
                                     title={t('combat.card.status_remove', { name: t(`combat.status.presets.${status.name.toLowerCase()}`, { defaultValue: status.name }) })}
                                 >
@@ -308,7 +308,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                         e.stopPropagation();
                                         setSuggestedAction(null);
                                     }}
-                                    className="absolute -top-1 -right-1 bg-black/80 rounded-full p-1 text-app-text/60 hover:text-red-400 transition-colors shadow-lg border border-white/10"
+                                    className="absolute -top-1 -right-1 bg-app-bg/80 rounded-full p-1 text-app-text/60 hover:text-etat-danger transition-colors shadow-lg border border-app-text/10"
                                     title={t('combat.card.cortex_close')}
                                 >
                                     <X size={12} />
@@ -421,7 +421,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             if (combatant.targetId) ids.push(combatant.targetId);
                             gmCustom('damage-calc', { targetIds: ids });
                         }}
-                        className="mt-2 flex items-center justify-center gap-2 w-full py-2 bg-app-surface/60 border border-primary/50 hover:bg-primary text-primary hover:text-white rounded-lg text-ui-10 font-black transition-all uppercase tracking-[0.2em] shadow-glow-gold/20 active:scale-95"
+                        className="mt-2 flex items-center justify-center gap-2 w-full py-2 bg-app-surface/60 border border-primary/50 hover:bg-primary text-primary hover:text-app-on-accent rounded-lg text-ui-10 font-black transition-all uppercase tracking-[0.2em] shadow-glow-gold/20 active:scale-95"
                         title={t('combat.card.calculate_tooltip')}
                     >
                         <Zap size={14} className="fill-current" />
@@ -439,7 +439,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                 {/* Delete button */}
                 <button
-                    className="w-8 h-8 flex items-center justify-center text-app-text/40 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors shrink-0"
+                    className="w-8 h-8 flex items-center justify-center text-app-text/40 hover:text-etat-danger hover:bg-etat-danger/10 rounded-full transition-colors shrink-0"
                     onClick={() => removeCombatant(combatant.id)}
                     title={t('combat.card.delete')}
                 >
@@ -503,7 +503,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     title={`${gaugeConfig.label}: ${val}/${max} (L-Click: -1 | R-Click: +1)`}
                                 >
                                     <div className="flex items-center justify-between px-1">
-                                        <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
+                                        <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
                                         <span className="text-ui-12 font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val}</span>
                                     </div>
                                     <div className="flex gap-1 h-2.5 bg-app-bg/40 p-0.5 rounded-sm border border-app-border/20">
@@ -534,7 +534,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     title={`${gaugeConfig.label}: ${val}/${max} (L-Click: -1 | R-Click: +1)`}
                                 >
                                     <div className="flex justify-between items-center px-1">
-                                        <span className="stitch-label text-slate-200">{gaugeConfig.label}</span>
+                                        <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
                                         <span className="text-ui-12 font-black text-primary" style={styleDuChiffre}>{val}</span>
                                     </div>
                                     <div className="h-3 bg-app-bg/60 rounded-full overflow-hidden border border-app-border/30 p-[1.5px]">

@@ -27,6 +27,7 @@ const SRC = path.resolve(__dirname, '..', 'src');
 const MODULES_MIGRES: string[] = [
     'modules/dice',   // phase 4, L1 — 2026-09-30
     'modules/image',  // phase 4, L1 — 2026-09-30
+    'modules/combat', // phase 4, L1 — 2026-09-30
 ];
 
 function releve(): Map<string, number> {
