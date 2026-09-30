@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { EtiquetteDuDegre } from './EtiquetteDuDegre';
 import { DiceEngine } from './DiceEngine';
 import type { RollResult } from './DiceEngine';
-import { Dices, RotateCcw, Zap, BookmarkPlus, X, Target, Settings, Info, XCircle, Cast } from 'lucide-react';
+import { Dices, RotateCcw, Zap, BookmarkPlus, X, Target, Info, XCircle, Cast, SlidersHorizontal } from 'lucide-react';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { useMapStore } from '../map/useMapStore';
 import { tacticalService } from '../map/TacticalService';
@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
 import { facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes } from './desEchelonnes';
 import { STYLES_DE_DES } from './logic/stylesDeDes';
-import { Panneau } from '../../components/socle';
+import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
+import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -34,13 +35,15 @@ type DiceMode = 'standard' | 'formula' | 'pool' | 'pool_explode' | 'threshold' |
 const LETTRES_ECHELONNEES = ['A', 'B', 'C', 'D'] as const;
 
 /**
- * **Les modes dont le dé est déjà décidé — ils reçoivent un bouton « Lancer ».**
+ * **Les modes dont le dé est déjà décidé — ils n'offrent pas la rangée d4 à d100.**
  *
- * Les autres affichent la grille des faces (d4, d6, d20…), et c'est le clic sur
- * une face qui lance. Un mode absent de cette liste tombe donc dans la grille :
- * il propose de choisir un nombre de faces que son moteur ignore, et **il n'a
- * aucun bouton pour lancer**. C'est exactement ce qui est arrivé à
- * `yze-echelonne` le 2026-08-30 — signalé par David, une heure après avoir
+ * ⭐ Depuis le 2026-09-30 (phase 4, L1, étape 2), **tous les modes ont le bouton
+ * « Lancer »**, et les faces ne font plus que CHOISIR le dé. Ce qui suit dit
+ * pourquoi la liste existe ; avant ce jour, les autres modes lançaient au clic
+ * sur une face. Un mode absent de cette liste propose de choisir un nombre de
+ * faces que son moteur ignore. C'est ce qui est arrivé à `yze-echelonne` le
+ * 2026-08-30 — et, le bouton n'existant alors que pour les modes listés, il
+ * n'avait **aucun moyen de lancer** : signalé par David, une heure après avoir
  * signalé le même oubli un cran plus haut, dans la reconnaissance du moteur.
  *
  * *Une liste de noms recopiée à la main dérive le jour où un nom s'ajoute.*
@@ -109,7 +112,6 @@ const DiceBoard: React.FC = () => {
     const [newQuickRollLabel, setNewQuickRollLabel] = useState('');
     const [newQuickRollFormula, setNewQuickRollFormula] = useState('');
     const [isAddingQuickRoll, setIsAddingQuickRoll] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
 
     const diceTypes = [4, 6, 8, 10, 12, 20, 100];
 
@@ -186,7 +188,14 @@ const DiceBoard: React.FC = () => {
             // Map engine to local mode
             const engine = activeDriver.dice.engine as string | undefined;
             
-            if (engine === 'yze-echelonne') {
+            /*
+              **Un pilote qui déclare `jet.desEchelonnes` lance des dés
+              échelonnés, quel que soit son moteur** — `executeRoll` le force
+              déjà. L'écran, lui, restait sur « Year Zero Engine » avec des
+              champs B et E ignorés, et les lettres réellement lancées
+              invisibles (Blade Runner, trouvé en réagençant, 2026-09-30).
+            */
+            if (engine === 'yze-echelonne' || activeDriver.jet?.desEchelonnes) {
                 /*
                   **La variante à dés échelonnés n'était reconnue nulle part
                   ici.** Elle tombait dans le `else`, n'y trouvait aucun nom
@@ -449,352 +458,303 @@ const DiceBoard: React.FC = () => {
 
     // --- Remote Control Listeners removed: handled globally in App.tsx now ---
 
-    return (
-        <div className="flex h-[calc(100vh-8rem)] gap-6 text-app-text">
+    /*
+      **L'étape 2 du lot 1 — le réagencement, dans la grammaire commune**
+      (décisions de David, 2026-09-30).
 
-            {/* LEFT & CENTER COLUMN: Config + Dices + Quick Rolls */}
-            <div className="flex-1 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-2">
+      La barre porte l'action : « Lancer », puis les jets rapides. Le centre
+      montre ce qui vient de tomber, et l'historique dessous, sobre. La colonne
+      de droite règle le jet — *ce qui se règle, séparé de ce qui se fait*.
 
-                {/* Top: Engine Config */}
-                <Panneau niveau={1} orne className="p-5">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-4">
-                            {activeDriver && (
-                                <button 
-                                    onClick={() => setUseSystemDriver(!useSystemDriver)}
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${useSystemDriver ? 'bg-accent text-app-bg border-accent/40 shadow-glow-accent/20' : 'bg-app-bg text-app-text/40 border-app-border hover:border-app-border/80'}`}
-                                >
-                                    <Zap size={14} className={useSystemDriver ? 'animate-pulse' : ''} />
-                                    {t('dice.system_mode', { name: activeDriver.name.toUpperCase() })}
-                                </button>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <button 
-                                onClick={() => setShowSettings(!showSettings)}
-                                className={`p-1.5 rounded-lg transition-all border ${showSettings ? 'bg-accent text-app-on-accent border-accent' : 'bg-app-bg text-app-text/40 border-app-border hover:border-app-border/80'}`}
-                            >
-                                <Settings size={14} />
-                            </button>
-                            <button onClick={resetConfig} title={t('dice.reset')} className="text-xs flex items-center gap-1.5 text-app-text/60 hover:text-accent transition-colors bg-app-bg px-3 py-1.5 rounded-lg border border-app-border/80 text-nowrap">
-                                <RotateCcw size={14} /> {t('dice.reset')}
-                            </button>
+      ⭐ **Un seul geste pour tous les modes** : les dés d4 à d100 CHOISISSENT
+      le dé, ils ne lancent plus. Avant, cinq modes avaient un bouton et les
+      autres lançaient au clic sur une face — *« comment se fait-il que parfois
+      j'ai un bouton et parfois non ? »*, David, le même jour. Le dé choisi reste
+      retenu : le plus souvent, un seul clic sur « Lancer ».
+    */
+    const regime = useRegimeDInterface();
+    /*
+      À la table, le gabarit replie les réglages derrière un bouton. Ici ils
+      restent **dépliés par défaut** : on y choisit le dé à chaque jet, et un
+      d6 caché derrière un bouton, c'est deux gestes de plus par lancer.
+    */
+    const [reglagesOuverts, setReglagesOuverts] = useState(true);
+    const [faces, setFaces] = useState<number>(20);
+
+    /*
+      ⚠️ **En mode système, le jet part avec les dés du pilote** :
+      `rollFromConfig` ne reçoit pas de faces. La rangée d4 à d100 y était
+      offerte quand même — on choisissait un d8, le jeu lançait ses propres dés.
+      *Un réglage affiché et ignoré*, la famille du sélecteur ≥ / ≤ du 16/08.
+      Elle ne paraît donc que lorsqu'elle décide vraiment.
+    */
+    const jetDuSysteme = useSystemDriver && !!activeDriver;
+    const avecFaces = !MODES_SANS_CHOIX_DE_FACES.includes(mode) && !jetDuSysteme;
+    const valeurDuModificateur = typeof modifier === 'number' ? modifier : (parseInt(String(modifier).replace('+', ''), 10) || 0);
+    const avecLeModificateur = (des: string) => valeurDuModificateur === 0
+        ? des
+        : `${des}${valeurDuModificateur > 0 ? '+' : ''}${valeurDuModificateur}`;
+    const echelonne = mode === 'yze-echelonne'
+        || (jetDuSysteme && (activeDriver!.dice.engine === 'yze-echelonne' || !!activeDriver!.jet?.desEchelonnes));
+
+    /** Ce que « Lancer » va lancer, écrit à côté du bouton. */
+    const resumeDuJet = mode === 'formula' ? formulaInput
+        : echelonne ? libelleDeLaPoignee
+        : mode === 'yze' ? `${diceCount}B + ${gearCount}E`
+        : mode === 'fate' ? avecLeModificateur(`${diceCount}dF`)
+        : mode === 'rolemaster' ? avecLeModificateur('d100')
+        : jetDuSysteme ? avecLeModificateur(activeDriver!.dice.defaultDice)
+        : avecLeModificateur(`${diceCount}d${faces}`);
+
+    const lancer = () => handleRoll(avecFaces ? faces : 0, mode === 'formula');
+
+    const libelleDuMode = (m: DiceMode) => m === 'yze-echelonne' ? 'Year Zero — dés échelonnés' : t(`dice.modes.${m}`);
+    const etiquetteDeChamp = 'text-ui-11 font-semibold text-app-muted uppercase tracking-widest';
+    const champ = 'flex bg-app-bg border border-app-border rounded-lg overflow-hidden h-[38px]';
+    const sansFleches = '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none';
+    const dernier = history[0];
+
+    /*
+      ── La colonne de droite : ce qui se règle ──
+      ⚠️ **Chaque panneau y est `shrink-0`** : la colonne est un empilement
+      vertical et le panneau du socle coupe ce qui dépasse. Sans cela, quand la
+      fenêtre est moins haute, le panneau se comprime et la rangée d12 à d100
+      disparaît au lieu de faire défiler la colonne (David, 2026-09-30).
+    */
+    const reglages = (
+        <>
+            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-4">
+                <h2 className={etiquetteDeChamp}>{t('dice.agencement.parameters')}</h2>
+
+                {activeDriver && (
+                    <button
+                        onClick={() => setUseSystemDriver(!useSystemDriver)}
+                        aria-pressed={useSystemDriver}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all border text-left ${useSystemDriver ? 'bg-accent text-app-on-accent border-accent/40' : 'bg-app-bg text-app-muted border-app-border hover:border-accent/50'}`}
+                    >
+                        <Zap size={14} className={`shrink-0 ${useSystemDriver ? 'animate-pulse' : ''}`} />
+                        {t('dice.system_mode', { name: activeDriver.name.toUpperCase() })}
+                    </button>
+                )}
+
+                <div className="space-y-1.5">
+                    <label className={etiquetteDeChamp}>{t('dice.inputs.mode')}</label>
+                    <select
+                        value={mode}
+                        onChange={(e) => setMode(e.target.value as DiceMode)}
+                        title={t('dice.inputs.mode')}
+                        aria-label={t('dice.inputs.mode')}
+                        className="w-full bg-app-bg border border-app-border rounded-lg py-2 px-3 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/50 transition-all text-app-text"
+                    >
+                        <option value="standard">{t('dice.modes.standard')}</option>
+                        <option value="exploding">{t('dice.modes.exploding')}</option>
+                        <option value="formula">{t('dice.modes.formula')}</option>
+                        <option value="threshold">{t('dice.modes.threshold')}</option>
+                        <option value="pool">{t('dice.modes.pool')}</option>
+                        <option value="pool_explode">{t('dice.modes.pool_explode')}</option>
+                        <option value="advantage">{t('dice.modes.advantage')}</option>
+                        <option value="disadvantage">{t('dice.modes.disadvantage')}</option>
+                        <option value="yze">{t('dice.modes.yze')}</option>
+                        <option value="yze-echelonne">Year Zero — dés échelonnés</option>
+                        <option value="fate">{t('dice.modes.fate')}</option>
+                        <option value="rolemaster">{t('dice.modes.rolemaster')}</option>
+                    </select>
+                </div>
+
+                {mode === 'formula' ? (
+                    <div className="space-y-1.5">
+                        <label className={etiquetteDeChamp}>{t('dice.inputs.formula_label')}</label>
+                        <div className={`${champ} focus-within:border-accent focus-within:ring-1 focus-within:ring-accent/50`}>
+                            <input
+                                type="text" value={formulaInput} onChange={e => setFormulaInput(e.target.value)}
+                                className="w-full bg-transparent px-3 py-2 font-mono text-sm text-app-text outline-none"
+                                placeholder={t('dice.inputs.formula_placeholder')}
+                            />
                         </div>
                     </div>
+                ) : mode === 'yze-echelonne' ? (
+                    /*
+                      **Le meneur nomme les niveaux ; l'échelle reste dans
+                      `desEchelonnes`.** Le dé écrit à côté de chaque lettre vient
+                      de la table et n'est jamais saisi — une fiche où quelqu'un a
+                      tapé « B (D8) » est corrigée au passage plutôt que propagée.
+                    */
+                    <div className="space-y-2">
+                        {([
+                            { cle: 'attribut', titre: 'Attribut', valeur: niveauAttribut, poser: setNiveauAttribut, facultatif: false },
+                            { cle: 'competence', titre: 'Compétence', valeur: niveauCompetence, poser: setNiveauCompetence, facultatif: false },
+                            { cle: 'equipement', titre: 'Équipement', valeur: niveauEquipement, poser: setNiveauEquipement, facultatif: true },
+                        ] as const).map(({ cle, titre, valeur, poser, facultatif }) => (
+                            <div key={cle} className={champ}>
+                                <span className="w-28 shrink-0 bg-app-surface-2 text-app-muted text-ui-11 px-2 flex items-center border-r border-app-border uppercase tracking-wider">
+                                    {titre}
+                                </span>
+                                <select
+                                    value={valeur}
+                                    onChange={(e) => poser(e.target.value)}
+                                    title={titre}
+                                    aria-label={titre}
+                                    className="w-full bg-transparent text-center font-semibold text-app-text outline-none text-sm"
+                                >
+                                    {facultatif && <option value="">—</option>}
+                                    {LETTRES_ECHELONNEES.map(lettre => (
+                                        <option key={lettre} value={lettre}>
+                                            {lettre} (D{facesDuNiveau(lettre)})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        ))}
 
-                    {showSettings && (
-                        <div className="mb-6 p-4 rounded-xl bg-app-bg/40 border border-app-border animate-in fade-in slide-in-from-top-2">
-                             <h4 className="text-ui-10 font-black text-app-text/40 uppercase tracking-widest mb-3">{t('dice.settings.title')}</h4>
-                             <div className="flex flex-wrap gap-6">
-                                <label className="flex items-center gap-3 cursor-pointer group">
-                                    <div className="relative">
-                                        <input 
-                                            type="checkbox" 
-                                            checked={enable3D} 
-                                            onChange={e => setEnable3D(e.target.checked)} 
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-10 h-5 bg-app-surface border border-app-border rounded-full peer peer-checked:bg-etat-succes/20 peer-checked:border-etat-succes/50 transition-all"></div>
-                                        <div className="absolute left-1 top-1 w-3 h-3 bg-app-text/20 rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-etat-succes shadow-sm"></div>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-xs font-bold text-app-text/80 group-hover:text-app-text">{t('dice.settings.enable_3d')}</span>
-                                        <span className="text-ui-9 text-app-text/40">{t('dice.settings.enable_3d_desc')}</span>
-                                    </div>
-                                </label>
+                        <div className="grid grid-cols-3 gap-1.5 pt-1">
+                            {([
+                                { cle: 'aucun', titre: 'Normal' },
+                                { cle: 'avantage', titre: 'Avantage' },
+                                { cle: 'desavantage', titre: 'Désavantage' },
+                            ] as const).map(({ cle, titre }) => (
+                                <button
+                                    key={cle}
+                                    onClick={() => setModificateurEchelonne(cle)}
+                                    aria-pressed={modificateurEchelonne === cle}
+                                    className={`px-1 py-1.5 rounded-lg border text-ui-10 font-bold uppercase tracking-wider transition-all ${modificateurEchelonne === cle
+                                        ? 'bg-accent/20 border-accent/60 text-accent'
+                                        : 'bg-app-bg border-app-border text-app-muted hover:text-app-text'}`}
+                                >
+                                    {titre}
+                                </button>
+                            ))}
+                        </div>
 
-                                {/*
-                                  ⭐ **La matière des dés appartient au meneur.**
-                                  Demandé par David le 2026-09-17 : *« est-ce que
-                                  je peux choisir le style ? »*.
-
-                                  ⚠️ Le sélecteur ne s'affiche que si la 3D est
-                                  active — *un réglage qui ne change rien à
-                                  l'écran est un réglage qui fait douter du
-                                  reste.*
-                                */}
-                                {enable3D && (
-                                    <div className="flex flex-col gap-1.5">
-                                        <span className="text-xs font-bold text-app-text/80">{t('dice.settings.dice_style')}</span>
-                                        <div className="flex gap-1 p-1 rounded-lg bg-app-surface border border-app-border">
-                                            {STYLES_DE_DES.map(style => (
-                                                <button
-                                                    key={style}
-                                                    type="button"
-                                                    onClick={() => setStyleDesDes(style)}
-                                                    aria-pressed={styleDesDes === style}
-                                                    className={`px-3 py-1 rounded-md text-ui-10 font-bold uppercase tracking-wider transition-all ${
-                                                        styleDesDes === style
-                                                            ? 'bg-accent/20 text-accent border border-accent/40'
-                                                            : 'text-app-text/50 border border-transparent hover:text-app-text'
-                                                    }`}
-                                                >
-                                                    {t(`dice.settings.styles.${style}`)}
-                                                </button>
-                                            ))}
+                        {/*
+                          *Une correction muette est une règle perdue.* Le livre
+                          plafonne à deux D12 et un désavantage ne vide jamais la
+                          poignée : quand la composition corrige quelque chose,
+                          elle le dit.
+                        */}
+                        {poigneeEchelonnee.remarques.map((remarque, i) => (
+                            <p key={i} className="text-ui-11 italic text-etat-alerte/80">{remarque}</p>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 gap-3">
+                        {mode === 'yze' ? (
+                            <>
+                                {([
+                                    { cle: 'B', titre: t('dice.inputs.base_dice'), valeur: diceCount, poser: (n: number) => setDiceCount(Math.max(1, n)), ton: 'bg-accent/20 text-accent' },
+                                    { cle: 'E', titre: t('dice.inputs.gear_dice'), valeur: gearCount, poser: (n: number) => setGearCount(Math.max(0, n)), ton: 'bg-app-surface-2 text-app-muted' },
+                                ]).map(({ cle, titre, valeur, poser, ton }) => (
+                                    <div key={cle} className="space-y-1.5">
+                                        <label className={etiquetteDeChamp}>{titre}</label>
+                                        <div className={champ}>
+                                            <span className={`${ton} text-xs px-2 flex items-center border-r border-app-border`}>{cle}</span>
+                                            <input
+                                                type="number" value={valeur}
+                                                onChange={(e) => poser(parseInt(e.target.value) || 0)}
+                                                title={titre} aria-label={titre}
+                                                className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`}
+                                            />
+                                            <div className="flex flex-col border-l border-app-border">
+                                                <button onClick={() => poser(valeur + 1)} className="flex-1 px-1.5 flex items-center justify-center hover:bg-app-surface-2 text-xs">+</button>
+                                                <button onClick={() => poser(valeur - 1)} className="flex-1 px-1.5 flex items-center justify-center hover:bg-app-surface-2 text-xs border-t border-app-border">-</button>
+                                            </div>
                                         </div>
                                     </div>
-                                )}
-                             </div>
-                        </div>
-                    )}
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.mode')}</label>
-                            <select
-                                value={mode}
-                                onChange={(e) => setMode(e.target.value as DiceMode)}
-                                title={t('dice.inputs.mode')}
-                                aria-label={t('dice.inputs.mode')}
-                                className="w-full bg-app-bg border border-app-border rounded-xl py-2 px-3 text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/50 transition-all text-app-text"
-                            >
-                                <option value="standard">{t('dice.modes.standard')}</option>
-                                <option value="exploding">{t('dice.modes.exploding')}</option>
-                                <option value="formula">{t('dice.modes.formula')}</option>
-                                <option value="threshold">{t('dice.modes.threshold')}</option>
-                                <option value="pool">{t('dice.modes.pool')}</option>
-                                <option value="pool_explode">{t('dice.modes.pool_explode')}</option>
-                                <option value="advantage">{t('dice.modes.advantage')}</option>
-                                <option value="disadvantage">{t('dice.modes.disadvantage')}</option>
-                                <option value="yze">{t('dice.modes.yze')}</option>
-                                <option value="yze-echelonne">Year Zero — dés échelonnés</option>
-                                <option value="fate">{t('dice.modes.fate')}</option>
-                                <option value="rolemaster">{t('dice.modes.rolemaster')}</option>
-                            </select>
-                        </div>
-
-                        {mode === 'formula' ? (
-                            <div className="space-y-2 col-span-2">
-                                <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.formula_label')}</label>
-                                <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden focus-within:border-accent focus-within:ring-1 focus-within:ring-accent/50 h-[38px]">
+                                ))}
+                            </>
+                        ) : (
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{t('dice.inputs.qty')}</label>
+                                <div className={champ}>
+                                    <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
                                     <input
-                                        type="text" value={formulaInput} onChange={e => setFormulaInput(e.target.value)}
-                                        className="w-full bg-transparent px-4 py-2 font-mono text-sm text-app-text outline-none"
-                                        placeholder={t('dice.inputs.formula_placeholder')}
+                                        type="number" value={diceCount}
+                                        onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))}
+                                        title={t('dice.inputs.qty')} aria-label={t('dice.inputs.qty')}
+                                        className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`}
                                     />
+                                    <button onClick={() => setDiceCount(diceCount + 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
                                 </div>
                             </div>
-                        ) : (
-                            <>
-                                {/* Qty & Mod */}
-                                {mode === 'yze-echelonne' ? (
-                                    /*
-                                      **Le meneur nomme les niveaux ; l'échelle
-                                      reste dans `desEchelonnes`.** Le dé écrit
-                                      à côté de chaque lettre vient de la table
-                                      et n'est jamais saisi — une fiche où
-                                      quelqu'un a tapé « B (D8) » est corrigée
-                                      au passage plutôt que propagée.
-                                    */
-                                    <div className="space-y-2 col-span-3">
-                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">
-                                            Attribut / Compétence / Équipement
-                                        </label>
-                                        <div className="flex flex-wrap gap-2">
-                                            {([
-                                                { cle: 'attribut', titre: 'Attribut', valeur: niveauAttribut, poser: setNiveauAttribut, facultatif: false },
-                                                { cle: 'competence', titre: 'Compétence', valeur: niveauCompetence, poser: setNiveauCompetence, facultatif: false },
-                                                { cle: 'equipement', titre: 'Équipement', valeur: niveauEquipement, poser: setNiveauEquipement, facultatif: true },
-                                            ] as const).map(({ cle, titre, valeur, poser, facultatif }) => (
-                                                <div key={cle} className="flex flex-1 min-w-[8rem] bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
-                                                    <span className="bg-app-surface text-app-text/60 text-ui-10 px-2 flex items-center border-r border-app-border uppercase tracking-wider">
-                                                        {titre}
-                                                    </span>
-                                                    <select
-                                                        value={valeur}
-                                                        onChange={(e) => poser(e.target.value)}
-                                                        title={titre}
-                                                        aria-label={titre}
-                                                        className="w-full bg-transparent text-center font-semibold text-app-text outline-none text-sm"
-                                                    >
-                                                        {facultatif && <option value="">—</option>}
-                                                        {LETTRES_ECHELONNEES.map(lettre => (
-                                                            <option key={lettre} value={lettre}>
-                                                                {lettre} (D{facesDuNiveau(lettre)})
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        <div className="flex flex-wrap items-center gap-2 pt-1">
-                                            {([
-                                                { cle: 'aucun', titre: 'Normal' },
-                                                { cle: 'avantage', titre: 'Avantage' },
-                                                { cle: 'desavantage', titre: 'Désavantage' },
-                                            ] as const).map(({ cle, titre }) => (
-                                                <button
-                                                    key={cle}
-                                                    onClick={() => setModificateurEchelonne(cle)}
-                                                    aria-pressed={modificateurEchelonne === cle}
-                                                    className={`px-3 py-1.5 rounded-lg border text-ui-10 font-bold uppercase tracking-widest transition-all ${modificateurEchelonne === cle
-                                                        ? 'bg-accent/20 border-accent/60 text-accent'
-                                                        : 'bg-app-bg border-app-border text-app-text/50 hover:text-app-text'}`}
-                                                >
-                                                    {titre}
-                                                </button>
-                                            ))}
-
-                                            <span className="text-ui-11 font-mono text-app-text/60 ml-auto">
-                                                {poigneeEchelonnee.des.map(d => `D${d.faces}`).join(' + ') || '—'}
-                                                {facesDeLEquipement !== null && ` + D${facesDeLEquipement}`}
-                                            </span>
-                                        </div>
-
-                                        {/*
-                                          *Une correction muette est une règle
-                                          perdue.* Le livre plafonne à deux D12
-                                          et un désavantage ne vide jamais la
-                                          poignée : quand la composition corrige
-                                          quelque chose, elle le dit.
-                                        */}
-                                        {poigneeEchelonnee.remarques.map((remarque, i) => (
-                                            <p key={i} className="text-ui-10 italic text-etat-alerte/80">{remarque}</p>
-                                        ))}
-                                    </div>
-                                ) : mode === 'yze' ? (
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.base_dice')} / {t('dice.inputs.gear_dice')}</label>
-                                        <div className="flex space-x-2">
-                                            <div className="flex flex-1 bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
-                                                <span className="bg-accent/20 text-accent text-xs px-2 flex items-center border-r border-app-border">B</span>
-                                                <input 
-                                                    type="number" 
-                                                    value={diceCount} 
-                                                    onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))}
-                                                    title={t('dice.inputs.base_dice')}
-                                                    aria-label={t('dice.inputs.base_dice')}
-                                                    className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                                                />
-                                                <div className="flex flex-col border-l border-app-border">
-                                                    <button onClick={() => setDiceCount(diceCount + 1)} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs">+</button>
-                                                    <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs border-t border-app-border">-</button>
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-1 bg-app-bg border border-app-border rounded-xl overflow-hidden shadow-inner h-[38px]">
-                                                <span className="bg-app-surface text-app-text/60 text-xs px-2 flex items-center border-r border-app-border">E</span>
-                                                <input 
-                                                    type="number" 
-                                                    value={gearCount} 
-                                                    onChange={(e) => setGearCount(Math.max(0, parseInt(e.target.value) || 0))}
-                                                    title={t('dice.inputs.gear_dice')}
-                                                    aria-label={t('dice.inputs.gear_dice')}
-                                                    className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                                                />
-                                                <div className="flex flex-col border-l border-app-border">
-                                                    <button onClick={() => setGearCount(gearCount + 1)} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs">+</button>
-                                                    <button onClick={() => setGearCount(Math.max(0, gearCount - 1))} className="flex-1 px-1 flex items-center justify-center hover:bg-app-surface text-xs border-t border-app-border">-</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.qty')}</label>
-                                        <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
-                                            <button onClick={() => setDiceCount(Math.max(1, diceCount - 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                            <input 
-                                                type="number" 
-                                                value={diceCount} 
-                                                onChange={(e) => setDiceCount(Math.max(1, parseInt(e.target.value) || 1))} 
-                                                title={t('dice.inputs.qty')}
-                                                aria-label={t('dice.inputs.qty')}
-                                                className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                                            />
-                                            <button onClick={() => setDiceCount(diceCount + 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className={`space-y-2 ${['yze'].includes(mode) ? 'hidden' : ''}`}>
-                                    <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.mod')}</label>
-                                    <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
-                                        <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) - 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                        <input 
-                                            type="text" 
-                                            value={modifier === 0 || modifier === "0" ? "0" : typeof modifier === 'number' && modifier > 0 ? `+${modifier}` : modifier} 
-                                            onChange={(e) => {
-                                                const raw = e.target.value.replace(/[^0-9+-]/g, '');
-                                                if (raw === '' || raw === '-' || raw === '+') setModifier(raw);
-                                                else setModifier(parseInt(raw.replace('+', ''), 10) || 0);
-                                            }} 
-                                            title={t('dice.inputs.mod')}
-                                            aria-label={t('dice.inputs.mod')}
-                                            className="w-full bg-transparent text-center font-semibold text-app-text outline-none" 
-                                        />
-                                        <button onClick={() => setModifier((typeof modifier === 'number' ? modifier : parseInt(modifier.toString().replace('+', '')) || 0) + 1)} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
-                                    </div>
-                                </div>
-
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.repeat')}</label>
-                                        <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
-                                            <button onClick={() => setBatchCount(Math.max(1, batchCount - 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                            <input 
-                                                type="number" 
-                                                value={batchCount} 
-                                                onChange={(e) => setBatchCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
-                                                title={t('dice.inputs.repeat')}
-                                                aria-label={t('dice.inputs.repeat')}
-                                                className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                                            />
-                                            <button onClick={() => setBatchCount(Math.min(20, batchCount + 1))} className="px-3 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
-                                        </div>
-                                    </div>
-                            </>
                         )}
 
-                        {/* Dynamic Inputs depending on mode */}
+                        {mode !== 'yze' && (
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{t('dice.inputs.mod')}</label>
+                                <div className={champ}>
+                                    <button onClick={() => setModifier(valeurDuModificateur - 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
+                                    <input
+                                        type="text"
+                                        value={modifier === 0 || modifier === "0" ? "0" : typeof modifier === 'number' && modifier > 0 ? `+${modifier}` : modifier}
+                                        onChange={(e) => {
+                                            const raw = e.target.value.replace(/[^0-9+-]/g, '');
+                                            if (raw === '' || raw === '-' || raw === '+') setModifier(raw);
+                                            else setModifier(parseInt(raw.replace('+', ''), 10) || 0);
+                                        }}
+                                        title={t('dice.inputs.mod')} aria-label={t('dice.inputs.mod')}
+                                        className="w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none"
+                                    />
+                                    <button onClick={() => setModifier(valeurDuModificateur + 1)} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
+                                </div>
+                            </div>
+                        )}
+
                         {['pool', 'pool_explode', 'threshold', 'advantage', 'disadvantage'].includes(mode) && (
-                            <div className="space-y-2">
-                                <label className="text-xs font-semibold text-app-text/60 uppercase tracking-widest">{t('dice.inputs.threshold_rule')}</label>
-                                <div className="flex bg-app-bg border border-app-border rounded-xl overflow-hidden h-[38px]">
-                                    <select 
-                                        value={targetRule} 
-                                        onChange={e => setTargetRule(e.target.value as 'over' | 'under')} 
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{t('dice.inputs.threshold_rule')}</label>
+                                <div className={champ}>
+                                    <select
+                                        value={targetRule}
+                                        onChange={e => setTargetRule(e.target.value as 'over' | 'under')}
                                         title={t('dice.inputs.threshold_rule')}
                                         aria-label={t('dice.inputs.threshold_rule')}
-                                        className="bg-app-surface text-app-text text-xs px-2 outline-none border-r border-app-border"
+                                        className="w-12 shrink-0 bg-app-surface-2 text-app-text text-sm text-center px-1 outline-none border-r border-app-border"
                                     >
                                         <option value="over">≥</option>
                                         <option value="under">≤</option>
                                     </select>
-                                    <button onClick={() => setTarget(target - 1)} className="px-2 hover:bg-app-surface text-app-text/60 transition-colors">-</button>
-                                    <input 
-                                        type="number" 
-                                        value={target} 
+                                    <input
+                                        type="number" value={target}
                                         onChange={(e) => setTarget(parseInt(e.target.value) || 0)}
-                                        title={t('dice.inputs.threshold_rule')}
-                                        aria-label={t('dice.inputs.threshold_rule')}
-                                        className="w-full bg-transparent text-center font-semibold text-app-text outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                        title={t('dice.inputs.threshold_rule')} aria-label={t('dice.inputs.threshold_rule')}
+                                        className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`}
                                     />
-                                    <button onClick={() => setTarget(target + 1)} className="px-2 hover:bg-app-surface text-app-text/60 transition-colors">+</button>
+                                    <div className="flex flex-col border-l border-app-border">
+                                        <button onClick={() => setTarget(target + 1)} className="flex-1 px-1.5 flex items-center justify-center hover:bg-app-surface-2 text-xs">+</button>
+                                        <button onClick={() => setTarget(target - 1)} className="flex-1 px-1.5 flex items-center justify-center hover:bg-app-surface-2 text-xs border-t border-app-border">-</button>
+                                    </div>
                                 </div>
                             </div>
                         )}
-
-
-
                     </div>
-                </Panneau>
+                )}
 
-                {/* Center: Dices Grid */}
-                <Panneau niveau={1} className="p-5 flex flex-col items-center justify-center min-h-[160px]">
-                    {MODES_SANS_CHOIX_DE_FACES.includes(mode) ? (
-                        <button onClick={() => handleRoll(0, mode === 'formula')} className="px-8 py-4 bg-accent hover:bg-accent/90 text-app-on-accent shadow-lg shadow-accent/20 rounded-xl text-xl font-bold uppercase tracking-widest transition-transform active:scale-95">
-                            {t('dice.actions.roll')}
-                        </button>
-                    ) : (
-                        <div className="grid grid-cols-4 lg:grid-cols-7 gap-4 w-full">
+                <div className="space-y-1.5">
+                    <label className={etiquetteDeChamp}>{t('dice.inputs.repeat')}</label>
+                    <div className={champ}>
+                        <button onClick={() => setBatchCount(Math.max(1, batchCount - 1))} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">-</button>
+                        <input
+                            type="number" value={batchCount}
+                            onChange={(e) => setBatchCount(Math.min(20, Math.max(1, parseInt(e.target.value) || 1)))}
+                            title={t('dice.inputs.repeat')} aria-label={t('dice.inputs.repeat')}
+                            className={`w-full min-w-0 bg-transparent text-center font-semibold text-app-text outline-none ${sansFleches}`}
+                        />
+                        <button onClick={() => setBatchCount(Math.min(20, batchCount + 1))} className="px-2.5 hover:bg-app-surface-2 text-app-muted transition-colors">+</button>
+                    </div>
+                </div>
+
+                {avecFaces ? (
+                    <div className="space-y-1.5">
+                        <label className={etiquetteDeChamp}>{t('dice.agencement.die')}</label>
+                        <div className="grid grid-cols-4 gap-1.5">
                             {diceTypes.map((sides) => (
                                 <button
                                     key={sides}
-                                    onClick={() => handleRoll(sides)}
-                                    className="aspect-square flex flex-col items-center justify-center gap-2 rounded-2xl bg-app-surface hover:bg-accent/90 text-app-text/70 hover:text-app-on-accent border border-app-border/80 hover:border-accent transition-all duration-300 group relative overflow-hidden shadow-lg"
+                                    onClick={() => setFaces(sides)}
+                                    aria-pressed={faces === sides}
+                                    className={`flex flex-col items-center justify-center gap-1 py-2 rounded-lg border transition-all ${faces === sides
+                                        ? 'bg-accent/20 border-accent text-accent'
+                                        : 'bg-app-bg border-app-border text-app-muted hover:border-accent/50 hover:text-app-text'}`}
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-app-text/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                     {/*
                                       ⛔ **Chemin RELATIF, et c'est tout le correctif.**
                                       Il a longtemps ete `/icons/...`, absolu depuis la
@@ -805,267 +765,351 @@ const DiceBoard: React.FC = () => {
                                       de des ne s'affichaient donc QUE en developpement.
                                       Trouve le 2026-09-12 par la traversee E2E des modules,
                                       qui tourne sur le paquet construit -- jamais en dev.
-                                  */}
-                                    <img src={`./icons/D${sides}b.png`} alt={`d${sides}`} className="w-10 h-10 object-contain relative z-10 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] group-hover:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] invert dark:invert-0" />
-                                    <span className="text-xs font-bold tracking-widest relative z-10 opacity-70 group-hover:opacity-100">d{sides}</span>
-                                    {sides === 20 && <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
+                                    */}
+                                    <img src={`./icons/D${sides}b.png`} alt="" className="w-6 h-6 object-contain invert dark:invert-0" />
+                                    <span className="text-ui-11 font-bold tracking-widest">d{sides}</span>
                                 </button>
                             ))}
                         </div>
-                    )}
-                </Panneau>
+                    </div>
+                ) : jetDuSysteme && !MODES_SANS_CHOIX_DE_FACES.includes(mode) && (
+                    <p className="text-ui-11 text-app-muted">
+                        {t('dice.agencement.game_dice')} : <span className="font-mono text-app-text">{activeDriver!.dice.defaultDice}</span>
+                    </p>
+                )}
+            </Panneau>
 
-                {/* Bottom: Quick Rolls Panel */}
-                <Panneau niveau={1} className="p-5 flex-1 flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                            <Zap className="text-accent" size={18} />
-                            <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">{t('dice.quick_rolls.title')}</h3>
+            {/* Tactical Advice Panel — il règle le modificateur : sa place est ici. */}
+            {tokens.length >= 2 && (
+                <Panneau niveau={1} className="shrink-0 p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                        <Target className="text-accent" size={16} />
+                        <h3 className="text-xs font-bold text-accent uppercase tracking-widest">{t('dice.tactical.title')}</h3>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div className="space-y-1">
+                            <label className="text-ui-10 text-app-muted uppercase">{t('dice.tactical.attacker')}</label>
+                            <select
+                                value={lastSelectedTokenId || ''}
+                                onChange={e => setLastSelectedTokenId(e.target.value)}
+                                title={t('dice.tactical.attacker')}
+                                className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
+                            >
+                                <option value="">{t('common:actions.select')}...</option>
+                                {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                            </select>
                         </div>
-                        {!isAddingQuickRoll && (
-                            <button onClick={() => setIsAddingQuickRoll(true)} className="text-xs flex items-center gap-1 text-app-text/60 hover:text-accent transition-colors bg-app-surface px-3 py-1.5 rounded-lg border border-app-border">
-                                <BookmarkPlus size={14} /> {t('dice.actions.add_quick')}
-                            </button>
+                        <div className="space-y-1">
+                            <label className="text-ui-10 text-app-muted uppercase">{t('dice.tactical.target')}</label>
+                            <select
+                                value={targetTokenId || ''}
+                                onChange={e => setTargetTokenId(e.target.value)}
+                                title={t('dice.tactical.target')}
+                                className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
+                            >
+                                <option value="">{t('common:actions.select')}...</option>
+                                {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                            </select>
+                        </div>
+                    </div>
+
+                    {lastSelectedTokenId && targetTokenId && lastSelectedTokenId !== targetTokenId && (() => {
+                        const tA = tokens.find(t => t.id === lastSelectedTokenId);
+                        const tB = tokens.find(t => t.id === targetTokenId);
+                        if (tA && tB) {
+                            const range = tacticalService.getRangeInfo(tA, tB, gridSize, activeDriver?.tactical);
+                            return (
+                                <div className="bg-app-bg/40 rounded-xl p-3 border border-accent/20 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="flex flex-col">
+                                        <span className="text-ui-10 text-accent font-bold uppercase">{t('dice.tactical.range_category', { category: range.category })}</span>
+                                        <span className="text-xs text-app-text/80">{t('dice.tactical.distance', { units: range.distanceUnits, px: Math.round(range.distancePx) })}</span>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-ui-10 text-app-muted uppercase">{t('dice.inputs.mod')}</span>
+                                        <button
+                                            onClick={() => setModifier(range.modifier)}
+                                            className="text-sm font-black text-accent hover:text-accent/80 transition-colors bg-accent/10 px-2 py-0.5 rounded border border-accent/30 flex items-center gap-1"
+                                        >
+                                            {range.modifier > 0 ? '+' : ''}{range.modifier}
+                                            <Zap size={10} />
+                                        </button>
+                                    </div>
+                                </div>
+                            );
+                        }
+                        return null;
+                    })()}
+                    {!lastSelectedTokenId || !targetTokenId ? (
+                        <div className="text-ui-10 text-app-subtle italic flex items-center gap-1.5 justify-center py-2">
+                            <Info size={12} /> {t('dice.tactical.hint')}
+                        </div>
+                    ) : lastSelectedTokenId === targetTokenId ? (
+                        <div className="text-ui-10 text-etat-danger/70 italic flex items-center gap-1.5 justify-center py-2">
+                            {t('dice.tactical.error_same')}
+                        </div>
+                    ) : null}
+                </Panneau>
+            )}
+
+            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-3">
+                <h2 className={etiquetteDeChamp}>{t('dice.agencement.display')}</h2>
+                <label className="flex items-center gap-3 cursor-pointer group">
+                    <div className="relative">
+                        <input
+                            type="checkbox"
+                            checked={enable3D}
+                            onChange={e => setEnable3D(e.target.checked)}
+                            className="sr-only peer"
+                        />
+                        <div className="w-10 h-5 bg-app-surface border border-app-border rounded-full peer peer-checked:bg-etat-succes/20 peer-checked:border-etat-succes/50 transition-all"></div>
+                        <div className="absolute left-1 top-1 w-3 h-3 bg-app-text/20 rounded-full transition-all peer-checked:translate-x-5 peer-checked:bg-etat-succes shadow-sm"></div>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold text-app-text/80 group-hover:text-app-text">{t('dice.settings.enable_3d')}</span>
+                        <span className="text-ui-10 text-app-muted">{t('dice.settings.enable_3d_desc')}</span>
+                    </div>
+                </label>
+
+                {/*
+                  ⭐ **La matière des dés appartient au meneur.** Demandé par
+                  David le 2026-09-17 : *« est-ce que je peux choisir le style ? »*.
+
+                  ⚠️ Le sélecteur ne s'affiche que si la 3D est active — *un
+                  réglage qui ne change rien à l'écran est un réglage qui fait
+                  douter du reste.*
+                */}
+                {enable3D && (
+                    <div className="flex flex-col gap-1.5">
+                        <span className="text-xs font-bold text-app-text/80">{t('dice.settings.dice_style')}</span>
+                        <div className="flex flex-wrap gap-1 p-1 rounded-lg bg-app-surface border border-app-border">
+                            {STYLES_DE_DES.map(style => (
+                                <button
+                                    key={style}
+                                    type="button"
+                                    onClick={() => setStyleDesDes(style)}
+                                    aria-pressed={styleDesDes === style}
+                                    className={`px-3 py-1 rounded-md text-ui-10 font-bold uppercase tracking-wider transition-all ${
+                                        styleDesDes === style
+                                            ? 'bg-accent/20 text-accent border border-accent/40'
+                                            : 'text-app-muted border border-transparent hover:text-app-text'
+                                    }`}
+                                >
+                                    {t(`dice.settings.styles.${style}`)}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </Panneau>
+        </>
+    );
+
+    /* ── La barre : l'action, puis les jets rapides ─────────────────────── */
+    const barreDOutils = (
+        <>
+            <Bouton
+                variante="accent"
+                aLaTable={regime.aLaTable}
+                icone={<Dices size={20} />}
+                onClick={lancer}
+                aria-label={t('dice.actions.roll')}
+                title={resumeDuJet}
+                className="px-8 text-sm"
+            >
+                <span>{t('dice.actions.roll')}</span>
+                <span className="font-mono normal-case tracking-normal opacity-80">{resumeDuJet}</span>
+            </Bouton>
+
+            <span className="mx-1 h-8 w-px bg-app-border" aria-hidden="true" />
+
+            {quickRolls.map(qr => (
+                <div key={qr.id} className="group flex items-stretch bg-app-surface border border-app-border hover:border-accent/50 rounded-lg overflow-hidden transition-all">
+                    <button
+                        onClick={() => handleQuickRoll(qr.formula, t(qr.label))}
+                        className="px-3 py-1 hover:bg-app-surface-2 transition-colors flex flex-col items-start"
+                    >
+                        <span className="text-xs font-semibold text-app-text">{t(qr.label)}</span>
+                        <span className="text-ui-11 text-accent font-mono tracking-wider">{qr.formula}</span>
+                    </button>
+                    <button onClick={() => removeQuickRoll(qr.id)} title={t('common:actions.delete') + " " + t(qr.label)} className="px-1.5 hover:bg-etat-danger/20 text-app-subtle hover:text-etat-danger transition-colors">
+                        <X size={13} />
+                    </button>
+                </div>
+            ))}
+            {quickRolls.length === 0 && !isAddingQuickRoll && <p className="text-xs text-app-muted italic">{t('dice.quick_rolls.empty')}</p>}
+
+            {isAddingQuickRoll ? (
+                <div className="flex items-center gap-2 bg-app-bg px-3 py-1.5 rounded-lg border border-accent/30">
+                    <input
+                        type="text" placeholder={t('dice.quick_rolls.placeholder_name')} value={newQuickRollLabel} onChange={(e) => setNewQuickRollLabel(e.target.value)}
+                        className="w-32 bg-transparent border-b border-app-border focus:border-accent text-sm py-0.5 outline-none text-app-text"
+                    />
+                    <input
+                        type="text" placeholder={t('dice.quick_rolls.placeholder_formula')} value={newQuickRollFormula} onChange={(e) => setNewQuickRollFormula(e.target.value)}
+                        className="w-24 bg-transparent border-b border-app-border focus:border-accent text-sm py-0.5 outline-none text-app-text font-mono"
+                    />
+                    <button onClick={addQuickRoll} className="px-3 py-1 bg-accent hover:bg-accent/90 text-app-on-accent rounded-md text-xs font-semibold transition-colors">OK</button>
+                    <button onClick={() => setIsAddingQuickRoll(false)} title="Annuler" className="px-1 text-app-muted hover:text-etat-danger transition-colors"><X size={16} /></button>
+                </div>
+            ) : (
+                <button onClick={() => setIsAddingQuickRoll(true)} title={t('dice.quick_rolls.title')} className="text-xs flex items-center gap-1 text-app-muted hover:text-accent transition-colors px-2 py-1.5 rounded-lg border border-dashed border-app-border hover:border-accent/50">
+                    <BookmarkPlus size={14} /> {t('dice.actions.add_quick')}
+                </button>
+            )}
+        </>
+    );
+
+    return (
+        <GabaritDeModule
+            aLaTable={regime.aLaTable}
+            reglagesOuverts={reglagesOuverts}
+            className="text-app-text"
+            entete={
+                <EnTeteDeModule
+                    titre={t('dice.title')}
+                    etat={<>
+                        <Etiquette ton={jetDuSysteme ? 'accent' : 'neutre'}>
+                            {jetDuSysteme ? activeDriver!.name : libelleDuMode(mode)}
+                        </Etiquette>
+                        {batchCount > 1 && <Etiquette ton="info">× {batchCount}</Etiquette>}
+                        {isDiceProjected && <Etiquette ton="accent"><Cast size={11} /> {t('dice.status.projected')}</Etiquette>}
+                    </>}
+                    actions={<>
+                        {regime.aLaTable && (
+                            <Bouton aLaTable icone={<SlidersHorizontal size={16} />} aria-pressed={reglagesOuverts} onClick={() => setReglagesOuverts(!reglagesOuverts)}>
+                                {t('dice.agencement.settings_toggle')}
+                            </Bouton>
+                        )}
+                        <Bouton aLaTable={regime.aLaTable} icone={<RotateCcw size={14} />} onClick={resetConfig} title={t('dice.reset')}>
+                            {t('dice.reset')}
+                        </Bouton>
+                    </>}
+                />
+            }
+            barreDOutils={barreDOutils}
+            reglages={reglages}
+        >
+            <div className="flex h-full min-h-0 flex-col gap-4">
+                {/* ── Le dernier jet domine ── */}
+                <Panneau niveau={2} orne className="shrink-0 p-6 flex flex-col items-center">
+                    <div className="flex w-full items-center justify-between mb-2">
+                        <h2 className={etiquetteDeChamp}>{t('dice.agencement.last_roll')}</h2>
+                        {/*
+                          **Le bouton de projection reste visible.** Défaut T5 du
+                          § 12i, tranché le 2026-09-04 : il vivait en
+                          `opacity-0 group-hover`, il fallait savoir qu'il
+                          existait. *Un geste qu'on ne peut faire qu'en le
+                          connaissant déjà n'est pas offert, il est caché.* Sans
+                          jet, il n'y a rien à projeter.
+                        */}
+                        {history.length > 0 && (
+                            <Bouton
+                                variante={isDiceProjected ? 'danger' : 'neutre'}
+                                aLaTable={regime.aLaTable}
+                                icone={isDiceProjected ? <XCircle size={16} /> : <Cast size={16} />}
+                                onClick={handleToggleProjection}
+                                title={isDiceProjected ? t('dice.status.project_stop') : t('dice.status.project_start')}
+                            >
+                                {isDiceProjected ? t('dice.agencement.stop_projection') : t('dice.agencement.project')}
+                            </Bouton>
                         )}
                     </div>
 
-                    {isAddingQuickRoll && (
-                        <div className="flex items-center gap-3 mb-4 bg-app-bg p-3 rounded-xl border border-accent/30">
-                            <input
-                                type="text" placeholder={t('dice.quick_rolls.placeholder_name')} value={newQuickRollLabel} onChange={(e) => setNewQuickRollLabel(e.target.value)}
-                                className="flex-1 bg-transparent border-b border-app-border focus:border-accent text-sm py-1 outline-none text-app-text"
-                            />
-                            <input
-                                type="text" placeholder={t('dice.quick_rolls.placeholder_formula')} value={newQuickRollFormula} onChange={(e) => setNewQuickRollFormula(e.target.value)}
-                                className="flex-1 bg-transparent border-b border-app-border focus:border-accent text-sm py-1 outline-none text-app-text"
-                            />
-                            <button onClick={addQuickRoll} className="px-4 py-1.5 bg-accent hover:bg-accent/90 text-app-on-accent rounded-lg text-xs font-semibold transition-colors">OK</button>
-                            <button onClick={() => setIsAddingQuickRoll(false)} title="Annuler" className="px-2 py-1.5 text-app-text/60 hover:text-etat-danger transition-colors"><X size={16} /></button>
-                        </div>
-                    )}
-
-                    <div className="flex flex-wrap gap-3">
-                        {quickRolls.map(qr => (
-                            <div key={qr.id} className="group flex items-center gap-px bg-app-bg/50 border border-app-border hover:border-accent/50 rounded-xl overflow-hidden transition-all shadow-md">
-                                <button
-                                    onClick={() => handleQuickRoll(qr.formula, t(qr.label))}
-                                    className="px-4 py-2 hover:bg-app-surface transition-colors flex flex-col items-start"
-                                >
-                                    <span className="text-sm font-semibold text-app-text">{t(qr.label)}</span>
-                                    <span className="text-ui-10 text-accent font-mono tracking-wider">{qr.formula}</span>
-                                </button>
-                                <button onClick={() => removeQuickRoll(qr.id)} title={t('common:actions.delete') + " " + t(qr.label)} className="px-2 self-stretch hover:bg-etat-danger/20 text-app-text/50 hover:text-etat-danger transition-colors">
-                                    <X size={14} />
-                                </button>
-                            </div>
-                        ))}
-                        {quickRolls.length === 0 && <p className="text-xs text-app-text/50 italic py-2">{t('dice.quick_rolls.empty')}</p>}
-                    </div>
-                </Panneau>
-            </div>
-
-            {/* RIGHT COLUMN: Results & History */}
-            <div className="w-[400px] flex flex-col gap-6">
-
-                {/* Tactical Advice Panel */}
-                {tokens.length >= 2 && (
-                    <div className="bg-accent/10 border border-accent/30 rounded-2xl p-4 backdrop-blur-md">
-                        <div className="flex items-center gap-2 mb-3">
-                            <Target className="text-accent" size={16} />
-                            <h3 className="text-xs font-bold text-accent uppercase tracking-widest">{t('dice.tactical.title')}</h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 mb-3">
-                            <div className="space-y-1">
-                                <label className="text-ui-10 text-app-text/40 uppercase">{t('dice.tactical.attacker')}</label>
-                                <select 
-                                    value={lastSelectedTokenId || ''} 
-                                    onChange={e => setLastSelectedTokenId(e.target.value)}
-                                    title={t('dice.tactical.attacker')}
-                                    className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
-                                >
-                                    <option value="">{t('common:actions.select')}...</option>
-                                    {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                                </select>
-                            </div>
-                            <div className="space-y-1">
-                                <label className="text-ui-10 text-app-text/40 uppercase">{t('dice.tactical.target')}</label>
-                                <select 
-                                    value={targetTokenId || ''} 
-                                    onChange={e => setTargetTokenId(e.target.value)}
-                                    title={t('dice.tactical.target')}
-                                    className="w-full bg-app-bg/50 border border-app-border rounded-lg text-xs py-1 px-2 outline-none"
-                                >
-                                    <option value="">{t('common:actions.select')}...</option>
-                                    {tokens.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                                </select>
-                            </div>
-                        </div>
-
-                        {lastSelectedTokenId && targetTokenId && lastSelectedTokenId !== targetTokenId && (() => {
-                            const tA = tokens.find(t => t.id === lastSelectedTokenId);
-                            const tB = tokens.find(t => t.id === targetTokenId);
-                            if (tA && tB) {
-                                const range = tacticalService.getRangeInfo(tA, tB, gridSize, activeDriver?.tactical);
-                                return (
-                                    <div className="bg-app-bg/40 rounded-xl p-3 border border-accent/20 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
-                                        <div className="flex flex-col">
-                                            <span className="text-ui-10 text-accent font-bold uppercase">{t('dice.tactical.range_category', { category: range.category })}</span>
-                                            <span className="text-xs text-app-text/80">{t('dice.tactical.distance', { units: range.distanceUnits, px: Math.round(range.distancePx) })}</span>
-                                        </div>
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-ui-10 text-app-text/40 uppercase">{t('dice.inputs.mod')}</span>
-                                            <button 
-                                                onClick={() => setModifier(range.modifier)}
-                                                className="text-sm font-black text-accent hover:text-accent/80 transition-colors bg-accent/10 px-2 py-0.5 rounded border border-accent/30 flex items-center gap-1"
-                                            >
-                                                {range.modifier > 0 ? '+' : ''}{range.modifier}
-                                                <Zap size={10} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                );
-                            }
-                            return null;
-                        })()}
-                        {!lastSelectedTokenId || !targetTokenId ? (
-                            <div className="text-ui-10 text-app-text/30 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
-                                <Info size={12} /> {t('dice.tactical.hint')}
-                            </div>
-                        ) : lastSelectedTokenId === targetTokenId ? (
-                            <div className="text-ui-10 text-etat-danger/50 italic flex items-center gap-1.5 justify-center py-2 h-[42px]">
-                                {t('dice.tactical.error_same')}
-                            </div>
-                        ) : null}
-                    </div>
-                )}
-
-                {/* Latest Result */}
-                <div className="min-h-[16rem] max-h-[50%] flex-shrink-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent/10 via-app-surface/60 to-app-bg border border-accent/20 rounded-2xl flex flex-col items-center justify-center p-6 relative overflow-hidden shadow-2xl backdrop-blur-xl group/result">
-                    
-                    {/*
-                      **Le bouton de projection reste visible.**
-
-                      Défaut T5 du § 12i, tranché le 2026-09-04. Il vivait en
-                      `opacity-0 group-hover/result:opacity-100` : il fallait
-                      savoir qu'il existait pour aller le survoler. *Même famille
-                      que le repli du 23/08, qui rendait des boutons
-                      introuvables.* Un geste qu'on ne peut faire qu'en le
-                      connaissant déjà n'est pas offert, il est caché.
-
-                      La condition sur l'historique reste : sans jet, il n'y a
-                      rien à projeter.
-                    */}
-                    {history.length > 0 && (
-                        <div className="absolute top-4 right-4 z-40 flex items-center gap-2">
-                            <button
-                                onClick={handleToggleProjection}
-                                title={isDiceProjected ? t('dice.status.project_stop') : t('dice.status.project_start')}
-                                className={`p-2 rounded-lg border transition-all ${
-                                    isDiceProjected 
-                                        ? 'bg-etat-danger/20 border-etat-danger/50 text-etat-danger hover:bg-etat-danger/30' 
-                                        : 'bg-accent/20 border-accent/50 text-accent hover:bg-accent/30'
-                                }`}
-                            >
-                                {isDiceProjected ? <XCircle size={18} /> : <Cast size={18} />}
-                            </button>
-                        </div>
-                    )}
-
-                    {isDiceProjected && (
-                        <div className="absolute top-4 left-4 z-40">
-                             <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-accent/10 border border-accent/30 text-ui-9 font-black text-accent uppercase tracking-widest animate-pulse">
-                                <Cast size={10} /> {t('dice.status.projected')}
-                             </span>
-                        </div>
-                    )}
-                    {history.length > 0 ? (
+                    {dernier ? (
                         <>
-                            <p className="text-app-text/70 font-medium mb-3 relative z-10 text-sm text-center line-clamp-2">{history[0].title}</p>
-                            <div className={`font-black text-app-text mb-4 z-10 drop-shadow-[0_0_15px_rgba(var(--accent-rgb),0.5)] text-center w-full px-2 break-words ${
-                                history[0].totalDisplay.length > 12 ? 'text-3xl' : 
-                                history[0].totalDisplay.length > 8 ? 'text-4xl' : 
-                                'text-5xl'
+                            <p className="text-app-muted font-medium mb-2 text-sm text-center line-clamp-2">{dernier.title}</p>
+                            <div className={`font-display font-black text-app-text mb-3 text-center w-full px-2 break-words ${
+                                dernier.totalDisplay.length > 12 ? 'text-4xl' :
+                                dernier.totalDisplay.length > 8 ? 'text-5xl' :
+                                'text-6xl'
                             }`}>
-                                {history[0].totalDisplay}
+                                {dernier.totalDisplay}
                             </div>
-                            {history[0].fateRank !== undefined && (
-                                <div className="text-xs text-accent font-bold uppercase tracking-wider mb-2 z-10">
-                                    {getFateRankLabel(history[0].fateRank, t)}
+                            {dernier.fateRank !== undefined && (
+                                <div className="text-xs text-accent font-bold uppercase tracking-wider mb-2">
+                                    {getFateRankLabel(dernier.fateRank, t)}
                                 </div>
                             )}
                             <EtiquetteDuDegre
-                                resultat={history[0]}
-                                classes={reussi => 'px-4 py-1 mb-2 rounded-full text-xs font-bold uppercase tracking-widest z-10 shadow-lg '
+                                resultat={dernier}
+                                classes={reussi => 'px-5 py-1 mb-3 rounded-full text-xs font-bold uppercase tracking-widest '
                                     + (reussi
                                         ? 'bg-etat-succes/20 text-etat-succes border border-etat-succes/50'
                                         : 'bg-etat-danger/20 text-etat-danger border border-etat-danger/50')}
                             />
-                            <div className="flex flex-wrap gap-2 mt-2 justify-center z-10 max-h-[8rem] w-full overflow-y-auto custom-scrollbar px-2 py-1">
-                                {history[0].rolls.map((r, i) => (
-                                    <span key={i} className={`w-10 h-10 flex flex-col items-center justify-center rounded-lg text-xs font-black shadow-inner relative group ${getDieCssClass(r)}`}>
-                                        {r.displayStr ? r.displayStr : r.val}
-                                        {r.source === 'gear' && <span className="absolute bottom-0 right-1 text-ui-8 opacity-40 font-bold uppercase">G</span>}
-                                        {r.source === 'base' && <span className="absolute bottom-0 right-1 text-ui-8 opacity-40 font-bold uppercase">B</span>}
-                                    </span>
+                            {/* Chaque dé, avec ce qu'il est : ses faces, et sa réserve s'il en a une. */}
+                            <div className="flex flex-wrap gap-2 justify-center max-h-[9rem] w-full overflow-y-auto custom-scrollbar px-2 py-1">
+                                {dernier.rolls.map((r, i) => (
+                                    <div key={i} className="flex flex-col items-center gap-1">
+                                        <span className={`w-12 h-12 flex items-center justify-center rounded-lg text-base font-black ${getDieCssClass(r)} ${r.isDropped ? 'opacity-40 line-through' : ''}`}>
+                                            {r.displayStr ? r.displayStr : r.val}
+                                        </span>
+                                        {(r.sides || r.source) && (
+                                            <span className="text-ui-10 text-app-subtle uppercase tracking-wider">
+                                                {r.source === 'base' ? t('dice.agencement.base') : r.source === 'gear' ? t('dice.agencement.gear') : ''}
+                                                {r.source && r.source !== 'digit' && r.sides ? ' · ' : ''}
+                                                {r.sides ? `d${r.sides}` : ''}
+                                            </span>
+                                        )}
+                                    </div>
                                 ))}
                             </div>
                         </>
                     ) : (
-                        <div className="text-center opacity-50 relative z-10">
-                            <Dices size={48} className="mx-auto mb-4 text-app-text/40" />
-                            <p className="text-app-text/50 font-medium">{t('dice.status.waiting')}</p>
+                        <div className="text-center py-6">
+                            <Dices size={44} className="mx-auto mb-3 text-app-subtle" />
+                            <p className="text-app-muted font-medium">{t('dice.status.waiting')}</p>
                         </div>
                     )}
-                </div>
+                </Panneau>
 
-                {/* History Log */}
-                <Panneau niveau={1} className="flex-1 p-5 flex flex-col">
-                    <div className="flex items-center justify-between mb-4 pb-2 border-b border-app-border">
-                        <h3 className="text-sm font-bold text-app-text/90 uppercase tracking-widest">{t('dice.history.title')}</h3>
+                {/* ── L'historique, sobre : une ligne par jet ── */}
+                <Panneau niveau={1} className="flex-1 min-h-0 p-4 flex flex-col">
+                    <div className="flex items-center justify-between mb-2 pb-2 border-b border-app-border">
+                        <h2 className={etiquetteDeChamp}>{t('dice.history.title')}</h2>
                         <button
                             onClick={clearHistory}
                             disabled={history.length === 0}
-                            className="flex items-center gap-1.5 text-xs font-medium text-app-text/50 hover:text-app-text transition-colors disabled:opacity-30"
+                            className="flex items-center gap-1.5 text-xs font-medium text-app-muted hover:text-app-text transition-colors disabled:opacity-30"
                         >
                             <RotateCcw size={12} /> {t('dice.actions.clear')}
                         </button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
+                    <ul className="flex-1 overflow-y-auto custom-scrollbar pr-1 divide-y divide-app-border/50">
                         {history.map(record => (
-                            <div key={record.id} className="flex flex-col gap-2 p-3 rounded-xl bg-app-bg/50 border border-app-border/50 hover:bg-app-bg transition-colors relative">
-                                {record.batchId && <div className="absolute left-0 top-0 bottom-0 w-1 bg-etat-info/20 rounded-l-xl"></div>}
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs text-app-text/50">{new Date(record.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
-                                    <span className="text-xs font-semibold text-accent max-w-[60%] truncate text-right">{record.title}</span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="flex flex-wrap gap-1 max-w-[60%] items-center">
-                                        {record.rolls.map((r, idx) => (
-                                            <span key={idx} className={`text-ui-10 px-1.5 py-0.5 rounded flex items-center justify-center font-bold ${getDieCssClass(r)}`}>
+                            <li key={record.id} className={`grid grid-cols-[4.5rem_minmax(0,1fr)_auto_auto] items-center gap-3 py-1.5 pl-2 ${record.batchId ? 'border-l-2 border-etat-info/40' : ''}`}>
+                                <span className="text-ui-11 font-mono text-app-subtle">
+                                    {new Date(record.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                </span>
+                                <div className="min-w-0 flex items-center gap-2">
+                                    <span className="text-xs font-semibold text-accent truncate">{record.title}</span>
+                                    <span className="flex flex-wrap gap-1 items-center">
+                                        {record.rolls.slice(0, 8).map((r, idx) => (
+                                            <span key={idx} className={`text-ui-10 px-1.5 py-0.5 rounded font-bold ${getDieCssClass(r)}`}>
                                                 {r.displayStr || r.val}
                                             </span>
                                         ))}
+                                        {record.rolls.length > 8 && <span className="text-ui-10 text-app-subtle">+{record.rolls.length - 8}</span>}
                                         {record.modifier !== 0 && (
-                                            <span className="text-ui-10 px-1.5 py-0.5 rounded bg-etat-info/20 text-etat-info font-bold ml-1">
+                                            <span className="text-ui-10 px-1.5 py-0.5 rounded bg-etat-info/20 text-etat-info font-bold">
                                                 {record.modifier > 0 ? '+' : ''}{record.modifier}
                                             </span>
                                         )}
-                                    </div>
-                                    <span className="text-lg font-black text-app-text">{record.totalDisplay}</span>
+                                    </span>
                                 </div>
+                                <span className="text-base font-black text-app-text text-right">{record.totalDisplay}</span>
                                 <EtiquetteDuDegre
                                     resultat={record}
-                                    classes={reussi => 'mt-1 text-ui-10 uppercase font-bold text-right '
+                                    classes={reussi => 'text-ui-10 uppercase font-bold text-right '
                                         + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
                                 />
-                            </div>
+                            </li>
                         ))}
-                    </div>
+                    </ul>
                 </Panneau>
             </div>
-
-        </div>
+        </GabaritDeModule>
     );
 };
 

@@ -272,6 +272,18 @@
     }
   },
   "dice": {
+    "agencement": {
+      "last_roll": "Last roll",
+      "parameters": "Roll parameters",
+      "die": "Die",
+      "game_dice": "Game dice",
+      "display": "Dice display",
+      "settings_toggle": "Settings",
+      "project": "Project",
+      "stop_projection": "Stop projecting",
+      "base": "Base",
+      "gear": "Gear"
+    },
     "title": "Dice-OS",
     "system_mode": "SYSTEM MODE: {{name}}",
     "reset": "Reset",

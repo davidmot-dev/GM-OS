@@ -138,7 +138,7 @@ describe('<EnTeteDeModule> et <GabaritDeModule>', () => {
             </GabaritDeModule>,
         );
         expect(screen.getByRole('toolbar')).not.toBeNull();
-        expect(screen.getByRole('main').textContent).toContain('Travail');
+        expect(screen.getByRole('region', { name: 'Zone de travail' }).textContent).toContain('Travail');
         expect(screen.getByRole('complementary', { name: 'Réglages' }).textContent).toContain('Réglage');
     });
 

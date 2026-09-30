@@ -31,6 +31,16 @@ function de(gmos: GmOsLance, faces: number) {
     return gmos.fenetre.locator('button').filter({ hasText: new RegExp(`^d${faces}$`) }).first();
 }
 
+/**
+ * **Choisir le dé, puis « Lancer »** — depuis le 2026-09-30, les faces
+ * choisissent le dé et ne lancent plus (phase 4, L1, étape 2) : un seul geste
+ * pour tous les modes.
+ */
+async function lancerLeDe(gmos: GmOsLance, faces: number) {
+    await de(gmos, faces).click();
+    await gmos.fenetre.getByRole('button', { name: /^Lancer$/i }).first().click();
+}
+
 interface Jet {
     total: number;
     modifier: number;
@@ -79,7 +89,7 @@ test.describe('lancer un dé', () => {
     test('un d20 rend un résultat entre 1 et 20, cinq fois de suite', async () => {
         for (let i = 0; i < 5; i++) {
             const avant = await tailleDeLHistorique(gmos);
-            await de(gmos, 20).click();
+            await lancerLeDe(gmos, 20);
             await expect.poll(() => tailleDeLHistorique(gmos), { timeout: 10_000 }).toBe(avant + 1);
 
             const jet = (await dernierJet(gmos))!;
@@ -97,7 +107,7 @@ test.describe('lancer un dé', () => {
       se voit pas à la table.
     */
     test('le total est la somme des dés et du modificateur', async () => {
-        await de(gmos, 6).click();
+        await lancerLeDe(gmos, 6);
         await expect.poll(async () => (await dernierJet(gmos))?.rolls[0].sides, { timeout: 10_000 }).toBe(6);
 
         const jet = (await dernierJet(gmos))!;
@@ -108,7 +118,7 @@ test.describe('lancer un dé', () => {
 
     test('chaque dé annonce sa formule', async () => {
         for (const faces of [4, 8, 100]) {
-            await de(gmos, faces).click();
+            await lancerLeDe(gmos, faces);
             await expect.poll(async () => (await dernierJet(gmos))?.title, { timeout: 10_000 })
                 .toBe(`1d${faces}`);
         }
@@ -121,7 +131,7 @@ test.describe('lancer un dé', () => {
       l'autre sens.
     */
     test('le résultat s’affiche', async () => {
-        await de(gmos, 12).click();
+        await lancerLeDe(gmos, 12);
         const jet = await expect.poll(async () => (await dernierJet(gmos))?.title, { timeout: 10_000 })
             .toBe('1d12')
             .then(async () => (await dernierJet(gmos))!);
@@ -133,7 +143,7 @@ test.describe('lancer un dé', () => {
 
 test.describe('l’historique', () => {
     test('garde les jets, et se vide sur demande', async () => {
-        await de(gmos, 6).click();
+        await lancerLeDe(gmos, 6);
         await expect.poll(() => tailleDeLHistorique(gmos), { timeout: 10_000 })
             .toBeGreaterThan(0);
 

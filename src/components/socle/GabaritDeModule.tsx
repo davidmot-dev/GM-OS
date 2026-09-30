@@ -43,7 +43,12 @@ export const GabaritDeModule: React.FC<GabaritDeModuleProps> = ({
                 </div>
             )}
             <div className={`flex min-h-0 flex-1 ${aLaTable ? 'gap-6' : 'gap-4'}`}>
-                <main className="min-w-0 flex-1 overflow-auto">{children}</main>
+                {/*
+                  Une section, pas un `<main>` : le module est déjà posé dans
+                  celui de l'application, et une page n'en a qu'un. Trouvé en
+                  y montant Dice-OS (P4, L1, étape 2).
+                */}
+                <section aria-label="Zone de travail" data-zone-de-travail="" className="min-w-0 flex-1 overflow-auto">{children}</section>
                 {reglagesVisibles && (
                     <aside aria-label="Réglages" className="flex w-[300px] shrink-0 flex-col gap-3 overflow-y-auto">
                         {reglages}

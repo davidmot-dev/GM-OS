@@ -118,6 +118,19 @@ describe('les dés échelonnés au pupitre, pilote actif', () => {
         expect(facesLancees()).toEqual([12, 8]);
     });
 
+    /**
+     * **L'écran dit ce qui sera lancé** (2026-09-30, trouvé en réagençant) :
+     * le pilote qui décrit des dés échelonnés ouvre le pupitre sur ce mode, avec
+     * ses lettres — pas sur « Year Zero Engine » et des champs B / E ignorés.
+     */
+    it("ouvre le pupitre sur les dés échelonnés quand le pilote en décrit", () => {
+        ouvrirLaCampagneAvec(PILOTE_QUI_SE_CONTREDIT);
+        render(<DiceBoard />);
+
+        expect((screen.getByLabelText('dice.inputs.mode') as HTMLSelectElement).value).toBe('yze-echelonne');
+        expect(screen.queryByLabelText('Attribut')).not.toBe(null);
+    });
+
     /** « Ajout d'un troisième dé de base identique au plus faible des deux. » */
     it('ajoute un dé identique au plus faible sur un avantage', () => {
         ouvrirLaCampagneAvec(PILOTE_QUI_SE_CONTREDIT);

@@ -34,6 +34,7 @@ vi.mock('../voice/useVoiceStore', () => ({
 
 const { default: DiceBoard } = await import('./DiceBoard');
 const { useSessionOSStore } = await import('../session/useSessionOSStore');
+const { useDiceStore } = await import('../../stores/useDiceStore');
 
 /*
   On passe par le **sélecteur de mode** plutôt que par un pilote monté à la
@@ -50,6 +51,8 @@ const choisirLeMode = (mode: string) => {
 
 beforeEach(() => {
     useSessionOSStore.setState({ activeCampaignId: null } as never);
+    /* Le dernier jet s'affiche avec ses faces (« d6 ») : il fausserait la recherche des boutons. */
+    useDiceStore.getState().clearHistory();
 });
 
 describe('le bouton de lancer', () => {
@@ -68,12 +71,34 @@ describe('le bouton de lancer', () => {
     });
 
     /**
-     * L'envers du garde-fou : un mode qui a bel et bien une face à choisir doit
-     * garder sa grille. Sans ce test, ranger tous les modes dans la liste
-     * ferait passer le premier.
+     * ⭐ **Un seul geste pour tous les modes** (phase 4, L1, étape 2,
+     * 2026-09-30). David : *« comment se fait-il que parfois j'ai un bouton
+     * pour lancer les dés et parfois non ? »* — les modes à faces lançaient au
+     * clic sur un dé. Ils ont désormais le bouton, eux aussi.
      */
-    it('cède la place à la grille des faces sur un mode ordinaire', () => {
+    it('existe aussi sur un mode ordinaire', () => {
         choisirLeMode('standard');
-        expect(screen.queryByText('dice.actions.roll')).toBe(null);
+        expect(screen.queryByText('dice.actions.roll')).not.toBe(null);
+    });
+
+    /**
+     * Et les faces **choisissent** le dé, elles ne lancent plus : un clic sur
+     * d6 ne doit rien ajouter à l'historique, et « Lancer » doit lancer ce d6.
+     */
+    it('lance le dé choisi, et le choix seul ne lance rien', () => {
+        choisirLeMode('standard');
+        fireEvent.click(screen.getByText('d6'));
+        expect(useDiceStore.getState().history).toHaveLength(0);
+
+        fireEvent.click(screen.getByText('dice.actions.roll'));
+        const jet = useDiceStore.getState().history[0];
+        expect(jet.rolls).toHaveLength(1);
+        expect(jet.rolls[0].sides).toBe(6);
+    });
+
+    /** L'envers : un mode dont le dé est décidé n'offre pas la rangée. */
+    it("n'offre pas les faces quand le dé est décidé", () => {
+        choisirLeMode('yze-echelonne');
+        expect(screen.queryByText('d6')).toBe(null);
     });
 });
