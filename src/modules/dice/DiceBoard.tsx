@@ -12,6 +12,7 @@ import { getFateRankLabel, getDieCssClass } from './DiceUIUtils';
 import { facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes } from './desEchelonnes';
 import { STYLES_DE_DES } from './logic/stylesDeDes';
 import { DES_D_USURE } from './desDUsure';
+import { deCourant, ecrireLeDe, ressourcesDUsure } from './ressourcesDUsure';
 import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
@@ -136,7 +137,7 @@ const DiceBoard: React.FC = () => {
         setFormulaInput('2d6+5');
     };
 
-    const { getActiveDriver } = useSessionOSStore();
+    const { getActiveDriver, players, activeCampaignId, updateCharacterSheetData } = useSessionOSStore();
     const activeDriver = getActiveDriver();
     const [useSystemDriver, setUseSystemDriver] = useState(false);
 
@@ -161,6 +162,26 @@ const DiceBoard: React.FC = () => {
     const [niveauEquipement, setNiveauEquipement] = useState('');
     const [modificateurEchelonne, setModificateurEchelonne] = useState<ModificateurDeDes>('aucun');
     const [modificateurSauvegarde, setModificateurSauvegarde] = useState<ModificateurDeSauvegarde>('aucun');
+
+    /*
+      **Le dé de ressource d'un personnage** — Cthulhu Hack, étape 4
+      (2026-09-30). Le dé courant vit sur la fiche ; le pupitre le lit, le
+      lance, et y réécrit ce qu'il devient. Sans personnage choisi, le mode
+      reste un dé libre.
+    */
+    const [personnageId, setPersonnageId] = useState('');
+    const [ressourceId, setRessourceId] = useState('');
+    const personnages = React.useMemo(
+        () => players.flatMap(joueur => joueur.characters
+            .filter(c => c.campaignId === activeCampaignId)
+            .map(c => ({ joueurId: joueur.id, personnage: c }))),
+        [players, activeCampaignId],
+    );
+    const lien = personnages.find(p => p.personnage.id === personnageId);
+    const ressourcesDuPersonnage = lien ? ressourcesDUsure(activeDriver, lien.personnage.sheetData ?? {}) : [];
+    const ressourceLiee = ressourcesDuPersonnage.find(r => r.fieldId === ressourceId);
+    const deDeLaFiche = ressourceLiee ? deCourant(lien!.personnage.sheetData?.[ressourceLiee.fieldId]) : undefined;
+    const libelleDeLaRessource = ressourceLiee ? `${ressourceLiee.label} · ${lien!.personnage.name}` : '';
 
     /**
      * La poignée telle que le pupitre la lancera — modificateur et bornes du
@@ -419,7 +440,7 @@ const DiceBoard: React.FC = () => {
                     break;
                 case 'usure':
                     result = DiceEngine.rollUsure(sides);
-                    title = t('dice.results.usure', { faces: sides });
+                    title = t('dice.results.usure', { faces: sides }) + (libelleDeLaRessource ? ` — ${libelleDeLaRessource}` : '');
                     break;
                 case 'yze-echelonne':
                     result = DiceEngine.rollYZEEchelonne(
@@ -436,7 +457,7 @@ const DiceBoard: React.FC = () => {
     }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule,
         // Sans elles, un changement de niveau ne serait pas relu : le pupitre
         // lancerait la poignée d'avant, et le résultat resterait plausible.
-        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde]);
+        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource]);
 
     const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions): RollRecord | null => {
         try {
@@ -527,7 +548,13 @@ const DiceBoard: React.FC = () => {
     */
     const jetDuSysteme = useSystemDriver && !!activeDriver;
     /* Le dé de ressource se choisit toujours, pilote ou pas : c'est lui qu'on lance. */
-    const avecFaces = mode === 'usure' || (!MODES_SANS_CHOIX_DE_FACES.includes(mode) && !jetDuSysteme);
+    /*
+      Le dé d'une ressource liée se lit sur la fiche : la rangée ne s'offre que
+      si la fiche ne dit rien de lisible — le premier jet l'y écrira.
+    */
+    const deLuSurLaFiche = mode === 'usure' && ressourceLiee !== undefined && deDeLaFiche !== undefined;
+    const avecFaces = (mode === 'usure' && !deLuSurLaFiche) || (!MODES_SANS_CHOIX_DE_FACES.includes(mode) && !jetDuSysteme);
+    const ressourceEpuisee = deLuSurLaFiche && deDeLaFiche === null;
     const facesOffertes: readonly number[] = mode === 'usure' ? DES_D_USURE : diceTypes;
     const valeurDuModificateur = typeof modifier === 'number' ? modifier : (parseInt(String(modifier).replace('+', ''), 10) || 0);
     const avecLeModificateur = (des: string) => valeurDuModificateur === 0
@@ -539,7 +566,7 @@ const DiceBoard: React.FC = () => {
     /** Ce que « Lancer » va lancer, écrit à côté du bouton. */
     const resumeDuJet = mode === 'formula' ? formulaInput
         : echelonne ? libelleDeLaPoignee
-        : mode === 'usure' ? `d${faces}`
+        : mode === 'usure' ? (ressourceEpuisee ? 'épuisée' : `d${faces}`) + (ressourceLiee ? ` · ${ressourceLiee.label}` : '')
         : mode === 'sauvegarde' ? avecLeModificateur(`d20 ≤ ${target}`) + (modificateurSauvegarde === 'avantage' ? ' · avantage' : modificateurSauvegarde === 'desavantage' ? ' · désavantage' : '')
         : mode === 'yze' ? `${diceCount}B + ${gearCount}E`
         : mode === 'fate' ? avecLeModificateur(`${diceCount}dF`)
@@ -554,12 +581,21 @@ const DiceBoard: React.FC = () => {
       décider de la suite.
     */
     const lancer = () => {
-        const jet = handleRoll(avecFaces ? faces : 0, mode === 'formula');
+        /* En mode ressource, le dé part toujours — lu sur la fiche, la rangée est masquée. */
+        const jet = handleRoll(avecFaces || mode === 'usure' ? faces : 0, mode === 'formula');
         if (mode === 'usure' && jet?.usure?.apres) setFaces(jet.usure.apres);
+        /* La fiche garde la vérité : on y réécrit le dé qu'est devenue la ressource. */
+        if (mode === 'usure' && jet?.usure && lien && ressourceLiee && jet.usure.apres !== deDeLaFiche) {
+            updateCharacterSheetData(lien.joueurId, lien.personnage.id, ressourceLiee.fieldId, ecrireLeDe(jet.usure.apres));
+        }
     };
     React.useEffect(() => {
         if (mode === 'usure' && !(DES_D_USURE as readonly number[]).includes(faces)) setFaces(12);
     }, [mode, faces]);
+    /* Le dé d'une ressource liée suit la fiche. */
+    React.useEffect(() => {
+        if (typeof deDeLaFiche === 'number') setFaces(deDeLaFiche);
+    }, [deDeLaFiche]);
 
     const libelleDuMode = (m: DiceMode) => m === 'yze-echelonne' ? 'Year Zero — dés échelonnés' : t(`dice.modes.${m}`);
     const etiquetteDeChamp = 'text-ui-11 font-semibold text-app-muted uppercase tracking-widest';
@@ -688,8 +724,55 @@ const DiceBoard: React.FC = () => {
                         </div>
                     </div>
                 ) : mode === 'usure' ? (
-                    /* Le dé de ressource n'a que son dé : la rangée ci-dessous. */
-                    <p className="text-ui-11 text-app-muted">{t('dice.agencement.usureAide')}</p>
+                    <div className="space-y-3">
+                        <p className="text-ui-11 text-app-muted">{t('dice.agencement.usureAide')}</p>
+                        {personnages.length > 0 && (
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{t('dice.agencement.personnage')}</label>
+                                <select
+                                    value={personnageId}
+                                    onChange={e => { setPersonnageId(e.target.value); setRessourceId(''); }}
+                                    aria-label={t('dice.agencement.personnage')}
+                                    className="w-full bg-app-bg border border-app-border rounded-lg py-2 px-3 text-sm text-app-text focus:outline-none focus:border-accent"
+                                >
+                                    <option value="">{t('dice.agencement.deLibre')}</option>
+                                    {personnages.map(({ personnage }) => (
+                                        <option key={personnage.id} value={personnage.id}>{personnage.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        {lien && (ressourcesDuPersonnage.length > 0 ? (
+                            <div className="space-y-1.5">
+                                <label className={etiquetteDeChamp}>{t('dice.agencement.ressource')}</label>
+                                <div className="grid grid-cols-2 gap-1.5">
+                                    {ressourcesDuPersonnage.map(r => {
+                                        const de = deCourant(lien.personnage.sheetData?.[r.fieldId]);
+                                        return (
+                                            <button
+                                                key={r.fieldId}
+                                                onClick={() => setRessourceId(r.fieldId)}
+                                                aria-pressed={ressourceId === r.fieldId}
+                                                className={`flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg border text-left transition-all ${ressourceId === r.fieldId
+                                                    ? 'bg-accent/20 border-accent text-accent'
+                                                    : 'bg-app-bg border-app-border text-app-text hover:border-accent/50'}`}
+                                            >
+                                                <span className="truncate text-xs font-semibold">{r.label}</span>
+                                                <span className={`shrink-0 font-mono text-xs ${de === null ? 'text-etat-danger' : 'text-app-muted'}`}>
+                                                    {de === null ? t('dice.agencement.epuisee') : de ? `d${de}` : '—'}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                {ressourceEpuisee && (
+                                    <p className="text-ui-11 text-etat-danger">{t('dice.agencement.ressourceEpuisee')}</p>
+                                )}
+                            </div>
+                        ) : (
+                            <p className="text-ui-11 text-app-muted italic">{t('dice.agencement.aucuneRessource')}</p>
+                        ))}
+                    </div>
                 ) : mode === 'yze-echelonne' ? (
                     /*
                       **Le meneur nomme les niveaux ; l'échelle reste dans
@@ -890,7 +973,7 @@ const DiceBoard: React.FC = () => {
                             ))}
                         </div>
                     </div>
-                ) : jetDuSysteme && !MODES_SANS_CHOIX_DE_FACES.includes(mode) && (
+                ) : jetDuSysteme && !MODES_SANS_CHOIX_DE_FACES.includes(mode) && mode !== 'usure' && (
                     <p className="text-ui-11 text-app-muted">
                         {t('dice.agencement.game_dice')} : <span className="font-mono text-app-text">{activeDriver!.dice.defaultDice}</span>
                     </p>
@@ -1030,6 +1113,8 @@ const DiceBoard: React.FC = () => {
                 aLaTable={regime.aLaTable}
                 icone={<Dices size={20} />}
                 onClick={lancer}
+                /* Une ressource épuisée ne se lance plus : elle se regagne. */
+                disabled={ressourceEpuisee}
                 aria-label={t('dice.actions.roll')}
                 title={resumeDuJet}
                 className="px-8 text-sm"

@@ -282,6 +282,12 @@
   },
   "dice": {
     "agencement": {
+      "personnage": "Personnage",
+      "deLibre": "— Dé libre —",
+      "ressource": "Ressource",
+      "epuisee": "épuisée",
+      "ressourceEpuisee": "Ressource épuisée : elle se regagne (repos, achat) avant de se relancer. Corrigez la fiche pour la rendre.",
+      "aucuneRessource": "Aucune ressource à dé d'usure sur cette fiche (un champ qui porte « d8 », par exemple).",
       "normal": "Normal",
       "avantage": "Avantage",
       "desavantage": "Désavantage",

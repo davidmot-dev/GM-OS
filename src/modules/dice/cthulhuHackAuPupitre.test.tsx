@@ -138,3 +138,56 @@ describe('la Sauvegarde', () => {
         expect(reglages().queryByText('d6')).toBe(null);
     });
 });
+
+/**
+ * **Étape 4 : le dé de chaque ressource, sur la fiche** (2026-09-30). Le
+ * pilote de David ne déclare pas `desDUsure` : ses ressources se reconnaissent
+ * à ce qu'il les suit en combat et que leur champ porte un dé.
+ */
+describe('le dé de ressource d’un personnage', () => {
+    const ouvrirMilo = (fiche: Record<string, unknown>) => {
+        useSessionOSStore.setState({
+            activeCampaignId: 'c-1',
+            campaigns: [{ id: 'c-1', name: 'Le Secret de Milo', system: 'ch-test' }],
+            customGameDrivers: [{
+                id: 'ch-test', name: 'Cthulhu Hack',
+                dice: { defaultDice: '1d20', logic: 'count-success', engine: 'standard' },
+                jet: { sens: 'sous-ou-egal', reserve: { base: 1, max: 1, faces: 20 } },
+                combat: { statsToTrack: [
+                    { fieldId: 'mentalHealth', label: 'Santé Mentale', isMainHP: false, isResource: true },
+                    { fieldId: 'torche', label: 'Torche', isMainHP: false, isResource: true },
+                ] },
+            }],
+            players: [{ id: 'j1', realName: 'Joueuse', avatarUrl: '', isOnline: false, characters: [
+                { id: 'p1', name: 'Milo', campaignId: 'c-1', templateId: 't', portraitUrl: '', sheetData: fiche },
+            ] }],
+        } as never);
+        render(<DiceBoard />);
+        choisirLeMode('usure');
+        fireEvent.change(screen.getByLabelText('dice.agencement.personnage'), { target: { value: 'p1' } });
+    };
+    const ficheDeMilo = () => (useSessionOSStore.getState() as never as { players: { characters: { sheetData: Record<string, unknown> }[] }[] })
+        .players[0].characters[0].sheetData;
+
+    it('lit le dé sur la fiche, le lance, et y réécrit ce qu’il devient', () => {
+        ouvrirMilo({ torche: 'd8', mentalHealth: 'd4' });
+        fireEvent.click(reglages().getByText('Torche'));
+
+        tirer(2);
+        lancer();
+
+        expect(dernierJet().usure).toEqual({ avant: 8, apres: 6 });
+        expect(ficheDeMilo().torche).toBe('d6');
+    });
+
+    it('écrit l’épuisement, et ne relance plus une ressource épuisée', () => {
+        ouvrirMilo({ torche: 'd8', mentalHealth: 'd4' });
+        fireEvent.click(reglages().getByText('Santé Mentale'));
+
+        tirer(1);
+        lancer();
+
+        expect(ficheDeMilo().mentalHealth).toBe('Épuisée');
+        expect(screen.getByText('dice.actions.roll').closest('button')!.hasAttribute('disabled')).toBe(true);
+    });
+});

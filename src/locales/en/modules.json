@@ -282,6 +282,12 @@
   },
   "dice": {
     "agencement": {
+      "personnage": "Character",
+      "deLibre": "— Free die —",
+      "ressource": "Resource",
+      "epuisee": "exhausted",
+      "ressourceEpuisee": "Exhausted resource: it must be regained (rest, purchase) before rolling again. Edit the sheet to restore it.",
+      "aucuneRessource": "No usage-die resource on this sheet (a field holding “d8”, for instance).",
       "normal": "Normal",
       "avantage": "Advantage",
       "desavantage": "Disadvantage",
