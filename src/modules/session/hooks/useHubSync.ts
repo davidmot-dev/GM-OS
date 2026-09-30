@@ -620,6 +620,12 @@ export const useHubSync = () => {
               meneur qui lit la fiche et lance. Voir `ficheActions.ts`.
             */
             'fiche:jet',
+            /*
+              **Le résultat d'un jet lancé ici** (2026-09-30) : la tablette l'a
+              déjà affiché ; il ne reste qu'à le dire au meneur, pour son écran
+              et son journal.
+            */
+            'fiche:resultat',
         ] as const;
 
         const acheminer = (e: Event) => {

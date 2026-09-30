@@ -1,5 +1,10 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+
+const consigner = vi.fn();
+vi.mock('../../../journal/consignerLeJet', () => ({ consignerLeJet: (...a: unknown[]) => consigner(...a) }));
+beforeEach(() => consigner.mockClear());
+afterEach(() => cleanup());
 import PanneauDeJet from './PanneauDeJet';
 import type { DescripteurDeJet } from '../../../dice/DescripteurDeJet';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
@@ -102,5 +107,53 @@ describe('le menu des composantes', () => {
         );
 
         expect(screen.getByRole('option', { name: 'Mêlée (7)' })).toBeTruthy();
+    });
+});
+
+/**
+ * **Le jet de la tablette remonte au meneur** — demandé par David le
+ * 2026-09-30 : il ne voyait pas les jets de ses joueurs, et le journal non
+ * plus. Sur la tablette, le panneau envoie son résultat (`fiche:resultat`) ;
+ * chez le meneur, il le consigne lui-même, comme avant.
+ */
+describe('le jet lancé sur la tablette', () => {
+    const lancerLeCombat = (props: Record<string, unknown>) => {
+        render(
+            <PanneauDeJet
+                descripteur={jetAvec('competences')}
+                dice={DICE} template={FICHE_SIMPLE} valeurs={{ combat: 6 }}
+                {...props}
+            />,
+        );
+        fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'combat' } });
+        fireEvent.click(screen.getByText('Lancer', { exact: true }));
+    };
+
+    it('envoie son résultat au meneur, au nom du personnage qui lance', () => {
+        const recus: Record<string, unknown>[] = [];
+        const ecouter = (e: Event) => recus.push((e as CustomEvent).detail);
+        window.addEventListener('fiche:resultat', ecouter);
+        try {
+            lancerLeCombat({ pourLesJoueurs: true, personnageId: 'p1' });
+        } finally {
+            window.removeEventListener('fiche:resultat', ecouter);
+        }
+        expect(recus).toHaveLength(1);
+        expect(recus[0]).toMatchObject({ characterId: 'p1', titre: 'Compétence' });
+        expect(String(recus[0].totalDisplay)).toContain('(seuil 6)');
+        expect(consigner).not.toHaveBeenCalled();
+    });
+
+    it('chez le meneur, consigne lui-même et n’envoie rien', () => {
+        const recus: unknown[] = [];
+        const ecouter = (e: Event) => recus.push(e);
+        window.addEventListener('fiche:resultat', ecouter);
+        try {
+            lancerLeCombat({});
+        } finally {
+            window.removeEventListener('fiche:resultat', ecouter);
+        }
+        expect(recus).toHaveLength(0);
+        expect(consigner).toHaveBeenCalledTimes(1);
     });
 });

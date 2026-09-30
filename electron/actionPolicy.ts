@@ -108,6 +108,13 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
       l'empêche de lancer pour le personnage d'un autre.
     */
     'fiche:jet',
+    /*
+      **Le résultat d'un jet lancé sur la tablette** — demandé par David le
+      2026-09-30 : les jets des joueurs n'atteignaient ni son écran ni le
+      journal. Le meneur relit la forme du message et signe du nom qu'il
+      connaît ; le contrôle de propriété empêche d'envoyer au nom d'un autre.
+    */
+    'fiche:resultat',
 ]);
 
 /** Rôles qui peuvent tout déclencher — ceux qui ont présenté le secret d'appairage. */
@@ -142,6 +149,8 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     'deck:refuser-don': 'characterId',
     // Un joueur ne lance que pour lui : ni les Sauvegardes, ni la Torche d'un autre.
     'fiche:jet': 'characterId',
+    // Un joueur n'envoie que SES jets : pas de résultat au nom d'un autre.
+    'fiche:resultat': 'characterId',
 };
 
 export type DenialReason = 'role' | 'ownership';

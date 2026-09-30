@@ -4,6 +4,7 @@ import { piloteDuPersonnage } from '../../session/logic/piloteDuPersonnage';
 import { resolveSheetTemplate } from '../../session/logic/templateResolver';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { resoudreLeJetDeFiche, type DemandeDeJetDeFiche } from '../../dice/jetDepuisLaFiche';
+import { lireLeResultatDeLaTablette } from '../../dice/resultatVenuDeLaTablette';
 import type { ActionRegistry } from './types';
 
 /**
@@ -58,6 +59,35 @@ const jetDeFiche = (payload: unknown) => {
     });
 };
 
+/**
+ * **Un jet lancé sur la tablette, qui remonte au meneur** — demandé par David
+ * le 2026-09-30 : *« que je les voie, et qu'ils soient pris en compte dans le
+ * journal »*.
+ *
+ * Le panneau de jet de la fiche garde sa mécanique chez le joueur (composantes,
+ * dés achetés, réserve commune) et envoie son résultat. On le relit champ par
+ * champ (`lireLeResultatDeLaTablette`), et **le nom vient du magasin**, jamais
+ * du message : un joueur ne signe pas au nom d'un autre — `actionPolicy` a déjà
+ * refusé qu'il parle pour un personnage qui n'est pas le sien.
+ */
+const resultatDeFiche = (payload: unknown) => {
+    const lu = lireLeResultatDeLaTablette(payload);
+    if (!lu) return;
+    const personnage = useSessionOSStore.getState().players
+        .flatMap(p => p.characters)
+        .find(c => c.id === lu.characterId);
+    if (!personnage) return;
+
+    /* L'historique de Dice-OS et le journal de séance, au goulot de `setLastRoll`. */
+    useDiceStore.getState().setLastRoll({
+        ...lu.resultat,
+        id: Math.random().toString(36).substring(2, 9),
+        timestamp: new Date(),
+        title: `${personnage.name} — ${lu.titre}`,
+    });
+};
+
 export const ficheActions: ActionRegistry = {
     'fiche:jet': jetDeFiche,
+    'fiche:resultat': resultatDeFiche,
 };

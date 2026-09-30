@@ -53,10 +53,16 @@ interface PanneauDeJetProps {
      * de rester dans la fenêtre où elle a été faite.
      */
     pourLesJoueurs?: boolean;
+    /**
+     * Le personnage qui lance, sur la tablette : son jet **remonte au meneur**
+     * (`fiche:resultat`) au lieu de s'écrire dans le journal de la tablette,
+     * que personne ne lit (demandé par David le 2026-09-30).
+     */
+    personnageId?: string;
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
-    descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false,
+    descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
 }) => {
     /** Champ retenu pour chaque composante — `{ competence: 'combat' }`. */
     const [choix, setChoix] = useState<Record<string, string>>({});
@@ -350,17 +356,45 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           joueurs — un changement de comportement que ce chantier n'a pas à
           faire. On appelle donc le même décideur, par l'autre porte.
         */
-        consignerLeJet({
-            titre: jet.composantes.length > 0
-                ? jet.composantes.map(c => c.label).join(' + ')
-                : jet.desEchelonnes.length > 0
-                    ? jet.desEchelonnes.map(d => `${d.label} D${d.faces}`).join(' + ')
-                    : `${jet.nombreDeDes}d${jet.faces}`,
-            totalDisplay: res.totalDisplay,
-            degre: res.degre,
-            tagSuccess: res.tagSuccess,
-            seuil: descripteur.cible || jet.composantes.length > 0 ? jet.seuil : undefined,
-        });
+        const titreDuJet = jet.composantes.length > 0
+            ? jet.composantes.map(c => c.label).join(' + ')
+            : jet.desEchelonnes.length > 0
+                ? jet.desEchelonnes.map(d => `${d.label} D${d.faces}`).join(' + ')
+                : `${jet.nombreDeDes}d${jet.faces}`;
+        /*
+          ⛔ **Sur la tablette, le jet restait chez le joueur** (David,
+          2026-09-30 : *« je voudrais que les jets des tablettes remontent vers
+          GM-OS pour que je les voie et pour qu'ils soient pris en compte dans le
+          journal »*). `consignerLeJet` écrivait dans le journal de la TABLETTE —
+          un journal que personne ne lit. Le résultat part donc au meneur, qui
+          l'inscrit à son historique et à son journal (`fiche:resultat`).
+        */
+        if (pourLesJoueurs && personnageId) {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+                detail: {
+                    characterId: personnageId,
+                    titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${LIBELLES[modificateur]}` : ''),
+                    total: res.total,
+                    modifier: res.modifier,
+                    /* Le seuil voyage avec le total, comme le journal l'écrit ici. */
+                    totalDisplay: descripteur.cible || jet.composantes.length > 0
+                        ? `${res.totalDisplay} (seuil ${jet.seuil})`
+                        : res.totalDisplay,
+                    rolls: res.rolls,
+                    successes: res.successes,
+                    tagSuccess: res.tagSuccess,
+                    degre: res.degre,
+                },
+            }));
+        } else {
+            consignerLeJet({
+                titre: titreDuJet,
+                totalDisplay: res.totalDisplay,
+                degre: res.degre,
+                tagSuccess: res.tagSuccess,
+                seuil: descripteur.cible || jet.composantes.length > 0 ? jet.seuil : undefined,
+            });
+        }
 
         /**
          * « Après la résolution d'un test réussi, chaque réussite excédentaire

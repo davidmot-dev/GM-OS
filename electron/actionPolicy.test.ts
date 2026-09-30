@@ -184,6 +184,8 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'deck:refuser-don',
             // Lancer depuis sa fiche — ajouté le 2026-09-30 (Cthulhu Hack).
             'fiche:jet',
+            // Le résultat d'un jet de tablette, qui remonte — 2026-09-30.
+            'fiche:resultat',
             'remote:request-sync',
             'session:remove-inventory-item',
             'session:request-item-transfer',
@@ -224,6 +226,13 @@ describe('evaluateAction — lancer depuis sa fiche', () => {
     it('laisse un joueur lancer pour SON personnage, et seulement le sien', () => {
         expect(evaluateAction('fiche:jet', { characterId: CHAR, genre: 'ressource', champ: 'torche' }, 'player', CHAR).allowed).toBe(true);
         const verdict = evaluateAction('fiche:jet', { characterId: 'char-d-un-autre', genre: 'ressource', champ: 'torche' }, 'player', CHAR);
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    it('laisse un joueur envoyer SES résultats, et seulement les siens', () => {
+        expect(evaluateAction('fiche:resultat', { characterId: CHAR, titre: 'x', totalDisplay: '3' }, 'player', CHAR).allowed).toBe(true);
+        const verdict = evaluateAction('fiche:resultat', { characterId: 'char-d-un-autre', titre: 'x', totalDisplay: '3' }, 'player', CHAR);
         expect(verdict.allowed).toBe(false);
         expect(verdict.reason).toBe('ownership');
     });

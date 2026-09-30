@@ -84,3 +84,31 @@ describe('un jet demandé depuis la fiche', () => {
         expect(ficheDeDan().torche).toBe('D8');
     });
 });
+
+/**
+ * **Le jet de la tablette entre au journal de séance** — demandé par David le
+ * 2026-09-30. Hors séance, le journal n'inscrit rien, ni ce jet ni ceux du
+ * meneur : c'est `addEvent` qui en décide, pour tous.
+ */
+describe('un résultat lancé sur la tablette', () => {
+    it('entre à l’historique et au journal de la séance, au nom que le meneur connaît', async () => {
+        const { useJournalStore } = await import('../../journal/useJournalStore');
+        useJournalStore.getState().startJournal({ id: 'c-1', nom: 'Le Secret de Milo' } as never, 'Séance 3');
+
+        ficheActions['fiche:resultat']({
+            characterId: 'p1', titre: 'Force', totalDisplay: '7 (seuil 13)',
+            total: 7, rolls: [{ val: 7, sides: 20 }], tagSuccess: true, degre: 'reussite-normale',
+        }, {} as never);
+
+        expect(useDiceStore.getState().history[0].title).toBe('Dan — Force');
+        const journal = useJournalStore.getState().journals.find(j => j.id === useJournalStore.getState().activeJournalId)!;
+        const des = journal.events.filter(e => e.type === 'DICE');
+        expect(des.map(e => e.title)).toEqual(['Jet : Dan — Force']);
+        expect(des[0].content).toContain('7 (seuil 13)');
+    });
+
+    it('ignore un résultat pour un personnage que le meneur ne connaît pas', () => {
+        ficheActions['fiche:resultat']({ characterId: 'inconnu', titre: 'Faux', totalDisplay: '20' }, {} as never);
+        expect(useDiceStore.getState().history).toHaveLength(0);
+    });
+});

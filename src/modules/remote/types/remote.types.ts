@@ -258,6 +258,8 @@ export type RemoteActionType =
     | 'session:update-character-sheet-data'
     /** Un joueur lance depuis sa fiche : il dit quoi, le meneur lance (2026-09-30). */
     | 'fiche:jet'
+    /** Le résultat d'un jet lancé sur la tablette, qui remonte au meneur (2026-09-30). */
+    | 'fiche:resultat'
     | 'session:send-message'
     /** Le meneur parle depuis sa tablette — inscrit chez lui **et** diffusé aux joueurs. */
     | 'remote:session:gm-message'

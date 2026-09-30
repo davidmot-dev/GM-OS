@@ -81,6 +81,8 @@ const EXPECTED_TYPES = [
       fiche qu'il détient et lance. Voir `ficheActions.ts`.
     */
     'fiche:jet',
+    // Le résultat d'un jet lancé sur la tablette, qui remonte au meneur (2026-09-30).
+    'fiche:resultat',
 ];
 
 describe('actionRegistry', () => {

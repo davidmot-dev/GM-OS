@@ -319,6 +319,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 campaignId={campaignId ?? undefined}
                                 ressourcesDeTable={pilote.ressourcesDeTable}
                                 pourLesJoueurs
+                                personnageId={character.id}
                             />
                         )}
 
