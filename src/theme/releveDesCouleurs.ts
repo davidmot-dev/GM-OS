@@ -68,6 +68,7 @@ export function lieuDuFichier(relatifASrc: string): string {
 export const PALETTES_DE_CONTENU: Readonly<Record<string, string>> = {
     'modules/music/logic/couleursDePastille.ts': 'les huit teintes que le meneur donne à une pastille',
     'modules/light/logic/catalogueDesEffets.ts': 'la couleur de chaque effet de lumière, celle de la lampe',
+    'modules/remote/components/RemoteWhiteboardView.tsx': 'le papier du tableau blanc sur la tablette, clair ou sombre au choix, indépendant du thème',
     'modules/clock/components/ClockVisualizer.tsx': 'la matière des trois cadrans dessinés (laiton, néon, moderne), que le meneur choisit',
 };
 

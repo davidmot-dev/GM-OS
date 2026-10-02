@@ -34,9 +34,9 @@ const LigneDeVolume: React.FC<{
     const choisie = sortieChoisie(reglages, voie);
 
     return (
-        <div className="relative flex items-center gap-2 px-3 h-11 rounded-xl bg-white/[0.03] border border-white/5">
-            <span className="shrink-0 text-slate-500">{icone}</span>
-            <span className="shrink-0 w-20 text-ui-10 font-black uppercase tracking-wider text-slate-500">
+        <div className="relative flex items-center gap-2 px-3 h-11 rounded-xl bg-app-text/[0.03] border border-app-text/5">
+            <span className="shrink-0 text-app-muted">{icone}</span>
+            <span className="shrink-0 w-20 text-ui-10 font-black uppercase tracking-wider text-app-muted">
                 {LIBELLE_DE_LA_VOIE[voie]}
             </span>
 
@@ -47,7 +47,7 @@ const LigneDeVolume: React.FC<{
                 step="0.01"
                 value={volume}
                 onChange={(e) => onVolume(parseFloat(e.target.value))}
-                className="flex-1 min-w-0 h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-accent"
+                className="flex-1 min-w-0 h-1.5 bg-app-bg/40 rounded-lg appearance-none cursor-pointer accent-accent"
                 title={`Volume — ${LIBELLE_DE_LA_VOIE[voie]}`}
                 aria-label={`Volume — ${LIBELLE_DE_LA_VOIE[voie]}`}
             />
@@ -68,8 +68,8 @@ const LigneDeVolume: React.FC<{
                     : `Sort sur : ${choisie.nom}`}
                 className={`shrink-0 flex items-center gap-1 max-w-[9rem] px-2 py-1.5 rounded-lg border text-ui-10 font-bold transition-colors ${
                     choisie.absente
-                        ? 'border-amber-500/40 bg-amber-500/10 text-amber-300'
-                        : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/25'
+                        ? 'border-etat-alerte/40 bg-etat-alerte/10 text-etat-alerte'
+                        : 'border-app-text/10 bg-app-text/[0.03] text-app-text hover:border-app-text/25'
                 }`}
             >
                 {choisie.absente && <AlertTriangle size={11} className="shrink-0" />}
@@ -89,7 +89,7 @@ const LigneDeVolume: React.FC<{
                     <div
                         role="menu"
                         aria-label={`Sorties disponibles — ${LIBELLE_DE_LA_VOIE[voie]}`}
-                        className="absolute right-0 top-12 z-50 w-64 max-h-64 overflow-y-auto rounded-xl border border-white/10 bg-[#0b1220] shadow-2xl p-1"
+                        className="absolute right-0 top-12 z-50 w-64 max-h-64 overflow-y-auto rounded-xl border border-app-text/10 bg-app-bg shadow-2xl p-1"
                     >
                         {reglages.sorties.map(sortie => (
                             <button
@@ -98,8 +98,8 @@ const LigneDeVolume: React.FC<{
                                 onClick={() => { onSortie(sortie.id); setMenuOuvert(false); }}
                                 className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left text-ui-11 font-bold transition-colors ${
                                     sortie.id === choisie.id
-                                        ? 'bg-accent/20 text-white'
-                                        : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'
+                                        ? 'bg-accent/20 text-app-text'
+                                        : 'text-app-muted hover:bg-app-text/5 hover:text-app-text'
                                 }`}
                             >
                                 <span className="min-w-0 truncate">{sortie.nom}</span>
@@ -107,7 +107,7 @@ const LigneDeVolume: React.FC<{
                             </button>
                         ))}
                         {reglages.sorties.length <= 1 && (
-                            <p className="px-3 py-2 text-ui-10 italic text-slate-600">
+                            <p className="px-3 py-2 text-ui-10 italic text-app-subtle">
                                 Aucune autre sortie recensée sur la machine du meneur.
                             </p>
                         )}

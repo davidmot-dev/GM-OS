@@ -42,10 +42,10 @@ const aplati = (texte: string) =>
 
 /** Ce que chaque état de scène dit, et de quelle couleur. */
 const ETATS = {
-    'en-cours': { mot: 'En cours', teinte: 'text-emerald-400 border-emerald-500/40' },
-    'en-pause': { mot: 'En pause', teinte: 'text-amber-400 border-amber-500/40' },
-    'prevue': { mot: 'À jouer', teinte: 'text-slate-400 border-white/10' },
-    'terminee': { mot: 'Close', teinte: 'text-slate-600 border-white/5' },
+    'en-cours': { mot: 'En cours', teinte: 'text-etat-succes border-etat-succes/40' },
+    'en-pause': { mot: 'En pause', teinte: 'text-etat-alerte border-etat-alerte/40' },
+    'prevue': { mot: 'À jouer', teinte: 'text-app-muted border-app-text/10' },
+    'terminee': { mot: 'Close', teinte: 'text-app-subtle border-app-text/5' },
 } as const;
 
 /** Une scène en une ligne : titre et état, le reste au déplié. */
@@ -54,7 +54,7 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
 }) => {
     const etat = ETATS[scene.etat];
     return (
-        <div className={`rounded-lg border ${scene.etat === 'en-cours' ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-white/5 bg-white/[0.02]'}`}>
+        <div className={`rounded-lg border ${scene.etat === 'en-cours' ? 'border-etat-succes/40 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
             <button
                 onClick={basculer}
                 title={infobulle(infobulleDeLImportance(scene.importance))}
@@ -74,7 +74,7 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
                 <span className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${etat.teinte}`}>
                     {etat.mot}
                 </span>
-                <span className={`flex-1 min-w-0 text-xs font-bold truncate ${styleDuTitre(scene.importance)} ${scene.etat === 'terminee' ? 'text-slate-600 line-through' : 'text-slate-200'}`}>
+                <span className={`flex-1 min-w-0 text-xs font-bold truncate ${styleDuTitre(scene.importance)} ${scene.etat === 'terminee' ? 'text-app-subtle line-through' : 'text-app-text'}`}>
                     {scene.titre}
                 </span>
                 {/*
@@ -83,19 +83,19 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
                   cette distinction — la tablette la garde.
                 */}
                 {scene.jamaisJouee && (
-                    <span className="shrink-0 text-ui-9 italic text-slate-600">jamais jouée</span>
+                    <span className="shrink-0 text-ui-9 italic text-app-subtle">jamais jouée</span>
                 )}
             </button>
             {ouverte && (
                 <div className="px-2.5 pb-2.5 flex flex-col gap-1.5">
-                    {scene.resume && <p className="text-ui-11 leading-relaxed text-slate-400">{scene.resume}</p>}
+                    {scene.resume && <p className="text-ui-11 leading-relaxed text-app-muted">{scene.resume}</p>}
                     {scene.notesDuMeneur && (
-                        <p className="text-ui-11 leading-relaxed text-amber-400/80 border-l-2 border-amber-500/30 pl-2 whitespace-pre-wrap">
+                        <p className="text-ui-11 leading-relaxed text-etat-alerte/80 border-l-2 border-etat-alerte/30 pl-2 whitespace-pre-wrap">
                             {scene.notesDuMeneur}
                         </p>
                     )}
                     {!scene.resume && !scene.notesDuMeneur && scene.suites.length === 0 && (
-                        <p className="text-ui-11 italic text-slate-600">Rien d'écrit sur cette scène.</p>
+                        <p className="text-ui-11 italic text-app-subtle">Rien d'écrit sur cette scène.</p>
                     )}
 
                     {/*
@@ -104,14 +104,14 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
                       vivait sur l'écran du PC, c'est-à-dire hors de portée.
                     */}
                     {scene.suites.length > 0 && (
-                        <div className="flex flex-col gap-1 pt-1 border-t border-white/5">
-                            <span className="text-ui-9 font-black uppercase tracking-wider text-sky-400/60">
+                        <div className="flex flex-col gap-1 pt-1 border-t border-app-text/5">
+                            <span className="text-ui-9 font-black uppercase tracking-wider text-etat-info/60">
                                 Peut mener à
                             </span>
                             {scene.suites.map((suite, index) => (
                                 <span key={`${suite.titre}-${index}`} className="flex items-baseline gap-1.5 text-ui-11">
-                                    <span className="text-sky-300/80 font-bold">{suite.titre}</span>
-                                    {suite.libelle && <span className="italic text-slate-500">{suite.libelle}</span>}
+                                    <span className="text-etat-info/80 font-bold">{suite.titre}</span>
+                                    {suite.libelle && <span className="italic text-app-muted">{suite.libelle}</span>}
                                 </span>
                             ))}
                         </div>
@@ -187,7 +187,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
         { id: 'secrets', titre: 'Secrets', icone: EyeOff },
     ];
 
-    const cadre = 'flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-white/[0.03] border border-white/5 p-3';
+    const cadre = 'flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-3';
 
     return (
         <div className="flex flex-col gap-3 h-full">
@@ -196,17 +196,17 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
               déborder. *Un onglet coupé par le bord est un onglet qui n'existe
               pas* — la leçon du 23/08, reprise ici avant qu'elle ne coûte.
             */}
-            <div className="flex gap-0.5 bg-white/5 p-0.5 rounded-xl border border-white/10 self-start shrink-0 max-w-full overflow-x-auto no-scrollbar">
+            <div className="flex gap-0.5 bg-app-text/5 p-0.5 rounded-xl border border-app-text/10 self-start shrink-0 max-w-full overflow-x-auto no-scrollbar">
                 {VUES.map(({ id, titre, icone: Icone, compte }) => (
                     <button
                         key={id}
                         onClick={() => setVue(id)}
                         aria-current={vue === id ? 'page' : undefined}
-                        className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-ui-10 font-black uppercase transition-colors ${vue === id ? 'bg-accent text-app-bg' : 'text-slate-500 hover:text-slate-300'}`}
+                        className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-ui-10 font-black uppercase transition-colors ${vue === id ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'}`}
                     >
                         <Icone size={13} /> {titre}
                         {compte !== undefined && compte > 0 && (
-                            <span className={vue === id ? 'opacity-60' : 'text-slate-600'}>{compte}</span>
+                            <span className={vue === id ? 'opacity-60' : 'text-app-subtle'}>{compte}</span>
                         )}
                     </button>
                 ))}
@@ -221,16 +221,16 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                         ['À jouer', scenesDuMoment.aJouer],
                     ] as const).map(([titre, lot]) => (
                         <section key={titre} className="flex flex-col gap-1.5">
-                            <h3 className="text-ui-10 font-black uppercase tracking-widest text-slate-500 px-1">
-                                {titre} <span className="text-slate-700">{lot.length}</span>
+                            <h3 className="text-ui-10 font-black uppercase tracking-widest text-app-muted px-1">
+                                {titre} <span className="text-app-subtle">{lot.length}</span>
                             </h3>
                             {lot.length === 0 ? (
-                                <p className="text-ui-11 italic text-slate-600 px-1">Rien ici.</p>
+                                <p className="text-ui-11 italic text-app-subtle px-1">Rien ici.</p>
                             ) : (
                                 <div className="grid grid-cols-1 min-[900px]:grid-cols-2 gap-1.5">
                                     {lot.map(({ scene, acte }) => (
                                         <div key={scene.id} className="flex flex-col gap-0.5">
-                                            <span className="text-ui-9 uppercase tracking-wider text-slate-600 px-1 truncate">{acte.titre}</span>
+                                            <span className="text-ui-9 uppercase tracking-wider text-app-subtle px-1 truncate">{acte.titre}</span>
                                             <LigneDeScene
                                                 scene={scene}
                                                 ouverte={scenesOuvertes.has(scene.id)}
@@ -245,8 +245,8 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
 
                     {notes?.public && (
                         <section className="flex flex-col gap-1.5">
-                            <h3 className="text-ui-10 font-black uppercase tracking-widest text-slate-500 px-1">Résumé public</h3>
-                            <p className="text-xs leading-relaxed text-slate-300 whitespace-pre-wrap px-1 max-w-[75ch]">{notes.public}</p>
+                            <h3 className="text-ui-10 font-black uppercase tracking-widest text-app-muted px-1">Résumé public</h3>
+                            <p className="text-xs leading-relaxed text-app-text whitespace-pre-wrap px-1 max-w-[75ch]">{notes.public}</p>
                         </section>
                     )}
                 </div>
@@ -256,22 +256,22 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
             {vue === 'trame' && (
                 <div className={`${cadre} flex flex-col gap-2`}>
                     {actes.length === 0 ? (
-                        <p className="text-sm italic text-slate-500 text-center py-10">Aucune trame sur cette campagne.</p>
+                        <p className="text-sm italic text-app-muted text-center py-10">Aucune trame sur cette campagne.</p>
                     ) : actes.map((acte: RemoteActe) => (
-                        <section key={acte.id} className={`rounded-xl border p-2 ${acte.acheve ? 'border-white/5 bg-white/[0.01]' : 'border-white/10 bg-white/[0.03]'}`}>
+                        <section key={acte.id} className={`rounded-xl border p-2 ${acte.acheve ? 'border-app-text/5 bg-app-text/[0.01]' : 'border-app-text/10 bg-app-text/[0.03]'}`}>
                             <button
                                 onClick={() => basculer(acte.id, setActesReplies)}
                                 className="w-full flex items-baseline gap-2 text-left px-1 pb-1.5"
                             >
-                                <span className={`text-sm font-black ${acte.acheve ? 'text-slate-600' : 'text-accent'}`}>{acte.titre}</span>
-                                {acte.acheve && <span className="text-ui-9 uppercase tracking-wider text-slate-600">achevé</span>}
-                                <span className="ml-auto shrink-0 text-ui-10 text-slate-600">{acte.scenes.length} scènes</span>
+                                <span className={`text-sm font-black ${acte.acheve ? 'text-app-subtle' : 'text-accent'}`}>{acte.titre}</span>
+                                {acte.acheve && <span className="text-ui-9 uppercase tracking-wider text-app-subtle">achevé</span>}
+                                <span className="ml-auto shrink-0 text-ui-10 text-app-subtle">{acte.scenes.length} scènes</span>
                             </button>
                             {!actesReplies.has(acte.id) && (
                                 <div className="flex flex-col gap-1.5">
-                                    {acte.resume && <p className="text-ui-11 italic text-slate-500 px-1">{acte.resume}</p>}
+                                    {acte.resume && <p className="text-ui-11 italic text-app-muted px-1">{acte.resume}</p>}
                                     {acte.notesDuMeneur && (
-                                        <p className="text-ui-11 text-amber-400/80 border-l-2 border-amber-500/30 pl-2 mx-1 whitespace-pre-wrap">
+                                        <p className="text-ui-11 text-etat-alerte/80 border-l-2 border-etat-alerte/30 pl-2 mx-1 whitespace-pre-wrap">
                                             {acte.notesDuMeneur}
                                         </p>
                                     )}
@@ -294,20 +294,20 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
             {vue === 'wiki' && (
                 <>
                     <div className="relative shrink-0">
-                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle pointer-events-none" />
                         <input
                             type="search"
                             value={filtreWiki}
                             onChange={(e) => setFiltreWiki(e.target.value)}
                             placeholder="Chercher dans le wiki…"
                             aria-label="Chercher dans le wiki"
-                            className="w-full h-9 pl-9 pr-9 rounded-xl bg-white/5 border border-white/10 text-sm text-app-text placeholder:text-slate-600 outline-none focus:border-accent/40"
+                            className="w-full h-9 pl-9 pr-9 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40"
                         />
                         {filtreWiki && (
                             <button
                                 onClick={() => setFiltreWiki('')}
                                 aria-label="Effacer la recherche"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-200"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
                             >
                                 <X size={14} />
                             </button>
@@ -315,40 +315,40 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                     </div>
                     <div className={`${cadre} flex flex-col gap-3`}>
                         {wikiFiltre.length === 0 ? (
-                            <p className="text-sm italic text-slate-500 text-center py-10">
+                            <p className="text-sm italic text-app-muted text-center py-10">
                                 {filtreWiki ? `Rien ne correspond à « ${filtreWiki} ».` : 'Le wiki de cette campagne est vide.'}
                             </p>
                         ) : groupesDeChroniques.map(({ cle, titre, fiches }) => (
                         <section key={cle} className="flex flex-col gap-1.5">
-                            <h3 className="text-ui-10 font-black uppercase tracking-widest text-slate-500 px-1">
-                                {titre} <span className="text-slate-700 tabular-nums">{fiches.length}</span>
+                            <h3 className="text-ui-10 font-black uppercase tracking-widest text-app-muted px-1">
+                                {titre} <span className="text-app-subtle tabular-nums">{fiches.length}</span>
                             </h3>
                             {fiches.map((fiche) => (
-                            <div key={fiche.id} className="rounded-lg border border-white/5 bg-white/[0.02]">
+                            <div key={fiche.id} className="rounded-lg border border-app-text/5 bg-app-text/[0.02]">
                                 <button
                                     onClick={() => setFicheOuverte(ficheOuverte === fiche.id ? null : fiche.id)}
                                     className="w-full flex items-center gap-2 px-2.5 py-2 text-left"
                                 >
-                                    <span className="shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border border-white/10 text-slate-500">
+                                    <span className="shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border border-app-text/10 text-app-muted">
                                         {LIBELLE_DE_CATEGORIE[fiche.categorie] ?? fiche.categorie}
                                     </span>
-                                    <span className="flex-1 min-w-0 text-xs font-bold text-slate-200 truncate">{fiche.titre}</span>
+                                    <span className="flex-1 min-w-0 text-xs font-bold text-app-text truncate">{fiche.titre}</span>
                                 </button>
                                 {ficheOuverte === fiche.id && (
                                     <div className="px-2.5 pb-2.5 flex flex-col gap-2">
                                         {fiche.contenu ? (
                                             /* Une fiche de wiki est écrite en Markdown comme le
                                                reste : elle mérite d'être lue, pas épelée. */
-                                            <div className="prose prose-invert prose-sm max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-slate-200 prose-p:text-slate-300 prose-li:text-slate-300 prose-strong:text-slate-100 prose-a:text-accent prose-code:text-accent prose-table:text-xs prose-th:text-slate-400 prose-td:text-slate-300">
+                                            <div className="prose prose-invert prose-sm max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-app-text prose-p:text-app-text prose-li:text-app-text prose-strong:text-app-text prose-a:text-accent prose-code:text-accent prose-table:text-xs prose-th:text-app-muted prose-td:text-app-text">
                                                 <TexteMarkdown>{fiche.contenu}</TexteMarkdown>
                                             </div>
                                         ) : (
-                                            <p className="text-ui-11 italic text-slate-500">Cette fiche n'a pas de contenu.</p>
+                                            <p className="text-ui-11 italic text-app-muted">Cette fiche n'a pas de contenu.</p>
                                         )}
                                         {fiche.tags.length > 0 && (
                                             <div className="flex flex-wrap gap-1">
                                                 {fiche.tags.map((tag) => (
-                                                    <span key={tag} className="text-ui-9 px-1.5 py-0.5 rounded bg-white/5 text-slate-500">{tag}</span>
+                                                    <span key={tag} className="text-ui-9 px-1.5 py-0.5 rounded bg-app-text/5 text-app-muted">{tag}</span>
                                                 ))}
                                             </div>
                                         )}
@@ -375,17 +375,17 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
             {vue === 'indices' && (
                 <div className={`${cadre} grid grid-cols-1 min-[900px]:grid-cols-2 gap-1.5 content-start`}>
                     {indices.length === 0 ? (
-                        <p className="text-sm italic text-slate-500 text-center py-10 col-span-full">Aucun indice sur cette campagne.</p>
+                        <p className="text-sm italic text-app-muted text-center py-10 col-span-full">Aucun indice sur cette campagne.</p>
                     ) : indices.map((indice) => (
-                        <div key={indice.id} className={`rounded-lg border p-2.5 flex flex-col gap-1 ${indice.revele ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-white/5 bg-white/[0.02]'}`}>
+                        <div key={indice.id} className={`rounded-lg border p-2.5 flex flex-col gap-1 ${indice.revele ? 'border-etat-succes/30 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
                             <div className="flex items-center gap-2">
-                                <span className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${indice.revele ? 'border-emerald-500/40 text-emerald-400' : 'border-white/10 text-slate-500'}`}>
+                                <span className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${indice.revele ? 'border-etat-succes/40 text-etat-succes' : 'border-app-text/10 text-app-muted'}`}>
                                     {indice.revele ? 'Donné' : 'En main'}
                                 </span>
-                                <span className="text-xs font-bold text-slate-200 truncate">{indice.titre}</span>
+                                <span className="text-xs font-bold text-app-text truncate">{indice.titre}</span>
                             </div>
                             {indice.contenu && (
-                                <p className="text-ui-11 leading-relaxed text-slate-400 whitespace-pre-wrap">{indice.contenu}</p>
+                                <p className="text-ui-11 leading-relaxed text-app-muted whitespace-pre-wrap">{indice.contenu}</p>
                             )}
                         </div>
                     ))}
@@ -395,7 +395,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
             {/* ── Les secrets du meneur ─────────────────────────────────── */}
             {vue === 'secrets' && (
                 <div className={`${cadre} ${isAventureMode ? 'blur-md grayscale pointer-events-none' : ''}`}>
-                    <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-slate-300 max-w-[75ch]">
+                    <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-app-text max-w-[75ch]">
                         {isAventureMode
                             ? "Contenu protégé par le Mode Aventure."
                             : (notes?.private || "Aucun secret enregistré pour cette séance.")}

@@ -25,7 +25,7 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md cursor-pointer"
+                    className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-app-bg/60 backdrop-blur-md cursor-pointer"
                     onClick={onClose}
                 >
                     <motion.div
@@ -33,7 +33,7 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.9, opacity: 0, y: -20 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="relative w-full max-w-lg premium-glass rounded-[40px] border border-white/10 shadow-3xl overflow-hidden p-8 flex flex-col items-center gap-6"
+                        className="relative w-full max-w-lg premium-glass rounded-[40px] border border-app-text/10 shadow-3xl overflow-hidden p-8 flex flex-col items-center gap-6"
                     >
                         {/* Progress bar for auto-dismiss */}
                         <motion.div 
@@ -50,8 +50,8 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                         </div>
 
                         <div className="relative group">
-                            <div className="absolute inset-0 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all duration-500" />
-                            <h2 className="relative text-7xl md:text-9xl font-black text-white tracking-tighter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                            <div className="absolute inset-0 bg-app-text/5 rounded-full blur-3xl group-hover:bg-app-text/10 transition-all duration-500" />
+                            <h2 className="relative text-7xl md:text-9xl font-black text-app-text tracking-tighter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
                                 {result.totalDisplay || result.total}
                             </h2>
                         </div>
@@ -62,9 +62,9 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                                     key={i} 
                                     className={`size-12 md:size-14 flex items-center justify-center rounded-xl md:rounded-2xl text-xl md:text-2xl border transition-all ${
                                         r.cssClass ? r.cssClass : 
-                                        r.isCritMax ? '!bg-emerald-500 border-emerald-500 !text-white shadow-glow-emerald/40' :
-                                        r.isCritMin ? '!bg-rose-500 border-rose-500 !text-white shadow-glow-rose/40' :
-                                        r.isExploded ? '!bg-amber-500/20 border-amber-500/50 text-amber-500 shadow-glow-amber/20' :
+                                        r.isCritMax ? '!bg-etat-succes border-etat-succes !text-app-bg shadow-glow-emerald/40' :
+                                        r.isCritMin ? '!bg-etat-danger border-etat-danger !text-app-bg shadow-glow-rose/40' :
+                                        r.isExploded ? '!bg-etat-alerte/20 border-etat-alerte/50 text-etat-alerte shadow-glow-amber/20' :
                                         'bg-app-bg/40 border-app-border/20 text-app-text/40'
                                     }`}
                                 >
@@ -96,8 +96,8 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                             }}
                             classes={reussi => 'px-10 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all '
                                 + (reussi
-                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30'
-                                    : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30')}
+                                    ? 'bg-etat-succes/10 text-etat-succes border-etat-succes/50 shadow-glow-emerald/30'
+                                    : 'bg-etat-danger/10 text-etat-danger border-etat-danger/50 shadow-glow-rose/30')}
                             enveloppe={contenu => (
                                 <motion.div
                                     initial={{ y: 10, opacity: 0 }}
@@ -110,10 +110,10 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                             )}
                         />
 
-                        <div className="mt-2 text-ui-10 font-black text-white/20 uppercase tracking-widest flex items-center gap-2">
-                            <span className="w-4 h-px bg-white/10" />
+                        <div className="mt-2 text-ui-10 font-black text-app-text/20 uppercase tracking-widest flex items-center gap-2">
+                            <span className="w-4 h-px bg-app-text/10" />
                             CLIQUER POUR FERMER
-                            <span className="w-4 h-px bg-white/10" />
+                            <span className="w-4 h-px bg-app-text/10" />
                         </div>
                     </motion.div>
                 </motion.div>

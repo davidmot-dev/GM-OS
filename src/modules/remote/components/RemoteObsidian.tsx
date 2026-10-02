@@ -86,20 +86,20 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                     <button
                         onClick={onFermer}
                         aria-label="Revenir à la liste"
-                        className="w-9 h-9 shrink-0 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-slate-200"
+                        className="w-9 h-9 shrink-0 rounded-lg bg-app-text/5 border border-app-text/10 flex items-center justify-center text-app-muted hover:text-app-text"
                     >
                         <ArrowLeft size={16} />
                     </button>
                     <span className="min-w-0 flex flex-col">
-                        <span className="text-sm font-bold text-slate-200 truncate">{ouverte?.nom ?? coffre.chemin}</span>
-                        {ouverte?.dossier && <span className="text-ui-10 text-slate-600 truncate">{ouverte.dossier}</span>}
+                        <span className="text-sm font-bold text-app-text truncate">{ouverte?.nom ?? coffre.chemin}</span>
+                        {ouverte?.dossier && <span className="text-ui-10 text-app-subtle truncate">{ouverte.dossier}</span>}
                     </span>
                 </div>
-                <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-white/[0.03] border border-white/5 p-4">
+                <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-4">
                     {coffre.chargement ? (
-                        <p className="text-sm italic text-slate-500 text-center py-10">Lecture…</p>
+                        <p className="text-sm italic text-app-muted text-center py-10">Lecture…</p>
                     ) : coffre.erreur ? (
-                        <p className="text-sm italic text-rose-400 text-center py-10">{coffre.erreur}</p>
+                        <p className="text-sm italic text-etat-danger text-center py-10">{coffre.erreur}</p>
                     ) : coffre.contenu ? (
                         /*
                           **Le coffre s'affichait en texte brut jusqu'au 2026-09-05.**
@@ -109,11 +109,11 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                           document au lieu du document est une panne discrète —
                           rien ne manque à l'écran, tout est illisible.*
                         */
-                        <div className="prose prose-invert prose-sm max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-slate-200 prose-p:text-slate-300 prose-li:text-slate-300 prose-strong:text-slate-100 prose-a:text-accent prose-code:text-accent prose-table:text-xs prose-th:text-slate-400 prose-td:text-slate-300">
+                        <div className="prose prose-invert prose-sm max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-app-text prose-p:text-app-text prose-li:text-app-text prose-strong:text-app-text prose-a:text-accent prose-code:text-accent prose-table:text-xs prose-th:text-app-muted prose-td:text-app-text">
                             <TexteMarkdown>{coffre.contenu}</TexteMarkdown>
                         </div>
                     ) : (
-                        <p className="text-sm italic text-slate-500 text-center py-10">Cette note est vide.</p>
+                        <p className="text-sm italic text-app-muted text-center py-10">Cette note est vide.</p>
                     )}
                 </div>
             </div>
@@ -127,20 +127,20 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
         <div className="flex flex-col gap-3 h-full">
             <div className="shrink-0 flex items-center gap-2">
                 <div className="relative flex-1">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle pointer-events-none" />
                     <input
                         type="search"
                         value={filtre}
                         onChange={(e) => setFiltre(e.target.value)}
                         placeholder="Chercher dans tout le coffre…"
                         aria-label="Chercher une note dans le coffre"
-                        className="w-full h-9 pl-9 pr-9 rounded-xl bg-white/5 border border-white/10 text-sm text-app-text placeholder:text-slate-600 outline-none focus:border-accent/40"
+                        className="w-full h-9 pl-9 pr-9 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40"
                     />
                     {filtre && (
                         <button
                             onClick={() => setFiltre('')}
                             aria-label="Effacer la recherche"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-200"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
                         >
                             <X size={14} />
                         </button>
@@ -150,7 +150,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                     onClick={onCharger}
                     aria-label="Recharger le coffre"
                     title="Recharger le coffre"
-                    className="shrink-0 w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-slate-200"
+                    className="shrink-0 w-9 h-9 rounded-lg bg-app-text/5 border border-app-text/10 flex items-center justify-center text-app-muted hover:text-app-text"
                 >
                     <RefreshCw size={15} className={coffre.chargement ? 'animate-spin' : ''} />
                 </button>
@@ -165,16 +165,16 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                 <nav aria-label="Chemin dans le coffre" className="shrink-0 flex items-center gap-1 overflow-x-auto no-scrollbar text-ui-11">
                     <button
                         onClick={() => setChemin([])}
-                        className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                        className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg text-app-muted hover:text-app-text hover:bg-app-text/5"
                     >
                         <Home size={12} /> Coffre
                     </button>
                     {cheminEffectif.map((nom, i) => (
                         <React.Fragment key={`${nom}-${i}`}>
-                            <ChevronRight size={12} className="shrink-0 text-slate-700" />
+                            <ChevronRight size={12} className="shrink-0 text-app-subtle" />
                             <button
                                 onClick={() => setChemin(cheminEffectif.slice(0, i + 1))}
-                                className={`shrink-0 px-2 py-1 rounded-lg hover:bg-white/5 ${i === cheminEffectif.length - 1 ? 'text-accent font-bold' : 'text-slate-400 hover:text-slate-200'}`}
+                                className={`shrink-0 px-2 py-1 rounded-lg hover:bg-app-text/5 ${i === cheminEffectif.length - 1 ? 'text-accent font-bold' : 'text-app-muted hover:text-app-text'}`}
                             >
                                 {nom}
                             </button>
@@ -183,30 +183,30 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                 </nav>
             )}
 
-            <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-white/[0.03] border border-white/5 p-3 flex flex-col gap-1">
+            <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-3 flex flex-col gap-1">
                 {coffre.chargement && coffre.notes.length === 0 ? (
-                    <p className="text-sm italic text-slate-500 text-center py-10">Lecture du coffre…</p>
+                    <p className="text-sm italic text-app-muted text-center py-10">Lecture du coffre…</p>
                 ) : enRecherche ? (
                     resultats!.length === 0 ? (
-                        <p className="text-sm italic text-slate-500 text-center py-10">
+                        <p className="text-sm italic text-app-muted text-center py-10">
                             Aucune note ne correspond à « {filtre} ».
                         </p>
                     ) : (
                         <>
-                            <p className="text-ui-10 uppercase tracking-widest text-slate-600 px-1 pb-1">
+                            <p className="text-ui-10 uppercase tracking-widest text-app-subtle px-1 pb-1">
                                 {resultats!.length} note{resultats!.length > 1 ? 's' : ''} dans tout le coffre
                             </p>
                             {resultats!.map((n) => (
                                 <button
                                     key={n.chemin}
                                     onClick={() => onOuvrir(n.chemin)}
-                                    className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-white/5 bg-white/[0.02] hover:border-white/20 text-left"
+                                    className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-app-text/5 bg-app-text/[0.02] hover:border-app-text/20 text-left"
                                 >
-                                    <FileText size={14} className="shrink-0 text-slate-600" />
+                                    <FileText size={14} className="shrink-0 text-app-subtle" />
                                     <span className="flex-1 min-w-0 flex flex-col">
-                                        <span className="text-xs font-bold text-slate-200 truncate">{n.nom}</span>
+                                        <span className="text-xs font-bold text-app-text truncate">{n.nom}</span>
                                         {n.dossier && (
-                                            <span className="flex items-center gap-1 text-ui-10 text-slate-600 truncate">
+                                            <span className="flex items-center gap-1 text-ui-10 text-app-subtle truncate">
                                                 <Folder size={9} className="shrink-0" /> {n.dossier}
                                             </span>
                                         )}
@@ -216,7 +216,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                         </>
                     )
                 ) : contenu.length === 0 ? (
-                    <p className="text-sm italic text-slate-500 text-center py-10">
+                    <p className="text-sm italic text-app-muted text-center py-10">
                         {cheminEffectif.length > 0
                             ? 'Ce dossier est vide.'
                             : "Le coffre est vide, ou son chemin n'est pas réglé dans la fiche de campagne."}
@@ -227,24 +227,24 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                             <button
                                 key={entree.path}
                                 onClick={() => setChemin([...cheminEffectif, entree.name])}
-                                className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-white/5 bg-white/[0.04] hover:border-accent/30 text-left"
+                                className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-app-text/5 bg-app-text/[0.04] hover:border-accent/30 text-left"
                             >
                                 <Folder size={14} className="shrink-0 text-accent/70" />
-                                <span className="flex-1 min-w-0 text-xs font-bold text-slate-200 truncate">{entree.name}</span>
+                                <span className="flex-1 min-w-0 text-xs font-bold text-app-text truncate">{entree.name}</span>
                                 {/* Le compte dit s'il vaut la peine d'ouvrir. */}
-                                <span className="shrink-0 text-ui-10 text-slate-600 tabular-nums">
+                                <span className="shrink-0 text-ui-10 text-app-subtle tabular-nums">
                                     {(entree.children ?? []).length}
                                 </span>
-                                <ChevronRight size={13} className="shrink-0 text-slate-600" />
+                                <ChevronRight size={13} className="shrink-0 text-app-subtle" />
                             </button>
                         ) : (
                             <button
                                 key={entree.path}
                                 onClick={() => onOuvrir(entree.path)}
-                                className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-white/5 bg-white/[0.02] hover:border-white/20 text-left"
+                                className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-app-text/5 bg-app-text/[0.02] hover:border-app-text/20 text-left"
                             >
-                                <FileText size={14} className="shrink-0 text-slate-600" />
-                                <span className="flex-1 min-w-0 text-xs font-bold text-slate-200 truncate">{entree.name}</span>
+                                <FileText size={14} className="shrink-0 text-app-subtle" />
+                                <span className="flex-1 min-w-0 text-xs font-bold text-app-text truncate">{entree.name}</span>
                             </button>
                         ))}
                     </div>

@@ -32,22 +32,22 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
 }) => {
     if (!combat?.combatants?.length) {
         return (
-            <div className="text-center py-16 rounded-2xl border border-white/5 bg-white/[0.02]">
-                <p className="text-sm italic text-slate-500">Aucun combat en cours.</p>
+            <div className="text-center py-16 rounded-2xl border border-app-text/5 bg-app-text/[0.02]">
+                <p className="text-sm italic text-app-muted">Aucun combat en cours.</p>
             </div>
         );
     }
 
     return (
         <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between gap-3 px-3 h-12 rounded-xl bg-white/[0.03] border border-white/5">
+            <div className="flex items-center justify-between gap-3 px-3 h-12 rounded-xl bg-app-text/[0.03] border border-app-text/5">
                 <span className="flex items-baseline gap-2">
-                    <span className="text-ui-10 font-black uppercase tracking-widest text-slate-500">Round</span>
-                    <span className="text-xl font-black text-white tabular-nums">{combat.round ?? 1}</span>
+                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">Round</span>
+                    <span className="text-xl font-black text-app-text tabular-nums">{combat.round ?? 1}</span>
                 </span>
                 <button
                     onClick={onNextTurn}
-                    className="px-5 py-2 bg-accent text-app-bg rounded-lg flex items-center gap-1.5 font-black uppercase text-ui-11 active:scale-95 transition-all"
+                    className="px-5 py-2 bg-accent text-app-on-accent rounded-lg flex items-center gap-1.5 font-black uppercase text-ui-11 active:scale-95 transition-all"
                 >
                     Suivant <ChevronRight size={16} />
                 </button>
@@ -57,13 +57,13 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                 {combat.combatants.map((c, i) => {
                     const isActive = i === combat.currentTurnIdx;
                     return (
-                        <div key={c.id} className={`p-2.5 rounded-xl border transition-colors ${isActive ? 'bg-accent/10 border-accent' : 'bg-white/[0.03] border-white/5'}`}>
+                        <div key={c.id} className={`p-2.5 rounded-xl border transition-colors ${isActive ? 'bg-accent/10 border-accent' : 'bg-app-text/[0.03] border-app-text/5'}`}>
                             <div className="flex items-center justify-between gap-2">
                                 <div className="flex items-center gap-2 min-w-0">
-                                    <div className={`w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-black text-ui-11 tabular-nums transition-colors ${isActive ? 'bg-accent text-app-bg' : 'bg-white/10'}`}>{c.init}</div>
+                                    <div className={`w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-black text-ui-11 tabular-nums transition-colors ${isActive ? 'bg-accent text-app-on-accent' : 'bg-app-text/10'}`}>{c.init}</div>
                                     <div className="flex flex-col min-w-0">
-                                        <span className={`font-bold text-sm truncate transition-colors ${isActive ? 'text-accent' : 'text-slate-200'}`}>{c.name}</span>
-                                        <span className="text-ui-8 uppercase text-slate-500">{c.isPlayer ? 'Joueur' : 'Ennemi'}</span>
+                                        <span className={`font-bold text-sm truncate transition-colors ${isActive ? 'text-accent' : 'text-app-text'}`}>{c.name}</span>
+                                        <span className="text-ui-8 uppercase text-app-muted">{c.isPlayer ? 'Joueur' : 'Ennemi'}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1.5 shrink-0">
@@ -72,31 +72,31 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                             <button
                                                 onClick={() => onUpdateHp(c.id, -1)}
                                                 aria-label={`Retirer un point de vie à ${c.name}`}
-                                                className="w-9 h-9 rounded-lg bg-rose-500/20 text-rose-500 flex items-center justify-center active:scale-90"
+                                                className="w-9 h-9 rounded-lg bg-etat-danger/20 text-etat-danger flex items-center justify-center active:scale-90"
                                             >
                                                 -
                                             </button>
                                             <div className="flex flex-col items-center min-w-[28px]">
                                                 <span className="text-xs font-black tabular-nums">{c.hp}</span>
-                                                <span className="text-ui-8 text-slate-500">PV</span>
+                                                <span className="text-ui-8 text-app-muted">PV</span>
                                             </div>
                                             <button
                                                 onClick={() => onUpdateHp(c.id, 1)}
                                                 aria-label={`Ajouter un point de vie à ${c.name}`}
-                                                className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-500 flex items-center justify-center active:scale-90"
+                                                className="w-9 h-9 rounded-lg bg-etat-succes/20 text-etat-succes flex items-center justify-center active:scale-90"
                                             >
                                                 +
                                             </button>
                                         </>
                                     )}
                                     {isAventureMode && !c.isPlayer && (
-                                        <div className="text-ui-10 font-black uppercase text-slate-600 tracking-widest italic pr-1">Caché</div>
+                                        <div className="text-ui-10 font-black uppercase text-app-subtle tracking-widest italic pr-1">Caché</div>
                                     )}
                                 </div>
                             </div>
 
                             {c.healthSystem && (
-                                <div className="mt-2 pt-2 border-t border-white/5 flex flex-wrap gap-2 items-center">
+                                <div className="mt-2 pt-2 border-t border-app-text/5 flex flex-wrap gap-2 items-center">
                                     {/*
                                         Les formes lues sont celles que le MJ
                                         écrit. L'état de gravité vient du champ
@@ -106,17 +106,17 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                     */}
                                     {c.healthSystem.type === 'wounds' && (
                                         <span className={`text-ui-10 font-black uppercase px-2 py-0.5 rounded-full border ${
-                                            c.healthSystem.state === 'healthy' ? 'border-emerald-500/30 text-emerald-400' :
-                                            c.healthSystem.state === 'dead' ? 'bg-rose-600 text-white animate-pulse' :
-                                            'border-amber-500 text-amber-400'
+                                            c.healthSystem.state === 'healthy' ? 'border-etat-succes/30 text-etat-succes' :
+                                            c.healthSystem.state === 'dead' ? 'bg-etat-danger text-app-bg animate-pulse' :
+                                            'border-etat-alerte text-etat-alerte'
                                         }`}>
                                             {woundLabel(c.healthSystem) || 'Sain'}
                                         </span>
                                     )}
                                     {c.healthSystem.type === 'clocks' && (
-                                        <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
-                                            <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                            <span className="text-ui-10 font-bold text-blue-400 tabular-nums">
+                                        <div className="flex items-center gap-1.5 bg-app-text/5 px-2 py-0.5 rounded-full border border-app-text/10">
+                                            <div className="w-2 h-2 rounded-full bg-etat-info" />
+                                            <span className="text-ui-10 font-bold text-etat-info tabular-nums">
                                                 {Number(c.healthSystem.data.filled ?? 0)} / {Number(c.healthSystem.data.segments ?? 0)}
                                             </span>
                                         </div>
@@ -126,13 +126,13 @@ const RemoteCombatTracker: React.FC<RemoteCombatTrackerProps> = ({
                                             {((c.healthSystem.data.boxes as { filled: boolean }[]) ?? []).map((b, bi) => (
                                                 <div
                                                     key={bi}
-                                                    className={`w-2 h-2 rounded-sm border ${b.filled ? 'bg-orange-500 border-orange-400' : 'border-white/20'}`}
+                                                    className={`w-2 h-2 rounded-sm border ${b.filled ? 'bg-etat-alerte border-etat-alerte' : 'border-app-text/20'}`}
                                                 />
                                             ))}
                                         </div>
                                     )}
                                     {c.healthSystem.type === 'anatomy' && (
-                                        <div className="flex items-center gap-1 text-ui-10 text-rose-400 font-bold uppercase">
+                                        <div className="flex items-center gap-1 text-ui-10 text-etat-danger font-bold uppercase">
                                             <Shield size={10} />
                                             {Object.values((c.healthSystem.data.parts as Record<string, { status: string }>) ?? {})
                                                 .filter(p => p.status !== 'healthy').length} Blessures

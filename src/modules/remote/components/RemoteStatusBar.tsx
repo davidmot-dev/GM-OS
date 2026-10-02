@@ -98,21 +98,21 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
         ?? (lecture?.pistesDAmbiance ? `${lecture.pistesDAmbiance} pistes` : null);
 
     return (
-        <header className="shrink-0 flex items-center gap-3 px-3 h-12 border-b border-white/5 bg-app-bg/80 backdrop-blur-xl">
+        <header className="shrink-0 flex items-center gap-3 px-3 h-12 border-b border-app-text/5 bg-app-bg/80 backdrop-blur-xl">
             {/* L'état de liaison : un point, et un mot seulement quand ça ne va pas. */}
             <div className="flex items-center gap-2 shrink-0">
                 <span
                     className={`w-2 h-2 rounded-full ${status === 'connected'
-                        ? (isPaired ? 'bg-emerald-500' : 'bg-amber-500')
-                        : 'bg-rose-500 animate-pulse'}`}
+                        ? (isPaired ? 'bg-etat-succes' : 'bg-etat-alerte')
+                        : 'bg-etat-danger animate-pulse'}`}
                 />
                 {status !== 'connected' && (
-                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-rose-400">
+                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-etat-danger">
                         <WifiOff size={12} /> Reconnexion
                     </span>
                 )}
                 {status === 'connected' && !isPaired && (
-                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-amber-400">
+                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-etat-alerte">
                         <ShieldAlert size={12} /> Non appairée
                     </span>
                 )}
@@ -124,28 +124,28 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
             */}
             <div className="flex items-center gap-4 min-w-0 flex-1 overflow-hidden">
                 {lecture?.musique && (
-                    <span className="flex items-center gap-1.5 min-w-0 text-slate-300">
+                    <span className="flex items-center gap-1.5 min-w-0 text-app-text">
                         <Music size={13} className="text-accent shrink-0" />
                         <span className="text-xs truncate">{lecture.musique}</span>
                     </span>
                 )}
                 {ambiance && (
-                    <span className="flex items-center gap-1.5 min-w-0 text-slate-300">
-                        <Waves size={13} className="text-cyan-400 shrink-0" />
+                    <span className="flex items-center gap-1.5 min-w-0 text-app-text">
+                        <Waves size={13} className="text-gm-cyan shrink-0" />
                         <span className="text-xs truncate">{ambiance}</span>
                     </span>
                 )}
                 {enCombat && (
-                    <span className="flex items-center gap-1.5 min-w-0 text-slate-300">
-                        <Swords size={13} className="text-rose-400 shrink-0" />
+                    <span className="flex items-center gap-1.5 min-w-0 text-app-text">
+                        <Swords size={13} className="text-etat-danger shrink-0" />
                         <span className="text-xs whitespace-nowrap">
                             R{combat.round}
-                            {combattantCourant && <span className="text-slate-500"> · {combattantCourant}</span>}
+                            {combattantCourant && <span className="text-app-muted"> · {combattantCourant}</span>}
                         </span>
                     </span>
                 )}
                 {minuteurActif && (
-                    <span className={`flex items-center gap-1.5 shrink-0 ${minuteur!.timerRemaining <= 10 ? 'text-rose-400' : 'text-slate-300'}`}>
+                    <span className={`flex items-center gap-1.5 shrink-0 ${minuteur!.timerRemaining <= 10 ? 'text-etat-danger' : 'text-app-text'}`}>
                         <Timer size={13} className="shrink-0" />
                         <span className="text-xs font-mono tabular-nums">{enMinutes(minuteur!.timerRemaining)}</span>
                     </span>
@@ -180,11 +180,11 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                 onContextMenu={(e) => e.preventDefault()}
                 title="Couper le son — maintenir appuyé"
                 aria-label="Couper le son — maintenir appuyé"
-                className="relative shrink-0 h-8 px-3 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-400 flex items-center gap-1.5 overflow-hidden select-none touch-none"
+                className="relative shrink-0 h-8 px-3 rounded-lg border border-etat-danger/30 bg-etat-danger/10 text-etat-danger flex items-center gap-1.5 overflow-hidden select-none touch-none"
             >
                 {/* La jauge de l'appui : le geste se voit avancer, donc s'annule. */}
                 <span
-                    className="absolute inset-y-0 left-0 bg-rose-600/60 pointer-events-none"
+                    className="absolute inset-y-0 left-0 bg-etat-danger/60 pointer-events-none"
                     style={{ width: `${progression * 100}%` }}
                 />
                 <Power size={14} strokeWidth={2.5} className="relative" />

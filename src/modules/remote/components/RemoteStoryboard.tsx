@@ -20,8 +20,8 @@ interface RemoteStoryboardProps {
 const RemoteStoryboard: React.FC<RemoteStoryboardProps> = ({ moments, onTrigger }) => {
     if (!moments || moments.length === 0) {
         return (
-            <div className="text-center py-16 rounded-2xl border border-white/5 bg-white/[0.02]">
-                <p className="text-sm italic text-slate-500">
+            <div className="text-center py-16 rounded-2xl border border-app-text/5 bg-app-text/[0.02]">
+                <p className="text-sm italic text-app-muted">
                     Aucun moment dans le storyboard de cette campagne.
                 </p>
             </div>
@@ -34,12 +34,12 @@ const RemoteStoryboard: React.FC<RemoteStoryboardProps> = ({ moments, onTrigger 
                 <button
                     key={m.id}
                     onClick={() => onTrigger(i)}
-                    className="group flex items-center gap-3 px-3 h-14 rounded-xl border border-white/5 bg-white/[0.03] hover:border-accent/40 active:bg-accent active:text-app-bg transition-colors text-left"
+                    className="group flex items-center gap-3 px-3 h-14 rounded-xl border border-app-text/5 bg-app-text/[0.03] hover:border-accent/40 active:bg-accent active:text-app-on-accent transition-colors text-left"
                 >
-                    <span className="text-sm font-black italic text-slate-600 tabular-nums shrink-0 group-active:text-app-bg/60">
+                    <span className="text-sm font-black italic text-app-subtle tabular-nums shrink-0 group-active:text-app-bg/60">
                         {(i + 1).toString().padStart(2, '0')}
                     </span>
-                    <span className="flex-1 min-w-0 text-xs font-bold uppercase tracking-tight truncate text-slate-200 group-active:text-app-bg">
+                    <span className="flex-1 min-w-0 text-xs font-bold uppercase tracking-tight truncate text-app-text group-active:text-app-bg">
                         {m.name}
                     </span>
                     <Play size={16} fill="currentColor" className="text-accent shrink-0 group-active:text-app-bg" />

@@ -35,8 +35,8 @@ interface RemoteUniversalPadsProps {
 
 const FAMILLES = [
     { type: 'music' as const, titre: 'Musique', icone: Music, teinte: 'text-accent' },
-    { type: 'ambient' as const, titre: 'Ambiances', icone: Waves, teinte: 'text-cyan-400' },
-    { type: 'image' as const, titre: 'Images', icone: ImageIcon, teinte: 'text-emerald-400' },
+    { type: 'ambient' as const, titre: 'Ambiances', icone: Waves, teinte: 'text-gm-cyan' },
+    { type: 'image' as const, titre: 'Images', icone: ImageIcon, teinte: 'text-etat-succes' },
 ];
 
 /** Sans accents ni casse : « Forêt » se trouve en tapant « foret ». */
@@ -88,8 +88,8 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
         return (
             <div className="flex flex-col gap-3">
                 {reglages}
-                <div className="text-center py-16 rounded-2xl border border-white/5 bg-white/[0.02]">
-                    <p className="text-sm italic text-slate-500">Aucun pad configuré sur cet univers.</p>
+                <div className="text-center py-16 rounded-2xl border border-app-text/5 bg-app-text/[0.02]">
+                    <p className="text-sm italic text-app-muted">Aucun pad configuré sur cet univers.</p>
                 </div>
             </div>
         );
@@ -103,20 +103,20 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                 jamais quand elles servent. */}
             {reglages}
             <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle pointer-events-none" />
                 <input
                     type="search"
                     value={filtre}
                     onChange={(e) => setFiltre(e.target.value)}
                     placeholder="Filtrer les pads…"
                     aria-label="Filtrer les pads"
-                    className="w-full h-9 pl-9 pr-9 rounded-xl bg-white/5 border border-white/10 text-sm text-app-text placeholder:text-slate-600 outline-none focus:border-accent/40 transition-colors"
+                    className="w-full h-9 pl-9 pr-9 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
                 />
                 {filtre && (
                     <button
                         onClick={() => setFiltre('')}
                         aria-label="Effacer le filtre"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-200"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
                     >
                         <X size={14} />
                     </button>
@@ -124,7 +124,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
             </div>
 
             {filtre && totalRetenu === 0 && (
-                <p className="text-center py-10 text-sm italic text-slate-500">
+                <p className="text-center py-10 text-sm italic text-app-muted">
                     Rien ne correspond à « {filtre} ».
                 </p>
             )}
@@ -141,9 +141,9 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                     <section key={type} className="flex flex-col gap-2">
                         <div className="flex items-baseline gap-2 px-1">
                             <Icone size={13} className={`${teinte} shrink-0 self-center`} />
-                            <h2 className="text-ui-10 font-black uppercase tracking-widest text-slate-400">{titre}</h2>
+                            <h2 className="text-ui-10 font-black uppercase tracking-widest text-app-muted">{titre}</h2>
                             {tronque && (
-                                <span className="text-ui-10 text-amber-500/80 italic">
+                                <span className="text-ui-10 text-etat-alerte/80 italic">
                                     {compte.montres} sur {compte.total} — les autres restent sur le PC
                                 </span>
                             )}
@@ -156,7 +156,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                                         key={pad.id}
                                         onClick={() => onTrigger(pad.id)}
                                         className={`group relative overflow-hidden aspect-[4/3] rounded-xl border transition-colors ${
-                                            pad.isActive ? 'border-accent' : 'border-white/5 hover:border-white/20'
+                                            pad.isActive ? 'border-accent' : 'border-app-text/5 hover:border-app-text/20'
                                         }`}
                                     >
                                         {pad.imageUrl ? (
@@ -166,11 +166,11 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                                                 className={`absolute inset-0 w-full h-full object-cover transition-opacity ${pad.isActive ? 'opacity-70' : 'opacity-35 group-hover:opacity-55'}`}
                                             />
                                         ) : (
-                                            <div className="absolute inset-0 bg-white/5" />
+                                            <div className="absolute inset-0 bg-app-text/5" />
                                         )}
                                         {/* Le voile part du bas : le titre reste lisible sur une image claire. */}
-                                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-2 pt-4 pb-1.5">
-                                            <span className={`block text-ui-10 font-bold leading-tight text-left line-clamp-2 ${pad.isActive ? 'text-accent' : 'text-slate-200'}`}>
+                                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-app-bg/85 to-transparent px-2 pt-4 pb-1.5">
+                                            <span className={`block text-ui-10 font-bold leading-tight text-left line-clamp-2 ${pad.isActive ? 'text-accent' : 'text-app-text'}`}>
                                                 {pad.label}
                                             </span>
                                         </div>
@@ -193,16 +193,16 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                                         className={`flex items-center gap-2.5 px-3 h-14 rounded-xl border text-left transition-colors ${
                                             pad.isActive
                                                 ? 'border-accent bg-accent/10'
-                                                : 'border-white/5 bg-white/[0.03] hover:border-white/20'
+                                                : 'border-app-text/5 bg-app-text/[0.03] hover:border-app-text/20'
                                         }`}
                                     >
                                         <Icone size={15} className={`shrink-0 ${pad.isActive ? 'text-accent' : teinte}`} />
                                         <span className="flex flex-col min-w-0">
-                                            <span className={`text-xs font-bold truncate ${pad.isActive ? 'text-accent' : 'text-slate-200'}`}>
+                                            <span className={`text-xs font-bold truncate ${pad.isActive ? 'text-accent' : 'text-app-text'}`}>
                                                 {pad.label}
                                             </span>
                                             {pad.sublabel && (
-                                                <span className="text-ui-10 text-slate-500 truncate">{pad.sublabel}</span>
+                                                <span className="text-ui-10 text-app-muted truncate">{pad.sublabel}</span>
                                             )}
                                         </span>
                                         {pad.isActive && (

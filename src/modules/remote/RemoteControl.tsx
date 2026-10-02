@@ -212,8 +212,8 @@ const RemoteControl: React.FC = () => {
                 aria-current={actif ? 'page' : undefined}
                 className={`flex items-center transition-colors duration-200 select-none ${
                     enColonne
-                        ? `w-full gap-3 px-3 py-2.5 rounded-xl ${actif ? 'bg-accent/15 text-accent' : 'text-slate-500 hover:text-slate-200 hover:bg-white/5'}`
-                        : `flex-1 flex-col gap-0.5 py-1.5 rounded-lg ${actif ? 'text-accent' : 'text-slate-500'}`
+                        ? `w-full gap-3 px-3 py-2.5 rounded-xl ${actif ? 'bg-accent/15 text-accent' : 'text-app-muted hover:text-app-text hover:bg-app-text/5'}`
+                        : `flex-1 flex-col gap-0.5 py-1.5 rounded-lg ${actif ? 'text-accent' : 'text-app-muted'}`
                 }`}
             >
                 <Icon size={enColonne ? 18 : 20} strokeWidth={actif ? 2.5 : 2} className="shrink-0" />
@@ -231,11 +231,11 @@ const RemoteControl: React.FC = () => {
               prend le relais. `w-32` suffit au plus long des sept libellés
               (« Scénario ») sans jamais imposer de coupure.
             */}
-            <nav className="hidden min-[900px]:flex flex-col gap-1 w-32 shrink-0 p-2 border-r border-white/5 bg-app-bg">
+            <nav className="hidden min-[900px]:flex flex-col gap-1 w-32 shrink-0 p-2 border-r border-app-text/5 bg-app-bg">
                 <div className="px-3 pt-2 pb-3">
-                    <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-600">GM Remote</span>
+                    <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-app-subtle">GM Remote</span>
                     {isAventureMode && (
-                        <span className="block mt-1 text-ui-9 font-black uppercase tracking-widest text-amber-500">Aventure</span>
+                        <span className="block mt-1 text-ui-9 font-black uppercase tracking-widest text-etat-alerte">Aventure</span>
                     )}
                 </div>
                 {boutonsDOnglet(true)}
@@ -262,7 +262,7 @@ const RemoteControl: React.FC = () => {
                 </main>
 
                 {/* Le repli sous 900 px : collée au bord, sans marge flottante. */}
-                <nav className="min-[900px]:hidden shrink-0 flex items-stretch gap-0.5 px-1 py-1 border-t border-white/5 bg-app-bg">
+                <nav className="min-[900px]:hidden shrink-0 flex items-stretch gap-0.5 px-1 py-1 border-t border-app-text/5 bg-app-bg">
                     {boutonsDOnglet(false)}
                 </nav>
             </div>
