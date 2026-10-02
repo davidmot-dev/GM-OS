@@ -147,33 +147,38 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
             </header>
 
             <div className="flex flex-1 overflow-hidden">
-                {/* Left Navigation Sidebar */}
-                <aside className="w-20 flex flex-col items-center py-8 gap-6 border-r border-app-border/10 bg-app-surface/20 backdrop-blur-xl">
-                    {sidebarItems.map(item => (
-                        <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => setActiveSection(item.id)}
-                            title={item.label}
-                            className={`group relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${
-                                activeSection === item.id 
-                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
-                                : 'bg-app-text/5 text-app-text/20 hover:bg-app-text/10 hover:text-app-text/60'
-                            }`}
-                        >
-                            <item.icon size={20} />
-                            <span className="absolute left-full ml-4 px-3 py-1.5 bg-app-bg border border-app-border/10 rounded-lg text-ui-10 font-black uppercase tracking-widest text-accent opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 z-50 whitespace-nowrap font-display">
-                                {item.label}
-                            </span>
-                        </button>
-                    ))}
-                    
-                    <div className="mt-auto flex flex-col gap-4">
-                        <div className="w-8 h-px bg-app-text/5" />
-                        <div className="w-12 h-12 rounded-2xl bg-app-text/5 flex items-center justify-center text-app-text/10">
-                            <Info size={18} />
+                {/*
+                  **Les sept sections, nommées et numérotées** — refonte, L5,
+                  étape 2. Elles n'étaient que des icônes, dont le nom ne se
+                  lisait qu'au survol.
+                */}
+                <aside className="flex w-60 shrink-0 flex-col border-r border-app-border bg-app-surface/40">
+                    <p className="px-4 pt-5 pb-3 text-ui-10 font-black uppercase tracking-widest text-app-muted">{t('modules:session.campaign_form.agencement.sections')}</p>
+                    <nav className="flex flex-col gap-1 px-2">
+                        {sidebarItems.map((item, rang) => {
+                            const actif = activeSection === item.id;
+                            return (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => setActiveSection(item.id)}
+                                    aria-current={actif ? 'page' : undefined}
+                                    className={`flex items-center gap-3 rounded-lg border-l-2 px-3 py-2.5 text-left text-sm font-bold transition-all ${
+                                        actif ? 'border-accent bg-accent/10 text-accent' : 'border-transparent text-app-muted hover:bg-app-text/5 hover:text-app-text'
+                                    }`}
+                                >
+                                    <item.icon size={16} className="shrink-0" />
+                                    <span className="font-mono text-ui-10">{String(rang + 1).padStart(2, '0')}.</span>
+                                    <span className="truncate uppercase tracking-wider">{item.label}</span>
+                                </button>
+                            );
+                        })}
+                    </nav>
+                    {isEdit && name && (
+                        <div className="mt-auto border-t border-app-border px-4 py-3 text-ui-10 text-app-muted">
+                            {t('modules:session.campaign_form.agencement.campagne')} <span className="font-bold text-accent">{name}</span>
                         </div>
-                    </div>
+                    )}
                 </aside>
 
                 {/* Main Content Area */}
@@ -271,6 +276,39 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                     </div>
                                 </div>
 
+
+                                {/*
+                                  L'image de fond et le synopsis se voient ici, avec
+                                  le reste de l'identité — mais ne se modifient qu'à
+                                  un seul endroit, leur section : *deux champs pour
+                                  la même donnée finissent par se contredire.*
+                                */}
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveSection('ambience')}
+                                        className="group flex flex-col gap-2 text-left"
+                                    >
+                                        <span className="px-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60">{t('modules:session.campaign_form.agencement.image_de_fond')}</span>
+                                        <span className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl border border-app-border bg-app-surface/40 transition-all group-hover:border-accent/50">
+                                            {wallpaperUrl && resolvedWallpaper
+                                                ? <ResolvedAsset src={wallpaperUrl} className="h-full w-full object-cover" />
+                                                : <ImageIcon size={32} strokeWidth={1} className="text-app-subtle" />}
+                                        </span>
+                                        <span className="px-2 text-ui-10 font-black uppercase tracking-widest text-accent group-hover:underline">{t('modules:session.campaign_form.agencement.changer_dans', { section: t('modules:session.campaign_form.sidebar.ambience') })}</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveSection('narrative')}
+                                        className="group flex flex-col gap-2 text-left"
+                                    >
+                                        <span className="px-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60">{t('modules:session.campaign_form.narrative.synopsis_label')}</span>
+                                        <span className="flex aspect-video w-full overflow-hidden rounded-xl border border-app-border bg-app-surface/40 p-4 text-sm leading-relaxed text-app-text transition-all group-hover:border-accent/50">
+                                            <span className={`line-clamp-6 ${synopsis ? '' : 'italic text-app-subtle'}`}>{synopsis || t('modules:session.campaign_form.agencement.sans_synopsis')}</span>
+                                        </span>
+                                        <span className="px-2 text-ui-10 font-black uppercase tracking-widest text-accent group-hover:underline">{t('modules:session.campaign_form.agencement.changer_dans', { section: t('modules:session.campaign_form.sidebar.narrative') })}</span>
+                                    </button>
+                                </div>
                             </div>
                         )}
 

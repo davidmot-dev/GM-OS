@@ -32,7 +32,7 @@ const PlayerRoster: React.FC = () => {
     );
 
     return (
-        <div className="w-72 h-full bg-app-bg border-r border-app-border flex flex-col flex-shrink-0">
+        <div className="w-80 h-full bg-app-surface/40 border-r border-app-border flex flex-col flex-shrink-0">
             {/* Header */}
             <div className="p-5 border-b border-app-border">
                 <h3 className="text-app-text font-bold text-sm uppercase tracking-widest mb-3 flex items-center gap-2">
@@ -101,6 +101,8 @@ const PlayerRoster: React.FC = () => {
     );
 };
 
+const initiales = (nom: string) => nom.split(/\s+/).filter(Boolean).slice(0, 2).map(m => m[0]?.toUpperCase()).join('');
+
 const PlayerCard: React.FC<{ 
     player: Player; 
     isSelected: boolean; 
@@ -121,18 +123,28 @@ const PlayerCard: React.FC<{
                 }`}
         >
             <div className="relative flex-shrink-0 group/avatar" onClick={onAvatarClick}>
-                <img
-                    src={resolvedAvatar || undefined}
-                    alt={player.realName}
-                    className="w-10 h-10 rounded-full bg-app-surface object-cover border border-app-border group-hover/avatar:opacity-40 transition-opacity"
-                />
+                {/* L'avatar quand il existe, ses initiales sinon — une image
+                    vide montrait son texte de remplacement, cassé. */}
+                {resolvedAvatar ? (
+                    <img
+                        src={resolvedAvatar}
+                        alt={player.realName}
+                        className="w-10 h-10 rounded-full bg-app-surface object-cover border border-app-border group-hover/avatar:opacity-40 transition-opacity"
+                    />
+                ) : (
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-app-border bg-app-surface-2 text-xs font-black text-app-muted group-hover/avatar:opacity-40">
+                        {initiales(player.realName)}
+                    </span>
+                )}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity text-accent">
                     <Camera size={16} />
                 </div>
                 <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-app-bg ${player.isOnline ? 'bg-etat-succes' : 'bg-app-text/20'}`}></span>
             </div>
             <div className="min-w-0 flex-1">
-                <p className={`font-bold text-sm truncate ${isSelected ? 'text-accent' : 'text-app-text/90'}`}>
+                {/* Le nom en entier : il était coupé (« Tho… »), et c'est
+                    lui qu'on cherche dans la liste. */}
+                <p className={`font-bold text-sm break-words leading-tight ${isSelected ? 'text-accent' : 'text-app-text'}`}>
                     {player.realName}
                 </p>
                 <p className="text-xs text-app-text/40 truncate">

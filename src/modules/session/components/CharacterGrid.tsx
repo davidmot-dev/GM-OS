@@ -99,11 +99,17 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                     onClick={() => setChoixDuPortrait(true)}
                     title={t('modules:session.players.avatar_change_title')}
                 >
-                    <img
-                        src={resolvedPlayerAvatar || undefined}
-                        alt={selectedPlayer.realName}
-                        className="w-16 h-16 rounded-full bg-app-surface object-cover ring-2 ring-accent/40 group-hover/portrait:opacity-40 transition-opacity"
-                    />
+                    {resolvedPlayerAvatar ? (
+                        <img
+                            src={resolvedPlayerAvatar}
+                            alt={selectedPlayer.realName}
+                            className="w-16 h-16 rounded-full bg-app-surface object-cover ring-2 ring-accent/40 group-hover/portrait:opacity-40 transition-opacity"
+                        />
+                    ) : (
+                        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-app-surface-2 text-lg font-black text-app-muted ring-2 ring-accent/40 group-hover/portrait:opacity-40">
+                            {selectedPlayer.realName.split(/\s+/).filter(Boolean).slice(0, 2).map(m => m[0]?.toUpperCase()).join('')}
+                        </span>
+                    )}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/portrait:opacity-100 transition-opacity text-app-text pointer-events-none">
                         <Camera size={22} />
                     </div>
@@ -120,7 +126,9 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                     <div className="flex items-center gap-2 mt-2">
                         <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${selectedPlayer.isOnline ? 'bg-etat-succes/10 text-etat-succes' : 'bg-app-surface text-app-text/40'}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${selectedPlayer.isOnline ? 'bg-etat-succes animate-pulse' : 'bg-app-text/20'}`}></span>
-                            {selectedPlayer.isOnline ? t('modules:session.players.status_online') : t('modules:session.players.status_offline')}
+                            {/* L'état en clair : « hors ligne » seul ne disait pas
+                                que c'est la tablette qui manque. */}
+                            {selectedPlayer.isOnline ? t('modules:session.players.agencement.en_ligne') : t('modules:session.players.agencement.hors_ligne')}
                         </span>
                         <span className="text-xs text-app-text/20">
                             {t('modules:session.players.character_count', { count: selectedPlayer.characters.length })}
@@ -241,33 +249,31 @@ const CharacterCard: React.FC<{
 
     return (
         <div className={`bg-app-surface/50 border rounded-xl overflow-hidden flex flex-col hover:border-app-border/80 transition-all group ${isSelected ? 'border-accent shadow-glow-accent/10' : 'border-app-border'}`}>
-            {/* Portrait */}
-            <div className="h-64 overflow-hidden relative bg-app-bg">
-                {/* Blurred background for full appearance */}
-                <img
-                    src={resolvedPortrait || undefined}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110"
-                />
-                {/* Main image - centered and contained */}
-                <img
-                    src={resolvedPortrait || undefined}
-                    alt={character.name}
-                    className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 z-10"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent z-20"></div>
-                {linkedCampaign && (
-                    <span className="absolute top-2 right-2 bg-accent/90 text-app-bg text-ui-10 font-black px-2 py-0.5 rounded-md uppercase tracking-wider z-30">
-                        {linkedCampaign.name.length > 12 ? linkedCampaign.name.slice(0, 12) + '…' : linkedCampaign.name}
-                    </span>
-                )}
-                {/* Delete Button */}
+            {/*
+              **Le portrait et le nom en tête, la vie en gros** — refonte, L5,
+              étape 2. Le portrait de 256 px poussait les gestes hors de vue.
+            */}
+            <div className="flex items-start gap-3 p-4 pb-0">
+                <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-app-border bg-app-surface-2">
+                    {resolvedPortrait
+                        ? <img src={resolvedPortrait} alt={character.name} className="h-full w-full object-cover" />
+                        : <span className="flex h-full w-full items-center justify-center text-app-subtle"><UserPlus size={22} strokeWidth={1.5} /></span>}
+                </div>
+                <div className="min-w-0 flex-1">
+                    <h4 className="font-display text-base font-bold leading-tight text-app-text">{character.name}</h4>
+                    {character.classRace && <p className="mt-0.5 text-xs text-app-muted">{character.classRace}</p>}
+                    {linkedCampaign && (
+                        <span className="mt-1.5 inline-block max-w-full truncate rounded border border-accent/40 bg-accent/10 px-2 py-0.5 text-ui-10 font-black uppercase tracking-wider text-accent">
+                            {linkedCampaign.name}
+                        </span>
+                    )}
+                </div>
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
                         onDelete();
                     }}
-                    className="absolute top-2 left-2 p-1.5 bg-app-bg/40 hover:bg-etat-danger/80 text-app-text/40 hover:text-app-bg rounded-lg backdrop-blur-md transition-all z-30 opacity-0 group-hover:opacity-100 shadow-xl"
+                    className="shrink-0 rounded-lg p-1.5 text-app-subtle transition-all hover:bg-etat-danger/10 hover:text-etat-danger"
                     title={t('modules:session.characters.delete_tooltip')}
                 >
                     <Trash2 size={14} />
@@ -276,10 +282,6 @@ const CharacterCard: React.FC<{
 
             {/* Info */}
             <div className="p-4 flex flex-col gap-3 flex-1">
-                <div>
-                    <h4 className="font-bold text-app-text text-sm leading-tight">{character.name}</h4>
-                    <p className="text-app-text/40 text-xs mt-0.5">{character.classRace}</p>
-                </div>
 
                 {/* La barre de vie n'existe que si le jeu compte des points de vie.
                     Sans jauge, on montre l'état que le système décrit — « Brisé »,
@@ -291,16 +293,17 @@ const CharacterCard: React.FC<{
                         <span>{decrireLaSante(character) ?? 'santé non chiffrée'}</span>
                     </div>
                 ) : (
-                <div className="flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1 text-app-text/40 text-xs">
-                            <Heart size={11} className="text-etat-danger" />
-                            <span>{t('modules:session.characters.hp_label')}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                            <button onClick={() => onHPChange(-1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-etat-danger hover:bg-app-border text-xs flex items-center justify-center transition-colors">−</button>
-                            <span className="font-mono text-xs text-app-text/60">{character.hp}/{character.maxHp}</span>
-                            <button onClick={() => onHPChange(1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-etat-succes hover:bg-app-border text-xs flex items-center justify-center transition-colors">+</button>
+                <div className="flex flex-col gap-2 rounded-lg border border-app-border bg-app-bg/40 p-3">
+                    <div className="flex items-center gap-3">
+                        <span className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                            <Heart size={13} className="text-etat-danger" />{t('modules:session.characters.hp_label')}
+                        </span>
+                        {/* − / + en gros : à la table, on vise un bouton de 16 px
+                            sans le voir. */}
+                        <div className="ml-auto flex items-center gap-2">
+                            <button onClick={() => onHPChange(-1)} className="flex h-10 w-10 items-center justify-center rounded-lg border border-app-border bg-app-surface text-lg font-black text-app-text transition-colors hover:border-etat-danger/50 hover:text-etat-danger" title="−1">−</button>
+                            <span className="min-w-[5rem] text-center font-display text-xl font-bold text-app-text">{character.hp} / {character.maxHp}</span>
+                            <button onClick={() => onHPChange(1)} className="flex h-10 w-10 items-center justify-center rounded-lg border border-app-border bg-app-surface text-lg font-black text-app-text transition-colors hover:border-etat-succes/50 hover:text-etat-succes" title="+1">+</button>
                         </div>
                     </div>
                     <div className="w-full bg-app-surface h-1.5 rounded-full overflow-hidden">

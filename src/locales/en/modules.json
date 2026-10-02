@@ -2374,6 +2374,16 @@
       }
     },
     "campaign_details": {
+      "agencement": {
+        "retour": "Back to the library",
+        "afficher": "Show",
+        "masquer": "Hide",
+        "seances": "{{count}} session(s)",
+        "en_cours": "{{count}} running",
+        "aucune_seance": "No session yet.",
+        "aucun_pnj": "No NPC in this campaign.",
+        "lieux_actifs": "Active places ({{count}})"
+      },
       "sections": {
         "overview": "Overview",
         "ai_oracle": "AI Oracle Settings",
@@ -2422,6 +2432,20 @@
       }
     },
     "campaign_library": {
+      "agencement": {
+        "compte": "{{count}} campaign(s)",
+        "une_active": "1 active",
+        "ouvrir": "Open the campaign in the cockpit",
+        "ajouter_image": "Add a background image",
+        "cloturee": "Closed",
+        "ecrire_synopsis": "Write a synopsis",
+        "exporter": "Export ({{count}} media)",
+        "cloturer": "Close",
+        "rouvrir": "Reopen",
+        "gerer_active": "Manage the campaign",
+        "aucun_resultat": "No campaign matches “{{q}}”.",
+        "aucune": "No campaign yet — “Create a campaign” starts the first one."
+      },
       "title": "Campaign Library",
       "subtitle": "Select a world to manage or create a new epic adventure.",
       "actions": {
@@ -2917,11 +2941,18 @@
       "empty_selection": "Untitled clue"
     },
     "campaign_form": {
-      "back_to_cockpit": "Back to Cockpit",
+      "agencement": {
+        "sections": "Sections",
+        "campagne": "Campaign:",
+        "image_de_fond": "Cockpit background image",
+        "changer_dans": "Edit in “{{section}}”",
+        "sans_synopsis": "No synopsis yet."
+      },
+      "back_to_cockpit": "Back",
       "title_edit": "Campaign Configuration",
       "title_new": "Initialize Adventure",
-      "sync_nexus": "Nexus Sync",
-      "sync_nexus_tooltip": "Propagate data to the Nexus",
+      "sync_nexus": "Save and close",
+      "sync_nexus_tooltip": "Saves the campaign settings, then closes the form",
       "close_tooltip": "Close editor",
       "sidebar": {
         "identity": "Identity",
@@ -3013,6 +3044,10 @@
       "quick_roll": "Quick Roll"
     },
     "players": {
+      "agencement": {
+        "en_ligne": "Online — tablet connected",
+        "hors_ligne": "Offline — tablet disconnected"
+      },
       "title": "Player Roster",
       "search_placeholder": "Search a player...",
       "no_results": "No players found",

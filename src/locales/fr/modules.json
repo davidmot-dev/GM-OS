@@ -2374,6 +2374,16 @@
       }
     },
     "campaign_details": {
+      "agencement": {
+        "retour": "Retour à la bibliothèque",
+        "afficher": "Afficher",
+        "masquer": "Masquer",
+        "seances": "{{count}} séance(s)",
+        "en_cours": "{{count}} en cours",
+        "aucune_seance": "Aucune séance pour l’instant.",
+        "aucun_pnj": "Aucun PNJ dans cette campagne.",
+        "lieux_actifs": "Lieux actifs ({{count}})"
+      },
       "sections": {
         "overview": "Aperçu",
         "ai_oracle": "Configuration Oracle IA",
@@ -2422,7 +2432,21 @@
       }
     },
     "campaign_library": {
-      "title": "Bibliothèque des Systèmes",
+      "agencement": {
+        "compte": "{{count}} campagne(s)",
+        "une_active": "1 active",
+        "ouvrir": "Ouvrir la campagne au cockpit",
+        "ajouter_image": "Ajouter une image de fond",
+        "cloturee": "Clôturée",
+        "ecrire_synopsis": "Écrire un synopsis",
+        "exporter": "Exporter ({{count}} médias)",
+        "cloturer": "Clôturer",
+        "rouvrir": "Rouvrir",
+        "gerer_active": "Gérer la campagne",
+        "aucun_resultat": "Aucune campagne ne répond à « {{q}} ».",
+        "aucune": "Aucune campagne — « Créer une campagne » commence la première."
+      },
+      "title": "Bibliothèque des campagnes",
       "subtitle": "Sélectionnez un univers à gérer ou créez une nouvelle aventure épique.",
       "actions": {
         "search_placeholder": "Rechercher des campagnes...",
@@ -2917,11 +2941,18 @@
       "empty_selection": "Indice sans titre"
     },
     "campaign_form": {
-      "back_to_cockpit": "Retour au Cockpit",
+      "agencement": {
+        "sections": "Sections",
+        "campagne": "Campagne :",
+        "image_de_fond": "Image de fond du cockpit",
+        "changer_dans": "Modifier dans « {{section}} »",
+        "sans_synopsis": "Pas encore de synopsis."
+      },
+      "back_to_cockpit": "Retour",
       "title_edit": "Configuration de Campagne",
       "title_new": "Initialisation d'Aventure",
-      "sync_nexus": "Synchronisation Nexus",
-      "sync_nexus_tooltip": "Propager les données vers le Nexus",
+      "sync_nexus": "Enregistrer et fermer",
+      "sync_nexus_tooltip": "Enregistre les réglages de la campagne, puis ferme le formulaire",
       "close_tooltip": "Fermer l'éditeur",
       "sidebar": {
         "identity": "Identité",
@@ -3013,6 +3044,10 @@
       "quick_roll": "Lancement Rapide"
     },
     "players": {
+      "agencement": {
+        "en_ligne": "En ligne — tablette connectée",
+        "hors_ligne": "Hors ligne — tablette déconnectée"
+      },
       "title": "Roster des Joueurs",
       "search_placeholder": "Rechercher un joueur...",
       "no_results": "Aucun joueur trouvé",

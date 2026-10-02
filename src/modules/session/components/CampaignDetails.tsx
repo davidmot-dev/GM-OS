@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { ChevronLeft, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2, Package, Upload, DownloadCloud } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2, Package, Upload, DownloadCloud } from 'lucide-react';
+import { Panneau, Etiquette } from '../../../components/socle';
 import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -11,8 +12,10 @@ import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 
 const CampaignDetails: React.FC = () => {
-    const { t } = useTranslation(['common', 'modules']);
-    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates, customGameDrivers, setSelectedAtlasMap } = useSessionOSStore();
+    const { t, i18n } = useTranslation(['common', 'modules']);
+    const { campaigns, activeCampaignId, sessions, setCurrentView, entities, atlasMaps, customSheetTemplates, customGameDrivers, setSelectedAtlasMap, navigateToNpcDetail } = useSessionOSStore();
+    const [apercuReplie, setApercuReplie] = useState(false);
+    const [survole, setSurvole] = useState<string | null>(null);
     const campaign = campaigns.find(c => c.id === activeCampaignId);
     const campaignSessions = sessions.filter(s => s.campaignId === activeCampaignId);
     const campaignNPCs = entities.filter(e => e.type === 'npc' && e.campaignId === activeCampaignId);
@@ -93,136 +96,267 @@ const CampaignDetails: React.FC = () => {
     if (!campaign) return null;
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];
-    const systemName = 
-        allTemplates.find(t => t.id === campaign.system)?.name || 
-        customGameDrivers.find(d => d.id === campaign.system)?.name ||
+    const piloteActif = customGameDrivers.find(d => d.id === campaign.system);
+    const systemName =
+        allTemplates.find(t => t.id === campaign.system)?.name ||
+        piloteActif?.name ||
         campaign.system;
+
+    const seances = [...campaignSessions].sort((a, b) => b.number - a.number);
+    const enCours = seances.filter(s => s.status === 'active').length;
+    const pnjSurvole = campaignNPCs.find(n => n.id === survole) ?? campaignNPCs[0];
+    const TON_DU_STATUT = { planned: 'alerte', active: 'accent', done: 'succes' } as const;
+    const TON_DU_CAMP = { ally: 'succes', neutral: 'neutre', hostile: 'danger', boss: 'accent' } as const;
+    const dateLongue = (date: string) => {
+        /* `AAAA-MM-JJ` se lit à midi (un fuseau négatif reculerait d'un jour) ;
+           une date complète, venue d'une importation, se lit telle quelle. */
+        const jour = /^\d{4}-\d{2}-\d{2}$/.test(date) ? new Date(`${date}T12:00:00`) : new Date(date);
+        return Number.isNaN(jour.getTime()) ? date : jour.toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    };
+
+    const copierPourLOracle = (s: (typeof seances)[number], bouton: HTMLButtonElement) => {
+        const checklistText = s.checklist?.length > 0
+            ? `\n\nCHECKLIST DE LA SESSION :\n${s.checklist.map(item => `${item.isCompleted ? '[X]' : '[ ]'} ${item.text}`).join('\n')}`
+            : '';
+        const text = `--- ORACLE UPDATE PROTOCOL ---\nCAMPAIGN: ${campaign.name}\nSESSION: #${s.number} - ${new Date(s.date).toLocaleDateString()}\n\nINSTRUCTIONS POUR L'ORACLE : \n1. Intègre ce compte-rendu de session dans ta base de connaissances.\n2. Identifie les nouveaux PNJs rencontrés et mets à jour les relations existantes.\n3. Note les changements majeurs dans l'univers (lieux visités, quêtes terminées).\n4. Prépare-toi à répondre aux questions futures en tenant compte de ces nouveaux événements.\n\nCONTENU DE LA SESSION :\n${s.publicSummary || "No summary recorded."}${checklistText}\n------------------------------`;
+        void navigator.clipboard.writeText(text);
+        const avant = bouton.textContent;
+        bouton.textContent = t('modules:session.campaign_details.status.copied');
+        setTimeout(() => { bouton.textContent = avant; }, 2000);
+    };
+
+    const titreDeBloc = (icone: React.ReactNode, titre: React.ReactNode, aside?: React.ReactNode) => (
+        <div className="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
+            <h3 className="flex min-w-0 items-center gap-2 font-display text-sm font-bold uppercase tracking-wider text-app-text">
+                <span className="shrink-0 text-accent">{icone}</span>
+                <span className="truncate">{titre}</span>
+            </h3>
+            {aside}
+        </div>
+    );
+    const boutonDEnTete = 'flex items-center gap-2 rounded-lg border px-3 py-2 text-ui-10 font-black uppercase tracking-widest transition-all';
 
     return (
         <>
-        <div className="flex-1 flex flex-col gap-6 p-6 h-full overflow-y-auto custom-scrollbar bg-app-bg/20">
-            {/* Header / Breadcrumbs */}
-            <div className="flex items-center gap-4">
-                <button
-                    onClick={() => setCurrentView('cockpit')}
-                    className="p-2 hover:bg-app-surface rounded-full transition-colors text-app-text/40 hover:text-app-text"
-                    title={t('modules:session.campaign_details.actions.back')}
-                    aria-label={t('modules:session.campaign_details.actions.back')}
-                >
-                    <ChevronLeft size={24} />
-                </button>
-                <div>
-                    <h2 className="text-2xl font-bold text-app-text/90">{campaign.name}</h2>
-                    <p className="text-app-text/40 text-sm tracking-widest uppercase font-semibold">{t('modules:session.campaign_details.subtitle')}</p>
+        <div className="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar bg-app-bg">
+            {/*
+              **L'image de fond en bandeau** — demandée par David, reprise de la
+              bibliothèque (refonte, L5, étape 2). Sans image, le bandeau garde
+              sa place, sobre.
+            */}
+            <header className="relative shrink-0 overflow-hidden border-b border-app-border bg-app-surface">
+                {campaign.wallpaperUrl && (
+                    <ResolvedAsset src={campaign.wallpaperUrl} alt="" className="absolute inset-0 h-full w-full object-cover opacity-40" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-r from-app-bg via-app-bg/80 to-transparent" />
+                <div className="relative flex flex-wrap items-end justify-between gap-4 px-6 py-5">
+                    <div className="min-w-0">
+                        <button
+                            onClick={() => setCurrentView('library')}
+                            className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-colors hover:text-accent"
+                        >
+                            <ChevronLeft size={14} />{t('modules:session.campaign_details.agencement.retour')}
+                        </button>
+                        <h1 className="mt-1 font-display text-3xl font-bold leading-tight text-app-text">{campaign.name}</h1>
+                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                            <Etiquette>{systemName}</Etiquette>
+                            {piloteActif && <Etiquette ton="info">{piloteActif.emoji} {t('modules:session.campaign_details.status.driver_active')}</Etiquette>}
+                            {campaign.id === activeCampaignId && <Etiquette ton="accent">{t('modules:session.campaign_library.status.active')}</Etiquette>}
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <button
+                            onClick={() => setCurrentView('campaign-editor')}
+                            className={`${boutonDEnTete} border-app-border bg-app-surface text-app-text hover:border-accent/50`}
+                        >
+                            <Edit3 size={13} />{t('modules:session.campaign_details.actions.edit')}
+                        </button>
+                        <button
+                            onClick={handleExportObsidian}
+                            title={verdictObsidian?.message}
+                            className={`${boutonDEnTete} ${
+                                verdictObsidian === null
+                                    ? 'border-gm-violet/40 text-gm-violet hover:bg-gm-violet/10'
+                                    : verdictObsidian.success
+                                    ? 'border-etat-succes/40 text-etat-succes'
+                                    : 'border-etat-danger/40 text-etat-danger'
+                            }`}
+                        >
+                            <Share2 size={13} />{t('modules:session.campaign_details.actions.export_obsidian')}
+                        </button>
+                    </div>
                 </div>
-                <div className="ml-auto flex gap-2">
-                    <button
-                        onClick={handleExportObsidian}
-                        title={verdictObsidian?.message}
-                        className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm transition-all font-bold ${
-                            verdictObsidian === null
-                                ? 'bg-gm-violet/20 hover:bg-gm-violet/30 border-gm-violet/30 text-gm-violet'
-                                : verdictObsidian.success
-                                ? 'bg-etat-succes/20 border-etat-succes/30 text-etat-succes'
-                                : 'bg-etat-danger/20 border-etat-danger/30 text-etat-danger'
-                        }`}
-                    >
-                        <Share2 size={16} />
-                        {t('modules:session.campaign_details.actions.export_obsidian')}
-                    </button>
-                    <button 
-                        onClick={() => setCurrentView('campaign-editor')}
-                        className="flex items-center gap-2 px-4 py-2 bg-app-surface hover:bg-app-surface/80 border border-app-border rounded-lg text-sm text-app-text/80 transition-all font-bold"
-                    >
-                        <Edit3 size={16} />
-                        {t('modules:session.campaign_details.actions.edit')}
-                    </button>
+                {verdictObsidian && (
+                    <p role="status" className={`relative px-6 pb-3 text-xs font-semibold ${verdictObsidian.success ? 'text-etat-succes' : 'text-etat-danger'}`}>
+                        {verdictObsidian.message}
+                    </p>
+                )}
+            </header>
+
+            <div className="grid grid-cols-1 gap-4 p-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+                <div className="flex flex-col gap-4">
+                    {/* L'aperçu, repliable : on le connaît, on vient chercher le reste */}
+                    <Panneau>
+                        {titreDeBloc(<Info size={16} />, t('modules:session.campaign_details.sections.overview'),
+                            <button onClick={() => setApercuReplie(!apercuReplie)} className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-accent">
+                                {apercuReplie ? <ChevronDown size={12} /> : <ChevronUp size={12} />}
+                                {apercuReplie ? t('modules:session.campaign_details.agencement.afficher') : t('modules:session.campaign_details.agencement.masquer')}
+                            </button>)}
+                        {!apercuReplie && (
+                            <div className="grid grid-cols-1 gap-4 px-4 pb-4 md:grid-cols-2">
+                                <div>
+                                    <p className="mb-1 text-ui-10 font-black uppercase tracking-widest text-app-muted">{t('modules:session.campaign_details.labels.description')}</p>
+                                    <p className="text-sm leading-relaxed text-app-text">{campaign.description || '—'}</p>
+                                </div>
+                                <div className="rounded-lg border-l-2 border-accent bg-accent/5 px-3 py-2">
+                                    <p className="mb-1 text-ui-10 font-black uppercase tracking-widest text-accent">{t('modules:session.campaign_details.labels.synopsis')}</p>
+                                    <p className="text-sm italic leading-relaxed text-app-text">{campaign.synopsis ? `« ${campaign.synopsis} »` : '—'}</p>
+                                </div>
+                            </div>
+                        )}
+                    </Panneau>
+
+                    {/* Les séances d'abord : la séance en cours se détache */}
+                    <Panneau>
+                        {titreDeBloc(<Calendar size={16} />, t('modules:session.campaign_details.sections.sessions'),
+                            <span className="flex items-center gap-1.5">
+                                <Etiquette>{t('modules:session.campaign_details.agencement.seances', { count: seances.length })}</Etiquette>
+                                {enCours > 0 && <Etiquette ton="accent">{t('modules:session.campaign_details.agencement.en_cours', { count: enCours })}</Etiquette>}
+                            </span>)}
+                        <div className="flex flex-col gap-2 px-4 pb-4">
+                            {seances.map(s => (
+                                <div key={s.id} className={`rounded-lg border p-3 ${s.status === 'active' ? 'border-accent bg-accent/10' : 'border-app-border bg-app-bg/40'}`}>
+                                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                        <span className={`font-display text-lg font-bold ${s.status === 'active' ? 'text-accent' : 'text-app-text'}`}>#{s.number}</span>
+                                        <span className="text-xs font-bold uppercase tracking-wider text-app-text">{dateLongue(s.date)}</span>
+                                        {s.status && <Etiquette ton={TON_DU_STATUT[s.status] ?? 'neutre'} className="ml-auto">{t(`modules:session.prep.status.${s.status}`, { defaultValue: s.status })}</Etiquette>}
+                                    </div>
+                                    <p className={`mt-1.5 line-clamp-1 text-sm ${s.publicSummary ? 'text-app-text' : 'italic text-app-subtle'} ${s.status === 'active' ? 'font-bold' : ''}`}>
+                                        {s.publicSummary || t('modules:session.campaign_details.status.no_summary')}
+                                    </p>
+                                    <div className="mt-2 flex justify-end gap-3">
+                                        <button
+                                            onClick={(e) => copierPourLOracle(s, e.currentTarget)}
+                                            className="text-ui-10 font-black uppercase tracking-widest text-app-muted transition-colors hover:text-accent"
+                                            title={t('modules:session.campaign_details.actions.oracle_copy')}
+                                        >
+                                            {t('modules:session.campaign_details.actions.oracle_copy')}
+                                        </button>
+                                        <button
+                                            onClick={() => useModalStore.getState().showCustom('session-summary', { sessionId: s.id })}
+                                            className="text-ui-10 font-black uppercase tracking-widest text-accent underline-offset-2 hover:underline"
+                                        >
+                                            {t('modules:session.campaign_details.actions.edit_summary')}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            {seances.length === 0 && <p className="py-3 text-center text-xs italic text-app-subtle">{t('modules:session.campaign_details.agencement.aucune_seance')}</p>}
+                        </div>
+                    </Panneau>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    {/*
+                      **La galerie en mosaïque, et l'aperçu de celui qu'on survole**
+                      — nom, camp, « Fiche » —, sans quitter l'écran.
+                    */}
+                    <Panneau>
+                        {titreDeBloc(<Users size={16} />, t('modules:session.campaign_details.sections.npcs', { count: campaignNPCs.length }),
+                            <button onClick={() => setCurrentView('npc-gallery')} className="text-ui-10 font-black uppercase tracking-widest text-accent hover:underline">
+                                {t('modules:session.campaign_details.actions.open_npcs')}
+                            </button>)}
+                        <div className="grid grid-cols-6 gap-1.5 px-4">
+                            {campaignNPCs.map(npc => (
+                                <button
+                                    key={npc.id}
+                                    onMouseEnter={() => setSurvole(npc.id)}
+                                    onFocus={() => setSurvole(npc.id)}
+                                    onClick={() => navigateToNpcDetail(npc.id)}
+                                    className={`aspect-square overflow-hidden rounded-md border bg-app-surface-2 transition-all ${pnjSurvole?.id === npc.id ? 'border-accent' : 'border-app-border hover:border-accent/50'}`}
+                                    title={npc.name}
+                                >
+                                    {npc.avatar
+                                        ? <ResolvedAsset src={npc.avatar} className="h-full w-full object-cover" alt={npc.name} />
+                                        : <span className="flex h-full w-full items-center justify-center text-app-subtle"><Users size={16} /></span>}
+                                </button>
+                            ))}
+                        </div>
+                        {pnjSurvole ? (
+                            <div className="m-4 flex items-center gap-3 rounded-lg border border-app-border bg-app-bg/40 px-3 py-2">
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="truncate font-display text-base font-bold text-accent">{pnjSurvole.name}</span>
+                                        <Etiquette ton={TON_DU_CAMP[pnjSurvole.role] ?? 'neutre'}>{t(`modules:session.npc_gallery.roles.${pnjSurvole.role}`, { defaultValue: pnjSurvole.role })}</Etiquette>
+                                    </div>
+                                    {pnjSurvole.description && <p className="truncate text-xs text-app-muted">{pnjSurvole.description}</p>}
+                                </div>
+                                <button onClick={() => navigateToNpcDetail(pnjSurvole.id)} className="shrink-0 rounded-md border border-accent/40 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/10">
+                                    {t('modules:session.npc_gallery.details_btn')}
+                                </button>
+                            </div>
+                        ) : (
+                            <p className="px-4 py-4 text-xs italic text-app-subtle">{t('modules:session.campaign_details.agencement.aucun_pnj')}</p>
+                        )}
+                    </Panneau>
+
+                    <Panneau>
+                        {titreDeBloc(<MapPin size={16} />, t('modules:session.campaign_details.agencement.lieux_actifs', { count: activeLocations.length }))}
+                        <div className="flex flex-col gap-1.5 px-4 pb-4">
+                            {activeLocations.map(loc => (
+                                <button
+                                    key={loc.id}
+                                    className="group flex items-center gap-3 rounded-lg border border-app-border bg-app-bg/40 p-2 text-left transition-all hover:border-accent/50"
+                                    onClick={() => {
+                                        setSelectedAtlasMap(loc.id);
+                                        setCurrentView('world-atlas');
+                                    }}
+                                >
+                                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded bg-app-surface-2">
+                                        <ResolvedAsset src={loc.fileUrl} isVideo={loc.isVideo} className="h-full w-full object-cover" alt="" />
+                                    </div>
+                                    <span className="min-w-0 flex-1 truncate text-sm font-bold text-app-text group-hover:text-accent">{loc.name}</span>
+                                    <ChevronRight size={14} className="shrink-0 text-app-subtle" />
+                                </button>
+                            ))}
+                            {activeLocations.length === 0 && (
+                                <p className="py-3 text-center text-xs italic text-app-subtle">{t('modules:session.campaign_details.status.no_locations')}</p>
+                            )}
+                        </div>
+                    </Panneau>
                 </div>
             </div>
 
-            {verdictObsidian && (
-                <p
-                    role="status"
-                    className={`-mt-3 text-xs font-semibold ${verdictObsidian.success ? 'text-etat-succes' : 'text-etat-danger'}`}
-                >
-                    {verdictObsidian.message}
-                </p>
-            )}
+            {/* Les outils de la campagne : le carnet de l'Oracle, les chroniques, la trame, l'archive */}
+            <div className="grid grid-cols-1 gap-4 px-5 pb-5 lg:grid-cols-3">
+                <Panneau className="p-4">
+                    <p className="flex items-center gap-2 font-display text-sm font-bold uppercase tracking-wider text-app-text">
+                        <Sparkles size={16} className="text-accent" />{t('modules:session.campaign_details.sections.ai_oracle')}
+                    </p>
+                    <p className="mt-2 text-ui-10 leading-relaxed text-app-muted">{t('modules:session.campaign_details.descriptions.ai_oracle')}</p>
+                    <input
+                        type="text"
+                        defaultValue={campaign.notebookUrl || ''}
+                        placeholder="https://notebooklm.google.com/..."
+                        onBlur={(e) => useSessionOSStore.getState().updateCampaign(campaign.id, { notebookUrl: e.target.value })}
+                        className="mt-3 w-full rounded-lg border border-app-border bg-app-bg/40 px-3 py-2 text-xs text-app-text outline-none transition-all focus:border-accent"
+                        title={t('modules:session.campaign_details.sections.ai_oracle')}
+                    />
+                    {campaign.notebookUrl && (
+                        <p className="mt-2 flex items-center gap-1 font-mono text-ui-9 text-etat-succes">
+                            <span className="h-1 w-1 rounded-full bg-etat-succes" />{t('modules:session.campaign_details.status.oracle_ready')}
+                        </p>
+                    )}
+                </Panneau>
 
-            <div className="grid grid-cols-12 gap-6">
-                {/* Left: General Info & Stats */}
-                <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
-                    <div className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col gap-4">
-                        <div className="flex items-center gap-3 text-accent">
-                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                                <Info size={18} />
-                            </div>
-                            <h3 className="font-bold text-sm uppercase tracking-wide">{t('modules:session.campaign_details.sections.overview')}</h3>
-                        </div>
-                        <div className="space-y-4">
-                            <div>
-                                <p className="text-ui-10 text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.system')}</p>
-                                <div className="flex items-center gap-2">
-                                    <p className="text-app-text/80 font-medium">{systemName}</p>
-                                    {customGameDrivers.find(d => d.id === campaign.system) && (
-                                        <span className="text-xs bg-etat-info/20 text-etat-info px-2 py-0.5 rounded border border-etat-info/30 flex items-center gap-1 font-bold">
-                                            {customGameDrivers.find(d => d.id === campaign.system)?.emoji} {t('modules:session.campaign_details.status.driver_active')}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                            <div>
-                                <p className="text-ui-10 text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.description')}</p>
-                                <p className="text-app-text/60 text-sm leading-relaxed">{campaign.description}</p>
-                            </div>
-                            <div>
-                                <p className="text-ui-10 text-app-text/40 uppercase font-bold tracking-widest mb-1">{t('modules:session.campaign_details.labels.synopsis')}</p>
-                                <p className="text-app-text/60 text-sm italic leading-relaxed border-l-2 border-accent/30 pl-3">
-                                    "{campaign.synopsis}"
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* NotebookLM Integration Card */}
-                    <div className="bg-app-surface/60 rounded-xl border border-accent/20 p-6 flex flex-col gap-4 shadow-glow-accent/5">
-                        <div className="flex items-center gap-3 text-accent">
-                            <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                                <Sparkles size={18} />
-                            </div>
-                            <h3 className="font-bold text-sm uppercase tracking-wide">{t('modules:session.campaign_details.sections.ai_oracle')}</h3>
-                        </div>
-                        <div className="space-y-3">
-                            <p className="text-ui-10 text-app-text/40 leading-relaxed">
-                                {t('modules:session.campaign_details.descriptions.ai_oracle')}
-                            </p>
-                            <div className="relative group">
-                                <input 
-                                    type="text" 
-                                    defaultValue={campaign.notebookUrl || ''}
-                                    placeholder="https://notebooklm.google.com/..."
-                                    onBlur={(e) => useSessionOSStore.getState().updateCampaign(campaign.id, { notebookUrl: e.target.value })}
-                                    className="w-full bg-app-bg/50 border border-app-border rounded-lg px-3 py-2 text-xs text-app-text/60 focus:border-accent/50 focus:ring-1 focus:ring-accent/20 outline-none transition-all"
-                                />
-                                <Sparkles size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within:text-accent transition-colors" />
-                            </div>
-                            {campaign.notebookUrl && (
-                                <p className="text-ui-9 text-etat-succes/70 flex items-center gap-1 font-mono">
-                                    <span className="w-1 h-1 rounded-full bg-etat-succes"></span>
-                                    {t('modules:session.campaign_details.status.oracle_ready')}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-
-                    <button 
+                <div className="grid grid-cols-2 gap-4">
+                    <button
                         onClick={() => setCurrentView('timeline-wiki')}
-                        className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
+                        className="flex flex-col items-center justify-center gap-2 rounded-xl border border-app-border bg-app-surface p-4 text-center transition-all hover:border-accent/50"
                     >
-                        <h4 className="font-bold text-sm uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">{t('modules:session.campaign_details.actions.open_wiki')}</h4>
-                        <p className="text-ui-10 text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">{t('modules:session.campaign_details.descriptions.open_wiki')}</p>
+                        <span className="font-display text-sm font-bold uppercase tracking-wider text-app-text">{t('modules:session.campaign_details.actions.open_wiki')}</span>
+                        <span className="text-ui-10 text-app-muted">{t('modules:session.campaign_details.descriptions.open_wiki')}</span>
                     </button>
-
                     {/*
                         La trame vit à côté de la chronique, et pas dedans : le
                         wiki décrit un MONDE, la trame décrit une HISTOIRE. C'est
@@ -231,212 +365,61 @@ const CampaignDetails: React.FC = () => {
                     */}
                     <button
                         onClick={() => setCurrentView('trame')}
-                        className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col justify-center items-center gap-3 hover:bg-app-surface hover:border-accent/40 hover:shadow-glow-accent/10 transition-all group"
+                        className="flex flex-col items-center justify-center gap-2 rounded-xl border border-app-border bg-app-surface p-4 text-center transition-all hover:border-accent/50"
                     >
-                        <h4 className="font-bold text-sm uppercase tracking-widest text-app-text/40 group-hover:text-accent transition-colors">Trame narrative</h4>
-                        <p className="text-ui-10 text-accent font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Actes et scènes</p>
+                        <span className="font-display text-sm font-bold uppercase tracking-wider text-app-text">Trame narrative</span>
+                        <span className="text-ui-10 text-app-muted">Actes et scènes</span>
                     </button>
                 </div>
 
-                {/* Right: Session History & Lore Notes */}
-                <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
-                    <div className="bg-app-surface/60 rounded-xl border border-app-border p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-center gap-3 text-accent">
-                                <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                                    <Calendar size={18} />
-                                </div>
-                                <h3 className="font-bold text-sm uppercase tracking-wide">{t('modules:session.campaign_details.sections.sessions')}</h3>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-3">
-                            {campaignSessions.sort((a, b) => b.number - a.number).map(s => (
-                                <div key={s.id} className={`group/session p-4 rounded-xl border transition-all relative ${s.status === 'active' ? 'bg-accent/10 border-accent/30' : 'bg-app-surface/30 border-app-border hover:border-app-border/80'}`}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-lg font-mono font-bold text-app-text/90">#{s.number}</span>
-                                            <h4 className="text-sm font-bold text-app-text/80">{t('common:labels.session_number', { number: s.number })}</h4>
-                                            <span className={`text-ui-10 px-2 py-0.5 rounded uppercase font-bold ${s.status === 'active' ? 'bg-etat-alerte text-app-subtle shadow-glow-accent' : 'bg-app-surface text-app-text/40'}`}>
-                                                {t('common:status.' + s.status, { defaultValue: s.status })}
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                            <button 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    useModalStore.getState().showCustom('session-summary', { sessionId: s.id });
-                                                }}
-                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-etat-info hover:bg-etat-info hover:text-app-bg transition-all uppercase tracking-wider"
-                                                title={t('modules:session.campaign_details.actions.edit_summary')}
-                                            >
-                                                <Edit3 size={12} />
-                                                {t('common:actions.edit')}
-                                            </button>
-                                            <button 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    const checklistText = s.checklist?.length > 0 
-                                                        ? `\n\nCHECKLIST DE LA SESSION :\n${s.checklist.map(item => `${item.isCompleted ? '[X]' : '[ ]'} ${item.text}`).join('\n')}`
-                                                        : '';
-
-                                                    const text = `--- ORACLE UPDATE PROTOCOL ---\nCAMPAIGN: ${campaign.name}\nSESSION: #${s.number} - ${new Date(s.date).toLocaleDateString()}\n\nINSTRUCTIONS POUR L'ORACLE : \n1. Intègre ce compte-rendu de session dans ta base de connaissances.\n2. Identifie les nouveaux PNJs rencontrés et mets à jour les relations existantes.\n3. Note les changements majeurs dans l'univers (lieux visités, quêtes terminées).\n4. Prépare-toi à répondre aux questions futures en tenant compte de ces nouveaux événements.\n\nCONTENU DE LA SESSION :\n${s.publicSummary || "No summary recorded."}${checklistText}\n------------------------------`;
-                                                    
-                                                    navigator.clipboard.writeText(text);
-                                                    
-                                                    // Visual feedback using the button itself
-                                                    const btn = e.currentTarget;
-                                                    const originalInner = btn.innerHTML;
-                                                    btn.innerHTML = `<span class="text-etat-succes flex items-center gap-1"><svg size="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check w-3 h-3"><polyline points="20 6 9 17 4 12"></polyline></svg> ${t('modules:session.campaign_details.status.copied')}</span>`;
-                                                    btn.classList.add('bg-etat-succes/10', 'border-etat-succes/30');
-                                                    
-                                                    setTimeout(() => {
-                                                        btn.innerHTML = originalInner;
-                                                        btn.classList.remove('bg-etat-succes/10', 'border-etat-succes/30');
-                                                    }, 2000);
-                                                }}
-                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-accent hover:bg-accent hover:text-app-on-accent transition-all uppercase tracking-wider"
-                                                title={t('modules:session.campaign_details.actions.oracle_copy')}
-                                            >
-                                                <Sparkles size={12} />
-                                                {t('modules:session.campaign_details.actions.oracle_copy')}
-                                            </button>
-                                            <span className="text-xs text-app-text/40 font-mono">{new Date(s.date).toLocaleDateString()}</span>
-                                        </div>
-                                    </div>
-                                    <p className="text-xs text-app-text/60 line-clamp-3 leading-relaxed">
-                                        {s.publicSummary || t('modules:session.campaign_details.status.no_summary')}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
+                <Panneau className="p-4">
+                    <div className="flex items-center gap-2">
+                        <Package size={16} className="text-etat-alerte" />
+                        <p className="font-display text-sm font-bold uppercase tracking-wider text-app-text">Nexus-OS</p>
+                        {!isNexusAvailable && (
+                            <span className="ml-auto rounded border border-app-border px-2 py-0.5 font-mono text-ui-9 uppercase text-app-subtle">
+                                {t('modules:session.campaign_details.status.no_electron')}
+                            </span>
+                        )}
                     </div>
-
-                    {/* World Tracking / POIs Snapshot */}
-                    <div className="grid grid-cols-2 gap-6">
-                        <div className="bg-app-surface/60 rounded-xl border border-app-border p-5">
-                            <div className="flex items-center gap-3 text-etat-info mb-4">
-                                <MapPin size={18} />
-                                <h4 className="font-bold text-xs uppercase tracking-widest">{t('modules:session.campaign_details.sections.locations')}</h4>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                {activeLocations.length > 0 ? (
-                                    activeLocations.map(loc => (
-                                        <div 
-                                            key={loc.id} 
-                                            className="group flex items-center gap-3 p-2 rounded-lg hover:bg-app-text/5 transition-all cursor-pointer"
-                                            onClick={() => {
-                                                setSelectedAtlasMap(loc.id);
-                                                setCurrentView('world-atlas');
-                                            }}
-                                        >
-                                            <div className="w-8 h-8 rounded bg-app-bg overflow-hidden border border-app-border">
-                                                <ResolvedAsset 
-                                                    src={loc.fileUrl} 
-                                                    isVideo={loc.isVideo}
-                                                    className="w-full h-full object-cover opacity-60 group-hover:opacity-100" 
-                                                    alt="" 
-                                                />
-                                            </div>
-                                            <span className="text-xs text-app-text/60 font-medium group-hover:text-accent truncate">{loc.name}</span>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-ui-10 text-app-text/20 italic text-center py-4">
-                                        {t('modules:session.campaign_details.status.no_locations')}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                        <div className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col gap-4">
-                            <div className="flex items-center gap-3 text-etat-succes">
-                                <div className="w-8 h-8 rounded-lg bg-etat-succes/10 flex items-center justify-center">
-                                    <Users size={18} />
-                                </div>
-                                <h3 className="font-bold text-sm uppercase tracking-wide">{t('modules:session.campaign_details.sections.npcs', { count: campaignNPCs.length })}</h3>
-                            </div>
-                            <div className="grid grid-cols-4 gap-2">
-                                {campaignNPCs.map(npc => (
-                                    <div key={npc.id} className="relative group aspect-square rounded-lg overflow-hidden border border-app-border hover:border-accent transition-colors cursor-pointer" onClick={() => setCurrentView('npc-gallery')}>
-                                        <ResolvedAsset src={npc.avatar} className="w-full h-full object-cover" alt={npc.name} />
-                                        <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <p className="text-ui-8 text-app-text font-bold uppercase p-1 bg-app-bg/60 rounded">{npc.name}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                                <button 
-                                    onClick={() => setCurrentView('npc-gallery')}
-                                    className="aspect-square rounded-lg border-2 border-dashed border-app-border hover:border-app-border/80 flex items-center justify-center text-app-text/20 hover:text-app-text/40 transition-all font-bold text-lg"
-                                    title={t('modules:session.campaign_details.actions.open_npcs')}
-                                    aria-label={t('modules:session.campaign_details.actions.open_npcs')}
-                                >
-                                    +
-                                </button>
-                            </div>
-                        </div>
+                    <p className="mt-2 text-ui-10 text-app-muted">{t('modules:session.campaign_details.descriptions.nexus')}</p>
+                    <label className="mt-2 flex cursor-pointer select-none items-center gap-2 text-ui-11 text-app-muted transition-colors hover:text-app-text">
+                        <input
+                            type="checkbox"
+                            checked={!emporterLesMedias}
+                            onChange={(e) => setEmporterLesMedias(!e.target.checked)}
+                            className="accent-etat-alerte"
+                        />
+                        <span>{t('modules:session.campaign_details.actions.nexus_light')}</span>
+                    </label>
+                    <div className="mt-3 flex gap-2">
+                        <button
+                            id="nexus-export-btn"
+                            onClick={handleExport}
+                            disabled={!isNexusAvailable || !!nexusProgress}
+                            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-etat-alerte/40 px-3 py-2 text-xs font-bold text-etat-alerte transition-all hover:bg-etat-alerte/10 disabled:cursor-not-allowed disabled:opacity-30"
+                            title={!isNexusAvailable ? t('modules:session.campaign_details.tooltips.no_electron') : t('modules:session.campaign_details.actions.nexus_export')}
+                        >
+                            <DownloadCloud size={14} />{t('modules:session.campaign_details.actions.nexus_export')}
+                        </button>
+                        <button
+                            id="nexus-import-btn"
+                            onClick={handleImport}
+                            disabled={!isNexusAvailable || !!nexusProgress}
+                            className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-app-border px-3 py-2 text-xs font-bold text-app-text transition-all hover:border-accent/50 disabled:cursor-not-allowed disabled:opacity-30"
+                            title={!isNexusAvailable ? t('modules:session.campaign_details.tooltips.no_electron') : t('modules:session.campaign_details.actions.nexus_import')}
+                        >
+                            <Upload size={14} />{t('modules:session.campaign_details.actions.nexus_import')}
+                        </button>
                     </div>
-                </div>
-            </div>
-            {/* Nexus-OS Section */}
-            <div className="bg-app-surface/60 rounded-xl border border-etat-alerte/20 p-6 flex flex-col gap-4">
-                <div className="flex items-center gap-3 text-etat-alerte">
-                    <div className="w-8 h-8 rounded-lg bg-etat-alerte/10 flex items-center justify-center">
-                        <Package size={18} />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-sm uppercase tracking-wide">Nexus-OS</h3>
-                        <p className="text-ui-10 text-app-text/40">{t('modules:session.campaign_details.descriptions.nexus')}</p>
-                    </div>
-                    {!isNexusAvailable && (
-                        <span className="ml-auto text-ui-9 bg-app-surface border border-app-border text-app-text/30 px-2 py-1 rounded font-mono uppercase">
-                            {t('modules:session.campaign_details.status.no_electron')}
-                        </span>
-                    )}
-                </div>
-
-                <label className="flex items-center gap-2 mb-3 text-ui-11 text-app-text/50 hover:text-app-text/80 transition-colors cursor-pointer select-none">
-                    <input
-                        type="checkbox"
-                        checked={!emporterLesMedias}
-                        onChange={(e) => setEmporterLesMedias(!e.target.checked)}
-                        className="accent-etat-alerte"
-                    />
-                    <span>{t('modules:session.campaign_details.actions.nexus_light')}</span>
-                </label>
-
-                {/* Actions */}
-                <div className="flex gap-3">
-                    <button
-                        id="nexus-export-btn"
-                        onClick={handleExport}
-                        disabled={!isNexusAvailable || !!nexusProgress}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-etat-alerte/10 hover:bg-etat-alerte/20 border border-etat-alerte/30 rounded-lg text-sm text-etat-alerte transition-all font-bold disabled:opacity-30 disabled:cursor-not-allowed"
-                        title={!isNexusAvailable ? t('modules:session.campaign_details.tooltips.no_electron') : t('modules:session.campaign_details.actions.nexus_export')}
-                    >
-                        <DownloadCloud size={16} />
-                        {t('modules:session.campaign_details.actions.nexus_export')}
-                    </button>
-                    <button
-                        id="nexus-import-btn"
-                        onClick={handleImport}
-                        disabled={!isNexusAvailable || !!nexusProgress}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-app-surface hover:bg-app-surface/80 border border-app-border rounded-lg text-sm text-app-text/60 hover:text-app-text/90 transition-all font-bold disabled:opacity-30 disabled:cursor-not-allowed"
-                        title={!isNexusAvailable ? t('modules:session.campaign_details.tooltips.no_electron') : t('modules:session.campaign_details.actions.nexus_import')}
-                    >
-                        <Upload size={16} />
-                        {t('modules:session.campaign_details.actions.nexus_import')}
-                    </button>
-                </div>
-
-                <p className="text-ui-9 text-app-text/25 leading-relaxed">
-                    {t('modules:session.campaign_details.descriptions.nexus_detailed')}
-                </p>
+                    <p className="mt-2 text-ui-9 leading-relaxed text-app-subtle">{t('modules:session.campaign_details.descriptions.nexus_detailed')}</p>
+                </Panneau>
             </div>
         </div>
         {/* Nexus HUD v2 — overlay glassmorphism plein écran */}
-        <NexusHUD 
-            progress={nexusProgress} 
-            onResolveInteraction={(choice) => nexusService.resolveInteraction(choice)} 
+        <NexusHUD
+            progress={nexusProgress}
+            onResolveInteraction={(choice) => nexusService.resolveInteraction(choice)}
         />
         {/* Nexus Conflict Resolver — modal décision utilisateur */}
         {conflictState && (

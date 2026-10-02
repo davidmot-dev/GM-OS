@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, BookOpen, Trash2, ArrowRight, Settings, Package, Upload, Power, Archive, ArchiveRestore, Eraser } from 'lucide-react';
+import { Plus, Search, Trash2, ArrowRight, Settings, Package, Upload, Power, Archive, ArchiveRestore, Eraser, ImagePlus, PenLine } from 'lucide-react';
+import { ResolvedImage } from '../../../components/ResolvedImage';
+import { Etiquette } from '../../../components/socle';
 import { ceQueLaClotureVaFaire } from '../logic/trame';
 import { motion } from 'framer-motion';
 import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
@@ -99,229 +101,234 @@ const CampaignLibrary: React.FC = () => {
         setCurrentView('cockpit');
     };
 
+    /* « Gérer » mène à la fiche de la campagne — l'écran « Gérer » de la
+       maquette —, en l'ouvrant si ce n'est pas déjà elle. */
+    const gerer = (id: string) => {
+        if (id !== activeCampaignId) setActiveCampaign(id);
+        setCurrentView('campaign-details');
+    };
+
+    const exporter = async (id: string) => {
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
+        await nexusService.exportBundle(id, { includeAssets: true });
+        setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    const cloturerOuRouvrir = (campaign: (typeof campaigns)[number]) => {
+        const os = useSessionOSStore.getState();
+        if (campaign.clotureeLe) {
+            os.rouvrirLaCampagne(campaign.id);
+            return;
+        }
+        /*
+          **Clôturer n'est pas supprimer**, et les deux boutons se touchent :
+          celui-ci range, l'autre détruit. D'où l'annonce AVANT — le nombre de
+          scènes qu'on va barrer se dit, sinon on découvre après coup ce qu'on
+          vient de faire. Même règle que pour l'achèvement d'un acte.
+        */
+        const { annulees, terminees, actesOuverts } = ceQueLaClotureVaFaire(os.scenes, os.actes, campaign.id);
+        const dits = [
+            terminees.length > 0 && `${terminees.length} scène(s) jouée(s) seront terminées`,
+            annulees.length > 0 && `${annulees.length} jamais jouée(s) seront annulées`,
+            actesOuverts > 0 && `${actesOuverts} acte(s) seront achevés`,
+        ].filter(Boolean).join(', ');
+        gmConfirm(
+            `Clôturer « ${campaign.name} » ?` + (dits ? ` ${dits}.` : '') + " Rien n'est effacé, et on peut rouvrir.",
+            () => os.cloturerLaCampagne(campaign.id),
+        );
+    };
+
+    /* La recherche filtre enfin : le champ était posé sans rien derrière. */
+    const [recherche, setRecherche] = useState('');
+    const visibles = campaigns.filter(c => {
+        const q = recherche.trim().toLowerCase();
+        return !q || c.name.toLowerCase().includes(q) || getSystemName(c.system).toLowerCase().includes(q);
+    });
+
+    const geste = 'flex items-center gap-1.5 text-ui-10 font-bold uppercase tracking-widest transition-colors';
+
     return (
-        <div className="flex-1 flex flex-col gap-6 p-8 h-full overflow-y-auto custom-scrollbar bg-app-bg">
-            <div className="flex flex-col gap-2">
-                <h2 className="text-3xl font-black text-app-text/90 uppercase tracking-tighter">{t('modules:session.campaign_library.title')}</h2>
-                <p className="text-app-text/40 font-medium">{t('modules:session.campaign_library.subtitle')}</p>
-            </div>
-
-            <div className="flex items-center gap-4 py-4">
-                <div className="flex-1 relative group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within:text-accent transition-colors" size={20} />
-                    <input
-                        type="text"
-                        placeholder={t('modules:session.campaign_library.actions.search_placeholder')}
-                        className="w-full bg-app-surface/60 border border-app-border/40 rounded-xl py-3 pl-11 pr-4 text-app-text/80 focus:outline-none focus:ring-1 focus:ring-accent/50 transition-all font-display"
-                    />
+        <div className="flex-1 flex flex-col h-full overflow-hidden bg-app-bg">
+            <header className="flex flex-wrap items-end justify-between gap-4 border-b border-app-border bg-app-surface/40 px-6 py-5 shrink-0">
+                <div>
+                    <h1 className="font-display text-2xl font-bold leading-tight text-app-text">{t('modules:session.campaign_library.title')}</h1>
+                    <p className="mt-1 text-sm text-app-muted">{t('modules:session.campaign_library.subtitle')}</p>
                 </div>
-                
-                {/* Global Import Action */}
-                <button
-                    onClick={handleImport}
-                    className="flex items-center gap-2 glass-bento px-6 py-3 rounded-xl text-app-text/60 font-bold hover:text-app-text transition-all hover:-translate-y-0.5"
-                >
-                    <Upload size={20} />
-                    {t('modules:session.campaign_library.actions.import_nexus')}
-                </button>
+                <Etiquette ton="accent">
+                    {t('modules:session.campaign_library.agencement.compte', { count: campaigns.length })}
+                    {activeCampaignId ? ` · ${t('modules:session.campaign_library.agencement.une_active')}` : ''}
+                </Etiquette>
+            </header>
 
-                {activeCampaignId && (
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+                <div className="mb-5 flex flex-wrap items-center gap-3">
+                    <div className="relative min-w-[16rem] flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle" size={16} />
+                        <input
+                            type="text"
+                            value={recherche}
+                            onChange={e => setRecherche(e.target.value)}
+                            placeholder={t('modules:session.campaign_library.actions.search_placeholder')}
+                            className="w-full rounded-lg border border-app-border bg-app-surface py-2.5 pl-10 pr-4 text-sm text-app-text outline-none transition-all placeholder:text-app-subtle focus:border-accent"
+                        />
+                    </div>
+                    {activeCampaignId && (
+                        <button
+                            onClick={() => setActiveCampaign(null)}
+                            className="flex items-center gap-2 rounded-lg border border-etat-danger/40 px-4 py-2.5 text-ui-10 font-black uppercase tracking-widest text-etat-danger transition-all hover:bg-etat-danger/10"
+                        >
+                            <Power size={14} />{t('modules:session.campaign_library.actions.deactivate_campaign')}
+                        </button>
+                    )}
                     <button
-                        onClick={() => setActiveCampaign(null)}
-                        className="flex items-center gap-2 bg-etat-danger/10 border border-etat-danger/20 px-6 py-3 rounded-xl text-etat-danger font-bold hover:bg-etat-danger hover:text-app-bg transition-all hover:-translate-y-0.5"
+                        onClick={handleImport}
+                        className="flex items-center gap-2 rounded-lg border border-app-border bg-app-surface px-4 py-2.5 text-ui-10 font-black uppercase tracking-widest text-app-text transition-all hover:border-accent/50"
                     >
-                        <Power size={20} />
-                        {t('modules:session.campaign_library.actions.deactivate_campaign')}
+                        <Upload size={14} />{t('modules:session.campaign_library.actions.import_nexus')}
                     </button>
-                )}
-
-                <button
-                    onClick={() => gmCustom('campaign-add')}
-                    className="flex items-center gap-2 bg-accent px-6 py-3 rounded-xl text-app-on-accent font-bold hover:brightness-110 transition-all shadow-glow-accent/20 hover:-translate-y-0.5"
-                >
-                    <Plus size={20} />
-                    {t('modules:session.campaign_library.actions.create_campaign')}
-                </button>
-            </div>
-
-            <motion.div 
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                    hidden: { opacity: 0 },
-                    visible: {
-                        opacity: 1,
-                        transition: { staggerChildren: 0.1 }
-                    }
-                }}
-            >
-                {campaigns.map(campaign => (
-                    <motion.div
-                        key={campaign.id}
-                        variants={{
-                            hidden: { opacity: 0, y: 20 },
-                            visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-                        }}
-                        className={`group glass-bento relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-xl ${campaign.id === activeCampaignId ? 'ring-2 ring-accent shadow-glow-accent/20' : 'hover:ring-1 hover:ring-app-text/20 hover:shadow-glow-accent/5'}`}
-                        onClick={() => handleSelectCampaign(campaign.id)}
+                    <button
+                        onClick={() => gmCustom('campaign-add')}
+                        className="flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-ui-10 font-black uppercase tracking-widest text-app-on-accent transition-all hover:brightness-110"
                     >
-                        {/* Background subtle image if available */}
-                        {campaign.wallpaperUrl && (
-                            <div className="absolute inset-0 opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-20 transition-all duration-700">
-                                <img src={campaign.wallpaperUrl} className="w-full h-full object-cover" alt="" />
-                            </div>
-                        )}
+                        <Plus size={14} />{t('modules:session.campaign_library.actions.create_campaign')}
+                    </button>
+                </div>
 
-                        <div className="relative p-6 flex flex-col h-64 justify-between z-10">
-                            <div>
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="w-12 h-12 rounded-xl bg-app-bg flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-app-bg transition-all duration-500">
-                                        <BookOpen size={24} />
+                <motion.div
+                    className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.06 } } }}
+                >
+                    {visibles.map(campaign => {
+                        const active = campaign.id === activeCampaignId;
+                        const medias = getMediaAssetCount(campaign.id);
+                        return (
+                            <motion.div
+                                key={campaign.id}
+                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                                className={`flex flex-col overflow-hidden rounded-xl border bg-app-surface transition-all ${active ? 'border-accent shadow-glow-accent/20' : 'border-app-border hover:border-accent/40'}`}
+                            >
+                                {/*
+                                  **L'image de fond, et sa place même vide** — une
+                                  invitation, pas un trou. Elle existait
+                                  (`wallpaperUrl`) mais ne paraissait qu'en filigrane.
+                                */}
+                                <div className="relative h-40 shrink-0 overflow-hidden bg-app-surface-2">
+                                    {campaign.wallpaperUrl ? (
+                                        <button type="button" onClick={() => handleSelectCampaign(campaign.id)} className="block h-full w-full" title={t('modules:session.campaign_library.agencement.ouvrir')}>
+                                            <ResolvedImage src={campaign.wallpaperUrl} alt="" className={`h-full w-full object-cover transition-transform duration-700 hover:scale-105 ${campaign.clotureeLe ? 'grayscale opacity-60' : ''}`} />
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => gmCustom('campaign-edit', campaign)}
+                                            className="flex h-full w-full items-center justify-center"
+                                        >
+                                            <span className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-app-border px-5 py-3 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-all hover:border-accent/50 hover:text-accent">
+                                                <ImagePlus size={20} />{t('modules:session.campaign_library.agencement.ajouter_image')}
+                                            </span>
+                                        </button>
+                                    )}
+                                    <div className="absolute left-3 top-3 flex gap-1.5">
+                                        {active && <Etiquette ton="accent">{t('modules:session.campaign_library.status.active')}</Etiquette>}
+                                        {campaign.clotureeLe && <Etiquette>{t('modules:session.campaign_library.agencement.cloturee')}</Etiquette>}
                                     </div>
-                                    <div className="flex gap-1">
+                                    <span className="absolute bottom-3 right-3 rounded border border-app-border bg-app-bg/85 px-2 py-0.5 text-ui-9 font-black uppercase tracking-widest text-app-text">
+                                        {getSystemName(campaign.system)}
+                                    </span>
+                                </div>
+
+                                <div className="flex flex-1 flex-col gap-3 p-4">
+                                    <h3 className={`font-display text-lg font-bold leading-tight ${campaign.clotureeLe ? 'text-app-muted line-through' : 'text-app-text'}`}>{campaign.name}</h3>
+                                    {/* Le synopsis, et non la description : c'est lui qui
+                                        dit en trois lignes de quoi parle la campagne. */}
+                                    {campaign.synopsis?.trim() ? (
+                                        <p className="line-clamp-3 text-sm leading-relaxed text-app-muted">{campaign.synopsis}</p>
+                                    ) : (
                                         <button
-                                            className="p-2 text-app-text/20 hover:text-accent transition-colors opacity-0 group-hover:opacity-100"
-                                            onClick={(e) => { 
-                                                e.stopPropagation(); 
-                                                gmCustom('campaign-edit', campaign); 
-                                            }}
-                                            title={t('common:actions.edit')}
+                                            type="button"
+                                            onClick={() => gmCustom('campaign-edit', campaign)}
+                                            className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-app-border py-3 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-all hover:border-accent/50 hover:text-accent"
                                         >
-                                            <Settings size={18} />
+                                            <PenLine size={13} />{t('modules:session.campaign_library.agencement.ecrire_synopsis')}
                                         </button>
-                                        {/*
-                                            **Clôturer n'est pas supprimer**, et
-                                            les deux boutons se touchent : celui-ci
-                                            range, l'autre détruit. D'où l'annonce
-                                            AVANT — le nombre de scènes qu'on va
-                                            barrer se dit, sinon on découvre après
-                                            coup ce qu'on vient de faire. Même règle
-                                            que pour l'achèvement d'un acte.
-                                        */}
+                                    )}
+
+                                    <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-app-border pt-3">
                                         <button
-                                            className="p-2 text-app-text/20 hover:text-accent transition-colors opacity-0 group-hover:opacity-100"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                const os = useSessionOSStore.getState();
-                                                if (campaign.clotureeLe) {
-                                                    os.rouvrirLaCampagne(campaign.id);
-                                                    return;
-                                                }
-                                                const { annulees, terminees, actesOuverts } =
-                                                    ceQueLaClotureVaFaire(os.scenes, os.actes, campaign.id);
-                                                const dits = [
-                                                    terminees.length > 0 && `${terminees.length} scène(s) jouée(s) seront terminées`,
-                                                    annulees.length > 0 && `${annulees.length} jamais jouée(s) seront annulées`,
-                                                    actesOuverts > 0 && `${actesOuverts} acte(s) seront achevés`,
-                                                ].filter(Boolean).join(', ');
-                                                gmConfirm(
-                                                    `Clôturer « ${campaign.name} » ?`
-                                                    + (dits ? ` ${dits}.` : '')
-                                                    + " Rien n'est effacé, et on peut rouvrir.",
-                                                    () => os.cloturerLaCampagne(campaign.id),
-                                                );
-                                            }}
-                                            title={campaign.clotureeLe
-                                                ? 'Rouvrir la campagne'
-                                                : "Clôturer la campagne — elle se range, rien n'est effacé"}
+                                            onClick={() => void exporter(campaign.id)}
+                                            className={`${geste} text-app-muted hover:text-accent`}
+                                            title={medias > 0
+                                                ? t('modules:session.campaign_library.status.nexus_ready_tooltip', { count: medias })
+                                                : t('modules:session.campaign_library.status.nexus_lite_tooltip')}
                                         >
-                                            {campaign.clotureeLe ? <ArchiveRestore size={18} /> : <Archive size={18} />}
+                                            <Package size={12} />{t('modules:session.campaign_library.agencement.exporter', { count: medias })}
+                                        </button>
+                                        <button onClick={() => gmCustom('campaign-edit', campaign)} className={`${geste} text-app-muted hover:text-accent`}>
+                                            <Settings size={12} />{t('common:actions.edit')}
                                         </button>
                                         <button
-                                            className="p-2 text-app-text/20 hover:text-etat-danger transition-colors opacity-0 group-hover:opacity-100"
-                                            onClick={(e) => { 
-                                                e.stopPropagation(); 
-                                                gmConfirm(t('modules:session.campaign_library.status.delete_confirm', { name: campaign.name }), () => {
+                                            onClick={() => cloturerOuRouvrir(campaign)}
+                                            className={`${geste} text-app-muted hover:text-accent`}
+                                            title={campaign.clotureeLe ? 'Rouvrir la campagne' : "Clôturer la campagne — elle se range, rien n'est effacé"}
+                                        >
+                                            {campaign.clotureeLe ? <ArchiveRestore size={12} /> : <Archive size={12} />}
+                                            {campaign.clotureeLe ? t('modules:session.campaign_library.agencement.rouvrir') : t('modules:session.campaign_library.agencement.cloturer')}
+                                        </button>
+                                        <span className="ml-auto flex items-center gap-3">
+                                            <button
+                                                onClick={() => gmConfirm(t('modules:session.campaign_library.status.delete_confirm', { name: campaign.name }), () => {
                                                     useSessionOSStore.getState().deleteCampaign(campaign.id);
-                                                });
-                                            }}
-                                            title={t('common:actions.delete')}
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
-                                        <button
-                                            className="p-2 text-app-text/20 hover:text-etat-danger transition-colors opacity-0 group-hover:opacity-100"
-                                            onClick={(e) => { e.stopPropagation(); setAPurger(campaign.id); }}
-                                            title="Tout effacer — jusqu’aux résidus dans les autres modules et au dossier de ses fiches"
-                                        >
-                                            <Eraser size={18} />
-                                        </button>
-                                    </div>
-                                </div>
-                                <h3 className={`text-xl font-bold mb-1 transition-colors ${
-                                    campaign.clotureeLe
-                                        ? 'text-app-text/40 line-through'
-                                        : 'text-app-text/90 group-hover:text-accent'
-                                }`}>{campaign.name}</h3>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-ui-10 bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{getSystemName(campaign.system)}</span>
-                                    {campaign.id === activeCampaignId && (
-                                        <span className="text-ui-10 bg-accent text-app-on-accent px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">{t('modules:session.campaign_library.status.active')}</span>
-                                    )}
-                                    {campaign.clotureeLe && (
-                                        <span className="text-ui-10 bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">
-                                            clôturée
+                                                })}
+                                                className={`${geste} text-etat-danger/80 hover:text-etat-danger`}
+                                            >
+                                                <Trash2 size={12} />{t('common:actions.delete')}
+                                            </button>
+                                            <button
+                                                onClick={() => setAPurger(campaign.id)}
+                                                className={`${geste} text-app-subtle hover:text-etat-danger`}
+                                                title="Tout effacer — jusqu’aux résidus dans les autres modules et au dossier de ses fiches"
+                                            >
+                                                <Eraser size={12} />
+                                            </button>
                                         </span>
-                                    )}
-                                </div>
-                                <p className="text-app-text/40 text-xs mt-3 line-clamp-2 leading-relaxed italic">
-                                    "{campaign.description}"
-                                </p>
-                            </div>
-
-                             <div className="flex items-center justify-between mt-4">
-                                <div className="flex -space-x-2">
-                                    {/* Mock player avatars */}
-                                    {[1, 2, 3, 4].map(i => (
-                                        <div key={i} className="w-7 h-7 rounded-full border-2 border-app-bg bg-app-surface overflow-hidden">
-                                            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Player${i}${campaign.id}`} alt="" />
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    {/* Badge Nexus-Ready — basé sur le compte réel des assets media */}
-                                    {(() => {
-                                        const assetCount = getMediaAssetCount(campaign.id);
-                                        return assetCount > 0 ? (
-                                            <span
-                                                title={t('modules:session.campaign_library.status.nexus_ready_tooltip', { count: assetCount })}
-                                                className="flex items-center gap-1 text-ui-9 bg-etat-info/10 text-etat-info border border-etat-info/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
-                                            >
-                                                <Package size={8} />
-                                                Nexus-Ready
-                                            </span>
-                                        ) : (
-                                            <span
-                                                title={t('modules:session.campaign_library.status.nexus_lite_tooltip')}
-                                                className="flex items-center gap-1 text-ui-9 text-app-text/20 border border-app-border/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
-                                            >
-                                                <Package size={8} />
-                                                Nexus
-                                            </span>
-                                        );
-                                    })()}
-                                    <div className="flex items-center gap-1 text-accent font-bold text-xs group-hover:translate-x-1 transition-transform">
-                                        {t('modules:session.campaign_library.actions.manage')} <ArrowRight size={14} />
                                     </div>
+
+                                    <button
+                                        onClick={() => gerer(campaign.id)}
+                                        className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                                            active ? 'bg-accent text-app-on-accent hover:brightness-110' : 'border border-app-border bg-app-surface-2 text-app-text hover:border-accent/50 hover:text-accent'
+                                        }`}
+                                    >
+                                        {active ? t('modules:session.campaign_library.agencement.gerer_active') : t('modules:session.campaign_library.actions.manage')}
+                                        <ArrowRight size={13} />
+                                    </button>
                                 </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
-            </motion.div>
+                            </motion.div>
+                        );
+                    })}
+                </motion.div>
+
+                {visibles.length === 0 && (
+                    <p className="py-16 text-center text-sm italic text-app-subtle">
+                        {recherche ? t('modules:session.campaign_library.agencement.aucun_resultat', { q: recherche }) : t('modules:session.campaign_library.agencement.aucune')}
+                    </p>
+                )}
+            </div>
 
             {/* Nexus Overlays */}
             {nexusProgress && (
-                <NexusHUD 
-                    progress={nexusProgress} 
+                <NexusHUD
+                    progress={nexusProgress}
                     onResolveInteraction={(choice) => nexusService.resolveInteraction(choice)}
                 />
             )}
 
             {conflictState && (
-                <NexusConflictResolver 
-                    conflicts={conflictState} 
+                <NexusConflictResolver
+                    conflicts={conflictState}
                     onResolve={handleConflictResolve}
                 />
             )}
