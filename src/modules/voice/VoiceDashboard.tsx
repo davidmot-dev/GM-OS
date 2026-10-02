@@ -140,12 +140,12 @@ const VoiceDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col bg-app-bg font-sans text-slate-200 overflow-hidden">
+        <div className="h-full flex flex-col bg-app-bg font-sans text-app-text overflow-hidden">
             {/* Header Status Bar */}
             <div className="flex items-center justify-between px-6 py-3 border-b border-app-border/50 bg-app-surface/50 backdrop-blur-md">
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-700'}`} />
+                        <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-etat-succes animate-pulse' : 'bg-app-surface-2'}`} />
                         <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
                             {t('modules:voice.dashboard.mic_status')}: {isActive ? t('modules:voice.dashboard.active') : t('modules:voice.dashboard.standby')}
                         </span>
@@ -157,18 +157,18 @@ const VoiceDashboard: React.FC = () => {
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <Zap size={14} className={isWorkletReady ? "text-amber-500" : "text-slate-600"} />
+                        <Zap size={14} className={isWorkletReady ? "text-etat-succes" : "text-app-subtle"} />
                         <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
                             {t('modules:voice.dashboard.dsp_load')}: {isWorkletReady ? '4%' : 'N/A'}
                         </span>
                         {!isWorkletReady && isActive && (
-                            <span className="text-ui-8 bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30 animate-pulse">
+                            <span className="text-ui-8 bg-etat-danger/20 text-etat-danger px-1.5 py-0.5 rounded border border-etat-danger/30 animate-pulse">
                                 FALLBACK ACTIVE
                             </span>
                         )}
                     </div>
                     {isDucking && (
-                        <div className="flex items-center gap-2 px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded text-amber-500 animate-pulse">
+                        <div className="flex items-center gap-2 px-2 py-0.5 bg-etat-alerte/20 border border-etat-alerte/30 rounded text-etat-alerte animate-pulse">
                             <Volume2 size={12} />
                             <span className="text-ui-9 font-black uppercase tracking-widest">
                                 {t('modules:voice.dashboard.ducking_active')}
@@ -181,7 +181,7 @@ const VoiceDashboard: React.FC = () => {
                             <span className="text-ui-9 font-bold text-accent uppercase tracking-wider">
                                 {t('modules:voice.dashboard.linked')}: {lastSyncedEntityName}
                             </span>
-                            <span className="text-ui-8 bg-accent/20 px-1.5 py-0.5 rounded text-accent/80 font-black flex items-center gap-1 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                            <span className="text-ui-8 bg-accent/20 px-1.5 py-0.5 rounded text-accent/80 font-black flex items-center gap-1 shadow-[0_0_10px_color-mix(in_srgb,var(--app-accent)_20%,transparent)]">
                                 <span className="w-1 h-1 bg-accent rounded-full animate-pulse" />
                                 {t('modules:voice.dashboard.ai_optimized')}
                             </span>
@@ -192,13 +192,13 @@ const VoiceDashboard: React.FC = () => {
                 <div className="flex gap-2">
                     <button 
                         onClick={() => toggleMonitor()}
-                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isMonitor ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-slate-300'}`}
+                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isMonitor ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-app-text'}`}
                     >
                         🎧 {t('modules:voice.dashboard.monitor')}
                     </button>
                     <button 
                         onClick={() => toggleSyncNPC()}
-                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isSyncNPC ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-slate-300'}`}
+                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isSyncNPC ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-app-text'}`}
                     >
                         🔄 {t('modules:voice.dashboard.sync_npc')}
                     </button>
@@ -208,7 +208,7 @@ const VoiceDashboard: React.FC = () => {
                             await voiceEngine.initialize();
                             toggleActive();
                         }}
-                        className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isActive ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'bg-app-surface text-slate-300'}`}
+                        className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isActive ? 'bg-etat-succes text-app-bg shadow-lg shadow-etat-succes/20' : 'bg-app-surface text-app-text'}`}
                     >
                         {isActive ? t('modules:voice.dashboard.mic_on') : t('modules:voice.dashboard.mic_off')}
                     </button>
@@ -218,16 +218,16 @@ const VoiceDashboard: React.FC = () => {
             <div className="flex-1 flex overflow-hidden">
                 {/* Left Sidebar: Presets */}
                 <aside className="w-64 border-r border-app-border/50 flex flex-col p-4 gap-2 bg-app-surface/20 overflow-y-auto custom-scrollbar">
-                    <h3 className="px-2 mb-2 text-ui-10 font-black text-slate-600 uppercase tracking-[0.2em]">{t('modules:voice.dashboard.vocal_templates')}</h3>
+                    <h3 className="px-2 mb-2 text-ui-10 font-black text-app-subtle uppercase tracking-[0.2em]">{t('modules:voice.dashboard.vocal_templates')}</h3>
                     {presets.map((preset) => (
                         <button
                             key={preset.id}
                             onClick={() => applyPreset(preset.id)}
                             className={`flex items-center gap-3 p-3 rounded-xl transition-all group overflow-hidden relative ${activePresetId === preset.id 
                                 ? 'bg-accent/10 text-accent border border-accent/30' 
-                                : 'text-app-subtle hover:bg-app-surface/5 hover:text-slate-300 border border-transparent'}`}
+                                : 'text-app-subtle hover:bg-app-surface/5 hover:text-app-text border border-transparent'}`}
                         >
-                            <div className={`${activePresetId === preset.id ? 'text-accent' : 'text-slate-600 group-hover:text-accent'} transition-colors`}>
+                            <div className={`${activePresetId === preset.id ? 'text-accent' : 'text-app-subtle group-hover:text-accent'} transition-colors`}>
                                 {getIcon(preset.icon)}
                             </div>
                             <div className="flex flex-col items-start min-w-0">
@@ -257,7 +257,7 @@ const VoiceDashboard: React.FC = () => {
                     */}
                     {voixEnregistrees.length > 0 && (
                         <div className="mt-8">
-                            <h3 className="px-2 mb-2 text-ui-10 font-black text-slate-600 uppercase tracking-[0.2em]">
+                            <h3 className="px-2 mb-2 text-ui-10 font-black text-app-subtle uppercase tracking-[0.2em]">
                                 Voix des PNJ
                             </h3>
                             {voixEnregistrees.map(pnj => (
@@ -267,9 +267,9 @@ const VoiceDashboard: React.FC = () => {
                                         appliquerProfil(pnj.voiceProfile!);
                                         gmToast(`Voix de ${pnj.name} rappelée.`, 'info');
                                     }}
-                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-app-subtle hover:bg-app-surface/5 hover:text-slate-300 border border-transparent hover:border-cyan-500/20 transition-all group"
+                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-app-subtle hover:bg-app-surface/5 hover:text-app-text border border-transparent hover:border-gm-cyan/20 transition-all group"
                                 >
-                                    <AudioLines size={16} className="text-slate-600 group-hover:text-cyan-300 transition-colors shrink-0" />
+                                    <AudioLines size={16} className="text-app-subtle group-hover:text-gm-cyan transition-colors shrink-0" />
                                     <div className="flex flex-col items-start min-w-0">
                                         <span className="font-bold text-sm truncate w-full">{pnj.name}</span>
                                         <span className="text-ui-10 opacity-60">
@@ -299,7 +299,7 @@ const VoiceDashboard: React.FC = () => {
                         <select
                             value={inputDeviceId || ''}
                             onChange={(e) => setInputDeviceId(e.target.value || null)}
-                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
+                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-app-text focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
                         >
                             <option value="">{t('modules:voice.dashboard.default_input')}</option>
                             {availableInputs.map(device => (
@@ -316,7 +316,7 @@ const VoiceDashboard: React.FC = () => {
                         <select
                             value={outputDeviceId || ''}
                             onChange={(e) => setOutputDeviceId(e.target.value || null)}
-                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-slate-300 focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
+                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-app-text focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
                         >
                             <option value="">{t('modules:voice.dashboard.default_output')}</option>
                             {availableOutputs.map(device => (
@@ -327,13 +327,13 @@ const VoiceDashboard: React.FC = () => {
                         </select>
                         <button 
                             onClick={() => voiceEngine.refreshAvailableDevices()}
-                            className="text-ui-9 text-slate-600 hover:text-accent transition-colors uppercase font-bold text-left px-1"
+                            className="text-ui-9 text-app-subtle hover:text-accent transition-colors uppercase font-bold text-left px-1"
                         >
                             ↻ {t('modules:voice.dashboard.refresh_devices')}
                         </button>
                     </div>
 
-                    <button className="mt-4 flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-slate-800 text-slate-600 text-ui-10 font-black uppercase tracking-widest hover:border-slate-600 hover:text-slate-400 transition-all">
+                    <button className="mt-4 flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-app-border text-app-subtle text-ui-10 font-black uppercase tracking-widest hover:border-app-border hover:text-app-muted transition-all">
                         + {t('modules:voice.dashboard.custom_profile')}
                     </button>
                 </aside>
@@ -344,7 +344,7 @@ const VoiceDashboard: React.FC = () => {
                     <div className="flex-1 flex items-center justify-center">
                         <div className="relative w-80 h-80 flex items-center justify-center">
                             {/* Animated Rings */}
-                            <div className="absolute inset-0 rounded-full border-2 border-white/5 scale-[1.1]" />
+                            <div className="absolute inset-0 rounded-full border-2 border-app-text/5 scale-[1.1]" />
                             <div className="absolute inset-0 rounded-full border border-accent/10 scale-[1.3] animate-pulse" />
                             
                             {/* Waveform Circle Emulation */}
@@ -354,8 +354,8 @@ const VoiceDashboard: React.FC = () => {
                             />
                             
                             {/* Main Mic Icon */}
-                            <div className={`relative w-48 h-48 rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-accent/10 border-2 border-accent/20' : 'bg-slate-900 border-2 border-slate-800'}`}>
-                                <Mic2 size={64} className={`transition-all duration-300 ${isActive ? 'text-accent drop-shadow-glow-accent' : 'text-slate-700'}`} />
+                            <div className={`relative w-48 h-48 rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-accent/10 border-2 border-accent/20' : 'bg-app-bg border-2 border-app-border'}`}>
+                                <Mic2 size={64} className={`transition-all duration-300 ${isActive ? 'text-accent drop-shadow-glow-accent' : 'text-app-subtle'}`} />
                                 
                                 {/* Pulse Effect when speaking */}
                                 {isActive && (
@@ -373,7 +373,7 @@ const VoiceDashboard: React.FC = () => {
                         <button 
                             onClick={() => toggleLive()}
                             className={`group relative overflow-hidden px-12 py-4 rounded-full font-black text-lg transition-all duration-500 border shadow-2xl ${isLive 
-                                ? 'bg-red-600 text-white border-red-500 animate-pulse ring-4 ring-red-600/20' 
+                                ? 'bg-etat-danger text-app-bg border-etat-danger animate-pulse ring-4 ring-etat-danger/20' 
                                 : 'bg-app-bg text-app-muted border-app-border hover:border-accent/50 hover:text-accent'}`}
                         >
                             <span className="relative z-10 flex items-center gap-3">
@@ -381,7 +381,7 @@ const VoiceDashboard: React.FC = () => {
                                 {isLive ? t('modules:voice.dashboard.live_broadcast') : t('modules:voice.dashboard.go_live')}
                             </span>
                             {isLive && (
-                                <div className="absolute inset-0 bg-red-500/20 blur-xl opacity-50" />
+                                <div className="absolute inset-0 bg-etat-danger/20 blur-xl opacity-50" />
                             )}
                         </button>
                     </div>
@@ -435,14 +435,14 @@ const VoiceDashboard: React.FC = () => {
                         />
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-slate-800/30 flex flex-col gap-3">
+                    <div className="mt-4 pt-4 border-t border-app-border/30 flex flex-col gap-3">
                         <button 
                             onClick={() => toggleAntiLarsen()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.antiLarsen ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.antiLarsen ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-app-muted'}`}
                         >
                             <span className="text-ui-10 font-black uppercase tracking-widest">🛡️ {t('modules:voice.shapers.anti_larsen')}</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.antiLarsen ? 'bg-emerald-500' : 'bg-slate-700'}`}>
-                                <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.antiLarsen ? 'right-1' : 'left-1'}`} />
+                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.antiLarsen ? 'bg-etat-succes' : 'bg-app-surface-2'}`}>
+                                <div className={`absolute top-1 w-2 h-2 bg-app-text rounded-full transition-all ${currentEffects.antiLarsen ? 'right-1' : 'left-1'}`} />
                             </div>
                         </button>
                         
@@ -468,7 +468,7 @@ const VoiceDashboard: React.FC = () => {
                                 {currentEffects.debruitage === 'neuronal' && (
                                     <span
                                         title={t('modules:voice.shapers.voice_detected')}
-                                        className={`w-2 h-2 rounded-full transition-colors ${probabiliteDeVoix > 0.6 ? 'bg-emerald-400' : 'bg-slate-700'}`}
+                                        className={`w-2 h-2 rounded-full transition-colors ${probabiliteDeVoix > 0.6 ? 'bg-etat-succes' : 'bg-app-surface-2'}`}
                                     />
                                 )}
                             </div>
@@ -479,8 +479,8 @@ const VoiceDashboard: React.FC = () => {
                                         onClick={() => setDebruitage(mode)}
                                         title={t(`modules:voice.shapers.debruitage_${mode}_hint`)}
                                         className={`flex-1 px-2 py-2 rounded-lg text-ui-9 font-black uppercase tracking-tighter transition-all border ${currentEffects.debruitage === mode
-                                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                                            : 'bg-app-bg border-transparent text-app-subtle hover:text-slate-300'}`}
+                                            ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes'
+                                            : 'bg-app-bg border-transparent text-app-subtle hover:text-app-text'}`}
                                     >
                                         {t(`modules:voice.shapers.debruitage_${mode}`)}
                                     </button>
@@ -502,27 +502,27 @@ const VoiceDashboard: React.FC = () => {
 
                         <button 
                             onClick={() => toggleNoiseGate()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-app-muted'}`}
                         >
                             <span className="text-ui-10 font-black uppercase tracking-widest">🔇 {t('modules:voice.shapers.noise_gate')}</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseGate ? 'bg-accent' : 'bg-slate-700'}`}>
-                                <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.noiseGate ? 'right-1' : 'left-1'}`} />
+                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseGate ? 'bg-accent' : 'bg-app-surface-2'}`}>
+                                <div className={`absolute top-1 w-2 h-2 bg-app-text rounded-full transition-all ${currentEffects.noiseGate ? 'right-1' : 'left-1'}`} />
                             </div>
                         </button>
  
                         <button 
                             onClick={() => toggleDucking()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.duckingEnabled ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-slate-400'}`}
+                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.duckingEnabled ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-app-muted'}`}
                         >
                             <span className="text-ui-10 font-black uppercase tracking-widest">🔊 {t('modules:voice.shapers.auto_ducking')}</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.duckingEnabled ? 'bg-amber-500' : 'bg-slate-700'}`}>
-                                <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${currentEffects.duckingEnabled ? 'right-1' : 'left-1'}`} />
+                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.duckingEnabled ? 'bg-etat-succes' : 'bg-app-surface-2'}`}>
+                                <div className={`absolute top-1 w-2 h-2 bg-app-text rounded-full transition-all ${currentEffects.duckingEnabled ? 'right-1' : 'left-1'}`} />
                             </div>
                         </button>
 
-                        <div className="mt-4 pt-4 border-t border-slate-800/30 flex flex-col gap-4">
+                        <div className="mt-4 pt-4 border-t border-app-border/30 flex flex-col gap-4">
                             <div className="flex flex-col gap-2">
-                                <span className="text-ui-10 font-bold uppercase tracking-widest text-slate-600 italic">{t('modules:voice.dashboard.ducking_params')}</span>
+                                <span className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle italic">{t('modules:voice.dashboard.ducking_params')}</span>
                                 <VocalShaperSlider 
                                     label={t('modules:voice.params.ducking_threshold')} 
                                     value={currentEffects.duckingThreshold} 
@@ -570,7 +570,7 @@ const VoiceDashboard: React.FC = () => {
                         />
                         
                         <div className="flex flex-col gap-2">
-                            <span className="text-ui-10 font-bold uppercase tracking-widest text-slate-600">{t('modules:voice.params.gate_threshold')}</span>
+                            <span className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle">{t('modules:voice.params.gate_threshold')}</span>
                             <div className="flex gap-2">
                                 <input 
                                     type="range"
@@ -591,7 +591,7 @@ const VoiceDashboard: React.FC = () => {
             {/* Bottom VU Meter Bar */}
             <div className="h-2 bg-app-bg border-t border-app-border/50 flex">
                 <div 
-                    className="h-full bg-gradient-to-r from-accent via-accent/70 to-emerald-400 transition-all duration-75 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
+                    className="h-full bg-gradient-to-r from-accent via-accent/70 to-etat-succes transition-all duration-75 shadow-[0_0_10px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]"
                     style={{ width: `${inputLevel * 100}%` }}
                 />
             </div>
