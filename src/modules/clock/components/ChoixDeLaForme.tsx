@@ -42,7 +42,9 @@ interface ChoixDeLaFormeProps {
 }
 
 export const ChoixDeLaForme: React.FC<ChoixDeLaFormeProps> = ({ valeur, onChoisir, compact = false }) => (
-    <div className={`flex ${compact ? 'gap-0.5' : 'gap-1'}`} role="group" aria-label="Forme de la jauge">
+    /* Hors carte, deux colonnes : quatre libellés côte à côte débordaient de la
+       colonne de configuration (« Points » coupé, barre de défilement). */
+    <div className={compact ? 'flex gap-0.5' : 'grid grid-cols-2 gap-1'} role="group" aria-label="Forme de la jauge">
         {FORMES_DE_JAUGE.map((forme) => {
             const { icone, nom, dit } = APPARENCE[forme];
             const actif = valeur === forme;
@@ -54,7 +56,7 @@ export const ChoixDeLaForme: React.FC<ChoixDeLaFormeProps> = ({ valeur, onChoisi
                     aria-pressed={actif}
                     aria-label={nom}
                     className={`flex items-center justify-center gap-1.5 rounded-md border transition-all ${
-                        compact ? 'p-1' : 'flex-1 px-2 py-1.5'
+                        compact ? 'p-1' : 'min-w-0 px-2 py-1.5'
                     } ${actif
                         ? 'bg-accent/20 border-accent/60 text-accent'
                         : 'bg-app-bg/50 border-app-border text-app-text/40 hover:text-app-text hover:border-accent/30'}`}

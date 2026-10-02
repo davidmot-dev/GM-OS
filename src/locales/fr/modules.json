@@ -92,6 +92,21 @@
     }
   },
   "clock": {
+    "agencement": {
+      "completion": "Complétion : {{p}} %",
+      "dernier_quart": "Dernier quart",
+      "au_bout": "Au bout de sa course",
+      "reglages": "Réglages de la jauge",
+      "forme": "Forme",
+      "sens": "Sens",
+      "remplir": "Remplir",
+      "couleur_afficheur": "Couleur sur l'afficheur",
+      "couleur_origine": "Origine",
+      "supprimer": "Supprimer la jauge",
+      "moins": "Retirer un segment",
+      "plus": "Ajouter un segment",
+      "jauges": "Jauges de tension"
+    },
     "chime": "Sonnerie de fin",
     "chime_off": "Couper la sonnerie de fin de minuteur",
     "chime_on": "Faire sonner la fin du minuteur",

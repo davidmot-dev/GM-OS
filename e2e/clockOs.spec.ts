@@ -83,6 +83,8 @@ test.describe('les jauges de tension', () => {
         const [jauge] = (await horloge(gmos)).jauges;
         expect(jauge.vueParLesJoueurs, 'une jauge neuve ne doit PAS être publique').toBe(false);
 
+        /* Depuis la refonte (L4, 2026-10-02), les réglages d'une jauge vivent dans son menu « ⋮ ». */
+        await gmos.fenetre.getByRole('button', { name: 'Réglages de la jauge' }).first().click();
         await expect(
             gmos.fenetre.getByTitle('Montrer cette jauge aux joueurs, sur tous leurs écrans').first(),
         ).toBeVisible();
@@ -106,6 +108,10 @@ test.describe('les jauges de tension', () => {
             async () => (await horloge(gmos)).jauges[0].filledSegments,
             { timeout: 10_000, message: 'la jauge n’a pas bougé' },
         ).toBeGreaterThan(avant);
+
+        /* Le menu « ⋮ » se referme par Échap, comme toute surcouche. */
+        await gmos.fenetre.keyboard.press('Escape');
+        await expect(gmos.fenetre.getByRole('dialog', { name: 'Réglages de la jauge' })).toHaveCount(0);
     });
 });
 

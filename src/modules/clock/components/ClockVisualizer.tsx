@@ -158,13 +158,6 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
     const date = mode === 'realtime' ? realtimeDate : new Date(timestamp);
     const fantasyDate = mode === 'fantasy' ? getFantasyDate() : null;
 
-    const formatTime = (d: Date) => {
-        if (mode === 'fantasy' && fantasyDate) {
-            return `${fantasyDate.hour.toString().padStart(2, '0')}:${fantasyDate.minute.toString().padStart(2, '0')}:${fantasyDate.second.toString().padStart(2, '0')}`;
-        }
-        return d.toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    };
-
     const formatDate = (d: Date) => {
         if (mode === 'fantasy' && activeCalendarId && calendars[activeCalendarId] && fantasyDate) {
             const cal = calendars[activeCalendarId];
@@ -199,183 +192,143 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
         return d.toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     };
 
-    const renderCyberpunk = () => (
-        <div className="relative flex flex-col items-center justify-center font-mono">
-            <div className="absolute inset-0 bg-accent/10 blur-3xl rounded-full" />
-            <div className="text-7xl font-black text-accent drop-shadow-glow-accent tracking-tighter tabular-nums mb-2 relative">
-                {formatTime(date)}
-                <div className="absolute -inset-1 bg-accent/20 skew-x-12 opacity-30 animate-pulse pointer-events-none" />
+    /**
+     * **L'heure en trois morceaux**, le calendrier fantastique compris — les
+     * trois cadrans la découpent chacun à leur façon (refonte, L4, étape 2).
+     */
+    const morceaux = () => {
+        const h = mode === 'fantasy' && fantasyDate ? fantasyDate.hour : date.getHours();
+        const m = mode === 'fantasy' && fantasyDate ? fantasyDate.minute : date.getMinutes();
+        const s = mode === 'fantasy' && fantasyDate ? fantasyDate.second : date.getSeconds();
+        const deux = (n: number) => n.toString().padStart(2, '0');
+        return { h, m, s, hh: deux(h), mm: deux(m), ss: deux(s) };
+    };
+
+    /*
+      **Les trois cadrans de la maquette retenue — refonte, phase 4, L4, étape
+      2 (2026-10-02).** Réponse à « les différents thèmes des horloges ne sont
+      pas assez élaborés ». Cyberpunk : les chiffres néon de l'accent avec leur
+      halo, **les secondes en or** ; Old style : un cadre en laiton rivé, **le
+      cadran à aiguilles à côté de l'heure numérique**, la date à empattements ;
+      Moderne : de grands chiffres francs, les secondes dans l'accent. Les
+      libellés décoratifs de la maquette (« Chronomètre de bord »…) sont des
+      inventions de Stitch : ils ne sont pas repris.
+    */
+    const renderCyberpunk = () => {
+        const { hh, mm, ss } = morceaux();
+        return (
+            <div className="relative flex flex-col items-center justify-center font-mono">
+                <div className="absolute inset-0 bg-accent/10 blur-3xl rounded-full" />
+                <div className="relative flex items-baseline gap-3 tabular-nums">
+                    <span className="text-8xl font-black tracking-tighter text-accent drop-shadow-glow-accent">
+                        {hh}<span className="animate-pulse opacity-70">:</span>{mm}
+                    </span>
+                    <span className="text-4xl font-black text-gm-gold drop-shadow-[0_0_12px_rgba(250,204,21,0.45)]">{ss}</span>
+                    <div className="absolute -inset-1 bg-accent/20 skew-x-12 opacity-30 animate-pulse pointer-events-none" />
+                </div>
+                <div className="text-xs uppercase tracking-[0.4em] text-pink-500 font-bold bg-pink-500/10 px-3 py-1 rounded border border-pink-500/30 animate-glitch mt-6">
+                    {formatDate(date)}
+                </div>
+                <div className="mt-6 grid grid-cols-4 gap-4 w-full max-w-md">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="h-1 bg-accent/20 relative overflow-hidden rounded-full">
+                            <div className="absolute inset-y-0 left-0 bg-accent animate-shimmer" style={{ width: '40%', animationDelay: `${i * 0.5}s` }} />
+                        </div>
+                    ))}
+                </div>
             </div>
-            <div className="text-xs uppercase tracking-[0.4em] text-pink-500 font-bold bg-pink-500/10 px-3 py-1 rounded border border-pink-500/30 animate-glitch mt-4">
-                {formatDate(date)}
-            </div>
-            <div className="mt-8 grid grid-cols-4 gap-4 w-full max-w-md">
-                {[...Array(4)].map((_, i) => (
-                    <div key={i} className="h-1 bg-accent/20 relative overflow-hidden rounded-full">
-                        <div className="absolute inset-y-0 left-0 bg-accent animate-shimmer" style={{ width: '40%', animationDelay: `${i * 0.5}s` }} />
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+        );
+    };
 
     const renderOldStyle = () => {
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
-        let seconds = date.getSeconds();
-
-        if (mode === 'fantasy' && fantasyDate) {
-            hours = fantasyDate.hour;
-            minutes = fantasyDate.minute;
-            seconds = fantasyDate.second;
-        }
+        const { h, m, s, hh, mm, ss } = morceaux();
 
         // Rotation for hands
-        const sRotate = seconds * 6;
-        const mRotate = minutes * 6 + seconds * 0.1;
-        const hRotate = (hours % 12) * 30 + minutes * 0.5;
+        const sRotate = s * 6;
+        const mRotate = m * 6 + s * 0.1;
+        const hRotate = (h % 12) * 30 + m * 0.5;
+
+        /*
+          **Les aiguilles en pourcentage du cadran**, plus en `rem` : le cadran
+          rapetisse pour laisser la place à l'heure numérique, et une longueur
+          fixe aurait débordé. `bottom: 50%` pose toujours leur pied sur l'axe
+          (correctif du 2026-08-30, voir l'historique de ce fichier).
+        */
+        const aiguille = (rotation: number, hauteur: string, extra: React.CSSProperties = {}) => ({
+            left: '50%', bottom: '50%', height: hauteur, transformOrigin: 'bottom center',
+            transform: `translateX(-50%) rotate(${rotation}deg)`, ...extra,
+        });
+        const rivet = 'absolute size-3 rounded-full bg-gradient-to-br from-amber-300 to-amber-700 shadow-[inset_0_-1px_2px_rgba(0,0,0,0.6)]';
 
         return (
             /*
-              **La date était posée HORS du cadran, et retombait sur ce qui
-              suit.** Signalé par David le 2026-08-30 sur le Player Hub : sa
-              date d'horloge s'affichait par-dessus la carte des jauges.
-
-              Elle vivait dans un `absolute bottom-[-80px]` — c'est-à-dire
-              quatre-vingts pixels **sous** la boîte, donc en dehors. Un élément
-              hors flux ne pousse rien : le conteneur ne mesurait que le cadran,
-              et tout ce qui venait dessous se faisait recouvrir. Les deux
-              autres thèmes posent leur date dans le flux, et n'ont jamais eu
-              le problème.
-
-              Le cadran garde sa boîte carrée — ses aiguilles et ses index y
-              sont positionnés en absolu — et la date devient sa voisine.
+              **La date reste DANS le flux** (correctif du 2026-08-30 : posée en
+              `absolute bottom-[-80px]`, elle retombait sur les jauges du
+              Player Hub).
             */
-            <div className="flex flex-col items-center gap-6">
-            <div className="relative w-96 h-96 flex items-center justify-center">
-                {/* Layered Background for Depth */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(67,20,7,0.4)_0%,rgba(20,10,5,0.8)_100%)] rounded-full shadow-[0_0_50px_rgba(0,0,0,0.8)]" />
+            <div className="relative flex flex-col items-center gap-5 rounded-2xl border-2 border-amber-600/70 bg-[radial-gradient(circle_at_30%_20%,rgba(120,53,15,0.35),rgba(20,10,5,0.85))] px-10 py-7 shadow-[inset_0_0_40px_rgba(0,0,0,0.6),0_0_30px_rgba(0,0,0,0.5)]">
+                <span className={`${rivet} left-2 top-2`} />
+                <span className={`${rivet} right-2 top-2`} />
+                <span className={`${rivet} left-2 bottom-2`} />
+                <span className={`${rivet} right-2 bottom-2`} />
 
-                {/* Outer Ornated Ring */}
-                <div className="absolute inset-0 border-[12px] border-amber-900/60 rounded-full shadow-[inset_0_0_30px_rgba(0,0,0,0.6)]" />
-                <div className="absolute inset-2 border-2 border-amber-600/20 rounded-full" />
-
-                {/* Spinning Astrolabe Ring */}
-                <div className="absolute inset-8 border border-amber-500/10 rounded-full border-dashed animate-spin-slow opacity-40" />
-
-                {/* Numerals / Markers */}
-                {[...Array(12)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute h-full w-full flex justify-center py-4"
-                        style={{ transform: `rotate(${i * 30}deg)` }}
-                    >
-                        <div className={`rounded-full ${i % 3 === 0 ? 'h-6 w-1.5 bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'h-3 w-1 bg-amber-700/50'}`} />
-                    </div>
-                ))}
-
-                {/* Clock Face Details */}
-                <div className="absolute inset-24 border border-amber-900/40 rounded-full bg-black/20" />
-
-                {/*
-                  **Les aiguilles ne pivotaient pas sur l'axe.** Signalé par
-                  David le 2026-08-30 : elles ne partaient pas du pivot.
-
-                  Chacune était posée par `top: calc(50% - Npx)`, où N valait sa
-                  hauteur **supposée** : `h-24` pour 96 px, `h-36` pour 144,
-                  `h-40` pour 160. Mais `h-24` vaut 6 rem, et
-                  `:root { font-size: 85% }` fait valoir un rem 13,6 px — soit
-                  81,6 px. Le bas de l'aiguille tombait donc 14 px **au-dessus**
-                  du centre, 22 px pour la minute, 24 px pour la seconde : trois
-                  pivots différents, aucun sur l'axe, et un moyeu dessiné au
-                  vrai centre pour rendre l'écart bien visible.
-
-                  Le remède n'est pas de recalculer les trois nombres — c'est de
-                  n'en avoir aucun. **`bottom: 50%` pose le bas de l'aiguille sur
-                  l'axe quelle que soit sa hauteur**, et `translateX(-50%)` la
-                  centre quelle que soit sa largeur. On peut désormais changer
-                  une longueur sans rien recalculer.
-
-                  Quatrième fois aujourd'hui que cette racine à 85 % coûte
-                  quelque chose : *une constante en pixels qui décrit un élément
-                  dimensionné en rem est fausse par construction.*
-                */}
-                <div className="absolute inset-0 pointer-events-none">
-
-                    {/* Hour Hand */}
-                    <div
-                        data-aiguille="heure"
-                        className="absolute w-2 h-24 bg-gradient-to-t from-amber-800 to-amber-500 rounded-full shadow-lg"
-                        style={{
-                            left: '50%',
-                            bottom: '50%',
-                            transformOrigin: 'bottom center',
-                            transform: `translateX(-50%) rotate(${hRotate}deg)`
-                        }}
-                    >
-                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-5 h-7 bg-amber-500 rounded-t-full border border-amber-300/50 shadow-[0_0_10px_rgba(245,158,11,0.3)]" />
+                <div className="flex items-center gap-10">
+                    {/* Le cadran à aiguilles */}
+                    <div className="relative size-52 shrink-0">
+                        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(180,120,30,0.55)_0%,rgba(90,50,10,0.9)_100%)] shadow-[0_0_25px_rgba(0,0,0,0.7)]" />
+                        <div className="absolute inset-0 rounded-full border-[8px] border-amber-700/80 shadow-[inset_0_0_20px_rgba(0,0,0,0.6)]" />
+                        <div className="absolute inset-2 rounded-full border border-amber-400/30" />
+                        {[...Array(12)].map((_, i) => (
+                            <div key={i} className="absolute inset-0 flex justify-center py-3" style={{ transform: `rotate(${i * 30}deg)` }}>
+                                <div className={`rounded-full ${i % 3 === 0 ? 'h-3 w-1 bg-amber-200' : 'h-1.5 w-0.5 bg-amber-300/60'}`} />
+                            </div>
+                        ))}
+                        {/* Les chiffres romains aux quatre quarts */}
+                        {([['XII', 'left-1/2 top-8 -translate-x-1/2'], ['III', 'right-8 top-1/2 -translate-y-1/2'],
+                           ['VI', 'left-1/2 bottom-8 -translate-x-1/2'], ['IX', 'left-8 top-1/2 -translate-y-1/2']] as const).map(([chiffre, place]) => (
+                            <span key={chiffre} className={`absolute ${place} font-serif text-sm font-bold text-amber-100/90`}>{chiffre}</span>
+                        ))}
+                        <div className="absolute inset-0 pointer-events-none">
+                            <div data-aiguille="heure" className="absolute w-1.5 rounded-full bg-gradient-to-t from-amber-900 to-amber-200 shadow" style={aiguille(hRotate, '27%')} />
+                            <div data-aiguille="minute" className="absolute w-1 rounded-full bg-gradient-to-t from-amber-800 to-amber-100 shadow" style={aiguille(mRotate, '38%')} />
+                            <div data-aiguille="seconde" className="absolute w-0.5 rounded-full bg-red-600" style={aiguille(sRotate, '42%')} />
+                            <div className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-amber-500 bg-amber-950" />
+                        </div>
                     </div>
 
-                    {/* Minute Hand */}
-                    <div
-                        data-aiguille="minute"
-                        className="absolute w-1.5 h-36 bg-gradient-to-t from-amber-700 to-amber-400 rounded-full shadow-md"
-                        style={{
-                            left: '50%',
-                            bottom: '50%',
-                            transformOrigin: 'bottom center',
-                            transform: `translateX(-50%) rotate(${mRotate}deg)`
-                        }}
-                    >
-                        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-4 h-4 bg-amber-400 rounded-full border border-amber-200/50 shadow-[0_0_8px_rgba(251,191,36,0.3)]" />
-                    </div>
-
-                    {/* Second Hand */}
-                    <div
-                        data-aiguille="seconde"
-                        className="absolute w-0.5 h-40 bg-red-600 rounded-full shadow-sm"
-                        style={{
-                            left: '50%',
-                            bottom: '50%',
-                            transformOrigin: 'bottom center',
-                            transform: `translateX(-50%) rotate(${sRotate}deg)`
-                        }}
-                    >
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-1.5 h-6 bg-red-500 rounded-full" />
-                    </div>
-
-                    {/* Center Pin Hub */}
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-amber-950 border-4 border-amber-600 shadow-[0_0_15px_rgba(0,0,0,0.5)] flex items-center justify-center z-20">
-                        <div className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_5px_white]" />
+                    {/* L'heure numérique, dans son cadre de laiton */}
+                    <div className="flex items-baseline gap-3 rounded-xl border border-amber-600/60 bg-black/40 px-6 py-4 shadow-[inset_0_0_20px_rgba(0,0,0,0.7)] tabular-nums">
+                        <span className="font-serif text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-600 drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+                            {hh}:{mm}
+                        </span>
+                        <span className="border-l border-amber-600/40 pl-3 font-serif text-4xl font-bold text-amber-300">{ss}</span>
                     </div>
                 </div>
 
-            </div>
-
-                <p className="text-center font-serif italic text-amber-200/80 text-xl tracking-[0.2em] font-bold drop-shadow-md">
-                    {mode === 'fantasy' ? formatDate(date).toUpperCase() : date.toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase()}
+                <p className="flex items-center gap-4 text-center font-serif italic text-amber-200/90 text-xl tracking-[0.2em] font-bold drop-shadow-md">
+                    <span className="h-px w-12 bg-gradient-to-r from-transparent to-amber-500/70" />
+                    {mode === 'fantasy' ? formatDate(date).toUpperCase() : date.toLocaleDateString(i18n.language, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase()}
+                    <span className="h-px w-12 bg-gradient-to-l from-transparent to-amber-500/70" />
                 </p>
             </div>
         );
     };
 
     const renderModern = () => {
-        const h = mode === 'fantasy' && fantasyDate ? fantasyDate.hour : date.getHours();
-        const m = mode === 'fantasy' && fantasyDate ? fantasyDate.minute : date.getMinutes();
-        const s = mode === 'fantasy' && fantasyDate ? fantasyDate.second : date.getSeconds();
+        const { hh, mm, ss } = morceaux();
 
         return (
             <div className="flex flex-col items-center">
-                <div className="text-9xl font-thin text-app-text tracking-tighter tabular-nums flex items-baseline">
-                    {h.toString().padStart(2, '0')}
-                    <span className="text-app-text/20 mx-2 animate-pulse">:</span>
-                    {m.toString().padStart(2, '0')}
-                    <span className="text-4xl text-app-text/40 ml-4 font-normal">
-                        {s.toString().padStart(2, '0')}
+                <div className="text-9xl font-black text-app-text tracking-tighter tabular-nums flex items-baseline">
+                    {hh}
+                    <span className="text-app-text/30 mx-1 animate-pulse">:</span>
+                    {mm}
+                    <span className="text-5xl text-accent ml-4 font-bold">
+                        {ss}
                     </span>
                 </div>
-                <div className="h-[1px] w-64 bg-gradient-to-r from-transparent via-app-border to-transparent my-8" />
-                <div className="text-xl text-app-text/60 font-light tracking-widest uppercase">
+                <div className="h-[1px] w-64 bg-gradient-to-r from-transparent via-app-border to-transparent my-6" />
+                <div className="text-xl text-app-text/70 font-semibold tracking-[0.3em] uppercase">
                     {formatDate(date)}
                 </div>
             </div>

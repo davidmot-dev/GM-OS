@@ -92,6 +92,21 @@
     }
   },
   "clock": {
+    "agencement": {
+      "completion": "Completion: {{p}}%",
+      "dernier_quart": "Last quarter",
+      "au_bout": "At the end",
+      "reglages": "Gauge settings",
+      "forme": "Shape",
+      "sens": "Direction",
+      "remplir": "Fill",
+      "couleur_afficheur": "Colour on the display",
+      "couleur_origine": "Default",
+      "supprimer": "Delete gauge",
+      "moins": "Remove a segment",
+      "plus": "Add a segment",
+      "jauges": "Tension gauges"
+    },
     "chime": "End chime",
     "chime_off": "Mute the timer's end chime",
     "chime_on": "Ring at the end of the timer",

@@ -8,36 +8,26 @@ import {
     Calendar,
     Settings,
     Plus,
-    Trash2,
     Play,
     Pause,
     RotateCcw,
     Monitor,
     LayoutGrid,
-    ChevronsUp,
-    MonitorSmartphone,
-    Eye,
-    EyeOff,
     Bell,
     BellOff,
-    Hourglass,
     CalendarPlus
 } from 'lucide-react';
 import ClockVisualizer from './components/ClockVisualizer';
-import NarrativeClock from './components/NarrativeClock';
+import CarteDeJauge from './components/CarteDeJauge';
 import ChoixDeLaForme from './components/ChoixDeLaForme';
 import ChoixDuSens from './components/ChoixDuSens';
 import { FORME_PAR_DEFAUT, type FormeDeJauge } from './components/formesDeJauge';
 import {
-    SENS_PAR_DEFAUT, elleSeVide, pasDuClicPrincipal, sensDe, type SensDeLaJauge,
+    SENS_PAR_DEFAUT, type SensDeLaJauge,
 } from './logic/sensDeLaJauge';
 import { nomDeLaJauge, SEGMENTS_PROPOSES, SEGMENTS_PAR_DEFAUT } from './logic/nomDeLaJauge';
 import { estBissextile } from './logic/formeDuCalendrier';
 import { AtelierDesCalendriers } from './atelier/AtelierDesCalendriers';
-import { COULEURS_DU_COMPTE } from '../ulanzi/widgets/compteARebours';
-
-/** Ce que l'afficheur montre quand une jauge n'a pas de couleur choisie. */
-const COULEUR_DE_JAUGE_PAR_DEFAUT = COULEURS_DU_COMPTE.plein;
 import { useTranslation } from 'react-i18next';
 
 
@@ -85,15 +75,6 @@ const ClockDashboard: React.FC = () => {
         resetTimer,
         tensions,
         addTensionClock,
-        removeTensionClock,
-        updateTensionSegments,
-        changerLaFormeDeLaJauge,
-        changerLaCouleurDeLaJauge,
-        remplirLaJauge,
-        changerLeSensDeLaJauge,
-        reglerLePasParScene,
-        basculerSurLAfficheur,
-        basculerLaVueDesJoueurs,
         setTimer,
         setTimerLabel,
         timerDuration,
@@ -502,7 +483,7 @@ const ClockDashboard: React.FC = () => {
             {/* Main Visualizer */}
             <div className="col-span-9 flex flex-col gap-6 overflow-hidden">
                 {/* Main Clock Area */}
-                <div className="flex-1 min-h-[400px] bg-app-surface/40 border border-app-border/50 rounded-2xl relative flex items-center justify-center overflow-hidden group">
+                <div className="shrink-0 h-[44%] min-h-[18rem] bg-app-surface/40 border border-app-border/50 rounded-2xl relative flex items-center justify-center overflow-hidden group">
                     <div className="absolute top-4 right-4 flex gap-2">
                         <button
                             onClick={() => setIsClockProjected(!isClockProjected)}
@@ -522,237 +503,22 @@ const ClockDashboard: React.FC = () => {
 
                 </div>
 
-                {/* Tension Clocks Grid */}
-                <div className="h-1/3 bg-app-surface/20 border border-app-border/30 rounded-2xl p-6 overflow-y-auto overflow-x-hidden custom-scrollbar">
-                    <div className="grid grid-cols-4 gap-6">
+                {/*
+                  **Les jauges ont la place** — refonte, L4, étape 2. Elles
+                  tenaient dans le tiers bas de l'écran, sous un cadran qui
+                  prenait le reste ; ce sont elles qu'on touche en séance.
+                */}
+                <div className="flex-1 min-h-0 bg-app-surface/20 border border-app-border/30 rounded-2xl p-5 overflow-y-auto overflow-x-hidden custom-scrollbar">
+                    <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-app-text/60">
+                        <LayoutGrid size={16} /> {t('clock.agencement.jauges')}
+                    </h3>
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] gap-5 pt-2">
                         {tensions.map((clock) => (
-                            <div
-                                key={clock.id}
-                                className="bg-app-surface/60 border border-app-border rounded-xl p-4 relative group hover:border-accent/40 transition-all backdrop-blur-sm"
-                            >
-                                <button
-                                    onClick={() => removeTensionClock(clock.id)}
-                                    className="absolute top-2 right-2 text-app-subtle hover:text-etat-danger opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    <Trash2 size={14} />
-                                </button>
-                                <div className="flex flex-col items-center gap-3">
-                                    <div
-                                        className="cursor-pointer"
-                                        title={elleSeVide(clock)
-                                            ? 'Clic : consommer un segment — shift-clic ou clic droit : en rendre un'
-                                            : 'Clic : avancer d’un segment — shift-clic ou clic droit : reculer'}
-                                        onClick={(e) => {
-                                            /*
-                                              **Le clic facile suit le sens de la
-                                              jauge** — tranché par David le
-                                              2026-09-15. Sur un consommable, le
-                                              geste de la soirée est de
-                                              consommer ; avant, c'était le geste
-                                              difficile. Shift-clic rend.
-
-                                              ⚠️ Le geste s'inverse donc selon la
-                                              jauge, et c'est assumé : *un geste
-                                              uniforme qui va dans le mauvais
-                                              sens n'est pas plus simple, il est
-                                              seulement plus régulier.*
-                                            */
-                                            const pas = pasDuClicPrincipal(clock);
-                                            updateTensionSegments(clock.id, e.shiftKey ? -pas : pas);
-                                        }}
-                                        onContextMenu={(e) => {
-                                            e.preventDefault();
-                                            updateTensionSegments(clock.id, -pasDuClicPrincipal(clock));
-                                        }}
-                                    >
-                                        <NarrativeClock clock={clock} theme={theme} size={100} />
-                                    </div>
-                                    <div className="text-center">
-                                        <p className="text-xs font-bold text-app-text truncate w-full max-w-[120px] uppercase tracking-tight">{clock.name}</p>
-                                        {/*
-                                          `4 / 6 restants` plutôt que `4 / 6
-                                          segments` : sur un consommable, le
-                                          mot est la moitié de l'information.
-                                          Sans lui, rien dans la ligne ne dit
-                                          si quatre est une bonne nouvelle.
-                                        */}
-                                        <p className="text-ui-10 text-app-subtle font-mono italic">
-                                            {clock.filledSegments} / {clock.totalSegments}{' '}
-                                            {elleSeVide(clock) ? t('clock.remaining') : t('clock.segments')}
-                                        </p>
-                                    </div>
-
-                                    {/*
-                                      Changer d'avis sur une jauge déjà posée.
-                                      Discret au repos, franc au survol : quatre
-                                      boutons toujours allumés sur chaque carte
-                                      disputeraient l'œil à la jauge elle-même,
-                                      qui est la seule chose à lire en séance.
-                                    */}
-                                    <div className="opacity-30 group-hover:opacity-100 transition-opacity flex items-center gap-2">
-                                        <ChoixDeLaForme
-                                            compact
-                                            valeur={clock.forme ?? FORME_PAR_DEFAUT}
-                                            onChoisir={(f) => changerLaFormeDeLaJauge(clock.id, f)}
-                                        />
-                                        {/*
-                                          **Changer d'avis sur le sens.** Une
-                                          jauge qu'on n'a pas encore touchée se
-                                          replace toute seule au départ de son
-                                          nouveau sens ; dès qu'elle a compté
-                                          quelque chose, le magasin garde ce
-                                          compte. *Deviner est bienvenu tant
-                                          qu'il n'y a rien à perdre.*
-                                        */}
-                                        <ChoixDuSens
-                                            compact
-                                            valeur={sensDe(clock)}
-                                            onChoisir={(s) => changerLeSensDeLaJauge(clock.id, s)}
-                                        />
-                                        {/*
-                                          **La couleur de cette jauge SUR L'AFFICHEUR.**
-
-                                          Demandé par David le 2026-08-31. Le champ
-                                          `color` existait depuis toujours et **rien ne
-                                          le renseignait** — aucune interface ne le
-                                          posait, aucun rendu ne le lisait. L'Ulanzi le
-                                          lit désormais, jauge par jauge, ce qui lui
-                                          donne enfin un usage.
-
-                                          Les jauges de CET écran gardent leur habillage
-                                          de thème : ce réglage-ci ne parle qu'à l'objet
-                                          de la table.
-                                        */}
-                                        <input
-                                            type="color"
-                                            value={clock.color ?? COULEUR_DE_JAUGE_PAR_DEFAUT}
-                                            onChange={(e) => changerLaCouleurDeLaJauge(clock.id, e.target.value)}
-                                            title={t('clock.gauge_color')}
-                                            aria-label={t('clock.gauge_color')}
-                                            className="h-5 w-5 shrink-0 cursor-pointer rounded border border-app-border bg-transparent p-0"
-                                        />
-                                        {clock.color && (
-                                            <button
-                                                type="button"
-                                                onClick={() => changerLaCouleurDeLaJauge(clock.id, null)}
-                                                title={t('clock.gauge_color_reset')}
-                                                className="text-xs leading-none text-app-subtle hover:text-app-text"
-                                            >
-                                                ×
-                                            </button>
-                                        )}
-
-                                        {/*
-                                          **Remplir d'un coup.** Un instrument qui *se
-                                          vide* — le Voight-Kampff — part de son
-                                          maximum ; sans ce geste il fallait six clics
-                                          sur `+1` avant de pouvoir le descendre.
-                                        */}
-                                        <button
-                                            type="button"
-                                            onClick={() => remplirLaJauge(clock.id)}
-                                            title={t('clock.gauge_fill')}
-                                            aria-label={t('clock.gauge_fill')}
-                                            className="shrink-0 text-app-subtle hover:text-app-text"
-                                        >
-                                            <ChevronsUp size={14} />
-                                        </button>
-
-                                        {/*
-                                          **Sur l'afficheur, ou non.** `isClockProjected`
-                                          est tout-ou-rien ; ce drapeau choisit LESQUELLES
-                                          des jauges vont sur les 32 pixels. Absent, elle
-                                          y va — on retire une jauge de l'afficheur, on
-                                          ne l'y ajoute pas.
-                                        */}
-                                        <button
-                                            type="button"
-                                            onClick={() => basculerSurLAfficheur(clock.id)}
-                                            title={(clock.surLAfficheur ?? true)
-                                                ? t('clock.gauge_display_off')
-                                                : t('clock.gauge_display_on')}
-                                            aria-label={t('clock.gauge_display')}
-                                            className={`shrink-0 transition-colors ${(clock.surLAfficheur ?? true)
-                                                ? 'text-gm-gold/70 hover:text-gm-gold'
-                                                : 'text-app-subtle hover:text-app-muted'}`}
-                                        >
-                                            <MonitorSmartphone size={14} />
-                                        </button>
-
-                                        {/*
-                                          **Les joueurs la voient, ou non.**
-                                          Tranché par David le 2026-09-04 :
-                                          `isClockProjected` était tout-ou-rien,
-                                          et c'est justement la jauge qu'on veut
-                                          cacher qui rend les autres utiles.
-
-                                          ⚠️ Une jauge NEUVE naît fermée. Une
-                                          jauge d'avant ce bouton reste ouverte —
-                                          elle l'était hier, elle l'est encore.
-                                        */}
-                                        <button
-                                            type="button"
-                                            onClick={() => basculerLaVueDesJoueurs(clock.id)}
-                                            title={(clock.vueParLesJoueurs ?? true)
-                                                ? t('clock.gauge_players_hide')
-                                                : t('clock.gauge_players_show')}
-                                            aria-label={t('clock.gauge_players')}
-                                            className={`shrink-0 transition-colors ${(clock.vueParLesJoueurs ?? true)
-                                                ? 'text-gm-gold/70 hover:text-gm-gold'
-                                                : 'text-app-subtle hover:text-app-muted'}`}
-                                        >
-                                            {(clock.vueParLesJoueurs ?? true)
-                                                ? <Eye size={14} />
-                                                : <EyeOff size={14} />}
-                                        </button>
-                                    </div>
-
-                                    {/*
-                                      **Ce qu'une fin de scène coûte à cette jauge.**
-
-                                      *Portée choisie par David le 2026-09-15.* Le
-                                      nombre est saisi **positif** : c'est le sens de
-                                      la jauge qui décide de la direction, et la
-                                      légende le dit à côté (`−1 / scène`,
-                                      `+1 / scène`). *Laisser saisir un signe aurait
-                                      créé deux façons d'écrire la même intention, et
-                                      donc une jauge qui remonte à chaque scène sans
-                                      que personne comprenne pourquoi.*
-
-                                      Vide = la scène ne lui fait rien, et c'est le cas
-                                      de toutes les jauges existantes.
-                                    */}
-                                    <label
-                                        className="opacity-30 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 text-ui-9 uppercase tracking-wider text-app-subtle"
-                                        title={t('clock.gauge_step_hint')}
-                                    >
-                                        <Hourglass size={11} className="shrink-0" />
-                                        <span>{t('clock.gauge_step')}</span>
-                                        <input
-                                            type="number"
-                                            min={0}
-                                            max={clock.totalSegments}
-                                            value={clock.pasParScene ?? ''}
-                                            placeholder="0"
-                                            onChange={(e) => reglerLePasParScene(
-                                                clock.id,
-                                                e.target.value === '' ? null : Number(e.target.value),
-                                            )}
-                                            aria-label={t('clock.gauge_step_hint')}
-                                            className="w-10 bg-app-bg/60 border border-app-border/40 rounded px-1 py-0.5 text-center font-mono text-app-text/80 focus:outline-none focus:border-accent"
-                                        />
-                                        {!!clock.pasParScene && (
-                                            <span className="font-mono text-app-subtle">
-                                                {elleSeVide(clock) ? '−' : '+'}{clock.pasParScene}
-                                            </span>
-                                        )}
-                                    </label>
-                                </div>
-                            </div>
+                            <CarteDeJauge key={clock.id} clock={clock} theme={theme} />
                         ))}
 
                         {tensions.length === 0 && (
-                            <div className="col-span-4 h-full flex flex-col items-center justify-center text-app-subtle border-2 border-dashed border-app-border/50 rounded-xl py-8">
+                            <div className="col-span-full h-full flex flex-col items-center justify-center text-app-subtle border-2 border-dashed border-app-border/50 rounded-xl py-8">
                                 <Plus size={32} className="mb-2 opacity-20" />
                                 <p className="text-sm font-medium italic">{t('clock.empty.no_gauges')}</p>
                                 <p className="text-ui-10 uppercase mt-1">{t('clock.empty.create_hint')}</p>
