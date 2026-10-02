@@ -1,14 +1,35 @@
 import React, { useEffect } from 'react';
-import { Sidebar } from './components/Sidebar';
-import { TopControls } from './components/TopControls';
+import { SlidersHorizontal } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { SceneGrid } from './components/SceneGrid';
-import { BulbFooter } from './components/BulbFooter';
+import { ReglagesDeLumiere } from './components/ReglagesDeLumiere';
+import { BarreDeTransition, BarreDesGestes } from './components/BarresDeLumiere';
 import { useLightStore } from './useLightStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
+import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
+import { Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 
+/**
+ * **Light-OS réagencé — refonte, phase 4, L2, étape 2 (2026-10-02).**
+ *
+ * La maquette retenue avec Stitch le 2026-09-26 (`documentation/Planning/
+ * stitch/lumiere/`), dans la grammaire d'écran commune : l'en-tête, les temps
+ * de transition en barre d'outils, **la grille des tuiles au plus large**, les
+ * gestes rapides en pied, et à droite le panneau de réglages — le pont, les
+ * lampes en liste verticale, l'éclairage normal, la préparation, le blackout.
+ *
+ * Il répond aux deux plaintes de David : *« la disposition des lampes »* et
+ * *« les pads sont trop fournis : difficile de modifier un pad ou même de
+ * l'activer »*.
+ */
 const LightDashboard: React.FC = () => {
     const { status } = useLightStore();
     const campagneId = useSessionOSStore(s => s.activeCampaignId);
+    const { t } = useTranslation('modules');
+    const regime = useRegimeDInterface();
+    const [reglagesOuverts, setReglagesOuverts] = React.useState(true);
+    const sceneActive = useLightStore(s => (s.activeSceneId ? s.scenes[s.activeSceneId]?.name : null) ?? null);
+    const eclairageNormal = useLightStore(s => (s.defaultSceneId ? s.scenes[s.defaultSceneId]?.name : null) ?? null);
 
     /*
       **Chaque campagne reçoit ses dix-huit cases à la première ouverture.**
@@ -45,36 +66,48 @@ const LightDashboard: React.FC = () => {
 
 
     /*
-      ⛔ **`grid-rows-1` n'est pas décoratif — c'est le correctif.**
-
-      Sans lui, la rangée est en `auto` : elle se règle sur **le plus grand de
-      ses deux enfants**. Le panneau de gauche, qui ne défilait pas, imposait
-      donc sa hauteur au `<main>` d'à côté — et le pied de page des lampes
-      passait **sous la ligne de flottaison**, coupé par l'`overflow-hidden` du
-      châssis.
-
-      David, le 2026-09-17, sur un écran 2880×1800 à 200 % — soit 1440×900
-      points pour l'application : *« je ne vois plus mes lumières »*. Elles
-      n'étaient pas perdues, elles étaient en dessous de l'écran.
-
-      `grid-rows-1` vaut `minmax(0, 1fr)` : la rangée fait exactement la hauteur
-      disponible, et aucun enfant ne peut plus la pousser. *Une hauteur qui se
-      règle sur son contenu n'est pas une hauteur, c'est une promesse que le
-      contenu tiendra.*
+      ⛔ **La hauteur ne se règle plus sur le contenu.** L'ancienne grille à
+      deux colonnes avait besoin de `grid-rows-1` pour que le panneau de
+      gauche n'impose pas sa hauteur au voisin — sans lui, le pied de page des
+      lampes passait sous la ligne de flottaison (David, 2026-09-17 : *« je ne
+      vois plus mes lumières »*). Le gabarit commun donne à la zone de travail
+      et au panneau de réglages chacun son défilement : les lampes, désormais
+      dans le panneau, ne peuvent plus être poussées hors de l'écran.
     */
     return (
-        <div className="grid grid-cols-12 grid-rows-1 h-full bg-app-bg text-app-text font-sans overflow-hidden">
-            <Sidebar />
-
-            <main className="col-span-9 min-h-0 flex flex-col overflow-hidden relative">
-                {/* Background glow base */}
-                <div className="absolute inset-0 bg-gradient-to-br from-app-surface/50 via-app-bg to-app-bg opacity-50 pointer-events-none" />
-
-                <TopControls />
-                <SceneGrid />
-                <BulbFooter />
-            </main>
-        </div>
+        <GabaritDeModule
+            aLaTable={regime.aLaTable}
+            reglagesOuverts={reglagesOuverts}
+            className="text-app-text"
+            entete={
+                <EnTeteDeModule
+                    titre={t('names.light')}
+                    etat={<>
+                        <Etiquette ton={status === 'connected' ? 'succes' : status === 'mock' ? 'alerte' : 'neutre'}>
+                            {t(`light.agencement.pont_${status}`)}
+                        </Etiquette>
+                        {sceneActive
+                            ? <Etiquette ton="accent">{t('light.agencement.scene_active', { nom: sceneActive })}</Etiquette>
+                            : <Etiquette>{t('light.agencement.aucune_scene')}</Etiquette>}
+                        {eclairageNormal && <Etiquette>{t('light.agencement.eclairage_normal', { nom: eclairageNormal })}</Etiquette>}
+                    </>}
+                    actions={regime.aLaTable ? (
+                        <Bouton aLaTable icone={<SlidersHorizontal size={16} />} aria-pressed={reglagesOuverts} onClick={() => setReglagesOuverts(!reglagesOuverts)}>
+                            {t('light.agencement.reglages')}
+                        </Bouton>
+                    ) : undefined}
+                />
+            }
+            barreDOutils={<BarreDeTransition aLaTable={regime.aLaTable} />}
+            reglages={<ReglagesDeLumiere />}
+        >
+            <div className="flex min-h-full flex-col gap-4">
+                <div className="flex-1">
+                    <SceneGrid />
+                </div>
+                <BarreDesGestes />
+            </div>
+        </GabaritDeModule>
     );
 };
 

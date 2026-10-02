@@ -789,6 +789,31 @@
     }
   },
   "light": {
+    "agencement": {
+      "pont_connected": "Bridge online",
+      "pont_mock": "Simulated mode",
+      "pont_disconnected": "Bridge disconnected",
+      "pont_discovering": "Searching for the bridge…",
+      "pont_pairing": "Pairing…",
+      "scene_active": "Scene “{{nom}}”",
+      "aucune_scene": "No scene",
+      "eclairage_normal": "Normal lighting: {{nom}}",
+      "reglages": "Settings",
+      "lampes": "Lamps",
+      "lampes_nombre": "{{nombre}} detected",
+      "preparation": "Preparation · Workshop",
+      "gestes": "Quick actions",
+      "tuile_reglages": "Tile settings",
+      "tuile_intensite": "Intensity",
+      "tuile_vitesse": "Effect speed",
+      "tuile_touche": "Key",
+      "tuile_sans_touche": "Assign",
+      "tuile_eclairage_normal": "Room's normal lighting",
+      "tuile_recapturer": "Recapture",
+      "tuile_renommer": "Name & colour",
+      "tuile_vider": "Clear the tile",
+      "fermer": "Close"
+    },
     "sidebar": {
       "hue_bridge": "Hue Bridge",
       "sync_with_audio": "Sync with Audio",

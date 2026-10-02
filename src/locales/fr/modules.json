@@ -789,6 +789,31 @@
     }
   },
   "light": {
+    "agencement": {
+      "pont_connected": "Pont en ligne",
+      "pont_mock": "Mode simulé",
+      "pont_disconnected": "Pont déconnecté",
+      "pont_discovering": "Recherche du pont…",
+      "pont_pairing": "Appairage en cours…",
+      "scene_active": "Scène « {{nom}} »",
+      "aucune_scene": "Aucune scène",
+      "eclairage_normal": "Éclairage normal : {{nom}}",
+      "reglages": "Réglages",
+      "lampes": "Lampes",
+      "lampes_nombre": "{{nombre}} détectée(s)",
+      "preparation": "Préparation · Atelier",
+      "gestes": "Gestes rapides",
+      "tuile_reglages": "Régler la tuile",
+      "tuile_intensite": "Intensité",
+      "tuile_vitesse": "Vitesse des effets",
+      "tuile_touche": "Touche",
+      "tuile_sans_touche": "Associer",
+      "tuile_eclairage_normal": "Éclairage normal de la pièce",
+      "tuile_recapturer": "Recapturer",
+      "tuile_renommer": "Nom et couleur",
+      "tuile_vider": "Vider la tuile",
+      "fermer": "Fermer"
+    },
     "sidebar": {
       "hue_bridge": "Pont Philips Hue",
       "sync_with_audio": "Synchro avec l'Audio",

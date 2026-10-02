@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { etatARendre } from './etatARendre';
 import { brillanceEffective } from '../HueEngine';
 import MOTEUR from '../HueEngine.ts?raw';
-import PIED_DE_PAGE from '../components/BulbFooter.tsx?raw';
+import PIED_DE_PAGE from '../components/ListeDesLampes.tsx?raw';
 
 /**
  * **Ce que ces essais protègent : une lampe qui sort d'un effet retrouve l'état
@@ -146,7 +146,7 @@ describe('qui a le droit de restaurer', () => {
      * **Le pied de page** : choisir « Fixe ». Le seul geste d'arrêt de
      * l'interface qui ne soit suivi d'aucune pose d'état.
      */
-    it('le pied de page restaure quand on repasse en Fixe', () => {
+    it('la liste des lampes (l’ancien pied de page) restaure quand on repasse en Fixe', () => {
         expect(PIED_DE_PAGE.match(RESTAURANT) ?? []).toHaveLength(1);
     });
 

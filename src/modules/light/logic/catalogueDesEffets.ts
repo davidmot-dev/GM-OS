@@ -5,7 +5,7 @@
  * POURQUOI CE FICHIER EXISTE
  * ──────────────────────────────────────────────────────────────────────────────────
  *
- * Les quarante-huit effets vivaient en `<option>` dans `BulbFooter`, à
+ * Les quarante-huit effets vivaient en `<option>` dans `BulbFooter` (aujourd’hui `ListeDesLampes`), à
  * l'intérieur d'un `<select>`. Ça tenait tant qu'il n'y avait qu'un seul écran
  * pour les choisir.
  *

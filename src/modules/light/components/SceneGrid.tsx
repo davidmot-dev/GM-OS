@@ -16,6 +16,7 @@ import { couleurDeLaTuile } from '../logic/couleurDeLaTuile';
 import { toucheLisible } from '../useLightKeyboardControls';
 import { gmToast } from '../../../stores/useToastStore';
 import { useTuilesVisibles } from '../hooks/useTuilesVisibles';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 
 /** Le pas du curseur : des quarts, pour que ×1 se retrouve sans viser. */
 const PAS_DE_VITESSE = 0.25;
@@ -33,6 +34,14 @@ export const SceneGrid: React.FC = () => {
     const [sceneEnEdition, setSceneEnEdition] = useState<string | null>(null);
     /** La tuile dont la capture est en vol. `null` = aucune. */
     const [captureEnCours, setCaptureEnCours] = useState<string | null>(null);
+    /** La tuile dont la bulle de réglage est ouverte. `null` = aucune. */
+    const [tuileReglee, setTuileReglee] = useState<string | null>(null);
+    /*
+      Échap referme la bulle **avant** d'arrêter la scène : le registre des
+      surcouches passe devant le raccourci de Light-OS. *Une touche qui ferme
+      une fenêtre ne doit pas éteindre la pièce derrière elle.*
+    */
+    useFermetureParEchap(tuileReglee !== null, () => setTuileReglee(null), 'Réglage de la tuile');
 
     /*
       **Le râtelier de la campagne ouverte.** Les tuiles rattachées ailleurs
@@ -137,7 +146,7 @@ export const SceneGrid: React.FC = () => {
                             <div
                                 key={scene.id}
                                 onClick={(e) => handleCapture(e, scene.id)}
-                                className="aspect-square rounded-xl bg-app-surface/30 border border-app-border/50 hover:border-accent/40 flex flex-col items-center justify-center gap-3 cursor-pointer group transition-all duration-300 relative"
+                                className="min-h-[8.5rem] rounded-xl bg-app-surface/20 border border-dashed border-app-border hover:border-accent/50 flex flex-col items-center justify-center gap-2 cursor-pointer group transition-all duration-300 relative"
                                 title={t('light.grid.capture_tooltip')}
                             >
                                 {/*
@@ -155,90 +164,119 @@ export const SceneGrid: React.FC = () => {
                         );
                     }
 
+                    /*
+                      **La tuile allégée — refonte, L2, étape 2 (2026-10-02).**
+                      Répond à *« les pads sont trop fournis : difficile de
+                      modifier un pad ou même de l'activer »* : deux curseurs et
+                      six commandes de survol se disputaient un carré dont le
+                      clic, lui, lance la scène. La tuile ne garde que ce qui se
+                      LIT — icône, nom, intensité, vitesse, sa touche, sa maison
+                      — et **le bouton de réglage, en haut à droite, est séparé**
+                      du reste, qui active la scène. Tout ce qui se RÈGLE vit
+                      dans la bulle qu'il ouvre (`reglagesDeLaTuile`).
+                    */
+                    const reglee = tuileReglee === scene.id;
                     return (
                         <div
                             key={scene.id}
                             onClick={() => handleApply(scene.id)}
-                            /*
-                              **`py-7` n'est pas de l'esthétique, c'est une
-                              séparation.** Les badges de coin vivent à `top-2` /
-                              `bottom-2` et mesurent une vingtaine de pixels : sans
-                              cette marge, la colonne centrée remonte dans leur
-                              bande dès qu'elle grossit — et le 2026-09-07 elle a
-                              grossi d'une ligne de vitesse et d'un curseur.
-                              L'icône de la scène se retrouvait **collée à
-                              l'étoile ✨**, les deux se lisant comme un seul
-                              glyphe. *Un carré de taille fixe se remplit ; ce
-                              qu'on y ajoute pousse ce qui y était.*
-                            */
-                            className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-2 py-7 px-2 cursor-pointer group transition-all duration-300 relative overflow-hidden ${isActive
-                                ? `bg-app-surface/50 border-accent border-2 shadow-glow-accent`
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleApply(scene.id); } }}
+                            aria-pressed={isActive}
+                            className={`relative flex min-h-[8.5rem] flex-col gap-2 rounded-xl p-3 cursor-pointer group transition-all duration-300 ${isActive
+                                ? `bg-app-surface/60 border-accent border-2 shadow-glow-accent`
                                 : `bg-app-surface/50 border border-app-border hover:border-accent/30`
                                 }`}
                             /*
                               **La teinte marque la tuile au repos, pas seulement
-                              quand elle joue.** Elle ne servait qu'à la scène
-                              active : on choisissait une couleur, on validait, et
-                              *rien ne bougeait* tant qu'on n'avait pas cliqué la
-                              tuile. `80` en alpha au repos, pleine à l'activation
-                              — dix-huit bordures saturées se disputeraient l'œil.
+                              quand elle joue.** `80` en alpha au repos, pleine à
+                              l'activation — dix-huit bordures saturées se
+                              disputeraient l'œil.
                             */
                             style={{
                                 borderColor: teinte ? (isActive ? teinte : `${teinte}80`) : undefined,
-                                boxShadow: isActive && teinte ? `0 0 20px ${teinte}55` : undefined
+                                boxShadow: isActive && teinte ? `0 0 20px ${teinte}55` : undefined,
+                                /* La bulle de réglage passe DEVANT les tuiles voisines. */
+                                zIndex: reglee ? 40 : undefined,
                             }}
                         >
                             {isActive && teinte && (
                                 <div
-                                    className="absolute inset-0 opacity-10"
+                                    className="absolute inset-0 rounded-xl opacity-10 pointer-events-none"
                                     style={{ background: `linear-gradient(to bottom right, ${teinte}, transparent)` }}
                                 />
                             )}
+
+                            {/* L'en-tête : l'état, la touche, la maison — et le réglage, à part */}
+                            <div className="relative flex items-center gap-1.5 min-h-5">
+                                {isActive && (
+                                    <span className="flex items-center gap-1 text-ui-8 font-black uppercase tracking-widest text-accent">
+                                        <span className="size-1.5 rounded-full bg-accent animate-pulse" /> Actif
+                                    </span>
+                                )}
+                                {/*
+                                  **La touche qui lance la scène.** Affichée en
+                                  permanence quand elle existe — *un raccourci
+                                  qu'il faut survoler pour lire n'en est pas un.*
+                                */}
+                                {scene.keyCode && (
+                                    <span className="rounded bg-app-bg/80 px-1 py-0.5 font-mono text-ui-10 font-bold leading-none text-accent">
+                                        {toucheLisible(scene.keyCode)}
+                                    </span>
+                                )}
+                                {/*
+                                  **L'éclairage normal de la pièce** : la maison se
+                                  voit sur la tuile désignée, sans chercher.
+                                */}
+                                {estLEclairageNormal && (
+                                    <span className="material-symbols-outlined text-sm text-accent" title={t('light.agencement.tuile_eclairage_normal')}>home</span>
+                                )}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setTuileReglee(reglee ? null : scene.id); }}
+                                    aria-label={`${t('light.agencement.tuile_reglages')} — ${scene.name}`}
+                                    aria-expanded={reglee}
+                                    title={t('light.agencement.tuile_reglages')}
+                                    className={`ml-auto -mr-1 -mt-1 flex size-8 items-center justify-center rounded-lg transition-colors ${reglee ? 'bg-accent/15 text-accent' : 'text-app-subtle hover:bg-app-bg/60 hover:text-app-text'}`}
+                                >
+                                    <span className="material-symbols-outlined text-lg">tune</span>
+                                </button>
+                            </div>
+
                             <span
-                                className="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform"
+                                className="relative material-symbols-outlined text-3xl transition-transform group-hover:scale-110 self-center"
                                 /* Le gris ardoise reste le défaut : c'est ce que voit
                                    une tuile dont personne n'a choisi la couleur. */
                                 style={{ color: teinte ?? '#94a3b8' }} // slate-400
                             >
                                 {scene.icon}
                             </span>
-                            <span className="text-xs font-bold text-app-text uppercase tracking-tight relative z-10 text-center px-2">
+                            <span className="relative text-xs font-bold text-app-text uppercase tracking-tight line-clamp-2 break-words">
                                 {scene.name}
                             </span>
 
-                            <div className="absolute top-2 right-2 flex items-center gap-1 z-20">
-                                {/*
-                                  **L'éclairage normal de la pièce.** La maison reste
-                                  visible sur la tuile désignée, et n'apparaît au survol
-                                  que sur les autres : *ce qui est désigné doit se voir
-                                  sans chercher, ce qui ne l'est pas ne doit pas encombrer.*
-                                */}
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); setDefaultScene(scene.id); }}
-                                    title={estLEclairageNormal ? t('light.grid.default_unset_tooltip') : t('light.grid.default_set_tooltip')}
-                                    className={`material-symbols-outlined text-sm transition-all ${estLEclairageNormal
-                                        ? 'text-accent opacity-100'
-                                        : 'text-app-subtle opacity-0 group-hover:opacity-100 hover:text-accent'
-                                        }`}
-                                >
-                                    home
-                                </button>
-
-                                {/*
-                                  **La touche qui lance la scène.** Affichée en
-                                  permanence quand elle existe — *un raccourci
-                                  qu'il faut survoler pour lire n'en est pas un.*
-                                */}
-                                <button
-                                    onClick={(e) => { e.stopPropagation(); apprendreUneTouche(scene.id); }}
-                                    title={scene.keyCode ? t('light.grid.key_change_tooltip') : t('light.grid.key_learn_tooltip')}
-                                    className={`text-ui-10 font-mono font-bold leading-none px-1 py-0.5 rounded transition-all ${scene.keyCode
-                                        ? 'bg-app-bg/80 text-accent opacity-100'
-                                        : 'text-app-subtle opacity-0 group-hover:opacity-100 hover:text-accent'
-                                        }`}
-                                >
-                                    {scene.keyCode ? toucheLisible(scene.keyCode) : '⌨'}
-                                </button>
+                            {/*
+                              **Ce qui se lit des réglages : l'intensité, et la
+                              vitesse là où elle a prise.** Une scène sans effet
+                              n'a rien à accélérer : lui montrer « ×1 » ferait
+                              douter des autres.
+                            */}
+                            <div className="relative mt-auto flex flex-wrap items-center justify-between gap-x-2 font-mono text-ui-10 font-bold text-app-muted">
+                                <span className="flex items-center gap-0.5">
+                                    <span className="material-symbols-outlined leading-none" style={{ color: teinte ?? undefined, fontSize: 14 }}>light_mode</span>
+                                    {intensite}%
+                                </span>
+                                {aDesEffets && (
+                                    <span className="flex items-center gap-0.5" title={t('light.grid.speed_tooltip')}>
+                                        <span
+                                            className={`material-symbols-outlined leading-none animate-pulse ${teinte ? '' : 'text-accent'}`}
+                                            style={{ color: teinte ?? undefined, fontSize: 14 }}
+                                        >
+                                            auto_awesome
+                                        </span>
+                                        ×{vitesse.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                                    </span>
+                                )}
                             </div>
 
                             {/*
@@ -261,132 +299,170 @@ export const SceneGrid: React.FC = () => {
                                 </div>
                             )}
 
-                            {/*
-                              **Le curseur d'intensité — sur toutes les tuiles remplies.**
-                              Contrairement à la vitesse, il a prise partout :
-                              toute scène capturée porte une brillance, avec ou
-                              sans effet.
-
-                              Il **multiplie** ce qui a été capturé au lieu de le
-                              réécrire : on baisse une ambiance pour la soirée,
-                              et revenir à 100 % rend la scène d'origine sans
-                              avoir à la recapturer.
-                            */}
-                            <div
-                                /*
-                                  **Une seule ligne, et c'est délibéré.** La
-                                  vitesse peut s'offrir un titre au-dessus de son
-                                  curseur : elle ne s'affiche que sur les scènes
-                                  à effet. L'intensité, elle, est sur les dix-huit
-                                  tuiles — *un carré de taille fixe se remplit, et
-                                  ce qu'on y ajoute pousse ce qui y était.*
-                                */
-                                className="w-full px-4 flex items-center gap-1.5 relative z-20"
-                                onClick={(e) => e.stopPropagation()}
-                                onDoubleClick={(e) => e.stopPropagation()}
-                            >
-                                <span
-                                    className="material-symbols-outlined text-sm leading-none text-app-muted shrink-0"
-                                    style={{ color: teinte ?? undefined }}
-                                >
-                                    light_mode
-                                </span>
-                                <input
-                                    type="range"
-                                    min={INTENSITE_SCENE_MIN}
-                                    max={INTENSITE_SCENE_MAX}
-                                    step={PAS_D_INTENSITE}
-                                    value={intensite}
-                                    onChange={(e) => handleIntensite(scene.id, parseInt(e.target.value, 10))}
-                                    title={t('light.grid.brightness_tooltip')}
-                                    className="flex-1 min-w-0 h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
-                                />
-                                <button
-                                    onClick={() => handleIntensite(scene.id, INTENSITE_SCENE_DEFAUT)}
-                                    title={t('light.grid.brightness_reset_tooltip')}
-                                    className="text-ui-10 font-mono font-bold text-app-muted hover:text-accent transition-colors leading-none shrink-0 w-8 text-right"
-                                >
-                                    {intensite}%
-                                </button>
-                            </div>
-
-                            {/*
-                              **Le curseur de vitesse — seulement là où il a prise.**
-                              Une scène sans effet n'a rien à accélérer : lui donner
-                              un curseur inerte ferait douter des autres.
-                            */}
-                            {aDesEffets && (
-                                <div
-                                    className="w-full px-5 relative z-20"
-                                    onClick={(e) => e.stopPropagation()}
-                                    onDoubleClick={(e) => e.stopPropagation()}
-                                >
-                                    <div className="flex items-center justify-center gap-1.5 mb-1">
-                                        {/*
-                                          **L'étoile « cette scène porte un effet » vit
-                                          ici**, à la place d'un glyphe `speed` qui ne
-                                          disait rien que le « ×2 » ne disait déjà.
-
-                                          Elle y dit la même chose qu'au coin, au même
-                                          endroit que la vitesse qu'elle qualifie — et
-                                          *cette ligne n'existe QUE sur les scènes à
-                                          effet*, donc elle ne peut pas mentir.
-                                        */}
-                                        <span
-                                            className={`material-symbols-outlined text-sm leading-none animate-pulse ${teinte ? '' : 'text-accent'}`}
-                                            style={{ color: teinte ?? undefined }}
-                                        >
-                                            auto_awesome
-                                        </span>
-                                        <button
-                                            onClick={() => handleSpeed(scene.id, VITESSE_EFFET_DEFAUT)}
-                                            title={t('light.grid.speed_reset_tooltip')}
-                                            className="text-ui-10 font-mono font-bold text-app-muted hover:text-accent transition-colors leading-none"
-                                        >
-                                            ×{vitesse.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                                        </button>
-                                    </div>
-                                    <input
-                                        type="range"
-                                        min={VITESSE_EFFET_MIN}
-                                        max={VITESSE_EFFET_MAX}
-                                        step={PAS_DE_VITESSE}
-                                        value={vitesse}
-                                        onChange={(e) => handleSpeed(scene.id, parseFloat(e.target.value))}
-                                        title={t('light.grid.speed_tooltip')}
-                                        /* La couleur de scène vaut `#334155` tant que personne ne l'a changée : la teindre avec rendrait le curseur invisible. */
-                                        className="w-full h-1 bg-app-bg rounded-full appearance-none cursor-pointer accent-accent"
-                                    />
-                                </div>
-                            )}
-
-                            <div
-                                onClick={(e) => handleCapture(e, scene.id)}
-                                className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                                title={t('light.grid.overwrite_tooltip')}
-                            >
-                                <span className={`material-symbols-outlined text-sm ${captureEnCours === scene.id ? 'animate-spin text-accent' : 'text-app-subtle hover:text-app-text'}`}>
-                                    {captureEnCours === scene.id ? 'progress_activity' : 'photo_camera'}
-                                </span>
-                            </div>
-
-                            <div
-                                onClick={(e) => { e.stopPropagation(); clearScene(scene.id); }}
-                                className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                                title={t('light.grid.clear_tooltip')}
-                            >
-                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-etat-danger">close</span>
-                            </div>
-
-                            <div
-                                onClick={(e) => handleRename(e, scene)}
-                                className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                                title={t('light.grid.rename_tooltip')}
-                            >
-                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-app-text">edit</span>
-                            </div>
+                            {reglee && reglagesDeLaTuile(scene, { intensite, vitesse, aDesEffets, estLEclairageNormal })}
                         </div>
                     );
+    };
+
+    /**
+     * **La bulle de réglage d'une tuile.** Tout ce qui se règle sur une scène,
+     * à un seul endroit, hors du carré qui la lance.
+     *
+     * ⛔ **Une fonction de rendu, pas un composant** — pour la même raison que
+     * `ratelier` plus bas : un composant déclaré ici serait un type neuf à
+     * chaque rendu, et ses curseurs s'arracheraient de sous la souris au
+     * premier mouvement.
+     *
+     * Elle prend sa largeur propre et passe par-dessus les voisines, comme le
+     * menu d'une pastille de la Musique : *un menu dont la taille dépend de la
+     * vignette qu'il recouvre n'a pas de taille à lui.*
+     */
+    const reglagesDeLaTuile = (
+        scene: LightScene,
+        { intensite, vitesse, aDesEffets, estLEclairageNormal }: { intensite: number; vitesse: number; aDesEffets: boolean; estLEclairageNormal: boolean },
+    ) => {
+        const ligne = 'flex items-center justify-between gap-2';
+        const etiquette = 'text-ui-9 font-black uppercase tracking-widest text-app-subtle';
+        const bouton = 'flex items-center justify-center gap-1.5 rounded-lg border border-app-border bg-app-bg/60 px-2 py-2 text-ui-10 font-bold text-app-muted hover:text-app-text hover:border-accent/50 transition-colors';
+        return (
+            <>
+                {/* Un clic à côté referme la bulle, sans lancer la tuile d'en dessous. */}
+                <div className="fixed inset-0 z-40 cursor-default" onClick={(e) => { e.stopPropagation(); setTuileReglee(null); }} />
+                <div
+                    role="dialog"
+                    aria-label={`${t('light.agencement.tuile_reglages')} — ${scene.name}`}
+                    onClick={(e) => e.stopPropagation()}
+                    onDoubleClick={(e) => e.stopPropagation()}
+                    className="absolute left-1/2 top-2 z-50 flex w-[16rem] -translate-x-1/2 flex-col gap-3 rounded-2xl border border-app-border bg-app-bg p-4 shadow-2xl cursor-default animate-in fade-in zoom-in-95 duration-150"
+                >
+                    <div className={ligne}>
+                        <span className="truncate text-xs font-black uppercase tracking-widest text-app-text">{scene.name}</span>
+                        <button
+                            onClick={() => setTuileReglee(null)}
+                            aria-label={t('light.agencement.fermer')}
+                            className="shrink-0 rounded-md p-1 text-app-subtle hover:text-app-text"
+                        >
+                            <span className="material-symbols-outlined text-base">close</span>
+                        </button>
+                    </div>
+
+                    {/*
+                      **Le curseur d'intensité — sur toutes les tuiles remplies.**
+                      Il **multiplie** ce qui a été capturé au lieu de le
+                      réécrire : on baisse une ambiance pour la soirée, et
+                      revenir à 100 % rend la scène d'origine sans avoir à la
+                      recapturer.
+                    */}
+                    <div className="flex flex-col gap-1">
+                        <div className={ligne}>
+                            <span className={etiquette}>{t('light.agencement.tuile_intensite')}</span>
+                            <button
+                                onClick={() => handleIntensite(scene.id, INTENSITE_SCENE_DEFAUT)}
+                                title={t('light.grid.brightness_reset_tooltip')}
+                                className="font-mono text-xs font-bold text-app-muted hover:text-accent"
+                            >
+                                {intensite}%
+                            </button>
+                        </div>
+                        <input
+                            type="range"
+                            min={INTENSITE_SCENE_MIN}
+                            max={INTENSITE_SCENE_MAX}
+                            step={PAS_D_INTENSITE}
+                            value={intensite}
+                            onChange={(e) => handleIntensite(scene.id, parseInt(e.target.value, 10))}
+                            title={t('light.grid.brightness_tooltip')}
+                            aria-label={t('light.agencement.tuile_intensite')}
+                            className="w-full cursor-pointer accent-accent"
+                        />
+                    </div>
+
+                    {/*
+                      **Le curseur de vitesse — seulement là où il a prise.**
+                      Une scène sans effet n'a rien à accélérer : lui donner
+                      un curseur inerte ferait douter des autres.
+                    */}
+                    {aDesEffets && (
+                        <div className="flex flex-col gap-1">
+                            <div className={ligne}>
+                                <span className={etiquette}>{t('light.agencement.tuile_vitesse')}</span>
+                                <button
+                                    onClick={() => handleSpeed(scene.id, VITESSE_EFFET_DEFAUT)}
+                                    title={t('light.grid.speed_reset_tooltip')}
+                                    className="font-mono text-xs font-bold text-app-muted hover:text-accent"
+                                >
+                                    ×{vitesse.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                                </button>
+                            </div>
+                            <input
+                                type="range"
+                                min={VITESSE_EFFET_MIN}
+                                max={VITESSE_EFFET_MAX}
+                                step={PAS_DE_VITESSE}
+                                value={vitesse}
+                                onChange={(e) => handleSpeed(scene.id, parseFloat(e.target.value))}
+                                title={t('light.grid.speed_tooltip')}
+                                aria-label={t('light.agencement.tuile_vitesse')}
+                                className="w-full cursor-pointer accent-accent"
+                            />
+                        </div>
+                    )}
+
+                    <div className={ligne}>
+                        <span className={etiquette}>{t('light.agencement.tuile_touche')}</span>
+                        <button
+                            onClick={() => { apprendreUneTouche(scene.id); setTuileReglee(null); }}
+                            title={scene.keyCode ? t('light.grid.key_change_tooltip') : t('light.grid.key_learn_tooltip')}
+                            className="rounded-md border border-app-border bg-app-surface px-2 py-1 font-mono text-xs font-bold text-accent hover:border-accent/50"
+                        >
+                            {scene.keyCode ? toucheLisible(scene.keyCode) : t('light.agencement.tuile_sans_touche')}
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={() => setDefaultScene(scene.id)}
+                        aria-pressed={estLEclairageNormal}
+                        title={estLEclairageNormal ? t('light.grid.default_unset_tooltip') : t('light.grid.default_set_tooltip')}
+                        className={`flex items-center gap-2 rounded-lg border px-2 py-2 text-left text-xs font-bold transition-colors ${estLEclairageNormal
+                            ? 'border-accent/60 bg-accent/10 text-accent'
+                            : 'border-app-border bg-app-bg/60 text-app-muted hover:text-app-text hover:border-accent/50'}`}
+                    >
+                        <span className="material-symbols-outlined text-base">home</span>
+                        {t('light.agencement.tuile_eclairage_normal')}
+                    </button>
+
+                    <div className="grid grid-cols-2 gap-2">
+                        <button
+                            onClick={(e) => handleCapture(e, scene.id)}
+                            title={t('light.grid.overwrite_tooltip')}
+                            className={bouton}
+                        >
+                            <span className={`material-symbols-outlined text-sm ${captureEnCours === scene.id ? 'animate-spin text-accent' : ''}`}>
+                                {captureEnCours === scene.id ? 'progress_activity' : 'photo_camera'}
+                            </span>
+                            {t('light.agencement.tuile_recapturer')}
+                        </button>
+                        <button
+                            onClick={(e) => { handleRename(e, scene); setTuileReglee(null); }}
+                            title={t('light.grid.rename_tooltip')}
+                            className={bouton}
+                        >
+                            <span className="material-symbols-outlined text-sm">edit</span>
+                            {t('light.agencement.tuile_renommer')}
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={() => { clearScene(scene.id); setTuileReglee(null); }}
+                        title={t('light.grid.clear_tooltip')}
+                        className="flex items-center justify-center gap-1.5 rounded-lg border border-etat-danger/20 bg-etat-danger/5 py-2 text-ui-10 font-bold text-etat-danger/80 hover:bg-etat-danger/15 hover:text-etat-danger transition-colors"
+                    >
+                        <span className="material-symbols-outlined text-sm">close</span>
+                        {t('light.agencement.tuile_vider')}
+                    </button>
+                </div>
+            </>
+        );
     };
 
     /**
@@ -402,17 +478,17 @@ export const SceneGrid: React.FC = () => {
     const ratelier = (cle: string, titre: string, aide: string, tuiles: LightScene[]) => (
         <div key={cle} className="flex flex-col gap-3">
             <div className="flex items-baseline gap-3">
-                <h3 className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle">{titre}</h3>
+                <h3 className="text-ui-11 font-black uppercase tracking-widest text-app-muted">{titre}</h3>
                 <span className="text-ui-10 text-app-subtle">{aide}</span>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-3">
                 {tuiles.map(renduDeLaTuile)}
             </div>
         </div>
     );
 
     return (
-        <div className="flex-1 p-8 overflow-y-auto custom-scrollbar flex flex-col gap-8">
+        <div className="flex flex-col gap-6">
             {/*
               **Deux râteliers, et on ne les mélange pas.** Celui de la campagne
               ouverte d'abord — c'est celui qu'on joue — puis le pot commun, dont
@@ -420,7 +496,7 @@ export const SceneGrid: React.FC = () => {
               râtelier, et le titre disparaît avec la distinction.
             */}
             {campagneId === null ? (
-                <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(8rem,1fr))] gap-3">
                     {triees(visibles).map(renduDeLaTuile)}
                 </div>
             ) : (

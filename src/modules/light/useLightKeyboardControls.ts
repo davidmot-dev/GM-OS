@@ -63,7 +63,7 @@ export const useLightKeyboardControls = () => {
               *Une touche réservée qui ne l'est qu'à l'écriture ne l'est pas.*
 
               ⛔ Et elle ne fait rien quand **aucune scène ne joue** — même règle
-              que le bouton de la barre latérale : le retour vise l'éclairage
+              que le bouton de la barre des gestes : le retour vise l'éclairage
               normal, donc un « arrêter » sur une pièce au repos l'**allumerait**.
               *Le geste d'arrêt ne doit jamais être un geste d'allumage.*
 
