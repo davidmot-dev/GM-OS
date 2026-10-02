@@ -125,6 +125,35 @@ describe('FicheHote', () => {
     });
 
     /**
+     * **Seules les fiches du jeu se proposent** — David, 2026-10-02 : Dan, de
+     * Cthulhu Hack, se voyait offrir les fiches de Blade Runner.
+     */
+    it('ne propose que les fiches du gabarit du jeu', async () => {
+        const { pont } = faireUnPont();
+        (pont.bibliotheque as ReturnType<typeof vi.fn>).mockResolvedValue({
+            characters: [
+                { id: 'f-1', name: 'Rick Deckard', templateId: 'blade-runner-fr', templateName: 'Blade Runner', system: 'Blade Runner', updatedAt: 1 },
+                { id: 'f-2', name: 'Dan CH', templateId: 'cthulhu-hack', templateName: 'Cthulhu Hack', system: 'Cthulhu Hack', updatedAt: 2 },
+            ],
+            templates: [],
+        });
+        render(<FicheHote personnage={PERSONNAGE} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+        charger();
+
+        expect(await screen.findByText(/Rick Deckard/)).toBeTruthy();
+        expect(screen.queryByText('Dan CH')).toBe(null);
+    });
+
+    it('dit quand aucune fiche du jeu n’existe encore', async () => {
+        const { pont } = faireUnPont();
+        render(<FicheHote personnage={PERSONNAGE} table={{ ...TABLE, gabaritDeLaFiche: 'cthulhu-hack' }} onFicheLiee={vi.fn()} onRapprochement={vi.fn()} fabriquerLePont={() => pont} />);
+        charger();
+
+        expect(await screen.findByText(/Aucune fiche de ce jeu/)).toBeTruthy();
+        expect(screen.queryByText(/Rick Deckard/)).toBe(null);
+    });
+
+    /**
      * **La seule poussée de GM-OS vers la fiche.** Semer ailleurs qu'à la
      * création rouvrirait la question de qui gagne, à chaque frappe.
      */

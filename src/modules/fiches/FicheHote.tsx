@@ -324,6 +324,17 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         } finally { setOccupe(false); }
     };
 
+    /*
+      **Seules les fiches du jeu se proposent** (David, 2026-10-02 : pour Dan,
+      personnage de Cthulhu Hack, l'écran offrait ses quatre fiches de Blade
+      Runner). Relier un personnage à la fiche d'un autre jeu mélangerait deux
+      gabarits sans prévenir : la correspondance écrirait des clés que la fiche
+      n'a pas. Sans correspondance, on ne sait pas quel jeu viser : tout reste.
+    */
+    const fichesDuJeu = etat.nom === 'a-lier'
+        ? (table ? etat.bibliotheque.filter(f => f.templateId === table.gabaritDeLaFiche) : etat.bibliotheque)
+        : [];
+
     return (
         <div className="relative w-full h-full min-h-[24rem] rounded-3xl overflow-hidden border border-app-border/20 bg-app-surface">
             <iframe
@@ -373,7 +384,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                 )}
 
                                 <div className="max-h-64 overflow-y-auto custom-scrollbar space-y-2">
-                                    {etat.bibliotheque.map(f => (
+                                    {fichesDuJeu.map(f => (
                                         <button
                                             key={f.id}
                                             type="button"
@@ -390,6 +401,11 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                     ))}
                                     {etat.bibliotheque.length === 0 && (
                                         <p className="text-xs text-app-text/40 italic">La bibliothèque du moteur est vide.</p>
+                                    )}
+                                    {etat.bibliotheque.length > 0 && fichesDuJeu.length === 0 && (
+                                        <p className="text-xs text-app-text/40 italic">
+                                            Aucune fiche de ce jeu dans la bibliothèque du moteur : créez-en une.
+                                        </p>
                                     )}
                                 </div>
 
