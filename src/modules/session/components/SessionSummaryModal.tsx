@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { Save, Sparkles, Calendar } from 'lucide-react';
+import { BoutonPrincipal, BoutonSecondaire } from '../../../components/socle';
 
 const SessionSummaryModal: React.FC = () => {
     const { sessions, updateSessionPublicSummary } = useSessionOSStore();
     const { defaultValue, closeModal } = useModalStore();
-    
+
     const sessionId = (defaultValue as { sessionId: string })?.sessionId;
     const session = sessions.find(s => s.id === sessionId);
 
@@ -20,7 +21,8 @@ const SessionSummaryModal: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-full bg-app-bg p-8">
+        <div className="flex flex-col h-full bg-app-bg">
+          <div className="flex flex-1 min-h-0 flex-col p-6">
             {/* Context Header replaced by Body Info */}
             <div className="mb-6 flex items-center justify-between border-b border-app-border/10 pb-4">
                 <div className="flex items-center gap-4">
@@ -28,23 +30,19 @@ const SessionSummaryModal: React.FC = () => {
                         <Calendar size={24} />
                     </div>
                     <div>
-                        <div className="text-ui-10 font-black uppercase tracking-widest text-accent mb-1">Session Date</div>
-                        <div className="text-sm font-mono text-app-text/60">
-                            {new Date(session.date).toLocaleDateString(undefined, { dateStyle: 'long' })}
+                        <div className="text-ui-10 font-black uppercase tracking-widest text-accent mb-1">Séance n°{session.number}</div>
+                        <div className="text-sm font-bold text-app-text">
+                            {new Date(/^\d{4}-\d{2}-\d{2}$/.test(session.date) ? `${session.date}T12:00:00` : session.date).toLocaleDateString(undefined, { dateStyle: 'long' })}
                         </div>
                     </div>
                 </div>
-                
-                <div className="px-3 py-1.5 rounded-lg bg-etat-succes/10 border border-etat-succes/20 text-etat-succes text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse"></div>
-                    Journal de Campagne
-                </div>
+
             </div>
 
             {/* Editor Area */}
             <div className="flex-1 flex flex-col gap-4 overflow-hidden">
                 <div className="flex items-center justify-between">
-                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">Résumé Public & Lore</label>
+                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-muted">Résumé public & lore</label>
                     <div className="flex items-center gap-2 text-ui-10 text-accent/60 font-medium">
                         <Sparkles size={12} />
                         Ce contenu sera utilisé par l'Oracle
@@ -55,19 +53,18 @@ const SessionSummaryModal: React.FC = () => {
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
                     placeholder="Rédigez le compte-rendu détaillé de cette session... Les PJ, les lieux, les combats, les révélations..."
-                    className="flex-1 bg-app-surface/50 border border-app-border rounded-2xl px-8 py-8 text-lg leading-relaxed text-app-text/80 resize-none font-medium placeholder:text-app-text/10 custom-scrollbar focus:border-accent/30 focus:ring-0 transition-all shadow-inner"
+                    className="flex-1 bg-app-surface border border-app-border rounded-lg px-5 py-4 text-base leading-relaxed text-app-text resize-none placeholder:text-app-subtle custom-scrollbar focus:border-accent focus:ring-0 transition-all"
                 />
             </div>
 
-            {/* Actions Footer */}
-            <div className="mt-8 flex items-center justify-end">
-                <button
-                    onClick={handleSave}
-                    className="flex items-center gap-3 px-10 py-3 bg-accent text-app-on-accent rounded-xl font-black text-sm shadow-glow-accent transition-all active:scale-95 group"
-                >
-                    <Save size={20} className="group-hover:scale-110 transition-transform" />
-                    ENREGISTRER LE RÉSUMÉ
-                </button>
+          </div>
+            {/* Un seul pied, séparé par un filet : « Annuler », puis
+                l'action principale à droite (cadre commun des surcouches). */}
+            <div className="flex shrink-0 items-center justify-end gap-2 border-t border-app-border px-5 py-3">
+                <BoutonSecondaire onClick={closeModal}>Annuler</BoutonSecondaire>
+                <BoutonPrincipal onClick={handleSave} className="flex items-center gap-2">
+                    <Save size={15} />Enregistrer le résumé
+                </BoutonPrincipal>
             </div>
         </div>
     );

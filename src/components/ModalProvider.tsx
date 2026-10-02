@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useModalStore } from '../stores/useModalStore';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 import { useTranslation } from 'react-i18next';
-import { 
-    AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast, 
+import {
+    AlertCircle, HelpCircle, Edit3, UserPlus, ShieldPlus, BookOpen, Users, Play, Cast,
     History as LucideHistory, X, Lightbulb, Zap, Settings2, Sparkles, Package, MessageSquare,
     Keyboard, Swords, ScrollText, Music2, Shapes } from 'lucide-react';
 import type { Campaign, WikiEntry, TimelineEvent, SessionModuleSnapshot } from '../modules/session/useSessionOSStore';
@@ -33,12 +33,13 @@ import NarrativeModal from '../modules/map/components/NarrativeModal';
 import LootOS from '../modules/session/components/LootOS';
 import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 import VitrineDuSocle from './socle/VitrineDuSocle';
+import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire } from './socle/CadreDeSurcouche';
 
 const ModalProvider: React.FC = () => {
-    const { 
-        type, message, onConfirm, onCancel, onPromptConfirm, 
-        defaultValue, confirmLabel, cancelLabel, customVariant, 
-        isNetworkModalOpen, closeModal 
+    const {
+        type, message, onConfirm, onCancel, onPromptConfirm,
+        defaultValue, confirmLabel, cancelLabel, customVariant,
+        isNetworkModalOpen, closeModal
     } = useModalStore();
 
     const { t } = useTranslation(['common']);
@@ -82,146 +83,115 @@ const ModalProvider: React.FC = () => {
     return (
         <>
             {type === 'alert' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
-                                <AlertCircle size={28} />
-                            </div>
-                            <h3 className="text-lg font-bold text-white">{t('common:attention')}</h3>
-                        </div>
-                        <p className="text-slate-300 mb-6 leading-relaxed">{message}</p>
-                        {/*
-                          Même piège que celui du bouton d'annulation ci-dessous,
-                          et corrigé en même temps : aucun appelant ne passe
-                          aujourd'hui d'`onConfirm` à `gmAlert`, donc personne ne
-                          l'a jamais rencontré. Le premier qui le ferait
-                          obtiendrait une alerte qu'on ne peut plus fermer.
-                        */}
-                        <button
-                            onClick={() => { closeModal(); onConfirm?.(); }}
-                            className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-blue-600/20"
-                        >
-                            {confirmLabel || t('common:ok')}
-                        </button>
-                    </div>
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    {/*
+                      Même piège que celui du bouton d'annulation ci-dessous,
+                      et corrigé en même temps : aucun appelant ne passe
+                      aujourd'hui d'`onConfirm` à `gmAlert`, donc personne ne
+                      l'a jamais rencontré. Le premier qui le ferait
+                      obtiendrait une alerte qu'on ne peut plus fermer.
+                    */}
+                    <CadreDeSurcouche
+                        titre={t('common:attention')}
+                        icone={<AlertCircle size={18} />}
+                        tonIcone="info"
+                        onFermer={() => { closeModal(); onConfirm?.(); }}
+                        libelleFermer={t('common:close_window')}
+                        pied={<BoutonPrincipal autoFocus onClick={() => { closeModal(); onConfirm?.(); }}>{confirmLabel || t('common:ok')}</BoutonPrincipal>}
+                    >
+                        <p className="px-5 py-4 leading-relaxed text-app-text">{message}</p>
+                    </CadreDeSurcouche>
                 </div>
             )}
 
             {type === 'confirm' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
-                                <HelpCircle size={28} />
-                            </div>
-                            <h3 className="text-lg font-bold text-white">{t('common:confirmation')}</h3>
-                        </div>
-                        <p className="text-slate-300 mb-6 leading-relaxed">{message}</p>
-                        <div className="flex gap-3">
-                            {/*
-                              **`onCancel || closeModal` : ou l'un, ou l'autre — jamais les deux.**
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    {/*
+                      **`onCancel || closeModal` : ou l'un, ou l'autre — jamais les deux.**
 
-                              Un appelant qui fournissait un `onCancel` obtenait
-                              un bouton d'annulation qui n'annulait rien : la
-                              boîte restait à l'écran pour toujours. Signalé par
-                              David le 2026-08-30 sur la suppression d'une
-                              atmosphère de Music-OS, dont l'`onCancel` est un
-                              `() => {}` — le cas le plus pur : ne rien faire, et
-                              ne pas fermer non plus.
+                      Un appelant qui fournissait un `onCancel` obtenait
+                      un bouton d'annulation qui n'annulait rien : la
+                      boîte restait à l'écran pour toujours. Signalé par
+                      David le 2026-08-30 sur la suppression d'une
+                      atmosphère de Music-OS, dont l'`onCancel` est un
+                      `() => {}` — le cas le plus pur : ne rien faire, et
+                      ne pas fermer non plus.
 
-                              Le second appelant touché était le garde-fou de
-                              reprise de séance : « Reprendre et abandonner »
-                              abandonnait bien les requêtes du Cortex, puis
-                              laissait la boîte plantée devant le meneur.
+                      **On ferme AVANT d'exécuter le rappel**, et l'ordre
+                      n'est pas indifférent : l'`onCancel` du choix de
+                      source dans `PlaylistManager` ouvre une autre boîte.
+                      Fermer après l'aurait effacée aussitôt ouverte.
 
-                              **On ferme AVANT d'exécuter le rappel**, et l'ordre
-                              n'est pas indifférent : l'`onCancel` du choix de
-                              source dans `PlaylistManager` ouvre une autre boîte.
-                              Fermer après l'aurait effacée aussitôt ouverte.
-                            */}
-                            <button
-                                onClick={() => { closeModal(); onCancel?.(); }}
-                                className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-colors"
-                            >
-                                {cancelLabel || t('common:cancel')}
-                            </button>
-                            <button
-                                onClick={() => {
-                                    onConfirm?.();
-                                    closeModal();
-                                }}
-                                className="flex-1 py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-amber-600/20"
-                            >
-                                {confirmLabel || t('common:confirm')}
-                            </button>
-                        </div>
-                    </div>
+                      ⭐ **« Annuler » a le focus** (maquette retenue) : Entrée
+                      frappée par réflexe ne confirme rien.
+                    */}
+                    <CadreDeSurcouche
+                        titre={t('common:confirmation')}
+                        icone={<HelpCircle size={18} />}
+                        tonIcone="alerte"
+                        onFermer={() => { closeModal(); onCancel?.(); }}
+                        libelleFermer={t('common:close_window')}
+                        pied={<>
+                            <BoutonSecondaire autoFocus onClick={() => { closeModal(); onCancel?.(); }}>{cancelLabel || t('common:cancel')}</BoutonSecondaire>
+                            <BoutonPrincipal ton="alerte" onClick={() => { onConfirm?.(); closeModal(); }}>{confirmLabel || t('common:confirm')}</BoutonPrincipal>
+                        </>}
+                    >
+                        <p className="px-5 py-4 leading-relaxed text-app-text">{message}</p>
+                    </CadreDeSurcouche>
                 </div>
             )}
 
             {type === 'prompt' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-200">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-                                <Edit3 size={28} />
-                            </div>
-                            <h3 className="text-lg font-bold text-white">{t('common:prompt_title')}</h3>
-                        </div>
-                        <p className="text-app-muted text-sm mb-4">{message}</p>
-                        <input
-                            type="text"
-                            autoFocus
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white mb-6 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all font-medium"
-                            title={t('common:prompt_title')}
-                            placeholder={t('common:placeholder_input')}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    onPromptConfirm?.(inputValue);
-                                    closeModal();
-                                }
-                            }}
-                        />
-                        <div className="flex gap-3">
-                            <button
-                                onClick={closeModal}
-                                className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-colors"
-                            >
-                                {cancelLabel || t('common:cancel')}
-                            </button>
-                            <button
-                                onClick={() => {
-                                    onPromptConfirm?.(inputValue);
-                                    closeModal();
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <CadreDeSurcouche
+                        titre={t('common:prompt_title')}
+                        icone={<Edit3 size={18} />}
+                        onFermer={closeModal}
+                        libelleFermer={t('common:close_window')}
+                        pied={<>
+                            <BoutonSecondaire onClick={closeModal}>{cancelLabel || t('common:cancel')}</BoutonSecondaire>
+                            <BoutonPrincipal onClick={() => { onPromptConfirm?.(inputValue); closeModal(); }}>{confirmLabel || t('common:validate')}</BoutonPrincipal>
+                        </>}
+                    >
+                        {/* Le libellé au-dessus du champ : c'est la question posée. */}
+                        <label className="flex flex-col gap-2 px-5 py-4">
+                            <span className="text-sm font-bold text-app-text">{message}</span>
+                            <input
+                                type="text"
+                                autoFocus
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                className="w-full rounded-lg border border-app-border bg-app-bg px-4 py-2.5 font-medium text-app-text outline-none transition-all focus:border-accent"
+                                title={t('common:prompt_title')}
+                                placeholder={t('common:placeholder_input')}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        onPromptConfirm?.(inputValue);
+                                        closeModal();
+                                    }
                                 }}
-                                className="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-emerald-600/20"
-                            >
-                                {confirmLabel || t('common:validate')}
-                            </button>
-                        </div>
-                    </div>
+                            />
+                        </label>
+                    </CadreDeSurcouche>
                 </div>
             )}
 
             {type === 'custom' && (
-                <div role="dialog" aria-modal="true" className={`fixed inset-0 z-[150] flex items-center justify-center bg-black/80 backdrop-blur-md animate-in fade-in duration-300 ${
+                <div role="dialog" aria-modal="true" className={`fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/80 backdrop-blur-md animate-in fade-in duration-300 ${
                     customVariant === 'campaign-add' || customVariant === 'campaign-edit' ? 'p-0' : 'p-4'
                 }`}>
-                    <div className={`bg-slate-900 border border-slate-800/50 overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] animate-in zoom-in-95 duration-300 flex flex-col ${
+                    <div data-cadre-de-surcouche="" className={`bg-app-surface border border-app-border overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col ${
                         customVariant === 'campaign-add' || customVariant === 'campaign-edit'
                             ? 'w-full h-full rounded-none'
                             : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'session-feedback' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os' || customVariant === 'aide-du-meneur' || customVariant === 'vitrine-du-socle'
-                                ? 'max-w-6xl w-full h-[90vh] rounded-[2rem]'
-                                : 'max-w-2xl w-full max-h-[90vh] rounded-[2rem]'
+                                ? 'max-w-6xl w-full h-[90vh] rounded-xl'
+                                : 'max-w-2xl w-full max-h-[90vh] rounded-xl'
                     }`}>
                         {/* Header unifié pour les modals custom */}
                         {customVariant !== 'global-settings' && (
-                            <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+                            <div className="px-5 py-3 border-b border-app-border flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent">
+                                    <div className="w-9 h-9 rounded-lg border border-accent/40 bg-accent/10 flex items-center justify-center text-accent">
                                         {customVariant === 'player-add' && <UserPlus size={18} />}
                                         {customVariant === 'character-add' && <ShieldPlus size={18} />}
                                         {customVariant === 'campaign-add' && <BookOpen size={18} />}
@@ -249,7 +219,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'fiche-combattant' && <ScrollText size={18} />}
                                         {customVariant === 'vitrine-du-socle' && <Shapes size={18} />}
                                     </div>
-                                    <h3 className="font-bold text-white uppercase tracking-wider text-sm">
+                                    <h3 className="font-display font-bold text-app-text uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && t('common:modals.player_add')}
                                         {customVariant === 'character-add' && t('common:modals.character_add')}
                                         {customVariant === 'campaign-add' && t('common:modals.campaign_add')}
@@ -282,12 +252,14 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'vitrine-du-socle' && 'Vitrine du socle'}
                                     </h3>
                                 </div>
-                                <button 
-                                    onClick={closeModal} 
-                                    className="p-2 hover:bg-slate-800 rounded-full text-app-muted hover:text-white transition-all"
+                                <button
+                                    onClick={closeModal}
+                                    className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-app-muted transition-colors hover:bg-app-text/5 hover:text-app-text"
                                     title={t('common:close_window')}
+                                    aria-label={t('common:close_window')}
                                 >
-                                    <X size={20} />
+                                    <span className="rounded border border-app-border px-1.5 py-0.5 font-mono text-ui-9 font-bold">Échap</span>
+                                    <X size={18} />
                                 </button>
                             </div>
                         )}
@@ -312,11 +284,11 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'session-summary' && <SessionSummaryModal />}
                             {customVariant === 'session-feedback' && <SessionFeedbackModal />}
                             {customVariant === 'snapshot-viewer' && (
-                                <SnapshotVisualizerModal 
-                                    isOpen={true} 
-                                    onClose={closeModal} 
-                                    snapshot={(defaultValue as { snapshot: SessionModuleSnapshot; sessionName: string })?.snapshot} 
-                                    sessionName={(defaultValue as { snapshot: SessionModuleSnapshot; sessionName: string })?.sessionName || 'Session'} 
+                                <SnapshotVisualizerModal
+                                    isOpen={true}
+                                    onClose={closeModal}
+                                    snapshot={(defaultValue as { snapshot: SessionModuleSnapshot; sessionName: string })?.snapshot}
+                                    sessionName={(defaultValue as { snapshot: SessionModuleSnapshot; sessionName: string })?.sessionName || 'Session'}
                                 />
                             )}
                             {customVariant === 'damage-calc' && <DamageCalculator />}

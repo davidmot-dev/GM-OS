@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { MessageSquare, Star, Smile, BookOpen, Swords, Calendar } from 'lucide-react';
+import { BoutonSecondaire } from '../../../components/socle';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 
 const SessionFeedbackModal: React.FC = () => {
@@ -11,10 +12,10 @@ const SessionFeedbackModal: React.FC = () => {
     const { defaultValue } = useModalStore();
 
     const sessionId = (defaultValue as { sessionId?: string })?.sessionId;
-    
+
     // Find campaign and session
     const campaign = campaigns.find(c => c.id === activeCampaignId);
-    const session = sessions.find(s => 
+    const session = sessions.find(s =>
         sessionId ? s.id === sessionId : (s.campaignId === activeCampaignId && s.status === 'active')
     );
 
@@ -58,7 +59,8 @@ const SessionFeedbackModal: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-full bg-app-bg p-8 text-app-text select-text">
+        <div className="flex flex-col h-full bg-app-bg text-app-text select-text">
+          <div className="flex flex-1 min-h-0 flex-col p-6">
             {/* Header context info */}
             <div className="mb-6 flex items-center justify-between border-b border-app-border/10 pb-4 shrink-0">
                 <div className="flex items-center gap-4">
@@ -74,7 +76,7 @@ const SessionFeedbackModal: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="px-3 py-1.5 rounded-lg bg-etat-info/10 border border-etat-info/20 text-etat-info text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
                     <Calendar size={12} />
                     {new Date(session.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}
@@ -95,7 +97,7 @@ const SessionFeedbackModal: React.FC = () => {
                         <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                             {t('modules:session.feedback.aggregate')}
                         </h4>
-                        
+
                         <div className="glass-bento rounded-[2rem] border border-app-border/40 p-6 flex flex-col gap-6 shadow-xl">
                             {/* Fun Rating average */}
                             <div className="flex flex-col gap-2">
@@ -109,8 +111,8 @@ const SessionFeedbackModal: React.FC = () => {
                                 <div className="flex items-center gap-3 mt-1">
                                     {renderStars(averageFun, 18)}
                                     <div className="flex-1 bg-app-bg/40 h-2 rounded-full overflow-hidden">
-                                        <div 
-                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent" 
+                                        <div
+                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent"
                                             style={{ width: `${(averageFun / 5) * 100}%` }}
                                         />
                                     </div>
@@ -129,8 +131,8 @@ const SessionFeedbackModal: React.FC = () => {
                                 <div className="flex items-center gap-3 mt-1">
                                     {renderStars(averageStory, 18)}
                                     <div className="flex-1 bg-app-bg/40 h-2 rounded-full overflow-hidden">
-                                        <div 
-                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent" 
+                                        <div
+                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent"
                                             style={{ width: `${(averageStory / 5) * 100}%` }}
                                         />
                                     </div>
@@ -149,8 +151,8 @@ const SessionFeedbackModal: React.FC = () => {
                                 <div className="flex items-center gap-3 mt-1">
                                     {renderStars(averageCombat, 18)}
                                     <div className="flex-1 bg-app-bg/40 h-2 rounded-full overflow-hidden">
-                                        <div 
-                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent" 
+                                        <div
+                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent"
                                             style={{ width: `${(averageCombat / 5) * 100}%` }}
                                         />
                                     </div>
@@ -168,16 +170,16 @@ const SessionFeedbackModal: React.FC = () => {
                         <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 shrink-0">
                             {t('modules:session.feedback.details')}
                         </h4>
-                        
+
                         <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar flex flex-col gap-4 pr-2">
                             {feedbacks.map((f) => {
                                 // Find character portrait from players list
                                 const char = players
                                     .flatMap(p => p.characters)
                                     .find(c => c.id === f.characterId);
-                                    
+
                                 return (
-                                    <div 
+                                    <div
                                         key={f.characterId}
                                         className="glass-bento rounded-2xl border border-app-border/40 p-5 flex flex-col gap-4 hover:border-accent/20 transition-all shadow-md shrink-0"
                                     >
@@ -185,9 +187,9 @@ const SessionFeedbackModal: React.FC = () => {
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full border border-app-text/10 overflow-hidden bg-app-bg/40">
                                                     {char?.portraitUrl ? (
-                                                        <ResolvedImage 
-                                                            src={char.portraitUrl} 
-                                                            alt={f.characterName} 
+                                                        <ResolvedImage
+                                                            src={char.portraitUrl}
+                                                            alt={f.characterName}
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
@@ -233,6 +235,11 @@ const SessionFeedbackModal: React.FC = () => {
                     </div>
                 </div>
             )}
+          </div>
+            {/* Un seul pied : « Fermer » — on lit les retours, rien ne s'y écrit. */}
+            <div className="flex shrink-0 justify-end border-t border-app-border px-5 py-3">
+                <BoutonSecondaire onClick={() => useModalStore.getState().closeModal()}>Fermer</BoutonSecondaire>
+            </div>
         </div>
     );
 };

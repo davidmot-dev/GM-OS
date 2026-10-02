@@ -51,7 +51,8 @@ const MODULES_MIGRES: string[] = [
  */
 const FICHIERS_MIGRES: string[] = [
     /* Vide depuis que `session` est entré entier dans `MODULES_MIGRES`
-       (2026-10-02) ; la liste resservira pour `components/` (lot 6). */
+       (2026-10-02) ; elle sert désormais à `components/` (lot 6). */
+    'components/ModalProvider.tsx', // le cadre commun des surcouches — L5, 2026-10-03
 ];
 
 function releve(): Map<string, number> {
