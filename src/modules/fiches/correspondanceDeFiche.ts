@@ -56,16 +56,19 @@ const NIVEAUX_PAR_DE: Record<string, string> = Object.fromEntries(
 );
 
 /**
- * Une transformation entre **une** valeur de GM-OS et **deux** clés de la fiche.
+ * Une transformation entre **une** valeur de GM-OS et **plusieurs** clés de la
+ * fiche — deux pour `niveauEtDe`, autant que de lignes imprimées pour `lignes`.
  *
  * Les deux sens sont déclarés ensemble, dans le même objet : séparés, ils
  * auraient fini par ne plus décrire la même règle.
  */
 export interface Transformation {
-    /** GM-OS → fiche. */
-    decomposer(valeur: unknown): [unknown, unknown];
-    /** Fiche → GM-OS. */
-    composer(premiere: unknown, seconde: unknown): unknown;
+    /** Combien de clés de fiche elle attend : un nombre exact, ou « au moins deux ». */
+    cles: number | 'plusieurs';
+    /** GM-OS → fiche : autant de valeurs que de clés. */
+    decomposer(valeur: unknown, nombreDeCles: number): unknown[];
+    /** Fiche → GM-OS : les valeurs des clés, dans leur ordre. */
+    composer(valeurs: unknown[]): unknown;
 }
 
 /**
@@ -79,12 +82,13 @@ export interface Transformation {
  * — le dé coché, la lettre oubliée — rend tout de même un niveau.
  */
 export const NIVEAU_ET_DE: Transformation = {
+    cles: 2,
     decomposer(valeur) {
         const niveau = lireLeNiveau(valeur);
         if (!niveau) return ['', ''];
         return [niveau, DES_PAR_NIVEAU[niveau]];
     },
-    composer(premiere, seconde) {
+    composer([premiere, seconde]) {
         const niveau = lireLeNiveau(premiere) ?? NIVEAUX_PAR_DE[String(seconde ?? '').trim().toUpperCase()];
         if (!niveau) return '';
         return `${niveau} (${DES_PAR_NIVEAU[niveau]})`;
@@ -104,9 +108,42 @@ function lireLeNiveau(valeur: unknown): string | null {
     return lettre in DES_PAR_NIVEAU ? lettre : null;
 }
 
+/**
+ * **Un texte de GM-OS ↔ les lignes imprimées de la fiche** — Cthulhu Hack,
+ * 2026-09-30.
+ *
+ * La fiche imprime ses Compétences, son Histoire, son Équipement sur des lignes
+ * numérotées (`skills.0` … `skills.4`) ; GM-OS les tient en **un seul texte**.
+ * Chaque ligne du texte va sur une ligne de la fiche, dans l'ordre.
+ *
+ * ⚠️ **Rien ne se perd quand le texte a plus de lignes que la fiche** : le
+ * surplus se range sur la dernière, joint par « · ». Au retour, ces lignes-là
+ * n'en font plus qu'une — le texte est intact, seule sa coupe a changé. *Mieux
+ * vaut une ligne plus longue qu'une compétence disparue.*
+ */
+export const LIGNES: Transformation = {
+    cles: 'plusieurs',
+    decomposer(valeur, nombreDeCles) {
+        const lignes = String(valeur ?? '').split(/\r?\n/).map(l => l.trim());
+        while (lignes.length > 1 && lignes[lignes.length - 1] === '') lignes.pop();
+        const imprimees = lignes.slice(0, nombreDeCles);
+        if (lignes.length > nombreDeCles) {
+            imprimees[nombreDeCles - 1] = lignes.slice(nombreDeCles - 1).filter(Boolean).join(' · ');
+        }
+        while (imprimees.length < nombreDeCles) imprimees.push('');
+        return imprimees;
+    },
+    composer(valeurs) {
+        const lignes = valeurs.map(v => String(v ?? '').trim());
+        while (lignes.length > 0 && lignes[lignes.length - 1] === '') lignes.pop();
+        return lignes.join('\n');
+    },
+};
+
 /** Les transformations que le format connaît, par le nom qu'une table emploie. */
 export const TRANSFORMATIONS: Record<string, Transformation> = {
     niveauEtDe: NIVEAU_ET_DE,
+    lignes: LIGNES,
 };
 
 /**
@@ -131,14 +168,14 @@ export type DestinationGmOs = 'sheetData' | 'personnage';
 export interface ChampCorrespondu {
     /** L'identifiant du champ dans le gabarit de GM-OS. */
     gmos: string;
-    /** La clé de la fiche, ou **deux** clés quand une transformation les compose. */
-    fiche: string | [string, string];
+    /** La clé de la fiche, ou **plusieurs** clés quand une transformation les compose. */
+    fiche: string | string[];
     /**
      * `sheetData` par défaut — un champ du gabarit. `personnage` vise un des
      * `CHAMPS_DU_PERSONNAGE`, qui vivent en dehors de la fiche.
      */
     destination?: DestinationGmOs;
-    /** Le nom d'une entrée de `TRANSFORMATIONS`. Obligatoire si `fiche` est une paire. */
+    /** Le nom d'une entrée de `TRANSFORMATIONS`. Obligatoire si `fiche` est une liste. */
     transforme?: string;
     /** Traduction des valeurs, **de la fiche vers GM-OS**. Inversée pour l'autre sens. */
     valeurs?: Record<string, string>;
@@ -291,11 +328,18 @@ export function verifierLaCorrespondance(
             );
         }
 
-        const paire = Array.isArray(champ.fiche);
-        if (paire && !champ.transforme) erreur(`${ou} : deux clés de fiche sans transformation.`);
-        if (champ.transforme && !paire) erreur(`${ou} : une transformation demande deux clés de fiche.`);
-        if (champ.transforme && !TRANSFORMATIONS[champ.transforme]) {
+        const liste = Array.isArray(champ.fiche);
+        if (liste && !champ.transforme) erreur(`${ou} : plusieurs clés de fiche sans transformation.`);
+        if (champ.transforme && !liste) erreur(`${ou} : une transformation demande plusieurs clés de fiche.`);
+        const transformation = champ.transforme ? TRANSFORMATIONS[champ.transforme] : undefined;
+        if (champ.transforme && !transformation) {
             erreur(`${ou} : transformation « ${champ.transforme} » inconnue.`);
+        }
+        if (transformation && liste) {
+            const n = (champ.fiche as string[]).length;
+            if (transformation.cles === 'plusieurs' ? n < 2 : n !== transformation.cles) {
+                erreur(`${ou} : « ${champ.transforme} » attend ${transformation.cles === 'plusieurs' ? 'au moins deux' : transformation.cles} clés de fiche, la table en donne ${n}.`);
+            }
         }
 
         if (champ.valeurs) {
@@ -353,6 +397,21 @@ function inverser(valeurs: Record<string, string>): Record<string, string> {
 }
 
 /**
+ * **Traduire une valeur de GM-OS vers la fiche, sans tenir compte de la casse**
+ * (Cthulhu Hack, 2026-09-30). Le dé de ressource vaut « D8 » sur une fiche saisie
+ * à la main et « d8 » après un jet de Dice-OS : les deux doivent cocher la même
+ * case. L'exact d'abord, la casse ensuite ; sinon la valeur telle quelle.
+ */
+function versLaValeurDeLaFiche(valeurs: Record<string, string>, valeur: unknown): unknown {
+    const versFiche = inverser(valeurs);
+    const texte = String(valeur ?? '');
+    if (texte in versFiche) return versFiche[texte];
+    const bas = texte.toLowerCase();
+    const trouve = Object.keys(versFiche).find(g => g.toLowerCase() === bas);
+    return trouve !== undefined ? versFiche[trouve] : valeur;
+}
+
+/**
  * **GM-OS → la fiche.** Rend le lot à envoyer par `set`.
  *
  * Une valeur absente est écrite vide plutôt qu'omise : sans ça, effacer un champ
@@ -365,17 +424,13 @@ export function versLaFiche(personnage: CotesGmOs, table: CorrespondanceDeFiche)
     for (const champ of table.champs) {
         const source = champ.destination === 'personnage' ? personnage.narratif : personnage.sheetData;
         let valeur = source?.[champ.gmos];
-        if (champ.valeurs) {
-            const versFiche = inverser(champ.valeurs);
-            valeur = versFiche[String(valeur ?? '')] ?? valeur;
-        }
+        if (champ.valeurs) valeur = versLaValeurDeLaFiche(champ.valeurs, valeur);
 
         if (Array.isArray(champ.fiche)) {
             const transformation = TRANSFORMATIONS[champ.transforme ?? ''];
             if (!transformation) continue;
-            const [a, b] = transformation.decomposer(valeur);
-            lot[champ.fiche[0]] = a;
-            lot[champ.fiche[1]] = b;
+            const parties = transformation.decomposer(valeur, champ.fiche.length);
+            champ.fiche.forEach((cle, i) => { lot[cle] = parties[i] ?? ''; });
         } else {
             lot[champ.fiche] = valeur ?? '';
         }
@@ -417,7 +472,7 @@ export function versGmOs(
         if (Array.isArray(champ.fiche)) {
             const transformation = TRANSFORMATIONS[champ.transforme ?? ''];
             if (!transformation) continue;
-            valeur = transformation.composer(donnees[champ.fiche[0]], donnees[champ.fiche[1]]);
+            valeur = transformation.composer(champ.fiche.map(cle => donnees[cle]));
         } else {
             valeur = donnees[champ.fiche];
         }

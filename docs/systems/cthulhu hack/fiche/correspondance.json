@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "cthulhu-hack",
+  "commentaire": "Correspondance entre le gabarit de fiche de GM-OS (Cthulhu Hack, forge) et le gabarit « cthulhu-hack » du gestionnaire de fiches (Character Sheet HTML Studio, 2026-09-30). Le controle electron/correspondanceDesFiches.test.ts verifie que chaque cle citee existe, et qu'aucune cle de la fiche n'est passee sous silence.",
+
+  "champs": [
+    { "gmos": "force", "fiche": "attributes.strength" },
+    { "gmos": "dexterite", "fiche": "attributes.dexterity" },
+    { "gmos": "constitution", "fiche": "attributes.constitution" },
+    { "gmos": "sagesse", "fiche": "attributes.wisdom" },
+    { "gmos": "intelligence", "fiche": "attributes.intelligence" },
+    { "gmos": "charisme", "fiche": "attributes.charisma" },
+
+    {
+      "commentaire": "Un de de ressource : la case cochee sur la fiche (12, 10, 8, 6, 4) devient le de que Dice-OS, la tablette et la carte de combat lisent et reecrivent (« d8 »). La casse ne compte pas vers la fiche : « D8 » coche aussi la case 8. Une ressource epuisee est un de efface : elle remonte vide.",
+      "gmos": "torche",
+      "fiche": "resources.torch",
+      "valeurs": { "12": "d12", "10": "d10", "8": "d8", "6": "d6", "4": "d4" }
+    },
+    {
+      "gmos": "bagou",
+      "fiche": "resources.persuasion",
+      "valeurs": { "12": "d12", "10": "d10", "8": "d8", "6": "d6", "4": "d4" }
+    },
+    {
+      "gmos": "mentalHealth",
+      "fiche": "resources.sanity",
+      "valeurs": { "12": "d12", "10": "d10", "8": "d8", "6": "d6", "4": "d4" }
+    },
+
+    { "gmos": "hp", "fiche": "combat.hitPoints" },
+    { "gmos": "deVie", "fiche": "combat.hitDie" },
+    { "gmos": "degatsArme", "fiche": "combat.armedDamage" },
+    { "gmos": "degatsNonArme", "fiche": "combat.unarmedDamage" },
+    { "gmos": "richesse", "fiche": "equipment.wealth" },
+
+    {
+      "commentaire": "Les listes imprimees ligne a ligne sur la fiche, tenues en un seul texte dans GM-OS. Au-dela des lignes imprimees, le surplus se range sur la derniere : rien ne se perd.",
+      "gmos": "descriptionText",
+      "fiche": ["profile.description.0", "profile.description.1", "profile.description.2", "profile.description.3", "profile.description.4"],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "histoireText",
+      "fiche": ["profile.history.0", "profile.history.1", "profile.history.2", "profile.history.3", "profile.history.4", "profile.history.5", "profile.history.6", "profile.history.7", "profile.history.8", "profile.history.9", "profile.history.10"],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "competencesList",
+      "fiche": ["skills.0", "skills.1", "skills.2", "skills.3", "skills.4"],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "equipementList",
+      "fiche": ["equipment.items.0", "equipment.items.1", "equipment.items.2", "equipment.items.3", "equipment.items.4"],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "capacitesList",
+      "fiche": ["abilities.0", "abilities.1", "abilities.2", "abilities.3", "abilities.4", "abilities.5", "abilities.6", "abilities.7"],
+      "transforme": "lignes"
+    }
+  ],
+
+  "absents": [
+    { "fiche": "identity.name", "pourquoi": "Le gabarit GM-OS de Cthulhu Hack n'a pas de champ de nom : le nom vit sur le personnage, et le personnage n'est pas une destination permise. A reprendre si la Forge ajoute le champ." },
+    { "fiche": "identity.occupation", "pourquoi": "Vrai manque du gabarit GM-OS (Metier). Il doit revenir par la Forge : les identifiants ne sont pas autorables a la main." },
+    { "fiche": "identity.archetype", "pourquoi": "Vrai manque du gabarit GM-OS (Archetype). Idem identity.occupation." }
+  ]
+}

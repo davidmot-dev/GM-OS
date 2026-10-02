@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
-    NIVEAU_ET_DE, cheminDeLaCorrespondance, lireLaCorrespondance,
+    NIVEAU_ET_DE, LIGNES, cheminDeLaCorrespondance, lireLaCorrespondance,
     verifierLaCorrespondance, versLaFiche, versGmOs,
     type CorrespondanceDeFiche,
 } from './correspondanceDeFiche';
@@ -47,15 +47,15 @@ const arme = (id: string, name: string, degats: string): InventoryItem => ({
 
 describe('niveauEtDe — la lettre détermine le dé', () => {
     it('décompose et recompose sans ambiguïté', () => {
-        expect(NIVEAU_ET_DE.decomposer('C (D8)')).toEqual(['C', 'D8']);
-        expect(NIVEAU_ET_DE.composer('C', 'D8')).toBe('C (D8)');
-        expect(NIVEAU_ET_DE.composer('A', 'D12')).toBe('A (D12)');
+        expect(NIVEAU_ET_DE.decomposer('C (D8)', 2)).toEqual(['C', 'D8']);
+        expect(NIVEAU_ET_DE.composer(['C', 'D8'])).toBe('C (D8)');
+        expect(NIVEAU_ET_DE.composer(['A', 'D12'])).toBe('A (D12)');
     });
 
     /** La fiche est saisie à la main : refuser une forme lisible n'aurait servi personne. */
     it('accepte les formes qu’un humain écrit', () => {
-        expect(NIVEAU_ET_DE.decomposer('b (d10)')).toEqual(['B', 'D10']);
-        expect(NIVEAU_ET_DE.decomposer('D')).toEqual(['D', 'D6']);
+        expect(NIVEAU_ET_DE.decomposer('b (d10)', 2)).toEqual(['B', 'D10']);
+        expect(NIVEAU_ET_DE.decomposer('D', 2)).toEqual(['D', 'D6']);
     });
 
     /**
@@ -64,15 +64,15 @@ describe('niveauEtDe — la lettre détermine le dé', () => {
      * corrigée au passage plutôt que propagée dans GM-OS.
      */
     it('corrige un dé qui contredit sa lettre', () => {
-        expect(NIVEAU_ET_DE.composer('B', 'D8')).toBe('B (D10)');
+        expect(NIVEAU_ET_DE.composer(['B', 'D8'])).toBe('B (D10)');
     });
 
     /** Une fiche à moitié remplie rend tout de même un niveau. */
     it('retombe sur le dé quand la lettre manque', () => {
-        expect(NIVEAU_ET_DE.composer('', 'D12')).toBe('A (D12)');
-        expect(NIVEAU_ET_DE.composer('', '')).toBe('');
-        expect(NIVEAU_ET_DE.decomposer('')).toEqual(['', '']);
-        expect(NIVEAU_ET_DE.decomposer('Z')).toEqual(['', '']);
+        expect(NIVEAU_ET_DE.composer(['', 'D12'])).toBe('A (D12)');
+        expect(NIVEAU_ET_DE.composer(['', ''])).toBe('');
+        expect(NIVEAU_ET_DE.decomposer('', 2)).toEqual(['', '']);
+        expect(NIVEAU_ET_DE.decomposer('Z', 2)).toEqual(['', '']);
     });
 });
 
@@ -124,7 +124,7 @@ describe('verifierLaCorrespondance', () => {
 
         expect(verifierLaCorrespondance(sansNom, ['a', 'b']).some(d => d.message.includes('sans transformation'))).toBe(true);
         expect(verifierLaCorrespondance(inconnue, ['a', 'b']).some(d => d.message.includes('inconnue'))).toBe(true);
-        expect(verifierLaCorrespondance(seule, ['a']).some(d => d.message.includes('demande deux clés'))).toBe(true);
+        expect(verifierLaCorrespondance(seule, ['a']).some(d => d.message.includes('demande plusieurs clés'))).toBe(true);
     });
 
     it('refuse une traduction de valeurs non inversible', () => {
@@ -296,5 +296,72 @@ describe('versGmOs', () => {
     it('ne dit rien de l’inventaire quand la table n’en parle pas', () => {
         const sansObjets = { ...TABLE, objets: undefined };
         expect(versGmOs({}, sansObjets, [arme('i1', 'Blaster', '3')])).not.toHaveProperty('inventoryItems');
+    });
+});
+
+/**
+ * **Les lignes imprimées ↔ un texte de GM-OS** — Cthulhu Hack, 2026-09-30.
+ * Ses Compétences, son Histoire, son Équipement tiennent sur des lignes
+ * numérotées ; GM-OS les garde en un seul texte.
+ */
+describe('la transformation « lignes »', () => {
+    it('pose chaque ligne du texte sur une ligne de la fiche', () => {
+        expect(LIGNES.decomposer('Photographie\nBibliothèque', 5)).toEqual(['Photographie', 'Bibliothèque', '', '', '']);
+    });
+
+    it('recompose le texte, sans lignes vides en queue', () => {
+        expect(LIGNES.composer(['Photographie', 'Bibliothèque', '', '', ''])).toBe('Photographie\nBibliothèque');
+    });
+
+    it('ne perd rien quand le texte a plus de lignes que la fiche', () => {
+        const lignes = LIGNES.decomposer('a\nb\nc\nd', 2);
+        expect(lignes).toEqual(['a', 'b · c · d']);
+        expect(LIGNES.composer(lignes)).toBe('a\nb · c · d');
+    });
+
+    it('un texte vide donne des lignes vides, et l’inverse', () => {
+        expect(LIGNES.decomposer('', 3)).toEqual(['', '', '']);
+        expect(LIGNES.composer(['', '', ''])).toBe('');
+    });
+
+    it('fait l’aller-retour par la table', () => {
+        const table = {
+            ...TABLE, objets: undefined, absents: undefined,
+            champs: [{ gmos: 'competences', fiche: ['skills.0', 'skills.1', 'skills.2'], transforme: 'lignes' }],
+        };
+        expect(verifierLaCorrespondance(table, ['skills.0', 'skills.1', 'skills.2'])).toEqual([]);
+        const lot = versLaFiche({ sheetData: { competences: 'Tir\nFouille' } }, table);
+        expect(lot).toEqual({ 'skills.0': 'Tir', 'skills.1': 'Fouille', 'skills.2': '' });
+        expect(versGmOs(lot, table).sheetData).toEqual({ competences: 'Tir\nFouille' });
+    });
+
+    it('niveauEtDe garde exactement deux clés', () => {
+        const table = { ...TABLE, objets: undefined, absents: undefined, champs: [{ gmos: 'v', fiche: ['a', 'b', 'c'], transforme: 'niveauEtDe' }] };
+        expect(verifierLaCorrespondance(table, ['a', 'b', 'c']).some(d => d.message.includes('attend 2 clés'))).toBe(true);
+    });
+});
+
+/**
+ * **La casse d'une valeur de GM-OS ne décide pas de la case cochée** —
+ * Cthulhu Hack, 2026-09-30 : « D8 » saisi à la main et « d8 » écrit par
+ * Dice-OS cochent le même dé.
+ */
+describe('la traduction de valeurs vers la fiche', () => {
+    const table = {
+        ...TABLE, objets: undefined, absents: undefined,
+        champs: [{ gmos: 'torche', fiche: 'resources.torch', valeurs: { '12': 'd12', '8': 'd8', '4': 'd4' } }],
+    };
+
+    it('traduit la valeur exacte', () => {
+        expect(versLaFiche({ sheetData: { torche: 'd8' } }, table)).toEqual({ 'resources.torch': '8' });
+    });
+
+    it('et la même valeur dans une autre casse', () => {
+        expect(versLaFiche({ sheetData: { torche: 'D8' } }, table)).toEqual({ 'resources.torch': '8' });
+    });
+
+    it('et remonte la case cochée en dé de GM-OS', () => {
+        expect(versGmOs({ 'resources.torch': '8' }, table).sheetData).toEqual({ torche: 'd8' });
+        expect(versGmOs({ 'resources.torch': 12 }, table).sheetData).toEqual({ torche: 'd12' });
     });
 });

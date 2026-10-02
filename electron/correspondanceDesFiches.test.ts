@@ -113,3 +113,27 @@ describe('les correspondances de fiche du dépôt', () => {
         expect(numeriques, 'des champs de niveau typés « number »').toEqual([]);
     });
 });
+
+/**
+ * **Un gabarit intégré ajouté sans monter `BUILTIN_VERSION` n'arrive jamais.**
+ *
+ * *Trouvé par David le 2026-10-02 : « Modèle inconnu : cthulhu-hack ».* Le
+ * moteur ne recopie ses gabarits intégrés dans sa base que si ce numéro monte
+ * (`seedBuiltins`). Une base neuve les reçoit tous — l'essai de bout en bout
+ * était donc vert — mais la bibliothèque du meneur, déjà garnie au numéro 3,
+ * n'a jamais vu Cthulhu Hack. *L'essai sur une base vierge ne voit pas ce que
+ * voit une base qui a vécu.*
+ *
+ * Ce garde fige la liste et son numéro : changer l'une sans l'autre échoue ici.
+ */
+describe('les gabarits intégrés du moteur', () => {
+    it('ne changent pas sans que leur numéro de version monte', () => {
+        const source = fs.readFileSync(MOTEUR, 'utf8');
+        const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
+        const ids = MOTEURS.map(g => g.id).sort();
+        expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
+            version: 4,
+            ids: ['alien-v2-normalise', 'blade-runner-fr', 'cthulhu-hack', 'noc-reference', 'star-trek-adventures-2e-dossier-personnel-fr'],
+        });
+    });
+});
