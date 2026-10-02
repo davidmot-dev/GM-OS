@@ -46,7 +46,7 @@ export const COULEURS_DE_PASTILLE: Record<string, CouleurDePastille> = {
     [SANS_COULEUR]: {
         nom: 'Aucune',
         tuile: 'bg-app-bg/40 border-app-border/50 hover:bg-app-surface/60 hover:border-accent/40',
-        icone: 'text-slate-700 group-hover:text-accent/70',
+        icone: 'text-app-subtle group-hover:text-accent/70',
         echantillon: 'bg-app-surface border-app-border',
     },
     ambre: {

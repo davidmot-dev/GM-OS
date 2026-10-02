@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-    compterLesCouleursBrutes, lieuDuFichier, fichierCompte,
+    compterLesCouleursBrutes, lieuDuFichier, fichierCompte, PALETTES_DE_CONTENU,
 } from '../src/theme/releveDesCouleurs';
 
 /**
@@ -30,6 +30,7 @@ const MODULES_MIGRES: string[] = [
     'modules/combat', // phase 4, L1 — 2026-09-30
     'modules/sound',   // phase 4, L2 — 2026-10-02
     'modules/ambient', // phase 4, L2 — 2026-10-02
+    'modules/music',   // phase 4, L2 — 2026-10-02 (palette des pastilles exemptée)
 ];
 
 function releve(): Map<string, number> {
@@ -63,6 +64,24 @@ describe('les couleurs brutes', () => {
             expect(parLieu.get(lieu) ?? 0, `${lieu} est migré : ses couleurs passent par des jetons`).toBe(0);
         },
     );
+});
+
+/**
+ * **Les palettes de contenu existent encore** — L2, 2026-10-02. Une exemption
+ * qui survit à son fichier (renommé, déplacé) n'exempte plus rien, mais un
+ * successeur sous un autre nom serait compté sans qu'on sache pourquoi il
+ * échoue. *Une exception doit pouvoir être retrouvée.*
+ */
+describe('les palettes de contenu', () => {
+    it.each(Object.keys(PALETTES_DE_CONTENU))('%s existe', (relatif) => {
+        expect(fs.existsSync(path.join(SRC, ...relatif.split('/')))).toBe(true);
+        expect(PALETTES_DE_CONTENU[relatif].length).toBeGreaterThan(10);
+    });
+
+    it('ne parle plus en gris : son chrome est passé aux jetons', () => {
+        const pastilles = fs.readFileSync(path.join(SRC, 'modules/music/logic/couleursDePastille.ts'), 'utf-8');
+        expect(pastilles).not.toMatch(/(?<![\w-])(?:text|bg|border)-(?:slate|gray|zinc)-\d{2,3}/);
+    });
 });
 
 /**

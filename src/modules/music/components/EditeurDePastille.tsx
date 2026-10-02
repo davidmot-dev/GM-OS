@@ -142,7 +142,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
                     value={nom}
                     onChange={(e) => setNom(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') enregistrer(); }}
-                    className="w-full px-3 py-2 rounded-xl bg-app-bg border border-app-border/50 text-white outline-none focus:border-accent transition-colors"
+                    className="w-full px-3 py-2 rounded-xl bg-app-bg border border-app-border/50 text-app-text outline-none focus:border-accent transition-colors"
                 />
             </label>
 
@@ -161,10 +161,10 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
                                 aria-label={teinte.nom}
                                 aria-pressed={choisie}
                                 className={`size-9 rounded-xl border-2 flex items-center justify-center transition-all ${teinte.echantillon} ${
-                                    choisie ? 'ring-2 ring-white/80 scale-110' : 'opacity-70 hover:opacity-100 hover:scale-105'
+                                    choisie ? 'ring-2 ring-app-text/80 scale-110' : 'opacity-70 hover:opacity-100 hover:scale-105'
                                 }`}
                             >
-                                {choisie && <Check size={14} className="text-white drop-shadow" strokeWidth={3} />}
+                                {choisie && <Check size={14} className="text-fixe-blanc drop-shadow" strokeWidth={3} />}
                             </button>
                         );
                     })}
@@ -179,8 +179,8 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
                         onClick={() => setEnEcoute(true)}
                         className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
                             enEcoute
-                                ? 'bg-cyan-900/40 border-cyan-500 text-cyan-300 animate-pulse'
-                                : 'bg-app-surface border-app-border/50 text-slate-300 hover:border-accent/40 hover:text-white'
+                                ? 'bg-gm-cyan/15 border-gm-cyan text-gm-cyan animate-pulse'
+                                : 'bg-app-surface border-app-border/50 text-app-text hover:border-accent/40 hover:text-app-text'
                         }`}
                     >
                         <Keyboard size={12} />
@@ -194,7 +194,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
                         <button
                             onClick={() => setTouche(undefined)}
                             title="Retirer la touche"
-                            className="p-2.5 rounded-xl bg-app-surface border border-app-border/50 text-slate-600 hover:text-red-500 hover:border-red-500/30 transition-all"
+                            className="p-2.5 rounded-xl bg-app-surface border border-app-border/50 text-app-subtle hover:text-etat-danger hover:border-etat-danger/30 transition-all"
                         >
                             <X size={12} />
                         </button>
@@ -207,7 +207,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
                   oblige à chercher soi-même.*
                 */}
                 {detenteur && (
-                    <p className="text-ui-9 font-bold text-amber-500 leading-snug">
+                    <p className="text-ui-9 font-bold text-etat-alerte leading-snug">
                         Cette touche lance déjà « {detenteur.label} ». L'enregistrement la lui retire —
                         une touche ne commande qu'une pastille.
                     </p>
@@ -217,13 +217,13 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
             <div className="flex gap-2 pt-1">
                 <button
                     onClick={onClose}
-                    className="flex-1 py-2.5 rounded-xl bg-app-surface border border-app-border/50 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-white transition-all"
+                    className="flex-1 py-2.5 rounded-xl bg-app-surface border border-app-border/50 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-app-text transition-all"
                 >
                     Annuler
                 </button>
                 <button
                     onClick={enregistrer}
-                    className="flex-1 py-2.5 rounded-xl bg-accent border border-accent text-ui-10 font-black uppercase tracking-widest text-white hover:brightness-110 transition-all"
+                    className="flex-1 py-2.5 rounded-xl bg-accent border border-accent text-ui-10 font-black uppercase tracking-widest text-app-text hover:brightness-110 transition-all"
                 >
                     Enregistrer
                 </button>
@@ -231,7 +231,7 @@ export const EditeurDePastille: React.FC<Props> = ({ playlistId, padIndex, onClo
 
             {/* Un aperçu du rendu, pour que la couleur ne se juge pas dans le vide. */}
             <div className="flex items-center gap-3 pt-1 border-t border-app-border/30">
-                <span className="text-ui-9 font-black uppercase tracking-widest text-slate-600">Aperçu</span>
+                <span className="text-ui-9 font-black uppercase tracking-widest text-app-subtle">Aperçu</span>
                 <div className={`size-12 rounded-2xl border-2 flex items-center justify-center ${couleurDeLaPastille(couleur === SANS_COULEUR ? undefined : couleur).tuile}`}>
                     <span className={`text-ui-8 font-black uppercase ${couleurDeLaPastille(couleur === SANS_COULEUR ? undefined : couleur).icone}`}>
                         {(nom || pad.label).slice(0, 3)}

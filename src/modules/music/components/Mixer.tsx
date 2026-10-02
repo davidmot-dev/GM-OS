@@ -112,7 +112,7 @@ const Mixer: React.FC = () => {
     return (
         <div className="w-full bg-app-bg/30 backdrop-blur-[32px] rounded-[1.5rem] border border-app-border/50 p-3 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.6)] relative overflow-hidden group/mixer transition-all duration-700 hover:border-accent/20 hover:bg-app-bg/40">
             {/* Inner Glass Glow */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-fixe-blanc/[0.04] to-transparent pointer-events-none" />
             <div className="absolute -bottom-10 -left-10 size-40 bg-accent/10 blur-[60px] pointer-events-none opacity-40" />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center relative z-10">
@@ -129,8 +129,8 @@ const Mixer: React.FC = () => {
                     onClick={() => basculerLaNormalisation()}
                     title={`Aligne les pistes sur ${cibleDeSonie} LUFS. Une piste est mesuree pendant sa premiere ecoute, puis calee ensuite. ${Object.keys(sonies).length} piste(s) mesuree(s).`}
                     className={`absolute top-3 right-3 z-20 px-2.5 py-1 rounded-lg border text-ui-8 font-black uppercase tracking-widest transition-all ${normalisation
-                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                        : 'bg-app-bg/60 border-app-border/50 text-slate-600 hover:text-slate-400'}`}
+                        ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes'
+                        : 'bg-app-bg/60 border-app-border/50 text-app-subtle hover:text-app-muted'}`}
                 >
                     Niveaux alignes
                     <span className="ml-1.5 opacity-60 font-mono">{Object.keys(sonies).length}</span>
@@ -144,8 +144,8 @@ const Mixer: React.FC = () => {
                             <span className="text-ui-7 font-black text-accent uppercase tracking-widest opacity-60">Engine</span>
                         </div>
                         <div className="flex items-baseline gap-0.5">
-                            <span className="text-xl font-black font-mono text-white/95 drop-shadow-md">{Math.round(curseurDuMaster.position * 100)}</span>
-                            <span className="text-ui-10 font-black text-slate-600">%</span>
+                            <span className="text-xl font-black font-mono text-app-text/95 drop-shadow-md">{Math.round(curseurDuMaster.position * 100)}</span>
+                            <span className="text-ui-10 font-black text-app-subtle">%</span>
                         </div>
                     </div>
                     <div className="relative h-1.5 bg-app-bg rounded-full border border-app-border/50 shadow-inner group/range">
@@ -164,7 +164,7 @@ const Mixer: React.FC = () => {
                             style={{ width: `${curseurDuMaster.position * 100}%` }}
                         />
                         <div
-                            className={`absolute top-1/2 -translate-y-1/2 size-4 bg-white rounded-lg shadow-lg border-2 border-accent z-10 pointer-events-none ${curseurDuMaster.enCoursDeSaisie ? '' : 'transition-all duration-150'}`}
+                            className={`absolute top-1/2 -translate-y-1/2 size-4 bg-fixe-blanc rounded-lg shadow-lg border-2 border-accent z-10 pointer-events-none ${curseurDuMaster.enCoursDeSaisie ? '' : 'transition-all duration-150'}`}
                             style={{ left: `calc(${curseurDuMaster.position * 100}% - 8px)` }}
                         >
                             <div className="absolute inset-0 rounded-md animate-ping bg-accent/30" />
@@ -195,16 +195,16 @@ const Mixer: React.FC = () => {
                     <div className="flex justify-between items-center w-full max-w-[200px] gap-3">
                         <button
                             onClick={async () => await triggerAutoFade('A')}
-                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-app-subtle hover:text-white hover:border-accent/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'A' ? 'bg-accent border-accent text-app-on-accent shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-app-subtle hover:text-app-text hover:border-accent/30'}`}
                         >
                             A
                         </button>
                         <div className="size-8 rounded-xl bg-app-bg border border-app-border/50 flex items-center justify-center relative overflow-hidden">
-                            <Activity size={14} className={`relative z-10 transition-all duration-500 ${isFading ? 'animate-pulse text-accent' : 'text-slate-700'}`} />
+                            <Activity size={14} className={`relative z-10 transition-all duration-500 ${isFading ? 'animate-pulse text-accent' : 'text-app-subtle'}`} />
                         </div>
                         <button
                             onClick={async () => await triggerAutoFade('B')}
-                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-accent border-accent text-white shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-app-subtle hover:text-white hover:border-accent/30'}`}
+                            className={`flex-1 py-1.5 rounded-xl text-ui-8 font-black border transition-all uppercase tracking-tighter active:scale-[0.98] ${isFading === 'B' ? 'bg-accent border-accent text-app-on-accent shadow-glow-accent' : 'bg-app-surface/40 border-app-border/50 text-app-subtle hover:text-app-text hover:border-accent/30'}`}
                         >
                             B
                         </button>
@@ -212,7 +212,7 @@ const Mixer: React.FC = () => {
 
                     <div className="relative w-full h-10 flex items-center group/fader px-4">
                         {/* Fader Track UI */}
-                        <div className="absolute inset-x-8 h-3 bg-black/60 rounded-full border border-app-border/50 p-0.5 shadow-inner overflow-hidden">
+                        <div className="absolute inset-x-8 h-3 bg-app-bg/60 rounded-full border border-app-border/50 p-0.5 shadow-inner overflow-hidden">
                             <div className="w-full h-full border border-accent/5 rounded-full bg-gradient-to-r from-accent/10 via-transparent to-accent/10" />
                         </div>
 
@@ -229,7 +229,7 @@ const Mixer: React.FC = () => {
                           saccade. *On n'anime pas ce qui est déjà animé.*
                         */}
                         <div
-                            className="absolute h-6 w-10 bg-slate-100 rounded-lg shadow-xl border-y border-white z-10 pointer-events-none will-change-[left] flex items-center justify-center after:content-[''] after:w-[1px] after:h-3 after:bg-slate-300 after:rounded-full"
+                            className="absolute h-6 w-10 bg-fixe-blanc/95 rounded-lg shadow-xl border-y border-fixe-blanc z-10 pointer-events-none will-change-[left] flex items-center justify-center after:content-[''] after:w-[1px] after:h-3 after:bg-fixe-noir/30 after:rounded-full"
                             style={{ left: `calc(${10 + (positionAffichee * 80)}% - 1.25rem)` }}
                         >
                             <div className="absolute inset-x-0 -top-0.5 h-[1px] bg-accent/20 blur-[1px]" />
@@ -257,8 +257,8 @@ const Mixer: React.FC = () => {
                             className="absolute inset-x-0 w-full h-full opacity-0 cursor-pointer z-20"
                         />
                         
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 text-ui-8 font-black text-slate-700 opacity-40 uppercase">A</div>
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-ui-8 font-black text-slate-700 opacity-40 uppercase">B</div>
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 text-ui-8 font-black text-app-subtle opacity-40 uppercase">A</div>
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-ui-8 font-black text-app-subtle opacity-40 uppercase">B</div>
                     </div>
                 </div>
 
@@ -267,23 +267,23 @@ const Mixer: React.FC = () => {
                     <div className="flex items-center justify-between px-1">
                         <div className="flex flex-col">
                             <span className="text-ui-9 font-black text-app-subtle uppercase tracking-widest">Logic</span>
-                            <span className="text-ui-7 font-black text-slate-600 uppercase tracking-widest opacity-60">Fade</span>
+                            <span className="text-ui-7 font-black text-app-subtle uppercase tracking-widest opacity-60">Fade</span>
                         </div>
                         <div className="flex items-baseline gap-0.5">
-                            <span className="text-xl font-black font-mono text-white/95 drop-shadow-md">{(curseurDeLaDuree.position / 1000).toFixed(1)}</span>
-                            <span className="text-ui-10 font-black text-slate-600">s</span>
+                            <span className="text-xl font-black font-mono text-app-text/95 drop-shadow-md">{(curseurDeLaDuree.position / 1000).toFixed(1)}</span>
+                            <span className="text-ui-10 font-black text-app-subtle">s</span>
                         </div>
                     </div>
                     <div className="relative h-1.5 bg-app-bg rounded-full border border-app-border/50 shadow-inner group/range-speed">
                         <div
-                            className={`absolute inset-y-0 left-0 bg-slate-700 rounded-full opacity-40 ${curseurDeLaDuree.enCoursDeSaisie ? '' : 'transition-all'}`}
+                            className={`absolute inset-y-0 left-0 bg-app-surface-2 rounded-full opacity-40 ${curseurDeLaDuree.enCoursDeSaisie ? '' : 'transition-all'}`}
                             style={{ width: `${((curseurDeLaDuree.position - 500) / 19500) * 100}%` }}
                         />
                         <div
                             className={`absolute top-1/2 -translate-y-1/2 size-4 bg-app-surface rounded-lg shadow-lg border-2 border-app-border z-10 pointer-events-none flex items-center justify-center p-0.5 ${curseurDeLaDuree.enCoursDeSaisie ? '' : 'transition-all duration-150'}`}
                             style={{ left: `calc(${((curseurDeLaDuree.position - 500) / 19500) * 100}% - 8px)` }}
                         >
-                            <div className="w-[1px] h-2 bg-slate-500 rounded-full" />
+                            <div className="w-[1px] h-2 bg-app-muted rounded-full" />
                         </div>
                         {/*
                           `step` à 100 ms et non 250 : la lecture porte **une

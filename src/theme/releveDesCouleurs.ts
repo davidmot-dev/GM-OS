@@ -51,7 +51,27 @@ export function lieuDuFichier(relatifASrc: string): string {
     return parties.length > 1 ? parties[0] : '(racine)';
 }
 
-/** Les fichiers qui comptent : le code de l'interface, pas ses essais. */
+/**
+ * **Les palettes de contenu — des couleurs qui sont la donnée, pas le châssis.**
+ * Refonte, phase 4, lot L2 — 2026-10-02.
+ *
+ * Une teinte de pastille (« Ambre », « Rose ») ou la couleur d'un effet de
+ * lumière (« Sirène » en rouge, « Aurore » en cyan) **est** ce que le meneur
+ * choisit : la remplacer par un jeton d'état ferait dire « danger » à une
+ * pastille rouge, et un thème de jeu repeindrait la sirène. Elles restent donc
+ * en palette brute, et le relevé ne les compte pas.
+ *
+ * ⚠️ **Fichier entier, liste courte, raison écrite.** Le chrome qui vivrait dans
+ * ces fichiers échapperait à la garde : on l'en sort d'abord (« Aucune » parle
+ * en jetons). Un fichier ne s'ajoute ici que s'il ne contient **que** du contenu.
+ */
+export const PALETTES_DE_CONTENU: Readonly<Record<string, string>> = {
+    'modules/music/logic/couleursDePastille.ts': 'les huit teintes que le meneur donne à une pastille',
+    'modules/light/logic/catalogueDesEffets.ts': 'la couleur de chaque effet de lumière, celle de la lampe',
+};
+
+/** Les fichiers qui comptent : le code de l'interface, pas ses essais ni ses palettes de contenu. */
 export function fichierCompte(relatifASrc: string): boolean {
-    return /\.(tsx|ts)$/.test(relatifASrc) && !/\.test\.(tsx|ts)$/.test(relatifASrc);
+    return /\.(tsx|ts)$/.test(relatifASrc) && !/\.test\.(tsx|ts)$/.test(relatifASrc)
+        && !(relatifASrc in PALETTES_DE_CONTENU);
 }

@@ -137,14 +137,14 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                     <div className={`size-12 rounded-full border-2 border-app-bg bg-app-bg shadow-lg flex items-center justify-center relative overflow-hidden transition-all duration-500 ${isPlaying ? 'animate-spin-slow scale-105' : 'group-hover:scale-105'}`}>
                         {/* Center Label */}
                         <div className={`size-6 rounded-full border border-app-bg flex items-center justify-center relative z-10 transition-all duration-500 ${isPlaying ? 'bg-accent shadow-glow-accent' : 'bg-app-surface'}`}>
-                            <Activity size={10} className={`transition-all duration-500 ${isPlaying ? 'text-white' : 'text-slate-600'}`} />
+                            <Activity size={10} className={`transition-all duration-500 ${isPlaying ? 'text-app-on-accent' : 'text-app-subtle'}`} />
                         </div>
                     </div>
                 </div>
 
                 <div className="flex-1 min-w-0 space-y-0.5">
                     <div className="flex items-center gap-2">
-                        <span className={`px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-accent/20 border-accent text-white shadow-glow-accent/20' : 'bg-app-surface/60 border-app-border/50 text-app-subtle'}`}>
+                        <span className={`px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest transition-all duration-500 border ${isPlaying ? 'bg-accent/20 border-accent text-app-text shadow-glow-accent/20' : 'bg-app-surface/60 border-app-border/50 text-app-subtle'}`}>
                             DRK {side}
                         </span>
 
@@ -153,14 +153,14 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                             <button
                                 onClick={() => void triggerAutoFade(side)}
                                 title={`La platine ${side} joue mais le crossfader est sur l’autre — cliquer pour l’amener à l’antenne`}
-                                className="px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest border bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500 hover:text-black transition-all"
+                                className="px-1.5 py-0.5 rounded-lg text-ui-7 font-black uppercase tracking-widest border bg-etat-alerte/15 border-etat-alerte/40 text-etat-alerte hover:bg-etat-alerte hover:text-app-bg transition-all"
                             >
                                 Muet → à l’antenne
                             </button>
                         )}
                     </div>
                     <div>
-                        <h3 className="text-sm font-black text-white truncate tracking-tight transition-colors group-hover:text-accent/90">
+                        <h3 className="text-sm font-black text-app-text truncate tracking-tight transition-colors group-hover:text-accent/90">
                             {deckState.activeTrackLabel || "Ready"}
                         </h3>
                     </div>
@@ -216,7 +216,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                     {waveformHeights.map((h, i) => (
                         <div
                             key={i}
-                            className={`flex-1 rounded-t-[1px] transition-all duration-300 ${isPlaying ? 'bg-accent/30 animate-jitter' : 'bg-slate-800'}`}
+                            className={`flex-1 rounded-t-[1px] transition-all duration-300 ${isPlaying ? 'bg-accent/30 animate-jitter' : 'bg-app-surface-2'}`}
                             style={{
                                 height: isPlaying ? `${h}%` : '20%',
                                 transitionDelay: `${i * 5}ms`
@@ -229,7 +229,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                         prend pas les clics : la forme d'onde reste un curseur. */}
                     {plage && duration > 0 && (
                         <div
-                            className="absolute inset-y-0 pointer-events-none bg-emerald-400/15 border-x-2 border-emerald-400/70"
+                            className="absolute inset-y-0 pointer-events-none bg-etat-succes/15 border-x-2 border-etat-succes/70"
                             style={{
                                 left: `${(plage.entree / duration) * 100}%`,
                                 width: `${((plage.sortie - plage.entree) / duration) * 100}%`
@@ -252,7 +252,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between text-ui-8 font-black font-mono tracking-tighter text-slate-600 px-0.5 uppercase">
+                <div className="flex items-center justify-between text-ui-8 font-black font-mono tracking-tighter text-app-subtle px-0.5 uppercase">
                     <span className={pointageEnCours !== null ? 'text-accent' : isPlaying ? 'text-accent' : ''}>
                         {formatTime(positionAffichee)}
                     </span>
@@ -280,7 +280,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                             onClick={() => poserLePoint('entree')}
                             disabled={duration <= 0}
                             title="Poser l'entrée de la plage à la position actuelle"
-                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-app-subtle hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-app-subtle hover:text-etat-succes hover:border-etat-succes/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             Entrée
                         </button>
@@ -288,13 +288,13 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                             onClick={() => poserLePoint('sortie')}
                             disabled={duration <= 0}
                             title="Poser la sortie de la plage à la position actuelle"
-                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-app-subtle hover:text-emerald-400 hover:border-emerald-400/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="px-1.5 py-0.5 rounded-md border border-app-border/50 bg-app-surface/50 text-ui-8 font-black uppercase tracking-tighter text-app-subtle hover:text-etat-succes hover:border-etat-succes/30 transition-all active:scale-[0.95] disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             Sortie
                         </button>
 
                         <span className={`flex-1 text-ui-8 font-black font-mono tracking-tighter truncate text-center ${
-                            plage ? 'text-emerald-400' : unPointPose ? 'text-amber-500' : 'text-slate-700'
+                            plage ? 'text-etat-succes' : unPointPose ? 'text-etat-alerte' : 'text-app-subtle'
                         }`}>
                             {plage
                                 ? `${formatTime(plage.entree)} → ${formatTime(plage.sortie)}`
@@ -307,7 +307,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                             onClick={() => definirLaPlageDuPad(padCharge.id, null, null)}
                             disabled={!unPointPose}
                             title="Retirer la plage — le morceau entier se joue de nouveau"
-                            className="p-1 rounded-md border border-app-border/50 bg-app-surface/50 text-slate-600 hover:text-red-500 hover:border-red-500/20 transition-all active:scale-[0.9] disabled:opacity-20 disabled:cursor-not-allowed"
+                            className="p-1 rounded-md border border-app-border/50 bg-app-surface/50 text-app-subtle hover:text-etat-danger hover:border-etat-danger/20 transition-all active:scale-[0.9] disabled:opacity-20 disabled:cursor-not-allowed"
                         >
                             <X size={10} />
                         </button>
@@ -321,7 +321,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                     onClick={() => isPlaying ? engineDeck.pause() : playDeck(side)}
                     className={`flex-[2] h-8 rounded-lg flex items-center justify-center transition-all group/btn ${isPlaying
                         ? 'bg-app-surface/80 text-accent border border-accent/20'
-                        : 'bg-accent text-white shadow-lg active:scale-[0.98]'
+                        : 'bg-accent text-app-on-accent shadow-lg active:scale-[0.98]'
                         }`}
                 >
                     {isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" className="translate-x-0.5" />}
@@ -329,7 +329,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                 
                 <button
                     onClick={() => stopDeck(side)}
-                    className="flex-1 h-8 rounded-lg bg-app-surface/50 border border-app-border/50 text-slate-600 flex items-center justify-center hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-all active:scale-[0.9]"
+                    className="flex-1 h-8 rounded-lg bg-app-surface/50 border border-app-border/50 text-app-subtle flex items-center justify-center hover:bg-etat-danger/10 hover:text-etat-danger hover:border-etat-danger/20 transition-all active:scale-[0.9]"
                     title="Stop"
                 >
                     <Square size={10} fill="currentColor" />
@@ -338,7 +338,7 @@ const Deck: React.FC<DeckProps> = ({ side }) => {
                     onClick={() => toggleLoop(side)}
                     className={`flex-1 h-8 rounded-lg border transition-all flex items-center justify-center ${deckState.isLooping
                         ? 'bg-accent/10 border-accent/30 text-accent shadow-glow-accent'
-                        : 'bg-app-surface/50 border-app-border/50 text-slate-600 hover:text-slate-300'
+                        : 'bg-app-surface/50 border-app-border/50 text-app-subtle hover:text-app-text'
                         }`}
                     title={plage
                         ? (deckState.isLooping ? 'La plage tourne en boucle' : 'La plage joue une fois, puis s\'arrête')

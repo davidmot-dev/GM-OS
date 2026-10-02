@@ -149,7 +149,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePadClick(); } }}
             className={`aspect-square rounded-3xl border-2 flex flex-col items-center justify-center transition-all duration-300 relative group shadow-2xl
                 ${isLearningThis
-                    ? 'border-cyan-500 bg-cyan-900/40 shadow-glow-cyan'
+                    ? 'border-gm-cyan bg-gm-cyan/15 shadow-glow-cyan'
                     : isPlaying
                         /* `animate-jitter` étirait la tuile entière de 30 % deux
                            fois par seconde — l'animation des barres du Deck,
@@ -168,12 +168,12 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             {/* Premium Glossy Overlay */}
             {/* `rounded-3xl` porté ici depuis que la tuile ne rogne plus : c'est
                 elle qui arrondissait ces deux voiles. */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/[0.08] via-transparent to-transparent pointer-events-none opacity-50" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-fixe-blanc/[0.08] via-transparent to-transparent pointer-events-none opacity-50" />
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/10 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
 
             {/* Keybind Indicator */}
             {keyLabel && (
-                <div className={`absolute top-2 left-2 border text-ui-7 font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-cyan-900 text-cyan-400 border-cyan-500' : 'bg-app-bg text-app-subtle border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
+                <div className={`absolute top-2 left-2 border text-ui-7 font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-app-bg text-gm-cyan border-gm-cyan' : 'bg-app-bg text-app-subtle border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
                     {keyLabel}
                 </div>
             )}
@@ -182,7 +182,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             <div
                 {...attributes}
                 {...listeners}
-                className={`absolute top-2 right-2 p-1.5 text-slate-700 hover:text-white cursor-grab active:cursor-grabbing ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
+                className={`absolute top-2 right-2 p-1.5 text-app-subtle hover:text-app-text cursor-grab active:cursor-grabbing ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
             >
                 <GripVertical size={12} />
             </div>
@@ -196,17 +196,17 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
 
 
 
-            <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-cyan-400 scale-110 drop-shadow-glow-cyan' : 'text-accent scale-110 drop-shadow-glow-accent') : teinte.icone}`}>
+            <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-gm-cyan scale-110 drop-shadow-glow-cyan' : 'text-accent scale-110 drop-shadow-glow-accent') : teinte.icone}`}>
                 {pad.type === 'link' ? <Link size={36} strokeWidth={1} /> : <Music size={36} strokeWidth={1} />}
             </div>
 
             <div className="mt-3 px-3 w-full text-center">
-                <span className={`text-ui-10 font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-white drop-shadow-sm' : 'text-app-subtle group-hover:text-slate-300'}`}>
+                <span className={`text-ui-10 font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-app-text drop-shadow-sm' : 'text-app-subtle group-hover:text-app-text'}`}>
                     {pad.label}
                 </span>
                 {/*
                   ⛔ **L'identifiant interne ne s'affiche plus.** Il tenait une
-                  ligne sous le nom, en `text-white/20` : décoratif au mieux —
+                  ligne sous le nom, en `text-app-text/20` : décoratif au mieux —
                   et pour toute pastille née d'une playlist créée au bouton
                   « + », c'était un **UUID de 36 caractères**, qui passait à la
                   ligne et mangeait la tuile. *Un identifiant technique ne dit
@@ -241,7 +241,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             <button
                 onClick={handleRetirer}
                 title="Retirer cette pastille"
-                className={`absolute bottom-2 left-1/2 -translate-x-1/2 p-1.5 rounded-lg text-slate-700 hover:text-red-500 hover:bg-red-500/10 transition-colors ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
+                className={`absolute bottom-2 left-1/2 -translate-x-1/2 p-1.5 rounded-lg text-app-subtle hover:text-etat-danger hover:bg-etat-danger/10 transition-colors ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
             >
                 <X size={12} />
             </button>
@@ -249,7 +249,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             {/* More Menu Trigger */}
             <div
                 onClick={(e) => { e.stopPropagation(); setIsMenuOpen(true); }}
-                className={`absolute bottom-2 right-2 p-1.5 text-slate-700 hover:text-white ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
+                className={`absolute bottom-2 right-2 p-1.5 text-app-subtle hover:text-app-text ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
             >
                 <MoreHorizontal size={14} />
             </div>
@@ -272,7 +272,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                   auraient aggravé exactement ça.
                 */
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[13rem] max-h-[22rem] bg-app-bg/98 border border-app-border/60 shadow-2xl z-50 flex flex-col items-center justify-start p-4 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200 overflow-y-auto custom-scrollbar">
-                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-9 font-black text-app-subtle mb-2 hover:text-white uppercase tracking-[0.2em]">Retour</button>
+                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-9 font-black text-app-subtle mb-2 hover:text-app-text uppercase tracking-[0.2em]">Retour</button>
                     <button
                         onClick={handleEdit}
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-accent hover:border-accent text-ui-10 font-black uppercase tracking-widest transition-all"
@@ -293,7 +293,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                             });
                             setIsMenuOpen(false);
                         }}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-red-600 hover:border-red-600 text-ui-10 font-black uppercase tracking-widest transition-all"
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-app-surface border border-app-border/50 hover:bg-etat-danger hover:border-etat-danger text-ui-10 font-black uppercase tracking-widest transition-all"
                     >
                         <Trash2 size={12} /> VIDER
                     </button>
@@ -316,7 +316,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                       après.
                     */}
                     <div className="w-full flex items-center gap-2">
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-slate-600 shrink-0">Charger</span>
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-subtle shrink-0">Charger</span>
                         {(['A', 'B'] as const).map((platine) => {
                             const occupee = platine === 'A' ? isPlayingOnA : isPlayingOnB;
                             const enLecture = platine === 'A' ? deckA.isPlaying : deckB.isPlaying;
@@ -333,7 +333,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                                         : `Charger sur la platine ${platine} sans lancer la lecture`}
                                     className={`flex-1 py-2.5 rounded-xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
                                         enLecture
-                                            ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500 hover:text-black'
+                                            ? 'bg-etat-alerte/15 border-etat-alerte/40 text-etat-alerte hover:bg-etat-alerte hover:text-app-bg'
                                             : 'bg-app-surface border-app-border/50 hover:bg-accent hover:border-accent'
                                     } ${occupee ? 'ring-1 ring-accent/40' : ''}`}
                                 >
@@ -415,11 +415,11 @@ const PlaylistManager: React.FC = () => {
     if (!activePlaylist) {
         return (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-                <Music size={32} strokeWidth={1} className="text-slate-700" />
+                <Music size={32} strokeWidth={1} className="text-app-subtle" />
                 <p className="text-ui-10 font-black uppercase tracking-widest text-app-subtle">
                     Aucune atmosphère pour cette campagne
                 </p>
-                <p className="text-ui-10 text-slate-600 max-w-sm leading-relaxed">
+                <p className="text-ui-10 text-app-subtle max-w-sm leading-relaxed">
                     {campagneId === null
                         ? 'Créez-en une avec le + du bandeau.'
                         : 'Créez-en une avec le + du bandeau, ou rendez une atmosphère existante « commune » depuis la campagne qui la détient — elle apparaîtra alors partout.'}
@@ -514,7 +514,7 @@ const PlaylistManager: React.FC = () => {
                 <button
                     onClick={() => ajouterUnPad(activePlaylist.id)}
                     title="Ajouter une pastille à cette playlist"
-                    className="aspect-square rounded-3xl border-2 border-dashed border-app-border/50 flex flex-col items-center justify-center gap-2 text-slate-700 transition-all duration-300 hover:border-accent/40 hover:text-accent hover:bg-app-surface/30 hover:scale-[1.02] active:scale-[0.98]"
+                    className="aspect-square rounded-3xl border-2 border-dashed border-app-border/50 flex flex-col items-center justify-center gap-2 text-app-subtle transition-all duration-300 hover:border-accent/40 hover:text-accent hover:bg-app-surface/30 hover:scale-[1.02] active:scale-[0.98]"
                 >
                     <Plus size={32} strokeWidth={1.5} />
                     <span className="text-ui-9 font-black uppercase tracking-widest">Ajouter</span>
