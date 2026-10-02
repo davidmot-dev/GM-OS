@@ -45,6 +45,9 @@ const MODULES_MIGRES: string[] = [
     'modules/tactical-ai', // phase 4, L6 — 2026-10-03
     'modules/debug',   // phase 4, L6 — 2026-10-03
     'modules/voice',   // phase 4, L6 — 2026-10-03
+    'modules/web',     // phase 4, L6 — 2026-10-03 (couleurs des liens exemptées)
+    'modules/journal', // phase 4, L6 — 2026-10-03
+    'modules/shared',  // phase 4, L6 — 2026-10-03
 ];
 
 /**

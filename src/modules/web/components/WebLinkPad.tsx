@@ -8,6 +8,7 @@ import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { ecransDeProjection, ecransOccupes } from '../ecransDeProjection';
 import MenuDesEcrans from '../../../components/MenuDesEcrans';
+import { TEINTES_DES_LIENS } from './couleursDesLiens';
 
 interface WebLinkPadProps {
     link: WebLink;
@@ -79,19 +80,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
         gmToast("Vidéo YouTube projetée — Internet requis, et sortie audio non choisissable.");
     };
 
-    // Mapping colors to Tailwind classes
-    const colorClasses: Record<string, string> = {
-        orange: 'border-orange-500/30 hover:border-orange-500 text-orange-400 hover:shadow-[0_0_20px_rgba(249,115,22,0.15)] bg-orange-500/10 hover:bg-orange-500/20',
-        cyan: 'border-cyan-500/30 hover:border-cyan-500 text-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] bg-cyan-500/10 hover:bg-cyan-500/20',
-        purple: 'border-purple-500/30 hover:border-purple-500 text-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] bg-purple-500/10 hover:bg-purple-500/20',
-        emerald: 'border-accent/30 hover:border-accent text-accent hover:shadow-glow-accent bg-accent/10 hover:bg-accent/20',
-        blue: 'border-blue-500/30 hover:border-blue-500 text-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] bg-blue-500/10 hover:bg-blue-500/20',
-        amber: 'border-amber-500/30 hover:border-amber-500 text-amber-500 hover:shadow-[0_0_20px_rgba(245,158,11,0.15)] bg-amber-500/10 hover:bg-amber-500/20',
-        rose: 'border-rose-500/30 hover:border-rose-500 text-rose-500 hover:shadow-[0_0_20px_rgba(244,63,94,0.15)] bg-rose-500/10 hover:bg-rose-500/20',
-        default: 'border-app-border/30 hover:border-accent/50 text-app-muted hover:shadow-lg bg-app-surface/10 hover:bg-app-surface/20'
-    };
-
-    const currentClasses = colorClasses[link.color] || colorClasses.default;
+    const currentClasses = TEINTES_DES_LIENS[link.color] || TEINTES_DES_LIENS.default;
 
     return (
         <div
@@ -113,7 +102,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                     {occupes.map((ecran) => (
                         <span
                             key={ecran.id}
-                            className="bg-accent text-app-bg text-ui-8 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg font-display whitespace-nowrap"
+                            className="bg-accent text-app-on-accent text-ui-8 font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg font-display whitespace-nowrap"
                         >
                             {ecran.libelle}
                         </span>
@@ -121,7 +110,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                 </div>
             )}
 
-            <span className="text-xs font-medium text-slate-300 text-center truncate w-full">
+            <span className="text-xs font-medium text-app-text text-center truncate w-full">
                 {link.name}
             </span>
 
@@ -146,7 +135,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                         onClick={(e) => { e.stopPropagation(); setChoixOuvert(true); }}
                         aria-label="Choisir l'écran de projection"
                         className={`p-2 rounded-lg transition-colors ${occupes.length > 0
-                            ? 'bg-accent text-app-bg shadow-glow-accent'
+                            ? 'bg-accent text-app-on-accent shadow-glow-accent'
                             : 'bg-app-bg hover:bg-app-surface text-app-text'}`}
                         title="Projeter — choisir l'écran. Internet requis ; le volume suit la table, pas l'enceinte."
                     >
@@ -156,7 +145,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
 
                 <button
                     onClick={(e) => { e.stopPropagation(); removeLink(link.id); }}
-                    className="p-2 bg-red-900/50 hover:bg-red-800/70 rounded-lg text-red-100 transition-colors"
+                    className="p-2 bg-etat-danger/50 hover:bg-etat-danger/70 rounded-lg text-etat-danger transition-colors"
                     title="Remove"
                 >
                     <X size={18} />

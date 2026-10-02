@@ -89,7 +89,7 @@ const WebDashboard: React.FC = () => {
 
                     <button
                         onClick={clearAll}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-950/30 hover:bg-red-900/40 border border-red-900/30 transition-all text-ui-10 font-bold text-red-400 uppercase tracking-widest group"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-etat-danger/30 hover:bg-etat-danger/40 border border-etat-danger/30 transition-all text-ui-10 font-bold text-etat-danger uppercase tracking-widest group"
                         title="Vider la bibliothèque"
                     >
                         <Trash2 size={14} className="group-hover:scale-110 transition-transform" />
@@ -98,7 +98,7 @@ const WebDashboard: React.FC = () => {
 
                     <button
                         onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Web OS ? Vos marque-pages seront réinitialisés aux valeurs par défaut.", () => reset())}
-                        className="flex items-center justify-center size-10 rounded-xl bg-red-500/5 hover:bg-red-500/20 border border-red-500/10 text-red-500/50 hover:text-red-500 transition-all active:scale-95 group"
+                        className="flex items-center justify-center size-10 rounded-xl bg-etat-danger/5 hover:bg-etat-danger/20 border border-etat-danger/10 text-etat-danger/50 hover:text-etat-danger transition-all active:scale-95 group"
                         title="Réinitialiser le module"
                     >
                         <RotateCcw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
@@ -106,7 +106,7 @@ const WebDashboard: React.FC = () => {
 
                     <button
                         onClick={handleAddClick}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent hover:bg-accent/80 transition-all text-slate-950 font-black text-xs uppercase tracking-wider shadow-glow-accent active:scale-95 group"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent hover:bg-accent/80 transition-all text-app-on-accent font-black text-xs uppercase tracking-wider shadow-glow-accent active:scale-95 group"
                     >
                         <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
                         New Link
@@ -121,9 +121,9 @@ const WebDashboard: React.FC = () => {
                     {links.length === 0 ? (
                         <div className="h-[50vh] flex flex-col items-center justify-center text-center space-y-4">
                             <div className="w-20 h-20 rounded-full bg-app-surface border border-app-border flex items-center justify-center mb-2">
-                                <Info size={32} className="text-slate-600" />
+                                <Info size={32} className="text-app-subtle" />
                             </div>
-                            <h2 className="text-xl font-bold text-slate-300">Aucun raccourci web</h2>
+                            <h2 className="text-xl font-bold text-app-text">Aucun raccourci web</h2>
                             <p className="text-app-subtle max-w-sm text-sm">
                                 Votre bibliothèque est vide. Ajoutez des liens SRD, des générateurs ou des playlists pour y accéder rapidement.
                             </p>
@@ -150,9 +150,9 @@ const WebDashboard: React.FC = () => {
                                 className="aspect-square bg-app-surface/30 border-2 border-dashed border-app-border rounded-xl flex flex-col items-center justify-center group hover:bg-app-surface/50 hover:border-accent/30 transition-all duration-300 overflow-hidden"
                             >
                                 <div className="w-12 h-12 rounded-full flex items-center justify-center bg-app-surface border border-app-border group-hover:bg-app-surface/80 group-hover:border-accent/30 transition-colors">
-                                    <Plus size={24} className="text-slate-600 group-hover:text-slate-300" />
+                                    <Plus size={24} className="text-app-subtle group-hover:text-app-text" />
                                 </div>
-                                <span className="mt-4 text-ui-10 font-bold text-app-subtle group-hover:text-slate-300 uppercase tracking-[0.2em] transition-colors">Add Link</span>
+                                <span className="mt-4 text-ui-10 font-bold text-app-subtle group-hover:text-app-text uppercase tracking-[0.2em] transition-colors">Add Link</span>
                             </button>
                         </div>
                     )}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { X, Save } from 'lucide-react';
 import type { WebLink } from '../types';
+import { ECHANTILLONS_DES_LIENS } from './couleursDesLiens';
 
 interface AddEditWebLinkModalProps {
     isOpen: boolean;
@@ -10,14 +11,6 @@ interface AddEditWebLinkModalProps {
     initialData?: WebLink | null;
 }
 
-const COLORS = [
-    { id: 'orange', class: 'bg-orange-500' },
-    { id: 'cyan', class: 'bg-cyan-500' },
-    { id: 'purple', class: 'bg-purple-500' },
-    { id: 'emerald', class: 'bg-accent' },
-    { id: 'amber', class: 'bg-amber-500' },
-    { id: 'rose', class: 'bg-rose-500' },
-];
 
 const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
     isOpen,
@@ -49,10 +42,10 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-app-bg/80 backdrop-blur-md">
             <div className="w-full max-w-md bg-app-bg border border-app-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
                 <div className="px-6 py-4 border-b border-app-border flex items-center justify-between bg-app-surface/50">
-                    <h3 className="text-lg font-bold text-white uppercase tracking-tight">
+                    <h3 className="text-lg font-bold text-app-text uppercase tracking-tight">
                         {initialData ? 'Edit' : 'Add'} Web Link
                     </h3>
-                    <button onClick={onClose} className="text-app-muted hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-app-muted hover:text-app-text transition-colors">
                         <X size={20} />
                     </button>
                 </div>
@@ -86,13 +79,13 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                     <div className="space-y-1.5">
                         <label className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest px-1 text-center block">Theme Color</label>
                         <div className="flex justify-center gap-3 py-2">
-                            {COLORS.map((c) => (
+                            {ECHANTILLONS_DES_LIENS.map((c) => (
                                 <button
                                     key={c.id}
                                     type="button"
                                     onClick={() => setColor(c.id)}
                                     className={`w-8 h-8 rounded-full border-2 transition-all ${color === c.id
-                                        ? 'border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.3)]'
+                                        ? 'border-app-text scale-110 shadow-[0_0_10px_color-mix(in_srgb,var(--app-text)_30%,transparent)]'
                                         : 'border-transparent hover:scale-105'
                                         } ${c.class}`}
                                 />
@@ -110,7 +103,7 @@ const AddEditWebLinkModal: React.FC<AddEditWebLinkModalProps> = ({
                         </button>
                         <button
                             type="submit"
-                            className="flex-1 px-4 py-2.5 rounded-xl bg-accent text-slate-950 font-bold text-xs uppercase shadow-glow-accent hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2"
+                            className="flex-1 px-4 py-2.5 rounded-xl bg-accent text-app-on-accent font-bold text-xs uppercase shadow-glow-accent hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2"
                         >
                             <Save size={16} />
                             {initialData ? 'Update' : 'Confirm'}

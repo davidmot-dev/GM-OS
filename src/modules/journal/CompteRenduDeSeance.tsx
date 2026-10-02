@@ -54,7 +54,7 @@ const CompteRenduDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
                     title="Copier le compte rendu en Markdown"
                     className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border/40 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-accent hover:border-accent/40 transition-all"
                 >
-                    {copie ? <Check size={13} className="text-emerald-400" /> : <Copy size={13} />}
+                    {copie ? <Check size={13} className="text-etat-succes" /> : <Copy size={13} />}
                     {copie ? 'Copié' : 'Copier'}
                 </button>
             </div>
@@ -108,7 +108,7 @@ const Section: React.FC<{
                 {icone}
             </div>
             <div>
-                <h4 className="text-sm font-black uppercase tracking-[0.2em] text-slate-300">{titre}</h4>
+                <h4 className="text-sm font-black uppercase tracking-[0.2em] text-app-text">{titre}</h4>
                 {sousTitre && (
                     <p className="text-ui-10 text-app-subtle font-bold uppercase tracking-tighter opacity-80">
                         {sousTitre}
@@ -116,7 +116,7 @@ const Section: React.FC<{
                 )}
             </div>
         </div>
-        <div className="bg-app-surface/20 border border-app-border/40 rounded-2xl p-6 text-sm text-slate-300 leading-relaxed shadow-inner space-y-4">
+        <div className="bg-app-surface/20 border border-app-border/40 rounded-2xl p-6 text-sm text-app-text leading-relaxed shadow-inner space-y-4">
             {children}
         </div>
     </div>

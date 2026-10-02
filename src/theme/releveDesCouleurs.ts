@@ -70,6 +70,7 @@ export const PALETTES_DE_CONTENU: Readonly<Record<string, string>> = {
     'modules/light/logic/catalogueDesEffets.ts': 'la couleur de chaque effet de lumière, celle de la lampe',
     'modules/remote/components/RemoteWhiteboardView.tsx': 'le papier du tableau blanc sur la tablette, clair ou sombre au choix, indépendant du thème',
     'modules/clock/components/ClockVisualizer.tsx': 'la matière des trois cadrans dessinés (laiton, néon, moderne), que le meneur choisit',
+    'modules/web/components/couleursDesLiens.ts': 'la couleur que le meneur donne à chaque lien web',
 };
 
 /** Les fichiers qui comptent : le code de l'interface, pas ses essais ni ses palettes de contenu. */

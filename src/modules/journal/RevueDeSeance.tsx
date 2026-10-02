@@ -128,9 +128,9 @@ const Compteur: React.FC<{
     valeur: number; mot: string; accent?: boolean; alerte?: boolean; sourd?: boolean;
 }> = ({ valeur, mot, accent, alerte, sourd }) => (
     <span className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest border ${
-        alerte ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+        alerte ? 'bg-etat-alerte/10 border-etat-alerte/30 text-etat-alerte'
             : accent ? 'bg-accent/10 border-accent/30 text-accent'
-                : sourd ? 'bg-app-bg/40 border-app-border/20 text-slate-600'
+                : sourd ? 'bg-app-bg/40 border-app-border/20 text-app-subtle'
                     : 'bg-app-surface/40 border-app-border/30 text-app-muted'
     }`}>
         {valeur} {mot}
@@ -150,11 +150,11 @@ const ARanger: React.FC<{
     scenes: SceneAReviser[];
     ranger: (eventId: string, sceneId: string) => void;
 }> = ({ evenements, scenes, ranger }) => (
-    <div className="border border-amber-500/30 bg-amber-500/[0.04] rounded-2xl p-5 space-y-3">
+    <div className="border border-etat-alerte/30 bg-etat-alerte/[0.04] rounded-2xl p-5 space-y-3">
         <div className="flex items-center gap-3">
-            <Inbox size={16} className="text-amber-400 shrink-0" />
+            <Inbox size={16} className="text-etat-alerte shrink-0" />
             <div>
-                <p className="text-ui-11 font-black uppercase tracking-widest text-amber-200">
+                <p className="text-ui-11 font-black uppercase tracking-widest text-etat-alerte">
                     À ranger
                 </p>
                 <p className="text-ui-10 text-app-subtle leading-relaxed">
@@ -166,12 +166,12 @@ const ARanger: React.FC<{
             {evenements.map(e => (
                 <li key={e.id} className="flex items-center gap-3 flex-wrap text-ui-12">
                     <PastilleDeNature evenement={e} />
-                    <span className="text-slate-300 font-semibold">{e.title}</span>
+                    <span className="text-app-text font-semibold">{e.title}</span>
                     {scenes.length > 0 && (
                         <select
                             defaultValue=""
                             onChange={ev => ev.target.value && ranger(e.id, ev.target.value)}
-                            className="ml-auto bg-app-bg border border-app-border/40 rounded-lg px-2 py-1 text-ui-10 font-bold text-slate-300"
+                            className="ml-auto bg-app-bg border border-app-border/40 rounded-lg px-2 py-1 text-ui-10 font-bold text-app-text"
                         >
                             <option value="">Ranger dans…</option>
                             {scenes.map(s => (
@@ -222,7 +222,7 @@ const BlocDeScene: React.FC<{
                     <Layers size={15} className="text-accent/60 shrink-0 mt-1" />
                     <div className="flex-1 min-w-0 space-y-2">
                         {acte && (
-                            <p className="text-ui-9 font-black uppercase tracking-[0.2em] text-slate-600">
+                            <p className="text-ui-9 font-black uppercase tracking-[0.2em] text-app-subtle">
                                 {acte.titre}
                             </p>
                         )}
@@ -240,7 +240,7 @@ const BlocDeScene: React.FC<{
                             onChange={e => modifierScene(scene.id, { resume: e.target.value })}
                             rows={2}
                             placeholder="Ce qui s'y est joué — c'est ce résumé que la chronique reprendra."
-                            className="w-full bg-app-bg/40 border border-app-border/30 rounded-xl px-3 py-2 text-ui-12 text-slate-300 outline-none focus:border-accent/40 resize-y leading-relaxed"
+                            className="w-full bg-app-bg/40 border border-app-border/30 rounded-xl px-3 py-2 text-ui-12 text-app-text outline-none focus:border-accent/40 resize-y leading-relaxed"
                         />
                     </div>
                     {/*
@@ -293,7 +293,7 @@ const BlocDeScene: React.FC<{
                         />
                     ))}
                     {recit.length === 0 && (
-                        <li className="text-ui-11 text-slate-600 italic">
+                        <li className="text-ui-11 text-app-subtle italic">
                             Rien qui raconte — cette scène n'entrera pas dans le résumé.
                         </li>
                     )}
@@ -303,7 +303,7 @@ const BlocDeScene: React.FC<{
                     <div className="pl-8">
                         <button
                             onClick={() => setDeplie(!deplie)}
-                            className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-slate-600 hover:text-slate-400 transition-colors"
+                            className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-app-subtle hover:text-app-muted transition-colors"
                         >
                             {deplie ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                             {traces.length} trace{traces.length > 1 ? 's' : ''}
@@ -353,14 +353,14 @@ const LigneDEvenement: React.FC<{
         >
             <PastilleDeNature evenement={evenement} />
         </button>
-        <span className={natureDe(evenement) === 'chronique' ? 'text-slate-300' : 'text-slate-600'}>
+        <span className={natureDe(evenement) === 'chronique' ? 'text-app-text' : 'text-app-subtle'}>
             {evenement.title}
         </span>
         {scinder && (
             <button
                 onClick={() => scinder(evenement.timestamp)}
                 title="Scinder ici : cet événement et tous les suivants passent dans une nouvelle scène"
-                className="ml-auto shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 text-slate-600 hover:text-accent transition-all"
+                className="ml-auto shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 text-app-subtle hover:text-accent transition-all"
             >
                 <Scissors size={12} />
             </button>
@@ -371,7 +371,7 @@ const LigneDEvenement: React.FC<{
 const PastilleDeNature: React.FC<{ evenement: EvenementCure }> = ({ evenement }) => (
     natureDe(evenement) === 'chronique'
         ? <Feather size={12} className="text-accent shrink-0" />
-        : <Cog size={12} className="text-slate-600 shrink-0" />
+        : <Cog size={12} className="text-app-subtle shrink-0" />
 );
 
 export default RevueDeSeance;

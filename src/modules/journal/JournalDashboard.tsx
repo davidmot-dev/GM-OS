@@ -33,17 +33,17 @@ import HorsDePortee from '../session/components/HorsDePortee';
 import { gmConfirm } from '../../stores/useModalStore';
 
 const eventIcons: Record<string, React.ReactNode> = {
-  AUDIO: <Music className="size-4 text-blue-400" />,
-  COMBAT: <Swords className="size-4 text-red-400" />,
-  NPC: <User className="size-4 text-emerald-400" />,
+  AUDIO: <Music className="size-4 text-accent" />,
+  COMBAT: <Swords className="size-4 text-gm-crimson" />,
+  NPC: <User className="size-4 text-gm-emerald" />,
   // Le PJ se distingue du PNJ d'un coup d'œil : c'est la ligne qu'on cherche
   // en relisant le fil.
-  PJ: <UserRound className="size-4 text-cyan-300" />,
-  LOCATION: <MapPin className="size-4 text-amber-400" />,
+  PJ: <UserRound className="size-4 text-gm-cyan" />,
+  LOCATION: <MapPin className="size-4 text-gm-gold" />,
   NOTE: <FileText className="size-4 text-app-muted" />,
-  SYSTEM: <Settings className="size-4 text-indigo-400" />,
-  ORACLE: <HelpCircle className="size-4 text-purple-400" />,
-  DICE: <Dices className="size-4 text-fuchsia-400" />,
+  SYSTEM: <Settings className="size-4 text-app-muted" />,
+  ORACLE: <HelpCircle className="size-4 text-gm-violet" />,
+  DICE: <Dices className="size-4 text-gm-violet" />,
 };
 
 const JournalDashboard: React.FC = () => {
@@ -174,7 +174,7 @@ const JournalDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full bg-app-bg text-slate-200 overflow-hidden">
+    <div className="flex h-full bg-app-bg text-app-text overflow-hidden">
       {/* Sidebar - Journal List */}
       <aside className="w-80 border-r border-app-border flex flex-col bg-app-surface/20">
         <header className="p-6 border-b border-app-border">
@@ -202,7 +202,7 @@ const JournalDashboard: React.FC = () => {
             onClick={() => toggleRecording()}
             className={`w-full py-3 rounded-xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 transition-all border shadow-lg ${
               isRecording 
-                ? 'bg-red-500/20 border-red-500/50 text-red-500 animate-pulse' 
+                ? 'bg-etat-danger/20 border-etat-danger/50 text-etat-danger animate-pulse' 
                 : 'bg-accent/10 border-accent/30 text-accent hover:bg-accent/20'
             }`}
           >
@@ -226,7 +226,7 @@ const JournalDashboard: React.FC = () => {
                 <div className="absolute top-0 left-0 w-1 h-full bg-accent" />
               )}
               <div className="flex justify-between items-start">
-                <span className={`text-xs font-bold leading-tight ${activeJournalId === j.id ? 'text-accent' : 'text-slate-300'}`}>
+                <span className={`text-xs font-bold leading-tight ${activeJournalId === j.id ? 'text-accent' : 'text-app-text'}`}>
                   {j.title}
                 </span>
                 <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_session')} compact surInvitation icone={<Trash2 className="size-3" />}>
@@ -245,7 +245,7 @@ const JournalDashboard: React.FC = () => {
                            () => deleteJournal(j.id),
                        );
                    }}
-                   className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/20 rounded text-red-400 transition-all"
+                   className="opacity-0 group-hover:opacity-100 p-1 hover:bg-etat-danger/20 rounded text-etat-danger transition-all"
                    title={t('modules:journal.dashboard.delete_session')}
                 >
                   <Trash2 className="size-3" />
@@ -265,7 +265,7 @@ const JournalDashboard: React.FC = () => {
       <div className="flex-1 flex flex-col relative">
         <header className="h-20 border-b border-app-border flex items-center justify-between px-8 bg-app-surface/10 backdrop-blur-xl">
           <div className="flex items-center gap-4">
-            <h1 className="text-lg font-black tracking-tight text-white italic truncate max-w-md">
+            <h1 className="text-lg font-black tracking-tight text-app-text italic truncate max-w-md">
               {activeJournal?.title || t('modules:journal.dashboard.select_session')}
             </h1>
           </div>
@@ -277,7 +277,7 @@ const JournalDashboard: React.FC = () => {
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black tracking-widest uppercase transition-all shadow-lg ${
                 isSummarizing 
                   ? 'bg-accent/20 text-accent/50 cursor-wait animate-pulse' 
-                  : 'bg-accent text-slate-950 hover:scale-105 active:scale-95 shadow-glow-accent/30'
+                  : 'bg-accent text-app-on-accent hover:scale-105 active:scale-95 shadow-glow-accent/30'
               } disabled:opacity-20 disabled:grayscale`}
             >
               {isSummarizing ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
@@ -290,8 +290,8 @@ const JournalDashboard: React.FC = () => {
                 disabled={isSyncing}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black tracking-widest uppercase transition-all border shadow-lg ${
                   isSyncing 
-                    ? 'bg-blue-500/20 border-blue-500/40 text-blue-400/50 animate-pulse' 
-                    : 'bg-blue-500/10 border-blue-500/20 text-blue-400 hover:bg-blue-500/20 shadow-glow-blue/20'
+                    ? 'bg-accent/20 border-accent/40 text-accent/50 animate-pulse' 
+                    : 'bg-accent/10 border-accent/20 text-accent hover:bg-accent/20 shadow-glow-accent/20'
                 }`}
               >
                 {isSyncing ? <Loader2 className="size-4 animate-spin" /> : <Book className="size-4" />}
@@ -302,7 +302,7 @@ const JournalDashboard: React.FC = () => {
             <button 
               onClick={handleExport}
               disabled={!activeJournal}
-              className="p-2.5 bg-app-surface border border-app-border hover:bg-app-bg rounded-xl text-app-muted hover:text-white transition-all shadow-lg disabled:opacity-20"
+              className="p-2.5 bg-app-surface border border-app-border hover:bg-app-bg rounded-xl text-app-muted hover:text-app-text transition-all shadow-lg disabled:opacity-20"
               title={t('modules:journal.dashboard.export_journal')}
             >
               <Download className="size-5" />
@@ -358,7 +358,7 @@ const JournalDashboard: React.FC = () => {
                           t('modules:journal.dashboard.delete_event_confirm'),
                           () => removeEvent(activeJournalId, event.id),
                         )}
-                        className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 rounded-xl text-slate-600 hover:text-red-400 transition-all"
+                        className="opacity-0 group-hover:opacity-100 p-2 hover:bg-etat-danger/10 rounded-xl text-app-subtle hover:text-etat-danger transition-all"
                         title={t('modules:journal.dashboard.delete_event')}
                       >
                         <Trash2 className="size-4" />
@@ -409,7 +409,7 @@ const JournalDashboard: React.FC = () => {
                     }
                   }}
                   placeholder={t('modules:journal.dashboard.final_note_placeholder')}
-                  className="w-full h-48 bg-app-surface/20 border border-app-border/40 rounded-2xl p-6 text-sm text-slate-300 placeholder:text-slate-700 focus:outline-none focus:border-accent/40 focus:bg-accent/5 transition-all resize-none custom-scrollbar shadow-inner leading-relaxed"
+                  className="w-full h-48 bg-app-surface/20 border border-app-border/40 rounded-2xl p-6 text-sm text-app-text placeholder:text-app-subtle focus:outline-none focus:border-accent/40 focus:bg-accent/5 transition-all resize-none custom-scrollbar shadow-inner leading-relaxed"
                 />
               </div>
             </>
