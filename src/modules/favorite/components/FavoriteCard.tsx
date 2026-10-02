@@ -35,7 +35,9 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
         // Actually, let's bypass the linter by creating a variable before.
         const currentTime = new Date().getTime();
         const hoursAgo = Math.floor((currentTime - timestamp) / (1000 * 60 * 60));
-        if (hoursAgo === 0) return t('modules:favorite.card.just_now');
+        /* Une date à venir (une horloge d'appareil en retard, une sauvegarde
+           venue d'ailleurs) ne doit jamais afficher « il y a -2487h ». */
+        if (hoursAgo <= 0) return t('modules:favorite.card.just_now');
         if (hoursAgo < 24) return t('modules:favorite.card.hours_ago', { count: hoursAgo });
         return t('modules:favorite.card.days_ago', { count: Math.floor(hoursAgo / 24) });
     };

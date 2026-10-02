@@ -4,7 +4,14 @@ import { useFavoriteStore } from '../useFavoriteStore';
 
 export const FavoriteSidebar: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
-    const { activeCategory, setCategory, addFavorite, selectFavorite, setViewMode } = useFavoriteStore();
+    const { activeCategory, setCategory, addFavorite, selectFavorite, setViewMode, favorites } = useFavoriteStore();
+    /*
+      **Chaque filtre dit combien il contient** — la maquette retenue (refonte,
+      L4, étape 2). Un filtre vide se reconnaît avant qu'on clique dessus.
+    */
+    const compte = (type: 'all' | 'npc' | 'place' | 'item' | 'lore') =>
+        type === 'all' ? favorites.length : favorites.filter(f => f.type === type).length;
+    const pastille = 'ml-auto font-mono text-xs font-bold opacity-70';
 
     const handleNewEntry = () => {
         const newId = addFavorite({
@@ -36,30 +43,35 @@ export const FavoriteSidebar: React.FC = () => {
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'all' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-muted hover:bg-app-surface/50 hover:text-app-text'}`}>
                             <span className="material-symbols-outlined text-xl">grid_view</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.all')}</span>
+                            <span className={pastille}>{compte('all')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('npc')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'npc' ? 'bg-gm-gold/10 text-gm-gold border border-gm-gold/20' : 'text-app-muted hover:bg-app-surface/50 hover:text-app-text'}`}>
                             <span className={`material-symbols-outlined text-xl ${activeCategory !== 'npc' ? 'text-gm-gold/70' : ''}`}>person_celebrate</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.npc')}</span>
+                            <span className={pastille}>{compte('npc')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('place')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'place' ? 'bg-gm-emerald/10 text-gm-emerald border border-gm-emerald/20' : 'text-app-muted hover:bg-app-surface/50 hover:text-app-text'}`}>
                             <span className={`material-symbols-outlined text-xl ${activeCategory !== 'place' ? 'text-gm-emerald/70' : ''}`}>map</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.place')}</span>
+                            <span className={pastille}>{compte('place')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('item')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'item' ? 'bg-gm-violet/10 text-gm-violet border border-gm-violet/20' : 'text-app-muted hover:bg-app-surface/50 hover:text-app-text'}`}>
                             <span className={`material-symbols-outlined text-xl ${activeCategory !== 'item' ? 'text-gm-violet/70' : ''}`}>swords</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.item')}</span>
+                            <span className={pastille}>{compte('item')}</span>
                         </button>
                         <button
                             onClick={() => setCategory('lore')}
                             className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${activeCategory === 'lore' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-muted hover:bg-app-surface/50 hover:text-app-text'}`}>
-                            <span className="material-symbols-outlined text-xl ${activeCategory !== 'lore' && 'text-accent/70'}">auto_stories</span>
+                            <span className={`material-symbols-outlined text-xl ${activeCategory !== 'lore' ? 'text-accent/70' : ''}`}>auto_stories</span>
                             <span className="text-sm font-semibold leading-none">{t('modules:favorite.sidebar.categories.lore')}</span>
+                            <span className={pastille}>{compte('lore')}</span>
                         </button>
                     </div>
                 </div>
