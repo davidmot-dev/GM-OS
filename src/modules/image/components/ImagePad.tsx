@@ -168,7 +168,7 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
                         onClick={(e) => { e.stopPropagation(); void basculerLaBoucle(media.path); }}
                         className={`p-1 rounded-md transition-colors ${
                             boucle
-                                ? 'bg-accent text-app-bg shadow-glow-accent'
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent'
                                 : 'bg-app-surface/50 text-app-text/40 hover:text-accent'
                         }`}
                         title={boucle ? t('image.pad.boucleOui') : t('image.pad.boucleNon')}
@@ -179,7 +179,7 @@ const ImagePad: React.FC<ImagePadProps> = React.memo(({ media }) => {
 
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleMediaFavorite(media.id); }}
-                    className={`p-1 rounded-md transition-colors ${media.isFavorite ? 'bg-accent text-app-bg shadow-glow-accent' : 'bg-app-surface/50 text-app-text/40 hover:text-accent'}`}
+                    className={`p-1 rounded-md transition-colors ${media.isFavorite ? 'bg-accent text-app-on-accent shadow-glow-accent' : 'bg-app-surface/50 text-app-text/40 hover:text-accent'}`}
                     title={media.isFavorite ? t('image.pad.removeFromFavs') : t('image.pad.addToFavs')}
                 >
                     <Star size={14} fill={media.isFavorite ? "currentColor" : "none"} />

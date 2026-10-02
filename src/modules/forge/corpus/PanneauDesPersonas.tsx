@@ -97,7 +97,7 @@ const PanneauDesPersonas: React.FC<{
                             disabled={!modifie || !corpus}
                             className={`flex items-center gap-2 px-5 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                 modifie && corpus
-                                    ? 'bg-accent text-app-bg shadow-glow-accent/20'
+                                    ? 'bg-accent text-app-on-accent shadow-glow-accent/20'
                                     : 'bg-app-surface/40 text-app-text/20 cursor-not-allowed'
                             }`}
                         >

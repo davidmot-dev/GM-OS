@@ -169,7 +169,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                     <button 
                         onClick={() => onSelect(media.id)}
-                        className="flex items-center justify-center gap-3 py-4 bg-accent text-app-bg rounded-2xl font-black text-ui-11 uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]"
+                        className="flex items-center justify-center gap-3 py-4 bg-accent text-app-on-accent rounded-2xl font-black text-ui-11 uppercase tracking-widest hover:scale-[1.02] transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]"
                     >
                         <Check size={16} strokeWidth={3} />
                         {t('image.detail.actions.select')}
