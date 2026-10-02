@@ -13,6 +13,12 @@ export interface SoundPad {
     keyMapping: string | null; // e.g., 'KeyA'
     isActive: boolean;
     linkedLightSceneId: string | null;
+    /**
+     * **L'icône de la pastille** — une **clé** de `logic/iconesDuSon`, jamais un
+     * composant. Absente : pas d'icône. Posée le 2026-10-02 (refonte, L2) ;
+     * facultative, donc les pastilles d'avant n'ont rien à migrer.
+     */
+    icone?: string | null;
 }
 
 export interface Atmosphere {
@@ -38,6 +44,8 @@ export interface Atmosphere {
      * Le tri vit dans `logic/atmospheresDeLaCampagne.ts`.
      */
     campagneId?: string | null;
+    /** L'icône de l'onglet — une clé de `logic/iconesDuSon`. Voir `SoundPad.icone`. */
+    icone?: string | null;
 }
 
 interface SoundState {
@@ -62,6 +70,10 @@ interface SoundState {
     removeAtmosphere: (id: string) => void;
     setActiveAtmosphereId: (id: string) => void;
     renameAtmosphere: (id: string, name: string) => void;
+    /** Pose (ou retire, avec `null`) l'icône de l'onglet d'une atmosphère. */
+    definirLIconeDeLAtmosphere: (id: string, icone: string | null) => void;
+    /** Pose (ou retire) l'icône d'une pastille de l'atmosphère active. */
+    definirLIconeDuPad: (padId: string, icone: string | null) => void;
 
     setPadFile: (padId: string, filePath: string, title: string, atmosphereId?: string) => void;
     setPadVolume: (padId: string, volume: number) => void;
@@ -159,6 +171,18 @@ export const useSoundStore = create<SoundState>()(
                 atmospheres: state.atmospheres.map(a => a.id === id ? { ...a, name } : a)
             })),
 
+            definirLIconeDeLAtmosphere: (id, icone) => set((state) => ({
+                atmospheres: state.atmospheres.map(a => a.id === id ? { ...a, icone } : a)
+            })),
+
+            definirLIconeDuPad: (padId, icone) => set((state) => ({
+                atmospheres: state.atmospheres.map(a =>
+                    a.id === state.activeAtmosphereId && a.pads[padId]
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], icone } } }
+                        : a
+                )
+            })),
+
             setPadFile: (padId, filePath, title, atmosphereId) => set((state) => {
                 const targetAtmosId = atmosphereId || state.activeAtmosphereId;
                 const atmosExists = state.atmospheres.some(a => a.id === targetAtmosId);
@@ -246,7 +270,8 @@ export const useSoundStore = create<SoundState>()(
                                         linkedLightSceneId: null,
                                         keyMapping: null,
                                         midiMapping: null,
-                                        volume: 1.0
+                                        volume: 1.0,
+                                        icone: null
                                     }
                                 }
                             }

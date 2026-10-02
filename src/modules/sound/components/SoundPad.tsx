@@ -5,6 +5,8 @@ import { soundController } from '../SoundController';
 import { gmCustom, gmPrompt, gmConfirm } from '../../../stores/useModalStore';
 import { COULEUR_PAD_DEFAUT, couleurDuPad, couleurDuPadAttenuee } from '../logic/couleurDuPad';
 import { Plus, Zap, Keyboard, Lightbulb, Volume2, MoreHorizontal, Edit2, Trash2, RefreshCcw } from 'lucide-react';
+import { iconeDuSon } from '../logic/iconesDuSon';
+import { ChoixDIcone } from './ChoixDIcone';
 
 interface SoundPadProps {
     pad: ISoundPad;
@@ -19,7 +21,8 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
       définie nulle part. Voir `logic/couleurDuPad.ts`.
     */
     const color = couleurDuPad(pad.color);
-    const { setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad, renamePad, clearPad, setPadColor } = useSoundStore();
+    const { setPadVolume, isMidiLearnActive, isKeyLearnActive, activePadLearnId, setActiveLearnPad, renamePad, clearPad, setPadColor, definirLIconeDuPad } = useSoundStore();
+    const icone = iconeDuSon(pad.icone);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // UI state
@@ -124,10 +127,14 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
         >
             {/* Header: Key & MIDI */}
             <div className="flex justify-between items-start pointer-events-none z-10">
-                <div 
-                    className={`px-2 py-1 rounded-lg border text-ui-9 font-black tracking-tighter shadow-sm transition-colors ${keyMapping ? 'bg-accent text-app-on-accent border-app-on-accent/20' : 'bg-app-bg/60 text-app-text/40 border-app-border'}`}
-                >
-                    {keyLabel || <Keyboard size={10} />}
+                <div className="flex items-center gap-2">
+                    {/* L'icône de la pastille, à sa couleur — la demande de David, retenue avec la maquette du son. */}
+                    {icone && <icone.Icone size={18} className="shrink-0" style={{ color }} />}
+                    <div
+                        className={`px-2 py-1 rounded-lg border text-ui-9 font-black tracking-tighter shadow-sm transition-colors ${keyMapping ? 'bg-accent text-app-on-accent border-app-on-accent/20' : 'bg-app-bg/60 text-app-text/40 border-app-border'}`}
+                    >
+                        {keyLabel || <Keyboard size={10} />}
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-1.5 bg-app-bg/60 px-2 py-1 rounded-lg border border-app-border/30">
@@ -278,6 +285,10 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                                 style={{ backgroundColor: teinte }}
                             />
                         ))}
+                    </div>
+
+                    <div className="w-full pt-1">
+                        <ChoixDIcone actuelle={pad.icone} onChoisir={(cle) => definirLIconeDuPad(id, cle)} />
                     </div>
 
                     <button

@@ -5,6 +5,8 @@ import { useSoundStore } from '../useSoundStore';
 import type { Atmosphere } from '../useSoundStore';
 import { useAtmospheresVisibles } from '../hooks/useAtmospheresVisibles';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
+import { iconeDuSon } from '../logic/iconesDuSon';
+import { ChoixDIcone } from './ChoixDIcone';
 
 const AtmosphereManager: React.FC = () => {
     const {
@@ -14,6 +16,7 @@ const AtmosphereManager: React.FC = () => {
         setActiveAtmosphereId,
         renameAtmosphere,
         assignerLAtmosphere,
+        definirLIconeDeLAtmosphere,
     } = useSoundStore();
 
     /*
@@ -157,6 +160,11 @@ const AtmosphereManager: React.FC = () => {
                                             : 'text-app-text/40 hover:text-app-text/80 hover:bg-app-text/5'
                                     }`}
                                 >
+                                    {/* L'icône de l'onglet — la demande de David, retenue avec la maquette du son. */}
+                                    {(() => {
+                                        const icone = iconeDuSon(atmos.icone);
+                                        return icone ? <icone.Icone size={13} className="shrink-0" /> : null;
+                                    })()}
                                     {atmos.name}
                                     {/* Rattachée à une campagne qui n'existe plus : elle
                                         reste visible, sinon le travail s'évanouirait sans
@@ -205,7 +213,7 @@ const AtmosphereManager: React.FC = () => {
                     <div className="fixed inset-0 z-[90]" onClick={() => setMenu(null)} />
                     <div
                         style={{ left: menu.x, top: menu.y }}
-                        className="fixed w-32 bg-app-surface/95 backdrop-blur-2xl border border-app-border rounded-xl shadow-3xl p-1 z-[91] animate-in fade-in zoom-in-95 duration-150"
+                        className="fixed w-[14rem] bg-app-surface/95 backdrop-blur-2xl border border-app-border rounded-xl shadow-3xl p-1 z-[91] animate-in fade-in zoom-in-95 duration-150"
                     >
                         <button
                             onClick={() => {
@@ -229,6 +237,13 @@ const AtmosphereManager: React.FC = () => {
                             <Trash2 size={10} />
                             Delete
                         </button>
+                        <div className="mt-1 border-t border-app-border/60 px-2 pt-2 pb-1">
+                            <p className="mb-1.5 text-ui-8 font-black uppercase tracking-widest text-app-subtle">Icône de l’onglet</p>
+                            <ChoixDIcone
+                                actuelle={atmospheres.find(a => a.id === menu.id)?.icone}
+                                onChoisir={(icone) => definirLIconeDeLAtmosphere(menu.id, icone)}
+                            />
+                        </div>
                     </div>
                 </>,
                 document.body,
