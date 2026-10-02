@@ -3180,7 +3180,8 @@
       }
     },
     "oracle": {
-      "synced_with_system": "Synchronisé avec le système"
+      "synced_with_system": "Synchronisé avec le système",
+      "synced_short": "Système"
     }
   },
   "storyboard": {

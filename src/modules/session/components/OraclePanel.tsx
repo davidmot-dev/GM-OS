@@ -13,6 +13,7 @@ import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { useRegimeDInterface } from '../hooks/useRegimeDInterface';
 import HorsDePortee from './HorsDePortee';
 import { gmConfirm } from '../../../stores/useModalStore';
+import TexteMarkdown from '../../../components/TexteMarkdown';
 
 interface OraclePanelProps {
     isOpen: boolean;
@@ -181,282 +182,267 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
         }
     };
 
+    const nomDuPersona = activeGem ? t(activeGem.name) : 'Oracle';
+    const LIBELLE_DE_SOURCE: Record<string, string> = { campaign: 'Campagne', driver: 'Système', template: 'Modèle' };
+    /*
+      **Une réponse longue, lisible à un mètre** — refonte, L5, étape 2. Le
+      texte de NotebookLM arrive en Markdown : on le rend en paragraphes
+      aérés, le gras ressort, et une liste d'étapes se pose dans un encadré.
+      Il s'affichait brut, astérisques compris.
+    */
+    const rendus: React.ComponentProps<typeof TexteMarkdown>['components'] = {
+        p: ({ node: _node, ...props }) => <p className="mb-3 last:mb-0" {...props} />,
+        strong: ({ node: _node, ...props }) => <strong className="font-bold text-app-text" {...props} />,
+        ul: ({ node: _node, ...props }) => <ul className="my-3 list-disc space-y-1.5 rounded-lg border-l-2 border-accent bg-accent/5 py-3 pl-8 pr-4" {...props} />,
+        ol: ({ node: _node, ...props }) => <ol className="my-3 list-decimal space-y-1.5 rounded-lg border-l-2 border-accent bg-accent/5 py-3 pl-8 pr-4" {...props} />,
+        h1: ({ node: _node, ...props }) => <h3 className="mb-2 mt-4 font-display text-lg font-bold text-accent" {...props} />,
+        h2: ({ node: _node, ...props }) => <h3 className="mb-2 mt-4 font-display text-base font-bold text-accent" {...props} />,
+        h3: ({ node: _node, ...props }) => <h4 className="mb-2 mt-3 text-sm font-black uppercase tracking-widest text-accent" {...props} />,
+    };
+    const tailleDeLecture = regime.aLaTable ? 'text-lg' : 'text-base';
+
+    const boutonDEnTete = 'flex items-center gap-2 rounded-lg border border-app-border px-3 py-2 text-ui-10 font-black uppercase tracking-widest transition-all';
+
     return (
         <>
-            {/* Backdrop for easier closing */}
-            {isOpen && (
-                <div 
-                    className="fixed inset-0 bg-app-bg/40 backdrop-blur-sm z-[95] animate-in fade-in duration-300 cursor-pointer" 
-                    onClick={onClose} 
-                />
-            )}
+            {/* Le fond : un clic dehors ferme, comme Échap. */}
+            <div
+                className="fixed inset-0 bg-app-bg/60 backdrop-blur-sm z-[95] animate-in fade-in duration-300 cursor-pointer"
+                onClick={onClose}
+            />
 
-            <aside 
-                className={`fixed inset-y-0 right-0 w-[650px] max-w-full glass-bento border-l border-gm-cyan/20 shadow-2xl z-[100] transform transition-transform duration-500 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            {/*
+              **Une fenêtre large par-dessus le tableau de bord** — maquette
+              retenue le 2026-09-27. Le tiroir de 650 px tassait les réponses
+              longues en une colonne qu'on lisait mal à la table.
+            */}
+            <aside
+                role="dialog"
+                aria-label="Oracle"
+                className="fixed inset-3 md:inset-x-[6%] md:inset-y-[4%] z-[100] flex flex-col overflow-hidden rounded-xl border border-accent/40 bg-app-surface shadow-2xl animate-in fade-in zoom-in-95 duration-300"
             >
-                <div className="absolute inset-0 bg-gm-cyan/5 pointer-events-none" />
-                {/* Header */}
-                <header className="h-20 border-b border-app-border/40 bg-app-bg/95 backdrop-blur-xl px-4 flex items-center justify-between shrink-0 relative shadow-lg z-10 transition-all gap-4">
-                    <div className="flex items-center gap-3 min-w-0 flex-shrink">
-                        {/* Compact Close Button */}
-                        <button 
-                            onClick={onClose}
-                            className="group p-2.5 bg-etat-danger/10 hover:bg-etat-danger text-etat-danger hover:text-app-bg border border-etat-danger/20 rounded-xl transition-all shadow-lg active:scale-95 shrink-0"
-                            title="Fermer l'Oracle (Echap)"
+                <header className="flex flex-wrap items-center gap-2 border-b border-app-border bg-app-bg/60 px-4 py-3 shrink-0">
+                    {/* Le persona, et sa liste */}
+                    <div className="relative min-w-[14rem] max-w-[20rem] flex-1">
+                        <button
+                            onClick={() => setIsGemMenuOpen(!isGemMenuOpen)}
+                            className={`flex w-full items-center gap-3 rounded-lg border p-1.5 pr-3 transition-all ${
+                                isGemMenuOpen ? 'border-accent/50 bg-accent/10' : 'border-app-border bg-app-surface hover:border-accent/40'
+                            }`}
                         >
-                            <X size={18} className="transition-transform group-hover:rotate-90" />
+                            <span className={`shrink-0 rounded-md border p-2 ${isQuerying ? 'border-accent bg-accent/20 animate-pulse' : 'border-app-border bg-app-bg'}`}>
+                                <GemIcon size={18} className="text-accent" />
+                            </span>
+                            <span className="min-w-0 flex-1 text-left">
+                                <span className="block text-ui-9 font-black uppercase tracking-[0.15em] text-app-muted">Persona</span>
+                                <span className="flex items-center gap-1.5">
+                                    <span className="truncate text-sm font-black text-app-text">{nomDuPersona}</span>
+                                    <ChevronDown size={12} className={`shrink-0 text-app-muted transition-transform duration-300 ${isGemMenuOpen ? 'rotate-180' : ''}`} />
+                                </span>
+                            </span>
                         </button>
 
-                        <div className="w-px h-6 bg-app-border/40 mx-1 shrink-0"></div>
-
-                        {/* Persona Switcher - Clean Pill Design */}
-                        <div className="relative group max-w-[240px] flex-1">
-                            <button 
-                                onClick={() => setIsGemMenuOpen(!isGemMenuOpen)}
-                                className={`w-full flex items-center gap-3 p-1.5 pr-4 rounded-2xl transition-all border ${
-                                    isGemMenuOpen 
-                                        ? 'bg-gm-cyan/20 border-gm-cyan/40 shadow-glow-accent/20' 
-                                        : 'bg-app-text/5 border-app-text/5 hover:border-gm-cyan/30 hover:bg-app-text/10'
-                                }`}
+                        {isGemMenuOpen && (
+                            <div
+                                ref={gemMenuRef}
+                                className="absolute left-0 top-[calc(100%+8px)] z-50 w-80 overflow-hidden rounded-xl border border-accent/30 bg-app-surface shadow-2xl animate-in fade-in zoom-in-95 duration-200"
                             >
-                                <div className={`p-2 rounded-xl transition-colors shadow-inner ${
-                                    isQuerying ? 'bg-accent/20 border-accent animate-pulse' : 'bg-app-bg border-app-text/5'
-                                } border shrink-0`}>
-                                    <GemIcon size={18} className={isQuerying ? 'text-accent' : 'text-accent/80'} />
+                                <div className="flex items-center justify-between border-b border-app-border bg-accent/5 p-3">
+                                    <span className="text-ui-10 font-black uppercase tracking-widest text-accent">Changer de persona</span>
+                                    <Sparkles size={12} className="text-accent/60" />
                                 </div>
-                                
-                                <div className="text-left flex-1 min-w-0">
-                                    <div className="text-ui-9 font-black text-accent/40 uppercase tracking-[0.15em] leading-none mb-1">
-                                        Persona
-                                    </div>
-                                    <div className="flex items-center gap-1.5 leading-tight">
-                                    <h2 className="text-app-text font-black text-xs tracking-tight truncate">
-                                            {activeGem ? t(activeGem.name) : 'AI Oracle'}
-                                        </h2>
-                                        <ChevronDown size={11} className={`text-accent/30 transition-transform duration-300 ${isGemMenuOpen ? 'rotate-180' : ''}`} />
-                                    </div>
+                                <div className="grid max-h-[400px] grid-cols-1 gap-1 overflow-y-auto p-2 custom-scrollbar">
+                                    {gems.map((gem) => {
+                                        const Icon = iconMap[gem.icon] || Sparkles;
+                                        const isActive = gem.id === activeGemId;
+                                        const hasDriverOverride = !!activeDriver?.aiPersonas?.[gem.id];
+
+                                        return (
+                                            <button
+                                                key={gem.id}
+                                                onClick={() => {
+                                                    setActiveGemId(gem.id);
+                                                    setIsGemMenuOpen(false);
+                                                }}
+                                                className={`flex items-start gap-3 rounded-lg border p-3 text-left transition-all ${
+                                                    isActive
+                                                        ? 'border-accent bg-accent text-app-on-accent'
+                                                        : 'border-transparent text-app-muted hover:border-accent/20 hover:bg-accent/10 hover:text-app-text'
+                                                }`}
+                                            >
+                                                <span className={`rounded-md p-1.5 ${isActive ? 'bg-app-bg/20' : 'border border-app-border bg-app-bg'}`}>
+                                                    <Icon size={16} className={isActive ? 'text-app-on-accent' : 'text-accent'} />
+                                                </span>
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="flex items-center gap-2 text-xs font-black uppercase tracking-tight">
+                                                        {t(gem.name)}
+                                                        {hasDriverOverride && (
+                                                            <span
+                                                                className={`rounded border px-1.5 py-0.5 text-ui-8 font-black ${isActive ? 'border-app-on-accent/30' : 'border-accent/30 text-accent'}`}
+                                                                title={t('modules:session.oracle.synced_with_system', 'Synchronisé avec le système')}
+                                                            >
+                                                                {t('modules:session.oracle.synced_short', 'Système')}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                    <span className={`mt-0.5 line-clamp-2 block text-ui-10 leading-tight ${isActive ? 'opacity-80' : 'text-app-muted'}`}>
+                                                        {t(gem.description)}
+                                                    </span>
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
-                            </button>
-
-                            {/* Gem Selection Menu */}
-                            {isGemMenuOpen && (
-                                <div 
-                                    ref={gemMenuRef}
-                                    className="absolute top-[calc(100%+12px)] left-0 w-80 bg-app-surface/98 backdrop-blur-2xl border border-accent/30 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
-                                >
-                                    <div className="p-4 bg-accent/5 border-b border-accent/10 flex items-center justify-between">
-                                        <span className="text-ui-10 font-black uppercase tracking-widest text-accent">Changer de Persona</span>
-                                        <Sparkles size={12} className="text-accent/40" />
-                                    </div>
-                                    <div className="p-2 grid grid-cols-1 gap-1.5 max-h-[400px] overflow-y-auto custom-scrollbar">
-                                        {gems.map((gem) => {
-                                            const Icon = iconMap[gem.icon] || Sparkles;
-                                            const isActive = gem.id === activeGemId;
-                                            const hasDriverOverride = !!activeDriver?.aiPersonas?.[gem.id];
-
-                                            return (
-                                                <button
-                                                    key={gem.id}
-                                                    onClick={() => {
-                                                        setActiveGemId(gem.id);
-                                                        setIsGemMenuOpen(false);
-                                                    }}
-                                                    className={`flex items-start gap-3 p-3 rounded-xl transition-all group relative border ${
-                                                        isActive 
-                                                            ? 'bg-accent border-accent text-app-on-accent shadow-glow-accent/20' 
-                                                            : 'bg-transparent border-transparent hover:bg-accent/10 text-app-text/60 hover:text-app-text hover:border-accent/20'
-                                                    }`}
-                                                >
-                                                    <div className={`p-1.5 rounded-lg ${isActive ? 'bg-app-bg/20' : 'bg-app-bg border border-app-text/5'}`}>
-                                                        <Icon size={16} className={isActive ? 'text-app-bg' : 'text-accent'} />
-                                                    </div>
-                                                    <div className="text-left pr-4 min-w-0 flex-1">
-                                                        <div className="text-xs font-black uppercase tracking-tight flex items-center gap-2">
-                                                            {t(gem.name)}
-                                                            {hasDriverOverride && (
-                                                                <div 
-                                                                    className={`px-1.5 py-0.5 rounded text-ui-7 font-black border ${isActive ? 'bg-app-bg/20 border-app-text/20 text-app-text' : 'bg-accent/10 border-accent/20 text-accent'}`}
-                                                                    title={t('modules:session.oracle.synced_with_system', 'Synchronisé avec le système')}
-                                                                >
-                                                                    SYNC
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className={`text-ui-9 font-medium leading-tight line-clamp-2 mt-0.5 ${isActive ? 'text-app-bg/80' : 'text-app-text/40'}`}>
-                                                            {t(gem.description)}
-                                                        </div>
-                                                    </div>
-                                                    {isActive && (
-                                                        <div className="absolute top-1/2 -translate-y-1/2 right-3 w-1.5 h-1.5 bg-app-bg rounded-full" />
-                                                    )}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Right Side Actions Group */}
-                    <div className="flex items-center gap-1.5 shrink-0 ml-4">
-                        {/* View Controls Group */}
-                        <div className="flex items-center bg-app-surface/60 rounded-xl p-1 border border-app-text/5">
-                            <div className="flex p-0.5 gap-1">
-                                <button
-                                    onClick={() => handleSetViewMode('chat')}
-                                    className={`p-2 rounded-lg transition-all ${viewMode === 'chat' ? 'bg-accent text-app-on-accent shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/5'}`}
-                                    title="Mode Discussion"
-                                >
-                                    <MessageSquare size={16} />
-                                </button>
-                                <button
-                                    onClick={() => handleSetViewMode('iframe')}
-                                    className={`p-2 rounded-lg transition-all ${viewMode === 'iframe' ? 'bg-accent text-app-on-accent shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/5'}`}
-                                    title="Voir la Source (NotebookLM)"
-                                >
-                                    <Book size={16} />
-                                </button>
-                            </div>
-                            
-                            <div className="w-px h-4 bg-app-border mx-1 opacity-50"></div>
-
-                            {viewMode === 'iframe' && (
-                                <button 
-                                    onClick={handleReload}
-                                    className="p-2 text-app-text/40 hover:text-accent transition-all animate-in fade-in duration-300"
-                                    title="Actualiser la source"
-                                >
-                                    <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
-                                </button>
-                            )}
-
-                            {viewMode === 'chat' && (
-                                <HorsDePortee regime={regime} libelle="Vider la discussion" compact icone={<Trash2 size={16} />}>
-                                    <button 
-                                        onClick={() => gmConfirm(
-                                            'Vider toute la discussion avec l’Oracle ? Les questions et les réponses partent, et cela ne s’annule pas.',
-                                            clearChat,
-                                        )}
-                                        className="p-2 text-app-text/40 hover:text-etat-danger transition-all animate-in fade-in duration-300"
-                                        title="Vider la discussion"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </HorsDePortee>
-                            )}
-                        </div>
-
-                        {/* Source Toggle Group */}
-                        {hasMultipleSources && (
-                            <div className="flex bg-app-surface/60 rounded-xl p-1 border border-app-text/5">
-                                {availableSources.map(source => (
-                                    <button
-                                        key={source.type}
-                                        onClick={() => setUserSelectedType(source.type as 'campaign' | 'driver' | 'template')}
-                                        className={`px-3 py-1.5 text-ui-9 font-black uppercase tracking-widest rounded-lg transition-all ${
-                                            selectedUrlType === source.type 
-                                                ? 'bg-accent text-app-on-accent shadow-glow-accent/20' 
-                                                : 'text-app-text/40 hover:text-app-text/60'
-                                        }`}
-                                        title={`Source : ${source.type === 'campaign' ? 'Campagne' : source.type === 'driver' ? 'Système (Règles)' : 'Template UI'}`}
-                                    >
-                                        {source.type === 'campaign' ? 'CAMP' : 'SYS'}
-                                    </button>
-                                ))}
                             </div>
                         )}
+                    </div>
 
-                        <div className="w-px h-6 bg-app-border mx-1 opacity-50 mr-1"></div>
+                    {/* La source : Campagne / Système, en mots */}
+                    {hasMultipleSources && (
+                        <div className="flex rounded-lg border border-app-border bg-app-bg/40 p-1">
+                            {availableSources.map(source => (
+                                <button
+                                    key={source.type}
+                                    onClick={() => setUserSelectedType(source.type as 'campaign' | 'driver' | 'template')}
+                                    className={`rounded-md px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                                        selectedUrlType === source.type ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'
+                                    }`}
+                                >
+                                    {LIBELLE_DE_SOURCE[source.type]}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
-                        <button 
+                    {/*
+                      **Deux modes, et c'est voulu** — décidé par David le
+                      2026-09-29. Google interdit d'intégrer NotebookLM dans une
+                      page : la source ne peut pas vivre à côté de la discussion.
+                    */}
+                    <div className="flex rounded-lg border border-app-border bg-app-bg/40 p-1">
+                        {([['chat', MessageSquare, 'Discussion'], ['iframe', Book, 'Voir la source']] as const).map(([mode, Icone, libelle]) => (
+                            <button
+                                key={mode}
+                                onClick={() => handleSetViewMode(mode)}
+                                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                                    viewMode === mode ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'
+                                }`}
+                            >
+                                <Icone size={13} />{libelle}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="ml-auto flex flex-wrap items-center gap-2">
+                        {viewMode === 'iframe' && (
+                            <button onClick={handleReload} className={`${boutonDEnTete} text-app-muted hover:text-accent`}>
+                                <RefreshCw size={13} className={isLoading ? 'animate-spin' : ''} />Actualiser la source
+                            </button>
+                        )}
+                        {viewMode === 'chat' && (
+                            /* **Axe N** — vider efface le fil entier ; hors de portée à la table. */
+                            <HorsDePortee regime={regime} libelle="Vider la discussion" compact icone={<Trash2 size={13} />}>
+                                <button
+                                    onClick={() => gmConfirm(
+                                        'Vider toute la discussion avec l’Oracle ? Les questions et les réponses partent, et cela ne s’annule pas.',
+                                        clearChat,
+                                    )}
+                                    disabled={messages.length === 0}
+                                    className={`${boutonDEnTete} text-app-muted hover:border-etat-danger/50 hover:text-etat-danger disabled:opacity-30`}
+                                >
+                                    <Trash2 size={13} />Vider la discussion
+                                </button>
+                            </HorsDePortee>
+                        )}
+                        <button
                             onClick={handleOpenExternal}
-                            className="p-2.5 text-accent bg-accent/5 hover:bg-accent text-accent hover:text-app-on-accent border border-accent/20 rounded-xl transition-all active:scale-95"
-                            title="Ouvrir NotebookLM dans le navigateur"
+                            disabled={!activeNotebookUrl}
+                            className={`${boutonDEnTete} text-accent hover:border-accent/50 hover:bg-accent/10 disabled:opacity-30`}
                         >
-                            <ExternalLink size={18} />
+                            <ExternalLink size={13} />Ouvrir NotebookLM dans le navigateur
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className={`${boutonDEnTete} border-etat-danger/40 text-etat-danger hover:bg-etat-danger hover:text-app-bg`}
+                            title="Fermer l'Oracle"
+                        >
+                            <X size={13} />Échap
                         </button>
                     </div>
                 </header>
 
-                {/* Content Area */}
-                <div className="flex-1 relative bg-app-bg overflow-hidden flex flex-col">
+                {/* Le contenu */}
+                <div className="relative flex flex-1 flex-col overflow-hidden bg-app-bg">
                     {!activeNotebookUrl ? (
-                        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-app-bg/40">
-                            <div className="w-16 h-16 rounded-full bg-app-surface flex items-center justify-center mb-6">
-                                <Sparkles size={32} className="text-app-text/20" />
+                        <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
+                            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-app-surface">
+                                <Sparkles size={32} className="text-app-subtle" />
                             </div>
-                            <h3 className="text-xl font-bold text-app-text mb-2">Aucun Notebook Lié</h3>
-                            <p className="text-app-text/40 text-sm max-w-xs leading-relaxed">
-                                Pour utiliser l'Oracle, veuillez ajouter une URL de NotebookLM dans les paramètres de votre campagne ou le template du système.
+                            <h3 className="mb-2 text-xl font-bold text-app-text">Aucun carnet lié</h3>
+                            <p className="max-w-sm text-sm leading-relaxed text-app-muted">
+                                Pour utiliser l'Oracle, ajoutez l'adresse d'un carnet NotebookLM dans les paramètres de votre campagne ou le modèle du système.
                             </p>
                         </div>
                     ) : viewMode === 'chat' ? (
-                        /* CHAT MODE UI */
                         <>
-                            <div 
-                                ref={scrollRef}
-                                className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar scroll-smooth"
-                            >
-                                {messages.length === 0 ? (
-                                    <div className="h-full flex flex-col items-center justify-center text-center p-12 opacity-40">
-                                        <div className="w-20 h-20 rounded-3xl bg-accent/5 border border-accent/10 flex items-center justify-center mb-6">
-                                            <GemIcon size={40} className="text-accent" />
+                            <div ref={scrollRef} className="flex-1 overflow-y-auto scroll-smooth custom-scrollbar">
+                                <div className="mx-auto flex max-w-4xl flex-col gap-6 p-6">
+                                    {messages.length === 0 ? (
+                                        <div className="flex flex-col items-center justify-center p-12 text-center">
+                                            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-accent/20 bg-accent/5">
+                                                <GemIcon size={40} className="text-accent" />
+                                            </div>
+                                            <h4 className="mb-2 text-lg font-bold text-app-text">Consultation : {nomDuPersona}</h4>
+                                            <p className="max-w-sm text-sm text-app-muted">{activeGem ? t(activeGem.description) : "Posez vos questions sur les règles ou l'univers."}</p>
                                         </div>
-                                        <h4 className="text-lg font-bold mb-2">Consultation : {activeGem ? t(activeGem.name) : 'AI Oracle'}</h4>
-                                        <p className="text-sm max-w-xs">{activeGem ? t(activeGem.description) : "Posez vos questions sur les règles ou l'univers."}</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-6">
+                                    ) : (
                                         <AnimatePresence initial={false}>
                                             {messages.map((msg, idx) => (
-                                                <motion.div 
+                                                <motion.div
                                                     key={idx}
-                                                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    transition={{ duration: 0.4, ease: "easeOut" }}
-                                                    className={`glass-bento flex gap-4 p-4 transition-all !rounded-2xl ${
-                                                        msg.role === 'assistant' 
-                                                            ? 'bg-accent/5 border-accent/10' 
-                                                            : 'bg-app-text/5 border-app-text/5'
-                                                    }`}
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                                                    className={msg.role === 'assistant' ? 'flex flex-col gap-2' : 'flex flex-col items-end gap-1.5'}
                                                 >
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-lg ${msg.role === 'assistant' ? 'bg-accent text-app-on-accent' : 'bg-app-surface text-app-text/40'}`}>
-                                                        {msg.role === 'assistant' ? <GemIcon size={18} /> : <User size={18} />}
-                                                    </div>
-                                                    <div className="space-y-1 overflow-hidden flex-1">
-                                                        <p className={`text-ui-9 font-black uppercase tracking-widest ${msg.role === 'assistant' ? 'text-accent' : 'text-app-text/20'}`}>
-                                                            {msg.role === 'assistant' ? (activeGem ? t(activeGem.name) : 'AI Oracle') : 'Maître du Jeu'}
-                                                        </p>
-                                                        <div className="text-sm leading-relaxed text-app-text/80 whitespace-pre-wrap prose prose-invert prose-sm max-w-none">
-                                                            {msg.content}
-                                                        </div>
-                                                    </div>
+                                                    {msg.role === 'assistant' ? (
+                                                        <>
+                                                            <span className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-widest text-accent">
+                                                                <GemIcon size={14} />{nomDuPersona}
+                                                            </span>
+                                                            <div className={`rounded-xl border border-app-border bg-app-surface px-5 py-4 leading-relaxed text-app-text ${tailleDeLecture}`}>
+                                                                <TexteMarkdown components={rendus}>{msg.content}</TexteMarkdown>
+                                                            </div>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">Le meneur</span>
+                                                            <div className={`max-w-[80%] whitespace-pre-wrap rounded-xl border border-accent/40 bg-accent/10 px-4 py-3 font-bold text-app-text ${tailleDeLecture}`}>
+                                                                {msg.content}
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </motion.div>
                                             ))}
                                         </AnimatePresence>
-                                    </div>
-                                )}
-                                {isQuerying && (
-                                    <div className="flex gap-4 animate-pulse">
-                                        <div className="w-8 h-8 rounded-lg bg-accent text-app-on-accent flex items-center justify-center shrink-0">
-                                            <RefreshCw size={18} className="animate-spin" />
+                                    )}
+                                    {isQuerying && (
+                                        <div className="flex animate-pulse flex-col gap-2">
+                                            <span className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-widest text-accent">
+                                                <RefreshCw size={14} className="animate-spin" />{nomDuPersona} consulte le carnet…
+                                            </span>
+                                            <div className="space-y-2 rounded-xl border border-app-border bg-app-surface px-5 py-4">
+                                                <div className="h-4 w-full rounded bg-accent/10" />
+                                                <div className="h-4 w-2/3 rounded bg-accent/10" />
+                                            </div>
                                         </div>
-                                        <div className="space-y-2 flex-1">
-                                            <div className="h-2 w-24 bg-accent/20 rounded"></div>
-                                            <div className="h-4 bg-accent/10 rounded w-full"></div>
-                                            <div className="h-4 bg-accent/10 rounded w-2/3"></div>
-                                        </div>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
 
-                            {/* Input Area (Bento Style) */}
-                            <div className="p-6 border-t border-app-border/40 bg-app-surface/20 shrink-0">
-                                <form 
-                                    onSubmit={handleSendMessage}
-                                    className="relative group glass-bento !rounded-3xl p-1"
-                                >
+                            {/* La saisie, en pied */}
+                            <div className="border-t border-app-border bg-app-surface/60 shrink-0">
+                                <form onSubmit={handleSendMessage} className="mx-auto flex max-w-4xl items-end gap-3 p-4">
                                     <textarea
                                         value={input}
                                         onChange={e => setInput(e.target.value)}
@@ -466,65 +452,57 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                 handleSendMessage();
                                             }
                                         }}
-                                        placeholder="Écrivez votre question ici..."
-                                        rows={3}
-                                        className="w-full bg-app-bg/40 backdrop-blur-md border-none rounded-[1.4rem] py-4 pl-4 pr-14 text-sm focus:outline-none transition-all resize-none font-medium custom-scrollbar"
+                                        placeholder={`Posez une question à ${nomDuPersona}…`}
+                                        rows={2}
+                                        className="min-w-0 flex-1 resize-none rounded-lg border border-app-border bg-app-bg px-4 py-3 text-sm text-app-text outline-none transition-all placeholder:text-app-subtle focus:border-accent custom-scrollbar"
                                     />
                                     <button
                                         type="submit"
                                         disabled={!input.trim() || isQuerying}
-                                        className={`absolute right-3 bottom-3 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${!input.trim() || isQuerying ? 'text-app-text/20 bg-app-surface' : 'bg-accent text-app-on-accent shadow-glow-accent/20 hover:scale-105 active:scale-95'}`}
-                                        title="Envoyer la question"
+                                        className="flex shrink-0 items-center gap-2 rounded-lg bg-accent px-5 py-3 text-ui-10 font-black uppercase tracking-widest text-app-on-accent transition-all hover:brightness-110 disabled:opacity-30"
                                     >
-                                        <Send size={18} />
+                                        Envoyer<Send size={14} />
                                     </button>
                                 </form>
-                                <p className="mt-3 text-ui-9 text-app-text/30 font-mono text-center uppercase tracking-widest">
-                                    {isQuerying ? 'Flux Neural : ACTIF' : `Connecté au Notebook : ${notebookId?.slice(0, 8) || 'AUCUN'}...`}
-                                </p>
                             </div>
                         </>
                     ) : (
-                        /* IFRAME MODE UI */
-                        <div className="flex-1 relative">
+                        <div className="relative flex-1">
                             {isLoading && !loadError && (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-app-bg z-10">
-                                    <RefreshCw className="animate-spin text-accent mb-4" size={32} />
-                                    <p className="text-accent/50 text-ui-10 font-mono uppercase tracking-[0.2em] animate-pulse">Établissement de la Liaison Neurale...</p>
+                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-app-bg">
+                                    <RefreshCw className="mb-4 animate-spin text-accent" size={32} />
+                                    <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-muted">Chargement de la source…</p>
                                 </div>
                             )}
-                            
+
                             {(loadError || isGoogleDomain) && (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center bg-app-bg/90 z-20 backdrop-blur-sm">
-                                    <div className="w-20 h-20 rounded-2xl bg-etat-alerte/10 border border-etat-alerte/20 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+                                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-app-bg p-12 text-center">
+                                    <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-2xl border border-etat-alerte/30 bg-etat-alerte/10">
                                         <ExternalLink size={36} className="text-etat-alerte" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-app-text mb-4">Restriction de Sécurité</h3>
-                                    <p className="text-app-text/80 text-sm leading-relaxed mb-8 max-w-sm">
-                                        Google interdit l'intégration de NotebookLM pour des raisons de sécurité. La source de l'Oracle doit être consultée dans une fenêtre dédiée.
+                                    <h3 className="mb-4 text-xl font-bold text-app-text">La source s'ouvre à part</h3>
+                                    <p className="mb-8 max-w-sm text-sm leading-relaxed text-app-text">
+                                        Google interdit d'intégrer NotebookLM dans une page. La source se consulte dans le navigateur.
                                     </p>
-                                    <button 
+                                    <button
                                         onClick={handleOpenExternal}
-                                        className="px-8 py-3 bg-accent text-app-on-accent rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20 flex items-center gap-3"
+                                        className="flex items-center gap-3 rounded-lg bg-accent px-8 py-3 text-sm font-bold text-app-on-accent transition-all hover:brightness-110"
                                     >
-                                        OUVRIR LA FENÊTRE SOURCE <ExternalLink size={18} />
+                                        Ouvrir NotebookLM dans le navigateur <ExternalLink size={18} />
                                     </button>
-                                    <div className="mt-8 flex flex-col items-center gap-2">
-                                        <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest">Projet Recommandé :</p>
-                                        <button 
-                                            onClick={() => setViewMode('chat')}
-                                            className="text-accent text-ui-10 font-black uppercase tracking-widest hover:underline flex items-center gap-2"
-                                        >
-                                            Utiliser le Chat Intégré (MCP) <Sparkles size={10} />
-                                        </button>
-                                    </div>
+                                    <button
+                                        onClick={() => setViewMode('chat')}
+                                        className="mt-6 flex items-center gap-2 text-ui-10 font-black uppercase tracking-widest text-accent hover:underline"
+                                    >
+                                        Revenir à la discussion <MessageSquare size={11} />
+                                    </button>
                                 </div>
                             )}
 
                             <iframe
                                 key={`${key}-${activeNotebookUrl}`}
                                 src={isGoogleDomain ? 'about:blank' : activeNotebookUrl}
-                                className={`w-full h-full border-none transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                                className={`h-full w-full border-none transition-opacity duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                                 onLoad={() => setIsLoading(false)}
                                 title="NotebookLM Oracle"
                                 allow="clipboard-read; clipboard-write; microphone"
@@ -532,15 +510,6 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                         </div>
                     )}
                 </div>
-
-                {/* Status Footer */}
-                <footer className="h-10 border-t border-app-border bg-app-bg px-4 flex items-center justify-between text-ui-10 font-mono text-app-text/40 uppercase tracking-widest shrink-0">
-                    <span>Nœud d'IA Intégré</span>
-                    <span className="flex items-center gap-2">
-                        <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] ${activeNotebookUrl ? 'bg-etat-succes' : 'bg-app-surface'}`}></span>
-                        {activeNotebookUrl ? 'Pont MCP : EN LIGNE' : 'En attente de connexion'}
-                    </span>
-                </footer>
             </aside>
         </>
     );
