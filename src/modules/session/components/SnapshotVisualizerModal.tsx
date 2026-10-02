@@ -1,5 +1,10 @@
 import React from 'react';
+import { Music, Waves, Volume2, Lightbulb, ImageIcon, Swords, Globe, RotateCcw } from 'lucide-react';
 import type { SessionModuleSnapshot } from '../useSessionOSStore';
+import { useSessionOSStore } from '../useSessionOSStore';
+import { gmConfirm } from '../../../stores/useModalStore';
+import { gmToast } from '../../../stores/useToastStore';
+import { BoutonPrincipal, BoutonSecondaire, Etiquette } from '../../../components/socle';
 
 interface SnapshotVisualizerModalProps {
     isOpen: boolean;
@@ -8,132 +13,111 @@ interface SnapshotVisualizerModalProps {
     sessionName: string;
 }
 
-const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({ 
-    isOpen, 
-    onClose, 
-    snapshot, 
-    sessionName 
-}) => {
-    const [activeTab, setActiveTab] = React.useState<string>('summary');
-
+/**
+ * **Voir le contenu d'un instantané** — refonte, L5, cadre commun des
+ * surcouches. Un bloc par module figé, **en mots** : les deux platines et ce
+ * qu'elles jouaient, l'ambiance, la scène de lumière, ce qui était projeté.
+ * Le JSON brut reste derrière « Données brutes », pour qui veut vérifier.
+ *
+ * Le second en-tête et les icônes Material (une police en ligne : hors
+ * connexion, on lisait « visibility ») sont partis : le cadre porte le titre.
+ */
+const SnapshotVisualizerModal: React.FC<SnapshotVisualizerModalProps> = ({ isOpen, onClose, snapshot, sessionName }) => {
+    const applySystemSnapshot = useSessionOSStore(s => s.applySystemSnapshot);
     if (!isOpen) return null;
 
-    const renderJson = (data: unknown) => (
-        <pre className="bg-app-bg p-4 rounded-lg overflow-auto max-h-[400px] text-xs text-gm-cyan font-mono border border-app-border scrollbar-thin">
-            {JSON.stringify(data, null, 2)}
-        </pre>
+    const nomDuPad = (id: string | null | undefined) => {
+        if (!id) return null;
+        for (const pl of snapshot.music?.playlists ?? []) {
+            const pad = (pl as { pads?: Array<{ id: string; label?: string }> }).pads?.find(p => p.id === id);
+            if (pad) return pad.label || id;
+        }
+        return id;
+    };
+    const sceneDeLumiere = snapshot.light?.activeSceneId
+        ? (snapshot.light.scenes?.[snapshot.light.activeSceneId] as { name?: string } | undefined)?.name ?? snapshot.light.activeSceneId
+        : null;
+    const projections = Object.entries(snapshot.image?.projections ?? {}).filter(([, chemin]) => !!chemin);
+
+    const bloc = (cle: string, icone: React.ReactNode, titre: string, lignes: React.ReactNode[], brut: unknown) => (
+        <div key={cle} className="flex flex-col gap-2 rounded-lg border border-app-border bg-app-bg/40 p-3">
+            <p className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                <span className="text-accent">{icone}</span>{titre}
+            </p>
+            <ul className="space-y-1 text-sm text-app-text">
+                {lignes.map((l, i) => <li key={i}>{l}</li>)}
+            </ul>
+            <details className="text-ui-10 text-app-muted">
+                <summary className="cursor-pointer select-none hover:text-app-text">Données brutes</summary>
+                <pre className="mt-2 max-h-48 overflow-auto rounded border border-app-border bg-app-bg p-2 font-mono text-ui-10 text-app-muted custom-scrollbar">{JSON.stringify(brut, null, 2)}</pre>
+            </details>
+        </div>
     );
 
-    const tabs = [
-        { id: 'summary', label: 'Résumé', icon: 'dashboard' },
-        { id: 'music', label: 'Musique', icon: 'music_note', data: snapshot.music },
-        { id: 'sound', label: 'Sons', icon: 'volume_up', data: snapshot.sound },
-        { id: 'ambient', label: 'Ambiance', icon: 'filter_drama', data: snapshot.ambient },
-        { id: 'light', label: 'Lumières', icon: 'lightbulb', data: snapshot.light },
-        { id: 'image', label: 'Images', icon: 'image', data: snapshot.image },
-        { id: 'web', label: 'Web', icon: 'language', data: snapshot.web },
-        { id: 'combat', label: 'Combat', icon: 'swords', data: snapshot.combat },
-    ].filter(t => t.id === 'summary' || t.data);
+    const blocs: React.ReactNode[] = [];
+    if (snapshot.music) {
+        blocs.push(bloc('music', <Music size={13} />, 'Musique', [
+            <>Platine A : <strong>{nomDuPad(snapshot.music.deckA.activePadId) ?? 'vide'}</strong>{snapshot.music.deckA.isPlaying ? ' — en lecture' : ''}</>,
+            <>Platine B : <strong>{nomDuPad(snapshot.music.deckB.activePadId) ?? 'vide'}</strong>{snapshot.music.deckB.isPlaying ? ' — en lecture' : ''}</>,
+            <>Volume général : {Math.round(snapshot.music.masterVolume * 100)} %</>,
+        ], snapshot.music));
+    }
+    if (snapshot.ambient) {
+        const actives = snapshot.ambient.activeTracks.filter(t => t.isPlaying).length;
+        blocs.push(bloc('ambient', <Waves size={13} />, 'Ambiance', [
+            <>{actives} piste(s) en lecture</>,
+            <>Volume général : {Math.round(snapshot.ambient.masterVolume * 100)} %</>,
+        ], snapshot.ambient));
+    }
+    if (snapshot.sound) {
+        blocs.push(bloc('sound', <Volume2 size={13} />, 'Bruitages', [
+            <>{snapshot.sound.activePadIds.length} pastille(s) active(s)</>,
+            <>Volume général : {Math.round(snapshot.sound.masterVolume * 100)} %</>,
+        ], snapshot.sound));
+    }
+    if (snapshot.light) {
+        blocs.push(bloc('light', <Lightbulb size={13} />, 'Lumière', [
+            <>Scène : <strong>{sceneDeLumiere ?? 'aucune'}</strong></>,
+            <>Luminosité : {Math.round(snapshot.light.globalBrightness)} %</>,
+        ], snapshot.light));
+    }
+    if (snapshot.image) {
+        blocs.push(bloc('image', <ImageIcon size={13} />, 'Projection', projections.length
+            ? projections.map(([ecran, chemin]) => <><strong>{ecran === 'hub' ? 'Player Hub' : ecran}</strong> : {String(chemin).split(/[\\/]/).pop()}</>)
+            : ['Rien de projeté'], snapshot.image));
+    }
+    if (snapshot.combat) {
+        blocs.push(bloc('combat', <Swords size={13} />, 'Combat', [
+            <>{snapshot.combat.combatants.length} combattant(s), round {snapshot.combat.round}</>,
+        ], snapshot.combat));
+    }
+    if (snapshot.web) {
+        blocs.push(bloc('web', <Globe size={13} />, 'Navigateur', [<>{snapshot.web.links.length} lien(s)</>], snapshot.web));
+    }
+
+    const restaurer = () => gmConfirm(
+        `Restaurer l'instantané de ${sessionName} ? La musique, l'ambiance, la lumière et la projection reprennent l'état capturé.`,
+        () => {
+            void applySystemSnapshot(snapshot).then(() => gmToast(`État de ${sessionName} restauré.`, 'success'));
+        },
+    );
 
     return (
-        <div className="flex flex-col h-full bg-app-bg shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className="p-6 bg-app-surface-2/50 border-b border-app-border flex justify-between items-center">
-                <div>
-                    <h2 className="text-xl font-bold text-app-text flex items-center gap-2">
-                        <span className="material-symbols-outlined text-gm-violet">visibility</span>
-                        Contenu du Snapshot
-                    </h2>
-                    <p className="text-app-muted text-sm mt-1">
-                        Session : <span className="text-gm-violet">{sessionName}</span> • 
-                        Capturé le {new Date(snapshot.timestamp).toLocaleString()}
-                    </p>
-                </div>
-                {onClose && (
-                    <button 
-                        onClick={onClose}
-                        className="p-2 hover:bg-app-surface-2 rounded-full text-app-muted hover:text-app-text transition-colors"
-                    >
-                        <span className="material-symbols-outlined">close</span>
-                    </button>
-                )}
+        <div className="flex h-full flex-col bg-app-bg">
+            <div className="flex flex-wrap items-center gap-2 border-b border-app-border px-5 py-3 text-sm">
+                <span className="font-display font-bold text-app-text">{sessionName}</span>
+                <span className="text-app-muted">capturé le {new Date(snapshot.timestamp).toLocaleString(undefined, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</span>
+                <Etiquette ton="succes" className="ml-auto">Prêt pour la restauration</Etiquette>
             </div>
-
-            {/* Content */}
-            <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar Tabs */}
-                <div className="w-48 bg-app-bg/30 border-r border-app-border flex flex-col p-2 gap-1">
-                    {tabs.map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-all ${
-                                activeTab === tab.id 
-                                    ? 'bg-gm-violet/20 text-gm-violet border border-gm-violet/30 shadow-lg shadow-gm-violet/5' 
-                                    : 'text-app-muted hover:bg-app-surface-2 hover:text-app-text'
-                            }`}
-                        >
-                            <span className="material-symbols-outlined text-lg">{tab.icon}</span>
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Main View */}
-                <div className="flex-1 p-6 overflow-auto bg-app-bg/50">
-                    {activeTab === 'summary' && (
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-app-surface-2/80 border border-app-border rounded-lg">
-                                    <div className="text-app-muted text-xs uppercase tracking-wider mb-2 font-bold">Audio Actif</div>
-                                    <ul className="space-y-2 text-sm text-app-text">
-                                        {snapshot.music && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-gm-violet"></span> Music OS actif</li>}
-                                        {snapshot.sound && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-etat-info"></span> Sound OS ({snapshot.sound.activePadIds.length} pads)</li>}
-                                        {snapshot.ambient && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-etat-succes"></span> Ambient OS ({snapshot.ambient.activeTracks.filter(t => t.isPlaying).length} pistes)</li>}
-                                    </ul>
-                                </div>
-                                <div className="p-4 bg-app-surface-2/80 border border-app-border rounded-lg">
-                                    <div className="text-app-muted text-xs uppercase tracking-wider mb-2 font-bold">Visuels & Web</div>
-                                    <ul className="space-y-2 text-sm text-app-text">
-                                        {snapshot.light && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-etat-alerte"></span> Light OS (Scène active)</li>}
-                                        {snapshot.image && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-etat-alerte"></span> Image OS ({Object.keys(snapshot.image.projections).length} projections)</li>}
-                                        {snapshot.web && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-etat-info"></span> Web OS ({snapshot.web.links.length} liens)</li>}
-                                        {snapshot.combat && <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-etat-danger"></span> Combat OS ({snapshot.combat.combatants.length} combattants, Round {snapshot.combat.round})</li>}
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div className="p-6 bg-app-bg/40 border border-app-border rounded-xl flex flex-col items-center justify-center text-center py-12">
-                                <div className="w-16 h-16 rounded-full bg-gm-violet/10 flex items-center justify-center mb-4 border border-gm-violet/20">
-                                    <span className="material-symbols-outlined text-3xl text-gm-violet">auto_awesome</span>
-                                </div>
-                                <h3 className="text-lg font-medium text-app-text mb-2">Prêt pour la Restauration</h3>
-                                <p className="text-app-muted max-w-sm text-sm">
-                                    Ce snapshot contient l'intégralité de la configuration capturée. 
-                                    Sélectionnez un module à gauche pour voir les détails techniques JSON.
-                                </p>
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'music' && renderJson(snapshot.music)}
-                    {activeTab === 'sound' && renderJson(snapshot.sound)}
-                    {activeTab === 'ambient' && renderJson(snapshot.ambient)}
-                    {activeTab === 'light' && renderJson(snapshot.light)}
-                    {activeTab === 'image' && renderJson(snapshot.image)}
-                    {activeTab === 'web' && renderJson(snapshot.web)}
-                    {activeTab === 'combat' && renderJson(snapshot.combat)}
-                </div>
+            <div className="grid flex-1 grid-cols-1 gap-3 overflow-y-auto p-5 md:grid-cols-2 custom-scrollbar">
+                {blocs}
+                {blocs.length === 0 && <p className="text-sm italic text-app-subtle">Cet instantané ne contient aucun module.</p>}
             </div>
-
-            {/* Footer */}
-            <div className="p-4 bg-app-surface-2/30 border-t border-app-border flex justify-end">
-                <button 
-                    onClick={onClose}
-                    className="px-6 py-2 bg-app-surface-2 hover:bg-app-muted text-app-text rounded-lg transition-all text-sm font-medium"
-                >
-                    Fermer
-                </button>
+            <div className="flex shrink-0 items-center justify-end gap-2 border-t border-app-border px-5 py-3">
+                <BoutonSecondaire onClick={onClose}>Fermer</BoutonSecondaire>
+                <BoutonPrincipal onClick={restaurer} className="flex items-center gap-2">
+                    <RotateCcw size={15} />Restaurer cet état
+                </BoutonPrincipal>
             </div>
         </div>
     );

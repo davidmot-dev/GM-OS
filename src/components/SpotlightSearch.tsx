@@ -4,12 +4,18 @@ import {
   Search, 
   CornerDownLeft, 
   X, 
-  Sparkles, 
   User, 
   Music, 
   Book, 
-  Settings 
+  Settings,
+  Zap,
+  Map as MapIcon,
+  type LucideIcon,
 } from 'lucide-react';
+import { useSessionOSStore } from '../modules/session/useSessionOSStore';
+import { fractionDeVie, decrireLaSante } from '../modules/combat/logic/SanteDuCombattant';
+import { ResolvedImage } from './ResolvedImage';
+import { Etiquette } from './socle';
 import { useTranslation } from 'react-i18next';
 import { useSpotlight, type SpotlightResult } from '../hooks/useSpotlight';
 
@@ -24,7 +30,8 @@ export const SpotlightSearch: React.FC = () => {
         setSelectedIndex 
     } = useSpotlight();
 
-    const { t } = useTranslation(['common']);
+    const { t } = useTranslation(['common', 'modules']);
+    const entities = useSessionOSStore(s => s.entities);
     const inputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +47,9 @@ export const SpotlightSearch: React.FC = () => {
     // Keep selected item in view
     useEffect(() => {
         if (scrollRef.current && selectedIndex >= 0) {
-            const selectedElement = scrollRef.current.children[selectedIndex] as HTMLElement;
+            /* Par attribut, pas par rang d'enfant : les titres de groupe
+               décaleraient l'indice. */
+            const selectedElement = scrollRef.current.querySelector<HTMLElement>(`[data-rang="${selectedIndex}"]`);
             if (selectedElement) {
                 selectedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }
@@ -63,152 +72,195 @@ export const SpotlightSearch: React.FC = () => {
 
     if (!isOpen) return null;
 
+    /*
+      **L'aperçu, pour les entités seulement** — retenu par David le
+      2026-09-29 : vide pour une musique ou une action, il n'apparaît pas.
+    */
+    const choisi = results[selectedIndex];
+    const entiteChoisie = choisi?.type === 'entity'
+        ? entities.find(e => `entity-${e.id}` === choisi.id)
+        : undefined;
+    const fraction = entiteChoisie ? fractionDeVie(entiteChoisie) : null;
+
     return (
-        <div 
-            className="fixed inset-0 z-[9999] flex items-start justify-center pt-[15vh] px-4 pointer-events-none"
-        >
-            {/* Backdrop */}
-            <div 
-                className="fixed inset-0 bg-slate-950/60 backdrop-blur-md pointer-events-auto"
+        <div className="fixed inset-0 z-[9999] flex items-start justify-center px-4 pt-[12vh] pointer-events-none">
+            {/* L'écran assombri : un clic dehors ferme, comme Échap. */}
+            <div
+                className="fixed inset-0 bg-app-bg/70 backdrop-blur-sm pointer-events-auto"
                 onClick={() => setIsOpen(false)}
             />
 
-            {/* Content Container */}
-            <div className="relative w-full max-w-2xl bg-slate-900/90 border border-slate-700/50 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden pointer-events-auto flex flex-col animate-in fade-in zoom-in duration-200 glass-panel">
-                
-                {/* Search Header */}
-                <div className="flex items-center px-4 py-4 border-b border-slate-800 bg-slate-800/30">
-                    <Search className="w-5 h-5 text-app-muted mr-3" />
+            {/*
+              **La palette dans le cadre commun** — refonte, L5, maquette retenue
+              le 2026-09-27 : un seul grand champ, les résultats groupés par
+              sorte avec leur titre, le choisi surligné avec son geste, et en
+              pied les touches et le nombre de résultats.
+            */}
+            <div
+                data-cadre-de-surcouche=""
+                className={`relative flex w-full flex-col overflow-hidden rounded-xl border border-app-border bg-app-surface text-app-text shadow-2xl pointer-events-auto animate-in fade-in zoom-in duration-200 ${results.some(r => r.type === 'entity') ? 'max-w-4xl' : 'max-w-2xl'}`}
+            >
+                <div className="flex items-center gap-3 border-b border-app-border px-4 py-3">
+                    <Search className="h-5 w-5 shrink-0 text-accent" />
                     <input
                         ref={inputRef}
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder={t('common:spotlight.placeholder')}
-                        className="flex-1 bg-transparent border-none outline-none text-slate-100 placeholder:text-slate-500 text-lg"
+                        className="flex-1 border-none bg-transparent text-lg text-app-text outline-none placeholder:text-app-subtle"
                     />
-                    <div className="flex items-center space-x-2">
-                        <div className="flex items-center px-1.5 py-0.5 rounded border border-slate-700 bg-slate-800 text-ui-10 text-app-muted font-medium">
-                            ESC
-                        </div>
-                        <button 
-                            onClick={() => setIsOpen(false)}
-                            title={t('common:spotlight.close_tooltip')}
-                            className="p-1 hover:bg-slate-700 rounded-md transition-colors text-app-muted"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => setIsOpen(false)}
+                        title={t('common:spotlight.close_tooltip')}
+                        className="flex shrink-0 items-center gap-2 rounded-lg px-2 py-1.5 text-app-muted transition-colors hover:bg-app-text/5 hover:text-app-text"
+                    >
+                        <span className="rounded border border-app-border px-1.5 py-0.5 font-mono text-ui-9 font-bold">Échap</span>
+                        <X className="h-4 w-4" />
+                    </button>
                 </div>
 
-                {/* Results Section */}
-                <div 
-                    ref={scrollRef}
-                    className="max-h-[60vh] overflow-y-auto py-2 custom-scrollbar"
-                >
-                    {results.length > 0 ? (
-                        results.map((result, index) => (
-                            <ResultItem 
-                                key={result.id}
-                                result={result}
-                                isSelected={index === selectedIndex}
-                                onSelect={() => result.action()}
-                                onHover={() => setSelectedIndex(index)}
-                            />
-                        ))
-                    ) : query.trim() ? (
-                        <div className="px-6 py-12 text-center">
-                            <Search className="w-12 h-12 text-slate-700 mx-auto mb-4 opacity-20" />
-                            <p className="text-app-muted text-lg font-medium">{t('common:spotlight.no_results', { query })}</p>
-                            <p className="text-app-subtle text-sm mt-1">{t('common:spotlight.no_results_sub')}</p>
-                        </div>
-                    ) : (
-                        <div className="px-4 py-3 space-y-4">
-                            <div className="text-ui-10 uppercase tracking-wider text-app-subtle font-bold px-2">{t('common:spotlight.suggestions')}</div>
-                            <div className="grid grid-cols-2 gap-2">
-                                <QuickTip icon={User} label={t('common:spotlight.quick_tips.npcs')} />
-                                <QuickTip icon={Music} label={t('common:spotlight.quick_tips.audio')} />
-                                <QuickTip icon={Book} label={t('common:spotlight.quick_tips.wiki')} />
-                                <QuickTip icon={Settings} label={t('common:spotlight.quick_tips.system')} />
+                <div className="flex min-h-0">
+                    <div ref={scrollRef} className="max-h-[60vh] min-w-0 flex-1 overflow-y-auto py-1 custom-scrollbar">
+                        {results.length > 0 ? (
+                            results.map((result, index) => {
+                                const nouveauGroupe = index === 0 || results[index - 1].type !== result.type;
+                                const groupe = GROUPES[result.type];
+                                return (
+                                    <React.Fragment key={result.id}>
+                                        {nouveauGroupe && groupe && (
+                                            <div className="flex items-center gap-2 px-4 pt-3 pb-1 text-ui-10 font-black uppercase tracking-widest text-accent">
+                                                <groupe.icone className="h-3.5 w-3.5" />{groupe.libelle}
+                                            </div>
+                                        )}
+                                        <ResultItem
+                                            rang={index}
+                                            result={result}
+                                            isSelected={index === selectedIndex}
+                                            onSelect={() => result.action()}
+                                            onHover={() => setSelectedIndex(index)}
+                                        />
+                                    </React.Fragment>
+                                );
+                            })
+                        ) : query.trim() ? (
+                            <div className="px-6 py-12 text-center">
+                                <Search className="mx-auto mb-4 h-10 w-10 text-app-subtle" />
+                                <p className="text-lg font-medium text-app-text">{t('common:spotlight.no_results', { query })}</p>
+                                <p className="mt-1 text-sm text-app-muted">{t('common:spotlight.no_results_sub')}</p>
                             </div>
-                            <div className="flex items-center justify-center p-6 border border-dashed border-slate-800 rounded-xl bg-slate-800/10">
-                                <div className="text-center">
-                                    <Sparkles className="w-5 h-5 text-accent mx-auto mb-2" />
-                                    <p className="text-xs text-app-muted">{t('common:spotlight.shortcut_hint_prefix')}<span className="text-slate-200 font-bold">CMD+K</span>{t('common:spotlight.shortcut_hint_suffix')} </p>
+                        ) : (
+                            <div className="space-y-3 px-4 py-3">
+                                <div className="px-1 text-ui-10 font-black uppercase tracking-widest text-app-muted">{t('common:spotlight.suggestions')}</div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <QuickTip icon={User} label={t('common:spotlight.quick_tips.npcs')} />
+                                    <QuickTip icon={Music} label={t('common:spotlight.quick_tips.audio')} />
+                                    <QuickTip icon={Book} label={t('common:spotlight.quick_tips.wiki')} />
+                                    <QuickTip icon={Settings} label={t('common:spotlight.quick_tips.system')} />
                                 </div>
                             </div>
-                        </div>
+                        )}
+                    </div>
+
+                    {entiteChoisie && (
+                        <aside className="hidden w-72 shrink-0 flex-col gap-3 border-l border-app-border bg-app-bg/40 p-4 md:flex">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-accent">Aperçu</p>
+                            <div className="flex items-center gap-3">
+                                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-app-border bg-app-surface-2">
+                                    {entiteChoisie.avatar
+                                        ? <ResolvedImage src={entiteChoisie.avatar} alt={entiteChoisie.name} className="h-full w-full object-cover" />
+                                        : <span className="flex h-full w-full items-center justify-center text-app-subtle"><User size={22} /></span>}
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="truncate font-display text-base font-bold text-app-text">{entiteChoisie.name}</p>
+                                    <Etiquette ton={TON_DU_CAMP[entiteChoisie.role] ?? 'neutre'}>{t(`modules:session.npc_gallery.roles.${entiteChoisie.role}`, { defaultValue: entiteChoisie.role })}</Etiquette>
+                                </div>
+                            </div>
+                            {entiteChoisie.description && <p className="line-clamp-3 text-xs leading-relaxed text-app-muted">{entiteChoisie.description}</p>}
+                            {fraction !== null ? (
+                                <div className="rounded-lg border border-app-border p-3">
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-app-muted">Santé</span>
+                                        <span className="font-mono font-bold text-app-text">{entiteChoisie.hp} / {entiteChoisie.maxHp}</span>
+                                    </div>
+                                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-app-bg">
+                                        <div className={`h-full ${fraction > 0.5 ? 'bg-etat-succes' : fraction > 0.25 ? 'bg-etat-alerte' : 'bg-etat-danger'}`} style={{ width: `${fraction * 100}%` }} />
+                                    </div>
+                                </div>
+                            ) : decrireLaSante(entiteChoisie) ? (
+                                <p className="rounded-lg border border-app-border p-3 text-xs text-app-text">{decrireLaSante(entiteChoisie)}</p>
+                            ) : null}
+                            <button
+                                onClick={() => choisi.action()}
+                                className="mt-auto rounded-lg bg-accent py-2.5 text-ui-10 font-black uppercase tracking-widest text-app-on-accent hover:brightness-110"
+                            >
+                                Ouvrir la fiche <span className="ml-1 rounded border border-app-on-accent/30 px-1 font-mono">Entrée</span>
+                            </button>
+                        </aside>
                     )}
                 </div>
 
-                {/* Footer / Shortcuts */}
-                <div className="flex items-center justify-between px-4 py-2 bg-slate-950/40 border-t border-slate-800 text-ui-10 text-app-subtle">
-                    <div className="flex items-center space-x-4">
-                        <div className="flex items-center">
-                            <div className="flex items-center px-1 py-0.5 rounded border border-slate-800 bg-slate-900 mr-1.5 font-mono">↑↓</div>
-                            <span>{t('common:spotlight.nav_hint')}</span>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="flex items-center px-1 py-0.5 rounded border border-slate-800 bg-slate-900 mr-1.5 font-mono">ENTER</div>
-                            <span>{t('common:spotlight.select_hint')}</span>
-                        </div>
+                <div className="flex items-center justify-between gap-3 border-t border-app-border px-4 py-2 text-ui-10 text-app-muted">
+                    <div className="flex items-center gap-4">
+                        <span className="flex items-center gap-1.5"><kbd className="rounded border border-app-border px-1 font-mono">↑↓</kbd>{t('common:spotlight.nav_hint')}</span>
+                        <span className="flex items-center gap-1.5"><kbd className="rounded border border-app-border px-1 font-mono">Entrée</kbd>{t('common:spotlight.select_hint')}</span>
+                        <span className="flex items-center gap-1.5"><kbd className="rounded border border-app-border px-1 font-mono">Échap</kbd>Fermer</span>
                     </div>
-                    <div className="flex items-center font-medium text-app-muted">
-                        GM-OS <span className="text-accent ml-1 italic">Spotlight</span>
-                    </div>
+                    {query.trim() && <span className="font-bold text-accent">{results.length} résultat(s)</span>}
                 </div>
             </div>
         </div>
     );
 };
 
-const ResultItem: React.FC<{ 
-    result: SpotlightResult; 
+/** Les sortes de résultat, dans l'ordre où `useSpotlight` les range. */
+const GROUPES: Record<string, { libelle: string; icone: LucideIcon }> = {
+    entity: { libelle: 'Entités', icone: User },
+    map: { libelle: 'Cartes', icone: MapIcon },
+    audio: { libelle: 'Audio', icone: Music },
+    rule: { libelle: 'Règles & wiki', icone: Book },
+    action: { libelle: 'Actions & outils', icone: Zap },
+};
+const TON_DU_CAMP = { ally: 'succes', neutral: 'neutre', hostile: 'danger', boss: 'accent' } as const;
+
+const ResultItem: React.FC<{
+    rang: number;
+    result: SpotlightResult;
     isSelected: boolean;
     onSelect: () => void;
     onHover: () => void;
-}> = ({ result, isSelected, onSelect, onHover }) => {
+}> = ({ rang, result, isSelected, onSelect, onHover }) => {
     const { t } = useTranslation(['common']);
     const Icon = result.icon;
-    
+
     return (
-        <div 
+        <div
+            data-rang={rang}
             onClick={onSelect}
             onMouseEnter={onHover}
-            className={`
-                flex items-center px-4 py-3 cursor-pointer transition-all duration-150
-                ${isSelected ? 'bg-accent/10 border-l-2 border-accent' : 'bg-transparent border-l-2 border-transparent hover:bg-slate-800/40'}
-            `}
+            className={`mx-2 flex cursor-pointer items-center gap-3 rounded-lg border-l-2 px-3 py-2 transition-all duration-150 ${
+                isSelected ? 'border-accent bg-accent/10' : 'border-transparent hover:bg-app-text/5'
+            }`}
         >
-            <div className={`
-                p-2 rounded-lg mr-4 transition-colors
-                ${isSelected ? 'bg-accent text-slate-900' : 'bg-slate-800 text-app-muted'}
-            `}>
-                <Icon className="w-5 h-5" />
+            <div className={`shrink-0 rounded-md border p-1.5 ${isSelected ? 'border-accent text-accent' : 'border-app-border text-app-muted'}`}>
+                <Icon className="h-4 w-4" />
             </div>
-            <div className="flex-1 min-w-0">
-                <div className={`text-sm font-semibold truncate ${isSelected ? 'text-accent' : 'text-slate-200'}`}>
-                    {result.title}
-                </div>
-                {result.subtitle && (
-                    <div className="text-ui-11 text-app-subtle truncate mt-0.5 italic">
-                        {result.subtitle}
-                    </div>
-                )}
+            <div className="min-w-0 flex-1">
+                <div className={`truncate text-sm font-bold ${isSelected ? 'text-accent' : 'text-app-text'}`}>{result.title}</div>
+                {result.subtitle && <div className="mt-0.5 truncate text-ui-11 text-app-muted">{result.subtitle}</div>}
             </div>
             {isSelected && (
-                <div className="flex items-center text-accent/50 animate-pulse">
-                    <span className="text-ui-10 font-bold mr-2 uppercase tracking-tighter">{t('common:spotlight.open_hint')}</span>
-                    <CornerDownLeft className="w-3 h-3" />
-                </div>
+                <span className="flex shrink-0 items-center gap-1 rounded border border-accent/50 px-2 py-0.5 text-ui-10 font-black uppercase tracking-widest text-accent">
+                    {result.type === 'action' ? 'Exécuter' : t('common:spotlight.open_hint')}<CornerDownLeft className="h-3 w-3" />
+                </span>
             )}
         </div>
     );
 };
 
-const QuickTip: React.FC<{ icon: any; label: string }> = ({ icon: Icon, label }) => (
-    <div className="flex items-center p-2 rounded-lg bg-slate-800/30 border border-slate-800/50 text-app-muted hover:text-slate-200 hover:bg-slate-800/50 transition-all cursor-default">
-        <Icon className="w-4 h-4 mr-2" />
+const QuickTip: React.FC<{ icon: LucideIcon; label: string }> = ({ icon: Icon, label }) => (
+    <div className="flex cursor-default items-center gap-2 rounded-lg border border-app-border bg-app-bg/40 p-2 text-app-muted">
+        <Icon className="h-4 w-4" />
         <span className="text-ui-11 font-medium">{label}</span>
     </div>
 );

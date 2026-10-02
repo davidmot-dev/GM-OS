@@ -1,33 +1,32 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { 
-    Save, 
-    X, 
-    Check, 
-    Music, 
-    Volume2, 
-    Wind, 
-    Lightbulb, 
-    ImageIcon,
-    Clock,
-    Eye
-} from 'lucide-react';
+import { Save, Check, Music, Lightbulb, ImageIcon, Map as MapIcon, Clock, Eye, AlertTriangle } from 'lucide-react';
 import { useModalStore } from '../../../stores/useModalStore';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
+import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire, Etiquette } from '../../../components/socle';
 
 interface SessionSnapshotModalProps {
     onClose: () => void;
 }
 
-const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) => {
-    const { 
-        sessions, 
-        activeCampaignId, 
-        saveSystemSnapshot 
-    } = useSessionOSStore();
+/** Une date `AAAA-MM-JJ`, lue à midi : à minuit UTC, un fuseau négatif la ferait reculer d'un jour. */
+const dateLongue = (date: string) => {
+    const jour = /^\d{4}-\d{2}-\d{2}$/.test(date) ? new Date(`${date}T12:00:00`) : new Date(date);
+    return Number.isNaN(jour.getTime()) ? date : jour.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+};
 
+/**
+ * **Capturer l'état** — refonte, L5, cadre commun des surcouches.
+ *
+ * Une phrase dit ce qu'est un instantané, les modules concernés en pastilles,
+ * puis la séance à choisir. Une séance qui en porte déjà un le dit, avec son
+ * heure : **il sera remplacé**, et ce n'est pas une décision qui se découvre
+ * après coup.
+ */
+const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) => {
+    const { sessions, activeCampaignId, saveSystemSnapshot } = useSessionOSStore();
     const { showCustom } = useModalStore();
-    
+
     const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
     const [isSaved, setIsSaved] = useState(false);
 
@@ -41,132 +40,112 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
         if (!selectedSessionId) return;
         saveSystemSnapshot(selectedSessionId);
         setIsSaved(true);
-        setTimeout(() => {
-            onClose();
-        }, 1500);
+        setTimeout(() => { onClose(); }, 1500);
     };
 
+    const MODULES = [
+        { icone: Music, libelle: 'Musique, bruitages et ambiances' },
+        { icone: Lightbulb, libelle: 'Light-OS' },
+        { icone: ImageIcon, libelle: 'Image-OS' },
+        { icone: MapIcon, libelle: 'Cartographie' },
+    ];
+
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-app-bg/80 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="relative w-full max-w-lg bg-app-surface border border-app-border rounded-[2.5rem] shadow-glow-accent overflow-hidden animate-in zoom-in-95 duration-300">
-                {/* Header */}
-                <div className="flex items-center justify-between p-8 border-b border-app-border bg-app-surface/50">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-accent/20 text-accent rounded-2xl">
-                            <Save size={24} />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-black text-app-text tracking-tight uppercase">Capture d'État</h3>
-                            <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest mt-1">Sauvegarder la configuration actuelle</p>
-                        </div>
-                    </div>
-                    <button 
-                        onClick={onClose}
-                        className="p-2 hover:bg-app-surface/80 rounded-full text-app-text/20 hover:text-app-text transition-colors"
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center bg-app-bg/80 p-6 backdrop-blur-sm animate-in fade-in duration-300">
+            <CadreDeSurcouche
+                titre="Capturer l'état des modules"
+                icone={<Save size={18} />}
+                onFermer={onClose}
+                largeur="moyen"
+                pied={<>
+                    <BoutonSecondaire onClick={onClose}>Annuler</BoutonSecondaire>
+                    <BoutonPrincipal
+                        onClick={handleSave}
+                        disabled={!selectedSessionId || isSaved}
+                        className={`flex items-center gap-2 disabled:opacity-40 ${isSaved ? '!bg-etat-succes !text-app-bg' : ''}`}
                     >
-                        <X size={20} />
-                    </button>
-                </div>
-
-                {/* Body */}
-                <div className="p-8 flex flex-col gap-8">
-                    <div className="flex flex-col gap-4">
-                        <p className="text-xs text-app-text/60 leading-relaxed font-medium">
-                            Cette action va enregistrer l'état actuel de tous vos modules (**Music**, **Sound**, **Ambient**, **Light**, **Image**) dans la session sélectionnée. Vous pourrez le restaurer d'un clic lors du lancement.
+                        {isSaved ? <><Check size={15} />État capturé</> : <><Save size={15} />Capturer l'état actuel</>}
+                    </BoutonPrincipal>
+                </>}
+            >
+                <div className="flex flex-col gap-5 px-5 py-4">
+                    <div className="flex flex-col gap-3">
+                        <p className="text-sm leading-relaxed text-app-text">
+                            Un instantané enregistre l'état de tous vos modules, associé à une séance : au lancement, il se restaure d'un clic.
                         </p>
-                        
-                        <div className="flex flex-wrap gap-3 py-2 opacity-40">
-                            {[Music, Volume2, Wind, Lightbulb, ImageIcon].map((Icon, i) => (
-                                <div key={i} className="flex items-center gap-1 px-2 py-1 bg-app-bg border border-app-border rounded-lg">
-                                    <Icon size={12} />
-                                </div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {MODULES.map(({ icone: Icone, libelle }) => (
+                                <span key={libelle} className="flex items-center gap-1.5 rounded-md border border-app-border bg-app-bg/40 px-2.5 py-1 text-xs font-bold text-app-text">
+                                    <Icone size={12} className="text-accent" />{libelle}
+                                </span>
                             ))}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                        <label className="text-ui-10 font-black text-app-text/40 uppercase tracking-[0.2em] ml-2">Choisir une session prévue</label>
-                        <div className="max-h-60 overflow-y-auto custom-scrollbar flex flex-col gap-2">
-                            {relevantSessions.map(s => (
-                                <div
-                                    key={s.id}
-                                    onClick={() => setSelectedSessionId(s.id)}
-                                    className={`flex items-center justify-between p-4 rounded-2xl border transition-all text-left cursor-pointer ${
-                                        selectedSessionId === s.id 
-                                        ? 'bg-accent/10 border-accent shadow-glow-accent/20' 
-                                        : 'bg-app-bg border-app-border/40 hover:border-app-border'
-                                    }`}
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className={`p-2 rounded-lg ${selectedSessionId === s.id ? 'bg-accent text-app-on-accent' : 'bg-app-surface text-app-text/20'}`}>
-                                            <Clock size={16} />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-bold text-app-text">
-                                                Session #{s.number}
-                                                {s.status === 'active' && <span className="ml-2 text-ui-8 bg-etat-succes/20 text-etat-succes px-1.5 py-0.5 rounded border border-etat-succes/20 uppercase tracking-tighter">Active</span>}
+                    <div className="flex flex-col gap-2">
+                        <p className="text-ui-10 font-black uppercase tracking-widest text-app-muted">Choisir la séance</p>
+                        <div className="flex max-h-72 flex-col gap-2 overflow-y-auto custom-scrollbar">
+                            {relevantSessions.map(s => {
+                                const choisie = selectedSessionId === s.id;
+                                return (
+                                    <div
+                                        key={s.id}
+                                        role="radio"
+                                        aria-checked={choisie}
+                                        tabIndex={0}
+                                        onClick={() => setSelectedSessionId(s.id)}
+                                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedSessionId(s.id); } }}
+                                        className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-all ${
+                                            choisie ? 'border-accent bg-accent/10' : 'border-app-border bg-app-bg/40 hover:border-accent/40'
+                                        }`}
+                                    >
+                                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border ${choisie ? 'border-accent text-accent' : 'border-app-border text-app-muted'}`}>
+                                            <Clock size={15} />
+                                        </span>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm text-app-text">
+                                                <span className="font-display font-bold">Séance n°{s.number}</span>
+                                                <span className="ml-2 text-xs text-app-muted">{dateLongue(s.date)}</span>
+                                            </p>
+                                            <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                                                <Etiquette ton={s.status === 'active' ? 'accent' : 'neutre'}>{s.status === 'active' ? 'En cours' : 'Planifiée'}</Etiquette>
+                                                {s.moduleSnapshot ? (
+                                                    <span className="flex items-center gap-1 rounded border border-etat-alerte/40 bg-etat-alerte/10 px-2 py-0.5 text-ui-10 font-bold text-etat-alerte">
+                                                        <AlertTriangle size={11} />
+                                                        Instantané du {new Date(s.moduleSnapshot.timestamp).toLocaleString(undefined, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} — sera remplacé
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-ui-10 text-app-muted">Aucun instantané</span>
+                                                )}
                                             </div>
-                                            <div className="text-ui-10 text-app-text/40">{new Date(s.date).toLocaleDateString()}</div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        {selectedSessionId === s.id && <Check size={20} className="text-accent" />}
                                         {s.moduleSnapshot && !isSaved && (
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        showCustom('snapshot-viewer', { snapshot: s.moduleSnapshot, sessionName: `Session #${s.number}` });
-                                                    }}
-                                                    className="p-1.5 hover:bg-app-text/10 rounded-lg text-etat-succes transition-colors pointer-events-auto"
-                                                    title="Voir le contenu"
-                                                >
-                                                    <Eye size={14} />
-                                                </button>
-                                                <div className="text-ui-8 font-black bg-etat-succes/20 text-etat-succes px-2 py-0.5 rounded border border-etat-succes/20 uppercase tracking-tighter">
-                                                    Snapshot Existant
-                                                </div>
-                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    showCustom('snapshot-viewer', { snapshot: s.moduleSnapshot, sessionName: `Séance n°${s.number}` });
+                                                }}
+                                                className="flex shrink-0 items-center gap-1.5 rounded-md border border-app-border px-2.5 py-1.5 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-colors hover:text-accent"
+                                                title="Voir le contenu de l'instantané"
+                                            >
+                                                <Eye size={12} />Voir
+                                            </button>
                                         )}
+                                        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${choisie ? 'border-accent bg-accent text-app-on-accent' : 'border-app-border'}`}>
+                                            {choisie && <Check size={13} />}
+                                        </span>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                             {relevantSessions.length === 0 && (
-                                <div className="py-10 text-center border-2 border-dashed border-app-border rounded-3xl opacity-30">
-                                    <p className="text-xs font-bold uppercase tracking-widest leading-relaxed">Aucune session prévue.<br/>Créez-en une d'abord !</p>
-                                </div>
+                                <p className="rounded-lg border border-dashed border-app-border py-8 text-center text-xs text-app-muted">
+                                    Aucune séance planifiée ou en cours — créez-en une d'abord.
+                                </p>
                             )}
                         </div>
                     </div>
                 </div>
-
-                {/* Footer */}
-                <div className="p-8 pt-0">
-                    <button
-                        onClick={handleSave}
-                        disabled={!selectedSessionId || isSaved}
-                        className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-3 transition-all ${
-                            isSaved 
-                            ? 'bg-etat-succes text-app-bg cursor-default' 
-                            : selectedSessionId 
-                                ? 'bg-accent text-app-on-accent hover:brightness-110 shadow-glow-accent active:scale-95' 
-                                : 'bg-app-surface-2 text-app-text/20 cursor-not-allowed'
-                        }`}
-                    >
-                        {isSaved ? (
-                            <>
-                                <Check size={20} />
-                                ÉTAT SAUVEGARDÉ !
-                            </>
-                        ) : (
-                            <>
-                                <Save size={20} />
-                                CAPTURER L'ÉTAT ACTUEL
-                            </>
-                        )}
-                    </button>
-                </div>
-            </div>
+            </CadreDeSurcouche>
         </div>
     );
 };
