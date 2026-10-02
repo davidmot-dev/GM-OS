@@ -1405,6 +1405,16 @@
     "aide": "Aide"
   },
   "npc": {
+    "agencement": {
+      "notes_privees": "Notes privées du meneur",
+      "non_projetees": "Non projetées",
+      "actions": "Actions du tirage",
+      "illustration": "Illustration IA",
+      "galerie": "Enregistrer dans la galerie",
+      "tirage_instantane": "Tirage instantané",
+      "sa_voix": "Sa voix",
+      "importer_portrait": "Importer un portrait"
+    },
     "title": "Générateur Universel",
     "categories": {
       "npcs": "PNJ",

@@ -2,10 +2,17 @@ import React from 'react';
 import { useNPCStore, type NPCCategory } from '../useNPCStore';
 import { Users, MapPin, Box, Zap, MessageSquare, Dices, Sparkles, type LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 
 const NPCControls: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
     const { config, setConfig, availableUniverses, generate, isGenerating } = useNPCStore();
+    /*
+      **À la table, le geste unique en grand** — refonte, L4, étape 2. La
+      maquette du régime Table pose un gros « Tirage instantané » et nomme les
+      cinq catégories : en séance on tire vite, et une icône seule se cherche.
+    */
+    const aLaTable = useRegimeDInterface().aLaTable;
 
     const categories: { id: NPCCategory, label: string, icon: LucideIcon }[] = [
         { id: 'npcs', label: t('npc.categories.npcs'), icon: Users },
@@ -38,6 +45,7 @@ const NPCControls: React.FC = () => {
                             title={cat.label}
                         >
                             <Icon size={18} />
+                            {aLaTable && <span className="mt-1 w-full truncate text-center text-ui-8 font-black uppercase tracking-tight">{cat.label}</span>}
                         </button>
                     );
                 })}
@@ -103,13 +111,15 @@ const NPCControls: React.FC = () => {
                 <button
                     onClick={() => generate()}
                     disabled={isGenerating || availableUniverses.length === 0}
-                    className="w-full py-3 bg-accent hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed text-app-on-accent font-bold rounded-xl shadow-glow-accent flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group"
+                    className={`w-full ${aLaTable ? 'py-6' : 'py-3'} bg-accent hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed text-app-on-accent font-bold rounded-xl shadow-glow-accent flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group`}
                 >
                     <Dices size={20} className={isGenerating ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'} />
-                    <span className="uppercase tracking-wider text-xs font-sans">
-                        {isGenerating 
-                            ? t('npc.controls.generating') 
-                            : t('npc.controls.generate', { category: categories.find(c => c.id === config.category)?.label })}
+                    <span className={`uppercase tracking-wider font-sans ${aLaTable ? 'text-lg font-black' : 'text-xs'}`}>
+                        {isGenerating
+                            ? t('npc.controls.generating')
+                            : aLaTable
+                                ? t('npc.agencement.tirage_instantane')
+                                : t('npc.controls.generate', { category: categories.find(c => c.id === config.category)?.label })}
                     </span>
                 </button>
             </div>

@@ -1405,6 +1405,16 @@
     "aide": "Help"
   },
   "npc": {
+    "agencement": {
+      "notes_privees": "GM private notes",
+      "non_projetees": "Not projected",
+      "actions": "Draw actions",
+      "illustration": "AI illustration",
+      "galerie": "Save to gallery",
+      "tirage_instantane": "Instant draw",
+      "sa_voix": "Their voice",
+      "importer_portrait": "Import a portrait"
+    },
     "title": "Universal Generator",
     "categories": {
       "npcs": "NPC",

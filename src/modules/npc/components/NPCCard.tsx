@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNPCStore } from '../useNPCStore';
-import { AudioLines, Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull, Database } from 'lucide-react';
+import { AudioLines, Save, Sword, FileText, Share2, User, MapPin, Package, Zap, Quote, Star, Eye, Sparkles, Skull, Database, Lock } from 'lucide-react';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -14,11 +14,13 @@ import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { useJournalStore } from '../../journal/useJournalStore';
 import { RecipientSelector } from '../../session/components/RecipientSelector';
 import { useTranslation } from 'react-i18next';
+import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 
 const NPCCard: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
     const { currentEntity, saveToMemo, isGenerating, selectAvatar, generateAvatar, isGeneratingAIAvatar, toggleDeadStatus, setVoiceProfile } = useNPCStore();
     const [showAIPrompt, setShowAIPrompt] = useState(false);
+    const regime = useRegimeDInterface();
     const { addCombatant } = useCombatStore();
     const { 
         sessions, 
@@ -276,30 +278,49 @@ const NPCCard: React.FC = () => {
         }
     };
 
-    return (
-        <div className="w-full max-w-2xl bg-app-surface/80 border border-app-border/50 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col backdrop-blur-md group animate-in fade-in zoom-in duration-500 font-sans">
-            {/* Header / Avatar Area */}
-            <div className="h-48 bg-gradient-to-br from-accent/20 to-app-bg flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-corrugation opacity-10" />
+    /*
+      **Le résultat de la maquette retenue — refonte, phase 4, L4, étape 2
+      (2026-10-02).** Le portrait et le nom en tête ; **les champs du tirage en
+      blocs titrés**, du nom même que leur donne la table ; **les notes privées
+      du meneur à part**, marquées non projetées ; et **toutes les actions
+      réelles avec leur libellé** — la moitié n'étaient que des icônes. Le
+      panneau « Paramètres du tirage » de la maquette est inventé : il n'est
+      pas repris.
 
+      À la table, les textes grandissent : le résultat se lit de loin.
+    */
+    const grand = regime.aLaTable;
+    const projeter = () => {
+        const projected = { ...currentEntity, subtitle: currentEntity.category };
+        useImageStore.getState().projectEntity(projected);
+        gmToast(t('npc.card.project_success', { name: currentEntity.name }));
+    };
+    const action = 'flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 py-2 text-center text-ui-10 font-black uppercase tracking-wide leading-tight transition-all active:scale-[0.98] disabled:opacity-40';
+    const neutre = `${action} border-app-border bg-app-surface/70 text-app-text hover:border-accent/50 hover:text-accent`;
+    const estPersonneOuLieu = currentEntity.category === 'npcs' || currentEntity.category === 'places';
+
+    return (
+        <div className={`w-full ${grand ? 'max-w-6xl' : 'max-w-4xl'} bg-app-surface/80 border border-app-border/50 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col gap-5 p-6 backdrop-blur-md group animate-in fade-in zoom-in duration-500 font-sans`}>
+            {/* L'en-tête : le portrait, la catégorie, le nom */}
+            <div className="flex items-start gap-6">
                 <button
-                    style={{ 
+                    style={{
                         transform: `scale(${voiceScale})`,
                         boxShadow: voiceGlow,
                     }}
-                    className={`w-40 h-40 rounded-2xl bg-app-bg/50 border-2 ${currentEntity?.isDead ? 'border-etat-danger/50' : 'border-accent/30'} flex items-center justify-center text-accent shadow-glow-accent z-10 transition-all duration-75 hover:border-accent overflow-hidden group/avatar relative`}
+                    className={`${grand ? 'w-52 h-60' : 'w-40 h-48'} shrink-0 rounded-2xl bg-app-bg/50 border-2 ${currentEntity?.isDead ? 'border-etat-danger/50' : 'border-accent/30'} flex items-center justify-center text-accent shadow-glow-accent transition-all duration-75 hover:border-accent overflow-hidden group/avatar relative`}
                 >
                     {avatarSrc ? (
                         <>
-                            <img 
-                                src={avatarSrc} 
-                                alt="" 
-                                className={`absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110 ${currentEntity?.isDead ? 'grayscale brightness-50' : ''}`} 
+                            <img
+                                src={avatarSrc}
+                                alt=""
+                                className={`absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110 ${currentEntity?.isDead ? 'grayscale brightness-50' : ''}`}
                             />
-                            <img 
-                                src={avatarSrc} 
-                                alt={currentEntity.name} 
-                                className={`relative z-10 w-full h-full object-contain ${currentEntity?.isDead ? 'grayscale contrast-125 brightness-75' : ''}`} 
+                            <img
+                                src={avatarSrc}
+                                alt={currentEntity.name}
+                                className={`relative z-10 w-full h-full object-cover ${currentEntity?.isDead ? 'grayscale contrast-125 brightness-75' : ''}`}
                             />
                         </>
                     ) : (
@@ -308,7 +329,7 @@ const NPCCard: React.FC = () => {
 
                     {currentEntity?.isDead && (
                         <div className="absolute inset-0 z-20 flex items-center justify-center bg-etat-danger/20 backdrop-grayscale-[0.5]">
-                            <div className="bg-etat-danger text-app-on-accent text-ui-10 font-black px-2 py-0.5 rounded shadow-lg shadow-etat-danger/50 uppercase tracking-tighter rotate-[-10deg] border border-etat-danger/50">
+                            <div className="bg-etat-danger text-app-bg text-ui-10 font-black px-2 py-0.5 rounded shadow-lg shadow-etat-danger/50 uppercase tracking-tighter rotate-[-10deg] border border-etat-danger/50">
                                 {t('npc.card.dead')}
                             </div>
                         </div>
@@ -336,162 +357,131 @@ const NPCCard: React.FC = () => {
                     )}
                 </button>
 
-                <div className="absolute top-4 right-4 flex gap-2 z-30">
-                    <button
-                        onClick={(e) => { e.stopPropagation(); toggleDeadStatus(currentEntity.id); }}
-                        className={`p-2 rounded-lg border-2 transition-all flex items-center justify-center shadow-lg ${
-                            currentEntity.isDead 
-                            ? 'bg-etat-danger border-etat-danger text-app-bg shadow-glow-rose scale-110' 
-                            : 'bg-app-surface/90 border-app-border text-app-muted hover:text-etat-danger hover:border-etat-danger/50 hover:bg-app-surface'
-                        }`}
-                        title={currentEntity.isDead ? t('npc.card.revive') : t('npc.card.mark_dead')}
+                <div className="min-w-0 flex-1 pt-1">
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-accent/30 bg-accent/10 px-2 py-0.5 text-ui-10 font-black uppercase tracking-widest text-accent">
+                        {React.cloneElement(getIcon() as React.ReactElement<{ size?: number }>, { size: 12 })}
+                        {t(`npc.categories.${currentEntity.category}`)}
+                    </span>
+                    <h1 className={`mt-3 ${grand ? 'text-6xl' : 'text-4xl'} font-display font-black tracking-tight leading-none break-words transition-colors ${currentEntity.isDead ? 'text-app-subtle line-through decoration-etat-danger/50' : 'text-app-text'}`}>
+                        {currentEntity.name}
+                    </h1>
+                </div>
+            </div>
+
+            {/* Les champs du tirage, en blocs titrés venus de la table */}
+            <div className="grid grid-cols-2 gap-3">
+                {Object.entries(currentEntity.fields).map(([key, value]) => (
+                    <div
+                        key={key}
+                        className={`rounded-xl border border-app-border/60 bg-app-bg/40 p-4 ${String(value).length > 90 ? 'col-span-2' : ''}`}
                     >
-                        <Skull size={18} />
+                        <span className="text-ui-10 uppercase font-black tracking-widest text-accent">{key}</span>
+                        <p className={`mt-1.5 ${grand ? 'text-lg' : 'text-sm'} text-app-text font-medium leading-relaxed`}>{value}</p>
+                    </div>
+                ))}
+            </div>
+
+            {/* Les notes privées du meneur, à part : elles ne partent jamais aux joueurs */}
+            {currentEntity.gmNotes?.trim() && (
+                <div className="rounded-xl border border-etat-danger/40 bg-etat-danger/5 p-4">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="flex items-center gap-1.5 text-ui-10 uppercase font-black tracking-widest text-etat-danger">
+                            <Lock size={12} /> {t('npc.agencement.notes_privees')}
+                        </span>
+                        <span className="rounded border border-etat-danger/40 px-1.5 text-ui-9 font-black uppercase tracking-widest text-etat-danger/80">
+                            {t('npc.agencement.non_projetees')}
+                        </span>
+                    </div>
+                    <p className="mt-1.5 text-sm text-app-text/90 leading-relaxed">{currentEntity.gmNotes}</p>
+                </div>
+            )}
+
+            {/* Les actions réelles du tirage, avec leur libellé */}
+            <div className="flex flex-col gap-2 border-t border-app-border pt-4">
+                <span className="text-ui-9 uppercase font-black tracking-widest text-app-subtle">{t('npc.agencement.actions')}</span>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(10.5rem,1fr))] gap-2">
+                    <button onClick={projeter} className={`${action} border-accent bg-accent text-app-on-accent hover:brightness-110`}>
+                        <Eye size={16} /> {t('npc.card.project')}
                     </button>
+                    {currentEntity.category === 'npcs' && (
+                        <button onClick={handleAddToCombat} className={`${action} border-etat-danger bg-etat-danger text-app-bg hover:bg-etat-danger/90`}>
+                            <Sword size={16} /> {t('npc.card.combat_add')}
+                        </button>
+                    )}
+                    {estPersonneOuLieu && (
+                        <button onClick={handleAddToMap} className={neutre}>
+                            <MapPin size={16} /> {t('npc.card.map_add')}
+                        </button>
+                    )}
+                    <button
+                        onClick={() => setShowRecipientSelector(true)}
+                        title={t('npc.card.give_tooltip')}
+                        className={currentEntity.category === 'items'
+                            ? `${action} border-etat-alerte bg-etat-alerte text-app-bg hover:bg-etat-alerte/90`
+                            : neutre}
+                    >
+                        <Package size={16} /> {t('npc.card.give_to')}
+                    </button>
+                    <button onClick={handleAddToFavorite} className={neutre}>
+                        <Star size={16} /> {t('npc.card.favorite_add')}
+                    </button>
+                    <button onClick={saveToMemo} className={neutre}>
+                        <Save size={16} /> {t('npc.card.save_memo')}
+                    </button>
+                    <button
+                        onClick={handleAddToJournal}
+                        title={isSessionActive ? t('npc.card.wiki_export') : t('npc.card.wiki_export_hint')}
+                        className={neutre}
+                    >
+                        <FileText size={16} /> {t('npc.card.wiki_export')}
+                    </button>
+                    {estPersonneOuLieu && (
+                        <button
+                            onClick={handleSaveToGallery}
+                            title={activeCampaignId ? t('npc.card.gallery_export', { name: currentEntity.name }) : t('npc.card.gallery_error_session')}
+                            className={neutre}
+                        >
+                            <Database size={16} /> {t('npc.agencement.galerie')}
+                        </button>
+                    )}
                     {/*
                         **Le profil se range sur la fiche.** Il n'écrivait que
                         dans l'état global du rack : générer une voix pour un
                         second PNJ écrasait la première, sans moyen d'y revenir.
-                        Une voix qu'on doit refabriquer à chaque bascule n'est
-                        pas un profil, c'est un réglage.
                     */}
                     <button
-                        onClick={async (e) => {
-                            e.stopPropagation();
+                        onClick={async () => {
                             const profil = await generateVoiceProfile(depuisUnPnjDeNpcOs(currentEntity));
                             if (profil) setVoiceProfile(currentEntity.id, profil);
                         }}
-                        className="text-ui-10 uppercase font-bold tracking-widest text-etat-succes/80 px-2 py-1 border border-etat-succes/20 rounded bg-etat-succes/10 flex items-center gap-1 backdrop-blur-sm hover:bg-etat-succes/20 transition-colors"
                         title={t('npc.card.voice_gen_tooltip')}
+                        className={neutre}
                     >
-                        <Sparkles size={10} />
-                        {t('npc.card.voice_gen')}
+                        <AudioLines size={16} /> {t('npc.card.voice_gen')}
                     </button>
-                    {/* Le rappel n'apparaît que s'il y a quelque chose à
-                        rappeler : un bouton qui reposerait un profil inexistant
-                        remettrait le rack à des valeurs que personne n'a
-                        choisies. */}
+                    {/* Le rappel n'apparaît que s'il y a quelque chose à rappeler. */}
                     {currentEntity.voiceProfile && (
                         <button
-                            onClick={(e) => {
-                                e.stopPropagation();
+                            onClick={() => {
                                 appliquerProfil(currentEntity.voiceProfile!);
                                 gmToast(`Voix de ${currentEntity.name} rappelée.`, 'info');
                             }}
-                            className="text-ui-10 uppercase font-bold tracking-widest text-gm-cyan/80 px-2 py-1 border border-gm-cyan/20 rounded bg-gm-cyan/10 flex items-center gap-1 backdrop-blur-sm hover:bg-gm-cyan/20 transition-colors"
                             title="Reposer ce profil vocal sur le rack"
+                            className={neutre}
                         >
-                            <AudioLines size={10} />
-                            Sa voix
+                            <AudioLines size={16} /> {t('npc.agencement.sa_voix')}
                         </button>
                     )}
-                    <div className="text-ui-10 uppercase font-bold tracking-widest text-accent/50 px-2 py-1 border border-accent/20 rounded bg-accent/5 flex items-center backdrop-blur-sm">
-                        {t(`npc.categories.${currentEntity.category}`)}
-                    </div>
-                </div>
-            </div>
-
-            {/* Content Area */}
-            <div className="p-8 flex-1">
-                <h1 className={`text-4xl font-display font-black mb-6 tracking-tight border-b border-app-border pb-4 transition-colors ${currentEntity.isDead ? 'text-app-subtle line-through decoration-etat-danger/50' : 'text-app-text'}`}>
-                    {currentEntity.name}
-                </h1>
-
-                <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-h-[400px] overflow-y-auto custom-scrollbar pr-4">
-                    {Object.entries(currentEntity.fields).map(([key, value]) => (
-                        <div key={key} className="flex flex-col">
-                            <span className="text-ui-10 uppercase font-bold text-app-subtle tracking-tighter">{key}</span>
-                            <span className="text-app-text font-medium leading-tight">{value}</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* Actions Footer */}
-            <div className="p-4 bg-app-bg/50 border-t border-app-border flex items-center justify-between flex-wrap gap-4">
-                <div className="flex gap-2">
-                    <button
-                        onClick={() => {
-                            if (currentEntity) {
-                                // Convert NPCEntity to ProjectedEntity (already matches mostly)
-                                const projected = {
-                                    ...currentEntity,
-                                    subtitle: currentEntity.category,
-                                    // ensure fields are present
-                                };
-                                useImageStore.getState().projectEntity(projected);
-                                gmToast(t('npc.card.project_success', { name: currentEntity.name }));
-                            }
-                        }}
-                        className="p-2 bg-app-surface hover:bg-accent/20 text-app-muted hover:text-accent transition-colors"
-                        title={t('npc.card.project')}
-                    >
-                        <Eye size={20} />
+                    <button onClick={() => setShowAIPrompt(true)} title={t('npc.card.ai_generate')} className={neutre}>
+                        <Sparkles size={16} /> {t('npc.agencement.illustration')}
                     </button>
                     <button
-                        onClick={handleAddToFavorite}
-                        className="p-2 bg-app-surface hover:bg-etat-alerte/20 rounded-lg text-app-muted hover:text-etat-alerte transition-colors"
-                        title={t('npc.card.favorite_add')}
+                        onClick={() => toggleDeadStatus(currentEntity.id)}
+                        className={currentEntity.isDead
+                            ? `${action} border-etat-danger bg-etat-danger/15 text-etat-danger`
+                            : `${action} border-etat-danger/30 bg-etat-danger/5 text-etat-danger/80 hover:bg-etat-danger/15 hover:text-etat-danger`}
                     >
-                        <Star size={20} />
-                    </button>
-                    <button
-                        onClick={saveToMemo}
-                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-app-muted hover:text-app-text transition-colors"
-                        title={t('npc.card.save_memo')}
-                    >
-                        <Save size={20} />
-                    </button>
-                    <button
-                        onClick={handleAddToJournal}
-                        className={`p-2 rounded-lg transition-all ${isSessionActive ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-app-surface text-app-muted hover:text-app-text hover:bg-app-bg/50'}`}
-                        title={isSessionActive ? t('npc.card.wiki_export') : t('npc.card.wiki_export_hint')}
-                    >
-                        <FileText size={20} />
-                    </button>
-                    {(currentEntity.category === 'npcs' || currentEntity.category === 'places') && (
-                        <button
-                            onClick={handleSaveToGallery}
-                            className={`p-2 rounded-lg transition-all ${activeCampaignId ? 'bg-etat-info/20 text-etat-info border border-etat-info/30 hover:bg-etat-info/30' : 'bg-app-surface text-app-muted hover:text-app-text hover:bg-app-bg/50'}`}
-                            title={activeCampaignId ? t('npc.card.gallery_export', { name: currentEntity.name }) : t('npc.card.gallery_error_session')}
-                        >
-                            <Database size={20} />
-                        </button>
-                    )}
-                </div>
-
-                <div className="flex gap-3">
-                    {(currentEntity.category === 'npcs' || currentEntity.category === 'places') && (
-                        <button
-                            onClick={handleAddToMap}
-                            className="flex items-center gap-2 px-4 py-2 bg-etat-succes/20 hover:bg-etat-succes/30 text-etat-succes border border-etat-succes/30 font-bold rounded-xl transition-all hover:scale-105 active:scale-95"
-                        >
-                            <MapPin size={18} />
-                            <span className="text-xs uppercase tracking-wider">{t('npc.card.map_add')}</span>
-                        </button>
-                    )}
-
-                    {currentEntity.category === 'npcs' && (
-                        <button
-                            onClick={handleAddToCombat}
-                            className="flex items-center gap-2 px-4 py-2 bg-etat-danger hover:bg-etat-danger text-app-bg font-bold rounded-xl shadow-lg shadow-etat-danger/20 transition-all hover:scale-105 active:scale-95"
-                        >
-                            <Sword size={18} />
-                        <span className="text-xs uppercase tracking-wider">{t('npc.card.combat_add')}</span>
-                    </button>
-                    )}
-
-                    <button
-                        onClick={() => setShowRecipientSelector(true)}
-                        className={`flex items-center gap-2 px-4 py-2 border font-bold rounded-xl transition-all hover:scale-105 active:scale-95 ${
-                            currentEntity.category === 'items'
-                            ? 'bg-etat-alerte text-app-bg border-etat-alerte shadow-glow-amber/20'
-                            : 'bg-app-surface text-app-text/60 border-app-border/40 hover:text-accent hover:border-accent/40'
-                        }`}
-                        title={t('npc.card.give_tooltip')}
-                    >
-                        <Package size={18} />
-                        <span className="text-xs uppercase tracking-wider">{t('npc.card.give_to')}</span>
+                        <Skull size={16} /> {currentEntity.isDead ? t('npc.card.revive') : t('npc.card.mark_dead')}
                     </button>
                 </div>
             </div>
@@ -499,7 +489,7 @@ const NPCCard: React.FC = () => {
             {/* Recipient Selector Overlay */}
             {showRecipientSelector && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center p-8 bg-app-bg/40 backdrop-blur-sm animate-in fade-in duration-200">
-                    <RecipientSelector 
+                    <RecipientSelector
                         onSelect={handleGiveToPC}
                         onCancel={() => setShowRecipientSelector(false)}
                     />
@@ -522,4 +512,3 @@ const NPCCard: React.FC = () => {
 };
 
 export default NPCCard;
-
