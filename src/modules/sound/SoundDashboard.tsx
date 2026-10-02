@@ -49,7 +49,7 @@ const SoundDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col overflow-hidden font-sans bg-app-bg text-slate-50 p-6 space-y-6">
+        <div className="h-full flex flex-col overflow-hidden font-sans bg-app-bg text-app-text p-6 space-y-6">
             <MediaBrowser
                 isOpen={!!assignmentTarget}
                 onClose={() => {

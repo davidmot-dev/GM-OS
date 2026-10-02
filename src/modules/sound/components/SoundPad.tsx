@@ -80,7 +80,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                 className="relative h-64 bg-app-surface/20 border-2 border-dashed border-app-border/50 rounded-2xl flex flex-col items-center justify-center p-4 hover:border-app-border/20 hover:bg-app-surface/5 transition-all cursor-pointer group shadow-lg"
                 onClick={togglePlayback}
             >
-                <div className="size-12 rounded-full bg-app-surface/20 flex items-center justify-center text-app-text/40 group-hover:text-white group-hover:scale-110 transition-all border border-app-border/20 group-hover:bg-accent/40">
+                <div className="size-12 rounded-full bg-app-surface/20 flex items-center justify-center text-app-text/40 group-hover:text-app-text group-hover:scale-110 transition-all border border-app-border/20 group-hover:bg-accent/40">
                     <Plus size={24} />
                 </div>
                 <span className="mt-4 text-ui-9 font-black text-app-text/30 uppercase tracking-[0.2em] group-hover:text-app-text/60">Empty Pad</span>
@@ -107,13 +107,13 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
             {/* Header: Key & MIDI */}
             <div className="flex justify-between items-start pointer-events-none z-10">
                 <div 
-                    className={`px-2 py-1 rounded-lg border text-ui-9 font-black tracking-tighter shadow-sm transition-colors ${keyMapping ? 'bg-accent text-white border-white/20' : 'bg-app-bg/60 text-app-text/40 border-app-border'}`}
+                    className={`px-2 py-1 rounded-lg border text-ui-9 font-black tracking-tighter shadow-sm transition-colors ${keyMapping ? 'bg-accent text-app-on-accent border-app-on-accent/20' : 'bg-app-bg/60 text-app-text/40 border-app-border'}`}
                 >
                     {keyLabel || <Keyboard size={10} />}
                 </div>
 
                 <div className="flex items-center gap-1.5 bg-app-bg/60 px-2 py-1 rounded-lg border border-app-border/30">
-                    <span className="text-ui-8 font-black text-white/30 mr-1">{id}</span>
+                    <span className="text-ui-8 font-black text-app-text/30 mr-1">{id}</span>
                     {linkedLightSceneId && (
                         <div className="flex items-center gap-1 text-accent animate-pulse">
                             <Lightbulb size={10} fill="currentColor" className="drop-shadow-glow-accent" />
@@ -121,16 +121,16 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                         </div>
                     )}
                     {midiMapping ? (
-                        <span className="text-ui-9 font-black text-amber-500">#{midiMapping}</span>
+                        <span className="text-ui-9 font-black text-etat-alerte">#{midiMapping}</span>
                     ) : (
-                        <Zap size={10} className="text-slate-600" />
+                        <Zap size={10} className="text-app-subtle" />
                     )}
                 </div>
 
                 {/* More Menu Trigger */}
                 <div 
                     onClick={(e) => { e.stopPropagation(); setIsMenuOpen(true); }}
-                    className="absolute top-2 right-2 size-8 flex items-center justify-center text-app-text/40 hover:text-white hover:bg-white/10 rounded-full transition-all pointer-events-auto opacity-0 group-hover:opacity-100 z-30"
+                    className="absolute top-2 right-2 size-8 flex items-center justify-center text-app-text/40 hover:text-app-text hover:bg-app-text/10 rounded-full transition-all pointer-events-auto opacity-0 group-hover:opacity-100 z-30"
                 >
                     <MoreHorizontal size={16} />
                 </div>
@@ -138,7 +138,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
 
             {/* Content: Title & File */}
             <div className="text-center pointer-events-none z-10">
-                <h3 className={`text-ui-11 font-black uppercase tracking-widest transition-colors ${isActive ? 'text-white' : 'text-slate-200'}`}>
+                <h3 className={`text-ui-11 font-black uppercase tracking-widest transition-colors ${isActive ? 'text-app-text' : 'text-app-text/90'}`}>
                     {title || 'Unnamed Sound'}
                 </h3>
                 <p className="text-ui-9 font-bold text-app-text/30 mt-1.5 truncate max-w-[120px] mx-auto opacity-40 italic">
@@ -154,7 +154,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                 <div className="bg-app-bg/80 backdrop-blur-md p-2 rounded-full border border-app-border shadow-2xl flex flex-col items-center gap-2">
                     <Volume2 size={10} className="text-app-text/40" />
                     <input
-                        className="vertical-slider appearance-none bg-white/10 h-20 w-1 rounded-full outline-none cursor-pointer"
+                        className="vertical-slider appearance-none bg-app-text/10 h-20 w-1 rounded-full outline-none cursor-pointer"
                         max="1.5"
                         min="0"
                         step="0.05"
@@ -177,7 +177,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                             boxShadow: isActive ? `0 0 15px ${color}` : 'none'
                         }}
                     >
-                        <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                        <div className="absolute inset-0 bg-app-text/20 animate-pulse" />
                     </div>
                 </div>
             </div>
@@ -192,7 +192,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
 
             {isMenuOpen && (
                 <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-5 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
-                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-10 font-black text-app-text/40 mb-2 hover:text-white uppercase tracking-[0.2em] transition-colors">Retour</button>
+                    <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-10 font-black text-app-text/40 mb-2 hover:text-app-text uppercase tracking-[0.2em] transition-colors">Retour</button>
                     
                     <div className="w-full grid grid-cols-2 gap-2">
                         <button
@@ -265,7 +265,7 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                             gmConfirm('Effacer ce pad ?', () => clearPad(id));
                             setIsMenuOpen(false);
                         }}
-                        className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/30 bg-red-500/10 text-red-500 text-ui-9 font-black uppercase tracking-widest hover:bg-red-600 hover:border-red-600 hover:text-white transition-all"
+                        className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-etat-danger/30 bg-etat-danger/10 text-etat-danger text-ui-9 font-black uppercase tracking-widest hover:bg-etat-danger hover:border-etat-danger hover:text-app-bg transition-all"
                     >
                         <Trash2 size={12} /> Effacer Pad
                     </button>

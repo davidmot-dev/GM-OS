@@ -71,16 +71,16 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                 {/* Left: Indicators */}
                 <div className="flex items-center gap-6">
 
-                    <div className="flex items-center gap-4 bg-black/20 px-3 py-1.5 rounded-xl border border-white/5">
+                    <div className="flex items-center gap-4 bg-app-bg/20 px-3 py-1.5 rounded-xl border border-app-text/5">
                         <div className="flex items-center gap-2">
-                            <div className={`size-1.5 rounded-full transition-all duration-500 ${isMidiConnected ? 'bg-emerald-500 shadow-glow-emerald animate-pulse' : 'bg-app-text/20'}`} />
-                            <span className={`text-ui-8 font-black uppercase tracking-widest leading-none transition-colors ${isMidiConnected ? 'text-emerald-400' : 'text-app-text/40'}`}>
+                            <div className={`size-1.5 rounded-full transition-all duration-500 ${isMidiConnected ? 'bg-etat-succes shadow-glow-emerald animate-pulse' : 'bg-app-text/20'}`} />
+                            <span className={`text-ui-8 font-black uppercase tracking-widest leading-none transition-colors ${isMidiConnected ? 'text-etat-succes' : 'text-app-text/40'}`}>
                                 {isMidiConnected ? 'MIDI CONNECTED' : 'NO MIDI DEVICE'}
                             </span>
                         </div>
                         <button 
                             onClick={refreshMidi}
-                            className="p-1 hover:bg-white/10 rounded-md text-app-text/40 hover:text-white transition-all group"
+                            className="p-1 hover:bg-app-text/10 rounded-md text-app-text/40 hover:text-app-text transition-all group"
                             title="Actualiser les périphériques MIDI"
                         >
                             <RefreshCcw size={10} className="group-active:rotate-180 transition-transform duration-500" />
@@ -94,8 +94,8 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                         <button
                             onClick={toggleMidiLearn}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${isMidiLearnActive 
-                                ? 'bg-accent text-white shadow-glow-accent' 
-                                : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'}`}
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text/80 hover:bg-app-text/5'}`}
                         >
                             <Zap size={10} />
                             <span>MIDI LEARN</span>
@@ -103,8 +103,8 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                         <button
                             onClick={toggleKeyLearn}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${isKeyLearnActive 
-                                ? 'bg-accent text-white shadow-glow-accent' 
-                                : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'}`}
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text/80 hover:bg-app-text/5'}`}
                         >
                             <Keyboard size={10} />
                             <span>KEY LEARN</span>
@@ -115,7 +115,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                     <div className="relative device-selector">
                         <button
                             onClick={() => setIsDeviceMenuOpen(!isDeviceMenuOpen)}
-                            className={`flex items-center gap-3 bg-app-bg/40 border rounded-xl px-4 py-2 text-ui-8 font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-white shadow-glow-accent/30' : 'border-app-border text-app-text/40 hover:border-app-border/60 hover:text-app-text/80'}`}
+                            className={`flex items-center gap-3 bg-app-bg/40 border rounded-xl px-4 py-2 text-ui-8 font-black uppercase tracking-widest transition-all ${isDeviceMenuOpen ? 'border-accent text-app-text shadow-glow-accent/30' : 'border-app-border text-app-text/40 hover:border-app-border/60 hover:text-app-text/80'}`}
                         >
                             <span className="truncate max-w-[120px]">{currentDeviceLabel}</span>
                             <ChevronDown size={12} className={`transition-transform duration-300 ${isDeviceMenuOpen ? 'rotate-180 text-accent' : ''}`} />
@@ -126,19 +126,19 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                                 <div className="max-h-60 overflow-y-auto custom-scrollbar">
                                     <button
                                         onClick={() => { setOutputDevice('default'); soundEngine.setOutputDevice('default'); setIsDeviceMenuOpen(false); }}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-app-surface/5 hover:text-white'}`}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all ${outputDeviceId === 'default' ? 'bg-accent/20 text-app-text' : 'text-app-text/40 hover:bg-app-surface/5 hover:text-app-text'}`}
                                     >
                                         <span>Default Speaker</span>
                                         {outputDeviceId === 'default' && <Check size={12} className="text-accent" />}
                                     </button>
                                     
-                                    <div className="h-px bg-white/5 my-1 mx-2" />
+                                    <div className="h-px bg-app-text/5 my-1 mx-2" />
                                     
                                     {audioDevices.map((device: MediaDeviceInfo) => (
                                         <button
                                             key={device.deviceId}
                                             onClick={() => { setOutputDevice(device.deviceId); setIsDeviceMenuOpen(false); }}
-                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-accent/20 text-white' : 'text-app-text/40 hover:bg-white/5 hover:text-white'}`}
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all text-left ${outputDeviceId === device.deviceId ? 'bg-accent/20 text-app-text' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text'}`}
                                         >
                                             <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                             {outputDeviceId === device.deviceId && <Check size={12} className="text-accent" />}
@@ -151,7 +151,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
 
                     <button
                         onClick={handleStopAll}
-                        className="size-10 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-lg active:scale-95 group relative"
+                        className="size-10 bg-etat-danger/10 border border-etat-danger/20 text-etat-danger rounded-xl flex items-center justify-center hover:bg-etat-danger hover:text-app-bg transition-all shadow-lg active:scale-95 group relative"
                         title="Arrêt Progressif (3s)"
                     >
                         <StopCircle size={18} />
@@ -160,7 +160,7 @@ const SoundHeader: React.FC<SoundHeaderProps> = () => {
                     <button
                         onClick={() => gmConfirm("Voulez-vous vraiment réinitialiser le module Sound OS ? Toutes vos atmosphères et configurations seront perdues.", () => reset())}
                         title="Réinitialiser le module"
-                        className="size-10 bg-red-500/5 border border-red-500/10 text-red-500/50 rounded-xl flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95"
+                        className="size-10 bg-etat-danger/5 border border-etat-danger/10 text-etat-danger/50 rounded-xl flex items-center justify-center hover:bg-etat-danger/20 hover:text-etat-danger transition-all active:scale-95"
                     >
                         <RotateCcw size={16} />
                     </button>

@@ -132,7 +132,7 @@ const AtmosphereManager: React.FC = () => {
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/20 border border-accent rounded-xl shadow-glow-accent/20">
                                 <input
                                     autoFocus
-                                    className="bg-transparent text-ui-10 font-black uppercase tracking-widest text-white outline-none w-24"
+                                    className="bg-transparent text-ui-10 font-black uppercase tracking-widest text-app-text outline-none w-24"
                                     value={editValue}
                                     onChange={(e) => setEditValue(e.target.value)}
                                     onBlur={handleRename}
@@ -153,8 +153,8 @@ const AtmosphereManager: React.FC = () => {
                                     }}
                                     className={`flex items-center gap-3 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                         activeAtmosphereId === atmos.id
-                                            ? 'bg-accent text-white shadow-glow-accent'
-                                            : 'text-app-text/40 hover:text-app-text/80 hover:bg-white/5'
+                                            ? 'bg-accent text-app-on-accent shadow-glow-accent'
+                                            : 'text-app-text/40 hover:text-app-text/80 hover:bg-app-text/5'
                                     }`}
                                 >
                                     {atmos.name}
@@ -162,7 +162,7 @@ const AtmosphereManager: React.FC = () => {
                                         reste visible, sinon le travail s'évanouirait sans
                                         cause apparente — mais elle le dit. */}
                                     {orphelines.has(atmos.id) && (
-                                        <Unlink size={9} className="text-amber-500 shrink-0" />
+                                        <Unlink size={9} className="text-etat-alerte shrink-0" />
                                     )}
                                 </button>
                                 
@@ -212,7 +212,7 @@ const AtmosphereManager: React.FC = () => {
                                 const atmos = atmospheres.find(a => a.id === menu.id);
                                 if (atmos) startRename(atmos);
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-ui-9 font-black text-app-text/40 uppercase tracking-widest hover:bg-white/5 hover:text-white transition-all"
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-ui-9 font-black text-app-text/40 uppercase tracking-widest hover:bg-app-text/5 hover:text-app-text transition-all"
                         >
                             <Edit2 size={10} />
                             Rename
@@ -224,7 +224,7 @@ const AtmosphereManager: React.FC = () => {
                                 }
                                 setMenu(null);
                             }}
-                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-ui-9 font-black text-red-400/70 uppercase tracking-widest hover:bg-red-500/10 hover:text-red-400 transition-all"
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-ui-9 font-black text-etat-danger/70 uppercase tracking-widest hover:bg-etat-danger/10 hover:text-etat-danger transition-all"
                         >
                             <Trash2 size={10} />
                             Delete
@@ -253,7 +253,7 @@ const AtmosphereManager: React.FC = () => {
             {campagneId !== null && active && (
                 <div className="flex items-center gap-2 shrink-0">
                     <span
-                        className="text-ui-8 font-black uppercase tracking-widest text-slate-600 truncate max-w-[9rem]"
+                        className="text-ui-8 font-black uppercase tracking-widest text-app-subtle truncate max-w-[9rem]"
                         title={active.name}
                     >
                         « {active.name} »
@@ -273,8 +273,8 @@ const AtmosphereManager: React.FC = () => {
                                         ? `Rendre « ${active.name} » commune — elle apparaîtra dans toutes les campagnes`
                                         : `Rattacher « ${active.name} » à la campagne ouverte — elle n'apparaîtra plus ailleurs`}
                                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${actif
-                                    ? 'bg-accent text-white shadow-glow-accent'
-                                    : 'text-app-subtle hover:text-slate-200 hover:bg-app-surface/60'}`}
+                                    ? 'bg-accent text-app-on-accent shadow-glow-accent'
+                                    : 'text-app-subtle hover:text-app-text hover:bg-app-surface/60'}`}
                             >
                                 {icone}
                                 <span>{texte}</span>
