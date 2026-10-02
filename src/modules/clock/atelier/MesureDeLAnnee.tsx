@@ -36,7 +36,7 @@ const Case: React.FC<{
     <div
         className={`flex-1 min-w-[88px] rounded-lg border px-3 py-2 transition-colors ${
             alerte
-                ? 'border-red-500/50 bg-red-500/10'
+                ? 'border-etat-danger/50 bg-etat-danger/10'
                 : accent
                     ? 'border-accent/50 bg-accent/10'
                     : 'border-app-border/40 bg-app-bg/40'
@@ -48,7 +48,7 @@ const Case: React.FC<{
         </div>
         <div
             className={`font-mono font-bold text-lg leading-tight ${
-                alerte ? 'text-red-400' : accent ? 'text-accent' : 'text-app-text/80'
+                alerte ? 'text-etat-danger' : accent ? 'text-accent' : 'text-app-text/80'
             }`}
         >
             {valeur}
@@ -82,14 +82,14 @@ export const MesureDeLAnnee: React.FC<Props> = ({ calendrier, joursVises }) => {
                         {m.joursParAnneeOrdinaire}
                         {ecart !== null && ecart !== 0 && (
                             <span
-                                className={`text-xs font-normal ${ecart > 0 ? 'text-orange-400' : 'text-orange-400'}`}
+                                className={`text-xs font-normal ${ecart > 0 ? 'text-etat-alerte' : 'text-etat-alerte'}`}
                                 title={`Vous visiez ${joursVises} jours`}
                             >
                                 {ecart > 0 ? `+${ecart}` : ecart}
                             </span>
                         )}
                         {ecart === 0 && (
-                            <span className="text-xs font-normal text-emerald-400" title="La cible est atteinte">
+                            <span className="text-xs font-normal text-etat-succes" title="La cible est atteinte">
                                 ✓
                             </span>
                         )}

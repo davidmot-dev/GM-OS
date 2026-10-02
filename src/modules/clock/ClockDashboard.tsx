@@ -203,7 +203,7 @@ const ClockDashboard: React.FC = () => {
                         </div>
 
                         {mode === 'fantasy' && (
-                            <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <div className="bg-app-surface-2/30 border border-app-border/50 rounded-lg p-3 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                 <div>
                                     <label className="text-xs text-app-subtle uppercase font-medium block mb-2">{t('clock.calendar')}</label>
                                     <div className="flex gap-2">
@@ -276,21 +276,21 @@ const ClockDashboard: React.FC = () => {
                                             <input
                                                 type="number"
                                                 placeholder="HH"
-                                                className="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white text-center"
+                                                className="bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text text-center"
                                                 value={fantasyDate.hour}
                                                 onChange={(e) => setFantasyDate({ hour: parseInt(e.target.value) })}
                                             />
                                             <input
                                                 type="number"
                                                 placeholder="MM"
-                                                className="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white text-center"
+                                                className="bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text text-center"
                                                 value={fantasyDate.minute}
                                                 onChange={(e) => setFantasyDate({ minute: parseInt(e.target.value) })}
                                             />
                                             <input
                                                 type="number"
                                                 placeholder="SS"
-                                                className="bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-white text-center"
+                                                className="bg-app-bg border border-app-border rounded p-1.5 text-xs text-app-text text-center"
                                                 value={fantasyDate.second}
                                                 onChange={(e) => setFantasyDate({ second: parseInt(e.target.value) })}
                                             />
@@ -301,12 +301,12 @@ const ClockDashboard: React.FC = () => {
                         )}
 
                         {mode === 'static' && (
-                            <div className="bg-slate-800/30 border border-slate-700/50 rounded-lg p-3 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <div className="bg-app-surface-2/30 border border-app-border/50 rounded-lg p-3 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
                                 <label className="text-xs text-app-subtle uppercase font-medium block">{t('clock.manual_setting')}</label>
                                 <div className="space-y-2">
                                     <input
                                         type="date"
-                                        className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-app-text focus:outline-none focus:border-etat-info"
                                         value={dateDuChamp(timestamp)}
                                         onChange={(e) => {
                                             /*
@@ -329,7 +329,7 @@ const ClockDashboard: React.FC = () => {
                                     <input
                                         type="time"
                                         step="1"
-                                        className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-app-bg border border-app-border rounded p-2 text-xs text-app-text focus:outline-none focus:border-etat-info"
                                         value={heureDuChamp(timestamp)}
                                         onChange={(e) => {
                                             /*
@@ -377,7 +377,7 @@ const ClockDashboard: React.FC = () => {
                             aria-label={t('clock.chime')}
                             className={`ml-auto shrink-0 transition-colors ${sonnerieDuMinuteur
                                 ? 'text-gm-gold/70 hover:text-gm-gold'
-                                : 'text-slate-700 hover:text-slate-500'}`}
+                                : 'text-app-subtle hover:text-app-muted'}`}
                         >
                             {sonnerieDuMinuteur ? <Bell size={14} /> : <BellOff size={14} />}
                         </button>
@@ -395,7 +395,7 @@ const ClockDashboard: React.FC = () => {
 
                     <div className="flex items-center gap-3 mb-4 justify-center bg-app-surface/50 p-4 rounded-xl border border-app-border/50">
 
-                        <span className={`text-3xl font-mono font-bold tracking-tighter tabular-nums leading-none ${timerRemaining === 0 && timerDuration > 0 ? 'text-red-500 animate-pulse' : 'text-white'}`}>
+                        <span className={`text-3xl font-mono font-bold tracking-tighter tabular-nums leading-none ${timerRemaining === 0 && timerDuration > 0 ? 'text-etat-danger animate-pulse' : 'text-app-text'}`}>
                             {Math.floor(timerRemaining / 60).toString().padStart(2, '0')}:
                             {(timerRemaining % 60).toString().padStart(2, '0')}
                         </span>
@@ -419,14 +419,14 @@ const ClockDashboard: React.FC = () => {
                         {!timerIsRunning ? (
                             <button
                                 onClick={startTimer}
-                                className="flex-1 bg-emerald-600/20 border border-emerald-500/50 text-emerald-400 p-2 rounded-lg text-xs font-bold uppercase hover:bg-emerald-600/30 transition-colors flex items-center justify-center gap-2"
+                                className="flex-1 bg-etat-succes/20 border border-etat-succes/50 text-etat-succes p-2 rounded-lg text-xs font-bold uppercase hover:bg-etat-succes/30 transition-colors flex items-center justify-center gap-2"
                             >
                                 <Play size={14} fill="currentColor" /> {t('clock.start')}
                             </button>
                         ) : (
                             <button
                                 onClick={pauseTimer}
-                                className="flex-1 bg-amber-600/20 border border-amber-500/50 text-amber-400 p-2 rounded-lg text-xs font-bold uppercase hover:bg-amber-600/30 transition-colors flex items-center justify-center gap-2"
+                                className="flex-1 bg-etat-alerte/20 border border-etat-alerte/50 text-etat-alerte p-2 rounded-lg text-xs font-bold uppercase hover:bg-etat-alerte/30 transition-colors flex items-center justify-center gap-2"
                             >
                                 <Pause size={14} fill="currentColor" /> {t('clock.pause')}
                             </button>
@@ -532,7 +532,7 @@ const ClockDashboard: React.FC = () => {
                             >
                                 <button
                                     onClick={() => removeTensionClock(clock.id)}
-                                    className="absolute top-2 right-2 text-app-subtle hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute top-2 right-2 text-app-subtle hover:text-etat-danger opacity-0 group-hover:opacity-100 transition-opacity"
                                 >
                                     <Trash2 size={14} />
                                 </button>
@@ -568,7 +568,7 @@ const ClockDashboard: React.FC = () => {
                                         <NarrativeClock clock={clock} theme={theme} size={100} />
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-xs font-bold text-slate-300 truncate w-full max-w-[120px] uppercase tracking-tight">{clock.name}</p>
+                                        <p className="text-xs font-bold text-app-text truncate w-full max-w-[120px] uppercase tracking-tight">{clock.name}</p>
                                         {/*
                                           `4 / 6 restants` plutôt que `4 / 6
                                           segments` : sur un consommable, le
@@ -629,14 +629,14 @@ const ClockDashboard: React.FC = () => {
                                             onChange={(e) => changerLaCouleurDeLaJauge(clock.id, e.target.value)}
                                             title={t('clock.gauge_color')}
                                             aria-label={t('clock.gauge_color')}
-                                            className="h-5 w-5 shrink-0 cursor-pointer rounded border border-slate-700 bg-transparent p-0"
+                                            className="h-5 w-5 shrink-0 cursor-pointer rounded border border-app-border bg-transparent p-0"
                                         />
                                         {clock.color && (
                                             <button
                                                 type="button"
                                                 onClick={() => changerLaCouleurDeLaJauge(clock.id, null)}
                                                 title={t('clock.gauge_color_reset')}
-                                                className="text-xs leading-none text-slate-600 hover:text-slate-300"
+                                                className="text-xs leading-none text-app-subtle hover:text-app-text"
                                             >
                                                 ×
                                             </button>
@@ -653,7 +653,7 @@ const ClockDashboard: React.FC = () => {
                                             onClick={() => remplirLaJauge(clock.id)}
                                             title={t('clock.gauge_fill')}
                                             aria-label={t('clock.gauge_fill')}
-                                            className="shrink-0 text-slate-600 hover:text-slate-200"
+                                            className="shrink-0 text-app-subtle hover:text-app-text"
                                         >
                                             <ChevronsUp size={14} />
                                         </button>
@@ -674,7 +674,7 @@ const ClockDashboard: React.FC = () => {
                                             aria-label={t('clock.gauge_display')}
                                             className={`shrink-0 transition-colors ${(clock.surLAfficheur ?? true)
                                                 ? 'text-gm-gold/70 hover:text-gm-gold'
-                                                : 'text-slate-700 hover:text-slate-500'}`}
+                                                : 'text-app-subtle hover:text-app-muted'}`}
                                         >
                                             <MonitorSmartphone size={14} />
                                         </button>
@@ -699,7 +699,7 @@ const ClockDashboard: React.FC = () => {
                                             aria-label={t('clock.gauge_players')}
                                             className={`shrink-0 transition-colors ${(clock.vueParLesJoueurs ?? true)
                                                 ? 'text-gm-gold/70 hover:text-gm-gold'
-                                                : 'text-slate-700 hover:text-slate-500'}`}
+                                                : 'text-app-subtle hover:text-app-muted'}`}
                                         >
                                             {(clock.vueParLesJoueurs ?? true)
                                                 ? <Eye size={14} />
@@ -723,7 +723,7 @@ const ClockDashboard: React.FC = () => {
                                       de toutes les jauges existantes.
                                     */}
                                     <label
-                                        className="opacity-30 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 text-ui-9 uppercase tracking-wider text-slate-600"
+                                        className="opacity-30 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 text-ui-9 uppercase tracking-wider text-app-subtle"
                                         title={t('clock.gauge_step_hint')}
                                     >
                                         <Hourglass size={11} className="shrink-0" />
@@ -752,7 +752,7 @@ const ClockDashboard: React.FC = () => {
                         ))}
 
                         {tensions.length === 0 && (
-                            <div className="col-span-4 h-full flex flex-col items-center justify-center text-slate-600 border-2 border-dashed border-slate-800/50 rounded-xl py-8">
+                            <div className="col-span-4 h-full flex flex-col items-center justify-center text-app-subtle border-2 border-dashed border-app-border/50 rounded-xl py-8">
                                 <Plus size={32} className="mb-2 opacity-20" />
                                 <p className="text-sm font-medium italic">{t('clock.empty.no_gauges')}</p>
                                 <p className="text-ui-10 uppercase mt-1">{t('clock.empty.create_hint')}</p>

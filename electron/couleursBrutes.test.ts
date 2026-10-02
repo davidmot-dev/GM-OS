@@ -35,6 +35,7 @@ const MODULES_MIGRES: string[] = [
     'modules/map',     // phase 4, L3 — 2026-10-02
     'modules/forge',   // phase 4, L3 — 2026-10-02
     'modules/npc',     // phase 4, L4 — 2026-10-02
+    'modules/clock',   // phase 4, L4 — 2026-10-02 (cadrans exemptés)
 ];
 
 function releve(): Map<string, number> {

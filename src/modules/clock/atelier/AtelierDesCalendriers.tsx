@@ -76,14 +76,14 @@ function calendrierNeuf(): CalendrierDatable {
 }
 
 const ICONE: Record<Constat['gravite'], React.ReactNode> = {
-    faute: <AlertTriangle size={12} className="text-red-400 shrink-0" />,
-    doute: <AlertTriangle size={12} className="text-orange-400 shrink-0" />,
+    faute: <AlertTriangle size={12} className="text-etat-danger shrink-0" />,
+    doute: <AlertTriangle size={12} className="text-etat-alerte shrink-0" />,
     note: <Info size={12} className="text-app-text/40 shrink-0" />,
 };
 
 const TEINTE: Record<Constat['gravite'], string> = {
-    faute: 'text-red-400',
-    doute: 'text-orange-300',
+    faute: 'text-etat-danger',
+    doute: 'text-etat-alerte',
     note: 'text-app-text/50',
 };
 
@@ -277,7 +277,7 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
     if (!ouvert) return null;
 
     return (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 backdrop-blur-sm p-6">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-app-bg/70 backdrop-blur-sm p-6">
             <div
                 role="dialog"
                 aria-modal="true"
@@ -587,7 +587,7 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
                                     <button
                                         onClick={() => retirerUnMois(i)}
                                         aria-label={`Retirer le mois ${i + 1}`}
-                                        className="p-1 text-app-text/30 hover:text-red-400"
+                                        className="p-1 text-app-text/30 hover:text-etat-danger"
                                     >
                                         <Trash2 size={12} />
                                     </button>
@@ -637,7 +637,7 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
                                                 <button
                                                     onClick={() => retirerUneFete(i, k)}
                                                     aria-label={`Retirer la fête ${k + 1} du mois ${i + 1}`}
-                                                    className="ml-auto p-0.5 text-app-text/25 hover:text-red-400"
+                                                    className="ml-auto p-0.5 text-app-text/25 hover:text-etat-danger"
                                                 >
                                                     <Trash2 size={11} />
                                                 </button>
@@ -652,7 +652,7 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
                     {/* ── Le contrôle ── */}
                     <div className="rounded-xl border border-app-border/50 bg-app-bg/30 p-3">
                         {constats.length === 0 ? (
-                            <p className="flex items-center gap-2 text-xs text-emerald-400">
+                            <p className="flex items-center gap-2 text-xs text-etat-succes">
                                 <CheckCircle2 size={13} /> Rien à signaler.
                             </p>
                         ) : (
@@ -673,7 +673,7 @@ export const AtelierDesCalendriers: React.FC<Props> = ({
                     {calendrier.id && (
                         <button
                             onClick={() => void supprimer()}
-                            className="flex items-center gap-1.5 text-xs text-app-text/40 hover:text-red-400"
+                            className="flex items-center gap-1.5 text-xs text-app-text/40 hover:text-etat-danger"
                         >
                             <Trash2 size={13} /> Supprimer
                         </button>
