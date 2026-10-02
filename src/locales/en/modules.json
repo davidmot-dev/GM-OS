@@ -3151,6 +3151,28 @@
     }
   },
   "storyboard": {
+    "agencement": {
+      "ordre": "Order",
+      "moment": "Moment",
+      "commande": "Command",
+      "gestion": "Manage",
+      "en_cours": "Playing",
+      "jouer": "Play",
+      "arreter": "Stop",
+      "moment_en_cours": "Current moment",
+      "aucun_moment": "No moment playing",
+      "ne_touche_rien": "This moment touches no source.",
+      "source_musique": "Music",
+      "source_ambiance": "Ambience",
+      "source_lumiere": "Light",
+      "source_carte": "Map",
+      "source_image": "Image",
+      "source_bruitage": "Sound effect",
+      "source_titre": "Title",
+      "precedent": "Previous",
+      "suivant": "Next",
+      "arreter_le_moment": "Stop the moment"
+    },
     "title": "Master Storyboard",
     "subtitle": "Session Editing Desk",
     "add_sequence": "Add a Sequence",

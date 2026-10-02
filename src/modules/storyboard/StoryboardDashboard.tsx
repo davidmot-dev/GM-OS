@@ -7,7 +7,6 @@ import type { StoryboardMoment } from './useStoryboardStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { 
     Zap, 
-    Trash2, 
     Plus, 
     Music, 
     Sun, 
@@ -16,14 +15,9 @@ import {
     Volume2,
     Save,
     X,
-    Settings2,
-    Play,
-    Square,
     Waves,
     Clapperboard,
-    ArrowRight,
-    GripVertical,
-    Copy, Images, SlidersHorizontal } from 'lucide-react';
+    SlidersHorizontal } from 'lucide-react';
 import { useAmbientStore } from '../ambient/useAmbientStore';
 import { useTuilesVisibles } from '../light/hooks/useTuilesVisibles';
 import { useImageStore } from '../image/useImageStore';
@@ -45,183 +39,16 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragOverlay,
 } from '@dnd-kit/core';
-import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  horizontalListSortingStrategy,
-  useSortable,
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-
-interface SortableMomentProps {
-    moment: StoryboardMoment;
-    index: number;
-    activeMomentId: string | null;
-    isLast: boolean;
-    onTrigger: (id: string) => void;
-    /** Referme la parenthèse : l'image de la scène revient. */
-    onArreter: () => void;
-    onEdit: (moment: StoryboardMoment) => void;
-    onDelete: (id: string) => void;
-    onDuplicate: (id: string) => void;
-    isOverlay?: boolean;
-}
-
-const MomentFrame: React.FC<SortableMomentProps & { dragProps?: Record<string, unknown>, dragListeners?: Record<string, unknown> }> = ({ 
-    moment, 
-    index, 
-    activeMomentId, 
-    onTrigger,
-    onArreter,
-    onEdit, 
-    onDelete,
-    onDuplicate,
-    isOverlay,
-    dragProps,
-    dragListeners
-}) => {
-    const { t } = useTranslation(['modules']);
-
-    return (
-        <div 
-            className={`w-72 h-[420px] rounded-3xl relative transition-all duration-500 group ${
-                activeMomentId === moment.id 
-                    ? 'scale-105 z-20' 
-                    : 'scale-95 opacity-80 hover:opacity-100 hover:scale-100 z-10'
-            } ${isOverlay ? 'opacity-100 scale-100 shadow-2xl rotate-3 cursor-grabbing' : ''}`}
-        >
-            {/* Active Glow */}
-            {activeMomentId === moment.id && !isOverlay && (
-                <div className="absolute -inset-4 bg-accent/10 blur-3xl rounded-full animate-pulse pointer-events-none" />
-            )}
-
-            {/* Frame Content */}
-            <div className={`h-full bg-app-surface/60 border-2 rounded-3xl p-6 flex flex-col backdrop-blur-md shadow-2xl transition-all ${
-                activeMomentId === moment.id ? 'border-accent shadow-glow-accent/20' : 'border-white/5 group-hover:border-white/20'
-            } ${isOverlay ? 'border-accent/50 bg-app-surface/90' : ''}`}>
-                
-                {/* Frame Header: Number & Actions */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-2">
-                        <div 
-                            {...dragProps} 
-                            {...dragListeners} 
-                            className="p-2 hover:bg-white/10 rounded-lg cursor-grab active:cursor-grabbing text-slate-600 hover:text-accent transition-colors"
-                            title={t('modules:storyboard.actions.drag_hint')}
-                        >
-                            <GripVertical size={20} />
-                        </div>
-                        <span className={`text-3xl font-black italic opacity-20 ${activeMomentId === moment.id ? 'text-accent opacity-40' : ''}`}>
-                            {(index + 1).toString().padStart(2, '0')}
-                        </span>
-                    </div>
-                    {!isOverlay && (
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button 
-                                onClick={() => onDuplicate(moment.id)}
-                                className="p-2 bg-white/5 hover:bg-blue-500 hover:text-white rounded-xl transition-all"
-                                title={t('modules:storyboard.actions.duplicate')}
-                            >
-                                <Copy size={14} />
-                            </button>
-                            <button 
-                                onClick={() => onEdit(moment)}
-                                className="p-2 bg-white/5 hover:bg-accent hover:text-app-bg rounded-xl transition-all"
-                                title={t('modules:storyboard.actions.edit')}
-                            >
-                                <Settings2 size={14} />
-                            </button>
-                            <button 
-                                onClick={() => onDelete(moment.id)}
-                                className="p-2 bg-white/5 hover:bg-rose-500 hover:text-white rounded-xl transition-all"
-                                title={t('modules:storyboard.actions.delete')}
-                            >
-                                <Trash2 size={14} />
-                            </button>
-                        </div>
-                    )}
-                </div>
-
-                {/* Main Trigger Button */}
-                <button 
-                    /* Le même bouton arrête ce qu'il a lancé : un moment
-                       qu'on ne peut couper que depuis un autre écran laisse son
-                       image sur la table, et l'image de la scène ne revient
-                       jamais. */
-                    onClick={() => (activeMomentId === moment.id ? onArreter() : onTrigger(moment.id))}
-                    disabled={isOverlay}
-                    className="flex-1 flex flex-col items-center justify-center gap-4 group/play"
-                >
-                    <div className={`w-20 h-20 rounded-full border-4 flex items-center justify-center transition-all ${
-                        activeMomentId === moment.id 
-                            ? 'bg-accent text-app-bg border-accent shadow-glow-accent' 
-                            : 'bg-white/5 border-white/10 group-hover/play:bg-white/10 group-hover/play:border-accent group-hover/play:text-accent'
-                    }`}>
-                        {activeMomentId === moment.id
-                            ? <Square size={28} fill="currentColor" />
-                            : <Play size={32} fill="currentColor" className="group-hover/play:scale-110 transition-transform" />}
-                    </div>
-                    <h3 className="text-sm font-black uppercase tracking-wider text-center leading-tight group-hover/play:text-accent transition-colors">
-                        {moment.name}
-                    </h3>
-                </button>
-
-                {/* Linked Modules Strip */}
-                <div className="mt-6 pt-6 border-t border-white/5 grid grid-cols-3 gap-2">
-                    {moment.musicPadId && <div title={t('modules:storyboard.editor.music_label')} className="flex flex-col items-center gap-1"><Music size={12} className="text-blue-400" /><div className="w-full h-0.5 bg-blue-400/30 rounded-full" /></div>}
-                    {(moment.ambientSceneId || moment.ambientThemeId) && <div title={t('modules:storyboard.editor.ambient_label')} className="flex flex-col items-center gap-1"><Waves size={12} className="text-cyan-400" /><div className="w-full h-0.5 bg-cyan-400/30 rounded-full" /></div>}
-                    {moment.lightSceneId && <div title={t('modules:storyboard.editor.light_label')} className="flex flex-col items-center gap-1"><Sun size={12} className="text-orange-400" /><div className="w-full h-0.5 bg-orange-400/30 rounded-full" /></div>}
-                    {moment.mapUrl && <div title={t('modules:storyboard.editor.map_label')} className="flex flex-col items-center gap-1"><MapIcon size={12} className="text-emerald-400" /><div className="w-full h-0.5 bg-emerald-400/30 rounded-full" /></div>}
-                    {moment.imageMediaId && <div title={t('modules:storyboard.editor.image_label')} className="flex flex-col items-center gap-1"><ImageIcon size={12} className="text-purple-400" /><div className="w-full h-0.5 bg-purple-400/30 rounded-full" /></div>}
-                    {moment.diaporamaId && <div title={t('modules:storyboard.editor.diaporama_label')} className="flex flex-col items-center gap-1"><Images size={12} className="text-purple-400" /><div className="w-full h-0.5 bg-purple-400/30 rounded-full" /></div>}
-                    {moment.soundPadId && <div title={t('modules:storyboard.editor.sound_label')} className="flex flex-col items-center gap-1"><Volume2 size={12} className="text-rose-400" /><div className="w-full h-0.5 bg-rose-400/30 rounded-full" /></div>}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const SortableMoment: React.FC<SortableMomentProps> = (props) => {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-        isDragging
-    } = useSortable({ id: props.moment.id });
-
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        zIndex: isDragging ? 100 : 'auto',
-    };
-
-    return (
-        <div 
-            ref={setNodeRef} 
-            style={style} 
-            className="flex items-center shrink-0"
-        >
-            <MomentFrame 
-                {...props} 
-                dragProps={attributes as unknown as Record<string, unknown>} 
-                dragListeners={listeners as unknown as Record<string, unknown>} 
-                isOverlay={false}
-            />
-            {/* Connection Arrow */}
-            {!props.isLast && (
-                <div className="shrink-0 px-4 flex items-center justify-center">
-                    <ArrowRight size={24} className="text-white/10" />
-                </div>
-            )}
-        </div>
-    );
-};
+import { EnTeteDuTableau, LigneDeMoment, DetailDuMoment } from './TableauDesMoments';
+import { momentVoisin, type CleDeSource } from './sourcesDuMoment';
 
 const StoryboardDashboard: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -230,7 +57,6 @@ const StoryboardDashboard: React.FC = () => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [editingMoment, setEditingMoment] = useState<StoryboardMoment | null>(null);
-    const [activeId, setActiveId] = useState<string | null>(null);
 
     // Form State (for new/edit)
     const [name, setName] = useState('');
@@ -318,12 +144,7 @@ const StoryboardDashboard: React.FC = () => {
         })
     );
 
-    const handleDragStart = (event: DragStartEvent) => {
-        setActiveId(event.active.id as string);
-    };
-
     const handleDragEnd = (event: DragEndEvent) => {
-        setActiveId(null);
         const { active, over } = event;
         
         if (over && active.id !== over.id) {
@@ -335,8 +156,56 @@ const StoryboardDashboard: React.FC = () => {
         }
     };
 
-    const activeMoment = moments.find(m => m.id === activeId);
-    const activeIndex = moments.findIndex(m => m.id === activeId);
+    const momentEnCours = campaignMoments.find(m => m.id === activeMomentId) ?? null;
+    const idsDuTableau = campaignMoments.map(m => m.id);
+    const precedent = momentVoisin(idsDuTableau, momentEnCours?.id ?? null, -1);
+    const suivant = momentVoisin(idsDuTableau, momentEnCours?.id ?? null, 1);
+
+    /*
+      **Ce que la source joue, en mots** — le détail du moment en cours. On
+      lit les mêmes listes que le formulaire de réglage, pour qu'un nom lu ici
+      soit le nom choisi là. Un identifiant qu'aucune liste ne connaît plus
+      s'affiche tel quel : *un nom qui disparaît sans rien dire passe pour une
+      source vide.*
+    */
+    const nommer = (cle: CleDeSource, m: StoryboardMoment): string => {
+        const volume = (v?: number) => (typeof v === 'number' ? `${Math.round(v * 100)} %` : '');
+        const avecVolume = (nom: string | undefined, v?: number) => [nom, volume(v)].filter(Boolean).join(' · ') || '—';
+        switch (cle) {
+            case 'musique': {
+                const listes = ((window as any).useMusicStore?.getState()?.playlists ?? []) as Array<{ pads: Array<{ id: string; label: string }> }>;
+                const pad = listes.flatMap(pl => pl.pads).find(pd => pd.id === m.musicPadId);
+                return avecVolume(pad?.label ?? m.musicPadId, m.musicVolume);
+            }
+            case 'ambiance': {
+                const nom = ambientThemes.find(a => a.id === m.ambientThemeId)?.name
+                    ?? ambientScenes.find(s => s.id === m.ambientSceneId)?.name;
+                return avecVolume(nom, m.ambientVolume);
+            }
+            case 'lumiere':
+                return tuilesLumineuses.find(tuile => tuile.id === m.lightSceneId)?.name ?? m.lightSceneId ?? '—';
+            case 'carte':
+                return atlasMaps.find(a => a.fileUrl === m.mapUrl)?.name ?? (m.mapUrl?.split(/[\\/]/).pop() || '—');
+            case 'image': {
+                const image = (window as any).useImageStore?.getState() as {
+                    mediaList?: Array<{ id: string; name: string }>;
+                    diaporamas?: Array<{ id: string; nom: string }>;
+                } | undefined;
+                if (m.diaporamaId) return image?.diaporamas?.find(d => d.id === m.diaporamaId)?.nom ?? m.diaporamaId;
+                return image?.mediaList?.find(x => x.id === m.imageMediaId)?.name ?? m.imageMediaId ?? '—';
+            }
+            case 'bruitage': {
+                const atmospheres = ((window as any).useSoundStore?.getState()?.atmospheres ?? []) as Array<{ id: string; pads?: Record<string, { id: string; title?: string }> }>;
+                const pad = atmospheres
+                    .filter(a => !m.soundAtmosphereId || a.id === m.soundAtmosphereId)
+                    .flatMap(a => Object.values(a.pads ?? {}))
+                    .find(pd => pd.id === m.soundPadId);
+                return avecVolume(pad?.title ?? m.soundPadId, m.soundVolume);
+            }
+            case 'titre':
+                return m.titre?.trim() || '—';
+        }
+    };
 
     const startEdit = (moment: StoryboardMoment) => {
         setEditingMoment(moment);
@@ -587,15 +456,15 @@ const StoryboardDashboard: React.FC = () => {
 
 
     return (
-        <div className="flex flex-col h-full bg-app-bg text-slate-200">
+        <div className="flex flex-col h-full bg-app-bg text-app-text">
             {/* Header */}
-            <div className="px-8 py-6 flex items-center justify-between bg-app-surface/40 border-b border-white/5 backdrop-blur-xl shrink-0">
+            <div className="px-8 py-6 flex items-center justify-between bg-app-surface/40 border-b border-app-text/5 backdrop-blur-xl shrink-0">
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent shadow-glow-accent/20 animate-pulse-slow">
                         <Clapperboard size={24} />
                     </div>
                     <div>
-                        <h2 className="text-xl font-black uppercase tracking-tighter text-white">{t('modules:storyboard.title')}</h2>
+                        <h2 className="text-xl font-black uppercase tracking-tighter text-app-text">{t('modules:storyboard.title')}</h2>
                         <p className="text-ui-10 font-bold text-app-subtle uppercase tracking-widest">{t('modules:storyboard.subtitle')}</p>
                     </div>
                 </div>
@@ -603,7 +472,7 @@ const StoryboardDashboard: React.FC = () => {
                 <div className="flex items-center gap-4">
                     <button 
                         onClick={startNew}
-                        className="flex items-center gap-2 px-6 py-3 bg-accent text-app-bg rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20"
+                        className="flex items-center gap-2 px-6 py-3 bg-accent text-app-on-accent rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20"
                     >
                         <Plus size={16} />
                         {t('modules:storyboard.add_sequence')}
@@ -611,82 +480,55 @@ const StoryboardDashboard: React.FC = () => {
                 </div>
             </div>
 
-            {/* Main Content: Horizontal Timeline */}
+            {/* Le tableau des moments à gauche ; à droite, le moment en cours — ou son réglage */}
             <div className="flex-1 overflow-hidden flex relative">
-                {/* Horizontal Scrolling Area */}
-                <div className="flex-1 overflow-x-auto overflow-y-hidden custom-scrollbar-h flex items-center px-12 py-8 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_100%)] from-accent/5">
-                    
-                    {/* Vertical Perforations Background */}
-                    <div className="absolute top-0 left-0 right-0 h-8 flex items-center justify-around opacity-5 pointer-events-none">
-                        {Array.from({ length: 40 }).map((_, i) => <div key={i} className="w-4 h-4 rounded bg-white" />)}
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-8 flex items-center justify-around opacity-5 pointer-events-none">
-                        {Array.from({ length: 40 }).map((_, i) => <div key={i} className="w-4 h-4 rounded bg-white" />)}
-                    </div>
-
-                    <DndContext 
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}
-                    >
-                        <SortableContext 
-                            items={campaignMoments.map(m => m.id)}
-                            strategy={horizontalListSortingStrategy}
-                        >
-                            {campaignMoments.map((moment, index) => (
-                                <SortableMoment 
-                                    key={moment.id}
-                                    moment={moment}
-                                    index={index}
-                                    activeMomentId={activeMomentId}
-                                    isLast={index === campaignMoments.length - 1}
-                                    onTrigger={triggerMoment}
-                                    onArreter={arreterLeMoment}
-                                    onEdit={startEdit}
-                                    onDelete={deleteMoment}
-                                    onDuplicate={duplicateMoment}
-                                />
-                            ))}
-                        </SortableContext>
-
-                        <DragOverlay adjustScale={true}>
-                            {activeId && activeMoment ? (
-                                <MomentFrame 
-                                    moment={activeMoment}
-                                    index={activeIndex}
-                                    activeMomentId={activeMomentId}
-                                    isLast={true}
-                                    onTrigger={() => {}}
-                                    onArreter={() => {}}
-                                    onEdit={() => {}}
-                                    onDelete={() => {}}
-                                    onDuplicate={() => {}}
-                                    isOverlay={true}
-                                />
-                            ) : null}
-                        </DragOverlay>
-                    </DndContext>
-
-                    {campaignMoments.length === 0 && (
-                        <div className="w-full h-full flex flex-col items-center justify-center text-app-text/20 py-20">
-                            <Zap size={64} strokeWidth={1} className="mb-4 opacity-50" />
-                            <p className="text-sm font-black uppercase tracking-widest text-center max-w-sm">
-                                {t('modules:storyboard.empty_state')}
-                            </p>
+                <div className="flex-1 min-w-0 overflow-y-auto custom-scrollbar p-4">
+                    <div className="overflow-x-auto rounded-xl border border-app-border bg-app-surface custom-scrollbar-h">
+                        <div className="min-w-[44rem]">
+                            <EnTeteDuTableau />
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext items={idsDuTableau} strategy={verticalListSortingStrategy}>
+                                    {campaignMoments.map((moment, index) => (
+                                        <LigneDeMoment
+                                            key={moment.id}
+                                            moment={moment}
+                                            index={index}
+                                            enCours={activeMomentId === moment.id}
+                                            onJouer={triggerMoment}
+                                            onArreter={arreterLeMoment}
+                                            onRegler={startEdit}
+                                            onSupprimer={deleteMoment}
+                                            onDupliquer={duplicateMoment}
+                                        />
+                                    ))}
+                                </SortableContext>
+                            </DndContext>
                         </div>
-                    )}
+
+                        {campaignMoments.length === 0 && (
+                            <div className="flex flex-col items-center justify-center px-6 py-16 text-app-subtle">
+                                <Zap size={48} strokeWidth={1} className="mb-4 opacity-50" />
+                                <p className="max-w-sm text-center text-sm font-black uppercase tracking-widest">
+                                    {t('modules:storyboard.empty_state')}
+                                </p>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Sidebar Editor Panel */}
-                {isEditing && (
-                    <div className="w-[450px] bg-app-surface/80 border-l border-white/5 backdrop-blur-2xl p-8 overflow-y-auto custom-scrollbar flex flex-col shadow-2xl animate-in slide-in-from-right duration-500 z-50">
+                {isEditing ? (
+                    <div className="w-[450px] shrink-0 bg-app-surface border-l border-app-border p-8 overflow-y-auto custom-scrollbar flex flex-col animate-in slide-in-from-right duration-500 z-20">
                         <div className="flex items-center justify-between mb-10">
                             <div>
-                                <h3 className="text-xl font-black uppercase tracking-tighter text-white">{t('modules:storyboard.editor.title')}</h3>
+                                <h3 className="text-xl font-black uppercase tracking-tighter text-app-text">{t('modules:storyboard.editor.title')}</h3>
                                 <p className="text-ui-10 font-bold text-accent uppercase tracking-widest">{t('modules:storyboard.editor.subtitle')}</p>
                             </div>
-                            <button onClick={() => setIsEditing(false)} className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors" title={t('modules:storyboard.editor.cancel')}>
+                            <button onClick={() => setIsEditing(false)} className="w-10 h-10 rounded-full bg-app-text/5 hover:bg-app-text/10 flex items-center justify-center transition-colors" title={t('modules:storyboard.editor.cancel')}>
                                 <X size={20} />
                             </button>
                         </div>
@@ -699,22 +541,22 @@ const StoryboardDashboard: React.FC = () => {
                                     type="text" 
                                     value={name}
                                     onChange={e => setName(e.target.value)}
-                                    className="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 text-sm font-bold focus:border-accent outline-none transition-all shadow-inner"
+                                    className="w-full bg-app-bg/40 border border-app-text/5 rounded-2xl px-6 py-4 text-sm font-bold focus:border-accent outline-none transition-all shadow-inner"
                                     placeholder={t('modules:storyboard.editor.name_placeholder')}
                                 />
                             </div>
 
                             {/* Music & Ambient Group */}
-                            <div className="p-6 rounded-3xl bg-blue-500/5 border border-blue-500/10 space-y-6">
+                            <div className="p-6 rounded-3xl bg-etat-info/5 border border-etat-info/10 space-y-6">
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-blue-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-etat-info">
                                         <span className="flex items-center gap-2"><Music size={14} /> {t('modules:storyboard.editor.music_label')}</span>
-                                        <button onClick={() => handleCapture('music')} className="text-ui-9 hover:underline lowercase bg-blue-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('music')} className="text-ui-9 hover:underline lowercase bg-etat-info/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={musicPadId}
                                         onChange={e => setMusicPadId(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-blue-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-etat-info outline-none"
                                         title={t('modules:storyboard.editor.music_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
@@ -735,7 +577,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={musicOutputId}
                                         onChange={e => setMusicOutputId(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-blue-400/80 focus:border-blue-400 outline-none"
+                                        className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-etat-info/80 focus:border-etat-info outline-none"
                                         title={t('modules:storyboard.editor.output_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.output_module')}</option>
@@ -748,7 +590,7 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-cyan-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-gm-cyan">
                                         <span className="flex items-center gap-2"><Waves size={14} /> {t('modules:storyboard.editor.ambient_label')}</span>
                                     </label>
                                     {/*
@@ -764,7 +606,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={ambientThemeId}
                                         onChange={e => setAmbientThemeId(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-cyan-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-cyan outline-none"
                                         title={t('modules:storyboard.editor.ambient_theme_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.ambient_theme_none')}</option>
@@ -778,7 +620,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select 
                                         value={ambientSceneId}
                                         onChange={e => setAmbientSceneId(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-cyan-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-cyan outline-none"
                                         title={t('modules:storyboard.editor.ambient_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
@@ -793,7 +635,7 @@ const StoryboardDashboard: React.FC = () => {
                                         qui ne pose que le mélange hérite de la matière
                                         du moment précédent, ce qui est parfois voulu. */}
                                     {ambientSceneId && !ambientThemeId && (
-                                        <p className="text-ui-10 text-amber-400/80 italic leading-snug">
+                                        <p className="text-ui-10 text-etat-alerte/80 italic leading-snug">
                                             {t('modules:storyboard.editor.ambient_sans_theme')}
                                         </p>
                                     )}
@@ -806,7 +648,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={ambientOutputId}
                                         onChange={e => setAmbientOutputId(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-cyan-400/80 focus:border-cyan-400 outline-none"
+                                        className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-gm-cyan/80 focus:border-gm-cyan outline-none"
                                         title={t('modules:storyboard.editor.output_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.output_module')}</option>
@@ -833,7 +675,7 @@ const StoryboardDashboard: React.FC = () => {
                                   ne saurait pas porter les deux.
                                 */}
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-emerald-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-gm-emerald">
                                         <span className="flex items-center gap-2">
                                             <SlidersHorizontal size={14} />
                                             {t('modules:storyboard.editor.volumes_label')}
@@ -854,15 +696,15 @@ const StoryboardDashboard: React.FC = () => {
                                                     : t('modules:storyboard.editor.volume_laisser')}
                                                 className={`px-2 py-1 rounded-lg border text-ui-10 font-bold uppercase tracking-widest transition-colors w-28 shrink-0 text-left truncate ${
                                                     valeur === null
-                                                        ? 'border-white/5 text-white/25 hover:text-white/60'
-                                                        : 'border-emerald-400/40 text-emerald-400 bg-emerald-400/10'
+                                                        ? 'border-app-text/5 text-app-text/25 hover:text-app-text/60'
+                                                        : 'border-gm-emerald/40 text-gm-emerald bg-gm-emerald/10'
                                                 }`}
                                             >
                                                 {t(`modules:storyboard.editor.volume_${cle}`)}
                                             </button>
 
                                             {valeur === null ? (
-                                                <span className="text-ui-10 text-white/20 italic flex-1 min-w-0">
+                                                <span className="text-ui-10 text-app-text/20 italic flex-1 min-w-0">
                                                     {t('modules:storyboard.editor.volume_inchange')}
                                                 </span>
                                             ) : (
@@ -873,9 +715,9 @@ const StoryboardDashboard: React.FC = () => {
                                                         max={100}
                                                         value={Math.round(valeur * 100)}
                                                         onChange={e => poser(Number(e.target.value) / 100)}
-                                                        className="flex-1 accent-emerald-400 min-w-[6rem]"
+                                                        className="flex-1 accent-etat-succes min-w-[6rem]"
                                                     />
-                                                    <span className="text-ui-10 text-emerald-400/80 w-10 text-right tabular-nums shrink-0">
+                                                    <span className="text-ui-10 text-gm-emerald/80 w-10 text-right tabular-nums shrink-0">
                                                         {Math.round(valeur * 100)} %
                                                     </span>
                                                     {/* Le fondu de CETTE source — couper net un bruitage
@@ -888,9 +730,9 @@ const StoryboardDashboard: React.FC = () => {
                                                         value={fondu}
                                                         onChange={e => poserLeFondu(Number(e.target.value))}
                                                         title={t('modules:storyboard.editor.volume_fondu')}
-                                                        className="w-20 bg-black/40 border border-white/5 rounded-lg px-2 py-1 text-ui-10 text-right tabular-nums outline-none focus:border-emerald-400 shrink-0"
+                                                        className="w-20 bg-app-bg/40 border border-app-text/5 rounded-lg px-2 py-1 text-ui-10 text-right tabular-nums outline-none focus:border-gm-emerald shrink-0"
                                                     />
-                                                    <span className="text-ui-9 text-white/25 shrink-0">ms</span>
+                                                    <span className="text-ui-9 text-app-text/25 shrink-0">ms</span>
                                                 </>
                                             )}
                                         </div>
@@ -898,7 +740,7 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-rose-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-gm-crimson">
                                         <span className="flex items-center gap-2"><Volume2 size={14} /> {t('modules:storyboard.editor.sound_label')}</span>
                                     </label>
                                     <select 
@@ -908,7 +750,7 @@ const StoryboardDashboard: React.FC = () => {
                                             setSoundAtmosphereId(atmosphere);
                                             setSoundPadId(pad);
                                         }}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-rose-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-crimson outline-none"
                                         title={t('modules:storyboard.editor.sound_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
@@ -935,7 +777,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={soundOutputId}
                                         onChange={e => setSoundOutputId(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-rose-400/80 focus:border-rose-400 outline-none"
+                                        className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-gm-crimson/80 focus:border-gm-crimson outline-none"
                                         title={t('modules:storyboard.editor.output_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.output_module')}</option>
@@ -949,16 +791,16 @@ const StoryboardDashboard: React.FC = () => {
                             </div>
 
                             {/* Visuals & Lights Group */}
-                            <div className="p-6 rounded-3xl bg-orange-500/5 border border-orange-500/10 space-y-6">
+                            <div className="p-6 rounded-3xl bg-gm-gold/5 border border-gm-gold/10 space-y-6">
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-orange-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-gm-gold">
                                         <span className="flex items-center gap-2"><Sun size={14} /> {t('modules:storyboard.editor.light_label')}</span>
-                                        <button onClick={() => handleCapture('light')} className="text-ui-9 hover:underline lowercase bg-orange-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('light')} className="text-ui-9 hover:underline lowercase bg-gm-gold/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={lightSceneId}
                                         onChange={e => setLightSceneId(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-orange-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-gold outline-none"
                                         title={t('modules:storyboard.editor.light_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
@@ -978,9 +820,9 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-emerald-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-gm-emerald">
                                         <span className="flex items-center gap-2"><MapIcon size={14} /> {t('modules:storyboard.editor.map_label')}</span>
-                                        <button onClick={() => handleCapture('map')} className="text-ui-9 hover:underline lowercase bg-emerald-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('map')} className="text-ui-9 hover:underline lowercase bg-gm-emerald/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={mapUrl}
@@ -993,7 +835,7 @@ const StoryboardDashboard: React.FC = () => {
                                           Map-OS, elle, garde le verdict du magasin.
                                         */
                                         onChange={e => { setMapUrl(e.target.value); setMapEstVideo(estUneVideo(e.target.value)); }}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-emerald-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-emerald outline-none"
                                         title={t('modules:storyboard.editor.map_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
@@ -1017,7 +859,7 @@ const StoryboardDashboard: React.FC = () => {
                                             <select
                                                 value={mapTarget}
                                                 onChange={e => setMapTarget(e.target.value)}
-                                                className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-emerald-400/80 focus:border-emerald-400 outline-none"
+                                                className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-gm-emerald/80 focus:border-gm-emerald outline-none"
                                                 title={t('modules:storyboard.editor.map_screen_label')}
                                             >
                                                 <option value="">{t('modules:storyboard.editor.map_screen_current')}</option>
@@ -1026,12 +868,12 @@ const StoryboardDashboard: React.FC = () => {
                                                     <option key={ecran.id} value={ecran.id}>{getDisplayLabel(ecran.id)}</option>
                                                 ))}
                                             </select>
-                                            <label className="flex items-center gap-2 px-1 text-ui-11 font-bold text-emerald-400/80 cursor-pointer select-none">
+                                            <label className="flex items-center gap-2 px-1 text-ui-11 font-bold text-gm-emerald/80 cursor-pointer select-none">
                                                 <input
                                                     type="checkbox"
                                                     checked={mapRevelee}
                                                     onChange={e => setMapRevelee(e.target.checked)}
-                                                    className="accent-emerald-400"
+                                                    className="accent-etat-succes"
                                                 />
                                                 {t('modules:storyboard.editor.map_revealed')}
                                             </label>
@@ -1045,14 +887,14 @@ const StoryboardDashboard: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-purple-400">
+                                    <label className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-gm-violet">
                                         <span className="flex items-center gap-2"><ImageIcon size={14} /> {t('modules:storyboard.editor.image_label')}</span>
-                                        <button onClick={() => handleCapture('image')} className="text-ui-9 hover:underline lowercase bg-purple-400/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
+                                        <button onClick={() => handleCapture('image')} className="text-ui-9 hover:underline lowercase bg-gm-violet/10 px-2 py-1 rounded">{t('modules:storyboard.editor.capture_active')}</button>
                                     </label>
                                     <select 
                                         value={imageMediaId}
                                         onChange={e => { setImageMediaId(e.target.value); if (e.target.value) setDiaporamaId(''); }}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-purple-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-violet outline-none"
                                         title={t('modules:storyboard.editor.image_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
@@ -1079,7 +921,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={diaporamaId}
                                         onChange={e => { setDiaporamaId(e.target.value); if (e.target.value) setImageMediaId(''); }}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-purple-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-violet outline-none"
                                         title={t('modules:storyboard.editor.diaporama_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.diaporama_none')}</option>
@@ -1096,7 +938,7 @@ const StoryboardDashboard: React.FC = () => {
                                     <select
                                         value={imageTarget}
                                         onChange={e => setImageTarget(e.target.value)}
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-purple-400/80 focus:border-purple-400 outline-none"
+                                        className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-2 text-ui-11 font-bold text-gm-violet/80 focus:border-gm-violet outline-none"
                                         title={t('modules:storyboard.editor.screen_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.screen_current')}</option>
@@ -1140,7 +982,7 @@ const StoryboardDashboard: React.FC = () => {
                                         type="text"
                                         value={titre}
                                         onChange={e => setTitre(e.target.value)}
-                                        className="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-purple-400 outline-none"
+                                        className="w-full bg-app-bg/40 border border-app-text/5 rounded-xl px-4 py-3 text-xs font-bold focus:border-gm-violet outline-none"
                                         placeholder={t('modules:storyboard.editor.title_placeholder')}
                                         title={t('modules:storyboard.editor.title_label')}
                                     />
@@ -1148,18 +990,18 @@ const StoryboardDashboard: React.FC = () => {
                                     {titre.trim() && (
                                         <div className="flex gap-3">
                                             <label className="flex-1 flex flex-col gap-1">
-                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-gm-violet/60">
                                                     {t('modules:storyboard.editor.title_fade')}
                                                 </span>
                                                 <input
                                                     type="number" min={FONDU_MIN} max={FONDU_MAX} step={0.5}
                                                     value={titreFondu}
                                                     onChange={e => setTitreFondu(e.target.value)}
-                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                    className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-2 text-ui-11 font-bold outline-none focus:border-gm-violet"
                                                 />
                                             </label>
                                             <label className="flex-1 flex flex-col gap-1">
-                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-gm-violet/60">
                                                     {t('modules:storyboard.editor.title_duration')}
                                                 </span>
                                                 <input
@@ -1167,7 +1009,7 @@ const StoryboardDashboard: React.FC = () => {
                                                     value={titreDuree}
                                                     onChange={e => setTitreDuree(e.target.value)}
                                                     placeholder={t('modules:storyboard.editor.title_permanent')}
-                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                    className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-2 text-ui-11 font-bold outline-none focus:border-gm-violet"
                                                 />
                                             </label>
                                         </div>
@@ -1183,13 +1025,13 @@ const StoryboardDashboard: React.FC = () => {
                                     {titre.trim() && (
                                         <div className="flex flex-wrap gap-3">
                                             <label className="flex-1 min-w-[7rem] flex flex-col gap-1">
-                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-gm-violet/60">
                                                     {t('modules:storyboard.editor.title_position')}
                                                 </span>
                                                 <select
                                                     value={titrePosition}
                                                     onChange={e => setTitrePosition(e.target.value)}
-                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                    className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-gm-violet"
                                                 >
                                                     {POSITIONS.map(p => (
                                                         <option key={p} value={p}>
@@ -1200,13 +1042,13 @@ const StoryboardDashboard: React.FC = () => {
                                             </label>
 
                                             <label className="flex-1 min-w-[9rem] flex flex-col gap-1">
-                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-gm-violet/60">
                                                     {t('modules:storyboard.editor.title_font')}
                                                 </span>
                                                 <select
                                                     value={titrePolice}
                                                     onChange={e => setTitrePolice(e.target.value)}
-                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                    className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-gm-violet"
                                                 >
                                                     <option value="">{t('modules:storyboard.editor.title_font_theme')}</option>
                                                     {POLICES_CONNUES.map(police => (
@@ -1216,26 +1058,26 @@ const StoryboardDashboard: React.FC = () => {
                                             </label>
 
                                             <label className="flex flex-col gap-1">
-                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-gm-violet/60">
                                                     {t('modules:storyboard.editor.title_color')}
                                                 </span>
                                                 <input
                                                     type="color"
                                                     value={titreCouleur}
                                                     onChange={e => setTitreCouleur(e.target.value)}
-                                                    className="h-[38px] w-14 bg-black/20 border border-white/5 rounded-xl cursor-pointer"
+                                                    className="h-[38px] w-14 bg-app-bg/20 border border-app-text/5 rounded-xl cursor-pointer"
                                                 />
                                             </label>
 
                                             <label className="flex-1 min-w-[7rem] flex flex-col gap-1">
-                                                <span className="text-ui-9 uppercase tracking-widest text-purple-400/60">
+                                                <span className="text-ui-9 uppercase tracking-widest text-gm-violet/60">
                                                     {t('modules:storyboard.editor.title_outline')}
                                                 </span>
                                                 <select
                                                     value={titreContour}
                                                     onChange={e => setTitreContour(e.target.value)}
                                                     title={t('modules:storyboard.editor.title_outline_help')}
-                                                    className="w-full bg-black/20 border border-white/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-purple-400"
+                                                    className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-3 py-2 text-ui-11 font-bold outline-none focus:border-gm-violet"
                                                 >
                                                     {CONTOURS.map(contour => (
                                                         <option key={contour} value={contour}>
@@ -1250,22 +1092,32 @@ const StoryboardDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="pt-10 mt-10 border-t border-white/5 flex flex-col gap-4">
+                        <div className="pt-10 mt-10 border-t border-app-text/5 flex flex-col gap-4">
                             <button 
                                 onClick={handleSave}
-                                className="w-full bg-accent text-app-bg py-5 rounded-2xl text-xs font-black uppercase tracking-widest hover:shadow-glow-accent transition-all flex items-center justify-center gap-2 shadow-2xl"
+                                className="w-full bg-accent text-app-on-accent py-5 rounded-2xl text-xs font-black uppercase tracking-widest hover:shadow-glow-accent transition-all flex items-center justify-center gap-2 shadow-2xl"
                             >
                                 <Save size={16} />
                                 {t('modules:storyboard.editor.save')}
                             </button>
                             <button 
                                 onClick={() => setIsEditing(false)}
-                                className="w-full bg-white/5 border border-white/5 text-app-muted py-4 rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:bg-white/10 transition-all"
+                                className="w-full bg-app-text/5 border border-app-text/5 text-app-muted py-4 rounded-2xl text-ui-10 font-black uppercase tracking-widest hover:bg-app-text/10 transition-all"
                             >
                                 {t('modules:storyboard.editor.cancel')}
                             </button>
                         </div>
                     </div>
+                ) : (
+                    <aside className="w-[22rem] shrink-0 overflow-y-auto border-l border-app-border bg-app-surface/60 p-4 custom-scrollbar">
+                        <DetailDuMoment
+                            moment={momentEnCours}
+                            nommer={nommer}
+                            onPrecedent={precedent ? () => triggerMoment(precedent) : null}
+                            onSuivant={suivant ? () => triggerMoment(suivant) : null}
+                            onArreter={arreterLeMoment}
+                        />
+                    </aside>
                 )}
             </div>
         </div>

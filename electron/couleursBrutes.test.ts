@@ -39,6 +39,7 @@ const MODULES_MIGRES: string[] = [
     'modules/favorite', // phase 4, L4 — 2026-10-02
     'modules/remote',  // phase 4, L4 — 2026-10-02 (tableau blanc exempté)
     'modules/session', // phase 4, L5 — 2026-10-02 (cinq sous-lots)
+    'modules/storyboard', // phase 4, L5 (poste du meneur) — 2026-10-02
 ];
 
 /**

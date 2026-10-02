@@ -3151,6 +3151,28 @@
     }
   },
   "storyboard": {
+    "agencement": {
+      "ordre": "Ordre",
+      "moment": "Moment",
+      "commande": "Commande",
+      "gestion": "Gestion",
+      "en_cours": "En cours",
+      "jouer": "Jouer",
+      "arreter": "Arrêter",
+      "moment_en_cours": "Moment en cours",
+      "aucun_moment": "Aucun moment en cours",
+      "ne_touche_rien": "Ce moment ne touche aucune source.",
+      "source_musique": "Musique",
+      "source_ambiance": "Ambiance",
+      "source_lumiere": "Lumière",
+      "source_carte": "Carte",
+      "source_image": "Image",
+      "source_bruitage": "Bruitage",
+      "source_titre": "Titre",
+      "precedent": "Précédent",
+      "suivant": "Suivant",
+      "arreter_le_moment": "Arrêter le moment"
+    },
     "title": "Master Storyboard",
     "subtitle": "Table de Montage de Session",
     "add_sequence": "Ajouter une Séquence",
