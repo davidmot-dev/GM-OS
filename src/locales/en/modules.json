@@ -2065,6 +2065,18 @@
       }
     },
     "npc_detail": {
+      "agencement": {
+        "surtitre": "Entity sheet",
+        "profil": "Profile",
+        "sans_profil": "No description.",
+        "console": "Damage console",
+        "sans_fiche": "This NPC has no game sheet yet: pick its template under “Edit”.",
+        "campagne": "Active campaign",
+        "relations": "Key relations",
+        "sans_relation": "No relation yet — they are woven in the social graph.",
+        "cible_disparue": "Missing sheet",
+        "non_projete": "Never projected"
+      },
       "placeholder": "Select an entity to view details",
       "status": {
         "dead": "DECEASED",

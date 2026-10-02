@@ -2065,6 +2065,18 @@
       "details_tooltip": "Détails de l'indice"
     },
     "npc_detail": {
+      "agencement": {
+        "surtitre": "Fiche d'entité",
+        "profil": "Profil",
+        "sans_profil": "Aucune description.",
+        "console": "Console de dommage",
+        "sans_fiche": "Ce PNJ n'a pas encore de fiche de jeu : choisissez son modèle dans « Modifier ».",
+        "campagne": "Campagne active",
+        "relations": "Relations clés",
+        "sans_relation": "Aucune relation — elles se tissent dans le graphe social.",
+        "cible_disparue": "Fiche disparue",
+        "non_projete": "Non projeté"
+      },
       "placeholder": "Sélectionnez une entité pour voir les détails",
       "status": {
         "dead": "DÉCÉDÉ",

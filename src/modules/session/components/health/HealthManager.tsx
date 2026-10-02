@@ -450,7 +450,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   );
 
   const commandes = (
-            <div className="flex items-center gap-2 bg-app-bg/40 p-1 px-2 rounded-xl border border-app-border/60">
+            <div className="flex flex-wrap items-center gap-2 bg-app-bg/40 p-1 px-2 rounded-xl border border-app-border/60">
                 <button
                   onClick={() => triggerImpact(false, undefined, true)}
                   className="flex flex-col items-center justify-center w-11 h-11 rounded-lg hover:bg-etat-danger/20 transition-all group/dmg"
