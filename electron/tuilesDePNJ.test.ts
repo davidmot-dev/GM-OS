@@ -54,7 +54,7 @@ const HAUTEUR_FIGEE = /(?<!min-)\bh-(?:\d+|\[[^\]]+\])/;
 
 describe('la carte de PNJ', () => {
     it('ne déclare aucune hauteur : elle est la somme de ses parties', () => {
-        const carte = classesCommencantPar('group relative flex flex-col rounded-2xl');
+        const carte = classesCommencantPar('group relative flex flex-col rounded-xl');
         expect(carte).toContain('flex flex-col');
         expect(carte, `hauteur figée sur la carte : « ${carte} »`).not.toMatch(HAUTEUR_FIGEE);
     });
@@ -65,14 +65,14 @@ describe('la carte de PNJ', () => {
      * même hauteur — donc des boutons alignés d'une carte à l'autre.
      */
     it('laisse sa moitié basse prendre la place qu’il lui faut', () => {
-        const contenu = classesCommencantPar('p-5 ');
+        const contenu = classesCommencantPar('p-4 ');
         expect(contenu, 'le contenu doit croître, pas être borné').toContain('flex-1');
         expect(contenu, `hauteur figée sur le contenu : « ${contenu} »`).not.toMatch(HAUTEUR_FIGEE);
     });
 
     /** Le portrait est la seule hauteur écrite, et elle est légitime. */
     it('garde une hauteur de portrait, et une seule', () => {
-        expect(classesCommencantPar('relative h-56')).toMatch(/\bh-56\b/);
+        expect(classesCommencantPar('relative h-64')).toMatch(/\bh-64\b/);
     });
 
     /**
