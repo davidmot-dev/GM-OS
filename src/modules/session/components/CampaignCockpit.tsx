@@ -12,6 +12,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { scenesDansLEtat, actesOrdonnes } from '../logic/trame';
 import { DUREE_DE_PAUSE_PAR_DEFAUT_MS, estEnPause, libelleDeLaPause } from '../pauseDeSeance';
 import { depuisQuand, useFileDAttente } from '../../ai/useFileDAttente';
+import { ouvrirLeFichierDeLaSeance } from '../logic/ouvrirLeFichierDeLaSeance';
 
 const CampaignCockpit: React.FC = () => {
     const { t } = useTranslation();
@@ -589,29 +590,10 @@ const CampaignCockpit: React.FC = () => {
                         )}
                         {activeSession.filePath && (
                             <button 
-                                onClick={async () => {
-                                    const chemin = activeSession.filePath!;
-                                    const ouvrir = window.appBridge?.openFile;
-                                    /*
-                                      **Hors d'Electron, il n'y a rien à ouvrir** — une
-                                      tablette n'a pas de disque à nous. On montre le
-                                      chemin, ce que ce bouton faisait déjà.
-                                    */
-                                    if (!ouvrir) {
-                                        alert(chemin);
-                                        return;
-                                    }
-                                    const resultat = await ouvrir(chemin);
-                                    if (resultat?.ouvert) return;
-                                    /*
-                                      *Un bouton doit pouvoir dire pourquoi il n'a rien
-                                      fait.* Le refus d'un exécutable a sa propre phrase :
-                                      c'est le seul cas où ne rien faire est volontaire.
-                                    */
-                                    alert(resultat?.raison === 'extension-executable'
-                                        ? t('modules:session.cockpit.open_file_refused')
-                                        : t('modules:session.cockpit.open_file_failed', { chemin }));
-                                }}
+                                onClick={() => ouvrirLeFichierDeLaSeance(activeSession.filePath!, {
+                                    refuse: t('modules:session.cockpit.open_file_refused'),
+                                    echec: t('modules:session.cockpit.open_file_failed', { chemin: activeSession.filePath }),
+                                })}
                                 className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gm-cyan/5 border border-gm-cyan/10 text-gm-cyan hover:bg-gm-cyan/10 hover:border-gm-cyan/30 transition-all group"
                             >
                                 <File size={16} className="group-hover:scale-110 transition-transform" />
