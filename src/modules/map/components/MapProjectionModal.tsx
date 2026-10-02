@@ -41,13 +41,13 @@ const MapProjectionModal: React.FC = () => {
                 {/* Option 1: Player Hub */}
                 <button
                     onClick={handleProjectToHub}
-                    className="flex items-center gap-4 p-4 bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 rounded-xl transition-all group text-left"
+                    className="flex items-center gap-4 p-4 bg-etat-info/20 hover:bg-etat-info/30 border border-etat-info/30 rounded-xl transition-all group text-left"
                 >
-                    <div className="w-12 h-12 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-lg bg-etat-info/20 flex items-center justify-center text-etat-info group-hover:scale-110 transition-transform">
                         <Cast size={24} />
                     </div>
                     <div className="flex-1">
-                        <h4 className="font-bold text-slate-100">{t('map.projection.hub.title')}</h4>
+                        <h4 className="font-bold text-app-text">{t('map.projection.hub.title')}</h4>
                         <p className="text-xs text-app-subtle">{t('map.projection.hub.desc')}</p>
                     </div>
                 </button>
@@ -72,10 +72,10 @@ const MapProjectionModal: React.FC = () => {
                                 <Monitor size={24} />
                             </div>
                             <div className="flex-1">
-                                <h4 className="font-bold text-slate-100">{getDisplayLabel(display.id)}</h4>
+                                <h4 className="font-bold text-app-text">{getDisplayLabel(display.id)}</h4>
                                 <p className="text-xs text-app-subtle">{t('map.projection.monitors.desc')}</p>
                             </div>
-                            <ExternalLink size={16} className="text-slate-600 group-hover:text-slate-400 transition-colors" />
+                            <ExternalLink size={16} className="text-app-subtle group-hover:text-app-muted transition-colors" />
                         </button>
                     ))
                 )}

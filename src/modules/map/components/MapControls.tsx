@@ -38,13 +38,13 @@ const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: M
     return (
         <button
             className={`p-2 rounded flex flex-col items-center justify-center gap-1 transition-colors w-[70px] ${isActive
-                ? 'bg-accent shadow-glow-accent text-slate-950'
-                : 'bg-app-bg hover:bg-app-surface text-slate-300 border border-app-border/50'
+                ? 'bg-accent shadow-glow-accent text-app-on-accent'
+                : 'bg-app-bg hover:bg-app-surface text-app-text border border-app-border/50'
                 }`}
             onClick={() => setTool(tool)}
             title={label}
         >
-            <Icon size={20} className={isActive ? 'text-slate-950' : 'text-accent'} />
+            <Icon size={20} className={isActive ? 'text-app-on-accent' : 'text-accent'} />
             <span className="text-ui-10 uppercase font-bold">{label}</span>
         </button>
     );
@@ -52,14 +52,14 @@ const ToolButton = ({ tool, currentTool, setTool, icon: Icon, label }: { tool: M
 
 const ModeButton = ({ mode, fogMode, setFogMode, icon: Icon, label }: { mode: FogMode, fogMode: FogMode, setFogMode: (m: FogMode) => void, icon: React.ElementType, label: string }) => {
     const isActive = fogMode === mode;
-    const activeColor = mode === 'reveal' ? 'bg-green-500' : 'bg-red-500';
-    const textColor = mode === 'reveal' ? 'text-green-500' : 'text-red-500';
+    const activeColor = mode === 'reveal' ? 'bg-etat-succes' : 'bg-etat-danger';
+    const textColor = mode === 'reveal' ? 'text-etat-succes' : 'text-etat-danger';
     const shadow = mode === 'reveal' ? 'shadow-[0_0_15px_-3px_rgba(34,197,94,0.4)]' : 'shadow-[0_0_15px_-3px_rgba(239,68,68,0.4)]';
 
     return (
         <button
             className={`flex-1 py-2 flex items-center justify-center gap-2 rounded transition-all border ${isActive
-                ? `${activeColor} ${shadow} text-white border-transparent`
+                ? `${activeColor} ${shadow} text-app-bg border-transparent`
                 : `bg-app-bg border-app-border hover:bg-app-surface ${textColor}`
                 }`}
             onClick={() => setFogMode(mode)}
@@ -215,7 +215,7 @@ const MapControls: React.FC = () => {
                 <h2 className="text-accent font-display font-bold text-xl flex items-center gap-2">
                     <span className="text-2xl">🗺️</span> {t('map.dashboard', { defaultValue: 'Map OS' })}
                 </h2>
-                <p className="text-gray-400 text-xs mt-1">{t('map.sidebar.subtitle')}</p>
+                <p className="text-app-muted text-xs mt-1">{t('map.sidebar.subtitle')}</p>
             </div>
 
             {/* Content Array */}
@@ -230,7 +230,7 @@ const MapControls: React.FC = () => {
                     <MapPresetGallery />
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Import Section */}
                 <section>
@@ -246,7 +246,7 @@ const MapControls: React.FC = () => {
                         {mapUrl && (
                             <HorsDePortee regime={regime} libelle={t('map.sidebar.import.remove')} compact icone={<Trash2 size={18} />}>
                                 <button
-                                    className="bg-rose-500/10 hover:bg-rose-500/20 p-3 rounded-lg flex items-center justify-center border border-rose-500/30 transition-colors text-rose-500"
+                                    className="bg-etat-danger/10 hover:bg-etat-danger/20 p-3 rounded-lg flex items-center justify-center border border-etat-danger/30 transition-colors text-etat-danger"
                                     onClick={handleClearMap}
                                     title={t('map.sidebar.import.remove')}
                                 >
@@ -260,25 +260,25 @@ const MapControls: React.FC = () => {
                     <button
                         disabled={isGenerating || !mapUrl}
                         onClick={handleGenerateNarrative}
-                        className="w-full bg-gradient-to-r from-indigo-600/20 to-purple-600/20 hover:from-indigo-600/30 hover:to-purple-600/30 p-2.5 rounded-lg border border-indigo-500/30 flex items-center justify-center gap-2 transition-all group disabled:opacity-30 disabled:grayscale"
+                        className="w-full bg-gradient-to-r from-gm-violet/20 to-gm-violet/10 hover:from-gm-violet/30 hover:to-gm-violet/20 p-2.5 rounded-lg border border-gm-violet/30 flex items-center justify-center gap-2 transition-all group disabled:opacity-30 disabled:grayscale"
                     >
                         {isGenerating ? (
                             <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
                         ) : (
                             <Sparkles size={16} className="text-accent group-hover:scale-110 transition-transform animate-pulse" />
                         )}
-                        <span className="text-ui-11 font-black uppercase tracking-widest text-indigo-100 group-hover:text-accent transition-colors">{t('map.sidebar.oracle')}</span>
+                        <span className="text-ui-11 font-black uppercase tracking-widest text-app-text group-hover:text-accent transition-colors">{t('map.sidebar.oracle')}</span>
                     </button>
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Layers Section */}
                 <section>
                     <MapLayersPanel />
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Tools Section */}
                 <section>
@@ -293,7 +293,7 @@ const MapControls: React.FC = () => {
                             */}
                             <HorsDePortee regime={regime} libelle={t('map.sidebar.fog.revealAll')} compact icone={<Eye size={16} />}>
                                 <button
-                                    className="text-gray-400 hover:text-green-500 transition-colors p-1 flex items-center gap-1"
+                                    className="text-app-muted hover:text-etat-succes transition-colors p-1 flex items-center gap-1"
                                     onClick={handleRevealAll}
                                     title={t('map.sidebar.fog.revealAll')}
                                 >
@@ -301,7 +301,7 @@ const MapControls: React.FC = () => {
                                 </button>
                             </HorsDePortee>
                             <button
-                                className="text-gray-400 hover:text-red-500 transition-colors p-1 flex items-center gap-1"
+                                className="text-app-muted hover:text-etat-danger transition-colors p-1 flex items-center gap-1"
                                 onClick={handleHideAll}
                                 title={t('map.sidebar.fog.hideAll')}
                             >
@@ -333,7 +333,7 @@ const MapControls: React.FC = () => {
                             <div>
                                 <div className="flex justify-between text-ui-10 text-app-muted mb-2 uppercase font-bold tracking-wider">
                                     <span>{t('map.sidebar.magic.type')}</span>
-                                    <button onClick={handleClearMagic} className="text-rose-500 hover:text-rose-400">{t('map.sidebar.magic.clearAll')}</button>
+                                    <button onClick={handleClearMagic} className="text-etat-danger hover:text-etat-danger">{t('map.sidebar.magic.clearAll')}</button>
                                 </div>
                                 <div className="grid grid-cols-4 gap-1">
                                     {[
@@ -410,7 +410,7 @@ const MapControls: React.FC = () => {
                                                         eff.style === 'arcane' ? '#a855f7' : 
                                                         eff.style === 'darkness' ? '#374151' : '#10b981'
                                                     }} />
-                                                    <span className="text-ui-10 text-slate-300 capitalize truncate font-medium">
+                                                    <span className="text-ui-10 text-app-text capitalize truncate font-medium">
                                                         {t(`map.sidebar.magic.styles.${eff.style}`)} - {
                                                             eff.type === 'circle' ? t('map.sidebar.magic.shapes.circle') :
                                                             eff.type === 'rect' ? t('map.sidebar.magic.shapes.rect') :
@@ -420,7 +420,7 @@ const MapControls: React.FC = () => {
                                                 </div>
                                                 <button 
                                                     onClick={() => removeMagicEffect(eff.id)}
-                                                    className="p-1 text-slate-600 hover:text-rose-500 transition-colors"
+                                                    className="p-1 text-app-subtle hover:text-etat-danger transition-colors"
                                                     title={t('map.sidebar.magic.removeEffect')}
                                                 >
                                                     <Trash2 size={12} />
@@ -437,7 +437,7 @@ const MapControls: React.FC = () => {
 
 
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Danger Zones Section */}
                 <section>
@@ -446,13 +446,13 @@ const MapControls: React.FC = () => {
                         <div className="flex gap-2">
                             <button
                                 onClick={() => gmCustom('danger-preset-editor')}
-                                className="text-ui-9 font-black uppercase tracking-widest text-accent hover:text-white transition-colors"
+                                className="text-ui-9 font-black uppercase tracking-widest text-accent hover:text-app-text transition-colors"
                             >
                                 {t('map.sidebar.danger.managePresets')}
                             </button>
                             <button
                                 onClick={() => gmConfirm(t('map.sidebar.danger.clearConfirm'), clearDangerZones)}
-                                className="text-ui-9 font-black uppercase tracking-widest text-rose-500 hover:text-rose-400 transition-colors"
+                                className="text-ui-9 font-black uppercase tracking-widest text-etat-danger hover:text-etat-danger transition-colors"
                             >
                                 {t('map.sidebar.danger.clearAll')}
                             </button>
@@ -461,8 +461,8 @@ const MapControls: React.FC = () => {
 
                     <div className="flex flex-col gap-2">
                         {currentTool === 'danger' ? (
-                            <div className="bg-rose-500/5 border border-rose-500/20 rounded-lg p-3">
-                                <p className="text-ui-11 text-rose-200/70 mb-3 italic">
+                            <div className="bg-etat-danger/5 border border-etat-danger/20 rounded-lg p-3">
+                                <p className="text-ui-11 text-etat-danger/70 mb-3 italic">
                                     {t('map.sidebar.danger.instruction')}
                                 </p>
                                 
@@ -473,28 +473,28 @@ const MapControls: React.FC = () => {
                                             <button 
                                                 onClick={() => setDangerShape('rect')}
                                                 title={t('map.sidebar.danger.shapes.rect')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'rect' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'rect' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-app-text'}`}
                                             >
                                                 <Square size={16} />
                                             </button>
                                             <button 
                                                 onClick={() => setDangerShape('circle')}
                                                 title={t('map.sidebar.danger.shapes.circle')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'circle' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'circle' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-app-text'}`}
                                             >
                                                 <Circle size={16} />
                                             </button>
                                             <button 
                                                 onClick={() => setDangerShape('cone')}
                                                 title={t('map.sidebar.danger.shapes.cone')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'cone' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'cone' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-app-text'}`}
                                             >
                                                 <Triangle size={16} className="rotate-180" />
                                             </button>
                                             <button 
                                                 onClick={() => setDangerShape('line')}
                                                 title={t('map.sidebar.danger.shapes.line')}
-                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'line' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-slate-200'}`}
+                                                className={`flex-1 flex justify-center p-2 rounded border transition-all ${dangerShape === 'line' ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-muted hover:text-app-text'}`}
                                             >
                                                 <GripHorizontal size={16} />
                                             </button>
@@ -505,7 +505,7 @@ const MapControls: React.FC = () => {
                                     <div className="flex gap-2">
                                         <button 
                                             onClick={() => setAuraOverride(!auraOverride)}
-                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-subtle hover:text-slate-300'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${auraOverride ? 'bg-accent/20 border-accent text-accent' : 'bg-app-bg/50 border-app-border/50 text-app-subtle hover:text-app-text'}`}
                                             title={t('map.sidebar.danger.aura')}
                                         >
                                             <Link size={14} />
@@ -513,7 +513,7 @@ const MapControls: React.FC = () => {
                                         </button>
                                         <button 
                                             onClick={() => setDifficultTerrainOverride(!difficultTerrainOverride)}
-                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${difficultTerrainOverride ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'bg-app-bg/50 border-app-border/50 text-app-subtle hover:text-slate-300'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 p-2 rounded border text-ui-10 font-bold transition-all ${difficultTerrainOverride ? 'bg-etat-succes/20 border-etat-succes text-etat-succes' : 'bg-app-bg/50 border-app-border/50 text-app-subtle hover:text-app-text'}`}
                                             title={t('map.sidebar.danger.terrain')}
                                         >
                                             <Mountain size={14} />
@@ -529,9 +529,9 @@ const MapControls: React.FC = () => {
                                                     type="range" min="1" max="4" step="0.5" 
                                                     value={movementCostOverride}
                                                     onChange={(e) => setMovementCostOverride(parseFloat(e.target.value))}
-                                                    className="w-20 h-1 accent-emerald-500 bg-gray-700 rounded-lg cursor-pointer"
+                                                    className="w-20 h-1 accent-etat-succes bg-app-surface-2 rounded-lg cursor-pointer"
                                                 />
-                                                <span className="text-ui-10 font-mono text-emerald-500">x{movementCostOverride}</span>
+                                                <span className="text-ui-10 font-mono text-etat-succes">x{movementCostOverride}</span>
                                             </div>
                                         </div>
                                     )}
@@ -552,7 +552,7 @@ const MapControls: React.FC = () => {
                                                         }`}
                                                     >
                                                         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: preset.color }} />
-                                                        <span className={`flex-1 text-ui-11 ${isActive ? 'text-accent font-bold' : 'text-slate-300'}`}>
+                                                        <span className={`flex-1 text-ui-11 ${isActive ? 'text-accent font-bold' : 'text-app-text'}`}>
                                                             {preset.name}
                                                             <span className="ml-2 inline-flex gap-1 opacity-50">
                                                                 {preset.isAura && <Link size={10} />}
@@ -562,7 +562,7 @@ const MapControls: React.FC = () => {
                                                         {isActive ? (
                                                             <Zap size={14} className="text-accent animate-pulse" />
                                                         ) : (
-                                                            <PlusCircle size={14} className="text-slate-600 group-hover:text-accent" />
+                                                            <PlusCircle size={14} className="text-app-subtle group-hover:text-accent" />
                                                         )}
                                                     </button>
                                                 );
@@ -577,14 +577,14 @@ const MapControls: React.FC = () => {
                                     <div key={zone.id} className="bg-app-bg/30 border border-app-border rounded p-2 flex flex-col gap-1 group">
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: zone.color }} />
-                                            <span className="text-ui-11 text-slate-300 flex-1 truncate">{zone.name}</span>
+                                            <span className="text-ui-11 text-app-text flex-1 truncate">{zone.name}</span>
                                             <div className="flex gap-1">
                                                 {zone.isAura && <Link size={12} className="text-accent" />}
-                                                {zone.isDifficultTerrain && <Mountain size={12} className="text-emerald-500" />}
+                                                {zone.isDifficultTerrain && <Mountain size={12} className="text-etat-succes" />}
                                             </div>
                                             <button 
                                                 onClick={() => removeDangerZone(zone.id)}
-                                                className="text-slate-600 hover:text-rose-500 p-1 opacity-0 group-hover:opacity-100 transition-all"
+                                                className="text-app-subtle hover:text-etat-danger p-1 opacity-0 group-hover:opacity-100 transition-all"
                                             >
                                                 <Trash2 size={14} />
                                             </button>
@@ -598,7 +598,7 @@ const MapControls: React.FC = () => {
                                     </div>
                                 ))}
                                 {dangerZones.length === 0 && (
-                                    <p className="text-center py-4 text-ui-11 text-slate-600 italic border border-dashed border-app-border rounded">
+                                    <p className="text-center py-4 text-ui-11 text-app-subtle italic border border-dashed border-app-border rounded">
                                         {t('map.sidebar.danger.noActiveZones')}
                                     </p>
                                 )}
@@ -607,7 +607,7 @@ const MapControls: React.FC = () => {
                     </div>
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Weather Section */}
                 <section>
@@ -654,24 +654,24 @@ const MapControls: React.FC = () => {
                                 title={t('map.sidebar.weather.intensity')}
                                 aria-label={t('map.sidebar.weather.intensity')}
                                 onChange={(e) => setWeather(weatherType, parseFloat(e.target.value))}
-                                className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
+                                className="w-full h-1 accent-accent bg-app-surface-2 rounded-lg cursor-pointer"
                             />
                         </div>
                     )}
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Time of Day Section */}
                 <section>
                     <h3 className="text-xs text-app-muted uppercase tracking-wider mb-3 font-bold px-1">{t('map.sidebar.time.title')}</h3>
                     <div className="flex gap-1.5 mb-2">
                         {[
-                            { id: 'dawn', icon: Sunrise, label: t('map.sidebar.time.dawn'), color: 'text-orange-400' },
-                            { id: 'day', icon: Sun, label: t('map.sidebar.time.day'), color: 'text-yellow-400' },
+                            { id: 'dawn', icon: Sunrise, label: t('map.sidebar.time.dawn'), color: 'text-etat-alerte' },
+                            { id: 'day', icon: Sun, label: t('map.sidebar.time.day'), color: 'text-gm-gold' },
                             { id: 'overcast', icon: Cloudy, label: t('map.sidebar.time.overcast'), color: 'text-app-muted' },
-                            { id: 'dusk', icon: Sunset, label: t('map.sidebar.time.dusk'), color: 'text-purple-400' },
-                            { id: 'night', icon: Moon, label: t('map.sidebar.time.night'), color: 'text-indigo-400' },
+                            { id: 'dusk', icon: Sunset, label: t('map.sidebar.time.dusk'), color: 'text-gm-violet' },
+                            { id: 'night', icon: Moon, label: t('map.sidebar.time.night'), color: 'text-etat-info' },
                         ].map((t) => {
                             const isActive = timeOfDay === t.id;
                             const Icon = t.icon;
@@ -694,7 +694,7 @@ const MapControls: React.FC = () => {
                     </div>
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Grid Settings */}
                 <section>
@@ -707,7 +707,7 @@ const MapControls: React.FC = () => {
                                 checked={isGridEnabled} 
                                 onChange={(e) => setGridEnabled(e.target.checked)} 
                             />
-                            <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent"></div>
+                            <div className="w-9 h-5 bg-app-surface-2 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-fixe-blanc after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-fixe-blanc after:border-app-muted after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent"></div>
                         </label>
                     </div>
 
@@ -726,7 +726,7 @@ const MapControls: React.FC = () => {
                                     value={gridSize}
                                     title={t('map.sidebar.grid.size')}
                                     onChange={(e) => setGridSize(parseInt(e.target.value))}
-                                    className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
+                                    className="w-full h-1 accent-accent bg-app-surface-2 rounded-lg cursor-pointer"
                                 />
                             </div>
                             <div className="flex flex-col gap-1">
@@ -742,7 +742,7 @@ const MapControls: React.FC = () => {
                                     value={gridOpacity}
                                     title={t('map.sidebar.grid.opacity')}
                                     onChange={(e) => setGridOpacity(parseFloat(e.target.value))}
-                                    className="w-full h-1 accent-accent bg-gray-700 rounded-lg cursor-pointer"
+                                    className="w-full h-1 accent-accent bg-app-surface-2 rounded-lg cursor-pointer"
                                 />
                             </div>
 
@@ -774,7 +774,7 @@ const MapControls: React.FC = () => {
                                         type="button"
                                         onClick={() => setGridColor('#ffffff')}
                                         title={t('map.sidebar.grid.color_reset')}
-                                        className="text-ui-9 uppercase tracking-wider text-slate-600 hover:text-slate-300 transition-colors"
+                                        className="text-ui-9 uppercase tracking-wider text-app-subtle hover:text-app-text transition-colors"
                                     >
                                         {t('map.sidebar.grid.color_reset_short')}
                                     </button>
@@ -784,7 +784,7 @@ const MapControls: React.FC = () => {
                     )}
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Combat Turn Section */}
                 <section>
@@ -804,7 +804,7 @@ const MapControls: React.FC = () => {
                         <button
                             disabled={combatants.length === 0}
                             onClick={prevTurn}
-                            className="flex items-center justify-center gap-2 py-2 bg-app-bg hover:bg-app-surface border border-app-border rounded-lg text-xs font-bold text-slate-300 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                            className="flex items-center justify-center gap-2 py-2 bg-app-bg hover:bg-app-surface border border-app-border rounded-lg text-xs font-bold text-app-text disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
                         >
                             <SkipBack size={14} />
                             <span>{t('map.sidebar.combat.prev')}</span>
@@ -820,7 +820,7 @@ const MapControls: React.FC = () => {
                     </div>
                 </section>
 
-                <hr className="border-gray-800" />
+                <hr className="border-app-border" />
 
                 {/* Tokens Section */}
                 <section className="flex-1 flex flex-col min-h-[300px]">
@@ -830,7 +830,7 @@ const MapControls: React.FC = () => {
                         <HorsDePortee regime={regime} libelle={t('map.sidebar.combatants.clear')} compact icone={<Trash2 size={14} />}>
                             <button
                                 onClick={handleClearTokens}
-                                className={`p-1 rounded transition-colors ${tokens.length > 0 ? 'text-gray-400 hover:text-rose-500' : 'text-gray-700 cursor-not-allowed'}`}
+                                className={`p-1 rounded transition-colors ${tokens.length > 0 ? 'text-app-muted hover:text-etat-danger' : 'text-app-subtle cursor-not-allowed'}`}
                                 title={t('map.sidebar.combatants.clear')}
                                 disabled={tokens.length === 0}
                             >
@@ -842,9 +842,9 @@ const MapControls: React.FC = () => {
                     <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2">
                         {combatants.length === 0 ? (
                         <div className="bg-app-bg/10 border border-app-border border-dashed rounded-lg flex flex-col items-center justify-center p-4 text-center">
-                                <Users size={32} className="text-gray-600 mb-2" />
-                                <p className="text-sm text-gray-500">{t('map.sidebar.combatants.none')}</p>
-                                <p className="text-xs text-gray-600 mt-1">{t('map.sidebar.combatants.hint')}</p>
+                                <Users size={32} className="text-app-subtle mb-2" />
+                                <p className="text-sm text-app-muted">{t('map.sidebar.combatants.none')}</p>
+                                <p className="text-xs text-app-subtle mt-1">{t('map.sidebar.combatants.hint')}</p>
                             </div>
                         ) : (
                             combatants.map(combatant => (
@@ -858,20 +858,20 @@ const MapControls: React.FC = () => {
                             ))
                         )}
                     </div>
-                    <div className="mt-2 text-ui-10 text-gray-500 px-1 border-t border-gray-800 pt-2 text-center">
+                    <div className="mt-2 text-ui-10 text-app-muted px-1 border-t border-app-border pt-2 text-center">
                         {t('map.sidebar.combatants.footer')}
                     </div>
                 </section>
 
                 {/* Audio Controls (Conditional for Videos) */}
                 {isVideo && (
-                    <section className="mt-4 pt-4 border-t border-gray-800 flex flex-col gap-3 px-1">
+                    <section className="mt-4 pt-4 border-t border-app-border flex flex-col gap-3 px-1">
                         <div className="flex items-center justify-between">
                             <span className="text-ui-10 font-black uppercase tracking-widest text-app-subtle">{t('map.sidebar.audio.title')}</span>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setMapMuted(!isMapMuted)}
-                                    className={`p-1.5 rounded-lg transition-all ${isMapMuted ? 'text-rose-500 bg-rose-500/10' : 'text-accent bg-accent/10 hover:bg-accent/20'}`}
+                                    className={`p-1.5 rounded-lg transition-all ${isMapMuted ? 'text-etat-danger bg-etat-danger/10' : 'text-accent bg-accent/10 hover:bg-accent/20'}`}
                                     title={isMapMuted ? t('map.sidebar.audio.unmute') : t('map.sidebar.audio.mute')}
                                 >
                                     {isMapMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
@@ -888,7 +888,7 @@ const MapControls: React.FC = () => {
                                     step="0.01"
                                     value={mapVolume}
                                     onChange={(e) => setMapVolume(parseFloat(e.target.value))}
-                                    className="w-full accent-accent h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer"
+                                    className="w-full accent-accent h-1.5 bg-app-surface-2 rounded-lg appearance-none cursor-pointer"
                                 />
                             </div>
                             <span className="text-ui-10 font-bold text-app-muted tabular-nums w-8 text-right">
@@ -907,7 +907,7 @@ const MapControls: React.FC = () => {
                 )}
 
                 {/* Projection Action */}
-                <section className="mt-auto pt-4 border-t border-gray-800 flex flex-col gap-3">
+                <section className="mt-auto pt-4 border-t border-app-border flex flex-col gap-3">
                     {projectionTarget && (
                         <div className="px-1 flex flex-col gap-2">
                             <div className="w-full flex flex-col items-center justify-center gap-1 p-3 bg-accent/10 border border-accent/20 rounded-xl text-accent shadow-inner">
@@ -924,7 +924,7 @@ const MapControls: React.FC = () => {
                                     }
                                     clearProjectedState();
                                 }}
-                                className="w-full py-1 text-ui-10 text-app-subtle hover:text-rose-400 transition-colors uppercase font-bold tracking-widest"
+                                className="w-full py-1 text-ui-10 text-app-subtle hover:text-etat-danger transition-colors uppercase font-bold tracking-widest"
                             >
                                 {t('map.sidebar.projection.stop')}
                             </button>
@@ -938,7 +938,7 @@ const MapControls: React.FC = () => {
                             className={`group flex items-center gap-3 p-4 border rounded-xl transition-all shadow-lg ${
                                 isAnalyzing 
                                 ? 'bg-gm-violet/20 border-gm-violet/40 text-gm-violet animate-pulse' 
-                                : 'bg-gm-violet/10 border-gm-violet/30 text-gm-violet hover:bg-gm-violet hover:text-white active:scale-95'
+                                : 'bg-gm-violet/10 border-gm-violet/30 text-gm-violet hover:bg-gm-violet hover:text-app-bg active:scale-95'
                             }`}
                         >
                             <Brain className={`shrink-0 ${isAnalyzing ? 'animate-spin-slow' : 'group-hover:scale-110 transition-transform'}`} size={20} />
@@ -954,7 +954,7 @@ const MapControls: React.FC = () => {
                             onClick={() => gmCustom('map-projection-select')}
                             className={`group flex flex-col items-center justify-center gap-2 p-4 border rounded-xl transition-all shadow-lg ${projectionTarget
                                 ? 'bg-app-surface/50 border-app-border text-app-muted'
-                                : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-100 hover:bg-indigo-500/20 active:scale-95'
+                                : 'bg-etat-info/10 border-etat-info/30 text-app-text hover:bg-etat-info/20 active:scale-95'
                                 }`}
                         >
                             <Cast className={projectionTarget ? 'text-app-subtle' : 'text-accent group-hover:scale-110 transition-transform'} />
@@ -965,7 +965,7 @@ const MapControls: React.FC = () => {
                             className="flex flex-col items-center justify-center gap-2 p-4 bg-app-surface/40 hover:bg-app-surface border border-app-border/50 rounded-xl transition-all group shadow-lg"
                         >
                             <Maximize className="text-app-muted group-hover:scale-110 transition-transform" />
-                            <span className="text-ui-10 font-bold uppercase tracking-tight text-white/80">{t('map.sidebar.projection.resetView')}</span>
+                            <span className="text-ui-10 font-bold uppercase tracking-tight text-app-text/80">{t('map.sidebar.projection.resetView')}</span>
                         </button>
                     </div>
                 </section>
@@ -1007,7 +1007,7 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-full flex items-center justify-between gap-3 bg-app-surface/30 border rounded-xl px-4 py-2.5 text-ui-8 font-black uppercase tracking-widest transition-all ${isOpen ? 'border-accent text-white shadow-glow-accent/20' : 'border-app-border/50 text-app-subtle hover:border-app-border/10 hover:text-slate-300'}`}
+                className={`w-full flex items-center justify-between gap-3 bg-app-surface/30 border rounded-xl px-4 py-2.5 text-ui-8 font-black uppercase tracking-widest transition-all ${isOpen ? 'border-accent text-app-text shadow-glow-accent/20' : 'border-app-border/50 text-app-subtle hover:border-app-border/10 hover:text-app-text'}`}
             >
                 <span className="truncate max-w-[140px]">{currentLabel}</span>
                 <ChevronDown size={12} className={`transition-transform duration-300 ${isOpen ? 'rotate-180 text-accent' : ''}`} />
@@ -1023,19 +1023,19 @@ const DeviceSelector = ({ currentId, onSelect }: { currentId: string, onSelect: 
                         <div className="max-h-48 overflow-y-auto custom-scrollbar flex flex-col gap-0.5">
                             <button
                                 onClick={() => { onSelect('default'); setIsOpen(false); }}
-                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${currentId === 'default' ? 'bg-accent/20 text-white' : 'text-app-muted hover:bg-app-surface/5 hover:text-white'}`}
+                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all ${currentId === 'default' ? 'bg-accent/20 text-app-text' : 'text-app-muted hover:bg-app-surface/5 hover:text-app-text'}`}
                             >
                                 <span>{t('map.sidebar.audio.defaultSpeaker')}</span>
                                 {currentId === 'default' && <Check size={10} className="text-gm-violet" />}
                             </button>
                             
-                            <div className="h-px bg-white/5 my-0.5 mx-1" />
+                            <div className="h-px bg-app-text/5 my-0.5 mx-1" />
                             
                             {devices.map((device) => (
                                 <button
                                     key={device.deviceId}
                                     onClick={() => { onSelect(device.deviceId); setIsOpen(false); }}
-                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all text-left ${currentId === device.deviceId ? 'bg-gm-violet/20 text-white' : 'text-app-muted hover:bg-white/5 hover:text-white'}`}
+                                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-ui-8 font-black uppercase tracking-widest transition-all text-left ${currentId === device.deviceId ? 'bg-gm-violet/20 text-app-text' : 'text-app-muted hover:bg-app-text/5 hover:text-app-text'}`}
                                 >
                                     <span className="truncate pr-4">{getAudioLabel(device.deviceId)}</span>
                                     {currentId === device.deviceId && <Check size={10} className="text-gm-violet" />}
@@ -1076,7 +1076,7 @@ const MapCombatantItem: React.FC<MapCombatantItemProps> = ({ combatant, tokens, 
                         <span className="text-ui-10 uppercase text-gm-crimson">{combatant.name.substring(0, 2)}</span>
                     </div>
                 )}
-                <span className="text-sm text-slate-200 truncate">{combatant.name}</span>
+                <span className="text-sm text-app-text truncate">{combatant.name}</span>
             </div>
             <button
                 disabled={isOnMap}
@@ -1091,7 +1091,7 @@ const MapCombatantItem: React.FC<MapCombatantItemProps> = ({ combatant, tokens, 
                     });
                     setTool('move_token');
                 }}
-                className={`p-1.5 rounded transition-colors ${isOnMap ? 'text-gray-600 cursor-not-allowed' : 'text-gm-emerald hover:bg-gm-emerald/20 hover:text-green-400'}`}
+                className={`p-1.5 rounded transition-colors ${isOnMap ? 'text-app-subtle cursor-not-allowed' : 'text-gm-emerald hover:bg-gm-emerald/20 hover:text-etat-succes'}`}
                 title={isOnMap ? t('map.sidebar.combatants.alreadyOnMap') : t('map.sidebar.combatants.addToMap')}
             >
                 <PlusCircle size={18} />

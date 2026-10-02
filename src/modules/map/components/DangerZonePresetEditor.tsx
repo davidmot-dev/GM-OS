@@ -61,18 +61,18 @@ const DangerZonePresetEditor: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col md:flex-row h-full min-h-[600px] bg-[#060e20] text-[#dee5ff] font-['Space_Grotesk'] overflow-hidden">
+        <div className="flex flex-col md:flex-row h-full min-h-[600px] bg-app-bg text-app-text font-['Space_Grotesk'] overflow-hidden">
             {/* Sidebar: Preset List */}
-            <div className="w-full md:w-72 border-r border-[#192540] flex flex-col bg-[#091328]/80 backdrop-blur-xl">
-                <div className="p-6 border-b border-[#192540] flex items-center justify-between">
+            <div className="w-full md:w-72 border-r border-app-surface-2 flex flex-col bg-app-bg/80 backdrop-blur-xl">
+                <div className="p-6 border-b border-app-surface-2 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Layers size={18} className="text-cyan-400" />
-                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400/80">{t('map.dangerEditor.models')}</span>
+                        <Layers size={18} className="text-gm-cyan" />
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-gm-cyan/80">{t('map.dangerEditor.models')}</span>
                     </div>
                     <button 
                         onClick={handleCreate}
                         title={t('map.dangerEditor.newModel') as string}
-                        className="p-2 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/20 rounded-lg transition-all active:scale-95"
+                        className="p-2 bg-gm-cyan/10 text-gm-cyan hover:bg-gm-cyan/20 border border-gm-cyan/20 rounded-lg transition-all active:scale-95"
                     >
                         <Plus size={16} />
                     </button>
@@ -85,38 +85,38 @@ const DangerZonePresetEditor: React.FC = () => {
                             onClick={() => setSelectedPresetId(preset.id)}
                             className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all relative group overflow-hidden ${
                                 selectedPresetId === preset.id 
-                                ? 'bg-cyan-500/10 border border-cyan-500/30' 
-                                : 'hover:bg-[#192540]/50 border border-transparent text-app-muted hover:text-white'
+                                ? 'bg-gm-cyan/10 border border-gm-cyan/30' 
+                                : 'hover:bg-app-surface-2/50 border border-transparent text-app-muted hover:text-app-text'
                             }`}
                         >
                             {/* Accent Glow for selected */}
                             {selectedPresetId === preset.id && (
-                                <div className="absolute left-0 top-0 w-1 h-full bg-cyan-400 shadow-[0_0_10px_rgba(83,221,252,0.8)]" />
+                                <div className="absolute left-0 top-0 w-1 h-full bg-gm-cyan shadow-[0_0_10px_rgba(83,221,252,0.8)]" />
                             )}
                             
                             <div 
-                                className="w-4 h-4 rounded-full border border-white/10 shrink-0 shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
+                                className="w-4 h-4 rounded-full border border-app-text/10 shrink-0 shadow-[0_0_8px_rgba(255,255,255,0.1)]" 
                                 style={{ backgroundColor: preset.color } as React.CSSProperties} 
                             />
                             <div className="flex flex-col items-start min-w-0 flex-1">
-                                <span className={`text-sm font-bold truncate w-full ${selectedPresetId === preset.id ? 'text-white' : ''}`}>
+                                <span className={`text-sm font-bold truncate w-full ${selectedPresetId === preset.id ? 'text-app-text' : ''}`}>
                                     {preset.name}
                                 </span>
                                 {preset.isAura && (
-                                    <span className="text-ui-10 text-cyan-400/60 uppercase font-black tracking-tighter">{t('map.dangerEditor.auraActive')}</span>
+                                    <span className="text-ui-10 text-gm-cyan/60 uppercase font-black tracking-tighter">{t('map.dangerEditor.auraActive')}</span>
                                 )}
                             </div>
-                            <ChevronRight size={14} className={`transition-all ${selectedPresetId === preset.id ? 'text-cyan-400 translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'}`} />
+                            <ChevronRight size={14} className={`transition-all ${selectedPresetId === preset.id ? 'text-gm-cyan translate-x-0' : 'opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'}`} />
                         </button>
                     ))}
                 </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col bg-[#060e20] relative overflow-hidden">
+            <div className="flex-1 flex flex-col bg-app-bg relative overflow-hidden">
                 {/* Background Decorative Gradients */}
-                <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
-                <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+                <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-gm-cyan/5 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-etat-info/5 blur-[100px] rounded-full pointer-events-none" />
 
                 {selectedPreset ? (
                     <div className="flex-1 overflow-y-auto custom-scrollbar p-8">
@@ -124,28 +124,28 @@ const DangerZonePresetEditor: React.FC = () => {
                         <div className="flex items-start justify-between mb-10">
                             <div className="space-y-2">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2.5 bg-cyan-500/10 rounded-xl border border-cyan-500/20">
-                                        <Settings2 size={24} className="text-cyan-400" />
+                                    <div className="p-2.5 bg-gm-cyan/10 rounded-xl border border-gm-cyan/20">
+                                        <Settings2 size={24} className="text-gm-cyan" />
                                     </div>
-                                    <h2 className="text-3xl font-black text-white tracking-tight leading-none uppercase italic">
+                                    <h2 className="text-3xl font-black text-app-text tracking-tight leading-none uppercase italic">
                                         {selectedPreset.name}
                                     </h2>
                                 </div>
                                 <div className="flex items-center gap-4 text-ui-10 font-bold text-app-subtle uppercase tracking-widest pl-1">
-                                    <span className="flex items-center gap-1.5 border-r border-slate-800 pr-4">
-                                        <Activity size={12} className="text-cyan-500/50" />
+                                    <span className="flex items-center gap-1.5 border-r border-app-border pr-4">
+                                        <Activity size={12} className="text-gm-cyan/50" />
                                         Nexus ID: <span className="text-app-muted">{selectedPreset.id.substring(0, 8)}...</span>
                                     </span>
                                     <span className="flex items-center gap-1.5">
-                                        <Shield size={12} className="text-emerald-500/50" />
-                                        Statut: <span className="text-emerald-400">Synchronisé</span>
+                                        <Shield size={12} className="text-etat-succes/50" />
+                                        Statut: <span className="text-etat-succes">Synchronisé</span>
                                     </span>
                                 </div>
                             </div>
                             
                             <button 
                                 onClick={() => handleDelete(selectedPreset.id)}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-rose-500/5 text-rose-500 hover:bg-rose-500/15 border border-rose-500/20 rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+                                className="flex items-center gap-2 px-5 py-2.5 bg-etat-danger/5 text-etat-danger hover:bg-etat-danger/15 border border-etat-danger/20 rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                             >
                                 <Trash2 size={14} />
                                 {t('map.dangerEditor.delete')}
@@ -157,24 +157,24 @@ const DangerZonePresetEditor: React.FC = () => {
                             <section className="space-y-6">
                                 <SectionHeader icon={Palette} title={t('map.dangerEditor.visualConfig')} />
                                 
-                                <div className="p-6 bg-[#0f1930]/40 backdrop-blur-md rounded-2xl border border-[#192540] relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-3xl pointer-events-none group-hover:bg-cyan-500/10 transition-colors" />
+                                <div className="p-6 bg-app-surface/40 backdrop-blur-md rounded-2xl border border-app-surface-2 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-gm-cyan/5 blur-3xl pointer-events-none group-hover:bg-gm-cyan/10 transition-colors" />
                                     
                                     <div className="space-y-6">
                                         <div className="space-y-2">
-                                            <label className="text-ui-10 font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.modelName')}</label>
+                                            <label className="text-ui-10 font-black text-gm-cyan/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.modelName')}</label>
                                             <input 
                                                 type="text" 
                                                 value={selectedPreset.name}
                                                 onChange={(e) => handleUpdate({ name: e.target.value })}
-                                                className="w-full bg-[#060e20] border-b-2 border-[#40485d] focus:border-cyan-400 px-4 py-3 text-lg font-bold text-white transition-all outline-none rounded-t-lg"
+                                                className="w-full bg-app-bg border-b-2 border-app-border focus:border-gm-cyan px-4 py-3 text-lg font-bold text-app-text transition-all outline-none rounded-t-lg"
                                                 placeholder={t('map.dangerEditor.placeholderName') as string}
                                             />
                                         </div>
                                         
                                         <div className="space-y-2">
-                                            <label className="text-ui-10 font-black text-cyan-400/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.signature')}</label>
-                                            <div className="flex gap-4 p-4 bg-[#060e20]/50 rounded-xl border border-[#192540]">
+                                            <label className="text-ui-10 font-black text-gm-cyan/60 uppercase tracking-widest ml-1">{t('map.dangerEditor.signature')}</label>
+                                            <div className="flex gap-4 p-4 bg-app-bg/50 rounded-xl border border-app-surface-2">
                                                 <div className="relative">
                                                     <input 
                                                         type="color" 
@@ -183,14 +183,14 @@ const DangerZonePresetEditor: React.FC = () => {
                                                         title={t('map.dangerEditor.signature') as string}
                                                         className="w-14 h-14 bg-transparent cursor-pointer rounded-lg overflow-hidden border-none p-0"
                                                     />
-                                                    <div className="absolute inset-0 pointer-events-none rounded-lg ring-1 ring-white/10 ring-inset" />
+                                                    <div className="absolute inset-0 pointer-events-none rounded-lg ring-1 ring-app-text/10 ring-inset" />
                                                 </div>
                                                 <div className="flex flex-col justify-center gap-1">
                                                     <input 
                                                         type="text" 
                                                         value={selectedPreset.color}
                                                         onChange={(e) => handleUpdate({ color: e.target.value })}
-                                                        className="bg-transparent text-xl font-mono font-black text-white outline-none uppercase tracking-tighter w-28"
+                                                        className="bg-transparent text-xl font-mono font-black text-app-text outline-none uppercase tracking-tighter w-28"
                                                         title={t('map.dangerEditor.hexCode') as string}
                                                     />
                                                     <span className="text-ui-9 text-app-subtle font-bold uppercase tracking-widest italic">{t('map.dangerEditor.hexCode')}</span>
@@ -200,8 +200,8 @@ const DangerZonePresetEditor: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <SectionHeader icon={AlertCircle} title={t('map.dangerEditor.tacticalProps')} color="text-emerald-400" />
-                                <div className="p-6 bg-[#0f1930]/40 backdrop-blur-md rounded-2xl border border-[#192540] space-y-6">
+                                <SectionHeader icon={AlertCircle} title={t('map.dangerEditor.tacticalProps')} color="text-etat-succes" />
+                                <div className="p-6 bg-app-surface/40 backdrop-blur-md rounded-2xl border border-app-surface-2 space-y-6">
                                     <TacticalSwitch 
                                         label={t('map.dangerEditor.auraLabel')} 
                                         description={t('map.dangerEditor.auraDesc')}
@@ -209,7 +209,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                         onToggle={() => handleUpdate({ isAura: !selectedPreset.isAura })}
                                     />
 
-                                    <div className="h-px bg-slate-800/50" />
+                                    <div className="h-px bg-app-surface-2/50" />
 
                                     <TacticalSwitch 
                                         label={t('map.dangerEditor.movementLabel')} 
@@ -222,8 +222,8 @@ const DangerZonePresetEditor: React.FC = () => {
                                     {selectedPreset.isDifficultTerrain && (
                                         <div className="space-y-4 pt-2 animate-in slide-in-from-top-4 fade-in duration-300">
                                             <div className="flex justify-between items-center mb-1">
-                                                <label className="text-ui-10 font-black text-emerald-400/60 uppercase tracking-widest">{t('map.dangerEditor.multiCost')}</label>
-                                                <span className="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-lg text-xs font-black italic">
+                                                <label className="text-ui-10 font-black text-etat-succes/60 uppercase tracking-widest">{t('map.dangerEditor.multiCost')}</label>
+                                                <span className="bg-etat-succes/10 text-etat-succes px-2 py-0.5 rounded-lg text-xs font-black italic">
                                                     x{selectedPreset.movementCost || 2.0}
                                                 </span>
                                             </div>
@@ -236,7 +236,7 @@ const DangerZonePresetEditor: React.FC = () => {
                                                     value={selectedPreset.movementCost || 2.0}
                                                     onChange={(e) => handleUpdate({ movementCost: parseFloat(e.target.value) })}
                                                     title={t('map.dangerEditor.multiCost') as string}
-                                                    className="w-full accent-emerald-500 hover:accent-emerald-400 transition-all cursor-pointer"
+                                                    className="w-full accent-etat-succes hover:accent-etat-succes transition-all cursor-pointer"
                                                 />
                                             </div>
                                             <div className="flex justify-between text-ui-8 font-bold text-app-subtle uppercase">
@@ -250,9 +250,9 @@ const DangerZonePresetEditor: React.FC = () => {
 
                             {/* Right Column: Interaction & Audio */}
                             <section className="space-y-6">
-                                <SectionHeader icon={Zap} title={t('map.dangerEditor.domotics')} color="text-amber-400" />
+                                <SectionHeader icon={Zap} title={t('map.dangerEditor.domotics')} color="text-etat-alerte" />
                                 
-                                <div className="p-6 bg-[#0f1930]/40 backdrop-blur-md rounded-2xl border border-[#192540] space-y-6">
+                                <div className="p-6 bg-app-surface/40 backdrop-blur-md rounded-2xl border border-app-surface-2 space-y-6">
                                     <ObsidianSelect 
                                         label={t('map.dangerEditor.lightScene')}
                                         icon={Lightbulb}
@@ -285,13 +285,13 @@ const DangerZonePresetEditor: React.FC = () => {
                                 </div>
 
                                 {/* Tips / System Info */}
-                                <div className="p-6 bg-[#0f1930]/20 rounded-2xl border border-[#192540] flex gap-4 relative overflow-hidden">
-                                     <div className="absolute top-0 left-0 w-1 h-full bg-amber-500/30" />
-                                     <div className="p-3 bg-amber-500/10 rounded-xl h-fit">
-                                         <Sparkles className="text-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]" size={18} />
+                                <div className="p-6 bg-app-surface/20 rounded-2xl border border-app-surface-2 flex gap-4 relative overflow-hidden">
+                                     <div className="absolute top-0 left-0 w-1 h-full bg-etat-alerte/30" />
+                                     <div className="p-3 bg-etat-alerte/10 rounded-xl h-fit">
+                                         <Sparkles className="text-etat-alerte shadow-[0_0_10px_rgba(251,191,36,0.5)]" size={18} />
                                      </div>
-                                     <div className="space-y-2 text-slate-300">
-                                         <p className="text-ui-10 font-black text-amber-400 uppercase tracking-widest pl-1">{t('map.dangerEditor.protocol')}</p>
+                                     <div className="space-y-2 text-app-text">
+                                         <p className="text-ui-10 font-black text-etat-alerte uppercase tracking-widest pl-1">{t('map.dangerEditor.protocol')}</p>
                                          <p className="text-xs leading-relaxed italic opacity-80">
                                             {t('map.dangerEditor.protocolDesc')}
                                          </p>
@@ -301,10 +301,10 @@ const DangerZonePresetEditor: React.FC = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="h-full flex flex-col items-center justify-center text-slate-600 gap-6 animate-in fade-in zoom-in duration-500">
-                        <div className="p-8 bg-cyan-500/5 rounded-full border border-cyan-500/10 relative">
-                            <Layers size={84} className="opacity-20 text-cyan-400" />
-                            <div className="absolute inset-0 animate-pulse bg-cyan-500/5 rounded-full blur-2xl" />
+                    <div className="h-full flex flex-col items-center justify-center text-app-subtle gap-6 animate-in fade-in zoom-in duration-500">
+                        <div className="p-8 bg-gm-cyan/5 rounded-full border border-gm-cyan/10 relative">
+                            <Layers size={84} className="opacity-20 text-gm-cyan" />
+                            <div className="absolute inset-0 animate-pulse bg-gm-cyan/5 rounded-full blur-2xl" />
                         </div>
                         <div className="text-center space-y-2">
                             <h3 className="text-xl font-bold text-app-muted uppercase tracking-[0.3em]">{t('map.dangerEditor.initRequired')}</h3>
@@ -312,7 +312,7 @@ const DangerZonePresetEditor: React.FC = () => {
                         </div>
                         <button 
                             onClick={handleCreate}
-                            className="group flex items-center gap-3 px-8 py-3 bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/30 rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+                            className="group flex items-center gap-3 px-8 py-3 bg-gm-cyan/10 text-gm-cyan hover:bg-gm-cyan/20 border border-gm-cyan/30 rounded-2xl font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                         >
                             <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
                             {t('map.dangerEditor.newMatrix')}
@@ -326,9 +326,9 @@ const DangerZonePresetEditor: React.FC = () => {
 
 /* --- Internal Modular Sub-components --- */
 
-const SectionHeader = ({ icon: Icon, title, color = "text-cyan-400" }: { icon: React.ElementType, title: string, color?: string }) => (
+const SectionHeader = ({ icon: Icon, title, color = "text-gm-cyan" }: { icon: React.ElementType, title: string, color?: string }) => (
     <div className="flex items-center gap-2 mb-2 pl-1">
-        <div className={`p-1.5 rounded-lg bg-white/5 ${color}`}>
+        <div className={`p-1.5 rounded-lg bg-app-text/5 ${color}`}>
             <Icon size={14} />
         </div>
         <h3 className={`text-ui-10 font-black uppercase tracking-[0.25em] ${color}`}>{title}</h3>
@@ -343,19 +343,19 @@ const TacticalSwitch = ({ label, description, active, onToggle, color = "cyan" }
     color?: 'cyan' | 'emerald' | 'amber'
 }) => {
     const accents = {
-        cyan: 'bg-cyan-500 shadow-[0_0_15px_rgba(83,221,252,0.4)]',
-        emerald: 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]',
-        amber: 'bg-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
+        cyan: 'bg-gm-cyan shadow-[0_0_15px_rgba(83,221,252,0.4)]',
+        emerald: 'bg-etat-succes shadow-[0_0_15px_rgba(16,185,129,0.4)]',
+        amber: 'bg-etat-alerte shadow-[0_0_15px_rgba(245,158,11,0.4)]'
     };
 
     return (
         <div className="flex items-center justify-between group cursor-pointer" onClick={onToggle}>
             <div className="space-y-1">
-                <label className="text-sm font-black text-white group-hover:text-cyan-400 transition-colors uppercase tracking-wider">{label}</label>
+                <label className="text-sm font-black text-app-text group-hover:text-gm-cyan transition-colors uppercase tracking-wider">{label}</label>
                 <p className="text-ui-10 text-app-subtle font-bold italic">{description}</p>
             </div>
-            <div className={`w-14 h-7 p-1 rounded-full transition-all duration-300 flex items-center ${active ? accents[color] : 'bg-[#060e20] border border-[#40485d]'}`}>
-                <div className={`w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-sm ${active ? 'translate-x-[26px]' : 'translate-x-0'}`} />
+            <div className={`w-14 h-7 p-1 rounded-full transition-all duration-300 flex items-center ${active ? accents[color] : 'bg-app-bg border border-app-border'}`}>
+                <div className={`w-5 h-5 bg-fixe-blanc rounded-full transition-all duration-300 shadow-sm ${active ? 'translate-x-[26px]' : 'translate-x-0'}`} />
             </div>
         </div>
     );
@@ -370,10 +370,10 @@ const ObsidianSelect = ({
     const selectedOption = options.find(o => o.id === value);
 
     const accentClasses: Record<string, string> = {
-        cyan: 'text-cyan-400 border-cyan-500/20',
-        amber: 'text-amber-400 border-amber-500/20',
-        emerald: 'text-emerald-400 border-emerald-500/20',
-        blue: 'text-blue-400 border-blue-500/20'
+        cyan: 'text-gm-cyan border-gm-cyan/20',
+        amber: 'text-etat-alerte border-etat-alerte/20',
+        emerald: 'text-etat-succes border-etat-succes/20',
+        blue: 'text-etat-info border-etat-info/20'
     };
 
     return (
@@ -385,22 +385,22 @@ const ObsidianSelect = ({
             
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between bg-[#060e20] border border-[#192540] hover:border-[#40485d] rounded-xl px-4 py-3 text-sm text-white transition-all outline-none group text-left"
+                className="w-full flex items-center justify-between bg-app-bg border border-app-surface-2 hover:border-app-border rounded-xl px-4 py-3 text-sm text-app-text transition-all outline-none group text-left"
             >
-                <span className={`font-bold truncate ${selectedOption ? 'text-white' : 'text-slate-600 italic'}`}>
+                <span className={`font-bold truncate ${selectedOption ? 'text-app-text' : 'text-app-subtle italic'}`}>
                     {selectedOption ? selectedOption.name : placeholder}
                 </span>
-                <ChevronDown size={14} className={`text-app-subtle group-hover:text-cyan-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`text-app-subtle group-hover:text-gm-cyan transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
-                    <div className="absolute top-full left-0 w-full mt-2 bg-[#0f1930] border border-[#192540] rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    <div className="absolute top-full left-0 w-full mt-2 bg-app-surface border border-app-surface-2 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] z-[101] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                         <div className="max-h-60 overflow-y-auto custom-scrollbar p-1">
                             <button
                                 onClick={() => { onChange(''); setIsOpen(false); }}
-                                className="w-full text-left px-4 py-3 text-xs text-app-subtle hover:bg-[#192540] rounded-lg transition-colors italic font-bold"
+                                className="w-full text-left px-4 py-3 text-xs text-app-subtle hover:bg-app-surface-2 rounded-lg transition-colors italic font-bold"
                             >
                                 {placeholder}
                             </button>
@@ -410,8 +410,8 @@ const ObsidianSelect = ({
                                     onClick={() => { onChange(opt.id); setIsOpen(false); }}
                                     className={`w-full text-left px-4 py-3 text-xs rounded-lg transition-all ${
                                         value === opt.id 
-                                        ? 'bg-cyan-500/20 text-cyan-400 font-black italic' 
-                                        : 'text-slate-300 hover:bg-[#192540] font-bold'
+                                        ? 'bg-gm-cyan/20 text-gm-cyan font-black italic' 
+                                        : 'text-app-text hover:bg-app-surface-2 font-bold'
                                     }`}
                                 >
                                     {opt.name}

@@ -99,14 +99,14 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
     // Calcul de l'aura de santé (similaire à CombatCard).
     // Sans jauge, le jeton garde son anneau neutre : une couleur de santé
     // impliquerait une santé mesurée, et il n'y en a pas.
-    let ringColor = 'ring-gray-600';
+    let ringColor = 'ring-app-border';
     if (combatant) {
         const part = fractionDeVie(combatant);
-        if (estHorsDeCombat(combatant)) ringColor = 'ring-gray-500 opacity-50 grayscale';
-        else if (part === null) ringColor = 'ring-gray-600';
-        else if (part <= 0.25) ringColor = 'ring-red-500';
-        else if (part <= 0.5) ringColor = 'ring-yellow-400';
-        else ringColor = 'ring-green-400';
+        if (estHorsDeCombat(combatant)) ringColor = 'ring-app-border opacity-50 grayscale';
+        else if (part === null) ringColor = 'ring-app-border';
+        else if (part <= 0.25) ringColor = 'ring-etat-danger';
+        else if (part <= 0.5) ringColor = 'ring-etat-alerte';
+        else ringColor = 'ring-etat-succes';
     }
 
     // Modificateur pour le tour actif
@@ -117,7 +117,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
     return (
         <div
             className={`absolute rounded-full shadow-lg border-2 border-app-bg bg-app-surface flex items-center justify-center transition-all group ${isInteractable ? 'cursor-grab hover:ring-4 hover:z-40 active:cursor-grabbing' : 'cursor-default'
-                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-sky-500 shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''} ${displayInvisible ? (isProjectedView ? 'hidden' : 'opacity-40 grayscale-[0.5]') : ''} ${isLockedByOther ? 'opacity-70 saturate-50' : ''}`}
+                } ring-2 ${ringColor} ${isDragging ? 'z-50 ring-4' : 'z-30'} ${isSelected ? 'ring-etat-info shadow-[0_0_20px_rgba(14,165,233,0.5)] z-40' : ''} ${displayInvisible ? (isProjectedView ? 'hidden' : 'opacity-40 grayscale-[0.5]') : ''} ${isLockedByOther ? 'opacity-70 saturate-50' : ''}`}
             style={{
                 left: token.x,
                 top: token.y,
@@ -143,8 +143,8 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
         >
             {/* Lock Indicator */}
             {isLockedByOther && (
-                <div className="absolute inset-0 flex items-center justify-center z-50 bg-red-900/20 rounded-full animate-pulse">
-                    <Lock size={20 * token.size} className="text-red-500 drop-shadow-lg" />
+                <div className="absolute inset-0 flex items-center justify-center z-50 bg-etat-danger/20 rounded-full animate-pulse">
+                    <Lock size={20 * token.size} className="text-etat-danger drop-shadow-lg" />
                 </div>
             )}
 
@@ -156,7 +156,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                             e.stopPropagation();
                             updateToken(token.id, { isVisible: !isVisible });
                         }}
-                        className={`p-1 rounded-full shadow-lg border border-white/20 transition-colors ${isVisible ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-600 hover:bg-gray-500'}`}
+                        className={`p-1 rounded-full shadow-lg border border-app-text/20 transition-colors ${isVisible ? 'bg-etat-info hover:bg-etat-info/85 text-app-bg' : 'bg-app-surface-2 hover:bg-app-muted text-app-text'}`}
                         title={isVisible ? t('map.token.hide') : t('map.token.show')}
                     >
                         {isVisible ? <Eye size={14} /> : <EyeOff size={14} />}
@@ -166,7 +166,7 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
                             e.stopPropagation();
                             removeToken(token.id);
                         }}
-                        className="bg-red-600 text-white p-1 rounded-full shadow-lg hover:bg-red-500 border border-white/20"
+                        className="bg-etat-danger text-app-bg p-1 rounded-full shadow-lg hover:bg-etat-danger/90 border border-app-border"
                         title={t('map.token.remove')}
                     >
                         <Trash2 size={14} />
@@ -183,16 +183,16 @@ const MapTokenNode: React.FC<MapTokenNodeProps> = ({ token, isProjectedView = fa
 
             {/* Status indicators */}
             {combatant && combatant.statuses.length > 0 && (
-                <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 bg-obsidian border border-gray-700 rounded-full px-1.5 py-0.5 flex gap-0.5 pointer-events-none shadow-xl z-20">
+                <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 bg-obsidian border border-app-border rounded-full px-1.5 py-0.5 flex gap-0.5 pointer-events-none shadow-xl z-20">
                     {combatant.statuses.slice(0, 3).map((s: StatusEffect) => (
                         <span key={s.id} className="text-ui-12 leading-none drop-shadow-md">{s.icon}</span>
                     ))}
-                    {combatant.statuses.length > 3 && <span className="text-ui-10 text-gray-400 font-bold ml-0.5">+{combatant.statuses.length - 3}</span>}
+                    {combatant.statuses.length > 3 && <span className="text-ui-10 text-app-muted font-bold ml-0.5">+{combatant.statuses.length - 3}</span>}
                 </div>
             )}
 
             {/* Hover Tooltip (Name + HP) */}
-            <div className="absolute -bottom-8 whitespace-nowrap bg-app-bg/90 backdrop-blur-sm border border-app-border text-xs px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 text-slate-200 shadow-xl font-bold">
+            <div className="absolute -bottom-8 whitespace-nowrap bg-app-bg/90 backdrop-blur-sm border border-app-border text-xs px-2 py-1 rounded opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none z-50 text-app-text shadow-xl font-bold">
                 {combatant ? `${combatant.name} (${combatant.hp}/${combatant.hpMax})` : (token.name || t('map.token.defaultName'))}
             </div>
         </div>

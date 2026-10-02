@@ -197,7 +197,7 @@ const MapCanvas: React.FC = () => {
     return (
         <div 
             ref={containerRef} 
-            className={`relative w-full h-full bg-obsidian-dark overflow-hidden border border-gray-700 rounded-xl ${
+            className={`relative w-full h-full bg-obsidian-dark overflow-hidden border border-app-border rounded-xl ${
                 isPanning ? 'cursor-grabbing' : uiStore.currentTool === 'move_token' ? 'cursor-default' : 'cursor-crosshair'
             }`}
             onMouseDown={handleMouseDown}
@@ -221,7 +221,7 @@ const MapCanvas: React.FC = () => {
             }}
         >
             {!resolvedMapUrl && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-0">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-app-muted z-0">
                     <span className="text-4xl mb-2">🗺️</span>
                     <p className="text-xl font-bold font-display">{t('map.canvas.empty', { defaultValue: 'Aucune carte chargée' })}</p>
                     <p className="text-sm">{t('map.canvas.emptySub', { defaultValue: 'Utilisez le panneau latéral pour importer une image ou vidéo.' })}</p>
@@ -280,7 +280,7 @@ const MapCanvas: React.FC = () => {
 
                 {magicPreview && (
                     <div 
-                        className={`absolute border-2 border-white/50 border-dashed pointer-events-none z-50 ${uiStore.magicShape === 'circle' ? 'rounded-full' : ''}`}
+                        className={`absolute border-2 border-fixe-blanc/50 border-dashed pointer-events-none z-50 ${uiStore.magicShape === 'circle' ? 'rounded-full' : ''}`}
                         style={{
                             left: magicPreview.x,
                             top: magicPreview.y,
@@ -290,7 +290,7 @@ const MapCanvas: React.FC = () => {
                         }}
                     >
                         {uiStore.magicShape === 'rect' && (
-                            <div className="absolute top-0 left-0 border-2 border-white/50 border-dashed"
+                            <div className="absolute top-0 left-0 border-2 border-fixe-blanc/50 border-dashed"
                                  style={{
                                      width: Math.abs(magicPreview.w),
                                      height: Math.abs(magicPreview.h),
@@ -315,7 +315,7 @@ const MapCanvas: React.FC = () => {
 
                 {dangerPreview && (
                     <div 
-                        className={`absolute border border-rose-500/50 bg-rose-500/10 pointer-events-none z-50 border-dashed ${mapStore.dangerShape === 'circle' ? 'rounded-full text-center flex items-center justify-center' : ''}`}
+                        className={`absolute border border-etat-danger/50 bg-etat-danger/10 pointer-events-none z-50 border-dashed ${mapStore.dangerShape === 'circle' ? 'rounded-full text-center flex items-center justify-center' : ''}`}
                         style={{
                             left: mapStore.dangerShape === 'circle' ? (dangerPreview.x - dangerPreview.radius) : Math.min(dangerPreview.x, dangerPreview.x + dangerPreview.w),
                             top: mapStore.dangerShape === 'circle' ? (dangerPreview.y - dangerPreview.radius) : Math.min(dangerPreview.y, dangerPreview.y + dangerPreview.h),
@@ -323,7 +323,7 @@ const MapCanvas: React.FC = () => {
                             height: mapStore.dangerShape === 'circle' ? (dangerPreview.radius * 2) : Math.abs(dangerPreview.h)
                         }}
                     >
-                        {mapStore.dangerShape === 'circle' && <div className="w-1 h-1 bg-rose-500 rounded-full" />}
+                        {mapStore.dangerShape === 'circle' && <div className="w-1 h-1 bg-etat-danger rounded-full" />}
                     </div>
                 )}
             </div>

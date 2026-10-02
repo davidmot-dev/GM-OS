@@ -57,7 +57,7 @@ const MapPresetGallery: React.FC = () => {
                             value={newPresetName}
                             onChange={(e) => setNewPresetName(e.target.value)}
                             placeholder={t('map.presets.placeholder')}
-                            className="w-full bg-app-bg border border-accent/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-accent"
+                            className="w-full bg-app-bg border border-accent/30 rounded-lg px-3 py-2 text-xs text-app-text focus:outline-none focus:border-accent"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSave();
                                 if (e.key === 'Escape') { /* La frappe reste au champ : sans ça elle annulerait la saisie **et** refermerait l'écran derrière. */ e.stopPropagation(); setIsSaving(false); }
@@ -66,7 +66,7 @@ const MapPresetGallery: React.FC = () => {
                         <div className="flex gap-2">
                             <button 
                                 onClick={handleSave}
-                                className="flex-1 bg-accent text-slate-900 py-1.5 rounded-lg text-ui-10 font-black uppercase hover:bg-white transition-all flex items-center justify-center gap-2"
+                                className="flex-1 bg-accent text-app-on-accent py-1.5 rounded-lg text-ui-10 font-black uppercase hover:brightness-110 transition-all flex items-center justify-center gap-2"
                             >
                                 <Check size={14} />
                                 {t('map.presets.confirm')}
@@ -74,7 +74,7 @@ const MapPresetGallery: React.FC = () => {
                             <button 
                                 onClick={() => setIsSaving(false)}
                                 title={t('map.presets.cancel')}
-                                className="px-3 py-1.5 bg-app-surface border border-app-border rounded-lg text-app-muted hover:text-white transition-all"
+                                className="px-3 py-1.5 bg-app-surface border border-app-border rounded-lg text-app-muted hover:text-app-text transition-all"
                             >
                                 <X size={14} />
                             </button>
@@ -101,14 +101,14 @@ const MapPresetGallery: React.FC = () => {
                                     <div className="p-1.5 bg-accent/10 rounded-lg text-accent">
                                         <MapIcon size={14} />
                                     </div>
-                                    <span className="text-xs font-bold text-slate-200 truncate uppercase tracking-tight">
+                                    <span className="text-xs font-bold text-app-text truncate uppercase tracking-tight">
                                         {preset.name}
                                     </span>
                                 </div>
                                 <button 
                                     onClick={() => handleDelete(preset.id, preset.name)}
                                     title={t('map.presets.delete')}
-                                    className="p-1.5 text-slate-600 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                                    className="p-1.5 text-app-subtle hover:text-etat-danger hover:bg-etat-danger/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
                                 >
                                     <Trash2 size={14} />
                                 </button>
@@ -121,13 +121,13 @@ const MapPresetGallery: React.FC = () => {
                                         <span>{t('map.presets.count.tokens', { count: preset.tokens.length, defaultValue: `${preset.tokens.length} Pions` })}</span>
                                     </div>
                                     <div className="flex items-center gap-1 text-ui-9 text-app-subtle font-bold uppercase">
-                                        <Check size={10} className="text-rose-500" />
+                                        <Check size={10} className="text-etat-danger" />
                                         <span>{t('map.presets.count.zones', { count: preset.dangerZones.length, defaultValue: `${preset.dangerZones.length} Zones` })}</span>
                                     </div>
                                 </div>
                                 <button 
                                     onClick={() => handleLoad(preset.id, preset.name)}
-                                    className="bg-app-surface hover:bg-accent text-slate-300 hover:text-slate-900 px-3 py-1 rounded-lg border border-app-border hover:border-accent text-ui-9 font-black uppercase tracking-widest transition-all"
+                                    className="bg-app-surface hover:bg-accent text-app-text hover:text-app-on-accent px-3 py-1 rounded-lg border border-app-border hover:border-accent text-ui-9 font-black uppercase tracking-widest transition-all"
                                 >
                                     {t('map.presets.load')}
                                 </button>
@@ -135,7 +135,7 @@ const MapPresetGallery: React.FC = () => {
                             
                             {/* Visual Hint of the map name if available */}
                             {preset.mapName && (
-                                <div className="text-ui-8 text-slate-600 italic truncate mt-1 border-t border-app-border/30 pt-1">
+                                <div className="text-ui-8 text-app-subtle italic truncate mt-1 border-t border-app-border/30 pt-1">
                                     {t('map.presets.mapLabel')} : {preset.mapName}
                                 </div>
                             )}
