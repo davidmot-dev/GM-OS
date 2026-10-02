@@ -2209,7 +2209,7 @@
       },
       "node_detail": {
         "faction_label": "Faction / Group",
-        "relations_title": "Active Relations",
+        "relations_title": "Direct relations",
         "no_relations": "No established connections",
         "add_relation": "Add Connection",
         "edit_faction": "Edit Faction",
@@ -2223,7 +2223,9 @@
         },
         "manage_existing": "Manage Existing",
         "remove_relation_title": "Remove relation",
-        "incoming_perception": "Incoming perception (read-only)"
+        "incoming_perception": "Incoming perception (read-only)",
+        "perception_entrante": "Incoming perception",
+        "aucune_perception": "Nobody declares a link to them yet."
       },
       "relation_form": {
         "target_label": "Target",

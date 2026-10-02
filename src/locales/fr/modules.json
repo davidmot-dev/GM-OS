@@ -2209,7 +2209,7 @@
       },
       "node_detail": {
         "faction_label": "Faction / Groupe",
-        "relations_title": "Relations Actives",
+        "relations_title": "Relations directes",
         "no_relations": "Aucune connexion établie",
         "add_relation": "Ajouter une Connexion",
         "edit_faction": "Modifier la faction",
@@ -2223,7 +2223,9 @@
         },
         "manage_existing": "Gérer l'existant",
         "remove_relation_title": "Supprimer la relation",
-        "incoming_perception": "Perception entrante (non modifiable)"
+        "incoming_perception": "Perception entrante (non modifiable)",
+        "perception_entrante": "Perception entrante",
+        "aucune_perception": "Personne ne déclare encore de lien vers lui."
       },
       "relation_form": {
         "target_label": "Cible",

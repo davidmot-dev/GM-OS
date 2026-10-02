@@ -15,7 +15,7 @@ import { prepareSocialGraphData, getUniqueFactions, type GraphNode, type GraphLi
   formulaire une troisième liste de types : elles avaient divergé au point
   qu'« Ami » enregistrait `romantic`.
 */
-import { couleurDeRelation, distanceDeRelation } from '../logic/relationsSociales';
+import { couleurDeRelation, distanceDeRelation, NATURES_DE_RELATION, NATURES_ORDONNEES } from '../logic/relationsSociales';
 
 // Hooks
 import { useAvatarResolver } from '../hooks/useAvatarResolver';
@@ -40,6 +40,39 @@ import RelationForm from './SocialGraph/RelationForm';
  * React interdit à juste titre. C'est un cache, et il se comporte comme tel.
  */
 const POSITIONS_VIVANTES = new Map<string, { x: number; y: number }>();
+
+/*
+  **Le canevas ne lit pas les classes** — refonte, L5, étape 2. Les nœuds se
+  peignaient en dur (`#00e1ab`, `#94a3b8`, blanc) : le graphe restait néon
+  quel que soit le thème. On lui passe les jetons, relus quand le thème
+  réécrit le style de la racine.
+*/
+interface CouleursDuCanevas { accent: string; texte: string; fond: string; discret: string; alerte: string }
+
+function lireLesCouleurs(): CouleursDuCanevas {
+    const style = getComputedStyle(document.documentElement);
+    const jeton = (nom: string, repli: string) => style.getPropertyValue(nom).trim() || repli;
+    return {
+        accent: jeton('--app-accent', '#00e1ab'),
+        texte: jeton('--app-text', '#ffffff'),
+        fond: jeton('--app-bg', '#000000'),
+        discret: jeton('--app-text-muted', '#94a3b8'),
+        alerte: jeton('--etat-alerte', '#fbbf24'),
+    };
+}
+
+function useCouleursDuCanevas(): CouleursDuCanevas {
+    const [couleurs, setCouleurs] = useState(lireLesCouleurs);
+    useEffect(() => {
+        const observateur = new MutationObserver(() => {
+            const lues = lireLesCouleurs();
+            setCouleurs(avant => (JSON.stringify(avant) === JSON.stringify(lues) ? avant : lues));
+        });
+        observateur.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class', 'data-theme'] });
+        return () => observateur.disconnect();
+    }, []);
+    return couleurs;
+}
 
 const SocialGraph: React.FC = () => {
     const { t } = useTranslation();
@@ -317,6 +350,7 @@ const SocialGraph: React.FC = () => {
 
     /** Les nœuds posés à la main, pour les marquer et pour les détacher. */
     const epingles = activeCampaign?.noeudsEpingles;
+    const couleurs = useCouleursDuCanevas();
 
     const paintNode = useCallback((node: GraphNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
         const size = node.type === 'pc' ? 24 : 20;
@@ -327,8 +361,10 @@ const SocialGraph: React.FC = () => {
         // Glow / Background
         ctx.beginPath();
         ctx.arc(nx, ny, size, 0, 2 * Math.PI, false);
-        ctx.fillStyle = node.id === selectedNodeId ? 'rgba(0, 255, 194, 0.2)' : 'rgba(255, 255, 255, 0.05)';
+        ctx.globalAlpha = node.id === selectedNodeId ? 0.2 : 0.05;
+        ctx.fillStyle = node.id === selectedNodeId ? couleurs.accent : couleurs.texte;
         ctx.fill();
+        ctx.globalAlpha = 1;
         
         /*
           **L'épingle se voit.** Un nœud qui ne bouge plus sans qu'on sache
@@ -337,16 +373,16 @@ const SocialGraph: React.FC = () => {
         if (epingles?.[node.id]) {
             ctx.beginPath();
             ctx.arc(nx + size * 0.72, ny - size * 0.72, 4, 0, 2 * Math.PI, false);
-            ctx.fillStyle = '#fbbf24';
+            ctx.fillStyle = couleurs.alerte;
             ctx.fill();
-            ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+            ctx.strokeStyle = couleurs.fond;
             ctx.lineWidth = 1 / globalScale;
             ctx.stroke();
         }
 
         // Border
-        ctx.strokeStyle = node.type === 'pc' ? '#00e1ab' : '#94a3b8';
-        ctx.lineWidth = 2 / globalScale;
+        ctx.strokeStyle = node.id === selectedNodeId || node.type === 'pc' ? couleurs.accent : couleurs.discret;
+        ctx.lineWidth = (node.id === selectedNodeId ? 3 : 2) / globalScale;
         if (node.type === 'npc') ctx.setLineDash([2, 2]);
         ctx.stroke();
         ctx.setLineDash([]);
@@ -355,12 +391,14 @@ const SocialGraph: React.FC = () => {
         const label = node.name;
         ctx.font = `${fontSize}px "Space Grotesk", sans-serif`;
         const textWidth = ctx.measureText(label).width;
-        ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(0.8, globalScale / 2)})`;
+        ctx.globalAlpha = Math.min(0.8, globalScale / 2);
+        ctx.fillStyle = couleurs.fond;
         ctx.fillRect(nx - textWidth / 2 - 4, ny + size + 4, textWidth + 8, fontSize + 4);
+        ctx.globalAlpha = 1;
         
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.fillStyle = node.id === selectedNodeId ? '#00e1ab' : '#ffffff';
+        ctx.fillStyle = node.id === selectedNodeId ? couleurs.accent : couleurs.texte;
         ctx.fillText(label, nx, ny + size + 6);
 
         // Avatar Rendering
@@ -391,7 +429,7 @@ const SocialGraph: React.FC = () => {
                 }
             }
         }
-    }, [selectedNodeId, resolvedAvatars, FALLBACK_AVATAR, epingles]);
+    }, [selectedNodeId, resolvedAvatars, FALLBACK_AVATAR, epingles, couleurs]);
 
     const handleNodeClick = useCallback((node: GraphNode) => {
         setSelectedNodeId(node.id);
@@ -476,116 +514,116 @@ const SocialGraph: React.FC = () => {
                 setIsSettingsOpen={setIsSettingsOpen}
             />
 
-            <div ref={containerRef} className="flex-1 relative">
-                {dimensions.width > 0 && (
-                    <ForceGraph2D
-                        ref={graphRef}
-                        width={dimensions.width}
-                        height={dimensions.height}
-                        graphData={data}
-                        backgroundColor="transparent"
-                        nodeCanvasObject={paintNode}
-                        nodePointerAreaPaint={(node: GraphNode, color, canvasContext) => {
-                            canvasContext.fillStyle = color;
-                            const size = 20 * 1.5;
-                            canvasContext.beginPath();
-                            canvasContext.arc(node.x || 0, node.y || 0, size, 0, 2 * Math.PI, false);
-                            canvasContext.fill();
+            {/* Le graphe et, à sa droite, le panneau du nœud : une colonne pleine,
+                plus un verre posé par-dessus — il « se voyait mal ». */}
+            <div className="flex flex-1 min-h-0">
+                <div ref={containerRef} className="flex-1 relative min-w-0">
+                    {dimensions.width > 0 && (
+                        <ForceGraph2D
+                            ref={graphRef}
+                            width={dimensions.width}
+                            height={dimensions.height}
+                            graphData={data}
+                            backgroundColor="transparent"
+                            nodeCanvasObject={paintNode}
+                            nodePointerAreaPaint={(node: GraphNode, color, canvasContext) => {
+                                canvasContext.fillStyle = color;
+                                const size = 20 * 1.5;
+                                canvasContext.beginPath();
+                                canvasContext.arc(node.x || 0, node.y || 0, size, 0, 2 * Math.PI, false);
+                                canvasContext.fill();
+                            }}
+                            linkDirectionalParticles={2}
+                            linkDirectionalParticleSpeed={() => 0.005}
+                            linkDirectionalParticleWidth={2}
+                            linkDirectionalParticleColor={(link: GraphLink) => couleurDeRelation(link.type)}
+                            linkDirectionalArrowLength={3.5}
+                            linkDirectionalArrowRelPos={1}
+                            linkCurvature={0.25}
+                            linkColor={(link: GraphLink) => `${couleurDeRelation(link.type)}66`}
+                            linkWidth={2}
+                            onNodeClick={handleNodeClick}
+                            onNodeDragEnd={handleNodeDragEnd}
+                            onEngineStop={releverLesPositions}
+                            onBackgroundClick={() => setSelectedNodeId(null)}
+                            cooldownTicks={(isGraphLocked && !isSettingsOpen) ? 0 : 200}
+                            d3VelocityDecay={(isGraphLocked && !isSettingsOpen) ? 1 : 0.1}
+                            d3AlphaDecay={isSettingsOpen ? 0.01 : 0.02}
+                            enableNodeDrag={!isGraphLocked}
+                        />
+                    )}
+                    {/*
+                      **La légende dit les huit natures que le graphe dessine**, lues
+                      dans `NATURES_DE_RELATION` — la seule écriture des couleurs. Elle
+                      en listait six à la main, dont un « Ami » qui n'existe pas, peint
+                      de la couleur d'« Amour », et un « Neutre » bleu quand ses liens
+                      sont gris. Elle reste visible quand un nœud est choisi : le
+                      panneau ne la recouvre plus.
+                    */}
+                    <div className="absolute bottom-4 left-4 z-10 rounded-xl border border-app-border bg-app-surface p-4 shadow-lg">
+                        <div className="mb-3 flex items-center gap-2 text-app-muted">
+                            <Users size={14} />
+                            <span className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.legend_title')}</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                            {NATURES_ORDONNEES.map(nature => (
+                                <div key={nature} className="flex items-center gap-2">
+                                    <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: NATURES_DE_RELATION[nature].couleur }} />
+                                    <span className="text-ui-10 font-bold uppercase tracking-wider text-app-text">{t(`modules:session.social_graph.legend.${NATURES_DE_RELATION[nature].cle}`)}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {selectedNode && (
+                    <NodeDetailPanel 
+                        selectedNode={selectedNode}
+                        onClose={() => setSelectedNodeId(null)}
+                        resolvedAvatar={resolvedAvatars[selectedNode.id]}
+                        isEditing={isEditing}
+                        setIsEditing={setIsEditing}
+                        isEditingFaction={isEditingFaction}
+                        setIsEditingFaction={setIsEditingFaction}
+                        tempFaction={tempFaction}
+                        setTempFaction={setTempFaction}
+                        onSaveFaction={handleSaveFaction}
+                        onViewFullProfile={() => {
+                            if (selectedNode.type === 'npc') {
+                                navigateToNpcDetail(selectedNode.id);
+                            } else {
+                                const player = players.find(p => p.characters.some(c => c.id === selectedNode.id));
+                                if (player) {
+                                    navigateToPlayerDetail(player.id, selectedNode.id);
+                                }
+                            }
                         }}
-                        linkDirectionalParticles={2}
-                        linkDirectionalParticleSpeed={() => 0.005}
-                        linkDirectionalParticleWidth={2}
-                        linkDirectionalParticleColor={(link: GraphLink) => couleurDeRelation(link.type)}
-                        linkDirectionalArrowLength={3.5}
-                        linkDirectionalArrowRelPos={1}
-                        linkCurvature={0.25}
-                        linkColor={(link: GraphLink) => `${couleurDeRelation(link.type)}66`}
-                        linkWidth={2}
+                        activeRelations={data.links.filter(l => 
+                            (typeof l.source === 'string' ? l.source : (l.source as GraphNode).id) === selectedNodeId || 
+                            (typeof l.target === 'string' ? l.target : (l.target as GraphNode).id) === selectedNodeId
+                        )}
                         onNodeClick={handleNodeClick}
-                        onNodeDragEnd={handleNodeDragEnd}
-                        onEngineStop={releverLesPositions}
-                        onBackgroundClick={() => setSelectedNodeId(null)}
-                        cooldownTicks={(isGraphLocked && !isSettingsOpen) ? 0 : 200}
-                        d3VelocityDecay={(isGraphLocked && !isSettingsOpen) ? 1 : 0.1}
-                        d3AlphaDecay={isSettingsOpen ? 0.01 : 0.02}
-                        enableNodeDrag={!isGraphLocked}
+                        onRemoveRelation={handleRemoveRelation}
+                        estEpingle={!!epingles?.[selectedNode.id]}
+                        onDetacher={() => detacher(selectedNode.id)}
+                        allNodes={data.nodes}
+                        renderRelationForm={() => (
+                            <RelationForm 
+                                newRelTarget={newRelTarget}
+                                setNewRelTarget={setNewRelTarget}
+                                newRelType={newRelType}
+                                setNewRelType={setNewRelType}
+                                newRelDesc={newRelDesc}
+                                setNewRelDesc={setNewRelDesc}
+                                newRelLibelle={newRelLibelle}
+                                setNewRelLibelle={setNewRelLibelle}
+                                potentialTargets={potentialTargets}
+                                onAddRelation={handleAddRelation}
+                            />
+                        )}
                     />
                 )}
             </div>
-
-            {selectedNode && (
-                <NodeDetailPanel 
-                    selectedNode={selectedNode}
-                    onClose={() => setSelectedNodeId(null)}
-                    resolvedAvatar={resolvedAvatars[selectedNode.id]}
-                    isEditing={isEditing}
-                    setIsEditing={setIsEditing}
-                    isEditingFaction={isEditingFaction}
-                    setIsEditingFaction={setIsEditingFaction}
-                    tempFaction={tempFaction}
-                    setTempFaction={setTempFaction}
-                    onSaveFaction={handleSaveFaction}
-                    onViewFullProfile={() => {
-                        if (selectedNode.type === 'npc') {
-                            navigateToNpcDetail(selectedNode.id);
-                        } else {
-                            const player = players.find(p => p.characters.some(c => c.id === selectedNode.id));
-                            if (player) {
-                                navigateToPlayerDetail(player.id, selectedNode.id);
-                            }
-                        }
-                    }}
-                    activeRelations={data.links.filter(l => 
-                        (typeof l.source === 'string' ? l.source : (l.source as GraphNode).id) === selectedNodeId || 
-                        (typeof l.target === 'string' ? l.target : (l.target as GraphNode).id) === selectedNodeId
-                    )}
-                    onNodeClick={handleNodeClick}
-                    onRemoveRelation={handleRemoveRelation}
-                    estEpingle={!!epingles?.[selectedNode.id]}
-                    onDetacher={() => detacher(selectedNode.id)}
-                    allNodes={data.nodes}
-                    renderRelationForm={() => (
-                        <RelationForm 
-                            newRelTarget={newRelTarget}
-                            setNewRelTarget={setNewRelTarget}
-                            newRelType={newRelType}
-                            setNewRelType={setNewRelType}
-                            newRelDesc={newRelDesc}
-                            setNewRelDesc={setNewRelDesc}
-                            newRelLibelle={newRelLibelle}
-                            setNewRelLibelle={setNewRelLibelle}
-                            potentialTargets={potentialTargets}
-                            onAddRelation={handleAddRelation}
-                        />
-                    )}
-                />
-            )}
-
-            {!selectedNodeId && (
-                <div className="absolute bottom-10 left-10 p-6 bg-app-bg/40 backdrop-blur-xl border border-app-text/10 rounded-2xl z-10">
-                    <div className="flex items-center gap-3 text-app-muted mb-4">
-                        <Users size={16} />
-                        <span className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.legend_title')}</span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-                        {[
-                            { label: t('modules:session.social_graph.legend.family'), color: '#eab308' },
-                            { label: t('modules:session.social_graph.legend.ally'), color: '#22c55e' },
-                            { label: t('modules:session.social_graph.legend.hostile'), color: '#ef4444' },
-                            { label: t('modules:session.social_graph.legend.friend'), color: '#d946ef' },
-                            { label: t('modules:session.social_graph.legend.neutral'), color: '#3b82f6' },
-                            { label: t('modules:session.social_graph.legend.rival'), color: '#f97316' }
-                        ].map(item => (
-                            <div key={item.label} className="flex items-center gap-3">
-                                <div className="w-3 h-3 rounded-full shadow-glow" style={{ backgroundColor: item.color }} />
-                                <span className="text-ui-10 font-bold text-app-text uppercase tracking-wider">{item.label}</span>
-                            </div>
-                        ))}
-
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

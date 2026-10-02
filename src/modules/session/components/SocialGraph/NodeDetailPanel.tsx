@@ -6,7 +6,7 @@ import {
     X, 
     ExternalLink, 
     Shield, 
-    Info, 
+    Users,
     MoveRight, 
     MoveLeft,
     Trash2,
@@ -65,150 +65,172 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
     */
     const getRelationColor = couleurDeRelation;
 
-    return (
-        <div className="absolute top-6 bottom-6 right-6 w-96 bg-app-bg/40 backdrop-blur-2xl border border-app-text/10 rounded-3xl p-8 flex flex-col shadow-2xl animate-fade-in z-50">
-            <button 
-                onClick={onClose}
-                className="absolute top-6 right-6 p-2 hover:bg-app-text/10 rounded-full transition-all text-app-muted hover:text-app-text"
-                title={t('modules:session.social_graph.physics.close')}
+    /*
+      **Les relations se rangent par sens** — refonte, L5, étape 2. Ce que le
+      nœud déclare (sortantes, modifiables ici) et ce que les autres déclarent
+      de lui (la perception entrante, qui se modifie depuis leur nœud). La
+      ligne de sens affichait un morceau du libellé « Réinitialiser la
+      disposition » coupé à la parenthèse, en guise de « sortante ».
+    */
+    const autreBout = (rel: GraphLink) => {
+        const sId = typeof rel.source === 'string' ? rel.source : (rel.source as GraphNode).id;
+        const sortante = sId === selectedNode.id;
+        const autreId = sortante ? (typeof rel.target === 'string' ? rel.target : (rel.target as GraphNode).id) : sId;
+        return { sortante, autreId, autre: allNodes.find(n => n.id === autreId) };
+    };
+    const sortantes = activeRelations.filter(rel => autreBout(rel).sortante);
+    const entrantes = activeRelations.filter(rel => !autreBout(rel).sortante);
+    const portrait = resolvedAvatar || selectedNode.avatar;
+
+    const carteDeRelation = (rel: GraphLink, i: number) => {
+        const { autre } = autreBout(rel);
+        const couleur = getRelationColor(rel.type);
+        return (
+            <button
+                key={i}
+                type="button"
+                className="w-full rounded-lg border border-app-border bg-app-bg/40 p-3 text-left transition-all hover:border-accent/40"
+                onClick={() => autre && onNodeClick(autre)}
             >
-                <X size={20} />
-            </button>
-
-
-            {/*
-              **Détacher se fait là où l'on regarde le nœud.** L'épingle se pose
-              d'un geste — on lâche le nœud — donc elle doit se retirer d'un
-              geste : *un réglage qui ne se défait que dans un menu n'est pas un
-              geste, c'est un piège.*
-            */}
-            {estEpingle && onDetacher && (
-                <button
-                    onClick={onDetacher}
-                    className="absolute top-6 right-16 p-2 hover:bg-etat-alerte/20 rounded-full transition-all text-etat-alerte"
-                    title="Détacher ce nœud : la simulation le reprend"
-                >
-                    <PinOff size={18} />
-                </button>
-            )}
-
-            <div className="flex items-center gap-4 mb-2">
-                <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-neonCyan shadow-glow-cyan/20 bg-app-surface">
-                    <img src={resolvedAvatar || selectedNode.avatar} alt={selectedNode.name} className="w-full h-full object-cover" />
+                <div className="flex items-start justify-between gap-2">
+                    <span className="flex min-w-0 items-center gap-2">
+                        <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: couleur }} />
+                        <span className="truncate text-sm font-bold text-app-text">{autre?.name}</span>
+                    </span>
+                    <span className="shrink-0 rounded border px-2 py-0.5 text-ui-9 font-black uppercase" style={{ color: couleur, borderColor: `${couleur}66`, backgroundColor: `${couleur}1a` }}>
+                        {libelleDeRelation(rel, t)}
+                    </span>
                 </div>
-                <div>
-                    <span className="text-neonCyan text-ui-10 font-black uppercase tracking-[0.3em] mb-1 block">
+                {rel.description && <p className="mt-1.5 pl-4 text-xs leading-relaxed text-app-muted">{rel.description}</p>}
+            </button>
+        );
+    };
+
+    const titreDeSection = (icone: React.ReactNode, titre: string, nombre: number) => (
+        <div className="mb-2 flex items-center gap-2 text-app-muted">
+            {icone}
+            <h3 className="text-ui-10 font-black uppercase tracking-widest">{titre}</h3>
+            <span className="ml-auto text-ui-10 font-black text-app-subtle">{nombre}</span>
+        </div>
+    );
+
+    return (
+        <aside className="flex h-full w-96 shrink-0 flex-col overflow-hidden border-l border-app-border bg-app-surface animate-fade-in">
+            {/* L'identité du nœud : son nom, son portrait, sa faction */}
+            <div className="relative h-56 shrink-0 overflow-hidden bg-app-surface-2">
+                {portrait ? (
+                    <img src={portrait} alt={selectedNode.name} className="absolute inset-0 h-full w-full object-cover object-top" />
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-app-subtle"><Users size={64} strokeWidth={1} /></div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-app-surface via-app-surface/40 to-transparent" />
+
+                <div className="absolute top-3 right-3 flex gap-1.5">
+                    {/*
+                      **Détacher se fait là où l'on regarde le nœud.** L'épingle se pose
+                      d'un geste — on lâche le nœud — donc elle doit se retirer d'un
+                      geste : *un réglage qui ne se défait que dans un menu n'est pas un
+                      geste, c'est un piège.*
+                    */}
+                    {estEpingle && onDetacher && (
+                        <button
+                            onClick={onDetacher}
+                            className="rounded-lg border border-etat-alerte/40 bg-app-bg/70 p-2 text-etat-alerte transition-all hover:bg-etat-alerte/20"
+                            title="Détacher ce nœud : la simulation le reprend"
+                        >
+                            <PinOff size={16} />
+                        </button>
+                    )}
+                    <button
+                        onClick={onClose}
+                        className="rounded-lg border border-app-border bg-app-bg/70 p-2 text-app-muted transition-all hover:text-app-text"
+                        title={t('modules:session.social_graph.physics.close')}
+                    >
+                        <X size={16} />
+                    </button>
+                </div>
+
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                    <span className="block text-ui-10 font-black uppercase tracking-[0.2em] text-accent">
                         {selectedNode.type === 'pc' ? t('modules:session.social_graph.node_detail.type_pj') : t('modules:session.social_graph.node_detail.type_npc')}
                     </span>
-
-                    <div className="flex items-center gap-3">
-                        <h2 className="text-2xl font-bold text-app-text tracking-tight leading-none">{selectedNode.name}</h2>
+                    <div className="flex items-center gap-2">
+                        <h2 className="truncate font-display text-xl font-bold leading-tight text-app-text">{selectedNode.name}</h2>
                         <button
                             onClick={onViewFullProfile}
-                            className="p-1.5 rounded-lg bg-neonCyan/10 text-neonCyan hover:bg-neonCyan hover:text-app-bg transition-all shadow-glow-cyan/10"
+                            className="shrink-0 rounded-lg bg-accent/15 p-1.5 text-accent transition-all hover:bg-accent hover:text-app-on-accent"
                             title={t('modules:session.social_graph.tooltips.view_profile')}
                         >
                             <ExternalLink size={14} />
                         </button>
-
                     </div>
-                    
                     <div className="mt-2">
                         {isEditingFaction ? (
-                            <div className="flex items-center gap-2">
-                                <input 
-                                    autoFocus
-                                    type="text"
-                                    value={tempFaction}
-                                    onChange={(e) => setTempFaction(e.target.value)}
-                                    onBlur={onSaveFaction}
-                                    onKeyDown={(e) => e.key === 'Enter' && onSaveFaction()}
-                                    className="bg-app-bg/40 border border-neonCyan/30 rounded px-2 py-0.5 text-ui-9 text-neonCyan uppercase font-black tracking-wider outline-none focus:border-neonCyan"
-                                />
-                            </div>
+                            <input
+                                autoFocus
+                                type="text"
+                                value={tempFaction}
+                                onChange={(e) => setTempFaction(e.target.value)}
+                                onBlur={onSaveFaction}
+                                onKeyDown={(e) => e.key === 'Enter' && onSaveFaction()}
+                                className="w-full rounded border border-accent/40 bg-app-bg/80 px-2 py-1 text-ui-10 font-black uppercase tracking-wider text-accent outline-none focus:border-accent"
+                                title={t('modules:session.social_graph.node_detail.edit_faction')}
+                            />
                         ) : (
-                            <button 
+                            <button
                                 onClick={() => {
                                     setTempFaction(selectedNode.faction || '');
                                     setIsEditingFaction(true);
                                 }}
-                                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-accent/20 border border-accent/30 text-accent text-ui-9 font-black uppercase tracking-wider hover:bg-accent/30 transition-all font-display"
+                                className="inline-flex items-center gap-1.5 rounded border border-accent/30 bg-app-bg/70 px-2 py-1 font-display text-ui-10 font-black uppercase tracking-wider text-accent transition-all hover:bg-accent/20"
+                                title={t('modules:session.social_graph.node_detail.edit_faction')}
                             >
-                                <Shield size={10} />
+                                <Shield size={11} />
                                 {selectedNode.faction || t('modules:session.social_graph.node_detail.faction_label')}
                             </button>
-
                         )}
                     </div>
                 </div>
             </div>
 
-            <div className="flex gap-2 mb-8 border-b border-app-text/10 pb-4">
-                <button 
-                    onClick={() => setIsEditing(false)}
-                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${!isEditing ? 'bg-app-text/10 text-app-text' : 'text-app-subtle hover:text-app-text'}`}
-                >
-                    {t('modules:session.social_graph.node_detail.tabs.relations')}
-                </button>
-                <button 
-                    onClick={() => setIsEditing(true)}
-                    className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${isEditing ? 'bg-app-text/10 text-app-text' : 'text-app-subtle hover:text-app-text'}`}
-                >
-                    {t('modules:session.social_graph.node_detail.tabs.edit')}
-                </button>
-
+            <div role="tablist" className="flex shrink-0 border-b border-app-border">
+                {[false, true].map(edition => (
+                    <button
+                        key={String(edition)}
+                        role="tab"
+                        aria-selected={isEditing === edition}
+                        onClick={() => setIsEditing(edition)}
+                        className={`flex-1 border-b-2 py-3 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                            isEditing === edition ? 'border-accent text-accent' : 'border-transparent text-app-muted hover:text-app-text'
+                        }`}
+                    >
+                        {t(`modules:session.social_graph.node_detail.tabs.${edition ? 'edit' : 'relations'}`)}
+                    </button>
+                ))}
             </div>
 
-            <div className="space-y-6 flex-1 overflow-y-auto pr-2 no-scrollbar">
+            <div className="flex-1 space-y-6 overflow-y-auto p-4 custom-scrollbar">
                 {!isEditing ? (
-                    <section>
-                        <div className="flex items-center gap-2 mb-3 text-app-muted">
-                            <Info size={14} />
-                            <h3 className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.node_detail.relations_title')}</h3>
-                        </div>
-
-                        <div className="space-y-3">
-                            {activeRelations.map((rel, i) => {
-                                const sId = typeof rel.source === 'string' ? rel.source : (rel.source as GraphNode).id;
-                                const isOutbound = sId === selectedNode.id;
-                                const otherId = isOutbound ? (typeof rel.target === 'string' ? rel.target : (rel.target as GraphNode).id) : sId;
-                                const otherNode = allNodes.find(n => n.id === otherId);
-                                
-                                return (
-                                    <div key={i} className="p-4 bg-app-text/5 border border-app-text/5 rounded-2xl hover:bg-app-text/10 transition-all group cursor-pointer" onClick={() => otherNode && onNodeClick(otherNode)}>
-                                        <div className="flex justify-between items-start mb-2">
-                                            <div className="flex flex-col">
-                                                <span className="text-app-text font-bold text-sm tracking-tight">{otherNode?.name}</span>
-                                                <div className="flex items-center gap-1.5 mt-1">
-                                                    {isOutbound ? (
-                                                        <>
-                                                            <span className="text-ui-8 text-app-subtle font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
-                                                            <MoveRight size={10} className="text-neonCyan" />
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <MoveLeft size={10} className="text-accent" />
-                                                            <span className="text-ui-8 text-app-subtle font-bold uppercase tracking-tighter">{t('modules:session.social_graph.tooltips.reset_layout').split('(')[0]}</span>
-                                                        </>
-                                                    )}
-                                                </div>
-
-                                            </div>
-                                            <span className="text-ui-9 font-black uppercase px-2 py-1 rounded-md border shrink-0" style={{ color: getRelationColor(rel.type), borderColor: `${getRelationColor(rel.type)}44`, backgroundColor: `${getRelationColor(rel.type)}11` }}>
-                                                {libelleDeRelation(rel, t)}
-                                            </span>
-
-                                        </div>
-                                        <p className="text-app-muted text-xs leading-relaxed italic border-l-2 border-app-text/5 pl-3 py-1">"{rel.description}"</p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </section>
+                    <>
+                        <section>
+                            {titreDeSection(<MoveRight size={14} />, t('modules:session.social_graph.node_detail.relations_title'), sortantes.length)}
+                            <div className="space-y-2">
+                                {sortantes.map(carteDeRelation)}
+                                {sortantes.length === 0 && <p className="text-xs italic text-app-subtle">{t('modules:session.social_graph.node_detail.no_relations')}</p>}
+                            </div>
+                        </section>
+                        <section>
+                            {titreDeSection(<MoveLeft size={14} />, t('modules:session.social_graph.node_detail.perception_entrante'), entrantes.length)}
+                            <div className="space-y-2">
+                                {entrantes.map(carteDeRelation)}
+                                {entrantes.length === 0 && <p className="text-xs italic text-app-subtle">{t('modules:session.social_graph.node_detail.aucune_perception')}</p>}
+                            </div>
+                        </section>
+                    </>
                 ) : (
                     <>
                         {renderRelationForm()}
-                        
+
                         <div className="space-y-4 py-4">
                             <div className="flex items-center gap-2 text-app-muted">
                                 <Trash2 size={14} />
@@ -216,23 +238,20 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                             </div>
                             <div className="space-y-2">
                                 {activeRelations.map((rel, i) => {
-                                    const sId = typeof rel.source === 'string' ? rel.source : (rel.source as GraphNode).id;
-                                    const isOutbound = sId === selectedNode.id;
-                                    const otherId = isOutbound ? (typeof rel.target === 'string' ? rel.target : (rel.target as GraphNode).id) : sId;
-                                    const otherNode = allNodes.find(n => n.id === otherId);
+                                    const { sortante: isOutbound, autreId: otherId, autre: otherNode } = autreBout(rel);
                                     return (
-                                        <div key={i} className="p-3 bg-app-text/5 border border-app-text/5 rounded-xl flex justify-between items-center group">
+                                        <div key={i} className="p-3 bg-app-bg/40 border border-app-border rounded-lg flex justify-between items-center group">
                                             <div className="flex items-center gap-3">
-                                                <div className={`p-2 rounded-lg ${isOutbound ? 'bg-neonCyan/10 text-neonCyan' : 'bg-accent/10 text-accent'}`}>
+                                                <div className={`p-2 rounded-lg ${isOutbound ? 'bg-gm-cyan/10 text-gm-cyan' : 'bg-accent/10 text-accent'}`}>
                                                     {isOutbound ? <MoveRight size={14} /> : <MoveLeft size={14} />}
                                                 </div>
                                                 <div>
                                                     <div className="text-ui-11 font-bold text-app-text">{otherNode?.name}</div>
-                                                    <div className="text-ui-9 uppercase tracking-wider opacity-60" style={{ color: getRelationColor(rel.type) }}>{libelleDeRelation(rel, t)}</div>
+                                                    <div className="text-ui-9 uppercase tracking-wider" style={{ color: getRelationColor(rel.type) }}>{libelleDeRelation(rel, t)}</div>
                                                 </div>
 
                                             </div>
-                                            <button 
+                                            <button
                                                 onClick={() => isOutbound ? onRemoveRelation(otherId, rel.type) : null}
                                                 title={isOutbound ? t('modules:session.social_graph.node_detail.remove_relation_title') : t('modules:session.social_graph.node_detail.incoming_perception')}
                                                 disabled={!isOutbound}
@@ -248,7 +267,7 @@ const NodeDetailPanel: React.FC<NodeDetailPanelProps> = ({
                     </>
                 )}
             </div>
-        </div>
+        </aside>
     );
 };
 
