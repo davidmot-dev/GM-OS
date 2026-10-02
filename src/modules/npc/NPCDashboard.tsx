@@ -12,7 +12,7 @@ const NPCDashboard: React.FC = () => {
     }, [fetchUniverses]);
 
     return (
-        <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-app-bg text-slate-200">
+        <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-app-bg text-app-text">
             {/* Sidebar Left: Config & History */}
             <aside className="w-80 border-r border-app-border flex flex-col bg-app-surface/30">
                 <NPCControls />

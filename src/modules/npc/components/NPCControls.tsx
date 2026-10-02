@@ -32,7 +32,7 @@ const NPCControls: React.FC = () => {
                             key={cat.id}
                             onClick={() => setConfig({ category: cat.id })}
                             className={`p-2 rounded-lg flex flex-col items-center justify-center transition-all ${isActive
-                                ? 'bg-accent text-slate-950 shadow-glow-accent scale-105'
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent scale-105'
                                 : 'bg-app-surface text-app-muted hover:bg-app-bg/50'
                                 }`}
                             title={cat.label}
@@ -56,7 +56,7 @@ const NPCControls: React.FC = () => {
                             const firstTheme = availableUniverses.find(u => u.startsWith(selectedPrefix)) || "";
                             setConfig({ universe: firstTheme });
                         }}
-                        className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-slate-200 focus:outline-none focus:border-accent custom-scrollbar"
+                        className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-app-text focus:outline-none focus:border-accent custom-scrollbar"
                     >
                         {Array.from(new Set(availableUniverses.map(u => u.split('_')[0]))).sort().map(prefix => (
                             <option key={prefix} value={prefix}>{prefix}</option>
@@ -93,7 +93,7 @@ const NPCControls: React.FC = () => {
                     className={`flex items-center justify-center gap-2 py-1.5 rounded-lg border transition-all text-ui-10 font-black uppercase tracking-widest ${
                         config.aiEnabled 
                         ? 'bg-accent/10 border-accent/30 text-accent shadow-glow-accent/20' 
-                        : 'bg-app-surface border-app-border text-app-subtle hover:text-slate-400'
+                        : 'bg-app-surface border-app-border text-app-subtle hover:text-app-muted'
                     }`}
                 >
                     <Sparkles size={12} className={config.aiEnabled ? 'animate-pulse' : ''} />
@@ -103,7 +103,7 @@ const NPCControls: React.FC = () => {
                 <button
                     onClick={() => generate()}
                     disabled={isGenerating || availableUniverses.length === 0}
-                    className="w-full py-3 bg-accent hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold rounded-xl shadow-glow-accent flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group"
+                    className="w-full py-3 bg-accent hover:bg-accent/80 disabled:opacity-50 disabled:cursor-not-allowed text-app-on-accent font-bold rounded-xl shadow-glow-accent flex items-center justify-center gap-3 transition-all hover:scale-[1.02] active:scale-95 group"
                 >
                     <Dices size={20} className={isGenerating ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'} />
                     <span className="uppercase tracking-wider text-xs font-sans">

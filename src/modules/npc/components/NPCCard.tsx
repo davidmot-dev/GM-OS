@@ -268,10 +268,10 @@ const NPCCard: React.FC = () => {
     const getIcon = () => {
         switch (currentEntity.category) {
             case 'npcs': return <User className="text-accent" />;
-            case 'places': return <MapPin className="text-emerald-400" />;
-            case 'items': return <Package className="text-amber-400" />;
-            case 'events': return <Zap className="text-purple-400" />;
-            case 'rumors': return <Quote className="text-rose-400" />;
+            case 'places': return <MapPin className="text-gm-emerald" />;
+            case 'items': return <Package className="text-gm-gold" />;
+            case 'events': return <Zap className="text-gm-violet" />;
+            case 'rumors': return <Quote className="text-gm-crimson" />;
             default: return <User />;
         }
     };
@@ -287,7 +287,7 @@ const NPCCard: React.FC = () => {
                         transform: `scale(${voiceScale})`,
                         boxShadow: voiceGlow,
                     }}
-                    className={`w-40 h-40 rounded-2xl bg-app-bg/50 border-2 ${currentEntity?.isDead ? 'border-rose-900/50' : 'border-accent/30'} flex items-center justify-center text-accent shadow-glow-accent z-10 transition-all duration-75 hover:border-accent overflow-hidden group/avatar relative`}
+                    className={`w-40 h-40 rounded-2xl bg-app-bg/50 border-2 ${currentEntity?.isDead ? 'border-etat-danger/50' : 'border-accent/30'} flex items-center justify-center text-accent shadow-glow-accent z-10 transition-all duration-75 hover:border-accent overflow-hidden group/avatar relative`}
                 >
                     {avatarSrc ? (
                         <>
@@ -307,30 +307,30 @@ const NPCCard: React.FC = () => {
                     )}
 
                     {currentEntity?.isDead && (
-                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-rose-950/20 backdrop-grayscale-[0.5]">
-                            <div className="bg-rose-600 text-white text-ui-10 font-black px-2 py-0.5 rounded shadow-lg shadow-rose-900/50 uppercase tracking-tighter rotate-[-10deg] border border-rose-400/50">
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-etat-danger/20 backdrop-grayscale-[0.5]">
+                            <div className="bg-etat-danger text-app-on-accent text-ui-10 font-black px-2 py-0.5 rounded shadow-lg shadow-etat-danger/50 uppercase tracking-tighter rotate-[-10deg] border border-etat-danger/50">
                                 {t('npc.card.dead')}
                             </div>
                         </div>
                     )}
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity z-20 gap-4">
+                    <div className="absolute inset-0 bg-app-bg/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity z-20 gap-4">
                         <div
                             onClick={(e) => { e.stopPropagation(); selectAvatar(); }}
-                            className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all cursor-pointer"
+                            className="p-2 bg-app-text/10 hover:bg-app-text/20 rounded-full transition-all cursor-pointer"
                             title={t('npc.card.ai_import_file')}
                         >
-                            <Share2 size={24} className="text-white" />
+                            <Share2 size={24} className="text-app-text" />
                         </div>
                         <div
                             onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
-                            className="p-2 bg-accent text-slate-950 rounded-full hover:scale-110 transition-all shadow-glow-accent cursor-pointer"
+                            className="p-2 bg-accent text-app-on-accent rounded-full hover:scale-110 transition-all shadow-glow-accent cursor-pointer"
                             title={t('npc.card.ai_generate')}
                         >
                             <Sparkles size={24} />
                         </div>
                     </div>
                     {isGeneratingAIAvatar && (
-                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30">
+                        <div className="absolute inset-0 bg-app-bg/60 backdrop-blur-sm flex items-center justify-center z-30">
                             <Sparkles size={32} className="text-accent animate-spin" />
                         </div>
                     )}
@@ -341,8 +341,8 @@ const NPCCard: React.FC = () => {
                         onClick={(e) => { e.stopPropagation(); toggleDeadStatus(currentEntity.id); }}
                         className={`p-2 rounded-lg border-2 transition-all flex items-center justify-center shadow-lg ${
                             currentEntity.isDead 
-                            ? 'bg-rose-600 border-rose-400 text-white shadow-glow-rose scale-110' 
-                            : 'bg-app-surface/90 border-app-border text-app-muted hover:text-rose-500 hover:border-rose-500/50 hover:bg-app-surface'
+                            ? 'bg-etat-danger border-etat-danger text-app-bg shadow-glow-rose scale-110' 
+                            : 'bg-app-surface/90 border-app-border text-app-muted hover:text-etat-danger hover:border-etat-danger/50 hover:bg-app-surface'
                         }`}
                         title={currentEntity.isDead ? t('npc.card.revive') : t('npc.card.mark_dead')}
                     >
@@ -361,7 +361,7 @@ const NPCCard: React.FC = () => {
                             const profil = await generateVoiceProfile(depuisUnPnjDeNpcOs(currentEntity));
                             if (profil) setVoiceProfile(currentEntity.id, profil);
                         }}
-                        className="text-ui-10 uppercase font-bold tracking-widest text-emerald-400/80 px-2 py-1 border border-emerald-500/20 rounded bg-emerald-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-emerald-500/20 transition-colors"
+                        className="text-ui-10 uppercase font-bold tracking-widest text-etat-succes/80 px-2 py-1 border border-etat-succes/20 rounded bg-etat-succes/10 flex items-center gap-1 backdrop-blur-sm hover:bg-etat-succes/20 transition-colors"
                         title={t('npc.card.voice_gen_tooltip')}
                     >
                         <Sparkles size={10} />
@@ -378,7 +378,7 @@ const NPCCard: React.FC = () => {
                                 appliquerProfil(currentEntity.voiceProfile!);
                                 gmToast(`Voix de ${currentEntity.name} rappelée.`, 'info');
                             }}
-                            className="text-ui-10 uppercase font-bold tracking-widest text-cyan-300/80 px-2 py-1 border border-cyan-500/20 rounded bg-cyan-500/10 flex items-center gap-1 backdrop-blur-sm hover:bg-cyan-500/20 transition-colors"
+                            className="text-ui-10 uppercase font-bold tracking-widest text-gm-cyan/80 px-2 py-1 border border-gm-cyan/20 rounded bg-gm-cyan/10 flex items-center gap-1 backdrop-blur-sm hover:bg-gm-cyan/20 transition-colors"
                             title="Reposer ce profil vocal sur le rack"
                         >
                             <AudioLines size={10} />
@@ -393,7 +393,7 @@ const NPCCard: React.FC = () => {
 
             {/* Content Area */}
             <div className="p-8 flex-1">
-                <h1 className={`text-4xl font-display font-black mb-6 tracking-tight border-b border-app-border pb-4 transition-colors ${currentEntity.isDead ? 'text-app-subtle line-through decoration-rose-600/50' : 'text-white'}`}>
+                <h1 className={`text-4xl font-display font-black mb-6 tracking-tight border-b border-app-border pb-4 transition-colors ${currentEntity.isDead ? 'text-app-subtle line-through decoration-etat-danger/50' : 'text-app-text'}`}>
                     {currentEntity.name}
                 </h1>
 
@@ -401,7 +401,7 @@ const NPCCard: React.FC = () => {
                     {Object.entries(currentEntity.fields).map(([key, value]) => (
                         <div key={key} className="flex flex-col">
                             <span className="text-ui-10 uppercase font-bold text-app-subtle tracking-tighter">{key}</span>
-                            <span className="text-slate-200 font-medium leading-tight">{value}</span>
+                            <span className="text-app-text font-medium leading-tight">{value}</span>
                         </div>
                     ))}
                 </div>
@@ -430,21 +430,21 @@ const NPCCard: React.FC = () => {
                     </button>
                     <button
                         onClick={handleAddToFavorite}
-                        className="p-2 bg-app-surface hover:bg-amber-500/20 rounded-lg text-app-muted hover:text-amber-400 transition-colors"
+                        className="p-2 bg-app-surface hover:bg-etat-alerte/20 rounded-lg text-app-muted hover:text-etat-alerte transition-colors"
                         title={t('npc.card.favorite_add')}
                     >
                         <Star size={20} />
                     </button>
                     <button
                         onClick={saveToMemo}
-                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-app-muted hover:text-white transition-colors"
+                        className="p-2 bg-app-surface hover:bg-app-bg/50 rounded-lg text-app-muted hover:text-app-text transition-colors"
                         title={t('npc.card.save_memo')}
                     >
                         <Save size={20} />
                     </button>
                     <button
                         onClick={handleAddToJournal}
-                        className={`p-2 rounded-lg transition-all ${isSessionActive ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-app-surface text-app-muted hover:text-white hover:bg-app-bg/50'}`}
+                        className={`p-2 rounded-lg transition-all ${isSessionActive ? 'bg-accent/10 text-accent border border-accent/20' : 'bg-app-surface text-app-muted hover:text-app-text hover:bg-app-bg/50'}`}
                         title={isSessionActive ? t('npc.card.wiki_export') : t('npc.card.wiki_export_hint')}
                     >
                         <FileText size={20} />
@@ -452,7 +452,7 @@ const NPCCard: React.FC = () => {
                     {(currentEntity.category === 'npcs' || currentEntity.category === 'places') && (
                         <button
                             onClick={handleSaveToGallery}
-                            className={`p-2 rounded-lg transition-all ${activeCampaignId ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/30' : 'bg-app-surface text-app-muted hover:text-white hover:bg-app-bg/50'}`}
+                            className={`p-2 rounded-lg transition-all ${activeCampaignId ? 'bg-etat-info/20 text-etat-info border border-etat-info/30 hover:bg-etat-info/30' : 'bg-app-surface text-app-muted hover:text-app-text hover:bg-app-bg/50'}`}
                             title={activeCampaignId ? t('npc.card.gallery_export', { name: currentEntity.name }) : t('npc.card.gallery_error_session')}
                         >
                             <Database size={20} />
@@ -464,7 +464,7 @@ const NPCCard: React.FC = () => {
                     {(currentEntity.category === 'npcs' || currentEntity.category === 'places') && (
                         <button
                             onClick={handleAddToMap}
-                            className="flex items-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-600/30 font-bold rounded-xl transition-all hover:scale-105 active:scale-95"
+                            className="flex items-center gap-2 px-4 py-2 bg-etat-succes/20 hover:bg-etat-succes/30 text-etat-succes border border-etat-succes/30 font-bold rounded-xl transition-all hover:scale-105 active:scale-95"
                         >
                             <MapPin size={18} />
                             <span className="text-xs uppercase tracking-wider">{t('npc.card.map_add')}</span>
@@ -474,7 +474,7 @@ const NPCCard: React.FC = () => {
                     {currentEntity.category === 'npcs' && (
                         <button
                             onClick={handleAddToCombat}
-                            className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg shadow-rose-900/20 transition-all hover:scale-105 active:scale-95"
+                            className="flex items-center gap-2 px-4 py-2 bg-etat-danger hover:bg-etat-danger text-app-bg font-bold rounded-xl shadow-lg shadow-etat-danger/20 transition-all hover:scale-105 active:scale-95"
                         >
                             <Sword size={18} />
                         <span className="text-xs uppercase tracking-wider">{t('npc.card.combat_add')}</span>
@@ -485,7 +485,7 @@ const NPCCard: React.FC = () => {
                         onClick={() => setShowRecipientSelector(true)}
                         className={`flex items-center gap-2 px-4 py-2 border font-bold rounded-xl transition-all hover:scale-105 active:scale-95 ${
                             currentEntity.category === 'items'
-                            ? 'bg-amber-500 text-app-bg border-amber-400 shadow-glow-amber/20'
+                            ? 'bg-etat-alerte text-app-bg border-etat-alerte shadow-glow-amber/20'
                             : 'bg-app-surface text-app-text/60 border-app-border/40 hover:text-accent hover:border-accent/40'
                         }`}
                         title={t('npc.card.give_tooltip')}
@@ -498,7 +498,7 @@ const NPCCard: React.FC = () => {
 
             {/* Recipient Selector Overlay */}
             {showRecipientSelector && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center p-8 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+                <div className="absolute inset-0 z-50 flex items-center justify-center p-8 bg-app-bg/40 backdrop-blur-sm animate-in fade-in duration-200">
                     <RecipientSelector 
                         onSelect={handleGiveToPC}
                         onCancel={() => setShowRecipientSelector(false)}

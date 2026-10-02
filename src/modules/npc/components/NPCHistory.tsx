@@ -20,7 +20,7 @@ const NPCHistory: React.FC = () => {
 
     if (savedEntities.length === 0) {
         return (
-            <div className="h-full flex flex-col items-center justify-center p-8 text-slate-600 text-center animate-in fade-in duration-700">
+            <div className="h-full flex flex-col items-center justify-center p-8 text-app-subtle text-center animate-in fade-in duration-700">
                 <div className="w-12 h-12 rounded-full border border-app-border flex items-center justify-center mb-4">
                     <Trash2 size={24} className="opacity-20" />
                 </div>
@@ -33,10 +33,10 @@ const NPCHistory: React.FC = () => {
     const getMiniIcon = (category: string) => {
         switch (category) {
             case 'npcs': return <User size={14} className="text-accent" />;
-            case 'places': return <MapPin size={14} className="text-emerald-400" />;
-            case 'items': return <Package size={14} className="text-amber-400" />;
-            case 'events': return <Zap size={14} className="text-purple-400" />;
-            case 'rumors': return <Quote size={14} className="text-rose-400" />;
+            case 'places': return <MapPin size={14} className="text-gm-emerald" />;
+            case 'items': return <Package size={14} className="text-gm-gold" />;
+            case 'events': return <Zap size={14} className="text-gm-violet" />;
+            case 'rumors': return <Quote size={14} className="text-gm-crimson" />;
             default: return <User size={14} />;
         }
     };
@@ -60,7 +60,7 @@ const NPCHistory: React.FC = () => {
                 <HorsDePortee regime={regime} libelle={t('npc.history.clear')} compact icone={<Trash size={14} />}>
                     <button
                         onClick={() => gmConfirm(t('npc.history.clear_confirm'), clearHistory)}
-                        className="p-1 hover:bg-rose-500/10 hover:text-rose-500 rounded transition-colors text-slate-600"
+                        className="p-1 hover:bg-etat-danger/10 hover:text-etat-danger rounded transition-colors text-app-subtle"
                         title={t('npc.history.clear')}
                     >
                         <Trash size={14} />
@@ -91,10 +91,10 @@ const NPCHistory: React.FC = () => {
 
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                                <p className={`text-ui-11 font-bold truncate ${entity.isDead ? 'text-app-subtle line-through' : 'text-slate-200'}`}>
+                                <p className={`text-ui-11 font-bold truncate ${entity.isDead ? 'text-app-subtle line-through' : 'text-app-text'}`}>
                                     {entity.name}
                                 </p>
-                                {entity.isDead && <Skull size={10} className="text-rose-500 shrink-0" />}
+                                {entity.isDead && <Skull size={10} className="text-etat-danger shrink-0" />}
                             </div>
                             <p className="text-ui-8 text-app-subtle uppercase">{t(`npc.categories.${entity.category}`)}</p>
                         </div>
@@ -116,14 +116,14 @@ const NPCHistory: React.FC = () => {
                                         () => deleteFromMemo(entity.id),
                                     );
                                 }}
-                                className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-rose-500/20 hover:text-rose-500 rounded transition-all text-app-subtle"
+                                className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-etat-danger/20 hover:text-etat-danger rounded transition-all text-app-subtle"
                                 title={t('npc.history.delete_tooltip')}
                             >
                                 <Trash2 size={12} />
                             </button>
                         </HorsDePortee>
 
-                        <ChevronRight size={14} className="text-slate-700 group-hover:text-accent transition-colors" />
+                        <ChevronRight size={14} className="text-app-subtle group-hover:text-accent transition-colors" />
                     </div>
                 ))}
             </div>
