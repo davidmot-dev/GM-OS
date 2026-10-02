@@ -1,18 +1,19 @@
 import React from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { 
-    History, 
-    Book, 
-    ChevronLeft, 
+import {
+    History,
+    Book,
+    ChevronLeft,
     Shield
 } from 'lucide-react';
 import TimelineView from './TimelineView';
 import WikiView from './WikiView';
+import PanneauDuWiki from './PanneauDuWiki';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const TimelineWikiDashboard: React.FC = () => {
     const { setCurrentView, activeCampaignId, campaigns, wikiTab, setWikiTab } = useSessionOSStore();
-    
+
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
 
     if (!activeCampaign) return null;
@@ -22,20 +23,20 @@ const TimelineWikiDashboard: React.FC = () => {
             {/* Header Area (Glassmorphism 2.0) */}
             <header className="flex items-center justify-between px-8 py-6 bg-app-surface/20 border-b border-app-border/40 backdrop-blur-3xl shrink-0 z-20">
                 <div className="flex items-center gap-6">
-                    <button 
+                    <button
                         onClick={() => setCurrentView('campaign-details')}
-                        className="p-2 rounded-xl hover:bg-app-bg text-app-text/40 hover:text-accent transition-all group"
+                        className="p-2 rounded-xl hover:bg-app-bg text-app-muted hover:text-accent transition-all group"
                         title="Retour aux détails de la campagne"
                     >
                         <ChevronLeft size={20} className="group-hover:-translate-x-0.5 transition-transform" />
                     </button>
-                    
+
                     <div>
                         <div className="flex items-center gap-2 mb-0.5">
                             <Shield size={14} className="text-accent" />
                             <h2 className="text-lg font-black uppercase tracking-widest">{activeCampaign.name}</h2>
                         </div>
-                        <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-[0.2em]">Archives & Chroniques du Monde</p>
+                        <p className="text-ui-10 font-bold text-app-muted uppercase tracking-[0.2em]">Chronologie et wiki du monde</p>
                     </div>
                 </div>
 
@@ -43,8 +44,8 @@ const TimelineWikiDashboard: React.FC = () => {
                     <button
                         onClick={() => setWikiTab('timeline')}
                         className={`flex items-center gap-2 px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
-                            wikiTab === 'timeline' 
-                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                            wikiTab === 'timeline'
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent'
                                 : 'text-app-text/40 hover:text-app-text hover:bg-app-text/5'
                         }`}
                     >
@@ -54,8 +55,8 @@ const TimelineWikiDashboard: React.FC = () => {
                     <button
                         onClick={() => setWikiTab('wiki')}
                         className={`flex items-center gap-2 px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
-                            wikiTab === 'wiki' 
-                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                            wikiTab === 'wiki'
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent'
                                 : 'text-app-text/40 hover:text-app-text hover:bg-app-text/5'
                         }`}
                     >
@@ -76,8 +77,15 @@ const TimelineWikiDashboard: React.FC = () => {
                         transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
                         className="h-full"
                     >
+                        {/* La frise au centre, le wiki du monde toujours visible
+                            à droite — on relie un événement à un lieu sans
+                            changer d'onglet. L'onglet « Wiki du monde » garde
+                            le wiki complet. */}
                         {wikiTab === 'timeline' ? (
-                            <TimelineView />
+                            <div className="grid h-full grid-cols-1 xl:grid-cols-[minmax(0,1fr)_22rem]">
+                                <div className="min-h-0"><TimelineView /></div>
+                                <div className="hidden min-h-0 xl:block"><PanneauDuWiki /></div>
+                            </div>
                         ) : (
                             <WikiView />
                         )}

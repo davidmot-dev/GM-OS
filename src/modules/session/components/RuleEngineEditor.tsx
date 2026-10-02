@@ -1,13 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Etiquette } from '../../../components/socle';
+import { MOTEURS_DU_JET, moteurDuPilote } from './rules/moteursDuJet';
+import { Wrench, ExternalLink } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
-    Sparkles, Brain, Save, ArrowLeft, PenTool, Music, Beaker, User,
+    Sparkles, Brain, ArrowLeft, PenTool, Music, Beaker, User,
     BookOpen, Dice5, Zap, Map, Archive, type LucideIcon, Eye 
 } from 'lucide-react';
 import type { GameDriver, TacticalConfig } from '../../../types/drivers';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
-import { gmToast } from '../../../stores/useToastStore';
 import { Loader2 } from 'lucide-react';
 import { useRuleEngine } from '../hooks/useRuleEngine';
 import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
@@ -52,6 +54,20 @@ export const RuleEngineEditor: React.FC = () => {
     const champsNumeriquesDeLaFiche = (gabaritDuPilote?.sections ?? [])
         .flatMap(s => (s.fields ?? []).map(f => ({ id: f.id, label: `${f.label} — ${s.label || s.id}`, type: f.type })))
         .filter(f => TYPES_NUMERIQUES.has(f.type));
+
+    const moteurChoisi = moteurDuPilote(dice.engine);
+    const resumes: Record<string, string> = {
+        core: moteurChoisi ? t(`modules:session.rule_engine_editor.core.agencement.moteurs.${moteurChoisi.cle}.nom`) : String(dice.engine ?? ''),
+        combat: combat?.initiativeCards
+            ? t('modules:session.rule_engine_editor.agencement.resume_cartes', { count: combat.initiativeCards })
+            : combat?.initiative?.mode === 'alternance'
+                ? t('modules:session.rule_engine_editor.agencement.resume_alternance')
+                : t('modules:session.rule_engine_editor.agencement.resume_initiative'),
+        tactical: t('modules:session.rule_engine_editor.agencement.resume_portees', { count: Object.keys(tactical?.ranges ?? {}).length }),
+        ai: t('modules:session.rule_engine_editor.agencement.resume_personas', { count: Object.keys(driver.aiPersonas ?? {}).length }),
+        loot: t('modules:session.rule_engine_editor.agencement.resume_butin', { count: driver.lootTables?.length ?? 0 }),
+        notebook: driver.defaultNotebookUrl ? t('modules:session.rule_engine_editor.agencement.resume_carnet') : t('modules:session.rule_engine_editor.agencement.resume_sans_carnet'),
+    };
 
     const navItems = [
         { id: 'core', label: t('modules:session.rule_engine_editor.nav.core'), icon: Dice5, color: 'text-gm-cyan', bg: 'bg-gm-cyan/10' },
@@ -103,36 +119,56 @@ export const RuleEngineEditor: React.FC = () => {
                     </div>
                 </div>
 
-                <button
-                    onClick={() => gmToast(t('modules:session.rule_engine_editor.sync_success'), "success")}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-app-on-accent font-black text-xs uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
-                    title={t('modules:session.rule_engine_editor.sync_btn')}
-                >
-                    <Save size={16} /> {t('modules:session.rule_engine_editor.sync_btn')}
-                </button>
+                {/*
+                  **« Synchroniser » ne faisait qu'afficher un succès** : chaque
+                  réglage s'écrit déjà au changement (`updateGameDriver`). Un
+                  bouton qui prétend enregistrer ce qui l'est déjà fait douter
+                  de tout le reste.
+                */}
+                <Etiquette ton="succes">{t('modules:session.rule_engine_editor.agencement.enregistre')}</Etiquette>
             </div>
 
             <div className="flex-1 flex overflow-hidden">
-                {/* Sidebar Navigation */}
-                <div className="w-24 border-r border-app-border/10 bg-app-surface/20 backdrop-blur-md flex flex-col items-center py-8 gap-4">
-                    {navItems.map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => setActiveSection(item.id as any)}
-                            className={`group relative w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 ${
-                                activeSection === item.id 
-                                ? `${item.bg} ${item.color} shadow-lg ring-1 ring-app-text/10` 
-                                : 'text-app-text/40 hover:text-app-text hover:bg-app-surface/50'
-                            }`}
-                            title={item.label}
-                        >
-                            <item.icon size={22} className={`transition-transform duration-300 ${activeSection === item.id ? 'scale-110' : 'group-hover:scale-110'}`} />
-                            {activeSection === item.id && (
-                                <div className={`absolute -right-1 w-1 h-6 rounded-full ${item.color.replace('text', 'bg')} shadow-[0_0_10px_currentColor]`} />
-                            )}
-                        </button>
-                    ))}
-                </div>
+                {/*
+                  **Les onglets nommés, chacun avec son résumé** — refonte, L5,
+                  étape 2. Ils n'étaient que des icônes ; on y lit maintenant ce
+                  que chacun règle avant de l'ouvrir.
+                */}
+                <nav className="flex w-64 shrink-0 flex-col gap-1 border-r border-app-border bg-app-surface/40 p-2">
+                    {navItems.map((item, rang) => {
+                        const actif = activeSection === item.id;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => setActiveSection(item.id as any)}
+                                aria-current={actif ? 'page' : undefined}
+                                className={`flex flex-col gap-1 rounded-lg border-l-2 px-3 py-2.5 text-left transition-all ${
+                                    actif ? 'border-accent bg-accent/10' : 'border-transparent hover:bg-app-text/5'
+                                }`}
+                            >
+                                <span className={`flex items-center gap-2 text-sm font-bold uppercase tracking-wider ${actif ? 'text-accent' : 'text-app-text'}`}>
+                                    <item.icon size={15} className={actif ? 'text-accent' : item.color} />
+                                    <span className="font-mono text-ui-10">{String(rang + 1).padStart(2, '0')}.</span>
+                                    <span className="truncate">{item.label}</span>
+                                </span>
+                                {resumes[item.id] && <span className="truncate pl-6 text-ui-10 text-app-muted">{resumes[item.id]}</span>}
+                            </button>
+                        );
+                    })}
+                    {/* L'atelier des règles vit dans sa propre vue : on y va. */}
+                    <button
+                        onClick={() => setCurrentView('rule-workshop')}
+                        className="mt-auto flex flex-col gap-1 rounded-lg border border-app-border px-3 py-2.5 text-left transition-all hover:border-accent/50"
+                    >
+                        <span className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-app-text">
+                            <Wrench size={15} className="text-gm-gold" />
+                            <span className="font-mono text-ui-10">{String(navItems.length + 1).padStart(2, '0')}.</span>
+                            <span className="truncate">{t('modules:session.rule_engine_editor.agencement.atelier')}</span>
+                            <ExternalLink size={12} className="ml-auto text-app-subtle" />
+                        </span>
+                        <span className="truncate pl-6 text-ui-10 text-app-muted">{t('modules:session.rule_engine_editor.agencement.atelier_resume')}</span>
+                    </button>
+                </nav>
 
                 {/* Main Workspace */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar bg-[radial-gradient(circle_at_top_right,rgba(var(--app-accent-rgb),0.05),transparent_40%)]">
@@ -154,26 +190,43 @@ export const RuleEngineEditor: React.FC = () => {
                                     <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm space-y-6">
                                         <div>
                                             <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.engine_label')}</label>
-                                            <select 
-                                                value={dice.engine || 'standard'}
-                                                onChange={e => handleUpdate({ dice: { ...dice, engine: e.target.value as GameDriver['dice']['engine'] } })}
-                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/20 text-sm text-app-text focus:border-accent/50 outline-none transition-all appearance-none cursor-pointer"
-                                                title={t('modules:session.rule_engine_editor.core.engine_label')}
-                                            >
-                                                <option value="standard">{t('modules:session.rule_engine_editor.core.engine_options.standard')}</option>
-                                                <option value="exploding">{t('modules:session.rule_engine_editor.core.engine_options.exploding')}</option>
-                                                <option value="formula">{t('modules:session.rule_engine_editor.core.engine_options.formula')}</option>
-                                                <option value="threshold">{t('modules:session.rule_engine_editor.core.engine_options.threshold')}</option>
-                                                <option value="pool">{t('modules:session.rule_engine_editor.core.engine_options.pool')}</option>
-                                                <option value="pool_explode">{t('modules:session.rule_engine_editor.core.engine_options.pool_explode')}</option>
-                                                <option value="advantage">{t('modules:session.rule_engine_editor.core.engine_options.advantage')}</option>
-                                                <option value="disadvantage">{t('modules:session.rule_engine_editor.core.engine_options.disadvantage')}</option>
-                                                <option value="year-zero">{t('modules:session.rule_engine_editor.core.engine_options.year-zero')}</option>
-                                                <option value="yze">{t('modules:session.rule_engine_editor.core.engine_options.yze')}</option>
-                                                <option value="fate">{t('modules:session.rule_engine_editor.core.engine_options.fate')}</option>
-                                                <option value="rolemaster">{t('modules:session.rule_engine_editor.core.engine_options.rolemaster')}</option>
-                                                <option value="2d20">{t('modules:session.rule_engine_editor.core.engine_options.twodtwenty')}</option>
-                                            </select>
+                                            {/*
+                                              **Chaque moteur dit ce qu'il fait** — la liste
+                                              déroulante n'en donnait que le nom, et il lui
+                                              manquait les dés échelonnés et la sauvegarde.
+                                              Voir `moteursDuJet.ts`.
+                                            */}
+                                            <div role="radiogroup" aria-label={t('modules:session.rule_engine_editor.core.engine_label')} className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                                                {MOTEURS_DU_JET.map(m => {
+                                                    const choisi = (dice.engine || 'standard') === m.id;
+                                                    return (
+                                                        <button
+                                                            key={m.id}
+                                                            type="button"
+                                                            role="radio"
+                                                            aria-checked={choisi}
+                                                            onClick={() => handleUpdate({ dice: { ...dice, engine: m.id as GameDriver['dice']['engine'] } })}
+                                                            className={`rounded-lg border px-3 py-2 text-left transition-all ${
+                                                                choisi ? 'border-accent bg-accent/15 text-accent' : 'border-app-border bg-app-bg/40 text-app-text hover:border-accent/40'
+                                                            }`}
+                                                            title={t(`modules:session.rule_engine_editor.core.agencement.moteurs.${m.cle}.clair`)}
+                                                        >
+                                                            <span className="block text-xs font-bold">{t(`modules:session.rule_engine_editor.core.agencement.moteurs.${m.cle}.nom`)}</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                            {moteurChoisi ? (
+                                                <div className="mt-3 rounded-lg border-l-2 border-accent bg-accent/5 px-4 py-3">
+                                                    <p className="text-ui-10 font-black uppercase tracking-widest text-accent">{t('modules:session.rule_engine_editor.agencement.en_clair')}</p>
+                                                    <p className="mt-1 text-sm leading-relaxed text-app-text">{t(`modules:session.rule_engine_editor.core.agencement.moteurs.${moteurChoisi.cle}.clair`)}</p>
+                                                    <p className="mt-2 font-mono text-xs text-app-muted">
+                                                        <span className="font-bold text-accent">{t('modules:session.rule_engine_editor.agencement.exemple')}</span> {t(`modules:session.rule_engine_editor.core.agencement.moteurs.${moteurChoisi.cle}.exemple`)}
+                                                    </p>
+                                                </div>
+                                            ) : (
+                                                <p className="mt-3 text-xs italic text-etat-alerte">{t('modules:session.rule_engine_editor.agencement.moteur_inconnu', { moteur: dice.engine })}</p>
+                                            )}
                                         </div>
                                         <div>
                                             <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.core.default_dice_label')}</label>

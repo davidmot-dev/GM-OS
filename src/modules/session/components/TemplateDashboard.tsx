@@ -431,7 +431,7 @@ const TemplateDashboard: React.FC = () => {
             </div>
 
             {/* Right Column: Preview */}
-            <div className="w-[450px] bg-app-surface/60 backdrop-blur-3xl p-8 overflow-y-auto custom-scrollbar border-l border-app-border/20 shadow-2xl relative">
+            <div className="w-[34rem] shrink-0 bg-app-surface/60 p-6 overflow-y-auto custom-scrollbar border-l border-app-border relative">
                 {selectedItem ? (
                     <>
                         <div className="sticky top-0 z-10 bg-gradient-to-b from-app-surface to-transparent pb-6 -mt-8 pt-8">
@@ -531,33 +531,44 @@ const TemplateDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-8 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <div className="space-y-3 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
                             {activeTab === 'sheets' ? (
                                 (selectedItem as SheetTemplate).sections.map((section, idx) => (
-                                    <div key={section.id} className="space-y-4" style={{ animationDelay: `${idx * 100}ms` }}>
-                                        <div className="flex items-center gap-3">
-                                            <div className="h-px flex-1 bg-gradient-to-r from-accent/40 to-transparent"></div>
-                                            <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent/80">{section.label}</h4>
-                                            <div className="h-px flex-1 bg-gradient-to-l from-accent/40 to-transparent"></div>
+                                    /*
+                                      **L'aperçu en groupes de champs** — refonte, L5, étape 2.
+                                      Un champ par ligne faisait défiler une fiche de trente
+                                      champs sur dix écrans ; en grille, un groupe se lit d'un
+                                      coup, et chaque champ montre sa valeur par défaut (la
+                                      lettre ou le dé d'un attribut, le maximum d'une jauge).
+                                    */
+                                    <div key={section.id} className="rounded-xl border border-app-border bg-app-bg/30" style={{ animationDelay: `${idx * 100}ms` }}>
+                                        <div className="flex items-center justify-between border-b border-app-border px-4 py-2.5">
+                                            <h4 className="font-display text-xs font-bold uppercase tracking-wider text-accent">
+                                                <span className="mr-2 font-mono text-app-muted">{String(idx + 1).padStart(2, '0')}</span>{section.label}
+                                            </h4>
+                                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-muted">{section.fields.length} champ(s)</span>
                                         </div>
-                                        <div className="space-y-3">
-                                            {section.fields.map(field => (
-                                                <div key={field.id} className="p-4 rounded-xl bg-app-bg/40 border border-app-border/20 group hover:border-accent/30 transition-all">
-                                                    <div className="flex justify-between items-center mb-1">
-                                                        <label className="text-ui-9 font-black uppercase tracking-widest text-app-text/40 uppercase">{field.label}</label>
-                                                        <span className="text-ui-8 font-bold text-accent/40 bg-accent/5 px-1.5 py-0.5 rounded border border-accent/10">{field.type}</span>
+                                        <div className="grid grid-cols-2 gap-1.5 p-2">
+                                            {section.fields.map(field => {
+                                                const parDefaut = field.type === 'gauge' || field.type === 'rating'
+                                                    ? `${field.defaultValue ?? 0} / ${field.max ?? '—'}`
+                                                    : field.type === 'select'
+                                                        ? (String(field.defaultValue || '') || (field.options ?? []).join(' · '))
+                                                        : field.type === 'checkbox' ? '☐'
+                                                        : field.type === 'formula' ? (field.formula || 'ƒ')
+                                                        : String(field.defaultValue ?? '') || '—';
+                                                return (
+                                                    <div key={field.id} className={`rounded-md border border-app-border bg-app-surface px-3 py-2 ${field.type === 'textarea' ? 'col-span-2' : ''}`} title={field.type}>
+                                                        <p className="truncate text-ui-9 font-black uppercase tracking-widest text-app-muted">{field.label}</p>
+                                                        <p className="truncate font-display text-sm font-bold text-app-text">{parDefaut}</p>
+                                                        {field.type === 'gauge' && (
+                                                            <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-app-bg">
+                                                                <div className="h-full bg-accent" style={{ width: `${field.max ? (Number(field.defaultValue) || 0) / field.max * 100 : 0}%` }} />
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                    {field.type === 'gauge' ? (
-                                                        <div className="h-1.5 w-full bg-app-surface rounded-full overflow-hidden mt-2">
-                                                            <div className="h-full w-2/3 bg-accent/40 shadow-glow-accent/20"></div>
-                                                        </div>
-                                                    ) : field.type === 'number' ? (
-                                                        <div className="text-sm font-mono font-bold text-app-text/60">00</div>
-                                                    ) : (
-                                                        <div className="h-4 w-full bg-app-surface/50 rounded animate-pulse"></div>
-                                                    )}
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 ))

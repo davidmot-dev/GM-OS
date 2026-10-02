@@ -9,6 +9,9 @@ import {
     SearchX, Loader2, Plus, Globe, Edit2, Hammer, CheckCircle2, Layers, RefreshCw
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { useSessionStore } from '../../../store/useSessionStore';
+import { demanderLAtelierDesRegles } from '../../forge/ouvertureDeLaForge';
+import { PenLine, Wand2, X as Fermer } from 'lucide-react';
 import { useBrainstormStore } from '../../forge/rules/store/useBrainstormStore';
 
 import type { DocEntry } from '../../ai/RAGService';
@@ -313,7 +316,22 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
         }
     };
 
+    /*
+      **« Créer une règle » ouvre deux chemins** — refonte, L5, étape 2, note de
+      David du 2026-09-27 : « il manque la possibilité de préciser des
+      paramètres ». Ils existent, dans la Forge : le chemin IA y mène, sur
+      l'atelier des règles, plutôt que d'en recopier le moteur.
+    */
+    const [choixDeCreation, setChoixDeCreation] = useState(false);
+    useFermetureParEchap(choixDeCreation, () => setChoixDeCreation(false), 'Créer une règle');
+    const genererAvecLIA = () => {
+        setChoixDeCreation(false);
+        demanderLAtelierDesRegles();
+        useSessionStore.getState().setActiveModule('forge');
+    };
+
     const handleCreateNew = () => {
+        setChoixDeCreation(false);
         setEditTitle('Nouvelle Règle');
         setEditContent('# Nouvelle Règle\n\nÉcrivez votre contenu ici...');
         setEditPath(null);
@@ -400,7 +418,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                         <RefreshCw size={16} />
                     </button>
                     <button
-                        onClick={handleCreateNew}
+                        onClick={() => setChoixDeCreation(true)}
                         className="px-6 py-3 bg-accent text-app-on-accent rounded-2xl font-black uppercase tracking-widest text-ui-10 shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                     >
                         <Plus size={16} />
@@ -604,6 +622,30 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                     </LoupeDeLecture>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {choixDeCreation && (
+                <div className="fixed inset-0 z-[90] flex items-center justify-center bg-app-bg/70 p-6 backdrop-blur-sm" onClick={() => setChoixDeCreation(false)}>
+                    <div role="dialog" aria-label={t('modules:session.forge_module.workshop_viewer.create_button')} className="w-full max-w-2xl rounded-xl border border-accent/40 bg-app-surface p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+                        <div className="mb-5 flex items-center justify-between">
+                            <h2 className="font-display text-lg font-bold uppercase tracking-wider text-app-text">{t('modules:session.forge_module.workshop_viewer.create_button')}</h2>
+                            <button onClick={() => setChoixDeCreation(false)} className="rounded-lg p-2 text-app-muted hover:text-app-text" title={t('modules:session.forge_module.workshop_viewer.agencement.fermer')}>
+                                <Fermer size={16} />
+                            </button>
+                        </div>
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                            <button onClick={handleCreateNew} className="flex flex-col gap-2 rounded-lg border border-app-border bg-app-bg/40 p-5 text-left transition-all hover:border-accent/50">
+                                <PenLine size={22} className="text-accent" />
+                                <span className="font-display text-base font-bold text-app-text">{t('modules:session.forge_module.workshop_viewer.agencement.ecrire')}</span>
+                                <span className="text-sm text-app-muted">{t('modules:session.forge_module.workshop_viewer.agencement.ecrire_aide')}</span>
+                            </button>
+                            <button onClick={genererAvecLIA} className="flex flex-col gap-2 rounded-lg border border-accent/40 bg-accent/5 p-5 text-left transition-all hover:border-accent hover:bg-accent/10">
+                                <Wand2 size={22} className="text-accent" />
+                                <span className="font-display text-base font-bold text-app-text">{t('modules:session.forge_module.workshop_viewer.agencement.generer')}</span>
+                                <span className="text-sm text-app-muted">{t('modules:session.forge_module.workshop_viewer.agencement.generer_aide')}</span>
+                            </button>
                         </div>
                     </div>
                 </div>

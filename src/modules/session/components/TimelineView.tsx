@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { 
-    Plus, 
-    Calendar, 
-    MapPin, 
-    Users, 
-    MessageSquare, 
-    Swords, 
+import {
+    Plus,
+    Calendar,
+    MapPin,
+    Users,
+    MessageSquare,
+    Swords,
     Scroll,
     Trash2,
     Edit2,
     History as LucideHistory,
     Book
 } from 'lucide-react';
-import { gmCustom } from '../../../stores/useModalStore';
+import { gmCustom, gmConfirm } from '../../../stores/useModalStore';
+import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import TexteMarkdown from '../../../components/TexteMarkdown';
 import { reparerLeMojibake } from '../../../utils/reparerLeMojibake';
 
 const TimelineView: React.FC = () => {
-    const { 
-        timelineEvents, 
+    const {
+        timelineEvents,
         wikiEntries,
-        activeCampaignId, 
+        activeCampaignId,
         deleteTimelineEvent,
         atlasMaps,
         setSelectedWikiEntryId,
@@ -51,7 +52,7 @@ const TimelineView: React.FC = () => {
         }));
 
     const mergedEvents = [...campaignEvents, ...wikiEvents]
-        .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id)); 
+        .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
 
     const handleEventClick = (event: any) => {
         if (event.isWikiSource) {
@@ -61,12 +62,29 @@ const TimelineView: React.FC = () => {
             gmCustom('timeline-event-edit', event);
         }
     };
+    /*
+      **Les cinq sortes, chacune sa couleur** — refonte, L5, étape 2. Le filtre
+      n'en proposait que quatre : un « événement majeur » ne se filtrait pas.
+      Couleurs de catégorie (gm-*), pas d'état : un combat n'est pas une erreur.
+    */
+    const SORTES: Record<string, { libelle: string; couleur: string }> = {
+        session: { libelle: 'Séance', couleur: 'border-gm-cyan/50 bg-gm-cyan/15 text-gm-cyan' },
+        combat: { libelle: 'Combat', couleur: 'border-gm-crimson/50 bg-gm-crimson/15 text-gm-crimson' },
+        quest: { libelle: 'Quête', couleur: 'border-gm-gold/50 bg-gm-gold/15 text-gm-gold' },
+        lore: { libelle: 'Lore', couleur: 'border-gm-emerald/50 bg-gm-emerald/15 text-gm-emerald' },
+        'major-event': { libelle: 'Événement majeur', couleur: 'border-gm-violet/50 bg-gm-violet/15 text-gm-violet' },
+    };
+    const compte = (sorte: string) => [
+        ...timelineEvents.filter(e => e.campaignId === activeCampaignId && (sorte === 'all' || e.type === sorte)),
+    ].length;
+
     const getIcon = (type: string) => {
         switch (type) {
-            case 'combat': return <Swords size={18} className="text-etat-danger" />;
-            case 'quest': return <Scroll size={18} className="text-accent" />;
-            case 'lore': return <Book size={18} className="text-gm-violet" />;
-            case 'session': return <Calendar size={18} className="text-etat-succes" />;
+            case 'combat': return <Swords size={18} className="text-gm-crimson" />;
+            case 'quest': return <Scroll size={18} className="text-gm-gold" />;
+            case 'lore': return <Book size={18} className="text-gm-emerald" />;
+            case 'session': return <Calendar size={18} className="text-gm-cyan" />;
+            case 'major-event': return <Star size={18} className="text-gm-violet" />;
             default: return <MessageSquare size={18} className="text-etat-info" />;
         }
     };
@@ -87,26 +105,26 @@ const TimelineView: React.FC = () => {
     return (
         <div className="flex flex-col h-full bg-app-bg/20">
             {/* Toolbar (Glass) */}
-            <div className="px-8 py-6 flex items-center justify-between bg-app-bg/20 border-b border-app-text/5 backdrop-blur-md">
-                <div className="flex gap-2">
-                    {['all', 'session', 'combat', 'quest', 'lore'].map(t => (
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-app-border bg-app-surface/40 px-5 py-3">
+                <div className="flex flex-wrap gap-1.5">
+                    {['all', 'session', 'combat', 'quest', 'lore', 'major-event'].map(t => (
                         <button
                             key={t}
                             onClick={() => setFilter(t)}
-                            className={`px-4 py-1.5 rounded-full text-ui-10 font-black uppercase tracking-widest border transition-all ${
-                                filter === t 
-                                    ? 'bg-accent/20 border-accent/40 text-accent shadow-glow-accent/10' 
-                                    : 'bg-app-text/5 border-app-text/5 text-app-text/40 hover:text-app-text hover:border-app-text/10'
+                            className={`rounded-lg border px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                                filter === t
+                                    ? 'border-accent bg-accent text-app-on-accent'
+                                    : 'border-app-border text-app-muted hover:text-app-text'
                             }`}
                         >
-                            {t === 'all' ? 'Tous' : t}
+                            {t === 'all' ? 'Tous' : SORTES[t].libelle} ({compte(t)})
                         </button>
                     ))}
                 </div>
 
-                <button 
+                <button
                     onClick={() => gmCustom('timeline-event-add')}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-accent text-app-on-accent rounded-xl text-ui-10 font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all active:scale-95"
+                    className="flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-ui-10 font-black uppercase tracking-widest text-app-on-accent transition-all hover:brightness-110"
                 >
                     <Plus size={14} strokeWidth={3} />
                     Nouvel Événement
@@ -114,20 +132,20 @@ const TimelineView: React.FC = () => {
             </div>
 
             {/* Timeline List */}
-            <div className="flex-1 overflow-y-auto px-8 py-12 custom-scrollbar">
-                <motion.div 
+            <div className="flex-1 overflow-y-auto px-5 py-6 custom-scrollbar">
+                <motion.div
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="max-w-5xl mx-auto space-y-12 relative"
+                    className="max-w-5xl mx-auto space-y-4 relative"
                 >
                     {/* Vertical Line (Glowing) */}
                     <div className="absolute left-[22.5px] top-6 bottom-6 w-0.5 bg-gradient-to-b from-accent/0 via-accent/20 to-accent/0 shadow-[0_0_10px_rgba(var(--accent-rgb),0.2)]" />
 
                     {mergedEvents.length > 0 ? (
                         mergedEvents.map((event: any) => (
-                            <motion.div 
-                                key={event.id} 
+                            <motion.div
+                                key={event.id}
                                 variants={itemVariants}
                                 className={`relative pl-20 group ${event.isWikiSource ? 'cursor-pointer' : ''}`}
                                 onClick={() => event.isWikiSource && handleEventClick(event)}
@@ -139,39 +157,44 @@ const TimelineView: React.FC = () => {
                                 </div>
 
                                 {/* Content (Glass Bento) */}
-                                <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 hover:bg-app-text/5 transition-all group-hover:shadow-2xl">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-ui-10 font-black text-accent bg-accent/10 px-3 py-1 rounded-full uppercase tracking-widest border border-accent/20">
-                                                {event.date}
-                                            </span>
+                                <div className="rounded-xl border border-app-border bg-app-surface p-5 transition-all hover:border-accent/40">
+                                    <div className="mb-3 flex items-start justify-between gap-3">
+                                        <div className="flex min-w-0 flex-wrap items-center gap-2">
+                                            {SORTES[event.type] && (
+                                                <span className={`rounded border px-2 py-0.5 text-ui-9 font-black uppercase tracking-widest ${SORTES[event.type].couleur}`}>
+                                                    {SORTES[event.type].libelle}
+                                                </span>
+                                            )}
+                                            <span className="font-mono text-xs font-bold text-app-muted">{event.date}</span>
                                             {event.isWikiSource && (
                                                 <span className="text-ui-8 font-black text-gm-violet bg-gm-violet/10 px-2 py-0.5 rounded border border-gm-violet/20 uppercase tracking-widest">
                                                     WIKI: {event.originalCategory}
                                                 </span>
                                             )}
-                                            <h3 className="text-base font-black text-app-text tracking-tight uppercase group-hover:text-accent transition-colors">{reparerLeMojibake(event.title)}</h3>
+                                            <h3 className="w-full font-display text-base font-bold uppercase tracking-tight text-app-text">{reparerLeMojibake(event.title)}</h3>
                                         </div>
-                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                                        {/* Éditer et supprimer restent visibles : un geste caché
+                                            derrière un survol ne se trouve pas à la tablette. */}
+                                        <div className="flex shrink-0 items-center gap-1">
                                             {!event.isWikiSource ? (
                                                 <>
-                                                    <button 
+                                                    <button
                                                         onClick={(e) => { e.stopPropagation(); gmCustom('timeline-event-edit', event); }}
-                                                        className="p-2 hover:bg-app-text/5 rounded-xl text-app-text/20 hover:text-accent transition-all border border-transparent hover:border-app-text/10"
+                                                        className="flex items-center gap-1.5 rounded-md border border-app-border px-2.5 py-1 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-all hover:border-accent/50 hover:text-accent"
                                                         title="Modifier l'événement"
                                                     >
-                                                        <Edit2 size={16} />
+                                                        <Edit2 size={12} />Éditer
                                                     </button>
-                                                    <button 
-                                                        onClick={(e) => { e.stopPropagation(); deleteTimelineEvent(event.id); }}
-                                                        className="p-2 hover:bg-app-text/5 rounded-xl text-app-text/20 hover:text-etat-danger transition-all border border-transparent hover:border-app-text/10"
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); gmConfirm(`Supprimer « ${reparerLeMojibake(event.title)} » de la chronologie ?`, () => deleteTimelineEvent(event.id)); }}
+                                                        className="rounded-md border border-app-border p-1.5 text-app-subtle transition-all hover:border-etat-danger/50 hover:text-etat-danger"
                                                         title="Supprimer l'événement"
                                                     >
-                                                        <Trash2 size={16} />
+                                                        <Trash2 size={13} />
                                                     </button>
                                                 </>
                                             ) : (
-                                                <button 
+                                                <button
                                                     onClick={() => handleEventClick(event)}
                                                     className="flex items-center gap-2 px-3 py-1.5 bg-gm-violet/10 text-gm-violet border border-gm-violet/20 rounded-xl text-ui-9 font-black uppercase tracking-widest hover:bg-gm-violet hover:text-app-bg transition-all"
                                                 >
@@ -190,11 +213,11 @@ const TimelineView: React.FC = () => {
                                       `reparerLeMojibake` rend lisibles les événements écrits
                                       avant le 18/08, quand le fichier FR était abîmé.
                                     */}
-                                    <div className="prose prose-invert prose-sm max-w-none mb-8 font-medium text-app-text/60 prose-headings:text-app-text prose-headings:mb-2 prose-headings:mt-4 prose-p:text-app-text/60 prose-p:my-1 prose-li:text-app-text/60 prose-li:my-0 prose-ul:my-1 prose-strong:text-app-text prose-a:text-accent">
+                                    <div className="prose prose-invert prose-sm max-w-none text-app-text prose-headings:text-app-text prose-headings:mb-2 prose-headings:mt-3 prose-p:text-app-text prose-p:my-1 prose-li:text-app-text prose-li:my-0 prose-ul:my-1 prose-strong:text-app-text prose-a:text-accent">
                                         <TexteMarkdown>{reparerLeMojibake(event.description)}</TexteMarkdown>
                                     </div>
 
-                                    <div className="flex flex-wrap gap-6 pt-6 border-t border-app-text/5">
+                                    <div className="mt-3 flex flex-wrap gap-6 border-t border-app-border pt-3 empty:hidden">
                                         {event.locationId && (
                                             <div className="flex items-center gap-2.5 text-ui-10 font-black uppercase tracking-widest text-app-text/30">
                                                 <MapPin size={14} className="text-accent" />
@@ -216,7 +239,7 @@ const TimelineView: React.FC = () => {
                             </motion.div>
                         ))
                     ) : (
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             className="flex flex-col items-center justify-center py-32 text-app-text/20 gap-6"

@@ -1876,6 +1876,13 @@
         "select_notebook_hint": "Sélectionnez un carnet pour voir les parchemins"
       },
       "workshop_viewer": {
+        "agencement": {
+          "fermer": "Fermer",
+          "ecrire": "L’écrire moi-même",
+          "ecrire_aide": "Une fiche Markdown vide, rédigée à la main.",
+          "generer": "La générer avec l’IA",
+          "generer_aide": "Ouvre l’atelier des règles de la Forge : le sujet, les sources du carnet NotebookLM à cocher, et les règles qu’il propose."
+        },
         "syncing": "Synchronisation de l'Atelier...",
         "search_placeholder": "Rechercher une règle ou une note...",
         "create_button": "Créer une Règle",
@@ -2327,7 +2334,7 @@
       "detail": {
         "media_hub": "Médiathèque",
         "generate_ai": "Générer par IA",
-        "send_to_mapos": "Send to Map-OS",
+        "send_to_mapos": "Envoyer à la cartographie",
         "location_clues": "Indices du Lieu",
         "no_clues_found": "Aucun indice découvert dans ce lieu.",
         "narrative_description": "Description Narrative",
@@ -2463,8 +2470,8 @@
       }
     },
     "template_dashboard": {
-      "title": "Bibliothèque des Systèmes",
-      "subtitle": "Archives de la Forge GM-OS",
+      "title": "Bibliothèque des fiches et règles",
+      "subtitle": "Les fiches de jeu et les pilotes de règles",
       "actions": {
         "import_driver": "IMPORTER DRIVER",
         "create_forge": "CRÉER VIA FORGE",
@@ -2600,13 +2607,27 @@
       }
     },
     "rule_engine_editor": {
+      "agencement": {
+        "enregistre": "Enregistré à chaque modification",
+        "atelier": "Atelier",
+        "atelier_resume": "Fiches de règles",
+        "en_clair": "En clair",
+        "exemple": "Exemple :",
+        "moteur_inconnu": "Moteur « {{moteur}} » : inconnu de cette liste — choisissez-en un.",
+        "resume_cartes": "Cartes d’initiative (1–{{count}})",
+        "resume_alternance": "Alternance des camps",
+        "resume_initiative": "Initiative chiffrée",
+        "resume_portees": "{{count}} paliers de portée",
+        "resume_personas": "{{count}} persona(s) réglé(s)",
+        "resume_butin": "{{count}} table(s) de butin",
+        "resume_carnet": "Carnet NotebookLM lié",
+        "resume_sans_carnet": "Aucun carnet lié"
+      },
       "loading": "Chargement du moteur de règles...",
       "back_to_templates": "Retour à la bibliothèque",
       "emoji_title": "Icône du système",
       "name_placeholder": "Nom du système de jeu...",
       "core_label": "Noyau Système",
-      "sync_success": "Configuration du moteur synchronisée",
-      "sync_btn": "Synchroniser",
       "nav": {
         "core": "Système",
         "combat": "Combat",
@@ -2618,6 +2639,24 @@
         "system_ref": "Référence Système"
       },
       "core": {
+        "agencement": {
+          "moteurs": {
+            "standard": { "nom": "Standard", "clair": "On lance la formule et on ajoute les modificateurs ; le total décide.", "exemple": "1d20 + 5 → 13 + 5 = 18." },
+            "exploding": { "nom": "Dés explosifs", "clair": "Un dé qui tombe sur sa plus haute face se relance, et les deux s'additionnent.", "exemple": "1d6 → 6, relancé → 4 : 10." },
+            "formula": { "nom": "Formule libre", "clair": "La formule du jeu est lancée telle qu'elle est écrite, sans règle de plus.", "exemple": "2d10 + 1d4 → 7 + 3 + 2 = 12." },
+            "threshold": { "nom": "Total contre un seuil", "clair": "On additionne les dés, et le total doit atteindre le seuil — ou rester dessous, selon le sens du jeu.", "exemple": "2d6 → 9 contre 8 : réussite." },
+            "advantage": { "nom": "Avantage", "clair": "Deux dés, on garde le meilleur.", "exemple": "2d20 → 7 et 15 : 15." },
+            "disadvantage": { "nom": "Désavantage", "clair": "Deux dés, on garde le pire.", "exemple": "2d20 → 7 et 15 : 7." },
+            "pool": { "nom": "Réserve de dés", "clair": "Chaque dé qui atteint la cible compte pour une réussite ; on compte les réussites.", "exemple": "5d10, cible 8 → 9, 3, 8, 1, 10 : 3 réussites." },
+            "pool_explode": { "nom": "Réserve explosive", "clair": "Comme la réserve, et chaque dé tombé sur sa face maximale ajoute un dé.", "exemple": "5d10, cible 8 → le 10 ajoute un dé à la réserve." },
+            "yze": { "nom": "Year Zero (d6)", "clair": "Une réserve de dés à six faces : chaque 6 est une réussite (Alien, Mutant).", "exemple": "4d6 → 6, 2, 6, 3 : 2 réussites." },
+            "yze_echelonne": { "nom": "Dés échelonnés (d6…d12)", "clair": "Deux dés de tailles différentes, lus sur les lettres de la fiche (A = d12, B = d10, C = d8, D = d6) : 6 ou plus réussit, 10 ou plus vaut deux réussites (Blade Runner).", "exemple": "Vigueur A + Armes B → 1d12 et 1d10 : 11 et 7, trois réussites." },
+            "deux_d20": { "nom": "Système 2d20", "clair": "Une réserve de d20 : chaque dé sous la cible réussit, un 1 vaut deux réussites (Dune, Star Trek).", "exemple": "Cible 12, 2d20 → 1 et 9 : trois réussites." },
+            "sauvegarde": { "nom": "Sauvegarde (d20 sous la valeur)", "clair": "Un seul d20, qui doit tomber sous la valeur de la fiche (Cthulhu Hack).", "exemple": "Force 13, d20 → 9 : réussite." },
+            "fate": { "nom": "FATE / Fudge", "clair": "Quatre dés à faces −, 0, + ajoutés à la compétence.", "exemple": "Compétence 2, dés + 0 − + : 3." },
+            "rolemaster": { "nom": "Rolemaster (d100 ouvert)", "clair": "Un d100 : de 96 à 100 on relance et on ajoute, de 01 à 05 on relance et on retranche.", "exemple": "97 → relancé 42 : 139." }
+          }
+        },
         "title": "Système de Jeu Core",
         "description": "Configurez les fondations mécaniques de votre jeu. Ces paramètres définissent comment les dés sont interprétés par le système.",
         "engine_label": "Moteur de Résolution",

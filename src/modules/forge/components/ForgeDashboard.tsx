@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { prendreLaDemande } from '../ouvertureDeLaForge';
 import { useTranslation } from 'react-i18next';
 import { Hammer, FileUp, Globe, X, Rocket, Zap, Sparkles, ChevronRight, Shield, Layers, AlertTriangle, Terminal, Users, FolderTree } from 'lucide-react';
 import { forgeService } from '../ForgeService';
@@ -97,7 +98,9 @@ const ForgeDashboard: React.FC = () => {
 
   const allDrivers = tousLesPilotes(customGameDrivers);
 
-  const [activeTab, setActiveTab] = useState<'structure' | 'rules'>('structure');
+  /* Une demande venue du Grimoire (« La générer avec l'IA ») ouvre l'atelier
+     des règles ; sinon, la structure, comme toujours. */
+  const [activeTab, setActiveTab] = useState<'structure' | 'rules'>(() => prendreLaDemande() ?? 'structure');
   /**
    * N'enrichir que le pilote, sans toucher à la fiche de personnage.
    *

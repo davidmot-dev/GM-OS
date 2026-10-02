@@ -1876,6 +1876,13 @@
         "select_notebook_hint": "Select a notebook to view scrolls"
       },
       "workshop_viewer": {
+        "agencement": {
+          "fermer": "Close",
+          "ecrire": "Write it myself",
+          "ecrire_aide": "An empty Markdown sheet, written by hand.",
+          "generer": "Generate it with AI",
+          "generer_aide": "Opens the Forge's rules workshop: the topic, the NotebookLM notebook sources to tick, and the rules it suggests."
+        },
         "syncing": "Synchronizing Atelier...",
         "search_placeholder": "Search a rule or note...",
         "create_button": "Create a Rule",
@@ -2463,8 +2470,8 @@
       }
     },
     "template_dashboard": {
-      "title": "Systems Library",
-      "subtitle": "GM-OS Forge Archives",
+      "title": "Sheets and rules library",
+      "subtitle": "Game sheets and rule drivers",
       "actions": {
         "import_driver": "IMPORT DRIVER",
         "create_forge": "CREATE VIA FORGE",
@@ -2600,13 +2607,27 @@
       }
     },
     "rule_engine_editor": {
+      "agencement": {
+        "enregistre": "Saved on every change",
+        "atelier": "Workshop",
+        "atelier_resume": "Rule sheets",
+        "en_clair": "In plain words",
+        "exemple": "Example:",
+        "moteur_inconnu": "Engine “{{moteur}}”: not in this list — pick one.",
+        "resume_cartes": "Initiative cards (1–{{count}})",
+        "resume_alternance": "Alternating sides",
+        "resume_initiative": "Numbered initiative",
+        "resume_portees": "{{count}} range bands",
+        "resume_personas": "{{count}} persona(s) set",
+        "resume_butin": "{{count}} loot table(s)",
+        "resume_carnet": "NotebookLM notebook linked",
+        "resume_sans_carnet": "No notebook linked"
+      },
       "loading": "Loading rule engine...",
       "back_to_templates": "Back to library",
       "emoji_title": "System Icon",
       "name_placeholder": "Game system name...",
       "core_label": "System Core",
-      "sync_success": "Rule engine configuration synchronized",
-      "sync_btn": "Synchronize",
       "nav": {
         "core": "System",
         "combat": "Combat",
@@ -2618,6 +2639,24 @@
         "system_ref": "System Reference"
       },
       "core": {
+        "agencement": {
+          "moteurs": {
+            "standard": { "nom": "Standard", "clair": "Roll the formula and add the modifiers; the total decides.", "exemple": "1d20 + 5 → 13 + 5 = 18." },
+            "exploding": { "nom": "Exploding dice", "clair": "A die that rolls its highest face is rolled again, and both add up.", "exemple": "1d6 → 6, rerolled → 4: 10." },
+            "formula": { "nom": "Free formula", "clair": "The game's formula is rolled as written, with no extra rule.", "exemple": "2d10 + 1d4 → 7 + 3 + 2 = 12." },
+            "threshold": { "nom": "Total against a threshold", "clair": "Add the dice; the total must reach the threshold — or stay under it, depending on the game.", "exemple": "2d6 → 9 against 8: success." },
+            "advantage": { "nom": "Advantage", "clair": "Two dice, keep the best.", "exemple": "2d20 → 7 and 15: 15." },
+            "disadvantage": { "nom": "Disadvantage", "clair": "Two dice, keep the worst.", "exemple": "2d20 → 7 and 15: 7." },
+            "pool": { "nom": "Dice pool", "clair": "Each die that reaches the target is a success; count the successes.", "exemple": "5d10, target 8 → 9, 3, 8, 1, 10: 3 successes." },
+            "pool_explode": { "nom": "Exploding pool", "clair": "Like the pool, and each die on its highest face adds a die.", "exemple": "5d10, target 8 → the 10 adds a die to the pool." },
+            "yze": { "nom": "Year Zero (d6)", "clair": "A pool of six-sided dice: each 6 is a success (Alien, Mutant).", "exemple": "4d6 → 6, 2, 6, 3: 2 successes." },
+            "yze_echelonne": { "nom": "Step dice (d6…d12)", "clair": "Two dice of different sizes, read from the sheet letters (A = d12, B = d10, C = d8, D = d6): 6+ succeeds, 10+ counts as two successes (Blade Runner).", "exemple": "Strength A + Firearms B → 1d12 and 1d10: 11 and 7, three successes." },
+            "deux_d20": { "nom": "2d20 system", "clair": "A pool of d20s: each die under the target succeeds, a 1 counts as two (Dune, Star Trek).", "exemple": "Target 12, 2d20 → 1 and 9: three successes." },
+            "sauvegarde": { "nom": "Save (d20 under the value)", "clair": "A single d20, which must roll under the sheet value (Cthulhu Hack).", "exemple": "Strength 13, d20 → 9: success." },
+            "fate": { "nom": "FATE / Fudge", "clair": "Four dice with −, 0, + faces added to the skill.", "exemple": "Skill 2, dice + 0 − +: 3." },
+            "rolemaster": { "nom": "Rolemaster (open d100)", "clair": "One d100: on 96–100 reroll and add, on 01–05 reroll and subtract.", "exemple": "97 → rerolled 42: 139." }
+          }
+        },
         "title": "Core Game System",
         "description": "Configure the mechanical foundations of your game. These parameters define how dice are interpreted by the system.",
         "engine_label": "Resolution Engine",
