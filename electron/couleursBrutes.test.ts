@@ -43,6 +43,7 @@ const MODULES_MIGRES: string[] = [
     'modules/ai',      // phase 4, L6 — 2026-10-03
     'modules/system',  // phase 4, L6 — 2026-10-03 (HUD Nexus : phases en cours à l'accent)
     'modules/tactical-ai', // phase 4, L6 — 2026-10-03
+    'modules/debug',   // phase 4, L6 — 2026-10-03
 ];
 
 /**
