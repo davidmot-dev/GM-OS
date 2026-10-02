@@ -959,7 +959,8 @@ const ForgeDashboard: React.FC = () => {
               {/* Metadata / Output Target */}
               <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
                 <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent font-display">
-                   <Rocket size={14} className="animate-pulse" /> {t('modules:session.forge_module.destination_label')}
+                   {/* Les trois temps de la Forge, numérotés : la maquette retenue (L3, 2026-10-02). */}
+                   <span className="font-mono">01.</span> <Rocket size={14} className="animate-pulse" /> {t('modules:session.forge_module.destination_label')}
                 </h2>
                 <div className="flex flex-col gap-3">
                   <div className="relative group">
@@ -1038,7 +1039,7 @@ const ForgeDashboard: React.FC = () => {
               */}
               <div className="bg-gm-violet/10 rounded-2xl border border-gm-violet/20 p-5 flex flex-col gap-3 hover:border-gm-violet/40 transition-all">
                 <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-gm-violet font-display">
-                  <Layers size={14} /> {t('modules:session.forge_module.corpus_forge.label')}
+                  <span className="font-mono">02.</span> <Layers size={14} /> {t('modules:session.forge_module.corpus_forge.label')}
                 </h2>
                 <p className="text-ui-10 text-app-text/40 leading-relaxed">
                   {t('modules:session.forge_module.corpus_forge.hint')}
@@ -1232,7 +1233,7 @@ const ForgeDashboard: React.FC = () => {
               {/* User Instructions Extension */}
               <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
                 <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent font-display">
-                   <Sparkles size={14} className="text-etat-alerte" /> {t('modules:session.forge_module.intentions_label')}
+                   <span className="font-mono">03.</span> <Sparkles size={14} className="text-etat-alerte" /> {t('modules:session.forge_module.intentions_label')}
                 </h2>
                 <textarea 
                   value={forgeStore.userInstructions} 

@@ -4,7 +4,7 @@ import { Hammer, Layers, Network } from 'lucide-react';
 import ForgeDashboard from './components/ForgeDashboard';
 import AtelierDeCampagne from './campagne/AtelierDeCampagne';
 import ForgeDeLaTrame from './campagne/ForgeDeLaTrame';
-import { useSessionStore } from '../../store/useSessionStore';
+import { EnTeteDeModule } from '../../components/socle';
 
 /**
  * Forge OS — le point d'entrée du module.
@@ -39,54 +39,42 @@ import { useSessionStore } from '../../store/useSessionStore';
  */
 export type ModeForge = 'system' | 'campagne' | 'trame';
 
+/**
+ * **L'en-tête de la Forge dans la grammaire commune** — refonte, phase 4, L3,
+ * étape 2 (2026-10-02). Le titre du module, puis **les trois ateliers
+ * numérotés**, dans l'ordre où ils s'enchaînent : documenter le système, écrire
+ * les fiches de la campagne, les projeter en trame. La maquette retenue les
+ * numérote ; *un ordre qui ne se lit pas est un ordre qu'on refait.*
+ */
 const ForgeOS: React.FC = () => {
     const { t } = useTranslation(['modules']);
-    const { theme } = useSessionStore();
     const [mode, setMode] = useState<ModeForge>('system');
+
+    const ateliers: { id: ModeForge; icone: React.ReactNode; libelle: string }[] = [
+        { id: 'system', icone: <Hammer size={13} />, libelle: t('modules:session.header.forge') },
+        { id: 'campagne', icone: <Layers size={13} />, libelle: 'Campagne' },
+        { id: 'trame', icone: <Network size={13} />, libelle: 'Trame' },
+    ];
 
     return (
         <div className="flex-1 h-full overflow-hidden flex flex-col bg-app-bg text-app-text">
-            <header className={`flex items-center justify-between h-16 px-6 shrink-0 z-30 relative transition-all duration-500 ${
-                theme === 'medieval' ? 'bg-app-surface/90 border-b-2 border-app-border/40' : 'premium-glass'
-            }`}>
-                <div className={`flex items-center gap-3 ${theme === 'medieval' ? 'text-accent' : 'text-gm-gold'}`}>
-                    <Hammer size={26} className={theme === 'medieval' ? 'opacity-80' : ''} />
-                    <h1 className={`text-app-text text-lg tracking-[0.15em] uppercase ${
-                        theme === 'medieval' ? 'font-display' : 'font-bold tracking-tight'
-                    }`}>
-                        {t('modules:names.forge')} <span className="text-accent opacity-80">OS</span>
-                    </h1>
-                </div>
-
-                <div className={`flex p-1 bg-app-surface/50 border border-app-border/50 shadow-lg ${
-                    theme === 'medieval' ? 'rounded-md' : 'rounded-xl'
-                }`}>
-                    <button
-                        onClick={() => setMode('system')}
-                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-ui-11 font-display tracking-widest' : 'rounded-lg text-ui-10 font-black uppercase tracking-widest'
-                        } ${mode === 'system' ? 'bg-accent text-app-on-accent shadow-glow-accent' : 'text-app-text/60'}`}
-                    >
-                        <Hammer size={12} /> {t('modules:session.header.forge')}
-                    </button>
-                    <button
-                        onClick={() => setMode('campagne')}
-                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-ui-11 font-display tracking-widest' : 'rounded-lg text-ui-10 font-black uppercase tracking-widest'
-                        } ${mode === 'campagne' ? 'bg-accent text-app-on-accent shadow-glow-accent' : 'text-app-text/60'}`}
-                    >
-                        <Layers size={12} /> Campagne
-                    </button>
-                    <button
-                        onClick={() => setMode('trame')}
-                        className={`px-6 py-1.5 transition-all flex items-center gap-2 ${
-                            theme === 'medieval' ? 'rounded-sm text-ui-11 font-display tracking-widest' : 'rounded-lg text-ui-10 font-black uppercase tracking-widest'
-                        } ${mode === 'trame' ? 'bg-accent text-app-on-accent shadow-glow-accent' : 'text-app-text/60'}`}
-                    >
-                        <Network size={12} /> Trame
-                    </button>
-                </div>
-            </header>
+            <div className="shrink-0 flex flex-wrap items-end justify-between gap-3 px-6 pt-4 pb-3 border-b border-app-border/50">
+                <EnTeteDeModule titre={t('modules:names.forge')} />
+                <nav aria-label="Ateliers de la Forge" className="flex gap-1 rounded-xl border border-app-border/50 bg-app-surface/50 p-1">
+                    {ateliers.map(({ id, icone, libelle }, rang) => (
+                        <button
+                            key={id}
+                            onClick={() => setMode(id)}
+                            aria-pressed={mode === id}
+                            className={`flex items-center gap-2 rounded-lg px-4 py-1.5 text-ui-10 font-black uppercase tracking-widest transition-all ${mode === id
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent'
+                                : 'text-app-text/60 hover:text-app-text hover:bg-app-surface'}`}
+                        >
+                            <span className="font-mono opacity-70">{rang + 1}.</span> {icone} {libelle}
+                        </button>
+                    ))}
+                </nav>
+            </div>
 
             <div className="flex-1 min-h-0 overflow-hidden">
                 {mode === 'campagne' ? <AtelierDeCampagne />
