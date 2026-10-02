@@ -226,12 +226,12 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                         {/* La pièce a changé : le dire ici, parce que le meneur
                             peut regarder l'écran et non les lampes. */}
                         {essai && (
-                            <span className="text-ui-9 font-bold uppercase tracking-widest text-amber-400 animate-pulse shrink-0">
+                            <span className="text-ui-9 font-bold uppercase tracking-widest text-etat-alerte animate-pulse shrink-0">
                                 essai en cours
                             </span>
                         )}
                         {caseEcrite && !essai && (
-                            <span className="text-ui-9 font-bold uppercase tracking-widest text-emerald-400">
+                            <span className="text-ui-9 font-bold uppercase tracking-widest text-etat-succes">
                                 rangée
                             </span>
                         )}
@@ -245,10 +245,10 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                         {(proposition.lampes ?? []).map((lampe, i) => (
                             <div key={`${lampe?.lampe}-${i}`} className="flex items-center gap-2.5">
                                 <span
-                                    className="size-4 rounded shrink-0 border border-white/10"
+                                    className="size-4 rounded shrink-0 border border-app-text/10"
                                     style={{ backgroundColor: couleurValide(lampe?.couleur) ?? 'transparent' }}
                                 />
-                                <span className={`text-ui-10 flex-1 truncate ${lampeConnue(lampe?.lampe) ? 'text-app-text/80' : 'text-amber-400'}`}>
+                                <span className={`text-ui-10 flex-1 truncate ${lampeConnue(lampe?.lampe) ? 'text-app-text/80' : 'text-etat-alerte'}`}>
                                     {lampe?.lampe}
                                     {/* Une lampe que le pont ne connaît pas sera ignorée : le dire ici
                                         plutôt que de laisser le meneur chercher pourquoi elle reste noire. */}
@@ -268,14 +268,14 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                         {caseEcrite ? (
                             <button
                                 onClick={() => hueEngine.applyScene(caseEcrite)}
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-white text-ui-10 font-bold uppercase tracking-widest"
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-app-on-accent text-ui-10 font-bold uppercase tracking-widest"
                             >
                                 <Play size={12} /> Jouer maintenant
                             </button>
                         ) : (
                             <button
                                 onClick={enregistrer}
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-white text-ui-10 font-bold uppercase tracking-widest hover:brightness-110"
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-app-on-accent text-ui-10 font-bold uppercase tracking-widest hover:brightness-110"
                             >
                                 <Check size={12} /> Enregistrer
                             </button>
@@ -288,7 +288,7 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                                     : 'Allume l’ambiance sur vos lampes, sans rien enregistrer.'}
                                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-ui-10 font-bold uppercase tracking-widest border transition-colors ${
                                     essai
-                                        ? 'border-amber-400/40 text-amber-400 hover:bg-amber-400/10'
+                                        ? 'border-etat-alerte/40 text-etat-alerte hover:bg-etat-alerte/10'
                                         : 'border-accent/30 text-accent/80 hover:text-accent hover:bg-accent/10'
                                 }`}
                             >
@@ -306,7 +306,7 @@ export const PropositionDAmbiance: React.FC<Props> = ({
                         </button>
                         <button
                             onClick={refuser}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-subtle hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-subtle hover:text-etat-danger text-ui-10 font-bold uppercase tracking-widest ml-auto"
                         >
                             <X size={12} /> Refuser
                         </button>

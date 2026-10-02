@@ -202,7 +202,7 @@ export const SceneGrid: React.FC = () => {
                             >
                                 {scene.icon}
                             </span>
-                            <span className="text-xs font-bold text-slate-300 uppercase tracking-tight relative z-10 text-center px-2">
+                            <span className="text-xs font-bold text-app-text uppercase tracking-tight relative z-10 text-center px-2">
                                 {scene.name}
                             </span>
 
@@ -365,7 +365,7 @@ export const SceneGrid: React.FC = () => {
                                 className="absolute bottom-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                 title={t('light.grid.overwrite_tooltip')}
                             >
-                                <span className={`material-symbols-outlined text-sm ${captureEnCours === scene.id ? 'animate-spin text-accent' : 'text-app-subtle hover:text-white'}`}>
+                                <span className={`material-symbols-outlined text-sm ${captureEnCours === scene.id ? 'animate-spin text-accent' : 'text-app-subtle hover:text-app-text'}`}>
                                     {captureEnCours === scene.id ? 'progress_activity' : 'photo_camera'}
                                 </span>
                             </div>
@@ -375,7 +375,7 @@ export const SceneGrid: React.FC = () => {
                                 className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                 title={t('light.grid.clear_tooltip')}
                             >
-                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-red-500">close</span>
+                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-etat-danger">close</span>
                             </div>
 
                             <div
@@ -383,7 +383,7 @@ export const SceneGrid: React.FC = () => {
                                 className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                                 title={t('light.grid.rename_tooltip')}
                             >
-                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-white">edit</span>
+                                <span className="material-symbols-outlined text-app-subtle text-sm hover:text-app-text">edit</span>
                             </div>
                         </div>
                     );
@@ -403,7 +403,7 @@ export const SceneGrid: React.FC = () => {
         <div key={cle} className="flex flex-col gap-3">
             <div className="flex items-baseline gap-3">
                 <h3 className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle">{titre}</h3>
-                <span className="text-ui-10 text-slate-600">{aide}</span>
+                <span className="text-ui-10 text-app-subtle">{aide}</span>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6">
                 {tuiles.map(renduDeLaTuile)}

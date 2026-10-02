@@ -172,7 +172,7 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
       explique au lieu de l'écouter ne sert à rien.*
     */
     return createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-app-bg/70 backdrop-blur-sm p-4">
             <div className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl bg-app-surface border border-app-border/20 shadow-2xl overflow-hidden">
 
                 <div className="flex items-center gap-3 p-4 border-b border-app-border/10">
@@ -260,7 +260,7 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                                     title={peutPoser ? undefined : t('light.footer.selecteur.sansLampe')}
                                     className={`flex-1 text-left min-w-0 ${peutPoser ? '' : 'cursor-default'}`}
                                 >
-                                    <span className="block text-xs font-bold text-sky-200 truncate">{e.nom}</span>
+                                    <span className="block text-xs font-bold text-gm-cyan truncate">{e.nom}</span>
                                     <span className="block text-ui-10 text-app-text/40 truncate">
                                         {t('light.footer.atelier.resume', {
                                             etapes: effetsDAtelier.find(x => x.id === e.idAtelier)?.etapes.length ?? 0,
@@ -276,7 +276,7 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                                 </button>
                                 <button
                                     onClick={() => supprimerUnEffetDAtelier(e.idAtelier!)}
-                                    className="shrink-0 p-1 text-app-text/25 hover:text-red-400 transition-colors"
+                                    className="shrink-0 p-1 text-app-text/25 hover:text-etat-danger transition-colors"
                                     title={t('light.footer.atelier.supprimer')}
                                 >
                                     <Trash2 size={14} />
@@ -304,14 +304,14 @@ const SelecteurDEffet: React.FC<Props> = ({ effetActuel, nomDeLaLampe, onChoisir
                                         title={peutPoser ? undefined : t('light.footer.selecteur.sansLampe')}
                                         className={`flex-1 text-left min-w-0 ${peutPoser ? '' : 'cursor-default'}`}
                                     >
-                                        <span className="block text-xs font-bold text-amber-200 truncate">{a.nom}</span>
+                                        <span className="block text-xs font-bold text-gm-gold truncate">{a.nom}</span>
                                         <span className="block text-ui-10 text-app-text/40 truncate">
                                             {t('light.footer.ambiances.from', { source: a.origine })}
                                         </span>
                                     </button>
                                     <button
                                         onClick={() => supprimerUneVariante(a.idVariante!)}
-                                        className="shrink-0 p-1 text-app-text/25 hover:text-red-400 transition-colors"
+                                        className="shrink-0 p-1 text-app-text/25 hover:text-etat-danger transition-colors"
                                         title={t('light.footer.ambiances.delete')}
                                     >
                                         <Trash2 size={14} />

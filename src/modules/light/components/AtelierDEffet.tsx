@@ -209,7 +209,7 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-app-bg/70 backdrop-blur-sm p-4">
             <div className="w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl bg-app-surface border border-app-border/20 shadow-2xl overflow-hidden">
 
                 <div className="flex items-center gap-3 p-4 border-b border-app-border/10">
@@ -283,7 +283,7 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                                 : (
                                     /* ⚠️ Le dire plutôt que de montrer une bande vide : une
                                        proposition illisible ressemble sinon à une panne. */
-                                    <p className="text-ui-10 text-amber-400 italic">
+                                    <p className="text-ui-10 text-etat-alerte italic">
                                         Aucune étape jouable là-dedans — les couleurs rendues ne sont
                                         pas des hexadécimaux. Réessayez.
                                     </p>
@@ -299,7 +299,7 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                                 <button
                                     onClick={remplacerParLaProposition}
                                     disabled={etapesProposees.length === 0}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-white text-ui-10 font-bold uppercase tracking-widest hover:brightness-110 disabled:opacity-40"
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent text-app-on-accent text-ui-10 font-bold uppercase tracking-widest hover:brightness-110 disabled:opacity-40"
                                 >
                                     <Check size={12} /> Remplacer les étapes
                                 </button>
@@ -312,7 +312,7 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                                 </button>
                                 <button
                                     onClick={() => setProposition(null)}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-subtle hover:text-red-400 text-ui-10 font-bold uppercase tracking-widest ml-auto"
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-app-subtle hover:text-etat-danger text-ui-10 font-bold uppercase tracking-widest ml-auto"
                                 >
                                     <X size={12} /> Refuser
                                 </button>
@@ -401,7 +401,7 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                                 <button
                                     onClick={() => supprimer(i)}
                                     disabled={etapes.length <= 1}
-                                    className="p-1 text-app-text/25 hover:text-red-400 disabled:opacity-20"
+                                    className="p-1 text-app-text/25 hover:text-etat-danger disabled:opacity-20"
                                     title={etapes.length <= 1 ? 'Un effet garde au moins une étape' : 'Supprimer cette étape'}
                                 >
                                     <Trash2 size={14} />
@@ -458,7 +458,7 @@ export const AtelierDEffet: React.FC<Props> = ({ effetId, onFermer }) => {
                                     onClick={() => basculerLEssai(lampe.id)}
                                     className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-ui-10 font-bold transition-colors ${
                                         lampeDEssai === lampe.id
-                                            ? 'border-amber-400/50 text-amber-400 bg-amber-400/10'
+                                            ? 'border-etat-alerte/50 text-etat-alerte bg-etat-alerte/10'
                                             : 'border-app-border/30 text-app-text/60 hover:border-accent/50 hover:text-accent'
                                     }`}
                                     title={lampeDEssai === lampe.id

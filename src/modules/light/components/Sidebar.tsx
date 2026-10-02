@@ -113,7 +113,7 @@ export const Sidebar: React.FC = () => {
 
             {/* Connection Status & Sync */}
             <div className="flex flex-col gap-3">
-                <div className={`flex items-center justify-between p-4 rounded-xl border ${status === 'connected' ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-app-bg/50 border-app-border'}`}>
+                <div className={`flex items-center justify-between p-4 rounded-xl border ${status === 'connected' ? 'bg-etat-succes/10 border-etat-succes/30' : 'bg-app-bg/50 border-app-border'}`}>
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined text-accent">hub</span>
                         <div className="flex flex-col">
@@ -125,14 +125,14 @@ export const Sidebar: React.FC = () => {
 
                 <div className="flex items-center justify-between p-4 rounded-xl border bg-app-bg/20 border-app-border">
                     <div className="flex items-center gap-3">
-                        <span className={`material-symbols-outlined ${useLightStore.getState().isSyncEnabled ? 'text-gm-violet animate-pulse' : 'text-slate-600'}`}>sync</span>
-                        <span className="text-xs font-bold uppercase tracking-widest text-slate-300">{t('light.sidebar.sync_with_audio')}</span>
+                        <span className={`material-symbols-outlined ${useLightStore.getState().isSyncEnabled ? 'text-gm-violet animate-pulse' : 'text-app-subtle'}`}>sync</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-app-text">{t('light.sidebar.sync_with_audio')}</span>
                     </div>
                     <button 
                         onClick={() => useLightStore.getState().setSyncEnabled(!useLightStore.getState().isSyncEnabled)}
                         className={`w-10 h-5 rounded-full relative transition-colors ${useLightStore.getState().isSyncEnabled ? 'bg-accent' : 'bg-app-surface'}`}
                     >
-                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${useLightStore.getState().isSyncEnabled ? 'left-6' : 'left-1'}`} />
+                        <div className={`absolute top-1 w-3 h-3 bg-fixe-blanc rounded-full transition-all ${useLightStore.getState().isSyncEnabled ? 'left-6' : 'left-1'}`} />
                     </button>
                 </div>
 
@@ -147,7 +147,7 @@ export const Sidebar: React.FC = () => {
                     </div>
                 )}
                 {status === 'connected' && (
-                    <button onClick={async () => await useLightStore.getState().setConnection('disconnected', null, null)} className="py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg text-xs font-bold transition-colors">
+                    <button onClick={async () => await useLightStore.getState().setConnection('disconnected', null, null)} className="py-2 bg-etat-danger/10 hover:bg-etat-danger/20 text-etat-danger rounded-lg text-xs font-bold transition-colors">
                         {t('light.sidebar.disconnect')}
                     </button>
                 )}
@@ -158,7 +158,7 @@ export const Sidebar: React.FC = () => {
                                 await useLightStore.getState().forgetBridge();
                             }
                         }}
-                        className="py-2 bg-slate-800 hover:bg-slate-700 text-app-muted rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                        className="py-2 bg-app-surface-2 hover:bg-app-text/10 text-app-muted rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2"
                     >
                         <span className="material-symbols-outlined text-sm">delete_forever</span>
                         {t('light.sidebar.forget_bridge')}
@@ -170,7 +170,7 @@ export const Sidebar: React.FC = () => {
             {/* Global Brightness */}
             <div className="flex flex-col gap-4">
                 <div className="flex justify-between items-center">
-                    <label className="text-sm font-bold text-slate-300 uppercase tracking-widest">{t('light.sidebar.global_intensity')}</label>
+                    <label className="text-sm font-bold text-app-text uppercase tracking-widest">{t('light.sidebar.global_intensity')}</label>
                     <span className="text-accent font-mono font-bold">{globalBrightness}%</span>
                 </div>
                 <div className="relative w-full h-8 flex items-center">
@@ -191,19 +191,19 @@ export const Sidebar: React.FC = () => {
                     className={`group flex items-center justify-between p-4 rounded-xl border transition-all ${
                         suivreLaVoix
                             ? 'bg-accent/20 border-accent/40'
-                            : 'bg-app-bg/50 border-white/10 hover:bg-app-bg'
+                            : 'bg-app-bg/50 border-app-text/10 hover:bg-app-bg'
                     }`}
                 >
                     <div className="flex items-center gap-3">
                         <span className={`material-symbols-outlined transition-transform group-hover:scale-110 ${suivreLaVoix ? 'text-accent' : 'text-app-muted'}`}>graphic_eq</span>
-                        <span className={`font-bold ${suivreLaVoix ? 'text-app-text' : 'text-slate-300'}`}>{t('light.sidebar.suivre_la_voix')}</span>
+                        <span className={`font-bold ${suivreLaVoix ? 'text-app-text' : 'text-app-text'}`}>{t('light.sidebar.suivre_la_voix')}</span>
                     </div>
-                    <span className={`text-ui-10 font-black uppercase tracking-widest ${suivreLaVoix ? 'text-accent' : 'text-slate-600'}`}>
+                    <span className={`text-ui-10 font-black uppercase tracking-widest ${suivreLaVoix ? 'text-accent' : 'text-app-subtle'}`}>
                         {suivreLaVoix ? t('light.sidebar.suivre_la_voix_actif') : t('light.sidebar.suivre_la_voix_inactif')}
                     </span>
                 </button>
                 {suivreLaVoix && !voixActive && (
-                    <p className="text-ui-11 text-amber-400/80 px-1">{t('light.sidebar.suivre_la_voix_sans_micro')}</p>
+                    <p className="text-ui-11 text-etat-alerte/80 px-1">{t('light.sidebar.suivre_la_voix_sans_micro')}</p>
                 )}
                 {suivreLaVoix && (
                     <p className="text-ui-11 text-app-subtle px-1">{t('light.sidebar.suivre_la_voix_note')}</p>
@@ -213,28 +213,28 @@ export const Sidebar: React.FC = () => {
             {/* Quick Flash Buttons */}
             <div className="flex flex-col gap-3">
                 <h3 className="text-xs font-bold text-app-subtle uppercase tracking-widest mb-1">{t('light.sidebar.quick_action_presets')}</h3>
-                <button onClick={() => handleFlash('#ff0000')} className="group flex items-center justify-between p-4 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-all">
+                <button onClick={() => handleFlash('#ff0000')} className="group flex items-center justify-between p-4 rounded-xl bg-etat-danger/10 border border-etat-danger/20 hover:bg-etat-danger/20 transition-all">
                     <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-red-500 group-hover:scale-110 transition-transform">local_fire_department</span>
-                        <span className="font-bold text-red-100">{t('light.sidebar.critical_red')}</span>
+                        <span className="material-symbols-outlined text-etat-danger group-hover:scale-110 transition-transform">local_fire_department</span>
+                        <span className="font-bold text-app-text">{t('light.sidebar.critical_red')}</span>
                     </div>
-                    <span className="material-symbols-outlined text-xs text-red-500/50">bolt</span>
+                    <span className="material-symbols-outlined text-xs text-etat-danger/50">bolt</span>
                 </button>
 
                 <button onClick={() => handleFlash('#0088ff')} className="group flex items-center justify-between p-4 rounded-xl bg-accent/10 border border-accent/20 hover:bg-accent/20 transition-all">
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined text-accent group-hover:scale-110 transition-transform">auto_fix_high</span>
-                        <span className="font-bold text-blue-100">{t('light.sidebar.arcane_blue')}</span>
+                        <span className="font-bold text-app-text">{t('light.sidebar.arcane_blue')}</span>
                     </div>
                     <span className="material-symbols-outlined text-xs text-accent/50">bolt</span>
                 </button>
 
-                <button onClick={() => handleFlash('#10b981')} className="group flex items-center justify-between p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+                <button onClick={() => handleFlash('#10b981')} className="group flex items-center justify-between p-4 rounded-xl bg-etat-succes/10 border border-etat-succes/20 hover:bg-etat-succes/20 transition-all">
                     <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-emerald-400 group-hover:scale-110 transition-transform">healing</span>
+                        <span className="material-symbols-outlined text-etat-succes group-hover:scale-110 transition-transform">healing</span>
                         <span className="font-bold text-app-text">{t('light.sidebar.healing_green')}</span>
                     </div>
-                    <span className="material-symbols-outlined text-xs text-emerald-400/50">bolt</span>
+                    <span className="material-symbols-outlined text-xs text-etat-succes/50">bolt</span>
                 </button>
             </div>
 
@@ -296,7 +296,7 @@ export const Sidebar: React.FC = () => {
                     title={!activeSceneId
                         ? t('light.sidebar.stop_scene_none_active')
                         : (defaultSceneId ? t('light.sidebar.stop_scene_tooltip') : t('light.sidebar.stop_scene_tooltip_none'))}
-                    className="w-full py-3 bg-app-bg hover:bg-app-surface border border-app-border hover:border-accent/40 text-slate-300 hover:text-app-text rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-app-bg disabled:hover:border-app-border disabled:hover:text-slate-300">
+                    className="w-full py-3 bg-app-bg hover:bg-app-surface border border-app-border hover:border-accent/40 text-app-text hover:text-app-text rounded-xl font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-app-bg disabled:hover:border-app-border disabled:hover:text-app-text">
                     <span className="material-symbols-outlined">stop_circle</span>
                     {t('light.sidebar.stop_scene')}
                     {/*
@@ -311,7 +311,7 @@ export const Sidebar: React.FC = () => {
 
                 <button
                     onClick={() => hueEngine.extinguishAll()}
-                    className="w-full py-4 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
+                    className="w-full py-4 bg-etat-danger hover:bg-etat-danger/90 text-app-bg rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
                     <span className="material-symbols-outlined">power_settings_new</span>
                     {t('light.sidebar.emergency_blackout')}
                 </button>

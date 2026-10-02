@@ -45,14 +45,14 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
             {/* None Option */}
             <button
                 onClick={() => handleSelect(null)}
-                className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all group"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-app-text/5 border border-app-text/5 hover:border-app-text/10 hover:bg-app-text/10 transition-all group"
             >
                 <div className="size-12 rounded-xl bg-app-surface flex items-center justify-center text-app-text/50 group-hover:text-app-text/80">
                     <X size={24} />
                 </div>
                 <div className="text-left">
                     <span className="block text-ui-10 font-black uppercase tracking-widest text-app-muted">Aucune</span>
-                    <span className="text-ui-9 font-bold text-slate-600 uppercase tracking-tighter italic">Désactiver le lien</span>
+                    <span className="text-ui-9 font-bold text-app-subtle uppercase tracking-tighter italic">Désactiver le lien</span>
                 </div>
             </button>
 
@@ -60,7 +60,7 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
                 <button
                     key={scene.id}
                     onClick={() => handleSelect(scene.id)}
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-gm-cyan/30 hover:bg-gm-cyan/5 transition-all group"
+                    className="flex items-center gap-4 p-4 rounded-2xl bg-app-text/5 border border-app-text/5 hover:border-gm-cyan/30 hover:bg-gm-cyan/5 transition-all group"
                 >
                     <div 
                         className="size-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
@@ -69,7 +69,7 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
                         <span className="material-symbols-outlined text-2xl">{scene.icon}</span>
                     </div>
                     <div className="text-left overflow-hidden">
-                        <span className="block text-ui-10 font-black uppercase tracking-widest text-white truncate">{scene.name}</span>
+                        <span className="block text-ui-10 font-black uppercase tracking-widest text-app-text truncate">{scene.name}</span>
                         <span className="text-ui-9 font-bold text-app-subtle uppercase tracking-tighter">
                             {Object.keys(scene.lightStates).length} LUMIÈRE(S)
                         </span>
@@ -79,9 +79,9 @@ const LightSceneSelector: React.FC<LightSceneSelectorProps> = ({ data }) => {
 
             {capturedScenes.length === 0 && (
                 <div className="col-span-2 py-12 flex flex-col items-center justify-center text-center opacity-50">
-                    <Lightbulb size={32} className="text-slate-600 mb-4" />
+                    <Lightbulb size={32} className="text-app-subtle mb-4" />
                     <p className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle">Aucune scène capturée</p>
-                    <p className="text-ui-9 text-slate-600 mt-1 uppercase">Capturez des scènes dans l'onglet Light OS</p>
+                    <p className="text-ui-9 text-app-subtle mt-1 uppercase">Capturez des scènes dans l'onglet Light OS</p>
                 </div>
             )}
         </div>

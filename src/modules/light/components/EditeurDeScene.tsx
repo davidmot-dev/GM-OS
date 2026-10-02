@@ -104,7 +104,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
         <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-6"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-app-bg/70 backdrop-blur-sm p-6"
             onClick={onAnnuler}
         >
             <div
@@ -218,8 +218,8 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                                         onClick={() => setCampagneId(pour)}
                                         aria-pressed={actif}
                                         className={`flex-1 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md text-ui-10 font-bold uppercase tracking-widest transition-all ${actif
-                                            ? 'bg-accent text-white shadow-lg'
-                                            : 'text-app-subtle hover:text-slate-200'}`}
+                                            ? 'bg-accent text-app-on-accent shadow-lg'
+                                            : 'text-app-subtle hover:text-app-text'}`}
                                     >
                                         <span className="material-symbols-outlined text-sm">{glyphe}</span>
                                         <span>{texte}</span>
@@ -244,7 +244,7 @@ export const EditeurDeScene: React.FC<Props> = ({ scene, campagneOuverte, onVali
                     </button>
                     <button
                         onClick={valider}
-                        className="px-4 py-2 rounded-lg bg-accent text-white text-sm font-bold hover:brightness-110 transition-all"
+                        className="px-4 py-2 rounded-lg bg-accent text-app-on-accent text-sm font-bold hover:brightness-110 transition-all"
                     >
                         {t('light.grid.save_button')}
                     </button>

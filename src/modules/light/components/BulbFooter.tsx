@@ -234,13 +234,13 @@ export const BulbFooter: React.FC = () => {
                         <div key={light.id} className="flex-none w-64 bg-app-bg/80 rounded-lg p-3 border border-app-border flex items-center gap-4">
                             <button
                                 onClick={() => toggleLight(light.id, isOn)}
-                                className={`size-10 rounded-full flex items-center justify-center shrink-0 transition-all ${isOn ? 'bg-amber-500 shadow-glow-accent' : 'bg-app-surface'}
+                                className={`size-10 rounded-full flex items-center justify-center shrink-0 transition-all ${isOn ? 'bg-gm-gold shadow-glow-accent' : 'bg-app-surface'}
                                     }`}
                             >
-                                <span className={`material-symbols-outlined text-xl ${isOn ? 'text-white' : 'text-app-subtle'}`}>lightbulb</span>
+                                <span className={`material-symbols-outlined text-xl ${isOn ? 'text-app-bg' : 'text-app-subtle'}`}>lightbulb</span>
                             </button>
                             <div className="flex flex-col gap-1 flex-1 overflow-hidden">
-                                <span className="text-xs font-bold text-slate-200 truncate">{light.name}</span>
+                                <span className="text-xs font-bold text-app-text truncate">{light.name}</span>
                                 <div className="flex items-center gap-3 mt-1">
                                     <input
                                         type="color"
@@ -309,7 +309,7 @@ export const BulbFooter: React.FC = () => {
                                                 <input
                                                     value={v.nom}
                                                     onChange={(e) => modifierUneVariante(v.id, { nom: e.target.value })}
-                                                    className="flex-1 bg-transparent border-none p-0 text-xs font-bold text-amber-200 outline-none min-w-0"
+                                                    className="flex-1 bg-transparent border-none p-0 text-xs font-bold text-gm-gold outline-none min-w-0"
                                                     title={t('light.footer.ambiances.name')}
                                                 />
                                                 <span className="text-ui-10 text-app-subtle shrink-0">
@@ -319,7 +319,7 @@ export const BulbFooter: React.FC = () => {
                                                 </span>
                                                 <button
                                                     onClick={() => supprimerUneVariante(v.id)}
-                                                    className="shrink-0 text-app-subtle hover:text-red-400 transition-colors"
+                                                    className="shrink-0 text-app-subtle hover:text-etat-danger transition-colors"
                                                     title={t('light.footer.ambiances.delete')}
                                                 >
                                                     <span className="material-symbols-outlined text-sm">delete</span>

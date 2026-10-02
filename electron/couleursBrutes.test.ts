@@ -31,6 +31,7 @@ const MODULES_MIGRES: string[] = [
     'modules/sound',   // phase 4, L2 — 2026-10-02
     'modules/ambient', // phase 4, L2 — 2026-10-02
     'modules/music',   // phase 4, L2 — 2026-10-02 (palette des pastilles exemptée)
+    'modules/light',   // phase 4, L2 — 2026-10-02 (catalogue des effets exempté)
 ];
 
 function releve(): Map<string, number> {
