@@ -1893,25 +1893,33 @@
       "untitled": "Untitled"
     },
     "workspace": {
+      "agencement": {
+        "scene_en_cours": "Current scene",
+        "aucune_scene": "No scene running",
+        "scenes_ouvertes": "{{count}} open scenes",
+        "changer_de_scene": "Change scene",
+        "groupe": "Party present ({{count}})",
+        "groupe_vide": "No PC marked present for this session.",
+        "pnj_actifs": "Scene NPCs ({{count}})",
+        "pnj_vide": "No NPC pinned to the session.",
+        "lu_par_les_joueurs": "Read by players",
+        "masque_aux_joueurs": "Hidden from players",
+        "ouvrir_la_cartographie": "Open Map-OS",
+        "aucun_lieu": "No pinned location.",
+        "indices_a_reveler": "Scene clues to reveal",
+        "reveler": "Reveal to players"
+      },
       "no_active_session": "No Active Session",
       "no_active_session_desc": "Select or create a session in the Prep module to start the workspace.",
-      "group": "Group",
-      "active_npcs": "Active NPCs",
       "manage_group": "Manage group",
       "remove_from_session": "Remove from session",
       "add_npc": "Add an NPC",
       "public_summary": "Public Summary",
-      "edit_summary": "Edit summary",
       "public_notes_placeholder": "Write public notes here...",
       "gm_secrets": "GM Secrets",
-      "history_secrets": "Secrets history",
       "secret_notes_placeholder": "Write your secret notes here...",
       "pinned_locations": "Pinned Locations",
-      "no_active_map": "No active map",
-      "map_os_sync": "Map-OS Synchronized",
-      "map_fallback_status": "Sector 7G • Underdark Region",
-      "search_map_tooltip": "Search map",
-      "manage_layers_tooltip": "Manage layers"
+      "no_active_map": "No active map"
     },
     "modules": {
       "module_status_title": "Module Status",
@@ -2938,7 +2946,14 @@
       "wallpaper_browser_title": "Choose a wallpaper"
     },
     "snapshots": {
-      "title": "Session Snapshot",
+      "agencement": {
+        "tour_actif": "Active turn",
+        "ouvrir_combat": "Open Combat-OS",
+        "en_lecture": "Playing",
+        "a_l_arret": "Stopped",
+        "volume_general": "Master volume",
+        "effacer": "Clear"
+      },
       "combat_order": "Initiative Order",
       "round_hash": "ROUND #{{number}}",
       "others_count": "+ {{count}} others",
@@ -2946,14 +2961,11 @@
       "audio_environment": "Audio Environment",
       "audio_silence": "Digital Silence",
       "audio_deck_label": "Deck {{deck}}",
-      "audio_waiting": "Waiting for stream...",
       "active_conditions": "Active Conditions",
       "no_condition": "No active conditions",
       "cards_destiny": "Destiny & Cards",
       "manage": "Manage",
-      "start_engine": "Start Engine",
-      "quick_roll": "Quick Roll",
-      "history": "History"
+      "quick_roll": "Quick Roll"
     },
     "players": {
       "title": "Player Roster",

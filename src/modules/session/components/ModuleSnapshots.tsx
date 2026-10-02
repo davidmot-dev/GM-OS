@@ -1,31 +1,32 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap, Layers } from 'lucide-react';
+import { Music, Pause, Play, Volume2, EyeOff, HeartCrack, CheckCircle, Skull, Zap, Layers, Swords, Dices, Repeat } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
 import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { useMusicStore } from '../../music/useMusicStore';
+import { useSessionStore } from '../../../store/useSessionStore';
+import { Panneau, Etiquette } from '../../../components/socle';
 import { CockpitMessenger } from './CockpitMessenger';
 
+/**
+ * **Ce qui tourne ailleurs, en lecture rapide** — la colonne droite du
+ * cockpit, refonte L5, étape 2 : le combat et son round, les conditions, les
+ * deux platines, les cartes, le jet rapide et son historique.
+ */
 const ModuleSnapshots: React.FC = () => {
     const { t } = useTranslation(['modules']);
     const { rollDice, diceRolls, clearDiceRolls } = useSessionOSStore();
     const { combatants, currentTurnIdx, round } = useCombatStore();
-    const { deckA, deckB, masterVolume, setMasterVolume, stopAll, playDeck } = useMusicStore();
-    
+    const { deckA, deckB, masterVolume, setMasterVolume, playDeck, stopDeck } = useMusicStore();
+    const setActiveModule = useSessionStore(s => s.setActiveModule);
+
     const lastRoll = diceRolls[0];
 
-    // Determine active track (Deck A or B)
-    const activeDeck = deckA.isPlaying ? 'A' : deckB.isPlaying ? 'B' : null;
-    const activeTrackLabel = activeDeck === 'A' ? deckA.activeTrackLabel : deckB.activeTrackLabel;
-    const isAudioPlaying = !!activeDeck;
-
-    // Collect all unique status effects from all combatants
-    const allActiveStatuses = combatants.flatMap(c => 
+    const allActiveStatuses = combatants.flatMap(c =>
         (c.statuses || []).map(s => ({ ...s, combatantName: c.name }))
     );
 
-    // Icon mapping for statuses
     const getStatusIcon = (name: string) => {
         const n = name.toLowerCase();
         if (n.includes('blind') || n.includes('aveugl')) return <EyeOff size={14} className="text-etat-alerte" />;
@@ -35,204 +36,185 @@ const ModuleSnapshots: React.FC = () => {
         return <CheckCircle size={14} className="text-app-muted" />;
     };
 
+    const titre = (icone: React.ReactNode, libelle: React.ReactNode, aside?: React.ReactNode) => (
+        <div className="flex items-center justify-between gap-2 px-3 pt-3 pb-2">
+            <h4 className="flex min-w-0 items-center gap-2 text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                <span className="shrink-0 text-accent">{icone}</span>
+                <span className="truncate">{libelle}</span>
+            </h4>
+            {aside}
+        </div>
+    );
+
     return (
-        <aside className="h-full col-span-3 bg-app-surface/80 border-l border-app-border p-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
-            {/* Module Snapshot Section */}
-            <div className="flex flex-col gap-4">
-                <h4 className="text-xs uppercase tracking-widest text-app-text/40 mb-2 font-bold px-1">{t('modules:session.snapshots.title')}</h4>
-
-                {/* Track 1: Active Encounter */}
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>{t('modules:session.snapshots.combat_order')}</span>
-                        <span className="text-accent">{t('modules:session.snapshots.round_hash', { number: round })}</span>
-                    </div>
-                    
-                    {combatants.length > 0 ? (
-                        <div className="bg-app-bg/40 rounded-xl border border-app-border/40 p-3 space-y-3">
-                            {combatants.slice(0, 5).map((c, idx) => {
-                                const isCurrentTurn = idx === currentTurnIdx;
-                                // `null` quand le système n'a pas de jauge : on
-                                // n'affiche alors aucune barre, plutôt qu'une
-                                // barre vide qui se lirait « à l'agonie ».
-                                const part = fractionDeVie(c);
-                                const hpPct = part === null ? null : part * 100;
-                                
-                                return (
-                                    <div 
-                                        key={c.id} 
-                                        className={`flex items-center gap-3 transition-opacity ${isCurrentTurn ? 'opacity-100' : 'opacity-50'}`}
-                                    >
-                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-ui-10 border transition-all ${
-                                            isCurrentTurn 
-                                            ? 'bg-accent/20 text-accent border-accent/50 shadow-glow-accent' 
-                                            : 'bg-app-surface text-app-text/40 border-app-border/30'
-                                        }`}>
-                                            {c.init}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className={`text-ui-10 font-bold truncate ${isCurrentTurn ? 'text-app-text' : 'text-app-text/40'}`}>
-                                                {c.name}
-                                            </p>
-                                            {hpPct !== null && (
-                                                <div className="w-full bg-app-bg h-1 rounded-full mt-1 overflow-hidden">
-                                                    <div
-                                                        className={`h-full transition-all duration-500 ${hpPct > 50 ? 'bg-etat-succes' : hpPct > 25 ? 'bg-etat-alerte' : 'bg-etat-danger'}`}
-                                                        style={{ width: `${hpPct}%` }}
-                                                    ></div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                            {combatants.length > 5 && (
-                                <p className="text-ui-10 text-app-text/20 text-center italic mt-1">{t('modules:session.snapshots.others_count', { count: combatants.length - 5 })}</p>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="bg-app-bg/20 rounded-xl border border-dashed border-app-border/40 p-4 text-center">
-                            <p className="text-ui-10 text-app-text/20 italic">{t('session.snapshots.no_active_encounter')}</p>
-                        </div>
-                    )}
-                </div>
-
-                {/* Track 2: Audio Environment */}
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>{t('session.snapshots.audio_environment')}</span>
-                    </div>
-                    <div className="bg-app-bg/40 rounded-xl border border-app-border/40 p-3">
-                        <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-lg bg-app-bg flex items-center justify-center border transition-colors ${isAudioPlaying ? 'text-accent border-accent/30' : 'text-app-text/20 border-app-border/20'}`}>
-                                <Music size={20} className={isAudioPlaying ? 'animate-pulse' : ''} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-xs text-app-text font-bold truncate">
-                                    {activeTrackLabel || t('session.snapshots.audio_silence')}
-                                </p>
-                                <p className="text-ui-10 text-app-text/40 truncate italic">
-                                    {isAudioPlaying ? t('session.snapshots.audio_deck_label', { deck: activeDeck }) : t('session.snapshots.audio_waiting')}
-                                </p>
-                            </div>
-                            <button 
-                                onClick={() => isAudioPlaying ? stopAll() : (deckA.activePadId ? playDeck('A') : null)}
-                                className={`p-1 transition-colors ${isAudioPlaying ? 'text-app-text/40 hover:text-app-text' : 'text-accent/40 hover:text-accent'}`}
-                                disabled={!isAudioPlaying && !deckA.activePadId && !deckB.activePadId}
+        <aside className="h-full col-span-3 bg-app-surface/60 border-l border-app-border p-3 flex flex-col gap-3 overflow-y-auto custom-scrollbar">
+            {/* Le combat : l'ordre, le tour actif, et la porte vers Combat-OS */}
+            <Panneau className="flex-shrink-0">
+                {titre(<Swords size={14} />, t('modules:session.snapshots.combat_order'),
+                    combatants.length > 0 && <Etiquette ton="danger" className="whitespace-nowrap">{t('modules:session.snapshots.round_hash', { number: round })}</Etiquette>)}
+                <div className="space-y-1.5 px-3 pb-3">
+                    {combatants.slice(0, 6).map((c, idx) => {
+                        const isCurrentTurn = idx === currentTurnIdx;
+                        const part = fractionDeVie(c);
+                        return (
+                            <div
+                                key={c.id}
+                                title={isCurrentTurn ? t('modules:session.snapshots.agencement.tour_actif') : undefined}
+                                className={`flex items-center gap-3 rounded-lg border px-2 py-1.5 transition-all ${
+                                    isCurrentTurn ? 'border-accent/50 bg-accent/10' : 'border-transparent opacity-70'
+                                }`}
                             >
-                                {isAudioPlaying ? <Pause size={20} /> : <Play size={20} />}
-                            </button>
-                        </div>
-                        <div className="mt-3 flex items-center gap-2">
-                            <Volume2 size={16} className="text-app-text/40" />
-                            <div className="flex-1 bg-app-bg h-1 rounded-full relative group">
-                                <input 
-                                    type="range"
-                                    min="0"
-                                    max="1"
-                                    step="0.01"
-                                    value={masterVolume}
-                                    onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                />
-                                <div 
-                                    className="bg-accent h-full rounded-full transition-all duration-150"
-                                    style={{ width: `${masterVolume * 100}%` }}
-                                ></div>
+                                <span className={`w-8 shrink-0 text-center font-mono text-sm font-black ${isCurrentTurn ? 'text-accent' : 'text-app-muted'}`}>{c.init}</span>
+                                <div className="min-w-0 flex-1">
+                                    <p className={`truncate text-xs font-black uppercase ${isCurrentTurn ? 'text-app-text' : 'text-app-muted'}`}>{c.name}</p>
+                                    {part !== null && (
+                                        <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-app-bg">
+                                            <div
+                                                className={`h-full transition-all duration-500 ${part > 0.5 ? 'bg-etat-succes' : part > 0.25 ? 'bg-etat-alerte' : 'bg-etat-danger'}`}
+                                                style={{ width: `${part * 100}%` }}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Track 3: Conditions */}
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1">
-                        <span>{t('session.snapshots.active_conditions')}</span>
-                    </div>
-                    {allActiveStatuses.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-2">
-                            {allActiveStatuses.slice(0, 4).map((s, idx) => (
-                                <div key={idx} className="bg-app-bg/40 rounded-lg p-2 border border-app-border/40 flex items-center gap-2 overflow-hidden">
-                                    <div className="flex-shrink-0">{getStatusIcon(s.name)}</div>
-                                    <span className="text-ui-10 text-app-text/80 truncate" title={`${s.name} (${s.combatantName})`}>
-                                        {s.name} <span className="text-app-text/20">({s.combatantName})</span>
-                                    </span>
-                                </div>
-                            ))}
-                            {allActiveStatuses.length > 4 && (
-                                <div className="col-span-2 text-ui-10 text-app-subtle text-center italic">
-                                    {t('modules:session.snapshots.others_count', { count: allActiveStatuses.length - 4 })}
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="bg-app-surface-2/20 rounded-xl border border-dashed border-app-border/50 p-4 text-center">
-                            <p className="text-ui-10 text-app-subtle italic">{t('session.snapshots.no_condition')}</p>
-                        </div>
+                        );
+                    })}
+                    {combatants.length > 6 && (
+                        <p className="text-center text-ui-10 italic text-app-subtle">{t('modules:session.snapshots.others_count', { count: combatants.length - 6 })}</p>
                     )}
-                </div>
-                {/* Track 4: Deck-OS */}
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1 border-t border-app-text/5 pt-4 mt-2">
-                        <span>{t('session.snapshots.cards_destiny')}</span>
-                        <div className="flex gap-2">
-                            <button 
-                                onClick={() => useSessionOSStore.getState().setCurrentView('deck-library')}
-                                className="text-accent hover:underline lowercase tracking-tight"
-                            >
-                                {t('session.snapshots.manage')}
-                            </button>
-                        </div>
-                    </div>
-                    <button 
-                        onClick={() => useSessionOSStore.getState().setCurrentView('deck-player')}
-                        className="group flex items-center justify-between bg-app-text/5 hover:bg-gm-gold/10 rounded-xl border border-app-border/40 hover:border-gm-gold/30 p-3 transition-all"
+                    {combatants.length === 0 && (
+                        <p className="py-2 text-center text-ui-10 italic text-app-subtle">{t('session.snapshots.no_active_encounter')}</p>
+                    )}
+                    <button
+                        onClick={() => setActiveModule('combat')}
+                        className="mt-1 flex w-full items-center justify-center gap-2 rounded-lg border border-app-border py-2 text-ui-10 font-black uppercase tracking-widest text-accent transition-all hover:border-accent/50 hover:bg-accent/10"
                     >
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-app-bg/40 flex items-center justify-center border border-app-border/20 group-hover:border-gm-gold/40 text-app-text/20 group-hover:text-gm-gold transition-colors">
-                                <Layers size={18} />
+                        <Swords size={12} />{t('modules:session.snapshots.agencement.ouvrir_combat')}
+                    </button>
+                </div>
+            </Panneau>
+
+            {/* Les conditions actives, par combattant */}
+            <Panneau className="flex-shrink-0">
+                {titre(<Zap size={14} />, t('session.snapshots.active_conditions'),
+                    allActiveStatuses.length > 0 && <Etiquette>{allActiveStatuses.length}</Etiquette>)}
+                <div className="flex flex-wrap gap-1.5 px-3 pb-3">
+                    {allActiveStatuses.slice(0, 8).map((s, idx) => (
+                        <span key={idx} className="flex max-w-full items-center gap-1.5 rounded-md border border-app-border bg-app-bg/40 px-2 py-1" title={`${s.name} (${s.combatantName})`}>
+                            <span className="shrink-0">{getStatusIcon(s.name)}</span>
+                            <span className="truncate text-ui-10 text-app-text"><span className="font-bold">{s.combatantName}</span> · {s.name}</span>
+                        </span>
+                    ))}
+                    {allActiveStatuses.length > 8 && (
+                        <span className="text-ui-10 italic text-app-subtle">{t('modules:session.snapshots.others_count', { count: allActiveStatuses.length - 8 })}</span>
+                    )}
+                    {allActiveStatuses.length === 0 && <p className="text-ui-10 italic text-app-subtle">{t('session.snapshots.no_condition')}</p>}
+                </div>
+            </Panneau>
+
+            {/* Les deux platines, chacune avec son titre, son état et sa boucle */}
+            <Panneau className="flex-shrink-0">
+                {titre(<Music size={14} />, t('session.snapshots.audio_environment'))}
+                <div className="space-y-2 px-3 pb-3">
+                    {([['A', deckA], ['B', deckB]] as const).map(([lettre, platine]) => (
+                        <div key={lettre} className={`flex items-center gap-3 rounded-lg border p-2 ${platine.isPlaying ? 'border-accent/40 bg-accent/5' : 'border-app-border bg-app-bg/40'}`}>
+                            <span className={`w-6 shrink-0 text-center font-display text-sm font-black ${platine.isPlaying ? 'text-accent' : 'text-app-subtle'}`}>{lettre}</span>
+                            <div className="min-w-0 flex-1">
+                                <p className="truncate text-xs font-bold text-app-text">{platine.activeTrackLabel || t('session.snapshots.audio_silence')}</p>
+                                <p className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-widest text-app-muted">
+                                    {platine.isPlaying ? t('modules:session.snapshots.agencement.en_lecture') : t('modules:session.snapshots.agencement.a_l_arret')}
+                                    {platine.isLooping && <Repeat size={10} className="text-accent" />}
+                                </p>
                             </div>
-                            <div className="flex flex-col items-start">
-                                <span className="text-xs text-app-text font-bold uppercase tracking-wider group-hover:text-gm-gold transition-colors">Deck-OS</span>
-                                <span className="text-ui-9 text-app-text/40 uppercase tracking-widest font-black">{t('session.snapshots.start_engine')}</span>
-                            </div>
+                            <button
+                                onClick={() => platine.isPlaying ? stopDeck(lettre) : playDeck(lettre)}
+                                disabled={!platine.isPlaying && !platine.activePadId}
+                                className="shrink-0 rounded-md p-1.5 text-app-muted transition-colors hover:text-accent disabled:opacity-30"
+                                title={t('session.snapshots.audio_deck_label', { deck: lettre })}
+                            >
+                                {platine.isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                            </button>
                         </div>
+                    ))}
+                    <div className="flex items-center gap-2 pt-1">
+                        <Volume2 size={14} className="shrink-0 text-app-muted" />
+                        <div className="relative h-1.5 flex-1 rounded-full bg-app-bg">
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={masterVolume}
+                                onChange={(e) => setMasterVolume(parseFloat(e.target.value))}
+                                className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
+                                title={t('modules:session.snapshots.agencement.volume_general')}
+                            />
+                            <div className="h-full rounded-full bg-accent transition-all duration-150" style={{ width: `${masterVolume * 100}%` }} />
+                        </div>
+                        <span className="w-9 shrink-0 text-right font-mono text-ui-10 font-bold text-app-text">{Math.round(masterVolume * 100)}%</span>
+                    </div>
+                </div>
+            </Panneau>
+
+            {/* Les cartes du destin, et la messagerie du cockpit */}
+            <Panneau className="flex-shrink-0">
+                {titre(<Layers size={14} />, t('session.snapshots.cards_destiny'),
+                    <button onClick={() => useSessionOSStore.getState().setCurrentView('deck-library')} className="text-ui-10 font-black uppercase tracking-widest text-accent hover:underline">
+                        {t('session.snapshots.manage')}
+                    </button>)}
+                <div className="space-y-3 px-3 pb-3">
+                    <button
+                        onClick={() => useSessionOSStore.getState().setCurrentView('deck-player')}
+                        className="group flex w-full items-center gap-3 rounded-lg border border-app-border bg-app-bg/40 p-2 transition-all hover:border-gm-gold/40"
+                    >
+                        <div className="flex h-9 w-9 items-center justify-center rounded-md border border-app-border text-app-muted transition-colors group-hover:text-gm-gold">
+                            <Layers size={16} />
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-wider text-app-text transition-colors group-hover:text-gm-gold">Deck-OS</span>
                     </button>
                     <CockpitMessenger />
                 </div>
-            </div>
+            </Panneau>
 
-            {/* Quick Roll Tray */}
-            <div className="mt-auto bg-app-bg p-4 rounded-xl border border-app-border/40 shadow-lg">
-                <div className="flex justify-between items-center mb-3">
-                    <span className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest">{t('session.snapshots.quick_roll')}</span>
-                    <button
-                        onClick={() => clearDiceRolls()}
-                        className="text-accent text-ui-10 font-bold hover:underline"
-                    >
-                        {t('session.snapshots.history')}
-                    </button>
-                </div>
-                <div className="flex justify-between gap-1">
-                    {[4, 6, 8, 10, 12, 20, 100].map((sides) => (
-                        <button
-                            key={sides}
-                            onClick={() => rollDice(sides)}
-                            className={`w-10 h-10 rounded-lg border flex flex-col items-center justify-center transition-all ${sides === 20
-                                    ? 'bg-accent/20 border-accent/50 shadow-glow-accent hover:bg-accent/30'
-                                    : 'bg-app-surface hover:bg-app-surface/80 border-app-border/30'
-                                }`}
-                        >
-                            <span className={`text-ui-10 font-mono ${sides === 20 ? 'text-accent' : 'text-app-text/40'}`}>
-                                d{sides === 100 ? '%' : sides}
-                            </span>
-                            <span className={`text-xs font-bold ${sides === 20 ? 'text-app-text' : 'text-app-text/80'}`}>
-                                {lastRoll?.die === sides ? lastRoll.result : '-'}
-                            </span>
+            {/* Le jet rapide, et ce qu'il a donné */}
+            <Panneau className="mt-auto flex-shrink-0">
+                {titre(<Dices size={14} />, t('session.snapshots.quick_roll'),
+                    diceRolls.length > 0 && (
+                        <button onClick={() => clearDiceRolls()} className="text-ui-10 font-black uppercase tracking-widest text-app-subtle hover:text-etat-danger">
+                            {t('modules:session.snapshots.agencement.effacer')}
                         </button>
                     ))}
+                <div className="px-3 pb-3">
+                    <div className="grid grid-cols-7 gap-1">
+                        {[4, 6, 8, 10, 12, 20, 100].map((sides) => (
+                            <button
+                                key={sides}
+                                onClick={() => rollDice(sides)}
+                                className={`flex h-11 flex-col items-center justify-center rounded-lg border transition-all ${sides === 20
+                                        ? 'border-accent/50 bg-accent/15 hover:bg-accent/25'
+                                        : 'border-app-border bg-app-bg/40 hover:border-accent/40'
+                                    }`}
+                            >
+                                <span className={`font-mono text-ui-9 ${sides === 20 ? 'text-accent' : 'text-app-muted'}`}>d{sides === 100 ? '%' : sides}</span>
+                                <span className="text-xs font-bold text-app-text">{lastRoll?.die === sides ? lastRoll.result : '–'}</span>
+                            </button>
+                        ))}
+                    </div>
+                    {/* Le bouton « Historique » effaçait les jets : on montre
+                        désormais les derniers, et « Effacer » dit ce qu'il fait. */}
+                    {diceRolls.length > 0 && (
+                        <div className="mt-2 space-y-1">
+                            {diceRolls.slice(0, 5).map(jet => (
+                                <div key={jet.timestamp} className="flex items-center justify-between rounded-md bg-app-bg/40 px-2 py-1 text-ui-10">
+                                    <span className="font-mono text-app-subtle">{new Date(jet.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <span className="font-bold text-app-muted">d{jet.die === 100 ? '%' : jet.die}</span>
+                                    <span className="font-mono font-black text-app-text">{jet.result}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-            </div>
+            </Panneau>
         </aside>
     );
 };

@@ -1893,25 +1893,33 @@
       "untitled": "Sans titre"
     },
     "workspace": {
+      "agencement": {
+        "scene_en_cours": "Scène en cours",
+        "aucune_scene": "Aucune scène en cours",
+        "scenes_ouvertes": "{{count}} scènes ouvertes",
+        "changer_de_scene": "Changer de scène",
+        "groupe": "Groupe présent ({{count}})",
+        "groupe_vide": "Aucun PJ déclaré présent pour cette séance.",
+        "pnj_actifs": "PNJ de la scène ({{count}})",
+        "pnj_vide": "Aucun PNJ épinglé à la séance.",
+        "lu_par_les_joueurs": "Lu par les joueurs",
+        "masque_aux_joueurs": "Masqué aux joueurs",
+        "ouvrir_la_cartographie": "Ouvrir Cartographie",
+        "aucun_lieu": "Aucun lieu épinglé.",
+        "indices_a_reveler": "Indices de la scène à révéler",
+        "reveler": "Révéler aux joueurs"
+      },
       "no_active_session": "Aucune Session Active",
       "no_active_session_desc": "Sélectionnez ou créez une session dans le module Prep pour démarrer le workspace.",
-      "group": "Groupe",
-      "active_npcs": "PNJ Actifs",
       "manage_group": "Gérer le groupe",
       "remove_from_session": "Retirer de la session",
       "add_npc": "Ajouter un PNJ",
       "public_summary": "Résumé Public",
-      "edit_summary": "Modifier le résumé",
       "public_notes_placeholder": "Rédigez les notes publiques ici...",
       "gm_secrets": "Secrets du MJ",
-      "history_secrets": "Historique des secrets",
       "secret_notes_placeholder": "Rédigez vos notes secrètes ici...",
       "pinned_locations": "Lieux Épinglés",
-      "no_active_map": "Aucune Carte Active",
-      "map_os_sync": "Map-OS Synchronisé",
-      "map_fallback_status": "Secteur 7G • Région de l'Outreterre",
-      "search_map_tooltip": "Rechercher sur la carte",
-      "manage_layers_tooltip": "Gérer les calques"
+      "no_active_map": "Aucune Carte Active"
     },
     "modules": {
       "module_status_title": "État des Modules",
@@ -2938,7 +2946,14 @@
       "wallpaper_browser_title": "Choisir un fond d'écran"
     },
     "snapshots": {
-      "title": "Instantané de Session",
+      "agencement": {
+        "tour_actif": "Tour actif",
+        "ouvrir_combat": "Ouvrir Combat-OS",
+        "en_lecture": "En lecture",
+        "a_l_arret": "À l'arrêt",
+        "volume_general": "Volume général",
+        "effacer": "Effacer"
+      },
       "combat_order": "Ordre d'Initiative",
       "round_hash": "ROUND #{{number}}",
       "others_count": "+ {{count}} autres",
@@ -2946,14 +2961,11 @@
       "audio_environment": "Environnement Sonore",
       "audio_silence": "Silence Digital",
       "audio_deck_label": "Deck {{deck}}",
-      "audio_waiting": "En attente de flux...",
       "active_conditions": "Conditions Actives",
       "no_condition": "Aucune altération",
       "cards_destiny": "Destinée & Cartes",
       "manage": "Gérer",
-      "start_engine": "Initialiser le Moteur",
-      "quick_roll": "Lancement Rapide",
-      "history": "Historique"
+      "quick_roll": "Lancement Rapide"
     },
     "players": {
       "title": "Roster des Joueurs",
