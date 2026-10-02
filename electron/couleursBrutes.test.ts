@@ -42,6 +42,7 @@ const MODULES_MIGRES: string[] = [
     'modules/storyboard', // phase 4, L5 (poste du meneur) — 2026-10-02
     'modules/ai',      // phase 4, L6 — 2026-10-03
     'modules/system',  // phase 4, L6 — 2026-10-03 (HUD Nexus : phases en cours à l'accent)
+    'modules/tactical-ai', // phase 4, L6 — 2026-10-03
 ];
 
 /**
@@ -77,9 +78,19 @@ function releve(): Map<string, number> {
 describe('les couleurs brutes', () => {
     const parLieu = releve();
 
-    it('le relevé trouve bien quelque chose — sinon le motif ne voit plus rien', () => {
-        const total = [...parLieu.values()].reduce((a, b) => a + b, 0);
-        expect(total).toBeGreaterThan(1000);
+    /*
+      Le motif doit voir une couleur brute, sinon toute la garde passe à vide.
+      On l'éprouvait sur le total du dépôt (« plus de 1000 ») ; la migration
+      l'a fait fondre sous ce seuil au lot 6 (2026-10-03) — d'où un échantillon
+      fixe, qui ne décroît pas avec le travail fait.
+    */
+    it('le motif voit les couleurs brutes, et pas les jetons', () => {
+        expect(compterLesCouleursBrutes('bg-red-500/10 text-emerald-400 border-slate-800')).toBe(3);
+        expect(compterLesCouleursBrutes('bg-etat-danger/10 text-gm-violet border-app-border text-accent')).toBe(0);
+    });
+
+    it('le relevé du dépôt parcourt bien les fichiers', () => {
+        expect(parLieu.size).toBeGreaterThan(0);
     });
 
     it.each(MODULES_MIGRES.length ? MODULES_MIGRES : ['(aucun module migré pour l’instant)'])(

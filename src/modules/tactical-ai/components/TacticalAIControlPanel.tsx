@@ -41,7 +41,7 @@ export const TacticalAIControlPanel: React.FC = () => {
 
   return (
     <div 
-      className="w-[72rem] max-w-[95vw] h-85 bg-slate-950/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] shadow-[0_0_100px_-20px_rgba(0,0,0,0.8)] flex overflow-hidden ring-1 ring-white/10 shadow-glow-accent/5 transition-all duration-500"
+      className="w-[72rem] max-w-[95vw] h-85 bg-app-bg/80 backdrop-blur-2xl border border-app-text/10 rounded-[2.5rem] shadow-[0_0_100px_-20px_rgba(0,0,0,0.8)] flex overflow-hidden ring-1 ring-app-text/10 shadow-glow-accent/5 transition-all duration-500"
       style={{ 
         position: 'fixed',
         bottom: '3rem',
@@ -52,14 +52,14 @@ export const TacticalAIControlPanel: React.FC = () => {
     >
       
       {/* 1. Header & Status (w-[15%]) */}
-      <div className="w-[15%] p-4 flex flex-col justify-between border-r border-white/5 bg-accent/5 shrink-0">
+      <div className="w-[15%] p-4 flex flex-col justify-between border-r border-app-text/5 bg-accent/5 shrink-0">
         <div>
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 rounded-xl bg-accent/20 text-accent">
               <Brain size={20} />
             </div>
             <div>
-              <h3 className="text-sm font-bold tracking-tight text-white uppercase">Cerveau <span className="text-accent">Tactique</span></h3>
+              <h3 className="text-sm font-bold tracking-tight text-app-text uppercase">Cerveau <span className="text-accent">Tactique</span></h3>
               <span className="text-ui-10 font-mono text-accent/60 uppercase tracking-widest leading-none">AI Integration</span>
             </div>
           </div>
@@ -69,8 +69,8 @@ export const TacticalAIControlPanel: React.FC = () => {
               title={hardwareStatus.hue === 'connected' ? 'Hue Bridge Connecté' : 'Hue Bridge Offline (Pairing requis)'}
               className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl border text-ui-10 font-black uppercase tracking-tight transition-all duration-300 ${
                 hardwareStatus.hue === 'connected' 
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-glow-emerald/10' 
-                  : 'bg-red-500/10 border-red-500/30 text-red-400 opacity-60 animate-pulse'
+                  ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes shadow-glow-emerald/10' 
+                  : 'bg-etat-danger/10 border-etat-danger/30 text-etat-danger opacity-60 animate-pulse'
               }`}
             >
               <Zap size={13} fill={hardwareStatus.hue === 'connected' ? 'currentColor' : 'none'} />
@@ -81,8 +81,8 @@ export const TacticalAIControlPanel: React.FC = () => {
               title={hardwareStatus.audio === 'ready' ? 'Audio Immersif Prêt' : 'Assets Audio Manquants'}
               className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl border text-ui-10 font-black uppercase tracking-tight transition-all duration-300 ${
                 hardwareStatus.audio === 'ready' 
-                  ? 'bg-blue-500/10 border-blue-500/30 text-blue-400 shadow-glow-blue/10' 
-                  : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                  ? 'bg-etat-info/10 border-etat-info/30 text-etat-info shadow-glow-blue/10' 
+                  : 'bg-etat-alerte/10 border-etat-alerte/30 text-etat-alerte'
               }`}
             >
               <Volume2 size={13} />
@@ -93,19 +93,19 @@ export const TacticalAIControlPanel: React.FC = () => {
 
         <button 
           onClick={() => setIsPanelOpen(false)} 
-          className="mt-6 flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all uppercase text-ui-10 font-black tracking-widest border border-white/5 shadow-inner"
+          className="mt-6 flex items-center justify-center gap-2 p-3.5 rounded-2xl bg-app-text/5 text-app-text/40 hover:text-app-text hover:bg-app-text/10 transition-all uppercase text-ui-10 font-black tracking-widest border border-app-text/5 shadow-inner"
         >
             Fermer Cortex
         </button>
       </div>
 
       {/* 2. Insights Actifs (flex-1 - Prominence to Analysis) */}
-      <div className="flex-1 border-r border-white/5 min-w-0">
+      <div className="flex-1 border-r border-app-text/5 min-w-0">
         <TacticalAdvicePanel />
       </div>
 
       {/* 3. Contrôles (w-[15%]) */}
-      <div className="w-[15%] p-3 flex flex-col gap-2 border-r border-white/5 shrink-0">
+      <div className="w-[15%] p-3 flex flex-col gap-2 border-r border-app-text/5 shrink-0">
           <div className="grid grid-cols-2 gap-2 flex-1">
             <button
             onClick={toggleSensor}
@@ -114,8 +114,8 @@ export const TacticalAIControlPanel: React.FC = () => {
                 : "Couper les sons tactiques et les lumières du Cortex. L’analyse et les conseils continuent."}
             className={`flex flex-col items-center justify-center gap-2 rounded-2xl border transition-all ${
                 settings.isMuted 
-                ? 'bg-red-500/10 border-red-500/30 text-red-400' 
-                : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                ? 'bg-etat-danger/10 border-etat-danger/30 text-etat-danger' 
+                : 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes'
             }`}
             >
             {/*
@@ -137,7 +137,7 @@ export const TacticalAIControlPanel: React.FC = () => {
             onClick={toggleAutoDispel}
             className={`flex flex-col items-center justify-center gap-2 rounded-2xl border transition-all ${
                 !settings.autoApplyDispel 
-                ? 'bg-slate-800/50 border-white/10 text-white/40' 
+                ? 'bg-app-surface-2/50 border-app-text/10 text-app-text/40' 
                 : 'bg-accent/10 border-accent/30 text-accent'
             }`}
             >
@@ -149,14 +149,14 @@ export const TacticalAIControlPanel: React.FC = () => {
           <div className="grid grid-cols-2 gap-2 shrink-0">
              <button
             onClick={testAudio}
-            className="py-2 rounded-xl bg-white/5 border border-white/10 text-white font-bold text-ui-9 uppercase tracking-wider hover:bg-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+            className="py-2 rounded-xl bg-app-text/5 border border-app-text/10 text-app-text font-bold text-ui-9 uppercase tracking-wider hover:bg-app-text/10 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
             >
             <Volume2 size={14} />
             Test
              </button>
              <button
             onClick={triggerCombatFlash}
-            className="py-2 rounded-xl bg-accent text-slate-950 font-black text-ui-9 uppercase tracking-wider shadow-glow-accent hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+            className="py-2 rounded-xl bg-accent text-app-on-accent font-black text-ui-9 uppercase tracking-wider shadow-glow-accent hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
             >
             <Zap size={14} fill="currentColor" />
             Flash
@@ -165,24 +165,24 @@ export const TacticalAIControlPanel: React.FC = () => {
       </div>
 
       {/* 4. Logs (w-[20%]) */}
-      <div className="w-[20%] flex flex-col bg-black/40 shrink-0 border-l border-white/5">
-          <div className="px-5 py-4 flex items-center justify-between border-b border-white/10">
-            <div className="flex items-center gap-2 text-ui-10 font-black text-white/40 uppercase tracking-[0.2em]">
+      <div className="w-[20%] flex flex-col bg-app-bg/40 shrink-0 border-l border-app-text/5">
+          <div className="px-5 py-4 flex items-center justify-between border-b border-app-text/10">
+            <div className="flex items-center gap-2 text-ui-10 font-black text-app-text/40 uppercase tracking-[0.2em]">
               <History size={12} className="text-accent/40" /> Flux Neural
             </div>
-            <button onClick={clearLogs} className="text-ui-10 hover:text-red-400 text-white/20 transition-colors uppercase font-black tracking-widest">Wipe</button>
+            <button onClick={clearLogs} className="text-ui-10 hover:text-etat-danger text-app-text/20 transition-colors uppercase font-black tracking-widest">Wipe</button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
             {logs.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-white/10 text-center px-4">
+              <div className="h-full flex flex-col items-center justify-center text-app-text/10 text-center px-4">
                 <Wand2 size={32} className="mb-3 opacity-20 animate-pulse" />
                 <span className="text-ui-11 uppercase font-black tracking-[0.2em] leading-tight">Aucune activité détectée</span>
               </div>
             ) : (
               logs.slice(0, 10).map((log) => (
-                <div key={log.id} className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all group">
-                  <p className="text-ui-11 text-white/70 group-hover:text-white/90 leading-relaxed transition-colors" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>{log.message}</p>
-                  <span className="text-ui-9 font-mono text-white/20 mt-2 block tracking-tighter opacity-50">
+                <div key={log.id} className="p-4 rounded-2xl bg-app-text/[0.03] border border-app-text/5 hover:border-app-text/10 transition-all group">
+                  <p className="text-ui-11 text-app-text/70 group-hover:text-app-text/90 leading-relaxed transition-colors" style={{ fontFamily: '"Plus Jakarta Sans", sans-serif' }}>{log.message}</p>
+                  <span className="text-ui-9 font-mono text-app-text/20 mt-2 block tracking-tighter opacity-50">
                     {new Date(log.timestamp).toLocaleTimeString()}
                   </span>
                 </div>

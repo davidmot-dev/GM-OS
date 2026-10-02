@@ -180,7 +180,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                         onClick={() => {
                             if(confirm(t('tactical.taxonomy.confirm_reset') || "Réinitialiser ?")) resetToDefault();
                         }}
-                        className="w-full py-2 flex items-center justify-center gap-2 text-ui-10 font-black uppercase tracking-widest text-app-text/40 hover:text-red-500 transition-colors"
+                        className="w-full py-2 flex items-center justify-center gap-2 text-ui-10 font-black uppercase tracking-widest text-app-text/40 hover:text-etat-danger transition-colors"
                     >
                         <Undo2 size={14} />
                         {t('tactical.taxonomy.reset')}
@@ -209,7 +209,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                         setSelectedIndex(null);
                                     }
                                 }}
-                                className="p-3 rounded-xl bg-red-500/5 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 transition-all border border-red-500/10"
+                                className="p-3 rounded-xl bg-etat-danger/5 text-etat-danger/40 hover:text-etat-danger hover:bg-etat-danger/10 transition-all border border-etat-danger/10"
                             >
                                 <Trash2 size={20} />
                             </button>
@@ -228,7 +228,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                         {selectedMapping.keywords.map(k => (
                                             <span key={k} className="px-2 py-1 rounded bg-app-bg/50 border border-app-border/40 text-ui-10 font-bold text-accent uppercase flex items-center gap-1.5 group">
                                                 {k}
-                                                <button onClick={() => handleKeywordRemove(k)} className="hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onClick={() => handleKeywordRemove(k)} className="hover:text-etat-danger opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <Trash2 size={10} />
                                                 </button>
                                             </span>
@@ -250,9 +250,9 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                     </div>
                                     <div className="flex flex-wrap gap-2">
                                         {selectedMapping.tags.map(t => (
-                                            <span key={t} className="px-2 py-1 rounded bg-app-surface/40 border border-emerald-500/20 text-ui-10 font-bold text-emerald-500 uppercase flex items-center gap-1.5 group">
+                                            <span key={t} className="px-2 py-1 rounded bg-app-surface/40 border border-etat-succes/20 text-ui-10 font-bold text-etat-succes uppercase flex items-center gap-1.5 group">
                                                 {t}
-                                                <button onClick={() => handleTagRemove(t)} className="hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button onClick={() => handleTagRemove(t)} className="hover:text-etat-danger opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <Trash2 size={10} />
                                                 </button>
                                             </span>
@@ -325,7 +325,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                                         key={p}
                                                         onClick={() => handleUpdateNested('hardware', 'priority', p)}
                                                         className={`size-8 rounded-lg font-black text-xs transition-all ${selectedMapping.hardware?.priority === p 
-                                                            ? 'bg-accent text-app-bg shadow-glow-accent/30' 
+                                                            ? 'bg-accent text-app-on-accent shadow-glow-accent/30' 
                                                             : 'bg-app-surface/40 text-app-text/40 hover:text-app-text'}`}
                                                     >
                                                         {p}
@@ -352,7 +352,7 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                             >
                                                 <option value="" className="bg-app-bg text-app-text/40">{t('tactical.taxonomy.editor.none')}</option>
                                                 {soundFiles.map(file => (
-                                                    <option key={file} value={file} className="bg-app-bg text-white">
+                                                    <option key={file} value={file} className="bg-app-bg text-app-text">
                                                         {file.replace(/\.(mp3|wav|ogg|m4a)$/i, '').replace(/_/g, ' ')}
                                                     </option>
                                                 ))}
@@ -366,9 +366,9 @@ export const TacticalTaxonomyEditor: React.FC = () => {
                                                 className="w-full bg-app-bg/50 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold text-GM-Gold outline-none"
                                             >
                                                 <option value="" className="bg-app-bg text-app-text/40">{t('tactical.taxonomy.editor.default_silence')}</option>
-                                                <option value="scene-action" className="bg-app-bg text-red-500">{t('tactical.taxonomy.editor.intense_action')}</option>
-                                                <option value="scene-tension" className="bg-app-bg text-amber-500">{t('tactical.taxonomy.editor.heavy_tension')}</option>
-                                                <option value="scene-mystery" className="bg-app-bg text-purple-500">{t('tactical.taxonomy.editor.ethereal_mystery')}</option>
+                                                <option value="scene-action" className="bg-app-bg text-gm-crimson">{t('tactical.taxonomy.editor.intense_action')}</option>
+                                                <option value="scene-tension" className="bg-app-bg text-gm-gold">{t('tactical.taxonomy.editor.heavy_tension')}</option>
+                                                <option value="scene-mystery" className="bg-app-bg text-gm-violet">{t('tactical.taxonomy.editor.ethereal_mystery')}</option>
                                             </select>
                                         </div>
                                     </div>
