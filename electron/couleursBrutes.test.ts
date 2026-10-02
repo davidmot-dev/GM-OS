@@ -29,6 +29,7 @@ const MODULES_MIGRES: string[] = [
     'modules/image',  // phase 4, L1 — 2026-09-30
     'modules/combat', // phase 4, L1 — 2026-09-30
     'modules/sound',   // phase 4, L2 — 2026-10-02
+    'modules/ambient', // phase 4, L2 — 2026-10-02
 ];
 
 function releve(): Map<string, number> {

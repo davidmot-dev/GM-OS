@@ -233,7 +233,7 @@ const AmbientDashboard: React.FC = () => {
                             {themesInUniverse.length > 0 && (
                                 <button
                                     onClick={handleDeleteTheme}
-                                    className="p-1 text-app-text/60 hover:text-red-500 transition-colors"
+                                    className="p-1 text-app-text/60 hover:text-etat-danger transition-colors"
                                     title={t('modules:ambient.dashboard.delete_theme')}
                                 >
                                     <Trash2 size={12} />
@@ -252,7 +252,7 @@ const AmbientDashboard: React.FC = () => {
                         </button>
                         <button
                             onClick={handleSaveNewTheme}
-                            className="p-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 rounded-xl transition-all border border-emerald-500/10 flex items-center justify-center"
+                            className="p-2.5 bg-etat-succes/10 hover:bg-etat-succes/20 text-etat-succes rounded-xl transition-all border border-etat-succes/10 flex items-center justify-center"
                             title={t('modules:ambient.dashboard.save_new')}
                         >
                             <Save size={16} />
@@ -284,7 +284,7 @@ const AmbientDashboard: React.FC = () => {
 
                     <button
                         onClick={() => fadeOutAll()}
-                        className="flex items-center gap-2 px-6 py-4 bg-red-600/10 hover:bg-red-600/20 text-red-500 border border-red-500/20 rounded-2xl font-black text-xs transition-all uppercase tracking-widest active:scale-95 shadow-lg group"
+                        className="flex items-center gap-2 px-6 py-4 bg-etat-danger/10 hover:bg-etat-danger/20 text-etat-danger border border-etat-danger/20 rounded-2xl font-black text-xs transition-all uppercase tracking-widest active:scale-95 shadow-lg group"
                     >
                         <Trash2 size={16} className="group-hover:rotate-12 transition-transform" />
                         {t('modules:ambient.dashboard.silence')}
@@ -293,7 +293,7 @@ const AmbientDashboard: React.FC = () => {
                     <button
                         onClick={() => gmConfirm(t('modules:ambient.messages.reset_confirm'), () => reset())}
                         title={t('modules:ambient.dashboard.reset_module')}
-                        className="size-12 bg-red-500/5 border border-red-500/10 text-red-500/50 rounded-2xl flex items-center justify-center hover:bg-red-500/20 hover:text-red-500 transition-all active:scale-95 shadow-lg"
+                        className="size-12 bg-etat-danger/5 border border-etat-danger/10 text-etat-danger/50 rounded-2xl flex items-center justify-center hover:bg-etat-danger/20 hover:text-etat-danger transition-all active:scale-95 shadow-lg"
                     >
                         <RotateCcw size={18} />
                     </button>
@@ -329,7 +329,7 @@ const AmbientDashboard: React.FC = () => {
                                     e.stopPropagation();
                                     gmConfirm(t('modules:ambient.messages.delete_scene_confirm', { name: t(scene.name) }), () => deleteScene(scene.id));
                                 }}
-                                className="absolute -top-1 -right-1 p-1 bg-red-500 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 hover:scale-110"
+                                className="absolute -top-1 -right-1 p-1 bg-etat-danger rounded-full text-app-bg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10 hover:scale-110"
                                 title={t('modules:ambient.dashboard.delete_scene')}
                             >
                                 <Plus size={10} className="rotate-45" />
@@ -357,7 +357,7 @@ const AmbientDashboard: React.FC = () => {
             <div className="flex justify-between items-center px-6 py-3 bg-app-surface/40 rounded-2xl border border-app-border/50 text-ui-9 font-mono text-app-text/60 uppercase tracking-widest">
                 <div className="flex items-center gap-4">
                     <span className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_5px_#10b981]" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse shadow-[0_0_5px_#10b981]" />
                         {t('modules:ambient.dashboard.engine_ready')}
                     </span>
                     <span className="text-app-border">|</span>

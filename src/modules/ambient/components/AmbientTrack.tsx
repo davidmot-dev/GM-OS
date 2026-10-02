@@ -74,7 +74,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                     className="w-full bg-transparent text-ui-10 font-bold uppercase tracking-widest text-app-text/50 text-center focus:text-app-text focus:outline-none"
                     placeholder={t('modules:ambient.presets.tracks.default_track', { index: index + 1 }).toUpperCase()}
                 />
-                <div className="text-ui-7 font-black text-white/20 mt-0.5 uppercase tracking-tighter">[{track.id}]</div>
+                <div className="text-ui-7 font-black text-app-text/20 mt-0.5 uppercase tracking-tighter">[{track.id}]</div>
 
                 {/* Visualizer */}
                 <div className="mt-2">
@@ -86,7 +86,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
             <button
                 onClick={() => toggleTrack(index)}
                 className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 relative group/btn ${track.isPlaying
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                    ? 'bg-etat-succes/20 text-etat-succes border border-etat-succes/30'
                     : 'bg-app-surface/80 text-app-text/50 border border-app-border hover:text-app-text hover:border-app-border/80'
                     }`}
                 style={track.isPlaying ? { boxShadow: `0 0 20px -5px ${track.color}44`, borderColor: `${track.color}66`, color: track.color } : {}}
@@ -168,7 +168,7 @@ const AmbientTrack: React.FC<AmbientTrackProps> = ({ track, index, onRequestMedi
                             linkedLightSceneId: undefined
                         });
                     }}
-                    className="p-1 rounded-full text-app-text/40 hover:text-red-500 hover:bg-red-500/10 transition-all"
+                    className="p-1 rounded-full text-app-text/40 hover:text-etat-danger hover:bg-etat-danger/10 transition-all"
                     title={t('modules:ambient.dashboard.delete_track')}
                 >
                     <Trash2 size={12} />
