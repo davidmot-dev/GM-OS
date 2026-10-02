@@ -46,56 +46,56 @@ const PHASE_CONFIG: Record<NexusOperationPhase, PhaseConfig> = {
     scraping: {
         label: 'modules:system.nexus.phases.scraping',
         icon: Database,
-        color: 'text-amber-400',
-        glow: 'shadow-[0_0_30px_rgba(251,191,36,0.3)]',
+        color: 'text-accent',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]',
     },
     harvesting: {
         label: 'modules:system.nexus.phases.harvesting',
         icon: HardDrive,
-        color: 'text-orange-400',
-        glow: 'shadow-[0_0_30px_rgba(251,146,60,0.3)]',
+        color: 'text-accent',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]',
     },
     remote_check: {
         label: 'modules:system.nexus.phases.remote_check',
         icon: Zap,
-        color: 'text-indigo-400',
-        glow: 'shadow-[0_0_30px_rgba(129,140,248,0.3)]',
+        color: 'text-accent',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]',
     },
     packaging: {
         label: 'modules:system.nexus.phases.packaging',
         icon: FileArchive,
-        color: 'text-yellow-400',
-        glow: 'shadow-[0_0_30px_rgba(250,204,21,0.3)]',
+        color: 'text-accent',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]',
     },
     importing: {
         label: 'modules:system.nexus.phases.importing',
         icon: Download,
-        color: 'text-sky-400',
-        glow: 'shadow-[0_0_30px_rgba(56,189,248,0.3)]',
+        color: 'text-accent',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]',
     },
     remapping: {
         label: 'modules:system.nexus.phases.remapping',
         icon: Layers,
-        color: 'text-violet-400',
-        glow: 'shadow-[0_0_30px_rgba(167,139,250,0.3)]',
+        color: 'text-accent',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]',
     },
     injecting: {
         label: 'modules:system.nexus.phases.injecting',
         icon: ArrowDownToLine,
-        color: 'text-emerald-400',
-        glow: 'shadow-[0_0_30px_rgba(52,211,153,0.3)]',
+        color: 'text-accent',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]',
     },
     done: {
         label: 'modules:system.nexus.phases.done',
         icon: CheckCircle2,
-        color: 'text-emerald-400',
-        glow: 'shadow-[0_0_40px_rgba(52,211,153,0.4)]',
+        color: 'text-etat-succes',
+        glow: 'shadow-[0_0_40px_color-mix(in_srgb,var(--etat-succes)_40%,transparent)]',
     },
     error: {
         label: 'modules:system.nexus.phases.error',
         icon: AlertCircle,
-        color: 'text-rose-400',
-        glow: 'shadow-[0_0_30px_rgba(251,113,133,0.3)]',
+        color: 'text-etat-danger',
+        glow: 'shadow-[0_0_30px_color-mix(in_srgb,var(--etat-danger)_30%,transparent)]',
     },
 };
 
@@ -128,7 +128,7 @@ const ParticleGroup: React.FC = () => (
                     '--p-size': `${PARTICLE_SIZES[i]}px`,
                     '--p-delay': PARTICLE_DELAYS[i],
                 } as React.CSSProperties}
-                className="absolute bottom-0 rounded-full bg-amber-400/20 animate-rise left-[var(--p-left)] w-[var(--p-size)] h-[var(--p-size)] [animation-delay:var(--p-delay)]"
+                className="absolute bottom-0 rounded-full bg-accent/20 animate-rise left-[var(--p-left)] w-[var(--p-size)] h-[var(--p-size)] [animation-delay:var(--p-delay)]"
             />
         ))}
     </div>
@@ -137,7 +137,7 @@ const ParticleGroup: React.FC = () => (
 /** Ligne de scan horizontale animée */
 const ScanLine: React.FC = () => (
     <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl">
-        <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent animate-[scan_2s_linear_infinite]" />
+        <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent animate-[scan_2s_linear_infinite]" />
     </div>
 );
 
@@ -172,11 +172,11 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
                             <div
                                 className={`w-8 h-8 rounded-lg flex items-center justify-center border transition-all duration-500 ${
                                     isError && isActive
-                                        ? 'bg-rose-500/20 border-rose-500/50 text-rose-400'
+                                        ? 'bg-etat-danger/20 border-etat-danger/50 text-etat-danger'
                                         : isDone
-                                        ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400'
+                                        ? 'bg-etat-succes/20 border-etat-succes/40 text-etat-succes'
                                         : isActive
-                                        ? 'bg-amber-500/20 border-amber-500/50 text-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.3)]'
+                                        ? 'bg-accent/20 border-accent/50 text-accent shadow-[0_0_12px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]'
                                         : 'bg-app-bg/40 border-app-border/30 text-app-text/20'
                                 }`}
                             >
@@ -188,7 +188,7 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
                             </div>
                             <span
                                 className={`text-ui-8 font-bold uppercase tracking-widest transition-colors duration-300 ${
-                                    isActive ? 'text-amber-400' : isDone ? 'text-emerald-400/60' : 'text-app-text/20'
+                                    isActive ? 'text-accent' : isDone ? 'text-etat-succes/60' : 'text-app-text/20'
                                 }`}
                             >
                                 {t(config.label).split(' ')[0]}
@@ -197,7 +197,7 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
                         {idx < phases.length - 1 && (
                             <div
                                 className={`flex-1 h-px mx-2 mb-4 transition-all duration-700 ${
-                                    isDone ? 'bg-emerald-500/40' : 'bg-app-border/20'
+                                    isDone ? 'bg-etat-succes/40' : 'bg-app-border/20'
                                 }`}
                             />
                         )}
@@ -291,7 +291,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
         <div
             className={`fixed inset-0 z-[200] flex items-center justify-center transition-all duration-600 ${
                 isExiting ? 'opacity-0 backdrop-blur-0' : 'opacity-100 backdrop-blur-sm'
-            } bg-black/60`}
+            } bg-app-bg/60`}
         >
             {/* Panneau principal */}
             <div
@@ -303,15 +303,15 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                 <div
                     className={`absolute -inset-4 rounded-3xl blur-2xl opacity-30 transition-all duration-1000 ${
                         isDone
-                            ? 'bg-emerald-500'
+                            ? 'bg-etat-succes'
                             : isError
-                            ? 'bg-rose-500'
-                            : 'bg-amber-500'
+                            ? 'bg-etat-danger'
+                            : 'bg-accent'
                     }`}
                 />
 
                 {/* Corps du HUD */}
-                <div className="relative bg-black/80 backdrop-blur-2xl border border-amber-500/20 rounded-2xl overflow-hidden">
+                <div className="relative bg-app-bg/80 backdrop-blur-2xl border border-accent/20 rounded-2xl overflow-hidden">
                     {/* Scanline animée */}
                     <ScanLine />
 
@@ -319,16 +319,16 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                     {!isDone && !isError && <ParticleGroup />}
 
                     {/* Header */}
-                    <div className="px-6 pt-6 pb-4 border-b border-white/5">
+                    <div className="px-6 pt-6 pb-4 border-b border-app-text/5">
                         <div className="flex items-center gap-4">
                             {/* Icône de phase animée */}
                             <div
                                 className={`relative w-14 h-14 rounded-xl flex items-center justify-center border ${
                                     isDone
-                                        ? 'bg-emerald-500/10 border-emerald-500/30'
+                                        ? 'bg-etat-succes/10 border-etat-succes/30'
                                         : isError
-                                        ? 'bg-rose-500/10 border-rose-500/30'
-                                        : 'bg-amber-500/10 border-amber-500/30'
+                                        ? 'bg-etat-danger/10 border-etat-danger/30'
+                                        : 'bg-accent/10 border-accent/30'
                                 } ${config.glow} transition-all duration-700`}
                             >
                                 <Icon
@@ -341,14 +341,14 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                 />
                                 {/* Anneau de rotation */}
                                 {!isDone && !isError && (
-                                    <div className="absolute inset-0 rounded-xl border-2 border-amber-400/20 border-t-amber-400/60 animate-spin" />
+                                    <div className="absolute inset-0 rounded-xl border-2 border-accent/20 border-t-accent/60 animate-spin" />
                                 )}
                             </div>
 
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-0.5">
-                                    <Zap size={10} className="text-amber-400/60" />
-                                    <span className="text-ui-9 text-amber-400/60 font-black uppercase tracking-[0.2em]">
+                                    <Zap size={10} className="text-accent/60" />
+                                    <span className="text-ui-9 text-accent/60 font-black uppercase tracking-[0.2em]">
                                         {t('modules:system.nexus.hud.title')}
                                     </span>
                                 </div>
@@ -374,22 +374,22 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
 
                     {/* Barre de progression */}
                     <div className="px-6 py-4">
-                        <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div className="relative h-2 bg-app-text/5 rounded-full overflow-hidden">
                             {/* Track — eslint-disable-next-line react/forbid-dom-props (width dynamique obligatoire) */}
                             <div
                                 className={`absolute inset-y-0 left-0 rounded-full transition-all duration-500 ease-out w-[var(--progress-width)] ${
                                     isDone
-                                        ? 'bg-gradient-to-r from-emerald-600 to-emerald-400'
+                                        ? 'bg-etat-succes'
                                         : isError
-                                        ? 'bg-gradient-to-r from-rose-700 to-rose-500'
-                                        : 'bg-gradient-to-r from-amber-600 via-amber-400 to-orange-400'
+                                        ? 'bg-etat-danger'
+                                        : 'bg-accent'
                                 }`}
                                 style={{ '--progress-width': `${progressValue}%` } as React.CSSProperties}
                             />
                             {/* Shimmer */}
                             {!isDone && !isError && progressValue > 0 && (
                                 <div
-                                    className="absolute inset-y-0 w-20 bg-white/20 animate-shimmer rounded-full left-[var(--shimmer-left)]"
+                                    className="absolute inset-y-0 w-20 bg-app-text/20 animate-shimmer rounded-full left-[var(--shimmer-left)]"
                                     style={{ '--shimmer-left': `${Math.max(0, progressValue - 10)}%` } as React.CSSProperties}
                                 />
                             )}
@@ -402,12 +402,12 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                     </div>
 
                     {/* Terminal de logs */}
-                    <div className="mx-6 mb-4 bg-black/40 border border-white/5 rounded-xl p-3 h-28 overflow-y-auto custom-scrollbar">
+                    <div className="mx-6 mb-4 bg-app-bg/40 border border-app-text/5 rounded-xl p-3 h-28 overflow-y-auto custom-scrollbar">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="flex gap-1">
-                                <div className="w-2 h-2 rounded-full bg-rose-500/60" />
-                                <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
-                                <div className="w-2 h-2 rounded-full bg-emerald-500/60" />
+                                <div className="w-2 h-2 rounded-full bg-etat-danger/60" />
+                                <div className="w-2 h-2 rounded-full bg-accent/60" />
+                                <div className="w-2 h-2 rounded-full bg-etat-succes/60" />
                             </div>
                             <span className="text-ui-8 text-app-text/20 font-mono uppercase tracking-widest">
                                 {t('modules:system.nexus.hud.log_title')}
@@ -421,10 +421,10 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                                     className={`text-ui-10 font-mono leading-relaxed transition-opacity duration-300 ${
                                         log.includes('⚠️')
                                             ? idx === logs.length - 1
-                                                ? 'text-rose-400 font-bold'
-                                                : 'text-rose-400/40'
+                                                ? 'text-etat-danger font-bold'
+                                                : 'text-etat-danger/40'
                                             : idx === logs.length - 1
-                                            ? 'text-amber-400/80'
+                                            ? 'text-accent/80'
                                             : 'text-app-text/30'
                                     }`}
                                 >
@@ -442,12 +442,12 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
 
                     {/* Zone d'interaction (Boutons) */}
                     {progress?.interactionRequired && (
-                        <div className="mx-6 mb-6 p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <div className="mx-6 mb-6 p-4 bg-etat-info/10 border border-etat-info/30 rounded-xl animate-in fade-in slide-in-from-bottom-2 duration-500">
                             <div className="flex items-start gap-3 mb-4">
-                                <AlertCircle size={18} className="text-indigo-400 mt-0.5 shrink-0" />
+                                <AlertCircle size={18} className="text-etat-info mt-0.5 shrink-0" />
                                 <div>
-                                    <h4 className="text-sm font-bold text-indigo-100">{t('modules:system.nexus.hud.interaction.title')}</h4>
-                                    <p className="text-ui-11 text-indigo-200/60 leading-relaxed mt-1">
+                                    <h4 className="text-sm font-bold text-etat-info">{t('modules:system.nexus.hud.interaction.title')}</h4>
+                                    <p className="text-ui-11 text-etat-info/60 leading-relaxed mt-1">
                                         {t('modules:system.nexus.hud.interaction.desc', { count: progress.remoteUrlCount })}
                                     </p>
                                 </div>
@@ -456,14 +456,14 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => onResolveInteraction?.('localize')}
-                                    className="flex-1 py-2 px-4 bg-indigo-500 hover:bg-indigo-400 text-white text-ui-11 font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
+                                    className="flex-1 py-2 px-4 bg-etat-info hover:bg-etat-info text-app-bg text-ui-11 font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                                 >
                                     <Download size={14} />
                                     {t('modules:system.nexus.hud.interaction.localize_all')}
                                 </button>
                                 <button
                                     onClick={() => onResolveInteraction?.('ignore')}
-                                    className="flex-1 py-2 px-4 bg-white/5 hover:bg-white/10 text-app-text/60 text-ui-11 font-bold rounded-lg transition-colors border border-white/10"
+                                    className="flex-1 py-2 px-4 bg-app-text/5 hover:bg-app-text/10 text-app-text/60 text-ui-11 font-bold rounded-lg transition-colors border border-app-text/10"
                                 >
                                     {t('modules:system.nexus.hud.interaction.ignore')}
                                 </button>
@@ -475,7 +475,7 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                     {(isDone || isError) && (
                         <div
                             className={`px-6 pb-6 flex items-center gap-2 ${
-                                isDone ? 'text-emerald-400' : 'text-rose-400'
+                                isDone ? 'text-etat-succes' : 'text-etat-danger'
                             }`}
                         >
                             {isDone ? (
