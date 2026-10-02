@@ -9,14 +9,17 @@ import {
     ChevronLeft,
     Infinity as InfinityIcon,
     Eye,
-    EyeOff,
-    Hand
+    Hand,
+    Lock,
+    MonitorUp,
 } from 'lucide-react';
 import { useDeckPlayer } from '../hooks/useDeckPlayer';
+import { DeckInterpreter } from '../logic/DeckInterpreter';
+import { Panneau, Etiquette } from '../../../components/socle';
 
 const DeckPlayer: React.FC = () => {
     const { t } = useTranslation();
-    const { setCurrentView, decks } = useSessionOSStore();
+    const { setCurrentView, decks, updateDeck } = useSessionOSStore();
     const {
         propositionsEnAttente,
         accepterLeDonDeCarte,
@@ -61,167 +64,98 @@ const DeckPlayer: React.FC = () => {
         );
     }
 
+    const restantes = activeState.remainingIndices.length;
+    const derniereDefaussee = activeState.discardedIndices[activeState.discardedIndices.length - 1];
+    const urlDeLaDefausse = derniereDefaussee !== undefined
+        ? DeckInterpreter.getCardImageUrl(activeDeck.folderPath, derniereDefaussee, activeDeck)
+        : null;
+    const nomDeLaCarte = (idx: number) => DeckInterpreter.getCardMetadata(activeDeck, idx)?.name
+        ?? t('modules:session.deck_module.player.projection.card_name_fallback', { idx });
+    const cartesEnMain = mainsOuvertes.flatMap(main => main.cartes.map(carte => ({ main, carte })));
+
+    const titreDeTas = (numero: number, titre: string, aside?: React.ReactNode) => (
+        <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-3">
+            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-app-text">
+                <span className="mr-2 font-mono text-ui-11 text-accent">{numero}</span>{titre}
+            </h3>
+            {aside}
+        </div>
+    );
+
     return (
-        <div className="flex flex-col h-full w-full bg-app-bg overflow-hidden p-8 gap-8">
-            {/* Header / Selector */}
-            <header className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <button 
+        <div className="flex h-full w-full flex-col overflow-hidden bg-app-bg">
+            {/* L'en-tête : le paquet, son système, ce qu'il reste ; les autres paquets ; la projection */}
+            <header className="flex flex-wrap items-end justify-between gap-4 border-b border-app-border bg-app-surface/40 px-6 py-4 shrink-0">
+                <div className="min-w-0">
+                    <button
                         type="button"
                         onClick={() => setCurrentView('deck-library')}
-                        title={t('modules:session.deck_module.player.back_to_library')}
-                        className="p-2 rounded-lg bg-app-text/5 text-app-text/40 hover:text-app-text hover:bg-app-text/10 transition-all focus:outline-none"
+                        className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-colors hover:text-accent"
                     >
-                        <ChevronLeft size={20} />
+                        <ChevronLeft size={14} />{t('modules:session.deck_module.player.back_to_library')}
                     </button>
-                    <div className="h-8 w-px bg-app-text/10" />
-                    <div>
-                        <h1 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/80 flex items-center gap-2">
-                             Deck <span className="text-gm-gold">//</span> {activeDeck.name}
-                        </h1>
-                        <p className="text-ui-9 text-app-text/20 font-bold uppercase tracking-widest mt-0.5">
-                            {activeDeck.format} — {activeDeck.orientation} — {activeDeck.systemId}
-                        </p>
+                    <h1 className="mt-1 font-display text-2xl font-bold leading-tight text-app-text">
+                        Deck-OS <span className="text-gm-gold">//</span> {activeDeck.name}
+                    </h1>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <Etiquette>{activeDeck.systemId}</Etiquette>
+                        <Etiquette ton="accent">{t('modules:session.deck_module.player.agencement.restantes', { restantes, total: activeDeck.cardCount })}</Etiquette>
                     </div>
                 </div>
 
-                <div className="flex gap-2">
-                    <button 
-                        type="button"
-                        onClick={() => setCurrentView('deck-library')}
-                        className="mr-4 px-4 py-1.5 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all bg-app-text/5 text-app-text/40 border border-app-text/5 hover:bg-app-text/10 hover:text-app-text flex items-center gap-2 focus:outline-none"
-                    >
-                        <Layers size={14} /> {t('modules:session.deck_module.player.library')}
-                    </button>
-
-                    {decks.map(d => (
+                <div className="flex flex-wrap items-center gap-2">
+                    {decks.length > 1 && decks.map(d => (
                         <button
                             key={d.id}
                             type="button"
                             onClick={() => setActiveDeckId(d.id)}
-                            className={`px-4 py-1.5 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all border focus:outline-none ${
-                                activeDeckId === d.id 
-                                ? 'bg-gm-gold text-app-bg border-gm-gold shadow-glow-gold/20' 
-                                : 'bg-app-text/5 text-app-text/40 border-app-text/5 hover:bg-app-text/10'
+                            className={`rounded-lg border px-3 py-2 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                                activeDeckId === d.id
+                                ? 'border-gm-gold bg-gm-gold text-app-bg'
+                                : 'border-app-border bg-app-surface text-app-muted hover:text-app-text'
                             }`}
                         >
                             {d.name}
                         </button>
                     ))}
-
-                    <div className="h-8 w-px bg-app-text/10 mx-2" />
-
-                    <button 
+                    {/* `gm-blue` n'existe pas dans la palette : la projection
+                        active ne se colorait pas. Elle prend l'accent. */}
+                    <button
                         type="button"
                         onClick={toggleProjection}
                         title={isProjecting ? t('modules:session.deck_module.player.stop_projection') : t('modules:session.deck_module.player.start_projection')}
-                        className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all border focus:outline-none ${
-                            isProjecting 
-                            ? 'bg-gm-blue/20 text-gm-blue border-gm-blue/40 shadow-glow-blue/20' 
-                            : 'bg-app-text/5 text-app-text/20 border-app-text/5 hover:bg-app-text/10 hover:text-app-text/60'
+                        className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                            isProjecting
+                            ? 'border-accent bg-accent text-app-on-accent'
+                            : 'border-app-border bg-app-surface text-app-muted hover:border-accent/50 hover:text-accent'
                         }`}
                     >
-                        {isProjecting ? <Eye size={14} className="animate-pulse" /> : <EyeOff size={14} />}
-                        {isProjecting ? t('modules:session.deck_module.player.projection_active') : t('modules:session.deck_module.player.seers_eye')}
+                        {isProjecting ? <Eye size={14} className="animate-pulse" /> : <MonitorUp size={14} />}
+                        {isProjecting ? t('modules:session.deck_module.player.projection_active') : t('modules:session.deck_module.player.start_projection')}
                     </button>
                 </div>
             </header>
 
-            {/* Main Interaction Area */}
-            <div className="flex-1 flex items-center justify-center relative">
-                {/* Left Side: The Pile (Pioche) */}
-                <div className="absolute left-10 flex flex-col items-center gap-4">
-                    <button 
-                        type="button"
-                        className={`relative group transition-all focus:outline-none ${activeState.remainingIndices.length > 0 ? 'cursor-pointer hover:scale-105 active:scale-95' : 'opacity-30 cursor-not-allowed'}`} 
-                        onClick={() => activeState.remainingIndices.length > 0 && handleDraw()}
-                        title={t('modules:session.deck_module.player.draw_card_tooltip')}
-                        disabled={activeState.remainingIndices.length === 0}
-                    >
-                        {/* Stacked effect */}
-                        {activeState.remainingIndices.length > 2 && <div className="absolute inset-0 translate-x-1 translate-y-1 bg-app-bg/40 border border-app-text/5 rounded-xl -z-10" />}
-                        {activeState.remainingIndices.length > 5 && <div className="absolute inset-0 translate-x-2 translate-y-2 bg-app-bg/40 border border-app-text/5 rounded-xl -z-20" />}
-                        
-                        <div 
-                            className="bg-app-surface border border-app-text/10 rounded-xl overflow-hidden shadow-2xl transition-all group-hover:border-gm-gold/40"
-                            style={{ width: activeDeck.orientation === 'landscape' ? '264px' : '220px', aspectRatio }}
-                        >
-                            <img src={`/${cardBackUrl}`} alt={t('modules:session.deck_module.player.card_back')} className="w-full h-full object-cover opacity-60 group-hover:opacity-100" />
-                            <div className="absolute inset-x-0 bottom-4 flex flex-col items-center gap-2">
-                                <span className="px-3 py-1 bg-app-bg/80 rounded-full text-ui-10 font-black text-gm-gold border border-gm-gold/30">
-                                    {activeState.remainingIndices.length}
-                                </span>
-                                <div 
-                                    className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md text-ui-8 font-black uppercase tracking-widest border ${
-                                        activeDeck.useDiscard 
-                                        ? 'bg-etat-danger/10 text-etat-danger border-etat-danger/20' 
-                                        : 'bg-gm-blue/10 text-gm-blue border-gm-blue/20'
-                                    }`}
-                                    title={activeDeck.useDiscard ? t('modules:session.deck_module.player.discard_mode_tooltip') : t('modules:session.deck_module.player.oracle_mode_tooltip')}
-                                >
-                                    {activeDeck.useDiscard ? <Trash2 size={10} /> : <InfinityIcon size={10} />}
-                                    {activeDeck.useDiscard ? t('modules:session.deck_module.player.mode_standard') : t('modules:session.deck_module.player.mode_oracle')}
-                                </div>
-                            </div>
-                        </div>
-                    </button>
-                    <span className="text-ui-10 font-black uppercase tracking-tighter text-app-text/20">{t('modules:session.deck_module.player.draw_pile')}</span>
-                </div>
-
-                {/* Center: The Active Card (Zone de Jeu) */}
-                <div className="flex flex-col items-center gap-12">
-                    {currentCardUrl ? (
-                        <button 
-                            type="button"
-                            key={`card-${drawCount}`}
-                            className={`card-perspective animate-glide-card cursor-pointer focus:outline-none`}
-                            style={{ width: activeDeck.orientation === 'landscape' ? '480px' : '400px', aspectRatio }}
-                            onClick={() => handleFlip()}
-                            title={t('modules:session.deck_module.player.flip_card_tooltip')}
-                        >
-                            <div className={`card-inner h-full w-full relative ${isFlipped ? 'card-flipped' : ''}`}>
-                                {/* Front (or rather the actual card content) */}
-                                <div className="card-face absolute inset-0 rounded-[2rem] overflow-hidden border border-app-text/10 shadow-2xl bg-app-bg">
-                                    <img src={`/${currentCardUrl}`} alt={t('modules:session.deck_module.player.card_label')} className="w-full h-full object-cover" />
-                                </div>
-                                {/* Back (The hidden side before flip) */}
-                                <div className="card-face card-back absolute inset-0 rounded-[2rem] overflow-hidden border border-app-text/10 shadow-2xl bg-app-bg">
-                                    <img src={`/${cardBackUrl}`} alt={t('modules:session.deck_module.player.card_back')} className="w-full h-full object-cover grayscale opacity-40" />
-                                </div>
-                            </div>
-                        </button>
-                    ) : (
-                        <div 
-                            className="rounded-[2rem] border-2 border-dashed border-app-text/5 flex flex-col items-center justify-center text-app-text/5 gap-4"
-                            style={{ width: activeDeck.orientation === 'landscape' ? '480px' : '400px', aspectRatio }}
-                        >
-                            <Layers size={64} strokeWidth={1} />
-                            <span className="text-xs font-bold uppercase tracking-[0.2em]">{t('modules:session.deck_module.player.draw_pile_empty_hint')}</span>
-                        </div>
-                    )}
-
-                    {/* Bottom Controls */}
-                    <div className="flex gap-4 p-4 rounded-3xl bg-app-bg/40 backdrop-blur-xl border border-app-text/5 shadow-2xl">
-                        <button 
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+                <div className="flex flex-col gap-4 p-5">
+                    {/* Les gestes du paquet, et sa règle de pioche */}
+                    <div className="flex flex-wrap items-center gap-2">
+                        <button
                             type="button"
                             onClick={handleDraw}
-                            disabled={activeState.remainingIndices.length === 0}
-                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-app-text/5 text-app-text/40 hover:text-gm-gold transition-all disabled:opacity-20 focus:outline-none"
+                            disabled={restantes === 0}
+                            className="flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-ui-10 font-black uppercase tracking-widest text-app-on-accent transition-all hover:brightness-110 disabled:opacity-30"
                         >
-                            <RefreshCw size={24} />
-                            <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.deck_module.player.draw_btn')}</span>
+                            <RefreshCw size={14} />{t('modules:session.deck_module.player.draw_btn')}
                         </button>
-                        <div className="w-px h-12 self-center bg-app-text/5" />
-                        <button 
+                        <button
                             type="button"
                             onClick={handleDiscard}
                             disabled={activeState.currentCardIndex === null}
-                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-app-text/5 text-app-text/40 hover:text-etat-danger transition-all disabled:opacity-20 focus:outline-none"
+                            className="flex items-center gap-2 rounded-lg border border-app-border bg-app-surface px-4 py-3 text-ui-10 font-black uppercase tracking-widest text-app-text transition-all hover:border-etat-danger/50 hover:text-etat-danger disabled:opacity-30"
                         >
-                            <Trash2 size={24} />
-                            <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.deck_module.player.discard_btn')}</span>
+                            <Trash2 size={14} />{t('modules:session.deck_module.player.discard_btn')}
                         </button>
-                        <div className="w-px h-12 self-center bg-app-text/5" />
                         {/*
                           **Garder la carte tirée** — le quatrième tas, décidé
                           le 2026-08-30. On choisit d'abord à qui elle va : le
@@ -230,15 +164,15 @@ const DeckPlayer: React.FC = () => {
                           l'inverse ne se rattrape pas — on peut toujours la
                           retourner, on ne peut pas la faire oublier.
                         */}
-                        <div className="flex flex-col items-center justify-center gap-1.5 p-4">
-                            <Hand size={24} className={activeState.currentCardIndex === null ? 'text-app-text/10' : 'text-app-text/40'} />
+                        <label className={`flex items-center gap-2 rounded-lg border border-app-border bg-app-surface px-3 py-2 ${activeState.currentCardIndex === null ? 'opacity-30' : ''}`}>
+                            <Hand size={14} className="text-app-muted" />
                             <select
                                 value=""
                                 disabled={activeState.currentCardIndex === null}
                                 onChange={(e) => handleGarder(e.target.value === 'mj' ? null : e.target.value)}
                                 title={t('modules:session.deck_module.player.hands.keep')}
                                 aria-label={t('modules:session.deck_module.player.hands.keep')}
-                                className="bg-transparent text-ui-9 font-black uppercase tracking-widest text-app-text/40 outline-none disabled:opacity-20 hover:text-gm-gold cursor-pointer"
+                                className="cursor-pointer bg-transparent text-ui-10 font-black uppercase tracking-widest text-app-text outline-none"
                             >
                                 <option value="">{t('modules:session.deck_module.player.hands.keep')}</option>
                                 {porteursPossibles.map(p => (
@@ -247,174 +181,244 @@ const DeckPlayer: React.FC = () => {
                                     </option>
                                 ))}
                             </select>
-                        </div>
-                        <div className="w-px h-12 self-center bg-app-text/5" />
+                        </label>
                         <button
                             type="button"
                             onClick={handleShuffle}
-                            className="flex flex-col items-center gap-1.5 p-4 rounded-2xl hover:bg-app-text/5 text-app-text/40 hover:text-gm-purple transition-all focus:outline-none"
+                            className="flex items-center gap-2 rounded-lg border border-app-border bg-app-surface px-4 py-3 text-ui-10 font-black uppercase tracking-widest text-app-text transition-all hover:border-gm-violet/50 hover:text-gm-violet"
                         >
-                            <RotateCcw size={24} />
-                            <span className="text-ui-9 font-black uppercase tracking-widest">{t('modules:session.deck_module.player.shuffle_btn')}</span>
+                            <RotateCcw size={14} />{t('modules:session.deck_module.player.shuffle_btn')}
                         </button>
-                    </div>
-                </div>
 
-                {/* Right Side: The Discard (Défausse) */}
-                <div className="absolute right-10 flex flex-col items-center gap-4">
-                     <div 
-                        className={`rounded-xl border border-dashed transition-all flex items-center justify-center ${
-                            activeState.discardedIndices.length > 0 
-                            ? 'bg-etat-danger/5 border-etat-danger/20' 
-                            : 'bg-app-text/5 border-app-text/5'
-                        }`}
-                        style={{ width: activeDeck.orientation === 'landscape' ? '187px' : '156px', aspectRatio }}
-                    >
-                        {activeState.discardedIndices.length > 0 && (
-                            <div className="text-etat-danger/40 font-black text-xl">
-                                {activeState.discardedIndices.length}
-                            </div>
-                        )}
-                    </div>
-                    <span className="text-ui-10 font-black uppercase tracking-tighter text-app-text/20">{t('modules:session.deck_module.player.discard_pile')}</span>
-                </div>
-            </div>
-
-            {/*
-              **Les cartes tenues — le quatrième tas.**
-
-              Il ne s'affiche que lorsqu'il contient quelque chose : un cadre
-              vide en permanence prendrait la place du paquet, qui est ce qu'on
-              regarde. Chaque porteur a sa rangée, parce que la question posée
-              en séance est *« qui a quoi »* et non *« combien de cartes sont
-              sorties »*.
-            */}
-            {/*
-              **Les propositions en attente.** Le destinataire tranche, mais le
-              meneur doit pouvoir trancher aussi : un joueur parti de table ne
-              doit pas bloquer une carte pendant tout un combat.
-            */}
-            {propositionsEnAttente.length > 0 && (
-                <div className="shrink-0 border-t border-accent/30 bg-accent/5 px-8 py-4">
-                    {propositionsEnAttente.map(d => (
-                        <div key={d.id} className="flex flex-wrap items-center gap-4 py-1.5">
-                            <span className="text-xs text-app-text/70">
-                                <strong className="text-app-text">{d.deNom}</strong> propose{' '}
-                                <strong className="text-gm-gold">{d.nomDeLaCarte}</strong> à{' '}
-                                <strong className="text-app-text">{d.versNom}</strong>
-                            </span>
-                            <div className="flex gap-2">
+                        {/* Standard / Oracle en bascule : la règle du paquet, à
+                            portée de la main pendant qu'on joue. */}
+                        <div className="ml-auto flex rounded-lg border border-app-border bg-app-bg/40 p-1">
+                            {([true, false] as const).map(defausse => (
                                 <button
+                                    key={String(defausse)}
                                     type="button"
-                                    onClick={() => accepterLeDonDeCarte(d.id)}
-                                    className="rounded-lg bg-gm-gold px-3 py-1 text-ui-9 font-black uppercase tracking-widest text-app-bg"
+                                    onClick={() => updateDeck(activeDeck.id, { useDiscard: defausse })}
+                                    title={defausse ? t('modules:session.deck_module.player.discard_mode_tooltip') : t('modules:session.deck_module.player.oracle_mode_tooltip')}
+                                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest transition-all ${
+                                        activeDeck.useDiscard === defausse ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'
+                                    }`}
                                 >
-                                    {t('modules:session.deck_module.player.hands.accept')}
+                                    {defausse ? <Trash2 size={12} /> : <InfinityIcon size={12} />}
+                                    {defausse ? t('modules:session.deck_module.player.mode_standard') : t('modules:session.deck_module.player.mode_oracle')}
                                 </button>
-                                <button
-                                    type="button"
-                                    onClick={() => refuserLeDonDeCarte(d.id)}
-                                    className="rounded-lg border border-app-text/20 px-3 py-1 text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:text-app-text"
-                                >
-                                    {t('modules:session.deck_module.player.hands.refuse')}
-                                </button>
-                            </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            )}
+                    </div>
 
-            {mainsOuvertes.length > 0 && (
-                <div className="shrink-0 border-t border-app-text/5 bg-app-bg/30 backdrop-blur-xl px-8 py-5">
-                    <p className="mb-4 text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/25">
-                        {t('modules:session.deck_module.player.hands.title')}
-                    </p>
-                    <div className="flex flex-wrap gap-8">
-                        {mainsOuvertes.map(main => (
-                            <div key={main.porteur ?? 'mj'} className="flex flex-col gap-2">
-                                <span className={`text-ui-10 font-black uppercase tracking-widest ${main.porteur === null ? 'text-gm-gold/70' : 'text-app-text/50'}`}>
-                                    {main.nom}
-                                </span>
-                                <div className="flex gap-3">
-                                    {main.cartes.map(carte => (
-                                        <div key={carte.index} className="group relative">
-                                            {/*
-                                              Le meneur voit toujours la carte,
-                                              même face cachée : c'est lui qui
-                                              arbitre. Le voile dit seulement ce
-                                              que la table, elle, ne voit pas.
-                                            */}
-                                            <img
-                                                src={carte.face === 'scellee' ? `/${cardBackUrl}` : `/${carte.url}`}
-                                                alt={carte.nomDeLaCarte}
-                                                title={`${carte.nomDeLaCarte} — ${carte.face === 'scellee' ? t('modules:session.deck_module.player.hands.hidden') : t('modules:session.deck_module.player.hands.shown')}`}
-                                                className={`h-24 rounded-lg border object-cover shadow-lg transition-all ${carte.face === 'scellee'
-                                                    ? 'border-app-text/10 opacity-60'
-                                                    : 'border-gm-gold/40'}`}
-                                                style={{ aspectRatio }}
-                                            />
-                                            <div className="absolute inset-x-0 -bottom-1 flex justify-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                    {/* Les trois tas, d'un coup d'œil */}
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_minmax(0,1fr)]">
+                        <Panneau className="flex flex-col">
+                            {titreDeTas(1, t('modules:session.deck_module.player.draw_pile'), <Etiquette>{restantes}</Etiquette>)}
+                            <div className="flex flex-1 flex-col items-center gap-3 px-4 pb-4">
+                                <button
+                                    type="button"
+                                    className={`relative w-full max-w-[12rem] transition-all ${restantes > 0 ? 'cursor-pointer hover:scale-[1.03] active:scale-95' : 'cursor-not-allowed opacity-30'}`}
+                                    onClick={() => restantes > 0 && handleDraw()}
+                                    title={t('modules:session.deck_module.player.draw_card_tooltip')}
+                                    disabled={restantes === 0}
+                                    style={{ aspectRatio }}
+                                >
+                                    {restantes > 2 && <span className="absolute inset-0 translate-x-1 translate-y-1 rounded-xl border border-app-border bg-app-surface-2" />}
+                                    <img src={`/${cardBackUrl}`} alt={t('modules:session.deck_module.player.card_back')} className="relative h-full w-full rounded-xl border border-app-border object-cover shadow-xl" />
+                                </button>
+                                <div className="w-full">
+                                    <div className="flex items-baseline justify-between text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                                        <span>{t('modules:session.deck_module.player.agencement.reserve')}</span>
+                                        <span className="font-display text-lg text-app-text">{restantes}</span>
+                                    </div>
+                                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-app-bg">
+                                        <div className="h-full bg-accent" style={{ width: `${activeDeck.cardCount ? (restantes / activeDeck.cardCount) * 100 : 0}%` }} />
+                                    </div>
+                                </div>
+                            </div>
+                        </Panneau>
+
+                        <Panneau className={`flex flex-col ${currentCardUrl ? 'border-accent/50' : ''}`}>
+                            {titreDeTas(2, t('modules:session.deck_module.player.agencement.carte_tiree'),
+                                activeState.currentCardIndex !== null && <Etiquette ton="accent">{t('modules:session.deck_module.player.agencement.numero', { n: activeState.currentCardIndex, total: activeDeck.cardCount })}</Etiquette>)}
+                            <div className="flex flex-1 flex-col items-center gap-3 px-4 pb-4">
+                                {currentCardUrl ? (
+                                    <button
+                                        type="button"
+                                        key={`card-${drawCount}`}
+                                        className="card-perspective animate-glide-card w-full max-w-[20rem] cursor-pointer"
+                                        style={{ aspectRatio }}
+                                        onClick={() => handleFlip()}
+                                        title={t('modules:session.deck_module.player.flip_card_tooltip')}
+                                    >
+                                        <div className={`card-inner h-full w-full relative ${isFlipped ? 'card-flipped' : ''}`}>
+                                            <div className="card-face absolute inset-0 overflow-hidden rounded-2xl border border-app-border bg-app-bg shadow-2xl">
+                                                <img src={`/${currentCardUrl}`} alt={t('modules:session.deck_module.player.card_label')} className="h-full w-full object-cover" />
+                                            </div>
+                                            <div className="card-face card-back absolute inset-0 overflow-hidden rounded-2xl border border-app-border bg-app-bg shadow-2xl">
+                                                <img src={`/${cardBackUrl}`} alt={t('modules:session.deck_module.player.card_back')} className="h-full w-full object-cover grayscale opacity-40" />
+                                            </div>
+                                        </div>
+                                    </button>
+                                ) : (
+                                    <div
+                                        className="flex w-full max-w-[20rem] flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-app-border text-app-subtle"
+                                        style={{ aspectRatio }}
+                                    >
+                                        <Layers size={48} strokeWidth={1} />
+                                        <span className="text-xs font-bold uppercase tracking-[0.2em]">{t('modules:session.deck_module.player.draw_pile_empty_hint')}</span>
+                                    </div>
+                                )}
+                                {activeState.currentCardIndex !== null && (
+                                    <div className="text-center">
+                                        <p className="font-display text-base font-bold text-app-text">{nomDeLaCarte(activeState.currentCardIndex)}</p>
+                                        <p className="text-ui-10 text-app-muted">{t('modules:session.deck_module.player.flip_card_tooltip')}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </Panneau>
+
+                        <Panneau className="flex flex-col">
+                            {titreDeTas(3, t('modules:session.deck_module.player.discard_pile'), <Etiquette ton={activeState.discardedIndices.length ? 'danger' : 'neutre'}>{activeState.discardedIndices.length}</Etiquette>)}
+                            <div className="flex flex-1 flex-col items-center gap-3 px-4 pb-4">
+                                {urlDeLaDefausse ? (
+                                    <img
+                                        src={`/${urlDeLaDefausse}`}
+                                        alt={nomDeLaCarte(derniereDefaussee!)}
+                                        className="w-full max-w-[12rem] rounded-xl border border-app-border object-cover opacity-70 grayscale-[0.4]"
+                                        style={{ aspectRatio }}
+                                    />
+                                ) : (
+                                    <div className="flex w-full max-w-[12rem] items-center justify-center rounded-xl border border-dashed border-app-border text-app-subtle" style={{ aspectRatio }}>
+                                        <Trash2 size={32} strokeWidth={1} />
+                                    </div>
+                                )}
+                                <p className="text-center text-xs text-app-muted">
+                                    {derniereDefaussee !== undefined
+                                        ? t('modules:session.deck_module.player.agencement.derniere', { nom: nomDeLaCarte(derniereDefaussee) })
+                                        : activeDeck.useDiscard
+                                            ? t('modules:session.deck_module.player.agencement.defausse_vide')
+                                            : t('modules:session.deck_module.player.oracle_mode_tooltip')}
+                                </p>
+                            </div>
+                        </Panneau>
+                    </div>
+
+                    {/*
+                      **Les propositions en attente.** Le destinataire tranche, mais le
+                      meneur doit pouvoir trancher aussi : un joueur parti de table ne
+                      doit pas bloquer une carte pendant tout un combat.
+                    */}
+                    {propositionsEnAttente.length > 0 && (
+                        <Panneau className="border-accent/40 px-4 py-3">
+                            {propositionsEnAttente.map(d => (
+                                <div key={d.id} className="flex flex-wrap items-center gap-4 py-1.5">
+                                    <span className="text-xs text-app-text">
+                                        <strong>{d.deNom}</strong> propose{' '}
+                                        <strong className="text-gm-gold">{d.nomDeLaCarte}</strong> à{' '}
+                                        <strong>{d.versNom}</strong>
+                                    </span>
+                                    <div className="flex gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => accepterLeDonDeCarte(d.id)}
+                                            className="rounded-lg bg-gm-gold px-3 py-1 text-ui-9 font-black uppercase tracking-widest text-app-bg"
+                                        >
+                                            {t('modules:session.deck_module.player.hands.accept')}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => refuserLeDonDeCarte(d.id)}
+                                            className="rounded-lg border border-app-border px-3 py-1 text-ui-9 font-black uppercase tracking-widest text-app-muted hover:text-app-text"
+                                        >
+                                            {t('modules:session.deck_module.player.hands.refuse')}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </Panneau>
+                    )}
+
+                    {/*
+                      **Les cartes tenues — le quatrième tas.** Chaque carte dit qui
+                      la tient, ce que la table en sait, et ses quatre gestes. *La
+                      question posée en séance est « qui a quoi », et non « combien
+                      de cartes sont sorties ».*
+                    */}
+                    <Panneau>
+                        {titreDeTas(4, t('modules:session.deck_module.player.hands.title'), cartesEnMain.length > 0 && <Etiquette>{cartesEnMain.length}</Etiquette>)}
+                        <div className="grid grid-cols-1 gap-3 px-4 pb-4 sm:grid-cols-2 xl:grid-cols-3">
+                            {cartesEnMain.map(({ main, carte }) => {
+                                const scellee = carte.face === 'scellee';
+                                return (
+                                    <div key={carte.index} className="flex gap-3 rounded-lg border border-app-border bg-app-bg/40 p-3">
+                                        {/*
+                                          Le meneur voit toujours la carte, même sous
+                                          scellé : c'est lui qui arbitre. Le voile dit
+                                          seulement ce que la table, elle, ne voit pas.
+                                        */}
+                                        <img
+                                            src={scellee ? `/${cardBackUrl}` : `/${carte.url}`}
+                                            alt={carte.nomDeLaCarte}
+                                            className={`h-28 shrink-0 rounded-md border object-cover ${scellee ? 'border-app-border opacity-60' : 'border-gm-gold/50'}`}
+                                            style={{ aspectRatio }}
+                                        />
+                                        <div className="flex min-w-0 flex-1 flex-col gap-2">
+                                            <Etiquette ton={main.porteur === null ? 'alerte' : 'succes'} className="self-start">{main.nom}</Etiquette>
+                                            <p className="truncate text-sm font-black uppercase text-app-text" title={carte.nomDeLaCarte}>{carte.nomDeLaCarte}</p>
+                                            <p className={`flex items-start gap-1.5 text-ui-10 font-bold ${scellee ? 'text-etat-alerte' : 'text-gm-cyan'}`}>
+                                                {scellee ? <Lock size={11} className="mt-0.5 shrink-0" /> : <Eye size={11} className="mt-0.5 shrink-0" />}
+                                                {scellee ? t('modules:session.deck_module.player.hands.hidden') : t('modules:session.deck_module.player.hands.shown')}
+                                            </p>
+                                            <div className="mt-auto grid grid-cols-2 gap-1.5">
+                                                <select
+                                                    value=""
+                                                    onChange={(e) => handleDonner(carte.index, e.target.value === 'mj' ? null : e.target.value)}
+                                                    title={t('modules:session.deck_module.player.hands.give')}
+                                                    aria-label={t('modules:session.deck_module.player.hands.give')}
+                                                    className="cursor-pointer rounded-md border border-app-border bg-app-surface px-2 py-1.5 text-ui-9 font-black uppercase tracking-widest text-app-text outline-none"
+                                                >
+                                                    <option value="">{t('modules:session.deck_module.player.hands.give')}…</option>
+                                                    {porteursPossibles
+                                                        .filter(p => p.id !== main.porteur)
+                                                        .map(p => (
+                                                            <option key={p.id ?? 'mj'} value={p.id ?? 'mj'} className="bg-app-bg text-app-text">{p.nom}</option>
+                                                        ))}
+                                                </select>
+                                                {/* L'infobulle et le libellé disent l'action, pas
+                                                    l'état : un libellé qui décrit l'état ne dit
+                                                    jamais ce qu'un clic va produire. */}
                                                 <button
                                                     type="button"
                                                     onClick={() => handleRetourner(carte.index)}
-                                                    /*
-                                                      L'infobulle dit **l'action**, pas l'état : « Révéler »
-                                                      sur une carte scellée, « Remettre sous scellé » sur
-                                                      une carte révélée. C'est la leçon du bouton de
-                                                      rattachement des atmosphères, payée le matin même —
-                                                      un libellé qui décrit l'état ne dit jamais ce qu'un
-                                                      clic va produire.
-                                                    */
-                                                    title={carte.face === 'scellee'
-                                                        ? t('modules:session.deck_module.player.hands.reveal')
-                                                        : t('modules:session.deck_module.player.hands.seal')}
-                                                    className="rounded-md bg-app-bg p-1 text-app-text/60 shadow-lg hover:text-gm-gold"
+                                                    className="rounded-md border border-app-border px-2 py-1.5 text-ui-9 font-black uppercase tracking-widest text-gm-gold transition-all hover:border-gm-gold/50"
                                                 >
-                                                    {carte.face === 'scellee' ? <Eye size={12} /> : <EyeOff size={12} />}
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleRendre(carte.index)}
-                                                    title={t('modules:session.deck_module.player.hands.return')}
-                                                    className="rounded-md bg-app-bg p-1 text-app-text/60 shadow-lg hover:text-gm-purple"
-                                                >
-                                                    <RotateCcw size={12} />
+                                                    {scellee ? t('modules:session.deck_module.player.agencement.reveler') : t('modules:session.deck_module.player.agencement.resceller')}
                                                 </button>
                                                 <button
                                                     type="button"
                                                     onClick={() => handleJouer(carte.index)}
-                                                    title={t('modules:session.deck_module.player.hands.play')}
-                                                    className="rounded-md bg-app-bg p-1 text-app-text/60 shadow-lg hover:text-etat-danger"
+                                                    className="rounded-md bg-accent px-2 py-1.5 text-ui-9 font-black uppercase tracking-widest text-app-on-accent transition-all hover:brightness-110"
                                                 >
-                                                    <Trash2 size={12} />
+                                                    {t('modules:session.deck_module.player.hands.play')}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRendre(carte.index)}
+                                                    className="rounded-md border border-app-border px-2 py-1.5 text-ui-9 font-black uppercase tracking-widest text-app-muted transition-all hover:text-app-text"
+                                                >
+                                                    {t('modules:session.deck_module.player.hands.return')}
                                                 </button>
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
-                                {/* Donner la main entière à quelqu'un d'autre. */}
-                                <select
-                                    value=""
-                                    onChange={(e) => main.cartes.forEach(c =>
-                                        handleDonner(c.index, e.target.value === 'mj' ? null : e.target.value))}
-                                    title={t('modules:session.deck_module.player.hands.give')}
-                                    aria-label={t('modules:session.deck_module.player.hands.give')}
-                                    className="cursor-pointer bg-transparent text-ui-9 font-black uppercase tracking-widest text-app-text/25 outline-none hover:text-app-text/60"
-                                >
-                                    <option value="">{t('modules:session.deck_module.player.hands.give')}</option>
-                                    {porteursPossibles
-                                        .filter(p => p.id !== main.porteur)
-                                        .map(p => (
-                                            <option key={p.id ?? 'mj'} value={p.id ?? 'mj'} className="bg-app-bg text-app-text">
-                                                {p.nom}
-                                            </option>
-                                        ))}
-                                </select>
-                            </div>
-                        ))}
-                    </div>
+                                    </div>
+                                );
+                            })}
+                            {cartesEnMain.length === 0 && <p className="text-xs italic text-app-subtle">{t('modules:session.deck_module.player.agencement.aucune_en_main')}</p>}
+                        </div>
+                    </Panneau>
                 </div>
-            )}
+            </div>
         </div>
     );
 };

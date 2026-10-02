@@ -3046,10 +3046,18 @@
     },
     "deck_module": {
       "library": {
-        "title": "Tactical Library",
-        "subtitle": "Card deck and narrative element management",
+        "agencement": {
+          "titre": "Deck library",
+          "retour": "Back to cockpit",
+          "systeme_en_cours": "Current system: {{systeme}}",
+          "systeme_actif": "Active system",
+          "en_service": "Loaded",
+          "cartes": "cards",
+          "phrase_ouvert": "Players draw from it on their tablets.",
+          "phrase_ferme": "Only the GM draws from it.",
+          "paquets": "{{count}} deck(s)"
+        },
         "filter_all": "Show All",
-        "filter_system": "System Filter",
         "tooltip_filter_active": "Filter by active system",
         "tooltip_filter_all": "Show all systems",
         "new_deck": "New Deck",
@@ -3101,14 +3109,23 @@
         }
       },
       "player": {
+        "agencement": {
+          "restantes": "{{restantes}} / {{total}} cards in the pile",
+          "reserve": "Reserve",
+          "carte_tiree": "Drawn card",
+          "numero": "No. {{n}} / {{total}}",
+          "derniere": "Last: {{nom}}",
+          "defausse_vide": "No discarded card.",
+          "reveler": "Reveal",
+          "resceller": "Re-seal",
+          "aucune_en_main": "No card in hand — “Keep” gives the drawn card to someone."
+        },
         "empty_state": "No deck configured",
         "go_to_library": "Go to Library",
         "back_to_library": "Back to Library",
-        "library": "Library",
         "stop_projection": "Stop Hub projection",
         "start_projection": "Project to Player Hub",
         "projection_active": "Projection Active",
-        "seers_eye": "Seer's Eye",
         "draw_card_tooltip": "Draw a card",
         "card_back": "Card back",
         "discard_mode_tooltip": "Discard Mode: Cards are removed from the deck",

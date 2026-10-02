@@ -3046,10 +3046,18 @@
     },
     "deck_module": {
       "library": {
-        "title": "Bibliothèque Tactique",
-        "subtitle": "Gestion des paquets de cartes et éléments narratifs",
+        "agencement": {
+          "titre": "Bibliothèque de paquets",
+          "retour": "Retour au cockpit",
+          "systeme_en_cours": "Système en cours : {{systeme}}",
+          "systeme_actif": "Système actif",
+          "en_service": "En service",
+          "cartes": "cartes",
+          "phrase_ouvert": "Les joueurs y piochent depuis leur tablette.",
+          "phrase_ferme": "Seul le meneur y pioche.",
+          "paquets": "{{count}} paquet(s)"
+        },
         "filter_all": "Tout Voir",
-        "filter_system": "Filtre Système",
         "tooltip_filter_active": "Filtrer par système actif",
         "tooltip_filter_all": "Afficher tous les systèmes",
         "new_deck": "Nouveau Paquet",
@@ -3101,14 +3109,23 @@
         }
       },
       "player": {
+        "agencement": {
+          "restantes": "{{restantes}} / {{total}} cartes en pioche",
+          "reserve": "Réserve",
+          "carte_tiree": "Carte tirée",
+          "numero": "N° {{n}} / {{total}}",
+          "derniere": "Dernière : {{nom}}",
+          "defausse_vide": "Aucune carte défaussée.",
+          "reveler": "Révéler",
+          "resceller": "Re-sceller",
+          "aucune_en_main": "Aucune carte en main — « Garder » confie la carte tirée à quelqu’un."
+        },
         "empty_state": "Aucun paquet configuré",
         "go_to_library": "Aller à la Bibliothèque",
         "back_to_library": "Retour à la Bibliothèque",
-        "library": "Bibliothèque",
         "stop_projection": "Arrêter la projection Hub",
         "start_projection": "Projeter sur Player Hub",
         "projection_active": "Projection Active",
-        "seers_eye": "Seer's Eye",
         "draw_card_tooltip": "Piocher une carte",
         "card_back": "Dos de carte",
         "discard_mode_tooltip": "Mode Défausse : Les cartes sont retirées du paquet",

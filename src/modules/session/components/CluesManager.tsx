@@ -281,7 +281,7 @@ const CluesManager: React.FC = () => {
                                     title={clues.some(c => c.id === editingClue.id)
                                         ? t('modules:session.clues_manager.generate_image')
                                         : t('modules:session.clues_manager.generate_image_save_first')}
-                                    className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-gm-purple/40 text-gm-purple text-ui-9 font-black uppercase tracking-widest hover:bg-gm-purple/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                    className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-gm-violet/40 text-gm-violet text-ui-9 font-black uppercase tracking-widest hover:bg-gm-violet/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                     <Sparkles size={13} />
                                     {t('modules:session.clues_manager.generate_image')}
@@ -398,8 +398,8 @@ const CluesManager: React.FC = () => {
                     {/* Preview Side (Player View) */}
                     <div className="space-y-8 sticky top-0">
                         <div className="flex items-center gap-3 px-4">
-                            <Sparkles className="text-gm-purple" size={16} />
-                            <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-gm-purple/60">{t('modules:session.clues_manager.preview_title')}</span>
+                            <Sparkles className="text-gm-violet" size={16} />
+                            <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-gm-violet/60">{t('modules:session.clues_manager.preview_title')}</span>
                         </div>
                         
                         <div className={`min-h-[600px] flex-1 rounded-[3.5rem] glass-bento !bg-app-bg/40 border border-app-text/10 shadow-glow-white/5 overflow-hidden relative group p-12 pb-32 flex flex-col items-center justify-center text-center gap-8 ${justRevealed === editingClue.id ? 'animate-clue-reveal ring-4 ring-gm-gold/50 shadow-glow-gold' : ''}`}>
