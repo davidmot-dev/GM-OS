@@ -121,9 +121,9 @@ export const FavoriteDetailPanel: React.FC = () => {
     };
 
     const typeColor =
-        entity.type === 'npc' ? 'text-amber-500 ring-amber-500/20' :
-            entity.type === 'place' ? 'text-emerald-500 ring-emerald-500/20' :
-                entity.type === 'item' ? 'text-purple-500 ring-purple-500/20' :
+        entity.type === 'npc' ? 'text-gm-gold ring-gm-gold/20' :
+            entity.type === 'place' ? 'text-gm-emerald ring-gm-emerald/20' :
+                entity.type === 'item' ? 'text-gm-violet ring-gm-violet/20' :
                     'text-accent ring-accent/20';
 
     return (
@@ -136,7 +136,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                 title={t('common:mediaBrowser.importAsset')}
             />
             <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-100">{isEditing ? t('modules:favorite.detail.title_editing') : t('modules:favorite.detail.title_details')}</h2>
+                <h2 className="text-xl font-bold text-app-text">{isEditing ? t('modules:favorite.detail.title_editing') : t('modules:favorite.detail.title_details')}</h2>
                 <div className="flex items-center gap-2">
                     {!isEditing ? (
                         <button
@@ -157,7 +157,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                             </button>
                             <button
                                 onClick={handleCancel}
-                                className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all"
+                                className="p-2 rounded-lg bg-etat-danger/10 text-etat-danger hover:bg-etat-danger/20 transition-all"
                                 title={t('common:cancel')}
                             >
                                 <X size={18} />
@@ -166,7 +166,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                     )}
                     <button
                         onClick={() => selectFavorite(null)}
-                        className="p-1 rounded-lg hover:bg-app-surface text-app-muted hover:text-white transition-colors ml-2"
+                        className="p-1 rounded-lg hover:bg-app-surface text-app-muted hover:text-app-text transition-colors ml-2"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
@@ -179,7 +179,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                         {resolvedImageUrl ? (
                             <img className="w-full h-full object-cover" src={resolvedImageUrl} alt={formData.name} />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-700">
+                            <div className="w-full h-full flex items-center justify-center text-app-subtle">
                                 <span className="material-symbols-outlined text-4xl">{getTypeIcon(entity.type)}</span>
                             </div>
                         )}
@@ -191,14 +191,14 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 type="text"
                                 value={formData.name || ''}
                                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full bg-app-surface border-b-2 border-accent/50 text-white text-xl font-bold text-center focus:outline-none focus:border-accent transition-colors"
+                                className="w-full bg-app-surface border-b-2 border-accent/50 text-app-text text-xl font-bold text-center focus:outline-none focus:border-accent transition-colors"
                                 placeholder={t('common:placeholder_input')}
                             />
                             <input
                                 type="text"
                                 value={formData.subtitle || ''}
                                 onChange={e => setFormData({ ...formData, subtitle: e.target.value })}
-                                className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-center text-slate-300 focus:outline-none focus:border-accent"
+                                className="w-full bg-app-bg border border-app-border rounded-lg p-2 text-sm text-center text-app-text focus:outline-none focus:border-accent"
                                 placeholder={t('common:standby')}
                             />
                             
@@ -209,7 +209,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     <select
                                         value={formData.campaignId || ''}
                                         onChange={e => setFormData({ ...formData, campaignId: e.target.value || undefined, ownerId: undefined })}
-                                        className="w-full bg-app-bg border border-app-border rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-accent"
+                                        className="w-full bg-app-bg border border-app-border rounded-lg px-3 py-2 text-sm text-app-text focus:outline-none focus:border-accent"
                                     >
                                         <option value="">-- {t('common:standby')} --</option>
                                         {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -218,11 +218,11 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                                 {formData.campaignId && entity.type === 'item' && (
                                     <section className="space-y-2 text-left animate-in fade-in">
-                                        <label className="text-ui-10 font-bold text-emerald-500 uppercase tracking-widest ml-1">{t('common:playerHub')}</label>
+                                        <label className="text-ui-10 font-bold text-etat-succes uppercase tracking-widest ml-1">{t('common:playerHub')}</label>
                                         <select
                                             value={formData.ownerId || ''}
                                             onChange={e => setFormData({ ...formData, ownerId: e.target.value || undefined })}
-                                            className="w-full bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-400 focus:outline-none focus:border-emerald-500"
+                                            className="w-full bg-etat-succes/10 border border-etat-succes/30 rounded-lg px-3 py-2 text-sm text-etat-succes focus:outline-none focus:border-etat-succes"
                                         >
                                             <option value="">-- {t('common:gm')} --</option>
                                             {players
@@ -245,7 +245,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                             type="text"
                                             value={formData.imageUrl || ''}
                                             onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
-                                            className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-accent font-mono"
+                                            className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-app-text focus:outline-none focus:border-accent font-mono"
                                             placeholder="https://... m-..."
                                         />
                                         <button
@@ -264,7 +264,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                             type="text"
                                             value={formData.tokenUrl || ''}
                                             onChange={e => setFormData({ ...formData, tokenUrl: e.target.value })}
-                                            className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-accent font-mono"
+                                            className="flex-1 bg-app-bg border border-app-border rounded-lg px-3 py-2 text-xs text-app-text focus:outline-none focus:border-accent font-mono"
                                             placeholder="https://... m-..."
                                         />
                                         <button
@@ -280,7 +280,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                         </div>
                     ) : (
                         <div>
-                            <h3 className="text-2xl font-bold text-slate-100">{entity.name}</h3>
+                            <h3 className="text-2xl font-bold text-app-text">{entity.name}</h3>
                             {entity.subtitle && (
                                 <p className={`${typeColor.split(' ')[0]} font-semibold text-sm`}>{entity.subtitle}</p>
                             )}
@@ -298,7 +298,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     attrs[`Trait ${Object.keys(attrs).length + 1}`] = 'Value';
                                     setFormData({ ...formData, attributes: attrs });
                                 }}
-                                className="text-accent hover:text-white transition-colors"
+                                className="text-accent hover:text-app-text transition-colors"
                             >
                                 <Plus size={14} />
                             </button>
@@ -330,7 +330,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                 attrs[key] = e.target.value;
                                                 setFormData({ ...formData, attributes: attrs });
                                             }}
-                                            className="w-full bg-transparent text-sm font-bold text-white text-center focus:outline-none"
+                                            className="w-full bg-transparent text-sm font-bold text-app-text text-center focus:outline-none"
                                         />
                                         <button
                                             onClick={() => {
@@ -338,7 +338,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                 delete attrs[key];
                                                 setFormData({ ...formData, attributes: attrs });
                                             }}
-                                            className="absolute -top-1 -right-1 p-1 bg-rose-500 text-white rounded-full opacity-0 group-hover/attr:opacity-100 transition-opacity scale-75"
+                                            className="absolute -top-1 -right-1 p-1 bg-etat-danger text-app-bg rounded-full opacity-0 group-hover/attr:opacity-100 transition-opacity scale-75"
                                         >
                                             <X size={10} />
                                         </button>
@@ -348,7 +348,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                         <p className="text-ui-10 text-app-subtle uppercase font-bold tracking-wider mb-1">
                                             {t([`modules:favorite.attributes.${key.trim().toLowerCase()}`, key])}
                                         </p>
-                                        <p className="text-sm font-bold text-slate-200">{value}</p>
+                                        <p className="text-sm font-bold text-app-text">{value}</p>
                                     </>
                                 )}
                             </div>
@@ -366,7 +366,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     stats[`Stat ${Object.keys(stats).length + 1}`] = 50;
                                     setFormData({ ...formData, stats: stats });
                                 }}
-                                className="text-accent hover:text-white transition-colors"
+                                className="text-accent hover:text-app-text transition-colors"
                             >
                                 <Plus size={14} />
                             </button>
@@ -392,7 +392,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                         stats[newKey] = val;
                                                         setFormData({ ...formData, stats: stats });
                                                     }}
-                                                    className="bg-transparent text-app-muted focus:text-white focus:outline-none w-24"
+                                                    className="bg-transparent text-app-muted focus:text-app-text focus:outline-none w-24"
                                                 />
                                                 <button
                                                     onClick={() => {
@@ -400,7 +400,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                                         delete stats[stat];
                                                         setFormData({ ...formData, stats: stats });
                                                     }}
-                                                    className="opacity-0 group-hover/stat:opacity-100 text-rose-500 transition-opacity"
+                                                    className="opacity-0 group-hover/stat:opacity-100 text-etat-danger transition-opacity"
                                                 >
                                                     <Trash2 size={12} />
                                                 </button>
@@ -446,7 +446,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                         <textarea
                             value={formData.lore || ''}
                             onChange={e => setFormData({ ...formData, lore: e.target.value })}
-                            className="w-full bg-app-surface/50 border border-app-border/50 rounded-xl p-4 text-sm text-slate-300 focus:outline-none focus:border-accent/50 min-h-[120px] custom-scrollbar"
+                            className="w-full bg-app-surface/50 border border-app-border/50 rounded-xl p-4 text-sm text-app-text focus:outline-none focus:border-accent/50 min-h-[120px] custom-scrollbar"
                             placeholder={t('common:standby')}
                         />
                     ) : (
@@ -457,7 +457,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                 </div>
 
                 {entity.type === 'npc' && (
-                    <div className="space-y-4 pt-4 border-t border-white/5">
+                    <div className="space-y-4 pt-4 border-t border-app-text/5">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-app-subtle">
                                 <MessageSquare size={16} />
@@ -469,7 +469,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${
                                     isGeneratingDialogues 
                                         ? 'bg-accent/10 text-accent/50 animate-pulse' 
-                                        : 'bg-accent text-slate-950 hover:scale-105 active:scale-95 shadow-glow-accent/20'
+                                        : 'bg-accent text-app-on-accent hover:scale-105 active:scale-95 shadow-glow-accent/20'
                                 }`}
                             >
                                 <Sparkles size={12} className={isGeneratingDialogues ? 'animate-spin' : ''} />
@@ -483,18 +483,18 @@ export const FavoriteDetailPanel: React.FC = () => {
                                     <div 
                                         key={idx} 
                                         onClick={() => handleCopyDialogue(line)}
-                                        className="group relative bg-app-surface/40 hover:bg-accent/5 border border-white/5 hover:border-accent/20 rounded-xl p-3 cursor-pointer transition-all animate-in slide-in-from-right-4"
+                                        className="group relative bg-app-surface/40 hover:bg-accent/5 border border-app-text/5 hover:border-accent/20 rounded-xl p-3 cursor-pointer transition-all animate-in slide-in-from-right-4"
                                         style={{ animationDelay: `${idx * 100}ms` }}
                                     >
-                                        <p className="text-xs text-slate-300 italic pr-6 leading-relaxed line-clamp-3">"{line}"</p>
+                                        <p className="text-xs text-app-text italic pr-6 leading-relaxed line-clamp-3">"{line}"</p>
                                         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <Copy size={12} className="text-accent/60" />
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <div className="py-4 text-center border border-dashed border-white/5 rounded-xl">
-                                    <p className="text-ui-10 text-slate-600 uppercase tracking-widest">{t('modules:favorite.detail.no_lore')}</p>
+                                <div className="py-4 text-center border border-dashed border-app-text/5 rounded-xl">
+                                    <p className="text-ui-10 text-app-subtle uppercase tracking-widest">{t('modules:favorite.detail.no_lore')}</p>
                                 </div>
                             )}
                         </div>
@@ -517,7 +517,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 });
                                 gmToast(t('common:success_operation'));
                             }}
-                            className="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg"
+                            className="w-full py-3 bg-etat-danger hover:bg-etat-danger text-app-bg rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg"
                         >
                             <Sword size={18} />
                             {t('modules:favorite.detail.send_combat')}
@@ -540,7 +540,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                                 });
                                 gmToast(t('common:success_operation'));
                             }}
-                            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg"
+                            className="w-full py-3 bg-etat-succes hover:bg-etat-succes text-app-bg rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg"
                         >
                             <MapPin size={18} />
                             {t('modules:favorite.detail.send_map')}
@@ -558,7 +558,7 @@ export const FavoriteDetailPanel: React.FC = () => {
                             className={`flex-1 py-3 rounded-xl border font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg
                                 ${entity.isSyncedToPlayerHub
                                     ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
-                                    : 'bg-app-bg border-white/10 text-app-subtle hover:text-slate-300 hover:border-white/20'}`}
+                                    : 'bg-app-bg border-app-text/10 text-app-subtle hover:text-app-text hover:border-app-text/20'}`}
                         >
                             <span className="material-symbols-outlined text-sm">{entity.isSyncedToPlayerHub ? 'visibility' : 'visibility_off'}</span>
                             {t('modules:favorite.detail.hub_sync')}
@@ -568,7 +568,7 @@ export const FavoriteDetailPanel: React.FC = () => {
 
                     <button
                         onClick={() => setViewMode('detail')}
-                        className="w-full py-3 bg-accent hover:bg-accent/80 text-slate-950 rounded-xl font-bold text-sm transition-transform active:scale-95 shadow-lg"
+                        className="w-full py-3 bg-accent hover:bg-accent/80 text-app-on-accent rounded-xl font-bold text-sm transition-transform active:scale-95 shadow-lg"
                     >
                         {t('modules:favorite.detail.full_dossier')}
                     </button>

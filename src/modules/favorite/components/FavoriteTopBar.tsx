@@ -14,7 +14,7 @@ export const FavoriteTopBar: React.FC = () => {
                     <input
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-app-surface/50 border-app-border focus:ring-1 focus:ring-accent focus:border-accent rounded-xl pl-10 py-2 text-sm transition-all placeholder:text-slate-600 outline-none text-slate-200"
+                        className="w-full bg-app-surface/50 border-app-border focus:ring-1 focus:ring-accent focus:border-accent rounded-xl pl-10 py-2 text-sm transition-all placeholder:text-app-subtle outline-none text-app-text"
                         placeholder={t('modules:favorite.topbar.search_placeholder')}
                         type="text"
                     />
@@ -22,12 +22,12 @@ export const FavoriteTopBar: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
-                <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border hover:bg-app-surface/80 transition-colors text-sm font-semibold text-slate-300">
+                <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-app-border hover:bg-app-surface/80 transition-colors text-sm font-semibold text-app-text">
                     <span className="material-symbols-outlined text-lg">file_export</span>
                     {t('modules:favorite.topbar.export')}
                 </button>
                 <div className="h-6 w-[1px] bg-app-border mx-1"></div>
-                <button className="p-2 rounded-xl text-app-subtle hover:bg-app-surface/80 hover:text-slate-300 transition-colors">
+                <button className="p-2 rounded-xl text-app-subtle hover:bg-app-surface/80 hover:text-app-text transition-colors">
                     <span className="material-symbols-outlined">settings</span>
                 </button>
             </div>

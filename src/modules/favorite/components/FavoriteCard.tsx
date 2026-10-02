@@ -41,21 +41,21 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
     };
 
     const typeColor =
-        entity.type === 'npc' ? 'text-amber-500' :
-            entity.type === 'place' ? 'text-emerald-500' :
-                entity.type === 'item' ? 'text-purple-500' :
+        entity.type === 'npc' ? 'text-gm-gold' :
+            entity.type === 'place' ? 'text-gm-emerald' :
+                entity.type === 'item' ? 'text-gm-violet' :
                     'text-accent';
 
     const typeBg =
-        entity.type === 'npc' ? 'bg-amber-500/20' :
-            entity.type === 'place' ? 'bg-emerald-500/20' :
-                entity.type === 'item' ? 'bg-purple-500/20' :
+        entity.type === 'npc' ? 'bg-gm-gold/20' :
+            entity.type === 'place' ? 'bg-gm-emerald/20' :
+                entity.type === 'item' ? 'bg-gm-violet/20' :
                     'bg-accent/20';
 
     const typeBorderHover =
-        entity.type === 'npc' ? 'hover:border-amber-500/50 hover:shadow-[0_0_15px_-3px_rgba(245,158,11,0.4)]' :
-            entity.type === 'place' ? 'hover:border-emerald-500/50 hover:shadow-[0_0_15px_-3px_rgba(16,185,129,0.4)]' :
-                entity.type === 'item' ? 'hover:border-purple-500/50 hover:shadow-[0_0_15px_-3px_rgba(168,85,247,0.4)]' :
+        entity.type === 'npc' ? 'hover:border-gm-gold/50 hover:shadow-[0_0_15px_-3px_rgba(245,158,11,0.4)]' :
+            entity.type === 'place' ? 'hover:border-gm-emerald/50 hover:shadow-[0_0_15px_-3px_rgba(16,185,129,0.4)]' :
+                entity.type === 'item' ? 'hover:border-gm-violet/50 hover:shadow-[0_0_15px_-3px_rgba(168,85,247,0.4)]' :
                     'hover:border-accent/50 hover:shadow-glow-accent';
 
     return (
@@ -80,7 +80,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                 </div>
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleStar(entity.id); }}
-                    className={`${entity.isStarred ? 'text-accent fill-1 drop-shadow-glow-accent' : 'text-slate-600 hover:text-slate-400'} transition-all`}
+                    className={`${entity.isStarred ? 'text-accent fill-1 drop-shadow-glow-accent' : 'text-app-subtle hover:text-app-muted'} transition-all`}
                 >
                     <span className={`material-symbols-outlined ${entity.isStarred ? 'font-variation-fill-1' : ''}`}>star</span>
                 </button>
@@ -94,14 +94,14 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                         src={resolvedImageUrl || resolvedTokenUrl}
                         alt={entity.name}
                     />
-                ) : (<div className="w-full h-full flex items-center justify-center text-slate-700">
+                ) : (<div className="w-full h-full flex items-center justify-center text-app-subtle">
                     <span className="material-symbols-outlined text-4xl">{getTypeIcon(entity.type)}</span>
                 </div>
                 )}
             </div>
 
             <div>
-                <h3 className={`text-lg font-bold transition-colors ${isSelected ? typeColor : `group-hover:${typeColor} text-slate-200`}`}>
+                <h3 className={`text-lg font-bold transition-colors ${isSelected ? typeColor : `group-hover:${typeColor} text-app-text`}`}>
                     {entity.name}
                 </h3>
                 <p className="text-xs text-app-muted uppercase font-bold tracking-widest mt-1">
@@ -119,7 +119,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                             selectFavorite(entity.id);
                             setViewMode('detail');
                         }}
-                        className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-app-surface/80 text-slate-300 transition-colors"
+                        className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-app-surface/80 text-app-text transition-colors"
                         title={t('modules:favorite.card.view_details')}
                     >
                         <span className="material-symbols-outlined text-lg">visibility</span>
@@ -131,7 +131,7 @@ export const FavoriteCard: React.FC<FavoriteCardProps> = ({ entity }) => {
                                 removeFavorite(entity.id);
                             });
                         }}
-                        className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-rose-500/20 hover:text-rose-400 text-slate-300 transition-colors"
+                        className="p-2 rounded-lg bg-app-surface border border-app-border hover:bg-etat-danger/20 hover:text-etat-danger text-app-text transition-colors"
                         title={t('modules:favorite.card.remove')}
                     >
                         <span className="material-symbols-outlined text-lg">delete</span>

@@ -32,9 +32,9 @@ export const FavoriteGrid: React.FC = () => {
     if (filteredFavorites.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center p-16 border-2 border-dashed border-app-border rounded-3xl mt-8">
-                <span className="material-symbols-outlined text-6xl text-slate-700 mb-4">search_off</span>
+                <span className="material-symbols-outlined text-6xl text-app-subtle mb-4">search_off</span>
                 <p className="text-xl font-bold text-app-subtle">{t('modules:favorite.sections.no_dossier')}</p>
-                <p className="text-sm text-slate-600 mt-2">{t('modules:favorite.grid.no_results_sub')}</p>
+                <p className="text-sm text-app-subtle mt-2">{t('modules:favorite.grid.no_results_sub')}</p>
             </div>
         );
     }

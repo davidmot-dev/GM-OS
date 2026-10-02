@@ -37,7 +37,7 @@ export const FavoriteDashboard: React.FC = () => {
     }, [pendingPreFill, addFavorite, selectFavorite, setViewMode, clearPendingPreFill, activeCampaignId]);
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-app-bg font-sans text-slate-100 antialiased">
+        <div className="flex h-screen w-full overflow-hidden bg-app-bg font-sans text-app-text antialiased">
             {/* Sidebar (col-span-3 equivalent in fixed width) */}
             <FavoriteSidebar />
 
