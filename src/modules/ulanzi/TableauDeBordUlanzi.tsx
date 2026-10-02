@@ -143,7 +143,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
             className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${actif ? 'bg-accent' : 'bg-app-border'}`}
         >
             <span
-                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-all ${actif ? 'left-[1.125rem]' : 'left-0.5'}`}
+                className={`absolute top-0.5 h-4 w-4 rounded-full bg-app-text transition-all ${actif ? 'left-[1.125rem]' : 'left-0.5'}`}
             />
         </button>
     );
@@ -226,7 +226,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                   silencieux se cherche une heure.*
                                 */}
                                 {coche && widget.source.de === 'horloge' && (
-                                    <span className={`shrink-0 text-ui-10 ${horlogesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${horlogesMontrees > 0 ? 'text-app-text/40' : 'text-etat-alerte/70'}`}>
                                         {!isClockProjected
                                             ? 'non projetées'
                                             : horlogesMontrees === 0
@@ -235,19 +235,19 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'pilote' && (
-                                    <span className={`shrink-0 text-ui-10 ${reservesMontrees > 0 ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${reservesMontrees > 0 ? 'text-app-text/40' : 'text-etat-alerte/70'}`}>
                                         {reservesMontrees > 0
                                             ? `${reservesMontrees} affichée${reservesMontrees > 1 ? 's' : ''}`
                                             : 'aucune réserve'}
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'temps' && (
-                                    <span className={`shrink-0 text-ui-10 ${isClockProjected ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${isClockProjected ? 'text-app-text/40' : 'text-etat-alerte/70'}`}>
                                         {isClockProjected ? LIBELLES_DE_MODE[modeDeLHorloge] : 'non projetée'}
                                     </span>
                                 )}
                                 {coche && widget.source.de === 'minuteur' && (
-                                    <span className={`shrink-0 text-ui-10 ${minuteurMontre ? 'text-app-text/40' : 'text-amber-300/70'}`}>
+                                    <span className={`shrink-0 text-ui-10 ${minuteurMontre ? 'text-app-text/40' : 'text-etat-alerte/70'}`}>
                                         {!isClockProjected
                                             ? 'non projeté'
                                             : minuteurMontre
@@ -307,7 +307,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                         );
                     })}
                     {actifs.length === 0 && (
-                        <p className="text-ui-10 leading-snug text-amber-300/70">
+                        <p className="text-ui-10 leading-snug text-etat-alerte/70">
                             Aucun widget coché — l&apos;afficheur garde sa routine.
                         </p>
                     )}
@@ -332,7 +332,9 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                         qu'il représente n'est plus un aperçu.*
                     */}
                     <div
-                        className="shrink-0 rounded bg-black p-1"
+                        className="shrink-0 rounded p-1"
+                        /* La matrice est noire pour de vrai, quel que soit le thème : c'est l'appareil, pas l'interface. */
+                        style={{ backgroundColor: '#000' }}
                         aria-label={`Quart : ${LIBELLES[moment]}, ${quarts.consecutifs} d'affilée`}
                     >
                         <svg
@@ -364,7 +366,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                 <span className="text-app-text/30"> · </span>
                                 {LIBELLES[moment]}
                             </span>
-                            <span className={coute ? 'text-red-400 font-bold' : 'text-app-text/50'}>
+                            <span className={coute ? 'text-etat-danger font-bold' : 'text-app-text/50'}>
                                 {quarts.consecutifs} d&apos;affilée{coute ? ' · +1 stress' : ''}
                             </span>
                         </div>
@@ -381,7 +383,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                                 type="button"
                                 onClick={pause}
                                 title="Une pause consomme elle-même un Quart, et remet le compteur à zéro."
-                                className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2 py-1.5 text-ui-11 font-bold text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+                                className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-etat-succes/30 bg-etat-succes/10 px-2 py-1.5 text-ui-11 font-bold text-etat-succes hover:bg-etat-succes/20 transition-colors"
                             >
                                 <Coffee size={12} /> Pause
                             </button>
@@ -439,7 +441,7 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                         onClick={accelererLeSignal}
                         disabled={signal.niveau >= NIVEAU_MAX}
                         title="Le rythme s’accélère"
-                        className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1 text-ui-11 font-bold text-rose-300 hover:bg-rose-500/20 disabled:opacity-20"
+                        className="flex items-center gap-1 rounded-lg border border-etat-danger/30 bg-etat-danger/10 px-3 py-1 text-ui-11 font-bold text-etat-danger hover:bg-etat-danger/20 disabled:opacity-20"
                     >
                         <Activity size={12} /> Accélérer
                     </button>
@@ -486,12 +488,12 @@ const TableauDeBordUlanzi: React.FC<Props> = ({ seanceOuverte }) => {
                 c'est l'écran de la table qui manque, pas l'information.
             */}
             {seanceOuverte && joignable === false && (
-                <p className="flex items-start gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-ui-10 leading-snug text-amber-300/90">
+                <p className="flex items-start gap-1.5 rounded-lg border border-etat-alerte/30 bg-etat-alerte/10 px-2 py-1 text-ui-10 leading-snug text-etat-alerte/90">
                     <WifiOff size={11} className="mt-0.5 shrink-0" />
                     <span>
                         Afficheur injoignable — le Quart se tient ici et reprendra seul.
                         {pourquoi && (
-                            <span className="block mt-0.5 font-mono text-ui-9 leading-tight text-amber-200/70 break-all">
+                            <span className="block mt-0.5 font-mono text-ui-9 leading-tight text-etat-alerte/70 break-all">
                                 {pourquoi}
                             </span>
                         )}

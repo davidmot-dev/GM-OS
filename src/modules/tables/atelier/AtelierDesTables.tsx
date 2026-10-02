@@ -181,7 +181,7 @@ export const AtelierDesTables: React.FC<Props> = ({
 
     const icone = { faute: AlertTriangle, doute: Info, note: Info } as const;
     const teinte = {
-        faute: 'text-red-400', doute: 'text-amber-400', note: 'text-app-text/40',
+        faute: 'text-etat-danger', doute: 'text-etat-alerte', note: 'text-app-text/40',
     } as const;
 
     return (
@@ -246,7 +246,7 @@ export const AtelierDesTables: React.FC<Props> = ({
                     <button
                         onClick={() => ouvrirUneTable('')}
                         className={`w-full text-left px-3 py-2 rounded-lg text-sm mb-1 transition-colors ${
-                            nomDeFichier === '' ? 'bg-accent text-app-bg font-bold' : 'text-app-text/60 hover:bg-app-surface'}`}
+                            nomDeFichier === '' ? 'bg-accent text-app-on-accent font-bold' : 'text-app-text/60 hover:bg-app-surface'}`}
                     >
                         <Plus size={12} className="inline mr-1.5" />Nouvelle table
                     </button>
@@ -255,7 +255,7 @@ export const AtelierDesTables: React.FC<Props> = ({
                             key={nom}
                             onClick={() => ouvrirUneTable(nom)}
                             className={`w-full text-left px-3 py-2 rounded-lg text-sm truncate transition-colors ${
-                                nom === nomDeFichier ? 'bg-accent text-app-bg font-bold' : 'text-app-text/60 hover:bg-app-surface'}`}
+                                nom === nomDeFichier ? 'bg-accent text-app-on-accent font-bold' : 'text-app-text/60 hover:bg-app-surface'}`}
                         >
                             {nom}
                         </button>
@@ -344,7 +344,7 @@ export const AtelierDesTables: React.FC<Props> = ({
                             <button
                                 onClick={() => setTable(t => ({ ...t, entries: t.entries.filter((_, i) => i !== rang) }))}
                                 title={`Retirer l’entrée ${rang + 1}`}
-                                className="p-1.5 text-app-text/20 hover:text-red-500 transition-colors">
+                                className="p-1.5 text-app-text/20 hover:text-etat-danger transition-colors">
                                 <Trash2 size={14} />
                             </button>
                         </div>
@@ -396,17 +396,17 @@ export const AtelierDesTables: React.FC<Props> = ({
 
                     {nomDeFichier && (
                         <button onClick={supprimer}
-                            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-red-500/30 text-sm text-red-400 hover:bg-red-500/10 transition-colors">
+                            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-etat-danger/30 text-sm text-etat-danger hover:bg-etat-danger/10 transition-colors">
                             <Trash2 size={14} />Supprimer
                         </button>
                     )}
                     <button onClick={enregistrer} disabled={enCours}
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-app-bg font-bold text-sm hover:brightness-110 disabled:opacity-50 transition-all">
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-app-on-accent font-bold text-sm hover:brightness-110 disabled:opacity-50 transition-all">
                         {enCours ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                         Enregistrer
                     </button>
                     {constats.length === 0 && (
-                        <CheckCircle2 size={16} className="text-emerald-500" aria-label="Rien à signaler" />
+                        <CheckCircle2 size={16} className="text-etat-succes" aria-label="Rien à signaler" />
                     )}
                 </footer>
             </div>

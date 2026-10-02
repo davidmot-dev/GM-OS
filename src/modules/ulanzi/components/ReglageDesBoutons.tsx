@@ -129,7 +129,7 @@ const ReglageDesBoutons: React.FC = () => {
                 const r = boutons?.[b];
                 return leGeste(r?.geste ?? '')?.demandeUneFormule && !r?.formule?.trim();
             }) && (
-                <p className="text-ui-9 leading-snug text-amber-400/80">
+                <p className="text-ui-9 leading-snug text-etat-alerte/80">
                     Un jet sans formule ne lancera rien.
                 </p>
             )}
@@ -158,7 +158,7 @@ const ReglageDesBoutons: React.FC = () => {
                 pousse sur cette adresse, jeton en en-tête{' '}
                 <span className="font-mono">x-gmos-jeton</span>. Sans cette
                 automatisation, ces réglages ne font rien.{' '}
-                <span className="text-amber-400/70">
+                <span className="text-etat-alerte/70">
                     Révoquer les appairages régénère le jeton et coupe aussi ce pont.
                 </span>
             </p>

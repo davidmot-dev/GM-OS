@@ -127,7 +127,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                                         }`}
                                     />
                                 ))}
-                                <span className={`ml-1 font-mono text-sm font-black ${auPlafond ? 'text-amber-300' : 'text-app-text/70'}`}>
+                                <span className={`ml-1 font-mono text-sm font-black ${auPlafond ? 'text-etat-alerte' : 'text-app-text/70'}`}>
                                     {valeur}
                                 </span>
                             </div>

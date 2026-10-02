@@ -15,6 +15,7 @@ import { gmCustom } from '../../stores/useModalStore';
 import { useJournalStore } from '../journal/useJournalStore';
 import { gmToast } from '../../stores/useToastStore';
 import { useTranslation } from 'react-i18next';
+import { PAPIER } from './papierDuTableau';
 
 const WhiteboardDashboard: React.FC = () => {
     const canvasRef = useRef<DrawingCanvasRef>(null);
@@ -34,6 +35,7 @@ const WhiteboardDashboard: React.FC = () => {
     const isSessionActive = activeSession?.status === 'active';
 
     const isLight = backgroundMode === 'light';
+    const papier = PAPIER[isLight ? 'clair' : 'sombre'];
 
     const handleExport = async () => {
         if (!canvasRef.current || !isSessionActive || !activeSession) {
@@ -78,9 +80,9 @@ const WhiteboardDashboard: React.FC = () => {
     };
 
     return (
-        <div className={`h-full w-full transition-colors duration-500 relative overflow-hidden flex flex-col ${isLight ? 'bg-white' : 'bg-app-bg'}`}>
+        <div className={`h-full w-full transition-colors duration-500 relative overflow-hidden flex flex-col ${papier.fond}`}>
             {/* Header / Info bar */}
-            <div className={`flex items-center justify-between p-4 backdrop-blur-md border-b z-10 ${isLight ? 'bg-white/80 border-app-border/30' : 'bg-app-surface/50 border-app-border/20'}`}>
+            <div className={`flex items-center justify-between p-4 backdrop-blur-md border-b z-10 ${papier.bandeau}`}>
                 <div className="flex flex-col gap-0.5">
                     {projectionTarget && (
                         <div className="flex items-center gap-2 mt-1 py-1 px-2 bg-accent/10 border border-accent/20 rounded-md">
@@ -112,15 +114,15 @@ const WhiteboardDashboard: React.FC = () => {
                         <Cast size={14} />
                         {t('whiteboard.actions.project')}
                     </button>
-                    <div className="w-px h-6 bg-white/10 mx-1" />
+                    <div className="w-px h-6 bg-app-text/10 mx-1" />
                     <button onClick={undo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border" title={t('whiteboard.actions.undo')}>
                         <RotateCcw size={18} />
                     </button>
                     <button onClick={redo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border" title={t('whiteboard.actions.redo')}>
                         <RotateCw size={18} />
                     </button>
-                    <div className="w-px h-6 bg-white/10 mx-1" />
-                    <button onClick={clearBoard} className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all border border-red-500/10" title={t('whiteboard.actions.clear')}>
+                    <div className="w-px h-6 bg-app-text/10 mx-1" />
+                    <button onClick={clearBoard} className="p-2 rounded-lg bg-etat-danger/10 hover:bg-etat-danger/20 text-etat-danger transition-all border border-etat-danger/10" title={t('whiteboard.actions.clear')}>
                         <Trash2 size={18} />
                     </button>
                     {isSessionActive && (

@@ -254,7 +254,7 @@ const TableDashboard: React.FC = () => {
                     <button
                         onClick={() => roll()}
                         disabled={!currentTableData || isLoading}
-                        className="w-full flex items-center justify-center gap-3 bg-accent hover:bg-accent/80 text-slate-950 font-bold py-4 rounded-xl transition-all shadow-glow-accent active:scale-95 disabled:opacity-50"
+                        className="w-full flex items-center justify-center gap-3 bg-accent hover:bg-accent/80 text-app-on-accent font-bold py-4 rounded-xl transition-all shadow-glow-accent active:scale-95 disabled:opacity-50"
                     >
                         <Dices className="w-6 h-6" />
                         <span>{t('random_tables.sidebar.launch_button')}</span>
@@ -297,10 +297,10 @@ const TableDashboard: React.FC = () => {
                         {/* Result Card */}
                         <div className="relative group bg-app-surface/50 border border-app-border rounded-3xl overflow-hidden shadow-2xl backdrop-blur-sm">
                             {/* Header */}
-                            <div className="bg-gradient-to-r from-accent to-accent/60 p-8 flex justify-between items-end text-slate-950">
+                            <div className="bg-gradient-to-r from-accent to-accent/60 p-8 flex justify-between items-end text-app-subtle">
                                 <div className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 rounded-2xl bg-white/30 backdrop-blur-md flex items-center justify-center text-2xl font-black">
+                                        <div className="w-12 h-12 rounded-2xl bg-app-text/30 backdrop-blur-md flex items-center justify-center text-2xl font-black">
                                             {currentResult.finalValue}
                                         </div>
                                         <div className="opacity-70 text-xs font-mono">
@@ -326,11 +326,11 @@ const TableDashboard: React.FC = () => {
 
                                 {/* Effect Block (Mechanical) */}
                                 {currentResult.entry.effect && (
-                                    <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 flex gap-4">
-                                        <AlertTriangle className="w-6 h-6 text-red-400 shrink-0" />
+                                    <div className="bg-etat-danger/10 border border-etat-danger/30 rounded-2xl p-6 flex gap-4">
+                                        <AlertTriangle className="w-6 h-6 text-etat-danger shrink-0" />
                                         <div className="space-y-1">
-                                            <div className="text-xs font-bold uppercase tracking-widest text-red-400">{t('random_tables.main.mechanical_effect')}</div>
-                                            <div className="text-red-200 text-lg">{currentResult.entry.effect}</div>
+                                            <div className="text-xs font-bold uppercase tracking-widest text-etat-danger">{t('random_tables.main.mechanical_effect')}</div>
+                                            <div className="text-etat-danger text-lg">{currentResult.entry.effect}</div>
                                         </div>
                                     </div>
                                 )}
@@ -354,7 +354,7 @@ const TableDashboard: React.FC = () => {
                                     {!laDeclarationEstVide(currentResult.entry) ? (
                                         <button
                                             onClick={handleVerserAuButin}
-                                            className="flex-1 flex items-center justify-center gap-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 py-4 rounded-xl border border-amber-500/30 transition-all group"
+                                            className="flex-1 flex items-center justify-center gap-3 bg-accent/10 hover:bg-accent/20 text-accent py-4 rounded-xl border border-accent/30 transition-all group"
                                             title={t('random_tables.main.pour_tooltip')}
                                         >
                                             <Package className="w-5 h-5" />
@@ -376,10 +376,10 @@ const TableDashboard: React.FC = () => {
 
                                     <button
                                         onClick={clearCurrentResult}
-                                        className="bg-app-surface hover:bg-red-900/30 p-4 border border-app-border rounded-xl transition-all group"
+                                        className="bg-app-surface hover:bg-etat-danger/30 p-4 border border-app-border rounded-xl transition-all group"
                                         title={t('random_tables.main.clear_tooltip')}
                                     >
-                                        <Trash2 className="w-5 h-5 text-app-text/40 group-hover:text-red-400" />
+                                        <Trash2 className="w-5 h-5 text-app-text/40 group-hover:text-etat-danger" />
                                     </button>
                                 </div>
                             </div>

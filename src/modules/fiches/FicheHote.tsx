@@ -342,7 +342,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                 src={adresseDuMoteur({ epuree: liaison === 'locale' })}
                 title={`Fiche de ${personnage.name}`}
                 onLoad={surCharge}
-                className="w-full h-full border-0 bg-white"
+                className="w-full h-full border-0 bg-app-text"
             />
 
             {etat.nom !== 'branchee' && (
@@ -359,7 +359,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                         {etat.nom === 'erreur' && (
                             <div className="space-y-2">
                                 {/* Elle a peut-être très bien répondu — pour refuser. Le motif le dit. */}
-                                <div className="flex items-center gap-2 text-amber-500">
+                                <div className="flex items-center gap-2 text-etat-alerte">
                                     <AlertTriangle size={16} />
                                     <span className="text-ui-11 font-black uppercase tracking-widest">La fiche n'a pas pu s'ouvrir</span>
                                 </div>
@@ -377,7 +377,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                 </div>
 
                                 {!table && (
-                                    <p className="text-xs text-amber-500/80">
+                                    <p className="text-xs text-etat-alerte/80">
                                         Ce jeu n'a pas de <span className="font-mono">correspondance.json</span> :
                                         la fiche s'affichera sans être branchée.
                                     </p>
@@ -423,8 +423,8 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                     sauvegarde* — et celle-ci ne se restaure que d'ici.
                                 */}
                                 {liaison === 'bibliotheque' && etat.bibliotheque.length === 0 && enReserve && (
-                                    <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl space-y-2">
-                                        <p className="text-xs text-emerald-300/80 leading-relaxed">
+                                    <div className="p-3 bg-etat-succes/5 border border-etat-succes/20 rounded-2xl space-y-2">
+                                        <p className="text-xs text-etat-succes/80 leading-relaxed">
                                             GM-OS garde une copie de {enReserve.personnages} fiche
                                             {enReserve.personnages > 1 ? 's' : ''}, prise le{' '}
                                             {new Date(enReserve.priseLe).toLocaleString()}.
@@ -433,7 +433,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
                                             type="button"
                                             disabled={occupe}
                                             onClick={restaurer}
-                                            className="w-full flex items-center justify-center gap-2 p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500/20 transition-colors disabled:opacity-30"
+                                            className="w-full flex items-center justify-center gap-2 p-2 bg-etat-succes/10 border border-etat-succes/30 rounded-xl text-ui-10 font-black uppercase tracking-widest text-etat-succes hover:bg-etat-succes/20 transition-colors disabled:opacity-30"
                                         >
                                             <RotateCcw size={13} /> Restaurer la bibliothèque
                                         </button>

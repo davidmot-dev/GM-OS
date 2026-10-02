@@ -48,6 +48,12 @@ const MODULES_MIGRES: string[] = [
     'modules/web',     // phase 4, L6 — 2026-10-03 (couleurs des liens exemptées)
     'modules/journal', // phase 4, L6 — 2026-10-03
     'modules/shared',  // phase 4, L6 — 2026-10-03
+    'modules/tables',  // phase 4, L6 — 2026-10-03
+    'modules/whiteboard', // phase 4, L6 — 2026-10-03 (papier clair exempté)
+    'modules/ulanzi',  // phase 4, L6 — 2026-10-03
+    'modules/fiches',  // phase 4, L6 — 2026-10-03
+    'modules/aide',    // phase 4, L6 — 2026-10-03
+    'modules/table',   // phase 4, L6 — 2026-10-03
 ];
 
 /**

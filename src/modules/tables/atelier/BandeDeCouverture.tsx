@@ -46,7 +46,7 @@ export const BandeDeCouverture: React.FC<Props> = ({ table, entreeSurvolee }) =>
         return (
             <p className="text-xs text-app-text/50">
                 {possibles.length} valeurs possibles — trop pour les dessiner.{' '}
-                <span className={couvertes === possibles.length ? 'text-emerald-400' : 'text-red-400 font-bold'}>
+                <span className={couvertes === possibles.length ? 'text-etat-succes' : 'text-etat-danger font-bold'}>
                     {couvertes} couverte(s).
                 </span>
             </p>
@@ -74,10 +74,10 @@ export const BandeDeCouverture: React.FC<Props> = ({ table, entreeSurvolee }) =>
                 {cases.map(({ valeur, rangs }) => {
                     const survolee = entreeSurvolee != null && rangs.includes(entreeSurvolee);
                     const couleur = rangs.length === 0
-                        ? 'bg-red-600'
+                        ? 'bg-etat-danger'
                         : rangs.length > 1
-                            ? 'bg-amber-500'
-                            : survolee ? 'bg-accent' : 'bg-emerald-600/60';
+                            ? 'bg-etat-alerte'
+                            : survolee ? 'bg-accent' : 'bg-etat-succes/60';
                     return (
                         <span
                             key={valeur}
@@ -96,13 +96,13 @@ export const BandeDeCouverture: React.FC<Props> = ({ table, entreeSurvolee }) =>
             <p className="text-ui-9 uppercase tracking-widest text-app-text/40 flex flex-wrap gap-x-4 gap-y-1">
                 <span>{cases.length} valeurs tirables</span>
                 {trous > 0 && (
-                    <span className="text-red-400 font-bold">{trous} sans entrée</span>
+                    <span className="text-etat-danger font-bold">{trous} sans entrée</span>
                 )}
                 {doubles > 0 && (
-                    <span className="text-amber-400 font-bold">{doubles} prises deux fois</span>
+                    <span className="text-etat-alerte font-bold">{doubles} prises deux fois</span>
                 )}
                 {trous === 0 && doubles === 0 && (
-                    <span className="text-emerald-400">couverture complète</span>
+                    <span className="text-etat-succes">couverture complète</span>
                 )}
             </p>
         </div>

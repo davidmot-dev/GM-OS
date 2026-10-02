@@ -181,7 +181,7 @@ export const ImportDeTable: React.FC<Props> = ({
     if (!ouvert) return null;
 
     return (
-        <div className="fixed inset-0 z-[190] flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm"
+        <div className="fixed inset-0 z-[190] flex items-center justify-center p-6 bg-app-bg/70 backdrop-blur-sm"
             role="dialog" aria-modal="true" aria-label="Importer une table">
             <div className="w-full max-w-3xl max-h-full flex flex-col bg-app-surface border border-app-border rounded-2xl shadow-2xl overflow-hidden">
 
@@ -218,21 +218,21 @@ export const ImportDeTable: React.FC<Props> = ({
                             <span className="text-xs text-app-text/70 truncate flex-1">{image.nom}</span>
                             <span className={`text-ui-9 uppercase tracking-widest ${
                                 vision === null ? 'text-app-text/40'
-                                    : !vision.voit ? 'text-red-400 font-bold'
-                                        : vision.certain ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                    : !vision.voit ? 'text-etat-danger font-bold'
+                                        : vision.certain ? 'text-etat-succes' : 'text-etat-alerte'}`}>
                                 {vision === null ? 'IA seulement'
                                     : !vision.voit ? 'ce modèle ne voit pas'
                                         : vision.certain ? `${vision.modele} voit` : 'vision incertaine'}
                             </span>
                             <button onClick={() => setImage(null)} title="Retirer l’image"
-                                className="p-1 text-app-text/30 hover:text-red-400 transition-colors">
+                                className="p-1 text-app-text/30 hover:text-etat-danger transition-colors">
                                 <X size={13} />
                             </button>
                         </div>
                     )}
 
                     {vision?.motif && (
-                        <p className={`text-ui-9 leading-snug ${vision.voit ? 'text-amber-400/80' : 'text-red-400/90'}`}>
+                        <p className={`text-ui-9 leading-snug ${vision.voit ? 'text-etat-alerte/80' : 'text-etat-danger/90'}`}>
                             {vision.motif}
                         </p>
                     )}
@@ -258,7 +258,7 @@ export const ImportDeTable: React.FC<Props> = ({
                                 onClick={() => setRegimeChoisi(valeur)}
                                 className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${
                                     regimeChoisi === valeur
-                                        ? 'bg-accent text-app-bg font-bold'
+                                        ? 'bg-accent text-app-on-accent font-bold'
                                         : 'border border-app-border text-app-text/50 hover:text-app-text'}`}
                             >
                                 {libelle}
@@ -276,14 +276,14 @@ export const ImportDeTable: React.FC<Props> = ({
                         <div className="rounded-xl border border-app-border/60 bg-app-bg/40 p-3 space-y-2">
                             <p className="text-xs text-app-text/60 flex flex-wrap items-center gap-x-2">
                                 {apercu.regime === 'json' && (
-                                    <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
+                                    <span className="inline-flex items-center gap-1 text-etat-succes font-bold">
                                         <FileJson size={12} />Table JSON reconnue
                                     </span>
                                 )}
                                 <span>
                                 <b className="text-accent">{apercu.entrees.length}</b> entrée(s) lue(s)
                                 {apercu.ignorees.length > 0 && (
-                                    <span className="text-amber-400">
+                                    <span className="text-etat-alerte">
                                         {' '}· {apercu.ignorees.length} ligne(s) non rattachée(s)
                                     </span>
                                 )}
@@ -293,7 +293,7 @@ export const ImportDeTable: React.FC<Props> = ({
                             </p>
 
                             {apercu.ignorees.length > 0 && (
-                                <ul className="text-ui-9 text-amber-400/70 space-y-0.5">
+                                <ul className="text-ui-9 text-etat-alerte/70 space-y-0.5">
                                     {apercu.ignorees.slice(0, 3).map((l, i) => (
                                         <li key={i} className="flex items-start gap-1.5">
                                             <AlertTriangle size={11} className="mt-[1px] shrink-0" />
@@ -336,7 +336,7 @@ export const ImportDeTable: React.FC<Props> = ({
                         <ClipboardPaste size={14} />Ranger tel quel
                     </button>
                     <button onClick={appliquerLIA} disabled={enCours || (texte.trim() === '' && !image)}
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-app-bg font-bold text-sm hover:brightness-110 disabled:opacity-40 transition-all">
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-app-on-accent font-bold text-sm hover:brightness-110 disabled:opacity-40 transition-all">
                         {enCours ? <Loader2 size={14} className="animate-spin" /> : <Wand2 size={14} />}
                         Ranger par l’IA
                     </button>

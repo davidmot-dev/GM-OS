@@ -99,8 +99,8 @@ const Famille: React.FC<{ famille: FamilleDeModule }> = ({ famille }) => {
 };
 
 const Regle: React.FC<{ titre: string; children: React.ReactNode }> = ({ titre, children }) => (
-    <div className="rounded-r-xl border border-l-[3px] border-app-border border-l-amber-500 bg-app-surface/40 p-4">
-        <h4 className="mb-1 text-[0.66rem] font-black uppercase tracking-[0.16em] text-amber-500">{titre}</h4>
+    <div className="rounded-r-xl border border-l-[3px] border-app-border border-l-etat-alerte bg-app-surface/40 p-4">
+        <h4 className="mb-1 text-[0.66rem] font-black uppercase tracking-[0.16em] text-etat-alerte">{titre}</h4>
         <p className="text-sm text-app-text/60">{children}</p>
     </div>
 );
