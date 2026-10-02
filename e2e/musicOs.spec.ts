@@ -64,8 +64,8 @@ test.describe('la console', () => {
     test('porte ses deux platines', async () => {
         const zone = gmos.fenetre.locator('body');
 
-        await expect(zone, 'la platine A manque').toContainText(/DRK A/i);
-        await expect(zone, 'la platine B manque').toContainText(/DRK B/i);
+        await expect(zone, 'la platine A manque').toContainText(/Platine A/i);
+        await expect(zone, 'la platine B manque').toContainText(/Platine B/i);
     });
 
     /*

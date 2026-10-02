@@ -136,6 +136,30 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
         );
     };
 
+    /*
+      **La pastille en carte — refonte, L2, étape 2 (2026-10-02).** David a
+      retenu les pads de la maquette, **quatre par ligne** : la touche en
+      badge, ce que fait la pastille sur les platines, le titre **en entier**
+      et, au pied, sa plage de lecture. Les commandes de survol (déplacer,
+      retirer, menu) sont rangées ensemble au pied, à droite : la maquette
+      faisait chevaucher le badge et l'état, *deux informations au même
+      endroit, c'est une de trop.*
+
+      La « catégorie » et la durée des cartes de la maquette n'existent pas
+      dans les données d'une pastille : on montre la plage quand elle existe,
+      la source sinon.
+    */
+    const chargeeSur = deckA.activePadId === pad.id ? 'A' : deckB.activePadId === pad.id ? 'B' : null;
+    const etatSurLesPlatines = isPlaying
+        ? `Lecture • Platine ${isPlayingOnA ? 'A' : 'B'}`
+        : chargeeSur ? `Chargée • Platine ${chargeeSur}` : null;
+    const minutes = (s: number) => `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
+    const piedDeCarte = !pad.url
+        ? 'Vide'
+        : pad.loopA !== null && pad.loopB !== null && pad.loopB > pad.loopA
+            ? `${minutes(pad.loopA)} → ${minutes(pad.loopB)}`
+            : pad.type === 'link' ? 'Lien externe' : 'Morceau entier';
+
     return (
         <div
             ref={setNodeRef}
@@ -147,7 +171,7 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
             role="button"
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePadClick(); } }}
-            className={`aspect-square rounded-3xl border-2 flex flex-col items-center justify-center transition-all duration-300 relative group shadow-2xl
+            className={`min-h-[9.5rem] rounded-2xl border-2 flex flex-col gap-2 p-3 transition-all duration-300 relative group shadow-xl
                 ${isLearningThis
                     ? 'border-gm-cyan bg-gm-cyan/15 shadow-glow-cyan'
                     : isPlaying
@@ -155,103 +179,100 @@ const Pad: React.FC<{ pad: MusicPadType; index: number; playlistId: string; onRe
                            fois par seconde — l'animation des barres du Deck,
                            appliquée à un carré de 300 px. Remplacée par un halo
                            qui respire : voir `souffle-du-morceau` dans
-                           `index.css`. Le `scale-[1.05]`, jusqu'ici annulé par
-                           le `transform` du jitter, devient la marque fixe. */
-                        ? 'bg-accent/40 border-accent animate-souffle-du-morceau scale-[1.05]'
+                           `index.css`. */
+                        ? 'bg-accent/30 border-accent animate-souffle-du-morceau'
                         /* La couleur marque l'identité AU REPOS seulement : une
                            pastille qui joue garde le halo d'accent, commun à toutes.
                            *Ce qui sonne doit se repérer d'un coup d'œil, et une
                            couleur par pastille rendrait cet état-là illisible.* */
-                        : `${teinte.tuile} hover:shadow-glow-accent/20 hover:scale-[1.02]`
+                        : `${teinte.tuile} hover:shadow-glow-accent/20`
                 } ${isOver && !isLearningThis ? 'border-accent bg-accent/10' : ''} cursor-pointer`}
         >
             {/* Premium Glossy Overlay */}
-            {/* `rounded-3xl` porté ici depuis que la tuile ne rogne plus : c'est
-                elle qui arrondissait ces deux voiles. */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-fixe-blanc/[0.08] via-transparent to-transparent pointer-events-none opacity-50" />
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/10 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-fixe-blanc/[0.06] via-transparent to-transparent pointer-events-none opacity-50" />
 
-            {/* Keybind Indicator */}
-            {keyLabel && (
-                <div className={`absolute top-2 left-2 border text-ui-7 font-black px-1.5 py-0.5 rounded-md shadow-sm transition-all uppercase tracking-widest ${isLearningThis ? 'bg-app-bg text-gm-cyan border-gm-cyan' : 'bg-app-bg text-app-subtle border-app-border/50 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/40'}`}>
-                    {keyLabel}
-                </div>
-            )}
-
-            {/* Drag Handle */}
-            <div
-                {...attributes}
-                {...listeners}
-                className={`absolute top-2 right-2 p-1.5 text-app-subtle hover:text-app-text cursor-grab active:cursor-grabbing ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
-            >
-                <GripVertical size={12} />
-            </div>
-
-            {/* Light Link Indicator */}
-            {pad.linkedLightSceneId && (
-                <div className="absolute bottom-2 left-2 p-1.5 text-gm-cyan drop-shadow-glow-cyan animate-pulse">
-                    <Lightbulb size={12} fill="currentColor" />
-                </div>
-            )}
-
-
-
-            <div className={`transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-gm-cyan scale-110 drop-shadow-glow-cyan' : 'text-accent scale-110 drop-shadow-glow-accent') : teinte.icone}`}>
-                {pad.type === 'link' ? <Link size={36} strokeWidth={1} /> : <Music size={36} strokeWidth={1} />}
-            </div>
-
-            <div className="mt-3 px-3 w-full text-center">
-                <span className={`text-ui-10 font-black uppercase tracking-widest line-clamp-1 transition-colors ${isPlaying || isLearningThis ? 'text-app-text drop-shadow-sm' : 'text-app-subtle group-hover:text-app-text'}`}>
-                    {pad.label}
+            {/* La touche, l'état sur les platines, la source */}
+            <div className="relative flex items-start gap-2">
+                {keyLabel ? (
+                    <span className={`shrink-0 border text-ui-8 font-black px-1.5 py-0.5 rounded-md uppercase tracking-widest ${isLearningThis ? 'bg-app-bg text-gm-cyan border-gm-cyan' : 'bg-app-bg/80 text-app-muted border-app-border/60 group-hover:text-accent group-hover:border-accent/40'}`}>
+                        {keyLabel}
+                    </span>
+                ) : isLearningThis ? (
+                    <span className="shrink-0 border border-gm-cyan bg-app-bg px-1.5 py-0.5 rounded-md text-ui-8 font-black uppercase tracking-widest text-gm-cyan">Touche ?</span>
+                ) : null}
+                <span className={`min-w-0 flex-1 truncate pt-0.5 text-ui-8 font-black uppercase tracking-widest ${isPlaying ? 'text-accent' : 'text-app-subtle'}`}>
+                    {etatSurLesPlatines ?? ''}
                 </span>
-                {/*
-                  ⛔ **L'identifiant interne ne s'affiche plus.** Il tenait une
-                  ligne sous le nom, en `text-app-text/20` : décoratif au mieux —
-                  et pour toute pastille née d'une playlist créée au bouton
-                  « + », c'était un **UUID de 36 caractères**, qui passait à la
-                  ligne et mangeait la tuile. *Un identifiant technique ne dit
-                  rien au meneur ; il ne dit quelque chose qu'à celui qui
-                  débogue, et celui-là a la console.* Retiré sur demande de
-                  David le 2026-09-16, après sa capture d'une tuile illisible.
-                */}
-                {isPlaying && (
-                    <div className="flex justify-center gap-0.5 mt-1.5">
-                        <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '0ms' }} />
-                        <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '100ms' }} />
-                        <div className="w-0.5 h-2 bg-accent rounded-full animate-bounce shadow-glow-accent" style={{ animationDelay: '200ms' }} />
-                    </div>
-                )}
+                <span className={`shrink-0 transition-all duration-500 ${isPlaying || isLearningThis ? (isLearningThis ? 'text-gm-cyan drop-shadow-glow-cyan' : 'text-accent drop-shadow-glow-accent') : teinte.icone}`}>
+                    {pad.type === 'link' ? <Link size={18} strokeWidth={1.5} /> : <Music size={18} strokeWidth={1.5} />}
+                </span>
             </div>
 
             {/*
-              **La croix de retrait au milieu en bas — demandé par David le
-              2026-09-16**, après que le menu a débordé de la tuile.
-
-              Les trois autres coins sont pris : la touche en haut à gauche, la
-              poignée de déplacement en haut à droite, la scène lumineuse en bas
-              à gauche, et le menu « … » en bas à droite. **Le milieu du bas est
-              le seul emplacement libre** — c'est d'ailleurs pourquoi ma première
-              tentative l'avait posée SOUS le bouton « … », inatteignable.
-
-              Elle sort du menu parce que le menu, lui, ne tient plus : sa
-              hauteur est fixe et je viens de rétrécir les tuiles. *Une commande
-              de plus dans une boîte de taille fixe pousse la dernière dehors,
-              et rien ne le signale.*
+              ⛔ **L'identifiant interne ne s'affiche plus.** Il tenait une
+              ligne sous le nom, en `text-app-text/20` : décoratif au mieux —
+              et pour toute pastille née d'une playlist créée au bouton
+              « + », c'était un **UUID de 36 caractères**, qui passait à la
+              ligne et mangeait la tuile. *Un identifiant technique ne dit
+              rien au meneur ; il ne dit quelque chose qu'à celui qui
+              débogue, et celui-là a la console.* Retiré sur demande de
+              David le 2026-09-16, après sa capture d'une tuile illisible.
             */}
-            <button
-                onClick={handleRetirer}
-                title="Retirer cette pastille"
-                className={`absolute bottom-2 left-1/2 -translate-x-1/2 p-1.5 rounded-lg text-app-subtle hover:text-etat-danger hover:bg-etat-danger/10 transition-colors ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
-            >
-                <X size={12} />
-            </button>
+            <h4 className={`relative line-clamp-3 break-words text-sm font-bold leading-snug transition-colors ${isPlaying || isLearningThis ? 'text-app-text' : pad.url ? 'text-app-text/90 group-hover:text-app-text' : 'text-app-subtle'}`}>
+                {pad.label}
+            </h4>
 
-            {/* More Menu Trigger */}
-            <div
-                onClick={(e) => { e.stopPropagation(); setIsMenuOpen(true); }}
-                className={`absolute bottom-2 right-2 p-1.5 text-app-subtle hover:text-app-text ${isLearningThis ? 'hidden' : 'opacity-0 group-hover:opacity-100'}`}
-            >
-                <MoreHorizontal size={14} />
+            {/* Le pied : la plage ou la source, la lumière liée, les commandes */}
+            <div className="relative mt-auto flex items-center gap-2 border-t border-app-border/30 pt-2">
+                <span className={`min-w-0 flex-1 truncate font-mono text-ui-10 font-bold ${isPlaying ? 'text-accent' : 'text-app-subtle'}`}>
+                    {piedDeCarte}
+                </span>
+                {isPlaying && (
+                    <span className="flex shrink-0 gap-0.5">
+                        <span className="w-0.5 h-2.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-0.5 h-2.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '100ms' }} />
+                        <span className="w-0.5 h-2.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: '200ms' }} />
+                    </span>
+                )}
+                {pad.linkedLightSceneId && (
+                    <span className="shrink-0 text-gm-cyan" title="Une scène lumineuse est liée à cette pastille">
+                        <Lightbulb size={12} fill="currentColor" />
+                    </span>
+                )}
+                {!isLearningThis && (
+                    <span className="flex shrink-0 items-center opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
+                        <span
+                            {...attributes}
+                            {...listeners}
+                            onClick={(e) => e.stopPropagation()}
+                            title="Déplacer cette pastille"
+                            className="p-1 text-app-subtle hover:text-app-text cursor-grab active:cursor-grabbing"
+                        >
+                            <GripVertical size={12} />
+                        </span>
+                        {/*
+                          **La croix de retrait — demandée par David le
+                          2026-09-16**, après que le menu a débordé de la tuile.
+                          Elle sort du menu parce que le menu, lui, ne tenait
+                          plus. *Une commande de plus dans une boîte de taille
+                          fixe pousse la dernière dehors, et rien ne le signale.*
+                        */}
+                        <button
+                            onClick={handleRetirer}
+                            title="Retirer cette pastille"
+                            className="p-1 rounded-md text-app-subtle hover:text-etat-danger hover:bg-etat-danger/10 transition-colors"
+                        >
+                            <X size={12} />
+                        </button>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); setIsMenuOpen(true); }}
+                            title="Éditer, vider, charger, lier une lumière"
+                            className="p-1 rounded-md text-app-subtle hover:text-app-text"
+                        >
+                            <MoreHorizontal size={14} />
+                        </button>
+                    </span>
+                )}
             </div>
 
             {isMenuOpen && !isLearningThis && (
@@ -370,8 +391,8 @@ const PlaylistManager: React.FC = () => {
     /*
       La sélection et le filtrage par campagne vivent dans un seul endroit
       (`usePlaylistsVisibles`) — cet écran en tenait auparavant sa propre
-      copie, à l'identique de celle du `MusicHeader`. Deux copies ne
-      divergeaient pas tant que la liste ne rétrécissait jamais.
+      copie, à l’identique de celle du bandeau (aujourd’hui
+      `BarreDesAtmospheres`). Deux copies ne divergeaient pas tant que la liste ne rétrécissait jamais.
     */
     const { active: activePlaylist, campagneId } = usePlaylistsVisibles();
 
@@ -429,7 +450,7 @@ const PlaylistManager: React.FC = () => {
     }
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col gap-3">
             <MediaBrowser
                 isOpen={!!browserTarget}
                 onClose={() => setBrowserTarget(null)}
@@ -437,6 +458,11 @@ const PlaylistManager: React.FC = () => {
                 allowedTypes={['audio']}
                 title="Sélectionner une Musique"
             />
+            <h3 className="flex items-baseline gap-2 text-ui-11 font-black uppercase tracking-widest text-app-muted">
+                Pads de l’atmosphère
+                <span className="truncate text-app-text">« {activePlaylist.name} »</span>
+                <span className="ml-auto shrink-0 text-ui-9 font-bold normal-case tracking-normal text-app-subtle">Clic : jouer · « … » : éditer, charger sur une platine</span>
+            </h3>
             {/*
               ⛔ **`.slice(0, 5)` retiré des DEUX endroits — il cachait des
               données.** La refonte `da7979d2` a fait passer les playlists de
@@ -463,6 +489,13 @@ const PlaylistManager: React.FC = () => {
               stable, c'est la tuile ; le nombre de colonnes n'est qu'une
               conséquence.*
 
+              ⭐ **Quatre par ligne, retenu par David le 2026-10-02** avec la
+              maquette de la refonte (L2, étape 2) — un revirement assumé de la
+              tuile de 11rem : la carte porte désormais le titre en entier,
+              l'état sur les platines et la plage, ce qu'un carré de 160 px ne
+              pouvait pas dire. Le menu de la pastille garde sa taille propre et
+              déborde de la carte, comme avant.
+
               ⚠️ **11rem et non 11 × 16 px** : la racine porte `font-size: 85%`,
               donc un `rem` vaut **13,6 px** — c'est le piège déjà payé le 05/09
               sur la conversion des 1 832 tailles. 11rem ≈ 150 px de plancher,
@@ -478,7 +511,7 @@ const PlaylistManager: React.FC = () => {
               DANS ses cases, y compris ce qui ne sait pas rétrécir.* Six
               colonnes au plus, et le menu défile désormais plutôt que de rogner.
             */}
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-6 pb-8 w-full">
+            <div className="grid grid-cols-4 gap-4 pb-4 w-full">
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -514,7 +547,7 @@ const PlaylistManager: React.FC = () => {
                 <button
                     onClick={() => ajouterUnPad(activePlaylist.id)}
                     title="Ajouter une pastille à cette playlist"
-                    className="aspect-square rounded-3xl border-2 border-dashed border-app-border/50 flex flex-col items-center justify-center gap-2 text-app-subtle transition-all duration-300 hover:border-accent/40 hover:text-accent hover:bg-app-surface/30 hover:scale-[1.02] active:scale-[0.98]"
+                    className="min-h-[9.5rem] rounded-2xl border-2 border-dashed border-app-border/50 flex flex-col items-center justify-center gap-2 text-app-subtle transition-all duration-300 hover:border-accent/40 hover:text-accent hover:bg-app-surface/30 active:scale-[0.98]"
                 >
                     <Plus size={32} strokeWidth={1.5} />
                     <span className="text-ui-9 font-black uppercase tracking-widest">Ajouter</span>
