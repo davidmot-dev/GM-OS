@@ -52,11 +52,11 @@ const Ligne: React.FC<{ clef: string; children: React.ReactNode }> = ({ clef, ch
  */
 const Id: React.FC<{ valeur?: string; resolu?: boolean }> = ({ valeur, resolu }) => {
   if (!valeur) {
-    return <em className="text-red-300">absent ✕</em>;
+    return <em className="text-etat-danger">absent ✕</em>;
   }
   return (
     <code className={`font-mono px-1.5 py-0.5 rounded ${
-      resolu === false ? 'bg-red-500/20 text-red-300' : 'bg-app-text/10 text-app-text/70'
+      resolu === false ? 'bg-etat-danger/20 text-etat-danger' : 'bg-app-text/10 text-app-text/70'
     }`}>
       {valeur}
       {resolu === false && ' ✕'}
@@ -98,9 +98,9 @@ const SectionsDeLaComposante: React.FC<{
 const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constats }) => {
   if (constats.length === 0) {
     return (
-      <div className="flex items-center gap-3 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5">
-        <CheckCircle2 size={18} className="text-emerald-400 shrink-0" />
-        <p className="text-xs text-emerald-300/80">
+      <div className="flex items-center gap-3 bg-etat-succes/5 border border-etat-succes/20 rounded-2xl p-5">
+        <CheckCircle2 size={18} className="text-etat-succes shrink-0" />
+        <p className="text-xs text-etat-succes/80">
           Chaque identifiant du pilote se raccorde à un champ ou à une section réelle de la fiche.
         </p>
       </div>
@@ -110,10 +110,10 @@ const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constat
   const erreurs = constats.filter(c => c.gravite === 'erreur');
   return (
     <div className={`rounded-2xl border p-5 space-y-3 ${
-      erreurs.length > 0 ? 'bg-red-500/5 border-red-500/20' : 'bg-amber-500/5 border-amber-500/20'
+      erreurs.length > 0 ? 'bg-etat-danger/5 border-etat-danger/20' : 'bg-etat-alerte/5 border-etat-alerte/20'
     }`}>
       <p className={`flex items-center gap-2 text-ui-10 uppercase font-black tracking-[0.2em] font-display ${
-        erreurs.length > 0 ? 'text-red-400' : 'text-amber-400'
+        erreurs.length > 0 ? 'text-etat-danger' : 'text-etat-alerte'
       }`}>
         <AlertTriangle size={14} />
         Ce qui ne se raccorde à rien ({constats.length})
@@ -122,8 +122,8 @@ const JournalDesConstats: React.FC<{ constats: ConstatDuPilote[] }> = ({ constat
         {constats.map((constat, i) => (
           <li key={`${constat.ou}-${i}`} className="flex gap-2 text-xs leading-relaxed">
             {constat.gravite === 'erreur'
-              ? <XCircle size={14} className="text-red-400 shrink-0 mt-0.5" />
-              : <AlertTriangle size={14} className="text-amber-400 shrink-0 mt-0.5" />}
+              ? <XCircle size={14} className="text-etat-danger shrink-0 mt-0.5" />
+              : <AlertTriangle size={14} className="text-etat-alerte shrink-0 mt-0.5" />}
             <span>
               <code className="font-mono text-app-text/50">{constat.ou}</code>
               <span className="text-app-text/80"> — {constat.message}</span>
@@ -377,7 +377,7 @@ export const RevueDuPilote: React.FC<{
 
       <Bloc titre={`Fiche de personnage — ${sections.length} section${sections.length > 1 ? 's' : ''}`}>
         {sections.length === 0 && (
-          <p className="text-xs text-amber-300/70">Aucune section : la fiche ne porterait rien.</p>
+          <p className="text-xs text-etat-alerte/70">Aucune section : la fiche ne porterait rien.</p>
         )}
         {sections.map(section => (
           <div key={section.id} className="space-y-1">

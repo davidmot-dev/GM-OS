@@ -63,11 +63,11 @@ const LienAuCorpus: React.FC<{
 
                     <Ligne clef="Personas">
                         {personas.erreur ? (
-                            <span className="text-red-300">
+                            <span className="text-etat-danger">
                                 gems.json illisible — {personas.erreur}
                             </span>
                         ) : personas.present ? (
-                            <span className="text-emerald-300/80">
+                            <span className="text-etat-succes/80">
                                 {Object.keys(personas.personas).length} lue
                                 {Object.keys(personas.personas).length > 1 ? 's' : ''} dans gems.json
                                 {' '}— c'est ce texte que l'Oracle emploie.
@@ -86,9 +86,9 @@ const LienAuCorpus: React.FC<{
                       d'afficher un chemin rassurant.
                     */}
                     {corpus.aCreer && (
-                        <div className="flex gap-2 items-start bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
-                            <Info size={14} className="text-amber-400 shrink-0 mt-0.5" />
-                            <p className="text-ui-11 text-amber-200/70 leading-relaxed">
+                        <div className="flex gap-2 items-start bg-etat-alerte/5 border border-etat-alerte/20 rounded-xl p-3">
+                            <Info size={14} className="text-etat-alerte shrink-0 mt-0.5" />
+                            <p className="text-ui-11 text-etat-alerte/70 leading-relaxed">
                                 Ce dossier n'existe pas encore sur le disque. Il sera créé à
                                 l'enregistrement, vide : ni fiches, ni personas tant qu'on n'y aura
                                 rien écrit.
@@ -103,9 +103,9 @@ const LienAuCorpus: React.FC<{
                       travaille depuis des heures dans le mauvais corpus.
                     */}
                     {corpus.contradiction && (
-                        <div className="flex gap-2 items-start bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
-                            <AlertTriangle size={14} className="text-amber-400 shrink-0 mt-0.5" />
-                            <p className="text-ui-11 text-amber-200/70 leading-relaxed">
+                        <div className="flex gap-2 items-start bg-etat-alerte/5 border border-etat-alerte/20 rounded-xl p-3">
+                            <AlertTriangle size={14} className="text-etat-alerte shrink-0 mt-0.5" />
+                            <p className="text-ui-11 text-etat-alerte/70 leading-relaxed">
                                 Le nom de ce pilote désigne <code className="font-mono">{corpus.contradiction}</code>,
                                 un autre dossier qui existe aussi. C'est le corpus déclaré qui
                                 l'emporte, et c'est bien <code className="font-mono">{corpus.id}</code> qui

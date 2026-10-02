@@ -69,8 +69,8 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
     <div className="w-full max-w-4xl mx-auto space-y-8 animate-in zoom-in-95 duration-500 p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-purple-500/20 rounded-2xl border border-purple-500/30">
-            <Sparkles className="text-purple-400" size={24} />
+          <div className="p-3 bg-gm-violet/20 rounded-2xl border border-gm-violet/30">
+            <Sparkles className="text-gm-violet" size={24} />
           </div>
           <div>
             <h3 className="text-2xl font-black uppercase tracking-tighter text-app-text font-display">{t('session.forge_module.atelier.inventory_title')}</h3>
@@ -81,7 +81,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
         <div className="flex items-center gap-4">
           {candidates.length > 0 && (
             <div className="text-right">
-              <p className="text-ui-10 font-black uppercase tracking-widest text-purple-400/60">
+              <p className="text-ui-10 font-black uppercase tracking-widest text-gm-violet/60">
                 {t('session.forge_module.atelier.coverage', { traites, total: duCanevas.length })}
               </p>
               {/*
@@ -90,7 +90,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
                 seances — et elle survit a la fermeture, contrairement a la
                 memoire de session qui la portait avant.
               */}
-              <p className="text-ui-10 font-black uppercase tracking-widest text-emerald-400/60 mt-0.5">
+              <p className="text-ui-10 font-black uppercase tracking-widest text-etat-succes/60 mt-0.5">
                 {t('session.forge_module.atelier.forged_count', {
                   forgees: candidates.filter(c => fichesPubliees.includes(c.id)).length,
                   total: candidates.length,
@@ -101,14 +101,14 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
           {onEnregistrerInventaire && (
             <button
               onClick={onEnregistrerInventaire}
-              className="flex items-center gap-2 px-5 py-2.5 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 bg-app-text/5 hover:bg-gm-violet/20 border border-app-text/5 hover:border-gm-violet/40 text-app-text/60 hover:text-app-text rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all"
             >
               <Save size={14} /> {t('session.forge_module.atelier.save_inventory')}
             </button>
           )}
           <button
             onClick={() => (onRelancer ? onRelancer() : startDiscovery())}
-            className="p-3 hover:bg-white/5 rounded-xl text-app-text/40 hover:text-purple-400 transition-all group"
+            className="p-3 hover:bg-app-text/5 rounded-xl text-app-text/40 hover:text-gm-violet transition-all group"
             title={t('common:actions.refresh')}
           >
             <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-700" />
@@ -130,13 +130,13 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
               key={idx}
               onClick={() => onSelect(candidate)}
               className={`group relative bg-app-surface/60 border p-6 rounded-[2rem] text-left transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-6 shadow-xl ${
-                statut === 'traite' ? 'border-app-border/10 hover:border-purple-500/50 hover:bg-purple-500/5' : 'border-app-border/10 opacity-60 hover:opacity-100'
+                statut === 'traite' ? 'border-app-border/10 hover:border-gm-violet/50 hover:bg-gm-violet/5' : 'border-app-border/10 opacity-60 hover:opacity-100'
               }`}
             >
-              <div className="p-4 bg-purple-500/10 rounded-2xl group-hover:bg-purple-500/20 transition-colors">
+              <div className="p-4 bg-gm-violet/10 rounded-2xl group-hover:bg-gm-violet/20 transition-colors">
                 {statut === 'non' ? <MinusCircle className="text-app-text/30" size={24} />
-                  : statut === 'inconnu' ? <HelpCircle className="text-amber-400/60" size={24} />
-                  : <Zap className="text-purple-400" size={24} />}
+                  : statut === 'inconnu' ? <HelpCircle className="text-etat-alerte/60" size={24} />
+                  : <Zap className="text-gm-violet" size={24} />}
               </div>
               <div className="flex-1 min-w-0">
                 {/*
@@ -146,13 +146,13 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
                   s affichait alors comme restant a faire, uniquement parce que
                   son sujet etait long.
                 */}
-                <h4 className="text-lg font-black text-app-text mb-1 font-display group-hover:text-purple-400 transition-colors flex items-center gap-2 min-w-0">
+                <h4 className="text-lg font-black text-app-text mb-1 font-display group-hover:text-gm-violet transition-colors flex items-center gap-2 min-w-0">
                   <span className="truncate">{candidate.title}</span>
-                  {enregistre && <CheckCircle2 size={14} className="text-emerald-400 shrink-0" />}
+                  {enregistre && <CheckCircle2 size={14} className="text-etat-succes shrink-0" />}
                   {enBrouillon && (
                     <FileClock
                       size={14}
-                      className="text-amber-400 shrink-0"
+                      className="text-etat-alerte shrink-0"
                       aria-label={t('session.forge_module.atelier.draft_pending')}
                     />
                   )}
@@ -167,7 +167,7 @@ const DiscoveryUI: React.FC<DiscoveryUIProps> = ({
                   <p className="text-xs text-app-text/50 mt-2 line-clamp-2 normal-case tracking-normal font-normal">{candidate.summary}</p>
                 )}
               </div>
-              <ChevronRight className="text-app-text/20 group-hover:text-purple-400 group-hover:translate-x-1 transition-all shrink-0" size={20} />
+              <ChevronRight className="text-app-text/20 group-hover:text-gm-violet group-hover:translate-x-1 transition-all shrink-0" size={20} />
             </button>
           );
         })}

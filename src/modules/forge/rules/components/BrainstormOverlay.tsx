@@ -557,28 +557,28 @@ export const BrainstormOverlay: React.FC = () => {
   if (brainstormStore.step === 'idle') return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-8 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="relative w-full max-w-5xl h-[85vh] overflow-hidden rounded-[3rem] border border-white/10 bg-[#0c0c14]/90 shadow-2xl backdrop-blur-2xl flex flex-col">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-8 bg-app-bg/60 backdrop-blur-sm animate-in fade-in duration-300">
+      <div className="relative w-full max-w-5xl h-[85vh] overflow-hidden rounded-[3rem] border border-app-text/10 bg-app-bg/90 shadow-2xl backdrop-blur-2xl flex flex-col">
         
         {/* Animated Glow Background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 blur-[150px] rounded-full animate-pulse pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gm-violet/10 blur-[150px] rounded-full animate-pulse pointer-events-none" />
 
         {/* Header Section */}
-        <div className="p-8 border-b border-white/5 flex items-center justify-between relative z-10 bg-white/2">
+        <div className="p-8 border-b border-app-text/5 flex items-center justify-between relative z-10 bg-app-text/2">
           <div className="flex items-center gap-6">
-            <div className="p-4 bg-purple-600 rounded-2xl shadow-glow-purple/20">
-              <Zap className="text-white" size={24} />
+            <div className="p-4 bg-gm-violet rounded-2xl shadow-glow-purple/20">
+              <Zap className="text-app-text" size={24} />
             </div>
             <div>
-              <h2 className="text-2xl font-black uppercase tracking-tighter text-white font-display">
-                {t('session.forge_module.tabs.rules').split(' ')[0]} <span className="text-purple-400">{t('session.forge_module.tabs.rules').split(' ').slice(1).join(' ') || 'Rules'}</span>
+              <h2 className="text-2xl font-black uppercase tracking-tighter text-app-text font-display">
+                {t('session.forge_module.tabs.rules').split(' ')[0]} <span className="text-gm-violet">{t('session.forge_module.tabs.rules').split(' ').slice(1).join(' ') || 'Rules'}</span>
               </h2>
-              <div className="flex items-center gap-2 text-ui-10 text-white/40 font-bold uppercase tracking-widest mt-1">
-                <Sparkles size={12} className="text-purple-400" /> Powered by NotebookLM
+              <div className="flex items-center gap-2 text-ui-10 text-app-text/40 font-bold uppercase tracking-widest mt-1">
+                <Sparkles size={12} className="text-gm-violet" /> Powered by NotebookLM
               </div>
             </div>
 
-            <div className="h-8 w-px bg-white/5 mx-2" />
+            <div className="h-8 w-px bg-app-text/5 mx-2" />
 
             {/*
               Ce bouton choisit le corpus a documenter. Il ne touche PAS a la
@@ -587,18 +587,18 @@ export const BrainstormOverlay: React.FC = () => {
               le pilote d une campagne Blade Runner — ce qui est arrive.
             */}
             <div className="flex flex-col">
-              <span className="text-ui-10 font-black text-white/20 uppercase tracking-widest mb-0.5">
+              <span className="text-ui-10 font-black text-app-text/20 uppercase tracking-widest mb-0.5">
                 {t('session.forge_module.atelier.corpus_label')}
               </span>
               <button
                 onClick={() => brainstormStore.setError('SELECT_CORPUS')}
-                className="flex items-center gap-2 text-xs font-bold text-purple-400 hover:text-white transition-all group"
+                className="flex items-center gap-2 text-xs font-bold text-gm-violet hover:text-app-text transition-all group"
               >
-                <Shield size={12} className={corpus ? 'text-purple-400' : 'text-red-500'} />
+                <Shield size={12} className={corpus ? 'text-gm-violet' : 'text-etat-danger'} />
                 {corpus ? (
                   <span className="font-mono">{corpus.id}</span>
                 ) : (
-                  <span className="text-red-500 italic">{t('session.forge_module.atelier.corpus_none')}</span>
+                  <span className="text-etat-danger italic">{t('session.forge_module.atelier.corpus_none')}</span>
                 )}
               </button>
             </div>
@@ -651,7 +651,7 @@ export const BrainstormOverlay: React.FC = () => {
                     'ANNULER',
                   );
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-ui-10 font-black uppercase tracking-widest text-white/50 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-app-text/10 text-ui-10 font-black uppercase tracking-widest text-app-text/50 hover:text-app-text hover:border-app-text/30 hover:bg-app-text/5 transition-all"
               >
                 <RotateCcw size={14} /> Recommencer
               </button>
@@ -660,7 +660,7 @@ export const BrainstormOverlay: React.FC = () => {
             <button
               onClick={() => { abandonnerLaRequete(); brainstormStore.reset(); }}
               title="Fermer l'atelier"
-              className="p-3 hover:bg-white/5 rounded-full text-white/20 hover:text-white transition-all"
+              className="p-3 hover:bg-app-text/5 rounded-full text-app-text/20 hover:text-app-text transition-all"
             >
               <X size={28} />
             </button>
@@ -673,18 +673,18 @@ export const BrainstormOverlay: React.FC = () => {
           { (brainstormStore.error || !corpus) && (
             <div className={`mb-8 p-8 border rounded-[3rem] animate-in slide-in-from-top-4 shadow-xl transition-all duration-500 ${
               brainstormStore.error === 'SELECT_CORPUS' || (!corpus && !brainstormStore.error)
-                ? 'bg-purple-600/10 border-purple-500/20 shadow-purple-900/10'
-                : 'bg-[#ff4d4d]/10 border-[#ff4d4d]/20 shadow-red-900/10'
+                ? 'bg-gm-violet/10 border-gm-violet/20 shadow-gm-violet/10'
+                : 'bg-etat-danger/10 border-etat-danger/20 shadow-etat-danger/10'
             }`}>
 
               {brainstormStore.error && brainstormStore.error !== 'SELECT_CORPUS' && (
                 <div className="flex items-start gap-6 mb-6">
-                  <div className="p-4 bg-red-500 rounded-2xl shadow-glow-red/30">
-                    <Shield size={24} className="text-white" />
+                  <div className="p-4 bg-etat-danger rounded-2xl shadow-glow-red/30">
+                    <Shield size={24} className="text-app-text" />
                   </div>
                   <div>
-                    <h4 className="text-xl font-black uppercase tracking-tight text-red-400 font-display">{t('session.forge_module.atelier.error_title')}</h4>
-                    <p className="text-sm text-red-400/60 leading-relaxed">{brainstormStore.error}</p>
+                    <h4 className="text-xl font-black uppercase tracking-tight text-etat-danger font-display">{t('session.forge_module.atelier.error_title')}</h4>
+                    <p className="text-sm text-etat-danger/60 leading-relaxed">{brainstormStore.error}</p>
                   </div>
                 </div>
               )}
@@ -693,14 +693,14 @@ export const BrainstormOverlay: React.FC = () => {
                 <div className="space-y-4 mb-2">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-purple-600 rounded-lg">
-                        <FolderTree size={16} className="text-white" />
+                      <div className="p-2 bg-gm-violet rounded-lg">
+                        <FolderTree size={16} className="text-app-text" />
                       </div>
                       <div>
-                        <h4 className="text-lg font-black uppercase tracking-tight text-white font-display">
+                        <h4 className="text-lg font-black uppercase tracking-tight text-app-text font-display">
                           {t('session.forge_module.atelier.corpus_choose')}
                         </h4>
-                        <p className="text-xs text-white/30 mt-0.5">
+                        <p className="text-xs text-app-text/30 mt-0.5">
                           {t('session.forge_module.atelier.corpus_choose_hint')}
                         </p>
                       </div>
@@ -708,7 +708,7 @@ export const BrainstormOverlay: React.FC = () => {
                     {brainstormStore.error === 'SELECT_CORPUS' && (
                       <button
                         onClick={() => brainstormStore.setError(null)}
-                        className="text-ui-10 font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors"
+                        className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 hover:text-app-text transition-colors"
                       >
                         {t('common:actions.cancel')}
                       </button>
@@ -733,13 +733,13 @@ export const BrainstormOverlay: React.FC = () => {
                           }}
                           className={`flex items-center gap-3 p-4 rounded-2xl border transition-all text-left group relative overflow-hidden ${
                             isSelected
-                              ? 'bg-purple-600/20 border-purple-500 shadow-lg shadow-purple-900/20'
-                              : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-purple-500/30'
+                              ? 'bg-gm-violet/20 border-gm-violet shadow-lg shadow-gm-violet/20'
+                              : 'bg-app-text/5 border-app-text/5 hover:bg-app-text/10 hover:border-gm-violet/30'
                           }`}
                         >
-                          <FolderTree size={16} className={isSelected ? 'text-purple-400' : 'text-white/20'} />
+                          <FolderTree size={16} className={isSelected ? 'text-gm-violet' : 'text-app-text/20'} />
                           <p className={`text-xs font-mono truncate transition-colors ${
-                            isSelected ? 'text-white' : 'text-white/60 group-hover:text-white'
+                            isSelected ? 'text-app-text' : 'text-app-text/60 group-hover:text-app-text'
                           }`}>
                             {dossier}
                           </p>
@@ -747,7 +747,7 @@ export const BrainstormOverlay: React.FC = () => {
                       );
                     })}
                     {dossiersSystemes.length === 0 && (
-                      <p className="col-span-3 text-xs text-white/30 italic py-6 text-center">
+                      <p className="col-span-3 text-xs text-app-text/30 italic py-6 text-center">
                         {t('session.forge_module.atelier.corpus_no_inventory')}
                       </p>
                     )}
@@ -759,7 +759,7 @@ export const BrainstormOverlay: React.FC = () => {
                     cette entree, l'atelier serait ferme aux jeux nouveaux —
                     c'est-a-dire a ceux qui en ont le plus besoin.
                   */}
-                  <div className="pt-4 mt-2 border-t border-white/5 flex items-center gap-3">
+                  <div className="pt-4 mt-2 border-t border-app-text/5 flex items-center gap-3">
                     <input
                       value={nouveauCorpus}
                       onChange={e => setNouveauCorpus(e.target.value)}
@@ -770,7 +770,7 @@ export const BrainstormOverlay: React.FC = () => {
                         }
                       }}
                       placeholder={t('session.forge_module.atelier.corpus_new_placeholder')}
-                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white/80 font-mono focus:outline-none focus:border-purple-500/50 placeholder:text-white/20"
+                      className="flex-1 bg-app-text/5 border border-app-text/10 rounded-xl px-4 py-3 text-xs text-app-text/80 font-mono focus:outline-none focus:border-gm-violet/50 placeholder:text-app-text/20"
                     />
                     <button
                       disabled={!slug(nouveauCorpus)}
@@ -780,15 +780,15 @@ export const BrainstormOverlay: React.FC = () => {
                       }}
                       className={`px-6 py-3 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                         slug(nouveauCorpus)
-                          ? 'bg-purple-600 text-white hover:bg-purple-500'
-                          : 'bg-white/5 text-white/10 cursor-not-allowed'
+                          ? 'bg-gm-violet text-app-bg hover:bg-gm-violet'
+                          : 'bg-app-text/5 text-app-text/10 cursor-not-allowed'
                       }`}
                     >
                       {t('session.forge_module.atelier.corpus_new_button')}
                     </button>
                   </div>
                   {slug(nouveauCorpus) && (
-                    <p className="text-ui-10 text-white/30 font-mono">
+                    <p className="text-ui-10 text-app-text/30 font-mono">
                       systems/{slug(nouveauCorpus)}
                     </p>
                   )}
@@ -796,10 +796,10 @@ export const BrainstormOverlay: React.FC = () => {
               )}
 
               {brainstormStore.error && brainstormStore.error !== 'SELECT_CORPUS' && (
-                <div className="mt-6 pt-6 border-t border-white/5 flex gap-4">
+                <div className="mt-6 pt-6 border-t border-app-text/5 flex gap-4">
                   <button 
                     onClick={() => brainstormStore.reset()} 
-                    className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                    className="px-8 py-3 bg-app-text/5 hover:bg-app-text/10 text-app-text rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                   >
                     {t('session.forge_module.atelier.btn_reset')}
                   </button>
@@ -818,22 +818,22 @@ export const BrainstormOverlay: React.FC = () => {
           {corpus && (
             <div className={`mb-6 px-6 py-4 rounded-2xl border flex items-start gap-4 ${
               corpus.aCreer || !inventaireDisponible
-                ? 'bg-amber-500/10 border-amber-500/20'
-                : 'bg-white/5 border-white/5'
+                ? 'bg-etat-alerte/10 border-etat-alerte/20'
+                : 'bg-app-text/5 border-app-text/5'
             }`}>
-              <FolderTree size={16} className={corpus.aCreer || !inventaireDisponible ? 'text-amber-400 mt-0.5' : 'text-purple-400/60 mt-0.5'} />
+              <FolderTree size={16} className={corpus.aCreer || !inventaireDisponible ? 'text-etat-alerte mt-0.5' : 'text-gm-violet/60 mt-0.5'} />
               <div className="min-w-0">
-                <p className="text-ui-10 font-black uppercase tracking-widest text-white/20">
+                <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/20">
                   {t('session.forge_module.atelier.corpus_target')}
-                  <span className="ml-2 text-white/40 normal-case tracking-normal font-normal">
+                  <span className="ml-2 text-app-text/40 normal-case tracking-normal font-normal">
                     ({t(`session.forge_module.atelier.corpus_reason_${corpus.raison}`)})
                   </span>
                 </p>
-                <p className={`text-sm font-mono ${corpus.aCreer ? 'text-amber-400' : 'text-purple-400/80'}`}>
+                <p className={`text-sm font-mono ${corpus.aCreer ? 'text-etat-alerte' : 'text-gm-violet/80'}`}>
                   {corpus.racine}
                 </p>
                 {corpus.aCreer && (
-                  <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
+                  <p className="text-xs text-etat-alerte/60 leading-relaxed mt-2">
                     {/*
                       Choisi a la main, un dossier neuf est voulu — on l'annonce.
                       Deduit, il signale que les fiches partiraient loin de
@@ -853,7 +853,7 @@ export const BrainstormOverlay: React.FC = () => {
                   campagne décide encore.
                 */}
                 {!inventaireDisponible && (
-                  <p className="text-xs text-amber-200/60 leading-relaxed mt-2">
+                  <p className="text-xs text-etat-alerte/60 leading-relaxed mt-2">
                     {t('session.forge_module.atelier.corpus_no_inventory')}
                   </p>
                 )}
@@ -874,7 +874,7 @@ export const BrainstormOverlay: React.FC = () => {
                 <div className="max-w-4xl mx-auto px-6 pb-6 flex justify-center">
                   <button
                     onClick={handlePersonas}
-                    className="flex items-center gap-3 px-8 py-3 bg-white/5 hover:bg-purple-600/20 border border-white/5 hover:border-purple-500/40 text-white/60 hover:text-white rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all"
+                    className="flex items-center gap-3 px-8 py-3 bg-app-text/5 hover:bg-gm-violet/20 border border-app-text/5 hover:border-gm-violet/40 text-app-text/60 hover:text-app-text rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all"
                   >
                     <Users size={16} /> {t('session.forge_module.atelier.personas_button')}
                   </button>
@@ -898,25 +898,25 @@ export const BrainstormOverlay: React.FC = () => {
                <div className="flex items-center justify-between">
                  <button
                    onClick={() => brainstormStore.setStep('discovery')}
-                   className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-400 hover:text-white transition-colors"
+                   className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gm-violet hover:text-app-text transition-colors"
                  >
                    <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
                  </button>
                  <div className="text-right">
-                   <p className="text-ui-10 text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.review_title')}</p>
-                   <p className="text-xs text-amber-400/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
+                   <p className="text-ui-10 text-app-text/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.review_title')}</p>
+                   <p className="text-xs text-etat-alerte/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
                  </div>
                </div>
 
                {brainstormStore.activeCard.avertissements.length > 0 && (
-                 <div className="p-8 bg-amber-500/10 border border-amber-500/20 rounded-[3rem]">
+                 <div className="p-8 bg-etat-alerte/10 border border-etat-alerte/20 rounded-[3rem]">
                    <div className="flex items-center gap-4 mb-4">
-                     <AlertTriangle size={20} className="text-amber-400" />
-                     <h4 className="text-sm font-black uppercase tracking-widest text-amber-400 font-display">
+                     <AlertTriangle size={20} className="text-etat-alerte" />
+                     <h4 className="text-sm font-black uppercase tracking-widest text-etat-alerte font-display">
                        {t('session.forge_module.atelier.review_warnings')}
                      </h4>
                    </div>
-                   <ul className="space-y-2 text-sm text-amber-200/60 leading-relaxed list-disc pl-6">
+                   <ul className="space-y-2 text-sm text-etat-alerte/60 leading-relaxed list-disc pl-6">
                      {brainstormStore.activeCard.avertissements.map((avis, idx) => <li key={idx}>{avis}</li>)}
                    </ul>
                  </div>
@@ -929,14 +929,14 @@ export const BrainstormOverlay: React.FC = () => {
                  après, la fiche est dans `rules/` et l'Oracle la cite.
                */}
                {(resolutionEnCours || resolution) && (
-                 <div className="p-8 bg-white/2 border border-white/5 rounded-[3rem]">
+                 <div className="p-8 bg-app-text/2 border border-app-text/5 rounded-[3rem]">
                    <div className="flex items-center gap-4 mb-5">
-                     <BookOpen size={18} className="text-purple-400/60" />
-                     <h4 className="text-sm font-black uppercase tracking-widest text-white/40 font-display">
+                     <BookOpen size={18} className="text-gm-violet/60" />
+                     <h4 className="text-sm font-black uppercase tracking-widest text-app-text/40 font-display">
                        {t('session.forge_module.atelier.sections_title')}
                      </h4>
                      {resolutionEnCours && (
-                       <span className="text-ui-10 font-black uppercase tracking-widest text-white/20 animate-pulse">
+                       <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/20 animate-pulse">
                          {t('session.forge_module.atelier.sections_checking')}
                        </span>
                      )}
@@ -953,7 +953,7 @@ export const BrainstormOverlay: React.FC = () => {
                        David le 2026-08-21 sur un index de 31 Ko dont aucune
                        forme n'était reconnue. On nomme donc les fichiers vus.
                      */
-                     <p className="text-xs text-white/30 leading-relaxed">
+                     <p className="text-xs text-app-text/30 leading-relaxed">
                        {resolution.ignores && resolution.ignores.length > 0
                          ? t('session.forge_module.atelier.sections_index_illisible', {
                              corpus: corpus?.id ?? '',
@@ -968,7 +968,7 @@ export const BrainstormOverlay: React.FC = () => {
                      const perdues = resolution.resolutions.filter(r => r.statut === 'introuvable');
                      return (
                        <div className="space-y-4">
-                         <p className="text-xs text-white/40 leading-relaxed">
+                         <p className="text-xs text-app-text/40 leading-relaxed">
                            {t('session.forge_module.atelier.sections_score', {
                              resolues: resolues.length,
                              total: resolution.resolutions.length,
@@ -983,10 +983,10 @@ export const BrainstormOverlay: React.FC = () => {
                                title={r.entree && r.entree !== r.demande ? r.entree : undefined}
                                className={`px-3 py-1.5 rounded-lg text-ui-11 font-bold border ${
                                  r.statut === 'exact'
-                                   ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80'
+                                   ? 'bg-etat-succes/10 border-etat-succes/20 text-etat-succes/80'
                                    : r.statut === 'approche'
-                                     ? 'bg-amber-500/10 border-amber-500/20 text-amber-200/80'
-                                     : 'bg-red-500/10 border-red-500/20 text-red-300/70'
+                                     ? 'bg-etat-alerte/10 border-etat-alerte/20 text-etat-alerte/80'
+                                     : 'bg-etat-danger/10 border-etat-danger/20 text-etat-danger/70'
                                }`}
                              >
                                {r.demande}
@@ -1001,15 +1001,15 @@ export const BrainstormOverlay: React.FC = () => {
                            // Ni accusation ni blanc-seing : une section introuvable
                            // peut venir d'un index incomplet autant que d'un titre
                            // inventé. C'est un humain qui tranche.
-                           <p className="text-xs text-red-300/50 leading-relaxed">
+                           <p className="text-xs text-etat-danger/50 leading-relaxed">
                              {t('session.forge_module.atelier.sections_unresolved_hint')}
                            </p>
                          )}
 
                          {resolution.pagesDouteuses.length > 0 && (
                            <div className="flex items-start gap-3 pt-2">
-                             <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" />
-                             <p className="text-xs text-red-300/60 leading-relaxed">
+                             <AlertTriangle size={14} className="text-etat-danger mt-0.5 shrink-0" />
+                             <p className="text-xs text-etat-danger/60 leading-relaxed">
                                {t('session.forge_module.atelier.sections_impossible_pages', {
                                  pages: resolution.pagesDouteuses.join(', '),
                                  max: resolution.plage?.max ?? '?',
@@ -1023,25 +1023,25 @@ export const BrainstormOverlay: React.FC = () => {
                  </div>
                )}
 
-               <div className="bg-black/40 border border-white/5 rounded-[3rem] p-12 relative">
-                 <div className="absolute top-8 right-12 text-ui-10 font-black uppercase tracking-widest text-white/10">Markdown Construct</div>
+               <div className="bg-app-bg/40 border border-app-text/5 rounded-[3rem] p-12 relative">
+                 <div className="absolute top-8 right-12 text-ui-10 font-black uppercase tracking-widest text-app-text/10">Markdown Construct</div>
                  <div className="prose prose-invert max-w-none">
-                   <h1 className="text-4xl font-black uppercase tracking-tighter text-white font-display mb-4">{brainstormStore.activeCard.title}</h1>
-                   <p className="text-ui-10 font-black uppercase tracking-widest text-white/20 mb-8">
-                     {t('session.forge_module.atelier.review_path')} <span className="text-purple-400/60">{cheminDeLaFiche}</span>
+                   <h1 className="text-4xl font-black uppercase tracking-tighter text-app-text font-display mb-4">{brainstormStore.activeCard.title}</h1>
+                   <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/20 mb-8">
+                     {t('session.forge_module.atelier.review_path')} <span className="text-gm-violet/60">{cheminDeLaFiche}</span>
                    </p>
-                   <div className="text-white/60 leading-relaxed font-sans text-base whitespace-pre-wrap">
+                   <div className="text-app-text/60 leading-relaxed font-sans text-base whitespace-pre-wrap">
                      {brainstormStore.activeCard.content}
                    </div>
                  </div>
                </div>
 
                <div className="flex justify-end gap-6 pt-8">
-                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_discard')}</button>
+                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-app-text/5 hover:bg-app-text/10 text-app-text rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_discard')}</button>
                  <button
                    onClick={handleSaveCard}
                    disabled={brainstormStore.isProcessing}
-                   className="px-12 py-4 bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                   className="px-12 py-4 bg-gm-violet hover:bg-gm-violet disabled:opacity-40 text-app-bg rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-gm-violet/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                  >
                    <Save size={18} /> {t('session.forge_module.atelier.btn_save_card')}
                  </button>
@@ -1054,53 +1054,53 @@ export const BrainstormOverlay: React.FC = () => {
                <div className="flex items-center justify-between">
                  <button
                    onClick={() => brainstormStore.setStep('discovery')}
-                   className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-purple-400 hover:text-white transition-colors"
+                   className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-gm-violet hover:text-app-text transition-colors"
                  >
                    <ChevronLeft size={16} /> {t('session.forge_module.atelier.back_to_subjects')}
                  </button>
                  <div className="text-right">
-                   <p className="text-ui-10 text-white/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.personas_title')}</p>
-                   <p className="text-xs text-amber-400/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
+                   <p className="text-ui-10 text-app-text/20 uppercase font-black tracking-widest">{t('session.forge_module.atelier.personas_title')}</p>
+                   <p className="text-xs text-etat-alerte/60 font-bold">{t('session.forge_module.atelier.review_subtitle')}</p>
                  </div>
                </div>
 
                {brainstormStore.personas.avertissements.length > 0 && (
-                 <div className="p-8 bg-amber-500/10 border border-amber-500/20 rounded-[3rem]">
+                 <div className="p-8 bg-etat-alerte/10 border border-etat-alerte/20 rounded-[3rem]">
                    <div className="flex items-center gap-4 mb-4">
-                     <AlertTriangle size={20} className="text-amber-400" />
-                     <h4 className="text-sm font-black uppercase tracking-widest text-amber-400 font-display">
+                     <AlertTriangle size={20} className="text-etat-alerte" />
+                     <h4 className="text-sm font-black uppercase tracking-widest text-etat-alerte font-display">
                        {t('session.forge_module.atelier.review_warnings')}
                      </h4>
                    </div>
-                   <ul className="space-y-2 text-sm text-amber-200/60 leading-relaxed list-disc pl-6">
+                   <ul className="space-y-2 text-sm text-etat-alerte/60 leading-relaxed list-disc pl-6">
                      {brainstormStore.personas.avertissements.map((avis, idx) => <li key={idx}>{avis}</li>)}
                    </ul>
                  </div>
                )}
 
-               <p className="text-ui-10 font-black uppercase tracking-widest text-white/20">
+               <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/20">
                  {t('session.forge_module.atelier.personas_path')}{' '}
-                 <span className="text-purple-400/60">{corpus ? cheminDesPersonas(corpus) : ''}</span>
+                 <span className="text-gm-violet/60">{corpus ? cheminDesPersonas(corpus) : ''}</span>
                </p>
 
                <div className="grid grid-cols-2 gap-4">
                  {Object.entries(brainstormStore.personas.personas).map(([clef, texte]) => (
-                   <div key={clef} className="bg-black/40 border border-white/5 rounded-[2rem] p-6 space-y-3">
+                   <div key={clef} className="bg-app-bg/40 border border-app-text/5 rounded-[2rem] p-6 space-y-3">
                      <div className="flex items-center justify-between">
-                       <h4 className="text-sm font-black uppercase tracking-widest text-purple-400 font-display">{clef}</h4>
-                       <span className="text-ui-10 font-bold text-white/20">{texte.length}</span>
+                       <h4 className="text-sm font-black uppercase tracking-widest text-gm-violet font-display">{clef}</h4>
+                       <span className="text-ui-10 font-bold text-app-text/20">{texte.length}</span>
                      </div>
-                     <p className="text-sm text-white/50 leading-relaxed">{texte}</p>
+                     <p className="text-sm text-app-text/50 leading-relaxed">{texte}</p>
                    </div>
                  ))}
                </div>
 
                <div className="flex justify-end gap-6 pt-8">
-                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_discard')}</button>
+                 <button onClick={() => brainstormStore.setStep('discovery')} className="px-10 py-4 bg-app-text/5 hover:bg-app-text/10 text-app-text rounded-2xl font-black uppercase tracking-widest transition-all">{t('session.forge_module.atelier.btn_discard')}</button>
                  <button
                    onClick={handleSavePersonas}
                    disabled={brainstormStore.isProcessing}
-                   className="px-12 py-4 bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                   className="px-12 py-4 bg-gm-violet hover:bg-gm-violet disabled:opacity-40 text-app-bg rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-gm-violet/20 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                  >
                    <Save size={18} /> {t('session.forge_module.atelier.btn_save_personas')}
                  </button>
@@ -1110,13 +1110,13 @@ export const BrainstormOverlay: React.FC = () => {
 
           {brainstormStore.step === 'saved' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-               <div className="p-8 bg-emerald-500/10 border border-emerald-500/20 rounded-[3rem] flex items-center gap-8">
-                 <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-glow-emerald/30">
-                   <Zap size={32} className="text-white" />
+               <div className="p-8 bg-etat-succes/10 border border-etat-succes/20 rounded-[3rem] flex items-center gap-8">
+                 <div className="w-20 h-20 bg-etat-succes rounded-full flex items-center justify-center shadow-glow-emerald/30">
+                   <Zap size={32} className="text-app-text" />
                  </div>
                  <div>
-                   <h3 className="text-2xl font-black uppercase text-emerald-400 font-display tracking-tight">{t('session.forge_module.atelier.saved_title')}</h3>
-                   <p className="text-sm text-emerald-400/40 uppercase font-black tracking-widest mt-1">{t('session.forge_module.atelier.saved_subtitle')}</p>
+                   <h3 className="text-2xl font-black uppercase text-etat-succes font-display tracking-tight">{t('session.forge_module.atelier.saved_title')}</h3>
+                   <p className="text-sm text-etat-succes/40 uppercase font-black tracking-widest mt-1">{t('session.forge_module.atelier.saved_subtitle')}</p>
                  </div>
                </div>
 
@@ -1131,7 +1131,7 @@ export const BrainstormOverlay: React.FC = () => {
                  <div className="flex gap-3">
                    <button
                      onClick={() => brainstormStore.reset()}
-                     className="px-6 py-3 text-white/30 hover:text-white/60 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all"
+                     className="px-6 py-3 text-app-text/30 hover:text-app-text/60 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all"
                    >
                      {t('session.forge_module.atelier.btn_finish')}
                    </button>
@@ -1156,14 +1156,14 @@ export const BrainstormOverlay: React.FC = () => {
 
                  <button
                    onClick={() => brainstormStore.setStep('discovery')}
-                   className="px-14 py-5 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-purple-900/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-3 text-base"
+                   className="px-14 py-5 bg-gm-violet hover:bg-gm-violet text-app-bg rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-gm-violet/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-3 text-base"
                    autoFocus
                  >
                    <Zap size={20} />
                    <span className="flex flex-col items-start leading-tight">
                      {t('session.forge_module.atelier.btn_forge_next')}
                      {restantAForger > 0 && (
-                       <span className="text-ui-10 font-bold text-white/50 normal-case tracking-normal">
+                       <span className="text-ui-10 font-bold text-app-text/50 normal-case tracking-normal">
                          {t('session.forge_module.atelier.remaining', { restant: restantAForger })}
                        </span>
                      )}

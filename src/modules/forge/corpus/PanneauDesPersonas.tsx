@@ -110,25 +110,25 @@ const PanneauDesPersonas: React.FC<{
             {chargement && <p className="text-xs text-app-text/40">Lecture du disque…</p>}
 
             {enregistre && (
-                <div className="flex items-center gap-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-3">
-                    <Check size={14} className="text-emerald-400 shrink-0" />
-                    <p className="text-ui-11 text-emerald-300/80">
+                <div className="flex items-center gap-3 bg-etat-succes/5 border border-etat-succes/20 rounded-xl p-3">
+                    <Check size={14} className="text-etat-succes shrink-0" />
+                    <p className="text-ui-11 text-etat-succes/80">
                         Écrit dans le corpus. Toutes les campagnes qui l'emploient en héritent.
                     </p>
                 </div>
             )}
 
             {echec && (
-                <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3">
-                    <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
-                    <p className="text-ui-11 text-red-300/80">L'écriture a échoué — {echec}</p>
+                <div className="flex items-start gap-3 bg-etat-danger/5 border border-etat-danger/20 rounded-xl p-3">
+                    <AlertTriangle size={14} className="text-etat-danger shrink-0 mt-0.5" />
+                    <p className="text-ui-11 text-etat-danger/80">L'écriture a échoué — {echec}</p>
                 </div>
             )}
 
             {personas.erreur && (
-                <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/20 rounded-xl p-3">
-                    <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
-                    <p className="text-ui-11 text-red-300/80 leading-relaxed">
+                <div className="flex items-start gap-3 bg-etat-danger/5 border border-etat-danger/20 rounded-xl p-3">
+                    <AlertTriangle size={14} className="text-etat-danger shrink-0 mt-0.5" />
+                    <p className="text-ui-11 text-etat-danger/80 leading-relaxed">
                         Le fichier existe mais ne se lit pas — {personas.erreur}. Les gemmes jouent
                         leurs instructions par défaut en attendant qu'il soit réparé.
                     </p>

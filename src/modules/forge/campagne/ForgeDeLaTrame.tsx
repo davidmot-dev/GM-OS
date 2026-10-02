@@ -220,15 +220,15 @@ const ForgeDeLaTrame: React.FC = () => {
                                 presque jamais une intention de doublon.
                             */}
                             {homonyme ? (
-                                <div className="mt-2 p-3 rounded-xl border border-amber-500/40 bg-amber-500/10 space-y-2">
-                                    <p className="text-ui-11 text-amber-200/90 leading-relaxed">
+                                <div className="mt-2 p-3 rounded-xl border border-etat-alerte/40 bg-etat-alerte/10 space-y-2">
+                                    <p className="text-ui-11 text-etat-alerte/90 leading-relaxed">
                                         <b>« {homonyme.name} » existe déjà.</b> Forger ici créerait une
                                         seconde campagne du même nom : ce qu'elle porte déjà ne serait
                                         ni reconnu, ni conservé.
                                     </p>
                                     <button
                                         onClick={() => setCampagneId(homonyme.id)}
-                                        className="w-full px-3 py-2 rounded-lg bg-amber-500/20 border border-amber-500/40 text-ui-10 font-black uppercase tracking-widest text-amber-200 hover:bg-amber-500/30 transition-all"
+                                        className="w-full px-3 py-2 rounded-lg bg-etat-alerte/20 border border-etat-alerte/40 text-ui-10 font-black uppercase tracking-widest text-etat-alerte hover:bg-etat-alerte/30 transition-all"
                                     >
                                         Viser celle qui existe
                                     </button>
@@ -253,7 +253,7 @@ const ForgeDeLaTrame: React.FC = () => {
                                 <FolderTree size={12} className="shrink-0" /> docs/{corpus.racine}/fiches
                             </p>
                             {corpus.contradiction && (
-                                <p className="text-ui-11 text-amber-300/80 leading-relaxed">
+                                <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                                     Le nom désignerait <b>{corpus.contradiction}</b>. Le chemin déclaré
                                     l'emporte — vérifie que c'est bien voulu.
                                 </p>
@@ -266,7 +266,7 @@ const ForgeDeLaTrame: React.FC = () => {
                     {!lecture ? (
                         <p className="text-ui-11 text-app-text/30 italic">Choisis une campagne.</p>
                     ) : lecture.fiches.length === 0 ? (
-                        <p className="text-ui-11 text-amber-300/80 leading-relaxed">
+                        <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                             Aucune fiche publiée dans ce dossier. La Forge lit <b>fiches/</b> et jamais
                             <b> drafts/</b> : un brouillon n'a pas été relu, et une campagne bâtie sur des
                             brouillons porterait des faits que personne n'a vérifiés.
@@ -276,8 +276,8 @@ const ForgeDeLaTrame: React.FC = () => {
                             <Compte icone={<ScrollText size={13} />} nombre={lecture.fiches.length} quoi="fiches publiées" />
                             <Compte icone={<Clapperboard size={13} />} nombre={actesDuDisque.length} quoi="actes attestés" />
                             {actesIllisibles.length > 0 && (
-                                <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3 space-y-2">
-                                    <p className="text-ui-11 text-amber-200/90 leading-relaxed">
+                                <div className="rounded-xl border border-etat-alerte/30 bg-etat-alerte/5 p-3 space-y-2">
+                                    <p className="text-ui-11 text-etat-alerte/90 leading-relaxed">
                                         Le livre écrit ses titres en <b>lettres espacées</b>, et la trame
                                         de cette campagne les a gardés tels quels :
                                     </p>
@@ -290,7 +290,7 @@ const ForgeDeLaTrame: React.FC = () => {
                                     </ul>
                                     <button
                                         onClick={rendreLesActesLisibles}
-                                        className="w-full px-3 py-2 rounded-lg bg-amber-400/15 border border-amber-400/30 text-amber-200 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/25 transition-all"
+                                        className="w-full px-3 py-2 rounded-lg bg-etat-alerte/15 border border-etat-alerte/30 text-etat-alerte text-ui-10 font-black uppercase tracking-widest hover:bg-etat-alerte/25 transition-all"
                                     >
                                         Rendre ces titres lisibles
                                     </button>
@@ -306,7 +306,7 @@ const ForgeDeLaTrame: React.FC = () => {
                                 {!driver && jeuCible && ' — pilote introuvable'}
                             </p>
                             {!driver && (
-                                <p className="text-ui-11 text-amber-300/80 leading-relaxed">
+                                <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                                     Sans pilote, les PNJ naîtront sans modèle de santé et sur le gabarit
                                     générique. Rien d'inventé — mais rien de réglé non plus.
                                 </p>
@@ -317,7 +317,7 @@ const ForgeDeLaTrame: React.FC = () => {
                                 </p>
                             ))}
                             {lecture.ignorees.map(i => (
-                                <p key={i.fichier} className="text-ui-11 text-amber-300/70 leading-relaxed">
+                                <p key={i.fichier} className="text-ui-11 text-etat-alerte/70 leading-relaxed">
                                     {i.fichier} — {i.raison}.
                                 </p>
                             ))}
@@ -328,7 +328,7 @@ const ForgeDeLaTrame: React.FC = () => {
                 <button
                     onClick={() => void forger()}
                     disabled={enCours || !lecture || lecture.fiches.length === 0}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-accent text-white text-ui-10 font-black uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-110 transition-all"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed hover:brightness-110 transition-all"
                 >
                     {enCours ? <Loader2 size={13} className="animate-spin" /> : <Play size={13} />}
                     {enCours ? 'Forge en cours' : 'Forger la trame'}
@@ -342,7 +342,7 @@ const ForgeDeLaTrame: React.FC = () => {
                 )}
 
                 {erreur && (
-                    <p className="flex items-start gap-2 text-ui-11 text-red-300/90 leading-relaxed">
+                    <p className="flex items-start gap-2 text-ui-11 text-etat-danger/90 leading-relaxed">
                         <AlertTriangle size={13} className="shrink-0 mt-0.5" /> {erreur}
                     </p>
                 )}
@@ -410,7 +410,7 @@ const ForgeDeLaTrame: React.FC = () => {
                             <Bloc icone={<AlertTriangle size={16} />} titre="Ce qui manque">
                                 <div className="space-y-2">
                                     {resultat.lacunes.map(l => (
-                                        <p key={l.quoi} className="text-ui-11 text-amber-300/80 leading-relaxed">
+                                        <p key={l.quoi} className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                                             <b>{l.quoi}</b> — {l.consequence}
                                         </p>
                                     ))}
@@ -426,7 +426,7 @@ const ForgeDeLaTrame: React.FC = () => {
                         <button
                             onClick={ecrire}
                             disabled={!!ecrit}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600/80 text-white text-ui-10 font-black uppercase tracking-widest disabled:opacity-30 hover:brightness-110 transition-all"
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-etat-succes/80 text-app-bg text-ui-10 font-black uppercase tracking-widest disabled:opacity-30 hover:brightness-110 transition-all"
                         >
                             <Check size={13} />
                             {ecrit ? 'Écrite' : campagneExistante ? 'Enrichir la campagne' : 'Créer la campagne'}
@@ -467,11 +467,11 @@ const ForgeDeLaTrame: React.FC = () => {
                                     */}
                                     {ecrit.approximatifs.length > 0 && (
                                         <div className="space-y-1 pt-1">
-                                            <p className="text-ui-10 uppercase tracking-widest font-bold text-sky-300/70">
+                                            <p className="text-ui-10 uppercase tracking-widest font-bold text-etat-info/70">
                                                 {ecrit.approximatifs.length} renvois rattachés à peu près
                                             </p>
                                             {ecrit.approximatifs.map((r, i) => (
-                                                <p key={`${r.depuis}-${r.champ}-${i}`} className="text-ui-11 text-sky-200/70 leading-relaxed">
+                                                <p key={`${r.depuis}-${r.champ}-${i}`} className="text-ui-11 text-etat-info/70 leading-relaxed">
                                                     {r.depuis} · {r.champ} → « {r.ecrit} » rattaché à
                                                     {' '}<b>« {r.retenu} »</b>.
                                                 </p>
@@ -484,11 +484,11 @@ const ForgeDeLaTrame: React.FC = () => {
 
                                     {ecrit.nonResolus.length > 0 ? (
                                         <div className="space-y-1 pt-1">
-                                            <p className="text-ui-10 uppercase tracking-widest font-bold text-amber-300/70">
+                                            <p className="text-ui-10 uppercase tracking-widest font-bold text-etat-alerte/70">
                                                 {ecrit.nonResolus.length} renvois sans cible
                                             </p>
                                             {ecrit.nonResolus.map((r, i) => (
-                                                <p key={`${r.depuis}-${r.champ}-${i}`} className="text-ui-11 text-amber-300/70 leading-relaxed">
+                                                <p key={`${r.depuis}-${r.champ}-${i}`} className="text-ui-11 text-etat-alerte/70 leading-relaxed">
                                                     {r.depuis} · {r.champ} → « {r.nom} »
                                                     {r.ambigu
                                                         ? ' désigne plusieurs cibles également plausibles.'
@@ -501,7 +501,7 @@ const ForgeDeLaTrame: React.FC = () => {
                                             </p>
                                         </div>
                                     ) : (
-                                        <p className="text-ui-11 text-emerald-300/70 leading-relaxed">
+                                        <p className="text-ui-11 text-etat-succes/70 leading-relaxed">
                                             Tous les renvois ont trouvé leur cible.
                                         </p>
                                     )}

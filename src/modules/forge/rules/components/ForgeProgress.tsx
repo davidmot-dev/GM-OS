@@ -109,34 +109,34 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
   const critique = plafondSecondes > 0 && secondes >= plafondSecondes - 60;
 
   const couleur = (niveau: EvenementMcp['niveau']) => {
-    if (niveau === 'erreur') return 'text-red-400';
-    if (niveau === 'reponse') return 'text-emerald-400';
-    if (niveau === 'requete') return 'text-purple-400';
-    return 'text-white/40';
+    if (niveau === 'erreur') return 'text-etat-danger';
+    if (niveau === 'reponse') return 'text-etat-succes';
+    if (niveau === 'requete') return 'text-gm-violet';
+    return 'text-app-text/40';
   };
 
   return (
     <div className="h-full flex flex-col items-center justify-center p-12 space-y-8 text-center animate-in zoom-in-95">
       <div className="w-32 h-32 relative">
-        <div className="absolute inset-0 bg-purple-600/30 blur-3xl animate-pulse" />
-        <div className="relative w-full h-full rounded-full border-4 border-dashed border-purple-500/50 flex items-center justify-center animate-spin-slow">
-          <Zap size={48} className="text-purple-400" />
+        <div className="absolute inset-0 bg-gm-violet/30 blur-3xl animate-pulse" />
+        <div className="relative w-full h-full rounded-full border-4 border-dashed border-gm-violet/50 flex items-center justify-center animate-spin-slow">
+          <Zap size={48} className="text-gm-violet" />
         </div>
       </div>
 
       <div>
-        <h3 className="text-2xl font-black uppercase tracking-widest text-white font-display mb-2">{titre}</h3>
-        <p className="text-white/40 text-sm uppercase tracking-widest">{sousTitre}</p>
+        <h3 className="text-2xl font-black uppercase tracking-widest text-app-text font-display mb-2">{titre}</h3>
+        <p className="text-app-text/40 text-sm uppercase tracking-widest">{sousTitre}</p>
       </div>
 
       <div className="flex flex-col items-center gap-2">
         <p className={`text-4xl font-black font-display tabular-nums transition-colors ${
-          critique ? 'text-red-400' : inquietant ? 'text-amber-400' : 'text-white/60'
+          critique ? 'text-etat-danger' : inquietant ? 'text-etat-alerte' : 'text-app-text/60'
         }`}>
           {formatDuree(ecoule)}
         </p>
         {critique && (
-          <p className="text-ui-10 font-black uppercase tracking-widest text-red-400/60">
+          <p className="text-ui-10 font-black uppercase tracking-widest text-etat-danger/60">
             La requête sera abandonnée à {formatDuree(plafondSecondes * 1000)}
           </p>
         )}
@@ -145,35 +145,35 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
       {onAbandon && (
         <button
           onClick={onAbandon}
-          className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-white/10 text-white/40 hover:text-red-400 hover:border-red-500/30 text-ui-10 font-black uppercase tracking-widest transition-all"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl border border-app-text/10 text-app-text/40 hover:text-etat-danger hover:border-etat-danger/30 text-ui-10 font-black uppercase tracking-widest transition-all"
         >
           <XCircle size={14} /> {libelleAbandon ?? "Cesser d'attendre"}
         </button>
       )}
 
       {contexte && (
-        <div className="w-full max-w-2xl bg-white/5 border border-white/5 rounded-[2rem] px-6 py-4 text-left space-y-2">
-          <p className="flex items-center gap-3 text-xs text-white/60">
-            <BookOpen size={14} className="text-purple-400/60 shrink-0" />
+        <div className="w-full max-w-2xl bg-app-text/5 border border-app-text/5 rounded-[2rem] px-6 py-4 text-left space-y-2">
+          <p className="flex items-center gap-3 text-xs text-app-text/60">
+            <BookOpen size={14} className="text-gm-violet/60 shrink-0" />
             <span className="font-bold">{contexte.entete}</span>
           </p>
-          <p className="flex items-start gap-3 text-xs text-white/40">
-            <FileText size={14} className="text-purple-400/40 shrink-0 mt-0.5" />
+          <p className="flex items-start gap-3 text-xs text-app-text/40">
+            <FileText size={14} className="text-gm-violet/40 shrink-0 mt-0.5" />
             <span>{contexte.detail}</span>
           </p>
         </div>
       )}
 
       {!contexte && (notebookTitre || sourcesRetenues.length > 0) && (
-        <div className="w-full max-w-2xl bg-white/5 border border-white/5 rounded-[2rem] px-6 py-4 text-left space-y-2">
+        <div className="w-full max-w-2xl bg-app-text/5 border border-app-text/5 rounded-[2rem] px-6 py-4 text-left space-y-2">
           {notebookTitre && (
-            <p className="flex items-center gap-3 text-xs text-white/60">
-              <BookOpen size={14} className="text-purple-400/60 shrink-0" />
+            <p className="flex items-center gap-3 text-xs text-app-text/60">
+              <BookOpen size={14} className="text-gm-violet/60 shrink-0" />
               <span className="font-bold">{notebookTitre}</span>
             </p>
           )}
-          <p className="flex items-start gap-3 text-xs text-white/40">
-            <FileText size={14} className="text-purple-400/40 shrink-0 mt-0.5" />
+          <p className="flex items-start gap-3 text-xs text-app-text/40">
+            <FileText size={14} className="text-gm-violet/40 shrink-0 mt-0.5" />
             <span>
               {selectedSourceIds.length === 0
                 ? `${sourcesDuCarnet.length} source${sourcesDuCarnet.length > 1 ? 's' : ''} — carnet entier`
@@ -189,9 +189,9 @@ export const ForgeProgress: React.FC<ForgeProgressProps> = ({
       )}
 
       {journal.length > 0 && (
-        <div className="w-full max-w-2xl bg-black/40 border border-white/5 rounded-[2rem] p-6 text-left">
-          <div className="flex items-center gap-2 mb-4 text-ui-10 font-black uppercase tracking-widest text-white/20">
-            <Radio size={12} className="text-purple-400/60" /> Journal du pont
+        <div className="w-full max-w-2xl bg-app-bg/40 border border-app-text/5 rounded-[2rem] p-6 text-left">
+          <div className="flex items-center gap-2 mb-4 text-ui-10 font-black uppercase tracking-widest text-app-text/20">
+            <Radio size={12} className="text-gm-violet/60" /> Journal du pont
           </div>
           <div className="max-h-48 overflow-y-auto custom-scrollbar space-y-1 font-mono text-xs">
             {journal.map((evenement, idx) => (

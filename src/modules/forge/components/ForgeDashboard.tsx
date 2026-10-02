@@ -59,8 +59,8 @@ const JournalDesLacunes: React.FC<{ lacunes: LacuneDuPilote[] }> = ({ lacunes })
   if (lacunes.length === 0) return null;
 
   return (
-    <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-6 space-y-3">
-      <h4 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400 font-display">
+    <div className="bg-etat-alerte/5 border border-etat-alerte/20 rounded-2xl p-6 space-y-3">
+      <h4 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-etat-alerte font-display">
         <AlertTriangle size={14} /> {t('modules:session.forge_module.corpus_forge.gaps_title')}
       </h4>
       <ul className="space-y-2">
@@ -932,7 +932,7 @@ const ForgeDashboard: React.FC = () => {
           onClick={() => setActiveTab('structure')}
           className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
             activeTab === 'structure' 
-              ? 'bg-accent text-app-text shadow-glow-accent/20' 
+              ? 'bg-accent text-app-on-accent shadow-glow-accent/20' 
               : 'text-app-text/40 hover:bg-app-text/5'
           }`}
         >
@@ -942,7 +942,7 @@ const ForgeDashboard: React.FC = () => {
           onClick={() => setActiveTab('rules')}
           className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
             activeTab === 'rules' 
-              ? 'bg-purple-600 text-app-text shadow-glow-purple/20' 
+              ? 'bg-gm-violet text-app-bg shadow-glow-purple/20' 
               : 'text-app-text/40 hover:bg-app-text/5'
           }`}
         >
@@ -970,17 +970,17 @@ const ForgeDashboard: React.FC = () => {
                         if (driver) forgeStore.setTargetName(driver.name);
                         else if (e.target.value === 'NEW') forgeStore.setTargetName('');
                       }}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs font-bold text-white/80 focus:outline-none focus:border-accent/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
+                      className="w-full bg-app-text/5 border border-app-text/10 rounded-xl p-3 text-xs font-bold text-app-text/80 focus:outline-none focus:border-accent/50 appearance-none cursor-pointer transition-all hover:bg-app-text/10"
                     >
-                      <option value="" disabled className="bg-app-bg text-white/40">-- Choisir un Driver --</option>
+                      <option value="" disabled className="bg-app-bg text-app-text/40">-- Choisir un Driver --</option>
                       {allDrivers.map(d => (
-                        <option key={d.id} value={d.id} className="bg-app-bg text-white">
+                        <option key={d.id} value={d.id} className="bg-app-bg text-app-text">
                           {d.emoji} {d.name}
                         </option>
                       ))}
                       <option value="NEW" className="bg-app-bg text-accent font-black">+ CRÉER UN NOUVEAU SYSTÈME</option>
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20 group-hover:text-accent transition-colors">
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-app-text/20 group-hover:text-accent transition-colors">
                       <ChevronRight size={14} className="rotate-90" />
                     </div>
                   </div>
@@ -991,7 +991,7 @@ const ForgeDashboard: React.FC = () => {
                       value={forgeStore.targetSystemName} 
                       onChange={(e) => forgeStore.setTargetName(e.target.value)} 
                       placeholder={t('modules:session.forge_module.destination_placeholder')} 
-                      className="w-full bg-white/2 border-b border-white/10 p-2 text-sm text-white/80 focus:outline-none focus:border-accent/50 transition-all placeholder:text-white/10 font-sans italic" 
+                      className="w-full bg-app-text/2 border-b border-app-text/10 p-2 text-sm text-app-text/80 focus:outline-none focus:border-accent/50 transition-all placeholder:text-app-text/10 font-sans italic" 
                     />
                     {!allDrivers.find(d => d.name === forgeStore.targetSystemName) && forgeStore.targetSystemName && (
                       <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2 text-ui-8 font-black text-accent uppercase tracking-widest animate-pulse">
@@ -1006,7 +1006,7 @@ const ForgeDashboard: React.FC = () => {
                       référence ne s'édite pas.
                   */}
                   {customGameDrivers.some(d => d.name === forgeStore.targetSystemName.trim()) && (
-                    <label className="flex items-start gap-3 p-3 rounded-xl bg-white/2 border border-white/10 cursor-pointer hover:bg-white/5 transition-all">
+                    <label className="flex items-start gap-3 p-3 rounded-xl bg-app-text/2 border border-app-text/10 cursor-pointer hover:bg-app-text/5 transition-all">
                       <input
                         type="checkbox"
                         checked={piloteSeulement}
@@ -1036,8 +1036,8 @@ const ForgeDashboard: React.FC = () => {
                 projette des fiches déjà vérifiées ; déposer le livre reste
                 possible en dessous, pour un jeu qu'aucun atelier n'a documenté.
               */}
-              <div className="bg-purple-500/10 rounded-2xl border border-purple-500/20 p-5 flex flex-col gap-3 hover:border-purple-500/40 transition-all">
-                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-purple-400 font-display">
+              <div className="bg-gm-violet/10 rounded-2xl border border-gm-violet/20 p-5 flex flex-col gap-3 hover:border-gm-violet/40 transition-all">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-gm-violet font-display">
                   <Layers size={14} /> {t('modules:session.forge_module.corpus_forge.label')}
                 </h2>
                 <p className="text-ui-10 text-app-text/40 leading-relaxed">
@@ -1048,18 +1048,18 @@ const ForgeDashboard: React.FC = () => {
                   <select
                     value={corpusVise?.id || ''}
                     onChange={(e) => brainstormStore.setCorpusCible(e.target.value || null)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs font-bold text-white/80 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
+                    className="w-full bg-app-text/5 border border-app-text/10 rounded-xl p-3 text-xs font-bold text-app-text/80 focus:outline-none focus:border-gm-violet/50 appearance-none cursor-pointer transition-all hover:bg-app-text/10"
                   >
-                    <option value="" disabled className="bg-app-bg text-white/40">
+                    <option value="" disabled className="bg-app-bg text-app-text/40">
                       {t('modules:session.forge_module.corpus_forge.choose')}
                     </option>
                     {dossiersSystemes.map(dossier => (
-                      <option key={dossier} value={dossier} className="bg-app-bg text-white font-mono">
+                      <option key={dossier} value={dossier} className="bg-app-bg text-app-text font-mono">
                         {dossier}
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20 group-hover:text-purple-400 transition-colors">
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-app-text/20 group-hover:text-gm-violet transition-colors">
                     <ChevronRight size={14} className="rotate-90" />
                   </div>
                 </div>
@@ -1075,8 +1075,8 @@ const ForgeDashboard: React.FC = () => {
                   sur rien invite à croire qu'il a agi.
                 */}
                 {corpusVise && (
-                  <div className="flex flex-col gap-2 rounded-xl border border-white/10 bg-black/20 p-3">
-                    <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-white/30">
+                  <div className="flex flex-col gap-2 rounded-xl border border-app-text/10 bg-app-bg/20 p-3">
+                    <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-app-text/30">
                       Ce corpus est
                     </span>
                     <div className="flex gap-2">
@@ -1089,8 +1089,8 @@ const ForgeDashboard: React.FC = () => {
                           onClick={() => void enregistrerLaDeclaration({ ...declaration, nature: choix.valeur })}
                           className={`flex-1 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${
                             declaration.nature === choix.valeur
-                              ? 'bg-purple-600 text-white'
-                              : 'bg-white/5 text-white/40 hover:bg-white/10'
+                              ? 'bg-gm-violet text-app-bg'
+                              : 'bg-app-text/5 text-app-text/40 hover:bg-app-text/10'
                           }`}
                         >
                           {choix.libelle}
@@ -1106,7 +1106,7 @@ const ForgeDashboard: React.FC = () => {
                         plutôt que de laisser croire qu'il agit.
                       */}
                       <label className="flex flex-col gap-1">
-                        <span className="text-ui-9 uppercase tracking-widest text-white/25">
+                        <span className="text-ui-9 uppercase tracking-widest text-app-text/25">
                           Moteur (non lu)
                         </span>
                         <input
@@ -1114,11 +1114,11 @@ const ForgeDashboard: React.FC = () => {
                           onChange={e => setDeclaration({ ...declaration, moteur: e.target.value })}
                           onBlur={() => void enregistrerLaDeclaration(declaration)}
                           placeholder="2d20, yze…"
-                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-ui-11 font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
+                          className="bg-app-text/5 border border-app-text/10 rounded-lg px-2 py-1.5 text-ui-11 font-mono text-app-text/70 focus:outline-none focus:border-gm-violet/50"
                         />
                       </label>
                       <label className="flex flex-col gap-1">
-                        <span className="text-ui-9 uppercase tracking-widest text-white/25">
+                        <span className="text-ui-9 uppercase tracking-widest text-app-text/25">
                           Langue de forge
                         </span>
                         <input
@@ -1126,11 +1126,11 @@ const ForgeDashboard: React.FC = () => {
                           onChange={e => setDeclaration({ ...declaration, langue: e.target.value })}
                           onBlur={() => void enregistrerLaDeclaration(declaration)}
                           placeholder={i18n.language}
-                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-ui-11 font-mono text-white/70 focus:outline-none focus:border-purple-500/50"
+                          className="bg-app-text/5 border border-app-text/10 rounded-lg px-2 py-1.5 text-ui-11 font-mono text-app-text/70 focus:outline-none focus:border-gm-violet/50"
                         />
                       </label>
                     </div>
-                    <p className="text-ui-9 text-white/25 leading-relaxed">
+                    <p className="text-ui-9 text-app-text/25 leading-relaxed">
                       Un socle commun ne se forge pas en pilote : il sert à combler les sujets
                       qu&apos;un corpus de jeu ne couvre pas. Vider un champ retire la déclaration.
                     </p>
@@ -1145,20 +1145,20 @@ const ForgeDashboard: React.FC = () => {
                 */}
                 {famillesConnues.length > 0 && (
                   <div className="flex flex-col gap-2">
-                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-white/30">
+                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/30">
                       Socle commun (facultatif)
                     </label>
                     <select
                       value={familleCible ?? ''}
                       onChange={(e) => setFamilleCible(e.target.value || null)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-ui-11 font-bold text-white/70 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
+                      className="w-full bg-app-text/5 border border-app-text/10 rounded-xl p-2.5 text-ui-11 font-bold text-app-text/70 focus:outline-none focus:border-gm-violet/50 appearance-none cursor-pointer transition-all hover:bg-app-text/10"
                     >
-                      <option value="" className="bg-app-bg text-white/40">Aucun — ce jeu seul</option>
+                      <option value="" className="bg-app-bg text-app-text/40">Aucun — ce jeu seul</option>
                       {famillesConnues.map(f => (
-                        <option key={f} value={f} className="bg-app-bg text-white font-mono">{f}</option>
+                        <option key={f} value={f} className="bg-app-bg text-app-text font-mono">{f}</option>
                       ))}
                     </select>
-                    <p className="text-ui-9 text-white/25 leading-relaxed">
+                    <p className="text-ui-9 text-app-text/25 leading-relaxed">
                       Sert uniquement aux sujets que le corpus du jeu ne couvre pas. Le jeu
                       l'emporte toujours, et chaque comblement est signalé.
                     </p>
@@ -1170,14 +1170,14 @@ const ForgeDashboard: React.FC = () => {
                   disabled={!corpusVise || forgeStore.isProcessing}
                   className={`w-full py-3 rounded-xl font-black text-ui-10 uppercase tracking-[0.2em] transition-all ${
                     !corpusVise || forgeStore.isProcessing
-                      ? 'bg-white/5 text-white/10 cursor-not-allowed'
-                      : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
+                      ? 'bg-app-text/5 text-app-text/10 cursor-not-allowed'
+                      : 'bg-gm-violet text-app-bg shadow-glow-purple/30 hover:scale-105 active:scale-95'
                   }`}
                 >
                   {t('modules:session.forge_module.corpus_forge.button')}
                 </button>
                 {!corpusVise && (
-                  <p className="text-ui-10 text-amber-300/60 leading-relaxed">
+                  <p className="text-ui-10 text-etat-alerte/60 leading-relaxed">
                     {t('modules:session.forge_module.corpus_forge.required')}
                   </p>
                 )}
@@ -1232,7 +1232,7 @@ const ForgeDashboard: React.FC = () => {
               {/* User Instructions Extension */}
               <div className="bg-app-surface/40 rounded-2xl border border-app-border/10 p-5 flex flex-col gap-3 hover:border-accent/30 transition-all">
                 <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent font-display">
-                   <Sparkles size={14} className="text-amber-500" /> {t('modules:session.forge_module.intentions_label')}
+                   <Sparkles size={14} className="text-etat-alerte" /> {t('modules:session.forge_module.intentions_label')}
                 </h2>
                 <textarea 
                   value={forgeStore.userInstructions} 
@@ -1245,7 +1245,7 @@ const ForgeDashboard: React.FC = () => {
           ) : (
             <>
               {/* Rules Atelier Settings */}
-              <div className="bg-purple-500/10 rounded-2xl border border-purple-500/20 p-5 flex flex-col gap-4 animate-in slide-in-from-left-4">
+              <div className="bg-gm-violet/10 rounded-2xl border border-gm-violet/20 p-5 flex flex-col gap-4 animate-in slide-in-from-left-4">
                 {/*
                   Ce menu choisit le CORPUS a documenter, pas le pilote de la
                   campagne. Sa version precedente appelait `updateCampaign` :
@@ -1258,7 +1258,7 @@ const ForgeDashboard: React.FC = () => {
                   L atelier avait ete decouple ; ce point d entree-ci ne l etait
                   pas. Documenter un corpus reste une operation de bibliotheque.
                 */}
-                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-purple-400 font-display">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-gm-violet font-display">
                    <Shield size={14} /> {t('modules:session.forge_module.atelier.corpus_label')}
                 </h2>
 
@@ -1266,18 +1266,18 @@ const ForgeDashboard: React.FC = () => {
                   <select
                     value={corpusVise?.id || ''}
                     onChange={(e) => brainstormStore.setCorpusCible(e.target.value || null)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs font-bold text-white/80 focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer transition-all hover:bg-white/10"
+                    className="w-full bg-app-text/5 border border-app-text/10 rounded-xl p-3 text-xs font-bold text-app-text/80 focus:outline-none focus:border-gm-violet/50 appearance-none cursor-pointer transition-all hover:bg-app-text/10"
                   >
-                    <option value="" disabled className="bg-app-bg text-white/40">
+                    <option value="" disabled className="bg-app-bg text-app-text/40">
                       {t('modules:session.forge_module.atelier.corpus_choose')}
                     </option>
                     {dossiersSystemes.map(dossier => (
-                      <option key={dossier} value={dossier} className="bg-app-bg text-white font-mono">
+                      <option key={dossier} value={dossier} className="bg-app-bg text-app-text font-mono">
                         {dossier}
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20 group-hover:text-purple-400 transition-colors">
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-app-text/20 group-hover:text-gm-violet transition-colors">
                     <ChevronRight size={14} className="rotate-90" />
                   </div>
                 </div>
@@ -1296,15 +1296,15 @@ const ForgeDashboard: React.FC = () => {
                     onChange={e => setNouveauCorpus(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') void ouvrirUnCorpus(); }}
                     placeholder={t('modules:session.forge_module.atelier.corpus_new_placeholder')}
-                    className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-ui-11 text-white/80 font-mono focus:outline-none focus:border-purple-500/50 placeholder:text-white/20"
+                    className="flex-1 min-w-0 bg-app-text/5 border border-app-text/10 rounded-xl px-3 py-2.5 text-ui-11 text-app-text/80 font-mono focus:outline-none focus:border-gm-violet/50 placeholder:text-app-text/20"
                   />
                   <button
                     disabled={!slug(nouveauCorpus) || ouvertureEnCours}
                     onClick={() => void ouvrirUnCorpus()}
                     className={`px-4 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all shrink-0 ${
                       slug(nouveauCorpus) && !ouvertureEnCours
-                        ? 'bg-purple-600 text-white hover:bg-purple-500'
-                        : 'bg-white/5 text-white/10 cursor-not-allowed'
+                        ? 'bg-gm-violet text-app-bg hover:bg-gm-violet'
+                        : 'bg-app-text/5 text-app-text/10 cursor-not-allowed'
                     }`}
                   >
                     {t('modules:session.forge_module.atelier.corpus_new_button')}
@@ -1318,24 +1318,24 @@ const ForgeDashboard: React.FC = () => {
                   celui qui porte deja les fiches.
                 */}
                 {slug(nouveauCorpus) && (
-                  <p className="text-ui-10 text-white/30 font-mono -mt-1">
+                  <p className="text-ui-10 text-app-text/30 font-mono -mt-1">
                     systems/{slug(nouveauCorpus)}
                     {dossiersSystemes.some(d => d === slug(nouveauCorpus)) && (
-                      <span className="text-amber-400/70 not-italic"> — existe deja, sera rejoint</span>
+                      <span className="text-etat-alerte/70 not-italic"> — existe deja, sera rejoint</span>
                     )}
                   </p>
                 )}
 
-                <div className="h-px bg-white/5 my-1" />
+                <div className="h-px bg-app-text/5 my-1" />
 
-                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-purple-400 font-display">
+                <h2 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-gm-violet font-display">
                    <Sparkles size={14} /> {t('modules:session.forge_module.atelier.custom_subject_label')}
                 </h2>
                 <textarea 
                   value={brainstormStore.customSubject} 
                   onChange={(e) => brainstormStore.setCustomSubject(e.target.value)} 
                   placeholder={t('modules:session.forge_module.atelier.custom_subject_placeholder')} 
-                  className="w-full bg-white/5 text-xs text-app-text/80 focus:outline-none placeholder:text-white/10 font-sans border border-white/10 rounded-xl p-4 focus:border-purple-500/50 transition-all min-h-[120px] resize-none" 
+                  className="w-full bg-app-text/5 text-xs text-app-text/80 focus:outline-none placeholder:text-app-text/10 font-sans border border-app-text/10 rounded-xl p-4 focus:border-gm-violet/50 transition-all min-h-[120px] resize-none" 
                 />
                 {/*
                   Deux conditions, pas une. Le corpus n'a plus de valeur par
@@ -1351,13 +1351,13 @@ const ForgeDashboard: React.FC = () => {
                     brainstormStore.startDiscovery();
                   }}
                   className={`w-full py-3 rounded-xl font-black text-ui-10 uppercase tracking-[0.2em] transition-all ${
-                    !selectedNotebook || !corpusVise ? 'bg-white/5 text-white/10 cursor-not-allowed' : 'bg-purple-600 text-white shadow-glow-purple/30 hover:scale-105 active:scale-95'
+                    !selectedNotebook || !corpusVise ? 'bg-app-text/5 text-app-text/10 cursor-not-allowed' : 'bg-gm-violet text-app-bg shadow-glow-purple/30 hover:scale-105 active:scale-95'
                   }`}
                 >
                   {t('modules:session.forge_module.atelier.analyze_button')}
                 </button>
                 {!corpusVise && (
-                  <p className="text-ui-10 text-amber-300/60 leading-relaxed">
+                  <p className="text-ui-10 text-etat-alerte/60 leading-relaxed">
                     {t('modules:session.forge_module.atelier.corpus_required')}
                   </p>
                 )}
@@ -1411,7 +1411,7 @@ const ForgeDashboard: React.FC = () => {
                     <div className="flex-1 min-w-0 text-app-text">
                       <p className="text-xs font-bold truncate">{item.name}</p>
                     </div>
-                    <button onClick={() => removeContextItem(idx)} className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-500/20 hover:text-red-400 rounded-lg transition-all"><X className="w-4 h-4" /></button>
+                    <button onClick={() => removeContextItem(idx)} className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-etat-danger/20 hover:text-etat-danger rounded-lg transition-all"><X className="w-4 h-4" /></button>
                   </div>
                 </div>
               )) : notebookSources.map(s => (
@@ -1426,15 +1426,15 @@ const ForgeDashboard: React.FC = () => {
                     }
                   }}
                   className={`group relative p-4 rounded-xl border transition-all cursor-pointer ${
-                    brainstormStore.selectedSourceIds.includes(s.id) ? 'bg-purple-600/20 border-purple-500/50 shadow-glow-purple/10' : 'bg-app-text/5 border-app-border/10 opacity-60 hover:opacity-100'
+                    brainstormStore.selectedSourceIds.includes(s.id) ? 'bg-gm-violet/20 border-gm-violet/50 shadow-glow-purple/10' : 'bg-app-text/5 border-app-border/10 opacity-60 hover:opacity-100'
                   }`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-lg ${brainstormStore.selectedSourceIds.includes(s.id) ? 'bg-purple-500 text-white' : 'bg-white/5 text-app-text/40'}`}>
+                    <div className={`p-3 rounded-lg ${brainstormStore.selectedSourceIds.includes(s.id) ? 'bg-gm-violet text-app-bg' : 'bg-app-text/5 text-app-text/40'}`}>
                       <Globe className="w-4 h-4" />
                     </div>
                     <p className="text-xs font-bold truncate flex-1">{s.title}</p>
-                    {brainstormStore.selectedSourceIds.includes(s.id) && <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />}
+                    {brainstormStore.selectedSourceIds.includes(s.id) && <div className="w-2 h-2 rounded-full bg-gm-violet animate-pulse" />}
                   </div>
                 </div>
               ))}
@@ -1463,7 +1463,7 @@ const ForgeDashboard: React.FC = () => {
                   className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 shadow-2xl ${
                     forgeStore.contextItems.length === 0 || forgeStore.isProcessing
                       ? 'bg-app-text/5 text-app-text/20 cursor-not-allowed' 
-                      : 'bg-accent text-white shadow-glow-accent/20 hover:scale-[1.02] active:scale-[0.98]'
+                      : 'bg-accent text-app-on-accent shadow-glow-accent/20 hover:scale-[1.02] active:scale-[0.98]'
                   }`}
                 >
                   {forgeStore.isProcessing ? (
@@ -1495,7 +1495,7 @@ const ForgeDashboard: React.FC = () => {
                       addLog("TRANSMUTATION ABORTED MANUALLY.");
                       gmToast("Transmutation annulée", "info");
                     }}
-                    className="w-full py-2 rounded-xl text-ui-10 font-bold uppercase tracking-widest text-red-400 hover:bg-red-400/10 transition-colors"
+                    className="w-full py-2 rounded-xl text-ui-10 font-bold uppercase tracking-widest text-etat-danger hover:bg-etat-danger/10 transition-colors"
                   >
                     {t('modules:session.forge_module.atelier.abort_forge')}
                   </button>
@@ -1580,19 +1580,19 @@ const ForgeDashboard: React.FC = () => {
                     des deux sources manque, plutôt que de laisser un bouton ne
                     rien faire. */}
                 {!forgeStore.analysisResult.driver.name && (
-                  <p className="text-xs text-amber-300/70 leading-relaxed">
+                  <p className="text-xs text-etat-alerte/70 leading-relaxed">
                     {t('modules:session.forge_module.corpus_forge.unnamed')}
                   </p>
                 )}
 
                 <div className="p-8 bg-accent rounded-2xl flex items-center justify-between">
                   <div>
-                    <p className="text-white font-black text-xl">{t('modules:session.forge_module.atelier.ready_title')}</p>
-                    <p className="text-white/60 text-xs">{t('modules:session.forge_module.atelier.ready_desc')}</p>
+                    <p className="text-app-text font-black text-xl">{t('modules:session.forge_module.atelier.ready_title')}</p>
+                    <p className="text-app-text/60 text-xs">{t('modules:session.forge_module.atelier.ready_desc')}</p>
                   </div>
                   <button
                     onClick={handleForgeSave}
-                    className="px-8 py-4 bg-white text-accent rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
+                    className="px-8 py-4 bg-app-text text-accent rounded-xl font-black uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
                   >
                     {t('modules:session.forge_module.atelier.btn_save')}
                   </button>
@@ -1613,9 +1613,9 @@ const ForgeDashboard: React.FC = () => {
             )
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-12 space-y-6 relative overflow-hidden">
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none" />
-               <Sparkles size={64} className="text-purple-400/20 animate-pulse" />
-               <h3 className="text-2xl font-bold font-display uppercase text-purple-400">{t('modules:session.forge_module.atelier.brainstorm_title')}</h3>
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gm-violet/10 blur-[120px] rounded-full pointer-events-none" />
+               <Sparkles size={64} className="text-gm-violet/20 animate-pulse" />
+               <h3 className="text-2xl font-bold font-display uppercase text-gm-violet">{t('modules:session.forge_module.atelier.brainstorm_title')}</h3>
                <p className="text-app-text/40 max-w-md mx-auto">{t('modules:session.forge_module.atelier.brainstorm_desc')}</p>
 
                {/*
@@ -1638,7 +1638,7 @@ const ForgeDashboard: React.FC = () => {
             message qu'on n'a pas écrit.
           */}
           {logs.length > 0 && (
-            <div className="shrink-0 border-t border-app-border/10 bg-black/40 px-6 py-4">
+            <div className="shrink-0 border-t border-app-border/10 bg-app-bg/40 px-6 py-4">
               <div className="flex items-center gap-2 mb-2 text-ui-10 font-black uppercase tracking-widest text-app-text/20">
                 <Terminal size={12} className="text-accent/60" /> Journal de la Forge
               </div>
@@ -1704,8 +1704,8 @@ const ForgeDashboard: React.FC = () => {
                                     onClick={() => handleSourceImport(s.id, s.title)} 
                                     className={`px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                       forgeStore.contextItems.some(item => item.name === `[NB] ${s.title}`)
-                                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                                        : 'bg-accent/20 text-accent hover:bg-accent hover:text-white'
+                                        ? 'bg-etat-succes/20 text-etat-succes border border-etat-succes/30'
+                                        : 'bg-accent/20 text-accent hover:bg-accent hover:text-app-on-accent'
                                     }`}
                                   >
                                     {t('modules:session.forge_module.atelier.source_adn_btn')}
@@ -1721,8 +1721,8 @@ const ForgeDashboard: React.FC = () => {
                                     }}
                                     className={`px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                       brainstormStore.selectedSourceIds.includes(s.id)
-                                        ? 'bg-purple-500 text-white'
-                                        : 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                                        ? 'bg-gm-violet text-app-bg'
+                                        : 'bg-gm-violet/20 text-gm-violet border border-gm-violet/30'
                                     }`}
                                   >
                                     {t('modules:session.forge_module.atelier.source_atelier_btn')}

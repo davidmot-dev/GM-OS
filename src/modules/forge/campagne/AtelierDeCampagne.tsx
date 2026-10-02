@@ -371,12 +371,12 @@ const AtelierDeCampagne: React.FC = () => {
                                 résolu par : {corpus.raison}
                             </p>
                             {corpus.aCreer && (
-                                <p className="text-ui-11 text-amber-300/80 leading-relaxed">
+                                <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                                     Ce dossier n'existe pas encore : il sera créé à la première fiche.
                                 </p>
                             )}
                             {corpus.contradiction && (
-                                <p className="text-ui-11 text-amber-300/80 leading-relaxed">
+                                <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                                     Le nom de la campagne désignerait <b>{corpus.contradiction}</b>. Le chemin
                                     déclaré l'emporte — mais vérifie que c'est bien voulu.
                                 </p>
@@ -407,7 +407,7 @@ const AtelierDeCampagne: React.FC = () => {
                                 règles de l'échec à 72 secondes : douze sources
                                 contre une. C'est le levier le plus rentable. */}
                             {sourcesRetenues.length === 0 && sources.length > 1 && (
-                                <p className="text-ui-11 text-amber-300/70 leading-relaxed pt-1">
+                                <p className="text-ui-11 text-etat-alerte/70 leading-relaxed pt-1">
                                     Ne retenir que le livre de cette campagne accélère beaucoup les
                                     réponses — et évite que le carnet réponde depuis un autre jeu.
                                 </p>
@@ -431,7 +431,7 @@ const AtelierDeCampagne: React.FC = () => {
                     *mémoriser sans montrer redonnerait un réglage qu'on a oublié
                     d'avoir posé.*
                 */}
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col gap-2">
+                <div className="p-3 rounded-xl bg-app-text/[0.03] border border-app-text/5 flex flex-col gap-2">
                     <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/35">
                         Moteur de la forge
                     </span>
@@ -439,8 +439,8 @@ const AtelierDeCampagne: React.FC = () => {
                 </div>
 
                 {erreur && (
-                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30">
-                        <p className="text-ui-10 font-black uppercase tracking-widest text-red-400">Le carnet refuse</p>
+                    <div className="p-3 rounded-xl bg-etat-danger/10 border border-etat-danger/30">
+                        <p className="text-ui-10 font-black uppercase tracking-widest text-etat-danger">Le carnet refuse</p>
                         <p className="text-ui-11 text-app-text/60 mt-1 font-mono leading-relaxed">{erreur}</p>
                     </div>
                 )}
@@ -503,8 +503,8 @@ const AtelierDeCampagne: React.FC = () => {
                     {/* Ce que le disque atteste, avant même d'avoir relancé quoi que ce soit. */}
                     {corpus && (publiees.size > 0 || brouillonsOrphelins.length > 0) && (
                         <p className="text-ui-11 text-app-text/40 leading-relaxed mt-2">
-                            Déjà sur le disque : <b className="text-emerald-400/80">{publiees.size} publiée{publiees.size > 1 ? 's' : ''}</b>
-                            {brouillonsOrphelins.length > 0 && <>, <b className="text-amber-300/80">{brouillonsOrphelins.length} brouillon{brouillonsOrphelins.length > 1 ? 's' : ''} en attente</b></>}.
+                            Déjà sur le disque : <b className="text-etat-succes/80">{publiees.size} publiée{publiees.size > 1 ? 's' : ''}</b>
+                            {brouillonsOrphelins.length > 0 && <>, <b className="text-etat-alerte/80">{brouillonsOrphelins.length} brouillon{brouillonsOrphelins.length > 1 ? 's' : ''} en attente</b></>}.
                         </p>
                     )}
 
@@ -533,7 +533,7 @@ const AtelierDeCampagne: React.FC = () => {
 
                     {brouillonsOrphelins.length > 0 && (
                         <div className="mt-4 pt-4 border-t border-app-border/10 space-y-1.5">
-                            <p className="text-ui-10 font-black uppercase tracking-widest text-amber-400/60">
+                            <p className="text-ui-10 font-black uppercase tracking-widest text-etat-alerte/60">
                                 Brouillons repris du disque
                             </p>
                             {brouillonsOrphelins.map(fiche => (
@@ -678,7 +678,7 @@ const SelecteurDeCarnet: React.FC<{
                                     >
                                         <span className="text-sm font-medium truncate">{s.title}</span>
                                         <span className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest ${
-                                            retenue ? 'bg-accent text-white' : 'bg-white/5 text-app-text/40'
+                                            retenue ? 'bg-accent text-app-on-accent' : 'bg-app-text/5 text-app-text/40'
                                         }`}>
                                             {retenue ? 'retenue' : 'retenir'}
                                         </span>
@@ -693,7 +693,7 @@ const SelecteurDeCarnet: React.FC<{
             <div className="p-4 border-t border-app-border/10 flex justify-end bg-app-surface/20">
                 <button
                     onClick={onFermer}
-                    className="px-6 py-2.5 rounded-xl bg-accent text-white text-ui-10 font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                    className="px-6 py-2.5 rounded-xl bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-widest hover:brightness-110 transition-all"
                 >
                     Terminé
                 </button>
@@ -716,7 +716,7 @@ const Etape: React.FC<{
                     <h3 className="text-ui-11 font-black uppercase tracking-widest text-app-text">
                         {numero}. {titre}
                     </h3>
-                    {fait && <Check size={13} className="text-emerald-400" />}
+                    {fait && <Check size={13} className="text-etat-succes" />}
                 </div>
                 <p className="text-ui-11 text-app-text/35 leading-relaxed mt-1.5">{aide}</p>
             </div>
@@ -748,12 +748,12 @@ const LigneDeFiche: React.FC<{
                             de sa forge : la réponse brute du carnet n'est pas
                             conservée. Le dire évite de lire un silence comme un
                             « rien à signaler ». */}
-                        {'reprise' in fiche && <span className="text-amber-400/50"> · reprise du disque</span>}
+                        {'reprise' in fiche && <span className="text-etat-alerte/50"> · reprise du disque</span>}
                     </p>
                 )}
             </div>
             {publiee ? (
-                <span className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-emerald-400">
+                <span className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-etat-succes">
                     <Check size={12} /> publiée
                 </span>
             ) : (
@@ -769,7 +769,7 @@ const LigneDeFiche: React.FC<{
                     {fiche && (
                         <button
                             onClick={onPublier}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-ui-10 font-black uppercase tracking-widest text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-etat-succes/10 border border-etat-succes/30 text-ui-10 font-black uppercase tracking-widest text-etat-succes hover:bg-etat-succes/20 transition-all"
                         >
                             <Upload size={11} /> Publier
                         </button>
@@ -786,7 +786,7 @@ const LigneDeFiche: React.FC<{
         {fiche && fiche.avertissements.length > 0 && (
             <ul className="mt-2 space-y-1">
                 {fiche.avertissements.map((a, i) => (
-                    <li key={i} className="flex items-start gap-2 text-ui-11 text-amber-300/70 leading-relaxed">
+                    <li key={i} className="flex items-start gap-2 text-ui-11 text-etat-alerte/70 leading-relaxed">
                         <AlertTriangle size={11} className="shrink-0 mt-0.5" /> {a}
                     </li>
                 ))}

@@ -96,9 +96,9 @@ const PanneauDesFiches: React.FC<{
               deux — dont celle qu'une reforge venait de remplacer.
             */}
             {doublons > 0 && (
-                <div className="flex items-start gap-2 bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
-                    <AlertTriangle size={14} className="text-amber-400 shrink-0 mt-0.5" />
-                    <p className="text-ui-11 text-amber-200/70 leading-relaxed">
+                <div className="flex items-start gap-2 bg-etat-alerte/5 border border-etat-alerte/20 rounded-xl p-3">
+                    <AlertTriangle size={14} className="text-etat-alerte shrink-0 mt-0.5" />
+                    <p className="text-ui-11 text-etat-alerte/70 leading-relaxed">
                         {doublons} fiches portent un sujet que porte déjà une autre. L'Oracle les
                         reçoit toutes. Vérifiez laquelle garder — elles ne sont pas forcément
                         redondantes : deux fiches peuvent couvrir deux aspects d'un même sujet.
@@ -112,7 +112,7 @@ const PanneauDesFiches: React.FC<{
                         key={fiche.nom}
                         className={`flex items-center justify-between gap-3 p-3 rounded-xl border transition-all ${
                             fiche.enDouble
-                                ? 'bg-amber-500/5 border-amber-500/20'
+                                ? 'bg-etat-alerte/5 border-etat-alerte/20'
                                 : 'bg-app-surface/20 border-app-border/10'
                         }`}
                     >
@@ -125,7 +125,7 @@ const PanneauDesFiches: React.FC<{
                         <button
                             onClick={() => archiver(fiche)}
                             title="Écarter vers rules-v1/"
-                            className="flex items-center gap-1.5 px-3 py-1.5 shrink-0 rounded-lg border border-app-border/30 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-amber-300 hover:border-amber-500/40 transition-all"
+                            className="flex items-center gap-1.5 px-3 py-1.5 shrink-0 rounded-lg border border-app-border/30 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-etat-alerte hover:border-etat-alerte/40 transition-all"
                         >
                             <Archive size={11} /> Écarter
                         </button>
