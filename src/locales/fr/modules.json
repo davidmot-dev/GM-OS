@@ -1113,6 +1113,23 @@
     }
   },
   "map": {
+    "agencement": {
+      "en_jeu": "En jeu direct",
+      "forme": "Forme",
+      "tout": "Tout",
+      "outils": "Outils",
+      "en_partie": "Actions en partie",
+      "preparation": "Préparation · Atelier",
+      "zones_actives": "Zones de danger actives",
+      "modeles_de_zones": "Modèles de zones de danger",
+      "carte": "Carte « {{nom}} »",
+      "aucune_carte": "Aucune carte",
+      "round": "Round {{n}}",
+      "projetee": "Projetée : {{cible}}",
+      "reglages": "Réglages",
+      "carte_et_medias": "Carte et médias",
+      "ambiance": "Météo et moment"
+    },
     "dashboard": "Plateau Tactique",
     "sidebar": {
       "subtitle": "Plateau tactique synchronisé.",

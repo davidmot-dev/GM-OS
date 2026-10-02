@@ -1113,6 +1113,23 @@
     }
   },
   "map": {
+    "agencement": {
+      "en_jeu": "Live play",
+      "forme": "Shape",
+      "tout": "All",
+      "outils": "Tools",
+      "en_partie": "In-game actions",
+      "preparation": "Preparation · Workshop",
+      "zones_actives": "Active danger zones",
+      "modeles_de_zones": "Danger zone templates",
+      "carte": "Map “{{nom}}”",
+      "aucune_carte": "No map",
+      "round": "Round {{n}}",
+      "projetee": "Projected: {{cible}}",
+      "reglages": "Settings",
+      "carte_et_medias": "Map and media",
+      "ambiance": "Weather and time"
+    },
     "dashboard": "Tactical Map",
     "sidebar": {
       "subtitle": "Synchronized tactical board.",

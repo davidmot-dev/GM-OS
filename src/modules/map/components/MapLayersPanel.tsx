@@ -22,7 +22,7 @@ const MapLayersPanel: React.FC = () => {
     ];
 
     return (
-        <div className="flex flex-col gap-2 p-3 bg-obsidian-dark/40 rounded-lg border border-app-text/5 backdrop-blur-sm">
+        <div className="flex flex-col gap-2 p-3 bg-app-bg/40 rounded-lg border border-app-text/5 backdrop-blur-sm">
             <div className="flex items-center gap-2 mb-1 px-1">
                 <Layers className="w-4 h-4 text-accent" />
                 <h3 className="text-xs font-bold uppercase tracking-wider text-app-text">{t('map.sidebar.layers.title')}</h3>
