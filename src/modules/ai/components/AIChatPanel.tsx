@@ -260,14 +260,14 @@ const AIChatPanel: React.FC = () => {
             <div>
               <h3 className="text-sm font-bold tracking-tight uppercase">AI Companion</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse" />
                 <span className="text-ui-10 font-mono text-app-text/40 uppercase tracking-widest leading-none">Contextual Oracle Active</span>
               </div>
             </div>
           </div>
           <button 
             onClick={() => toggleAIPanel(false)}
-            className="p-1.5 hover:bg-white/5 rounded-lg text-app-text/40 hover:text-app-text transition-colors"
+            className="p-1.5 hover:bg-app-text/5 rounded-lg text-app-text/40 hover:text-app-text transition-colors"
           >
             <ChevronRight size={20} />
           </button>
@@ -285,7 +285,7 @@ const AIChatPanel: React.FC = () => {
                  className={`flex-1 min-w-[30%] flex flex-col items-center gap-1.5 py-2.5 rounded-lg transition-all duration-300 ${
                    activeGem === gem.id 
                      ? 'bg-accent/10 border border-accent/30 text-accent shadow-glow-accent/10' 
-                     : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/5 border border-transparent'
+                     : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/5 border border-transparent'
                  }`}
                >
                  <Icon size={18} />
@@ -299,7 +299,7 @@ const AIChatPanel: React.FC = () => {
       {/* Messages */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-gradient-to-b from-transparent to-black/10"
+        className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-gradient-to-b from-transparent to-app-bg/10"
       >
         {/*
           **D'où l'Oracle tient sa réponse, et si quelqu'un l'a relue.**
@@ -329,13 +329,13 @@ const AIChatPanel: React.FC = () => {
         */}
         {lacunes.length > 0 && (
           <details className="px-1 pb-2">
-            <summary className="cursor-pointer text-ui-9 font-black uppercase tracking-widest text-amber-300/50 hover:text-amber-300/80">
+            <summary className="cursor-pointer text-ui-9 font-black uppercase tracking-widest text-etat-alerte/50 hover:text-etat-alerte/80">
               Lacunes — {lacunes.length} sujet{lacunes.length > 1 ? 's' : ''} sans fiche qui réponde
             </summary>
             <ul className="mt-1.5 space-y-1">
               {lacunes.slice(0, 8).map(lacune => (
                 <li key={lacune.clef} className="flex items-start gap-2 text-ui-10 text-app-text/45">
-                  <span className="font-mono text-amber-300/60 shrink-0">
+                  <span className="font-mono text-etat-alerte/60 shrink-0">
                     ×{lacune.fois}
                   </span>
                   <span className="flex-1">{lacune.question}</span>
@@ -380,14 +380,14 @@ const AIChatPanel: React.FC = () => {
           meneur lit — une règle, et non une reformulation qui peut avoir glissé.
         */}
         {ficheDirecte && (
-          <div className="mx-1 mb-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-emerald-300/90">
+          <div className="mx-1 mb-2 rounded-lg border border-etat-succes/30 bg-etat-succes/10 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-etat-succes/90">
             Tiré de la fiche — aucun modèle invoqué
           </div>
         )}
 
 
         {jugement && (
-          <div className="mx-1 mb-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-amber-300/90">
+          <div className="mx-1 mb-2 rounded-lg border border-etat-alerte/30 bg-etat-alerte/10 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-etat-alerte/90">
             {ETIQUETTE_DU_JUGEMENT}
           </div>
         )}
@@ -395,12 +395,12 @@ const AIChatPanel: React.FC = () => {
 
         {dansLeLivre.length > 0 && (
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-1 pb-2 text-ui-10">
-            <span className="font-black uppercase tracking-widest text-sky-300/50">
+            <span className="font-black uppercase tracking-widest text-etat-info/50">
               Le livre en parle
             </span>
             {dansLeLivre.map(t => (
               <span key={`${t.titre}-${t.page}`} className="text-app-text/50">
-                {t.titre} <span className="font-mono text-sky-300/70">p. {t.page}</span>
+                {t.titre} <span className="font-mono text-etat-info/70">p. {t.page}</span>
               </span>
             ))}
           </div>
@@ -424,7 +424,7 @@ const AIChatPanel: React.FC = () => {
                 }
                 className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-ui-9 font-black uppercase tracking-widest ${
                   penchant === 'campagne'
-                    ? 'border-sky-400/30 bg-sky-500/10 text-sky-300/70'
+                    ? 'border-etat-info/30 bg-etat-info/10 text-etat-info/70'
                     : 'border-app-border/30 bg-app-text/5 text-app-text/40'
                 }`}
               >
@@ -444,13 +444,13 @@ const AIChatPanel: React.FC = () => {
                     <button
                       onClick={() => void marquerRelue(source.path)}
                       title="Cette fiche n'a jamais été relue. Cliquer pour la déclarer relue."
-                      className="rounded-full bg-amber-500/15 px-1.5 text-amber-300/80 hover:bg-amber-500/30 transition-colors"
+                      className="rounded-full bg-etat-alerte/15 px-1.5 text-etat-alerte/80 hover:bg-etat-alerte/30 transition-colors"
                     >
                       non relue
                     </button>
                   )}
                   {source.relu === true && source.aRegenerer !== true && (
-                    <span className="text-emerald-400/60">relue</span>
+                    <span className="text-etat-succes/60">relue</span>
                   )}
                   {/*
                     **Signalée l'emporte sur relue** : une fiche qu'on vient de
@@ -461,7 +461,7 @@ const AIChatPanel: React.FC = () => {
                     <button
                       onClick={() => void signaler(source.path, false)}
                       title="Signalée comme suspecte, et en file de reforge. Cliquer pour retirer le signalement."
-                      className="rounded-full bg-rose-500/20 px-1.5 text-rose-300/90 hover:bg-rose-500/35 transition-colors"
+                      className="rounded-full bg-etat-danger/20 px-1.5 text-etat-danger/90 hover:bg-etat-danger/35 transition-colors"
                     >
                       signalée
                     </button>
@@ -469,7 +469,7 @@ const AIChatPanel: React.FC = () => {
                     <button
                       onClick={() => void signaler(source.path, true)}
                       title="Cette fiche a-t-elle mal répondu ? La signaler la met en file de reforge, sans rien supprimer."
-                      className="text-app-text/20 hover:text-rose-300/80 transition-colors"
+                      className="text-app-text/20 hover:text-etat-danger/80 transition-colors"
                     >
                       ⚑
                     </button>
@@ -523,17 +523,17 @@ const AIChatPanel: React.FC = () => {
         */}
         {enAttente.length > 0 && (
           <div className="flex justify-start">
-            <div className="bg-amber-500/[0.06] border border-amber-500/25 rounded-2xl p-3 space-y-2 w-full">
+            <div className="bg-etat-alerte/[0.06] border border-etat-alerte/25 rounded-2xl p-3 space-y-2 w-full">
               {enAttente.map(r => (
                 <div key={r.id} className="flex items-center gap-3 flex-wrap">
-                  <Clock size={12} className="text-amber-400 shrink-0" />
-                  <span className="text-ui-11 text-amber-200/80 leading-relaxed flex-1 min-w-0">
+                  <Clock size={12} className="text-etat-alerte shrink-0" />
+                  <span className="text-ui-11 text-etat-alerte/80 leading-relaxed flex-1 min-w-0">
                     <b>{r.libelle}</b> occupe le modèle depuis {depuisQuand(r.depuis)} — votre
                     question partira à la suite.
                   </span>
                   <button
                     onClick={() => void abandonner(r.id)}
-                    className="shrink-0 px-2.5 py-1 rounded-lg border border-amber-500/30 text-ui-9 font-black uppercase tracking-widest text-amber-300/80 hover:bg-amber-500/15 hover:text-amber-200 transition-all"
+                    className="shrink-0 px-2.5 py-1 rounded-lg border border-etat-alerte/30 text-ui-9 font-black uppercase tracking-widest text-etat-alerte/80 hover:bg-etat-alerte/15 hover:text-etat-alerte transition-all"
                   >
                     Abandonner
                   </button>
@@ -591,7 +591,7 @@ const AIChatPanel: React.FC = () => {
                 className={`px-2 py-1 rounded text-ui-9 font-black uppercase tracking-tighter transition-all border ${
                   activeProvider === p 
                     ? 'bg-accent/20 border-accent/40 text-accent ring-1 ring-accent/20' 
-                    : 'bg-black/20 border-white/5 text-app-text/30 hover:text-app-text/50'
+                    : 'bg-app-bg/20 border-app-text/5 text-app-text/30 hover:text-app-text/50'
                 }`}
               >
                 {p}
@@ -599,10 +599,10 @@ const AIChatPanel: React.FC = () => {
             ))}
           </div>
           
-          <div className="flex items-center gap-2 px-2 py-1 rounded-full bg-black/20 border border-white/5">
+          <div className="flex items-center gap-2 px-2 py-1 rounded-full bg-app-bg/20 border border-app-text/5">
             <Cpu size={10} className={loading ? 'text-accent animate-spin' : 'text-app-text/20'} />
-            <div className="w-6 h-3 rounded-full bg-slate-800 relative cursor-not-allowed opacity-50">
-               <div className="absolute left-0.5 top-0.5 w-2 h-2 rounded-full bg-slate-600" />
+            <div className="w-6 h-3 rounded-full bg-app-surface-2 relative cursor-not-allowed opacity-50">
+               <div className="absolute left-0.5 top-0.5 w-2 h-2 rounded-full bg-app-muted" />
             </div>
             <span className="text-ui-8 font-black uppercase tracking-widest text-app-text/20">Vocal Shaping</span>
           </div>
@@ -614,7 +614,7 @@ const AIChatPanel: React.FC = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
             rows={3}
-            className="w-full bg-black/30 border border-app-border/30 rounded-xl p-4 pr-12 text-sm text-app-text/80 placeholder:text-app-text/20 focus:ring-1 focus:ring-accent/50 focus:border-accent/40 outline-none resize-none transition-all duration-300 group-hover:border-app-border/50"
+            className="w-full bg-app-bg/30 border border-app-border/30 rounded-xl p-4 pr-12 text-sm text-app-text/80 placeholder:text-app-text/20 focus:ring-1 focus:ring-accent/50 focus:border-accent/40 outline-none resize-none transition-all duration-300 group-hover:border-app-border/50"
             placeholder={t('modules:ai.input_placeholder', { 
               gem: t(storeGems.find(g => g.id === activeGem)?.name || ''),
               defaultValue: `Demandez à ${activeGem === 'sage' ? 'votre Sage des règles' : activeGem === 'scribe' ? 'votre Scribe de notes' : 'votre Oracle créatif'}...`
@@ -625,7 +625,7 @@ const AIChatPanel: React.FC = () => {
             disabled={!input.trim() || loading}
             className={`absolute right-3 bottom-3 p-2.5 rounded-lg transition-all duration-300 ${
               input.trim() && !loading 
-                ? 'bg-accent text-white shadow-glow-accent/40 scale-100' 
+                ? 'bg-accent text-app-on-accent shadow-glow-accent/40 scale-100' 
                 : 'text-app-text/20 scale-90 grayscale opacity-50'
             }`}
           >

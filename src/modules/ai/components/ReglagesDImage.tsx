@@ -82,14 +82,14 @@ const ReglagesDImage: React.FC = () => {
         <div className="p-6 rounded-2xl border border-app-border/20 bg-app-surface/40 space-y-5">
             <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-black/20 flex items-center justify-center border border-white/5 text-orange-400">
+                    <div className="w-12 h-12 rounded-xl bg-app-bg/20 flex items-center justify-center border border-app-text/5 text-etat-alerte">
                         <ImagePlus size={22} />
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
                             <h5 className="font-black uppercase tracking-tighter text-app-text">Génération d'image</h5>
                             <span className={`px-1.5 py-0.5 rounded text-ui-8 font-bold uppercase ${
-                                pret ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/10 text-white/40'
+                                pret ? 'bg-etat-succes/20 text-etat-succes' : 'bg-app-text/10 text-app-text/40'
                             }`}>
                                 {pret ? 'configuré' : 'non configuré'}
                             </span>
@@ -115,7 +115,7 @@ const ReglagesDImage: React.FC = () => {
                     href="https://dash.cloudflare.com/?to=/:account/ai/workers-ai"
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-white/10 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-app-text/5 border border-app-text/10 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-app-text/10 transition-all"
                 >
                     <ExternalLink size={12} /> Tableau de bord
                 </a>
@@ -130,10 +130,10 @@ const ReglagesDImage: React.FC = () => {
                 endroit.
             */}
             {essai?.etat === 'ok' && (
-                <div className="flex items-center gap-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+                <div className="flex items-center gap-4 p-3 rounded-xl bg-etat-succes/10 border border-etat-succes/30">
                     <img src={essai.apercu} alt="Essai de génération" className="w-20 h-20 rounded-lg object-cover" />
                     <div>
-                        <p className="text-ui-11 font-black uppercase tracking-widest text-emerald-400">Cloudflare répond</p>
+                        <p className="text-ui-11 font-black uppercase tracking-widest text-etat-succes">Cloudflare répond</p>
                         <p className="text-ui-11 text-app-text/50 mt-1">
                             {Math.round(essai.octets / 1024)} Ko reçus. La génération d'image passera par lui.
                         </p>
@@ -141,8 +141,8 @@ const ReglagesDImage: React.FC = () => {
                 </div>
             )}
             {essai?.etat === 'echec' && (
-                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30">
-                    <p className="text-ui-11 font-black uppercase tracking-widest text-red-400">Cloudflare refuse</p>
+                <div className="p-3 rounded-xl bg-etat-danger/10 border border-etat-danger/30">
+                    <p className="text-ui-11 font-black uppercase tracking-widest text-etat-danger">Cloudflare refuse</p>
                     <p className="text-ui-11 text-app-text/60 mt-1 font-mono leading-relaxed">{essai.dit}</p>
                 </div>
             )}
@@ -159,11 +159,11 @@ const ReglagesDImage: React.FC = () => {
                         onChange={e => updateImageConfig({ accountId: e.target.value.trim() })}
                         placeholder="32 caractères hexadécimaux"
                         className={`w-full bg-app-bg/40 px-4 py-3 rounded-xl border font-mono text-xs text-app-text outline-none transition-colors ${
-                            compteDouteux ? 'border-amber-500/50 focus:border-amber-400' : 'border-app-border/20 focus:border-accent/50'
+                            compteDouteux ? 'border-etat-alerte/50 focus:border-etat-alerte' : 'border-app-border/20 focus:border-accent/50'
                         }`}
                     />
                     {compteDouteux && (
-                        <p className="text-ui-11 text-amber-300/80 leading-relaxed px-1">
+                        <p className="text-ui-11 text-etat-alerte/80 leading-relaxed px-1">
                             Un identifiant de compte fait 32 caractères hexadécimaux — celui-ci n'en a pas
                             la forme. Ce n'est ni le nom d'un Worker ni ton sous-domaine : ouvre
                             <a href="https://dash.cloudflare.com" target="_blank" rel="noreferrer" className="underline mx-1">dash.cloudflare.com</a>
@@ -211,7 +211,7 @@ const ReglagesDImage: React.FC = () => {
                     {aUneCle('image') && jetonSaisi.trim() === '' && (
                         <button
                             onClick={() => oublierLaCle('image')}
-                            className="w-full mt-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-rose-400 hover:border-rose-500/40 transition-all"
+                            className="w-full mt-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-etat-danger hover:border-etat-danger/40 transition-all"
                         >
                             Effacer le jeton du coffre
                         </button>

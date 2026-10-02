@@ -74,7 +74,7 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
         <div className="absolute inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
             {/* Backdrop Blur */}
             <div 
-                className="absolute inset-0 bg-black/60 backdrop-blur-md cursor-pointer" 
+                className="absolute inset-0 bg-app-bg/60 backdrop-blur-md cursor-pointer" 
                 onClick={onClose}
             />
 
@@ -88,7 +88,7 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                     </div>
                     <button 
                         onClick={onClose}
-                        className="p-2 text-app-text/40 hover:text-white transition-colors hover:rotate-90 duration-300"
+                        className="p-2 text-app-text/40 hover:text-app-text transition-colors hover:rotate-90 duration-300"
                         title="Fermer"
                     >
                         <X size={18} />
@@ -105,7 +105,7 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                             onKeyDown={handleKeyDown}
                             placeholder={placeholder}
                             disabled={isGenerating}
-                            className="w-full h-32 bg-black/40 border border-app-border/50 rounded-2xl p-4 text-sm text-app-text/90 focus:border-accent/50 outline-none transition-all resize-none font-sans leading-relaxed custom-scrollbar placeholder:text-app-text/20"
+                            className="w-full h-32 bg-app-bg/40 border border-app-border/50 rounded-2xl p-4 text-sm text-app-text/90 focus:border-accent/50 outline-none transition-all resize-none font-sans leading-relaxed custom-scrollbar placeholder:text-app-text/20"
                         />
                         <div className="absolute bottom-3 right-4 text-ui-9 font-bold text-app-text/20 uppercase tracking-widest pointer-events-none">
                             Ctrl + Enter pour lancer
@@ -123,7 +123,7 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                                     key={idx}
                                     onClick={() => setInputValue(prev => prev ? `${prev}, ${s}` : s)}
                                     disabled={isGenerating}
-                                    className="px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-ui-10 font-bold text-app-text/60 hover:border-accent/30 hover:text-accent transition-all active:scale-95"
+                                    className="px-3 py-1.5 rounded-full bg-app-text/5 border border-app-text/5 text-ui-10 font-bold text-app-text/60 hover:border-accent/30 hover:text-accent transition-all active:scale-95"
                                 >
                                     {s}
                                 </button>
@@ -133,10 +133,10 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-4 bg-black/20 flex gap-3">
+                <div className="px-6 py-4 bg-app-bg/20 flex gap-3">
                     <button
                         onClick={onClose}
-                        className="flex-1 py-3 rounded-xl border border-app-border text-app-text/40 font-black uppercase tracking-widest text-ui-10 hover:bg-white/5 transition-all"
+                        className="flex-1 py-3 rounded-xl border border-app-border text-app-text/40 font-black uppercase tracking-widest text-ui-10 hover:bg-app-text/5 transition-all"
                     >
                         Annuler
                     </button>
@@ -146,7 +146,7 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
                         className={`flex-[2] py-3 rounded-xl font-black uppercase tracking-widest text-ui-10 flex items-center justify-center gap-2 transition-all shadow-glow-accent ${
                             isGenerating 
                             ? 'bg-accent/20 text-accent cursor-not-allowed' 
-                            : 'bg-accent text-slate-950 hover:scale-[1.02] active:scale-[0.98]'
+                            : 'bg-accent text-app-on-accent hover:scale-[1.02] active:scale-[0.98]'
                         }`}
                     >
                         {isGenerating ? (

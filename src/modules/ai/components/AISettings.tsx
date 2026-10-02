@@ -240,14 +240,14 @@ const AISettings: React.FC = () => {
       id: 'gemini', 
       name: t('ai.providers.gemini_label'), 
       icon: <Sparkles size={24} />,
-      color: 'text-blue-400',
+      color: 'text-etat-info',
       desc: t('ai.providers.gemini_desc')
     },
     { 
       id: 'openai', 
       name: t('ai.providers.openai_label'), 
       icon: <Cpu size={24} />,
-      color: 'text-emerald-500',
+      color: 'text-etat-succes',
       desc: t('ai.providers.openai_desc')
     },
     { 
@@ -261,14 +261,14 @@ const AISettings: React.FC = () => {
       id: 'ollama', 
       name: t('ai.providers.ollama_label'), 
       icon: <Cpu size={24} />,
-      color: 'text-orange-400',
+      color: 'text-etat-alerte',
       desc: t('ai.providers.ollama_desc')
     },
     { 
       id: 'ollama_cloud', 
       name: t('ai.providers.ollama_cloud_label', 'Ollama Cloud'), 
       icon: <Sparkles size={24} />,
-      color: 'text-sky-400',
+      color: 'text-etat-info',
       desc: t('ai.providers.ollama_cloud_desc', 'Ollama distant via HTTPS')
     },
     { 
@@ -297,7 +297,7 @@ const AISettings: React.FC = () => {
         
         <button
           onClick={runGlobalDiagnostic}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-ui-10 font-black uppercase tracking-widest text-app-text transition-all"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-app-text/5 border border-app-text/10 hover:bg-app-text/10 text-ui-10 font-black uppercase tracking-widest text-app-text transition-all"
         >
           <Beaker size={14} className={Object.values(diagnosticResults).some(r => r.status === 'loading') ? 'animate-pulse' : ''} />
           {t('ai.global_diagnostic')}
@@ -324,11 +324,11 @@ const AISettings: React.FC = () => {
           encore chargées (une synchronisation manque, mais rien n'est perdu).
       */}
       {etatDuCoffre?.etat === 'illisible' && (
-        <div className="p-4 rounded-2xl border border-red-500/40 bg-red-500/10 space-y-1">
-          <p className="text-ui-10 font-black uppercase tracking-widest text-red-300">
+        <div className="p-4 rounded-2xl border border-etat-danger/40 bg-etat-danger/10 space-y-1">
+          <p className="text-ui-10 font-black uppercase tracking-widest text-etat-danger">
             Coffre illisible — ne retape rien
           </p>
-          <p className="text-ui-11 text-red-200/80 leading-relaxed">
+          <p className="text-ui-11 text-etat-danger/80 leading-relaxed">
             Le fichier de clés existe mais n'a pas pu être déchiffré. <b>Tes clés y sont toujours.</b>
             {' '}Redémarre complètement l'application : la lecture réussit presque toujours au second
             essai. Si tu saisis une clé maintenant, l'ancien coffre sera mis de côté — rien ne sera
@@ -358,7 +358,7 @@ const AISettings: React.FC = () => {
           >
             <div className="flex items-start justify-between mb-6">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl bg-black/20 flex items-center justify-center p-2 border border-white/5 ${p.color}`}>
+                <div className={`w-12 h-12 rounded-xl bg-app-bg/20 flex items-center justify-center p-2 border border-app-text/5 ${p.color}`}>
                   {p.icon}
                 </div>
                 <div>
@@ -366,8 +366,8 @@ const AISettings: React.FC = () => {
                     <h5 className="font-black uppercase tracking-tighter text-app-text">{p.name}</h5>
                     {diagnosticResults[p.id].status !== 'idle' && (
                       <div className={`px-1.5 py-0.5 rounded text-ui-8 font-bold uppercase ${
-                        diagnosticResults[p.id].status === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 
-                        diagnosticResults[p.id].status === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-white/10 text-white/40'
+                        diagnosticResults[p.id].status === 'success' ? 'bg-etat-succes/20 text-etat-succes' : 
+                        diagnosticResults[p.id].status === 'error' ? 'bg-etat-danger/20 text-etat-danger' : 'bg-app-text/10 text-app-text/40'
                       }`}>
                         {diagnosticResults[p.id].message}
                       </div>
@@ -381,8 +381,8 @@ const AISettings: React.FC = () => {
                 onClick={() => setProvider(p.id)}
                 className={`px-4 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${
                   activeProvider === p.id 
-                    ? 'bg-accent text-white shadow-glow-accent/40' 
-                    : 'bg-white/5 text-app-text/40 hover:bg-white/10 hover:text-white'
+                    ? 'bg-accent text-app-on-accent shadow-glow-accent/40' 
+                    : 'bg-app-text/5 text-app-text/40 hover:bg-app-text/10 hover:text-app-text'
                 }`}
               >
                 {activeProvider === p.id ? t('ai.status.active') : t('ai.status.select')}
@@ -404,7 +404,7 @@ const AISettings: React.FC = () => {
                       placeholder={aUneCle(p.id)
                         ? t('ai.status.key_stored_hint')
                         : t('ai.status.api_key_placeholder', { name: p.name })}
-                      className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
+                      className="w-full bg-app-bg/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
                     />
                     <button
                       onClick={() => toggleKeyVisibility(p.id)}
@@ -430,7 +430,7 @@ const AISettings: React.FC = () => {
                   {aUneCle(p.id) && saisie(p.id).trim() === '' && (
                     <button
                       onClick={() => oublierLaCle(p.id)}
-                      className="w-full px-3 py-2 rounded-xl border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-rose-400 hover:border-rose-500/40 transition-all"
+                      className="w-full px-3 py-2 rounded-xl border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/40 hover:text-etat-danger hover:border-etat-danger/40 transition-all"
                     >
                       {t('ai.actions.forget_key')}
                     </button>
@@ -450,7 +450,7 @@ const AISettings: React.FC = () => {
                       value={configs[p.id]?.endpoint || ''}
                       onChange={(e) => updateConfig(p.id, { endpoint: e.target.value.trim() })}
                       placeholder={p.id === 'ollama' ? "http://127.0.0.1:11434" : "https://api.provider.com/v1"}
-                      className="w-full bg-black/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
+                      className="w-full bg-app-bg/40 border border-app-border/40 rounded-xl px-4 py-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all font-mono"
                     />
                   </div>
                 </div>
@@ -459,19 +459,19 @@ const AISettings: React.FC = () => {
               {p.id === 'ollama' && (
                 <div className="space-y-2">
                   <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2">
-                    <ShieldCheck size={12} className={diagnosticResults.ollama.status === 'success' ? "text-emerald-500" : "text-app-text/20"} />
+                    <ShieldCheck size={12} className={diagnosticResults.ollama.status === 'success' ? "text-etat-succes" : "text-app-text/20"} />
                     {t('ai.status.local_status')}
                   </label>
                   <div className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
                     diagnosticResults.ollama.status === 'success' 
-                      ? 'bg-emerald-500/5 border-emerald-500/10' 
-                      : 'bg-red-500/5 border-red-500/10'
+                      ? 'bg-etat-succes/5 border-etat-succes/10' 
+                      : 'bg-etat-danger/5 border-etat-danger/10'
                   }`}>
                     <div className={`flex items-center gap-2 text-ui-10 font-bold uppercase tracking-widest ${
-                      diagnosticResults.ollama.status === 'success' ? 'text-emerald-500' : 'text-red-400'
+                      diagnosticResults.ollama.status === 'success' ? 'text-etat-succes' : 'text-etat-danger'
                     }`}>
                       <div className={`w-2 h-2 rounded-full ${
-                        diagnosticResults.ollama.status === 'success' ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'
+                        diagnosticResults.ollama.status === 'success' ? 'bg-etat-succes animate-pulse' : 'bg-etat-danger'
                       }`} />
                       {diagnosticResults.ollama.status === 'success' ? t('ai.status.ollama_ready') : t('ai.status.ollama_offline', 'Ollama Offline')}
                     </div>
@@ -589,7 +589,7 @@ const AISettings: React.FC = () => {
                         gmToast(t('ai.actions.pull_gemma_12b_error'), "error");
                       }
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-white transition-all shadow-lg shadow-accent/10"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-app-on-accent transition-all shadow-lg shadow-accent/10"
                   >
                     <Cpu size={14} className="animate-pulse" />
                     {t('ai.actions.pull_gemma_12b')}
@@ -610,7 +610,7 @@ const AISettings: React.FC = () => {
                         gmToast(t('ai.actions.pull_gemma_error'), "error");
                       }
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-white transition-all shadow-lg shadow-accent/10"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 border border-accent/40 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent hover:text-app-on-accent transition-all shadow-lg shadow-accent/10"
                   >
                     <Cpu size={14} className="animate-pulse" />
                     {t('ai.actions.pull_gemma')}
@@ -620,7 +620,7 @@ const AISettings: React.FC = () => {
             )}
 
             {aUneCle(p.id) && (
-              <div className="mt-4 flex items-center gap-2 text-ui-9 font-bold uppercase tracking-widest text-emerald-500/60 bg-emerald-500/5 px-3 py-2 rounded-lg border border-emerald-500/10">
+              <div className="mt-4 flex items-center gap-2 text-ui-9 font-bold uppercase tracking-widest text-etat-succes/60 bg-etat-succes/5 px-3 py-2 rounded-lg border border-etat-succes/10">
                 <ShieldCheck size={12} />
                 {t('ai.status.key_configured')}
               </div>
@@ -653,8 +653,8 @@ const AISettings: React.FC = () => {
               <Music size={24} />
             </div>
             <div>
-              <p className="text-white text-xs font-black uppercase tracking-widest leading-none">{t('ai.audio.title')}</p>
-              <p className="text-white/40 text-ui-9 font-bold uppercase tracking-tight mt-1">{t('ai.audio.subtitle')}</p>
+              <p className="text-app-text text-xs font-black uppercase tracking-widest leading-none">{t('ai.audio.title')}</p>
+              <p className="text-app-text/40 text-ui-9 font-bold uppercase tracking-tight mt-1">{t('ai.audio.subtitle')}</p>
             </div>
           </div>
           
@@ -663,7 +663,7 @@ const AISettings: React.FC = () => {
                <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">{t('ai.audio.input_source')}</span>
                <span className="text-ui-9 font-bold text-gm-cyan">{t('ai.audio.no_device')}</span>
              </div>
-             <div className="h-1 bg-black/40 rounded-full overflow-hidden">
+             <div className="h-1 bg-app-bg/40 rounded-full overflow-hidden">
                <div className="h-full bg-gm-cyan w-0 transition-all duration-300" />
              </div>
           </div>
@@ -681,8 +681,8 @@ const AISettings: React.FC = () => {
               <h4 className="text-sm font-black uppercase tracking-tight text-app-text">{t('ai.oracle.title')}</h4>
               {diagnosticResults.oracle.status !== 'idle' && (
                 <div className={`px-2 py-0.5 rounded-full text-ui-9 font-black uppercase tracking-widest ${
-                  diagnosticResults.oracle.status === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 
-                  diagnosticResults.oracle.status === 'error' ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-white/10 text-white/40'
+                  diagnosticResults.oracle.status === 'success' ? 'bg-etat-succes/20 text-etat-succes' : 
+                  diagnosticResults.oracle.status === 'error' ? 'bg-etat-danger/20 text-etat-danger animate-pulse' : 'bg-app-text/10 text-app-text/40'
                 }`}>
                   {diagnosticResults.oracle.message}
                 </div>
@@ -694,7 +694,7 @@ const AISettings: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-black/20 rounded-xl p-4 border border-white/5 flex items-center justify-between gap-4">
+        <div className="bg-app-bg/20 rounded-xl p-4 border border-app-text/5 flex items-center justify-between gap-4">
           <div className="space-y-1">
             <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('ai.oracle.status_label')}</p>
             <p className="text-xs text-app-text/80">
@@ -719,7 +719,7 @@ const AISettings: React.FC = () => {
                   setTimeout(() => btn.classList.remove('animate-spin-once'), 1000);
                 }
               }}
-              className="px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-white hover:bg-white/10 hover:border-accent/40 transition-all group"
+              className="px-4 py-3 rounded-xl bg-app-text/5 border border-app-text/10 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-app-text/10 hover:border-accent/40 transition-all group"
               title={t('ai.oracle.restart_tooltip')}
             >
               <RefreshCw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
@@ -737,7 +737,7 @@ const AISettings: React.FC = () => {
                   gmToast(t('common:error_generic'), "error");
                 }
               }}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white border border-accent shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all font-black uppercase tracking-widest text-ui-10"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-app-on-accent border border-accent shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all font-black uppercase tracking-widest text-ui-10"
             >
               <ExternalLink size={16} />
               {diagnosticResults.oracle.status === 'error' ? t('ai.oracle.reconnect_force') : t('ai.oracle.reconnect')}
@@ -776,7 +776,7 @@ const AISettings: React.FC = () => {
           className={`group flex items-center gap-3 px-6 py-3 rounded-xl border transition-all font-black uppercase tracking-widest text-ui-10 ${
             isReindexing 
               ? 'bg-gm-emerald/10 border-gm-emerald/40 text-gm-emerald cursor-wait' 
-              : 'bg-gm-emerald text-white border-gm-emerald shadow-glow-emerald/20 hover:scale-105 active:scale-95'
+              : 'bg-gm-emerald text-app-bg border-gm-emerald shadow-glow-emerald/20 hover:scale-105 active:scale-95'
           }`}
         >
           <RefreshCw size={16} className={isReindexing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'} />
@@ -791,10 +791,10 @@ const AISettings: React.FC = () => {
         du 2026-08-22 : ce jour-là le coffre remplaçait `docs/` sans que
         personne ne l'ait demandé, parce que son chemin était écrit en dur.
       */}
-      <div className="p-4 rounded-2xl bg-purple-500/5 border border-purple-500/20 space-y-3">
+      <div className="p-4 rounded-2xl bg-gm-violet/5 border border-gm-violet/20 space-y-3">
         <div className="flex items-center justify-between gap-4">
           <div className="flex gap-4">
-            <div className="p-3 rounded-xl bg-purple-500/10 text-purple-400">
+            <div className="p-3 rounded-xl bg-gm-violet/10 text-gm-violet">
               <Sparkles size={24} />
             </div>
             <div>
@@ -820,7 +820,7 @@ const AISettings: React.FC = () => {
             disabled={nexusEnCours}
             className={`shrink-0 px-6 py-3 rounded-xl border transition-all font-black uppercase tracking-widest text-ui-10 ${
               nexusBranche
-                ? 'bg-purple-500 text-white border-purple-500 shadow-glow-accent/20'
+                ? 'bg-gm-violet text-app-bg border-gm-violet shadow-glow-accent/20'
                 : 'bg-app-surface text-app-text/60 border-app-border hover:text-app-text'
             } ${nexusEnCours ? 'opacity-50 cursor-wait' : ''}`}
           >
@@ -830,7 +830,7 @@ const AISettings: React.FC = () => {
 
         {/* Le verdict, toujours : un refus muet laisserait croire les notes indexées. */}
         {verdictDuNexus && (
-          <p className={`text-ui-11 font-semibold ${verdictDuNexus.raison ? 'text-rose-400' : 'text-purple-300'}`}>
+          <p className={`text-ui-11 font-semibold ${verdictDuNexus.raison ? 'text-etat-danger' : 'text-gm-violet'}`}>
             {verdictDuNexus.raison ?? `${verdictDuNexus.fichiers} note(s) indexée(s) depuis le coffre.`}
           </p>
         )}
@@ -851,10 +851,10 @@ const AISettings: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${useAIStore.getState().streamEnabled ? 'bg-gm-violet/10 border-gm-violet/30 shadow-glow-gm-violet/10' : 'bg-black/20 border-white/5 opacity-60'}`}
+          <div className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${useAIStore.getState().streamEnabled ? 'bg-gm-violet/10 border-gm-violet/30 shadow-glow-gm-violet/10' : 'bg-app-bg/20 border-app-text/5 opacity-60'}`}
                onClick={() => useAIStore.getState().setStreamEnabled(!useAIStore.getState().streamEnabled)}>
             <div className="flex gap-3 items-center">
-              <div className={`p-2 rounded-lg ${useAIStore.getState().streamEnabled ? 'bg-gm-violet/20 text-gm-violet' : 'bg-white/5 text-white/20'}`}>
+              <div className={`p-2 rounded-lg ${useAIStore.getState().streamEnabled ? 'bg-gm-violet/20 text-gm-violet' : 'bg-app-text/5 text-app-text/20'}`}>
                 <RefreshCw size={16} className={useAIStore.getState().streamEnabled ? 'animate-spin-slow' : ''} />
               </div>
               <div>
@@ -864,10 +864,10 @@ const AISettings: React.FC = () => {
             </div>
           </div>
 
-          <div className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${useAIStore.getState().liteContext ? 'bg-emerald-500/10 border-emerald-500/30 shadow-glow-emerald/10' : 'bg-black/20 border-white/5 opacity-60'}`}
+          <div className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${useAIStore.getState().liteContext ? 'bg-etat-succes/10 border-etat-succes/30 shadow-glow-emerald/10' : 'bg-app-bg/20 border-app-text/5 opacity-60'}`}
                onClick={() => useAIStore.getState().setLiteContext(!useAIStore.getState().liteContext)}>
             <div className="flex gap-3 items-center">
-              <div className={`p-2 rounded-lg ${useAIStore.getState().liteContext ? 'bg-emerald-500/20 text-emerald-500' : 'bg-white/5 text-white/20'}`}>
+              <div className={`p-2 rounded-lg ${useAIStore.getState().liteContext ? 'bg-etat-succes/20 text-etat-succes' : 'bg-app-text/5 text-app-text/20'}`}>
                 <Cpu size={16} />
               </div>
               <div>
@@ -893,7 +893,7 @@ const AISettings: React.FC = () => {
 
       <div className="bg-app-surface border border-app-border/20 rounded-2xl overflow-hidden shadow-xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 min-h-[400px]">
-          <div className="border-r border-app-border/10 bg-black/20 p-4 space-y-2">
+          <div className="border-r border-app-border/10 bg-app-bg/20 p-4 space-y-2">
             <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 mb-4 block px-2">{t('ai.gems.label')}</label>
             {gems.map((gem) => {
               const Icon = iconMap[gem.icon] || Brain;
@@ -903,11 +903,11 @@ const AISettings: React.FC = () => {
                   onClick={() => setSelectedGemId(gem.id)}
                   className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 group ${
                     selectedGemId === gem.id 
-                      ? 'bg-accent text-white shadow-glow-accent/20' 
-                      : 'hover:bg-white/5 text-app-text/60 hover:text-app-text'
+                      ? 'bg-accent text-app-on-accent shadow-glow-accent/20' 
+                      : 'hover:bg-app-text/5 text-app-text/60 hover:text-app-text'
                   }`}
                 >
-                  <Icon size={18} className={selectedGemId === gem.id ? 'text-white' : 'text-accent opacity-60 group-hover:opacity-100'} />
+                  <Icon size={18} className={selectedGemId === gem.id ? 'text-app-text' : 'text-accent opacity-60 group-hover:opacity-100'} />
                   <div className="text-left">
                     <div className="text-xs font-black uppercase tracking-tight">{t(gem.name)}</div>
                     <div className={`text-ui-9 font-medium opacity-60 truncate max-w-[120px]`}>{t(gem.description)}</div>
@@ -938,7 +938,7 @@ const AISettings: React.FC = () => {
                             updateGem(gem.id, { baseInstructions: instructions });
                           }
                        }}
-                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-ui-10 font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all"
+                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-etat-succes/10 text-etat-succes border border-etat-succes/20 text-ui-10 font-black uppercase tracking-widest hover:bg-etat-succes/20 transition-all"
                      >
                        <Save size={14} /> {t('ai.gems.save_gem')}
                      </button>
@@ -961,7 +961,7 @@ const AISettings: React.FC = () => {
                     <div className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
                       {t('ai.gems.penchant.titre')}
                     </div>
-                    <div className="flex p-1 bg-black/40 rounded-xl w-fit">
+                    <div className="flex p-1 bg-app-bg/40 rounded-xl w-fit">
                       {(['regles', 'campagne'] as const).map(valeur => (
                         <button
                           key={valeur}
@@ -980,8 +980,8 @@ const AISettings: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="flex p-1 bg-black/40 rounded-xl w-fit">
-                    <button onClick={() => setIsEditingOverride(false)} className={`px-4 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${!isEditingOverride ? 'bg-white/10 text-white' : 'text-app-text/40'}`}>{t('ai.gems.base')}</button>
+                  <div className="flex p-1 bg-app-bg/40 rounded-xl w-fit">
+                    <button onClick={() => setIsEditingOverride(false)} className={`px-4 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${!isEditingOverride ? 'bg-app-text/10 text-app-text' : 'text-app-text/40'}`}>{t('ai.gems.base')}</button>
                     <button onClick={() => setIsEditingOverride(true)} className={`px-4 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isEditingOverride ? 'bg-accent/20 text-accent' : 'text-app-text/40'}`}>{t('ai.gems.override', { systemId })}</button>
                   </div>
 
@@ -995,7 +995,7 @@ const AISettings: React.FC = () => {
                           updateGem(gem.id, { baseInstructions: newVal });
                         }
                       }}
-                      className="w-full h-48 bg-black/40 border border-app-border/40 rounded-xl p-4 text-xs text-app-text/80 outline-none font-mono"
+                      className="w-full h-48 bg-app-bg/40 border border-app-border/40 rounded-xl p-4 text-xs text-app-text/80 outline-none font-mono"
                     />
                 </>
               );

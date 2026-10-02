@@ -28,7 +28,7 @@ export const IndicateurDeMode: React.FC<{
     const mode = useModeDeContexte(surcharge);
 
     const Icone = mode.allege ? Gauge : Layers;
-    const teinte = mode.allege ? 'text-amber-400' : 'text-sky-400';
+    const teinte = mode.allege ? 'text-etat-alerte' : 'text-etat-info';
 
     return (
         <div className="flex items-center gap-2 flex-wrap">

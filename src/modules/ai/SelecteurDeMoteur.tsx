@@ -66,7 +66,7 @@ export const SelecteurDeMoteur: React.FC<{
 
     return (
         <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg p-0.5 w-fit">
+            <div className="flex items-center gap-1 bg-app-text/5 border border-app-text/10 rounded-lg p-0.5 w-fit">
                 {moteurs.map(p => {
                     const distant = p !== 'ollama';
                     const Icone = distant ? Cloud : Cpu;
@@ -84,7 +84,7 @@ export const SelecteurDeMoteur: React.FC<{
                             title={utilisable ? undefined : 'Aucune clé enregistrée pour ce moteur'}
                             onClick={() => retenir(forge, p === activeProvider ? undefined : p)}
                             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-ui-10 font-bold uppercase tracking-widest transition-all
-                                ${actif ? 'bg-indigo-500/20 text-indigo-300' : 'text-app-text/40 hover:text-app-text/70'}
+                                ${actif ? 'bg-etat-info/20 text-etat-info' : 'text-app-text/40 hover:text-app-text/70'}
                                 ${utilisable ? '' : 'opacity-30 cursor-not-allowed'}`}
                         >
                             <Icone size={11} />
