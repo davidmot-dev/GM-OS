@@ -86,7 +86,7 @@ const SessionWorkspace: React.FC = () => {
                                         <div className="w-full h-full rounded-full overflow-hidden" onClick={() => navigateToPlayerDetail(ownerId, pc.id)}>
                                             <ResolvedAsset src={pc.portraitUrl} alt={pc.name} className="w-full h-full object-cover" title={[pc.name, decrireLaSante(pc)].filter(Boolean).join(' — ')} />
                                         </div>
-                                        <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-app-bg ${(() => { const f = fractionDeVie(pc); return f === null ? 'bg-app-border' : f > 0.5 ? 'bg-green-500' : f > 0 ? 'bg-yellow-500' : 'bg-red-500'; })()}`}></div>
+                                        <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-app-bg ${(() => { const f = fractionDeVie(pc); return f === null ? 'bg-app-border' : f > 0.5 ? 'bg-etat-succes' : f > 0 ? 'bg-etat-alerte' : 'bg-etat-danger'; })()}`}></div>
 
                                         {/* Quick HP Controls.
                                             La pastille et l'infobulle passaient déjà par le
@@ -96,9 +96,9 @@ const SessionWorkspace: React.FC = () => {
                                             personnage disait donc deux choses différentes. */}
                                         {aUneJaugeDeVie(pc) && (
                                         <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-app-surface border border-app-border rounded px-2 py-1 text-ui-10 hidden group-hover:flex items-center gap-2 z-50 shadow-xl">
-                                            <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, -1); }} className="hover:text-red-400 font-bold w-4 text-center">-</button>
+                                            <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, -1); }} className="hover:text-etat-danger font-bold w-4 text-center">-</button>
                                             <span className="font-mono font-bold text-app-text min-w-[20px] text-center">{pc.hp}</span>
-                                            <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, 1); }} className="hover:text-green-400 font-bold w-4 text-center">+</button>
+                                            <button onClick={(e) => { e.stopPropagation(); updateEntityHP(pc.id, 1); }} className="hover:text-etat-succes font-bold w-4 text-center">+</button>
                                         </div>
                                         )}
                                     </div>
@@ -129,15 +129,15 @@ const SessionWorkspace: React.FC = () => {
                                         <div className="w-full h-full rounded-lg overflow-hidden relative group" onClick={() => navigateToNpcDetail(npc.id)}>
                                             <ResolvedAsset src={npc.avatar} alt={npc.name} className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all" />
                                             <div className="absolute inset-0 bg-accent/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <Eye size={18} className="text-white drop-shadow-lg" />
+                                                <Eye size={18} className="text-app-text drop-shadow-lg" />
                                             </div>
                                         </div>
-                                        <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-app-bg ${npc.status === 'alive' ? 'bg-emerald-500' : npc.status === 'injured' ? 'bg-amber-500' : 'bg-red-600'}`}></div>
+                                        <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-app-bg ${npc.status === 'alive' ? 'bg-etat-succes' : npc.status === 'injured' ? 'bg-etat-alerte' : 'bg-etat-danger'}`}></div>
                                         
                                         {/* Remove Button */}
                                         <button 
                                             onClick={(e) => { e.stopPropagation(); useSessionOSStore.getState().removeEntityFromSession(session.id, npc.id); }}
-                                            className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-500 border border-white/20"
+                                            className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-etat-danger text-app-bg rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-etat-danger border border-app-text/20"
                                             title={t('modules:session.workspace.remove_from_session')}
                                         >
                                             <span className="text-ui-10 font-bold">×</span>

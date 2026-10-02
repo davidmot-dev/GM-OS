@@ -45,7 +45,7 @@ export const AddPlayerForm: React.FC = () => {
                             <User size={40} className="text-app-text/20 group-hover:text-accent transition-colors" />
                         )}
                         <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                            <ImageIcon size={20} className="text-white" />
+                            <ImageIcon size={20} className="text-app-text" />
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@ export const AddPlayerForm: React.FC = () => {
                 </button>
                 <button
                     type="submit"
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-accent hover:brightness-110 text-app-bg font-bold text-sm shadow-glow-accent/10 transition-all active:scale-95"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-accent hover:brightness-110 text-app-on-accent font-bold text-sm shadow-glow-accent/10 transition-all active:scale-95"
                 >
                     {t('modules:session.players.create_confirm')}
                 </button>

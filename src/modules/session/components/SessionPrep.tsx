@@ -46,11 +46,11 @@ const SessionPrep: React.FC = () => {
 
     if (!activeCampaignId) return (
         <div className="flex-1 flex flex-col items-center justify-center p-10 bg-app-bg">
-            <AlertCircle size={48} className="text-slate-700 mb-4" />
+            <AlertCircle size={48} className="text-app-subtle mb-4" />
             <p className="text-app-muted font-bold uppercase tracking-widest">{t('modules:session.prep.no_active_campaign')}</p>
             <button 
                 onClick={() => setCurrentView('library')}
-                className="mt-6 px-6 py-2 bg-accent text-white rounded-lg font-bold"
+                className="mt-6 px-6 py-2 bg-accent text-app-on-accent rounded-lg font-bold"
             >
                 {t('modules:session.prep.select_campaign')}
             </button>
@@ -82,7 +82,7 @@ const SessionPrep: React.FC = () => {
 
                 <button 
                     onClick={handleCreateSession}
-                    className="flex items-center gap-3 px-6 py-3 bg-accent hover:brightness-110 text-white rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95"
+                    className="flex items-center gap-3 px-6 py-3 bg-accent hover:brightness-110 text-app-on-accent rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95"
                 >
                     <Plus size={20} />
                     {t('modules:session.prep.create_session')}
@@ -133,9 +133,9 @@ const SessionPrep: React.FC = () => {
                                             {t('modules:session.prep.session_card_number', { number: s.number })}
                                         </div>
                                         <div className={`w-3 h-3 rounded-full ${
-                                            s.status === 'active' ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 
-                                            s.status === 'planned' ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 
-                                            'bg-slate-600'
+                                            s.status === 'active' ? 'bg-etat-succes shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 
+                                            s.status === 'planned' ? 'bg-etat-info shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 
+                                            'bg-app-muted'
                                         }`}></div>
 
                                         <button
@@ -149,7 +149,7 @@ const SessionPrep: React.FC = () => {
                                                     t('modules:session.prep.cancel_btn')
                                                 );
                                             }}
-                                            className="ml-2 p-2 text-app-text/20 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                                            className="ml-2 p-2 text-app-text/20 hover:text-etat-danger hover:bg-etat-danger/10 rounded-lg transition-all"
                                             title={t('modules:session.prep.delete_tooltip')}
                                         >
                                             <Trash2 size={16} />

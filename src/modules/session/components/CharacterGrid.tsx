@@ -107,7 +107,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/portrait:opacity-100 transition-opacity text-app-text pointer-events-none">
                         <Camera size={22} />
                     </div>
-                    <span className={`absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full border-2 border-app-bg ${selectedPlayer.isOnline ? 'bg-emerald-400' : 'bg-app-text/20'}`}></span>
+                    <span className={`absolute bottom-0.5 right-0.5 w-4 h-4 rounded-full border-2 border-app-bg ${selectedPlayer.isOnline ? 'bg-etat-succes' : 'bg-app-text/20'}`}></span>
                 </div>
                 <div>
                     <h2 className="text-xl font-bold text-app-text">{selectedPlayer.realName}</h2>
@@ -118,8 +118,8 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                         </div>
                     )}
                     <div className="flex items-center gap-2 mt-2">
-                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-500/10 text-emerald-400' : 'bg-app-surface text-app-text/40'}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${selectedPlayer.isOnline ? 'bg-emerald-400 animate-pulse' : 'bg-app-text/20'}`}></span>
+                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full ${selectedPlayer.isOnline ? 'bg-etat-succes/10 text-etat-succes' : 'bg-app-surface text-app-text/40'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${selectedPlayer.isOnline ? 'bg-etat-succes animate-pulse' : 'bg-app-text/20'}`}></span>
                             {selectedPlayer.isOnline ? t('modules:session.players.status_online') : t('modules:session.players.status_offline')}
                         </span>
                         <span className="text-xs text-app-text/20">
@@ -189,7 +189,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
             <div className="p-6 border-t border-app-border flex justify-end">
                 <button
                     onClick={() => gmCustom('character-add')}
-                    className="flex items-center gap-2 bg-accent hover:brightness-110 text-app-bg font-bold py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent/20 active:scale-95"
+                    className="flex items-center gap-2 bg-accent hover:brightness-110 text-app-on-accent font-bold py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent/20 active:scale-95"
                 >
                     <UserPlus size={16} />
                     {t('modules:session.characters.add_button')}
@@ -236,7 +236,7 @@ const CharacterCard: React.FC<{
     const fraction = fractionDeVie(character);
     const hpPercent = fraction === null ? null : fraction * 100;
     const hpColor = hpPercent === null ? 'bg-app-border'
-        : hpPercent > 60 ? 'bg-emerald-500' : hpPercent > 30 ? 'bg-amber-500' : 'bg-red-600';
+        : hpPercent > 60 ? 'bg-etat-succes' : hpPercent > 30 ? 'bg-etat-alerte' : 'bg-etat-danger';
     const resolvedPortrait = useMediaUrl(character.portraitUrl);
 
     return (
@@ -267,7 +267,7 @@ const CharacterCard: React.FC<{
                         e.stopPropagation();
                         onDelete();
                     }}
-                    className="absolute top-2 left-2 p-1.5 bg-black/40 hover:bg-red-600/80 text-white/40 hover:text-white rounded-lg backdrop-blur-md transition-all z-30 opacity-0 group-hover:opacity-100 shadow-xl"
+                    className="absolute top-2 left-2 p-1.5 bg-app-bg/40 hover:bg-etat-danger/80 text-app-text/40 hover:text-app-bg rounded-lg backdrop-blur-md transition-all z-30 opacity-0 group-hover:opacity-100 shadow-xl"
                     title={t('modules:session.characters.delete_tooltip')}
                 >
                     <Trash2 size={14} />
@@ -294,13 +294,13 @@ const CharacterCard: React.FC<{
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1 text-app-text/40 text-xs">
-                            <Heart size={11} className="text-rose-500" />
+                            <Heart size={11} className="text-etat-danger" />
                             <span>{t('modules:session.characters.hp_label')}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                            <button onClick={() => onHPChange(-1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-red-400 hover:bg-app-border text-xs flex items-center justify-center transition-colors">−</button>
+                            <button onClick={() => onHPChange(-1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-etat-danger hover:bg-app-border text-xs flex items-center justify-center transition-colors">−</button>
                             <span className="font-mono text-xs text-app-text/60">{character.hp}/{character.maxHp}</span>
-                            <button onClick={() => onHPChange(1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-emerald-400 hover:bg-app-border text-xs flex items-center justify-center transition-colors">+</button>
+                            <button onClick={() => onHPChange(1)} className="w-4 h-4 rounded bg-app-surface text-app-text/40 hover:text-etat-succes hover:bg-app-border text-xs flex items-center justify-center transition-colors">+</button>
                         </div>
                     </div>
                     <div className="w-full bg-app-surface h-1.5 rounded-full overflow-hidden">
@@ -313,7 +313,7 @@ const CharacterCard: React.FC<{
                 <div className="flex gap-2 mt-auto pt-2 border-t border-app-border/50">
                     <button 
                         onClick={onSelect}
-                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-accent text-app-bg border-accent' : 'border-accent/30 text-accent hover:bg-accent/10'}`}>
+                        className={`flex-1 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-accent text-app-on-accent border-accent' : 'border-accent/30 text-accent hover:bg-accent/10'}`}>
                         {t('modules:session.characters.sheet_btn')}
                     </button>
                     <button
@@ -332,7 +332,7 @@ const CharacterCard: React.FC<{
                             });
                             gmToast(t('modules:session.characters.combat_add_success', { name: character.name }));
                         }}
-                        className="p-1.5 px-2.5 rounded-lg border border-red-500/30 text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center gap-1.5"
+                        className="p-1.5 px-2.5 rounded-lg border border-etat-danger/30 text-etat-danger hover:bg-etat-danger/10 transition-all flex items-center justify-center gap-1.5"
                         title={t('modules:session.characters.combat_btn')}
                     >
                         <Swords size={14} />
@@ -358,7 +358,7 @@ const CharacterCard: React.FC<{
                             useImageStore.getState().projectEntity(projectedPJ);
                             gmToast(t('modules:session.characters.project_success', { name: character.name }));
                         }}
-                        className="p-1.5 rounded-lg border border-blue-500/30 text-blue-500 hover:bg-blue-500/10 transition-all flex items-center justify-center"
+                        className="p-1.5 rounded-lg border border-etat-info/30 text-etat-info hover:bg-etat-info/10 transition-all flex items-center justify-center"
                         title={t('modules:session.characters.project_tooltip')}
                     >
                         <Eye size={14} />
@@ -371,8 +371,8 @@ const CharacterCard: React.FC<{
                             }}
                             className={`p-1.5 rounded-lg border transition-all flex items-center justify-center ${
                                 isProjectedInSession 
-                                ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-glow-amber/20' 
-                                : 'border-amber-500/30 text-amber-500/60 hover:bg-amber-500/10'
+                                ? 'bg-etat-alerte/20 border-etat-alerte text-etat-alerte shadow-glow-amber/20' 
+                                : 'border-etat-alerte/30 text-etat-alerte/60 hover:bg-etat-alerte/10'
                             }`}
                             title={isProjectedInSession ? t('modules:session.characters.hub_remove') : t('modules:session.characters.hub_send')}
                         >

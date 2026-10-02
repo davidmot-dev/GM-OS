@@ -126,7 +126,7 @@ const LootGeneratorPanel: React.FC = () => {
                     </div>
                     
                     {/* Lite/Full Toggle */}
-                    <div className="flex items-center bg-white/5 border border-white/10 rounded-lg p-0.5">
+                    <div className="flex items-center bg-app-text/5 border border-app-text/10 rounded-lg p-0.5">
                         <button 
                             onClick={() => setSurcharge(true)}
                             title={t('modules:loot.generator.lite_mode')}
@@ -138,7 +138,7 @@ const LootGeneratorPanel: React.FC = () => {
                         <button 
                             onClick={() => setSurcharge(false)}
                             title={t('modules:loot.generator.full_mode')}
-                            className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-ui-10 font-bold transition-all ${useFullContext ? 'bg-indigo-500/20 text-indigo-400' : 'text-app-text/40 hover:text-app-text/60'}`}
+                            className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-ui-10 font-bold transition-all ${useFullContext ? 'bg-etat-info/20 text-etat-info' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
                             <BookOpen size={10} />
                             FULL
@@ -162,7 +162,7 @@ const LootGeneratorPanel: React.FC = () => {
                 )}
                 <div className="relative group">
                     <input 
-                        className={`w-full bg-white/5 border border-white/10 rounded-xl py-4 px-5 pr-12 text-sm text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-gm-gold/50 transition-all outline-none ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`w-full bg-app-text/5 border border-app-text/10 rounded-xl py-4 px-5 pr-12 text-sm text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-gm-gold/50 transition-all outline-none ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
                         placeholder={t('modules:loot.generator.input_placeholder')}
                         value={aiInput}
                         onChange={(e) => setAiInput(e.target.value)}
@@ -197,7 +197,7 @@ const LootGeneratorPanel: React.FC = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder={t('modules:loot.generator.search_placeholder')}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all"
+                        className="w-full bg-app-text/5 border border-app-text/10 rounded-lg py-2 pl-9 pr-3 text-xs text-app-text focus:border-accent/50 outline-none transition-all"
                     />
                 </div>
 
@@ -224,7 +224,7 @@ const LootGeneratorPanel: React.FC = () => {
                             </button>
                         ))
                     ) : (
-                        <div className="p-8 text-center border border-white/5 rounded-xl bg-white/2">
+                        <div className="p-8 text-center border border-app-text/5 rounded-xl bg-app-text/2">
                             <p className="text-xs text-app-text/30">{t('modules:loot.generator.empty_tables')}</p>
                         </div>
                     )}

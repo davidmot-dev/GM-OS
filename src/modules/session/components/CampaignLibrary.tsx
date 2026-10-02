@@ -128,7 +128,7 @@ const CampaignLibrary: React.FC = () => {
                 {activeCampaignId && (
                     <button
                         onClick={() => setActiveCampaign(null)}
-                        className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 px-6 py-3 rounded-xl text-red-500 font-bold hover:bg-red-500 hover:text-white transition-all hover:-translate-y-0.5"
+                        className="flex items-center gap-2 bg-etat-danger/10 border border-etat-danger/20 px-6 py-3 rounded-xl text-etat-danger font-bold hover:bg-etat-danger hover:text-app-bg transition-all hover:-translate-y-0.5"
                     >
                         <Power size={20} />
                         {t('modules:session.campaign_library.actions.deactivate_campaign')}
@@ -137,7 +137,7 @@ const CampaignLibrary: React.FC = () => {
 
                 <button
                     onClick={() => gmCustom('campaign-add')}
-                    className="flex items-center gap-2 bg-accent px-6 py-3 rounded-xl text-app-bg font-bold hover:brightness-110 transition-all shadow-glow-accent/20 hover:-translate-y-0.5"
+                    className="flex items-center gap-2 bg-accent px-6 py-3 rounded-xl text-app-on-accent font-bold hover:brightness-110 transition-all shadow-glow-accent/20 hover:-translate-y-0.5"
                 >
                     <Plus size={20} />
                     {t('modules:session.campaign_library.actions.create_campaign')}
@@ -163,7 +163,7 @@ const CampaignLibrary: React.FC = () => {
                             hidden: { opacity: 0, y: 20 },
                             visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
                         }}
-                        className={`group glass-bento relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-xl ${campaign.id === activeCampaignId ? 'ring-2 ring-accent shadow-glow-accent/20' : 'hover:ring-1 hover:ring-white/20 hover:shadow-glow-accent/5'}`}
+                        className={`group glass-bento relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-xl ${campaign.id === activeCampaignId ? 'ring-2 ring-accent shadow-glow-accent/20' : 'hover:ring-1 hover:ring-app-text/20 hover:shadow-glow-accent/5'}`}
                         onClick={() => handleSelectCampaign(campaign.id)}
                     >
                         {/* Background subtle image if available */}
@@ -229,7 +229,7 @@ const CampaignLibrary: React.FC = () => {
                                             {campaign.clotureeLe ? <ArchiveRestore size={18} /> : <Archive size={18} />}
                                         </button>
                                         <button
-                                            className="p-2 text-app-text/20 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                            className="p-2 text-app-text/20 hover:text-etat-danger transition-colors opacity-0 group-hover:opacity-100"
                                             onClick={(e) => { 
                                                 e.stopPropagation(); 
                                                 gmConfirm(t('modules:session.campaign_library.status.delete_confirm', { name: campaign.name }), () => {
@@ -241,7 +241,7 @@ const CampaignLibrary: React.FC = () => {
                                             <Trash2 size={18} />
                                         </button>
                                         <button
-                                            className="p-2 text-app-text/20 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                            className="p-2 text-app-text/20 hover:text-etat-danger transition-colors opacity-0 group-hover:opacity-100"
                                             onClick={(e) => { e.stopPropagation(); setAPurger(campaign.id); }}
                                             title="Tout effacer — jusqu’aux résidus dans les autres modules et au dossier de ses fiches"
                                         >
@@ -257,7 +257,7 @@ const CampaignLibrary: React.FC = () => {
                                 <div className="flex items-center gap-2">
                                     <span className="text-ui-10 bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">{getSystemName(campaign.system)}</span>
                                     {campaign.id === activeCampaignId && (
-                                        <span className="text-ui-10 bg-accent text-app-bg px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">{t('modules:session.campaign_library.status.active')}</span>
+                                        <span className="text-ui-10 bg-accent text-app-on-accent px-2 py-0.5 rounded font-black uppercase tracking-widest animate-pulse">{t('modules:session.campaign_library.status.active')}</span>
                                     )}
                                     {campaign.clotureeLe && (
                                         <span className="text-ui-10 bg-app-bg text-app-text/40 px-2 py-0.5 rounded font-black uppercase tracking-widest">
@@ -286,7 +286,7 @@ const CampaignLibrary: React.FC = () => {
                                         return assetCount > 0 ? (
                                             <span
                                                 title={t('modules:session.campaign_library.status.nexus_ready_tooltip', { count: assetCount })}
-                                                className="flex items-center gap-1 text-ui-9 bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
+                                                className="flex items-center gap-1 text-ui-9 bg-etat-info/10 text-etat-info border border-etat-info/20 px-2 py-0.5 rounded-full font-black uppercase tracking-widest"
                                             >
                                                 <Package size={8} />
                                                 Nexus-Ready

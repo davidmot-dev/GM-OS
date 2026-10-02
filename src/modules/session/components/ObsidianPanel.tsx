@@ -84,10 +84,10 @@ const ObsidianPanel: React.FC = () => {
                         <div key={item.path} style={{ paddingLeft: `${level * 12}px` }}>
                             <button 
                                 onClick={() => toggleFolder(item.path)}
-                                className="w-full flex items-center gap-2 p-1.5 hover:bg-white/5 rounded-lg text-app-text/60 transition-all text-xs"
+                                className="w-full flex items-center gap-2 p-1.5 hover:bg-app-text/5 rounded-lg text-app-text/60 transition-all text-xs"
                             >
                                 {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                                <Folder size={14} className="text-yellow-500/60" />
+                                <Folder size={14} className="text-etat-alerte/60" />
                                 <span className="truncate">{item.name}</span>
                             </button>
                             {isExpanded && item.children && renderTree(item.children, level + 1)}
@@ -102,7 +102,7 @@ const ObsidianPanel: React.FC = () => {
                             className={`w-full flex items-center gap-2 p-1.5 rounded-lg transition-all text-xs ${
                                 isActive 
                                 ? 'bg-accent/20 text-accent border border-accent/30' 
-                                : 'text-app-text/40 hover:bg-white/5 hover:text-app-text/80'
+                                : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/80'
                             }`}
                         >
                             <FileText size={14} className={isActive ? 'text-accent' : 'text-app-text/20'} />
@@ -120,14 +120,14 @@ const ObsidianPanel: React.FC = () => {
                 <div className="p-4 space-y-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 border border-purple-500/30">
+                            <div className="w-6 h-6 bg-gm-violet/20 rounded-lg flex items-center justify-center text-gm-violet border border-gm-violet/30">
                                 <Sparkles size={14} />
                             </div>
                             <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/60">Obsidian vault</span>
                         </div>
                         <button 
                             onClick={() => fetchNotes()}
-                            className="p-1.5 text-app-text/20 hover:text-app-text/60 hover:bg-white/5 rounded-lg transition-all"
+                            className="p-1.5 text-app-text/20 hover:text-app-text/60 hover:bg-app-text/5 rounded-lg transition-all"
                             title="Actualiser"
                         >
                             <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
@@ -149,8 +149,8 @@ const ObsidianPanel: React.FC = () => {
                 <div className="flex-1 overflow-y-auto px-2 pb-4 custom-scrollbar">
                     {error ? (
                         <div className="p-4 text-center space-y-2">
-                            <AlertCircle size={24} className="mx-auto text-rose-500/40" />
-                            <p className="text-ui-10 text-rose-500/60 uppercase font-bold">{error}</p>
+                            <AlertCircle size={24} className="mx-auto text-etat-danger/40" />
+                            <p className="text-ui-10 text-etat-danger/60 uppercase font-bold">{error}</p>
                         </div>
                     ) : (
                         <div className="space-y-0.5">
@@ -179,10 +179,10 @@ const ObsidianPanel: React.FC = () => {
                                     disabled={!notebookUrl || syncStatus === 'syncing'}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                         syncStatus === 'success' 
-                                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                                        ? 'bg-etat-succes/20 text-etat-succes border border-etat-succes/30' 
                                         : syncStatus === 'error'
-                                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                                        : 'bg-accent text-app-bg shadow-glow-accent/20 hover:opacity-90 disabled:opacity-30'
+                                        ? 'bg-etat-danger/20 text-etat-danger border border-etat-danger/30'
+                                        : 'bg-accent text-app-on-accent shadow-glow-accent/20 hover:opacity-90 disabled:opacity-30'
                                     }`}
                                 >
                                     {syncStatus === 'syncing' ? <RefreshCw size={14} className="animate-spin" /> : <Share2 size={14} />}
@@ -213,7 +213,7 @@ const ObsidianPanel: React.FC = () => {
                         )}
 
                         <div className="mt-12 p-4 bg-app-surface/40 border border-app-border rounded-2xl flex gap-4 items-start">
-                            <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
+                            <div className="p-2 bg-etat-info/10 rounded-lg text-etat-info">
                                 <Info size={16} />
                             </div>
                             <div>
@@ -227,8 +227,8 @@ const ObsidianPanel: React.FC = () => {
                     </div>
                 ) : (
                     <div className="h-full flex flex-col items-center justify-center text-app-text/10 gap-6">
-                        <div className="w-24 h-24 bg-purple-500/5 rounded-3xl border border-purple-500/10 flex items-center justify-center">
-                            <Sparkles size={48} strokeWidth={1} className="text-purple-500/20" />
+                        <div className="w-24 h-24 bg-gm-violet/5 rounded-3xl border border-gm-violet/10 flex items-center justify-center">
+                            <Sparkles size={48} strokeWidth={1} className="text-gm-violet/20" />
                         </div>
                         <div className="text-center">
                             <p className="font-black text-sm tracking-[0.2em] uppercase text-app-text/30">Select a note to begin</p>

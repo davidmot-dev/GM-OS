@@ -63,11 +63,11 @@ const TimelineView: React.FC = () => {
     };
     const getIcon = (type: string) => {
         switch (type) {
-            case 'combat': return <Swords size={18} className="text-rose-400" />;
+            case 'combat': return <Swords size={18} className="text-etat-danger" />;
             case 'quest': return <Scroll size={18} className="text-accent" />;
-            case 'lore': return <Book size={18} className="text-purple-400" />;
-            case 'session': return <Calendar size={18} className="text-emerald-400" />;
-            default: return <MessageSquare size={18} className="text-blue-400" />;
+            case 'lore': return <Book size={18} className="text-gm-violet" />;
+            case 'session': return <Calendar size={18} className="text-etat-succes" />;
+            default: return <MessageSquare size={18} className="text-etat-info" />;
         }
     };
 
@@ -87,7 +87,7 @@ const TimelineView: React.FC = () => {
     return (
         <div className="flex flex-col h-full bg-app-bg/20">
             {/* Toolbar (Glass) */}
-            <div className="px-8 py-6 flex items-center justify-between bg-black/20 border-b border-white/5 backdrop-blur-md">
+            <div className="px-8 py-6 flex items-center justify-between bg-app-bg/20 border-b border-app-text/5 backdrop-blur-md">
                 <div className="flex gap-2">
                     {['all', 'session', 'combat', 'quest', 'lore'].map(t => (
                         <button
@@ -96,7 +96,7 @@ const TimelineView: React.FC = () => {
                             className={`px-4 py-1.5 rounded-full text-ui-10 font-black uppercase tracking-widest border transition-all ${
                                 filter === t 
                                     ? 'bg-accent/20 border-accent/40 text-accent shadow-glow-accent/10' 
-                                    : 'bg-white/5 border-white/5 text-app-text/40 hover:text-app-text hover:border-white/10'
+                                    : 'bg-app-text/5 border-app-text/5 text-app-text/40 hover:text-app-text hover:border-app-text/10'
                             }`}
                         >
                             {t === 'all' ? 'Tous' : t}
@@ -106,7 +106,7 @@ const TimelineView: React.FC = () => {
 
                 <button 
                     onClick={() => gmCustom('timeline-event-add')}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-accent text-app-bg rounded-xl text-ui-10 font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all active:scale-95"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-accent text-app-on-accent rounded-xl text-ui-10 font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all active:scale-95"
                 >
                     <Plus size={14} strokeWidth={3} />
                     Nouvel Événement
@@ -133,20 +133,20 @@ const TimelineView: React.FC = () => {
                                 onClick={() => event.isWikiSource && handleEventClick(event)}
                             >
                                 {/* Dot (Bento Style) */}
-                                <div className="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-black/60 border border-white/5 flex items-center justify-center z-10 group-hover:border-accent shadow-xl transition-all group-hover:shadow-glow-accent/20 group-hover:-translate-y-0.5">
+                                <div className="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-app-bg/60 border border-app-text/5 flex items-center justify-center z-10 group-hover:border-accent shadow-xl transition-all group-hover:shadow-glow-accent/20 group-hover:-translate-y-0.5">
                                     <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
                                     {getIcon(event.type)}
                                 </div>
 
                                 {/* Content (Glass Bento) */}
-                                <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 hover:bg-white/5 transition-all group-hover:shadow-2xl">
+                                <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 hover:bg-app-text/5 transition-all group-hover:shadow-2xl">
                                     <div className="flex items-center justify-between mb-6">
                                         <div className="flex items-center gap-4">
                                             <span className="text-ui-10 font-black text-accent bg-accent/10 px-3 py-1 rounded-full uppercase tracking-widest border border-accent/20">
                                                 {event.date}
                                             </span>
                                             {event.isWikiSource && (
-                                                <span className="text-ui-8 font-black text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded border border-purple-400/20 uppercase tracking-widest">
+                                                <span className="text-ui-8 font-black text-gm-violet bg-gm-violet/10 px-2 py-0.5 rounded border border-gm-violet/20 uppercase tracking-widest">
                                                     WIKI: {event.originalCategory}
                                                 </span>
                                             )}
@@ -157,14 +157,14 @@ const TimelineView: React.FC = () => {
                                                 <>
                                                     <button 
                                                         onClick={(e) => { e.stopPropagation(); gmCustom('timeline-event-edit', event); }}
-                                                        className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-accent transition-all border border-transparent hover:border-white/10"
+                                                        className="p-2 hover:bg-app-text/5 rounded-xl text-app-text/20 hover:text-accent transition-all border border-transparent hover:border-app-text/10"
                                                         title="Modifier l'événement"
                                                     >
                                                         <Edit2 size={16} />
                                                     </button>
                                                     <button 
                                                         onClick={(e) => { e.stopPropagation(); deleteTimelineEvent(event.id); }}
-                                                        className="p-2 hover:bg-white/5 rounded-xl text-app-text/20 hover:text-rose-400 transition-all border border-transparent hover:border-white/10"
+                                                        className="p-2 hover:bg-app-text/5 rounded-xl text-app-text/20 hover:text-etat-danger transition-all border border-transparent hover:border-app-text/10"
                                                         title="Supprimer l'événement"
                                                     >
                                                         <Trash2 size={16} />
@@ -173,7 +173,7 @@ const TimelineView: React.FC = () => {
                                             ) : (
                                                 <button 
                                                     onClick={() => handleEventClick(event)}
-                                                    className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-xl text-ui-9 font-black uppercase tracking-widest hover:bg-purple-500 hover:text-white transition-all"
+                                                    className="flex items-center gap-2 px-3 py-1.5 bg-gm-violet/10 text-gm-violet border border-gm-violet/20 rounded-xl text-ui-9 font-black uppercase tracking-widest hover:bg-gm-violet hover:text-app-bg transition-all"
                                                 >
                                                     <Book size={12} />
                                                     Voir Article
@@ -194,7 +194,7 @@ const TimelineView: React.FC = () => {
                                         <TexteMarkdown>{reparerLeMojibake(event.description)}</TexteMarkdown>
                                     </div>
 
-                                    <div className="flex flex-wrap gap-6 pt-6 border-t border-white/5">
+                                    <div className="flex flex-wrap gap-6 pt-6 border-t border-app-text/5">
                                         {event.locationId && (
                                             <div className="flex items-center gap-2.5 text-ui-10 font-black uppercase tracking-widest text-app-text/30">
                                                 <MapPin size={14} className="text-accent" />

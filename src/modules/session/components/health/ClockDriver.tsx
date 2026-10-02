@@ -22,7 +22,7 @@ export const ClockDriver: React.FC<ClockDriverProps> = ({ filled, total }) => {
           {/* Background Ring */}
           <circle
             cx="50" cy="50" r="45"
-            className="fill-none stroke-white/5 stroke-[10]"
+            className="fill-none stroke-app-text/5 stroke-[10]"
           />
           
           {/* Segmented Stroke */}
@@ -42,8 +42,8 @@ export const ClockDriver: React.FC<ClockDriverProps> = ({ filled, total }) => {
                 d={`M ${x1} ${y1} A 45 45 0 0 1 ${x2} ${y2}`}
                 className={`fill-none stroke-[10] transition-all duration-700 ease-out-back ${
                   isFilled 
-                    ? (percentage >= 100 ? 'stroke-rose-600 shadow-glow-red' : 'stroke-gm-cyan shadow-glow-cyan') 
-                    : 'stroke-white/10'
+                    ? (percentage >= 100 ? 'stroke-etat-danger shadow-glow-red' : 'stroke-gm-cyan shadow-glow-cyan') 
+                    : 'stroke-app-text/10'
                 }`}
               />
             );
@@ -52,7 +52,7 @@ export const ClockDriver: React.FC<ClockDriverProps> = ({ filled, total }) => {
         
         {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-ui-12 font-black font-display text-white mt-1">{filled}<span className="opacity-40 text-ui-10">/</span>{total}</span>
+            <span className="text-ui-12 font-black font-display text-app-text mt-1">{filled}<span className="opacity-40 text-ui-10">/</span>{total}</span>
         </div>
       </div>
     </div>

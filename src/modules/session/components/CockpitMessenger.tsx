@@ -150,7 +150,7 @@ export const CockpitMessenger: React.FC = () => {
                                 <button 
                                     onClick={() => saveMessageToJournal(msg.id)}
                                     title={t('modules:session.messenger.tooltip_save_journal')}
-                                    className="absolute -right-1 -top-1 p-1 rounded-full bg-gm-gold text-black scale-0 group-hover:scale-100 transition-all shadow-lg hover:bg-white active:scale-90"
+                                    className="absolute -right-1 -top-1 p-1 rounded-full bg-gm-gold text-app-bg scale-0 group-hover:scale-100 transition-all shadow-lg hover:bg-app-text active:scale-90"
                                 >
                                     <Save size={10} />
                                 </button>

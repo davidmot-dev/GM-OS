@@ -42,7 +42,7 @@ export const FieldGauge: React.FC<{
       basse doit se voir sans qu'on lise le nombre — c'est le propre d'une
       jauge, et l'accent uniforme ne le permettait pas.
     */
-    const couleur = part <= 0.25 ? 'bg-rose-500' : part <= 0.5 ? 'bg-amber-500' : 'bg-accent';
+    const couleur = part <= 0.25 ? 'bg-etat-danger' : part <= 0.5 ? 'bg-etat-alerte' : 'bg-accent';
 
     return (
         <div className="group space-y-1.5">
@@ -185,7 +185,7 @@ export const FieldTextarea: React.FC<{
  * pleines**.
  *
  * **Ce que David a relevé le 2026-08-15** : *« elles sont peu visibles quand
- * elles sont vides »*. Elles l'étaient : `bg-black/20 border-white/10` sur un
+ * elles sont vides »*. Elles l'étaient : `bg-app-bg/20 border-app-text/10` sur un
  * fond déjà sombre, soit un cercle presque invisible. Or **une pastille vide
  * porte autant d'information qu'une pleine** — c'est elle qui dit ce qu'il
  * reste. Un Stress à 5 sur 10 et un Stress à 5 sur 6 se jouent très

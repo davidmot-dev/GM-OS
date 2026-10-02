@@ -134,26 +134,26 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
     if (!character) return null;
 
     return (
-        <div className="flex flex-col bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden transition-all duration-300 shadow-2xl">
+        <div className="flex flex-col bg-app-bg/40 backdrop-blur-md border border-app-text/10 rounded-xl overflow-hidden transition-all duration-300 shadow-2xl">
             {/* Header */}
             <div 
-                className="flex items-center justify-between px-4 py-3 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors"
+                className="flex items-center justify-between px-4 py-3 bg-app-text/5 cursor-pointer hover:bg-app-text/10 transition-colors"
                 onClick={() => setIsExpanded(!isExpanded)}
             >
                 <div className="flex items-center gap-2">
-                    <BookText className="w-5 h-5 text-indigo-400" />
-                    <h3 className="font-semibold text-slate-100 uppercase tracking-wider text-sm">Notes & Feedback</h3>
+                    <BookText className="w-5 h-5 text-etat-info" />
+                    <h3 className="font-semibold text-app-text uppercase tracking-wider text-sm">Notes & Feedback</h3>
                 </div>
                 
                 <div className="flex items-center gap-4">
                     {activeTab === 'notes' && (
                         isSaving ? (
-                            <div className="flex items-center gap-1.5 text-ui-10 text-indigo-400 font-medium animate-pulse">
+                            <div className="flex items-center gap-1.5 text-ui-10 text-etat-info font-medium animate-pulse">
                                 <RefreshCcw className="w-3 h-3 animate-spin" />
                                 <span>SYNCHRO...</span>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-1.5 text-ui-10 text-emerald-400/70 font-medium">
+                            <div className="flex items-center gap-1.5 text-ui-10 text-etat-succes/70 font-medium">
                                 <Save className="w-3 h-3" />
                                 <span>À JOUR</span>
                             </div>
@@ -167,13 +167,13 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
             {isExpanded && (
                 <>
                     {/* Tab Navigation */}
-                    <div className="flex bg-slate-950/40 p-1 border-b border-white/5">
+                    <div className="flex bg-app-bg/40 p-1 border-b border-app-text/5">
                         <button
                             onClick={() => setActiveTab('notes')}
                             className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
                                 activeTab === 'notes'
-                                    ? 'bg-indigo-600/30 text-indigo-400 border border-indigo-500/20'
-                                    : 'text-app-muted hover:text-slate-200'
+                                    ? 'bg-etat-info/30 text-etat-info border border-etat-info/20'
+                                    : 'text-app-muted hover:text-app-text'
                             }`}
                         >
                             <BookText className="w-4 h-4" />
@@ -183,8 +183,8 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                             onClick={() => setActiveTab('feedback')}
                             className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
                                 activeTab === 'feedback'
-                                    ? 'bg-indigo-600/30 text-indigo-400 border border-indigo-500/20 shadow-glow-indigo/5'
-                                    : 'text-app-muted hover:text-slate-200'
+                                    ? 'bg-etat-info/30 text-etat-info border border-etat-info/20 shadow-glow-indigo/5'
+                                    : 'text-app-muted hover:text-app-text'
                             }`}
                         >
                             <MessageSquare className="w-4 h-4" />
@@ -199,7 +199,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                 value={localNotes}
                                 onChange={handleChange}
                                 placeholder="Notez ici vos théories, secrets et rappels personnels... Ces notes ne sont visibles que par vous (et sauvegardées chez le MJ)."
-                                className="w-full h-[600px] bg-slate-950/50 border border-white/5 rounded-lg p-4 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none text-sm leading-relaxed scrollbar-thin scrollbar-thumb-white/10"
+                                className="w-full h-[600px] bg-app-bg/50 border border-app-text/5 rounded-lg p-4 text-app-text placeholder:text-app-subtle focus:outline-none focus:border-etat-info/50 focus:ring-1 focus:ring-etat-info/20 transition-all resize-none text-sm leading-relaxed scrollbar-thin scrollbar-thumb-white/10"
                             />
                             <div className="flex justify-between items-center text-ui-10 text-app-subtle italic">
                                 <span>Sauvegarde automatique activée</span>
@@ -210,21 +210,21 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                         <div className="p-4 flex flex-col gap-4 animate-in fade-in duration-300">
                             {isSubmitted ? (
                                 <div className="flex flex-col items-center justify-center py-16 px-6 text-center animate-in fade-in zoom-in-95 duration-300">
-                                    <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-6 shadow-glow-emerald/10">
+                                    <div className="w-16 h-16 rounded-full bg-etat-succes/10 border border-etat-succes/30 flex items-center justify-center text-etat-succes mb-6 shadow-glow-emerald/10">
                                         <CheckCircle className="w-8 h-8" />
                                     </div>
-                                    <h4 className="text-lg font-black text-slate-100 uppercase tracking-wider mb-2">Feedback Transmis !</h4>
+                                    <h4 className="text-lg font-black text-app-text uppercase tracking-wider mb-2">Feedback Transmis !</h4>
                                     <p className="text-sm text-app-muted max-w-sm mb-8 leading-relaxed">
                                         Vos ressentis et remarques ont été partagés au Maître du Jeu de manière confidentielle.
                                     </p>
                                     
                                     {/* Summary of ratings submitted */}
-                                    <div className="w-full bg-slate-950/40 border border-white/5 rounded-2xl p-6 mb-8 flex flex-col gap-3 max-w-md">
+                                    <div className="w-full bg-app-bg/40 border border-app-text/5 rounded-2xl p-6 mb-8 flex flex-col gap-3 max-w-md">
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs text-app-muted font-bold uppercase tracking-wider">Plaisir de jeu</span>
                                             <div className="flex gap-1">
                                                 {Array.from({ length: 5 }).map((_, i) => (
-                                                    <Star key={i} className={`w-4 h-4 ${i < funRating ? 'text-amber-400 fill-amber-400' : 'text-slate-600'}`} />
+                                                    <Star key={i} className={`w-4 h-4 ${i < funRating ? 'text-etat-alerte fill-etat-alerte' : 'text-app-subtle'}`} />
                                                 ))}
                                             </div>
                                         </div>
@@ -232,7 +232,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                             <span className="text-xs text-app-muted font-bold uppercase tracking-wider">Histoire</span>
                                             <div className="flex gap-1">
                                                 {Array.from({ length: 5 }).map((_, i) => (
-                                                    <Star key={i} className={`w-4 h-4 ${i < storyRating ? 'text-amber-400 fill-amber-400' : 'text-slate-600'}`} />
+                                                    <Star key={i} className={`w-4 h-4 ${i < storyRating ? 'text-etat-alerte fill-etat-alerte' : 'text-app-subtle'}`} />
                                                 ))}
                                             </div>
                                         </div>
@@ -240,7 +240,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                             <span className="text-xs text-app-muted font-bold uppercase tracking-wider">Combat / Action</span>
                                             <div className="flex gap-1">
                                                 {Array.from({ length: 5 }).map((_, i) => (
-                                                    <Star key={i} className={`w-4 h-4 ${i < combatRating ? 'text-amber-400 fill-amber-400' : 'text-slate-600'}`} />
+                                                    <Star key={i} className={`w-4 h-4 ${i < combatRating ? 'text-etat-alerte fill-etat-alerte' : 'text-app-subtle'}`} />
                                                 ))}
                                             </div>
                                         </div>
@@ -248,21 +248,21 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
 
                                     <button
                                         onClick={handleEditFeedback}
-                                        className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                                        className="px-6 py-2.5 bg-app-surface-2 hover:bg-app-surface-2 text-app-text border border-app-text/5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                                     >
                                         Modifier mon feedback
                                     </button>
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-5 max-h-[640px] overflow-y-auto pr-1">
-                                    <p className="text-app-muted text-xs leading-relaxed italic border-l-2 border-indigo-500/50 pl-3 mb-2">
+                                    <p className="text-app-muted text-xs leading-relaxed italic border-l-2 border-etat-info/50 pl-3 mb-2">
                                         Donnez votre feedback sur la session active. Ces informations sont confidentielles et transmises uniquement au MJ.
                                     </p>
                                     
-                                    <div className="flex flex-col gap-4 bg-slate-950/30 border border-white/5 p-5 rounded-2xl">
+                                    <div className="flex flex-col gap-4 bg-app-bg/30 border border-app-text/5 p-5 rounded-2xl">
                                         {/* Fun Rating */}
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs font-black text-slate-300 uppercase tracking-wider">Plaisir de jeu (Fun)</span>
+                                            <span className="text-xs font-black text-app-text uppercase tracking-wider">Plaisir de jeu (Fun)</span>
                                             <div className="flex gap-1.5">
                                                 {Array.from({ length: 5 }).map((_, i) => (
                                                     <button
@@ -271,7 +271,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                                         onClick={() => setFunRating(i + 1)}
                                                         className="focus:outline-none transition-transform hover:scale-125 active:scale-95"
                                                     >
-                                                        <Star className={`w-5 h-5 ${i < funRating ? 'text-amber-400 fill-amber-400 drop-shadow-glow' : 'text-slate-600 hover:text-amber-400/50'}`} />
+                                                        <Star className={`w-5 h-5 ${i < funRating ? 'text-etat-alerte fill-etat-alerte drop-shadow-glow' : 'text-app-subtle hover:text-etat-alerte/50'}`} />
                                                     </button>
                                                 ))}
                                             </div>
@@ -279,7 +279,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
 
                                         {/* Story Rating */}
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs font-black text-slate-300 uppercase tracking-wider">Histoire / Scénario</span>
+                                            <span className="text-xs font-black text-app-text uppercase tracking-wider">Histoire / Scénario</span>
                                             <div className="flex gap-1.5">
                                                 {Array.from({ length: 5 }).map((_, i) => (
                                                     <button
@@ -288,7 +288,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                                         onClick={() => setStoryRating(i + 1)}
                                                         className="focus:outline-none transition-transform hover:scale-125 active:scale-95"
                                                     >
-                                                        <Star className={`w-5 h-5 ${i < storyRating ? 'text-amber-400 fill-amber-400 drop-shadow-glow' : 'text-slate-600 hover:text-amber-400/50'}`} />
+                                                        <Star className={`w-5 h-5 ${i < storyRating ? 'text-etat-alerte fill-etat-alerte drop-shadow-glow' : 'text-app-subtle hover:text-etat-alerte/50'}`} />
                                                     </button>
                                                 ))}
                                             </div>
@@ -296,7 +296,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
 
                                         {/* Combat Rating */}
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs font-black text-slate-300 uppercase tracking-wider">Action / Combat</span>
+                                            <span className="text-xs font-black text-app-text uppercase tracking-wider">Action / Combat</span>
                                             <div className="flex gap-1.5">
                                                 {Array.from({ length: 5 }).map((_, i) => (
                                                     <button
@@ -305,7 +305,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                                         onClick={() => setCombatRating(i + 1)}
                                                         className="focus:outline-none transition-transform hover:scale-125 active:scale-95"
                                                     >
-                                                        <Star className={`w-5 h-5 ${i < combatRating ? 'text-amber-400 fill-amber-400 drop-shadow-glow' : 'text-slate-600 hover:text-amber-400/50'}`} />
+                                                        <Star className={`w-5 h-5 ${i < combatRating ? 'text-etat-alerte fill-etat-alerte drop-shadow-glow' : 'text-app-subtle hover:text-etat-alerte/50'}`} />
                                                     </button>
                                                 ))}
                                             </div>
@@ -321,7 +321,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                             value={feedbackComments}
                                             onChange={(e) => setFeedbackComments(e.target.value)}
                                             placeholder="Ce que vous avez aimé, vos théories, vos envies, ou ce qui pourrait être amélioré..."
-                                            className="w-full h-36 bg-slate-950/50 border border-white/5 rounded-xl p-4 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none text-sm"
+                                            className="w-full h-36 bg-app-bg/50 border border-app-text/5 rounded-xl p-4 text-app-text placeholder:text-app-subtle focus:outline-none focus:border-etat-info/50 focus:ring-1 focus:ring-etat-info/20 transition-all resize-none text-sm"
                                         />
                                     </div>
 
@@ -330,8 +330,8 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                         disabled={!activeSession}
                                         className={`w-full py-3.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg ${
                                             activeSession
-                                                ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/20 active:scale-[0.98]'
-                                                : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5'
+                                                ? 'bg-etat-info hover:bg-etat-info text-app-bg shadow-etat-info/20 active:scale-[0.98]'
+                                                : 'bg-app-surface-2 text-app-muted cursor-not-allowed border border-app-text/5'
                                         }`}
                                     >
                                         <Send className="w-4 h-4" />

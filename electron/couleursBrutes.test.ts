@@ -38,6 +38,19 @@ const MODULES_MIGRES: string[] = [
     'modules/clock',   // phase 4, L4 — 2026-10-02 (cadrans exemptés)
     'modules/favorite', // phase 4, L4 — 2026-10-02
     'modules/remote',  // phase 4, L4 — 2026-10-02 (tableau blanc exempté)
+    'modules/session', // phase 4, L5 — 2026-10-02 (cinq sous-lots)
+];
+
+/**
+ * **Les fichiers migrés d'un module qui se migre par morceaux** — phase 4,
+ * L5 (2026-10-02). `session` compte 77 fichiers à couleurs : il se migre en
+ * cinq sous-lots, et il n'entre dans `MODULES_MIGRES` qu'au dernier. Chaque
+ * sous-lot fini inscrit ici ses fichiers, qui n'en sortent plus — *une garde
+ * posée à la fin n'aurait protégé que ce qui restait à faire.*
+ */
+const FICHIERS_MIGRES: string[] = [
+    /* Vide depuis que `session` est entré entier dans `MODULES_MIGRES`
+       (2026-10-02) ; la liste resservira pour `components/` (lot 6). */
 ];
 
 function releve(): Map<string, number> {
@@ -71,6 +84,15 @@ describe('les couleurs brutes', () => {
             expect(parLieu.get(lieu) ?? 0, `${lieu} est migré : ses couleurs passent par des jetons`).toBe(0);
         },
     );
+});
+
+describe('les fichiers migrés un à un', () => {
+    it.each(FICHIERS_MIGRES.length ? FICHIERS_MIGRES : ['(aucun fichier isolé pour l’instant)'])('%s : plus aucune couleur brute', (relatif) => {
+        if (!FICHIERS_MIGRES.includes(relatif)) return;
+        const chemin = path.join(SRC, ...relatif.split('/'));
+        expect(fs.existsSync(chemin), `${relatif} a disparu : retirez-le de la liste`).toBe(true);
+        expect(compterLesCouleursBrutes(fs.readFileSync(chemin, 'utf-8'))).toBe(0);
+    });
 });
 
 /**

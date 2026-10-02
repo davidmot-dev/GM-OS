@@ -16,11 +16,11 @@ const CampaignWidget: React.FC = () => {
     const progress = (sessionNumber / sessionMax) * 100;
 
     return (
-        <div className="bg-slate-800/40 rounded-xl border border-slate-700/50 p-4 transition-all hover:border-gm-gold/30">
+        <div className="bg-app-surface-2/40 rounded-xl border border-app-border/50 p-4 transition-all hover:border-gm-gold/30">
             <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                     <p className="text-ui-10 uppercase font-bold text-app-subtle tracking-widest mb-1">Active Campaign</p>
-                    <h3 className="text-slate-100 font-bold tracking-tight text-lg line-clamp-1">{campaignName}</h3>
+                    <h3 className="text-app-text font-bold tracking-tight text-lg line-clamp-1">{campaignName}</h3>
                 </div>
                 <button
                     onClick={() => gmAlert('Campaign configurations like export/import will be available in the next update.')}
@@ -34,7 +34,7 @@ const CampaignWidget: React.FC = () => {
                     <span>Session Progress</span>
                     <span>Stage {sessionNumber}/{sessionMax}</span>
                 </div>
-                <div className="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-app-surface-2 h-1.5 rounded-full overflow-hidden">
                     <div
                         className="bg-gm-gold h-full shadow-glow-gold transition-all duration-500"
                         style={{ width: `${progress}%` }}

@@ -261,7 +261,7 @@ const TemplateDashboard: React.FC = () => {
                             {activeTab === 'drivers' && isNexusAvailable && (
                                 <button 
                                     onClick={handleImportDriver}
-                                    className="flex items-center gap-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
+                                    className="flex items-center gap-2 bg-etat-info/20 hover:bg-etat-info/30 text-etat-info font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
                                 >
                                     <Upload size={18} className="group-hover:-translate-y-1 transition-transform" />
                                     {t('modules:session.template_dashboard.actions.import_driver')}
@@ -269,7 +269,7 @@ const TemplateDashboard: React.FC = () => {
                             )}
                             <button 
                                 onClick={ouvrirLaForge}
-                                className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-app-bg font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
+                                className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-app-on-accent font-black px-6 py-3 rounded-xl text-xs tracking-[0.15em] transition-all shadow-glow-accent/20 hover:scale-105 active:scale-95 group"
                             >
                                 <Hammer size={18} className="group-hover:rotate-12 transition-transform" />
                                 {t('modules:session.template_dashboard.actions.create_forge')}
@@ -281,13 +281,13 @@ const TemplateDashboard: React.FC = () => {
                     <div className="flex gap-4 mb-6">
                         <button 
                             onClick={() => { setActiveTab('sheets'); setSelectedId(allTemplates[0].id); }}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-widest transition-all ${activeTab === 'sheets' ? 'bg-accent text-app-bg shadow-glow-accent/20' : 'text-app-text/40 hover:text-app-text/60'}`}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-widest transition-all ${activeTab === 'sheets' ? 'bg-accent text-app-on-accent shadow-glow-accent/20' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
                             <FileText size={14} /> {t('modules:session.template_dashboard.tabs.sheets')}
                         </button>
                         <button 
                             onClick={() => { setActiveTab('drivers'); setSelectedId(customGameDrivers[0]?.id || null); }}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-widest transition-all ${activeTab === 'drivers' ? 'bg-accent text-app-bg shadow-glow-accent/20' : 'text-app-text/40 hover:text-app-text/60'}`}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black tracking-widest transition-all ${activeTab === 'drivers' ? 'bg-accent text-app-on-accent shadow-glow-accent/20' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
                             <Sparkles size={14} /> {t('modules:session.template_dashboard.tabs.drivers')}
                         </button>
@@ -315,14 +315,14 @@ const TemplateDashboard: React.FC = () => {
                         remédier d'un geste.
                     */}
                     {activeTab === 'drivers' && orphelins.length > 0 && (
-                        <div className="mb-8 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6">
+                        <div className="mb-8 rounded-2xl border border-etat-alerte/20 bg-etat-alerte/5 p-6">
                             <div className="flex items-start gap-3 mb-4">
-                                <FolderTree size={18} className="text-amber-400 mt-0.5 shrink-0" />
+                                <FolderTree size={18} className="text-etat-alerte mt-0.5 shrink-0" />
                                 <div>
-                                    <h3 className="text-sm font-black text-amber-300 uppercase tracking-tight">
+                                    <h3 className="text-sm font-black text-etat-alerte uppercase tracking-tight">
                                         {t('modules:session.template_dashboard.orphans.title')}
                                     </h3>
-                                    <p className="text-xs text-amber-200/50 leading-relaxed mt-1">
+                                    <p className="text-xs text-etat-alerte/50 leading-relaxed mt-1">
                                         {t('modules:session.template_dashboard.orphans.description')}
                                     </p>
                                 </div>
@@ -332,10 +332,10 @@ const TemplateDashboard: React.FC = () => {
                                     <button
                                         key={dossier}
                                         onClick={() => adopterLeCorpus(dossier)}
-                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-app-bg border border-amber-500/30 hover:border-amber-400 text-amber-200 hover:text-amber-100 transition-all text-xs font-bold"
+                                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-app-bg border border-etat-alerte/30 hover:border-etat-alerte text-etat-alerte hover:text-etat-alerte transition-all text-xs font-bold"
                                     >
                                         <span className="font-mono">{dossier}</span>
-                                        <span className="text-ui-10 font-black uppercase tracking-widest text-amber-400/60">
+                                        <span className="text-ui-10 font-black uppercase tracking-widest text-etat-alerte/60">
                                             {t('modules:session.template_dashboard.orphans.adopt')}
                                         </span>
                                     </button>
@@ -373,7 +373,7 @@ const TemplateDashboard: React.FC = () => {
                                     className={`group relative bg-app-surface/40 backdrop-blur-xl border rounded-2xl p-6 cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98] ${selectedId === item.id ? 'border-accent shadow-glow-accent/10 ring-1 ring-accent/20' : 'border-app-border/40 hover:border-app-border/80'}`}
                                 >
                                     <div className="flex items-start justify-between">
-                                        <div className="w-14 h-14 bg-app-bg rounded-xl flex items-center justify-center text-3xl shadow-inner border border-white/5 mb-4 group-hover:scale-110 transition-transform">
+                                        <div className="w-14 h-14 bg-app-bg rounded-xl flex items-center justify-center text-3xl shadow-inner border border-app-text/5 mb-4 group-hover:scale-110 transition-transform">
                                             {item.emoji}
                                         </div>
                                         
@@ -390,7 +390,7 @@ const TemplateDashboard: React.FC = () => {
                                             {(!('isBuiltin' in item) || !(item as SheetTemplate).isBuiltin) && (
                                                 <button 
                                                     onClick={(e) => handleDelete(e, item.id, item.name)}
-                                                    className="p-2 bg-app-surface border border-app-border rounded-lg text-app-text/40 hover:text-red-400 hover:border-red-400/40 transition-all"
+                                                    className="p-2 bg-app-surface border border-app-border rounded-lg text-app-text/40 hover:text-etat-danger hover:border-etat-danger/40 transition-all"
                                                     title={t('common:actions.delete')}
                                                 >
                                                     <Trash2 size={14} />
@@ -399,7 +399,7 @@ const TemplateDashboard: React.FC = () => {
                                             {activeTab !== 'sheets' && (
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); setPiloteAPurger(item.id); }}
-                                                    className="p-2 bg-app-surface border border-app-border rounded-lg text-app-text/40 hover:text-red-400 hover:border-red-400/40 transition-all"
+                                                    className="p-2 bg-app-surface border border-app-border rounded-lg text-app-text/40 hover:text-etat-danger hover:border-etat-danger/40 transition-all"
                                                     title="Tout effacer — jusqu’au bestiaire, aux paquets et au dossier du corpus"
                                                 >
                                                     <Eraser size={14} />
@@ -417,7 +417,7 @@ const TemplateDashboard: React.FC = () => {
                                             }
                                         </span>
                                         {activeTab === 'sheets' && (item as SheetTemplate).isBuiltin && (
-                                            <span className="text-ui-10 font-bold uppercase tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">
+                                            <span className="text-ui-10 font-bold uppercase tracking-widest text-etat-succes bg-etat-succes/10 px-2 py-0.5 rounded-full border border-etat-succes/20">
                                                 {t('modules:session.template_dashboard.status.builtin')}
                                             </span>
                                         )}
@@ -471,7 +471,7 @@ const TemplateDashboard: React.FC = () => {
                                             onClick={() => {
                                                 setCurrentView('rulebook');
                                             }}
-                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all shadow-lg"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-etat-succes/10 text-etat-succes border border-etat-succes/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-etat-succes/20 transition-all shadow-lg"
                                         >
                                             <Eye size={14} className="shrink-0" />
                                             <span className="truncate">{t('modules:session.header.grimoire_label').toUpperCase()}</span>
@@ -489,7 +489,7 @@ const TemplateDashboard: React.FC = () => {
                                         <button
                                             onClick={() => gmCustom('atelier-adversaires', { jeuId: selectedItem.id })}
                                             title="Fabriquer des adversaires pour ce jeu, et relire son bestiaire"
-                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all shadow-lg"
+                                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-etat-danger/10 text-etat-danger border border-etat-danger/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-etat-danger/20 transition-all shadow-lg"
                                         >
                                             <Swords size={14} className="shrink-0" />
                                             <span className="truncate">BESTIAIRE</span>
@@ -497,7 +497,7 @@ const TemplateDashboard: React.FC = () => {
                                         {isNexusAvailable && (
                                             <button
                                                 onClick={() => handleExportDriver(selectedItem.id)}
-                                                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-500/10 text-amber-500 border border-amber-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all shadow-lg"
+                                                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-etat-alerte/10 text-etat-alerte border border-etat-alerte/30 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-etat-alerte/20 transition-all shadow-lg"
                                             >
                                                 <DownloadCloud size={14} className="shrink-0" />
                                                 <span className="truncate">{t('common:actions.export').toUpperCase()}</span>
@@ -522,7 +522,7 @@ const TemplateDashboard: React.FC = () => {
                                 <div>
                                     <h2 className="text-xl font-black text-app-text line-clamp-1 uppercase">{selectedItem.name}</h2>
                                     {selectedTemplate && (
-                                        <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">{selectedTemplate.id}</p>
+                                        <p className="text-ui-10 text-app-text/40 font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-app-text/5 border border-app-text/10">{selectedTemplate.id}</p>
                                     )}
                                     <p className="text-ui-9 text-app-text/40 font-bold uppercase tracking-widest">
                                         {activeTab === 'sheets' ? t('modules:session.template_dashboard.preview.ui_subtitle') : t('modules:session.template_dashboard.preview.ai_subtitle')}
@@ -573,25 +573,25 @@ const TemplateDashboard: React.FC = () => {
                                     */}
                                     <LienAuCorpus pilote={selectedItem as GameDriver} />
 
-                                    <div className="p-6 rounded-2xl bg-black/40 border border-app-border/20 space-y-4">
-                                        <div className="flex items-center gap-3 text-accent border-b border-white/5 pb-3">
+                                    <div className="p-6 rounded-2xl bg-app-bg/40 border border-app-border/20 space-y-4">
+                                        <div className="flex items-center gap-3 text-accent border-b border-app-text/5 pb-3">
                                             <Sparkles size={16} />
                                             <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.template_dashboard.preview.sections.dice_mechanics')}</h4>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="bg-app-surface/40 p-3 rounded-lg border border-white/5 text-center">
+                                            <div className="bg-app-surface/40 p-3 rounded-lg border border-app-text/5 text-center">
                                                 <p className="text-ui-9 text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.default_dice')}</p>
                                                 <p className="text-sm font-mono font-black text-accent uppercase">{(selectedItem as GameDriver).dice?.defaultDice || '1D20'}</p>
                                             </div>
-                                            <div className="bg-app-surface/40 p-3 rounded-lg border border-white/5 text-center">
+                                            <div className="bg-app-surface/40 p-3 rounded-lg border border-app-text/5 text-center">
                                                 <p className="text-ui-9 text-app-text/40 font-bold uppercase mb-1">{t('modules:session.template_dashboard.preview.labels.logic')}</p>
-                                                <p className="text-xs font-black text-emerald-400 uppercase">{(selectedItem as GameDriver).dice?.logic || 'SUM'}</p>
+                                                <p className="text-xs font-black text-etat-succes uppercase">{(selectedItem as GameDriver).dice?.logic || 'SUM'}</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 space-y-4">
-                                        <div className="flex items-center gap-3 text-indigo-400 border-b border-indigo-500/10 pb-3">
+                                    <div className="p-6 rounded-2xl bg-etat-info/10 border border-etat-info/20 space-y-4">
+                                        <div className="flex items-center gap-3 text-etat-info border-b border-etat-info/10 pb-3">
                                             <Hammer size={16} />
                                             <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.template_dashboard.preview.sections.ai_protocols')}</h4>
                                         </div>
@@ -600,14 +600,14 @@ const TemplateDashboard: React.FC = () => {
                                         </p>
                                     </div>
 
-                                    <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-4">
-                                        <div className="flex items-center gap-3 text-emerald-400 border-b border-emerald-500/10 pb-3">
+                                    <div className="p-6 rounded-2xl bg-etat-succes/10 border border-etat-succes/20 space-y-4">
+                                        <div className="flex items-center gap-3 text-etat-succes border-b border-etat-succes/10 pb-3">
                                             <CheckCircle2 size={16} />
                                             <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.template_dashboard.preview.sections.combat_tracking')}</h4>
                                         </div>
                                         <div className="space-y-2">
                                             {(selectedItem as GameDriver).combat?.statsToTrack?.map((s, i) => (
-                                                <div key={i} className="flex items-center justify-between text-ui-10 bg-black/20 p-2 rounded">
+                                                <div key={i} className="flex items-center justify-between text-ui-10 bg-app-bg/20 p-2 rounded">
                                                     <span className="font-bold opacity-60">{s.label}</span>
                                                     <span className="font-mono text-accent uppercase font-black">{s.fieldId}</span>
                                                 </div>
@@ -617,17 +617,17 @@ const TemplateDashboard: React.FC = () => {
 
                                     {/* AI Personas Section */}
                                     {((selectedItem as GameDriver).aiPersonas && Object.keys((selectedItem as GameDriver).aiPersonas || {}).length > 0) && (
-                                        <div className="p-6 rounded-2xl bg-violet-500/10 border border-violet-500/20 space-y-4">
-                                            <div className="flex items-center gap-3 text-violet-400 border-b border-violet-500/10 pb-3">
+                                        <div className="p-6 rounded-2xl bg-gm-violet/10 border border-gm-violet/20 space-y-4">
+                                            <div className="flex items-center gap-3 text-gm-violet border-b border-gm-violet/10 pb-3">
                                                 <Sparkles size={16} />
                                                 <h4 className="text-xs font-black uppercase tracking-widest">{t('modules:session.rule_engine_editor.ai.personas_title')}</h4>
                                             </div>
                                             <div className="space-y-3">
                                                 {Object.entries((selectedItem as GameDriver).aiPersonas || {}).map(([id, text]) => (
-                                                    <div key={id} className="p-3 rounded-lg bg-black/20 border border-white/5 space-y-2">
+                                                    <div key={id} className="p-3 rounded-lg bg-app-bg/20 border border-app-text/5 space-y-2">
                                                         <div className="flex items-center justify-between">
-                                                            <span className="text-ui-10 font-black uppercase tracking-widest text-violet-400">{t(`modules:session.rule_engine_editor.ai.persona_type_label`, { id })}</span>
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-glow-violet" />
+                                                            <span className="text-ui-10 font-black uppercase tracking-widest text-gm-violet">{t(`modules:session.rule_engine_editor.ai.persona_type_label`, { id })}</span>
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-gm-violet shadow-glow-violet" />
                                                         </div>
                                                         <p className="text-ui-10 text-app-text/60 italic leading-relaxed line-clamp-3">{text}</p>
                                                     </div>
@@ -646,7 +646,7 @@ const TemplateDashboard: React.FC = () => {
                 )}
 
                 {/* Bottom Call to Action */}
-                <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-purple-500/10 border border-accent/20 text-center">
+                <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-gm-violet/10 border border-accent/20 text-center">
                     <Sparkles className="mx-auto text-accent mb-3 animate-pulse" size={24} />
                     <h3 className="text-sm font-bold text-app-text mb-2">{t('modules:session.template_dashboard.cta.title')}</h3>
                     <p className="text-xs text-app-text/40 mb-6 leading-relaxed">
@@ -654,7 +654,7 @@ const TemplateDashboard: React.FC = () => {
                     </p>
                     <button 
                          onClick={ouvrirLaForge}
-                         className="w-full bg-app-bg border border-accent/40 hover:border-accent text-accent font-black py-4 rounded-xl text-ui-10 tracking-[0.2em] transition-all hover:bg-accent hover:text-app-bg shadow-lg shadow-accent/5 group"
+                         className="w-full bg-app-bg border border-accent/40 hover:border-accent text-accent font-black py-4 rounded-xl text-ui-10 tracking-[0.2em] transition-all hover:bg-accent hover:text-app-on-accent shadow-lg shadow-accent/5 group"
                     >
                         {t('modules:session.template_dashboard.actions.open_forge')} <ChevronRight size={14} className="inline ml-1 group-hover:translate-x-1 transition-transform" />
                     </button>

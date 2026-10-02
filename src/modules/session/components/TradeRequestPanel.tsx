@@ -28,7 +28,7 @@ const TradeRequestPanel: React.FC = () => {
                             initial={{ opacity: 0, x: -20, scale: 0.95 }}
                             animate={{ opacity: 1, x: 0, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                            className="glass-bento p-3 relative group overflow-hidden border border-white/5 hover:border-accent/30 transition-colors"
+                            className="glass-bento p-3 relative group overflow-hidden border border-app-text/5 hover:border-accent/30 transition-colors"
                         >
                             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent pointer-events-none" />
                             
@@ -48,12 +48,12 @@ const TradeRequestPanel: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2 mb-3 bg-black/20 p-1.5 rounded-lg border border-white/5">
+                            <div className="flex items-center gap-2 mb-3 bg-app-bg/20 p-1.5 rounded-lg border border-app-text/5">
                                 <span className="text-ui-10 font-bold text-accent truncate flex-1 text-center bg-accent/10 py-0.5 rounded">
                                     {request.fromCharacterName}
                                 </span>
                                 <ArrowRight size={12} className="text-app-text/40 shrink-0" />
-                                <span className="text-ui-10 font-bold text-emerald-400 truncate flex-1 text-center bg-emerald-400/10 py-0.5 rounded">
+                                <span className="text-ui-10 font-bold text-etat-succes truncate flex-1 text-center bg-etat-succes/10 py-0.5 rounded">
                                     {request.toCharacterName}
                                 </span>
                             </div>
@@ -61,14 +61,14 @@ const TradeRequestPanel: React.FC = () => {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => approveItemTransfer(request.id)}
-                                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/40 transition-all font-bold text-ui-10 uppercase tracking-wider"
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-etat-succes/20 text-etat-succes border border-etat-succes/30 hover:bg-etat-succes/40 transition-all font-bold text-ui-10 uppercase tracking-wider"
                                 >
                                     <Check size={14} />
                                     Approuver
                                 </button>
                                 <button
                                     onClick={() => rejectItemTransfer(request.id)}
-                                    className="flex items-center justify-center w-8 rounded-md bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/30 transition-all"
+                                    className="flex items-center justify-center w-8 rounded-md bg-etat-danger/10 text-etat-danger border border-etat-danger/20 hover:bg-etat-danger/30 transition-all"
                                     title="Rejeter"
                                 >
                                     <X size={14} />

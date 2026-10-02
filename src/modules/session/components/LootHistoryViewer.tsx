@@ -15,11 +15,11 @@ import { libelleDeRarete, rangDepuisLeSommet } from '../logic/vocabulaireDuButin
  * aussi, ce qu'un `rarity === 'legendary'` écrit en dur ne permettait pas.
  */
 const COULEURS_PAR_RANG = [
-    'bg-amber-500/20 text-amber-400 border border-amber-500/30',
-    'bg-purple-500/20 text-purple-400 border border-purple-500/30',
-    'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+    'bg-gm-gold/20 text-gm-gold border border-gm-gold/30',
+    'bg-gm-violet/20 text-gm-violet border border-gm-violet/30',
+    'bg-gm-cyan/20 text-gm-cyan border border-gm-cyan/30',
 ];
-const COULEUR_NEUTRE = 'bg-white/5 text-app-text/40 border border-white/10';
+const COULEUR_NEUTRE = 'bg-app-text/5 text-app-text/40 border border-app-text/10';
 
 const LootHistoryViewer: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -44,7 +44,7 @@ const LootHistoryViewer: React.FC = () => {
 
     if (dons.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
+            <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-app-text/5 rounded-xl bg-app-text/2">
                 <History size={48} className="mb-3 opacity-20" />
                 <p className="text-sm font-medium">{t('modules:loot.history.empty')}</p>
                 <p className="text-ui-10 uppercase tracking-widest mt-1">{t('modules:loot.history.empty_hint')}</p>
@@ -61,7 +61,7 @@ const LootHistoryViewer: React.FC = () => {
                 </div>
                 <button 
                     onClick={() => clearLootHistory()}
-                    className="text-ui-10 font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
+                    className="text-ui-10 font-bold uppercase tracking-widest text-etat-danger/60 hover:text-etat-danger transition-colors"
                 >
                     {t('modules:loot.history.clear_all')}
                 </button>
@@ -75,7 +75,7 @@ const LootHistoryViewer: React.FC = () => {
                             layout
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="bg-black/20 border border-white/5 rounded-lg p-3 hover:bg-white/5 transition-all group"
+                            className="bg-app-bg/20 border border-app-text/5 rounded-lg p-3 hover:bg-app-text/5 transition-all group"
                         >
                             <div className="flex items-center gap-3">
                                 {/* Item Info */}

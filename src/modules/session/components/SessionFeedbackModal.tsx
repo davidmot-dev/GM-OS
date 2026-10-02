@@ -48,8 +48,8 @@ const SessionFeedbackModal: React.FC = () => {
                         size={size}
                         className={`${
                             i < Math.round(rating)
-                                ? 'text-amber-400 fill-amber-400'
-                                : 'text-slate-700'
+                                ? 'text-etat-alerte fill-etat-alerte'
+                                : 'text-app-subtle'
                         }`}
                     />
                 ))}
@@ -75,7 +75,7 @@ const SessionFeedbackModal: React.FC = () => {
                     </div>
                 </div>
                 
-                <div className="px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
+                <div className="px-3 py-1.5 rounded-lg bg-etat-info/10 border border-etat-info/20 text-etat-info text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
                     <Calendar size={12} />
                     {new Date(session.date).toLocaleDateString(undefined, { dateStyle: 'medium' })}
                 </div>
@@ -83,7 +83,7 @@ const SessionFeedbackModal: React.FC = () => {
 
             {feedbacks.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center opacity-40 py-20">
-                    <MessageSquare size={64} className="mb-6 text-slate-600 animate-pulse" />
+                    <MessageSquare size={64} className="mb-6 text-app-subtle animate-pulse" />
                     <p className="text-lg font-black uppercase tracking-widest text-center">
                         {t('modules:session.feedback.no_feedback')}
                     </p>
@@ -99,18 +99,18 @@ const SessionFeedbackModal: React.FC = () => {
                         <div className="glass-bento rounded-[2rem] border border-app-border/40 p-6 flex flex-col gap-6 shadow-xl">
                             {/* Fun Rating average */}
                             <div className="flex flex-col gap-2">
-                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-slate-300">
+                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-app-text">
                                     <div className="flex items-center gap-2">
-                                        <Smile size={16} className="text-emerald-400" />
+                                        <Smile size={16} className="text-etat-succes" />
                                         <span>{t('modules:session.feedback.fun')}</span>
                                     </div>
                                     <span className="font-mono text-accent text-sm">{averageFun} / 5</span>
                                 </div>
                                 <div className="flex items-center gap-3 mt-1">
                                     {renderStars(averageFun, 18)}
-                                    <div className="flex-1 bg-black/40 h-2 rounded-full overflow-hidden">
+                                    <div className="flex-1 bg-app-bg/40 h-2 rounded-full overflow-hidden">
                                         <div 
-                                            className="bg-gradient-to-r from-amber-500 to-amber-300 h-full shadow-glow-accent" 
+                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent" 
                                             style={{ width: `${(averageFun / 5) * 100}%` }}
                                         />
                                     </div>
@@ -119,18 +119,18 @@ const SessionFeedbackModal: React.FC = () => {
 
                             {/* Story Rating average */}
                             <div className="flex flex-col gap-2">
-                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-slate-300">
+                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-app-text">
                                     <div className="flex items-center gap-2">
-                                        <BookOpen size={16} className="text-indigo-400" />
+                                        <BookOpen size={16} className="text-etat-info" />
                                         <span>{t('modules:session.feedback.story')}</span>
                                     </div>
                                     <span className="font-mono text-accent text-sm">{averageStory} / 5</span>
                                 </div>
                                 <div className="flex items-center gap-3 mt-1">
                                     {renderStars(averageStory, 18)}
-                                    <div className="flex-1 bg-black/40 h-2 rounded-full overflow-hidden">
+                                    <div className="flex-1 bg-app-bg/40 h-2 rounded-full overflow-hidden">
                                         <div 
-                                            className="bg-gradient-to-r from-amber-500 to-amber-300 h-full shadow-glow-accent" 
+                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent" 
                                             style={{ width: `${(averageStory / 5) * 100}%` }}
                                         />
                                     </div>
@@ -139,18 +139,18 @@ const SessionFeedbackModal: React.FC = () => {
 
                             {/* Combat Rating average */}
                             <div className="flex flex-col gap-2">
-                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-slate-300">
+                                <div className="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-app-text">
                                     <div className="flex items-center gap-2">
-                                        <Swords size={16} className="text-rose-400" />
+                                        <Swords size={16} className="text-etat-danger" />
                                         <span>{t('modules:session.feedback.combat')}</span>
                                     </div>
                                     <span className="font-mono text-accent text-sm">{averageCombat} / 5</span>
                                 </div>
                                 <div className="flex items-center gap-3 mt-1">
                                     {renderStars(averageCombat, 18)}
-                                    <div className="flex-1 bg-black/40 h-2 rounded-full overflow-hidden">
+                                    <div className="flex-1 bg-app-bg/40 h-2 rounded-full overflow-hidden">
                                         <div 
-                                            className="bg-gradient-to-r from-amber-500 to-amber-300 h-full shadow-glow-accent" 
+                                            className="bg-gradient-to-r from-etat-alerte to-etat-alerte h-full shadow-glow-accent" 
                                             style={{ width: `${(averageCombat / 5) * 100}%` }}
                                         />
                                     </div>
@@ -158,7 +158,7 @@ const SessionFeedbackModal: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="bg-slate-900/30 border border-app-border/20 rounded-[1.5rem] p-4 text-ui-10 text-app-text/40 leading-relaxed uppercase tracking-wider font-semibold">
+                        <div className="bg-app-bg/30 border border-app-border/20 rounded-[1.5rem] p-4 text-ui-10 text-app-text/40 leading-relaxed uppercase tracking-wider font-semibold">
                             💡 {t('modules:session.feedback.average')} ({feedbackCount} {feedbackCount > 1 ? 'contributeurs' : 'contributeur'})
                         </div>
                     </div>
@@ -183,7 +183,7 @@ const SessionFeedbackModal: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-slate-950/40">
+                                                <div className="w-10 h-10 rounded-full border border-app-text/10 overflow-hidden bg-app-bg/40">
                                                     {char?.portraitUrl ? (
                                                         <ResolvedImage 
                                                             src={char.portraitUrl} 
@@ -197,7 +197,7 @@ const SessionFeedbackModal: React.FC = () => {
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <h5 className="font-bold text-sm text-slate-200">{f.characterName}</h5>
+                                                    <h5 className="font-bold text-sm text-app-text">{f.characterName}</h5>
                                                     <span className="text-ui-9 text-app-subtle font-mono">
                                                         {new Date(f.timestamp).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                                                     </span>
@@ -205,7 +205,7 @@ const SessionFeedbackModal: React.FC = () => {
                                             </div>
 
                                             {/* Ratings grid for this player */}
-                                            <div className="flex flex-col gap-1 text-ui-10 uppercase font-bold text-app-muted items-end bg-black/20 p-2.5 rounded-xl border border-white/5">
+                                            <div className="flex flex-col gap-1 text-ui-10 uppercase font-bold text-app-muted items-end bg-app-bg/20 p-2.5 rounded-xl border border-app-text/5">
                                                 <div className="flex items-center gap-2">
                                                     <span>{t('modules:session.feedback.fun')}</span>
                                                     {renderStars(f.funRating, 12)}
@@ -222,7 +222,7 @@ const SessionFeedbackModal: React.FC = () => {
                                         </div>
 
                                         {f.notes && (
-                                            <div className="bg-slate-950/40 border border-white/5 rounded-xl p-4 text-sm leading-relaxed text-slate-300 font-medium whitespace-pre-wrap">
+                                            <div className="bg-app-bg/40 border border-app-text/5 rounded-xl p-4 text-sm leading-relaxed text-app-text font-medium whitespace-pre-wrap">
                                                 {f.notes}
                                             </div>
                                         )}

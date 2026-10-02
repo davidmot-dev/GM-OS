@@ -44,10 +44,10 @@ import HorsDePortee from './HorsDePortee';
 const HAUTEUR_DE_CARTE = 'min-h-[26rem]';
 
 const ROLE_COLORS = {
-    ally: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
-    neutral: 'bg-slate-500/20 text-slate-600 dark:text-slate-300 border-slate-500/30',
-    hostile: 'bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/30',
-    boss: 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]',
+    ally: 'bg-etat-succes/20 text-etat-succes dark:text-etat-succes border-etat-succes/30',
+    neutral: 'bg-app-muted/20 text-app-subtle dark:text-app-text border-app-border/30',
+    hostile: 'bg-etat-danger/20 text-etat-danger dark:text-etat-danger border-etat-danger/30',
+    boss: 'bg-gm-violet/20 text-gm-violet dark:text-gm-violet border-gm-violet/30 shadow-[0_0_15px_rgba(168,85,247,0.2)]',
 };
 
 const NpcGallery: React.FC = () => {
@@ -109,11 +109,11 @@ const NpcGallery: React.FC = () => {
                 {/* Search */}
                 <div className="mb-10 group">
                     <div className="relative">
-                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within:text-accent" />
+                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle transition-colors group-focus-within:text-accent" />
                         <input
                             type="text"
                             placeholder={t('modules:session.npc_gallery.search_placeholder')}
-                            className="w-full bg-app-bg/50 border-b-2 border-app-border py-3 pl-10 pr-4 text-sm text-app-text focus:outline-none focus:border-accent transition-all placeholder:text-slate-600/50"
+                            className="w-full bg-app-bg/50 border-b-2 border-app-border py-3 pl-10 pr-4 text-sm text-app-text focus:outline-none focus:border-accent transition-all placeholder:text-app-subtle/50"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -258,17 +258,17 @@ const NpcGallery: React.FC = () => {
                         className={`${HAUTEUR_DE_CARTE} rounded-2xl border-2 border-dashed border-app-border flex flex-col items-center justify-center gap-6 hover:border-accent/50 hover:bg-accent/5 transition-all group`}
                     >
                         <div className="w-16 h-16 rounded-full border border-app-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all">
-                            <Plus size={32} className="text-slate-600 group-hover:text-accent group-hover:rotate-90 transition-all duration-300" />
+                            <Plus size={32} className="text-app-subtle group-hover:text-accent group-hover:rotate-90 transition-all duration-300" />
                         </div>
                         <div className="text-center">
                             <span className="font-display font-black text-app-subtle uppercase tracking-widest text-xs group-hover:text-accent transition-colors">{t('modules:session.npc_gallery.empty_state_init')}</span>
-                            <p className="text-ui-9 text-slate-700 mt-1 font-mono group-hover:text-slate-500">{t('modules:session.npc_gallery.empty_state_slot')}</p>
+                            <p className="text-ui-9 text-app-subtle mt-1 font-mono group-hover:text-app-muted">{t('modules:session.npc_gallery.empty_state_slot')}</p>
                         </div>
                     </button>
                 </motion.div>
 
                 {filteredEntities.length === 0 && search && (
-                    <div className="flex flex-col items-center justify-center py-32 text-slate-700">
+                    <div className="flex flex-col items-center justify-center py-32 text-app-subtle">
                         <Search size={64} className="mb-6 opacity-10" />
                         <p className="text-sm italic font-mono uppercase tracking-[0.3em]">{t('modules:session.npc_gallery.no_results', { query: search })}</p>
                     </div>
@@ -318,7 +318,7 @@ const FilterButton: React.FC<{
         className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-sm transition-all active:translate-x-1 ${
             active 
                 ? 'bg-accent/10 text-accent border-r-4 border-accent shadow-[10px_0_15px_-10px_rgba(var(--accent-rgb),0.5)]' 
-                : 'text-app-subtle hover:bg-black/5 dark:hover:bg-white/5 hover:text-slate-700 dark:hover:text-slate-300'
+                : 'text-app-subtle hover:bg-app-bg/5 dark:hover:bg-app-text/5 hover:text-app-subtle dark:hover:text-app-text'
         }`}
     >
         {icon}
@@ -394,7 +394,7 @@ const NpcGalleryItem: React.FC<{
                     <button
                         onClick={(e) => { e.stopPropagation(); onTogglePin(); }}
                         className={`p-2.5 rounded-xl transition-all shadow-xl backdrop-blur-md ${
-                            isPinned ? 'bg-accent text-white scale-110 shadow-accent/20' : 'bg-black/40 text-slate-300 hover:text-accent border border-white/10'
+                            isPinned ? 'bg-accent text-app-on-accent scale-110 shadow-accent/20' : 'bg-app-bg/40 text-app-text hover:text-accent border border-app-text/10'
                         }`}
                         title={isPinned ? t('modules:session.npc_gallery.unpin_tooltip') : t('modules:session.npc_gallery.pin_tooltip')}
                     >
@@ -420,7 +420,7 @@ const NpcGalleryItem: React.FC<{
                         >
                             <button
                                 onClick={(e) => { e.stopPropagation(); onDelete(); }}
-                                className="p-2.5 bg-red-500/20 backdrop-blur-md rounded-xl text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 transition-all"
+                                className="p-2.5 bg-etat-danger/20 backdrop-blur-md rounded-xl text-etat-danger hover:bg-etat-danger hover:text-app-bg border border-etat-danger/30 transition-all"
                                 title={t('modules:session.npc_gallery.delete_tooltip')}
                             >
                                 <Trash2 size={18} />
@@ -428,14 +428,14 @@ const NpcGalleryItem: React.FC<{
                         </HorsDePortee>
                         <button
                             onClick={(e) => { e.stopPropagation(); onPickImage(); }}
-                            className="p-2.5 bg-black/40 backdrop-blur-md rounded-xl text-slate-300 hover:text-accent border border-white/10 transition-all"
+                            className="p-2.5 bg-app-bg/40 backdrop-blur-md rounded-xl text-app-text hover:text-accent border border-app-text/10 transition-all"
                             title={t('modules:session.npc_gallery.browse_tooltip')}
                         >
                             <ImageIcon size={18} />
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); onGenerateImage(); }}
-                            className="p-2.5 bg-accent text-white rounded-xl hover:scale-110 transition-all shadow-[0_0_15px_rgba(var(--accent-rgb),0.4)]"
+                            className="p-2.5 bg-accent text-app-on-accent rounded-xl hover:scale-110 transition-all shadow-[0_0_15px_rgba(var(--accent-rgb),0.4)]"
                             title={t('modules:session.npc_gallery.ai_tooltip')}
                         >
                             <Sparkles size={18} />
@@ -470,7 +470,7 @@ const NpcGalleryItem: React.FC<{
             */}
             <div className="p-5 flex-1 flex flex-col relative text-app-text">
                 {/* Role Badge */}
-                <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-ui-9 font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-slate-500/20 text-app-muted border-white/10'}`}>
+                <div className={`absolute -top-3 right-6 px-3 py-1 rounded-full text-ui-9 font-black uppercase tracking-widest border ${ROLE_COLORS[npc.role as keyof typeof ROLE_COLORS] || 'bg-app-muted/20 text-app-muted border-app-text/10'}`}>
                     {t(`modules:session.npc_gallery.roles.${npc.role}`, { defaultValue: npc.role })}
                 </div>
 
@@ -490,7 +490,7 @@ const NpcGalleryItem: React.FC<{
                 </div>
 
                 {/* Bottom Controls */}
-                <div className="mt-4 pt-4 border-t border-white/5 flex flex-col gap-3">
+                <div className="mt-4 pt-4 border-t border-app-text/5 flex flex-col gap-3">
                     {/*
                         **La barre n'existe que si le jeu compte des points.**
 
@@ -502,19 +502,19 @@ const NpcGalleryItem: React.FC<{
                         montre ce que le système décrit.
                     */}
                     {fractionDeVie(npc) === null ? (
-                        <div className="flex items-center gap-1.5 text-ui-10 font-black text-slate-600 tracking-widest uppercase">
-                            <Activity size={11} className="text-rose-400/60" />
+                        <div className="flex items-center gap-1.5 text-ui-10 font-black text-app-subtle tracking-widest uppercase">
+                            <Activity size={11} className="text-etat-danger/60" />
                             <span>{abregerLaSante(npc) ?? decrireLaSante(npc) ?? 'santé non chiffrée'}</span>
                         </div>
                     ) : (<>
-                    <div className="flex justify-between items-center text-ui-10 font-black text-slate-600 mb-1 tracking-widest uppercase">
+                    <div className="flex justify-between items-center text-ui-10 font-black text-app-subtle mb-1 tracking-widest uppercase">
                         <span>{t('modules:session.npc_gallery.hp_label')}</span>
-                        <span className={fractionDeVie(npc)! < 0.3 ? 'text-red-400' : 'text-accent'}>{npc.hp} / {npc.maxHp} HP</span>
+                        <span className={fractionDeVie(npc)! < 0.3 ? 'text-etat-danger' : 'text-accent'}>{npc.hp} / {npc.maxHp} HP</span>
                     </div>
-                    <div className="w-full h-1 bg-black/10 rounded-full overflow-hidden">
+                    <div className="w-full h-1 bg-app-bg/10 rounded-full overflow-hidden">
                         <div
                             className={`h-full transition-all duration-500 ${
-                                fractionDeVie(npc)! < 0.3 ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-accent shadow-[0_0_8px_rgba(var(--accent-rgb),0.5)]'
+                                fractionDeVie(npc)! < 0.3 ? 'bg-etat-danger shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-accent shadow-[0_0_8px_rgba(var(--accent-rgb),0.5)]'
                             }`}
                             style={{ width: `${fractionDeVie(npc)! * 100}%` }}
                         />
@@ -553,7 +553,7 @@ const NpcGalleryItem: React.FC<{
                                 });
                                 gmToast(t('modules:session.toasts.entity_added_to_combat', { name: npc.name }));
                             }}
-                            className="w-9 h-9 flex items-center justify-center bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-all"
+                            className="w-9 h-9 flex items-center justify-center bg-etat-danger/10 border border-etat-danger/20 text-etat-danger hover:bg-etat-danger hover:text-app-bg rounded-lg transition-all"
                             title={t('modules:session.npc_gallery.add_combat_tooltip')}
                         >
                             <Swords size={14} />
@@ -564,7 +564,7 @@ const NpcGalleryItem: React.FC<{
                                 useImageStore.getState().projectEntity(npc);
                                 gmToast(t('modules:session.toasts.entity_projected', { name: npc.name }));
                             }}
-                            className="w-9 h-9 flex items-center justify-center bg-accent/10 border border-accent/20 text-accent hover:bg-accent hover:text-white rounded-lg transition-all"
+                            className="w-9 h-9 flex items-center justify-center bg-accent/10 border border-accent/20 text-accent hover:bg-accent hover:text-app-on-accent rounded-lg transition-all"
                             title={t('modules:session.npc_gallery.project_tooltip')}
                         >
                             <Eye size={14} />

@@ -47,7 +47,7 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-app-bg/80 backdrop-blur-sm animate-in fade-in duration-300">
             <div className="relative w-full max-w-lg bg-app-surface border border-app-border rounded-[2.5rem] shadow-glow-accent overflow-hidden animate-in zoom-in-95 duration-300">
                 {/* Header */}
                 <div className="flex items-center justify-between p-8 border-b border-app-border bg-app-surface/50">
@@ -98,13 +98,13 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
                                     }`}
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className={`p-2 rounded-lg ${selectedSessionId === s.id ? 'bg-accent text-white' : 'bg-app-surface text-app-text/20'}`}>
+                                        <div className={`p-2 rounded-lg ${selectedSessionId === s.id ? 'bg-accent text-app-on-accent' : 'bg-app-surface text-app-text/20'}`}>
                                             <Clock size={16} />
                                         </div>
                                         <div>
                                             <div className="text-sm font-bold text-app-text">
                                                 Session #{s.number}
-                                                {s.status === 'active' && <span className="ml-2 text-ui-8 bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-500/20 uppercase tracking-tighter">Active</span>}
+                                                {s.status === 'active' && <span className="ml-2 text-ui-8 bg-etat-succes/20 text-etat-succes px-1.5 py-0.5 rounded border border-etat-succes/20 uppercase tracking-tighter">Active</span>}
                                             </div>
                                             <div className="text-ui-10 text-app-text/40">{new Date(s.date).toLocaleDateString()}</div>
                                         </div>
@@ -118,12 +118,12 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
                                                         e.stopPropagation();
                                                         showCustom('snapshot-viewer', { snapshot: s.moduleSnapshot, sessionName: `Session #${s.number}` });
                                                     }}
-                                                    className="p-1.5 hover:bg-white/10 rounded-lg text-emerald-400 transition-colors pointer-events-auto"
+                                                    className="p-1.5 hover:bg-app-text/10 rounded-lg text-etat-succes transition-colors pointer-events-auto"
                                                     title="Voir le contenu"
                                                 >
                                                     <Eye size={14} />
                                                 </button>
-                                                <div className="text-ui-8 font-black bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-tighter">
+                                                <div className="text-ui-8 font-black bg-etat-succes/20 text-etat-succes px-2 py-0.5 rounded border border-etat-succes/20 uppercase tracking-tighter">
                                                     Snapshot Existant
                                                 </div>
                                             </div>
@@ -147,10 +147,10 @@ const SessionSnapshotModal: React.FC<SessionSnapshotModalProps> = ({ onClose }) 
                         disabled={!selectedSessionId || isSaved}
                         className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-3 transition-all ${
                             isSaved 
-                            ? 'bg-emerald-500 text-white cursor-default' 
+                            ? 'bg-etat-succes text-app-bg cursor-default' 
                             : selectedSessionId 
-                                ? 'bg-accent text-white hover:brightness-110 shadow-glow-accent active:scale-95' 
-                                : 'bg-slate-800 text-white/20 cursor-not-allowed'
+                                ? 'bg-accent text-app-on-accent hover:brightness-110 shadow-glow-accent active:scale-95' 
+                                : 'bg-app-surface-2 text-app-text/20 cursor-not-allowed'
                         }`}
                     >
                         {isSaved ? (

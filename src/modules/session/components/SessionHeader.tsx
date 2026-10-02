@@ -43,7 +43,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
             theme === 'medieval' ? 'bg-app-surface/90 border-b-2 border-app-border/40' : 'premium-glass'
         }`}>
             <div className={`absolute inset-0 bg-gradient-to-r via-transparent pointer-events-none ${
-                theme === 'medieval' ? 'from-accent/5 to-accent/5' : 'from-cyan-500/5 to-cyan-500/5'
+                theme === 'medieval' ? 'from-accent/5 to-accent/5' : 'from-gm-cyan/5 to-gm-cyan/5'
             }`} />
             
             <div className="flex items-center gap-8 relative z-10">
@@ -85,7 +85,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                         theme === 'medieval' ? 'font-display tracking-widest rounded-md' : 'font-bold rounded-lg'
                     } ${
                         isOracleOpen 
-                            ? 'bg-accent text-white border-accent shadow-glow-accent' 
+                            ? 'bg-accent text-app-on-accent border-accent shadow-glow-accent' 
                             : `bg-app-surface/50 text-accent border-accent/30 hover:bg-accent/10 hover:border-accent/50 hover:shadow-glow-accent/20`
                     }`}
                     title={t('modules:session.header.tooltip_oracle')}
@@ -99,8 +99,8 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                     }}
                     className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all border ${
                         theme === 'medieval' 
-                            ? 'bg-amber-800/20 text-amber-300 border-amber-800/40 hover:bg-amber-800/30' 
-                            : 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
+                            ? 'bg-etat-alerte/20 text-etat-alerte border-etat-alerte/40 hover:bg-etat-alerte/30' 
+                            : 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20 hover:bg-etat-alerte/20'
                     }`}
                     title={t('modules:session.header.tooltip_rules')}
                 >
@@ -111,8 +111,8 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                     onClick={() => setIsSnapshotModalOpen(true)}
                     className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-bold transition-all border ${
                         theme === 'medieval' 
-                            ? 'bg-emerald-800/20 text-emerald-300 border-emerald-800/40 hover:bg-emerald-800/30' 
-                            : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
+                            ? 'bg-etat-succes/20 text-etat-succes border-etat-succes/40 hover:bg-etat-succes/30' 
+                            : 'bg-etat-succes/10 text-etat-succes border-etat-succes/20 hover:bg-etat-succes/20'
                     }`}
                     title={t('modules:session.header.tooltip_snapshot')}
                 >

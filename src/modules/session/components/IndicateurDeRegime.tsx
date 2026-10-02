@@ -56,7 +56,7 @@ export const IndicateurDeRegime: React.FC = () => {
         : aLaTable ? 'séance ouverte' : 'hors séance';
 
     const Icone = aLaTable ? Users : Armchair;
-    const teinte = aLaTable ? 'text-emerald-400' : 'text-sky-400';
+    const teinte = aLaTable ? 'text-etat-succes' : 'text-etat-info';
 
     return (
         <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export const IndicateurDeRegime: React.FC = () => {
                 <button
                     onClick={() => forcerLeRegime(null)}
                     title="Rendre la main à la séance : le régime suivra de nouveau son ouverture et sa pause"
-                    className="text-ui-10 font-bold uppercase tracking-widest text-amber-400/60 hover:text-amber-400 underline underline-offset-2 transition-colors"
+                    className="text-ui-10 font-bold uppercase tracking-widest text-etat-alerte/60 hover:text-etat-alerte underline underline-offset-2 transition-colors"
                 >
                     Auto
                 </button>

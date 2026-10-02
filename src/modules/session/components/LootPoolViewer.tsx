@@ -14,7 +14,7 @@ export const CharacterPortrait: React.FC<{ character?: { portraitUrl: string; na
     
     return (
         <div 
-            className="rounded-full bg-accent/20 flex items-center justify-center overflow-hidden border border-white/10 shadow-inner"
+            className="rounded-full bg-accent/20 flex items-center justify-center overflow-hidden border border-app-text/10 shadow-inner"
             style={{ width: size, height: size }}
         >
             {resolvedUrl ? (
@@ -68,7 +68,7 @@ const LootPoolViewer: React.FC = () => {
 
     if (butin.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-white/5 rounded-xl bg-white/2">
+            <div className="flex flex-col items-center justify-center p-8 text-app-text/40 border-2 border-dashed border-app-text/5 rounded-xl bg-app-text/2">
                 <Package size={48} className="mb-3 opacity-20" />
                 <p className="text-sm font-medium">{t('modules:loot.pool.empty')}</p>
                 <p className="text-ui-10 uppercase tracking-widest mt-1">{t('modules:loot.pool.empty_hint')}</p>
@@ -87,7 +87,7 @@ const LootPoolViewer: React.FC = () => {
                 </div>
                 <button 
                     onClick={() => clearLootPool()}
-                    className="text-ui-10 font-bold uppercase tracking-widest text-red-400/60 hover:text-red-400 transition-colors"
+                    className="text-ui-10 font-bold uppercase tracking-widest text-etat-danger/60 hover:text-etat-danger transition-colors"
                 >
                     {t('modules:loot.pool.clear_all')}
                 </button>
@@ -115,7 +115,7 @@ const LootPoolViewer: React.FC = () => {
                                 </div>
                                 <button 
                                     onClick={() => removeFromPool(item.id)}
-                                    className="p-1.5 rounded-md hover:bg-red-500/10 text-app-text/20 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100"
+                                    className="p-1.5 rounded-md hover:bg-etat-danger/10 text-app-text/20 hover:text-etat-danger transition-all opacity-0 group-hover:opacity-100"
                                 >
                                     <Trash2 size={14} />
                                 </button>
@@ -129,7 +129,7 @@ const LootPoolViewer: React.FC = () => {
                                             <button
                                                 key={`${player.id}-${char.id}`}
                                                 onClick={() => handleAssign(item.id, player.id, char.id)}
-                                                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/5 hover:border-accent/30 hover:bg-accent/10 transition-all group/btn"
+                                                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-app-text/5 border border-app-text/5 hover:border-accent/30 hover:bg-accent/10 transition-all group/btn"
                                                 title={t('modules:loot.pool.assign_to', { name: char.name })}
                                             >
                                                 <CharacterPortrait character={char} size={20} />

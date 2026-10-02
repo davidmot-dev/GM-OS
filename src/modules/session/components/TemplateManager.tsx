@@ -52,7 +52,7 @@ const FieldOptionsInput: React.FC<{
             value={text}
             onChange={e => handleChange(e.target.value)}
             placeholder={t('modules:session.template_manager.editor.field_options_placeholder')}
-            className="flex-1 bg-black/20 text-xs text-app-text/80 px-2 py-1 rounded border border-white/5 focus:outline-none focus:border-accent/30"
+            className="flex-1 bg-app-bg/20 text-xs text-app-text/80 px-2 py-1 rounded border border-app-text/5 focus:outline-none focus:border-accent/30"
         />
     );
 };
@@ -95,18 +95,18 @@ const SectionEditor: React.FC<{
         <div className="border border-app-border/40 rounded-xl overflow-hidden">
             {/* Section Header */}
             <div className="flex items-center gap-3 p-3 bg-app-surface/60">
-                <button onClick={() => setIsOpen(!isOpen)} className="text-app-subtle hover:text-white transition-colors">
+                <button onClick={() => setIsOpen(!isOpen)} className="text-app-subtle hover:text-app-text transition-colors">
                     {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                 </button>
                 <input
                     type="text"
                     value={section.label}
                     onChange={e => onUpdate({ ...section, label: e.target.value })}
-                    className="flex-1 bg-transparent font-bold text-sm text-white focus:outline-none"
+                    className="flex-1 bg-transparent font-bold text-sm text-app-text focus:outline-none"
                 />
                 <button 
                     onClick={() => showConfirm(t('modules:session.template_manager.editor.confirm_delete_section', { name: section.label }), onDelete)} 
-                    className="p-1.5 text-slate-600 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
+                    className="p-1.5 text-app-subtle hover:text-etat-danger transition-colors rounded-lg hover:bg-etat-danger/10"
                 >
                     <Trash2 size={14} />
                 </button>
@@ -117,14 +117,14 @@ const SectionEditor: React.FC<{
             {isOpen && (
                 <div className="p-3 space-y-2 bg-app-bg/40">
                     {section.fields.map((field, i) => (
-                        <div key={field.id} className="flex flex-col gap-2 p-2 bg-app-surface/30 rounded-lg border border-white/5">
+                        <div key={field.id} className="flex flex-col gap-2 p-2 bg-app-surface/30 rounded-lg border border-app-text/5">
                             <div className="flex items-center gap-2">
-                                <Pencil size={12} className="text-slate-600 flex-shrink-0" />
+                                <Pencil size={12} className="text-app-subtle flex-shrink-0" />
                                 <input
                                     type="text"
                                     value={field.label}
                                     onChange={e => updateField(i, { label: e.target.value })}
-                                    className="flex-1 bg-transparent text-sm text-slate-200 focus:outline-none min-w-0"
+                                    className="flex-1 bg-transparent text-sm text-app-text focus:outline-none min-w-0"
                                     placeholder={t('modules:session.template_manager.editor.field_name_placeholder')}
                                 />
                                 <select
@@ -135,13 +135,13 @@ const SectionEditor: React.FC<{
                                         ...(e.target.value === 'rating' ? { max: 5 } : {}),
                                         ...(e.target.value === 'select' ? { options: [] } : {})
                                     })}
-                                    className="bg-app-bg text-app-text/80 text-ui-11 rounded-lg px-2 py-1 border border-white/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
+                                    className="bg-app-bg text-app-text/80 text-ui-11 rounded-lg px-2 py-1 border border-app-text/10 focus:outline-none focus:ring-1 focus:ring-accent/40"
                                 >
                                     {(Object.entries(fieldTypeLabels) as [SheetFieldType, string][]).map(([type, label]) => (
                                         <option key={type} value={type}>{label}</option>
                                     ))}
                                 </select>
-                                <button onClick={() => removeField(i)} className="p-1 text-app-text/20 hover:text-red-400 transition-colors">
+                                <button onClick={() => removeField(i)} className="p-1 text-app-text/20 hover:text-etat-danger transition-colors">
                                     <Trash2 size={12} />
                                 </button>
                             </div>
@@ -165,7 +165,7 @@ const SectionEditor: React.FC<{
                                         max={20}
                                         value={field.max || 5}
                                         onChange={e => updateField(i, { max: parseInt(e.target.value) || 5 })}
-                                        className="w-16 bg-black/20 text-xs text-app-text/80 px-2 py-1 rounded border border-white/5 focus:outline-none focus:border-accent/30 text-center"
+                                        className="w-16 bg-app-bg/20 text-xs text-app-text/80 px-2 py-1 rounded border border-app-text/5 focus:outline-none focus:border-accent/30 text-center"
                                     />
                                 </div>
                             )}
@@ -224,28 +224,28 @@ const TemplateEditor: React.FC<{
                     type="text"
                     value={template.name}
                     onChange={e => onUpdate({ ...template, name: e.target.value })}
-                    className="flex-1 bg-transparent text-lg font-bold text-white focus:outline-none border-b border-white/10 focus:border-gm-gold/50 transition-colors pb-1"
+                    className="flex-1 bg-transparent text-lg font-bold text-app-text focus:outline-none border-b border-app-text/10 focus:border-gm-gold/50 transition-colors pb-1"
                     placeholder={t('modules:session.template_manager.editor.template_name_placeholder')}
                 />
             </div>
 
             {/* NotebookLM Link */}
-            <div className="flex items-center gap-3 p-3 bg-blue-500/5 border border-blue-500/20 rounded-xl">
-                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+            <div className="flex items-center gap-3 p-3 bg-etat-info/5 border border-etat-info/20 rounded-xl">
+                <div className="w-8 h-8 rounded-lg bg-etat-info/10 flex items-center justify-center text-etat-info">
                     <Sparkles size={16} />
                 </div>
                 <div className="flex-1">
-                    <p className="text-ui-10 font-black uppercase tracking-widest text-blue-500/70 mb-1">{t('modules:session.template_manager.editor.notebook_link_label')}</p>
+                    <p className="text-ui-10 font-black uppercase tracking-widest text-etat-info/70 mb-1">{t('modules:session.template_manager.editor.notebook_link_label')}</p>
                     <input 
                         type="text"
                         value={template.defaultNotebookUrl || ''}
                         onChange={e => onUpdate({ ...template, defaultNotebookUrl: e.target.value })}
                         placeholder={t('modules:session.template_manager.editor.notebook_link_placeholder')}
-                        className="w-full bg-transparent text-xs text-app-text/80 focus:outline-none border-b border-white/5 focus:border-accent/50 transition-colors pb-0.5"
+                        className="w-full bg-transparent text-xs text-app-text/80 focus:outline-none border-b border-app-text/5 focus:border-accent/50 transition-colors pb-0.5"
                     />
                 </div>
                 {onDelete && (
-                    <button onClick={onDelete} className="px-3 py-1.5 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all font-bold uppercase tracking-widest border border-red-500/20">
+                    <button onClick={onDelete} className="px-3 py-1.5 text-xs text-etat-danger hover:text-etat-danger hover:bg-etat-danger/10 rounded-lg transition-all font-bold uppercase tracking-widest border border-etat-danger/20">
                         {t('modules:session.template_manager.manager.delete_btn')}
                     </button>
                 )}
@@ -263,10 +263,10 @@ const TemplateEditor: React.FC<{
                         const Icon = iconMap[gem.icon] || Brain;
                         const currValue = template.aiPersonas?.[gem.id] || '';
                         return (
-                            <div key={gem.id} className="p-3 bg-app-surface/40 border border-white/5 rounded-xl space-y-2 focus-within:border-accent/30 transition-colors">
+                            <div key={gem.id} className="p-3 bg-app-surface/40 border border-app-text/5 rounded-xl space-y-2 focus-within:border-accent/30 transition-colors">
                                 <div className="flex items-center gap-2">
                                     <Icon size={14} className="text-accent" />
-                                    <span className="text-ui-10 font-bold text-white uppercase tracking-widest">{t(gem.name)}</span>
+                                    <span className="text-ui-10 font-bold text-app-text uppercase tracking-widest">{t(gem.name)}</span>
                                 </div>
                                 <textarea
                                     value={currValue}
@@ -281,7 +281,7 @@ const TemplateEditor: React.FC<{
                                         onUpdate({ ...template, aiPersonas: newPersonas });
                                     }}
                                     placeholder={t('modules:session.template_manager.editor.ai_personas_placeholder', { name: t(gem.name) })}
-                                    className="w-full h-20 bg-black/40 border border-app-border/40 rounded-xl p-3 text-xs text-app-text/80 focus:border-accent/50 outline-none transition-all font-mono"
+                                    className="w-full h-20 bg-app-bg/40 border border-app-border/40 rounded-xl p-3 text-xs text-app-text/80 focus:border-accent/50 outline-none transition-all font-mono"
                                 />
                             </div>
                         );
@@ -386,12 +386,12 @@ const TemplateManager: React.FC = () => {
                         <button
                             key={templateItem.id}
                             onClick={() => setSelectedId(templateItem.id)}
-                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${selectedId === templateItem.id ? 'bg-accent/10 border border-accent/30 text-accent' : 'text-app-text/40 hover:bg-app-bg/50 hover:text-white border border-transparent'}`}
+                            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all ${selectedId === templateItem.id ? 'bg-accent/10 border border-accent/30 text-accent' : 'text-app-text/40 hover:bg-app-bg/50 hover:text-app-text border border-transparent'}`}
                         >
                             <span className="text-lg">{templateItem.emoji}</span>
                             <div className="min-w-0">
                                 <p className="text-xs font-bold truncate">{templateItem.name}</p>
-                                {templateItem.isBuiltin && <p className="text-ui-9 text-slate-600 uppercase tracking-widest">{t('modules:session.template_manager.manager.builtin_tag')}</p>}
+                                {templateItem.isBuiltin && <p className="text-ui-9 text-app-subtle uppercase tracking-widest">{t('modules:session.template_manager.manager.builtin_tag')}</p>}
                             </div>
                         </button>
                     ))}
@@ -435,8 +435,8 @@ const TemplateManager: React.FC = () => {
                             <div className="flex items-center gap-3 p-4 bg-accent/5 border border-accent/20 rounded-xl">
                                 <span className="text-2xl">{selectedTemplate.emoji}</span>
                                 <div>
-                                    <p className="font-bold text-white">{selectedTemplate.name}</p>
-                                    <p className="text-xs text-amber-600">{t('modules:session.template_manager.manager.builtin_warning')}</p>
+                                    <p className="font-bold text-app-text">{selectedTemplate.name}</p>
+                                    <p className="text-xs text-etat-alerte">{t('modules:session.template_manager.manager.builtin_warning')}</p>
                                 </div>
                             </div>
                             <div className="opacity-50 pointer-events-none">
@@ -459,7 +459,7 @@ const TemplateManager: React.FC = () => {
                         />
                     )
                 ) : (
-                    <div className="flex-1 flex items-center justify-center text-slate-600 italic text-sm h-full">
+                    <div className="flex-1 flex items-center justify-center text-app-subtle italic text-sm h-full">
                         {t('modules:session.template_manager.manager.empty_selection')}
                     </div>
                 )}

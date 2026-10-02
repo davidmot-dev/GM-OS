@@ -18,11 +18,11 @@ import type { AtlasMap } from '../useSessionOSStore';
 import { Search } from 'lucide-react';
 
 const TYPE_META: Record<AtlasMap['type'], { labelKey: string; icon: LucideIcon; color: string }> = {
-    'battlemap': { labelKey: 'modules:session.world_atlas.library.types.battlemap', icon: Swords, color: 'text-red-400 border-red-500/30 bg-red-500/10' },
-    'world-map': { labelKey: 'modules:session.world_atlas.library.types.world-map', icon: Globe, color: 'text-blue-400 border-blue-500/30 bg-blue-500/10' },
-    'region': { labelKey: 'modules:session.world_atlas.library.types.region', icon: Map, color: 'text-green-400 border-green-500/30 bg-green-500/10' },
-    'city': { labelKey: 'modules:session.world_atlas.library.types.city', icon: Building2, color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' },
-    'dungeon': { labelKey: 'modules:session.world_atlas.library.types.dungeon', icon: MapPin, color: 'text-purple-400 border-purple-500/30 bg-purple-500/10' },
+    'battlemap': { labelKey: 'modules:session.world_atlas.library.types.battlemap', icon: Swords, color: 'text-gm-crimson border-gm-crimson/30 bg-gm-crimson/10' },
+    'world-map': { labelKey: 'modules:session.world_atlas.library.types.world-map', icon: Globe, color: 'text-etat-info border-etat-info/30 bg-etat-info/10' },
+    'region': { labelKey: 'modules:session.world_atlas.library.types.region', icon: Map, color: 'text-gm-emerald border-gm-emerald/30 bg-gm-emerald/10' },
+    'city': { labelKey: 'modules:session.world_atlas.library.types.city', icon: Building2, color: 'text-gm-gold border-gm-gold/30 bg-gm-gold/10' },
+    'dungeon': { labelKey: 'modules:session.world_atlas.library.types.dungeon', icon: MapPin, color: 'text-gm-violet border-gm-violet/30 bg-gm-violet/10' },
 };
 
 const AtlasMapDetail: React.FC = () => {
@@ -151,7 +151,7 @@ const AtlasMapDetail: React.FC = () => {
                 <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
                     <button 
                         onClick={() => setIsChoosingMedia(true)}
-                        className="flex items-center gap-2 bg-app-surface/60 hover:bg-white/10 text-white font-bold py-1.5 px-3 rounded-lg text-ui-10 transition-all border border-white/10 backdrop-blur-md"
+                        className="flex items-center gap-2 bg-app-surface/60 hover:bg-app-text/10 text-app-text font-bold py-1.5 px-3 rounded-lg text-ui-10 transition-all border border-app-text/10 backdrop-blur-md"
                     >
                         <ImageIcon size={12} />
                         {t('modules:session.world_atlas.detail.media_hub')}
@@ -159,7 +159,7 @@ const AtlasMapDetail: React.FC = () => {
                     <button 
                         onClick={() => setShowAIPrompt(true)}
                         disabled={isGeneratingAIImage}
-                        className="flex items-center gap-2 bg-accent text-slate-950 font-bold py-1.5 px-3 rounded-lg text-ui-10 transition-all border border-accent/20 shadow-glow-accent"
+                        className="flex items-center gap-2 bg-accent text-app-on-accent font-bold py-1.5 px-3 rounded-lg text-ui-10 transition-all border border-accent/20 shadow-glow-accent"
                     >
                         <Sparkles size={12} />
                         {t('modules:session.world_atlas.detail.generate_ai')}
@@ -167,7 +167,7 @@ const AtlasMapDetail: React.FC = () => {
                 </div>
 
                 {isGeneratingAIImage && (
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center z-30">
+                    <div className="absolute inset-0 bg-app-bg/60 backdrop-blur-md flex flex-col items-center justify-center z-30">
                         <Sparkles size={48} className="text-accent animate-spin mb-4" />
                         <span className="text-xs font-black uppercase tracking-[0.3em] text-accent animate-pulse">{t('modules:session.world_atlas.expanding_world')}</span>
                     </div>
@@ -180,7 +180,7 @@ const AtlasMapDetail: React.FC = () => {
                 <div className="absolute bottom-4 left-6 right-6">
                     <div className="flex items-end justify-between">
                         <div>
-                            <h2 className="text-2xl font-black text-white tracking-tight drop-shadow-lg">{selectedMap.name}</h2>
+                            <h2 className="text-2xl font-black text-app-text tracking-tight drop-shadow-lg">{selectedMap.name}</h2>
                             <div className="flex items-center gap-2 mt-2">
                                 {(Object.entries(TYPE_META) as [AtlasMap['type'], typeof TYPE_META['battlemap']][]).map(([type, meta]) => {
                                     const Icon = meta.icon;
@@ -191,8 +191,8 @@ const AtlasMapDetail: React.FC = () => {
                                             onClick={() => updateAtlasMap(selectedMap.id, { type })}
                                             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-ui-9 font-black uppercase tracking-widest transition-all border backdrop-blur-md ${
                                                 isActive 
-                                                ? `${meta.color} border-white/20 shadow-lg scale-105` 
-                                                : 'text-white/40 border-white/5 hover:text-white/60 hover:bg-white/5'
+                                                ? `${meta.color} border-app-text/20 shadow-lg scale-105` 
+                                                : 'text-app-text/40 border-app-text/5 hover:text-app-text/60 hover:bg-app-text/5'
                                             }`}
                                             title={t(meta.labelKey)}
                                         >
@@ -202,7 +202,7 @@ const AtlasMapDetail: React.FC = () => {
                                     );
                                 })}
                                 {selectedMap.isVideo && (
-                                    <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-2 py-1 rounded-lg bg-purple-500/80 text-white ml-2">
+                                    <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-2 py-1 rounded-lg bg-gm-violet/80 text-app-bg ml-2">
                                         <Film size={9} /> {t('modules:session.world_atlas.library.animated')}
                                     </span>
                                 )}
@@ -226,7 +226,7 @@ const AtlasMapDetail: React.FC = () => {
                             */}
                             <button
                                 onClick={() => leGroupeSyRend(selectedMap.id)}
-                                className="flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/30"
+                                className="flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border bg-app-surface/40 border-app-text/10 text-app-text/60 hover:text-app-text hover:bg-app-text/10 hover:border-app-text/30"
                                 title={t('modules:session.world_atlas.detail.travel_here_hint')}
                             >
                                 <Footprints size={16} />
@@ -236,8 +236,8 @@ const AtlasMapDetail: React.FC = () => {
                                 onClick={() => toggleMapVisited(selectedMap.id)}
                                 className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${
                                     selectedMap.isVisited 
-                                    ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-glow-emerald' 
-                                    : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
+                                    ? 'bg-etat-succes/20 border-etat-succes text-etat-succes shadow-glow-emerald' 
+                                    : 'bg-app-surface/40 border-app-text/10 text-app-text/60 hover:text-app-text hover:bg-app-text/10'
                                 }`}
                                 title={selectedMap.isVisited ? t('modules:session.world_atlas.library.mark_unvisited') : t('modules:session.world_atlas.library.mark_visited')}
                             >
@@ -249,7 +249,7 @@ const AtlasMapDetail: React.FC = () => {
                                 className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${
                                     isPinned 
                                     ? 'bg-accent/20 border-accent text-accent shadow-glow-accent' 
-                                    : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
+                                    : 'bg-app-surface/40 border-app-text/10 text-app-text/60 hover:text-app-text hover:bg-app-text/10'
                                 }`}
                                 title={isPinned ? t('modules:session.world_atlas.library.unpin_from_cockpit') : t('modules:session.world_atlas.library.pin_to_cockpit')}
                             >
@@ -272,7 +272,7 @@ const AtlasMapDetail: React.FC = () => {
                                     className={`flex items-center gap-2 font-black py-2.5 px-4 rounded-xl text-sm transition-all border ${
                                         aLAntenne.length > 0
                                             ? 'bg-accent/20 border-accent text-accent shadow-glow-accent'
-                                            : 'bg-app-surface/40 border-white/10 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/30'
+                                            : 'bg-app-surface/40 border-app-text/10 text-app-text/60 hover:text-app-text hover:bg-app-text/10 hover:border-app-text/30'
                                     }`}
                                     title="Montrer ce lieu sur un écran de la table"
                                 >
@@ -307,7 +307,7 @@ const AtlasMapDetail: React.FC = () => {
 
                             <button
                                 onClick={handleSendToMapOS}
-                                className="flex items-center gap-2 bg-accent hover:bg-accent/80 text-white font-black py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent"
+                                className="flex items-center gap-2 bg-accent hover:bg-accent/80 text-app-on-accent font-black py-2.5 px-5 rounded-xl text-sm transition-all shadow-glow-accent"
                                 title="En faire un plateau tactique, avec pions et brouillard"
                             >
                                 <Send size={16} />
@@ -319,7 +319,7 @@ const AtlasMapDetail: React.FC = () => {
             </div>
 
             {/* Linked Clues Section */}
-            <div className="px-6 py-4 bg-black/20 border-b border-app-border flex flex-col gap-3">
+            <div className="px-6 py-4 bg-app-bg/20 border-b border-app-border flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                     <Search size={14} className="text-gm-gold" />
                     <h4 className="text-ui-10 font-black uppercase tracking-widest text-gm-gold/60">{t('modules:session.world_atlas.detail.location_clues')}</h4>
@@ -334,21 +334,21 @@ const AtlasMapDetail: React.FC = () => {
                                     setEditingClueId(clue.id);
                                     setCurrentView('campaign-editor');
                                 }}
-                                className="group relative flex items-center gap-3 p-2 bg-[#121215] border border-white/5 rounded-2xl hover:border-gm-gold/40 transition-all text-left max-w-xs overflow-hidden"
+                                className="group relative flex items-center gap-3 p-2 bg-app-surface border border-app-text/5 rounded-2xl hover:border-gm-gold/40 transition-all text-left max-w-xs overflow-hidden"
                                 title={`Ouvrir "${clue.title}" dans le Nexus`}
                             >
-                                <div className="w-10 h-10 rounded-xl bg-app-surface overflow-hidden flex-shrink-0 border border-white/5">
+                                <div className="w-10 h-10 rounded-xl bg-app-surface overflow-hidden flex-shrink-0 border border-app-text/5">
                                     {clue.mediaUrl ? (
                                         <ResolvedAsset src={clue.mediaUrl} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-white/10">
+                                        <div className="w-full h-full flex items-center justify-center text-app-text/10">
                                             <Search size={14} />
                                         </div>
                                     )}
                                 </div>
                                 <div className="flex-1 min-w-0 pr-4">
-                                    <p className="text-ui-10 font-black text-white/80 group-hover:text-gm-gold transition-colors truncate">{clue.title}</p>
-                                    <p className="text-ui-8 font-bold text-white/20 uppercase tracking-widest leading-none mt-0.5">{t('modules:session.cockpit.click_to_view')}</p>
+                                    <p className="text-ui-10 font-black text-app-text/80 group-hover:text-gm-gold transition-colors truncate">{clue.title}</p>
+                                    <p className="text-ui-8 font-bold text-app-text/20 uppercase tracking-widest leading-none mt-0.5">{t('modules:session.cockpit.click_to_view')}</p>
                                 </div>
                             </button>
                         ))
@@ -396,13 +396,13 @@ const AtlasMapDetail: React.FC = () => {
 
             {/* Media Browser Modal */}
             {isChoosingMedia && (
-                <div className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-20 backdrop-blur-sm">
+                <div className="fixed inset-0 z-[100] bg-app-bg/80 flex items-center justify-center p-20 backdrop-blur-sm">
                     <div className="bg-app-bg border border-app-border rounded-2xl w-full max-w-5xl h-full flex flex-col overflow-hidden shadow-2xl">
                         <div className="p-4 border-b border-app-border flex items-center justify-between">
                             <h3 className="font-bold text-lg">{t('modules:session.world_atlas.detail.change_media')}</h3>
                             <button 
                                 onClick={() => setIsChoosingMedia(false)}
-                                className="text-app-text/40 hover:text-white transition-colors"
+                                className="text-app-text/40 hover:text-app-text transition-colors"
                             >
                                 {t('modules:session.world_atlas.detail.close')}
                             </button>

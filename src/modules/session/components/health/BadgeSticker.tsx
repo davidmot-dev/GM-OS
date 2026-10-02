@@ -14,9 +14,9 @@ interface BadgeStickerProps {
  */
 export const BadgeSticker: React.FC<BadgeStickerProps> = ({ badge, onRemove }) => {
     const severityColors = {
-        minor: 'bg-amber-500/10 text-amber-500 border-amber-500/30',
-        major: 'bg-orange-600/20 text-orange-400 border-orange-500/40',
-        critical: 'bg-rose-700/30 text-rose-500 border-rose-500/50 shadow-[0_0_10px_rgba(225,29,72,0.3)]'
+        minor: 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/30',
+        major: 'bg-etat-alerte/20 text-etat-alerte border-etat-alerte/40',
+        critical: 'bg-etat-danger/30 text-etat-danger border-etat-danger/50 shadow-[0_0_10px_rgba(225,29,72,0.3)]'
     };
 
     return (
@@ -32,7 +32,7 @@ export const BadgeSticker: React.FC<BadgeStickerProps> = ({ badge, onRemove }) =
                         e.stopPropagation();
                         onRemove();
                     }}
-                    className="ml-1 opacity-10 group-hover:opacity-100 hover:text-white transition-opacity text-sm font-bold leading-none"
+                    className="ml-1 opacity-10 group-hover:opacity-100 hover:text-app-text transition-opacity text-sm font-bold leading-none"
                     title="Dissiper/Supprimer"
                 >
                     ×

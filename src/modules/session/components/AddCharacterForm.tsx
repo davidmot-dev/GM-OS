@@ -160,9 +160,9 @@ export const AddCharacterForm: React.FC = () => {
 
     if (!selectedPlayerId) {
         return (
-            <div className="p-4 text-center text-red-400">
+            <div className="p-4 text-center text-etat-danger">
                 Erreur : Aucun joueur sélectionné.
-                <button onClick={closeModal} className="mt-4 block w-full px-4 py-2 bg-slate-800 rounded-lg">Fermer</button>
+                <button onClick={closeModal} className="mt-4 block w-full px-4 py-2 bg-app-surface-2 rounded-lg">Fermer</button>
             </div>
         );
     }
@@ -178,8 +178,8 @@ export const AddCharacterForm: React.FC = () => {
                         ) : (
                             <User size={48} className="text-app-text/20 group-hover:text-accent transition-colors" />
                         )}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                            <ImageIcon size={24} className="text-white" />
+                        <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <ImageIcon size={24} className="text-app-text" />
                         </div>
                     </div>
                 </div>
@@ -251,7 +251,7 @@ export const AddCharacterForm: React.FC = () => {
                     {gabarit
                         ? <>Fiche : <span className="text-app-text/50">{gabarit.emoji} {gabarit.name}</span>
                             {' '}— {gabarit.sections.reduce((n, s) => n + s.fields.length, 0)} champs</>
-                        : <span className="text-amber-300/70">Ce jeu ne désigne aucune fiche de personnage valide.</span>}
+                        : <span className="text-etat-alerte/70">Ce jeu ne désigne aucune fiche de personnage valide.</span>}
                 </p>
             </div>
 
@@ -272,7 +272,7 @@ export const AddCharacterForm: React.FC = () => {
                     {campagnesDuJeu.length > 0
                         ? <>Seules les campagnes de {jeuChoisi?.name ?? 'ce jeu'} sont proposées : un personnage
                             n'a pas de fiche dans un autre système.</>
-                        : <span className="text-amber-300/70">Aucune campagne ne tourne sur
+                        : <span className="text-etat-alerte/70">Aucune campagne ne tourne sur
                             {' '}{jeuChoisi?.name ?? 'ce jeu'}. Le personnage sera créé sans campagne, et
                             pourra en rejoindre une plus tard.</span>}
                 </p>
@@ -289,7 +289,7 @@ export const AddCharacterForm: React.FC = () => {
                 </button>
                 <button
                     type="submit"
-                    className="flex-1 px-4 py-3 rounded-xl bg-accent hover:opacity-90 text-app-bg font-bold text-sm shadow-glow-accent/20 transition-all"
+                    className="flex-1 px-4 py-3 rounded-xl bg-accent hover:opacity-90 text-app-on-accent font-bold text-sm shadow-glow-accent/20 transition-all"
                 >
                     Ajouter
                 </button>

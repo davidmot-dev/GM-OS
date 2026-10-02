@@ -46,7 +46,7 @@ const SessionFocusEditor: React.FC = () => {
     if (!session) {
         return (
             <div className="flex-1 flex flex-col items-center justify-center bg-app-bg p-10">
-                <BookOpen size={64} className="text-slate-800 mb-6" />
+                <BookOpen size={64} className="text-app-subtle mb-6" />
                 <p className="text-app-subtle font-bold uppercase tracking-widest">{t('modules:session.focus.not_found')}</p>
                 <button 
                     onClick={() => setCurrentView('session-prep')}
@@ -108,7 +108,7 @@ const SessionFocusEditor: React.FC = () => {
                         <div className="flex items-center gap-3">
                             <span className="px-2 py-0.5 bg-accent/20 text-accent text-ui-10 font-bold rounded uppercase tracking-widest">{activeCampaign?.name || t('modules:session.prep.no_active_campaign')}</span>
                             <span className="text-app-text/60 font-bold text-ui-10">/</span>
-                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-ui-10 font-bold rounded uppercase tracking-widest">{t('modules:session.prep.session_card_number', { number: session.number })}</span>
+                            <span className="px-2 py-0.5 bg-etat-info/20 text-etat-info text-ui-10 font-bold rounded uppercase tracking-widest">{t('modules:session.prep.session_card_number', { number: session.number })}</span>
                             <h2 className="text-2xl font-black tracking-tight text-app-text">{t('modules:session.focus.title')}</h2>
                         </div>
                         <p className="text-xs text-app-text/60 font-medium mt-1">{t('modules:session.focus.subtitle', { date: new Date(session.date).toLocaleDateString() })}</p>
@@ -117,15 +117,15 @@ const SessionFocusEditor: React.FC = () => {
 
                 <div className="flex items-center gap-6">
                     {/* Status Toggle (Pills Style) */}
-                    <div className="flex bg-black/40 p-1 rounded-2xl border border-white/5 backdrop-blur-md">
+                    <div className="flex bg-app-bg/40 p-1 rounded-2xl border border-app-text/5 backdrop-blur-md">
                         {(['planned', 'active', 'done'] as const).map(status => (
                             <button
                                 key={status}
                                 onClick={() => updateSession(session.id, { status })}
                                 className={`px-5 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                                     session.status === status 
-                                    ? 'bg-accent text-app-bg shadow-glow-accent' 
-                                    : 'text-app-text/30 hover:text-app-text/60 hover:bg-white/5'
+                                    ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                                    : 'text-app-text/30 hover:text-app-text/60 hover:bg-app-text/5'
                                 }`}
                             >
                                 {t(`modules:session.prep.status.${status}`)}
@@ -135,7 +135,7 @@ const SessionFocusEditor: React.FC = () => {
 
                     <button 
                         onClick={() => setCurrentView('cockpit')}
-                        className="flex items-center gap-3 px-6 py-3 bg-accent hover:brightness-110 text-white rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95"
+                        className="flex items-center gap-3 px-6 py-3 bg-accent hover:brightness-110 text-app-on-accent rounded-xl font-bold text-sm shadow-glow-accent transition-all active:scale-95"
                     >
                         <Save size={18} />
                         {t('modules:session.focus.save_close')}
@@ -161,8 +161,8 @@ const SessionFocusEditor: React.FC = () => {
                                 <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.narration_title')}</h3>
                             </div>
                             
-                            <div className="glass-bento rounded-[2.5rem] border border-white/5 overflow-hidden flex flex-col shadow-2xl focus-within:border-accent/30 transition-colors">
-                                <div className="grid grid-cols-2 divide-x divide-white/5 min-h-[600px]">
+                            <div className="glass-bento rounded-[2.5rem] border border-app-text/5 overflow-hidden flex flex-col shadow-2xl focus-within:border-accent/30 transition-colors">
+                                <div className="grid grid-cols-2 divide-x divide-app-text/5 min-h-[600px]">
                                     {/* Public Side */}
                                     <div className="flex flex-col p-8 gap-6">
                                         <div className="flex items-center justify-between opacity-80">
@@ -195,13 +195,13 @@ const SessionFocusEditor: React.FC = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="bg-white/5 px-8 py-4 border-t border-white/5 flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity">
+                                <div className="bg-app-text/5 px-8 py-4 border-t border-app-text/5 flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity">
                                     <div className="flex gap-8 text-ui-11 font-mono font-bold uppercase tracking-widest text-app-text/40">
                                         <span>{t('modules:session.focus.stats_words', { count: session.publicSummary.split(/\s+/).filter(Boolean).length + session.gmSecrets.split(/\s+/).filter(Boolean).length })}</span>
                                         <span>{t('modules:session.focus.stats_chars', { count: session.publicSummary.length + session.gmSecrets.length })}</span>
                                     </div>
                                     <div className="text-ui-9 font-black uppercase flex items-center gap-2 text-accent/60">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-glow-emerald"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-etat-succes shadow-glow-emerald"></div>
                                         {t('modules:session.focus.sync_status')}
                                     </div>
                                 </div>
@@ -226,7 +226,7 @@ const SessionFocusEditor: React.FC = () => {
                                 <StickyNote size={20} />
                                 <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.notes_title')}</h3>
                             </div>
-                            <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl flex flex-col gap-4">
+                            <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-xl flex flex-col gap-4">
                                 <p className="text-ui-10 text-app-text/40 font-black uppercase tracking-widest leading-relaxed">
                                     {t('modules:session.focus.notes_subtitle')}
                                 </p>
@@ -245,7 +245,7 @@ const SessionFocusEditor: React.FC = () => {
                                 <CheckSquare size={20} />
                                 <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.checklist_title')}</h3>
                             </div>
-                            <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl">
+                            <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-xl">
                                 <SessionChecklist sessionId={session.id} />
                             </div>
                         </motion.div>
@@ -257,9 +257,9 @@ const SessionFocusEditor: React.FC = () => {
                                 <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.feedback.title')}</h3>
                             </div>
                             
-                            <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-2xl flex flex-col gap-6">
+                            <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-2xl flex flex-col gap-6">
                                 {(!session.feedbacks || session.feedbacks.length === 0) ? (
-                                    <div className="py-8 text-center border-2 border-dashed border-white/5 rounded-3xl opacity-40">
+                                    <div className="py-8 text-center border-2 border-dashed border-app-text/5 rounded-3xl opacity-40">
                                         <p className="text-xs text-app-text/50 font-black uppercase tracking-widest">{t('modules:session.feedback.no_feedback')}</p>
                                     </div>
                                 ) : (
@@ -275,13 +275,13 @@ const SessionFocusEditor: React.FC = () => {
                                             const renderStarsShort = (rating: number) => (
                                                 <div className="flex gap-0.5">
                                                     {Array.from({ length: 5 }).map((_, idx) => (
-                                                        <Star key={idx} size={12} className={idx < Math.round(rating) ? 'text-amber-400 fill-amber-400' : 'text-slate-700'} />
+                                                        <Star key={idx} size={12} className={idx < Math.round(rating) ? 'text-etat-alerte fill-etat-alerte' : 'text-app-subtle'} />
                                                     ))}
                                                 </div>
                                             );
 
                                             return (
-                                                <div className="grid grid-cols-3 gap-4 bg-black/20 p-5 rounded-2xl border border-white/5 mb-2">
+                                                <div className="grid grid-cols-3 gap-4 bg-app-bg/20 p-5 rounded-2xl border border-app-text/5 mb-2">
                                                     <div className="flex flex-col gap-1 items-center text-center">
                                                         <span className="text-ui-10 text-app-muted font-bold uppercase tracking-wider">{t('modules:session.feedback.fun')}</span>
                                                         <span className="font-mono text-accent text-sm font-black">{funAvg} / 5</span>
@@ -309,10 +309,10 @@ const SessionFocusEditor: React.FC = () => {
                                                     .find(c => c.id === f.characterId);
                                                 
                                                 return (
-                                                    <div key={f.characterId} className="bg-black/10 border border-white/5 rounded-2xl p-4 flex flex-col gap-3">
+                                                    <div key={f.characterId} className="bg-app-bg/10 border border-app-text/5 rounded-2xl p-4 flex flex-col gap-3">
                                                         <div className="flex items-center justify-between">
                                                             <div className="flex items-center gap-2.5">
-                                                                <div className="w-8 h-8 rounded-full border border-white/10 overflow-hidden bg-slate-950/40">
+                                                                <div className="w-8 h-8 rounded-full border border-app-text/10 overflow-hidden bg-app-bg/40">
                                                                     {char?.portraitUrl ? (
                                                                         <ResolvedImage src={char.portraitUrl} alt={f.characterName} className="w-full h-full object-cover" />
                                                                     ) : (
@@ -321,14 +321,14 @@ const SessionFocusEditor: React.FC = () => {
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                <span className="font-bold text-xs text-slate-200">{f.characterName}</span>
+                                                                <span className="font-bold text-xs text-app-text">{f.characterName}</span>
                                                             </div>
                                                             <span className="text-ui-9 text-app-subtle font-mono">
                                                                 {new Date(f.timestamp).toLocaleDateString()}
                                                             </span>
                                                         </div>
                                                         {f.notes && (
-                                                            <p className="text-xs text-slate-300 bg-black/20 rounded-xl p-3 border border-white/5 whitespace-pre-wrap leading-relaxed">
+                                                            <p className="text-xs text-app-text bg-app-bg/20 rounded-xl p-3 border border-app-text/5 whitespace-pre-wrap leading-relaxed">
                                                                 {f.notes}
                                                             </p>
                                                         )}
@@ -345,7 +345,7 @@ const SessionFocusEditor: React.FC = () => {
                     {/* Right Column: Entity Management */}
                     <div className="col-span-4 flex flex-col gap-10">
                         {/* Section Date Quick Pick */}
-                        <motion.div variants={itemVariants} className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-2xl">
+                        <motion.div variants={itemVariants} className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-2xl">
                             <div className="flex items-center gap-3 mb-6 text-app-text/40">
                                 <Calendar size={18} className="text-accent" />
                                 <span className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.focus.date_title')}</span>
@@ -356,12 +356,12 @@ const SessionFocusEditor: React.FC = () => {
                                 onChange={(e) => updateSession(session.id, { date: e.target.value })}
                                 title={t('modules:session.focus.date_tooltip')}
                                 aria-label={t('modules:session.focus.date_tooltip')}
-                                className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-4 text-sm font-black text-accent focus:ring-accent/30 focus:border-accent/40 shadow-inner transition-all appearance-none"
+                                className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl px-4 py-4 text-sm font-black text-accent focus:ring-accent/30 focus:border-accent/40 shadow-inner transition-all appearance-none"
                             />
                         </motion.div>
 
                         {/* Additional Resources (Link & File) */}
-                        <motion.div variants={itemVariants} className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-2xl flex flex-col gap-8">
+                        <motion.div variants={itemVariants} className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-2xl flex flex-col gap-8">
                             <div className="flex items-center gap-3 text-app-text/40">
                                 <Link size={18} className="text-accent" />
                                 <span className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.focus.resources_title')}</span>
@@ -379,7 +379,7 @@ const SessionFocusEditor: React.FC = () => {
                                         value={session.externalLink || ''}
                                         onChange={(e) => updateSession(session.id, { externalLink: e.target.value })}
                                         placeholder="https://example.com"
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl pl-11 pr-4 py-3 text-xs focus:ring-accent/30 focus:border-accent/40 transition-all text-app-text placeholder:text-app-text/20 shadow-inner"
+                                        className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl pl-11 pr-4 py-3 text-xs focus:ring-accent/30 focus:border-accent/40 transition-all text-app-text placeholder:text-app-text/20 shadow-inner"
                                     />
                                     <Link size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within/input:text-accent transition-colors" />
                                 </div>
@@ -397,7 +397,7 @@ const SessionFocusEditor: React.FC = () => {
                                         value={session.filePath || ''}
                                         onChange={(e) => updateSession(session.id, { filePath: e.target.value })}
                                         placeholder="C:/MonDossier/mon_scénario.pdf"
-                                        className="w-full bg-black/20 border border-white/5 rounded-xl pl-11 pr-4 py-3 text-xs focus:ring-accent/30 focus:border-accent/40 transition-all text-app-text placeholder:text-app-text/20 shadow-inner"
+                                        className="w-full bg-app-bg/20 border border-app-text/5 rounded-xl pl-11 pr-4 py-3 text-xs focus:ring-accent/30 focus:border-accent/40 transition-all text-app-text placeholder:text-app-text/20 shadow-inner"
                                     />
                                     <File size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within/input:text-accent transition-colors" />
                                 </div>
@@ -407,14 +407,14 @@ const SessionFocusEditor: React.FC = () => {
 
                         {/* Players Management */}
                         <motion.div variants={itemVariants} className="flex flex-col gap-4">
-                            <div className="flex items-center justify-between text-blue-400">
+                            <div className="flex items-center justify-between text-etat-info">
                                 <div className="flex items-center gap-3">
                                     <Users size={20} />
                                     <h3 className="text-sm font-black uppercase tracking-[0.3em]">{t('modules:session.focus.players_title')}</h3>
                                 </div>
                                 <span className="text-ui-10 font-black opacity-40">({linkedPlayers.length})</span>
                             </div>
-                            <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 flex flex-col gap-6 shadow-xl">
+                            <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 flex flex-col gap-6 shadow-xl">
                                 <div className="flex flex-wrap gap-3">
                                     {campaignCharacters.map(char => {
                                         const isLinked = linkedEntityIds.includes(char.id);
@@ -423,15 +423,15 @@ const SessionFocusEditor: React.FC = () => {
                                                 key={char.id}
                                                 onClick={() => isLinked ? removeEntityFromSession(session.id, char.id) : addEntityToSession(session.id, char.id)}
                                                 className={`group relative w-16 h-16 rounded-2xl border-2 transition-all p-1 hover:scale-110 active:scale-95 ${
-                                                    isLinked ? 'border-accent bg-accent/10 shadow-glow-accent/10' : 'border-white/5 bg-black/20 grayscale hover:grayscale-0'
+                                                    isLinked ? 'border-accent bg-accent/10 shadow-glow-accent/10' : 'border-app-text/5 bg-app-bg/20 grayscale hover:grayscale-0'
                                                 }`}
                                                 title={char.name}
                                             >
-                                                <div className="w-full h-full rounded-xl overflow-hidden bg-slate-900 border border-white/5">
+                                                <div className="w-full h-full rounded-xl overflow-hidden bg-app-bg border border-app-text/5">
                                                     <ResolvedImage src={char.portraitUrl} alt={char.name} className="w-full h-full object-cover" />
                                                 </div>
                                                 {isLinked && (
-                                                    <div className="absolute -top-1.5 -right-1.5 bg-accent text-app-bg rounded-full p-0.5 border-2 border-app-bg shadow-lg">
+                                                    <div className="absolute -top-1.5 -right-1.5 bg-accent text-app-on-accent rounded-full p-0.5 border-2 border-app-bg shadow-lg">
                                                         <X size={10} strokeWidth={4} />
                                                     </div>
                                                 )}
@@ -439,7 +439,7 @@ const SessionFocusEditor: React.FC = () => {
                                         );
                                     })}
                                     {campaignCharacters.length === 0 && (
-                                        <div className="flex-1 py-8 text-center border-2 border-dashed border-white/5 rounded-3xl opacity-40">
+                                        <div className="flex-1 py-8 text-center border-2 border-dashed border-app-text/5 rounded-3xl opacity-40">
                                             <p className="text-ui-10 text-app-text/50 font-black uppercase tracking-widest leading-relaxed">{t('modules:session.focus.no_players')}</p>
                                         </div>
                                     )}
@@ -460,7 +460,7 @@ const SessionFocusEditor: React.FC = () => {
                                 </div>
                                 <span className="text-ui-10 font-black opacity-40">({linkedNpcs.length})</span>
                             </div>
-                            <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl">
+                            <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-xl">
                                 <SessionPrepEntityManager sessionId={session.id} />
                             </div>
                         </motion.div>

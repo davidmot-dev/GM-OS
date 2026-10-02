@@ -112,7 +112,7 @@ const LigneDeComposante: React.FC<{
         {onRetirer && (
             <button
                 onClick={onRetirer}
-                className="p-2.5 rounded-xl text-app-text/20 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                className="p-2.5 rounded-xl text-app-text/20 hover:text-etat-danger hover:bg-etat-danger/10 transition-all"
                 title="Retirer cette composante"
             ><Trash2 size={16} /></button>
         )}
@@ -151,8 +151,8 @@ const LigneDeComposante: React.FC<{
                 title="Retirer ce sous-groupe"
                 className={`group flex items-center gap-1 px-2 py-1 rounded-lg text-ui-10 font-bold border transition-all ${
                   connue
-                    ? 'bg-app-bg/40 border-app-border/20 text-app-text/60 hover:border-red-400/40 hover:text-red-300'
-                    : 'bg-red-500/10 border-red-400/30 text-red-300'
+                    ? 'bg-app-bg/40 border-app-border/20 text-app-text/60 hover:border-etat-danger/40 hover:text-etat-danger'
+                    : 'bg-etat-danger/10 border-etat-danger/30 text-etat-danger'
                 }`}
               >
                 {/* Une section devenue introuvable reste visible plutôt que
@@ -282,7 +282,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
             </header>
 
             {!gabarit && (
-                <p className="text-ui-11 text-amber-300/70 italic">
+                <p className="text-ui-11 text-etat-alerte/70 italic">
                     Ce pilote ne désigne aucune fiche : sans elle, aucune section où choisir.
                     Rattache-lui un gabarit ci-dessus.
                 </p>
@@ -314,7 +314,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
             <div className="space-y-3 pt-2 border-t border-app-border/10">
                 <div className="flex gap-4 items-end">
                     <label className="flex-1">
-                        <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
+                        <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-etat-alerte/60 mb-2 block px-1">
                             Seconde poule — son nom
                         </span>
                         <input
@@ -323,11 +323,11 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                             onChange={e => majSecondaire({ label: e.target.value })}
                             placeholder="Stress, Équipement… — vide si le jeu n’en a pas"
                             title="Le nom que le jeu donne à cette seconde poule de dés"
-                            className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-amber-400/50 outline-none"
+                            className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-etat-alerte/50 outline-none"
                         />
                     </label>
                     <label className="flex-1">
-                        <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-amber-300/60 mb-2 block px-1">
+                        <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-etat-alerte/60 mb-2 block px-1">
                             Ce qu’un 1 déclenche
                         </span>
                         <input
@@ -336,7 +336,7 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                             onChange={e => majSecondaire({ libelleDuUn: e.target.value })}
                             placeholder="Panique…"
                             title="Le mot qui dira au meneur d’ouvrir sa table"
-                            className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-amber-400/50 outline-none"
+                            className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-etat-alerte/50 outline-none"
                         />
                     </label>
                 </div>
@@ -463,8 +463,8 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                     qu'un autre jeu emploierait légitimement.
                 */}
                 {cible && jet?.difficulte && (
-                    <div className="flex items-center gap-4 p-4 rounded-2xl border border-amber-400/30 bg-amber-500/5">
-                        <p className="flex-1 text-ui-11 text-amber-200/80 leading-relaxed">
+                    <div className="flex items-center gap-4 p-4 rounded-2xl border border-etat-alerte/30 bg-etat-alerte/5">
+                        <p className="flex-1 text-ui-11 text-etat-alerte/80 leading-relaxed">
                             Un <b>compte de réussites</b> ({jet.difficulte.min} à {jet.difficulte.max},
                             départ {jet.difficulte.defaut}) subsiste alors qu’une cible est déclarée.
                             Les deux se nomment « difficulté » et n’ont aucun rapport : la cible décide,
@@ -472,21 +472,21 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                         </p>
                         <button
                             onClick={() => onUpdate({ jet: { ...jet, difficulte: undefined } })}
-                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
+                            className="px-4 py-2 rounded-xl border border-etat-alerte/40 text-etat-alerte text-ui-10 font-black uppercase tracking-widest hover:bg-etat-alerte/10 transition-all shrink-0"
                         >Retirer le compte</button>
                     </div>
                 )}
 
                 {cible && (jet?.seuil ?? []).length > 0 && (
-                    <div className="flex items-center gap-4 p-4 rounded-2xl border border-amber-400/30 bg-amber-500/5">
-                        <p className="flex-1 text-ui-11 text-amber-200/80 leading-relaxed">
+                    <div className="flex items-center gap-4 p-4 rounded-2xl border border-etat-alerte/30 bg-etat-alerte/5">
+                        <p className="flex-1 text-ui-11 text-etat-alerte/80 leading-relaxed">
                             {(jet?.seuil ?? []).length} composantes de seuil subsistent alors qu’une cible
                             est déclarée. Elles ne servent plus à rien, et le panneau de jet les réclamera
                             toutes au joueur avant de le laisser lancer.
                         </p>
                         <button
                             onClick={() => majJet({ seuil: [] })}
-                            className="px-4 py-2 rounded-xl border border-amber-400/40 text-amber-200 text-ui-10 font-black uppercase tracking-widest hover:bg-amber-400/10 transition-all shrink-0"
+                            className="px-4 py-2 rounded-xl border border-etat-alerte/40 text-etat-alerte text-ui-10 font-black uppercase tracking-widest hover:bg-etat-alerte/10 transition-all shrink-0"
                         >Vider le seuil</button>
                     </div>
                 )}

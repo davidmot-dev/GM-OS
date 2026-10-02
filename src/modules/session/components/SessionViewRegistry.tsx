@@ -81,7 +81,7 @@ const SessionViewRegistry: React.FC = () => {
             case 'cockpit':
                 return (
                     <div className="flex-1 grid grid-cols-9 h-full overflow-hidden">
-                        <div className="col-span-6 h-full flex flex-col overflow-hidden border-r border-white/5">
+                        <div className="col-span-6 h-full flex flex-col overflow-hidden border-r border-app-text/5">
                             <SessionWorkspace />
                         </div>
                         <div className="col-span-3 h-full flex flex-col overflow-hidden">
@@ -130,7 +130,7 @@ const SessionViewRegistry: React.FC = () => {
                 className={`flex-1 min-h-0 flex overflow-hidden view-transition-fade-up ${isFullLayout ? 'flex-col' : 'flex-row'}`}
             >
                 {!isFullLayout && (
-                    <aside className="w-[320px] shrink-0 border-r border-white/5 bg-black/10 backdrop-blur-sm z-10 shadow-xl flex flex-col min-h-0">
+                    <aside className="w-[320px] shrink-0 border-r border-app-text/5 bg-app-bg/10 backdrop-blur-sm z-10 shadow-xl flex flex-col min-h-0">
                         <CampaignCockpit />
                     </aside>
                 )}

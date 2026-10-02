@@ -103,12 +103,12 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                     <button 
                         type="button"
                         onClick={onClose}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all text-xs font-bold border border-white/5"
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-app-text/5 hover:bg-app-text/10 text-app-text/40 hover:text-app-text transition-all text-xs font-bold border border-app-text/5"
                     >
                         <ArrowLeft size={14} />
                         {t('modules:session.campaign_form.back_to_cockpit')}
                     </button>
-                    <div className="h-6 w-px bg-white/10" />
+                    <div className="h-6 w-px bg-app-text/10" />
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center border border-accent/20">
                             <Fingerprint className="text-accent" size={18} />
@@ -127,7 +127,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         title={t('modules:session.campaign_form.sync_nexus_tooltip')}
                         className={`flex items-center gap-2 font-black px-6 py-2 rounded-xl text-ui-10 tracking-widest uppercase transition-all ${
                             hasUnsavedChanges 
-                                ? 'bg-accent text-app-bg hover:opacity-90 shadow-glow-accent/40 animate-pulse border border-accent/50' 
+                                ? 'bg-accent text-app-on-accent hover:opacity-90 shadow-glow-accent/40 animate-pulse border border-accent/50' 
                                 : 'bg-accent/20 text-accent/60 hover:bg-accent/40 hover:text-accent border border-transparent'
                         }`}
                     >
@@ -138,7 +138,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                         type="button"
                         onClick={onClose}
                         title={t('modules:session.campaign_form.close_tooltip')}
-                        className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-white/20 hover:text-white hover:bg-red-500/20 transition-all border border-white/5"
+                        className="w-10 h-10 flex items-center justify-center bg-app-text/5 rounded-xl text-app-text/20 hover:text-app-text hover:bg-etat-danger/20 transition-all border border-app-text/5"
                     >
                         <X size={18} />
                     </button>
@@ -157,8 +157,8 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                             title={item.label}
                             className={`group relative w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${
                                 activeSection === item.id 
-                                ? 'bg-accent text-app-bg shadow-glow-accent' 
-                                : 'bg-white/5 text-white/20 hover:bg-white/10 hover:text-white/60'
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                                : 'bg-app-text/5 text-app-text/20 hover:bg-app-text/10 hover:text-app-text/60'
                             }`}
                         >
                             <item.icon size={20} />
@@ -169,8 +169,8 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                     ))}
                     
                     <div className="mt-auto flex flex-col gap-4">
-                        <div className="w-8 h-px bg-white/5" />
-                        <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-white/10">
+                        <div className="w-8 h-px bg-app-text/5" />
+                        <div className="w-12 h-12 rounded-2xl bg-app-text/5 flex items-center justify-center text-app-text/10">
                             <Info size={18} />
                         </div>
                     </div>
@@ -264,7 +264,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                     if (path) setObsidianPath(path);
                                                 }
                                             }}
-                                            className="px-8 py-5 bg-accent/10 border border-accent/20 rounded-2xl text-accent font-black uppercase tracking-widest text-ui-10 hover:bg-accent hover:text-app-bg transition-all"
+                                            className="px-8 py-5 bg-accent/10 border border-accent/20 rounded-2xl text-accent font-black uppercase tracking-widest text-ui-10 hover:bg-accent hover:text-app-on-accent transition-all"
                                         >
                                             {t('modules:session.campaign_form.identity.btn_browse')}
                                         </button>
@@ -342,7 +342,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                             <ResolvedAsset src={wallpaperUrl} className="w-full h-full object-cover rounded-[2.5rem] opacity-60 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent opacity-60" />
                                             <div className="absolute inset-x-8 bottom-8 p-10 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-500">
-                                                <div className="px-10 py-4 bg-accent text-app-bg text-ui-10 font-black uppercase tracking-[0.3em] rounded-2xl shadow-glow-accent">{t('modules:session.campaign_form.ambience.change_wallpaper')}</div>
+                                                <div className="px-10 py-4 bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-[0.3em] rounded-2xl shadow-glow-accent">{t('modules:session.campaign_form.ambience.change_wallpaper')}</div>
                                             </div>
                                         </>
                                     ) : (
@@ -395,7 +395,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                 </button>
                                                 <button 
                                                     onClick={() => clearPendingPreFill()}
-                                                    className="px-3 py-1.5 rounded-lg bg-app-surface border border-app-border text-xs hover:text-red-400 transition-colors"
+                                                    className="px-3 py-1.5 rounded-lg bg-app-surface border border-app-border text-xs hover:text-etat-danger transition-colors"
                                                 >
                                                     {t('modules:session.campaign_form.world.ignore')}
                                                 </button>
@@ -432,7 +432,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                         alt={map.name}
                                                     />
                                                     {isActive && (
-                                                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-accent text-app-bg flex items-center justify-center shadow-glow-accent">
+                                                        <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-accent text-app-on-accent flex items-center justify-center shadow-glow-accent">
                                                             <Check size={16} strokeWidth={3} />
                                                         </div>
                                                     )}
@@ -459,26 +459,26 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 </div>
 
 
-                                <div className="p-10 rounded-[3rem] bg-gradient-to-br from-violet-500/10 to-transparent border border-violet-500/20 space-y-10">
+                                <div className="p-10 rounded-[3rem] bg-gradient-to-br from-gm-violet/10 to-transparent border border-gm-violet/20 space-y-10">
                                     <div className="flex items-center gap-6">
-                                        <div className="w-16 h-16 rounded-[1.5rem] bg-violet-500/20 flex items-center justify-center text-violet-400 border border-violet-500/30 shadow-glow-violet/10">
+                                        <div className="w-16 h-16 rounded-[1.5rem] bg-gm-violet/20 flex items-center justify-center text-gm-violet border border-gm-violet/30 shadow-glow-violet/10">
                                             <Brain size={32} />
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-black uppercase tracking-[0.2em] text-violet-400 font-display">{t('modules:session.campaign_form.intelligence.notebook_title')}</h3>
+                                            <h3 className="text-lg font-black uppercase tracking-[0.2em] text-gm-violet font-display">{t('modules:session.campaign_form.intelligence.notebook_title')}</h3>
                                             <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-widest mt-1">{t('modules:session.campaign_form.intelligence.notebook_subtitle')}</p>
                                         </div>
                                     </div>
 
                                     <div className="space-y-4">
-                                        <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-violet-500/60 px-2 flex items-center gap-2">
+                                        <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-gm-violet/60 px-2 flex items-center gap-2">
                                             <ExternalLink size={12} /> {t('modules:session.campaign_form.intelligence.notebook_label')}
                                         </label>
                                         <input 
                                             value={notebookUrl}
                                             onChange={e => setNotebookUrl(e.target.value)}
                                             placeholder={t('modules:session.campaign_form.intelligence.notebook_placeholder')}
-                                            className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl py-5 px-6 text-sm font-mono tracking-wider focus:outline-none focus:border-violet-500/50 transition-all text-violet-400 shadow-inner"
+                                            className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl py-5 px-6 text-sm font-mono tracking-wider focus:outline-none focus:border-gm-violet/50 transition-all text-gm-violet shadow-inner"
                                         />
                                     </div>
 
@@ -488,13 +488,13 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                             <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
                                                 <PenTool size={12} /> {t('modules:session.campaign_form.intelligence.rules_path_label')}
                                             </label>
-                                            <input value={systemPath} onChange={e => setSystemPath(e.target.value)} placeholder={t('modules:session.campaign_form.intelligence.rules_path_placeholder')} className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner" />
+                                            <input value={systemPath} onChange={e => setSystemPath(e.target.value)} placeholder={t('modules:session.campaign_form.intelligence.rules_path_placeholder')} className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-gm-violet/30 tracking-tight shadow-inner" />
                                         </div>
                                         <div className="flex-1 space-y-3">
                                             <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/20 px-2 flex items-center gap-2">
                                                 <PenTool size={12} /> {t('modules:session.campaign_form.intelligence.notes_path_label')}
                                             </label>
-                                            <input value={campaignPath} onChange={e => setCampaignPath(e.target.value)} placeholder={t('modules:session.campaign_form.intelligence.notes_path_placeholder')} className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner" />
+                                            <input value={campaignPath} onChange={e => setCampaignPath(e.target.value)} placeholder={t('modules:session.campaign_form.intelligence.notes_path_placeholder')} className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-gm-violet/30 tracking-tight shadow-inner" />
                                         </div>
                                     </div>
 
@@ -517,7 +517,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                             value={langueDeForge}
                                             onChange={e => setLangueDeForge(e.target.value)}
                                             title="La Forge écrira la prose de cette campagne dans cette langue, quelle que soit celle des fiches"
-                                            className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-violet-500/30 tracking-tight shadow-inner cursor-pointer"
+                                            className="w-full bg-app-bg/20 border border-app-border/10 rounded-xl py-4 px-5 text-xs text-app-text/40 focus:outline-none focus:border-gm-violet/30 tracking-tight shadow-inner cursor-pointer"
                                         >
                                             <option value="">— la langue de l’interface —</option>
                                             {Object.entries(LANGUES).map(([code, nom]) => (
@@ -535,14 +535,14 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                 <div className="space-y-8">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
-                                            <h3 className="text-ui-10 font-black uppercase tracking-[0.3em] text-violet-500">{t('modules:session.campaign_form.intelligence.neural_overrides')}</h3>
+                                            <h3 className="text-ui-10 font-black uppercase tracking-[0.3em] text-gm-violet">{t('modules:session.campaign_form.intelligence.neural_overrides')}</h3>
                                             <p className="text-ui-9 text-app-text/20 font-bold uppercase tracking-widest italic">{t('modules:session.campaign_form.intelligence.neural_overrides_subtitle')}</p>
                                         </div>
                                         <button
                                             type="button"
                                             onClick={handleAutoGenerate}
                                             disabled={isGenerating}
-                                            className="flex items-center gap-3 px-6 py-2.5 bg-violet-600 text-white border border-violet-500/30 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-violet/5"
+                                            className="flex items-center gap-3 px-6 py-2.5 bg-gm-violet text-app-bg border border-gm-violet/30 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all disabled:opacity-50 shadow-glow-violet/5"
                                         >
                                             {isGenerating ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
                                             {t('modules:session.campaign_form.intelligence.auto_generate')}
@@ -554,9 +554,9 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                         {gems.map((gem: { id: string; name: string }) => {
                                             const hasOverride = !!aiPersonas[gem.id];
                                             return (
-                                                <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 flex flex-col gap-4 ${hasOverride ? 'bg-app-surface/40 border-violet-500/30 shadow-glow-violet/5' : 'bg-app-surface/20 border-app-border/10'}`}>
+                                                <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 flex flex-col gap-4 ${hasOverride ? 'bg-app-surface/40 border-gm-violet/30 shadow-glow-violet/5' : 'bg-app-surface/20 border-app-border/10'}`}>
                                                     <div className="flex items-center gap-3">
-                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasOverride ? 'bg-violet-600 text-white shadow-glow-violet/20' : 'bg-app-bg text-app-text/20'}`}>
+                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasOverride ? 'bg-gm-violet text-app-bg shadow-glow-violet/20' : 'bg-app-bg text-app-text/20'}`}>
                                                             <Sparkles size={16} />
                                                         </div>
                                                         <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/60">{t(gem.name, { defaultValue: gem.id })}</span>
@@ -570,7 +570,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ campaign, isNew, onClose })
                                                             setAiPersonas(next);
                                                         }}
                                                         rows={3}
-                                                        className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-ui-11 text-app-text/40 focus:border-violet-500/40 resize-none outline-none custom-scrollbar transition-all shadow-inner"
+                                                        className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-ui-11 text-app-text/40 focus:border-gm-violet/40 resize-none outline-none custom-scrollbar transition-all shadow-inner"
                                                         placeholder={t('modules:session.campaign_form.intelligence.ai_placeholder', { name: t(gem.name) })}
                                                     />
                                                 </div>

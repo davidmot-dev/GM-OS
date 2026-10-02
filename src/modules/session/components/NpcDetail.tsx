@@ -22,10 +22,10 @@ import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
 
 const ROLE_COLORS = {
-    ally: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20',
-    neutral: 'bg-slate-500/10 text-app-muted border-slate-500/20 hover:bg-slate-500/20',
-    hostile: 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20',
-    boss: 'bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]',
+    ally: 'bg-etat-succes/10 text-etat-succes border-etat-succes/20 hover:bg-etat-succes/20',
+    neutral: 'bg-app-muted/10 text-app-muted border-app-border/20 hover:bg-app-muted/20',
+    hostile: 'bg-etat-danger/10 text-etat-danger border-etat-danger/20 hover:bg-etat-danger/20',
+    boss: 'bg-gm-violet/10 text-gm-violet border-gm-violet/20 hover:bg-gm-violet/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]',
 };
 
 const ROLE_ICONS = {
@@ -93,7 +93,7 @@ const FieldCheckbox: React.FC<{
         className="flex items-center gap-3 p-3 bg-app-bg/40 rounded-xl border border-app-border/40 w-full hover:border-accent/20 transition-all flex-shrink-0"
     >
         <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${value ? 'bg-accent border-accent' : 'border-app-text/20'}`}>
-            {value && <CheckCircle size={10} className="text-white" />}
+            {value && <CheckCircle size={10} className="text-app-text" />}
         </div>
         <label className="text-ui-11 font-black uppercase tracking-wider text-app-text/60 cursor-pointer">{field.label}</label>
     </button>
@@ -110,7 +110,7 @@ const FieldSelect: React.FC<{
         <select
             value={value}
             onChange={e => onChange(e.target.value)}
-            className="w-48 bg-app-surface text-app-text text-ui-11 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-white/5"
+            className="w-48 bg-app-surface text-app-text text-ui-11 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-accent/40 border border-app-text/5"
             title={field.label}
         >
             <option value="" disabled>{t('common:actions.select_placeholder')}</option>
@@ -145,7 +145,7 @@ const FieldTextarea: React.FC<{
  * `FieldRating` vient de `SheetFields`, comme `FieldGauge`.
  *
  * Cet écran en portait une copie avec les mêmes pastilles vides invisibles —
- * `bg-black/20 border-white/10`. Deux composants pour la même donnée, c'est la
+ * `bg-app-bg/20 border-app-text/10`. Deux composants pour la même donnée, c'est la
  * garantie qu'une correction n'en atteindra qu'un : celle du 2026-08-15 aurait
  * laissé les fiches de PNJ illisibles.
  */
@@ -159,7 +159,7 @@ const FieldFormula: React.FC<{
             <Calculator size={12} className="group-hover:rotate-12 transition-transform" />
             {field.label}
         </label>
-        <span className="text-ui-11 font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
+        <span className="text-ui-11 font-black text-app-text bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
             {value}
         </span>
     </div>
@@ -295,8 +295,8 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     onClick={() => setIsEditing(!isEditing)}
                     className={`flex items-center gap-2 px-6 py-2 rounded-xl border transition-all font-bold text-sm uppercase tracking-widest ${
                         isEditing 
-                        ? 'bg-accent text-white border-accent shadow-glow-accent' 
-                        : 'bg-app-surface border-app-border text-app-text/40 hover:text-white hover:border-white/30'
+                        ? 'bg-accent text-app-on-accent border-accent shadow-glow-accent' 
+                        : 'bg-app-surface border-app-border text-app-text/40 hover:text-app-text hover:border-app-text/30'
                     }`}
                 >
                     {isEditing ? <CheckCircle size={18} /> : <Edit2 size={18} />}
@@ -319,18 +319,18 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         </div>
 
                         {selectedNpc.status === 'dead' && (
-                            <div className="absolute inset-0 z-20 flex items-center justify-center bg-rose-950/20 backdrop-grayscale-[0.5]">
-                                <div className="bg-rose-600 text-white text-ui-10 font-black px-3 py-1 rounded uppercase tracking-widest rotate-[-10deg] border border-rose-400/50">{t('modules:session.npc_detail.status.dead')}</div>
+                            <div className="absolute inset-0 z-20 flex items-center justify-center bg-etat-danger/20 backdrop-grayscale-[0.5]">
+                                <div className="bg-etat-danger text-app-bg text-ui-10 font-black px-3 py-1 rounded uppercase tracking-widest rotate-[-10deg] border border-etat-danger/50">{t('modules:session.npc_detail.status.dead')}</div>
                             </div>
                         )}
 
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 gap-4">
-                            <button onClick={(e) => { e.stopPropagation(); setIsMediaBrowserOpen(true); }} className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-all"><ImageIcon size={32} /></button>
-                            <button onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }} className="p-3 bg-accent text-slate-950 rounded-full hover:scale-110 shadow-glow-accent"><Sparkles size={32} /></button>
+                        <div className="absolute inset-0 bg-app-bg/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 gap-4">
+                            <button onClick={(e) => { e.stopPropagation(); setIsMediaBrowserOpen(true); }} className="p-3 bg-app-text/10 hover:bg-app-text/20 rounded-full transition-all"><ImageIcon size={32} /></button>
+                            <button onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }} className="p-3 bg-accent text-app-on-accent rounded-full hover:scale-110 shadow-glow-accent"><Sparkles size={32} /></button>
                         </div>
                         
                         {isGeneratingAIImage && (
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30">
+                            <div className="absolute inset-0 bg-app-bg/60 backdrop-blur-sm flex items-center justify-center z-30">
                                 <div className="flex flex-col items-center gap-4 animate-pulse">
                                     <Sparkles size={48} className="text-accent animate-spin" />
                                     <span className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent">{t('modules:session.npc_detail.status.generating')}</span>
@@ -349,7 +349,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                 <input 
                                     type="text" value={selectedNpc.name || ''}
                                     onChange={(e) => updateEntity(selectedNpc.id, { name: e.target.value })}
-                                    className="bg-app-surface/50 border border-accent/30 rounded-xl px-4 py-2 text-2xl font-black text-white w-full focus:outline-none focus:border-accent"
+                                    className="bg-app-surface/50 border border-accent/30 rounded-xl px-4 py-2 text-2xl font-black text-app-text w-full focus:outline-none focus:border-accent"
                                 />
                                 <input 
                                     type="text" value={selectedNpc.description || ''}
@@ -418,7 +418,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                     </button>
                                     <button
                                         onClick={() => updateEntity(selectedNpc.id, { status: selectedNpc.status === 'dead' ? 'alive' : 'dead' })}
-                                        className={`p-2 rounded-xl border-2 transition-all ${selectedNpc.status === 'dead' ? 'bg-rose-600 border-rose-400 text-white' : 'bg-app-surface border-app-border text-app-text/20 hover:text-rose-500 hover:border-rose-500/50'}`}
+                                        className={`p-2 rounded-xl border-2 transition-all ${selectedNpc.status === 'dead' ? 'bg-etat-danger border-etat-danger text-app-bg' : 'bg-app-surface border-app-border text-app-text/20 hover:text-etat-danger hover:border-etat-danger/50'}`}
                                     >
                                         <Skull size={20} />
                                     </button>
@@ -455,7 +455,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                             }
                                         }}
                                         disabled={profilageEnCours}
-                                        className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400/80 hover:bg-emerald-500/20 transition-all disabled:opacity-40"
+                                        className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-etat-succes/20 bg-etat-succes/10 text-etat-succes/80 hover:bg-etat-succes/20 transition-all disabled:opacity-40"
                                         title={t('modules:session.npc_detail.voice_gen_tooltip')}
                                     >
                                         <Sparkles size={14} className={profilageEnCours ? 'animate-pulse' : ''} />
@@ -473,7 +473,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                                                 appliquerProfil(selectedNpc.voiceProfile!);
                                                 gmToast(t('modules:session.npc_detail.voice_recalled', { name: selectedNpc.name }), 'info');
                                             }}
-                                            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-300/80 hover:bg-cyan-500/20 transition-all"
+                                            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-gm-cyan/20 bg-gm-cyan/10 text-gm-cyan/80 hover:bg-gm-cyan/20 transition-all"
                                             title={t('modules:session.npc_detail.voice_recall_tooltip')}
                                         >
                                             <AudioLines size={14} />
@@ -502,12 +502,12 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         */}
                         {aUneJaugeDeVie(selectedNpc) ? (<>
                         <div className="col-span-2 bg-app-surface/60 border border-accent/30 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
-                            <Heart size={14} className="text-rose-500" />
-                            <div className="flex items-center gap-1 bg-black/20 px-2 py-0.5 rounded-lg border border-white/5 h-7">
+                            <Heart size={14} className="text-etat-danger" />
+                            <div className="flex items-center gap-1 bg-app-bg/20 px-2 py-0.5 rounded-lg border border-app-text/5 h-7">
                                 <input
                                     type="number" value={selectedNpc.hp ?? 0}
                                     onChange={(e) => updateEntityHP(selectedNpc.id, parseInt(e.target.value) || 0)}
-                                    className="w-20 bg-transparent text-center text-white font-black text-xs outline-none"
+                                    className="w-20 bg-transparent text-center text-app-text font-black text-xs outline-none"
                                     title={t('common:status.vitality')}
                                 />
                                 <span className="text-app-text/20 font-bold text-xs">/</span>
@@ -525,16 +525,16 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             un pilote dira quel champ de fiche porte la
                             protection, cette heuristique lui laissera la place. */}
                         {!!selectedNpc.ac && (
-                        <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
-                            <Shield size={14} className="text-blue-400" />
-                            <input type="number" value={selectedNpc.ac} onChange={e => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.ac')} />
+                        <div className="col-span-1 bg-app-surface/40 border border-app-text/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                            <Shield size={14} className="text-etat-info" />
+                            <input type="number" value={selectedNpc.ac} onChange={e => updateEntity(selectedNpc.id, { ac: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-app-text font-black text-xs outline-none" title={t('modules:session.forms.labels.ac')} />
                             <span className="text-ui-8 font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.ac')}</span>
                         </div>
                         )}
                         </>) : (
-                        <div className="col-span-3 bg-app-surface/60 border border-rose-500/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
-                            <Activity size={14} className="text-rose-400" />
-                            <span className="text-white font-black text-xs">
+                        <div className="col-span-3 bg-app-surface/60 border border-etat-danger/20 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                            <Activity size={14} className="text-etat-danger" />
+                            <span className="text-app-text font-black text-xs">
                                 {abregerLaSante(selectedNpc) ?? 'santé non chiffrée'}
                             </span>
                             <span className="text-ui-8 font-bold text-app-text/20 uppercase tracking-widest">
@@ -549,9 +549,9 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             l'imprime. On la garde la ou elle porte une valeur,
                             on ne la propose plus a blanc. */}
                         {!!selectedNpc.speed && (
-                        <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
-                            <Wind size={14} className="text-emerald-400" />
-                            <input type="number" value={selectedNpc.speed} onChange={e => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.speed')} />
+                        <div className="col-span-1 bg-app-surface/40 border border-app-text/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                            <Wind size={14} className="text-etat-succes" />
+                            <input type="number" value={selectedNpc.speed} onChange={e => updateEntity(selectedNpc.id, { speed: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-app-text font-black text-xs outline-none" title={t('modules:session.forms.labels.speed')} />
                             <span className="text-ui-8 font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.speed')}</span>
                         </div>
                         )}
@@ -559,9 +559,9 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             ordonne son tour par un nombre. Alien tire des
                             cartes, Dune alterne entre les camps. */}
                         {initiativeChiffree && (
-                        <div className="col-span-1 bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
-                            <Zap size={14} className="text-amber-400" />
-                            <input type="number" value={selectedNpc.initiative ?? 0} onChange={e => updateEntity(selectedNpc.id, { initiative: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-white font-black text-xs outline-none" title={t('modules:session.forms.labels.initiative')} />
+                        <div className="col-span-1 bg-app-surface/40 border border-app-text/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1">
+                            <Zap size={14} className="text-etat-alerte" />
+                            <input type="number" value={selectedNpc.initiative ?? 0} onChange={e => updateEntity(selectedNpc.id, { initiative: parseInt(e.target.value) || 0 })} className="w-full bg-transparent text-center text-app-text font-black text-xs outline-none" title={t('modules:session.forms.labels.initiative')} />
                             <span className="text-ui-8 font-bold text-app-text/20 uppercase">{t('modules:session.forms.labels.initiative')}</span>
                         </div>
                         )}
@@ -569,7 +569,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
 
                     {/* Template Selection */}
                     {isEditing && (
-                        <div className="p-4 bg-app-surface/20 border border-white/5 rounded-2xl space-y-3">
+                        <div className="p-4 bg-app-surface/20 border border-app-text/5 rounded-2xl space-y-3">
                             <div className="flex items-center gap-2"><Layers size={14} className="text-accent"/><label className="text-ui-11 font-black uppercase tracking-widest text-app-text/60">{t('modules:session.npc_detail.sections.sheet_template')}</label></div>
                             <div className="grid grid-cols-2 gap-2">
                                 {allTemplates.map(t => (
@@ -587,16 +587,16 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     {/* Dynamic Sections */}
                     {!isEditing && template && template.id !== 'generic' && (
                         <div className="space-y-6">
-                            <div className="flex items-center gap-2 border-b border-white/5 pb-2">
+                            <div className="flex items-center gap-2 border-b border-app-text/5 pb-2">
                                 < BookOpen size={16} className="text-accent" />
                                 <h3 className="text-ui-11 font-black uppercase tracking-widest text-accent">{t('modules:session.npc_detail.sections.sheet_dossier')} : {template.name}</h3>
                             </div>
                             {template.sections.map((section, sidx) => (
                                 <div key={sidx} className="space-y-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="h-px flex-1 bg-white/5" />
+                                        <div className="h-px flex-1 bg-app-text/5" />
                                         <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/20">{section.label}</span>
-                                        <div className="h-px flex-1 bg-white/5" />
+                                        <div className="h-px flex-1 bg-app-text/5" />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         {section.fields.map(field => {
@@ -623,7 +623,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
 
                     {/* Notes & Secret Info */}
                     <div className="grid grid-cols-1 gap-4">
-                        <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 space-y-2">
+                        <div className="p-4 rounded-2xl bg-app-surface/30 border border-app-text/5 space-y-2">
                             <div className="flex items-center gap-2"><BookOpen size={14} className="text-app-text/40"/><h4 className="text-ui-10 font-black uppercase text-app-text/40">{t('modules:session.npc_detail.sections.notes')}</h4></div>
                             <textarea className="w-full bg-transparent text-xs text-app-text/80 outline-none resize-none min-h-[80px]" value={selectedNpc.roleplayingNotes || ''} onChange={e => updateEntity(selectedNpc.id, { roleplayingNotes: e.target.value })} placeholder={t('modules:session.npc_detail.placeholders.roleplay')} />
                         </div>
@@ -639,7 +639,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             <h4 className="text-ui-10 font-black uppercase text-gm-gold/60 flex items-center gap-2"><Search size={14}/> {t('modules:session.npc_detail.sections.clues')}</h4>
                             <div className="flex flex-wrap gap-2">
                                 {linkedClues.map(c => (
-                                    <button key={c.id} onClick={() => handleClueClick(c.id)} className="px-3 py-1.5 rounded-xl bg-black/20 border border-white/5 text-ui-9 font-black text-white/40 hover:text-gm-gold hover:border-gm-gold/40 transition-all">{c.title}</button>
+                                    <button key={c.id} onClick={() => handleClueClick(c.id)} className="px-3 py-1.5 rounded-xl bg-app-bg/20 border border-app-text/5 text-ui-9 font-black text-app-text/40 hover:text-gm-gold hover:border-gm-gold/40 transition-all">{c.title}</button>
                                 ))}
                                 {linkedClues.length === 0 && <span className="text-ui-10 italic text-app-text/10">{t('modules:session.npc_detail.sections.no_clue')}</span>}
                             </div>
@@ -648,7 +648,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                             <h4 className="text-ui-10 font-black uppercase text-app-text/40 flex items-center gap-2"><MapPin size={14}/> {t('modules:session.npc_detail.sections.maps')}</h4>
                             <div className="flex flex-wrap gap-2">
                                 {linkedMaps.map(m => (
-                                    <span key={m.id} className="px-3 py-1.5 rounded-xl bg-black/20 border border-white/5 text-ui-9 font-black text-white/40">{m.name}</span>
+                                    <span key={m.id} className="px-3 py-1.5 rounded-xl bg-app-bg/20 border border-app-text/5 text-ui-9 font-black text-app-text/40">{m.name}</span>
                                 ))}
                                 {linkedMaps.length === 0 && <span className="text-ui-10 italic text-app-text/10">{t('modules:session.npc_detail.sections.no_map')}</span>}
                             </div>
@@ -660,9 +660,9 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
             {/* Bottom Actions */}
             {!isEditing && (
                 <div className="mt-8 flex gap-4 pt-4 border-t border-app-border">
-                    <button onClick={handleAddToCombat} className="flex-1 flex items-center justify-center gap-2 bg-app-surface hover:bg-app-surface/80 text-white font-bold py-3 rounded-xl text-xs transition-all border border-white/5"><Swords size={16}/>{t('modules:session.npc_detail.actions.combat')}</button>
+                    <button onClick={handleAddToCombat} className="flex-1 flex items-center justify-center gap-2 bg-app-surface hover:bg-app-surface/80 text-app-text font-bold py-3 rounded-xl text-xs transition-all border border-app-text/5"><Swords size={16}/>{t('modules:session.npc_detail.actions.combat')}</button>
                     <button onClick={handleSendToMap} className="flex-1 flex items-center justify-center gap-2 border border-accent/50 text-accent hover:bg-accent/10 font-bold py-3 rounded-xl text-xs transition-all"><MapPin size={16}/>{t('modules:session.npc_detail.actions.map')}</button>
-                    <button onClick={() => useImageStore.getState().projectEntity(selectedNpc)} className="flex-1 flex items-center justify-center gap-2 bg-accent text-white font-black py-3 rounded-xl text-xs transition-all shadow-glow-accent"><Monitor size={16}/>{t('modules:session.npc_detail.actions.project')}</button>
+                    <button onClick={() => useImageStore.getState().projectEntity(selectedNpc)} className="flex-1 flex items-center justify-center gap-2 bg-accent text-app-on-accent font-black py-3 rounded-xl text-xs transition-all shadow-glow-accent"><Monitor size={16}/>{t('modules:session.npc_detail.actions.project')}</button>
                 </div>
             )}
 

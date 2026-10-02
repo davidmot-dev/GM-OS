@@ -86,7 +86,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
         majEntree(tIdx, eIdx, { metadata: { ...(entree.metadata || {}), ...patch } });
     };
 
-    const champ = 'w-full bg-black/20 px-2 py-1.5 rounded border border-white/5 text-ui-10 text-app-text outline-none focus:border-amber-500/40';
+    const champ = 'w-full bg-app-bg/20 px-2 py-1.5 rounded border border-app-text/5 text-ui-10 text-app-text outline-none focus:border-etat-alerte/40';
     const etiquette = 'text-ui-7 font-bold uppercase text-app-text/20 mb-0.5 block';
 
     return (
@@ -94,7 +94,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
             {/* ─── Le vocabulaire du jeu ─────────────────────────────────── */}
             <div className="p-6 bg-app-surface/20 border border-app-border/10 rounded-[2rem] space-y-5">
                 <div className="space-y-1">
-                    <h3 className="text-ui-10 font-black uppercase tracking-[0.25em] text-amber-400/60">
+                    <h3 className="text-ui-10 font-black uppercase tracking-[0.25em] text-etat-alerte/60">
                         {t('modules:session.rule_engine_editor.loot.vocabulary_title')}
                     </h3>
                     <p className="text-ui-10 text-app-text/40 leading-relaxed max-w-2xl">
@@ -126,7 +126,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                         raretes: [...(driver.vocabulaireDuButin?.raretes || raretes), { id: '', label: '' }],
                                     },
                                 })}
-                                className="flex items-center gap-1 text-ui-9 font-black uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300"
+                                className="flex items-center gap-1 text-ui-9 font-black uppercase tracking-[0.2em] text-etat-alerte hover:text-etat-alerte"
                             >
                                 <Plus size={10} /> {t('modules:session.rule_engine_editor.loot.add_rarity_btn')}
                             </button>
@@ -151,7 +151,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                 onUpdate({ vocabulaireDuButin: { ...(driver.vocabulaireDuButin || {}), raretes: suivants } });
                                             }}
                                             placeholder={t('modules:session.rule_engine_editor.loot.rarity_id_placeholder')}
-                                            className={`${champ} font-mono text-violet-400 flex-1`}
+                                            className={`${champ} font-mono text-gm-violet flex-1`}
                                         />
                                         <input
                                             type="text"
@@ -174,7 +174,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                     },
                                                 });
                                             }}
-                                            className="p-1 text-red-400/60 hover:text-red-400 hover:bg-red-500/10 rounded"
+                                            className="p-1 text-etat-danger/60 hover:text-etat-danger hover:bg-etat-danger/10 rounded"
                                         >
                                             <Trash2 size={10} />
                                         </button>
@@ -201,7 +201,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                             entries: [],
                         }],
                     })}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-all font-black text-ui-10 uppercase tracking-widest"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-etat-alerte/10 text-etat-alerte border border-etat-alerte/20 hover:bg-etat-alerte/20 transition-all font-black text-ui-10 uppercase tracking-widest"
                 >
                     <Plus size={14} /> {t('modules:session.rule_engine_editor.loot.create_btn')}
                 </button>
@@ -210,13 +210,13 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
             <div className="grid grid-cols-1 gap-8 pb-20">
                 {tables.map((table, tIdx) => (
                     <div key={table.id} className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm group relative overflow-hidden transition-all hover:bg-app-surface/30">
-                        <div className="absolute top-0 right-0 p-8 text-amber-500/5 -rotate-12 pointer-events-none">
+                        <div className="absolute top-0 right-0 p-8 text-etat-alerte/5 -rotate-12 pointer-events-none">
                             <Archive size={120} />
                         </div>
 
                         <button
                             onClick={() => onUpdate({ lootTables: tables.filter(t2 => t2.id !== table.id) })}
-                            className="absolute top-6 right-6 p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                            className="absolute top-6 right-6 p-2 rounded-lg bg-etat-danger/10 text-etat-danger hover:bg-etat-danger hover:text-app-bg transition-all opacity-0 group-hover:opacity-100"
                             title={t('modules:session.rule_engine_editor.loot.delete_table')}
                         >
                             <Trash2 size={16} />
@@ -225,10 +225,10 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                         <div className="grid grid-cols-12 gap-8 mb-8 relative z-10">
                             <div className="col-span-6">
                                 <div className="flex items-center justify-between mb-2 px-1">
-                                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400/60">
+                                    <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-alerte/60">
                                         {t('modules:session.rule_engine_editor.loot.table_name_label')}
                                     </label>
-                                    <span className="text-ui-8 font-mono text-app-text/20 bg-black/20 px-2 py-0.5 rounded border border-white/5 select-all">
+                                    <span className="text-ui-8 font-mono text-app-text/20 bg-app-bg/20 px-2 py-0.5 rounded border border-app-text/5 select-all">
                                         {t('common:id_label')}: {table.id}
                                     </span>
                                 </div>
@@ -236,12 +236,12 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                     type="text"
                                     value={table.name}
                                     onChange={e => majTable(tIdx, { name: e.target.value })}
-                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 text-lg font-bold text-app-text focus:border-amber-500/50 outline-none shadow-inner"
+                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 text-lg font-bold text-app-text focus:border-etat-alerte/50 outline-none shadow-inner"
                                 />
                             </div>
 
                             <div className="col-span-2">
-                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400/60 mb-2 block px-1">
+                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-alerte/60 mb-2 block px-1">
                                     {t('modules:session.rule_engine_editor.loot.rolls_label')}
                                 </label>
                                 <input
@@ -249,7 +249,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                     value={table.rolls || ''}
                                     onChange={e => majTable(tIdx, { rolls: e.target.value })}
                                     placeholder="1"
-                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-center text-amber-400 focus:border-amber-500/50 outline-none shadow-inner text-sm"
+                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-center text-etat-alerte focus:border-etat-alerte/50 outline-none shadow-inner text-sm"
                                 />
                             </div>
 
@@ -261,7 +261,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                 sa phrase : ce que le tirage fait est écrit.
                             */}
                             <div className="col-span-4">
-                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-400/60 mb-2 block px-1">
+                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-alerte/60 mb-2 block px-1">
                                     {t('modules:session.rule_engine_editor.loot.mode_label')}
                                 </label>
                                 <div className="grid grid-cols-2 gap-2">
@@ -271,7 +271,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                             onClick={() => majTable(tIdx, { rollMode: mode })}
                                             className={`px-3 py-2 rounded-xl border text-left transition-all ${
                                                 modeDeTirage(table) === mode
-                                                    ? 'bg-amber-500/15 border-amber-500/40 text-amber-300'
+                                                    ? 'bg-etat-alerte/15 border-etat-alerte/40 text-etat-alerte'
                                                     : 'bg-app-bg/40 border-app-border/10 text-app-text/40 hover:text-app-text/70'
                                             }`}
                                         >
@@ -306,7 +306,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                         };
                                         onUpdate({ lootTables: suivantes });
                                     }}
-                                    className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-[0.2em] text-amber-400 hover:text-amber-300 transition-colors"
+                                    className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-[0.2em] text-etat-alerte hover:text-etat-alerte transition-colors"
                                 >
                                     <Plus size={12} /> {t('modules:session.rule_engine_editor.loot.add_entry_btn')}
                                 </button>
@@ -326,7 +326,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                     <select
                                                         value={entry.type || 'item'}
                                                         onChange={e => majEntree(tIdx, eIdx, { type: e.target.value as LootEntry['type'] })}
-                                                        className={`${champ} font-black uppercase tracking-wider text-amber-400`}
+                                                        className={`${champ} font-black uppercase tracking-wider text-etat-alerte`}
                                                     >
                                                         <option value="item">{t('modules:session.rule_engine_editor.loot.entry_types.item')}</option>
                                                         <option value="currency">{t('modules:session.rule_engine_editor.loot.entry_types.currency')}</option>
@@ -362,7 +362,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                         type="number"
                                                         value={entry.weight}
                                                         onChange={e => majEntree(tIdx, eIdx, { weight: parseInt(e.target.value) || 0 })}
-                                                        className={`${champ} text-center font-mono text-amber-500`}
+                                                        className={`${champ} text-center font-mono text-etat-alerte`}
                                                     />
                                                 </div>
 
@@ -374,7 +374,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                                 type="text"
                                                                 value={entry.minAmount ?? ''}
                                                                 onChange={e => majEntree(tIdx, eIdx, { minAmount: e.target.value })}
-                                                                className={`${champ} text-center font-mono text-cyan-400`}
+                                                                className={`${champ} text-center font-mono text-gm-cyan`}
                                                                 placeholder="1"
                                                             />
                                                         </>
@@ -391,7 +391,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                             };
                                                             onUpdate({ lootTables: suivantes });
                                                         }}
-                                                        className="p-1 px-2 text-red-400 hover:bg-red-500/20 rounded transition-all"
+                                                        className="p-1 px-2 text-etat-danger hover:bg-etat-danger/20 rounded transition-all"
                                                     >
                                                         <Trash2 size={10} />
                                                     </button>
@@ -416,7 +416,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                         <select
                                                             value={tableImbriqueeDe(entry, tables)?.id || ''}
                                                             onChange={e => majMetadata(tIdx, eIdx, { tableId: e.target.value })}
-                                                            className={`${champ} text-violet-400`}
+                                                            className={`${champ} text-gm-violet`}
                                                         >
                                                             <option value="">{t('modules:session.rule_engine_editor.loot.target_table_none')}</option>
                                                             {tables.filter(t2 => t2.id !== table.id).map(t2 => (
@@ -437,7 +437,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                         <select
                                                             value={universChoisi}
                                                             onChange={e => majMetadata(tIdx, eIdx, { oracleUnivers: e.target.value, oracleTable: '' })}
-                                                            className={`${champ} text-violet-400`}
+                                                            className={`${champ} text-gm-violet`}
                                                         >
                                                             <option value="">{t('modules:session.rule_engine_editor.loot.oracle_choose')}</option>
                                                             {univers.map(u => <option key={u} value={u}>{u}</option>)}
@@ -449,7 +449,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
                                                             value={String(entry.metadata?.oracleTable || '')}
                                                             onChange={e => majMetadata(tIdx, eIdx, { oracleTable: e.target.value })}
                                                             disabled={!universChoisi}
-                                                            className={`${champ} text-violet-400 disabled:opacity-40`}
+                                                            className={`${champ} text-gm-violet disabled:opacity-40`}
                                                         >
                                                             <option value="">{t('modules:session.rule_engine_editor.loot.oracle_choose')}</option>
                                                             {(tablesParUnivers[universChoisi] || []).map(nom => (

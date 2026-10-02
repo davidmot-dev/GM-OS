@@ -155,7 +155,7 @@ const CampaignCockpit: React.FC = () => {
 
     return (
         <aside className="flex-1 min-h-0 premium-glass border-r-0 flex flex-col">
-            <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-white/5 to-transparent pointer-events-none z-10" />
+            <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-app-text/5 to-transparent pointer-events-none z-10" />
             
             <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar w-full flex flex-col gap-6 p-5">
                 {/* Campaign Card */}
@@ -215,7 +215,7 @@ const CampaignCockpit: React.FC = () => {
                     <button
                         type="button"
                         onClick={e => { e.stopPropagation(); setCurrentView('campaign-editor'); }}
-                        className="mt-1 w-full text-left flex items-start gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1.5 text-ui-10 leading-snug text-amber-300/90 hover:bg-amber-500/20 transition-colors"
+                        className="mt-1 w-full text-left flex items-start gap-1.5 rounded-lg border border-etat-alerte/30 bg-etat-alerte/10 px-2 py-1.5 text-ui-10 leading-snug text-etat-alerte/90 hover:bg-etat-alerte/20 transition-colors"
                     >
                         <AlertTriangle size={11} className="mt-0.5 shrink-0" />
                         <span>
@@ -249,7 +249,7 @@ const CampaignCockpit: React.FC = () => {
                 <button
                     onClick={() => setCurrentView('cockpit')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${
-                        currentView === 'cockpit' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                        currentView === 'cockpit' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-text/5 hover:text-app-text'
                     }`}
                 >
                     <LayoutDashboard className={currentView === 'cockpit' ? 'scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
@@ -267,7 +267,7 @@ const CampaignCockpit: React.FC = () => {
                 <button
                     onClick={() => setCurrentView('storyboard')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${
-                        currentView === 'storyboard' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                        currentView === 'storyboard' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-text/5 hover:text-app-text'
                     }`}
                 >
                     <Zap className={currentView === 'storyboard' ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} size={20} />
@@ -322,7 +322,7 @@ const CampaignCockpit: React.FC = () => {
                 <button
                     onClick={() => showCustom('loot-os')}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all ${
-                        isLootOSOpen ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                        isLootOSOpen ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-text/5 hover:text-app-text'
                     }`}
                 >
                     <Archive size={20} className={isLootOSOpen ? 'text-accent scale-110 shadow-glow-accent' : 'group-hover:scale-110 transition-transform'} />
@@ -348,7 +348,7 @@ const CampaignCockpit: React.FC = () => {
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all nav-item-glow ${
                         currentView === 'deck-player' || currentView === 'deck-library' 
                         ? 'bg-gm-gold/10 text-gm-gold border border-gm-gold/20' 
-                        : 'text-app-text/60 hover:bg-white/5 hover:text-app-text'
+                        : 'text-app-text/60 hover:bg-app-text/5 hover:text-app-text'
                     }`}
                 >
                     <Layers className={currentView === 'deck-player' || currentView === 'deck-library' ? 'text-gm-gold scale-110 shadow-glow-gold' : 'group-hover:scale-110 transition-transform'} size={20} />
@@ -391,12 +391,12 @@ const CampaignCockpit: React.FC = () => {
                             )}
                             className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all glass-bento relative overflow-hidden"
                         >
-                            <div className="absolute inset-0 bg-emerald-500/10 pointer-events-none" />
-                            <div className="absolute inset-0 bg-emerald-500/5 animate-pulse pointer-events-none" />
-                            <div className="absolute inset-y-0 left-0 w-0.5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                            <div className="absolute inset-0 bg-etat-succes/10 pointer-events-none" />
+                            <div className="absolute inset-0 bg-etat-succes/5 animate-pulse pointer-events-none" />
+                            <div className="absolute inset-y-0 left-0 w-0.5 bg-etat-succes shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                             
-                            <Play size={20} fill="currentColor" className="text-emerald-500 relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-transform" />
-                            <span className="text-sm font-bold uppercase tracking-tighter text-emerald-400 relative z-10 drop-shadow-md">{t('modules:session.cockpit.active_session')}</span>
+                            <Play size={20} fill="currentColor" className="text-etat-succes relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-transform" />
+                            <span className="text-sm font-bold uppercase tracking-tighter text-etat-succes relative z-10 drop-shadow-md">{t('modules:session.cockpit.active_session')}</span>
                         </motion.button>
 
                         {/*
@@ -418,11 +418,11 @@ const CampaignCockpit: React.FC = () => {
                                 onClick={reprendreLaSeance}
                                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg w-full text-left glass-bento relative overflow-hidden group"
                             >
-                                <div className="absolute inset-0 bg-amber-500/10 pointer-events-none" />
-                                <div className="absolute inset-y-0 left-0 w-0.5 bg-amber-500" />
-                                <Pause size={18} fill="currentColor" className="text-amber-500 relative z-10 group-hover:scale-110 transition-transform" />
+                                <div className="absolute inset-0 bg-etat-alerte/10 pointer-events-none" />
+                                <div className="absolute inset-y-0 left-0 w-0.5 bg-etat-alerte" />
+                                <Pause size={18} fill="currentColor" className="text-etat-alerte relative z-10 group-hover:scale-110 transition-transform" />
                                 <div className="relative z-10 min-w-0">
-                                    <div className="text-ui-11 font-black uppercase tracking-widest text-amber-400">
+                                    <div className="text-ui-11 font-black uppercase tracking-widest text-etat-alerte">
                                         Reprendre
                                     </div>
                                     {/* Le dépassement se dit : c'est là que la table s'est dispersée. */}
@@ -437,7 +437,7 @@ const CampaignCockpit: React.FC = () => {
                                     pausedAt: Date.now(),
                                     pauseDureePrevueMs: DUREE_DE_PAUSE_PAR_DEFAUT_MS,
                                 })}
-                                className="flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left text-app-text/40 hover:text-amber-400 hover:bg-amber-500/5 transition-all"
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left text-app-text/40 hover:text-etat-alerte hover:bg-etat-alerte/5 transition-all"
                             >
                                 <Pause size={16} />
                                 <span className="text-ui-11 font-bold uppercase tracking-widest">
@@ -460,7 +460,7 @@ const CampaignCockpit: React.FC = () => {
                             <button
                                 onClick={() => setCurrentView('trame')}
                                 title="Ouvrir la trame"
-                                className="flex flex-col gap-1 px-3 py-2.5 rounded-lg w-full text-left transition-all text-app-text/50 hover:bg-accent/10 hover:text-accent border border-white/5"
+                                className="flex flex-col gap-1 px-3 py-2.5 rounded-lg w-full text-left transition-all text-app-text/50 hover:bg-accent/10 hover:text-accent border border-app-text/5"
                             >
                                 {acteDeLaSeance && (
                                     <span className="text-ui-11 font-bold truncate w-full">
@@ -472,7 +472,7 @@ const CampaignCockpit: React.FC = () => {
                                 )}
                                 <span className="flex items-center gap-2 text-ui-9 font-black uppercase tracking-widest">
                                     {scenesEnCours > 0 && (
-                                        <span className="text-emerald-400">{scenesEnCours} en cours</span>
+                                        <span className="text-etat-succes">{scenesEnCours} en cours</span>
                                     )}
                                     {scenesEnPause > 0 && (
                                         <span className="opacity-50">{scenesEnPause} en pause</span>
@@ -510,7 +510,7 @@ const CampaignCockpit: React.FC = () => {
                                         t('modules:session.cockpit.confirm_restore'),
                                         t('modules:session.cockpit.cancel')
                                     )}
-                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/10"
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg group w-full text-left transition-all text-etat-succes hover:bg-etat-succes/10 border border-etat-succes/10"
                                     title={t('modules:session.cockpit.restore_state')}
                                 >
                                     <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-500" />
@@ -518,7 +518,7 @@ const CampaignCockpit: React.FC = () => {
                                 </button>
                                 <button
                                     onClick={() => showCustom('snapshot-viewer', { snapshot: activeSession.moduleSnapshot, sessionName: t('modules:session.cockpit.session_hash', { number: activeSession.number }) })}
-                                    className="flex items-center gap-3 px-3 py-1.5 rounded-lg group w-full text-left transition-all text-emerald-400/60 hover:text-emerald-400 hover:bg-emerald-500/5 text-ui-10"
+                                    className="flex items-center gap-3 px-3 py-1.5 rounded-lg group w-full text-left transition-all text-etat-succes/60 hover:text-etat-succes hover:bg-etat-succes/5 text-ui-10"
                                 >
                                     <Eye size={14} />
                                     <span className="font-bold uppercase tracking-widest">{t('modules:session.cockpit.view_content')}</span>
@@ -581,7 +581,7 @@ const CampaignCockpit: React.FC = () => {
                                 href={activeSession.externalLink} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all group"
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-etat-succes/5 border border-etat-succes/10 text-etat-succes hover:bg-etat-succes/10 hover:border-etat-succes/30 transition-all group"
                             >
                                 <ExternalLink size={16} className="group-hover:scale-110 transition-transform" />
                                 <span className="text-xs font-bold truncate">{t('modules:session.cockpit.open_http_link')}</span>
@@ -612,7 +612,7 @@ const CampaignCockpit: React.FC = () => {
                                         ? t('modules:session.cockpit.open_file_refused')
                                         : t('modules:session.cockpit.open_file_failed', { chemin }));
                                 }}
-                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-cyan-500/5 border border-cyan-500/10 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-all group"
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gm-cyan/5 border border-gm-cyan/10 text-gm-cyan hover:bg-gm-cyan/10 hover:border-gm-cyan/30 transition-all group"
                             >
                                 <File size={16} className="group-hover:scale-110 transition-transform" />
                                 <span className="text-xs font-bold truncate">{t('modules:session.cockpit.access_file')}</span>

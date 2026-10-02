@@ -88,7 +88,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                                         onKeyDown={(e) => e.key === 'Enter' && saveEdit(item.id)}
                                         onBlur={() => saveEdit(item.id)}
                                     />
-                                    <button onClick={() => saveEdit(item.id)} title={t('modules:session.checklist.tooltip_validate')} className="text-emerald-500 hover:text-emerald-400">
+                                    <button onClick={() => saveEdit(item.id)} title={t('modules:session.checklist.tooltip_validate')} className="text-etat-succes hover:text-etat-succes">
                                         <Check size={14} />
                                     </button>
                                 </div>
@@ -111,7 +111,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = ({ sessionId }) => {
                                 </button>
                                 <button 
                                     onClick={() => removeChecklistItem(session.id, item.id)}
-                                    className="p-1 text-app-text/40 hover:text-red-400 transition-colors"
+                                    className="p-1 text-app-text/40 hover:text-etat-danger transition-colors"
                                     title={t('modules:session.checklist.tooltip_delete')}
                                 >
                                     <Trash2 size={12} />

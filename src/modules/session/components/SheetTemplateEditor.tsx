@@ -111,7 +111,7 @@ const SectionEditor: React.FC<{
                 <button 
                     onClick={() => showConfirm(t('modules:session.template_manager.editor.confirm_delete_section', { name: section.label }), onDelete)} 
                     title={t('modules:session.template_manager.editor.delete_section')}
-                    className="p-2 text-app-text/40 hover:text-red-500 transition-colors rounded-lg hover:bg-red-500/10"
+                    className="p-2 text-app-text/40 hover:text-etat-danger transition-colors rounded-lg hover:bg-etat-danger/10"
                 >
                     <Trash2 size={16} />
                 </button>
@@ -150,7 +150,7 @@ const SectionEditor: React.FC<{
                                 <button 
                                     onClick={() => removeField(i)} 
                                     title={t('modules:session.template_manager.editor.delete_field')} 
-                                    className="p-1.5 text-app-text/20 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                                    className="p-1.5 text-app-text/20 hover:text-etat-danger opacity-0 group-hover:opacity-100 transition-all"
                                 >
                                     <Trash2 size={14} />
                                 </button>
@@ -316,7 +316,7 @@ const SheetTemplateEditor: React.FC = () => {
                                 readOnly={template.isBuiltin}
                             />
                             <div className="flex items-center gap-2 mt-0.5">
-                                <span className={`text-ui-9 font-black uppercase tracking-widest px-2 py-0.5 rounded ${template.isBuiltin ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-accent/10 text-accent border border-accent/20'}`}>
+                                <span className={`text-ui-9 font-black uppercase tracking-widest px-2 py-0.5 rounded ${template.isBuiltin ? 'bg-etat-alerte/10 text-etat-alerte border border-etat-alerte/20' : 'bg-accent/10 text-accent border border-accent/20'}`}>
                                     {template.isBuiltin ? t('modules:session.template_manager.manager.status_core') : t('modules:session.template_manager.manager.status_user')}
                                 </span>
                                 <span className="text-ui-9 text-app-text/20 font-bold uppercase tracking-tighter">ID: {template.id}</span>
@@ -327,11 +327,11 @@ const SheetTemplateEditor: React.FC = () => {
 
                 <div className="flex items-center gap-3">
                     {template.isBuiltin ? (
-                        <p className="text-xs text-amber-500 italic mr-4">{t('modules:session.template_manager.manager.builtin_warning')}</p>
+                        <p className="text-xs text-etat-alerte italic mr-4">{t('modules:session.template_manager.manager.builtin_warning')}</p>
                     ) : (
                         <button
                             onClick={() => {}}
-                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-app-bg font-black text-xs uppercase tracking-widest shadow-glow-accent hover:opacity-90 transition-all"
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-app-on-accent font-black text-xs uppercase tracking-widest shadow-glow-accent hover:opacity-90 transition-all"
                         >
                             <Save size={16} /> {t('modules:session.template_manager.manager.save_btn')}
                         </button>
@@ -385,15 +385,15 @@ const SheetTemplateEditor: React.FC = () => {
                             </div>
 
                             {!template.isBuiltin && (
-                                <div className="p-6 rounded-3xl border-2 border-dashed border-red-500/20 bg-red-500/5 hover:bg-red-500/10 transition-all group">
-                                    <h5 className="text-ui-10 font-black uppercase tracking-widest text-red-500 mb-2">{t('modules:session.template_manager.manager.destruction_label')}</h5>
+                                <div className="p-6 rounded-3xl border-2 border-dashed border-etat-danger/20 bg-etat-danger/5 hover:bg-etat-danger/10 transition-all group">
+                                    <h5 className="text-ui-10 font-black uppercase tracking-widest text-etat-danger mb-2">{t('modules:session.template_manager.manager.destruction_label')}</h5>
                                     <p className="text-ui-10 text-app-text/40 mb-4">{t('modules:session.template_manager.manager.destruction_desc')}</p>
                                     <button 
                                         onClick={() => showConfirm(t('modules:session.template_manager.manager.delete_confirm', { name: template.name }), () => {
                                             deleteSheetTemplate(template.id);
                                             handleBack();
                                         })}
-                                        className="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/40 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all shadow-lg"
+                                        className="w-full py-2 bg-etat-danger/20 text-etat-danger border border-etat-danger/40 rounded-xl text-ui-10 font-black uppercase tracking-widest hover:bg-etat-danger hover:text-app-bg transition-all shadow-lg"
                                     >
                                         {t('modules:session.template_manager.manager.destruction_btn')}
                                     </button>
@@ -414,7 +414,7 @@ const SheetTemplateEditor: React.FC = () => {
                                         <div key={gem.id} className={`p-4 rounded-2xl border transition-all ${currValue ? 'bg-accent/5 border-accent/30 shadow-glow-accent/5' : 'bg-app-surface/20 border-app-border/40 hover:border-app-border/60'} group`}>
                                             <div className="flex items-center justify-between mb-3">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`p-2 rounded-xl ${currValue ? 'bg-accent text-app-bg' : 'bg-app-bg text-app-text/40'}`}>
+                                                    <div className={`p-2 rounded-xl ${currValue ? 'bg-accent text-app-on-accent' : 'bg-app-bg text-app-text/40'}`}>
                                                         <Icon size={14} />
                                                     </div>
                                                 <span className={`text-ui-11 font-black uppercase tracking-widest ${currValue ? 'text-accent' : 'text-app-text/60'}`}>{t(gem.name)}</span>

@@ -35,8 +35,8 @@ const SessionSummaryModal: React.FC = () => {
                     </div>
                 </div>
                 
-                <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <div className="px-3 py-1.5 rounded-lg bg-etat-succes/10 border border-etat-succes/20 text-etat-succes text-ui-10 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse"></div>
                     Journal de Campagne
                 </div>
             </div>
@@ -63,7 +63,7 @@ const SessionSummaryModal: React.FC = () => {
             <div className="mt-8 flex items-center justify-end">
                 <button
                     onClick={handleSave}
-                    className="flex items-center gap-3 px-10 py-3 bg-accent text-white rounded-xl font-black text-sm shadow-glow-accent transition-all active:scale-95 group"
+                    className="flex items-center gap-3 px-10 py-3 bg-accent text-app-on-accent rounded-xl font-black text-sm shadow-glow-accent transition-all active:scale-95 group"
                 >
                     <Save size={20} className="group-hover:scale-110 transition-transform" />
                     ENREGISTRER LE RÉSUMÉ

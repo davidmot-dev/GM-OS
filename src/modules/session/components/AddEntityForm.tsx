@@ -153,7 +153,7 @@ const AddEntityForm: React.FC = () => {
                     <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
                     {t('common:actions.cancel')}
                 </button>
-                <h2 className="text-2xl font-black text-white tracking-widest uppercase italic">{t('modules:session.forms.add_entity_title')}</h2>
+                <h2 className="text-2xl font-black text-app-text tracking-widest uppercase italic">{t('modules:session.forms.add_entity_title')}</h2>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-12 flex-1 overflow-hidden">
@@ -174,8 +174,8 @@ const AddEntityForm: React.FC = () => {
                                 <p className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.forms.labels.avatar_select')}</p>
                             </div>
                         )}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                            <ImageIcon size={32} className="text-white" />
+                        <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <ImageIcon size={32} className="text-app-text" />
                         </div>
                     </button>
 
@@ -192,7 +192,7 @@ const AddEntityForm: React.FC = () => {
                                         type="button"
                                         onClick={() => setType(typeVal)}
                                         className={`flex-1 py-2 rounded-xl text-ui-10 font-black uppercase transition-all border ${
-                                            type === typeVal ? 'bg-accent text-white border-accent' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
+                                            type === typeVal ? 'bg-accent text-app-on-accent border-accent' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
                                         }`}
                                     >
                                         {t(`modules:session.forms.types.${typeVal}`)}
@@ -212,7 +212,7 @@ const AddEntityForm: React.FC = () => {
                                         type="button"
                                         onClick={() => setRole(r)}
                                         className={`py-2 rounded-xl text-ui-10 font-black uppercase transition-all border ${
-                                            role === r ? 'bg-white text-app-bg border-white' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
+                                            role === r ? 'bg-app-text text-app-bg border-app-border' : 'bg-app-surface border-app-border text-app-text/40 hover:border-app-border/60'
                                         }`}
                                     >
                                         {t(`modules:session.npc_detail.affinity.${r}`)}
@@ -233,7 +233,7 @@ const AddEntityForm: React.FC = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder={t('modules:session.forms.placeholders.name')}
-                            className="w-full bg-app-surface/50 border border-app-border rounded-2xl px-6 py-4 text-xl font-bold text-white focus:ring-1 focus:ring-accent/50 focus:border-accent/50 focus:outline-none transition-all placeholder:text-app-text/10"
+                            className="w-full bg-app-surface/50 border border-app-border rounded-2xl px-6 py-4 text-xl font-bold text-app-text focus:ring-1 focus:ring-accent/50 focus:border-accent/50 focus:outline-none transition-all placeholder:text-app-text/10"
                             required
                             title={t('modules:session.forms.labels.name')}
                         />
@@ -290,13 +290,13 @@ const AddEntityForm: React.FC = () => {
                                     label: tacheDeDefaite.label || 'Seuil de défaite',
                                     val: seuilDeDefaite,
                                     set: setSeuilDeDefaite,
-                                    icon: <Activity size={14} className="text-rose-400" />,
+                                    icon: <Activity size={14} className="text-etat-danger" />,
                                 }]
                                 : modeleDeSante === 'hp'
-                                    ? [{ id: 'entity-hp', label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-red-400" /> }]
+                                    ? [{ id: 'entity-hp', label: 'PV Max', val: maxHp, set: setMaxHp, icon: <Heart size={14} className="text-etat-danger" /> }]
                                     : []),
                             ...(initiativeChiffree
-                                ? [{ id: 'entity-initiative', label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-amber-400" /> }]
+                                ? [{ id: 'entity-initiative', label: 'Init.', val: initiative, set: setInitiative, icon: <Zap size={14} className="text-etat-alerte" /> }]
                                 : []),
                         ].map((stat, i) => {
                             /*
@@ -308,14 +308,14 @@ const AddEntityForm: React.FC = () => {
                             const cle = `modules:session.forms.labels.${stat.id.split('-')[1]}`;
                             const intitule = i18n.exists(cle) ? t(cle) : stat.label;
                             return (
-                            <div key={i} className="bg-app-surface/40 border border-white/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
+                            <div key={i} className="bg-app-surface/40 border border-app-text/5 p-3 rounded-xl flex flex-col items-center justify-center gap-1 group hover:border-accent/20 transition-all">
                                 {stat.icon}
                                 <input
                                     id={stat.id}
                                     type="number"
                                     value={stat.val}
                                     onChange={(e) => stat.set(parseInt(e.target.value) || 0)}
-                                    className="w-full bg-transparent border-none text-center text-white font-black text-sm focus:ring-0"
+                                    className="w-full bg-transparent border-none text-center text-app-text font-black text-sm focus:ring-0"
                                     title={intitule}
                                 />
                                 <label htmlFor={stat.id} className="text-ui-9 uppercase font-bold text-app-text/20 tracking-wider">{intitule}</label>
@@ -326,7 +326,7 @@ const AddEntityForm: React.FC = () => {
 
                     <div className="flex flex-col gap-4">
                         {/* Roleplaying Notes */}
-                        <div className="p-4 rounded-2xl bg-app-surface/30 border border-white/5 flex flex-col gap-2">
+                        <div className="p-4 rounded-2xl bg-app-surface/30 border border-app-text/5 flex flex-col gap-2">
                             <div className="flex items-center gap-2 mb-1">
                                 <BookOpen size={14} className="text-app-text/40 pointer-events-none" />
                                 <label htmlFor="entity-roleplaying-notes" className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.forms.labels.notes')}</label>
@@ -365,13 +365,13 @@ const AddEntityForm: React.FC = () => {
             <div className="mt-8 pt-6 border-t border-app-border flex justify-end gap-4">
                  <button
                     onClick={() => setIsAddingEntity(false)}
-                    className="px-8 py-3 rounded-xl bg-app-surface hover:bg-app-surface/80 text-app-text/60 font-bold text-xs transition-all border border-white/5"
+                    className="px-8 py-3 rounded-xl bg-app-surface hover:bg-app-surface/80 text-app-text/60 font-bold text-xs transition-all border border-app-text/5"
                 >
                     {t('common:actions.cancel')}
                 </button>
                 <button
                     onClick={handleSubmit}
-                    className="px-12 py-3 rounded-xl bg-accent hover:bg-accent/80 text-white font-black text-xs transition-all shadow-glow-accent"
+                    className="px-12 py-3 rounded-xl bg-accent hover:bg-accent/80 text-app-on-accent font-black text-xs transition-all shadow-glow-accent"
                 >
                     {t('modules:session.forms.create')}
                 </button>

@@ -17,13 +17,13 @@ export const AnatomicalSilhouette: React.FC<AnatomicalSilhouetteProps> = ({ part
   const getPartColor = (status: PartStatus) => {
     switch (status) {
       case 'crippled': 
-        return 'fill-rose-500/80 stroke-rose-300 drop-shadow-[0_0_15px_rgba(244,63,94,0.9)] animate-pulse';
+        return 'fill-etat-danger/80 stroke-etat-danger drop-shadow-[0_0_15px_rgba(244,63,94,0.9)] animate-pulse';
       case 'injured': 
-        return 'fill-orange-500/60 stroke-orange-300 drop-shadow-[0_0_10px_rgba(249,115,22,0.7)]';
+        return 'fill-etat-alerte/60 stroke-etat-alerte drop-shadow-[0_0_10px_rgba(249,115,22,0.7)]';
       case 'healthy':
-        return 'fill-emerald-500/40 stroke-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.3)]';
+        return 'fill-etat-succes/40 stroke-etat-succes drop-shadow-[0_0_5px_rgba(52,211,153,0.3)]';
       default: 
-        return 'fill-slate-500/20 stroke-slate-400/40';
+        return 'fill-app-muted/20 stroke-app-muted/40';
     }
   };
 
@@ -33,7 +33,7 @@ export const AnatomicalSilhouette: React.FC<AnatomicalSilhouetteProps> = ({ part
       <path
         d={path}
         id={id}
-        className={`transition-all duration-500 cursor-pointer ${getPartColor(status)} hover:stroke-white/60 hover:fill-opacity-80 active:scale-95`}
+        className={`transition-all duration-500 cursor-pointer ${getPartColor(status)} hover:stroke-app-text/60 hover:fill-opacity-80 active:scale-95`}
         onClick={(e) => {
           e.stopPropagation();
           onPartClick?.(id, false);

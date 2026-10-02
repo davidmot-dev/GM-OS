@@ -105,7 +105,7 @@ const CampaignDetails: React.FC = () => {
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => setCurrentView('cockpit')}
-                    className="p-2 hover:bg-app-surface rounded-full transition-colors text-app-text/40 hover:text-white"
+                    className="p-2 hover:bg-app-surface rounded-full transition-colors text-app-text/40 hover:text-app-text"
                     title={t('modules:session.campaign_details.actions.back')}
                     aria-label={t('modules:session.campaign_details.actions.back')}
                 >
@@ -121,10 +121,10 @@ const CampaignDetails: React.FC = () => {
                         title={verdictObsidian?.message}
                         className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm transition-all font-bold ${
                             verdictObsidian === null
-                                ? 'bg-purple-500/20 hover:bg-purple-500/30 border-purple-500/30 text-purple-400'
+                                ? 'bg-gm-violet/20 hover:bg-gm-violet/30 border-gm-violet/30 text-gm-violet'
                                 : verdictObsidian.success
-                                ? 'bg-green-500/20 border-green-500/30 text-green-400'
-                                : 'bg-rose-500/20 border-rose-500/30 text-rose-400'
+                                ? 'bg-etat-succes/20 border-etat-succes/30 text-etat-succes'
+                                : 'bg-etat-danger/20 border-etat-danger/30 text-etat-danger'
                         }`}
                     >
                         <Share2 size={16} />
@@ -143,7 +143,7 @@ const CampaignDetails: React.FC = () => {
             {verdictObsidian && (
                 <p
                     role="status"
-                    className={`-mt-3 text-xs font-semibold ${verdictObsidian.success ? 'text-green-400' : 'text-rose-400'}`}
+                    className={`-mt-3 text-xs font-semibold ${verdictObsidian.success ? 'text-etat-succes' : 'text-etat-danger'}`}
                 >
                     {verdictObsidian.message}
                 </p>
@@ -165,7 +165,7 @@ const CampaignDetails: React.FC = () => {
                                 <div className="flex items-center gap-2">
                                     <p className="text-app-text/80 font-medium">{systemName}</p>
                                     {customGameDrivers.find(d => d.id === campaign.system) && (
-                                        <span className="text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/30 flex items-center gap-1 font-bold">
+                                        <span className="text-xs bg-etat-info/20 text-etat-info px-2 py-0.5 rounded border border-etat-info/30 flex items-center gap-1 font-bold">
                                             {customGameDrivers.find(d => d.id === campaign.system)?.emoji} {t('modules:session.campaign_details.status.driver_active')}
                                         </span>
                                     )}
@@ -207,8 +207,8 @@ const CampaignDetails: React.FC = () => {
                                 <Sparkles size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within:text-accent transition-colors" />
                             </div>
                             {campaign.notebookUrl && (
-                                <p className="text-ui-9 text-emerald-500/70 flex items-center gap-1 font-mono">
-                                    <span className="w-1 h-1 rounded-full bg-emerald-500"></span>
+                                <p className="text-ui-9 text-etat-succes/70 flex items-center gap-1 font-mono">
+                                    <span className="w-1 h-1 rounded-full bg-etat-succes"></span>
                                     {t('modules:session.campaign_details.status.oracle_ready')}
                                 </p>
                             )}
@@ -257,7 +257,7 @@ const CampaignDetails: React.FC = () => {
                                         <div className="flex items-center gap-3">
                                             <span className="text-lg font-mono font-bold text-app-text/90">#{s.number}</span>
                                             <h4 className="text-sm font-bold text-app-text/80">{t('common:labels.session_number', { number: s.number })}</h4>
-                                            <span className={`text-ui-10 px-2 py-0.5 rounded uppercase font-bold ${s.status === 'active' ? 'bg-amber-500 text-slate-950 shadow-glow-accent' : 'bg-app-surface text-app-text/40'}`}>
+                                            <span className={`text-ui-10 px-2 py-0.5 rounded uppercase font-bold ${s.status === 'active' ? 'bg-etat-alerte text-app-subtle shadow-glow-accent' : 'bg-app-surface text-app-text/40'}`}>
                                                 {t('common:status.' + s.status, { defaultValue: s.status })}
                                             </span>
                                         </div>
@@ -267,7 +267,7 @@ const CampaignDetails: React.FC = () => {
                                                     e.stopPropagation();
                                                     useModalStore.getState().showCustom('session-summary', { sessionId: s.id });
                                                 }}
-                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-blue-400 hover:bg-blue-500 hover:text-white transition-all uppercase tracking-wider"
+                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-etat-info hover:bg-etat-info hover:text-app-bg transition-all uppercase tracking-wider"
                                                 title={t('modules:session.campaign_details.actions.edit_summary')}
                                             >
                                                 <Edit3 size={12} />
@@ -287,15 +287,15 @@ const CampaignDetails: React.FC = () => {
                                                     // Visual feedback using the button itself
                                                     const btn = e.currentTarget;
                                                     const originalInner = btn.innerHTML;
-                                                    btn.innerHTML = `<span class="text-emerald-500 flex items-center gap-1"><svg size="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check w-3 h-3"><polyline points="20 6 9 17 4 12"></polyline></svg> ${t('modules:session.campaign_details.status.copied')}</span>`;
-                                                    btn.classList.add('bg-emerald-500/10', 'border-emerald-500/30');
+                                                    btn.innerHTML = `<span class="text-etat-succes flex items-center gap-1"><svg size="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check w-3 h-3"><polyline points="20 6 9 17 4 12"></polyline></svg> ${t('modules:session.campaign_details.status.copied')}</span>`;
+                                                    btn.classList.add('bg-etat-succes/10', 'border-etat-succes/30');
                                                     
                                                     setTimeout(() => {
                                                         btn.innerHTML = originalInner;
-                                                        btn.classList.remove('bg-emerald-500/10', 'border-emerald-500/30');
+                                                        btn.classList.remove('bg-etat-succes/10', 'border-etat-succes/30');
                                                     }, 2000);
                                                 }}
-                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-accent hover:bg-accent hover:text-app-bg transition-all uppercase tracking-wider"
+                                                className="opacity-0 group-hover/session:opacity-100 transition-opacity flex items-center gap-1.5 px-2 py-1 rounded bg-app-surface/50 border border-app-border text-ui-10 font-bold text-accent hover:bg-accent hover:text-app-on-accent transition-all uppercase tracking-wider"
                                                 title={t('modules:session.campaign_details.actions.oracle_copy')}
                                             >
                                                 <Sparkles size={12} />
@@ -315,7 +315,7 @@ const CampaignDetails: React.FC = () => {
                     {/* World Tracking / POIs Snapshot */}
                     <div className="grid grid-cols-2 gap-6">
                         <div className="bg-app-surface/60 rounded-xl border border-app-border p-5">
-                            <div className="flex items-center gap-3 text-blue-400 mb-4">
+                            <div className="flex items-center gap-3 text-etat-info mb-4">
                                 <MapPin size={18} />
                                 <h4 className="font-bold text-xs uppercase tracking-widest">{t('modules:session.campaign_details.sections.locations')}</h4>
                             </div>
@@ -324,7 +324,7 @@ const CampaignDetails: React.FC = () => {
                                     activeLocations.map(loc => (
                                         <div 
                                             key={loc.id} 
-                                            className="group flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all cursor-pointer"
+                                            className="group flex items-center gap-3 p-2 rounded-lg hover:bg-app-text/5 transition-all cursor-pointer"
                                             onClick={() => {
                                                 setSelectedAtlasMap(loc.id);
                                                 setCurrentView('world-atlas');
@@ -349,8 +349,8 @@ const CampaignDetails: React.FC = () => {
                             </div>
                         </div>
                         <div className="bg-app-surface/60 rounded-xl border border-app-border p-6 flex flex-col gap-4">
-                            <div className="flex items-center gap-3 text-emerald-500">
-                                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                            <div className="flex items-center gap-3 text-etat-succes">
+                                <div className="w-8 h-8 rounded-lg bg-etat-succes/10 flex items-center justify-center">
                                     <Users size={18} />
                                 </div>
                                 <h3 className="font-bold text-sm uppercase tracking-wide">{t('modules:session.campaign_details.sections.npcs', { count: campaignNPCs.length })}</h3>
@@ -360,7 +360,7 @@ const CampaignDetails: React.FC = () => {
                                     <div key={npc.id} className="relative group aspect-square rounded-lg overflow-hidden border border-app-border hover:border-accent transition-colors cursor-pointer" onClick={() => setCurrentView('npc-gallery')}>
                                         <ResolvedAsset src={npc.avatar} className="w-full h-full object-cover" alt={npc.name} />
                                         <div className="absolute inset-0 bg-app-bg/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <p className="text-ui-8 text-white font-bold uppercase p-1 bg-black/60 rounded">{npc.name}</p>
+                                            <p className="text-ui-8 text-app-text font-bold uppercase p-1 bg-app-bg/60 rounded">{npc.name}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -378,9 +378,9 @@ const CampaignDetails: React.FC = () => {
                 </div>
             </div>
             {/* Nexus-OS Section */}
-            <div className="bg-app-surface/60 rounded-xl border border-amber-500/20 p-6 flex flex-col gap-4">
-                <div className="flex items-center gap-3 text-amber-400">
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+            <div className="bg-app-surface/60 rounded-xl border border-etat-alerte/20 p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-3 text-etat-alerte">
+                    <div className="w-8 h-8 rounded-lg bg-etat-alerte/10 flex items-center justify-center">
                         <Package size={18} />
                     </div>
                     <div>
@@ -399,7 +399,7 @@ const CampaignDetails: React.FC = () => {
                         type="checkbox"
                         checked={!emporterLesMedias}
                         onChange={(e) => setEmporterLesMedias(!e.target.checked)}
-                        className="accent-amber-500"
+                        className="accent-etat-alerte"
                     />
                     <span>{t('modules:session.campaign_details.actions.nexus_light')}</span>
                 </label>
@@ -410,7 +410,7 @@ const CampaignDetails: React.FC = () => {
                         id="nexus-export-btn"
                         onClick={handleExport}
                         disabled={!isNexusAvailable || !!nexusProgress}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-lg text-sm text-amber-400 transition-all font-bold disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-etat-alerte/10 hover:bg-etat-alerte/20 border border-etat-alerte/30 rounded-lg text-sm text-etat-alerte transition-all font-bold disabled:opacity-30 disabled:cursor-not-allowed"
                         title={!isNexusAvailable ? t('modules:session.campaign_details.tooltips.no_electron') : t('modules:session.campaign_details.actions.nexus_export')}
                     >
                         <DownloadCloud size={16} />

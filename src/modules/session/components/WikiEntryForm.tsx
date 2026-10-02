@@ -144,7 +144,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                             {tags.map(tag => (
                                 <span key={tag} className="flex items-center gap-1.5 px-2 py-0.5 bg-app-bg border border-app-border rounded text-ui-9 text-app-text/60">
                                     {tag}
-                                    <button type="button" onClick={() => setTags(tags.filter(t => t !== tag))} className="hover:text-rose-400">
+                                    <button type="button" onClick={() => setTags(tags.filter(t => t !== tag))} className="hover:text-etat-danger">
                                         <X size={10} />
                                     </button>
                                 </span>
@@ -174,7 +174,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                                     <button 
                                         type="button" 
                                         onClick={() => setImageUrls(imageUrls.filter(u => u !== url))}
-                                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-rose-400"
+                                        className="absolute inset-0 bg-app-bg/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-etat-danger"
                                     >
                                         <X size={12} />
                                     </button>
@@ -216,7 +216,7 @@ export const WikiEntryForm: React.FC<WikiEntryFormProps> = ({ entry, onClose }) 
                 </button>
                 <button
                     type="submit"
-                    className="flex items-center gap-2 px-8 py-2 bg-accent text-app-bg rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
+                    className="flex items-center gap-2 px-8 py-2 bg-accent text-app-on-accent rounded-xl text-xs font-black uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
                 >
                     <Save size={14} />
                     {entry ? t('modules:session.wiki_form.save_edit') : t('modules:session.wiki_form.save_create')}

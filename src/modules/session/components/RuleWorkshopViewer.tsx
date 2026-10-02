@@ -368,7 +368,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
     return (
         <div className="flex-1 flex flex-col h-full overflow-hidden">
             {/* Toolbar */}
-            <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between bg-white/2">
+            <div className="px-8 py-6 border-b border-app-text/5 flex items-center justify-between bg-app-text/2">
                 <div className="flex items-center gap-6">
                     <div className="relative group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within:text-accent transition-colors" size={18} />
@@ -377,7 +377,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             placeholder={t('modules:session.forge_module.workshop_viewer.search_placeholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-app-bg/40 border border-white/5 rounded-2xl pl-12 pr-6 py-3 text-sm font-bold w-80 focus:ring-2 focus:ring-accent/20 focus:border-accent/40 outline-none transition-all"
+                            className="bg-app-bg/40 border border-app-text/5 rounded-2xl pl-12 pr-6 py-3 text-sm font-bold w-80 focus:ring-2 focus:ring-accent/20 focus:border-accent/40 outline-none transition-all"
                         />
                     </div>
                 </div>
@@ -395,18 +395,18 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                     <button
                         onClick={() => { void loadDocs(); }}
                         title={t('modules:session.forge_module.workshop_viewer.refresh')}
-                        className="p-3 bg-app-bg/40 border border-white/5 rounded-2xl text-app-text/40 hover:text-accent hover:border-accent/30 transition-all"
+                        className="p-3 bg-app-bg/40 border border-app-text/5 rounded-2xl text-app-text/40 hover:text-accent hover:border-accent/30 transition-all"
                     >
                         <RefreshCw size={16} />
                     </button>
                     <button
                         onClick={handleCreateNew}
-                        className="px-6 py-3 bg-accent text-white rounded-2xl font-black uppercase tracking-widest text-ui-10 shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                        className="px-6 py-3 bg-accent text-app-on-accent rounded-2xl font-black uppercase tracking-widest text-ui-10 shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                     >
                         <Plus size={16} />
                         {t('modules:session.forge_module.workshop_viewer.create_button')}
                     </button>
-                    <div className="h-8 w-[1px] bg-white/10 mx-2" />
+                    <div className="h-8 w-[1px] bg-app-text/10 mx-2" />
                     <span className="text-ui-10 font-black text-app-text/20 uppercase tracking-widest">
                         {t('modules:session.forge_module.workshop_viewer.available_files', { count: filteredDocs.length })}
                     </span>
@@ -416,7 +416,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
             {/* Grid Area */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-8">
                 {filteredDocs.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-app-text/20 border-2 border-dashed border-white/5 rounded-[3rem]">
+                    <div className="h-full flex flex-col items-center justify-center text-app-text/20 border-2 border-dashed border-app-text/5 rounded-[3rem]">
                         <SearchX size={64} className="mb-6 opacity-20" />
                         <h3 className="text-xl font-black uppercase tracking-widest">{t('modules:session.forge_module.workshop_viewer.no_results_title')}</h3>
                         <p className="text-sm font-bold mt-2">{t('modules:session.forge_module.workshop_viewer.no_results_desc')}</p>
@@ -442,7 +442,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                     </span>
                                 </div>
 
-                                <h3 className="text-xl font-bold font-display text-white group-hover:text-accent transition-colors truncate">
+                                <h3 className="text-xl font-bold font-display text-app-text group-hover:text-accent transition-colors truncate">
                                     {doc.name.replace('.md', '')}
                                 </h3>
                                 
@@ -452,7 +452,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                     </p>
                                 </div>
 
-                                <div className="pt-4 border-t border-white/5 flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-app-text/20">
+                                <div className="pt-4 border-t border-app-text/5 flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-app-text/20">
                                     <span>{t('modules:session.forge_module.workshop_viewer.md_version')}</span>
                                     <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform group-hover:text-accent" />
                                 </div>
@@ -464,15 +464,15 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
 
             {/* Reading View Overlay */}
             {isReading && selectedCard && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-8 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
-                    <div className="relative w-full max-w-4xl h-[90vh] overflow-hidden rounded-[3rem] border border-white/10 bg-[#0c0c14]/95 shadow-2xl flex flex-col">
-                        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/2">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-8 bg-app-bg/60 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="relative w-full max-w-4xl h-[90vh] overflow-hidden rounded-[3rem] border border-app-text/10 bg-app-bg/95 shadow-2xl flex flex-col">
+                        <div className="p-8 border-b border-app-text/5 flex items-center justify-between bg-app-text/2">
                             <div className="flex items-center gap-4">
                                 <div className="p-3 bg-accent rounded-xl shadow-glow-accent/20">
-                                    <Zap size={20} className="text-white" />
+                                    <Zap size={20} className="text-app-text" />
                                 </div>
                                 <div>
-                                    <h2 className="text-2xl font-black uppercase tracking-tight text-white font-display">
+                                    <h2 className="text-2xl font-black uppercase tracking-tight text-app-text font-display">
                                         {selectedCard.title}
                                     </h2>
                                     <p className="text-ui-10 text-accent font-black uppercase tracking-widest mt-1 flex items-center gap-2">
@@ -483,28 +483,28 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             <div className="flex items-center gap-3">
                                 <button 
                                     onClick={handleExportToObsidian}
-                                    className="p-3 bg-white/5 border border-white/5 rounded-2xl text-white/40 hover:text-white hover:border-white/20 transition-all group/obs"
+                                    className="p-3 bg-app-text/5 border border-app-text/5 rounded-2xl text-app-text/40 hover:text-app-text hover:border-app-text/20 transition-all group/obs"
                                     title={t('modules:session.forge_module.workshop_viewer.export_obsidian')}
                                 >
                                     <Globe size={24} className="group-hover/obs:scale-110 transition-transform" />
                                 </button>
                                 <button 
                                     onClick={handleEditCurrent}
-                                    className="p-3 bg-white/5 border border-white/5 rounded-2xl text-white/40 hover:text-accent hover:border-accent/40 transition-all group/edit"
+                                    className="p-3 bg-app-text/5 border border-app-text/5 rounded-2xl text-app-text/40 hover:text-accent hover:border-accent/40 transition-all group/edit"
                                     title={t('modules:session.forge_module.workshop_viewer.edit_rule')}
                                 >
                                     <Edit2 size={24} className="group-hover/edit:scale-110 transition-transform" />
                                 </button>
                                 <button 
                                     onClick={() => setIsReading(false)}
-                                    className="p-3 hover:bg-white/5 rounded-full text-white/20 hover:text-white transition-all"
+                                    className="p-3 hover:bg-app-text/5 rounded-full text-app-text/20 hover:text-app-text transition-all"
                                 >
                                     <X size={28} />
                                 </button>
                             </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto custom-scrollbar p-12 bg-black/20">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar p-12 bg-app-bg/20">
                             <LoupeDeLecture>
                                 <div className="max-w-4xl mx-auto prose prose-invert prose-emerald prose-headings:font-display prose-headings:tracking-tighter prose-p:text-lg prose-p:leading-relaxed prose-strong:text-accent prose-li:text-app-text/80">
                                     <TexteMarkdown>
@@ -514,16 +514,16 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             </LoupeDeLecture>
                         </div>
 
-                        <div className="p-8 border-t border-white/5 flex justify-end gap-4 bg-white/2">
+                        <div className="p-8 border-t border-app-text/5 flex justify-end gap-4 bg-app-text/2">
                             <button 
                                 onClick={() => setIsReading(false)}
-                                className="px-10 py-3 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest transition-all"
+                                className="px-10 py-3 bg-app-text/5 hover:bg-app-text/10 text-app-text rounded-2xl font-black uppercase tracking-widest transition-all"
                             >
                                 {t('modules:session.forge_module.workshop_viewer.close_grimoire')}
                             </button>
                             <button 
                                 onClick={handleShareRule}
-                                className="px-10 py-3 bg-accent hover:bg-accent/80 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-accent/20 transition-all hover:scale-105 active:scale-95"
+                                className="px-10 py-3 bg-accent hover:bg-accent/80 text-app-on-accent rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-accent/20 transition-all hover:scale-105 active:scale-95"
                             >
                                 {t('modules:session.forge_module.workshop_viewer.share_players')}
                             </button>
@@ -534,9 +534,9 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
 
             {/* Editor View Overlay */}
             {isEditing && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-8 bg-black/60 backdrop-blur-xl animate-in fade-in zoom-in duration-300">
-                    <div className="relative w-full h-[95vh] overflow-hidden rounded-[3rem] border border-white/10 bg-[#08080c] shadow-2xl flex flex-col">
-                        <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/2">
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-8 bg-app-bg/60 backdrop-blur-xl animate-in fade-in zoom-in duration-300">
+                    <div className="relative w-full h-[95vh] overflow-hidden rounded-[3rem] border border-app-text/10 bg-app-bg shadow-2xl flex flex-col">
+                        <div className="p-8 border-b border-app-text/5 flex items-center justify-between bg-app-text/2">
                             <div className="flex items-center gap-6">
                                 <div className="p-4 bg-accent/20 text-accent rounded-2xl border border-accent/20">
                                     <Hammer size={24} />
@@ -546,7 +546,7 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                                         type="text"
                                         value={editTitle}
                                         onChange={(e) => setEditTitle(e.target.value)}
-                                        className="bg-transparent text-2xl font-black uppercase tracking-tight text-white font-display border-none outline-none focus:ring-0 placeholder:text-white/10"
+                                        className="bg-transparent text-2xl font-black uppercase tracking-tight text-app-text font-display border-none outline-none focus:ring-0 placeholder:text-app-text/10"
                                         placeholder={t('modules:session.forge_module.workshop_viewer.rule_title_placeholder')}
                                     />
                                     <p className="text-ui-10 text-accent font-black uppercase tracking-widest mt-1">
@@ -557,13 +557,13 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             <div className="flex items-center gap-4">
                                 <button 
                                     onClick={() => setIsEditing(false)}
-                                    className="px-8 py-3 text-app-text/40 hover:text-white font-black uppercase tracking-widest text-ui-10 transition-all"
+                                    className="px-8 py-3 text-app-text/40 hover:text-app-text font-black uppercase tracking-widest text-ui-10 transition-all"
                                 >
                                     {t('modules:session.forge_module.workshop_viewer.cancel')}
                                 </button>
                                 <button 
                                     onClick={handleSaveRule}
-                                    className="px-10 py-3 bg-accent text-white rounded-2xl font-black uppercase tracking-widest shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                                    className="px-10 py-3 bg-accent text-app-on-accent rounded-2xl font-black uppercase tracking-widest shadow-glow-accent/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                                 >
                                     <CheckCircle2 size={18} />
                                     {t('modules:session.forge_module.workshop_viewer.save')}
@@ -573,9 +573,9 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
 
                         <div className="flex-1 flex overflow-hidden">
                             {/* Editor Pane */}
-                            <div className="flex-1 border-r border-white/5 flex flex-col">
-                                <div className="px-8 py-3 bg-white/2 border-b border-white/5 flex items-center justify-between">
-                                    <span className="text-ui-10 font-black uppercase tracking-widest text-white/20">{t('modules:session.forge_module.workshop_viewer.markdown_editor')}</span>
+                            <div className="flex-1 border-r border-app-text/5 flex flex-col">
+                                <div className="px-8 py-3 bg-app-text/2 border-b border-app-text/5 flex items-center justify-between">
+                                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/20">{t('modules:session.forge_module.workshop_viewer.markdown_editor')}</span>
                                     <div className="flex gap-4 opacity-20">
                                         <History size={14} />
                                         <Layers size={14} />
@@ -590,8 +590,8 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                             </div>
 
                             {/* Preview Pane */}
-                            <div className="flex-1 bg-black/40 flex flex-col">
-                                <div className="px-8 py-3 bg-white/2 border-b border-white/5">
+                            <div className="flex-1 bg-app-bg/40 flex flex-col">
+                                <div className="px-8 py-3 bg-app-text/2 border-b border-app-text/5">
                                     <span className="text-ui-10 font-black uppercase tracking-widest text-accent">{t('modules:session.forge_module.workshop_viewer.dynamic_render')}</span>
                                 </div>
                                 <div className="flex-1 overflow-y-auto custom-scrollbar p-12">

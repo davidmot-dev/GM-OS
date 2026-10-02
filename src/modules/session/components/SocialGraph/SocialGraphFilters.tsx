@@ -31,7 +31,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ label, value, option
             <label className="text-ui-9 font-bold text-app-subtle uppercase px-1">{label}</label>
             <button 
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white flex justify-between items-center hover:border-neonCyan/50 transition-all"
+                className="w-full bg-app-bg/40 border border-app-text/10 rounded-xl px-3 py-2 text-xs text-app-text flex justify-between items-center hover:border-neonCyan/50 transition-all"
             >
                 <span className={!selectedOption ? 'text-app-subtle' : ''}>
                     {selectedOption ? selectedOption.label : placeholder}
@@ -42,7 +42,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ label, value, option
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-[60]" onClick={() => setIsOpen(false)} />
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl z-[70] animate-fade-in animate-slide-up-subtle max-h-48 overflow-y-auto no-scrollbar">
+                    <div className="absolute top-full left-0 right-0 mt-1 bg-app-bg/80 backdrop-blur-xl border border-app-text/10 rounded-xl overflow-hidden shadow-2xl z-[70] animate-fade-in animate-slide-up-subtle max-h-48 overflow-y-auto no-scrollbar">
                         {options.map(opt => (
                             <button
                                 key={opt.value}
@@ -50,7 +50,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({ label, value, option
                                     onChange(opt.value);
                                     setIsOpen(false);
                                 }}
-                                className={`w-full px-4 py-2 text-left text-xs transition-all hover:bg-neonCyan/10 ${value === opt.value ? 'text-neonCyan bg-neonCyan/5 font-bold' : 'text-slate-300'}`}
+                                className={`w-full px-4 py-2 text-left text-xs transition-all hover:bg-neonCyan/10 ${value === opt.value ? 'text-neonCyan bg-neonCyan/5 font-bold' : 'text-app-text'}`}
                             >
                                 {opt.label}
                             </button>
@@ -125,28 +125,28 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
 
         <div className="absolute top-6 left-6 z-10 flex flex-col gap-4 max-w-2xl">
             <div className="flex gap-4">
-                <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex gap-2 shadow-2xl">
-                    <button onClick={onZoomIn} className="p-3 hover:bg-white/10 rounded-xl transition-all text-app-muted hover:text-white" title={t('modules:session.social_graph.tooltips.zoom_in')}>
+                <div className="bg-app-bg/60 backdrop-blur-xl border border-app-text/10 rounded-2xl p-2 flex gap-2 shadow-2xl">
+                    <button onClick={onZoomIn} className="p-3 hover:bg-app-text/10 rounded-xl transition-all text-app-muted hover:text-app-text" title={t('modules:session.social_graph.tooltips.zoom_in')}>
                         <ZoomIn size={20} />
                     </button>
-                    <button onClick={onZoomOut} className="p-3 hover:bg-white/10 rounded-xl transition-all text-app-muted hover:text-white" title={t('modules:session.social_graph.tooltips.zoom_out')}>
+                    <button onClick={onZoomOut} className="p-3 hover:bg-app-text/10 rounded-xl transition-all text-app-muted hover:text-app-text" title={t('modules:session.social_graph.tooltips.zoom_out')}>
                         <ZoomOut size={20} />
                     </button>
                     <button 
                         onClick={onToggleHeader} 
-                        className={`p-3 rounded-xl transition-all ${isHeaderHidden ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-app-muted hover:text-white hover:bg-white/10'}`} 
+                        className={`p-3 rounded-xl transition-all ${isHeaderHidden ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-app-muted hover:text-app-text hover:bg-app-text/10'}`} 
                         title={isHeaderHidden ? t('modules:session.social_graph.tooltips.immersive_on') : t('modules:session.social_graph.tooltips.immersive_off')}
                     >
                         <Maximize2 size={20} />
                     </button>
-                    <div className="w-px h-8 bg-white/10 self-center mx-1" />
-                    <button onClick={onZoomReset} className="p-3 hover:bg-white/10 rounded-xl transition-all text-app-muted hover:text-white" title={t('modules:session.social_graph.tooltips.reset_view')}>
+                    <div className="w-px h-8 bg-app-text/10 self-center mx-1" />
+                    <button onClick={onZoomReset} className="p-3 hover:bg-app-text/10 rounded-xl transition-all text-app-muted hover:text-app-text" title={t('modules:session.social_graph.tooltips.reset_view')}>
                         <Search size={20} className="rotate-45" />
                     </button>
-                    <div className="w-px h-8 bg-white/10 self-center mx-1" />
+                    <div className="w-px h-8 bg-app-text/10 self-center mx-1" />
                     <button 
                         onClick={onToggleLock} 
-                        className={`p-3 rounded-xl transition-all ${isLocked ? 'text-neonCyan bg-neonCyan/20 shadow-glow border border-neonCyan/30' : 'text-app-muted hover:text-white hover:bg-white/10'}`} 
+                        className={`p-3 rounded-xl transition-all ${isLocked ? 'text-neonCyan bg-neonCyan/20 shadow-glow border border-neonCyan/30' : 'text-app-muted hover:text-app-text hover:bg-app-text/10'}`} 
                         title={isLocked ? t('modules:session.social_graph.tooltips.lock_on') : t('modules:session.social_graph.tooltips.lock_off')}
                     >
                         {isLocked ? <Lock size={20} /> : <Unlock size={20} />}
@@ -159,26 +159,26 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                     {nbEpingles > 0 && onDetacherTout && (
                         <button
                             onClick={onDetacherTout}
-                            className="p-3 rounded-xl transition-all text-amber-500 hover:bg-amber-500/20 relative"
+                            className="p-3 rounded-xl transition-all text-etat-alerte hover:bg-etat-alerte/20 relative"
                             title={`Détacher les ${nbEpingles} nœud(s) posés à la main`}
                         >
                             <PinOff size={20} />
-                            <span className="absolute -top-0.5 -right-0.5 text-ui-9 font-black bg-amber-500 text-black rounded-full w-4 h-4 flex items-center justify-center">
+                            <span className="absolute -top-0.5 -right-0.5 text-ui-9 font-black bg-etat-alerte text-app-bg rounded-full w-4 h-4 flex items-center justify-center">
                                 {nbEpingles}
                             </span>
                         </button>
                     )}
                     <button 
                         onClick={onResetLayout} 
-                        className="p-3 hover:bg-red-500/20 rounded-xl transition-all text-app-muted hover:text-red-400" 
+                        className="p-3 hover:bg-etat-danger/20 rounded-xl transition-all text-app-muted hover:text-etat-danger" 
                         title={t('modules:session.social_graph.tooltips.reset_layout')}
                     >
                         <RefreshCw size={20} />
                     </button>
-                    <div className="w-px h-8 bg-white/10 self-center mx-1" />
+                    <div className="w-px h-8 bg-app-text/10 self-center mx-1" />
                     <button 
                         onClick={() => setIsSettingsOpen(!isSettingsOpen)} 
-                        className={`p-3 rounded-xl transition-all ${isSettingsOpen ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-app-muted hover:text-white hover:bg-white/10'}`} 
+                        className={`p-3 rounded-xl transition-all ${isSettingsOpen ? 'text-accent bg-accent/20 shadow-glow-accent border border-accent/30' : 'text-app-muted hover:text-app-text hover:bg-app-text/10'}`} 
                         title={t('modules:session.social_graph.tooltips.physics_settings')}
                     >
                         <Sliders size={20} />
@@ -186,7 +186,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                 </div>
 
 
-                <div className="flex-1 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center shadow-2xl min-w-[300px]">
+                <div className="flex-1 bg-app-bg/60 backdrop-blur-xl border border-app-text/10 rounded-2xl p-2 flex items-center shadow-2xl min-w-[300px]">
                     <div className="px-3 text-app-subtle">
                         <Search size={18} />
                     </div>
@@ -195,7 +195,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                         placeholder={t('modules:session.social_graph.filters.search_placeholder')}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-transparent border-none outline-none text-white text-sm w-full placeholder:text-slate-600"
+                        className="bg-transparent border-none outline-none text-app-text text-sm w-full placeholder:text-app-subtle"
                     />
                 </div>
 
@@ -203,10 +203,10 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
 
             {/* Physics Settings Popover */}
             {isSettingsOpen && (
-                <div className="bg-black/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 shadow-2xl animate-fade-in animate-slide-up-subtle w-[350px] space-y-6 mt-4">
-                    <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                <div className="bg-app-bg/80 backdrop-blur-2xl border border-app-text/10 rounded-2xl p-6 shadow-2xl animate-fade-in animate-slide-up-subtle w-[350px] space-y-6 mt-4">
+                    <div className="flex items-center justify-between border-b border-app-text/5 pb-3">
                         <span className="text-ui-10 font-black uppercase text-accent tracking-widest">{t('modules:session.social_graph.physics.settings_title')}</span>
-                        <button onClick={() => setIsSettingsOpen(false)} className="text-app-subtle hover:text-white text-ui-10 font-bold uppercase transition-colors">{t('modules:session.social_graph.physics.close')}</button>
+                        <button onClick={() => setIsSettingsOpen(false)} className="text-app-subtle hover:text-app-text text-ui-10 font-bold uppercase transition-colors">{t('modules:session.social_graph.physics.close')}</button>
                     </div>
 
 
@@ -224,10 +224,10 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             step="10"
                             value={physicsSettings.charge}
                             onChange={(e) => setPhysicsSettings.setCharge(Number(e.target.value))}
-                            className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
+                            className="w-full h-1.5 bg-app-bg/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
                             title="Ajuster la force de répulsion entre les nœuds"
                         />
-                        <div className="flex justify-between text-ui-8 text-slate-600 font-bold uppercase">
+                        <div className="flex justify-between text-ui-8 text-app-subtle font-bold uppercase">
                             <span>{t('modules:session.social_graph.physics.dense')}</span>
                             <span>{t('modules:session.social_graph.physics.airy')}</span>
                         </div>
@@ -248,10 +248,10 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             step="10"
                             value={physicsSettings.distance}
                             onChange={(e) => setPhysicsSettings.setDistance(Number(e.target.value))}
-                            className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
+                            className="w-full h-1.5 bg-app-bg/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
                             title="Ajuster la longueur par défaut des liens"
                         />
-                         <div className="flex justify-between text-ui-8 text-slate-600 font-bold uppercase">
+                         <div className="flex justify-between text-ui-8 text-app-subtle font-bold uppercase">
                             <span>{t('modules:session.social_graph.physics.tight')}</span>
                             <span>{t('modules:session.social_graph.physics.wide')}</span>
                         </div>
@@ -272,10 +272,10 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             step="5"
                             value={physicsSettings.collision}
                             onChange={(e) => setPhysicsSettings.setCollision(Number(e.target.value))}
-                            className="w-full h-1.5 bg-black/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
+                            className="w-full h-1.5 bg-app-bg/40 rounded-lg appearance-none cursor-pointer accent-neonCyan"
                             title="Ajuster l'espace de collision autour de chaque personnage"
                         />
-                         <div className="flex justify-between text-ui-8 text-slate-600 font-bold uppercase">
+                         <div className="flex justify-between text-ui-8 text-app-subtle font-bold uppercase">
                             <span>{t('modules:session.social_graph.physics.small')}</span>
                             <span>{t('modules:session.social_graph.physics.imposing')}</span>
                         </div>
@@ -288,7 +288,7 @@ const SocialGraphFilters: React.FC<SocialGraphFiltersProps> = ({
                             setPhysicsSettings.setDistance(150);
                             setPhysicsSettings.setCollision(40);
                         }}
-                        className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-ui-10 font-bold text-app-muted hover:text-white uppercase tracking-widest transition-all"
+                        className="w-full py-2 bg-app-text/5 hover:bg-app-text/10 border border-app-text/10 rounded-xl text-ui-10 font-bold text-app-muted hover:text-app-text uppercase tracking-widest transition-all"
                     >
                         {t('modules:session.social_graph.physics.default_btn')}
                     </button>

@@ -38,7 +38,7 @@ const ChoixDuRang: React.FC<{
                         title={actif ? 'Cliquer à nouveau pour ne plus la classer' : LIBELLE_DE_L_IMPORTANCE[valeur]}
                         className={`${taille} rounded-lg text-ui-10 font-bold border transition-all ${
                             actif
-                                ? 'bg-sky-500/20 border-sky-400/40 text-sky-300'
+                                ? 'bg-etat-info/20 border-etat-info/40 text-etat-info'
                                 : 'bg-app-bg/30 border-app-border/20 text-app-text/40 hover:text-app-text/70'
                         }`}
                     >

@@ -112,7 +112,7 @@ const WikiView: React.FC = () => {
     return (
         <div className="flex h-full bg-app-bg text-app-text">
             {/* Sidebar: Navigation & Search (Bento Style) */}
-            <div className="w-80 border-r border-white/5 flex flex-col bg-black/20 backdrop-blur-xl">
+            <div className="w-80 border-r border-app-text/5 flex flex-col bg-app-bg/20 backdrop-blur-xl">
                 <div className="p-6 space-y-6">
                     <div className="relative group/search">
                         <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-app-text/20 group-focus-within/search:text-accent transition-colors" />
@@ -121,7 +121,7 @@ const WikiView: React.FC = () => {
                             placeholder="Rechercher dans les archives..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-black/40 border border-white/5 rounded-2xl pl-11 pr-4 py-3 text-ui-11 text-app-text focus:outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all placeholder:text-app-text/20"
+                            className="w-full bg-app-bg/40 border border-app-text/5 rounded-2xl pl-11 pr-4 py-3 text-ui-11 text-app-text focus:outline-none focus:border-accent/40 focus:ring-4 focus:ring-accent/5 transition-all placeholder:text-app-text/20"
                         />
                     </div>
 
@@ -133,7 +133,7 @@ const WikiView: React.FC = () => {
                                 className={`px-2 py-2 rounded-xl text-ui-9 font-black uppercase tracking-[0.15em] border transition-all truncate ${
                                     selectedCategory === cat 
                                         ? 'bg-accent/20 border-accent/40 text-accent shadow-glow-accent/5' 
-                                        : 'bg-white/5 border-white/5 text-app-text/30 hover:text-app-text/60 hover:bg-white/10'
+                                        : 'bg-app-text/5 border-app-text/5 text-app-text/30 hover:text-app-text/60 hover:bg-app-text/10'
                                   }`}
                                 title={categoryLabels[cat] || cat}
                             >
@@ -158,7 +158,7 @@ const WikiView: React.FC = () => {
                                 className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all group ${
                                     selectedWikiEntryId === entry.id
                                         ? 'bg-accent/10 border-accent/30 text-accent shadow-lg shadow-accent/5'
-                                        : 'border-transparent text-app-text/40 hover:bg-white/5 hover:text-app-text/80'
+                                        : 'border-transparent text-app-text/40 hover:bg-app-text/5 hover:text-app-text/80'
                                 }`}
                             >
                                 <div className="flex flex-col items-start gap-1 overflow-hidden">
@@ -173,10 +173,10 @@ const WikiView: React.FC = () => {
                     </motion.div>
                 </div>
 
-                <div className="p-6 border-t border-white/5">
+                <div className="p-6 border-t border-app-text/5">
                     <button 
                         onClick={() => gmCustom('wiki-entry-add')}
-                        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-accent text-app-bg rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] shadow-glow-accent/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-accent text-app-on-accent rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] shadow-glow-accent/20 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
                         <Plus size={16} strokeWidth={3} />
                         Nouvel Article
@@ -185,7 +185,7 @@ const WikiView: React.FC = () => {
             </div>
 
             {/* Main Content: Article View (Bento Style) */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 bg-black/10">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-12 bg-app-bg/10">
                 <AnimatePresence mode="wait">
                     {selectedEntry ? (
                         <motion.div 
@@ -212,7 +212,7 @@ const WikiView: React.FC = () => {
                                                 </span>
                                                 <div className="flex gap-1.5">
                                                     {(selectedEntry.tags || []).map(tag => (
-                                                        <span key={tag} className="text-ui-9 font-black uppercase tracking-widest text-app-text/20 bg-white/5 border border-white/5 px-2 py-1 rounded-lg">
+                                                        <span key={tag} className="text-ui-9 font-black uppercase tracking-widest text-app-text/20 bg-app-text/5 border border-app-text/5 px-2 py-1 rounded-lg">
                                                             {tag}
                                                         </span>
                                                     ))}
@@ -230,7 +230,7 @@ const WikiView: React.FC = () => {
                                         {/* Wiki Bridge Action Button (Premium Style) */}
                                         <button 
                                             onClick={handleBridgeAction}
-                                            className="flex items-center gap-3 px-5 py-3 bg-accent/10 border border-accent/30 rounded-2xl text-accent hover:bg-accent hover:text-app-bg transition-all group/magic shadow-xl active:scale-95"
+                                            className="flex items-center gap-3 px-5 py-3 bg-accent/10 border border-accent/30 rounded-2xl text-accent hover:bg-accent hover:text-app-on-accent transition-all group/magic shadow-xl active:scale-95"
                                             title="Transformer en élément de jeu (PNJ, Indice, Lieu...)"
                                         >
                                             <Sparkles size={18} className="group-hover/magic:rotate-12 transition-transform" />
@@ -239,7 +239,7 @@ const WikiView: React.FC = () => {
 
                                         <button 
                                             onClick={() => gmCustom('wiki-entry-edit', selectedEntry)}
-                                            className="p-3 bg-white/5 border border-white/5 rounded-2xl text-app-text/20 hover:text-accent hover:border-accent/40 transition-all shadow-xl active:scale-95"
+                                            className="p-3 bg-app-text/5 border border-app-text/5 rounded-2xl text-app-text/20 hover:text-accent hover:border-accent/40 transition-all shadow-xl active:scale-95"
                                             title="Modifier l'article"
                                         >
                                             <Edit2 size={20} />
@@ -249,7 +249,7 @@ const WikiView: React.FC = () => {
                                                 deleteWikiEntry(selectedEntry.id);
                                                 setSelectedWikiEntryId(null);
                                             }}
-                                            className="p-3 bg-white/5 border border-white/5 rounded-2xl text-app-text/20 hover:text-rose-500 hover:border-rose-500/40 transition-all shadow-xl active:scale-95"
+                                            className="p-3 bg-app-text/5 border border-app-text/5 rounded-2xl text-app-text/20 hover:text-etat-danger hover:border-etat-danger/40 transition-all shadow-xl active:scale-95"
                                             title="Supprimer l'article"
                                         >
                                             <Trash2 size={20} />
@@ -261,7 +261,7 @@ const WikiView: React.FC = () => {
                             {/* Article Content Grid */}
                             <div className="grid grid-cols-12 gap-12">
                                 <div className="col-span-8 space-y-10">
-                                    <div className="glass-bento rounded-[3rem] border border-white/5 p-10 shadow-2xl relative overflow-hidden group/content">
+                                    <div className="glass-bento rounded-[3rem] border border-app-text/5 p-10 shadow-2xl relative overflow-hidden group/content">
                                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <BookOpen size={120} strokeWidth={1} />
                                         </div>
@@ -276,7 +276,7 @@ const WikiView: React.FC = () => {
 
                                     {/* Linked Stuff (Bento Style) */}
                                     <div className="grid grid-cols-2 gap-8">
-                                        <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl">
+                                        <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-xl">
                                             <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-app-text/30 flex items-center gap-3 mb-6">
                                                 <Users size={16} className="text-accent" />
                                                 Entités Liées
@@ -284,18 +284,18 @@ const WikiView: React.FC = () => {
                                             <div className="flex flex-col gap-3">
                                                 {(selectedEntry.linkedEntityIds || []).length > 0 ? (
                                                     (selectedEntry.linkedEntityIds || []).map(id => (
-                                                        <div key={id} className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 hover:border-accent/20 transition-colors">
+                                                        <div key={id} className="flex items-center gap-3 p-3 rounded-2xl bg-app-text/5 border border-app-text/5 hover:border-accent/20 transition-colors">
                                                             <div className="w-2 h-2 rounded-full bg-accent/40" />
                                                             <span className="text-ui-11 font-black uppercase tracking-tight text-app-text/60">{entities.find(e => e.id === id)?.name || "Entité inconnue"}</span>
                                                         </div>
                                                     ))
                                                 ) : (
-                                                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/10 italic p-4 text-center border border-dashed border-white/5 rounded-2xl">Aucun lien établi</span>
+                                                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/10 italic p-4 text-center border border-dashed border-app-text/5 rounded-2xl">Aucun lien établi</span>
                                                 )}
                                             </div>
                                         </div>
                                         
-                                        <div className="glass-bento rounded-[2.5rem] border border-white/5 p-8 shadow-xl flex flex-col items-center justify-center text-center gap-4 opacity-40 hover:opacity-100 transition-opacity">
+                                        <div className="glass-bento rounded-[2.5rem] border border-app-text/5 p-8 shadow-xl flex flex-col items-center justify-center text-center gap-4 opacity-40 hover:opacity-100 transition-opacity">
                                             <Layers size={32} strokeWidth={1} className="text-accent/40" />
                                             <p className="text-ui-9 font-black uppercase tracking-[0.2em] leading-relaxed">Module de Connexion Étendu prochainement disponible</p>
                                         </div>
@@ -305,14 +305,14 @@ const WikiView: React.FC = () => {
                                 {/* Sidebar visual (Bento Style) */}
                                 <div className="col-span-4 space-y-10">
                                     {(selectedEntry.imageUrls || []).length > 0 && (
-                                        <div className="glass-bento rounded-[2.5rem] overflow-hidden border border-white/5 p-3 shadow-2xl group/img">
-                                            <div className="rounded-[2rem] overflow-hidden border border-white/5 relative">
+                                        <div className="glass-bento rounded-[2.5rem] overflow-hidden border border-app-text/5 p-3 shadow-2xl group/img">
+                                            <div className="rounded-[2rem] overflow-hidden border border-app-text/5 relative">
                                                 <MediaImage 
                                                     source={(selectedEntry.imageUrls || [])[0]} 
                                                     alt={selectedEntry.title} 
                                                     className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                             </div>
                                         </div>
                                     )}

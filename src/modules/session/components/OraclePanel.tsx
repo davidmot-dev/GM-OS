@@ -186,22 +186,22 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
             {/* Backdrop for easier closing */}
             {isOpen && (
                 <div 
-                    className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[95] animate-in fade-in duration-300 cursor-pointer" 
+                    className="fixed inset-0 bg-app-bg/40 backdrop-blur-sm z-[95] animate-in fade-in duration-300 cursor-pointer" 
                     onClick={onClose} 
                 />
             )}
 
             <aside 
-                className={`fixed inset-y-0 right-0 w-[650px] max-w-full glass-bento border-l border-cyan-500/20 shadow-2xl z-[100] transform transition-transform duration-500 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`fixed inset-y-0 right-0 w-[650px] max-w-full glass-bento border-l border-gm-cyan/20 shadow-2xl z-[100] transform transition-transform duration-500 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
-                <div className="absolute inset-0 bg-cyan-500/5 pointer-events-none" />
+                <div className="absolute inset-0 bg-gm-cyan/5 pointer-events-none" />
                 {/* Header */}
                 <header className="h-20 border-b border-app-border/40 bg-app-bg/95 backdrop-blur-xl px-4 flex items-center justify-between shrink-0 relative shadow-lg z-10 transition-all gap-4">
                     <div className="flex items-center gap-3 min-w-0 flex-shrink">
                         {/* Compact Close Button */}
                         <button 
                             onClick={onClose}
-                            className="group p-2.5 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 rounded-xl transition-all shadow-lg active:scale-95 shrink-0"
+                            className="group p-2.5 bg-etat-danger/10 hover:bg-etat-danger text-etat-danger hover:text-app-bg border border-etat-danger/20 rounded-xl transition-all shadow-lg active:scale-95 shrink-0"
                             title="Fermer l'Oracle (Echap)"
                         >
                             <X size={18} className="transition-transform group-hover:rotate-90" />
@@ -215,12 +215,12 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                 onClick={() => setIsGemMenuOpen(!isGemMenuOpen)}
                                 className={`w-full flex items-center gap-3 p-1.5 pr-4 rounded-2xl transition-all border ${
                                     isGemMenuOpen 
-                                        ? 'bg-cyan-500/20 border-cyan-400/40 shadow-glow-accent/20' 
-                                        : 'bg-white/5 border-white/5 hover:border-cyan-500/30 hover:bg-white/10'
+                                        ? 'bg-gm-cyan/20 border-gm-cyan/40 shadow-glow-accent/20' 
+                                        : 'bg-app-text/5 border-app-text/5 hover:border-gm-cyan/30 hover:bg-app-text/10'
                                 }`}
                             >
                                 <div className={`p-2 rounded-xl transition-colors shadow-inner ${
-                                    isQuerying ? 'bg-accent/20 border-accent animate-pulse' : 'bg-app-bg border-white/5'
+                                    isQuerying ? 'bg-accent/20 border-accent animate-pulse' : 'bg-app-bg border-app-text/5'
                                 } border shrink-0`}>
                                     <GemIcon size={18} className={isQuerying ? 'text-accent' : 'text-accent/80'} />
                                 </div>
@@ -263,11 +263,11 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                     }}
                                                     className={`flex items-start gap-3 p-3 rounded-xl transition-all group relative border ${
                                                         isActive 
-                                                            ? 'bg-accent border-accent text-app-bg shadow-glow-accent/20' 
+                                                            ? 'bg-accent border-accent text-app-on-accent shadow-glow-accent/20' 
                                                             : 'bg-transparent border-transparent hover:bg-accent/10 text-app-text/60 hover:text-app-text hover:border-accent/20'
                                                     }`}
                                                 >
-                                                    <div className={`p-1.5 rounded-lg ${isActive ? 'bg-app-bg/20' : 'bg-app-bg border border-white/5'}`}>
+                                                    <div className={`p-1.5 rounded-lg ${isActive ? 'bg-app-bg/20' : 'bg-app-bg border border-app-text/5'}`}>
                                                         <Icon size={16} className={isActive ? 'text-app-bg' : 'text-accent'} />
                                                     </div>
                                                     <div className="text-left pr-4 min-w-0 flex-1">
@@ -275,7 +275,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                             {t(gem.name)}
                                                             {hasDriverOverride && (
                                                                 <div 
-                                                                    className={`px-1.5 py-0.5 rounded text-ui-7 font-black border ${isActive ? 'bg-app-bg/20 border-white/20 text-white' : 'bg-accent/10 border-accent/20 text-accent'}`}
+                                                                    className={`px-1.5 py-0.5 rounded text-ui-7 font-black border ${isActive ? 'bg-app-bg/20 border-app-text/20 text-app-text' : 'bg-accent/10 border-accent/20 text-accent'}`}
                                                                     title={t('modules:session.oracle.synced_with_system', 'Synchronisé avec le système')}
                                                                 >
                                                                     SYNC
@@ -301,18 +301,18 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                     {/* Right Side Actions Group */}
                     <div className="flex items-center gap-1.5 shrink-0 ml-4">
                         {/* View Controls Group */}
-                        <div className="flex items-center bg-app-surface/60 rounded-xl p-1 border border-white/5">
+                        <div className="flex items-center bg-app-surface/60 rounded-xl p-1 border border-app-text/5">
                             <div className="flex p-0.5 gap-1">
                                 <button
                                     onClick={() => handleSetViewMode('chat')}
-                                    className={`p-2 rounded-lg transition-all ${viewMode === 'chat' ? 'bg-accent text-app-bg shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/5'}`}
+                                    className={`p-2 rounded-lg transition-all ${viewMode === 'chat' ? 'bg-accent text-app-on-accent shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/5'}`}
                                     title="Mode Discussion"
                                 >
                                     <MessageSquare size={16} />
                                 </button>
                                 <button
                                     onClick={() => handleSetViewMode('iframe')}
-                                    className={`p-2 rounded-lg transition-all ${viewMode === 'iframe' ? 'bg-accent text-app-bg shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/5'}`}
+                                    className={`p-2 rounded-lg transition-all ${viewMode === 'iframe' ? 'bg-accent text-app-on-accent shadow-lg' : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/5'}`}
                                     title="Voir la Source (NotebookLM)"
                                 >
                                     <Book size={16} />
@@ -338,7 +338,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                             'Vider toute la discussion avec l’Oracle ? Les questions et les réponses partent, et cela ne s’annule pas.',
                                             clearChat,
                                         )}
-                                        className="p-2 text-app-text/40 hover:text-red-400 transition-all animate-in fade-in duration-300"
+                                        className="p-2 text-app-text/40 hover:text-etat-danger transition-all animate-in fade-in duration-300"
                                         title="Vider la discussion"
                                     >
                                         <Trash2 size={16} />
@@ -349,14 +349,14 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
 
                         {/* Source Toggle Group */}
                         {hasMultipleSources && (
-                            <div className="flex bg-app-surface/60 rounded-xl p-1 border border-white/5">
+                            <div className="flex bg-app-surface/60 rounded-xl p-1 border border-app-text/5">
                                 {availableSources.map(source => (
                                     <button
                                         key={source.type}
                                         onClick={() => setUserSelectedType(source.type as 'campaign' | 'driver' | 'template')}
                                         className={`px-3 py-1.5 text-ui-9 font-black uppercase tracking-widest rounded-lg transition-all ${
                                             selectedUrlType === source.type 
-                                                ? 'bg-accent text-app-bg shadow-glow-accent/20' 
+                                                ? 'bg-accent text-app-on-accent shadow-glow-accent/20' 
                                                 : 'text-app-text/40 hover:text-app-text/60'
                                         }`}
                                         title={`Source : ${source.type === 'campaign' ? 'Campagne' : source.type === 'driver' ? 'Système (Règles)' : 'Template UI'}`}
@@ -371,7 +371,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
 
                         <button 
                             onClick={handleOpenExternal}
-                            className="p-2.5 text-accent bg-accent/5 hover:bg-accent text-accent hover:text-app-bg border border-accent/20 rounded-xl transition-all active:scale-95"
+                            className="p-2.5 text-accent bg-accent/5 hover:bg-accent text-accent hover:text-app-on-accent border border-accent/20 rounded-xl transition-all active:scale-95"
                             title="Ouvrir NotebookLM dans le navigateur"
                         >
                             <ExternalLink size={18} />
@@ -418,10 +418,10 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                                     className={`glass-bento flex gap-4 p-4 transition-all !rounded-2xl ${
                                                         msg.role === 'assistant' 
                                                             ? 'bg-accent/5 border-accent/10' 
-                                                            : 'bg-white/5 border-white/5'
+                                                            : 'bg-app-text/5 border-app-text/5'
                                                     }`}
                                                 >
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-lg ${msg.role === 'assistant' ? 'bg-accent text-app-bg' : 'bg-app-surface text-app-text/40'}`}>
+                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-lg ${msg.role === 'assistant' ? 'bg-accent text-app-on-accent' : 'bg-app-surface text-app-text/40'}`}>
                                                         {msg.role === 'assistant' ? <GemIcon size={18} /> : <User size={18} />}
                                                     </div>
                                                     <div className="space-y-1 overflow-hidden flex-1">
@@ -439,7 +439,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                 )}
                                 {isQuerying && (
                                     <div className="flex gap-4 animate-pulse">
-                                        <div className="w-8 h-8 rounded-lg bg-accent text-app-bg flex items-center justify-center shrink-0">
+                                        <div className="w-8 h-8 rounded-lg bg-accent text-app-on-accent flex items-center justify-center shrink-0">
                                             <RefreshCw size={18} className="animate-spin" />
                                         </div>
                                         <div className="space-y-2 flex-1">
@@ -473,7 +473,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                     <button
                                         type="submit"
                                         disabled={!input.trim() || isQuerying}
-                                        className={`absolute right-3 bottom-3 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${!input.trim() || isQuerying ? 'text-app-text/20 bg-app-surface' : 'bg-accent text-app-bg shadow-glow-accent/20 hover:scale-105 active:scale-95'}`}
+                                        className={`absolute right-3 bottom-3 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${!input.trim() || isQuerying ? 'text-app-text/20 bg-app-surface' : 'bg-accent text-app-on-accent shadow-glow-accent/20 hover:scale-105 active:scale-95'}`}
                                         title="Envoyer la question"
                                     >
                                         <Send size={18} />
@@ -496,8 +496,8 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                             
                             {(loadError || isGoogleDomain) && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-center bg-app-bg/90 z-20 backdrop-blur-sm">
-                                    <div className="w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
-                                        <ExternalLink size={36} className="text-amber-500" />
+                                    <div className="w-20 h-20 rounded-2xl bg-etat-alerte/10 border border-etat-alerte/20 flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+                                        <ExternalLink size={36} className="text-etat-alerte" />
                                     </div>
                                     <h3 className="text-xl font-bold text-app-text mb-4">Restriction de Sécurité</h3>
                                     <p className="text-app-text/80 text-sm leading-relaxed mb-8 max-w-sm">
@@ -505,7 +505,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                     </p>
                                     <button 
                                         onClick={handleOpenExternal}
-                                        className="px-8 py-3 bg-accent text-app-bg rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20 flex items-center gap-3"
+                                        className="px-8 py-3 bg-accent text-app-on-accent rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-glow-accent/20 flex items-center gap-3"
                                     >
                                         OUVRIR LA FENÊTRE SOURCE <ExternalLink size={18} />
                                     </button>
@@ -537,7 +537,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                 <footer className="h-10 border-t border-app-border bg-app-bg px-4 flex items-center justify-between text-ui-10 font-mono text-app-text/40 uppercase tracking-widest shrink-0">
                     <span>Nœud d'IA Intégré</span>
                     <span className="flex items-center gap-2">
-                        <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] ${activeNotebookUrl ? 'bg-emerald-500' : 'bg-app-surface'}`}></span>
+                        <span className={`w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.5)] ${activeNotebookUrl ? 'bg-etat-succes' : 'bg-app-surface'}`}></span>
                         {activeNotebookUrl ? 'Pont MCP : EN LIGNE' : 'En attente de connexion'}
                     </span>
                 </footer>

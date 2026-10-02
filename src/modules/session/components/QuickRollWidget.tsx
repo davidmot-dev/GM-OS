@@ -19,7 +19,7 @@ const QuickRollWidget: React.FC = () => {
     };
 
     return (
-        <div className="mt-auto bg-slate-900 flex flex-col p-4 rounded-xl border border-slate-800 shadow-lg shrink-0">
+        <div className="mt-auto bg-app-bg flex flex-col p-4 rounded-xl border border-app-border shadow-lg shrink-0">
             <div className="flex justify-between items-center mb-3">
                 <span className="text-ui-10 text-app-subtle font-bold uppercase tracking-widest flex items-center gap-1">
                     <Dices size={12} /> Quick Roll
@@ -35,8 +35,8 @@ const QuickRollWidget: React.FC = () => {
                         key={dice.label}
                         onClick={() => handleQuickRoll(dice.expression)}
                         className={`aspect-square rounded-lg flex flex-col items-center justify-center transition-all ${dice.highlight
-                            ? 'bg-gm-gold/20 border border-gm-gold/50 shadow-glow-gold text-slate-100 hover:bg-gm-gold/30'
-                            : 'bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300'
+                            ? 'bg-gm-gold/20 border border-gm-gold/50 shadow-glow-gold text-app-text hover:bg-gm-gold/30'
+                            : 'bg-app-surface-2 hover:bg-app-surface-2 border border-app-border text-app-text'
                             }`}
                         title={`Roll ${dice.expression}`}
                     >

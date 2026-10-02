@@ -32,7 +32,7 @@ const FieldFormula: React.FC<{
             {field.label}
         </label>
         <div className="flex items-center gap-2">
-            <span className="text-ui-11 font-black text-white bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
+            <span className="text-ui-11 font-black text-app-text bg-accent/20 px-3 py-1 rounded-lg border border-accent/10 min-w-[3rem] text-center font-mono">
                 {value}
             </span>
         </div>
@@ -191,8 +191,8 @@ const CharacterSheetEditor: React.FC = () => {
                         onClick={handleSave}
                         className={`flex items-center gap-2 px-5 py-2 rounded-xl font-black text-xs tracking-widest transition-all ${
                             saved
-                                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                                : 'bg-accent hover:opacity-90 text-app-bg shadow-lg shadow-accent/20 hover:scale-105 active:scale-95'
+                                ? 'bg-etat-succes text-app-bg shadow-lg shadow-etat-succes/20'
+                                : 'bg-accent hover:opacity-90 text-app-on-accent shadow-lg shadow-accent/20 hover:scale-105 active:scale-95'
                         }`}
                     >
                         <Save size={14} />
@@ -255,14 +255,14 @@ const CharacterSheetEditor: React.FC = () => {
                                 <div className="absolute inset-0 bg-app-bg/70 opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center justify-center gap-4">
                                     <button
                                         onClick={(e) => { e.stopPropagation(); setMediaBrowserTarget('portrait'); }}
-                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all border border-white/10"
+                                        className="w-10 h-10 rounded-full bg-app-text/10 hover:bg-app-text/20 flex items-center justify-center transition-all border border-app-text/10"
                                         title="Changer via Galerie"
                                     >
-                                        <FolderOpen size={18} className="text-white" />
+                                        <FolderOpen size={18} className="text-app-text" />
                                     </button>
                                     <button
                                         onClick={(e) => { e.stopPropagation(); setShowAIPrompt(true); }}
-                                        className="w-12 h-12 rounded-full bg-accent text-app-bg flex items-center justify-center transition-all shadow-glow-accent hover:scale-110"
+                                        className="w-12 h-12 rounded-full bg-accent text-app-on-accent flex items-center justify-center transition-all shadow-glow-accent hover:scale-110"
                                         title="Générer par IA"
                                     >
                                         <Sparkles size={20} />
@@ -288,16 +288,16 @@ const CharacterSheetEditor: React.FC = () => {
                                                 useImageStore.getState().projectEntity(projectedPJ);
                                                 gmToast(`${character.name} projeté sur le Hub !`);
                                             }}
-                                            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all border border-white/10"
+                                            className="w-10 h-10 rounded-full bg-app-text/10 hover:bg-app-text/20 flex items-center justify-center transition-all border border-app-text/10"
                                             title="Projeter sur le Hub"
                                         >
-                                            <Eye size={18} className="text-white" />
+                                            <Eye size={18} className="text-app-text" />
                                         </button>
                                     )}
                                 </div>
 
                                 {isGeneratingAIImage && (
-                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center z-30">
+                                    <div className="absolute inset-0 bg-app-bg/60 backdrop-blur-sm flex flex-col items-center justify-center z-30">
                                         <Sparkles size={32} className="text-accent animate-spin mb-2" />
                                         <span className="text-ui-9 font-black uppercase tracking-widest text-accent animate-pulse">Vision en cours...</span>
                                     </div>
@@ -357,18 +357,18 @@ const CharacterSheetEditor: React.FC = () => {
                           réellement des points.
                         */}
                         {(piloteDeLaFiche?.combat?.defaultHealthType ?? 'hp') === 'hp' && (
-                        <div className="p-4 bg-app-bg/60 border border-accent/20 rounded-xl space-y-3 shadow-lg shadow-red-500/5">
+                        <div className="p-4 bg-app-bg/60 border border-accent/20 rounded-xl space-y-3 shadow-lg shadow-etat-danger/5">
                             <div className="flex items-center justify-between">
                                 <span className="text-ui-9 font-black uppercase tracking-[0.15em] text-accent">Points de vie</span>
-                                <Heart size={12} className="text-red-500 animate-pulse" />
+                                <Heart size={12} className="text-etat-danger animate-pulse" />
                             </div>
                                                 <div className="flex items-center justify-center gap-2 mt-1">
-                                <div className="bg-black/40 border border-white/5 w-14 h-10 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/20 transition-all">
+                                <div className="bg-app-bg/40 border border-app-text/5 w-14 h-10 rounded-lg flex items-center justify-center shadow-inner group-hover:border-accent/20 transition-all">
                                     <input 
                                         type="number" 
                                         value={character.hp}
                                         onChange={(e) => updateCharacterHP(parseInt(e.target.value) || 0)}
-                                        className="w-full bg-transparent text-center text-white font-black text-sm focus:outline-none"
+                                        className="w-full bg-transparent text-center text-app-text font-black text-sm focus:outline-none"
                                         title="Points de Vie actuels"
                                     />
                                 </div>
@@ -395,8 +395,8 @@ const CharacterSheetEditor: React.FC = () => {
                                 <div
                                     className={`w-14 h-10 rounded-lg flex items-center justify-center shadow-inner transition-all ${
                                         santeSuitLaFiche
-                                            ? 'bg-transparent border border-dashed border-white/10'
-                                            : 'bg-black/20 border border-white/5 group-hover:border-accent/10'
+                                            ? 'bg-transparent border border-dashed border-app-text/10'
+                                            : 'bg-app-bg/20 border border-app-text/5 group-hover:border-accent/10'
                                     }`}
                                     title={santeSuitLaFiche
                                         ? `Maximum lu sur la fiche (${piloteDeLaFiche?.combat?.santeDeDepart}) — il suit à l’enregistrement`
@@ -418,15 +418,15 @@ const CharacterSheetEditor: React.FC = () => {
                                 </div>
                             </div>
                             
-                            <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden border border-app-border/40 ring-1 ring-white/5 p-[1px]">
+                            <div className="w-full bg-app-bg h-1.5 rounded-full overflow-hidden border border-app-border/40 ring-1 ring-app-text/5 p-[1px]">
                                 <div
                                     ref={hpBarRef}
                                     className={`h-full rounded-full transition-all duration-500 ${(() => {
                                         const f = fractionDeVie(character);
                                         if (f === null) return 'bg-app-border';
-                                        return f > 0.6 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400'
-                                            : f > 0.3 ? 'bg-gradient-to-r from-amber-600 to-amber-400'
-                                            : 'bg-gradient-to-r from-rose-700 to-rose-500';
+                                        return f > 0.6 ? 'bg-gradient-to-r from-etat-succes to-etat-succes'
+                                            : f > 0.3 ? 'bg-gradient-to-r from-etat-alerte to-etat-alerte'
+                                            : 'bg-gradient-to-r from-etat-danger to-etat-danger';
                                     })()}`}
                                 />
                             </div>
@@ -543,16 +543,16 @@ const CharacterSheetEditor: React.FC = () => {
                                     <div className="grid grid-cols-2 gap-3">
                                         {(character.inventoryItems ?? []).map((item) => (
                                             <div key={item.id} className="group flex items-center gap-3 p-3 bg-app-surface/60 border border-app-border/40 rounded-xl hover:border-accent/30 transition-all">
-                                                <div className="w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center text-accent/40">
+                                                <div className="w-10 h-10 rounded-lg bg-app-bg/40 flex items-center justify-center text-accent/40">
                                                     <Package size={20} />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <h4 className="text-ui-11 font-black text-app-text uppercase truncate">{item.name}</h4>
                                                     <p className="text-ui-9 text-app-text/40 font-bold uppercase tracking-tighter">
                                                         {item.type} • <span className={
-                                                            item.rarity === 'légendaire' ? 'text-orange-500' :
-                                                            item.rarity === 'rare' ? 'text-blue-500' :
-                                                            item.rarity === 'atypique' ? 'text-emerald-500' :
+                                                            item.rarity === 'légendaire' ? 'text-etat-alerte' :
+                                                            item.rarity === 'rare' ? 'text-etat-info' :
+                                                            item.rarity === 'atypique' ? 'text-etat-succes' :
                                                             'text-app-text/40'
                                                         }>{item.rarity}</span> • Qté: {item.quantity}
                                                     </p>
@@ -562,7 +562,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                         removeInventoryItem(item.id);
                                                         gmToast(`Objet "${item.name}" supprimé`);
                                                     }}
-                                                    className="opacity-0 group-hover:opacity-100 p-2 hover:bg-red-500/10 hover:text-red-500 rounded-lg transition-all"
+                                                    className="opacity-0 group-hover:opacity-100 p-2 hover:bg-etat-danger/10 hover:text-etat-danger rounded-lg transition-all"
                                                 >
                                                     <Trash2 size={14} />
                                                 </button>
@@ -598,7 +598,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                 }
                                             }}
                                             placeholder="Nom de l'objet..."
-                                            className="flex-1 bg-black/40 border border-accent/40 rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:ring-1 focus:ring-accent/50"
+                                            className="flex-1 bg-app-bg/40 border border-accent/40 rounded-xl px-4 py-2 text-sm text-app-text focus:outline-none focus:ring-1 focus:ring-accent/50"
                                         />
                                         <button 
                                             onClick={() => {
@@ -615,7 +615,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                     setIsAddingItem(false);
                                                 }
                                             }}
-                                            className="p-3 bg-accent text-app-bg rounded-xl hover:opacity-90 transition-all font-black"
+                                            className="p-3 bg-accent text-app-on-accent rounded-xl hover:opacity-90 transition-all font-black"
                                         >
                                             <Check size={16} />
                                         </button>
@@ -624,7 +624,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                 setIsAddingItem(false);
                                                 setNewItemName('');
                                             }}
-                                            className="p-3 bg-app-surface border border-app-border text-app-text/40 rounded-xl hover:text-red-500 transition-all"
+                                            className="p-3 bg-app-surface border border-app-border text-app-text/40 rounded-xl hover:text-etat-danger transition-all"
                                         >
                                             <X size={16} />
                                         </button>
@@ -659,37 +659,37 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Player Notes */}
                     <div className="col-span-9 space-y-3">
-                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-gm-cyan border-b border-gm-cyan/20 pb-2 flex items-center gap-2">
                             <PenTool size={12} /> Notes du Joueur
-                            <span className="ml-auto text-ui-9 bg-cyan-500/10 text-cyan-600 border border-cyan-500/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Public Joueur</span>
+                            <span className="ml-auto text-ui-9 bg-gm-cyan/10 text-gm-cyan border border-gm-cyan/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Public Joueur</span>
                         </h3>
                         <textarea
                             value={playerNotes}
                             onChange={e => setPlayerNotes(e.target.value)}
                             rows={4}
                             placeholder="Notes partagées avec le joueur — visible sur son HUB…"
-                            className="w-full bg-cyan-950/10 border border-cyan-500/10 rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-cyan-500/30 focus:border-cyan-500/20 transition-all leading-relaxed"
+                            className="w-full bg-gm-cyan/10 border border-gm-cyan/10 rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-gm-cyan/30 focus:border-gm-cyan/20 transition-all leading-relaxed"
                         />
                     </div>
 
                     {/* GM Notes */}
                     <div className="col-span-9 space-y-3">
-                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-amber-500 border-b border-amber-500/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-alerte border-b border-etat-alerte/20 pb-2 flex items-center gap-2">
                             <Lock size={12} /> Notes du MJ
-                            <span className="ml-auto text-ui-9 bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Privé</span>
+                            <span className="ml-auto text-ui-9 bg-etat-alerte/10 text-etat-alerte border border-etat-alerte/20 px-2 py-0.5 rounded-full normal-case tracking-normal font-bold">Privé</span>
                         </h3>
                         <textarea
                             value={gmNotes}
                             onChange={e => setGmNotes(e.target.value)}
                             rows={4}
                             placeholder="Notes secrètes du MJ — jamais visible par les joueurs…"
-                            className="w-full bg-amber-950/10 border border-amber-500/10 rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-amber-500/30 focus:border-amber-500/20 transition-all leading-relaxed"
+                            className="w-full bg-etat-alerte/10 border border-etat-alerte/10 rounded-xl p-4 text-sm text-app-text placeholder-app-text/20 resize-none focus:outline-none focus:ring-1 focus:ring-etat-alerte/30 focus:border-etat-alerte/20 transition-all leading-relaxed"
                         />
                     </div>
 
                     {/* Tablet HUB Configuration */}
                     <div className="col-span-9 space-y-3">
-                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-cyan-500 border-b border-cyan-500/20 pb-2 flex items-center gap-2">
+                        <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-gm-cyan border-b border-gm-cyan/20 pb-2 flex items-center gap-2">
                             <Tablet size={12} /> Configuration Tablet HUB
                         </h3>
                         <div className="grid grid-cols-3 gap-3">
@@ -750,8 +750,8 @@ const CharacterSheetEditor: React.FC = () => {
                                     const ext = media?.name.split('.').pop()?.toUpperCase() ?? '?';
                                     return (
                                         <div key={docId} className="flex items-center gap-3 px-4 py-2.5 bg-app-bg/40 border border-app-border/40 rounded-xl hover:border-app-border/60 transition-all group">
-                                            <FileText size={14} className="text-emerald-400 flex-shrink-0" />
-                                            <span className="text-ui-9 font-black tracking-widest text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">{ext}</span>
+                                            <FileText size={14} className="text-etat-succes flex-shrink-0" />
+                                            <span className="text-ui-9 font-black tracking-widest text-etat-succes bg-etat-succes/10 px-1.5 py-0.5 rounded">{ext}</span>
                                             <button
                                                 onClick={() => openDocument(docId)}
                                                 className="flex-1 text-left text-sm text-app-text/80 hover:text-app-text transition-colors truncate"
@@ -760,7 +760,7 @@ const CharacterSheetEditor: React.FC = () => {
                                             </button>
                                             <button
                                                 onClick={() => handleRemoveDocument(docId)}
-                                                className="opacity-0 group-hover:opacity-100 p-1 text-app-text/20 hover:text-red-400 transition-all"
+                                                className="opacity-0 group-hover:opacity-100 p-1 text-app-text/20 hover:text-etat-danger transition-all"
                                                 title="Supprimer"
                                             >
                                                 <Trash2 size={12} />

@@ -54,12 +54,12 @@ export const RuleEngineEditor: React.FC = () => {
         .filter(f => TYPES_NUMERIQUES.has(f.type));
 
     const navItems = [
-        { id: 'core', label: t('modules:session.rule_engine_editor.nav.core'), icon: Dice5, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-        { id: 'combat', label: t('modules:session.rule_engine_editor.nav.combat'), icon: Zap, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-        { id: 'tactical', label: t('modules:session.rule_engine_editor.nav.tactical'), icon: Map, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-        { id: 'ai', label: t('modules:session.rule_engine_editor.nav.ai'), icon: Sparkles, color: 'text-violet-400', bg: 'bg-violet-500/10' },
-        { id: 'loot', label: t('modules:session.rule_engine_editor.nav.loot'), icon: Archive, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-        { id: 'notebook', label: t('modules:session.rule_engine_editor.nav.notebook'), icon: BookOpen, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+        { id: 'core', label: t('modules:session.rule_engine_editor.nav.core'), icon: Dice5, color: 'text-gm-cyan', bg: 'bg-gm-cyan/10' },
+        { id: 'combat', label: t('modules:session.rule_engine_editor.nav.combat'), icon: Zap, color: 'text-gm-violet', bg: 'bg-gm-violet/10' },
+        { id: 'tactical', label: t('modules:session.rule_engine_editor.nav.tactical'), icon: Map, color: 'text-gm-emerald', bg: 'bg-gm-emerald/10' },
+        { id: 'ai', label: t('modules:session.rule_engine_editor.nav.ai'), icon: Sparkles, color: 'text-gm-violet', bg: 'bg-gm-violet/10' },
+        { id: 'loot', label: t('modules:session.rule_engine_editor.nav.loot'), icon: Archive, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
+        { id: 'notebook', label: t('modules:session.rule_engine_editor.nav.notebook'), icon: BookOpen, color: 'text-etat-info', bg: 'bg-etat-info/10' },
     ];
 
     return (
@@ -69,12 +69,12 @@ export const RuleEngineEditor: React.FC = () => {
                 <div className="flex-1 flex items-center gap-6">
                     <button 
                         onClick={handleBack}
-                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-accent/40 transition-all shadow-lg hover:scale-105 active:scale-95 group"
+                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-app-text/5 border border-app-text/10 text-app-text/60 hover:text-app-text hover:border-accent/40 transition-all shadow-lg hover:scale-105 active:scale-95 group"
                         title={t('modules:session.rule_engine_editor.back_to_templates')}
                     >
                         <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                     </button>
-                    <div className="h-10 w-[1px] bg-white/10 mx-2" />
+                    <div className="h-10 w-[1px] bg-app-text/10 mx-2" />
                     <div className="flex-1 flex items-center gap-4">
                         <input
                             type="text"
@@ -105,7 +105,7 @@ export const RuleEngineEditor: React.FC = () => {
 
                 <button
                     onClick={() => gmToast(t('modules:session.rule_engine_editor.sync_success'), "success")}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-app-bg font-black text-xs uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-accent text-app-on-accent font-black text-xs uppercase tracking-widest shadow-glow-accent/20 hover:opacity-90 transition-all"
                     title={t('modules:session.rule_engine_editor.sync_btn')}
                 >
                     <Save size={16} /> {t('modules:session.rule_engine_editor.sync_btn')}
@@ -121,7 +121,7 @@ export const RuleEngineEditor: React.FC = () => {
                             onClick={() => setActiveSection(item.id as any)}
                             className={`group relative w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 ${
                                 activeSection === item.id 
-                                ? `${item.bg} ${item.color} shadow-lg ring-1 ring-white/10` 
+                                ? `${item.bg} ${item.color} shadow-lg ring-1 ring-app-text/10` 
                                 : 'text-app-text/40 hover:text-app-text hover:bg-app-surface/50'
                             }`}
                             title={item.label}
@@ -240,7 +240,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                             setEditingTemplateId(driver.templateId);
                                                             setCurrentView('template-editor');
                                                         }}
-                                                        className="p-4 bg-accent/20 border border-accent/40 text-accent rounded-2xl hover:bg-accent hover:text-white transition-all shadow-glow-accent/20"
+                                                        className="p-4 bg-accent/20 border border-accent/40 text-accent rounded-2xl hover:bg-accent hover:text-app-on-accent transition-all shadow-glow-accent/20"
                                                         title={t('common:actions.view')}
                                                     >
                                                         <Eye size={20} />
@@ -276,8 +276,8 @@ export const RuleEngineEditor: React.FC = () => {
                             <div className="space-y-8">
                                 <header className="space-y-2 mb-10">
                                     <h2 className="text-3xl font-black text-app-text tracking-tight uppercase italic flex items-center gap-4 font-display">
-                                        <Zap className="text-indigo-400" size={32} />
-                                        {t('modules:session.rule_engine_editor.combat.title')} & <span className="text-indigo-500/20 underline decoration-indigo-500/40">{t('modules:session.rule_engine_editor.combat.initiative_subtitle')}</span>
+                                        <Zap className="text-etat-info" size={32} />
+                                        {t('modules:session.rule_engine_editor.combat.title')} & <span className="text-etat-info/20 underline decoration-etat-info/40">{t('modules:session.rule_engine_editor.combat.initiative_subtitle')}</span>
                                     </h2>
                                     <p className="text-app-text/40 text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
                                         {t('modules:session.rule_engine_editor.combat.description')}
@@ -285,24 +285,24 @@ export const RuleEngineEditor: React.FC = () => {
                                 </header>
 
                                 <div className="grid grid-cols-12 gap-8">
-                                    <div className="col-span-7 p-8 bg-indigo-500/5 border border-indigo-500/20 rounded-[2.5rem] space-y-8">
+                                    <div className="col-span-7 p-8 bg-etat-info/5 border border-etat-info/20 rounded-[2.5rem] space-y-8">
                                         <div className="grid grid-cols-2 gap-6">
                                             <div>
-                                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.init_formula_label')}</label>
+                                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-info/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.init_formula_label')}</label>
                                                 <input 
                                                     type="text"
                                                     value={combat.initiativeFormula || ''}
                                                     onChange={e => handleUpdate({ combat: { ...combat, initiativeFormula: e.target.value } })}
-                                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-indigo-400 focus:border-indigo-500/40 outline-none shadow-inner"
+                                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-etat-info focus:border-etat-info/40 outline-none shadow-inner"
                                                     placeholder={t('modules:session.rule_engine_editor.combat.init_formula_placeholder')}
                                                 />
                                             </div>
                                             <div>
-                                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.health_type_label')}</label>
+                                                <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-info/60 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.health_type_label')}</label>
                                                 <select 
                                                     value={combat.defaultHealthType || 'hp'}
                                                     onChange={e => handleUpdate({ combat: { ...combat, defaultHealthType: e.target.value as GameDriver['combat']['defaultHealthType'] } })}
-                                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 text-sm text-app-text focus:border-indigo-500/40 outline-none appearance-none cursor-pointer"
+                                                    className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 text-sm text-app-text focus:border-etat-info/40 outline-none appearance-none cursor-pointer"
                                                     title={t('modules:session.rule_engine_editor.combat.health_type_label')}
                                                 >
                                                     <option value="hp">{t('modules:session.rule_engine_editor.combat.health_options.hp')}</option>
@@ -329,7 +329,7 @@ export const RuleEngineEditor: React.FC = () => {
                                           suivre le code, il s'amende.
                                         */}
                                         <div>
-                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-3 block px-1">
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-info/60 mb-3 block px-1">
                                                 Santé de départ — lue sur la fiche
                                             </label>
                                             {/*
@@ -358,7 +358,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                 list="champs-numeriques-de-la-fiche"
                                                 value={combat.santeDeDepart || ''}
                                                 onChange={e => handleUpdate({ combat: { ...combat, santeDeDepart: e.target.value } })}
-                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-indigo-400 focus:border-indigo-500/40 outline-none shadow-inner"
+                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-etat-info focus:border-etat-info/40 outline-none shadow-inner"
                                                 placeholder="ex. force — ou (force + agilite) / 2 + 1"
                                             />
                                             <datalist id="champs-numeriques-de-la-fiche">
@@ -374,7 +374,7 @@ export const RuleEngineEditor: React.FC = () => {
                                             {/* Ce que la fiche offre vraiment, sous les yeux : sans gabarit
                                                 rattaché, aucun identifiant n'existe et la formule ne pourra
                                                 rien lire. */}
-                                            <p className="text-ui-9 text-indigo-300/40 font-bold uppercase tracking-widest mt-2 px-2 leading-relaxed">
+                                            <p className="text-ui-9 text-etat-info/40 font-bold uppercase tracking-widest mt-2 px-2 leading-relaxed">
                                                 {champsNumeriquesDeLaFiche.length > 0
                                                     ? `Champs numériques disponibles : ${champsNumeriquesDeLaFiche.map(c => c.id).join(', ')}`
                                                     : 'Aucun champ numérique sur la fiche rattachée — une formule n’y lirait rien.'}
@@ -382,18 +382,18 @@ export const RuleEngineEditor: React.FC = () => {
                                         </div>
 
                                         <div>
-                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-indigo-400/60 mb-4 block px-1">{t('modules:session.rule_engine_editor.combat.sort_order_label')}</label>
+                                            <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-etat-info/60 mb-4 block px-1">{t('modules:session.rule_engine_editor.combat.sort_order_label')}</label>
                                             <div className="flex p-1 bg-app-bg/40 rounded-2xl border border-app-border/10 overflow-hidden">
                                                 <button 
                                                     onClick={() => handleUpdate({ combat: { ...combat, initiativeSort: 'desc' } })}
-                                                    className={`flex-1 py-4 text-ui-11 font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort !== 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
+                                                    className={`flex-1 py-4 text-ui-11 font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort !== 'asc' ? 'bg-etat-info text-app-bg shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
                                                     title={t('modules:session.rule_engine_editor.combat.descending_title')}
                                                 >
                                                     {t('modules:session.rule_engine_editor.combat.descending')}
                                                 </button>
                                                 <button 
                                                     onClick={() => handleUpdate({ combat: { ...combat, initiativeSort: 'asc' } })}
-                                                    className={`flex-1 py-4 text-ui-11 font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort === 'asc' ? 'bg-indigo-500 text-white shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
+                                                    className={`flex-1 py-4 text-ui-11 font-black uppercase tracking-[0.2em] rounded-xl transition-all ${combat.initiativeSort === 'asc' ? 'bg-etat-info text-app-bg shadow-lg' : 'text-app-text/40 hover:text-app-text'}`}
                                                     title={t('modules:session.rule_engine_editor.combat.ascending_title')}
                                                 >
                                                     {t('modules:session.rule_engine_editor.combat.ascending')}
@@ -405,7 +405,7 @@ export const RuleEngineEditor: React.FC = () => {
                                     <div className="col-span-5 p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] flex flex-col justify-between group">
                                         <div>
                                             <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 mb-6 flex items-center gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-etat-info" />
                                                 {t('modules:session.rule_engine_editor.combat.card_draw_title')}
                                             </h4>
                                             <label className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 mb-3 block px-1">{t('modules:session.rule_engine_editor.combat.deck_size_label')}</label>
@@ -413,7 +413,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                 type="number"
                                                 value={combat.initiativeCards || ''}
                                                 onChange={e => handleUpdate({ combat: { ...combat, initiativeCards: e.target.value ? parseInt(e.target.value) : undefined } })}
-                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-app-text focus:border-indigo-500/40 outline-none"
+                                                className="w-full bg-app-bg/40 px-5 py-4 rounded-2xl border border-app-border/10 font-mono text-base text-app-text focus:border-etat-info/40 outline-none"
                                                 placeholder={t('modules:session.rule_engine_editor.combat.deck_size_placeholder')}
                                             />
                                         </div>
@@ -429,8 +429,8 @@ export const RuleEngineEditor: React.FC = () => {
                             <div className="space-y-8">
                                 <header className="space-y-2 mb-10">
                                     <h2 className="text-3xl font-black text-app-text tracking-tight uppercase italic flex items-center gap-4 font-display">
-                                        <Map className="text-emerald-400" size={32} />
-                                        {t('modules:session.rule_engine_editor.tactical.title')} <span className="text-emerald-500/20 underline decoration-emerald-500/40">{t('modules:session.rule_engine_editor.tactical.subtitle')}</span>
+                                        <Map className="text-etat-succes" size={32} />
+                                        {t('modules:session.rule_engine_editor.tactical.title')} <span className="text-etat-succes/20 underline decoration-etat-succes/40">{t('modules:session.rule_engine_editor.tactical.subtitle')}</span>
                                     </h2>
                                     <p className="text-app-text/40 text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
                                         {t('modules:session.rule_engine_editor.tactical.description')}
@@ -438,22 +438,22 @@ export const RuleEngineEditor: React.FC = () => {
                                 </header>
 
                                 <div className="space-y-6">
-                                    <div className="flex items-center justify-between p-6 bg-emerald-500/5 rounded-[2rem] border border-emerald-500/20 shadow-xl">
+                                    <div className="flex items-center justify-between p-6 bg-etat-succes/5 rounded-[2rem] border border-etat-succes/20 shadow-xl">
                                         <div className="flex flex-col gap-1">
                                             <label className="text-ui-11 font-black uppercase text-app-text tracking-[0.2em]">{t('modules:session.rule_engine_editor.tactical.enable_ai_label')}</label>
-                                            <span className="text-ui-10 text-emerald-500/60 font-medium italic">{t('modules:session.rule_engine_editor.tactical.enable_ai_description')}</span>
+                                            <span className="text-ui-10 text-etat-succes/60 font-medium italic">{t('modules:session.rule_engine_editor.tactical.enable_ai_description')}</span>
                                         </div>
                                         <button 
                                             onClick={() => handleUpdate({ tactical: { ...tactical, useTacticalAI: !tactical.useTacticalAI } })}
-                                            className={`w-14 h-7 rounded-full transition-all relative p-1 ${tactical.useTacticalAI ? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]' : 'bg-app-surface/40 border border-app-border/20'}`}
+                                            className={`w-14 h-7 rounded-full transition-all relative p-1 ${tactical.useTacticalAI ? 'bg-etat-succes shadow-[0_0_20px_rgba(16,185,129,0.3)]' : 'bg-app-surface/40 border border-app-border/20'}`}
                                             title={tactical.useTacticalAI ? t('modules:session.rule_engine_editor.tactical.disable_ai_title') : t('modules:session.rule_engine_editor.tactical.enable_ai_title')}
                                         >
-                                            <div className={`w-5 h-5 rounded-full bg-white shadow-lg transition-all transform ${tactical.useTacticalAI ? 'translate-x-7' : 'translate-x-0 opacity-40'}`} />
+                                            <div className={`w-5 h-5 rounded-full bg-app-text shadow-lg transition-all transform ${tactical.useTacticalAI ? 'translate-x-7' : 'translate-x-0 opacity-40'}`} />
                                         </button>
                                     </div>
 
                                     <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm overflow-hidden relative">
-                                        <div className="absolute top-0 right-0 p-12 text-emerald-500/5 -rotate-12 select-none group-hover:scale-110 transition-transform">
+                                        <div className="absolute top-0 right-0 p-12 text-etat-succes/5 -rotate-12 select-none group-hover:scale-110 transition-transform">
                                             <Map size={240} />
                                         </div>
 
@@ -469,7 +469,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                     const range = tactical.ranges?.[rangeKey] || { label: t(`modules:session.rule_engine_editor.tactical.ranges.${rangeKey}`), maxUnits: 0, modifier: 0 };
                                                     return (
                                                         <div key={rangeKey} className="grid grid-cols-12 gap-4 items-center p-2 hover:bg-app-surface/40 rounded-2xl transition-all">
-                                                            <div className="col-span-4 text-xs font-black uppercase tracking-widest text-app-text/80 pl-2 border-l-2 border-emerald-500/40 font-display">{t(`modules:session.rule_engine_editor.tactical.ranges.${rangeKey}`)}</div>
+                                                            <div className="col-span-4 text-xs font-black uppercase tracking-widest text-app-text/80 pl-2 border-l-2 border-etat-succes/40 font-display">{t(`modules:session.rule_engine_editor.tactical.ranges.${rangeKey}`)}</div>
                                                             <div className="col-span-4 flex justify-center">
                                                                 <input 
                                                                     type="number"
@@ -481,7 +481,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                                         newRanges[rangeKey as keyof TacticalConfig['ranges']] = { ...range, maxUnits: isNaN(val) ? 0 : val };
                                                                         handleUpdate({ tactical: { ...tactical, ranges: newRanges } });
                                                                     }}
-                                                                    className="w-24 bg-app-bg/40 text-center py-2.5 rounded-xl border border-app-border/10 text-xs font-mono text-emerald-400 focus:border-emerald-500/50 outline-none"
+                                                                    className="w-24 bg-app-bg/40 text-center py-2.5 rounded-xl border border-app-border/10 text-xs font-mono text-etat-succes focus:border-etat-succes/50 outline-none"
                                                                     placeholder={t('modules:session.rule_engine_editor.tactical.grid_placeholder')}
                                                                 />
                                                             </div>
@@ -495,7 +495,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                                         newRanges[rangeKey as keyof TacticalConfig['ranges']] = { ...range, modifier: val };
                                                                         handleUpdate({ tactical: { ...tactical, ranges: newRanges } });
                                                                     }}
-                                                                    className={`w-24 bg-app-bg/40 text-center py-2.5 rounded-xl border border-app-border/10 text-xs font-mono focus:border-emerald-500/50 outline-none ${range.modifier > 0 ? 'text-emerald-400' : range.modifier < 0 ? 'text-rose-400' : 'text-app-text/40'}`}
+                                                                    className={`w-24 bg-app-bg/40 text-center py-2.5 rounded-xl border border-app-border/10 text-xs font-mono focus:border-etat-succes/50 outline-none ${range.modifier > 0 ? 'text-etat-succes' : range.modifier < 0 ? 'text-etat-danger' : 'text-app-text/40'}`}
                                                                     placeholder={t('modules:session.rule_engine_editor.tactical.modifier_placeholder')}
                                                                 />
                                                             </div>
@@ -514,8 +514,8 @@ export const RuleEngineEditor: React.FC = () => {
                                 <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                                     <div className="space-y-2">
                                         <h2 className="text-3xl font-black text-app-text tracking-tight uppercase italic flex items-center gap-4 font-display">
-                                            <Sparkles className="text-violet-400" size={32} />
-                                            {t('modules:session.rule_engine_editor.ai.title')} <span className="text-violet-500/20 underline decoration-violet-500/40">{t('modules:session.rule_engine_editor.ai.subtitle')}</span>
+                                            <Sparkles className="text-gm-violet" size={32} />
+                                            {t('modules:session.rule_engine_editor.ai.title')} <span className="text-gm-violet/20 underline decoration-gm-violet/40">{t('modules:session.rule_engine_editor.ai.subtitle')}</span>
                                         </h2>
                                         <p className="text-app-text/40 text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
                                             {t('modules:session.rule_engine_editor.ai.description')}
@@ -524,7 +524,7 @@ export const RuleEngineEditor: React.FC = () => {
                                     <button
                                         onClick={handleAutoGenerate}
                                         disabled={isGenerating}
-                                        className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-violet-600 text-white font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:opacity-90 transition-all disabled:opacity-50 shrink-0"
+                                        className="flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-gm-violet text-app-bg font-black text-xs uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:opacity-90 transition-all disabled:opacity-50 shrink-0"
                                         title={t('modules:session.rule_engine_editor.ai.generate_btn')}
                                     >
                                         {isGenerating ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
@@ -537,25 +537,25 @@ export const RuleEngineEditor: React.FC = () => {
                                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Brain size={120} />
                                         </div>
-                                        <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-violet-400 mb-6 flex items-center gap-3 font-mono">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
+                                        <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-gm-violet mb-6 flex items-center gap-3 font-mono">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-gm-violet animate-pulse" />
                                             {t('modules:session.rule_engine_editor.ai.global_prompt_label')}
                                         </h4>
                                         <textarea 
                                             value={driver.aiInstructions || ''}
                                             onChange={e => handleUpdate({ aiInstructions: e.target.value })}
                                             placeholder={t('modules:session.rule_engine_editor.ai.global_prompt_placeholder')}
-                                            className="w-full h-64 bg-app-bg/40 text-sm text-app-text/80 p-6 rounded-3xl border border-app-border/10 focus:border-violet-500/40 outline-none transition-all font-mono leading-relaxed custom-scrollbar shadow-inner"
+                                            className="w-full h-64 bg-app-bg/40 text-sm text-app-text/80 p-6 rounded-3xl border border-app-border/10 focus:border-gm-violet/40 outline-none transition-all font-mono leading-relaxed custom-scrollbar shadow-inner"
                                         />
                                     </div>
 
                                     <div className="p-8 bg-app-surface/20 border border-app-border/10 rounded-[2.5rem] backdrop-blur-sm relative overflow-hidden group">
                                         <div className="flex items-center gap-4 mb-4">
-                                            <div className="p-3 rounded-2xl bg-violet-500/10 text-violet-400">
+                                            <div className="p-3 rounded-2xl bg-gm-violet/10 text-gm-violet">
                                                 <Archive size={20} />
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-violet-400 font-mono">
+                                                <h4 className="text-ui-11 font-black uppercase tracking-[0.3em] text-gm-violet font-mono">
                                                     Chemin de l'Atelier (RAG)
                                                 </h4>
                                                 <p className="text-ui-9 text-app-text/40 font-bold uppercase tracking-tight mt-1">
@@ -569,11 +569,11 @@ export const RuleEngineEditor: React.FC = () => {
                                                 value={driver.ragPath || ''}
                                                 onChange={e => handleUpdate({ ragPath: e.target.value })}
                                                 placeholder="ex: systems/my-system/rules"
-                                                className="w-full bg-app-bg/40 px-6 py-4 rounded-2xl border border-app-border/10 focus:border-violet-500/40 outline-none transition-all font-mono text-sm"
+                                                className="w-full bg-app-bg/40 px-6 py-4 rounded-2xl border border-app-border/10 focus:border-gm-violet/40 outline-none transition-all font-mono text-sm"
                                             />
                                             <p className="text-ui-9 text-app-text/20 font-bold uppercase tracking-widest mt-3 px-2 flex items-center gap-2">
-                                                <Sparkles size={10} className="text-violet-400" />
-                                                Le chemin doit être relatif au dossier <code className="text-violet-400/60">docs/</code> pour l'indexation IA.
+                                                <Sparkles size={10} className="text-gm-violet" />
+                                                Le chemin doit être relatif au dossier <code className="text-gm-violet/60">docs/</code> pour l'indexation IA.
                                             </p>
                                         </div>
                                     </div>
@@ -626,18 +626,18 @@ export const RuleEngineEditor: React.FC = () => {
                                                 const Icon = iconMap[gem.icon] || Brain;
                                                 const currValue = driver.aiPersonas?.[gem.id] || '';
                                                 return (
-                                                    <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 ${currValue ? 'bg-violet-500/5 border-violet-500/30' : 'bg-app-surface/20 border-app-border/10 hover:border-app-border/40'} group`}>
+                                                    <div key={gem.id} className={`p-6 rounded-[2rem] border transition-all duration-500 ${currValue ? 'bg-gm-violet/5 border-gm-violet/30' : 'bg-app-surface/20 border-app-border/10 hover:border-app-border/40'} group`}>
                                                         <div className="flex items-center justify-between mb-4">
                                                             <div className="flex items-center gap-4">
-                                                                <div className={`p-3 rounded-2xl transition-all ${currValue ? 'bg-violet-500 text-white shadow-glow-violet' : 'bg-app-bg text-app-text/40'}`}>
+                                                                <div className={`p-3 rounded-2xl transition-all ${currValue ? 'bg-gm-violet text-app-bg shadow-glow-violet' : 'bg-app-bg text-app-text/40'}`}>
                                                                     <Icon size={18} />
                                                                 </div>
                                                                 <div className="flex flex-col">
-                                                                    <span className={`text-xs font-black uppercase tracking-[0.2em] ${currValue ? 'text-violet-400' : 'text-app-text/40'}`}>{t(gem.name)}</span>
+                                                                    <span className={`text-xs font-black uppercase tracking-[0.2em] ${currValue ? 'text-gm-violet' : 'text-app-text/40'}`}>{t(gem.name)}</span>
                                                                     <span className="text-ui-10 text-app-text/20 font-medium font-sans">{t('modules:session.rule_engine_editor.ai.persona_type_label', { id: gem.id })}</span>
                                                                 </div>
                                                             </div>
-                                                            {currValue && <div className="w-2 h-2 rounded-full bg-violet-500 animate-pulse shadow-[0_0_10px_rgba(139,92,246,1)]" />}
+                                                            {currValue && <div className="w-2 h-2 rounded-full bg-gm-violet animate-pulse shadow-[0_0_10px_rgba(139,92,246,1)]" />}
                                                         </div>
                                                         <textarea
                                                             value={currValue}
@@ -653,7 +653,7 @@ export const RuleEngineEditor: React.FC = () => {
                                                             }}
                                                             placeholder={t('modules:session.rule_engine_editor.ai.persona_prompt_placeholder', { name: t(gem.name) })}
 
-                                                            className="w-full h-36 bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-xs text-app-text/60 focus:border-violet-500/40 outline-none transition-all font-mono resize-none leading-relaxed custom-scrollbar"
+                                                            className="w-full h-36 bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-xs text-app-text/60 focus:border-gm-violet/40 outline-none transition-all font-mono resize-none leading-relaxed custom-scrollbar"
                                                         />
                                                     </div>
                                                 );
@@ -668,8 +668,8 @@ export const RuleEngineEditor: React.FC = () => {
                             <div className="space-y-12">
                                 <header className="space-y-2 mb-10">
                                     <h2 className="text-3xl font-black text-app-text tracking-tight uppercase italic flex items-center gap-4 font-display">
-                                        <Archive className="text-amber-400" size={32} />
-                                        {t('modules:session.rule_engine_editor.loot.title')} <span className="text-amber-500/20 underline decoration-amber-500/40">{t('modules:session.rule_engine_editor.loot.subtitle')}</span>
+                                        <Archive className="text-etat-alerte" size={32} />
+                                        {t('modules:session.rule_engine_editor.loot.title')} <span className="text-etat-alerte/20 underline decoration-etat-alerte/40">{t('modules:session.rule_engine_editor.loot.subtitle')}</span>
                                     </h2>
                                     <p className="text-app-text/40 text-sm max-w-2xl leading-relaxed uppercase tracking-widest font-bold">
                                         {t('modules:session.rule_engine_editor.loot.description')}
@@ -683,11 +683,11 @@ export const RuleEngineEditor: React.FC = () => {
                         {activeSection === 'notebook' && (
                             <div className="space-y-8 h-full flex flex-col items-center justify-center py-20">
                                 <header className="text-center space-y-4 mb-12">
-                                    <div className="w-24 h-24 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20 shadow-glow-blue/5">
-                                        <BookOpen className="text-blue-400" size={48} />
+                                    <div className="w-24 h-24 bg-etat-info/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-etat-info/20 shadow-glow-blue/5">
+                                        <BookOpen className="text-etat-info" size={48} />
                                     </div>
-                                    <h2 className="text-4xl font-black text-app-text tracking-tight uppercase italic underline decoration-blue-500/40 font-display">
-                                        NotebookLM <span className="text-blue-500/20">Sync</span>
+                                    <h2 className="text-4xl font-black text-app-text tracking-tight uppercase italic underline decoration-etat-info/40 font-display">
+                                        NotebookLM <span className="text-etat-info/20">Sync</span>
                                     </h2>
                                     <p className="text-app-text/40 text-sm max-w-xl mx-auto leading-relaxed uppercase tracking-widest font-bold">
                                         {t('modules:session.rule_engine_editor.notebook.description')}
@@ -695,14 +695,14 @@ export const RuleEngineEditor: React.FC = () => {
                                 </header>
 
                                 <div className="w-full max-w-2xl p-10 bg-app-bg/40 border border-app-border/10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-8 text-blue-500/5 -rotate-12 translate-x-4 -translate-y-4 pointer-events-none">
+                                    <div className="absolute top-0 right-0 p-8 text-etat-info/5 -rotate-12 translate-x-4 -translate-y-4 pointer-events-none">
                                         <BookOpen size={180} />
                                     </div>
                                     
                                     <div className="relative z-10 space-y-6">
-                                        <label className="text-ui-10 font-black uppercase tracking-[0.3em] text-blue-400 mb-2 block px-2 italic">{t('modules:session.rule_engine_editor.notebook.link_label')}</label>
+                                        <label className="text-ui-10 font-black uppercase tracking-[0.3em] text-etat-info mb-2 block px-2 italic">{t('modules:session.rule_engine_editor.notebook.link_label')}</label>
                                         <div className="relative">
-                                            <div className="absolute left-6 top-1/2 -translate-y-1/2 text-blue-500/40">
+                                            <div className="absolute left-6 top-1/2 -translate-y-1/2 text-etat-info/40">
                                                 <BookOpen size={20} />
                                             </div>
                                             <input 
@@ -710,19 +710,19 @@ export const RuleEngineEditor: React.FC = () => {
                                                 value={driver.defaultNotebookUrl || ''}
                                                 onChange={e => handleUpdate({ defaultNotebookUrl: e.target.value })}
                                                 placeholder={t('modules:session.rule_engine_editor.notebook.placeholder')}
-                                                className="w-full bg-app-bg/60 text-sm text-app-text pl-16 pr-8 py-6 rounded-[2rem] border border-app-border/10 focus:outline-none focus:border-blue-500/50 transition-all font-mono shadow-inner"
+                                                className="w-full bg-app-bg/60 text-sm text-app-text pl-16 pr-8 py-6 rounded-[2rem] border border-app-border/10 focus:outline-none focus:border-etat-info/50 transition-all font-mono shadow-inner"
                                                 title={t('modules:session.rule_engine_editor.notebook.title')}
                                             />
                                         </div>
                                         <div className="p-6 rounded-2xl bg-app-surface/20 border border-app-border/10 space-y-3">
                                             <p className="text-ui-11 text-app-text/40 leading-relaxed font-medium">
-                                                <strong className="text-blue-400/80 uppercase font-bold">{t('common:note')} :</strong> {t('modules:session.rule_engine_editor.notebook.hint')}
+                                                <strong className="text-etat-info/80 uppercase font-bold">{t('common:note')} :</strong> {t('modules:session.rule_engine_editor.notebook.hint')}
                                             </p>
 
                                             <div className="flex gap-2">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30" />
-                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30" />
-                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500/30" />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-etat-info/30" />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-etat-info/30" />
+                                                <div className="w-1.5 h-1.5 rounded-full bg-etat-info/30" />
                                             </div>
                                         </div>
                                     </div>

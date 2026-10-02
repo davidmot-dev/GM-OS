@@ -22,7 +22,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({ onSelect, 
             <div className="p-4 bg-app-surface border border-app-border rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 w-64 z-50">
                 <div className="flex justify-between items-center mb-2">
                     <span className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">Donner à...</span>
-                    <button onClick={onCancel} className="text-app-text/20 hover:text-red-400 transition-colors"><X size={14} /></button>
+                    <button onClick={onCancel} className="text-app-text/20 hover:text-etat-danger transition-colors"><X size={14} /></button>
                 </div>
                 <p className="text-xs text-app-text/40 italic">Aucun personnage dans la campagne active.</p>
             </div>
@@ -33,7 +33,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({ onSelect, 
         <div className="p-2 bg-app-surface border border-app-border/60 rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 min-w-[220px] z-50 backdrop-blur-xl">
             <div className="flex justify-between items-center px-3 py-1.5 border-b border-app-border/40 mb-1">
                 <span className="text-ui-10 font-black uppercase tracking-widest text-accent">Sélecteur de PJ</span>
-                <button onClick={onCancel} className="text-app-text/40 hover:text-red-400 transition-colors"><X size={14} /></button>
+                <button onClick={onCancel} className="text-app-text/40 hover:text-etat-danger transition-colors"><X size={14} /></button>
             </div>
             
             <div className="space-y-0.5 max-h-56 overflow-y-auto custom-scrollbar p-1">

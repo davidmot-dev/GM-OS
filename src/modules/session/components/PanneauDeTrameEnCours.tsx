@@ -172,7 +172,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                 <button
                     onClick={() => setCurrentView('trame')}
                     title="Ouvrir la trame complète"
-                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-ui-10 font-black uppercase tracking-widest text-app-text/50 hover:text-app-text transition-all"
+                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-app-text/5 border border-app-text/10 text-ui-10 font-black uppercase tracking-widest text-app-text/50 hover:text-app-text transition-all"
                 >
                     <ExternalLink size={11} /> Trame
                 </button>
@@ -181,7 +181,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
             {/* Combien de scènes tournent — l'information qu'on cherche d'un coup d'œil
                 quand le groupe s'est séparé. */}
             {enCours.length > 0 && (
-                <p className="text-ui-10 font-black uppercase tracking-widest text-emerald-400/80">
+                <p className="text-ui-10 font-black uppercase tracking-widest text-etat-succes/80">
                     {enCours.length} scène{enCours.length > 1 ? 's' : ''} en cours
                 </p>
             )}
@@ -302,7 +302,7 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                     onClick={basculerLActe}
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                         acte.acheve
-                            ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/20'
+                            ? 'text-etat-succes bg-etat-succes/10 border border-etat-succes/20'
                             : 'text-app-text/40 border border-app-border/20 hover:text-app-text'
                     }`}
                 >
@@ -369,7 +369,7 @@ const LigneDeSceneJouee: React.FC<{
     return (
         <div className={`rounded-xl border transition-colors ${
             etat === 'en-cours'
-                ? 'bg-emerald-500/10 border-emerald-500/30'
+                ? 'bg-etat-succes/10 border-etat-succes/30'
                 : etat === 'terminee'
                     ? 'bg-transparent border-transparent'
                     : 'bg-app-bg/30 border-app-border/20'
@@ -409,7 +409,7 @@ const LigneDeSceneJouee: React.FC<{
                 >prévue</span>
             )}
             {scene.origine === 'improvisee' && (
-                <span className="text-ui-8 font-black uppercase tracking-widest text-amber-400/70 shrink-0">
+                <span className="text-ui-8 font-black uppercase tracking-widest text-etat-alerte/70 shrink-0">
                     improvisée
                 </span>
             )}
@@ -417,13 +417,13 @@ const LigneDeSceneJouee: React.FC<{
                 <button
                     onClick={onTerminer}
                     title="Terminer la scène"
-                    className="shrink-0 p-1.5 rounded-lg text-app-text/40 hover:text-red-300 hover:bg-red-500/10 transition-all"
+                    className="shrink-0 p-1.5 rounded-lg text-app-text/40 hover:text-etat-danger hover:bg-etat-danger/10 transition-all"
                 ><Square size={13} /></button>
             ) : (
                 <button
                     onClick={onOuvrir}
                     title={etat === 'terminee' ? 'Rouvrir cette scène' : 'Commencer la scène'}
-                    className="shrink-0 p-1.5 rounded-lg text-app-text/40 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all"
+                    className="shrink-0 p-1.5 rounded-lg text-app-text/40 hover:text-etat-succes hover:bg-etat-succes/10 transition-all"
                 ><Play size={13} /></button>
             )}
         </div>
@@ -468,17 +468,17 @@ const LigneDeSceneJouee: React.FC<{
                 */}
                 {suites.length > 0 && (
                     <div>
-                        <p className="text-ui-9 font-black uppercase tracking-widest text-sky-300/50 mb-1.5">
+                        <p className="text-ui-9 font-black uppercase tracking-widest text-etat-info/50 mb-1.5">
                             Peut mener à
                         </p>
                         <div className="flex flex-col gap-1">
                             {suites.map(suite => (
                                 <div
                                     key={suite.vers.id}
-                                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-sky-500/5 border border-sky-400/20"
+                                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-etat-info/5 border border-etat-info/20"
                                 >
-                                    <ArrowRight size={11} className="shrink-0 text-sky-300/70" />
-                                    <span className="shrink-0 max-w-[45%] truncate text-ui-11 font-bold text-sky-200/90">
+                                    <ArrowRight size={11} className="shrink-0 text-etat-info/70" />
+                                    <span className="shrink-0 max-w-[45%] truncate text-ui-11 font-bold text-etat-info/90">
                                         {suite.vers.titre}
                                     </span>
                                     {libelleLisible(suite.libelle) && (
@@ -489,7 +489,7 @@ const LigneDeSceneJouee: React.FC<{
                                     <button
                                         onClick={() => onOuvrirLaSuite(suite.vers.id)}
                                         title="Commencer cette scène — celle-ci reste ouverte"
-                                        className="ml-auto shrink-0 flex items-center gap-1 px-2 py-1 rounded text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all"
+                                        className="ml-auto shrink-0 flex items-center gap-1 px-2 py-1 rounded text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:text-etat-succes hover:bg-etat-succes/10 transition-all"
                                     ><Play size={10} /> Ouvrir</button>
                                 </div>
                             ))}

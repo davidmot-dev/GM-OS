@@ -196,7 +196,7 @@ const TrameDashboard: React.FC = () => {
                     </div>
                     <button
                         onClick={creerActe}
-                        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-white text-ui-11 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
+                        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-accent text-app-on-accent text-ui-11 font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all"
                     >
                         <Plus size={14} /> Ajouter un acte
                     </button>
@@ -241,7 +241,7 @@ const TrameDashboard: React.FC = () => {
                             <div key={acte.id} className="rounded-2xl border border-app-border/10 bg-app-surface/40 overflow-hidden">
                                 <div
                                     className={`flex items-center gap-3 p-4 cursor-pointer transition-colors ${
-                                        selection?.id === acte.id ? 'bg-accent/10' : 'hover:bg-white/5'
+                                        selection?.id === acte.id ? 'bg-accent/10' : 'hover:bg-app-text/5'
                                     }`}
                                     onClick={() => {
                                         setActeOuvert(ouvert ? null : acte.id);
@@ -261,11 +261,11 @@ const TrameDashboard: React.FC = () => {
                                     </div>
                                     <div className="flex items-center gap-0.5 shrink-0" onClick={e => e.stopPropagation()}>
                                         <button onClick={() => deplacerActe(acte.id, 'haut')} title="Monter"
-                                            className="p-1.5 rounded-lg text-app-text/30 hover:text-app-text hover:bg-white/5"><ChevronUp size={14} /></button>
+                                            className="p-1.5 rounded-lg text-app-text/30 hover:text-app-text hover:bg-app-text/5"><ChevronUp size={14} /></button>
                                         <button onClick={() => deplacerActe(acte.id, 'bas')} title="Descendre"
-                                            className="p-1.5 rounded-lg text-app-text/30 hover:text-app-text hover:bg-white/5"><ChevronDown size={14} /></button>
+                                            className="p-1.5 rounded-lg text-app-text/30 hover:text-app-text hover:bg-app-text/5"><ChevronDown size={14} /></button>
                                         <button onClick={() => demanderSuppressionActe(acte)} title="Supprimer l'acte"
-                                            className="p-1.5 rounded-lg text-app-text/30 hover:text-red-400 hover:bg-red-500/10"><Trash2 size={14} /></button>
+                                            className="p-1.5 rounded-lg text-app-text/30 hover:text-etat-danger hover:bg-etat-danger/10"><Trash2 size={14} /></button>
                                     </div>
                                 </div>
 
@@ -333,9 +333,9 @@ const TrameDashboard: React.FC = () => {
                             </Champ>
                             <button
                                 onClick={() => demanderAchevementActe(acteSelectionne)}
-                                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-app-border/20 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
+                                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-app-border/20 text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:text-app-text hover:bg-app-text/5 transition-all"
                             >
-                                {acteSelectionne.acheve ? <CheckCircle2 size={14} className="text-emerald-400" /> : <Circle size={14} />}
+                                {acteSelectionne.acheve ? <CheckCircle2 size={14} className="text-etat-succes" /> : <Circle size={14} />}
                                 {acteSelectionne.acheve ? 'Acte achevé' : 'Marquer comme achevé'}
                             </button>
                             {/* On n'efface pas un acte joué : il reste lisible, barré. */}
@@ -407,7 +407,7 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
         <div
             onClick={onSelect}
             className={`group flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-                actif ? 'bg-accent/15 border border-accent/30' : 'border border-transparent hover:bg-white/5'
+                actif ? 'bg-accent/15 border border-accent/30' : 'border border-transparent hover:bg-app-text/5'
             }`}
         >
             {/* Le rang avant la préparation : il dit ce qu'on attend de la scène,
@@ -431,13 +431,13 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
                 )}
             >{scene.titre}</span>
             {etat === 'en-cours' && (
-                <span className="text-ui-8 font-black uppercase tracking-widest text-emerald-400 shrink-0">en cours</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-etat-succes shrink-0">en cours</span>
             )}
             {etat === 'en-pause' && (
                 <span className="text-ui-8 font-black uppercase tracking-widest text-app-text/30 shrink-0">pause</span>
             )}
             {scene.origine === 'improvisee' && (
-                <span className="text-ui-8 font-black uppercase tracking-widest text-amber-400/70 shrink-0">improvisée</span>
+                <span className="text-ui-8 font-black uppercase tracking-widest text-etat-alerte/70 shrink-0">improvisée</span>
             )}
             <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
                 {/*
@@ -467,20 +467,20 @@ function LigneDeScene({ scene, actif, onSelect, onMonter, onDescendre, onSupprim
                         title={etat === 'terminee' ? 'Rouvrir la scène'
                             : etat === 'en-pause' ? 'Reprendre la scène'
                                 : 'Commencer la scène'}
-                        className="p-1 rounded text-app-text/30 hover:text-emerald-300"
+                        className="p-1 rounded text-app-text/30 hover:text-etat-succes"
                     ><Play size={12} /></button>
                 )}
                 {(etat === 'en-cours' || etat === 'en-pause') && (
                     <button
                         onClick={onTerminer}
                         title="Terminer la scène — elle se barre"
-                        className="p-1 rounded text-emerald-400 hover:text-red-300"
+                        className="p-1 rounded text-etat-succes hover:text-etat-danger"
                     ><Square size={12} /></button>
                 )}
                 <button onClick={onCloner} title="Cloner la scène — une copie vierge, juste après" className="p-1 rounded text-app-text/30 hover:text-app-text"><Copy size={12} /></button>
                 <button onClick={onMonter} title="Monter" className="p-1 rounded text-app-text/30 hover:text-app-text"><ChevronUp size={12} /></button>
                 <button onClick={onDescendre} title="Descendre" className="p-1 rounded text-app-text/30 hover:text-app-text"><ChevronDown size={12} /></button>
-                <button onClick={onSupprimer} title="Supprimer la scène" className="p-1 rounded text-app-text/30 hover:text-red-400"><Trash2 size={12} /></button>
+                <button onClick={onSupprimer} title="Supprimer la scène" className="p-1 rounded text-app-text/30 hover:text-etat-danger"><Trash2 size={12} /></button>
             </div>
         </div>
     );
@@ -569,23 +569,23 @@ const EditeurDeScene: React.FC<{
                         </p>
                     )}
                     {sorties.map(sortie => (
-                        <div key={sortie.vers.id} className="flex items-center gap-2 p-2 rounded-xl bg-sky-500/5 border border-sky-400/20">
-                            <ArrowRight size={12} className="shrink-0 text-sky-300/70" />
+                        <div key={sortie.vers.id} className="flex items-center gap-2 p-2 rounded-xl bg-etat-info/5 border border-etat-info/20">
+                            <ArrowRight size={12} className="shrink-0 text-etat-info/70" />
                             <button
                                 onClick={() => onChoisirLaScene(sortie.vers.id)}
-                                className="shrink-0 max-w-[40%] truncate text-xs font-bold text-sky-200/90 hover:text-sky-100 text-left"
+                                className="shrink-0 max-w-[40%] truncate text-xs font-bold text-etat-info/90 hover:text-etat-info text-left"
                             >{sortie.vers.titre}</button>
                             <input
                                 value={sortie.libelle ?? ''}
                                 onChange={e => onLibeller(sortie.vers.id, e.target.value)}
                                 maxLength={LIBELLE_MAXIMUM}
                                 placeholder="à quelle condition ? « si elle survit », « en cas d'échec »"
-                                className="flex-1 min-w-0 bg-app-bg/40 px-2 py-1.5 rounded-lg text-ui-11 border border-app-border/20 focus:border-sky-400/50 outline-none placeholder:text-app-text/25"
+                                className="flex-1 min-w-0 bg-app-bg/40 px-2 py-1.5 rounded-lg text-ui-11 border border-app-border/20 focus:border-etat-info/50 outline-none placeholder:text-app-text/25"
                             />
                             <button
                                 onClick={() => onDesenchainer(sortie.vers.id)}
                                 title="Retirer cette suite"
-                                className="shrink-0 p-1 rounded text-app-text/30 hover:text-red-400"
+                                className="shrink-0 p-1 rounded text-app-text/30 hover:text-etat-danger"
                             ><Unlink size={12} /></button>
                         </div>
                     ))}
@@ -594,7 +594,7 @@ const EditeurDeScene: React.FC<{
                         <select
                             value=""
                             onChange={e => { if (e.target.value) onEnchainer(e.target.value); }}
-                            className="w-full bg-app-bg/40 px-4 py-2.5 rounded-xl border border-dashed border-app-border/25 text-xs focus:border-sky-400/50 outline-none cursor-pointer"
+                            className="w-full bg-app-bg/40 px-4 py-2.5 rounded-xl border border-dashed border-app-border/25 text-xs focus:border-etat-info/50 outline-none cursor-pointer"
                         >
                             <option value="">+ ajouter une suite…</option>
                             {aProposer.map(autre => (

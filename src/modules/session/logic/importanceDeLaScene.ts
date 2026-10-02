@@ -18,7 +18,7 @@ import type { ImportanceDeScene } from '../../../types/trame.types';
  *
  * ⛔ **Le langage visuel doit franchir DEUX mondes de style.** Les écrans du
  * meneur emploient les jetons du thème (`text-app-text`, `border-accent`) ; la
- * tablette a sa propre palette d'ardoise (`text-slate-200`) et un titre déjà en
+ * tablette a sa propre palette d'ardoise (une ardoise claire, slate-200) et un titre déjà en
  * `font-bold`. Un « gras pour l'intrigue principale » écrit à la main aurait
  * donc été invisible là-bas.
  *

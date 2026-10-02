@@ -34,7 +34,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
     return (
 
         <section className="space-y-6">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4">
+            <div className="bg-app-text/5 border border-app-text/10 rounded-2xl p-4 space-y-4">
                 <div className="flex items-center gap-2 text-neonCyan">
                     <Plus size={14} />
                     <h3 className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.social_graph.relation_form.add_btn')}</h3>
@@ -86,7 +86,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
                             placeholder={t('modules:session.social_graph.relation_form.libelle_placeholder')}
                             value={newRelLibelle}
                             onChange={(e) => setNewRelLibelle(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-neonCyan/50"
+                            className="w-full bg-app-bg/40 border border-app-text/10 rounded-xl px-3 py-2 text-xs text-app-text placeholder:text-app-subtle focus:outline-none focus:border-neonCyan/50"
                         />
                     </div>
 
@@ -98,7 +98,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
                             placeholder={t('modules:session.social_graph.relation_form.desc_placeholder')}
                             value={newRelDesc}
                             onChange={(e) => setNewRelDesc(e.target.value)}
-                            className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-neonCyan/50 transition-all font-display"
+                            className="w-full bg-app-bg/40 border border-app-text/10 rounded-xl px-3 py-2 text-xs text-app-text outline-none focus:border-neonCyan/50 transition-all font-display"
                         />
                     </div>
 
@@ -106,7 +106,7 @@ const RelationForm: React.FC<RelationFormProps> = ({
                     <button 
                         onClick={onAddRelation}
                         disabled={!newRelTarget}
-                        className="w-full py-3 bg-neonCyan/20 border border-neonCyan/30 text-neonCyan text-ui-10 font-black uppercase tracking-widest rounded-xl hover:bg-neonCyan hover:text-black transition-all disabled:opacity-30 disabled:hover:bg-neonCyan/20 disabled:hover:text-neonCyan"
+                        className="w-full py-3 bg-neonCyan/20 border border-neonCyan/30 text-neonCyan text-ui-10 font-black uppercase tracking-widest rounded-xl hover:bg-neonCyan hover:text-app-bg transition-all disabled:opacity-30 disabled:hover:bg-neonCyan/20 disabled:hover:text-neonCyan"
                     >
                         {t('modules:session.social_graph.relation_form.add_btn')}
                     </button>

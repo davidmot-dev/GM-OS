@@ -25,20 +25,20 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
   
   // Dynamic color orchestration
   const getBarColor = () => {
-    if (isHealing) return 'from-emerald-400 to-emerald-600 shadow-[0_0_15px_rgba(52,211,153,0.5)]';
+    if (isHealing) return 'from-etat-succes to-etat-succes shadow-[0_0_15px_rgba(52,211,153,0.5)]';
     
     // Elemental overrides
-    if (lastDamageType === 'fire') return 'from-orange-500 to-rose-600 shadow-[0_0_15px_rgba(249,115,22,0.6)]';
-    if (lastDamageType === 'cold') return 'from-cyan-400 to-blue-600 shadow-[0_0_15px_rgba(34,211,238,0.6)]';
-    if (lastDamageType === 'psychic') return 'from-purple-400 to-fuchsia-600 shadow-[0_0_15px_rgba(192,132,252,0.6)]';
-    if (lastDamageType === 'necrotic') return 'from-lime-600 to-green-900 shadow-[0_0_15px_rgba(74,222,128,0.4)]';
-    if (lastDamageType === 'radiant') return 'from-amber-300 to-yellow-500 shadow-[0_0_15px_rgba(251,191,36,0.6)]';
-    if (lastDamageType === 'electric') return 'from-yellow-200 to-blue-300 shadow-[0_0_15px_rgba(254,240,138,0.7)]';
-    if (lastDamageType === 'acid') return 'from-green-400 to-emerald-900 shadow-[0_0_15px_rgba(52,211,153,0.5)]';
+    if (lastDamageType === 'fire') return 'from-etat-alerte to-etat-danger shadow-[0_0_15px_rgba(249,115,22,0.6)]';
+    if (lastDamageType === 'cold') return 'from-gm-cyan to-etat-info shadow-[0_0_15px_rgba(34,211,238,0.6)]';
+    if (lastDamageType === 'psychic') return 'from-gm-violet to-gm-violet shadow-[0_0_15px_rgba(192,132,252,0.6)]';
+    if (lastDamageType === 'necrotic') return 'from-etat-succes to-etat-succes shadow-[0_0_15px_rgba(74,222,128,0.4)]';
+    if (lastDamageType === 'radiant') return 'from-etat-alerte to-etat-alerte shadow-[0_0_15px_rgba(251,191,36,0.6)]';
+    if (lastDamageType === 'electric') return 'from-etat-alerte to-etat-info shadow-[0_0_15px_rgba(254,240,138,0.7)]';
+    if (lastDamageType === 'acid') return 'from-etat-succes to-etat-succes shadow-[0_0_15px_rgba(52,211,153,0.5)]';
 
-    if (percentage > 50) return 'from-emerald-500 to-teal-600 shadow-[0_0_15px_rgba(16,185,129,0.3)]';
-    if (percentage > 20) return 'from-amber-400 to-orange-500 shadow-[0_0_15px_rgba(251,191,36,0.3)]';
-    return 'from-rose-500 to-red-700 shadow-[0_0_20px_rgba(239,68,68,0.5)]';
+    if (percentage > 50) return 'from-etat-succes to-etat-succes shadow-[0_0_15px_rgba(16,185,129,0.3)]';
+    if (percentage > 20) return 'from-etat-alerte to-etat-alerte shadow-[0_0_15px_rgba(251,191,36,0.3)]';
+    return 'from-etat-danger to-etat-danger shadow-[0_0_20px_rgba(239,68,68,0.5)]';
   };
 
   const isLow = percentage <= 20;
@@ -54,8 +54,8 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
     <div className="w-full min-h-8 flex flex-col justify-center gap-1 px-1 relative group/hp">
         {/* PV Labels */}
         <div className="flex justify-between items-end px-0.5">
-            <span className="text-ui-10 font-display font-black text-white/40 uppercase tracking-tighter">PV</span>
-            <div className={`flex items-baseline gap-1 font-display font-black tracking-tight ${percentage <= 25 ? 'text-rose-500' : 'text-white/80'}`}>
+            <span className="text-ui-10 font-display font-black text-app-text/40 uppercase tracking-tighter">PV</span>
+            <div className={`flex items-baseline gap-1 font-display font-black tracking-tight ${percentage <= 25 ? 'text-etat-danger' : 'text-app-text/80'}`}>
                 <input 
                     type="number" 
                     value={current}
@@ -75,7 +75,7 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
         </div>
 
         {/* Progress Container */}
-        <div className="h-3 shrink-0 w-full bg-black/60 rounded-full border border-white/10 overflow-hidden shadow-inner flex items-center p-[2px]">
+        <div className="h-3 shrink-0 w-full bg-app-bg/60 rounded-full border border-app-text/10 overflow-hidden shadow-inner flex items-center p-[2px]">
             <div 
                 className={`h-full rounded-full bg-gradient-to-r transition-all duration-700 ease-out-back relative ${getBarColor()}`}
                 style={{ width: `${percentage}%` }}
@@ -90,17 +90,17 @@ export const HealthBarDriver: React.FC<HealthBarDriverProps> = ({
                 
                 {/* Low health alert pulse */}
                 {isLow && (
-                    <div className="absolute inset-0 bg-white/40 animate-ping rounded-full opacity-20" />
+                    <div className="absolute inset-0 bg-app-text/40 animate-ping rounded-full opacity-20" />
                 )}
 
                 {/* Leading edge glow */}
-                <div className="absolute right-0 top-0 bottom-0 w-1 bg-white/40 blur-[2px]" />
+                <div className="absolute right-0 top-0 bottom-0 w-1 bg-app-text/40 blur-[2px]" />
             </div>
         </div>
 
         {/* Subtle background glow when active */}
         <div className={`absolute -inset-1 rounded-full blur-2xl opacity-0 group-hover/hp:opacity-10 transition-opacity duration-1000 ${
-            percentage <= 25 ? 'bg-rose-500' : 'bg-emerald-500'
+            percentage <= 25 ? 'bg-etat-danger' : 'bg-etat-succes'
         }`} />
     </div>
   );

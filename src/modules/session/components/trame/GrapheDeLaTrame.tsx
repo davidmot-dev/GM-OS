@@ -611,7 +611,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                         : 'Glisser d’une scène vers un lieu, un PNJ, un indice… et cliquer un lien pour le retirer'}
                     className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
                         liaison
-                            ? 'bg-sky-500/25 border-sky-400/50 text-sky-200'
+                            ? 'bg-etat-info/25 border-etat-info/50 text-etat-info'
                             : 'bg-app-bg/40 border-app-border/20 text-app-text/45 hover:text-app-text/80'
                     }`}
                 ><Link2 size={13} /> Relier</button>
@@ -619,13 +619,13 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                 <button
                     onClick={ranger}
                     title="Chaque acte selon sa forme : une chaîne qui se lit de gauche à droite, ou une étoile autour de son carrefour. Tu peux ensuite ajuster à la main."
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-app-text hover:bg-app-text/5 transition-all"
                 ><Columns3 size={13} /> Ranger</button>
 
                 <button
                     onClick={figerOuLiberer}
                     title={fige ? 'Rendre les nœuds à la simulation' : 'Garder la disposition telle qu’elle est'}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-app-text hover:bg-white/5 transition-all"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-app-text hover:bg-app-text/5 transition-all"
                 >
                     {fige ? <Lock size={13} className="text-accent" /> : <Unlock size={13} />}
                     {fige ? 'Figé' : 'Libre'}
@@ -633,12 +633,12 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                 <button
                     onClick={() => activeCampaignId && reinitialiserLeGrapheDeTrame(activeCampaignId)}
                     title="Tout rendre à la simulation, épingles comprises"
-                    className="p-2 rounded-xl border border-app-border/20 text-app-text/40 hover:text-app-text hover:bg-white/5 transition-all"
+                    className="p-2 rounded-xl border border-app-border/20 text-app-text/40 hover:text-app-text hover:bg-app-text/5 transition-all"
                 ><RotateCcw size={13} /></button>
             </div>
 
             {liaison && (
-                <p className="shrink-0 px-3 py-2 rounded-xl bg-sky-500/10 border border-sky-400/25 text-ui-10 font-bold text-sky-200/90">
+                <p className="shrink-0 px-3 py-2 rounded-xl bg-etat-info/10 border border-etat-info/25 text-ui-10 font-bold text-etat-info/90">
                     {depart
                         ? `Relie « ${noeudParId(depart)?.nom ?? ''} » à… relâche sur un lieu, un PNJ, un indice, un personnage ou une ambiance.`
                         : 'Glisse d’une scène vers une autre pour dire qu’elle y mène, ou vers un lieu, un PNJ, un indice · clique un lien pour le retirer.'}
@@ -662,7 +662,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                                     actif
                                         ? 'bg-accent/20 border-accent/40 text-accent'
                                         : constat.ton === 'alerte'
-                                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-300/90 hover:bg-amber-500/20'
+                                            ? 'bg-etat-alerte/10 border-etat-alerte/30 text-etat-alerte/90 hover:bg-etat-alerte/20'
                                             : 'bg-app-bg/40 border-app-border/20 text-app-text/45 hover:text-app-text/80'
                                 }`}
                             >
@@ -690,7 +690,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                     onPointerUp={auPointeurHaut}
                     onPointerLeave={() => { if (depart) { setDepart(null); fil.current = null; } }}
                     className={`flex-1 min-w-0 rounded-2xl border bg-app-bg/30 overflow-hidden relative transition-colors ${
-                        liaison ? 'border-sky-400/40' : 'border-app-border/10'
+                        liaison ? 'border-etat-info/40' : 'border-app-border/10'
                     } ${liaison ? 'cursor-crosshair' : ''}`}
                 >
                     {rienAMontrer ? (
@@ -926,13 +926,13 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                                 {etatDeLaScene(sceneChoisie) !== 'en-cours' && (
                                     <button
                                         onClick={() => ouvrirLaScene(sceneChoisie.id, seanceActive?.id)}
-                                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-emerald-300 hover:bg-white/5 transition-all"
+                                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-app-border/20 text-ui-10 font-bold text-app-text/60 hover:text-etat-succes hover:bg-app-text/5 transition-all"
                                     ><Play size={11} /> {etatDeLaScene(sceneChoisie) === 'terminee' ? 'Rouvrir' : 'Commencer'}</button>
                                 )}
                                 {(etatDeLaScene(sceneChoisie) === 'en-cours' || etatDeLaScene(sceneChoisie) === 'en-pause') && (
                                     <button
                                         onClick={() => terminerLaScene(sceneChoisie.id)}
-                                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-app-border/20 text-ui-10 font-bold text-emerald-400 hover:text-red-300 hover:bg-white/5 transition-all"
+                                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-app-border/20 text-ui-10 font-bold text-etat-succes hover:text-etat-danger hover:bg-app-text/5 transition-all"
                                     ><Square size={11} /> Terminer</button>
                                 )}
                             </div>
@@ -972,20 +972,20 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                         */}
                         {sceneChoisie && sorties.length > 0 && (
                             <div className="space-y-1.5">
-                                <p className="text-ui-9 font-black uppercase tracking-widest text-sky-300/60">
+                                <p className="text-ui-9 font-black uppercase tracking-widest text-etat-info/60">
                                     Mène à
                                 </p>
                                 {sorties.map(sortie => (
-                                    <div key={sortie.vers.id} className="space-y-1 p-2 rounded-lg bg-sky-500/5 border border-sky-400/20">
+                                    <div key={sortie.vers.id} className="space-y-1 p-2 rounded-lg bg-etat-info/5 border border-etat-info/20">
                                         <div className="flex items-center gap-1.5">
                                             <button
                                                 onClick={() => setChoisi(idDuNoeud('scene', sortie.vers.id))}
-                                                className="flex-1 min-w-0 text-left text-ui-11 font-bold text-sky-200/90 truncate hover:text-sky-100"
+                                                className="flex-1 min-w-0 text-left text-ui-11 font-bold text-etat-info/90 truncate hover:text-etat-info"
                                             >{sortie.vers.titre}</button>
                                             <button
                                                 onClick={() => retirerUnEnchainement(sceneChoisie.id, sortie.vers.id)}
                                                 title="Retirer cette sortie"
-                                                className="p-0.5 rounded text-app-text/30 hover:text-red-300"
+                                                className="p-0.5 rounded text-app-text/30 hover:text-etat-danger"
                                             ><Unlink size={11} /></button>
                                         </div>
                                         <input
@@ -993,7 +993,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                                             onChange={e => libellerUnEnchainement(sceneChoisie.id, sortie.vers.id, e.target.value)}
                                             maxLength={LIBELLE_MAXIMUM}
                                             placeholder="à quelle condition ?"
-                                            className="w-full bg-app-bg/40 px-2 py-1 rounded text-ui-10 border border-app-border/20 focus:border-sky-400/50 outline-none placeholder:text-app-text/25"
+                                            className="w-full bg-app-bg/40 px-2 py-1 rounded text-ui-10 border border-app-border/20 focus:border-etat-info/50 outline-none placeholder:text-app-text/25"
                                         />
                                     </div>
                                 ))}
@@ -1012,7 +1012,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                                     <button
                                         key={entree.depuis.id}
                                         onClick={() => setChoisi(idDuNoeud('scene', entree.depuis.id))}
-                                        className="w-full flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-white/5 transition-colors"
+                                        className="w-full flex items-center gap-1.5 px-2 py-1 rounded-lg text-left hover:bg-app-text/5 transition-colors"
                                     >
                                         <span className="flex-1 min-w-0 text-ui-11 truncate text-app-text/60">{entree.depuis.titre}</span>
                                         {libelleLisible(entree.libelle) && (
@@ -1051,7 +1051,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                                         () => { supprimerActe(acteChoisi.id); setChoisi(null); },
                                     );
                                 }}
-                                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/40 hover:text-red-300 hover:border-red-500/30 hover:bg-red-500/10 transition-all"
+                                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-app-border/20 text-ui-10 font-bold text-app-text/40 hover:text-etat-danger hover:border-etat-danger/30 hover:bg-etat-danger/10 transition-all"
                             ><Trash2 size={12} /> Supprimer</button>
                         )}
 
@@ -1064,7 +1064,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                                     <button
                                         key={voisin.id}
                                         onClick={() => setChoisi(voisin.id)}
-                                        className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left hover:bg-white/5 transition-colors"
+                                        className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left hover:bg-app-text/5 transition-colors"
                                     >
                                         <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: COULEUR_DU_TYPE[voisin.type] }} />
                                         <span className="flex-1 min-w-0 text-ui-11 truncate text-app-text/70">{voisin.nom}</span>

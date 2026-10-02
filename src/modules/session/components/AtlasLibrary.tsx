@@ -10,11 +10,11 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { gmToast } from '../../../stores/useToastStore';
 
 const TYPE_META: Record<AtlasMap['type'], { labelKey: string; icon: React.ReactNode; color: string }> = {
-    'battlemap': { labelKey: 'modules:session.world_atlas.library.types.battlemap', icon: <Swords size={10} />, color: 'text-red-400 bg-red-500/10 border-red-500/20' },
-    'world-map': { labelKey: 'modules:session.world_atlas.library.types.world-map', icon: <Globe size={10} />, color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-    'region': { labelKey: 'modules:session.world_atlas.library.types.region', icon: <Map size={10} />, color: 'text-green-400 bg-green-500/10 border-green-500/20' },
-    'city': { labelKey: 'modules:session.world_atlas.library.types.city', icon: <Building2 size={10} />, color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
-    'dungeon': { labelKey: 'modules:session.world_atlas.library.types.dungeon', icon: <MapPin size={10} />, color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+    'battlemap': { labelKey: 'modules:session.world_atlas.library.types.battlemap', icon: <Swords size={10} />, color: 'text-gm-crimson bg-gm-crimson/10 border-gm-crimson/20' },
+    'world-map': { labelKey: 'modules:session.world_atlas.library.types.world-map', icon: <Globe size={10} />, color: 'text-etat-info bg-etat-info/10 border-etat-info/20' },
+    'region': { labelKey: 'modules:session.world_atlas.library.types.region', icon: <Map size={10} />, color: 'text-gm-emerald bg-gm-emerald/10 border-gm-emerald/20' },
+    'city': { labelKey: 'modules:session.world_atlas.library.types.city', icon: <Building2 size={10} />, color: 'text-gm-gold bg-gm-gold/10 border-gm-gold/20' },
+    'dungeon': { labelKey: 'modules:session.world_atlas.library.types.dungeon', icon: <MapPin size={10} />, color: 'text-gm-violet bg-gm-violet/10 border-gm-violet/20' },
 };
 
 const MapCard: React.FC<{
@@ -28,7 +28,7 @@ const MapCard: React.FC<{
     onToggleVisited: () => void
 }> = ({ map, isSelected, isProjected, isPinned, onClick, onDelete, onTogglePin, onToggleVisited }) => {
     const { t } = useTranslation();
-    const typeMeta = TYPE_META[map.type] || { labelKey: 'modules:session.world_atlas.library.unknown_type', icon: <Map size={10} />, color: 'text-app-muted bg-slate-500/10 border-slate-500/20' };
+    const typeMeta = TYPE_META[map.type] || { labelKey: 'modules:session.world_atlas.library.unknown_type', icon: <Map size={10} />, color: 'text-app-muted bg-app-muted/10 border-app-border/20' };
 
     return (
         <div
@@ -66,16 +66,16 @@ const MapCard: React.FC<{
                             {typeMeta.icon} {t(typeMeta.labelKey)}
                         </span>
                         {map.isVideo && (
-                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-purple-400 bg-purple-500/10 border-purple-500/20">
+                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-gm-violet bg-gm-violet/10 border-gm-violet/20">
                                 <Film size={8} /> {t('modules:session.world_atlas.library.animated')}
                             </span>
                         )}
                         {isProjected && (
-                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-etat-succes bg-etat-succes/10 border-etat-succes/20">
                             </span>
                         )}
                         {map.isVisited && (
-                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                            <span className="inline-flex items-center gap-1 text-ui-9 font-bold px-1.5 py-0.5 rounded border text-etat-succes bg-etat-succes/10 border-etat-succes/20">
                                 <CheckCircle2 size={8} /> {t('modules:session.world_atlas.library.visited')}
                             </span>
                         )}
@@ -88,10 +88,10 @@ const MapCard: React.FC<{
                 {/* Visited Button */}
                 <button
                     onClick={(e) => { e.stopPropagation(); onToggleVisited(); }}
-                    className={`p-1.5 rounded-lg transition-all ${map.isVisited ? 'text-emerald-400 bg-emerald-500/10' : 'text-app-text/20 hover:text-emerald-400/60'}`}
+                    className={`p-1.5 rounded-lg transition-all ${map.isVisited ? 'text-etat-succes bg-etat-succes/10' : 'text-app-text/20 hover:text-etat-succes/60'}`}
                     title={map.isVisited ? t('modules:session.world_atlas.library.mark_unvisited') : t('modules:session.world_atlas.library.mark_visited')}
                 >
-                    <CheckCircle2 size={13} fill={map.isVisited ? "currentColor" : "none"} className={map.isVisited ? "text-emerald-400" : ""} />
+                    <CheckCircle2 size={13} fill={map.isVisited ? "currentColor" : "none"} className={map.isVisited ? "text-etat-succes" : ""} />
                 </button>
                 {/* Pin Button */}
                 <button
@@ -104,7 +104,7 @@ const MapCard: React.FC<{
                 {/* Delete Button */}
                 <button
                     onClick={(e) => { e.stopPropagation(); onDelete(); }}
-                    className="p-1.5 hover:text-red-400 text-app-text/20 transition-colors"
+                    className="p-1.5 hover:text-etat-danger text-app-text/20 transition-colors"
                     title={t('modules:session.world_atlas.library.delete_map')}
                 >
                     <Trash2 size={13} />

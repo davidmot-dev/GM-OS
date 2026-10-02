@@ -11,13 +11,13 @@ const MapPreview: React.FC = () => {
     const resolvedMapUrl = useMediaUrl(mapUrl || undefined);
 
     return (
-        <div className="h-64 bg-slate-800/40 rounded-xl border border-slate-800 overflow-hidden relative group">
+        <div className="h-64 bg-app-surface-2/40 rounded-xl border border-app-border overflow-hidden relative group">
             {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent z-10" />
 
             {/* Labels */}
             <div className="absolute bottom-4 left-4 z-20">
-                <h5 className="text-slate-100 font-bold tracking-tight">
+                <h5 className="text-app-text font-bold tracking-tight">
                     {mapUrl ? 'Current Tactical Map' : 'No Map Active'}
                 </h5>
                 <div className="flex items-center gap-2 text-xs text-app-muted mt-1">
@@ -30,13 +30,13 @@ const MapPreview: React.FC = () => {
             <div className="absolute top-4 right-4 z-20 flex gap-2">
                 <button
                     onClick={() => setActiveModule('map')}
-                    className="bg-slate-900/80 backdrop-blur-md p-2 rounded-lg text-slate-300 hover:text-gm-gold transition-all hover:scale-105 active:scale-95" title="Zoom"
+                    className="bg-app-bg/80 backdrop-blur-md p-2 rounded-lg text-app-text hover:text-gm-gold transition-all hover:scale-105 active:scale-95" title="Zoom"
                 >
                     <ZoomIn size={18} />
                 </button>
                 <button
                     onClick={() => setActiveModule('map')}
-                    className="bg-slate-900/80 backdrop-blur-md p-2 rounded-lg text-slate-300 hover:text-gm-gold transition-all hover:scale-105 active:scale-95" title="Layers"
+                    className="bg-app-bg/80 backdrop-blur-md p-2 rounded-lg text-app-text hover:text-gm-gold transition-all hover:scale-105 active:scale-95" title="Layers"
                 >
                     <Layers size={18} />
                 </button>
@@ -66,7 +66,7 @@ const MapPreview: React.FC = () => {
                             {useMapStore.getState().tokens.map(token => (
                                 <div 
                                     key={token.id}
-                                    className="absolute rounded-full border border-white/40 shadow-lg bg-slate-900 overflow-hidden"
+                                    className="absolute rounded-full border border-app-text/40 shadow-lg bg-app-bg overflow-hidden"
                                     style={{ 
                                         left: `${(token.x / 1000) * 100}%`, // Absolute fallback or relative? 
                                         top: `${(token.y / 1000) * 100}%`,
@@ -80,7 +80,7 @@ const MapPreview: React.FC = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="absolute inset-0 bg-slate-900/50 flex flex-col items-center justify-center opacity-50">
+                    <div className="absolute inset-0 bg-app-bg/50 flex flex-col items-center justify-center opacity-50">
                         <span className="text-app-subtle font-bold tracking-widest uppercase text-xs">Waiting for Projection</span>
                     </div>
                 )}

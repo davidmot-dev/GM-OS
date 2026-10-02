@@ -28,10 +28,10 @@ const ModuleSnapshots: React.FC = () => {
     // Icon mapping for statuses
     const getStatusIcon = (name: string) => {
         const n = name.toLowerCase();
-        if (n.includes('blind') || n.includes('aveugl')) return <EyeOff size={14} className="text-yellow-500" />;
-        if (n.includes('fear') || n.includes('peur') || n.includes('fright')) return <HeartCrack size={14} className="text-red-500" />;
-        if (n.includes('inspired') || n.includes('inspir')) return <Zap size={14} className="text-blue-400" />;
-        if (n.includes('poison') || n.includes('toxin') || n.includes('bleed') || n.includes('saign')) return <Skull size={14} className="text-emerald-500" />;
+        if (n.includes('blind') || n.includes('aveugl')) return <EyeOff size={14} className="text-etat-alerte" />;
+        if (n.includes('fear') || n.includes('peur') || n.includes('fright')) return <HeartCrack size={14} className="text-etat-danger" />;
+        if (n.includes('inspired') || n.includes('inspir')) return <Zap size={14} className="text-etat-info" />;
+        if (n.includes('poison') || n.includes('toxin') || n.includes('bleed') || n.includes('saign')) return <Skull size={14} className="text-etat-succes" />;
         return <CheckCircle size={14} className="text-app-muted" />;
     };
 
@@ -71,13 +71,13 @@ const ModuleSnapshots: React.FC = () => {
                                             {c.init}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className={`text-ui-10 font-bold truncate ${isCurrentTurn ? 'text-white' : 'text-app-text/40'}`}>
+                                            <p className={`text-ui-10 font-bold truncate ${isCurrentTurn ? 'text-app-text' : 'text-app-text/40'}`}>
                                                 {c.name}
                                             </p>
                                             {hpPct !== null && (
                                                 <div className="w-full bg-app-bg h-1 rounded-full mt-1 overflow-hidden">
                                                     <div
-                                                        className={`h-full transition-all duration-500 ${hpPct > 50 ? 'bg-emerald-500' : hpPct > 25 ? 'bg-amber-500' : 'bg-red-500'}`}
+                                                        className={`h-full transition-all duration-500 ${hpPct > 50 ? 'bg-etat-succes' : hpPct > 25 ? 'bg-etat-alerte' : 'bg-etat-danger'}`}
                                                         style={{ width: `${hpPct}%` }}
                                                     ></div>
                                                 </div>
@@ -117,7 +117,7 @@ const ModuleSnapshots: React.FC = () => {
                             </div>
                             <button 
                                 onClick={() => isAudioPlaying ? stopAll() : (deckA.activePadId ? playDeck('A') : null)}
-                                className={`p-1 transition-colors ${isAudioPlaying ? 'text-app-text/40 hover:text-white' : 'text-accent/40 hover:text-accent'}`}
+                                className={`p-1 transition-colors ${isAudioPlaying ? 'text-app-text/40 hover:text-app-text' : 'text-accent/40 hover:text-accent'}`}
                                 disabled={!isAudioPlaying && !deckA.activePadId && !deckB.activePadId}
                             >
                                 {isAudioPlaying ? <Pause size={20} /> : <Play size={20} />}
@@ -160,20 +160,20 @@ const ModuleSnapshots: React.FC = () => {
                                 </div>
                             ))}
                             {allActiveStatuses.length > 4 && (
-                                <div className="col-span-2 text-ui-10 text-slate-600 text-center italic">
+                                <div className="col-span-2 text-ui-10 text-app-subtle text-center italic">
                                     {t('modules:session.snapshots.others_count', { count: allActiveStatuses.length - 4 })}
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <div className="bg-slate-800/20 rounded-xl border border-dashed border-slate-700/50 p-4 text-center">
-                            <p className="text-ui-10 text-slate-600 italic">{t('session.snapshots.no_condition')}</p>
+                        <div className="bg-app-surface-2/20 rounded-xl border border-dashed border-app-border/50 p-4 text-center">
+                            <p className="text-ui-10 text-app-subtle italic">{t('session.snapshots.no_condition')}</p>
                         </div>
                     )}
                 </div>
                 {/* Track 4: Deck-OS */}
                 <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1 border-t border-white/5 pt-4 mt-2">
+                    <div className="flex items-center justify-between text-ui-10 text-app-text/40 font-bold uppercase tracking-wider px-1 border-t border-app-text/5 pt-4 mt-2">
                         <span>{t('session.snapshots.cards_destiny')}</span>
                         <div className="flex gap-2">
                             <button 
@@ -186,10 +186,10 @@ const ModuleSnapshots: React.FC = () => {
                     </div>
                     <button 
                         onClick={() => useSessionOSStore.getState().setCurrentView('deck-player')}
-                        className="group flex items-center justify-between bg-white/5 hover:bg-gm-gold/10 rounded-xl border border-app-border/40 hover:border-gm-gold/30 p-3 transition-all"
+                        className="group flex items-center justify-between bg-app-text/5 hover:bg-gm-gold/10 rounded-xl border border-app-border/40 hover:border-gm-gold/30 p-3 transition-all"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-black/40 flex items-center justify-center border border-app-border/20 group-hover:border-gm-gold/40 text-app-text/20 group-hover:text-gm-gold transition-colors">
+                            <div className="w-10 h-10 rounded-lg bg-app-bg/40 flex items-center justify-center border border-app-border/20 group-hover:border-gm-gold/40 text-app-text/20 group-hover:text-gm-gold transition-colors">
                                 <Layers size={18} />
                             </div>
                             <div className="flex flex-col items-start">
@@ -226,7 +226,7 @@ const ModuleSnapshots: React.FC = () => {
                             <span className={`text-ui-10 font-mono ${sides === 20 ? 'text-accent' : 'text-app-text/40'}`}>
                                 d{sides === 100 ? '%' : sides}
                             </span>
-                            <span className={`text-xs font-bold ${sides === 20 ? 'text-white' : 'text-app-text/80'}`}>
+                            <span className={`text-xs font-bold ${sides === 20 ? 'text-app-text' : 'text-app-text/80'}`}>
                                 {lastRoll?.die === sides ? lastRoll.result : '-'}
                             </span>
                         </button>

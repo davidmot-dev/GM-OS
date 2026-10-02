@@ -575,10 +575,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 déclenche la Panique, ce qu'un dé de base ne fait jamais. */}
             {jet.desSecondaires > 0 && (
                 <div className="flex items-baseline gap-2 text-xs">
-                    <span className="text-amber-300/60 font-bold uppercase tracking-widest text-ui-9">
+                    <span className="text-etat-alerte/60 font-bold uppercase tracking-widest text-ui-9">
                         {descripteur.reserve?.secondaire?.label ?? 'Seconde réserve'}
                     </span>
-                    <span className="font-mono text-lg font-black text-amber-300">{jet.desSecondaires}</span>
+                    <span className="font-mono text-lg font-black text-etat-alerte">{jet.desSecondaires}</span>
                     {jet.composantesDeLaSecondeReserve.length > 0 && (
                         <span className="text-app-text/30 font-mono">
                             ({jet.composantesDeLaSecondeReserve.map(c => c.champ).join(' + ')})
@@ -641,7 +641,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 */}
                 {ventilation && (
                     <span
-                        className="flex items-center gap-1.5 text-ui-10 font-bold text-amber-300/80"
+                        className="flex items-center gap-1.5 text-ui-10 font-bold text-etat-alerte/80"
                         title="Coût des dés supplémentaires"
                     >
                         <Coins size={11} />
@@ -649,7 +649,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <span>{ventilation.surLaReserve} {nomDe(jet.cout.ressource)}</span>
                         )}
                         {ventilation.reporte > 0 && (
-                            <span className="text-red-300/80">
+                            <span className="text-etat-danger/80">
                                 {ventilation.surLaReserve > 0 && '+ '}
                                 {ventilation.reporte} {nomDe(ventilation.ressourceDeReport)}
                             </span>
@@ -680,9 +680,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 : 'Deux dés : l’Avantage garde le plus HAUT, le Désavantage le plus bas'}
                             className={`bg-app-bg/60 border rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50 ${
                                 modificateur === 'avantage'
-                                    ? 'border-emerald-400/50 text-emerald-300'
+                                    ? 'border-etat-succes/50 text-etat-succes'
                                     : modificateur === 'desavantage'
-                                        ? 'border-red-400/50 text-red-300'
+                                        ? 'border-etat-danger/50 text-etat-danger'
                                         : 'border-app-border/40 text-app-text/60'
                             }`}
                         >
@@ -728,7 +728,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     disabled={!pret}
                     className={`ml-auto px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                         pret
-                            ? 'bg-accent text-white hover:scale-105 active:scale-95'
+                            ? 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
                             : 'bg-app-text/5 text-app-text/20 cursor-not-allowed'
                     }`}
                 >
@@ -744,7 +744,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             {jet.avertissements.length > 0 && (
                 <ul className="space-y-1">
                     {jet.avertissements.map((a, i) => (
-                        <li key={i} className="flex items-start gap-2 text-ui-11 text-amber-300/70">
+                        <li key={i} className="flex items-start gap-2 text-ui-11 text-etat-alerte/70">
                             <AlertTriangle size={12} className="mt-0.5 shrink-0" /> {a}
                         </li>
                     ))}
@@ -804,15 +804,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                         ecarte
                                             ? 'bg-transparent border-dashed border-app-border/30 text-app-text/25 line-through'
                                         : declenche
-                                            ? 'bg-amber-500/25 border-amber-400 text-amber-100 shadow-[0_0_10px_rgba(251,191,36,0.35)]'
+                                            ? 'bg-etat-alerte/25 border-etat-alerte text-etat-alerte shadow-[0_0_10px_rgba(251,191,36,0.35)]'
                                             : critique
-                                                ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-200'
+                                                ? 'bg-etat-succes/20 border-etat-succes/50 text-etat-succes'
                                                 : d.isCritMax
-                                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300/80'
+                                                    ? 'bg-etat-succes/10 border-etat-succes/20 text-etat-succes/80'
                                                     : complique
-                                                        ? 'bg-red-500/20 border-red-400/50 text-red-200'
+                                                        ? 'bg-etat-danger/20 border-etat-danger/50 text-etat-danger'
                                                         : seconde
-                                                            ? 'bg-app-text/5 border-dashed border-amber-400/40 text-app-text/50'
+                                                            ? 'bg-app-text/5 border-dashed border-etat-alerte/40 text-app-text/50'
                                                             : 'bg-app-text/5 border-app-border/30 text-app-text/40'
                                     }`}
                                 >
@@ -832,7 +832,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <EtiquetteDuDegre
                             resultat={{ degre: resultat.degre, tagSuccess: v.reussi }}
                             classes={reussi => 'font-black uppercase tracking-widest '
-                                + (reussi ? 'text-emerald-400' : 'text-red-400')}
+                                + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
                         />
                         {/* « difficulté 0 » ne voulait rien dire sur un jeu qui
                             n'en gradue aucune : il en faut une, et c'est ça
@@ -858,7 +858,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             compte, il n'arbitre pas.
                         */}
                         {(resultat?.fails ?? 0) > 0 && (
-                            <span className="text-amber-300 font-black uppercase tracking-widest">
+                            <span className="text-etat-alerte font-black uppercase tracking-widest">
                                 {resultat!.fails} {descripteur.reserve?.secondaire?.libelleDuUn ?? 'fléau'}
                                 {resultat!.fails! > 1 ? 's' : ''}
                             </span>
@@ -866,12 +866,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {/* L'excédent alimente la monnaie de table — et depuis
                             le mur n° 4, il y est réellement versé. */}
                         {v.excedent > 0 && (
-                            <span className="text-amber-300/80 font-mono">
+                            <span className="text-etat-alerte/80 font-mono">
                                 +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
                             </span>
                         )}
                         {complications > 0 && (
-                            <span className="text-red-300/80 font-mono">
+                            <span className="text-etat-danger/80 font-mono">
                                 {complications} complication{complications > 1 ? 's' : ''}
                             </span>
                         )}
@@ -887,7 +887,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {mouvements.length > 0 && (
                         <ul className="space-y-1 pt-1 border-t border-app-border/20">
                             {mouvements.map((m, i) => (
-                                <li key={i} className="flex items-start gap-2 text-ui-11 text-amber-300/70">
+                                <li key={i} className="flex items-start gap-2 text-ui-11 text-etat-alerte/70">
                                     <Coins size={11} className="mt-0.5 shrink-0" /> {m}
                                 </li>
                             ))}

@@ -39,13 +39,13 @@ const TimelineWikiDashboard: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-1 p-1 bg-black/40 rounded-2xl border border-white/5 backdrop-blur-md">
+                <div className="flex items-center gap-1 p-1 bg-app-bg/40 rounded-2xl border border-app-text/5 backdrop-blur-md">
                     <button
                         onClick={() => setWikiTab('timeline')}
                         className={`flex items-center gap-2 px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                             wikiTab === 'timeline' 
-                                ? 'bg-accent text-app-bg shadow-glow-accent' 
-                                : 'text-app-text/40 hover:text-app-text hover:bg-white/5'
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text hover:bg-app-text/5'
                         }`}
                     >
                         <History size={14} />
@@ -55,8 +55,8 @@ const TimelineWikiDashboard: React.FC = () => {
                         onClick={() => setWikiTab('wiki')}
                         className={`flex items-center gap-2 px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                             wikiTab === 'wiki' 
-                                ? 'bg-accent text-app-bg shadow-glow-accent' 
-                                : 'text-app-text/40 hover:text-app-text hover:bg-white/5'
+                                ? 'bg-accent text-app-on-accent shadow-glow-accent' 
+                                : 'text-app-text/40 hover:text-app-text hover:bg-app-text/5'
                         }`}
                     >
                         <Book size={14} />

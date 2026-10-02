@@ -7,10 +7,10 @@ import { Users, MapPin, Package, Zap, Plus, X, Bookmark, Star } from 'lucide-rea
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 
 const CATEGORY_META: Record<AtlasEntityCategory, { labelKey: string; icon: React.ReactNode; color: string; favType: string }> = {
-    npc: { labelKey: 'modules:session.world_atlas.linked_entities.categories.npc', icon: <Users size={14} className="text-blue-400" />, color: 'bg-blue-500/10 border-blue-500/20 text-blue-300', favType: 'npc' },
-    lieu: { labelKey: 'modules:session.world_atlas.linked_entities.categories.lieu', icon: <MapPin size={14} className="text-green-400" />, color: 'bg-green-500/10 border-green-500/20 text-green-300', favType: 'place' },
-    objet: { labelKey: 'modules:session.world_atlas.linked_entities.categories.objet', icon: <Package size={14} className="text-amber-400" />, color: 'bg-amber-500/10 border-amber-500/20 text-amber-300', favType: 'item' },
-    evenement: { labelKey: 'modules:session.world_atlas.linked_entities.categories.evenement', icon: <Zap size={14} className="text-purple-400" />, color: 'bg-purple-500/10 border-purple-500/20 text-purple-300', favType: 'lore' },
+    npc: { labelKey: 'modules:session.world_atlas.linked_entities.categories.npc', icon: <Users size={14} className="text-etat-info" />, color: 'bg-etat-info/10 border-etat-info/20 text-etat-info', favType: 'npc' },
+    lieu: { labelKey: 'modules:session.world_atlas.linked_entities.categories.lieu', icon: <MapPin size={14} className="text-gm-emerald" />, color: 'bg-gm-emerald/10 border-gm-emerald/20 text-gm-emerald', favType: 'place' },
+    objet: { labelKey: 'modules:session.world_atlas.linked_entities.categories.objet', icon: <Package size={14} className="text-gm-gold" />, color: 'bg-gm-gold/10 border-gm-gold/20 text-gm-gold', favType: 'item' },
+    evenement: { labelKey: 'modules:session.world_atlas.linked_entities.categories.evenement', icon: <Zap size={14} className="text-gm-violet" />, color: 'bg-gm-violet/10 border-gm-violet/20 text-gm-violet', favType: 'lore' },
 };
 
 const CATEGORIES: AtlasEntityCategory[] = ['npc', 'lieu', 'objet', 'evenement'];
@@ -106,7 +106,7 @@ const AtlasLinkedEntities: React.FC = () => {
                         <h4 className="text-ui-10 font-black text-accent uppercase tracking-widest">{t('modules:session.world_atlas.linked_entities.link_favorite')}</h4>
                         <button 
                             onClick={() => setPickingCategory(null)} 
-                            className="text-app-text/20 hover:text-white"
+                            className="text-app-text/20 hover:text-app-text"
                             title={t('modules:session.world_atlas.linked_entities.close_picker')}
                         >
                             <X size={14} />
@@ -125,7 +125,7 @@ const AtlasLinkedEntities: React.FC = () => {
                                         <button
                                             key={fav.id}
                                             onClick={() => handleLinkFavorite(fav.id)}
-                                            className="text-left px-3 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
+                                            className="text-left px-3 py-2 rounded-lg bg-app-text/5 border border-app-text/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
                                             title={t('modules:session.cockpit.click_to_view')}
                                         >
                                             <div className="min-w-0 pr-2">
@@ -151,13 +151,13 @@ const AtlasLinkedEntities: React.FC = () => {
                                             <button
                                                 key={entity.id}
                                                 onClick={() => handleLinkCampaignEntity(entity.id)}
-                                                className="text-left px-3 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
+                                                className="text-left px-3 py-2 rounded-lg bg-app-text/5 border border-app-text/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
                                             >
                                                 <div className="min-w-0 pr-2">
                                                     <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors truncate">{entity.name}</div>
                                                     <div className="text-ui-10 text-app-text/20 truncate">{entity.description || t('modules:session.world_atlas.linked_entities.npc_campaign_subtitle')}</div>
                                                 </div>
-                                                <Users size={10} className="text-blue-400/50 flex-shrink-0" />
+                                                <Users size={10} className="text-etat-info/50 flex-shrink-0" />
                                             </button>
                                         ))}
                                 </div>
@@ -177,13 +177,13 @@ const AtlasLinkedEntities: React.FC = () => {
                                             <button
                                                 key={m.id}
                                                 onClick={() => handleLinkAtlasMap(m.id)}
-                                                className="text-left px-3 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
+                                                className="text-left px-3 py-2 rounded-lg bg-app-text/5 border border-app-text/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
                                             >
                                                 <div className="min-w-0 pr-2">
                                                     <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors truncate">{m.name}</div>
                                                     <div className="text-ui-10 text-app-text/20 truncate">{t('modules:session.world_atlas.linked_entities.atlas_map_subtitle')}</div>
                                                 </div>
-                                                <MapPin size={10} className="text-green-400/50 flex-shrink-0" />
+                                                <MapPin size={10} className="text-etat-succes/50 flex-shrink-0" />
                                             </button>
                                         ))}
                                 </div>
@@ -204,16 +204,16 @@ const AtlasLinkedEntities: React.FC = () => {
                                             <button
                                                 key={entry.id}
                                                 onClick={() => handleLinkWikiEntry(entry.id)}
-                                                className="text-left px-3 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
+                                                className="text-left px-3 py-2 rounded-lg bg-app-text/5 border border-app-text/5 hover:border-accent/30 hover:bg-accent/5 transition-all group flex items-center justify-between"
                                             >
                                                 <div className="min-w-0 pr-2">
                                                     <div className="text-xs font-bold text-app-text/80 group-hover:text-accent transition-colors truncate">{entry.title}</div>
                                                     <div className="text-ui-10 text-app-text/20 truncate">{t('modules:session.world_atlas.linked_entities.wiki_article_subtitle', { category: entry.category })}</div>
                                                 </div>
                                                 {pickingCategory === 'evenement' ? (
-                                                    <Zap size={10} className="text-purple-400/50 flex-shrink-0" />
+                                                    <Zap size={10} className="text-gm-violet/50 flex-shrink-0" />
                                                 ) : (
-                                                    <Package size={10} className="text-amber-400/50 flex-shrink-0" />
+                                                    <Package size={10} className="text-etat-alerte/50 flex-shrink-0" />
                                                 )}
                                             </button>
                                         ))}
@@ -313,10 +313,10 @@ const EntityChip: React.FC<{
         >
             <div className="flex items-center gap-1.5 min-w-0">
                 {entity.favoriteId && <Star size={10} className="text-accent fill-accent/20 flex-shrink-0" />}
-                {entity.entityId && <Users size={10} className="text-blue-400 flex-shrink-0" />}
-                {entity.mapId && <MapPin size={10} className="text-green-400 flex-shrink-0" />}
-                {entity.wikiEntryId && entity.category === 'evenement' && <Zap size={10} className="text-purple-400 flex-shrink-0" />}
-                {entity.wikiEntryId && entity.category === 'objet' && <Package size={10} className="text-amber-400 flex-shrink-0" />}
+                {entity.entityId && <Users size={10} className="text-etat-info flex-shrink-0" />}
+                {entity.mapId && <MapPin size={10} className="text-etat-succes flex-shrink-0" />}
+                {entity.wikiEntryId && entity.category === 'evenement' && <Zap size={10} className="text-gm-violet flex-shrink-0" />}
+                {entity.wikiEntryId && entity.category === 'objet' && <Package size={10} className="text-etat-alerte flex-shrink-0" />}
                 <span className="truncate">{entity.name}</span>
             </div>
             <button 

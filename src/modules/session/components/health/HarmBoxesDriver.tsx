@@ -15,15 +15,15 @@ export const HarmBoxesDriver: React.FC<HarmBoxesDriverProps> = ({ boxes }) => {
         >
           <div className={`w-6 h-6 rounded border flex items-center justify-center transition-all duration-500 ${
             box.filled 
-              ? 'bg-rose-500/30 border-rose-500 shadow-glow-red/30 rotate-45' 
-              : 'bg-white/10 border-white/20 group-hover/box:border-white/40'
+              ? 'bg-etat-danger/30 border-etat-danger shadow-glow-red/30 rotate-45' 
+              : 'bg-app-text/10 border-app-text/20 group-hover/box:border-app-text/40'
           }`}>
             {box.filled && (
-              <div className="w-2 h-2 bg-rose-500 rounded-sm -rotate-45" />
+              <div className="w-2 h-2 bg-etat-danger rounded-sm -rotate-45" />
             )}
           </div>
           <span className={`text-ui-9 font-black uppercase tracking-wider transition-colors ${
-            box.filled ? 'text-rose-400' : 'text-app-text/30'
+            box.filled ? 'text-etat-danger' : 'text-app-text/30'
           }`}>
             {box.label}
           </span>

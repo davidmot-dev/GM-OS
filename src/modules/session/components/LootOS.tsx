@@ -34,13 +34,13 @@ const LootOS: React.FC = () => {
     }, [gmQuotes]);
 
     return (
-        <div className="flex flex-col h-full bg-slate-900/50 backdrop-blur-xl">
+        <div className="flex flex-col h-full bg-app-bg/50 backdrop-blur-xl">
             {/* Sub-header Tabs */}
-            <div className="flex border-b border-white/5 bg-black/20">
+            <div className="flex border-b border-app-text/5 bg-app-bg/20">
                 <button
                     onClick={() => setActiveTab('generate')}
                     className={`flex-1 flex items-center justify-center gap-2 py-4 text-xs font-bold uppercase tracking-widest transition-all ${
-                        activeTab === 'generate' ? 'text-accent border-b-2 border-accent bg-accent/5' : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/2'
+                        activeTab === 'generate' ? 'text-accent border-b-2 border-accent bg-accent/5' : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/2'
                     }`}
                 >
                     <Sparkles size={14} />
@@ -49,7 +49,7 @@ const LootOS: React.FC = () => {
                 <button
                     onClick={() => setActiveTab('pool')}
                     className={`flex-1 flex items-center justify-center gap-2 py-4 text-xs font-bold uppercase tracking-widest transition-all ${
-                        activeTab === 'pool' ? 'text-accent border-b-2 border-accent bg-accent/5' : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/2'
+                        activeTab === 'pool' ? 'text-accent border-b-2 border-accent bg-accent/5' : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/2'
                     }`}
                 >
                     <Package size={14} />
@@ -58,7 +58,7 @@ const LootOS: React.FC = () => {
                 <button
                     onClick={() => setActiveTab('history')}
                     className={`flex-1 flex items-center justify-center gap-2 py-4 text-xs font-bold uppercase tracking-widest transition-all ${
-                        activeTab === 'history' ? 'text-accent border-b-2 border-accent bg-accent/5' : 'text-app-text/40 hover:text-app-text/60 hover:bg-white/2'
+                        activeTab === 'history' ? 'text-accent border-b-2 border-accent bg-accent/5' : 'text-app-text/40 hover:text-app-text/60 hover:bg-app-text/2'
                     }`}
                 >
                     <History size={14} />
@@ -98,7 +98,7 @@ const LootOS: React.FC = () => {
                 </div>
 
                 {/* Side Stats / Quick Info */}
-                <div className="w-64 border-l border-white/5 bg-black/10 p-5 hidden lg:flex flex-col gap-6">
+                <div className="w-64 border-l border-app-text/5 bg-app-bg/10 p-5 hidden lg:flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
                         <span className="text-ui-10 font-bold uppercase tracking-[0.2em] text-app-text/30">{t('modules:loot.stats.title')}</span>
                         <div className="glass-bento p-3 flex flex-col gap-1">
@@ -118,7 +118,7 @@ const LootOS: React.FC = () => {
                             </div>
                             <div className="flex justify-between items-center text-ui-10">
                                 <span className="text-app-text/40">{t('modules:loot.stats.remarkable_items')}</span>
-                                <span className="text-violet-400 font-bold">{remarquables}</span>
+                                <span className="text-gm-violet font-bold">{remarquables}</span>
                             </div>
                         </div>
                     </div>

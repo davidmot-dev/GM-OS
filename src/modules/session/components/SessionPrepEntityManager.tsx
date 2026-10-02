@@ -34,8 +34,8 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
 
     const getRoleIcon = (role: Entity['role']) => {
         switch (role) {
-            case 'ally': return <Shield size={12} className="text-emerald-500" />;
-            case 'hostile': return <Skull size={12} className="text-red-500" />;
+            case 'ally': return <Shield size={12} className="text-etat-succes" />;
+            case 'hostile': return <Skull size={12} className="text-etat-danger" />;
             case 'boss': return <Skull size={14} className="text-gm-gold" />;
             case 'neutral': return <User size={12} className="text-app-muted" />;
             default: return null;
@@ -70,7 +70,7 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
                                 </div>
                                 <button 
                                     onClick={() => removeEntityFromSession(sessionId, entity.id)}
-                                    className="p-1.5 text-app-text/40 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                                    className="p-1.5 text-app-text/40 hover:text-etat-danger transition-colors opacity-0 group-hover:opacity-100"
                                 >
                                     <X size={16} />
                                 </button>

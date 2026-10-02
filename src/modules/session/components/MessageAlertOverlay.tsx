@@ -84,7 +84,7 @@ export const MessageAlertOverlay: React.FC = () => {
                             type="button"
                             onClick={() => handleDismiss(alert.id)}
                             title="Ignorer l'alerte"
-                            className="p-1.5 hover:bg-app-text/10 rounded-lg transition-colors text-app-text/40 hover:text-rose-500"
+                            className="p-1.5 hover:bg-app-text/10 rounded-lg transition-colors text-app-text/40 hover:text-etat-danger"
                         >
                             <X size={14} />
                         </button>

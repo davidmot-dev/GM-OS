@@ -40,7 +40,7 @@ const SessionNotesModal: React.FC = () => {
             {/* Simple Help Info */}
             <div className="flex items-center justify-between text-ui-10 font-bold uppercase tracking-widest text-app-text/20">
                 <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 opacity-50"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-etat-succes/40 opacity-50"></div>
                     {t('modules:session.notes.auto_save')}
                 </div>
                 <span className="italic opacity-60">
