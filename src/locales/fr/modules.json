@@ -1027,6 +1027,10 @@
     }
   },
   "loot": {
+    "agencement": {
+      "en_attente": "{{count}} en attente",
+      "distribues": "{{count}} distribués"
+    },
     "title": "Loot-OS",
     "tabs": {
       "generate": "Génération",
@@ -1039,6 +1043,12 @@
       "remarkable_items": "Objets Remarquables"
     },
     "generator": {
+      "agencement": {
+        "lite": "Lite (rapide)",
+        "full": "Full (contexte campagne)",
+        "generer": "Générer les objets",
+        "tirer": "Tirer"
+      },
       "ai_header": "Générateur Rapide (IA)",
       "lite_mode": "Mode Lite (Rapide)",
       "full_mode": "Mode Full (Contexte Lore)",
@@ -1070,6 +1080,19 @@
       }
     },
     "pool": {
+      "agencement": {
+        "titre": "Objets en attente d’attribution",
+        "aide": "Choisissez un destinataire pour chaque objet.",
+        "retirer": "Retirer cet objet du pool",
+        "donner_a": "Donner à :",
+        "partager": "Partager équitablement",
+        "partager_aide": "{{part}} chacun entre les {{count}} PJ présents ; le reste ({{reste}}) reste dans le pool.",
+        "partage_impossible": "Pas assez pour une part entière par PJ présent.",
+        "en_attente": "{{count}} objet(s) en attente",
+        "archiver": "Archiver les reliquats",
+        "archives": "{{count}} objet(s) mis de côté — à retrouver dans l’historique.",
+        "vider_confirm": "Vider le pool ? Les {{count}} objet(s) en attente disparaissent, sans retour. « Archiver les reliquats » les garde de côté."
+      },
       "title": "Pool de Butin ({{count}})",
       "empty": "Le pool de butin est vide.",
       "empty_hint": "Générez des objets pour commencer",
@@ -1078,6 +1101,12 @@
       "no_active_chars": "Aucun personnage actif"
     },
     "history": {
+      "agencement": {
+        "mis_de_cote": "Mis de côté",
+        "mis_de_cote_aide": "Ce que personne n’a pris, gardé pour une séance suivante.",
+        "remettre": "Remettre au pool",
+        "vider_confirm": "Vider l’historique des {{count}} don(s) de cette campagne ? Cela ne s’annule pas."
+      },
       "title": "Historique des Gains",
       "empty": "L'historique est vide.",
       "empty_hint": "Les objets distribués apparaîtront ici",

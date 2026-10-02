@@ -1027,6 +1027,10 @@
     }
   },
   "loot": {
+    "agencement": {
+      "en_attente": "{{count}} pending",
+      "distribues": "{{count}} given"
+    },
     "title": "Loot-OS",
     "tabs": {
       "generate": "Generation",
@@ -1039,6 +1043,12 @@
       "remarkable_items": "Remarkable Items"
     },
     "generator": {
+      "agencement": {
+        "lite": "Lite (fast)",
+        "full": "Full (campaign context)",
+        "generer": "Generate items",
+        "tirer": "Roll"
+      },
       "ai_header": "AI Quick Generator",
       "lite_mode": "Lite Mode (Fast)",
       "full_mode": "Full Mode (Lore Context)",
@@ -1070,6 +1080,19 @@
       }
     },
     "pool": {
+      "agencement": {
+        "titre": "Items awaiting a recipient",
+        "aide": "Pick a recipient for each item.",
+        "retirer": "Remove this item from the pool",
+        "donner_a": "Give to:",
+        "partager": "Split evenly",
+        "partager_aide": "{{part}} each between the {{count}} present PCs; the rest ({{reste}}) stays in the pool.",
+        "partage_impossible": "Not enough for a whole share per present PC.",
+        "en_attente": "{{count}} item(s) pending",
+        "archiver": "Set leftovers aside",
+        "archives": "{{count}} item(s) set aside — find them in the history.",
+        "vider_confirm": "Empty the pool? The {{count}} pending item(s) disappear for good. “Set leftovers aside” keeps them."
+      },
       "title": "Loot Pool ({{count}})",
       "empty": "Loot pool is empty.",
       "empty_hint": "Generate items to get started",
@@ -1078,6 +1101,12 @@
       "no_active_chars": "No active characters"
     },
     "history": {
+      "agencement": {
+        "mis_de_cote": "Set aside",
+        "mis_de_cote_aide": "What nobody took, kept for a later session.",
+        "remettre": "Back to the pool",
+        "vider_confirm": "Clear the history of {{count}} gift(s) for this campaign? This cannot be undone."
+      },
       "title": "Loot History",
       "empty": "History is empty.",
       "empty_hint": "Distributed items will appear here",

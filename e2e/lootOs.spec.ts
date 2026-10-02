@@ -37,12 +37,17 @@ async function butin(gmos: GmOsLance) {
 
 let gmos: GmOsLance;
 
+/* Les étapes sont des onglets numérotés, suivis de leur compte (« 2. Pool Actif
+   3 en attente ») depuis la refonte L5 : on les trouve par leur nom, pas par un
+   libellé exact. */
+const onglet = (nom: string) => gmos.fenetre.getByRole('tab', { name: new RegExp(`[0-9][.] ${nom}`) }).first();
+
 test.beforeAll(async () => {
     gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
     await attendreLHydratation(gmos);
     await ouvrirLeModule(gmos, 'Tableau de Bord');
     await gmos.fenetre.getByRole('button', { name: /^Loot-OS$/ }).first().click();
-    await gmos.fenetre.getByRole('button', { name: /^Génération$/ }).first()
+    await onglet('Génération')
         .waitFor({ timeout: 20_000 });
 });
 
@@ -55,17 +60,17 @@ test.describe('les trois temps', () => {
       Loot-OS — *trois pages, trois gestes différents, ne pas les confondre.*
     */
     test('sont tous offerts', async () => {
-        for (const onglet of ['Génération', 'Pool Actif', 'Historique']) {
+        for (const nom of ['Génération', 'Pool Actif', 'Historique']) {
             await expect(
-                gmos.fenetre.getByRole('button', { name: new RegExp(`^${onglet}$`) }).first(),
-                `l'onglet « ${onglet} » manque`,
+                onglet(nom),
+                `l'onglet « ${nom} » manque`,
             ).toBeVisible();
         }
     });
 
     test('s’ouvrent sans rien casser', async () => {
-        for (const onglet of ['Pool Actif', 'Historique', 'Génération']) {
-            await gmos.fenetre.getByRole('button', { name: new RegExp(`^${onglet}$`) }).first().click();
+        for (const nom of ['Pool Actif', 'Historique', 'Génération']) {
+            await onglet(nom).click();
             await expect
                 .poll(async () => (await gmos.fenetre.locator('body').innerText()).length, { timeout: 10_000 })
                 .toBeGreaterThan(0);
@@ -87,7 +92,7 @@ test.describe('les états vides', () => {
       lit comme un module cassé, et c'est en séance qu'on le découvrirait.
     */
     test('l’absence de table est ANNONCÉE, pas laissée en blanc', async () => {
-        await gmos.fenetre.getByRole('button', { name: /^Génération$/ }).first().click();
+        await onglet('Génération').click();
 
         await expect(gmos.fenetre.locator('body'))
             .toContainText(/Aucune table de butin trouvée/i, { timeout: 15_000 });

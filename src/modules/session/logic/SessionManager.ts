@@ -302,6 +302,7 @@ export class SessionManager {
                laisserait la campagne à moitié supprimée. */
             lootPool: (state.lootPool ?? []).filter(i => i.campaignId !== id),
             lootHistory: (state.lootHistory ?? []).filter(e => e.campaignId !== id),
+            lootReserve: (state.lootReserve ?? []).filter(i => i.campaignId !== id),
 
 
             players: state.players.map(p => ({

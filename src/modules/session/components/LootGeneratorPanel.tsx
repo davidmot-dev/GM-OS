@@ -133,7 +133,7 @@ const LootGeneratorPanel: React.FC = () => {
                             className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-ui-10 font-bold transition-all ${!useFullContext ? 'bg-gm-gold/20 text-gm-gold' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
                             <Zap size={10} />
-                            LITE
+                            {t('modules:loot.generator.agencement.lite')}
                         </button>
                         <button 
                             onClick={() => setSurcharge(false)}
@@ -141,7 +141,7 @@ const LootGeneratorPanel: React.FC = () => {
                             className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-ui-10 font-bold transition-all ${useFullContext ? 'bg-etat-info/20 text-etat-info' : 'text-app-text/40 hover:text-app-text/60'}`}
                         >
                             <BookOpen size={10} />
-                            FULL
+                            {t('modules:loot.generator.agencement.full')}
                         </button>
                     </div>
                 </div>
@@ -160,25 +160,25 @@ const LootGeneratorPanel: React.FC = () => {
                         <IndicateurDeMode surcharge={surcharge} onSurcharge={setSurcharge} />
                     </div>
                 )}
-                <div className="relative group">
-                    <input 
-                        className={`w-full bg-app-text/5 border border-app-text/10 rounded-xl py-4 px-5 pr-12 text-sm text-app-text placeholder:text-app-text/30 focus:outline-none focus:border-gm-gold/50 transition-all outline-none ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        placeholder={t('modules:loot.generator.input_placeholder')}
-                        value={aiInput}
-                        onChange={(e) => setAiInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
-                        disabled={isGenerating}
-                    />
+                <input 
+                    className={`w-full rounded-lg border border-app-border bg-app-bg/40 px-4 py-3 text-sm text-app-text outline-none transition-all placeholder:text-app-subtle focus:border-gm-gold/60 ${isGenerating ? 'cursor-not-allowed opacity-50' : ''}`}
+                    placeholder={t('modules:loot.generator.input_placeholder')}
+                    value={aiInput}
+                    onChange={(e) => setAiInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
+                    disabled={isGenerating}
+                />
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <p className="text-ui-10 italic text-app-muted">{t('modules:loot.generator.ai_hint')}</p>
                     <button 
                         onClick={handleAIGenerate}
                         disabled={isGenerating || !aiInput.trim()}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-gm-gold/10 text-gm-gold hover:bg-gm-gold/20 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="flex items-center gap-2 rounded-lg bg-gm-gold px-4 py-2 text-ui-10 font-black uppercase tracking-widest text-app-bg transition-all hover:brightness-110 disabled:opacity-30"
                     >
-                        {isGenerating ? <Loader2 size={18} className="animate-spin" /> : <Wand2 size={18} />}
+                        {isGenerating ? <Loader2 size={14} className="animate-spin" /> : <Wand2 size={14} />}
+                        {t('modules:loot.generator.agencement.generer')}
                     </button>
-                    <div className="absolute inset-0 rounded-xl bg-gm-gold/5 blur opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </div>
-                <p className="text-ui-10 text-app-text/40 px-2 italic">{t('modules:loot.generator.ai_hint')}</p>
             </div>
 
             {/* Tables Selection */}
@@ -218,9 +218,9 @@ const LootGeneratorPanel: React.FC = () => {
                                         })}
                                     </span>
                                 </div>
-                                <div className="p-2 rounded-lg bg-accent/5 text-accent group-hover:bg-accent group-hover:text-app-bg transition-all">
-                                    <Dices size={16} />
-                                </div>
+                                <span className="flex shrink-0 items-center gap-1.5 rounded-lg border border-accent/40 px-3 py-1.5 text-ui-10 font-black uppercase tracking-widest text-accent transition-all group-hover:bg-accent group-hover:text-app-on-accent">
+                                    <Dices size={13} />{t('modules:loot.generator.agencement.tirer')}
+                                </span>
                             </button>
                         ))
                     ) : (

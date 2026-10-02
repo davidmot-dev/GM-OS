@@ -84,6 +84,7 @@ export const LES_DETENTEURS_DE_CAMPAGNE: Detenteur<CibleCampagne>[] = [
                 compte('scènes', cible.sceneIds.length),
                 compte('objets de butin', (s.lootPool ?? []).filter(i => i.campaignId === cible.id).length),
                 compte('dons consignés', (s.lootHistory ?? []).filter(e => e.campaignId === cible.id).length),
+                compte('objets mis de côté', (s.lootReserve ?? []).filter(i => i.campaignId === cible.id).length),
                 compte(
                     'personnages détachés (gardés)',
                     (s.players ?? []).reduce(

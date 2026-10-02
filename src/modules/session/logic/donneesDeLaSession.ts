@@ -56,6 +56,9 @@ export const lesDonneesDeLaSession = (state: SessionOSStore) => ({
     */
     lootPool: state.lootPool,
     lootHistory: state.lootHistory,
+    /* La réserve des reliquats (2026-10-02) : ajoutée ici d'emblée, pour ne
+       pas rejouer l'oubli du 2026-09-04. */
+    lootReserve: state.lootReserve,
 });
 
 /**

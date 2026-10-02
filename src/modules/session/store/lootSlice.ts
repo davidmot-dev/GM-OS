@@ -10,6 +10,7 @@ import type { StateCreator } from 'zustand';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import type { InventoryItem, LootHistoryEntry } from './types';
+import { partagerEquitablement } from '../logic/partageDuButin';
 
 /**
  * Un objet **dans le pool**, donc rattaché à la campagne où il a été trouvé.
@@ -40,6 +41,13 @@ export const estDeLaCampagne = (
 export interface LootSliceState {
     lootPool: ObjetDuButin[];
     lootHistory: LootHistoryEntry[];
+    /**
+     * **Les reliquats mis de côté** — retenu par David le 2026-09-29, réglé
+     * le 2026-10-02 : ce que personne n'a pris quitte le pool sans se perdre,
+     * et peut revenir à une séance suivante (« Remettre au pool »). Facultatif
+     * à la lecture : un état d'avant cette date ne le porte pas.
+     */
+    lootReserve: ObjetDuButin[];
 }
 
 export interface LootSliceActions {
@@ -48,6 +56,12 @@ export interface LootSliceActions {
     clearLootPool: () => void;
     assignLootToCharacter: (itemId: string, playerId: string, characterId: string) => void;
     clearLootHistory: () => void;
+    /** Partage une monnaie du pool entre ces personnages ; le reste y demeure. */
+    partagerLaMonnaie: (itemId: string, beneficiaires: { playerId: string; characterId: string }[]) => void;
+    /** Ce qui reste dans le pool de la campagne passe dans la réserve. */
+    archiverLesReliquats: () => void;
+    /** Un objet mis de côté revient dans le pool. */
+    remettreAuPool: (itemId: string) => void;
 }
 
 export type LootSlice = LootSliceState & LootSliceActions;
@@ -56,6 +70,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
     // Initial State
     lootPool: [],
     lootHistory: [],
+    lootReserve: [],
 
     // Actions
     addLootToPool: (items) => {
@@ -92,6 +107,55 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
             lootHistory: state.lootHistory.filter((e) => !estDeLaCampagne(e.campaignId, campaignId)),
         }));
         gmToast("Historique du butin vidé.", "info");
+    },
+
+    /*
+      **Le partage passe par la porte du don.** Chaque part devient un objet du
+      pool, puis `assignLootToCharacter` la remet — inventaire, historique,
+      journal et notification de tablette compris. *Une seconde porte vers
+      l'inventaire finirait par oublier l'une des trois traces.*
+    */
+    partagerLaMonnaie: (itemId, beneficiaires) => {
+        const objet = get().lootPool.find(it => it.id === itemId);
+        if (!objet) return;
+        const partage = partagerEquitablement(objet.quantity, beneficiaires.length);
+        if (!partage) {
+            gmToast(i18next.t('modules:loot.pool.agencement.partage_impossible'), 'warning');
+            return;
+        }
+        const parts: ObjetDuButin[] = beneficiaires.map(() => ({
+            ...objet,
+            id: `${objet.id}-part-${crypto.randomUUID()}`,
+            quantity: partage.part,
+        }));
+        set((state) => ({
+            lootPool: state.lootPool.flatMap(it => it.id !== itemId
+                ? [it]
+                : [...parts, ...(partage.reste > 0 ? [{ ...objet, quantity: partage.reste }] : [])]),
+        }));
+        parts.forEach((part, i) => get().assignLootToCharacter(part.id, beneficiaires[i].playerId, beneficiaires[i].characterId));
+    },
+
+    archiverLesReliquats: () => {
+        const campaignId = (get() as unknown as { activeCampaignId?: string | null }).activeCampaignId ?? undefined;
+        const reliquats = get().lootPool.filter(it => estDeLaCampagne(it.campaignId, campaignId));
+        if (reliquats.length === 0) return;
+        set((state) => ({
+            lootPool: state.lootPool.filter(it => !estDeLaCampagne(it.campaignId, campaignId)),
+            // La marque est posée à l'archivage : un objet d'avant la marque
+            // appartient à la campagne qu'on regardait en le mettant de côté.
+            lootReserve: [...(state.lootReserve ?? []), ...reliquats.map(it => ({ ...it, campaignId: it.campaignId ?? campaignId }))],
+        }));
+        gmToast(i18next.t('modules:loot.pool.agencement.archives', { count: reliquats.length }), 'info');
+    },
+
+    remettreAuPool: (itemId) => {
+        const objet = (get().lootReserve ?? []).find(it => it.id === itemId);
+        if (!objet) return;
+        set((state) => ({
+            lootReserve: (state.lootReserve ?? []).filter(it => it.id !== itemId),
+            lootPool: [...state.lootPool, objet],
+        }));
     },
 
     assignLootToCharacter: (itemId, playerId, characterId) => {
