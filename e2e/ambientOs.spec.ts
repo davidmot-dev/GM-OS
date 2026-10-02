@@ -30,7 +30,7 @@ test.beforeAll(async () => {
     gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
     await attendreLHydratation(gmos);
     await ouvrirLeModule(gmos, 'Ambiances');
-    await gmos.fenetre.getByRole('button', { name: /^SILENCE$/i }).first()
+    await gmos.fenetre.getByRole('button', { name: /^Silence ambiances$/i }).first()
         .waitFor({ timeout: 20_000 });
 });
 
@@ -54,7 +54,7 @@ test.describe('les huit pistes', () => {
         */
         for (let i = 0; i < 8; i++) {
             await expect(zone, `la piste ${i} manque`)
-                .toContainText(new RegExp(`\\[track-${i}\\]`, 'i'));
+                .toContainText(new RegExp(`Piste ${String(i + 1).padStart(2, '0')}`, 'i'));
         }
     });
 
@@ -70,7 +70,8 @@ test.describe('les huit pistes', () => {
     });
 
     test('chacune offre de charger un son', async () => {
-        const charger = gmos.fenetre.getByRole('button', { name: /^Charger$/i });
+        /* « Choisir » sur une piste vide, « Changer » sur une piste garnie (refonte, L2). */
+        const charger = gmos.fenetre.getByRole('button', { name: /^(Choisir|Changer)$/i });
 
         expect(await charger.count(), 'une piste sans bouton de chargement est inutilisable')
             .toBeGreaterThanOrEqual(8);
@@ -125,7 +126,7 @@ test.describe('le moteur', () => {
     });
 
     test('le silence général est à portée', async () => {
-        await expect(gmos.fenetre.getByRole('button', { name: /^SILENCE$/i }).first())
+        await expect(gmos.fenetre.getByRole('button', { name: /^Silence ambiances$/i }).first())
             .toBeVisible();
     });
 });

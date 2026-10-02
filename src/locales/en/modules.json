@@ -5,6 +5,19 @@
     "input_placeholder": "Ask {{gem}}..."
   },
   "ambient": {
+    "agencement": {
+      "pistes_actives": "{{nombre}} track(s) playing",
+      "silence_total": "Silence",
+      "theme_courant": "Theme “{{nom}}”",
+      "master": "Ambience master",
+      "choisir": "Choose",
+      "vider": "Clear",
+      "lier": "Link light",
+      "liee": "Light linked",
+      "silence_ambiances": "Silence ambiences",
+      "reglages": "Settings",
+      "nouvelle_scene": "Save the current state as a quick scene"
+    },
     "dashboard": {
       "select_ambiance": "Select an Ambiance",
       "universe": "Universe",

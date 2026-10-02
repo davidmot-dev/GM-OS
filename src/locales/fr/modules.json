@@ -5,6 +5,19 @@
     "input_placeholder": "Demandez à {{gem}}..."
   },
   "ambient": {
+    "agencement": {
+      "pistes_actives": "{{nombre}} piste(s) en lecture",
+      "silence_total": "Silence",
+      "theme_courant": "Thème « {{nom}} »",
+      "master": "Master ambiances",
+      "choisir": "Choisir",
+      "vider": "Vider",
+      "lier": "Lier lumière",
+      "liee": "Lumière liée",
+      "silence_ambiances": "Silence ambiances",
+      "reglages": "Réglages",
+      "nouvelle_scene": "Mémoriser l'état actuel comme scène rapide"
+    },
     "dashboard": {
       "select_ambiance": "Sélectionner une Ambiance",
       "universe": "Univers",
