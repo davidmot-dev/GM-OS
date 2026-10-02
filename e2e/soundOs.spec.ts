@@ -33,7 +33,7 @@ test.beforeAll(async () => {
     gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
     await attendreLHydratation(gmos);
     await ouvrirLeModule(gmos, 'Effets Sonores');
-    await gmos.fenetre.getByRole('button', { name: /^KEY LEARN$/ }).first()
+    await gmos.fenetre.getByRole('button', { name: /^Key learn$/i }).first()
         .waitFor({ timeout: 20_000 });
 });
 
@@ -46,7 +46,7 @@ test.describe('le pupitre', () => {
       raccourcis appris.
     */
     test('porte seize pads', async () => {
-        const vides = gmos.fenetre.getByText('EMPTY PAD', { exact: false });
+        const vides = gmos.fenetre.getByText('Pad vide', { exact: false });
 
         expect(await vides.count(), 'le compte des pads a changé').toBe(16);
     });
@@ -59,7 +59,8 @@ test.describe('le pupitre', () => {
     });
 
     test('annonce qu’aucun canal ne joue', async () => {
-        await expect(gmos.fenetre.locator('body')).toContainText(/0 ACTIVE CHANNELS/i);
+        /* Depuis la refonte (L2, 2026-10-02), l'en-tête dit « Silence » quand aucun canal ne joue. */
+        await expect(gmos.fenetre.locator('[data-en-tete-de-module]')).toContainText(/Silence/i);
     });
 });
 
@@ -70,7 +71,7 @@ test.describe('les commandes globales', () => {
       suivantes — et en séance, c'est le clavier entier qui cesse de répondre.
     */
     test('l’apprentissage de touche s’allume et s’éteint', async () => {
-        const bouton = gmos.fenetre.getByRole('button', { name: /^KEY LEARN$/ }).first();
+        const bouton = gmos.fenetre.getByRole('button', { name: /^Key learn$/i }).first();
 
         await bouton.click();
         await expect.poll(async () => (await son(gmos)).keyLearn, { timeout: 10_000 }).toBe(true);

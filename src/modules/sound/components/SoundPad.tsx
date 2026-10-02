@@ -77,25 +77,43 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
     if (!filePath && !isLearningThis) {
         return (
             <div
-                className="relative h-64 bg-app-surface/20 border-2 border-dashed border-app-border/50 rounded-2xl flex flex-col items-center justify-center p-4 hover:border-app-border/20 hover:bg-app-surface/5 transition-all cursor-pointer group shadow-lg"
+                className="relative h-44 bg-app-surface/20 border-2 border-dashed border-app-border/50 rounded-2xl flex flex-col items-center justify-center p-4 hover:border-accent/40 hover:bg-app-surface/30 transition-all cursor-pointer group"
                 onClick={togglePlayback}
             >
                 <div className="size-12 rounded-full bg-app-surface/20 flex items-center justify-center text-app-text/40 group-hover:text-app-text group-hover:scale-110 transition-all border border-app-border/20 group-hover:bg-accent/40">
                     <Plus size={24} />
                 </div>
-                <span className="mt-4 text-ui-9 font-black text-app-text/30 uppercase tracking-[0.2em] group-hover:text-app-text/60">Empty Pad</span>
+                <span className="mt-3 text-ui-9 font-black text-app-subtle uppercase tracking-[0.2em] group-hover:text-app-text/80">Pad vide</span>
+                <span className="mt-1 font-mono text-ui-8 text-app-subtle">{id}</span>
             </div>
         );
     }
 
     const shortName = filePath ? filePath.split(/[/\\]/).pop() || '' : '';
+    /*
+      ⛔ **Un identifiant de médiathèque ne s'affiche pas.** Un son choisi dans
+      la médiathèque porte `m-3f883426-…` pour chemin : la ligne sous le titre
+      montrait donc un UUID, que la pastille de la refonte rendait bien
+      lisible. *Un identifiant à l'écran est un défaut, même quand tout
+      fonctionne* — le titre, lui, porte déjà le nom du fichier.
+    */
+    const nomAffiche = /^m-[0-9a-f-]{8,}$/i.test(shortName) ? '' : shortName;
     const keyLabel = keyMapping ? keyMapping.replace('Key', '').replace('Numpad', 'NUM ') : '';
 
     return (
         <div
             onClick={togglePlayback}
-            className={`relative h-64 bg-app-bg/40 backdrop-blur-md border border-app-border/40 rounded-2xl flex flex-col justify-between p-5 group cursor-pointer transition-all duration-300 shadow-xl overflow-hidden ${isActive ? 'shadow-glow-accent ring-1 ring-accent/30' : 'hover:border-app-border/20 hover:bg-app-surface/5'}`}
-            style={{ 
+            /*
+              **La pastille de la maquette retenue — refonte, L2, étape 2
+              (2026-10-02).** Plus basse (quatre par ligne, seize visibles sans
+              défiler), le titre en évidence. ⚠️ Elle ne rogne plus
+              (`overflow-hidden` retiré) : son menu déborde, comme celui d'une
+              pastille de la Musique — *un menu dont la taille dépend de la
+              vignette qu'il recouvre n'a pas de taille à lui.*
+            */
+            className={`relative h-44 bg-app-bg/40 border border-app-border/40 rounded-2xl flex flex-col justify-between p-4 group cursor-pointer transition-all duration-300 shadow-xl ${isActive ? 'shadow-glow-accent ring-1 ring-accent/30' : 'hover:border-app-border/20 hover:bg-app-surface/5'}`}
+            style={{
+                zIndex: isMenuOpen ? 60 : undefined,
                 /* `var(--gm-violet)` n'existe pas davantage : `gm.violet` est une
                    couleur Tailwind, pas une variable CSS. Trois lignes, deux
                    variables mortes — elles se recopient plus vite qu'on ne les
@@ -137,12 +155,12 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
             </div>
 
             {/* Content: Title & File */}
-            <div className="text-center pointer-events-none z-10">
-                <h3 className={`text-ui-11 font-black uppercase tracking-widest transition-colors ${isActive ? 'text-app-text' : 'text-app-text/90'}`}>
-                    {title || 'Unnamed Sound'}
+            <div className="pointer-events-none z-10 min-w-0 pr-6">
+                <h3 className={`line-clamp-2 break-words text-sm font-black uppercase tracking-wide transition-colors ${isActive ? 'text-app-text' : 'text-app-text/90'}`}>
+                    {title || 'Son sans nom'}
                 </h3>
-                <p className="text-ui-9 font-bold text-app-text/30 mt-1.5 truncate max-w-[120px] mx-auto opacity-40 italic">
-                    {shortName}
+                <p className="text-ui-9 font-bold text-app-subtle mt-1 truncate italic">
+                    {nomAffiche}
                 </p>
             </div>
 
@@ -185,13 +203,16 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
             {/* Background Glow when active */}
             {isActive && (
                 <div 
-                    className="absolute inset-x-0 bottom-0 h-1/2 opacity-20 bg-gradient-to-t from-current to-transparent pointer-events-none"
+                    className="absolute inset-x-0 bottom-0 h-1/2 rounded-b-2xl opacity-20 bg-gradient-to-t from-current to-transparent pointer-events-none"
                     style={{ color: color }}
                 />
             )}
 
             {isMenuOpen && (
-                <div className="absolute inset-0 bg-app-bg/98 z-50 flex flex-col items-center justify-center p-5 gap-2 rounded-2xl animate-in fade-in zoom-in-95 duration-200">
+                <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="absolute left-1/2 top-2 -translate-x-1/2 w-[15rem] bg-app-bg border border-app-border shadow-2xl z-50 flex flex-col items-center p-4 gap-2 rounded-2xl cursor-default animate-in fade-in zoom-in-95 duration-200"
+                >
                     <button onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); }} className="text-ui-10 font-black text-app-text/40 mb-2 hover:text-app-text uppercase tracking-[0.2em] transition-colors">Retour</button>
                     
                     <div className="w-full grid grid-cols-2 gap-2">
