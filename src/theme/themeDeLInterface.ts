@@ -118,13 +118,13 @@ export interface ThemeDeBase {
 
   Chaque valeur est celle que l'écran montre AUJOURD'HUI, pour que rien ne
   bouge tant qu'un composant n'emploie pas l'alias :
-  - `muted` et `subtil`, les `text-slate-400` et `text-slate-500` d'aujourd'hui ;
+  - `muted` et `subtil`, les textes en `slate` 400 et 500 d'aujourd'hui ;
   - ⛔ **les valeurs de Tailwind 4, pas celles de Tailwind 3** : sa palette est
     écrite en `oklch` (`slate-400` = `oklch(70.4% .04 256.788)`, soit
     `#90a1b9`), et le `#94a3b8` qu'on connaît par cœur est celui de la v3. Le
     recopier aurait changé tout le texte secondaire en P1.3 ;
   - `accent-contrast`, le `text-app-bg` posé sur l'accent (86 emplois, contre
-    62 `text-white`) — donc le fond du thème ;
+    62 textes en blanc) — donc le fond du thème ;
   - les états, les emerald, red, amber et sky 500 écrits en dur ;
   - `surface-2` n'a pas d'emploi : la surface éclaircie de 5 % vers le texte,
     **provisoire**, à juger avec les personnalités (P1.7).

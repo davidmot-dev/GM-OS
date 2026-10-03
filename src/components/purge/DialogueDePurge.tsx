@@ -117,7 +117,7 @@ const DialogueDePurge: React.FC<Props> = ({ genre, cibleId, onClose, onPurge }) 
     const titre = genre === 'campagne' ? 'Purger la campagne' : 'Purger le pilote';
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-app-bg/70 backdrop-blur-sm p-4">
             <div className="w-full max-w-2xl max-h-[88vh] flex flex-col rounded-2xl bg-app-surface border border-app-border/20 shadow-2xl overflow-hidden">
 
                 <div className="flex items-start justify-between gap-4 p-6 border-b border-app-border/10">
@@ -154,9 +154,9 @@ const DialogueDePurge: React.FC<Props> = ({ genre, cibleId, onClose, onPurge }) 
                     {/* ⛔ Le barrage. Une campagne vivante dont le jeu disparaît devient
                         injouable : c'est au meneur de trancher, pas à la purge. */}
                     {apercu && barrage && (
-                        <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/30">
-                            <ShieldAlert size={16} className="text-red-400 mt-0.5 flex-shrink-0" />
-                            <div className="text-ui-11 text-red-200/80 leading-relaxed">
+                        <div className="flex items-start gap-3 p-4 rounded-xl bg-etat-danger/10 border border-etat-danger/30">
+                            <ShieldAlert size={16} className="text-etat-danger mt-0.5 flex-shrink-0" />
+                            <div className="text-ui-11 text-etat-danger/80 leading-relaxed">
                                 <p className="font-bold mb-1">Ce pilote est encore joué.</p>
                                 <p>
                                     {apercu.campagnesQuiJouent.map(c => `« ${c.nom} »`).join(', ')} —
@@ -171,9 +171,9 @@ const DialogueDePurge: React.FC<Props> = ({ genre, cibleId, onClose, onPurge }) 
                         rappeler AVANT est la seule façon d'éviter qu'il le
                         découvre des semaines plus tard, par une absence. */}
                     {apercu && !barrage && apercu.autresPilotesDuCorpus.length > 0 && (
-                        <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                            <AlertTriangle size={16} className="text-amber-400 mt-0.5 flex-shrink-0" />
-                            <p className="text-ui-11 text-amber-200/80 leading-relaxed">
+                        <div className="flex items-start gap-3 p-4 rounded-xl bg-etat-alerte/10 border border-etat-alerte/30">
+                            <AlertTriangle size={16} className="text-etat-alerte mt-0.5 flex-shrink-0" />
+                            <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                                 <span className="font-bold">Ce dossier est partagé.</span>{' '}
                                 {apercu.autresPilotesDuCorpus.map(n => `« ${n} »`).join(', ')} pointe(nt)
                                 vers <span className="font-mono">docs/{apercu.corpusRelatif}</span> :
@@ -183,9 +183,9 @@ const DialogueDePurge: React.FC<Props> = ({ genre, cibleId, onClose, onPurge }) 
                     )}
 
                     {apercu && incomplet && (
-                        <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                            <AlertTriangle size={16} className="text-amber-400 mt-0.5 flex-shrink-0" />
-                            <p className="text-ui-11 text-amber-200/80 leading-relaxed">
+                        <div className="flex items-start gap-3 p-4 rounded-xl bg-etat-alerte/10 border border-etat-alerte/30">
+                            <AlertTriangle size={16} className="text-etat-alerte mt-0.5 flex-shrink-0" />
+                            <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                                 Ces modules n’ont pas répondu : {apercu.donnees.modulesEnEchec.join(', ')}.
                                 La purge est refusée tant qu’un module reste muet — il détient peut-être
                                 ce qu’on croit absent.
@@ -280,7 +280,7 @@ const DialogueDePurge: React.FC<Props> = ({ genre, cibleId, onClose, onPurge }) 
                     {bilan && (
                         <section className="flex flex-col gap-3 p-4 rounded-xl bg-app-bg/40 border border-app-border/20">
                             {bilan.refus ? (
-                                <p className="text-ui-11 text-red-300/80 leading-relaxed">{bilan.refus}</p>
+                                <p className="text-ui-11 text-etat-danger/80 leading-relaxed">{bilan.refus}</p>
                             ) : (
                                 <>
                                     <p className="text-ui-11 text-app-text/70 leading-relaxed">
@@ -290,12 +290,12 @@ const DialogueDePurge: React.FC<Props> = ({ genre, cibleId, onClose, onPurge }) 
                                             : ' · aucun fichier déplacé'}.
                                     </p>
                                     {bilan.modulesEnEchec.length > 0 && (
-                                        <p className="text-ui-11 text-amber-300/80">
+                                        <p className="text-ui-11 text-etat-alerte/80">
                                             N’ont pas pu rendre : {bilan.modulesEnEchec.join(', ')}.
                                         </p>
                                     )}
                                     {bilan.sansInstantane && (
-                                        <p className="text-ui-10 text-amber-300/70 italic">{bilan.sansInstantane}</p>
+                                        <p className="text-ui-10 text-etat-alerte/70 italic">{bilan.sansInstantane}</p>
                                     )}
                                     {bilan.quarantaine && (
                                         <button
@@ -333,7 +333,7 @@ const DialogueDePurge: React.FC<Props> = ({ genre, cibleId, onClose, onPurge }) 
                             <button
                                 onClick={() => void lancer()}
                                 disabled={!peutPurger}
-                                className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 px-5 py-2.5 rounded-xl text-ui-11 font-black uppercase tracking-widest transition-all disabled:opacity-40 disabled:hover:bg-red-500/10 disabled:hover:text-red-400"
+                                className="flex items-center gap-2 bg-etat-danger/10 hover:bg-etat-danger text-etat-danger hover:text-app-bg border border-etat-danger/30 px-5 py-2.5 rounded-xl text-ui-11 font-black uppercase tracking-widest transition-all disabled:opacity-40 disabled:hover:bg-etat-danger/10 disabled:hover:text-etat-danger"
                             >
                                 {enPurge ? <RefreshCw size={14} className="animate-spin" /> : <Trash2 size={14} />}
                                 {enPurge ? 'Purge en cours…' : 'Purger'}

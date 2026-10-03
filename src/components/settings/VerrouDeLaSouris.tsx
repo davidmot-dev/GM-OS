@@ -114,12 +114,12 @@ const VerrouDeLaSouris: React.FC = () => {
             */}
             <p className="text-ui-10 text-app-text/40 leading-relaxed px-1">
                 Windows nomme souvent toutes les souris de la même façon. Si tu coupes la mauvaise,
-                <strong className="text-amber-400"> ne fais rien</strong> : elle revient seule au bout de
+                <strong className="text-etat-alerte"> ne fais rien</strong> : elle revient seule au bout de
                 vingt secondes. Fermer GM-OS rend aussi toutes les souris coupées.
             </p>
 
             {erreur && (
-                <p role="alert" className="text-ui-11 font-semibold text-rose-400 flex items-start gap-2 px-1">
+                <p role="alert" className="text-ui-11 font-semibold text-etat-danger flex items-start gap-2 px-1">
                     <AlertTriangle size={13} className="shrink-0 mt-0.5" />{erreur}
                 </p>
             )}
@@ -136,7 +136,7 @@ const VerrouDeLaSouris: React.FC = () => {
                     return (
                         <div key={s.id} className="p-4 rounded-xl border border-app-border/20 bg-app-surface/20 flex flex-col gap-3">
                             <div className="flex items-center gap-3">
-                                <Mouse size={16} className={s.active ? 'text-emerald-400' : 'text-app-text/20'} />
+                                <Mouse size={16} className={s.active ? 'text-etat-succes' : 'text-app-text/20'} />
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs font-bold text-app-text truncate">{s.nom}</p>
                                     <p className="text-ui-10 font-mono text-app-text/30 truncate" title={s.id}>
@@ -148,8 +148,8 @@ const VerrouDeLaSouris: React.FC = () => {
                                     onClick={() => (s.active ? couper(s.id) : rendre(s.id))}
                                     className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-ui-10 font-black uppercase tracking-widest border transition-all disabled:opacity-40 ${
                                         s.active
-                                            ? 'bg-app-surface border-app-border text-app-text/70 hover:text-rose-400 hover:border-rose-500/40'
-                                            : 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
+                                            ? 'bg-app-surface border-app-border text-app-text/70 hover:text-etat-danger hover:border-etat-danger/40'
+                                            : 'bg-etat-succes/15 border-etat-succes/40 text-etat-succes'
                                     }`}
                                 >
                                     {s.active ? <><Lock size={12} />Couper</> : <><Unlock size={12} />Rendre</>}
@@ -157,16 +157,16 @@ const VerrouDeLaSouris: React.FC = () => {
                             </div>
 
                             {sursis && (
-                                <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
-                                    <p className="flex-1 text-ui-11 font-bold text-amber-300 leading-tight">
+                                <div className="flex items-center gap-3 p-3 rounded-lg bg-etat-alerte/10 border border-etat-alerte/30">
+                                    <p className="flex-1 text-ui-11 font-bold text-etat-alerte leading-tight">
                                         Ta souris répond encore ? Confirme.
-                                        <span className="block font-normal text-amber-400/70">
+                                        <span className="block font-normal text-etat-alerte/70">
                                             Sans confirmation, elle revient dans {sursis.secondes} s.
                                         </span>
                                     </p>
                                     <button
                                         onClick={() => void confirmer(s.id)}
-                                        className="shrink-0 px-4 py-2 rounded-lg bg-amber-500 text-black text-ui-10 font-black uppercase tracking-widest hover:opacity-90"
+                                        className="shrink-0 px-4 py-2 rounded-lg bg-etat-alerte text-app-bg text-ui-10 font-black uppercase tracking-widest hover:opacity-90"
                                     >
                                         Oui, garde-la coupée
                                     </button>

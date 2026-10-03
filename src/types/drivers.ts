@@ -105,7 +105,7 @@ export interface TacticalConfig {
 export interface GaugeConfig {
     fieldId: string;
     label: string;
-    color: string; // Tailwind color class or hex, e.g. "bg-emerald-500" or "#10b981"
+    color: string; // Tailwind color class (bg-…-500) or hex, e.g. "#10b981"
     style: 'bar' | 'segmented' | 'neon';
 }
 

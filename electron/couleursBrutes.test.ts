@@ -95,6 +95,8 @@ const FICHIERS_MIGRES: string[] = [
     'components/hub/LobbyOnboarding.tsx', // L6, 2026-10-03
 ];
 
+let fichiersParcourus = 0;
+
 function releve(): Map<string, number> {
     const parLieu = new Map<string, number>();
     const parcourir = (dossier: string) => {
@@ -103,6 +105,7 @@ function releve(): Map<string, number> {
             if (e.isDirectory()) { parcourir(complet); continue; }
             const relatif = path.relative(SRC, complet).split(path.sep).join('/');
             if (!fichierCompte(relatif)) continue;
+            fichiersParcourus++;
             const n = compterLesCouleursBrutes(fs.readFileSync(complet, 'utf-8'));
             if (n) parLieu.set(lieuDuFichier(relatif), (parLieu.get(lieuDuFichier(relatif)) ?? 0) + n);
         }
@@ -123,10 +126,24 @@ describe('les couleurs brutes', () => {
     it('le motif voit les couleurs brutes, et pas les jetons', () => {
         expect(compterLesCouleursBrutes('bg-red-500/10 text-emerald-400 border-slate-800')).toBe(3);
         expect(compterLesCouleursBrutes('bg-etat-danger/10 text-gm-violet border-app-border text-accent')).toBe(0);
+        // Une ligne de commentaire ne compte pas ; un commentaire en fin de code, si.
+        expect(compterLesCouleursBrutes(' * remplace `text-slate-400`\n// bg-red-500\n/* bg-white */')).toBe(0);
+        expect(compterLesCouleursBrutes('const c = "bg-red-500"; // text-white')).toBe(2);
     });
 
     it('le relevé du dépôt parcourt bien les fichiers', () => {
-        expect(parLieu.size).toBeGreaterThan(0);
+        expect(fichiersParcourus).toBeGreaterThan(300);
+    });
+
+    /*
+      **Tout `src/` est migré** — fin du lot 6, 2026-10-03. Les listes
+      ci-dessous gardent l'histoire de la migration ; celle-ci garde l'avenir :
+      un fichier NEUF, dans un lieu que personne n'a inscrit, est compté lui
+      aussi. Une couleur qui est la donnée va dans `PALETTES_DE_CONTENU`, avec
+      sa raison.
+    */
+    it('aucun lieu de src/ ne contient de couleur brute', () => {
+        expect(Object.fromEntries(parLieu), 'passer par les jetons du thème, ou déclarer une palette de contenu').toEqual({});
     });
 
     it.each(MODULES_MIGRES.length ? MODULES_MIGRES : ['(aucun module migré pour l’instant)'])(

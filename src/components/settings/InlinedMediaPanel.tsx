@@ -167,7 +167,7 @@ export const InlinedMediaPanel: React.FC = () => {
             {summary && (
                 <div className="mt-5 pt-5 border-t border-app-border/10">
                     {summary.count === 0 ? (
-                        <p className="text-xs text-emerald-400 font-bold flex items-center gap-2">
+                        <p className="text-xs text-etat-succes font-bold flex items-center gap-2">
                             <ShieldCheck size={14} />
                             {t('settings:inlined_media.none')}
                         </p>
@@ -187,11 +187,11 @@ export const InlinedMediaPanel: React.FC = () => {
                                     </div>
                                 ))}
                             </div>
-                            <p className="text-ui-10 text-amber-400/80 mb-3">{t('settings:inlined_media.backup_hint')}</p>
+                            <p className="text-ui-10 text-etat-alerte/80 mb-3">{t('settings:inlined_media.backup_hint')}</p>
                             <button
                                 onClick={handleMigrate}
                                 disabled={isBusy}
-                                className="flex items-center gap-2 bg-accent/10 hover:bg-accent text-accent hover:text-app-bg border border-accent/30 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                                className="flex items-center gap-2 bg-accent/10 hover:bg-accent text-accent hover:text-app-on-accent border border-accent/30 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50"
                             >
                                 {isBusy ? <RefreshCw size={16} className="animate-spin" /> : <Images size={16} />}
                                 {isBusy && progress
@@ -205,7 +205,7 @@ export const InlinedMediaPanel: React.FC = () => {
 
             {report && (
                 <div className="mt-5 pt-5 border-t border-app-border/10 space-y-1">
-                    <p className="text-xs text-emerald-400 font-bold">
+                    <p className="text-xs text-etat-succes font-bold">
                         {t('settings:inlined_media.report', {
                             count: report.migrated,
                             size: formatBytes(report.freedBytes),
@@ -213,7 +213,7 @@ export const InlinedMediaPanel: React.FC = () => {
                     </p>
                     {(report.failed > 0 || report.skipped > 0) && (
                         <>
-                            <p className="text-ui-10 text-amber-400 font-bold uppercase tracking-widest">
+                            <p className="text-ui-10 text-etat-alerte font-bold uppercase tracking-widest">
                                 {t('settings:inlined_media.kept', { count: report.failed + report.skipped })}
                             </p>
                             {report.errors.slice(0, 5).map((e, i) => (

@@ -37,8 +37,22 @@ export const COULEUR_BRUTE = new RegExp(
     'g',
 );
 
+/**
+ * Les lignes de commentaire ne comptent pas — refonte, L6 (2026-10-03) : une
+ * doc qui cite `text-slate-400` pour dire ce qu'on remplace ne peint rien.
+ *
+ * ⚠️ **Par ligne, pas par bloc.** Retirer les blocs `/* … *\/` aurait été plus
+ * complet, mais une chaîne comme `` `${type}/*` `` (les types MIME) ouvre un faux
+ * bloc qui avale le vrai code jusqu'au prochain `*\/`. Une ligne qui commence
+ * par `*`, `/*` ou `//` est un commentaire à coup sûr ; un commentaire en fin de
+ * ligne de code reste compté, et c'est le prix de la sûreté.
+ */
+const LIGNE_DE_COMMENTAIRE = /^\s*(?:\*|\/\*|\/\/)/;
+
 export function compterLesCouleursBrutes(source: string): number {
-    return source.match(COULEUR_BRUTE)?.length ?? 0;
+    return source.split('\n')
+        .filter(ligne => !LIGNE_DE_COMMENTAIRE.test(ligne))
+        .reduce((n, ligne) => n + (ligne.match(COULEUR_BRUTE)?.length ?? 0), 0);
 }
 
 /**
@@ -72,6 +86,10 @@ export const PALETTES_DE_CONTENU: Readonly<Record<string, string>> = {
     'modules/clock/components/ClockVisualizer.tsx': 'la matière des trois cadrans dessinés (laiton, néon, moderne), que le meneur choisit',
     'modules/web/components/couleursDesLiens.ts': 'la couleur que le meneur donne à chaque lien web',
     'modules/whiteboard/papierDuTableau.ts': 'le papier clair du tableau blanc, une feuille blanche quel que soit le thème',
+    'components/splash/CyberpunkSplash.tsx': 'l’écran de démarrage Cyberpunk, un style choisi qui ne suit pas le thème',
+    'components/splash/GrimoireSplash.tsx': 'l’écran de démarrage Grimoire, sur parchemin, un style choisi',
+    'components/splash/RecoverySplash.tsx': 'l’écran de démarrage Recovery, terminal ambre, un style choisi',
+    'components/splash/ZenSplash.tsx': 'l’écran de démarrage Zen, blanc sur noir, un style choisi',
 };
 
 /** Les fichiers qui comptent : le code de l'interface, pas ses essais ni ses palettes de contenu. */

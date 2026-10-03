@@ -76,8 +76,8 @@ const BrainstormOverlay = lazy(() => import('./modules/forge/rules/components/Br
 
 const PlaceholderModule = ({ name }: { name: string }) => (
   <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-    <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center animate-pulse">
-      <div className="w-8 h-8 rounded-full bg-slate-700" />
+    <div className="w-16 h-16 rounded-full bg-app-surface-2 flex items-center justify-center animate-pulse">
+      <div className="w-8 h-8 rounded-full bg-app-text/10" />
     </div>
     <h2 className="text-3xl font-bold tracking-tight">Module {name}</h2>
   </div>
@@ -328,17 +328,17 @@ function App() {
   if (!isAppReady) {
     const manquees = etapesRendues.filter(e => e.etat !== 'faite');
 
-    return <div className="h-screen w-screen bg-black flex flex-col items-center justify-center gap-2">
-      <div className="text-cyan-500 font-mono animate-pulse">GM-OS BOOTING...</div>
+    return <div className="h-screen w-screen bg-app-bg flex flex-col items-center justify-center gap-2">
+      <div className="text-gm-cyan font-mono animate-pulse">GM-OS BOOTING...</div>
 
       {etapeDeDemarrage && (
-        <div className="text-cyan-700 font-mono text-ui-11">{etapeDeDemarrage}…</div>
+        <div className="text-gm-cyan font-mono text-ui-11">{etapeDeDemarrage}…</div>
       )}
 
       {/* Une étape manquée se dit ici AUSSI : au moment où elle manque, le
           meneur regarde cet écran et pas encore ses notifications. */}
       {manquees.map(etape => (
-        <div key={etape.nom} className="text-amber-500 font-mono text-ui-11">
+        <div key={etape.nom} className="text-etat-alerte font-mono text-ui-11">
           ⚠ {etape.nom} — {etape.motif ?? etape.etat}
         </div>
       ))}
@@ -346,7 +346,7 @@ function App() {
   }
 
   return (
-    <Suspense fallback={<div className="h-screen w-screen bg-black" />}>
+    <Suspense fallback={<div className="h-screen w-screen bg-app-bg" />}>
       {isRemoteView ? (
         <ErrorBoundary moduleName="Remote Control"><RemoteControl /></ErrorBoundary>
       ) : isProjectorView ? (

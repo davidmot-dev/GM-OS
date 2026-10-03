@@ -62,7 +62,7 @@ const PupitreDuBas: React.FC = () => {
                 className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                     ouvert
                         ? 'bg-app-bg/40 border border-app-border/30 text-app-text/70 hover:text-app-text'
-                        : 'bg-accent text-white hover:brightness-110'
+                        : 'bg-accent text-app-on-accent hover:brightness-110'
                 }`}
                 title="La télécommande, en plein écran sur la dalle tactile sous celle de GM-OS — déjà appairée."
             >

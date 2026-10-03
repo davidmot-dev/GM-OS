@@ -82,7 +82,7 @@ const NettoyageDesMedias: React.FC = () => {
                 <button
                     onClick={analyser}
                     disabled={enAnalyse || enSuppression}
-                    className="flex items-center gap-2 bg-accent/10 hover:bg-accent text-accent hover:text-app-bg border border-accent/30 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 bg-accent/10 hover:bg-accent text-accent hover:text-app-on-accent border border-accent/30 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50"
                 >
                     {enAnalyse ? <RefreshCw size={18} className="animate-spin" /> : <Search size={18} />}
                     {enAnalyse
@@ -92,9 +92,9 @@ const NettoyageDesMedias: React.FC = () => {
             </div>
 
             {apercu && !apercu.fiable && (
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                    <AlertTriangle size={16} className="text-amber-400 mt-0.5 flex-shrink-0" />
-                    <p className="text-ui-11 text-amber-200/80 leading-relaxed">
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-etat-alerte/10 border border-etat-alerte/30">
+                    <AlertTriangle size={16} className="text-etat-alerte mt-0.5 flex-shrink-0" />
+                    <p className="text-ui-11 text-etat-alerte/80 leading-relaxed">
                         {t('settings:maintenance.media_cleanup_unreliable', {
                             modules: apercu.modulesEnEchec.join(', '),
                         })}
@@ -151,7 +151,7 @@ const NettoyageDesMedias: React.FC = () => {
                         <button
                             onClick={supprimer}
                             disabled={enSuppression}
-                            className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 px-5 py-2.5 rounded-xl text-ui-11 font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                            className="flex items-center gap-2 bg-etat-danger/10 hover:bg-etat-danger text-etat-danger hover:text-app-bg border border-etat-danger/30 px-5 py-2.5 rounded-xl text-ui-11 font-black uppercase tracking-widest transition-all disabled:opacity-50"
                         >
                             {enSuppression ? (
                                 <RefreshCw size={14} className="animate-spin" />

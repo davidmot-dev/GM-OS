@@ -324,7 +324,7 @@ export const AtelierDuTheme: React.FC = () => {
                             title="Remettre le thème tel qu’il était avant tes retouches"
                             className={`flex items-center gap-2 px-3 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest border transition-all disabled:opacity-30 ${
                                 confirmeLaRestauration
-                                    ? 'border-amber-500/60 bg-amber-500/15 text-amber-500'
+                                    ? 'border-etat-alerte/60 bg-etat-alerte/15 text-etat-alerte'
                                     : 'border-app-border bg-app-bg text-app-text/60 hover:text-app-text'
                             }`}
                         >
@@ -342,7 +342,7 @@ export const AtelierDuTheme: React.FC = () => {
                     <button
                         onClick={() => void enregistrer()}
                         disabled={!modifie || enCoursDEcriture}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-accent text-app-bg disabled:opacity-30 transition-all"
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-accent text-app-on-accent disabled:opacity-30 transition-all"
                     >
                         {enCoursDEcriture ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
                         Enregistrer
@@ -352,10 +352,10 @@ export const AtelierDuTheme: React.FC = () => {
 
             <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-6 space-y-8">
                 {cssOrigine === null && (
-                    <div className="p-5 rounded-2xl border border-amber-500/30 bg-amber-500/5 flex items-start gap-4">
-                        <FilePlus2 size={18} className="text-amber-500 mt-0.5 shrink-0" />
+                    <div className="p-5 rounded-2xl border border-etat-alerte/30 bg-etat-alerte/5 flex items-start gap-4">
+                        <FilePlus2 size={18} className="text-etat-alerte mt-0.5 shrink-0" />
                         <div className="flex-1">
-                            <p className="text-xs font-black uppercase tracking-widest text-amber-500">
+                            <p className="text-xs font-black uppercase tracking-widest text-etat-alerte">
                                 Ce jeu n’a pas encore de thème
                             </p>
                             <p className="text-ui-11 text-app-text/50 mt-1 max-w-xl">
@@ -366,7 +366,7 @@ export const AtelierDuTheme: React.FC = () => {
                         </div>
                         <button
                             onClick={creerUnTheme}
-                            className="px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 shrink-0"
+                            className="px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-etat-alerte/20 text-etat-alerte border border-etat-alerte/30 shrink-0"
                         >
                             Créer un thème
                         </button>
@@ -464,7 +464,7 @@ const ChampDeJeton: React.FC<{
 
         <p className="text-ui-10 text-app-text/35 leading-snug">{jeton.aide}</p>
         {alerte && (
-            <p className="text-ui-10 text-amber-500/90 leading-snug flex items-start gap-1.5">
+            <p className="text-ui-10 text-etat-alerte/90 leading-snug flex items-start gap-1.5">
                 <AlertTriangle size={11} className="mt-0.5 shrink-0" /> {alerte}
             </p>
         )}
@@ -515,7 +515,7 @@ const ChampDePolice: React.FC<{
 
             {famille && (
                 <p className={`text-ui-10 flex items-start gap-1.5 leading-snug ${
-                    fourniture === 'locale' ? 'text-amber-500/90' : 'text-emerald-500/80'
+                    fourniture === 'locale' ? 'text-etat-alerte/90' : 'text-etat-succes/80'
                 }`}>
                     {fourniture === 'locale'
                         ? <><AlertTriangle size={11} className="mt-0.5 shrink-0" />
@@ -612,8 +612,8 @@ const ControleDuContraste: React.FC<{ valeurs: Record<string, string> }> = ({ va
                         key={m.quoi}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-ui-10 font-bold ${
                             passe
-                                ? 'border-emerald-500/20 bg-emerald-500/5 text-emerald-500/90'
-                                : 'border-amber-500/30 bg-amber-500/5 text-amber-500'
+                                ? 'border-etat-succes/20 bg-etat-succes/5 text-etat-succes/90'
+                                : 'border-etat-alerte/30 bg-etat-alerte/5 text-etat-alerte'
                         }`}
                     >
                         {passe ? <Check size={11} /> : <AlertTriangle size={11} />}
