@@ -5442,7 +5442,7 @@ explicitement, jamais le défaut.
 
 ---
 
-### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phases 4, 5 et 6 faites le 2026-10-03, sauf T6.6 sur un vrai jeu**
+### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phases 0 à 6 faites le 2026-10-03 — reste la séance jouée**
 
 **Origine** : David apporte trois maquettes (compteur de rounds, Dice-OS, Image-OS) et demande
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
@@ -5539,11 +5539,16 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
     un bruit qui invente ses couleurs est signalé, pas mesuré (`src/theme/contrasteSurLaMatiere.ts`).
     Les sept thèmes du dépôt restent acceptés (Cthulhu Hack : `muted` passe de 4,34 à 3,64 sous
     son grain) ; les personnalités cyberpunk et médiévale passent la même garde. Constructeur 0.7.0.
-  - **Reste T6.6 sur un vrai jeu** : aucun jeu réel ne livre encore d'icônes, le premier viendra
-    du constructeur.
+  - ✅ **T6.6 sur un vrai jeu — Cthulhu Hack, le 2026-10-03** : RPG Theme Builder (mis à jour en
+    v1.7 par David) livre dix icônes — indice, santé, pnj, lieu, oracle, dés, combat, journal,
+    scène, pj — et un `intention.md` débarrassé des mentions « V2 » périmées. Déposées telles
+    quelles, acceptées par le validateur (les quatre avertissements d'avant, aucun sur les icônes),
+    vues dans l'application construite sur la campagne d'essai. Le constructeur a signalé **un nom
+    qui manque au § 9 : la santé mentale** — à trancher par David (ajouter un nom ne casse aucun
+    paquet ; en retirer un, si).
 - **La suite** : **une séance jouée** (règle du plan — rien de la refonte n'y a encore été
-  éprouvé) ; un premier jeu livré avec ses icônes, à regarder à l'écran. La tablette reste hors
-  de la refonte, à trancher par David.
+  éprouvé), Cthulhu Hack compris, personnalités allumées. La tablette reste hors de la refonte, à
+  trancher par David.
 
 *État au 2026-09-29/30, gardé pour l'historique du lot 1 :*
 
