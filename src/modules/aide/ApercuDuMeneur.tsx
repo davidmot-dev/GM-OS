@@ -8,6 +8,7 @@ import {
     type FamilleDeModule,
 } from '../../data/catalogueDesModules';
 import { useRaccourcisStore } from '../../stores/useRaccourcisStore';
+import { GROUPES_DE_RACCOURCIS, NOMBRE_DE_RACCOURCIS } from '../../data/registreDesRaccourcis';
 
 /**
  * **L'écran du meneur — la face intérieure du paravent.**
@@ -57,12 +58,17 @@ const Titre: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     </h3>
 );
 
-/** Une ligne de raccourci : la combinaison à gauche, ce qu'elle fait à droite. */
-const Ligne: React.FC<{ touches: string[]; children: React.ReactNode }> = ({ touches, children }) => (
-    <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1.5 border-b border-app-border/40 py-2.5 last:border-b-0">
-        <span className="w-[11rem] shrink-0"><Combinaison touches={touches} /></span>
-        <span className="flex-1 min-w-[14rem] text-sm text-app-text/60">{children}</span>
-    </div>
+/**
+ * Un des gestes maîtres — refonte, L6, maquette retenue : un surtitre, le nom,
+ * ce qu'il fait, et ses touches en pied de carte.
+ */
+const Geste: React.FC<{ surtitre: string; titre: string; touches: React.ReactNode; children: React.ReactNode }> = ({ surtitre, titre, touches, children }) => (
+    <article className="flex flex-col gap-2 rounded-xl border border-app-border bg-app-surface/60 p-5">
+        <p className="text-ui-10 font-black uppercase tracking-widest text-accent">{surtitre}</p>
+        <h4 className="font-display text-lg font-bold uppercase tracking-wide text-app-text">{titre}</h4>
+        <p className="flex-1 text-sm leading-relaxed text-app-muted">{children}</p>
+        <div className="mt-2 rounded-lg border border-app-border bg-app-bg/60 p-3">{touches}</div>
+    </article>
 );
 
 const Famille: React.FC<{ famille: FamilleDeModule }> = ({ famille }) => {
@@ -119,66 +125,67 @@ const ApercuDuMeneur: React.FC = () => {
     return (
         <div className="flex flex-col gap-10 p-8">
 
-            {/* Les deux gestes ------------------------------------------ */}
+            {/* Les trois gestes ------------------------------------------ */}
             <section>
-                <Titre>Les deux gestes qui ouvrent tout</Titre>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <article className="flex flex-col gap-2 rounded-2xl border border-app-border bg-gradient-to-b from-app-surface/70 to-app-surface/30 p-6">
-                        <Combinaison touches={['Ctrl', 'K']} vive />
-                        <h4 className="text-base font-bold text-app-text">La palette</h4>
-                        <p className="text-sm text-app-text/60">
-                            Elle liste tous les modules dès l'ouverture. Tapez deux ou trois
-                            lettres pour filtrer&nbsp;; la recherche s'étend alors aux PNJ, aux
-                            lieux, aux entrées du wiki et aux fiches de règles.
-                        </p>
-                    </article>
-                    <article className="flex flex-col gap-2 rounded-2xl border border-app-border bg-gradient-to-b from-app-surface/70 to-app-surface/30 p-6">
-                        <span className="inline-flex flex-wrap items-center gap-1">
+                <Titre>Les gestes qui ouvrent tout</Titre>
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                    <Geste surtitre="Recherche" titre="La palette" touches={<Combinaison touches={['Ctrl', 'K']} vive />}>
+                        Elle liste tous les modules dès l'ouverture. Tapez deux ou trois
+                        lettres&nbsp;: la recherche s'étend aux PNJ, aux lieux, au wiki et
+                        aux fiches de règles.
+                    </Geste>
+                    <Geste
+                        surtitre={`${places.filter(Boolean).length} places occupées`}
+                        titre="Les neuf places"
+                        touches={<span className="inline-flex flex-wrap items-center gap-1">
                             <Combinaison touches={['Ctrl', '1']} vive />
-                            <span className="px-1 text-app-text/30 text-[0.7rem]">…</span>
+                            <span className="px-1 text-[0.7rem] text-app-subtle">…</span>
                             <Combinaison touches={['Ctrl', String(PLACES_DE_RACCOURCI)]} vive />
-                        </span>
-                        <h4 className="text-base font-bold text-app-text">Les neuf places</h4>
-                        <p className="text-sm text-app-text/60">
-                            Neuf modules sous les doigts, assignables dans
-                            <strong className="text-app-text/80"> Paramètres → Matériel</strong>.
-                            {NOMBRE_DE_MODULES} modules pour neuf touches&nbsp;: à vous de dire lesquels comptent,
-                            selon le jeu que vous menez.
-                        </p>
-                    </article>
+                        </span>}
+                    >
+                        {/* Les places du meneur, pas un exemple : elles se règlent dans
+                            Paramètres → Matériel. */}
+                        {places.some(Boolean)
+                            ? places.map((m, rang) => m ? `${rang + 1} : ${t(CATALOGUE_DES_MODULES[m].cle)}` : null).filter(Boolean).join(', ') + '.'
+                            : `Aucune place assignée — ${NOMBRE_DE_MODULES} modules pour neuf touches, à choisir dans Paramètres → Matériel.`}
+                    </Geste>
+                    <Geste surtitre="Sortir" titre="Échap" touches={<Combinaison touches={['Échap']} vive />}>
+                        Ferme la fenêtre du dessus — la palette, une boîte, une image en
+                        plein écran. Sans fenêtre ouverte, arrête la scène de lumière qui joue.
+                    </Geste>
                 </div>
             </section>
 
-            {/* Raccourcis ----------------------------------------------- */}
+            {/* Les raccourcis, groupés par usage — lus dans le registre ------- */}
             <section>
-                <Titre>Tous les raccourcis</Titre>
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    <div>
-                        <p className="mb-1 text-[0.66rem] font-black uppercase tracking-[0.16em] text-app-text/30">Aller quelque part</p>
-                        <Ligne touches={['Ctrl', 'H']}>Ouvre l’aide, et ramène d’où l’on vient.</Ligne>
-                        <Ligne touches={['Ctrl', 'K']}>Ouvre et ferme la palette.</Ligne>
-                        <Ligne touches={['Ctrl', '1…9']}>Ouvre le module assigné à cette place.</Ligne>
-                        <Ligne touches={['Ctrl', '²']}>Ramène au Cockpit de Session-OS, d'où que l'on vienne.</Ligne>
-                        <Ligne touches={['Ctrl', 'T']}>Ouvre Table-OS.</Ligne>
-                        <Ligne touches={['Ctrl', '0']}>Vide le Player Hub : il revient au décor de la campagne.</Ligne>
-                        <Ligne touches={['Ctrl', 'Maj', 'N']}>Éteint le Player Hub — écran noir.</Ligne>
-                        <Ligne touches={['↑', '↓']}>Parcourt les résultats de la palette.</Ligne>
-                        <Ligne touches={['Entrée']}>Ouvre le résultat sélectionné.</Ligne>
-                        <Ligne touches={['Échap']}>Referme la palette, une boîte, une image en plein écran.</Ligne>
-                    </div>
-                    <div>
-                        <p className="mb-1 text-[0.66rem] font-black uppercase tracking-[0.16em] text-app-text/30">Faire sonner</p>
-                        <Ligne touches={['A', 'Z', 'Pavé num.']}>
-                            <strong className="text-app-text/80">Les pastilles.</strong> Chaque pastille de
-                            Musique et d'Effets Sonores prend la touche que vous lui donnez, par le
-                            mode <em>Key&nbsp;Learn</em>. Aucune ne demande de modificateur.
-                        </Ligne>
-                        <Ligne touches={['←', '→']}>Déplace la lecture de 5&nbsp;s, quand la forme d'onde a le focus.</Ligne>
-                        <Ligne touches={['Maj', '←', '→']}>Le même déplacement, d'une seconde — pour tomber sur la mesure.</Ligne>
-                        <Ligne touches={['Début', 'Fin']}>Va au début ou à la fin du morceau.</Ligne>
-                        <p className="mt-4 mb-1 text-[0.66rem] font-black uppercase tracking-[0.16em] text-app-text/30">Écrire à l'Oracle</p>
-                        <Ligne touches={['Ctrl', 'Entrée']}>Envoie la demande sans lâcher le clavier.</Ligne>
-                    </div>
+                <Titre>Tous les raccourcis, groupés par usage · {NOMBRE_DE_RACCOURCIS}</Titre>
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+                    {GROUPES_DE_RACCOURCIS.map((groupe, rang) => (
+                        <section key={groupe.titre} className="rounded-xl border border-app-border bg-app-surface/60 p-4">
+                            <h4 className="mb-2 flex items-baseline justify-between gap-2 font-display text-sm font-bold uppercase tracking-wider text-app-text">
+                                <span><span className="text-accent">{rang + 1}.</span> {groupe.titre}</span>
+                                <span className="text-ui-10 font-black text-app-muted">{groupe.raccourcis.length}</span>
+                            </h4>
+                            <ul className="flex flex-col">
+                                {groupe.raccourcis.map(r => (
+                                    <li key={r.titre} className="flex items-start justify-between gap-3 border-b border-app-border/40 py-2.5 last:border-b-0">
+                                        <span className="min-w-0">
+                                            <span className="block text-sm font-semibold text-app-text">{r.titre}</span>
+                                            {r.detail && <span className="mt-0.5 block text-xs leading-snug text-app-muted">{r.detail}</span>}
+                                        </span>
+                                        <span className="flex shrink-0 flex-wrap items-center justify-end gap-1">
+                                            {r.touches.map((combinaison, i) => (
+                                                <React.Fragment key={i}>
+                                                    {i > 0 && <span className="px-0.5 text-[0.7rem] text-app-subtle">ou</span>}
+                                                    <Combinaison touches={combinaison} />
+                                                </React.Fragment>
+                                            ))}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    ))}
                 </div>
             </section>
 

@@ -4,6 +4,8 @@ import TexteMarkdown from '../../components/TexteMarkdown';
 import ApercuDuMeneur from './ApercuDuMeneur';
 import { chercherDansLeManuel } from './rechercheDansLeManuel';
 import { FAMILLES_DU_MANUEL, DOSSIER_DU_MANUEL, type GuideDuManuel } from '../../../electron/formeDuManuel';
+import { EnTeteDeModule, Etiquette } from '../../components/socle';
+import { NOMBRE_DE_RACCOURCIS } from '../../data/registreDesRaccourcis';
 
 /**
  * **Le module d'aide — l'aperçu du meneur, et le manuel.**
@@ -138,10 +140,22 @@ const AideDashboard: React.FC = () => {
 
     return (
         <div className="flex h-full flex-col">
+            {/* L'en-tête commun — refonte, L6, maquette retenue. Les comptes se
+                calculent : le registre des raccourcis, les guides lus. */}
+            <div className="shrink-0 px-6 pt-4">
+                <EnTeteDeModule
+                    titre="Aide et manuel"
+                    surtitre="Les gestes du meneur, et la documentation"
+                    etat={<>
+                        <Etiquette ton="accent">{NOMBRE_DE_RACCOURCIS} raccourcis</Etiquette>
+                        {guides && <Etiquette ton="neutre">{guides.length} guides</Etiquette>}
+                    </>}
+                />
+            </div>
             <div className="flex shrink-0 items-center gap-2 border-b border-app-border px-6 py-3">
-                <Onglet id="apercu" actif={onglet} surChoix={setOnglet} icone={<Keyboard size={15} />}>Aperçu</Onglet>
+                <Onglet id="apercu" actif={onglet} surChoix={setOnglet} icone={<Keyboard size={15} />}>Aperçu et raccourcis</Onglet>
                 <Onglet id="manuel" actif={onglet} surChoix={setOnglet} icone={<BookOpen size={15} />}>
-                    Manuel{guides ? ` · ${guides.length}` : ''}
+                    Manuel du meneur{guides ? ` · ${guides.length}` : ''}
                 </Onglet>
             </div>
 
