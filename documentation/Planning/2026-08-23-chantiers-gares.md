@@ -5444,6 +5444,8 @@ explicitement, jamais le défaut.
 
 ### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phases 0 à 6 faites le 2026-10-03 — reste la séance jouée**
 
+> ➡️ **Les tablettes, exclues de ce chantier, ont le leur depuis le 2026-10-04 : § 123.**
+
 **Origine** : David apporte trois maquettes (compteur de rounds, Dice-OS, Image-OS) et demande
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
@@ -9618,6 +9620,37 @@ et `Ctrl+Maj+0` ne porte plus rien, essai à l'appui. ⚠️ La même liste Wind
 
 ---
 
+### 123 · ⭐ La refonte des tablettes — joueurs, puis meneur (ouvert le 2026-10-04)
+
+**Origine** : David, le 2026-10-04 : *« fais-moi un plan pour mettre à jour l'interface des
+tablettes MJ et Joueurs »*. C'est la suite du § 76, qui les avait exclues (*« il passe après, ou
+jamais — à trancher »*). **Plan** : `documentation/Planning/2026-10-04-refonte-tablettes.md`.
+
+**Les cinq décisions de David, le jour même** :
+
+1. **Les tablettes suivent le PC** — thème de base, accent, personnalités, thème du jeu ; aucun
+   réglage local.
+2. **Matériel hétéroclite** : tablettes, **iPad Air**, téléphones — chaque écran doit tenir de
+   360 à 1 180 px de large.
+3. **Maquettes Stitch**, comme pour le poste du meneur.
+4. **Les joueurs d'abord**, le meneur ensuite.
+5. **L'habillage (T2) à apparence constante.**
+
+**Le constat (vérifié dans le code le 2026-10-04)** : ⛔ **les tablettes ne reçoivent aucun
+thème** — le thème du jeu se lit par `window.appBridge`, absent d'un navigateur de tablette, et le
+thème de base est un réglage local jamais transmis ; **aucune des deux n'emploie le socle**
+(`components/socle/`) ; **aucune maquette** (la section 7 de Stitch avait été laissée de côté) ;
+**peu d'e2e** (`viderLePlayerHub` et deux captures du manuel).
+
+**Les phases** : T0 état des lieux (inventaire, captures aux trois tailles, un e2e par onglet) →
+**T1 le thème voyage** (un segment de synchronisation « apparence », des jetons et jamais la CSS du
+jeu) → T2 habillage par le socle → T3 maquettes Stitch → **T4 réagencement en quatre lots, J1, J2,
+M1, M2**, une séance jouée entre deux lots → T5 le fini → T6 l'épreuve sur les vrais appareils.
+
+**État** : ⏳ **rien n'est commencé.** Le tableau des phases vit au § 7 du plan.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -9680,6 +9713,7 @@ et `Ctrl+Maj+0` ne porte plus rien, essai à l'appui. ⚠️ La même liste Wind
 | 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
+| 58 | **La refonte des tablettes** | ⏳ **PLAN FAIT le 04/10, rien de commencé** — joueurs d'abord, meneur ensuite ; les tablettes suivront le thème du PC, maquettes Stitch, T2 à apparence constante. Voir § 123 et `2026-10-04-refonte-tablettes.md` | T0 : l'inventaire des écrans et un e2e par onglet | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
