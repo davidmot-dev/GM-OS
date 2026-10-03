@@ -99,7 +99,7 @@ describe('chaque réglage écrit le sien', () => {
 
         const curseur = screen.getByLabelText(libelle);
         fireEvent.change(curseur, { target: { value: '1.3' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer le thème' }));
 
         await waitFor(() => expect(writeDoc).toHaveBeenCalled());
         const ecrit = writeDoc.mock.calls.at(-1)![1];
@@ -113,7 +113,7 @@ describe('chaque réglage écrit le sien', () => {
         /* Un palier de la liste, et pas une valeur inventée : un `<select>`
            refuse ce qu'il n'offre pas, et le test ne mesurerait plus rien. */
         fireEvent.change(screen.getByLabelText('Chiffres et code'), { target: { value: '1.2' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer le thème' }));
 
         await waitFor(() => expect(writeDoc).toHaveBeenCalled());
         const ecrit = writeDoc.mock.calls.at(-1)![1];
@@ -146,7 +146,7 @@ describe('chaque réglage écrit le sien', () => {
         await screen.findByLabelText('Accent');
 
         fireEvent.change(screen.getByLabelText('Texte courant'), { target: { value: '' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Enregistrer le thème' }));
 
         await waitFor(() => expect(writeDoc).toHaveBeenCalled());
         expect(writeDoc.mock.calls.at(-1)![1]).not.toContain('--rpg-scale-corps');
@@ -194,7 +194,7 @@ describe('l’atelier de thème', () => {
         const champ = await screen.findByLabelText('Accent');
 
         fireEvent.change(champ, { target: { value: '#00ff88' } });
-        fireEvent.click(screen.getByText('Enregistrer'));
+        fireEvent.click(screen.getByText('Enregistrer le thème'));
 
         await waitFor(() => expect(writeDoc).toHaveBeenCalled());
         const ecriture = writeDoc.mock.calls.find(([c]) => c === CHEMIN);
@@ -237,7 +237,7 @@ describe('l’atelier de thème', () => {
         const champ = await screen.findByLabelText('Accent');
 
         fireEvent.change(champ, { target: { value: '#00ff88' } });
-        fireEvent.click(screen.getByText('Enregistrer'));
+        fireEvent.click(screen.getByText('Enregistrer le thème'));
 
         await waitFor(() => expect(writeDoc).toHaveBeenCalledTimes(2));
         const [cheminCopie, copie] = writeDoc.mock.calls[0];
@@ -257,7 +257,7 @@ describe('l’atelier de thème', () => {
         const champ = await screen.findByLabelText('Accent');
 
         fireEvent.change(champ, { target: { value: '#00ff88' } });
-        fireEvent.click(screen.getByText('Enregistrer'));
+        fireEvent.click(screen.getByText('Enregistrer le thème'));
 
         await waitFor(() => expect(writeDoc).toHaveBeenCalled());
         expect(writeDoc.mock.calls.some(([c]) => c === CHEMIN_ORIGINAL)).toBe(false);
@@ -284,7 +284,7 @@ describe('l’atelier de thème', () => {
         fireEvent.click(await screen.findByText('Restaurer l’original'));
         expect(writeDoc).not.toHaveBeenCalled();
 
-        fireEvent.click(screen.getByText('Confirmer ?'));
+        fireEvent.click(screen.getByText('Confirmer : revenir à l’original ?'));
 
         await waitFor(() => expect(writeDoc).toHaveBeenCalledWith(CHEMIN, ORIGINAL));
         // Et l'écran repart de ce fichier-là.

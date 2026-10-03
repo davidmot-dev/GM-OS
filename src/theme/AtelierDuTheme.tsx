@@ -13,6 +13,8 @@ import {
     pileDePolice, policeFournie, POLICES_CONNUES, requeteDePolices, themeVierge,
     palierDeLEchelle, PALIERS_DE_TAILLE, type JetonEditable,
 } from './editionDuTheme';
+import { Bouton, Etiquette } from '../components/socle';
+import { VignetteDeZone, ZONE_DU_JETON } from './VignetteDeZone';
 
 /**
  * **L'atelier de thème — demandé par David le 2026-09-03 :** *« si je veux
@@ -289,116 +291,168 @@ export const AtelierDuTheme: React.FC = () => {
     */
     const accentSurcharge = !!themeColor && themeColor !== accentDuTheme(theme);
 
+    /*
+      **L'atelier de la maquette retenue** — refonte, L6
+      (`stitch/outillage/outillage-atelier-du-theme.png`) : chaque réglage dit
+      où il se voit et le montre ; à droite, l'aperçu vivant ; en pied, les
+      trois gestes — restaurer l'original, annuler, enregistrer. Les jetons CSS
+      restent consultables, repliés : *utiles au développeur, pas au meneur*.
+      « Empreinte SHA » et « Écran table connecté » sont des inventions du dessin.
+    */
     return (
-        <div className="flex-1 flex flex-col min-h-0">
-            {/* En-tête */}
-            <div className="px-8 pt-6 pb-4 flex items-start justify-between gap-6 border-b border-app-border/10">
-                <div>
-                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-app-text flex items-center gap-2">
-                        <Palette size={16} className="text-accent" />
-                        {nomDuJeu}
-                    </h3>
-                    <p className="text-ui-10 font-mono text-app-text/40 mt-1">
-                        docs/{cheminDuTheme(racine)}
-                    </p>
-                    <p className="text-ui-10 text-app-text/40 mt-1 max-w-lg">
-                        Ce fichier habille l’application <strong>et</strong> les fiches de personnage.
-                        Les réglages s’appliquent tout de suite ; rien n’est écrit avant « Enregistrer ».
+        <div className="flex min-h-0 flex-1 flex-col">
+            {/* En-tête : le jeu, son fichier, ce que fait l'atelier */}
+            <div className="flex items-start gap-3 border-b border-app-border px-6 pb-3 pt-5">
+                <Palette size={18} className="mt-0.5 shrink-0 text-accent" />
+                <div className="min-w-0">
+                    <h3 className="font-display text-lg font-bold uppercase tracking-wide text-app-text">{nomDuJeu}</h3>
+                    <p className="mt-0.5 font-mono text-ui-10 text-app-muted">docs/{cheminDuTheme(racine)}</p>
+                    <p className="mt-1 max-w-2xl text-xs text-app-muted">
+                        Ce fichier habille l’application <strong className="text-app-text">et</strong> les fiches de personnage.
+                        Chaque réglage s’applique tout de suite à l’écran ; rien n’est écrit avant « Enregistrer le thème ».
                     </p>
                 </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                    {/*
-                      **Deux retours en arrière, et ils ne disent pas la même
-                      chose.** « Annuler » défait ce qui n'est pas enregistré ;
-                      « Restaurer » remonte au thème d'avant toutes les
-                      retouches. Les confondre ferait perdre une séance de
-                      réglages à qui voulait juste défaire son dernier geste —
-                      d'où le second clic de confirmation, et lui seul.
-                    */}
-                    {originalPresent && (
-                        <button
-                            onClick={() => confirmeLaRestauration ? void restaurerLOriginal() : setConfirmeLaRestauration(true)}
-                            onBlur={() => setConfirmeLaRestauration(false)}
-                            disabled={enCoursDEcriture}
-                            title="Remettre le thème tel qu’il était avant tes retouches"
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest border transition-all disabled:opacity-30 ${
-                                confirmeLaRestauration
-                                    ? 'border-etat-alerte/60 bg-etat-alerte/15 text-etat-alerte'
-                                    : 'border-app-border bg-app-bg text-app-text/60 hover:text-app-text'
-                            }`}
-                        >
-                            <History size={13} />
-                            {confirmeLaRestauration ? 'Confirmer ?' : 'Restaurer l’original'}
-                        </button>
-                    )}
-                    <button
-                        onClick={revenir}
-                        disabled={!modifie}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest border border-app-border bg-app-bg text-app-text/60 hover:text-app-text disabled:opacity-30 transition-all"
-                    >
-                        <RotateCcw size={13} /> Annuler
-                    </button>
-                    <button
-                        onClick={() => void enregistrer()}
-                        disabled={!modifie || enCoursDEcriture}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-accent text-app-on-accent disabled:opacity-30 transition-all"
-                    >
-                        {enCoursDEcriture ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
-                        Enregistrer
-                    </button>
-                </div>
+                {modifie && <Etiquette ton="alerte" className="ml-auto shrink-0">Modifié, pas enregistré</Etiquette>}
             </div>
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-6 space-y-8">
-                {cssOrigine === null && (
-                    <div className="p-5 rounded-2xl border border-etat-alerte/30 bg-etat-alerte/5 flex items-start gap-4">
-                        <FilePlus2 size={18} className="text-etat-alerte mt-0.5 shrink-0" />
-                        <div className="flex-1">
-                            <p className="text-xs font-black uppercase tracking-widest text-etat-alerte">
-                                Ce jeu n’a pas encore de thème
-                            </p>
-                            <p className="text-ui-11 text-app-text/50 mt-1 max-w-xl">
-                                Je peux en créer un neuf : les vingt-deux jetons, et rien d’autre. Les
-                                habillages de fiche d’un thème complet décrivent une page de livre —
-                                les inventer serait prétendre connaître la direction artistique de ton jeu.
-                            </p>
+            <div className="flex min-h-0 flex-1">
+                {/* ── Les réglages ── */}
+                <div className="min-w-0 flex-1 space-y-6 overflow-y-auto px-6 py-5 custom-scrollbar">
+                    {cssOrigine === null && (
+                        <div className="flex items-start gap-4 rounded-xl border border-etat-alerte/40 bg-etat-alerte/5 p-4">
+                            <FilePlus2 size={18} className="mt-0.5 shrink-0 text-etat-alerte" />
+                            <div className="flex-1">
+                                <p className="text-xs font-black uppercase tracking-widest text-etat-alerte">Ce jeu n’a pas encore de thème</p>
+                                <p className="mt-1 max-w-xl text-xs text-app-muted">
+                                    Je peux en créer un neuf : les vingt-deux jetons, et rien d’autre. Les
+                                    habillages de fiche d’un thème complet décrivent une page de livre —
+                                    les inventer serait prétendre connaître la direction artistique de ton jeu.
+                                </p>
+                            </div>
+                            <Bouton variante="accent" icone={<FilePlus2 size={14} />} onClick={creerUnTheme} className="shrink-0">Créer un thème</Bouton>
                         </div>
-                        <button
-                            onClick={creerUnTheme}
-                            className="px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest bg-etat-alerte/20 text-etat-alerte border border-etat-alerte/30 shrink-0"
-                        >
-                            Créer un thème
-                        </button>
-                    </div>
+                    )}
+
+                    {GROUPES.map((groupe, rang) => {
+                        const jetons = JETONS_EDITABLES.filter(j => j.groupe === groupe.id);
+                        return (
+                            <section key={groupe.id} className="space-y-2">
+                                <h4 className="flex items-baseline justify-between gap-3 border-b border-app-border pb-1.5 font-display text-sm font-bold uppercase tracking-wider text-app-text">
+                                    <span><span className="text-accent">{String(rang + 1).padStart(2, '0')}</span> · {groupe.titre}</span>
+                                    <span className="text-ui-10 font-black text-app-muted">{jetons.length} réglages</span>
+                                </h4>
+                                <div className="flex flex-col gap-2">
+                                    {jetons.map(jeton => (
+                                        <ChampDeJeton
+                                            key={jeton.cle}
+                                            jeton={jeton}
+                                            valeur={valeurs[jeton.cle] ?? ''}
+                                            enregistree={enregistrees.current[jeton.cle] ?? ''}
+                                            poser={poser}
+                                            alerte={jeton.cle === 'accent' && accentSurcharge
+                                                ? 'Un accent est choisi à la main dans les réglages : il passe devant celui du jeu.'
+                                                : undefined}
+                                        />
+                                    ))}
+                                </div>
+                            </section>
+                        );
+                    })}
+                </div>
+
+                {/* ── L'aperçu vivant ── */}
+                <aside className="hidden w-80 shrink-0 flex-col gap-3 overflow-y-auto border-l border-app-border p-4 custom-scrollbar lg:flex">
+                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                        Aperçu en direct <span className="font-normal normal-case tracking-normal">— suit chaque réglage</span>
+                    </p>
+                    <ApercuVivant />
+                    <ControleDuContraste valeurs={valeurs} />
+                    <details className="rounded-lg border border-app-border bg-app-bg/40 p-3">
+                        <summary className="cursor-pointer text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-app-text">Les jetons, tels qu’écrits</summary>
+                        <pre className="mt-2 max-h-56 overflow-auto font-mono text-ui-10 leading-relaxed text-app-muted custom-scrollbar">
+                            {JETONS_EDITABLES.filter(j => valeurs[j.cle]).map(j => `--rpg-${j.cle}: ${valeurs[j.cle]};`).join('\n')}
+                        </pre>
+                    </details>
+                </aside>
+            </div>
+
+            {/*
+              **Deux retours en arrière, et ils ne disent pas la même chose.**
+              « Annuler » défait ce qui n'est pas enregistré ; « Restaurer
+              l'original » remonte au thème d'avant toutes les retouches. Les
+              confondre ferait perdre une séance de réglages à qui voulait juste
+              défaire son dernier geste — d'où le second clic de confirmation.
+            */}
+            <div className="flex flex-wrap items-center justify-end gap-2 border-t border-app-border px-6 py-3">
+                {originalPresent && (
+                    <Bouton
+                        variante={confirmeLaRestauration ? 'danger' : 'neutre'}
+                        icone={<History size={14} />}
+                        onClick={() => confirmeLaRestauration ? void restaurerLOriginal() : setConfirmeLaRestauration(true)}
+                        onBlur={() => setConfirmeLaRestauration(false)}
+                        disabled={enCoursDEcriture}
+                        title="Remettre le thème tel qu’il était avant tes retouches"
+                        className="mr-auto"
+                    >
+                        {confirmeLaRestauration ? 'Confirmer : revenir à l’original ?' : 'Restaurer l’original'}
+                    </Bouton>
                 )}
-
-                <ControleDuContraste valeurs={valeurs} />
-
-                {GROUPES.map(groupe => (
-                    <section key={groupe.id} className="space-y-3">
-                        <h4 className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 border-l-2 border-accent/30 pl-3">
-                            {groupe.titre}
-                        </h4>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                            {JETONS_EDITABLES.filter(j => j.groupe === groupe.id).map(jeton => (
-                                <ChampDeJeton
-                                    key={jeton.cle}
-                                    jeton={jeton}
-                                    valeur={valeurs[jeton.cle] ?? ''}
-                                    poser={poser}
-                                    alerte={jeton.cle === 'accent' && accentSurcharge
-                                        ? 'Un accent est choisi à la main dans les réglages : il passe devant celui du jeu.'
-                                        : undefined}
-                                />
-                            ))}
-                        </div>
-                    </section>
-                ))}
+                <Bouton icone={<RotateCcw size={14} />} onClick={revenir} disabled={!modifie}>Annuler</Bouton>
+                <Bouton
+                    variante="accent"
+                    icone={enCoursDEcriture ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                    onClick={() => void enregistrer()}
+                    disabled={!modifie || enCoursDEcriture}
+                >
+                    Enregistrer le thème
+                </Bouton>
             </div>
         </div>
     );
 };
+
+/* ────────────────────────────────────────────────────────────────────────────
+   L'APERÇU VIVANT
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * **Une carte de combattant, des badges** — la maquette retenue. Elle est
+ * peinte avec les classes de l'interface : comme l'atelier repeint
+ * l'interface à chaque réglage, la carte suit sans rien savoir des jetons.
+ */
+const ApercuVivant: React.FC = () => (
+    <div className="flex flex-col gap-3 rounded-xl border border-app-border bg-app-surface p-4">
+        <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+                <p className="flex items-center gap-2 font-display text-base font-bold uppercase tracking-wide text-app-text">
+                    Roy Batty <Etiquette ton="danger">Hostile</Etiquette>
+                </p>
+                <p className="text-ui-10 uppercase tracking-widest text-app-muted">Réplicant · combat</p>
+            </div>
+            <div className="text-right">
+                <p className="text-ui-9 font-black uppercase tracking-widest text-app-muted">Initiative</p>
+                <p className="font-mono text-2xl font-bold text-accent">21</p>
+            </div>
+        </div>
+        <div>
+            <div className="mb-1 flex justify-between text-xs">
+                <span className="text-app-muted">Santé</span>
+                <span className="font-mono font-bold text-app-text">14 / 15</span>
+            </div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-app-bg"><div className="h-full w-[93%] bg-etat-succes" /></div>
+        </div>
+        <div className="flex gap-2">
+            <Bouton variante="accent" className="flex-1">Calculer</Bouton>
+            <Bouton className="flex-1">Fiche</Bouton>
+        </div>
+        <div className="flex flex-wrap gap-1.5 border-t border-app-border pt-3">
+            <Etiquette ton="danger">Critique</Etiquette>
+            <Etiquette ton="succes">Stable</Etiquette>
+            <Etiquette ton="alerte">Enragé</Etiquette>
+            <Etiquette ton="info">Couvert</Etiquette>
+        </div>
+    </div>
+);
 
 /* ────────────────────────────────────────────────────────────────────────────
    LES CHAMPS
@@ -406,68 +460,77 @@ export const AtelierDuTheme: React.FC = () => {
 
 const estUnHex = (v: string) => /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v.trim());
 
+/**
+ * **Un réglage : où il se voit, ce qu'il fait, sa valeur.** La vignette montre
+ * la zone ; l'aide la dit ; « Réinit. » rend la valeur enregistrée — pas celle
+ * d'usine, que « Restaurer l'original » sait rendre pour tout le thème.
+ */
 const ChampDeJeton: React.FC<{
     jeton: JetonEditable;
     valeur: string;
+    enregistree: string;
     poser: (cle: string, valeur: string) => void;
     alerte?: string;
-}> = ({ jeton, valeur, poser, alerte }) => (
-    <div className="p-4 rounded-2xl bg-app-bg/40 border border-app-border/60 space-y-2">
-        <div className="flex items-center justify-between gap-2">
-            <label className="text-ui-11 font-black uppercase tracking-widest text-app-text/80">
+}> = ({ jeton, valeur, enregistree, poser, alerte }) => (
+    <div className={`flex flex-wrap items-center gap-4 rounded-xl border bg-app-surface/60 p-3 ${valeur !== enregistree ? 'border-etat-alerte/50' : 'border-app-border'}`}>
+        <VignetteDeZone zone={ZONE_DU_JETON[jeton.cle] ?? 'tailles'} />
+        <div className="min-w-[14rem] flex-1">
+            <p className="flex items-center gap-2 font-display text-sm font-bold text-app-text">
                 {jeton.label}
-            </label>
-            {!jeton.surLInterface && (
-                <span className="text-ui-8 font-black uppercase tracking-tighter px-1.5 py-0.5 rounded bg-app-surface text-app-text/30 border border-app-border/60">
-                    {POUR_LES_FICHES}
-                </span>
+                {!jeton.surLInterface && <Etiquette ton="neutre">{POUR_LES_FICHES}</Etiquette>}
+            </p>
+            <p className="mt-0.5 text-xs leading-snug text-app-muted">{jeton.aide}</p>
+            {alerte && (
+                <p className="mt-1 flex items-start gap-1.5 text-ui-10 leading-snug text-etat-alerte">
+                    <AlertTriangle size={11} className="mt-0.5 shrink-0" /> {alerte}
+                </p>
             )}
         </div>
 
-        {jeton.famille === 'couleur' && (
-            <div className="flex items-center gap-2">
-                {estUnHex(valeur) && (
+        <div className="flex w-full items-center gap-2 sm:w-auto sm:min-w-[16rem] sm:max-w-[24rem] sm:flex-1">
+            {jeton.famille === 'couleur' && (
+                <>
                     <input
-                        type="color"
-                        value={valeur.trim()}
+                        type="text"
+                        value={valeur}
                         onChange={e => poser(jeton.cle, e.target.value)}
-                        title={jeton.label}
-                        aria-label={`${jeton.label} — sélecteur`}
-                        className="w-9 h-9 rounded-lg bg-transparent border border-app-border cursor-pointer shrink-0"
+                        placeholder="#000000 ou rgba(…)"
+                        aria-label={jeton.label}
+                        className="min-w-0 flex-1 rounded-lg border border-app-border bg-app-bg px-3 py-2 font-mono text-xs text-app-text outline-none focus:border-accent/60"
                     />
-                )}
+                    {estUnHex(valeur) && (
+                        <input
+                            type="color"
+                            value={valeur.trim()}
+                            onChange={e => poser(jeton.cle, e.target.value)}
+                            title={jeton.label}
+                            aria-label={`${jeton.label} — sélecteur`}
+                            className="h-9 w-10 shrink-0 cursor-pointer rounded-lg border border-app-border bg-transparent"
+                        />
+                    )}
+                </>
+            )}
+            {jeton.famille === 'police' && <div className="min-w-0 flex-1"><ChampDePolice jeton={jeton} valeur={valeur} poser={poser} /></div>}
+            {jeton.famille === 'echelle' && <div className="min-w-0 flex-1"><ChampDEchelle jeton={jeton} valeur={valeur} poser={poser} /></div>}
+            {(jeton.famille === 'longueur' || jeton.famille === 'ombre') && (
                 <input
                     type="text"
                     value={valeur}
                     onChange={e => poser(jeton.cle, e.target.value)}
-                    placeholder="#000000 ou rgba(…)"
+                    placeholder={jeton.famille === 'ombre' ? '0 20px 60px rgba(0,0,0,.4)' : '0px'}
                     aria-label={jeton.label}
-                    className="flex-1 bg-app-surface border border-app-border rounded-lg px-3 py-2 text-xs font-mono text-app-text outline-none focus:border-accent/60"
+                    className="min-w-0 flex-1 rounded-lg border border-app-border bg-app-bg px-3 py-2 font-mono text-xs text-app-text outline-none focus:border-accent/60"
                 />
-            </div>
-        )}
-
-        {jeton.famille === 'police' && <ChampDePolice jeton={jeton} valeur={valeur} poser={poser} />}
-
-        {jeton.famille === 'echelle' && <ChampDEchelle jeton={jeton} valeur={valeur} poser={poser} />}
-
-        {(jeton.famille === 'longueur' || jeton.famille === 'ombre') && (
-            <input
-                type="text"
-                value={valeur}
-                onChange={e => poser(jeton.cle, e.target.value)}
-                placeholder={jeton.famille === 'ombre' ? '0 20px 60px rgba(0,0,0,.4)' : '0px'}
-                aria-label={jeton.label}
-                className="w-full bg-app-surface border border-app-border rounded-lg px-3 py-2 text-xs font-mono text-app-text outline-none focus:border-accent/60"
-            />
-        )}
-
-        <p className="text-ui-10 text-app-text/35 leading-snug">{jeton.aide}</p>
-        {alerte && (
-            <p className="text-ui-10 text-etat-alerte/90 leading-snug flex items-start gap-1.5">
-                <AlertTriangle size={11} className="mt-0.5 shrink-0" /> {alerte}
-            </p>
-        )}
+            )}
+            <button
+                onClick={() => poser(jeton.cle, enregistree)}
+                disabled={valeur === enregistree}
+                title="Revenir à la valeur enregistrée"
+                className="shrink-0 rounded-lg border border-app-border px-2.5 py-2 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-colors hover:text-app-text disabled:opacity-30"
+            >
+                Réinit.
+            </button>
+        </div>
     </div>
 );
 
@@ -488,8 +551,34 @@ const ChampDePolice: React.FC<{
     const connue = POLICES_CONNUES.some(p => p.famille === famille);
     const fourniture = policeFournie(famille);
 
+    /*
+      **Les polices en choix nommés** — maquette retenue : quelques pastilles,
+      chacune écrite dans sa police, choisies selon le rôle. La liste complète
+      et la saisie libre restent dessous.
+    */
+    const genres: string[] = jeton.cle === 'font-mono' ? ['mono']
+        : jeton.cle === 'font-display' ? ['titre', 'serif', 'atmosphere']
+            : ['sans', 'serif'];
+    const suggestions = POLICES_CONNUES.filter(p => genres.includes(p.genre)).slice(0, 6);
+
     return (
         <div className="space-y-2">
+            <div className="flex flex-wrap gap-1.5">
+                {suggestions.map(p => (
+                    <button
+                        key={p.famille}
+                        type="button"
+                        onClick={() => poser(jeton.cle, pileDePolice(p.famille))}
+                        aria-pressed={famille === p.famille}
+                        style={{ fontFamily: `"${p.famille}"` }}
+                        className={`rounded-md border px-2.5 py-1 text-sm transition-colors ${
+                            famille === p.famille ? 'border-accent bg-accent text-app-on-accent' : 'border-app-border text-app-text hover:border-accent/60'
+                        }`}
+                    >
+                        {p.famille}
+                    </button>
+                ))}
+            </div>
             <select
                 value={connue ? famille : ''}
                 onChange={e => e.target.value && poser(jeton.cle, pileDePolice(e.target.value))}
