@@ -70,7 +70,7 @@ début de chaque conversation. À chaque nouvelle version du cahier, remplacer l
 
 | Rôle | Fait | Ne fait pas |
 | --- | --- | --- |
-| **RPG Theme Builder** | Lit les références et le cahier ; écrit `theme.css` (les jetons) et `intention.md` ; corrige d'après le rapport ; classe les remarques visuelles | Recalculer ce que le validateur prouve ; inventer un jeton ou un emplacement d'ornement ; régler l'interface par des sélecteurs CSS |
+| **RPG Theme Builder** | Lit les références et le cahier ; écrit `theme.css` (les jetons) et `intention.md` ; corrige d'après le rapport ; classe les remarques visuelles | Recalculer ce que le validateur prouve ; inventer un jeton, un emplacement d'ornement ou un nom d'icône ; régler l'interface par des sélecteurs CSS |
 | **David** | Fournit les références ; demande ; fait le lien entre les deux fenêtres ; **juge sur image** ; décide | Ranger les fichiers à la main |
 | **Claude Code** | Dépose les fichiers **tels quels** ; lance le validateur et la vitrine ; rend le rapport et les captures ; commite ; construit et entretient l'outillage ; fait évoluer le contrat **avec David** | **Retoucher un thème** : une correction passe par RPG Theme Builder, sinon deux auteurs se contredisent au tour suivant |
 | **Validateur** | Vérifie le contrat de bout en bout ; rend un rapport chiffré ; refuse | Réparer un thème en silence |

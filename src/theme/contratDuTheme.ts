@@ -18,7 +18,7 @@
  */
 
 /** La version du cahier des charges que ce fichier traduit. */
-export const VERSION_DU_CONTRAT = '1.5';
+export const VERSION_DU_CONTRAT = '1.6';
 
 /**
  * - **LU** : GM-OS l'applique aujourd'hui — ceux marqués `personnalites`
@@ -254,8 +254,56 @@ export const HOTES_DE_POLICES: readonly string[] = ['fonts.googleapis.com', 'fon
 /** Les emplacements d'ornement du § 8 — la liste la plus difficile à changer du contrat. */
 export const EMPLACEMENTS_D_ORNEMENT: readonly string[] = ['entete', 'coin', 'separateur', 'fond'];
 
-/** Les tailles maximales des fichiers joints, en octets (§ 7, § 8). */
+/**
+ * **Les noms d'icônes du § 9** — contrat v1.6, phase 6 de la refonte, 2026-10-03.
+ *
+ * Un jeu peut remplacer **ces** icônes-là, et seulement elles (`icones.json`,
+ * surcharge partielle) ; les autres restent celles de GM-OS. Les modules,
+ * puis les notions qui reviennent dans tous les écrans — choix de David :
+ * *« modules + concepts de jeu »*.
+ *
+ * ⚠️ **Comme les emplacements d'ornement, cette liste se fige** : chaque
+ * thème écrit s'y conforme. On pourra **ajouter** un nom, jamais en renommer
+ * ni en retirer un.
+ */
+export const NOMS_D_ICONES: readonly { nom: string; designe: string }[] = [
+    // Les modules — la barre latérale et la palette.
+    { nom: 'tableau-de-bord', designe: 'le tableau de bord de la campagne' },
+    { nom: 'journal', designe: 'le journal de jeu' },
+    { nom: 'forge', designe: 'la Forge' },
+    { nom: 'musique', designe: 'la musique' },
+    { nom: 'effets-sonores', designe: 'les effets sonores' },
+    { nom: 'ambiances', designe: 'les ambiances' },
+    { nom: 'voix', designe: 'Voice-OS, la voix du meneur' },
+    { nom: 'favoris', designe: 'les favoris' },
+    { nom: 'nexus', designe: 'le Nexus Wiki, le coffre de notes' },
+    { nom: 'cortex', designe: 'le Cortex, l’assistant IA' },
+    { nom: 'combat', designe: 'Combat-OS' },
+    { nom: 'des', designe: 'Dice-OS, les dés' },
+    { nom: 'pnj', designe: 'les PNJ' },
+    { nom: 'carte', designe: 'la cartographie' },
+    { nom: 'mediatheque', designe: 'la médiathèque' },
+    { nom: 'image', designe: 'Image-OS, la projection' },
+    { nom: 'horloge', designe: 'l’horloge et le temps' },
+    { nom: 'lumiere', designe: 'Light-OS, la lumière' },
+    { nom: 'tables', designe: 'les tables aléatoires' },
+    { nom: 'navigateur', designe: 'le navigateur web' },
+    { nom: 'tableau-blanc', designe: 'le tableau blanc' },
+    { nom: 'aide', designe: 'l’aide' },
+    // Les notions de jeu — là où elles s'affichent.
+    { nom: 'pj', designe: 'un personnage joueur' },
+    { nom: 'sante', designe: 'la santé, les points de vie' },
+    { nom: 'initiative', designe: 'l’initiative en combat' },
+    { nom: 'indice', designe: 'un indice' },
+    { nom: 'butin', designe: 'le butin' },
+    { nom: 'lieu', designe: 'un lieu' },
+    { nom: 'scene', designe: 'une scène de la trame' },
+    { nom: 'oracle', designe: 'l’Oracle' },
+];
+
+/** Les tailles maximales des fichiers joints, en octets (§ 7, § 8, § 9). */
 export const TAILLES_MAXIMALES = {
+    icone: 20 * 1024,
     ornement: 50 * 1024,
     matiereSvg: 200 * 1024,
     matiereImage: 500 * 1024,

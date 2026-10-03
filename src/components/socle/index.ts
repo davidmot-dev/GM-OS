@@ -14,3 +14,4 @@ export { Etiquette, type TonDEtiquette, type EtiquetteProps } from './Etiquette'
 export { EnTeteDeModule, type EnTeteDeModuleProps } from './EnTeteDeModule';
 export { GabaritDeModule, Separateur, type GabaritDeModuleProps } from './GabaritDeModule';
 export { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire, type CadreDeSurcoucheProps } from './CadreDeSurcouche';
+export { Icone, type IconeProps } from './Icone';

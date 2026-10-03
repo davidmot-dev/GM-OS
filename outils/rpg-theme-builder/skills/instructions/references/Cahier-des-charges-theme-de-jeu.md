@@ -1,6 +1,6 @@
 # Cahier des charges — thème de jeu pour GM-OS
 
-**Contrat v1.5 — 2026-09-30.** Destinataire : l'assistant qui construit les thèmes de jeu.
+**Contrat v1.6 — 2026-10-03.** Destinataire : l'assistant qui construit les thèmes de jeu.
 
 Ce document est une **contrainte**, pas une inspiration. Il dit exactement ce que GM-OS lit dans un
 thème, ce qu'il ignore et ce qu'il refuse. Tout ce qui n'y figure pas n'aura **aucun effet** dans
@@ -19,12 +19,13 @@ theme/
 ├── matieres/*.svg       facultatif — textures de fond et de panneau (§ 7)
 ├── ornements.json       facultatif — les ornements, par emplacement (§ 8)
 ├── ornements/*.svg
+├── icones.json          facultatif — les icônes, par nom (§ 9)
+├── icones/*.svg
 └── apercu/              facultatif — tes captures de démonstration, ignorées par GM-OS
 ```
 
 - Tu **NE DOIS PAS** livrer `theme.original.css` : c'est GM-OS qui le crée quand le meneur retouche
   un thème dans son atelier.
-- `icones.json` est **réservé** (§ 9) : n'en livre pas avant que la liste des icônes soit publiée.
 
 ### 1.1 · `intention.md` — dire ce qu'on vise, et ce qu'on n'a pas pu faire
 
@@ -322,11 +323,66 @@ avec parcimonie : le `coin` sur un ou deux panneaux principaux par écran, pas s
 écrit s'y conforme. Si un emplacement manque au jeu que tu construis, **signale-le** au meneur
 plutôt que d'en inventer un : GM-OS ne le lirait pas.
 
-## 9 · Les icônes — réservé
+## 9 · Les icônes — nouvelles
 
-GM-OS pourra remplacer une partie de ses icônes par celles du jeu (`icones.json`, surcharge
-partielle, repli sur les icônes d'origine). **La liste des noms n'est pas encore publiée : n'en
-livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat.
+GM-OS peut remplacer **certaines** de ses icônes par celles du jeu. `icones.json` associe un **nom du
+tableau ci-dessous** à un SVG du dossier `icones/`. **Chaque icône est facultative** : livre celles qui
+comptent pour ton jeu — *quinze icônes bien choisies font un thème* —, les autres restent celles de
+GM-OS. **Appliquées quand le meneur allume les personnalités** (LU ⚙), comme les ornements.
+
+```json
+{
+  "combat": "icones/combat.svg",
+  "sante": "icones/sante.svg"
+}
+```
+
+| Nom | Ce qu'elle désigne |
+| --- | --- |
+| `tableau-de-bord` | Le tableau de bord de la campagne |
+| `journal` | Le journal de jeu |
+| `forge` | La Forge |
+| `musique` | La musique |
+| `effets-sonores` | Les effets sonores |
+| `ambiances` | Les ambiances |
+| `voix` | Voice-OS, la voix du meneur |
+| `favoris` | Les favoris |
+| `nexus` | Le Nexus Wiki, le coffre de notes |
+| `cortex` | Le Cortex, l’assistant IA |
+| `combat` | Combat-OS |
+| `des` | Dice-OS, les dés |
+| `pnj` | Les PNJ |
+| `carte` | La cartographie |
+| `mediatheque` | La médiathèque |
+| `image` | Image-OS, la projection |
+| `horloge` | L’horloge et le temps |
+| `lumiere` | Light-OS, la lumière |
+| `tables` | Les tables aléatoires |
+| `navigateur` | Le navigateur web |
+| `tableau-blanc` | Le tableau blanc |
+| `aide` | L’aide |
+| `pj` | Un personnage joueur |
+| `sante` | La santé, les points de vie |
+| `initiative` | L’initiative en combat |
+| `indice` | Un indice |
+| `butin` | Le butin |
+| `lieu` | Un lieu |
+| `scene` | Une scène de la trame |
+| `oracle` | L’Oracle |
+
+**Règles des icônes** — celles des SVG du § 8, plus deux :
+
+- **DOIT** avoir un `viewBox`, **carré** (`0 0 24 24` est RECOMMANDÉ) ;
+- **DOIT** dessiner en `currentColor` : GM-OS la colore avec **la couleur du texte autour** — une icône
+  de la barre latérale s'allume avec son module, comme celle qu'elle remplace ;
+- **NE DOIT PAS** contenir de `<script>`, d'attribut `on…`, d'`<image>` externe, de `<foreignObject>`
+  ni de lien vers un autre fichier ;
+- **DOIT** rester lisible à **16 px** : un trait d'au moins 1,5 sur 24, peu de détails ;
+- **20 Ko au plus** par icône ; le chemin est `icones/<fichier>.svg`.
+
+⚠️ **Cette liste de noms se fige, comme les emplacements d'ornement** : GM-OS pourra en ajouter,
+jamais en renommer ni en retirer. Si une icône manque au jeu que tu construis, **signale-la** au
+meneur plutôt que d'inventer un nom : GM-OS ne le lirait pas.
 
 ## 10 · Ce que GM-OS fait seul — ne le fournis pas
 
@@ -356,7 +412,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 ```css
 /* ==========================================================================
    RPG THEME — <NOM DU JEU>
-   Contrat GM-OS v1.5
+   Contrat GM-OS v1.6
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=<Police+Titre>:wght@500;700&family=<Police+Mono>:wght@400;600&display=swap');
@@ -455,6 +511,7 @@ livre pas.** Ce paragraphe sera complété dans une prochaine version du contrat
 | **v1** | 2026-09-26 | Premier contrat écrit. GM-OS lit **13 réglages** (6 couleurs, 2 polices, 5 tailles), la polarité et les polices importées. Les jetons **V2** sont réservés et annoncés : forme, relief, verre, états, matières, ornements. |
 | **v1.1** | 2026-09-26 | ⛔ Le **piège « page de livre »** (§ 4.1) : dans GM-OS, le texte est posé sur `bg`, pas seulement sur `surface` — quatre des six thèmes existants y tombent. **Polarité vérifiable** (§ 3.5). **`intention.md` obligatoire**, avec les limites signalées et leur classe (§ 1.1). Le déroulé du travail vit dans [`Pipeline-des-themes.md`](./Pipeline-des-themes.md). |
 | **v1.2** | 2026-09-26 | ⛔ **Un seul consommateur** (§ 2) : les fiches de personnage sont **indépendantes des thèmes** (décision de David) et ne lisent jamais `theme.css` — la v1 affirmait l'inverse. Les composants `.rpg-*` et les jetons `paper`, `ink`, `accent-2`, `font-ui` passent au statut **SDK** : facultatifs, sans effet dans GM-OS. La classe de limite « fiches seulement » disparaît. |
+| **v1.6** | 2026-10-03 | ⭐ **Les icônes sont publiées** (§ 9) : trente noms — les modules, puis les notions de jeu (PJ, santé, initiative, indice, butin, lieu, scène, Oracle). `icones.json` et `icones/*.svg` entrent au paquet (§ 1), sous l'interrupteur des personnalités. Surcharge partielle, repli sur les icônes de GM-OS. Aucun jeton ne change : **tout thème v1.5 reste valide**. |
 | **v1.5** | 2026-09-30 | ⭐ **Plus aucun jeton V2** : les treize derniers passent à **LU ⚙**, lus par les nouveaux composants de GM-OS — `surface-2`, `accent-contrast`, `border-soft`, les **quatre couleurs d'état**, `border-width`, `border-style`, `title-tracking`, `kicker-tracking`, `title-transform`, `texture-panel`. **Les ornements** (§ 8) s'appliquent aussi, sous le même interrupteur. Un nom de bloc peut contenir une espace : `:root[data-theme="cthulhu hack"]` (le nom du dossier). |
 | **v1.4** | 2026-09-29 | ⭐ **Dix-huit jetons passent de V2 à LU ⚙** : la forme (`radius-*`), le relief (`elevation-*`, `shadow`, `glow`, `glow-strength`), le verre (`glass-*`), la police du corps (`font-body`), la matière de fond (`texture-bg`, `texture-opacity`) et le cadre (`frame-*`). GM-OS les applique quand le meneur allume les **personnalités** : éteintes, **aucun thème existant ne change** — décision du meneur, qui veut comparer avant d'adopter. Restent **V2** ceux qu'aucun élément de l'écran ne lit encore : `surface-2`, `accent-contrast`, `border-soft`, les états, `border-width`, `border-style`, `title-*`, `kicker-tracking`, `texture-panel`. Une matière `url('matieres/…')` doit être un **SVG** (§ 7). |
 | **v1.3** | 2026-09-27 | ⭐ **Le cadre** (§ 4.8) : trois jetons **V2**, `frame-bg`, `frame-text`, `frame-accent`, pour une barre latérale et un bandeau d'une autre polarité que le contenu, et leurs deux paires de contraste (§ 6). Absents, ils valent `bg`, `text` et `accent` : aucun thème existant ne change. Né du relevé des quatre thèmes de base de GM-OS, dont deux (Médiéval, Moderne) ont un cadre sombre autour d'un contenu clair. |

@@ -5442,7 +5442,7 @@ explicitement, jamais le défaut.
 
 ---
 
-### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phase 4 presque close le 2026-10-03**
+### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phase 4 presque close, phase 6 commencée le 2026-10-03**
 
 **Origine** : David apporte trois maquettes (compteur de rounds, Dice-OS, Image-OS) et demande
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
@@ -5486,9 +5486,28 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
   bibliothèque de rendu (pdf.js) — pas installée sans accord ; les `shadow-glow-accent`,
   `glow-emerald`, `glow-blue`, `glow-indigo` employés partout **n'existent pas** dans
   `tailwind.config` (aucun halo, avant comme après) — à régler en phase 5.
+- **Phase 6 — les icônes (V4) : COMMENCÉE le 2026-10-03, sur décision de David** alors que sa
+  condition d'entrée (phases 1 à 5 éprouvées en séance jouée) n'est **pas** remplie — signalé,
+  et David a choisi d'avancer. Vocabulaire choisi par David : **« modules + concepts de jeu »**.
+  - **Contrat v1.6**, § 9 : `theme/icones.json` associe un nom à `icones/<fichier>.svg`. **Trente
+    noms gelés** (`NOMS_D_ICONES`, `src/theme/contratDuTheme.ts`) : vingt-deux modules et huit
+    notions (pj, santé, initiative, indice, butin, lieu, scène, oracle). Surcharge **partielle** :
+    un nom absent garde l'icône de GM-OS. SVG carré en `currentColor`, sans script, 20 Ko au plus ;
+    le validateur (`verifierLesIcones`) et le chargeur (`src/theme/icones.ts`) écartent le reste.
+  - **Le mécanisme** : l'icône est incorporée en `data:` et posée en variable CSS, **seulement sous
+    les personnalités** ; `<Icone nom repli>` (socle) bascule en CSS pure, sans état React ; le
+    dessin est un masque, il prend la couleur du texte.
+  - **Branché** : les 21 entrées de la barre latérale et le bouton d'aide (`Shell.tsx`), la palette
+    (`ICONE_DU_MODULE`, `useSpotlight`), Loot-OS (butin), indices, Oracle, poste du meneur (scène,
+    groupe, lieux épinglés), état de santé et initiative du combat.
+  - **Témoin permanent** `e2e/iconesDuJeu.spec.ts` (T6.6) : un jeu de test fournit combat, dés et
+    PNJ ; les trois remplacent ceux de GM-OS, la musique garde le sien. Constructeur de thèmes
+    passé en 0.6.0 (§ 9 dans `SKILL.md`, cahier recopié).
+  - **Pas fait** : **aucun jeu réel ne livre encore d'icônes** — le premier viendra du
+    constructeur ; le **chargeur des paquets** de la phase 6 n'est pas commencé.
 - **La suite** : **une séance jouée** (règle du plan) ; **phase 5, le fini** (halos,
-  anneau de focus, bordures, transitions — dans les primitives) ; **phase 6** réduite aux icônes
-  et au chargeur des paquets, avec sa propre décision d'entrée.
+  anneau de focus, bordures, transitions — dans les primitives) ; un premier jeu livré avec ses
+  icônes, à regarder à l'écran.
 
 *État au 2026-09-29/30, gardé pour l'historique du lot 1 :*
 

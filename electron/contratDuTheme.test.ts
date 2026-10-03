@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-    JETONS_DU_CONTRAT, PAIRES_DU_CONTRAT, HOTES_DE_POLICES, EMPLACEMENTS_D_ORNEMENT, VERSION_DU_CONTRAT,
+    JETONS_DU_CONTRAT, PAIRES_DU_CONTRAT, HOTES_DE_POLICES, EMPLACEMENTS_D_ORNEMENT, VERSION_DU_CONTRAT, NOMS_D_ICONES,
     VARIABLE_DU_JETON,
 } from '../src/theme/contratDuTheme';
 import { pontVersLInterface } from '../src/theme/jetonsDeTheme';
@@ -118,6 +118,13 @@ describe('le contrat en données suit le cahier des charges', () => {
     it('les mêmes emplacements d\'ornement (§ 8)', () => {
         const bloc = /## 8 ·[\s\S]*?```json\n([\s\S]*?)```/.exec(CAHIER)![1];
         expect(Object.keys(JSON.parse(bloc))).toEqual([...EMPLACEMENTS_D_ORNEMENT]);
+    });
+
+    /* v1.6 : la liste se fige comme les emplacements — le cahier et le code disent les mêmes noms, dans le même ordre. */
+    it('les mêmes noms d\'icônes (§ 9)', () => {
+        const section = CAHIER.split('## 9 ·')[1].split('\n## ')[0];
+        const noms = section.split(/\r?\n/).filter(l => l.startsWith('| `')).map(l => /^\| `([^`]+)`/.exec(l)![1]);
+        expect(noms).toEqual(NOMS_D_ICONES.map(i => i.nom));
     });
 });
 

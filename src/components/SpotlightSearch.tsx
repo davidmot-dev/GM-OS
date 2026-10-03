@@ -15,7 +15,7 @@ import {
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { fractionDeVie, decrireLaSante } from '../modules/combat/logic/SanteDuCombattant';
 import { ResolvedImage } from './ResolvedImage';
-import { Etiquette } from './socle';
+import { Etiquette, Icone } from './socle';
 import { useTranslation } from 'react-i18next';
 import { useSpotlight, type SpotlightResult } from '../hooks/useSpotlight';
 
@@ -243,7 +243,7 @@ const ResultItem: React.FC<{
             }`}
         >
             <div className={`shrink-0 rounded-md border p-1.5 ${isSelected ? 'border-accent text-accent' : 'border-app-border text-app-muted'}`}>
-                <Icon className="h-4 w-4" />
+                {result.icone ? <Icone nom={result.icone} taille={14} repli={<Icon className="h-4 w-4" />} /> : <Icon className="h-4 w-4" />}
             </div>
             <div className="min-w-0 flex-1">
                 <div className={`truncate text-sm font-bold ${isSelected ? 'text-accent' : 'text-app-text'}`}>{result.title}</div>

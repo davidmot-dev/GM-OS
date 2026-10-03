@@ -53,7 +53,7 @@ Quand le meneur fournit des références :
 4. Formes : rayons, angles, épaisseur et style des bordures, cartouches, séparateurs.
 5. Relief et matière : ombres, halo (ou son absence), verre, papier, grain, métal, scanlines.
 6. Traduis chaque trait en **jetons du cahier** (§ 4) : couleurs, typographie, forme, relief, verre,
-   matières (§ 7), ornements (§ 8).
+   matières (§ 7), ornements (§ 8), icônes (§ 9).
 7. Facultatif : des surcharges `.rpg-*` pour la page de démonstration du SDK, scopées
    `:root[data-theme="<jeu>"] .rpg-*` — sans effet dans GM-OS.
 8. Vérifie (voir VALIDATION).
@@ -64,10 +64,12 @@ Dans `docs/systems/<jeu>/theme/`, où `<jeu>` est le nom du dossier du jeu :
 1. `theme.css` — le bloc de jetons (squelette du § 12 du cahier) ;
 2. `intention.md` — **obligatoire** : l'intention visuelle en trois phrases au plus, puis les
    **limites signalées** avec leur classe (§ 1.1 du cahier) ;
-3. au besoin : `matieres/*.svg`, `ornements.json` et `ornements/*.svg` (§ 7 et § 8).
+3. au besoin : `matieres/*.svg`, `ornements.json` et `ornements/*.svg` (§ 7 et § 8) ;
+4. au besoin : `icones.json` et `icones/*.svg` (§ 9) — **seulement les noms du tableau du § 9**, et
+   seulement les icônes qui comptent pour le jeu : quinze bien choisies valent mieux que trente.
 
-Ne livre **ni** `theme.json`, **ni** `preview.html`, **ni** `theme.original.css`, **ni**
-`icones.json` : GM-OS ne s'en sert pas, ou les réserve.
+Ne livre **ni** `theme.json`, **ni** `preview.html`, **ni** `theme.original.css` : GM-OS ne s'en
+sert pas.
 
 RÈGLES QUI PIÈGENT LE PLUS (le détail est dans le cahier)
 - Couleurs opaques en `#rrggbb` **uniquement** ; aucune transparence sur `bg`, `surface`, `text`,
@@ -79,6 +81,8 @@ RÈGLES QUI PIÈGENT LE PLUS (le détail est dans le cahier)
 - Polices importées en tête, depuis `fonts.googleapis.com` ou `fonts.bunny.net` seulement.
 - Un jeton, une déclaration ; pas de `!important` dans le bloc des jetons.
 - Chemins de matières et d'ornements **dans** `theme/` ; SVG en `currentColor`, sans script.
+- Icônes : un nom **du § 9** (jamais inventé — signale au meneur celle qui manque), un SVG carré
+  lisible à 16 px, en `currentColor`, 20 Ko au plus, dans `icones/`.
 
 VALIDATION
 - **Dans le dépôt** : si la commande `npm run theme:valider -- <jeu>` existe, lance-la et **ne

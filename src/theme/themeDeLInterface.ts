@@ -46,7 +46,8 @@ import { tailleDeRacine, echelleDeTexte } from './editionDuTheme';
 import { VARIABLE_DU_JETON } from './contratDuTheme';
 import { accentsDeModule, ACCENTS_D_AUJOURD_HUI } from './accentsDeModule';
 import { ORNEMENTS_DES_THEMES_DE_BASE, type Ornements, type Emplacement } from './ornements';
-import { EMPLACEMENTS_D_ORNEMENT } from './contratDuTheme';
+import { variablesDeLIcone, type IconesDuJeu } from './icones';
+import { EMPLACEMENTS_D_ORNEMENT, NOMS_D_ICONES } from './contratDuTheme';
 
 export type ThemeID = 'cyberpunk' | 'medieval' | 'modern' | 'claire';
 
@@ -63,6 +64,8 @@ export interface ThemeDuJeuApplique {
     clarte?: 'dark' | 'light';
     /** Les ornements du jeu (§ 8), incorporés — sous l'interrupteur des personnalités. */
     ornements?: Ornements;
+    /** Les icônes du jeu (§ 9, phase 6), incorporées — sous l'interrupteur des personnalités. */
+    icones?: IconesDuJeu;
 }
 
 /**
@@ -699,6 +702,18 @@ export function appliquerLeTheme(
             vars[`--orne-${emplacement}`] = adresse;
             vars[`--orne-${emplacement}-affichage`] = 'block';
         }
+        /*
+          **Les icônes du jeu** (§ 9, phase 6) : chacune pose son dessin, s'affiche,
+          et efface l'icône de GM-OS — `<Icone>` lit ces trois variables. Les
+          thèmes de base n'en ont pas : leurs icônes sont celles de GM-OS.
+        */
+        for (const [nom, adresse] of Object.entries(jeu?.icones ?? {})) {
+            if (!adresse) continue;
+            const [dessin, affichage, repli] = variablesDeLIcone(nom);
+            vars[dessin] = adresse;
+            vars[affichage] = 'inline-block';
+            vars[repli] = 'none';
+        }
         // R7 : les accents de module suivent l'accent effectif et le fond affiché.
         const modules = accentsDeModule(accent, vars['--app-bg']);
         if (modules) {
@@ -793,6 +808,7 @@ export function appliquerLeTheme(
 const VARIABLES_EFFACABLES = new Set([
     ...Object.values(VARIABLE_DU_JETON),
     ...(EMPLACEMENTS_D_ORNEMENT as readonly Emplacement[]).flatMap(e => [`--orne-${e}`, `--orne-${e}-affichage`]),
+    ...NOMS_D_ICONES.flatMap(i => variablesDeLIcone(i.nom)),
     '--verre-premium',
     ...Object.keys(ACCENTS_D_AUJOURD_HUI).map(m => `--gm-${m}`),
 ]);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icone } from '../../../components/socle';
 import { Heart, Activity } from 'lucide-react';
 import { decrireLaSante, aUneJaugeDeVie, fractionDeVie, type PorteurDeSante } from '../logic/SanteDuCombattant';
 import { woundLabel } from '../../session/logic/HealthInterpreter';
@@ -63,7 +64,7 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
             <div className="flex items-center gap-3">
                 {sante && sante.type !== 'hp'
                     ? <Activity size={18} className="text-etat-danger" />
-                    : <Heart size={18} className="text-etat-danger" fill="currentColor" />}
+                    : <Icone nom="sante" taille={18} className="text-etat-danger" repli={<Heart size={18} className="text-etat-danger" fill="currentColor" />} />}
                 <h3 className="text-xs font-black text-app-text uppercase tracking-widest">{titre}</h3>
             </div>
             <span className="text-xl font-black text-app-text font-mono">{valeur}</span>

@@ -8,7 +8,7 @@ import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore'
 import { HealthManager } from '../../session/components/health/HealthManager';
 import { estHorsDeCombat, santeAffichee } from '../logic/SanteDuCombattant';
 import type { HealthSystem } from '../../session/useSessionOSStore';
-import { Bouton } from '../../../components/socle';
+import { Bouton, Icone } from '../../../components/socle';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
@@ -273,7 +273,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             {/* ── 1. Qui : initiative, nom, camp, altérations — et la cible ── */}
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 min-w-0">
                 <div className="flex flex-col items-center shrink-0 rounded-lg bg-app-bg/50 border border-app-border px-1.5 py-1">
-                    <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">INIT</span>
+                    <span className="flex h-4 items-center text-ui-10 font-black uppercase tracking-widest text-app-muted" title="Initiative"><Icone nom="initiative" taille={13} repli="INIT" /></span>
                     <input
                         type="number"
                         value={(!combatant.init || Number.isNaN(combatant.init)) ? '' : combatant.init}

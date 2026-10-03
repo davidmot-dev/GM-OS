@@ -127,6 +127,20 @@ export const MODULES_DE_LA_PALETTE = (Object.keys(CATALOGUE_DES_MODULES) as Modu
 export const PLACES_DE_RACCOURCI = 9;
 
 /**
+ * **Le nom d'icône de chaque module** — contrat des thèmes v1.6, § 9 (phase 6).
+ * C'est par ce nom qu'un jeu remplace l'icône du module, dans la barre
+ * latérale comme dans la palette. `debug` n'en a pas : un thème de jeu n'a
+ * rien à dire de l'écran de débogage.
+ */
+export const ICONE_DU_MODULE: Partial<Record<ModuleID, string>> = {
+    dashboard: 'tableau-de-bord', journal: 'journal', forge: 'forge', music: 'musique',
+    sound: 'effets-sonores', ambient: 'ambiances', voice: 'voix', favorite: 'favoris',
+    obsidian: 'nexus', combat: 'combat', dice: 'des', npc: 'pnj', map: 'carte',
+    image: 'image', clock: 'horloge', light: 'lumiere', table: 'tables', web: 'navigateur',
+    whiteboard: 'tableau-blanc', aide: 'aide',
+};
+
+/**
  * Les modules assignés par défaut aux neuf places.
  *
  * Choisis pour une séance qui se joue, pas pour une qui se prépare : la Forge

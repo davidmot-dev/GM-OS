@@ -8,7 +8,7 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { estDeLaCampagne } from '../store/lootSlice';
 import { estRemarquable, nomDeLaMonnaie } from '../logic/vocabulaireDuButin';
 import { motion } from 'framer-motion';
-import { Panneau, Etiquette } from '../../../components/socle';
+import { Panneau, Etiquette, Icone } from '../../../components/socle';
 
 const LootOS: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -102,7 +102,7 @@ const LootOS: React.FC = () => {
                             */}
                             {monnaie
                                 ? <span className="text-ui-10 font-bold uppercase tracking-wider">{monnaie}</span>
-                                : <Coins size={14} />}
+                                : <Icone nom="butin" taille={14} repli={<Coins size={14} />} />}
                         </p>
                         <div className="mt-3 flex items-center justify-between border-t border-app-border pt-3 text-xs">
                             <span className="text-app-muted">{t('modules:loot.stats.remarkable_items')}</span>

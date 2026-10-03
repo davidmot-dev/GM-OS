@@ -27,7 +27,7 @@
 
 import {
     JETONS_DU_CONTRAT, PAIRES_DU_CONTRAT, HOTES_DE_POLICES, EMPLACEMENTS_D_ORNEMENT,
-    TAILLES_MAXIMALES, VERSION_DU_CONTRAT, jetonDuContrat,
+    TAILLES_MAXIMALES, VERSION_DU_CONTRAT, jetonDuContrat, NOMS_D_ICONES,
     type FormatDeJeton, type JetonDuContrat,
 } from './contratDuTheme';
 import { blocsDeJetons, declarationsDuBloc, extraireJetons, nomDuBloc } from './jetonsDeTheme';
@@ -173,9 +173,6 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
         erreur('§ 1.1', '`intention.md` est vide.');
     } else if (!/limite/i.test(intention.contenu)) {
         avertir('§ 1.1', '`intention.md` ne semble pas avoir de partie « Limites signalées ». Même vide, elle dit « aucune ».');
-    }
-    if (theme.fichiers['icones.json']) {
-        erreur('§ 9', '`icones.json` est réservé : la liste des icônes n\'est pas encore publiée. Ne pas en livrer.');
     }
 
     /* ── § 3 · Le format ─────────────────────────────────────────────────── */
@@ -330,6 +327,11 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
 
     const ornements = theme.fichiers['ornements.json'];
     if (ornements) verifierLesOrnements(ornements, theme, erreur);
+
+    /* ── § 9 · Les icônes (v1.6) ─────────────────────────────────────────── */
+
+    const icones = theme.fichiers['icones.json'];
+    if (icones) verifierLesIcones(icones, theme, erreur);
 
     const erreurs = remarques.filter(r => r.gravite === 'erreur');
     return {
@@ -492,10 +494,10 @@ function verifierLaPile(
  * d'un type et d'une taille permis — et, pour un SVG, sûr (§ 7, § 8).
  */
 function verifierUnFichierJoint(
-    nom: string, cle: string | undefined, chemin: string, usage: 'matiere' | 'ornement',
+    nom: string, cle: string | undefined, chemin: string, usage: 'matiere' | 'ornement' | 'icone',
     theme: ThemeAValider, erreur: Signaler,
 ): void {
-    const regle = usage === 'matiere' ? '§ 7' : '§ 8';
+    const regle = usage === 'matiere' ? '§ 7' : usage === 'icone' ? '§ 9' : '§ 8';
     if (/^[a-z][a-z0-9+.-]*:/i.test(chemin) || chemin.startsWith('/') || chemin.startsWith('\\') || chemin.split(/[\\/]/).includes('..')) {
         erreur(regle, `${nom}: « ${chemin} » sort du dossier \`theme/\`. Seuls les chemins relatifs qui y restent sont permis.`, cle);
         return;
@@ -512,11 +514,16 @@ function verifierUnFichierJoint(
         erreur(regle, `${nom}: « ${relatif} » — un ornement est un SVG.`, cle);
         return;
     }
+    if (usage === 'icone' && !estSvg) {
+        erreur(regle, `${nom}: « ${relatif} » — une icône est un SVG.`, cle);
+        return;
+    }
     if (!estSvg && !['png', 'webp'].includes(extension ?? '')) {
         erreur(regle, `${nom}: « ${relatif} » — une matière est un SVG, un PNG ou un WebP.`, cle);
         return;
     }
-    const plafond = usage === 'ornement' ? TAILLES_MAXIMALES.ornement
+    const plafond = usage === 'icone' ? TAILLES_MAXIMALES.icone
+        : usage === 'ornement' ? TAILLES_MAXIMALES.ornement
         : estSvg ? TAILLES_MAXIMALES.matiereSvg : TAILLES_MAXIMALES.matiereImage;
     if (fichier.taille > plafond) {
         erreur(regle, `${nom}: « ${relatif} » pèse ${Math.round(fichier.taille / 1024)} Ko, au plus ${plafond / 1024} Ko.`, cle);
@@ -552,6 +559,41 @@ function verifierLesOrnements(fichier: FichierDuTheme, theme: ThemeAValider, err
             continue;
         }
         verifierUnFichierJoint(`ornement « ${emplacement} »`, undefined, chemin, 'ornement', theme, erreur);
+    }
+}
+
+/**
+ * **Les icônes du § 9** — contrat v1.6. Un nom hors de la liste est une erreur,
+ * comme un emplacement d'ornement inconnu : GM-OS ne le lirait pas, et le
+ * constructeur doit le dire au meneur plutôt que d'en inventer un.
+ */
+function verifierLesIcones(fichier: FichierDuTheme, theme: ThemeAValider, erreur: Signaler): void {
+    let table: unknown;
+    try {
+        table = JSON.parse(fichier.contenu ?? '');
+    } catch {
+        erreur('§ 9', '`icones.json` n\'est pas du JSON valide.');
+        return;
+    }
+    if (!table || typeof table !== 'object' || Array.isArray(table)) {
+        erreur('§ 9', '`icones.json` doit être un objet `{ "nom": "icones/<fichier>.svg" }`.');
+        return;
+    }
+    const noms = NOMS_D_ICONES.map(i => i.nom);
+    for (const [nom, chemin] of Object.entries(table as Record<string, unknown>)) {
+        if (!noms.includes(nom)) {
+            erreur('§ 9', `Icône « ${nom} » inconnue : GM-OS ne la lira pas. Les noms sont ceux du § 9. S'il en manque une au jeu, le signaler au meneur.`);
+            continue;
+        }
+        if (typeof chemin !== 'string') {
+            erreur('§ 9', `Icône « ${nom} » : un chemin est attendu.`);
+            continue;
+        }
+        if (!/^icones\/[\w.-]+\.svg$/.test(chemin.replace(/\\/g, '/').replace(/^\.\//, ''))) {
+            erreur('§ 9', `Icône « ${nom} » : « ${chemin} » doit être \`icones/<fichier>.svg\`.`);
+            continue;
+        }
+        verifierUnFichierJoint(`icône « ${nom} »`, undefined, chemin, 'icone', theme, erreur);
     }
 }
 

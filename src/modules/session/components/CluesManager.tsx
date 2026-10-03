@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Icone } from '../../../components/socle';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore, type Clue } from '../useSessionOSStore';
 import { useJournalStore } from '../../journal/useJournalStore';
@@ -189,7 +190,7 @@ const CluesManager: React.FC = () => {
             <div className="flex items-center justify-between">
                 <div className="space-y-2">
                     <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-4">
-                        <Search className="text-gm-gold" size={28} />
+                        <Icone nom="indice" taille={28} className="text-gm-gold" repli={<Search className="text-gm-gold" size={28} />} />
                         {t('modules:session.clues_manager.title')}
                     </h2>
                     <p className="text-sm text-app-text/40 tracking-wide uppercase font-bold">{t('modules:session.clues_manager.subtitle')}</p>
@@ -418,7 +419,7 @@ const CluesManager: React.FC = () => {
                                 {editingClue.mediaUrl ? (
                                     <ResolvedAsset src={resolvedMedia || ''} className="w-16 h-16 object-cover rounded-xl shadow-2xl rotate-3 group-hover:rotate-0 transition-transform duration-700" />
                                 ) : (
-                                    <Search className="text-gm-gold" size={40} strokeWidth={1.5} />
+                                    <Icone nom="indice" taille={40} className="text-gm-gold" repli={<Search className="text-gm-gold" size={40} strokeWidth={1.5} />} />
                                 )}
                                 <div className="absolute inset-0 bg-gm-gold/10 blur-xl opacity-20 animate-pulse" />
                             </div>

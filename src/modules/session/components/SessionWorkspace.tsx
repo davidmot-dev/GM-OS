@@ -7,7 +7,7 @@ import { useSessionStore } from '../../../store/useSessionStore';
 import { Eye, EyeOff, Lock, MapPin, Plus, Users, X, Clapperboard, ArrowRight, Search, Map as MapIcon } from 'lucide-react';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
-import { Panneau, Etiquette } from '../../../components/socle';
+import { Panneau, Etiquette, Icone } from '../../../components/socle';
 import { scenesDansLEtat } from '../logic/trame';
 
 import SessionClueDeck from './SessionClueDeck';
@@ -142,7 +142,7 @@ const SessionWorkspace: React.FC = () => {
                         {scenesEnCours.length > 1 && <Etiquette ton="alerte" className="whitespace-nowrap">{t('modules:session.workspace.agencement.scenes_ouvertes', { count: scenesEnCours.length })}</Etiquette>}
                         {/* Un raccourci vers la trame, pas un second écrivain de la
                             scène — décidé par David le 2026-09-29. */}
-                        {lienDeBloc(t('modules:session.workspace.agencement.changer_de_scene'), () => setCurrentView('trame'), <Clapperboard size={12} />)}
+                        {lienDeBloc(t('modules:session.workspace.agencement.changer_de_scene'), () => setCurrentView('trame'), <Icone nom="scene" taille={12} repli={<Clapperboard size={12} />} />)}
                     </div>
                 </div>
                 {scene?.resume && <p className="mt-3 max-w-3xl text-base leading-relaxed text-app-text">{scene.resume}</p>}
@@ -150,7 +150,7 @@ const SessionWorkspace: React.FC = () => {
 
             {/* 2. Qui est là : le groupe, puis les PNJ de la scène */}
             <Panneau className="flex-shrink-0">
-                {titreDeBloc(<Users size={16} />, t('modules:session.workspace.agencement.groupe', { count: groupe.length }),
+                {titreDeBloc(<Icone nom="pj" taille={16} repli={<Users size={16} />} />, t('modules:session.workspace.agencement.groupe', { count: groupe.length }),
                     lienDeBloc(t('modules:session.workspace.manage_group'), () => setCurrentView('players')))}
                 <div className="grid grid-cols-1 gap-3 px-4 pb-4 md:grid-cols-2">
                     {groupe.map(({ pc, ownerId }) => {
@@ -284,7 +284,7 @@ const SessionWorkspace: React.FC = () => {
                     </div>
                     <div className="flex flex-col gap-2">
                         <span className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-widest text-app-muted">
-                            <MapPin size={12} className="text-accent" />{t('modules:session.workspace.pinned_locations')}
+                            <Icone nom="lieu" taille={12} className="text-accent" repli={<MapPin size={12} className="text-accent" />} />{t('modules:session.workspace.pinned_locations')}
                         </span>
                         {activeLocations.map(loc => (
                             <button

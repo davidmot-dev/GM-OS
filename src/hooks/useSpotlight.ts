@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { gmCustom } from '../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
-import { CATALOGUE_DES_MODULES, MODULES_DE_LA_PALETTE } from '../data/catalogueDesModules';
+import { CATALOGUE_DES_MODULES, MODULES_DE_LA_PALETTE, ICONE_DU_MODULE } from '../data/catalogueDesModules';
 import { useRaccourcisStore } from '../stores/useRaccourcisStore';
 
 export type SpotlightCategory = 'entity' | 'audio' | 'map' | 'rule' | 'action';
@@ -32,6 +32,8 @@ export interface SpotlightResult {
   title: string;
   subtitle?: string;
   icon: LucideIcon;
+  /** Le nom d'icône du § 9 qu'un thème de jeu peut remplacer — sinon `icon` reste. */
+  icone?: string;
   action: () => void;
   shortcut?: string;
 }
@@ -102,6 +104,7 @@ export const useSpotlight = () => {
       title: t(CATALOGUE_DES_MODULES[id].cle),
       subtitle: 'Aller à',
       icon: LayoutGrid,
+      icone: ICONE_DU_MODULE[id],
       action: () => {
         setActiveModule(id);
         setIsOpen(false);
@@ -138,6 +141,7 @@ export const useSpotlight = () => {
           title: entity.name,
           subtitle: `Entité • ${entity.description}`,
           icon: User,
+          icone: 'pnj',
           action: () => {
             setSelectedEntity(entity.id);
             setActiveModule('dashboard' as ModuleID);
@@ -157,6 +161,7 @@ export const useSpotlight = () => {
           title: map.name,
           subtitle: `Atlas • ${map.type}`,
           icon: MapIcon,
+          icone: 'lieu',
           action: () => {
             setSelectedAtlasMap(map.id);
             setActiveModule('dashboard' as ModuleID);

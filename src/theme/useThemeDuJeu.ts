@@ -56,7 +56,7 @@ export function useThemeDuJeu(): void {
         return releve
             ? {
                 variables: pontVersLInterface(releve.jetons, { personnalites: allumees }),
-                jetons: releve.jetons, clarte: releve.clarte, ornements: releve.ornements,
+                jetons: releve.jetons, clarte: releve.clarte, ornements: releve.ornements, icones: releve.icones,
             }
             : undefined;
     };

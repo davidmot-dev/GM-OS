@@ -182,8 +182,37 @@ describe('validerLeTheme — ce qu\'il refuse', () => {
         expect(regles(feuille(), { 'ornements.json': { taille: table.length, contenu: table } })).toContain('§ 8');
     });
 
-    it('§ 9 : icones.json est réservé', () => {
-        expect(regles(feuille(), { 'icones.json': { taille: 2, contenu: '{}' } })).toContain('§ 9');
+    /* § 9, publié en v1.6 (phase 6) : icones.json n'est plus réservé, il est vérifié. */
+    it('§ 9 : des icônes conformes passent', () => {
+        const table = JSON.stringify({ combat: 'icones/combat.svg', sante: 'icones/sante.svg' });
+        const r = valider(feuille(), {
+            'icones.json': { taille: table.length, contenu: table },
+            'icones/combat.svg': { taille: SVG.length, contenu: SVG },
+            'icones/sante.svg': { taille: SVG.length, contenu: SVG },
+        });
+        expect(r.erreurs).toEqual([]);
+    });
+
+    it('§ 9 : un nom d\'icône inventé', () => {
+        const table = JSON.stringify({ vaisseau: 'icones/v.svg' });
+        expect(regles(feuille(), {
+            'icones.json': { taille: table.length, contenu: table },
+            'icones/v.svg': { taille: SVG.length, contenu: SVG },
+        })).toContain('§ 9');
+    });
+
+    it('§ 9 : une icône hors du dossier icones/, ou qui n\'est pas sûre', () => {
+        const dehors = JSON.stringify({ combat: 'ornements/coin.svg' });
+        expect(regles(feuille(), {
+            'icones.json': { taille: dehors.length, contenu: dehors },
+            'ornements/coin.svg': { taille: SVG.length, contenu: SVG },
+        })).toContain('§ 9');
+        const script = SVG.replace('</svg>', '<script>alert(1)</script></svg>');
+        const table = JSON.stringify({ combat: 'icones/combat.svg' });
+        expect(regles(feuille(), {
+            'icones.json': { taille: table.length, contenu: table },
+            'icones/combat.svg': { taille: script.length, contenu: script },
+        })).toContain('§ 8');
     });
 
     it('§ 11 : !important, et une @media avant la fin des jetons', () => {

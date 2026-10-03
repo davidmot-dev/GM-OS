@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Icone } from '../../../components/socle';
 import { useTranslation } from 'react-i18next';
 import { 
     Sparkles, X, ExternalLink, RefreshCw, Send, MessageSquare, 
@@ -231,7 +232,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                             }`}
                         >
                             <span className={`shrink-0 rounded-md border p-2 ${isQuerying ? 'border-accent bg-accent/20 animate-pulse' : 'border-app-border bg-app-bg'}`}>
-                                <GemIcon size={18} className="text-accent" />
+                                <Icone nom="oracle" taille={18} className="text-accent" repli={<GemIcon size={18} className="text-accent" />} />
                             </span>
                             <span className="min-w-0 flex-1 text-left">
                                 <span className="block text-ui-9 font-black uppercase tracking-[0.15em] text-app-muted">Persona</span>
@@ -390,7 +391,7 @@ const OraclePanel: React.FC<OraclePanelProps> = ({ isOpen, onClose, campaignNote
                                     {messages.length === 0 ? (
                                         <div className="flex flex-col items-center justify-center p-12 text-center">
                                             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-accent/20 bg-accent/5">
-                                                <GemIcon size={40} className="text-accent" />
+                                                <Icone nom="oracle" taille={40} className="text-accent" repli={<GemIcon size={40} className="text-accent" />} />
                                             </div>
                                             <h4 className="mb-2 text-lg font-bold text-app-text">Consultation : {nomDuPersona}</h4>
                                             <p className="max-w-sm text-sm text-app-muted">{activeGem ? t(activeGem.description) : "Posez vos questions sur les règles ou l'univers."}</p>

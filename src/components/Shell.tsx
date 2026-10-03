@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import { Icone } from './socle';
 import {
     Music,
     Volume2,
@@ -309,13 +310,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                 <nav className="flex-1 flex flex-col gap-1 overflow-y-auto pr-2 custom-scrollbar">
                     <NavItem
-                        icon={<LayoutDashboard size={20} />}
+                        icon={<Icone nom="tableau-de-bord" taille={20} repli={<LayoutDashboard size={20} />} />}
                         label={t('modules:names.dashboard')}
                         active={activeModule === 'dashboard'}
                         onClick={() => setActiveModule('dashboard')}
                     />
                     <NavItem
-                        icon={<BookOpen size={20} />}
+                        icon={<Icone nom="journal" taille={20} repli={<BookOpen size={20} />} />}
                         label={t('modules:names.journal')}
                         active={activeModule === 'journal'}
                         onClick={() => setActiveModule('journal')}
@@ -326,7 +327,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         partie. Elle est donc atteignable sans campagne ouverte.
                     */}
                     <NavItem
-                        icon={<Hammer size={20} />}
+                        icon={<Icone nom="forge" taille={20} repli={<Hammer size={20} />} />}
                         label={t('modules:names.forge')}
                         active={activeModule === 'forge'}
                         onClick={() => setActiveModule('forge')}
@@ -336,25 +337,25 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/60 uppercase tracking-widest">{t('common:audio', 'Audio')}</div>
                     <NavItem
-                        icon={<Music size={20} />}
+                        icon={<Icone nom="musique" taille={20} repli={<Music size={20} />} />}
                         label={t('modules:names.music')}
                         active={activeModule === 'music'}
                         onClick={() => setActiveModule('music')}
                     />
                     <NavItem
-                        icon={<Volume2 size={20} />}
+                        icon={<Icone nom="effets-sonores" taille={20} repli={<Volume2 size={20} />} />}
                         label={t('modules:names.sound')}
                         active={activeModule === 'sound'}
                         onClick={() => setActiveModule('sound')}
                     />
                     <NavItem
-                        icon={<Wind size={20} />}
+                        icon={<Icone nom="ambiances" taille={20} repli={<Wind size={20} />} />}
                         label={t('modules:names.ambient')}
                         active={activeModule === 'ambient'}
                         onClick={() => setActiveModule('ambient')}
                     />
                     <NavItem
-                        icon={<Mic2 size={20} />}
+                        icon={<Icone nom="voix" taille={20} repli={<Mic2 size={20} />} />}
                         label={t('modules:names.voice')}
                         active={activeModule === 'voice'}
                         onClick={() => setActiveModule('voice')}
@@ -364,19 +365,19 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{t('common:global', 'Global')}</div>
                     <NavItem
-                        icon={<Star size={20} className="text-gm-gold" />}
+                        icon={<Icone nom="favoris" taille={20} className="text-gm-gold" repli={<Star size={20} className="text-gm-gold" />} />}
                         label={t('modules:names.favorite')}
                         active={activeModule === 'favorite'}
                         onClick={() => setActiveModule('favorite')}
                     />
                     <NavItem
-                        icon={<Sparkles size={20} className="text-gm-violet" />}
+                        icon={<Icone nom="nexus" taille={20} className="text-gm-violet" repli={<Sparkles size={20} className="text-gm-violet" />} />}
                         label={t('modules:names.obsidian')}
                         active={activeModule === 'obsidian'}
                         onClick={() => setActiveModule('obsidian')}
                     />
                     <NavItem
-                        icon={<Brain size={20} className="text-accent" />}
+                        icon={<Icone nom="cortex" taille={20} className="text-accent" repli={<Brain size={20} className="text-accent" />} />}
                         label={t('common:aiPanel')}
                         active={isAIPanelOpen}
                         onClick={() => toggleAIPanel()}
@@ -386,25 +387,25 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{t('common:aventure', 'Aventure')}</div>
                     <NavItem
-                        icon={<Sword size={20} />}
+                        icon={<Icone nom="combat" taille={20} repli={<Sword size={20} />} />}
                         label={t('modules:names.combat')}
                         active={activeModule === 'combat'}
                         onClick={() => setActiveModule('combat')}
                     />
                     <NavItem
-                        icon={<Dices size={20} />}
+                        icon={<Icone nom="des" taille={20} repli={<Dices size={20} />} />}
                         label={t('modules:names.dice')}
                         active={activeModule === 'dice'}
                         onClick={() => setActiveModule('dice')}
                     />
                     <NavItem
-                        icon={<Users size={20} />}
+                        icon={<Icone nom="pnj" taille={20} repli={<Users size={20} />} />}
                         label={t('modules:names.npc')}
                         active={activeModule === 'npc'}
                         onClick={() => setActiveModule('npc')}
                     />
                     <NavItem
-                        icon={<MapIcon size={20} />}
+                        icon={<Icone nom="carte" taille={20} repli={<MapIcon size={20} />} />}
                         label={t('modules:names.map')}
                         active={activeModule === 'map'}
                         onClick={() => setActiveModule('map')}
@@ -414,43 +415,43 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{t('common:outils', 'Outils')}</div>
                     <NavItem
-                        icon={<FolderOpen size={20} className="text-gm-cyan" />}
+                        icon={<Icone nom="mediatheque" taille={20} className="text-gm-cyan" repli={<FolderOpen size={20} className="text-gm-cyan" />} />}
                         label={t('common:mediaHub', 'Media Hub')}
                         active={false}
                         onClick={() => openMediaHub()}
                     />
                     <NavItem
-                        icon={<ImageIcon size={20} />}
+                        icon={<Icone nom="image" taille={20} repli={<ImageIcon size={20} />} />}
                         label={t('modules:names.image')}
                         active={activeModule === 'image'}
                         onClick={() => setActiveModule('image')}
                     />
                     <NavItem
-                        icon={<Clock size={20} />}
+                        icon={<Icone nom="horloge" taille={20} repli={<Clock size={20} />} />}
                         label={t('modules:names.clock')}
                         active={activeModule === 'clock'}
                         onClick={() => setActiveModule('clock')}
                     />
                     <NavItem
-                        icon={<Lightbulb size={20} />}
+                        icon={<Icone nom="lumiere" taille={20} repli={<Lightbulb size={20} />} />}
                         label={t('modules:names.light')}
                         active={activeModule === 'light'}
                         onClick={() => setActiveModule('light')}
                     />
                     <NavItem
-                        icon={<Table size={20} />}
+                        icon={<Icone nom="tables" taille={20} repli={<Table size={20} />} />}
                         label={t('modules:names.table')}
                         active={activeModule === 'table'}
                         onClick={() => setActiveModule('table')}
                     />
                     <NavItem
-                        icon={<Globe size={20} />}
+                        icon={<Icone nom="navigateur" taille={20} repli={<Globe size={20} />} />}
                         label={t('modules:names.web')}
                         active={activeModule === 'web'}
                         onClick={() => setActiveModule('web')}
                     />
                     <NavItem
-                        icon={<Edit3 size={20} />}
+                        icon={<Icone nom="tableau-blanc" taille={20} repli={<Edit3 size={20} />} />}
                         label={t('modules:names.whiteboard')}
                         active={activeModule === 'whiteboard'}
                         onClick={() => setActiveModule('whiteboard')}
@@ -480,7 +481,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             className={`flex-1 py-3 flex items-center justify-center transition-all ${activeModule === 'aide' ? 'text-accent bg-accent/10' : 'text-app-text/50 hover:text-accent hover:bg-accent/10'}`}
                             title={`${t('modules:names.aide')} — Ctrl+H`}
                         >
-                            <HelpCircle size={18} />
+                            <Icone nom="aide" taille={18} repli={<HelpCircle size={18} />} />
                         </button>
                         <button 
                             onClick={() => setActiveModule('debug')}
