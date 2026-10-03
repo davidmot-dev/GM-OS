@@ -5,6 +5,7 @@ import type { MediaItem } from '../../../stores/useMediaStore';
 import { useTranslation } from 'react-i18next';
 import {
     ondeDuSon, dureeLisible, estDuTexte, debutDuTexte, TAILLE_MAX_POUR_L_ONDE,
+    estUnPdf, premierePageDuPdf, TAILLE_MAX_POUR_LA_PAGE,
 } from '../../../components/media/apercuDesMedias';
 
 interface MediaItemThumbnailProps {
@@ -97,24 +98,38 @@ const VignetteDeVideo: React.FC<{ url: string }> = ({ url }) => {
 };
 
 /**
- * **Le document montre son début** — pour du texte (markdown, txt). Un PDF
- * reste une icône : en montrer la première page demanderait une bibliothèque
- * de rendu que GM-OS n'embarque pas.
+ * **Le document montre son début** — le texte (markdown, txt) ses premières
+ * lignes, le PDF sa première page (pdf.js, jusqu'à 100 Mo). Le reste, ou un
+ * PDF illisible, garde l'icône.
  */
 const VignetteDeDocument: React.FC<{ media: MediaItem; url: string }> = ({ media, url }) => {
     const { t } = useTranslation('modules');
     const [ref, visible] = useVisible<HTMLDivElement>();
     const [lignes, setLignes] = useState<string[] | null>(null);
+    const [page, setPage] = useState<string | null>(null);
     const texte = estDuTexte(media.name);
+    const pdf = estUnPdf(media.name) && media.size <= TAILLE_MAX_POUR_LA_PAGE;
     const ext = media.name.split('.').pop()?.toUpperCase() ?? 'DOC';
 
     useEffect(() => {
-        if (!visible || !texte) return;
+        if (!visible) return;
         let vivant = true;
-        fetch(url).then(r => r.text()).then(tx => { if (vivant) setLignes(debutDuTexte(tx)); }).catch(() => { /* l'icône reste */ });
+        if (texte) {
+            fetch(url).then(r => r.text()).then(tx => { if (vivant) setLignes(debutDuTexte(tx)); }).catch(() => { /* l'icône reste */ });
+        } else if (pdf) {
+            void premierePageDuPdf(media.id, url).then(p => { if (vivant) setPage(p); });
+        }
         return () => { vivant = false; };
-    }, [visible, texte, url]);
+    }, [visible, texte, pdf, media.id, url]);
 
+    if (page) {
+        return (
+            <div ref={ref} className="relative h-full w-full bg-app-surface-2">
+                <img src={page} alt={media.name} className="h-full w-full object-cover object-top" />
+                <span className="absolute bottom-2 left-2 rounded bg-app-bg/85 px-1.5 py-0.5 text-ui-9 font-black uppercase tracking-widest text-app-text">{ext}</span>
+            </div>
+        );
+    }
     if (texte && lignes && lignes.length > 0) {
         return (
             <div ref={ref} className="h-full w-full overflow-hidden bg-app-surface-2 p-3 pt-8">

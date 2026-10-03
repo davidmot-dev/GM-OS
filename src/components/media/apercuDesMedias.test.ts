@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cretesDepuisLesEchantillons, dureeLisible, debutDuTexte, estDuTexte } from './apercuDesMedias';
+import { cretesDepuisLesEchantillons, dureeLisible, debutDuTexte, estDuTexte, estUnPdf } from './apercuDesMedias';
 
 describe("l'onde d'un son", () => {
     it('rend une crête par barre, ramenée à la plus haute', () => {
@@ -32,5 +32,12 @@ describe("le début d'un document", () => {
     it('ne prend que le texte', () => {
         expect(estDuTexte('notes.md')).toBe(true);
         expect(estDuTexte('regles.PDF')).toBe(false);
+    });
+
+    it('reconnaît un PDF, quelle que soit la casse — et rien d’autre', () => {
+        expect(estUnPdf('regles.PDF')).toBe(true);
+        expect(estUnPdf('scenario.pdf')).toBe(true);
+        expect(estUnPdf('notes.md')).toBe(false);
+        expect(estUnPdf('pdf.txt')).toBe(false);
     });
 });

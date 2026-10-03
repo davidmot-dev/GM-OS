@@ -83,3 +83,53 @@ export function ondeDuSon(id: string, url: string, barres = 48): Promise<Apercu 
     cache.set(id, travail);
     return travail;
 }
+
+/** Les documents dont on peut montrer la première page : le PDF, par pdf.js. */
+export const estUnPdf = (nom: string) => /\.pdf$/i.test(nom);
+
+/**
+ * Au-delà, un PDF reste une icône. Le protocole `gmos://` ne sert pas de
+ * lecture partielle : pdf.js lirait tout le livre de règles pour en montrer la
+ * couverture.
+ */
+export const TAILLE_MAX_POUR_LA_PAGE = 100 * 1024 * 1024;
+
+const pages = new Map<string, Promise<string | null>>();
+
+/**
+ * **La première page d'un PDF, en image** — refonte, L6, accord de David le
+ * 2026-10-03 pour pdf.js. Comme l'onde : une fois par média, une à la fois, et
+ * dans la même file — une grille mêlant sons et PDF ne décode qu'une chose à
+ * la fois. pdf.js n'est chargé qu'au premier PDF affiché.
+ */
+export function premierePageDuPdf(id: string, url: string, largeur = 480): Promise<string | null> {
+    const deja = pages.get(id);
+    if (deja) return deja;
+    const travail = file.then(async () => {
+        try {
+            const pdfjs = await import('pdfjs-dist');
+            if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+                pdfjs.GlobalWorkerOptions.workerSrc = (await import('pdfjs-dist/build/pdf.worker.min.mjs?url')).default;
+            }
+            // `isEvalSupported: false` : un PDF ne fait jamais exécuter de code construit à la volée.
+            const document = await pdfjs.getDocument({ url, isEvalSupported: false }).promise;
+            try {
+                const page = await document.getPage(1);
+                const echelle = largeur / page.getViewport({ scale: 1 }).width;
+                const viewport = page.getViewport({ scale: echelle });
+                const toile = window.document.createElement('canvas');
+                toile.width = Math.ceil(viewport.width);
+                toile.height = Math.ceil(viewport.height);
+                await page.render({ canvas: toile, viewport }).promise;
+                return toile.toDataURL('image/jpeg', 0.85);
+            } finally {
+                void document.destroy();
+            }
+        } catch {
+            return null;
+        }
+    });
+    file = travail;
+    pages.set(id, travail);
+    return travail;
+}

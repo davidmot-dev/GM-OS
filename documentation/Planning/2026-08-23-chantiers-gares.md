@@ -5456,9 +5456,9 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
   **papier clair du tableau blanc**, **les quatre écrans de démarrage**). La garde
   `electron/couleursBrutes.test.ts` ignore désormais les **lignes** de commentaire (par ligne, pas
   par bloc : un `` `${type}/*` `` aurait ouvert un faux bloc) et vérifie **tout `src/`**.
-  ⚠️ **Question ouverte à David** : la décision **Q4** du 17/09 disait *« la garde reste une liste,
-  jamais un “tout src/” »* — prise quand seuls L1 et L2 devaient migrer. Garder le contrôle global
-  ou revenir aux seules listes ?
+  ✅ **Q4 révisée par David le 2026-10-03 : le contrôle global sur tout `src/` reste.** La
+  décision du 17/09 (*« la garde reste une liste, jamais un “tout src/” »*) avait été prise quand
+  seuls L1 et L2 devaient migrer ; tout `src/` l'est désormais.
 - **Phase 4, étape 2 — le réagencement selon les maquettes retenues : FAIT pour les lots L1 à L6**,
   **Voice-OS compris** (03/10 : trois colonnes, le micro au centre, les effets en deux groupes ;
   « Latence 12ms » et « Charge DSP 4% » écrits en dur et le bouton « Profil personnalisé » sans
@@ -5482,8 +5482,12 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
   une tablette ; la page intégrée du navigateur sur les vrais sites ; les vignettes vidéo de la
   médiathèque ; les écrans de tablette en général. **Redémarrer GM-OS en entier** au prochain
   lancement : `electron/main.ts` a changé (`webviewTag`).
-- **Gardé pour plus tard** : la première page d'un PDF dans la médiathèque demanderait une
-  bibliothèque de rendu (pdf.js) — pas installée sans accord ; les `shadow-glow-accent`,
+- ✅ **La première page d'un PDF dans la médiathèque** (accord de David le 2026-10-03) :
+  `pdfjs-dist` 5.4.296 déclaré en dépendance directe — il était déjà là, tiré par `pdf-parse`,
+  rien n'a été téléchargé. Chargé à part au premier PDF affiché, dans la même file que l'onde des
+  sons ; jusqu'à 100 Mo (le protocole `gmos://` ne sert pas de lecture partielle). Éprouvé dans
+  l'application construite sur une fiche de personnage du dépôt.
+- **Gardé pour plus tard** : les `shadow-glow-accent`,
   `glow-emerald`, `glow-blue`, `glow-indigo` employés partout **n'existent pas** dans
   `tailwind.config` (aucun halo, avant comme après) — à régler en phase 5.
 - **Phase 6 — les icônes (V4) : COMMENCÉE le 2026-10-03, sur décision de David** alors que sa
@@ -5503,8 +5507,12 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
   - **Témoin permanent** `e2e/iconesDuJeu.spec.ts` (T6.6) : un jeu de test fournit combat, dés et
     PNJ ; les trois remplacent ceux de GM-OS, la musique garde le sien. Constructeur de thèmes
     passé en 0.6.0 (§ 9 dans `SKILL.md`, cahier recopié).
-  - **Pas fait** : **aucun jeu réel ne livre encore d'icônes** — le premier viendra du
-    constructeur ; le **chargeur des paquets** de la phase 6 n'est pas commencé.
+  - **Le chargeur de paquet (T6.1) existait déjà**, par morceaux : `chargerLeThemeDuJeu` lit
+    `theme.css`, incorpore les matières (v1.4), les ornements (v1.5) et les icônes (v1.6), confine
+    chaque chemin au dossier du thème et rend `null` sans thème. Matière (T6.2), ornements (T6.4)
+    et icônes (T6.5) sont faits. **Restent** : **T6.3**, la garde de contraste du texte **sur la
+    matière** (aujourd'hui, seulement sur la couleur) ; **T6.6 sur un vrai jeu** — aucun jeu réel
+    ne livre encore d'icônes, le premier viendra du constructeur.
 - **La suite** : **une séance jouée** (règle du plan) ; **phase 5, le fini** (halos,
   anneau de focus, bordures, transitions — dans les primitives) ; un premier jeu livré avec ses
   icônes, à regarder à l'écran.
@@ -5613,7 +5621,7 @@ nous.*
 | **Q1** | Les 4 thèmes d'interface survivent-ils ? | ✅ **Oui, et ils sont un axe INDÉPENDANT du jeu** | Chaque nouvelle échelle reçoit **4 jeux de valeurs** par défaut. Mais le **jeu n'en fournit qu'un** : il se pose par-dessus la palette active, donc le pont reste à une dimension |
 | **Q2** | Le thème clair est-il encore voulu ? | ✅ **Oui, explicitement** — *« je veux conserver un thème clair »* | Chaque jeton, halo et seuil validé **deux fois**. C'est la moitié de la phase 1 — et ce n'est plus un héritage, c'est une exigence |
 | **Q3** | Les 7 accents `gm-*` face à l'accent unique du jeu ? | ✅ **DÉRIVÉS de l'accent effectif** | Une fonction de dérivation, et ⚠️ **deux garanties au lieu d'une** — voir ci-dessous |
-| **Q4** | Jusqu'où va la migration des 214 fichiers ? | ✅ **L1 + L2, puis on rejuge** — 46 fichiers | La garde anti-couleurs-brutes reste **une liste**, jamais un « tout `src/` » |
+| **Q4** | Jusqu'où va la migration des 214 fichiers ? | ✅ **L1 + L2, puis on rejuge** — 46 fichiers | La garde anti-couleurs-brutes reste **une liste**, jamais un « tout `src/` » — ✅ **révisé le 2026-10-03 : contrôle global sur tout `src/`** (§ 76) |
 | **Q5** | Jusqu'où vont « les éléments visuels » ? | ✅ **Les quatre** — V1 forme, V2 matière, V3 ornement, V4 iconographie | V1 en phases 1 et 3 ; V2–V4 deviennent la **phase 6** |
 
 ⭐ **Le piège de Q3, et il vaut d'être écrit.** La dérivation doit garantir **deux** choses : assez de
