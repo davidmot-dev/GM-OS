@@ -213,6 +213,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                         personnage={{
                             id: character.id,
                             name: character.name,
+                            donneesModifieesLe: character.donneesModifieesLe,
                             sheetData: character.sheetData ?? {},
                             narratif: {
                                 description: character.description ?? '',

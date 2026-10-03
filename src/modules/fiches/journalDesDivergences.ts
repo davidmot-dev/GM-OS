@@ -41,6 +41,12 @@ export interface SujetDuJournal {
     personnage: string;
     /** L'identifiant du gabarit de fiche, pour retrouver la table en cause. */
     gabarit: string;
+    /**
+     * Qui a écrasé l'autre — `fiche` par défaut. Depuis le 2026-10-03 (option A
+     * de David : *« la dernière écriture gagne »*), GM-OS peut aussi écraser la
+     * fiche, quand c'est lui qui a écrit en dernier.
+     */
+    sens?: 'fiche' | 'gmos';
 }
 
 /** Rend une valeur lisible dans une ligne de journal, sans la laisser s'étaler. */
@@ -54,7 +60,8 @@ function lisible(valeur: unknown): string {
 
 /** La ligne telle qu'elle apparaît dans `main.log`. */
 export function ligneDeDivergence(sujet: SujetDuJournal, d: Divergence): string {
-    return `[Fiche] « ${sujet.personnage} » (${sujet.gabarit}) — la fiche fait foi sur `
+    const qui = sujet.sens === 'gmos' ? 'GM-OS, plus récent, fait foi' : 'la fiche fait foi';
+    return `[Fiche] « ${sujet.personnage} » (${sujet.gabarit}) — ${qui} sur `
         + `« ${d.cle} » : ${lisible(d.ancienne)} → ${lisible(d.nouvelle)}`;
 }
 

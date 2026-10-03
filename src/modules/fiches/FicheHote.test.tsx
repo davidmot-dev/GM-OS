@@ -373,3 +373,53 @@ describe('FicheHote', () => {
         expect(pont.fermer).toHaveBeenCalled();
     });
 });
+
+/**
+ * **La dernière écriture gagne** — option A de David, 2026-10-03. La Force
+ * corrigée dans le Formulaire ne partait jamais vers la fiche, et la fiche la
+ * remettait à l'ancienne valeur à la réouverture.
+ */
+describe('FicheHote — la dernière écriture gagne', () => {
+    it('à l’ouverture, GM-OS plus récent pousse ses valeurs vers la fiche, et la fiche ne les écrase pas', async () => {
+        const { pont } = faireUnPont();
+        const rapprochement = vi.fn();
+        render(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1', donneesModifieesLe: 10 }} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={rapprochement} fabriquerLePont={() => pont} />);
+        charger();
+
+        await waitFor(() => expect(pont.ecrire).toHaveBeenCalled());
+        expect(vi.mocked(pont.ecrire).mock.calls[0][0]).toMatchObject({ 'identity.name': 'Rick' });
+        // Rien à rapprocher : la fiche porte désormais ce que GM-OS savait.
+        await new Promise(r => setTimeout(r, 0));
+        expect(rapprochement.mock.calls.some(([r]) => 'nom' in (r.aEcrire ?? {}))).toBe(false);
+    });
+
+    it('à l’ouverture, la fiche plus récente fait foi, comme avant', async () => {
+        const { pont } = faireUnPont();
+        const rapprochement = vi.fn();
+        render(<FicheHote personnage={{ ...PERSONNAGE, ficheId: 'f-1', donneesModifieesLe: 0.5 }} table={TABLE} onFicheLiee={vi.fn()} onRapprochement={rapprochement} fabriquerLePont={() => pont} />);
+        charger();
+
+        await waitFor(() => expect(rapprochement).toHaveBeenCalled());
+        expect(rapprochement.mock.calls[0][0].aEcrire).toMatchObject({ nom: 'Rick Deckard' });
+        expect(pont.ecrire).not.toHaveBeenCalled();
+    });
+
+    it('fiche ouverte, ce que GM-OS change part aussitôt — et seulement cela', async () => {
+        const { pont } = faireUnPont();
+        const props = { table: TABLE, onFicheLiee: vi.fn(), onRapprochement: vi.fn(), fabriquerLePont: () => pont };
+        const aligne = { ...PERSONNAGE, ficheId: 'f-1', sheetData: { nom: 'Rick Deckard', vigueur: 'C (D8)' } };
+        const vue = render(<FicheHote personnage={aligne} {...props} />);
+        charger();
+        await waitFor(() => expect(pont.ouvrirPersonnage).toHaveBeenCalled());
+        await new Promise(r => setTimeout(r, 0));
+        vi.mocked(pont.ecrire).mockClear();
+
+        // Le meneur sauvegarde le Formulaire : la vigueur change, le nom non.
+        vue.rerender(<FicheHote personnage={{ ...aligne, sheetData: { nom: 'Rick Deckard', vigueur: 'B (D10)' } }} {...props} />);
+        await waitFor(() => expect(pont.ecrire).toHaveBeenCalledTimes(1));
+        const lot = vi.mocked(pont.ecrire).mock.calls[0][0];
+        expect(Object.keys(lot).some(k => k.startsWith('attributes.vigor'))).toBe(true);
+        expect(lot).not.toHaveProperty('identity.name');
+    });
+});
+

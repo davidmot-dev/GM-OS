@@ -153,6 +153,16 @@ export type EntitySlice = EntitySliceState & EntitySliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
+/**
+ * **Une écriture touche-t-elle les données que la fiche HTML reflète ?**
+ * `sheetData`, le narratif, l'inventaire — c'est d'eux que `donneesModifieesLe`
+ * date la dernière écriture, pour arbitrer avec la fiche (option A de David,
+ * 2026-10-03 : *« la dernière écriture gagne »*). Le portrait ou les PV seuls ne
+ * comptent pas : la fiche n'en dit rien.
+ */
+const CLES_DES_DONNEES = ['sheetData', 'description', 'gmNotes', 'playerNotes', 'inventory', 'inventoryItems'] as const;
+const toucheLesDonnees = (updates: Partial<PlayerCharacter>) => CLES_DES_DONNEES.some(k => k in updates);
+
 export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> = (set, get) => ({
     // Initial State
     entities: [],
@@ -451,6 +461,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                           characters: p.characters.map((c) => {
                                 if (c.id !== characterId) return c;
                                 const updated = { ...c, ...updates };
+                                // La date de la dernière écriture des données — l'arbitre face à la fiche (`pousseeVersLaFiche.ts`).
+                                if (toucheLesDonnees(updates) && updates.donneesModifieesLe === undefined) updated.donneesModifieesLe = Date.now();
 
                                 // Auto-sync HealthSystem
                                 const currentVal = updates.hp !== undefined ? updates.hp : updated.hp;
@@ -471,7 +483,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                           ...p,
                           characters: p.characters.map((c) =>
                               c.id === characterId
-                                  ? { ...c, sheetData: { ...c.sheetData, [fieldId]: value } }
+                                  ? { ...c, sheetData: { ...c.sheetData, [fieldId]: value }, donneesModifieesLe: Date.now() }
                                   : c
                           ),
                       }
@@ -561,6 +573,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                                     ...(updates.inventory !== undefined ? { inventory: updates.inventory } : {}),
                                     ...(updates.inventoryItems ? { inventoryItems: updates.inventoryItems } : {}),
                                     sheetData: { ...c.sheetData, ...(updates.sheetData ?? {}) },
+                                    donneesModifieesLe: Date.now(),
                                 }
                                 : c
                         ),
@@ -605,7 +618,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                         ...p,
                         characters: p.characters.map((c) =>
                             c.id === characterId
-                                ? { ...c, inventoryItems: [...(c.inventoryItems ?? []), newItem] }
+                                ? { ...c, inventoryItems: [...(c.inventoryItems ?? []), newItem], donneesModifieesLe: Date.now() }
                                 : c
                         ),
                     }
@@ -622,7 +635,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                         ...p,
                         characters: p.characters.map((c) =>
                             c.id === characterId
-                                ? { ...c, inventoryItems: (c.inventoryItems ?? []).filter(i => i.id !== itemId) }
+                                ? { ...c, inventoryItems: (c.inventoryItems ?? []).filter(i => i.id !== itemId), donneesModifieesLe: Date.now() }
                                 : c
                         ),
                     }

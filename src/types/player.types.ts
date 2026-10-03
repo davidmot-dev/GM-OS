@@ -116,6 +116,13 @@ export interface PlayerCharacter {
      * deux, et il pointe vers une base que GM-OS ne détient pas.
      */
     ficheId?: string;
+    /**
+     * Quand GM-OS a écrit pour la dernière fois les données que la fiche reflète
+     * (`sheetData`, narratif, inventaire), en millisecondes. À l'ouverture de la
+     * fiche, le plus récent des deux gagne — option A de David, 2026-10-03.
+     * Absent sur un PJ d'avant ce réglage : la fiche fait foi, comme avant.
+     */
+    donneesModifieesLe?: number;
     sheetData: Record<string, unknown>;
     description?: string;
     gmNotes?: string;

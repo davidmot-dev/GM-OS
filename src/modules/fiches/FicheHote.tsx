@@ -8,6 +8,14 @@ import { versLaFiche, type CorrespondanceDeFiche, type CotesGmOs } from './corre
 import { rapprocher, type Rapprochement } from './rapprochementDeLaFiche';
 import { journaliserLesDivergences } from './journalDesDivergences';
 import { useBibliothequeDesFiches } from './useBibliothequeDesFiches';
+import { pousseeVersLaFiche, gmosEstPlusRecent } from './pousseeVersLaFiche';
+
+/** Ce que la correspondance lit d'un PJ — et seulement cela, figé pour comparer. */
+const cotesDe = (pj: CotesGmOs): CotesGmOs => ({
+    sheetData: { ...(pj.sheetData ?? {}) },
+    narratif: pj.narratif ? { ...pj.narratif } : undefined,
+    inventoryItems: pj.inventoryItems ? [...pj.inventoryItems] : undefined,
+});
 
 /**
  * **L'hôte : la fiche HTML affichée dans GM-OS, et branchée.**
@@ -45,6 +53,8 @@ export interface PersonnageDeLHote extends CotesGmOs {
     name: string;
     /** L'identifiant de sa fiche dans la bibliothèque du moteur, s'il en a une. */
     ficheId?: string;
+    /** Quand GM-OS a écrit ses données pour la dernière fois — l'arbitre à l'ouverture. */
+    donneesModifieesLe?: number;
 }
 
 /**
@@ -152,12 +162,38 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         }, 2_000);
     }, [liaison]);
 
-    /** La fiche vient de parler : elle fait foi, et on dit ce qu'elle écrase. */
-    const accueillir = React.useCallback((fiche: InstantaneDeFiche | null) => {
-        if (!fiche) return;
-        setEtat({ nom: 'branchee', fiche });
+    /**
+     * Ce que la fiche porte, tel que l'hôte l'a vu en dernier, et le PJ d'alors —
+     * de quoi pousser vers la fiche **ce que GM-OS change** pendant qu'elle est
+     * ouverte (`pousseeVersLaFiche.ts`). L'identifiant garde d'écrire les
+     * données d'un PJ dans la fiche d'un autre au moment où l'on en change.
+     */
+    const vue = React.useRef<{ pjId: string; fiche: InstantaneDeFiche; precedent: CotesGmOs } | null>(null);
 
+    /**
+     * La fiche vient de parler.
+     *
+     * **À l'ouverture**, le plus récent des deux gagne — option A de David,
+     * 2026-10-03 : si GM-OS a écrit après la fiche (le Formulaire, la tablette,
+     * Dice-OS), ses valeurs partent d'abord vers la fiche. **Pendant la saisie**,
+     * c'est la fiche qui vient d'écrire : elle fait foi, comme avant. Dans les
+     * deux sens, ce qui est écrasé va au journal.
+     */
+    const accueillir = React.useCallback(async (fiche: InstantaneDeFiche | null, ouverture = false) => {
+        if (!fiche) return;
         const { personnage: pj, table: t, onRapprochement: rendre } = dernier.current;
+
+        if (t && ouverture && pont.current && gmosEstPlusRecent(pj.donneesModifieesLe, fiche.updatedAt)) {
+            const { lot, divergences } = pousseeVersLaFiche(pj, null, fiche.data, t);
+            if (Object.keys(lot).length > 0) {
+                journaliserLesDivergences({ personnage: pj.name, gabarit: t.gabaritDeLaFiche, sens: 'gmos' }, divergences);
+                const ecrite = await pont.current.ecrire(lot).catch(() => null);
+                fiche = ecrite ?? { ...fiche, data: { ...fiche.data, ...lot } };
+            }
+        }
+
+        vue.current = { pjId: pj.id, fiche, precedent: cotesDe(pj) };
+        setEtat({ nom: 'branchee', fiche });
         if (!t) return;
 
         const releve = rapprocher(fiche.data, pj, t);
@@ -178,8 +214,8 @@ const FicheHote: React.FC<FicheHoteProps> = ({
       bibliothèque du moteur a changé. La brancher sur le store de GM-OS aurait
       copié à contretemps — après coup, ou pour rien.
     */
-    const accueillirEtCopier = React.useCallback((fiche: InstantaneDeFiche | null) => {
-        accueillir(fiche);
+    const accueillirEtCopier = React.useCallback((fiche: InstantaneDeFiche | null, ouverture = false) => {
+        void accueillir(fiche, ouverture);
         if (fiche) emporterUneCopie();
     }, [accueillir, emporterUneCopie]);
 
@@ -203,7 +239,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         if (liaison === 'locale') {
             const connue = ficheLocaleConnue(pj.id);
             if (connue) {
-                try { accueillirEtCopier(await p.ouvrirPersonnage(connue)); return; } catch { /* effacée : on resème */ }
+                try { accueillirEtCopier(await p.ouvrirPersonnage(connue), true); return; } catch { /* effacée : on resème */ }
             }
             const neuve = await semer(p);
             retenirLaFicheLocale(pj.id, neuve.id);
@@ -213,7 +249,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
 
         if (pj.ficheId) {
             try {
-                accueillirEtCopier(await p.ouvrirPersonnage(pj.ficheId));
+                accueillirEtCopier(await p.ouvrirPersonnage(pj.ficheId), true);
                 return;
             } catch {
                 /*
@@ -239,7 +275,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             // ferait une boucle. `sheet` est la saisie du joueur, `open` un
             // changement de PJ — les deux nous concernent.
             if (ev.origin === 'host') return;
-            accueillirEtCopier(ev.character);
+            accueillirEtCopier(ev.character, ev.origin === 'open');
         });
 
         p.bonjour()
@@ -271,6 +307,31 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [personnage.id]);
 
+    /**
+     * **Ce que GM-OS change part aussitôt vers la fiche ouverte** — option A de
+     * David, 2026-10-03. Le Formulaire sauvegardé, Dice-OS qui use un dé, la
+     * tablette : seules les clés que GM-OS vient de changer s'écrivent. Ce qui
+     * vient de la fiche elle-même (le rapprochement) lui est déjà égal et ne
+     * repart pas.
+     */
+    const cleNarratif = JSON.stringify(personnage.narratif ?? {});
+    React.useEffect(() => {
+        const p = pont.current;
+        const v = vue.current;
+        if (!p || !table || !v || v.pjId !== personnage.id) return;
+        const maintenant = cotesDe(personnage);
+        const { lot, divergences } = pousseeVersLaFiche(maintenant, v.precedent, v.fiche.data, table);
+        v.precedent = maintenant;
+        if (Object.keys(lot).length === 0) return;
+
+        journaliserLesDivergences({ personnage: personnage.name, gabarit: table.gabaritDeLaFiche, sens: 'gmos' }, divergences);
+        v.fiche = { ...v.fiche, data: { ...v.fiche.data, ...lot } };
+        p.ecrire(lot)
+            .then(ecrite => { if (ecrite && vue.current?.pjId === personnage.id) vue.current.fiche = ecrite; })
+            .catch(err => console.warn('[Fiche] écriture vers la fiche impossible :', err));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [personnage.id, personnage.sheetData, personnage.inventoryItems, cleNarratif, table]);
+
     React.useEffect(() => () => {
         // La copie groupée part avec le pont : la laisser vivre appellerait un
         // `sauvegarde()` sur une iframe démontée, qui échouerait pour rien.
@@ -284,7 +345,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         if (!p) return;
         setOccupe(true);
         try {
-            accueillirEtCopier(await p.ouvrirPersonnage(ficheId));
+            accueillirEtCopier(await p.ouvrirPersonnage(ficheId), true);
             dernier.current.onFicheLiee(ficheId);
         } catch (err) {
             setEtat({ nom: 'erreur', motif: String((err as Error)?.message ?? err) });

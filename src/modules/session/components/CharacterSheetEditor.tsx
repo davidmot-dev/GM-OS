@@ -215,6 +215,7 @@ const CharacterSheetEditor: React.FC = () => {
                             id: character.id,
                             name: character.name,
                             ficheId: character.ficheId,
+                            donneesModifieesLe: character.donneesModifieesLe,
                             sheetData: character.sheetData ?? {},
                             narratif: {
                                 description: character.description ?? '',
