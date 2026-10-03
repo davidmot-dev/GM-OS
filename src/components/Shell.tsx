@@ -283,9 +283,9 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
                         theme === 'medieval' 
                             ? 'bg-accent shadow-accent/20' 
-                            : 'bg-gradient-to-br from-blue-500 to-emerald-500 shadow-blue-500/20'
+                            : 'bg-gradient-to-br from-accent to-accent/60 shadow-accent/20'
                     }`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-app-text">
                             <path d="m12 3-8.5 5v8l8.5 5 8.5-5V8z"></path>
                             <polyline points="12 22 12 13 2 9"></polyline>
                             <path d="m12 13 8.5-4"></path>
@@ -294,7 +294,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                     </div>
                     <div className="flex flex-col">
                         <span className={`text-xl tracking-tight leading-none ${
-                            theme === 'medieval' ? 'font-medieval text-accent' : 'font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent'
+                            theme === 'medieval' ? 'font-medieval text-accent' : 'font-bold bg-gradient-to-r from-app-text to-app-muted bg-clip-text text-transparent'
                         }`}>
                             GM-OS <span className={theme === 'medieval' ? 'text-app-text/60' : ''}>v6</span>
                         </span>
@@ -364,13 +364,13 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                     <div className="px-3 mb-2 text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{t('common:global', 'Global')}</div>
                     <NavItem
-                        icon={<Star size={20} className="text-amber-500" />}
+                        icon={<Star size={20} className="text-gm-gold" />}
                         label={t('modules:names.favorite')}
                         active={activeModule === 'favorite'}
                         onClick={() => setActiveModule('favorite')}
                     />
                     <NavItem
-                        icon={<Sparkles size={20} className="text-purple-400" />}
+                        icon={<Sparkles size={20} className="text-gm-violet" />}
                         label={t('modules:names.obsidian')}
                         active={activeModule === 'obsidian'}
                         onClick={() => setActiveModule('obsidian')}
@@ -484,7 +484,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </button>
                         <button 
                             onClick={() => setActiveModule('debug')}
-                            className={`flex-1 py-3 flex items-center justify-center transition-all border-x border-app-border/50 ${activeModule === 'debug' ? 'text-blue-400 bg-blue-400/10' : 'text-app-text/50 hover:text-blue-400 hover:bg-blue-400/10'}`}
+                            className={`flex-1 py-3 flex items-center justify-center transition-all border-x border-app-border/50 ${activeModule === 'debug' ? 'text-accent bg-accent/10' : 'text-app-text/50 hover:text-accent hover:bg-accent/10'}`}
                             title={t('modules:tooltips.debug_logs')}
                         >
                             <Terminal size={18} />
@@ -523,7 +523,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                                             <div className="flex items-center justify-center gap-4 relative z-10 px-2">
                              <button
                                 onClick={handleLaunchHub}
-                                className="p-3 rounded-xl bg-sky-500/5 text-sky-400/60 hover:text-sky-400 hover:bg-sky-500/10 hover:shadow-glow-sky transition-all border border-sky-500/10"
+                                className="p-3 rounded-xl bg-accent/5 text-accent/60 hover:text-accent hover:bg-accent/10 hover:shadow-glow-accent transition-all border border-accent/10"
                                 title={t('modules:tooltips.launch_player_hub')}
                             >
                                 <MonitorPlay size={20} />
@@ -531,7 +531,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                             <button
                                 onClick={handleLaunchTabletHub}
-                                className="p-3 rounded-xl bg-indigo-500/5 text-indigo-400/60 hover:text-indigo-400 hover:bg-indigo-500/10 hover:shadow-glow-indigo transition-all border border-indigo-500/10"
+                                className="p-3 rounded-xl bg-accent/5 text-accent/60 hover:text-accent hover:bg-accent/10 hover:shadow-glow-accent transition-all border border-accent/10"
                                 title={t('modules:tooltips.launch_tablet_hub')}
                             >
                                 <Tablet size={20} />
@@ -539,7 +539,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
 
                             <button
                                 onClick={handleQuitApp}
-                                className="p-3 rounded-xl bg-red-500/5 text-red-500/40 hover:text-red-500 hover:bg-red-500/10 hover:shadow-glow-red transition-all border border-red-500/10"
+                                className="p-3 rounded-xl bg-etat-danger/5 text-etat-danger/40 hover:text-etat-danger hover:bg-etat-danger/10 hover:shadow-glow-red transition-all border border-etat-danger/10"
                                 title={t('modules:tooltips.quit_app')}
                             >
                                 <Power size={20} />
@@ -599,7 +599,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                             className={`flex items-center gap-4 px-4 py-1.5 border ${
                             theme === 'medieval' ? 'rounded-md border-app-border/40' : 'rounded-full border-app-accent/20'
                         } ${tacticalSettings.isEnabled ? 'bg-accent/10' : 'bg-app-surface opacity-50'}`}>
-                            <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-emerald-400 animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
+                            <div className={`w-2 h-2 rounded-full ${tacticalSettings.isEnabled ? (tacticalStatus === 'analyzing' ? 'bg-etat-succes animate-pulse' : 'bg-accent') : 'bg-app-text/20'} shadow-glow-accent`} />
                              <span className={`hidden @min-[1300px]:inline text-ui-10 uppercase tracking-[0.22em] ${theme === 'medieval' ? 'font-display text-accent' : 'font-black text-accent/80'}`}>
                                 {tacticalSettings.isEnabled 
                                     ? (theme === 'medieval' ? t('modules:tactical.seal_active') : t('modules:tactical.cortex_active')) 
@@ -608,7 +608,7 @@ const Shell: React.FC<ShellProps> = ({ children }) => {
                         </div>
                         <button 
                             onClick={() => useModalStore.getState().openNetworkModal()}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 hover:text-indigo-300 border border-indigo-500/20 transition-all shadow-glow-indigo/20 group"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 hover:text-accent border border-accent/20 transition-all shadow-glow-indigo/20 group"
                             title="Ouvrir le code de connexion PWA"
                         >
                             <Wifi size={14} className="group-hover:scale-110 transition-transform" />

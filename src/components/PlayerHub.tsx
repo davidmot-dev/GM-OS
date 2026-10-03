@@ -229,7 +229,7 @@ const PlayerHub: React.FC = React.memo(() => {
 
             {/* LAYER 30: WHITEBOARD */}
             <div className={`fixed inset-0 z-30 pointer-events-none transition-colors duration-500 ${
-                isWhiteboardActive && backgroundMode === 'light' ? 'bg-white' : 
+                isWhiteboardActive && backgroundMode === 'light' ? 'bg-app-text' : 
                 isWhiteboardActive && backgroundMode === 'dark' ? 'bg-app-bg' : 'bg-transparent'
             }`}>
                 <PlayerDrawingCanvas />

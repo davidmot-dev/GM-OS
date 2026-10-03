@@ -127,7 +127,7 @@ const LoupeDeLecture: React.FC<LoupeDeLectureProps> = ({ children, className }) 
                         disabled={facteur <= LOUPE_MIN}
                         aria-label="Réduire le texte"
                         title="Réduire (Ctrl + molette)"
-                        className="p-1 rounded-full text-app-text/60 hover:text-accent hover:bg-white/5 disabled:opacity-20 disabled:hover:text-app-text/60 transition-colors"
+                        className="p-1 rounded-full text-app-text/60 hover:text-accent hover:bg-app-text/5 disabled:opacity-20 disabled:hover:text-app-text/60 transition-colors"
                     >
                         <Minus size={14} />
                     </button>
@@ -144,7 +144,7 @@ const LoupeDeLecture: React.FC<LoupeDeLectureProps> = ({ children, className }) 
                         disabled={facteur >= LOUPE_MAX}
                         aria-label="Agrandir le texte"
                         title="Agrandir (Ctrl + molette)"
-                        className="p-1 rounded-full text-app-text/60 hover:text-accent hover:bg-white/5 disabled:opacity-20 disabled:hover:text-app-text/60 transition-colors"
+                        className="p-1 rounded-full text-app-text/60 hover:text-accent hover:bg-app-text/5 disabled:opacity-20 disabled:hover:text-app-text/60 transition-colors"
                     >
                         <Plus size={14} />
                     </button>

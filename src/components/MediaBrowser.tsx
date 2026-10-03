@@ -21,10 +21,10 @@ import { TacticalDetailPanel } from '../modules/image/components/TacticalDetailP
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
-    'image': <ImageIcon size={14} className="text-blue-400" />,
-    'audio': <Music size={14} className="text-amber-400" />,
-    'video': <Film size={14} className="text-purple-400" />,
-    'document': <FileText size={14} className="text-emerald-400" />,
+    'image': <ImageIcon size={14} className="text-gm-cyan" />,
+    'audio': <Music size={14} className="text-gm-gold" />,
+    'video': <Film size={14} className="text-gm-violet" />,
+    'document': <FileText size={14} className="text-gm-emerald" />,
 };
 
 interface MediaBrowserProps {
@@ -378,7 +378,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                 
                 {/* Visual Background Decoration */}
                 <div className="absolute inset-0 z-0 pointer-events-none opacity-20 overflow-hidden">
-                    <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-blue-500/10 blur-[150px] rounded-full" />
+                    <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-accent/10 blur-[150px] rounded-full" />
                     <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-[#53ddfc]/10 blur-[150px] rounded-full" />
                 </div>
 
@@ -437,7 +437,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             setSelectedCollectionId(null);
                                             setSelectedTags([]);
                                         }}
-                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'recent' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
+                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'recent' ? 'bg-accent/10 text-accent border border-accent/30' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
                                     >
                                         <Clock size={18} className="opacity-50" />
                                         {t('mediaBrowser.latestFrequency')}
@@ -492,7 +492,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                 </button>
                                                 <button 
                                                     onClick={() => handleDeleteCollection(coll.id)} 
-                                                    className="p-2 text-app-text/20 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                                                    className="p-2 text-app-text/20 hover:text-etat-danger hover:bg-etat-danger/10 rounded-lg transition-all"
                                                     title={t('mediaBrowser.deleteFolder')}
                                                     aria-label={t('mediaBrowser.deleteFolder')}
                                                 >
@@ -621,8 +621,8 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             lequel on en aura besoin.
                         */}
                         {aRestituer > 0 && (
-                            <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl space-y-3">
-                                <p className="text-ui-11 text-emerald-300/80 leading-relaxed">
+                            <div className="p-4 bg-etat-succes/5 border border-etat-succes/20 rounded-2xl space-y-3">
+                                <p className="text-ui-11 text-etat-succes/80 leading-relaxed">
                                     {aRestituer} média{aRestituer > 1 ? 's' : ''} dans la sauvegarde,
                                     absent{aRestituer > 1 ? 's' : ''} d'ici.
                                 </p>
@@ -630,7 +630,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     type="button"
                                     disabled={restauration}
                                     onClick={lancerLaRestauration}
-                                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-ui-10 font-black uppercase tracking-[0.2em] border border-emerald-500/30 transition-all duration-300 disabled:opacity-30"
+                                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-etat-succes/10 text-etat-succes hover:bg-etat-succes/20 text-ui-10 font-black uppercase tracking-[0.2em] border border-etat-succes/30 transition-all duration-300 disabled:opacity-30"
                                 >
                                     <RotateCcw size={15} />
                                     {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
@@ -644,7 +644,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     clearDB();
                                 }
                             }}
-                            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-red-500/5 text-red-500/40 hover:bg-red-500/20 hover:text-red-500 text-ui-10 font-black uppercase tracking-[0.2em] border border-red-500/10 hover:border-red-500/40 transition-all duration-500 group"
+                            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-etat-danger/5 text-etat-danger/40 hover:bg-etat-danger/20 hover:text-etat-danger text-ui-10 font-black uppercase tracking-[0.2em] border border-etat-danger/10 hover:border-etat-danger/40 transition-all duration-500 group"
                         >
                             <Trash2 size={16} className="group-hover:rotate-12 transition-transform duration-500" />
                             {t('mediaBrowser.purgeHub')}
@@ -725,7 +725,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                                     {search ? (
                                         <>
-                                            <span className={`text-ui-9 font-black uppercase tracking-widest ${displayMedia.length === 0 ? 'text-amber-500' : 'text-accent'}`}>
+                                            <span className={`text-ui-9 font-black uppercase tracking-widest ${displayMedia.length === 0 ? 'text-etat-alerte' : 'text-accent'}`}>
                                                 {displayMedia.length}
                                             </span>
                                             <button
@@ -754,7 +754,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                     <button
                                         key={btn.id}
                                         onClick={() => setTypeFilter(btn.id as MediaType | 'all')}
-                                        className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 ${typeFilter === btn.id ? 'bg-accent text-app-bg shadow-[0_0_25px_rgba(var(--accent-rgb),0.4)] translate-y-[-1px]' : 'text-app-text/20 hover:text-app-text/70 hover:bg-app-text/5'}`}
+                                        className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 ${typeFilter === btn.id ? 'bg-accent text-app-on-accent shadow-[0_0_25px_rgba(var(--accent-rgb),0.4)] translate-y-[-1px]' : 'text-app-text/20 hover:text-app-text/70 hover:bg-app-text/5'}`}
                                     >
                                         {btn.icon}
                                         {t(`mediaBrowser.tabs.${btn.key}`)}
@@ -768,7 +768,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             {activeCampaignId && (
                                 <button
                                     onClick={() => setCampaignFilterEnabled(!campaignFilterEnabled)}
-                                    className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 border group ${campaignFilterEnabled ? 'bg-amber-500/10 border-amber-500/40 text-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.15)]' : 'bg-app-bg/80 border-app-border/10 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60'}`}
+                                    className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 border group ${campaignFilterEnabled ? 'bg-etat-alerte/10 border-etat-alerte/40 text-etat-alerte shadow-[0_0_20px_rgba(245,158,11,0.15)]' : 'bg-app-bg/80 border-app-border/10 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60'}`}
                                 >
                                     <Users size={16} className={`transition-transform duration-500 ${campaignFilterEnabled ? 'scale-110' : 'group-hover:scale-110'}`} />
                                     {campaignFilterEnabled ? t('mediaBrowser.focusOperational') : t('mediaBrowser.globalMatrix')}
@@ -803,7 +803,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                             setSortBy(option.id as 'date-desc' | 'date-asc' | 'size-desc' | 'name-asc');
                                                             setIsSortMenuOpen(false);
                                                         }}
-                                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group/opt ${sortBy === option.id ? 'bg-accent text-app-bg shadow-[0_8px_20px_rgba(var(--accent-rgb),0.3)]' : 'hover:bg-app-text/5'}`}
+                                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group/opt ${sortBy === option.id ? 'bg-accent text-app-on-accent shadow-[0_8px_20px_rgba(var(--accent-rgb),0.3)]' : 'hover:bg-app-text/5'}`}
                                                     >
                                                         <div className="flex items-center justify-between mb-1">
                                                             <div className="flex items-center gap-3">
@@ -822,7 +822,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             </div>
 
                             {/* Main Import Interface */}
-                            <label className="bg-accent hover:bg-accent/80 text-app-bg px-8 py-4 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
+                            <label className="bg-accent hover:bg-accent/80 text-app-on-accent px-8 py-4 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
                                 <UploadCloud size={18} className="group-hover:translate-y-[-2px] transition-transform duration-500" />
                                 {isUploading ? t('mediaBrowser.uploadingAsset') : t('mediaBrowser.importAsset')}
                                 <input
@@ -837,7 +837,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
                             <button 
                                 onClick={onClose} 
-                                className="w-12 h-12 flex items-center justify-center bg-app-text/5 rounded-2xl text-app-text/20 hover:text-app-text hover:bg-red-500/20 transition-all border border-transparent hover:border-red-500/20 active:scale-90 group duration-500"
+                                className="w-12 h-12 flex items-center justify-center bg-app-text/5 rounded-2xl text-app-text/20 hover:text-app-text hover:bg-etat-danger/20 transition-all border border-transparent hover:border-etat-danger/20 active:scale-90 group duration-500"
                                 title={t('mediaBrowser.deactivateInterface')}
                             >
                                 <X size={24} className="group-hover:rotate-90 transition-transform duration-500" />
@@ -876,7 +876,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                             <button
                                 onClick={() => void etiqueterLeLot('retirer')}
                                 disabled={!tagDuLot.trim()}
-                                className="px-3 py-2 rounded-xl border border-app-border/20 text-app-text/50 text-ui-10 font-black uppercase tracking-widest hover:text-red-400 hover:border-red-400/40 disabled:opacity-30"
+                                className="px-3 py-2 rounded-xl border border-app-border/20 text-app-text/50 text-ui-10 font-black uppercase tracking-widest hover:text-etat-danger hover:border-etat-danger/40 disabled:opacity-30"
                             >
                                 {t('mediaBrowser.tags.retirer')}
                             </button>
@@ -948,7 +948,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             title={t('mediaBrowser.tags.selectionner')}
                                             className={`absolute top-5 left-5 z-20 size-8 rounded-xl border flex items-center justify-center transition-all ${
                                                 selectionMultiple.has(media.id)
-                                                    ? 'bg-accent border-accent text-white opacity-100'
+                                                    ? 'bg-accent border-accent text-app-on-accent opacity-100'
                                                     : 'bg-app-bg/70 border-app-border/30 text-app-text/40 opacity-0 group-hover:opacity-100 hover:border-accent/50'
                                             }`}
                                         >
@@ -957,7 +957,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
                                         {/* Premium Thumbnail Container */}
                                         <div 
-                                            className="aspect-[4/5] relative overflow-hidden bg-black/40 cursor-pointer"
+                                            className="aspect-[4/5] relative overflow-hidden bg-app-bg/40 cursor-pointer"
                                             onClick={() => setPreviewItem(media)}
                                         >
                                             <MediaItemThumbnail media={media} />
@@ -979,14 +979,14 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                                     deleteMedia(media.id);
                                                                 }
                                                             }}
-                                                            className="w-10 h-10 flex items-center justify-center bg-red-500/10 text-red-500/60 hover:bg-red-500/20 hover:text-red-500 rounded-2xl transition-all border border-red-500/10 hover:border-red-500/40"
+                                                            className="w-10 h-10 flex items-center justify-center bg-etat-danger/10 text-etat-danger/60 hover:bg-etat-danger/20 hover:text-etat-danger rounded-2xl transition-all border border-etat-danger/10 hover:border-etat-danger/40"
                                                             title={t('mediaBrowser.deleteAsset')}
                                                         >
                                                             <Trash2 size={16} />
                                                         </button>
                                                         <button 
                                                             onClick={(e) => { e.stopPropagation(); onSelect(media.id); }}
-                                                            className="w-12 h-12 flex items-center justify-center bg-accent text-app-bg rounded-full transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.5)] hover:scale-110 active:scale-90"
+                                                            className="w-12 h-12 flex items-center justify-center bg-accent text-app-on-accent rounded-full transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.5)] hover:scale-110 active:scale-90"
                                                             title={t('mediaBrowser.selectTransmission')}
                                                         >
                                                             <Check size={20} strokeWidth={3} />
@@ -997,7 +997,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
                                             {/* HUD Type Icon Badge */}
                                             <div className="absolute top-6 left-6 flex items-center gap-2">
-                                                <div className="w-10 h-10 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/40 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/20 transition-all duration-500">
+                                                <div className="w-10 h-10 rounded-2xl bg-app-bg/40 backdrop-blur-md border border-app-text/10 flex items-center justify-center text-app-text/40 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/20 transition-all duration-500">
                                                     {TYPE_ICONS[media.type] || <FileText size={18} />}
                                                 </div>
                                                 {media.isPersistent && (
@@ -1007,7 +1007,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                 )}
                                                 {estOrphelin(media.id) && (
                                                     <div
-                                                        className="h-10 px-3 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-1.5 text-white/40"
+                                                        className="h-10 px-3 rounded-2xl bg-app-bg/40 backdrop-blur-md border border-app-text/10 flex items-center gap-1.5 text-app-text/40"
                                                         title={t('mediaBrowser.orphanBadgeTitle')}
                                                     >
                                                         <Unplug size={13} />
@@ -1022,7 +1022,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                         {/* Card Metadata Footer */}
                                         <div className="p-7 flex flex-col flex-1 relative">
                                             {/* Micro HUD decoration */}
-                                            <div className="absolute -right-4 -bottom-4 w-12 h-12 border border-white/5 rotate-45 pointer-events-none opacity-20" />
+                                            <div className="absolute -right-4 -bottom-4 w-12 h-12 border border-app-text/5 rotate-45 pointer-events-none opacity-20" />
                                             
                                             <div className="flex items-start justify-between mb-4 gap-4">
                                                 <h3 className="text-sm font-black uppercase tracking-wider text-app-text group-hover:text-accent transition-colors leading-tight truncate flex-1 font-display" title={media.name}>
@@ -1041,7 +1041,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                             {/* Domain Tags Row */}
                                             <div className="flex flex-wrap gap-2 mb-6 min-h-[22px]">
                                                 {collections.filter(c => c.mediaIds.includes(media.id)).map(coll => (
-                                                    <span key={coll.id} className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase border border-blue-400/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
+                                                    <span key={coll.id} className="inline-flex items-center gap-2 bg-gm-cyan/10 text-gm-cyan px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase border border-gm-cyan/20">
                                                         <FileText size={10} className="opacity-50" />
                                                         {coll.name}
                                                         <button 
@@ -1049,7 +1049,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                                 e.stopPropagation();
                                                                 toggleMediaInCollection(coll.id, media.id);
                                                             }}
-                                                            className="hover:text-red-400 opacity-30 hover:opacity-100 transition-all ml-1"
+                                                            className="hover:text-etat-danger opacity-30 hover:opacity-100 transition-all ml-1"
                                                             title={t('mediaBrowser.removeFromFolder')}
                                                             aria-label={t('mediaBrowser.removeFromFolder')}
                                                         >
@@ -1060,7 +1060,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
                                                 {media.campaignIds.map(cid => {
                                                     const campaignName = campaigns.find(c => c.id === cid)?.name || t('unknown_unit', { id: cid.substring(0, 4) });
                                                     return (
-                                                        <span key={cid} className="bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+                                                        <span key={cid} className="bg-gm-gold/10 text-gm-gold border border-gm-gold/20 px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase">
                                                             {campaignName}
                                                         </span>
                                                     );
@@ -1099,7 +1099,7 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
             {/* Tactical Detail Panel Overlay Backdrop */}
             {editingMediaId && (
                 <div 
-                    className="absolute inset-0 z-[115] bg-black/40 backdrop-blur-sm animate-in fade-in duration-300"
+                    className="absolute inset-0 z-[115] bg-app-bg/40 backdrop-blur-sm animate-in fade-in duration-300"
                     onClick={() => setEditingMediaId(null)}
                 />
             )}

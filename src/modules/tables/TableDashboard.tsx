@@ -376,7 +376,7 @@ const TableDashboard: React.FC = () => {
 
                                     <button
                                         onClick={clearCurrentResult}
-                                        className="bg-app-surface hover:bg-etat-danger/30 p-4 border border-app-border rounded-xl transition-all group"
+                                        className="bg-app-surface hover:bg-etat-danger/15 p-4 border border-app-border rounded-xl transition-all group"
                                         title={t('random_tables.main.clear_tooltip')}
                                     >
                                         <Trash2 className="w-5 h-5 text-app-text/40 group-hover:text-etat-danger" />

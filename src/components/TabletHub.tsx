@@ -229,16 +229,16 @@ const TabletHub: React.FC = () => {
                         performance.isManagedAutomatically ? 'cursor-default' : ''
                     } ${
                         performance.isLowGraphics
-                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                            : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
+                            ? 'bg-etat-alerte/20 text-etat-alerte border-etat-alerte/30'
+                            : 'bg-etat-info/20 text-etat-info border-etat-info/30'
                     }`}
                 >
                     {performance.isLowGraphics ? 'Mode Performance' : 'Mode Qualité'}
                 </button>
                 <div className={`p-1.5 rounded-full backdrop-blur-md border transition-colors ${
                     status === 'connected' 
-                        ? (latency !== null && latency < 100 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(52,211,153,0.2)]' : 'bg-amber-500/10 text-amber-400 border-amber-500/20')
-                        : 'bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse'
+                        ? (latency !== null && latency < 100 ? 'bg-etat-succes/10 text-etat-succes border-etat-succes/20 shadow-[0_0_10px_color-mix(in_srgb,var(--etat-succes)_20%,transparent)]' : 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20')
+                        : 'bg-etat-danger/10 text-etat-danger border-etat-danger/20 animate-pulse'
                 }`} title={status === 'connected' ? `Synchronisé (${latency}ms)` : 'Déconnecté du MJ'}>
                     {status === 'connected' ? <Wifi size={14} /> : <WifiOff size={14} />}
                 </div>
@@ -339,7 +339,7 @@ const TabletHub: React.FC = () => {
             
             {/* Overlay for focus (when an entity is displayed front-and-center) */}
             {(resolvedFavorites.length > 0 || liveEntity) && (
-                <div className={`fixed inset-0 z-5 bg-black/40 pointer-events-none transition-all duration-700 opacity-100 ${performance.isLowGraphics ? '' : 'backdrop-blur-[1px]'}`}></div>
+                <div className={`fixed inset-0 z-5 bg-app-bg/40 pointer-events-none transition-all duration-700 opacity-100 ${performance.isLowGraphics ? '' : 'backdrop-blur-[1px]'}`}></div>
             )}
 
             {/* Main Content Area */}
@@ -470,12 +470,12 @@ const TabletHub: React.FC = () => {
                 <div className={`bg-app-surface/90 md:bg-app-surface/80 border border-app-border/40 p-1 md:p-1.5 rounded-full shadow-2xl flex items-center gap-1 w-max mx-auto ${performance.heavyBlurClass}`}>
                     {(
                         [
-                            { id: 'live', icon: Monitor, label: 'Direct', color: undefined },
-                            { id: 'archives', icon: Archive, label: 'Archives', color: undefined },
-                            { id: 'trombinoscope', icon: Users, label: 'PNJ', color: 'indigo' },
-                            { id: 'atlas', icon: Globe, label: 'Lieux', color: 'emerald' },
-                            { id: 'inventory', icon: Package, label: 'Inventaire', color: 'amber' },
-                            { id: 'cartes', icon: Layers, label: 'Cartes', color: 'indigo' }
+                            { id: 'live', icon: Monitor, label: 'Direct' },
+                            { id: 'archives', icon: Archive, label: 'Archives' },
+                            { id: 'trombinoscope', icon: Users, label: 'PNJ' },
+                            { id: 'atlas', icon: Globe, label: 'Lieux' },
+                            { id: 'inventory', icon: Package, label: 'Inventaire' },
+                            { id: 'cartes', icon: Layers, label: 'Cartes' }
                         ] as const
                     ).map((tab) => (
                         <button
@@ -483,7 +483,7 @@ const TabletHub: React.FC = () => {
                             onClick={() => setCurrentTab(tab.id)}
                             className={`relative flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${
                                 currentTab === tab.id
-                                    ? `bg-${tab.color || 'accent'}${tab.color ? '-600 text-white' : ' text-app-bg'}`
+                                    ? 'bg-accent text-app-on-accent'
                                     : 'text-app-text/40 hover:text-app-text'
                             }`}
                             title={tab.label}
@@ -494,8 +494,8 @@ const TabletHub: React.FC = () => {
                                 se signale même onglet fermé. */}
                             {tab.id === 'cartes' && cartesProposees > 0 && currentTab !== 'cartes' && (
                                 <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-ui-9 items-center justify-center font-bold text-white">{cartesProposees}</span>
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-etat-danger opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-etat-danger text-ui-9 items-center justify-center font-bold text-app-bg">{cartesProposees}</span>
                                 </span>
                             )}
                         </button>
@@ -503,7 +503,7 @@ const TabletHub: React.FC = () => {
                     <div className="w-[1px] h-4 bg-app-border/40 mx-1 md:mx-2" />
                     <button 
                         onClick={() => setIsInventoryOpen(!isInventoryOpen)}
-                        className={`flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-indigo-600 text-white' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-accent text-app-on-accent' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Fiche Personnage"
                     >
                         <User className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -511,7 +511,7 @@ const TabletHub: React.FC = () => {
                     </button>
                     <button 
                         onClick={() => setIsNotesOpen(!isNotesOpen)}
-                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Notes Personnelles"
                     >
                         <BookOpen className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -519,21 +519,21 @@ const TabletHub: React.FC = () => {
                     </button>
                     <button 
                         onClick={toggleMessenger}
-                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-indigo-600 text-white shadow-glow-indigo/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Messages"
                     >
                         <MessageSquare className="w-5 h-5 md:w-3.5 md:h-3.5" />
                         <span className="hidden md:inline">Messages</span>
                         {unreadCount > 0 && !isMessengerOpen && (
                             <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 text-ui-9 items-center justify-center font-bold text-white">{unreadCount}</span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-etat-danger opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-4 w-4 bg-etat-danger text-ui-9 items-center justify-center font-bold text-app-bg">{unreadCount}</span>
                             </span>
                         )}
                     </button>
                     <button 
                         onClick={() => window.confirm('Quitter la session ?') && resetIdentity()}
-                        className="flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all ml-1 md:ml-0"
+                        className="flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest text-etat-danger hover:text-etat-danger hover:bg-etat-danger/10 transition-all ml-1 md:ml-0"
                         title="Quitter"
                     >
                         <LogOut className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -548,7 +548,7 @@ const TabletHub: React.FC = () => {
                     {/* Mobile Toggle Button */}
                     <button
                         onClick={() => setIsCombatOverlayOpen(!isCombatOverlayOpen)}
-                        className={`fixed md:hidden top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl transition-all ${isCombatOverlayOpen ? 'bg-rose-600 text-white' : 'bg-app-surface/90 border border-rose-500/30 text-rose-400'}`}
+                        className={`fixed md:hidden top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl transition-all ${isCombatOverlayOpen ? 'bg-etat-danger text-app-bg' : 'bg-app-surface/90 border border-etat-danger/30 text-etat-danger'}`}
                     >
                         <Swords size={16} />
                         {isCombatOverlayOpen ? 'Fermer' : 'Initiative'}
@@ -558,17 +558,17 @@ const TabletHub: React.FC = () => {
                     <aside className={`fixed right-0 md:right-4 top-0 md:top-4 w-full md:w-80 h-screen md:h-[calc(100vh-2rem)] z-50 bg-app-surface/95 md:bg-app-surface/60 border-l md:border border-app-border/40 flex flex-col gap-4 p-6 md:rounded-[2rem] shadow-2xl transition-transform duration-300 pointer-events-auto ${performance.heavyBlurClass} ${isCombatOverlayOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}`}>
                         <div className="flex items-center justify-between border-b border-app-border/40 pb-3 mt-12 md:mt-0">
                             <h2 className="text-app-text text-lg font-bold tracking-tight">Initiative</h2>
-                            <button className="md:hidden p-2 rounded-full text-app-text/40 hover:bg-white/5" onClick={() => setIsCombatOverlayOpen(false)}>
+                            <button className="md:hidden p-2 rounded-full text-app-text/40 hover:bg-app-text/5" onClick={() => setIsCombatOverlayOpen(false)}>
                                 <ChevronRight size={20} />
                             </button>
                         </div>
                     <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
-                        <div className="flex flex-col gap-3 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 shadow-glow-crimson">
+                        <div className="flex flex-col gap-3 p-3 rounded-2xl bg-etat-danger/10 border border-etat-danger/30 shadow-glow-crimson">
                             <div className="flex items-center gap-3">
-                                <ResolvedImage className="size-8 rounded-full border border-rose-500" src={activeCombatant.avatar} alt={activeCombatant.name} />
+                                <ResolvedImage className="size-8 rounded-full border border-etat-danger" src={activeCombatant.avatar} alt={activeCombatant.name} />
                                 <div className="flex flex-col">
                                     <p className="text-app-text text-xs font-bold leading-none">{activeCombatant.name}</p>
-                                    <p className="text-rose-400 text-ui-8 font-bold uppercase mt-1">À toi</p>
+                                    <p className="text-etat-danger text-ui-8 font-bold uppercase mt-1">À toi</p>
                                 </div>
                             </div>
                         </div>
@@ -719,8 +719,8 @@ const DiceResultDisplay: React.FC = () => {
                 resultat={lastRoll}
                 classes={reussi => 'px-10 py-3 rounded-2xl border-2 text-lg md:text-xl font-black uppercase tracking-[0.3em] backdrop-blur-2xl shadow-xl transition-all '
                     + (reussi
-                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/60 shadow-glow-emerald/40'
-                        : 'bg-rose-500/20 text-rose-400 border-rose-500/60 shadow-glow-rose/40')}
+                        ? 'bg-etat-succes/20 text-etat-succes border-etat-succes/60 shadow-glow-emerald/40'
+                        : 'bg-etat-danger/20 text-etat-danger border-etat-danger/60 shadow-glow-rose/40')}
                 enveloppe={contenu => (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -745,13 +745,13 @@ const MessageToast: React.FC<{ fromName: string; channel: string; onClick: () =>
             onClick={onClick}
             className="fixed bottom-24 left-1/2 z-[200] cursor-pointer"
         >
-            <div className="bg-indigo-600/90 backdrop-blur-xl border border-white/20 px-6 py-3 rounded-2xl shadow-[0_20px_50px_rgba(79,70,229,0.4)] flex items-center gap-4 hover:brightness-110 transition-all active:scale-95 group">
-                <div className="p-2 bg-white/20 rounded-lg group-hover:scale-110 transition-transform">
-                    <MessageSquare size={18} className="text-white" />
+            <div className="bg-accent text-app-on-accent backdrop-blur-xl border border-app-on-accent/20 px-6 py-3 rounded-2xl shadow-[0_20px_50px_color-mix(in_srgb,var(--app-accent)_40%,transparent)] flex items-center gap-4 hover:brightness-110 transition-all active:scale-95 group">
+                <div className="p-2 bg-app-on-accent/20 rounded-lg group-hover:scale-110 transition-transform">
+                    <MessageSquare size={18} />
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-ui-10 font-black text-white/60 uppercase tracking-widest leading-none mb-1">Nouveau Message</span>
-                    <p className="text-sm font-bold text-white leading-tight">
+                    <span className="text-ui-10 font-black opacity-60 uppercase tracking-widest leading-none mb-1">Nouveau Message</span>
+                    <p className="text-sm font-bold leading-tight">
                         {fromName} <span className="opacity-60 font-medium ml-1">({channel})</span>
                     </p>
                 </div>

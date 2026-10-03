@@ -68,6 +68,17 @@ const FICHIERS_MIGRES: string[] = [
        (2026-10-02) ; elle sert désormais à `components/` (lot 6). */
     'components/ModalProvider.tsx', // le cadre commun des surcouches — L5, 2026-10-03
     'components/SpotlightSearch.tsx', // la palette Ctrl+K — L5, 2026-10-03
+    'components/GlobalSettingsModal.tsx', // L6, 2026-10-03
+    'components/MediaBrowser.tsx', // L6, 2026-10-03
+    'components/TabletHub.tsx', // L6, 2026-10-03
+    'components/Shell.tsx', // L6, 2026-10-03
+    'components/ToastProvider.tsx', // L6, 2026-10-03
+    'components/NetworkQRCodeModal.tsx', // L6, 2026-10-03
+    'components/LoupeDeLecture.tsx', // L6, 2026-10-03
+    'components/PlayerHub.tsx', // L6, 2026-10-03
+    'components/common/ErrorBoundary.tsx', // L6, 2026-10-03
+    'components/common/LoadingOverlay.tsx', // L6, 2026-10-03
+    'components/audio/MasterAudioController.tsx', // L6, 2026-10-03
 ];
 
 function releve(): Map<string, number> {

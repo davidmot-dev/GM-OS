@@ -3,26 +3,31 @@ import { useToastStore } from '../stores/useToastStore';
 import type { ToastType } from '../stores/useToastStore';
 import { CheckCircle2, AlertCircle, Info, XCircle, X, Loader2 } from 'lucide-react';
 
+/*
+  Un fond teinté de l'état sur la surface du thème, le texte du thème : lisible
+  sur un thème clair comme sombre (refonte, L6). L'ancien fond vert très sombre
+  sous un texte vert pâle ne tenait que sur fond sombre.
+*/
 const TYPE_STYLES: Record<ToastType, { bg: string, icon: React.ReactNode }> = {
     success: {
-        bg: 'bg-emerald-950/90 border-emerald-500/50 text-emerald-100',
-        icon: <CheckCircle2 size={18} className="text-emerald-400" />
+        bg: 'bg-[color-mix(in_srgb,var(--etat-succes)_14%,var(--app-surface))] border-etat-succes/50 text-app-text',
+        icon: <CheckCircle2 size={18} className="text-etat-succes" />
     },
     error: {
-        bg: 'bg-red-950/90 border-red-500/50 text-red-100',
-        icon: <XCircle size={18} className="text-red-400" />
+        bg: 'bg-[color-mix(in_srgb,var(--etat-danger)_14%,var(--app-surface))] border-etat-danger/50 text-app-text',
+        icon: <XCircle size={18} className="text-etat-danger" />
     },
     warning: {
-        bg: 'bg-amber-950/90 border-amber-500/50 text-amber-100',
-        icon: <AlertCircle size={18} className="text-amber-400" />
+        bg: 'bg-[color-mix(in_srgb,var(--etat-alerte)_14%,var(--app-surface))] border-etat-alerte/50 text-app-text',
+        icon: <AlertCircle size={18} className="text-etat-alerte" />
     },
     info: {
-        bg: 'bg-slate-900/90 border-slate-500/50 text-slate-100',
+        bg: 'bg-app-surface border-app-border text-app-text',
         icon: <Info size={18} className="text-app-muted" />
     },
     loading: {
-        bg: 'bg-indigo-950/90 border-indigo-500/50 text-indigo-100',
-        icon: <Loader2 size={18} className="text-indigo-400 animate-spin" />
+        bg: 'bg-[color-mix(in_srgb,var(--etat-info)_14%,var(--app-surface))] border-etat-info/50 text-app-text',
+        icon: <Loader2 size={18} className="text-etat-info animate-spin" />
     }
 };
 
@@ -52,9 +57,9 @@ const ToastProvider: React.FC = () => {
                     </button>
                     
                     {/* Progress bar for auto-dismiss timer visual */}
-                    <div className="absolute bottom-0 left-0 h-1 bg-white/10 w-full overflow-hidden rounded-b-xl">
+                    <div className="absolute bottom-0 left-0 h-1 bg-app-text/10 w-full overflow-hidden rounded-b-xl">
                         <div 
-                            className="h-full bg-white/20 animate-out slide-out-to-left-full duration-[3000ms] linear fill-mode-forwards"
+                            className="h-full bg-app-text/20 animate-out slide-out-to-left-full duration-[3000ms] linear fill-mode-forwards"
                         />
                     </div>
                 </div>

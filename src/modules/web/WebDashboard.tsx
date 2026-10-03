@@ -89,7 +89,7 @@ const WebDashboard: React.FC = () => {
 
                     <button
                         onClick={clearAll}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-etat-danger/30 hover:bg-etat-danger/40 border border-etat-danger/30 transition-all text-ui-10 font-bold text-etat-danger uppercase tracking-widest group"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-etat-danger/10 hover:bg-etat-danger/20 border border-etat-danger/30 transition-all text-ui-10 font-bold text-etat-danger uppercase tracking-widest group"
                         title="Vider la bibliothèque"
                     >
                         <Trash2 size={14} className="group-hover:scale-110 transition-transform" />

@@ -72,7 +72,7 @@ const MasterAudioController: React.FC = () => {
         }`}>
             {/* Master Volume Slider */}
             <div className={`flex items-center gap-3 min-w-[110px] @min-[1000px]:min-w-[180px] p-2 ${
-                theme === 'medieval' ? 'bg-black/20 rounded border border-app-border/30' : ''
+                theme === 'medieval' ? 'bg-app-bg/20 rounded border border-app-border/30' : ''
             }`}>
                 <button 
                     onClick={basculerLaCoupure}
@@ -172,8 +172,8 @@ const MasterAudioController: React.FC = () => {
                 onClick={handleStopAll}
                 className={`flex items-center gap-2 px-4 py-2 border transition-all duration-300 group/panic ${
                     theme === 'medieval' 
-                    ? 'rounded-md bg-red-900/20 border-red-900/40 text-red-400 hover:bg-red-900/40' 
-                    : 'rounded-xl bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20 hover:border-red-500/40 hover:shadow-glow-red/20'
+                    ? 'rounded-md bg-etat-danger/20 border-etat-danger/40 text-etat-danger hover:bg-etat-danger/40' 
+                    : 'rounded-xl bg-etat-danger/10 border-etat-danger/20 text-etat-danger hover:bg-etat-danger/20 hover:border-etat-danger/40 hover:shadow-glow-red/20'
                 }`}
                 title={t('common:actions.stop_all')}
             >

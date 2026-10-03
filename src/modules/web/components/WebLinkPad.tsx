@@ -145,7 +145,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
 
                 <button
                     onClick={(e) => { e.stopPropagation(); removeLink(link.id); }}
-                    className="p-2 bg-etat-danger/50 hover:bg-etat-danger/70 rounded-lg text-etat-danger transition-colors"
+                    className="p-2 bg-etat-danger/15 hover:bg-etat-danger/30 rounded-lg text-etat-danger transition-colors"
                     title="Remove"
                 >
                     <X size={18} />
