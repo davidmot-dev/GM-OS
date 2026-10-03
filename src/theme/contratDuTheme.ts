@@ -18,7 +18,7 @@
  */
 
 /** La version du cahier des charges que ce fichier traduit. */
-export const VERSION_DU_CONTRAT = '1.6';
+export const VERSION_DU_CONTRAT = '1.7';
 
 /**
  * - **LU** : GM-OS l'applique aujourd'hui — ceux marqués `personnalites`

@@ -33,6 +33,7 @@ import {
 import { blocsDeJetons, declarationsDuBloc, extraireJetons, nomDuBloc } from './jetonsDeTheme';
 import { problemesDuSvg } from './ornements';
 import { contraste, POLICES_CONNUES } from './editionDuTheme';
+import { encresDuDegrade, encresDuSvg, pireContraste, OPACITE_MAXIMALE_DE_LA_MATIERE, type EncresDeLaMatiere } from './contrasteSurLaMatiere';
 
 /* ────────────────────────────────────────────────────────────────────────────
    L'ENTRÉE ET LA SORTIE
@@ -323,6 +324,10 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
         }
     }
 
+    /* ── § 7 · Le texte sur la matière (T6.3) ────────────────────────────── */
+
+    contrastes.push(...mesurerSurLesMatieres(jetons, theme, erreur, avertir));
+
     /* ── § 8 · Les ornements ─────────────────────────────────────────────── */
 
     const ornements = theme.fichiers['ornements.json'];
@@ -347,6 +352,58 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
 }
 
 type Signaler = (regle: string, message: string, jeton?: string) => void;
+
+/** Chaque matière, et le fond qu'elle recouvre. */
+const MATIERES = [
+    { cle: 'texture-bg', fond: 'bg' },
+    { cle: 'texture-panel', fond: 'surface' },
+] as const;
+
+/**
+ * **Les paires du § 6, remesurées au pire point de la matière** (T6.3).
+ * Voir `contrasteSurLaMatiere.ts` : on relève les encres, on ne rend rien.
+ */
+function mesurerSurLesMatieres(
+    jetons: Record<string, string>, theme: ThemeAValider, erreur: Signaler, avertir: Signaler,
+): MesureDeContraste[] {
+    const declaree = jetons['texture-opacity'] === undefined ? undefined : Number(jetons['texture-opacity']);
+    // Sans opacité déclarée, le jeu reçoit celle du thème de base : on mesure la pire permise.
+    const opacite = declaree === undefined || !Number.isFinite(declaree) ? OPACITE_MAXIMALE_DE_LA_MATIERE : declaree;
+    if (opacite <= 0) return [];
+
+    const mesures: MesureDeContraste[] = [];
+    for (const { cle, fond } of MATIERES) {
+        const valeur = jetons[cle]?.trim();
+        if (!valeur || valeur === 'none' || jetons[fond] === undefined) continue;
+
+        let releve: EncresDeLaMatiere | null = null;
+        if (DEGRADE.test(valeur)) releve = encresDuDegrade(valeur);
+        else {
+            const m = URL_CSS.exec(valeur);
+            const relatif = m?.[1].replace(/\\/g, '/').replace(/^\.\//, '');
+            // Un PNG ou un WebP n'est pas affiché (§ 7) : il n'y a rien à mesurer.
+            if (relatif?.toLowerCase().endsWith('.svg')) releve = encresDuSvg(theme.fichiers[relatif]?.contenu ?? '');
+        }
+        if (!releve) continue;
+        if (releve.incomplet) {
+            avertir('§ 7', `\`--rpg-${cle}\` : une part de la matière ne se mesure pas (un bruit qui invente ses couleurs, ou une couleur que GM-OS ne sait pas lire). Le contraste ci-dessous ne couvre que les couleurs déclarées.`, cle);
+        }
+
+        for (const p of PAIRES_DU_CONTRAT.filter(q => q.fond === fond)) {
+            const avant = jetons[p.avant];
+            if (avant === undefined) continue;
+            const pire = pireContraste(avant, jetons[fond], releve.encres, opacite);
+            if (!pire) continue;
+            const ratio = Math.round(pire.ratio * 100) / 100;
+            const verdict: VerdictDeContraste = ratio < p.minimum ? 'refusé' : ratio < p.recommande ? 'sous le recommandé' : 'bon';
+            mesures.push({ avant: p.avant, fond: `${fond} sous ${cle}`, ratio, minimum: p.minimum, recommande: p.recommande, verdict });
+            if (verdict === 'refusé') {
+                erreur('§ 7', `Contraste \`${p.avant}\` sur \`${fond}\` sous \`--rpg-${cle}\` : ${ratio} au pire point (${avant} sur ${pire.fond}, opacité ${opacite}), minimum ${p.minimum}. Éclaircis ou assombris l'encre de la matière, ou baisse \`--rpg-texture-opacity\`.`, cle);
+            }
+        }
+    }
+    return mesures;
+}
 
 /** Un `@import` : en `https`, depuis un hôte autorisé. Ses familles sont relevées. */
 function verifierLImport(adresse: string, importees: Set<string>, erreur: Signaler): void {

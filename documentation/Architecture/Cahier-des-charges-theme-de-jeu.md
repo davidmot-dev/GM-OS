@@ -1,6 +1,6 @@
 # Cahier des charges — thème de jeu pour GM-OS
 
-**Contrat v1.6 — 2026-10-03.** Destinataire : l'assistant qui construit les thèmes de jeu.
+**Contrat v1.7 — 2026-10-03.** Destinataire : l'assistant qui construit les thèmes de jeu.
 
 Ce document est une **contrainte**, pas une inspiration. Il dit exactement ce que GM-OS lit dans un
 thème, ce qu'il ignore et ce qu'il refuse. Tout ce qui n'y figure pas n'aura **aucun effet** dans
@@ -285,6 +285,15 @@ Une texture donne sa matière au jeu : papier, métal brossé, grain de film, cu
   matière se voie, livre un SVG ou un dégradé.
 - La matière **NE DOIT PAS** porter de texte ni d'information : elle est décor, et elle doit pouvoir
   disparaître sans rien perdre.
+- Le texte **DOIT** rester lisible **sur la matière** : les paires du § 6 dont le fond est `bg`
+  (sous `texture-bg`) ou `surface` (sous `texture-panel`) gardent leur minimum **au pire point**,
+  là où l'encre de la matière la plus gênante est posée à `texture-opacity`. GM-OS relève les
+  couleurs de la matière (celles d'un dégradé avec leur alpha ; celles d'un SVG à pleine force, et
+  `currentColor` y vaut **noir**, car un SVG posé en fond n'hérite pas de la couleur du texte) et
+  mesure ; le rapport donne ces contrastes à part (« `bg sous texture-bg` »). Sans
+  `texture-opacity` déclarée, il mesure à **0.35**, la pire que le jeu puisse recevoir. Un bruit
+  (`feTurbulence`) qui n'est pas ramené à une couleur du dessin (`SourceGraphic`) invente ses
+  couleurs : **signalé, non mesuré**.
 
 ## 8 · Les ornements — nouveaux
 
@@ -412,7 +421,7 @@ meneur plutôt que d'inventer un nom : GM-OS ne le lirait pas.
 ```css
 /* ==========================================================================
    RPG THEME — <NOM DU JEU>
-   Contrat GM-OS v1.6
+   Contrat GM-OS v1.7
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=<Police+Titre>:wght@500;700&family=<Police+Mono>:wght@400;600&display=swap');
@@ -511,6 +520,7 @@ meneur plutôt que d'inventer un nom : GM-OS ne le lirait pas.
 | **v1** | 2026-09-26 | Premier contrat écrit. GM-OS lit **13 réglages** (6 couleurs, 2 polices, 5 tailles), la polarité et les polices importées. Les jetons **V2** sont réservés et annoncés : forme, relief, verre, états, matières, ornements. |
 | **v1.1** | 2026-09-26 | ⛔ Le **piège « page de livre »** (§ 4.1) : dans GM-OS, le texte est posé sur `bg`, pas seulement sur `surface` — quatre des six thèmes existants y tombent. **Polarité vérifiable** (§ 3.5). **`intention.md` obligatoire**, avec les limites signalées et leur classe (§ 1.1). Le déroulé du travail vit dans [`Pipeline-des-themes.md`](./Pipeline-des-themes.md). |
 | **v1.2** | 2026-09-26 | ⛔ **Un seul consommateur** (§ 2) : les fiches de personnage sont **indépendantes des thèmes** (décision de David) et ne lisent jamais `theme.css` — la v1 affirmait l'inverse. Les composants `.rpg-*` et les jetons `paper`, `ink`, `accent-2`, `font-ui` passent au statut **SDK** : facultatifs, sans effet dans GM-OS. La classe de limite « fiches seulement » disparaît. |
+| **v1.7** | 2026-10-03 | ⭐ **Le texte sur la matière** (§ 7) : les contrastes du § 6 se mesurent aussi **au pire point de la matière**, et refusent sous le minimum. Aucun jeton ne change ; les sept thèmes du dépôt restent acceptés. Un thème v1.6 dont la matière noie le texte est désormais refusé. |
 | **v1.6** | 2026-10-03 | ⭐ **Les icônes sont publiées** (§ 9) : trente noms — les modules, puis les notions de jeu (PJ, santé, initiative, indice, butin, lieu, scène, Oracle). `icones.json` et `icones/*.svg` entrent au paquet (§ 1), sous l'interrupteur des personnalités. Surcharge partielle, repli sur les icônes de GM-OS. Aucun jeton ne change : **tout thème v1.5 reste valide**. |
 | **v1.5** | 2026-09-30 | ⭐ **Plus aucun jeton V2** : les treize derniers passent à **LU ⚙**, lus par les nouveaux composants de GM-OS — `surface-2`, `accent-contrast`, `border-soft`, les **quatre couleurs d'état**, `border-width`, `border-style`, `title-tracking`, `kicker-tracking`, `title-transform`, `texture-panel`. **Les ornements** (§ 8) s'appliquent aussi, sous le même interrupteur. Un nom de bloc peut contenir une espace : `:root[data-theme="cthulhu hack"]` (le nom du dossier). |
 | **v1.4** | 2026-09-29 | ⭐ **Dix-huit jetons passent de V2 à LU ⚙** : la forme (`radius-*`), le relief (`elevation-*`, `shadow`, `glow`, `glow-strength`), le verre (`glass-*`), la police du corps (`font-body`), la matière de fond (`texture-bg`, `texture-opacity`) et le cadre (`frame-*`). GM-OS les applique quand le meneur allume les **personnalités** : éteintes, **aucun thème existant ne change** — décision du meneur, qui veut comparer avant d'adopter. Restent **V2** ceux qu'aucun élément de l'écran ne lit encore : `surface-2`, `accent-contrast`, `border-soft`, les états, `border-width`, `border-style`, `title-*`, `kicker-tracking`, `texture-panel`. Une matière `url('matieres/…')` doit être un **SVG** (§ 7). |

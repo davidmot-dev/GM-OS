@@ -5510,9 +5510,15 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
   - **Le chargeur de paquet (T6.1) existait déjà**, par morceaux : `chargerLeThemeDuJeu` lit
     `theme.css`, incorpore les matières (v1.4), les ornements (v1.5) et les icônes (v1.6), confine
     chaque chemin au dossier du thème et rend `null` sans thème. Matière (T6.2), ornements (T6.4)
-    et icônes (T6.5) sont faits. **Restent** : **T6.3**, la garde de contraste du texte **sur la
-    matière** (aujourd'hui, seulement sur la couleur) ; **T6.6 sur un vrai jeu** — aucun jeu réel
-    ne livre encore d'icônes, le premier viendra du constructeur.
+    et icônes (T6.5) sont faits.
+  - ✅ **T6.3 — le texte sur la matière** (contrat **v1.7**, même jour) : le validateur relève les
+    encres de la matière (couleurs d'un dégradé avec leur alpha, couleurs d'un SVG à pleine force,
+    `currentColor` = noir) et remesure les paires du § 6 **au pire point** ; refus sous le minimum,
+    un bruit qui invente ses couleurs est signalé, pas mesuré (`src/theme/contrasteSurLaMatiere.ts`).
+    Les sept thèmes du dépôt restent acceptés (Cthulhu Hack : `muted` passe de 4,34 à 3,64 sous
+    son grain) ; les personnalités cyberpunk et médiévale passent la même garde. Constructeur 0.7.0.
+  - **Reste T6.6 sur un vrai jeu** : aucun jeu réel ne livre encore d'icônes, le premier viendra
+    du constructeur.
 - **La suite** : **une séance jouée** (règle du plan) ; **phase 5, le fini** (halos,
   anneau de focus, bordures, transitions — dans les primitives) ; un premier jeu livré avec ses
   icônes, à regarder à l'écran.

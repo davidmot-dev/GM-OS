@@ -78,6 +78,9 @@ RÈGLES QUI PIÈGENT LE PLUS (le détail est dans le cahier)
   que le noir, c'est `dark` (§ 3.5).
 - Contrastes minimums (§ 6) : texte ≥ 4.5 sur `bg` **et** `surface` ; texte secondaire ≥ 3 ;
   accent ≥ 3 sur `bg` ; texte sur l'accent ≥ 4.5 ; chaque couleur d'état ≥ 3 sur `bg`.
+- Les mêmes minimums **sur la matière** (§ 7), au pire point : une matière claire sur un fond clair,
+  ou sombre sur un fond sombre, rapproche le fond du texte. `currentColor` vaut noir dans une
+  matière. Le rapport donne ces contrastes à part (« `bg sous texture-bg` ») : lis-les.
 - Polices importées en tête, depuis `fonts.googleapis.com` ou `fonts.bunny.net` seulement.
 - Un jeton, une déclaration ; pas de `!important` dans le bloc des jetons.
 - Chemins de matières et d'ornements **dans** `theme/` ; SVG en `currentColor`, sans script.

@@ -80,13 +80,13 @@ describe('validerLeTheme — le cas normal', () => {
     });
 
     it('mesure les dix paires du § 6', () => {
-        expect(valider(feuille()).contrastes).toHaveLength(10);
+        expect(valider(feuille()).contrastes.filter(c => !c.fond.includes(' sous '))).toHaveLength(10);
     });
 
     it('§ 4.8 : un cadre complet ajoute ses deux paires, et passe', () => {
         const r = valider(feuille({ 'frame-bg': '#e8e0d0', 'frame-text': '#1a1208', 'frame-accent': '#6b4a12' }));
         expect(r.accepte).toBe(true);
-        expect(r.contrastes).toHaveLength(12);
+        expect(r.contrastes.filter(c => !c.fond.includes(' sous '))).toHaveLength(12);
         expect(r.contrastes.map(c => `${c.avant}/${c.fond}`)).toEqual(
             expect.arrayContaining(['frame-text/frame-bg', 'frame-accent/frame-bg']));
     });
@@ -213,6 +213,25 @@ describe('validerLeTheme — ce qu\'il refuse', () => {
             'icones.json': { taille: table.length, contenu: table },
             'icones/combat.svg': { taille: script.length, contenu: script },
         })).toContain('§ 8');
+    });
+
+    /* T6.3 (phase 6) : le texte sur la matière, au pire point. */
+    it('§ 7 : une matière claire qui noie le texte clair est refusée — la même, discrète, passe', () => {
+        const trame = 'repeating-linear-gradient(0deg, #ffffff 0 1px, transparent 1px 4px)';
+        expect(regles(feuille({ 'texture-panel': trame, 'texture-opacity': '0.35' }))).toContain('§ 7');
+        expect(regles(feuille({ 'texture-panel': trame, 'texture-opacity': '0.05' }))).not.toContain('§ 7');
+    });
+
+    it('§ 7 : les mesures sous la matière entrent au rapport', () => {
+        const r = valider(feuille());
+        expect(r.contrastes.some(c => c.fond === 'bg sous texture-bg' && c.avant === 'text')).toBe(true);
+    });
+
+    it('§ 7 : un bruit qui invente ses couleurs est signalé, pas refusé', () => {
+        const bruit = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><filter id="n"><feTurbulence baseFrequency="0.6"/></filter><rect width="10" height="10" fill="currentColor" filter="url(#n)"/></svg>';
+        const r = valider(feuille(), { 'matieres/grain.svg': { taille: bruit.length, contenu: bruit } });
+        expect(r.erreurs.map(e => e.regle)).not.toContain('§ 7');
+        expect(r.avertissements.map(a => a.regle)).toContain('§ 7');
     });
 
     it('§ 11 : !important, et une @media avant la fin des jetons', () => {
