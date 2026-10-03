@@ -438,7 +438,7 @@ declare global {
              * Charge le modèle d'avance. **Facultatif** : un pont plus ancien
              * ne l'expose pas, et l'appelant doit le vérifier avant d'appeler.
              */
-            ollamaPrechauffer?: (model: string, endpoint?: string) => Promise<boolean>;
+            ollamaPrechauffer?: (model: string, endpoint?: string, numCtx?: number) => Promise<boolean>;
             ollamaStatus: (endpoint?: string) => Promise<boolean>;
             ollamaListModels: (endpoint?: string) => Promise<string[]>;
             ollamaPull: (model: string, endpoint?: string) => Promise<boolean>;

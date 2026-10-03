@@ -17,6 +17,15 @@ export type AIModelConfig = {
   provider: AIProvider;
   modelId: string;
   endpoint?: string;
+  /**
+   * Ollama seulement — le modèle qui répond **pendant une séance ouverte**,
+   * pause comprise ; vide, `modelId` répond toujours. Voir `modeleDuMoment.ts`.
+   */
+  modeleEnSeance?: string;
+  /** Ollama seulement — la fenêtre de contexte de `modelId` ; absente, 16 384. */
+  contexte?: number;
+  /** Ollama seulement — la fenêtre de contexte de `modeleEnSeance` ; absente, 16 384. */
+  contexteEnSeance?: number;
 };
 
 export type AIResponse = {

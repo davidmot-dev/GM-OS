@@ -211,7 +211,14 @@
       "model_select_tooltip": "Select AI Model",
       "manual_input": "-- Manual Input --",
       "endpoint_url": "Endpoint URL",
-      "selected_model": "Selected model: "
+      "selected_model": "Selected model: ",
+      "context": "Context window",
+      "context_default": "{{n}} (default)",
+      "context_hint": "A larger window lets the Forge read more, but every request takes more memory.",
+      "session_model": "In-session model",
+      "session_model_same": "Same model",
+      "session_model_hint": "The in-session model answers while a session is open, pauses included; an image always goes to the main model.",
+      "session_context": "In-session window"
     },
     "oracle": {
       "title": "AI Oracle (NotebookLM)",

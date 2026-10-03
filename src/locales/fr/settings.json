@@ -211,7 +211,14 @@
       "model_select_tooltip": "Sélectionner le modèle d'IA",
       "manual_input": "-- Saisie Manuelle --",
       "endpoint_url": "URL du Point de Terminaison",
-      "selected_model": "Modèle sélectionné: "
+      "selected_model": "Modèle sélectionné: ",
+      "context": "Fenêtre de contexte",
+      "context_default": "{{n}} (défaut)",
+      "context_hint": "Une fenêtre plus grande laisse la Forge lire davantage, mais chaque requête occupe plus de mémoire.",
+      "session_model": "Modèle en séance",
+      "session_model_same": "Le même modèle",
+      "session_model_hint": "Le modèle en séance répond pendant une séance ouverte, pause comprise ; une image part toujours au modèle principal.",
+      "session_context": "Fenêtre en séance"
     },
     "oracle": {
       "title": "AI Oracle (NotebookLM)",

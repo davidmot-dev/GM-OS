@@ -189,4 +189,8 @@ describe('le corps du préchauffage', () => {
     expect(corpsDePrechauffage('gemma4:12b').options)
       .toMatchObject({ num_ctx: OPTIONS_PAR_DEFAUT.num_ctx });
   });
+
+  it('prend la fenêtre réglée par le meneur quand il y en a une (2026-10-03)', () => {
+    expect(corpsDePrechauffage('lfm2.5', 32768).options).toMatchObject({ num_ctx: 32768 });
+  });
 });

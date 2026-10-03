@@ -344,8 +344,8 @@ contextBridge.exposeInMainWorld('appBridge', {
          * Rend `false` sans bruit si Ollama ne répond pas : un préchauffage
          * raté ne coûte que le démarrage qu'on payait déjà.
          */
-        ollamaPrechauffer: (model: string, endpoint?: string): Promise<boolean> =>
-            ipcRenderer.invoke('ai:ollama-prechauffer', model, endpoint),
+        ollamaPrechauffer: (model: string, endpoint?: string, numCtx?: number): Promise<boolean> =>
+            ipcRenderer.invoke('ai:ollama-prechauffer', model, endpoint, numCtx),
         ollamaStatus: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-status', endpoint),
         ollamaListModels: (endpoint?: string) => ipcRenderer.invoke('ai:ollama-list-models', endpoint),
         ollamaPull: (model: string, endpoint?: string) => ipcRenderer.invoke('ai:ollama-pull', model, endpoint),

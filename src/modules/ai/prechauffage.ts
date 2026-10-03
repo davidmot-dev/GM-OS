@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAIStore } from '../../stores/useAIStore';
 import type { AIProvider, AIModelConfig } from './types';
+import { modeleDuMoment } from './modeleDuMoment';
 
 /**
  * **Charger le modèle avant la première question — mesuré le 2026-08-31.**
@@ -40,12 +41,16 @@ import type { AIProvider, AIModelConfig } from './types';
 export function modeleAPrechauffer(
     provider: AIProvider,
     configs: Partial<Record<AIProvider, AIModelConfig>>,
-): { model: string; endpoint?: string } | null {
+): { model: string; endpoint?: string; num_ctx?: number } | null {
     if (provider !== 'ollama') return null;
     const config = configs[provider];
-    const model = config?.modelId;
+    if (!config?.modelId && !config?.modeleEnSeance?.trim()) return null;
+    /* On ne préchauffe qu'en séance : c'est donc le modèle de séance, s'il y en
+       a un, et **sa** fenêtre — celle que porteront les requêtes, sans quoi
+       Ollama rechargerait à la première question (2026-10-03). */
+    const { model, num_ctx } = modeleDuMoment(config, true, '');
     if (!model) return null;
-    return { model, endpoint: config?.endpoint };
+    return { model, endpoint: config.endpoint, ...(num_ctx ? { num_ctx } : {}) };
 }
 
 /**
@@ -111,7 +116,7 @@ export function usePrechauffageDuModele(seanceOuverte: boolean): void {
             dernier.current = maintenant;
             // Sans `await` ni remontée d'erreur : le service journalise, et un
             // échec ne rend rien pire qu'avant.
-            void pont(cible.model, cible.endpoint).catch(() => undefined);
+            void pont(cible.model, cible.endpoint, cible.num_ctx).catch(() => undefined);
         };
 
         chauffer();

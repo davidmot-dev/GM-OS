@@ -1,5 +1,7 @@
 import { useAIStore } from '../../stores/useAIStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
+import { modeleOllamaActuel } from './modeleActuel';
+import { modeleDuMoment } from './modeleDuMoment';
 import { useJournalStore } from '../journal/useJournalStore';
 import { leRecitCureDuJournal } from '../journal/recitCure';
 import {
@@ -358,7 +360,12 @@ export class AIService {
     while (retries <= MAX_RETRIES) {
       try {
         if (activeProvider === 'ollama' || activeProvider === 'ollama_cloud') {
-          const model = config.modelId || 'phi3';
+          /* En séance, le modèle de séance s'il est déclaré (`modeleDuMoment.ts`)
+             — **sauf pour une image** : elle part toujours au modèle principal,
+             celui que la garde de vision (`capaciteDuModele.ts`) a vérifié. */
+          const { model, num_ctx } = (pieces ?? []).length > 0
+            ? modeleDuMoment(config, false)
+            : modeleOllamaActuel(config);
           const endpoint = config.endpoint;
           if (!window.appBridge?.ai?.ollamaChat) throw new Error("Bridge Ollama non disponible.");
 
@@ -413,13 +420,14 @@ export class AIService {
               content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}`,
               ...(images.length > 0 ? { images } : {}),
             }
-          ], endpoint, attendJson || plafondDeGeneration
+          ], endpoint, attendJson || plafondDeGeneration || num_ctx
             ? {
                 ...(attendJson ? { json: true } : {}),
                 ...(schema ? { schema } : {}),
                 // Absent, le service garde son défaut : on ne fait pas payer
                 // une nouveauté aux appelants qui n'ont rien demandé.
                 ...(plafondDeGeneration ? { num_predict: plafondDeGeneration } : {}),
+                ...(num_ctx ? { num_ctx } : {}),
               }
             : undefined,
             // Toute requête s'inscrit au registre, nommée : c'est ce qui permet
@@ -1246,7 +1254,7 @@ Use the names above verbatim. Do not invent a setting title.
     onStatusUpdate?.("Réception de la vision...");
     
     if (activeProvider === 'ollama') {
-      const model = config.modelId || 'phi3';
+      const { model, num_ctx } = modeleOllamaActuel(config);
       const endpoint = config.endpoint;
       if (!window.appBridge?.ai?.ollamaChatStream) throw new Error("Bridge Ollama Stream non disponible.");
       
@@ -1269,7 +1277,7 @@ Use the names above verbatim. Do not invent a setting title.
         await window.appBridge.ai.ollamaChatStream(model, [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: prompt }
-        ], endpoint, { num_predict: 1024 }, identifierLaRequete("Oracle"));
+        ], endpoint, { num_predict: 1024, ...(num_ctx ? { num_ctx } : {}) }, identifierLaRequete("Oracle"));
       } finally {
         unsubscribe();
       }

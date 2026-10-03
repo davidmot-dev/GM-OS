@@ -23,6 +23,7 @@ import { slugFiche } from './rules/canevas';
 import { extrairePersonas, controlerPersonas, type Personas } from './rules/personas';
 import { budgetEnCaracteres, direLEcart, preparerLeTexte } from './rules/budgetDeLaForge';
 import { OPTIONS_PAR_DEFAUT } from '../../../electron/optionsDuModele';
+import { modeleOllamaActuel } from '../ai/modeleActuel';
 import { moteurRetenu } from '../ai/moteurParForge';
 
 /**
@@ -162,9 +163,13 @@ export class ForgeService {
       troncature muette du chemin IA.
     */
     const RESERVE_POUR_L_INVITE = 3000;
+    // La fenêtre réglée par le meneur pour le modèle qui répondra (2026-10-03), sinon le défaut.
+    const fenetre = activeProvider === 'ollama'
+        ? modeleOllamaActuel(useAIStore.getState().configs.ollama).num_ctx
+        : undefined;
     const { texte: consolidatedText, pieces: attachments, ecarts } = preparerLeTexte(
         items,
-        budgetEnCaracteres(OPTIONS_PAR_DEFAUT.num_ctx, RESERVE_POUR_L_INVITE),
+        budgetEnCaracteres(fenetre ?? OPTIONS_PAR_DEFAUT.num_ctx, RESERVE_POUR_L_INVITE),
         5,
     );
 

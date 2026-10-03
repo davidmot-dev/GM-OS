@@ -87,7 +87,8 @@ const ReglagesDesAmbiances: React.FC = () => {
 
     return (
         <>
-            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-2">
+            {/* Les sorties sont celles de la machine : la capture de référence masque ce panneau (`data-depend-du-materiel`). */}
+            <Panneau niveau={1} data-depend-du-materiel="" className="shrink-0 p-4 flex flex-col gap-2">
                 <h2 className={titreDeSection}>{t('modules:ambient.dashboard.audio_output')}</h2>
                 <div className="flex flex-col gap-1">
                     {sorties.map(({ id, libelle }) => {

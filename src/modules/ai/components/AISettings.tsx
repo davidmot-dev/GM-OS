@@ -7,6 +7,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useObsidianStore } from '../../session/useObsidianStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { Select } from '../../../components/common/Select';
+import { FENETRES_DE_CONTEXTE } from '../modeleDuMoment';
 import type { AIProvider } from '../types';
 import { aiService } from '../AIService';
 import ReglagesDImage from './ReglagesDImage';
@@ -572,6 +573,55 @@ const AISettings: React.FC = () => {
                 )}
               </div>
             </div>
+
+            {/*
+              **Un modèle pour préparer, un autre pour jouer** — demandé par David
+              le 2026-10-03. Vide, le modèle principal répond toujours. La règle
+              vit dans `modeleDuMoment.ts`.
+            */}
+            {p.id === 'ollama' && (() => {
+              const connus = discoveredModels.ollama.length > 0
+                ? discoveredModels.ollama
+                : ['gemma4:12b', 'gemma4:26b', 'llama3.2:3b', 'phi3'];
+              const modeles = Array.from(new Set([...connus, configs.ollama.modeleEnSeance].filter((m): m is string => !!m)));
+              const fenetres = FENETRES_DE_CONTEXTE.map(n => ({
+                value: String(n),
+                label: n === 16384 ? t('ai.labels.context_default', { n: n.toLocaleString('fr-FR') }) : n.toLocaleString('fr-FR'),
+              }));
+              const etiquette = 'text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40 flex items-center gap-2';
+              return (
+                <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <label className={etiquette}><Cpu size={12} className="text-accent" />{t('ai.labels.context')}</label>
+                    <Select
+                      value={String(configs.ollama.contexte ?? 16384)}
+                      onChange={(val) => updateConfig('ollama', { contexte: Number(val) })}
+                      options={fenetres}
+                      title={t('ai.labels.context_hint')}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className={etiquette}><Cpu size={12} className="text-accent" />{t('ai.labels.session_model')}</label>
+                    <Select
+                      value={configs.ollama.modeleEnSeance ?? ''}
+                      onChange={(val) => updateConfig('ollama', { modeleEnSeance: val })}
+                      options={[{ value: '', label: t('ai.labels.session_model_same') }, ...modeles.map(m => ({ value: m, label: m }))]}
+                      title={t('ai.labels.session_model_hint')}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className={etiquette}><Cpu size={12} className="text-accent" />{t('ai.labels.session_context')}</label>
+                    <Select
+                      value={String(configs.ollama.contexteEnSeance ?? 16384)}
+                      onChange={(val) => updateConfig('ollama', { contexteEnSeance: Number(val) })}
+                      options={fenetres}
+                      title={t('ai.labels.context_hint')}
+                    />
+                  </div>
+                  <p className="text-ui-10 leading-snug text-app-muted md:col-span-3">{t('ai.labels.session_model_hint')} {t('ai.labels.context_hint')}</p>
+                </div>
+              );
+            })()}
 
             {p.id === 'ollama' && (
               <div className="flex flex-col gap-2 mt-4 w-full">

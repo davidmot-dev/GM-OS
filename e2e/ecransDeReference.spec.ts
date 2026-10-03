@@ -107,6 +107,14 @@ for (const [serie, allumees, suffixe] of [
                     scale: 'css',
                     /* Un pixel anti-crénelé de travers n'est pas un changement d'habillage. */
                     maxDiffPixelRatio: 0.005,
+                    /*
+                      **Ce qui dépend du matériel ne se compare pas** (2026-10-03) : la
+                      liste des sorties audio est celle de la machine, et un écran
+                      branché ajoutait trois lignes — Musique et Ambiances échouaient
+                      sans qu'une ligne de code ait changé. On masque toute la
+                      colonne : la liste pousse ce qui est dessous.
+                    */
+                    mask: [gmos.fenetre.locator('aside:has([data-depend-du-materiel])')],
                     timeout: 15_000,
                 });
 

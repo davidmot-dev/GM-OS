@@ -224,16 +224,18 @@ export function corpsDeChat(
  * La fenêtre décide de la taille du cache clé-valeur, donc de l'occupation
  * mémoire : demander 16 384 après avoir chargé sur 4 096 fait **recharger** le
  * modèle, et le préchauffage n'aura fait qu'ajouter une montée de plus. Il lit
- * donc `OPTIONS_PAR_DEFAUT`, la seule écriture de cette valeur.
+ * donc `OPTIONS_PAR_DEFAUT`, la seule écriture de cette valeur — sauf quand le
+ * meneur a réglé la fenêtre de son modèle (`numCtx`, 2026-10-03) : le renderer
+ * la passe alors, la même qu'il mettra sur chaque requête.
  *
  * `keep_alive` est ici pour la même raison que dans `corpsDeChat` : de premier
  * niveau, jamais dans `options`, où Ollama l'ignore en silence.
  */
-export function corpsDePrechauffage(model: string): Record<string, unknown> {
+export function corpsDePrechauffage(model: string, numCtx?: number): Record<string, unknown> {
     return {
         model,
         keep_alive: DUREE_DE_CHARGE,
-        options: { num_ctx: OPTIONS_PAR_DEFAUT.num_ctx },
+        options: { num_ctx: numCtx ?? OPTIONS_PAR_DEFAUT.num_ctx },
     };
 }
 
@@ -460,13 +462,13 @@ export class OllamaService {
      * lieu, c'est lui donner un souci qu'il ne peut pas traiter.* Le journal
      * garde la trace pour qui la cherche.
      */
-    async prechauffer(model: string, endpoint?: string): Promise<boolean> {
+    async prechauffer(model: string, endpoint?: string, numCtx?: number): Promise<boolean> {
         const url = (endpoint || this.baseUrl).replace(/\/$/, '');
         const depart = Date.now();
         try {
             const reponse = await net.fetch(`${url}/api/generate`, {
                 method: 'POST',
-                body: JSON.stringify(corpsDePrechauffage(model)),
+                body: JSON.stringify(corpsDePrechauffage(model, numCtx)),
                 headers: { 'Content-Type': 'application/json' },
             });
             const secondes = ((Date.now() - depart) / 1000).toFixed(1);
@@ -939,8 +941,10 @@ export class OllamaService {
         });
 
         /** Charger le modèle d'avance — sans requête, sans réponse à attendre. */
-        ipcMain.handle('ai:ollama-prechauffer', async (_event, model: string, endpoint?: string) => {
-            return await service.prechauffer(model, endpoint);
+        ipcMain.handle('ai:ollama-prechauffer', async (_event, model: string, endpoint?: string, numCtx?: number) => {
+            // Une fenêtre hors bornes ne part pas : le défaut la remplace.
+            const fenetre = typeof numCtx === 'number' && Number.isInteger(numCtx) && numCtx >= 2048 && numCtx <= 131072 ? numCtx : undefined;
+            return await service.prechauffer(model, endpoint, fenetre);
         });
 
         ipcMain.handle('ai:ollama-list-models', async (_event, endpoint?: string) => {
