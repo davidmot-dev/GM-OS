@@ -42,13 +42,13 @@ question la page répond — de quoi choisir sans ouvrir.
 | Guide | À quelle question il répond |
 | :--- | :--- |
 | [NPC-OS](./20-NPC-OS-les-personnages.md) | Improviser un PNJ, un lieu, une rumeur — et le garder. |
-| [Générateur de portraits (IA)](./21-Generer-un-PNJ-en-direct.md) | Donner un visage à un PNJ, et un décor à une scène. |
+| [Générateur de portraits (IA)](./21-Generer-un-PNJ-en-direct.md) | Donner un visage à un PNJ. |
 | [Voice-OS](./74-Voice-OS-la-voix.md) | Transformer **votre** voix pour incarner un PNJ, et **lui garder sa voix** d'une séance à l'autre. |
 | [Favorite-OS](./26-Favoris.md) | Le codex du meneur : ce qu'on veut sous la main sans le chercher. |
 | [Indices](./25-Indices.md) | Poser des secrets, les relier aux PNJ et aux lieux, les révéler au bon moment. |
 | [Map-OS](./22-Map-OS-le-plateau.md) | Le plateau tactique : cartes, pions, brouillard, zones de danger, projection. |
 | [Brouillard et calques](./23-Map-OS-calques-et-effets.md) | Comment le brouillard est fabriqué, ce que chaque calque masque, et le dépannage. |
-| [Obsidian](./84-Nexus-Wiki-coffre-Obsidian.md) | Brancher vos notes de préparation sur GM-OS. |
+| [Nexus Wiki (Obsidian)](./84-Nexus-Wiki-coffre-Obsidian.md) | Lire vos notes Obsidian dans GM-OS, liens `[[…]]` compris. |
 | [Web-OS](./28-Navigateur-integre.md) | Garder à portée les ressources en ligne d'une campagne, et **projeter une vidéo YouTube**. |
 
 ## ⚔️ Jouer
@@ -112,7 +112,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Ambient-OS](./72-Ambient-OS.md) | Huit boucles à superposer — et **les thèmes livrés sont des gabarits sans sons**. |
 | [Sound-OS](./73-Sound-OS-bruitages.md) | Seize pads de bruitages, clavier et MIDI. |
 | [Image-OS](./24-Image-OS-la-regie-visuelle.md) | Projeter une illustration, un portrait, une carte — **ou une vidéo**, avec son son. |
-| [Media Hub](./92-Media-Hub.md) | Où vivent les fichiers, et comment les retrouver. |
+| [Médiathèque](./92-Media-Hub.md) | Où vivent les fichiers, et comment les retrouver. |
 | [Light-OS](./75-Light-OS-les-lumieres.md) | Les lumières Philips Hue dans la scène. |
 | [Whiteboard-OS](./27-Tableau-blanc.md) | Dessiner à quatre mains avec les joueurs. |
 | [Afficheur Ulanzi](./76-Afficheur-de-table-Ulanzi.md) | Le petit écran 32 × 8 posé sur la table : widgets, défilé, icônes animées. |
@@ -121,11 +121,11 @@ question la page répond — de quoi choisir sans ouvrir.
 
 | Guide | À quelle question il répond |
 | :--- | :--- |
-| [Oracle IA](./80-Oracle-poser-une-question.md) | Poser une question à un modèle qui connaît **votre** corpus. |
-| [Oracle & NotebookLM](./81-Oracle-le-pont-NotebookLM.md) | Le même Oracle, côté corpus documentaire : comment on l'alimente. |
+| [Oracle IA](./80-Oracle-poser-une-question.md) | Poser une question à un modèle qui connaît **votre** corpus — le panneau **Cortex IA**. |
+| [Oracle & NotebookLM](./81-Oracle-le-pont-NotebookLM.md) | Le bouton **Oracle** de Session-OS, qui converse avec un carnet NotebookLM — et ce que NotebookLM fait d'autre. |
 | [Synergie IA ↔ Obsidian](./85-Nexus-Wiki-et-l-Oracle.md) | Préparer une séance à partir de ses propres notes. |
-| [Cortex — l'assistant tactique](./82-Cortex-OS.md) | Ce que l'IA observe de la table, et ce qu'elle en dit. |
-| [Cortex — manuel détaillé](./83-Cortex-OS-aide-memoire.md) | Le même module, vu depuis Map-OS. |
+| [Cortex — l'assistant tactique](./82-Cortex-OS.md) | Ce que l'IA observe du combat, et ce qu'elle en dit. *Le cerveau en bas de la barre — pas **Cortex IA**.* |
+| [Cortex — manuel détaillé](./83-Cortex-OS-aide-memoire.md) | Le mémo de séance du Cortex tactique. |
 
 ## 📦 Transporter et installer
 
@@ -151,11 +151,28 @@ renommage du même jour. Lisez quand même la première d'abord :
 
 ---
 
-## 📌 Les illustrations manquent
+## 📸 Les illustrations
 
-Plusieurs guides annonçaient des captures d'écran qui vivaient hors du dépôt, à l'ancien
-emplacement du projet. **Elles sont perdues** : les pages le disent désormais à l'endroit où
-l'image devait apparaître, plutôt que d'afficher une icône cassée. Elles sont à refaire.
+**Les captures d'écran des guides sont de vraies captures de GM-OS**, rangées dans
+[`captures/`](./captures/). Elles viennent toutes de la **campagne de démonstration « Le Silence de
+Varn »** — une station de relais muette, ses PNJ, son plan, son coffre Obsidian —, fictive de bout
+en bout : aucune ne montre une vraie campagne.
+
+Elles se **régénèrent** quand l'interface change, par un essai de bout en bout qui monte la
+démonstration dans une instance jetable et photographie chaque écran :
+
+```text
+npm run build
+npx playwright test e2e/capturesDuManuel.spec.ts
+```
+
+La campagne vit dans `e2e/donnees/campagne-de-demo.json`, le coffre dans
+`e2e/donnees/coffre-de-demo/`. Les panneaux qui listent le matériel de la machine (sorties audio)
+sont floutés à la prise.
+
+> ⚠️ **Une capture n'est juste que le jour où elle est prise.** Après une refonte d'écran,
+> relancez l'essai *avant* de relire le guide : un texte relu contre une image périmée confirme
+> l'erreur au lieu de la trouver.
 
 ---
 
@@ -163,3 +180,6 @@ l'image devait apparaître, plutôt que d'afficher une icône cassée. Elles son
 liens vers l'ancienne arborescence `docs/` sont réparés, et **six guides ont été écrits** pour des
 modules majeurs qui n'en avaient aucun — la trame, la Forge de campagne, le journal, la sauvegarde
 automatique, l'afficheur Ulanzi et la fiche HTML.*
+
+*Relu le 2026-10-03 : les guides sont illustrés par des captures réelles, régénérables ; les deux
+« Oracle » et les deux « Cortex » sont distingués.*

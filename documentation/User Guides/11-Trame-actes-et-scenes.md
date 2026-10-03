@@ -8,6 +8,8 @@ train de jouer, et ce qui est derrière vous. C'est le seul endroit de GM-OS qui
 > un clic dessus ouvre la trame. Les **gestes** de jeu, eux, vivent dans le panneau de séance —
 > *un second endroit pour ouvrir une scène ferait deux écrans à tenir d'accord.*
 
+![La trame de la campagne de démonstration : trois actes, leurs scènes, et l'en-tête Arbre / Graphe / Ajouter un acte](captures/session-trame.jpg)
+
 ---
 
 ## 1. Deux niveaux, et pas quatre
@@ -28,6 +30,8 @@ quelles scènes seront jouées* — c'est tout ce que le modèle promet.
 > séparé.
 
 ## 2. Ce qu'une scène contient
+
+![Une scène ouverte dans la trame : son rang, ce qu'elle convoque, où elle mène](captures/session-trame-scene.jpg)
 
 | Champ | À quoi il sert |
 | :--- | :--- |
@@ -226,6 +230,8 @@ Deux gestes pour rattraper la réalité d'une partie :
 Dans l'en-tête de la trame, deux boutons : **Arbre** et **Graphe**. L'arbre sert à **écrire**, le
 graphe à **voir**.
 
+![Le graphe de la trame : les actes, leurs scènes et ce qu'elles convoquent](captures/session-trame-graphe.jpg)
+
 > ⭐ *Une liste montre ce qui est ; un graphe montre ce qui **manque**.* Un indice que plus aucune
 > scène ne livre, un PNJ qu'aucune scène ne convoque, un acte vide, un renvoi vers un lieu supprimé :
 > rien de tout cela ne se voit dans une liste.
@@ -332,3 +338,5 @@ et oui à un graphe de ce qui existe déjà), et **« cette scène mène à cell
 qu'une scène A mène vers une scène B ou une scène C »*). ⭐ **Les niveaux de visualisation sont son
 idée**, et elle était meilleure que les sept cases à cocher prévues. ✅ **Éprouvé à l'écran le jour
 même**, correctif des espaces compris.*
+
+*Illustré le 2026-10-03 avec la campagne de démonstration.*

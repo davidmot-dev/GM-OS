@@ -4,7 +4,26 @@ L'Oracle est le panneau de conversation de GM-OS. Vous lui posez une question, i
 **dans votre corpus** — les fiches de règles de votre jeu, les notes de votre campagne — et il
 répond en vous disant **sur quelles fiches** il s'est appuyé.
 
-![Sélecteur de Persona de l'Oracle](oracle_mockup.png)
+**Où le trouver** : **Cortex IA**, dans la section *Global* de la barre des modules. Le panneau
+s'ouvre à droite de l'écran, par-dessus le module en cours, sous le titre *AI Companion* ; un second
+clic sur **Cortex IA** le referme.
+
+![Le panneau Cortex IA ouvert à droite, par-dessus Nexus Wiki : les huit personas en haut, la conversation, puis le fournisseur et la question en bas](captures/module-cortex-ia.jpg)
+
+*Le panneau de l'Oracle : les huit personas en tuiles, la conversation au milieu, et en bas le
+fournisseur actif (Gemini, OpenAI, Anthropic…) et le champ de la question.*
+
+> ⚠️ **Deux panneaux portent le nom d'« Oracle », et ce ne sont pas les mêmes.**
+>
+> | Où | Ce qu'il interroge |
+> | :--- | :--- |
+> | **Cortex IA**, barre des modules — *ce guide* | Votre **corpus**, par le fournisseur choisi dans **Paramètres › 03. IA**. |
+> | Le bouton **Oracle** de l'en-tête de **Session-OS** | Le **carnet NotebookLM** de la campagne, du pilote ou du modèle de fiche → [Oracle & NotebookLM](./81-Oracle-le-pont-NotebookLM.md). |
+>
+> Les personas sont les mêmes des deux côtés ; les sources, non.
+>
+> Et le **Cortex tactique** — le cerveau du bas de la barre des modules — est encore autre chose :
+> [Cortex, l'assistant tactique](./82-Cortex-OS.md).
 
 ---
 
@@ -14,15 +33,16 @@ répond en vous disant **sur quelles fiches** il s'est appuyé.
 > « repose sur la technologie NotebookLM via un pont MCP » et qu'il fallait vérifier un voyant vert
 > « Bridged » pour qu'il réponde. **C'est faux, et ça envoyait dépanner le mauvais module.**
 >
-> NotebookLM existe bien dans GM-OS, mais il sert à **la Forge de campagne**, pour distiller un
-> scénario. L'Oracle, lui, parle à l'un des **six moteurs** que vous configurez dans les réglages
+> NotebookLM existe bien dans GM-OS : il sert à **la Forge de campagne**, pour distiller un
+> scénario, et au **bouton Oracle de Session-OS** (voir l'encadré au-dessus). L'Oracle de ce guide,
+> lui, parle à l'un des **six moteurs** que vous configurez dans les réglages
 > IA. Corrigé le 2026-09-04.
 
 ---
 
 ## ⚙️ Le moteur
 
-Dans **Paramètres → IA**, vous choisissez le fournisseur :
+Dans **Paramètres › 03. IA**, vous choisissez le fournisseur :
 
 | Fournisseur | Où tourne le modèle |
 | :--- | :--- |
@@ -39,7 +59,7 @@ conversation.*
 
 ## 🎭 Les huit personas
 
-Un persona change la voix et le domaine de l'Oracle. Le sélecteur est dans l'en-tête du panneau.
+Un persona change la voix et le domaine de l'Oracle. Les huit sont en tuiles en haut du panneau : un clic suffit.
 
 | Persona | Ce qu'on lui demande |
 | :--- | :--- |
@@ -154,3 +174,7 @@ repose pas sur NotebookLM, et il n'y a pas de « voyant vert » à surveiller po
 Le compte des personas corrigé (huit, et non six ni sept). Ajouté : les six moteurs, les trois
 racines du corpus, le plafond de 4 000 jetons, le **penchant**, et surtout **les sources citées et
 leurs marques**, qui n'apparaissaient dans aucun guide.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Ajouté : l'Oracle de ce guide s'ouvre
+par **Cortex IA** ; le bouton **Oracle** de Session-OS, lui, converse avec un carnet NotebookLM — les
+deux portaient le même nom sans que le manuel le dise.*

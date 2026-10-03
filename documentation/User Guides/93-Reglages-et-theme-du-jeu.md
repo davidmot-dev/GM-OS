@@ -2,15 +2,32 @@
 
 Le module **Paramètres de l'OS** est le centre de contrôle global de GM-OS. C'est ici que vous configurez l'esthétique de votre interface, votre matériel physique, vos services d'IA et votre **télécommande déportée**.
 
+Il s'ouvre par l'engrenage, parmi les raccourcis en bas de la barre des modules. **Échap** ou
+**Fermer** le referme ; chaque réglage s'applique et s'enregistre aussitôt.
+
+![Paramètres › 01. Système : l'état du système, le thème de l'interface, la couleur d'accent, puis la langue](captures/parametres.jpg)
+
+| Catégorie | Ce qu'on y trouve |
+| :--- | :--- |
+| **01. Système** | L'état du système, le **thème de l'interface** et la **couleur d'accent**, la langue, le matériel (*Hardware & Routing* : noms des sorties et des écrans, raccourcis, boutons de l'afficheur), l'intégration Obsidian, la maintenance (dont le nettoyage des médias) et la zone de danger |
+| **02. Tactique** | Le Cortex tactique et ses règles → [Cortex](./82-Cortex-OS.md) |
+| **03. IA** | Les fournisseurs, les clés et les modèles → [Oracle](./80-Oracle-poser-une-question.md) |
+| **04. Télécommande** | Les deux QR codes : votre tablette, et celles des joueurs |
+| **05. Thème du jeu** | L'atelier de thème du jeu ouvert (plus bas) |
+
 ---
 
 ## 🎨 Personnalisation (Look & Feel)
 GM-OS s'adapte à l'ambiance de votre table :
-- **Choix du Thème** : 
-    - **Cyberpunk** : Interface sombre, néons et contrastes élevés.
-    - **Médiéval** : Textures organiques, parchemin et tons ambrés.
-    - **Moderne** : Design épuré, translucide et professionnel.
-- **Palette d'Accentuation** : Changez instantanément la couleur des boutons et des lueurs de l'OS.
+- **Thème de l'interface** (*01. Système*) :
+    - **Cyberpunk** : nuit marine et néon cyan.
+    - **Médiéval** : parchemin, or et cire.
+    - **Moderne** : ardoise et bleu franc.
+    - **Mode clair** : papier clair, le contraste du jour.
+- **Personnalités** : l'interrupteur sous les thèmes. Allumé, chaque thème prend aussi sa forme, son
+  relief, son cadre et sa matière — et un thème de jeu applique les siens.
+- **Couleur d'accent** : la teinte des boutons d'action, des sélections et des halos — Cyan, Violet,
+  Rose, Sarcelle ou Orange. Elle passe devant celle du jeu.
 
 ---
 
@@ -21,6 +38,11 @@ Chaque jeu peut habiller GM-OS à ses couleurs — et depuis la v6.5, **cela se 
 > 🎨 **Pour créer un thème de toutes pièces à partir des images d'un jeu**, avec RPG Theme Builder
 > dans ChatGPT : voir [Créer un thème de jeu](./95-Creer-un-theme-de-jeu.md). L'atelier sert aux
 > retouches.
+
+![Paramètres › 05. Thème du jeu : le jeu et son fichier en haut, les réglages groupés au centre, l'aperçu en direct à droite, Annuler et Enregistrer le thème en bas](captures/parametres-theme-du-jeu.jpg)
+
+*L'atelier ouvert sur un jeu qui n'a pas encore de thème : il propose d'en **créer un** — les jetons
+seuls. L'aperçu de droite suit chaque réglage ; rien n'est écrit avant **Enregistrer le thème**.*
 
 L'atelier travaille sur le thème du **jeu de la campagne ouverte**, et propose ses réglages en quatre groupes :
 
@@ -105,7 +127,10 @@ et il y en a maintenant cinq :
 
 ## 📱 GM Remote Control (Télécommande)
 Pilotez votre session sans quitter vos joueurs des yeux :
-- **Activation** : Allez dans l'onglet **Télécommande**.
+- **Activation** : allez dans **04. Télécommande**.
+
+![Paramètres › 04. Télécommande : le QR code de votre tablette (GM Remote Control) et celui des joueurs (Tablet Hub)](captures/parametres-telecommande.jpg)
+
 - **Connexion QR Code** : Scannez le QR Code affiché avec votre smartphone ou tablette.
 - **Fonctions mobiles** :
     - **Dés** : Lancez des dés en temps réel.
@@ -118,7 +143,7 @@ Pilotez votre session sans quitter vos joueurs des yeux :
 ---
 
 ## 🔊 Hardware & Routing (Audio)
-Gérez vos sorties audio physiques :
+Dans **01. Système**, section *Hardware & Routing*, gérez vos sorties audio physiques :
 - **Système d'Alias** : Assignez un nom convivial (ex: "Table Joueurs") à chaque sortie.
 - **Actualisation** : Détectez les nouveaux périphériques branchés.
 
@@ -143,8 +168,13 @@ Gérez vos écrans secondaires pour l'immersion :
 
 ## 🤖 Intelligence Artificielle (Cloud & Tactical)
 Configurez le "cerveau" de votre OS :
-- **AI Oracle** : Gérez vos clés API (Gemini, Nano Banana).
-- **Cortex Tactique** : Activez l'assistance au combat et gérez votre taxonomie de règles.
+- **03. IA** : les fournisseurs de l'Oracle (Ollama, Gemini, OpenAI, Anthropic, une adresse à vous),
+  leurs clés et leurs modèles — dont le **modèle de séance** —, la **génération d'image**
+  (Cloudflare Workers AI), l'interrupteur du coffre Obsidian, et un **diagnostic global**. Les clés
+  vont dans le trousseau de Windows, jamais dans les préférences.
+- **02. Tactique** : le Cortex tactique, son interrupteur général et sa taxonomie de règles.
+
+![Paramètres › 03. IA : la génération d'image, puis un fournisseur par carte — ici Google Gemini, actif](captures/parametres-ia.jpg)
 
 ---
 
@@ -173,3 +203,7 @@ GM-OS protège vos campagnes sans action de votre part :
 
 > [!IMPORTANT]
 > **Sécurité Réseau** : Pour que la télécommande fonctionne, votre tablette et votre PC doivent être connectés au **même réseau WiFi**.
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Ajouté : la carte des cinq catégories,
+le **Mode clair**, l'interrupteur **Personnalités** et les cinq couleurs d'accent. Corrigé : la
+section IA citait « Nano Banana » ; la génération d'image passe par Cloudflare Workers AI.*

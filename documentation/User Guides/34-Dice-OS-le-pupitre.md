@@ -2,14 +2,20 @@
 
 **Dice OS** est le moteur de probabilités central de GM-OS. Plus qu'un simple lanceur de dés, c'est un outil universel capable de gérer les mécaniques de centaines de jeux de rôle, tout en restant connecté à l'action tactique sur votre carte.
 
-![Aperçu du module Dice OS](dice_mockup.png)
+![Dice-OS après un jet : le gros bouton Lancer et les jets rapides, le dernier jet, l'historique, et les paramètres à droite](captures/dice-un-jet.jpg)
 
 ## 📋 Présentation du Module
 
-Dice OS se divise en trois zones principales :
-1. **Le Configurateur (Haut)** : Choisissez votre mode de jeu et vos paramètres.
-2. **Le Plateau de Lancement (Centre)** : Lancez vos dés d'un clic ou via des raccourcis.
-3. **Le Pont Tactique & Résultats (Droite)** : Consultez vos succès et calculez vos modificateurs de portée.
+*Disposition refondue le 2026-09-30 (refonte, lot L1) : **un seul bouton « Lancer » pour tous les
+modes**, et le dé se choisit dans les paramètres.*
+
+1. **En haut, le lancer** : le gros bouton **Lancer**, qui dit ce qu'il lance (*1d20*), puis vos
+   **jets rapides** — *Attaque Épée Longue 1d20+7*, *Dégâts 1d8+4*… — et **Ajouter** pour en
+   enregistrer un.
+2. **Au centre, le dernier jet** — son résultat, sa formule, et **Projeter** — puis l'**historique**.
+3. **À droite, les paramètres du jet** : le **mode**, la **quantité**, le **modificateur**, les
+   **répétitions**, le **dé** (d4 à d100), et l'**affichage des dés** — le rendu 3D et la matière
+   (résine, verre, métal). **Réglages** et **Réinitialiser** sont en haut à droite.
 
 ## ⚙️ Modes de Lancement Supportés
 
@@ -114,3 +120,5 @@ Chaque jet est archivé dans l'historique :
 
 - **Rendu 3D** : Bien que l'interface soit en 2D pour la rapidité, Dice OS envoie les commandes au **Player Hub** pour afficher de véritables lancers de dés 3D physiques aux joueurs.
 - **Persistance** : Vos favoris (Quick Rolls) sont sauvegardés par campagne.
+
+*Relu le 2026-10-03 contre l'écran refondu. Capture de la campagne de démonstration.*

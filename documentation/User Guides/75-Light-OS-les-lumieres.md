@@ -2,7 +2,10 @@
 
 Le module **Light OS** est votre centre de contrôle domotique dédié à l'immersion. Il intègre vos lumières **Philips Hue** directement dans votre environnement de jeu, permettant de synchroniser l'éclairage de votre pièce avec l'action, la musique et les effets sonores.
 
-![Aperçu du module Light OS](light_mockup.png)
+![Light-OS : le temps de transition en haut, les dix-huit cases de la campagne puis les communes, les effets rapides en bas, et la colonne du pont à droite](captures/module-light-os.jpg)
+
+*Light-OS sans pont branché — la capture a été prise loin de toute lampe. Les cases attendent leur
+première capture ; à droite, le panneau **Préparation · Atelier** sert à appairer le pont.*
 
 ## 📋 Présentation du Module
 
@@ -17,10 +20,16 @@ Light OS transforme vos lampes connectées en véritables accessoires de jeu :
 
 Avant de commencer, vous devez lier GM-OS à votre installation Philips Hue :
 
-1. Cliquez sur le statut de connexion dans l'en-tête (indique "Disconnected").
-2. Suivez les instructions : GM-OS va détecter votre Bridge sur le réseau.
-3. Lorsque l'OS vous le demande, appuyez sur le bouton physique central de votre **Philips Hue Bridge**.
-4. Une fois jumelé, le statut passe au vert ("Connected") et vos lampes apparaissent dans l'interface.
+1. Dans la colonne de droite, panneau **Préparation · Atelier**, cliquez sur **Découvrir** : GM-OS
+   cherche votre pont sur le réseau. L'en-tête indique « Pont déconnecté » jusqu'au bout.
+2. Appuyez sur le bouton physique central de votre **Philips Hue Bridge**.
+3. Cliquez aussitôt sur **Appairer**.
+4. Une fois jumelé, le panneau **Pont Philips Hue** passe au vert et vos lampes apparaissent dans
+   le panneau **Lampes**.
+
+> 🔎 **Le panneau Préparation n'est là qu'à l'*Atelier*.** Découvrir et appairer ne se font pas en
+> pleine scène : pendant une séance, la colonne de droite se replie derrière le bouton
+> **Réglages**.
 
 ### 🔁 La reconnexion au démarrage, et quand elle s'arrête
 
@@ -47,15 +56,18 @@ adresse relance le cycle depuis zéro.
 > le pont indéfiniment — une tentative toutes les cinq secondes et demie, toute la soirée.*
 
 > [!TIP]
-> **Réinitialisation (Forget Bridge)** : Si vous changez de pont ou si vous souhaitez réinitialiser la détection automatique, utilisez le bouton **"Forget Bridge"** (icône 🗑️) dans la barre latérale. Cela effacera l'IP du pont et votre clé utilisateur pour repartir sur une installation propre.
+> **Oublier le pont** : si vous changez de pont ou voulez reprendre la détection de zéro, le bouton
+> **Oublier le Pont**, dans le panneau **Préparation · Atelier** une fois le pont connecté, efface
+> son adresse et votre clé pour repartir sur une installation propre. **Déconnecter**, à côté,
+> coupe sans rien oublier.
 
 
 ## 🎭 Création et Gestion des Scènes
 
 Le système de "Snapshots" vous permet de capturer une ambiance parfaite en quelques secondes :
 
-- **Ajustement Manuel** : Utilisez les curseurs et sélecteurs de couleur du pied de page pour régler
-  chaque lampe à votre convenance.
+- **Ajustement Manuel** : utilisez les curseurs et sélecteurs de couleur du panneau **Lampes**, dans
+  la colonne de droite, pour régler chaque lampe à votre convenance.
 - **Sauvegarde** : survolez une tuile et cliquez l'**appareil photo 📷** en bas à gauche. L'état
   actuel de toutes les lampes y est mémorisé. Une tuile encore vide se capture d'un simple clic.
   La capture **va d'abord demander au pont** ce que vos lampes font vraiment — voir juste en dessous.
@@ -82,8 +94,8 @@ Deux gestes s'appuient là-dessus :
 - **Capturer une tuile** va maintenant **relire le pont avant d'enregistrer**. C'est ce que son nom
   promettait depuis toujours : la tuile retient la pièce telle qu'elle est, pas telle que GM-OS la
   croyait. L'icône tourne le temps de l'aller-retour — une fraction de seconde sur le réseau local.
-- **« Relire les lampes »**, à droite de la barre du haut, fait la même lecture sans rien
-  enregistrer. Les **curseurs et les couleurs du pied de page** se remettent alors sur vos vraies
+- **« Relire les lampes »**, dans le panneau **Préparation · Atelier**, fait la même lecture sans rien
+  enregistrer. Les **curseurs et les couleurs du panneau Lampes** se remettent alors sur vos vraies
   lampes. C'est le bouton à cliquer quand vous revenez du téléphone et que vous voulez repartir de
   ce que vous voyez.
 
@@ -307,7 +319,7 @@ Le réglage **agit immédiatement** si la scène est en cours : pas besoin de la
 > **Le curseur n'apparaît que là où il a prise.** Une scène sans effet n'a rien à accélérer — elle
 > n'affiche donc pas de curseur, comme elle n'affiche pas l'étoile ✨.
 >
-> Deux limites voulues : un effet choisi **à la main** dans le pied de page (sous une lampe précise)
+> Deux limites voulues : un effet choisi **à la main** dans le panneau Lampes (sous une lampe précise)
 > garde sa cadence d'origine, car il n'appartient à aucune tuile ; et même poussé à ×3, un effet ne
 > descend jamais sous **un dixième de seconde** entre deux commandes — au-delà, le pont Hue sature et
 > la lumière prend du retard sur ce que vous faites.
@@ -395,7 +407,7 @@ sombre — n'est la déclinaison d'aucun effet existant.
 
 **Pour en créer un**, deux portes mènent au même écran :
 
-- **« Mes effets » dans la barre du haut** de Light-OS — la plus directe, et **elle ne demande
+- **« Mes effets », dans le panneau Préparation · Atelier** de Light-OS — la plus directe, et **elle ne demande
   aucune lampe** ;
 - l'**écran de choix d'un effet** d'une lampe, section **Mes effets**.
 
@@ -502,7 +514,7 @@ Deux façons de la désigner, au choix :
 
 - **L'icône 🏠 sur une tuile** : elle apparaît au survol, un clic désigne la tuile, un second la
   libère. La tuile désignée garde sa maison affichée en permanence.
-- **Le bloc « Éclairage normal »** de la barre latérale, juste au-dessus du bouton d'extinction : la
+- **Le bloc « Éclairage normal »** de la colonne de droite, sous la liste des lampes : la
   liste de vos scènes capturées, et « Aucun ».
 
 ### Ce que ça change, geste par geste
@@ -648,3 +660,9 @@ pot commun et une case vide devait rester visible partout — deux protections c
 rétrécit. Le râtelier ne rétrécit plus, donc les deux protections sont devenues des gênes. *Une
 règle juste peut s'inverser quand ce qu'elle protégeait change de forme.* ⚠️ Jamais éprouvé à
 l'écran à cette date.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. La connexion au pont, « Mes effets »
+et « Relire les lampes » ont rejoint le panneau **Préparation · Atelier** de la colonne de droite ;
+les réglages lampe par lampe sont dans le panneau **Lampes**, plus dans un pied de page. Le bandeau
+du bas porte désormais les **effets rapides** (Rouge critique, Bleu arcanique, Vert de soin) et
+**Arrêter la scène** ; le **Blackout d'urgence** ferme la colonne.*

@@ -7,6 +7,17 @@ Elles pilotent les quatre moteurs sonores à la fois —
 [Music-OS](./71-Music-OS.md), [Ambient-OS](./72-Ambient-OS.md),
 [Sound-OS](./73-Sound-OS-bruitages.md) et [Voice-OS](./74-Voice-OS-la-voix.md).
 
+![La barre de titre : le nom du module ouvert, puis le volume général, Focus Chat et Stop All ; à droite, le moment (Table ou Atelier) et l'icône Wi-Fi](captures/tour-de-controle-audio.jpg)
+
+*À droite de la tour, trois éléments qui n'ont rien d'audio mais vivent dans la même barre :*
+
+- *le **régime** — **Table** quand une séance est ouverte, **Atelier** sinon, avec la raison entre
+  parenthèses. Le mot souligné à côté force l'autre régime ; **Auto** apparaît alors pour rendre la
+  main à la séance ;*
+- *la pastille du **Cortex**, allumée quand il est actif ;*
+- *l'icône **Wi-Fi**, qui affiche le QR code des tablettes des joueurs
+  ([Tablet Hub](./61-Tablette-des-joueurs.md)).*
+
 ---
 
 ## 🔊 Le volume général
@@ -98,3 +109,5 @@ d'erreur le dit plutôt que de laisser croire au silence.
 la coupure instantanée des bruitages), deux comportements ajoutés (le tamisage à 50 % des
 bruitages, le retrait des projections du Hub), et un piège nommé — la coupure rapide remontait à
 100 % — **réparé le soir même**.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré.*

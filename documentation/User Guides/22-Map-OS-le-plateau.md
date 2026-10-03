@@ -1,6 +1,6 @@
 # 🗺️ Map-OS
 
-> Dans l'application, ce module s'appelle **Plateau Tactique**. « Map-OS » est son nom dans le code
+> Dans la barre latérale, ce module s'appelle **Cartographie**. « Map-OS » est son nom dans le code
 > et dans cette documentation.
 
 Map-OS est la carte que vous montrez à vos joueurs : un plan, des pions, du brouillard de guerre, et
@@ -8,21 +8,36 @@ tout cela dupliqué en direct sur leur écran. Ce guide dit **ce que chaque gest
 et surtout **ce qui part chez les joueurs et ce qui reste chez vous** — c'est la seule question qui
 compte en séance.
 
-![Aperçu du module Map-OS](map_mockup.png)
+![La Cartographie pendant une séance : le plan de la station sous le brouillard, la barre « En jeu direct », et le panneau des actions en partie](captures/module-cartographie.jpg)
+
+### Où sont les commandes
+
+*Disposition refondue le 2026-10-02 : le jeu est séparé de la préparation.*
+
+- **L'en-tête** : la carte chargée, le round, l'état de la projection — et trois actions :
+  **Cortex tactique**, **Recadrer la vue**, **Projeter la carte** (ou l'arrêter).
+- **La barre « En jeu direct »**, sous l'en-tête : le brouillard (**Révéler** / **Masquer**), la
+  forme (**Pinceau**, **Zone**, **Rond**), **Tout masquer** / **Tout révéler**, puis les outils
+  **Pions**, **Ping**, **Magie**, **Danger**.
+- **La carte**, au plus large.
+- **Le panneau de droite**, en deux parties : **Actions en partie** — la Vision de l'Oracle, les
+  réglages de l'outil actif, le tour de combat et les pions, la météo et le moment, les couches,
+  les zones actives — puis **Préparation · Atelier** — les configurations, la carte et ses médias,
+  la grille, les modèles de zones, l'audio d'une carte vidéo.
 
 ---
 
 ## 🚀 Le premier plateau, en cinq gestes
 
-1. **Importer Média** (panneau latéral, en haut) — ouvre la bibliothèque du **Media Hub**. Images
-   **et vidéos** sont acceptées.
-2. **Grille Tactique** — activez-la, puis réglez la **taille de case** jusqu'à ce que le quadrillage
-   colle au dessin de la carte.
-3. **Pions du Combat** — tous les combattants de Combat-OS apparaissent dans la liste du bas. Le
-   bouton **+** les pose sur la carte.
-4. **Outils Fog of War** — la carte est **entièrement noire** au départ. Choisissez **Révéler**,
-   prenez le **Pinceau** ou une **Zone**, et dégagez la première pièce.
-5. **Projeter la Carte** — choisissez le Player Hub ou un moniteur.
+1. **Importer la carte** (panneau, partie *Préparation · Atelier*, bloc *Carte et médias*) — ouvre
+   la bibliothèque du **Media Hub**. Images **et vidéos** sont acceptées.
+2. **La grille** (même partie) — activez-la, puis réglez la **taille de case** jusqu'à ce que le
+   quadrillage colle au dessin de la carte.
+3. **Les pions du combat** (partie *Actions en partie*, bloc *Tour de combat*) — tous les
+   combattants de Combat-OS y sont listés. Le bouton **+** les pose sur la carte.
+4. **Le brouillard** (barre *En jeu direct*) — la carte est **entièrement noire** au départ.
+   Choisissez **Révéler**, prenez le **Pinceau** ou une **Zone**, et dégagez la première pièce.
+5. **Projeter la carte** (en-tête) — choisissez le Player Hub ou un moniteur.
 
    > ⛔ **Corrigé le 2026-09-25 :** projeter sur le Player Hub une carte **déjà sur un moniteur**
    > fermait le moniteur sans l'afficher sur le Hub — elle n'était plus nulle part. Et une carte
@@ -429,3 +444,6 @@ déplacent les pions — chacune avec sa propre section.*
 
 *Le 2026-09-05, **la couleur de grille a cessé d'être une affirmation fausse** : elle a obtenu son
 sélecteur. Des cinq, c'était la seule dont tout le reste existait déjà.*
+
+*Relu le 2026-10-03 contre l'écran refondu (en-tête, barre « En jeu direct », panneau en deux
+parties). Capture de la campagne de démonstration : un plan de station dessiné pour l'occasion.*

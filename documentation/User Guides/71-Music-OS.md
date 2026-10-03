@@ -2,17 +2,30 @@
 
 Le module **Music OS** est le coeur de l'ambiance sonore de vos sessions. Contrairement à un simple lecteur audio, il est conçu comme un véritable mixeur de DJ thématique, vous permettant de gérer des transitions fluides entre vos musiques d'ambiance.
 
-![Aperçu du module Music OS](music_mockup.png)
+![Music-OS : les deux platines et le mixeur en haut, les pastilles de l'atmosphère « Station Varn » en bas, les réglages à droite](captures/module-musique.jpg)
+
+*L'atmosphère de la campagne de démonstration : cinq pastilles colorées, une par moment de la
+séance, et la tuile **Ajouter** au bout de la grille.*
 
 ## 📋 Présentation du Module
 
-Le module s'articule autour de trois zones de contrôle :
+Le module s'articule autour de quatre zones :
 > [!TIP]
 > **Contrôle Global** : Le volume de Music OS est désormais asservi au [Master Soundscape Controller](./70-Tour-de-controle-audio.md). Utilisez le mode **Focus Chat** pour atténuer la musique instantanément pendant vos narrations.
 
-1. **Les Platines (Decks A & B)** : Deux lecteurs audio indépendants capables de charger et de jouer des pistes simultanément.
-2. **La Console de Mixage (Mixer)** : Permet d'équilibrer le volume entre les deux platines et de réaliser des transitions professionnelles.
-3. **Le Gestionnaire de Playlists & Pads** : une grille de pastilles pour lancer instantanément vos musiques préférées — **autant que vous en ajoutez**.
+1. **La barre des atmosphères**, en haut : un onglet par playlist (**+** en crée une), et le filtre
+   **Commune / Cette campagne** (voir § 7).
+2. **Les platines A et B** : deux lecteurs indépendants, chacun avec sa forme d'onde, Lecture,
+   Stop et **Boucle**.
+3. **Le mixeur**, entre les deux : **Fondu A** et **Fondu B**, le **fondu croisé** (le curseur), sa
+   **durée**, et le **master**.
+4. **Les pastilles de l'atmosphère** : une grille pour lancer vos musiques d'un clic — **autant que
+   vous en ajoutez**.
+
+La colonne de droite — toujours visible à l'*Atelier*, repliée derrière le bouton **Réglages**
+quand une séance est ouverte (*Table*) — porte la sortie audio,
+**l'atténuation par la voix** (la musique baisse quand vous parlez dans le micro de
+[Voice-OS](./74-Voice-OS-la-voix.md)) et les **niveaux alignés** (les pistes calées sur −18 LUFS).
 
 ## 🚀 Comment l'utiliser ?
 
@@ -23,9 +36,10 @@ Le module s'articule autour de trois zones de contrôle :
 
 ### 2. Maîtriser les Transitions (Fades)
 
-- **Manual Fade** : Déplacez le curseur central (Crossfader) vers la gauche pour entendre uniquement le Deck A, ou vers la droite pour le Deck B.
-- **Auto-Fade** : Cliquez sur **Fade to A** ou **Fade to B**. GM-OS croise les deux platines tout
-  seul. La durée est **réglable au-dessus du crossfader, de 0,5 à 20 secondes — 5 secondes par
+- **À la main** : déplacez le curseur du **fondu croisé** vers la gauche pour n'entendre que la
+  platine A, vers la droite pour la platine B. Les pourcentages au-dessus disent où vous en êtes.
+- **Automatique** : cliquez sur **Fondu A** ou **Fondu B**. GM-OS croise les deux platines tout
+  seul. La durée est **réglable sous le fondu croisé, de 0,5 à 20 secondes — 5 secondes par
   défaut**.
 
 > ⛔ **Correction.** Cette page annonçait une « rampe de 1.5s ». Ni la durée ni la forme n'étaient
@@ -169,9 +183,10 @@ Chaque **Pad** peut être lié à une scène lumineuse spécifique. Ainsi, lorsq
 
 ### Comment lier une scène ?
 
-1. Faites un **clic droit** sur un Pad.
-2. Dans le menu de configuration, sélectionnez la scène lumineuse correspondante dans la liste (si vous avez configuré le module Light OS).
-3. Cliquez sur "Save". Désormais, dès que ce pad est joué, la lumière suivra automatiquement.
+1. Ouvrez le menu **…** de la pastille.
+2. Choisissez **Lier lumière**, puis la scène voulue (il faut en avoir enregistré dans
+   [Light-OS](./75-Light-OS-les-lumieres.md)). Le bouton devient **Lié**.
+3. Une petite ampoule apparaît au pied de la pastille : dès qu'elle joue, la lumière suit.
 
 ---
 
@@ -181,16 +196,16 @@ Chaque **Pad** peut être lié à une scène lumineuse spécifique. Ainsi, lorsq
 
 Les joueurs quittent la sécurité de la taverne pour entrer dans une ruelle sombre.
 
-1. La musique de taverne joue sur le **Deck A**.
-2. Cliquez sur le pad "Ruelle Siniestre". Il se charge sur le **Deck B**.
-3. Cliquez sur **Fade to B**. La taverne s'efface doucement au profit de l'ambiance mystérieuse.
+1. La musique de taverne joue sur la **platine A**.
+2. Cliquez sur la pastille « Ruelle sinistre ». Elle se charge sur la **platine B**.
+3. Cliquez sur **Fondu B**. La taverne s'efface doucement au profit de l'ambiance mystérieuse.
 
 ### Scénario B : Intensification du Combat
 
 Le combat s'accélère !
 
-1. Vous avez une musique de combat "Rythmique" sur le **Deck A**.
-2. Chargez une piste avec des "Cuivres Héroïques" sur le **Deck B**.
+1. Vous avez une musique de combat « Rythmique » sur la **platine A**.
+2. Chargez une piste avec des « Cuivres héroïques » sur la **platine B**.
 3. Mixez progressivement les deux en déplaçant le crossfader au centre pour un son massif et épique.
 
 ---

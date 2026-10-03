@@ -4,8 +4,16 @@ Clock-OS fait deux choses qui n'ont l'air d'en être qu'une : il **affiche le te
 compté à rebours, ou celui d'un calendrier inventé — et il tient vos **jauges de tension**, ces
 horloges de *Blades in the Dark* qui montent pendant que les joueurs hésitent.
 
-L'écran est en trois zones : la **configuration** à gauche, le **visualiseur** au centre, et la
-**grille des jauges** en bas.
+L'écran est en deux colonnes : à gauche la **configuration**, le **minuteur** et la création d'une
+**nouvelle jauge** ; à droite le **visualiseur**, et dessous la **grille des jauges**.
+
+![Clock-OS : à gauche la configuration, le minuteur et la nouvelle jauge ; à droite l'heure et trois jauges de tension](captures/module-horloge-temps.jpg)
+
+Chaque jauge montre son pourcentage, son nom, ses segments, le **pas par scène**, et **−** / **+**.
+Tout le reste vit dans son menu **⋮ — Réglages de la jauge** : la **forme**, le **sens**,
+**Remplir**, **Sur l'afficheur de table**, **Vue par les joueurs**, la couleur sur l'afficheur, et la
+suppression. *Une rangée de dix icônes sans nom sous chaque carte a laissé la place à un menu
+(refonte, 2026-10-02).*
 
 ---
 
@@ -14,8 +22,8 @@ L'écran est en trois zones : la **configuration** à gauche, le **visualiseur**
 **Chaque jauge décide si les joueurs la voient — et une jauge neuve naît fermée.**
 
 Le bouton **Monitor**, en haut à droite du visualiseur, est l'interrupteur général : allumé au
-démarrage, il décide **si** les joueurs voient des jauges. Puis, sur chaque jauge, un **œil** décide
-**laquelle**. Ce qui est ouvert part sur le Player Hub, sur les tablettes et sur l'afficheur de
+démarrage, il décide **si** les joueurs voient des jauges. Puis, sur chaque jauge, la ligne **Vue
+par les joueurs** de son menu **⋮** — l'œil — décide **laquelle**. Ce qui est ouvert part sur le Player Hub, sur les tablettes et sur l'afficheur de
 table ; ce qui est fermé ne quitte pas votre écran.
 
 | L'œil | Ce que ça veut dire |
@@ -345,7 +353,7 @@ ajoute pas.*
 
 | Problème | Ce qu'il faut regarder |
 | :--- | :--- |
-| **Les joueurs voient une jauge que je voulais garder** | L'œil au survol de la carte la referme, elle seule. *Cette ligne disait « il n'existe pas de jauge privée » : c'était vrai jusqu'au 2026-09-04, ça ne l'est plus.* |
+| **Les joueurs voient une jauge que je voulais garder** | Menu **⋮** de la jauge → **Vue par les joueurs** : la referme, elle seule. *Cette ligne disait « il n'existe pas de jauge privée » : c'était vrai jusqu'au 2026-09-04, ça ne l'est plus.* |
 | **Mes rations ont baissé sans que j'y touche** | Elle a un **Par scène**, et vous venez de terminer une scène. Videz le champ pour la détacher. |
 | **Ma jauge de vivres crie alors qu'elle est pleine** | Son sens est resté sur **Monte**. Basculez-le sur **S'épuise** au survol de la carte. |
 | **Ma jauge est orange alors que tout va bien** | Elle a passé la mi-course. C'est le code couleur, pas un défaut — voir le tableau des seuils. |
@@ -378,3 +386,6 @@ le bouton de projection ne commande pas que le Player Hub.*
 
 *Ce dernier point a été **tranché et construit le soir même** : chaque jauge porte désormais son
 œil, et une jauge neuve naît fermée.*
+
+*Relu le 2026-10-03 contre l'écran refondu (le menu ⋮ de chaque jauge). Capture de la campagne de
+démonstration.*

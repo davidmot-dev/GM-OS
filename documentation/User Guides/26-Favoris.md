@@ -5,8 +5,11 @@
 ---
 
 ## 🖥️ Le Dashboard Favorite-OS
+
+![Les favoris de la campagne de démonstration : chaque filtre dit combien il contient](captures/module-favoris.jpg)
+
 L'interface se divise en trois zones majeures :
-1. **La Galerie (Grid View)** : Vue d'ensemble de vos favoris avec filtres par catégorie (PNJ, Lieux, etc.) et barre de recherche.
+1. **La Galerie (Grid View)** : Vue d'ensemble de vos favoris avec filtres par catégorie (PNJ, Lieux, Objets, Lore) — **chacun dit combien il contient** — et barre de recherche.
 2. **Le Panneau de Détails (Sidebar)** : Apparaît lors de la sélection d'une entité pour une consultation rapide.
 3. **Le Full Dossier** : Un mode immersif plein écran pour éditer chaque aspect d'une entité.
 
@@ -84,3 +87,5 @@ la famille la plus coûteuse : un coffre de synchronisation qui n'existe pas et 
 données sont en sécurité », un bouton d'export qui n'existe pas, et des notes secrètes annoncées
 comme chiffrées alors qu'elles sont en clair. Ajouté : le rattachement d'un dossier à un personnage
 joueur, et le fait que le module **n'est dans aucune sauvegarde**.*
+
+*Illustré le 2026-10-03 avec la campagne de démonstration.*

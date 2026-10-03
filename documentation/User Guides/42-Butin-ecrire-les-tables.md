@@ -148,7 +148,10 @@ Voici comment est implémentée la table "Preuves du LAPD" :
 1. Nommez la table et donnez-lui son nombre de **tirages** (`1`, `1d4+1`…).
 2. Choisissez son **mode** — un seul parmi la liste, ou chaque ligne a sa chance.
 3. Ajoutez ses entrées : type, nom, poids, quantité, puis rareté, valeur, masse et description.
-4. Les tables apparaissent aussitôt dans **Loot-OS → onglet Génération**.
+4. Les tables apparaissent aussitôt dans **Loot-OS → onglet 1. Génération**, section **Tables de
+   système**.
+
+![Loot-OS, onglet 1. Génération : le générateur rapide par l'IA, puis la section Tables de système, encore vide dans la campagne de démonstration](captures/session-loot-os.jpg)
 
 > ⛔ **Cette section décrivait jusqu'au 2026-09-04 une procédure impossible** : éditer
 > `src/data/defaultGameDrivers.ts` pour y modifier un objet `loot.tables`. Ce champ n'existe pas
@@ -159,3 +162,5 @@ Voici comment est implémentée la table "Preuves du LAPD" :
 > [!IMPORTANT]
 > Le tirage vous **dit** ce qu'il n'a pas trouvé — une table appelée qui n'existe plus, un oracle
 > illisible. Un tirage qui rend zéro objet sans expliquer pourquoi ne se répare jamais en séance.
+
+*Relu le 2026-10-03 et illustré.*

@@ -9,6 +9,12 @@ des entrées de savoir. Elle vit dans **Forge-OS**, à côté de la Forge Systè
 > dans une histoire** et produit une **campagne**. Elles ne se mélangent jamais : *le pilote
 > appartient au jeu, jamais à la campagne.*
 
+**Où c'est** : module **Forge**, deuxième onglet en haut à droite — *1. Forge du système*,
+**2. Campagne**, *3. Trame*. L'écran suit les étapes dans l'ordre : l'**inventaire**, la **structure
+en actes**, puis **les fiches**, avec le carnet NotebookLM qui sert de source.
+
+![La Forge de campagne : l'inventaire, la structure en actes, les fiches, et le carnet source](captures/forge-campagne.jpg)
+
 ---
 
 ## 1. Elle ne lit pas le livre — elle lit vos fiches
@@ -129,3 +135,5 @@ espacées, et leur texte rend une espace entre chaque lettre : `S TA R T I N G  
 ---
 
 *Guide écrit le 2026-09-04. La Forge de campagne a été éprouvée en partie réelle le 2026-08-16.*
+
+*Illustré le 2026-10-03 (onglets de la Forge refondus en phase 4).*

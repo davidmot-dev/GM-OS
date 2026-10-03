@@ -9,21 +9,18 @@ C'est l'interface qui lie tous les autres modules entre eux.
 > [journal de séance](./14-Journal-de-seance.md), et la
 > [sauvegarde automatique](./91-Sauvegarde-automatique.md).
 
-````carousel
-*(Capture « Master Cockpit » — perdue lors du déplacement du projet.)*
-<!-- slide -->
-*(Capture « World Atlas » — perdue lors du déplacement du projet.)*
-<!-- slide -->
-*(Capture « Session Prep » — perdue lors du déplacement du projet.)*
-<!-- slide -->
-*(Capture « Obsidian Bridge » — perdue lors du déplacement du projet.)*
-````
+![Le cockpit pendant une séance : la scène en cours, le groupe présent, l'initiative, l'ambiance](captures/module-tableau-de-bord.jpg)
+
+*Toutes les captures viennent de la campagne de démonstration « Le Silence de Varn ».*
 
 ---
 
 ## 📚 Campaign Library (Bibliothèque de Campagnes)
 
 La **Campaign Library** est votre point d'entrée. Elle permet de segmenter vos différentes aventures.
+On l'ouvre par **Bibliothèque**, en bas de la colonne du cockpit.
+
+![La bibliothèque des campagnes : la campagne active, ses exports, et « Créer une campagne »](captures/session-bibliotheque.jpg)
 
 ### Créer une Aventure
 
@@ -43,6 +40,11 @@ Lors de la création d'une campagne, vous devez configurer plusieurs éléments 
 
 - **La langue de la Forge** : on peut forger depuis un livre anglais et vouloir un résultat en
   français. Réglage **par campagne** ; sans lui, la langue de l'interface sert de repli.
+
+![Le formulaire d'une campagne : ses sept sections à gauche — Identité, Narration, Indices, PNJ, Ambiance, Atlas & lieux, Intelligence —, ici la section Indices](captures/campagne-formulaire.jpg)
+
+*Le formulaire s'ouvre par **Modifier la campagne**, sur la page de la campagne. Ses sept sections
+se parcourent dans l'ordre ; **Enregistrer et fermer**, en haut à droite, valide le tout.*
 
 ### 🗑️ Suppression et Nettoyage de Campagne
 
@@ -68,7 +70,16 @@ Chaque campagne est pilotée par un **Driver**. Ce "pilote" définit :
 1.  **La Logique des Dés** : Succès, seuils, dés explosifs.
 2.  **L'Intelligence Tactique** : Les portées (Contact, Courte, Longue) utilisées par **Map OS**.
 3.  **L'Initiative** : La formule de calcul pour **Combat OS**.
-4.  **Le Modèle de Fiche** : L'interface visuelle de la fiche de personnage.
+4.  **Le Modèle de Fiche** : L'interface visuelle de la fiche de personnage. Fiches et pilotes se
+    rangent dans la **Bibliothèque des fiches et règles** — onglets **Fiches (UI)** et **Règles
+    (drivers)** —, avec un aperçu de la fiche choisie à droite.
+
+![La bibliothèque des fiches et règles : les onglets Fiches et Règles, et l'aperçu d'une fiche de référence](captures/session-modeles-de-fiches.jpg)
+5.  **La bannière de l'en-tête** *(depuis le 2026-10-03)* : une image du dossier du jeu
+    (`docs/systems/<jeu>/`), posée en fond de l'en-tête de Session-OS. Elle se choisit en haut de
+    l'éditeur du pilote, sous « Bannière de l'en-tête », avec un aperçu recadré comme l'en-tête le
+    montrera. Une image au format **4:1** est conseillée : seule sa bande centrale est visible, sous
+    un voile qui garde le titre et les boutons lisibles.
 
 ---
 
@@ -95,7 +106,10 @@ L'Oracle est désormais synchronisé avec vos PNJs actifs. Si vous avez épingl�
 
 ## 👥 Joueurs & Fiches de Jeu
 
-Gérez votre table physiquement et numériquement dans l'onglet **Roster**.
+Gérez votre table physiquement et numériquement dans l'écran **Joueurs**, en bas de la colonne du
+cockpit.
+
+![L'écran des joueurs : la liste à gauche, le détail du joueur sélectionné à droite](captures/session-joueurs.jpg)
 
 ### La fiche du joueur
 
@@ -146,14 +160,36 @@ Les fiches sont entièrement adaptables :
 
 ## 🕹️ Le Cockpit : Votre Tour de Contrôle
 
-Le **Cockpit** est l'écran par défaut une fois une campagne lancée. Il affiche en temps réel :
+Le **Cockpit** est l'écran par défaut une fois une campagne lancée. Hors séance, il le dit
+(« Aucune session active ») et la colonne propose **Lancer Session**.
 
-- **Le Header Global (v5.3)** : Situé tout en haut, il contient désormais le **Bouton Panique (Stop All)** pour tout éteindre en urgence, le curseur de volume master, et le bouton **Focus Chat** pour tamiser l'ambiance sonore.
-- **Les Personnages Actifs** : Portraits et barres de vie mis à jour instantanément.
-- **Le Workspace & Session Notes** : Zone d'édition rapide et multilingue pour vos notes de session. Supporte désormais l'auto-sauvegarde atomique et la synchronisation avec le Cerveau IA.
-- **Les Snapshots** : voir section ci-dessous.
-- **Deck-OS** : la bibliothèque de paquets, ou le lecteur si un paquet est lié à la campagne.
-- **Loot-OS** : le butin de séance — génération, pool, distribution, historique.
+![Le cockpit hors séance : « Aucune session active », et la colonne qui propose de lancer une séance](captures/session-cockpit-hors-seance.jpg)
+
+### Lancer une séance
+
+**Lancer Session**, dans la colonne de gauche, ouvre la liste des séances **planifiées** de la
+campagne. Choisissez-en une : elle s'ouvre, le journal démarre, et GM-OS passe en régime *Table*.
+Une séance se planifie dans **Préparation de Session**.
+
+### Le cockpit pendant la partie
+
+L'écran se lit en trois colonnes :
+
+- **À gauche, la campagne et la navigation** : la carte de la campagne et sa progression, les écrans
+  de la colonne (voir ci-dessous), puis la séance elle-même — **Session active**, **Mettre en pause**,
+  les notes de séance — et, tout en bas, la **Bibliothèque**, les **Joueurs** et les **Modèles de
+  fiches**.
+- **Au centre, la scène en cours** : son titre et son résumé, **Changer de scène**, le **groupe
+  présent** avec ses points de vie (*Gérer le groupe*), les **PNJ de la scène**, l'interrupteur de
+  l'**afficheur Ulanzi**, la **trame en cours**, puis le **résumé public** (lu par les joueurs) et
+  vos **secrets** (masqués aux joueurs).
+- **À droite, la table** : l'**ordre d'initiative** du combat en cours et son round, les
+  **conditions actives**, l'**environnement sonore** (les deux platines de Music-OS), **Destinée &
+  cartes** (Deck-OS), et le **centre de liaison** — les messages avec les tablettes.
+
+En haut, l'en-tête de Session-OS porte **Oracle** (la conversation avec le carnet NotebookLM du
+jeu — [guide](./81-Oracle-le-pont-NotebookLM.md)), **Règles** et **Snapshot** — et, si le pilote du
+jeu en a une, sa **bannière** en fond.
 
 ### La colonne de navigation
 
@@ -161,13 +197,23 @@ Elle mène aux écrans qu'on ouvre **pendant comme avant** une séance :
 
 | | |
 | :--- | :--- |
-| **Storyboard** | Les moments de la campagne |
+| **Cockpit** | L'écran de la partie, décrit ci-dessus |
+| **Rencontres** | Ouvre Combat-OS |
+| **Master Storyboard** | Les moments de la campagne |
 | **Galerie PNJ** | Les fiches de vos personnages non joueurs |
 | **Social Nexus** | Le graphe des relations |
 | **Atlas du Monde** | Les lieux et leurs cartes |
 | **Chroniques & Wiki** | La chronologie et les fiches du monde |
 | **Loot-OS** | Le butin |
-| **La trame** | Actes et scènes |
+| **Préparation de Session** | Les séances planifiées et leur liste de préparation — *hors séance seulement* |
+| **Deck-OS** | Les paquets de cartes de la campagne |
+
+La **trame** n'a pas de ligne : on l'ouvre par le bouton **Trame** de la carte « Trame en cours »,
+au centre du cockpit.
+
+![Chroniques & Wiki : la frise des événements de la campagne, filtrable par type, et le wiki du monde à droite](captures/session-chroniques.jpg)
+
+![Préparation de Session : les séances de la campagne, leur liste et leurs PNJ](captures/session-preparation.jpg)
 
 > ⛔ **« Chroniques & Wiki » n'était pas dans cette colonne avant le 2026-09-05**, et son unique
 > bouton vivait dans le **panneau de campagne**. Or ce panneau est un écran d'atelier : **dès
@@ -338,6 +384,8 @@ Si vous n'utilisez qu'un seul écran, GM-OS devient plus "compact" :
 
 L'Atlas gère la géographie et les lieux d'intérêt :
 
+![L'Atlas du monde : la liste des lieux de la campagne](captures/session-atlas.jpg)
+
 - **Cartes Multiniveaux** : Du monde entier au simple donjon.
 - **Entités Liées** : Épinglez des PNJ ou des objets directement sur vos cartes.
 - **Lieux Actifs** : Épinglez vos lieux favoris pour un accès immédiat.
@@ -377,13 +425,20 @@ Vous pouvez désormais sauvegarder l'état complet d'une carte dans **Map OS** (
 
 ## 🔌 Obsidian Bridge : Alimentation Data
 
-Connectez Session OS à votre coffre **Obsidian** pour une injection directe du lore dans l'IA Oracle via le bouton **"Sync to Oracle"**.
+Branchez votre coffre **Obsidian** sur GM-OS : il se lit dans [Nexus Wiki](./84-Nexus-Wiki-coffre-Obsidian.md),
+et **l'interrupteur du coffre**, dans **Paramètres › 03. IA**, le fait lire par l'Oracle.
+
+> ⛔ **Le bouton « Sync to Oracle » n'existe plus sous ce nom.** Il s'appelle **Envoyer au carnet**
+> et verse la note dans votre carnet **NotebookLM** — pas dans le corpus de l'Oracle. Voir
+> [Oracle & NotebookLM](./81-Oracle-le-pont-NotebookLM.md).
 
 ---
 
 ## 🕸️ Social Nexus (Graphe Social)
 
 Le **Social Nexus** est un outil de visualisation dynamique des relations (PJ/PNJ).
+
+![Le Social Nexus : les personnages en bulles, et la légende des liens](captures/session-social-nexus.jpg)
 
 ### Fonctionnalités Clés
 
@@ -469,3 +524,8 @@ Vous pouvez désormais projeter en toute confiance :
 
 > [!TIP]
 > Pour une expérience optimale sur tablette, assurez-vous que tous les appareils sont sur le même réseau Wi-Fi que le PC du MJ et que le **Nexus Bridge** est actif (icône antenne verte dans le Cockpit).
+
+---
+
+*Relu le 2026-10-03 contre l'interface refondue (phase 4) : la colonne du cockpit, le cockpit en
+séance, le lancement d'une séance, la bannière du pilote. Captures de la campagne de démonstration.*

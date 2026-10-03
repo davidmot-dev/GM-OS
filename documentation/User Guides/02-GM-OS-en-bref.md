@@ -83,6 +83,8 @@ Une douzaine de mots reviennent partout. Les connaître évite les trois quarts 
 > fréquente est entre *votre* tablette et celle d'un joueur — elles ne montrent pas les mêmes
 > choses, et c'est délibéré.
 
+![Le Player Hub, l'écran commun de la table : l'heure, et l'ordre d'initiative du combat en cours](captures/player-hub.jpg)
+
 ### Ce qui s'enregistre
 
 | Mot | Ce qu'il désigne |
@@ -222,10 +224,14 @@ le Stop All éteint aussi vos images et vos lumières.
 
 **L'Oracle**
 Posez une question en langage courant à un modèle qui connaît **votre** corpus de règles et vos
-notes. Il fonctionne en local ou à distance, et cite ce sur quoi il s'appuie.
+notes. Il fonctionne en local ou à distance, et cite ce sur quoi il s'appuie. Un **modèle de séance**,
+plus rapide, peut répondre pendant la partie, et un modèle plus précis en préparation. Il s'ouvre par
+**Cortex IA**, dans la barre des modules. *Le bouton **Oracle** de Session-OS, lui, interroge un
+carnet NotebookLM : même nom, autre source.*
 
 **Le Cortex**
-L'assistant tactique : il observe l'état de la table — combattants, positions, portées — et suggère.
+L'assistant tactique — le cerveau en bas de la barre des modules, à ne pas confondre avec
+**Cortex IA** : il observe l'état de la table — combattants, positions, portées — et suggère.
 Il propose une lecture de la situation, jamais une décision à votre place.
 
 ### 📱 Les écrans des autres
@@ -239,8 +245,19 @@ Une surface de contrôle pensée pour une tablette tenue en paysage : pads, dés
 combat, trame, wiki. Elle porte vos notes privées — ne la faites pas circuler.
 
 **La fiche de personnage HTML**
-La vraie fiche du jeu, branchée sur les données de GM-OS. Quand les deux divergent, une règle claire
-dit laquelle l'emporte.
+La vraie fiche du jeu, branchée sur les données de GM-OS. Quand les deux divergent, **la dernière
+écriture l'emporte** — et chaque valeur écrasée reste au journal.
+
+### 🎨 L'apparence
+
+**Les thèmes de base et les personnalités**
+Quatre thèmes — Cyberpunk, Médiéval, Moderne, Clair — et leur **personnalité** : forme, relief,
+matière, halos. L'interrupteur « Personnalités » des Paramètres les allume.
+
+**Le thème du jeu**
+Un jeu peut habiller GM-OS à ses couleurs : jetons de couleur et de forme, matières, ornements,
+**icônes** et **bannière** d'en-tête. Il s'applique à la campagne ouverte, sans rien toucher aux
+autres. → [Créer un thème de jeu](./95-Creer-un-theme-de-jeu.md)
 
 ### 📦 Transporter et protéger
 
@@ -307,6 +324,8 @@ traîner y reste.*
 - **`Ctrl+0` vide l'écran des joueurs** quand vous ne savez plus ce qui y est affiché.
 
 ---
+
+*Relu le 2026-10-03 : l'apparence, le modèle de séance de l'Oracle et la règle de la fiche HTML.*
 
 *Guide écrit le 2026-09-12, à la demande de David. La liste des modules vivait auparavant dans
 [Prise en main](./01-Prise-en-main.md) en une phrase chacun ; elle a été **déplacée ici** plutôt que

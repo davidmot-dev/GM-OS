@@ -3,6 +3,10 @@
 Les cartes de Combat-OS ne se ressemblent pas d'un jeu à l'autre. Un pilote peut décider de
 l'allure de ses jauges et de la disposition de l'initiative.
 
+![Une carte de combattant, en trois lignes : initiative, nom, camp et cible ; la jauge et son état ; dégâts, soins, Fiche et Calculer](captures/combat-carte-de-combattant.jpg)
+
+*Ici le style par défaut (`bar`), avec le pilote générique de la campagne de démonstration.*
+
 ---
 
 ## 🌈 Les trois styles de jauge
@@ -82,3 +86,5 @@ C'est une proposition. Relisez-la dans l'éditeur : c'est cinq lignes de JSON, e
 — mais **la couleur déclarée n'est appliquée que sur le style `bar`, et seulement en classe
 Tailwind**, ce qu'aucune page ne disait et que l'exemple de la Forge contredit. Ajouté : le réglage
 d'une jauge au clic.*
+
+*Illustré le 2026-10-03.*

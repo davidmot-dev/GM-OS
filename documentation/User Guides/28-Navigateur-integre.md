@@ -5,20 +5,33 @@
 ---
 
 ## 🚀 Le Dashboard Web-OS
-L'interface est conçue pour une efficacité maximale :
-- **Bibliothèque de "Pads"** : Chaque lien est représenté par un "Pad" interactif.
-- **Codes Couleurs** : Attribuez des couleurs à vos liens pour les catégoriser visuellement (ex: Orange pour les règles, Cyan pour les générateurs, Pourpre pour la musique).
-- **Accès Rapide** : Cliquez simplement sur un Pad pour ouvrir le lien dans votre navigateur habituel.
+
+![Le navigateur : la barre d'adresse et ses commandes, les liens en tuiles numérotées, la page au plus large](captures/module-navigateur-web.jpg)
+
+*Refondu le 2026-10-03, sur le choix de David : **la page s'ouvre dans GM-OS**.*
+
+- **En haut, la barre de navigation** : **Précédent**, **Suivant**, **Recharger**, et l'**adresse**
+  — tapez-en une, ou collez-la. **Ouvrir dans le navigateur** reste à portée, en tête, pour envoyer
+  la page dans votre navigateur habituel.
+- **Les liens en tuiles numérotées** : un clic ouvre le lien dans la page.
+- **La page, au plus large.**
 
 ---
 
 ## 📂 Gestion de la Bibliothèque
-- **Nouveau Lien (New Link)** : Ajoutez une URL et donnez-lui un nom clair.
-- **Édition** : Modifiez l'URL ou le titre d'un lien existant à tout moment.
-- **Réinitialisation** : restaure les liens livrés avec GM-OS.
+- **Nouveau lien** : ajoutez une adresse et donnez-lui un nom clair.
+- **Édition** : modifiez l'adresse ou le titre d'un lien existant à tout moment.
+- **Réinitialiser** : restaure les liens livrés avec GM-OS.
 
-> ⚠️ **« Clear » et « Réinitialiser » ne font pas la même chose** : le premier vide la bibliothèque,
-> le second la remplace par les liens d'origine. Aucun des deux ne se défait.
+> ⚠️ **« Effacer » et « Réinitialiser » ne font pas la même chose** : le premier vide la
+> bibliothèque, le second la remplace par les liens d'origine. Les deux demandent confirmation, et
+> aucun des deux ne se défait.
+
+### 🔒 Une page tenue à l'écart de GM-OS
+
+La page intégrée n'a **aucun accès** à GM-OS : ni à vos campagnes, ni à vos fichiers, ni à votre
+disque. Elle tourne dans **sa propre session** de navigation, et **seules les adresses `http` et
+`https`** y entrent. *Un site ouvert pour une règle ne doit rien pouvoir toucher d'autre.*
 
 ---
 
@@ -27,17 +40,17 @@ L'interface est conçue pour une efficacité maximale :
 **Ajouté le 2026-09-05, à la demande de David.** Collez l'adresse d'une vidéo
 YouTube comme n'importe quel autre lien : Web-OS la **reconnaît**, remplace son
 pictogramme par celui de YouTube, et ajoute un bouton **Projeter** dans les
-commandes qui apparaissent au survol.
+commandes de sa tuile.
 
 Les quatre écritures fonctionnent — celle du site, celle du bouton *Partager*,
 celle du code d'intégration, et les *Shorts* — et le **point de départ est
 conservé** si l'adresse en contient un (`?t=1m30s`).
 
-**Vous choisissez l'écran au moment de lancer.** Le bouton ouvre la liste sur le pad
+**Vous choisissez l'écran au moment de lancer.** Le bouton ouvre la liste sur la tuile
 lui-même : *Player Hub*, puis chaque moniteur détecté. Une ligne déjà allumée se
 coupe d'un second appui.
 
-Chaque écran où la vidéo est à l'antenne porte son **étiquette sur le pad**, visible
+Chaque écran où la vidéo est à l'antenne porte son **étiquette sur la tuile**, visible
 sans survoler — *une vidéo qu'on a lancée et qu'on ne retrouve plus est une vidéo
 qu'on ne peut pas couper.* Rien n'empêche de l'envoyer sur plusieurs écrans à la fois.
 
@@ -80,15 +93,9 @@ qu'on ne peut pas couper.* Rien n'empêche de l'envoyer sur plusieurs écrans à
 
 ## 💾 Sauvegarde & Partage (JSON)
 Votre bibliothèque Web-OS est précieuse. Vous pouvez l'exporter et l'importer très simplement :
-- **Save (Export)** : Sauvegarde toute votre liste de liens dans un fichier JSON sur votre ordinateur.
-- **Load (Import)** : Recharge une bibliothèque complète à partir d'un fichier JSON.
-- **Clear** : Vide complètement l'interface pour repartir d'une page blanche.
-
----
-
-## 🛠️ Le Bridge GM-OS
-Web-OS utilise le **Bridge** système pour une expérience fluide :
-- **Ouverture Externe** : Contrairement aux navigateurs web classiques, GM-OS demande à votre système d'exploitation d'ouvrir le lien. Cela signifie que le lien s'ouvrira dans votre navigateur par défaut (Chrome, Firefox, etc.) en dehors de GM-OS, vous permettant de garder vos outils favoris à portée de main sur un autre écran.
+- **Enregistrer** : sauvegarde toute votre liste de liens dans un fichier JSON sur votre ordinateur.
+- **Charger** : recharge une bibliothèque complète à partir d'un fichier JSON.
+- **Effacer** : vide complètement la bibliothèque, après confirmation.
 
 ---
 
@@ -100,3 +107,6 @@ Web-OS utilise le **Bridge** système pour une expérience fluide :
 *Complété le 2026-09-05 : Web-OS sait désormais **projeter une vidéo YouTube** sur un écran de
 table, avec ses trois limites annoncées avant le clic. Voir aussi
 [Image-OS](./24-Image-OS-la-regie-visuelle.md), qui a reçu les vidéos en fichier le même jour.*
+
+*Relu le 2026-10-03 : la page intégrée remplace l'ouverture systématique dans le navigateur.
+Capture de la campagne de démonstration.*

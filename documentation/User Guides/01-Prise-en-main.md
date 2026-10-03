@@ -20,6 +20,28 @@ dans quel ordre découvrir**. Pour le détail, chaque module a son guide — tou
 
 **Le premier soir**, vous n'avez besoin que du premier.
 
+![Session-OS pendant une séance : à gauche la barre des modules, au centre la scène en cours et le groupe présent, à droite l'initiative et l'ambiance](captures/module-tableau-de-bord.jpg)
+
+*La campagne de démonstration « Le Silence de Varn », séance 2 en cours. Toutes les captures de ce
+manuel viennent de cette campagne fictive.*
+
+### Se repérer dans la fenêtre
+
+- **À gauche, la barre des modules**, rangée par familles (Audio, Global, Aventure, Outils). En bas,
+  sept raccourcis : Cortex, thème, **aide** (`Ctrl+H`), journal technique, **Paramètres**,
+  sauvegarder et charger une sauvegarde ; puis les deux boutons qui ouvrent le **Player Hub** (l'écran des joueurs) et le **Hub
+  Tablette**.
+- **En haut, la tour de contrôle audio** — volume général, Focus Chat, **Stop All** — et, à droite,
+  le **moment** : *Atelier* (hors séance) ou *Table* (séance ouverte). Voir
+  [la tour de contrôle](./70-Tour-de-controle-audio.md).
+- **Le reste est le module ouvert.**
+
+> 💡 **Deux raccourcis valent d'être appris le premier soir** : `Ctrl+K` ouvre la
+> [recherche universelle](./94-Recherche-universelle.md), `Ctrl+H` l'aide — qui contient **ce
+> manuel**, consultable sans quitter GM-OS, et la liste de tous les raccourcis.
+
+![L'aide intégrée : les raccourcis réels, et le manuel du meneur](captures/aide-manuel.jpg)
+
 ## 🧭 Ce que fait chaque module
 
 **Cette liste a déménagé** — elle vit désormais dans [GM-OS en bref](./02-GM-OS-en-bref.md), avec
@@ -38,9 +60,18 @@ voix. → [Guide Voice-OS](./74-Voice-OS-la-voix.md)
 
 ## 📱 Brancher une tablette
 
-1. Ouvrez le **QR Code** depuis la barre latérale.
-2. Scannez-le avec l'appareil du joueur.
+1. Ouvrez **Paramètres › 04. Télécommande** : deux QR codes, l'un pour **votre** tablette (*GM
+   Remote Control*), l'autre pour celles des joueurs (*Tablet Hub*). L'icône **Wi-Fi**, en haut à
+   droite, ouvre directement celui des joueurs.
+2. Scannez le second avec l'appareil du joueur.
 3. Tous les appareils doivent être sur le **même réseau Wi-Fi** que le PC du meneur.
+
+![Paramètres › Télécommande : le QR code de votre tablette, et celui des joueurs](captures/parametres-telecommande.jpg)
+
+Le joueur choisit alors son personnage parmi ceux **présents à la séance** — c'est vous qui
+déclarez le groupe présent, depuis le cockpit.
+
+![La tablette d'un joueur, à l'ouverture : les personnages présents à la séance](captures/tablette-des-joueurs.jpg)
 
 → [Guide du Tablet Hub](./61-Tablette-des-joueurs.md)
 
@@ -91,4 +122,6 @@ Pour **emporter** une campagne sur une autre machine, c'est autre chose :
 
 ---
 
-*Guide refondu le 2026-09-04. Il datait de mars 2026 et décrivait une sauvegarde qui n'existe plus.*
+*Guide refondu le 2026-09-04. Il datait de mars 2026 et décrivait une sauvegarde qui n'existe plus.
+Relu le 2026-10-03 contre l'interface refondue, et illustré : le QR code est passé dans les
+Paramètres.*

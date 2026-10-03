@@ -2,17 +2,26 @@
 
 **NPC OS** est l'outil ultime d'improvisation et de préparation de GM-OS. Il permet de générer instantanément des personnages, des lieux, des rumeurs ou des objets, tout en assurant une cohérence thématique parfaite avec votre univers de jeu.
 
-![Aperçu du module NPC OS](npc_mockup.png)
+Dans la barre latérale, c'est le module **Générateur PNJ**.
+
+![Le Générateur PNJ : les cinq catégories, l'univers, le fichier, l'enrichissement IA, et un tirage](captures/pnj-tirage.jpg)
 
 ## 📋 Présentation du Module
 
-NPC OS n'est pas qu'un simple générateur de noms. C'est un moteur de données capable de construire des entités complexes et de les injecter directement dans les autres modules de l'OS :
+NPC OS n'est pas qu'un simple générateur de noms. C'est un moteur de données capable de construire des entités complexes et de les injecter directement dans les autres modules de l'OS.
 
-1. **Sélecteur de Catégories** : Choisissez entre PNJ, Lieux, Objets, Événements ou Rumeurs.
-2. **Sélecteur d'Univers** : Filtrez vos bases de données par univers (ex: Cyberpunk, Fantasy, Alien).
-3. **Fiche d'Entité** : Visualisez les détails générés (traits, secrets, motivations, descriptions).
-4. **Intégrateur de Médias** : Liez un avatar et préparez la projection pour vos joueurs.
-5. **Actions Rapides** : Exportez vers le Combat OS, la Map ou le Wiki de session.
+**À gauche, le tirage** *(disposition refondue le 2026-10-02)* :
+
+1. **Les cinq catégories** : PNJ, Lieux, Objets, Événements, Rumeurs — nommées à la table.
+2. **L'univers** et **le fichier** de la base où piocher.
+3. **L'enrichissement IA**, allumé ou non.
+4. **Tirage instantané** — le gros bouton, en régime *Table* (séance ouverte). En régime *Atelier*,
+   il s'appelle **Générer PNJ**, et les catégories se réduisent à leurs icônes.
+
+**À droite, le résultat** : le portrait, la catégorie et le nom en tête ; les champs en **blocs
+titrés** du nom que leur donne la table ; vos **notes privées** à part, marquées *non projetées* ;
+et **toutes les actions avec leur libellé** — Combat, Carte, Wiki & Journal, Favoris, Donner,
+Mémo, Projeter.
 
 ## 🗄️ Comment alimenter le module ?
 
@@ -77,7 +86,25 @@ Désormais, **NPC OS** tire parti de l'intelligence artificielle locale pour sub
 
 ## 🖼️ Galerie des PNJs (Session)
 
-Dans le Cockpit de session, l'accès à la **NPC Gallery** a été optimisé pour la fluidité narrative :
+Dans le Cockpit de session, colonne de gauche : **Galerie PNJ**.
+
+![La galerie des PNJ de la campagne : onglets comptés, grandes cartes, Fiche / Combat / Projeter](captures/session-galerie-pnj.jpg)
+
+*Refondue le 2026-10-02.* En haut, **Nouveau PNJ** et la recherche ; les **onglets** Tous, PNJ,
+Monstres, Alliés, Hostiles portent leur nombre — qui suit la recherche. Chaque carte montre le
+portrait (une silhouette s'il n'y en a pas) avec le **camp** posé dessus, la vitalité, et trois
+gestes : **Fiche**, **Combat**, **Projeter**.
+
+### La fiche d'un PNJ
+
+![La fiche de Superviseur Hale : blocs titrés à gauche ; campagne, relations clés et secrets non projetés à droite](captures/session-fiche-pnj.jpg)
+
+La fiche **suit le modèle du jeu** : chaque section devient un bloc titré numéroté ; la santé vit
+dans sa console de dommage, et CA, vitesse ou initiative ne paraissent que si elles portent
+quelque chose. En tête, **Retour**, **Modifier** et l'état ; puis **Projeter**, **Combat**,
+**Carte**. À droite : la campagne, les **relations clés** (celles du Social Nexus), les **secrets
+du MJ marqués « Non projeté »**, les notes, les indices et les cartes.
+
 
 - **Préservation du Contexte** : Si vous accédez à la galerie via un lien direct (ex: depuis le Social Nexus), l'OS vous affiche immédiatement la fiche détaillée demandée.
 - **Navigation Fluide** : Le bouton "Retour à la Galerie" vous permet de revenir instantanément à la liste complète tout en gardant vos filtres de recherche.
@@ -98,3 +125,6 @@ Dans le Cockpit de session, l'accès à la **NPC Gallery** a été optimisé pou
 
 - **Catégories Supportées** : NPC, Lieux, Objets, Événements, Rumeurs.
 - **Persistance** : Utilise `IndexedDB` via Zustand pour conserver vos mémos et vos notes entre deux lancements de l'application.
+
+*Relu le 2026-10-03 contre les écrans refondus (générateur, galerie, fiche). Captures de la
+campagne de démonstration.*

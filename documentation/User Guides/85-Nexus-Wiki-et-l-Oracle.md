@@ -18,8 +18,8 @@ graph LR
     O -->|réponse + sources citées| MJ[Meneur]
 ```
 
-**Un seul geste, une seule fois** : *Paramètres → IA → brancher le Nexus Wiki*. À partir de là,
-chaque question interroge vos notes **en même temps que** les règles du jeu.
+**Un seul geste, une seule fois** : *Paramètres › 03. IA → brancher le Nexus Wiki*. À partir de là,
+chaque question posée à l'Oracle de **Cortex IA** interroge vos notes **en même temps que** les règles du jeu.
 
 - **L'interrupteur est éteint par défaut.** Jusqu'au 2026-08-22, le coffre *remplaçait* la racine
   documentaire, et l'Oracle cessait de voir les règles sans le dire.
@@ -29,22 +29,24 @@ chaque question interroge vos notes **en même temps que** les règles du jeu.
 
 ---
 
-## 📤 L'autre chemin : « Sync Oracle », qui ne fait pas ce qu'il dit
+## 📤 L'autre chemin : « Envoyer au carnet » (ex-« Sync Oracle »)
 
 > ⛔ **Correction.** Cette page annonçait que le bouton *Sync Oracle* « injecte votre note active
 > comme source dans NotebookLM », et concluait que « l'IA répond en tenant compte de VOTRE monde ».
 > La première moitié est exacte, la seconde ne suit pas : la note rejoint un **carnet NotebookLM**,
 > qui sert à la [Forge de campagne](./12-Forge-de-campagne.md) — **pas** à la conversation
-> avec l'Oracle. Relevé le 2026-09-04.
+> avec l'Oracle de Cortex IA. Relevé le 2026-09-04.
 
-Utilisez-le quand vous préparez une campagne à partir d'un long document. Pas pour qu'on vous
-réponde en partie.
+Le bouton s'appelle aujourd'hui **Envoyer au carnet**, en haut du lecteur de Nexus Wiki. Utilisez-le
+quand vous préparez une campagne à partir d'un long document — ou pour que le bouton **Oracle** de
+Session-OS, qui converse avec ce carnet, connaisse la note ([Oracle &
+NotebookLM](./81-Oracle-le-pont-NotebookLM.md)).
 
 ---
 
 ## 🎭 Les personas
 
-Le sélecteur de l'en-tête change l'expert : **huit** sont disponibles — Sage, Scribe, Oracle, Barde,
+Les tuiles du haut du panneau Cortex IA changent l'expert : **huit** sont disponibles — Sage, Scribe, Oracle, Barde,
 Alchimiste, Cartographe, Acteur, Stratège. Ils se réécrivent d'après votre jeu par le bouton
 **Générer avec l'IA** des réglages de campagne.
 
@@ -70,3 +72,6 @@ Alchimiste, Cartographe, Acteur, Stratège. Ils se réécrivent d'après votre j
 notes — c'est l'interrupteur du coffre qui le fait —, un chemin de coffre écrit en dur avec un nom
 d'utilisateur, et une consigne de dépannage (`notebook_query`, bouton RECONNECT du panneau Oracle)
 qui ne correspond à aucun bouton existant. Le compte des personas corrigé : huit.*
+
+*Relu le 2026-10-03 : « Sync Oracle » s'appelle **Envoyer au carnet**, et l'Oracle dont parle cette
+page s'ouvre par **Cortex IA**.*

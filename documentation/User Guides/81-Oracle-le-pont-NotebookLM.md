@@ -2,19 +2,43 @@
 
 > ⛔ **Cette page décrivait NotebookLM comme le moteur de l'Oracle. Il ne l'est pas.**
 >
-> On y lisait que « l'Oracle s'appuie sur le NotebookLM MCP Server », que chaque campagne « pointe
-> vers une URL NotebookLM », et que sans ce pont l'IA ne répondrait pas. **Rien de tout cela n'est
-> vrai pour la conversation avec l'Oracle** : elle passe par le fournisseur choisi dans les
-> réglages IA — Ollama, Gemini, OpenAI, Anthropic ou une adresse à vous.
+> On y lisait que « l'Oracle s'appuie sur le NotebookLM MCP Server », et que sans ce pont l'IA ne
+> répondrait pas. **C'est faux pour l'Oracle du panneau Cortex IA** : il passe par le fournisseur
+> choisi dans les réglages IA — Ollama, Gemini, OpenAI, Anthropic ou une adresse à vous.
+> → [Le guide de l'Oracle](./80-Oracle-poser-une-question.md)
 >
-> Un meneur dont l'Oracle ne répondait plus était donc envoyé réparer un pont sans rapport.
-> Corrigé le 2026-09-04. → [Le vrai guide de l'Oracle](./80-Oracle-poser-une-question.md)
+> ⚠️ **Précision du 2026-10-03.** La correction du 2026-09-04 était allée trop loin : le bouton
+> **Oracle de l'en-tête de Session-OS**, lui, converse **bien** avec un carnet NotebookLM. C'est
+> l'objet de la section suivante.
 
 ---
 
-## 🎯 À quoi NotebookLM sert, alors
+## 💬 Le bouton Oracle de Session-OS : converser avec un carnet
 
-À **une** chose, et elle est précieuse : **distiller un gros document**.
+En haut de Session-OS, le bouton **Oracle** ✨ ouvre un panneau de conversation qui interroge **un
+carnet NotebookLM** — celui de la campagne, celui du pilote du jeu, ou celui du modèle de fiche.
+
+![Le panneau Oracle de Session-OS, le sélecteur de persona déplié](captures/oracle-personas.jpg)
+
+- **Le carnet** se désigne par son URL, dans les réglages de la campagne (ou du pilote, ou du
+  modèle). Quand plusieurs existent, des boutons dans l'en-tête permettent de choisir ; sans choix,
+  c'est **la campagne, puis le pilote, puis le modèle**. Sans aucun carnet, **Envoyer** reste grisé.
+- **Le persona** (en haut à gauche) part avec la question comme consigne : les huit sont ceux de
+  l'Oracle du panneau Cortex IA, avec les mêmes adaptations à votre campagne et à votre jeu.
+- **Voir la source** veut afficher le carnet lui-même. Google interdit de l'intégrer dans une page :
+  le panneau le dit, et **Ouvrir NotebookLM dans le navigateur** l'ouvre à part.
+- **Vider la discussion** efface le fil ; pendant une séance, le bouton est mis hors de portée.
+
+> 🔎 **Quand l'utiliser plutôt que Cortex IA.** NotebookLM répond à partir **des sources que vous
+> avez versées dans le carnet** — un PDF de règles, un scénario entier — là où l'Oracle de Cortex IA
+> lit votre corpus fiche par fiche. Il faut que le pont soit authentifié (section « Le pont »,
+> plus bas).
+
+---
+
+## 🎯 À quoi d'autre NotebookLM sert
+
+À **distiller un gros document**.
 
 NotebookLM est un service de Google qui ingère des sources — un PDF de règles, un scénario de
 cent pages, une vidéo, un site — et sait en tirer des réponses. GM-OS s'en sert dans **la Forge de
@@ -59,7 +83,7 @@ votre carnet NotebookLM**. Il est grisé tant qu'aucune URL de carnet n'est rens
 
 ## 📚 Le carnet « GM-OS » — la documentation, interrogeable
 
-Depuis le 2026-09-12, **les 53 guides utilisateur sont des sources d'un carnet NotebookLM nommé
+Depuis le 2026-09-12, **les guides utilisateur sont des sources d'un carnet NotebookLM nommé
 « GM-OS »**. Vous pouvez donc lui poser des questions sur GM-OS lui-même : *« comment scinder une
 scène ? »*, *« que fait le Stop All au juste ? »* — et il répond en citant le guide.
 
@@ -78,7 +102,7 @@ renvoie les guides modifiés**, et eux seuls. Un commit de code ne coûte rien.
 | :--- | :--- |
 | `npm run notebooklm` | Renvoie les guides modifiés depuis la dernière fois. |
 | `node scripts/notebooklm-guides.mjs --etat` | Dit ce qui serait renvoyé, **sans rien envoyer**. |
-| `node scripts/notebooklm-guides.mjs --tout` | Renvoie les 53. Une dizaine de minutes — à éviter. |
+| `node scripts/notebooklm-guides.mjs --tout` | Renvoie tous les guides. Une dizaine de minutes — à éviter. |
 
 > ⚠️ **Pour désactiver ponctuellement** : `GMOS_SANS_NOTEBOOKLM=1 git commit …`. Pour de bon,
 > retirez `scripts/hooks/post-commit` — **les hooks sont versionnés** et git les lit directement
@@ -93,11 +117,12 @@ renvoie les guides modifiés**, et eux seuls. Un commit de code ne coûte rien.
 
 ---
 
-## 🧭 Lequel des trois, pour quoi
+## 🧭 Lequel choisir, pour quoi
 
 | Ce que vous voulez | L'outil |
 | :--- | :--- |
-| Poser une question en cours de partie | **L'Oracle**, sur son corpus local |
+| Poser une question en cours de partie | **L'Oracle** du panneau **Cortex IA**, sur son corpus local |
+| Interroger le carnet NotebookLM de la campagne ou du jeu | Le bouton **Oracle** de Session-OS |
 | Que l'Oracle connaisse vos notes Obsidian | **L'interrupteur du coffre**, réglages IA |
 | Transformer un scénario de cent pages en campagne jouable | **La Forge de campagne**, avec NotebookLM |
 
@@ -107,3 +132,7 @@ renvoie les guides modifiés**, et eux seuls. Un commit de code ne coûte rien.
 décrit désormais NotebookLM pour ce qu'il est — l'outil de distillation de la Forge de campagne. Le
 tableau des six personas qu'elle portait est supprimé : il en manquait deux, et il faisait doublon
 avec le guide de l'Oracle, qui les tient à jour.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Ajouté : le bouton **Oracle** de
+Session-OS, qui converse avec un carnet NotebookLM — la correction du 2026-09-04 l'avait effacé du
+manuel en même temps que l'erreur qu'elle visait.*

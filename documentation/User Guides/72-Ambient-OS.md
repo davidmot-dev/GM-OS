@@ -6,7 +6,10 @@ fabriquer une ambiance qui n'existe dans aucun fichier. C'est un pupitre de mixa
 Trois modules audio, trois usages : [Music-OS](./71-Music-OS.md) joue des morceaux,
 [Sound-OS](./73-Sound-OS-bruitages.md) déclenche des coups, Ambient-OS **tient le fond**.
 
-![Aperçu du module Ambient OS](ambient_mockup.png)
+![Ambient-OS : l'univers et le thème en haut, les scènes rapides, puis les huit pistes avec leur curseur, et le master à droite](captures/module-ambiances.jpg)
+
+*Le thème « Station Varn » de la campagne de démonstration : huit pistes réglées à des volumes
+différents — l'air à 60 %, le bourdonnement du relais à 45 %, le noyau en réserve à 0 %.*
 
 ---
 
@@ -39,6 +42,9 @@ Le déroulé réel est donc :
   oiseaux, et la tempête arrive sans que rien ne change de fichier.*
 - **Un mini-analyseur de spectre** sur chaque piste, pour voir d'un coup d'œil laquelle produit
   effectivement du son.
+- Sous chaque piste, trois boutons : **Changer** (choisir le fichier dans le
+  [Media Hub](./92-Media-Hub.md)), **Vider**, et **Lier lumière**. Un clic sur le nom de la piste
+  le renomme.
 
 > 🔎 **Le son est sommé en mono, exprès.** Les deux canaux sont fusionnés avant la sortie. Une
 > ambiance n'a pas de scène stéréo à respecter, et vos joueurs ne sont pas assis au point d'écoute :
@@ -72,9 +78,11 @@ Trois sont livrées :
 
 | Scène | Ce qu'elle fait |
 | :--- | :--- |
-| **Calme** | Trois pistes actives, volumes bas |
+| **Calme plat** | Trois pistes actives, volumes bas |
 | **Tension** | Cinq pistes, les drones poussés |
-| **Action** | Les huit pistes, presque à fond |
+| **Action / Danger** | Les huit pistes, presque à fond |
+
+Le bouton **Scènes rapides**, devant elles, enregistre l'état présent comme une scène de plus.
 
 *Le bon usage : préparez le thème d'un lieu, puis trois scènes pour ce lieu — calme, tension,
 bagarre. Le lieu ne change pas, son humeur si.*
@@ -127,7 +135,7 @@ La **recherche rapide** (Spotlight), elle, sait charger un thème et appliquer u
 | **Un thème livré ne fait aucun bruit** | Normal : les thèmes d'exemple sont des gabarits sans fichiers. Attribuez vos sons, puis enregistrez le thème. |
 | **J'ai chargé un thème et rien ne démarre** | Voulu : charger ne lance pas. Démarrez les pistes une à une, ou appliquez une scène. |
 | **Un pad d'ambiance ne fait aucun bruit** | Ses pistes n'ont pas de fichier, ou leur volume est à zéro. Un thème livré est un gabarit vide — voir le haut de cette page. |
-| **La lumière ne revient pas à la bonne piste** | La reprise choisit le numéro de piste le plus élevé, pas la dernière allumée. |
+| **La lumière ne revient pas à la bonne piste** | Depuis le 2026-09-04, la reprise suit la dernière piste **allumée**. Une piste allumée avant cette date n'a pas d'instant d'allumage et passe derrière les autres. |
 | **Une piste ne s'entend pas alors que son curseur est haut** | Regardez son analyseur de spectre : s'il est plat, c'est le fichier qui manque ou ne joue pas. |
 | **Tout est trop faible pendant une narration** | Le **Focus Chat** est actif : il met les ambiances à 10 %. |
 
@@ -150,3 +158,7 @@ La **recherche rapide** (Spotlight), elle, sait charger un thème et appliquer u
 qui « chargeront des oiseaux et un ruisseau », le fondu de 2 secondes au Stop All, et les deux
 fonctions de télécommande qui n'existent pas. Deux précisions ajoutées : la reprise lumineuse suit
 le numéro de piste, et la sortie des pistes dure 1 seconde quand l'entrée en dure 1,5.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Corrigé : les scènes livrées
+s'appellent **Calme plat**, **Tension** et **Action / Danger** ; la ligne de dépannage sur la reprise
+lumineuse contredisait la correction du 2026-09-04 plus haut.*

@@ -6,6 +6,11 @@ Le **Module de Loot** de Session-OS permet au MJ de gérer un pool d'objets trou
 
 ## 🎒 Le Pool de Butin (MJ)
 
+On l'ouvre depuis le cockpit de Session-OS : ligne **Loot-OS** de la colonne de gauche. Trois
+onglets : **1. Génération**, **2. Pool actif**, **3. Historique**.
+
+![Loot-OS : la génération rapide, les tables du système, et à droite le résumé trésor et le conseil MJ](captures/session-loot-os.jpg)
+
 Lorsqu'un groupe triomphe d'un défi ou fouille un lieu, le MJ peut ajouter des objets au **Pool de Butin**.
 
 Le butin arrive dans le pool par **quatre portes** :
@@ -74,3 +79,5 @@ Chaque mouvement d'objet est enregistré dans l'**Historique du Loot**.
 
 *Dernière mise à jour : 2026-09-04 — pool par campagne et persisté, quatre portes d'entrée,
 annonce sur les tablettes.*
+
+*Illustré le 2026-10-03 avec la campagne de démonstration.*

@@ -7,12 +7,14 @@ l'envoie en plein écran sur le Player Hub **et sur les tablettes des joueurs**.
 
 ## 🔘 Le bouton, et où il se cache
 
-L'interrupteur est l'icône **Cast** (diffusion), **en haut à droite du panneau de résultat** de
-Dice-OS.
+L'interrupteur est le bouton **Projeter** (icône de diffusion), **en haut à droite du panneau
+« Dernier jet »** de Dice-OS.
 
-> ✅ **Il est visible en permanence depuis le 2026-09-04**, dès qu'un jet existe dans l'historique. Il vivait auparavant caché jusqu'au survol : *un geste qu'on ne peut faire qu'en le connaissant déjà n'est pas offert, il est caché.*
-> Si vous ne le trouvez pas : lancez un dé, puis passez la souris sur le résultat. Ce guide le
-> plaçait « dans le bandeau Dice-OS » — il n'y est pas.
+![Le panneau « Dernier jet » : le résultat, sa formule, et le bouton Projeter en haut à droite](captures/dice-dernier-jet.jpg)
+
+> ✅ **Il est visible en permanence**, dès qu'un jet existe dans l'historique, et il porte son
+> libellé depuis la refonte (2026-09-30). Il vivait auparavant caché jusqu'au survol : *un geste
+> qu'on ne peut faire qu'en le connaissant déjà n'est pas offert, il est caché.*
 
 | État | Ce que voient les joueurs |
 | :--- | :--- |
@@ -63,7 +65,7 @@ L'interrupteur des dés 3D est dans les réglages de Dice-OS, à côté des mode
 
 | Problème | Ce qu'il faut regarder |
 | :--- | :--- |
-| **Je ne trouve pas le bouton Cast** | Il faut un jet dans l'historique — sans jet, il n'y a rien à projeter, et le bouton ne s'affiche pas. |
+| **Je ne trouve pas le bouton Projeter** | Il faut un jet dans l'historique — sans jet, il n'y a rien à projeter, et le bouton ne s'affiche pas. |
 | **Le jet ne part pas chez les joueurs** | L'interrupteur est éteint. Il ne s'allume pas tout seul au premier lancer. |
 | **Le résultat a disparu trop vite** | Cinq secondes, c'est court. Éteignez puis rallumez pour le remontrer. |
 | **Les dés 3D ne roulent pas sur la tablette** | C'est voulu : l'animation est réservée au Player Hub. |
@@ -82,3 +84,6 @@ L'interrupteur des dés 3D est dans les réglages de Dice-OS, à côté des mode
 au-dessus du résultat. **Rendu permanent le 2026-09-04.** Ajouté : la projection atteint aussi **les
 tablettes**, et les **dés 3D** du Player Hub, avec leur seconde et demie d'attente — rien de tout
 cela n'était écrit.*
+
+*Relu le 2026-10-03 : le bouton s'appelle « Projeter » depuis la refonte. Capture de la campagne
+de démonstration.*

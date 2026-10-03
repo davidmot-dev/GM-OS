@@ -1,10 +1,14 @@
-# 🗄️ Media Hub
+# 🗄️ Médiathèque (Media Hub)
 
 Le Media Hub est **la** bibliothèque de fichiers de GM-OS : illustrations, musiques, bruitages,
 vidéos d'ambiance, documents. Tout ce que vous importez une fois y reste, et tous les modules y
 puisent.
 
-![Aperçu du Media Hub](media_hub_mockup.png)
+![La Médiathèque : la recherche et les onglets de type en haut, Campagne active, le tri et Importer à droite ; à gauche les collections, le diagnostic et les étiquettes](captures/mediatheque.jpg)
+
+*La médiathèque de la campagne de démonstration : quatre images importées d'un bloc. À gauche,
+**Collections**, **Diagnostic** (*Ajoutés récemment*, *Sans étiquette*, *Orphelins*) et
+**Étiquettes** ; tout en bas, **Vider la médiathèque**.*
 
 ---
 
@@ -12,9 +16,9 @@ puisent.
 
 Le Hub s'ouvre de **deux** façons, et elles ne montrent pas la même chose.
 
-**Pour tout voir** : la barre latérale, section *Outils* → **Media Hub**. Aucun filtre : images,
+**Pour tout voir** : la barre des modules, section *Outils* → **Médiathèque**. Aucun filtre : images,
 sons, vidéos et documents ensemble. C'est le mode « ranger ma bibliothèque ». Le bouton
-*Sélectionner* n'y sert à rien — il n'y a pas de module à qui rendre le fichier.
+*Utiliser* n'y sert à rien — il n'y a pas de module à qui rendre le fichier.
 
 **Pour choisir un fichier** : depuis le module qui en a besoin. Il s'ouvre alors en plein écran, et
 **ne montre que ce qui l'intéresse** :
@@ -27,15 +31,15 @@ sons, vidéos et documents ensemble. C'est le mode « ranger ma bibliothèque »
 | L'éditeur de fiche, en mode document | **les documents seuls** |
 
 > 🔎 **Conséquence pratique.** Si un fichier « a disparu », il est le plus souvent d'un type que
-> l'écran d'où vous regardez ne montre pas. Les onglets **TOUT / IMAGE / AUDIO / VIDEO / DOC** ne
+> l'écran d'où vous regardez ne montre pas. Les onglets **Tout / Image / Audio / Vidéo / Document** ne
 > filtrent qu'à l'intérieur de ce que le module a déjà autorisé : ouvert depuis Image-OS, l'onglet
-> AUDIO reste vide. Passez par la barre latérale pour tout revoir.
+> *Audio* reste vide. Passez par la barre latérale pour tout revoir.
 
 ---
 
 ## 📥 Importer
 
-**Importer Asset Tactique**, en bas à droite, ouvre le sélecteur de fichiers de votre système.
+**Importer**, en haut à droite, ouvre le sélecteur de fichiers de votre système.
 
 > ✅ **Vous pouvez en choisir plusieurs d'un coup depuis le 2026-09-05.** Le Hub n'en prenait qu'un,
 > ce qui obligeait à rouvrir la fenêtre entre chaque fichier — ranger une sonothèque prenait la
@@ -61,10 +65,6 @@ sons, vidéos et documents ensemble. C'est le mode « ranger ma bibliothèque »
 
 <!-- -->
 
-> ⚠️ **Un fichier à la fois.** Le sélecteur ne prend pas de sélection multiple.
-
-<!-- -->
-
 > 🔎 **Les doublons sont signalés depuis le 2026-09-04.** Un fichier de **même nom et même taille**
 > déclenche une demande de confirmation. C'est un avertissement, pas une interdiction : vous pouvez
 > vouloir la copie — une variante retouchée sous le même nom, par exemple.
@@ -85,14 +85,14 @@ vos sons ; taper `elfe` remonte aussi bien `elfe_archer.png` qu'une image tagué
 
 ### Les tags, et la logique OU / ET
 
-Colonne de gauche, **Tags Tactiques**. Cliquez pour en sélectionner plusieurs, et **le bouton
-`OR` / `AND` change tout** :
+Colonne de gauche, **Étiquettes**. Cliquez pour en sélectionner plusieurs, et **le bouton
+`l'une` / `toutes` change tout** :
 
-- **OR** (par défaut) — les fichiers qui portent **au moins un** des tags choisis.
-- **AND** — seulement ceux qui les portent **tous**.
+- **l'une** (par défaut) — les fichiers qui portent **au moins une** des étiquettes choisies.
+- **toutes** — seulement ceux qui les portent **toutes**.
 
-*C'est ce bouton qui transforme les tags en vrai outil : `PNJ` + `Ennemi` en mode AND vous donne
-exactement les portraits d'adversaires.*
+*C'est ce bouton qui transforme les étiquettes en vrai outil : `PNJ` + `Ennemi` en mode « toutes »
+vous donne exactement les portraits d'adversaires.*
 
 ⭐ **Chaque tag porte désormais son compte**, et la liste est classée par **usage** et non par
 ordre alphabétique : *ce qu'on cherche le plus souvent doit être ce qu'on atteint le plus vite.*
@@ -104,13 +104,13 @@ Le compte dit aussi lesquels ne servent à rien — ce sont ceux à fusionner.
 | :--- | :--- |
 | `taverne` | du texte — nom, type ou tag, comme avant |
 | `#taverne` | **exige** le tag |
-| `-combat` | **refuse** le tag |
+| `-combat` ou `-#combat` | **refuse** le tag |
 
 ⛔ **Il n'y avait aucune façon de dire « pas ça »**, et c'est pourtant la moitié des recherches
 d'un meneur qui range : *« mes décors de taverne, sauf ceux que j'ai déjà employés en combat ».*
 
 > [!NOTE]
-> **Un refus ne se négocie pas.** Il s'applique même en mode `OR` — *dire « sauf les combats » et
+> **Un refus ne se négocie pas.** Il s'applique même en mode « l'une » — *dire « sauf les combats » et
 > voir quand même des combats serait un réglage qui ment.*
 
 > [!TIP]
@@ -146,25 +146,24 @@ le geste porte sur toute la sélection. **Tout l'écran** coche ce que le filtre
 
 ### Les dossiers de collection
 
-Colonne de gauche, en haut. **Trois familles** :
+Colonne de gauche, en haut. **Deux familles** :
 
 | | |
 | :--- | :--- |
-| **Archive Globale** | tout, sans filtre |
-| **Matrice Intelligente** | deux dossiers calculés : **Dernière Fréquence** (les imports récents) et **Contenu Non Aliasé** (tout ce qui n'a **aucun** tag — la pile à ranger) |
-| **Domaines Utilisateur** | **vos** dossiers, que vous créez avec le **+** |
+| **Collections** | **Toutes les ressources** (tout, sans filtre), puis **vos** collections, que vous créez avec le **+** |
+| **Diagnostic** | trois listes calculées : **Ajoutés récemment** (les imports récents), **Sans étiquette** (la pile à ranger) et **Orphelins** (les fichiers dont aucun module ne se sert) |
 
 Un fichier peut appartenir à plusieurs dossiers, et un dossier supprimé **n'efface aucun fichier** —
 il défait seulement le rangement.
 
 ### Le focus campagne
 
-Le bouton **Focus Opérationnel / Matrice Globale** bascule entre « tout » et « seulement ce qui est
-lié à la campagne active ».
+Le bouton **Campagne active / Toutes les campagnes** bascule entre « seulement ce qui est lié à la
+campagne active » et « tout ».
 
 ### Le type, et le tri
 
-Les onglets **TOUT / IMAGE / AUDIO / VIDEO / DOC**, et un menu de tri : **Plus récents**, **Plus
+Les onglets **Tout / Image / Audio / Vidéo / Document**, et un menu de tri : **Plus récents**, **Plus
 anciens**, **Taille**, **Nom (A-Z)**.
 
 ---
@@ -173,7 +172,7 @@ anciens**, **Taille**, **Nom (A-Z)**.
 
 ### Sur une vignette
 
-**Cliquez sur l'image** pour l'ouvrir en plein écran. C'est un vrai lecteur :
+**Double-cliquez la vignette** pour l'ouvrir en plein écran. C'est un vrai lecteur :
 
 - une **image** s'affiche en grand ;
 - un **son** et une **vidéo** démarrent tout seuls, avec les commandes de lecture ;
@@ -184,9 +183,9 @@ anciens**, **Taille**, **Nom (A-Z)**.
 > `.docx`, `.odt`, `.rtf` — ne s'affichent pas : GM-OS le dit désormais au lieu de montrer un cadre
 > blanc. *Une absence expliquée n'est plus une panne.*
 
-Au survol de la vignette apparaissent **Supprimer Asset** et le grand bouton rond **Sélectionner
-pour Transmission** — celui qui renvoie le fichier au module qui a ouvert le Hub. Un crayon permet
-de **Modifier l'identifiant** (le nom d'affichage ; le fichier d'origine n'est pas touché).
+Au survol de la vignette apparaissent **Supprimer** et **Utiliser** — celui qui renvoie le fichier
+au module qui a ouvert la médiathèque. **Renommer** change le nom d'affichage ; le fichier d'origine
+n'est pas touché.
 
 ### ✨ Le champ de tags vous aide
 
@@ -225,15 +224,16 @@ tablettes — et pour tous les chemins qui déclenchent cette vidéo.
 
 ### Le panneau de détails
 
-Le bouton **ÉDITION DÉTAILLÉE** ouvre un panneau latéral qui donne, sur un seul média :
+**Un simple clic sur une vignette** la choisit et ouvre sa fiche dans une colonne à droite ; un
+second clic la referme. La fiche donne, sur un seul média :
 
 - un **grand aperçu**, son type et son poids ;
-- le **cadenas de persistance** (voir plus bas) ;
-- **Classification Dossier** — cocher les dossiers auxquels il appartient ;
-- **Matrice de Tags** — en ajouter, en retirer ;
+- le **cadenas** *Protégé* (voir plus bas) ;
+- **Collections** — cocher celles auxquelles il appartient ;
+- **Étiquettes** — en ajouter, en retirer ;
 - ⭐ **Utilisé par** — la liste nommée de ce qui retient ce fichier ;
-- son **identifiant** et sa **date d'import** ;
-- **Attribution Opérationnelle** — lier ou délier le média à chacune de vos campagnes.
+- son **nom** et sa **date d'import** ;
+- **Campagnes** — lier ou délier le média à chacune de vos campagnes.
 
 > 🔎 **La section « Utilisé par » est née de cette relecture.** Le guide promettait un « Status
 > Tactique » qui n'existait pas — mais l'application, elle, savait déjà répondre « personne » :
@@ -349,8 +349,8 @@ campagne sur les médias concernés.
 | **Le sélecteur de fichiers n'affiche aucun document** | C'était un défaut, corrigé le 2026-09-04 : le filtre demandait un type de fichier qui n'existe pas. |
 | **Des images ont disparu après un nettoyage** | Si c'était **avant le 2026-09-04**, elles n'étaient sans doute référencées que par l'un des six angles morts d'alors (Map-OS, un indice, le storyboard, un document de fiche, l'avatar d'un joueur, un favori). Restaurez depuis la sauvegarde. Depuis, ces six modules sont recensés. |
 | **Le nettoyage refuse d'agir** | Un module n'a pas répondu, et l'écran le nomme. Tout ce qu'il détenait passerait pour orphelin : GM-OS préfère ne rien supprimer. |
-| **Le filtre par tags ne rend presque rien** | Le bouton est sur **AND** : il exige *tous* les tags. Repassez-le sur **OR**. |
-| **La liste est vide et je n'ai rien filtré** | Vérifiez le **Focus Opérationnel** : il ne montre que les médias liés à la campagne active. |
+| **Le filtre par étiquettes ne rend presque rien** | Le bouton est sur **toutes** : il exige *toutes* les étiquettes choisies. Repassez-le sur **l'une**. |
+| **La liste est vide et je n'ai rien filtré** | Vérifiez le bouton **Campagne active** : il ne montre que les médias liés à la campagne active. |
 
 ---
 
@@ -366,3 +366,9 @@ sont corrigés le même jour — le « Status Tactique » qui manquait est deven
 *Quatre défauts de plus le même jour : le filtre du sélecteur demandait `document/*`, **qui n'est
 pas un type de fichier** ; le repli de classement était « image », d'où les vignettes cassées ; les
 doublons passaient sans un mot ; et les documents n'avaient aucun aperçu.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Le Hub s'appelle **Médiathèque** dans la
+barre des modules, et tous ses libellés ont été francisés : **Étiquettes** (et non *Tags
+Tactiques*), **l'une / toutes** (et non *OR / AND*), **Collections** et **Diagnostic**, **Campagne
+active**, **Utiliser**. Un clic sur une vignette ouvre sa fiche, un double-clic l'agrandit. Retiré :
+l'avertissement « un fichier à la fois », que l'import multiple du 2026-09-05 avait rendu faux.*

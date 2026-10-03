@@ -1,18 +1,28 @@
-# 📔 Obsidian
+# 📔 Nexus Wiki — votre coffre Obsidian
 
-Le module **Obsidian Bridge** permet d'intégrer vos notes personnelles de préparation directement dans l'interface de GM-OS. Il crée un pont intelligent entre votre savoir accumulé dans Obsidian et l'intelligence artificielle de l'Oracle.
+Le module **Nexus Wiki** permet d'intégrer vos notes personnelles de préparation directement dans l'interface de GM-OS. Il crée un pont intelligent entre votre savoir accumulé dans Obsidian et l'intelligence artificielle de l'Oracle.
 
-![Aperçu du module Obsidian](obsidian_mockup.png)
+![Nexus Wiki : l'arborescence du coffre à gauche, la note « Station Varn » au centre avec ses liens internes, la table des matières à droite](captures/module-nexus-wiki.jpg)
+
+*Le coffre de démonstration : cinq notes rangées en dossiers. Les noms surlignés dans la note —
+*Superviseur Hale*, *L'Écho* — sont des liens `[[…]]` : un clic ouvre la note visée.*
 
 ## 📋 Présentation du Module
-Le module se divise en deux zones principales :
-1.  **Explorateur (Gauche)** : Affiche l'arborescence de votre "Vault" Obsidian. Seuls les fichiers Markdown (`.md`) sont visibles.
-2.  **Lecteur (Centre)** : Affiche le contenu de la note sélectionnée dans un format clair et lisible.
+L'écran a trois colonnes, sous un en-tête qui compte vos notes et rappelle qu'il est en **lecture
+seule** :
+1.  **L'explorateur (à gauche)** : l'arborescence de votre coffre, avec le nombre de notes par
+    dossier. Seuls les fichiers Markdown (`.md`) sont visibles.
+2.  **Le lecteur (au centre)** : la note sélectionnée, son dossier au-dessus du titre, et le bouton
+    **Envoyer au carnet** (voir plus bas).
+3.  **La table des matières (à droite)** : les intertitres de la note, pour y sauter d'un clic.
+
+En haut à droite : **Recharger le coffre** et **Ouvrir dans Obsidian**.
 
 ## 🚀 Comment l'utiliser ?
 
 ### 1. Accéder au module
-Cliquez sur l'icône ✨ (**Sparkles**) dans la section **Global** de la barre latérale gauche (juste au-dessus de *AI GEMS*).
+Cliquez sur **Nexus Wiki** dans la section **Global** de la barre des modules (juste au-dessus de
+*Cortex IA*).
 
 ### 2. Parcourir et Rechercher
 - Utilisez la barre de recherche en haut à gauche pour filtrer vos notes par nom.
@@ -35,9 +45,12 @@ blocs de code — **et les tableaux**.
 Un tableau plus large que le panneau **défile tout seul**, sans pousser le reste de
 la page.
 
-Deux écritures d'Obsidian restent en dehors : les liens internes `[[Note]]` (montrés
-tels quels) et l'en-tête `---` du haut de note, qui s'affiche comme une ligne suivie
-de ses champs.
+**Les liens internes `[[Note]]` sont cliquables** : ils ouvrent la note visée, et
+`[[Note|texte]]` affiche le texte. Un lien vers une note qui n'existe pas encore le dit
+au lieu de ne rien faire.
+
+Une écriture d'Obsidian reste en dehors : l'en-tête `---` du haut de note, qui s'affiche
+comme une ligne suivie de ses champs.
 
 ### 3 bis. La loupe de lecture 🔍
 
@@ -72,12 +85,16 @@ conversation.
 
 ### 5. Éditeur & Liens
 Le lecteur de GM-OS est principalement conçu pour la consultation.
-- Pour modifier une note, cliquez sur l'icône **Lien Externe** (en haut à droite du lecteur) pour l'ouvrir dans Obsidian.
+- Pour modifier une note, cliquez sur **Ouvrir dans Obsidian**, en haut à droite : la note
+  affichée s'ouvre dans Obsidian, quel que soit le nom de votre coffre.
 
 ### 6. Exporter vers Obsidian 📤
 Vous pouvez désormais exporter vos données GM-OS vers Obsidian pour archive ou préparation approfondie.
-1. Allez dans les **Détails de la Campagne** (cliquez sur le titre de la campagne dans le Cockpit).
-2. Cliquez sur le bouton violet **Exporter vers Obsidian**.
+1. Ouvrez la **page de la campagne** : *Bibliothèque* → **Gérer la campagne**.
+2. Cliquez sur **Exporter vers Obsidian**, en haut à droite.
+
+![La page de la campagne : Modifier la campagne et Exporter vers Obsidian en haut à droite](captures/campagne-details.jpg)
+
 3. GM-OS créera automatiquement une structure de dossiers dans votre Vault :
    - `/Ma Campagne/Scenario.md`
    - `/Ma Campagne/PNJs/` (Fiches de personnages non-joueurs)
@@ -93,7 +110,7 @@ C'est le point qui prête à confusion, et le nom du bouton n'aide pas.
 
 ### 1. L'interrupteur du coffre — celui qui compte en partie
 
-**Paramètres → IA → le bouton du Nexus Wiki.**
+**Paramètres › 03. IA → le bouton du Nexus Wiki.**
 
 Il branche votre coffre comme **racine supplémentaire du corpus** : à partir de là, l'Oracle
 cherche dans vos notes en même temps que dans les fiches de règles, à chaque question, sans que
@@ -110,15 +127,16 @@ vous ayez rien à préparer.
 > ⚠️ **Le coffre n'est pas cloisonné par campagne.** Vos notes de Star Trek peuvent remonter sur une
 > question de Blade Runner. Rangez par dossiers si cela vous gêne.
 
-### 2. « Sync Oracle » — celui qui alimente la Forge
+### 2. « Envoyer au carnet » — celui qui alimente NotebookLM
 
-Le bouton **Sync Oracle**, en haut du lecteur, envoie la note affichée **dans votre carnet
-NotebookLM**. Il reste grisé tant qu'aucune URL de carnet n'est renseignée.
+Le bouton **Envoyer au carnet**, en haut du lecteur, envoie la note affichée **dans le carnet
+NotebookLM de la campagne**. Il reste grisé tant qu'aucune URL de carnet n'est renseignée (page de
+la campagne, panneau *Configuration Oracle IA*).
 
-> ⛔ **Il ne fait pas ce que son nom promet.** La note rejoint le carnet ; elle **n'entre pas** dans
-> ce que l'Oracle lit quand vous lui parlez. C'est un outil de **préparation**, utile à la
-> [Forge de campagne](./12-Forge-de-campagne.md), pas une injection dans la conversation.
-> Relevé le 2026-09-04.
+> ⛔ **La note rejoint le carnet ; elle n'entre pas dans le corpus de l'Oracle de Cortex IA.** Le
+> carnet sert à la [Forge de campagne](./12-Forge-de-campagne.md) et au bouton **Oracle** de
+> Session-OS, qui converse avec lui — voir [Oracle & NotebookLM](./81-Oracle-le-pont-NotebookLM.md).
+> *Le bouton s'appelait « Sync Oracle » jusqu'au 2026-09-04.*
 
 **En un mot** : pour que l'Oracle connaisse vos notes en séance, c'est l'**interrupteur**, pas le
 bouton.
@@ -144,12 +162,12 @@ Vous avez une fiche de PNJ très détaillée dans Obsidian.
 
 ---
 
-- **Emplacement du Vault** : Par défaut, GM-OS cherche votre Vault dans `OneDrive/Obsidian Vault`. Ce chemin est modifiable dans les réglages.
+- **Emplacement du coffre** : par défaut, GM-OS cherche votre coffre dans `OneDrive/Obsidian Vault`. Ce chemin est modifiable dans les réglages.
 - **Sécurité et Écritures** : GM-OS ne modifie jamais vos notes existantes. En revanche, il a l'autorisation de **créer de nouveaux dossiers et fichiers** dans le cadre de la fonction "Exporter vers Obsidian".
 
 ---
 > [!TIP]
-> Si vous venez d'ajouter une note dans Obsidian et qu'elle n'apparaît pas encore, cliquez sur le bouton de rafraîchissement 🔄 en haut de l'explorateur.
+> Si vous venez d'ajouter une note dans Obsidian et qu'elle n'apparaît pas encore, cliquez sur **Recharger le coffre**, en haut à droite.
 
 ---
 
@@ -160,3 +178,7 @@ texte brut sur tous les écrans qui rendent du Markdown.*
 conversation avec l'Oracle** — il pousse la note dans un carnet NotebookLM, qui sert à la Forge de
 campagne. Ce qui donne vos notes à l'Oracle est l'**interrupteur du coffre**, dans les réglages IA,
 **éteint par défaut** — et cette page n'en parlait pas du tout.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Le module s'appelle **Nexus Wiki** ;
+les liens `[[…]]` sont désormais **cliquables** ; « Sync Oracle » est devenu **Envoyer au carnet** ;
+l'export vers Obsidian part de la page de la campagne.*

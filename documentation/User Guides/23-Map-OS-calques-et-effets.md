@@ -26,6 +26,12 @@ Trois conséquences pratiques :
 3. **Réimporter la même carte sous un autre nom de fichier repart de zéro** (noir complet), parce
    que l'adresse a changé.
 
+![Cartographie : le plan de la station sous le brouillard, assombri à 80 % sur l'écran du meneur ; Révéler et Masquer en haut, avec les formes Pinceau, Zone et Rond](captures/module-cartographie.jpg)
+
+*Le plan de démonstration encore entièrement couvert : le meneur le devine sous un voile à 80 %,
+les joueurs ne voient que du noir. **Révéler** et **Masquer**, puis la forme — **Pinceau**, **Zone**
+ou **Rond** —, découpent ou reposent le brouillard ; **Tout masquer** repart de zéro.*
+
 ### Le départ en noir
 
 Toute carte jamais explorée s'ouvre **noire à 100 %**, sur votre écran comme sur celui des joueurs.
@@ -95,3 +101,5 @@ sauvegarde**, ni automatique ni manuelle. Le détail est dans le
 *Page refaite le 2026-09-04 : deux affirmations retirées (les calques « sans effet sur la
 projection », et une promesse de 60 images par seconde que rien ne mesure), et le tableau de
 dépannage ajouté.*
+
+*Relu le 2026-10-03 et illustré.*

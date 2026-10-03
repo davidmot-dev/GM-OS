@@ -2,7 +2,21 @@
 
 Le module **Combat OS** est votre tour de contrôle pour les affrontements. Il automatise la gestion de l'ordre de passage, le suivi de la santé, les effets de statut et synchronise le tout avec le plateau de jeu et la chronologie de votre campagne.
 
-![Aperçu du module Combat OS](combat_mockup.png)
+![Combat-OS : l'équipage face à l'Écho — le compteur en tête, une carte par combattant, et les contrôles à droite](captures/module-combat-os.jpg)
+
+### Ce que montre l'écran
+
+*Disposition refondue le 2026-09-30 (refonte, lot L1).*
+
+- **En tête**, la scène en cours et le **compteur** : combien de combattants, combien **en lice**.
+- **Une carte par combattant, en trois lignes** : l'initiative, le nom, le camp et la cible ; la
+  jauge de santé et son état (*Stable*, *Égratigné*…) ; les dégâts et les soins, puis **Fiche** et
+  **Calculer**. Le combattant dont c'est le tour se détache. **Les hors-de-combat se regroupent en
+  bas**, pour ne pas encombrer l'ordre.
+- **À droite, les contrôles** : la projection (*ON*), le système actif, le **round** et **Tour
+  suivant**, l'**auto-initiative** (le dé, et le mode *Standard*), puis **Ajouter un combattant**,
+  **Fabriquer des adversaires**, le **calculateur de dégâts**, les deux **tris**, et en bas **Sync PV
+  vers Session**, **Fin de combat**, **Reset combat**.
 
 ## 📋 Présentation du Module
 
@@ -203,3 +217,6 @@ Quand vous fabriquez depuis un gabarit du bestiaire, **ce que vous y avez saisi 
 
 > [!TIP]
 > Le bestiaire entre dans la sauvegarde automatique, avec vos corrections de répartition.
+
+*Illustré le 2026-10-03 avec la campagne de démonstration ; la disposition décrite est celle de la
+refonte (lot L1).*

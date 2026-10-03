@@ -1,12 +1,12 @@
 # 🎬 Storyboard
 
-Le module **Master Storyboard** est le chef d'orchestre de votre partie. Il vous permet de synchroniser instantanément l'ambiance sonore, l'éclairage et les visuels pour créer des moments cinématographiques inoubliables via une interface de montage intuitive.
+Le module **Master Storyboard** est le chef d'orchestre de votre partie. Il vous permet de synchroniser instantanément l'ambiance sonore, l'éclairage et les visuels pour créer des moments cinématographiques — d'un seul geste.
 
-![Aperçu du Master Storyboard](storyboard_mockup.png)
+![Le Master Storyboard : un tableau, une ligne par moment, une colonne par source ; à droite, le moment en cours](captures/session-storyboard.jpg)
 
 ## 📋 Présentation du Module
 
-Le Storyboard utilise une **Table de Montage Horizontale** (façon pellicule de film) pour organiser vos "Moments". Un moment est une configuration prédéfinie qui impacte plusieurs modules simultanément :
+Le Storyboard est un **tableau de montage** : une ligne par *moment*, une colonne par source. Un moment est une configuration prédéfinie qui impacte plusieurs modules simultanément :
 
 1. **Musique** : Lance une piste spécifique de vos playlists.
 2. **Ambiance (Ambient-OS)** : Charge un **thème** — les huit sons de fond — et, si vous le voulez, la **scène** qui les dose (Calme, Tension, Action).
@@ -18,13 +18,30 @@ Le Storyboard utilise une **Table de Montage Horizontale** (façon pellicule de 
 ## 🚀 Comment l'utiliser ?
 
 ### 1. Accéder au module
-Cliquez sur l'icône 🎬 (**Storyboard**) dans la section **Modules** de la barre latérale du **Session-OS**.
+Dans le cockpit de **Session-OS**, colonne de gauche : **Master Storyboard**.
 
-### 2. Créer une séquence
+### 2. Lire le tableau
+
+*Refondu le 2026-10-02 (refonte, phase 4) : la pellicule de cartes est devenue un tableau.*
+
+- **Chaque ligne est un moment** : son ordre et sa poignée, son nom et le titre qu'il affiche.
+- **Sept colonnes, une par source** — musique, ambiance, lumière, carte, image ou diaporama,
+  bruitage, titre affiché — **allumées ou éteintes** : on voit d'un coup d'œil ce que le moment
+  déclenche. Un volume réglé seul suffit à allumer sa source, **zéro compris** : c'est alors une
+  source *coupée*, et c'est voulu.
+- **Au bout de la ligne** : **Jouer** (ou **Arrêter**), **Dupliquer**, **Régler**, **Supprimer**.
+- **La ligne en cours se détache** du reste.
+- **À droite, le moment en cours**, et ce que chaque source joue, **en clair**. **Précédent** et
+  **Suivant** passent d'un moment à l'autre dans l'ordre du tableau — **sans boucler** : après le
+  dernier, il n'y a rien. **Régler** y ouvre le formulaire du moment.
+
+### 3. Créer une séquence
 
 - Cliquez sur **+ Ajouter une séquence**, en haut à droite.
 - Nommez-la (*« Rencontre avec l'Inquisiteur »*).
-- Choisissez ses éléments dans le panneau de droite.
+- Choisissez ses éléments dans le formulaire.
+
+![Régler un moment : son nom, puis chaque source — musique, ambiance, dosage, bruitage…](captures/session-storyboard-regler.jpg)
 
 #### « Capturer active » — six boutons, quatre qui répondent
 
@@ -55,16 +72,16 @@ moment sur votre poste. Il n'y a pas de bouton global.
 > vrai d'une *scène* — mais Ambient-OS retient le **thème chargé**, et personne ne le lisait.
 > *Une capacité déclarée que personne ne lit n'est pas une capacité.*
 
-### 3. Organiser votre Scénario (Drag & Drop)
-Le Storyboard fonctionne comme un logiciel de montage :
-- **Réorganiser** : Maintenez le clic sur l'icône **Grip** (les 6 points à gauche du numéro) pour déplacer une séquence sur la pellicule.
-- **Dupliquer** : Cliquez sur l'icône **Copier** (double page) pour créer une variante d'une séquence existante.
-- **Supprimer** : Utilisez l'icône **Poubelle** pour retirer une scène de votre montage.
+### 4. Organiser votre scénario
+- **Réorganiser** : saisissez la **poignée** (les six points à gauche du numéro) et déplacez la ligne.
+- **Dupliquer** : pour créer une variante d'un moment existant.
+- **Supprimer** : retire le moment du tableau.
 
-### 4. Déclencher en Direct
-Cliquez simplement sur le gros bouton **PLAY** au centre d'une carte.
-- Tous les modules liés s'ajusteront instantanément.
-- Une lueur pulsée entoure la séquence active pour vous aider à vous repérer.
+### 5. Déclencher en direct
+**Jouer**, au bout de la ligne — ou **Suivant**, dans le panneau de droite, pour enchaîner dans
+l'ordre du tableau.
+- Tous les modules liés s'ajustent instantanément.
+- La ligne en cours se détache, et le panneau de droite dit ce que chaque source joue.
 
 ---
 
@@ -375,3 +392,6 @@ Préparez un moment nommé "Secret Révélé" qui :
 à un changement de séquence, seulement à l'arrêt d'un moment ; et le Storyboard atteint bien le
 Player Hub, pas les tablettes. Deux boutons **Capturer active** réparés dans la foulée — ils
 visaient des champs qui n'existent pas et échouaient sans un mot.*
+
+*Relu le 2026-10-03 : le tableau de montage refondu (phase 4) remplace la pellicule de cartes.
+Captures de la campagne de démonstration.*

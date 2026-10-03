@@ -6,8 +6,11 @@ Bienvenue dans le guide complet de **Deck-OS**, votre moteur de cartes interacti
 
 ## 🎲 1. Accéder au Deck-OS
 
-Le module Deck-OS se trouve dans le **Master Cockpit** (Tableau de bord du MJ), sous l'onglet **Decks**. 
+Le module Deck-OS s'ouvre depuis le **cockpit de Session-OS** : ligne **Deck-OS** de la colonne de
+gauche. Il montre d'abord la **bibliothèque de paquets** de la campagne ; **Charger** ouvre un
+paquet dans le lecteur.
 
+![Deck-OS, la bibliothèque de paquets : « Cartes de complication », six cartes, ouvert aux joueurs](captures/session-deck.jpg)
 ### Éléments Visuels :
 - **Pile de Pioche** : Représentée par le dos de vos cartes (`back.png`).
 - **Carte Courante** : Affiche la dernière carte piochée, face visible.
@@ -92,3 +95,6 @@ Pour ajouter vos propres decks ou modifier les chemins d'accès :
 
 - **Vision Dynamique** : Si vous utilisez la voix, la carte projetée sur les Hubs "respire" au rythme de votre parole pour un effet mystique saisissant.
 - **Clean View** : N'hésitez pas à projeter vos plus belles illustrations ; le système s'occupe de supprimer tout le superflu textuel !
+
+*Relu le 2026-10-03 : l'accès passe par la colonne du cockpit. Capture de la campagne de
+démonstration.*

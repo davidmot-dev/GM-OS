@@ -4,7 +4,7 @@ Une page à garder sous la main pendant qu'on joue. Le détail complet est dans 
 [guide du Cortex](./82-Cortex-OS.md), qui fait référence : **tout ce qui est commun aux
 deux pages n'est écrit que là-bas.**
 
-> 🔎 **Pourquoi cette règle.** Ces deux pages décrivaient toutes deux le bouton **Sensors**, et
+> 🔎 **Pourquoi cette règle.** Ces deux pages décrivaient toutes deux le bouton **Sensors** (aujourd'hui **Sons & Lum.**), et
 > **elles n'en disaient pas la même chose** — l'une prétendait qu'il coupe les suggestions, l'autre
 > qu'il coupe le son. Ni l'une ni l'autre n'avait raison. *Deux guides qui décrivent la même chose
 > finissent toujours par diverger* : celui-ci a donc cessé de décrire, et renvoie.
@@ -15,9 +15,9 @@ deux pages n'est écrit que là-bas.**
 
 | Je veux… | Je fais |
 | :--- | :--- |
-| **Voir la situation** | Le bandeau du bas est déjà là. L'analyse se relance à chaque changement de tour. |
-| **Du silence, sans perdre les conseils** | **Sensors** → *Muted*. Sons et lumières se taisent, les conseils continuent. |
-| **Tout arrêter** | Paramètres → Cortex tactique. |
+| **Voir la situation** | Le **cerveau**, en bas de la barre des modules, ouvre le bandeau. L'analyse se relance à chaque changement de tour. |
+| **Du silence, sans perdre les conseils** | **Sons & Lum.** → *Muet*. Sons et lumières se taisent, les conseils continuent. |
+| **Tout arrêter** | Paramètres › 02. Tactique, interrupteur général. |
 | **Un éclair maintenant** | **Flash**. |
 | **Vérifier que le son marche** | **Test**. |
 
@@ -65,3 +65,5 @@ Dans cet ordre — c'est presque toujours le premier :
 ouvre par une icône Brain de sa barre d'outils — ni l'un ni l'autre n'existe. Ses trois seuils de
 priorité étaient faux, et sa description du bouton Sensors contredisait l'autre guide. Elle a cessé
 de dupliquer : elle renvoie.*
+
+*Relu le 2026-10-03 : le bandeau s'ouvre par le cerveau, et le bouton s'appelle **Sons & Lum.***

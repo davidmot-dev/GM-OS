@@ -3,6 +3,21 @@
 Le **Journal** enregistre ce qui se passe pendant que vous jouez, puis vous aide à en tirer un
 compte rendu. Il ne demande presque rien : les modules de GM-OS y écrivent d'eux-mêmes.
 
+![Le Journal de jeu pendant une séance : à gauche les journaux de la campagne, au centre le fil puis la revue](captures/module-journal-de-jeu.jpg)
+
+**L'écran se lit de haut en bas, dans l'ordre de la soirée :**
+
+1. **Pendant la partie — le fil.** Chaque événement à son heure, **le plus récent en haut**. La
+   chronique se lit ; la trace mécanique reste plus discrète. La bascule **Tout / Chronique
+   uniquement** retire les traces d'un clic.
+2. **Après la partie — compte rendu et revue.** Le résumé de la séance, puis la **revue scène par
+   scène** (voir plus bas).
+3. **La note de fin de séance** — vos pensées pour le prochain résumé. Elle s'enregistre à la
+   frappe.
+
+À gauche, la campagne et **ses journaux de séance** : celui qui est en cours, puis les autres.
+**Résumer par IA** et **Exporter** sont en haut à droite.
+
 ---
 
 ## 1. Ce qui s'écrit tout seul
@@ -143,3 +158,6 @@ titre. Renommer une campagne ne détache donc plus ses journaux.
 
 *Guide écrit le 2026-09-04. Le plan du module date du 2026-08-08 ; ses dix étapes sont closes
 depuis le 2026-08-21.*
+
+*Relu le 2026-10-03 contre l'écran refondu (le fil le plus récent en haut, la bascule Tout /
+Chronique uniquement). Capture de la campagne de démonstration.*

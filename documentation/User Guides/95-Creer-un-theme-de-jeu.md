@@ -207,10 +207,12 @@ pendant que l'application tourne s'applique quand vous rouvrez la campagne.
 | Interrupteur | Où | Effet |
 | :--- | :--- | :--- |
 | 🎨 **Thème du jeu** — par campagne | Le bouton palette sur la **carte de la campagne**, dans le tableau de bord (il n'apparaît que si le jeu a un thème) | Éteint, la campagne garde votre thème de base ; rallumé, le jeu reprend la main. Retenu d'une session à l'autre |
-| **Personnalités (refonte)** | Paramètres, sous le choix du thème | Allumé (par défaut), le jeu applique aussi sa forme, son relief, son verre, sa matière et son cadre |
+| **Personnalités (refonte)** | Paramètres › 01. Système, sous le choix du thème | Allumé (par défaut), le jeu applique aussi sa forme, son relief, son verre, sa matière et son cadre |
 
-**Retoucher un détail sans ChatGPT.** L'**Atelier de thème** (Paramètres → *Thème du jeu*) règle
+**Retoucher un détail sans ChatGPT.** L'**Atelier de thème** (Paramètres › *05. Thème du jeu*) règle
 couleurs, polices et tailles, avec l'aperçu en direct — voir [Paramètres](./93-Reglages-et-theme-du-jeu.md).
+
+![L'atelier de thème : les réglages groupés au centre, l'aperçu en direct d'une carte de combattant à droite](captures/parametres-theme-du-jeu.jpg)
 
 > ⚠️ **Deux auteurs pour un même thème se contredisent.** Si vous retouchez dans l'atelier, donnez
 > à ChatGPT **le `theme.css` actuel** (Claude Code vous le fournit) avant de lui demander la
@@ -250,3 +252,5 @@ essais des thèmes tournent avant chaque envoi.
 → Pour aller plus loin : le [cahier des charges](../Architecture/Cahier-des-charges-theme-de-jeu.md)
 (ce qui est permis) et le [pipeline des thèmes](../Architecture/Pipeline-des-themes.md) (comment on
 travaille).
+
+*Relu le 2026-10-03 et illustré : l'atelier de thème, dans Paramètres › 05. Thème du jeu.*

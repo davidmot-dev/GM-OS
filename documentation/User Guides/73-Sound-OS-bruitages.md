@@ -6,7 +6,10 @@ qui claque, une explosion. Rien ne boucle, rien ne s'installe — c'est un coup.
 Les trois modules audio se partagent le travail : [Music-OS](./71-Music-OS.md) joue des
 morceaux, [Ambient-OS](./72-Ambient-OS.md) tient le fond, Sound-OS **frappe**.
 
-![Aperçu du module Sound OS](sound_mockup.png)
+![Sound-OS : les seize pads de l'atmosphère « Station Varn », huit équipés avec leur icône et leur couleur, et la colonne des réglages à droite](captures/module-effets-sonores.jpg)
+
+*L'atmosphère de la campagne de démonstration : un sas, une alarme, la voix de l'Écho… Chaque pad
+équipé montre son icône, son titre et son fichier ; les huit autres attendent leur son.*
 
 ---
 
@@ -15,14 +18,16 @@ morceaux, [Ambient-OS](./72-Ambient-OS.md) tient le fond, Sound-OS **frappe**.
 Seize boutons, autant de sons. **Cliquez** pour déclencher. La polyphonie est totale : superposez un
 rugissement et une explosion, rien ne se coupe.
 
-**Clic droit sur un pad** pour l'équiper :
+**Le menu « … »**, qui apparaît en haut à droite d'un pad quand la souris le survole, sert à
+l'équiper :
 
 | Réglage | Détail |
 | :--- | :--- |
 | **Le son** | choisi dans le [Media Hub](./92-Media-Hub.md) |
-| **Le titre** | pour le reconnaître en séance |
-| **Le volume** | **jusqu'à 150 %** — c'est ici que le boost existe, pas sur le volume général |
+| **Le titre** | **Renommer**, pour le reconnaître en séance |
+| **Le volume** | le curseur au pied du pad, **jusqu'à 150 %** — c'est ici que le boost existe, pas sur le volume général |
 | **La couleur** | rouge pour les attaques, vert pour la nature… un code visuel vaut mieux qu'une lecture |
+| **L'icône** | quarante-cinq pictogrammes — porte, sirène, radio, éclair… — affichés à la couleur du pad |
 | **Une scène Philips Hue** | jouée en même temps que le son |
 | **Une touche du clavier** | voir plus bas |
 | **Une note MIDI** | voir plus bas |
@@ -81,16 +86,18 @@ même règle.
 La touche fonctionne **partout dans GM-OS**, tant qu'aucun champ de saisie n'a le focus. Vous pouvez
 déclencher un bruitage depuis la carte ou le suivi de combat.
 
-**MIDI Learn** (icône piano) fonctionne pareil, avec un contrôleur branché — Launchpad, nanoPAD,
-clavier maître. Un bouton rafraîchit la liste des périphériques si vous branchez le vôtre après
-coup.
+**MIDI Learn** (icône éclair) fonctionne pareil, avec un contrôleur branché — Launchpad, nanoPAD,
+clavier maître. Le panneau **Périphérique MIDI**, dans la colonne de droite, dit si un appareil est
+branché ; son bouton ⟳ rafraîchit la liste si vous branchez le vôtre après coup. Le panneau
+**Touches assignées**, juste dessous, récapitule les touches de l'atmosphère.
 
 ---
 
 ## 🎚️ Le volume, et ce que le Focus Chat en fait
 
-Sound-OS a **sa propre sortie audio**, réglable dans l'en-tête du module : vous pouvez envoyer les
-bruitages sur une enceinte différente de la musique.
+Sound-OS a **sa propre sortie audio**, réglable dans la colonne de droite du module (repliée
+derrière le bouton **Réglages** pendant une séance), sous le **volume des bruitages** : vous pouvez
+envoyer les bruitages sur une enceinte différente de la musique.
 
 > 🔎 **Le Focus Chat ne traite pas les bruitages comme le reste.** Quand vous tamisez pour parler,
 > la musique et les ambiances tombent à **10 %** ; les bruitages, eux, s'arrêtent à **50 %**. C'est
@@ -99,14 +106,14 @@ bruitages sur une enceinte différente de la musique.
 
 ---
 
-## ⏹️ Les deux boutons rouges de l'en-tête
+## ⏹️ Les deux boutons rouges
 
 Ils se ressemblent, et l'un est sans retour.
 
 | Bouton | Effet |
 | :--- | :--- |
-| **Arrêt Progressif** (carré) | Éteint tous les sons en cours par un **fondu de 3 secondes**. Sans danger. |
-| **Réinitialiser le module** (flèche circulaire) | ⛔ **Supprime toutes vos atmosphères et toute leur configuration.** Une confirmation le demande, et il n'y a pas de retour en arrière. |
+| **Arrêt progressif (3 s)**, à droite de la barre d'outils | Éteint tous les sons en cours par un **fondu de 3 secondes**. Sans danger. |
+| **Réinitialiser le module**, tout en bas de la colonne de droite | ⛔ **Supprime toutes vos atmosphères et toute leur configuration.** Une confirmation le demande, et il n'y a pas de retour en arrière. |
 
 Le **Stop All** de la barre de titre applique le même fondu de trois secondes aux bruitages — ce
 n'est pas une coupure sèche, contrairement à ce qu'annonçait la tour de contrôle.
@@ -118,8 +125,8 @@ n'est pas une coupure sèche, contrairement à ce qu'annonçait la tour de contr
 | Problème | Ce qu'il faut regarder |
 | :--- | :--- |
 | **Ma touche ne déclenche rien** | Un champ de saisie a le focus. Cliquez dans le vide et réessayez. |
-| **Le contrôleur MIDI n'apparaît pas** | Branchez-le, puis rafraîchissez la liste depuis l'en-tête. |
-| **Le son part sur la mauvaise enceinte** | Sound-OS a sa sortie propre, dans son en-tête — distincte de celle de Music-OS. |
+| **Le contrôleur MIDI n'apparaît pas** | Branchez-le, puis rafraîchissez le panneau **Périphérique MIDI**. |
+| **Le son part sur la mauvaise enceinte** | Sound-OS a sa sortie propre, dans sa colonne de réglages — distincte de celle de Music-OS. |
 | **Les bruitages sont faibles pendant que je parle** | Le Focus Chat est actif : ils sont à 50 %. |
 | **J'ai perdu mes atmosphères** | Le bouton de réinitialisation les efface toutes. Elles sont dans la [sauvegarde automatique](./91-Sauvegarde-automatique.md). |
 
@@ -135,3 +142,7 @@ David. Sound-OS était le dernier des trois modules d'ambiance sans rattachement
 suit **jusqu'au clavier** : son moteur ne lisait que l'atmosphère active — il n'avait donc pas le
 défaut que Music-OS a payé en août — mais son **repli** prenait la première de la liste brute,
 qui peut venir d'ailleurs. ⚠️ Jamais éprouvé à l'écran à cette date.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Corrigé : un pad s'équipe par son menu
+**…** (il n'y a pas de clic droit), il porte désormais une **icône**, et la sortie audio comme le
+MIDI se règlent dans la **colonne de droite**, plus dans l'en-tête.*

@@ -1,0 +1,587 @@
+{
+ "version": "5.1.0",
+ "timestamp": "2026-09-12T00:00:00.000Z",
+ "global": {
+  "theme": "cyberpunk",
+  "themeColor": "#06b6d4",
+  "activeModule": "dashboard"
+ },
+ "modules": {
+  "sessionOS": {
+   "activeCampaignId": "temoin-campagne",
+   "campaigns": [
+    {
+     "id": "temoin-campagne",
+     "name": "Le Silence de Varn",
+     "system": "generic",
+     "description": "Campagne de démonstration des guides : une station de relais muette, et ce qui l'écoute.",
+     "synopsis": "La station Varn a cessé d'émettre. L'équipage est toujours à bord — et personne ne répond.",
+     "activeLocationIds": [
+      "temoin-lieu-station"
+     ]
+    }
+   ],
+   "players": [
+    {
+     "id": "temoin-joueur-1",
+     "realName": "Camille",
+     "avatarUrl": "",
+     "isOnline": false,
+     "characters": [
+      {
+       "id": "temoin-pj-1",
+       "name": "Nel Varga",
+       "classRace": "Technicienne de bord",
+       "portraitUrl": "",
+       "hp": 9,
+       "maxHp": 12,
+       "campaignId": "temoin-campagne",
+       "templateId": "generic",
+       "sheetData": {
+        "metier": "Technicienne",
+        "moral": 3
+       }
+      }
+     ]
+    },
+    {
+     "id": "temoin-joueur-2",
+     "realName": "Mathis",
+     "avatarUrl": "",
+     "isOnline": false,
+     "characters": [
+      {
+       "id": "temoin-pj-2",
+       "name": "Idris Koa",
+       "classRace": "Négociateur",
+       "portraitUrl": "",
+       "hp": 11,
+       "maxHp": 11,
+       "campaignId": "temoin-campagne",
+       "templateId": "generic",
+       "sheetData": {
+        "metier": "Negociateur",
+        "moral": 5
+       }
+      }
+     ]
+    },
+    {
+     "id": "demo-joueur-3",
+     "realName": "Inès",
+     "avatarUrl": "",
+     "isOnline": false,
+     "characters": [
+      {
+       "id": "demo-pj-3",
+       "name": "Sora Adebayo",
+       "classRace": "Médecin de bord",
+       "portraitUrl": "",
+       "hp": 7,
+       "maxHp": 10,
+       "campaignId": "temoin-campagne",
+       "templateId": "generic",
+       "sheetData": {
+        "metier": "Médecin",
+        "moral": 4
+       }
+      }
+     ]
+    }
+   ],
+   "entities": [
+    {
+     "id": "temoin-pnj-1",
+     "name": "Superviseur Hale",
+     "campaignId": "temoin-campagne",
+     "type": "npc",
+     "description": "Répond trop vite aux questions qu'on ne lui a pas posées.",
+     "avatar": "",
+     "hp": 8,
+     "maxHp": 8,
+     "initiative": 0,
+     "linkedMapIds": [],
+     "role": "neutral",
+     "status": "alive",
+     "ac": 12,
+     "speed": 30,
+     "roleplayingNotes": "Répond trop vite. Regarde la porte quand il ment.",
+     "gmSecretInfo": "Il a réécrit le registre lui-même.",
+     "voiceProfile": {
+      "presetId": null,
+      "effects": {
+       "pitch": -2,
+       "formant": -20,
+       "reverb": 0.1,
+       "distortion": 0,
+       "bitcrush": 0,
+       "lowCut": 80,
+       "gateThreshold": -50,
+       "compression": 40,
+       "outputGain": 1.0,
+       "antiLarsen": true,
+       "debruitage": "neuronal",
+       "noiseGate": true,
+       "duckingEnabled": true,
+       "duckingThreshold": -40,
+       "duckingRange": 0.3,
+       "duckingRelease": 800,
+       "duckingAttack": 150
+      },
+      "enregistreLe": 1789243200000
+     }
+    },
+    {
+     "id": "temoin-pnj-2",
+     "name": "Ancre-7",
+     "campaignId": "temoin-campagne",
+     "type": "npc",
+     "description": "Une voix dans le systeme de relais. Elle compte les absents.",
+     "avatar": "",
+     "hp": 8,
+     "maxHp": 8,
+     "initiative": 0,
+     "linkedMapIds": [],
+     "role": "neutral",
+     "status": "unknown",
+     "ac": 10,
+     "speed": 0,
+     "roleplayingNotes": "Voix plate, phrases courtes. Ne repond jamais deux fois pareil.",
+     "gmSecretInfo": "Ancre-7 compte les absents depuis trois semaines."
+    },
+    {
+     "id": "demo-pnj-3",
+     "name": "Dr Ilse Moreau",
+     "campaignId": "temoin-campagne",
+     "type": "npc",
+     "description": "Médecin-chef de la station, introuvable depuis trois jours.",
+     "avatar": "",
+     "hp": 9,
+     "maxHp": 9,
+     "initiative": 0,
+     "linkedMapIds": [],
+     "role": "ally",
+     "status": "alive",
+     "ac": 12,
+     "speed": 30,
+     "roleplayingNotes": "Parle bas, cite ses patients par leur numéro.",
+     "gmSecretInfo": "Elle a entendu la voix la première."
+    },
+    {
+     "id": "demo-pnj-4",
+     "name": "Teo Vasquez",
+     "campaignId": "temoin-campagne",
+     "type": "npc",
+     "description": "Contrebandier amarré au quai 4, pressé de repartir.",
+     "avatar": "",
+     "hp": 10,
+     "maxHp": 10,
+     "initiative": 0,
+     "linkedMapIds": [],
+     "role": "neutral",
+     "status": "alive",
+     "ac": 12,
+     "speed": 30,
+     "roleplayingNotes": "Rit trop fort. Tient toujours une main dans sa poche.",
+     "gmSecretInfo": "Il transporte la pièce qui manque au relais."
+    },
+    {
+     "id": "demo-pnj-5",
+     "name": "L'Écho",
+     "campaignId": "temoin-campagne",
+     "type": "npc",
+     "description": "Ce qui parle dans le relais, avec la voix de l'équipage.",
+     "avatar": "",
+     "hp": 24,
+     "maxHp": 24,
+     "initiative": 0,
+     "linkedMapIds": [],
+     "role": "enemy",
+     "status": "alive",
+     "ac": 12,
+     "speed": 30,
+     "roleplayingNotes": "Ne parle jamais avec sa propre voix.",
+     "gmSecretInfo": "Il n'existe que tant que le relais émet.",
+     "voiceProfile": {
+      "presetId": "robot",
+      "effects": {
+       "pitch": -1,
+       "formant": 20,
+       "reverb": 0,
+       "distortion": 0.5,
+       "bitcrush": 0,
+       "lowCut": 80,
+       "gateThreshold": -50,
+       "compression": 40,
+       "outputGain": 1.0,
+       "antiLarsen": true,
+       "debruitage": "neuronal",
+       "noiseGate": true,
+       "duckingEnabled": true,
+       "duckingThreshold": -40,
+       "duckingRange": 0.3,
+       "duckingRelease": 800,
+       "duckingAttack": 150
+      },
+      "enregistreLe": 1790625600000
+     }
+    }
+   ],
+   "sessions": [
+    {
+     "id": "temoin-seance-1",
+     "campaignId": "temoin-campagne",
+     "name": "Séance 1 — Amarrage",
+     "date": "2026-09-12",
+     "notes": "Seance gelee : elle ne doit jamais etre rejouee ni mise a jour.",
+     "number": 1,
+     "status": "done",
+     "publicSummary": "Le groupe s'amarre à la station Varn et trouve le café encore chaud.",
+     "gmSecrets": "Hale a réécrit le registre lui-même.",
+     "checklist": [
+      {
+       "id": "demo-tache-1",
+       "text": "Plan de la station imprimé",
+       "isCompleted": true
+      }
+     ],
+     "sessionEntityIds": [
+      "temoin-pnj-1"
+     ]
+    },
+    {
+     "id": "demo-seance-2",
+     "campaignId": "temoin-campagne",
+     "name": "Séance 2 — La voix dans le relais",
+     "number": 2,
+     "date": "2026-10-03",
+     "status": "planned",
+     "publicSummary": "",
+     "gmSecrets": "L'Écho imite la voix du dernier qui a parlé.",
+     "checklist": [
+      {
+       "id": "demo-tache-2",
+       "text": "Préparer la voix de l’Écho dans Voice-OS",
+       "isCompleted": true
+      },
+      {
+       "id": "demo-tache-3",
+       "text": "Ambiance « Relais » dans Ambient-OS",
+       "isCompleted": true
+      },
+      {
+       "id": "demo-tache-4",
+       "text": "Statistiques de l’Écho",
+       "isCompleted": false
+      }
+     ],
+     "sessionEntityIds": [
+      "temoin-pnj-1",
+      "demo-pnj-5",
+      "temoin-pj-1",
+      "temoin-pj-2",
+      "demo-pj-3"
+     ]
+    }
+   ],
+   "actes": [
+    {
+     "id": "temoin-acte-1",
+     "campaignId": "temoin-campagne",
+     "ordre": 1,
+     "titre": "L'arrivee",
+     "resume": "Le groupe atteint la station et constate le silence.",
+     "acheve": true
+    },
+    {
+     "id": "temoin-acte-2",
+     "campaignId": "temoin-campagne",
+     "ordre": 2,
+     "titre": "Ce que Hale n'a pas dit",
+     "resume": "Le superviseur cache un depart qui n'en etait pas un.",
+     "notesDuMeneur": "Hale ment sur la date, pas sur le nombre."
+    },
+    {
+     "id": "demo-acte-3",
+     "campaignId": "temoin-campagne",
+     "ordre": 3,
+     "titre": "Ce qui écoute",
+     "resume": "Le groupe descend au noyau et rencontre l'Écho.",
+     "acheve": false
+    }
+   ],
+   "scenes": [
+    {
+     "id": "temoin-scene-1",
+     "campaignId": "temoin-campagne",
+     "acteId": "temoin-acte-1",
+     "ordre": 1,
+     "titre": "Amarrage",
+     "resume": "Le sas s'ouvre sur un couloir eclaire et vide.",
+     "origine": "preparee",
+     "lieuId": "temoin-lieu-station",
+     "entiteIds": [],
+     "personnagesIds": [
+      "temoin-pj-1",
+      "temoin-pj-2"
+     ],
+     "indiceIds": [
+      "temoin-indice-1"
+     ],
+     "passages": [
+      {
+       "debut": 1789156800000,
+       "fin": 1789159500000,
+       "seanceId": "temoin-seance-1"
+      }
+     ],
+     "termineeLe": 1789159500000,
+     "creeeLe": 1789156000000
+    },
+    {
+     "id": "temoin-scene-2",
+     "campaignId": "temoin-campagne",
+     "acteId": "temoin-acte-2",
+     "ordre": 1,
+     "titre": "Entretien avec Hale",
+     "resume": "Il repond a tout, et trop vite.",
+     "origine": "preparee",
+     "entiteIds": [
+      "temoin-pnj-1"
+     ],
+     "personnagesIds": [
+      "temoin-pj-2"
+     ],
+     "indiceIds": [
+      "temoin-indice-2"
+     ],
+     "passages": [
+      {
+       "debut": 1789160400000,
+       "seanceId": "temoin-seance-1"
+      }
+     ],
+     "creeeLe": 1789156100000
+    },
+    {
+     "id": "temoin-scene-3",
+     "campaignId": "temoin-campagne",
+     "acteId": "temoin-acte-2",
+     "ordre": 2,
+     "titre": "La voix dans le relais",
+     "resume": "Scene improvisee : Ancre-7 prend la parole sans qu'on l'appelle.",
+     "origine": "improvisee",
+     "entiteIds": [
+      "temoin-pnj-2"
+     ],
+     "indiceIds": [],
+     "creeeLe": 1789160500000
+    },
+    {
+     "id": "demo-scene-4",
+     "campaignId": "temoin-campagne",
+     "acteId": "temoin-acte-2",
+     "ordre": 3,
+     "titre": "Le registre réécrit",
+     "resume": "Les entrées des trois derniers jours ont la même signature.",
+     "origine": "preparee",
+     "entiteIds": [
+      "temoin-pnj-2"
+     ],
+     "indiceIds": [],
+     "creeeLe": 1789160500000,
+     "passages": []
+    },
+    {
+     "id": "demo-scene-5",
+     "campaignId": "temoin-campagne",
+     "acteId": "demo-acte-3",
+     "ordre": 1,
+     "titre": "Descente vers le noyau",
+     "resume": "L'ascenseur s'arrête entre deux ponts. Les lumières suivent le groupe.",
+     "origine": "preparee",
+     "entiteIds": [
+      "temoin-pnj-2"
+     ],
+     "indiceIds": [],
+     "creeeLe": 1789160500000,
+     "passages": []
+    },
+    {
+     "id": "demo-scene-6",
+     "campaignId": "temoin-campagne",
+     "acteId": "demo-acte-3",
+     "ordre": 2,
+     "titre": "Confrontation avec l'Écho",
+     "resume": "La voix de Nel répond avant que Nel ait parlé.",
+     "origine": "preparee",
+     "entiteIds": [
+      "temoin-pnj-2"
+     ],
+     "indiceIds": [],
+     "creeeLe": 1789160500000,
+     "passages": []
+    }
+   ],
+   "clues": [
+    {
+     "id": "temoin-indice-1",
+     "campaignId": "temoin-campagne",
+     "title": "Le café encore chaud",
+     "content": "Le départ date de moins d'une heure.",
+     "isRevealed": true,
+     "locationId": "temoin-lieu-station"
+    },
+    {
+     "id": "temoin-indice-2",
+     "campaignId": "temoin-campagne",
+     "title": "La date corrigee",
+     "content": "Le registre a ete reecrit, une seule fois.",
+     "isRevealed": false
+    },
+    {
+     "id": "demo-indice-3",
+     "campaignId": "temoin-campagne",
+     "title": "La signature unique",
+     "content": "Tout le registre est signé « Hale », même les nuits où il dormait.",
+     "isRevealed": true,
+     "ownerId": "temoin-pnj-1"
+    },
+    {
+     "id": "demo-indice-4",
+     "campaignId": "temoin-campagne",
+     "title": "La pièce manquante",
+     "content": "Le module de coupure du relais est dans la soute de Teo.",
+     "isRevealed": false,
+     "ownerId": "demo-pnj-4"
+    }
+   ],
+   "wikiEntries": [
+    {
+     "id": "temoin-wiki-1",
+     "campaignId": "temoin-campagne",
+     "title": "Station Varn",
+     "content": "Relais de communication en orbite basse. Équipage nominal : neuf.",
+     "tags": [
+      "lieu"
+     ],
+     "category": "location",
+     "imageUrls": [],
+     "linkedEntityIds": []
+    },
+    {
+     "id": "demo-wiki-2",
+     "campaignId": "temoin-campagne",
+     "title": "Ancre-7",
+     "content": "L'intelligence de bord. Elle compte encore neuf membres d'équipage.",
+     "tags": [
+      "pnj",
+      "machine"
+     ],
+     "category": "npc",
+     "imageUrls": [],
+     "linkedEntityIds": []
+    },
+    {
+     "id": "demo-wiki-3",
+     "campaignId": "temoin-campagne",
+     "title": "Protocole de quarantaine",
+     "content": "Scelle les ponts inférieurs au moindre signal non identifié.",
+     "tags": [
+      "règle de bord"
+     ],
+     "category": "lore",
+     "imageUrls": [],
+     "linkedEntityIds": []
+    }
+   ],
+   "atlasMaps": [
+    {
+     "id": "temoin-lieu-station",
+     "campaignId": "temoin-campagne",
+     "name": "Station Varn",
+     "imageUrl": "",
+     "tokens": [],
+     "fogEnabled": false
+    }
+   ],
+   "timelineEvents": [
+    {
+     "id": "temoin-evt-1",
+     "campaignId": "temoin-campagne",
+     "title": "Dernier message recu",
+     "date": "Jour 1 — 22 h 00",
+     "type": "major-event",
+     "description": "Le relais envoie son dernier message : « Tout va bien. Ne venez pas. »",
+     "involvedEntityIds": [
+      "temoin-pnj-1"
+     ]
+    },
+    {
+     "id": "demo-evt-2",
+     "campaignId": "temoin-campagne",
+     "title": "Arrivée de la navette du groupe",
+     "date": "Jour 2 — 20 h 00",
+     "type": "session",
+     "description": "La navette du groupe s'amarre au quai 4, à côté du cargo de Teo.",
+     "involvedEntityIds": [
+      "temoin-pj-1",
+      "temoin-pj-2",
+      "demo-pj-3",
+      "demo-pnj-4"
+     ]
+    },
+    {
+     "id": "demo-evt-3",
+     "campaignId": "temoin-campagne",
+     "title": "Le relais émet seul",
+     "date": "Jour 2 — 23 h 40",
+     "type": "quest",
+     "description": "Le relais se remet à émettre, avec la voix de l'équipage.",
+     "involvedEntityIds": [
+      "demo-pnj-5"
+     ]
+    }
+   ],
+   "decks": [
+    {
+     "id": "temoin-paquet",
+     "name": "Cartes de complication",
+     "systemId": "generic",
+     "folderPath": "assets/decks/generic/temoin-paquet",
+     "cardCount": 6,
+     "format": "poker",
+     "orientation": "portrait",
+     "useDiscard": true,
+     "ouvertAuxJoueurs": true
+    }
+   ],
+   "deckStates": {
+    "temoin-paquet": {
+     "deckId": "temoin-paquet",
+     "remainingIndices": [
+      3,
+      4,
+      5,
+      6
+     ],
+     "discardedIndices": [
+      1
+     ],
+     "currentCardIndex": null,
+     "enMain": [
+      {
+       "cardIndex": 2,
+       "porteurId": "temoin-pj-1",
+       "face": "porteur"
+      }
+     ]
+    }
+   },
+   "lootPool": [],
+   "lootHistory": [],
+   "customSheetTemplates": [],
+   "customGameDrivers": []
+  }
+ }
+}

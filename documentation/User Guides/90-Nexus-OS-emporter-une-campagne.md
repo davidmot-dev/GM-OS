@@ -14,7 +14,11 @@ vous ayez à y penser.
 
 ## 📤 Exporter une campagne
 
-**Cockpit → la campagne → panneau « Portabilité & Archivage de Campagne » → Exporter (.gmos)**
+**Bibliothèque → Gérer la campagne → panneau « Nexus-OS — Portabilité & Archivage de Campagne » →
+Exporter (.gmos)** — ou, plus court, le lien **Exporter (N médias)** de la carte de la campagne,
+dans la bibliothèque.
+
+![La page de la campagne : en bas à droite, le panneau Nexus-OS avec la case « Archive légère », Exporter (.gmos) et Importer (.gmos)](captures/campagne-details.jpg)
 
 Une fenêtre plein écran, le **Nexus HUD**, suit le travail. Il traverse ces étapes :
 
@@ -59,9 +63,9 @@ Trois boutons ouvrent **le même sélecteur**, qui accepte aussi bien un `.gmos`
 
 | Où | Bouton |
 | :--- | :--- |
-| Bibliothèque de campagnes | **IMPORTER UN BUNDLE NEXUS** |
+| Bibliothèque des campagnes | **Importer un bundle Nexus** |
 | Panneau d'une campagne | **Importer (.gmos)** |
-| Librairie de Modèles, onglet Drivers | **Importer un driver** |
+| Bibliothèque des fiches et règles, onglet **Règles (drivers)** | **Importer driver** |
 
 > 🔎 **C'est l'archive qui décide de sa destination, pas l'écran d'où vous partez.** Le fichier porte
 > le nom de sa campagne : l'importer depuis le panneau d'une *autre* campagne ne l'y verse pas, il
@@ -88,10 +92,10 @@ consignes d'IA, le gabarit de fiche associé, et — depuis le 2026-09-03 — **
 c'est-à-dire les gabarits d'adversaires que vous avez rangés. *Partager un jeu sans ses adversaires
 reviendrait à partager un livre de règles sans son bestiaire.*
 
-**Exporter** : Librairie de Modèles → onglet **Drivers** → sélectionnez-en un → **Exporter** dans le
+**Exporter** : Bibliothèque des fiches et règles → onglet **Règles (drivers)** → sélectionnez-en un → **Exporter** dans le
 panneau d'aperçu.
 
-**Importer** : le bouton **Importer un driver** en haut de la même page. Un driver du même nom
+**Importer** : le bouton **Importer driver** du même onglet. Un driver du même nom
 déclenche le même résolveur de conflits, avec l'option **Cloner** pour ne pas écraser votre travail.
 
 > Un `.gmos-driver` fabriqué avant le 03/09 ne contient pas de bestiaire. Il s'importe sans rien
@@ -216,3 +220,7 @@ retirées — le « Theater Mode » (un nom qui n'apparaît nulle part dans le c
 [son guide](./22-Map-OS-le-plateau.md). Le feu tricolore Nexus-Ready a été corrigé en deux états, les
 étapes de l'export rétablies, et la liste de ce que l'archive **ne** contient **pas** ajoutée —
 c'est elle qu'il fallait écrire.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Les chemins suivent l'écran : la page
+de la campagne s'ouvre par **Gérer la campagne**, et les pilotes vivent dans l'onglet **Règles
+(drivers)** de la bibliothèque des fiches et règles.*

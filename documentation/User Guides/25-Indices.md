@@ -5,8 +5,13 @@ Le module **Indices** est conçu pour vous aider à gérer les secrets et les pr
 ---
 
 ## 🏗️ Création d'un Indice
-1. Accédez au **Session-OS** > **Campaignes** > **Ma Campagne** > **Indices**.
+1. Dans **Session-OS**, ouvrez la **Bibliothèque** (bas de la colonne du cockpit), puis **Gérer la
+   campagne** sur la carte de la campagne active, et **Modifier la campagne**. Dans la colonne du
+   formulaire, choisissez **Indices**.
 2. Cliquez sur **Nouveau Fragment**.
+
+![Les indices de la campagne, dans le formulaire de campagne : la liste, et l'indice ouvert](captures/campagne-indices.jpg)
+
 3. Renseignez :
     - **Titre** : Nom de l'indice (ex: "Le Médaillon Sanglant").
     - **Visuel** : Sélectionnez une image via le Media Hub, **ou faites-la générer** (voir plus bas).
@@ -93,3 +98,6 @@ Les joueurs peuvent consulter l'ensemble des indices déjà révélés via l'ong
 
 *Guide révisé le 2026-09-04, code à l'appui : le deck vit dans le panneau de séance, et l'image
 d'un indice était un angle mort du nettoyage.*
+
+*Relu le 2026-10-03 : le chemin d'accès passe par « Gérer la campagne » puis « Modifier la campagne ». Capture de la campagne de
+démonstration.*

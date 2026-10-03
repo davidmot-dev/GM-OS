@@ -12,30 +12,29 @@ Le **NPC Live Generator** est une extension majeure de NPC-OS. Il permet de gén
 
 Pour donner un visage à votre entité :
 
-1. **Générez une entité** ou sélectionnez-en une dans vos **Mémos**.
-2. **Survolez l'avatar** (le cercle central) avec votre souris.
-3. Cliquez sur l'icône **IA (Étincelles)** qui apparaît en surbrillance.
-4. Patientez quelques secondes : l'IA analyse les caractéristiques (Race, Classe, Traits) pour peindre un portrait correspondant.
+1. **Faites un tirage** dans le Générateur PNJ, ou rouvrez une entité de vos **Mémos**.
+2. **Deux portes ouvrent la même demande** : survolez le **portrait**, en tête du résultat, et
+   cliquez sur les **étincelles** — ou cliquez sur **Illustration** dans la barre d'actions.
+3. La demande s'ouvre **préremplie** avec le prompt que l'IA a proposé d'après la fiche ; vous
+   pouvez l'ajuster avant de lancer.
+4. Patientez quelques secondes : le portrait prend la place de la silhouette.
 
 > [!TIP]
-> Si le résultat ne vous convient pas, vous pouvez cliquer à nouveau sur l'icône pour relancer une génération différente.
+> Si le résultat ne vous convient pas, relancez : chaque génération en donne une différente.
 
-## 🏔️ Générer un Décor (Background)
+Le second bouton du portrait, **Importer un portrait**, prend une image de vos fichiers à la place.
 
-Pour situer votre entité dans son environnement :
-
-1. Dans la fiche de l'entité, localisez la barre d'actions en bas.
-2. Cliquez sur l'icône **Image (Paysage)**.
-3. L'IA génère un décor cinématique basé sur le thème de l'univers et les détails de la fiche.
-4. Le décor s'affiche automatiquement en fond de l'en-tête de la carte.
+> ⚠️ **La génération d'un décor de fiche n'est plus proposée** dans le générateur (relevé le
+> 2026-10-03, après la refonte de l'écran) : seul le portrait se génère. Pour une illustration de
+> scène, passez par Image-OS.
 
 ## 💾 Gestion et Sauvegarde
 
 Toutes les images générées sont gérées de manière intelligente :
 
 - **Media Hub** : Chaque visuel est enregistré dans votre bibliothèque locale (`Media Hub`).
-- **Persistance** : Si vous enregistrez l'entité en **Mémo**, l'avatar et le décor sont conservés pour vos prochaines sessions.
-- **Modification Manuelle** : Vous pouvez à tout moment remplacer une image IA par une image locale en cliquant sur l'icône **Partager/Dossier** sur l'avatar.
+- **Persistance** : Si vous enregistrez l'entité en **Mémo**, le portrait est conservé pour vos prochaines sessions.
+- **Modification Manuelle** : Vous pouvez à tout moment remplacer une image IA par une image locale par **Importer un portrait**, au survol du portrait.
 
 ## ⚙️ Qui fabrique l'image
 
@@ -70,3 +69,6 @@ différents, et les confondre ferait chercher au mauvais endroit.
 *Guide révisé le 2026-09-04, code à l'appui. Le moteur d'images n'est pas Gemini/Imagen-3 mais
 **Cloudflare Workers AI**, avec FLUX en local hors séance et Z-Image en dernier recours — et la clé
 à configurer n'est pas une clé Gemini. Ajouté : pourquoi le local est écarté pendant une séance.*
+
+*Relu le 2026-10-03 contre le générateur refondu : les deux portes de la génération, et le décor
+qui n'existe plus.*

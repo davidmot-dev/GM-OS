@@ -2,21 +2,28 @@
 
 Le module **Image OS** est votre régie visuelle. Il vous permet de projeter des illustrations, des portraits de PNJ, des cartes ou des ambiances visuelles sur différents écrans (Hub Joueur, Moniteurs secondaires, Vidéoprojecteurs) pour renforcer l'immersion de vos joueurs.
 
-![Aperçu du module Image OS](image_mockup.png)
+![Image-OS : les vignettes de la médiathèque, le bloc « En direct », et à droite l'écran cible et les commandes d'urgence](captures/module-image-os.jpg)
 
 ## 📋 Présentation du Module
 
-L'interface est divisée en trois zones principales :
+*Disposition refondue le 2026-09-30 (refonte, lot L1).*
 
-1. **La Bibliothèque (Explorer)** : Gérez vos images avec un système de dossiers et de favoris.
-2. **Le Sélecteur de Cible (Target)** : Choisissez sur quel écran projeter votre média.
-3. **Le Contrôle de Projection** : Lancez des images isolées, des séquences ou coupez tout en un clic.
+- **En tête** : l'écran visé (*Écran : Player Hub*) et le nombre de médias ; **Ajouter un média**
+  et la recherche, reliée à la grille.
+- **Trois onglets** : **Médiathèque**, **Diaporamas**, **Favoris**.
+- **Le bloc « En direct »** dit ce qui est projeté, et sur quel écran — *« Rien n'est projeté sur
+  Player Hub »* quand l'écran est libre.
+- **La grille de vignettes** : un clic projette.
+- **À droite** : l'**écran cible**, les **commandes d'urgence** (*Target*, *All*, *Noir*, *Restore
+  default*), l'**arborescence** de vos dossiers, et le stockage local. **Réglages**, en haut à droite.
+
+![Une image à l'antenne : le bloc « En direct » la nomme, avec son écran](captures/image-en-direct.jpg)
 
 ## 🚀 Projection et Gestion des Écrans
 
 ### Choisir sa Cible (Target Screen)
 
-En haut de l'interface, vous pouvez sélectionner l'écran de destination :
+À droite, le bloc **Écran cible** choisit l'écran de destination :
 
 - **Player Hub** : Envoie l'image vers l'application "Hub" des joueurs (fenêtré).
 - **Displays (1, 2, etc.)** : Envoie l'image en plein écran sur vos moniteurs physiques connectés à l'ordinateur.
@@ -268,3 +275,5 @@ Storyboard », puis « ça fonctionne si je lance à partir d'Image-OS ». ⭐ *
 bien** : la reproduction côte à côte a montré que les deux gestes envoient un ordre identique au
 caractère près. Le défaut n'était nulle part dans le chemin — il était dans ce que **personne ne
 disait**.*
+
+*Relu le 2026-10-03 contre l'écran refondu. Captures de la campagne de démonstration.*

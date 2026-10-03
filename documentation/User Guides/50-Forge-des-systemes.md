@@ -7,13 +7,16 @@ de règles** vous laisse tout reprendre à la main.
 
 ## 🗂️ Forge-OS a trois ateliers
 
-L'en-tête du module porte trois onglets, et ce guide n'en connaissait qu'un :
+L'en-tête du module porte trois onglets numérotés, en haut à droite — **1. Forge du système**,
+**2. Campagne**, **3. Trame** :
+
+![La Forge du système : la destination du système, la dérivation depuis le corpus, les intentions du meneur, et à droite le résultat en attente](captures/module-forge.jpg)
 
 | Atelier      | Ce qu'il produit                                                                                                            |
 | :----------- | :-------------------------------------------------------------------------------------------------------------------------- |
-| **Forge**    | Un **système de jeu** : moteur de dés, combat, portées, consignes d'IA, gabarit de fiche                                    |
-| **Campagne** | Une campagne jouable à partir d'un scénario — actes, scènes, PNJ, lieux. → [guide dédié](./12-Forge-de-campagne.md) |
-| **Trame**    | Le plan narratif d'une campagne existante. → [guide dédié](./11-Trame-actes-et-scenes.md)                                 |
+| **1. Forge du système** | Un **système de jeu** : moteur de dés, combat, portées, consignes d'IA, gabarit de fiche. Deux sous-onglets : *Structure système* et *Atelier de règles* |
+| **2. Campagne** | Une campagne jouable à partir d'un scénario — actes, scènes, PNJ, lieux. → [guide dédié](./12-Forge-de-campagne.md) |
+| **3. Trame** | Le plan narratif d'une campagne existante. → [guide dédié](./11-Trame-actes-et-scenes.md)                                 |
 
 ---
 
@@ -126,3 +129,8 @@ pas « Gemini 1.5 Pro » mais celui que vous choisissez à chaque forge, et les 
 n'existent plus. Ajouté : les **trois ateliers** de Forge-OS, l'**enrichissement** (2026-08-16) et
 sa case de garde, les **quatre sections** de l'éditeur que ce guide ignorait, et les durées
 mesurées.*
+
+> 🖼️ **La bannière de l'en-tête** se choisit aussi dans l'éditeur du pilote, depuis le 2026-10-03 :
+> une image du dossier du jeu, en fond de l'en-tête de Session-OS. → [Session-OS](./10-Session-OS-le-cockpit.md)
+
+*Relu le 2026-10-03 : les onglets numérotés de la Forge. Capture de la campagne de démonstration.*

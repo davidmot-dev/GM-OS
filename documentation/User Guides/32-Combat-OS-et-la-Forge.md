@@ -20,7 +20,7 @@ Le **Combat-OS** agit comme l'interface opérationnelle qui réunit ces deux ent
 Le Combat-OS n'utilise plus de jet générique par défaut s'il détecte un système actif.
 
 ### Le "Jet Système"
-Lorsqu'une campagne est liée à un `GameDriver` possédant une `initiativeFormula` (ex: `1d20 + [dex]`), un bouton bleu **« JET SYSTÈME »** apparaît dans les contrôles de combat.
+Lorsqu'une campagne est liée à un `GameDriver` possédant une `initiativeFormula` (ex: `1d20 + [dex]`), un bouton **« Jet Système »** apparaît dans le bloc *Auto initiative* des contrôles de combat, avec la formule sous son nom.
 *   **Résolution Dynamique** : Le moteur remplace automatiquement les variables entre crochets par les valeurs stockées sur la fiche du personnage.
 *   **Les crochets sont facultatifs** : `1d20 + dex` est lu comme `1d20 + [dex]`.
 *   ⚠️ **Une variable introuvable vaut `0`**, elle ne fait pas échouer le jet. `1d20 + [dex]` sur un

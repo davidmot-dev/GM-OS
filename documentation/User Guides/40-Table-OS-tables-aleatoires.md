@@ -6,16 +6,29 @@
 
 ## 🖥️ Le pupitre
 
-Colonne de gauche, dans l'ordre où on s'en sert :
+![Table-OS après un tirage : le réglage en une rangée, le bouton qui lance le dé de la table, le résultat, et l'historique à droite](captures/tables-un-tirage.jpg)
+
+*Disposition refondue le 2026-10-03 : le réglage en une rangée, et le résultat qui domine.*
+
+**En haut, une rangée**, dans l'ordre où on s'en sert :
 
 | Contrôle | À quoi il sert |
 | :--- | :--- |
-| **Univers / Jeu** | Le dossier de tables : Alien, Blade Runner, Cthulhu Hack, MedFan, cyberpunk, générique |
-| **Table Aléatoire** | Les tables de cet univers. Le dé requis s'affiche dessous — *Jet Requis : 1d20* |
-| **Modificateur de Jet** | Ajouté au **résultat brut**, pas au dé |
-| **Jet Manuel** + **Afficher** | ⚭ **Vous avez lancé un vrai dé ?** Tapez le chiffre et cliquez *Afficher* : la table donne l'entrée correspondante sans rien retirer |
-| **LANCER** | Le tirage par GM-OS |
-| **Historique Récent** | Les **dix** derniers tirages à l'écran ; cinquante sont gardés en mémoire |
+| **1. Univers / Jeu** | Le dossier de tables : Alien, Blade Runner, Cthulhu Hack, MedFan, cyberpunk, générique |
+| **2. Table aléatoire** | Les tables de cet univers |
+| **Modificateur de jet** | Par pas : −5, −1, 0, +1, +5. Ajouté au **résultat brut**, pas au dé |
+| **Jet manuel** + **Valider** | ⚭ **Vous avez lancé un vrai dé ?** Tapez le chiffre et validez : la table donne l'entrée correspondante sans rien retirer |
+
+**Dessous, un seul bouton** qui dit le dé de la table — *Lancer 1D8* — et **Espace** lance aussi,
+hors d'un champ de saisie.
+
+**Le résultat domine** : la source, le jet brut, le modificateur et le **total en grand** ; l'entrée
+tirée, avec son **effet mécanique** dans son cadre ; puis les gestes — **Verser au butin** quand
+l'entrée déclare ce qu'elle donne, **Proposer des objets** sinon (l'IA en tire du texte, à relire
+dans Loot-OS), **Log Session** pour consigner au journal (grisé sans séance en cours), supprimer.
+
+**À droite, l'historique récent** : un clic **réinjecte** un tirage ; *Effacer l'historique* demande
+confirmation. En bas, **Ouvrir l'atelier des tables**.
 
 > 🔎 **Le jet manuel n'était documenté nulle part**, et c'est pourtant le geste des meneurs qui
 > tiennent à lancer leurs propres dés. Ajouté le 2026-09-04.
@@ -60,7 +73,7 @@ Il existe trois façons d'ajouter du contenu à Table-OS :
 
 ### 0. L'Atelier des tables (le plus court chemin)
 
-Bouton **Atelier des tables**, en haut de la colonne de gauche. Il écrit le fichier JSON pour vous.
+Bouton **Ouvrir l'atelier des tables**, en bas de l'historique. Il écrit le fichier JSON pour vous.
 
 - **Choisissez un univers**, ou tapez-en un nouveau : *un univers naît avec sa première table.*
 - **Le dé se choisit dans une liste.** Un champ libre reste à côté pour les formules rares.
@@ -223,3 +236,5 @@ la forme complète.
 dé et n'était documenté nulle part ; la règle exacte des dés juxtaposés (un chiffre répété, et
 seulement 4, 6 ou 8) ; et le fait que l'historique **montre dix tirages** là où il en garde
 cinquante.*
+
+*Relu le 2026-10-03 contre le pupitre refondu. Capture de la campagne de démonstration.*

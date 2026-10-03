@@ -7,19 +7,30 @@
 
 ---
 
-## 🖥️ Le Dashboard Voice-OS
-L'interface est conçue comme une console de mixage professionnelle simplifiée :
-1. **Statut Mic (Haut)** : Visualisation de l'état (Active/Standby), de la latence et de la charge processeur.
-2. **Templates Vocaux (Gauche)** : Bibliothèque de presets prêts à l'emploi.
-3. **Visualiseur Central** : Un indicateur visuel pulsant qui réagit à votre voix.
-4. **Vocal Shapers (Droite)** : Contrôles granulaires pour sculpter votre timbre.
-5. **VU-Meter (Bas)** : Barre de niveau d'entrée pour éviter la saturation.
+## 🖥️ L'écran de Voice-OS
+
+![Voice-OS : les quatre interrupteurs en haut, les modèles vocaux et les voix des PNJ à gauche, le micro au centre, le signal et les effets à droite](captures/module-voice-os.jpg)
+
+*Voice-OS dans la campagne de démonstration, micro en attente. À gauche, sous les modèles, les
+voix déjà posées sur deux PNJ de la campagne.*
+
+Trois colonnes, sous une rangée d'interrupteurs :
+
+1. **En haut** : **Micro** (on/off), **Diffuser** (la voix part vers la sortie), **Retour casque**
+   et **Synchro PNJ** (§ « Sync NPC » plus bas). L'étiquette *Statut micro* dit où il en est.
+2. **À gauche, les modèles vocaux** — les presets — puis **les voix des PNJ** : celles que vous
+   avez enregistrées sur les fiches de la campagne, à rappeler d'un clic.
+3. **Au centre, le flux d'entrée** : un cercle qui réagit à votre voix, le **niveau du micro**
+   au-dessous, et le panneau **Interfaces matérielles** (micro et sortie audio).
+4. **À droite, Signal et effets**, en deux sections : **01 · Nettoyage et sécurité** (anti-larsen,
+   débruitage, noise gate, auto-ducking) et **02 · Modeleurs vocaux** (les réglages fins
+   ci-dessous).
 
 ---
 
 ## 🎭 Templates Vocaux (Presets)
 Plutôt que de régler chaque curseur manuellement, utilisez les presets intégrés :
-- **Clean** : Voix naturelle avec égalisation optimisée.
+- **Clair** : Voix naturelle avec compression légère.
 - **Spectre** : Voix éthérée et résonante (idéal pour les fantômes ou les apparitions).
 - **Ogre** : Voix grave, massive et caverneuse (parfait pour les géants ou monstres).
 - **Androïde** : Effet métallique et distorsion numérique (pour les IAs ou cyborgs).
@@ -27,7 +38,7 @@ Plutôt que de régler chaque curseur manuellement, utilisez les presets intégr
 
 ---
 
-## 🎚️ Vocal Shapers (Paramètres Avancés)
+## 🎚️ Les modeleurs vocaux (réglages avancés)
 Pour les MJs souhaitant un contrôle total, ajustez les réglages suivants :
 - **Compression** *(nouveau, 0 à 100 %)* : à quel point la voix est ramenée à un niveau constant. **Bas**, votre jeu respire — un murmure reste un murmure, et *Voice-to-Light* a de quoi suivre. **Haut**, tout sort au même niveau, façon radio. Le réglage par défaut est 40 % ; **100 % reproduit exactement le réglage figé d'avant le 03/09/2026**, si vous préférez celui-là.
 - **Pitch Shift** : Modifie la hauteur de la voix (en demi-tons).
@@ -86,7 +97,7 @@ La voix suit le PNJ dont vous vous occupez :
 
 ## 🎙️ Choisir son micro (v6.5)
 
-En haut du panneau de droite, **Micro** liste les entrées audio de la machine.
+Dans le panneau **Interfaces matérielles**, sous le flux d'entrée, **Micro** liste les entrées audio de la machine ; **Actualiser les périphériques** relit la liste si vous en branchez un.
 
 - **Micro Système par Défaut** garde le comportement d'avant : Voice-OS prend celui que Windows a choisi.
 - Choisir explicitement un micro **le retient d'une soirée à l'autre**, même après un redémarrage.
@@ -98,12 +109,12 @@ En haut du panneau de droite, **Micro** liste les entrées audio de la machine.
 ---
 
 ## ⚡ Modes de Diffusion
-- **Monitor** : Retour casque personnel. Indispensable pour entendre votre propre transformation vocale.
-- **Go Live** : Diffusion vers la sortie audio principale (vos enceintes ou le stream).
-- **Audio Output** : Permet de choisir précisément sur quel périphérique envoyer la voix transformée (ex: Câble Audio Virtuel pour redirection vers Discord).
+- **Retour casque** : votre retour personnel. Indispensable pour entendre votre propre transformation vocale.
+- **Diffuser** : la voix part vers la sortie audio principale (vos enceintes ou le stream).
+- **Sortie audio** (panneau *Interfaces matérielles*) : le périphérique qui reçoit la voix transformée (ex. un câble audio virtuel pour la renvoyer vers Discord).
 
 > [!NOTE]
-> **Monitor et Go Live sortent sur le même périphérique** — `Audio Output` se règle pour tout le module, pas par voie. Les deux interrupteurs ouvrent donc la même sortie ; les activer ensemble ne double plus le volume (c'était le cas avant le 03/09/2026, et cela suffisait à faire saturer la voix).
+> **Retour casque et Diffuser sortent sur le même périphérique** — la *Sortie audio* se règle pour tout le module, pas par voie. Les deux interrupteurs ouvrent donc la même sortie ; les activer ensemble ne double plus le volume (c'était le cas avant le 03/09/2026, et cela suffisait à faire saturer la voix).
 
 ---
 
@@ -213,3 +224,7 @@ ce que l'on a sans rien régler — et l'explication des trois modes, qui vivait
 maintenant sous le sélecteur : une infobulle ne se lit que par quelqu'un qui soupçonne déjà. **Et la
 liste « Voix des PNJ » voit désormais la galerie de campagne**, pour les fiches à qui vous avez déjà
 donné une voix.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Les noms suivent l'écran : **Diffuser**
+et **Retour casque** (et non *Go Live* et *Monitor*), le preset **Clair**, le micro et la sortie
+dans **Interfaces matérielles**.*

@@ -9,6 +9,8 @@ ce que chacune encaisse.
 
 **Combat-OS → Calculateur de Dégâts** (panneau de droite).
 
+![Le calculateur de dégâts : le montant, le type, dégâts ou soins, et les cibles avec leur impact prévu](captures/combat-calcul-des-degats.jpg)
+
 1. **Le montant.** Un bouton **DERNIER JET** reprend le total de votre dernier lancer de dés — plus
    besoin de le recopier. *Absent des guides jusqu'ici, et c'est le geste qui fait gagner le plus
    de temps.*
@@ -88,3 +90,5 @@ Combat-OS](./32-Combat-OS-et-la-Forge.md)
 automatiques inventés (Nécrotique, Radiant), une durée erronée (Empoisonné, 5 tours et non 3), et
 deux alias de type qui ne déclenchent rien (« Glace », « Éclair »). Ajouté : le bouton **Dernier
 jet**, et les libellés réels des boutons.*
+
+*Illustré le 2026-10-03 avec la campagne de démonstration.*

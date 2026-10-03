@@ -21,20 +21,26 @@ protocole.*
 
 ## 2. Qui gagne quand les deux ne disent pas la même chose
 
-> ⭐ **La fiche fait foi.** Décision de David du 2026-08-28 : *« c'est la tablette qui gagne ».*
+> ⭐ **La dernière écriture gagne.** Décision de David du 2026-10-03 (*option A*), qui remplace celle
+> du 2026-08-28 (*« c'est la tablette qui gagne »*).
 
 | Sens | Quand |
 | :--- | :--- |
 | **La fiche → GM-OS** | À l'ouverture, **et à chaque saisie du joueur**. |
-| **GM-OS → la fiche** | **Une seule fois, à la création.** |
+| **GM-OS → la fiche** | À la création ; **à l'ouverture, si GM-OS a été modifié plus récemment** que la fiche ; et, fiche ouverte, **dès que GM-OS change** une valeur — seulement celle-là. |
 
-On *sème* une fiche neuve avec ce que GM-OS savait déjà du personnage, puis on ne pousse plus.
-Semer ailleurs qu'à la création rouvrirait la question de qui gagne **à chaque frappe**.
+GM-OS date chaque écriture des données d'un personnage. À l'ouverture d'une fiche, il compare : si
+ses valeurs sont plus récentes — une Force corrigée dans le formulaire, par exemple —, il les pousse
+vers la fiche ; sinon, c'est la fiche qui fait foi, comme avant.
+
+> ⛔ **Ce que cela répare.** La fiche gagnait toujours : une valeur corrigée dans le formulaire de
+> GM-OS ne partait jamais vers la fiche, et la fiche la remettait à l'ancienne valeur à la
+> réouverture. *Une règle qui donne toujours raison au même côté efface l'autre en silence.*
 
 **Deux garde-fous** :
 
 - **Le vide n'efface jamais.** Un champ laissé blanc dans la fiche n'écrase pas une valeur connue.
-- **Chaque valeur écrasée est journalisée**, dans `main.log`. *La règle est simple ; c'est son coût
+- **Chaque valeur écrasée est journalisée**, dans les deux sens, dans `main.log`. *La règle est simple ; c'est son coût
   qui doit rester visible* — un champ écrasé par une resynchronisation se découvre en séance, et
   sans trace on ne peut plus dire ce qu'il contenait.
 
@@ -82,3 +88,6 @@ maintien. Si vous voyez une fiche projetée disparaître en l'éditant, c'est l�
 
 *Guide écrit le 2026-09-04. La couture a été publiée le 2026-08-27 et livrée sur les deux écrans le
 2026-08-28.*
+
+*Relu le 2026-10-03 : la règle « la fiche fait foi » est remplacée par **la dernière écriture gagne**
+(commit du même jour).*

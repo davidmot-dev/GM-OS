@@ -4,7 +4,10 @@ Le Cortex regarde votre combat — qui est où, à quelle distance, dans quel é
 choses : **un paragraphe de situation** à lire à la table, et **des conseils d'action** classés par
 urgence. Il pilote aussi vos lumières et vos sons tactiques.
 
-![Aperçu du module Cortex OS](cortex_mockup.png)
+![Le bandeau du Cortex tactique, ouvert en bas de Combat-OS : Hue Bridge et Audio Logic à gauche, les boutons Sons & Lum., Auto, Test et Flash, et le flux neural à droite](captures/cortex-tactique.jpg)
+
+*Le bandeau du Cortex, ouvert par-dessus Combat-OS. Le **flux neural**, à droite, affiche ses
+analyses ; **Fermer Cortex**, à gauche, le replie.*
 
 > 📖 Ce guide est **la référence**. Le [manuel du Cortex](./83-Cortex-OS-aide-memoire.md) est le
 > mémo de séance : comment lire le panneau pendant qu'on joue.
@@ -13,11 +16,19 @@ urgence. Il pilote aussi vos lumières et vos sons tactiques.
 
 ## 🔌 Où il vit, et comment on l'allume
 
-**Le Cortex n'est pas dans Map-OS.** C'est un bandeau horizontal en bas de l'écran, présent dans
-toute l'application dès qu'il est activé.
+**Le Cortex n'est pas dans Map-OS.** C'est un bandeau en bas de l'écran, présent dans toute
+l'application. Il s'ouvre par le **cerveau**, premier des raccourcis en bas de la barre des modules,
+et se referme par **Fermer Cortex** (Échap ne le ferme pas).
 
-L'interrupteur général est dans **Paramètres → Cortex tactique**. Un voyant dans la barre du haut
-dit son état : éteint, actif, ou **en train d'analyser** (il pulse).
+> ⚠️ **Ne le confondez pas avec « Cortex IA »**, dans la section *Global* de la barre des modules :
+> celui-là ouvre la conversation avec l'Oracle ([guide](./80-Oracle-poser-une-question.md)). Même
+> mot, deux outils.
+
+L'interrupteur général est dans **Paramètres › 02. Tactique** (*Cortex tactique, master switch*),
+au-dessus des **règles tactiques** — les portées et leurs statuts. Une pastille dans la barre du
+haut dit son état : éteint, actif, ou **en train d'analyser** (elle pulse).
+
+![Paramètres › 02. Tactique : l'interrupteur général du Cortex, et la liste des règles tactiques — Contact, Courte, Moyenne, Longue…](captures/parametres-tactique.jpg)
 
 > ⛔ **Correction.** Le manuel envoyait « ouvrir Map-OS et cliquer sur l'icône Brain de la barre
 > d'outils ». Il n'y a pas d'icône Brain dans Map-OS, et le Cortex ne s'y trouve pas.
@@ -151,3 +162,6 @@ chose que ce qu'on croyait.
 faux ; les **sons tactiques sont livrés** et non à fournir ; le **moteur** n'est pas limité à deux
 fournisseurs optionnels ; et **rien ne part chez les joueurs**. Ajouté : où le Cortex vit
 réellement, et l'avertissement sur les grilles non calibrées.*
+
+*Relu le 2026-10-03 contre l'interface refondue, et illustré. Ajouté : où s'ouvre le bandeau, en quoi
+il diffère de **Cortex IA**, et l'emplacement réel de l'interrupteur (**Paramètres › 02. Tactique**).*

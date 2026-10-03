@@ -14,7 +14,7 @@ C'est une page web : rien à installer, on scanne un QR code.
 ## 🚀 Connexion Initiale
 
 1.  Sur votre PC, ouvrez les **Paramètres** (icône engrenage).
-2.  Allez dans l'onglet **Télécommande**.
+2.  Allez dans **04. Télécommande** : le QR code de gauche, *GM Remote Control*, est le vôtre.
 3.  Vérifiez que le statut affiche "Serveur WebSocket Actif".
 4.  Scannez le **QR Code** avec votre appareil mobile.
 5.  L'interface de contrôle s'ouvre automatiquement dans votre navigateur mobile.
@@ -50,10 +50,20 @@ On la ferme aussi depuis elle-même avec **Alt+F4**, et elle part toujours avec 
 
 La télécommande est pensée pour une **tablette tenue en paysage**.
 
+![La télécommande du meneur sur l'onglet Pads : les huit onglets à gauche, les volumes de la musique et des ambiances en haut, puis les pastilles de Music-OS et les thèmes d'ambiance](captures/tablette-du-meneur.jpg)
+
+*L'onglet **Pads** dans la campagne de démonstration : les cinq pastilles de Music-OS et les thèmes
+d'Ambient-OS, chacun avec son univers en sous-titre. **Couper le son**, en haut à droite, coupe la
+musique, les ambiances et les bruitages — en le tenant enfoncé.*
+
+> ⚠️ **Défaut connu (2026-10-03).** Les trois thèmes d'ambiance **livrés** avec GM-OS s'affichent ici
+> sous leur nom interne (`modules:ambient.presets.themes.arcology`…) au lieu de *Arcologie*, *Club
+> Néon*, *Forêt Enchantée*. Vos propres thèmes, eux, portent leur nom.
+
 | Où | Quoi |
 | :--- | :--- |
 | **Colonne de gauche** | Les huit onglets, **avec leur nom écrit** |
-| **Ligne du haut** | Ce qui joue en ce moment, et **Tout couper** |
+| **Ligne du haut** | Ce qui joue en ce moment, et **Couper le son** |
 | **Le reste** | Le panneau ouvert |
 
 > ✅ **Le châssis mangeait 35 % de la hauteur** — un en-tête de 104 px pour un titre qu'on connaît
@@ -160,7 +170,7 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 > largeur** — près de cinq cents pixels pour un mot sur une tablette. Ils s'adaptent maintenant
 > jusqu'à six colonnes.
 >
-> ⚠️ **« Tout couper » n'est plus ici** : il est dans la ligne d'état, atteignable depuis tous les
+> ⚠️ **« Tout couper » n'est plus ici** : devenu **Couper le son**, il est dans la ligne d'état, atteignable depuis tous les
 > onglets. Il n'avait rien à faire au fond du troisième.
 
 ---
@@ -391,3 +401,6 @@ a pas de slider dans les pads. »** ⛔ Le trou était plus large qu'il n'y para
 Ambient-OS n'avaient aucune action de télécommande** — la tablette savait les lancer, jamais les
 doser, et aucune des trois voies ne pouvait changer de sortie. ✅ **Éprouvé à l'écran** — le
 curseur des bruitages, réparé le 20/09, fonctionne.*
+
+*Relu le 2026-10-03 et illustré. Signalé : les noms des thèmes d'ambiance livrés, non traduits sur la
+télécommande.*

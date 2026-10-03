@@ -9,6 +9,10 @@ les tablettes, d'un clic.
 
 **Session-OS → Règles** (le *Grimoire*) **→ section Atelier.**
 
+![Session-OS › Règles : les fiches du système actif, la recherche, et « Créer une règle »](captures/session-regles.jpg)
+
+*Le bouton **Règles** est dans l'en-tête de Session-OS, à côté d'Oracle et de Snapshot.*
+
 Vous y trouvez toutes les fiches du système actif : celles que la Forge a produites, et celles que
 vous avez écrites. Un compteur dit combien il y en a, et une recherche les filtre.
 
@@ -77,3 +81,5 @@ Tout le monde a le même texte, et il reste dans l'historique.
 l'éditeur de règles, pas un onglet du cockpit. Ajouté : le **message de chat** envoyé en même temps
 que la fenêtre, le fait que le partage vise **toutes** les tablettes, et le lien entre ces fiches et
 ce que l'Oracle lit.*
+
+*Illustré le 2026-10-03.*

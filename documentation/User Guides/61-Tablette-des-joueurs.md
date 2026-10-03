@@ -11,11 +11,19 @@ Deux guides le couvrent : celui-ci monte la table, le
 
 ## 🔌 Brancher une tablette
 
-**Le bouton « Connecter Joueurs », dans la barre du haut de GM-OS** (icône Wi-Fi), ouvre un QR code.
-Le joueur le scanne, et il est dans le Hub.
+**Deux chemins mènent au QR code** :
 
-> ⛔ **Correction.** Cette page envoyait le meneur dans « Paramètres OS → onglet Télécommande →
-> section Nexus Link ». **Ce chemin n'existe pas.** Le QR code est un bouton de la barre du haut.
+- **l'icône Wi-Fi**, en haut à droite de GM-OS (*Ouvrir le code de connexion PWA*), qui ouvre
+  directement le QR code des joueurs ;
+- **Paramètres › 04. Télécommande**, qui montre côte à côte le QR code de **votre** tablette (*GM
+  Remote Control*) et celui des joueurs (*Tablet Hub*).
+
+Le joueur scanne le second, et il est dans le Hub.
+
+![Paramètres › Télécommande : à gauche votre tablette, à droite celles des joueurs](captures/parametres-telecommande.jpg)
+
+> 🔎 *Cette page disait le 2026-09-05 que le chemin des Paramètres n'existait pas : c'était vrai
+> alors. Les Paramètres refondus (2026-10-03) l'ont créé.*
 
 Ce que le QR code contient : `http://<adresse-du-MJ>:3001/?window=tablet&sync=3001`. Vous pouvez le
 taper à la main si le scan échoue — **l'adresse s'affiche sous le code**, et c'est elle qu'il faut
@@ -28,6 +36,14 @@ recopier, en entier.
 > campagne.*
 
 Toutes les machines doivent être sur **le même réseau Wi-Fi**.
+
+### Ce que voit le joueur en arrivant
+
+**« Qui es-tu ? »** : les personnages **présents à la séance**, avec le nom de leur joueur. C'est vous
+qui déclarez le groupe présent, depuis le cockpit (*Gérer le groupe*) ; un personnage déjà pris par
+une autre tablette n'est plus proposé.
+
+![La tablette d'un joueur à l'ouverture : « Qui es-tu ? », et les trois personnages présents à la séance](captures/tablette-des-joueurs.jpg)
 
 ### Choisir son personnage
 
@@ -147,3 +163,6 @@ une section entière déformée par des marques de fusion (`+` en début de lign
 l'envers ; et une promesse de « 60 FPS sous Tauri v2 » — **GM-OS ne tourne pas sous Tauri**, mais
 sous Electron, et personne n'a jamais mesuré ces images par seconde. Ajouté : les six onglets et
 les quatre panneaux, qui n'étaient décrits nulle part.*
+
+*Relu le 2026-10-03 : le QR code est aussi dans les Paramètres refondus. Captures de la campagne de
+démonstration.*

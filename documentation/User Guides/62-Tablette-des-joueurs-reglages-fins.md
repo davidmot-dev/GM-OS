@@ -7,8 +7,9 @@ d'abord le [guide du Tablet Hub](./61-Tablette-des-joueurs.md).
 
 ## 🔌 Se connecter
 
-Le meneur affiche un QR code depuis le bouton **Connecter Joueurs** de sa barre du haut. Scannez-le,
-ou tapez l'adresse affichée dessous :
+Le meneur affiche un QR code depuis l'icône **Wi-Fi** de sa barre du haut (*Connecter Joueurs* sur
+un grand écran), ou depuis **Paramètres › 04. Télécommande**. Scannez-le, ou tapez l'adresse affichée
+dessous :
 
 ```text
 http://<adresse-du-MJ>:3001/?window=tablet&sync=3001
@@ -144,3 +145,6 @@ quiconque puisse la reprendre.
 *Guide révisé le 2026-09-04, code à l'appui. L'adresse de connexion était fausse sur le port et sur
 le chemin. Ajouté : les cartes en main et leur pastille, les indices dans les Archives, le
 trombinoscope, l'Atlas, l'ordre d'initiative, et ce que fait vraiment le bouton Quitter.*
+
+*Relu le 2026-10-03 : le bouton **Connecter Joueurs** n'affiche son nom qu'à partir de 1600 px de
+large ; en dessous, c'est l'icône Wi-Fi.*

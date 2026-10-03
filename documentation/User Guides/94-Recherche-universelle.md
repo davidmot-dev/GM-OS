@@ -11,6 +11,12 @@ Où que vous soyez dans l'OS, utilisez le raccourci suivant pour ouvrir la barre
 - **Windows/Linux** : `CTRL + K`
 - **Mac** : `CMD + K`
 
+![La recherche universelle : « Hale » tapé, un résultat dans Entités, et l'aperçu de sa fiche à droite](captures/recherche-universelle.jpg)
+
+*Une frappe, un résultat : le PNJ de la campagne de démonstration. La colonne **Aperçu** montre
+l'élément sélectionné — ici sa description et sa santé — avant même de l'ouvrir ; **Entrée** ouvre
+la fiche, les flèches passent d'un résultat à l'autre, **Échap** referme.*
+
 ---
 
 ## 📂 Que pouvez-vous rechercher ?
@@ -23,11 +29,11 @@ Elle indexe ensuite, en temps réel :
 
 ### 👤 Entités (PNJ & Héros)
 - Recherchez par **nom** ou **description**.
-- **Action** : Ouvre directement la fiche détaillée dans la Galerie NPC.
+- **Action** : Ouvre directement la fiche détaillée dans la galerie des PNJ.
 
 ### 🗺️ Atlas & Cartes
 - Recherchez vos **Battlemaps**, **Régions** ou **Donjons**.
-- **Action** : Charge immédiatement la carte dans le module Atlas-OS.
+- **Action** : Charge immédiatement la carte dans l'Atlas du monde.
 
 ### 🔊 Audio & Ambiances
 - **Musique** : Recherchez des pads spécifiques dans vos playlists.
@@ -66,3 +72,5 @@ Le Spotlight est conçu pour être utilisé sans souris :
 
 *Guide révisé le 2026-09-04, code à l'appui. Ajouté : la barre **s'ouvre déjà pleine** des
 destinations de navigation — son usage le plus fréquent, et il n'était pas écrit.*
+
+*Relu le 2026-10-03 et illustré : la colonne **Aperçu**, à droite des résultats.*
