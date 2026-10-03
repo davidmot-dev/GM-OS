@@ -218,7 +218,9 @@
       "session_model": "Modèle en séance",
       "session_model_same": "Le même modèle",
       "session_model_hint": "Le modèle en séance répond pendant une séance ouverte, pause comprise ; une image part toujours au modèle principal.",
-      "session_context": "Fenêtre en séance"
+      "session_context": "Fenêtre en séance",
+      "session_instructions": "Consignes en séance",
+      "session_instructions_hint": "Ajoutées à chaque réponse en texte du modèle en séance (pas aux générations JSON). Vides : aucune consigne."
     },
     "oracle": {
       "title": "AI Oracle (NotebookLM)",

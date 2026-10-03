@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { modeleDuMoment, fenetreValide } from './modeleDuMoment';
+import { modeleDuMoment, fenetreValide, CONSIGNES_EN_SEANCE_PAR_DEFAUT } from './modeleDuMoment';
 import { modeleAPrechauffer } from './prechauffage';
 
 const OLLAMA = { provider: 'ollama' as const, modelId: 'gemma4:12b', modeleEnSeance: 'lfm2.5', contexte: 16384, contexteEnSeance: 32768 };
@@ -10,7 +10,22 @@ describe('un modèle pour préparer, un autre pour jouer', () => {
     });
 
     it('en séance, le modèle de séance et sa fenêtre', () => {
-        expect(modeleDuMoment(OLLAMA, true)).toEqual({ model: 'lfm2.5', num_ctx: 32768, enSeance: true });
+        expect(modeleDuMoment(OLLAMA, true)).toEqual({
+            model: 'lfm2.5', num_ctx: 32768, enSeance: true, consignes: CONSIGNES_EN_SEANCE_PAR_DEFAUT,
+        });
+    });
+
+    /* David, 2026-10-03 : « la contrainte de 20 lignes ne vaut pas pour une question à gemma hors session ». */
+    it('les consignes de table ne valent QUE pour le modèle de séance', () => {
+        expect(modeleDuMoment(OLLAMA, false).consignes).toBeUndefined();
+        expect(modeleDuMoment({ ...OLLAMA, modeleEnSeance: '' }, true).consignes).toBeUndefined();
+        expect(CONSIGNES_EN_SEANCE_PAR_DEFAUT).toMatch(/français/);
+        expect(CONSIGNES_EN_SEANCE_PAR_DEFAUT).toMatch(/Vingt lignes/);
+    });
+
+    it('des consignes réglées passent devant le défaut ; vides, il n’y en a aucune', () => {
+        expect(modeleDuMoment({ ...OLLAMA, consignesEnSeance: 'Sois bref.' }, true).consignes).toBe('Sois bref.');
+        expect(modeleDuMoment({ ...OLLAMA, consignesEnSeance: '  ' }, true).consignes).toBeUndefined();
     });
 
     it('sans modèle de séance, rien ne change — même en séance', () => {

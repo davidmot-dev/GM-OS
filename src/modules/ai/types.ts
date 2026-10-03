@@ -26,6 +26,11 @@ export type AIModelConfig = {
   contexte?: number;
   /** Ollama seulement — la fenêtre de contexte de `modeleEnSeance` ; absente, 16 384. */
   contexteEnSeance?: number;
+  /**
+   * Ollama seulement — les consignes ajoutées aux réponses du modèle de séance ;
+   * absentes, `CONSIGNES_EN_SEANCE_PAR_DEFAUT` ; vides, aucune.
+   */
+  consignesEnSeance?: string;
 };
 
 export type AIResponse = {

@@ -363,9 +363,13 @@ export class AIService {
           /* En séance, le modèle de séance s'il est déclaré (`modeleDuMoment.ts`)
              — **sauf pour une image** : elle part toujours au modèle principal,
              celui que la garde de vision (`capaciteDuModele.ts`) a vérifié. */
-          const { model, num_ctx } = (pieces ?? []).length > 0
+          const { model, num_ctx, consignes } = (pieces ?? []).length > 0
             ? modeleDuMoment(config, false)
             : modeleOllamaActuel(config);
+          /* Les consignes de table du modèle de séance — en fin de message, là
+             où un petit modèle les suit le mieux ; jamais sur une réponse JSON,
+             qu'une limite de lignes couperait. */
+          const consignesDeTable = consignes && !attendJson ? `\n\n[CONSIGNES DE TABLE]\n${consignes}` : '';
           const endpoint = config.endpoint;
           if (!window.appBridge?.ai?.ollamaChat) throw new Error("Bridge Ollama non disponible.");
 
@@ -417,7 +421,7 @@ export class AIService {
           const text = await window.appBridge.ai.ollamaChat(model, [
             {
               role: 'user',
-              content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}`,
+              content: `${systemPrompt}\n\n--- TA MISSION ---\n${prompt}${consignesDeTable}`,
               ...(images.length > 0 ? { images } : {}),
             }
           ], endpoint, attendJson || plafondDeGeneration || num_ctx
@@ -1254,7 +1258,7 @@ Use the names above verbatim. Do not invent a setting title.
     onStatusUpdate?.("Réception de la vision...");
     
     if (activeProvider === 'ollama') {
-      const { model, num_ctx } = modeleOllamaActuel(config);
+      const { model, num_ctx, consignes } = modeleOllamaActuel(config);
       const endpoint = config.endpoint;
       if (!window.appBridge?.ai?.ollamaChatStream) throw new Error("Bridge Ollama Stream non disponible.");
       
@@ -1276,7 +1280,8 @@ Use the names above verbatim. Do not invent a setting title.
         */
         await window.appBridge.ai.ollamaChatStream(model, [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
+          // Les consignes de table du modèle de séance, en fin de message — voir `modeleDuMoment.ts`.
+          { role: 'user', content: consignes ? `${prompt}\n\n[CONSIGNES DE TABLE]\n${consignes}` : prompt }
         ], endpoint, { num_predict: 1024, ...(num_ctx ? { num_ctx } : {}) }, identifierLaRequete("Oracle"));
       } finally {
         unsubscribe();

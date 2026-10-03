@@ -2,6 +2,7 @@
 import { net, ipcMain } from 'electron';
 import fs from 'node:fs';
 import path from 'node:path';
+import { retirerLaReflexion, filtreDeReflexion } from './retirerLaReflexion';
 
 /**
  * Le journal du processus principal, **sur le disque**.
@@ -549,7 +550,9 @@ export class OllamaService {
             }
 
             const data = await response.json() as OllamaChatResponse;
-            const contenu = data.message?.content ?? '';
+            const brut = data.message?.content ?? '';
+            // Une réflexion écrite DANS la réponse (`lfm2.5`) n'en fait pas partie — `retirerLaReflexion.ts`.
+            const contenu = retirerLaReflexion(brut);
 
             // Ce qui revient, aussi : sans la réponse en face de la requête, le
             // journal ne dit que la moitié de l'histoire.
@@ -578,7 +581,7 @@ export class OllamaService {
               huit fois de suite, et en accusant le mauvais coupable.
             */
             if (!contenu.trim()) {
-                const pensee = data.message?.thinking ?? '';
+                const pensee = data.message?.thinking || (brut.includes('<think>') ? brut : '');
                 if (pensee.trim()) {
                     throw new Error(
                         `Le modèle « ${model} » a raisonné ${pensee.length} caractères sans rien répondre` +
@@ -747,6 +750,8 @@ export class OllamaService {
 
             const decoder = new TextDecoder();
             let leftover = '';
+            // La réflexion écrite dans la réponse ne s'affiche pas, même morceau par morceau.
+            const filtre = filtreDeReflexion();
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -761,13 +766,16 @@ export class OllamaService {
                     try {
                         const json = JSON.parse(line);
                         if (json.message?.content) {
-                            onToken(json.message.content);
+                            const visible = filtre.pousser(json.message.content);
+                            if (visible) onToken(visible);
                         }
                     } catch (e) {
                          // On ignore les lignes corrompues
                     }
                 }
             }
+            const reste = filtre.finir();
+            if (reste) onToken(reste);
         } catch (error) {
             console.error('[Ollama] Stream error:', error);
             throw error;

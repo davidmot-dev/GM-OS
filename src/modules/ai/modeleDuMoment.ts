@@ -19,7 +19,20 @@ export interface ModeleDuMoment {
     num_ctx?: number;
     /** Vrai quand c'est le modèle de séance qui répond. */
     enSeance: boolean;
+    /** Les consignes de table, pour une réponse en texte du modèle de séance. */
+    consignes?: string;
 }
+
+/**
+ * **Les consignes du modèle de séance, par défaut** — demandées par David le
+ * 2026-10-03 : *« que la réponse ne dépasse pas 20 lignes et soit obligatoirement
+ * en français »*. Un petit modèle rapide répond en anglais quand ses sources le
+ * sont, et déroule au lieu de trancher. Modifiables dans les Paramètres.
+ */
+export const CONSIGNES_EN_SEANCE_PAR_DEFAUT =
+    'Réponds toujours en français, quelle que soit la langue des sources ou de la question. '
+    + 'Vingt lignes au plus : va droit à l’essentiel, sans répéter la question. '
+    + 'N’écris pas ton raisonnement, seulement la réponse.';
 
 /** Les fenêtres proposées au meneur — des puissances de deux, celles qu'Ollama alloue sans perte. */
 export const FENETRES_DE_CONTEXTE = [8192, 16384, 32768, 65536] as const;
@@ -36,7 +49,11 @@ export function modeleDuMoment(
 ): ModeleDuMoment {
     const deSeance = config?.modeleEnSeance?.trim();
     if (seanceOuverte && deSeance) {
-        return { model: deSeance, num_ctx: fenetreValide(config?.contexteEnSeance), enSeance: true };
+        const consignes = (config?.consignesEnSeance ?? CONSIGNES_EN_SEANCE_PAR_DEFAUT).trim();
+        return {
+            model: deSeance, num_ctx: fenetreValide(config?.contexteEnSeance), enSeance: true,
+            ...(consignes ? { consignes } : {}),
+        };
     }
     return { model: config?.modelId || repli, num_ctx: fenetreValide(config?.contexte), enSeance: false };
 }

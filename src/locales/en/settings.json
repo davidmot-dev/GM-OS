@@ -218,7 +218,9 @@
       "session_model": "In-session model",
       "session_model_same": "Same model",
       "session_model_hint": "The in-session model answers while a session is open, pauses included; an image always goes to the main model.",
-      "session_context": "In-session window"
+      "session_context": "In-session window",
+      "session_instructions": "In-session instructions",
+      "session_instructions_hint": "Added to every text answer of the in-session model (not to JSON generations). Empty: no instructions."
     },
     "oracle": {
       "title": "AI Oracle (NotebookLM)",

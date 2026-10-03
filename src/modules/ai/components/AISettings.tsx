@@ -7,7 +7,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useObsidianStore } from '../../session/useObsidianStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { Select } from '../../../components/common/Select';
-import { FENETRES_DE_CONTEXTE } from '../modeleDuMoment';
+import { FENETRES_DE_CONTEXTE, CONSIGNES_EN_SEANCE_PAR_DEFAUT } from '../modeleDuMoment';
 import type { AIProvider } from '../types';
 import { aiService } from '../AIService';
 import ReglagesDImage from './ReglagesDImage';
@@ -619,6 +619,17 @@ const AISettings: React.FC = () => {
                     />
                   </div>
                   <p className="text-ui-10 leading-snug text-app-muted md:col-span-3">{t('ai.labels.session_model_hint')} {t('ai.labels.context_hint')}</p>
+                  {/* Les consignes de table — enregistrées en quittant le champ, pas à chaque frappe. */}
+                  <label className="flex flex-col gap-2 md:col-span-3">
+                    <span className={etiquette}><Cpu size={12} className="text-accent" />{t('ai.labels.session_instructions')}</span>
+                    <textarea
+                      defaultValue={configs.ollama.consignesEnSeance ?? CONSIGNES_EN_SEANCE_PAR_DEFAUT}
+                      onBlur={(e) => updateConfig('ollama', { consignesEnSeance: e.target.value })}
+                      rows={3}
+                      className="w-full resize-y rounded-xl border border-app-border bg-app-bg px-4 py-3 text-xs leading-relaxed text-app-text outline-none transition-colors focus:border-accent/60"
+                    />
+                    <span className="text-ui-10 leading-snug text-app-muted">{t('ai.labels.session_instructions_hint')}</span>
+                  </label>
                 </div>
               );
             })()}
