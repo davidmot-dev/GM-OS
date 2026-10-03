@@ -779,9 +779,9 @@ const AISettings: React.FC = () => {
               onClick={async () => {
                 try {
                   const result = await window.appBridge?.mcp?.reauthenticate();
-                  if (result?.success) {
-                    gmToast(t('common:check_browser'));
-                  }
+                  // Le message dit ce qui s'est passé — y compris « déjà connecté »
+                  // et l'échec, qui restait muet jusqu'au 2026-10-03.
+                  if (result) gmToast(result.message || t('common:check_browser'), result.success ? undefined : 'error');
                 } catch (error) {
                   console.error("Re-authentication failed:", error);
                   gmToast(t('common:error_generic'), "error");

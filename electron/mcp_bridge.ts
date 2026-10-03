@@ -419,38 +419,57 @@ export function registerMcpHandlers() {
                 return;
             }
 
+            /* Une seule réponse, quelle que soit la voie qui arrive la première. */
+            let repondu = false;
+            let earlyExit: NodeJS.Timeout | undefined;
+            const repondre = (r: { success: boolean; message: string }) => {
+                if (repondu) return;
+                repondu = true;
+                clearTimeout(earlyExit);
+                resolve(r);
+            };
+
             let output = '';
             const collect = (data: Buffer) => {
                 output += data.toString();
                 logToDebugFile(`[Auth] ${data.toString().trimEnd()}`);
+                /*
+                  **Déjà connecté : il n'y a pas de fenêtre à ouvrir** (2026-10-03).
+                  Le CLI vérifie le profil et répond « Authentication valid! » ;
+                  on annonçait pourtant une fenêtre Chrome — David l'a cherchée.
+                */
+                if (/Authentication valid/i.test(output)) {
+                    repondre({
+                        success: true,
+                        message: 'Vous êtes déjà connecté à NotebookLM : aucune fenêtre à ouvrir. Si l’Oracle refuse encore, la connexion n’est pas en cause.',
+                    });
+                }
             };
             authProcess.stdout?.on('data', collect);
             authProcess.stderr?.on('data', collect);
 
             // Le CLI meurt-il avant même d'avoir ouvert le navigateur ?
-            const earlyExit = setTimeout(() => {
+            earlyExit = setTimeout(() => {
                 authProcess.removeAllListeners('exit');
                 authProcess.unref();
-                resolve({
+                repondre({
                     success: true,
                     message: "Connectez-vous à votre compte Google dans la fenêtre Chrome qui vient de s'ouvrir.",
                 });
             }, 3000);
 
             authProcess.on('exit', (code) => {
-                clearTimeout(earlyExit);
                 const detail = output.trim().split('\n').slice(-3).join(' ').slice(0, 300);
                 logToDebugFile(`[Auth] CLI exited early with code ${code}: ${detail}`);
-                resolve({
-                    success: false,
-                    message: `L'authentification a échoué immédiatement (code ${code}). ${detail}`,
-                });
+                // Code 0 : le CLI a fini sans erreur — ce n'est pas un échec.
+                repondre(code === 0
+                    ? { success: true, message: `Connexion à NotebookLM vérifiée. ${detail}` }
+                    : { success: false, message: `L'authentification a échoué immédiatement (code ${code}). ${detail}` });
             });
 
             authProcess.on('error', (error) => {
-                clearTimeout(earlyExit);
                 logToDebugFile(`[Auth] CLI error: ${error}`);
-                resolve({ success: false, message: `Lancement impossible : ${error.message}` });
+                repondre({ success: false, message: `Lancement impossible : ${error.message}` });
             });
         });
     });

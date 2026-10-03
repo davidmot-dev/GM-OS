@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useOracleContext } from '../../ai/hooks/useOracleContext';
+import { questionAuCarnet } from '../logic/questionAuCarnet';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -64,7 +65,8 @@ export const useNotebookLM = () => {
 
             // 3. Injection du Contexte Vital (Neural Liaison)
             // On combine l'instantané de session capturé par useOracleContext avec la question
-            const enrichedQuery = `[LIAISON NEURALE : ÉTAT DE LA SESSION]\n${snapshot}\n\n[MESSAGE DU MJ]\n${query}\n\n(Réponds toujours en français)`;
+            // Bornée à la limite de NotebookLM : au-delà, Google refuse la question entière.
+            const enrichedQuery = questionAuCarnet(snapshot, query);
 
             const response = await window.appBridge.mcp.callTool('notebooklm-mcp-server', 'notebook_query', {
                 notebook_id: notebookId,
