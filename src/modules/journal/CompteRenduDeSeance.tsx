@@ -44,7 +44,7 @@ const CompteRenduDeSeance: React.FC<{ journal: Journal }> = ({ journal }) => {
     };
 
     return (
-        <div className="mt-16 pt-12 border-t border-app-border/30 space-y-10">
+        <div className="space-y-6">
             <div className="flex items-center justify-between gap-4">
                 <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">
                     Compte rendu de séance

@@ -750,6 +750,38 @@
     }
   },
   "journal": {
+    "fil": {
+      "title": "Game journal",
+      "recording": "Session in progress",
+      "events_count": "{{count}} event(s)",
+      "export": "Export",
+      "campaign": "Campaign",
+      "journals": "Session journals",
+      "open": "Open",
+      "closed": "Closed",
+      "zone_live": "During play — the feed",
+      "zone_live_desc": "Every table event, at its time. The chronicle reads; the mechanical trace stays in the background.",
+      "filter": "Filter the feed",
+      "all": "All",
+      "chronicle_only": "Chronicle only",
+      "chronicle": "Chronicle",
+      "trace": "Trace",
+      "traces_hidden": "{{count}} mechanical trace(s) hidden",
+      "zone_after": "After play — report and review",
+      "zone_after_desc": "The session summary, then the scene-by-scene review: what is kept goes into the summary.",
+      "note_autosave": "Saved as you type.",
+      "types": {
+        "COMBAT": "Combat",
+        "NPC": "NPC",
+        "PJ": "PC",
+        "LOCATION": "Place",
+        "NOTE": "Note",
+        "DICE": "Dice",
+        "ORACLE": "Oracle",
+        "AUDIO": "Audio",
+        "SYSTEM": "System"
+      }
+    },
     "dashboard": {
       "title": "Journal OS",
       "new_journal": "New Journal",

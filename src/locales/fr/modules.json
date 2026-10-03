@@ -750,6 +750,38 @@
     }
   },
   "journal": {
+    "fil": {
+      "title": "Journal de jeu",
+      "recording": "Séance en cours",
+      "events_count": "{{count}} événement(s)",
+      "export": "Exporter",
+      "campaign": "Campagne",
+      "journals": "Journaux de séance",
+      "open": "En cours",
+      "closed": "Clôturé",
+      "zone_live": "Pendant la partie — le fil",
+      "zone_live_desc": "Chaque événement de la table, à son heure. La chronique se lit ; la trace mécanique reste plus discrète.",
+      "filter": "Filtrer le fil",
+      "all": "Tout",
+      "chronicle_only": "Chronique uniquement",
+      "chronicle": "Chronique",
+      "trace": "Trace",
+      "traces_hidden": "{{count}} trace(s) mécanique(s) masquée(s)",
+      "zone_after": "Après la partie — compte rendu et revue",
+      "zone_after_desc": "Le résumé de la séance, puis la revue scène par scène : ce qui est retenu part au résumé.",
+      "note_autosave": "Enregistrée à chaque frappe.",
+      "types": {
+        "COMBAT": "Combat",
+        "NPC": "PNJ",
+        "PJ": "PJ",
+        "LOCATION": "Lieu",
+        "NOTE": "Note",
+        "DICE": "Dés",
+        "ORACLE": "Oracle",
+        "AUDIO": "Audio",
+        "SYSTEM": "Système"
+      }
+    },
     "dashboard": {
       "title": "Journal OS",
       "new_journal": "Nouveau journal",

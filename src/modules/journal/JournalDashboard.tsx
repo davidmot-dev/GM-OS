@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useJournalStore } from './useJournalStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
-import { 
-  Book, 
-  History, 
-  Trash2, 
-  Download, 
-  Plus, 
-  Clock, 
-  Mic, 
+import {
+  Book,
+  History,
+  Trash2,
+  Download,
+  Plus,
+  Clock,
+  Mic,
   StopCircle,
   Sparkles,
   Loader2,
@@ -20,7 +20,9 @@ import {
   FileText,
   Settings,
   HelpCircle,
-  Dices
+  Dices,
+  Radio,
+  ScrollText,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { gmToast } from '../../stores/useToastStore';
@@ -28,45 +30,64 @@ import { useTranslation } from 'react-i18next';
 import CompteRenduDeSeance from './CompteRenduDeSeance';
 import RevueDeSeance from './RevueDeSeance';
 import { leFichierDuCompteRendu } from './compteRendu';
+import { natureDe } from './curation';
+import type { JournalEvent, JournalEventType } from './types';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import HorsDePortee from '../session/components/HorsDePortee';
 import { gmConfirm } from '../../stores/useModalStore';
+import { Panneau, Bouton, Etiquette, EnTeteDeModule } from '../../components/socle';
 
-const eventIcons: Record<string, React.ReactNode> = {
-  AUDIO: <Music className="size-4 text-accent" />,
-  COMBAT: <Swords className="size-4 text-gm-crimson" />,
-  NPC: <User className="size-4 text-gm-emerald" />,
+/**
+ * **Chaque type, sa couleur et son pictogramme** — des catégories, pas des
+ * états : un combat n'est pas une erreur. Les classes sont écrites en toutes
+ * lettres, Tailwind ne voit pas une classe composée à l'exécution.
+ */
+const TYPES: Record<JournalEventType, { icone: React.ElementType; teinte: string }> = {
+  COMBAT: { icone: Swords, teinte: 'text-gm-crimson border-gm-crimson/40 bg-gm-crimson/10' },
+  NPC: { icone: User, teinte: 'text-gm-emerald border-gm-emerald/40 bg-gm-emerald/10' },
   // Le PJ se distingue du PNJ d'un coup d'œil : c'est la ligne qu'on cherche
   // en relisant le fil.
-  PJ: <UserRound className="size-4 text-gm-cyan" />,
-  LOCATION: <MapPin className="size-4 text-gm-gold" />,
-  NOTE: <FileText className="size-4 text-app-muted" />,
-  SYSTEM: <Settings className="size-4 text-app-muted" />,
-  ORACLE: <HelpCircle className="size-4 text-gm-violet" />,
-  DICE: <Dices className="size-4 text-gm-violet" />,
+  PJ: { icone: UserRound, teinte: 'text-gm-cyan border-gm-cyan/40 bg-gm-cyan/10' },
+  LOCATION: { icone: MapPin, teinte: 'text-gm-gold border-gm-gold/40 bg-gm-gold/10' },
+  NOTE: { icone: FileText, teinte: 'text-app-text border-app-border bg-app-surface-2' },
+  DICE: { icone: Dices, teinte: 'text-gm-violet border-gm-violet/40 bg-gm-violet/10' },
+  ORACLE: { icone: HelpCircle, teinte: 'text-gm-violet border-gm-violet/40 bg-gm-violet/10' },
+  AUDIO: { icone: Music, teinte: 'text-accent border-accent/40 bg-accent/10' },
+  SYSTEM: { icone: Settings, teinte: 'text-app-muted border-app-border bg-app-surface-2' },
 };
 
+const titreDeZone = 'flex items-center gap-2 font-display text-base font-bold uppercase tracking-wider text-app-text';
+
+/**
+ * **Le journal de jeu** — refonte, L6, maquette retenue le 2026-09-27
+ * (`stitch/meneur/meneur-journal.png`). David a choisi **le fil puis la revue,
+ * sur une seule page** : 1. pendant la partie, le fil ; 2. après la partie, le
+ * compte rendu et la revue scène par scène ; la note de fin ; à gauche, les
+ * journaux de la campagne.
+ *
+ * « Filtrage par type d'extrait » (trois cases) n'existe pas dans le module :
+ * le seul filtre est la bascule trace / chronique, et la maquette ne la
+ * remplace pas.
+ */
 const JournalDashboard: React.FC = () => {
     /**
      * **Axe N — ce qui est à portée de main.** Le journal est le troisième des
      * cinq modules dédoublés.
      *
      * ⚠️ *Trouvé en chemin le 2026-08-23* : les deux suppressions de cet écran
-     * n'ont **aucune confirmation**, et elles sont invisibles jusqu'au survol.
-     * Un survol involontaire suivi d'un clic efface un journal de séance entier,
-     * sans un mot. *Une action qu'on ne voit pas venir ne peut pas s'éviter.*
-     * Le repli de séance n'y répond qu'à moitié — la confirmation manquante est
-     * un défaut à part, signalé à David.
+     * n'avaient **aucune confirmation**, et elles sont invisibles jusqu'au
+     * survol. *Une action qu'on ne voit pas venir ne peut pas s'éviter.*
      */
     const regime = useRegimeDInterface();
   const { t } = useTranslation();
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
-  const { 
-    journals, 
-    activeJournalId, 
-    setActiveJournal, 
-    removeEvent, 
+  const [chroniqueSeule, setChroniqueSeule] = useState(false);
+  const {
+    journals,
+    activeJournalId,
+    setActiveJournal,
+    removeEvent,
     deleteJournal,
     isRecording,
     toggleRecording,
@@ -89,12 +110,14 @@ const JournalDashboard: React.FC = () => {
     rappelle pas lui-même.
   */
   const campagnes = useSessionOSStore(s => s.campaigns);
+  const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
   useEffect(() => {
     reparerLesTitresDeCampagne(campagnes ?? []);
   }, [campagnes, reparerLesTitresDeCampagne]);
 
   const activeJournal = journals.find(j => j.id === activeJournalId);
-  const events = activeJournal?.events || [];
+  const events = useMemo(() => activeJournal?.events ?? [], [activeJournal]);
+  const campagneDuJournal = (campagnes ?? []).find(c => c.id === (activeJournal?.campaignId ?? activeCampaignId));
   /*
     **Le résumé se lit sur son champ, comme partout ailleurs.**
 
@@ -109,9 +132,19 @@ const JournalDashboard: React.FC = () => {
   */
   const hasAISummary = !!activeJournal?.resumeIA?.trim();
 
+  /** Le fil affiché, et ce que la bascule en retire. */
+  const fil = chroniqueSeule ? events.filter(e => natureDe(e) === 'chronique') : events;
+  const tracesMasquees = events.length - fil.length;
+  /** Les types présents dans ce journal, pour la légende — et combien de chacun. */
+  const typesPresents = useMemo(() => {
+    const compte = new Map<JournalEventType, number>();
+    events.forEach(e => compte.set(e.type, (compte.get(e.type) ?? 0) + 1));
+    return (Object.keys(TYPES) as JournalEventType[]).filter(ty => compte.has(ty)).map(ty => [ty, compte.get(ty)!] as const);
+  }, [events]);
+
   const handleAISummary = async () => {
     if (!activeJournalId || events.length === 0) return;
-    
+
     setIsSummarizing(true);
     try {
       await generateAISummary(activeJournalId);
@@ -133,7 +166,7 @@ const JournalDashboard: React.FC = () => {
 
   const handleSyncToNotebook = async () => {
     if (!activeJournalId) return;
-    
+
     setIsSyncing(true);
     try {
       await syncToNotebook(activeJournalId);
@@ -173,233 +206,233 @@ const JournalDashboard: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  const nouveauJournal = () => {
+    const defaultName = t('modules:journal.messages.default_session_name', {
+      date: format(new Date(), 'dd/MM/yyyy HH:mm')
+    });
+    useJournalStore.getState().addJournal(defaultName);
+    gmToast(t('modules:journal.messages.new_journal_created', { name: defaultName }), 'success');
+  };
+
   return (
-    <div className="flex h-full bg-app-bg text-app-text overflow-hidden">
-      {/* Sidebar - Journal List */}
-      <aside className="w-80 border-r border-app-border flex flex-col bg-app-surface/20">
-        <header className="p-6 border-b border-app-border">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
-              <Book className="size-6 text-accent" />
-              {t('modules:journal.dashboard.title')}
-            </h2>
-            <button 
-              onClick={() => {
-                const defaultName = t('modules:journal.messages.default_session_name', {
-                  date: format(new Date(), 'dd/MM/yyyy HH:mm')
-                });
-                useJournalStore.getState().addJournal(defaultName);
-                gmToast(t('modules:journal.messages.new_journal_created', { name: defaultName }), 'success');
-              }}
-              className="p-2 bg-accent/10 hover:bg-accent/20 rounded-lg text-accent transition-all active:scale-95"
-              title={t('modules:journal.dashboard.new_journal')}
-            >
-              <Plus className="size-5" />
-            </button>
-          </div>
-          
-          <button 
-            onClick={() => toggleRecording()}
-            className={`w-full py-3 rounded-xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 transition-all border shadow-lg ${
-              isRecording 
-                ? 'bg-etat-danger/20 border-etat-danger/50 text-etat-danger animate-pulse' 
-                : 'bg-accent/10 border-accent/30 text-accent hover:bg-accent/20'
-            }`}
+    <div className="flex h-full min-h-0 flex-col gap-3 p-4 text-app-text">
+      <EnTeteDeModule
+        titre={t('modules:journal.fil.title')}
+        surtitre={[campagneDuJournal?.name, activeJournal?.title].filter(Boolean).join(' · ') || undefined}
+        etat={<>
+          {isRecording && <Etiquette ton="danger"><Radio size={11} className="animate-pulse" /> {t('modules:journal.fil.recording')}</Etiquette>}
+          {activeJournal && <Etiquette ton="neutre">{t('modules:journal.fil.events_count', { count: events.length })}</Etiquette>}
+        </>}
+        actions={<>
+          <Bouton
+            aLaTable={regime.aLaTable}
+            variante="accent"
+            icone={isSummarizing ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
+            onClick={handleAISummary}
+            disabled={isSummarizing || !activeJournalId || events.length === 0}
           >
-            {isRecording ? <StopCircle className="size-4" /> : <Mic className="size-4" />}
-            {isRecording ? t('modules:journal.dashboard.session_in_progress') : t('modules:journal.dashboard.new_session')}
-          </button>
-        </header>
-
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
-          {journals.map((j) => (
-            <div
-              key={j.id}
-              onClick={() => setActiveJournal(j.id)}
-              className={`w-full group text-left p-4 rounded-xl border transition-all relative overflow-hidden cursor-pointer ${
-                activeJournalId === j.id 
-                  ? 'bg-accent/10 border-accent/40 shadow-glow-accent/10' 
-                  : 'bg-app-surface/40 border-app-border/40 hover:border-accent/20'
-              }`}
+            {isSummarizing ? t('modules:journal.dashboard.analyzing') : t('modules:journal.dashboard.summarize_ia')}
+          </Bouton>
+          {hasAISummary && (
+            <Bouton
+              aLaTable={regime.aLaTable}
+              icone={isSyncing ? <Loader2 size={15} className="animate-spin" /> : <Book size={15} />}
+              onClick={handleSyncToNotebook}
+              disabled={isSyncing}
             >
-              {activeJournalId === j.id && (
-                <div className="absolute top-0 left-0 w-1 h-full bg-accent" />
-              )}
-              <div className="flex justify-between items-start">
-                <span className={`text-xs font-bold leading-tight ${activeJournalId === j.id ? 'text-accent' : 'text-app-text'}`}>
-                  {j.title}
-                </span>
-                <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_session')} compact surInvitation icone={<Trash2 className="size-3" />}>
-                <button 
-                   onClick={(e) => {
-                       e.stopPropagation();
-                       /*
-                         **La confirmation manquait entièrement.** Un survol
-                         involontaire suivi d'un clic effaçait un journal de
-                         séance et tous ses événements, sans un mot — et le
-                         bouton est `opacity-0` jusqu'au survol, donc *on ne
-                         pouvait ni le voir venir ni l'éviter.*
-                       */
-                       gmConfirm(
-                           t('modules:journal.dashboard.delete_session_confirm', { title: j.title }),
-                           () => deleteJournal(j.id),
-                       );
-                   }}
-                   className="opacity-0 group-hover:opacity-100 p-1 hover:bg-etat-danger/20 rounded text-etat-danger transition-all"
-                   title={t('modules:journal.dashboard.delete_session')}
-                >
-                  <Trash2 className="size-3" />
-                </button>
-                </HorsDePortee>
+              {t('modules:journal.dashboard.sync_notebook')}
+            </Bouton>
+          )}
+          <Bouton aLaTable={regime.aLaTable} icone={<Download size={15} />} onClick={handleExport} disabled={!activeJournal} title={t('modules:journal.dashboard.export_journal')}>
+            {t('modules:journal.fil.export')}
+          </Bouton>
+        </>}
+      />
+
+      <div className="flex min-h-0 flex-1 gap-4">
+        {/* ── À gauche : la campagne et ses journaux ── */}
+        <aside className="flex w-72 shrink-0 flex-col gap-3">
+          <Panneau className="flex shrink-0 flex-col gap-3 p-4">
+            {campagneDuJournal && (
+              <div>
+                <p className="text-ui-10 font-black uppercase tracking-widest text-app-muted">{t('modules:journal.fil.campaign')}</p>
+                <p className="truncate font-display text-lg font-bold text-app-text">{campagneDuJournal.name}</p>
               </div>
-              <div className="flex items-center gap-3 mt-3 text-ui-9 text-app-subtle font-mono uppercase tracking-tighter">
-                <span className="flex items-center gap-1"><Clock className="size-2.5" /> {j.duration || '--:--'}</span>
-                <span className="flex items-center gap-1"><Book className="size-2.5" /> {j.events.length}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </aside>
-
-      {/* Main Content - Selected Journal */}
-      <div className="flex-1 flex flex-col relative">
-        <header className="h-20 border-b border-app-border flex items-center justify-between px-8 bg-app-surface/10 backdrop-blur-xl">
-          <div className="flex items-center gap-4">
-            <h1 className="text-lg font-black tracking-tight text-app-text italic truncate max-w-md">
-              {activeJournal?.title || t('modules:journal.dashboard.select_session')}
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={handleAISummary}
-              disabled={isSummarizing || !activeJournalId || events.length === 0}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black tracking-widest uppercase transition-all shadow-lg ${
-                isSummarizing 
-                  ? 'bg-accent/20 text-accent/50 cursor-wait animate-pulse' 
-                  : 'bg-accent text-app-on-accent hover:scale-105 active:scale-95 shadow-glow-accent/30'
-              } disabled:opacity-20 disabled:grayscale`}
-            >
-              {isSummarizing ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
-              {isSummarizing ? t('modules:journal.dashboard.analyzing') : t('modules:journal.dashboard.summarize_ia')}
-            </button>
-
-            {hasAISummary && (
-              <button 
-                onClick={handleSyncToNotebook}
-                disabled={isSyncing}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black tracking-widest uppercase transition-all border shadow-lg ${
-                  isSyncing 
-                    ? 'bg-accent/20 border-accent/40 text-accent/50 animate-pulse' 
-                    : 'bg-accent/10 border-accent/20 text-accent hover:bg-accent/20 shadow-glow-accent/20'
-                }`}
-              >
-                {isSyncing ? <Loader2 className="size-4 animate-spin" /> : <Book className="size-4" />}
-                {t('modules:journal.dashboard.sync_notebook')}
-              </button>
             )}
-
-            <button 
-              onClick={handleExport}
-              disabled={!activeJournal}
-              className="p-2.5 bg-app-surface border border-app-border hover:bg-app-bg rounded-xl text-app-muted hover:text-app-text transition-all shadow-lg disabled:opacity-20"
-              title={t('modules:journal.dashboard.export_journal')}
+            <Bouton aLaTable={regime.aLaTable} icone={<Plus size={15} />} onClick={nouveauJournal}>
+              {t('modules:journal.dashboard.new_journal')}
+            </Bouton>
+            <Bouton
+              aLaTable={regime.aLaTable}
+              variante={isRecording ? 'danger' : 'neutre'}
+              icone={isRecording ? <StopCircle size={15} /> : <Mic size={15} />}
+              onClick={() => toggleRecording()}
+              aria-pressed={isRecording}
             >
-              <Download className="size-5" />
-            </button>
-          </div>
-        </header>
+              {isRecording ? t('modules:journal.dashboard.session_in_progress') : t('modules:journal.dashboard.new_session')}
+            </Bouton>
+          </Panneau>
 
-        <main className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar bg-app-bg/50">
-          {!activeJournalId ? (
-            <div className="h-full flex flex-col items-center justify-center text-app-text-muted opacity-50 space-y-6">
-              <History className="size-24 animate-pulse" />
-              <div className="text-center">
-                <p className="text-2xl font-black uppercase tracking-widest italic mb-2">{t('modules:journal.dashboard.empty_history')}</p>
-                <p className="text-sm font-medium tracking-tight">{t('modules:journal.dashboard.empty_desc')}</p>
-              </div>
-            </div>
-          ) : events.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-app-text-muted opacity-50 space-y-3">
-              <Book className="size-16" />
-              <p className="text-lg font-bold italic tracking-tighter">{t('modules:journal.dashboard.ready_for_adventure')}</p>
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4">
-                {events.map((event) => (
-                  <div 
-                    key={event.id}
-                    className="group relative bg-app-surface/30 border border-app-border/20 rounded-2xl p-6 hover:border-accent/40 transition-all hover:bg-app-surface/40 shadow-sm"
-                  >
-                    <div className="flex items-start justify-between gap-6">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="p-2 bg-app-surface/50 rounded-xl shadow-inner border border-app-border/30">
-                            {eventIcons[event.type]}
-                          </div>
-                          <div className="flex flex-col">
-                            <h3 className="text-sm font-bold text-app-text-bright leading-none mb-1">
-                              {event.title}
-                            </h3>
-                            <span className="text-ui-10 uppercase tracking-widest text-app-text-muted font-black font-mono opacity-50">
-                              {format(event.timestamp, 'HH:mm:ss')}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-xs text-app-text-muted leading-relaxed whitespace-pre-wrap pl-1 border-l-2 border-app-border/10 ml-5 mt-1">
-                          {event.content}
-                        </p>
-                      </div>
-                      
-                      <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_event')} compact surInvitation icone={<Trash2 className="size-4" />}>
-                      <button 
-                        onClick={() => gmConfirm(
-                          t('modules:journal.dashboard.delete_event_confirm'),
-                          () => removeEvent(activeJournalId, event.id),
-                        )}
-                        className="opacity-0 group-hover:opacity-100 p-2 hover:bg-etat-danger/10 rounded-xl text-app-subtle hover:text-etat-danger transition-all"
-                        title={t('modules:journal.dashboard.delete_event')}
+          <p className="flex items-center justify-between px-1 text-ui-10 font-black uppercase tracking-widest text-app-muted">
+            {t('modules:journal.fil.journals')}
+            <span>{journals.length}</span>
+          </p>
+          <div className="-mr-2 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar">
+            {journals.map((j) => {
+              const actif = activeJournalId === j.id;
+              const enCours = !j.endTimestamp;
+              return (
+                <div
+                  key={j.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={actif}
+                  onClick={() => setActiveJournal(j.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') setActiveJournal(j.id); }}
+                  className={`group relative cursor-pointer rounded-lg border p-3 transition-colors ${
+                    actif ? 'border-accent bg-accent/10' : 'border-app-border bg-app-surface/60 hover:border-accent/50'
+                  }`}
+                >
+                  {actif && <span className="absolute inset-y-0 left-0 w-1 rounded-l-lg bg-accent" />}
+                  <div className="flex items-start justify-between gap-2">
+                    <span className={`text-sm font-bold leading-tight ${actif ? 'text-accent' : 'text-app-text'}`}>{j.title}</span>
+                    <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_session')} compact surInvitation icone={<Trash2 className="size-3" />}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          /*
+                            **La confirmation manquait entièrement.** Un survol
+                            involontaire suivi d'un clic effaçait un journal de
+                            séance et tous ses événements, sans un mot.
+                          */
+                          gmConfirm(
+                            t('modules:journal.dashboard.delete_session_confirm', { title: j.title }),
+                            () => deleteJournal(j.id),
+                          );
+                        }}
+                        className="rounded p-1 text-app-muted opacity-0 transition-all hover:bg-etat-danger/15 hover:text-etat-danger group-hover:opacity-100"
+                        title={t('modules:journal.dashboard.delete_session')}
                       >
-                        <Trash2 className="size-4" />
+                        <Trash2 className="size-3" />
                       </button>
-                      </HorsDePortee>
-                    </div>
+                    </HorsDePortee>
                   </div>
-                ))}
-              </div>
-
-              {/*
-                **Le compte rendu a sa place a lui depuis le 2026-08-17.**
-
-                Le résumé était enregistré comme un ÉVÉNEMENT du journal, donc il
-                s'affichait dans le fil — et `summarizeSession` le relisait à la
-                passe suivante, se résumant lui-même. En le sortant du flux, il
-                fallait lui rendre un écran ; il en porte maintenant deux autres
-                avec lui, l'état des lieux et ce qui attend, qui ne demandent
-                aucun modèle.
-              */}
-              {activeJournal && <CompteRenduDeSeance journal={activeJournal} />}
-
-              {/*
-                **La revue vient APRÈS le compte rendu dans l'écran, et avant lui
-                dans l'ordre des étapes.** Le § 4.1 met la curation en premier des
-                deux, mais on la lit en descendant : on cure ce qu'on vient de
-                trouver insuffisant. *Un résumé raté se relance ; une curation
-                ratée fausse tout ce qui en découle.*
-              */}
-              {activeJournal && <RevueDeSeance journal={activeJournal} />}
-
-              {/* Final Note Section */}
-              <div className="mt-16 pt-12 border-t border-app-border/30">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="size-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center shadow-inner">
-                    <FileText className="size-5 text-accent" />
+                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-nowrap text-xs text-app-muted">
+                    <Etiquette ton={enCours ? 'accent' : 'neutre'}>
+                      {enCours ? t('modules:journal.fil.open') : t('modules:journal.fil.closed')}
+                    </Etiquette>
+                    <span className="flex items-center gap-1 font-mono"><Clock className="size-3" /> {j.duration || '--:--'}</span>
+                    <span>{t('modules:journal.fil.events_count', { count: j.events.length })}</span>
                   </div>
+                </div>
+              );
+            })}
+          </div>
+        </aside>
+
+        {/* ── Le journal choisi, en deux zones ── */}
+        <section aria-label={t('modules:journal.fil.title')} className="-mr-2 min-w-0 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+          {!activeJournalId ? (
+            <Panneau vide className="flex h-full flex-col items-center justify-center gap-3 text-center">
+              <History size={40} className="text-app-subtle" />
+              <p className="font-display text-lg text-app-text">{t('modules:journal.dashboard.empty_history')}</p>
+              <p className="text-sm text-app-muted">{t('modules:journal.dashboard.empty_desc')}</p>
+            </Panneau>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {/* 1. Pendant la partie — le fil */}
+              <Panneau className="flex flex-col gap-3 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-black uppercase tracking-[0.2em] text-accent">{t('modules:journal.dashboard.final_note_title')}</h3>
-                    <p className="text-ui-10 text-app-subtle font-bold uppercase tracking-tighter opacity-80">{t('modules:journal.dashboard.final_note_desc')}</p>
+                    <h2 className={titreDeZone}><span className="text-accent">1.</span> {t('modules:journal.fil.zone_live')}</h2>
+                    <p className="mt-0.5 text-xs text-app-muted">{t('modules:journal.fil.zone_live_desc')}</p>
                   </div>
+                  <div role="radiogroup" aria-label={t('modules:journal.fil.filter')} className="flex overflow-hidden rounded-lg border border-app-border">
+                    {[false, true].map(seule => (
+                      <button
+                        key={String(seule)}
+                        role="radio"
+                        aria-checked={chroniqueSeule === seule}
+                        onClick={() => setChroniqueSeule(seule)}
+                        className={`px-3 py-2 text-ui-10 font-black uppercase tracking-widest transition-colors ${
+                          chroniqueSeule === seule ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'
+                        }`}
+                      >
+                        {seule ? t('modules:journal.fil.chronicle_only') : t('modules:journal.fil.all')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {typesPresents.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 border-y border-app-border py-2">
+                    {typesPresents.map(([type, n]) => (
+                      <PastilleDeType key={type} type={type} suffixe={` ${n}`} />
+                    ))}
+                  </div>
+                )}
+
+                {events.length === 0 ? (
+                  <p className="py-10 text-center text-sm italic text-app-muted">{t('modules:journal.dashboard.ready_for_adventure')}</p>
+                ) : (
+                  <ol className="flex flex-col gap-1.5">
+                    {fil.map(event => (
+                      <LigneDuFil
+                        key={event.id}
+                        evenement={event}
+                        supprimer={
+                          <HorsDePortee regime={regime} libelle={t('modules:journal.dashboard.delete_event')} compact surInvitation icone={<Trash2 className="size-3.5" />}>
+                            <button
+                              onClick={() => gmConfirm(
+                                t('modules:journal.dashboard.delete_event_confirm'),
+                                () => removeEvent(activeJournalId, event.id),
+                              )}
+                              className="rounded p-1 text-app-muted opacity-0 transition-all hover:bg-etat-danger/15 hover:text-etat-danger group-hover:opacity-100"
+                              title={t('modules:journal.dashboard.delete_event')}
+                            >
+                              <Trash2 className="size-3.5" />
+                            </button>
+                          </HorsDePortee>
+                        }
+                      />
+                    ))}
+                  </ol>
+                )}
+                {tracesMasquees > 0 && (
+                  <p className="text-center text-ui-10 text-app-subtle">{t('modules:journal.fil.traces_hidden', { count: tracesMasquees })}</p>
+                )}
+              </Panneau>
+
+              {/* 2. Après la partie — compte rendu et revue */}
+              {events.length > 0 && activeJournal && (
+                <Panneau className="flex flex-col gap-6 p-4">
+                  <div>
+                    <h2 className={titreDeZone}><span className="text-accent">2.</span> {t('modules:journal.fil.zone_after')}</h2>
+                    <p className="mt-0.5 text-xs text-app-muted">{t('modules:journal.fil.zone_after_desc')}</p>
+                  </div>
+                  {/*
+                    **Le compte rendu a sa place a lui depuis le 2026-08-17.**
+
+                    Le résumé était enregistré comme un ÉVÉNEMENT du journal, donc il
+                    s'affichait dans le fil — et `summarizeSession` le relisait à la
+                    passe suivante, se résumant lui-même.
+                  */}
+                  <CompteRenduDeSeance journal={activeJournal} />
+                  {/*
+                    **La revue vient APRÈS le compte rendu dans l'écran, et avant lui
+                    dans l'ordre des étapes.** On la lit en descendant : on cure ce
+                    qu'on vient de trouver insuffisant. *Un résumé raté se relance ;
+                    une curation ratée fausse tout ce qui en découle.*
+                  */}
+                  <RevueDeSeance journal={activeJournal} />
+                </Panneau>
+              )}
+
+              {/* La note de fin de séance */}
+              <Panneau className="flex flex-col gap-3 p-4">
+                <div>
+                  <h2 className={titreDeZone}><ScrollText size={16} className="text-accent" /> {t('modules:journal.dashboard.final_note_title')}</h2>
+                  <p className="mt-0.5 text-xs text-app-muted">{t('modules:journal.dashboard.final_note_desc')}</p>
                 </div>
                 <textarea
                   value={activeJournal?.finalNote || ''}
@@ -409,14 +442,61 @@ const JournalDashboard: React.FC = () => {
                     }
                   }}
                   placeholder={t('modules:journal.dashboard.final_note_placeholder')}
-                  className="w-full h-48 bg-app-surface/20 border border-app-border/40 rounded-2xl p-6 text-sm text-app-text placeholder:text-app-subtle focus:outline-none focus:border-accent/40 focus:bg-accent/5 transition-all resize-none custom-scrollbar shadow-inner leading-relaxed"
+                  className="h-40 w-full resize-y rounded-lg border border-app-border bg-app-bg p-4 text-sm leading-relaxed text-app-text placeholder:text-app-subtle focus:border-accent/60 focus:outline-none custom-scrollbar"
                 />
-              </div>
-            </>
+                {/* Elle s'écrit à chaque frappe : un bouton « Enregistrer » mentirait. */}
+                <p className="text-right text-ui-10 text-app-subtle">{t('modules:journal.fil.note_autosave')}</p>
+              </Panneau>
+            </div>
           )}
-        </main>
+        </section>
       </div>
     </div>
+  );
+};
+
+/** Le type d'un événement, en pastille de sa couleur. */
+const PastilleDeType: React.FC<{ type: JournalEventType; suffixe?: string }> = ({ type, suffixe }) => {
+  const { t } = useTranslation();
+  const { icone: Icone, teinte } = TYPES[type] ?? TYPES.SYSTEM;
+  return (
+    <span className={`inline-flex shrink-0 items-center gap-1 rounded border px-1.5 py-0.5 text-ui-9 font-black uppercase tracking-wider ${teinte}`}>
+      <Icone size={11} />{t(`modules:journal.fil.types.${type}`)}{suffixe}
+    </span>
+  );
+};
+
+/**
+ * **Une ligne du fil.** La chronique se lit — un titre, son texte, sur une
+ * carte ; la trace se survole — une ligne plus discrète, sur le fond. *On ne
+ * supprime pas, on distingue* : c'est la règle de la revue, déjà.
+ */
+const LigneDuFil: React.FC<{ evenement: JournalEvent; supprimer: React.ReactNode }> = ({ evenement, supprimer }) => {
+  const { t } = useTranslation();
+  const chronique = natureDe(evenement) === 'chronique';
+  return (
+    <li className={`group grid grid-cols-[4.5rem_auto_1fr_auto] items-start gap-3 rounded-lg px-3 py-2 ${
+      chronique ? 'border border-app-border bg-app-surface-2/60' : ''
+    }`}>
+      <span className={`pt-0.5 font-mono text-xs ${chronique ? 'font-bold text-accent' : 'text-app-subtle'}`}>
+        {format(evenement.timestamp, 'HH:mm:ss')}
+      </span>
+      <PastilleDeType type={evenement.type} />
+      {chronique ? (
+        <div className="min-w-0">
+          <p className="text-sm font-bold text-app-text">{evenement.title}</p>
+          {evenement.content && <p className="mt-0.5 whitespace-pre-wrap text-xs leading-relaxed text-app-muted">{evenement.content}</p>}
+        </div>
+      ) : (
+        <p className="min-w-0 truncate pt-0.5 text-xs text-app-subtle" title={evenement.content}>
+          {evenement.title}{evenement.content ? ` — ${evenement.content}` : ''}
+        </p>
+      )}
+      <span className="flex items-center gap-1">
+        {supprimer}
+        <Etiquette ton={chronique ? 'accent' : 'neutre'}>{chronique ? t('modules:journal.fil.chronicle') : t('modules:journal.fil.trace')}</Etiquette>
+      </span>
+    </li>
   );
 };
 
