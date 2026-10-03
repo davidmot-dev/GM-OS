@@ -1511,6 +1511,24 @@
     "deactivate": "DEACTIVATE PROJECTION"
   },
   "random_tables": {
+    "title": "Random tables",
+    "pupitre": {
+      "launch_dice": "Roll {{dice}}",
+      "space_key": "Space",
+      "total": "Total",
+      "reset_modifier": "Reset the modifier",
+      "logged_toast": "Roll logged to the journal and the session notes.",
+      "log_no_session": "No session in progress: nowhere to log this roll.",
+      "clear_history": "Clear history",
+      "clear_history_confirm": "Clear the {{count}} roll(s) from history? They can no longer be re-injected.",
+      "reinject_hint": "Click a card to re-inject it.",
+      "reinject": "Re-inject",
+      "history_empty": "No roll yet.",
+      "roll_short": "Roll: {{value}}",
+      "raw_short": "raw {{raw}} ({{mod}})",
+      "open_atelier": "Open the table workshop",
+      "atelier_tooltip": "Create or fix a table"
+    },
     "sidebar": {
       "config_title": "Config & Selection",
       "universe_label": "Universe / Game",
@@ -1522,13 +1540,13 @@
       "modifier_label": "Roll Modifier",
       "manual_roll_label": "Manual Roll",
       "manual_roll_placeholder": "ex: 15",
-      "show_button": "Show",
+      "show_button": "Apply",
       "launch_button": "ROLL",
       "history_title": "Recent History"
     },
     "main": {
       "waiting_title": "Waiting for roll",
-      "waiting_desc": "Select a table in the sidebar to start generating random results.",
+      "waiting_desc": "Choose a universe and a table above, then roll — or press Space.",
       "raw_roll": "Raw Roll",
       "mod": "Mod",
       "source": "Source: {{table}}",

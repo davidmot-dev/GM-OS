@@ -1511,6 +1511,24 @@
     "deactivate": "DÉSACTIVER LA PROJECTION"
   },
   "random_tables": {
+    "title": "Tables aléatoires",
+    "pupitre": {
+      "launch_dice": "Lancer {{dice}}",
+      "space_key": "Espace",
+      "total": "Total",
+      "reset_modifier": "Remettre le modificateur à zéro",
+      "logged_toast": "Tirage consigné au journal et dans les notes de la séance.",
+      "log_no_session": "Aucune séance en cours : rien où consigner ce tirage.",
+      "clear_history": "Effacer l'historique",
+      "clear_history_confirm": "Effacer les {{count}} tirage(s) de l'historique ? Ils ne pourront plus être réinjectés.",
+      "reinject_hint": "Un clic sur une carte la réinjecte.",
+      "reinject": "Réinjecter",
+      "history_empty": "Aucun tirage pour l’instant.",
+      "roll_short": "Jet : {{value}}",
+      "raw_short": "brut {{raw}} ({{mod}})",
+      "open_atelier": "Ouvrir l'atelier des tables",
+      "atelier_tooltip": "Créer ou corriger une table"
+    },
     "sidebar": {
       "config_title": "Config & Sélection",
       "universe_label": "Univers / Jeu",
@@ -1522,13 +1540,13 @@
       "modifier_label": "Modificateur de Jet",
       "manual_roll_label": "Jet Manuel",
       "manual_roll_placeholder": "ex: 15",
-      "show_button": "Afficher",
+      "show_button": "Valider",
       "launch_button": "LANCER",
       "history_title": "Historique Récent"
     },
     "main": {
       "waiting_title": "En attente de tirage",
-      "waiting_desc": "Sélectionnez une table dans la barre latérale pour commencer à générer des résultats aléatoires.",
+      "waiting_desc": "Choisissez un univers et une table ci-dessus, puis lancez — ou appuyez sur Espace.",
       "raw_roll": "Jet Brut",
       "mod": "Mod",
       "source": "Source: {{table}}",

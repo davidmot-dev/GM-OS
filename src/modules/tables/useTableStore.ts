@@ -23,6 +23,14 @@ interface TableState {
     setModifier: (mod: number) => void;
     roll: (manualRoll?: number) => void;
     clearCurrentResult: () => void;
+    /**
+     * **Réinjecter** un tirage de l'historique — retenu par David le
+     * 2026-09-29 (refonte, tables aléatoires) : il redevient le résultat
+     * affiché, avec ses gestes (verser, journaliser). Il ne s'ajoute pas une
+     * seconde fois à l'historique : on relit un tirage, on n'en refait pas un.
+     */
+    reinjecter: (resultat: TableResult) => void;
+    effacerLHistorique: () => void;
     sendToSession: (recipientName?: string) => void;
 }
 
@@ -107,6 +115,10 @@ export const useTableStore = create<TableState>()(
             },
 
             clearCurrentResult: () => set({ currentResult: null }),
+
+            reinjecter: (resultat) => set({ currentResult: resultat }),
+
+            effacerLHistorique: () => set({ history: [] }),
 
             sendToSession: (recipientName?: string) => {
                 const { currentResult } = get();
