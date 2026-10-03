@@ -656,26 +656,26 @@
       "boucleNon": "Joue une fois, puis garde sa dernière image — cliquez pour boucler"
     },
     "detail": {
-      "classification": "Classification Dossier",
-      "noFolders": "Aucun dossier configuré",
-      "neuralInterface": "Neural Interface",
-      "persistent": "Persistant",
-      "matrixTags": "Matrice de Tags",
-      "noTags": "Aucun Tag Actif",
-      "identifier": "Identifiant",
+      "classification": "Collections",
+      "noFolders": "Aucune collection",
+      "neuralInterface": "Fiche du média",
+      "persistent": "Protégé",
+      "matrixTags": "Étiquettes",
+      "noTags": "Aucune étiquette",
+      "identifier": "Nom",
       "importDate": "Date d'import",
-      "operationalAttribution": "Attribution Opérationnelle",
-      "noCampaigns": "Aucune unité opérationnelle détectée",
-      "deleteConfirm": "INITIER LA SUPPRESSION : \"{{name}}\" ?",
+      "operationalAttribution": "Campagnes",
+      "noCampaigns": "Aucune campagne",
+      "deleteConfirm": "Supprimer « {{name}} » ? Cela ne s’annule pas.",
       "placeholders": {
-        "newTag": "TRANSMETTRE NOUVEAU TAG..."
+        "newTag": "Ajouter une étiquette…"
       },
       "actions": {
-        "select": "Sélectionner",
+        "select": "Utiliser",
         "delete": "Supprimer",
-        "closePanel": "Fermer le panneau tactique",
-        "enablePersistence": "Activer la persistance (Protéger du nettoyage)",
-        "disablePersistence": "Désactiver la persistance (Risque de suppression)",
+        "closePanel": "Fermer la fiche",
+        "enablePersistence": "Protéger du nettoyage",
+        "disablePersistence": "Ne plus protéger du nettoyage",
         "removeTag": "Retirer le tag {{tag}}",
         "linkCampaign": "Lier à {{name}}",
         "unlinkCampaign": "Délier de {{name}}"
@@ -702,7 +702,7 @@
       "documentNotRendered": "Ce format ne s'affiche pas ici. Le Hub sait le ranger et le transmettre à une fiche, mais seuls les PDF et le texte brut se lisent à l'écran."
     },
     "thumbnail": {
-      "audio": "Données Soniques",
+      "audio": "Son",
       "document": "Fichier {{ext}}"
     },
     "notifications": {

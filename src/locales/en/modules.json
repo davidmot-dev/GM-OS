@@ -656,26 +656,26 @@
       "boucleNon": "Plays once, then holds its last frame — click to loop"
     },
     "detail": {
-      "classification": "Folder Classification",
-      "noFolders": "No folders configured",
-      "neuralInterface": "Neural Interface",
-      "persistent": "Persistent",
-      "matrixTags": "Tag Matrix",
-      "noTags": "No Active Tags",
-      "identifier": "Identifier",
-      "importDate": "Import Date",
-      "operationalAttribution": "Operational Attribution",
-      "noCampaigns": "No operational unit detected",
-      "deleteConfirm": "INITIATE DELETION: \"{{name}}\"?",
+      "classification": "Collections",
+      "noFolders": "No collection",
+      "neuralInterface": "Media sheet",
+      "persistent": "Protected",
+      "matrixTags": "Tags",
+      "noTags": "No tag",
+      "identifier": "Name",
+      "importDate": "Import date",
+      "operationalAttribution": "Campaigns",
+      "noCampaigns": "No campaign",
+      "deleteConfirm": "Delete “{{name}}”? This cannot be undone.",
       "placeholders": {
-        "newTag": "TRANSMIT NEW TAG..."
+        "newTag": "Add a tag…"
       },
       "actions": {
-        "select": "Select",
+        "select": "Use",
         "delete": "Delete",
-        "closePanel": "Close tactical panel",
-        "enablePersistence": "Enable persistence (Protect from cleanup)",
-        "disablePersistence": "Disable persistence (Risk of deletion)",
+        "closePanel": "Close the sheet",
+        "enablePersistence": "Protect from cleanup",
+        "disablePersistence": "Stop protecting from cleanup",
         "removeTag": "Remove tag {{tag}}",
         "linkCampaign": "Link to {{name}}",
         "unlinkCampaign": "Unlink from {{name}}"
@@ -702,7 +702,7 @@
       "documentNotRendered": "This format cannot be shown here. The Hub can store it and hand it to a sheet, but only PDFs and plain text can be read on screen."
     },
     "thumbnail": {
-      "audio": "Sonic Data",
+      "audio": "Sound",
       "document": "{{ext}} File"
     },
     "notifications": {

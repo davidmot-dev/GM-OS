@@ -362,7 +362,7 @@ function App() {
           <ModalProvider />
           <ToastProvider />
           <AudioRouter />
-          <MediaBrowser isOpen={isMediaHubOpen} onClose={closeMediaHub} onSelect={() => {}} title="MEDIA HUB" />
+          <MediaBrowser isOpen={isMediaHubOpen} onClose={closeMediaHub} onSelect={() => {}} />
           <LoadingOverlay />
           {showSplash && <SplashScreenSelector onComplete={() => setShowSplash(false)} />}
           

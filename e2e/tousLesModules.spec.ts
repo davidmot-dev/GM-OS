@@ -117,7 +117,7 @@ test.describe('les modules de la barre latérale', () => {
       modal, ça ne se voit pas dans une liste de boutons.*
     */
     test('la Médiathèque s’ouvre en surcouche, et se referme', async () => {
-        const surcouches = () => gmos.fenetre.locator('div.fixed.inset-0').filter({ hasText: 'MEDIA HUB' });
+        const surcouches = () => gmos.fenetre.locator('div.fixed.inset-0').filter({ hasText: /médiathèque/i }); // « Media Hub » jusqu'à la refonte (L6, 2026-10-03)
 
         await ouvrirLeModule(gmos, 'Médiathèque');
         await expect(surcouches().first()).toBeVisible({ timeout: 15_000 });

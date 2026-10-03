@@ -5,11 +5,11 @@ import { correspondALaRecherche } from './media/rechercheDeMedia';
 import { analyserLaRecherche, passeLeFiltreDeTags } from './media/filtreDeTags';
 import { tagsParUsage, appliquerEnLot, renommerDansLaBibliotheque, formeCanonique } from './media/vocabulaireDesTags';
 import type { MediaType, MediaItem } from '../stores/useMediaStore';
-import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Tag, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw, Unplug } from 'lucide-react';
+import { Search, Image as ImageIcon, Music, Film, UploadCloud, Trash2, X, Check, FileText, Plus, Edit2, Users, Clock, ShieldAlert, ArrowDownAZ, ChevronDown, ListFilter, Folder, Lock, RotateCcw, Unplug } from 'lucide-react';
 import { usagesDesMedias } from '../services/proprietairesDesMedias';
 import { filtreDeSelection } from '../stores/typesDeMedia';
 import { importerPlusieursMedias } from './media/importerPlusieursMedias';
-import { gmPrompt } from '../stores/useModalStore';
+import { gmPrompt, gmConfirm } from '../stores/useModalStore';
 import { gmToast } from '../stores/useToastStore';
 import { mediasRestituables, restaurerLesMedias } from '../modules/session/logic/MiroirDesMedias';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
@@ -19,6 +19,7 @@ import { MediaItemThumbnail } from '../modules/image/components/MediaItemThumbna
 import { FullScreenPreview } from '../modules/image/components/FullScreenPreview';
 import { TacticalDetailPanel } from '../modules/image/components/TacticalDetailPanel';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
+import { Etiquette } from './socle';
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
     'image': <ImageIcon size={14} className="text-gm-cyan" />,
@@ -26,6 +27,23 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
     'video': <Film size={14} className="text-gm-violet" />,
     'document': <FileText size={14} className="text-gm-emerald" />,
 };
+
+/** Une ligne de la colonne de gauche : un libellé, son compte, l'état choisi. */
+const LigneDeFiltre: React.FC<{
+    actif: boolean; onClick: () => void; icone: React.ReactNode; libelle: string; compte?: number; ton?: 'neutre' | 'danger';
+}> = ({ actif, onClick, icone, libelle, compte, ton = 'neutre' }) => (
+    <button
+        onClick={onClick}
+        aria-pressed={actif}
+        className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+            actif ? 'bg-accent/10 font-semibold text-accent' : ton === 'danger' ? 'text-etat-danger hover:bg-etat-danger/10' : 'text-app-muted hover:bg-app-text/5 hover:text-app-text'
+        }`}
+    >
+        <span className="shrink-0 opacity-80">{icone}</span>
+        <span className="min-w-0 flex-1 truncate">{libelle}</span>
+        {compte !== undefined && <span className="font-mono text-ui-10 font-bold">{compte}</span>}
+    </button>
+);
 
 interface MediaBrowserProps {
     isOpen: boolean;
@@ -186,10 +204,10 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
     };
 
     const handleDeleteCollection = (id: string) => {
-        if (confirm(t('mediaBrowser.deleteFolderConfirm'))) {
+        gmConfirm(t('mediaBrowser.deleteFolderConfirm'), () => {
             deleteCollection(id);
             if (selectedCollectionId === id) setSelectedCollectionId(null);
-        }
+        });
     };
 
     const handleRenameMedia = (id: string, currentName: string) => {
@@ -363,762 +381,515 @@ export const MediaBrowser: React.FC<MediaBrowserProps> = ({
 
     if (!isOpen) return null;
 
-    // 5. Render Obsidian Edition
+    /** Le compte de chaque type, sous les filtres de campagne et de types permis. */
+    const compteParType = (type: MediaType | 'all') => mediaList.filter(m =>
+        (!allowedTypes || allowedTypes.includes(m.type))
+        && (!campaignFilterEnabled || !activeCampaignId || m.campaignIds?.includes(activeCampaignId))
+        && (type === 'all' || m.type === type)).length;
+
+    const toutVoir = () => {
+        setSelectedCollectionId(null);
+        setSelectedTags([]);
+        setSmartFilter('none');
+    };
+    const mediaChoisi = editingMediaId ? mediaList.find(m => m.id === editingMediaId) : undefined;
+
+    const titreDeColonne = 'mb-1.5 flex items-center justify-between px-1 text-ui-10 font-black uppercase tracking-widest text-app-muted';
+
+    /*
+      **La médiathèque de la maquette retenue** — refonte, L6
+      (`stitch/outillage/outillage-mediatheque.png`) : l'en-tête, une barre
+      (recherche, types et leur compte, tri, import) ; à gauche les collections,
+      le diagnostic et les étiquettes filtrables ; la grille ; **à droite le
+      média choisi** — sa lecture, ses étiquettes, ses liaisons —, en colonne
+      et plus en tiroir par-dessus la grille. « Télémétrie CPU / RAM », « Grille
+      compacte » et l'échantillonnage du son sont des inventions du dessin.
+    */
     return createPortal(
-        <div className="fixed inset-0 z-[100] flex bg-app-bg text-app-text font-sans overflow-hidden animate-in fade-in duration-500 select-none">
-            {/* Full preview overlay */}
+        <div className="fixed inset-0 z-[100] flex flex-col gap-3 bg-app-bg p-4 font-sans text-app-text animate-in fade-in duration-300">
             {previewItem && (
-                <FullScreenPreview 
-                    media={previewItem} 
-                    onClose={() => setPreviewItem(null)} 
+                <FullScreenPreview
+                    media={previewItem}
+                    onClose={() => setPreviewItem(null)}
                 />
             )}
-            
-            <div className="flex-1 flex flex-row overflow-hidden relative">
-                
-                {/* Visual Background Decoration */}
-                <div className="absolute inset-0 z-0 pointer-events-none opacity-20 overflow-hidden">
-                    <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-accent/10 blur-[150px] rounded-full" />
-                    <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-[#53ddfc]/10 blur-[150px] rounded-full" />
+
+            {/* ── L'en-tête ── */}
+            <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-app-border pb-3">
+                <div className="flex min-w-0 items-center gap-3">
+                    <UploadCloud size={22} className="shrink-0 text-accent" />
+                    <h1 className="truncate font-display text-xl font-bold uppercase tracking-wide text-app-text">{title || t('mediaBrowser.hubTitle')}</h1>
+                    <Etiquette ton="accent">{t('mediaBrowser.countMedia', { count: compteParType('all') })}</Etiquette>
+                </div>
+                <button
+                    onClick={onClose}
+                    title={t('mediaBrowser.deactivateInterface')}
+                    className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-app-muted transition-colors hover:bg-app-text/5 hover:text-app-text"
+                >
+                    <span className="rounded border border-app-border px-1.5 py-0.5 font-mono text-ui-9 font-bold">Échap</span>
+                    <X size={18} />
+                </button>
+            </div>
+
+            {/* ── La barre : chercher, filtrer par type, trier, importer ── */}
+            {/*
+              ⛔ **`z-30` n'est pas décoratif : sans lui, le menu de tri passe SOUS
+              les vignettes** (David, 2026-09-16). Les vignettes sont `relative` :
+              même couche de peinture que cette barre, mais plus loin dans le
+              document. Un `z-index` positif ici fait passer la barre — et son
+              menu — au-dessus d'elles.
+            */}
+            <div className="relative z-30 flex shrink-0 flex-wrap items-center gap-3">
+                {/*
+                  ⛔ **Le champ existait ; il était INVISIBLE** (David, 2026-09-16) :
+                  son invite était à 5 % d'opacité. *Une fonctionnalité qu'on ne voit
+                  pas est une fonctionnalité absente.*
+                */}
+                <div className="relative min-w-[16rem] max-w-xl flex-1">
+                    <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-app-muted" />
+                    <input
+                        type="text"
+                        placeholder={t('mediaBrowser.searchPlaceholder')}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="min-h-11 w-full rounded-lg border border-app-border bg-app-surface pl-9 pr-20 text-sm text-app-text placeholder:text-app-subtle focus:border-accent/60 focus:outline-none"
+                    />
+                    {/*
+                      **Le compte de résultats, et le moyen d'effacer** : une recherche
+                      qui ne rend rien doit se distinguer d'une médiathèque vide.
+                    */}
+                    {search && (
+                        <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1">
+                            <span className={`font-mono text-ui-10 font-bold ${displayMedia.length === 0 ? 'text-etat-alerte' : 'text-accent'}`}>{displayMedia.length}</span>
+                            <button onClick={() => setSearch('')} title={t('mediaBrowser.clearSearch')} className="rounded p-1 text-app-muted hover:text-app-text">
+                                <X size={14} />
+                            </button>
+                        </div>
+                    )}
                 </div>
 
-                {/* SideNavBar Glassmorphic */}
-                <aside className="w-80 h-full bg-app-surface/40 backdrop-blur-3xl border-r border-app-border/10 flex flex-col z-20 relative">
-                    <div className="p-8 border-b border-app-border/10">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center shadow-[inset_0_0_20px_rgba(var(--accent-rgb),0.1)] border border-accent/20 group transition-all duration-500 hover:scale-105 active:scale-95">
-                                <UploadCloud className="text-accent group-hover:drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.8)] transition-all" size={24} />
-                            </div>
-                            <div>
-                                <h1 className="text-base font-black uppercase tracking-[0.25em] text-app-text drop-shadow-[0_0_10px_rgba(var(--app-text-rgb),0.3)] font-display">{title || t('mediaBrowser.hubTitle')}</h1>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_5px_var(--accent)]" />
-                                    <p className="text-ui-10 font-bold text-app-text/30 uppercase tracking-widest leading-none">{t('mediaBrowser.nexusProtocol')}</p>
+                <div role="tablist" className="flex overflow-hidden rounded-lg border border-app-border">
+                    {([
+                        { id: 'all', icon: null },
+                        { id: 'image', icon: <ImageIcon size={14} /> },
+                        { id: 'audio', icon: <Music size={14} /> },
+                        { id: 'video', icon: <Film size={14} /> },
+                        { id: 'document', icon: <FileText size={14} /> },
+                    ] as const).filter(b => b.id === 'all' || !allowedTypes || allowedTypes.includes(b.id)).map(btn => (
+                        <button
+                            key={btn.id}
+                            role="tab"
+                            aria-selected={typeFilter === btn.id}
+                            onClick={() => setTypeFilter(btn.id)}
+                            className={`flex min-h-11 items-center gap-2 border-r border-app-border px-3 text-ui-10 font-black uppercase tracking-widest transition-colors last:border-r-0 ${
+                                typeFilter === btn.id ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:bg-app-text/5 hover:text-app-text'
+                            }`}
+                        >
+                            {btn.icon}
+                            {t(`mediaBrowser.tabs.${btn.id}`)}
+                            <span className="font-mono opacity-70">{compteParType(btn.id)}</span>
+                        </button>
+                    ))}
+                </div>
+
+                <div className="ml-auto flex items-center gap-2">
+                    {activeCampaignId && (
+                        <button
+                            onClick={() => setCampaignFilterEnabled(!campaignFilterEnabled)}
+                            aria-pressed={campaignFilterEnabled}
+                            className={`flex min-h-11 items-center gap-2 rounded-lg border px-3 text-ui-10 font-black uppercase tracking-widest transition-colors ${
+                                campaignFilterEnabled ? 'border-gm-gold/50 bg-gm-gold/10 text-gm-gold' : 'border-app-border text-app-muted hover:text-app-text'
+                            }`}
+                        >
+                            <Users size={15} />
+                            {campaignFilterEnabled ? t('mediaBrowser.focusOperational') : t('mediaBrowser.globalMatrix')}
+                        </button>
+                    )}
+
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsSortMenuOpen(!isSortMenuOpen)}
+                            aria-expanded={isSortMenuOpen}
+                            className={`flex min-h-11 items-center gap-2 rounded-lg border px-3 text-ui-10 font-black uppercase tracking-widest transition-colors ${
+                                isSortMenuOpen ? 'border-accent/60 text-accent' : 'border-app-border text-app-muted hover:text-app-text'
+                            }`}
+                        >
+                            <ListFilter size={15} />
+                            {t(`mediaBrowser.sort.${sortBy === 'date-desc' ? 'recent' : sortBy === 'date-asc' ? 'oldest' : sortBy === 'size-desc' ? 'size' : 'name'}.label`)}
+                            <ChevronDown size={14} className={`transition-transform ${isSortMenuOpen ? 'rotate-180' : ''}`} />
+                        </button>
+                        {isSortMenuOpen && (
+                            <>
+                                <div className="fixed inset-0 z-40" onClick={() => setIsSortMenuOpen(false)} />
+                                <div className="absolute right-0 top-[calc(100%+6px)] z-50 w-60 rounded-xl border border-app-border bg-app-surface p-1.5 shadow-2xl">
+                                    {([
+                                        { id: 'date-desc', key: 'recent', icon: <Clock size={15} /> },
+                                        { id: 'date-asc', key: 'oldest', icon: <Clock size={15} /> },
+                                        { id: 'size-desc', key: 'size', icon: <UploadCloud size={15} /> },
+                                        { id: 'name-asc', key: 'name', icon: <ArrowDownAZ size={15} /> },
+                                    ] as const).map(option => (
+                                        <button
+                                            key={option.id}
+                                            onClick={() => { setSortBy(option.id); setIsSortMenuOpen(false); }}
+                                            className={`flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${sortBy === option.id ? 'bg-accent/10 text-accent' : 'text-app-text hover:bg-app-text/5'}`}
+                                        >
+                                            <span className="mt-0.5">{option.icon}</span>
+                                            <span className="min-w-0 flex-1">
+                                                <span className="block text-sm font-semibold">{t(`mediaBrowser.sort.${option.key}.label`)}</span>
+                                                <span className="block text-xs text-app-muted">{t(`mediaBrowser.sort.${option.key}.desc`)}</span>
+                                            </span>
+                                            {sortBy === option.id && <Check size={14} className="mt-0.5" />}
+                                        </button>
+                                    ))}
                                 </div>
-                            </div>
-                        </div>
+                            </>
+                        )}
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-8">
-                        {/* Virtual Directories */}
-                        <section>
-                            <div className="flex items-center justify-between mb-4 px-2">
-                                <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
-                                    <Folder size={14} />
-                                    {t('mediaBrowser.foldersTitle')}
-                                </h3>
-                                <button 
-                                    onClick={handleCreateCollection}
-                                    className="p-1 px-3 rounded-xl bg-accent/10 text-accent hover:bg-accent/20 transition-all border border-accent/20 text-ui-10 font-black uppercase tracking-widest"
-                                    title={t('mediaBrowser.newFolder')}
-                                >
-                                    <Plus size={14} />
+                    <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg bg-accent px-4 text-ui-11 font-black uppercase tracking-widest text-app-on-accent transition-all hover:brightness-110">
+                        <UploadCloud size={16} />
+                        {isUploading ? t('mediaBrowser.uploadingAsset') : t('mediaBrowser.importAsset')}
+                        <input
+                            type="file"
+                            multiple
+                            ref={fileInputRef}
+                            onChange={handleUpload}
+                            className="hidden"
+                            accept={filtreDeSelection(allowedTypes)}
+                        />
+                    </label>
+                </div>
+            </div>
+
+            {/*
+              ⚠️ **La barre de lot n'apparaît qu'avec une sélection.** Un bandeau
+              permanent qui dit « 0 sélectionné » occupe la place sans rien apprendre.
+            */}
+            {selectionMultiple.size > 0 && (
+                <div className="flex shrink-0 flex-wrap items-center gap-2 rounded-lg border border-accent/40 bg-accent/5 px-4 py-2">
+                    <span className="shrink-0 text-ui-10 font-black uppercase tracking-widest text-accent">
+                        {t('mediaBrowser.tags.selection', { count: selectionMultiple.size })}
+                    </span>
+                    <input
+                        value={tagDuLot}
+                        onChange={e => setTagDuLot(e.target.value)}
+                        onKeyDown={e => {
+                            if (e.key === 'Escape') { e.stopPropagation(); setTagDuLot(''); return; }
+                            if (e.key === 'Enter') void etiqueterLeLot('ajouter');
+                        }}
+                        list="vocabulaire-des-tags"
+                        placeholder={t('mediaBrowser.tags.placeholderLot')}
+                        className="min-w-[10rem] flex-1 rounded-lg border border-app-border bg-app-bg px-3 py-2 text-sm text-app-text outline-none focus:border-accent/60"
+                    />
+                    <button onClick={() => void etiqueterLeLot('ajouter')} disabled={!tagDuLot.trim()} className="rounded-lg border border-accent/40 px-3 py-2 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/10 disabled:opacity-30">
+                        {t('mediaBrowser.tags.ajouter')}
+                    </button>
+                    <button onClick={() => void etiqueterLeLot('retirer')} disabled={!tagDuLot.trim()} className="rounded-lg border border-app-border px-3 py-2 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:border-etat-danger/40 hover:text-etat-danger disabled:opacity-30">
+                        {t('mediaBrowser.tags.retirer')}
+                    </button>
+                    <button onClick={() => setSelectionMultiple(new Set(displayMedia.map(m => m.id)))} className="px-3 py-2 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-app-text">
+                        {t('mediaBrowser.tags.toutSelectionner')}
+                    </button>
+                    <button onClick={() => setSelectionMultiple(new Set())} className="ml-auto px-3 py-2 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-app-text">
+                        {t('mediaBrowser.tags.deselectionner')}
+                    </button>
+                </div>
+            )}
+
+            {/* Le vocabulaire, offert à tous les champs d'étiquette de cet écran. */}
+            <datalist id="vocabulaire-des-tags">
+                {allTags.map(tag => <option key={tag} value={tag} />)}
+            </datalist>
+
+            <div className="flex min-h-0 flex-1 gap-4">
+                {/* ── À gauche : collections, diagnostic, étiquettes ── */}
+                <aside className="flex w-64 shrink-0 flex-col gap-4 overflow-y-auto pr-1 custom-scrollbar">
+                    <section>
+                        <p className={titreDeColonne}>
+                            {t('mediaBrowser.foldersTitle')}
+                            <button onClick={handleCreateCollection} title={t('mediaBrowser.newFolder')} className="rounded p-1 text-app-muted hover:text-accent">
+                                <Plus size={14} />
+                            </button>
+                        </p>
+                        <LigneDeFiltre
+                            actif={!selectedCollectionId && selectedTags.length === 0 && smartFilter === 'none'}
+                            onClick={toutVoir}
+                            icone={<Folder size={15} />}
+                            libelle={t('mediaBrowser.globalArchive')}
+                            compte={compteParType('all')}
+                        />
+                        {collections.map(coll => (
+                            <div key={coll.id} className="group flex items-center">
+                                <div className="min-w-0 flex-1">
+                                    <LigneDeFiltre
+                                        actif={selectedCollectionId === coll.id}
+                                        onClick={() => { setSelectedCollectionId(coll.id); setSelectedTags([]); setSmartFilter('none'); }}
+                                        icone={<Folder size={15} />}
+                                        libelle={coll.name}
+                                        compte={coll.mediaIds.length}
+                                    />
+                                </div>
+                                <button onClick={() => handleRenameCollection(coll.id, coll.name)} className="rounded p-1.5 text-app-muted opacity-0 transition-opacity hover:text-accent group-hover:opacity-100" title={t('mediaBrowser.renameFolder')} aria-label={t('mediaBrowser.renameFolder')}>
+                                    <Edit2 size={12} />
+                                </button>
+                                <button onClick={() => handleDeleteCollection(coll.id)} className="rounded p-1.5 text-app-muted opacity-0 transition-opacity hover:text-etat-danger group-hover:opacity-100" title={t('mediaBrowser.deleteFolder')} aria-label={t('mediaBrowser.deleteFolder')}>
+                                    <Trash2 size={12} />
                                 </button>
                             </div>
-                            
-                            <div className="space-y-1.5">
+                        ))}
+                        {collections.length === 0 && <p className="px-3 py-1 text-xs italic text-app-subtle">{t('mediaBrowser.noUnitsDetected')}</p>}
+                    </section>
+
+                    <section>
+                        <p className={titreDeColonne}>{t('mediaBrowser.smartMatrix')}</p>
+                        <LigneDeFiltre actif={smartFilter === 'recent'} onClick={() => { setSmartFilter('recent'); setSelectedCollectionId(null); setSelectedTags([]); }} icone={<Clock size={15} />} libelle={t('mediaBrowser.latestFrequency')} />
+                        <LigneDeFiltre actif={smartFilter === 'untagged'} onClick={() => { setSmartFilter('untagged'); setSelectedCollectionId(null); setSelectedTags([]); }} icone={<ShieldAlert size={15} />} libelle={t('mediaBrowser.unaliasContent')} compte={mediaList.filter(m => m.tags.length === 0).length} />
+                        <LigneDeFiltre actif={smartFilter === 'orphans'} onClick={() => { setSmartFilter(smartFilter === 'orphans' ? 'none' : 'orphans'); setSelectedCollectionId(null); setSelectedTags([]); }} icone={<Unplug size={15} />} libelle={t('mediaBrowser.orphans')} compte={orphelins.size} ton={orphelins.size > 0 ? 'danger' : 'neutre'} />
+                    </section>
+
+                    <section>
+                        <p className={titreDeColonne}>
+                            {t('mediaBrowser.tacticalTags')}
+                            <button
+                                onClick={() => setTagLogic(tagLogic === 'AND' ? 'OR' : 'AND')}
+                                className={`rounded border px-1.5 py-0.5 font-mono text-ui-9 font-bold ${tagLogic === 'AND' ? 'border-accent/50 text-accent' : 'border-app-border text-app-muted hover:text-app-text'}`}
+                                title={`${t('mediaBrowser.matrixLogic')} : ${tagLogic === 'AND' ? t('mediaBrowser.tagLogic.and') : t('mediaBrowser.tagLogic.or')}`}
+                            >
+                                {tagLogic === 'AND' ? t('mediaBrowser.tagLogic.and') : t('mediaBrowser.tagLogic.or')}
+                            </button>
+                        </p>
+                        {/*
+                          ⭐ **Renommer, fusionner, supprimer : un seul champ** (double-clic
+                          sur une étiquette). Renommer vers une étiquette qui existe EST
+                          une fusion ; renommer vers rien EST une suppression.
+                        */}
+                        {tagARenommer && (
+                            <div className="mb-2 flex flex-col gap-2 rounded-lg border border-accent/40 p-2">
+                                <p className="text-xs text-app-muted">{t('mediaBrowser.tags.renommerTitre', { tag: tagARenommer })}</p>
+                                <input
+                                    autoFocus
+                                    value={nouveauNomDeTag}
+                                    onChange={e => setNouveauNomDeTag(e.target.value)}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Escape') { e.stopPropagation(); setTagARenommer(null); return; }
+                                        if (e.key === 'Enter') void renommerLeTag();
+                                    }}
+                                    list="vocabulaire-des-tags"
+                                    placeholder={t('mediaBrowser.tags.renommerVide')}
+                                    className="w-full rounded-lg border border-app-border bg-app-bg px-3 py-1.5 text-sm text-app-text outline-none focus:border-accent/60"
+                                />
+                                <div className="flex gap-2">
+                                    <button onClick={() => void renommerLeTag()} className="rounded-lg border border-accent/40 px-3 py-1 text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/10">
+                                        {t('mediaBrowser.tags.appliquer')}
+                                    </button>
+                                    <button onClick={() => setTagARenommer(null)} className="px-3 py-1 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-app-text">
+                                        {t('mediaBrowser.tags.annuler')}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        <div className="flex flex-wrap gap-1.5 px-1">
+                            {tagsClasses.map(({ tag, compte }) => (
                                 <button
+                                    key={tag}
+                                    onDoubleClick={(e) => { e.stopPropagation(); setTagARenommer(tag); setNouveauNomDeTag(tag); }}
+                                    title={t('mediaBrowser.tags.doubleClic')}
                                     onClick={() => {
+                                        setSelectedTags(prev => prev.includes(tag) ? prev.filter(x => x !== tag) : [...prev, tag]);
                                         setSelectedCollectionId(null);
-                                        setSelectedTags([]);
                                         setSmartFilter('none');
                                     }}
-                                    className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${(!selectedCollectionId && selectedTags.length === 0 && smartFilter === 'none') ? 'bg-accent/10 text-accent border border-accent/30 shadow-[0_0_30px_rgba(var(--accent-rgb),0.15)]' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
+                                    aria-pressed={selectedTags.includes(tag)}
+                                    className={`rounded-md border px-2 py-1 text-xs font-semibold transition-colors ${
+                                        selectedTags.includes(tag) ? 'border-accent bg-accent/15 text-accent' : 'border-app-border text-app-muted hover:border-accent/50 hover:text-app-text'
+                                    }`}
                                 >
-                                    <Search size={18} className="opacity-50" />
-                                    {t('mediaBrowser.globalArchive')}
+                                    #{tag} <span className="font-mono opacity-60">{compte}</span>
                                 </button>
+                            ))}
+                            {allTags.length === 0 && <p className="px-2 py-1 text-xs italic text-app-subtle">{t('mediaBrowser.noTagTraces')}</p>}
+                        </div>
+                    </section>
 
-                                <div className="pt-3 space-y-1.5">
-                                    <h4 className="px-5 text-ui-9 font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">{t('mediaBrowser.smartMatrix')}</h4>
-                                    <button
-                                        onClick={() => {
-                                            setSmartFilter('recent');
-                                            setSelectedCollectionId(null);
-                                            setSelectedTags([]);
-                                        }}
-                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'recent' ? 'bg-accent/10 text-accent border border-accent/30' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
-                                    >
-                                        <Clock size={18} className="opacity-50" />
-                                        {t('mediaBrowser.latestFrequency')}
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setSmartFilter('untagged');
-                                            setSelectedCollectionId(null);
-                                            setSelectedTags([]);
-                                        }}
-                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'untagged' ? 'bg-accent/10 text-accent border border-accent/30' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
-                                    >
-                                        <ShieldAlert size={18} className="opacity-50" />
-                                        {t('mediaBrowser.unaliasContent')}
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setSmartFilter(smartFilter === 'orphans' ? 'none' : 'orphans');
-                                            setSelectedCollectionId(null);
-                                            setSelectedTags([]);
-                                        }}
-                                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${smartFilter === 'orphans' ? 'bg-app-text/10 text-app-text/80 border border-app-text/20' : 'text-app-text/40 hover:bg-app-text/5 hover:text-app-text/70'}`}
-                                    >
-                                        <Unplug size={18} className="opacity-50" />
-                                        {t('mediaBrowser.orphans')}
-                                    </button>
-                                </div>
-                                
-                                <div className="pt-6 space-y-1.5">
-                                    <h4 className="px-5 text-ui-9 font-black text-app-text/15 uppercase tracking-[0.3em] mb-2 font-display">{t('mediaBrowser.userDomains')}</h4>
-                                    {collections.map(coll => (
-                                        <div key={coll.id} className="group flex items-center gap-1 pr-2">
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedCollectionId(coll.id);
-                                                    setSelectedTags([]);
-                                                    setSmartFilter('none');
-                                                }}
-                                                className={`flex-1 flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-bold transition-all duration-300 ${selectedCollectionId === coll.id ? 'bg-accent/10 text-accent border border-accent/20 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'text-app-text/30 hover:bg-app-text/5 hover:text-app-text/60'}`}
-                                            >
-                                                <Folder size={18} className={`opacity-50 ${selectedCollectionId === coll.id ? 'text-accent' : ''}`} />
-                                                <span className="truncate">{coll.name}</span>
-                                            </button>
-                                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0 duration-300">
-                                                <button 
-                                                    onClick={() => handleRenameCollection(coll.id, coll.name)} 
-                                                    className="p-2 text-app-text/20 hover:text-accent hover:bg-accent/10 rounded-lg transition-all"
-                                                    title={t('mediaBrowser.renameFolder')}
-                                                    aria-label={t('mediaBrowser.renameFolder')}
-                                                >
-                                                    <Edit2 size={12} />
-                                                </button>
-                                                <button 
-                                                    onClick={() => handleDeleteCollection(coll.id)} 
-                                                    className="p-2 text-app-text/20 hover:text-etat-danger hover:bg-etat-danger/10 rounded-lg transition-all"
-                                                    title={t('mediaBrowser.deleteFolder')}
-                                                    aria-label={t('mediaBrowser.deleteFolder')}
-                                                >
-                                                    <Trash2 size={12} />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    {collections.length === 0 && (
-                                        <div className="px-5 py-8 text-center border border-dashed border-app-border/10 rounded-2xl">
-                                            <p className="text-ui-10 font-bold text-app-text/10 uppercase tracking-widest">{t('mediaBrowser.noUnitsDetected')}</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Tactical Metadata Tags */}
-                        <section className="pt-8 border-t border-app-border/10">
-                            <div className="flex items-center justify-between mb-5 px-2">
-                                <h3 className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent flex items-center gap-2 opacity-60 font-display">
-                                    <Tag size={14} />
-                                    {t('mediaBrowser.tacticalTags')}
-                                </h3>
-                                <button 
-                                    onClick={() => setTagLogic(tagLogic === 'AND' ? 'OR' : 'AND')}
-                                    className={`px-3 py-1 rounded-xl text-ui-9 font-black tracking-widest transition-all border ${tagLogic === 'AND' ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/10 text-app-text/40 hover:text-app-text/70'}`}
-                                    title={`${t('mediaBrowser.matrixLogic')}: ${tagLogic}`}
-                                >
-                                    {tagLogic}
-                                </button>
-                            </div>
-                            {/*
-                              ⭐ **Renommer, fusionner, supprimer : un seul champ.**
-                              Renommer vers une étiquette qui existe EST une fusion ;
-                              renommer vers rien EST une suppression. *Trois écrans
-                              auraient demandé au meneur de savoir d'avance lequel des
-                              trois il fait.*
-                            */}
-                            {tagARenommer && (
-                                <div className="mb-4 px-1 flex flex-col gap-2">
-                                    <p className="text-ui-9 font-bold uppercase tracking-widest text-app-text/40">
-                                        {t('mediaBrowser.tags.renommerTitre', { tag: tagARenommer })}
-                                    </p>
-                                    <input
-                                        autoFocus
-                                        value={nouveauNomDeTag}
-                                        onChange={e => setNouveauNomDeTag(e.target.value)}
-                                        onKeyDown={e => {
-                                            if (e.key === 'Escape') { e.stopPropagation(); setTagARenommer(null); return; }
-                                            if (e.key === 'Enter') void renommerLeTag();
-                                        }}
-                                        list="vocabulaire-des-tags"
-                                        placeholder={t('mediaBrowser.tags.renommerVide')}
-                                        className="w-full bg-app-bg/60 border border-accent/30 rounded-xl px-4 py-2 text-ui-10 font-bold text-accent outline-none"
-                                    />
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => void renommerLeTag()}
-                                            className="px-3 py-1.5 rounded-xl border border-accent/40 text-accent text-ui-9 font-black uppercase tracking-widest hover:bg-accent/10"
-                                        >
-                                            {t('mediaBrowser.tags.appliquer')}
-                                        </button>
-                                        <button
-                                            onClick={() => setTagARenommer(null)}
-                                            className="px-3 py-1.5 rounded-xl text-app-text/40 text-ui-9 font-black uppercase tracking-widest hover:text-app-text"
-                                        >
-                                            {t('mediaBrowser.tags.annuler')}
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="flex flex-wrap gap-2 px-1">
-                                {allTags.map(tag => (
-                                    <button
-                                        key={tag}
-                                        onDoubleClick={(e) => {
-                                            /* Le double-clic ouvre le renommage : il ne coûte
-                                               aucune place à l'écran, et il ne gêne pas le
-                                               clic simple qui filtre. */
-                                            e.stopPropagation();
-                                            setTagARenommer(tag);
-                                            setNouveauNomDeTag(tag);
-                                        }}
-                                        title={t('mediaBrowser.tags.doubleClic')}
-                                        onClick={() => {
-                                            setSelectedTags(prev => 
-                                                prev.includes(tag) 
-                                                    ? prev.filter(t => t !== tag)
-                                                    : [...prev, tag]
-                                            );
-                                            setSelectedCollectionId(null);
-                                            setSmartFilter('none');
-                                        }}
-                                        className={`px-4 py-2 rounded-2xl text-ui-10 font-black uppercase tracking-[0.1em] border transition-all duration-300 ${selectedTags.includes(tag) ? 'bg-accent/10 border-accent/40 text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-app-text/5 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60 hover:bg-app-text/10'}`}
-                                    >
-                                        {tag}
-                                        <span className="ml-2 opacity-40 tabular-nums">
-                                            {tagsClasses.find(e => e.tag === tag)?.compte ?? 0}
-                                        </span>
-                                    </button>
-                                ))}
-                                {allTags.length === 0 && (
-                                    <div className="text-ui-10 font-bold text-app-text/5 uppercase tracking-widest text-center w-full py-4 italic">{t('mediaBrowser.noTagTraces')}</div>
-                                )}
-                            </div>
-                        </section>
-                    </div>
-                    
-                    {/* Bottom Status & Actions */}
-                    <div className="p-6 border-t border-app-border/10 bg-app-bg/20 space-y-3">
+                    <section className="mt-auto flex flex-col gap-2 border-t border-app-border pt-3">
                         {/*
-                            **Le retour du miroir — chantier n° 4.**
-
-                            Il vit ici parce que c'est ici qu'on gère les médias :
-                            posé sur l'autre écran le 2026-08-29, il était
-                            invisible depuis celui que David ouvre réellement.
-                            *Un filet rangé là où personne ne regarde n'est pas
-                            un filet.*
-
-                            Il n'apparaît que si le miroir porte ce que cette
-                            bibliothèque n'a plus, et il annonce le compte avant
-                            de proposer quoi que ce soit — juste au-dessus du
-                            bouton qui purge, qui est précisément le geste après
-                            lequel on en aura besoin.
+                          **Le retour du miroir — chantier n° 4.** Il vit ici parce que
+                          c'est ici qu'on gère les médias, juste au-dessus du bouton qui
+                          vide : le geste après lequel on en aura besoin.
                         */}
                         {aRestituer > 0 && (
-                            <div className="p-4 bg-etat-succes/5 border border-etat-succes/20 rounded-2xl space-y-3">
-                                <p className="text-ui-11 text-etat-succes/80 leading-relaxed">
-                                    {aRestituer} média{aRestituer > 1 ? 's' : ''} dans la sauvegarde,
-                                    absent{aRestituer > 1 ? 's' : ''} d'ici.
+                            <div className="flex flex-col gap-2 rounded-lg border border-etat-succes/40 bg-etat-succes/5 p-3">
+                                <p className="text-xs text-app-text">
+                                    {aRestituer} média{aRestituer > 1 ? 's' : ''} dans la sauvegarde, absent{aRestituer > 1 ? 's' : ''} d'ici.
                                 </p>
-                                <button
-                                    type="button"
-                                    disabled={restauration}
-                                    onClick={lancerLaRestauration}
-                                    className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-etat-succes/10 text-etat-succes hover:bg-etat-succes/20 text-ui-10 font-black uppercase tracking-[0.2em] border border-etat-succes/30 transition-all duration-300 disabled:opacity-30"
-                                >
-                                    <RotateCcw size={15} />
+                                <button type="button" disabled={restauration} onClick={lancerLaRestauration} className="flex items-center justify-center gap-2 rounded-lg border border-etat-succes/40 py-2 text-ui-10 font-black uppercase tracking-widest text-etat-succes hover:bg-etat-succes/10 disabled:opacity-30">
+                                    <RotateCcw size={14} />
                                     {restauration ? 'Restauration…' : 'Restaurer depuis la sauvegarde'}
                                 </button>
                             </div>
                         )}
-
                         <button
-                            onClick={() => {
-                                if (confirm(t('mediaBrowser.purgeConfirm'))) {
-                                    clearDB();
-                                }
-                            }}
-                            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-etat-danger/5 text-etat-danger/40 hover:bg-etat-danger/20 hover:text-etat-danger text-ui-10 font-black uppercase tracking-[0.2em] border border-etat-danger/10 hover:border-etat-danger/40 transition-all duration-500 group"
+                            onClick={() => gmConfirm(t('mediaBrowser.purgeConfirm'), () => { void clearDB(); })}
+                            className="flex items-center justify-center gap-2 rounded-lg py-2 text-ui-10 font-black uppercase tracking-widest text-app-muted transition-colors hover:bg-etat-danger/10 hover:text-etat-danger"
                         >
-                            <Trash2 size={16} className="group-hover:rotate-12 transition-transform duration-500" />
+                            <Trash2 size={14} />
                             {t('mediaBrowser.purgeHub')}
                         </button>
-                    </div>
+                    </section>
                 </aside>
 
-                {/* Main View Port Area */}
-                <main className="flex-1 h-full flex flex-col relative z-20">
-                    
-                    {/* Integrated HUD Toolbar */}
-                    {/*
-                      ⛔ **`z-30` n'est pas décoratif : sans lui, le menu de tri
-                      passe SOUS les vignettes.** Signalé par David le
-                      2026-09-16, capture à l'appui — la seconde entrée du menu
-                      « Date » était recouverte par une carte.
-
-                      La cause n'est pas le `z-50` du menu, qui est correct :
-                      c'est que **ce header crée un contexte d'empilement** —
-                      `backdrop-filter` en crée un, `backdrop-blur-3xl` ci-dessous
-                      en est un. Le `z-50` du menu est donc *enfermé* ici, et ne
-                      peut plus rien départager au-dehors.
-
-                      Or chaque vignette est `relative` **sans `z-index`**
-                      (+ `backdrop-blur-sm`, un contexte de plus) : même couche
-                      de peinture que ce header, mais **plus loin dans le
-                      document**, donc peinte par-dessus lui *tout entier*.
-                      *Un élément ne peut pas sortir de l'ordre de peinture de
-                      son parent.*
-
-                      Un `z-index` positif ici fait passer le header dans la
-                      couche au-dessus des positionnés sans `z-index` — les
-                      vignettes — et le menu suit.
-                    */}
-                    <header className="h-24 border-b border-app-border/10 flex items-center px-10 bg-app-surface/40 backdrop-blur-3xl justify-between relative z-30">
-                        {/* Decorative HUD line */}
-                        <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/30 to-transparent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)]" />
-                        
-                        <div className="flex items-center gap-8 flex-1 max-w-5xl">
-                            {/*
-                              ⛔ **Le champ existait ; il était INVISIBLE.** David
-                              le 2026-09-16 : *« peux-tu rajouter un moteur de
-                              recherche, j'ai parfois du mal à trouver »* — il y
-                              en avait un, qui filtrait bien le nom, les
-                              étiquettes et le type.
-
-                              Son texte d'invite était en `text-app-text/5` —
-                              **5 % d'opacité** — et sa loupe en `/10` : sur le
-                              fond sombre, un rectangle vide sans le moindre
-                              indice. *C'est le piège de Light-OS en pire : là-bas
-                              le gris « que personne n'a choisi » donnait un
-                              contraste de 1,6 ; ici on est en dessous.*
-
-                              **Une fonctionnalité qu'on ne voit pas est une
-                              fonctionnalité absente**, et elle coûte plus cher
-                              qu'une absence : on la redemande, et on cherche à
-                              la main en attendant.
-                            */}
-                            <div className="relative flex-1 group max-w-xl">
-                                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-app-text/40 group-focus-within:text-accent group-focus-within:drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.4)] transition-all duration-500" size={18} />
-                                <input 
-                                    type="text" 
-                                    placeholder={t('mediaBrowser.searchPlaceholder')} 
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    className="w-full bg-app-bg/80 border border-app-border/30 rounded-2xl pl-14 pr-32 py-4 text-sm font-bold tracking-wide focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all duration-500 placeholder:text-app-text/35 placeholder:uppercase placeholder:text-ui-10 placeholder:tracking-[0.2em] text-app-text"
-                                />
-
-                                {/*
-                                  **Le compte de résultats, et le moyen d'effacer.**
-                                  Une recherche qui ne rend rien doit se
-                                  distinguer d'une médiathèque vide : *sans ce
-                                  nombre, « aucune donnée détectée » accuse la
-                                  bibliothèque alors que c'est le filtre qui
-                                  parle.* Et le `Échap`/la croix rendent la sortie
-                                  visible — on tape souvent trois lettres de trop.
-                                */}
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                    {search ? (
-                                        <>
-                                            <span className={`text-ui-9 font-black uppercase tracking-widest ${displayMedia.length === 0 ? 'text-etat-alerte' : 'text-accent'}`}>
-                                                {displayMedia.length}
-                                            </span>
-                                            <button
-                                                onClick={() => setSearch('')}
-                                                title={t('mediaBrowser.clearSearch')}
-                                                className="p-1.5 rounded-lg text-app-text/40 hover:text-app-text hover:bg-app-text/10 transition-colors"
-                                            >
-                                                <X size={14} />
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <div className="px-1.5 py-0.5 border border-accent/20 rounded text-ui-8 font-black text-accent/50 font-display opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none">{t('mediaBrowser.scanMode')}</div>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Matrix Type Tabs */}
-                            <div className="flex bg-app-bg/90 p-1.5 rounded-2xl border border-app-border/10 shadow-2xl">
-                                {[
-                                    { id: 'all', key: 'all', icon: null },
-                                    { id: 'image', key: 'image', icon: <ImageIcon size={14} /> },
-                                    { id: 'audio', key: 'audio', icon: <Music size={14} /> },
-                                    { id: 'video', key: 'video', icon: <Film size={14} /> },
-                                    { id: 'document', key: 'document', icon: <FileText size={14} /> }
-                                ].map(btn => (
-                                    <button
-                                        key={btn.id}
-                                        onClick={() => setTypeFilter(btn.id as MediaType | 'all')}
-                                        className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 ${typeFilter === btn.id ? 'bg-accent text-app-on-accent shadow-[0_0_25px_rgba(var(--accent-rgb),0.4)] translate-y-[-1px]' : 'text-app-text/20 hover:text-app-text/70 hover:bg-app-text/5'}`}
-                                    >
-                                        {btn.icon}
-                                        {t(`mediaBrowser.tabs.${btn.key}`)}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-5">
-                            {/* Campaign Context Filter */}
-                            {activeCampaignId && (
-                                <button
-                                    onClick={() => setCampaignFilterEnabled(!campaignFilterEnabled)}
-                                    className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 border group ${campaignFilterEnabled ? 'bg-etat-alerte/10 border-etat-alerte/40 text-etat-alerte shadow-[0_0_20px_rgba(245,158,11,0.15)]' : 'bg-app-bg/80 border-app-border/10 text-app-text/20 hover:border-app-text/20 hover:text-app-text/60'}`}
-                                >
-                                    <Users size={16} className={`transition-transform duration-500 ${campaignFilterEnabled ? 'scale-110' : 'group-hover:scale-110'}`} />
-                                    {campaignFilterEnabled ? t('mediaBrowser.focusOperational') : t('mediaBrowser.globalMatrix')}
-                                </button>
-                            )}
-
-                            {/* Custom HUD Sort Menu */}
-                            <div className="relative">
-                                <button
-                                    onClick={() => setIsSortMenuOpen(!isSortMenuOpen)}
-                                    className={`flex items-center gap-3 px-6 py-3.5 bg-app-bg/80 border ${isSortMenuOpen ? 'border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'border-app-border/10 text-app-text/30'} rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] transition-all duration-500 group`}
-                                >
-                                    <ListFilter size={18} className={`transition-colors duration-500 ${isSortMenuOpen ? 'text-accent' : 'group-hover:text-app-text/60 text-app-text/20'}`} />
-                                    <span>{t(`mediaBrowser.sort.${sortBy.split('-')[0]}.label`)}</span>
-                                    <ChevronDown size={16} className={`transition-transform duration-500 ${isSortMenuOpen ? 'rotate-180 text-accent' : 'text-app-text/10 group-hover:text-app-text/30'}`} />
-                                </button>
-
-                                {isSortMenuOpen && (
-                                    <>
-                                        <div className="fixed inset-0 z-40" onClick={() => setIsSortMenuOpen(false)} />
-                                        <div className="absolute right-0 top-[calc(100%+12px)] w-64 bg-app-surface/95 border border-app-border/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-top-4 duration-500 p-2 border-accent/10">
-                                            <div className="space-y-1">
-                                                {[
-                                                    { id: 'date-desc', key: 'recent', icon: <Clock size={16} /> },
-                                                    { id: 'date-asc', key: 'oldest', icon: <Clock size={16} /> },
-                                                    { id: 'size-desc', key: 'size', icon: <UploadCloud size={16} /> },
-                                                    { id: 'name-asc', key: 'name', icon: <ArrowDownAZ size={16} /> }
-                                                ].map(option => (
-                                                    <button
-                                                        key={option.id}
-                                                        onClick={() => {
-                                                            setSortBy(option.id as 'date-desc' | 'date-asc' | 'size-desc' | 'name-asc');
-                                                            setIsSortMenuOpen(false);
-                                                        }}
-                                                        className={`w-full text-left px-5 py-4 rounded-2xl transition-all duration-300 group/opt ${sortBy === option.id ? 'bg-accent text-app-on-accent shadow-[0_8px_20px_rgba(var(--accent-rgb),0.3)]' : 'hover:bg-app-text/5'}`}
-                                                    >
-                                                        <div className="flex items-center justify-between mb-1">
-                                                            <div className="flex items-center gap-3">
-                                                                <span className={sortBy === option.id ? 'text-app-bg' : 'text-accent/40'}>{option.icon}</span>
-                                                                <span className="text-ui-10 font-black uppercase tracking-widest">{t(`mediaBrowser.sort.${option.key}.label`)}</span>
-                                                            </div>
-                                                            {sortBy === option.id && <Check size={14} className="text-app-bg" />}
-                                                        </div>
-                                                        <p className={`text-ui-9 font-bold uppercase tracking-widest opacity-40 group-hover/opt:opacity-60 transition-opacity ${sortBy === option.id ? 'text-app-bg' : 'text-app-text'}`}>{t(`mediaBrowser.sort.${option.key}.desc`)}</p>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-
-                            {/* Main Import Interface */}
-                            <label className="bg-accent hover:bg-accent/80 text-app-on-accent px-8 py-4 rounded-2xl text-ui-10 font-black uppercase tracking-[0.2em] cursor-pointer transition-all duration-500 shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.5)] hover:scale-[1.02] active:scale-95 flex items-center gap-3 group">
-                                <UploadCloud size={18} className="group-hover:translate-y-[-2px] transition-transform duration-500" />
-                                {isUploading ? t('mediaBrowser.uploadingAsset') : t('mediaBrowser.importAsset')}
-                                <input
-                                    type="file"
-                                    multiple
-                                    ref={fileInputRef}
-                                    onChange={handleUpload}
-                                    className="hidden"
-                                    accept={filtreDeSelection(allowedTypes)}
-                                />
-                            </label>
-
-                            <button 
-                                onClick={onClose} 
-                                className="w-12 h-12 flex items-center justify-center bg-app-text/5 rounded-2xl text-app-text/20 hover:text-app-text hover:bg-etat-danger/20 transition-all border border-transparent hover:border-etat-danger/20 active:scale-90 group duration-500"
-                                title={t('mediaBrowser.deactivateInterface')}
-                            >
-                                <X size={24} className="group-hover:rotate-90 transition-transform duration-500" />
-                            </button>
-                        </div>
-                    </header>
-
-                    {/*
-                      ⚠️ **La barre n'apparaît qu'avec une sélection.** Un bandeau
-                      permanent qui dit « 0 sélectionné » occupe la place sans
-                      rien apprendre — et ce qui est toujours là cesse d'être lu.
-                    */}
-                    {selectionMultiple.size > 0 && (
-                        <div className="flex flex-wrap items-center gap-3 px-12 py-4 bg-accent/5 border-y border-accent/20">
-                            <span className="text-ui-10 font-black uppercase tracking-widest text-accent shrink-0">
-                                {t('mediaBrowser.tags.selection', { count: selectionMultiple.size })}
-                            </span>
-                            <input
-                                value={tagDuLot}
-                                onChange={e => setTagDuLot(e.target.value)}
-                                onKeyDown={e => {
-                                    if (e.key === 'Escape') { e.stopPropagation(); setTagDuLot(''); return; }
-                                    if (e.key === 'Enter') void etiqueterLeLot('ajouter');
+                {/* ── La grille ── */}
+                <div className="min-w-0 flex-1 overflow-y-auto pr-1 custom-scrollbar">
+                    {displayMedia.length === 0 ? (
+                        <div className="flex h-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-app-border text-center">
+                            <UploadCloud size={40} className="text-app-subtle" />
+                            <p className="font-display text-lg text-app-text">{t('mediaBrowser.noDataDetected')}</p>
+                            <p className="max-w-sm text-sm text-app-muted">{t('mediaBrowser.noDataSub')}</p>
+                            <button
+                                onClick={() => {
+                                    setSearch('');
+                                    setTypeFilter('all');
+                                    setSelectedTags([]);
+                                    setSelectedCollectionId(null);
+                                    setCampaignFilterEnabled(false);
+                                    setSmartFilter('none');
                                 }}
-                                list="vocabulaire-des-tags"
-                                placeholder={t('mediaBrowser.tags.placeholderLot')}
-                                className="flex-1 min-w-[10rem] bg-app-bg/60 border border-app-border/20 rounded-xl px-4 py-2 text-ui-10 font-bold text-accent outline-none focus:border-accent/50"
-                            />
-                            <button
-                                onClick={() => void etiqueterLeLot('ajouter')}
-                                disabled={!tagDuLot.trim()}
-                                className="px-3 py-2 rounded-xl border border-accent/30 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/10 disabled:opacity-30"
+                                className="rounded-lg border border-app-border px-4 py-2 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:border-accent/50 hover:text-accent"
                             >
-                                {t('mediaBrowser.tags.ajouter')}
-                            </button>
-                            <button
-                                onClick={() => void etiqueterLeLot('retirer')}
-                                disabled={!tagDuLot.trim()}
-                                className="px-3 py-2 rounded-xl border border-app-border/20 text-app-text/50 text-ui-10 font-black uppercase tracking-widest hover:text-etat-danger hover:border-etat-danger/40 disabled:opacity-30"
-                            >
-                                {t('mediaBrowser.tags.retirer')}
-                            </button>
-                            <button
-                                onClick={() => setSelectionMultiple(new Set(displayMedia.map(m => m.id)))}
-                                className="px-3 py-2 rounded-xl text-app-text/40 text-ui-10 font-black uppercase tracking-widest hover:text-app-text"
-                            >
-                                {t('mediaBrowser.tags.toutSelectionner')}
-                            </button>
-                            <button
-                                onClick={() => setSelectionMultiple(new Set())}
-                                className="px-3 py-2 rounded-xl text-app-text/40 text-ui-10 font-black uppercase tracking-widest hover:text-app-text ml-auto"
-                            >
-                                {t('mediaBrowser.tags.deselectionner')}
+                                {t('mediaBrowser.resetFrequency')}
                             </button>
                         </div>
-                    )}
-
-                    {/* Le vocabulaire, offert à tous les champs d'étiquette de cet écran. */}
-                    <datalist id="vocabulaire-des-tags">
-                        {allTags.map(tag => <option key={tag} value={tag} />)}
-                    </datalist>
-
-                    {/* Operational Content Area */}
-                    <div className="flex-1 overflow-y-auto p-12 custom-scrollbar bg-app-bg">
-                        
-                        {displayMedia.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-full text-center max-w-md mx-auto">
-                                <div className="w-32 h-32 rounded-[2.5rem] bg-app-surface/50 flex items-center justify-center border border-app-border/10 mb-10 shadow-[inset_0_0_30px_rgba(0,0,0,0.5)] relative">
-                                    <div className="absolute inset-0 rounded-[2.5rem] border border-accent/10 animate-ping opacity-20" />
-                                    <UploadCloud size={48} className="text-app-text/5 animate-pulse" />
-                                </div>
-                                <h4 className="text-2xl font-black uppercase tracking-[0.4em] text-app-text/10 mb-4 font-display">{t('mediaBrowser.noDataDetected')}</h4>
-                                <p className="text-ui-10 font-bold text-app-text/5 uppercase tracking-[0.3em] leading-loose mb-10">
-                                    {t('mediaBrowser.noDataSub')}
-                                </p>
-                                <button 
-                                    onClick={() => {
-                                        setSearch('');
-                                        setTypeFilter('all');
-                                        setSelectedTags([]);
-                                        setSelectedCollectionId(null);
-                                        setCampaignFilterEnabled(false);
-                                        setSmartFilter('none');
-                                    }}
-                                    className="px-10 py-4 rounded-2xl bg-app-text/5 hover:bg-accent/10 text-app-text/20 hover:text-accent text-ui-10 font-black uppercase tracking-[0.25em] border border-app-text/10 hover:border-accent/30 transition-all duration-500"
-                                >
-                                    {t('mediaBrowser.resetFrequency')}
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-10 pb-20 auto-rows-max">
-                                {displayMedia.map(media => (
-                                    <div 
-                                        key={media.id} 
-                                        className="group relative bg-app-surface/40 border border-app-border/10 hover:border-accent/30 rounded-[2.5rem] overflow-hidden transition-all duration-700 hover:shadow-[0_0_60px_rgba(var(--accent-rgb),0.08)] hover:translate-y-[-12px] flex flex-col h-full shadow-2xl backdrop-blur-sm"
+                    ) : (
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(13rem,1fr))] gap-4 pb-6">
+                            {displayMedia.map(media => {
+                                const choisi = editingMediaId === media.id;
+                                return (
+                                    <div
+                                        key={media.id}
+                                        role="button"
+                                        tabIndex={0}
+                                        aria-pressed={choisi}
+                                        onClick={() => setEditingMediaId(choisi ? null : media.id)}
+                                        onDoubleClick={() => setPreviewItem(media)}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') setEditingMediaId(media.id); }}
+                                        className={`group relative flex cursor-pointer flex-col overflow-hidden rounded-xl border bg-app-surface transition-colors ${
+                                            choisi ? 'border-accent ring-1 ring-accent' : 'border-app-border hover:border-accent/50'
+                                        }`}
                                     >
-                                        {/* Visual Tactical Scan Lines */}
-                                        <div className="absolute top-0 left-0 w-full h-[1px] bg-accent/20 opacity-0 group-hover:opacity-100 group-hover:animate-scan z-10 pointer-events-none" />
-
-                                        {/*
-                                          ⚠️ **La case reste visible dès qu'elle est cochée**, et
-                                          ne se montre au survol que sinon : *une sélection
-                                          qu'on ne voit qu'en survolant est une sélection qu'on
-                                          croit perdue.*
-                                        */}
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); basculerLaSelection(media.id); }}
-                                            title={t('mediaBrowser.tags.selectionner')}
-                                            className={`absolute top-5 left-5 z-20 size-8 rounded-xl border flex items-center justify-center transition-all ${
-                                                selectionMultiple.has(media.id)
-                                                    ? 'bg-accent border-accent text-app-on-accent opacity-100'
-                                                    : 'bg-app-bg/70 border-app-border/30 text-app-text/40 opacity-0 group-hover:opacity-100 hover:border-accent/50'
-                                            }`}
-                                        >
-                                            <Check size={14} />
-                                        </button>
-
-                                        {/* Premium Thumbnail Container */}
-                                        <div 
-                                            className="aspect-[4/5] relative overflow-hidden bg-app-bg/40 cursor-pointer"
-                                            onClick={() => setPreviewItem(media)}
-                                        >
+                                        <div className="relative aspect-[4/3] overflow-hidden bg-app-bg">
                                             <MediaItemThumbnail media={media} />
-                                            
-                                            {/* Data Overlay Logic */}
-                                            <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-app-bg via-app-bg/80 to-transparent translate-y-[20px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-10">
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-ui-11 font-black text-accent tracking-tighter drop-shadow-[0_0_8px_rgba(var(--accent-rgb),0.6)]">{formatSize(media.size)}</span>
-                                                        <span className="text-ui-8 font-bold text-app-text/30 uppercase tracking-widest mt-1.5 opacity-60">
-                                                            {t('mediaBrowser.synchronizedDate', { date: new Date(media.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit' }) })}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center gap-3">
-                                                        <button 
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                if (confirm(t('mediaBrowser.initiateDeletion', { name: media.name }))) {
-                                                                    deleteMedia(media.id);
-                                                                }
-                                                            }}
-                                                            className="w-10 h-10 flex items-center justify-center bg-etat-danger/10 text-etat-danger/60 hover:bg-etat-danger/20 hover:text-etat-danger rounded-2xl transition-all border border-etat-danger/10 hover:border-etat-danger/40"
-                                                            title={t('mediaBrowser.deleteAsset')}
-                                                        >
-                                                            <Trash2 size={16} />
-                                                        </button>
-                                                        <button 
-                                                            onClick={(e) => { e.stopPropagation(); onSelect(media.id); }}
-                                                            className="w-12 h-12 flex items-center justify-center bg-accent text-app-on-accent rounded-full transition-all shadow-[0_0_30px_rgba(var(--accent-rgb),0.5)] hover:scale-110 active:scale-90"
-                                                            title={t('mediaBrowser.selectTransmission')}
-                                                        >
-                                                            <Check size={20} strokeWidth={3} />
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                            {/* Le type et la taille, lisibles sans survoler */}
+                                            <div className="absolute left-2 top-2 flex items-center gap-1.5">
+                                                <span className="flex items-center gap-1 rounded bg-app-bg/85 px-1.5 py-0.5 text-ui-9 font-black uppercase tracking-widest text-app-text">
+                                                    {TYPE_ICONS[media.type] || <FileText size={12} />}{t(`mediaBrowser.tabs.${media.type}`)}
+                                                </span>
+                                                {media.isPersistent && <span className="rounded bg-app-bg/85 p-1 text-accent" title={t('mediaBrowser.persistentBadge')}><Lock size={11} /></span>}
                                             </div>
-
-                                            {/* HUD Type Icon Badge */}
-                                            <div className="absolute top-6 left-6 flex items-center gap-2">
-                                                <div className="w-10 h-10 rounded-2xl bg-app-bg/40 backdrop-blur-md border border-app-text/10 flex items-center justify-center text-app-text/40 opacity-60 group-hover:opacity-100 group-hover:text-accent group-hover:border-accent/20 transition-all duration-500">
-                                                    {TYPE_ICONS[media.type] || <FileText size={18} />}
-                                                </div>
-                                                {media.isPersistent && (
-                                                    <div className="w-10 h-10 rounded-2xl bg-accent/10 backdrop-blur-md border border-accent/20 flex items-center justify-center text-accent shadow-[0_0_15px_rgba(var(--accent-rgb),0.2)]">
-                                                        <Lock size={16} />
-                                                    </div>
-                                                )}
-                                                {estOrphelin(media.id) && (
-                                                    <div
-                                                        className="h-10 px-3 rounded-2xl bg-app-bg/40 backdrop-blur-md border border-app-text/10 flex items-center gap-1.5 text-app-text/40"
-                                                        title={t('mediaBrowser.orphanBadgeTitle')}
-                                                    >
-                                                        <Unplug size={13} />
-                                                        <span className="text-ui-8 font-black uppercase tracking-widest">
-                                                            {t('mediaBrowser.orphanBadge')}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
+                                            <span className="absolute bottom-2 right-2 rounded bg-app-bg/85 px-1.5 py-0.5 font-mono text-ui-9 font-bold text-app-text">{formatSize(media.size)}</span>
+                                            {/*
+                                              ⚠️ **La case reste visible dès qu'elle est cochée** : une
+                                              sélection qu'on ne voit qu'en survolant est une sélection
+                                              qu'on croit perdue.
+                                            */}
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); basculerLaSelection(media.id); }}
+                                                title={t('mediaBrowser.tags.selectionner')}
+                                                aria-pressed={selectionMultiple.has(media.id)}
+                                                className={`absolute right-2 top-2 flex size-7 items-center justify-center rounded-md border transition-opacity ${
+                                                    selectionMultiple.has(media.id)
+                                                        ? 'border-accent bg-accent text-app-on-accent opacity-100'
+                                                        : 'border-app-border bg-app-bg/85 text-app-muted opacity-0 hover:border-accent/50 group-hover:opacity-100'
+                                                }`}
+                                            >
+                                                <Check size={13} />
+                                            </button>
                                         </div>
 
-                                        {/* Card Metadata Footer */}
-                                        <div className="p-7 flex flex-col flex-1 relative">
-                                            {/* Micro HUD decoration */}
-                                            <div className="absolute -right-4 -bottom-4 w-12 h-12 border border-app-text/5 rotate-45 pointer-events-none opacity-20" />
-                                            
-                                            <div className="flex items-start justify-between mb-4 gap-4">
-                                                <h3 className="text-sm font-black uppercase tracking-wider text-app-text group-hover:text-accent transition-colors leading-tight truncate flex-1 font-display" title={media.name}>
-                                                    {media.name}
-                                                </h3>
-                                                <button 
+                                        <div className="flex flex-1 flex-col gap-2 p-3">
+                                            <div className="flex items-start gap-2">
+                                                <p className="min-w-0 flex-1 truncate text-sm font-bold text-app-text" title={media.name}>{media.name}</p>
+                                                <button
                                                     onClick={(e) => { e.stopPropagation(); handleRenameMedia(media.id, media.name); }}
-                                                    className="opacity-0 group-hover:opacity-40 hover:!opacity-100 transition-all text-app-text/50 hover:text-accent"
+                                                    className="shrink-0 text-app-muted opacity-0 transition-opacity hover:text-accent group-hover:opacity-100"
                                                     title={t('mediaBrowser.renameIdent')}
                                                     aria-label={t('mediaBrowser.renameIdent')}
                                                 >
                                                     <Edit2 size={12} />
                                                 </button>
                                             </div>
-
-                                            {/* Domain Tags Row */}
-                                            <div className="flex flex-wrap gap-2 mb-6 min-h-[22px]">
-                                                {collections.filter(c => c.mediaIds.includes(media.id)).map(coll => (
-                                                    <span key={coll.id} className="inline-flex items-center gap-2 bg-gm-cyan/10 text-gm-cyan px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase border border-gm-cyan/20">
-                                                        <FileText size={10} className="opacity-50" />
-                                                        {coll.name}
-                                                        <button 
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                toggleMediaInCollection(coll.id, media.id);
-                                                            }}
-                                                            className="hover:text-etat-danger opacity-30 hover:opacity-100 transition-all ml-1"
-                                                            title={t('mediaBrowser.removeFromFolder')}
-                                                            aria-label={t('mediaBrowser.removeFromFolder')}
-                                                        >
-                                                            <X size={10} />
-                                                        </button>
-                                                    </span>
-                                                ))}
-                                                {media.campaignIds.map(cid => {
-                                                    const campaignName = campaigns.find(c => c.id === cid)?.name || t('unknown_unit', { id: cid.substring(0, 4) });
-                                                    return (
-                                                        <span key={cid} className="bg-gm-gold/10 text-gm-gold border border-gm-gold/20 px-3 py-1 rounded-full text-ui-9 font-black tracking-widest uppercase">
-                                                            {campaignName}
-                                                        </span>
-                                                    );
-                                                })}
-                                            </div>
-                                            {/* Tactical Neural Tags */}
-                                            <div className="mt-auto pt-5 border-t border-app-border/10 flex items-center justify-between">
-                                                <div className="flex flex-wrap gap-2 items-center max-w-[75%] overflow-hidden">
-                                                    {media.tags.map(t => (
-                                                        <span key={t} className="text-ui-9 font-bold text-app-text/10 group-hover:text-accent/40 transition-colors uppercase tracking-widest">#{t}</span>
-                                                    ))}
-                                                    {media.tags.length === 0 && <span className="text-ui-8 font-bold text-app-text/5 uppercase italic tracking-[0.2em]">{t('mediaBrowser.noTagTraces')}</span>}
-                                                </div>
-                                                
-                                                <div className="relative">
-                                                    <button 
+                                            {/* Les étiquettes en pastilles — un clic filtre la grille */}
+                                            <div className="flex min-h-[1.5rem] flex-wrap gap-1">
+                                                {media.tags.map(tag => (
+                                                    <button
+                                                        key={tag}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            setEditingMediaId(editingMediaId === media.id ? null : media.id);
+                                                            setSelectedTags(prev => prev.includes(tag) ? prev : [...prev, tag]);
+                                                            setSelectedCollectionId(null);
+                                                            setSmartFilter('none');
                                                         }}
-                                                        className={`w-10 h-10 flex items-center justify-center rounded-2xl border transition-all duration-500 ${editingMediaId === media.id ? 'bg-accent/20 border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 border-transparent text-app-text/10 hover:text-accent hover:bg-accent/10'}`}
-                                                        title={t('mediaBrowser.detailedEdition')}
+                                                        className={`rounded border px-1.5 py-0.5 text-ui-10 font-semibold transition-colors ${
+                                                            selectedTags.includes(tag) ? 'border-accent/60 text-accent' : 'border-app-border text-app-muted hover:text-accent'
+                                                        }`}
                                                     >
-                                                        <Plus size={18} className={`transition-transform duration-500 ${editingMediaId === media.id ? 'rotate-45' : ''}`} />
+                                                        #{tag}
                                                     </button>
-                                                </div>
+                                                ))}
+                                                {media.tags.length === 0 && <span className="text-ui-10 italic text-app-subtle">{t('mediaBrowser.noTagTraces')}</span>}
+                                                {estOrphelin(media.id) && (
+                                                    <span className="flex items-center gap-1 rounded border border-dashed border-app-border px-1.5 py-0.5 text-ui-10 text-app-muted" title={t('mediaBrowser.orphanBadgeTitle')}>
+                                                        <Unplug size={10} />{t('mediaBrowser.orphanBadge')}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="mt-auto flex items-center justify-end gap-1.5 pt-1 opacity-0 transition-opacity group-hover:opacity-100">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        gmConfirm(t('mediaBrowser.initiateDeletion', { name: media.name }), () => {
+                                                            if (editingMediaId === media.id) setEditingMediaId(null);
+                                                            void deleteMedia(media.id);
+                                                        });
+                                                    }}
+                                                    className="rounded-md p-1.5 text-app-muted hover:bg-etat-danger/10 hover:text-etat-danger"
+                                                    title={t('mediaBrowser.deleteAsset')}
+                                                    aria-label={t('mediaBrowser.deleteAsset')}
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); onSelect(media.id); }}
+                                                    className="flex items-center gap-1 rounded-md bg-accent px-2.5 py-1.5 text-ui-10 font-black uppercase tracking-widest text-app-on-accent hover:brightness-110"
+                                                    title={t('mediaBrowser.selectTransmission')}
+                                                >
+                                                    <Check size={13} strokeWidth={3} />{t('mediaBrowser.use')}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </main>
-            </div>
-            {/* Tactical Detail Panel Overlay Backdrop */}
-            {editingMediaId && (
-                <div 
-                    className="absolute inset-0 z-[115] bg-app-bg/40 backdrop-blur-sm animate-in fade-in duration-300"
-                    onClick={() => setEditingMediaId(null)}
-                />
-            )}
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
 
-            {/* Tactical Detail Panel Component */}
-            {editingMediaId && (
-                <TacticalDetailPanel 
-                    media={mediaList.find(m => m.id === editingMediaId)!}
-                    onClose={() => setEditingMediaId(null)}
-                    collections={collections}
-                    toggleMediaInCollection={toggleMediaInCollection}
-                    updateMediaTags={updateMediaTags}
-                    updateMediaCampaigns={updateMediaCampaigns}
-                    toggleMediaPersistence={toggleMediaPersistence}
-                    deleteMedia={deleteMedia}
-                    campaigns={campaigns}
-                    onSelect={onSelect}
-                />
-            )}
+                {/* ── À droite : le média choisi ── */}
+                {mediaChoisi && (
+                    <TacticalDetailPanel
+                        integre
+                        media={mediaChoisi}
+                        onClose={() => setEditingMediaId(null)}
+                        collections={collections}
+                        toggleMediaInCollection={toggleMediaInCollection}
+                        updateMediaTags={updateMediaTags}
+                        updateMediaCampaigns={updateMediaCampaigns}
+                        toggleMediaPersistence={toggleMediaPersistence}
+                        deleteMedia={deleteMedia}
+                        campaigns={campaigns}
+                        onSelect={onSelect}
+                    />
+                )}
+            </div>
         </div>,
         document.body
     );

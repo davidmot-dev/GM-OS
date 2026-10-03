@@ -12,6 +12,7 @@ import {
 } from '../../../components/media/vocabulaireDesTags';
 import { tagsProposes } from '../../../components/media/tagsProposes';
 import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
+import { useMediaUrl } from '../../../hooks/useMediaUrl';
 
 interface TacticalDetailPanelProps {
     media: MediaItem;
@@ -24,6 +25,12 @@ interface TacticalDetailPanelProps {
     deleteMedia: (mid: string) => void;
     campaigns: Campaign[];
     onSelect: (mid: string) => void;
+    /**
+     * **Intégré à la médiathèque** — refonte, L6, maquette retenue : le panneau
+     * du média choisi est une colonne à droite de la grille, plus un tiroir
+     * qui la recouvre. Image-OS garde le tiroir.
+     */
+    integre?: boolean;
 }
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
@@ -43,8 +50,10 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
     toggleMediaPersistence,
     deleteMedia, 
     campaigns, 
-    onSelect 
+    onSelect,
+    integre = false,
 }) => {
+    const url = useMediaUrl(media.id);
     const { t, i18n } = useTranslation(['modules', 'common']);
     const [newTag, setNewTag] = useState('');
 
@@ -109,11 +118,13 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 
     return (
         <div 
-            className="fixed inset-y-0 right-0 w-[500px] bg-app-surface/95 backdrop-blur-3xl border-l border-app-border/20 z-[120] flex flex-col shadow-[-20px_0_60px_rgba(0,0,0,0.8)] animate-in slide-in-from-right duration-500"
+            className={integre
+                ? 'flex h-full w-[24rem] shrink-0 flex-col overflow-hidden rounded-xl border border-app-border bg-app-surface'
+                : 'fixed inset-y-0 right-0 w-[500px] bg-app-surface/95 backdrop-blur-3xl border-l border-app-border/20 z-[120] flex flex-col shadow-[-20px_0_60px_rgba(0,0,0,0.8)] animate-in slide-in-from-right duration-500'}
             onClick={e => e.stopPropagation()}
         >
             {/* Header HUD */}
-            <div className="p-8 border-b border-app-border/10 flex items-center justify-between bg-accent/5">
+            <div className={`${integre ? 'p-4' : 'p-8'} border-b border-app-border/10 flex items-center justify-between bg-accent/5`}>
                 <div className="flex items-center gap-5">
                     <div className="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center text-accent border border-accent/20 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]">
                         {TYPE_ICONS[media.type] || <FileText size={20} />}
@@ -133,7 +144,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 </div>
                 <button 
                     onClick={onClose}
-                    className="w-12 h-12 flex items-center justify-center bg-app-text/5 hover:bg-app-text/10 text-app-text/20 hover:text-app-text rounded-2xl transition-all border border-app-border/10 hover:border-app-border/20"
+                    className="w-12 h-12 flex items-center justify-center bg-app-text/5 hover:bg-app-text/10 text-app-muted hover:text-app-text rounded-2xl transition-all border border-app-border/10 hover:border-app-border/20"
                     title={t('image.detail.actions.closePanel')}
                     aria-label={t('image.detail.actions.closePanel')}
                 >
@@ -141,7 +152,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-8 space-y-10">
+            <div className={`flex-1 overflow-y-auto custom-scrollbar ${integre ? 'p-4 space-y-6' : 'p-8 space-y-10'}`}>
                 {/* Large Preview */}
                 <div className="relative group aspect-video rounded-3xl overflow-hidden bg-fixe-noir/40 border border-app-border/10 shadow-2xl">
                     <MediaItemThumbnail media={media} />
@@ -150,7 +161,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         <span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-lg text-ui-10 font-black text-accent uppercase tracking-widest">
                             {media.type}
                         </span>
-                        <span className="text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">
+                        <span className="text-ui-10 font-bold text-app-muted uppercase tracking-widest">
                             {formatSize(media.size)}
                         </span>
                     </div>
@@ -158,12 +169,24 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                     {/* Persistence Toggle Overlay */}
                     <button 
                         onClick={() => toggleMediaPersistence(media.id)}
-                        className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 backdrop-blur-md border ${media.isPersistent ? 'bg-accent/20 border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-fixe-noir/40 border-app-border/10 text-app-text/20 hover:text-app-text/60 hover:bg-fixe-noir/60'}`}
+                        className={`absolute top-6 right-6 w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 backdrop-blur-md border ${media.isPersistent ? 'bg-accent/20 border-accent/40 text-accent shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)]' : 'bg-fixe-noir/40 border-app-border/10 text-app-muted hover:text-app-text/60 hover:bg-fixe-noir/60'}`}
                         title={media.isPersistent ? t('image.detail.actions.disablePersistence') : t('image.detail.actions.enablePersistence')}
                     >
                         {media.isPersistent ? <Lock size={20} /> : <Unlock size={20} />}
                     </button>
                 </div>
+
+                {/*
+                  **Lire le média là où on le choisit** — refonte, L6 : un son
+                  s'écoute et une vidéo se regarde sans ouvrir l'aperçu plein
+                  écran. Le lecteur du système, rien à apprendre.
+                */}
+                {url && media.type === 'audio' && (
+                    <audio controls src={url} className="w-full" preload="metadata" />
+                )}
+                {url && media.type === 'video' && (
+                    <video controls src={url} className="w-full rounded-xl border border-app-border" preload="metadata" />
+                )}
 
                 {/* Main Actions */}
                 <div className="grid grid-cols-2 gap-4">
@@ -192,14 +215,14 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <section>
                     <div className="flex items-center gap-3 mb-6">
                         <Folder size={14} className="text-accent/40" />
-                        <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.classification')}</h4>
+                        <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-muted font-display">{t('image.detail.classification')}</h4>
                     </div>
                     <div className="space-y-2">
                         {collections.map(coll => (
                             <button
                                 key={coll.id}
                                 onClick={() => toggleMediaInCollection(coll.id, media.id)}
-                                className={`w-full flex items-center justify-between px-6 py-4 rounded-2xl text-ui-11 font-bold uppercase tracking-widest transition-all duration-300 ${coll.mediaIds.includes(media.id) ? 'bg-accent/20 text-accent border border-accent/30 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 text-app-text/30 border border-transparent hover:bg-app-text/10'}`}
+                                className={`w-full flex items-center justify-between px-6 py-4 rounded-2xl text-ui-11 font-bold uppercase tracking-widest transition-all duration-300 ${coll.mediaIds.includes(media.id) ? 'bg-accent/20 text-accent border border-accent/30 shadow-[0_0_20px_rgba(var(--accent-rgb),0.1)]' : 'bg-app-text/5 text-app-muted border border-transparent hover:bg-app-text/10'}`}
                             >
                                 <div className="flex items-center gap-4">
                                     <Folder size={16} className={coll.mediaIds.includes(media.id) ? 'text-accent' : 'opacity-30'} />
@@ -210,7 +233,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         ))}
                         {collections.length === 0 && (
                             <div className="py-6 text-center border-2 border-dashed border-app-border/10 rounded-3xl">
-                                <p className="text-ui-10 italic text-app-text/5 uppercase tracking-widest font-bold">{t('image.detail.noFolders')}</p>
+                                <p className="text-ui-10 italic text-app-subtle uppercase tracking-widest font-bold">{t('image.detail.noFolders')}</p>
                             </div>
                         )}
                     </div>
@@ -229,7 +252,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                             className={`w-full flex items-center gap-4 px-6 py-4 rounded-3xl border transition-all ${
                                 laVideoBoucle(media)
                                     ? 'bg-accent/5 border-accent/30 text-accent'
-                                    : 'bg-app-surface/40 border-app-border/10 text-app-text/40'
+                                    : 'bg-app-surface/40 border-app-border/10 text-app-muted'
                             }`}
                         >
                             <Repeat size={16} className="shrink-0" />
@@ -240,7 +263,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                             </span>
                             {laVideoBoucle(media) && <Check size={16} className="shrink-0" />}
                         </button>
-                        <p className="mt-3 px-2 text-ui-9 font-bold uppercase tracking-widest text-app-text/20 leading-relaxed">
+                        <p className="mt-3 px-2 text-ui-9 font-bold uppercase tracking-widest text-app-muted leading-relaxed">
                             {t('image.detail.boucle.aide')}
                         </p>
                     </section>
@@ -250,7 +273,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 <section>
                     <div className="flex items-center gap-3 mb-6">
                         <Tag size={14} className="text-accent/40" />
-                        <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/30 font-display">{t('image.detail.matrixTags')}</h4>
+                        <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-muted font-display">{t('image.detail.matrixTags')}</h4>
                     </div>
                     <div className="bg-app-surface/40 border border-app-border/10 rounded-[2rem] p-6 space-y-6">
                          <div className="flex flex-wrap gap-2">
@@ -267,14 +290,14 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                     </button>
                                 </span>
                             ))}
-                            {media.tags.length === 0 && <span className="text-ui-9 font-bold text-app-text/10 uppercase italic tracking-widest">{t('image.detail.noTags')}</span>}
+                            {media.tags.length === 0 && <span className="text-ui-9 font-bold text-app-subtle uppercase italic tracking-widest">{t('image.detail.noTags')}</span>}
                         </div>
                         <input
                             type="text"
                             placeholder={t('image.detail.placeholders.newTag')}
                             value={newTag}
                             onChange={e => setNewTag(e.target.value)}
-                            className="w-full bg-app-bg/60 border border-app-border/10 rounded-2xl px-6 py-4 text-xs font-bold text-accent outline-none placeholder:text-app-text/10 uppercase tracking-[0.2em] focus:border-accent/30 transition-all font-display"
+                            className="w-full bg-app-bg/60 border border-app-border/10 rounded-2xl px-6 py-4 text-xs font-bold text-accent outline-none placeholder:text-app-subtle uppercase tracking-[0.2em] focus:border-accent/30 transition-all font-display"
                             onKeyDown={async e => {
                                 if (e.key === 'Escape') { e.stopPropagation(); setNewTag(''); return; }
                                 if (e.key === 'Enter') await poserUnTag(newTag);
@@ -326,7 +349,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                         */}
                         {saisie === '' && propositions.length > 0 && (
                             <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-ui-9 font-bold uppercase tracking-widest text-app-text/30">
+                                <span className="text-ui-9 font-bold uppercase tracking-widest text-app-muted">
                                     {t('image.detail.tags.proposees')}
                                 </span>
                                 {propositions.map(tag => (
@@ -345,7 +368,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
 
                 {/* Usage Section */}
                 <section className="bg-app-surface/20 rounded-3xl p-6 space-y-3">
-                    <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/30 font-display">
+                    <h4 className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-muted font-display">
                         {t('image.detail.usage.title')}
                     </h4>
 
@@ -355,7 +378,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                 <li key={`${usage.module}-${i}`} className="flex items-start gap-3">
                                     <Link2 size={12} className="text-accent/50 mt-0.5 flex-shrink-0" />
                                     <span className="text-ui-11 leading-tight">
-                                        <span className="font-black uppercase tracking-widest text-app-text/40 text-ui-9">
+                                        <span className="font-black uppercase tracking-widest text-app-muted text-ui-9">
                                             {usage.module}
                                         </span>
                                         <span className="block text-app-text/60">{usage.sujet}</span>
@@ -392,15 +415,15 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                 {/* Metadata Section */}
                 <section className="bg-app-surface/20 rounded-3xl p-6 space-y-4">
                     <div className="flex items-center justify-between text-ui-10 font-bold uppercase tracking-widest">
-                        <span className="text-app-text/20">{t('image.detail.identifier')}</span>
+                        <span className="text-app-muted">{t('image.detail.identifier')}</span>
                         <span className="text-app-text/60 font-mono text-ui-9">{media.id.split('-')[0]}</span>
                     </div>
                     <div className="flex items-center justify-between text-ui-10 font-bold uppercase tracking-widest">
-                        <span className="text-app-text/20">{t('image.detail.importDate')}</span>
+                        <span className="text-app-muted">{t('image.detail.importDate')}</span>
                         <span className="text-app-text/60">{new Date(media.createdAt).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US')}</span>
                     </div>
                     <div className="pt-4 border-t border-app-border/10">
-                        <span className="text-ui-9 font-black text-app-text/20 uppercase tracking-[0.3em] block mb-3 font-display">{t('image.detail.operationalAttribution')}</span>
+                        <span className="text-ui-9 font-black text-app-muted uppercase tracking-[0.3em] block mb-3 font-display">{t('image.detail.operationalAttribution')}</span>
                         <div className="flex flex-wrap gap-2">
                              {campaigns.map(campaign => {
                                  const isLinked = media.campaignIds.includes(campaign.id);
@@ -413,7 +436,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                                  : [...media.campaignIds, campaign.id];
                                              updateMediaCampaigns(media.id, newCampaignIds);
                                          }}
-                                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all duration-300 border ${isLinked ? 'bg-etat-alerte/20 text-etat-alerte border-etat-alerte/40 shadow-[0_0_15px_rgba(245,158,11,0.1)]' : 'bg-app-surface/5 text-app-text/20 border-transparent hover:border-app-border/10 hover:text-app-text/40'}`}
+                                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-ui-9 font-black uppercase tracking-widest transition-all duration-300 border ${isLinked ? 'bg-gm-gold/15 text-gm-gold border-gm-gold/40' : 'bg-app-surface/5 text-app-muted border-transparent hover:border-app-border/10 hover:text-app-text/40'}`}
                                          title={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
                                          aria-label={isLinked ? t('image.detail.actions.unlinkCampaign', { name: campaign.name }) : t('image.detail.actions.linkCampaign', { name: campaign.name })}
                                      >
@@ -423,7 +446,7 @@ export const TacticalDetailPanel: React.FC<TacticalDetailPanelProps> = ({
                                  );
                              })}
                              {campaigns.length === 0 && (
-                                 <span className="text-ui-8 font-bold text-app-text/5 uppercase italic tracking-widest">{t('image.detail.noCampaigns')}</span>
+                                 <span className="text-ui-8 font-bold text-app-subtle uppercase italic tracking-widest">{t('image.detail.noCampaigns')}</span>
                              )}
                         </div>
                     </div>
