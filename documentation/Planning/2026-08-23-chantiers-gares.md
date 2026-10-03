@@ -9651,6 +9651,42 @@ M1, M2**, une séance jouée entre deux lots → T5 le fini → T6 l'épreuve su
 
 ---
 
+### 124 · Le graphe de la Trame en cartes, comme la maquette de Stitch (garé le 2026-10-04)
+
+**Origine** : David, le 2026-10-04 : *« la représentation “Graphe” de la Trame imaginée par Stitch
+est très différente de ce que j'ai — pourrait-on prendre un autre moteur de graphe pour être plus
+proche du rendu de Stitch ? »* La maquette retenue est `stitch/trame/trame-graphe.png` (registre
+§ 76 ; `stitch/README.md`, « La Trame — retenue le 2026-09-27 »).
+
+**L'écart, constaté dans le code** : `trame/GrapheDeLaTrame.tsx` (1 082 lignes) dessine sur un
+**canevas** avec `react-force-graph-2d` — un nœud est un point peint à la main
+(`nodeCanvasObject`). La maquette montre des **cartes** (acte, statut, titre, lieu, PNJ), des
+**flèches courbes** qui partent du bord des cartes, et le **panneau du nœud choisi** à droite. Une
+carte est du HTML : la peindre sur un canevas obligerait à tout refaire à la main (texte tronqué,
+badges, polices du thème, zones de clic), et le canevas ne lit pas les jetons du thème.
+
+**La piste proposée** : **React Flow** (`@xyflow/react`) pour la Trame seulement.
+
+- Les nœuds sont des **composants React** : le socle, les jetons et les personnalités s'y
+  appliquent comme partout.
+- Courbes, zoom, déplacement et **points d'accroche** (le geste « Relier ») sont fournis.
+- **Pas de physique**, et la Trame n'en a pas besoin : le rangement du § 120 (chaîne ou étoile,
+  décision de David du 25/09) fournit les positions ; « Libre » devient un glisser, avec les
+  positions déjà mémorisées (`fx`/`fy`).
+- **Le graphe social des PNJ garde `react-force-graph-2d`** : là, la physique a un sens (familles
+  regroupées, rivalités écartées).
+
+**Ce que ça coûte** : ⛔ **un paquet à installer — accord de David requis** (`AGENTS.md`) ; la
+réécriture du dessin du graphe — onglets, filtres, constats et gestes Relier / Ranger / Libre se
+gardent ; les « à régler à l'intégration » de la maquette (noms tronqués, cartes sous le panneau,
+inventions de Stitch à écarter : « ID : SCN-0314 », « Verrouillage édition », « Session live
+#42 », « + Ajouter une sortie »).
+
+**État** : ⏳ **garé, rien de commencé.** **À trancher par David** : l'accord pour le paquet, et la
+place du chantier — **avant ou après la refonte des tablettes** (§ 123).
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -9714,6 +9750,7 @@ M1, M2**, une séance jouée entre deux lots → T5 le fini → T6 l'épreuve su
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
 | 58 | **La refonte des tablettes** | ⏳ **PLAN FAIT le 04/10, rien de commencé** — joueurs d'abord, meneur ensuite ; les tablettes suivront le thème du PC, maquettes Stitch, T2 à apparence constante. Voir § 123 et `2026-10-04-refonte-tablettes.md` | T0 : l'inventaire des écrans et un e2e par onglet | Rien |
+| 59 | **Le graphe de la Trame en cartes** | ⏳ **GARÉ le 04/10** — rapprocher le graphe de la maquette Stitch (cartes, flèches courbes, panneau du nœud) ; piste : React Flow pour la Trame seule. Voir § 124 | David : accord pour le paquet, et place avant ou après les tablettes | La décision de David |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
