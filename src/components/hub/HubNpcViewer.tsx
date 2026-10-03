@@ -81,9 +81,9 @@ export const HubNpcViewer: React.FC<HubNpcViewerProps> = ({ npc, onClose }) => {
                                     </span>
                                 </div>
                                 {npc.faction && (
-                                    <div className="flex items-center gap-2 px-4 py-1.5 bg-indigo-500/10 rounded-full border border-indigo-500/20">
-                                        <Info size={12} className="text-indigo-400" />
-                                        <span className="text-ui-10 font-black text-indigo-400/80 uppercase tracking-widest text-shadow-glow">
+                                    <div className="flex items-center gap-2 px-4 py-1.5 bg-etat-info/10 rounded-full border border-etat-info/20">
+                                        <Info size={12} className="text-etat-info" />
+                                        <span className="text-ui-10 font-black text-etat-info/80 uppercase tracking-widest text-shadow-glow">
                                             {npc.faction}
                                         </span>
                                     </div>

@@ -140,7 +140,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
     return (
         <div className="fixed inset-0 z-[150] bg-app-bg/95 backdrop-blur-3xl p-4 md:p-8 flex flex-col animate-in fade-in slide-in-from-bottom-10 duration-500 overflow-hidden">
             
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gm-cyan to-transparent opacity-50" />
 
             {/* Header */}
             <div className="flex items-center justify-between mb-8 flex-shrink-0">
@@ -343,7 +343,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                                         </div>
                                                     </div>
                                                 ) : field.type === 'checkbox' ? (
-                                                    <span className={`text-sm font-black uppercase mt-1 block ${value ? 'text-emerald-500' : 'text-app-text/10'}`}>
+                                                    <span className={`text-sm font-black uppercase mt-1 block ${value ? 'text-etat-succes' : 'text-app-text/10'}`}>
                                                         {value ? 'OUI' : 'NON'}
                                                     </span>
                                                 ) : (
@@ -358,11 +358,11 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-app-border/10">
                             <section className="space-y-4">
-                                <h3 className="text-xs font-black text-purple-500 uppercase tracking-widest flex items-center gap-2">
+                                <h3 className="text-xs font-black text-gm-violet uppercase tracking-widest flex items-center gap-2">
                                     <BookOpen size={14} /> Description
                                 </h3>
                                 <textarea 
-                                    className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-sm text-app-text/80 focus:border-purple-500/40 outline-none min-h-[140px] resize-none"
+                                    className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-sm text-app-text/80 focus:border-gm-violet/40 outline-none min-h-[140px] resize-none"
                                     value={localDescription}
                                     onChange={(e) => setLocalDescription(e.target.value)}
                                     onBlur={saveNarrative}
@@ -372,11 +372,11 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             </section>
  
                             <section className="space-y-4">
-                                <h3 className="text-xs font-black text-amber-600 uppercase tracking-widest flex items-center gap-2">
+                                <h3 className="text-xs font-black text-gm-gold uppercase tracking-widest flex items-center gap-2">
                                     <PenTool size={14} /> Notes Perso
                                 </h3>
                                 <textarea 
-                                    className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-sm text-amber-600/80 focus:border-amber-500/40 outline-none min-h-[140px] resize-none font-mono"
+                                    className="w-full bg-app-bg/40 border border-app-border/10 rounded-2xl p-4 text-sm text-gm-gold/80 focus:border-gm-gold/40 outline-none min-h-[140px] resize-none font-mono"
                                     value={localPlayerNotes}
                                     onChange={(e) => setLocalPlayerNotes(e.target.value)}
                                     onBlur={saveNarrative}
@@ -407,7 +407,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
 
             <div className="mt-auto pt-6 flex items-center justify-between border-t border-app-border/10">
                 <div className="flex items-center gap-3 opacity-30">
-                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse" />
                     <span className="text-ui-10 font-black uppercase tracking-[0.3em] text-app-text">Liaison Active</span>
                 </div>
                 <Layout size={12} className="text-app-text/10" />

@@ -66,8 +66,8 @@ export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRo
                     resultat={lastRoll}
                     classes={reussi => 'mt-4 px-12 py-3 rounded-full border-2 text-xl font-black uppercase tracking-[0.25em] backdrop-blur-md shadow-2xl transition-all '
                         + (reussi
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/50 shadow-glow-emerald/30'
-                            : 'bg-rose-500/10 text-rose-400 border-rose-500/50 shadow-glow-rose/30')}
+                            ? 'bg-etat-succes/10 text-etat-succes border-etat-succes/50 shadow-glow-emerald/30'
+                            : 'bg-etat-danger/10 text-etat-danger border-etat-danger/50 shadow-glow-rose/30')}
                 />
             </div>
         </div>

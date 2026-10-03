@@ -20,8 +20,8 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                     <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Cartographie des territoires explorés par le groupe.</p>
                 </div>
                 <div className="flex gap-2">
-                    <div className="text-ui-10 font-black bg-emerald-500/10 border border-emerald-500/20 px-6 py-2 rounded-full text-emerald-400 uppercase tracking-widest flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <div className="text-ui-10 font-black bg-etat-succes/10 border border-etat-succes/20 px-6 py-2 rounded-full text-etat-succes uppercase tracking-widest flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse" />
                         {atlasMaps.length} Lieux Découverts
                     </div>
                 </div>
@@ -51,13 +51,13 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                                 )}
 
                                 <div className="absolute top-4 right-4 z-20">
-                                    <div className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-ui-7 font-black text-white/60 uppercase tracking-widest">
+                                    <div className="px-3 py-1 bg-app-bg/40 backdrop-blur-md rounded-full border border-app-text/10 text-ui-7 font-black text-app-text/60 uppercase tracking-widest">
                                         {map.type}
                                     </div>
                                 </div>
 
                                 <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-700">
-                                    <div className="px-6 py-2 bg-accent text-app-bg rounded-full text-ui-9 font-black uppercase tracking-[0.2em] shadow-glow-accent">
+                                    <div className="px-6 py-2 bg-accent text-app-on-accent rounded-full text-ui-9 font-black uppercase tracking-[0.2em] shadow-glow-accent">
                                         Consulter l'Atlas
                                     </div>
                                 </div>

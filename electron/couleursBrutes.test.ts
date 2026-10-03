@@ -79,6 +79,20 @@ const FICHIERS_MIGRES: string[] = [
     'components/common/ErrorBoundary.tsx', // L6, 2026-10-03
     'components/common/LoadingOverlay.tsx', // L6, 2026-10-03
     'components/audio/MasterAudioController.tsx', // L6, 2026-10-03
+    'components/hub/HubAtlas.tsx', // L6, 2026-10-03
+    'components/hub/HubAtlasViewer.tsx', // L6, 2026-10-03
+    'components/hub/HubCharacterSheet.tsx', // L6, 2026-10-03
+    'components/hub/HubClockWidgets.tsx', // L6, 2026-10-03
+    'components/hub/HubCombatTracker.tsx', // L6, 2026-10-03
+    'components/hub/HubDiceDisplay.tsx', // L6, 2026-10-03
+    'components/hub/HubInventory.tsx', // L6, 2026-10-03
+    'components/hub/HubItemViewer.tsx', // L6, 2026-10-03
+    'components/hub/HubMainDeCartes.tsx', // L6, 2026-10-03
+    'components/hub/HubNotificationCenter.tsx', // L6, 2026-10-03
+    'components/hub/HubNpcViewer.tsx', // L6, 2026-10-03
+    'components/hub/HubProjectionCard.tsx', // L6, 2026-10-03
+    'components/hub/HubRuleViewer.tsx', // L6, 2026-10-03
+    'components/hub/LobbyOnboarding.tsx', // L6, 2026-10-03
 ];
 
 function releve(): Map<string, number> {

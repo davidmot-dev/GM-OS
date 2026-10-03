@@ -88,12 +88,12 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                     return (
                                         <div 
                                             key={item.id}
-                                            className={`group relative flex flex-col gap-2 p-3 rounded-[1.5rem] bg-accent/5 border border-white/5 transition-all duration-500 shadow-lg ${isPending ? 'opacity-50 grayscale' : 'hover:border-accent/40'}`}
+                                            className={`group relative flex flex-col gap-2 p-3 rounded-[1.5rem] bg-accent/5 border border-app-text/5 transition-all duration-500 shadow-lg ${isPending ? 'opacity-50 grayscale' : 'hover:border-accent/40'}`}
                                         >
-                                            <div className="relative aspect-square w-full rounded-[1.2rem] overflow-hidden bg-black/40 flex items-center justify-center">
+                                            <div className="relative aspect-square w-full rounded-[1.2rem] overflow-hidden bg-app-bg/40 flex items-center justify-center">
                                                 <Package className={`${isPending ? 'text-app-text/20' : 'text-accent/20 group-hover:scale-110'} transition-transform duration-700`} size={32} />
                                                 {isPending && (
-                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                                                    <div className="absolute inset-0 flex items-center justify-center bg-app-bg/40 backdrop-blur-[2px]">
                                                         <Clock size={16} className="text-accent animate-pulse" />
                                                     </div>
                                                 )}
@@ -113,7 +113,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                                     onClick={() => setTransferringItem(item)}
                                                     className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border transition-all text-ui-7 font-black uppercase tracking-widest ${
                                                         isPending 
-                                                            ? 'bg-app-bg/40 text-app-text/20 border-white/5 cursor-not-allowed'
+                                                            ? 'bg-app-bg/40 text-app-text/20 border-app-text/5 cursor-not-allowed'
                                                             : 'bg-accent/20 hover:bg-accent/40 text-accent border-accent/20'
                                                     }`}
                                                     title="Donner"
@@ -123,7 +123,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                                 <button 
                                                     disabled={isPending}
                                                     onClick={() => handleDropItem(item)}
-                                                    className={`aspect-square flex items-center justify-center py-1.5 rounded-lg border transition-all text-red-400 border-red-400/20 bg-red-400/10 hover:bg-red-400/20`}
+                                                    className={`aspect-square flex items-center justify-center py-1.5 rounded-lg border transition-all text-etat-danger border-etat-danger/20 bg-etat-danger/10 hover:bg-etat-danger/20`}
                                                     title="Jeter"
                                                 >
                                                     <Trash2 size={10} />
@@ -134,7 +134,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 })}
                             </div>
                         ) : (
-                            <div className="mx-4 p-8 border-2 border-dashed border-white/5 rounded-[2rem] bg-white/[0.02] text-center">
+                            <div className="mx-4 p-8 border-2 border-dashed border-app-text/5 rounded-[2rem] bg-app-text/[0.02] text-center">
                                 <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-widest">Votre sac à dos est vide</p>
                             </div>
                         )}
@@ -193,7 +193,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[200] flex items-center justify-center p-8 bg-black/80 backdrop-blur-xl pointer-events-auto"
+                        className="fixed inset-0 z-[200] flex items-center justify-center p-8 bg-app-bg/80 backdrop-blur-xl pointer-events-auto"
                     >
                         <motion.div 
                             initial={{ scale: 0.9, y: 20 }}
@@ -203,7 +203,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                         >
                             <div className="flex items-center justify-between">
                                 <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter">Donner un objet</h3>
-                                <button onClick={() => setTransferringItem(null)} className="p-2 hover:bg-white/5 rounded-full text-app-text/40 transition-colors">
+                                <button onClick={() => setTransferringItem(null)} className="p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors">
                                     <X size={24} />
                                 </button>
                             </div>
@@ -226,10 +226,10 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                         <button
                                             key={char.id}
                                             onClick={() => handleRequestTransfer(char.id)}
-                                            className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-accent/10 hover:border-accent/30 transition-all group"
+                                            className="flex items-center justify-between p-4 rounded-2xl bg-app-text/5 border border-app-text/5 hover:bg-accent/10 hover:border-accent/30 transition-all group"
                                         >
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-xl bg-app-bg flex items-center justify-center overflow-hidden border border-white/10 group-hover:border-accent/40 transition-colors">
+                                                <div className="w-10 h-10 rounded-xl bg-app-bg flex items-center justify-center overflow-hidden border border-app-text/10 group-hover:border-accent/40 transition-colors">
                                                     {char.portraitUrl ? <ResolvedImage src={char.portraitUrl} className="w-full h-full object-cover" /> : <User size={20} className="text-app-text/20" />}
                                                 </div>
                                                 <div className="flex flex-col items-start">
@@ -241,18 +241,18 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                         </button>
                                     ))}
                                     {otherCharacters.length === 0 && (
-                                        <div className="py-8 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
+                                        <div className="py-8 text-center bg-app-text/5 rounded-2xl border border-dashed border-app-text/10">
                                             <p className="text-xs font-bold text-app-text/20 uppercase tracking-widest italic">Aucun autre membre dans l'équipe</p>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-2xl flex items-center gap-4">
-                                <div className="size-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
+                            <div className="bg-etat-alerte/10 border border-etat-alerte/20 p-4 rounded-2xl flex items-center gap-4">
+                                <div className="size-8 rounded-full bg-etat-alerte/20 flex items-center justify-center text-etat-alerte shrink-0">
                                     <Clock size={16} />
                                 </div>
-                                <p className="text-ui-10 font-bold text-amber-500/80 leading-relaxed uppercase tracking-wider">
+                                <p className="text-ui-10 font-bold text-etat-alerte/80 leading-relaxed uppercase tracking-wider">
                                     Le Maître du Jeu doit valider l'échange avant qu'il ne soit effectif.
                                 </p>
                             </div>

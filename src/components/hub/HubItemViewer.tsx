@@ -77,17 +77,17 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
                             {/* Metadata Badges */}
                             <div className="flex flex-wrap gap-3">
                                 {item.ownerId && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                                        <User size={12} className="text-emerald-500/50" />
-                                        <span className="text-ui-9 font-black text-emerald-400 uppercase tracking-widest">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gm-emerald/10 rounded-full border border-gm-emerald/20">
+                                        <User size={12} className="text-gm-emerald/50" />
+                                        <span className="text-ui-9 font-black text-gm-emerald uppercase tracking-widest">
                                             Objet Privé
                                         </span>
                                     </div>
                                 )}
                                 {item.attributes && Object.keys(item.attributes).length > 0 && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-rose-500/10 rounded-full border border-rose-500/20">
-                                        <Shield size={12} className="text-rose-500/50" />
-                                        <span className="text-ui-9 font-black text-rose-500/80 uppercase tracking-widest">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gm-crimson/10 rounded-full border border-gm-crimson/20">
+                                        <Shield size={12} className="text-gm-crimson/50" />
+                                        <span className="text-ui-9 font-black text-gm-crimson/80 uppercase tracking-widest">
                                             Stats Incluses
                                         </span>
                                     </div>

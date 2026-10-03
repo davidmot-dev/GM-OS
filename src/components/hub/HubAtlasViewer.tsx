@@ -80,9 +80,9 @@ export const HubAtlasViewer: React.FC<HubAtlasViewerProps> = ({ map, onClose }) 
                                         Lieu Visité
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 rounded-full border border-emerald-500/20">
-                                    <Info size={12} className="text-emerald-400" />
-                                    <span className="text-ui-10 font-black text-emerald-400/80 uppercase tracking-widest text-shadow-glow">
+                                <div className="flex items-center gap-2 px-4 py-1.5 bg-etat-succes/10 rounded-full border border-etat-succes/20">
+                                    <Info size={12} className="text-etat-succes" />
+                                    <span className="text-ui-10 font-black text-etat-succes/80 uppercase tracking-widest text-shadow-glow">
                                         {map.type.replace('-', ' ')}
                                     </span>
                                 </div>

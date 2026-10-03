@@ -139,20 +139,20 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                     onKeyDown={(e) => { if (e.key === 'Escape') setCarteEnGrand(null); }}
                     tabIndex={-1}
                     ref={(n) => n?.focus()}
-                    className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-black/90 p-6 backdrop-blur-md"
+                    className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-app-bg/90 p-6 backdrop-blur-md"
                 >
                     <ResolvedImage
                         src={carteEnGrand.url}
                         alt={carteEnGrand.nom}
                         className="max-h-[75vh] max-w-full rounded-2xl border border-accent/40 object-contain shadow-2xl"
                     />
-                    <p className="text-center text-lg font-bold text-white">{carteEnGrand.nom}</p>
+                    <p className="text-center text-lg font-bold text-app-text">{carteEnGrand.nom}</p>
                     {carteEnGrand.texte && (
-                        <p className="max-w-xl text-center text-sm leading-relaxed text-white/70">
+                        <p className="max-w-xl text-center text-sm leading-relaxed text-app-text/70">
                             {carteEnGrand.texte}
                         </p>
                     )}
-                    <p className="text-ui-10 uppercase tracking-[0.2em] text-white/30">
+                    <p className="text-ui-10 uppercase tracking-[0.2em] text-app-text/30">
                         {t('modules:session.deck_module.player.hands.tap_to_close')}
                     </p>
                 </div>
@@ -171,7 +171,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                     <div className="flex gap-2">
                         <button
                             onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })}
-                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2.5 text-ui-10 font-black uppercase tracking-widest text-white"
+                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2.5 text-ui-10 font-black uppercase tracking-widest text-app-on-accent"
                         >
                             <Check size={12} /> {t('modules:session.deck_module.player.hands.accept')}
                         </button>
@@ -219,7 +219,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                             alt={paquet.name}
                                             className="h-32 rounded-xl border border-accent/40 object-cover shadow-lg"
                                         />
-                                        <span className="absolute inset-x-0 bottom-1 mx-auto w-fit rounded-full bg-black/80 px-2 py-0.5 text-ui-10 font-black text-accent">
+                                        <span className="absolute inset-x-0 bottom-1 mx-auto w-fit rounded-full bg-app-bg/80 px-2 py-0.5 text-ui-10 font-black text-accent">
                                             {restantes}
                                         </span>
                                     </button>
@@ -327,7 +327,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                             >
                                                                 <option value="">{t('modules:session.deck_module.player.hands.give_to')}</option>
                                                                 {voisins.map(v => (
-                                                                    <option key={v.id} value={v.id} className="bg-slate-900 text-white">
+                                                                    <option key={v.id} value={v.id} className="bg-app-bg text-app-text">
                                                                         {v.nom}
                                                                     </option>
                                                                 ))}

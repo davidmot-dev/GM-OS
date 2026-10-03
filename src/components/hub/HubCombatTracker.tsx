@@ -37,21 +37,21 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
             <div className="flex items-center justify-between mb-4 border-b border-app-border/40 pb-4">
                 <div className="flex flex-col">
                     <h1 className="text-app-text text-xl font-bold tracking-tight">Initiative</h1>
-                    <p className="text-rose-400 text-xs font-bold uppercase">Round {round} • Tour {currentTurnIdx + 1}</p>
+                    <p className="text-etat-danger text-xs font-bold uppercase">Round {round} • Tour {currentTurnIdx + 1}</p>
                 </div>
             </div>
 
             <div className="flex flex-col gap-3">
                 {/* Active Turn */}
                 {activeCombatant && (
-                    <div className="flex flex-col gap-4 px-4 py-4 rounded-xl bg-rose-500/10 ring-1 ring-rose-500/40 shadow-glow-crimson relative overflow-hidden transition-all duration-700">
+                    <div className="flex flex-col gap-4 px-4 py-4 rounded-xl bg-etat-danger/10 ring-1 ring-etat-danger/40 shadow-glow-crimson relative overflow-hidden transition-all duration-700">
                         <div className="flex items-center gap-4">
-                            <ResolvedImage className="size-10 rounded-full border-2 border-rose-500" src={activeCombatant.avatar} alt={activeCombatant.name} fallback={activeCombatant.name.charAt(0)} />
+                            <ResolvedImage className="size-10 rounded-full border-2 border-etat-danger" src={activeCombatant.avatar} alt={activeCombatant.name} fallback={activeCombatant.name.charAt(0)} />
                             <div className="flex flex-col">
                                 <p className="text-app-text text-sm font-bold leading-none">{activeCombatant.name}</p>
-                                <p className="text-rose-400 text-ui-10 font-bold uppercase mt-1">Tour Actif</p>
+                                <p className="text-etat-danger text-ui-10 font-bold uppercase mt-1">Tour Actif</p>
                             </div>
-                            <div className="ml-auto text-rose-500 material-symbols-outlined">double_arrow</div>
+                            <div className="ml-auto text-etat-danger material-symbols-outlined">double_arrow</div>
                         </div>
 
                         {/*
@@ -73,9 +73,9 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                             écrira le prochain écran.
                         */}
                         {abregerLaSante(activeCombatant) && (
-                            <div className="flex flex-wrap gap-2 pt-2 border-t border-rose-500/20">
-                                <div className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40">
-                                    <span className="text-ui-10 font-black text-blue-400 uppercase tracking-tighter">
+                            <div className="flex flex-wrap gap-2 pt-2 border-t border-etat-danger/20">
+                                <div className="px-2 py-0.5 rounded-full bg-etat-info/20 border border-etat-info/40">
+                                    <span className="text-ui-10 font-black text-etat-info uppercase tracking-tighter">
                                         {abregerLaSante(activeCombatant)}
                                     </span>
                                 </div>
@@ -101,7 +101,7 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                         {/* La même lecture que pour le tour actif, en plus petit. */}
                         {abregerLaSante(combatant) && (
                             <div className="flex flex-wrap gap-1 mt-1">
-                                <span className="text-ui-8 font-black text-blue-400 uppercase px-1.5 rounded bg-blue-500/10 border border-blue-500/20">
+                                <span className="text-ui-8 font-black text-etat-info uppercase px-1.5 rounded bg-etat-info/10 border border-etat-info/20">
                                     {abregerLaSante(combatant)}
                                 </span>
                             </div>

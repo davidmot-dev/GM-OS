@@ -167,10 +167,10 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
     };
 
     const getLatencyColor = (ms: number | null) => {
-        if (ms === null) return 'text-slate-500';
-        if (ms < 50) return 'text-emerald-400';
-        if (ms < 150) return 'text-amber-400';
-        return 'text-rose-400';
+        if (ms === null) return 'text-app-muted';
+        if (ms < 50) return 'text-etat-succes';
+        if (ms < 150) return 'text-etat-alerte';
+        return 'text-etat-danger';
     };
 
     const getLatencyLabel = (ms: number | null) => {
@@ -180,7 +180,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
 
     // DEBUG PANEL - Visible only in dev or via triple click (mocked here as always for debug)
     const renderDebugOverlay = () => (
-        <div className="fixed bottom-4 left-4 z-[9999] bg-black/80 backdrop-blur-md border border-app-border/40 p-4 rounded-xl text-ui-10 font-mono text-app-text/60 max-w-xs shadow-2xl pointer-events-none select-none">
+        <div className="fixed bottom-4 left-4 z-[9999] bg-app-bg/80 backdrop-blur-md border border-app-border/40 p-4 rounded-xl text-ui-10 font-mono text-app-text/60 max-w-xs shadow-2xl pointer-events-none select-none">
             <h5 className="text-accent font-bold mb-2 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                 HUB SYNC DEBUG
@@ -189,16 +189,16 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                 <p><span className="text-app-text/40">Campaign ID:</span> {activeCampaignId || 'NONE'}</p>
                 <p><span className="text-app-text/40">Campaign Name:</span> {activeCampaignName || 'NONE'}</p>
                 <p><span className="text-app-text/40">Sessions Count:</span> {sessions?.length || 0}</p>
-                <div className="mt-2 pt-2 border-t border-white/5">
+                <div className="mt-2 pt-2 border-t border-app-text/5">
                     <p className="text-app-text/80 font-bold mb-1">Active Session:</p>
                     {activeSession ? (
-                        <div className="text-emerald-400">
+                        <div className="text-etat-succes">
                             <p>ID: {activeSession.id}</p>
                             <p>CID: {activeSession.campaignId}</p>
                             <p>Num: #{activeSession.number}</p>
                         </div>
                     ) : (
-                        <p className="text-red-400 italic">None Detected</p>
+                        <p className="text-etat-danger italic">None Detected</p>
                     )}
                 </div>
             </div>
@@ -248,16 +248,16 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
     // --- RENDER: ERROR (e.g., Collision) ---
     if (lastError) {
         return (
-            <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-rose-950/20 backdrop-blur-3xl p-6">
+            <div className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-etat-danger/20 backdrop-blur-3xl p-6">
                 <div className="relative mb-12">
-                    <div className="absolute inset-0 bg-rose-500/20 rounded-full blur-3xl animate-pulse" />
-                    <div className="relative w-48 h-48 bg-rose-500/10 rounded-full flex items-center justify-center border-2 border-rose-500/50">
-                        <AlertCircle className="text-rose-500 animate-bounce" size={80} strokeWidth={1.5} />
+                    <div className="absolute inset-0 bg-etat-danger/20 rounded-full blur-3xl animate-pulse" />
+                    <div className="relative w-48 h-48 bg-etat-danger/10 rounded-full flex items-center justify-center border-2 border-etat-danger/50">
+                        <AlertCircle className="text-etat-danger animate-bounce" size={80} strokeWidth={1.5} />
                     </div>
                 </div>
 
                 <div className="text-center max-w-md">
-                    <h2 className="text-4xl font-black text-rose-500 uppercase tracking-tightest mb-4">
+                    <h2 className="text-4xl font-black text-etat-danger uppercase tracking-tightest mb-4">
                         Accès Refusé
                     </h2>
                     <p className="text-app-text/80 text-lg font-bold mb-12 leading-relaxed">
@@ -269,7 +269,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                             setLastError(null);
                             setStep('SELECTION');
                         }}
-                        className="px-12 py-5 bg-rose-600 hover:bg-rose-500 text-white rounded-full text-lg font-black uppercase tracking-widest shadow-glow-rose/40 transition-all active:scale-95"
+                        className="px-12 py-5 bg-etat-danger hover:brightness-110 text-app-bg rounded-full text-lg font-black uppercase tracking-widest shadow-glow-rose/40 transition-all active:scale-95"
                     >
                         Choisir un autre signal
                     </button>
@@ -341,7 +341,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         className="w-full h-full object-cover opacity-20 grayscale-[0.2]"
                     />
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-black opacity-60" />
+                    <div className="w-full h-full bg-gradient-to-br from-app-bg via-app-bg to-app-bg opacity-60" />
                 )}
             </div>
 
@@ -353,20 +353,20 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                             haptic(10);
                             setShowLogoutConfirm(true);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-ui-10 font-black text-app-text/40 uppercase tracking-widest hover:text-rose-500 hover:border-rose-500/30 transition-all group"
+                        className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-ui-10 font-black text-app-text/40 uppercase tracking-widest hover:text-etat-danger hover:border-etat-danger/30 transition-all group"
                     >
-                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500/40 group-hover:bg-rose-500 group-hover:animate-pulse" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-etat-danger/40 group-hover:bg-etat-danger group-hover:animate-pulse" />
                         Quitter la session
                     </button>
                 ) : (
-                    <div className="flex items-center gap-2 p-1 bg-rose-600 rounded-full animate-in zoom-in duration-300">
-                        <span className="px-4 text-ui-9 font-black text-white uppercase tracking-tighter">Vraiment ?</span>
+                    <div className="flex items-center gap-2 p-1 bg-etat-danger rounded-full animate-in zoom-in duration-300">
+                        <span className="px-4 text-ui-9 font-black text-app-text uppercase tracking-tighter">Vraiment ?</span>
                         <button 
                             onClick={() => {
                                 haptic(10);
                                 setShowLogoutConfirm(false);
                             }}
-                            className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-full text-ui-10 font-black uppercase"
+                            className="px-4 py-2 bg-app-text/20 hover:bg-app-text/30 text-app-text rounded-full text-ui-10 font-black uppercase"
                         >
                             Non
                         </button>
@@ -375,7 +375,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                                 haptic([10, 50, 10]);
                                 logout();
                             }}
-                            className="px-4 py-2 bg-white text-rose-600 hover:bg-rose-50 rounded-full text-ui-10 font-black uppercase"
+                            className="px-4 py-2 bg-app-text text-etat-danger hover:bg-app-text/80 rounded-full text-ui-10 font-black uppercase"
                         >
                             Oui, quitter
                         </button>
@@ -421,7 +421,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                                 <div className="absolute top-4 right-4 z-10">
                                     <div className="flex flex-col items-end">
                                         <span className="text-ui-8 font-black text-accent/40 uppercase tracking-widest mb-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Joueur</span>
-                                        <span className="px-3 py-1.5 bg-accent text-app-bg text-ui-10 font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
+                                        <span className="px-3 py-1.5 bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
                                             {char.playerName}
                                         </span>
                                     </div>
@@ -476,7 +476,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         <div className={`w-1 h-1 rounded-full bg-current ${getLatencyColor(latency || null)}`} />
                         <span className={getLatencyColor(latency || null)}>{getLatencyLabel(latency || null)}</span>
                     </div>
-                    <div className="w-px h-2 bg-white/10" />
+                    <div className="w-px h-2 bg-app-text/10" />
                     <div>GM-OS v{__APP_VERSION__} • nexus_bridge_active</div>
                 </div>
                 <div className="opacity-50 font-mono">Device ID: {deviceId?.substring(0, 12)}...</div>

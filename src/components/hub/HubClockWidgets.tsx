@@ -34,8 +34,8 @@ export const HubClockWidgets: React.FC<HubClockWidgetsProps> = ({
                             <div key={clock.id} className="flex items-center gap-5 bg-app-surface/60 backdrop-blur-xl border border-app-border/40 rounded-2xl p-5 shadow-xl w-full">
                                 <NarrativeClock clock={clock} theme={theme} size={75} />
                                 <div className="flex flex-col flex-1 overflow-hidden">
-                                    <p className={`text-xl font-black truncate w-full ${theme === 'cyberpunk' ? 'text-accent font-mono tracking-wider' : theme === 'oldstyle' ? 'text-amber-500 font-serif' : 'text-app-text uppercase tracking-tight'}`}>{clock.name}</p>
-                                    <p className={`text-sm mt-0.5 font-bold ${theme === 'cyberpunk' ? 'text-cyan-400' : theme === 'oldstyle' ? 'text-amber-700/80 italic' : 'text-app-text/60'}`}>
+                                    <p className={`text-xl font-black truncate w-full ${theme === 'cyberpunk' ? 'text-accent font-mono tracking-wider' : theme === 'oldstyle' ? 'text-gm-gold font-serif' : 'text-app-text uppercase tracking-tight'}`}>{clock.name}</p>
+                                    <p className={`text-sm mt-0.5 font-bold ${theme === 'cyberpunk' ? 'text-gm-cyan' : theme === 'oldstyle' ? 'text-gm-gold/80 italic' : 'text-app-text/60'}`}>
                                         {clock.filledSegments} / {clock.totalSegments} Segments
                                     </p>
                                 </div>

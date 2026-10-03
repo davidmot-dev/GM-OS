@@ -48,7 +48,7 @@ export const HubProjectionCard: React.FC<HubProjectionCardProps> = ({
             </div>
 
             {/* Image/Avatar Container */}
-            <div className={`relative ${isVoiceReactive ? 'aspect-portrait sm:aspect-[3/4]' : 'aspect-square sm:aspect-video'} rounded-2xl overflow-hidden border border-accent/20 bg-black/60 shadow-inner flex items-center justify-center`}>
+            <div className={`relative ${isVoiceReactive ? 'aspect-portrait sm:aspect-[3/4]' : 'aspect-square sm:aspect-video'} rounded-2xl overflow-hidden border border-accent/20 bg-app-bg/60 shadow-inner flex items-center justify-center`}>
                 {isVoiceReactive ? (
                     <div className="scale-110 sm:scale-125 w-full h-full flex items-center justify-center">
                         <VoiceReactiveAvatar 
