@@ -10,6 +10,7 @@ import { AtelierDuTheme } from '../theme/AtelierDuTheme';
 import { flushApplication } from '../utils/appUtils';
 import { useSessionStore } from '../store/useSessionStore';
 import { themeDeBase } from '../theme/themeDeLInterface';
+import { nomDeLaCouleur } from '../theme/nomDeLaCouleur';
 import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES } from '../config/languages';
 import type { ThemeID } from '../store/useSessionStore';
@@ -138,62 +139,54 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                 </div>
                 <button 
                     onClick={onClose}
-                    className="p-2 hover:bg-app-surface rounded-full transition-colors text-app-text/40 hover:text-app-text"
+                    className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-app-muted transition-colors hover:bg-app-text/5 hover:text-app-text"
                     title={t('settings:close_tooltip')}
                     aria-label={t('settings:close_tooltip')}
                 >
-                    <X size={20} />
+                    <span className="rounded border border-app-border px-1.5 py-0.5 font-mono text-ui-9 font-bold">Échap</span>
+                    <X size={18} />
                 </button>
             </div>
 
             <div className="flex-1 flex overflow-hidden">
-                {/* Sidebar Navigation */}
-                <div className="w-64 border-r border-app-border/10 bg-app-surface/20 flex flex-col p-4 gap-2">
-                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-text/30 px-3 mb-2">{t('settings:categories_label')}</p>
-                    <button 
-                        onClick={() => setActiveTab('system')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'system' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
-                    >
-                        <Globe size={18} />
-                        {t('settings:tabs.system')}
-                    </button>
-                    <button 
-                        onClick={() => setActiveTab('tactical')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'tactical' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
-                    >
-                        <Zap size={18} />
-                        {t('settings:tabs.tactical')}
-                    </button>
-                    <button 
-                        onClick={() => setActiveTab('ai')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'ai' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
-                    >
-                        <Brain size={18} />
-                        {t('settings:tabs.ai')}
-                    </button>
-                    <button 
-                        onClick={() => setActiveTab('remote')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'remote' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
-                    >
-                        <Tablet size={18} />
-                        {t('settings:tabs.remote')}
-                    </button>
-                    {/*
-                      **L'atelier de thème du jeu — demandé par David le 2026-09-03.**
+                {/*
+                  **Chaque catégorie avec sa phrase** — refonte, L6, maquette retenue :
+                  *« mieux organiser le tout »*. Le nom ne suffisait pas à savoir où
+                  chercher un réglage ; la phrase dit ce qu'on y trouve. Les Paramètres
+                  comptent une trentaine d'écrans : la liste doit les annoncer tous.
 
-                      Il vit ici et non dans la Forge : la Forge écrit le pilote,
-                      c'est-à-dire les RÈGLES ; le thème habille l'application et
-                      les fiches, c'est un réglage. *Un réglage se cherche dans les
-                      réglages.*
-                    */}
-                    <button
-                        onClick={() => setActiveTab('theme')}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === 'theme' ? 'bg-accent/10 text-accent border border-accent/20' : 'text-app-text/60 hover:bg-app-surface/40 hover:text-app-text border border-transparent'}`}
-                    >
-                        <Palette size={18} />
-                        Thème du jeu
-                    </button>
-                </div>
+                  L'atelier de thème du jeu vit ici et non dans la Forge (David, le
+                  2026-09-03) : la Forge écrit les RÈGLES ; le thème est un réglage.
+                */}
+                <nav aria-label={t('settings:categories_label')} className="w-64 border-r border-app-border flex flex-col p-3 gap-1">
+                    <p className="text-ui-10 font-black uppercase tracking-widest text-app-muted px-3 mb-1">{t('settings:categories_label')}</p>
+                    {([
+                        { id: 'system', icone: Globe },
+                        { id: 'tactical', icone: Zap },
+                        { id: 'ai', icone: Brain },
+                        { id: 'remote', icone: Tablet },
+                        { id: 'theme', icone: Palette },
+                    ] as const).map(({ id, icone: Icone }, rang) => (
+                        <button
+                            key={id}
+                            onClick={() => setActiveTab(id)}
+                            aria-current={activeTab === id ? 'page' : undefined}
+                            aria-label={t(`settings:tabs.${id}`)}
+                            title={t(`settings:tabs_hint.${id}`)}
+                            className={`flex items-start gap-3 rounded-lg border-l-2 px-3 py-2.5 text-left transition-colors ${
+                                activeTab === id ? 'border-accent bg-accent/10' : 'border-transparent hover:bg-app-text/5'
+                            }`}
+                        >
+                            <Icone size={17} className={`mt-0.5 shrink-0 ${activeTab === id ? 'text-accent' : 'text-app-muted'}`} />
+                            <span className="min-w-0">
+                                <span className={`block font-display text-sm font-bold uppercase tracking-wide ${activeTab === id ? 'text-accent' : 'text-app-text'}`}>
+                                    <span className="font-mono text-ui-10 opacity-70">{String(rang + 1).padStart(2, '0')}.</span> {t(`settings:tabs.${id}`)}
+                                </span>
+                                <span className="mt-0.5 block text-xs text-app-muted">{t(`settings:tabs_hint.${id}`)}</span>
+                            </span>
+                        </button>
+                    ))}
+                </nav>
 
                 {/* Content Area */}
                 <div className="flex-1 overflow-hidden flex flex-col">
@@ -226,86 +219,94 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                 </div>
                             </section>
 
-                            {/* Appearance & Customization Section */}
-                            <section className="space-y-6">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-app-text/40 px-1 border-l-2 border-accent/30 pl-3">{t('settings:sections.customization')}</h3>
-                                
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    {/* Theme Selection */}
-                                    <div className="space-y-4">
-                                        <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50 px-1">{t('settings:system.theme_label')}</p>
-                                        <div className="flex flex-col gap-2">
-                                            {(['cyberpunk', 'medieval', 'modern', 'claire'] as ThemeID[]).map((tID) => (
-                                                <button
-                                                    key={tID}
-                                                    onClick={() => setTheme(tID)}
-                                                    className={`flex items-center justify-between p-4 rounded-xl border transition-all ${theme === tID ? 'bg-accent/10 border-accent shadow-glow-accent/20' : 'bg-app-surface/20 border-app-border/20 hover:border-app-border/40'}`}
-                                                    title={`${t('settings:system.theme_label')} ${tID}`}
-                                                    aria-label={`${t('settings:system.theme_label')} ${tID}`}
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <div 
-                                                        className="w-8 h-8 rounded-lg bg-app-bg border border-app-border/50 flex items-center justify-center text-accent" 
-                                                    >
-                                                        <Zap size={18} fill={theme === tID ? "currentColor" : "none"} />
-                                                    </div>
-                                                        <span className="text-sm font-black uppercase tracking-tight text-app-text">{t(`settings:themes.${tID}`)}</span>
-                                                    </div>
-                                                    {theme === tID && <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        {/*
-                                          **L'interrupteur des personnalités** — P1.7, décision de
-                                          David du 2026-09-27 : un réglage, pour basculer en pleine
-                                          séance et comparer. Il ne change ni le thème, ni l'accent.
-                                        */}
-                                        <button
-                                            role="switch"
-                                            aria-checked={personnalites}
-                                            onClick={() => setPersonnalites(!personnalites)}
-                                            className={`w-full flex items-center justify-between gap-4 p-4 rounded-xl border text-left transition-all ${personnalites ? 'bg-accent/10 border-accent' : 'bg-app-surface/20 border-app-border/20 hover:border-app-border/40'}`}
-                                        >
-                                            <div>
-                                                <span className="text-sm font-black uppercase tracking-tight text-app-text">{t('settings:system.personnalites_label')}</span>
-                                                <p className="text-xs text-app-muted mt-1">{t(personnalites ? 'settings:system.personnalites_on' : 'settings:system.personnalites_off')}</p>
-                                            </div>
-                                            <span className={`relative shrink-0 w-10 h-6 rounded-full transition-colors ${personnalites ? 'bg-accent' : 'bg-app-border'}`}>
-                                                <span className={`absolute top-1 w-4 h-4 rounded-full bg-app-bg transition-all ${personnalites ? 'left-5' : 'left-1'}`} />
-                                            </span>
-                                        </button>
+                            {/*
+                              **Les quatre thèmes en tuiles, chacun avec son aperçu** — refonte,
+                              L6, maquette retenue. L'aperçu est peint avec les jetons du thème
+                              lui-même : on voit son fond, sa surface, son accent et son texte
+                              avant de le choisir, au lieu d'un nom et d'un éclair.
+                            */}
+                            <section className="space-y-3">
+                                <div>
+                                    <h3 className="font-display text-sm font-bold uppercase tracking-wider text-accent">{t('settings:sections.interface_theme')}</h3>
+                                    <p className="mt-0.5 text-xs text-app-muted">{t('settings:system.theme_phrase')}</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+                                    {(['cyberpunk', 'medieval', 'modern', 'claire'] as ThemeID[]).map((tID) => {
+                                        const j = themeDeBase(tID, personnalites).jetons;
+                                        const choisi = theme === tID;
+                                        return (
+                                            <button
+                                                key={tID}
+                                                onClick={() => setTheme(tID)}
+                                                aria-pressed={choisi}
+                                                title={`${t('settings:system.theme_label')} ${t(`settings:themes.${tID}`)}`}
+                                                className={`flex flex-col gap-2 rounded-xl border p-3 text-left transition-colors ${choisi ? 'border-accent bg-accent/10' : 'border-app-border hover:border-accent/50'}`}
+                                            >
+                                                <span className="flex items-center justify-between gap-2">
+                                                    <span className={`font-display text-sm font-bold uppercase tracking-wide ${choisi ? 'text-accent' : 'text-app-text'}`}>{t(`settings:themes.${tID}`)}</span>
+                                                    {choisi && <span className="rounded bg-accent px-1.5 py-0.5 text-ui-9 font-black uppercase tracking-widest text-app-on-accent">{t('settings:system.active')}</span>}
+                                                </span>
+                                                {/* L'aperçu : les couleurs du thème, telles qu'il les déclare. */}
+                                                <span className="flex h-12 items-center gap-2 rounded-md border p-2" style={{ backgroundColor: j.bg, borderColor: j.border }}>
+                                                    <span className="h-full w-6 rounded-sm" style={{ backgroundColor: j.surface }} />
+                                                    <span className="flex flex-1 flex-col gap-1">
+                                                        <span className="h-1.5 w-3/4 rounded-full" style={{ backgroundColor: j.text }} />
+                                                        <span className="h-1.5 w-1/2 rounded-full" style={{ backgroundColor: j.muted }} />
+                                                    </span>
+                                                    <span className="h-4 w-8 rounded-sm" style={{ backgroundColor: j.accent }} />
+                                                </span>
+                                                <span className="text-xs leading-snug text-app-muted">{t(`settings:themes_desc.${tID}`)}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                {/*
+                                  **L'interrupteur des personnalités** — P1.7, décision de
+                                  David du 2026-09-27 : un réglage, pour basculer en pleine
+                                  séance et comparer. Il ne change ni le thème, ni l'accent.
+                                */}
+                                <button
+                                    role="switch"
+                                    aria-checked={personnalites}
+                                    onClick={() => setPersonnalites(!personnalites)}
+                                    className={`flex w-full items-center justify-between gap-4 rounded-xl border p-4 text-left transition-colors ${personnalites ? 'border-accent bg-accent/10' : 'border-app-border hover:border-accent/50'}`}
+                                >
+                                    <div>
+                                        <span className="text-sm font-bold uppercase tracking-wide text-app-text">{t('settings:system.personnalites_label')}</span>
+                                        <p className="mt-1 text-xs text-app-muted">{t(personnalites ? 'settings:system.personnalites_on' : 'settings:system.personnalites_off')}</p>
                                     </div>
+                                    <span className={`relative h-6 w-10 shrink-0 rounded-full transition-colors ${personnalites ? 'bg-accent' : 'bg-app-border'}`}>
+                                        <span className={`absolute top-1 h-4 w-4 rounded-full bg-app-bg transition-all ${personnalites ? 'left-5' : 'left-1'}`} />
+                                    </span>
+                                </button>
+                            </section>
 
-                                    {/* Palette Selection */}
-                                    <div className="space-y-4">
-                                        <p className="text-ui-10 font-bold uppercase tracking-widest opacity-50 px-1">{t('settings:system.palette_label', { theme })}</p>
-                                        <div className="bg-app-surface/20 border border-app-border/20 rounded-xl p-6 h-[184px] flex flex-col items-center justify-center space-y-6">
-                                            <div className="flex gap-3">
-                                                {themeDeBase(theme, personnalites).palettes.map((color) => (
-                                                    <button
-                                                        key={color}
-                                                        onClick={() => setThemeColor(color)}
-                                                        className={`group relative w-10 h-10 rounded-full transition-all duration-300 ${themeColor === color ? `ring-4 ${theme === 'claire' ? 'ring-app-text/20' : 'ring-app-border'} ring-offset-4 ring-offset-app-bg scale-110 shadow-lg` : 'opacity-60 hover:opacity-100 hover:scale-105'}`}
-                                                        style={{ backgroundColor: color }}
-                                                    >
-                                                        {themeColor === color && (
-                                                            <div className={`absolute -top-2 -right-2 bg-app-text text-app-bg rounded-full p-0.5`}>
-                                                                <Zap size={10} fill="currentColor" />
-                                                            </div>
-                                                        )}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                            <div className="text-center">
-                                                <p 
-                                                    className="text-sm font-mono font-bold text-accent" 
-                                                >
-                                                    {themeColor}
-                                                </p>
-                                                <p className="text-ui-9 uppercase tracking-[0.2em] text-app-text/40 mt-1">{t('settings:system.active_sample')}</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                            {/* La couleur d'accent, en pastilles nommées */}
+                            <section className="space-y-3">
+                                <div>
+                                    <h3 className="font-display text-sm font-bold uppercase tracking-wider text-accent">{t('settings:system.accent_title')}</h3>
+                                    <p className="mt-0.5 text-xs text-app-muted">{t('settings:system.accent_phrase')}</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5">
+                                    {themeDeBase(theme, personnalites).palettes.map((color) => {
+                                        const choisie = themeColor === color;
+                                        return (
+                                            <button
+                                                key={color}
+                                                onClick={() => setThemeColor(color)}
+                                                aria-pressed={choisie}
+                                                className={`flex items-center gap-3 rounded-lg border p-2.5 text-left transition-colors ${choisie ? 'border-accent bg-accent/10' : 'border-app-border hover:border-accent/50'}`}
+                                            >
+                                                <span className="flex size-7 shrink-0 items-center justify-center rounded-md" style={{ backgroundColor: color }}>
+                                                    {choisie && <CheckCircle2 size={16} className="text-app-bg" />}
+                                                </span>
+                                                <span className="min-w-0">
+                                                    <span className="block truncate text-sm font-bold text-app-text">{nomDeLaCouleur(color)}</span>
+                                                    <span className="block font-mono text-ui-10 text-app-muted">{color}</span>
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </section>
 
@@ -781,6 +782,24 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                         </div>
                     )}
                 </div>
+            </div>
+
+            {/*
+              **Pas de bouton « Enregistrer »** — la maquette retenue en dessine un,
+              mais chaque réglage de cet écran s'applique et s'enregistre à l'instant
+              où on le touche. *Un bouton qui promet d'enregistrer ce qui l'est déjà
+              apprend qu'on peut perdre ses réglages en fermant.* Le pied le dit.
+            */}
+            <div className="flex shrink-0 items-center justify-between gap-3 border-t border-app-border px-6 py-3">
+                <p className="flex items-center gap-2 text-xs text-app-muted">
+                    <CheckCircle2 size={14} className="text-etat-succes" />{t('settings:footer_note')}
+                </p>
+                <button
+                    onClick={onClose}
+                    className="rounded-lg border border-app-border px-4 py-2 text-ui-11 font-black uppercase tracking-widest text-app-text transition-colors hover:border-accent/60"
+                >
+                    {t('settings:close')}
+                </button>
             </div>
         </div>
     );

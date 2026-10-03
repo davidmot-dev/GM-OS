@@ -7,7 +7,8 @@
     "system": "System",
     "tactical": "Tactical",
     "ai": "AI",
-    "remote": "Remote"
+    "remote": "Remote",
+    "theme": "Game theme"
   },
   "sections": {
     "system_status": "System Status",
@@ -17,7 +18,8 @@
     "maintenance": "Maintenance & Optimization",
     "danger_zone": "Danger Zone",
     "language": "Language & Region",
-    "rules": "Tactical Rules"
+    "rules": "Tactical Rules",
+    "interface_theme": "Interface theme"
   },
   "themes": {
     "cyberpunk": "Cyberpunk",
@@ -37,7 +39,11 @@
     "personnalites_on": "The new interface: each theme gets its shape, depth, frame and texture. A game theme applies its own too.",
     "personnalites_off": "Today's interface. Turn on to compare — one click to come back.",
     "language_label": "Interface Language",
-    "language_description": "Select the global language for the OS and AI."
+    "language_description": "Select the global language for the OS and AI.",
+    "theme_phrase": "The console's personality: its colours, its relief, its texture.",
+    "accent_title": "Accent colour",
+    "accent_phrase": "The hue of action buttons, selections and glows. It overrides the game's.",
+    "active": "Active"
   },
   "hardware": {
     "audio_outputs": "Audio Outputs",
@@ -361,5 +367,20 @@
     "desc": "Connect your Google account so the **campaign Forge** can distil a scenario from a NotebookLM notebook. ⚠️ This bridge has **nothing** to do with the Oracle conversation, which uses the provider selected above.",
     "status_hint": "If the campaign Forge can no longer find your notebook, reconnecting may help. The Oracle itself does not depend on this bridge.",
     "restart_tooltip": "Restart the NotebookLM MCP server"
-  }
+  },
+  "tabs_hint": {
+    "system": "Look, language, status",
+    "tactical": "Cortex ranges and states",
+    "ai": "Accounts and models",
+    "remote": "Tablets and phones",
+    "theme": "The colours of the open game"
+  },
+  "themes_desc": {
+    "cyberpunk": "Navy night and cyan neon.",
+    "medieval": "Parchment, gold and wax.",
+    "modern": "Slate and plain blue.",
+    "claire": "Light paper, daytime contrast."
+  },
+  "footer_note": "Every setting applies and saves at once.",
+  "close": "Close"
 }

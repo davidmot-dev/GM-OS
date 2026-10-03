@@ -7,7 +7,8 @@
     "system": "Système",
     "tactical": "Tactique",
     "ai": "IA",
-    "remote": "Télécommande"
+    "remote": "Télécommande",
+    "theme": "Thème du jeu"
   },
   "sections": {
     "system_status": "État du Système",
@@ -17,7 +18,8 @@
     "maintenance": "Maintenance & Optimisation",
     "danger_zone": "Zone de Danger",
     "language": "Langue & Région",
-    "rules": "Règles Tactiques"
+    "rules": "Règles Tactiques",
+    "interface_theme": "Thème de l'interface"
   },
   "themes": {
     "cyberpunk": "Cyberpunk",
@@ -37,7 +39,11 @@
     "personnalites_on": "La nouvelle interface : chaque thème prend sa forme, son relief, son cadre et sa matière. Un thème de jeu applique aussi les siens.",
     "personnalites_off": "L'interface d'aujourd'hui. Allumer pour comparer — on revient d'un clic.",
     "language_label": "Langue de l'interface",
-    "language_description": "Sélectionnez la langue globale pour l'OS et l'IA."
+    "language_description": "Sélectionnez la langue globale pour l'OS et l'IA.",
+    "theme_phrase": "La personnalité de la console : ses couleurs, son relief, sa matière.",
+    "accent_title": "Couleur d'accent",
+    "accent_phrase": "La teinte des boutons d'action, des sélections et des halos. Elle passe devant celle du jeu.",
+    "active": "Actif"
   },
   "hardware": {
     "audio_outputs": "Sorties Audio",
@@ -361,5 +367,20 @@
     "desc": "Connectez votre compte Google pour que la **Forge de campagne** puisse distiller un scénario depuis un carnet NotebookLM. ⚠️ Ce pont n'a **aucun** rapport avec la conversation de l'Oracle, qui passe par le fournisseur choisi ci-dessus.",
     "status_hint": "Si la Forge de campagne ne trouve plus votre carnet, une reconnexion peut être nécessaire. L'Oracle, lui, ne dépend pas de ce pont.",
     "restart_tooltip": "Réinitialiser le serveur MCP NotebookLM"
-  }
+  },
+  "tabs_hint": {
+    "system": "Apparence, langue, état",
+    "tactical": "Portées et statuts du Cortex",
+    "ai": "Comptes et modèles",
+    "remote": "Tablettes et téléphones",
+    "theme": "Les couleurs du jeu ouvert"
+  },
+  "themes_desc": {
+    "cyberpunk": "Nuit marine et néon cyan.",
+    "medieval": "Parchemin, or et cire.",
+    "modern": "Ardoise et bleu franc.",
+    "claire": "Papier clair, le contraste du jour."
+  },
+  "footer_note": "Chaque réglage s'applique et s'enregistre aussitôt.",
+  "close": "Fermer"
 }
