@@ -132,8 +132,14 @@ const JournalDashboard: React.FC = () => {
   */
   const hasAISummary = !!activeJournal?.resumeIA?.trim();
 
-  /** Le fil affiché, et ce que la bascule en retire. */
-  const fil = chroniqueSeule ? events.filter(e => natureDe(e) === 'chronique') : events;
+  /**
+   * Le fil affiché, et ce que la bascule en retire. **Le plus récent en haut**
+   * — choisi par David le 2026-10-03, comme la maquette : pendant la partie,
+   * c'est la dernière ligne qu'on cherche. Le magasin garde l'ordre d'arrivée ;
+   * seul l'affichage le retourne.
+   */
+  const fil = (chroniqueSeule ? events.filter(e => natureDe(e) === 'chronique') : events)
+    .slice().sort((a, b) => b.timestamp - a.timestamp);
   const tracesMasquees = events.length - fil.length;
   /** Les types présents dans ce journal, pour la légende — et combien de chacun. */
   const typesPresents = useMemo(() => {
