@@ -13,9 +13,22 @@ import { TEINTES_DES_LIENS } from './couleursDesLiens';
 interface WebLinkPadProps {
     link: WebLink;
     onEdit: (link: WebLink) => void;
+    /**
+     * Ouvrir le lien — dans la page intégrée du navigateur depuis la refonte
+     * (L6, 2026-10-03, choix de David). Sans lui, le lien part au navigateur
+     * de Windows, comme avant.
+     */
+    onOuvrir?: (link: WebLink) => void;
+    /** Le rang de la tuile, écrit en coin (« 01 ») — maquette retenue. */
+    numero?: number;
+    /** La page intégrée affiche ce lien. */
+    actif?: boolean;
 }
 
-const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
+/** L'hôte d'une adresse, pour la seconde ligne de la tuile. */
+const hoteDe = (url: string) => { try { return new URL(url).host; } catch { return url; } };
+
+const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit, onOuvrir, numero, actif = false }) => {
     const { openLink, removeLink } = useWebStore();
 
     /*
@@ -84,14 +97,21 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
 
     return (
         <div
-            className={`relative group aspect-square rounded-xl border-2 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden p-4 ${currentClasses}`}
-            onClick={() => openLink(link.url)}
+            role="button"
+            tabIndex={0}
+            aria-pressed={actif}
+            className={`relative group flex min-h-[5.5rem] w-52 shrink-0 cursor-pointer flex-col justify-between gap-1 overflow-hidden rounded-xl border-2 p-3 transition-all duration-300 ${currentClasses} ${actif ? 'ring-2 ring-accent ring-offset-2 ring-offset-app-bg' : ''}`}
+            onClick={() => (onOuvrir ? onOuvrir(link) : openLink(link.url))}
+            onKeyDown={(e) => { if (e.key === 'Enter') (onOuvrir ? onOuvrir(link) : openLink(link.url)); }}
         >
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors ${currentClasses.split(' ').find(c => c.startsWith('bg-'))}`}>
+            <div className="flex items-center justify-between gap-2">
                 {/* Le pictogramme dit ce que le lien est, avant qu'on survole. */}
                 {video
-                    ? <Youtube size={24} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />
-                    : <Link size={24} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />}
+                    ? <Youtube size={18} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />
+                    : <Link size={18} className={currentClasses.split(' ').find(c => c.startsWith('text-'))} />}
+                {numero !== undefined && (
+                    <span className="font-mono text-ui-10 font-bold text-app-muted">{String(numero).padStart(2, '0')}</span>
+                )}
             </div>
 
             {/* Une vidéo à l'antenne se voit sans survoler — et sur QUELS écrans :
@@ -110,9 +130,10 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit }) => {
                 </div>
             )}
 
-            <span className="text-xs font-medium text-app-text text-center truncate w-full">
+            <span className="w-full truncate font-display text-sm font-bold text-app-text">
                 {link.name}
             </span>
+            <span className="w-full truncate font-mono text-ui-10 text-app-muted">{hoteDe(link.url)}</span>
 
             {/* Overlay Controls */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 bg-app-surface/90 backdrop-blur-sm flex items-center justify-center gap-2 px-2">

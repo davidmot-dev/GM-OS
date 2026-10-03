@@ -80,6 +80,7 @@ import { SyncServer } from './SyncServer'
 import { mediaAccess } from './MediaAccess'
 import { registerPairingHandlers, pairingManager } from './PairingManager'
 import { registerPupitreHandlers } from './pupitreDuBas'
+import { garderLesVuesWeb } from './navigateurIntegre'
 import { shouldRejectUnauthorized } from './netTrust'
 import { racineDesTables, cheminDUnUnivers, cheminDUneTable } from './cheminDesTables'
 import { cheminDUnCalendrier } from './cheminDesCalendriers'
@@ -195,6 +196,9 @@ mediaAccess.init(APP_ROOT, TEMP_MEDIA_DIR);
   GM-OS sur la dalle tactile du Zenbook Duo (2026-09-25). Un client comme la
   tablette : voir `pupitreDuBas.ts`.
 */
+/* La garde des <webview> : posée avant toute fenêtre. Voir `navigateurIntegre.ts`. */
+garderLesVuesWeb(app);
+
 registerPupitreHandlers({
     fenetreMJ: () => win,
     devUrl: VITE_DEV_SERVER_URL,
@@ -227,6 +231,13 @@ function createWindow() {
               dernière phrase.
             */
             backgroundThrottling: false,
+            /*
+              **La page intégrée du navigateur web** (refonte, L6 — choix de
+              David, 2026-10-03). Seule la fenêtre du meneur la reçoit ; ce
+              qu'une page web a le droit d'y faire se décide dans
+              `navigateurIntegre.ts` — rien de GM-OS ne lui parvient.
+            */
+            webviewTag: true,
         },
     })
 

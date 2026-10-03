@@ -22,7 +22,7 @@ export interface WebState {
     exportLinks: () => Promise<void>;
     /** Importe des liens depuis un fichier externe */
     importLinks: () => Promise<void>;
-    /** Vide tous les marque-pages après confirmation */
+    /** Vide tous les marque-pages — l'écran demande confirmation avant */
     clearAll: () => void;
     /** Applique un snapshot de session (format URLs simples ou objets complets) */
     applySnapshot: (snapshot: { links?: string[]; fullLinks?: WebLink[] }) => void;
@@ -86,11 +86,10 @@ export const useWebStore = create<WebState>()(
                 }
             },
 
-            clearAll: () => {
-                if (confirm('Êtes-vous sûr de vouloir supprimer tous les marque-pages ?')) {
-                    set({ links: [] });
-                }
-            },
+            /* La confirmation se demande à l'écran (`gmConfirm`), plus par le
+               `confirm()` natif : une boîte système grise, hors du thème, que
+               Échap et le registre des surcouches ne connaissaient pas. */
+            clearAll: () => set({ links: [] }),
 
             applySnapshot: (snapshot) => {
                 if (!snapshot) return;
