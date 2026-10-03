@@ -45,6 +45,10 @@ const GABARIT = {
             { key: 'sante', label: 'Santé 1', type: 'hotspot', value: 1, x: 10, y: 140, w: 20, h: 20 },
             { key: 'sante', label: 'Santé 2', type: 'hotspot', value: 2, x: 34, y: 140, w: 20, h: 20 },
             { key: 'sante', label: 'Santé 3', type: 'hotspot', value: 3, x: 58, y: 140, w: 20, h: 20 },
+            // Un dé de ressource : des valeurs TEXTE, une seule case allumée (Cthulhu Hack, 2026-10-03).
+            { key: 'de', label: 'Dé : d8', type: 'hotspot', value: '8', x: 10, y: 210, w: 20, h: 20 },
+            { key: 'de', label: 'Dé : d6', type: 'hotspot', value: '6', x: 34, y: 210, w: 20, h: 20 },
+            { key: 'de', label: 'Dé : d4', type: 'hotspot', value: '4', x: 58, y: 210, w: 20, h: 20 },
             {
                 key: 'santeMoitie', label: 'Moitié', type: 'number', x: 10, y: 180, w: 60, h: 24,
                 derive: { operation: 'floor-divide', source: 'sante', divisor: 2 },
@@ -287,6 +291,21 @@ describe('le moteur réel, chargé et piloté', () => {
         const pastilles = [...win.document.querySelectorAll('.hotspot[data-key="sante"]')];
         expect(pastilles.map((p: any) => p.classList.contains('active'))).toEqual([true, true, false]);
         expect(champ('santeMoitie').value).toBe('1');
+    });
+
+    /**
+     * **Un dé de ressource n'est pas une jauge** — David, 2026-10-03 : la Torche
+     * de Dan allumait d6 ET d4. Une case à valeur texte ne s'allume que si elle
+     * est égale — même quand la valeur a été rangée en NOMBRE par l'ancien
+     * gabarit, ce qui est le cas des fiches déjà remplies.
+     */
+    it('un dé à cases texte n’allume qu’une case, même rangé en nombre', () => {
+        const allumees = () => [...win.document.querySelectorAll('.hotspot[data-key="de"]')]
+            .map((p: any) => p.classList.contains('active'));
+        win.RPGSheet.setData({ de: 6 });
+        expect(allumees()).toEqual([false, true, false]);
+        win.RPGSheet.setData({ de: '8' });
+        expect(allumees()).toEqual([true, false, false]);
     });
 
     it('la saisie de la fiche remonte à l’hôte', async () => {

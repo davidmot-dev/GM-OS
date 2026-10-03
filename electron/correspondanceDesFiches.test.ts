@@ -132,8 +132,25 @@ describe('les gabarits intégrés du moteur', () => {
         const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
-            version: 4,
+            version: 5,
             ids: ['alien-v2-normalise', 'blade-runner-fr', 'cthulhu-hack', 'noc-reference', 'star-trek-adventures-2e-dossier-personnel-fr'],
         });
+    });
+});
+
+/**
+ * **Un dé de ressource n'est pas une jauge** — trouvé par David le 2026-10-03.
+ *
+ * Le moteur allume toutes les cases ≤ la valeur quand la case porte un NOMBRE
+ * (une jauge) ; une valeur TEXTE n'allume que la case égale. Les dés de Cthulhu
+ * Hack avaient été générés en nombres : choisir d6 allumait d6 ET d4. Une
+ * régénération du gabarit par le constructeur ramènerait le défaut en silence.
+ */
+describe('les dés de ressource de Cthulhu Hack', () => {
+    it('portent des valeurs texte — une seule case allumée', () => {
+        const gabarit = MOTEURS.find(g => g.id === 'cthulhu-hack');
+        const des = champsDu(gabarit!).filter(c => /^resources\./.test(c.key)) as (ChampDuGabarit & { value?: unknown })[];
+        expect(des).toHaveLength(15);
+        expect(des.filter(c => typeof c.value !== 'string').map(c => c.label)).toEqual([]);
     });
 });
