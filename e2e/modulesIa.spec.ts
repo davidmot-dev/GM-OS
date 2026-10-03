@@ -107,7 +107,7 @@ test.describe('la Forge', () => {
 test.describe('le Nexus Wiki', () => {
     test.beforeAll(async () => {
         await ouvrirLeModule(gmos, 'Nexus Wiki');
-        await gmos.fenetre.getByPlaceholder('Chercher une note...').waitFor({ timeout: 20_000 });
+        await gmos.fenetre.getByPlaceholder(/^Chercher une note/).waitFor({ timeout: 20_000 });
     });
 
     /*
@@ -119,11 +119,11 @@ test.describe('le Nexus Wiki', () => {
       note figerait le contenu personnel du meneur dans le dépôt.
     */
     test('offre sa recherche', async () => {
-        await expect(gmos.fenetre.getByPlaceholder('Chercher une note...')).toBeVisible();
+        await expect(gmos.fenetre.getByPlaceholder(/^Chercher une note/)).toBeVisible();
     });
 
     test('et invite à choisir une note', async () => {
         await expect(gmos.fenetre.locator('body'))
-            .toContainText(/SELECT A NOTE TO BEGIN/i);
+            .toContainText(/Choisissez une note/i);
     });
 });

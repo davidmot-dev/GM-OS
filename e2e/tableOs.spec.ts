@@ -68,7 +68,7 @@ test.describe('tirer', () => {
         await listes(gmos).nth(1).selectOption({ label: table });
 
         const avant = await gmos.fenetre.locator('body').innerText();
-        await gmos.fenetre.getByRole('button', { name: /^LANCER$/i }).first().click();
+        await gmos.fenetre.getByRole('button', { name: /^Lancer( |$)/i }).first().click();
 
         /*
           On ne peut pas prédire le résultat — c'est un tirage. Ce qu'on exige,
@@ -91,7 +91,7 @@ test.describe('tirer', () => {
         const premier = await zone.innerText();
 
         for (let i = 0; i < 4; i++) {
-            await gmos.fenetre.getByRole('button', { name: /^LANCER$/i }).first().click();
+            await gmos.fenetre.getByRole('button', { name: /^Lancer( |$)/i }).first().click();
             await gmos.fenetre.waitForTimeout(500);
             if ((await zone.innerText()) !== premier) return;
         }

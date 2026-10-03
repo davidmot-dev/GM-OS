@@ -419,8 +419,8 @@ const VoiceDashboard: React.FC = () => {
                         </div>
 
                         <Interrupteur actif={currentEffects.noiseGate} onClick={() => toggleNoiseGate()} libelle={t('modules:voice.shapers.noise_gate')} aide={t('modules:voice.ui.gate_hint', { db: currentEffects.gateThreshold })}>
-                            {currentEffects.noiseGate && (
-                                <div className="mt-2">
+                            {/* Toujours offert, atténué quand la porte est coupée : on le règle avant de l'allumer. */}
+                            <div className={`mt-2 transition-opacity ${currentEffects.noiseGate ? '' : 'opacity-50'}`}>
                                     <VocalShaperSlider
                                         label={t('modules:voice.params.gate_threshold')}
                                         value={currentEffects.gateThreshold}
@@ -428,19 +428,18 @@ const VoiceDashboard: React.FC = () => {
                                         onChange={(val) => updateEffect('gateThreshold', val)}
                                         unit=" dB"
                                     />
-                                </div>
-                            )}
+                            </div>
                         </Interrupteur>
 
                         <Interrupteur actif={currentEffects.duckingEnabled} onClick={() => toggleDucking()} libelle={t('modules:voice.shapers.auto_ducking')} aide={t('modules:voice.ui.ducking_hint', { pct: Math.round((1 - currentEffects.duckingRange) * 100) })}>
-                            {currentEffects.duckingEnabled && (
-                                <div className="mt-2 flex flex-col gap-1.5">
+                            {/* Les quatre réglages restent offerts, ducking coupé compris : c'est en
+                                les retouchant qu'on rattrape une soirée (garde : e2e/voiceOs.spec.ts). */}
+                            <div className={`mt-2 flex flex-col gap-1.5 transition-opacity ${currentEffects.duckingEnabled ? '' : 'opacity-50'}`}>
                                     <VocalShaperSlider label={t('modules:voice.params.ducking_threshold')} value={currentEffects.duckingThreshold} min={-80} max={-10} step={1} onChange={(val) => updateEffect('duckingThreshold', val)} unit=" dB" />
                                     <VocalShaperSlider label={t('modules:voice.params.music_reduct')} value={Math.round((1 - currentEffects.duckingRange) * 100)} min={0} max={100} step={5} onChange={(val) => updateEffect('duckingRange', 1 - (val / 100))} unit=" %" />
                                     <VocalShaperSlider label={t('modules:voice.params.release_delay')} value={currentEffects.duckingRelease} min={0} max={3000} step={100} onChange={(val) => updateEffect('duckingRelease', val)} unit=" ms" />
                                     <VocalShaperSlider label={t('modules:voice.params.fade_speed')} value={currentEffects.duckingAttack} min={50} max={1000} step={50} onChange={(val) => updateEffect('duckingAttack', val)} unit=" ms" />
-                                </div>
-                            )}
+                            </div>
                         </Interrupteur>
 
                         <p className={`${sousTitre} mt-3 flex items-center gap-1.5`}><SlidersHorizontal size={12} />02 · {t('modules:voice.ui.group_shapers')}</p>

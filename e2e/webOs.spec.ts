@@ -25,7 +25,7 @@ test.beforeAll(async () => {
     gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
     await attendreLHydratation(gmos);
     await ouvrirLeModule(gmos, 'Navigateur Web');
-    await gmos.fenetre.getByRole('button', { name: /^New Link$/ }).first()
+    await gmos.fenetre.getByRole('button', { name: /^Nouveau lien$/ }).first()
         .waitFor({ timeout: 20_000 });
 });
 
@@ -53,7 +53,7 @@ test.describe('ajouter un lien', () => {
     test('le formulaire le retient, et l’écran le montre', async () => {
         const avant = (await liens(gmos)).length;
 
-        await gmos.fenetre.getByRole('button', { name: /^New Link$/ }).first().click();
+        await gmos.fenetre.getByRole('button', { name: /^Nouveau lien$/ }).first().click();
 
         /*
           ⛔ **Le formulaire s'ouvre en MODAL**, par-dessus la bibliothèque. La

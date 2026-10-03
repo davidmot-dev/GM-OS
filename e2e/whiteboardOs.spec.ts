@@ -113,15 +113,15 @@ test.describe('revenir en arrière', () => {
 
         const avant = await traits(gmos);
 
-        await gmos.fenetre.getByTitle('Annuler').first().click();
+        await gmos.fenetre.getByRole('button', { name: 'Annuler', exact: true }).first().click();
         await expect.poll(() => traits(gmos), { timeout: 10_000 }).toBe(avant - 1);
 
-        await gmos.fenetre.getByTitle('Rétablir').first().click();
+        await gmos.fenetre.getByRole('button', { name: 'Rétablir', exact: true }).first().click();
         await expect.poll(() => traits(gmos), { timeout: 10_000 }).toBe(avant);
     });
 
     test('effacer tout vide le tableau', async () => {
-        await gmos.fenetre.getByTitle('Effacer tout').first().click();
+        await gmos.fenetre.getByRole('button', { name: 'Effacer tout', exact: true }).first().click();
 
         await expect.poll(() => traits(gmos), { timeout: 10_000 }).toBe(0);
     });

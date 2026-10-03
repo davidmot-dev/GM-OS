@@ -239,6 +239,7 @@ const GlobalSettingsModal: React.FC<GlobalSettingsModalProps> = ({ onClose }) =>
                                                 key={tID}
                                                 onClick={() => setTheme(tID)}
                                                 aria-pressed={choisi}
+                                                aria-label={`${t('settings:system.theme_label')} ${tID}`}
                                                 title={`${t('settings:system.theme_label')} ${t(`settings:themes.${tID}`)}`}
                                                 className={`flex flex-col gap-2 rounded-xl border p-3 text-left transition-colors ${choisi ? 'border-accent bg-accent/10' : 'border-app-border hover:border-accent/50'}`}
                                             >

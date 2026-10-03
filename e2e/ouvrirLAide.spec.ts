@@ -174,7 +174,7 @@ test.describe('le manuel', () => {
 
         /* Le compte est affiché à côté du titre de l'onglet : s'il est là, les
            guides ont bien traversé le pont. */
-        await expect(fenetre.getByRole('button', { name: /Manuel · \d+/ })).toBeVisible();
+        await expect(fenetre.getByRole('button', { name: /Manuel du meneur · \d+/ })).toBeVisible();
 
         const recherche = fenetre.getByPlaceholder(/Chercher dans les guides/);
         await recherche.fill('pupitre');
