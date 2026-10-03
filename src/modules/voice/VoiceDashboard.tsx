@@ -1,16 +1,19 @@
 import React, { useEffect, useMemo } from 'react';
-import { 
+import {
     AudioLines,
-    Mic2, 
-    Settings2, 
-    Activity, 
-    Ghost, 
-    Skull, 
-    Cpu, 
-    Flame, 
-    Radio, 
-    Volume2, 
-    Zap
+    Mic2,
+    MicOff,
+    Ghost,
+    Skull,
+    Cpu,
+    Flame,
+    Radio,
+    Volume2,
+    Headphones,
+    RefreshCw,
+    ShieldCheck,
+    SlidersHorizontal,
+    Activity,
 } from 'lucide-react';
 import { useVoiceStore } from './useVoiceStore';
 import { voiceEngine } from './VoiceEngine';
@@ -19,6 +22,11 @@ import { useTranslation } from 'react-i18next';
 import { useNPCStore } from '../npc/useNPCStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import { gmToast } from '../../stores/useToastStore';
+import { Panneau, Bouton, Etiquette, EnTeteDeModule } from '../../components/socle';
+import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
+
+const titreDeColonne = 'flex items-center gap-2 font-display text-sm font-bold uppercase tracking-wider text-app-text';
+const sousTitre = 'mb-1 mt-1 text-ui-10 font-black uppercase tracking-widest text-accent';
 
 const VocalShaperSlider: React.FC<{
     label: string;
@@ -29,28 +37,64 @@ const VocalShaperSlider: React.FC<{
     onChange: (val: number) => void;
     unit?: string;
 }> = ({ label, value, min, max, step = 1, onChange, unit = '' }) => (
-    <div className="flex flex-col gap-2">
-        <div className="flex justify-between text-ui-10 font-bold uppercase tracking-widest text-app-subtle">
+    <label className="flex flex-col gap-1.5 rounded-lg border border-app-border bg-app-bg/40 p-2.5">
+        <span className="flex justify-between text-ui-10 font-black uppercase tracking-widest text-app-muted">
             <span>{label}</span>
-            <span className="text-accent">{value}{unit}</span>
-        </div>
-        <input 
+            <span className="font-mono text-accent">{value}{unit}</span>
+        </span>
+        <input
             type="range"
             min={min}
             max={max}
             step={step}
             value={value}
             onChange={(e) => onChange(parseFloat(e.target.value))}
-            className="w-full h-1.5 bg-app-surface rounded-lg appearance-none cursor-pointer accent-accent"
+            className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-app-surface-2 accent-accent"
         />
+    </label>
+);
+
+/** Un interrupteur nommé, avec ce qu'il fait dessous. */
+const Interrupteur: React.FC<{
+    actif: boolean;
+    onClick: () => void;
+    libelle: string;
+    aide?: string;
+    children?: React.ReactNode;
+}> = ({ actif, onClick, libelle, aide, children }) => (
+    <div className={`rounded-lg border p-2.5 transition-colors ${actif ? 'border-etat-succes/40 bg-etat-succes/5' : 'border-app-border bg-app-bg/40'}`}>
+        <button role="switch" aria-checked={actif} onClick={onClick} className="flex w-full items-center justify-between gap-3 text-left">
+            <span className="min-w-0">
+                <span className={`block text-xs font-black uppercase tracking-widest ${actif ? 'text-etat-succes' : 'text-app-text'}`}>{libelle}</span>
+                {aide && <span className="mt-0.5 block text-ui-10 leading-snug text-app-muted">{aide}</span>}
+            </span>
+            <span className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${actif ? 'bg-etat-succes' : 'bg-app-surface-2'}`}>
+                <span className={`absolute top-1 h-3 w-3 rounded-full bg-app-text transition-all ${actif ? 'left-5' : 'left-1'}`} />
+            </span>
+        </button>
+        {children}
     </div>
 );
 
+/** Le niveau en décibels, lisible : « -12 dB », « -∞ » au silence. */
+const decibels = (niveau: number) => (niveau > 0.0001 ? `${Math.round(20 * Math.log10(niveau))} dB` : '-∞');
+
+/**
+ * **Voice-OS** — refonte, L6, maquette retenue (`stitch/son/son-voice-os.png`) :
+ * trois colonnes — les modèles vocaux et les voix des PNJ, **le micro au centre
+ * (plus petit)**, puis les effets **rangés en deux groupes**, « Nettoyage et
+ * sécurité » et « Modeleurs vocaux ». Répond à David : *« la partie avec les
+ * effets prend peut-être un peu trop de place »*.
+ *
+ * **Retirés parce qu'ils mentaient** : « Latence : 12ms » et « Charge DSP : 4% »
+ * étaient écrits en dur et ne mesuraient rien — l'état réel du DSP les
+ * remplace ; le bouton « + Profil personnalisé » n'avait aucune action.
+ */
 const VoiceDashboard: React.FC = () => {
-    const { 
-        isActive, 
-        isLive, 
-        isMonitor, 
+    const {
+        isActive,
+        isLive,
+        isMonitor,
         isSyncNPC,
         isDucking,
         currentEffects,
@@ -79,6 +123,7 @@ const VoiceDashboard: React.FC = () => {
         isWorkletReady
     } = useVoiceStore();
     const { getAudioLabel } = useHardwareStore();
+    const regime = useRegimeDInterface();
 
     /*
       Les PNJ qui portent une voix. Voice-OS lit les modules des PNJ, et non
@@ -139,461 +184,277 @@ const VoiceDashboard: React.FC = () => {
         }
     };
 
+    const basculerLeMicro = async () => {
+        // User interaction: crucial for AudioContext resume
+        await voiceEngine.initialize();
+        toggleActive();
+    };
+
     return (
-        <div className="h-full flex flex-col bg-app-bg font-sans text-app-text overflow-hidden">
-            {/* Header Status Bar */}
-            <div className="flex items-center justify-between px-6 py-3 border-b border-app-border/50 bg-app-surface/50 backdrop-blur-md">
-                <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-etat-succes animate-pulse' : 'bg-app-surface-2'}`} />
-                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
-                            {t('modules:voice.dashboard.mic_status')}: {isActive ? t('modules:voice.dashboard.active') : t('modules:voice.dashboard.standby')}
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Activity size={14} className="text-accent" />
-                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
-                            {t('modules:voice.dashboard.latency')}: 12ms
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Zap size={14} className={isWorkletReady ? "text-etat-succes" : "text-app-subtle"} />
-                        <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
-                            {t('modules:voice.dashboard.dsp_load')}: {isWorkletReady ? '4%' : 'N/A'}
-                        </span>
-                        {!isWorkletReady && isActive && (
-                            <span className="text-ui-8 bg-etat-danger/20 text-etat-danger px-1.5 py-0.5 rounded border border-etat-danger/30 animate-pulse">
-                                FALLBACK ACTIVE
-                            </span>
-                        )}
-                    </div>
-                    {isDucking && (
-                        <div className="flex items-center gap-2 px-2 py-0.5 bg-etat-alerte/20 border border-etat-alerte/30 rounded text-etat-alerte animate-pulse">
-                            <Volume2 size={12} />
-                            <span className="text-ui-9 font-black uppercase tracking-widest">
-                                {t('modules:voice.dashboard.ducking_active')}
-                            </span>
-                        </div>
+        <div className="flex h-full min-h-0 flex-col gap-3 p-4 text-app-text">
+            <EnTeteDeModule
+                titre="Voice-OS"
+                surtitre={t('modules:voice.ui.surtitre')}
+                etat={<>
+                    <Etiquette ton={isActive ? 'succes' : 'neutre'}>
+                        {t('modules:voice.dashboard.mic_status')} : {isActive ? t('modules:voice.dashboard.active') : t('modules:voice.dashboard.standby')}
+                    </Etiquette>
+                    {isActive && (
+                        <Etiquette ton={isWorkletReady ? 'succes' : 'danger'} title={isWorkletReady ? undefined : t('modules:voice.ui.dsp_fallback_hint')}>
+                            {isWorkletReady ? t('modules:voice.ui.dsp_ready') : t('modules:voice.ui.dsp_fallback')}
+                        </Etiquette>
                     )}
+                    {isDucking && <Etiquette ton="alerte"><Volume2 size={11} /> {t('modules:voice.dashboard.ducking_active')}</Etiquette>}
                     {lastSyncedEntityName && (
-                        <div className="flex items-center gap-3 px-3 py-1 bg-accent/10 rounded-full border border-accent/20 ml-4 animate-in fade-in slide-in-from-left-4 duration-500">
-                            <Mic2 size={12} className="text-accent" />
-                            <span className="text-ui-9 font-bold text-accent uppercase tracking-wider">
-                                {t('modules:voice.dashboard.linked')}: {lastSyncedEntityName}
-                            </span>
-                            <span className="text-ui-8 bg-accent/20 px-1.5 py-0.5 rounded text-accent/80 font-black flex items-center gap-1 shadow-[0_0_10px_color-mix(in_srgb,var(--app-accent)_20%,transparent)]">
-                                <span className="w-1 h-1 bg-accent rounded-full animate-pulse" />
-                                {t('modules:voice.dashboard.ai_optimized')}
-                            </span>
-                        </div>
+                        <Etiquette ton="accent"><AudioLines size={11} /> {t('modules:voice.dashboard.linked')} : {lastSyncedEntityName}</Etiquette>
                     )}
-                </div>
-                
-                <div className="flex gap-2">
-                    <button 
-                        onClick={() => toggleMonitor()}
-                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isMonitor ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-app-text'}`}
-                    >
-                        🎧 {t('modules:voice.dashboard.monitor')}
-                    </button>
-                    <button 
-                        onClick={() => toggleSyncNPC()}
-                        className={`px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isSyncNPC ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-app-surface text-app-subtle border border-transparent hover:text-app-text'}`}
-                    >
-                        🔄 {t('modules:voice.dashboard.sync_npc')}
-                    </button>
-                    <button 
-                        onClick={async () => {
-                            // User interaction: crucial for AudioContext resume
-                            await voiceEngine.initialize();
-                            toggleActive();
-                        }}
-                        className={`px-4 py-1.5 rounded-lg text-ui-10 font-black uppercase tracking-widest transition-all ${isActive ? 'bg-etat-succes text-app-bg shadow-lg shadow-etat-succes/20' : 'bg-app-surface text-app-text'}`}
-                    >
-                        {isActive ? t('modules:voice.dashboard.mic_on') : t('modules:voice.dashboard.mic_off')}
-                    </button>
-                </div>
+                </>}
+            />
+
+            {/* ── Les gestes : le micro, la diffusion, le retour, la synchro ── */}
+            <div role="toolbar" className="flex shrink-0 flex-wrap items-center gap-2">
+                <Bouton aLaTable={regime.aLaTable} variante={isActive ? 'succes' : 'neutre'} icone={isActive ? <Mic2 size={16} /> : <MicOff size={16} />} onClick={() => void basculerLeMicro()} aria-pressed={isActive}>
+                    {isActive ? t('modules:voice.dashboard.mic_on') : t('modules:voice.dashboard.mic_off')}
+                </Bouton>
+                <Bouton aLaTable={regime.aLaTable} variante={isLive ? 'danger' : 'accent'} icone={<Radio size={16} className={isLive ? 'animate-pulse' : ''} />} onClick={() => toggleLive()} aria-pressed={isLive}>
+                    {isLive ? t('modules:voice.dashboard.live_broadcast') : t('modules:voice.dashboard.go_live')}
+                </Bouton>
+                <Bouton aLaTable={regime.aLaTable} icone={<Headphones size={16} />} onClick={() => toggleMonitor()} aria-pressed={isMonitor}>
+                    {t('modules:voice.dashboard.monitor')} : {isMonitor ? 'ON' : 'OFF'}
+                </Bouton>
+                <Bouton aLaTable={regime.aLaTable} icone={<RefreshCw size={16} />} onClick={() => toggleSyncNPC()} aria-pressed={isSyncNPC}>
+                    {t('modules:voice.dashboard.sync_npc')} : {isSyncNPC ? 'AUTO' : 'OFF'}
+                </Bouton>
             </div>
 
-            <div className="flex-1 flex overflow-hidden">
-                {/* Left Sidebar: Presets */}
-                <aside className="w-64 border-r border-app-border/50 flex flex-col p-4 gap-2 bg-app-surface/20 overflow-y-auto custom-scrollbar">
-                    <h3 className="px-2 mb-2 text-ui-10 font-black text-app-subtle uppercase tracking-[0.2em]">{t('modules:voice.dashboard.vocal_templates')}</h3>
-                    {presets.map((preset) => (
-                        <button
-                            key={preset.id}
-                            onClick={() => applyPreset(preset.id)}
-                            className={`flex items-center gap-3 p-3 rounded-xl transition-all group overflow-hidden relative ${activePresetId === preset.id 
-                                ? 'bg-accent/10 text-accent border border-accent/30' 
-                                : 'text-app-subtle hover:bg-app-surface/5 hover:text-app-text border border-transparent'}`}
-                        >
-                            <div className={`${activePresetId === preset.id ? 'text-accent' : 'text-app-subtle group-hover:text-accent'} transition-colors`}>
-                                {getIcon(preset.icon)}
-                            </div>
-                            <div className="flex flex-col items-start min-w-0">
-                                <span className="font-bold text-sm">{t(preset.name)}</span>
-                                <span className="text-ui-10 opacity-60 truncate w-full">{t(preset.description)}</span>
-                            </div>
-                            {activePresetId === preset.id && (
-                                <div className="absolute right-[-10px] top-[-10px] w-10 h-10 bg-accent/10 rounded-full blur-xl animate-pulse" />
-                            )}
-                        </button>
-                    ))}
+            <div className="flex min-h-0 flex-1 gap-4">
+                {/* ── À gauche : les modèles vocaux, les voix des PNJ ── */}
+                <aside className="flex w-72 shrink-0 flex-col gap-3 overflow-y-auto pr-1 custom-scrollbar">
+                    <Panneau className="flex flex-col gap-2 p-3">
+                        <p className={titreDeColonne}><Mic2 size={15} className="text-accent" />{t('modules:voice.dashboard.vocal_templates')}</p>
+                        {presets.map((preset) => {
+                            const actif = activePresetId === preset.id;
+                            return (
+                                <button
+                                    key={preset.id}
+                                    onClick={() => applyPreset(preset.id)}
+                                    aria-pressed={actif}
+                                    className={`flex items-start gap-3 rounded-lg border p-2.5 text-left transition-colors ${actif ? 'border-accent bg-accent/10' : 'border-app-border hover:border-accent/50'}`}
+                                >
+                                    <span className={`mt-0.5 shrink-0 ${actif ? 'text-accent' : 'text-app-muted'}`}>{getIcon(preset.icon)}</span>
+                                    <span className="min-w-0">
+                                        <span className={`flex items-center gap-2 text-sm font-bold ${actif ? 'text-accent' : 'text-app-text'}`}>
+                                            {t(preset.name)}
+                                            {actif && <Etiquette ton="accent">{t('modules:voice.dashboard.active')}</Etiquette>}
+                                        </span>
+                                        <span className="block truncate text-xs text-app-muted">{t(preset.description)}</span>
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </Panneau>
 
                     {/*
-                        **Les voix rangées sur les fiches de PNJ.**
-
-                        Demandé par David le 2026-08-15 : un profil généré dans
-                        NPC-OS doit se rappeler ici, en séance, sans rouvrir le
-                        générateur. La liste ne montre que les PNJ qui EN ONT
-                        un — un rappel qui reposerait un profil inexistant
-                        remettrait le rack à des valeurs que personne n'a
-                        choisies.
-
-                        Ne sont listés que les PNJ **enregistrés au mémo** :
-                        `partialize` ne persiste que ceux-là, donc un profil posé
-                        sur une fiche non sauvée ne survivrait pas au
-                        redémarrage. Le dire ici évite de le découvrir demain.
+                        **Les voix rangées sur les fiches de PNJ.** Demandé par David le
+                        2026-08-15 : un profil généré dans NPC-OS doit se rappeler ici, en
+                        séance, sans rouvrir le générateur. La liste ne montre que les PNJ
+                        qui EN ONT un — un rappel qui reposerait un profil inexistant
+                        remettrait le rack à des valeurs que personne n'a choisies.
                     */}
-                    {voixEnregistrees.length > 0 && (
-                        <div className="mt-8">
-                            <h3 className="px-2 mb-2 text-ui-10 font-black text-app-subtle uppercase tracking-[0.2em]">
-                                Voix des PNJ
-                            </h3>
-                            {voixEnregistrees.map(pnj => (
-                                <button
-                                    key={pnj.id}
-                                    onClick={() => {
-                                        appliquerProfil(pnj.voiceProfile!);
-                                        gmToast(`Voix de ${pnj.name} rappelée.`, 'info');
-                                    }}
-                                    className="w-full flex items-center gap-3 p-3 rounded-xl text-app-subtle hover:bg-app-surface/5 hover:text-app-text border border-transparent hover:border-gm-cyan/20 transition-all group"
-                                >
-                                    <AudioLines size={16} className="text-app-subtle group-hover:text-gm-cyan transition-colors shrink-0" />
-                                    <div className="flex flex-col items-start min-w-0">
-                                        <span className="font-bold text-sm truncate w-full">{pnj.name}</span>
-                                        <span className="text-ui-10 opacity-60">
-                                            {pnj.voiceProfile!.presetId ?? 'réglage sur mesure'}
-                                        </span>
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    )}
-
-                    <div className="mt-8 px-2 flex flex-col gap-4">
-                        {/*
-                          **Le sélecteur de micro — demandé par David le 2026-09-03.**
-
-                          Il vient AVANT la sortie, parce que c'est l'ordre du
-                          signal et l'ordre des ennuis : un micro qui n'est pas
-                          le bon rend tout le reste sans objet. Sans lui,
-                          Voice-OS prenait le périphérique par défaut de
-                          Windows — *lequel se décide au branchement d'une
-                          webcam, pas au moment de jouer.*
-                        */}
-                        <div className="flex items-center gap-2 text-app-subtle">
-                            <Mic2 size={14} />
-                            <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.audio_input')}</h3>
-                        </div>
-                        <select
-                            value={inputDeviceId || ''}
-                            onChange={(e) => setInputDeviceId(e.target.value || null)}
-                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-app-text focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
-                        >
-                            <option value="">{t('modules:voice.dashboard.default_input')}</option>
-                            {availableInputs.map(device => (
-                                <option key={device.deviceId} value={device.deviceId}>
-                                    {device.label || getAudioLabel(device.deviceId)}
-                                </option>
-                            ))}
-                        </select>
-
-                        <div className="flex items-center gap-2 text-app-subtle">
-                            <Volume2 size={14} />
-                            <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.audio_output')}</h3>
-                        </div>
-                        <select
-                            value={outputDeviceId || ''}
-                            onChange={(e) => setOutputDeviceId(e.target.value || null)}
-                            className="w-full bg-app-surface border border-app-border rounded-lg p-2 text-xs font-bold text-app-text focus:outline-none focus:border-accent/50 transition-all custom-scrollbar"
-                        >
-                            <option value="">{t('modules:voice.dashboard.default_output')}</option>
-                            {availableOutputs.map(device => (
-                                <option key={device.deviceId} value={device.deviceId}>
-                                    {getAudioLabel(device.deviceId)}
-                                </option>
-                            ))}
-                        </select>
-                        <button 
-                            onClick={() => voiceEngine.refreshAvailableDevices()}
-                            className="text-ui-9 text-app-subtle hover:text-accent transition-colors uppercase font-bold text-left px-1"
-                        >
-                            ↻ {t('modules:voice.dashboard.refresh_devices')}
-                        </button>
-                    </div>
-
-                    <button className="mt-4 flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-app-border text-app-subtle text-ui-10 font-black uppercase tracking-widest hover:border-app-border hover:text-app-muted transition-all">
-                        + {t('modules:voice.dashboard.custom_profile')}
-                    </button>
+                    <Panneau className="flex flex-col gap-2 p-3">
+                        <p className={`${titreDeColonne} justify-between`}>
+                            <span className="flex items-center gap-2"><AudioLines size={15} className="text-accent" />{t('modules:voice.ui.npc_voices')}</span>
+                            <span className="font-mono text-ui-10 text-app-muted">{voixEnregistrees.length}</span>
+                        </p>
+                        {voixEnregistrees.length === 0 && (
+                            <p className="text-xs italic text-app-subtle">{t('modules:voice.ui.npc_none')}</p>
+                        )}
+                        {voixEnregistrees.map(pnj => (
+                            <button
+                                key={pnj.id}
+                                onClick={() => {
+                                    appliquerProfil(pnj.voiceProfile!);
+                                    gmToast(t('modules:voice.ui.recalled', { name: pnj.name }), 'info');
+                                }}
+                                className="flex items-center gap-3 rounded-lg border border-app-border p-2.5 text-left transition-colors hover:border-accent/50"
+                            >
+                                <AudioLines size={16} className="shrink-0 text-gm-cyan" />
+                                <span className="min-w-0">
+                                    <span className="block truncate text-sm font-bold text-app-text">{pnj.name}</span>
+                                    <span className="block text-xs text-app-muted">{pnj.voiceProfile!.presetId ?? t('modules:voice.ui.custom')}</span>
+                                </span>
+                            </button>
+                        ))}
+                    </Panneau>
                 </aside>
 
-                {/* Main View */}
-                <div className="flex-1 flex flex-col relative overflow-hidden p-8 gap-12">
-                    {/* Visualizer Area */}
-                    <div className="flex-1 flex items-center justify-center">
-                        <div className="relative w-80 h-80 flex items-center justify-center">
-                            {/* Animated Rings */}
-                            <div className="absolute inset-0 rounded-full border-2 border-app-text/5 scale-[1.1]" />
-                            <div className="absolute inset-0 rounded-full border border-accent/10 scale-[1.3] animate-pulse" />
-                            
-                            {/* Waveform Circle Emulation */}
-                            <div 
-                                className="absolute inset-0 rounded-full border-4 border-accent/20 transition-transform duration-75" 
-                                style={{ transform: `scale(${1 + inputLevel * 0.4})` }} 
-                            />
-                            
-                            {/* Main Mic Icon */}
-                            <div className={`relative w-48 h-48 rounded-full flex items-center justify-center transition-all duration-300 ${isActive ? 'bg-accent/10 border-2 border-accent/20' : 'bg-app-bg border-2 border-app-border'}`}>
-                                <Mic2 size={64} className={`transition-all duration-300 ${isActive ? 'text-accent drop-shadow-glow-accent' : 'text-app-subtle'}`} />
-                                
-                                {/* Pulse Effect when speaking */}
-                                {isActive && (
-                                    <div 
-                                        className="absolute inset-0 rounded-full bg-accent/20 blur-2xl transition-opacity duration-150" 
-                                        style={{ opacity: inputLevel }} 
-                                    />
-                                )}
+                {/* ── Au centre : le micro, plus petit, et le matériel ── */}
+                <div className="flex min-w-0 flex-1 flex-col gap-3 overflow-y-auto custom-scrollbar">
+                    <Panneau niveau={2} className="flex flex-1 flex-col p-4">
+                        <div className="flex items-center justify-between text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                            <span className="flex items-center gap-2"><Activity size={13} className="text-accent" />{t('modules:voice.ui.input_stream')}</span>
+                            <span className="font-mono text-accent">48 kHz</span>
+                        </div>
+                        <div className="flex flex-1 items-center justify-center py-6">
+                            <div className="relative flex h-52 w-52 items-center justify-center">
+                                <div className="absolute inset-0 rounded-full border border-app-border" />
+                                <div className="absolute inset-4 rounded-full border border-dashed border-accent/30" />
+                                <div
+                                    className="absolute inset-8 rounded-full border-4 border-accent/30 transition-transform duration-75"
+                                    style={{ transform: `scale(${1 + inputLevel * 0.35})` }}
+                                />
+                                <div className={`relative flex h-28 w-28 flex-col items-center justify-center rounded-full border-2 transition-colors ${isActive ? 'border-accent bg-accent/10' : 'border-app-border bg-app-bg'}`}>
+                                    {isActive ? <Mic2 size={40} className="text-accent" /> : <MicOff size={40} className="text-app-subtle" />}
+                                    <span className="mt-1 text-ui-9 font-black uppercase tracking-widest text-app-muted">
+                                        {isActive ? t('modules:voice.dashboard.active') : t('modules:voice.dashboard.standby')}
+                                    </span>
+                                    {isActive && (
+                                        <div className="absolute inset-0 rounded-full bg-accent/20 blur-2xl transition-opacity duration-150" style={{ opacity: inputLevel }} />
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div>
+                            <div className="mb-1 flex items-baseline justify-between text-ui-10 font-black uppercase tracking-widest text-app-muted">
+                                <span>{t('modules:voice.ui.level')}</span>
+                                <span className="font-mono text-sm text-accent">{decibels(inputLevel)}</span>
+                            </div>
+                            <div className="h-2 overflow-hidden rounded-full bg-app-bg">
+                                <div className="h-full bg-accent transition-all duration-75" style={{ width: `${inputLevel * 100}%` }} />
+                            </div>
+                        </div>
+                    </Panneau>
 
-                    {/* Go Live Button Area */}
-                    <div className="mt-auto flex flex-col items-center gap-6">
-                        <button 
-                            onClick={() => toggleLive()}
-                            className={`group relative overflow-hidden px-12 py-4 rounded-full font-black text-lg transition-all duration-500 border shadow-2xl ${isLive 
-                                ? 'bg-etat-danger text-app-bg border-etat-danger animate-pulse ring-4 ring-etat-danger/20' 
-                                : 'bg-app-bg text-app-muted border-app-border hover:border-accent/50 hover:text-accent'}`}
-                        >
-                            <span className="relative z-10 flex items-center gap-3">
-                                <Radio size={20} className={isLive ? 'animate-bounce' : ''} />
-                                {isLive ? t('modules:voice.dashboard.live_broadcast') : t('modules:voice.dashboard.go_live')}
-                            </span>
-                            {isLive && (
-                                <div className="absolute inset-0 bg-etat-danger/20 blur-xl opacity-50" />
-                            )}
-                        </button>
-                    </div>
+                    {/*
+                      **Le micro vient AVANT la sortie** — demandé par David le 2026-09-03 :
+                      c'est l'ordre du signal et l'ordre des ennuis. Sans le choix du micro,
+                      Voice-OS prenait le périphérique par défaut de Windows — *lequel se
+                      décide au branchement d'une webcam, pas au moment de jouer.*
+                    */}
+                    <Panneau className="flex shrink-0 flex-col gap-3 p-4">
+                        <div className="flex items-center justify-between">
+                            <p className={titreDeColonne}>{t('modules:voice.ui.hardware')}</p>
+                            <button onClick={() => voiceEngine.refreshAvailableDevices()} className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-accent hover:brightness-110">
+                                <RefreshCw size={12} />{t('modules:voice.dashboard.refresh_devices')}
+                            </button>
+                        </div>
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                            <label className="flex flex-col gap-1.5">
+                                <span className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-app-muted"><Mic2 size={12} />{t('modules:voice.dashboard.audio_input')}</span>
+                                <select
+                                    value={inputDeviceId || ''}
+                                    onChange={(e) => setInputDeviceId(e.target.value || null)}
+                                    className="min-h-11 w-full rounded-lg border border-app-border bg-app-bg px-3 text-sm text-app-text focus:border-accent/60 focus:outline-none"
+                                >
+                                    <option value="">{t('modules:voice.dashboard.default_input')}</option>
+                                    {availableInputs.map(device => (
+                                        <option key={device.deviceId} value={device.deviceId}>
+                                            {device.label || getAudioLabel(device.deviceId)}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                            <label className="flex flex-col gap-1.5">
+                                <span className="flex items-center gap-1.5 text-ui-10 font-black uppercase tracking-widest text-app-muted"><Volume2 size={12} />{t('modules:voice.dashboard.audio_output')}</span>
+                                <select
+                                    value={outputDeviceId || ''}
+                                    onChange={(e) => setOutputDeviceId(e.target.value || null)}
+                                    className="min-h-11 w-full rounded-lg border border-app-border bg-app-bg px-3 text-sm text-app-text focus:border-accent/60 focus:outline-none"
+                                >
+                                    <option value="">{t('modules:voice.dashboard.default_output')}</option>
+                                    {availableOutputs.map(device => (
+                                        <option key={device.deviceId} value={device.deviceId}>
+                                            {getAudioLabel(device.deviceId)}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                        </div>
+                    </Panneau>
                 </div>
 
-                {/* Right Sidebar: Vocal Shapers */}
-                <aside className="w-80 border-l border-app-border/50 p-6 flex flex-col gap-6 bg-app-surface/10 overflow-y-auto custom-scrollbar">
-                    <div className="flex items-center gap-2 mb-2">
-                        <Settings2 size={16} className="text-app-subtle" />
-                        <h3 className="text-ui-10 font-black text-app-subtle uppercase tracking-[0.2em]">{t('modules:voice.shapers.title')}</h3>
-                    </div>
+                {/* ── À droite : le signal et les effets, en deux groupes ── */}
+                <aside className="flex w-80 shrink-0 flex-col overflow-y-auto pr-1 custom-scrollbar">
+                    <Panneau className="flex flex-col gap-2 p-3">
+                        <p className={titreDeColonne}><SlidersHorizontal size={15} className="text-accent" />{t('modules:voice.ui.signal')}</p>
 
-                    <div className="flex flex-col gap-6">
-                        <VocalShaperSlider 
-                            label={t('modules:voice.shapers.pitch')} 
-                            value={currentEffects.pitch} 
-                            min={-12} max={12} 
-                            onChange={(val) => updateEffect('pitch', val)} 
-                            unit="st"
-                        />
-                        <VocalShaperSlider 
-                            label={t('modules:voice.shapers.formant')} 
-                            value={currentEffects.formant} 
-                            min={-100} max={100} 
-                            onChange={(val) => updateEffect('formant', val)} 
-                        />
-                        <VocalShaperSlider 
-                            label={t('modules:voice.shapers.reverb')} 
-                            value={currentEffects.reverb} 
-                            min={0} max={1} step={0.01}
-                            onChange={(val) => updateEffect('reverb', val)} 
-                        />
-                        <VocalShaperSlider 
-                            label={t('modules:voice.shapers.distortion')} 
-                            value={currentEffects.distortion} 
-                            min={0} max={1} step={0.01}
-                            onChange={(val) => updateEffect('distortion', val)} 
-                        />
-                        <VocalShaperSlider
-                            label={t('modules:voice.shapers.compression')}
-                            value={currentEffects.compression}
-                            min={0} max={100} step={5}
-                            unit="%"
-                            onChange={(val) => updateEffect('compression', val)}
-                        />
-                        <VocalShaperSlider 
-                            label={t('modules:voice.shapers.bitcrush')} 
-                            value={currentEffects.bitcrush} 
-                            min={0} max={1} step={0.01}
-                            onChange={(val) => updateEffect('bitcrush', val)} 
-                        />
-                    </div>
+                        <p className={`${sousTitre} flex items-center gap-1.5`}><ShieldCheck size={12} />01 · {t('modules:voice.ui.group_clean')}</p>
+                        <Interrupteur actif={currentEffects.antiLarsen} onClick={() => toggleAntiLarsen()} libelle={t('modules:voice.shapers.anti_larsen')} aide={t('modules:voice.ui.anti_larsen_hint')} />
 
-                    <div className="mt-4 pt-4 border-t border-app-border/30 flex flex-col gap-3">
-                        <button 
-                            onClick={() => toggleAntiLarsen()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.antiLarsen ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-app-muted'}`}
-                        >
-                            <span className="text-ui-10 font-black uppercase tracking-widest">🛡️ {t('modules:voice.shapers.anti_larsen')}</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.antiLarsen ? 'bg-etat-succes' : 'bg-app-surface-2'}`}>
-                                <div className={`absolute top-1 w-2 h-2 bg-app-text rounded-full transition-all ${currentEffects.antiLarsen ? 'right-1' : 'left-1'}`} />
-                            </div>
-                        </button>
-                        
                         {/*
-                          **Le débruitage : UN réglage, trois positions.**
-
-                          Deux interrupteurs auraient laissé empiler le
-                          débruiteur du navigateur et RNNoise — *deux
-                          débruiteurs qui se suivent, ce n'est pas mieux, c'est
-                          pire* : le premier rabote ce que le second aurait su
-                          garder. Le choix est donc exclusif par construction.
+                          **Le débruitage : UN réglage, trois positions.** Deux interrupteurs
+                          auraient laissé empiler le débruiteur du navigateur et RNNoise —
+                          *deux débruiteurs qui se suivent, ce n'est pas mieux, c'est pire.*
                         */}
-                        <div className="flex flex-col gap-2 p-3 rounded-xl border border-transparent bg-app-surface/50">
-                            <div className="flex items-center justify-between">
-                                <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">
-                                    🧹 {t('modules:voice.shapers.noise_suppression')}
-                                </span>
-                                {/*
-                                  La pastille de voix ne s'affiche que quand le modèle
-                                  tourne : *une pastille éteinte se lit comme « il ne
-                                  parle pas », pas comme « personne n'écoute ».*
-                                */}
+                        <div className="rounded-lg border border-app-border bg-app-bg/40 p-2.5">
+                            <div className="mb-2 flex items-center justify-between">
+                                <span className="text-xs font-black uppercase tracking-widest text-app-text">{t('modules:voice.shapers.noise_suppression')}</span>
+                                {/* La pastille de voix ne s'affiche que quand le modèle tourne :
+                                    *une pastille éteinte se lit comme « il ne parle pas », pas
+                                    comme « personne n'écoute ».* */}
                                 {currentEffects.debruitage === 'neuronal' && (
                                     <span
                                         title={t('modules:voice.shapers.voice_detected')}
-                                        className={`w-2 h-2 rounded-full transition-colors ${probabiliteDeVoix > 0.6 ? 'bg-etat-succes' : 'bg-app-surface-2'}`}
+                                        className={`h-2 w-2 rounded-full transition-colors ${probabiliteDeVoix > 0.6 ? 'bg-etat-succes' : 'bg-app-surface-2'}`}
                                     />
                                 )}
                             </div>
-                            <div className="flex gap-1">
+                            <div className="flex overflow-hidden rounded-md border border-app-border">
                                 {(['aucun', 'navigateur', 'neuronal'] as const).map(mode => (
                                     <button
                                         key={mode}
                                         onClick={() => setDebruitage(mode)}
-                                        title={t(`modules:voice.shapers.debruitage_${mode}_hint`)}
-                                        className={`flex-1 px-2 py-2 rounded-lg text-ui-9 font-black uppercase tracking-tighter transition-all border ${currentEffects.debruitage === mode
-                                            ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes'
-                                            : 'bg-app-bg border-transparent text-app-subtle hover:text-app-text'}`}
+                                        aria-pressed={currentEffects.debruitage === mode}
+                                        className={`flex-1 px-1 py-1.5 text-ui-9 font-black uppercase tracking-wide transition-colors ${currentEffects.debruitage === mode ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'}`}
                                     >
                                         {t(`modules:voice.shapers.debruitage_${mode}`)}
                                     </button>
                                 ))}
                             </div>
-                            {/*
-                              **Ce que fait le mode choisi, écrit, pas survolé.**
-
-                              Les trois boutons portaient déjà leur explication en
-                              infobulle — c'est-à-dire nulle part : *une infobulle
-                              ne se lit que par quelqu'un qui soupçonne déjà*. Or
-                              c'est précisément ce réglage qui décide si vos fins
-                              de phrase arrivent aux joueurs.
-                            */}
-                            <p className="text-ui-9 leading-snug text-app-subtle italic">
+                            {/* Ce que fait le mode choisi, écrit, pas survolé : *une infobulle
+                                ne se lit que par quelqu'un qui soupçonne déjà.* */}
+                            <p className="mt-2 text-ui-10 leading-snug text-app-muted">
                                 {t(`modules:voice.shapers.debruitage_${currentEffects.debruitage}_hint`)}
                             </p>
                         </div>
 
-                        <button 
-                            onClick={() => toggleNoiseGate()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.noiseGate ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-app-muted'}`}
-                        >
-                            <span className="text-ui-10 font-black uppercase tracking-widest">🔇 {t('modules:voice.shapers.noise_gate')}</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.noiseGate ? 'bg-accent' : 'bg-app-surface-2'}`}>
-                                <div className={`absolute top-1 w-2 h-2 bg-app-text rounded-full transition-all ${currentEffects.noiseGate ? 'right-1' : 'left-1'}`} />
-                            </div>
-                        </button>
- 
-                        <button 
-                            onClick={() => toggleDucking()}
-                            className={`flex items-center justify-between p-3 rounded-xl border transition-all ${currentEffects.duckingEnabled ? 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes' : 'bg-app-surface/50 border-transparent text-app-subtle hover:text-app-muted'}`}
-                        >
-                            <span className="text-ui-10 font-black uppercase tracking-widest">🔊 {t('modules:voice.shapers.auto_ducking')}</span>
-                            <div className={`w-8 h-4 rounded-full relative transition-colors ${currentEffects.duckingEnabled ? 'bg-etat-succes' : 'bg-app-surface-2'}`}>
-                                <div className={`absolute top-1 w-2 h-2 bg-app-text rounded-full transition-all ${currentEffects.duckingEnabled ? 'right-1' : 'left-1'}`} />
-                            </div>
-                        </button>
+                        <Interrupteur actif={currentEffects.noiseGate} onClick={() => toggleNoiseGate()} libelle={t('modules:voice.shapers.noise_gate')} aide={t('modules:voice.ui.gate_hint', { db: currentEffects.gateThreshold })}>
+                            {currentEffects.noiseGate && (
+                                <div className="mt-2">
+                                    <VocalShaperSlider
+                                        label={t('modules:voice.params.gate_threshold')}
+                                        value={currentEffects.gateThreshold}
+                                        min={-100} max={0} step={1}
+                                        onChange={(val) => updateEffect('gateThreshold', val)}
+                                        unit=" dB"
+                                    />
+                                </div>
+                            )}
+                        </Interrupteur>
 
-                        <div className="mt-4 pt-4 border-t border-app-border/30 flex flex-col gap-4">
-                            <div className="flex flex-col gap-2">
-                                <span className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle italic">{t('modules:voice.dashboard.ducking_params')}</span>
-                                <VocalShaperSlider 
-                                    label={t('modules:voice.params.ducking_threshold')} 
-                                    value={currentEffects.duckingThreshold} 
-                                    min={-80} max={-10} step={1}
-                                    onChange={(val) => updateEffect('duckingThreshold', val)} 
-                                    unit="dB"
-                                />
-                                <VocalShaperSlider 
-                                    label={t('modules:voice.params.music_reduct')} 
-                                    value={Math.round((1 - currentEffects.duckingRange) * 100)} 
-                                    min={0} max={100} step={5}
-                                    onChange={(val) => updateEffect('duckingRange', 1 - (val / 100))} 
-                                    unit="%"
-                                />
-                                <VocalShaperSlider 
-                                    label={t('modules:voice.params.release_delay')} 
-                                    value={currentEffects.duckingRelease} 
-                                    min={0} max={3000} step={100}
-                                    onChange={(val) => updateEffect('duckingRelease', val)} 
-                                    unit="ms"
-                                />
-                                <VocalShaperSlider 
-                                    label={t('modules:voice.params.fade_speed')} 
-                                    value={currentEffects.duckingAttack} 
-                                    min={50} max={1000} step={50}
-                                    onChange={(val) => updateEffect('duckingAttack', val)} 
-                                    unit="ms"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                        <Interrupteur actif={currentEffects.duckingEnabled} onClick={() => toggleDucking()} libelle={t('modules:voice.shapers.auto_ducking')} aide={t('modules:voice.ui.ducking_hint', { pct: Math.round((1 - currentEffects.duckingRange) * 100) })}>
+                            {currentEffects.duckingEnabled && (
+                                <div className="mt-2 flex flex-col gap-1.5">
+                                    <VocalShaperSlider label={t('modules:voice.params.ducking_threshold')} value={currentEffects.duckingThreshold} min={-80} max={-10} step={1} onChange={(val) => updateEffect('duckingThreshold', val)} unit=" dB" />
+                                    <VocalShaperSlider label={t('modules:voice.params.music_reduct')} value={Math.round((1 - currentEffects.duckingRange) * 100)} min={0} max={100} step={5} onChange={(val) => updateEffect('duckingRange', 1 - (val / 100))} unit=" %" />
+                                    <VocalShaperSlider label={t('modules:voice.params.release_delay')} value={currentEffects.duckingRelease} min={0} max={3000} step={100} onChange={(val) => updateEffect('duckingRelease', val)} unit=" ms" />
+                                    <VocalShaperSlider label={t('modules:voice.params.fade_speed')} value={currentEffects.duckingAttack} min={50} max={1000} step={50} onChange={(val) => updateEffect('duckingAttack', val)} unit=" ms" />
+                                </div>
+                            )}
+                        </Interrupteur>
 
-                    <div className="mt-8 pt-8 border-t border-app-border/50 flex flex-col gap-6">
-                        <div className="flex items-center gap-2 text-app-subtle mb-2">
-                            <Volume2 size={16} />
-                            <h3 className="text-ui-10 font-black uppercase tracking-[0.2em]">{t('modules:voice.dashboard.master_output')}</h3>
-                        </div>
-                        
-                        <VocalShaperSlider 
-                            label={t('modules:voice.params.output_gain')} 
-                            value={currentEffects.outputGain} 
-                            min={0} max={2} step={0.05}
-                            onChange={(val) => updateEffect('outputGain', val)} 
-                            unit="x"
-                        />
-                        
-                        <div className="flex flex-col gap-2">
-                            <span className="text-ui-10 font-bold uppercase tracking-widest text-app-subtle">{t('modules:voice.params.gate_threshold')}</span>
-                            <div className="flex gap-2">
-                                <input 
-                                    type="range"
-                                    min="-100"
-                                    max="0"
-                                    step="1"
-                                    value={currentEffects.gateThreshold}
-                                    onChange={(e) => updateEffect('gateThreshold', parseInt(e.target.value))}
-                                    className="flex-1 h-1.5 bg-app-surface rounded-full appearance-none cursor-pointer accent-accent self-center"
-                                />
-                                <span className="text-ui-10 font-bold text-app-subtle w-12 text-right">{currentEffects.gateThreshold}dB</span>
-                            </div>
-                        </div>
-                    </div>
+                        <p className={`${sousTitre} mt-3 flex items-center gap-1.5`}><SlidersHorizontal size={12} />02 · {t('modules:voice.ui.group_shapers')}</p>
+                        <VocalShaperSlider label={t('modules:voice.shapers.pitch')} value={currentEffects.pitch} min={-12} max={12} onChange={(val) => updateEffect('pitch', val)} unit=" st" />
+                        <VocalShaperSlider label={t('modules:voice.shapers.formant')} value={currentEffects.formant} min={-100} max={100} onChange={(val) => updateEffect('formant', val)} />
+                        <VocalShaperSlider label={t('modules:voice.shapers.reverb')} value={currentEffects.reverb} min={0} max={1} step={0.01} onChange={(val) => updateEffect('reverb', val)} />
+                        <VocalShaperSlider label={t('modules:voice.shapers.distortion')} value={currentEffects.distortion} min={0} max={1} step={0.01} onChange={(val) => updateEffect('distortion', val)} />
+                        <VocalShaperSlider label={t('modules:voice.shapers.compression')} value={currentEffects.compression} min={0} max={100} step={5} unit=" %" onChange={(val) => updateEffect('compression', val)} />
+                        <VocalShaperSlider label={t('modules:voice.shapers.bitcrush')} value={currentEffects.bitcrush} min={0} max={1} step={0.01} onChange={(val) => updateEffect('bitcrush', val)} />
+
+                        <p className={`${sousTitre} mt-3 flex items-center gap-1.5`}><Volume2 size={12} />03 · {t('modules:voice.dashboard.master_output')}</p>
+                        <VocalShaperSlider label={t('modules:voice.params.output_gain')} value={currentEffects.outputGain} min={0} max={2} step={0.05} onChange={(val) => updateEffect('outputGain', val)} unit="×" />
+                    </Panneau>
                 </aside>
-            </div>
-
-            {/* Bottom VU Meter Bar */}
-            <div className="h-2 bg-app-bg border-t border-app-border/50 flex">
-                <div 
-                    className="h-full bg-gradient-to-r from-accent via-accent/70 to-etat-succes transition-all duration-75 shadow-[0_0_10px_color-mix(in_srgb,var(--app-accent)_30%,transparent)]"
-                    style={{ width: `${inputLevel * 100}%` }}
-                />
             </div>
         </div>
     );

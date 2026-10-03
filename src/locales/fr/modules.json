@@ -3509,6 +3509,25 @@
     }
   },
   "voice": {
+    "ui": {
+      "surtitre": "La voix du meneur, modulée et diffusée à la table",
+      "npc_voices": "Voix des PNJ",
+      "npc_none": "Aucun PNJ n’a encore de voix : générez-en une depuis la fiche d’un PNJ.",
+      "recalled": "Voix de {{name}} rappelée.",
+      "custom": "réglage sur mesure",
+      "input_stream": "Flux d’entrée",
+      "level": "Niveau du micro",
+      "hardware": "Interfaces matérielles",
+      "signal": "Signal et effets",
+      "group_clean": "Nettoyage et sécurité",
+      "group_shapers": "Modeleurs vocaux",
+      "dsp_ready": "DSP prêt",
+      "dsp_fallback": "Mode de secours",
+      "dsp_fallback_hint": "Le processeur audio n’a pas démarré : la voix passe, sans les effets avancés.",
+      "anti_larsen_hint": "Atténue le larsen entre le micro et les enceintes.",
+      "gate_hint": "Coupe le micro sous {{db}} dB, entre les phrases.",
+      "ducking_hint": "Baisse la musique de {{pct}} % pendant que vous parlez."
+    },
     "dashboard": {
       "mic_status": "Statut Micro",
       "standby": "En attente",

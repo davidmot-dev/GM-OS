@@ -3509,6 +3509,25 @@
     }
   },
   "voice": {
+    "ui": {
+      "surtitre": "The GM’s voice, shaped and sent to the table",
+      "npc_voices": "NPC voices",
+      "npc_none": "No NPC has a voice yet: generate one from an NPC sheet.",
+      "recalled": "{{name}}’s voice recalled.",
+      "custom": "custom setting",
+      "input_stream": "Input stream",
+      "level": "Mic level",
+      "hardware": "Hardware interfaces",
+      "signal": "Signal and effects",
+      "group_clean": "Cleanup and safety",
+      "group_shapers": "Voice shapers",
+      "dsp_ready": "DSP ready",
+      "dsp_fallback": "Fallback mode",
+      "dsp_fallback_hint": "The audio processor did not start: the voice goes through, without the advanced effects.",
+      "anti_larsen_hint": "Reduces feedback between the mic and the speakers.",
+      "gate_hint": "Cuts the mic below {{db}} dB, between sentences.",
+      "ducking_hint": "Lowers the music by {{pct}} % while you speak."
+    },
     "dashboard": {
       "mic_status": "Mic Status",
       "standby": "Standby",
