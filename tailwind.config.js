@@ -128,15 +128,7 @@ export default {
                 lg: 'var(--elev-2, 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a))',
                 xl: 'var(--elev-3, 0 20px 25px -5px var(--tw-shadow-color, #0000001a), 0 8px 10px -6px var(--tw-shadow-color, #0000001a))',
                 '2xl': 'var(--elev-3, 0 25px 50px -12px var(--tw-shadow-color, #00000040))',
-                // Effets de lueur Glow pour l'immersion
-                'glow-gold': '0 0 15px -3px rgba(234, 179, 8, 0.4)',
-                'glow-cyan': '0 0 15px -3px rgba(6, 182, 212, 0.4)',
-                'glow-crimson': '0 0 15px -3px rgba(239, 68, 68, 0.4)',
-                'glow-violet': '0 0 15px -3px rgba(139, 92, 246, 0.4)',
-                'glow-white': '0 0 15px rgba(255, 255, 255, 0.1)',
-                'glow-amber': '0 0 15px rgba(255, 176, 0, 0.4)',
-                'glow-sky': '0 0 15px -3px rgba(14, 165, 233, 0.5)',
-                'glow-red': '0 0 15px -3px rgba(239, 68, 68, 0.5)',
+                // Les halos (`shadow-glow-*`) vivent dans `index.css` : une seule règle, qui suit le thème (phase 5).
             },
             backgroundImage: {
                 // Dégradés pour les cartes et panels

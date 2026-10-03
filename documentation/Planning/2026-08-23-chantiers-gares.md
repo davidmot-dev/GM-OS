@@ -5442,7 +5442,7 @@ explicitement, jamais le défaut.
 
 ---
 
-### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phase 4 presque close, phase 6 commencée le 2026-10-03**
+### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phases 4, 5 et 6 faites le 2026-10-03, sauf T6.6 sur un vrai jeu**
 
 **Origine** : David apporte trois maquettes (compteur de rounds, Dice-OS, Image-OS) et demande
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
@@ -5487,9 +5487,31 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
   rien n'a été téléchargé. Chargé à part au premier PDF affiché, dans la même file que l'onde des
   sons ; jusqu'à 100 Mo (le protocole `gmos://` ne sert pas de lecture partielle). Éprouvé dans
   l'application construite sur une fiche de personnage du dépôt.
-- **Gardé pour plus tard** : les `shadow-glow-accent`,
-  `glow-emerald`, `glow-blue`, `glow-indigo` employés partout **n'existent pas** dans
-  `tailwind.config` (aucun halo, avant comme après) — à régler en phase 5.
+- ✅ **Phase 5 — le fini : FAITE le 2026-10-03** (choix de David pour les halos et le dégradé).
+  - ⚠️ **Correction de la note précédente** : les huit halos nus (`shadow-glow-accent`, `-gold`,
+    `-emerald`…) existaient ; ce sont les **146 variantes à opacité** (`/20`, `/10`…, 61 fichiers)
+    que Tailwind ne générait pas. *Je l'avais écrit sans compter dans la CSS construite.*
+  - **Les halos suivent le thème** : une seule règle, `@utility shadow-glow-*` dans `index.css`,
+    teinte prise aux jetons (`--gm-*`, halo d'accent), opacité (45 %, ou celle de la barre)
+    multipliée par `--halo-facteur` — la force du halo du thème rapportée à 0,45
+    (`facteurDuHalo`). **0 en Médiéval et en Clair** (personnalités), 0,56 en Moderne, 0,78 en
+    Cyberpunk ; sans les personnalités, 1 partout. Le halo d'accent reste au pixel près ; les halos
+    colorés faiblissent sous les personnalités (Cyberpunk : 0,45 → 0,35). **Les 146 variantes
+    s'allument** (choix de David : *« les faire marcher »*) — discrètes, sous la tolérance des
+    captures de référence.
+  - **L'anneau de focus au clavier** : une règle `:focus-visible` hors couche, qui passe devant les
+    178 `focus:outline-none` ; boutons, liens, onglets, cases — pas les champs de saisie.
+  - **Le séparateur** prend le trait d'accent qui s'efface aux deux bouts (seul emploi : la
+    vitrine du socle). Les transitions étaient déjà dans les primitives.
+- ⛔ **Huit essais e2e cassés par le réagencement du jour, trouvés en phase 5** — ils ne tournent
+  pas au pré-push, et je ne les avais pas relancés après chaque module. Sept étaient des libellés
+  (tables « Lancer d20 », tableau blanc, navigateur « Nouveau lien », Nexus, aide, Paramètres
+  `aria-label` des tuiles de thème) ; **un était une perte réelle** : les quatre réglages du
+  ducking de Voice-OS et le seuil de la porte ne s'affichaient plus qu'effet allumé — rendus
+  toujours visibles, atténués. *Après un réagencement, lancer l'e2e du module, pas seulement les
+  captures.* Les essais qui lisent les sauvegardes du meneur (`vitrine`, `vitrineDuSocle`,
+  `campagnesEtThemes`, `profilageDesRendus`) ne sont pas lancés par Claude — `vitrineDuSocle` l'a
+  été deux fois ce jour-là, en lecture seule.
 - **Phase 6 — les icônes (V4) : COMMENCÉE le 2026-10-03, sur décision de David** alors que sa
   condition d'entrée (phases 1 à 5 éprouvées en séance jouée) n'est **pas** remplie — signalé,
   et David a choisi d'avancer. Vocabulaire choisi par David : **« modules + concepts de jeu »**.
@@ -5519,9 +5541,9 @@ puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? �
     son grain) ; les personnalités cyberpunk et médiévale passent la même garde. Constructeur 0.7.0.
   - **Reste T6.6 sur un vrai jeu** : aucun jeu réel ne livre encore d'icônes, le premier viendra
     du constructeur.
-- **La suite** : **une séance jouée** (règle du plan) ; **phase 5, le fini** (halos,
-  anneau de focus, bordures, transitions — dans les primitives) ; un premier jeu livré avec ses
-  icônes, à regarder à l'écran.
+- **La suite** : **une séance jouée** (règle du plan — rien de la refonte n'y a encore été
+  éprouvé) ; un premier jeu livré avec ses icônes, à regarder à l'écran. La tablette reste hors
+  de la refonte, à trancher par David.
 
 *État au 2026-09-29/30, gardé pour l'historique du lot 1 :*
 

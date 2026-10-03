@@ -844,6 +844,28 @@ const BANDES_DE_TAILLE: readonly (readonly [string, string])[] = [
  *
  * `Shell.tsx` lit les `--app-frame-*` : ils sont donc **toujours** écrits.
  */
+/**
+ * **La force des halos colorés, rapportée à celle du thème** — phase 5, le
+ * fini, 2026-10-03. David : *« ils suivent le thème »*.
+ *
+ * `shadow-glow-gold`, `-crimson`, `-emerald`… et chaque `/20`, `/10` se
+ * multiplient par ce facteur (`index.css`, `@utility shadow-glow-*`) :
+ * **0** quand le thème n'a pas de halo (Moderne, Médiéval), la force du thème
+ * divisée par 0,45 sinon — 0,45 étant l'opacité qu'avaient tous ces halos
+ * écrits en dur. Ainsi le halo d'accent, qui vaut déjà la force du thème,
+ * reste au pixel près ; un halo opaque (`#rrggbb`, `rgb()`) vaut une
+ * opacité de 1, et une forme qu'on ne lit pas compte pour 1.
+ */
+export function facteurDuHalo(halo: string | undefined): string {
+    const v = halo?.trim();
+    if (!v) return '1';
+    if (v === 'transparent') return '0';
+    const m = /^rgba\(\s*[\d.]+\s*,\s*[\d.]+\s*,\s*[\d.]+\s*,\s*([\d.]+)\s*\)$/i.exec(v);
+    const opacite = m ? Number(m[1]) : /^(#[0-9a-f]{6}|rgb\([^)]*\))$/i.test(v) ? 1 : null;
+    if (opacite === null) return '1';
+    return String(Math.round((opacite / 0.45) * 1000) / 1000);
+}
+
 export function completerLesDerivees(
     vars: Record<string, string>,
     mutedDuJeu?: string,
@@ -856,6 +878,7 @@ export function completerLesDerivees(
       après la fusion, pour le thème de base comme pour le jeu.
     */
     if (v['--app-accent-glow']?.trim() === 'none') v['--app-accent-glow'] = 'transparent';
+    v['--halo-facteur'] = facteurDuHalo(v['--app-accent-glow']);
 
     const cadreDeclare = v['--app-frame-bg'] !== undefined || v['--app-frame-text'] !== undefined;
     const fond = v['--app-frame-bg'] ??= v['--app-bg'];

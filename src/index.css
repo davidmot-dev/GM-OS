@@ -4,6 +4,49 @@
 
 @config "../tailwind.config.js";
 
+/*
+  **LES HALOS — phase 5 de la refonte, le fini, 2026-10-03.**
+
+  Un halo marque l'élément actif. Avant cette règle, il y en avait de deux
+  sortes, et aucune ne suivait le thème :
+
+  - huit couleurs écrites en dur (or, cyan, émeraude…), allumées même dans
+    les thèmes qui n'ont pas de halo — Moderne, Médiéval ;
+  - **cent quarante-six `shadow-glow-accent/20`, `/10`… qui ne faisaient
+    rien** : Tailwind ne les générait pas.
+
+  Une seule règle désormais, choisie par David : *« ils suivent le thème »*,
+  et les variantes à opacité *« marchent »*. La teinte vient d'un jeton ;
+  l'opacité, 45 % ou celle écrite après la barre, se multiplie par
+  `--halo-facteur` (`themeDeLInterface.ts`, `facteurDuHalo`) : 0 sans halo,
+  la force du thème sinon. Le halo d'accent garde la teinte du halo du thème,
+  déclaré par le jeu le cas échéant, et reste au pixel près.
+*/
+@theme {
+  --halo-accent: rgb(from var(--app-accent-glow, #3b82f6) r g b);
+  --halo-primary: rgb(from var(--app-accent-glow, #3b82f6) r g b);
+  --halo-blue: rgb(from var(--app-accent-glow, #3b82f6) r g b);
+  --halo-indigo: rgb(from var(--app-accent-glow, #3b82f6) r g b);
+  --halo-gold: var(--gm-gold, #eab308);
+  --halo-amber: var(--gm-gold, #eab308);
+  --halo-crimson: var(--gm-crimson, #ef4444);
+  --halo-red: var(--gm-crimson, #ef4444);
+  --halo-rose: var(--gm-crimson, #ef4444);
+  --halo-cyan: var(--gm-cyan, #06b6d4);
+  --halo-emerald: var(--gm-emerald, #10b981);
+  --halo-violet: var(--gm-violet, #8b5cf6);
+  --halo-gm-violet: var(--gm-violet, #8b5cf6);
+  --halo-purple: var(--gm-violet, #8b5cf6);
+  --halo-white: var(--app-text);
+}
+
+@utility shadow-glow-* {
+  --halo-teinte: --value(--halo-*);
+  --halo-part: 45%;
+  --halo-part: calc(--modifier(integer) * 1%);
+  box-shadow: 0 0 15px 2px color-mix(in srgb, var(--halo-teinte) calc(var(--halo-part) * var(--halo-facteur, 1)), transparent);
+}
+
 /* ═══════════════════════════════════════════════════════════════════════
    L'ÉCHELLE TYPOGRAPHIQUE, EN QUATRE BANDES RÉGLABLES
 
@@ -186,34 +229,6 @@ pre {
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  }
-
-  .shadow-glow-gold {
-    box-shadow: 0 0 12px 2px rgba(231, 176, 8, 0.45);
-  }
-
-  .shadow-glow-blue {
-    box-shadow: 0 0 15px 2px rgba(59, 130, 246, 0.45);
-  }
-
-  .shadow-glow-cyan {
-    box-shadow: 0 0 15px 2px rgba(6, 182, 212, 0.45);
-  }
-
-  .shadow-glow-amber {
-    box-shadow: 0 0 15px 2px rgba(251, 191, 36, 0.45);
-  }
-
-  .shadow-glow-rose {
-    box-shadow: 0 0 15px 2px rgba(244, 63, 94, 0.45);
-  }
-
-  .shadow-glow-emerald {
-    box-shadow: 0 0 15px 2px rgba(16, 185, 129, 0.45);
-  }
-
-  .shadow-glow-accent {
-    box-shadow: 0 0 15px 2px var(--app-accent-glow, rgba(59, 130, 246, 0.45));
   }
 
   .stitch-label {
@@ -814,9 +829,6 @@ input[type=number] {
   animation: clue-reveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.shadow-glow-gold {
-  box-shadow: 0 0 15px 3px rgba(251, 191, 36, 0.5);
-}
 
 /* Cleanup Phase: Dynamic Utility Classes */
 .tablet-hub-bg {
@@ -896,4 +908,25 @@ input[type=number] {
 
 .animate-spin-once {
   animation: spin-once 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/*
+  **L'ANNEAU DE FOCUS — phase 5 de la refonte, le fini, 2026-10-03.**
+
+  `focus:outline-none` est écrit 178 fois, et la plupart du temps rien ne le
+  remplace : au clavier, on ne savait plus où l'on était. Cette règle rend
+  l'anneau à tout ce qui se commande — bouton, lien, onglet, case, curseur —
+  **hors de toute couche** : une règle sans `@layer` passe devant les
+  utilitaires de Tailwind, donc devant chacun de ces `outline-none`.
+
+  `:focus-visible` ne s'allume qu'au clavier : un clic de souris ne le
+  déclenche pas sur un bouton. Les champs de saisie n'y sont pas — ils
+  montrent déjà leur focus par leur bordure, et le curseur clignotant.
+*/
+:where(
+  button, a[href], summary, [role='button'], [role='tab'], [role='menuitem'], [role='option'],
+  [role='switch'], [role='checkbox'], [role='radio'], [tabindex]:not([tabindex='-1']),
+  input[type='checkbox'], input[type='radio'], input[type='range']
+):focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
 }

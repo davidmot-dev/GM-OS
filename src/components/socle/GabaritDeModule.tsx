@@ -61,11 +61,12 @@ export const GabaritDeModule: React.FC<GabaritDeModuleProps> = ({
 
 /**
  * **Le séparateur entre deux sections** — l'ornement `separateur` du thème
- * s'il en a un, un filet sinon.
+ * s'il en a un, et toujours le trait d'accent des maquettes, qui s'efface aux
+ * deux bouts (phase 5, le fini, choix de David du 2026-10-03).
  */
 export const Separateur: React.FC<{ className?: string }> = ({ className = '' }) => (
     <div role="separator" className={`relative flex items-center justify-center py-1 ${className}`}>
-        <span className="h-px w-full bg-app-soft" />
+        <span className="h-px w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
         <Ornement emplacement="separateur" className="absolute inset-x-0 mx-auto h-3 w-40" />
     </div>
 );

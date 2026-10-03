@@ -5,6 +5,7 @@ import {
     variablesDuTheme,
     appliquerLeTheme,
     completerLesDerivees,
+    facteurDuHalo,
     STYLE_DU_CADRE,
     PERSONNALITES,
     accentDuTheme,
@@ -621,5 +622,25 @@ describe('le cadre sous un thème de jeu', () => {
         expect(r().getAttribute('data-clarte')).toBe('dark');
         appliquerLeTheme('claire');
         expect(r().getAttribute('data-clarte')).toBe('light');
+    });
+});
+
+describe('le facteur des halos (phase 5)', () => {
+    it('0 sans halo, la force du thème rapportée à 0,45 sinon', () => {
+        expect(facteurDuHalo('transparent')).toBe('0');
+        expect(facteurDuHalo('rgba(6, 182, 212, 0.45)')).toBe('1');
+        expect(facteurDuHalo('rgba(0, 240, 255, 0.8)')).toBe('1.778');
+        expect(facteurDuHalo('rgba(37, 99, 235, 0.3)')).toBe('0.667');
+    });
+
+    it('un halo opaque vaut une opacité de 1 ; ce qu’on ne lit pas compte pour 1', () => {
+        expect(facteurDuHalo('#ff0000')).toBe('2.222');
+        expect(facteurDuHalo('var(--x)')).toBe('1');
+        expect(facteurDuHalo(undefined)).toBe('1');
+    });
+
+    it('les dérivées l’écrivent toujours, et `glow: none` l’éteint', () => {
+        expect(completerLesDerivees({ '--app-accent-glow': 'none' })['--halo-facteur']).toBe('0');
+        expect(completerLesDerivees({})['--halo-facteur']).toBe('1');
     });
 });
