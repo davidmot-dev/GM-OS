@@ -138,6 +138,12 @@ export interface GameDriver {
     version: string;
     description: string;
     emoji: string;
+    /**
+     * Le nom d'une image du dossier du jeu (`docs/systems/<jeu>/`), posée en fond
+     * de l'en-tête de Session-OS — David, 2026-10-03. Un nom, jamais un chemin :
+     * voir `banniereDuPilote.ts`. Absent : l'en-tête reste nu.
+     */
+    banniere?: string;
     
     // Mechanics
     dice: DiceConfig;

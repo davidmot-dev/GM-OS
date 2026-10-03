@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Users, Sparkles, BookOpen } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
+import { useBanniereDuJeu } from '../hooks/useBanniereDuJeu';
 
 interface SessionHeaderProps {
     isOracleOpen: boolean;
@@ -21,6 +22,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
         setCurrentView 
     } = useSessionOSStore();
     const { theme } = useSessionStore();
+    const banniere = useBanniereDuJeu();
 
     const getTitle = () => {
         switch (currentView) {
@@ -42,6 +44,17 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
         <header className={`flex items-center justify-between h-16 px-6 z-50 border-b-0 relative transition-all duration-500 ${
             theme === 'medieval' ? 'bg-app-surface/90 border-b-2 border-app-border/40' : 'premium-glass'
         }`}>
+            {/*
+              **La bannière du jeu** (pilote, champ `banniere` — David, 2026-10-03) :
+              recadrée sur sa bande centrale, sous un voile plus sombre à gauche et
+              à droite, là où passent le titre et les boutons.
+            */}
+            {banniere && (
+                <>
+                    <div aria-hidden="true" data-banniere-du-jeu="" className="pointer-events-none absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${banniere}")` }} />
+                    <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-r from-app-bg/85 via-app-bg/25 to-app-bg/85" />
+                </>
+            )}
             <div className={`absolute inset-0 bg-gradient-to-r via-transparent pointer-events-none ${
                 theme === 'medieval' ? 'from-accent/5 to-accent/5' : 'from-gm-cyan/5 to-gm-cyan/5'
             }`} />
@@ -67,7 +80,7 @@ const SessionHeader: React.FC<SessionHeaderProps> = ({
                 la Forge dans son module : voir `src/modules/forge/ForgeOS.tsx`.
             */}
 
-            <div className="flex gap-3">
+            <div className="relative z-10 flex gap-3">
                 {currentView !== 'cockpit' && (
                     <button
                         onClick={() => setCurrentView('cockpit')}

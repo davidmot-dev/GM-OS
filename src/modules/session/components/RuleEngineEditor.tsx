@@ -16,6 +16,7 @@ import LienAuCorpus from '../../forge/corpus/LienAuCorpus';
 import PanneauDesPersonas from '../../forge/corpus/PanneauDesPersonas';
 import EditeurDuJet from './rules/EditeurDuJet';
 import EditeurDesTablesDeButin from './rules/EditeurDesTablesDeButin';
+import ChoixDeLaBanniere from './rules/ChoixDeLaBanniere';
 import { TYPES_NUMERIQUES } from '../../forge/rules/controlesDuPilote';
 
 export const RuleEngineEditor: React.FC = () => {
@@ -125,7 +126,10 @@ export const RuleEngineEditor: React.FC = () => {
                   bouton qui prétend enregistrer ce qui l'est déjà fait douter
                   de tout le reste.
                 */}
-                <Etiquette ton="succes">{t('modules:session.rule_engine_editor.agencement.enregistre')}</Etiquette>
+                <div className="flex items-center gap-4">
+                    <ChoixDeLaBanniere pilote={driver} onChange={banniere => handleUpdate({ banniere })} />
+                    <Etiquette ton="succes">{t('modules:session.rule_engine_editor.agencement.enregistre')}</Etiquette>
+                </div>
             </div>
 
             <div className="flex-1 flex overflow-hidden">
