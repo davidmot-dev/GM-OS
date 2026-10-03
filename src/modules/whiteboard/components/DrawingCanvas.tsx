@@ -1,6 +1,10 @@
 import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { useWhiteboardStore, type Point, type DrawingPath } from '../useWhiteboardStore';
 import { limiteurDeCadence } from '../../../utils/limiteurDeCadence';
+import { dessinerUnTrace, OUTILS_A_POSER, longueurEnCases, libelleDeMesure } from '../logic/dessinerUnTrace';
+import { useSessionOSStore } from '../../session/useSessionOSStore';
+import { gmPrompt } from '../../../stores/useModalStore';
+import { useTranslation } from 'react-i18next';
 
 export interface DrawingCanvasRef {
     getBlob: () => Promise<Blob | null>;
@@ -26,61 +30,22 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
     } = useWhiteboardStore();
     
     const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
+    const { t, i18n } = useTranslation('modules');
 
-    const drawPath = React.useCallback((ctx: CanvasRenderingContext2D, path: DrawingPath) => {
-        if (path.points.length < 2) return;
+    /**
+     * **La mesure d'une règle, dans le mot du jeu.** Le pilote dit ce qu'il
+     * compte (`tactical.uniteDeDistance`) ; la case du tableau donne le pas.
+     */
+    const mesurer = React.useCallback((points: Point[]): string | undefined => {
+        const canvas = canvasRef.current;
+        if (!canvas || points.length < 2) return undefined;
+        const cases = longueurEnCases(points[0], points[points.length - 1], canvas.width, canvas.height);
+        const unite = useSessionOSStore.getState().getActiveDriver()?.tactical?.uniteDeDistance;
+        return libelleDeMesure(cases, unite, i18n.language);
+    }, [i18n.language]);
 
-        const w = ctx.canvas.width;
-        const h = ctx.canvas.height;
-
-        ctx.beginPath();
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = 'transparent';
-        
-        if (path.tool === 'eraser') {
-            ctx.strokeStyle = backgroundMode === 'light' ? '#ffffff' : '#0f172a';
-            ctx.lineWidth = path.width * 16;
-        } else if (path.tool === 'laser') {
-            ctx.strokeStyle = '#ff0000';
-            ctx.lineWidth = 4;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#ff0000';
-        } else {
-            ctx.strokeStyle = path.color;
-            ctx.lineWidth = path.width;
-        }
-
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        if (path.tool === 'brush' || path.tool === 'eraser' || path.tool === 'laser') {
-            const first = path.points[0];
-            ctx.moveTo(first.x * w, first.y * h);
-            for (let i = 1; i < path.points.length; i++) {
-                const p = path.points[i];
-                ctx.lineTo(p.x * w, p.y * h);
-            }
-        } else if (path.tool === 'rect') {
-            const start = path.points[0];
-            const end = path.points[path.points.length - 1];
-            ctx.strokeRect(
-                start.x * w, 
-                start.y * h, 
-                (end.x - start.x) * w, 
-                (end.y - start.y) * h
-            );
-            return;
-        } else if (path.tool === 'circle') {
-            const start = path.points[0];
-            const end = path.points[path.points.length - 1];
-            // Calculate radius in pixel space for a proper circle
-            const dx = (end.x - start.x) * w;
-            const dy = (end.y - start.y) * h;
-            const radius = Math.sqrt(dx * dx + dy * dy);
-            ctx.arc(start.x * w, start.y * h, radius, 0, 2 * Math.PI);
-        }
-        ctx.stroke();
-    }, [backgroundMode]);
+    /* Le dessin vit à un seul endroit : `logic/dessinerUnTrace.ts`. */
+    const drawPath = React.useCallback((ctx: CanvasRenderingContext2D, path: DrawingPath) => dessinerUnTrace(ctx, path, backgroundMode), [backgroundMode]);
 
     const redraw = React.useCallback(() => {
         const canvas = canvasRef.current;
@@ -119,11 +84,12 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
                 points: currentPoints,
                 color: currentColor,
                 width: currentWidth,
-                tool: currentTool
+                tool: currentTool,
+                label: currentTool === 'regle' ? mesurer(currentPoints) : undefined,
             };
             drawPath(ctx, previewPath);
         }
-    }, [paths, isDrawing, currentPoints, currentTool, currentColor, currentWidth, activePath, activeDrawerId, instanceId, laserPointer, drawPath]);
+    }, [paths, isDrawing, currentPoints, currentTool, currentColor, currentWidth, activePath, activeDrawerId, instanceId, laserPointer, drawPath, mesurer]);
 
     useImperativeHandle(ref, () => ({
         getBlob: async () => {
@@ -225,6 +191,24 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
         const { x, y } = getCoordinates(e);
         const rx = roundCoord(x);
         const ry = roundCoord(y);
+        /*
+          **Un pion, une cible : un clic, puis son nom.** Le nom est facultatif —
+          valider le champ vide pose un pion muet ; Annuler ne pose rien.
+        */
+        if (OUTILS_A_POSER.includes(currentTool)) {
+            const outil = currentTool;
+            gmPrompt(t(`whiteboard.place.${outil}_prompt`), '', (nom) => {
+                finishDrawing({
+                    id: Math.random().toString(36).substr(2, 9),
+                    points: [{ x: rx, y: ry }],
+                    color: currentColor,
+                    width: currentWidth,
+                    tool: outil,
+                    label: nom.trim() || undefined,
+                });
+            });
+            return;
+        }
         setIsDrawing(true);
         setCurrentPoints([{ x: rx, y: ry }]);
     };
@@ -257,7 +241,7 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
         
         // Point Decimation: only add point if it moved at least 0.002
         const lastPoint = currentPoints[currentPoints.length - 1];
-        if (lastPoint && currentTool !== 'rect' && currentTool !== 'circle') {
+        if (lastPoint && currentTool !== 'rect' && currentTool !== 'circle' && currentTool !== 'regle') {
             const dist = Math.sqrt(Math.pow(rx - lastPoint.x, 2) + Math.pow(ry - lastPoint.y, 2));
             if (dist < 0.002) return;
         }
@@ -300,7 +284,8 @@ export const DrawingCanvas = forwardRef<DrawingCanvasRef>((_, ref) => {
                 color: currentColor,
                 width: currentWidth,
                 tool: currentTool,
-                isTemporary: currentTool === 'laser'
+                isTemporary: currentTool === 'laser',
+                label: currentTool === 'regle' ? mesurer(currentPoints) : undefined,
             };
             // Atomic: ajoute le path ET nettoie activePath en une seule mutation
             finishDrawing(newPath);

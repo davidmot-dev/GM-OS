@@ -7,7 +7,9 @@ import {
     Zap,
     Palette,
     Sun,
-    Moon
+    Moon,
+    UserRound,
+    Crosshair
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useWhiteboardStore, type WhiteboardTool } from '../useWhiteboardStore';
@@ -16,9 +18,27 @@ import { PAPIER } from '../papierDuTableau';
 
 interface WhiteboardToolbarProps {
     className?: string;
+    /**
+     * **Le poste du meneur** — refonte, L6 : il gagne le Pion et la Cible, et
+     * ses couleurs passent dans le pied du tableau, avec l'épaisseur et la
+     * règle (maquette retenue). Le Player Hub garde sa barre telle quelle.
+     */
+    meneur?: boolean;
 }
 
-const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" }) => {
+/** Les couleurs du crayon : la première suit le papier, noire sur le clair, blanche sur le sombre. */
+export const couleursDuTableau = (clair: boolean) => [
+    clair ? '#000000' : '#ffffff', // Black or White
+    '#ef4444', // Red
+    '#3b82f6', // Blue
+    '#10b981', // Emerald
+    '#f59e0b', // Amber
+    '#a855f7', // Purple
+    '#ec4899', // Pink
+    '#06b6d4', // Cyan
+];
+
+const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "", meneur = false }) => {
     const { 
         currentTool, 
         setTool, 
@@ -38,18 +58,13 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
         { id: 'laser', icon: Zap, label: t('whiteboard.tools.laser') },
         { id: 'rect', icon: Square, label: t('whiteboard.tools.rect') },
         { id: 'circle', icon: Circle, label: t('whiteboard.tools.circle') },
+        ...(meneur ? [
+            { id: 'pion' as const, icon: UserRound, label: t('whiteboard.tools.pion') },
+            { id: 'cible' as const, icon: Crosshair, label: t('whiteboard.tools.cible') },
+        ] : []),
     ];
 
-    const colors = [
-        isLight ? '#000000' : '#ffffff', // Black or White
-        '#ef4444', // Red
-        '#3b82f6', // Blue
-        '#10b981', // Emerald
-        '#f59e0b', // Amber
-        '#a855f7', // Purple
-        '#ec4899', // Pink
-        '#06b6d4', // Cyan
-    ];
+    const colors = couleursDuTableau(isLight);
 
     return (
         <div className={`flex flex-col gap-4 z-20 pointer-events-auto ${className}`}>
@@ -84,6 +99,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
                 </button>
             </div>
 
+            {!meneur && (<>
             {/* Color Palette */}
             <div className={`flex flex-col gap-2 p-2 rounded-2xl backdrop-blur-xl border shadow-2xl transition-colors duration-500 ${papier.panneau}`}>
                 <div className={`p-2 ${papier.icone}`}>
@@ -100,6 +116,7 @@ const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "" })
                     ))}
                 </div>
             </div>
+            </>)}
         </div>
     );
 };

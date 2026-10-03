@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useWhiteboardStore, type DrawingPath, type Point } from '../useWhiteboardStore';
 import { limiteurDeCadence } from '../../../utils/limiteurDeCadence';
+import { dessinerUnTrace, outilDeTrait } from '../logic/dessinerUnTrace';
 import WhiteboardToolbar from './WhiteboardToolbar';
 
 export const PlayerDrawingCanvas: React.FC = () => {
@@ -16,71 +17,22 @@ export const PlayerDrawingCanvas: React.FC = () => {
         setLaserPointer, 
         currentColor, 
         currentWidth, 
-        currentTool,
+        currentTool: outilDuMeneur,
         setActivePath,
         activePath,
         activeDrawerId,
         backgroundMode
     } = useWhiteboardStore();
+    /* Un pion ou une règle tenus par le meneur restent un trait sous le doigt d'un joueur. */
+    const currentTool = outilDeTrait(outilDuMeneur);
     
     const [isDrawing, setIsDrawing] = useState(false);
     const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
 
     const isActive = projectionTarget !== null;
 
-    const drawPath = React.useCallback((ctx: CanvasRenderingContext2D, path: DrawingPath) => {
-        if (path.points.length < 2) return;
-
-        const w = ctx.canvas.width;
-        const h = ctx.canvas.height;
-
-        ctx.beginPath();
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = 'transparent';
-        
-        if (path.tool === 'eraser') {
-            ctx.strokeStyle = backgroundMode === 'light' ? '#ffffff' : '#0f172a';
-            ctx.lineWidth = path.width * 16;
-        } else if (path.tool === 'laser') {
-            ctx.strokeStyle = '#ff0000';
-            ctx.lineWidth = 4;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#ff0000';
-        } else {
-            ctx.strokeStyle = path.color;
-            ctx.lineWidth = path.width;
-        }
-
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        if (path.tool === 'brush' || path.tool === 'eraser' || path.tool === 'laser') {
-            const first = path.points[0];
-            ctx.moveTo(first.x * w, first.y * h);
-            for (let i = 1; i < path.points.length; i++) {
-                const p = path.points[i];
-                ctx.lineTo(p.x * w, p.y * h);
-            }
-        } else if (path.tool === 'rect') {
-            const start = path.points[0];
-            const end = path.points[path.points.length - 1];
-            ctx.strokeRect(
-                start.x * w, 
-                start.y * h, 
-                (end.x - start.x) * w, 
-                (end.y - start.y) * h
-            );
-            return;
-        } else if (path.tool === 'circle') {
-            const start = path.points[0];
-            const end = path.points[path.points.length - 1];
-            const dx = (end.x - start.x) * w;
-            const dy = (end.y - start.y) * h;
-            const radius = Math.sqrt(dx * dx + dy * dy);
-            ctx.arc(start.x * w, start.y * h, radius, 0, 2 * Math.PI);
-        }
-        ctx.stroke();
-    }, [backgroundMode]);
+    /* Le dessin vit à un seul endroit : `logic/dessinerUnTrace.ts`. */
+    const drawPath = React.useCallback((ctx: CanvasRenderingContext2D, path: DrawingPath) => dessinerUnTrace(ctx, path, backgroundMode), [backgroundMode]);
 
     const redraw = React.useCallback(() => {
         const canvas = canvasRef.current;

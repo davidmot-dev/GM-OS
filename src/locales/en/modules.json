@@ -3589,12 +3589,29 @@
     }
   },
   "whiteboard": {
+    "title": "Whiteboard",
+    "place": {
+      "pion_prompt": "Token name (optional) — its initial is written inside.",
+      "cible_prompt": "What the target marks (optional)."
+    },
+    "footer": {
+      "label": "Width, color and ruler",
+      "width": "Width",
+      "color": "Color",
+      "ruler_tooltip": "Drag a line to measure — in {{unit}}, one grid square is one unit.",
+      "ruler_default_unit": "units (the driver does not name its own)",
+      "on": "ON",
+      "off": "OFF"
+    },
     "tools": {
       "brush": "Brush",
       "eraser": "Eraser",
       "laser": "Laser",
       "rect": "Rectangle",
-      "circle": "Circle"
+      "circle": "Circle",
+      "pion": "Token",
+      "cible": "Target",
+      "regle": "Ruler"
     },
     "background": {
       "title_light": "Light Mode",

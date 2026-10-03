@@ -1,38 +1,68 @@
 import React, { useRef } from 'react';
 import { DrawingCanvas, type DrawingCanvasRef } from './components/DrawingCanvas';
-import WhiteboardToolbar from './components/WhiteboardToolbar';
+import WhiteboardToolbar, { couleursDuTableau } from './components/WhiteboardToolbar';
 import { useWhiteboardStore } from './useWhiteboardStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
-import { 
-    RotateCcw, 
-    RotateCw, 
-    Trash2, 
+import {
+    RotateCcw,
+    RotateCw,
+    Trash2,
     Download,
-    Cast
+    Cast,
+    Ruler,
 } from 'lucide-react';
 import { gmCustom } from '../../stores/useModalStore';
 import { useJournalStore } from '../journal/useJournalStore';
 import { gmToast } from '../../stores/useToastStore';
 import { useTranslation } from 'react-i18next';
 import { PAPIER } from './papierDuTableau';
+import { TAILLE_DE_CASE } from './logic/dessinerUnTrace';
+import { Bouton, Etiquette, EnTeteDeModule } from '../../components/socle';
+import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 
+/** Les trois épaisseurs du pied, en pixels. */
+const EPAISSEURS = [2, 5, 10] as const;
+const etiquetteDuPied = 'text-ui-10 font-black uppercase tracking-widest text-app-muted';
+
+/**
+ * **Le tableau blanc** — refonte, L6, maquette retenue
+ * (`stitch/preparation/preparation-tableau-blanc.png`) : **la surface au plus
+ * large**, une barre d'outils compacte à gauche (crayon, gomme, rectangle,
+ * cercle, pion, cible, laser), l'épaisseur, les couleurs et la règle en pied ;
+ * Annuler, Rétablir, Tout effacer, Projeter en tête.
+ *
+ * L'en-tête et le pied sont **hors du papier** : ils suivent le thème, quand le
+ * papier suit le choix du meneur. Le bandeau d'avant était posé sur la feuille,
+ * et le texte du thème s'y lisait mal sur un papier clair.
+ */
 const WhiteboardDashboard: React.FC = () => {
     const canvasRef = useRef<DrawingCanvasRef>(null);
-    const { 
-        clearBoard, 
-        undo, 
+    const {
+        clearBoard,
+        undo,
         redo,
+        undoStack,
+        redoStack,
+        paths,
         projectionTarget,
         clearProjectedState,
-        backgroundMode
+        backgroundMode,
+        currentTool,
+        setTool,
+        currentColor,
+        setColor,
+        currentWidth,
+        setWidth,
     } = useWhiteboardStore();
     const { t, i18n } = useTranslation('modules');
+    const regime = useRegimeDInterface();
 
     const { addMedia } = useMediaStore();
     const { selectedSessionId, sessions, addWikiEntry } = useSessionOSStore();
     const activeSession = sessions.find(s => s.id === selectedSessionId);
     const isSessionActive = activeSession?.status === 'active';
+    const unite = useSessionOSStore(s => s.getActiveDriver()?.tactical?.uniteDeDistance);
 
     const isLight = backgroundMode === 'light';
     const papier = PAPIER[isLight ? 'clair' : 'sombre'];
@@ -79,75 +109,109 @@ const WhiteboardDashboard: React.FC = () => {
         }
     };
 
+    const arreterLaProjection = () => {
+        if (projectionTarget === 'monitor' && window.appBridge?.image?.closeAllDisplays) {
+            window.appBridge.image.closeAllDisplays();
+        }
+        clearProjectedState();
+    };
+
     return (
-        <div className={`h-full w-full transition-colors duration-500 relative overflow-hidden flex flex-col ${papier.fond}`}>
-            {/* Header / Info bar */}
-            <div className={`flex items-center justify-between p-4 backdrop-blur-md border-b z-10 ${papier.bandeau}`}>
-                <div className="flex flex-col gap-0.5">
-                    {projectionTarget && (
-                        <div className="flex items-center gap-2 mt-1 py-1 px-2 bg-accent/10 border border-accent/20 rounded-md">
-                            <Cast size={12} className="text-accent animate-pulse" />
-                            <span className="text-ui-9 font-black text-accent uppercase tracking-wider">
-                                {t('whiteboard.projection.active', { target: projectionTarget === 'hub' ? t('whiteboard.projection.player_hub') : t('whiteboard.projection.monitor') })}
-                            </span>
-                            <button 
-                                onClick={() => {
-                                    if (projectionTarget === 'monitor' && window.appBridge?.image?.closeAllDisplays) {
-                                        window.appBridge.image.closeAllDisplays();
-                                    }
-                                    clearProjectedState();
-                                }}
-                                className="ml-2 text-ui-8 text-accent hover:text-accent/80 font-bold uppercase transition-colors"
-                            >
-                                {t('whiteboard.actions.stop')}
-                            </button>
-                        </div>
-                    )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <button 
-                        onClick={() => gmCustom('whiteboard-projection-select')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all border font-black uppercase text-xs tracking-widest ${projectionTarget ? 'bg-app-surface text-app-text/40 border-app-border' : 'bg-accent/20 hover:bg-accent/30 text-accent border-accent/20'}`}
-                        title={t('whiteboard.actions.project')}
-                    >
-                        <Cast size={14} />
-                        {t('whiteboard.actions.project')}
-                    </button>
-                    <div className="w-px h-6 bg-app-text/10 mx-1" />
-                    <button onClick={undo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border" title={t('whiteboard.actions.undo')}>
-                        <RotateCcw size={18} />
-                    </button>
-                    <button onClick={redo} className="p-2 rounded-lg bg-app-surface/40 hover:bg-app-surface/60 text-app-text/60 transition-all border border-app-border" title={t('whiteboard.actions.redo')}>
-                        <RotateCw size={18} />
-                    </button>
-                    <div className="w-px h-6 bg-app-text/10 mx-1" />
-                    <button onClick={clearBoard} className="p-2 rounded-lg bg-etat-danger/10 hover:bg-etat-danger/20 text-etat-danger transition-all border border-etat-danger/10" title={t('whiteboard.actions.clear')}>
-                        <Trash2 size={18} />
-                    </button>
+        <div className="flex h-full min-h-0 flex-col gap-3 p-4 text-app-text">
+            <EnTeteDeModule
+                titre={t('whiteboard.title')}
+                etat={projectionTarget && (
+                    <Etiquette ton="accent">
+                        <Cast size={11} className="animate-pulse" />
+                        {t('whiteboard.projection.active', { target: projectionTarget === 'hub' ? t('whiteboard.projection.player_hub') : t('whiteboard.projection.monitor') })}
+                    </Etiquette>
+                )}
+                actions={<>
+                    <Bouton aLaTable={regime.aLaTable} icone={<RotateCcw size={15} />} onClick={undo} disabled={undoStack.length === 0}>
+                        {t('whiteboard.actions.undo')}
+                    </Bouton>
+                    <Bouton aLaTable={regime.aLaTable} icone={<RotateCw size={15} />} onClick={redo} disabled={redoStack.length === 0}>
+                        {t('whiteboard.actions.redo')}
+                    </Bouton>
+                    {/* Tout effacer s'annule : pas de confirmation, Annuler suffit. */}
+                    <Bouton aLaTable={regime.aLaTable} variante="danger" icone={<Trash2 size={15} />} onClick={clearBoard} disabled={paths.length === 0}>
+                        {t('whiteboard.actions.clear')}
+                    </Bouton>
                     {isSessionActive && (
-                        <button 
-                            onClick={handleExport}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/20 hover:bg-accent/30 text-accent text-xs font-black uppercase tracking-widest transition-all border border-accent/20"
-                            title={t('whiteboard.actions.export_tooltip')}
-                        >
-                            <Download size={14} />
+                        <Bouton aLaTable={regime.aLaTable} icone={<Download size={15} />} onClick={handleExport} title={t('whiteboard.actions.export_tooltip')}>
                             {t('whiteboard.actions.export')}
-                        </button>
+                        </Bouton>
                     )}
-                </div>
-            </div>
+                    {projectionTarget ? (
+                        <Bouton aLaTable={regime.aLaTable} icone={<Cast size={15} />} onClick={arreterLaProjection}>
+                            {t('whiteboard.actions.stop')}
+                        </Bouton>
+                    ) : (
+                        <Bouton aLaTable={regime.aLaTable} variante="accent" icone={<Cast size={15} />} onClick={() => gmCustom('whiteboard-projection-select')}>
+                            {t('whiteboard.actions.project')}
+                        </Bouton>
+                    )}
+                </>}
+            />
 
-            {/* Main Canvas Area */}
-            <div className="flex-1 relative bg-[radial-gradient(var(--app-border)_1px,transparent_1px)] [background-size:24px_24px]">
+            {/* ── La surface, au plus large ── */}
+            <div
+                className={`relative min-h-0 flex-1 overflow-hidden rounded-xl border border-app-border transition-colors duration-500 ${papier.fond}`}
+                style={{
+                    backgroundImage: 'radial-gradient(var(--app-border) 1px, transparent 1px)',
+                    backgroundSize: `${TAILLE_DE_CASE}px ${TAILLE_DE_CASE}px`,
+                }}
+            >
                 <DrawingCanvas ref={canvasRef} />
-                
-                {/* Floating Toolbar */}
-                <WhiteboardToolbar className="absolute left-6 top-1/2 -translate-y-1/2" />
+                <WhiteboardToolbar meneur className="absolute left-4 top-1/2 -translate-y-1/2" />
             </div>
 
-            {/* Decorative Grid Overlay (Subtle) */}
-            <div className="absolute inset-0 pointer-events-none border border-app-border/10 rounded-3xl m-4" />
+            {/* ── Le pied : épaisseur, couleurs, règle ── */}
+            <div role="toolbar" aria-label={t('whiteboard.footer.label')} className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-app-border bg-app-surface px-4 py-2">
+                <div className="flex items-center gap-2">
+                    <span className={etiquetteDuPied}>{t('whiteboard.footer.width')}</span>
+                    {EPAISSEURS.map(e => (
+                        <button
+                            key={e}
+                            onClick={() => setWidth(e)}
+                            aria-pressed={currentWidth === e}
+                            className={`flex min-h-9 items-center gap-2 rounded-lg px-3 font-mono text-xs font-bold transition-colors ${
+                                currentWidth === e ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:text-app-text'
+                            }`}
+                        >
+                            <span className="rounded-full bg-current" style={{ width: e + 2, height: e + 2 }} />
+                            {e} px
+                        </button>
+                    ))}
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className={etiquetteDuPied}>{t('whiteboard.footer.color')}</span>
+                    {couleursDuTableau(isLight).map(couleur => (
+                        <button
+                            key={couleur}
+                            onClick={() => setColor(couleur)}
+                            aria-pressed={currentColor === couleur}
+                            title={couleur}
+                            className={`size-7 rounded-md border border-app-border transition-transform hover:scale-110 ${
+                                currentColor === couleur ? 'ring-2 ring-accent ring-offset-2 ring-offset-app-surface' : ''
+                            }`}
+                            style={{ backgroundColor: couleur }}
+                        />
+                    ))}
+                </div>
+                <button
+                    onClick={() => setTool(currentTool === 'regle' ? 'brush' : 'regle')}
+                    aria-pressed={currentTool === 'regle'}
+                    title={t('whiteboard.footer.ruler_tooltip', { unit: unite || t('whiteboard.footer.ruler_default_unit') })}
+                    className={`ml-auto flex min-h-9 items-center gap-2 rounded-lg border px-3 text-ui-10 font-black uppercase tracking-widest transition-colors ${
+                        currentTool === 'regle' ? 'border-accent bg-accent/15 text-accent' : 'border-app-border text-app-muted hover:text-app-text'
+                    }`}
+                >
+                    <Ruler size={15} />
+                    {t('whiteboard.tools.regle')}
+                    <span className="font-mono">{currentTool === 'regle' ? t('whiteboard.footer.on') : t('whiteboard.footer.off')}</span>
+                </button>
+            </div>
         </div>
     );
 };

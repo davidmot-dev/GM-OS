@@ -3589,12 +3589,29 @@
     }
   },
   "whiteboard": {
+    "title": "Tableau blanc",
+    "place": {
+      "pion_prompt": "Le nom du pion (facultatif) — son initiale s’écrit dedans.",
+      "cible_prompt": "Ce que vise la cible (facultatif)."
+    },
+    "footer": {
+      "label": "Épaisseur, couleur et règle",
+      "width": "Épaisseur",
+      "color": "Couleur",
+      "ruler_tooltip": "Tirer un trait pour mesurer — en {{unit}}, une case de la grille vaut une unité.",
+      "ruler_default_unit": "unités (le pilote ne nomme pas la sienne)",
+      "on": "ON",
+      "off": "OFF"
+    },
     "tools": {
       "brush": "Crayon",
       "eraser": "Gomme",
       "laser": "Laser",
       "rect": "Rectangle",
-      "circle": "Cercle"
+      "circle": "Cercle",
+      "pion": "Pion",
+      "cible": "Cible",
+      "regle": "Règle"
     },
     "background": {
       "title_light": "Mode Clair",

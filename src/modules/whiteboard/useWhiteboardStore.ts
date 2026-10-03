@@ -3,7 +3,9 @@ import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../../utils/ecritureReserveeAuMJ';
 
 /** Outils de dessin disponibles sur le Whiteboard */
-export type WhiteboardTool = 'brush' | 'eraser' | 'rect' | 'circle' | 'laser';
+export type WhiteboardTool = 'brush' | 'eraser' | 'rect' | 'circle' | 'laser'
+    /** Pion, Cible, Règle — retenus par David le 2026-09-29 (refonte, L6). */
+    | 'pion' | 'cible' | 'regle';
 
 /** Point de coordonnées vectorielles */
 export interface Point {
@@ -25,7 +27,13 @@ export interface DrawingPath {
     /** Outil utilisé pour ce tracé */
     tool: WhiteboardTool;
     /** Si vrai, le tracé disparaît après un court instant (Laser) */
-    isTemporary?: boolean; 
+    isTemporary?: boolean;
+    /**
+     * Ce que le tracé écrit : le nom d'un pion ou d'une cible, la mesure d'une
+     * règle. La mesure est figée au moment du tracé, sur l'écran du meneur : la
+     * recalculer sur chaque écran donnerait un nombre différent par taille.
+     */
+    label?: string;
 }
 
 /**

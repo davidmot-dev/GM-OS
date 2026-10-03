@@ -179,8 +179,6 @@ const TOLERES: Record<string, string> = {
       un geste à improviser au détour d'un raccourci clavier.
     */
     'lumiereDuMoment': "la scène de lumière posée par un moment, relue à la prise de main suivante et à l'arrêt (useStoryboardStore)",
-    'undoStack': "la pile d’annulation du tableau blanc, relue chez elle",
-    'redoStack': "la pile de rétablissement du tableau blanc, relue chez elle",
 
     // ⚠️ Déclarés, parfois implémentés, et appelés par PERSONNE — mesuré le 2026-09-07.
     'isRemoteSyncing': "⚠️ useCombatStore : UNE seule occurrence : déclaré, même pas implémenté",
