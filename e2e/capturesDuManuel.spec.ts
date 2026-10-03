@@ -302,7 +302,14 @@ const PREPARATION: [string, () => Promise<void>][] = [
 
 /** Les écrans de la partie — séance ouverte. */
 const ECRANS: [string, () => Promise<void>][] = [
-    ['session-regles', async () => { await vue('cockpit'); await gmos.fenetre.getByRole('button', { name: /^Règles$/ }).first().click(); }],
+    // La démo n'a pas de jeu : le livre le dit (2026-10-03)…
+    ['session-regles-sans-jeu', async () => { await vue('cockpit'); await gmos.fenetre.getByRole('button', { name: /^Règles$/ }).first().click(); }],
+    // … et l'atelier se montre en consultant le pilote livré.
+    ['session-regles', async () => {
+        await vue('cockpit');
+        await gmos.fenetre.getByRole('button', { name: /^Règles$/ }).first().click();
+        await gmos.fenetre.getByRole('button', { name: /Dune/ }).first().click();
+    }],
     ['cortex-tactique', async () => {
         await ouvrirLeModule(gmos, 'Combat-OS');
         await gmos.fenetre.getByTitle('Cortex Tactique').first().click();

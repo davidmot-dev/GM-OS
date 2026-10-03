@@ -56,9 +56,9 @@ La télécommande est pensée pour une **tablette tenue en paysage**.
 d'Ambient-OS, chacun avec son univers en sous-titre. **Couper le son**, en haut à droite, coupe la
 musique, les ambiances et les bruitages — en le tenant enfoncé.*
 
-> ⚠️ **Défaut connu (2026-10-03).** Les trois thèmes d'ambiance **livrés** avec GM-OS s'affichent ici
-> sous leur nom interne (`modules:ambient.presets.themes.arcology`…) au lieu de *Arcologie*, *Club
-> Néon*, *Forêt Enchantée*. Vos propres thèmes, eux, portent leur nom.
+> ✅ **Corrigé le 2026-10-04.** Les trois thèmes d'ambiance **livrés** — *Arcologie*, *Club Néon*,
+> *Forêt Enchantée* — arrivaient ici sous leur nom interne (`modules:ambient.presets.themes.arcology`).
+> Ils sont désormais traduits avant de partir vers la tablette, comme à l'écran d'Ambient-OS.
 
 | Où | Quoi |
 | :--- | :--- |
@@ -404,3 +404,5 @@ curseur des bruitages, réparé le 20/09, fonctionne.*
 
 *Relu le 2026-10-03 et illustré. Signalé : les noms des thèmes d'ambiance livrés, non traduits sur la
 télécommande.*
+
+*Le 2026-10-04 : les noms des thèmes livrés sont traduits sur la télécommande.*

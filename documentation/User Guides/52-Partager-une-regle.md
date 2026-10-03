@@ -9,7 +9,11 @@ les tablettes, d'un clic.
 
 **Session-OS → Règles** (le *Grimoire*) **→ section Atelier.**
 
-![Session-OS › Règles : les fiches du système actif, la recherche, et « Créer une règle »](captures/session-regles.jpg)
+![Session-OS › Règles : l'atelier du pilote, sa recherche, et « Créer une règle »](captures/session-regles.jpg)
+
+*La campagne de démonstration n'a pas de jeu : la capture consulte le pilote livré, et l'en-tête le
+dit — « Consulté, ce n'est pas le jeu de la campagne ». Pour la vôtre, le livre s'ouvre directement
+sur son jeu.*
 
 *Le bouton **Règles** est dans l'en-tête de Session-OS, à côté d'Oracle et de Snapshot.*
 

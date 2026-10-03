@@ -1,7 +1,7 @@
 {
   "ai": {
     "prompt": "As the Tactical Brain of GM-OS, suggest extremely concisely (max 2 sentences) the best action for the NPC/Monster \"{{name}}\". Current variables: HP: {{hp}}/{{hpMax}}, Armor Class: {{ac}}, Active Statuses: {{statuses}}. Positioning Context: {{tacticalContext}}. Environment: (Declared Target: {{target}}). Do not use introductory text, just provide the advised action directly in English.",
-    "welcome_bot": "Hello David. I am ready to assist you for your session. Which Gem would you like to use?",
+    "welcome_bot": "Hello. I am ready to assist you for your session. Which persona would you like to consult?",
     "input_placeholder": "Ask {{gem}}..."
   },
   "ambient": {

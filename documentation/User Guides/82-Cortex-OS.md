@@ -18,7 +18,13 @@ analyses ; **Fermer Cortex**, à gauche, le replie.*
 
 **Le Cortex n'est pas dans Map-OS.** C'est un bandeau en bas de l'écran, présent dans toute
 l'application. Il s'ouvre par le **cerveau**, premier des raccourcis en bas de la barre des modules,
-et se referme par **Fermer Cortex** (Échap ne le ferme pas).
+et se referme par **Fermer Cortex** — ou par **Échap**, depuis le 2026-10-04, quand rien d'autre ne
+réclame la touche : une fenêtre ouverte se ferme d'abord, un champ de saisie garde son Échap, et une
+scène de Light-OS en cours s'arrête avant que le bandeau ne parte. *Une frappe, un seul effet.*
+
+> 🔎 **Le bandeau ne bloque pas le clavier.** Il reste ouvert tout un combat ; vos pastilles de
+> Sound-OS, Music-OS et Light-OS répondent pendant ce temps. Et depuis le 2026-10-04, il passe
+> **derrière** les fenêtres — Paramètres, médiathèque, confirmations — au lieu de les recouvrir.
 
 > ⚠️ **Ne le confondez pas avec « Cortex IA »**, dans la section *Global* de la barre des modules :
 > celui-là ouvre la conversation avec l'Oracle ([guide](./80-Oracle-poser-une-question.md)). Même
@@ -165,3 +171,5 @@ réellement, et l'avertissement sur les grilles non calibrées.*
 
 *Relu le 2026-10-03 contre l'interface refondue, et illustré. Ajouté : où s'ouvre le bandeau, en quoi
 il diffère de **Cortex IA**, et l'emplacement réel de l'interrupteur (**Paramètres › 02. Tactique**).*
+
+*Le 2026-10-04 : Échap referme le bandeau, et le bandeau ne recouvre plus les fenêtres.*

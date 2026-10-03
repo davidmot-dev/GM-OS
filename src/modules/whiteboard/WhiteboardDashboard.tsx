@@ -20,6 +20,7 @@ import { PAPIER } from './papierDuTableau';
 import { TAILLE_DE_CASE } from './logic/dessinerUnTrace';
 import { Bouton, Etiquette, EnTeteDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
+import { seanceOuverteDe } from '../session/logic/seanceOuverte';
 
 /** Les trois épaisseurs du pied, en pixels. */
 const EPAISSEURS = [2, 5, 10] as const;
@@ -59,9 +60,16 @@ const WhiteboardDashboard: React.FC = () => {
     const regime = useRegimeDInterface();
 
     const { addMedia } = useMediaStore();
-    const { selectedSessionId, sessions, addWikiEntry } = useSessionOSStore();
-    const activeSession = sessions.find(s => s.id === selectedSessionId);
-    const isSessionActive = activeSession?.status === 'active';
+    /*
+      ⛔ **La séance ouverte, lue par la règle commune** (2026-10-03). L'export
+      cherchait `selectedSessionId` — la séance *sélectionnée* dans une liste,
+      pas celle qui joue : une séance lancée depuis le cockpit pouvait être
+      ouverte sans être sélectionnée, et l'export se disait « hors séance ».
+      `seanceOuverteDe` tranche pour tout le dépôt : la campagne fait autorité.
+    */
+    const { campaigns, activeCampaignId, sessions, addWikiEntry } = useSessionOSStore();
+    const activeSession = seanceOuverteDe(campaigns, sessions, activeCampaignId);
+    const isSessionActive = activeSession !== null;
     const unite = useSessionOSStore(s => s.getActiveDriver()?.tactical?.uniteDeDistance);
 
     const isLight = backgroundMode === 'light';

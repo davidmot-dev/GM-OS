@@ -58,9 +58,10 @@ Une des fonctions les plus puissantes de Whiteboard-OS est son intégration avec
 > Utilisez cette fonction pour immortaliser les schémas complexes ou les plans de donjons
 > improvisés que les joueurs devront consulter plus tard.
 
-> ⚠️ **Relevé le 2026-10-03 : Export peut manquer alors qu'une séance est ouverte.** Le bouton lit la
-> séance *sélectionnée* dans une liste, et non la séance que la campagne a ouverte : une séance
-> lancée depuis le cockpit ne le fait pas toujours apparaître. Défaut signalé, à corriger.
+> ✅ **Corrigé le 2026-10-04 : Export apparaît pour la séance que la campagne a ouverte.** Il lisait
+> la séance *sélectionnée* dans une liste : une séance lancée depuis le cockpit pouvait être ouverte
+> sans le faire apparaître. Il suit désormais la même règle que le reste de GM-OS — *la campagne dit
+> quelle séance est en cours*.
 
 ---
 

@@ -41,7 +41,7 @@ const AIChatPanel: React.FC = () => {
     {
       id: '1',
       role: 'assistant',
-      content: t('modules:ai.welcome_bot', 'Bonjour David. Je suis prêt à vous assister pour votre session. Quel Gem souhaitez-vous solliciter ?'),
+      content: t('modules:ai.welcome_bot', 'Bonjour. Je suis prêt à vous assister pour votre séance. Quel persona souhaitez-vous consulter ?'),
       gemId: storeGems[0]?.id || 'sage'
     }
   ]);

@@ -23,13 +23,62 @@ export const RulebookViewer: React.FC = () => {
     const allDrivers = tousLesPilotes(customGameDrivers);
     const activeCampaign = campaigns.find(c => c.id === activeCampaignId);
     
-    // Initial driver selection: from campaign or first available
-    const initialDriver = allDrivers.find(d => d.id === activeCampaign?.system) || allDrivers[0];
-    
-    const [selectedDriverId, setSelectedDriverId] = useState<string | null>(initialDriver?.id || null);
+    /*
+      ⛔ **Le jeu de la campagne, ou rien — jamais « le premier venu ».**
+      Relevé le 2026-10-03 : une campagne rattachée à un gabarit de fiche
+      (« Generic ») n'a pas de pilote, et ce livre ouvrait alors **le premier
+      de la liste** — Dune — sans un mot. Le meneur lisait les règles d'un
+      autre jeu en les croyant les siennes. Le cockpit le signale déjà ; ce
+      livre le dit à son tour, et laisse consulter un autre jeu en le nommant.
+    */
+    const piloteDeLaCampagne = allDrivers.find(d => d.id === activeCampaign?.system) ?? null;
+
+    const [selectedDriverId, setSelectedDriverId] = useState<string | null>(piloteDeLaCampagne?.id ?? null);
     const [activeSection, setActiveSection] = useState<'core' | 'combat' | 'tactical' | 'ai' | 'loot' | 'notebook' | 'workshop'>('workshop');
 
     const driver = allDrivers.find(d => d.id === selectedDriverId);
+
+    if (!driver && allDrivers.length > 0) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center gap-6 p-12 bg-app-bg text-app-text">
+                <BookOpen size={48} className="text-etat-alerte/60" />
+                <div className="max-w-xl text-center">
+                    <h2 className="text-xl font-black uppercase tracking-widest">Cette campagne n’a pas de jeu</h2>
+                    <p className="mt-3 text-sm leading-relaxed text-app-text/60">
+                        {activeCampaign
+                            ? <>« {activeCampaign.name} » n’est rattachée à aucun pilote de jeu : il n’y a pas de règles à lui montrer.</>
+                            : <>Aucune campagne n’est ouverte.</>}
+                        {' '}Vous pouvez lui choisir son jeu, ou consulter les règles d’un autre.
+                    </p>
+                </div>
+                {activeCampaign && (
+                    <button
+                        onClick={() => setCurrentView('campaign-editor')}
+                        className="px-6 py-2 bg-accent text-app-on-accent rounded-xl hover:brightness-110 transition-all font-black text-xs uppercase tracking-widest"
+                    >
+                        Choisir le jeu de la campagne
+                    </button>
+                )}
+                <div className="flex max-w-2xl flex-wrap justify-center gap-2">
+                    {allDrivers.map(d => (
+                        <button
+                            key={d.id}
+                            onClick={() => setSelectedDriverId(d.id)}
+                            className="flex items-center gap-2 rounded-xl border border-app-border/40 bg-app-surface/40 px-4 py-2 text-xs font-bold text-app-text/70 hover:border-accent/50 hover:text-app-text transition-all"
+                        >
+                            <span className="text-base">{d.emoji}</span>{d.name}
+                        </button>
+                    ))}
+                </div>
+                <button
+                    onClick={() => setCurrentView('cockpit')}
+                    className="text-ui-10 font-black uppercase tracking-widest text-app-text/40 hover:text-app-text transition-colors"
+                >
+                    {t('modules:session.header.back_to_cockpit')}
+                </button>
+            </div>
+        );
+    }
 
     if (!driver) {
         return (
@@ -87,6 +136,11 @@ export const RulebookViewer: React.FC = () => {
                                 <Globe size={10} className="text-accent" />
                                 {t('modules:session.header.grimoire_label')} — {driver.author}
                             </p>
+                            {driver.id !== piloteDeLaCampagne?.id && (
+                                <p className="mt-1 text-ui-10 font-bold uppercase tracking-widest text-etat-alerte">
+                                    Consulté — ce n’est pas le jeu de la campagne
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>

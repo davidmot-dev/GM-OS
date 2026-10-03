@@ -188,8 +188,17 @@ L'écran se lit en trois colonnes :
   cartes** (Deck-OS), et le **centre de liaison** — les messages avec les tablettes.
 
 En haut, l'en-tête de Session-OS porte **Oracle** (la conversation avec le carnet NotebookLM du
-jeu — [guide](./81-Oracle-le-pont-NotebookLM.md)), **Règles** et **Snapshot** — et, si le pilote du
+jeu — [guide](./81-Oracle-le-pont-NotebookLM.md)), **Règles** (le livre du jeu de la campagne —
+[guide](./52-Partager-une-regle.md)) et **Snapshot** — et, si le pilote du
 jeu en a une, sa **bannière** en fond.
+
+> ✅ **Le livre de Règles dit quand la campagne n'a pas de jeu** (2026-10-04). Rattachée à un gabarit de fiche comme
+> « Generic », elle n'a pas de pilote : le livre de **Règles** ouvrait alors le premier de la liste —
+> les règles d'un autre jeu, sans un mot. Il le dit désormais, propose **Choisir le jeu de la
+> campagne**, et laisse consulter un autre pilote en l'étiquetant *« Consulté — ce n'est pas le jeu
+> de la campagne »*.
+
+![Le livre de Règles d'une campagne sans jeu : il le dit, et propose de lui choisir son jeu ou de consulter un autre pilote](captures/session-regles-sans-jeu.jpg)
 
 ### La colonne de navigation
 
@@ -529,3 +538,5 @@ Vous pouvez désormais projeter en toute confiance :
 
 *Relu le 2026-10-03 contre l'interface refondue (phase 4) : la colonne du cockpit, le cockpit en
 séance, le lancement d'une séance, la bannière du pilote. Captures de la campagne de démonstration.*
+
+*Le 2026-10-04 : le livre de Règles d'une campagne sans jeu le dit.*

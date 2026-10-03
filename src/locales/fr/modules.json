@@ -1,7 +1,7 @@
 {
   "ai": {
     "prompt": "En tant que Cerveau Tactique de GM-OS, propose de manière extrêmement concise (max 2 phrases) la meilleure action pour le PNJ/Monstre \"{{name}}\". Variables actuelles : PV: {{hp}}/{{hpMax}}, Classe d'Armure: {{ac}}, Statuts actifs: {{statuses}}. Contexte de positionnement : {{tacticalContext}}. Environnement: (Cible déclarée: {{target}}). Ne mets pas de texte introductif, donne juste directement l'action conseillée en français.",
-    "welcome_bot": "Bonjour David. Je suis prêt à vous assister pour votre session. Quel Gem souhaitez-vous solliciter ?",
+    "welcome_bot": "Bonjour. Je suis prêt à vous assister pour votre séance. Quel persona souhaitez-vous consulter ?",
     "input_placeholder": "Demandez à {{gem}}..."
   },
   "ambient": {

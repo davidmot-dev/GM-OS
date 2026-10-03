@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { Brain, VolumeX, Volume2, ShieldCheck, ShieldAlert, Zap, Wand2, History } from 'lucide-react';
 import { useTacticalAIStore } from '../useTacticalAIStore';
 import { huePriorityQueue, HuePriority } from '../services/HuePriorityQueue';
 import { gmToast } from '../../../stores/useToastStore';
 import { audioCurationService } from '../services/AudioCurationService';
 import { TacticalAdvicePanel } from './TacticalAdvicePanel';
+import { estUneFrappeDePastille } from '../../../utils/frappeDePastille';
 
 export const TacticalAIControlPanel: React.FC = () => {
   const { settings, logs, hardwareStatus, updateSettings, clearLogs, isPanelOpen, setIsPanelOpen } = useTacticalAIStore();
@@ -37,6 +39,30 @@ export const TacticalAIControlPanel: React.FC = () => {
     await audioCurationService.playTacticalCut('assets/sounds/tactical/proximity_alarm.mp3', 1.0);
   };
 
+  /*
+    **Échap referme le bandeau — en dernier, et seulement si personne d'autre
+    ne la réclame.** Relevé en écrivant le manuel le 2026-10-03.
+
+    ⛔ Le bandeau ne s'inscrit PAS dans le registre des surcouches
+    (`useFermetureParEchap`) : une surcouche ouverte prend la main sur le
+    clavier, et le bandeau reste ouvert tout un combat — les pastilles de
+    Sound-OS, Music-OS et Light-OS seraient muettes pendant ce temps.
+
+    D'où deux gardes : `estUneFrappeDePastille` écarte les champs de saisie et
+    les boîtes ouvertes ; la lecture différée de `defaultPrevented` laisse passer
+    avant lui ceux qui revendiquent Échap — la surcouche du sommet, et Light-OS
+    qui arrête sa scène. *Une touche, un seul effet par frappe.*
+  */
+  useEffect(() => {
+    if (!isPanelOpen) return;
+    const auClavier = (evenement: KeyboardEvent) => {
+      if (evenement.key !== 'Escape' || !estUneFrappeDePastille(evenement)) return;
+      setTimeout(() => { if (!evenement.defaultPrevented) setIsPanelOpen(false); }, 0);
+    };
+    window.addEventListener('keydown', auClavier);
+    return () => window.removeEventListener('keydown', auClavier);
+  }, [isPanelOpen, setIsPanelOpen]);
+
   if (!isPanelOpen) return null;
 
   return (
@@ -47,7 +73,13 @@ export const TacticalAIControlPanel: React.FC = () => {
         bottom: '3rem',
         left: '50%',
         transform: 'translateX(-50%)',
-        zIndex: 9999
+        /*
+          ⛔ Il était à 9999 : un bandeau permanent passait DEVANT les Paramètres,
+          la médiathèque et les confirmations (z-40 et plus). 35 le garde
+          au-dessus des modules et du panneau Cortex IA (z-30), sous toute
+          surcouche. Relevé le 2026-10-03.
+        */
+        zIndex: 35
       }}
     >
       

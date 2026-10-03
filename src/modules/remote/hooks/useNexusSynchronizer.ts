@@ -15,6 +15,7 @@ import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { reglagesAudio } from '../reglagesAudio';
 import { useImageStore } from '../../image/useImageStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
+import i18n from '../../../i18n';
 
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -267,12 +268,19 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
               Le sous-titre porte l'univers : deux jeux peuvent avoir leur
               « Taverne », et sur un téléphone on ne survole rien pour lever le
               doute.
+
+              ⛔ **Traduits ici, avant l'envoi** (2026-10-03). Les thèmes livrés
+              portent une clé (`modules:ambient.presets.themes.arcology`) que
+              l'écran d'Ambient-OS traduit ; la tablette recevait la clé brute.
+              Seules les clés livrées passent par `t` : un nom à vous qui
+              contiendrait « : » serait lu comme un espace de noms, et coupé.
             */
+            const traduit = (texte: string) => texte.startsWith('modules:') ? i18n.t(texte) : texte;
             const ambientPads = ambientStore.presets.slice(0, 8).map(p => ({
                 id: p.id,
                 type: 'ambient' as const,
-                label: p.name,
-                sublabel: p.universe,
+                label: traduit(p.name),
+                sublabel: traduit(p.universe),
                 color: 'var(--cyan-500)',
                 isActive: p.id === themeDAmbianceActif,
             }));
