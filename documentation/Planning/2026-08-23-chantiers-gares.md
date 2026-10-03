@@ -5442,11 +5442,55 @@ explicitement, jamais le défaut.
 
 ---
 
-### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phase 1 en cours depuis le 2026-09-27**
+### 76 · ⭐ La refonte de l'interface — ouverte le 2026-09-17, **phase 4 presque close le 2026-10-03**
 
 **Origine** : David apporte trois maquettes (compteur de rounds, Dice-OS, Image-OS) et demande
 *« je voudrais retravailler complètement l'interface et le rendu — tu penses que c'est possible ? »*,
 puis *« je ne suis pas graphiste, est-ce qu'une IA spécialisée peut aider ? »*.
+
+⭐ **Où on en est — 2026-10-03** (vérifié dans le code et `git log`, pas recopié) :
+
+- **Phase 4, étape 1 — l'habillage : FAITE pour tout `src/`** (`5d32ff03`). Plus aucune couleur
+  brute hors des **dix palettes de contenu** déclarées (`PALETTES_DE_CONTENU`, avec leur raison :
+  pastilles, effets de lumière, tableau blanc de la tablette, cadrans, **couleurs des liens web**,
+  **papier clair du tableau blanc**, **les quatre écrans de démarrage**). La garde
+  `electron/couleursBrutes.test.ts` ignore désormais les **lignes** de commentaire (par ligne, pas
+  par bloc : un `` `${type}/*` `` aurait ouvert un faux bloc) et vérifie **tout `src/`**.
+  ⚠️ **Question ouverte à David** : la décision **Q4** du 17/09 disait *« la garde reste une liste,
+  jamais un “tout src/” »* — prise quand seuls L1 et L2 devaient migrer. Garder le contrôle global
+  ou revenir aux seules listes ?
+- **Phase 4, étape 2 — le réagencement selon les maquettes retenues : FAIT pour les lots L1 à L6**,
+  **Voice-OS compris** (03/10 : trois colonnes, le micro au centre, les effets en deux groupes ;
+  « Latence 12ms » et « Charge DSP 4% » écrits en dur et le bouton « Profil personnalisé » sans
+  action, retirés).
+  - **L2** (02/10) : Musique `62ee330e`, Light-OS `f75e8fc8`, Effets sonores `59565135` + icônes
+    `8e1d2448`, Ambiances `fcd5ba14`.
+  - **L3** (02/10) : Carte `7166dff8`, Forge `4d30b402`.
+  - **L4** (02/10) : Horloge `447642ca`, générateur de PNJ `30b9fd7d`, Favoris `6fc0908d`.
+  - **L5** (02-03/10) : PNJ (fiche `3d9504e9`, galerie `144b91ad`, graphe `60748445`), poste du
+    meneur (cockpit `f1dec6ed`, storyboard `a22a8f79`, préparer la séance `8fc99887`, Deck-OS
+    `cd8f15e9`, Oracle `c03f9537`), Loot-OS `9920e7c4`, préparation `8675c411` `80934dcf`,
+    surcouches (cadre commun `6eefa398`, instantanés et palette `99111a8c`).
+  - **L6** (03/10) : habillage des derniers modules et de `components/` (`ffc851c1` → `5d32ff03`) ;
+    tables aléatoires `f4192c33` (Espace lance, l'historique se réinjecte), journal `3c0af638`
+    (fil le plus récent en haut, choix de David `094cef89`), tableau blanc `fff21fb5` (Pion,
+    Cible, Règle ; un seul dessinateur pour les trois écrans), navigateur `9e8dc13b` (**page
+    intégrée — choix de David**, `<webview>` isolée par `electron/navigateurIntegre.ts`), aide
+    `11f9f8de` (registre des raccourcis réels + garde), Nexus `19f59d1f`, médiathèque `31ee5784`
+    `a6625839`, atelier du thème `ff278a9a`, Paramètres `583ef67e`.
+- **Non vérifié à l'écran, à éprouver en séance** : pion / règle projetés sur le Player Hub et
+  une tablette ; la page intégrée du navigateur sur les vrais sites ; les vignettes vidéo de la
+  médiathèque ; les écrans de tablette en général. **Redémarrer GM-OS en entier** au prochain
+  lancement : `electron/main.ts` a changé (`webviewTag`).
+- **Gardé pour plus tard** : la première page d'un PDF dans la médiathèque demanderait une
+  bibliothèque de rendu (pdf.js) — pas installée sans accord ; les `shadow-glow-accent`,
+  `glow-emerald`, `glow-blue`, `glow-indigo` employés partout **n'existent pas** dans
+  `tailwind.config` (aucun halo, avant comme après) — à régler en phase 5.
+- **La suite** : **une séance jouée** (règle du plan) ; **phase 5, le fini** (halos,
+  anneau de focus, bordures, transitions — dans les primitives) ; **phase 6** réduite aux icônes
+  et au chargeur des paquets, avec sa propre décision d'entrée.
+
+*État au 2026-09-29/30, gardé pour l'historique du lot 1 :*
 
 ⭐ **Où on en est — 2026-09-29** : phase 0 faite, Stitch fait (T2.1 à T2.3), contrat v1.3, **P1.1
 à P1.7 faits**, **T2.5 tranché — David adopte les personnalités** (2026-09-29), et **le deuxième tour de Stitch terminé** (`a5b66855` : toute l'interface du meneur, une
