@@ -9,9 +9,13 @@
 | :--- | :--- | :--- |
 | Blade Runner | `docs/systems/blade-runner/` | ✅ `Blade Runner Band.jpg` |
 | Cthulhu Hack | `docs/systems/cthulhu hack/` | ✅ `Cthulhu-Hack Band.jpg` |
-| Dune | `docs/systems/dune/` | ⏳ prompt prêt, image à générer |
-| Alien | `docs/systems/alien/` | ⏳ prompt prêt, image à générer |
-| Rêve de Dragon | `docs/systems/reves de dragons/` | ⏳ prompt prêt, image à générer |
+| Dune | `docs/systems/dune/` | 🖼️ `Dune Band.jpg` déposée le 04/10 — à choisir dans l'éditeur du pilote |
+| Alien | `docs/systems/alien/` | 🖼️ `Alien Band.jpg` déposée le 04/10 — à choisir dans l'éditeur du pilote |
+| Rêve de Dragon | `docs/systems/reves de dragons/` | 🖼️ `RDD Band.jpg` déposée le 04/10 — à choisir dans l'éditeur du pilote |
+| Torg Eternity | `docs/systems/torg/` | 🖼️ `Torg Band.jpg` déposée le 04/10 — à choisir dans l'éditeur du pilote |
+| Noc | `docs/systems/noc/` | 🖼️ `NOC Band.jpg` déposée le 04/10 — à choisir dans l'éditeur du pilote |
+| Star Trek | `docs/systems/star-trek/` | 🖼️ `Star Trek Band.jpg` déposée le 04/10 — à choisir dans l'éditeur du pilote |
+| Within | ⛔ **pas de dossier** sous `docs/systems/` | ⏳ prompt à écrire : David doit décrire l'univers en deux lignes |
 
 ---
 
@@ -92,5 +96,47 @@ Scene: a wide, continuous horizontal panorama of a soft medieval valley at twili
 Composition: no focal subject on the far left or far right edges; the left 20% and right 30% are especially dark and quiet so text and buttons stay readable over them.
 Lighting & palette: low-key, dark, muted, low contrast, dusky violet, moss green and a faint pale gold, dreamy atmospheric depth, soft vignette, no bright highlights.
 Style: painterly storybook illustration, gouache and ink, slightly surreal, seamless, decorative, background-only.
+Strictly no text, no letters, no logo, no watermark, no UI, no frame, no border, no close-up faces, no characters in the foreground.
+```
+
+---
+
+*Ajoutés le 2026-10-04 : Torg, Noc et Star Trek. Leurs palettes suivent l'intention visuelle de
+leur thème de jeu (`docs/systems/<jeu>/theme/intention.md`), pour que la bannière et l'interface
+s'accordent.*
+
+## Torg Eternity
+
+```text
+Ultra-wide cinematic panoramic banner, 4:1 aspect ratio, for the header of a tabletop RPG game master app.
+Theme: Earth invaded by rival realities — pulp adventure, clashing worlds, cosmic storms, the last stand of our reality.
+Scene: a wide, continuous horizontal panorama of a modern city skyline at dusk, split into distinct zones that blend into each other: a primeval jungle with giant ferns and a distant dinosaur silhouette swallowing the left part of the skyline, a medieval castle and snowy pines in the middle, a gothic cathedral with cybernetic spires further right; huge swirling storm-bridges of light descending from a cosmic sky onto the city; all visual interest concentrated in a thin horizontal band through the vertical center of the image; the top and bottom thirds are calm, almost uniform (deep cosmic blue sky above, dark ruined ground below).
+Composition: no focal subject on the far left or far right edges; the left 20% and right 30% are especially dark and quiet so text and buttons stay readable over them.
+Lighting & palette: low-key, dark, muted, low contrast, deep cosmic blue, dark steel and a warm bronze glow, subtle atmospheric depth, soft vignette, no bright highlights.
+Style: pulp adventure matte painting, painterly, seamless, decorative, background-only.
+Strictly no text, no letters, no logo, no watermark, no UI, no frame, no border, no close-up faces, no characters in the foreground.
+```
+
+## Noc
+
+```text
+Ultra-wide cinematic panoramic banner, 4:1 aspect ratio, for the header of a tabletop RPG game master app.
+Theme: a retro-futuristic totalitarian city ruled by a faceless Administration — surveillance, bureaucracy, secret police, an occult awakening hidden beneath the order.
+Scene: a wide, continuous horizontal panorama of a monumental brutalist city at night, endless rows of identical concrete ministries, tall chimneys, loudspeakers on poles, searchlights sweeping low fog, a distant glowing geometric sigil faintly carved into a tower like an ancient artifact, faint red glow leaking from a few windows; all visual interest concentrated in a thin horizontal band through the vertical center of the image; the top and bottom thirds are calm, almost uniform (ink-black sky above, wet dark pavement below).
+Composition: no focal subject on the far left or far right edges; the left 20% and right 30% are especially dark and quiet so text and buttons stay readable over them.
+Lighting & palette: low-key, very dark, muted, low contrast, charcoal, ink black and a ritual burgundy, with a faint ash-pink light, subtle haze, soft vignette, no bright highlights.
+Style: dark retro-futurist matte painting with a hint of constructivist propaganda poster texture, film grain, seamless, decorative, background-only.
+Strictly no text, no letters, no logo, no watermark, no UI, no frame, no border, no close-up faces, no characters in the foreground.
+```
+
+## Star Trek
+
+```text
+Ultra-wide cinematic panoramic banner, 4:1 aspect ratio, for the header of a tabletop RPG game master app.
+Theme: optimistic space exploration — discovery, diplomacy, the unknown frontier, a starship crew far from home.
+Scene: a wide, continuous horizontal panorama of deep space, the curved horizon of a blue-green alien planet along the lower middle, a sleek elegant exploration starship with a saucer hull and two glowing nacelles in calm orbit near the center, a soft violet-blue nebula and a distant star cluster; all visual interest concentrated in a thin horizontal band through the vertical center of the image; the top and bottom thirds are calm, almost uniform (dark starfield above, the planet's shadowed night side below).
+Composition: no focal subject on the far left or far right edges; the left 20% and right 30% are especially dark and quiet so text and buttons stay readable over them.
+Lighting & palette: low-key, dark, muted, low contrast, graphite blue, deep space black and a soft light-blue glow, subtle atmospheric depth, soft vignette, no bright highlights.
+Style: clean cinematic space matte painting, smooth, seamless, decorative, background-only.
 Strictly no text, no letters, no logo, no watermark, no UI, no frame, no border, no close-up faces, no characters in the foreground.
 ```

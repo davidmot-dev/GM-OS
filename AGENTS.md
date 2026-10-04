@@ -5,6 +5,12 @@ meneur, propriétaire du dépôt) et Claude Code. Ce fichier est lu automatiquem
 qui le connaissent, comme Codex. Il dit surtout **ce qu'il ne faut pas faire**, et pourquoi. **En
 cas de doute, demande à David avant d'agir.**
 
+> 🔁 **Reprendre le travail de l'autre agent** (Claude Code ↔ Codex) : lire d'abord
+> [`documentation/Planning/2026-10-04-passation-claude-codex.md`](documentation/Planning/2026-10-04-passation-claude-codex.md)
+> — l'ordre de lecture, le protocole de passation, les commandes et les pièges. L'état des
+> chantiers vit dans le registre
+> [`documentation/Planning/2026-08-23-chantiers-gares.md`](documentation/Planning/2026-08-23-chantiers-gares.md).
+
 > Les thèmes de jeu ne sont **pas** construits ici : ils viennent de *RPG Theme Builder*, dans
 > ChatGPT. Leur contrat est
 > [`documentation/Architecture/Cahier-des-charges-theme-de-jeu.md`](documentation/Architecture/Cahier-des-charges-theme-de-jeu.md)
