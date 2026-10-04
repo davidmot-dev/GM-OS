@@ -36,7 +36,14 @@ guides de septembre l'avait déjà montré : les trois quarts des trouvailles é
    Cortex quand une scène de Light-OS joue (le premier appui arrête la lumière, le second ferme le
    bandeau) ; le livre de règles d'une campagne sans jeu ; l'export du tableau blanc pendant une
    séance lancée depuis le cockpit.
-3. **Repris du 28/09, rien n'a bougé** : §§ 87, 106 à 110, 114 du registre.
+3. **Le graphe de la Trame en cartes** (registre § 124, garé) — rapprocher le graphe de la
+   maquette Stitch, avec React Flow pour la Trame seule. **Attend deux décisions de David** :
+   l'accord pour installer le paquet, et la place du chantier, avant ou après les tablettes.
+4. **Les bannières de Dune, d'Alien et de Rêve de Dragon** — les prompts sont prêts dans
+   [`2026-10-04-prompts-bannieres.md`](./2026-10-04-prompts-bannieres.md) (avec le prompt générique
+   et les valeurs de Cthulhu Hack et Blade Runner). David génère les images, les dépose dans le
+   dossier du jeu (`docs/systems/<jeu>/`) et les choisit dans l'éditeur du pilote. Rien à coder.
+5. **Repris du 28/09, rien n'a bougé** : §§ 87, 106 à 110, 114 du registre.
 
 ---
 
