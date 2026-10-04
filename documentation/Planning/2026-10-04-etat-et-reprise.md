@@ -77,3 +77,21 @@ Les noms de thèmes en clé i18n brute sur la tablette, Dune dans le livre d'une
 les dates ISO dans la préparation, les sorties audio réelles de la machine non floutées dans
 Sound-OS. *Une planche contact de soixante captures se relit en cinq minutes, et elle trouve ce
 que six mille tests ne cherchent pas.*
+
+---
+
+## Ajout Codex — T0 joueurs, le 2026-10-04
+
+À la demande de David (« on peut commencer avec le 1er travail ? T0 joueurs ? »), la tablette
+des joueurs a été inventoriée dans `2026-10-04-T0-tablette-joueurs.md`. Son banc
+`e2e/tabletteJoueursT0.spec.ts` utilise Edge, la campagne fictive et un profil Electron jetable.
+La galerie `tablettes/T0-joueurs/index.html` compare **54 captures** aux trois tailles.
+Validation : construction, analyse de types et ESLint verts ; 39 scénarios, dont 35 réussites
+et 4 échecs attendus. La série complète initiale rendait 38 cas verts et un échec sur le clic
+« Jouer » ; un ciblage après bornage du clic a reconnu cet échec attendu. Aucun commit ni push.
+
+Trois constats sont au § 1 bis du registre : PV modifiés localement sans retour au MJ ; bouton
+« Jouer » masqué par la navigation sur téléphone ; titre de campagne sous l'horloge sur iPad.
+Ne pas ôter les échecs attendus sans correction et nouvelle vérification. **Reprendre par T0
+meneur**, puis décider du traitement du défaut des PV avant de déclarer la base T0 entièrement
+saine. Aucun fichier `src/` ou `electron/` n'a été modifié pendant ce relevé.

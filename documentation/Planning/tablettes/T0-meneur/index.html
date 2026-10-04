@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T0 meneur — captures de référence</title>
+<style>
+  :root { color-scheme: dark; font: 16px system-ui, sans-serif; background: #111722; color: #e7ecf5; }
+  body { margin: 0; padding: 2rem; }
+  header, main { max-width: 110rem; margin: auto; }
+  h1 { margin: 0 0 .6rem; }
+  p { color: #a8b6cc; line-height: 1.5; }
+  main { margin-top: 2rem; }
+  section { border-top: 1px solid #405066; padding: 1.5rem 0; }
+  section h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+  .vues { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  figure { margin: 0; min-width: 0; }
+  figcaption { padding: .4rem 0 .7rem; font-size: .85rem; color: #c3d5ee; }
+  a { display: block; border: 1px solid #405066; border-radius: .6rem; overflow: hidden; background: #050a13; }
+  a:focus-visible { outline: 3px solid #76d8e6; }
+  img { display: block; width: 100%; height: 27rem; object-fit: contain; object-position: top center; }
+  @media (max-width: 800px) { body { padding: 1rem; } .vues { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; } img { height: 16rem; } }
+</style>
+<header>
+  <h1>T0 · Tablette du meneur</h1>
+  <p>Les quatre colonnes montrent les mêmes états sur téléphone (390 × 844), iPad portrait (820 × 1180), iPad paysage (1180 × 820) et pupitre (1440 × 900). Cliquer sur une image l'ouvre à sa taille réelle. Ces captures documentent l'interface du 05/10/2026 et ses défauts actuels ; elles ne sont pas des maquettes.</p>
+  <p>Décor : campagne fictive « Le Silence de Varn », profil jetable. L'inventaire et les résultats des gestes figurent dans <a style="display:inline;border:0;background:none;color:#76d8e6" href="../../2026-10-05-T0-tablette-meneur.md">la note T0</a>.</p>
+</header>
+<main id="captures"></main>
+<script>
+  const vues = [
+    ['00-non-appairee','Télécommande sans appairage'], ['01-pads','Pads'],
+    ['02-des','Dés'], ['03-resultat-des','Résultat de dés'], ['04-sons','Sons'],
+    ['05-scenario','Scénario'], ['06-combat','Combat'], ['07-tableau','Tableau sombre'],
+    ['08-tableau-clair','Tableau clair'], ['09-notes-seance','Notes · Séance'],
+    ['10-notes-trame','Notes · Trame'], ['11-notes-chroniques','Notes · Chroniques'],
+    ['12-notes-indices','Notes · Indices'], ['13-notes-secrets','Notes · Secrets'],
+    ['14-notes-coffre','Notes · Nexus Wiki'], ['15-messages','Messages'],
+    ['16-messages-envoyes','Message privé envoyé'],
+  ];
+  const tailles = [['telephone','Téléphone'],['portrait','iPad portrait'],['paysage','iPad paysage'],['pupitre','Pupitre']];
+  const racine = document.getElementById('captures');
+  for (const [nom, titre] of vues) {
+    const section = document.createElement('section');
+    const h2 = document.createElement('h2'); h2.textContent = titre; section.append(h2);
+    const grille = document.createElement('div'); grille.className = 'vues';
+    for (const [dossier, etiquette] of tailles) {
+      const figure = document.createElement('figure');
+      const legende = document.createElement('figcaption'); legende.textContent = etiquette;
+      const lien = document.createElement('a'); lien.href = `${dossier}/${nom}.png`; lien.target = '_blank'; lien.rel = 'noopener';
+      lien.setAttribute('aria-label', `${titre} — ${etiquette}`);
+      const image = document.createElement('img'); image.src = lien.href; image.alt = `${titre} sur ${etiquette}`; image.loading = 'lazy';
+      lien.append(image); figure.append(legende, lien); grille.append(figure);
+    }
+    section.append(grille); racine.append(section);
+  }
+</script>
+</html>

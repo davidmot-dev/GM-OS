@@ -213,7 +213,7 @@ clavier de Safari, la reconnexion après une mise en veille.
 
 | Phase | État |
 | :--- | :--- |
-| T0 · État des lieux | ⏳ à faire |
+| T0 · État des lieux | 🔄 **Relevé complet sur les deux surfaces** : [joueurs, 54 captures et 39 scénarios](2026-10-04-T0-tablette-joueurs.md) ; [meneur, 68 captures et 44 scénarios](2026-10-05-T0-tablette-meneur.md). Le banc MJ compte 40 réussites ordinaires et 4 échecs attendus. Défauts connus au § 1 bis du registre ; sortie stricte à arbitrer avant T1. |
 | T1 · Le thème voyage | ⏳ |
 | T2 · Habillage par le socle | ⏳ |
 | T3 · Maquettes Stitch | ⏳ |
