@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS // Tablette Joueur : Messagerie</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Space+Mono:wght@400;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#d8e3fb",
+            "on-tertiary-fixed": "#001f26",
+            "surface-container-low": "#151b2d",
+            "primary-fixed-dim": "#4cd7f6",
+            "error-container": "#93000a",
+            "surface-variant": "#2e3447",
+            "on-error": "#690005",
+            "surface-container-highest": "#2e3447",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "primary-fixed": "#acedff",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#263143",
+            "on-surface": "#dee2f7",
+            "outline-variant": "#151b2d",
+            "surface-bright": "#32394c",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-surface-variant": "#898c95",
+            "surface-container-high": "#232a3c",
+            "inverse-on-surface": "#293042",
+            "on-primary-container": "#00424f",
+            "surface-container": "#192031",
+            "primary-container": "#06b6d4",
+            "surface-tint": "#4cd7f6",
+            "surface": "#0c1324",
+            "on-primary-fixed": "#001f26",
+            "on-primary": "#003640",
+            "surface-container-lowest": "#070e1e",
+            "on-secondary-fixed-variant": "#3c475a",
+            "inverse-primary": "#00687a",
+            "on-background": "#dce2fa",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-secondary-container": "#c0c9e0",
+            "secondary-container": "#3e495d",
+            "tertiary-container": "#004f5d",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-secondary-fixed": "#111c2d",
+            "on-tertiary-container": "#00424f",
+            "outline": "#1e293b",
+            "secondary": "#bcc7de",
+            "inverse-surface": "#dce2fa",
+            "surface-dim": "#0c1324",
+            "background": "#020617",
+            "tertiary-fixed": "#acedff",
+            "primary": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "error": "#ef4444",
+            "tertiary": "#4cd7f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "fontFamily": {
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "code-lg": ["Space Mono", "monospace"],
+            "number-md": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "label-sm": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+            "number-md": ["15px", {"fontWeight": "600"}],
+            "number-lg": ["28px", {"fontWeight": "700"}],
+            "label-lg": ["13px", {"lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+            "label-sm": ["11px", {"lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700"}],
+            "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+            "code-md": ["15px", {"lineHeight": "22px", "fontWeight": "600"}],
+            "code-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "body-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Diegetic reticle styling */
+    .reticle-grid {
+      background-size: 20px 20px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.45) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.45) 1px, transparent 1px);
+    }
+    /* Custom scrollbar for tactical console */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070e1e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4cd7f6;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased select-none font-body-md min-h-screen flex justify-center items-start overflow-x-hidden p-0 sm:py-4">
+<!-- Mobile Chassis Shell (390px x 844px base container) -->
+<div class="relative w-full max-w-[390px] min-h-screen sm:min-h-[844px] bg-background border-0 sm:border border-outline flex flex-col justify-between shadow-2xl overflow-hidden">
+<!-- ========================================== -->
+<!-- 1. COMPACT DIEGETIC CONSOLE HEADER         -->
+<!-- ========================================== -->
+<header class="w-full bg-surface-container-lowest border-b border-outline z-10 shrink-0">
+<!-- Topmost Telemetry Strip -->
+<div class="flex items-center justify-between px-3 py-1.5 border-b border-outline-variant text-on-surface-variant font-code-sm text-code-sm">
+<div class="flex items-center space-x-2">
+<span class="font-headline-sm text-label-sm tracking-widest text-primary font-bold">GM-OS // JOUEUR</span>
+<span class="inline-flex items-center px-1.5 py-0.5 bg-surface-container border border-outline text-[10px] text-green-400 font-label-sm">
+<span class="w-1.5 h-1.5 rounded-none bg-green-400 mr-1 animate-pulse"></span>
+            CONNECTÉ
+          </span>
+</div>
+<button class="h-6 px-2 bg-surface-container-low border border-outline text-[10px] font-label-sm text-on-surface hover:border-primary active:bg-surface-container transition-colors uppercase flex items-center space-x-1" id="toggle-perf" title="Basculer le mode de rendu">
+<span class="text-primary">⚡</span>
+<span id="perf-label">MODE PERFORMANCE</span>
+</button>
+</div>
+<!-- Station Time & Tension Alert Rail -->
+<div class="px-3 py-2 grid grid-cols-2 gap-2 bg-surface-container-lowest">
+<!-- Projected Clock -->
+<div class="border border-outline-variant bg-surface-container-low p-1.5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant">HORLOGE SYNC</span>
+<span class="px-1 bg-surface-variant text-[9px] font-label-sm text-primary border border-outline">TABLE</span>
+</div>
+<div class="font-code-md text-code-md text-primary font-bold tracking-wider leading-none mt-1">
+            23:37:32
+          </div>
+<div class="font-label-sm text-[10px] text-on-surface-variant truncate mt-0.5">
+            Dimanche 4 oct. 2026
+          </div>
+</div>
+<!-- Station Tension Alert Gauge (3/8 Active Segments) -->
+<div class="border border-outline-variant bg-surface-container-low p-1.5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant tracking-wider">ALERTE STATION</span>
+<span class="font-code-sm text-code-sm font-bold text-amber-400">3/8</span>
+</div>
+<!-- 8-Segment Stepped Gauge -->
+<div class="grid grid-cols-8 gap-1 my-1">
+<span class="h-3 bg-amber-400 border border-amber-300"></span>
+<span class="h-3 bg-amber-400 border border-amber-300"></span>
+<span class="h-3 bg-amber-400 border border-amber-300"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+</div>
+<span class="font-label-sm text-[9px] text-amber-400 uppercase tracking-tighter truncate">NIVEAU 3 : CONFINEMENT PARTIEL</span>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. DIRECT SCREEN BACKGROUND (UNDER OVERLAY)-->
+<!-- ========================================== -->
+<main class="relative flex-1 bg-background overflow-hidden p-3 flex flex-col space-y-3 pb-[175px]">
+<!-- Operation Banner -->
+<section class="border border-outline bg-surface-container-low p-3">
+<div class="flex items-center justify-between border-b border-outline pb-1.5 mb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">DIRECT // CAMPAGNE</span>
+<span class="font-code-sm text-[11px] text-primary">SESS-09</span>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-on-surface font-bold tracking-tight">
+          OPÉRATION EN COURS : LE SILENCE DE VARN
+        </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Sous-sol du Réacteur 04 — Secteur pressurisé instable.
+        </p>
+</section>
+<!-- Projection Standby Box with Wireframe Reticle -->
+<section class="border border-outline bg-surface-container p-4 flex flex-col items-center justify-center text-center relative reticle-grid min-h-[140px]">
+<div class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-primary"></div>
+<div class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-primary"></div>
+<div class="absolute bottom-1 left-1 w-2 h-2 border-b-2 border-l-2 border-primary"></div>
+<div class="absolute bottom-1 right-1 w-2 h-2 border-b-2 border-r-2 border-primary"></div>
+<span class="material-symbols-outlined text-3xl text-primary mb-1 animate-pulse">radar</span>
+<span class="font-code-sm text-code-sm font-bold text-primary tracking-widest uppercase">
+          EN ATTENTE DU SIGNAL TABLE
+        </span>
+<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">
+          FLUX VISUEL TAC-LINK HORS LIGNE
+        </span>
+</section>
+<!-- Chroniques de Séance -->
+<section class="border border-outline bg-surface-container-low p-3 flex-1 flex flex-col">
+<div class="flex items-center justify-between border-b border-outline pb-1 mb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">CHRONIQUES DE SÉANCE</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant">history_edu</span>
+</div>
+<div class="flex-1 flex items-center justify-center p-4 border border-dashed border-outline-variant bg-surface-container-lowest">
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+            Aucun résumé public.
+          </p>
+</div>
+</section>
+</main>
+<!-- ========================================== -->
+<!-- 3. MESSAGERIE OVERLAY PANEL (HubMessenger)  -->
+<!-- ========================================== -->
+<div class="absolute inset-0 z-30 flex flex-col justify-end bg-background/80 backdrop-blur-[2px] transition-opacity duration-150" id="messenger-overlay">
+<!-- Modal Container docked upwards -->
+<div class="w-full h-[84%] bg-surface border-t-2 border-primary flex flex-col shadow-2xl">
+<!-- Header bar with explicit close button >=44px height -->
+<div class="h-12 bg-surface-container-lowest border-b border-outline px-3 flex items-center justify-between shrink-0">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary text-xl">forum</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-none">MESSAGERIE</h2>
+<span class="font-label-sm text-[10px] text-primary tracking-widest uppercase" id="active-channel-badge">Canal Direct MJ</span>
+</div>
+</div>
+<!-- Close button: >=44px touch target -->
+<button aria-label="Fermer la messagerie" class="min-h-[44px] min-w-[44px] px-3 bg-surface-container border border-outline hover:border-error hover:text-error text-on-surface text-label-sm font-label-sm font-bold flex items-center justify-center space-x-1 transition-colors" id="btn-close-messenger">
+<span class="material-symbols-outlined text-base">close</span>
+<span>FERMER</span>
+</button>
+</div>
+<!-- Recipient Selector Button & Custom Brutalist Dropdown -->
+<div class="relative bg-surface-container-low border-b border-outline p-2.5 shrink-0 z-20">
+<span class="block font-label-sm text-[10px] uppercase text-on-surface-variant mb-1">DESTINATAIRE SÉLECTIONNÉ :</span>
+<!-- Selector Trigger Button (>=44px) -->
+<button aria-expanded="false" aria-haspopup="listbox" class="w-full min-h-[44px] bg-surface-container border border-outline hover:border-primary px-3 py-2 flex items-center justify-between text-left transition-colors" id="btn-recipient-select">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary text-lg" id="selected-recipient-icon">shield_person</span>
+<div>
+<span class="font-headline-sm text-label-lg font-bold text-on-surface block leading-tight" id="selected-recipient-name">Maître du Jeu</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant block" id="selected-recipient-channel">Canal Direct MJ / Privé</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform" id="recipient-chevron">expand_more</span>
+</button>
+<!-- Dropdown List of 4 Exact Recipients -->
+<div class="hidden absolute left-2.5 right-2.5 top-[76px] bg-surface-container-highest border border-primary shadow-2xl z-30" id="recipient-dropdown">
+<!-- 1. Maître du Jeu -->
+<button class="recipient-option w-full min-h-[44px] p-2.5 border-b border-outline flex items-center space-x-2 text-left hover:bg-surface-container active:bg-primary/20 transition-colors" data-channel="Canal Direct MJ / Privé" data-icon="shield_person" data-placeholder="Message à Maître du Jeu..." data-privacy="Seul le Maître du Jeu pourra lire ce message." data-recipient="Maître du Jeu">
+<span class="material-symbols-outlined text-primary text-base">shield_person</span>
+<div class="flex-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface block leading-tight">Maître du Jeu</span>
+<span class="font-label-sm text-[10px] text-primary block">Canal Direct MJ / Privé</span>
+</div>
+<span class="material-symbols-outlined text-xs text-primary">arrow_forward</span>
+</button>
+<!-- 2. Tous les Joueurs -->
+<button class="recipient-option w-full min-h-[44px] p-2.5 border-b border-outline flex items-center space-x-2 text-left hover:bg-surface-container active:bg-primary/20 transition-colors" data-channel="Canal Général" data-icon="groups" data-placeholder="Message à Tous les Joueurs..." data-privacy="Tout le monde pourra lire ce message." data-recipient="Tous les Joueurs">
+<span class="material-symbols-outlined text-secondary text-base">groups</span>
+<div class="flex-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface block leading-tight">Tous les Joueurs</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant block">Canal Général</span>
+</div>
+<span class="material-symbols-outlined text-xs text-on-surface-variant">arrow_forward</span>
+</button>
+<!-- 3. Idris Koa -->
+<button class="recipient-option w-full min-h-[44px] p-2.5 border-b border-outline flex items-center space-x-2 text-left hover:bg-surface-container active:bg-primary/20 transition-colors" data-channel="Canal Privé" data-icon="person" data-placeholder="Message à Idris Koa..." data-privacy="Seul Idris Koa pourra lire ce message." data-recipient="Idris Koa">
+<span class="material-symbols-outlined text-secondary text-base">person</span>
+<div class="flex-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface block leading-tight">Idris Koa</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant block">Canal Privé</span>
+</div>
+<span class="material-symbols-outlined text-xs text-on-surface-variant">arrow_forward</span>
+</button>
+<!-- 4. Sora Adebayo -->
+<button class="recipient-option w-full min-h-[44px] p-2.5 flex items-center space-x-2 text-left hover:bg-surface-container active:bg-primary/20 transition-colors" data-channel="Canal Privé" data-icon="person" data-placeholder="Message à Sora Adebayo..." data-privacy="Seule Sora Adebayo pourra lire ce message." data-recipient="Sora Adebayo">
+<span class="material-symbols-outlined text-secondary text-base">person</span>
+<div class="flex-1">
+<span class="font-label-lg text-label-lg font-bold text-on-surface block leading-tight">Sora Adebayo</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant block">Canal Privé</span>
+</div>
+<span class="material-symbols-outlined text-xs text-on-surface-variant">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Conversation Scrollable Feed -->
+<div class="flex-1 overflow-y-auto p-3 space-y-3 bg-surface-container-lowest" id="messages-container">
+<!-- Message 1: VOUS (Right aligned, accented border) -->
+<div class="flex flex-col items-end">
+<div class="flex items-center space-x-1.5 mb-0.5">
+<span class="font-label-sm text-[10px] font-bold text-primary tracking-wider">VOUS</span>
+<span class="font-code-sm text-[10px] text-on-surface-variant">23:37</span>
+</div>
+<div class="max-w-[85%] bg-surface-container border-r-2 border-r-primary border-t border-b border-l border-outline p-2.5 text-on-surface font-body-md text-body-md">
+              Le relais est ouvert.
+            </div>
+</div>
+<!-- Message 2: MAÎTRE DU JEU (Left aligned) -->
+<div class="flex flex-col items-start">
+<div class="flex items-center space-x-1.5 mb-0.5">
+<span class="font-label-sm text-[10px] font-bold text-amber-400 tracking-wider">MAÎTRE DU JEU</span>
+<span class="font-code-sm text-[10px] text-on-surface-variant">23:37</span>
+</div>
+<div class="max-w-[85%] bg-surface-container-low border-l-2 border-l-amber-400 border-t border-b border-r border-outline p-2.5 text-on-surface font-body-md text-body-md">
+              Vous entendez trois coups.
+            </div>
+</div>
+</div>
+<!-- Privacy Warning Text Banner -->
+<div class="bg-surface-container border-t border-outline px-3 py-1.5 flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-xs text-primary">lock</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate" id="privacy-warning">
+            Seul le Maître du Jeu pourra lire ce message.
+          </span>
+</div>
+<!-- Message Input Zone -->
+<div class="p-2.5 bg-surface-container-low border-t border-outline shrink-0">
+<label class="sr-only" for="message-input">Entrer un message</label>
+<div class="flex flex-col space-y-2">
+<textarea class="w-full bg-surface-container-lowest border border-outline focus:border-primary text-on-surface placeholder:text-on-surface-variant font-body-md text-body-md p-2 resize-none outline-none transition-colors" id="message-input" placeholder="Message à Maître du Jeu..." rows="2" style="border-radius: 0px;"></textarea>
+<button class="w-full min-h-[44px] bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm font-bold uppercase tracking-wider border border-outline flex items-center justify-center space-x-2 transition-all cursor-not-allowed disabled:opacity-50" disabled="" id="btn-send-message">
+<span class="material-symbols-outlined text-base">send</span>
+<span>Envoyer le message</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 4. BOTTOM FIXED NAVIGATION DOCK (>=44px)   -->
+<!-- ========================================== -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline z-40 shrink-0">
+<!-- Primary 6 Tabs: 2 rows of 3 -->
+<nav aria-label="Navigation principale" class="grid grid-cols-3 border-b border-outline-variant text-center">
+<!-- Row 1 -->
+<button class="min-h-[44px] border-r border-b border-outline-variant bg-surface-container-low hover:bg-surface-container active:bg-surface text-on-surface font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
+<span class="material-symbols-outlined text-sm text-primary">visibility</span>
+<span>DIRECT</span>
+</button>
+<button class="min-h-[44px] border-r border-b border-outline-variant bg-surface-container-low hover:bg-surface-container active:bg-surface text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
+<span class="material-symbols-outlined text-sm">inventory_2</span>
+<span>ARCHIVES</span>
+</button>
+<button class="min-h-[44px] border-b border-outline-variant bg-surface-container-low hover:bg-surface-container active:bg-surface text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
+<span class="material-symbols-outlined text-sm">badge</span>
+<span>PNJ</span>
+</button>
+<!-- Row 2 -->
+<button class="min-h-[44px] border-r border-outline-variant bg-surface-container-low hover:bg-surface-container active:bg-surface text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
+<span class="material-symbols-outlined text-sm">location_city</span>
+<span>LIEUX</span>
+</button>
+<button class="min-h-[44px] border-r border-outline-variant bg-surface-container-low hover:bg-surface-container active:bg-surface text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
+<span class="material-symbols-outlined text-sm">backpack</span>
+<span>INVENTAIRE</span>
+</button>
+<button class="min-h-[44px] bg-surface-container-low hover:bg-surface-container active:bg-surface text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center space-x-1">
+<span class="material-symbols-outlined text-sm">map</span>
+<span>CARTES</span>
+</button>
+</nav>
+<!-- Quick Actions Row of 4 -->
+<div aria-label="Actions rapides" class="grid grid-cols-4 bg-surface-container-lowest">
+<button class="min-h-[44px] border-r border-outline hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-bold uppercase flex flex-col items-center justify-center">
+<span class="material-symbols-outlined text-base">contact_page</span>
+<span class="text-[10px]">FICHE</span>
+</button>
+<button class="min-h-[44px] border-r border-outline hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-bold uppercase flex flex-col items-center justify-center">
+<span class="material-symbols-outlined text-base">edit_note</span>
+<span class="text-[10px]">NOTES</span>
+</button>
+<!-- MESSAGES TAB (Active with cyan indicator) -->
+<button class="min-h-[44px] border-r border-outline bg-surface-container border-t-2 border-t-primary text-primary font-label-sm text-label-sm font-bold uppercase flex flex-col items-center justify-center relative" id="btn-tab-messages">
+<span class="material-symbols-outlined text-base">mail</span>
+<span class="text-[10px]">MESSAGES</span>
+<span class="absolute top-1 right-2 w-1.5 h-1.5 bg-primary"></span>
+</button>
+<button class="min-h-[44px] hover:bg-surface-container text-error hover:text-red-400 font-label-sm text-label-sm font-bold uppercase flex flex-col items-center justify-center">
+<span class="material-symbols-outlined text-base">power_settings_new</span>
+<span class="text-[10px]">QUITTER</span>
+</button>
+</div>
+</footer>
+</div>
+<!-- Interactive JavaScript Logic -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Element references
+      const overlay = document.getElementById('messenger-overlay');
+      const btnClose = document.getElementById('btn-close-messenger');
+      const btnTabMessages = document.getElementById('btn-tab-messages');
+      
+      const btnSelect = document.getElementById('btn-recipient-select');
+      const dropdown = document.getElementById('recipient-dropdown');
+      const chevron = document.getElementById('recipient-chevron');
+      const options = document.querySelectorAll('.recipient-option');
+      
+      const selectedName = document.getElementById('selected-recipient-name');
+      const selectedChannel = document.getElementById('selected-recipient-channel');
+      const selectedIcon = document.getElementById('selected-recipient-icon');
+      const activeChannelBadge = document.getElementById('active-channel-badge');
+      const privacyWarning = document.getElementById('privacy-warning');
+      
+      const messageInput = document.getElementById('message-input');
+      const btnSend = document.getElementById('btn-send-message');
+      const messagesContainer = document.getElementById('messages-container');
+
+      // Mode performance toggle
+      const btnPerf = document.getElementById('toggle-perf');
+      const perfLabel = document.getElementById('perf-label');
+      let isPerf = true;
+      btnPerf.addEventListener('click', () => {
+        isPerf = !isPerf;
+        perfLabel.textContent = isPerf ? 'MODE PERFORMANCE' : 'MODE QUALITÉ';
+        btnPerf.classList.toggle('border-primary', !isPerf);
+      });
+
+      // Recipient Dropdown Toggle
+      btnSelect.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !dropdown.classList.contains('hidden');
+        if (isOpen) {
+          dropdown.classList.add('hidden');
+          chevron.textContent = 'expand_more';
+          btnSelect.setAttribute('aria-expanded', 'false');
+        } else {
+          dropdown.classList.remove('hidden');
+          chevron.textContent = 'expand_less';
+          btnSelect.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && !btnSelect.contains(e.target)) {
+          dropdown.classList.add('hidden');
+          chevron.textContent = 'expand_more';
+          btnSelect.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Recipient Selection Logic
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          const recName = opt.getAttribute('data-recipient');
+          const recChannel = opt.getAttribute('data-channel');
+          const recIcon = opt.getAttribute('data-icon');
+          const recPrivacy = opt.getAttribute('data-privacy');
+          const recPlaceholder = opt.getAttribute('data-placeholder');
+
+          selectedName.textContent = recName;
+          selectedChannel.textContent = recChannel;
+          selectedIcon.textContent = recIcon;
+          activeChannelBadge.textContent = recChannel;
+          privacyWarning.textContent = recPrivacy;
+          messageInput.placeholder = recPlaceholder;
+
+          dropdown.classList.add('hidden');
+          chevron.textContent = 'expand_more';
+          btnSelect.setAttribute('aria-expanded', 'false');
+          messageInput.focus();
+        });
+      });
+
+      // Send Button State Controller
+      function updateSendButtonState() {
+        const text = messageInput.value.trim();
+        if (text.length > 0) {
+          btnSend.removeAttribute('disabled');
+          btnSend.classList.remove('cursor-not-allowed', 'opacity-50', 'bg-surface-container-highest', 'text-on-surface-variant');
+          btnSend.classList.add('bg-primary-container', 'text-on-primary-container', 'hover:bg-primary', 'cursor-pointer');
+        } else {
+          btnSend.setAttribute('disabled', 'true');
+          btnSend.classList.add('cursor-not-allowed', 'opacity-50', 'bg-surface-container-highest', 'text-on-surface-variant');
+          btnSend.classList.remove('bg-primary-container', 'text-on-primary-container', 'hover:bg-primary', 'cursor-pointer');
+        }
+      }
+
+      messageInput.addEventListener('input', updateSendButtonState);
+
+      // Send Message Routine (Append Locally)
+      function sendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const timestamp = `${hours}:${minutes}`;
+
+        // Construct Brutalist Message Bubble
+        const msgWrapper = document.createElement('div');
+        msgWrapper.className = 'flex flex-col items-end';
+
+        const metaRow = document.createElement('div');
+        metaRow.className = 'flex items-center space-x-1.5 mb-0.5';
+
+        const senderSpan = document.createElement('span');
+        senderSpan.className = 'font-label-sm text-[10px] font-bold text-primary tracking-wider';
+        senderSpan.textContent = 'VOUS';
+
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'font-code-sm text-[10px] text-on-surface-variant';
+        timeSpan.textContent = timestamp;
+
+        metaRow.appendChild(senderSpan);
+        metaRow.appendChild(timeSpan);
+
+        const bubble = document.createElement('div');
+        bubble.className = 'max-w-[85%] bg-surface-container border-r-2 border-r-primary border-t border-b border-l border-outline p-2.5 text-on-surface font-body-md text-body-md break-words';
+        bubble.textContent = text;
+
+        msgWrapper.appendChild(metaRow);
+        msgWrapper.appendChild(bubble);
+
+        messagesContainer.appendChild(msgWrapper);
+
+        // Clear and reset input
+        messageInput.value = '';
+        updateSendButtonState();
+
+        // Scroll to newest message
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      btnSend.addEventListener('click', sendMessage);
+
+      // Handle Enter (Send) and Shift+Enter (Newline)
+      messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      // Close Overlay Action
+      btnClose.addEventListener('click', () => {
+        overlay.classList.add('hidden');
+        btnTabMessages.classList.remove('border-t-2', 'border-t-primary', 'text-primary');
+        btnTabMessages.classList.add('text-on-surface-variant');
+        const badge = btnTabMessages.querySelector('.bg-primary');
+        if (badge) badge.classList.add('hidden');
+      });
+
+      // Toggle Overlay via Messages Tab in footer
+      btnTabMessages.addEventListener('click', () => {
+        if (overlay.classList.contains('hidden')) {
+          overlay.classList.remove('hidden');
+          btnTabMessages.classList.add('border-t-2', 'border-t-primary', 'text-primary');
+          btnTabMessages.classList.remove('text-on-surface-variant');
+          const badge = btnTabMessages.querySelector('.bg-primary');
+          if (badge) badge.classList.remove('hidden');
+        } else {
+          overlay.classList.add('hidden');
+          btnTabMessages.classList.remove('border-t-2', 'border-t-primary', 'text-primary');
+          btnTabMessages.classList.add('text-on-surface-variant');
+          const badge = btnTabMessages.querySelector('.bg-primary');
+          if (badge) badge.classList.add('hidden');
+        }
+      });
+
+      // Initial scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+  </script>
+</body></html>

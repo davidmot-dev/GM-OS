@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GM-OS — Qui es-tu ? (Tablette Joueurs)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'rpg-bg': '#020617',
+            'rpg-surface': '#0f172a',
+            'rpg-surface-raised': '#1e293b',
+            'rpg-text': '#f8fafc',
+            'rpg-muted': '#898c95',
+            'rpg-border': '#1e293b',
+            'rpg-accent': '#06b6d4',
+            'rpg-success': '#10b981',
+            'rpg-danger': '#ef4444',
+            'rpg-warning': '#f59e0b',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Orbitron', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Brutal Diegetic Console styles: 0px rounded, scanline, high contrast */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .diegetic-border {
+      border: 1px solid #1e293b;
+    }
+    .active-glow {
+      box-shadow: 0 0 16px rgba(6, 182, 212, 0.25);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen text-rpg-text select-none">
+
+  <!-- TOP BAR / EN-TÊTE SESSION JOUEURS -->
+  <header class="w-full bg-[#070d1f] border-b border-rpg-border px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <span class="w-2.5 h-2.5 bg-rpg-accent animate-pulse inline-block"></span>
+      <span class="font-display font-bold text-xs tracking-wider text-rpg-accent uppercase">GM-OS // PLAYER HUB</span>
+    </div>
+    <!-- Quitter la session avec confirmation tactile -->
+    <button id="btn-quit" onclick="handleQuitClick()" class="h-11 px-3.5 bg-rpg-surface-raised border border-rpg-border hover:border-rpg-danger text-rpg-muted hover:text-rpg-danger font-sans text-xs font-semibold tracking-wider uppercase transition-colors flex items-center gap-1.5 active:bg-rpg-danger active:text-white">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+      </svg>
+      <span id="quit-label">Quitter la session</span>
+    </button>
+  </header>
+
+  <!-- CONFIRMATION BANNER (MODALE INLINE / DISCRÈTE) -->
+  <div id="quit-confirm-box" class="hidden bg-[#151b2d] border-b-2 border-rpg-danger px-4 py-3 flex items-center justify-between">
+    <span class="text-xs text-rpg-text font-medium">Confirmer la déconnexion ?</span>
+    <div class="flex gap-2">
+      <button onclick="confirmQuit()" class="h-9 px-3 bg-rpg-danger text-white text-xs font-bold uppercase tracking-wider">Oui, quitter</button>
+      <button onclick="cancelQuit()" class="h-9 px-3 bg-rpg-surface-raised text-rpg-muted text-xs font-bold uppercase tracking-wider">Annuler</button>
+    </div>
+  </div>
+
+  <!-- MAIN SCROLLABLE CONTENT (390px / 360px OPTIMIZED) -->
+  <main class="flex-1 w-full max-w-md mx-auto px-4 py-5 flex flex-col gap-5">
+
+    <!-- TITRE & CONTEXTE DE LA SÉANCE -->
+    <section class="border-l-2 border-rpg-accent pl-3 py-1">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="font-mono text-[11px] font-bold text-rpg-accent tracking-widest uppercase bg-rpg-surface-raised px-2 py-0.5 border border-rpg-border">
+          Agent de la Session
+        </span>
+        <span class="font-mono text-[11px] text-rpg-muted">03/10/2026</span>
+      </div>
+      <h1 class="font-display font-extrabold text-2xl tracking-wide uppercase text-rpg-text">
+        Qui es-tu ?
+      </h1>
+      <p class="text-xs text-rpg-muted mt-1 flex items-center gap-1.5 font-sans">
+        <span class="text-rpg-text font-medium">Le Silence de Varn</span>
+        <span class="text-rpg-border">•</span>
+        <span>Séance 2</span>
+      </p>
+    </section>
+
+    <!-- INSTRUCTIONS SUCCINCTES -->
+    <div class="bg-rpg-surface border border-rpg-border p-3 flex items-start gap-2.5">
+      <svg class="w-4 h-4 text-rpg-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-xs leading-relaxed text-rpg-muted">
+        Sélectionne ta fiche pour synchroniser ton interface tactile et recevoir les flux de la table en direct.
+      </p>
+    </div>
+
+    <!-- LISTE DES PERSONNAGES DISPONIBLES (3 CARTES) -->
+    <section class="flex flex-col gap-4" aria-label="Sélection du personnage">
+
+      <!-- CARTE 1 : Camille / Nel Varga / Technicienne de bord -->
+      <article class="bg-rpg-surface diegetic-border hover:border-rpg-accent transition-colors relative flex flex-col p-4 gap-3.5 group">
+        <!-- En-tête de carte -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <!-- Emplacement silhouette neutre (jamais de photo inventée) -->
+            <div class="w-12 h-12 bg-rpg-surface-raised border border-rpg-border flex items-center justify-center flex-shrink-0 text-rpg-muted group-hover:border-rpg-accent">
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-base text-rpg-text tracking-wide">Nel Varga</span>
+              </div>
+              <p class="text-xs text-rpg-accent font-medium mt-0.5">Technicienne de bord</p>
+              <p class="text-[11px] text-rpg-muted font-sans mt-0.5">Joué par : <strong class="text-rpg-text font-semibold">Camille</strong></p>
+            </div>
+          </div>
+          <!-- Badge d'état Connectable -->
+          <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-[#064e3b]/40 border border-rpg-success text-rpg-success text-[11px] font-mono font-semibold uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 bg-rpg-success rounded-full"></span>
+            Connectable
+          </span>
+        </div>
+
+        <!-- Bouton de sélection (cible tactile >= 44px) -->
+        <button onclick="selectCharacter('Nel Varga', 'Camille', 'Technicienne de bord')" class="w-full h-11 bg-rpg-surface-raised hover:bg-rpg-accent text-rpg-text hover:text-black border border-rpg-border hover:border-rpg-accent font-sans text-sm font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-[0.99]">
+          <span>Prendre ce personnage</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </article>
+
+      <!-- CARTE 2 : Mathis / Idris Koa / Négociateur -->
+      <article class="bg-rpg-surface diegetic-border hover:border-rpg-accent transition-colors relative flex flex-col p-4 gap-3.5 group">
+        <!-- En-tête de carte -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <!-- Emplacement silhouette neutre -->
+            <div class="w-12 h-12 bg-rpg-surface-raised border border-rpg-border flex items-center justify-center flex-shrink-0 text-rpg-muted group-hover:border-rpg-accent">
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-base text-rpg-text tracking-wide">Idris Koa</span>
+              </div>
+              <p class="text-xs text-rpg-accent font-medium mt-0.5">Négociateur</p>
+              <p class="text-[11px] text-rpg-muted font-sans mt-0.5">Joué par : <strong class="text-rpg-text font-semibold">Mathis</strong></p>
+            </div>
+          </div>
+          <!-- Badge d'état Connectable -->
+          <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-[#064e3b]/40 border border-rpg-success text-rpg-success text-[11px] font-mono font-semibold uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 bg-rpg-success rounded-full"></span>
+            Connectable
+          </span>
+        </div>
+
+        <!-- Bouton de sélection (cible tactile >= 44px) -->
+        <button onclick="selectCharacter('Idris Koa', 'Mathis', 'Négociateur')" class="w-full h-11 bg-rpg-surface-raised hover:bg-rpg-accent text-rpg-text hover:text-black border border-rpg-border hover:border-rpg-accent font-sans text-sm font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-[0.99]">
+          <span>Prendre ce personnage</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </article>
+
+      <!-- CARTE 3 : Inès / Sora Adebayo / Médecin de bord -->
+      <article class="bg-rpg-surface diegetic-border hover:border-rpg-accent transition-colors relative flex flex-col p-4 gap-3.5 group">
+        <!-- En-tête de carte -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <!-- Emplacement silhouette neutre -->
+            <div class="w-12 h-12 bg-rpg-surface-raised border border-rpg-border flex items-center justify-center flex-shrink-0 text-rpg-muted group-hover:border-rpg-accent">
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-base text-rpg-text tracking-wide">Sora Adebayo</span>
+              </div>
+              <p class="text-xs text-rpg-accent font-medium mt-0.5">Médecin de bord</p>
+              <p class="text-[11px] text-rpg-muted font-sans mt-0.5">Joué par : <strong class="text-rpg-text font-semibold">Inès</strong></p>
+            </div>
+          </div>
+          <!-- Badge d'état Connectable -->
+          <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-[#064e3b]/40 border border-rpg-success text-rpg-success text-[11px] font-mono font-semibold uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 bg-rpg-success rounded-full"></span>
+            Connectable
+          </span>
+        </div>
+
+        <!-- Bouton de sélection (cible tactile >= 44px) -->
+        <button onclick="selectCharacter('Sora Adebayo', 'Inès', 'Médecin de bord')" class="w-full h-11 bg-rpg-surface-raised hover:bg-rpg-accent text-rpg-text hover:text-black border border-rpg-border hover:border-rpg-accent font-sans text-sm font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-[0.99]">
+          <span>Prendre ce personnage</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </article>
+
+    </section>
+
+    <!-- ÉTAT DE CONNEXION TÉLÉMÉTRIQUE (PIED RÉEL) -->
+    <footer class="mt-4 pt-4 border-t border-rpg-border flex flex-col gap-2 font-mono text-[11px] text-rpg-muted">
+      <div class="flex items-center justify-between bg-rpg-surface p-2.5 border border-rpg-border">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 bg-rpg-success inline-block"></span>
+          <span class="text-rpg-text font-medium">GM-OS v6.5.0</span>
+          <span class="text-rpg-border">•</span>
+          <span class="text-rpg-muted">nexus_bridge_active</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-rpg-muted">LAT :</span>
+          <span class="text-rpg-accent font-bold">--</span>
+        </div>
+      </div>
+      <div class="flex items-center justify-between text-[11px] text-rpg-muted px-1">
+        <span>Device ID: T0-JOUEURS-P91...</span>
+        <span>PORT: 8080</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    function handleQuitClick() {
+      const box = document.getElementById('quit-confirm-box');
+      box.classList.toggle('hidden');
+    }
+    function cancelQuit() {
+      document.getElementById('quit-confirm-box').classList.add('hidden');
+    }
+    function confirmQuit() {
+      alert("Session fermée. Vous pouvez fermer cet onglet.");
+      cancelQuit();
+    }
+    function selectCharacter(charName, playerName, role) {
+      alert("Personnage sélectionné : " + charName + " (" + role + ") pour " + playerName + ".\nConnexion à la table en cours...");
+    }
+  </script>
+</body>
+</html>

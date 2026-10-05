@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS — Tablette Joueur : Inventaire</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed-variant": "#004e5c",
+            "tertiary-fixed": "#acedff",
+            "on-secondary": "#263143",
+            "surface-dim": "#0c1324",
+            "secondary": "#bcc7de",
+            "on-primary-container": "#00424f",
+            "outline-variant": "#3d494c",
+            "surface-bright": "#33394c",
+            "error": "#ef4444",
+            "surface-tint": "#4cd7f6",
+            "surface-container-high": "#232a3c",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-secondary-fixed-variant": "#3c475a",
+            "on-error-container": "#ffdad6",
+            "surface-container": "#181f31",
+            "on-surface": "#dee2f7",
+            "inverse-primary": "#00687a",
+            "tertiary-container": "#06b6d4",
+            "surface-container-highest": "#2e3548",
+            "inverse-on-surface": "#293042",
+            "surface-container-low": "#141b2c",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-surface-variant": "#898c95",
+            "on-background": "#dee2f7",
+            "primary-container": "#06b6d4",
+            "outline": "#1e293b",
+            "primary-fixed-dim": "#4cd7f6",
+            "surface-variant": "#2e3447",
+            "surface-container-lowest": "#070d1f",
+            "surface": "#0c1324",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-tertiary-container": "#9bf0ff",
+            "primary-fixed": "#acedff",
+            "secondary-container": "#3e495d",
+            "error-container": "#93000a",
+            "on-error": "#690005",
+            "on-secondary-fixed": "#111c2d",
+            "on-primary": "#003640",
+            "background": "#020617",
+            "tertiary": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "primary": "#06b6d4",
+            "secondary-fixed": "#d8e3fb",
+            "on-secondary-container": "#c0c9e0",
+            "on-primary-fixed": "#001f26",
+            "on-tertiary-fixed": "#001f26",
+            "inverse-surface": "#dce2fa"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "fontFamily": {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "number-lg": ["Space Mono"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "code-sm": ["Space Mono"],
+            "code-md": ["Space Mono"],
+            "label-sm": ["Inter"],
+            "number-md": ["Space Mono"],
+            "body-lg": ["Inter"],
+            "headline-md": ["Space Grotesk"],
+            "headline-sm": ["Space Grotesk"],
+            "code-lg": ["Space Mono"],
+            "label-lg": ["Inter"],
+            "headline-lg": ["Space Grotesk"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "label-md": ["Inter"]
+          },
+          "fontSize": {
+            "number-lg": ["28px", { "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "code-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "number-md": ["15px", { "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "code-lg": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #dee2f7;
+      overflow: hidden;
+    }
+    /* Diegetic grid hairline aesthetics */
+    .tactile-seam {
+      border-color: #1e293b;
+    }
+    .tactile-glow-cyan {
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.25);
+    }
+    .tactile-glow-red {
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+    }
+  </style>
+</head>
+<body class="w-screen h-screen flex items-center justify-center p-0 m-0 bg-background antialiased font-body-md text-on-surface">
+<!-- iPad Air Landscape Container (Strictly 1180x820 fixed viewport zero-scroll) -->
+<div class="w-[1180px] h-[820px] max-w-[1180px] max-h-[820px] bg-surface-container-lowest flex flex-col justify-between border border-outline relative overflow-hidden shadow-2xl">
+<!-- ==================== TOP BAR (HEADER) ==================== -->
+<header class="h-[58px] min-h-[58px] w-full bg-surface-container-lowest border-b border-outline px-6 flex items-center justify-between z-30">
+<!-- Left side: Player OS Identity + Op Title -->
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-2">
+<span class="inline-block w-2.5 h-2.5 bg-primary"></span>
+<span class="font-headline-sm text-headline-sm font-bold tracking-wider text-primary">GM-OS // JOUEUR</span>
+</div>
+<div class="h-4 w-px bg-outline"></div>
+<div class="flex items-center space-x-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">OPÉRATION EN COURS :</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-wide">LE SILENCE DE VARN</span>
+</div>
+</div>
+<!-- Right side: Connection + Mode Performance Toggle (height >= 44px) -->
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-2 px-3 py-1.5 bg-surface-container border border-outline">
+<span class="inline-block w-2 h-2 rounded-none bg-emerald-400 animate-pulse"></span>
+<span class="font-code-sm text-code-sm font-bold text-emerald-400 tracking-wider">■ ● CONNECTÉ</span>
+</div>
+<button class="h-11 px-4 min-h-[44px] bg-surface-container hover:bg-surface-container-high border border-outline hover:border-primary active:bg-surface-bright flex items-center space-x-2 transition-colors cursor-pointer" id="perfToggle" onclick="togglePerformanceMode()" title="Basculer le mode performance">
+<span class="material-symbols-outlined text-primary text-[18px]">bolt</span>
+<span class="font-label-sm text-label-sm uppercase text-on-surface font-bold tracking-wider">⚡ MODE PERFORMANCE</span>
+<span class="w-2 h-2 bg-on-surface-variant ml-1" id="perfIndicator"></span>
+</button>
+</div>
+</header>
+<!-- ==================== TELEMETRY SUB-HEADER ==================== -->
+<section class="h-[48px] min-h-[48px] w-full bg-surface border-b border-outline px-6 flex items-center justify-between z-20">
+<!-- Horloge Telemetry -->
+<div class="flex items-center space-x-6">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
+<span class="font-number-md text-number-md text-primary font-bold tracking-widest" id="clockDigits">23:37:05</span>
+</div>
+<div class="h-3 w-px bg-outline"></div>
+<span class="font-body-md text-body-md text-on-surface-variant font-medium">Dimanche 4 octobre 2026</span>
+<div class="h-3 w-px bg-outline"></div>
+<div class="flex items-center space-x-1.5 bg-surface-container-high px-2 py-0.5 border border-outline">
+<span class="font-label-sm text-label-sm uppercase font-bold text-primary">TABLE</span>
+</div>
+</div>
+<!-- Station Alert Level Gauge (Tension Publique) -->
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-amber-500 text-[18px]">warning</span>
+<span class="font-label-sm text-label-sm uppercase font-bold text-on-surface tracking-wider">ALERTE DE LA STATION</span>
+</div>
+<!-- 8-Segment Tactile Bar: 3 active in warning amber, 5 inactive -->
+<div class="flex items-center space-x-1 bg-surface-container-lowest p-1 border border-outline">
+<div class="w-3.5 h-4 bg-amber-500 shadow-sm" title="Alerte 1 active"></div>
+<div class="w-3.5 h-4 bg-amber-500 shadow-sm" title="Alerte 2 active"></div>
+<div class="w-3.5 h-4 bg-amber-500 shadow-sm" title="Alerte 3 active"></div>
+<div class="w-3.5 h-4 bg-surface-container border border-outline" title="Alerte 4 inactive"></div>
+<div class="w-3.5 h-4 bg-surface-container border border-outline" title="Alerte 5 inactive"></div>
+<div class="w-3.5 h-4 bg-surface-container border border-outline" title="Alerte 6 inactive"></div>
+<div class="w-3.5 h-4 bg-surface-container border border-outline" title="Alerte 7 inactive"></div>
+<div class="w-3.5 h-4 bg-surface-container border border-outline" title="Alerte 8 inactive"></div>
+</div>
+<span class="font-code-md text-code-md font-bold text-amber-400">3/8</span>
+</div>
+</section>
+<!-- ==================== MAIN CONTENT CANVAS (INVENTAIRE) ==================== -->
+<main class="flex-1 w-full bg-surface-container-lowest p-8 flex flex-col justify-start overflow-hidden relative">
+<!-- Inventory Section Header -->
+<div class="flex items-end justify-between border-b border-outline pb-4 mb-6">
+<div>
+<div class="flex items-center space-x-3 mb-1">
+<h1 class="font-orbitron font-extrabold text-[26px] text-on-surface tracking-wider">INVENTAIRE</h1>
+<span class="px-2.5 py-0.5 bg-surface-container-high border border-primary text-primary font-code-sm text-code-sm font-bold">1 OBJETS</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Trésors, reliques et possessions personnelles.</p>
+</div>
+<!-- Subtle chassis identifier -->
+<div class="flex items-center space-x-2 text-on-surface-variant font-code-sm text-code-sm">
+<span>PORT EMPLACEMENT : 01/12</span>
+<span class="w-1.5 h-1.5 bg-primary inline-block"></span>
+</div>
+</div>
+<!-- Category Label (No "CONTENANT #01") -->
+<div class="mb-4 flex items-center space-x-2">
+<span class="inline-block w-2 h-2 bg-primary"></span>
+<h2 class="font-label-sm text-label-sm uppercase font-bold text-primary tracking-widest">SAC À DOS (INTERACTIF)</h2>
+</div>
+<!-- Single Item Card Chassis (Focused, tactile, wide modern panel) -->
+<div class="w-full bg-surface-container-low border border-outline hover:border-outline-variant transition-colors p-6 flex flex-col justify-between relative shadow-lg">
+<!-- Corner Technical Indicators -->
+<div class="absolute top-0 right-0 border-t-2 border-r-2 border-primary w-3 h-3"></div>
+<div class="absolute bottom-0 left-0 border-b-2 border-l-2 border-outline w-3 h-3"></div>
+<div class="flex items-start justify-between">
+<!-- Item Graphical Asset & Info Details -->
+<div class="flex items-start space-x-6">
+<!-- 3D Vector Cube / Tech Tool Wireframe Graphic Box -->
+<div class="w-24 h-24 min-w-[96px] bg-surface-container border border-outline flex items-center justify-center relative p-3">
+<div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+<!-- Futuristic Cube SVG Wireframe -->
+<svg class="w-16 h-16 text-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 64 64">
+<!-- Isometric Cube Nodes -->
+<path d="M32 6L54 18V44L32 56L10 44V18L32 6Z" stroke="currentColor"></path>
+<path d="M32 6V56" stroke="currentColor" stroke-dasharray="2 2"></path>
+<path d="M10 18L32 31L54 18" stroke="currentColor"></path>
+<path d="M32 31V56" stroke="currentColor"></path>
+<!-- Core tool vector markings -->
+<circle cx="32" cy="31" fill="#06b6d4" fill-opacity="0.3" r="4" stroke="#06b6d4"></circle>
+<line stroke="currentColor" stroke-opacity="0.5" x1="20" x2="20" y1="24" y2="38"></line>
+<line stroke="currentColor" stroke-opacity="0.5" x1="44" x2="44" y1="24" y2="38"></line>
+</svg>
+<span class="absolute bottom-1 right-1 font-code-sm text-[10px] text-on-surface-variant">SYS#09</span>
+</div>
+<!-- Descriptive Hierarchy -->
+<div class="flex flex-col justify-center space-y-2">
+<div class="flex items-center space-x-3">
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-wide">OUTIL MULTIFONCTION</h3>
+<span class="px-2 py-0.5 bg-surface-container-high border border-outline font-number-md text-number-md font-bold text-primary">x1</span>
+<span class="px-2 py-0.5 bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">COMMON</span>
+</div>
+<p class="font-body-md text-body-md text-secondary max-w-xl">Pour ouvrir le relais.</p>
+<div class="flex items-center space-x-4 pt-1">
+<div class="flex items-center space-x-1.5 text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[15px] text-primary">build</span>
+<span>UTILITAIRE DE CLASSE C</span>
+</div>
+<div class="h-3 w-px bg-outline"></div>
+<div class="flex items-center space-x-1.5 text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[15px]">lock_open</span>
+<span>ACCÈS RELAIS AUTORISÉ</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Explicit Interaction Touch Buttons (Targets >= 44x44px, height >= 44px) -->
+<div class="flex items-center space-x-3 self-center">
+<!-- 1. "⇄ Donner" (Cyan Button / Accent Touch) -->
+<button class="h-12 min-h-[48px] px-6 min-w-[140px] bg-primary hover:bg-[#9bf0ff] active:bg-[#00424f] text-[#020617] font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-md" onclick="openTransferModal()" title="Transférer l'objet à un coéquipier">
+<span class="material-symbols-outlined text-[20px] font-bold">sync_alt</span>
+<span>⇄ DONNER</span>
+</button>
+<!-- 2. "🗑 Jeter" (Danger Button with Red Outline/Text) -->
+<button class="h-12 min-h-[48px] px-6 min-w-[120px] bg-surface-container hover:bg-error-container/30 border border-error hover:border-error text-error active:bg-error active:text-white font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-colors cursor-pointer" onclick="confirmDiscardItem()" title="Détruire ou abandonner l'objet">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+<span>🗑 JETER</span>
+</button>
+</div>
+</div>
+<!-- Diagnostic baseline strip -->
+<div class="mt-6 pt-3 border-t border-outline flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<div class="flex items-center space-x-4">
+<span>INTÉGRITÉ MATÉRIELLE : 100%</span>
+<span>//</span>
+<span>SERVICING ID : 884-FL-RELAY</span>
+</div>
+<div class="text-primary font-bold">SYNCHRONISATION TABLE COMPLÈTE</div>
+</div>
+</div>
+<!-- Empty slots placeholder grid for physical tablet presence -->
+<div class="grid grid-cols-3 gap-4 mt-6 opacity-30 pointer-events-none">
+<div class="h-20 border border-dashed border-outline flex items-center justify-center font-code-sm text-code-sm text-on-surface-variant">
+          + EMPLACEMENT VIDE [SLOT #02]
+        </div>
+<div class="h-20 border border-dashed border-outline flex items-center justify-center font-code-sm text-code-sm text-on-surface-variant">
+          + EMPLACEMENT VIDE [SLOT #03]
+        </div>
+<div class="h-20 border border-dashed border-outline flex items-center justify-center font-code-sm text-code-sm text-on-surface-variant">
+          + EMPLACEMENT VIDE [SLOT #04]
+        </div>
+</div>
+</main>
+<!-- ==================== BOTTOM NAVIGATION BAR (10 DESTINATIONS IN 2 DOCKED ROWS) ==================== -->
+<nav class="w-full bg-surface-container-lowest border-t border-outline z-30">
+<!-- ROW 1: 6 Primary Views (Targets >= 44x44px, height = 46px) -->
+<div class="grid grid-cols-6 border-b border-outline">
+<!-- 1. DIRECT -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">radio_button_checked</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">DIRECT</span>
+</button>
+<!-- 2. ARCHIVES -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">ARCHIVES</span>
+</button>
+<!-- 3. PNJ -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">PNJ</span>
+</button>
+<!-- 4. LIEUX -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">LIEUX</span>
+</button>
+<!-- 5. INVENTAIRE ● (Active State: bold cyan background #06b6d4, text #070d1f) -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline bg-primary text-surface-container-lowest font-bold transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[19px] font-bold">backpack</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">INVENTAIRE ●</span>
+</button>
+<!-- 6. CARTES -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">map</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">CARTES</span>
+</button>
+</div>
+<!-- ROW 2: 4 Secondary Views (Targets >= 44x44px, height = 46px) -->
+<div class="grid grid-cols-4">
+<!-- 7. FICHE -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">◆ FICHE</span>
+</button>
+<!-- 8. NOTES -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">✎ NOTES</span>
+</button>
+<!-- 9. MESSAGES (Written out in full MESSAGES) -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 border-r border-outline text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">✉ MESSAGES</span>
+</button>
+<!-- 10. QUITTER (Tactile button with modal confirmation prompt) -->
+<button class="h-[46px] min-h-[44px] flex items-center justify-center space-x-2 text-error hover:bg-error-container/20 active:bg-error active:text-white transition-colors cursor-pointer" onclick="openQuitPrompt()">
+<span class="material-symbols-outlined text-[18px]">stop_circle</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">⏹ QUITTER</span>
+</button>
+</div>
+</nav>
+<!-- ==================== OVERLAY: TRANSFER MODAL ("DONNER") ==================== -->
+<div class="hidden absolute inset-0 z-50 bg-background/80 backdrop-blur-none flex items-center justify-center p-6" id="transferModal">
+<div class="w-[640px] bg-surface-container-low border-2 border-primary shadow-2xl p-6 relative flex flex-col justify-between">
+<!-- Header -->
+<div class="border-b border-outline pb-3 mb-5 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-primary text-[22px]">sync_alt</span>
+<h2 class="font-orbitron font-bold text-[18px] text-on-surface tracking-wider">TRANSFÉRER L'OBJET // OUTIL MULTIFONCTION (x1)</h2>
+</div>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-on-surface border border-outline" onclick="closeTransferModal()">
+            ✕
+          </button>
+</div>
+<!-- Recipient Selection List (2 Eligible Party Members) -->
+<div class="space-y-3 mb-6">
+<span class="font-label-sm text-label-sm uppercase font-bold text-on-surface-variant tracking-wider">SÉLECTIONNEZ LE COÉQUIPIER DESTINATAIRE :</span>
+<!-- Option 1: Idris Koa -->
+<label class="recipient-option flex items-center justify-between p-4 bg-surface-container border border-outline cursor-pointer hover:border-primary transition-colors">
+<div class="flex items-center space-x-4">
+<input checked="" class="w-4 h-4 text-primary focus:ring-0 rounded-none bg-surface-container-lowest border-outline" name="recipient" type="radio" value="Idris Koa"/>
+<div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface">Idris Koa</div>
+<div class="font-body-md text-body-md text-primary">Négociateur</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">PORTÉE : 4M (TABLE)</span>
+</label>
+<!-- Option 2: Sora Adebayo -->
+<label class="recipient-option flex items-center justify-between p-4 bg-surface-container border border-outline cursor-pointer hover:border-primary transition-colors">
+<div class="flex items-center space-x-4">
+<input class="w-4 h-4 text-primary focus:ring-0 rounded-none bg-surface-container-lowest border-outline" name="recipient" type="radio" value="Sora Adebayo"/>
+<div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface">Sora Adebayo</div>
+<div class="font-body-md text-body-md text-primary">Médecin de bord</div>
+</div>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant">PORTÉE : 2M (TABLE)</span>
+</label>
+</div>
+<!-- Explanatory Validation Warning Note -->
+<div class="p-3 bg-surface-container-high border-l-2 border-amber-500 mb-6 flex items-start space-x-3">
+<span class="material-symbols-outlined text-amber-500 text-[20px] mt-0.5">info</span>
+<p class="font-body-md text-body-md text-secondary">
+<strong class="text-amber-400">Avertissement :</strong> Le transfert sera soumis à la validation du Meneur de Jeu avant synchronisation.
+          </p>
+</div>
+<!-- Action Buttons (Height >= 44px) -->
+<div class="grid grid-cols-2 gap-4">
+<button class="h-12 min-h-[48px] bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center justify-center transition-colors cursor-pointer" onclick="closeTransferModal()">
+            ANNULER
+          </button>
+<button class="h-12 min-h-[48px] bg-primary hover:bg-[#9bf0ff] active:bg-[#00424f] text-[#020617] font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-colors cursor-pointer" onclick="executeTransfer()">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>CONFIRMER LE TRANSFERT</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ==================== OVERLAY: QUIT CONFIRMATION MODAL ==================== -->
+<div class="hidden absolute inset-0 z-50 bg-background/80 flex items-center justify-center p-6" id="quitModal">
+<div class="w-[500px] bg-surface-container-low border-2 border-error p-6 shadow-2xl flex flex-col justify-between">
+<div class="border-b border-outline pb-3 mb-4 flex items-center space-x-3">
+<span class="material-symbols-outlined text-error text-[24px]">warning</span>
+<h2 class="font-orbitron font-bold text-[18px] text-error tracking-wider">DÉCONNEXION DE LA TABLE</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-6">
+          Voulez-vous vraiment clore votre session joueur sur <strong class="text-primary">LE SILENCE DE VARN</strong> ? La synchronisation de l'inventaire sera suspendue.
+        </p>
+<div class="grid grid-cols-2 gap-4">
+<button class="h-12 min-h-[48px] bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center justify-center cursor-pointer" onclick="closeQuitPrompt()">
+            ANNULER
+          </button>
+<button class="h-12 min-h-[48px] bg-error hover:bg-red-600 text-white font-label-sm text-label-sm font-bold uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer" onclick="confirmQuit()">
+<span class="material-symbols-outlined text-[18px]">power_settings_new</span>
+<span>QUITTER LA SESSION</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ==================== SYSTEM NOTIFICATION TOAST ==================== -->
+<div class="hidden absolute top-16 right-8 z-50 bg-surface-container border border-primary p-4 shadow-xl flex items-center space-x-3" id="systemToast">
+<span class="material-symbols-outlined text-primary text-[20px]" id="toastIcon">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface" id="toastMessage">Action envoyée au Meneur.</span>
+</div>
+</div>
+<!-- Inline Micro-interactions Script -->
+<script>
+    // Clock Telemetry updater
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const clockEl = document.getElementById('clockDigits');
+      if (clockEl) {
+        clockEl.textContent = `${h}:${m}:${s}`;
+      }
+    }
+    setInterval(updateClock, 1000);
+
+    // Performance Mode Toggle
+    let perfActive = false;
+    function togglePerformanceMode() {
+      perfActive = !perfActive;
+      const indicator = document.getElementById('perfIndicator');
+      const btn = document.getElementById('perfToggle');
+      if (perfActive) {
+        indicator.className = 'w-2 h-2 bg-primary animate-pulse ml-1';
+        btn.classList.add('border-primary');
+        showToast('Mode performance activé : télémétrie ultra-rapide.', 'bolt');
+      } else {
+        indicator.className = 'w-2 h-2 bg-on-surface-variant ml-1';
+        btn.classList.remove('border-primary');
+        showToast('Mode performance standard rétabli.', 'bolt');
+      }
+    }
+
+    // Modal logic for "Donner"
+    function openTransferModal() {
+      document.getElementById('transferModal').classList.remove('hidden');
+    }
+    function closeTransferModal() {
+      document.getElementById('transferModal').classList.add('hidden');
+    }
+
+    function executeTransfer() {
+      const recipient = document.querySelector('input[name="recipient"]:checked').value;
+      closeTransferModal();
+      showToast(`Demande de transfert à ${recipient} transmise au MJ.`, 'hourglass_top');
+    }
+
+    // Discard Item Logic
+    function confirmDiscardItem() {
+      if (confirm("Êtes-vous certain de vouloir jeter 'OUTIL MULTIFONCTION' ? Cette action sera consignée.")) {
+        showToast("Objet 'OUTIL MULTIFONCTION' retiré du sac.", 'delete');
+      }
+    }
+
+    // Quit prompt logic
+    function openQuitPrompt() {
+      document.getElementById('quitModal').classList.remove('hidden');
+    }
+    function closeQuitPrompt() {
+      document.getElementById('quitModal').classList.add('hidden');
+    }
+    function confirmQuit() {
+      closeQuitPrompt();
+      showToast("Déconnexion sécurisée... Retour au terminal racine.", 'logout');
+    }
+
+    // Toast helper
+    function showToast(msg, icon = 'info') {
+      const toast = document.getElementById('systemToast');
+      const msgEl = document.getElementById('toastMessage');
+      const iconEl = document.getElementById('toastIcon');
+      msgEl.textContent = msg;
+      iconEl.textContent = icon;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+  </script>
+</body></html>

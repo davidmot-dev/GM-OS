@@ -1,0 +1,14 @@
+﻿[
+    {
+        "text":  "Voici la déclinaison de l\u0027accueil joueur **« QUI ES-TU ? »** adaptée au format **Tablette Paysage (1180 × 820 px)**, sans aucun défilement :\n\n### 📐 Ergonomie \u0026 Composition (1180 × 820 px)\n- **Affichage sans défilement (Zero-Scroll) :** Tout le contenu s\u0027insère harmonieusement dans les 820 px de hauteur verticale avec une grille à 3 colonnes horizontales.\n- **En-tête épuré :**\n  - Identité discrète en haut à gauche : `GM-OS // PLAYER HUB`.\n  - Bouton sécurisé en haut à droite : `QUITTER LA SESSION`.\n  - Bloc central d\u0027identification de session : Badge `AGENT DE LA SESSION`, date `03/10/2026`, grand titre `QUI ES-TU ?` en Orbitron, sous-titre `Le Silence de Varn • Séance 2`.\n  - **Suppression du texte de conseil :** L\u0027encadré explicatif a été retiré conformément à la consigne.\n\n### 👥 Les 3 Cartes de Personnages (Côte à côte)\n1. **Nel Varga** — *Technicienne de bord* (Joué par : Camille) | Statut `● CONNECTABLE` | Bouton plein tactile `PRENDRE CE PERSONNAGE →` (hauteur $\\ge 44$ px).\n2. **Idris Koa** — *Négociateur* (Joué par : Mathis) | Statut `● CONNECTABLE` | Bouton plein tactile `PRENDRE CE PERSONNAGE →` (hauteur $\\ge 44$ px).\n3. **Sora Adebayo** — *Médecin de bord* (Joué par : Inès) | Statut `● CONNECTABLE` | Bouton plein tactile `PRENDRE CE PERSONNAGE →` (hauteur $\\ge 44$ px).\n- Chaque personnage dispose d\u0027un caisson dédié avec silhouette vectorielle technique diégétique et repères matriciels.\n\n### ⚡ Pied d\u0027Écran Télémétrique \u0026 Rigueur Système\n- Présence de la version et de l\u0027état : `● GM-OS v6.5.0 • nexus_bridge_active`.\n- Télémétrie : `LAT : --` et `Device ID: TO-JOUEURS-P91...`.\n- **Exclusion stricte :** Aucun affichage de `PORT: 8080`.\n- **Zéro élément superflu :** Aucun bandeau de bureau MJ, aucun volet de modules, aucun onglet supplémentaire ni navigation avant le choix.\n- **Design System Brutal Diegetic Console :** Arêtes à 0 px, typographie Orbitron / Inter / Space Mono, contrastes adaptés à la pénombre de table."
+    },
+    {
+        "suggestion":  "Ajouter un état où un personnage est déjà sélectionné par un autre joueur (badge OCCUPÉ)"
+    },
+    {
+        "suggestion":  "Simuler l\u0027animation d\u0027état lors de l\u0027appui sur « Prendre ce personnage »"
+    },
+    {
+        "suggestion":  "Tester une déclinaison en thème Clair ou Médiéval pour cette tablette"
+    }
+]

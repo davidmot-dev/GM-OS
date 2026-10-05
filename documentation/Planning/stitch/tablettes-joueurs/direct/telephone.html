@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GM-OS // Tablette Joueur — Direct</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'bg-app': '#020617',
+            'surface-1': '#0f172a',
+            'surface-2': '#1e293b',
+            'accent': '#06b6d4',
+            'accent-muted': 'rgba(6, 182, 212, 0.15)',
+            'txt': '#f8fafc',
+            'txt-muted': '#898c95',
+            'border-subtle': '#1e293b',
+            'warning': '#f59e0b',
+            'danger': '#ef4444',
+            'success': '#10b981'
+          },
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    /* Reset & Custom styles */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    /* CRT Scanline subtle texture */
+    .crt-grid {
+      background-image: linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    /* Touch target guarantee */
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    /* Hide scrollbar for clean tabs */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="crt-grid flex flex-col justify-between min-h-screen text-[14px]">
+
+  <!-- TOP BAR: Statut, Qualité/Performance & Liaison -->
+  <header class="w-full bg-surface-1 border-b border-border-subtle px-3 py-2 flex flex-wrap gap-2 items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-2">
+      <span class="inline-block w-2.5 h-2.5 bg-accent shadow-[0_0_8px_#06b6d4]"></span>
+      <span class="font-mono text-[11px] font-bold tracking-wider text-txt">GM-OS</span>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <!-- Indicateur Réseau -->
+      <div class="flex items-center gap-1.5 px-2 py-1 bg-surface-2 border border-border-subtle">
+        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+        <span class="font-mono text-[11px] text-txt font-semibold">CONNECTÉ</span>
+      </div>
+      <!-- Mode Qualité/Performance -->
+      <button class="touch-target px-2.5 py-1 bg-surface-2 hover:bg-slate-700 active:bg-cyan-950/60 border border-border-subtle text-accent text-[11px] font-mono font-bold tracking-wider transition-colors flex items-center justify-center">
+        ⚡ MODE PERFORMANCE
+      </button>
+    </div>
+  </header>
+
+  <!-- TITRE DE CAMPAGNE & OPÉRATION (Clair, dégagé, sans chevauchement) -->
+  <section class="w-full px-3 pt-3 pb-2 shrink-0 bg-gradient-to-b from-surface-1/60 to-transparent border-b border-border-subtle/50">
+    <div class="flex flex-col">
+      <span class="font-mono text-[11px] font-bold text-accent uppercase tracking-widest flex items-center gap-1">
+        <span class="text-xs">▶</span> OPÉRATION EN COURS
+      </span>
+      <h1 class="font-display text-[20px] xs:text-[22px] font-bold text-txt uppercase tracking-wide leading-tight mt-0.5">
+        Le Silence de Varn
+      </h1>
+    </div>
+  </section>
+
+  <!-- CONTENU PRINCIPAL (Horloge, Jauge Tension, Projection Libre, Chroniques) -->
+  <main class="flex-1 flex flex-col gap-3 px-3 py-2 w-full max-w-[430px] mx-auto overflow-y-auto pb-4">
+
+    <!-- DUO TELEMETRIE : HORLOGE PROJETEE & Alerte de la station -->
+    <div class="grid grid-cols-2 gap-2.5 shrink-0">
+      
+      <!-- HORLOGE PROJETÉE -->
+      <div class="bg-surface-1 border border-border-subtle p-2.5 flex flex-col justify-between">
+        <div class="flex items-center justify-between pb-1 border-b border-border-subtle/70">
+          <span class="font-mono text-[11px] font-bold text-txt-muted uppercase tracking-wider">HORLOGE</span>
+          <span class="w-1.5 h-1.5 bg-accent"></span>
+        </div>
+        <div class="py-1.5">
+          <div class="flex items-baseline gap-1 font-mono text-txt font-bold">
+            <span class="text-[26px] leading-none tracking-tight">23:36</span>
+            <span class="text-[14px] text-accent font-medium leading-none">17</span>
+          </div>
+          <div class="text-[11px] text-txt-muted font-medium mt-1 leading-tight">
+            Dimanche 4 octobre 2026
+          </div>
+        </div>
+      </div>
+
+      <!-- TENSION PUBLIQUE (Alerte de la station 3/8) -->
+      <div class="bg-surface-1 border border-border-subtle p-2.5 flex flex-col justify-between">
+        <div class="flex items-center justify-between pb-1 border-b border-border-subtle/70">
+          <span class="font-body text-[11px] font-bold text-txt-muted leading-tight">Alerte de la station</span>
+          <span class="font-mono text-[12px] font-bold text-warning">3/8</span>
+        </div>
+        <div class="flex items-center gap-2.5 py-1">
+          <!-- Anneau 8 segments SVG -->
+          <div class="w-11 h-11 shrink-0 relative flex items-center justify-center">
+            <svg class="w-full h-full" viewBox="0 0 40 40" aria-label="3 segments sur 8"><path d="M 20 4 A 16 16 0 0 1 29.40456403667957 7.055728090000841" fill="none" stroke="#f59e0b" stroke-width="4"/><path d="M 31.31370849898476 8.68629150101524 A 16 16 0 0 1 35.803013449522204 17.497048559356305" fill="none" stroke="#f59e0b" stroke-width="4"/><path d="M 36 20 A 16 16 0 0 1 32.94427190999916 29.40456403667957" fill="none" stroke="#f59e0b" stroke-width="4"/><path d="M 31.31370849898476 31.31370849898476 A 16 16 0 0 1 22.502951440643695 35.803013449522204" fill="none" stroke="#1e293b" stroke-width="4"/><path d="M 20 36 A 16 16 0 0 1 10.595435963320432 32.94427190999916" fill="none" stroke="#1e293b" stroke-width="4"/><path d="M 8.68629150101524 31.31370849898476 A 16 16 0 0 1 4.1969865504777975 22.502951440643695" fill="none" stroke="#1e293b" stroke-width="4"/><path d="M 4 20.000000000000004 A 16 16 0 0 1 7.055728090000841 10.595435963320432" fill="none" stroke="#1e293b" stroke-width="4"/><path d="M 8.686291501015237 8.68629150101524 A 16 16 0 0 1 17.497048559356305 4.1969865504777975" fill="none" stroke="#1e293b" stroke-width="4"/></svg>
+            <span class="absolute font-mono text-[11px] font-bold text-warning">3</span>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ZONE DE PROJECTION LIBRE DU MENEUR (Plein espace, zéro média inventé, épurée) -->
+    <section class="flex-1 min-h-[170px] xs:min-h-[200px] bg-surface-1 border border-dashed border-border-subtle flex flex-col justify-between p-3 relative overflow-hidden">
+      <!-- Repères matriciels d'angles diégétiques -->
+      <div class="absolute top-1 left-1 w-2 h-2 border-t-2 border-l-2 border-accent/40"></div>
+      <div class="absolute top-1 right-1 w-2 h-2 border-t-2 border-r-2 border-accent/40"></div>
+      <div class="absolute bottom-1 left-1 w-2 h-2 border-b-2 border-l-2 border-accent/40"></div>
+      <div class="absolute bottom-1 right-1 w-2 h-2 border-b-2 border-r-2 border-accent/40"></div>
+
+      
+    </section>
+
+    <!-- CHRONIQUES DE SÉANCE (Section sobre, texte franc) -->
+    <section class="w-full bg-surface-1 border border-border-subtle p-3 shrink-0">
+      <div class="flex items-center justify-between pb-1.5 mb-2 border-b border-border-subtle">
+        <h2 class="font-display text-[13px] font-bold text-txt uppercase tracking-wider">
+          Chroniques de séance
+        </h2>
+        
+      </div>
+      <div class="text-[14px] text-txt-muted italic bg-surface-2/40 border border-border-subtle/50 p-2.5 text-center">
+        Aucun résumé public.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NAVIGATION TACTILE DU JOUEUR (Atteignable dès 360px, cibles >= 44x44px) -->
+  <footer class="w-full bg-surface-1 border-t-2 border-border-subtle z-40 shrink-0 shadow-lg">
+    
+    <!-- Ligne 1 : Les 6 Onglets Majeurs (Direct, Archives, PNJ, Lieux, Inventaire, Cartes) -->
+    <div class="grid grid-cols-3 border-b border-border-subtle">
+      <!-- Direct (Actif) -->
+      <button class="touch-target flex flex-col items-center justify-center bg-surface-2 border-b-2 border-accent text-accent py-1 px-0.5">
+        <span class="font-body text-[11px] font-bold">DIRECT</span>
+        
+      </button>
+
+      <!-- Archives -->
+      <button class="touch-target flex flex-col items-center justify-center hover:bg-surface-2 text-txt-muted hover:text-txt py-1 px-0.5 transition-colors">
+        <span class="font-body text-[11px] font-semibold tracking-tight">ARCHIVES</span>
+        
+      </button>
+
+      <!-- PNJ -->
+      <button class="touch-target flex flex-col items-center justify-center hover:bg-surface-2 text-txt-muted hover:text-txt py-1 px-0.5 transition-colors">
+        <span class="font-body text-[11px] font-semibold">PNJ</span>
+        
+      </button>
+
+      <!-- Lieux -->
+      <button class="touch-target flex flex-col items-center justify-center hover:bg-surface-2 text-txt-muted hover:text-txt py-1 px-0.5 transition-colors">
+        <span class="font-body text-[11px] font-semibold">LIEUX</span>
+        
+      </button>
+
+      <!-- Inventaire -->
+      <button class="touch-target flex flex-col items-center justify-center hover:bg-surface-2 text-txt-muted hover:text-txt py-1 px-0.5 transition-colors">
+        <span class="font-body text-[11px] font-semibold">INVENTAIRE</span>
+        
+      </button>
+
+      <!-- Cartes -->
+      <button class="touch-target flex flex-col items-center justify-center hover:bg-surface-2 text-txt-muted hover:text-txt py-1 px-0.5 transition-colors">
+        <span class="font-body text-[11px] font-semibold">CARTES</span>
+        
+      </button>
+    </div>
+
+    <!-- Ligne 2 : Surcouches & Action Sécurisée (Fiche, Notes, Messages, Quitter) -->
+    <div class="grid grid-cols-4 bg-surface-2/70 p-1 gap-1">
+      <!-- Fiche -->
+      <button class="touch-target bg-surface-1 border border-border-subtle hover:border-accent text-txt hover:text-accent font-body text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+        <span class="text-accent text-[11px]">◆</span> FICHE
+      </button>
+
+      <!-- Notes -->
+      <button class="touch-target bg-surface-1 border border-border-subtle hover:border-accent text-txt hover:text-accent font-body text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+        <span class="text-accent text-[11px]">✎</span> NOTES
+      </button>
+
+      <!-- Messages -->
+      <button class="touch-target bg-surface-1 border border-border-subtle hover:border-accent text-txt hover:text-accent font-body text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+        <span class="text-accent text-[11px]">✉</span> MESSAGES
+      </button>
+
+      <!-- Quitter (Rouge / Confirmation demandée) -->
+      <button class="touch-target bg-surface-1 border border-danger/40 hover:bg-danger/20 text-danger font-body text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+        <span>⏻</span> QUITTER
+      </button>
+    </div>
+
+  </footer>
+
+<script>
+const mode = Array.from(document.querySelectorAll('header button'))[0];
+mode.addEventListener('click', () => { mode.textContent = mode.textContent.includes('PERFORMANCE') ? 'MODE QUALITÉ' : 'MODE PERFORMANCE'; });
+const quitter = Array.from(document.querySelectorAll('footer button')).find(button => button.textContent.includes('QUITTER'));
+quitter.addEventListener('click', () => window.confirm('Quitter la session ?'));
+</script></body>
+</html>

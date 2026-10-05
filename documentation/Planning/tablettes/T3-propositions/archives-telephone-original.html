@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS // JOUEUR - ARCHIVES DU GROUPE</title>
+<!-- Google Fonts: Space Grotesk (Orbitron/Display substitute compliant with token map), Space Mono, Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-variant": "#2e3447",
+            "on-surface-variant": "#bcc9cd",
+            "on-secondary-container": "#aeb9d0",
+            "surface-container": "#181f31",
+            "on-tertiary-fixed": "#001f26",
+            "on-error": "#690005",
+            "primary-container": "#004f5d",
+            "inverse-on-surface": "#293042",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-surface": "#dce2fa",
+            "surface-container-high": "#232a3c",
+            "surface-container-highest": "#2e3548",
+            "on-primary-container": "#00424f",
+            "tertiary-container": "#06b6d4",
+            "surface-bright": "#33394c",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#263143",
+            "surface": "#0c1324",
+            "outline-variant": "#3d494c",
+            "on-tertiary-container": "#9bf0ff",
+            "on-primary": "#003640",
+            "on-primary-fixed": "#001f26",
+            "secondary-fixed-dim": "#bcc7de",
+            "primary-fixed": "#acedff",
+            "on-background": "#dee2f7",
+            "on-tertiary": "#003640",
+            "on-secondary-fixed": "#111c2d",
+            "surface-tint": "#4cd7f6",
+            "secondary-container": "#283347",
+            "primary-fixed-dim": "#4cd7f6",
+            "primary": "#4cd7f6",
+            "error": "#ef4444",
+            "error-container": "#93000a",
+            "surface-container-lowest": "#070e1e",
+            "secondary": "#bcc7de",
+            "tertiary": "#4cd7f6",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-secondary-fixed-variant": "#3c475a",
+            "secondary-fixed": "#d8e3fb",
+            "surface-dim": "#0c1324",
+            "surface-container-low": "#141b2c",
+            "outline": "#1e293b",
+            "background": "#020617",
+            "tertiary-fixed": "#acedff",
+            "inverse-surface": "#dce2fa",
+            "inverse-primary": "#00687a",
+            "on-primary-fixed-variant": "#004e5c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "code-md": ["Space Mono"],
+            "code-sm": ["Space Mono"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "number-md": ["Space Mono"],
+            "label-lg": ["Inter"],
+            "headline-sm": ["Space Grotesk"],
+            "number-lg": ["Space Mono"],
+            "label-sm": ["Inter"],
+            "headline-lg": ["Space Grotesk"],
+            "code-lg": ["Space Mono"],
+            "headline-md": ["Space Grotesk"]
+          },
+          "fontSize": {
+            "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "code-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "number-md": ["15px", { "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "number-lg": ["28px", { "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+            "code-lg": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      border-radius: 0 !important;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #dee2f7;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Masquer la scrollbar tout en conservant le scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background flex justify-center items-center min-h-screen p-0 sm:py-6">
+<!-- Châssis Simulateur Mobile Joueur 390x844px -->
+<div class="relative w-full max-w-[390px] h-screen sm:h-[844px] bg-background border border-outline flex flex-col justify-between overflow-hidden shadow-2xl">
+<!-- 1. EN-TÊTE MOBILE COMPACT -->
+<header class="bg-surface-container-lowest border-b border-outline px-3 py-2 flex items-center justify-between shrink-0 z-20">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-primary font-bold tracking-wider">GM-OS // JOUEUR</span>
+<div class="flex items-center gap-1.5 px-1.5 py-0.5 bg-surface-container border border-outline">
+<span class="w-1.5 h-1.5 bg-[#10b981] inline-block animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">CONNECTÉ</span>
+</div>
+</div>
+<!-- Bouton unique : Bascule Mode Performance / Mode Qualité -->
+<button class="min-h-[44px] px-2.5 bg-surface-container border border-outline hover:border-primary text-on-surface active:bg-surface-bright flex items-center justify-center transition-colors" id="perf-toggle-btn" onclick="togglePerformanceMode()">
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider" id="perf-label">MODE PERFORMANCE</span>
+</button>
+</header>
+<!-- 2. SOUS-BANDEAU DE TÉLÉMESURE COMPACT -->
+<div class="bg-surface-container-low border-b border-outline px-3 py-2 shrink-0 z-10 flex flex-col gap-1.5">
+<!-- Ligne 1 : Horloge + Date + Pastille TABLE -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-code-md text-code-md text-primary font-bold tracking-wider">23:36:43</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Dimanche 4 octobre 2026</span>
+</div>
+<div class="px-1.5 py-0.5 bg-surface-container border border-outline">
+<span class="font-label-sm text-label-sm text-primary font-bold">TABLE</span>
+</div>
+</div>
+<!-- Ligne 2 : Tension Station (3/8 crans orange/ambre allumés, 5 éteints) -->
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant/40">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm text-[#f59e0b] font-bold">ALERTE DE LA STATION</span>
+<span class="font-code-sm text-code-sm text-[#f59e0b] font-bold">3/8</span>
+</div>
+<!-- Jauge segmentée à 8 crans -->
+<div class="flex items-center gap-1">
+<!-- 3 allumés (orange/ambre) -->
+<div class="w-3.5 h-2 bg-[#f59e0b] border border-[#d97706]"></div>
+<div class="w-3.5 h-2 bg-[#f59e0b] border border-[#d97706]"></div>
+<div class="w-3.5 h-2 bg-[#f59e0b] border border-[#d97706]"></div>
+<!-- 5 éteints -->
+<div class="w-3.5 h-2 bg-surface-container border border-outline"></div>
+<div class="w-3.5 h-2 bg-surface-container border border-outline"></div>
+<div class="w-3.5 h-2 bg-surface-container border border-outline"></div>
+<div class="w-3.5 h-2 bg-surface-container border border-outline"></div>
+<div class="w-3.5 h-2 bg-surface-container border border-outline"></div>
+</div>
+</div>
+</div>
+<!-- 3. CONTENU PRINCIPAL (Scrollable, marge réservée pour le footer fixe) -->
+<main class="flex-1 overflow-y-auto px-4 py-4 space-y-4 no-scrollbar pb-36">
+<!-- Section Titre & Compteur -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase tracking-wide">ARCHIVES DU GROUPE</h1>
+<div class="px-2 py-0.5 bg-surface-container-high border border-primary text-primary font-label-sm text-label-sm font-bold">
+            2 FRAGMENTS DÉCOUVERTS
+          </div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Preuves et indices collectés lors de la campagne.</p>
+</div>
+<!-- Liste des 2 indices réels -->
+<div class="space-y-3 pt-1">
+<!-- Indice 1 -->
+<div class="w-full min-h-[58px] bg-surface-container border border-outline p-3 flex items-start gap-3 text-left hover:border-primary active:bg-surface-bright transition-colors cursor-pointer group" onclick="openClueModal(1)">
+<div class="w-9 h-9 shrink-0 bg-surface-container-low border border-outline flex items-center justify-center text-on-surface-variant group-hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="description">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary tracking-wide truncate">Le café encore chaud</h2>
+<span class="font-code-sm text-code-sm text-primary uppercase ml-2">#01</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-0.5">Le départ date de moins d'une heure.</p>
+</div>
+</div>
+<!-- Indice 2 -->
+<div class="w-full min-h-[58px] bg-surface-container border border-outline p-3 flex items-start gap-3 text-left hover:border-primary active:bg-surface-bright transition-colors cursor-pointer group" onclick="openClueModal(2)">
+<div class="w-9 h-9 shrink-0 bg-surface-container-low border border-outline flex items-center justify-center text-on-surface-variant group-hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="description">description</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary tracking-wide truncate">La signature unique</h2>
+<span class="font-code-sm text-code-sm text-primary uppercase ml-2">#02</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mt-0.5">Tout le registre est signé « Hale », même les nuits où il dormait.</p>
+</div>
+</div>
+</div>
+<!-- Zone de contexte purement diégétique T0 -->
+<div class="p-3 bg-surface-container-lowest border border-outline text-on-surface-variant font-code-sm text-code-sm mt-4">
+        SYS.SYNC // BUFFER LOCAL VALIDE // REGISTRE CENTRAL TEST T0
+      </div>
+</main>
+<!-- 4. NAVIGATION FIXE EN PIED (Hauteur réservée, 3 rangées compactes, toutes cibles >= 44px) -->
+<nav class="absolute bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline flex flex-col z-30">
+<!-- Rangée A : DIRECT, ARCHIVES (ACTIF), PNJ -->
+<div class="grid grid-cols-3 border-b border-outline">
+<button class="min-h-[44px] flex items-center justify-center font-label-md text-label-md text-on-surface-variant hover:text-primary active:bg-surface-container border-r border-outline">
+          DIRECT
+        </button>
+<!-- Onglet Actif : ARCHIVES (Cyan #06b6d4, indicateur actif) -->
+<button class="min-h-[44px] bg-tertiary-container text-[#020617] flex items-center justify-center font-label-md text-label-md font-bold border-r border-outline relative">
+<span class="w-1.5 h-1.5 bg-[#020617] inline-block mr-1.5"></span>
+          ARCHIVES
+        </button>
+<button class="min-h-[44px] flex items-center justify-center font-label-md text-label-md text-on-surface-variant hover:text-primary active:bg-surface-container">
+          PNJ
+        </button>
+</div>
+<!-- Rangée B : LIEUX, INVENTAIRE, CARTES -->
+<div class="grid grid-cols-3 border-b border-outline">
+<button class="min-h-[44px] flex items-center justify-center font-label-md text-label-md text-on-surface-variant hover:text-primary active:bg-surface-container border-r border-outline">
+          LIEUX
+        </button>
+<button class="min-h-[44px] flex items-center justify-center font-label-md text-label-md text-on-surface-variant hover:text-primary active:bg-surface-container border-r border-outline">
+          INVENTAIRE
+        </button>
+<button class="min-h-[44px] flex items-center justify-center font-label-md text-label-md text-on-surface-variant hover:text-primary active:bg-surface-container">
+          CARTES
+        </button>
+</div>
+<!-- Rangée 3 : Les 4 actions rapides (FICHE, NOTES, MESSAGES, QUITTER) -->
+<div class="grid grid-cols-4 bg-surface-container-low">
+<button class="min-h-[44px] flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary active:bg-surface-container border-r border-outline">
+          FICHE
+        </button>
+<button class="min-h-[44px] flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary active:bg-surface-container border-r border-outline">
+          NOTES
+        </button>
+<button class="min-h-[44px] flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary active:bg-surface-container border-r border-outline">
+          MESSAGES
+        </button>
+<button class="min-h-[44px] flex items-center justify-center font-label-sm text-label-sm text-error hover:bg-error-container hover:text-on-error-container active:bg-error-container">
+          QUITTER
+        </button>
+</div>
+</nav>
+<!-- SURCOUCHE MODALE TACTILE (HubClueViewer) -->
+<div class="hidden fixed inset-0 z-50 bg-[#020617]/85 backdrop-blur-none flex items-center justify-center p-3" id="clue-modal" onclick="closeClueModal(event)">
+<!-- Conteneur modal HubClueViewer -->
+<div class="w-full max-w-[360px] max-h-[870px] bg-surface-container-low border border-primary flex flex-col shadow-2xl" onclick="event.stopPropagation()">
+<!-- En-tête de modale -->
+<div class="bg-surface-container-lowest border-b border-outline px-3 py-2.5 flex items-center justify-between shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base" data-icon="description">description</span>
+<span class="font-label-sm text-label-sm text-primary font-bold tracking-wider">ARCHIVES SÉCURISÉES // PREUVE IMMATÉRIELLE</span>
+</div>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary" onclick="hideModal()">
+<span class="material-symbols-outlined text-lg" data-icon="close">close</span>
+</button>
+</div>
+<!-- Corps modal scrollable -->
+<div class="p-4 overflow-y-auto space-y-4 no-scrollbar flex-1">
+<!-- Icône document neutre diégétique & Titre Orbitron -->
+<div class="flex items-start gap-3 border-b border-outline pb-3">
+<div class="w-10 h-10 shrink-0 bg-surface-container border border-primary/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="description">description</span>
+</div>
+<div>
+<span class="font-code-sm text-code-sm text-primary uppercase font-bold tracking-widest" id="modal-clue-id">INDICE #01</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase mt-0.5 leading-snug" id="modal-clue-title">
+                Le café encore chaud
+              </h3>
+</div>
+</div>
+<!-- Texte intégral de l'indice -->
+<div class="bg-surface-container p-3 border border-outline">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase block mb-1">DÉPÔT NUMÉRIQUE :</span>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed" id="modal-clue-text">
+              Le départ date de moins d'une heure.
+            </p>
+</div>
+<!-- Métadonnée diégétique stricte -->
+<div class="flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm pt-1">
+<span>INTÉGRITÉ : 100%</span>
+<span>CHUCK-ID: V4-TEST</span>
+</div>
+</div>
+<!-- Bouton FERMER L'INDICE (hauteur >= 44px) -->
+<div class="p-3 bg-surface-container-lowest border-t border-outline shrink-0">
+<button class="w-full min-h-[44px] bg-tertiary-container hover:bg-[#9bf0ff] active:bg-primary text-[#020617] font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center transition-colors" onclick="hideModal()">
+            FERMER L'INDICE
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro-interactions et gestion de la modale HubClueViewer -->
+<script>
+    // Données des indices de test T0
+    const cluesData = {
+      1: {
+        id: "FRAGMENT #01",
+        title: "Le café encore chaud",
+        text: "Le départ date de moins d'une heure."
+      },
+      2: {
+        id: "FRAGMENT #02",
+        title: "La signature unique",
+        text: "Tout le registre est signé « Hale », même les nuits où il dormait."
+      }
+    };
+
+    // Ouverture modale
+    function openClueModal(clueId) {
+      const clue = cluesData[clueId];
+      if (!clue) return;
+
+      document.getElementById('modal-clue-id').innerText = clue.id;
+      document.getElementById('modal-clue-title').innerText = clue.title;
+      document.getElementById('modal-clue-text').innerText = clue.text;
+
+      const modal = document.getElementById('clue-modal');
+      modal.classList.remove('hidden');
+    }
+
+    // Fermeture modale
+    function hideModal() {
+      document.getElementById('clue-modal').classList.add('hidden');
+    }
+
+    // Fermeture en cliquant sur le fond
+    function closeClueModal(event) {
+      if (event.target === document.getElementById('clue-modal')) {
+        hideModal();
+      }
+    }
+
+    // Bascule Mode Performance / Mode Qualité
+    let isPerfMode = true;
+    function togglePerformanceMode() {
+      isPerfMode = !isPerfMode;
+      const label = document.getElementById('perf-label');
+      if (isPerfMode) {
+        label.innerText = 'MODE PERFORMANCE';
+        label.classList.remove('text-[#f59e0b]');
+        label.classList.add('text-primary');
+      } else {
+        label.innerText = 'MODE QUALITÉ';
+        label.classList.remove('text-primary');
+        label.classList.add('text-[#f59e0b]');
+      }
+    }
+
+    // Fermeture via touche Escape pour accessibilité
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        hideModal();
+      }
+    });
+  </script>
+</body></html>

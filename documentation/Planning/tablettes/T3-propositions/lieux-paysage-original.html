@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // ATLAS DES LIEUX - JOUEUR</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-fixed-dim": "#bcc7de",
+            "inverse-surface": "#dce2fa",
+            "on-surface": "#dce2fa",
+            "surface-container-low": "#141b2c",
+            "primary": "#4cd7f6",
+            "on-tertiary-container": "#9bf0ff",
+            "secondary": "#bcc7de",
+            "on-error": "#690005",
+            "secondary-container": "#283347",
+            "surface-bright": "#32394c",
+            "primary-fixed-dim": "#4cd7f6",
+            "error": "#ef4444",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "surface-container": "#181f31",
+            "on-surface-variant": "#bcc9cd",
+            "inverse-on-surface": "#293042",
+            "on-primary-fixed-variant": "#004e5c",
+            "primary-fixed": "#acedff",
+            "surface-container-highest": "#2e3548",
+            "tertiary-fixed": "#acedff",
+            "on-error-container": "#ffdad6",
+            "on-secondary-container": "#aeb9d0",
+            "surface-container-lowest": "#070e1e",
+            "tertiary": "#4cd7f6",
+            "on-secondary-fixed-variant": "#3c475a",
+            "on-primary": "#003640",
+            "secondary-fixed": "#d8e3fb",
+            "error-container": "#93000a",
+            "tertiary-container": "#06b6d4",
+            "on-secondary": "#263143",
+            "on-tertiary-fixed": "#001f26",
+            "inverse-primary": "#00687a",
+            "background": "#020617",
+            "on-secondary-fixed": "#111c2d",
+            "on-tertiary": "#003640",
+            "outline-variant": "#151b2d",
+            "surface": "#0c1324",
+            "on-primary-container": "#00424f",
+            "outline": "#1e293b",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-background": "#dce2fa",
+            "surface-variant": "#2e3447",
+            "surface-container-high": "#232a3c",
+            "primary-container": "#004f5d",
+            "surface-dim": "#0c1324",
+            "on-primary-fixed": "#001f26",
+            "surface-tint": "#4cd7f6"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            lg: "0px",
+            xl: "0px",
+            full: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "code-sm": ["Space Mono"],
+            "headline-sm": ["Space Grotesk"],
+            "label-sm": ["Inter"],
+            "code-md": ["Space Mono"],
+            "headline-md": ["Space Grotesk"],
+            "code-lg": ["Space Mono"],
+            "body-lg": ["Inter"],
+            "number-md": ["Space Mono"],
+            "number-lg": ["Space Mono"],
+            "body-md": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "headline-lg": ["Space Grotesk"],
+            "label-lg": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          fontSize: {
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }],
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "number-md": ["15px", { fontWeight: "600" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }],
+            "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #dce2fa;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+    .tactical-grid {
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- Enceinte iPad Air Paysage Fixe 1180x820 -->
+<div class="relative w-[1180px] h-[820px] bg-background border border-outline flex flex-col justify-between overflow-hidden shadow-2xl">
+<!-- ==================== 1. EN-TÊTE JOUEUR ==================== -->
+<header class="h-[76px] bg-surface-container-lowest border-b border-outline flex flex-col justify-between px-6 py-2 select-none z-10 shrink-0">
+<div class="flex justify-between items-center w-full">
+<!-- Gauche : Titre OS & Surtitre -->
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-tertiary tracking-widest uppercase">OPÉRATION EN COURS : LE SILENCE DE VARN</span>
+<span class="font-orbitron font-bold text-headline-sm text-primary tracking-wider flex items-center gap-2">
+<span class="text-tertiary">■</span> GM-OS // JOUEUR
+          </span>
+</div>
+<!-- Centre : Horloge projetée & Statut Table -->
+<div class="flex items-center gap-6 px-4 py-1 bg-surface-container border border-outline">
+<div class="flex flex-col items-center">
+<span class="font-code-md text-code-md text-primary tracking-wider font-bold">23:36:58</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Dimanche 4 octobre 2026</span>
+</div>
+<div class="h-6 w-px bg-outline"></div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-code-sm text-code-sm text-on-surface font-bold">TABLE</span>
+</div>
+</div>
+<!-- Droite : Connexion & Mode Performance -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container border border-outline">
+<span class="text-[#22c55e] text-xs">■ ●</span>
+<span class="font-code-sm text-code-sm font-bold text-[#22c55e] tracking-wider">CONNECTÉ</span>
+</div>
+<button class="h-[44px] px-4 bg-surface-container border border-outline hover:border-primary active:bg-surface-container-high transition-colors text-on-surface flex items-center gap-2 cursor-pointer" id="perf-toggle-btn">
+<span class="text-tertiary font-bold text-sm">⚡</span>
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider" id="perf-status-text">MODE PERFORMANCE</span>
+</button>
+</div>
+</div>
+<!-- TENSION PUBLIQUE (Alerte Station 3/8) -->
+<div class="flex items-center justify-between border-t border-outline-variant pt-1 text-label-sm">
+<div class="flex items-center gap-3">
+<span class="font-bold text-on-surface-variant uppercase tracking-wider">ALERTE DE LA STATION :</span>
+<span class="font-code-sm font-bold text-[#f59e0b]">3/8</span>
+<!-- Jauge segmentée à 8 crans -->
+<div class="flex gap-1 items-center">
+<span class="w-4 h-2 bg-[#f59e0b]"></span>
+<span class="w-4 h-2 bg-[#f59e0b]"></span>
+<span class="w-4 h-2 bg-[#f59e0b]"></span>
+<span class="w-4 h-2 bg-surface-container-highest border border-outline"></span>
+<span class="w-4 h-2 bg-surface-container-highest border border-outline"></span>
+<span class="w-4 h-2 bg-surface-container-highest border border-outline"></span>
+<span class="w-4 h-2 bg-surface-container-highest border border-outline"></span>
+<span class="w-4 h-2 bg-surface-container-highest border border-outline"></span>
+</div>
+<span class="text-[#f59e0b] font-code-sm font-semibold tracking-wide ml-2">[Palier 3 enclenché]</span>
+</div>
+<div class="font-code-sm text-on-surface-variant text-[11px]">
+          SÉANCE 2 // ARCHIVE LOCALE VALIDÉE
+        </div>
+</div>
+</header>
+<!-- ==================== 2. CONTENU CENTRAL (MODULE LIEUX) ==================== -->
+<main class="flex-1 px-8 py-5 flex flex-col gap-4 overflow-hidden relative">
+<!-- En-tête Titre du module -->
+<div class="flex items-end justify-between border-b border-outline pb-3 shrink-0">
+<div>
+<h1 class="font-orbitron font-bold text-headline-lg text-primary tracking-wide">ATLAS DES LIEUX VISITÉS</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Cartographie des territoires explorés par le groupe.</p>
+</div>
+<div class="px-3 py-1.5 bg-surface-container border border-outline text-label-sm font-label-sm font-bold text-tertiary">
+          1 LIEUX DÉCOUVERTS
+        </div>
+</div>
+<!-- Grille Principale 2 Colonnes -->
+<div class="flex-1 grid grid-cols-12 gap-6 overflow-hidden">
+<!-- Colonne Gauche : Unique Carte Visité 'STATION VARN' (8 cols) -->
+<section class="col-span-8 bg-surface-container-low border border-outline flex flex-col justify-between p-5 relative">
+<!-- Carte Header -->
+<div class="flex justify-between items-start border-b border-outline-variant pb-3 shrink-0">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<span class="font-orbitron font-bold text-headline-md text-on-surface tracking-wider">STATION VARN</span>
+<span class="px-2 py-0.5 bg-surface-container-highest border border-outline text-label-sm font-label-sm font-bold text-tertiary">
+                  BATTLEMAP
+                </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Le pont C, entre le sas et le relais.
+              </p>
+</div>
+<div class="text-right">
+<span class="font-code-sm text-code-sm text-tertiary block font-bold">SECTEUR 03</span>
+<span class="font-code-sm text-[11px] text-on-surface-variant">DÉPRESSURISÉ</span>
+</div>
+</div>
+<!-- Zone Centrale Caisson Technique / Wireframe Plan -->
+<div class="my-4 flex-1 bg-surface-container-lowest border border-outline flex flex-col relative overflow-hidden group">
+<!-- En-tête du plan -->
+<div class="flex justify-between items-center bg-surface-container px-3 py-1.5 border-b border-outline">
+<span class="font-code-sm text-code-sm text-on-surface font-bold tracking-wider">PLAN DE STATION VARN</span>
+<span class="font-code-sm text-[11px] text-on-surface-variant">ÉCHELLE : 1:100</span>
+</div>
+<!-- Grille Technique et Schéma Filaire Fictif Neutre -->
+<div class="flex-1 tactical-grid relative flex items-center justify-center p-6">
+<!-- Repères filaires tactiques SVG neutres -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+<div class="w-[85%] h-[75%] border border-dashed border-tertiary/40 relative flex items-center justify-between p-4">
+<div class="w-24 h-24 border border-outline flex items-center justify-center font-code-sm text-[11px] text-on-surface-variant bg-surface-container-low/80">SAS ACCÈS</div>
+<div class="flex-1 h-8 mx-4 border-y border-outline-variant bg-surface/40 flex items-center justify-center font-code-sm text-[11px] text-on-surface-variant">COULOIR C-1</div>
+<div class="w-28 h-28 border border-outline flex items-center justify-center font-code-sm text-[11px] text-on-surface-variant bg-surface-container-low/80">RELAIS D'ÉNERGIE</div>
+</div>
+</div>
+<!-- Filigrane / Libellé Neutre -->
+<div class="z-10 text-center bg-surface-container/90 border border-outline px-6 py-4">
+<p class="font-code-sm text-code-sm text-on-surface tracking-wider font-semibold mb-2">
+                  [Emplacement neutre du plan technique]
+                </p>
+<button class="h-[44px] px-6 bg-surface-container-high border border-primary hover:bg-tertiary-container hover:text-on-primary transition-colors text-primary font-label-sm font-label-sm uppercase tracking-widest font-bold cursor-pointer" id="open-plan-btn">
+                  TOUCHER POUR EXAMINER
+                </button>
+</div>
+</div>
+</div>
+<!-- Carte Footer / Bouton Tactile >=44px -->
+<div class="flex items-center justify-between border-t border-outline-variant pt-3 shrink-0">
+<span class="font-label-sm font-label-sm text-on-surface-variant tracking-wider uppercase font-bold">
+              EXPLORATION DOCUMENTÉE
+            </span>
+<button class="h-[44px] px-6 bg-surface-container border border-outline hover:border-primary text-on-surface hover:text-primary active:bg-surface-container-high font-label-sm font-label-sm font-bold tracking-wider uppercase transition-colors flex items-center gap-2 cursor-pointer" id="open-detail-btn">
+<span>TOUCHER POUR DÉTAIL</span>
+<span class="text-tertiary">→</span>
+</button>
+</div>
+</section>
+<!-- Colonne Droite : Territoires Inconnus & Statut Éclaireur (4 cols) -->
+<section class="col-span-4 flex flex-col gap-4">
+<!-- Encadré Discret 'TERRITOIRES INCONNUS' -->
+<div class="bg-surface-container-low border border-outline p-5 flex flex-col justify-between flex-1">
+<div>
+<div class="flex items-center justify-between border-b border-outline-variant pb-2 mb-3">
+<span class="font-orbitron font-bold text-headline-sm text-on-surface-variant tracking-wide">TERRITOIRES INCONNUS</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">0 RÉPERTORIÉS</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.
+              </p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-4 font-code-sm text-[12px] text-on-surface-variant space-y-2">
+<div class="flex justify-between">
+<span>SECTEURS OCCULTÉS :</span>
+<span class="text-on-surface">PONT B, D, LABO</span>
+</div>
+<div class="flex justify-between">
+<span>RÉSEAU SENSORIEL :</span>
+<span class="text-[#f59e0b]">DÉGRADÉ</span>
+</div>
+<div class="flex justify-between">
+<span>SÉCURITÉ PORTE SAS :</span>
+<span class="text-on-surface">VERROU BIO-MET</span>
+</div>
+</div>
+</div>
+<!-- Panneau Journal de Reconnaissance Rapide -->
+<div class="bg-surface-container-low border border-outline p-4 shrink-0">
+<span class="font-label-sm font-label-sm text-tertiary block mb-1 font-bold uppercase tracking-wider">
+              PROTOCOLE DE DÉCOUVERTE
+            </span>
+<p class="font-body-md text-[13px] text-on-surface leading-normal">
+              Les plans de bataille et cartes de zone se mettent à jour automatiquement dès l'accès à une borne de données ou validation MJ.
+            </p>
+</div>
+</section>
+</div>
+</main>
+<!-- ==================== 4. PIED DE PAGE FIXE COMPLET ==================== -->
+<footer class="h-[108px] bg-surface-container-lowest border-t border-outline flex flex-col justify-center px-6 py-2 shrink-0 select-none z-20">
+<!-- Rangée supérieure (6 destinations de l'application) -->
+<div class="grid grid-cols-6 gap-2 mb-1.5">
+<button class="h-[44px] bg-surface-container border border-outline text-on-surface-variant hover:text-on-surface hover:border-outline-variant font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center transition-colors">
+          DIRECT
+        </button>
+<button class="h-[44px] bg-surface-container border border-outline text-on-surface-variant hover:text-on-surface hover:border-outline-variant font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center transition-colors">
+          ARCHIVES
+        </button>
+<button class="h-[44px] bg-surface-container border border-outline text-on-surface-variant hover:text-on-surface hover:border-outline-variant font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center transition-colors">
+          PNJ
+        </button>
+<!-- LIEUX ACTIF : #06b6d4, texte sombre #020617, gras -->
+<button class="h-[44px] bg-[#06b6d4] text-[#020617] border border-[#06b6d4] font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center gap-1 shadow-sm">
+<span>LIEUX</span>
+<span class="text-[9px]">●</span>
+</button>
+<button class="h-[44px] bg-surface-container border border-outline text-on-surface-variant hover:text-on-surface hover:border-outline-variant font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center transition-colors">
+          INVENTAIRE
+        </button>
+<button class="h-[44px] bg-surface-container border border-outline text-on-surface-variant hover:text-on-surface hover:border-outline-variant font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center transition-colors">
+          CARTES
+        </button>
+</div>
+<!-- Rangée inférieure (4 actions joueur) -->
+<div class="grid grid-cols-4 gap-2">
+<button class="h-[44px] bg-surface-container-high border border-outline text-on-surface hover:border-primary font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
+<span class="text-tertiary">◆</span>
+<span>FICHE</span>
+</button>
+<button class="h-[44px] bg-surface-container-high border border-outline text-on-surface hover:border-primary font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
+<span class="text-tertiary">✎</span>
+<span>NOTES</span>
+</button>
+<button class="h-[44px] bg-surface-container-high border border-outline text-on-surface hover:border-primary font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
+<span class="text-tertiary">✉</span>
+<span>MESSAGES</span>
+</button>
+<button class="h-[44px] bg-surface-container-high border border-outline hover:border-error text-error font-label-sm font-label-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer" id="open-quit-btn">
+<span>⏹</span>
+<span>QUITTER</span>
+</button>
+</div>
+</footer>
+<!-- ==================== 3. SURCOUCHES FERMABLES ==================== -->
+<!-- A. Surcouche Détail / Plan de Station Varn -->
+<div class="fixed inset-0 bg-background/85 backdrop-blur-sm z-50 hidden flex items-center justify-center p-8" id="modal-detail">
+<div class="w-[1080px] h-[720px] bg-surface-container-lowest border-2 border-primary flex flex-col shadow-2xl relative">
+<!-- En-tête Modale -->
+<div class="h-14 bg-surface-container px-6 border-b border-outline flex items-center justify-between shrink-0">
+<div class="flex items-center gap-3">
+<span class="font-orbitron font-bold text-headline-sm text-primary tracking-wide">RECONNAISSANCE // STATION VARN</span>
+<span class="px-2 py-0.5 bg-surface-container-highest border border-outline text-label-sm font-label-sm font-bold text-tertiary">
+              NIVEAU SÉCURISÉ 03
+            </span>
+</div>
+<!-- Bouton Fermer >=44x44px -->
+<button class="w-[44px] h-[44px] bg-surface-container-high border border-outline hover:border-primary text-on-surface font-label-sm font-bold flex items-center justify-center transition-colors cursor-pointer" id="close-detail-btn" title="Fermer la vue">
+            ✕
+          </button>
+</div>
+<!-- Contenu divisé en deux colonnes -->
+<div class="flex-1 grid grid-cols-12 overflow-hidden">
+<!-- Gauche : Plan agrandi avec quadrillage et repères techniques -->
+<div class="col-span-7 border-r border-outline tactical-grid p-6 flex flex-col justify-between relative bg-surface-container-lowest">
+<div class="flex justify-between items-center text-label-sm text-on-surface-variant font-code-sm">
+<span>QUADRILLAGE TACTIQUE MET-09</span>
+<span>AZIMUT : 044° REL</span>
+</div>
+<!-- Schéma filaire détaillé avec repères exacts -->
+<div class="flex-1 flex items-center justify-center relative my-4 border border-outline bg-surface/30">
+<div class="w-[90%] h-[85%] border-2 border-outline relative flex flex-col justify-between p-4">
+<!-- Repère 1 : SAS D'ACCÈS -->
+<div class="border border-tertiary bg-surface-container p-3 w-48 relative">
+<span class="w-2 h-2 bg-primary absolute -top-1 -left-1"></span>
+<div class="font-orbitron font-bold text-code-sm text-primary">SAS D'ACCÈS</div>
+<div class="font-code-sm text-[11px] text-error font-bold mt-1">DÉPRESSURISÉ</div>
+</div>
+<!-- Repère 2 : COULOIR C-1 -->
+<div class="border border-outline-variant bg-surface-container-high/60 p-3 self-center text-center w-64">
+<div class="font-orbitron font-semibold text-code-sm text-on-surface">COULOIR C-1</div>
+<div class="font-code-sm text-[11px] text-on-surface-variant">LONGUEUR 32M // DÉCOMBRES</div>
+</div>
+<!-- Repère 3 : RELAIS DE TRANSMISSION -->
+<div class="border border-tertiary bg-surface-container p-3 w-56 self-end text-right relative">
+<span class="w-2 h-2 bg-primary absolute -bottom-1 -right-1"></span>
+<div class="font-orbitron font-bold text-code-sm text-primary">RELAIS DE TRANSMISSION</div>
+<div class="font-code-sm text-[11px] text-error font-bold mt-1">HORS TENSION</div>
+</div>
+</div>
+</div>
+<div class="font-code-sm text-[11px] text-on-surface-variant flex justify-between">
+<span>STATUS MATÉRIEL : CRITIQUE</span>
+<span>SYNCHRONISATION TACTIQUE : ACTIVE</span>
+</div>
+</div>
+<!-- Droite : Description & Notes détaillées du lieu -->
+<div class="col-span-5 p-6 flex flex-col justify-between bg-surface-container-low">
+<div class="space-y-6">
+<div>
+<span class="font-label-sm font-label-sm text-tertiary uppercase tracking-wider block mb-1">
+                  OBSERVATIONS ENREGISTRÉES
+                </span>
+<h3 class="font-orbitron font-bold text-headline-sm text-on-surface mb-2">PONT C (SAS &amp; RELAIS)</h3>
+<div class="h-0.5 w-12 bg-primary mb-4"></div>
+<!-- Texte exact requis -->
+<p class="font-body-md text-body-md text-on-surface leading-relaxed border-l-2 border-outline-variant pl-4">
+                  Le pont C, entre le sas et le relais. Sas dépressurisé, relais de transmission hors tension.
+                </p>
+</div>
+<!-- Bloc Diagnostic Télémétrique -->
+<div class="space-y-3 bg-surface-container-lowest border border-outline p-4 font-code-sm text-code-sm">
+<div class="text-label-sm font-bold text-on-surface-variant border-b border-outline-variant pb-1">
+                  PARAMÈTRES ENVIRONNEMENTAUX
+                </div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">OXYGÈNE :</span>
+<span class="text-error font-bold">0.02 ATM (NUL)</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">TEMPÉRATURE :</span>
+<span class="text-on-surface">-42°C</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">INTÉGRITÉ STRUCTURALE :</span>
+<span class="text-[#f59e0b] font-bold">64%</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">BLOCAGE TÉLÉMÉTRIE :</span>
+<span class="text-on-surface">RELAIS DÉCONNECTÉ</span>
+</div>
+</div>
+</div>
+<!-- Pied de panneau modal -->
+<div class="pt-4 border-t border-outline flex justify-end">
+<button class="h-[44px] px-6 bg-surface-container-high border border-outline hover:border-primary text-on-surface font-label-sm font-label-sm uppercase font-bold tracking-wider cursor-pointer" id="close-detail-alt-btn">
+                FERMER L'EXAMEN
+              </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- B. Modal de Confirmation 'Quitter la session ?' -->
+<div class="fixed inset-0 bg-background/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-6" id="modal-quit">
+<div class="w-[460px] bg-surface-container-lowest border-2 border-error p-6 flex flex-col shadow-2xl relative">
+<div class="flex items-center gap-3 text-error mb-4 border-b border-outline-variant pb-3">
+<span class="text-xl">⏹</span>
+<span class="font-orbitron font-bold text-headline-sm tracking-wide">AVERTISSEMENT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-6 leading-relaxed">
+          Quitter la session ?
+        </p>
+<p class="font-code-sm text-code-sm text-on-surface-variant mb-6">
+          Votre terminal se déconnectera de la table 'Le Silence de Varn'. Les données locales seront conservées dans la mémoire tampon.
+        </p>
+<div class="grid grid-cols-2 gap-4">
+<button class="h-[44px] bg-surface-container border border-outline hover:border-primary text-on-surface font-label-sm font-label-sm font-bold uppercase tracking-wider cursor-pointer" id="cancel-quit-btn">
+            Annuler
+          </button>
+<button class="h-[44px] bg-error border border-error hover:bg-error-container text-on-error hover:text-on-error-container font-label-sm font-label-sm font-bold uppercase tracking-wider cursor-pointer" id="confirm-quit-btn">
+            Confirmer
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Inline Script Minimal pour Interactions Authentiques (Pas de bibliothèques externes) -->
+<script>
+    // Éléments DOM
+    const modalDetail = document.getElementById('modal-detail');
+    const modalQuit = document.getElementById('modal-quit');
+    
+    const openPlanBtn = document.getElementById('open-plan-btn');
+    const openDetailBtn = document.getElementById('open-detail-btn');
+    const closeDetailBtn = document.getElementById('close-detail-btn');
+    const closeDetailAltBtn = document.getElementById('close-detail-alt-btn');
+    
+    const openQuitBtn = document.getElementById('open-quit-btn');
+    const cancelQuitBtn = document.getElementById('cancel-quit-btn');
+    const confirmQuitBtn = document.getElementById('confirm-quit-btn');
+
+    const perfToggleBtn = document.getElementById('perf-toggle-btn');
+    const perfStatusText = document.getElementById('perf-status-text');
+
+    // Ouverture Vue Détail
+    const openDetail = () => {
+      modalDetail.classList.remove('hidden');
+    };
+
+    // Fermeture Vue Détail
+    const closeDetail = () => {
+      modalDetail.classList.add('hidden');
+    };
+
+    // Ouverture Modal Quitter
+    const openQuit = () => {
+      modalQuit.classList.remove('hidden');
+    };
+
+    // Fermeture Modal Quitter
+    const closeQuit = () => {
+      modalQuit.classList.add('hidden');
+    };
+
+    // Écouteurs Modales
+    openPlanBtn.addEventListener('click', openDetail);
+    openDetailBtn.addEventListener('click', openDetail);
+    closeDetailBtn.addEventListener('click', closeDetail);
+    closeDetailAltBtn.addEventListener('click', closeDetail);
+
+    openQuitBtn.addEventListener('click', openQuit);
+    cancelQuitBtn.addEventListener('click', closeQuit);
+    confirmQuitBtn.addEventListener('click', () => {
+      closeQuit();
+      alert('DÉCONNEXION DU TERMINAL EFFECTUÉE.');
+    });
+
+    // Clic sur fond pour fermer
+    modalDetail.addEventListener('click', (e) => {
+      if (e.target === modalDetail) closeDetail();
+    });
+    modalQuit.addEventListener('click', (e) => {
+      if (e.target === modalQuit) closeQuit();
+    });
+
+    // Touche Échap pour fermer toutes les modales
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDetail();
+        closeQuit();
+      }
+    });
+
+    // Bascule Mode Performance / Qualité
+    let isPerformance = true;
+    perfToggleBtn.addEventListener('click', () => {
+      isPerformance = !isPerformance;
+      if (isPerformance) {
+        perfStatusText.textContent = 'MODE PERFORMANCE';
+        perfToggleBtn.classList.remove('border-primary');
+      } else {
+        perfStatusText.textContent = 'MODE HAUTE DÉF.';
+        perfToggleBtn.classList.add('border-primary');
+      }
+    });
+  </script>
+</body></html>

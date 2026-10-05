@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS // JOUEUR - Le Silence de Varn</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;700;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "outline": "#1e293b",
+            "on-error-container": "#ffdad6",
+            "on-secondary-fixed": "#111c2d",
+            "secondary-fixed": "#d8e3fb",
+            "tertiary-fixed": "#acedff",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-tertiary-container": "#9bf0ff",
+            "tertiary-container": "#004f5d",
+            "surface-container-high": "#232a3c",
+            "on-surface": "#dce2fa",
+            "primary-container": "#06b6d4",
+            "surface-container-low": "#141b2c",
+            "surface-container-highest": "#2e3447",
+            "outline-variant": "#3d494c",
+            "on-secondary-container": "#aeb9d0",
+            "error-container": "#93000a",
+            "surface-dim": "#0c1324",
+            "surface-container-lowest": "#070d1f",
+            "secondary-container": "#283347",
+            "surface-bright": "#32394c",
+            "error": "#ef4444",
+            "on-tertiary": "#003640",
+            "on-primary-container": "#00424f",
+            "surface-variant": "#2e3447",
+            "primary-fixed": "#acedff",
+            "on-error": "#020617",
+            "on-background": "#dee2f7",
+            "tertiary": "#4cd7f6",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-secondary": "#263143",
+            "inverse-primary": "#00687a",
+            "on-primary": "#003640",
+            "primary": "#4cd7f6",
+            "surface": "#0c1324",
+            "inverse-on-surface": "#293042",
+            "on-surface-variant": "#bcc9cd",
+            "on-tertiary-fixed": "#001f26",
+            "surface-container": "#181f31",
+            "secondary-fixed-dim": "#bcc7de",
+            "inverse-surface": "#dce2fa",
+            "on-primary-fixed": "#001f26",
+            "secondary": "#bcc7de",
+            "background": "#020617",
+            "on-secondary-fixed-variant": "#3c475a",
+            "surface-tint": "#4cd7f6",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "primary-fixed-dim": "#4cd7f6"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            none: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "number-lg": ["Space Mono", "monospace"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "code-md": ["Space Mono", "monospace"],
+            "label-sm": ["Inter", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "label-lg": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "code-lg": ["Space Mono", "monospace"],
+            "number-md": ["Space Mono", "monospace"],
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"]
+          },
+          fontSize: {
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }],
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }],
+            "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "number-md": ["15px", { fontWeight: "600" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    * {
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* CRT Scanline & grid aesthetic */
+    .bg-grid {
+      background-size: 20px 20px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.3) 1px, transparent 1px);
+    }
+    .scanline {
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(6, 182, 212, 0.04) 50%,
+        rgba(6, 182, 212, 0.04)
+      );
+      background-size: 100% 4px;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased font-body-md select-none min-h-screen flex justify-center items-center p-0 md:p-4">
+<!-- Mobile Chassis (390px x 844px exact viewport framing) -->
+<div class="w-full max-w-[390px] h-[844px] max-h-screen flex flex-col bg-background border border-outline relative overflow-hidden shadow-2xl">
+<!-- ========================================== -->
+<!-- 1. EN-TÊTE COMPACT                         -->
+<!-- ========================================== -->
+<header class="w-full bg-surface-container-lowest border-b border-outline shrink-0 flex flex-col z-20">
+<!-- Ligne 1: Marque, Statut & Bascule Mode (≥44px hauteur) -->
+<div class="flex items-center justify-between px-3 h-12 border-b border-outline/60 gap-2">
+<div class="flex items-center gap-2 shrink-0">
+<span class="font-orbitron font-bold text-xs tracking-wider text-primary">GM-OS // JOUEUR</span>
+<div class="flex items-center gap-1 bg-surface px-1.5 py-0.5 border border-outline">
+<span class="w-1.5 h-1.5 bg-emerald-500 animate-pulse"></span>
+<span class="font-label-sm text-[10px] text-emerald-400 font-bold uppercase tracking-wider">CONNECTÉ</span>
+</div>
+</div>
+<!-- Bouton bascule Performance / Qualité (min 44px interactif) -->
+<button class="h-11 min-h-[44px] px-2.5 bg-surface-container border border-outline flex items-center gap-1.5 active:border-primary text-left transition-colors" id="perfToggleBtn">
+<span class="font-code-sm text-xs font-bold text-primary" id="perfIcon">⚡</span>
+<span class="font-label-sm text-[11px] text-on-surface tracking-wider font-semibold" id="perfLabel">MODE PERFORMANCE</span>
+</button>
+</div>
+<!-- Ligne 2: Contexte Opérationnel & Horloge Projetée -->
+<div class="px-3 py-2 bg-surface-container-low/80 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 overflow-hidden">
+<span class="w-1 h-3 bg-primary"></span>
+<span class="font-orbitron text-[11px] font-bold text-on-surface truncate tracking-wide">OPÉRATION EN COURS : LE SILENCE DE VARN</span>
+</div>
+<span class="px-1.5 py-0.5 bg-primary/10 border border-primary/40 font-code-sm text-[10px] text-primary font-bold">TABLE</span>
+</div>
+<div class="flex items-center justify-between font-code-sm text-xs">
+<span class="text-on-surface-variant font-code-sm text-[11px]">Dimanche 4 octobre 2026</span>
+<span class="text-primary font-number-md text-sm font-bold tracking-widest" id="clockDisplay">23:38:05</span>
+</div>
+<!-- Tension Publique : Alerte station (3/8 ambre) -->
+<div class="mt-0.5 pt-1 border-t border-outline/50 flex items-center justify-between gap-2">
+<span class="font-label-sm text-[10px] text-amber-400 font-bold tracking-wider uppercase">ALERTE DE LA STATION 3/8</span>
+<div class="flex items-center gap-1">
+<!-- 3 blocs pleins ambre -->
+<span class="w-3.5 h-2 bg-amber-500 border border-amber-400"></span>
+<span class="w-3.5 h-2 bg-amber-500 border border-amber-400"></span>
+<span class="w-3.5 h-2 bg-amber-500 border border-amber-400"></span>
+<!-- 5 blocs vides gris -->
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. CONTENU PRINCIPAL : VUE DIRECT          -->
+<!-- ========================================== -->
+<main class="flex-1 overflow-y-auto p-3 flex flex-col gap-3 relative pb-28 bg-grid scanline">
+<!-- Cadre Central de Projection du Meneur -->
+<section class="border border-outline bg-surface-container-lowest/90 relative p-4 flex flex-col justify-between min-h-[260px]">
+<!-- Réticules filaires aux 4 coins -->
+<div class="absolute top-1 left-1 w-3 h-3 border-t-2 border-l-2 border-primary pointer-events-none"></div>
+<div class="absolute top-1 right-1 w-3 h-3 border-t-2 border-r-2 border-primary pointer-events-none"></div>
+<div class="absolute bottom-1 left-1 w-3 h-3 border-b-2 border-l-2 border-primary pointer-events-none"></div>
+<div class="absolute bottom-1 right-1 w-3 h-3 border-b-2 border-r-2 border-primary pointer-events-none"></div>
+<!-- En-tête de projection -->
+<div class="flex items-center justify-between border-b border-outline pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base" data-icon="videocam">videocam</span>
+<span class="font-orbitron text-xs font-bold text-on-surface tracking-wider">FLUX DIRECT // MENEUR</span>
+</div>
+<span class="font-code-sm text-[10px] text-on-surface-variant border border-outline px-1.5 py-0.5 uppercase tracking-wider bg-surface">STANDBY</span>
+</div>
+<!-- Centre du visualiseur diégétique -->
+<div class="flex flex-col items-center justify-center my-6 gap-3 text-center">
+<div class="relative w-16 h-16 border border-outline-variant flex items-center justify-center bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-3xl animate-pulse" data-icon="sensors">sensors</span>
+<div class="absolute inset-0 border border-primary/30 scale-110 pointer-events-none"></div>
+</div>
+<div class="space-y-1">
+<p class="font-orbitron text-xs font-bold tracking-widest text-primary">EN ATTENTE DU SIGNAL TABLE</p>
+<p class="font-code-sm text-[11px] text-on-surface-variant">CANAL SÉLECTIONNÉ : PROJECTION PRINCIPALE</p>
+</div>
+</div>
+<!-- Télémétrie bas de cadre -->
+<div class="flex items-center justify-between pt-2 border-t border-outline/70 font-code-sm text-[10px] text-on-surface-variant">
+<span>FRÉQ: 142.850 MHZ</span>
+<span class="text-primary font-bold">RÉCEPTION: NOMINALE</span>
+</div>
+</section>
+<!-- Chroniques de Séance -->
+<section class="border border-outline bg-surface-container-low p-3 flex flex-col gap-2">
+<div class="flex items-center justify-between border-b border-outline pb-1.5">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span class="font-orbitron text-xs font-bold text-on-surface tracking-wider">CHRONIQUES DE SÉANCE</span>
+</div>
+<span class="font-code-sm text-xs text-primary font-bold px-1.5 py-0.2 border border-outline bg-surface-container-lowest">SÉANCE 2</span>
+</div>
+<div class="p-3 bg-surface-container-lowest border border-outline/50 flex flex-col gap-1">
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">COMMUNIQUÉ OFFICIEL</span>
+<p class="font-body-md text-sm text-on-surface italic">« Aucun résumé public. »</p>
+</div>
+</section>
+</main>
+<!-- ========================================== -->
+<!-- 3. SURCOUCHE DE NOTIFICATION T0 (Toast)   -->
+<!-- Positionnée juste au-dessus du footer     -->
+<!-- ========================================== -->
+<div class="absolute bottom-[114px] left-3 right-3 z-30 transition-transform duration-200" id="messageToast">
+<button class="w-full min-h-[48px] bg-surface-container-high border-2 border-primary p-2.5 flex items-center justify-between shadow-xl active:bg-surface-bright text-left" id="openToastBtn">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary/20 border border-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="terminal">terminal</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-orbitron text-xs font-bold text-primary tracking-wide">NOUVEAU MESSAGE</span>
+<span class="w-1.5 h-1.5 bg-primary animate-ping"></span>
+</div>
+<span class="font-body-md text-xs text-on-surface font-semibold">Maître du Jeu (Maître du Jeu)</span>
+</div>
+</div>
+<div class="flex items-center gap-1 shrink-0 bg-primary text-background px-2 py-1 font-label-sm text-[11px] font-bold uppercase tracking-wider">
+<span>Toucher pour ouvrir</span>
+<span class="material-symbols-outlined text-sm font-bold" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</button>
+</div>
+<!-- ========================================== -->
+<!-- 4. MODAL / VOLET HUB MESSENGER            -->
+<!-- ========================================== -->
+<div class="hidden absolute inset-0 z-40 bg-background/95 backdrop-blur-sm flex flex-col justify-end" id="messengerModal">
+<div class="w-full h-[85%] bg-surface-container-lowest border-t-2 border-primary flex flex-col shadow-2xl">
+<!-- En-tête Modal (bouton fermeture ≥44x44px) -->
+<div class="h-12 bg-surface-container border-b border-outline px-3 flex items-center justify-between shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="forum">forum</span>
+<span class="font-orbitron text-sm font-bold text-on-surface tracking-wider">CANAL DIRECT MJ</span>
+</div>
+<button class="min-w-[44px] min-h-[44px] flex items-center justify-center bg-surface border border-outline text-on-surface active:bg-error-container active:text-on-error-container text-xs font-bold uppercase tracking-wider transition-colors px-2" id="closeMessengerBtn">
+            ✕ FERMER
+          </button>
+</div>
+<!-- Méta destinataire -->
+<div class="px-3 py-2 bg-surface-container-low border-b border-outline flex items-center justify-between text-xs font-code-sm">
+<span class="text-on-surface-variant">DESTINATAIRE : <strong class="text-primary font-bold">Maître du Jeu</strong></span>
+<span class="text-emerald-400 font-bold flex items-center gap-1">● SÉCURISÉ</span>
+</div>
+<!-- Historique de messagerie -->
+<div class="flex-1 p-3 overflow-y-auto flex flex-col gap-3">
+<div class="text-center my-1">
+<span class="font-code-sm text-[10px] text-on-surface-variant bg-surface px-2 py-0.5 border border-outline">SYNCHRONISATION AU BANC T0</span>
+</div>
+<!-- Message reçu du MJ -->
+<div class="flex flex-col items-start max-w-[85%]">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-orbitron text-[11px] font-bold text-primary">Maître du Jeu</span>
+<span class="font-code-sm text-[10px] text-on-surface-variant">23:38</span>
+</div>
+<div class="p-3 bg-surface-container border-l-2 border-primary border-t border-r border-b border-outline text-on-surface font-body-md text-sm leading-relaxed">
+              Le sas vient de se fermer.
+            </div>
+</div>
+</div>
+<!-- Zone de Saisie & Envoi (min 44px) -->
+<div class="p-3 bg-surface-container-low border-t border-outline flex gap-2 items-center">
+<input class="flex-1 h-11 min-h-[44px] bg-surface-container-lowest border border-outline px-3 text-sm text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:outline-none focus:ring-0" placeholder="Écrire une réponse..." type="text"/>
+<button class="h-11 min-h-[44px] px-4 bg-primary text-background font-label-sm font-bold text-xs uppercase tracking-wider active:bg-primary-fixed hover:bg-tertiary transition-colors flex items-center justify-center shrink-0">
+            ENVOYER
+          </button>
+</div>
+</div>
+</div>
+<!-- Modale de Confirmation Quitter -->
+<div class="hidden absolute inset-0 z-50 bg-background/90 flex items-center justify-center p-4" id="quitModal">
+<div class="w-full max-w-[320px] bg-surface-container-lowest border border-error p-4 flex flex-col gap-3 shadow-2xl">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-xl" data-icon="warning">warning</span>
+<span class="font-orbitron text-sm font-bold tracking-wider">DÉCONNEXION TABLE</span>
+</div>
+<p class="font-body-md text-xs text-on-surface">Voulez-vous rompre la liaison terminal avec le banc d'opération Varn ?</p>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 min-h-[44px] bg-surface border border-outline font-label-sm text-xs font-bold text-on-surface uppercase" id="cancelQuitBtn">ANNULER</button>
+<button class="flex-1 min-h-[44px] bg-error text-background font-label-sm text-xs font-bold uppercase" id="confirmQuitBtn">CONFIRMER</button>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 5. NAVIGATION FIXE EN PIED                -->
+<!-- 2 rangées de 3 + 1 rangée de 4 (Actions)   -->
+<!-- ========================================== -->
+<nav class="absolute bottom-0 left-0 w-full z-20 bg-surface-container-lowest border-t border-outline flex flex-col">
+<!-- Rangée 1 : DIRECT (actif), ARCHIVES, PNJ -->
+<div class="grid grid-cols-3 border-b border-outline/70">
+<button class="min-h-[36px] py-1.5 px-1 bg-surface-container border-b-2 border-primary text-primary font-orbitron text-[11px] font-bold tracking-wider text-center flex items-center justify-center">
+          DIRECT
+        </button>
+<button class="min-h-[36px] py-1.5 px-1 border-r border-outline/40 text-on-surface-variant hover:text-on-surface font-orbitron text-[11px] font-semibold tracking-wider text-center flex items-center justify-center active:bg-surface-container">
+          ARCHIVES
+        </button>
+<button class="min-h-[36px] py-1.5 px-1 text-on-surface-variant hover:text-on-surface font-orbitron text-[11px] font-semibold tracking-wider text-center flex items-center justify-center active:bg-surface-container">
+          PNJ
+        </button>
+</div>
+<!-- Rangée 2 : LIEUX, INVENTAIRE, CARTES -->
+<div class="grid grid-cols-3 border-b border-outline">
+<button class="min-h-[36px] py-1.5 px-1 border-r border-outline/40 text-on-surface-variant hover:text-on-surface font-orbitron text-[11px] font-semibold tracking-wider text-center flex items-center justify-center active:bg-surface-container">
+          LIEUX
+        </button>
+<button class="min-h-[36px] py-1.5 px-1 border-r border-outline/40 text-on-surface-variant hover:text-on-surface font-orbitron text-[11px] font-semibold tracking-wider text-center flex items-center justify-center active:bg-surface-container">
+          INVENTAIRE
+        </button>
+<button class="min-h-[36px] py-1.5 px-1 text-on-surface-variant hover:text-on-surface font-orbitron text-[11px] font-semibold tracking-wider text-center flex items-center justify-center active:bg-surface-container">
+          CARTES
+        </button>
+</div>
+<!-- Rangée 3 : 4 ACTIONS RAPIDES (min 44px interactif) -->
+<div class="grid grid-cols-4 bg-surface-container-low">
+<!-- FICHE -->
+<button class="min-h-[44px] border-r border-outline/60 flex flex-col items-center justify-center gap-0.5 py-1 text-on-surface-variant hover:text-primary active:bg-surface-container">
+<span class="text-xs">◆</span>
+<span class="font-label-sm text-[10px] tracking-wider font-bold">FICHE</span>
+</button>
+<!-- NOTES -->
+<button class="min-h-[44px] border-r border-outline/60 flex flex-col items-center justify-center gap-0.5 py-1 text-on-surface-variant hover:text-primary active:bg-surface-container">
+<span class="text-xs">✎</span>
+<span class="font-label-sm text-[10px] tracking-wider font-bold">NOTES</span>
+</button>
+<!-- MESSAGES avec pastille '1' au-dessus/en retrait sans masquer le texte -->
+<button class="min-h-[44px] border-r border-outline/60 flex flex-col items-center justify-center gap-0.5 py-1 text-on-surface hover:text-primary active:bg-surface-container relative" id="navMessagesBtn">
+<div class="relative flex items-center justify-center">
+<span class="text-xs">✉</span>
+<!-- Badge 1 non lu (ne masque pas le texte) -->
+<span class="absolute -top-1 -right-3.5 px-1 py-0 bg-primary text-background font-code-sm text-[9px] font-extrabold border border-background" id="unreadBadge">1</span>
+</div>
+<span class="font-label-sm text-[10px] tracking-wider font-bold text-primary">MESSAGES</span>
+</button>
+<!-- QUITTER avec modale -->
+<button class="min-h-[44px] flex flex-col items-center justify-center gap-0.5 py-1 text-error/90 hover:text-error active:bg-error-container" id="navQuitBtn">
+<span class="text-xs">⏹</span>
+<span class="font-label-sm text-[10px] tracking-wider font-bold">QUITTER</span>
+</button>
+</div>
+</nav>
+</div>
+<!-- Inline Logic: Micro-interactions strictes sans API externe -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Horloge
+      const clockEl = document.getElementById('clockDisplay');
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        if (clockEl) clockEl.textContent = `${h}:${m}:${s}`;
+      }
+      setInterval(updateClock, 1000);
+
+      // 2. Bascule Mode Performance / Qualité
+      const perfBtn = document.getElementById('perfToggleBtn');
+      const perfLabel = document.getElementById('perfLabel');
+      const perfIcon = document.getElementById('perfIcon');
+      let isPerf = true;
+
+      perfBtn.addEventListener('click', () => {
+        isPerf = !isPerf;
+        if (isPerf) {
+          perfLabel.textContent = 'MODE PERFORMANCE';
+          perfIcon.textContent = '⚡';
+          perfLabel.classList.remove('text-amber-400');
+          perfIcon.classList.remove('text-amber-400');
+          perfLabel.classList.add('text-on-surface');
+          perfIcon.classList.add('text-primary');
+        } else {
+          perfLabel.textContent = 'MODE QUALITÉ';
+          perfIcon.textContent = '✦';
+          perfLabel.classList.add('text-amber-400');
+          perfIcon.classList.add('text-amber-400');
+        }
+      });
+
+      // 3. Gestionnaire de Toast & Modal Messagerie
+      const toastEl = document.getElementById('messageToast');
+      const openToastBtn = document.getElementById('openToastBtn');
+      const navMessagesBtn = document.getElementById('navMessagesBtn');
+      const messengerModal = document.getElementById('messengerModal');
+      const closeMessengerBtn = document.getElementById('closeMessengerBtn');
+      const unreadBadge = document.getElementById('unreadBadge');
+
+      function openMessenger() {
+        messengerModal.classList.remove('hidden');
+        if (toastEl) toastEl.classList.add('hidden');
+        if (unreadBadge) unreadBadge.classList.add('hidden');
+      }
+
+      function closeMessenger() {
+        messengerModal.classList.add('hidden');
+      }
+
+      if (openToastBtn) openToastBtn.addEventListener('click', openMessenger);
+      if (navMessagesBtn) navMessagesBtn.addEventListener('click', openMessenger);
+      if (closeMessengerBtn) closeMessengerBtn.addEventListener('click', closeMessenger);
+
+      // 4. Modal Quitter
+      const quitModal = document.getElementById('quitModal');
+      const navQuitBtn = document.getElementById('navQuitBtn');
+      const cancelQuitBtn = document.getElementById('cancelQuitBtn');
+      const confirmQuitBtn = document.getElementById('confirmQuitBtn');
+
+      if (navQuitBtn) {
+        navQuitBtn.addEventListener('click', () => {
+          quitModal.classList.remove('hidden');
+        });
+      }
+      if (cancelQuitBtn) {
+        cancelQuitBtn.addEventListener('click', () => {
+          quitModal.classList.add('hidden');
+        });
+      }
+      if (confirmQuitBtn) {
+        confirmQuitBtn.addEventListener('click', () => {
+          quitModal.classList.add('hidden');
+          alert('LIAISON GM-OS CLÔTURÉE.');
+        });
+      }
+    });
+  </script>
+</body></html>

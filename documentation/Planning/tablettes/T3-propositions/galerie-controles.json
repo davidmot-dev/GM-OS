@@ -1,0 +1,295 @@
+{
+  "erreurs": [],
+  "liensLocauxValides": true,
+  "utilisableA360": true,
+  "resultats": [
+    {
+      "mode": "propositions",
+      "largeur": "390",
+      "images": [
+        {
+          "id": "accueil-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "accueil-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "direct-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "direct-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "inventaire-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "inventaire-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "cartes-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "cartes-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "archives-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "archives-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "pnj-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "pnj-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "lieux-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "lieux-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "messages-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "messages-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "notifications-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "notifications-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        }
+      ]
+    },
+    {
+      "mode": "propositions",
+      "largeur": "360",
+      "images": [
+        {
+          "id": "accueil-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "accueil-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "direct-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "direct-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "inventaire-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "inventaire-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "cartes-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "cartes-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "archives-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "archives-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "pnj-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "pnj-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "lieux-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "lieux-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "messages-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "messages-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "notifications-mobile",
+          "largeur": 360,
+          "lienIdentique": true
+        },
+        {
+          "id": "notifications-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        }
+      ]
+    },
+    {
+      "mode": "references",
+      "largeur": "360",
+      "images": [
+        {
+          "id": "accueil-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "accueil-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "direct-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "direct-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "inventaire-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "inventaire-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "cartes-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "cartes-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "archives-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "archives-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "pnj-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "pnj-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "lieux-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "lieux-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "messages-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "messages-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        },
+        {
+          "id": "notifications-mobile",
+          "largeur": 390,
+          "lienIdentique": true
+        },
+        {
+          "id": "notifications-paysage",
+          "largeur": 1180,
+          "lienIdentique": true
+        }
+      ]
+    }
+  ]
+}

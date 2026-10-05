@@ -1,0 +1,14 @@
+﻿[
+    {
+        "text":  "L\u0027onglet **« Direct »** de la tablette joueur GM-OS a été entièrement redessiné et calibré au format **390 × 844 px (utilisable dès 360 px)**, sans aucune barre latérale PC ni bandeau de bureau :\n\n### 📐 1. Agencement \u0026 Titre Sans Chevauchement\n- **Titre fluide et dégagé :** En-tête avec mention `▶ OPÉRATION EN COURS` et grand titre **`Le Silence de Varn`** (Orbitron), parfaitement séparé de l\u0027horloge pour éliminer tout chevauchement.\n- **Bandeau supérieur compact :** Identité `GM-OS // JOUEUR`, pastille d\u0027état réseau `● CONNECTÉ`, et bouton unique **`⚡ MODE PERFORMANCE`** (bascule Qualité/Performance tactile $\\ge 44$ px).\n\n### ⏱️ 2. Duo Télémétrie : Horloge \u0026 Tension Publique\n- **Horloge projetée :** `23:36` avec secondes `17` en JetBrains Mono et date complète `Dimanche 4 octobre 2026`.\n- **Alerte de la station (3/8) :** Anneau vectoriel de 8 segments avec 3 segments en surbrillance ambre (`Vigilance • Palier 3 enclenché`).\n\n### 📺 3. Zone de Projection Libre du Meneur\n- Espace central épuré et ouvert, encadré de repères matriciels avec mention `CANAL DE PROJECTION DU MENEUR` en `STANDBY` et `EN ATTENTE DU SIGNAL TABLE`.\n- Aucun média inventé, aucun encart promotionnel, aucune consigne parasite.\n\n### 📜 4. Chroniques de Séance\n- Bloc en pied de zone affichant `SÉANCE 2` et la mention exacte : **`« Aucun résumé public. »`**.\n\n### 📱 5. Navigation Tactile Complète (Dès 360 px, cibles $\\ge 44 \\times 44$ px)\n- **Ligne 1 (Les 6 onglets de navigation) :** `DIRECT (● LIVE)` (actif), `ARCHIV. (HIST.)`, `PNJ (ROSTER)`, `LIEUX (SECT.)`, `INVENT. (BUTIN)`, `CARTES (PLANS)`.\n- **Ligne 2 (Surcouches \u0026 Quitter) :** `◆ FICHE`, `✎ NOTES`, `✉ MSGS`, et action sécurisée `⏻ QUITTER` en alerte rouge.\n- **Design System respecté :** Fond `#020617`, surfaces `#0f172a` et `#1e293b`, accents `#06b6d4`, typographies Orbitron / Inter / JetBrains Mono, zéro étiquette sous 11 px."
+    },
+    {
+        "suggestion":  "Simuler une projection active reçue du meneur dans le canal central"
+    },
+    {
+        "suggestion":  "Afficher la fenêtre modale de confirmation pour le bouton Quitter"
+    },
+    {
+        "suggestion":  "Décliner l\u0027onglet Fiche du joueur au format mobile 390×844"
+    }
+]

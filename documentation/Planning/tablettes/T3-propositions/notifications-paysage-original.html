@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // JOUEUR - Tablette Direct &amp; Notifications</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-error": "#020617",
+            "surface-dim": "#0c1324",
+            "on-secondary": "#263143",
+            "primary": "#4cd7f6",
+            "surface-container-high": "#232a3c",
+            "surface-container-low": "#151b2d",
+            "on-surface": "#dce2fa",
+            "secondary-container": "#283347",
+            "surface-tint": "#4cd7f6",
+            "tertiary": "#4cd7f6",
+            "on-secondary-fixed-variant": "#3c475a",
+            "surface-container": "#192031",
+            "surface-container-highest": "#2e3447",
+            "on-tertiary-fixed": "#001f26",
+            "inverse-primary": "#00687a",
+            "tertiary-container": "#004f5d",
+            "surface-container-lowest": "#070d1f",
+            "surface-bright": "#32394c",
+            "on-primary-fixed": "#001f26",
+            "on-secondary-fixed": "#111c2d",
+            "outline-variant": "#3d494c",
+            "surface": "#0c1324",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-primary": "#003640",
+            "on-background": "#dee2f7",
+            "background": "#020617",
+            "on-primary-container": "#9bf0ff",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "secondary": "#bcc7de",
+            "on-error-container": "#ffdad6",
+            "outline": "#1e293b",
+            "inverse-surface": "#dce2fa",
+            "on-tertiary-container": "#00424f",
+            "error": "#ef4444",
+            "inverse-on-surface": "#293042",
+            "secondary-fixed-dim": "#bcc7de",
+            "secondary-fixed": "#d8e3fb",
+            "primary-fixed": "#acedff",
+            "primary-fixed-dim": "#4cd7f6",
+            "primary-container": "#004f5d",
+            "error-container": "#93000a",
+            "on-secondary-container": "#c0c9e0",
+            "on-surface-variant": "#bcc9cd",
+            "tertiary-fixed": "#acedff",
+            "on-tertiary": "#003640",
+            "surface-variant": "#2e3447",
+            "on-primary-fixed-variant": "#004e5c"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            lg: "0px",
+            xl: "0px",
+            full: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "code-lg": ["Space Mono"],
+            "label-md": ["Inter"],
+            "headline-md": ["Space Grotesk"],
+            "number-lg": ["Space Mono"],
+            "label-lg": ["Inter"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "number-md": ["Space Mono"],
+            "headline-sm": ["Space Grotesk"],
+            "headline-lg": ["Space Grotesk"],
+            "code-md": ["Space Mono"],
+            "label-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "code-sm": ["Space Mono"]
+          },
+          fontSize: {
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }],
+            "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+            "number-md": ["15px", { fontWeight: "600" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }],
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      border-radius: 0px !important;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .scanline-overlay {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+    .radar-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.6) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.6) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-black text-on-surface m-0 p-0 overflow-hidden flex items-center justify-center min-h-screen">
+<!-- Fixed iPad Air Chassis Container: Exactly 1180px by 820px -->
+<div class="relative w-[1180px] h-[820px] bg-background border border-outline flex flex-col justify-between overflow-hidden shadow-2xl">
+<!-- Diegetic Scanline Simulation Overlay -->
+<div class="absolute inset-0 scanline-overlay z-30 opacity-70 pointer-events-none"></div>
+<!-- 1. HEADER (48px) -->
+<header class="w-full h-12 bg-surface-container-lowest border-b border-outline px-6 flex items-center justify-between z-20 shrink-0">
+<div class="flex items-center gap-4">
+<span class="font-orbitron font-black text-sm tracking-wider text-primary">GM-OS // JOUEUR</span>
+<span class="text-outline text-xs">|</span>
+<span class="font-orbitron font-semibold text-xs tracking-wider text-on-surface">OPÉRATION EN COURS : LE SILENCE DE VARN</span>
+</div>
+<div class="flex items-center gap-6">
+<!-- Status indicator with green dot -->
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-emerald-400 inline-block shadow-[0_0_8px_#34d399]"></span>
+<span class="font-code-sm text-code-sm text-emerald-400 font-bold tracking-widest">CONNECTÉ</span>
+</div>
+<!-- Mode Performance Button -->
+<button class="h-8 px-3 bg-surface-container border border-outline hover:border-primary text-on-surface font-label-sm text-label-sm uppercase tracking-wider transition-colors duration-150 flex items-center gap-2 active:bg-surface-container-high">
+<span class="material-symbols-outlined text-xs text-primary">speed</span>
+          MODE PERFORMANCE
+        </button>
+</div>
+</header>
+<!-- 2. COMPACT TELEMETRY ROW (34px) -->
+<div class="w-full h-[34px] bg-surface-container-low border-b border-outline px-6 flex items-center justify-between z-20 shrink-0 font-code-sm text-code-sm">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">schedule</span>
+<span class="text-primary font-bold">HORLOGE TABLE :</span>
+<span class="text-on-surface font-bold">13:24:50</span>
+<span class="text-on-surface-variant">Dimanche 4 octobre 2026</span>
+</div>
+<!-- Segmented Bar (3/8 Orange Filled, 5 Dark Empty) -->
+<div class="flex items-center gap-3">
+<span class="text-amber-400 font-bold uppercase tracking-wider">ALERTE DE LA STATION : 3/8</span>
+<div class="flex items-center gap-1">
+<!-- Segment 1 Filled -->
+<div class="w-5 h-2.5 bg-amber-500 border border-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.5)]"></div>
+<!-- Segment 2 Filled -->
+<div class="w-5 h-2.5 bg-amber-500 border border-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.5)]"></div>
+<!-- Segment 3 Filled -->
+<div class="w-5 h-2.5 bg-amber-500 border border-amber-400 shadow-[0_0_6px_rgba(245,158,11,0.5)]"></div>
+<!-- Segment 4 Empty -->
+<div class="w-5 h-2.5 bg-surface-container-lowest border border-outline"></div>
+<!-- Segment 5 Empty -->
+<div class="w-5 h-2.5 bg-surface-container-lowest border border-outline"></div>
+<!-- Segment 6 Empty -->
+<div class="w-5 h-2.5 bg-surface-container-lowest border border-outline"></div>
+<!-- Segment 7 Empty -->
+<div class="w-5 h-2.5 bg-surface-container-lowest border border-outline"></div>
+<!-- Segment 8 Empty -->
+<div class="w-5 h-2.5 bg-surface-container-lowest border border-outline"></div>
+</div>
+</div>
+</div>
+<!-- 3. MAIN WORKSPACE CANVAS (Direct Backdrop & Layout) -->
+<main class="relative flex-1 w-full p-6 flex flex-col justify-between overflow-hidden bg-background radar-grid">
+<!-- Top Backdrop Title Bar -->
+<div class="w-full flex items-center justify-between border-b border-outline pb-2 z-10">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 bg-primary"></span>
+<h1 class="font-orbitron font-bold text-sm tracking-widest text-on-surface uppercase">FLUX DIRECT // MENEUR [STANDBY]</h1>
+</div>
+<div class="font-code-sm text-code-sm text-on-surface-variant">
+          FRÉQ: 142.850 MHZ // RÉCEPTION: NOMINALE
+        </div>
+</div>
+<!-- Central Radar / Direct Feed Visual -->
+<div class="relative flex-1 flex flex-col items-center justify-center my-4 z-10">
+<div class="relative w-64 h-64 border border-outline flex items-center justify-center bg-surface-container-lowest/60">
+<!-- Concentric Ring Simulations -->
+<div class="absolute inset-4 border border-outline/60"></div>
+<div class="absolute inset-12 border border-outline/40"></div>
+<div class="absolute inset-20 border border-outline/30"></div>
+<!-- Crosshairs -->
+<div class="absolute inset-x-0 h-px bg-outline/80"></div>
+<div class="absolute inset-y-0 w-px bg-outline/80"></div>
+<!-- Central Pulse Icon -->
+<div class="relative z-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-5xl text-primary animate-pulse">radar</span>
+</div>
+</div>
+<div class="mt-4 text-center">
+<h2 class="font-orbitron font-bold text-base text-on-surface tracking-wider">EN ATTENTE DU SIGNAL TABLE</h2>
+<p class="font-label-sm text-label-sm text-primary tracking-widest mt-1 uppercase">CANAL SÉLECTIONNÉ : PROJECTION PRINCIPALE</p>
+</div>
+</div>
+<!-- Bottom Panel Section of Main: Chroniques + Persistent Notification Card -->
+<div class="w-full grid grid-cols-12 gap-6 items-end z-10">
+<!-- Left 6 cols: Chroniques de Séance -->
+<div class="col-span-6 bg-surface-container-lowest border border-outline p-3.5">
+<div class="flex items-center justify-between border-b border-outline pb-1.5 mb-2">
+<span class="font-orbitron font-bold text-xs tracking-wider text-on-surface">CHRONIQUES DE SÉANCE [SÉANCE 2]</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">LOG-ID: #892-V</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface italic">
+            COMMUNIQUÉ OFFICIEL : « Aucun résumé public. »
+          </p>
+</div>
+<!-- Right 6 cols: Interactive Notification Card (Nouveau Message) -->
+<div class="col-span-6 bg-surface-container-low border border-primary p-3 flex items-center justify-between shadow-[0_0_15px_rgba(6,182,212,0.12)]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary/20 border border-primary flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">mark_email_unread</span>
+</div>
+<div>
+<div class="font-orbitron font-bold text-xs tracking-wider text-primary">NOUVEAU MESSAGE</div>
+<div class="font-body-sm text-body-sm text-on-surface font-semibold">Maître du Jeu / Maître du Jeu</div>
+</div>
+</div>
+<button class="h-11 px-4 bg-primary hover:bg-[#9bf0ff] text-background font-label-md text-label-md font-bold uppercase tracking-wider flex items-center gap-2 transition-colors duration-150 cursor-pointer active:bg-white" id="open-drawer-btn">
+<span>TOUCHER POUR OUVRIR</span>
+<span class="text-base font-bold">→</span>
+</button>
+</div>
+</div>
+</main>
+<!-- 4. FIXED BOTTOM NAVIGATION BAR (Two Rows, Target >= 44x44px) -->
+<nav class="w-full bg-surface-container-lowest border-t border-outline flex flex-col z-20 shrink-0">
+<!-- Row 1: 6 Primary Tabs -->
+<div class="grid grid-cols-6 border-b border-outline">
+<!-- Direct (Active) -->
+<button class="h-11 flex items-center justify-center gap-2 border-r border-outline bg-primary-container text-primary border-b-2 border-b-primary font-orbitron font-bold text-xs tracking-wider transition-colors">
+<span class="material-symbols-outlined text-lg">live_tv</span>
+<span>DIRECT</span>
+</button>
+<!-- Archives -->
+<button class="h-11 flex items-center justify-center gap-2 border-r border-outline text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-orbitron font-semibold text-xs tracking-wider transition-colors">
+<span class="material-symbols-outlined text-lg">folder</span>
+<span>ARCHIVES</span>
+</button>
+<!-- PNJ -->
+<button class="h-11 flex items-center justify-center gap-2 border-r border-outline text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-orbitron font-semibold text-xs tracking-wider transition-colors">
+<span class="material-symbols-outlined text-lg">group</span>
+<span>PNJ</span>
+</button>
+<!-- Lieux -->
+<button class="h-11 flex items-center justify-center gap-2 border-r border-outline text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-orbitron font-semibold text-xs tracking-wider transition-colors">
+<span class="material-symbols-outlined text-lg">location_city</span>
+<span>LIEUX</span>
+</button>
+<!-- Inventaire -->
+<button class="h-11 flex items-center justify-center gap-2 border-r border-outline text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-orbitron font-semibold text-xs tracking-wider transition-colors">
+<span class="material-symbols-outlined text-lg">inventory_2</span>
+<span>INVENTAIRE</span>
+</button>
+<!-- Cartes -->
+<button class="h-11 flex items-center justify-center gap-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-orbitron font-semibold text-xs tracking-wider transition-colors">
+<span class="material-symbols-outlined text-lg">map</span>
+<span>CARTES</span>
+</button>
+</div>
+<!-- Row 2: 4 Quick Actions -->
+<div class="grid grid-cols-4">
+<!-- Fiche -->
+<button class="h-11 flex items-center justify-center gap-2 border-r border-outline text-on-surface hover:text-primary hover:bg-surface-container font-label-md text-label-md uppercase tracking-wider transition-colors">
+<span class="material-symbols-outlined text-base">badge</span>
+<span>FICHE</span>
+</button>
+<!-- Notes -->
+<button class="h-11 flex items-center justify-center gap-2 border-r border-outline text-on-surface hover:text-primary hover:bg-surface-container font-label-md text-label-md uppercase tracking-wider transition-colors">
+<span class="material-symbols-outlined text-base">edit_note</span>
+<span>NOTES</span>
+</button>
+<!-- Messages (With Badge 1) -->
+<button class="h-11 flex items-center justify-center gap-2.5 border-r border-outline text-primary hover:bg-surface-container font-label-md text-label-md uppercase tracking-wider transition-colors cursor-pointer" id="nav-messages-btn">
+<span class="material-symbols-outlined text-base">mail</span>
+<span>MESSAGES</span>
+<span class="w-5 h-5 bg-primary text-background font-code-sm text-xs font-bold flex items-center justify-center">1</span>
+</button>
+<!-- Quitter -->
+<button class="h-11 flex items-center justify-center gap-2 text-error hover:bg-error-container hover:text-on-error-container font-label-md text-label-md uppercase tracking-wider transition-colors cursor-pointer" id="quit-btn">
+<span class="material-symbols-outlined text-base">power_settings_new</span>
+<span>QUITTER</span>
+</button>
+</div>
+</nav>
+<!-- 5. SLIDE-OVER DRAWER: MESSAGERIE // CANAL DIRECT MJ (Right Side Overlay) -->
+<div class="absolute top-0 right-0 w-[420px] h-full bg-surface-container-lowest border-l border-primary shadow-2xl z-40 transform translate-x-full transition-transform duration-200 flex flex-col justify-between" id="messages-drawer">
+<!-- Drawer Header -->
+<div class="h-14 bg-surface-container-low border-b border-outline px-4 flex items-center justify-between shrink-0">
+<div>
+<div class="font-orbitron font-bold text-xs tracking-wider text-primary">MESSAGERY // CANAL DIRECT MJ</div>
+<div class="font-code-sm text-[10px] text-on-surface-variant">CRYPTAGE SYMÉTRIQUE ACTIF</div>
+</div>
+<button class="min-w-[44px] min-h-[44px] px-3 bg-surface-container border border-outline hover:border-error hover:text-error text-on-surface font-label-sm text-label-sm uppercase tracking-wider flex items-center justify-center gap-1 transition-colors" id="close-drawer-btn">
+<span class="material-symbols-outlined text-sm">close</span>
+<span>FERMER</span>
+</button>
+</div>
+<!-- Recipient Selector Display -->
+<div class="bg-surface-container px-4 py-2 border-b border-outline flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">DESTINATAIRE :</span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-orbitron font-bold text-xs text-primary">Maître du Jeu</span>
+<span class="font-code-sm text-[10px] text-on-surface-variant">(Canal Direct MJ / Privé)</span>
+</div>
+</div>
+<!-- Chat Messages Container -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Message 1: Vous (23:37) -->
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-code-sm text-code-sm text-on-surface-variant">23:37</span>
+<span class="font-label-sm text-label-sm font-bold text-primary">Vous</span>
+</div>
+<div class="bg-surface-container border border-outline p-3 max-w-[85%] text-right font-body-md text-body-md text-on-surface">
+            Le relais est ouvert.
+          </div>
+</div>
+<!-- Message 2: Maître du Jeu (23:37) -->
+<div class="flex flex-col items-start">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-label-sm font-bold text-amber-400">Maître du Jeu</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">23:37</span>
+</div>
+<div class="bg-surface-container-low border border-amber-400/40 p-3 max-w-[85%] font-body-md text-body-md text-on-surface shadow-[0_0_8px_rgba(245,158,11,0.1)]">
+            Vous entendez trois coups.
+          </div>
+</div>
+</div>
+<!-- Security / Lock Notification Footer & Input Area -->
+<div class="p-4 border-t border-outline bg-surface-container-low shrink-0 space-y-3">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">lock</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant italic">Seul le Maître du Jeu pourra lire ce message.</span>
+</div>
+<div class="flex gap-2">
+<input class="flex-1 bg-surface-container-lowest border border-outline px-3 py-2 text-body-md text-on-surface focus:outline-none focus:border-primary placeholder:text-on-surface-variant/50" placeholder="Transmettre une transmission directe..." type="text"/>
+<button class="h-10 px-4 bg-primary text-background font-label-md text-label-md font-bold uppercase tracking-wider hover:bg-[#9bf0ff] transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-base">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 6. CONFIRMATION MODAL (QUITTER) -->
+<div class="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 hidden items-center justify-center" id="quit-modal">
+<div class="w-[440px] bg-surface-container-lowest border-2 border-error p-6 shadow-2xl">
+<div class="flex items-center gap-3 border-b border-error/40 pb-3 mb-4 text-error">
+<span class="material-symbols-outlined text-2xl">warning</span>
+<h3 class="font-orbitron font-bold text-sm tracking-wider uppercase">CONFIRMATION DE DÉCONNEXION</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-6">
+          Voulez-vous véritablement interrompre la liaison neurale et quitter la session GM-OS en cours ?
+        </p>
+<div class="grid grid-cols-2 gap-4">
+<button class="h-11 bg-surface-container border border-outline hover:border-on-surface text-on-surface font-label-md text-label-md uppercase tracking-wider" id="cancel-quit-btn">
+            ANNULER
+          </button>
+<button class="h-11 bg-error hover:bg-red-600 text-on-error font-label-md text-label-md font-bold uppercase tracking-wider" id="confirm-quit-btn">
+            DÉCONNECTER
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Logic -->
+<script>
+    const drawer = document.getElementById('messages-drawer');
+    const openDrawerBtn = document.getElementById('open-drawer-btn');
+    const navMessagesBtn = document.getElementById('nav-messages-btn');
+    const closeDrawerBtn = document.getElementById('close-drawer-btn');
+
+    const quitModal = document.getElementById('quit-modal');
+    const quitBtn = document.getElementById('quit-btn');
+    const cancelQuitBtn = document.getElementById('cancel-quit-btn');
+    const confirmQuitBtn = document.getElementById('confirm-quit-btn');
+
+    function openDrawer() {
+      drawer.classList.remove('translate-x-full');
+    }
+
+    function closeDrawer() {
+      drawer.classList.add('translate-x-full');
+    }
+
+    openDrawerBtn.addEventListener('click', openDrawer);
+    navMessagesBtn.addEventListener('click', openDrawer);
+    closeDrawerBtn.addEventListener('click', closeDrawer);
+
+    // Modal Handling
+    quitBtn.addEventListener('click', () => {
+      quitModal.classList.remove('hidden');
+      quitModal.classList.add('flex');
+    });
+
+    cancelQuitBtn.addEventListener('click', () => {
+      quitModal.classList.add('hidden');
+      quitModal.classList.remove('flex');
+    });
+
+    confirmQuitBtn.addEventListener('click', () => {
+      quitModal.classList.add('hidden');
+      quitModal.classList.remove('flex');
+    });
+  </script>
+</body></html>

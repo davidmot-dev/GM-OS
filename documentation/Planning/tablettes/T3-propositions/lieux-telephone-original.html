@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GM-OS — Tablette Joueur : Lieux (390×844)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            text: '#f8fafc',
+            'text-muted': '#898c95',
+            primary: '#06b6d4',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            success: '#10b981',
+            border: '#1e293b'
+          },
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Grille discrète diegetique */
+    .cyber-grid {
+      background-image: linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    /* Arêtes vives 0px strictes */
+    * {
+      border-radius: 0px !important;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+  </style>
+</head>
+<body class="bg-background text-text min-h-screen flex justify-center items-start selection:bg-primary selection:text-background">
+
+  <!-- Conteneur Téléphone 390x844 responsive dès 360px -->
+  <div class="w-full max-w-[390px] min-h-[844px] bg-background border-x border-[#1e293b] flex flex-col relative cyber-grid shadow-2xl overflow-hidden pb-[148px]">
+
+    <!-- 1. En-tête compact GM-OS Joueur -->
+    <header class="w-full bg-[#070d1f] border-b border-border px-3.5 py-2.5 flex items-center justify-between z-30 sticky top-0">
+      <div class="flex items-center gap-2">
+        <div class="w-2.5 h-2.5 bg-primary shadow-[0_0_8px_#06b6d4]"></div>
+        <span class="font-display text-[13px] font-bold tracking-wider text-text">GM-OS <span class="text-primary font-normal">// JOUEUR</span></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-[#0f172a] border border-border">
+          <span class="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>
+          <span class="text-[11px] font-bold text-success tracking-wider uppercase font-mono">CONNECTÉ</span>
+        </div>
+        <!-- Bouton unique Mode performance / Mode qualité -->
+        <button id="btn-toggle-perf" class="min-h-[44px] px-2.5 py-1 bg-surface-raised border border-border hover:border-primary active:bg-primary active:text-background text-[11px] font-bold tracking-wider text-text flex items-center gap-1 transition-colors" onclick="togglePerformance()">
+          <span class="text-warning">⚡</span>
+          <span id="perf-label">MODE PERFORMANCE</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. Sous-bandeau de Télémesure : Horloge & Tension Publique -->
+    <section class="w-full bg-[#0a1022] border-b border-border px-3.5 py-2.5 grid grid-cols-2 gap-2 z-20">
+      <!-- Horloge projetée -->
+      <div class="flex flex-col justify-center">
+        <div class="flex items-center gap-1 text-[11px] font-mono text-text-muted">
+          <span>HORLOGE</span>
+          <span class="text-[10px] px-1 bg-[#1e293b] text-primary">TABLE</span>
+        </div>
+        <div class="font-mono text-[17px] font-bold text-text tracking-wide mt-0.5">
+          23:36:<span class="text-primary">58</span>
+        </div>
+        <div class="text-[11px] text-text-muted">Dimanche 4 octobre 2026</div>
+      </div>
+
+      <!-- Tension publique (Alerte de la station 3/8) -->
+      <div class="flex flex-col justify-center border-l border-border pl-2.5">
+        <div class="flex items-center justify-between text-[11px] font-mono">
+          <span class="text-warning font-bold tracking-wide">ALERTE DE LA STATION</span>
+          <span class="text-warning font-bold font-mono">3/8</span>
+        </div>
+        <!-- Rail segmenté 3 crans ambre / 5 crans éteints -->
+        <div class="grid grid-cols-8 gap-1 w-full h-2.5 mt-1.5 bg-[#020617] p-0.5 border border-border">
+          <div class="bg-warning"></div>
+          <div class="bg-warning"></div>
+          <div class="bg-warning"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+        </div>
+        <div class="text-[11px] text-text-muted mt-1 truncate">Palier 3 enclenché</div>
+      </div>
+    </section>
+
+    <!-- 3. Contenu Défilant : Hub Atlas (Lieux) -->
+    <main class="w-full flex-1 px-3.5 py-3.5 overflow-y-auto custom-scroll flex flex-col gap-3.5">
+      
+      <!-- Titre de module & Compteur -->
+      <div class="flex items-start justify-between border-b border-border pb-2.5">
+        <div>
+          <h1 class="font-display text-[18px] font-bold text-text uppercase tracking-wide leading-tight">
+            Atlas des Lieux Visités
+          </h1>
+          <p class="text-[14px] text-text-muted mt-0.5 leading-snug">
+            Cartographie des territoires explorés par le groupe.
+          </p>
+        </div>
+        <div class="bg-[#0f172a] border border-primary/40 px-2 py-1 flex items-center shrink-0">
+          <span class="text-[11px] font-mono font-bold text-primary tracking-wider uppercase">1 LIEUX DÉCOUVERTS</span>
+        </div>
+      </div>
+
+      <!-- Liste des Lieux (1 seul lieu touchable : Station Varn) -->
+      <section class="flex flex-col gap-3">
+        <!-- Carte touchable Station Varn -->
+        <article id="card-station-varn" class="w-full bg-surface border border-border hover:border-primary cursor-pointer transition-colors p-3 flex flex-col gap-2.5 active:bg-surface-raised" onclick="ouvrirSurcoucheLieu()">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-primary"></span>
+              <h2 class="font-display text-[16px] font-bold text-text uppercase tracking-wide">Station Varn</h2>
+            </div>
+            <span class="px-2 py-0.5 bg-[#1e293b] border border-primary/50 text-primary text-[11px] font-mono uppercase font-bold tracking-wider">
+              BATTLEMAP
+            </span>
+          </div>
+
+          <p class="text-[14px] text-text leading-relaxed">
+            Le pont C, entre le sas et le relais.
+          </p>
+
+          <!-- Emplacement neutre du plan technique (conformément aux consignes strictes) -->
+          <div class="w-full h-[180px] bg-[#070d1f] border border-dashed border-border flex flex-col items-center justify-center relative p-3 text-center group-hover:border-primary/60">
+            <!-- Schéma filaire géométrique neutre rappelant le plan e2e -->
+            <div class="w-full h-full border border-border/80 flex items-center justify-between px-2 py-1 text-[11px] font-mono text-text-muted bg-[#020617]/60">
+              <div class="border border-border p-1 bg-surface">SAS</div>
+              <div class="flex flex-col gap-2">
+                <div class="border border-border p-1 bg-surface">QUARTIERS</div>
+                <div class="border border-border p-1 bg-surface">INFIRMERIE</div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <div class="border border-border p-1 bg-surface">REGISTRE</div>
+                <div class="border border-border p-1 bg-surface">SOUTE</div>
+              </div>
+              <div class="border border-primary/60 p-1 bg-surface text-primary">RELAIS</div>
+            </div>
+
+            <div class="absolute inset-0 bg-[#020617]/70 flex flex-col items-center justify-center p-2">
+              <span class="font-mono text-[13px] font-bold text-text uppercase tracking-wider">Plan de Station Varn</span>
+              <span class="text-[11px] text-text-muted mt-1 font-mono">[Emplacement neutre du plan technique]</span>
+              <span class="mt-2 text-[11px] text-primary font-mono uppercase tracking-wide border-b border-primary/60">Toucher pour examiner</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] font-mono text-text-muted pt-1 border-t border-border/60">
+            <span>EXPLORATION DOCUMENTÉE</span>
+            <span class="text-primary font-bold">TOUCHER POUR DÉTAIL →</span>
+          </div>
+        </article>
+
+        <!-- État vide de référence (inclus conformément aux spécifications) -->
+        <div class="w-full bg-[#0a1022] border border-border p-3 text-center opacity-70">
+          <div class="text-[12px] font-display text-text-muted uppercase tracking-wider font-bold">Territoires inconnus</div>
+          <div class="text-[13px] text-text-muted mt-1 leading-snug">
+            Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 4. Navigation Fixe en Pied (10 destinations réelles) -->
+    <footer class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-[#070d1f] border-t border-border z-40 flex flex-col">
+      <!-- Rangée 1 : 3 destinations primaires -->
+      <div class="grid grid-cols-3 border-b border-border">
+        <a href="#direct" class="min-h-[44px] flex items-center justify-center text-[12px] font-bold tracking-wider text-text-muted hover:text-text hover:bg-surface transition-colors border-r border-border">
+          DIRECT
+        </a>
+        <a href="#archives" class="min-h-[44px] flex items-center justify-center text-[12px] font-bold tracking-wider text-text-muted hover:text-text hover:bg-surface transition-colors border-r border-border">
+          ARCHIVES
+        </a>
+        <a href="#pnj" class="min-h-[44px] flex items-center justify-center text-[12px] font-bold tracking-wider text-text-muted hover:text-text hover:bg-surface transition-colors">
+          PNJ
+        </a>
+      </div>
+
+      <!-- Rangée 2 : 3 destinations primaires (Lieux actif) -->
+      <div class="grid grid-cols-3 border-b border-border">
+        <a href="#lieux" class="min-h-[44px] flex items-center justify-center text-[12px] font-bold tracking-wider bg-primary text-background transition-colors border-r border-border">
+          LIEUX ●
+        </a>
+        <a href="#inventaire" class="min-h-[44px] flex items-center justify-center text-[12px] font-bold tracking-wider text-text-muted hover:text-text hover:bg-surface transition-colors border-r border-border">
+          INVENTAIRE
+        </a>
+        <a href="#cartes" class="min-h-[44px] flex items-center justify-center text-[12px] font-bold tracking-wider text-text-muted hover:text-text hover:bg-surface transition-colors">
+          CARTES
+        </a>
+      </div>
+
+      <!-- Rangée 3 : 4 actions rapides -->
+      <div class="grid grid-cols-4 bg-[#0a1022]">
+        <button class="min-h-[44px] flex items-center justify-center text-[11px] font-mono font-bold text-text-muted hover:text-text border-r border-border" onclick="alert('Module Fiche joueur')">
+          ◆ FICHE
+        </button>
+        <button class="min-h-[44px] flex items-center justify-center text-[11px] font-mono font-bold text-text-muted hover:text-text border-r border-border" onclick="alert('Module Notes de session')">
+          ✎ NOTES
+        </button>
+        <button class="min-h-[44px] flex items-center justify-center text-[11px] font-mono font-bold text-text-muted hover:text-text border-r border-border" onclick="alert('Module Messages directs')">
+          ✉ MESSAGES
+        </button>
+        <button class="min-h-[44px] flex items-center justify-center text-[11px] font-mono font-bold text-danger hover:bg-danger/10" onclick="demanderQuitter()">
+          ⏹ QUITTER
+        </button>
+      </div>
+    </footer>
+
+    <!-- 5. Surcouche Modale (HubAtlasViewer : Détail du Lieu Visité) -->
+    <div id="modal-lieu-viewer" class="fixed inset-0 bg-[#020617]/90 backdrop-blur-md z-50 flex items-center justify-center p-3.5 hidden" onclick="fermerSurcoucheLieu(event)">
+      <div class="w-full max-w-[360px] bg-surface border border-primary shadow-[0_0_24px_rgba(6,182,212,0.25)] flex flex-col overflow-hidden" onclick="event.stopPropagation()">
+        
+        <!-- En-tête de la surcouche -->
+        <div class="bg-[#070d1f] border-b border-border px-3.5 py-2.5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-primary"></span>
+            <span class="text-[11px] font-mono text-text-muted uppercase tracking-wider font-bold">Lieu Visité</span>
+          </div>
+          <span class="px-2 py-0.5 bg-[#1e293b] border border-primary/50 text-primary text-[11px] font-mono uppercase font-bold">
+            battlemap
+          </span>
+        </div>
+
+        <!-- Corps de la surcouche -->
+        <div class="p-4 flex flex-col gap-3">
+          <div class="border-b border-border pb-2">
+            <h2 class="font-display text-[18px] font-bold text-text uppercase tracking-wide">
+              Station Varn
+            </h2>
+            <div class="text-[12px] font-mono text-primary mt-0.5 font-bold uppercase tracking-wider">
+              Exploration Documentée
+            </div>
+            <p class="text-[14px] text-text mt-1.5 leading-relaxed">
+              Le pont C, entre le sas et le relais.
+            </p>
+          </div>
+
+          <!-- Ce même plan technique neutre agrandi -->
+          <div class="w-full h-[220px] bg-[#070d1f] border border-border p-2 flex flex-col justify-between relative">
+            <div class="w-full h-full border border-border/80 flex items-center justify-between px-2 py-1 text-[11px] font-mono text-text-muted bg-[#020617]/70">
+              <div class="border border-border p-2 bg-surface">SAS</div>
+              <div class="flex flex-col gap-3">
+                <div class="border border-border p-1.5 bg-surface text-center">QUARTIERS</div>
+                <div class="border border-border p-1.5 bg-surface text-center">INFIRMERIE</div>
+              </div>
+              <div class="flex flex-col gap-3">
+                <div class="border border-border p-1.5 bg-surface text-center">REGISTRE</div>
+                <div class="border border-border p-1.5 bg-surface text-center">SOUTE</div>
+              </div>
+              <div class="border border-primary p-2 bg-surface text-primary font-bold">RELAIS</div>
+            </div>
+
+            <!-- Mention de source neutre -->
+            <div class="absolute bottom-1 right-2 text-[10px] font-mono text-text-muted">
+              Plan de Station Varn
+            </div>
+          </div>
+
+          <div class="text-[11px] font-mono text-text-muted">
+            RÉPERTOIRE : <span class="text-text">Atlas du Nexus</span>
+          </div>
+        </div>
+
+        <!-- Bouton de fermeture -->
+        <div class="p-3 bg-[#070d1f] border-t border-border flex justify-end">
+          <button class="min-h-[44px] w-full px-4 py-2 bg-primary text-background font-mono font-bold text-[13px] uppercase tracking-wider hover:bg-primary/90 active:bg-primary/70 transition-colors" onclick="fermerSurcoucheLieuDirect()">
+            Fermer
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 6. Dialogue Modale de Confirmation : Quitter -->
+    <div id="modal-confirm-quitter" class="fixed inset-0 bg-[#020617]/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden" onclick="fermerModalQuitter(event)">
+      <div class="w-full max-w-[320px] bg-surface border border-border p-4 flex flex-col gap-3 shadow-xl" onclick="event.stopPropagation()">
+        <div class="flex items-center gap-2 text-danger font-display text-[15px] font-bold uppercase">
+          <span>⏹</span> Confirmation de sortie
+        </div>
+        <p class="text-[14px] text-text leading-snug">
+          Voulez-vous vous déconnecter de la session en cours ?
+        </p>
+        <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-border">
+          <button class="min-h-[44px] px-3.5 py-1.5 text-[12px] font-bold text-text-muted hover:text-text" onclick="fermerModalQuitterDirect()">
+            Annuler
+          </button>
+          <button class="min-h-[44px] px-3.5 py-1.5 bg-danger text-text font-bold text-[12px] uppercase" onclick="confirmerQuitter()">
+            Déconnecter
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 1. Bascule du mode Performance / Qualité
+    let isPerformance = true;
+    function togglePerformance() {
+      isPerformance = !isPerformance;
+      const label = document.getElementById('perf-label');
+      label.innerText = isPerformance ? 'MODE PERFORMANCE' : 'MODE QUALITÉ';
+    }
+
+    // 2. Gestion de la surcouche HubAtlasViewer
+    function ouvrirSurcoucheLieu() {
+      document.getElementById('modal-lieu-viewer').classList.remove('hidden');
+    }
+
+    function fermerSurcoucheLieuDirect() {
+      document.getElementById('modal-lieu-viewer').classList.add('hidden');
+    }
+
+    function fermerSurcoucheLieu(event) {
+      document.getElementById('modal-lieu-viewer').classList.add('hidden');
+    }
+
+    // 3. Gestion de la modale de confirmation Quitter
+    function demanderQuitter() {
+      document.getElementById('modal-confirm-quitter').classList.remove('hidden');
+    }
+
+    function fermerModalQuitterDirect() {
+      document.getElementById('modal-confirm-quitter').classList.add('hidden');
+    }
+
+    function fermerModalQuitter(event) {
+      document.getElementById('modal-confirm-quitter').classList.add('hidden');
+    }
+
+    function confirmerQuitter() {
+      alert("Session fermée.");
+      fermerModalQuitterDirect();
+    }
+
+    // 4. Fermeture par touche Échap
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        fermerSurcoucheLieuDirect();
+        fermerModalQuitterDirect();
+      }
+    });
+  </script>
+</body>
+</html>

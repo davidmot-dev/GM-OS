@@ -1,0 +1,336 @@
+<!DOCTYPE html><html class="dark" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>GM-OS // JOUEUR - Tablette Joueur T0</title>
+<!-- Google Fonts: Space Grotesk (pour Orbitron/Headlines cyberpunk), Inter, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:wght@400;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-low": "#141b2c",
+            "secondary-fixed": "#d8e3fb",
+            "error-container": "#93000a",
+            "surface-variant": "#2e3447",
+            "secondary-container": "#3e495d",
+            "on-surface": "#dee2f7",
+            "on-primary-container": "#9bf0ff",
+            "primary-fixed": "#acedff",
+            "tertiary-container": "#06b6d4",
+            "surface-container-lowest": "#070d1f",
+            "secondary-fixed-dim": "#bcc7de",
+            "primary-fixed-dim": "#4cd7f6",
+            "primary": "#4cd7f6",
+            "surface-tint": "#4cd7f6",
+            "surface-container-high": "#232a3c",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-tertiary-fixed": "#001f26",
+            "on-primary": "#003640",
+            "outline-variant": "#151b2d",
+            "on-secondary-container": "#aeb9d0",
+            "surface-bright": "#32394c",
+            "outline": "#1e293b",
+            "on-secondary-fixed": "#111c2d",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-surface-variant": "#bcc9cd",
+            "on-error": "#690005",
+            "surface-container-highest": "#2e3447",
+            "surface-container": "#192031",
+            "primary-container": "#06b6d4",
+            "on-secondary": "#263143",
+            "secondary": "#bcc7de",
+            "inverse-primary": "#00687a",
+            "on-background": "#dee2f7",
+            "on-error-container": "#ffdad6",
+            "background": "#020617",
+            "surface": "#0c1324",
+            "tertiary": "#4cd7f6",
+            "on-tertiary-container": "#9bf0ff",
+            "on-secondary-fixed-variant": "#3c475a",
+            "inverse-on-surface": "#293042",
+            "inverse-surface": "#dce2fa",
+            "on-tertiary": "#003640",
+            "surface-dim": "#0c1324",
+            "tertiary-fixed": "#acedff",
+            "on-primary-fixed": "#001f26",
+            "error": "#ef4444",
+            "tertiary-fixed-dim": "#4cd7f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "spacing": {
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "margin": "1rem",
+            "gutter-desktop": "1.5rem",
+            "gutter": "1rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "margin-desktop": "2rem",
+            "space-xl": "2.5rem"
+          },
+          "fontFamily": {
+            "number-lg": ["Space Mono", "monospace"],
+            "label-sm": ["Inter", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "code-lg": ["Space Mono", "monospace"],
+            "body-lg": ["Inter", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "code-md": ["Space Mono", "monospace"],
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"]
+          },
+          "fontSize": {
+            "number-lg": ["28px", { "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "number-md": ["15px", { "fontWeight": "600" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+            "code-lg": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "code-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    * {
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #020617;
+      color: #dee2f7;
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <link rel="stylesheet" href="j2.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Orbitron:wght@600;700;800&amp;display=swap"></head>
+<body class="" data-ecran="pnj"><div id="cadre-j2" class="telephone"><header class="w-full bg-surface-container-lowest border-b border-outline px-3 py-2 flex items-center justify-between sticky top-0 z-30">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold tracking-wider text-primary">■ GM-OS</span>
+<span class="inline-flex items-center px-1.5 py-0.5 bg-surface-container-high border border-outline text-[#22c55e] font-label-sm text-label-sm">
+          ● CONNECTÉ
+        </span>
+</div>
+<!-- Bouton mode performance (>= 44px tactile) -->
+<button class="min-h-[44px] min-w-[44px] px-2.5 bg-surface-container border border-outline text-on-surface-variant hover:text-primary hover:border-primary active:bg-surface-container-high transition-colors flex items-center justify-center gap-1" id="bouton-mode-j2" onclick="basculerQualite()"><span id="mode-j2">MODE PERFORMANCE</span></button>
+</header><section class="w-full bg-surface-container-low border-b border-outline px-3 py-2.5 flex flex-col gap-2">
+<!-- Horloge projetée et statut de table -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-code-md text-code-md font-bold tracking-tight text-primary">23:36:50</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Dimanche 4 octobre 2026</span>
+</div>
+
+</div>
+<!-- Tension publique : Alerte station (3/8 crans orange allumés) -->
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">ALERTE STATION</span>
+<span class="font-body-sm text-body-sm text-secondary">Alerte de la station</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-md text-code-md font-bold text-[#f59e0b] mr-1">3/8</span>
+<!-- Jauge de 8 segments diegétiques (3 ambre allumés, 5 éteints) -->
+<div aria-label="Jauge alerte station 3 sur 8" class="flex gap-1">
+<span class="w-2.5 h-4 bg-[#f59e0b] inline-block border border-[#f59e0b]"></span>
+<span class="w-2.5 h-4 bg-[#f59e0b] inline-block border border-[#f59e0b]"></span>
+<span class="w-2.5 h-4 bg-[#f59e0b] inline-block border border-[#f59e0b]"></span>
+<span class="w-2.5 h-4 bg-surface-container-lowest inline-block border border-outline"></span>
+<span class="w-2.5 h-4 bg-surface-container-lowest inline-block border border-outline"></span>
+<span class="w-2.5 h-4 bg-surface-container-lowest inline-block border border-outline"></span>
+<span class="w-2.5 h-4 bg-surface-container-lowest inline-block border border-outline"></span>
+<span class="w-2.5 h-4 bg-surface-container-lowest inline-block border border-outline"></span>
+</div>
+</div>
+</div>
+</section><main id="contenu-j2" class="flex-1 overflow-y-auto px-3.5 pt-4 pb-48 flex flex-col gap-4">
+<!-- En-tête du module -->
+<div class="flex flex-col gap-1 border-l-2 border-primary pl-2.5">
+<div class="flex items-center justify-between">
+<h1 class="font-headline-md text-headline-md tracking-wider text-on-surface uppercase">TROMBINOSCOPE</h1>
+<span class="px-2 py-0.5 bg-surface-container-high border border-outline font-label-sm text-label-sm text-primary">
+            <span id="compteur-j2">1</span> PROFILS RÉPERTORIÉS
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Registre des individus et entités identifiés.</p>
+</div>
+<!-- CARTE DE PROFIL TOUCHABLE : Superviseur Hale (>=44px tactile garanti) -->
+
+<!-- ÉTAT VIDE SOUS-JACENT -->
+
+<div data-liste-j2="" class="j2-liste "><article aria-haspopup="dialog" class="w-full bg-surface-container border border-outline hover:border-primary active:border-primary p-3 flex items-center justify-between gap-3 cursor-pointer transition-colors min-h-[72px] j2-carte" id="card-hale" role="button" tabindex="0" onclick="ouvrirDetail(0)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();ouvrirDetail(0)}">
+<div class="flex items-center gap-3">
+<!-- Silhouette vectorielle technique diegetique -->
+<div class="w-12 h-12 bg-surface-container-lowest border border-outline flex items-center justify-center shrink-0 text-on-surface-variant">
+<svg class="w-7 h-7 stroke-current fill-none" stroke-width="1.5" viewBox="0 0 24 24">
+<path d="M12 3a4 4 0 100 8 4 4 0 000-8z" stroke-linecap="square"></path>
+<path d="M5 21v-2a6 6 0 0112 0v2" stroke-linecap="square"></path>
+<line x1="2" x2="4" y1="12" y2="12"></line>
+<line x1="20" x2="22" y1="12" y2="12"></line>
+<line x1="12" x2="12" y1="2" y2="4"></line>
+</svg>
+</div>
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Superviseur Hale</h2>
+</div>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="px-1.5 py-0.5 bg-surface-container-high border border-outline font-label-sm text-label-sm text-secondary">
+                NEUTRAL
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Civil / Neutre</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center min-w-[44px] min-h-[44px] text-on-surface-variant">
+<span class="font-code-lg text-code-lg text-primary">›</span>
+</div>
+</article></div><p id="vide-j2" class="hidden j2-vide">Aucun sujet identifié / En attente de transmission par le MJ</p></main><footer id="navigation-j2"><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button">Direct</button><button type="button">Archives</button><button type="button" class="j2-actif" aria-current="page">PNJ</button></div><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button">Lieux</button><button type="button">Inventaire</button><button type="button">Cartes</button></div><div class="j2-rangee" style="grid-template-columns: repeat(4, minmax(0,1fr));"><button type="button">Fiche</button><button type="button">Notes</button><button type="button" id="destination-messages">Messages</button><button type="button" onclick="quitterSession()" class="j2-quitter">Quitter</button></div></footer><div id="detail-j2" class="j2-detail hidden" role="dialog" aria-modal="true" aria-label="Superviseur Hale" onclick="if(event.target===this)fermerDetail()"><section class="j2-detail-panneau"><div class="j2-detail-entete"><span>Identité Non Documentée</span><button onclick="fermerDetail()" aria-label="Fermer">Fermer</button></div><div class="j2-detail-corps "><div class="j2-neutre" aria-hidden="true"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3a4 4 0 100 8 4 4 0 000-8z"></path><path d="M5 21v-2a6 6 0 0112 0v2"></path></svg></div><div><h2>Superviseur Hale</h2><p class="j2-sous-titre">neutral · Profil Civil / Neutre</p><p data-description="">Répond trop vite aux questions qu'on ne lui a pas posées.</p><p class="j2-note">Archives du Nexus</p></div></div></section></div></div><script>// Prototype T3 : interactions locales, aucune connexion ou écriture dans GM-OS.
+const ecran = document.body.dataset.ecran;
+const variante = new URLSearchParams(location.search).get('etat');
+function basculerQualite() {
+  const texte = document.getElementById('mode-j2');
+  texte.textContent = texte.textContent.includes('PERFORMANCE') ? 'MODE QUALITÉ' : 'MODE PERFORMANCE';
+}
+function quitterSession() { window.confirm('Quitter la session ?'); }
+function fermerDetail() { document.getElementById('detail-j2')?.classList.add('hidden'); }
+function ouvrirDetail(index = 0) {
+  const detail = document.getElementById('detail-j2');
+  if (ecran === 'archives') {
+    const indices = [['Le café encore chaud', "Le départ date de moins d'une heure."], ['La signature unique', 'Tout le registre est signé « Hale », même les nuits où il dormait.']];
+    detail.querySelector('h2').textContent = indices[index][0];
+    detail.querySelector('[data-description]').textContent = indices[index][1];
+    detail.setAttribute('aria-label', indices[index][0]);
+  }
+  detail.classList.remove('hidden');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { fermerDetail(); fermerMessagerie(); } });
+
+const destinataires = { GM: 'Maître du Jeu', all: 'Tous les Joueurs', idris: 'Idris Koa', sora: 'Sora Adebayo' };
+let destinataire = 'GM';
+let messages = ecran === 'notifications'
+  ? [{ de: 'GM', vers: 'nel', texte: 'Le sas vient de se fermer.', heure: '23:38' }]
+  : [{ de: 'nel', vers: 'GM', texte: 'Le relais est ouvert.', heure: '23:37' }, { de: 'GM', vers: 'nel', texte: 'Vous entendez trois coups.', heure: '23:37' }];
+function ouvrirMessagerie() {
+  const panneau = document.getElementById('messagerie-j2');
+  if (!panneau) return;
+  panneau.classList.remove('hidden');
+  document.getElementById('nouveau-message')?.classList.add('hidden');
+  document.getElementById('badge-non-lu')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'true');
+  rendreConversation();
+}
+function fermerMessagerie() {
+  document.getElementById('messagerie-j2')?.classList.add('hidden');
+  document.getElementById('destinataires-j2')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'false');
+}
+function ouvrirDestinataires() {
+  const liste = document.getElementById('destinataires-j2');
+  liste.classList.toggle('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', String(!liste.classList.contains('hidden')));
+}
+function choisirDestinataire(id) {
+  destinataire = id;
+  document.getElementById('destinataires-j2').classList.add('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', 'false');
+  rendreConversation();
+}
+function actualiserEnvoi() {
+  document.getElementById('envoyer-message').disabled = !document.getElementById('message-saisi').value.trim();
+}
+function envoyerMessage() {
+  const saisie = document.getElementById('message-saisi');
+  const texte = saisie.value.trim();
+  if (!texte) return;
+  messages.push({ de: 'nel', vers: destinataire, texte, heure: ecran === 'notifications' ? '23:38' : '23:37' });
+  saisie.value = '';
+  rendreConversation(); actualiserEnvoi();
+}
+function rendreConversation() {
+  const nom = destinataires[destinataire];
+  document.getElementById('nom-destinataire').textContent = nom;
+  document.getElementById('canal-j2').textContent = destinataire === 'GM' ? 'Canal Direct MJ' : destinataire === 'all' ? 'Canal Général' : 'Canal Privé';
+  document.getElementById('message-saisi').placeholder = `Message à ${nom}...`;
+  document.getElementById('confidentialite-j2').textContent = destinataire === 'all' ? 'Tout le monde pourra lire ce message.' : `Seul ${nom} pourra lire ce message.`;
+  const conversation = messages.filter(m => destinataire === 'all' ? m.vers === 'all'
+    : m.de === 'nel' && m.vers === destinataire || m.de === destinataire && m.vers === 'nel');
+  const liste = document.getElementById('conversation-j2');
+  liste.replaceChildren();
+  if (!conversation.length) {
+    const vide = document.createElement('p'); vide.className = 'vide-conversation';
+    vide.textContent = `Aucun message avec ${nom}. Commencez la conversation !`; liste.append(vide);
+  }
+  for (const msg of conversation) {
+    const ligne = document.createElement('div'); ligne.className = `message-ligne ${msg.de === 'nel' ? 'message-moi' : ''}`;
+    const bulle = document.createElement('p'); bulle.className = 'message-bulle'; bulle.textContent = msg.texte;
+    const meta = document.createElement('p'); meta.className = 'message-meta';
+    meta.textContent = `${msg.de === 'nel' ? 'VOUS' : destinataires[msg.de]} · ${msg.heure}`;
+    ligne.append(bulle, meta); liste.append(ligne);
+  }
+  liste.scrollTop = liste.scrollHeight;
+}
+if (ecran === 'messages' || ecran === 'notifications') {
+  const saisie = document.getElementById('message-saisi');
+  saisie.addEventListener('input', actualiserEnvoi);
+  saisie.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); envoyerMessage(); }
+  });
+  actualiserEnvoi();
+  if (ecran === 'messages') ouvrirMessagerie();
+  if (ecran === 'notifications' && variante === 'alerte') {
+    document.getElementById('nouveau-message').classList.add('hidden');
+    document.getElementById('badge-non-lu').classList.add('hidden');
+    const alerte = document.getElementById('alerte-j2');
+    alerte.classList.remove('hidden');
+    setTimeout(() => alerte.classList.add('hidden'), 8000);
+  }
+  if (ecran === 'notifications' && variante !== 'alerte') {
+    setTimeout(() => document.getElementById('nouveau-message').classList.add('hidden'), 5000);
+  }
+}
+if (variante === 'vide' && ['archives', 'pnj', 'lieux'].includes(ecran)) {
+  document.querySelector('[data-liste-j2]').classList.add('hidden');
+  document.getElementById('vide-j2').classList.remove('hidden');
+  document.getElementById('compteur-j2').textContent = '0';
+}
+</script></body></html>

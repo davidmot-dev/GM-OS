@@ -1,0 +1,368 @@
+<!DOCTYPE html><html lang="fr" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GM-OS — Tablette Joueur : Cartes (390×844)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Orbitron:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            primary: '#06b6d4',
+            'text-main': '#f8fafc',
+            'text-muted': '#898c95',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            success: '#10b981',
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .device-shell {
+      width: 100%;
+      max-width: 390px;
+      min-height: 844px;
+      background: #020617;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid #1e293b;
+      border-right: 1px solid #1e293b;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    }
+    /* Arêtes vives absolues à 0px */
+    .brutal-card {
+      border-radius: 0px !important;
+      border: 1px solid #1e293b;
+    }
+    .brutal-btn {
+      border-radius: 0px !important;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      transition: all 0.15s ease-in-out;
+    }
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    /* Scanline subtile diegetique */
+    .scanline-overlay {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+    /* Masquage de la scrollbar native tout en préservant le scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>*{border-radius:0!important}.text-xs{font-size:14px}.text-\[10px\]{font-size:11px}main{overscroll-behavior:contain}header{flex-shrink:0}button,select{min-width:44px;min-height:44px}#cardInspectModal>div{max-height:calc(100dvh - 24px);overflow-y:auto}</style></head>
+<body class="bg-background text-text-main antialiased">
+
+  <div class="device-shell relative flex flex-col justify-between overflow-hidden" style="max-width: 480px; height: 100dvh; min-height: 0px; padding-bottom: 134px;">
+    
+    <!-- BANDEAU HAUT DIEGETIQUE : GM-OS -->
+    <header class="w-full bg-surface border-b border-surface-raised px-3.5 py-2.5 flex items-center justify-between z-30 shrink-0 flex-wrap gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2.5 h-2.5 bg-primary"></span>
+        <span class="font-orbitron font-bold text-xs tracking-wider text-text-main">GM-OS</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1.5 px-2 py-1 bg-surface-raised border border-surface-raised">
+          <span class="w-1.5 h-1.5 bg-success rounded-none"></span>
+          <span class="font-mono text-[11px] font-bold text-success uppercase tracking-wider">CONNECTÉ</span>
+        </div>
+        <button id="perfBtn" onclick="togglePerfMode()" class="touch-target px-2.5 py-1 bg-surface-raised hover:bg-slate-800 border border-surface-raised text-primary font-mono text-[11px] font-bold flex items-center space-x-1 active:scale-95 transition-transform" title="Bascule Qualité/Performance">
+          <span>⚡</span>
+          <span id="perfText" class="tracking-wider">MODE PERFORMANCE</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- BANDEAU HORLOGE & TENSION PUBLIQUE -->
+    <section class="w-full bg-surface/80 border-b border-surface-raised px-4 py-2.5 grid grid-cols-2 gap-3 shrink-0">
+      <!-- Horloge projetée -->
+      <div class="border-r border-surface-raised/80 pr-2">
+        <div class="flex items-center justify-between text-text-muted text-[11px] font-bold tracking-widest uppercase mb-0.5">
+          <span>HORLOGE</span>
+          
+        </div>
+        <div class="font-mono font-bold text-lg tracking-tight text-text-main">
+          23:43<span class="text-primary text-sm">:22</span>
+        </div>
+        <div class="text-[11px] text-text-muted font-inter break-words">Dimanche 4 octobre 2026</div>
+      </div>
+
+      <!-- Tension Publique -->
+      <div class="pl-1">
+        <div class="flex items-center justify-between text-[11px] font-bold tracking-wider mb-0.5">
+          <span class="text-warning break-words">ALERTE STATION</span>
+          <span class="font-mono text-warning font-bold">3/8</span>
+        </div>
+        <!-- Rail segmenté de tension -->
+        <div class="w-full grid grid-cols-8 gap-1 h-2 my-1">
+          <div class="bg-warning h-full"></div>
+          <div class="bg-warning h-full"></div>
+          <div class="bg-warning h-full"></div>
+          <div class="bg-surface-raised border border-slate-700/40 h-full"></div>
+          <div class="bg-surface-raised border border-slate-700/40 h-full"></div>
+          <div class="bg-surface-raised border border-slate-700/40 h-full"></div>
+          <div class="bg-surface-raised border border-slate-700/40 h-full"></div>
+          <div class="bg-surface-raised border border-slate-700/40 h-full"></div>
+        </div>
+        <div class="text-[11px] text-text-muted font-inter break-words">Alerte de la station</div>
+      </div>
+    </section>
+
+    <!-- CORPS DE PAGE DÉFILABLE (AU-DESSUS DE LA NAVIGATION ANCRÉE) -->
+    <main class="flex-1 overflow-y-auto px-4 py-3.5 space-y-4 no-scrollbar pb-4 min-h-0">
+      
+      <!-- EN-TÊTE DE SECTION : CARTES DU JOUEUR -->
+      <div class="flex items-center justify-between border-b border-surface-raised pb-2">
+        <div>
+          <h1 class="font-orbitron font-bold text-lg text-text-main tracking-wider">CARTES</h1>
+          
+        </div>
+        
+      </div>
+
+      <!-- SECTION 1 : PAQUETS OUVERTS -->
+      <section class="space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 bg-primary"></span>
+            <h2 class="font-orbitron text-xs font-bold tracking-widest text-text-muted uppercase">PAQUETS OUVERTS</h2>
+          </div>
+          <span class="text-[11px] text-text-muted font-inter">Toucher pour piocher</span>
+        </div>
+
+        <!-- PAQUET UNIQUE : CARTES DE COMPLICATION -->
+        <div class="brutal-card bg-surface p-3.5 border border-surface-raised relative">
+          <div class="flex items-start justify-between mb-3 flex-wrap gap-2">
+            <div>
+              <div class="font-orbitron font-bold text-sm text-text-main">CARTES DE COMPLICATION</div>
+              
+            </div>
+            <!-- Badge cartes restantes -->
+            <div class="flex items-center space-x-1 bg-surface-raised border border-surface-raised px-2.5 py-1">
+              <span class="text-[11px] text-text-muted font-inter">RESTANT :</span>
+              <span id="remainingCardsVal" class="font-mono text-xs font-bold text-primary">4</span>
+            </div>
+          </div>
+
+          <!-- Dos de carte rectangulaire interactif (Toucher = Piocher) -->
+          <button id="deckDrawTarget" type="button" onclick="drawCard()" aria-label="Piocher" class="cursor-pointer w-full bg-surface-raised border border-primary/50 hover:border-primary p-3 flex items-center gap-3 touch-target text-left"><img id="deck-image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAiIGhlaWdodD0iMzUwIj48cmVjdCB3aWR0aD0iMjUwIiBoZWlnaHQ9IjM1MCIgcng9IjE2IiBmaWxsPSIjMTQyNjM3Ii8+PHJlY3QgeD0iMTIiIHk9IjEyIiB3aWR0aD0iMjI2IiBoZWlnaHQ9IjMyNiIgcng9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiM1NGM2YjQiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjEyNSIgeT0iMTY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZmlsbD0id2hpdGUiPlNUQVRJT04gVkFSTjwvdGV4dD48dGV4dCB4PSIxMjUiIHk9IjIwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM1NGM2YjQiPkNvbXBsaWNhdGlvbjwvdGV4dD48L3N2Zz4=" alt="Dos de carte" width="60" height="84" class="w-[60px] h-auto shrink-0"><span class="draw-label font-orbitron font-bold text-sm text-primary">Piocher</span></button>
+        </div>
+      </section>
+
+      <!-- SECTION 2 : CARTES EN MAIN -->
+      <section class="space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-1.5 h-1.5 bg-primary"></span>
+            <h2 class="font-orbitron text-xs font-bold tracking-widest text-text-muted uppercase">CARTES EN MAIN</h2>
+          </div>
+          <span id="handCounter" class="font-mono text-[11px] text-primary">1 CARTE</span>
+        </div>
+
+        <!-- LISTE DES CARTES EN MAIN -->
+        <div id="handCardsContainer" class="space-y-3"></div>
+
+        <!-- ZONE ÉTAT : MAIN VIDE (Masquée par défaut) -->
+        <div id="emptyHandMsg" class="hidden brutal-card bg-surface/50 border border-dashed border-surface-raised p-6 text-center space-y-2"><p class="text-sm text-text-muted">Vous ne tenez aucune carte.</p></div>
+
+      </section>
+
+    </main>
+
+    <!-- FENÊTRE SURCOUCHE D'AGRANDISSEMENT DE LA CARTE (Toucher n'importe où ou Échap ferme) -->
+    <div id="cardInspectModal" onclick="closeCardModal()" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Carte 2"><div class="cursor-pointer brutal-card bg-surface border border-primary max-w-xs w-full p-4 flex flex-col items-center gap-4"><h2 id="modalCardTitle" class="font-orbitron font-bold text-sm uppercase">Carte 2</h2><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAiIGhlaWdodD0iMzUwIj48cmVjdCB3aWR0aD0iMjUwIiBoZWlnaHQ9IjM1MCIgcng9IjE2IiBmaWxsPSIjMTQyNjM3Ii8+PHJlY3QgeD0iMTIiIHk9IjEyIiB3aWR0aD0iMjI2IiBoZWlnaHQ9IjMyNiIgcng9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiM1NGM2YjQiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjEyNSIgeT0iMTY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZmlsbD0id2hpdGUiPlNUQVRJT04gVkFSTjwvdGV4dD48dGV4dCB4PSIxMjUiIHk9IjIwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM1NGM2YjQiPkNvbXBsaWNhdGlvbjwvdGV4dD48L3N2Zz4=" alt="Carte agrandie" width="250" height="350" style="max-height:calc(100dvh - 180px);width:auto;max-width:100%;object-fit:contain"><p class="text-sm text-primary">Touchez pour fermer</p></div></div>
+
+    <!-- NOTIFICATION TEMPORAIRE TOAST DIÉGÉTIQUE -->
+    
+
+    <!-- PIED DE NAVIGATION FIXE (2 RANGÉES DE 3 ONGLETS + 1 RANGÉE DE 4 ACTIONS) -->
+    <footer class="w-full bg-surface border-t border-surface-raised z-40 shrink-0 select-none" style="position: fixed; bottom: 0px; left: 50%; transform: translateX(-50%); max-width: 480px;">
+      
+      <!-- Rangée 1 des onglets principaux (3 items) -->
+      <div class="grid grid-cols-3 border-b border-surface-raised/80">
+        <button class="brutal-btn text-xs text-text-muted hover:text-text-main border-r border-surface-raised/80 tracking-wider">
+          DIRECT
+        </button>
+        <button class="brutal-btn text-xs text-text-muted hover:text-text-main border-r border-surface-raised/80 tracking-wider">
+          ARCHIVES
+        </button>
+        <button class="brutal-btn text-xs text-text-muted hover:text-text-main tracking-wider">
+          PNJ
+        </button>
+      </div>
+
+      <!-- Rangée 2 des onglets principaux (3 items, CARTES ACTIF) -->
+      <div class="grid grid-cols-3 border-b border-surface-raised">
+        <button class="brutal-btn text-xs text-text-muted hover:text-text-main border-r border-surface-raised/80 tracking-wider">
+          LIEUX
+        </button>
+        <button class="brutal-btn text-xs text-text-muted hover:text-text-main border-r border-surface-raised/80 tracking-wider">
+          INVENTAIRE
+        </button>
+        <!-- Onglet Cartes actif : cyan plein #06b6d4 avec point indicateur -->
+        <button class="brutal-btn text-xs bg-primary text-slate-950 font-bold tracking-wider flex items-center justify-center space-x-1">
+          <span>CARTES</span>
+          <span class="inline-block w-1.5 h-1.5 bg-slate-950 rounded-full"></span>
+        </button>
+      </div>
+
+      <!-- Rangée des 4 actions rapides -->
+      <div class="grid grid-cols-4 bg-background">
+        <button class="brutal-btn text-[11px] text-text-muted hover:text-text-main border-r border-surface-raised/60 tracking-wider flex items-center justify-center space-x-1">
+          <span>◆</span>
+          <span>FICHE</span>
+        </button>
+        <button class="brutal-btn text-[11px] text-text-muted hover:text-text-main border-r border-surface-raised/60 tracking-wider flex items-center justify-center space-x-1">
+          <span>✎</span>
+          <span>NOTES</span>
+        </button>
+        <button class="brutal-btn text-[11px] text-text-muted hover:text-text-main border-r border-surface-raised/60 tracking-wider flex items-center justify-center space-x-1">
+          <span>✉</span>
+          <span>MESSAGES</span>
+        </button>
+        <button onclick="confirmExit()" class="brutal-btn text-[11px] text-danger hover:bg-danger/10 tracking-wider flex items-center justify-center space-x-1">
+          <span>⏹</span>
+          <span>QUITTER</span>
+        </button>
+      </div>
+
+    </footer>
+
+  </div>
+
+  <!-- SCRIPT DE MANIPULATION INTERACTIVE (LOCAL & DIEGETIQUE) -->
+  
+
+
+<script>// Simulation locale des seuls gestes déjà présents dans HubMainDeCartes.
+// Les changements de main simulent la réponse du meneur, sans connexion à GM-OS.
+const etat = new URLSearchParams(location.search).get('etat');
+let remainingCards = etat === 'vide' ? 0 : 4;
+let handCards = etat === 'vide' ? [] : ['Carte 2'];
+let propositionEnAttente = etat === 'attente';
+let perfMode = true;
+const avecVoisin = etat === 'voisin';
+const visuelCarte = document.getElementById('deck-image').src;
+
+function togglePerfMode() {
+  perfMode = !perfMode;
+  document.getElementById('perfText').textContent = perfMode ? 'MODE PERFORMANCE' : 'MODE QUALITÉ';
+}
+function confirmExit() { window.confirm('Quitter la session ?'); }
+function openCardModal(nom) {
+  const modal = document.getElementById('cardInspectModal');
+  modal.setAttribute('aria-label', nom);
+  document.getElementById('modalCardTitle').textContent = nom;
+  modal.classList.remove('hidden');
+}
+function closeCardModal() { document.getElementById('cardInspectModal').classList.add('hidden'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCardModal(); });
+function drawCard() {
+  if (!remainingCards) return;
+  handCards.push(`Carte ${7 - remainingCards}`);
+  remainingCards--;
+  rendreMain();
+}
+function playCard(nom) {
+  if (propositionEnAttente && nom === 'Carte 2') return;
+  handCards = handCards.filter(carte => carte !== nom);
+  rendreMain();
+}
+function proposerCarte(select) {
+  if (select.value !== 'Idris Koa') return;
+  propositionEnAttente = true;
+  rendreMain();
+}
+function repondreProposition(accepter) {
+  document.getElementById('incoming-offer').remove();
+  if (accepter) { handCards.push('Carte 3'); rendreMain(); }
+}
+function rendreMain() {
+  document.getElementById('remainingCardsVal').textContent = remainingCards;
+  const pioche = document.getElementById('deckDrawTarget');
+  pioche.disabled = !remainingCards;
+  pioche.querySelector('.draw-label').textContent = remainingCards ? 'Piocher' : 'Paquet vide';
+  pioche.classList.toggle('opacity-40', !remainingCards);
+  const compteur = document.getElementById('handCounter');
+  if (compteur) compteur.textContent = `${handCards.length} ${handCards.length > 1 ? 'CARTES' : 'CARTE'}`;
+  document.getElementById('handCardsContainer').innerHTML = handCards.map(nom => `
+    <article class="brutal-card bg-surface border border-surface-raised p-3">
+      <div class="flex items-start gap-4">
+        <button type="button" aria-label="Agrandir ${nom}" onclick="openCardModal('${nom}')" class="shrink-0 border border-primary/60 touch-target">
+          <img src="${visuelCarte}" alt="${nom}" width="96" height="134" class="block w-24 h-auto" />
+        </button>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-orbitron text-sm font-bold uppercase break-words">${nom}</h3>
+          <p class="text-sm text-text-muted mt-2">Cartes de complication</p>
+          <div class="mt-3 space-y-2">
+            ${propositionEnAttente && nom === 'Carte 2' ? '<p class="text-sm text-primary">Proposition en attente</p>' : `
+              <button aria-label="Jouer ${nom}" onclick="playCard('${nom}')" class="brutal-btn touch-target w-full border border-primary/60 bg-surface-raised text-primary text-sm">Jouer</button>
+              ${avecVoisin ? '<select aria-label="Donner à" onchange="proposerCarte(this)" class="touch-target text-sm w-full bg-surface-raised border border-surface-raised"><option value="">Donner à</option><option>Idris Koa</option></select>' : ''}
+            `}
+          </div>
+        </div>
+      </div>
+    </article>`).join('');
+  document.getElementById('emptyHandMsg').classList.toggle('hidden', handCards.length > 0 || etat === 'scellee');
+  if (etat === 'scellee' && !document.getElementById('sealed-card')) {
+    const scellee = document.createElement('div');
+    scellee.id = 'sealed-card';
+    scellee.className = 'brutal-card bg-surface p-3 mt-3';
+    scellee.innerHTML = '<div aria-label="Carte sous scellé" class="w-24 h-32 border border-surface-raised bg-surface-raised flex items-center justify-center text-text-muted text-xl">?</div><p class="text-sm text-text-muted mt-2">sous scellé — personne ne la connaît</p>';
+    document.getElementById('handCardsContainer').append(scellee);
+  }
+}
+if (etat === 'proposition') {
+  const offre = document.createElement('div');
+  offre.id = 'incoming-offer';
+  offre.className = 'brutal-card bg-primary/10 border border-primary/40 p-4 mb-4';
+  offre.innerHTML = '<p class="text-sm mb-3">Idris Koa vous propose une carte</p><div class="grid grid-cols-2 gap-2"><button onclick="repondreProposition(true)" class="brutal-btn touch-target bg-primary text-background text-sm">Accepter</button><button onclick="repondreProposition(false)" class="brutal-btn touch-target bg-surface-raised border border-surface-raised text-sm">Refuser</button></div>';
+  document.querySelector('main').prepend(offre);
+}
+rendreMain();
+</script></body></html>

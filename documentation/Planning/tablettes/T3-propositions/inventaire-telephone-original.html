@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GM-OS — Tablette Joueur : Inventaire</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Orbitron:wght@700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'rpg-bg': '#020617',
+            'rpg-surface': '#0f172a',
+            'rpg-surface-2': '#1e293b',
+            'rpg-accent': '#06b6d4',
+            'rpg-accent-contrast': '#020617',
+            'rpg-text': '#f8fafc',
+            'rpg-muted': '#898c95',
+            'rpg-border': '#1e293b',
+            'rpg-danger': '#ef4444',
+            'rpg-warning': '#f59e0b',
+            'rpg-success': '#10b981',
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            spacemono: ['"Space Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    /* Arêtes vives absolues à 0px */
+    *, button, div, span, input, header, footer, nav, section, article {
+      border-radius: 0px !important;
+    }
+    /* Scanline subtile diegetique */
+    .scanline-bg {
+      background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+    }
+    /* Hauteur minimale tactile 44px */
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  </style>
+</head>
+<body class="bg-rpg-bg text-rpg-text min-h-screen flex flex-col justify-between scanline-bg relative w-full max-w-[480px] mx-auto border-x border-rpg-border">
+
+  <!-- ZONE SUPÉRIEURE : EN-TÊTE JOUEUR & STATUS DE SESSION -->
+  <header class="w-full bg-rpg-surface border-b border-rpg-border p-3 flex flex-col gap-2 shrink-0 z-20">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 bg-rpg-accent shadow-[0_0_8px_#06b6d4]"></span>
+        <span class="font-orbitron font-bold text-xs tracking-wider text-rpg-accent">GM-OS // JOUEUR</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-rpg-surface-2 border border-rpg-border">
+          <span class="w-1.5 h-1.5 bg-rpg-success"></span>
+          <span class="font-mono text-[11px] text-rpg-text font-semibold uppercase tracking-wider">SYNC</span>
+        </div>
+        <button id="toggle-mode-btn" onclick="togglePerformanceMode()" class="touch-target px-2.5 py-1 bg-rpg-surface-2 hover:bg-slate-800 border border-rpg-border flex items-center gap-1.5 text-[11px] font-mono font-bold tracking-wider text-rpg-accent transition-colors">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+          <span id="mode-text">MODE PERFORMANCE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- HORLOGE PROJETÉE & TENSION PUBLIQUE (NON SECRÈTE) -->
+    <div class="grid grid-cols-2 gap-2 pt-1 border-t border-rpg-border/60">
+      <div class="bg-rpg-surface-2/60 border border-rpg-border p-2">
+        <div class="flex items-center justify-between text-[11px] text-rpg-muted font-mono font-semibold uppercase">
+          <span>HORLOGE</span>
+          <span class="text-rpg-accent">TABLE</span>
+        </div>
+        <div class="font-spacemono text-base font-bold tracking-tight text-rpg-text mt-0.5" id="live-clock">
+          23:37:05
+        </div>
+        <div class="text-[11px] text-rpg-muted font-inter leading-none mt-0.5">
+          Dimanche 4 octobre 2026
+        </div>
+      </div>
+
+      <div class="bg-rpg-surface-2/60 border border-rpg-border p-2">
+        <div class="flex items-center justify-between text-[11px] font-mono font-semibold uppercase">
+          <span class="text-rpg-muted">TENSION</span>
+          <span class="text-rpg-warning font-bold">3/8</span>
+        </div>
+        <div class="text-[12px] font-orbitron font-bold text-rpg-warning truncate mt-0.5">
+          Alerte de la station
+        </div>
+        <div class="w-full bg-slate-900 border border-rpg-border h-2 mt-1 flex">
+          <div class="bg-rpg-warning h-full w-[37.5%]"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENU PRINCIPAL DÉFILANT (AU-DESSUS DE LA NAVIGATION EN PIED) -->
+  <main class="flex-1 overflow-y-auto px-3.5 py-3 pb-36 space-y-3.5">
+    
+    <!-- TITRE ET COMPTEUR D'INVENTAIRE -->
+    <div class="border-b border-rpg-border pb-2.5">
+      <div class="flex items-baseline justify-between">
+        <h1 class="font-orbitron text-xl font-bold tracking-wide text-rpg-text uppercase">INVENTAIRE</h1>
+        <div class="flex items-center gap-1.5 px-2 py-0.5 bg-rpg-surface border border-rpg-border font-mono text-xs font-bold text-rpg-accent">
+          <span id="item-count">1</span> OBJETS
+        </div>
+      </div>
+      <p class="text-xs text-rpg-muted font-inter mt-0.5">
+        Trésors, reliques et possessions personnelles.
+      </p>
+    </div>
+
+    <!-- NOTIFICATION TEMPORAIRE EN ATTENTE D'ÉCHANGE -->
+    <div id="status-banner" class="hidden p-2.5 bg-cyan-950/40 border border-rpg-accent/60 flex items-start gap-2.5 text-xs text-cyan-200">
+      <svg class="w-4 h-4 text-rpg-accent shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      <div class="leading-snug">
+        <span class="font-bold font-mono text-rpg-accent uppercase block">Transfert en attente</span>
+        Demande envoyée pour <span id="banner-target-name" class="font-semibold text-white">Idris Koa</span>. En attente de validation du Meneur.
+      </div>
+    </div>
+
+    <!-- SECTION SAC À DOS (INTERACTIF) -->
+    <section class="space-y-2">
+      <div class="flex items-center justify-between text-[11px] font-mono font-bold tracking-widest text-rpg-muted uppercase">
+        <span>SAC À DOS (INTERACTIF)</span>
+        <span class="text-rpg-text">CONTENANT #01</span>
+      </div>
+
+      <!-- CARTE D'OBJET UNIQUE : OUTIL MULTIFONCTION -->
+      <article id="item-card" class="bg-rpg-surface border border-rpg-border p-3.5 space-y-3 relative">
+        <div class="flex items-start gap-3">
+          <!-- Icône de colis neutre (aucune image inventée) -->
+          <div class="w-12 h-12 bg-rpg-surface-2 border border-rpg-border flex items-center justify-center shrink-0 text-rpg-accent">
+            <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <h2 class="font-orbitron font-bold text-sm text-rpg-text truncate uppercase">Outil multifonction</h2>
+              <span class="font-mono text-[11px] text-rpg-muted px-1.5 py-0.5 bg-slate-900 border border-rpg-border shrink-0">
+                x1
+              </span>
+            </div>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-slate-400 px-1 bg-rpg-surface-2 border border-rpg-border">
+                COMMON
+              </span>
+              <span class="font-inter text-xs text-rpg-muted truncate">
+                Pour ouvrir le relais.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMMANDES D'ACTION SUR L'OBJET -->
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-rpg-border">
+          <button id="btn-give" onclick="openGiveModal()" class="touch-target w-full bg-rpg-surface-2 hover:bg-slate-800 text-rpg-text border border-rpg-border font-inter text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors">
+            <svg class="w-3.5 h-3.5 text-rpg-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            Donner
+          </button>
+          
+          <button id="btn-drop" onclick="confirmDropItem()" class="touch-target w-full bg-rpg-surface-2 hover:bg-red-950/40 text-rpg-text hover:text-rpg-danger border border-rpg-border font-inter text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors">
+            <svg class="w-3.5 h-3.5 text-rpg-danger" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Jeter
+          </button>
+        </div>
+
+        <!-- BADGE ÉTAT EN ATTENTE (SI TRANSFERT DEMANDÉ) -->
+        <div id="pending-badge" class="hidden absolute top-2 right-2 bg-rpg-warning text-black font-mono font-bold text-[11px] px-2 py-0.5 border border-amber-300">
+          EN ATTENTE DU MJ
+        </div>
+      </article>
+
+      <!-- ÉTAT VIDE (INITIALEMENT MASQUÉ) -->
+      <div id="empty-state" class="hidden bg-rpg-surface border border-rpg-border p-6 text-center text-rpg-muted space-y-1">
+        <p class="font-orbitron text-sm font-semibold text-slate-300">SAC À DOS VIDE</p>
+        <p class="text-xs">Aucun objet en réserve pour le moment.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODALE SURCOUCHE : DONNER UN OBJET -->
+  <div id="give-modal" class="fixed inset-0 bg-black/85 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+    <div class="bg-rpg-surface border border-rpg-accent w-full max-w-[440px] p-4 flex flex-col gap-3 shadow-[0_0_24px_rgba(6,182,212,0.2)]">
+      
+      <!-- En-tête de la modale -->
+      <div class="flex items-center justify-between border-b border-rpg-border pb-2.5">
+        <div>
+          <h3 class="font-orbitron font-bold text-sm tracking-wide text-rpg-accent uppercase">Donner un objet</h3>
+          <span class="text-[11px] font-mono text-rpg-muted uppercase">TYPE: EQUIPMENT</span>
+        </div>
+        <button onclick="closeGiveModal()" class="touch-target px-3 py-1 bg-rpg-surface-2 border border-rpg-border text-xs font-mono font-bold text-rpg-muted hover:text-white">
+          Fermer le don
+        </button>
+      </div>
+
+      <!-- Détail de l'objet sélectionné -->
+      <div class="bg-rpg-surface-2/70 border border-rpg-border p-2.5 flex items-center gap-3">
+        <div class="w-10 h-10 bg-slate-900 border border-rpg-border flex items-center justify-center shrink-0 text-rpg-accent">
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <div class="font-orbitron text-xs font-bold text-rpg-text uppercase truncate">Outil multifonction</div>
+          <div class="text-xs text-rpg-muted truncate">Pour ouvrir le relais.</div>
+        </div>
+      </div>
+
+      <!-- Message réel du système -->
+      <div class="p-2.5 bg-slate-950 border border-rpg-border text-[12px] text-slate-300 font-inter leading-relaxed">
+        Le Maître du Jeu doit valider l'échange avant qu'il ne soit effectif.
+      </div>
+
+      <!-- Sélection du destinataire -->
+      <div class="space-y-1.5 pt-1">
+        <label class="block font-mono text-[11px] font-bold text-rpg-muted uppercase">
+          Choisir le destinataire :
+        </label>
+        
+        <div class="space-y-2">
+          <!-- Destinataire 1 : Idris Koa -->
+          <button onclick="selectRecipient('Idris Koa')" class="touch-target w-full bg-rpg-surface-2 hover:bg-slate-800 border border-rpg-border p-2.5 flex items-center justify-between transition-colors text-left">
+            <div class="flex items-center gap-3">
+              <!-- Silhouette neutre -->
+              <div class="w-9 h-9 bg-slate-900 border border-rpg-border flex items-center justify-center shrink-0 text-slate-400">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+              </div>
+              <div>
+                <div class="font-orbitron text-xs font-bold text-rpg-text">Idris Koa</div>
+                <div class="text-[11px] text-rpg-muted">Négociateur</div>
+              </div>
+            </div>
+            <span class="font-mono text-xs text-rpg-accent font-bold px-2 py-1 bg-rpg-surface border border-rpg-border">
+              SÉLECTIONNER
+            </span>
+          </button>
+
+          <!-- Destinataire 2 : Sora Adebayo -->
+          <button onclick="selectRecipient('Sora Adebayo')" class="touch-target w-full bg-rpg-surface-2 hover:bg-slate-800 border border-rpg-border p-2.5 flex items-center justify-between transition-colors text-left">
+            <div class="flex items-center gap-3">
+              <!-- Silhouette neutre -->
+              <div class="w-9 h-9 bg-slate-900 border border-rpg-border flex items-center justify-center shrink-0 text-slate-400">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/></svg>
+              </div>
+              <div>
+                <div class="font-orbitron text-xs font-bold text-rpg-text">Sora Adebayo</div>
+                <div class="text-[11px] text-rpg-muted">Médecin de bord</div>
+              </div>
+            </div>
+            <span class="font-mono text-xs text-rpg-accent font-bold px-2 py-1 bg-rpg-surface border border-rpg-border">
+              SÉLECTIONNER
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION FIXE CONSTANTE EN PIED (6 ONGLETS + 4 ACTIONS RAPIDES) -->
+  <footer class="fixed bottom-0 left-0 right-0 w-full max-w-[480px] mx-auto bg-rpg-surface border-t border-rpg-border z-40">
+    <!-- RANGÉE 1 DES ONGLETS (3 boutons) -->
+    <div class="grid grid-cols-3 border-b border-rpg-border text-center">
+      <button class="touch-target py-2 px-1 text-[11px] font-mono font-bold tracking-wider text-rpg-muted hover:text-white border-r transition-colors">
+        DIRECT
+      </button>
+      <button class="touch-target py-2 px-1 text-[11px] font-mono font-bold tracking-wider text-rpg-muted hover:text-white border-r transition-colors">
+        ARCHIVES
+      </button>
+      <button class="touch-target py-2 px-1 text-[11px] font-mono font-bold tracking-wider text-rpg-muted hover:text-white transition-colors">
+        PNJ
+      </button>
+    </div>
+
+    <!-- RANGÉE 2 DES ONGLETS (3 boutons, dont INVENTAIRE ACTIF) -->
+    <div class="grid grid-cols-3 border-b border-rpg-border text-center">
+      <button class="touch-target py-2 px-1 text-[11px] font-mono font-bold tracking-wider text-rpg-muted hover:text-white border-r transition-colors">
+        LIEUX
+      </button>
+      <!-- Onglet Actif : Inventaire -->
+      <button class="touch-target py-2 px-1 text-[11px] font-mono font-bold tracking-wider text-rpg-accent-contrast bg-rpg-accent border-r border-rpg-accent">
+        INVENTAIRE ●
+      </button>
+      <button class="touch-target py-2 px-1 text-[11px] font-mono font-bold tracking-wider text-rpg-muted hover:text-white transition-colors">
+        CARTES
+      </button>
+    </div>
+
+    <!-- RANGÉE 3 : LES QUATRE ACTIONS RAPIDES -->
+    <div class="grid grid-cols-4 text-center bg-slate-950">
+      <button class="touch-target py-2.5 text-[11px] font-inter font-bold tracking-wider text-slate-300 hover:text-rpg-accent flex items-center justify-center gap-1 border-r border-rpg-border">
+        <span>◆</span> FICHE
+      </button>
+      <button class="touch-target py-2.5 text-[11px] font-inter font-bold tracking-wider text-slate-300 hover:text-rpg-accent flex items-center justify-center gap-1 border-r border-rpg-border">
+        <span>✎</span> NOTES
+      </button>
+      <button class="touch-target py-2.5 text-[11px] font-inter font-bold tracking-wider text-slate-300 hover:text-rpg-accent flex items-center justify-center gap-1 border-r border-rpg-border">
+        <span>✉</span> MSGS
+      </button>
+      <button onclick="simulateQuit()" class="touch-target py-2.5 text-[11px] font-inter font-bold tracking-wider text-rpg-danger hover:bg-red-950/30 flex items-center justify-center gap-1">
+        <span>⏹</span> QUITTER
+      </button>
+    </div>
+  </footer>
+
+  <!-- SCRIPT DE COMPORTEMENT LOCAL ET SIMULATION -->
+  <script>
+    let isPendingTransfer = false;
+    let isPerformanceMode = true;
+
+    function togglePerformanceMode() {
+      isPerformanceMode = !isPerformanceMode;
+      const textElem = document.getElementById('mode-text');
+      textElem.textContent = isPerformanceMode ? 'MODE PERFORMANCE' : 'MODE QUALITÉ';
+    }
+
+    function openGiveModal() {
+      if (isPendingTransfer) return;
+      document.getElementById('give-modal').classList.remove('hidden');
+    }
+
+    function closeGiveModal() {
+      document.getElementById('give-modal').classList.add('hidden');
+    }
+
+    function selectRecipient(name) {
+      closeGiveModal();
+      isPendingTransfer = true;
+
+      // Désactivation de Donner et Jeter
+      const btnGive = document.getElementById('btn-give');
+      const btnDrop = document.getElementById('btn-drop');
+      
+      btnGive.disabled = true;
+      btnGive.classList.add('opacity-40', 'cursor-not-allowed');
+      btnDrop.disabled = true;
+      btnDrop.classList.add('opacity-40', 'cursor-not-allowed');
+
+      // Affichage du bandeau et du badge d'attente
+      document.getElementById('banner-target-name').textContent = name;
+      document.getElementById('status-banner').classList.remove('hidden');
+      document.getElementById('pending-badge').classList.remove('hidden');
+    }
+
+    function confirmDropItem() {
+      if (isPendingTransfer) return;
+      const confirmed = window.confirm("Confirmer la suppression de cet objet de votre inventaire ?");
+      if (confirmed) {
+        document.getElementById('item-card').classList.add('hidden');
+        document.getElementById('empty-state').classList.remove('hidden');
+        document.getElementById('item-count').textContent = '0';
+      }
+    }
+
+    function simulateQuit() {
+      window.alert("Simulation : Retour vers l'écran d'accueil 'QUI ES-TU ?'.");
+    }
+  </script>
+</body>
+</html>

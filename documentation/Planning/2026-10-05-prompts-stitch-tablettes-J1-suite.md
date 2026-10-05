@@ -1,0 +1,44 @@
+# T3 — prompts Inventaire et Cartes, suite de J1
+
+David retient Accueil et Direct le 05/10/2026 : « je suis satisfait continue ».
+La suite produit les deux autres écrans J1. Les propositions restent à choisir dans
+[la galerie](tablettes/T3-propositions/index.html) ; aucun T4 commencé.
+
+Sources : `HubInventory.tsx`, `HubMainDeCartes.tsx`, traductions françaises,
+`e2e/tabletteJoueursT0.spec.ts` et la campagne de démonstration. Le décor est fictif.
+Les références T0 et le DESIGN.md ont été inspectés localement et transcrits ;
+l’API texte Stitch n’a pas reçu d’images en pièces jointes.
+
+Une génération par écran, puis `edit_screens` depuis le téléphone pour le paysage.
+Les exports bruts et corrigés, réponses et identifiants sont dans le dossier de propositions.
+
+## inventaire-telephone
+
+```text
+DÉCOR ENTIÈREMENT FICTIF DE TEST : ces noms et cet objet viennent uniquement de e2e/donnees/campagne-de-demo.json et e2e/tabletteJoueursT0.spec.ts, campagne de démonstration des guides. Aucune sauvegarde réelle ni donnée personnelle. GM-OS, T3 J1.3 : redessine UNIQUEMENT Inventaire de la tablette joueur à 390×844, responsive dès 360px. Nouvelle conversation pour cet écran. Même grammaire que les maquettes joueurs validées (Accueil et Direct), aucune barre latérale ou régie du PC.
+STYLE OBLIGATOIRE : DESIGN.md du projet : fond #020617, panneaux #0f172a / #1e293b, texte #f8fafc, secondaire #898c95, accent cyan #06b6d4, danger #ef4444. Orbitron pour les titres, Inter pour la lecture >=14px, JetBrains Mono pour les chiffres ; badges >=11px, boutons et champs >=44×44px. HTML responsive avec viewport, jamais une largeur fixe de bureau.
+CONTENU EXACT vérifié dans HubInventory.tsx et les captures fictives T0, transcrites car l'API ne permet pas les pièces jointes : bouton Mode Performance (bascule Mode Qualité), indicateur réseau ; horloge projetée 23:37:05 et Dimanche 4 octobre 2026 ; tension publique Alerte de la station, 3/8. Puis titre Inventaire, sous-titre Trésors, reliques et possessions personnelles., compteur 1 Objets. Section Sac à Dos (Interactif). Un seul objet Outil multifonction, rareté common, quantité 1, icône de colis neutre, pas d'image inventée. Deux commandes Donner et Jeter. Donner ouvre une surcouche Donner un objet, Fermer le don, type equipment, nom Outil multifonction, description Pour ouvrir le relais., Choisir le destinataire : Idris Koa / Négociateur, Sora Adebayo / Médecin de bord ; silhouettes neutres. Message réel : Le Maître du Jeu doit valider l'échange avant qu'il ne soit effectif. Toucher le destinataire simule une demande, referme la surcouche ; l'objet en attente désactive Donner et Jeter. Jeter demande confirmation. Ce sont des simulations locales de maquette, sans connexion. Ne pas ajouter un bouton Envoyer ni un choix de quantité : ils n'existent pas.
+NAVIGATION CONSTANTE : six onglets Direct, Archives, PNJ, Lieux, Inventaire (actif), Cartes ; quatre actions Fiche, Notes, Messages, Quitter. Sur téléphone, deux rangées de trois onglets et une rangée de quatre actions, comme Direct retenu. Réserver la hauteur de cette navigation en pied : objet et actions défilent au-dessus. Modale de don utilisable à 360px, tous ses boutons >=44px. Les fonctions conditionnelles Objets Scannés (Atlas) et sac vide existent mais sont absentes du décor : ne pas inventer d'autres objets. Pas de recherche, équipement, monnaie, poids total, tri, filtres, achat, téléversement ni télémétrie décorative. Garder chaque information réelle, aucune tension secrète. C'est TOUT. N'ajoute rien.
+```
+
+## inventaire-paysage
+
+```text
+Décline CE MÊME Inventaire à 1180×820, iPad Air paysage. Décor entièrement fictif du banc de démonstration. Garde le contenu et les gestes du téléphone, la grammaire et tous les libellés ; espace compact pour horloge et tension, zone large pour objets, navigation complète en pied sans masquer Donner ou Jeter. Donner ouvre la même surcouche (Idris Koa, Sora Adebayo, métier et avertissement de validation MJ), pas de nouveau bouton ni choix de quantité. Une seule carte Outil multifonction, quantité 1, rareté common. Pas de recherche, filtres, tri, statistiques, poids total, matériel inventé ou diagnostics décoratifs : retirer CONTENANT #01. État réseau CONNECTÉ et libellé MESSAGES complet. Quitter demande confirmation, pas une alerte. Titre de l’objet lisible en entier, ainsi que Alerte de la station. Aucun bandeau ni barre latérale de régie PC. Toutes cibles >=44×44px, lecture >=14px, badges >=11px. HTML fluide à 1180×820. Conserve le cadre téléphone et crée une déclinaison paysage distincte. C'est TOUT.
+```
+
+## cartes-telephone
+
+```text
+GM-OS, T3 J1.4 : redessine UNIQUEMENT l'onglet Cartes joueur à 390×844, responsive dès 360px. Nouvelle conversation. Même grammaire que les maquettes joueurs retenues Accueil et Direct, aucune régie ni barre latérale du PC.
+STYLE OBLIGATOIRE : fond #020617, panneaux #0f172a et #1e293b, texte #f8fafc, secondaire #898c95, accent #06b6d4. Orbitron titres, Inter lecture >=14px, JetBrains Mono chiffres ; badges >=11px, cibles et select >=44×44px. HTML responsive avec viewport.
+DÉCOR ENTIÈREMENT FICTIF depuis le test T0 et sa campagne de démonstration, aucune donnée personnelle : Mode Performance/Mode Qualité est un bouton, indicateur réseau ; horloge projetée 23:43:22, Dimanche 4 octobre 2026 ; tension publique Alerte de la station, 3/8. Section Paquets ouverts : un seul paquet Cartes de complication, dos neutre rectangulaire portant STATION VARN et Complication, badge 4 (cartes restantes), toucher le dos = Piocher. Section Cartes en main : ce même paquet, une seule Carte 2 révélée portant la même illustration neutre STATION VARN / Complication. Aucun dessin de carte fantasy, numéro de statistique, texte de pouvoir, rareté ou secret inventé. Toucher la carte l'agrandit dans une surcouche : titre Carte 2 et Touchez pour fermer ; toucher n'importe où ou Échap ferme. Sous la carte : Jouer. Le select Donner à est conditionnel aux autres personnages connectés de la campagne, absents de la capture de base : ne pas le montrer au repos ni inventer un destinataire Meneur. Piocher peut simuler une deuxième Carte 3, restants 3 ; Jouer simule son retrait ; rien n'est synchronisé dans la maquette.
+ÉTATS RÉELS conditionnels, ne pas les afficher dans le cadre de base : carte proposée = Proposition en attente, sans Jouer/Donner ; proposition entrante = [nom] vous propose une carte, Accepter et Refuser ; carte sous scellé = dos muet, aucun nom, aucun indice ni action ; paquet vide = Paquet vide, pioche désactivée ; main vide = Vous ne tenez aucune carte. Aucun bouton de gestion des paquets, révélation ou import : réservés au meneur.
+NAVIGATION CONSTANTE : Direct, Archives, PNJ, Lieux, Inventaire, Cartes (actif), puis Fiche, Notes, Messages, Quitter. Deux rangées de trois onglets et une rangée de quatre actions comme Direct retenu. La liste défile AU-DESSUS de la navigation fixe : Piocher, Jouer restent atteignables à 360px ; le défaut T0 était Jouer masqué sous la navigation. Garder tous les libellés complets. Pas de filtres, recherche, monnaie, résumé de règles, téléversement, journal ni faux diagnostic réseau. C'est TOUT. N'ajoute rien.
+```
+
+## cartes-paysage
+
+```text
+Décliner UNIQUEMENT cet écran Cartes en iPad paysage 1180×820. DÉCOR ENTIÈREMENT FICTIF DE TEST provenant de e2e/donnees/campagne-de-demo.json et e2e/tabletteJoueursT0.spec.ts ; aucune donnée personnelle ni sauvegarde de David. Garder le même DESIGN.md, les vrais contenus et fonctions, pas de nouvelles données, statistiques, diagnostics, rangs, pouvoirs ou boutons. GM-OS, Connecté, bouton unique Mode performance / Mode qualité. Horloge projetée fixe 23:43:22, Dimanche 4 octobre 2026, seule tension publique Alerte de la station 3/8. Deux colonnes : Paquets ouverts à gauche, Vos cartes en main à droite. Un seul paquet Cartes de complication avec dos neutre STATION VARN / Complication et 4 cartes restantes ; toucher Piocher ajoute Carte 3 et réduit à 3. Une seule Carte 2 révélée dans la main au repos, illustration neutre identique au dos, pas de texte de pouvoir, pas de matricule #02 ni type/description inventés. Toucher la carte ouvre le détail avec titre Carte 2 et Touchez pour fermer ; Échap et toucher ferment. Jouer immédiatement sous la carte, visible au-dessus du pied. Aucun Donner à au repos puisqu'aucun autre PJ connecté dans cet état de test. Les cartes scellées, si présentes dans un autre état, restent anonymes/non interactives. Navigation complète en pied fixe : Direct, Archives, PNJ, Lieux, Inventaire, Cartes actif (rangée 6) ; Fiche, Notes, Messages, Quitter (rangée 4). Ne pas inventer de filtres, recherche, synchronisation %, emplacements ou actions supplémentaires. Tous boutons ≥44×44, corps ≥14, badges ≥11. Réserver espace du pied, défilement contenu seulement si nécessaire. Export HTML fonctionnel, labels français, aucune interdiction de zoom.
+```

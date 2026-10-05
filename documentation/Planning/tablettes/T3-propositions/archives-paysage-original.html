@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // Tablette Joueur : Archives</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;700;800;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-primary-fixed-variant": "#004e5c",
+            "surface-tint": "#4cd7f6",
+            "on-error": "#690005",
+            "primary-fixed": "#acedff",
+            "error-container": "#93000a",
+            "on-secondary-fixed": "#111c2d",
+            "on-tertiary": "#003640",
+            "on-background": "#dee2f7",
+            "secondary": "#bcc7de",
+            "on-primary": "#003640",
+            "surface-container-highest": "#2e3447",
+            "surface-dim": "#0c1324",
+            "outline": "#1e293b",
+            "outline-variant": "#151b2d",
+            "secondary-fixed": "#d8e3fb",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-surface": "#dce2fa",
+            "inverse-on-surface": "#293042",
+            "surface-container-lowest": "#070e1e",
+            "tertiary-container": "#004f5d",
+            "surface": "#0c1324",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-secondary-container": "#c0c9e0",
+            "on-surface-variant": "#898c95",
+            "inverse-surface": "#dce2fa",
+            "on-tertiary-fixed": "#001f26",
+            "on-primary-fixed": "#001f26",
+            "on-primary-container": "#9bf0ff",
+            "surface-container": "#192031",
+            "on-error-container": "#ffdad6",
+            "surface-container-low": "#141b2c",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-tertiary-container": "#00424f",
+            "surface-bright": "#32394c",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "background": "#020617",
+            "error": "#ef4444",
+            "surface-container-high": "#232a3c",
+            "secondary-container": "#3e495d",
+            "on-secondary": "#263143",
+            "surface-variant": "#2e3447",
+            "primary-container": "#004f5d",
+            "on-secondary-fixed-variant": "#3c475a",
+            "tertiary": "#4cd7f6",
+            "primary": "#4cd7f6",
+            "inverse-primary": "#00687a",
+            "tertiary-fixed": "#acedff"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            lg: "0px",
+            xl: "0px",
+            full: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "number-md": ["Space Mono"],
+            "number-lg": ["Space Mono"],
+            "code-lg": ["Space Mono"],
+            "headline-sm": ["Orbitron", "Space Grotesk"],
+            "headline-lg": ["Orbitron", "Space Grotesk"],
+            "code-md": ["Space Mono"],
+            "code-sm": ["Space Mono"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "label-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          fontSize: {
+            "number-md": ["15px", { fontWeight: "600" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "700" }],
+            "headline-lg": ["30px", { lineHeight: "36px", fontWeight: "800" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }],
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #dce2fa;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hud-scanline {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- IPAD AIR 1180x820 FRAME WRAPPER -->
+<div class="relative w-[1180px] h-[820px] max-w-[1180px] max-h-[820px] bg-background border border-outline flex flex-col justify-between overflow-hidden shadow-2xl">
+<!-- Diegetic HUD Overlay Texture -->
+<div class="hud-scanline absolute inset-0 z-30 pointer-events-none opacity-40"></div>
+<!-- 1. EN-TÊTE JOUEUR (HAUT) -->
+<header class="h-[64px] min-h-[64px] bg-surface-container-lowest border-b border-outline px-6 flex items-center justify-between z-20">
+<!-- Identité Système & Mission -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 border-r border-outline-variant pr-4">
+<span class="w-3 h-3 bg-primary block"></span>
+<h1 class="font-orbitron text-headline-sm tracking-wider text-primary">GM-OS // JOUEUR</h1>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md text-label-md">
+<span class="text-primary text-[10px] uppercase font-bold">SYS //</span>
+<span class="tracking-wider uppercase text-on-surface">OPÉRATION EN COURS : LE SILENCE DE VARN</span>
+</div>
+</div>
+<!-- Contrôles d'état tactile (≥ 44px) -->
+<div class="flex items-center gap-3">
+<!-- Badge Réseau -->
+<div class="h-11 px-3 bg-surface-container border border-outline flex items-center gap-2 text-label-sm font-label-sm">
+<span class="w-2.5 h-2.5 bg-emerald-500 animate-pulse block"></span>
+<span class="text-emerald-400 font-code-sm font-bold tracking-widest">■ ● CONNECTÉ</span>
+</div>
+<!-- Bascule Mode Performance / Qualité (≥ 44px height & width) -->
+<button class="h-11 px-4 bg-surface-container hover:bg-surface-container-high border border-outline hover:border-primary active:bg-primary-container text-primary flex items-center gap-2 transition-colors duration-150 cursor-pointer" id="toggle-perf-btn" onclick="togglePerformanceMode()">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+<span class="font-label-sm text-label-sm tracking-widest font-bold" id="perf-btn-label">⚡ MODE PERFORMANCE</span>
+</button>
+</div>
+</header>
+<!-- 2. SOUS-BANDEAU DE TÉLÉMESURE COMPACT -->
+<div class="h-[52px] min-h-[52px] bg-surface-container-low border-b border-outline px-6 flex items-center justify-between text-on-surface z-10">
+<!-- Horloge et date projetées -->
+<div class="flex items-center gap-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
+<span class="font-code-md text-code-md text-primary font-bold tracking-wider" id="hud-clock">23:36:43</span>
+</div>
+<span class="text-outline text-body-sm">|</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Dimanche 4 octobre 2026</span>
+<div class="px-2 py-0.5 bg-surface-container-high border border-outline text-primary text-label-sm font-label-sm font-bold">
+          TABLE
+        </div>
+</div>
+<!-- Télémesure Tension Publique Uniquement -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">ALERTE DE LA STATION :</span>
+<span class="font-code-md text-code-md text-amber-400 font-bold px-1.5 py-0.5 bg-amber-950/40 border border-amber-500/40">3/8</span>
+</div>
+<!-- Jauge segmentée à 8 crans (3 crans orange/ambre, 5 éteints) -->
+<div class="flex items-center gap-1.5">
+<div class="w-4 h-4 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"></div>
+<div class="w-4 h-4 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"></div>
+<div class="w-4 h-4 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"></div>
+<div class="w-4 h-4 bg-surface-container-highest border border-outline"></div>
+<div class="w-4 h-4 bg-surface-container-highest border border-outline"></div>
+<div class="w-4 h-4 bg-surface-container-highest border border-outline"></div>
+<div class="w-4 h-4 bg-surface-container-highest border border-outline"></div>
+<div class="w-4 h-4 bg-surface-container-highest border border-outline"></div>
+</div>
+<span class="font-code-sm text-code-sm text-amber-300 font-bold tracking-widest uppercase pl-1">Palier 3 enclenché</span>
+</div>
+</div>
+<!-- 3. ZONE CENTRALE - ARCHIVES DU GROUPE (Exactement 2 colonnes équilibrées) -->
+<main class="flex-1 p-6 flex flex-col justify-between overflow-hidden bg-background">
+<!-- En-tête Module -->
+<div class="flex justify-between items-start pb-4 border-b border-outline-variant">
+<div>
+<div class="flex items-center gap-3">
+<h2 class="font-orbitron text-headline-lg font-bold tracking-wide text-on-surface">ARCHIVES DU GROUPE</h2>
+<div class="px-2.5 py-1 bg-surface-container-high border border-primary text-primary font-label-sm text-label-sm font-bold tracking-widest flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+              2 FRAGMENTS DÉCOUVERTS
+            </div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Preuves et indices collectés lors de la campagne.</p>
+</div>
+<div class="text-right flex flex-col items-end">
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase">REGISTRE LOCAL // ID: VARN-ARC-09</span>
+<span class="font-label-sm text-label-sm text-emerald-400 flex items-center gap-1 mt-0.5">
+<span class="w-1.5 h-1.5 bg-emerald-400 inline-block"></span> EN LECTURE SEULE
+          </span>
+</div>
+</div>
+<!-- 2 INDICES CÔTE À CÔTE -->
+<div class="grid grid-cols-2 gap-6 my-auto pt-2">
+<!-- INDICE 1 -->
+<article class="group cursor-pointer bg-surface-container-low hover:bg-surface-container border border-outline hover:border-primary transition-all duration-150 p-6 flex flex-col justify-between h-[360px] relative" onclick="openArchiveModal(1)">
+<!-- Coins diegétiques -->
+<div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div>
+<!-- Top tag bar -->
+<div class="flex justify-between items-center pb-4 border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">description</span>
+<span class="font-orbitron font-bold text-headline-sm text-primary">#01</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase tracking-wider">FRAGMENT PHYSIQUE</span>
+</div>
+<!-- Titre et Extrait -->
+<div class="mt-5">
+<h3 class="font-orbitron text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-wide">
+                Le café encore chaud
+              </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-4 leading-relaxed border-l-2 border-primary/50 pl-3">
+                « Le départ date de moins d'une heure. »
+              </p>
+</div>
+</div>
+<!-- Métadonnées et Bouton Tactile (≥ 44px) -->
+<div class="pt-4 border-t border-outline-variant flex flex-col gap-3">
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant">
+<span>LOCALISATION : SALLE COMMUNE</span>
+<span>HORODATAGE : T-47 MIN</span>
+</div>
+<button class="w-full h-11 bg-surface-container-high group-hover:bg-primary border border-outline group-hover:border-primary text-on-surface group-hover:text-background font-label-sm text-label-sm font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+              EXAMINER LE DOCUMENT
+            </button>
+</div>
+</article>
+<!-- INDICE 2 -->
+<article class="group cursor-pointer bg-surface-container-low hover:bg-surface-container border border-outline hover:border-primary transition-all duration-150 p-6 flex flex-col justify-between h-[360px] relative" onclick="openArchiveModal(2)">
+<!-- Coins diegétiques -->
+<div class="absolute top-0 right-0 w-3 h-3 border-t border-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div>
+<!-- Top tag bar -->
+<div class="flex justify-between items-center pb-4 border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">description</span>
+<span class="font-orbitron font-bold text-headline-sm text-primary">#02</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase tracking-wider">REGISTRE DE BORD</span>
+</div>
+<!-- Titre et Extrait -->
+<div class="mt-5">
+<h3 class="font-orbitron text-headline-sm text-on-surface group-hover:text-primary transition-colors tracking-wide">
+                La signature unique
+              </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-4 leading-relaxed border-l-2 border-primary/50 pl-3">
+                « Tout le registre est signé « Hale », même les nuits où il dormait. »
+              </p>
+</div>
+</div>
+<!-- Métadonnées et Bouton Tactile (≥ 44px) -->
+<div class="pt-4 border-t border-outline-variant flex flex-col gap-3">
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant">
+<span>SOURCE : TERMINAL DE CONTRÔLE</span>
+<span>HORODATAGE : CYCLE 314-B</span>
+</div>
+<button class="w-full h-11 bg-surface-container-high group-hover:bg-primary border border-outline group-hover:border-primary text-on-surface group-hover:text-background font-label-sm text-label-sm font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+              EXAMINER LE DOCUMENT
+            </button>
+</div>
+</article>
+</div>
+<!-- Pied diegétique de la zone centrale -->
+<div class="h-9 px-4 bg-surface-container-lowest border border-outline-variant flex items-center justify-between text-code-sm font-code-sm text-on-surface-variant mt-2">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<span>SYS.SYNC // BUFFER LOCAL VALIDE // REGISTRE CENTRAL TEST T0</span>
+</div>
+<div class="flex items-center gap-4">
+<span>PACKETS : 1,024 KB</span>
+<span>SÉCURITÉ : INTÈGRE</span>
+</div>
+</div>
+</main>
+<!-- 5. NAVIGATION FIXE COMPLÈTE EN PIED (10 DESTINATIONS RÉELLES, HAUTEUR ≥ 44px) -->
+<footer class="bg-surface-container-lowest border-t border-outline flex flex-col z-20">
+<!-- Rangée 1 : 6 destinations primaires (h=46px) -->
+<div class="grid grid-cols-6 border-b border-outline">
+<a class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors border-r border-outline" href="#direct">
+<span class="material-symbols-outlined text-[18px]">radar</span>
+          DIRECT
+        </a>
+<!-- ARCHIVES (ACTIF) -->
+<a class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider font-bold bg-primary text-background border-r border-outline" href="#archives">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+          ■ ARCHIVES
+        </a>
+<a class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors border-r border-outline" href="#pnj">
+<span class="material-symbols-outlined text-[18px]">group</span>
+          PNJ
+        </a>
+<a class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors border-r border-outline" href="#lieux">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+          LIEUX
+        </a>
+<a class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors border-r border-outline" href="#inventaire">
+<span class="material-symbols-outlined text-[18px]">backpack</span>
+          INVENTAIRE
+        </a>
+<a class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" href="#cartes">
+<span class="material-symbols-outlined text-[18px]">map</span>
+          CARTES
+        </a>
+</div>
+<!-- Rangée 2 : 4 actions rapides (h=46px) -->
+<div class="grid grid-cols-4">
+<button class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors border-r border-outline cursor-pointer" type="button">
+<span class="text-primary font-bold">◆</span>
+          FICHE
+        </button>
+<button class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors border-r border-outline cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+          ✎ NOTES
+        </button>
+<button class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors border-r border-outline cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+          ✉ MESSAGES
+        </button>
+<!-- QUITTER (MODALE) -->
+<button class="h-12 flex items-center justify-center gap-2 font-label-md text-label-md uppercase tracking-wider text-error hover:bg-error-container hover:text-on-error-container transition-colors cursor-pointer" onclick="openQuitModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">stop_circle</span>
+          ⏹ QUITTER
+        </button>
+</div>
+</footer>
+<!-- 4. SURCOUCHE DE DÉTAIL MODALE (INDICE DÉTAILLÉ) -->
+<div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm hidden items-center justify-center p-6" id="archive-modal">
+<div class="w-[840px] max-w-[840px] bg-surface-container border border-primary flex flex-col max-h-[700px] shadow-[0_0_30px_rgba(6,182,212,0.15)] relative">
+<!-- Barre d'en-tête modale -->
+<div class="h-14 bg-surface-container-low border-b border-outline px-6 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[22px]">description</span>
+<span class="font-orbitron font-bold text-headline-sm text-primary" id="modal-fragment-id">FRAGMENT D'ARCHIVE #01</span>
+</div>
+<!-- Fermeture ≥ 44x44px -->
+<button class="w-11 h-11 bg-surface-container hover:bg-surface-container-high border border-outline hover:border-primary text-on-surface flex items-center justify-center transition-colors cursor-pointer" onclick="closeArchiveModal()" title="Fermer [Échap]">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Contenu interne avec scroll interne si nécessaire -->
+<div class="p-8 overflow-y-auto space-y-6">
+<div class="flex justify-between items-start pb-4 border-b border-outline-variant">
+<div>
+<span class="text-label-sm font-label-sm text-primary uppercase font-bold tracking-widest">OBJET DE PREUVE</span>
+<h4 class="font-orbitron text-headline-lg font-bold text-on-surface mt-1" id="modal-title">Le café encore chaud</h4>
+</div>
+<div class="text-right">
+<div class="px-3 py-1 bg-surface-container-highest border border-outline font-code-sm text-code-sm text-emerald-400">
+                STATUT D'INTÉGRITÉ : 100% CONSERVÉ
+              </div>
+<span class="text-code-sm font-code-sm text-on-surface-variant block mt-1" id="modal-timestamp">ARCHIVÉ : 2026-10-04 22:49:12 UTC</span>
+</div>
+</div>
+<!-- Zone transcription -->
+<div class="space-y-4">
+<div class="text-label-sm font-label-sm text-on-surface-variant tracking-wider uppercase">TRANSCRIPTION INTÉGRALE DU RAPPORT :</div>
+<div class="p-6 bg-surface-container-lowest border border-outline font-body-md text-body-md text-on-surface leading-relaxed whitespace-pre-line" id="modal-body">
+<!-- Rempli dynamiquement -->
+</div>
+</div>
+<!-- Bloc diegétique d'authentification -->
+<div class="grid grid-cols-3 gap-4 pt-4 border-t border-outline-variant text-code-sm font-code-sm text-on-surface-variant">
+<div class="p-3 bg-surface-container-lowest border border-outline">
+<span class="block text-primary font-bold">SOURCE MATÉRIELLE</span>
+<span class="text-on-surface" id="modal-source">Tasse isolante isotherme</span>
+</div>
+<div class="p-3 bg-surface-container-lowest border border-outline">
+<span class="block text-primary font-bold">VÉRIFICATION BIOMÉTRIQUE</span>
+<span class="text-on-surface">Résidu salivaire non identifié</span>
+</div>
+<div class="p-3 bg-surface-container-lowest border border-outline">
+<span class="block text-primary font-bold">CYCLE DE SAISIE</span>
+<span class="text-on-surface">Session 09 // Réf. Varn-7</span>
+</div>
+</div>
+</div>
+<!-- Pied de la modale avec bouton Échap tactile (≥ 44px) -->
+<div class="h-16 bg-surface-container-low border-t border-outline px-6 flex items-center justify-between">
+<span class="font-code-sm text-code-sm text-on-surface-variant">TERMINAL GM-OS TABLETTE JOUEUR // COPIE LOCALE SÉCURISÉE</span>
+<button class="h-11 px-6 bg-primary hover:bg-on-primary-container text-background font-label-sm text-label-sm font-bold tracking-widest uppercase flex items-center gap-2 transition-colors cursor-pointer" onclick="closeArchiveModal()">
+<span class="material-symbols-outlined text-[18px]">keyboard_return</span>
+            FERMER LE DOSSIER [ÉCHAP]
+          </button>
+</div>
+</div>
+</div>
+<!-- 6. BOÎTE DE CONFIRMATION MODALE « QUITTER » -->
+<div class="fixed inset-0 z-50 bg-background/85 backdrop-blur-sm hidden items-center justify-center p-6" id="quit-modal">
+<div class="w-[520px] max-w-[520px] bg-surface-container border border-error flex flex-col shadow-[0_0_40px_rgba(239,68,68,0.25)]">
+<!-- Barre titre alerte -->
+<div class="h-12 bg-error-container border-b border-error px-5 flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-error-container font-orbitron font-bold text-label-lg tracking-wider">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+            INTERRUPTION DE SESSION
+          </div>
+<button class="w-8 h-8 flex items-center justify-center text-on-error-container hover:text-white cursor-pointer" onclick="closeQuitModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="p-6 space-y-4">
+<h4 class="font-orbitron text-headline-sm font-bold text-on-surface">Quitter la session joueur ?</h4>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Votre terminal sera déconnecté du flux GM-OS de la table. Les données archivées resteront sauvegardées sur le serveur central.
+          </p>
+</div>
+<div class="h-16 bg-surface-container-low border-t border-outline px-6 flex items-center justify-end gap-3">
+<button class="h-11 px-5 bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface font-label-sm text-label-sm font-bold tracking-widest uppercase transition-colors cursor-pointer" onclick="closeQuitModal()">
+            ANNULER
+          </button>
+<button class="h-11 px-6 bg-error hover:bg-red-600 text-white font-label-sm text-label-sm font-bold tracking-widest uppercase transition-colors cursor-pointer" onclick="confirmQuit()">
+            CONFIRMER LA DÉCONNEXION
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+    // Horloge diegétique mise à jour fluide
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const clockEl = document.getElementById('hud-clock');
+      if (clockEl) {
+        clockEl.textContent = `${h}:${m}:${s}`;
+      }
+    }
+    setInterval(updateClock, 1000);
+
+    // Données des 2 fragments
+    const archiveData = {
+      1: {
+        num: "#01",
+        title: "Le café encore chaud",
+        tag: "FRAGMENT PHYSIQUE",
+        timestamp: "2026-10-04 22:49:12 UTC",
+        source: "Tasse isolante isotherme // Module Mess",
+        body: "Découverte effectuée dans le réfectoire principal du sous-secteur B.\n\nLe gobelet isotherme était encore à une température de 42°C lors de l'arrivée de l'équipe de reconnaissance. Le liquide contient un dérivé synthétique de caféine standard délivré par les distributeurs de bord.\n\nConstat formel : le départ de l'occupant date de moins d'une heure. Aucun signe de lutte, mais la chaise a été repoussée violemment vers l'arrière."
+      },
+      2: {
+        num: "#02",
+        title: "La signature unique",
+        tag: "REGISTRE DE BORD",
+        timestamp: "2026-10-04 21:15:00 UTC",
+        source: "Terminal passerelle Nord // Bloc 04",
+        body: "Extraction du journal d'émargement biométrique de la station Varn.\n\nL'examen des 84 dernières rotations de quart révèle une anomalie systématique. Toutes les entrées sans exception portent la signature cryptographique du superviseur Hale.\n\nY compris les créneaux nocturnes où les capteurs de son caisson de stase attestent d'une phase de sommeil paradoxal profond.\n\nQuelqu'un ou quelque chose a utilisé sa clé d'accès avec une régularité mathématique."
+      }
+    };
+
+    // Bascule Mode Performance / Qualité
+    let isPerformance = true;
+    function togglePerformanceMode() {
+      isPerformance = !isPerformance;
+      const label = document.getElementById('perf-btn-label');
+      if (label) {
+        if (isPerformance) {
+          label.textContent = "⚡ MODE PERFORMANCE";
+        } else {
+          label.textContent = "✦ MODE QUALITÉ";
+        }
+      }
+    }
+
+    // Modal Indice
+    function openArchiveModal(id) {
+      const data = archiveData[id];
+      if (!data) return;
+
+      document.getElementById('modal-fragment-id').textContent = `FRAGMENT D'ARCHIVE ${data.num}`;
+      document.getElementById('modal-title').textContent = data.title;
+      document.getElementById('modal-timestamp').textContent = `ARCHIVÉ : ${data.timestamp}`;
+      document.getElementById('modal-source').textContent = data.source;
+      document.getElementById('modal-body').textContent = data.body;
+
+      const modal = document.getElementById('archive-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeArchiveModal() {
+      const modal = document.getElementById('archive-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Modal Quitter
+    function openQuitModal() {
+      const modal = document.getElementById('quit-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeQuitModal() {
+      const modal = document.getElementById('quit-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function confirmQuit() {
+      closeQuitModal();
+      alert("DÉCONNEXION EN COURS // Terminal remis en veille de synchronisation.");
+    }
+
+    // Clavier : Touche Échap pour fermer les modales
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeArchiveModal();
+        closeQuitModal();
+      }
+    });
+
+    // Clic extérieur pour fermer
+    document.getElementById('archive-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'archive-modal') {
+        closeArchiveModal();
+      }
+    });
+    document.getElementById('quit-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'quit-modal') {
+        closeQuitModal();
+      }
+    });
+  </script>
+</body></html>

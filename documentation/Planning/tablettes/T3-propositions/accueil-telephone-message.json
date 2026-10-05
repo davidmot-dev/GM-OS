@@ -1,0 +1,14 @@
+﻿[
+    {
+        "text":  "J\u0027ai créé l\u0027écran mobile tactile d\u0027accueil **« Qui es-tu ? »** pour la tablette et les téléphones des joueurs (390 × 844 px, fluide dès 360 px), en respectant scrupuleusement le design system GM-OS et l\u0027ensemble des contraintes demandées :\n\n### 📱 1. Ergonomie Mobile \u0026 Élimination du Bureau\n- **Sans barre latérale ni bandeau de bureau :** Pas de menu 27 modules ni de commandes de régie réservées au meneur.\n- **En-tête Joueurs épuré :** Logotype discret `GM-OS // PLAYER HUB` et bouton tactile **« Quitter la session »** ($\\ge 44$ px) avec confirmation au toucher.\n\n### 🎭 2. Titre, Contexte de Session \u0026 Instructions\n- **Agent de la Session \u0026 Date :** `03/10/2026` en `JetBrains Mono`.\n- **Titre Display :** **« QUI ES-TU ? »** en typographie `Orbitron` en graisse 800.\n- **Contexte :** « Le Silence de Varn • Séance 2 ».\n- **Consigne brève :** *« Sélectionne ta fiche pour synchroniser ton interface tactile et recevoir les flux de la table en direct. »*\n\n### 👥 3. Les Trois Fiches de Personnages\nChaque fiche dispose d\u0027une cible tactile de sélection $\\ge 44$ px (« Prendre ce personnage »), d\u0027un badge de statut vert « Connectable » et d\u0027un pictogramme silhouette neutre (aucune photo inventée) :\n1. **Nel Varga** (Technicienne de bord) — Joué par : **Camille**\n2. **Idris Koa** (Négociateur) — Joué par : **Mathis**\n3. **Sora Adebayo** (Médecin de bord) — Joué par : **Inès**\n\n### ⚡ 4. Pied Télémétrique \u0026 Informations Réelles\n- Pastille verte de statut réseau, version `GM-OS v6.5.0 • nexus_bridge_active`.\n- Indicateur de latence `LAT : --`.\n- Identifiant de démonstration `Device ID: T0-JOUEURS-P91...` et `PORT: 8080`.\n\nL\u0027écran est d\u0027ores et déjà publié sur le canevas et prêt à être testé."
+    },
+    {
+        "suggestion":  "Simuler l\u0027écran suivant une fois le personnage choisi (la fiche du joueur en jeu)"
+    },
+    {
+        "suggestion":  "Ajouter un état où un personnage est déjà « En cours d\u0027utilisation » par un autre joueur"
+    },
+    {
+        "suggestion":  "Tester l\u0027affichage avec un thème sombre alternatif (ex: Médiéval ou Moderne)"
+    }
+]

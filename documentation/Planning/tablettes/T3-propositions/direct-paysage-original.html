@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // JOUEUR - DIRECT</title>
+<!-- Material Symbols & Typography -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#0c1324",
+            "surface-bright": "#33394c",
+            "surface-container-low": "#141b2c",
+            "surface-container": "#192031",
+            "primary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#232a3c",
+            "on-error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "outline-variant": "#3d494c",
+            "on-surface-variant": "#898c95",
+            "error-container": "#93000a",
+            "on-error": "#020617",
+            "error": "#ef4444",
+            "secondary": "#bcc7de",
+            "surface-container-highest": "#2e3447",
+            "inverse-surface": "#dce2fa",
+            "surface-container-lowest": "#070d1f",
+            "surface-variant": "#2e3447",
+            "on-primary-container": "#00424f",
+            "on-primary-fixed-variant": "#004e5c",
+            "surface-tint": "#4cd7f6",
+            "on-primary-fixed": "#001f26",
+            "tertiary-container": "#06b6d4",
+            "on-tertiary": "#003640",
+            "on-background": "#dce2fa",
+            "primary-fixed": "#acedff",
+            "primary-container": "#06b6d4",
+            "on-secondary-container": "#c0c9e0",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "inverse-on-surface": "#293042",
+            "outline": "#1e293b",
+            "background": "#020617",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-tertiary-fixed": "#001f26",
+            "tertiary-fixed": "#acedff",
+            "surface-dim": "#0c1324",
+            "tertiary": "#4cd7f6",
+            "secondary-fixed": "#d8e3fb",
+            "secondary-container": "#283347",
+            "on-secondary": "#263143",
+            "on-primary": "#003640",
+            "on-surface": "#dce2fa",
+            "inverse-primary": "#00687a",
+            "primary": "#4cd7f6",
+            "on-secondary-fixed": "#111c2d",
+            "on-tertiary-container": "#00424f",
+            "on-secondary-fixed-variant": "#3c475a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Orbitron", "sans-serif"],
+            "headline-md": ["Orbitron", "sans-serif"],
+            "headline-sm": ["Orbitron", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "code-lg": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "code-sm": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "number-md": ["Space Mono", "monospace"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "34px", "fontWeight": "800" }],
+            "headline-md": ["20px", { "lineHeight": "26px", "fontWeight": "700" }],
+            "headline-sm": ["15px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-md": ["13px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "body-sm": ["11px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "code-lg": ["28px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "code-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "code-sm": ["11px", { "lineHeight": "16px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Réticules diegétiques de cadrage */
+    .reticle-corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+    }
+    .reticle-tl { top: -1px; left: -1px; border-top: 2px solid #06b6d4; border-left: 2px solid #06b6d4; }
+    .reticle-tr { top: -1px; right: -1px; border-top: 2px solid #06b6d4; border-right: 2px solid #06b6d4; }
+    .reticle-bl { bottom: -1px; left: -1px; border-bottom: 2px solid #06b6d4; border-left: 2px solid #06b6d4; }
+    .reticle-br { bottom: -1px; right: -1px; border-bottom: 2px solid #06b6d4; border-right: 2px solid #06b6d4; }
+
+    /* Scanlines diegétiques très légères */
+    .terminal-grid {
+      background-size: 100% 4px;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 50%, transparent 50%);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface m-0 p-0 overflow-hidden select-none font-body-md antialiased terminal-grid">
+<!-- FRAME CHÂSSIS STRICT TABLETTE PAYSAGE : 1180px × 820px -->
+<div class="w-[1180px] h-[820px] max-w-[1180px] max-h-[820px] mx-auto flex flex-col bg-surface-container-lowest border border-outline relative">
+<!-- ================= EN-TÊTE SUPÉRIEUR (72px) ================= -->
+<header class="h-[72px] min-h-[72px] w-full px-6 flex items-center justify-between bg-surface-container-lowest border-b border-outline">
+<!-- Gauche : Identité & Campagne -->
+<div class="flex items-center gap-5">
+<div class="flex items-center gap-2.5 pr-5 border-r border-outline">
+<span class="w-2.5 h-2.5 bg-tertiary-container shadow-[0_0_8px_#06b6d4]"></span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-wider uppercase">GM-OS // JOUEUR</span>
+</div>
+<div class="flex flex-col justify-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest leading-none">OPÉRATION EN COURS</span>
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-wide uppercase mt-1 leading-none">LE SILENCE DE VARN</h1>
+</div>
+</div>
+<!-- Droite : Statut & Bouton de Performance Unique -->
+<div class="flex items-center gap-4">
+<!-- Statut connecté -->
+<div class="h-11 px-4 flex items-center gap-2.5 bg-surface-container-low border border-outline">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="font-code-md text-code-md text-emerald-400 tracking-wider">● CONNECTÉ</span>
+</div>
+<!-- Bascule Unique Mode Performance (min 44px) -->
+<button class="h-11 px-4 flex items-center gap-2 bg-surface-container border border-outline text-on-surface hover:border-primary hover:text-primary transition-colors cursor-pointer" id="perfToggle" onclick="togglePerfMode()" title="Basculer le mode de rendu">
+<span class="text-tertiary font-bold">⚡</span>
+<span class="font-label-md text-label-md uppercase tracking-wider" id="perfText">MODE PERFORMANCE</span>
+</button>
+</div>
+</header>
+<!-- ================= ZONE CENTRALE DE TRAVAIL (644px) ================= -->
+<main class="flex-1 grid grid-cols-12 gap-4 p-4 min-h-0 bg-surface-dim">
+<!-- GAUCHE : LE COEUR DE L'ÉCRAN - CANAL DE PROJECTION DU MENEUR (Col 8/12) -->
+<section class="col-span-8 h-full flex flex-col bg-surface-container-lowest border border-outline relative">
+<!-- Coins Réticulés Diegétiques -->
+<div class="reticle-corner reticle-tl"></div>
+<div class="reticle-corner reticle-tr"></div>
+<div class="reticle-corner reticle-bl"></div>
+<div class="reticle-corner reticle-br"></div>
+<!-- Bandeau supérieur du canal -->
+<div class="h-9 px-4 flex items-center justify-between bg-surface-container-low border-b border-outline">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">CANAL DE PROJECTION DU MENEUR</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-sm text-code-sm text-tertiary uppercase">FLUX : PRIORITAIRE</span>
+<span class="inline-block w-1.5 h-1.5 bg-tertiary"></span>
+</div>
+</div>
+<!-- Surface de projection centrale en Standby -->
+<div class="flex-1 flex flex-col items-center justify-center p-8 relative overflow-hidden bg-surface-container-lowest">
+<!-- Repère diegétique central discret -->
+<div class="w-64 h-64 border border-outline-variant/40 flex items-center justify-center relative mb-4">
+<div class="absolute inset-x-0 top-1/2 h-[1px] bg-outline-variant/30"></div>
+<div class="absolute inset-y-0 left-1/2 w-[1px] bg-outline-variant/30"></div>
+<div class="flex flex-col items-center justify-center gap-3 z-10 bg-surface-container-lowest/80 p-6 border border-outline">
+<span class="material-symbols-outlined text-outline-variant text-4xl" data-icon="sensors">sensors</span>
+<span class="font-code-md text-code-md text-on-surface-variant tracking-widest uppercase">STANDBY</span>
+</div>
+</div>
+<!-- Message officiel sans contenu inventé -->
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-center mt-2">
+            EN ATTENTE DU SIGNAL TABLE
+          </p>
+</div>
+<!-- Pied de cadre projection -->
+<div class="h-7 px-4 flex items-center justify-between bg-surface-container-lowest border-t border-outline text-on-surface-variant">
+<span class="font-code-sm text-code-sm">DISPOSITIF : RÉCEPTEUR DIRECT V2</span>
+<span class="font-code-sm text-code-sm">CANAL SÉCURISÉ [J-TABLET]</span>
+</div>
+</section>
+<!-- DROITE : PANNEAU PAYSAGE INFORMATIF (Col 4/12) -->
+<aside class="col-span-4 h-full flex flex-col gap-4 min-h-0">
+<!-- 1. BLOC HORLOGE -->
+<div class="bg-surface-container-lowest border border-outline p-4 flex flex-col justify-between">
+<div class="flex items-center justify-between pb-2 border-b border-outline mb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">HORLOGE</span>
+<span class="font-code-sm text-code-sm text-tertiary">SYNC LOCALE</span>
+</div>
+<div class="flex items-baseline gap-1 my-1">
+<span class="font-code-lg text-code-lg text-on-surface text-4xl font-bold tracking-tight">23:36</span>
+<span class="font-code-md text-code-md text-tertiary font-bold">:17</span>
+</div>
+<div class="pt-2 border-t border-outline/50 flex items-center justify-between">
+<span class="font-label-md text-label-md text-secondary">Dimanche 4 octobre 2026</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">STATION T-0</span>
+</div>
+</div>
+<!-- 2. BLOC TENSION PUBLIQUE -->
+<div class="bg-surface-container-lowest border border-outline p-4 flex flex-col justify-between">
+<div class="flex items-center justify-between pb-2 border-b border-outline mb-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">TENSION PUBLIQUE</span>
+<span class="font-label-sm text-label-sm text-amber-400 font-bold px-1.5 py-0.5 bg-amber-950/40 border border-amber-500/40">ALERTE STATION 3/8</span>
+</div>
+<!-- Jauge segmentée 8 crans (3 actifs en ambre/orange) -->
+<div class="my-2">
+<div class="grid grid-cols-8 gap-1.5 h-4 mb-2">
+<div class="bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]"></div>
+<div class="bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]"></div>
+<div class="bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]"></div>
+<div class="bg-surface-container-high border border-outline"></div>
+<div class="bg-surface-container-high border border-outline"></div>
+<div class="bg-surface-container-high border border-outline"></div>
+<div class="bg-surface-container-high border border-outline"></div>
+<div class="bg-surface-container-high border border-outline"></div>
+</div>
+</div>
+<div class="pt-2 border-t border-outline/50 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-amber-400 uppercase tracking-wide">3 VIGILANCE</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Palier 3 enclenché</span>
+</div>
+</div>
+<!-- 3. BLOC CHRONIQUES DE SÉANCE -->
+<div class="flex-1 bg-surface-container-lowest border border-outline p-4 flex flex-col">
+<div class="flex items-center justify-between pb-2 border-b border-outline mb-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">CHRONIQUES DE SÉANCE</span>
+<span class="font-code-sm text-code-sm text-primary">SÉANCE 2</span>
+</div>
+<div class="flex-1 flex flex-col items-center justify-center bg-surface-container-low/40 border border-dashed border-outline p-4">
+<span class="font-body-md text-body-md text-on-surface-variant italic text-center">
+              « Aucun résumé public. »
+            </span>
+</div>
+<div class="pt-2 mt-2 border-t border-outline/50 flex items-center justify-between text-on-surface-variant">
+<span class="font-code-sm text-code-sm">JOURNAL DE BORD</span>
+<span class="font-code-sm text-code-sm">DIFFUSION TABLE</span>
+</div>
+</div>
+</aside>
+</main>
+<!-- ================= NAVIGATION COMPLÈTE EN BAS (104px) ================= -->
+<!-- Contient strictement les 10 destinations réelles, format tactile >= 44x44px -->
+<footer class="h-[104px] min-h-[104px] w-full flex flex-col bg-surface-container-lowest border-t border-outline">
+<!-- NIVEAU 1 : BARRE PRINCIPALE À 6 ONGLETS HORIZONTAUX (56px) -->
+<nav aria-label="Navigation principale" class="h-14 grid grid-cols-6 border-b border-outline text-center">
+<!-- 1. DIRECT (Actif en cyan plein) -->
+<button class="h-full flex items-center justify-center gap-2 bg-primary-container text-on-primary-container font-bold border-r border-outline active:bg-primary transition-colors min-h-[44px]">
+<span class="w-2 h-2 rounded-full bg-surface-container-lowest animate-pulse"></span>
+<span class="font-label-md text-label-md uppercase tracking-wider">DIRECT (● LIVE)</span>
+</button>
+<!-- 2. ARCHIV. / HIST. -->
+<button class="h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low border-r border-outline transition-colors min-h-[44px]">
+<span class="font-label-md text-label-md uppercase tracking-wider">ARCHIV. / HIST.</span>
+</button>
+<!-- 3. PNJ / ROSTER -->
+<button class="h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low border-r border-outline transition-colors min-h-[44px]">
+<span class="font-label-md text-label-md uppercase tracking-wider">PNJ / ROSTER</span>
+</button>
+<!-- 4. LIEUX / SECT. -->
+<button class="h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low border-r border-outline transition-colors min-h-[44px]">
+<span class="font-label-md text-label-md uppercase tracking-wider">LIEUX / SECT.</span>
+</button>
+<!-- 5. INVENT. / BUTIN -->
+<button class="h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low border-r border-outline transition-colors min-h-[44px]">
+<span class="font-label-md text-label-md uppercase tracking-wider">INVENT. / BUTIN</span>
+</button>
+<!-- 6. CARTES / PLANS -->
+<button class="h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors min-h-[44px]">
+<span class="font-label-md text-label-md uppercase tracking-wider">CARTES / PLANS</span>
+</button>
+</nav>
+<!-- NIVEAU 2 : BARRE D'ACTIONS SECONDAIRES (48px) -->
+<div class="h-12 grid grid-cols-12 bg-surface-container-low">
+<!-- 7. FICHE (Col 3) -->
+<button class="col-span-3 h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface hover:text-primary hover:bg-surface-container border-r border-outline transition-colors min-h-[44px]">
+<span class="text-tertiary">◆</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">FICHE</span>
+</button>
+<!-- 8. NOTES (Col 3) -->
+<button class="col-span-3 h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface hover:text-primary hover:bg-surface-container border-r border-outline transition-colors min-h-[44px]">
+<span class="text-tertiary">✎</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">NOTES</span>
+</button>
+<!-- 9. MSGS (Col 3) -->
+<button class="col-span-3 h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-on-surface hover:text-primary hover:bg-surface-container border-r border-outline transition-colors min-h-[44px]">
+<span class="text-tertiary">✉</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">MSGS</span>
+</button>
+<!-- 10. QUITTER (Col 3) - Isolé en alerte sobre avec confirmation -->
+<button class="col-span-3 h-full flex items-center justify-center gap-2 bg-surface-container-lowest text-red-400 hover:bg-error-container hover:text-on-error-container transition-colors min-h-[44px]" onclick="confirmExit()">
+<span>⏹</span>
+<span class="font-label-md text-label-md uppercase tracking-wider font-bold">QUITTER</span>
+</button>
+</div>
+</footer>
+</div>
+<!-- SCRIPT LÉGER DE MICRO-INTERACTIONS -->
+<script>
+    // Bascule Mode Performance / Mode Qualité
+    let isPerfMode = true;
+    function togglePerfMode() {
+      isPerfMode = !isPerfMode;
+      const btnText = document.getElementById('perfText');
+      if (isPerfMode) {
+        btnText.textContent = "MODE PERFORMANCE";
+      } else {
+        btnText.textContent = "MODE QUALITÉ";
+      }
+    }
+
+    // Confirmation sobre de sortie
+    function confirmExit() {
+      if (window.confirm("CONFIRMATION // Déconnexion du terminal joueur ?")) {
+        console.log("Terminal déconnecté.");
+      }
+    }
+  </script>
+</body></html>

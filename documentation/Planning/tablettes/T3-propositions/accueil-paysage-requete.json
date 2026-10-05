@@ -1,0 +1,8 @@
+{
+    "selectedScreenIds":  [
+                              "8dbd9f168e86453c92df43b33b748e8d"
+                          ],
+    "deviceType":  "TABLET",
+    "prompt":  "Décline CE MÊME accueil à 1180 × 820. Montre les trois personnages et l\u0027état de connexion\nsans défilement si possible. Conserve exactement les informations, les deux gestes et le\nsystème de design du cadre téléphone. Aucun bandeau de bureau, aucun nouvel onglet,\naucune nouvelle fonction. C\u0027est TOUT.\nCréer une déclinaison distincte paysage ; conserver le cadre téléphone comme référence. Pas de PORT:8080 : cette information n\u0027existe pas dans le code. Pas de texte explicatif ni de conseil ajouté. Garder « Session 2 », la date 03/10/2026, trois silhouettes neutres, tous les noms et métiers. HTML fluide à 1180×820 avec trois cartes côte à côte, cibles \u003e=44×44px, pied lisible sans données inventées. Ne pas ajouter de navigation avant le choix.",
+    "projectId":  "14179472786712390673"
+}

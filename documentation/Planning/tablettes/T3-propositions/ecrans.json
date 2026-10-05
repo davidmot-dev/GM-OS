@@ -1,0 +1,182 @@
+[
+  {
+    "nom": "accueil-telephone",
+    "projet": "14179472786712390673",
+    "session": "15332744561655353899",
+    "ecran": "projects/14179472786712390673/screens/8dbd9f168e86453c92df43b33b748e8d",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Qui es-tu ? (Tablette Joueurs)",
+    "original": "accueil-telephone-original.html",
+    "proposition": "accueil-telephone.html"
+  },
+  {
+    "nom": "accueil-paysage",
+    "projet": "14179472786712390673",
+    "session": "14330675858929004245",
+    "ecran": "projects/14179472786712390673/screens/31bcce50758f4ed89b404287f4c72e7a",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Qui es-tu ? (Tablette Paysage 1180×820)",
+    "original": "accueil-paysage-original.html",
+    "proposition": "accueil-paysage.html"
+  },
+  {
+    "nom": "direct-telephone",
+    "projet": "14179472786712390673",
+    "session": "16831676289526252992",
+    "ecran": "projects/14179472786712390673/screens/ff7131487c8e47aea001882de03a902c",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Direct (390×844)",
+    "original": "direct-telephone-original.html",
+    "proposition": "direct-telephone.html"
+  },
+  {
+    "nom": "direct-paysage",
+    "projet": "14179472786712390673",
+    "session": "13828515919272972516",
+    "ecran": "projects/14179472786712390673/screens/a3c4211f862d490c9285c411b0fbc344",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Direct (Tablette Paysage 1180×820)",
+    "original": "direct-paysage-original.html",
+    "proposition": "direct-paysage.html"
+  },
+  {
+    "nom": "inventaire-telephone",
+    "projet": "14179472786712390673",
+    "session": "16643781083008141992",
+    "ecran": "projects/14179472786712390673/screens/46878407fcaf40a79336f832dea5f4b5",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Inventaire (390×844)",
+    "original": "inventaire-telephone-original.html",
+    "proposition": "inventaire-telephone.html"
+  },
+  {
+    "nom": "inventaire-paysage",
+    "projet": "14179472786712390673",
+    "session": "6368023882026867277",
+    "ecran": "projects/14179472786712390673/screens/fda93b7cc19c462ab1c01472e60de303",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Inventaire (Tablette Paysage 1180×820)",
+    "original": "inventaire-paysage-original.html",
+    "proposition": "inventaire-paysage.html"
+  },
+  {
+    "nom": "cartes-telephone",
+    "projet": "14179472786712390673",
+    "session": "6559636167307794196",
+    "ecran": "projects/14179472786712390673/screens/dfc9d61c02494250a1b07a267d4d8a14",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Cartes (390×844)",
+    "original": "cartes-telephone-original.html",
+    "proposition": "cartes-telephone.html"
+  },
+  {
+    "nom": "cartes-paysage",
+    "projet": "14179472786712390673",
+    "session": "9722715162168505596",
+    "ecran": "projects/14179472786712390673/screens/0f4e3deb29a0437a9e183e0df9b86408",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Cartes (Tablette Paysage 1180×820)",
+    "original": "cartes-paysage-original.html",
+    "proposition": "cartes-paysage.html"
+  },
+  {
+    "nom": "archives-telephone",
+    "projet": "14179472786712390673",
+    "session": "990928815908717094",
+    "ecran": "projects/14179472786712390673/screens/2da6462d68684f6b9f953b2a9e3ca3b9",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Archives (390×844)",
+    "original": "archives-telephone-original.html",
+    "proposition": "archives-telephone.html"
+  },
+  {
+    "nom": "archives-paysage",
+    "projet": "14179472786712390673",
+    "session": "17475028047750188364",
+    "ecran": "projects/14179472786712390673/screens/b05215b02d664a7eac04be57daaca667",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Archives (Tablette Paysage 1180×820)",
+    "original": "archives-paysage-original.html",
+    "proposition": "archives-paysage.html"
+  },
+  {
+    "nom": "pnj-telephone",
+    "projet": "14179472786712390673",
+    "session": "1966234544377615783",
+    "ecran": "projects/14179472786712390673/screens/52b6d1918e524d18b1c747f88b5bdae3",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Trombinoscope (390×844)",
+    "original": "pnj-telephone-original.html",
+    "proposition": "pnj-telephone.html"
+  },
+  {
+    "nom": "pnj-paysage",
+    "projet": "14179472786712390673",
+    "session": "4924335428356350906",
+    "ecran": "projects/14179472786712390673/screens/a01cb3c99e8a4339a5741a7c49353cfb",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : PNJ (Tablette Paysage 1180×820)",
+    "original": "pnj-paysage-original.html",
+    "proposition": "pnj-paysage.html"
+  },
+  {
+    "nom": "lieux-telephone",
+    "projet": "14179472786712390673",
+    "session": "5268980457112322161",
+    "ecran": "projects/14179472786712390673/screens/9d41365bd6034ee79c3cccdc43acf35d",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Lieux (390×844)",
+    "original": "lieux-telephone-original.html",
+    "proposition": "lieux-telephone.html"
+  },
+  {
+    "nom": "lieux-paysage",
+    "projet": "14179472786712390673",
+    "session": "17841418039096964269",
+    "ecran": "projects/14179472786712390673/screens/bf58794a412e4abf8cd5beb23dd624d8",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Lieux (Tablette Paysage 1180×820)",
+    "original": "lieux-paysage-original.html",
+    "proposition": "lieux-paysage.html"
+  },
+  {
+    "nom": "messages-telephone",
+    "projet": "14179472786712390673",
+    "session": "714660641010060881",
+    "ecran": "projects/14179472786712390673/screens/ca30107911fb4b9da0e7002ec8e8e4c7",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Messagerie (390×844)",
+    "original": "messages-telephone-original.html",
+    "proposition": "messages-telephone.html"
+  },
+  {
+    "nom": "messages-paysage",
+    "projet": "14179472786712390673",
+    "session": "18266180874008928148",
+    "ecran": "projects/14179472786712390673/screens/31160c895ef34836ac65d3a0fbcdcadd",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Messagerie (Tablette Paysage 1180×820)",
+    "original": "messages-paysage-original.html",
+    "proposition": "messages-paysage.html"
+  },
+  {
+    "nom": "notifications-telephone",
+    "projet": "14179472786712390673",
+    "session": "1128853308752980656",
+    "ecran": "projects/14179472786712390673/screens/7dddb211952049808ceae63db05e552e",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Notifications (390×844)",
+    "original": "notifications-telephone-original.html",
+    "proposition": "notifications-telephone.html"
+  },
+  {
+    "nom": "notifications-paysage",
+    "projet": "14179472786712390673",
+    "session": "7931368740587841807",
+    "ecran": "projects/14179472786712390673/screens/ca04e06a55fe450eadccb623970d0543",
+    "designSystem": "assets/f715d3f70c644671a1bdf4670b677326",
+    "titre": "GM-OS — Tablette Joueur : Notifications & Direct (1180×820)",
+    "original": "notifications-paysage-original.html",
+    "proposition": "notifications-paysage.html"
+  }
+]

@@ -1,0 +1,380 @@
+<!DOCTYPE html><html class="dark" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>GM-OS - CARTES</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Orbitron:wght@600;800;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#0c1324",
+            "on-primary-container": "#00424f",
+            "inverse-on-surface": "#293042",
+            "surface-container-lowest": "#070e1e",
+            "on-primary-fixed": "#001f26",
+            "on-surface": "#dce2fa",
+            "on-background": "#dce2fa",
+            "on-tertiary": "#003640",
+            "surface-container": "#192031",
+            "tertiary-container": "#004f5d",
+            "primary-container": "#004f5d",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-error": "#020617",
+            "error-container": "#93000a",
+            "on-surface-variant": "#898c95",
+            "primary": "#4cd7f6",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-secondary-fixed": "#111c2d",
+            "secondary": "#bcc7de",
+            "inverse-surface": "#dce2fa",
+            "outline-variant": "#151b2d",
+            "surface-container-highest": "#2e3548",
+            "secondary-fixed": "#d8e3fb",
+            "on-secondary-container": "#c0c9e0",
+            "on-primary-fixed-variant": "#004e5c",
+            "surface-tint": "#4cd7f6",
+            "on-primary": "#003640",
+            "surface-container-low": "#151b2d",
+            "on-error-container": "#ffdad6",
+            "secondary-container": "#3e495d",
+            "surface-variant": "#2e3447",
+            "on-tertiary-container": "#9bf0ff",
+            "surface-container-high": "#232a3c",
+            "primary-fixed": "#acedff",
+            "tertiary-fixed": "#acedff",
+            "error": "#ef4444",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-secondary": "#263143",
+            "inverse-primary": "#00687a",
+            "outline": "#1e293b",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "surface-bright": "#32394c",
+            "background": "#020617",
+            "surface": "#0c1324",
+            "on-tertiary-fixed": "#001f26",
+            "tertiary": "#4cd7f6",
+            "on-secondary-fixed-variant": "#3c475a"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            lg: "0px",
+            xl: "0px",
+            full: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "code-lg": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "headline-md": ["Space Grotesk", "sans-serif"]
+          },
+          fontSize: {
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "number-md": ["15px", { fontWeight: "600" }],
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #dce2fa;
+      width: 1180px;
+      height: 820px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+    /* Diegetic Scanlines & Reticle */
+    .bg-scanlines {
+      background: linear-gradient(rgba(18, 24, 38, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.01));
+      background-size: 100% 3px, 6px 100%;
+    }
+    .technical-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+    }
+    .reticle-corner {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-color: #4cd7f6;
+    }
+  </style>
+<script>Object.assign(tailwind.config.theme.extend.colors,{"background":"#020617","surface":"#0f172a","surface-raised":"#1e293b","primary":"#06b6d4","text-main":"#f8fafc","text-muted":"#898c95","danger":"#ef4444","warning":"#f59e0b","success":"#10b981"});Object.assign(tailwind.config.theme.extend.fontFamily,{inter:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']});</script><style>body{color:#f8fafc;font-family:Inter,sans-serif}.brutal-btn{display:flex;align-items:center;justify-content:center;padding:8px;font-weight:700}#handCardsContainer article img{width:160px}#handCardsContainer article{background:#0f172a}.text-body-sm{font-size:14px}</style><style>*{border-radius:0!important}.text-xs{font-size:14px}.text-\[10px\]{font-size:11px}main{overscroll-behavior:contain}header{flex-shrink:0}button,select{min-width:44px;min-height:44px}#cardInspectModal>div{max-height:calc(100dvh - 24px);overflow-y:auto}</style></head>
+<body class="bg-background text-on-surface antialiased flex flex-col justify-between select-none technical-grid relative border-x border-outline" style="width: 100%; max-width: 1180px; height: 100dvh;">
+<!-- ========================================== -->
+<!-- 1. EN-TÊTE SUPÉRIEUR SYSTÈME              -->
+<!-- ========================================== -->
+<header class="w-full bg-surface-container-lowest border-b border-outline px-6 py-2.5 flex items-center justify-between z-30 shrink-0">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-wider font-bold">GM-OS</span>
+
+</div>
+</div>
+</div>
+<!-- Actions système et statut réseau -->
+<div class="flex items-center gap-5">
+<!-- État réseau -->
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-outline">
+<span class="text-xs text-emerald-400 font-code-sm tracking-wide">■ ● CONNECTÉ</span>
+</div>
+<!-- Bouton mode performance -->
+<button class="min-h-[44px] px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline hover:border-primary active:bg-surface-container-highest transition-colors flex items-center gap-2 font-label-sm text-label-sm text-on-surface tracking-wider" id="btn-perf" onclick="togglePerfMode()">
+<span class="text-amber-400">⚡</span>
+<span id="perfText">MODE PERFORMANCE</span>
+</button>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. SOUS-BANDEAU TÉLÉMÉTRIE COMPACT         -->
+<!-- ========================================== -->
+<section class="w-full bg-surface-dim border-b border-outline px-6 py-2 flex items-center justify-between z-20 shrink-0">
+<!-- Horloge projetée fixe -->
+<div class="flex items-center gap-3">
+
+<div class="flex items-baseline gap-2">
+<span class="font-code-lg text-[20px] font-bold text-on-surface leading-none">23:43:22</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Dimanche 4 octobre 2026</span>
+</div>
+</div>
+<!-- Tension publique de la station (Pas de tension meneur) -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider">ALERTE DE LA STATION</span>
+<span class="font-code-sm text-code-sm text-amber-500 font-bold px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/30">3/8</span>
+</div>
+<!-- 8 segments discrets : 3 allumés orange, 5 éteints -->
+<div class="flex items-center gap-1.5 p-1 bg-surface-container-lowest border border-outline">
+<span class="w-3.5 h-2.5 bg-amber-500"></span>
+<span class="w-3.5 h-2.5 bg-amber-500"></span>
+<span class="w-3.5 h-2.5 bg-amber-500"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 3. ZONE PRINCIPALE (CARTES EN MAIN & PIOCHE)-->
+<!-- ========================================== -->
+<main class="w-full flex-1 px-8 py-4 flex flex-col justify-start overflow-y-auto relative min-h-0">
+<!-- En-tête de section -->
+<div class="flex items-end justify-between border-b border-outline pb-2.5 mb-4 shrink-0"><h1 class="font-orbitron text-2xl font-black tracking-wider">CARTES</h1></div>
+<!-- Grille 2 Colonnes larges équilibrées -->
+<div class="grid grid-cols-2 gap-8 items-stretch">
+<!-- ====================================== -->
+<!-- COLONNE GAUCHE : PAQUETS OUVERTS       -->
+<!-- ====================================== -->
+<section class="bg-surface-container-low border border-outline p-5 flex flex-col justify-start"><div class="flex justify-between items-start gap-3 border-b border-outline pb-3 mb-4"><div><h2 class="font-orbitron text-sm font-bold uppercase">Paquets ouverts</h2><p class="text-sm text-text-muted mt-2">Cartes de complication</p></div><span class="text-sm font-mono text-primary">Restant : <span id="remainingCardsVal">4</span></span></div><button id="deckDrawTarget" onclick="drawCard()" aria-label="Piocher" class="touch-target w-full bg-surface-raised border border-primary/40 flex flex-col items-center gap-4 p-4"><img id="deck-image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAiIGhlaWdodD0iMzUwIj48cmVjdCB3aWR0aD0iMjUwIiBoZWlnaHQ9IjM1MCIgcng9IjE2IiBmaWxsPSIjMTQyNjM3Ii8+PHJlY3QgeD0iMTIiIHk9IjEyIiB3aWR0aD0iMjI2IiBoZWlnaHQ9IjMyNiIgcng9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiM1NGM2YjQiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjEyNSIgeT0iMTY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZmlsbD0id2hpdGUiPlNUQVRJT04gVkFSTjwvdGV4dD48dGV4dCB4PSIxMjUiIHk9IjIwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM1NGM2YjQiPkNvbXBsaWNhdGlvbjwvdGV4dD48L3N2Zz4=" alt="Dos de carte" width="180" height="252" class="w-[180px] h-auto"><span class="draw-label text-sm font-orbitron text-primary">Piocher</span></button></section>
+<!-- ====================================== -->
+<!-- COLONNE DROITE : VOS CARTES EN MAIN     -->
+<!-- ====================================== -->
+<section class="bg-surface-container-low border border-outline p-5 flex flex-col justify-start"><div class="flex justify-between items-center border-b border-outline pb-3 mb-4"><h2 class="font-orbitron text-sm font-bold uppercase">Cartes en main</h2><span id="handCounter" class="text-sm text-primary font-mono">1 CARTE</span></div><div id="handCardsContainer" class="space-y-3"></div><p id="emptyHandMsg" class="hidden text-sm text-text-muted p-6 text-center">Vous ne tenez aucune carte.</p></section>
+</div>
+</main>
+<!-- ========================================== -->
+<!-- 4. NAVIGATION EN PIED FIXE (10 DESTINATIONS)-->
+<!-- ========================================== -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline z-30 shrink-0 flex flex-col">
+<!-- RANGÉE 1 (6 destinations réelles de l'application) -->
+<div class="grid grid-cols-6 border-b border-outline">
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>DIRECT</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>ARCHIVES</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>PNJ</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>LIEUX</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>INVENTAIRE</span>
+</button>
+<!-- CARTES ACTIF (FOND CYAN PLEIN #06b6d4 / text foncé) -->
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-[#06b6d4] text-[#003640] font-label-sm text-label-sm tracking-widest font-black">
+<span>CARTES</span>
+<span class="text-xs">●</span>
+</button>
+</div>
+<!-- RANGÉE 2 (4 actions rapides) -->
+<div class="grid grid-cols-4 bg-surface-dim">
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container border-r border-outline transition-colors font-label-sm text-label-sm tracking-wider">
+<span>◆</span>
+<span>FICHE</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container border-r border-outline transition-colors font-label-sm text-label-sm tracking-wider">
+<span>✎</span>
+<span>NOTES</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container border-r border-outline transition-colors font-label-sm text-label-sm tracking-wider">
+<span>✉</span>
+<span>MESSAGES</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-error hover:bg-error-container/40 transition-colors font-label-sm text-label-sm tracking-wider" onclick="confirmExit()">
+<span>⏹</span>
+<span>QUITTER</span>
+</button>
+</div>
+</footer>
+<!-- ========================================== -->
+<!-- 5. MODALE DÉTAIL CARTE                     -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-background/85 backdrop-blur-sm hidden items-center justify-center p-6 flex" id="cardInspectModal" onclick="closeCardModal()" role="dialog" aria-modal="true" aria-label="Carte 2"><div class="cursor-pointer brutal-card bg-surface border border-primary max-w-xs w-full p-4 flex flex-col items-center gap-4"><h2 id="modalCardTitle" class="font-orbitron font-bold text-sm uppercase">Carte 2</h2><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAiIGhlaWdodD0iMzUwIj48cmVjdCB3aWR0aD0iMjUwIiBoZWlnaHQ9IjM1MCIgcng9IjE2IiBmaWxsPSIjMTQyNjM3Ii8+PHJlY3QgeD0iMTIiIHk9IjEyIiB3aWR0aD0iMjI2IiBoZWlnaHQ9IjMyNiIgcng9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiM1NGM2YjQiIHN0cm9rZS13aWR0aD0iMyIvPjx0ZXh0IHg9IjEyNSIgeT0iMTY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZmlsbD0id2hpdGUiPlNUQVRJT04gVkFSTjwvdGV4dD48dGV4dCB4PSIxMjUiIHk9IjIwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM1NGM2YjQiPkNvbXBsaWNhdGlvbjwvdGV4dD48L3N2Zz4=" alt="Carte agrandie" width="250" height="350" style="max-height:calc(100dvh - 180px);width:auto;max-width:100%;object-fit:contain"><p class="text-sm text-primary">Touchez pour fermer</p></div></div>
+<!-- ========================================== -->
+<!-- 6. MODALE CONFIRMATION QUITTER            -->
+<!-- ========================================== -->
+
+<!-- ========================================== -->
+<!-- 7. SCRIPT LOGIQUE & INTERACTIONS           -->
+<!-- ========================================== -->
+
+<script>// Simulation locale des seuls gestes déjà présents dans HubMainDeCartes.
+// Les changements de main simulent la réponse du meneur, sans connexion à GM-OS.
+const etat = new URLSearchParams(location.search).get('etat');
+let remainingCards = etat === 'vide' ? 0 : 4;
+let handCards = etat === 'vide' ? [] : ['Carte 2'];
+let propositionEnAttente = etat === 'attente';
+let perfMode = true;
+const avecVoisin = etat === 'voisin';
+const visuelCarte = document.getElementById('deck-image').src;
+
+function togglePerfMode() {
+  perfMode = !perfMode;
+  document.getElementById('perfText').textContent = perfMode ? 'MODE PERFORMANCE' : 'MODE QUALITÉ';
+}
+function confirmExit() { window.confirm('Quitter la session ?'); }
+function openCardModal(nom) {
+  const modal = document.getElementById('cardInspectModal');
+  modal.setAttribute('aria-label', nom);
+  document.getElementById('modalCardTitle').textContent = nom;
+  modal.classList.remove('hidden');
+}
+function closeCardModal() { document.getElementById('cardInspectModal').classList.add('hidden'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCardModal(); });
+function drawCard() {
+  if (!remainingCards) return;
+  handCards.push(`Carte ${7 - remainingCards}`);
+  remainingCards--;
+  rendreMain();
+}
+function playCard(nom) {
+  if (propositionEnAttente && nom === 'Carte 2') return;
+  handCards = handCards.filter(carte => carte !== nom);
+  rendreMain();
+}
+function proposerCarte(select) {
+  if (select.value !== 'Idris Koa') return;
+  propositionEnAttente = true;
+  rendreMain();
+}
+function repondreProposition(accepter) {
+  document.getElementById('incoming-offer').remove();
+  if (accepter) { handCards.push('Carte 3'); rendreMain(); }
+}
+function rendreMain() {
+  document.getElementById('remainingCardsVal').textContent = remainingCards;
+  const pioche = document.getElementById('deckDrawTarget');
+  pioche.disabled = !remainingCards;
+  pioche.querySelector('.draw-label').textContent = remainingCards ? 'Piocher' : 'Paquet vide';
+  pioche.classList.toggle('opacity-40', !remainingCards);
+  const compteur = document.getElementById('handCounter');
+  if (compteur) compteur.textContent = `${handCards.length} ${handCards.length > 1 ? 'CARTES' : 'CARTE'}`;
+  document.getElementById('handCardsContainer').innerHTML = handCards.map(nom => `
+    <article class="brutal-card bg-surface border border-surface-raised p-3">
+      <div class="flex items-start gap-4">
+        <button type="button" aria-label="Agrandir ${nom}" onclick="openCardModal('${nom}')" class="shrink-0 border border-primary/60 touch-target">
+          <img src="${visuelCarte}" alt="${nom}" width="96" height="134" class="block w-24 h-auto" />
+        </button>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-orbitron text-sm font-bold uppercase break-words">${nom}</h3>
+          <p class="text-sm text-text-muted mt-2">Cartes de complication</p>
+          <div class="mt-3 space-y-2">
+            ${propositionEnAttente && nom === 'Carte 2' ? '<p class="text-sm text-primary">Proposition en attente</p>' : `
+              <button aria-label="Jouer ${nom}" onclick="playCard('${nom}')" class="brutal-btn touch-target w-full border border-primary/60 bg-surface-raised text-primary text-sm">Jouer</button>
+              ${avecVoisin ? '<select aria-label="Donner à" onchange="proposerCarte(this)" class="touch-target text-sm w-full bg-surface-raised border border-surface-raised"><option value="">Donner à</option><option>Idris Koa</option></select>' : ''}
+            `}
+          </div>
+        </div>
+      </div>
+    </article>`).join('');
+  document.getElementById('emptyHandMsg').classList.toggle('hidden', handCards.length > 0 || etat === 'scellee');
+  if (etat === 'scellee' && !document.getElementById('sealed-card')) {
+    const scellee = document.createElement('div');
+    scellee.id = 'sealed-card';
+    scellee.className = 'brutal-card bg-surface p-3 mt-3';
+    scellee.innerHTML = '<div aria-label="Carte sous scellé" class="w-24 h-32 border border-surface-raised bg-surface-raised flex items-center justify-center text-text-muted text-xl">?</div><p class="text-sm text-text-muted mt-2">sous scellé — personne ne la connaît</p>';
+    document.getElementById('handCardsContainer').append(scellee);
+  }
+}
+if (etat === 'proposition') {
+  const offre = document.createElement('div');
+  offre.id = 'incoming-offer';
+  offre.className = 'brutal-card bg-primary/10 border border-primary/40 p-4 mb-4';
+  offre.innerHTML = '<p class="text-sm mb-3">Idris Koa vous propose une carte</p><div class="grid grid-cols-2 gap-2"><button onclick="repondreProposition(true)" class="brutal-btn touch-target bg-primary text-background text-sm">Accepter</button><button onclick="repondreProposition(false)" class="brutal-btn touch-target bg-surface-raised border border-surface-raised text-sm">Refuser</button></div>';
+  document.querySelector('main').prepend(offre);
+}
+rendreMain();
+</script></body></html>

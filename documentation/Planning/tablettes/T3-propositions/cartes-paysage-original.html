@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS // JOUEUR - CARTES</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Orbitron:wght@600;800;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#0c1324",
+            "on-primary-container": "#00424f",
+            "inverse-on-surface": "#293042",
+            "surface-container-lowest": "#070e1e",
+            "on-primary-fixed": "#001f26",
+            "on-surface": "#dce2fa",
+            "on-background": "#dce2fa",
+            "on-tertiary": "#003640",
+            "surface-container": "#192031",
+            "tertiary-container": "#004f5d",
+            "primary-container": "#004f5d",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-error": "#020617",
+            "error-container": "#93000a",
+            "on-surface-variant": "#898c95",
+            "primary": "#4cd7f6",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-secondary-fixed": "#111c2d",
+            "secondary": "#bcc7de",
+            "inverse-surface": "#dce2fa",
+            "outline-variant": "#151b2d",
+            "surface-container-highest": "#2e3548",
+            "secondary-fixed": "#d8e3fb",
+            "on-secondary-container": "#c0c9e0",
+            "on-primary-fixed-variant": "#004e5c",
+            "surface-tint": "#4cd7f6",
+            "on-primary": "#003640",
+            "surface-container-low": "#151b2d",
+            "on-error-container": "#ffdad6",
+            "secondary-container": "#3e495d",
+            "surface-variant": "#2e3447",
+            "on-tertiary-container": "#9bf0ff",
+            "surface-container-high": "#232a3c",
+            "primary-fixed": "#acedff",
+            "tertiary-fixed": "#acedff",
+            "error": "#ef4444",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-secondary": "#263143",
+            "inverse-primary": "#00687a",
+            "outline": "#1e293b",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "surface-bright": "#32394c",
+            "background": "#020617",
+            "surface": "#0c1324",
+            "on-tertiary-fixed": "#001f26",
+            "tertiary": "#4cd7f6",
+            "on-secondary-fixed-variant": "#3c475a"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            lg: "0px",
+            xl: "0px",
+            full: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "code-lg": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "headline-md": ["Space Grotesk", "sans-serif"]
+          },
+          fontSize: {
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "number-md": ["15px", { fontWeight: "600" }],
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #dce2fa;
+      width: 1180px;
+      height: 820px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+    /* Diegetic Scanlines & Reticle */
+    .bg-scanlines {
+      background: linear-gradient(rgba(18, 24, 38, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.01));
+      background-size: 100% 3px, 6px 100%;
+    }
+    .technical-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+    }
+    .reticle-corner {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-color: #4cd7f6;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased flex flex-col justify-between select-none technical-grid relative border-x border-outline">
+<!-- ========================================== -->
+<!-- 1. EN-TÊTE SUPÉRIEUR SYSTÈME              -->
+<!-- ========================================== -->
+<header class="w-full bg-surface-container-lowest border-b border-outline px-6 py-2.5 flex items-center justify-between z-30 shrink-0">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary tracking-widest leading-none mb-1">OPÉRATION EN COURS : LE SILENCE DE VARN</span>
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-wider font-bold">GM-OS // JOUEUR</span>
+<span class="px-1.5 py-0.5 bg-surface-container border border-outline text-[10px] font-code-sm text-on-surface-variant">V4.2</span>
+</div>
+</div>
+</div>
+<!-- Actions système et statut réseau -->
+<div class="flex items-center gap-5">
+<!-- État réseau -->
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-outline">
+<span class="text-xs text-emerald-400 font-code-sm tracking-wide">■ ● CONNECTÉ</span>
+</div>
+<!-- Bouton mode performance -->
+<button class="min-h-[44px] px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-outline hover:border-primary active:bg-surface-container-highest transition-colors flex items-center gap-2 font-label-sm text-label-sm text-on-surface tracking-wider" id="btn-perf">
+<span class="text-amber-400">⚡</span>
+<span id="perf-text">MODE PERFORMANCE</span>
+</button>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. SOUS-BANDEAU TÉLÉMÉTRIE COMPACT         -->
+<!-- ========================================== -->
+<section class="w-full bg-surface-dim border-b border-outline px-6 py-2 flex items-center justify-between z-20 shrink-0">
+<!-- Horloge projetée fixe -->
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 bg-primary text-on-primary font-label-sm text-[10px] font-bold tracking-widest">TABLE</span>
+<div class="flex items-baseline gap-2">
+<span class="font-code-lg text-[20px] font-bold text-on-surface leading-none">23:43:22</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Dimanche 4 octobre 2026</span>
+</div>
+</div>
+<!-- Tension publique de la station (Pas de tension meneur) -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider">ALERTE DE LA STATION</span>
+<span class="font-code-sm text-code-sm text-amber-500 font-bold px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/30">3/8</span>
+</div>
+<!-- 8 segments discrets : 3 allumés orange, 5 éteints -->
+<div class="flex items-center gap-1.5 p-1 bg-surface-container-lowest border border-outline">
+<span class="w-3.5 h-2.5 bg-amber-500"></span>
+<span class="w-3.5 h-2.5 bg-amber-500"></span>
+<span class="w-3.5 h-2.5 bg-amber-500"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+<span class="w-3.5 h-2.5 bg-surface-container-highest opacity-40"></span>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- 3. ZONE PRINCIPALE (CARTES EN MAIN & PIOCHE)-->
+<!-- ========================================== -->
+<main class="w-full flex-1 px-8 py-4 flex flex-col justify-start overflow-hidden relative">
+<!-- En-tête de section -->
+<div class="flex items-end justify-between border-b border-outline pb-2.5 mb-4 shrink-0">
+<div class="flex items-baseline gap-4">
+<h1 class="font-orbitron text-2xl font-black text-on-surface tracking-wider">CARTES</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Cartes de complication et main active.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">ÉTAT MAIN :</span>
+<span class="px-2.5 py-1 bg-surface-container-high border border-primary text-primary font-code-sm text-code-sm font-bold" id="hand-badge">1 EN MAIN</span>
+</div>
+</div>
+<!-- Grille 2 Colonnes larges équilibrées -->
+<div class="grid grid-cols-2 gap-8 flex-1 items-stretch max-h-[460px]">
+<!-- ====================================== -->
+<!-- COLONNE GAUCHE : PAQUETS OUVERTS       -->
+<!-- ====================================== -->
+<section class="bg-surface-container-low border border-outline p-5 flex flex-col justify-between">
+<div>
+<!-- Titre du bloc et badge compteur restant -->
+<div class="flex items-center justify-between border-b border-outline-variant pb-3 mb-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<h2 class="font-label-lg text-label-lg text-on-surface tracking-wider uppercase font-bold">CARTES DE COMPLICATION</h2>
+</div>
+<span class="font-code-sm text-code-sm font-bold px-2 py-0.5 bg-surface-container-highest border border-outline text-secondary" id="deck-count-badge">RESTANT : 4</span>
+</div>
+<!-- Dos de carte neutre interactif -->
+<div class="w-full flex justify-center py-2">
+<div class="w-64 h-56 bg-surface-container border-2 border-outline hover:border-primary active:border-primary transition-all cursor-pointer relative flex flex-col justify-between p-4 bg-scanlines group" id="deck-card-visual" onclick="drawCard()">
+<!-- Coins réticule -->
+<div class="reticle-corner top-1 left-1 border-t-2 border-l-2"></div>
+<div class="reticle-corner top-1 right-1 border-t-2 border-r-2"></div>
+<div class="reticle-corner bottom-1 left-1 border-b-2 border-l-2"></div>
+<div class="reticle-corner bottom-1 right-1 border-b-2 border-r-2"></div>
+<!-- Haut de dos de carte -->
+<div class="flex justify-between items-center text-on-surface-variant group-hover:text-primary transition-colors">
+<span class="font-code-sm text-[11px]">VARN // DECK</span>
+<span class="material-symbols-outlined text-[18px]">layers</span>
+</div>
+<!-- Centre de dos de carte : Filigrane technique et mentions -->
+<div class="flex flex-col items-center justify-center my-auto text-center">
+<!-- Réticule isométrique SVG neutre -->
+<svg class="w-16 h-16 text-outline group-hover:text-primary/70 transition-colors mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 100 100">
+<polygon points="50 10, 85 30, 85 70, 50 90, 15 70, 15 30" stroke-dasharray="2 2"></polygon>
+<line x1="50" x2="50" y1="10" y2="90"></line>
+<line x1="15" x2="85" y1="30" y2="70"></line>
+<line x1="85" x2="15" y1="30" y2="70"></line>
+<circle cx="50" cy="50" r="14"></circle>
+<circle cx="50" cy="50" fill="currentColor" r="4"></circle>
+</svg>
+<span class="font-orbitron text-lg font-bold tracking-wider text-on-surface">STATION VARN</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant uppercase tracking-widest mt-0.5">Complication</span>
+</div>
+<!-- Bas de dos de carte -->
+<div class="text-center border-t border-outline-variant pt-2">
+<span class="font-body-sm text-[12px] text-primary tracking-wide">Toucher pour piocher</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Contrôles et bouton tactile large (>=44px) -->
+<div class="flex flex-col gap-2 pt-3 border-t border-outline-variant">
+<button class="w-full min-h-[44px] bg-surface-container hover:bg-surface-container-high active:bg-primary active:text-on-primary border border-outline hover:border-primary text-on-surface font-label-md text-label-md tracking-wider flex items-center justify-center gap-2 transition-all" id="btn-draw" onclick="drawCard()">
+<span class="text-primary font-bold text-lg leading-none">+</span>
+<span>PIOCHER</span>
+</button>
+<span class="font-body-sm text-body-sm text-on-surface-variant text-center">Toucher pour piocher une carte du paquet actif.</span>
+</div>
+</section>
+<!-- ====================================== -->
+<!-- COLONNE DROITE : VOS CARTES EN MAIN     -->
+<!-- ====================================== -->
+<section class="bg-surface-container-low border border-outline p-5 flex flex-col justify-between">
+<div>
+<!-- En-tête avec compteur -->
+<div class="flex items-center justify-between border-b border-outline-variant pb-3 mb-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<h2 class="font-label-lg text-label-lg text-on-surface tracking-wider uppercase font-bold">VOS CARTES EN MAIN</h2>
+</div>
+<span class="font-code-sm text-code-sm font-bold px-2 py-0.5 bg-surface-container-highest border border-outline text-primary" id="hand-count-header">1 CARTE</span>
+</div>
+<!-- Conteneur défilant / Présentation des cartes en main -->
+<div class="w-full flex justify-center items-center gap-4 py-1" id="hand-cards-container">
+<!-- Carte 2 (En main initiale) -->
+<div class="w-64 h-56 bg-surface-container border-2 border-primary/70 hover:border-primary active:bg-surface-container-high transition-all cursor-pointer relative flex flex-col justify-between p-4 bg-scanlines group" id="card-item-2" onclick="openModal('CARTE 2')">
+<!-- Coins réticule cyan -->
+<div class="reticle-corner top-1 left-1 border-t-2 border-l-2"></div>
+<div class="reticle-corner top-1 right-1 border-t-2 border-r-2"></div>
+<div class="reticle-corner bottom-1 left-1 border-b-2 border-l-2"></div>
+<div class="reticle-corner bottom-1 right-1 border-b-2 border-r-2"></div>
+<!-- Cartouche Titre -->
+<div class="flex justify-between items-center border-b border-outline-variant pb-1.5">
+<span class="font-orbitron font-bold text-base tracking-wider text-primary">CARTE 2</span>
+<span class="px-1.5 py-0.5 bg-primary/20 text-primary text-[10px] font-code-sm">ACTIF</span>
+</div>
+<!-- Illustration neutre technique (schéma filaire isométrique/réticule identique) -->
+<div class="flex flex-col items-center justify-center my-auto py-2">
+<svg class="w-16 h-16 text-primary group-hover:scale-105 transition-transform" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 100 100">
+<polygon points="50 12, 84 31, 84 69, 50 88, 16 69, 16 31" stroke="currentColor"></polygon>
+<line stroke-dasharray="3 3" x1="50" x2="50" y1="12" y2="88"></line>
+<line stroke-dasharray="3 3" x1="16" x2="84" y1="31" y2="69"></line>
+<line stroke-dasharray="3 3" x1="84" x2="16" y1="31" y2="69"></line>
+<circle cx="50" cy="50" r="16" stroke="currentColor"></circle>
+<circle cx="50" cy="50" fill="#4cd7f6" r="5"></circle>
+</svg>
+</div>
+<!-- Pied de carte -->
+<div class="flex justify-between items-center border-t border-outline-variant pt-2 text-[11px] font-code-sm text-on-surface-variant">
+<span>INDEX // 02</span>
+<span class="text-primary flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">touch_app</span> DÉTAIL</span>
+</div>
+</div>
+<!-- Carte 3 (Générée lors du piochement, initialement cachée) -->
+<div class="hidden w-64 h-56 bg-surface-container border-2 border-primary/70 hover:border-primary active:bg-surface-container-high transition-all cursor-pointer relative flex-col justify-between p-4 bg-scanlines group" id="card-item-3" onclick="openModal('CARTE 3')">
+<div class="reticle-corner top-1 left-1 border-t-2 border-l-2"></div>
+<div class="reticle-corner top-1 right-1 border-t-2 border-r-2"></div>
+<div class="reticle-corner bottom-1 left-1 border-b-2 border-l-2"></div>
+<div class="reticle-corner bottom-1 right-1 border-b-2 border-r-2"></div>
+<div class="flex justify-between items-center border-b border-outline-variant pb-1.5">
+<span class="font-orbitron font-bold text-base tracking-wider text-primary">CARTE 3</span>
+<span class="px-1.5 py-0.5 bg-primary/20 text-primary text-[10px] font-code-sm">PIOCHÉE</span>
+</div>
+<div class="flex flex-col items-center justify-center my-auto py-2">
+<svg class="w-16 h-16 text-primary group-hover:scale-105 transition-transform" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 100 100">
+<polygon points="50 12, 84 31, 84 69, 50 88, 16 69, 16 31" stroke="currentColor"></polygon>
+<line stroke-dasharray="3 3" x1="50" x2="50" y1="12" y2="88"></line>
+<line stroke-dasharray="3 3" x1="16" x2="84" y1="31" y2="69"></line>
+<line stroke-dasharray="3 3" x1="84" x2="16" y1="31" y2="69"></line>
+<circle cx="50" cy="50" r="16" stroke="currentColor"></circle>
+<circle cx="50" cy="50" fill="#4cd7f6" r="5"></circle>
+</svg>
+</div>
+<div class="flex justify-between items-center border-t border-outline-variant pt-2 text-[11px] font-code-sm text-on-surface-variant">
+<span>INDEX // 03</span>
+<span class="text-primary flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">touch_app</span> DÉTAIL</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Deux actions principales sous la carte (≥44px hauteur) -->
+<!-- Aucun bouton 'Donner à' car aucun autre PJ connecté -->
+<div class="grid grid-cols-2 gap-3 pt-3 border-t border-outline-variant">
+<button class="min-h-[44px] bg-primary hover:bg-[#9bf0ff] active:bg-cyan-300 text-on-primary font-label-md text-label-md tracking-wider flex items-center justify-center gap-2 transition-colors font-bold shadow-none" id="btn-play-card" onclick="playActiveCard()">
+<span>▶</span>
+<span>JOUER</span>
+</button>
+<button class="min-h-[44px] bg-surface-container hover:bg-surface-container-high border border-outline hover:border-primary active:bg-surface-container-highest text-on-surface font-label-md text-label-md tracking-wider flex items-center justify-center gap-2 transition-colors" onclick="openModal('CARTE 2')">
+<span class="text-primary">⤢</span>
+<span>AGRANDIR</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+<!-- ========================================== -->
+<!-- 4. NAVIGATION EN PIED FIXE (10 DESTINATIONS)-->
+<!-- ========================================== -->
+<footer class="w-full bg-surface-container-lowest border-t border-outline z-30 shrink-0 flex flex-col">
+<!-- RANGÉE 1 (6 destinations réelles de l'application) -->
+<div class="grid grid-cols-6 border-b border-outline">
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>DIRECT</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>ARCHIVES</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>PNJ</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>LIEUX</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors border-r border-outline font-label-sm text-label-sm tracking-widest">
+<span>INVENTAIRE</span>
+</button>
+<!-- CARTES ACTIF (FOND CYAN PLEIN #06b6d4 / text foncé) -->
+<button class="min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 bg-[#06b6d4] text-[#003640] font-label-sm text-label-sm tracking-widest font-black">
+<span>CARTES</span>
+<span class="text-xs">●</span>
+</button>
+</div>
+<!-- RANGÉE 2 (4 actions rapides) -->
+<div class="grid grid-cols-4 bg-surface-dim">
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container border-r border-outline transition-colors font-label-sm text-label-sm tracking-wider">
+<span>◆</span>
+<span>FICHE</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container border-r border-outline transition-colors font-label-sm text-label-sm tracking-wider">
+<span>✎</span>
+<span>NOTES</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container border-r border-outline transition-colors font-label-sm text-label-sm tracking-wider">
+<span>✉</span>
+<span>MESSAGES</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 text-error hover:bg-error-container/40 transition-colors font-label-sm text-label-sm tracking-wider" onclick="openQuitModal()">
+<span>⏹</span>
+<span>QUITTER</span>
+</button>
+</div>
+</footer>
+<!-- ========================================== -->
+<!-- 5. MODALE DÉTAIL CARTE                     -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-background/85 backdrop-blur-sm hidden items-center justify-center p-6" id="card-modal" onclick="closeModal()">
+<div class="w-full max-w-lg bg-surface-container-lowest border-2 border-primary p-6 relative flex flex-col items-center shadow-2xl bg-scanlines" onclick="event.stopPropagation()">
+<!-- Coins décoratifs -->
+<div class="reticle-corner top-2 left-2 border-t-2 border-l-2"></div>
+<div class="reticle-corner top-2 right-2 border-t-2 border-r-2"></div>
+<div class="reticle-corner bottom-2 left-2 border-b-2 border-l-2"></div>
+<div class="reticle-corner bottom-2 right-2 border-b-2 border-r-2"></div>
+<!-- En-tête modale -->
+<div class="w-full flex items-center justify-between border-b border-outline pb-3 mb-6">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 bg-primary"></span>
+<h2 class="font-orbitron text-xl font-black text-primary tracking-widest" id="modal-card-title">CARTE 2</h2>
+</div>
+<button class="w-8 h-8 flex items-center justify-center bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface hover:text-primary font-bold text-sm" onclick="closeModal()">✕</button>
+</div>
+<!-- Illustration technique grand format -->
+<div class="w-72 h-72 border border-outline bg-surface-container-low flex items-center justify-center my-2 relative">
+<svg class="w-48 h-48 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 100 100">
+<polygon points="50 10, 85 30, 85 70, 50 90, 15 70, 15 30" stroke="currentColor"></polygon>
+<line stroke-dasharray="3 3" x1="50" x2="50" y1="10" y2="90"></line>
+<line stroke-dasharray="3 3" x1="15" x2="85" y1="30" y2="70"></line>
+<line stroke-dasharray="3 3" x1="85" x2="15" y1="30" y2="70"></line>
+<circle cx="50" cy="50" r="22" stroke="currentColor"></circle>
+<circle cx="50" cy="50" fill="#4cd7f6" r="7"></circle>
+</svg>
+</div>
+<!-- Mention explicite requise -->
+<div class="w-full text-center mt-6 pt-4 border-t border-outline">
+<button class="w-full min-h-[44px] bg-surface-container hover:bg-surface-container-high border border-outline hover:border-primary text-on-surface font-label-md text-label-md tracking-wider uppercase transition-colors" onclick="closeModal()">
+          Touchez pour fermer
+        </button>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 6. MODALE CONFIRMATION QUITTER            -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-background/85 backdrop-blur-sm hidden items-center justify-center p-6" id="quit-modal" onclick="closeQuitModal()">
+<div class="w-full max-w-md bg-surface-container-lowest border border-error p-6 relative flex flex-col shadow-2xl" onclick="event.stopPropagation()">
+<div class="flex items-center gap-3 border-b border-outline pb-3 mb-4">
+<span class="text-error font-bold text-lg">⏹</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">DÉCONNEXION DE SESSION</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+        Voulez-vous interrompre le flux direct avec le terminal du meneur et quitter la table ?
+      </p>
+<div class="grid grid-cols-2 gap-3">
+<button class="min-h-[44px] bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface font-label-md text-label-md tracking-wider" onclick="closeQuitModal()">
+          ANNULER
+        </button>
+<button class="min-h-[44px] bg-error-container hover:bg-red-800 border border-error text-[#ffdad6] font-label-md text-label-md tracking-wider font-bold" onclick="confirmQuit()">
+          CONFIRMER
+        </button>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- 7. SCRIPT LOGIQUE & INTERACTIONS           -->
+<!-- ========================================== -->
+<script>
+    let remainingCards = 4;
+    let handCount = 1;
+    let isPerfMode = true;
+
+    // Bascule Performance / Qualité
+    const btnPerf = document.getElementById('btn-perf');
+    const perfText = document.getElementById('perf-text');
+    btnPerf.addEventListener('click', () => {
+      isPerfMode = !isPerfMode;
+      perfText.textContent = isPerfMode ? 'MODE PERFORMANCE' : 'MODE QUALITÉ';
+    });
+
+    // Piochement de carte (Pioche -> ajoute Carte 3, réduit restant à 3)
+    function drawCard() {
+      if (remainingCards > 3) {
+        remainingCards = 3;
+        handCount = 2;
+        
+        // Mise à jour visuelle des compteurs
+        document.getElementById('deck-count-badge').textContent = 'RESTANT : ' + remainingCards;
+        document.getElementById('hand-badge').textContent = handCount + ' EN MAIN';
+        document.getElementById('hand-count-header').textContent = handCount + ' CARTES';
+        
+        // Affichage de Carte 3
+        const card3 = document.getElementById('card-item-3');
+        card3.classList.remove('hidden');
+        card3.classList.add('flex');
+
+        // Réduction du gabarit si 2 cartes pour harmonie du layout
+        const card2 = document.getElementById('card-item-2');
+        card2.classList.remove('w-64');
+        card2.classList.add('w-48');
+        card3.classList.remove('w-64');
+        card3.classList.add('w-48');
+      }
+    }
+
+    // Jouer une carte
+    function playActiveCard() {
+      const card2 = document.getElementById('card-item-2');
+      if (card2 && !card2.classList.contains('opacity-30')) {
+        card2.classList.add('opacity-30', 'pointer-events-none');
+        const playBtn = document.getElementById('btn-play-card');
+        playBtn.innerHTML = '<span>✔</span><span>JOUÉE</span>';
+        playBtn.classList.add('bg-surface-container', 'text-on-surface-variant', 'border-outline');
+        playBtn.classList.remove('bg-primary', 'text-on-primary');
+      }
+    }
+
+    // Gestion de la modale détail carte
+    function openModal(title) {
+      document.getElementById('modal-card-title').textContent = title;
+      const modal = document.getElementById('card-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('card-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Gestion de la modale Quitter
+    function openQuitModal() {
+      const modal = document.getElementById('quit-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeQuitModal() {
+      const modal = document.getElementById('quit-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function confirmQuit() {
+      window.location.reload();
+    }
+
+    // Touche Échap pour fermer les modales
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        closeQuitModal();
+      }
+    });
+  </script>
+</body></html>

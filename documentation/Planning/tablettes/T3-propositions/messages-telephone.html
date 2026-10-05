@@ -1,0 +1,304 @@
+<!DOCTYPE html><html class="dark" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>GM-OS // Tablette Joueur : Messagerie</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Space+Mono:wght@400;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#d8e3fb",
+            "on-tertiary-fixed": "#001f26",
+            "surface-container-low": "#151b2d",
+            "primary-fixed-dim": "#4cd7f6",
+            "error-container": "#93000a",
+            "surface-variant": "#2e3447",
+            "on-error": "#690005",
+            "surface-container-highest": "#2e3447",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "primary-fixed": "#acedff",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#263143",
+            "on-surface": "#dee2f7",
+            "outline-variant": "#151b2d",
+            "surface-bright": "#32394c",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-surface-variant": "#898c95",
+            "surface-container-high": "#232a3c",
+            "inverse-on-surface": "#293042",
+            "on-primary-container": "#00424f",
+            "surface-container": "#192031",
+            "primary-container": "#06b6d4",
+            "surface-tint": "#4cd7f6",
+            "surface": "#0c1324",
+            "on-primary-fixed": "#001f26",
+            "on-primary": "#003640",
+            "surface-container-lowest": "#070e1e",
+            "on-secondary-fixed-variant": "#3c475a",
+            "inverse-primary": "#00687a",
+            "on-background": "#dce2fa",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-secondary-container": "#c0c9e0",
+            "secondary-container": "#3e495d",
+            "tertiary-container": "#004f5d",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-secondary-fixed": "#111c2d",
+            "on-tertiary-container": "#00424f",
+            "outline": "#1e293b",
+            "secondary": "#bcc7de",
+            "inverse-surface": "#dce2fa",
+            "surface-dim": "#0c1324",
+            "background": "#020617",
+            "tertiary-fixed": "#acedff",
+            "primary": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "error": "#ef4444",
+            "tertiary": "#4cd7f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "fontFamily": {
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "code-lg": ["Space Mono", "monospace"],
+            "number-md": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "label-sm": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "headline-md": ["22px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+            "number-md": ["15px", {"fontWeight": "600"}],
+            "number-lg": ["28px", {"fontWeight": "700"}],
+            "label-lg": ["13px", {"lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+            "label-sm": ["11px", {"lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700"}],
+            "code-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+            "code-md": ["15px", {"lineHeight": "22px", "fontWeight": "600"}],
+            "code-lg": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+            "body-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Diegetic reticle styling */
+    .reticle-grid {
+      background-size: 20px 20px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.45) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.45) 1px, transparent 1px);
+    }
+    /* Custom scrollbar for tactical console */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070e1e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4cd7f6;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  <link rel="stylesheet" href="j2.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Orbitron:wght@600;700;800&amp;display=swap"></head>
+<body class="" data-ecran="messages"><div id="cadre-j2" class="telephone"><header class="w-full bg-surface-container-lowest border-b border-outline z-10 shrink-0">
+<!-- Topmost Telemetry Strip -->
+<div class="flex items-center justify-between px-3 py-1.5 border-b border-outline-variant text-on-surface-variant font-code-sm text-code-sm">
+<div class="flex items-center space-x-2">
+<span class="font-headline-sm text-label-sm tracking-widest text-primary font-bold">GM-OS</span>
+<span class="inline-flex items-center px-1.5 py-0.5 bg-surface-container border border-outline text-[10px] text-green-400 font-label-sm">
+<span class="w-1.5 h-1.5 rounded-none bg-green-400 mr-1 animate-pulse"></span>
+            CONNECTÉ
+          </span>
+</div>
+<button class="h-6 px-2 bg-surface-container-low border border-outline text-[10px] font-label-sm text-on-surface hover:border-primary active:bg-surface-container transition-colors uppercase flex items-center space-x-1" id="bouton-mode-j2" title="Basculer le mode de rendu" onclick="basculerQualite()"><span id="mode-j2">MODE PERFORMANCE</span></button>
+</div>
+<!-- Station Time & Tension Alert Rail -->
+<div class="px-3 py-2 grid grid-cols-2 gap-2 bg-surface-container-lowest">
+<!-- Projected Clock -->
+<div class="border border-outline-variant bg-surface-container-low p-1.5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant">HORLOGE</span>
+
+</div>
+<div class="font-code-md text-code-md text-primary font-bold tracking-wider leading-none mt-1">
+            23:37:32
+          </div>
+<div class="font-label-sm text-[10px] text-on-surface-variant break-words mt-0.5">Dimanche 4 octobre 2026</div>
+</div>
+<!-- Station Tension Alert Gauge (3/8 Active Segments) -->
+<div class="border border-outline-variant bg-surface-container-low p-1.5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant tracking-wider">ALERTE STATION</span>
+<span class="font-code-sm text-code-sm font-bold text-amber-400">3/8</span>
+</div>
+<!-- 8-Segment Stepped Gauge -->
+<div class="grid grid-cols-8 gap-1 my-1">
+<span class="h-3 bg-amber-400 border border-amber-300"></span>
+<span class="h-3 bg-amber-400 border border-amber-300"></span>
+<span class="h-3 bg-amber-400 border border-amber-300"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+<span class="h-3 bg-surface-container-highest border border-outline"></span>
+</div>
+<span class="font-label-sm text-[9px] text-amber-400 uppercase tracking-tighter break-words">Alerte de la station</span>
+</div>
+</div>
+</header><main id="contenu-j2" class="relative flex-1 bg-background overflow-hidden p-3 flex flex-col space-y-3 pb-[175px]"><h1 class="j2-titre-campagne">Le Silence de Varn</h1><div class="j2-projection" aria-label="Surface de projection"></div><section class="j2-chroniques"><h2>Chroniques de séance</h2><p>Aucun résumé public.</p></section></main><footer id="navigation-j2"><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button" class="j2-actif" aria-current="page">Direct</button><button type="button">Archives</button><button type="button">PNJ</button></div><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button">Lieux</button><button type="button">Inventaire</button><button type="button">Cartes</button></div><div class="j2-rangee" style="grid-template-columns: repeat(4, minmax(0,1fr));"><button type="button">Fiche</button><button type="button">Notes</button><button type="button" id="destination-messages" onclick="ouvrirMessagerie()">Messages</button><button type="button" onclick="quitterSession()" class="j2-quitter">Quitter</button></div></footer><aside id="messagerie-j2" class="j2-messagerie hidden " aria-label="Messagerie"><div class="j2-chat-titre"><div><h2>Messagerie</h2><p id="canal-j2">Canal Direct MJ</p></div><button aria-label="Fermer la messagerie" onclick="fermerMessagerie()">Fermer</button></div>
+    <div class="j2-destinataire"><button id="choisir-destinataire" aria-label="Choisir le destinataire" aria-expanded="false" onclick="ouvrirDestinataires()">À : <span id="nom-destinataire">Maître du Jeu</span> <span aria-hidden="true">⌄</span></button>
+    <div id="destinataires-j2" class="hidden"><button onclick="choisirDestinataire('GM')">Maître du Jeu</button><button onclick="choisirDestinataire('all')">Tous les Joueurs</button><button onclick="choisirDestinataire('idris')">Idris Koa</button><button onclick="choisirDestinataire('sora')">Sora Adebayo</button></div></div>
+    <div id="conversation-j2" aria-live="polite"></div>
+    <div class="j2-saisie"><textarea id="message-saisi" aria-label="Entrer un message" title="Entrer un message" placeholder="Message à Maître du Jeu..." rows="2"></textarea><button id="envoyer-message" aria-label="Envoyer le message" onclick="envoyerMessage()" disabled="">Envoyer</button><p id="confidentialite-j2">Seul Maître du Jeu pourra lire ce message.</p></div></aside></div><script>// Prototype T3 : interactions locales, aucune connexion ou écriture dans GM-OS.
+const ecran = document.body.dataset.ecran;
+const variante = new URLSearchParams(location.search).get('etat');
+function basculerQualite() {
+  const texte = document.getElementById('mode-j2');
+  texte.textContent = texte.textContent.includes('PERFORMANCE') ? 'MODE QUALITÉ' : 'MODE PERFORMANCE';
+}
+function quitterSession() { window.confirm('Quitter la session ?'); }
+function fermerDetail() { document.getElementById('detail-j2')?.classList.add('hidden'); }
+function ouvrirDetail(index = 0) {
+  const detail = document.getElementById('detail-j2');
+  if (ecran === 'archives') {
+    const indices = [['Le café encore chaud', "Le départ date de moins d'une heure."], ['La signature unique', 'Tout le registre est signé « Hale », même les nuits où il dormait.']];
+    detail.querySelector('h2').textContent = indices[index][0];
+    detail.querySelector('[data-description]').textContent = indices[index][1];
+    detail.setAttribute('aria-label', indices[index][0]);
+  }
+  detail.classList.remove('hidden');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { fermerDetail(); fermerMessagerie(); } });
+
+const destinataires = { GM: 'Maître du Jeu', all: 'Tous les Joueurs', idris: 'Idris Koa', sora: 'Sora Adebayo' };
+let destinataire = 'GM';
+let messages = ecran === 'notifications'
+  ? [{ de: 'GM', vers: 'nel', texte: 'Le sas vient de se fermer.', heure: '23:38' }]
+  : [{ de: 'nel', vers: 'GM', texte: 'Le relais est ouvert.', heure: '23:37' }, { de: 'GM', vers: 'nel', texte: 'Vous entendez trois coups.', heure: '23:37' }];
+function ouvrirMessagerie() {
+  const panneau = document.getElementById('messagerie-j2');
+  if (!panneau) return;
+  panneau.classList.remove('hidden');
+  document.getElementById('nouveau-message')?.classList.add('hidden');
+  document.getElementById('badge-non-lu')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'true');
+  rendreConversation();
+}
+function fermerMessagerie() {
+  document.getElementById('messagerie-j2')?.classList.add('hidden');
+  document.getElementById('destinataires-j2')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'false');
+}
+function ouvrirDestinataires() {
+  const liste = document.getElementById('destinataires-j2');
+  liste.classList.toggle('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', String(!liste.classList.contains('hidden')));
+}
+function choisirDestinataire(id) {
+  destinataire = id;
+  document.getElementById('destinataires-j2').classList.add('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', 'false');
+  rendreConversation();
+}
+function actualiserEnvoi() {
+  document.getElementById('envoyer-message').disabled = !document.getElementById('message-saisi').value.trim();
+}
+function envoyerMessage() {
+  const saisie = document.getElementById('message-saisi');
+  const texte = saisie.value.trim();
+  if (!texte) return;
+  messages.push({ de: 'nel', vers: destinataire, texte, heure: ecran === 'notifications' ? '23:38' : '23:37' });
+  saisie.value = '';
+  rendreConversation(); actualiserEnvoi();
+}
+function rendreConversation() {
+  const nom = destinataires[destinataire];
+  document.getElementById('nom-destinataire').textContent = nom;
+  document.getElementById('canal-j2').textContent = destinataire === 'GM' ? 'Canal Direct MJ' : destinataire === 'all' ? 'Canal Général' : 'Canal Privé';
+  document.getElementById('message-saisi').placeholder = `Message à ${nom}...`;
+  document.getElementById('confidentialite-j2').textContent = destinataire === 'all' ? 'Tout le monde pourra lire ce message.' : `Seul ${nom} pourra lire ce message.`;
+  const conversation = messages.filter(m => destinataire === 'all' ? m.vers === 'all'
+    : m.de === 'nel' && m.vers === destinataire || m.de === destinataire && m.vers === 'nel');
+  const liste = document.getElementById('conversation-j2');
+  liste.replaceChildren();
+  if (!conversation.length) {
+    const vide = document.createElement('p'); vide.className = 'vide-conversation';
+    vide.textContent = `Aucun message avec ${nom}. Commencez la conversation !`; liste.append(vide);
+  }
+  for (const msg of conversation) {
+    const ligne = document.createElement('div'); ligne.className = `message-ligne ${msg.de === 'nel' ? 'message-moi' : ''}`;
+    const bulle = document.createElement('p'); bulle.className = 'message-bulle'; bulle.textContent = msg.texte;
+    const meta = document.createElement('p'); meta.className = 'message-meta';
+    meta.textContent = `${msg.de === 'nel' ? 'VOUS' : destinataires[msg.de]} · ${msg.heure}`;
+    ligne.append(bulle, meta); liste.append(ligne);
+  }
+  liste.scrollTop = liste.scrollHeight;
+}
+if (ecran === 'messages' || ecran === 'notifications') {
+  const saisie = document.getElementById('message-saisi');
+  saisie.addEventListener('input', actualiserEnvoi);
+  saisie.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); envoyerMessage(); }
+  });
+  actualiserEnvoi();
+  if (ecran === 'messages') ouvrirMessagerie();
+  if (ecran === 'notifications' && variante === 'alerte') {
+    document.getElementById('nouveau-message').classList.add('hidden');
+    document.getElementById('badge-non-lu').classList.add('hidden');
+    const alerte = document.getElementById('alerte-j2');
+    alerte.classList.remove('hidden');
+    setTimeout(() => alerte.classList.add('hidden'), 8000);
+  }
+  if (ecran === 'notifications' && variante !== 'alerte') {
+    setTimeout(() => document.getElementById('nouveau-message').classList.add('hidden'), 5000);
+  }
+}
+if (variante === 'vide' && ['archives', 'pnj', 'lieux'].includes(ecran)) {
+  document.querySelector('[data-liste-j2]').classList.add('hidden');
+  document.getElementById('vide-j2').classList.remove('hidden');
+  document.getElementById('compteur-j2').textContent = '0';
+}
+</script></body></html>

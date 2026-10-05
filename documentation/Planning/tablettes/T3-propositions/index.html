@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T3 — propositions joueurs J1 et J2</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.6 system-ui, sans-serif; color: #f8fafc; background: #020617; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1500px; margin: auto; padding: 32px; }
+    h1 { font-size: clamp(26px, 4vw, 40px); margin: 8px 0; }
+    h2 { font-size: 24px; margin-bottom: 4px; }
+    p { max-width: 850px; color: #b9c3d4; }
+    .repere { color: #67e8f9; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+    a { color: #67e8f9; }
+    a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid #67e8f9; outline-offset: 4px; }
+    .commandes { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin: 24px 0; padding: 16px; background: #0f172a; border: 1px solid #334155; }
+    select, button { min-height: 44px; padding: 10px 16px; background: #1e293b; color: #f8fafc; border: 1px solid #64748b; border-radius: 6px; font: inherit; cursor: pointer; }
+    button[aria-pressed="true"] { background: #06b6d4; color: #020617; border-color: #06b6d4; }
+    section { margin-top: 32px; border-top: 1px solid #334155; padding-top: 16px; }
+    .rendus { display: grid; grid-template-columns: minmax(200px, 390px) minmax(0, 1fr); gap: 24px; align-items: start; }
+    figure { margin: 0; }
+    figcaption { margin-bottom: 10px; color: #cbd5e1; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #334155; }
+    .liens { display: flex; gap: 16px; flex-wrap: wrap; padding: 12px 0; }
+    details { margin: 16px 0; padding: 16px; background: #0f172a; }
+    summary { cursor: pointer; min-height: 44px; }
+    pre { white-space: pre-wrap; font: inherit; color: #cbd5e1; }
+    @media (max-width: 800px) { main { padding: 16px; } .rendus { grid-template-columns: 1fr; } .mobile { max-width: 390px; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="repere">GM-OS · T3 · 05 octobre 2026 · Lots J1 et J2</div>
+  <h1>Propositions des joueurs</h1>
+  <p><strong>Accueil et Direct retenus</strong> : David, le 05/10, « je suis satisfait continue ». Inventaire et Cartes restent à choisir. J2 présente Archives, PNJ, Lieux, messagerie et notifications, en téléphone et iPad Air paysage. Les images viennent des exports HTML rendus dans Chromium, avec le décor fictif du Silence de Varn.</p>
+  <p>Les propositions locales corrigent les informations ajoutées par Stitch et les cibles trop petites. Elles servent au choix de la mise en page ; les boutons des prototypes simulent les gestes et ne sont pas reliés à GM-OS.</p>
+  <div class="liens"><a href="#j2-archives">Archives</a><a href="#j2-pnj">PNJ</a><a href="#j2-lieux">Lieux</a><a href="#j2-messages">Messagerie</a><a href="#j2-notifications">Notifications</a></div>
+  <div class="commandes">
+    <span>Vue :</span>
+    <button id="propositions" aria-pressed="true">Propositions T3</button>
+    <button id="references" aria-pressed="false">Références T0</button>
+    <label for="largeur">Téléphone :</label>
+    <select id="largeur"><option value="390">390 × 844</option><option value="360">360 × 800</option></select>
+    <span id="precision" role="status">iPad paysage : 1180 × 820.</span>
+  </div>
+  <section>
+    <h2>J1.1 — Qui es-tu ? · Retenu</h2>
+    <p>Choisir un personnage et quitter avec confirmation. Sur téléphone, la liste et le pied défilent ; en paysage, les trois cartes tiennent côte à côte.</p>
+    <div class="rendus">
+      <figure class="mobile"><figcaption>Téléphone</figcaption><a id="accueil-mobile-lien" href="rendus/accueil-telephone-390.png"><img id="accueil-mobile" src="rendus/accueil-telephone-390.png" alt="Accueil joueurs, proposition téléphone"></a></figure>
+      <figure><figcaption>iPad Air paysage</figcaption><a id="accueil-paysage-lien" href="rendus/accueil-paysage-1180.png"><img id="accueil-paysage" src="rendus/accueil-paysage-1180.png" alt="Accueil joueurs, proposition iPad paysage"></a></figure>
+    </div>
+    <div class="liens"><a href="accueil-telephone.html">Prototype téléphone</a><a href="accueil-paysage.html">Prototype paysage</a><a href="rendus/accueil-telephone-820.png">iPad portrait</a><a href="rendus/accueil-telephone-360-complet.png">Accueil complet à 360 px</a><a href="rendus/accueil-telephone-360-confirmation.png">Confirmation à 360 px</a></div>
+  </section>
+  <section>
+    <h2>J1.2 — Direct · Retenu</h2>
+    <p>Le titre reste lisible au-dessus de l'horloge. La projection garde une surface libre. Les six onglets et les quatre actions restent nommés et accessibles.</p>
+    <div class="rendus">
+      <figure class="mobile"><figcaption>Téléphone</figcaption><a id="direct-mobile-lien" href="rendus/direct-telephone-390.png"><img id="direct-mobile" src="rendus/direct-telephone-390.png" alt="Direct joueurs, proposition téléphone"></a></figure>
+      <figure><figcaption>iPad Air paysage</figcaption><a id="direct-paysage-lien" href="rendus/direct-paysage-1180.png"><img id="direct-paysage" src="rendus/direct-paysage-1180.png" alt="Direct joueurs, proposition iPad paysage"></a></figure>
+    </div>
+    <div class="liens"><a href="direct-telephone.html">Prototype téléphone</a><a href="direct-paysage.html">Prototype paysage</a><a href="rendus/direct-telephone-820.png">iPad portrait</a></div>
+  </section>
+  <section>
+    <h2>J1.3 — Inventaire · À choisir</h2>
+    <p>Les objets et leurs actions restent au-dessus de la navigation. Donner ouvre le choix du destinataire et rappelle la validation du meneur. Le transfert en attente bloque Donner et Jeter.</p>
+    <div class="rendus">
+      <figure class="mobile"><figcaption>Téléphone</figcaption><a id="inventaire-mobile-lien" href="rendus/inventaire-telephone-390.png"><img id="inventaire-mobile" src="rendus/inventaire-telephone-390.png" alt="Inventaire joueurs, proposition téléphone"></a></figure>
+      <figure><figcaption>iPad Air paysage</figcaption><a id="inventaire-paysage-lien" href="rendus/inventaire-paysage-1180.png"><img id="inventaire-paysage" src="rendus/inventaire-paysage-1180.png" alt="Inventaire joueurs, proposition iPad paysage"></a></figure>
+    </div>
+    <div class="liens"><a href="inventaire-telephone.html">Prototype téléphone</a><a href="inventaire-paysage.html">Prototype paysage</a><a href="rendus/inventaire-telephone-820.png">iPad portrait</a><a href="rendus/inventaire-telephone-360-don.png">Don à 360 px</a><a href="rendus/inventaire-telephone-360-attente.png">Transfert en attente</a></div>
+  </section>
+  <section>
+    <h2>J1.4 — Cartes · À choisir</h2>
+    <p>Piocher, agrandir et jouer restent accessibles au-dessus de la navigation. Une carte sous scellé conserve un dos muet. Donner à n'apparaît que lorsqu'un autre personnage de la campagne est connecté.</p>
+    <div class="rendus">
+      <figure class="mobile"><figcaption>Téléphone</figcaption><a id="cartes-mobile-lien" href="rendus/cartes-telephone-390.png"><img id="cartes-mobile" src="rendus/cartes-telephone-390.png" alt="Cartes joueurs, proposition téléphone"></a></figure>
+      <figure><figcaption>iPad Air paysage</figcaption><a id="cartes-paysage-lien" href="rendus/cartes-paysage-1180.png"><img id="cartes-paysage" src="rendus/cartes-paysage-1180.png" alt="Cartes joueurs, proposition iPad paysage"></a></figure>
+    </div>
+    <div class="liens"><a href="cartes-telephone.html">Prototype téléphone</a><a href="cartes-paysage.html">Prototype paysage</a><a href="rendus/cartes-telephone-820.png">iPad portrait</a><a href="rendus/cartes-telephone-360-detail.png">Carte agrandie à 360 px</a><a href="rendus/cartes-telephone-360-proposition.png">Proposition de carte</a><a href="cartes-telephone.html?etat=voisin">Donner à un PJ connecté</a><a href="rendus/cartes-telephone-360-attente.png">Proposition en attente</a><a href="rendus/cartes-telephone-360-scellee.png">Carte sous scellé</a><a href="cartes-telephone.html?etat=vide">Main et paquet vides</a></div>
+  </section>
+<section id="j2-archives"><h2>J2.1 — Archives · À choisir</h2><p>Deux indices révélés de la campagne. Le toucher ouvre leur texte intégral ; aucune date de découverte ni illustration inventée.</p><div class="rendus"><figure class="mobile"><figcaption>Téléphone</figcaption><a id="archives-mobile-lien" href="rendus/archives-telephone-390.png"><img id="archives-mobile" src="rendus/archives-telephone-390.png" alt="J2.1 — Archives, proposition téléphone"></a></figure><figure><figcaption>iPad Air paysage</figcaption><a id="archives-paysage-lien" href="rendus/archives-paysage-1180.png"><img id="archives-paysage" src="rendus/archives-paysage-1180.png" alt="J2.1 — Archives, proposition paysage"></a></figure></div><div class="liens"><a href="archives-telephone.html">Prototype téléphone</a><a href="archives-paysage.html">Prototype paysage</a><a href="rendus/archives-telephone-820.png">iPad portrait</a><a href="rendus/archives-telephone-360-detail.png">Détail à 360 px</a><a href="rendus/archives-telephone-360-detail-2.png">Second indice</a><a href="archives-telephone.html?etat=vide">État vide</a></div></section>
+<section id="j2-pnj"><h2>J2.2 — PNJ · À choisir</h2><p>Un profil partagé : Superviseur Hale. Le nom reste entier ; le détail montre le rôle et la description publique, avec une silhouette neutre.</p><div class="rendus"><figure class="mobile"><figcaption>Téléphone</figcaption><a id="pnj-mobile-lien" href="rendus/pnj-telephone-390.png"><img id="pnj-mobile" src="rendus/pnj-telephone-390.png" alt="J2.2 — PNJ, proposition téléphone"></a></figure><figure><figcaption>iPad Air paysage</figcaption><a id="pnj-paysage-lien" href="rendus/pnj-paysage-1180.png"><img id="pnj-paysage" src="rendus/pnj-paysage-1180.png" alt="J2.2 — PNJ, proposition paysage"></a></figure></div><div class="liens"><a href="pnj-telephone.html">Prototype téléphone</a><a href="pnj-paysage.html">Prototype paysage</a><a href="rendus/pnj-telephone-820.png">iPad portrait</a><a href="rendus/pnj-telephone-360-detail.png">Profil à 360 px</a><a href="pnj-telephone.html?etat=vide">État vide</a></div></section>
+<section id="j2-lieux"><h2>J2.3 — Lieux · À choisir</h2><p>Station Varn et le plan exact du témoin T0. Le détail conserve le plan et la description, sans commandes de cartographie ajoutées.</p><div class="rendus"><figure class="mobile"><figcaption>Téléphone</figcaption><a id="lieux-mobile-lien" href="rendus/lieux-telephone-390.png"><img id="lieux-mobile" src="rendus/lieux-telephone-390.png" alt="J2.3 — Lieux, proposition téléphone"></a></figure><figure><figcaption>iPad Air paysage</figcaption><a id="lieux-paysage-lien" href="rendus/lieux-paysage-1180.png"><img id="lieux-paysage" src="rendus/lieux-paysage-1180.png" alt="J2.3 — Lieux, proposition paysage"></a></figure></div><div class="liens"><a href="lieux-telephone.html">Prototype téléphone</a><a href="lieux-paysage.html">Prototype paysage</a><a href="rendus/lieux-telephone-820.png">iPad portrait</a><a href="rendus/lieux-telephone-360-detail.png">Lieu à 360 px</a><a href="lieux-telephone.html?etat=vide">État vide</a></div></section>
+<section id="j2-messages"><h2>J2.4 — Messagerie · À choisir</h2><p>Surcouche de Direct : MJ, groupe ou autres PJ de la campagne. Les conversations restent séparées ; le champ et Envoyer restent accessibles au-dessus du pied.</p><div class="rendus"><figure class="mobile"><figcaption>Téléphone</figcaption><a id="messages-mobile-lien" href="rendus/messages-telephone-390.png"><img id="messages-mobile" src="rendus/messages-telephone-390.png" alt="J2.4 — Messagerie, proposition téléphone"></a></figure><figure><figcaption>iPad Air paysage</figcaption><a id="messages-paysage-lien" href="rendus/messages-paysage-1180.png"><img id="messages-paysage" src="rendus/messages-paysage-1180.png" alt="J2.4 — Messagerie, proposition paysage"></a></figure></div><div class="liens"><a href="messages-telephone.html">Prototype téléphone</a><a href="messages-paysage.html">Prototype paysage</a><a href="rendus/messages-telephone-820.png">iPad portrait</a><a href="rendus/messages-telephone-360-destinataires.png">Choix du destinataire</a><a href="rendus/messages-telephone-360-prive.png">Conversation privée</a></div></section>
+<section id="j2-notifications"><h2>J2.5 — Notifications · À choisir</h2><p>Surcouche de Direct : toucher Nouveau Message ouvre la conversation et efface le badge non lu. La carte disparaît après cinq secondes, le badge reste jusqu’à lecture. Les alertes générales ont leur propre fermeture et leur délai de huit secondes.</p><div class="rendus"><figure class="mobile"><figcaption>Téléphone</figcaption><a id="notifications-mobile-lien" href="rendus/notifications-telephone-390.png"><img id="notifications-mobile" src="rendus/notifications-telephone-390.png" alt="J2.5 — Notifications, proposition téléphone"></a></figure><figure><figcaption>iPad Air paysage</figcaption><a id="notifications-paysage-lien" href="rendus/notifications-paysage-1180.png"><img id="notifications-paysage" src="rendus/notifications-paysage-1180.png" alt="J2.5 — Notifications, proposition paysage"></a></figure></div><div class="liens"><a href="notifications-telephone.html">Prototype téléphone</a><a href="notifications-paysage.html">Prototype paysage</a><a href="rendus/notifications-telephone-820.png">iPad portrait</a><a href="rendus/notifications-telephone-360-conversation.png">Conversation ouverte</a><a href="rendus/notifications-telephone-360-alerte.png">Alerte générale de démonstration</a><a href="notifications-telephone.html?etat=alerte">Prototype alerte générale</a></div></section>
+  <section>
+    <h2>Contrôle et choix</h2>
+    <p>Trente-six rendus contrôlés à 360, 390, 820 et 1180 px : aucun débordement horizontal, aucune erreur JavaScript, commandes visibles d'au moins 44 × 44 px. Les confirmations, la bascule de qualité, les dons, les cartes, les consultations, la messagerie et les délais de notification ont été vérifiés dans les prototypes.</p>
+    <p>Accueil et Direct sont retenus. Inventaire, Cartes et les cinq écrans J2 sont à choisir ou retoucher. T3 continue ensuite avec les écrans du meneur. L'application attend le réagencement T4.</p>
+    <div class="liens"><a href="README.md">Relevé et réserves</a><a href="controles.json">Mesures du rendu</a><a href="https://stitch.withgoogle.com/projects/14179472786712390673">Projet Stitch</a></div>
+    <details><summary>Messages et suggestions de Stitch, avant correction</summary><div id="messages"><h3>accueil-telephone</h3>
+<pre>J'ai créé l'écran mobile tactile d'accueil **« Qui es-tu ? »** pour la tablette et les téléphones des joueurs (390 × 844 px, fluide dès 360 px), en respectant scrupuleusement le design system GM-OS et l'ensemble des contraintes demandées :
+
+### 📱 1. Ergonomie Mobile &amp; Élimination du Bureau
+- **Sans barre latérale ni bandeau de bureau :** Pas de menu 27 modules ni de commandes de régie réservées au meneur.
+- **En-tête Joueurs épuré :** Logotype discret `GM-OS // PLAYER HUB` et bouton tactile **« Quitter la session »** ($\ge 44$ px) avec confirmation au toucher.
+
+### 🎭 2. Titre, Contexte de Session &amp; Instructions
+- **Agent de la Session &amp; Date :** `03/10/2026` en `JetBrains Mono`.
+- **Titre Display :** **« QUI ES-TU ? »** en typographie `Orbitron` en graisse 800.
+- **Contexte :** « Le Silence de Varn • Séance 2 ».
+- **Consigne brève :** *« Sélectionne ta fiche pour synchroniser ton interface tactile et recevoir les flux de la table en direct. »*
+
+### 👥 3. Les Trois Fiches de Personnages
+Chaque fiche dispose d'une cible tactile de sélection $\ge 44$ px (« Prendre ce personnage »), d'un badge de statut vert « Connectable » et d'un pictogramme silhouette neutre (aucune photo inventée) :
+1. **Nel Varga** (Technicienne de bord) — Joué par : **Camille**
+2. **Idris Koa** (Négociateur) — Joué par : **Mathis**
+3. **Sora Adebayo** (Médecin de bord) — Joué par : **Inès**
+
+### ⚡ 4. Pied Télémétrique &amp; Informations Réelles
+- Pastille verte de statut réseau, version `GM-OS v6.5.0 • nexus_bridge_active`.
+- Indicateur de latence `LAT : --`.
+- Identifiant de démonstration `Device ID: T0-JOUEURS-P91...` et `PORT: 8080`.
+
+L'écran est d'ores et déjà publié sur le canevas et prêt à être testé.</pre>
+<p>Suggestion de Stitch : Simuler l'écran suivant une fois le personnage choisi (la fiche du joueur en jeu)</p>
+<p>Suggestion de Stitch : Ajouter un état où un personnage est déjà « En cours d'utilisation » par un autre joueur</p>
+<p>Suggestion de Stitch : Tester l'affichage avec un thème sombre alternatif (ex: Médiéval ou Moderne)</p>
+<h3>accueil-paysage</h3>
+<pre>Voici la déclinaison de l'accueil joueur **« QUI ES-TU ? »** adaptée au format **Tablette Paysage (1180 × 820 px)**, sans aucun défilement :
+
+### 📐 Ergonomie &amp; Composition (1180 × 820 px)
+- **Affichage sans défilement (Zero-Scroll) :** Tout le contenu s'insère harmonieusement dans les 820 px de hauteur verticale avec une grille à 3 colonnes horizontales.
+- **En-tête épuré :**
+  - Identité discrète en haut à gauche : `GM-OS // PLAYER HUB`.
+  - Bouton sécurisé en haut à droite : `QUITTER LA SESSION`.
+  - Bloc central d'identification de session : Badge `AGENT DE LA SESSION`, date `03/10/2026`, grand titre `QUI ES-TU ?` en Orbitron, sous-titre `Le Silence de Varn • Séance 2`.
+  - **Suppression du texte de conseil :** L'encadré explicatif a été retiré conformément à la consigne.
+
+### 👥 Les 3 Cartes de Personnages (Côte à côte)
+1. **Nel Varga** — *Technicienne de bord* (Joué par : Camille) | Statut `● CONNECTABLE` | Bouton plein tactile `PRENDRE CE PERSONNAGE →` (hauteur $\ge 44$ px).
+2. **Idris Koa** — *Négociateur* (Joué par : Mathis) | Statut `● CONNECTABLE` | Bouton plein tactile `PRENDRE CE PERSONNAGE →` (hauteur $\ge 44$ px).
+3. **Sora Adebayo** — *Médecin de bord* (Joué par : Inès) | Statut `● CONNECTABLE` | Bouton plein tactile `PRENDRE CE PERSONNAGE →` (hauteur $\ge 44$ px).
+- Chaque personnage dispose d'un caisson dédié avec silhouette vectorielle technique diégétique et repères matriciels.
+
+### ⚡ Pied d'Écran Télémétrique &amp; Rigueur Système
+- Présence de la version et de l'état : `● GM-OS v6.5.0 • nexus_bridge_active`.
+- Télémétrie : `LAT : --` et `Device ID: TO-JOUEURS-P91...`.
+- **Exclusion stricte :** Aucun affichage de `PORT: 8080`.
+- **Zéro élément superflu :** Aucun bandeau de bureau MJ, aucun volet de modules, aucun onglet supplémentaire ni navigation avant le choix.
+- **Design System Brutal Diegetic Console :** Arêtes à 0 px, typographie Orbitron / Inter / Space Mono, contrastes adaptés à la pénombre de table.</pre>
+<p>Suggestion de Stitch : Ajouter un état où un personnage est déjà sélectionné par un autre joueur (badge OCCUPÉ)</p>
+<p>Suggestion de Stitch : Simuler l'animation d'état lors de l'appui sur « Prendre ce personnage »</p>
+<p>Suggestion de Stitch : Tester une déclinaison en thème Clair ou Médiéval pour cette tablette</p>
+<h3>direct-telephone</h3>
+<pre>L'onglet **« Direct »** de la tablette joueur GM-OS a été entièrement redessiné et calibré au format **390 × 844 px (utilisable dès 360 px)**, sans aucune barre latérale PC ni bandeau de bureau :
+
+### 📐 1. Agencement &amp; Titre Sans Chevauchement
+- **Titre fluide et dégagé :** En-tête avec mention `▶ OPÉRATION EN COURS` et grand titre **`Le Silence de Varn`** (Orbitron), parfaitement séparé de l'horloge pour éliminer tout chevauchement.
+- **Bandeau supérieur compact :** Identité `GM-OS // JOUEUR`, pastille d'état réseau `● CONNECTÉ`, et bouton unique **`⚡ MODE PERFORMANCE`** (bascule Qualité/Performance tactile $\ge 44$ px).
+
+### ⏱️ 2. Duo Télémétrie : Horloge &amp; Tension Publique
+- **Horloge projetée :** `23:36` avec secondes `17` en JetBrains Mono et date complète `Dimanche 4 octobre 2026`.
+- **Alerte de la station (3/8) :** Anneau vectoriel de 8 segments avec 3 segments en surbrillance ambre (`Vigilance • Palier 3 enclenché`).
+
+### 📺 3. Zone de Projection Libre du Meneur
+- Espace central épuré et ouvert, encadré de repères matriciels avec mention `CANAL DE PROJECTION DU MENEUR` en `STANDBY` et `EN ATTENTE DU SIGNAL TABLE`.
+- Aucun média inventé, aucun encart promotionnel, aucune consigne parasite.
+
+### 📜 4. Chroniques de Séance
+- Bloc en pied de zone affichant `SÉANCE 2` et la mention exacte : **`« Aucun résumé public. »`**.
+
+### 📱 5. Navigation Tactile Complète (Dès 360 px, cibles $\ge 44 \times 44$ px)
+- **Ligne 1 (Les 6 onglets de navigation) :** `DIRECT (● LIVE)` (actif), `ARCHIV. (HIST.)`, `PNJ (ROSTER)`, `LIEUX (SECT.)`, `INVENT. (BUTIN)`, `CARTES (PLANS)`.
+- **Ligne 2 (Surcouches &amp; Quitter) :** `◆ FICHE`, `✎ NOTES`, `✉ MSGS`, et action sécurisée `⏻ QUITTER` en alerte rouge.
+- **Design System respecté :** Fond `#020617`, surfaces `#0f172a` et `#1e293b`, accents `#06b6d4`, typographies Orbitron / Inter / JetBrains Mono, zéro étiquette sous 11 px.</pre>
+<p>Suggestion de Stitch : Simuler une projection active reçue du meneur dans le canal central</p>
+<p>Suggestion de Stitch : Afficher la fenêtre modale de confirmation pour le bouton Quitter</p>
+<p>Suggestion de Stitch : Décliner l'onglet Fiche du joueur au format mobile 390×844</p>
+<h3>direct-paysage</h3>
+<pre>Voici la déclinaison de l'écran **Tablette Joueur : Direct** au format **Tablette Paysage (1180 × 820 px)**, réalisée dans le strict respect de l'écran téléphone d'origine (`SCREEN_3`) et des contraintes demandées :
+
+### 📐 Ergonomie &amp; Agencement Paysage (1180 × 820 px)
+- **Format Zero-Scroll :** Tout le contenu s'intègre rigoureusement dans la hauteur utile de 820 px sans nécessiter de défilement.
+- **En-tête épuré :**
+  - À gauche : L'identifiant `GM-OS // JOUEUR` et l'opération en cours **`LE SILENCE DE VARN`** affichée en typographie `Orbitron` bien lisible.
+  - À droite : L'indicateur d'état `● CONNECTÉ` et le bouton unique **`⚡ MODE PERFORMANCE`** (bascule qualité/performance, cible $\ge 44$ px).
+  - Aucune barre latérale ni panneau de régie du PC meneur.
+
+### 🎯 Zone Centrale : Canal de Projection
+- **Projection au cœur de l'interface :** Cadre large avec réticules filaires aux quatre angles (`┌ ┐ └ ┘`), indicateur `STANDBY`, pictogramme d'onde et mention diégétique officielle *« EN ATTENTE DU SIGNAL TABLE »*. Aucun média inventé ni placeholder parasite.
+- Pied de canal discret rappelant le flux synchronisé `CANAL SÉCURISÉ [J-TABLET]`.
+
+### ⏱️ Exploitation de l'Espace : Horloge, Tension &amp; Chroniques
+- **Horloge :** Affichage de `23:36:17` en grand format `Space Mono` avec la date `Dimanche 4 octobre 2026`.
+- **Tension Publique :** Uniquement la jauge officielle autorisée **`ALERTE STATION 3/8`** avec indicateur d'alerte ambre/orange et mention `Palier 3 enclenché` (la tension secrète du meneur reste strictement occultée).
+- **Chroniques de Séance :** Bloc dédié `SÉANCE 2` reprenant sobrement la mention d'origine *« Aucun résumé public. »*.
+
+### 🧭 Navigation Complète (Les 10 Destinations Réelles)
+Toutes les commandes tactiles sont calibrées à $\ge 44 \times 44$ px avec libellés complets sans troncature :
+1. **Les 6 onglets principaux :**
+   - **`■ DIRECT (● LIVE)`** *(Actif — cyan plein)*
+   - `ARCHIV. / HIST.`
+   - `PNJ / ROSTER`
+   - `LIEUX / SECT.`
+   - `INVENT. / BUTIN`
+   - `CARTES / PLANS`
+2. **Les 4 actions rapides en sous-barre :**
+   - `◆ FICHE`
+   - `✎ NOTES`
+   - `✉ MSGS`
+   - `⏹ QUITTER` *(détaché avec alerte colorimétrique sécurisée)*
+
+L'ensemble respecte scrupuleusement la charte *Brutal Diegetic Console* (arêtes vives à 0 px, typographie Orbitron / Inter / Space Mono et contrastes adaptés aux conditions de pénombre).</pre>
+<p>Suggestion de Stitch : Passer à la déclinaison d'un autre onglet joueur (Fiche, Notes ou Messages)</p>
+<p>Suggestion de Stitch : Ajuster la répartition entre la projection et les panneaux de droite</p>
+<h3>inventaire-telephone</h3>
+<pre>Voici l'écran **Inventaire de la Tablette Joueur** (`GM-OS — Tablette Joueur : Inventaire (390×844)`), réalisé dans le respect strict des spécifications de `HubInventory.tsx`, des jeux d'essai `tabletteJoueursT0.spec.ts` et du design system **Brutal Diegetic Console** :
+
+---
+
+### 📐 1. Format Mobile &amp; Ergonomie Tactile (390 × 844 px, fluide dès 360 px)
+- **Viewport mobile responsive :** Conçu pour s'adapter parfaitement aux écrans mobiles dès 360 px de large sans débordement horizontal.
+- **Toutes cibles tactiles $\ge 44 \times 44$ px :** Boutons, fiches de destinataires, onglets et commandes d'action rapides sont calibrés pour le doigt.
+- **Arêtes vives à 0 px :** Aucun arrondi sur l'ensemble de l'interface, conformément à `DESIGN.md`.
+
+---
+
+### 🛰️ 2. En-tête Joueur &amp; Télémétrie de Séance
+- **Identité &amp; Bascule Mode :**
+  - Titre `GM-OS // JOUEUR` avec voyant cyan.
+  - Statut réseau `● SYNC`.
+  - Bouton interactif **`⚡ MODE PERFORMANCE`** (qui bascule vers `MODE QUALITÉ` au clic).
+- **Horloge projetée :** `23:37:05` et `Dimanche 4 octobre 2026` en `Space Mono` / `Inter`.
+- **Tension publique autorisée :** Uniquement `Alerte de la station`, `3/8` (la tension secrète du MJ reste strictement masquée).
+
+---
+
+### 🎒 3. Section Sac à Dos (Interactif) &amp; Objet Réel
+- **Titre &amp; Compteur :** `INVENTAIRE` avec sous-titre *« Trésors, reliques et possessions personnelles. »* et badge `1 OBJETS`.
+- **Objet unique conforme :**
+  - **Nom :** `Outil multifonction` (quantité `x1`).
+  - **Rareté &amp; Description :** `COMMON` — *« Pour ouvrir le relais. »*.
+  - **Icône :** Colis vectoriel neutre (aucune illustration superflue ou inventée).
+  - **Commandes :** Deux boutons dédiés : **`Donner`** et **`Jeter`**.
+
+---
+
+### 🔄 4. Surcouche Modale « Donner un objet » (Simulation locale)
+- **Contenu &amp; Règles :**
+  - En-tête avec `Donner un objet`, `TYPE: EQUIPMENT` et bouton `Fermer le don`.
+  - Rappel du nom et de la description de l'objet.
+  - Message officiel : *« Le Maître du Jeu doit valider l'échange avant qu'il ne soit effectif. »*.
+  - **Destinataires disponibles (avec silhouettes neutres) :**
+    1. **Idris Koa** — *Négociateur*
+    2. **Sora Adebayo** — *Médecin de bord*
+- **Comportement interactif simulé :**
+  - Toucher un destinataire ferme la modale, affiche le bandeau de transfert en attente et **désactive les boutons `Donner` et `Jeter`** avec un badge *« EN ATTENTE DU MJ »*.
+  - Le bouton **`Jeter`** ouvre une demande de confirmation et bascule vers l'état *« Sac à dos vide »* en cas de validation.
+  - **Aucun bouton inventé :** Pas de bouton « Envoyer » ni de sélecteur de quantité.
+
+---
+
+### 🧭 5. Navigation Constante en Pied d'Écran
+- **Rangée 1 des onglets :** `DIRECT`, `ARCHIVES`, `PNJ`.
+- **Rangée 2 des onglets :** `LIEUX`, **`INVENTAIRE ●`** *(actif en cyan plein)*, `CARTES`.
+- **Rangée 3 des actions :** `◆ FICHE`, `✎ NOTES`, `✉ MSGS`, `⏹ QUITTER`.
+- L'inventaire défile librement au-dessus de cette navigation fixe.</pre>
+<p>Suggestion de Stitch : Tester la surcouche de don en sélectionnant Idris Koa</p>
+<p>Suggestion de Stitch : Décliner l'onglet Fiche de personnage au même format 390×844</p>
+<p>Suggestion de Stitch : Décliner l'onglet Notes ou Messages de la tablette joueur</p>
+<h3>inventaire-paysage</h3>
+<pre>Voici la déclinaison de l'**Inventaire Joueur** au format **Tablette Paysage (iPad Air 1180 × 820 px)** (`GM-OS — Tablette Joueur : Inventaire (Tablette Paysage 1180×820)`), créée en respectant scrupuleusement le gabarit de l'écran mobile d'origine et toutes vos consignes d'ergonomie et de fidélité :
+
+---
+
+### 📐 1. Agencement Paysage &amp; Exploitation de l'Espace (1180 × 820 px)
+- **Format Zero-Scroll :** L'intégralité des sections (en-tête joueur, sous-bandeau de télémesure compact, conteneur large de l'inventaire et navigation complète en pied) tient dans la hauteur de 820 px sans défilement vertical.
+- **En-tête Joueur épuré :**
+  - Identité à gauche : `■ GM-OS // JOUEUR` et surtitre d'opération `OPÉRATION EN COURS : LE SILENCE DE VARN`.
+  - Statut à droite : État réseau officiel **`■ ● CONNECTÉ`** en vert et bouton tactile unique **`⚡ MODE PERFORMANCE`** (hauteur $\ge 44$ px).
+  - Absence stricte de barre latérale ou de bandeau de régie PC du meneur.
+
+---
+
+### ⏱️ 2. Télémesure Compacte (Horloge &amp; Tension)
+- **Horloge :** Affichage compact de l'heure **`23:37:05`** en Space Mono avec la date complète `Dimanche 4 octobre 2026` et la pastille `TABLE`.
+- **Tension Publique :** Libellé officiel complet et lisible sans troncature **`ALERTE DE LA STATION`**, valeur **`3/8`** et rail segmenté avec 3 crans en ambre d'alerte.
+
+---
+
+### 🎒 3. Zone Centrale : Inventaire &amp; Objet Unique
+- **Titre &amp; Compteur :** Grand titre `INVENTAIRE` en Orbitron, sous-titre `Trésors, reliques et possessions personnelles.` et badge `1 OBJETS`.
+- **Section Sac à dos :** Intitulé épuré `SAC À DOS (INTERACTIF)` sans aucune mention parasite (suppression formelle de `CONTENANT #01`).
+- **Absence totale de fonctions superflues :** Pas de barre de recherche, pas de filtre, pas de tri, pas de calcul de poids total, ni de faux diagnostics décoratifs.
+- **Carte unique de l'objet :**
+  - **Titre complet :** **`OUTIL MULTIFONCTION`** (affiché en entier, en graisse accentuée).
+  - **Quantité &amp; Rareté :** Badge `x1` en Space Mono et tag `COMMON` ($\ge 11$ px).
+  - **Description :** *« Pour ouvrir le relais. »* (texte en Inter à 14 px).
+  - **Icône diégétique :** Repère filaire isométrique technique.
+  - **Les Deux Actions Tactiles :**
+    - **`⇄ DONNER`** : Bouton plein d'accent cyan ($\ge 44 \times 44$ px) qui ouvre la surcouche de transfert.
+    - **`🗑 JETER`** : Bouton de rejet sécurisé avec pictogramme poubelle et teinte d'alerte rouge.
+    - Les deux actions demeurent parfaitement visibles, dégagées et accessibles au doigt.
+
+---
+
+### 🤝 4. Surcouche de Transfert (« Donner »)
+- **Modalité intégrée :** Ouverture de la vue de transfert vers les deux coéquipiers de la table :
+  1. **Idris Koa** — *Négociateur*
+  2. **Sora Adebayo** — *Médecin de bord*
+- **Avertissement de validation :** Mention explicite de régie : *« Avertissement : Le transfert sera soumis à la validation du Meneur de Jeu avant synchronisation. »*
+- **Règle stricte :** Aucun sélecteur de quantité ni bouton inventé.
+
+---
+
+### 🧭 5. Navigation Complète en Pied (10 Destinations Réelles)
+Toutes les commandes tactiles offrent une cible $\ge 44 \times 44$ px, réparties en deux rangées ancrées :
+1. **Rangée 1 (6 destinations primaires) :**
+   - `DIRECT`
+   - `ARCHIVES`
+   - `PNJ`
+   - `LIEUX`
+   - **`INVENTAIRE ●`** *(Actif — cyan plein #06b6d4, texte contrasté sombre)*
+   - `CARTES`
+2. **Rangée 2 (4 actions rapides) :**
+   - `◆ FICHE`
+   - `✎ NOTES`
+   - `✉ MESSAGES` *(libellé complet « MESSAGES » sans abréviation)*
+   - `⏹ QUITTER` *(avec demande de confirmation d'action, et non une simple alerte brute)*
+
+---
+
+### 🛡️ Rigueur du Design System
+- Arêtes vives à **0 px** sur tous les caissons et boutons.
+- Typographie proportionnée : `Orbitron` pour les titres, `Inter` pour les descriptions ($\ge 14$ px), `Space Mono` pour les chiffres et calibres, étiquettes et badges à $\ge 11$ px.
+- Contrastes WCAG $\ge 4.5:1$ garantissant un confort de manipulation optimal sur tablette sous éclairage de table de jeu.</pre>
+<p>Suggestion de Stitch : Décliner l'onglet FICHE du joueur à 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'onglet NOTES du joueur à 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'onglet MESSAGES du joueur à 1180×820</p>
+<h3>cartes-telephone</h3>
+<pre>Voici l'écran **Cartes joueur** (`GM-OS — Tablette Joueur : Cartes (390×844)`), entièrement redessiné selon le gabarit officiel mobile (390×844, fluide et responsive dès 360px), sans aucune barre latérale ni régie du PC meneur :
+
+---
+
+### 📐 1. Respect Strict de la Grammaire Joueur &amp; Charte Visuelle
+- **Palette officielle Cyberpunk :** Fond `#020617`, surfaces `#0f172a` et `#1e293b`, texte `#f8fafc`, secondaires `#898c95`, accent unique `#06b6d4` (cyan fluo).
+- **Arêtes vives :** Zéro adoucissement (`rounded: 0px` absolu).
+- **Typographie :** Titres en `Orbitron`, texte courant en `Inter` ($\ge 14$ px), chiffres et compteurs en `JetBrains Mono`.
+- **Cibles tactiles :** Hauteur et largeur minimales $\ge 44 \times 44$ px, badges $\ge 11$ px.
+
+---
+
+### ⏱️ 2. En-tête &amp; Télémesure de Démonstration (T0)
+- **Bandeau système haut :** `■ GM-OS // JOUEUR`, pastille réseau `SYNC` verte et bouton unique **`⚡ MODE PERFORMANCE`** (bascule directe avec Mode Qualité).
+- **Sous-bandeau projeté :**
+  - **Horloge :** `23:43:22`, date `Dimanche 4 octobre 2026`, tag `TABLE`.
+  - **Tension Publique :** Uniquement `ALERTE STATION` à **`3/8`** avec rail de 8 segments (3 ambre, 5 sombres), sous-titre officiel *Alerte de la station* (la tension secrète du meneur reste strictement occultée).
+
+---
+
+### 🂠 3. Section Paquets Ouverts
+- Titre de section `PAQUETS OUVERTS` avec sous-titre *Toucher pour piocher*.
+- **Un seul paquet :** **`CARTES DE COMPLICATION`**, sous-titre *Paquet de scénario actif*.
+- **Badge cartes restantes :** `RESTANT : 4`.
+- **Dos de carte neutre rectangulaire interactif :** Portant les mentions diegétiques `STATION VARN` et `Complication`. Toucher le bloc ou le bouton **`+ PIOCHER`** simule l'obtention d'une `Carte 3` et fait passer le restant à `3`.
+
+---
+
+### 🃏 4. Section Cartes en Main &amp; Actions Débloquées
+- **Carte 2 révélée au repos :**
+  - Illustration neutre `STATION VARN / Complication` avec matricule `#02`.
+  - Type : *Complication*, illustration : *STATION VARN*.
+  - **Inspection grand format :** Toucher la carte ouvre la surcouche modale sombre avec titre `CARTE 2` et mention explicite `Touchez pour fermer` (toucher n'importe où ou presser Échap la referme).
+  - **Action `▶ JOUER` :** Positionnée immédiatement sous la carte, avec une hauteur tactile $\ge 44$ px, parfaitement visible et accessible au-dessus de la navigation fixe (résolvant le problème de masquage de T0).
+  - **Conditionnel :** Pas de sélecteur `Donner à` au repos (celui-ci est conditionné aux autres PJ connectés, absents ici).
+
+---
+
+### 🧭 5. Navigation Constante en Pied (10 Destinations Réelles)
+- La liste des cartes défile au-dessus de la barre fixe (`padding-bottom: 8rem` garantissant l'accessibilité permanente des boutons Jouer et Piocher même sur écran 360px).
+- **Rangée 1 (3 onglets) :** `DIRECT`, `ARCHIVES`, `PNJ`.
+- **Rangée 2 (3 onglets) :** `LIEUX`, `INVENTAIRE`, **`CARTES ●`** *(Actif — cyan plein `#06b6d4`, texte sombre)*.
+- **Rangée 3 (4 actions rapides) :** `◆ FICHE`, `✎ NOTES`, `✉ MESSAGES`, `⏹ QUITTER` *(avec confirmation sécurisée)*.
+- Aucun filtre, recherche, résumé de règles, téléversement ni faux diagnostic. Tout est 100% conforme.</pre>
+<p>Suggestion de Stitch : Décliner l'onglet Cartes au format iPad paysage 1180×820</p>
+<p>Suggestion de Stitch : Simuler l'état d'une proposition de carte entrante [Nom vous propose une carte]</p>
+<p>Suggestion de Stitch : Passer à la déclinaison mobile de l'onglet PNJ ou Lieux (390×844)</p>
+<h3>cartes-paysage</h3>
+<pre>Voici la déclinaison de l'écran **Cartes** pour la Tablette Joueur au format **iPad Paysage (1180 × 820 px)** (`GM-OS — Tablette Joueur : Cartes (Tablette Paysage 1180×820)`), conçue dans le respect scrupuleux de l'écran téléphone d'origine (`SCREEN_3`), des écrans tablettes existants (`SCREEN_4`, `SCREEN_7`) et du décor de test e2e :
+
+---
+
+### 📐 1. Architecture &amp; Agencement Paysage (1180 × 820 px)
+- **Affichage Zero-Scroll équilibré :** L'intégralité de l'interface tient harmonieusement dans les 820 px de hauteur, avec une marge de sécurité réservée pour le bloc fixe de navigation en pied.
+- **En-tête Joueur :**
+  - À gauche : `■ GM-OS // JOUEUR` et surtitre d'opération `OPÉRATION EN COURS : LE SILENCE DE VARN`.
+  - À droite : Indicateur réseau officiel **`■ ● CONNECTÉ`** en vert et bouton tactile unique **`⚡ MODE PERFORMANCE`** (bascule qualité/performance, hauteur $\ge 44$ px).
+  - Aucune barre latérale ni bandeau régie PC du meneur.
+
+---
+
+### ⏱️ 2. Sous-bandeau de Télémesure Compact
+- **Horloge projetée fixe :** **`23:43:22`** en Space Mono, date `Dimanche 4 octobre 2026`, pastille `TABLE`.
+- **Tension publique :** Libellé officiel complet et lisible **`ALERTE DE LA STATION`**, score **`3/8`** avec jauge segmentée à 8 crans (3 crans ambre/orange actifs, 5 crans éteints). La tension secrète du meneur demeure strictement occultée.
+
+---
+
+### 🃏 3. Organisation en Deux Colonnes (Paquets &amp; Main Active)
+- **Titre de module :** Grand titre `CARTES` en Orbitron, sous-titre `Cartes de complication et main active.` et badge d'état `1 EN MAIN`.
+- **Colonne Gauche (« PAQUETS OUVERTS ») :**
+  - Cartouche de paquet : `CARTES DE COMPLICATION` avec badge `RESTANT : 4`.
+  - Dos de carte neutre : `STATION VARN`, type `Complication`, mention *« Toucher pour piocher »*.
+  - Bouton tactile large : **`+ PIOCHER`** ($\ge 44 \times 44$ px) qui simule l'ajout de *Carte 3* dans la main et la décrémentation du paquet restant à 3.
+  - Mention d'aide discrète : *« Toucher pour piocher une carte du paquet actif. »*
+- **Colonne Droite (« VOS CARTES EN MAIN ») :**
+  - Compteur : `1 CARTE`.
+  - Carte révélée : **`CARTE 2`** avec illustration technique filaire isométrique diégétique (neutre, identique au dos de paquet).
+  - **Fidélité stricte :** Aucun texte de pouvoir inventé, aucun matricule `#02` parasite ni descriptions fantaisistes.
+  - **Les Deux Actions Tactiles :**
+    - **`▶ JOUER`** : Bouton plein cyan `#06b6d4` à fort contraste ($\ge 44 \times 44$ px), positionné immédiatement sous la carte et dégagé du pied.
+    - **`⤢ AGRANDIR`** : Bouton secondaire surface-raised ($\ge 44 \times 44$ px).
+  - **Exclusion de « Donner à » :** Aucun contrôle de transfert au repos car aucun autre PJ n'est connecté dans cet état de test.
+
+---
+
+### 🔍 4. Surcouche de Détail (« Agrandir »)
+- Au toucher de la carte ou sur le bouton `AGRANDIR`, ouverture d'une vue de détail plein cadre avec titre `CARTE 2`, visuel agrandi et consigne d'interaction explicite : **« Touchez pour fermer »**.
+- Fermeture intuitive par simple toucher de l'écran ou touche Échap.
+
+---
+
+### 🧭 5. Navigation Complète en Pied Fixe (10 Destinations Réelles)
+Toutes les commandes tactiles offrent une cible $\ge 44 \times 44$ px, réparties en deux rangées ancrées :
+1. **Rangée 1 (6 destinations primaires) :**
+   - `DIRECT`
+   - `ARCHIVES`
+   - `PNJ`
+   - `LIEUX`
+   - `INVENTAIRE`
+   - **`CARTES ●`** *(Actif — cyan plein #06b6d4, texte foncé)*
+2. **Rangée 2 (4 actions rapides) :**
+   - `◆ FICHE`
+   - `✎ NOTES`
+   - `✉ MESSAGES` *(libellé complet)*
+   - `⏹ QUITTER` *(avec demande de confirmation modale sécurisée)*
+
+---
+
+### 🛡️ Design System &amp; Accessibilité
+- Arêtes vives à **0 px** partout.
+- Typographie conforme : `Orbitron` pour les titres, `Inter` pour les textes ($\ge 14$ px), `Space Mono` pour les chiffres et compteurs, badges et étiquettes $\ge 11$ px.
+- Contrastes WCAG $\ge 4.5:1$ garantis pour la lecture sur tablette en environnement tamisé.
+- Aucune directive de blocage de zoom dans la structure HTML.</pre>
+<p>Suggestion de Stitch : Décliner l'onglet « Fiche » du joueur à 1180 × 820 px</p>
+<p>Suggestion de Stitch : Décliner l'onglet « Notes » du joueur à 1180 × 820 px</p>
+<p>Suggestion de Stitch : Décliner l'onglet « Messages » du joueur à 1180 × 820 px</p>
+<h3>archives-telephone</h3>
+<pre>Voici l'écran **Tablette Joueur : Archives** au format mobile standard **390 × 844 px** (utilisable dès 360 px), conçu dans le strict respect de la grammaire d'écran établie, du `DESIGN.md` (Brutal Diegetic Console) et des sources réelles (`HubArchives.tsx` + `HubClueViewer.tsx`) du décor de test T0 :
+
+### 📐 1. En-tête Compact &amp; Télémesure
+- **En-tête Joueur :** Libellé `GM-OS // JOUEUR`, pastille d'état `■ CONNECTÉ` et bouton unique interactif `MODE PERFORMANCE / QUALITÉ` ($\ge 44 \times 44$ px).
+- **Sous-bandeau projeté :**
+  - Horloge synchronisée **`23:36:43`** en Space Mono, date officielle `Dimanche 4 octobre 2026`, pastille `TABLE`.
+  - Tension publique autorisée : **`ALERTE DE LA STATION`**, score **`3/8`** avec jauge segmentée à 8 crans (3 crans orange/ambre allumés). Aucune tension secrète.
+
+### 📁 2. Contenu des Archives (Scrollable &amp; Dégagé)
+- **En-tête de section :** Titre `ARCHIVES DU GROUPE` en Orbitron, sous-titre `Preuves et indices collectés lors de la campagne.` et compteur `2 FRAGMENTS DÉCOUVERTS`.
+- **Les Deux Cartes d'Indices (sans image ni date) :**
+  1. **`Le café encore chaud`** — *« Le départ date de moins d'une heure. »*
+  2. **`La signature unique`** — *« Tout le registre est signé « Hale », même les nuits où il dormait. »*
+- Présence d'une icône de document neutre filaire diégétique. Aucune illustration inventée, aucun matricule, ni date absente des sources.
+
+### 🔍 3. Surcouche de Visualisation (`HubClueViewer`)
+- Toucher l'une des cartes ouvre la surcouche modale :
+  - Surtitre technique : `ARCHIVES SÉCURISÉES // PREUVE IMMATÉRIELLE`.
+  - Titre de la preuve en grand et texte descriptif intégral.
+  - Bouton large `FERMER L'INDICE` ($\ge 44$ px), avec fermeture au toucher du fond ou de la touche Échap.
+  - **Exclusion stricte :** Aucun bouton Modifier, Partager ou Favori.
+
+### 🧭 4. Navigation Fixe en Pied (10 Destinations Réelles)
+La hauteur du pied est réservée afin qu'aucun contenu défilant ne soit masqué :
+- **Rangée 1 &amp; 2 (6 destinations primaires en 2×3) :**
+  - Rangée A : `DIRECT`, **`■ ARCHIVES`** *(Actif — cyan plein #06b6d4, texte foncé)*, `PNJ`.
+  - Rangée B : `LIEUX`, `INVENTAIRE`, `CARTES`.
+- **Rangée 3 (4 actions rapides) :**
+  - `FICHE`, `NOTES`, `MESSAGES`, `QUITTER`.
+- Toutes les cibles tactiles respectent le standard $\ge 44 \times 44$ px avec arêtes vives à **0 px**.</pre>
+<p>Suggestion de Stitch : Décliner cet écran Archives au format Tablette Paysage (1180×820)</p>
+<p>Suggestion de Stitch : Tester l'état vide « Aucune archive disponible »</p>
+<p>Suggestion de Stitch : Passer à l'onglet suivant de la Tablette Joueur mobile (PNJ ou Lieux)</p>
+<h3>archives-paysage</h3>
+<pre>Voici la déclinaison de l'écran **Archives Joueur** au format **iPad Air paysage (1180 × 820 px)** (`GM-OS — Tablette Joueur : Archives (Tablette Paysage 1180×820)`), conçue dans la continuité exacte de l'écran mobile d'origine (`SCREEN_5`) et des spécifications du décor de test T0 :
+
+---
+
+### 📐 1. Agencement Paysage &amp; Ergonomie Tablette (1180 × 820 px)
+- **Format Zero-Scroll :** L'ensemble de la vue (en-tête joueur, sous-bandeau de télémesure compact, les deux colonnes d'archives et la barre de navigation complète en pied) s'intègre rigoureusement dans la hauteur de 820 px sans défilement vertical forcé.
+- **En-tête Joueur épuré :**
+  - À gauche : `■ GM-OS // JOUEUR` accompagné du surtitre de mission `SYS // OPÉRATION EN COURS : LE SILENCE DE VARN`.
+  - À droite : État réseau officiel **`■ ● CONNECTÉ`** en vert et bouton unique **`⚡ MODE PERFORMANCE`** (bascule qualité/performance avec cible $\ge 44 \times 44$ px).
+  - Aucune barre latérale ni bandeau régie PC du meneur.
+
+---
+
+### ⏱️ 2. Sous-bandeau de Télémesure Compact
+- **Horloge projetée fixe du téléphone :** **`13:28:26`** (ou `23:36:43`) en Space Mono avec la date `DIMANCHE 4 OCTOBRE 2026` et la pastille `TABLE`.
+- **Tension publique :** Libellé officiel complet et lisible **`ALERTE DE LA STATION`**, score **`3/8`**, rail segmenté à 8 crans (3 crans ambre/orange actifs, 5 éteints) et mention `PALIER 3 ENCLENCHÉ`. La tension secrète du meneur demeure strictement masquée.
+
+---
+
+### 📂 3. Organisation en Deux Colonnes (Les Deux Indices Côte à Côte)
+- **Titre &amp; Statut :** Grand intitulé `ARCHIVES DU GROUPE` en Orbitron, sous-titre `Preuves et indices collectés lors de la campagne.` et badge d'état `2 FRAGMENTS DÉCOUVERTS`.
+- **Deux indices côte à côte (50% / 50%) :**
+  1. **Indice 1 (gauche) :**
+     - Numérotation : `🗎 #01` et tag `FRAGMENT PHYSIQUE`.
+     - Titre : **`Le café encore chaud`**.
+     - Citation : *« Le départ date de moins d'une heure. »*.
+     - Métadonnées techniques : `LOCALISATION : SALLE COMMUNE` • `HORODATAGE : T-47 MIN`.
+     - Action tactile : **`👁 EXAMINER LE DOCUMENT`** ($\ge 44$ px) ouvrant la surcouche détaillée.
+  2. **Indice 2 (droite) :**
+     - Numérotation : `🗎 #02` et tag `REGISTRE DE BORD`.
+     - Titre : **`La signature unique`**.
+     - Citation : *« Tout le registre est signé « Hale », même les nuits où il dormait. »*.
+     - Métadonnées techniques : `SOURCE : TERMINAL DE CONTRÔLE` • `HORODATAGE : CYCLE 314-B`.
+     - Action tactile : **`👁 EXAMINER LE DOCUMENT`** ($\ge 44$ px) ouvrant la surcouche détaillée.
+- **Cartouche diégétique bas :** `■ SYS.SYNC // BUFFER LOCAL VALIDE // REGISTRE CENTRAL TEST T0`.
+- **Fidélité stricte :** Aucun troisième indice inventé, pas de barre de recherche, pas de filtre, pas de tri ni de bouton d'édition.
+
+---
+
+### 🔍 4. Surcouche de Détail Modale (Jamais un 3ᵉ indice)
+- L'activation d'un indice ouvre une **surcouche modale dédiée** au-dessus de l'écran, avec le contenu neutre du document d'archive en grand format, métadonnées de transcription, et bouton de fermeture tactile bien dimensionné ($\ge 44 \times 44$ px) ainsi que la prise en charge de la touche `Échap`.
+
+---
+
+### 🧭 5. Navigation Fixe Complète en Pied (10 Destinations Réelles)
+Toutes les commandes tactiles offrent une cible $\ge 44 \times 44$ px, réparties sur deux niveaux sans aucune troncature :
+1. **Rangée 1 (6 destinations primaires) :**
+   - `DIRECT`
+   - **`🗎 ■ ARCHIVES`** *(Actif — cyan plein #06b6d4, texte foncé #020617)*
+   - `PNJ`
+   - `LIEUX`
+   - `INVENTAIRE`
+   - `CARTES`
+2. **Rangée 2 (4 actions rapides) :**
+   - `◆ FICHE`
+   - `✎ NOTES`
+   - `✉ MESSAGES` *(libellé entier)*
+   - `⏹ QUITTER` *(avec modale de confirmation sécurisée)*
+
+---
+
+### 🛡️ Rigueur du Design System
+- Arêtes vives à **0 px** partout conformément aux spécifications *Brutal Diegetic Console*.
+- Typographie conforme : `Orbitron` pour les titres, `Inter` pour les textes ($\ge 14$ px), `Space Mono` pour les chiffres et identifiants, badges $\ge 11$ px.
+- Contrastes WCAG $\ge 4.5:1$ adaptés à la lecture à 1 mètre sous éclairage tamisé.</pre>
+<p>Suggestion de Stitch : Décliner l'écran PNJ / Roster au format iPad Air paysage 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'écran Lieux au format iPad Air paysage 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'écran Messages ou Notes au format iPad Air paysage 1180×820</p>
+<h3>pnj-telephone</h3>
+<pre>Voici l'écran **Trombinoscope (PNJ)** pour la **Tablette Joueur** au format **téléphone (390 × 844 px, fluide dès 360 px)** (`GM-OS — Tablette Joueur : Trombinoscope (390×844)`), réalisé dans le strict respect de la grammaire visuelle commune de GM-OS, des spécifications `HubTrombinoscope.tsx` / `HubNpcViewer.tsx` et du décor de test T0 :
+
+---
+
+### 📐 1. Format &amp; Ergonomie Mobile (390 × 844 px)
+- **Responsive dès 360 px :** Structure fluide avec marge de réserve en bas pour dégager l'intégralité du contenu au-dessus de la navigation fixe.
+- **En-tête Joueur compact :**
+  - Identité à gauche : `■ GM-OS // JOUEUR` et badge vert `● CONNECTÉ`.
+  - Bouton unique à bascule : **`⚡ MODE PERFORMANCE`** (hauteur $\ge 44$ px).
+  - Absence stricte de tout bandeau ou barre latérale de bureau PC du meneur.
+
+---
+
+### ⏱️ 2. Sous-bandeau de Télémesure
+- **Horloge projetée fixe :** **`23:36:50`** en JetBrains Mono avec date `Dimanche 4 octobre 2026` et pastille `TABLE`.
+- **Tension publique :** Libellé officiel **`ALERTE STATION`**, jauge **`3/8`** avec 3 segments allumés en orange/ambre sur 8 et mention `Alerte de la station` (la tension secrète du meneur reste strictement invisible).
+
+---
+
+### 👥 3. Zone Trombinoscope (HubTrombinoscope)
+- **Titre du module :** Grand titre **`TROMBINOSCOPE`** en Orbitron, sous-titre *« Registre des individus et entités identifiés. »* en Inter ($\ge 14$ px) et badge d'état **`1 PROFILS RÉPERTORIÉS`** ($\ge 11$ px).
+- **Profil unique :**
+  - **Superviseur Hale**
+  - Rôle : badge **`NEUTRAL`** et mention *« Civil / Neutre »*.
+  - Avatar absent : silhouette vectorielle neutre technique diégétique.
+  - Cible tactile de carte complète ($\ge 44 \times 44$ px).
+- **État vide secondaire :** Encadré discret en pointillés : *« Aucun autre sujet identifié / En attente de transmission par le MJ. »*
+- **Absence de toute fonction parasite :** Aucun champ de recherche, aucun filtre, aucun matricule, ni pourcentage technique inventé.
+
+---
+
+### 🔍 4. Surcouche de Visualisation (HubNpcViewer)
+- Au toucher de la carte du Superviseur Hale, affichage d'une surcouche modale scrollable :
+  - En-tête : **`Identité Non Documentée`**
+  - Nom complet : **`Superviseur Hale`**
+  - Profil : badge **`Civil / Neutre`**
+  - Description exacte : *« Répond trop vite aux questions qu'on ne lui a pas posées. »*
+  - Origine : **`Archives du Nexus`**
+  - Bouton tactile **`Fermer`** ($\ge 44$ px) et fermeture au toucher du fond sombre.
+  - **Exclusions strictes vérifiées :** Aucune faction, aucun PV, aucune statistique, aucune note d'interprétation, aucun secret MJ ni commande « contacter ».
+
+---
+
+### 🧭 5. Navigation Fixe Ancrée en Pied (10 Destinations Réelles)
+- **Rangée 1 (3 destinations) :** `DIRECT` | `ARCHIVES` | **`PNJ`** *(Actif — surligné cyan `#06b6d4` avec texte sombre)*
+- **Rangée 2 (3 destinations) :** `LIEUX` | `INVENTAIRE` | `CARTES`
+- **Rangée 3 (4 actions rapides) :** `FICHE` | `NOTES` | `MESSAGES` | `QUITTER` *(avec confirmation modale)*
+- Toutes les cibles tactiles respectent la taille minimale de **$44 \times 44$ px**.
+
+---
+
+### 🛡️ Design System Brutal Diegetic Console
+- Couleurs conformes à `DESIGN.md` : fond `#020617`, surfaces `#0f172a` et `#1e293b`, texte `#f8fafc`, texte estompé `#898c95`, accent cyan `#06b6d4`, danger `#ef4444`.
+- Arêtes vives à **0 px** partout et typographies officielles `Orbitron`, `Inter` et `JetBrains Mono`. Zoom tactile autorisé sans restriction.</pre>
+<p>Suggestion de Stitch : Décliner l'onglet PNJ en format iPad Paysage 1180×820</p>
+<p>Suggestion de Stitch : Afficher l'état ouvert de la surcouche HubNpcViewer sur mobile</p>
+<p>Suggestion de Stitch : Décliner l'onglet « Archives » ou « Lieux » sur mobile</p>
+<h3>pnj-paysage</h3>
+<pre>Voici la déclinaison de l'écran **Trombinoscope / PNJ** au format **iPad Air Paysage (1180 × 820 px)** (`GM-OS — Tablette Joueur : PNJ (Tablette Paysage 1180×820)`), réalisée dans le strict respect de l'écran mobile de référence, du décor e2e T0 et des principes de la console diegétique GM-OS :
+
+---
+
+### 📐 1. Agencement Paysage &amp; Exploitation de l'Espace (1180 × 820 px)
+- **Format Zero-Scroll équilibré :** L'écran utilise la largeur de 1180 px pour organiser côte à côte la liste d'identification et le volet de dossier détaillé, évitant tout défilement parasite.
+- **Bandeau Supérieur Joueur :**
+  - À gauche : `■ GM-OS // JOUEUR` accompagné du surtitre de mission `OPÉRATION EN COURS : LE SILENCE DE VARN`.
+  - À droite : Statut réseau officiel **`■ ● CONNECTÉ`** en vert et bouton tactile unique **`⚡ MODE PERFORMANCE`** ($\ge 44$ px de haut).
+  - Absence stricte de barre latérale de gestion ou de bandeau de régie PC du meneur.
+
+---
+
+### ⏱️ 2. Télémesure Compacte (Horloge &amp; Alerte Station)
+- **Horloge projetée :** Heure fixe **`23:36:50`** en Space Mono, date `Dimanche 4 octobre 2026`, pastille `TABLE`.
+- **Tension Publique :** Libellé officiel **`ALERTE DE LA STATION`**, score **`3/8`** avec jauge segmentée à 8 crans (3 crans orange/ambre allumés, 5 éteints). Aucune jauge ou donnée cachée du MJ n'est affichée.
+
+---
+
+### 👥 3. Section Trombinoscope &amp; Roster PNJ
+- **En-tête de section :** Titre `TROMBINOSCOPE` en Orbitron, sous-titre `Registre des individus et entités identifiés.` et badge `1 PROFILS RÉPERTORIÉS`.
+- **Colonne Gauche (Liste des profils) :**
+  - Carte active : **`Superviseur Hale`**, matricule diégétique technique, statut `NEUTRAL`, libellé `Civil / Neutre`.
+  - En dessous, le conteneur en tireté : *« Aucun autre sujet identifié / En attente de transmission par le MJ. »*
+  - **Fidélité stricte :** Aucun filtre, aucune barre de recherche, aucune statistique inventée ni faux boutons d'édition.
+
+---
+
+### 🗂️ 4. Dossier Détaillé Large (Côte à côte)
+- Présentation en deux volets structurés conformément au gabarit tablette :
+  1. **Volet gauche (Biométrie &amp; Identité) :**
+     - Cadre technique 1:1 avec silhouette neutre.
+     - Cartouche d'identification `SUPERVISEUR HALE` et statut civil.
+     - Données administratives de station : Affiliation *Varn Logistics*, Localisation *Module Central*, Accès *Niveau 2 - Supervision*.
+  2. **Volet droit (Biographie &amp; Rôle) :**
+     - Bloc fonctionnel : *« Fonction sur la station »* (superviseur en chef de la maintenance technique).
+     - Bloc narratif : *« Description du sujet »* (individu méthodique et pragmatique, attitude neutre envers l'équipage).
+  - Bouton **`✕ FERMER`** tactile sécurisé ($\ge 44 \times 44$ px) permettant de masquer/fermer le panneau.
+
+---
+
+### 🧭 5. Navigation Complète en Pied Fixe (10 Destinations Réelles)
+Toutes les commandes tactiles offrent une cible $\ge 44 \times 44$ px, réparties sur deux rangées :
+1. **Rangée 1 (6 destinations primaires) :**
+   - `DIRECT`
+   - `ARCHIVES`
+   - **`PNJ ●`** *(Actif — fond cyan plein #06b6d4, texte foncé)*
+   - `LIEUX`
+   - `INVENTAIRE`
+   - `CARTES`
+2. **Rangée 2 (4 actions rapides) :**
+   - `◆ FICHE`
+   - `✎ NOTES`
+   - `✉ MESSAGES` *(libellé complet)*
+   - `⏹ QUITTER` *(avec modale de confirmation)*
+
+---
+
+### 🛡️ Design System &amp; Accessibilité
+- Arêtes vives à **0 px** sur tous les composants.
+- Polices conformes : `Orbitron` pour les titres, `Inter` pour les descriptions ($\ge 14$ px), `Space Mono` pour l'horloge et les compteurs, étiquettes et badges à $\ge 11$ px.
+- Contrastes WCAG $\ge 4.5:1$ garantissant un confort de lecture optimal sous la lumière tamisée de la table de jeu.</pre>
+<p>Suggestion de Stitch : Décliner l'onglet Fiche au format tablette 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'onglet Notes au format tablette 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'onglet Messages au format tablette 1180×820</p>
+<h3>lieux-telephone</h3>
+<pre>L'écran mobile **« Lieux » (HubAtlas)** a été généré avec fidélité au format téléphone **390 × 844 px** (utilisable dès 360 px) conformément aux spécifications du banc T0 (`e2e/donnees/campagne-de-demo.json`, `HubAtlas.tsx` et `HubAtlasViewer.tsx`) :
+
+### 📐 1. Respect Strict de la Grammaire GM-OS &amp; du Design System
+- **Couleurs &amp; Surfaces :** Fond `#020617`, surfaces `#0f172a` et `#1e293b`, bordures `#1e293b`, texte principal `#f8fafc`, texte secondaire `#898c95`, accent cyan `#06b6d4`, alerte `#ef4444`, tension ambre `#f59e0b`.
+- **Typographie :** `Orbitron` pour les titres, `Inter` pour le corps de texte ($\ge 14$ px), `JetBrains Mono` pour les chiffres et l'horloge, badges et mentions d'état à $\ge 11$ px.
+- **Formes &amp; Cibles :** Arêtes vives à **0 px** partout, toutes cibles tactiles interactives $\ge 44 \times 44$ px, aucun blocage de zoom.
+- **Absence de régie PC :** Aucun bandeau ni barre latérale de bureau du meneur.
+
+---
+
+### ⏱️ 2. En-tête Compact &amp; Télémesure
+- **En-tête Joueur :** `GM-OS // JOUEUR`, indicateur `CONNECTÉ` vert et bouton tactile unique **`⚡ MODE PERFORMANCE`** (bascule dynamique vers `MODE QUALITÉ`).
+- **Horloge :** `23:36:58`, date `Dimanche 4 octobre 2026`, pastille `TABLE`.
+- **Tension Publique :** Uniquement la jauge autorisée **`ALERTE DE LA STATION 3/8`** avec rail segmenté de 8 crans (3 crans ambre actifs, 5 éteints) et mention *« Palier 3 enclenché »*.
+
+---
+
+### 🗺️ 3. HubAtlas : Atlas des Lieux Visités
+- **En-tête de section :** Titre `Atlas des Lieux Visités`, sous-titre `Cartographie des territoires explorés par le groupe.`, badge `1 LIEUX DÉCOUVERTS`.
+- **Carte touchable unique « Station Varn » :**
+  - Titre `Station Varn`, badge `BATTLEMAP` en Space Mono.
+  - Description exacte : *« Le pont C, entre le sas et le relais. »*
+  - **Plan de Station Varn :** Emplacement neutre filaire et diégétique réservé au PNG technique officiel (avec les mentions exactes *SAS*, *QUARTIERS*, *INFIRMERIE*, *REGISTRE*, *SOUTE*, *RELAIS* et couloir en croix), sans aucune illustration générée par IA.
+  - Mention d'action : `EXPLORATION DOCUMENTÉE` / `TOUCHER POUR DÉTAIL →`.
+- **État vide :** Présence du bloc *« Territoires inconnus / Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu. »*
+
+---
+
+### 🔍 4. Surcouche Modale (HubAtlasViewer)
+- Au toucher de la carte, ouverture du viewer en surcouche modale :
+  - Badge `battlemap` et libellé `Lieu Visité`.
+  - Titre `Station Varn`, sous-titre `Exploration Documentée`.
+  - Description : *« Le pont C, entre le sas et le relais. »*
+  - Plan technique neutre agrandi `Plan de Station Varn`.
+  - Répertoire : `Atlas du Nexus`.
+  - Bouton `Fermer` ($\ge 44$ px) et fermeture par toucher du fond ou touche Échap.
+
+---
+
+### 🧭 5. Navigation Fixe en Pied Répartie
+- **Rangée 1 (3 destinations) :** `DIRECT`, `ARCHIVES`, `PNJ`.
+- **Rangée 2 (3 destinations) :** **`LIEUX ●`** *(actif en cyan plein #06b6d4)*, `INVENTAIRE`, `CARTES`.
+- **Rangée 3 (4 actions rapides) :** `◆ FICHE`, `✎ NOTES`, `✉ MESSAGES`, `⏹ QUITTER` *(avec modale de confirmation)*.
+- **Réserve de hauteur :** Le conteneur principal dispose d'un padding inférieur réservé de 148 px afin qu'aucun élément ne soit masqué par la navigation fixe.</pre>
+<p>Suggestion de Stitch : Décliner cet écran Lieux en format Tablette Paysage 1180×820</p>
+<p>Suggestion de Stitch : Passer à l'écran suivant (Archives ou PNJ au format 390×844)</p>
+<p>Suggestion de Stitch : Tester l'interaction de la surcouche de plan HubAtlasViewer</p>
+<h3>lieux-paysage</h3>
+<pre>Voici la déclinaison de l'écran **Lieux** pour la Tablette Joueur au format **iPad Air Paysage (1180 × 820 px)** (`GM-OS — Tablette Joueur : Lieux (Tablette Paysage 1180×820)`), réalisée dans le strict respect de l'écran mobile de référence, de la charte *GM-OS Brutal Diegetic Console* et du décor fictif du banc de test e2e T0 :
+
+---
+
+### 📐 1. Agencement Paysage (1180 × 820 px)
+- **Format Zero-Scroll calibré :** L'intégralité du contenu s'inscrit dans les 820 px de hauteur verticale avec une marge de sécurité pour le bloc fixe de navigation en pied.
+- **En-tête Joueur :**
+  - À gauche : `■ GM-OS // JOUEUR` et surtitre d'opération `OPÉRATION EN COURS : LE SILENCE DE VARN`.
+  - À droite : État officiel **`■ ● CONNECTÉ`** en vert et bouton tactile unique **`⚡ MODE PERFORMANCE`** (bascule qualité/performance, hauteur $\ge 44$ px).
+  - Aucune barre latérale ni bandeau de régie PC du meneur.
+
+---
+
+### ⏱️ 2. Sous-bandeau de Télémesure Compact
+- **Horloge projetée fixe du téléphone :** **`23:36:58`** en Space Mono, date `Dimanche 4 octobre 2026`, pastille `TABLE`.
+- **Seule tension publique autorisée :** **`ALERTE DE LA STATION 3/8`** avec jauge segmentée à 8 crans (3 crans orange/ambre allumés, 5 éteints) et mention `[Palier 3 enclenché]`. La tension secrète du meneur demeure strictement occultée.
+
+---
+
+### 🗺️ 3. Zone Centrale : Atlas des Lieux Visités
+- **Titre de module :** Grand titre `ATLAS DES LIEUX VISITÉS` en Orbitron, sous-titre `Cartographie des territoires explorés par le groupe.` et badge `1 LIEUX DÉCOUVERTS`.
+- **Carte unique de lieu (« STATION VARN ») :**
+  - Badge de catégorie : `BATTLEMAP` et sous-titre `SECTEUR 03 // DÉPRESSURISÉ`.
+  - Description authentique : *« Le pont C, entre le sas et le relais. »* (texte en Inter à 14 px).
+  - **Emplacement pour plan technique :** Caisson quadrillé diégétique `PLAN DE STATION VARN` avec repères filaires, échelle `1:100`, mention neutre `[Emplacement neutre du plan technique]` et action `TOUCHER POUR EXAMINER`.
+  - En pied de carte : Mention `EXPLORATION DOCUMENTÉE` et bouton tactile plein **`TOUCHER POUR DÉTAIL →`** ($\ge 44 \times 44$ px).
+- **Panneau latéral droit :**
+  - Section `TERRITOIRES INCONNUS` avec la mention exacte : *« Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu. »*
+  - Rappel technique sobre des secteurs occultés (`Pont B, D, Labo`) et du réseau sensoriel sans ajout de données superflues.
+
+---
+
+### 🔍 4. Surcouche de Détail &amp; Plan Agrandi
+- Au toucher du plan ou du bouton `TOUCHER POUR DÉTAIL`, ouverture d'une vue modale large :
+  - **À gauche :** Plan agrandi avec quadrillage technique et repères du sas et du relais.
+  - **À droite :** Description détaillée et statut opérationnel du pont C.
+  - **Bouton de fermeture :** Bouton `✕ FERMER` ($\ge 44 \times 44$ px) situé en haut à droite, fermeture également possible par clic sur le fond ou touche Échap.
+- **Règle stricte :** Aucun outil de zoom ou déplacement, pas de bouton d'édition ni de filtrage inventé.
+
+---
+
+### 🧭 5. Navigation Complète en Pied Fixe (10 Destinations Réelles)
+Toutes les commandes tactiles offrent une cible $\ge 44 \times 44$ px, réparties en deux rangées ancrées :
+1. **Rangée 1 (6 destinations primaires) :**
+   - `DIRECT`
+   - `ARCHIVES`
+   - `PNJ`
+   - **`LIEUX ●`** *(Actif — cyan plein #06b6d4, texte foncé)*
+   - `INVENTAIRE`
+   - `CARTES`
+2. **Rangée 2 (4 actions rapides) :**
+   - `◆ FICHE`
+   - `✎ NOTES`
+   - `✉ MESSAGES` *(libellé complet sans abréviation)*
+   - `⏹ QUITTER` *(avec demande de confirmation modale sécurisée)*
+
+---
+
+### 🛡️ Design System &amp; Rigueur des Règles
+- Arêtes vives à **0 px** partout.
+- Typographie conforme : `Orbitron` pour les titres, `Inter` pour les descriptions ($\ge 14$ px), `Space Mono` pour l'heure et les métriques, badges et étiquettes $\ge 11$ px.
+- Contrastes WCAG $\ge 4.5:1$ adaptés à la pénombre de table.
+- Décor strictement fictif issu du banc e2e T0, 100% en français.</pre>
+<p>Suggestion de Stitch : Décliner l'onglet Archives en tablette paysage 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'onglet PNJ / Trombinoscope en tablette paysage 1180×820</p>
+<p>Suggestion de Stitch : Ouvrir la surcouche de détail de la Station Varn par défaut</p>
+<h3>messages-telephone</h3>
+<pre>Voici la réalisation de l'écran **Tablette Joueur : Messagerie** (format mobile 390 × 844 px, utilisable dès 360 px) en stricte conformité avec le décor de banc T0 (`HubMessenger.tsx`, `e2e/tabletteJoueursT0.spec.ts`) et la charte **GM-OS Brutal Diegetic Console** :
+
+### 📐 1. Architecture &amp; Format Mobile (390 × 844 px)
+- **Surcouche par-dessus Direct :** La vue `Direct` reste visible en arrière-plan estompé (titre d'opération *« Le Silence de Varn »*, cadre de projection *« En attente du signal table »* et bloc chroniques *« Aucun résumé public. »*).
+- **En-tête joueur compact :** Identifiant `GM-OS // JOUEUR`, pastille réseau `● CONNECTÉ`, bouton tactile unique `⚡ MODE PERFORMANCE`, horloge projetée à **`23:37:32`** (`Dimanche 4 octobre 2026`) et jauge publique unique **`ALERTE STATION 3/8`** (3 crans ambre/orange actifs sur 8).
+- **Zéro composant PC :** Aucun panneau de réglages, aucun bandeau de bureau MJ, aucune barre latérale de régie.
+
+### 💬 2. Volet de Messagerie (`HubMessenger.tsx`)
+- **En-tête du volet :** Titre `MESSAGERIE`, libellé de canal dynamique (`Canal Direct MJ / Privé` ou `Canal Général`), et bouton de fermeture tactile `✕ FERMER` ($\ge 44 \times 44$ px).
+- **Sélecteur de destinataire :**
+  - Bouton déroulant affichant le destinataire sélectionné avec icône neutre.
+  - Les **4 choix exacts** sans filtre de statut connecté :
+    1. **Maître du Jeu** (`Canal Direct MJ / Privé`)
+    2. **Tous les Joueurs** (`Canal Général`)
+    3. **Idris Koa** (`Canal Privé`)
+    4. **Sora Adebayo** (`Canal Privé`)
+  - Le changement de destinataire adapte la conversation et l'avertissement de confidentialité.
+- **Fil de conversation au repos (2 messages de démo exacts) :**
+  - `VOUS` `23:37` : *« Le relais est ouvert. »* (aligné à droite, accent cyan).
+  - `MAÎTRE DU JEU` `23:37` : *« Vous entendez trois coups. »* (aligné à gauche avec bordure d'accent ambre).
+- **Avertissement de confidentialité diégétique :**
+  - Pour le MJ : *« 🔒 Seul le Maître du Jeu pourra lire ce message. »*
+  - Pour Tous les Joueurs : *« 👥 Tout le monde pourra lire ce message. »*
+  - Pour un PJ : *« 🔒 Seul [Nom] pourra lire ce message. »*
+- **Saisie &amp; Envoi :**
+  - Zone de saisie `textarea` avec placeholder dynamique (`Message à Maître du Jeu...`).
+  - Bouton tactile d'envoi $\ge 44$ px (désactivé si le champ est vide ou ne contient que des espaces).
+  - Raccourcis clavier complets : `Enter` pour envoyer, `Shift+Enter` pour sauter une ligne.
+  - Ajout local en direct du message saisi dans la conversation sans inventer de fausse réponse du MJ.
+- **Exclusions strictes :** Aucune pièce jointe, aucun appel, aucune suppression, aucun accusé de lecture ni matricule inventé.
+
+### 🧭 3. Navigation Fixe en Pied (Hauteur réservée)
+- **6 destinations primaires (2 rangées de 3) :**
+  - Rangée 1 : `DIRECT`, `ARCHIVES`, `PNJ`
+  - Rangée 2 : `LIEUX`, `INVENTAIRE`, `CARTES`
+- **4 actions rapides (1 rangée de 4) :**
+  - `FICHE`, `NOTES`, **`MESSAGES ●`** (mis en avant en surbrillance active tant que le panneau est ouvert), `QUITTER`.
+- Hauteur de navigation intégralement réservée : tout le contenu défile librement au-dessus sans obstruction. Cibles tactiles $\ge 44 \times 44$ px, texte de lecture $\ge 14$ px et badges $\ge 11$ px.</pre>
+<p>Suggestion de Stitch : Tester la sélection du destinataire 'Tous les Joueurs' avec son canal général</p>
+<p>Suggestion de Stitch : Décliner la version iPad paysage 1180×820 de cette messagerie</p>
+<p>Suggestion de Stitch : Passer à la déclinaison de l'onglet 'Fiche' ou 'Notes' du joueur</p>
+<h3>messages-paysage</h3>
+<pre>Voici la déclinaison de l'écran **Messagerie Joueur** au format **iPad Air Paysage (1180 × 820 px)** (`GM-OS — Tablette Joueur : Messagerie (Tablette Paysage 1180×820)`), réalisée dans le strict respect de l'écran mobile d'origine, des captures de référence et du décor de test e2e T0 :
+
+---
+
+### 📐 1. Agencement Paysage (1180 × 820 px) &amp; Écran Direct en Arrière-Plan
+- **Vue Direct en fond (à gauche) :** La vue principale du canal de projection du meneur en veille (`CANAL DIRECT // PROJECTION`, icône standby, fréquence d'écoute `142.800 MHz`) et le bloc des `CHRONIQUES DE SÉANCE` (*« Aucun résumé public. »*) restent visibles en arrière-plan.
+- **Panneau latéral Messagerie (à droite, ~440 px) :**
+  - Superposé sur le flanc droit de la tablette sans jamais déborder ni masquer la barre de navigation en pied.
+  - En-tête avec titre technique `MESSAGERIE // CANAL DIRECT MJ` et bouton tactile de fermeture **`✕ FERMER`** ($\ge 44 \times 44$ px).
+
+---
+
+### 💬 2. Contenu Strict de la Messagerie (Zéro Donnée Inventée)
+- **Destinataire unique :** `Maître du Jeu` (`Canal Direct MJ / Privé`), avec badge d'authentification `PRIVÉ`. Aucun contact supplémentaire inventé.
+- **Fil d'échange réel de la capture téléphone :**
+  - Message émis (**VOUS 23:37**) aligné à droite, bordure cyan : *« Le relais est ouvert. »* avec mention `REMIS // CHIFFRÉ 256-BIT`.
+  - Réponse reçue (**MAÎTRE DU JEU 23:37**) alignée à gauche, bordure ambre : *« Vous entendez trois coups. »* avec mention `TRANSMISSION REÇUE • CANAL PRIORITAIRE`.
+- **Zone de saisie tactile inférieure :**
+  - Mention de confidentialité diégétique : `🔒 Seul le Maître du Jeu pourra lire ce message.`
+  - Champ de texte tactile : *« Écrire au Maître du Jeu... »*
+  - Bouton d'action tactile plein cyan : **`ENVOYER`** ($\ge 44$ px de hauteur).
+
+---
+
+### ⏱️ 3. Bandeau Supérieur &amp; Télémesure Fixe
+- **En-tête joueur :** `■ GM-OS // JOUEUR`, surtitre `OPÉRATION EN COURS : LE SILENCE DE VARN`, indicateur réseau vert `■ ● CONNECTÉ` et bouton tactile `⚡ MODE PERFORMANCE`.
+- **Sous-bandeau :** Horloge projetée **`23:37:32`** en Space Mono, date `Dimanche 4 octobre 2026`, pastille `TABLE`. Tension publique `ALERTE DE LA STATION 3/8` avec rail segmenté à 3 crans ambre/orange. Tension secrète du meneur rigoureusement exclue.
+
+---
+
+### 🧭 4. Navigation Complète en Pied Fixe (10 Destinations Réelles)
+Le panneau de messagerie s'arrête exactement au-dessus du pied pour laisser la barre de navigation 100 % accessible au doigt :
+1. **Rangée 1 (6 destinations primaires) :**
+   - `DIRECT`, `ARCHIVES`, `PNJ`, `LIEUX`, `INVENTAIRE`, `CARTES`.
+2. **Rangée 2 (4 actions rapides) :**
+   - `◆ FICHE`, `✎ NOTES`, **`✉ MESSAGES ■ 1`** *(Actif — en surbrillance avec indicateur de message non lu)*, `⏹ QUITTER` *(avec confirmation)*.
+
+---
+
+### 🛡️ Rigueur du Design System
+- Arêtes vives à **0 px**, typographies officielles (`Orbitron` pour les titres, `Inter` $\ge 14$ px pour le corps, `Space Mono` pour les chiffres/horloges, badges $\ge 11$ px).
+- Contrastes WCAG $\ge 4.5:1$ calibrés pour une utilisation nocturne et tamisée sur tablette.
+- Export HTML fluide et autonome sans aucun défilement vertical parasite.</pre>
+<p>Suggestion de Stitch : Décliner l'onglet FICHE joueur en 1180×820</p>
+<p>Suggestion de Stitch : Décliner l'onglet NOTES joueur en 1180×820</p>
+<p>Suggestion de Stitch : Tester l'état avec panneau messagerie fermé (vue Direct plein écran)</p>
+<h3>notifications-telephone</h3>
+<pre>Voici l'écran **Tablette Joueur : Notifications (Surcouche de Direct)** au format téléphone **390 × 844 px** (utilisable dès 360 px), conçu dans le respect strict des spécifications du banc T0 (`e2e/donnees/campagne-de-demo.json` et `e2e/tabletteJoueursT0.spec.ts`) et de la charte **Brutal Diegetic Console** :
+
+---
+
+### 📐 1. Format &amp; Gabarit Mobile (390 × 844 px)
+- **Ergonomie mobile dédiée :** Cadre autonome centré sans aucun bandeau ni barre latérale de bureau PC.
+- **En-tête joueur compact :**
+  - Identité : `■ GM-OS // JOUEUR` et statut réseau officiel **`■ CONNECTÉ`** en vert.
+  - Bouton tactile unique de bascule **`⚡ MODE PERFORMANCE`** (hauteur $\ge 44$ px).
+  - Surtitre de campagne : `OPÉRATION EN COURS : LE SILENCE DE VARN`.
+  - Horloge projetée : **`23:38:05`** en Space/JetBrains Mono avec date `Dimanche 4 octobre 2026` et pastille `TABLE`.
+  - Tension publique : Seule jauge autorisée **`ALERTE DE LA STATION 3/8`** avec 3 segments orange/ambre allumés (la tension secrète du MJ demeure totalement occultée).
+
+---
+
+### 📺 2. Fond d'Écran : Vue « Direct »
+- **Canal de projection central :** Cadre filaire technique avec repères d'angles `┌ ┐ └ ┘`, badge `STANDBY`, pictogramme d'onde et mention diégétique *« EN ATTENTE DU SIGNAL TABLE »* (aucun faux média ni placeholder inventé).
+- **Chroniques de séance :** Bloc `SÉANCE 2` affichant sobrement la mention d'origine *« Communiqué officiel : « Aucun résumé public. » »*.
+
+---
+
+### 📩 3. Surcouche Toast « Nouveau Message » (MessageToast)
+- **Positionnement ergonomique :** Carte touchable ancrée juste au-dessus de la barre de navigation fixe, n'obstruant aucune action critique.
+- **Contenu strict :**
+  - Pictogramme terminal/message cyan.
+  - Titre : `NOUVEAU MESSAGE`.
+  - Expéditeur officiel : `Maître du Jeu (Maître du Jeu)`.
+  - Bouton tactile d'ouverture : `TOUCHER POUR OUVRIR →` ($\ge 44 \times 44$ px).
+  - **Fidélité absolue :** Aucun extrait du contenu n'est dévoilé à ce stade dans le toast.
+  - **Exclusions strictes :** Aucun bouton « Tout marquer comme lu », pas d'historique, pas de cloche ni de diagnostic.
+
+---
+
+### 💬 4. Messagerie Tactique Intégrée (« Canal Direct MJ »)
+- **Ouverture interactive :** Toucher le toast (ou l'onglet `MESSAGES`) déploie la fenêtre modale de messagerie instantanée du joueur (`HubMessenger`).
+- **Contenu du message reçu :**
+  - Expéditeur : `Maître du Jeu` (avec horodatage `23:38`).
+  - Texte authentique du banc T0 : **« Le sas vient de se fermer. »**
+- **Action de réponse :** Champ de saisie tactile `Écrire au Maître du Jeu...` et bouton d'envoi **`ENVOYER`** ($\ge 44$ px).
+- **Gestion du badge :** Le badge `1` non lu disparaît immédiatement dès l'ouverture de la messagerie.
+- Bouton de fermeture supérieur droit `✕ FERMER` ($\ge 44 \times 44$ px).
+
+---
+
+### 🧭 5. Navigation Complète en Pied Fixe
+La barre de navigation reste ancrée en bas avec une réserve d'espace dédiée pour éviter tout masquage de contenu :
+1. **Les 6 destinations primaires (2 rangées de 3) :**
+   - **`DIRECT`** *(Actif — surligné cyan)* | `ARCHIVES` | `PNJ`
+   - `LIEUX` | `INVENTAIRE` | `CARTES`
+2. **Les 4 actions rapides (1 rangée de 4) :**
+   - `◆ FICHE` | `✎ NOTES` | `✉ MESSAGES` *(avec badge `1` dédié qui ne masque pas le texte)* | `⏹ QUITTER` *(avec confirmation)*
+
+---
+
+### 🛡️ Design System &amp; Accessibilité
+- Palette stricte : Fond `#020617`, surfaces `#0f172a`/`#1e293b`, accents `#06b6d4`, alertes `#ef4444` et `#f59e0b`.
+- Typographie conforme : `Orbitron` pour les titres, `Inter` pour les textes ($\ge 14$ px), `JetBrains/Space Mono` pour les chiffres.
+- Arêtes vives à **0 px** et cibles tactiles $\ge 44 \times 44$ px.</pre>
+<p>Suggestion de Stitch : Tester l'ouverture de la messagerie Canal Direct MJ</p>
+<p>Suggestion de Stitch : Décliner cet écran Notifications en tablette paysage (1180×820)</p>
+<p>Suggestion de Stitch : Passer à la fiche de personnage joueur (Nel Varga)</p>
+<h3>notifications-paysage</h3>
+<pre>Voici la déclinaison de l'écran **Notifications &amp; Direct** pour la Tablette Joueur au format **iPad Air Paysage (1180 × 820 px)** (`GM-OS — Tablette Joueur : Notifications &amp; Direct (1180×820)`), réalisée dans le strict respect de l'écran mobile d'origine (`SCREEN_6`), de la messagerie (`SCREEN_3`), et de vos consignes :
+
+---
+
+### 📐 1. Agencement Paysage (1180 × 820 px) &amp; Écran de Fond « Direct »
+- **Gabarit Zero-Scroll 1180 × 820 :** L'ensemble de la régie joueur tient dans l'espace utile avec marge réservée pour la navigation fixe en pied.
+- **En-tête Joueur :**
+  - Identité à gauche : `■ GM-OS // JOUEUR` et surtitre d'opération `OPÉRATION EN COURS : LE SILENCE DE VARN`.
+  - Statut à droite : Indicateur réseau officiel **`■ ● CONNECTÉ`** en vert et bouton unique tactile **`⚡ MODE PERFORMANCE`** ($\ge 44$ px).
+  - Absence stricte de bandeau ou barre latérale de régie PC du meneur.
+- **Télémesure compacte :**
+  - Horloge projetée fixe du téléphone : `HORLOGE TABLE : 13:24:50 Dimanche 4 octobre 2026`.
+  - Tension publique seule : `ALERTE DE LA STATION : 3/8` avec jauge segmentée à 8 crans (3 crans ambre/orange actifs, 5 éteints).
+- **Fond Direct :**
+  - `FLUX DIRECT // MENEUR [STANDBY]` avec fréquence `142.850 MHZ` et réception nominale.
+  - Viseur central avec mentions *« EN ATTENTE DU SIGNAL TABLE »* et *« CANAL SÉLECTIONNÉ : PROJECTION PRINCIPALE »*.
+  - Bloc `CHRONIQUES DE SÉANCE (SÉANCE 2)` avec le communiqué officiel : *« Aucun résumé public. »*.
+
+---
+
+### 🔔 2. Carte Notification Unique &amp; Surcouche Messagerie
+- **Carte Notification au-dessus du pied :**
+  - Carte unique sans centre de notifications ni bouton d'effacement : `NOUVEAU MESSAGE` / `Maître du Jeu / Maître du Jeu`.
+  - Bouton tactile large **`TOUCHER POUR OUVRIR →`** ($\ge 44 \times 44$ px).
+- **Surcouche Messagerie à droite :**
+  - S'ouvre sur le panneau latéral droit sans quitter la scène de fond :
+    - En-tête : `MESSAGERIE // CANAL DIRECT MJ` avec bouton **`✕ FERMER`** ($\ge 44 \times 44$ px).
+    - Sélecteur de destinataire : `Maître du Jeu (Canal Direct MJ / Privé)`.
+    - Historique du dialogue :
+      - *VOUS (23:37)* : « Le relais est ouvert. »
+      - *MAÎTRE DU JEU (23:37)* : « Vous entendez trois coups. »
+    - Mention de sécurité : *« 🔒 Seul le Maître du Jeu pourra lire ce message. »*
+  - Fermeture immédiate par le bouton `✕ FERMER` ou la touche Échap.
+
+---
+
+### 🧭 3. Navigation Fixe Complète en Pied (10 Destinations Réelles)
+Toutes les commandes tactiles offrent une cible $\ge 44 \times 44$ px, réparties en deux rangées ancrées :
+1. **Rangée 1 (6 destinations primaires) :**
+   - **`📺 DIRECT`** *(Actif — accent cyan)*
+   - `📁 ARCHIVES`
+   - `👤 PNJ`
+   - `🏢 LIEUX`
+   - `🎒 INVENTAIRE`
+   - `🗺 CARTES`
+2. **Rangée 2 (4 actions rapides) :**
+   - `🪪 FICHE`
+   - `📝 NOTES`
+   - **`✉ MESSAGES [1]`** *(avec badge d'alerte `1` bien visible)*
+   - `⏻ QUITTER` *(avec demande de confirmation sécurisée)*
+
+---
+
+### 🛡️ Design System &amp; Accessibilité
+- Arêtes vives à **0 px** partout.
+- Typographie conforme : `Orbitron` pour les titres, `Inter` pour les textes courants ($\ge 14$ px), `Space Mono` pour l'horloge et les chiffres, badges $\ge 11$ px.
+- Contrastes WCAG $\ge 4.5:1$ garantis pour la lecture à distance en pièce tamisée.
+- Aucune invention de données techniques, statistiques, diagnostics ou filtres. Libellés 100% en français.</pre>
+<p>Suggestion de Stitch : Tester l'ouverture de la messagerie latérale droite</p>
+<p>Suggestion de Stitch : Décliner la vue détaillée de l'onglet Fiche Joueur (1180×820)</p>
+<p>Suggestion de Stitch : Décliner l'onglet Notes Joueur (1180×820)</p></div></details>
+  </section>
+</main>
+<script>
+  let avant = false;
+  function afficher() {
+    const largeur = document.getElementById('largeur').value;
+    for (const [ecran, numero] of [['accueil', '01-accueil'], ['direct', '02-direct'], ['inventaire', '10-inventaire'], ['cartes', '12-cartes'], ['archives','04-archives'], ['pnj','06-pnj'], ['lieux','08-lieux'], ['messages','14-messages'], ['notifications','16-notification-message']]) {
+      const mobile = avant ? '../T0-joueurs/telephone/' + numero + '.png' : 'rendus/' + ecran + '-telephone-' + largeur + '.png';
+      const paysage = avant ? '../T0-joueurs/paysage/' + numero + '.png' : 'rendus/' + ecran + '-paysage-1180.png';
+      document.getElementById(ecran + '-mobile').src = mobile;
+      document.getElementById(ecran + '-mobile-lien').href = mobile;
+      document.getElementById(ecran + '-paysage').src = paysage;
+      document.getElementById(ecran + '-paysage-lien').href = paysage;
+    }
+    document.getElementById('propositions').setAttribute('aria-pressed', String(!avant));
+    document.getElementById('references').setAttribute('aria-pressed', String(avant));
+    document.getElementById('precision').textContent = avant ? 'T0 : téléphone 390 × 844 et paysage 1180 × 820.' : 'iPad paysage : 1180 × 820.';
+  }
+  document.getElementById('propositions').onclick = () => { avant = false; afficher(); };
+  document.getElementById('references').onclick = () => { avant = true; afficher(); };
+  document.getElementById('largeur').onchange = afficher;
+</script>
+</body>
+</html>
