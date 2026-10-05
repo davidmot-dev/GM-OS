@@ -45,7 +45,12 @@ surveillerLaFrappe((perdue) => {
   thème par défaut avant de basculer sur le bon.
 */
 const etat = useSessionStore.getState();
-appliquerLeTheme(etat.theme, etat.themeColor, undefined, { personnalites: etat.personnalites });
+// Un navigateur de tablette attend le PC : son ancien localStorage n'est pas un réglage de table.
+if (window.appBridge) {
+  appliquerLeTheme(etat.theme, etat.themeColor, undefined, { personnalites: etat.personnalites });
+} else {
+  appliquerLeTheme('cyberpunk');
+}
 
 /*
   **Une seule fois ici, et c'est délibéré.** La suite appartient à
@@ -60,7 +65,7 @@ appliquerLeTheme(etat.theme, etat.themeColor, undefined, { personnalites: etat.p
 
 // Enregistrement de la PWA (uniquement pour le Tablet Hub / Navigateur, pas pour Electron)
 if (!window.appBridge && 'serviceWorker' in navigator) {
-  // @ts-ignore : virtual module from vite-plugin-pwa
+  // @ts-expect-error : module virtuel fourni par vite-plugin-pwa à la construction
   import('virtual:pwa-register').then(({ registerSW }) => {
     registerSW({ immediate: true });
     console.log('[PWA] Service Worker registered for Tablet Hub');

@@ -213,8 +213,8 @@ clavier de Safari, la reconnexion après une mise en veille.
 
 | Phase | État |
 | :--- | :--- |
-| T0 · État des lieux | 🔄 **Relevé complet sur les deux surfaces** : [joueurs, 54 captures et 39 scénarios](2026-10-04-T0-tablette-joueurs.md) ; [meneur, 68 captures et 44 scénarios](2026-10-05-T0-tablette-meneur.md). Le banc MJ compte 40 réussites ordinaires et 4 échecs attendus. Défauts connus au § 1 bis du registre ; sortie stricte à arbitrer avant T1. |
-| T1 · Le thème voyage | ⏳ |
+| T0 · État des lieux | 🔄 **Relevé complet sur les deux surfaces** : [joueurs, 54 captures et 39 scénarios](2026-10-04-T0-tablette-joueurs.md) ; [meneur, 68 captures et 44 scénarios](2026-10-05-T0-tablette-meneur.md). Le banc MJ compte 40 réussites ordinaires et 4 échecs attendus. Défauts connus au § 1 bis du registre ; sortie stricte encore à arbitrer. David a ouvert T1 malgré ces défauts. |
+| T1 · Le thème voyage | ✅ **Implémenté le 05/10** : [relevé T1](2026-10-05-T1-apparence-tablettes.md), thème de base, accent, personnalités, jetons et icônes du jeu sur les deux tablettes ; reconnexion et bascule en moins d'une seconde éprouvées en E2E. Les polices du jeu sont incorporées sur le PC et diffusées localement quand leur source est disponible. |
 | T2 · Habillage par le socle | ⏳ |
 | T3 · Maquettes Stitch | ⏳ |
 | T4 · Réagencement (J1, J2, M1, M2) | ⏳ |

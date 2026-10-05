@@ -44,6 +44,8 @@ export class SyncServer {
     private mainWindow: BrowserWindow;
     private tempMediaDir: string;
     private deviceSocketMap = new Map<string, Set<WebSocket>>();
+    /** Dernier segment public d'apparence, pour le client qui s'enregistre après la diffusion initiale. */
+    private derniereApparence: unknown = null;
 
     constructor(mainWindow: BrowserWindow, port: number, tempMediaDir: string) {
         this.mainWindow = mainWindow;
@@ -426,6 +428,9 @@ export class SyncServer {
             
             // Confirm registration and send role back
             ws.send(JSON.stringify({ type: 'remote:registered', payload: { deviceId: actualDeviceId, role: ws.role } }));
+            if (this.derniereApparence) {
+                ws.send(JSON.stringify({ type: 'sync', payload: { apparence: this.derniereApparence } }));
+            }
         } catch (err: any) {
             if (err.message === 'character_taken') {
                 ws.send(JSON.stringify({ 
@@ -497,6 +502,9 @@ export class SyncServer {
 
     private registerIpcHandlers() {
         ipcMain.on('remote:broadcast-sync', (_event, data, role?: string) => {
+            if (data?.apparence && (role === 'player' || role === 'remote')) {
+                this.derniereApparence = data.apparence;
+            }
             this.broadcastAction({ type: 'sync', payload: data }, undefined, role);
         });
 

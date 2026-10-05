@@ -24,6 +24,7 @@ import { getDifferentialPayload } from '../../../utils/syncUtils';
 import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { crossWindowSync } from '../../../services/CrossWindowEventService';
 import { cartesRestantesPourLaTable, mainsPourLaTable } from '../../session/logic/mainsDuPaquet';
+import { abonnerApparenceTablettes, lireApparenceTablettes } from '../../../theme/apparenceTablettes';
 
 /**
  * Intervalle minimal entre deux synchronisations **forcées**.
@@ -411,6 +412,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const reservesStore = useRessourcesDeTableStore.getState();
 
             const fullState = {
+                apparence: lireApparenceTablettes(),
                 sounds, moments: storyboardStore.moments.filter(m => String(m.campaignId) === String(currentCampaignId)).map(m => ({ id: m.id, name: m.name })),
                 /*
                   ⭐ **Les trois voies partent ensemble, avec la liste des sorties
@@ -648,6 +650,12 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         if (!isMainPC) return;
 
         const unsubs = [
+            abonnerApparenceTablettes(apparence => {
+                // Segment isolé : pas de nouvelle résolution des médias, ni d'envoi à chaque battement.
+                window.appBridge?.remote?.sendSync?.({ apparence }, 'remote');
+                window.appBridge?.remote?.sendSync?.({ apparence }, 'player');
+                window.appBridge?.remote?.sendSync?.({ apparence }, 'hub');
+            }),
             useWhiteboardStore.subscribe(() => syncFast('whiteboard')),
             useClockStore.subscribe(() => syncFast('clock')),
             useMusicStore.subscribe(() => handleSync()),

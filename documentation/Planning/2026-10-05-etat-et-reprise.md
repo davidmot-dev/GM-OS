@@ -25,3 +25,7 @@ connexion transitoire après l'appairage, sans forger de données ; il conserve 
 de référence reproductibles tout en laissant le défaut de première connexion documenté. Un
 autre faux échec venait de deux frappes trop rapprochées sur le curseur de volume : l'assertion
 teste désormais un geste unique et son retour côté MJ.
+
+Mise à jour ultérieure le 05/10 : David a demandé T1, maintenant implémentée et éprouvée sur les
+deux navigateurs. Le [relevé T1](2026-10-05-T1-apparence-tablettes.md) fait foi pour la suite ;
+les défauts T0 ci-dessus restent ouverts.

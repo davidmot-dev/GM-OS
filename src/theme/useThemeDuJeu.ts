@@ -7,6 +7,8 @@ import type { ThemeDuJeuCharge } from './themeDuJeu';
 import {
     chargerLeThemeDuJeu, pontVersLInterface, poserLesPolices, verifierLesPolices,
 } from './themeDuJeu';
+import { publierApparenceTablettes } from './apparenceTablettes';
+import { policesPourTablettes } from './policesPourTablettes';
 
 /**
  * **L'interface suit le jeu de la campagne ouverte.**
@@ -46,6 +48,7 @@ export function useThemeDuJeu(): void {
       la campagne change.
     */
     const releveDuJeu = useRef<ThemeDuJeuCharge | null>(null);
+    const policesLocales = useRef('');
     /*
       **Le pont se recalcule, le disque ne se relit pas** (P1.7) : allumer les
       personnalités ouvre au jeu des jetons qu'il déclarait déjà. Le relevé
@@ -62,8 +65,20 @@ export function useThemeDuJeu(): void {
     };
     const campagneLue = useRef<string | null>(null);
 
+    const appliquerEtPublier = () => {
+        const etat = useSessionStore.getState();
+        const jeu = releveDuJeu.current;
+        appliquerLeTheme(etat.theme, etat.themeColor, duJeu(etat.personnalites), { personnalites: etat.personnalites });
+        publierApparenceTablettes({
+            theme: etat.theme, accent: etat.themeColor, personnalites: etat.personnalites,
+            jeu: jeu ? { jetons: jeu.jetons, clarte: jeu.clarte, ornements: jeu.ornements, icones: jeu.icones } : null,
+            polices: policesLocales.current,
+        });
+    };
+
     // 1. La campagne change : on va voir si son jeu a une peau.
     useEffect(() => {
+        if (!window.appBridge) return; // Le navigateur suit exclusivement l'apparence reçue du PC.
         let annule = false;
 
         const relire = async () => {
@@ -89,8 +104,9 @@ export function useThemeDuJeu(): void {
             if (!jeu || !releve) {
                 releveDuJeu.current = null;
                 campagneLue.current = null;
+                policesLocales.current = '';
                 poserLesPolices([]);
-                appliquerLeTheme(theme, themeColor, undefined, { personnalites });
+                appliquerEtPublier();
                 return;
             }
 
@@ -117,7 +133,13 @@ export function useThemeDuJeu(): void {
               changée.
             */
             poserLesPolices(releve?.polices ?? []);
-            appliquerLeTheme(theme, themeColor, duJeu(personnalites), { personnalites });
+            policesLocales.current = '';
+            appliquerEtPublier();
+            void policesPourTablettes(releve.polices).then(css => {
+                if (annule || releveDuJeu.current !== releve) return;
+                policesLocales.current = css;
+                appliquerEtPublier();
+            });
 
             /*
               Et on dit si elles ne sont pas arrivées. Une police absente ne
@@ -137,7 +159,8 @@ export function useThemeDuJeu(): void {
 
     // 2. Le thème d'atelier, l'accent ou les personnalités changent : on repeint, sans relire.
     useEffect(() => {
-        appliquerLeTheme(theme, themeColor, duJeu(personnalites), { personnalites });
+        if (!window.appBridge) return;
+        appliquerEtPublier();
         if (personnalites && releveDuJeu.current) void verifierLesPolices(releveDuJeu.current.jetons, { personnalites });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [theme, themeColor, personnalites]);

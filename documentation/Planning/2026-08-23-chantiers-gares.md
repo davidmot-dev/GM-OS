@@ -9656,8 +9656,12 @@ M1, M2**, une séance jouée entre deux lots → T5 le fini → T6 l'épreuve su
 (`documentation/Planning/2026-10-04-T0-tablette-joueurs.md`, 54 captures, 39 scénarios) ; meneur
 le 05/10 (`documentation/Planning/2026-10-05-T0-tablette-meneur.md`, 68 captures, 44 scénarios).
 Les essais gardent des échecs attendus et une course de première connexion : **sortie stricte de
-T0 à arbitrer avant T1**. Les phases T1 à T6 ne sont pas commencées. Aucun `src/` ou `electron/`
-modifié pour ces relevés.
+T0 toujours ouverte**. David a demandé d'avancer sur T1 le 05/10. **T1 est implémenté** : le PC
+diffuse un segment public « apparence » aux deux rôles de tablette, avec jetons, icônes et polices
+incorporées ; le serveur le redonne à l'inscription après reconnexion. Bascule et reconnexion sont
+éprouvées en E2E (`e2e/apparenceTablettesT1.spec.ts`) ; les polices réelles restent conditionnées à
+leur disponibilité sur le PC. [Relevé T1](2026-10-05-T1-apparence-tablettes.md).
+T2 à T6 ne sont pas commencées.
 
 ---
 
@@ -9759,7 +9763,7 @@ place du chantier — **avant ou après la refonte des tablettes** (§ 123).
 | 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
-| 58 | **La refonte des tablettes** | 🔄 **T0 relevé sur les deux surfaces les 04–05/10** — inventaires, 122 captures aux formats de référence et essais par onglet. Défauts consignés au § 1 bis ; sortie stricte de T0 à arbitrer. Voir § 123 et `2026-10-04-refonte-tablettes.md` | Décider du traitement des défauts T0, puis T1 : propagation du thème | Défauts T0 non corrigés |
+| 58 | **La refonte des tablettes** | 🔄 **T0 relevé, T1 implémenté les 04–05/10** — 122 captures T0 ; thème du PC, du jeu, icônes et polices diffusés aux deux tablettes, bascule et reconnexion éprouvées. Défauts T0 consignés au § 1 bis ; sortie stricte encore à arbitrer. Voir § 123 et `2026-10-04-refonte-tablettes.md` | Arbitrer les défauts T0, puis T2 : habillage par le socle | Défauts T0 non corrigés |
 | 59 | **Le graphe de la Trame en cartes** | ⏳ **GARÉ le 04/10** — rapprocher le graphe de la maquette Stitch (cartes, flèches courbes, panneau du nœud) ; piste : React Flow pour la Trame seule. Voir § 124 | David : accord pour le paquet, et place avant ou après les tablettes | La décision de David |
 
 ### Ce que la soirée du 2026-08-23 a fermé

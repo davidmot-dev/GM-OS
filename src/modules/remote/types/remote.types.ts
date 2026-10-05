@@ -36,6 +36,7 @@ export interface RemoteCombatant {
 }
 
 import type { RemoteReglagesAudio } from '../reglagesAudio';
+import type { ApparenceTablettes } from '../../../theme/apparenceTablettes';
 
 export interface RemoteSound {
     id: string;
@@ -97,6 +98,7 @@ export interface RemoteComptesDePads {
 }
 
 export interface RemoteSyncData {
+    apparence?: ApparenceTablettes;
     sounds: RemoteSound[];
     moments: RemoteMoment[];
     /**

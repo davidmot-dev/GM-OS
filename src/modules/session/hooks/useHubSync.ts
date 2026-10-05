@@ -5,6 +5,7 @@ import type { TensionClock } from '../../../store/useClockStore';
 import { openDB } from 'idb';
 import { DUREE_DU_RESULTAT_MS } from '../../dice/logic/choregraphieDuJet';
 import { imageApresMessage, papierPeintDeLaCampagne, type CampagneConnue } from '../../../components/hub/fondDuPlayerHub';
+import { appliquerApparenceTablettes } from '../../../theme/apparenceTablettes';
 
 // 🛡️ Safe Dynamic Store Access Helpers
 const getStore = (name: string) => (typeof window !== 'undefined' ? (window as any)[name] : null);
@@ -204,7 +205,8 @@ export const useHubSync = () => {
     // ─────────────────────────────────────────────
     const applySyncPayload = useCallback((payload: any) => {
         if (!payload) return;
-        const { clock, combat, voiceLevel: vLevel, session, notes, dice, map, whiteboard } = payload;
+        const { clock, combat, voiceLevel: vLevel, session, notes, dice, map, whiteboard, apparence } = payload;
+        if (apparence) appliquerApparenceTablettes(apparence);
         
         const sClock = getStore('useClockStore');
         const sCombat = getStore('useCombatStore');

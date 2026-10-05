@@ -6,6 +6,7 @@ import { type RemoteSyncData, type RemoteActionType } from '../types/remote.type
 import { type RollResult as BaseRollResult } from '../../dice/DiceEngine';
 import { capturePairingTokenFromUrl, getPairingToken } from '../pairingToken';
 import type { NoteEntry } from '../../session/useObsidianStore';
+import { appliquerApparenceTablettes } from '../../../theme/apparenceTablettes';
 
 /** L'état du coffre Obsidian sur la tablette — hors du flux périodique. */
 export interface CoffreObsidian {
@@ -117,6 +118,7 @@ export const useRemoteSync = () => {
                 
                 // Unified Sync Logic
                 if (data.type === 'sync') {
+                    if (data.payload?.apparence) appliquerApparenceTablettes(data.payload.apparence);
                     setSyncData(prev => ({
                         ...prev,
                         ...data.payload,
