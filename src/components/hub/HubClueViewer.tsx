@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, FileSearch, Calendar, Bookmark } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
+import { Bouton } from '../socle';
 import type { Clue } from '../../modules/session/store/types';
 
 interface HubClueViewerProps {
@@ -27,13 +28,13 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                 />
 
                 {/* Close Button */}
-                <button
+                <Bouton habillage="libre" cibleTactile
                     onClick={onClose}
                     className="absolute top-8 right-8 z-[210] p-4 bg-app-surface/40 hover:bg-app-surface border border-app-border/10 rounded-full text-app-text/40 hover:text-app-text transition-all hover:scale-110 active:scale-95 group"
                     title="Fermer l'indice"
                 >
                     <X size={24} className="group-hover:rotate-90 transition-transform duration-500" />
-                </button>
+                </Bouton>
 
                 {/* Main Content Container */}
                 <motion.div

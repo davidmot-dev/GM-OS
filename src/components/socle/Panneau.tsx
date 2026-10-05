@@ -29,6 +29,8 @@ const PAR_NIVEAU: Record<NiveauDePanneau, string> = {
 
 export interface PanneauProps extends React.HTMLAttributes<HTMLElement> {
     niveau?: NiveauDePanneau;
+    /** Pour les panneaux historiques de tablette : garde leurs classes pendant T2. */
+    habillage?: 'socle' | 'libre';
     /** Les coins ornés du thème, s'il en a. Un ou deux panneaux par écran. */
     orne?: boolean;
     /** Le panneau n'a rien à montrer : l'ornement `fond` s'y pose en filigrane. */
@@ -38,8 +40,10 @@ export interface PanneauProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Panneau: React.FC<PanneauProps> = ({
-    niveau = 1, orne = false, vide = false, as: Balise = 'section', className = '', style, children, ...reste
-}) => (
+    niveau = 1, habillage = 'socle', orne = false, vide = false, as: Balise = 'section', className = '', style, children, ...reste
+}) => habillage === 'libre' ? (
+    <Balise data-panneau={niveau} className={className} style={style} {...reste}>{children}</Balise>
+) : (
     <Balise
         data-panneau={niveau}
         /*

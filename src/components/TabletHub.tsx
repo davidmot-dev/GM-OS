@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import { ResolvedImage } from './ResolvedImage';
+import { Bouton } from './socle';
 import NarrativeClock from '../modules/clock/components/NarrativeClock';
 import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
 import LobbyOnboarding from './hub/LobbyOnboarding';
@@ -218,7 +219,7 @@ const TabletHub: React.FC = () => {
                 {/* Sur un appareil géré automatiquement, le réglage est en lecture
                     seule : la détection réimposerait aussitôt son choix, et un
                     bouton qui revient tout seul vaut moins qu'un simple témoin. */}
-                <button
+                <Bouton habillage="libre" cibleTactile
                     onClick={performance.isManagedAutomatically ? undefined : () => setLowGraphics(!performance.isLowGraphics)}
                     disabled={performance.isManagedAutomatically}
                     aria-disabled={performance.isManagedAutomatically}
@@ -234,7 +235,7 @@ const TabletHub: React.FC = () => {
                     }`}
                 >
                     {performance.isLowGraphics ? 'Mode Performance' : 'Mode Qualité'}
-                </button>
+                </Bouton>
                 <div className={`p-1.5 rounded-full backdrop-blur-md border transition-colors ${
                     status === 'connected' 
                         ? (latency !== null && latency < 100 ? 'bg-etat-succes/10 text-etat-succes border-etat-succes/20 shadow-[0_0_10px_color-mix(in_srgb,var(--etat-succes)_20%,transparent)]' : 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20')
@@ -374,7 +375,9 @@ const TabletHub: React.FC = () => {
                 </div>
 
                 {/* Centered Content Area */}
-                <div className={`flex-1 flex items-center justify-center transition-all duration-1000 pt-16 md:pt-0 ${hasCombatants ? 'pr-0 md:pr-72' : ''} md:pl-32 pointer-events-none overflow-hidden`}>
+                {/* Inventaire mobile : garder les cartes et réserver 88 px sous leur zone de défilement
+                    pour la navigation fixe (choix de David, T2, 05/10). */}
+                <div className={`flex-1 flex items-center justify-center transition-all duration-1000 pt-16 md:pt-0 ${hasCombatants ? 'pr-0 md:pr-72' : ''} ${currentTab === 'inventory' ? 'pb-[88px] md:pb-0' : ''} md:pl-32 pointer-events-none overflow-hidden`}>
                     {currentTab === 'live' && (resolvedFavorites.length > 0 || liveEntity || (liveImagePath && liveImagePath !== activeCampaignWallpaper)) && (
                         <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
                             <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-2 md:p-8 flex flex-col items-center justify-center">
@@ -478,10 +481,11 @@ const TabletHub: React.FC = () => {
                             { id: 'cartes', icon: Layers, label: 'Cartes' }
                         ] as const
                     ).map((tab) => (
-                        <button
+                        <Bouton habillage="libre" cibleTactile
                             key={tab.id}
                             onClick={() => setCurrentTab(tab.id)}
-                            className={`relative flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${
+                            aria-pressed={currentTab === tab.id}
+                            className={`relative flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${
                                 currentTab === tab.id
                                     ? 'bg-accent text-app-on-accent'
                                     : 'text-app-text/40 hover:text-app-text'
@@ -498,28 +502,31 @@ const TabletHub: React.FC = () => {
                                     <span className="relative inline-flex rounded-full h-4 w-4 bg-etat-danger text-ui-9 items-center justify-center font-bold text-app-bg">{cartesProposees}</span>
                                 </span>
                             )}
-                        </button>
+                        </Bouton>
                     ))}
                     <div className="w-[1px] h-4 bg-app-border/40 mx-1 md:mx-2" />
-                    <button 
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => setIsInventoryOpen(!isInventoryOpen)}
-                        className={`flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-accent text-app-on-accent' : 'text-app-text/40 hover:text-app-text'}`}
+                        aria-pressed={isInventoryOpen}
+                        className={`flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-accent text-app-on-accent' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Fiche Personnage"
                     >
                         <User className="w-5 h-5 md:w-3.5 md:h-3.5" />
                         <span className="hidden md:inline">Fiche</span>
-                    </button>
-                    <button 
+                    </Bouton>
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => setIsNotesOpen(!isNotesOpen)}
-                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        aria-pressed={isNotesOpen}
+                        className={`relative flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Notes Personnelles"
                     >
                         <BookOpen className="w-5 h-5 md:w-3.5 md:h-3.5" />
                         <span className="hidden md:inline">Notes</span>
-                    </button>
-                    <button 
+                    </Bouton>
+                    <Bouton habillage="libre" cibleTactile
                         onClick={toggleMessenger}
-                        className={`relative flex items-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        aria-pressed={isMessengerOpen}
+                        className={`relative flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
                         title="Messages"
                     >
                         <MessageSquare className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -530,15 +537,15 @@ const TabletHub: React.FC = () => {
                                 <span className="relative inline-flex rounded-full h-4 w-4 bg-etat-danger text-ui-9 items-center justify-center font-bold text-app-bg">{unreadCount}</span>
                             </span>
                         )}
-                    </button>
-                    <button 
+                    </Bouton>
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => window.confirm('Quitter la session ?') && resetIdentity()}
-                        className="flex items-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest text-etat-danger hover:text-etat-danger hover:bg-etat-danger/10 transition-all ml-1 md:ml-0"
+                        className="flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest text-etat-danger hover:text-etat-danger hover:bg-etat-danger/10 transition-all ml-1 md:ml-0"
                         title="Quitter"
                     >
                         <LogOut className="w-5 h-5 md:w-3.5 md:h-3.5" />
                         <span className="hidden md:inline">Quitter</span>
-                    </button>
+                    </Bouton>
                 </div>
             </nav>
 
@@ -546,21 +553,22 @@ const TabletHub: React.FC = () => {
             {hasCombatants && activeCombatant && (
                 <>
                     {/* Mobile Toggle Button */}
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => setIsCombatOverlayOpen(!isCombatOverlayOpen)}
+                        aria-pressed={isCombatOverlayOpen}
                         className={`fixed md:hidden top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl transition-all ${isCombatOverlayOpen ? 'bg-etat-danger text-app-bg' : 'bg-app-surface/90 border border-etat-danger/30 text-etat-danger'}`}
                     >
                         <Swords size={16} />
                         {isCombatOverlayOpen ? 'Fermer' : 'Initiative'}
-                    </button>
+                    </Bouton>
 
                     {/* Combat Sidebar */}
                     <aside className={`fixed right-0 md:right-4 top-0 md:top-4 w-full md:w-80 h-screen md:h-[calc(100vh-2rem)] z-50 bg-app-surface/95 md:bg-app-surface/60 border-l md:border border-app-border/40 flex flex-col gap-4 p-6 md:rounded-[2rem] shadow-2xl transition-transform duration-300 pointer-events-auto ${performance.heavyBlurClass} ${isCombatOverlayOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}`}>
                         <div className="flex items-center justify-between border-b border-app-border/40 pb-3 mt-12 md:mt-0">
                             <h2 className="text-app-text text-lg font-bold tracking-tight">Initiative</h2>
-                            <button className="md:hidden p-2 rounded-full text-app-text/40 hover:bg-app-text/5" onClick={() => setIsCombatOverlayOpen(false)}>
+                            <Bouton habillage="libre" cibleTactile className="md:hidden min-w-[44px] p-2 rounded-full text-app-text/40 hover:bg-app-text/5" onClick={() => setIsCombatOverlayOpen(false)} title="Fermer l'initiative">
                                 <ChevronRight size={20} />
-                            </button>
+                            </Bouton>
                         </div>
                     <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
                         <div className="flex flex-col gap-3 p-3 rounded-2xl bg-etat-danger/10 border border-etat-danger/30 shadow-glow-crimson">
@@ -742,10 +750,9 @@ const MessageToast: React.FC<{ fromName: string; channel: string; onClick: () =>
             initial={{ opacity: 0, y: 50, x: '-50%', scale: 0.9 }}
             animate={{ opacity: 1, y: 0, x: '-50%', scale: 1 }}
             exit={{ opacity: 0, y: 20, x: '-50%', scale: 0.9 }}
-            onClick={onClick}
             className="fixed bottom-24 left-1/2 z-[200] cursor-pointer"
         >
-            <div className="bg-accent text-app-on-accent backdrop-blur-xl border border-app-on-accent/20 px-6 py-3 rounded-2xl shadow-[0_20px_50px_color-mix(in_srgb,var(--app-accent)_40%,transparent)] flex items-center gap-4 hover:brightness-110 transition-all active:scale-95 group">
+            <Bouton habillage="libre" cibleTactile onClick={onClick} title="Ouvrir le nouveau message" className="bg-accent text-app-on-accent backdrop-blur-xl border border-app-on-accent/20 px-6 py-3 rounded-2xl shadow-[0_20px_50px_color-mix(in_srgb,var(--app-accent)_40%,transparent)] flex items-center gap-4 text-left hover:brightness-110 transition-all active:scale-95 group">
                 <div className="p-2 bg-app-on-accent/20 rounded-lg group-hover:scale-110 transition-transform">
                     <MessageSquare size={18} />
                 </div>
@@ -755,7 +762,7 @@ const MessageToast: React.FC<{ fromName: string; channel: string; onClick: () =>
                         {fromName} <span className="opacity-60 font-medium ml-1">({channel})</span>
                     </p>
                 </div>
-            </div>
+            </Bouton>
         </motion.div>
     );
 };

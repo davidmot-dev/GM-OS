@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
 import { Music, Waves, Swords, Timer, Power, WifiOff, ShieldAlert, MessageSquare } from 'lucide-react';
 import { type RemoteLecture } from '../types/remote.types';
 
@@ -161,7 +162,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
               Le compte disparaît à zéro, comme le reste de cette ligne.
             */}
             {!!messagesNonLus && (
-                <button
+                <Bouton habillage="libre" cibleTactile
                     onClick={onVoirLesMessages}
                     title={`${messagesNonLus} message(s) non lu(s)`}
                     aria-label={`${messagesNonLus} message(s) non lu(s)`}
@@ -169,10 +170,10 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                 >
                     <MessageSquare size={13} strokeWidth={2.5} />
                     <span className="text-xs font-black tabular-nums">{messagesNonLus}</span>
-                </button>
+                </Bouton>
             )}
 
-            <button
+            <Bouton habillage="libre" cibleTactile
                 onPointerDown={commencerLAppui}
                 onPointerUp={arreterLAppui}
                 onPointerLeave={arreterLAppui}
@@ -189,7 +190,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                 />
                 <Power size={14} strokeWidth={2.5} className="relative" />
                 <span className="relative text-ui-10 font-black uppercase tracking-widest">Couper le son</span>
-            </button>
+            </Bouton>
         </header>
     );
 };

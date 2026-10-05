@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BookText, Save, RefreshCcw, ChevronDown, ChevronUp, Star, Send, CheckCircle, MessageSquare } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { Bouton } from '../../../components/socle';
 
 interface PlayerPrivateNotesProps {
     playerId: string;
@@ -136,40 +137,42 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
     return (
         <div className="flex flex-col bg-app-bg/40 backdrop-blur-md border border-app-text/10 rounded-xl overflow-hidden transition-all duration-300 shadow-2xl">
             {/* Header */}
-            <div 
-                className="flex items-center justify-between px-4 py-3 bg-app-text/5 cursor-pointer hover:bg-app-text/10 transition-colors"
+            <Bouton habillage="libre" cibleTactile
+                className="flex w-full items-center justify-between px-4 py-3 bg-app-text/5 cursor-pointer text-left hover:bg-app-text/10 transition-colors"
                 onClick={() => setIsExpanded(!isExpanded)}
+                aria-expanded={isExpanded}
             >
-                <div className="flex items-center gap-2">
+                <span className="flex items-center gap-2">
                     <BookText className="w-5 h-5 text-etat-info" />
-                    <h3 className="font-semibold text-app-text uppercase tracking-wider text-sm">Notes & Feedback</h3>
-                </div>
+                    <span role="heading" aria-level={3} className="font-semibold text-app-text uppercase tracking-wider text-sm">Notes & Feedback</span>
+                </span>
                 
-                <div className="flex items-center gap-4">
+                <span className="flex items-center gap-4">
                     {activeTab === 'notes' && (
                         isSaving ? (
-                            <div className="flex items-center gap-1.5 text-ui-10 text-etat-info font-medium animate-pulse">
+                            <span className="flex items-center gap-1.5 text-ui-10 text-etat-info font-medium animate-pulse">
                                 <RefreshCcw className="w-3 h-3 animate-spin" />
                                 <span>SYNCHRO...</span>
-                            </div>
+                            </span>
                         ) : (
-                            <div className="flex items-center gap-1.5 text-ui-10 text-etat-succes/70 font-medium">
+                            <span className="flex items-center gap-1.5 text-ui-10 text-etat-succes/70 font-medium">
                                 <Save className="w-3 h-3" />
                                 <span>À JOUR</span>
-                            </div>
+                            </span>
                         )
                     )}
                     {isExpanded ? <ChevronUp className="w-5 h-5 text-app-muted" /> : <ChevronDown className="w-5 h-5 text-app-muted" />}
-                </div>
-            </div>
+                </span>
+            </Bouton>
 
             {/* Expanded View */}
             {isExpanded && (
                 <>
                     {/* Tab Navigation */}
                     <div className="flex bg-app-bg/40 p-1 border-b border-app-text/5">
-                        <button
+                        <Bouton habillage="libre" cibleTactile
                             onClick={() => setActiveTab('notes')}
+                            aria-pressed={activeTab === 'notes'}
                             className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
                                 activeTab === 'notes'
                                     ? 'bg-etat-info/30 text-etat-info border border-etat-info/20'
@@ -178,9 +181,10 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                         >
                             <BookText className="w-4 h-4" />
                             Notes Privées
-                        </button>
-                        <button
+                        </Bouton>
+                        <Bouton habillage="libre" cibleTactile
                             onClick={() => setActiveTab('feedback')}
+                            aria-pressed={activeTab === 'feedback'}
                             className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-black uppercase tracking-wider rounded-lg transition-all ${
                                 activeTab === 'feedback'
                                     ? 'bg-etat-info/30 text-etat-info border border-etat-info/20 shadow-glow-indigo/5'
@@ -189,7 +193,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                         >
                             <MessageSquare className="w-4 h-4" />
                             Feedback MJ
-                        </button>
+                        </Bouton>
                     </div>
 
                     {/* Content Pane */}
@@ -246,12 +250,12 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                         </div>
                                     </div>
 
-                                    <button
+                                    <Bouton habillage="libre" cibleTactile
                                         onClick={handleEditFeedback}
                                         className="px-6 py-2.5 bg-app-surface-2 hover:bg-app-surface-2 text-app-text border border-app-text/5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                                     >
                                         Modifier mon feedback
-                                    </button>
+                                    </Bouton>
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-5 max-h-[640px] overflow-y-auto pr-1">
@@ -325,7 +329,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                         />
                                     </div>
 
-                                    <button
+                                    <Bouton habillage="libre" cibleTactile
                                         onClick={handleSubmitFeedback}
                                         disabled={!activeSession}
                                         className={`w-full py-3.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg ${
@@ -336,7 +340,7 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
                                     >
                                         <Send className="w-4 h-4" />
                                         {activeSession ? 'Transmettre au MJ' : 'Aucune session active'}
-                                    </button>
+                                    </Bouton>
                                 </div>
                             )}
                         </div>

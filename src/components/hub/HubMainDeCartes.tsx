@@ -6,6 +6,7 @@ import { DeckInterpreter } from '../../modules/session/logic/DeckInterpreter';
 import { voisinsAQuiDonner } from '../../modules/session/logic/aQuiDonnerUneCarte';
 import { paquetsOffertsAuxJoueurs, systemeDeLaCampagne } from '../../modules/session/logic/paquetsDuJeu';
 import { ResolvedImage } from '../ResolvedImage';
+import { Bouton, Panneau } from '../socle';
 
 /**
  * **L'onglet Cartes de la tablette : ce que ce joueur tient, et ce qu'il peut
@@ -164,25 +165,28 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
               se met pas au bas d'une liste.
             */}
             {proposeesAMoi.map(demande => (
-                <div key={demande.id} className="rounded-2xl border border-accent/40 bg-accent/10 p-4">
+                <Panneau as="div" key={demande.id} className="!overflow-visible !rounded-2xl !border-accent/40 !bg-accent/10 !shadow-none p-4">
                     <p className="mb-3 text-sm text-app-text">
                         {t('modules:session.deck_module.player.hands.offered', { qui: nomDuPersonnage(demande.deQui) })}
                     </p>
                     <div className="flex gap-2">
-                        <button
+                        <Bouton
+                            cibleTactile
+                            variante="accent"
                             onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })}
-                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-accent px-3 py-2.5 text-ui-10 font-black uppercase tracking-widest text-app-on-accent"
+                            className="flex-1 !gap-1.5 !px-3 !text-ui-10 !font-black !font-[inherit] !tracking-widest"
                         >
                             <Check size={12} /> {t('modules:session.deck_module.player.hands.accept')}
-                        </button>
-                        <button
+                        </Bouton>
+                        <Bouton
+                            cibleTactile
                             onClick={() => demanderAuMeneur('deck:refuser-don', { demandeId: demande.id, characterId })}
-                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-app-border px-3 py-2.5 text-ui-10 font-black uppercase tracking-widest text-app-text/60"
+                            className="flex-1 !gap-1.5 !border-app-border !bg-transparent !px-3 !text-ui-10 !font-black !font-[inherit] !tracking-widest !text-app-text/60"
                         >
                             <X size={12} /> {t('modules:session.deck_module.player.hands.refuse')}
-                        </button>
+                        </Bouton>
                     </div>
-                </div>
+                </Panneau>
             ))}
 
             {/*
@@ -195,7 +199,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
               faire disparaître donnerait à croire que le meneur l'a retiré.
             */}
             {paquetsOuverts.length > 0 && (
-                <section className="rounded-2xl border border-app-border/40 bg-app-surface/50 p-4 backdrop-blur-xl">
+                <Panneau className="!overflow-visible !rounded-2xl !border-app-border/40 !bg-app-surface/50 !shadow-none p-4 backdrop-blur-xl">
                     <p className="mb-3 flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                         <Hand size={12} /> {t('modules:session.deck_module.player.hands.open_decks')}
                     </p>
@@ -205,14 +209,16 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                             const vide = restantes === 0;
                             return (
                                 <div key={paquet.id} className="flex flex-col items-center gap-2">
-                                    <button
+                                    <Bouton
+                                        habillage="libre"
+                                        cibleTactile
                                         type="button"
                                         disabled={vide}
                                         onClick={() => demanderAuMeneur('deck:piocher', { deckId: paquet.id, characterId })}
                                         title={vide
                                             ? t('modules:session.deck_module.player.hands.deck_empty')
                                             : t('modules:session.deck_module.player.hands.draw')}
-                                        className={`relative rounded-xl transition-transform focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${vide ? 'opacity-30' : 'active:scale-95'}`}
+                                        className={`relative rounded-xl transition-transform ${vide ? 'opacity-30' : 'active:scale-95'}`}
                                     >
                                         <ResolvedImage
                                             src={DeckInterpreter.getBackImageUrl(paquet.folderPath, paquet)}
@@ -222,7 +228,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                         <span className="absolute inset-x-0 bottom-1 mx-auto w-fit rounded-full bg-app-bg/80 px-2 py-0.5 text-ui-10 font-black text-accent">
                                             {restantes}
                                         </span>
-                                    </button>
+                                    </Bouton>
                                     <span className="max-w-[9rem] truncate text-center text-ui-10 font-bold uppercase tracking-widest text-app-text/40">
                                         {paquet.name}
                                     </span>
@@ -235,10 +241,10 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                             );
                         })}
                     </div>
-                </section>
+                </Panneau>
             )}
 
-            <section className="rounded-2xl border border-app-border/40 bg-app-surface/50 p-4 backdrop-blur-xl">
+            <Panneau className="!overflow-visible !rounded-2xl !border-app-border/40 !bg-app-surface/50 !shadow-none p-4 backdrop-blur-xl">
                 <p className="mb-3 flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
                     <Layers size={12} /> {t('modules:session.deck_module.player.hands.title')}
                 </p>
@@ -276,14 +282,16 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                   qu'on ne peut pas lire ne sert qu'à
                                                   rappeler qu'on a une carte.
                                                 */}
-                                                <button
+                                                <Bouton
+                                                    habillage="libre"
+                                                    cibleTactile
                                                     type="button"
                                                     onClick={() => setCarteEnGrand({
                                                         url: DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet),
                                                         nom: DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`,
                                                         texte: DeckInterpreter.getCardMetadata(paquet, index)?.description ?? '',
                                                     })}
-                                                    className="rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                                                    className="rounded-lg"
                                                 >
                                                     <ResolvedImage
                                                         src={DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet)}
@@ -292,7 +300,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                             ? 'border-app-border opacity-40 grayscale'
                                                             : 'border-accent/40'}`}
                                                     />
-                                                </button>
+                                                </Bouton>
 
                                                 {/*
                                                   Une carte déjà proposée n'offre plus
@@ -306,14 +314,15 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                     </span>
                                                 ) : (
                                                     <div className="flex gap-1">
-                                                        <button
+                                                        <Bouton
+                                                            cibleTactile
                                                             onClick={() => demanderAuMeneur('deck:jouer-carte', {
                                                                 deckId: paquet.id, index, characterId,
                                                             })}
-                                                            className="flex-1 rounded-md border border-app-border px-2 py-1.5 text-ui-9 font-black uppercase tracking-wider text-app-text/60 hover:border-accent/40 hover:text-app-text"
+                                                            className="flex-1 !rounded-md !border-app-border !bg-transparent !px-2 !text-ui-9 !font-black !font-[inherit] !tracking-wider !text-app-text/60 hover:!border-accent/40 hover:!text-app-text"
                                                         >
                                                             {t('modules:session.deck_module.player.hands.play_own')}
-                                                        </button>
+                                                        </Bouton>
                                                         {voisins.length > 0 && (
                                                             <select
                                                                 value=""
@@ -323,7 +332,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                                                                 })}
                                                                 title={t('modules:session.deck_module.player.hands.give_to')}
                                                                 aria-label={t('modules:session.deck_module.player.hands.give_to')}
-                                                                className="flex-1 cursor-pointer rounded-md border border-app-border bg-transparent px-1 py-1.5 text-ui-9 font-black uppercase tracking-wider text-app-text/60"
+                                                                className="min-h-[44px] flex-1 cursor-pointer rounded-md border border-app-border bg-transparent px-1 py-1.5 text-ui-9 font-black uppercase tracking-wider text-app-text/60"
                                                             >
                                                                 <option value="">{t('modules:session.deck_module.player.hands.give_to')}</option>
                                                                 {voisins.map(v => (
@@ -359,7 +368,7 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
                         ))}
                     </div>
                 )}
-            </section>
+            </Panneau>
         </div>
     );
 };

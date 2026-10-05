@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
 import {
     Pencil,
     Eraser,
@@ -126,10 +127,10 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
             <div className={`shrink-0 flex items-center justify-between gap-2 p-1.5 border-b ${enClair ? 'bg-white/80 border-slate-200' : 'bg-slate-900/80 border-white/10'}`}>
                 <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                     {OUTILS.map((o) => (
-                        <button
+                        <Bouton habillage="libre" cibleTactile
                             key={o.id}
                             onClick={() => choisir('whiteboard:set-tool', o.id as WhiteboardTool, poserOutil)}
-                            className={`p-2 rounded-lg transition-colors shrink-0 ${outil === o.id
+                            className={`min-w-[44px] p-2 rounded-lg transition-colors shrink-0 ${outil === o.id
                                 ? 'bg-accent text-white'
                                 : enClair ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-400 hover:bg-white/5'}`}
                             title={o.label}
@@ -137,7 +138,7 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
                             aria-pressed={outil === o.id}
                         >
                             <o.icon size={18} />
-                        </button>
+                        </Bouton>
                     ))}
 
                     <div className={`w-px h-5 mx-1 shrink-0 ${enClair ? 'bg-slate-200' : 'bg-white/10'}`} />
@@ -150,10 +151,10 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
                       laissée, sans moyen d'en changer.
                     */}
                     {EPAISSEURS.map((e) => (
-                        <button
+                        <Bouton habillage="libre" cibleTactile
                             key={e.valeur}
                             onClick={() => choisir('whiteboard:set-width', e.valeur, poserEpaisseur)}
-                            className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors shrink-0 ${epaisseur === e.valeur
+                            className={`min-w-[44px] w-9 h-9 rounded-lg flex items-center justify-center transition-colors shrink-0 ${epaisseur === e.valeur
                                 ? 'bg-accent/20 ring-1 ring-accent'
                                 : enClair ? 'hover:bg-slate-100' : 'hover:bg-white/5'}`}
                             title={`Trait ${e.titre.toLowerCase()}`}
@@ -164,7 +165,7 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
                                 className={`rounded-full block ${epaisseur === e.valeur ? 'bg-accent' : enClair ? 'bg-slate-400' : 'bg-slate-500'}`}
                                 style={{ width: e.point, height: e.point }}
                             />
-                        </button>
+                        </Bouton>
                     ))}
                 </div>
 
@@ -175,35 +176,35 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
                       sans émetteur ici **et sans destinataire** chez le meneur :
                       une action morte de bout en bout.
                     */}
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => choisir('whiteboard:set-background', enClair ? 'dark' : 'light', poserFond)}
-                        className={`p-2 rounded-lg transition-colors ${enClair ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-400 hover:bg-white/5'}`}
+                        className={`min-w-[44px] p-2 rounded-lg transition-colors ${enClair ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-400 hover:bg-white/5'}`}
                         title={enClair ? 'Passer en fond sombre' : 'Passer en fond clair'}
                         aria-label={enClair ? 'Passer en fond sombre' : 'Passer en fond clair'}
                     >
                         {enClair ? <Moon size={16} /> : <Sun size={16} />}
-                    </button>
-                    <button
+                    </Bouton>
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => onAction('whiteboard:undo', null)}
-                        className={`p-2 rounded-lg transition-colors ${enClair ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-400 hover:bg-white/5'}`}
+                        className={`min-w-[44px] p-2 rounded-lg transition-colors ${enClair ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-400 hover:bg-white/5'}`}
                         title="Annuler" aria-label="Annuler"
                     >
                         <RotateCcw size={16} />
-                    </button>
-                    <button
+                    </Bouton>
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => onAction('whiteboard:redo', null)}
-                        className={`p-2 rounded-lg transition-colors ${enClair ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-400 hover:bg-white/5'}`}
+                        className={`min-w-[44px] p-2 rounded-lg transition-colors ${enClair ? 'text-slate-500 hover:bg-slate-100' : 'text-slate-400 hover:bg-white/5'}`}
                         title="Rétablir" aria-label="Rétablir"
                     >
                         <RotateCw size={16} />
-                    </button>
-                    <button
+                    </Bouton>
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => onAction('whiteboard:clear', null)}
-                        className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                        className="min-w-[44px] p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                         title="Effacer tout" aria-label="Effacer tout"
                     >
                         <Trash2 size={16} />
-                    </button>
+                    </Bouton>
                 </div>
             </div>
 
@@ -224,12 +225,12 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
                 />
             </div>
 
-            <div className={`shrink-0 flex items-center gap-2 p-2 border-t overflow-x-auto no-scrollbar justify-center ${enClair ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-white/10'}`}>
+            <div className={`shrink-0 flex items-center gap-2 p-2 border-t overflow-x-auto no-scrollbar justify-start min-[430px]:justify-center ${enClair ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/50 border-white/10'}`}>
                 {couleurs.map((c) => (
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         key={c}
                         onClick={() => choisir('whiteboard:set-color', c, poserCouleur)}
-                        className={`size-7 rounded-full border transition-transform shrink-0 bg-[var(--swatch-color)] ${couleur === c
+                        className={`size-[44px] rounded-full border transition-transform shrink-0 bg-[var(--swatch-color)] ${couleur === c
                             ? `scale-110 ring-2 ring-accent ring-offset-2 ${enClair ? 'ring-offset-slate-50' : 'ring-offset-slate-900'}`
                             : 'border-white/20 hover:scale-105'}`}
                         style={{ '--swatch-color': c } as React.CSSProperties}

@@ -21,13 +21,15 @@ const PAR_TON: Record<TonDEtiquette, string> = {
 
 export interface EtiquetteProps extends React.HTMLAttributes<HTMLSpanElement> {
     ton?: TonDEtiquette;
+    /** Préserve l'apparence des pastilles historiques pendant la migration T2. */
+    habillage?: 'socle' | 'libre';
 }
 
-export const Etiquette: React.FC<EtiquetteProps> = ({ ton = 'neutre', className = '', style, children, ...reste }) => (
+export const Etiquette: React.FC<EtiquetteProps> = ({ ton = 'neutre', habillage = 'socle', className = '', style, children, ...reste }) => (
     <span
         data-ton={ton}
-        className={`inline-flex items-center gap-1 rounded-sm border px-2 py-0.5 text-ui-11 font-bold uppercase ${PAR_TON[ton]} ${className}`}
-        style={{ letterSpacing: 'var(--surtitre-espacement, 0.12em)', ...style }}
+        className={habillage === 'libre' ? className : `inline-flex items-center gap-1 rounded-sm border px-2 py-0.5 text-ui-11 font-bold uppercase ${PAR_TON[ton]} ${className}`}
+        style={habillage === 'libre' ? style : { letterSpacing: 'var(--surtitre-espacement, 0.12em)', ...style }}
         {...reste}
     >
         {children}

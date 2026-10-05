@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icone } from '../../../components/socle';
+import { Bouton, Icone } from '../../../components/socle';
 import { Heart, Activity } from 'lucide-react';
 import { decrireLaSante, aUneJaugeDeVie, fractionDeVie, type PorteurDeSante } from '../logic/SanteDuCombattant';
 import { woundLabel } from '../../session/logic/HealthInterpreter';
@@ -138,14 +138,14 @@ const EtatDeSante: React.FC<EtatDeSanteProps> = ({ porteur, onAjusterPV, libelle
         {onAjusterPV && (
             <div className="flex items-center justify-center gap-3">
                 {[-5, -1, 1, 5].map(d => (
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         key={d}
                         onClick={() => onAjusterPV(d)}
                         title={`${d > 0 ? '+' : ''}${d} PV`}
-                        className={`rounded-xl bg-app-surface border border-app-border flex items-center justify-center text-app-text/40 transition-all ${
+                        className={`min-w-[44px] rounded-xl bg-app-surface border border-app-border flex items-center justify-center text-app-text/40 transition-all ${
                             Math.abs(d) === 5 ? 'w-12 h-12' : 'w-10 h-10'
                         } ${d < 0 ? 'hover:text-etat-danger hover:border-etat-danger/30' : 'hover:text-etat-succes hover:border-etat-succes/30'}`}
-                    >{d > 0 ? `+${d}` : d}</button>
+                    >{d > 0 ? `+${d}` : d}</Bouton>
                 ))}
             </div>
         )}

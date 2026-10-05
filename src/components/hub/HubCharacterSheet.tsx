@@ -17,6 +17,7 @@ import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
 import PanneauDeJet from '../../modules/session/components/fields/PanneauDeJet';
 import type { GameDriver } from '../../types/drivers';
 import JetsDeLaFiche from './JetsDeLaFiche';
+import { Bouton } from '../socle';
 import { estUneSauvegarde, decrireLeJetDuPilote } from '../../modules/dice/lectureDuPilote';
 
 interface HubCharacterSheetProps {
@@ -144,17 +145,17 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
 
             {/* Header */}
             <div className="flex items-center justify-between mb-8 flex-shrink-0">
-                <button 
+                <Bouton habillage="libre" cibleTactile
                     onClick={onClose}
                     title="Fermer la fiche"
                     className="flex items-center gap-2 px-4 py-2 bg-app-surface/40 border border-app-border rounded-2xl text-ui-10 font-black text-app-text/40 uppercase tracking-widest hover:text-app-text hover:bg-app-surface/60 transition-all group"
                 >
                     <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Retour
-                </button>
+                </Bouton>
 
                 {/* La bascule n'apparaît que si le jeu a une fiche branchable. */}
                 {correspondance && (
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => { setSurLaFiche(v => !v); setFicheDejaOuverte(true); }}
                         title={surLaFiche ? 'Revenir à la vue synthétique' : 'Afficher ma fiche'}
                         className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
@@ -165,7 +166,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     >
                         <FileText size={14} />
                         {surLaFiche ? 'Vue synthétique' : 'Ma fiche'}
-                    </button>
+                    </Bouton>
                 )}
                 <div className="text-right">
                     <h2 className="text-3xl font-black text-app-text uppercase tracking-tighter leading-none mb-1">{character.name}</h2>

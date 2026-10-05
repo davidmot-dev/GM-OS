@@ -18,7 +18,10 @@ import type { useDiceStore } from '../src/stores/useDiceStore';
  * npx.cmd playwright test e2e/tabletteJoueursT0.spec.ts --reporter=list
  */
 const ICI = path.dirname(fileURLToPath(import.meta.url));
-const SORTIE = path.join(ICI, '../documentation/Planning/tablettes/T0-joueurs');
+// T2 peut rejouer le banc sans écraser les 54 images de référence T0.
+const SORTIE = process.env.GMOS_TABLET_CAPTURES_DIR
+    ? path.resolve(process.env.GMOS_TABLET_CAPTURES_DIR)
+    : path.join(ICI, '../documentation/Planning/tablettes/T0-joueurs');
 const DEMO = JSON.parse(fs.readFileSync(path.join(ICI, 'donnees/campagne-de-demo.json'), 'utf8'));
 const PLAN = 'data:image/png;base64,' + fs.readFileSync(path.join(ICI, 'donnees/plan-station-varn.png')).toString('base64');
 type Magasins = {
@@ -108,6 +111,9 @@ for (const taille of TAILLES) {
         }
         async function capturer(page: Page, nom: string) {
             await page.evaluate(() => document.fonts.ready);
+            // Les entrées du Hub durent jusqu'à 700 ms : une capture avant leur fin
+            // peut montrer un panneau présent dans le DOM mais encore transparent.
+            await page.waitForTimeout(800);
             await page.screenshot({ path: path.join(SORTIE, taille.nom, `${nom}.png`), animations: 'disabled', scale: 'css' });
         }
 

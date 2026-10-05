@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Bouton } from '../../components/socle/Bouton';
 import {
     LayoutDashboard,
     Dices,
@@ -206,7 +207,7 @@ const RemoteControl: React.FC = () => {
         const Icon = onglet.icon;
         const actif = activeTab === onglet.id;
         return (
-            <button
+            <Bouton habillage="libre" cibleTactile
                 key={onglet.id}
                 onClick={() => setActiveTab(onglet.id)}
                 aria-current={actif ? 'page' : undefined}
@@ -220,7 +221,7 @@ const RemoteControl: React.FC = () => {
                 <span className={`font-black uppercase tracking-wider ${enColonne ? 'text-ui-11' : 'text-ui-9'}`}>
                     {onglet.label}
                 </span>
-            </button>
+            </Bouton>
         );
     });
 

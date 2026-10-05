@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
 import { Check, ChevronDown, AlertTriangle } from 'lucide-react';
 import {
     sortieChoisie, type RemoteReglagesAudio, type NomDeVoie, LIBELLE_DE_LA_VOIE,
@@ -60,7 +61,7 @@ const LigneDeVolume: React.FC<{
               l'alias que le meneur a donné — « Enceintes du salon » plutôt que
               « Realtek(R) Audio (High Definition Audio Device) ».
             */}
-            <button
+            <Bouton habillage="libre" cibleTactile
                 onClick={() => setMenuOuvert(o => !o)}
                 aria-label={`Sortie — ${LIBELLE_DE_LA_VOIE[voie]}`}
                 title={choisie.absente
@@ -75,13 +76,13 @@ const LigneDeVolume: React.FC<{
                 {choisie.absente && <AlertTriangle size={11} className="shrink-0" />}
                 <span className="truncate">{choisie.nom}</span>
                 <ChevronDown size={11} className="shrink-0 opacity-60" />
-            </button>
+            </Bouton>
 
             {menuOuvert && (
                 <>
                     {/* Refermer en touchant à côté : sur une tablette, il n'y a pas
                         de « clic ailleurs » qui aille de soi. */}
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         aria-label="Fermer le choix de sortie"
                         onClick={() => setMenuOuvert(false)}
                         className="fixed inset-0 z-40 cursor-default"
@@ -92,7 +93,7 @@ const LigneDeVolume: React.FC<{
                         className="absolute right-0 top-12 z-50 w-64 max-h-64 overflow-y-auto rounded-xl border border-app-text/10 bg-app-bg shadow-2xl p-1"
                     >
                         {reglages.sorties.map(sortie => (
-                            <button
+                            <Bouton habillage="libre" cibleTactile
                                 key={sortie.id}
                                 role="menuitem"
                                 onClick={() => { onSortie(sortie.id); setMenuOuvert(false); }}
@@ -104,7 +105,7 @@ const LigneDeVolume: React.FC<{
                             >
                                 <span className="min-w-0 truncate">{sortie.nom}</span>
                                 {sortie.id === choisie.id && <Check size={12} className="shrink-0 text-accent" />}
-                            </button>
+                            </Bouton>
                         ))}
                         {reglages.sorties.length <= 1 && (
                             <p className="px-3 py-2 text-ui-10 italic text-app-subtle">

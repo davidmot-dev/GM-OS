@@ -21,7 +21,10 @@ import type { useDiceStore } from '../src/stores/useDiceStore';
  * npx.cmd playwright test e2e/tabletteMeneurT0.spec.ts --reporter=list
  */
 const ICI = path.dirname(fileURLToPath(import.meta.url));
-const SORTIE = path.join(ICI, '../documentation/Planning/tablettes/T0-meneur');
+// T2 peut rejouer le banc sans écraser les 68 images de référence T0.
+const SORTIE = process.env.GMOS_TABLET_CAPTURES_DIR
+    ? path.resolve(process.env.GMOS_TABLET_CAPTURES_DIR)
+    : path.join(ICI, '../documentation/Planning/tablettes/T0-meneur');
 const DEMO = JSON.parse(fs.readFileSync(path.join(ICI, 'donnees/campagne-de-demo.json'), 'utf8'));
 const PLAN = 'data:image/png;base64,' + fs.readFileSync(path.join(ICI, 'donnees/plan-station-varn.png')).toString('base64');
 

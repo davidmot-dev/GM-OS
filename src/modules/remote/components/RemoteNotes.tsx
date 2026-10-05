@@ -1,4 +1,7 @@
 import React, { useMemo, useState } from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
+import { Panneau } from '../../../components/socle/Panneau';
+import { Etiquette } from '../../../components/socle/Etiquette';
 import { EyeOff, FileText, Layers, BookOpen, Search, X, Lightbulb, Vault } from 'lucide-react';
 import { type RemoteLectureDuMeneur, type RemoteActe, type RemoteScene } from '../segmentDeLecture';
 import MarqueDIntrigue from '../../session/components/trame/MarqueDIntrigue';
@@ -42,10 +45,10 @@ const aplati = (texte: string) =>
 
 /** Ce que chaque état de scène dit, et de quelle couleur. */
 const ETATS = {
-    'en-cours': { mot: 'En cours', teinte: 'text-etat-succes border-etat-succes/40' },
-    'en-pause': { mot: 'En pause', teinte: 'text-etat-alerte border-etat-alerte/40' },
-    'prevue': { mot: 'À jouer', teinte: 'text-app-muted border-app-text/10' },
-    'terminee': { mot: 'Close', teinte: 'text-app-subtle border-app-text/5' },
+    'en-cours': { mot: 'En cours', ton: 'succes', teinte: 'text-etat-succes border-etat-succes/40' },
+    'en-pause': { mot: 'En pause', ton: 'alerte', teinte: 'text-etat-alerte border-etat-alerte/40' },
+    'prevue': { mot: 'À jouer', ton: 'neutre', teinte: 'text-app-muted border-app-text/10' },
+    'terminee': { mot: 'Close', ton: 'neutre', teinte: 'text-app-subtle border-app-text/5' },
 } as const;
 
 /** Une scène en une ligne : titre et état, le reste au déplié. */
@@ -55,7 +58,7 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
     const etat = ETATS[scene.etat];
     return (
         <div className={`rounded-lg border ${scene.etat === 'en-cours' ? 'border-etat-succes/40 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
-            <button
+            <Bouton habillage="libre" cibleTactile
                 onClick={basculer}
                 title={infobulle(infobulleDeLImportance(scene.importance))}
                 className="w-full flex items-center gap-2 px-2.5 py-2 text-left"
@@ -71,9 +74,9 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
                   quoi elle paraîtrait plus appuyée qu'une scène secondaire.
                 */}
                 <MarqueDIntrigue scene={scene} />
-                <span className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${etat.teinte}`}>
+                <Etiquette habillage="libre" ton={etat.ton} className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${etat.teinte}`}>
                     {etat.mot}
-                </span>
+                </Etiquette>
                 <span className={`flex-1 min-w-0 text-xs font-bold truncate ${styleDuTitre(scene.importance)} ${scene.etat === 'terminee' ? 'text-app-subtle line-through' : 'text-app-text'}`}>
                     {scene.titre}
                 </span>
@@ -85,7 +88,7 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
                 {scene.jamaisJouee && (
                     <span className="shrink-0 text-ui-9 italic text-app-subtle">jamais jouée</span>
                 )}
-            </button>
+            </Bouton>
             {ouverte && (
                 <div className="px-2.5 pb-2.5 flex flex-col gap-1.5">
                     {scene.resume && <p className="text-ui-11 leading-relaxed text-app-muted">{scene.resume}</p>}
@@ -198,7 +201,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
             */}
             <div className="flex gap-0.5 bg-app-text/5 p-0.5 rounded-xl border border-app-text/10 self-start shrink-0 max-w-full overflow-x-auto no-scrollbar">
                 {VUES.map(({ id, titre, icone: Icone, compte }) => (
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         key={id}
                         onClick={() => setVue(id)}
                         aria-current={vue === id ? 'page' : undefined}
@@ -208,13 +211,13 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                         {compte !== undefined && compte > 0 && (
                             <span className={vue === id ? 'opacity-60' : 'text-app-subtle'}>{compte}</span>
                         )}
-                    </button>
+                    </Bouton>
                 ))}
             </div>
 
             {/* ── La séance : où en est-on ──────────────────────────────── */}
             {vue === 'seance' && (
-                <div className={`${cadre} flex flex-col gap-4`}>
+                <Panneau as="div" habillage="libre" className={`${cadre} flex flex-col gap-4`}>
                     {([
                         ['Ce qui se joue', scenesDuMoment.enCours],
                         ['En pause', scenesDuMoment.enPause],
@@ -249,24 +252,24 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             <p className="text-xs leading-relaxed text-app-text whitespace-pre-wrap px-1 max-w-[75ch]">{notes.public}</p>
                         </section>
                     )}
-                </div>
+                </Panneau>
             )}
 
             {/* ── La trame entière ──────────────────────────────────────── */}
             {vue === 'trame' && (
-                <div className={`${cadre} flex flex-col gap-2`}>
+                <Panneau as="div" habillage="libre" className={`${cadre} flex flex-col gap-2`}>
                     {actes.length === 0 ? (
                         <p className="text-sm italic text-app-muted text-center py-10">Aucune trame sur cette campagne.</p>
                     ) : actes.map((acte: RemoteActe) => (
                         <section key={acte.id} className={`rounded-xl border p-2 ${acte.acheve ? 'border-app-text/5 bg-app-text/[0.01]' : 'border-app-text/10 bg-app-text/[0.03]'}`}>
-                            <button
+                            <Bouton habillage="libre" cibleTactile
                                 onClick={() => basculer(acte.id, setActesReplies)}
                                 className="w-full flex items-baseline gap-2 text-left px-1 pb-1.5"
                             >
                                 <span className={`text-sm font-black ${acte.acheve ? 'text-app-subtle' : 'text-accent'}`}>{acte.titre}</span>
                                 {acte.acheve && <span className="text-ui-9 uppercase tracking-wider text-app-subtle">achevé</span>}
                                 <span className="ml-auto shrink-0 text-ui-10 text-app-subtle">{acte.scenes.length} scènes</span>
-                            </button>
+                            </Bouton>
                             {!actesReplies.has(acte.id) && (
                                 <div className="flex flex-col gap-1.5">
                                     {acte.resume && <p className="text-ui-11 italic text-app-muted px-1">{acte.resume}</p>}
@@ -287,7 +290,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             )}
                         </section>
                     ))}
-                </div>
+                </Panneau>
             )}
 
             {/* ── Le wiki ───────────────────────────────────────────────── */}
@@ -301,19 +304,19 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             onChange={(e) => setFiltreWiki(e.target.value)}
                             placeholder="Chercher dans le wiki…"
                             aria-label="Chercher dans le wiki"
-                            className="w-full h-9 pl-9 pr-9 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40"
+                            className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40"
                         />
                         {filtreWiki && (
-                            <button
+                            <Bouton habillage="libre" cibleTactile
                                 onClick={() => setFiltreWiki('')}
                                 aria-label="Effacer la recherche"
-                                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
                             >
                                 <X size={14} />
-                            </button>
+                            </Bouton>
                         )}
                     </div>
-                    <div className={`${cadre} flex flex-col gap-3`}>
+                    <Panneau as="div" habillage="libre" className={`${cadre} flex flex-col gap-3`}>
                         {wikiFiltre.length === 0 ? (
                             <p className="text-sm italic text-app-muted text-center py-10">
                                 {filtreWiki ? `Rien ne correspond à « ${filtreWiki} ».` : 'Le wiki de cette campagne est vide.'}
@@ -325,15 +328,15 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             </h3>
                             {fiches.map((fiche) => (
                             <div key={fiche.id} className="rounded-lg border border-app-text/5 bg-app-text/[0.02]">
-                                <button
+                                <Bouton habillage="libre" cibleTactile
                                     onClick={() => setFicheOuverte(ficheOuverte === fiche.id ? null : fiche.id)}
                                     className="w-full flex items-center gap-2 px-2.5 py-2 text-left"
                                 >
-                                    <span className="shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border border-app-text/10 text-app-muted">
+                                    <Etiquette habillage="libre" ton="neutre" className="shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border border-app-text/10 text-app-muted">
                                         {LIBELLE_DE_CATEGORIE[fiche.categorie] ?? fiche.categorie}
-                                    </span>
+                                    </Etiquette>
                                     <span className="flex-1 min-w-0 text-xs font-bold text-app-text truncate">{fiche.titre}</span>
-                                </button>
+                                </Bouton>
                                 {ficheOuverte === fiche.id && (
                                     <div className="px-2.5 pb-2.5 flex flex-col gap-2">
                                         {fiche.contenu ? (
@@ -358,7 +361,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             ))}
                         </section>
                         ))}
-                    </div>
+                    </Panneau>
                 </>
             )}
 
@@ -373,15 +376,15 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
 
             {/* ── Les indices ───────────────────────────────────────────── */}
             {vue === 'indices' && (
-                <div className={`${cadre} grid grid-cols-1 min-[900px]:grid-cols-2 gap-1.5 content-start`}>
+                <Panneau as="div" habillage="libre" className={`${cadre} grid grid-cols-1 min-[900px]:grid-cols-2 gap-1.5 content-start`}>
                     {indices.length === 0 ? (
                         <p className="text-sm italic text-app-muted text-center py-10 col-span-full">Aucun indice sur cette campagne.</p>
                     ) : indices.map((indice) => (
                         <div key={indice.id} className={`rounded-lg border p-2.5 flex flex-col gap-1 ${indice.revele ? 'border-etat-succes/30 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
                             <div className="flex items-center gap-2">
-                                <span className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${indice.revele ? 'border-etat-succes/40 text-etat-succes' : 'border-app-text/10 text-app-muted'}`}>
+                                <Etiquette habillage="libre" ton={indice.revele ? 'succes' : 'neutre'} className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${indice.revele ? 'border-etat-succes/40 text-etat-succes' : 'border-app-text/10 text-app-muted'}`}>
                                     {indice.revele ? 'Donné' : 'En main'}
-                                </span>
+                                </Etiquette>
                                 <span className="text-xs font-bold text-app-text truncate">{indice.titre}</span>
                             </div>
                             {indice.contenu && (
@@ -389,18 +392,18 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             )}
                         </div>
                     ))}
-                </div>
+                </Panneau>
             )}
 
             {/* ── Les secrets du meneur ─────────────────────────────────── */}
             {vue === 'secrets' && (
-                <div className={`${cadre} ${isAventureMode ? 'blur-md grayscale pointer-events-none' : ''}`}>
+                <Panneau as="div" habillage="libre" className={`${cadre} ${isAventureMode ? 'blur-md grayscale pointer-events-none' : ''}`}>
                     <div className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-app-text max-w-[75ch]">
                         {isAventureMode
                             ? "Contenu protégé par le Mode Aventure."
                             : (notes?.private || "Aucun secret enregistré pour cette séance.")}
                     </div>
-                </div>
+                </Panneau>
             )}
         </div>
     );

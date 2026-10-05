@@ -1,4 +1,5 @@
 import React from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
 import { Play } from 'lucide-react';
 import { type RemoteMoment } from '../types/remote.types';
 
@@ -31,7 +32,7 @@ const RemoteStoryboard: React.FC<RemoteStoryboardProps> = ({ moments, onTrigger 
     return (
         <div className="grid grid-cols-1 min-[700px]:grid-cols-2 min-[1100px]:grid-cols-3 gap-2">
             {moments.map((m, i) => (
-                <button
+                <Bouton habillage="libre" cibleTactile
                     key={m.id}
                     onClick={() => onTrigger(i)}
                     className="group flex items-center gap-3 px-3 h-14 rounded-xl border border-app-text/5 bg-app-text/[0.03] hover:border-accent/40 active:bg-accent active:text-app-on-accent transition-colors text-left"
@@ -43,7 +44,7 @@ const RemoteStoryboard: React.FC<RemoteStoryboardProps> = ({ moments, onTrigger 
                         {m.name}
                     </span>
                     <Play size={16} fill="currentColor" className="text-accent shrink-0 group-active:text-app-bg" />
-                </button>
+                </Bouton>
             ))}
         </div>
     );

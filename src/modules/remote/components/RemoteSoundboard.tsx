@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
 import { Volume2, Search, X } from 'lucide-react';
 import { type RemoteSound } from '../types/remote.types';
 import { type RemoteReglagesAudio } from '../reglagesAudio';
@@ -64,16 +65,16 @@ const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
                         onChange={(e) => setFiltre(e.target.value)}
                         placeholder="Filtrer les bruitages…"
                         aria-label="Filtrer les bruitages"
-                        className="w-full h-9 pl-9 pr-9 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
+                        className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
                     />
                     {filtre && (
-                        <button
+                        <Bouton habillage="libre" cibleTactile
                             onClick={() => setFiltre('')}
                             aria-label="Effacer le filtre"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
                         >
                             <X size={14} />
-                        </button>
+                        </Bouton>
                     )}
                 </div>
             )}
@@ -81,7 +82,7 @@ const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
             {retenus.length > 0 ? (
                 <div className="grid grid-cols-3 min-[700px]:grid-cols-4 min-[1000px]:grid-cols-6 gap-2">
                     {retenus.map(s => (
-                        <button
+                        <Bouton habillage="libre" cibleTactile
                             key={s.id}
                             onClick={() => onTrigger(s.id)}
                             disabled={!s.active}
@@ -95,7 +96,7 @@ const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
                             <span className="text-ui-10 font-bold leading-tight text-center line-clamp-2 w-full">
                                 {s.title}
                             </span>
-                        </button>
+                        </Bouton>
                     ))}
                 </div>
             ) : (

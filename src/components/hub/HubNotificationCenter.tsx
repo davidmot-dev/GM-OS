@@ -3,6 +3,7 @@ import TexteMarkdown from '../TexteMarkdown';
 import { MessageSquare, Bell, X, ShieldAlert } from 'lucide-react';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Bouton } from '../socle';
 
 /**
  * HubNotificationCenter - Affiche les alertes et messages du MJ sur la tablette du joueur.
@@ -75,13 +76,13 @@ const HubNotificationCenter: React.FC = () => {
                                     <span className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/30 truncate pr-4">
                                         RECU DE : {notif.fromName}
                                     </span>
-                                    <button 
+                                    <Bouton habillage="libre" cibleTactile
                                         onClick={() => clearHubNotification(notif.id)}
-                                        className="text-app-text/20 hover:text-app-text transition-colors p-1 -m-1"
+                                        className="min-w-[44px] text-app-text/20 hover:text-app-text transition-colors p-1 -m-1"
                                         title="Fermer"
                                     >
                                         <X size={14} />
-                                    </button>
+                                    </Bouton>
                                 </div>
 
                                 <h4 className="text-sm font-bold text-app-text mb-1 leading-tight">

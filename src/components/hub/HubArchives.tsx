@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Archive, Search } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
+import { Bouton, EnTeteDeModule, Etiquette } from '../socle';
 import { type Clue } from '../../modules/session/store/types';
 
 interface HubArchivesProps {
@@ -14,7 +15,7 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
 
     return (
         <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
-            <div className="flex items-center justify-between mb-8 px-4">
+            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 px-4">
                 <div className="space-y-1">
                     <h2 className="text-2xl font-black tracking-tight text-app-text flex items-center gap-3">
                         <Archive className="text-accent" size={24} />
@@ -22,15 +23,15 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
                     </h2>
                     <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-widest">Preuves et indices collectés lors de la campagne.</p>
                 </div>
-                <div className="text-ui-10 font-black bg-app-text/5 border border-app-border/40 px-4 py-2 rounded-full text-app-text/40 uppercase tracking-widest">
+                <Etiquette habillage="libre" ton="neutre" className="text-ui-10 font-black bg-app-text/5 border border-app-border/40 px-4 py-2 rounded-full text-app-text/40 uppercase tracking-widest">
                     {revealedClues.length} Fragments Découverts
-                </div>
-            </div>
+                </Etiquette>
+            </EnTeteDeModule>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                     {revealedClues.map((clue, idx) => (
-                        <button 
+                        <Bouton habillage="libre" cibleTactile
                             key={clue.id} 
                             onClick={() => onSelectClue(clue)}
                             type="button"
@@ -60,7 +61,7 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
                                     <p className="text-ui-11 text-app-text/40 leading-relaxed italic font-serif line-clamp-4">{clue.content}</p>
                                 </div>
                             </div>
-                        </button>
+                        </Bouton>
                     ))}
                     
                     {revealedClues.length === 0 && (

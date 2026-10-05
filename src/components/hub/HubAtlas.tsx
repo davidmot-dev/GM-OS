@@ -1,6 +1,7 @@
 import React from 'react';
 import { Globe } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
+import { Bouton, EnTeteDeModule, Etiquette } from '../socle';
 import { type AtlasMap } from '../../modules/session/store/types';
 
 interface HubAtlasProps {
@@ -11,7 +12,7 @@ interface HubAtlasProps {
 export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSelectMap }) => {
     return (
         <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
-            <div className="flex items-center justify-between mb-8 px-4">
+            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 px-4">
                 <div className="space-y-1">
                     <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
                         <Globe className="text-accent" size={30} />
@@ -20,17 +21,17 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                     <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Cartographie des territoires explorés par le groupe.</p>
                 </div>
                 <div className="flex gap-2">
-                    <div className="text-ui-10 font-black bg-etat-succes/10 border border-etat-succes/20 px-6 py-2 rounded-full text-etat-succes uppercase tracking-widest flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse" />
+                    <Etiquette habillage="libre" ton="succes" className="text-ui-10 font-black bg-etat-succes/10 border border-etat-succes/20 px-6 py-2 rounded-full text-etat-succes uppercase tracking-widest flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse" />
                         {atlasMaps.length} Lieux Découverts
-                    </div>
+                    </Etiquette>
                 </div>
-            </div>
+            </EnTeteDeModule>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
                     {atlasMaps.map((map, idx) => (
-                        <button 
+                        <Bouton habillage="libre" cibleTactile
                             key={map.id}
                             onClick={() => onSelectMap(map)}
                             type="button"
@@ -69,7 +70,7 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                                     {map.narrativeDescription || "Documentation en attente..."}
                                 </p>
                             </div>
-                        </button>
+                        </Bouton>
                     ))}
 
                     {atlasMaps.length === 0 && (

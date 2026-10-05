@@ -1,4 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
+import { Panneau } from '../../../components/socle/Panneau';
 import { Send, User, Shield } from 'lucide-react';
 import type { SessionMessage } from '../../../types/session.types';
 
@@ -101,25 +103,25 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
     return (
         <div className="flex flex-col gap-3 h-full">
             <div className="flex gap-1 overflow-x-auto no-scrollbar shrink-0">
-                <button
+                <Bouton habillage="libre" cibleTactile
                     onClick={() => setFiltre('tous')}
                     title="Tout le fil, et le canal général pour écrire"
                     className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase transition-colors ${filtre === 'tous' ? 'bg-accent text-app-on-accent' : 'bg-app-text/5 text-app-muted hover:text-app-text'}`}
                 >
                     Tous
-                </button>
+                </Bouton>
                 {correspondants.map(({ id, nom }) => (
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         key={id}
                         onClick={() => setFiltre(id)}
                         className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase transition-colors ${filtre === id ? 'bg-accent text-app-on-accent' : 'bg-app-text/5 text-app-muted hover:text-app-text'}`}
                     >
                         {nom}
-                    </button>
+                    </Bouton>
                 ))}
             </div>
 
-            <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-3 flex flex-col gap-2">
+            <Panneau as="div" habillage="libre" className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-3 flex flex-col gap-2">
                 {fil.length === 0 ? (
                     <p className="text-sm italic text-app-muted text-center py-10">
                         {correspondants.length === 0
@@ -144,7 +146,7 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                     );
                 })}
                 <div ref={finDuFil} />
-            </div>
+            </Panneau>
 
             {/*
               **Le champ dit toujours à qui l'on parle.** C'est la seule garde qui
@@ -164,16 +166,16 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                         : 'Choisissez un destinataire ci-dessus'}
                     title={destinataireChoisi ? `Message à ${destinataireChoisi.nom}` : undefined}
                     aria-label="Message à envoyer"
-                    className="flex-1 h-10 px-3 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 disabled:opacity-40"
+                    className="flex-1 h-[44px] px-3 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 disabled:opacity-40"
                 />
-                <button
+                <Bouton habillage="libre" cibleTactile
                     onClick={envoyer}
                     disabled={!destinataireChoisi || !texte.trim()}
                     aria-label="Envoyer le message"
-                    className="shrink-0 w-10 h-10 rounded-xl bg-accent text-app-on-accent flex items-center justify-center active:scale-95 transition-transform disabled:opacity-30 disabled:grayscale"
+                    className="shrink-0 min-w-[44px] w-10 h-10 rounded-xl bg-accent text-app-on-accent flex items-center justify-center active:scale-95 transition-transform disabled:opacity-30 disabled:grayscale"
                 >
                     <Send size={16} />
-                </button>
+                </Bouton>
             </div>
         </div>
     );

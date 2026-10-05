@@ -138,6 +138,11 @@ une tablette qui se reconnecte retrouve le thème.
    rattrape, la mise en page ne bouge pas.
 3. Lot par lot, dans l'ordre de la décision 4 : **joueurs**, puis **meneur**.
 
+**Décision du 05/10** : les cinq étoiles de feedback et les commandes des réserves conservent
+leur disposition actuelle en T2. Leurs cibles tactiles de 44 × 44 px seront traitées en T4.
+Pour l'inventaire des joueurs, David retient l'option 1 : réserver dès T2 une zone de défilement
+au-dessus de la navigation fixe sur téléphone, sans réagencer les cartes ni leurs actions.
+
 **Sortie** : les captures de T0 passent sous la tolérance — *et on les regarde, on ne se fie pas au
 compte* (registre § 76 : sur fond sombre, la tolérance a laissé passer un écran refait). Les essais
 de T0 passent.
@@ -174,6 +179,9 @@ au tactile — la maquette retenue guide, la grammaire tranche (choix de David p
 | **J2** | Archives (indices), PNJ, Lieux, notifications, messagerie | Ce qu'il consulte |
 | **M1** | Pads, Dés, Combat, ligne d'état, Couper le son | Ce que le meneur touche en pleine scène |
 | **M2** | Sons, Scénario, Tableau, Notes, Messages | Le reste |
+
+Le réagencement de T4 inclut les étoiles de feedback et les commandes des réserves : rendre
+leurs cibles tactiles d'au moins 44 × 44 px, sans figer ici leur future disposition.
 
 Chaque lot comprend : ses essais e2e **relancés après chaque écran** (pas seulement les captures),
 ses captures aux trois tailles, et les guides concernés — **60** (tablette du meneur), **61** et
@@ -215,7 +223,7 @@ clavier de Safari, la reconnexion après une mise en veille.
 | :--- | :--- |
 | T0 · État des lieux | 🔄 **Relevé complet sur les deux surfaces** : [joueurs, 54 captures et 39 scénarios](2026-10-04-T0-tablette-joueurs.md) ; [meneur, 68 captures et 44 scénarios](2026-10-05-T0-tablette-meneur.md). Le banc MJ compte 40 réussites ordinaires et 4 échecs attendus. Défauts connus au § 1 bis du registre ; sortie stricte encore à arbitrer. David a ouvert T1 malgré ces défauts. |
 | T1 · Le thème voyage | ✅ **Implémenté le 05/10** : [relevé T1](2026-10-05-T1-apparence-tablettes.md), thème de base, accent, personnalités, jetons et icônes du jeu sur les deux tablettes ; reconnexion et bascule en moins d'une seconde éprouvées en E2E. Les polices du jeu sont incorporées sur le PC et diffusées localement quand leur source est disponible. |
-| T2 · Habillage par le socle | ⏳ |
+| T2 · Habillage par le socle | 🔄 **En cours sur les deux tablettes** : [joueurs](2026-10-05-T2-tablette-joueurs.md), [meneur](2026-10-05-T2-tablette-meneur.md). Boutons migrés et bancs T0 rejoués ; comparaison visuelle et cibles de 44 × 44 px restent ouvertes sur les barres compactes. L'inventaire mobile réserve désormais la place de la navigation fixe ; contrôle visuel à 390 px restant. Les étoiles de feedback et les commandes des réserves gardent leur disposition actuelle ; leurs cibles de 44 × 44 px sont reportées à T4 par décision de David. |
 | T3 · Maquettes Stitch | ⏳ |
 | T4 · Réagencement (J1, J2, M1, M2) | ⏳ |
 | T5 · Le fini | ⏳ |

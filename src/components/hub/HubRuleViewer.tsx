@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, BookOpen, Shield, HelpCircle, FileText } from 'lucide-react';
 import TexteMarkdown from '../TexteMarkdown';
+import { Bouton } from '../socle';
 
 interface HubRuleViewerProps {
     rule: {
@@ -55,12 +56,12 @@ export const HubRuleViewer: React.FC<HubRuleViewerProps> = ({ rule, onClose }) =
                                 </h2>
                             </div>
                         </div>
-                        <button 
+                        <Bouton habillage="libre" cibleTactile
                             onClick={onClose}
                             className="p-3 rounded-full hover:bg-app-text/10 text-app-muted hover:text-app-text transition-all"
                         >
                             <X size={24} />
-                        </button>
+                        </Bouton>
                     </div>
 
                     {/* Content */}
@@ -79,12 +80,12 @@ export const HubRuleViewer: React.FC<HubRuleViewerProps> = ({ rule, onClose }) =
 
                     {/* Footer */}
                     <div className="p-6 border-t border-app-border/30 flex justify-center bg-app-surface-2/10">
-                        <button 
+                        <Bouton habillage="libre" cibleTactile
                             onClick={onClose}
                             className="px-8 py-3 rounded-full bg-app-surface-2 border border-app-border text-app-text font-bold uppercase tracking-widest hover:bg-app-surface-2 hover:text-app-text transition-all shadow-lg active:scale-95"
                         >
                             Compris, Fermer
-                        </button>
+                        </Bouton>
                     </div>
                 </motion.div>
             </motion.div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
 import { useSessionOSStore } from '../../modules/session/store/index';
 import { MessageSquare, Send, X, Users, Shield, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Bouton } from '../socle';
 
 interface HubMessengerProps {
     isOpen: boolean;
@@ -105,19 +106,20 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                 <p className="text-ui-10 text-accent font-medium">Canal {selectedRecipient.type === 'gm' ? 'Direct MJ' : selectedRecipient.type === 'all' ? 'Général' : 'Privé'}</p>
                             </div>
                         </div>
-                        <button 
+                        <Bouton habillage="libre" cibleTactile
                             onClick={onClose}
-                            className="p-2 hover:bg-app-text/10 rounded-full text-app-text/40 transition-colors"
+                            className="min-w-[44px] p-2 hover:bg-app-text/10 rounded-full text-app-text/40 transition-colors"
                             title="Fermer la messagerie"
                         >
                             <X size={20} />
-                        </button>
+                        </Bouton>
                     </div>
 
                     {/* Recipient Selector (Dropdown) */}
                     <div className="px-4 py-3 bg-app-bg/40 border-b border-app-border/20 relative z-50">
-                        <button
+                        <Bouton habillage="libre" cibleTactile
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            aria-expanded={isDropdownOpen}
                             className="w-full flex items-center justify-between px-3 py-2 bg-app-surface border border-app-border/40 hover:border-accent/40 rounded-xl transition-all shadow-sm"
                             title="Choisir le destinataire"
                         >
@@ -143,7 +145,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                 </span>
                             </div>
                             <ChevronDown size={16} className={`text-app-text/60 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-accent' : ''}`} />
-                        </button>
+                        </Bouton>
 
                         <AnimatePresence>
                             {isDropdownOpen && (
@@ -155,7 +157,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                     className="absolute top-[calc(100%+0.5rem)] left-4 right-4 bg-app-surface border border-app-border/60 shadow-2xl rounded-xl overflow-hidden backdrop-blur-3xl z-50 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-app-text/10"
                                 >
                                     {otherCharacters.map((char) => (
-                                        <button
+                                        <Bouton habillage="libre" cibleTactile
                                             key={char.id}
                                             onClick={() => {
                                                 onRecipientChange(char.id);
@@ -183,7 +185,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                                 </div>
                                             )}
                                             {char.name}
-                                        </button>
+                                        </Bouton>
                                     ))}
                                 </motion.div>
                             )}
@@ -244,17 +246,17 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                 onKeyDown={handleKeyPress}
                                 title="Entrer un message"
                                 placeholder={`Message à ${selectedRecipient.name}...`}
-                                className="w-full bg-app-bg border border-app-border/40 rounded-xl py-3 pl-4 pr-12 text-sm text-app-text placeholder-app-text/30 focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none min-h-[44px] max-h-32 transition-all"
+                                className="w-full bg-app-bg border border-app-border/40 rounded-xl py-3 pl-4 pr-[60px] text-sm text-app-text placeholder-app-text/30 focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none min-h-[60px] max-h-32 transition-all"
                                 rows={1}
                             />
-                            <button
+                            <Bouton habillage="libre" cibleTactile
                                 onClick={handleSend}
                                 disabled={!inputValue.trim()}
                                 title="Envoyer le message"
-                                className="absolute right-2 bottom-2 p-2 bg-accent hover:brightness-110 disabled:opacity-50 text-app-bg rounded-lg transition-all shadow-lg"
+                                className="absolute right-2 bottom-2 min-w-[44px] p-2 bg-accent hover:brightness-110 disabled:opacity-50 text-app-bg rounded-lg transition-all shadow-lg"
                             >
                                 <Send size={16} />
-                            </button>
+                            </Bouton>
                         </div>
                         <p className="text-ui-10 text-app-text/40 mt-2 italic text-center">
                             {selectedRecipientId === 'all' 

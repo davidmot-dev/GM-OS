@@ -3,6 +3,7 @@ import { useClientStore } from '../../stores/useClientStore';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { Radar, User, Shield, Fingerprint, WifiOff, AlertCircle } from 'lucide-react';
 import { useMediaUrl } from '../../hooks/useMediaUrl';
+import { Bouton } from '../socle';
 
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
@@ -264,7 +265,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         {lastError}
                     </p>
                     
-                    <button 
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => {
                             setLastError(null);
                             setStep('SELECTION');
@@ -272,7 +273,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         className="px-12 py-5 bg-etat-danger hover:brightness-110 text-app-bg rounded-full text-lg font-black uppercase tracking-widest shadow-glow-rose/40 transition-all active:scale-95"
                     >
                         Choisir un autre signal
-                    </button>
+                    </Bouton>
                 </div>
             </div>
         );
@@ -348,7 +349,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
             {/* Top Bar for Reset/Logout */}
             <div className="absolute top-8 left-8 z-50">
                 {!showLogoutConfirm ? (
-                    <button 
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => {
                             haptic(10);
                             setShowLogoutConfirm(true);
@@ -357,11 +358,11 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                     >
                         <div className="w-1.5 h-1.5 rounded-full bg-etat-danger/40 group-hover:bg-etat-danger group-hover:animate-pulse" />
                         Quitter la session
-                    </button>
+                    </Bouton>
                 ) : (
                     <div className="flex items-center gap-2 p-1 bg-etat-danger rounded-full animate-in zoom-in duration-300">
                         <span className="px-4 text-ui-9 font-black text-app-text uppercase tracking-tighter">Vraiment ?</span>
-                        <button 
+                        <Bouton habillage="libre" cibleTactile
                             onClick={() => {
                                 haptic(10);
                                 setShowLogoutConfirm(false);
@@ -369,8 +370,8 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                             className="px-4 py-2 bg-app-text/20 hover:bg-app-text/30 text-app-text rounded-full text-ui-10 font-black uppercase"
                         >
                             Non
-                        </button>
-                        <button 
+                        </Bouton>
+                        <Bouton habillage="libre" cibleTactile
                             onClick={() => {
                                 haptic([10, 50, 10]);
                                 logout();
@@ -378,7 +379,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                             className="px-4 py-2 bg-app-text text-etat-danger hover:bg-app-text/80 rounded-full text-ui-10 font-black uppercase"
                         >
                             Oui, quitter
-                        </button>
+                        </Bouton>
                     </div>
                 )}
             </div>
@@ -405,7 +406,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                 {presentPcs.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                          {presentPcs.map((char) => (
-                             <button
+                             <Bouton habillage="libre" cibleTactile
                                  key={char.id}
                                  onClick={() => handleSelectCharacter(char)}
                                  className={`group relative flex flex-col bg-app-surface/50 border border-app-border/10 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-[0_0_50px_-12px_var(--app-accent)] active:scale-95 ${
@@ -456,7 +457,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                                         {char.classRace || "Héros d'Eldoria"}
                                     </p>
                                 </div>
-                            </button>
+                            </Bouton>
                         ))}
                     </div>
                 ) : (

@@ -10,8 +10,7 @@ import { Ornement } from './Ornement';
  * pastilles**, et les actions de l'en-tête à droite. L'ornement `entete` du
  * thème se pose dessous, en frise.
  */
-export interface EnTeteDeModuleProps {
-    titre: React.ReactNode;
+interface EnTeteCommunProps {
     surtitre?: React.ReactNode;
     /** La ligne d'état : des `<Etiquette>`. */
     etat?: React.ReactNode;
@@ -20,7 +19,15 @@ export interface EnTeteDeModuleProps {
     className?: string;
 }
 
-export const EnTeteDeModule: React.FC<EnTeteDeModuleProps> = ({ titre, surtitre, etat, actions, className = '' }) => (
+export type EnTeteDeModuleProps = EnTeteCommunProps & (
+    | { habillage?: 'socle'; titre: React.ReactNode; children?: never }
+    /** Garde le contenu et les classes d'un en-tête historique pendant T2. */
+    | { habillage: 'libre'; children: React.ReactNode; titre?: never }
+);
+
+export const EnTeteDeModule: React.FC<EnTeteDeModuleProps> = ({ titre, habillage = 'socle', children, surtitre, etat, actions, className = '' }) => habillage === 'libre' ? (
+    <header className={className} data-en-tete-de-module="">{children}</header>
+) : (
     <header className={`flex flex-col gap-2 ${className}`} data-en-tete-de-module="">
         <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">

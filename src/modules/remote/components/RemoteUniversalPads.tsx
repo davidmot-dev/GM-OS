@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Bouton } from '../../../components/socle/Bouton';
 import { Music, Waves, Image as ImageIcon, Search, X } from 'lucide-react';
 import { type RemoteUniversalPad, type RemoteComptesDePads } from '../types/remote.types';
 import { type RemoteReglagesAudio, type NomDeVoie } from '../reglagesAudio';
@@ -110,16 +111,16 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                     onChange={(e) => setFiltre(e.target.value)}
                     placeholder="Filtrer les pads…"
                     aria-label="Filtrer les pads"
-                    className="w-full h-9 pl-9 pr-9 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
+                    className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
                 />
                 {filtre && (
-                    <button
+                    <Bouton habillage="libre" cibleTactile
                         onClick={() => setFiltre('')}
                         aria-label="Effacer le filtre"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
                     >
                         <X size={14} />
-                    </button>
+                    </Bouton>
                 )}
             </div>
 
@@ -152,7 +153,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                         {type === 'image' ? (
                             <div className="grid grid-cols-3 min-[700px]:grid-cols-4 min-[1000px]:grid-cols-6 gap-2">
                                 {padsDeLaFamille.map(pad => (
-                                    <button
+                                    <Bouton habillage="libre" cibleTactile
                                         key={pad.id}
                                         onClick={() => onTrigger(pad.id)}
                                         className={`group relative overflow-hidden aspect-[4/3] rounded-xl border transition-colors ${
@@ -177,7 +178,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                                         {pad.isActive && (
                                             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent shadow-glow-accent" />
                                         )}
-                                    </button>
+                                    </Bouton>
                                 ))}
                             </div>
                         ) : (
@@ -187,7 +188,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                             */
                             <div className="grid grid-cols-2 min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4 gap-2">
                                 {padsDeLaFamille.map(pad => (
-                                    <button
+                                    <Bouton habillage="libre" cibleTactile
                                         key={pad.id}
                                         onClick={() => onTrigger(pad.id)}
                                         className={`flex items-center gap-2.5 px-3 h-14 rounded-xl border text-left transition-colors ${
@@ -208,7 +209,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                                         {pad.isActive && (
                                             <span className="ml-auto w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
                                         )}
-                                    </button>
+                                    </Bouton>
                                 ))}
                             </div>
                         )}

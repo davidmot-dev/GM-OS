@@ -4,6 +4,7 @@ import { ResolvedImage } from '../ResolvedImage';
 import { type FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
 import { type InventoryItem, type PlayerCharacter } from '../../modules/session/store/types';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Bouton, Panneau } from '../socle';
 
 interface HubInventoryProps {
     items: FavoriteEntity[]; // Legacy favorites
@@ -86,9 +87,9 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 {structuredItems.map((item) => {
                                     const isPending = (transferRequests || []).some(r => r.item.id === item.id && r.status === 'pending');
                                     return (
-                                        <div 
+                                        <Panneau as="div"
                                             key={item.id}
-                                            className={`group relative flex flex-col gap-2 p-3 rounded-[1.5rem] bg-accent/5 border border-app-text/5 transition-all duration-500 shadow-lg ${isPending ? 'opacity-50 grayscale' : 'hover:border-accent/40'}`}
+                                            className={`group flex flex-col gap-2 p-3 !overflow-visible !rounded-[1.5rem] !bg-accent/5 !border-app-text/5 !shadow-lg transition-all duration-500 ${isPending ? 'opacity-50 grayscale' : 'hover:!border-accent/40'}`}
                                         >
                                             <div className="relative aspect-square w-full rounded-[1.2rem] overflow-hidden bg-app-bg/40 flex items-center justify-center">
                                                 <Package className={`${isPending ? 'text-app-text/20' : 'text-accent/20 group-hover:scale-110'} transition-transform duration-700`} size={32} />
@@ -108,7 +109,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                             </div>
 
                                             <div className="flex gap-1.5 mt-1">
-                                                <button 
+                                                <Bouton habillage="libre" cibleTactile
                                                     disabled={isPending}
                                                     onClick={() => setTransferringItem(item)}
                                                     className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border transition-all text-ui-7 font-black uppercase tracking-widest ${
@@ -119,17 +120,17 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                                     title="Donner"
                                                 >
                                                     <Send size={10} />
-                                                </button>
-                                                <button 
+                                                </Bouton>
+                                                <Bouton habillage="libre" cibleTactile
                                                     disabled={isPending}
                                                     onClick={() => handleDropItem(item)}
-                                                    className={`aspect-square flex items-center justify-center py-1.5 rounded-lg border transition-all text-etat-danger border-etat-danger/20 bg-etat-danger/10 hover:bg-etat-danger/20`}
+                                                    className="aspect-square min-w-[44px] flex items-center justify-center py-1.5 rounded-lg border transition-all text-etat-danger border-etat-danger/20 bg-etat-danger/10 hover:bg-etat-danger/20"
                                                     title="Jeter"
                                                 >
                                                     <Trash2 size={10} />
-                                                </button>
+                                                </Bouton>
                                             </div>
-                                        </div>
+                                        </Panneau>
                                     );
                                 })}
                             </div>
@@ -149,7 +150,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                             </h3>
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 md:gap-4">
                                 {items.map((item) => (
-                                    <button 
+                                    <Bouton habillage="libre" cibleTactile
                                         key={item.id}
                                         onClick={() => onSelectItem(item)}
                                         className="group text-left relative flex flex-col gap-2 p-3 rounded-[1.5rem] bg-app-surface/40 border border-app-border/10 hover:bg-app-surface/80 hover:border-accent/30 transition-all duration-500 w-full"
@@ -164,7 +165,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                         <div className="px-1 text-center">
                                             <h3 className="text-ui-9 font-black text-app-text uppercase tracking-wider truncate">{item.name}</h3>
                                         </div>
-                                    </button>
+                                    </Bouton>
                                 ))}
                             </div>
                         </section>
@@ -203,9 +204,9 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                         >
                             <div className="flex items-center justify-between">
                                 <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter">Donner un objet</h3>
-                                <button onClick={() => setTransferringItem(null)} className="p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors">
+                                <Bouton habillage="libre" cibleTactile onClick={() => setTransferringItem(null)} className="min-w-[44px] p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors" title="Fermer le don">
                                     <X size={24} />
-                                </button>
+                                </Bouton>
                             </div>
 
                             <div className="flex items-center gap-6 p-6 bg-accent/5 border border-accent/10 rounded-3xl">
@@ -223,7 +224,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 <p className="text-ui-10 font-black text-app-text/40 uppercase tracking-[0.4em] px-2">Choisir le destinataire</p>
                                 <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                                     {otherCharacters.map(char => (
-                                        <button
+                                        <Bouton habillage="libre" cibleTactile
                                             key={char.id}
                                             onClick={() => handleRequestTransfer(char.id)}
                                             className="flex items-center justify-between p-4 rounded-2xl bg-app-text/5 border border-app-text/5 hover:bg-accent/10 hover:border-accent/30 transition-all group"
@@ -238,7 +239,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                                 </div>
                                             </div>
                                             <ChevronRight size={20} className="text-app-text/20 group-hover:text-accent group-hover:translate-x-1 transition-all" />
-                                        </button>
+                                        </Bouton>
                                     ))}
                                     {otherCharacters.length === 0 && (
                                         <div className="py-8 text-center bg-app-text/5 rounded-2xl border border-dashed border-app-text/10">

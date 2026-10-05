@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Sparkles } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
+import { Bouton, EnTeteDeModule, Etiquette } from '../socle';
 import { type Entity } from '../../modules/session/store/types';
 
 interface HubTrombinoscopeProps {
@@ -11,7 +12,7 @@ interface HubTrombinoscopeProps {
 export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ npcs, onSelectNpc }) => {
     return (
         <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
-            <div className="flex items-center justify-between mb-8 px-4">
+            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 px-4">
                 <div className="space-y-1">
                     <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
                         <Users className="text-accent" size={30} />
@@ -20,17 +21,17 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
                     <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Registre des individus et entités identifiés.</p>
                 </div>
                 <div className="flex gap-2">
-                    <div className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                    <Etiquette habillage="libre" ton="accent" className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                         {npcs.length} Profils Répertoriés
-                    </div>
+                    </Etiquette>
                 </div>
-            </div>
+            </EnTeteDeModule>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6 place-items-start">
                     {npcs.map((npc, idx) => (
-                        <button 
+                        <Bouton habillage="libre" cibleTactile
                             key={npc.id}
                             onClick={() => onSelectNpc(npc)}
                             type="button"
@@ -55,7 +56,7 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
                             <div className="absolute top-2 right-2 p-2 bg-app-bg/60 backdrop-blur-md rounded-full border border-app-border/10 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Sparkles size={10} className="text-accent" />
                             </div>
-                        </button>
+                        </Bouton>
                     ))}
 
                     {npcs.length === 0 && (

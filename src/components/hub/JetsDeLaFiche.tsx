@@ -4,6 +4,7 @@ import { caracteristiquesDeSauvegarde, type DemandeDeJetDeFiche } from '../../mo
 import { deCourant, ressourcesDUsure } from '../../modules/dice/ressourcesDUsure';
 import type { ModificateurDeSauvegarde } from '../../modules/dice/DiceEngine';
 import type { GameDriver } from '../../types/drivers';
+import { Bouton, Panneau } from '../socle';
 
 /**
  * **Lancer depuis sa fiche, sur sa tablette** — Cthulhu Hack, demandé par
@@ -55,7 +56,7 @@ export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characte
     };
 
     return (
-        <section className="space-y-5 rounded-2xl border border-app-border bg-app-surface/60 p-4" data-jets-de-la-fiche="">
+        <Panneau className="space-y-5 !overflow-visible !rounded-2xl !border-app-border !bg-app-surface/60 !shadow-none p-4" data-jets-de-la-fiche="">
             {sauvegardes.length > 0 && (
                 <div className="space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -64,29 +65,29 @@ export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characte
                         </h3>
                         <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Avantage">
                             {MODIFICATEURS.map(({ cle, titre }) => (
-                                <button
+                                <Bouton habillage="libre" cibleTactile aLaTable
                                     key={cle}
                                     onClick={() => setModificateur(cle)}
                                     aria-pressed={modificateur === cle}
-                                    className={`min-h-12 px-3 rounded-xl border text-ui-11 font-black uppercase tracking-wider transition-all ${modificateur === cle
+                                    className={`px-3 rounded-xl border text-ui-11 font-black uppercase tracking-wider transition-all ${modificateur === cle
                                         ? 'bg-accent/20 border-accent text-accent'
                                         : 'bg-app-bg border-app-border text-app-muted'}`}
                                 >
                                     {titre}
-                                </button>
+                                </Bouton>
                             ))}
                         </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                         {sauvegardes.map(s => (
-                            <button
+                            <Bouton habillage="libre" cibleTactile aLaTable
                                 key={s.fieldId}
                                 onClick={() => demander('sauvegarde', s.fieldId, `Sauvegarde de ${s.label}`)}
-                                className="min-h-14 flex items-center justify-between gap-2 px-4 rounded-xl border border-app-border bg-app-bg hover:border-accent active:bg-accent/15 transition-all"
+                                className="flex items-center justify-between gap-2 px-4 rounded-xl border border-app-border bg-app-bg hover:border-accent active:bg-accent/15 transition-all"
                             >
                                 <span className="truncate text-sm font-bold text-app-text">{s.label}</span>
                                 <span className="shrink-0 font-mono text-lg font-black text-accent">{s.valeur}</span>
-                            </button>
+                            </Bouton>
                         ))}
                     </div>
                 </div>
@@ -99,17 +100,17 @@ export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characte
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                         {ressources.map(r => (
-                            <button
+                            <Bouton habillage="libre" cibleTactile aLaTable
                                 key={r.fieldId}
                                 disabled={typeof r.de !== 'number'}
                                 onClick={() => demander('ressource', r.fieldId, r.label)}
-                                className="min-h-14 flex items-center justify-between gap-2 px-4 rounded-xl border border-app-border bg-app-bg hover:border-accent active:bg-accent/15 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                className="flex items-center justify-between gap-2 px-4 rounded-xl border border-app-border bg-app-bg hover:border-accent active:bg-accent/15 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                                 <span className="truncate text-sm font-bold text-app-text">{r.label}</span>
                                 <span className={`shrink-0 font-mono text-lg font-black ${r.de === null ? 'text-etat-danger' : 'text-accent'}`}>
                                     {r.de === null ? 'épuisée' : typeof r.de === 'number' ? `d${r.de}` : '—'}
                                 </span>
-                            </button>
+                            </Bouton>
                         ))}
                     </div>
                 </div>
@@ -120,7 +121,7 @@ export const JetsDeLaFiche: React.FC<JetsDeLaFicheProps> = ({ playerId, characte
                     <Send size={12} /> {envoye} — lancé par le meneur
                 </p>
             )}
-        </section>
+        </Panneau>
     );
 };
 
