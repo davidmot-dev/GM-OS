@@ -57,7 +57,7 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
 }) => {
     const etat = ETATS[scene.etat];
     return (
-        <div className={`rounded-lg border ${scene.etat === 'en-cours' ? 'border-etat-succes/40 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
+        <Panneau as="div" habillage="libre" className={`rounded-lg border ${scene.etat === 'en-cours' ? 'border-etat-succes/40 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
             <Bouton habillage="libre" cibleTactile
                 onClick={basculer}
                 title={infobulle(infobulleDeLImportance(scene.importance))}
@@ -121,7 +121,7 @@ const LigneDeScene: React.FC<{ scene: RemoteScene; ouverte: boolean; basculer: (
                     )}
                 </div>
             )}
-        </div>
+        </Panneau>
     );
 };
 
@@ -261,7 +261,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                     {actes.length === 0 ? (
                         <p className="text-sm italic text-app-muted text-center py-10">Aucune trame sur cette campagne.</p>
                     ) : actes.map((acte: RemoteActe) => (
-                        <section key={acte.id} className={`rounded-xl border p-2 ${acte.acheve ? 'border-app-text/5 bg-app-text/[0.01]' : 'border-app-text/10 bg-app-text/[0.03]'}`}>
+                        <Panneau key={acte.id} habillage="libre" className={`rounded-xl border p-2 ${acte.acheve ? 'border-app-text/5 bg-app-text/[0.01]' : 'border-app-text/10 bg-app-text/[0.03]'}`}>
                             <Bouton habillage="libre" cibleTactile
                                 onClick={() => basculer(acte.id, setActesReplies)}
                                 className="w-full flex items-baseline gap-2 text-left px-1 pb-1.5"
@@ -288,7 +288,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                                     ))}
                                 </div>
                             )}
-                        </section>
+                        </Panneau>
                     ))}
                 </Panneau>
             )}
@@ -327,7 +327,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                                 {titre} <span className="text-app-subtle tabular-nums">{fiches.length}</span>
                             </h3>
                             {fiches.map((fiche) => (
-                            <div key={fiche.id} className="rounded-lg border border-app-text/5 bg-app-text/[0.02]">
+                            <Panneau key={fiche.id} as="div" habillage="libre" className="rounded-lg border border-app-text/5 bg-app-text/[0.02]">
                                 <Bouton habillage="libre" cibleTactile
                                     onClick={() => setFicheOuverte(ficheOuverte === fiche.id ? null : fiche.id)}
                                     className="w-full flex items-center gap-2 px-2.5 py-2 text-left"
@@ -351,13 +351,13 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                                         {fiche.tags.length > 0 && (
                                             <div className="flex flex-wrap gap-1">
                                                 {fiche.tags.map((tag) => (
-                                                    <span key={tag} className="text-ui-9 px-1.5 py-0.5 rounded bg-app-text/5 text-app-muted">{tag}</span>
+                                                    <Etiquette key={tag} habillage="libre" ton="neutre" className="text-ui-9 px-1.5 py-0.5 rounded bg-app-text/5 text-app-muted">{tag}</Etiquette>
                                                 ))}
                                             </div>
                                         )}
                                     </div>
                                 )}
-                            </div>
+                            </Panneau>
                             ))}
                         </section>
                         ))}
@@ -380,7 +380,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                     {indices.length === 0 ? (
                         <p className="text-sm italic text-app-muted text-center py-10 col-span-full">Aucun indice sur cette campagne.</p>
                     ) : indices.map((indice) => (
-                        <div key={indice.id} className={`rounded-lg border p-2.5 flex flex-col gap-1 ${indice.revele ? 'border-etat-succes/30 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
+                        <Panneau key={indice.id} as="div" habillage="libre" className={`rounded-lg border p-2.5 flex flex-col gap-1 ${indice.revele ? 'border-etat-succes/30 bg-etat-succes/5' : 'border-app-text/5 bg-app-text/[0.02]'}`}>
                             <div className="flex items-center gap-2">
                                 <Etiquette habillage="libre" ton={indice.revele ? 'succes' : 'neutre'} className={`shrink-0 text-ui-9 font-black uppercase tracking-wider px-1.5 py-0.5 rounded border ${indice.revele ? 'border-etat-succes/40 text-etat-succes' : 'border-app-text/10 text-app-muted'}`}>
                                     {indice.revele ? 'Donné' : 'En main'}
@@ -390,7 +390,7 @@ const RemoteNotes: React.FC<RemoteNotesProps> = ({
                             {indice.contenu && (
                                 <p className="text-ui-11 leading-relaxed text-app-muted whitespace-pre-wrap">{indice.contenu}</p>
                             )}
-                        </div>
+                        </Panneau>
                     ))}
                 </Panneau>
             )}

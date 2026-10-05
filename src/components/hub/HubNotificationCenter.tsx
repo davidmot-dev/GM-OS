@@ -3,7 +3,7 @@ import TexteMarkdown from '../TexteMarkdown';
 import { MessageSquare, Bell, X, ShieldAlert } from 'lucide-react';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bouton } from '../socle';
+import { Bouton, Panneau } from '../socle';
 
 /**
  * HubNotificationCenter - Affiche les alertes et messages du MJ sur la tablette du joueur.
@@ -51,7 +51,7 @@ const HubNotificationCenter: React.FC = () => {
                         exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
                         className="pointer-events-auto group relative overflow-hidden"
                     >
-                        <div className="bg-app-surface/90 backdrop-blur-2xl border border-app-border/20 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex gap-4">
+                        <Panneau as="div" habillage="libre" className="bg-app-surface/90 backdrop-blur-2xl border border-app-border/20 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex gap-4">
                             {/* Accent line */}
                             <div className={`absolute top-0 left-0 h-full w-1 ${
                                 notif.type === 'alert' ? 'bg-etat-danger shadow-[0_0_10px_color-mix(in_srgb,var(--etat-danger)_50%,transparent)]' : 
@@ -103,7 +103,7 @@ const HubNotificationCenter: React.FC = () => {
                                     <span className="text-ui-9 font-bold text-app-text/10 italic">NEXUS-COMM v5.2</span>
                                 </div>
                             </div>
-                        </div>
+                        </Panneau>
 
                         {/* Background glow sweep */}
                         <div className="absolute -inset-[100%] bg-gradient-to-r from-transparent via-app-text/[0.03] to-transparent -rotate-45 pointer-events-none translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />

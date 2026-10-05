@@ -107,7 +107,15 @@ for (const taille of TAILLES) {
             await expect.poll(() => gmos.fenetre.evaluate(() => Boolean((window as unknown as Magasins).useSessionOSStore.getState().connectedCharacters['temoin-pj-1']))).toBe(true);
         }
         async function onglet(page: Page, nom: string) {
-            await page.getByRole('navigation', { name: 'Navigation Hub' }).getByTitle(nom, { exact: true }).click();
+            const bouton = page.getByRole('navigation', { name: 'Navigation Hub' }).getByTitle(nom, { exact: true });
+            await bouton.click();
+            await expect.poll(() => bouton.evaluate(element => {
+                const zone = element.closest('[data-hub-nav-scroll]');
+                if (!zone) return false;
+                const cible = element.getBoundingClientRect();
+                const visible = zone.getBoundingClientRect();
+                return cible.left >= visible.left - 1 && cible.right <= visible.right + 1;
+            })).toBe(true);
         }
         async function capturer(page: Page, nom: string) {
             await page.evaluate(() => document.fonts.ready);
@@ -188,7 +196,16 @@ for (const taille of TAILLES) {
             await onglet(page, 'Inventaire');
             await expect(page.getByRole('heading', { name: 'Outil multifonction' })).toBeVisible();
             await capturer(page, '10-inventaire');
-            await page.getByTitle('Donner', { exact: true }).click();
+            const donner = page.getByTitle('Donner', { exact: true });
+            await donner.scrollIntoViewIfNeeded();
+            if (taille.nom === 'telephone') {
+                await expect.poll(() => donner.evaluate(element => {
+                    const navigation = document.querySelector('[aria-label="Navigation Hub"]');
+                    return navigation !== null && element.getBoundingClientRect().bottom < navigation.getBoundingClientRect().top;
+                })).toBe(true);
+                if (process.env.GMOS_TABLET_CAPTURES_DIR) await capturer(page, '10-inventaire-actions');
+            }
+            await donner.click();
             await expect(page.getByRole('heading', { name: 'Donner un objet' })).toBeVisible();
             await capturer(page, '11-donner-objet');
             await page.getByRole('button', { name: /Idris Koa/ }).click();

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Bouton } from '../../../components/socle/Bouton';
+import { Panneau } from '../../../components/socle/Panneau';
 import {
     Pencil,
     Eraser,
@@ -123,7 +124,7 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
     };
 
     return (
-        <div className={`h-full w-full flex flex-col relative overflow-hidden rounded-xl border ${enClair ? 'bg-white border-slate-200' : 'bg-slate-950 border-white/10'}`}>
+        <Panneau as="div" habillage="libre" className={`h-full w-full flex flex-col relative overflow-hidden rounded-xl border ${enClair ? 'bg-white border-slate-200' : 'bg-slate-950 border-white/10'}`}>
             <div className={`shrink-0 flex items-center justify-between gap-2 p-1.5 border-b ${enClair ? 'bg-white/80 border-slate-200' : 'bg-slate-900/80 border-white/10'}`}>
                 <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                     {OUTILS.map((o) => (
@@ -240,7 +241,7 @@ const RemoteWhiteboardView: React.FC<RemoteWhiteboardViewProps> = ({ whiteboard,
                     />
                 ))}
             </div>
-        </div>
+        </Panneau>
     );
 };
 

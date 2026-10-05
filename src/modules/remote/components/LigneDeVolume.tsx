@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Bouton } from '../../../components/socle/Bouton';
+import { Panneau } from '../../../components/socle/Panneau';
 import { Check, ChevronDown, AlertTriangle } from 'lucide-react';
 import {
     sortieChoisie, type RemoteReglagesAudio, type NomDeVoie, LIBELLE_DE_LA_VOIE,
@@ -87,7 +88,7 @@ const LigneDeVolume: React.FC<{
                         onClick={() => setMenuOuvert(false)}
                         className="fixed inset-0 z-40 cursor-default"
                     />
-                    <div
+                    <Panneau as="div" habillage="libre"
                         role="menu"
                         aria-label={`Sorties disponibles — ${LIBELLE_DE_LA_VOIE[voie]}`}
                         className="absolute right-0 top-12 z-50 w-64 max-h-64 overflow-y-auto rounded-xl border border-app-text/10 bg-app-bg shadow-2xl p-1"
@@ -112,7 +113,7 @@ const LigneDeVolume: React.FC<{
                                 Aucune autre sortie recensée sur la machine du meneur.
                             </p>
                         )}
-                    </div>
+                    </Panneau>
                 </>
             )}
         </div>

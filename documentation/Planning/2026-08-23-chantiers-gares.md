@@ -9661,15 +9661,16 @@ diffuse un segment public « apparence » aux deux rôles de tablette, avec jeto
 incorporées ; le serveur le redonne à l'inscription après reconnexion. Bascule et reconnexion sont
 éprouvées en E2E (`e2e/apparenceTablettesT1.spec.ts`) ; les polices réelles restent conditionnées à
 leur disponibilité sur le PC. [Relevé T1](2026-10-05-T1-apparence-tablettes.md).
-**T2 est en cours sur les deux tablettes** : boutons du Hub et de la Remote, premiers panneaux,
-étiquettes et en-têtes passés au socle ([joueurs](2026-10-05-T2-tablette-joueurs.md),
+**T2 est terminé le 05/10 sur les deux tablettes** : boutons, panneaux, étiquettes et en-têtes
+passés au socle à apparence conservée ([joueurs](2026-10-05-T2-tablette-joueurs.md),
 [meneur](2026-10-05-T2-tablette-meneur.md)). Les 39 scénarios joueurs et les 44 scénarios meneur
-ont été rejoués avec leurs échecs T0 attendus ; la comparaison visuelle révèle des barres compactes
-à arbitrer pour atteindre 44 × 44 px sans masquer de commande. David garde la disposition des
-étoiles de feedback et des réserves et reporte leurs cibles tactiles à T4. La sortie stricte
-de T2 reste ouverte. Pour l'inventaire mobile, David retient l'option 1 : réserver la place de la
-navigation fixe dès T2, sans déplacer les cartes ni leurs actions. Le code le fait ; le contrôle
-visuel à 390 px reste à faire. T3 à T6 ne sont pas commencées.
+passent aux trois tailles de référence et au pupitre MJ ; les 122 captures T0 ont leur correspondante
+T2, et les écarts les plus marqués ont été regardés. Sur téléphone, David retient une navigation
+sur une ligne défilante avec indice visible et onglet actif ramené à l'écran. L'inventaire réserve
+la place de cette navigation ; le test à 390 px vérifie que « Donner » reste accessible après
+défilement. Les étoiles de feedback et les réserves gardent leur disposition ; leurs cibles
+tactiles sont reportées à T4. Les défauts fonctionnels de T0 restent consignés ici. T3 à T6
+ne sont pas commencées.
 
 ---
 
@@ -9771,7 +9772,7 @@ place du chantier — **avant ou après la refonte des tablettes** (§ 123).
 | 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
-| 58 | **La refonte des tablettes** | 🔄 **T0 relevé, T1 implémenté, T2 en cours sur les deux surfaces** — 122 captures T0 ; thème et icônes du jeu diffusés ; commandes joueurs et meneur passées au socle. Bancs E2E T0 rejoués, comparaison visuelle engagée. Inventaire mobile : place de la navigation réservée, à vérifier visuellement. Étoiles de feedback et réserves : disposition conservée, cibles reportées à T4. Voir § 123 et `2026-10-04-refonte-tablettes.md` | Finir panneaux/étiquettes/en-têtes et cibles compactes ; contrôler l'inventaire et résoudre le débordement horizontal de la navigation à 390 px ; valider les captures | Défauts T0 non corrigés |
+| 58 | **La refonte des tablettes** | ✅ **T2 terminé le 05/10** — T0 relevé (122 captures), T1 implémenté, boutons/panneaux/étiquettes/en-têtes migrés ; 39 scénarios joueurs et 44 meneur passent. Navigation joueurs sur une ligne défilante, inventaire contrôlé à 390 px. Étoiles de feedback et réserves : disposition conservée, cibles reportées à T4. Voir § 123 et `2026-10-04-refonte-tablettes.md` | T3 : maquettes Stitch, joueurs d'abord | Défauts T0 non corrigés |
 | 59 | **Le graphe de la Trame en cartes** | ⏳ **GARÉ le 04/10** — rapprocher le graphe de la maquette Stitch (cartes, flèches courbes, panneau du nœud) ; piste : React Flow pour la Trame seule. Voir § 124 | David : accord pour le paquet, et place avant ou après les tablettes | La décision de David |
 
 ### Ce que la soirée du 2026-08-23 a fermé

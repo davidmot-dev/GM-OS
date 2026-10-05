@@ -1,7 +1,7 @@
 import React from 'react';
 import { Globe } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton, EnTeteDeModule, Etiquette } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 import { type AtlasMap } from '../../modules/session/store/types';
 
 interface HubAtlasProps {
@@ -74,7 +74,7 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                     ))}
 
                     {atlasMaps.length === 0 && (
-                        <div className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20">
+                        <Panneau as="div" habillage="libre" vide className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20">
                             <div className="p-12 bg-app-surface/40 rounded-full border border-app-border/10">
                                 <Globe size={80} className="text-app-text/5 animate-pulse" />
                             </div>
@@ -84,7 +84,7 @@ export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSele
                                     Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.
                                 </p>
                             </div>
-                        </div>
+                        </Panneau>
                     )}
                 </div>
             </div>

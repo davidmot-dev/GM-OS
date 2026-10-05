@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, BookOpen, Shield, HelpCircle, FileText } from 'lucide-react';
 import TexteMarkdown from '../TexteMarkdown';
-import { Bouton } from '../socle';
+import { Bouton, EnTeteDeModule, Panneau } from '../socle';
 
 interface HubRuleViewerProps {
     rule: {
@@ -38,11 +38,12 @@ export const HubRuleViewer: React.FC<HubRuleViewerProps> = ({ rule, onClose }) =
                     initial={{ scale: 0.9, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                    className="bg-app-bg border border-app-border/50 rounded-[2rem] w-full max-w-3xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl"
+                    className="w-full max-w-3xl"
                     onClick={(e) => e.stopPropagation()}
                 >
+                    <Panneau as="div" habillage="libre" className="bg-app-bg border border-app-border/50 rounded-[2rem] w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
                     {/* Header */}
-                    <div className="p-6 md:p-8 border-b border-app-border/30 flex items-center justify-between bg-app-surface-2/30">
+                    <EnTeteDeModule habillage="libre" className="p-6 md:p-8 border-b border-app-border/30 flex items-center justify-between bg-app-surface-2/30">
                         <div className="flex items-center gap-4">
                             <div className="p-3 rounded-2xl bg-app-surface-2/50 border border-app-border/50 shadow-inner">
                                 {getIcon()}
@@ -62,7 +63,7 @@ export const HubRuleViewer: React.FC<HubRuleViewerProps> = ({ rule, onClose }) =
                         >
                             <X size={24} />
                         </Bouton>
-                    </div>
+                    </EnTeteDeModule>
 
                     {/* Content */}
                     <div className="flex-1 overflow-y-auto p-8 md:p-12 custom-scrollbar text-app-text leading-relaxed">
@@ -87,6 +88,7 @@ export const HubRuleViewer: React.FC<HubRuleViewerProps> = ({ rule, onClose }) =
                             Compris, Fermer
                         </Bouton>
                     </div>
+                    </Panneau>
                 </motion.div>
             </motion.div>
         </AnimatePresence>

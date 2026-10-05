@@ -3,7 +3,7 @@ import { useClientStore } from '../../stores/useClientStore';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { Radar, User, Shield, Fingerprint, WifiOff, AlertCircle } from 'lucide-react';
 import { useMediaUrl } from '../../hooks/useMediaUrl';
-import { Bouton } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
@@ -233,14 +233,14 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         <span className="text-xs font-black uppercase tracking-widest">Recherche de session active</span>
                     </div>
                     
-                    <div className="p-4 bg-app-surface/50 border border-app-border/10 rounded-2xl flex items-start gap-4 text-left">
+                    <Panneau as="div" habillage="libre" className="p-4 bg-app-surface/50 border border-app-border/10 rounded-2xl flex items-start gap-4 text-left">
                         <WifiOff className="text-app-text/40 shrink-0" size={20} />
                         <div>
                             <p className="text-app-text/60 text-xs font-bold leading-relaxed lowercase">
                                 <span className="text-app-text uppercase">Note au joueur :</span> le Hub est actuellement en veille. Demandez à votre Maître de Jeu de lancer une session depuis le cockpit GM-OS.
                             </p>
                         </div>
-                    </div>
+                    </Panneau>
                 </div>
             </div>
         );
@@ -385,7 +385,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
             </div>
 
             <div className="w-full max-w-5xl mt-12 mb-12 relative z-10">
-                <div className="text-center mb-16">
+                <EnTeteDeModule habillage="libre" className="text-center mb-16">
                     <h1 className="text-6xl font-black text-app-text tracking-tightest uppercase mb-4">
                         Qui es-tu ?
                     </h1>
@@ -401,7 +401,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         </div>
                         <div className="h-[1px] w-12 bg-accent/40" />
                     </div>
-                </div>
+                </EnTeteDeModule>
 
                 {presentPcs.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -422,9 +422,9 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                                 <div className="absolute top-4 right-4 z-10">
                                     <div className="flex flex-col items-end">
                                         <span className="text-ui-8 font-black text-accent/40 uppercase tracking-widest mb-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Joueur</span>
-                                        <span className="px-3 py-1.5 bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
+                                        <Etiquette habillage="libre" ton="accent" className="px-3 py-1.5 bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
                                             {char.playerName}
-                                        </span>
+                                        </Etiquette>
                                     </div>
                                 </div>
                                 
@@ -445,9 +445,9 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
 
                                 <div className="p-8 text-left relative">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent text-ui-10 font-black uppercase tracking-widest rounded-full">
+                                        <Etiquette habillage="libre" ton="accent" className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent text-ui-10 font-black uppercase tracking-widest rounded-full">
                                             Connectable
-                                        </span>
+                                        </Etiquette>
                                         <Shield size={16} className="text-app-text/20 group-hover:text-accent transition-colors" />
                                     </div>
                                     <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter mb-1 select-none">
@@ -461,13 +461,13 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                         ))}
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center p-20 bg-app-surface/30 border-2 border-dashed border-app-border/10 rounded-[3rem]">
+                    <Panneau as="div" habillage="libre" vide className="flex flex-col items-center justify-center p-20 bg-app-surface/30 border-2 border-dashed border-app-border/10 rounded-[3rem]">
                         <AlertCircle className="text-app-text/20 mb-6" size={48} />
                         <h3 className="text-xl font-black text-app-text/40 uppercase tracking-tighter mb-2">Aucun PJ détecté</h3>
                         <p className="text-app-text/30 text-xs text-center max-w-xs uppercase leading-relaxed font-bold">
                             Le Maître de Jeu doit ajouter vos personnages à la session pour qu'ils apparaissent ici.
                         </p>
-                    </div>
+                    </Panneau>
                 )}
             </div>
             

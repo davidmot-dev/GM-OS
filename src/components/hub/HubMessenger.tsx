@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
 import { useSessionOSStore } from '../../modules/session/store/index';
 import { MessageSquare, Send, X, Users, Shield, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bouton } from '../socle';
+import { Bouton, EnTeteDeModule, Panneau } from '../socle';
 
 interface HubMessengerProps {
     isOpen: boolean;
@@ -93,10 +93,11 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: '100%', opacity: 0 }}
                     transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                    className="fixed top-4 bottom-28 right-4 w-80 md:w-96 bg-app-surface/95 backdrop-blur-2xl border border-app-border/40 z-[100] flex flex-col shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] rounded-[2.5rem] overflow-hidden"
+                    className="fixed top-4 bottom-28 right-4 w-80 md:w-96 z-[100]"
                 >
+                    <Panneau as="div" habillage="libre" className="h-full bg-app-surface/95 backdrop-blur-2xl border border-app-border/40 flex flex-col shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] rounded-[2.5rem] overflow-hidden">
                     {/* Header */}
-                    <div className="p-4 border-b border-app-border/20 flex items-center justify-between bg-app-surface/50">
+                    <EnTeteDeModule habillage="libre" className="p-4 border-b border-app-border/20 flex items-center justify-between bg-app-surface/50">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-accent/20 rounded-lg text-accent">
                                 <MessageSquare size={20} />
@@ -113,7 +114,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                         >
                             <X size={20} />
                         </Bouton>
-                    </div>
+                    </EnTeteDeModule>
 
                     {/* Recipient Selector (Dropdown) */}
                     <div className="px-4 py-3 bg-app-bg/40 border-b border-app-border/20 relative z-50">
@@ -264,6 +265,7 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
                                 : `Seul ${selectedRecipient.name} pourra lire ce message.`}
                         </p>
                     </div>
+                    </Panneau>
                 </motion.div>
             )}
         </AnimatePresence>

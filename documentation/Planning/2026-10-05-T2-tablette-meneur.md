@@ -1,4 +1,4 @@
-# T2 — habillage de la tablette du meneur, en cours
+# T2 — habillage de la tablette du meneur, terminé
 
 David a confirmé le 05/10/2026 que GM-OS est éteint. Le lot meneur suit le lot joueurs du
 [plan de refonte](2026-10-04-refonte-tablettes.md), à apparence constante sauf agrandissement
@@ -29,3 +29,17 @@ pour atteindre toutes les commandes ; vérifier ce geste sur les vrais appareils
 Les onze scénarios du format téléphone repassent après l'agrandissement des commandes des dés,
 recherches et messages. Les autres cadres et étiquettes faits main, ainsi que les cibles des
 barres compactes, restent à inventorier avant la sortie stricte de T2.
+
+## Clôture du lot — 05/10
+
+Les cadres encore faits main des Pads, Dés, Sons, Scénario, Tableau et Notes passent par
+`Panneau`, et les pastilles de statut par `Etiquette`, avec `habillage="libre"` pour garder
+l'apparence de T0. Les cartes d'acte, de scène, de chronique et d'indice dans Notes suivent le
+même chemin. Les **44 scénarios E2E** passent aux quatre tailles, dont le pupitre ; les quatre
+échecs attendus de T0 restent les mêmes. Les 68 captures T0 ont chacune leur correspondante T2,
+rangée hors du dépôt de référence. La comparaison visuelle des écarts les plus marqués montre
+l'augmentation de hauteur des cibles tactiles sans commande masquée.
+
+La construction, les types et les 35 tests ciblés du Hub et du socle passent. ESLint ne relève
+aucune erreur nouvelle dans les fichiers T2 ; deux erreurs déjà présentes dans `HEAD` concernent
+`TabletHub.tsx` et `LobbyOnboarding.tsx`.

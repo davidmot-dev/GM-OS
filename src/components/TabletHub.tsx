@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { EtiquetteDuDegre } from '../modules/dice/EtiquetteDuDegre';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import { ResolvedImage } from './ResolvedImage';
-import { Bouton } from './socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau } from './socle';
 import NarrativeClock from '../modules/clock/components/NarrativeClock';
 import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
 import LobbyOnboarding from './hub/LobbyOnboarding';
@@ -91,6 +91,8 @@ const TabletHub: React.FC = () => {
     const { setLowGraphics } = usePerformanceStore();
 
     const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory' | 'cartes'>('live');
+    const navScrollRef = useRef<HTMLDivElement>(null);
+    const [navEdges, setNavEdges] = useState({ left: false, right: false });
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
@@ -204,6 +206,30 @@ const TabletHub: React.FC = () => {
             });
         }
     }, [activeCampaignWallpaper, resolvedCampaignWallpaper]);
+
+    useEffect(() => {
+        const nav = navScrollRef.current;
+        if (!nav) return;
+
+        const updateEdges = () => setNavEdges({
+            left: nav.scrollLeft > 1,
+            right: nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 1,
+        });
+        const active = nav.querySelector<HTMLElement>(`[data-hub-tab="${currentTab}"]`);
+        if (active) {
+            const activeCenter = active.getBoundingClientRect().left - nav.getBoundingClientRect().left
+                + nav.scrollLeft + active.offsetWidth / 2;
+            const scrollLeft = activeCenter - nav.clientWidth / 2;
+            if (typeof nav.scrollTo === 'function') {
+                nav.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            } else {
+                nav.scrollLeft = scrollLeft;
+            }
+        }
+        updateEdges();
+        window.addEventListener('resize', updateEdges);
+        return () => window.removeEventListener('resize', updateEdges);
+    }, [currentTab]);
 
     const rootStyles = {
         '--hub-bg-url': resolvedBackground ? `url('${resolvedBackground}')` : "none",
@@ -349,17 +375,17 @@ const TabletHub: React.FC = () => {
                 {/* Widgets: Clock & Narrative Indicators */}
                 <div className="flex flex-col gap-4 mb-6 pl-12 w-full max-w-[460px] pointer-events-auto animate-in fade-in slide-in-from-left duration-700">
                     {isClockProjected && String(mode) !== 'hidden' && (
-                        <div className={`bg-app-surface/40 border border-app-border/40 p-2 rounded-2xl shadow-2xl flex items-center justify-center w-full aspect-square max-w-[250px] overflow-hidden ${performance.blurClass}`}>
+                        <Panneau as="div" habillage="libre" className={`bg-app-surface/40 border border-app-border/40 p-2 rounded-2xl shadow-2xl flex items-center justify-center w-full aspect-square max-w-[250px] overflow-hidden ${performance.blurClass}`}>
                             <div className="scale-[0.5] origin-center transform-gpu">
                                 <ClockVisualizer theme={theme} timestamp={timestamp} mode={mode} />
                             </div>
-                        </div>
+                        </Panneau>
                     )}
 
                     {isClockProjected && tensions.length > 0 && (
                         <div className="grid grid-cols-2 gap-4 w-full h-fit overflow-y-auto max-h-[220px] pr-2 custom-scrollbar">
                             {tensions.map((clock: TensionClock) => (
-                                <div key={clock.id} className={`flex items-center gap-3 bg-app-surface/60 border border-app-border/40 rounded-2xl p-3 shadow-xl ${performance.blurClass}`}>
+                                <Panneau as="div" habillage="libre" key={clock.id} className={`flex items-center gap-3 bg-app-surface/60 border border-app-border/40 rounded-2xl p-3 shadow-xl ${performance.blurClass}`}>
                                     <NarrativeClock clock={clock} theme={theme} size={48} />
                                     <div className="flex flex-col flex-1 overflow-hidden">
                                         <p className={`text-sm font-black truncate w-full ${theme === 'cyberpunk' ? 'text-accent font-mono tracking-wider' : 'text-app-text uppercase tracking-tight'}`}>{clock.name}</p>
@@ -367,7 +393,7 @@ const TabletHub: React.FC = () => {
                                             {clock.filledSegments} / {clock.totalSegments}
                                         </p>
                                     </div>
-                                </div>
+                                </Panneau>
                             ))}
                         </div>
                     )}
@@ -455,7 +481,7 @@ const TabletHub: React.FC = () => {
 
             {/* Floatings: Session Summary */}
             {sessionSummary && currentTab === 'live' && (
-                <div className={`fixed bottom-28 left-8 z-[60] w-full max-w-2xl bg-app-surface/20 border border-app-border/40 rounded-[2.5rem] p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 pointer-events-auto ${performance.blurClass}`}>
+                <Panneau as="div" habillage="libre" className={`fixed bottom-28 left-8 z-[60] w-full max-w-2xl bg-app-surface/20 border border-app-border/40 rounded-[2.5rem] p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 pointer-events-auto ${performance.blurClass}`}>
                     <div className="flex items-center gap-5 mb-6 opacity-40">
                         <BookOpen size={20} className="text-app-text" />
                         <h3 className="text-ui-10 font-black text-app-text uppercase tracking-[0.4em]">Chroniques de Séance</h3>
@@ -465,12 +491,16 @@ const TabletHub: React.FC = () => {
                             {sessionSummary}
                         </p>
                     </div>
-                </div>
+                </Panneau>
             )}
 
             {/* Bottom Navigation */}
-            <nav className="fixed bottom-2 md:bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto w-full max-w-full px-2 overflow-x-auto custom-scrollbar-minimal pb-2 md:pb-0" aria-label="Navigation Hub">
-                <div className={`bg-app-surface/90 md:bg-app-surface/80 border border-app-border/40 p-1 md:p-1.5 rounded-full shadow-2xl flex items-center gap-1 w-max mx-auto ${performance.heavyBlurClass}`}>
+            <nav className="fixed bottom-2 md:bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto w-full max-w-full px-2 pb-2 md:pb-0" aria-label="Navigation Hub">
+                <div ref={navScrollRef} data-hub-nav-scroll onScroll={() => {
+                    const nav = navScrollRef.current;
+                    if (nav) setNavEdges({ left: nav.scrollLeft > 1, right: nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 1 });
+                }} className="w-full overflow-x-auto custom-scrollbar-minimal">
+                <Panneau as="div" habillage="libre" className={`bg-app-surface/90 md:bg-app-surface/80 border border-app-border/40 p-1 md:p-1.5 rounded-full shadow-2xl flex items-center gap-1 w-max mx-auto ${performance.heavyBlurClass}`}>
                     {(
                         [
                             { id: 'live', icon: Monitor, label: 'Direct' },
@@ -483,6 +513,7 @@ const TabletHub: React.FC = () => {
                     ).map((tab) => (
                         <Bouton habillage="libre" cibleTactile
                             key={tab.id}
+                            data-hub-tab={tab.id}
                             onClick={() => setCurrentTab(tab.id)}
                             aria-pressed={currentTab === tab.id}
                             className={`relative flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${
@@ -546,7 +577,10 @@ const TabletHub: React.FC = () => {
                         <LogOut className="w-5 h-5 md:w-3.5 md:h-3.5" />
                         <span className="hidden md:inline">Quitter</span>
                     </Bouton>
+                </Panneau>
                 </div>
+                {navEdges.left && <span aria-hidden="true" className="pointer-events-none absolute left-2 top-0 bottom-2 md:bottom-0 w-8 rounded-l-full bg-gradient-to-r from-app-bg/95 to-transparent" />}
+                {navEdges.right && <span aria-hidden="true" className="pointer-events-none absolute right-2 top-0 bottom-2 md:bottom-0 w-8 rounded-r-full bg-gradient-to-l from-app-bg/95 to-transparent flex items-center justify-end text-accent"><ChevronRight size={14} /></span>}
             </nav>
 
             {/* Combat Overlay */}
@@ -563,15 +597,15 @@ const TabletHub: React.FC = () => {
                     </Bouton>
 
                     {/* Combat Sidebar */}
-                    <aside className={`fixed right-0 md:right-4 top-0 md:top-4 w-full md:w-80 h-screen md:h-[calc(100vh-2rem)] z-50 bg-app-surface/95 md:bg-app-surface/60 border-l md:border border-app-border/40 flex flex-col gap-4 p-6 md:rounded-[2rem] shadow-2xl transition-transform duration-300 pointer-events-auto ${performance.heavyBlurClass} ${isCombatOverlayOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}`}>
-                        <div className="flex items-center justify-between border-b border-app-border/40 pb-3 mt-12 md:mt-0">
+                    <Panneau as="aside" habillage="libre" className={`fixed right-0 md:right-4 top-0 md:top-4 w-full md:w-80 h-screen md:h-[calc(100vh-2rem)] z-50 bg-app-surface/95 md:bg-app-surface/60 border-l md:border border-app-border/40 flex flex-col gap-4 p-6 md:rounded-[2rem] shadow-2xl transition-transform duration-300 pointer-events-auto ${performance.heavyBlurClass} ${isCombatOverlayOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}`}>
+                        <EnTeteDeModule habillage="libre" className="flex items-center justify-between border-b border-app-border/40 pb-3 mt-12 md:mt-0">
                             <h2 className="text-app-text text-lg font-bold tracking-tight">Initiative</h2>
                             <Bouton habillage="libre" cibleTactile className="md:hidden min-w-[44px] p-2 rounded-full text-app-text/40 hover:bg-app-text/5" onClick={() => setIsCombatOverlayOpen(false)} title="Fermer l'initiative">
                                 <ChevronRight size={20} />
                             </Bouton>
-                        </div>
+                        </EnTeteDeModule>
                     <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
-                        <div className="flex flex-col gap-3 p-3 rounded-2xl bg-etat-danger/10 border border-etat-danger/30 shadow-glow-crimson">
+                        <Panneau as="div" habillage="libre" className="flex flex-col gap-3 p-3 rounded-2xl bg-etat-danger/10 border border-etat-danger/30 shadow-glow-crimson">
                             <div className="flex items-center gap-3">
                                 <ResolvedImage className="size-8 rounded-full border border-etat-danger" src={activeCombatant.avatar} alt={activeCombatant.name} />
                                 <div className="flex flex-col">
@@ -579,15 +613,15 @@ const TabletHub: React.FC = () => {
                                     <p className="text-etat-danger text-ui-8 font-bold uppercase mt-1">À toi</p>
                                 </div>
                             </div>
-                        </div>
+                        </Panneau>
                         {upcomingCombatants.slice(0, 5).map((c: Combatant) => (
-                            <div key={c.id} className="flex items-center gap-3 p-3 rounded-2xl bg-app-surface/20 border border-app-border/10 opacity-60">
+                            <Panneau as="div" habillage="libre" key={c.id} className="flex items-center gap-3 p-3 rounded-2xl bg-app-surface/20 border border-app-border/10 opacity-60">
                                 <ResolvedImage className="size-8 rounded-full border border-app-border/10" src={c.avatar} alt={c.name} />
                                 <p className="text-app-text/90 text-xs font-medium truncate">{c.name}</p>
-                            </div>
+                            </Panneau>
                         ))}
                     </div>
-                </aside>
+                </Panneau>
                 </>
             )}
 
@@ -672,17 +706,18 @@ const DiceResultDisplay: React.FC = () => {
         <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className={`relative bg-app-surface/95 border-2 border-accent/40 rounded-[3rem] p-8 md:p-12 shadow-[0_0_80px_rgba(var(--accent-rgb),0.3)] flex flex-col items-center gap-6 max-w-2xl w-full ${performance.isLowGraphics ? 'backdrop-blur-none' : 'backdrop-blur-[40px]'}`}
+            className="max-w-2xl w-full"
         >
+            <Panneau as="div" habillage="libre" className={`relative bg-app-surface/95 border-2 border-accent/40 rounded-[3rem] p-8 md:p-12 shadow-[0_0_80px_rgba(var(--accent-rgb),0.3)] flex flex-col items-center gap-6 w-full ${performance.isLowGraphics ? 'backdrop-blur-none' : 'backdrop-blur-[40px]'}`}>
             {/* Background Decorative Glow */}
             <div className="absolute inset-0 bg-accent/5 rounded-[4rem] pointer-events-none" />
             
             <div className="relative flex flex-col items-center gap-3 text-center">
                 <div className="flex items-center gap-4">
                     <div className="h-[2px] w-12 bg-gradient-to-r from-transparent to-accent/60" />
-                    <span className="text-accent text-ui-10 font-black uppercase tracking-[0.8em] py-1 px-4 border border-accent/20 rounded-full">
+                    <Etiquette habillage="libre" ton="accent" className="text-accent text-ui-10 font-black uppercase tracking-[0.8em] py-1 px-4 border border-accent/20 rounded-full">
                         Séquence du Destin
-                    </span>
+                    </Etiquette>
                     <div className="h-[2px] w-12 bg-gradient-to-l from-transparent to-accent/60" />
                 </div>
                 <h2 className="text-app-text font-black text-xl md:text-2xl tracking-tight uppercase drop-shadow-2xl opacity-80 mt-1">
@@ -740,6 +775,7 @@ const DiceResultDisplay: React.FC = () => {
                     </motion.div>
                 )}
             />
+            </Panneau>
         </motion.div>
     );
 };

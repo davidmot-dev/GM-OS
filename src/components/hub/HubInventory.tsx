@@ -4,7 +4,7 @@ import { ResolvedImage } from '../ResolvedImage';
 import { type FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
 import { type InventoryItem, type PlayerCharacter } from '../../modules/session/store/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bouton, Panneau } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 
 interface HubInventoryProps {
     items: FavoriteEntity[]; // Legacy favorites
@@ -57,7 +57,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
 
     return (
         <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto relative">
-            <div className="flex items-center justify-between mb-8 px-4">
+            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 px-4">
                 <div className="space-y-1">
                     <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
                         <Package className="text-accent" size={30} />
@@ -66,12 +66,12 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                     <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Trésors, reliques et possessions personnelles.</p>
                 </div>
                 <div className="flex gap-2">
-                    <div className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
+                    <Etiquette habillage="libre" ton="accent" className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                         {structuredItems.length + items.length} Objets
-                    </div>
+                    </Etiquette>
                 </div>
-            </div>
+            </EnTeteDeModule>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
                 <div className="space-y-12">
@@ -135,9 +135,9 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 })}
                             </div>
                         ) : (
-                            <div className="mx-4 p-8 border-2 border-dashed border-app-text/5 rounded-[2rem] bg-app-text/[0.02] text-center">
+                            <Panneau as="div" habillage="libre" vide className="mx-4 p-8 border-2 border-dashed border-app-text/5 rounded-[2rem] bg-app-text/[0.02] text-center">
                                 <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-widest">Votre sac à dos est vide</p>
-                            </div>
+                            </Panneau>
                         )}
                     </section>
 
@@ -172,7 +172,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                     )}
 
                     {(items.length === 0 && structuredItems.length === 0) && (
-                        <div className="py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20 w-full">
+                        <Panneau as="div" habillage="libre" vide className="py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20 w-full">
                             <div className="p-12 bg-app-surface/40 rounded-full border border-app-border/10">
                                 <Package size={80} className="text-app-text/5" />
                             </div>
@@ -182,7 +182,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                     Vous ne possédez aucun objet pour le moment.
                                 </p>
                             </div>
-                        </div>
+                        </Panneau>
                     )}
                 </div>
             </div>
@@ -200,8 +200,9 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.9, y: 20 }}
-                            className="w-full max-w-lg bg-app-surface border border-accent/30 rounded-[3rem] p-8 shadow-glow-accent/20 flex flex-col gap-8"
+                            className="w-full max-w-lg"
                         >
+                            <Panneau as="div" habillage="libre" className="w-full bg-app-surface border border-accent/30 rounded-[3rem] p-8 shadow-glow-accent/20 flex flex-col gap-8">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter">Donner un objet</h3>
                                 <Bouton habillage="libre" cibleTactile onClick={() => setTransferringItem(null)} className="min-w-[44px] p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors" title="Fermer le don">
@@ -257,6 +258,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                     Le Maître du Jeu doit valider l'échange avant qu'il ne soit effectif.
                                 </p>
                             </div>
+                            </Panneau>
                         </motion.div>
                     </motion.div>
                 )}

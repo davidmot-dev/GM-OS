@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Archive, Search } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton, EnTeteDeModule, Etiquette } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 import { type Clue } from '../../modules/session/store/types';
 
 interface HubArchivesProps {
@@ -65,10 +65,10 @@ export const HubArchives: React.FC<HubArchivesProps> = memo(({ clues, activeCamp
                     ))}
                     
                     {revealedClues.length === 0 && (
-                        <div className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-4 border-2 border-dashed border-app-border/40 rounded-[3rem]">
+                        <Panneau as="div" habillage="libre" vide className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-4 border-2 border-dashed border-app-border/40 rounded-[3rem]">
                             <Archive size={48} className="text-app-text/5" />
                             <p className="text-xs font-black uppercase tracking-widest text-app-text/20">Aucune archive disponible</p>
-                        </div>
+                        </Panneau>
                     )}
                 </div>
             </div>

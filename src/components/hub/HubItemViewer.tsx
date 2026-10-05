@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Package, Shield, User } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton } from '../socle';
+import { Bouton, Etiquette, Panneau } from '../socle';
 import type { FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
 
 interface HubItemViewerProps {
@@ -45,7 +45,7 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
                     className="relative z-[205] w-full max-w-5xl max-h-full overflow-hidden flex flex-col md:flex-row gap-8 items-stretch"
                 >
                     {/* Media Section (Image or XXL Stylized Icon) */}
-                    <div className="flex-1 min-h-[300px] md:min-h-0 bg-app-surface/20 border border-app-border/10 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
+                    <Panneau as="div" habillage="libre" className="flex-1 min-h-[300px] md:min-h-0 bg-app-surface/20 border border-app-border/10 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
                         {item.imageUrl ? (
                             <>
                                 {/* Background Ambient Glow */}
@@ -70,7 +70,7 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </Panneau>
 
                     {/* Content Section */}
                     <div className="w-full md:w-[450px] flex flex-col justify-center gap-8 p-4">
@@ -78,20 +78,20 @@ export const HubItemViewer: React.FC<HubItemViewerProps> = ({ item, onClose }) =
                             {/* Metadata Badges */}
                             <div className="flex flex-wrap gap-3">
                                 {item.ownerId && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gm-emerald/10 rounded-full border border-gm-emerald/20">
+                                    <Etiquette habillage="libre" ton="succes" className="flex items-center gap-2 px-3 py-1.5 bg-gm-emerald/10 rounded-full border border-gm-emerald/20">
                                         <User size={12} className="text-gm-emerald/50" />
                                         <span className="text-ui-9 font-black text-gm-emerald uppercase tracking-widest">
                                             Objet Privé
                                         </span>
-                                    </div>
+                                    </Etiquette>
                                 )}
                                 {item.attributes && Object.keys(item.attributes).length > 0 && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-gm-crimson/10 rounded-full border border-gm-crimson/20">
+                                    <Etiquette habillage="libre" ton="danger" className="flex items-center gap-2 px-3 py-1.5 bg-gm-crimson/10 rounded-full border border-gm-crimson/20">
                                         <Shield size={12} className="text-gm-crimson/50" />
                                         <span className="text-ui-9 font-black text-gm-crimson/80 uppercase tracking-widest">
                                             Stats Incluses
                                         </span>
-                                    </div>
+                                    </Etiquette>
                                 )}
                             </div>
 

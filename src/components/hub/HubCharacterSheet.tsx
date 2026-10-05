@@ -17,7 +17,7 @@ import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
 import PanneauDeJet from '../../modules/session/components/fields/PanneauDeJet';
 import type { GameDriver } from '../../types/drivers';
 import JetsDeLaFiche from './JetsDeLaFiche';
-import { Bouton } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 import { estUneSauvegarde, decrireLeJetDuPilote } from '../../modules/dice/lectureDuPilote';
 
 interface HubCharacterSheetProps {
@@ -144,7 +144,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gm-cyan to-transparent opacity-50" />
 
             {/* Header */}
-            <div className="flex items-center justify-between mb-8 flex-shrink-0">
+            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 flex-shrink-0">
                 <Bouton habillage="libre" cibleTactile
                     onClick={onClose}
                     title="Fermer la fiche"
@@ -171,15 +171,15 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 <div className="text-right">
                     <h2 className="text-3xl font-black text-app-text uppercase tracking-tighter leading-none mb-1">{character.name}</h2>
                     <div className="flex items-center justify-end gap-2">
-                        <div className="px-2 py-0.5 bg-accent/10 border border-accent/30 rounded text-ui-9 font-black text-accent uppercase tracking-widest flex items-center gap-1.5 shadow-glow-accent/5">
+                        <Etiquette habillage="libre" ton="accent" className="px-2 py-0.5 bg-accent/10 border border-accent/30 rounded text-ui-9 font-black text-accent uppercase tracking-widest flex items-center gap-1.5 shadow-glow-accent/5">
                             <Shield size={10} />
                             SYSTÈME : {template.name}
-                        </div>
+                        </Etiquette>
                         <div className="w-1 h-1 rounded-full bg-app-text/20" />
                         <span className="text-ui-10 font-bold text-app-text/40 uppercase tracking-widest">{character.classRace || 'Agent Nexus'}</span>
                     </div>
                 </div>
-            </div>
+            </EnTeteDeModule>
 
             {/*
                 **Les réserves communes, sous les yeux des joueurs.**
@@ -195,13 +195,13 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 les deux écrans finiraient par afficher deux vérités.
             */}
             {campaignId && (pilote?.ressourcesDeTable?.length ?? 0) > 0 && (
-                <div className="flex-shrink-0 mb-4 rounded-2xl border border-app-border/20 overflow-hidden">
+                <Panneau as="div" habillage="libre" className="flex-shrink-0 mb-4 rounded-2xl border border-app-border/20 overflow-hidden">
                     <PanneauDesRessources
                         campaignId={campaignId}
                         ressources={pilote!.ressourcesDeTable!}
                         pourLesJoueurs
                     />
-                </div>
+                </Panneau>
             )}
 
             {/*
@@ -335,7 +335,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                     {section.fields.map((field: SheetField) => {
                                         const value = character.sheetData?.[field.id] ?? field.defaultValue;
                                         return (
-                                            <div key={field.id} className="p-4 bg-app-surface/40 border border-app-border/10 rounded-2xl">
+                                            <Panneau as="div" habillage="libre" key={field.id} className="p-4 bg-app-surface/40 border border-app-border/10 rounded-2xl">
                                                 <span className="text-ui-9 font-black text-app-text/30 uppercase tracking-widest">{field.label}</span>
                                                 {field.type === 'gauge' ? (
                                                     <div className="space-y-2 mt-1">
@@ -351,7 +351,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                                 ) : (
                                                     <span className="text-sm font-black text-app-text block mt-1 truncate">{String(value)}</span>
                                                 )}
-                                            </div>
+                                            </Panneau>
                                         );
                                     })}
                                 </div>

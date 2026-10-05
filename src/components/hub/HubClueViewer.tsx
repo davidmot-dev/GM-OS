@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, FileSearch, Calendar, Bookmark } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton } from '../socle';
+import { Bouton, Etiquette, Panneau } from '../socle';
 import type { Clue } from '../../modules/session/store/types';
 
 interface HubClueViewerProps {
@@ -45,7 +45,7 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                     className="relative z-[205] w-full max-w-5xl max-h-full overflow-hidden flex flex-col md:flex-row gap-8 items-stretch"
                 >
                     {/* Media Section (Image or XXL Stylized Icon) */}
-                    <div className="flex-1 min-h-[300px] md:min-h-0 bg-app-surface/20 border border-app-border/10 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
+                    <Panneau as="div" habillage="libre" className="flex-1 min-h-[300px] md:min-h-0 bg-app-surface/20 border border-app-border/10 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
                         {clue.mediaUrl ? (
                             <>
                                 {/* Background Ambient Glow */}
@@ -70,7 +70,7 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </Panneau>
 
                     {/* Content Section */}
                     <div className="w-full md:w-[450px] flex flex-col justify-center gap-8 p-4">
@@ -78,20 +78,20 @@ export const HubClueViewer: React.FC<HubClueViewerProps> = ({ clue, onClose }) =
                             {/* Metadata Badges */}
                             <div className="flex flex-wrap gap-3">
                                 {clue.revealedAt && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-app-surface/40 rounded-full border border-app-border/20">
+                                    <Etiquette habillage="libre" ton="neutre" className="flex items-center gap-2 px-3 py-1.5 bg-app-surface/40 rounded-full border border-app-border/20">
                                         <Calendar size={12} className="text-app-text/30" />
                                         <span className="text-ui-9 font-black text-app-text/40 uppercase tracking-widest">
                                             {new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' }).format(clue.revealedAt)}
                                         </span>
-                                    </div>
+                                    </Etiquette>
                                 )}
                                 {clue.campaignMoment && (
-                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full border border-accent/20">
+                                    <Etiquette habillage="libre" ton="accent" className="flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full border border-accent/20">
                                         <Bookmark size={12} className="text-accent/50" />
                                         <span className="text-ui-9 font-black text-accent/60 uppercase tracking-widest">
                                             {clue.campaignMoment}
                                         </span>
-                                    </div>
+                                    </Etiquette>
                                 )}
                             </div>
 

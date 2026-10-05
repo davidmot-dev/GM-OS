@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, User, Shield, Info } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton } from '../socle';
+import { Bouton, Etiquette, Panneau } from '../socle';
 import type { Entity } from '../../modules/session/store/types';
 
 interface HubNpcViewerProps {
@@ -45,7 +45,7 @@ export const HubNpcViewer: React.FC<HubNpcViewerProps> = ({ npc, onClose }) => {
                     className="relative z-[205] w-full max-w-6xl max-h-full overflow-hidden flex flex-col md:flex-row gap-8 lg:gap-16 items-center md:items-stretch"
                 >
                     {/* Portrait Section (Grand Format) */}
-                    <div className="w-full md:flex-1 h-[40vh] md:h-auto min-h-[350px] bg-app-surface/20 border border-app-border/10 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
+                    <Panneau as="div" habillage="libre" className="w-full md:flex-1 h-[40vh] md:h-auto min-h-[350px] bg-app-surface/20 border border-app-border/10 rounded-[3rem] overflow-hidden relative shadow-2xl flex items-center justify-center group">
                         <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent opacity-60 z-10" />
                         
                         {npc.avatar ? (
@@ -68,26 +68,26 @@ export const HubNpcViewer: React.FC<HubNpcViewerProps> = ({ npc, onClose }) => {
                                 <p className="text-ui-10 font-black uppercase tracking-[0.4em] text-app-text/20">Identité Non Documentée</p>
                             </div>
                         )}
-                    </div>
+                    </Panneau>
 
                     {/* NPC Info Section */}
                     <div className="w-full md:w-[480px] flex flex-col justify-center gap-8 md:gap-12 p-4 md:p-0">
                         <div className="space-y-6">
                             {/* Badges */}
                             <div className="flex flex-wrap gap-3">
-                                <div className="flex items-center gap-2 px-4 py-1.5 bg-app-surface/40 rounded-full border border-app-border/20 shadow-lg">
+                                <Etiquette habillage="libre" ton="neutre" className="flex items-center gap-2 px-4 py-1.5 bg-app-surface/40 rounded-full border border-app-border/20 shadow-lg">
                                     <Shield size={12} className="text-accent" />
                                     <span className="text-ui-10 font-black text-app-text/60 uppercase tracking-widest">
                                         {npc.role || 'NPC'}
                                     </span>
-                                </div>
+                                </Etiquette>
                                 {npc.faction && (
-                                    <div className="flex items-center gap-2 px-4 py-1.5 bg-etat-info/10 rounded-full border border-etat-info/20">
+                                    <Etiquette habillage="libre" ton="info" className="flex items-center gap-2 px-4 py-1.5 bg-etat-info/10 rounded-full border border-etat-info/20">
                                         <Info size={12} className="text-etat-info" />
                                         <span className="text-ui-10 font-black text-etat-info/80 uppercase tracking-widest text-shadow-glow">
                                             {npc.faction}
                                         </span>
-                                    </div>
+                                    </Etiquette>
                                 )}
                             </div>
 

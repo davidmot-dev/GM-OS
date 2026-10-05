@@ -1,7 +1,7 @@
 import React from 'react';
 import { Users, Sparkles } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton, EnTeteDeModule, Etiquette } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 import { type Entity } from '../../modules/session/store/types';
 
 interface HubTrombinoscopeProps {
@@ -60,7 +60,7 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
                     ))}
 
                     {npcs.length === 0 && (
-                        <div className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-6 border border-dashed border-app-border/20 rounded-[3rem] bg-app-surface/20">
+                        <Panneau as="div" habillage="libre" vide className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-6 border border-dashed border-app-border/20 rounded-[3rem] bg-app-surface/20">
                             <div className="p-8 bg-app-surface/40 rounded-full border border-app-border/10">
                                 <Users size={64} className="text-app-text/5" />
                             </div>
@@ -68,7 +68,7 @@ export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ n
                                 <p className="text-xs font-black uppercase tracking-[0.3em] text-app-text/20">Aucun sujet identifié</p>
                                 <p className="text-ui-10 text-app-text/10 font-bold uppercase">En attente de transmission par le MJ</p>
                             </div>
-                        </div>
+                        </Panneau>
                     )}
                 </div>
             </div>

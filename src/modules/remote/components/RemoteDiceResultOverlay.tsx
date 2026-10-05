@@ -3,6 +3,7 @@ import { EtiquetteDuDegre } from '../../dice/EtiquetteDuDegre';
 import { motion, AnimatePresence } from 'framer-motion';
 import { type RollRecord } from '../hooks/useRemoteSync';
 import { type DieResult } from '../../dice/DiceEngine';
+import { Panneau } from '../../../components/socle/Panneau';
 
 interface RemoteDiceResultOverlayProps {
     result: RollRecord | null;
@@ -33,8 +34,9 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.9, opacity: 0, y: -20 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="relative w-full max-w-lg premium-glass rounded-[40px] border border-app-text/10 shadow-3xl overflow-hidden p-8 flex flex-col items-center gap-6"
+                        className="w-full max-w-lg"
                     >
+                        <Panneau as="div" habillage="libre" className="relative w-full premium-glass rounded-[40px] border border-app-text/10 shadow-3xl overflow-hidden p-8 flex flex-col items-center gap-6">
                         {/* Progress bar for auto-dismiss */}
                         <motion.div 
                             initial={{ width: '100%' }}
@@ -115,6 +117,7 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                             CLIQUER POUR FERMER
                             <span className="w-4 h-px bg-app-text/10" />
                         </div>
+                        </Panneau>
                     </motion.div>
                 </motion.div>
             )}

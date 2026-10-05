@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bouton } from '../../../components/socle/Bouton';
+import { Panneau } from '../../../components/socle/Panneau';
 import { Play } from 'lucide-react';
 import { type RemoteMoment } from '../types/remote.types';
 
@@ -21,11 +22,11 @@ interface RemoteStoryboardProps {
 const RemoteStoryboard: React.FC<RemoteStoryboardProps> = ({ moments, onTrigger }) => {
     if (!moments || moments.length === 0) {
         return (
-            <div className="text-center py-16 rounded-2xl border border-app-text/5 bg-app-text/[0.02]">
+            <Panneau as="div" habillage="libre" className="text-center py-16 rounded-2xl border border-app-text/5 bg-app-text/[0.02]">
                 <p className="text-sm italic text-app-muted">
                     Aucun moment dans le storyboard de cette campagne.
                 </p>
-            </div>
+            </Panneau>
         );
     }
 

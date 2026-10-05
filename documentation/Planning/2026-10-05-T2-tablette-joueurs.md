@@ -1,4 +1,4 @@
-# T2 — habillage de la tablette des joueurs, en cours
+# T2 — habillage de la tablette des joueurs, terminé
 
 Le 05/10/2026, David a confirmé que T1 est testé et que GM-OS est fermé. T2 a commencé par
 l'onglet **Cartes**, dans l'ordre fixé au § 5 du [plan](2026-10-04-refonte-tablettes.md). David a
@@ -66,14 +66,24 @@ avant chaque image. Le passage du format téléphone a passé ses 13 scénarios 
 captures stabilisées ; elles documentent le débordement de navigation et le recouvrement de
 l'inventaire avant la correction de sa zone de défilement.
 
-## Suite du lot joueurs
+## Clôture du lot — 05/10
 
-- Migrer les panneaux, étiquettes et en-têtes encore faits main, sans déplacement de contenu ;
-  examiner les composants partagés hors du Hub. Les étoiles de feedback et les commandes des
-  réserves conservent leur disposition jusqu'à T4.
-- Vérifier toutes les cibles tactiles à 360–1 180 px, puis comparer visuellement les captures avec
-  les 54 images T0 en excluant la hauteur corrigée des commandes trop petites.
-- Contrôler à 390 px que les actions du dernier objet restent accessibles au-dessus de la
-  navigation après défilement ; traiter séparément le débordement horizontal de cette navigation.
-- Après chaque correction de mise en page, rejouer les scénarios concernés et comparer leurs
-  captures. Les 39 scénarios T0 ont déjà passé ; T2 entière reste ouverte sur les deux lots.
+Les panneaux, étiquettes et en-têtes du Hub encore faits main passent par les primitives du socle
+avec `habillage="libre"` : accueil, inventaire, fiche, notifications, messagerie, règles, visionneuses,
+archives et surimpressions. Leurs classes visuelles restent celles de T0. Les étoiles de feedback
+et les commandes des réserves conservent leur disposition ; David a reporté leurs cibles tactiles
+à T4.
+
+La navigation fixe occupe **une seule ligne défilante horizontalement**, avec dégradé et chevron
+pour signaler les onglets hors écran. L'onglet actif est ramené dans la zone visible à chaque
+sélection. À 390 px, le test fait défiler l'inventaire jusqu'à l'action « Donner » et vérifie qu'elle
+reste entièrement au-dessus de la navigation. Une capture supplémentaire
+`10-inventaire-actions.png` documente ce geste.
+
+La construction et la vérification des types passent. Les **39 scénarios E2E** passent aux trois
+tailles de référence, y compris les assertions de visibilité de l'onglet actif et de l'action
+d'inventaire. Les 54 captures de référence ont toutes une correspondante T2 isolée dans un
+dossier temporaire. Une comparaison échantillonnée des 122 paires joueurs et meneur, puis
+l'inspection des plus grands écarts, n'ont montré que les cibles agrandies, la navigation choisie,
+les animations prises à des instants différents et la date de l'horloge. Les défauts fonctionnels
+déjà répertoriés en T0 ne sont pas corrigés dans T2.
