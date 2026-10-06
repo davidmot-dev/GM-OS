@@ -8,6 +8,8 @@ interface ClockVisualizerProps {
     theme: ClockTheme;
     timestamp: number;
     mode: ClockMode;
+    /** T4 : même heure et même calendrier, dans la colonne de la tablette. */
+    compact?: boolean;
 }
 
 /**
@@ -143,7 +145,7 @@ function habillageDuMinuteur(theme: ClockTheme, epuise: boolean): HabillageDuMin
     }
 }
 
-const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mode }) => {
+const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mode, compact = false }) => {
     const { timerRemaining, timerDuration, timerIsRunning, timerLabel, calendars, activeCalendarId, getFantasyDate } = useClockStore();
     const [realtimeDate, setRealtimeDate] = useState(new Date());
     const { t, i18n } = useTranslation('modules');
@@ -450,6 +452,26 @@ const ClockVisualizer: React.FC<ClockVisualizerProps> = ({ theme, timestamp, mod
             </div>
         );
     };
+
+    if (compact) {
+        const { hh, mm, ss } = morceaux();
+        const minuteur = mode === 'timer';
+        const epuise = minuteur && timerDuration > 0 && timerRemaining === 0;
+        const urgent = minuteur && timerIsRunning && timerRemaining < 10;
+        return (
+            <div className={`min-w-0 space-y-2 ${theme === 'oldstyle' ? 'font-serif' : 'font-mono'}`}>
+                <div role={minuteur ? 'timer' : undefined} className={`flex flex-wrap items-baseline gap-1 tabular-nums ${epuise || urgent ? 'text-etat-danger' : 'text-accent'}`}>
+                    <span className="text-[28px] font-bold leading-none">
+                        {minuteur ? `${Math.floor(timerRemaining / 60).toString().padStart(2, '0')}:${(timerRemaining % 60).toString().padStart(2, '0')}` : `${hh}:${mm}`}
+                    </span>
+                    {!minuteur && <span className="text-[14px]">{ss}</span>}
+                </div>
+                <p className="text-[14px] leading-snug text-app-muted break-words">
+                    {minuteur ? (timerLabel || t('clock.timerLabel', 'Minuteur')) : formatDate(date)}
+                </p>
+            </div>
+        );
+    }
 
     if (mode === 'timer') return renderTimer();
 
