@@ -3,7 +3,7 @@ import { useClientStore } from '../../stores/useClientStore';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { Radar, User, Shield, Fingerprint, WifiOff, AlertCircle } from 'lucide-react';
 import { useMediaUrl } from '../../hooks/useMediaUrl';
-import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, Panneau, GabaritDeModule } from '../socle';
 
 type OnboardingStep = 'SCANNING' | 'SELECTION' | 'SYNCING';
 
@@ -81,7 +81,7 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
                 } else {
                     sessionDate = activeSession.date; // Garder la string telle quelle
                 }
-            } catch (_e) {
+            } catch {
                 // Ignore
             }
         }
@@ -330,171 +330,89 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
         );
     }
 
-    // --- RENDER: SELECTION (Character Grid) ---
+    // T4 J1 : en-tête et sortie fixes, cartes et pied dans la zone de lecture.
     return (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center bg-app-bg/95 backdrop-blur-2xl p-6 overflow-y-auto">
-            {/* Background Atmosphere */}
-            <div className="absolute inset-0 z-0 transition-opacity duration-1000">
-                {resolvedWallpaper ? (
-                    <img 
-                        src={resolvedWallpaper} 
-                        alt="" 
-                        className="w-full h-full object-cover opacity-20 grayscale-[0.2]"
+        <div data-accueil-joueur="" className="fixed inset-0 z-[100] bg-app-bg overflow-hidden">
+            {resolvedWallpaper && (
+                <img src={resolvedWallpaper} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none" />
+            )}
+            <GabaritDeModule
+                className="relative mx-auto max-w-6xl"
+                entete={(
+                    <EnTeteDeModule
+                        titre="Qui es-tu ?"
+                        surtitre="Agent de la Session"
+                        etat={<p className="text-[14px] text-accent break-words" title={sessionDisplayName}>{sessionDisplayName}</p>}
+                        className="shrink-0"
                     />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-app-bg via-app-bg to-app-bg opacity-60" />
                 )}
-            </div>
-
-            {/* Top Bar for Reset/Logout */}
-            <div className="absolute top-8 left-8 z-50">
-                {!showLogoutConfirm ? (
-                    <Bouton habillage="libre" cibleTactile
-                        onClick={() => {
-                            haptic(10);
-                            setShowLogoutConfirm(true);
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 bg-app-surface border border-app-border/20 rounded-full text-ui-10 font-black text-app-text/40 uppercase tracking-widest hover:text-etat-danger hover:border-etat-danger/30 transition-all group"
-                    >
-                        <div className="w-1.5 h-1.5 rounded-full bg-etat-danger/40 group-hover:bg-etat-danger group-hover:animate-pulse" />
+                barreDOutils={showLogoutConfirm ? (
+                    <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Confirmation de sortie">
+                        <span className="text-[14px] text-app-text">Vraiment ?</span>
+                        <Bouton cibleTactile onClick={() => { haptic(10); setShowLogoutConfirm(false); }}>Non</Bouton>
+                        <Bouton cibleTactile variante="danger" onClick={() => { haptic([10, 50, 10]); setShowLogoutConfirm(false); logout(); }}>Oui, quitter</Bouton>
+                    </div>
+                ) : (
+                    <Bouton cibleTactile variante="danger" onClick={() => { haptic(10); setShowLogoutConfirm(true); }}>
                         Quitter la session
                     </Bouton>
-                ) : (
-                    <div className="flex items-center gap-2 p-1 bg-etat-danger rounded-full animate-in zoom-in duration-300">
-                        <span className="px-4 text-ui-9 font-black text-app-text uppercase tracking-tighter">Vraiment ?</span>
-                        <Bouton habillage="libre" cibleTactile
-                            onClick={() => {
-                                haptic(10);
-                                setShowLogoutConfirm(false);
-                            }}
-                            className="px-4 py-2 bg-app-text/20 hover:bg-app-text/30 text-app-text rounded-full text-ui-10 font-black uppercase"
-                        >
-                            Non
-                        </Bouton>
-                        <Bouton habillage="libre" cibleTactile
-                            onClick={() => {
-                                haptic([10, 50, 10]);
-                                logout();
-                            }}
-                            className="px-4 py-2 bg-app-text text-etat-danger hover:bg-app-text/80 rounded-full text-ui-10 font-black uppercase"
-                        >
-                            Oui, quitter
-                        </Bouton>
-                    </div>
                 )}
-            </div>
-
-            <div className="w-full max-w-5xl mt-12 mb-12 relative z-10">
-                <EnTeteDeModule habillage="libre" className="text-center mb-16">
-                    <h1 className="text-6xl font-black text-app-text tracking-tightest uppercase mb-4">
-                        Qui es-tu ?
-                    </h1>
-                    <div className="flex items-center justify-center gap-3">
-                        <div className="h-[1px] w-12 bg-accent/40" />
-                        <div className="flex flex-col items-center">
-                            <span className="text-ui-10 font-bold text-app-text/40 tracking-[0.2em] uppercase">
-                                Agent de la Session
-                            </span>
-                            <span className="text-sm font-medium text-accent/90 text-center max-w-[280px] leading-tight px-4" title={sessionDisplayName}>
-                                {sessionDisplayName}
-                            </span>
-                        </div>
-                        <div className="h-[1px] w-12 bg-accent/40" />
-                    </div>
-                </EnTeteDeModule>
-
-                {presentPcs.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                         {presentPcs.map((char) => (
-                             <Bouton habillage="libre" cibleTactile
-                                 key={char.id}
-                                 onClick={() => handleSelectCharacter(char)}
-                                 className={`group relative flex flex-col bg-app-surface/50 border border-app-border/10 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-[0_0_50px_-12px_var(--app-accent)] active:scale-95 ${
-                                     selectedCharId === char.id 
-                                         ? 'ring-4 ring-accent ring-offset-4 ring-offset-app-bg scale-105 border-accent' 
-                                         : 'hover:border-accent/50 hover:bg-app-surface'
-                                 }`}
-                             >
-                                {/* Character Backdrop Effect */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                
-                                {/* Player Name Badge (Top Right) */}
-                                <div className="absolute top-4 right-4 z-10">
-                                    <div className="flex flex-col items-end">
-                                        <span className="text-ui-8 font-black text-accent/40 uppercase tracking-widest mb-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Joueur</span>
-                                        <Etiquette habillage="libre" ton="accent" className="px-3 py-1.5 bg-accent text-app-on-accent text-ui-10 font-black uppercase tracking-[0.1em] rounded-lg shadow-lg group-hover:scale-110 transition-all duration-300">
-                                            {char.playerName}
-                                        </Etiquette>
-                                    </div>
-                                </div>
-                                
-                                <div className="aspect-[4/3] w-full overflow-hidden bg-app-bg relative">
-                                    {char.portraitUrl ? (
-                                        <img 
-                                            src={char.portraitUrl} 
-                                            alt={char.name} 
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <User className="text-app-text/10" size={64} />
+            >
+                <div className="flex min-h-full flex-col gap-6">
+                    {presentPcs.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {presentPcs.map(char => (
+                                <Panneau as="div" key={char.id} className="flex">
+                                    <Bouton
+                                        habillage="libre"
+                                        cibleTactile
+                                        onClick={() => handleSelectCharacter(char)}
+                                        className={`flex w-full min-w-0 items-center gap-4 p-4 text-left lg:flex-col lg:items-stretch hover:bg-accent/5 active:bg-accent/10 ${selectedCharId === char.id ? 'ring-2 ring-inset ring-accent' : ''}`}
+                                    >
+                                        <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-app-bg lg:h-auto lg:w-full lg:aspect-[4/3]">
+                                            {char.portraitUrl ? (
+                                                <img src={char.portraitUrl} alt="" className="h-full w-full object-cover" />
+                                            ) : (
+                                                <User aria-hidden="true" className="text-app-muted" size={48} />
+                                            )}
                                         </div>
-                                    )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-app-bg via-transparent to-transparent opacity-60" />
-                                </div>
-
-                                <div className="p-8 text-left relative">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <Etiquette habillage="libre" ton="accent" className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent text-ui-10 font-black uppercase tracking-widest rounded-full">
-                                            Connectable
-                                        </Etiquette>
-                                        <Shield size={16} className="text-app-text/20 group-hover:text-accent transition-colors" />
-                                    </div>
-                                    <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter mb-1 select-none">
-                                        {char.name}
-                                    </h3>
-                                    <p className="text-app-text/40 text-ui-10 font-bold uppercase tracking-widest select-none leading-relaxed mt-2">
-                                        {char.classRace || "Héros d'Eldoria"}
-                                    </p>
-                                </div>
-                            </Bouton>
-                        ))}
-                    </div>
-                ) : (
-                    <Panneau as="div" habillage="libre" vide className="flex flex-col items-center justify-center p-20 bg-app-surface/30 border-2 border-dashed border-app-border/10 rounded-[3rem]">
-                        <AlertCircle className="text-app-text/20 mb-6" size={48} />
-                        <h3 className="text-xl font-black text-app-text/40 uppercase tracking-tighter mb-2">Aucun PJ détecté</h3>
-                        <p className="text-app-text/30 text-xs text-center max-w-xs uppercase leading-relaxed font-bold">
-                            Le Maître de Jeu doit ajouter vos personnages à la session pour qu'ils apparaissent ici.
-                        </p>
-                    </Panneau>
-                )}
-            </div>
-            
-             <div className="mt-auto pb-8 text-app-text/20 font-bold text-ui-10 uppercase tracking-[0.2em] flex flex-col items-center gap-1 relative z-10">
-                <div className="flex items-center gap-4 mb-2">
-                    <div className="flex items-center gap-1.5">
-                        <div className={`w-1 h-1 rounded-full bg-current ${getLatencyColor(latency || null)}`} />
-                        <span className={getLatencyColor(latency || null)}>{getLatencyLabel(latency || null)}</span>
-                    </div>
-                    <div className="w-px h-2 bg-app-text/10" />
-                    <div>GM-OS v{__APP_VERSION__} • nexus_bridge_active</div>
+                                        <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+                                            <Etiquette ton="accent" className="max-w-full break-words">{char.playerName}</Etiquette>
+                                            <h3 className="font-display text-[18px] font-bold leading-tight text-app-text break-words">{char.name}</h3>
+                                            <p className="text-[14px] leading-relaxed text-app-muted break-words">{char.classRace || "Héros d'Eldoria"}</p>
+                                            <span className="flex items-center gap-2">
+                                                <Etiquette ton="accent">Connectable</Etiquette>
+                                                <Shield aria-hidden="true" size={16} className="text-accent" />
+                                            </span>
+                                        </div>
+                                    </Bouton>
+                                </Panneau>
+                            ))}
+                        </div>
+                    ) : (
+                        <Panneau as="div" vide className="flex flex-col items-center gap-4 p-6 text-center">
+                            <AlertCircle aria-hidden="true" className="text-app-muted" size={40} />
+                            <h3 className="font-display text-[18px] font-bold text-app-text">Aucun PJ détecté</h3>
+                            <p className="max-w-sm text-[14px] leading-relaxed text-app-muted">
+                                Le Maître de Jeu doit ajouter vos personnages à la session pour qu'ils apparaissent ici.
+                            </p>
+                        </Panneau>
+                    )}
+                    <footer className="mt-auto border-t border-app-border pt-4 text-ui-11 text-app-muted">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <span className={`flex items-center gap-2 ${getLatencyColor(latency ?? null)}`}>
+                                <span className="h-2 w-2 shrink-0 rounded-full bg-current" />
+                                {getLatencyLabel(latency ?? null)}
+                            </span>
+                            <span className="break-words">GM-OS v{__APP_VERSION__} • nexus_bridge_active</span>
+                        </div>
+                        <p className="mt-2 font-mono break-all">Device ID: {deviceId?.substring(0, 12)}...</p>
+                    </footer>
                 </div>
-                <div className="opacity-50 font-mono">Device ID: {deviceId?.substring(0, 12)}...</div>
-            </div>
-
-            <style>{`
-                @keyframes ring-pulse {
-                    0% { box-shadow: 0 0 0 0 rgba(var(--app-accent-rgb), 0.4); }
-                    70% { box-shadow: 0 0 0 15px rgba(var(--app-accent-rgb), 0); }
-                    100% { box-shadow: 0 0 0 0 rgba(var(--app-accent-rgb), 0); }
-                }
-                .ring-pulse {
-                    animation: ring-pulse 2s infinite;
-                }
-            `}</style>
+            </GabaritDeModule>
         </div>
     );
+
 });
 
 export default LobbyOnboarding;
