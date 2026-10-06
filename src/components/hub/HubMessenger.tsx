@@ -1,8 +1,9 @@
+import { useFermetureParEchap } from '../../hooks/useFermetureParEchap';
 import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
 import { useSessionOSStore } from '../../modules/session/store/index';
-import { MessageSquare, Send, X, Users, Shield, ChevronDown } from 'lucide-react';
+import { Send, Users, Shield, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bouton, EnTeteDeModule, Panneau } from '../socle';
+import { Bouton, EnTeteDeModule } from '../socle';
 
 interface HubMessengerProps {
     isOpen: boolean;
@@ -85,189 +86,56 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
         }
     };
 
+    useFermetureParEchap(isOpen, () => {
+        if (isDropdownOpen) setIsDropdownOpen(false);
+        else onClose();
+    }, 'Messagerie tablette');
+
     return (
         <AnimatePresence>
-            {isOpen && (
-                <motion.div
-                    initial={{ x: '100%', opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: '100%', opacity: 0 }}
-                    transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                    className="fixed top-4 bottom-28 right-4 w-80 md:w-96 z-[100]"
-                >
-                    <Panneau as="div" habillage="libre" className="h-full bg-app-surface/95 backdrop-blur-2xl border border-app-border/40 flex flex-col shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] rounded-[2.5rem] overflow-hidden">
-                    {/* Header */}
-                    <EnTeteDeModule habillage="libre" className="p-4 border-b border-app-border/20 flex items-center justify-between bg-app-surface/50">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-accent/20 rounded-lg text-accent">
-                                <MessageSquare size={20} />
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-app-text uppercase tracking-wider">Messagerie</h3>
-                                <p className="text-ui-10 text-accent font-medium">Canal {selectedRecipient.type === 'gm' ? 'Direct MJ' : selectedRecipient.type === 'all' ? 'Général' : 'Privé'}</p>
-                            </div>
-                        </div>
-                        <Bouton habillage="libre" cibleTactile
-                            onClick={onClose}
-                            className="min-w-[44px] p-2 hover:bg-app-text/10 rounded-full text-app-text/40 transition-colors"
-                            title="Fermer la messagerie"
-                        >
-                            <X size={20} />
-                        </Bouton>
-                    </EnTeteDeModule>
-
-                    {/* Recipient Selector (Dropdown) */}
-                    <div className="px-4 py-3 bg-app-bg/40 border-b border-app-border/20 relative z-50">
-                        <Bouton habillage="libre" cibleTactile
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                            aria-expanded={isDropdownOpen}
-                            className="w-full flex items-center justify-between px-3 py-2 bg-app-surface border border-app-border/40 hover:border-accent/40 rounded-xl transition-all shadow-sm"
-                            title="Choisir le destinataire"
-                        >
-                            <div className="flex items-center gap-2 text-sm font-medium">
-                                <span className="text-app-text/60 mr-1 text-xs uppercase tracking-wider">À :</span>
-                                {selectedRecipient.type === 'gm' ? (
-                                    <Shield size={14} className="text-accent" />
-                                ) : selectedRecipient.type === 'all' ? (
-                                    <Users size={14} className="text-accent" />
-                                ) : (
-                                    <div className="w-5 h-5 rounded-full overflow-hidden bg-app-surface border border-accent/40">
-                                        {selectedRecipient.portrait ? (
-                                            <img src={selectedRecipient.portrait} alt={selectedRecipient.name} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-ui-9 font-bold text-accent">
-                                                {selectedRecipient.name[0]}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                                <span className={selectedRecipient.type !== 'pc' ? 'text-accent' : 'text-app-text'}>
-                                    {selectedRecipient.name}
-                                </span>
-                            </div>
-                            <ChevronDown size={16} className={`text-app-text/60 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-accent' : ''}`} />
-                        </Bouton>
-
-                        <AnimatePresence>
-                            {isDropdownOpen && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="absolute top-[calc(100%+0.5rem)] left-4 right-4 bg-app-surface border border-app-border/60 shadow-2xl rounded-xl overflow-hidden backdrop-blur-3xl z-50 max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-app-text/10"
-                                >
-                                    {otherCharacters.map((char) => (
-                                        <Bouton habillage="libre" cibleTactile
-                                            key={char.id}
-                                            onClick={() => {
-                                                onRecipientChange(char.id);
-                                                setIsDropdownOpen(false);
-                                            }}
-                                            className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-app-text/5 transition-colors border-l-2 text-sm ${
-                                                selectedRecipientId === char.id
-                                                    ? 'bg-accent/10 border-accent font-bold text-accent'
-                                                    : 'border-transparent text-app-text/80'
-                                            }`}
-                                        >
-                                            {char.type === 'gm' ? (
-                                                <Shield size={14} className={selectedRecipientId === char.id ? 'text-accent' : 'text-app-text/60'} />
-                                            ) : char.type === 'all' ? (
-                                                <Users size={14} className={selectedRecipientId === char.id ? 'text-accent' : 'text-app-text/60'} />
-                                            ) : (
-                                                <div className="w-5 h-5 rounded-full overflow-hidden bg-app-bg border border-app-border/40">
-                                                    {char.portrait ? (
-                                                        <img src={char.portrait} alt={char.name} className="w-full h-full object-cover" />
-                                                    ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-ui-10 font-bold">
-                                                            {char.name[0]}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
-                                            {char.name}
-                                        </Bouton>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+            {isOpen && <motion.section role="dialog" aria-label="Messagerie" aria-modal="true" data-messagerie-joueur=""
+                initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }}
+                className="fixed inset-3 z-[150] flex min-h-0 flex-col border border-app-border bg-app-surface shadow-2xl lg:left-auto lg:w-[440px]">
+                <EnTeteDeModule habillage="libre" className="flex shrink-0 items-start justify-between gap-3 border-b border-app-border p-3">
+                    <div className="space-y-1"><h2 className="text-[24px] font-bold text-app-text">Messagerie</h2>
+                        <p className="text-[14px] text-accent">Canal {selectedRecipient.type === 'gm' ? 'Direct MJ' : selectedRecipient.type === 'all' ? 'Général' : 'Privé'}</p>
                     </div>
-
-                    {/* Messages List */}
-                    <div 
-                        ref={scrollRef}
-                        className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-app-text/10"
-                    >
-                        {chatMessages.length === 0 ? (
-                            <div className="h-full flex flex-col items-center justify-center text-center p-6 opacity-30">
-                                <MessageSquare size={48} className="mb-4" />
-                                <p className="text-sm">Aucun message avec {selectedRecipient.name}.</p>
-                                <p className="text-xs">Commencez la conversation !</p>
-                            </div>
-                        ) : (
-                            chatMessages.map((msg) => {
-                                const isMe = msg.fromId === characterId;
-                                const isBroadcast = msg.toId === 'all';
-                                
-                                return (
-                                    <div 
-                                        key={msg.id}
-                                        className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
-                                    >
-                                        <div className={`max-w-[85%] rounded-2xl p-3 text-sm ${
-                                            isMe 
-                                                ? 'bg-accent text-app-bg rounded-tr-none shadow-lg' 
-                                                : 'bg-app-bg text-app-text rounded-tl-none border border-app-border'
-                                        }`}>
-                                            {msg.content}
-                                        </div>
-                                        <div className="flex items-center gap-1.5 mt-1">
-                                            {!isMe && (
-                                                <span className="text-ui-9 font-bold text-accent uppercase tracking-tighter">
-                                                    {msg.fromName}
-                                                </span>
-                                            )}
-                                            {isBroadcast && <Users size={8} className="text-app-text/40" />}
-                                            <span className="text-ui-9 text-app-text/40 uppercase tracking-tighter">
-                                                {isMe ? 'VOUS' : ''} • {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            </span>
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        )}
+                    <Bouton cibleTactile onClick={onClose} title="Fermer la messagerie">Fermer</Bouton>
+                </EnTeteDeModule>
+                <div className="relative shrink-0 border-b border-app-border p-3">
+                    <Bouton habillage="libre" cibleTactile onClick={() => setIsDropdownOpen(!isDropdownOpen)} aria-expanded={isDropdownOpen}
+                        title="Choisir le destinataire" className="flex w-full items-center justify-between gap-3 border border-app-border bg-app-bg p-3 text-left">
+                        <span className="min-w-0 break-words text-[14px] text-app-text">À : {selectedRecipient.name}</span>
+                        <ChevronDown size={16} className="shrink-0 text-accent" />
+                    </Bouton>
+                    {isDropdownOpen && <div className="absolute inset-x-3 top-full z-10 max-h-[35dvh] overflow-auto border border-app-border bg-app-surface">
+                        {otherCharacters.map(char => <Bouton habillage="libre" cibleTactile key={char.id}
+                            onClick={() => { onRecipientChange(char.id); setIsDropdownOpen(false); }}
+                            aria-pressed={selectedRecipientId === char.id}
+                            className={`flex w-full items-center gap-3 p-3 text-left text-[14px] ${selectedRecipientId === char.id ? 'bg-accent/10 text-accent' : 'text-app-text'}`}>
+                            {char.type === 'gm' ? <Shield size={16} /> : <Users size={16} />}{char.name}
+                        </Bouton>)}
+                    </div>}
+                </div>
+                <div ref={scrollRef} role="log" aria-label="Conversation" className="min-h-0 flex-1 space-y-4 overflow-auto p-3">
+                    {chatMessages.length === 0 ? <p className="text-[14px] text-app-muted">Aucun message avec {selectedRecipient.name}. Commencez la conversation !</p> : chatMessages.map(msg => {
+                        const isMe = msg.fromId === characterId;
+                        return <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                            <p className={`max-w-[90%] whitespace-pre-wrap break-words p-3 text-[16px] leading-relaxed ${isMe ? 'bg-accent text-app-on-accent' : 'border border-app-border bg-app-bg text-app-text'}`}>{msg.content}</p>
+                            <p className="mt-1 text-[14px] text-app-muted">{isMe ? 'VOUS' : msg.fromName} · {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                        </div>;
+                    })}
+                </div>
+                <div className="shrink-0 space-y-2 border-t border-app-border p-3 pb-[max(12px,env(safe-area-inset-bottom))]">
+                    <div className="flex items-end gap-2">
+                        <textarea value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={handleKeyPress}
+                            title="Entrer un message" placeholder={`Message à ${selectedRecipient.name}...`} rows={2}
+                            className="min-h-[60px] min-w-0 flex-1 resize-y border border-app-border bg-app-bg p-3 text-[16px] text-app-text placeholder:text-app-muted" />
+                        <Bouton cibleTactile onClick={handleSend} disabled={!inputValue.trim()} title="Envoyer le message" variante="accent" icone={<Send size={16} />}>Envoyer</Bouton>
                     </div>
-
-                    {/* Input Area */}
-                    <div className="p-4 bg-app-surface/50 border-t border-app-border/20">
-                        <div className="relative">
-                            <textarea
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                                onKeyDown={handleKeyPress}
-                                title="Entrer un message"
-                                placeholder={`Message à ${selectedRecipient.name}...`}
-                                className="w-full bg-app-bg border border-app-border/40 rounded-xl py-3 pl-4 pr-[60px] text-sm text-app-text placeholder-app-text/30 focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none min-h-[60px] max-h-32 transition-all"
-                                rows={1}
-                            />
-                            <Bouton habillage="libre" cibleTactile
-                                onClick={handleSend}
-                                disabled={!inputValue.trim()}
-                                title="Envoyer le message"
-                                className="absolute right-2 bottom-2 min-w-[44px] p-2 bg-accent hover:brightness-110 disabled:opacity-50 text-app-bg rounded-lg transition-all shadow-lg"
-                            >
-                                <Send size={16} />
-                            </Bouton>
-                        </div>
-                        <p className="text-ui-10 text-app-text/40 mt-2 italic text-center">
-                            {selectedRecipientId === 'all' 
-                                ? 'Tout le monde pourra lire ce message.' 
-                                : `Seul ${selectedRecipient.name} pourra lire ce message.`}
-                        </p>
-                    </div>
-                    </Panneau>
-                </motion.div>
-            )}
+                    <p className="text-[14px] text-app-muted">{selectedRecipientId === 'all' ? 'Tout le monde pourra lire ce message.' : `Seul ${selectedRecipient.name} pourra lire ce message.`}</p>
+                </div>
+            </motion.section>}
         </AnimatePresence>
     );
 });
