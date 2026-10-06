@@ -83,25 +83,25 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
     if (coffre.chemin) {
         const ouverte = toutes.find(n => n.chemin === coffre.chemin);
         return (
-            <div className="flex flex-col gap-3 h-full">
+            <div className="flex min-w-0 min-h-0 flex-col gap-3 h-full">
                 <div className="shrink-0 flex items-center gap-2">
                     <Bouton habillage="libre" cibleTactile
                         onClick={onFermer}
                         aria-label="Revenir à la liste"
-                        className="min-w-[44px] w-9 h-9 shrink-0 rounded-lg bg-app-text/5 border border-app-text/10 flex items-center justify-center text-app-muted hover:text-app-text"
+                        className="min-h-[44px] px-3 shrink-0 rounded-lg bg-app-text/5 border border-app-text/10 flex items-center justify-center gap-2 text-[14px] text-app-muted hover:text-app-text"
                     >
-                        <ArrowLeft size={16} />
+                        <ArrowLeft size={16} /> Retour
                     </Bouton>
                     <span className="min-w-0 flex flex-col">
-                        <span className="text-sm font-bold text-app-text truncate">{ouverte?.nom ?? coffre.chemin}</span>
-                        {ouverte?.dossier && <span className="text-ui-10 text-app-subtle truncate">{ouverte.dossier}</span>}
+                        <span className="text-[16px] font-bold text-app-text [overflow-wrap:anywhere]">{ouverte?.nom ?? coffre.chemin}</span>
+                        {ouverte?.dossier && <span className="text-[14px] text-app-subtle [overflow-wrap:anywhere]">{ouverte.dossier}</span>}
                     </span>
                 </div>
                 <Panneau as="div" habillage="libre" className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-4">
                     {coffre.chargement ? (
-                        <p className="text-sm italic text-app-muted text-center py-10">Lecture…</p>
+                        <p className="text-[16px] italic text-app-muted text-center py-10">Lecture…</p>
                     ) : coffre.erreur ? (
-                        <p className="text-sm italic text-etat-danger text-center py-10">{coffre.erreur}</p>
+                        <p className="text-[16px] italic text-etat-danger text-center py-10">{coffre.erreur}</p>
                     ) : coffre.contenu ? (
                         /*
                           **Le coffre s'affichait en texte brut jusqu'au 2026-09-05.**
@@ -111,11 +111,11 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                           document au lieu du document est une panne discrète —
                           rien ne manque à l'écran, tout est illisible.*
                         */
-                        <div className="prose prose-invert prose-sm max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-app-text prose-p:text-app-text prose-li:text-app-text prose-strong:text-app-text prose-a:text-accent prose-code:text-accent prose-table:text-xs prose-th:text-app-muted prose-td:text-app-text">
+                        <div className="prose prose-invert prose-base max-w-[80ch] prose-headings:font-black prose-headings:tracking-tight prose-headings:text-app-text prose-p:text-app-text prose-li:text-app-text prose-strong:text-app-text prose-a:text-accent prose-code:text-accent prose-table:text-[14px] prose-th:text-app-muted prose-td:text-app-text">
                             <TexteMarkdown>{coffre.contenu}</TexteMarkdown>
                         </div>
                     ) : (
-                        <p className="text-sm italic text-app-muted text-center py-10">Cette note est vide.</p>
+                        <p className="text-[16px] italic text-app-muted text-center py-10">Cette note est vide.</p>
                     )}
                 </Panneau>
             </div>
@@ -126,9 +126,9 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
     const contenu = range(niveau);
 
     return (
-        <div className="flex flex-col gap-3 h-full">
+        <div className="flex min-w-0 min-h-0 flex-col gap-3 h-full">
             <div className="shrink-0 flex items-center gap-2">
-                <div className="relative flex-1">
+                <div className="relative min-w-0 flex-1">
                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-app-subtle pointer-events-none" />
                     <input
                         type="search"
@@ -136,7 +136,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                         onChange={(e) => setFiltre(e.target.value)}
                         placeholder="Chercher dans tout le coffre…"
                         aria-label="Chercher une note dans le coffre"
-                        className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40"
+                        className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-[16px] text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40"
                     />
                     {filtre && (
                         <Bouton habillage="libre" cibleTactile
@@ -152,9 +152,9 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                     onClick={onCharger}
                     aria-label="Recharger le coffre"
                     title="Recharger le coffre"
-                    className="shrink-0 min-w-[44px] w-9 h-9 rounded-lg bg-app-text/5 border border-app-text/10 flex items-center justify-center text-app-muted hover:text-app-text"
+                    className="shrink-0 min-h-[44px] px-2 rounded-lg bg-app-text/5 border border-app-text/10 flex items-center justify-center gap-2 text-[14px] text-app-muted hover:text-app-text"
                 >
-                    <RefreshCw size={15} className={coffre.chargement ? 'animate-spin' : ''} />
+                    <RefreshCw size={15} className={coffre.chargement ? 'animate-spin' : ''} /> Recharger
                 </Bouton>
             </div>
 
@@ -164,7 +164,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
               Caché pendant une recherche, qui ne se tient dans aucun dossier.
             */}
             {!enRecherche && cheminEffectif.length > 0 && (
-                <nav aria-label="Chemin dans le coffre" className="shrink-0 flex items-center gap-1 overflow-x-auto no-scrollbar text-ui-11">
+                <nav aria-label="Chemin dans le coffre" className="shrink-0 flex flex-wrap items-center gap-1 text-[14px] [overflow-wrap:anywhere]">
                     <Bouton habillage="libre" cibleTactile
                         onClick={() => setChemin([])}
                         className="shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg text-app-muted hover:text-app-text hover:bg-app-text/5"
@@ -176,7 +176,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                             <ChevronRight size={12} className="shrink-0 text-app-subtle" />
                             <Bouton habillage="libre" cibleTactile
                                 onClick={() => setChemin(cheminEffectif.slice(0, i + 1))}
-                                className={`shrink-0 px-2 py-1 rounded-lg hover:bg-app-text/5 ${i === cheminEffectif.length - 1 ? 'text-accent font-bold' : 'text-app-muted hover:text-app-text'}`}
+                                className={`min-w-0 max-w-full px-2 py-1 rounded-lg [overflow-wrap:anywhere] hover:bg-app-text/5 ${i === cheminEffectif.length - 1 ? 'text-accent font-bold' : 'text-app-muted hover:text-app-text'}`}
                             >
                                 {nom}
                             </Bouton>
@@ -187,15 +187,17 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
 
             <Panneau as="div" habillage="libre" className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-3 flex flex-col gap-1">
                 {coffre.chargement && coffre.notes.length === 0 ? (
-                    <p className="text-sm italic text-app-muted text-center py-10">Lecture du coffre…</p>
+                    <p className="text-[16px] italic text-app-muted text-center py-10">Lecture du coffre…</p>
+                ) : coffre.erreur ? (
+                    <p role="alert" className="text-[16px] text-etat-danger text-center py-10 [overflow-wrap:anywhere]">{coffre.erreur}</p>
                 ) : enRecherche ? (
                     resultats!.length === 0 ? (
-                        <p className="text-sm italic text-app-muted text-center py-10">
+                        <p className="text-[16px] italic text-app-muted text-center py-10">
                             Aucune note ne correspond à « {filtre} ».
                         </p>
                     ) : (
                         <>
-                            <p className="text-ui-10 uppercase tracking-widest text-app-subtle px-1 pb-1">
+                            <p className="text-[14px] uppercase tracking-widest text-app-subtle px-1 pb-1">
                                 {resultats!.length} note{resultats!.length > 1 ? 's' : ''} dans tout le coffre
                             </p>
                             {resultats!.map((n) => (
@@ -206,9 +208,9 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                                 >
                                     <FileText size={14} className="shrink-0 text-app-subtle" />
                                     <span className="flex-1 min-w-0 flex flex-col">
-                                        <span className="text-xs font-bold text-app-text truncate">{n.nom}</span>
+                                        <span className="text-[14px] font-bold text-app-text [overflow-wrap:anywhere]">{n.nom}</span>
                                         {n.dossier && (
-                                            <span className="flex items-center gap-1 text-ui-10 text-app-subtle truncate">
+                                            <span className="flex items-center gap-1 text-[14px] text-app-subtle [overflow-wrap:anywhere]">
                                                 <Folder size={9} className="shrink-0" /> {n.dossier}
                                             </span>
                                         )}
@@ -218,7 +220,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                         </>
                     )
                 ) : contenu.length === 0 ? (
-                    <p className="text-sm italic text-app-muted text-center py-10">
+                    <p className="text-[16px] italic text-app-muted text-center py-10">
                         {cheminEffectif.length > 0
                             ? 'Ce dossier est vide.'
                             : "Le coffre est vide, ou son chemin n'est pas réglé dans la fiche de campagne."}
@@ -232,9 +234,9 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                                 className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-app-text/5 bg-app-text/[0.04] hover:border-accent/30 text-left"
                             >
                                 <Folder size={14} className="shrink-0 text-accent/70" />
-                                <span className="flex-1 min-w-0 text-xs font-bold text-app-text truncate">{entree.name}</span>
+                                <span className="flex-1 min-w-0 text-[14px] font-bold text-app-text [overflow-wrap:anywhere]">{entree.name}</span>
                                 {/* Le compte dit s'il vaut la peine d'ouvrir. */}
-                                <span className="shrink-0 text-ui-10 text-app-subtle tabular-nums">
+                                <span className="shrink-0 text-[14px] text-app-subtle tabular-nums">
                                     {(entree.children ?? []).length}
                                 </span>
                                 <ChevronRight size={13} className="shrink-0 text-app-subtle" />
@@ -246,7 +248,7 @@ const RemoteObsidian: React.FC<RemoteObsidianProps> = ({ coffre, onCharger, onOu
                                 className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-app-text/5 bg-app-text/[0.02] hover:border-app-text/20 text-left"
                             >
                                 <FileText size={14} className="shrink-0 text-app-subtle" />
-                                <span className="flex-1 min-w-0 text-xs font-bold text-app-text truncate">{entree.name}</span>
+                                <span className="flex-1 min-w-0 text-[14px] font-bold text-app-text [overflow-wrap:anywhere]">{entree.name}</span>
                             </Bouton>
                         ))}
                     </div>
