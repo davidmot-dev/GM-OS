@@ -1,93 +1,33 @@
 import React from 'react';
 import { Globe } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
+import { Bouton, Panneau } from '../socle';
 import { type AtlasMap } from '../../modules/session/store/types';
+import { HubConsultation, type CommandesDeConsultation } from './HubConsultation';
 
-interface HubAtlasProps {
+interface HubAtlasProps extends CommandesDeConsultation {
     atlasMaps: AtlasMap[];
     onSelectMap: (map: AtlasMap) => void;
 }
 
-export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSelectMap }) => {
-    return (
-        <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
-            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 px-4">
-                <div className="space-y-1">
-                    <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
-                        <Globe className="text-accent" size={30} />
-                        Atlas des Lieux Visités
-                    </h2>
-                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Cartographie des territoires explorés par le groupe.</p>
-                </div>
-                <div className="flex gap-2">
-                    <Etiquette habillage="libre" ton="succes" className="text-ui-10 font-black bg-etat-succes/10 border border-etat-succes/20 px-6 py-2 rounded-full text-etat-succes uppercase tracking-widest flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-etat-succes animate-pulse" />
-                        {atlasMaps.length} Lieux Découverts
-                    </Etiquette>
-                </div>
-            </EnTeteDeModule>
-
-            <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
-                    {atlasMaps.map((map, idx) => (
-                        <Bouton habillage="libre" cibleTactile
-                            key={map.id}
-                            onClick={() => onSelectMap(map)}
-                            type="button"
-                            className={`group text-left relative flex flex-col gap-5 p-5 rounded-[3rem] bg-app-surface/40 border border-app-border/10 hover:bg-app-surface/80 hover:border-accent/30 transition-all duration-700 animate-in slide-in-from-bottom-8 duration-700 delay-${Math.min(idx * 70, 700)}`}
-                        >
-                            <div className="relative aspect-video w-full rounded-[2.5rem] overflow-hidden bg-app-bg shadow-2xl">
-                                <div className="absolute inset-0 bg-gradient-to-t from-app-bg/90 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700 z-10" />
-                                
-                                {map.fileUrl ? (
-                                    <ResolvedImage 
-                                        src={map.fileUrl} 
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" 
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-app-surface/20">
-                                        <Globe size={48} className="text-app-text/5 rotate-12" />
-                                    </div>
-                                )}
-
-                                <div className="absolute top-4 right-4 z-20">
-                                    <div className="px-3 py-1 bg-app-bg/40 backdrop-blur-md rounded-full border border-app-text/10 text-ui-7 font-black text-app-text/60 uppercase tracking-widest">
-                                        {map.type}
-                                    </div>
-                                </div>
-
-                                <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-700">
-                                    <div className="px-6 py-2 bg-accent text-app-on-accent rounded-full text-ui-9 font-black uppercase tracking-[0.2em] shadow-glow-accent">
-                                        Consulter l'Atlas
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="px-2 space-y-2">
-                                <h3 className="text-lg font-black text-app-text uppercase tracking-tight truncate group-hover:text-accent transition-colors duration-500">{map.name}</h3>
-                                <p className="text-ui-10 font-serif text-app-text/40 leading-relaxed italic line-clamp-2">
-                                    {map.narrativeDescription || "Documentation en attente..."}
-                                </p>
-                            </div>
-                        </Bouton>
-                    ))}
-
-                    {atlasMaps.length === 0 && (
-                        <Panneau as="div" habillage="libre" vide className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20">
-                            <div className="p-12 bg-app-surface/40 rounded-full border border-app-border/10">
-                                <Globe size={80} className="text-app-text/5 animate-pulse" />
-                            </div>
-                            <div className="space-y-3">
-                                <p className="text-sm font-black uppercase tracking-[0.4em] text-app-text/20">Territoires inconnus</p>
-                                <p className="max-w-xs text-ui-10 text-app-text/10 font-bold uppercase leading-relaxed">
-                                    Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.
-                                </p>
-                            </div>
-                        </Panneau>
-                    )}
-                </div>
-            </div>
+export const HubAtlas: React.FC<HubAtlasProps> = React.memo(({ atlasMaps, onSelectMap, commandes, informations }) => (
+    <HubConsultation ecran="lieux" titre="Atlas des Lieux Visités" description="Cartographie des territoires explorés par le groupe."
+        compteur={`${atlasMaps.length} Lieux Découverts`} icone={Globe} {...{ commandes, informations }}>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {atlasMaps.map(map => (
+                <Bouton habillage="libre" cibleTactile key={map.id} onClick={() => onSelectMap(map)}
+                    className="flex w-full min-w-0 flex-col gap-2 border border-app-border bg-app-surface p-3 text-left hover:border-accent">
+                    <h3 className="break-words text-[16px] font-bold text-app-text">{map.name}</h3>
+                    <p className="text-[14px] font-normal text-accent">{map.type}</p>
+                    <p className="line-clamp-3 break-words text-[14px] font-normal leading-relaxed text-app-muted">{map.narrativeDescription || 'Documentation en attente...'}</p>
+                    <div className="flex h-44 w-full items-center justify-center overflow-hidden bg-app-bg lg:h-56">
+                        {map.fileUrl ? <ResolvedImage src={map.fileUrl} alt="" className="size-full object-contain" /> : <Globe size={40} className="text-app-muted" />}
+                    </div>
+                </Bouton>
+            ))}
+            {atlasMaps.length === 0 && <Panneau as="div" vide className="col-span-full space-y-2 p-6 text-center text-[14px] text-app-muted">
+                <p>Territoires inconnus</p><p>Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.</p>
+            </Panneau>}
         </div>
-    );
-});
+    </HubConsultation>
+));
