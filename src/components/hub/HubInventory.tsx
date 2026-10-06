@@ -1,10 +1,10 @@
 import React, { useState, memo } from 'react';
-import { Package, Send, User, ChevronRight, X, Clock, Trash2 } from 'lucide-react';
+import { Package, Send, User, ChevronRight, Clock, Trash2 } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
 import { type FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
 import { type InventoryItem, type PlayerCharacter } from '../../modules/session/store/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
+import { Bouton, EnTeteDeModule, Etiquette, GabaritDeModule, Panneau } from '../socle';
 
 interface HubInventoryProps {
     items: FavoriteEntity[]; // Legacy favorites
@@ -13,6 +13,8 @@ interface HubInventoryProps {
     currentCharacterId?: string;
     transferRequests?: any[]; // To show pending status
     onSelectItem: (item: any) => void;
+    commandes?: React.ReactNode;
+    informations?: React.ReactNode;
 }
 
 export const HubInventory: React.FC<HubInventoryProps> = memo(({ 
@@ -21,7 +23,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
     characters = [], 
     currentCharacterId,
     transferRequests = [], 
-    onSelectItem 
+    onSelectItem, commandes, informations
 }) => {
     const [transferringItem, setTransferringItem] = useState<InventoryItem | null>(null);
 
@@ -56,78 +58,77 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
     };
 
     return (
-        <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto relative">
-            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 px-4">
+        <div data-inventaire-joueur="" className="w-full h-full min-h-0 pointer-events-auto relative">
+            <GabaritDeModule className="mx-auto max-w-7xl" barreDOutils={commandes} entete={
+            <EnTeteDeModule habillage="libre" className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
-                    <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
-                        <Package className="text-accent" size={30} />
+                    <h2 className="text-[24px] font-bold text-app-text flex items-center gap-3">
+                        <Package className="text-accent" size={24} />
                         Inventaire
                     </h2>
-                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Trésors, reliques et possessions personnelles.</p>
+                    <p className="text-[14px] text-app-muted">Trésors, reliques et possessions personnelles.</p>
                 </div>
                 <div className="flex gap-2">
-                    <Etiquette habillage="libre" ton="accent" className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
+                    <Etiquette ton="accent" className="text-[14px]">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                         {structuredItems.length + items.length} Objets
                     </Etiquette>
                 </div>
-            </EnTeteDeModule>
+            </EnTeteDeModule>}>
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
-                <div className="space-y-12">
+            <div className="pb-2">
+                <div className="space-y-6">
+                    {informations}
                     {/* Structured Inventory Section */}
                     <section className="space-y-6">
-                        <h3 className="text-xs font-black text-app-text/40 uppercase tracking-[0.3em] px-4 flex items-center gap-2">
+                        <h3 className="text-[14px] font-bold text-app-muted flex items-center gap-2">
                             <div className="w-1 h-4 bg-accent rounded-full" />
                             Sac à Dos (Interactif)
                         </h3>
                         
                         {structuredItems.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 md:gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {structuredItems.map((item) => {
                                     const isPending = (transferRequests || []).some(r => r.item.id === item.id && r.status === 'pending');
                                     return (
                                         <Panneau as="div"
                                             key={item.id}
-                                            className={`group flex flex-col gap-2 p-3 !overflow-visible !rounded-[1.5rem] !bg-accent/5 !border-app-text/5 !shadow-lg transition-all duration-500 ${isPending ? 'opacity-50 grayscale' : 'hover:!border-accent/40'}`}
+                                            className="group min-w-0 flex flex-col gap-3 p-3"
                                         >
-                                            <div className="relative aspect-square w-full rounded-[1.2rem] overflow-hidden bg-app-bg/40 flex items-center justify-center">
+                                            <div className="relative h-16 w-full rounded-lg overflow-hidden bg-app-bg/40 flex items-center justify-center">
                                                 <Package className={`${isPending ? 'text-app-text/20' : 'text-accent/20 group-hover:scale-110'} transition-transform duration-700`} size={32} />
                                                 {isPending && (
                                                     <div className="absolute inset-0 flex items-center justify-center bg-app-bg/40 backdrop-blur-[2px]">
                                                         <Clock size={16} className="text-accent animate-pulse" />
                                                     </div>
                                                 )}
-                                                <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-accent/20 border border-accent/30 text-[calc(6px*var(--echelle-interface,1))] font-black text-accent uppercase tracking-tighter">
-                                                    {isPending ? 'Wait...' : item.rarity}
+                                                <div className="absolute top-2 right-2 px-2 py-1 bg-app-surface text-[14px] text-accent">
+                                                    {isPending ? 'En attente' : item.rarity}
                                                 </div>
                                             </div>
                                             
-                                            <div className="px-1 text-center space-y-0.5">
-                                                <h3 className="text-ui-9 font-black text-app-text uppercase tracking-wider truncate" title={item.name}>{item.name}</h3>
-                                                <p className="text-ui-7 font-bold text-app-text/40 uppercase tracking-widest">Qty: {item.quantity}</p>
+                                            <div className="space-y-2">
+                                                <h3 className="text-[16px] font-bold text-app-text break-words" title={item.name}>{item.name}</h3>
+                                                <p className="text-[14px] text-app-muted">Quantité : {item.quantity}</p>
+                                                {item.description && <p className="text-[14px] text-app-muted break-words">{item.description}</p>}
                                             </div>
 
-                                            <div className="flex gap-1.5 mt-1">
-                                                <Bouton habillage="libre" cibleTactile
+                                            <div className="grid grid-cols-2 gap-2 mt-auto">
+                                                <Bouton variante="accent" cibleTactile
                                                     disabled={isPending}
                                                     onClick={() => setTransferringItem(item)}
-                                                    className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border transition-all text-ui-7 font-black uppercase tracking-widest ${
-                                                        isPending 
-                                                            ? 'bg-app-bg/40 text-app-text/20 border-app-text/5 cursor-not-allowed'
-                                                            : 'bg-accent/20 hover:bg-accent/40 text-accent border-accent/20'
-                                                    }`}
+                                                    className="min-w-0 px-2"
                                                     title="Donner"
                                                 >
-                                                    <Send size={10} />
+                                                    <Send size={16} /><span className="text-[12px] tracking-normal">Donner</span>
                                                 </Bouton>
-                                                <Bouton habillage="libre" cibleTactile
+                                                <Bouton variante="danger" cibleTactile
                                                     disabled={isPending}
                                                     onClick={() => handleDropItem(item)}
-                                                    className="aspect-square min-w-[44px] flex items-center justify-center py-1.5 rounded-lg border transition-all text-etat-danger border-etat-danger/20 bg-etat-danger/10 hover:bg-etat-danger/20"
+                                                    className="min-w-0 px-2"
                                                     title="Jeter"
                                                 >
-                                                    <Trash2 size={10} />
+                                                    <Trash2 size={16} /><span className="text-[12px] tracking-normal">Jeter</span>
                                                 </Bouton>
                                             </div>
                                         </Panneau>
@@ -135,8 +136,8 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 })}
                             </div>
                         ) : (
-                            <Panneau as="div" habillage="libre" vide className="mx-4 p-8 border-2 border-dashed border-app-text/5 rounded-[2rem] bg-app-text/[0.02] text-center">
-                                <p className="text-ui-10 font-bold text-app-text/20 uppercase tracking-widest">Votre sac à dos est vide</p>
+                            <Panneau as="div" vide className="p-6 text-center">
+                                <p className="text-[14px] text-app-muted">Votre sac à dos est vide</p>
                             </Panneau>
                         )}
                     </section>
@@ -144,11 +145,11 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                     {/* Legacy / Favorites Section */}
                     {items.length > 0 && (
                         <section className="space-y-6">
-                            <h3 className="text-xs font-black text-app-text/40 uppercase tracking-[0.3em] px-4 flex items-center gap-2">
+                            <h3 className="text-[14px] font-bold text-app-muted flex items-center gap-2">
                                 <div className="w-1 h-4 bg-app-text/20 rounded-full" />
                                 Objets Scannés (Atlas)
                             </h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-3 md:gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {items.map((item) => (
                                     <Bouton habillage="libre" cibleTactile
                                         key={item.id}
@@ -163,7 +164,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                             )}
                                         </div>
                                         <div className="px-1 text-center">
-                                            <h3 className="text-ui-9 font-black text-app-text uppercase tracking-wider truncate">{item.name}</h3>
+                                            <h3 className="text-[16px] font-bold text-app-text break-words">{item.name}</h3>
                                         </div>
                                     </Bouton>
                                 ))}
@@ -172,13 +173,13 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                     )}
 
                     {(items.length === 0 && structuredItems.length === 0) && (
-                        <Panneau as="div" habillage="libre" vide className="py-32 flex flex-col items-center justify-center text-center gap-8 border-2 border-dashed border-app-border/20 rounded-[4rem] bg-app-surface/20 w-full">
+                        <Panneau as="div" vide className="p-6 flex flex-col items-center text-center gap-3 w-full">
                             <div className="p-12 bg-app-surface/40 rounded-full border border-app-border/10">
                                 <Package size={80} className="text-app-text/5" />
                             </div>
                             <div className="space-y-3">
-                                <p className="text-sm font-black uppercase tracking-[0.4em] text-app-text/20">Inventaire Vide</p>
-                                <p className="max-w-xs text-ui-10 text-app-text/10 font-bold uppercase leading-relaxed">
+                                <p className="text-[16px] font-bold text-app-text">Inventaire Vide</p>
+                                <p className="max-w-xs text-[14px] text-app-muted leading-relaxed">
                                     Vous ne possédez aucun objet pour le moment.
                                 </p>
                             </div>
@@ -187,6 +188,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                 </div>
             </div>
 
+            </GabaritDeModule>
             {/* Transfer Modal Overlay */}
             <AnimatePresence>
                 {transferringItem && (
@@ -194,7 +196,8 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[200] flex items-center justify-center p-8 bg-app-bg/80 backdrop-blur-xl pointer-events-auto"
+                        role="dialog" aria-modal="true" aria-label="Donner un objet"
+                        className="fixed inset-0 z-[200] flex items-center justify-center p-3 bg-app-bg/90 pointer-events-auto"
                     >
                         <motion.div 
                             initial={{ scale: 0.9, y: 20 }}
@@ -202,27 +205,27 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                             exit={{ scale: 0.9, y: 20 }}
                             className="w-full max-w-lg"
                         >
-                            <Panneau as="div" habillage="libre" className="w-full bg-app-surface border border-accent/30 rounded-[3rem] p-8 shadow-glow-accent/20 flex flex-col gap-8">
+                            <Panneau as="div" niveau={3} className="w-full max-h-[calc(100dvh-24px)] overflow-y-auto p-4 flex flex-col gap-4">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-2xl font-black text-app-text uppercase tracking-tighter">Donner un objet</h3>
-                                <Bouton habillage="libre" cibleTactile onClick={() => setTransferringItem(null)} className="min-w-[44px] p-2 hover:bg-app-text/5 rounded-full text-app-text/40 transition-colors" title="Fermer le don">
-                                    <X size={24} />
+                                <h3 className="text-[20px] font-bold text-app-text">Donner un objet</h3>
+                                <Bouton cibleTactile onClick={() => setTransferringItem(null)} className="min-w-[44px] px-2" title="Fermer le don">
+                                    Fermer
                                 </Bouton>
                             </div>
 
-                            <div className="flex items-center gap-6 p-6 bg-accent/5 border border-accent/10 rounded-3xl">
-                                <div className="w-20 h-20 bg-accent/20 rounded-2xl flex items-center justify-center text-accent">
+                            <div className="flex items-start gap-3 p-3 bg-accent/5 border border-accent/10 rounded-lg">
+                                <div className="size-10 shrink-0 flex items-center justify-center text-accent">
                                     <Package size={40} />
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-ui-10 font-black text-accent uppercase tracking-widest mb-1">{transferringItem.type}</span>
-                                    <h4 className="text-xl font-black text-app-text uppercase">{transferringItem.name}</h4>
-                                    <p className="text-xs text-app-text/40">{transferringItem.description}</p>
+                                <div className="min-w-0 flex flex-col">
+                                    <span className="text-[14px] text-accent mb-1">{transferringItem.type}</span>
+                                    <h4 className="text-[16px] font-bold text-app-text break-words">{transferringItem.name}</h4>
+                                    <p className="text-[14px] text-app-muted break-words">{transferringItem.description}</p>
                                 </div>
                             </div>
 
                             <div className="space-y-4">
-                                <p className="text-ui-10 font-black text-app-text/40 uppercase tracking-[0.4em] px-2">Choisir le destinataire</p>
+                                <p className="text-[14px] font-bold text-app-muted">Choisir le destinataire</p>
                                 <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                                     {otherCharacters.map(char => (
                                         <Bouton habillage="libre" cibleTactile
@@ -235,8 +238,8 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                                     {char.portraitUrl ? <ResolvedImage src={char.portraitUrl} className="w-full h-full object-cover" /> : <User size={20} className="text-app-text/20" />}
                                                 </div>
                                                 <div className="flex flex-col items-start">
-                                                    <span className="text-sm font-black text-app-text uppercase tracking-tight group-hover:text-accent transition-colors">{char.name}</span>
-                                                    <span className="text-ui-9 font-bold text-app-text/30 uppercase tracking-widest">{char.classRace}</span>
+                                                    <span className="text-[14px] font-bold text-app-text break-words">{char.name}</span>
+                                                    <span className="text-[14px] text-app-muted break-words">{char.classRace}</span>
                                                 </div>
                                             </div>
                                             <ChevronRight size={20} className="text-app-text/20 group-hover:text-accent group-hover:translate-x-1 transition-all" />
@@ -244,7 +247,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                     ))}
                                     {otherCharacters.length === 0 && (
                                         <div className="py-8 text-center bg-app-text/5 rounded-2xl border border-dashed border-app-text/10">
-                                            <p className="text-xs font-bold text-app-text/20 uppercase tracking-widest italic">Aucun autre membre dans l'équipe</p>
+                                            <p className="text-[14px] text-app-muted">Aucun autre membre dans l'équipe</p>
                                         </div>
                                     )}
                                 </div>
@@ -254,7 +257,7 @@ export const HubInventory: React.FC<HubInventoryProps> = memo(({
                                 <div className="size-8 rounded-full bg-etat-alerte/20 flex items-center justify-center text-etat-alerte shrink-0">
                                     <Clock size={16} />
                                 </div>
-                                <p className="text-ui-10 font-bold text-etat-alerte/80 leading-relaxed uppercase tracking-wider">
+                                <p className="text-[14px] text-etat-alerte leading-relaxed">
                                     Le Maître du Jeu doit valider l'échange avant qu'il ne soit effectif.
                                 </p>
                             </div>
