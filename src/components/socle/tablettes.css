@@ -1,0 +1,49 @@
+/* T5, 06/10/2026 : le fini commun, borné aux tablettes. Les jetons sont ceux du PC. */
+[data-tablette] :where(button, a[href], summary, input, textarea, select, [role='button']) {
+    transition-property: background-color, border-color, color, box-shadow, filter, opacity, transform;
+    transition-duration: 160ms;
+    transition-timing-function: ease-out;
+}
+
+/* L'anneau reste dans la cible : les navigations et lecteurs fixes ne le rognent pas. */
+[data-tablette] :where(button, a[href], summary, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid var(--app-accent);
+    outline-offset: -3px;
+}
+
+/* Sur l'accent plein, un anneau de la même couleur disparaît : le texte et
+   le focus prennent alors ensemble le contraste fourni par le thème. */
+[data-tablette] :where([data-variante='accent'], .bg-accent):focus-visible {
+    outline-color: var(--app-accent-contrast);
+}
+
+/* Même halo que shadow-glow-accent : les thèmes sans halo gardent un facteur nul. */
+[data-tablette] :where(button:enabled[aria-pressed='true'], button:enabled[aria-current='page']) {
+    box-shadow: 0 0 15px 2px color-mix(in srgb, var(--halo-accent) calc(45% * var(--halo-facteur, 1)), transparent);
+}
+
+/* Une tablette modeste garde la sélection par sa couleur et sa bordure, sans lueur. */
+[data-tablette][data-graphismes-legers] {
+    --halo-facteur: 0;
+}
+
+[data-tablette][data-mouvement-reduit] :where(button, a[href], summary, input, textarea, select, [role='button'], [class*='transition-']) {
+    transition-duration: 0s !important;
+}
+
+[data-tablette][data-mouvement-reduit] :where(.animate-pulse, .animate-ping, .animate-bounce) {
+    animation: none !important;
+}
+
+/* Le fondu d'une projection se coupe sans laisser sa couche sortante visible. */
+[data-tablette][data-mouvement-reduit] [style*='gmos-fondu-entrant'] {
+    animation: none !important;
+}
+[data-tablette][data-mouvement-reduit] [style*='gmos-fondu-sortant'] {
+    animation: none !important;
+    opacity: 0;
+}
+
+[data-tablette][data-mouvement-reduit] :where(*) {
+    scroll-behavior: auto !important;
+}

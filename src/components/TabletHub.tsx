@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { EtiquetteDuDegre } from '../modules/dice/EtiquetteDuDegre';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CadreDeTablette } from './socle/CadreDeTablette';
 import { 
     Monitor, 
     Archive, 
@@ -252,7 +253,7 @@ const TabletHub: React.FC = () => {
     useFermetureParEchap(isCombatOverlayOpen, () => setIsCombatOverlayOpen(false), 'Initiative tablette');
 
     return (
-        <div className={`h-dvh [--hub-navigation-hauteur:148px] lg:[--hub-navigation-hauteur:100px] bg-app-bg text-app-text font-inter overflow-hidden flex flex-col relative select-none ${performance.isLowGraphics ? '' : 'will-change-transform'}`} style={rootStyles}>
+        <CadreDeTablette className={`h-dvh [--hub-navigation-hauteur:148px] lg:[--hub-navigation-hauteur:100px] bg-app-bg text-app-text font-inter overflow-hidden flex flex-col relative select-none ${performance.isLowGraphics ? '' : 'will-change-transform'}`} style={rootStyles}>
             {/* Background Layers */}
             {/* Layer 1 (z-0): Campaign wallpaper — always visible as base atmosphere */}
             {resolvedCampaignWallpaper && (
@@ -564,7 +565,7 @@ const TabletHub: React.FC = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </CadreDeTablette>
     );
 };
 

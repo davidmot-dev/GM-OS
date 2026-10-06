@@ -1,6 +1,6 @@
 import React from 'react';
 import { EtiquetteDuDegre } from '../../dice/EtiquetteDuDegre';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, MotionConfig } from 'framer-motion';
 import { type RollRecord } from '../hooks/useRemoteSync';
 import { type DieResult } from '../../dice/DiceEngine';
 import { Panneau } from '../../../components/socle/Panneau';
@@ -47,13 +47,16 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                             aria-label="Fermer le résultat"
                             className="shrink-0 self-end min-h-[44px] px-4 bg-app-bg border border-app-text/20 text-[14px] font-bold">Fermer</Bouton>
                         <div data-resultat-des-contenu="" className="min-h-0 overflow-y-auto flex flex-col items-center gap-4 py-3">
-                        {/* Progress bar for auto-dismiss */}
-                        <motion.div 
+                        {/* T5 : la jauge dit le temps restant ; réduire les mouvements
+                            décoratifs ne doit pas la vider dès l'apparition du résultat. */}
+                        <MotionConfig reducedMotion="never">
+                        <motion.div
                             initial={{ width: '100%' }}
                             animate={{ width: '0%' }}
                             transition={{ duration: 15, ease: "linear" }}
                             className="absolute bottom-0 left-0 h-1.5 bg-accent/60 shadow-glow-accent/40"
                         />
+                        </MotionConfig>
 
                         <div className="text-center space-y-1">
                             <span className="text-[16px] font-bold text-accent break-words [overflow-wrap:anywhere]">

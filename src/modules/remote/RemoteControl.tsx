@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Bouton } from '../../components/socle/Bouton';
+import { CadreDeTablette } from '../../components/socle/CadreDeTablette';
 import {
     LayoutDashboard,
     Dices,
@@ -227,7 +228,7 @@ const RemoteControl: React.FC = () => {
     });
 
     return (
-        <div className="h-[100dvh] bg-app-bg text-app-text font-sans selection:bg-accent/30 flex overflow-hidden">
+        <CadreDeTablette className="h-[100dvh] bg-app-bg text-app-text font-sans selection:bg-accent/30 flex overflow-hidden">
             {/*
               **La colonne de navigation.** Cachée sous 900 px, où la barre du bas
               prend le relais. `w-32` suffit au plus long des sept libellés
@@ -273,7 +274,7 @@ const RemoteControl: React.FC = () => {
                 result={dernierJet}
                 onClose={ecarterLeJet}
             />
-        </div>
+        </CadreDeTablette>
     );
 };
 
