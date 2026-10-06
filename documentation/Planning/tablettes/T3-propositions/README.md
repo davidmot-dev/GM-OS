@@ -8,8 +8,11 @@ Les requêtes Inventaire et Cartes sont aussi lisibles dans
 **À montrer à David : [la galerie](index.html).** Les quatre écrans J1 et les cinq écrans J2,
 chacun en téléphone et iPad paysage. **David retient Accueil et Direct le 05/10 : « je suis satisfait continue ».**
 Les références choisies sont copiées dans [les maquettes retenues](../../stitch/tablettes-joueurs/README.md).
-Inventaire et Cartes restent à choisir. À la demande « on fait J2 », Archives, PNJ, Lieux,
-Messagerie et Notifications ont aussi été produits ; ils attendent le choix de David.
+**David, le 06/10 : « ok c'est bon pour moi, est-ce que t3 est fini ? ».** Son accord est
+consigné pour l’ensemble présenté en T3 : Inventaire, Cartes et les cinq écrans J2 sont
+retenus aussi, ainsi que M1/M2. Les [références joueurs](../../stitch/tablettes-joueurs/README.md)
+sont archivées pour T4. À la demande « on fait J2 », Archives, PNJ, Lieux, Messagerie et
+Notifications avaient été produits sans validation implicite ; cet accord clôt maintenant T3.
 Leurs requêtes sont dans [les prompts J2](../../2026-10-05-prompts-stitch-tablettes-J2.md).
 T4 ne commence pas ici.
 

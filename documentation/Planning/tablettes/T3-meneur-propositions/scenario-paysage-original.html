@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS — Télécommande Meneur : Scénario (Tablette Paysage 1180×820)</title>
+<!-- Material Symbols & Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#d8e3fb",
+            "on-tertiary-container": "#9bf0ff",
+            "inverse-primary": "#00687a",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "surface-container": "#181f31",
+            "on-secondary-fixed": "#111c2d",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface-tint": "#4cd7f6",
+            "on-secondary-container": "#c0c9e0",
+            "on-secondary-fixed-variant": "#3c475a",
+            "on-primary-fixed": "#001f26",
+            "on-background": "#dce2fa",
+            "surface-variant": "#2e3447",
+            "outline": "#1e293b",
+            "tertiary": "#4cd7f6",
+            "tertiary-container": "#004f5d",
+            "outline-variant": "#3d494c",
+            "surface-bright": "#33394c",
+            "primary": "#4cd7f6",
+            "on-primary-container": "#9bf0ff",
+            "on-primary": "#003640",
+            "error-container": "#93000a",
+            "primary-fixed": "#acedff",
+            "on-surface": "#dee2f7",
+            "on-surface-variant": "#898c95",
+            "surface-dim": "#0c1324",
+            "secondary-container": "#3e495d",
+            "primary-fixed-dim": "#4cd7f6",
+            "primary-container": "#004f5d",
+            "error": "#ef4444",
+            "on-tertiary": "#003640",
+            "surface-container-lowest": "#070d1f",
+            "surface-container-highest": "#2e3548",
+            "on-tertiary-fixed": "#001f26",
+            "on-error": "#020617",
+            "background": "#020617",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-error-container": "#ffdad6",
+            "surface-container-high": "#232a3c",
+            "surface-container-low": "#151b2d",
+            "secondary-fixed-dim": "#bcc7de",
+            "inverse-on-surface": "#293042",
+            "tertiary-fixed": "#acedff",
+            "on-secondary": "#263143",
+            "surface": "#0c1324",
+            "inverse-surface": "#dce2fa",
+            "secondary": "#bcc7de"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "spacing": {
+            "space-md": "1rem",
+            "margin-desktop": "2rem",
+            "gutter-desktop": "1.5rem",
+            "space-xl": "2.5rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1.5rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "code-lg": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "label-md": ["Inter", "sans-serif"],
+            "number-lg": ["Space Mono", "monospace"],
+            "label-sm": ["Inter", "sans-serif"],
+            "headline-sm": ["Space Grotesk", "sans-serif"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "number-md": ["15px", { "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "code-lg": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+            "code-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "number-lg": ["28px", { "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Diegetic CRT micro-scanline and grid styling */
+    .telemetry-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #4cd7f6;
+    }
+    /* Touch optimization */
+    * {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      border-radius: 0px !important;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md antialiased h-screen w-screen overflow-hidden flex flex-col telemetry-grid">
+<!-- ======================================================== -->
+<!-- 1. LIGNE D'ÉTAT COMPACTE EN HAUT (H: 48px)               -->
+<!-- ======================================================== -->
+<header class="h-[48px] min-h-[48px] w-full bg-surface-container-lowest border-b border-outline flex items-center justify-between px-4 z-50 select-none">
+<!-- Gauche: Voyant appairé + GM-OS // T3 + Identifiant Nel Varga -->
+<div class="flex items-center space-x-3">
+<div class="flex items-center space-x-2 bg-surface-container-low px-2 py-1 border border-outline">
+<span class="inline-block w-2.5 h-2.5 bg-[#10b981] animate-pulse"></span>
+<span class="font-label-sm text-label-sm tracking-widest text-[#10b981]">● APPAIRÉ</span>
+<span class="text-outline-variant font-code-sm text-code-sm">|</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant tracking-wider">CANAL T3</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="font-headline-sm text-headline-sm font-bold tracking-wider text-primary">GM-OS // T3</span>
+<span class="text-outline font-code-sm text-code-sm">/</span>
+<div class="flex items-center space-x-1.5 bg-surface-container-high px-2 py-0.5 border border-outline">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">TOUR:</span>
+<span class="font-code-sm text-code-sm font-bold text-on-surface">R1 · Nel Varga</span>
+</div>
+</div>
+</div>
+<!-- Centre / Droite: Info Session compacte -->
+<div class="hidden sm:flex items-center space-x-4">
+<div class="flex items-center space-x-2 text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="graphic_eq">graphic_eq</span>
+<span>AMB : CH-01</span>
+</div>
+<div class="h-3.5 w-px bg-outline"></div>
+<div class="flex items-center space-x-1.5 text-on-surface-variant font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span class="text-on-surface font-number-md text-number-md">01:42:19</span>
+</div>
+<div class="h-3.5 w-px bg-outline"></div>
+<div class="flex items-center space-x-1.5">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary uppercase">SYNCED</span>
+</div>
+</div>
+<!-- Droite: Bouton d'urgence / Mute sécurisé (>=44px tactile) -->
+<div class="flex items-center">
+<button class="h-[44px] px-3 bg-error-container text-on-error-container border border-error hover:bg-error hover:text-on-error transition-colors flex items-center space-x-2 active:scale-95 transition-transform" id="muteBtn" title="Maintenir 700ms pour couper le son de la table">
+<span class="material-symbols-outlined text-base" data-icon="volume_off">volume_off</span>
+<div class="flex flex-col text-left leading-none">
+<span class="font-label-sm text-label-sm font-bold tracking-wider uppercase text-[#ffdad6]">MUTE [700MS] // COUPER LE SON</span>
+<span class="font-code-sm text-[9px] tracking-widest text-on-error-container opacity-80 uppercase">MAINTENIR 700MS</span>
+</div>
+</button>
+</div>
+</header>
+<!-- ======================================================== -->
+<!-- ZONE PRINCIPALE : SPLIT BARRE LATÉRALE 150PX + CONTENU   -->
+<!-- ======================================================== -->
+<div class="flex-1 flex overflow-hidden w-full">
+<!-- 2. NAVIGATION LATÉRALE GAUCHE FIXE (150px de large) -->
+<aside class="w-[150px] min-w-[150px] bg-surface-container-lowest border-r border-outline flex flex-col justify-between h-full select-none z-30">
+<!-- Les 8 onglets télécommande meneur (Strict Phone Remapped) -->
+<nav class="flex flex-col w-full divide-y divide-outline">
+<!-- 1. PADS -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#pads">
+<span class="material-symbols-outlined text-lg" data-icon="grid_view">grid_view</span>
+<span class="font-label-md text-label-md tracking-wider">PADS</span>
+</a>
+<!-- 2. DÉS -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#des">
+<span class="material-symbols-outlined text-lg" data-icon="casino">casino</span>
+<span class="font-label-md text-label-md tracking-wider">DÉS</span>
+</a>
+<!-- 3. SONS -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#sons">
+<span class="material-symbols-outlined text-lg" data-icon="volume_up">volume_up</span>
+<span class="font-label-md text-label-md tracking-wider">SONS</span>
+</a>
+<!-- 4. SCÉNARIO (ACTIF - Cyan #06b6d4, fond actif) -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container text-primary font-bold border-l-4 border-l-primary border-primary transition-colors duration-150 relative" href="#scenario">
+<span class="material-symbols-outlined text-lg text-primary" data-icon="auto_stories" data-weight="fill" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-label-md text-label-md tracking-widest text-primary">SCÉNARIO</span>
+<span class="absolute right-2 w-1.5 h-1.5 bg-primary"></span>
+</a>
+<!-- 5. COMBAT -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#combat">
+<span class="material-symbols-outlined text-lg" data-icon="swords">swords</span>
+<span class="font-label-md text-label-md tracking-wider">COMBAT</span>
+</a>
+<!-- 6. TABLEAU -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#tableau">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md tracking-wider">TABLEAU</span>
+</a>
+<!-- 7. NOTES -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#notes">
+<span class="material-symbols-outlined text-lg" data-icon="edit_note">edit_note</span>
+<span class="font-label-md text-label-md tracking-wider">NOTES</span>
+</a>
+<!-- 8. MESSAGES -->
+<a class="h-[52px] min-h-[44px] px-3 flex items-center space-x-2.5 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#messages">
+<span class="material-symbols-outlined text-lg" data-icon="chat">chat</span>
+<span class="font-label-md text-label-md tracking-wider">MESSAGES</span>
+</a>
+</nav>
+<!-- Pied de la barre latérale 150px: indicateur matériel -->
+<div class="p-3 bg-surface-container-low border-t border-outline flex flex-col space-y-1 text-center">
+<span class="font-code-sm text-[10px] text-on-surface-variant uppercase tracking-widest">REMOTE T0</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">STATION ACT</span>
+</div>
+</aside>
+<!-- 3. ZONE DE CONTENU PRINCIPAL (À droite des 150px) -->
+<main class="flex-1 flex flex-col h-full bg-background overflow-y-auto custom-scrollbar pb-10">
+<!-- En-tête de module M2 SCÉNARIO -->
+<section class="border-b border-outline bg-surface-container-lowest px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-3 select-none">
+<div>
+<div class="flex items-center space-x-3">
+<h1 class="font-orbitron text-2xl font-bold tracking-widest text-primary uppercase">M2 SCÉNARIO</h1>
+<span class="px-2 py-0.5 bg-surface-container border border-outline font-label-sm text-label-sm text-on-surface-variant uppercase">TABLE T0</span>
+</div>
+<p class="font-code-sm text-code-sm text-on-surface-variant tracking-wider uppercase mt-1">
+            REMOTESTORYBOARD // DÉCLENCHEMENT DIRECT • TABLE T0
+          </p>
+</div>
+<div class="flex items-center space-x-3">
+<div class="px-3 py-1.5 bg-surface-container-low border border-outline flex items-center space-x-2">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-label-sm text-label-sm text-on-surface tracking-wider uppercase">MOMENTS DISPONIBLES : 2 SÉQUENCES</span>
+</div>
+</div>
+</section>
+<!-- Grille Principale Scénario Table T0 (2 Cartes + Régie direct) -->
+<div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Colonne Gauche & Centre: Les 2 Cartes de Séquence Strictes (Issue E2E T0) -->
+<div class="lg:col-span-8 flex flex-col space-y-5">
+<!-- CARTE SÉQUENCE 01: Amarrage au relais -->
+<article class="bg-surface-container-low border border-outline hover:border-primary/60 transition-colors p-5 relative overflow-hidden group">
+<!-- Bandeau de statut technique -->
+<div class="flex items-center justify-between border-b border-outline pb-3 mb-4">
+<div class="flex items-center space-x-2">
+<span class="inline-block w-2 h-2 bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">PRÊT // EN ATTENTE</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase tracking-wider">TABLE T0 • RELAIS D'ÉNERGIE</span>
+</div>
+<!-- Corps de la carte -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-baseline space-x-5">
+<span class="font-code-lg text-4xl sm:text-5xl font-bold text-primary tracking-tighter">01</span>
+<div>
+<h2 class="font-body-lg text-lg sm:text-xl font-bold text-on-surface tracking-wide">Amarrage au relais</h2>
+<p class="font-code-sm text-code-sm text-on-surface-variant mt-0.5">Vérification sas pneumatique &amp; stabilisation du noyau</p>
+</div>
+</div>
+<!-- Bouton de déclenchement large >=44px -->
+<div class="flex-shrink-0">
+<button class="h-[48px] min-h-[44px] min-w-[150px] px-5 bg-primary text-background font-label-md text-label-md font-bold tracking-widest uppercase flex items-center justify-center space-x-2 hover:bg-on-tertiary-container active:scale-95 transition-all" onclick="triggerSeq('01', 'Amarrage au relais')">
+<span class="material-symbols-outlined text-xl" data-icon="play_arrow">play_arrow</span>
+<span>▶ DÉCLENCHER</span>
+</button>
+</div>
+</div>
+<!-- Pied de carte métrique -->
+<div class="mt-4 pt-3 border-t border-outline flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>CANAL CIBLE: T0-BROADCAST</span>
+<span class="text-primary font-bold">DURÉE EST: ~02:30</span>
+</div>
+</article>
+<!-- CARTE SÉQUENCE 02: La voix dans le relais -->
+<article class="bg-surface-container-low border border-outline hover:border-primary/60 transition-colors p-5 relative overflow-hidden group">
+<!-- Bandeau de statut technique -->
+<div class="flex items-center justify-between border-b border-outline pb-3 mb-4">
+<div class="flex items-center space-x-2">
+<span class="inline-block w-2 h-2 bg-on-surface-variant"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase">SÉQUENCE 02</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase tracking-wider">FILE: 01 // CANAL AUDIO &amp; AMBIANCE</span>
+</div>
+<!-- Corps de la carte -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-baseline space-x-5">
+<span class="font-code-lg text-4xl sm:text-5xl font-bold text-on-surface-variant tracking-tighter group-hover:text-primary transition-colors">02</span>
+<div>
+<h2 class="font-body-lg text-lg sm:text-xl font-bold text-on-surface tracking-wide">La voix dans le relais</h2>
+<p class="font-code-sm text-code-sm text-on-surface-variant mt-0.5">Transmission fragmentée, synthétiseur de voix corrompu</p>
+</div>
+</div>
+<!-- Bouton de déclenchement large >=44px -->
+<div class="flex-shrink-0">
+<button class="h-[48px] min-h-[44px] min-w-[150px] px-5 bg-primary text-background font-label-md text-label-md font-bold tracking-widest uppercase flex items-center justify-center space-x-2 hover:bg-on-tertiary-container active:scale-95 transition-all" onclick="triggerSeq('02', 'La voix dans le relais')">
+<span class="material-symbols-outlined text-xl" data-icon="play_arrow">play_arrow</span>
+<span>▶ DÉCLENCHER</span>
+</button>
+</div>
+</div>
+<!-- Pied de carte métrique -->
+<div class="mt-4 pt-3 border-t border-outline flex items-center justify-between text-on-surface-variant font-code-sm text-code-sm">
+<span>CANAL CIBLE: T0-BROADCAST + SYNTH-VOX</span>
+<span class="text-on-surface font-bold">DURÉE EST: ~04:15</span>
+</div>
+</article>
+</div>
+<!-- Colonne Droite: Panneau d'état de diffusion table & Régie Direct -->
+<div class="lg:col-span-4 flex flex-col space-y-5">
+<div class="bg-surface-container-lowest border border-outline p-5 flex flex-col h-full justify-between">
+<div>
+<div class="flex items-center space-x-2 border-b border-outline pb-3 mb-4">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="broadcast_on_personal">broadcast_on_personal</span>
+<span class="font-label-md text-label-md font-bold tracking-widest text-on-surface uppercase">RETOUR TABLE EN DIRECT</span>
+</div>
+<div class="p-4 bg-surface-container-low border border-outline border-dashed mb-4 flex flex-col items-center justify-center text-center min-h-[140px]">
+<span class="material-symbols-outlined text-3xl text-outline-variant mb-2" data-icon="hourglass_empty">hourglass_empty</span>
+<p class="font-label-sm text-label-sm font-bold text-on-surface uppercase tracking-wider" id="liveSeqStatus">
+                  AUCUN MOMENT EN COURS DE DIFFUSION
+                </p>
+<p class="font-code-sm text-[11px] text-on-surface-variant mt-2 leading-relaxed max-w-xs">
+                  Toucher une séquence pour la propulser sur les terminaux joueurs et la régie d'ambiance.
+                </p>
+</div>
+<!-- Matrice des terminaux récepteurs T0 -->
+<div class="space-y-2">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">CANAUX LIÉS TABLE T0</div>
+<div class="flex items-center justify-between bg-surface-container px-3 py-2 border border-outline">
+<span class="font-code-sm text-code-sm text-on-surface">TERMINAUX JOUEURS (4)</span>
+<span class="font-label-sm text-label-sm text-[#10b981]">CONNECTÉS</span>
+</div>
+<div class="flex items-center justify-between bg-surface-container px-3 py-2 border border-outline">
+<span class="font-code-sm text-code-sm text-on-surface">RÉGIE AUDIO ATMOS</span>
+<span class="font-label-sm text-label-sm text-primary">ARMÉE (CH-1)</span>
+</div>
+</div>
+</div>
+<!-- Rappel ergonomie tactile -->
+<div class="mt-6 pt-4 border-t border-outline flex items-center justify-between">
+<span class="font-code-sm text-code-sm text-on-surface-variant">COMMANDE: TACTILE DIRECT</span>
+<span class="font-label-sm text-label-sm text-primary uppercase">E2E T0 V4.2</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- ======================================================== -->
+<!-- PIED DE PAGE TÉLÉMÉTRIQUE COMPACT                        -->
+<!-- ======================================================== -->
+<footer class="h-[28px] min-h-[28px] w-full bg-surface-container-lowest border-t border-outline flex justify-between items-center px-4 z-40 select-none">
+<div class="font-code-sm text-[11px] text-on-surface-variant uppercase tracking-wider">
+      GM-OS PROTOCOL V4.2.1 // SYS.HEALTH: NOMINAL // BUFFER: SECURE
+    </div>
+<div class="hidden sm:flex items-center space-x-4">
+<span class="font-code-sm text-[11px] text-primary">AUDIO FEED [CH-1]</span>
+<span class="font-code-sm text-[11px] text-on-surface-variant">DIAGNOSTICS: 0 ERR</span>
+<span class="font-code-sm text-[11px] text-on-surface-variant">EMERGENCY OVERRIDE: PRÊT</span>
+</div>
+</footer>
+<!-- Notification Toast Tactile Direct -->
+<div class="fixed bottom-10 right-8 bg-surface-container-high border-2 border-primary text-on-surface px-5 py-3 shadow-2xl flex items-center space-x-3 pointer-events-none opacity-0 translate-y-2 transition-all duration-200 z-50" id="toast">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="sensors">sensors</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider" id="toastTitle">SÉQUENCE PROPULSÉE</span>
+<span class="font-code-sm text-code-sm text-on-surface" id="toastMessage">Amarrage au relais -&gt; Table T0</span>
+</div>
+</div>
+<!-- Inline Interaction Logic (Touch Safe & Fast Feedback) -->
+<script>
+    function triggerSeq(seqId, seqTitle) {
+      const statusElement = document.getElementById('liveSeqStatus');
+      statusElement.innerText = "DIFFUSION EN COURS : " + seqId + " // " + seqTitle.toUpperCase();
+      statusElement.classList.remove('text-on-surface');
+      statusElement.classList.add('text-primary');
+
+      // Toast feedback
+      const toast = document.getElementById('toast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastMsg = document.getElementById('toastMessage');
+      
+      toastTitle.innerText = "SÉQUENCE " + seqId + " PROPULSÉE";
+      toastMsg.innerText = seqTitle + " -> Envoi vers terminaux joueurs T0";
+      
+      toast.classList.remove('opacity-0', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-2');
+      }, 2500);
+    }
+
+    // Sécurisation Mute 700ms (Maintenir 700ms)
+    let muteTimer = null;
+    const muteBtn = document.getElementById('muteBtn');
+
+    const startMuteHold = () => {
+      muteBtn.classList.add('ring-2', 'ring-error');
+      muteTimer = setTimeout(() => {
+        alert("SÉCURITÉ DÉCLENCHÉE : COUPURE DU SON TABLE EFFECTUÉE (MUTE)");
+        muteBtn.classList.remove('ring-2', 'ring-error');
+      }, 700);
+    };
+
+    const cancelMuteHold = () => {
+      clearTimeout(muteTimer);
+      muteBtn.classList.remove('ring-2', 'ring-error');
+    };
+
+    muteBtn.addEventListener('mousedown', startMuteHold);
+    muteBtn.addEventListener('mouseup', cancelMuteHold);
+    muteBtn.addEventListener('mouseleave', cancelMuteHold);
+    muteBtn.addEventListener('touchstart', startMuteHold);
+    muteBtn.addEventListener('touchend', cancelMuteHold);
+  </script>
+</body></html>

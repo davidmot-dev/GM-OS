@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-950 text-slate-100 overflow-hidden select-none" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS — Télécommande Meneur : M2 TABLEAU</title>
+<!-- Tailwind CSS v3 with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Orbitron, Inter, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Orbitron:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            orbitron: ['Orbitron', 'sans-serif'],
+          },
+          colors: {
+            station: {
+              bg: '#020617',
+              surface: '#0c1324',
+              surfaceRaised: '#151b2d',
+              border: '#1e293b',
+              accent: '#06b6d4',
+              accentGlow: 'rgba(6, 182, 212, 0.35)',
+              danger: '#ef4444',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Base brutalist styling & grid canvas background -->
+<style data-purpose="diegetic-theme">
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .canvas-grid-bg {
+      background-color: #070d1f;
+      background-image: 
+        linear-gradient(to right, rgba(6, 182, 212, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(6, 182, 212, 0.08) 1px, transparent 1px),
+        linear-gradient(to right, rgba(15, 23, 42, 0.45) 5px, transparent 5px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.45) 5px, transparent 5px);
+      background-size: 32px 32px, 32px 32px, 160px 160px, 160px 160px;
+    }
+
+    .canvas-plain-bg {
+      background-color: #050914;
+      background-image: none;
+    }
+
+    .active-cyan-tab {
+      background-color: #06b6d4;
+      color: #020617;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.45), inset 0 0 4px rgba(255, 255, 255, 0.6);
+      font-weight: 700;
+    }
+
+    .glow-cyan-border {
+      border: 1px solid #06b6d4;
+      box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.25);
+    }
+  </style>
+</head>
+<body class="h-full w-full flex flex-col bg-station-bg text-slate-100 font-sans overflow-hidden antialiased">
+<!-- BEGIN: TopCompactStatusBar -->
+<header class="h-14 border-b border-station-border bg-station-surface flex items-center justify-between px-4 shrink-0 z-30" data-purpose="status-bar">
+<!-- Statut d'appairage & Opérateur -->
+<div class="flex items-center space-x-5">
+<div class="flex items-center space-x-2 text-xs font-mono tracking-wider">
+<span class="inline-block w-2.5 h-2.5 bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse"></span>
+<span class="text-emerald-400 font-bold uppercase tracking-wider">■ APPAIRÉ // GM-OS T3</span>
+</div>
+<div class="h-4 w-px bg-slate-700"></div>
+<div class="text-xs font-mono text-slate-300">
+        OPÉRATEUR : <span class="text-cyan-400 font-bold uppercase">R1 · Nel Varga</span>
+</div>
+<div class="hidden md:flex items-center space-x-2 text-xs font-mono text-slate-400">
+<span class="text-slate-500">CANAL :</span>
+<span class="text-slate-200">SALLE T0 // PRINCIPAL</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+<span class="text-cyan-300">AMBIANCE ACTIVE (128 BPM)</span>
+</div>
+</div>
+<!-- Coupure d'urgence Audio tactile ≥44px -->
+<button class="h-11 min-w-[240px] px-4 bg-red-950/80 hover:bg-red-900 border border-red-500 text-red-300 text-xs font-mono font-bold flex items-center justify-center gap-2 active:scale-95 transition-all select-none relative overflow-hidden" data-purpose="emergency-mute-action" id="mute-hold-btn" title="Maintenir pour confirmer la coupure globale">
+<svg class="w-4 h-4 fill-current shrink-0" viewbox="0 0 24 24">
+<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"></path>
+</svg>
+<span>🔇 COUPER LE SON [700MS MAINTENIR]</span>
+<div class="absolute bottom-0 left-0 h-1 bg-red-500 w-0 transition-all duration-75" id="mute-progress-bar"></div>
+</button>
+</header>
+<!-- END: TopCompactStatusBar -->
+<!-- BEGIN: MainInterfaceLayout -->
+<div class="flex-1 flex overflow-hidden">
+<!-- BEGIN: LeftVerticalNavigation (150px fixed) -->
+<nav aria-label="Navigation Télécommande" class="w-[150px] shrink-0 bg-station-surface border-r border-station-border flex flex-col justify-between z-20">
+<div class="flex flex-col w-full divide-y divide-station-border/50">
+<!-- 1. Pads -->
+<button class="h-16 w-full flex flex-col items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-station-surfaceRaised transition-colors group">
+<svg class="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 4h4v4H4V4zm12 0h4v4h-4V4zM4 16h4v4H4v-4zm12 0h4v4h-4v-4zm-6-6h4v4h-4v-4z" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-semibold">PADS</span>
+</button>
+<!-- 2. Dés -->
+<button class="h-16 w-full flex flex-col items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-station-surfaceRaised transition-colors group">
+<svg class="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-semibold">DÉS</span>
+</button>
+<!-- 3. Sons -->
+<button class="h-16 w-full flex flex-col items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-station-surfaceRaised transition-colors group">
+<svg class="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M11 5L6 9H2v6h4l5 4V5zm4.5 3c1 .9 1.5 2.2 1.5 4s-.5 3.1-1.5 4" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-semibold">SONS</span>
+</button>
+<!-- 4. Scénario -->
+<button class="h-16 w-full flex flex-col items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-station-surfaceRaised transition-colors group">
+<svg class="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-semibold">SCÉNARIO</span>
+</button>
+<!-- 5. Combat -->
+<button class="h-16 w-full flex flex-col items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-station-surfaceRaised transition-colors group">
+<svg class="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-semibold">COMBAT</span>
+</button>
+<!-- 6. TABLEAU (ACTIF) -->
+<button class="h-16 w-full flex flex-col items-center justify-center active-cyan-tab cursor-default">
+<svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M4 4h16v16H4V4zm0 6h16M10 10v10" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-black">TABLEAU</span>
+</button>
+<!-- 7. Notes -->
+<button class="h-16 w-full flex flex-col items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-station-surfaceRaised transition-colors group">
+<svg class="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M11 4H4v16h16v-7m-9 2L20 4l-4-4-9 9v4h4z" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-semibold">NOTES</span>
+</button>
+<!-- 8. Messages -->
+<button class="h-16 w-full flex flex-col items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-station-surfaceRaised transition-colors group">
+<svg class="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M4 4h16v12H5.5L2 19.5V4z" stroke-linecap="square"></path>
+</svg>
+<span class="text-[11px] font-mono tracking-wider font-semibold">MESSAGES</span>
+</button>
+</div>
+<!-- Station Telemetry footer info -->
+<div class="p-2 border-t border-station-border/70 text-center font-mono text-[9px] text-slate-500">
+        IPAD 1180×820<br/>PUPITRE T0 OK
+      </div>
+</nav>
+<!-- END: LeftVerticalNavigation -->
+<!-- BEGIN: WorkspaceArea -->
+<main class="flex-1 flex flex-col overflow-hidden bg-station-bg">
+<!-- Module Top Title Bar -->
+<div class="h-12 bg-station-surfaceRaised/80 border-b border-station-border px-5 flex items-center justify-between shrink-0">
+<div class="flex items-center space-x-3">
+<h1 class="font-orbitron font-extrabold text-lg text-slate-100 tracking-wider flex items-center gap-2">
+            M2 TABLEAU
+          </h1>
+<span class="font-mono text-xs text-cyan-400/90 tracking-widest font-semibold border-l border-slate-700 pl-3">REMOTEWHITEBOARDVIEW</span>
+</div>
+<div class="flex items-center space-x-3">
+<span class="px-2 py-0.5 bg-cyan-950/80 border border-cyan-500/80 font-mono text-xs font-bold text-cyan-300 tracking-wider">
+            TABLE T0
+          </span>
+<span class="text-xs font-mono text-slate-400 hidden lg:inline">SYNC : TEMPS RÉEL (0 MS)</span>
+</div>
+</div>
+<!-- Tools Control Bar (Direct Screen_3 layout adapted for iPad Air) -->
+<div class="p-3 bg-station-surface border-b border-station-border flex flex-wrap items-center justify-between gap-3 shrink-0" data-purpose="drawing-toolbar">
+<!-- Left: Tool selection buttons -->
+<div class="flex items-center space-x-1" id="tool-selector">
+<button class="tool-btn h-11 px-4 bg-cyan-600 text-slate-950 font-bold border border-cyan-400 flex items-center space-x-2 text-xs font-mono tracking-wide" data-tool="crayon" title="Crayon standard">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
+<span>Crayon</span>
+</button>
+<button class="tool-btn h-11 px-4 bg-station-surfaceRaised hover:bg-slate-800 text-slate-300 border border-station-border flex items-center space-x-2 text-xs font-mono tracking-wide" data-tool="gomme" title="Gomme">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.78-.78 2.05 0 2.83L5.03 20h7.66l8.72-8.72c.78-.78.78-2.05 0-2.83l-4.86-4.86c-.39-.39-.9-.59-1.41-.59zm.71 3.55l3.45 3.45-3.45 3.45-3.45-3.45 3.45-3.45zM4 19v2h16v-2H4z"></path></svg>
+<span>Gomme</span>
+</button>
+<button class="tool-btn h-11 px-4 bg-station-surfaceRaised hover:bg-slate-800 text-slate-300 border border-station-border flex items-center space-x-2 text-xs font-mono tracking-wide" data-tool="laser" title="Pointeur laser éphémère">
+<svg class="w-4 h-4 fill-current text-red-400" viewbox="0 0 24 24"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4m0 12v4M2 12h4m12 0h4"></path></svg>
+<span>Laser</span>
+</button>
+<button class="tool-btn h-11 px-4 bg-station-surfaceRaised hover:bg-slate-800 text-slate-300 border border-station-border flex items-center space-x-2 text-xs font-mono tracking-wide" data-tool="rect" title="Tracer rectangle">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" width="18" x="3" y="3"></rect></svg>
+<span>Rect</span>
+</button>
+<button class="tool-btn h-11 px-4 bg-station-surfaceRaised hover:bg-slate-800 text-slate-300 border border-station-border flex items-center space-x-2 text-xs font-mono tracking-wide" data-tool="cercle" title="Tracer cercle">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle></svg>
+<span>Cercle</span>
+</button>
+</div>
+<!-- Center: Stroke Thickness Selector -->
+<div class="flex items-center space-x-2 bg-station-bg p-1 border border-station-border">
+<span class="text-xs font-mono text-slate-400 px-2 uppercase font-bold tracking-wider">Trait :</span>
+<button class="stroke-btn h-9 px-3 flex items-center gap-2 bg-station-surfaceRaised text-slate-300 border border-station-border text-xs font-mono" data-stroke="2">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+<span>Fin 2</span>
+</button>
+<button class="stroke-btn h-9 px-3 flex items-center gap-2 bg-cyan-950 text-cyan-300 border border-cyan-400 font-bold text-xs font-mono" data-stroke="4">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+<span>Moyen 4</span>
+</button>
+<button class="stroke-btn h-9 px-3 flex items-center gap-2 bg-station-surfaceRaised text-slate-300 border border-station-border text-xs font-mono" data-stroke="8">
+<span class="w-3.5 h-3.5 rounded-full bg-slate-300"></span>
+<span>Épais 8</span>
+</button>
+<!-- Toggle Background Style button -->
+<button class="h-9 px-3 bg-station-surfaceRaised border border-station-border text-xs font-mono text-slate-200 hover:border-slate-500 flex items-center gap-1.5 ml-2" id="toggle-bg-btn">
+<span>🔲 FOND :</span>
+<span class="text-cyan-400 font-bold" id="bg-mode-label">GRILLE</span>
+</button>
+</div>
+<!-- Right: Actions Undo / Redo / Clear -->
+<div class="flex items-center space-x-1.5">
+<button class="h-11 w-11 flex items-center justify-center bg-station-surfaceRaised hover:bg-slate-800 border border-station-border text-slate-200 active:scale-95" id="btn-undo" title="Annuler (↶)">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"></path></svg>
+</button>
+<button class="h-11 w-11 flex items-center justify-center bg-station-surfaceRaised hover:bg-slate-800 border border-station-border text-slate-200 active:scale-95" id="btn-redo" title="Rétablir (↷)">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"></path></svg>
+</button>
+<button class="h-11 px-3 bg-red-950/40 hover:bg-red-900/60 border border-red-800 text-red-300 text-xs font-mono font-bold flex items-center gap-1.5 active:scale-95" id="btn-clear" title="Vider tout le tableau">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
+<span>EFFACER</span>
+</button>
+</div>
+</div>
+<!-- Color Palette Bar (Explicitly exact colors from SCREEN_3 with minimum 44px touch targets) -->
+<div class="h-14 px-4 bg-station-surface/90 border-b border-station-border flex items-center justify-between shrink-0" data-purpose="palette-bar">
+<div class="flex items-center space-x-3">
+<span class="text-xs font-mono uppercase text-slate-400 font-bold tracking-wider mr-1">Couleurs :</span>
+<div class="flex items-center space-x-2" id="color-palette">
+<!-- White #ffffff -->
+<button class="color-btn w-11 h-11 bg-white border-2 border-transparent hover:scale-105 active:scale-95 transition-transform" data-color="#ffffff" title="Blanc (#ffffff)"></button>
+<!-- Red #ef4444 -->
+<button class="color-btn w-11 h-11 bg-[#ef4444] border-2 border-transparent hover:scale-105 active:scale-95 transition-transform" data-color="#ef4444" title="Rouge (#ef4444)"></button>
+<!-- Blue #3b82f6 -->
+<button class="color-btn w-11 h-11 bg-[#3b82f6] border-2 border-transparent hover:scale-105 active:scale-95 transition-transform" data-color="#3b82f6" title="Bleu (#3b82f6)"></button>
+<!-- Green #10b981 -->
+<button class="color-btn w-11 h-11 bg-[#10b981] border-2 border-transparent hover:scale-105 active:scale-95 transition-transform" data-color="#10b981" title="Vert (#10b981)"></button>
+<!-- Orange #f59e0b -->
+<button class="color-btn w-11 h-11 bg-[#f59e0b] border-2 border-transparent hover:scale-105 active:scale-95 transition-transform" data-color="#f59e0b" title="Orange (#f59e0b)"></button>
+<!-- Purple #a855f7 -->
+<button class="color-btn w-11 h-11 bg-[#a855f7] border-2 border-transparent hover:scale-105 active:scale-95 transition-transform" data-color="#a855f7" title="Violet (#a855f7)"></button>
+<!-- Pink #ec4899 -->
+<button class="color-btn w-11 h-11 bg-[#ec4899] border-2 border-transparent hover:scale-105 active:scale-95 transition-transform" data-color="#ec4899" title="Rose (#ec4899)"></button>
+<!-- Cyan #06b6d4 (ACTIF) -->
+<button class="color-btn w-11 h-11 bg-[#06b6d4] ring-2 ring-cyan-400 ring-offset-2 ring-offset-slate-900 border-2 border-white scale-105" data-color="#06b6d4" title="Cyan (#06b6d4) - Actif"></button>
+</div>
+</div>
+<!-- Coordonnées et statut du flux -->
+<div class="hidden sm:flex items-center space-x-4 font-mono text-xs text-slate-400">
+<div>POINTEUR : <span class="text-cyan-400 font-bold" id="cursor-coords">X:000 Y:000</span></div>
+<div class="h-3 w-px bg-slate-700"></div>
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span class="text-slate-300">TABLEAU EN DIRECT</span>
+</div>
+</div>
+</div>
+<!-- BEGIN: CanvasDrawingArea -->
+<div class="relative flex-1 w-full h-full overflow-hidden canvas-grid-bg cursor-crosshair" id="canvas-container">
+<!-- Diégétique HUD / Overlays -->
+<div class="absolute top-3 left-4 pointer-events-none select-none z-10 font-mono text-[11px] text-cyan-500/70 tracking-widest uppercase bg-slate-950/70 px-2.5 py-1 border border-cyan-900/50">
+          CANEVAS DE PROJECTION TABLEAU // SYNCHRONISÉ TABLE T0
+        </div>
+<div class="absolute bottom-3 right-4 pointer-events-none select-none z-10 font-mono text-[10px] text-slate-500 bg-slate-950/80 px-2 py-1 border border-slate-800">
+          RÉSOL. MATRICE : <span class="text-cyan-400" id="canvas-dim-display">1030 × 660</span>
+</div>
+<!-- Interactive HTML5 Canvas -->
+<canvas class="w-full h-full block touch-none" id="whiteboard-canvas"></canvas>
+<!-- Laser Overlay for ephemeral dots -->
+<div class="hidden absolute w-4 h-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500 shadow-[0_0_12px_#ef4444] pointer-events-none z-20 animate-ping" id="laser-dot"></div>
+</div>
+<!-- END: CanvasDrawingArea -->
+</main>
+<!-- END: WorkspaceArea -->
+</div>
+<!-- END: MainInterfaceLayout -->
+<!-- BEGIN: InteractiveScripts -->
+<!-- Emergency Mute Button Hold Behavior -->
+<script data-purpose="emergency-mute-handler">
+    (function setupEmergencyMute() {
+      const muteBtn = document.getElementById('mute-hold-btn');
+      const progressBar = document.getElementById('mute-progress-bar');
+      let holdTimer = null;
+      let startTime = 0;
+      const REQUIRED_DURATION = 700; // ms
+
+      const startHold = (e) => {
+        e.preventDefault();
+        startTime = Date.now();
+        progressBar.style.transition = `width ${REQUIRED_DURATION}ms linear`;
+        progressBar.style.width = '100%';
+
+        holdTimer = setTimeout(() => {
+          muteBtn.classList.add('bg-red-600', 'text-white');
+          muteBtn.innerHTML = '<span>🔇 SON COUPÉ (CONFIRMÉ)</span>';
+          if (navigator.vibrate) navigator.vibrate(80);
+        }, REQUIRED_DURATION);
+      };
+
+      const cancelHold = () => {
+        clearTimeout(holdTimer);
+        progressBar.style.transition = 'width 100ms ease-out';
+        progressBar.style.width = '0%';
+      };
+
+      muteBtn.addEventListener('mousedown', startHold);
+      muteBtn.addEventListener('mouseup', cancelHold);
+      muteBtn.addEventListener('mouseleave', cancelHold);
+      muteBtn.addEventListener('touchstart', startHold, { passive: false });
+      muteBtn.addEventListener('touchend', cancelHold);
+      muteBtn.addEventListener('touchcancel', cancelHold);
+    })();
+  </script>
+<!-- Interactive Drawing Engine -->
+<script data-purpose="canvas-drawing-engine">
+    (function initializeCanvasEngine() {
+      const canvas = document.getElementById('whiteboard-canvas');
+      const container = document.getElementById('canvas-container');
+      const coordsDisplay = document.getElementById('cursor-coords');
+      const dimDisplay = document.getElementById('canvas-dim-display');
+      const ctx = canvas.getContext('2d');
+
+      // State
+      let currentTool = 'crayon'; // 'crayon', 'gomme', 'laser', 'rect', 'cercle'
+      let currentColor = '#06b6d4';
+      let currentStroke = 4;
+      let isDrawing = false;
+      let startX = 0;
+      let startY = 0;
+      let snapshot = null;
+
+      // History Undo/Redo stacks
+      const undoStack = [];
+      const redoStack = [];
+      const MAX_HISTORY = 25;
+
+      // Resize canvas to fill container accurately
+      function resizeCanvas() {
+        const rect = container.getBoundingClientRect();
+        
+        // Save current canvas content
+        let tempCanvas = null;
+        if (canvas.width > 0 && canvas.height > 0) {
+          tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          tempCanvas.getContext('2d').drawImage(canvas, 0, 0);
+        }
+
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        dimDisplay.textContent = `${Math.round(rect.width)} × ${Math.round(rect.height)}`;
+
+        if (tempCanvas) {
+          ctx.drawImage(tempCanvas, 0, 0);
+        } else {
+          saveHistoryState();
+        }
+      }
+
+      function saveHistoryState() {
+        if (undoStack.length >= MAX_HISTORY) {
+          undoStack.shift();
+        }
+        undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        redoStack.length = 0; // Clear redo on new action
+      }
+
+      function getPointerPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      }
+
+      function startAction(e) {
+        const pos = getPointerPos(e);
+        isDrawing = true;
+        startX = pos.x;
+        startY = pos.y;
+
+        ctx.strokeStyle = currentTool === 'gomme' ? '#070d1f' : currentColor;
+        ctx.fillStyle = currentColor;
+        ctx.lineWidth = currentTool === 'gomme' ? currentStroke * 3 : currentStroke;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        if (currentTool === 'crayon' || currentTool === 'gomme') {
+          ctx.beginPath();
+          ctx.moveTo(pos.x, pos.y);
+          ctx.lineTo(pos.x, pos.y);
+          ctx.stroke();
+        } else if (currentTool === 'rect' || currentTool === 'cercle') {
+          snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      function moveAction(e) {
+        const pos = getPointerPos(e);
+        coordsDisplay.textContent = `X:${Math.round(pos.x).toString().padStart(3, '0')} Y:${Math.round(pos.y).toString().padStart(3, '0')}`;
+
+        if (!isDrawing) return;
+
+        if (currentTool === 'crayon' || currentTool === 'gomme') {
+          ctx.lineTo(pos.x, pos.y);
+          ctx.stroke();
+        } else if (currentTool === 'rect' && snapshot) {
+          ctx.putImageData(snapshot, 0, 0);
+          ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
+        } else if (currentTool === 'cercle' && snapshot) {
+          ctx.putImageData(snapshot, 0, 0);
+          ctx.beginPath();
+          const radius = Math.sqrt(Math.pow(pos.x - startX, 2) + Math.pow(pos.y - startY, 2));
+          ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+          ctx.stroke();
+        }
+      }
+
+      function endAction() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        ctx.closePath();
+        saveHistoryState();
+      }
+
+      // Event Listeners for Drawing
+      canvas.addEventListener('mousedown', startAction);
+      window.addEventListener('mousemove', moveAction);
+      window.addEventListener('mouseup', endAction);
+
+      canvas.addEventListener('touchstart', (e) => {
+        startAction(e);
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        moveAction(e);
+      }, { passive: true });
+      window.addEventListener('touchend', endAction);
+
+      // Tool Switching
+      const toolButtons = document.querySelectorAll('#tool-selector .tool-btn');
+      toolButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          toolButtons.forEach(b => {
+            b.className = 'tool-btn h-11 px-4 bg-station-surfaceRaised hover:bg-slate-800 text-slate-300 border border-station-border flex items-center space-x-2 text-xs font-mono tracking-wide';
+          });
+          btn.className = 'tool-btn h-11 px-4 bg-cyan-600 text-slate-950 font-bold border border-cyan-400 flex items-center space-x-2 text-xs font-mono tracking-wide';
+          currentTool = btn.dataset.tool;
+        });
+      });
+
+      // Thickness Selection
+      const strokeButtons = document.querySelectorAll('.stroke-btn');
+      strokeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          strokeButtons.forEach(b => {
+            b.className = 'stroke-btn h-9 px-3 flex items-center gap-2 bg-station-surfaceRaised text-slate-300 border border-station-border text-xs font-mono';
+            const dot = b.querySelector('span:first-child');
+            if (dot) dot.className = dot.className.replace('bg-cyan-400', 'bg-slate-300');
+          });
+          btn.className = 'stroke-btn h-9 px-3 flex items-center gap-2 bg-cyan-950 text-cyan-300 border border-cyan-400 font-bold text-xs font-mono';
+          const dot = btn.querySelector('span:first-child');
+          if (dot) dot.className = dot.className.replace('bg-slate-300', 'bg-cyan-400');
+          currentStroke = parseInt(btn.dataset.stroke, 10);
+        });
+      });
+
+      // Color Palette Selection
+      const colorButtons = document.querySelectorAll('#color-palette .color-btn');
+      colorButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          colorButtons.forEach(b => {
+            b.classList.remove('ring-2', 'ring-cyan-400', 'ring-offset-2', 'ring-offset-slate-900', 'scale-105');
+          });
+          btn.classList.add('ring-2', 'ring-cyan-400', 'ring-offset-2', 'ring-offset-slate-900', 'scale-105');
+          currentColor = btn.dataset.color;
+        });
+      });
+
+      // Undo Action
+      document.getElementById('btn-undo').addEventListener('click', () => {
+        if (undoStack.length > 1) {
+          redoStack.push(undoStack.pop());
+          const prevState = undoStack[undoStack.length - 1];
+          ctx.putImageData(prevState, 0, 0);
+        }
+      });
+
+      // Redo Action
+      document.getElementById('btn-redo').addEventListener('click', () => {
+        if (redoStack.length > 0) {
+          const nextState = redoStack.pop();
+          undoStack.push(nextState);
+          ctx.putImageData(nextState, 0, 0);
+        }
+      });
+
+      // Clear Canvas Action
+      document.getElementById('btn-clear').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        saveHistoryState();
+      });
+
+      // Toggle Background grid / plain
+      const toggleBgBtn = document.getElementById('toggle-bg-btn');
+      const bgModeLabel = document.getElementById('bg-mode-label');
+      toggleBgBtn.addEventListener('click', () => {
+        if (container.classList.contains('canvas-grid-bg')) {
+          container.classList.remove('canvas-grid-bg');
+          container.classList.add('canvas-plain-bg');
+          bgModeLabel.textContent = 'SOMBRE';
+        } else {
+          container.classList.remove('canvas-plain-bg');
+          container.classList.add('canvas-grid-bg');
+          bgModeLabel.textContent = 'GRILLE';
+        }
+      });
+
+      // Window resize handling
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('load', resizeCanvas);
+      setTimeout(resizeCanvas, 50);
+    })();
+  </script>
+<!-- END: InteractiveScripts -->
+</body></html>

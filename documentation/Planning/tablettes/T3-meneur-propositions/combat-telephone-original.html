@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS T3 // Télécommande Tactique</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Orbitron:wght@600;700;800;900&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#151b2d",
+            "on-primary": "#003640",
+            "secondary-container": "#3e495d",
+            "primary-fixed": "#acedff",
+            "on-surface": "#dee2f7",
+            "tertiary-container": "#004f5d",
+            "surface-container-low": "#141b2c",
+            "on-tertiary-fixed": "#001f26",
+            "inverse-primary": "#00687a",
+            "secondary-fixed": "#d8e3fb",
+            "surface-container-lowest": "#070d1f",
+            "surface-container-high": "#232a3c",
+            "inverse-surface": "#dce2fa",
+            "on-secondary-fixed-variant": "#3c475a",
+            "surface-container-highest": "#2e3447",
+            "error-container": "#93000a",
+            "surface-container": "#181f31",
+            "surface-bright": "#32394c",
+            "on-secondary-container": "#aeb9d0",
+            "on-error": "#020617",
+            "on-tertiary-container": "#004f5d",
+            "on-secondary-fixed": "#111c2d",
+            "on-secondary": "#263143",
+            "outline": "#1e293b",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "tertiary-fixed": "#acedff",
+            "on-background": "#dee2f7",
+            "surface-variant": "#2e3447",
+            "tertiary": "#4cd7f6",
+            "on-surface-variant": "#898c95",
+            "surface-dim": "#0c1324",
+            "on-primary-fixed-variant": "#004e5c",
+            "primary-container": "#06b6d4",
+            "secondary-fixed-dim": "#bcc7de",
+            "secondary": "#bcc7de",
+            "surface-tint": "#4cd7f6",
+            "primary": "#4cd7f6",
+            "on-primary-container": "#00424f",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "error": "#ef4444",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface": "#0c1324",
+            "on-primary-fixed": "#001f26",
+            "inverse-on-surface": "#293042",
+            "on-error-container": "#ffdad6",
+            "background": "#020617"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "code-lg": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "body-lg": ["Inter", "sans-serif"],
+            "headline-lg-mobile": ["Orbitron", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "label-md": ["Inter", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "number-lg": ["Space Mono", "monospace"],
+            "headline-lg": ["Orbitron", "sans-serif"],
+            "headline-sm": ["Orbitron", "sans-serif"],
+            "headline-md": ["Orbitron", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"]
+          },
+          "fontSize": {
+            "label-sm": ["11px", { "lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "code-lg": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+            "code-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "number-md": ["15px", { "fontWeight": "600" }],
+            "number-lg": ["28px", { "fontWeight": "700" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    .active-card-halo {
+      box-shadow: inset 0 0 0 1px #06b6d4, 0 0 16px rgba(6, 182, 212, 0.22);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex justify-center selection:bg-primary selection:text-background font-body-md overflow-x-hidden antialiased">
+<!-- Mobile Viewport Container: 390px locked canvas, responsive down to 360px -->
+<div class="w-full max-w-[390px] min-h-screen bg-background flex flex-col relative border-x border-outline">
+<!-- 1. PERMANENT SYSTEM STATUS BAR (FIXED TOP) -->
+<header class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-surface-container-lowest border-b border-outline px-2.5 h-13 flex items-center justify-between shadow-none">
+<!-- Pairing Telemetry Indicator -->
+<div class="flex items-center gap-1.5 h-11 px-1">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-emerald-400 uppercase tracking-widest leading-none font-bold">APPAIRÉ</span>
+<span class="font-code-sm text-[10px] text-on-surface-variant leading-tight">CANAL T3</span>
+</div>
+</div>
+<!-- Turn Indicator -->
+<div class="flex flex-col items-center justify-center border-x border-outline px-2 py-0.5">
+<span class="font-code-sm text-[10px] text-primary tracking-wider uppercase font-semibold">TOUR ACTIF</span>
+<span class="font-code-md text-code-md text-on-surface font-bold whitespace-nowrap" id="turn-active-banner">R1 · Nel Varga</span>
+</div>
+<!-- Mute Button with Hold 700ms progress gauge -->
+<div class="relative">
+<button class="relative h-11 px-2 flex flex-col items-center justify-center bg-surface-container border border-outline active:bg-surface-bright transition-colors select-none touch-manipulation overflow-hidden" id="mute-hold-btn" title="Maintenir 700ms pour couper le son">
+<!-- Linear fill track -->
+<div class="absolute left-0 bottom-0 top-0 bg-primary/30 w-0 transition-none pointer-events-none" id="mute-progress-bar"></div>
+<div class="relative z-10 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary" id="mute-icon">volume_up</span>
+<span class="font-label-sm text-[10px] font-bold tracking-tight text-on-surface uppercase" id="mute-label">MUTE [700MS]</span>
+</div>
+<span class="relative z-10 font-code-sm text-[9px] text-on-surface-variant leading-none">MAINTENIR</span>
+</button>
+</div>
+</header>
+<!-- Contextual indicator bar: conditional audio beacon -->
+<div class="fixed top-13 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-40 bg-surface-container-low border-b border-outline-variant px-3 py-1 flex items-center justify-between" id="audio-beacon">
+<div class="flex items-center gap-1.5">
+<span class="inline-block w-1.5 h-1.5 bg-primary"></span>
+<span class="font-code-sm text-[11px] text-on-surface-variant tracking-wider uppercase">FLUX AUDIO // AMBIANCE 04</span>
+</div>
+<span class="font-code-sm text-[11px] text-primary font-bold">ACTIF</span>
+</div>
+<!-- 2. SCROLLABLE MAIN CONTENT CANVAS -->
+<main class="flex-1 w-full pt-[82px] pb-[142px] px-3 flex flex-col gap-3">
+<!-- Tracker Module Header -->
+<section class="bg-surface-container-low border border-outline p-3 flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">swords</span>
+<h1 class="font-orbitron font-headline-sm text-headline-sm text-on-surface uppercase tracking-wider">COMBAT // TRACKER</h1>
+</div>
+<div class="bg-surface-container-high px-2 py-0.5 border border-outline">
+<span class="font-code-md text-code-md text-primary font-bold tracking-wider" id="round-indicator">ROUND 01</span>
+</div>
+</div>
+<!-- Big Primary Next Action -->
+<button class="w-full h-12 bg-primary-container text-on-primary-container font-label-md text-label-md uppercase tracking-widest font-bold flex items-center justify-center gap-2 border border-primary active:bg-primary-fixed hover:bg-primary-fixed-dim transition-colors cursor-pointer" id="btn-next-turn">
+<span>SUIVANT</span>
+<span class="material-symbols-outlined text-lg leading-none" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</section>
+<!-- Combatants Stack: Exact 3 Units from e2e T0 -->
+<div class="flex flex-col gap-2.5" id="combatants-container">
+<!-- COMBATANT 1: Nel Varga (ACTIF au tour 1) -->
+<article class="combatant-card active-card-halo bg-surface-container border border-primary transition-all duration-150 p-3 flex flex-col gap-2 relative" id="combatant-0">
+<!-- Active ribbon tag -->
+<div class="turn-tag flex items-center justify-between border-b border-outline-variant pb-1.5">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-[10px] bg-primary text-on-primary-container px-1.5 py-0.5 font-bold uppercase tracking-wider">JOUEUR</span>
+<span class="status-marker font-code-sm text-[11px] text-primary flex items-center gap-1 font-bold">
+<span class="inline-block w-1.5 h-1.5 bg-primary"></span> EN MAIN
+              </span>
+</div>
+<span class="font-code-sm text-[11px] text-on-surface-variant uppercase">ID: NV-01</span>
+</div>
+<div class="flex items-center justify-between">
+<!-- Initiative & Identity -->
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-center justify-center bg-surface-container-lowest border border-outline w-12 h-12 shrink-0">
+<span class="font-code-sm text-[9px] text-on-surface-variant uppercase font-semibold">INIT</span>
+<span class="font-code-lg text-code-lg text-primary font-bold leading-none">17</span>
+</div>
+<div class="flex flex-col">
+<h2 class="font-orbitron font-bold text-base text-on-surface tracking-wide">Nel Varga</h2>
+<span class="font-body-sm text-[12px] text-on-surface-variant font-medium">Opératrice Tech</span>
+</div>
+</div>
+<!-- Health Adjustment Controls (≥44x44px targets) -->
+<div class="flex items-center bg-surface-container-lowest border border-outline">
+<button class="hp-btn-minus w-11 h-11 flex items-center justify-center text-on-surface border-r border-outline active:bg-surface-bright text-lg font-bold" data-target="hp-0">-</button>
+<div class="w-12 h-11 flex flex-col items-center justify-center px-1">
+<span class="font-code-sm text-[8px] text-on-surface-variant uppercase font-semibold leading-none">PV</span>
+<span class="font-code-md text-code-md text-on-surface font-bold leading-tight" id="hp-0">9</span>
+</div>
+<button class="hp-btn-plus w-11 h-11 flex items-center justify-center text-on-surface border-l border-outline active:bg-surface-bright text-lg font-bold" data-target="hp-0">+</button>
+</div>
+</div>
+</article>
+<!-- COMBATANT 2: L'Écho -->
+<article class="combatant-card bg-surface-container border border-outline transition-all duration-150 p-3 flex flex-col gap-2 relative" id="combatant-1">
+<!-- Ribbon tag -->
+<div class="turn-tag flex items-center justify-between border-b border-outline-variant pb-1.5">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-[10px] bg-error-container text-on-error-container border border-error px-1.5 py-0.5 font-bold uppercase tracking-wider">ENNEMI</span>
+<span class="status-marker font-code-sm text-[11px] text-on-surface-variant hidden items-center gap-1 font-bold">
+<span class="inline-block w-1.5 h-1.5 bg-primary"></span> EN MAIN
+              </span>
+</div>
+<span class="font-code-sm text-[11px] text-on-surface-variant uppercase">ID: EC-99</span>
+</div>
+<div class="flex items-center justify-between">
+<!-- Initiative & Identity -->
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-center justify-center bg-surface-container-lowest border border-outline w-12 h-12 shrink-0">
+<span class="font-code-sm text-[9px] text-on-surface-variant uppercase font-semibold">INIT</span>
+<span class="font-code-lg text-code-lg text-on-surface font-bold leading-none">12</span>
+</div>
+<div class="flex flex-col">
+<h2 class="font-orbitron font-bold text-base text-on-surface tracking-wide">L'Écho</h2>
+<span class="font-body-sm text-[12px] text-on-surface-variant font-medium">Entité Infiltrée</span>
+</div>
+</div>
+<!-- Health Adjustment Controls (≥44x44px targets) -->
+<div class="flex items-center bg-surface-container-lowest border border-outline">
+<button class="hp-btn-minus w-11 h-11 flex items-center justify-center text-on-surface border-r border-outline active:bg-surface-bright text-lg font-bold" data-target="hp-1">-</button>
+<div class="w-12 h-11 flex flex-col items-center justify-center px-1">
+<span class="font-code-sm text-[8px] text-on-surface-variant uppercase font-semibold leading-none">PV</span>
+<span class="font-code-md text-code-md text-on-surface font-bold leading-tight" id="hp-1">18</span>
+</div>
+<button class="hp-btn-plus w-11 h-11 flex items-center justify-center text-on-surface border-l border-outline active:bg-surface-bright text-lg font-bold" data-target="hp-1">+</button>
+</div>
+</div>
+</article>
+<!-- COMBATANT 3: Idris Koa -->
+<article class="combatant-card bg-surface-container border border-outline transition-all duration-150 p-3 flex flex-col gap-2 relative" id="combatant-2">
+<!-- Ribbon tag -->
+<div class="turn-tag flex items-center justify-between border-b border-outline-variant pb-1.5">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-[10px] bg-primary/20 text-primary border border-primary/40 px-1.5 py-0.5 font-bold uppercase tracking-wider">JOUEUR</span>
+<span class="status-marker font-code-sm text-[11px] text-on-surface-variant hidden items-center gap-1 font-bold">
+<span class="inline-block w-1.5 h-1.5 bg-primary"></span> EN MAIN
+              </span>
+</div>
+<span class="font-code-sm text-[11px] text-on-surface-variant uppercase">ID: IK-02</span>
+</div>
+<div class="flex items-center justify-between">
+<!-- Initiative & Identity -->
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-center justify-center bg-surface-container-lowest border border-outline w-12 h-12 shrink-0">
+<span class="font-code-sm text-[9px] text-on-surface-variant uppercase font-semibold">INIT</span>
+<span class="font-code-lg text-code-lg text-on-surface-variant font-bold leading-none">0</span>
+</div>
+<div class="flex flex-col">
+<h2 class="font-orbitron font-bold text-base text-on-surface tracking-wide">Idris Koa</h2>
+<span class="font-body-sm text-[12px] text-on-surface-variant font-medium">Éclaireur de Bord</span>
+</div>
+</div>
+<!-- Health : Conforme T0 sans PV ni contrôles inventés -->
+<div class="flex items-center justify-center px-3 py-2 bg-surface-container-lowest border border-outline-variant">
+<span class="font-code-sm text-[11px] text-on-surface-variant uppercase tracking-wider">AUCUN PV</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Fallback / Empty State Toggle Trigger (Hidden by default, robust edge-case safeguard) -->
+<div class="hidden bg-surface-container-low border border-outline p-6 text-center" id="empty-state-notice">
+<span class="material-symbols-outlined text-3xl text-on-surface-variant mb-2">shield</span>
+<p class="font-orbitron font-semibold text-on-surface text-sm uppercase">Aucun combat en cours</p>
+<p class="font-body-sm text-on-surface-variant text-xs mt-1">En attente d'engagement tactique par le GM</p>
+</div>
+<!-- Quick Reset / Sync telemetry strip -->
+<div class="flex items-center justify-between px-1 py-1 text-on-surface-variant font-code-sm text-[11px]">
+<span>REGISTRE E2E: T0_OK</span>
+<button class="text-primary hover:underline uppercase text-[10px]" id="toggle-empty-demo">BASCULER ÉTAT VIDE</button>
+</div>
+</main>
+<!-- 3. NAVIGATION FIXE EN PIED (2 RANGÉES × 4 ONGLETS = 8 ONGLETS COMPLETS) -->
+<!-- Safe-area locked docked footer, 0px radius, strictly >=44x44px touch targets -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-surface-container-lowest border-t border-outline flex flex-col p-1 gap-1">
+<!-- Rangée 1 : Pads, Dés, Sons, Scénario -->
+<div class="grid grid-cols-4 gap-1 w-full">
+<!-- Onglet 1: Pads -->
+<button class="h-12 flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary border border-outline-variant active:scale-95 duration-100 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[19px]">grid_view</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase mt-0.5">Pads</span>
+</button>
+<!-- Onglet 2: Dés -->
+<button class="h-12 flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary border border-outline-variant active:scale-95 duration-100 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[19px]">casino</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase mt-0.5">Dés</span>
+</button>
+<!-- Onglet 3: Sons -->
+<button class="h-12 flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary border border-outline-variant active:scale-95 duration-100 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[19px]">volume_up</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase mt-0.5">Sons</span>
+</button>
+<!-- Onglet 4: Scénario -->
+<button class="h-12 flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary border border-outline-variant active:scale-95 duration-100 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[19px]">menu_book</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase mt-0.5">Scénario</span>
+</button>
+</div>
+<!-- Rangée 2 : Combat (ACTIF), Tableau, Notes, Messages -->
+<div class="grid grid-cols-4 gap-1 w-full">
+<!-- Onglet 5: Combat (ACTIF) -->
+<button class="h-12 flex flex-col items-center justify-center bg-surface-container text-primary border border-primary relative active:scale-95 duration-100">
+<span class="absolute top-1 right-1 w-1.5 h-1.5 bg-primary"></span>
+<span class="material-symbols-outlined text-[19px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">swords</span>
+<span class="font-label-sm text-[10px] font-bold tracking-wider uppercase mt-0.5 text-primary">Combat</span>
+</button>
+<!-- Onglet 6: Tableau -->
+<button class="h-12 flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary border border-outline-variant active:scale-95 duration-100 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[19px]">draw</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase mt-0.5">Tableau</span>
+</button>
+<!-- Onglet 7: Notes -->
+<button class="h-12 flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary border border-outline-variant active:scale-95 duration-100 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[19px]">edit_note</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase mt-0.5">Notes</span>
+</button>
+<!-- Onglet 8: Messages -->
+<button class="h-12 flex flex-col items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary border border-outline-variant active:scale-95 duration-100 bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[19px]">mail</span>
+<span class="font-label-sm text-[10px] tracking-wider uppercase mt-0.5">Messages</span>
+</button>
+</div>
+</nav>
+</div>
+<!-- Interactive Logic Engine -->
+<script>
+    (function () {
+      // Combat State
+      const combatants = [
+        { id: 0, name: "Nel Varga", type: "JOUEUR", init: 17, hp: 9, hasHp: true },
+        { id: 1, name: "L'Écho", type: "ENNEMI", init: 12, hp: 18, hasHp: true },
+        { id: 2, name: "Idris Koa", type: "JOUEUR", init: 0, hp: null, hasHp: false }
+      ];
+
+      let currentRound = 1;
+      let activeIndex = 0; // Starts with Nel Varga (index 0)
+
+      const roundIndicator = document.getElementById("round-indicator");
+      const turnActiveBanner = document.getElementById("turn-active-banner");
+      const nextTurnBtn = document.getElementById("btn-next-turn");
+
+      function updateActiveCombatantView() {
+        const activeCombatant = combatants[activeIndex];
+        roundIndicator.textContent = `ROUND 0${currentRound}`;
+        turnActiveBanner.textContent = `R${currentRound} · ${activeCombatant.name}`;
+
+        combatants.forEach((c, idx) => {
+          const card = document.getElementById(`combatant-${idx}`);
+          const marker = card.querySelector(".status-marker");
+          
+          if (idx === activeIndex) {
+            card.classList.add("active-card-halo", "border-primary");
+            card.classList.remove("border-outline");
+            if (marker) {
+              marker.classList.remove("hidden");
+              marker.classList.add("flex");
+            }
+          } else {
+            card.classList.remove("active-card-halo", "border-primary");
+            card.classList.add("border-outline");
+            if (marker) {
+              marker.classList.remove("flex");
+              marker.classList.add("hidden");
+            }
+          }
+        });
+      }
+
+      // Next Turn Handler
+      nextTurnBtn.addEventListener("click", () => {
+        activeIndex++;
+        if (activeIndex >= combatants.length) {
+          activeIndex = 0;
+          currentRound++;
+        }
+        updateActiveCombatantView();
+      });
+
+      // Local HP Adjusters (+ and -)
+      document.querySelectorAll(".hp-btn-minus").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const targetId = btn.getAttribute("data-target");
+          const hpElement = document.getElementById(targetId);
+          let currentHp = parseInt(hpElement.textContent, 10);
+          if (!isNaN(currentHp) && currentHp > 0) {
+            hpElement.textContent = currentHp - 1;
+          }
+        });
+      });
+
+      document.querySelectorAll(".hp-btn-plus").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const targetId = btn.getAttribute("data-target");
+          const hpElement = document.getElementById(targetId);
+          let currentHp = parseInt(hpElement.textContent, 10);
+          if (!isNaN(currentHp)) {
+            hpElement.textContent = currentHp + 1;
+          }
+        });
+      });
+
+      // Mute 700ms Hold Interaction with progress gauge
+      const muteBtn = document.getElementById("mute-hold-btn");
+      const muteProgressBar = document.getElementById("mute-progress-bar");
+      const muteIcon = document.getElementById("mute-icon");
+      const muteLabel = document.getElementById("mute-label");
+      const audioBeacon = document.getElementById("audio-beacon");
+
+      let holdTimer = null;
+      let startTime = null;
+      let isMuted = false;
+      let animFrame = null;
+      const HOLD_DURATION = 700;
+
+      function renderProgress() {
+        if (!startTime) return;
+        const elapsed = Date.now() - startTime;
+        const pct = Math.min(100, (elapsed / HOLD_DURATION) * 100);
+        muteProgressBar.style.width = pct + "%";
+
+        if (elapsed < HOLD_DURATION) {
+          animFrame = requestAnimationFrame(renderProgress);
+        } else {
+          completeMuteAction();
+        }
+      }
+
+      function startHold(e) {
+        if (e.type === 'touchstart') e.preventDefault();
+        startTime = Date.now();
+        muteProgressBar.style.width = "0%";
+        animFrame = requestAnimationFrame(renderProgress);
+      }
+
+      function cancelHold() {
+        startTime = null;
+        if (animFrame) cancelAnimationFrame(animFrame);
+        muteProgressBar.style.width = "0%";
+      }
+
+      function completeMuteAction() {
+        startTime = null;
+        if (animFrame) cancelAnimationFrame(animFrame);
+        muteProgressBar.style.width = "0%";
+        isMuted = !isMuted;
+
+        if (isMuted) {
+          muteIcon.textContent = "volume_off";
+          muteIcon.classList.replace("text-primary", "text-error");
+          muteLabel.textContent = "SILENCE [ON]";
+          muteLabel.classList.add("text-error");
+          audioBeacon.classList.add("opacity-40");
+          audioBeacon.querySelector(".text-primary").textContent = "COUPE";
+          audioBeacon.querySelector(".text-primary").className = "font-code-sm text-[11px] text-error font-bold";
+        } else {
+          muteIcon.textContent = "volume_up";
+          muteIcon.classList.replace("text-error", "text-primary");
+          muteLabel.textContent = "MUTE [700MS]";
+          muteLabel.classList.remove("text-error");
+          audioBeacon.classList.remove("opacity-40");
+          const status = audioBeacon.querySelector(".text-error") || audioBeacon.querySelector(".text-primary");
+          status.textContent = "ACTIF";
+          status.className = "font-code-sm text-[11px] text-primary font-bold";
+        }
+      }
+
+      muteBtn.addEventListener("mousedown", startHold);
+      muteBtn.addEventListener("mouseup", cancelHold);
+      muteBtn.addEventListener("mouseleave", cancelHold);
+
+      muteBtn.addEventListener("touchstart", startHold, { passive: false });
+      muteBtn.addEventListener("touchend", cancelHold);
+      muteBtn.addEventListener("touchcancel", cancelHold);
+
+      // Toggle Empty State for verification
+      const toggleEmptyDemo = document.getElementById("toggle-empty-demo");
+      const combatantsContainer = document.getElementById("combatants-container");
+      const emptyStateNotice = document.getElementById("empty-state-notice");
+
+      toggleEmptyDemo.addEventListener("click", () => {
+        const isHidden = emptyStateNotice.classList.contains("hidden");
+        if (isHidden) {
+          combatantsContainer.classList.add("hidden");
+          emptyStateNotice.classList.remove("hidden");
+          turnActiveBanner.textContent = "EN ATTENTE";
+        } else {
+          combatantsContainer.classList.remove("hidden");
+          emptyStateNotice.classList.add("hidden");
+          updateActiveCombatantView();
+        }
+      });
+
+      // Initial View Sync
+      updateActiveCombatantView();
+    })();
+  </script>
+</body></html>

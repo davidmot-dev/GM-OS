@@ -1,0 +1,235 @@
+{
+  "actes": [
+    {
+      "id": "temoin-acte-1",
+      "campaignId": "temoin-campagne",
+      "ordre": 1,
+      "titre": "L'arrivee",
+      "resume": "Le groupe atteint la station et constate le silence.",
+      "acheve": true
+    },
+    {
+      "id": "temoin-acte-2",
+      "campaignId": "temoin-campagne",
+      "ordre": 2,
+      "titre": "Ce que Hale n'a pas dit",
+      "resume": "Le superviseur cache un depart qui n'en etait pas un.",
+      "notesDuMeneur": "Hale ment sur la date, pas sur le nombre."
+    },
+    {
+      "id": "demo-acte-3",
+      "campaignId": "temoin-campagne",
+      "ordre": 3,
+      "titre": "Ce qui écoute",
+      "resume": "Le groupe descend au noyau et rencontre l'Écho.",
+      "acheve": false
+    }
+  ],
+  "scenes": [
+    {
+      "id": "temoin-scene-1",
+      "campaignId": "temoin-campagne",
+      "acteId": "temoin-acte-1",
+      "ordre": 1,
+      "titre": "Amarrage",
+      "resume": "Le sas s'ouvre sur un couloir eclaire et vide.",
+      "origine": "preparee",
+      "lieuId": "temoin-lieu-station",
+      "entiteIds": [],
+      "personnagesIds": [
+        "temoin-pj-1",
+        "temoin-pj-2"
+      ],
+      "indiceIds": [
+        "temoin-indice-1"
+      ],
+      "passages": [
+        {
+          "debut": 1789156800000,
+          "fin": 1789159500000,
+          "seanceId": "temoin-seance-1"
+        }
+      ],
+      "termineeLe": 1789159500000,
+      "creeeLe": 1789156000000
+    },
+    {
+      "id": "temoin-scene-2",
+      "campaignId": "temoin-campagne",
+      "acteId": "temoin-acte-2",
+      "ordre": 1,
+      "titre": "Entretien avec Hale",
+      "resume": "Il repond a tout, et trop vite.",
+      "origine": "preparee",
+      "entiteIds": [
+        "temoin-pnj-1"
+      ],
+      "personnagesIds": [
+        "temoin-pj-2"
+      ],
+      "indiceIds": [
+        "temoin-indice-2"
+      ],
+      "passages": [
+        {
+          "debut": 1789160400000,
+          "seanceId": "temoin-seance-1"
+        }
+      ],
+      "creeeLe": 1789156100000
+    },
+    {
+      "id": "temoin-scene-3",
+      "campaignId": "temoin-campagne",
+      "acteId": "temoin-acte-2",
+      "ordre": 2,
+      "titre": "La voix dans le relais",
+      "resume": "Scene improvisee : Ancre-7 prend la parole sans qu'on l'appelle.",
+      "origine": "improvisee",
+      "entiteIds": [
+        "temoin-pnj-2"
+      ],
+      "indiceIds": [],
+      "creeeLe": 1789160500000
+    },
+    {
+      "id": "demo-scene-4",
+      "campaignId": "temoin-campagne",
+      "acteId": "temoin-acte-2",
+      "ordre": 3,
+      "titre": "Le registre réécrit",
+      "resume": "Les entrées des trois derniers jours ont la même signature.",
+      "origine": "preparee",
+      "entiteIds": [
+        "temoin-pnj-2"
+      ],
+      "indiceIds": [],
+      "creeeLe": 1789160500000,
+      "passages": []
+    },
+    {
+      "id": "demo-scene-5",
+      "campaignId": "temoin-campagne",
+      "acteId": "demo-acte-3",
+      "ordre": 1,
+      "titre": "Descente vers le noyau",
+      "resume": "L'ascenseur s'arrête entre deux ponts. Les lumières suivent le groupe.",
+      "origine": "preparee",
+      "entiteIds": [
+        "temoin-pnj-2"
+      ],
+      "indiceIds": [],
+      "creeeLe": 1789160500000,
+      "passages": []
+    },
+    {
+      "id": "demo-scene-6",
+      "campaignId": "temoin-campagne",
+      "acteId": "demo-acte-3",
+      "ordre": 2,
+      "titre": "Confrontation avec l'Écho",
+      "resume": "La voix de Nel répond avant que Nel ait parlé.",
+      "origine": "preparee",
+      "entiteIds": [
+        "temoin-pnj-2"
+      ],
+      "indiceIds": [],
+      "creeeLe": 1789160500000,
+      "passages": []
+    }
+  ],
+  "wiki": [
+    {
+      "id": "temoin-wiki-1",
+      "campaignId": "temoin-campagne",
+      "title": "Station Varn",
+      "content": "Relais de communication en orbite basse. Équipage nominal : neuf.",
+      "tags": [
+        "lieu"
+      ],
+      "category": "location",
+      "imageUrls": [],
+      "linkedEntityIds": []
+    },
+    {
+      "id": "demo-wiki-2",
+      "campaignId": "temoin-campagne",
+      "title": "Ancre-7",
+      "content": "L'intelligence de bord. Elle compte encore neuf membres d'équipage.",
+      "tags": [
+        "pnj",
+        "machine"
+      ],
+      "category": "npc",
+      "imageUrls": [],
+      "linkedEntityIds": []
+    },
+    {
+      "id": "demo-wiki-3",
+      "campaignId": "temoin-campagne",
+      "title": "Protocole de quarantaine",
+      "content": "Scelle les ponts inférieurs au moindre signal non identifié.",
+      "tags": [
+        "règle de bord"
+      ],
+      "category": "lore",
+      "imageUrls": [],
+      "linkedEntityIds": []
+    }
+  ],
+  "indices": [
+    {
+      "id": "temoin-indice-1",
+      "campaignId": "temoin-campagne",
+      "title": "Le café encore chaud",
+      "content": "Le départ date de moins d'une heure.",
+      "isRevealed": true,
+      "locationId": "temoin-lieu-station"
+    },
+    {
+      "id": "temoin-indice-2",
+      "campaignId": "temoin-campagne",
+      "title": "La date corrigee",
+      "content": "Le registre a ete reecrit, une seule fois.",
+      "isRevealed": false
+    },
+    {
+      "id": "demo-indice-3",
+      "campaignId": "temoin-campagne",
+      "title": "La signature unique",
+      "content": "Tout le registre est signé « Hale », même les nuits où il dormait.",
+      "isRevealed": true,
+      "ownerId": "temoin-pnj-1"
+    },
+    {
+      "id": "demo-indice-4",
+      "campaignId": "temoin-campagne",
+      "title": "La pièce manquante",
+      "content": "Le module de coupure du relais est dans la soute de Teo.",
+      "isRevealed": false,
+      "ownerId": "demo-pnj-4"
+    }
+  ],
+  "coffre": [
+    {
+      "chemin": "Lieux/Le relais.md",
+      "contenu": "# Le relais\n\nUne salle ronde au pont C, des antennes en faisceau, un bourdonnement qui ne s'arrête jamais.\nC'est là que vit [[L'Écho]].\n\n> Les lumières suivent le groupe. Personne ne les a programmées pour ça.\n"
+    },
+    {
+      "chemin": "PNJ/L'Écho.md",
+      "contenu": "# L'Écho\n\nCe qui parle dans le [[Le relais|relais]], avec la voix de l'équipage. Il ne parle jamais avec sa\npropre voix — il imite celle du dernier qui a parlé.\n\nIl n'existe que tant que le relais émet : le module de coupure est dans la soute de Teo.\n"
+    },
+    {
+      "chemin": "PNJ/Superviseur Hale.md",
+      "contenu": "# Superviseur Hale\n\nResponsable de la [[Station Varn]] depuis six ans. Répond trop vite aux questions qu'on ne lui a\npas posées, et regarde la porte quand il ment.\n\n**Secret** : il a réécrit le registre lui-même. Toutes les entrées des trois derniers jours portent\nsa signature, même les nuits où il dormait.\n"
+    },
+    {
+      "chemin": "Station Varn.md",
+      "contenu": "# Station Varn\n\nRelais de communication en orbite basse, au-dessus d'une géante gazeuse sans nom. Neuf membres\nd'équipage au registre ; le [[Superviseur Hale]] la dirige depuis six ans.\n\n## Ce que les joueurs savent\n\n- La station a cessé d'émettre il y a trois jours.\n- L'équipage est toujours à bord — et personne ne répond.\n- Le café du mess était encore chaud à l'arrivée ([[Séance 1 — Amarrage]]).\n\n## Ce que le meneur sait\n\nLe [[Le relais|relais]] émet seul, avec la voix de l'équipage. Ce qui parle s'appelle\n[[L'Écho]], et il n'existe que tant que le relais émet.\n\n## Les ponts\n\n| Pont | Ce qu'on y trouve |\n| --- | --- |\n| A | Quartiers, mess |\n| B | Infirmerie du Dr Moreau |\n| C | Le relais, scellé par le protocole de quarantaine |\n"
+    },
+    {
+      "chemin": "Séances/Séance 1 — Amarrage.md",
+      "contenu": "# Séance 1 — Amarrage\n\nLe groupe s'amarre à la [[Station Varn]] et trouve le café encore chaud. Le [[Superviseur Hale]]\nles accueille seul, et refuse de dire où est passé l'équipage.\n\n- Indice trouvé : le café encore chaud.\n- Fil ouvert : la date corrigée du registre.\n"
+    }
+  ]
+}

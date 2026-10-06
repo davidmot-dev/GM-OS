@@ -1,0 +1,309 @@
+<!DOCTYPE html><html class="dark" lang="fr"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+<title>GM-OS // JOUEUR - Le Silence de Varn</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;700;900&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "outline": "#1e293b",
+            "on-error-container": "#ffdad6",
+            "on-secondary-fixed": "#111c2d",
+            "secondary-fixed": "#d8e3fb",
+            "tertiary-fixed": "#acedff",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-tertiary-container": "#9bf0ff",
+            "tertiary-container": "#004f5d",
+            "surface-container-high": "#232a3c",
+            "on-surface": "#dce2fa",
+            "primary-container": "#06b6d4",
+            "surface-container-low": "#141b2c",
+            "surface-container-highest": "#2e3447",
+            "outline-variant": "#3d494c",
+            "on-secondary-container": "#aeb9d0",
+            "error-container": "#93000a",
+            "surface-dim": "#0c1324",
+            "surface-container-lowest": "#070d1f",
+            "secondary-container": "#283347",
+            "surface-bright": "#32394c",
+            "error": "#ef4444",
+            "on-tertiary": "#003640",
+            "on-primary-container": "#00424f",
+            "surface-variant": "#2e3447",
+            "primary-fixed": "#acedff",
+            "on-error": "#020617",
+            "on-background": "#dee2f7",
+            "tertiary": "#4cd7f6",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-secondary": "#263143",
+            "inverse-primary": "#00687a",
+            "on-primary": "#003640",
+            "primary": "#4cd7f6",
+            "surface": "#0c1324",
+            "inverse-on-surface": "#293042",
+            "on-surface-variant": "#bcc9cd",
+            "on-tertiary-fixed": "#001f26",
+            "surface-container": "#181f31",
+            "secondary-fixed-dim": "#bcc7de",
+            "inverse-surface": "#dce2fa",
+            "on-primary-fixed": "#001f26",
+            "secondary": "#bcc7de",
+            "background": "#020617",
+            "on-secondary-fixed-variant": "#3c475a",
+            "surface-tint": "#4cd7f6",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "primary-fixed-dim": "#4cd7f6"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            none: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "number-lg": ["Space Mono", "monospace"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "code-md": ["Space Mono", "monospace"],
+            "label-sm": ["Inter", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "label-lg": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "code-lg": ["Space Mono", "monospace"],
+            "number-md": ["Space Mono", "monospace"],
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"]
+          },
+          fontSize: {
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }],
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }],
+            "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "number-md": ["15px", { fontWeight: "600" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    * {
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* CRT Scanline & grid aesthetic */
+    .bg-grid {
+      background-size: 20px 20px;
+      background-image: 
+        linear-gradient(to right, rgba(30, 41, 59, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.3) 1px, transparent 1px);
+    }
+    .scanline {
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(6, 182, 212, 0.04) 50%,
+        rgba(6, 182, 212, 0.04)
+      );
+      background-size: 100% 4px;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #06b6d4;
+    }
+  </style>
+<link rel="stylesheet" href="j2.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Orbitron:wght@600;700;800&amp;display=swap"></head>
+<body class="" data-ecran="notifications"><div id="cadre-j2" class="telephone"><header class="w-full bg-surface-container-lowest border-b border-outline shrink-0 flex flex-col z-20">
+<!-- Ligne 1: Marque, Statut & Bascule Mode (≥44px hauteur) -->
+<div class="flex items-center justify-between px-3 h-12 border-b border-outline/60 gap-2">
+<div class="flex items-center gap-2 shrink-0">
+<span class="font-orbitron font-bold text-xs tracking-wider text-primary">GM-OS</span>
+<div class="flex items-center gap-1 bg-surface px-1.5 py-0.5 border border-outline">
+<span class="w-1.5 h-1.5 bg-emerald-500 animate-pulse"></span>
+<span class="font-label-sm text-[10px] text-emerald-400 font-bold uppercase tracking-wider">CONNECTÉ</span>
+</div>
+</div>
+<!-- Bouton bascule Performance / Qualité (min 44px interactif) -->
+<button class="h-11 min-h-[44px] px-2.5 bg-surface-container border border-outline flex items-center gap-1.5 active:border-primary text-left transition-colors" id="bouton-mode-j2" onclick="basculerQualite()"><span id="mode-j2">MODE PERFORMANCE</span></button>
+</div>
+<!-- Ligne 2: Contexte Opérationnel & Horloge Projetée -->
+<div class="px-3 py-2 bg-surface-container-low/80 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 overflow-hidden">
+<span class="w-1 h-3 bg-primary"></span>
+<span class="font-orbitron text-[11px] font-bold text-on-surface break-words tracking-wide">OPÉRATION EN COURS : LE SILENCE DE VARN</span>
+</div>
+
+</div>
+<div class="flex items-center justify-between font-code-sm text-xs">
+<span class="text-on-surface-variant font-code-sm text-[11px]">Dimanche 4 octobre 2026</span>
+<span class="text-primary font-number-md text-sm font-bold tracking-widest" id="clockDisplay">23:38:05</span>
+</div>
+<!-- Tension Publique : Alerte station (3/8 ambre) -->
+<div class="mt-0.5 pt-1 border-t border-outline/50 flex items-center justify-between gap-2">
+<span class="font-label-sm text-[10px] text-amber-400 font-bold tracking-wider uppercase">ALERTE DE LA STATION 3/8</span>
+<div class="flex items-center gap-1">
+<!-- 3 blocs pleins ambre -->
+<span class="w-3.5 h-2 bg-amber-500 border border-amber-400"></span>
+<span class="w-3.5 h-2 bg-amber-500 border border-amber-400"></span>
+<span class="w-3.5 h-2 bg-amber-500 border border-amber-400"></span>
+<!-- 5 blocs vides gris -->
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+<span class="w-3.5 h-2 bg-surface border border-outline"></span>
+</div>
+</div>
+</div>
+</header><main id="contenu-j2" class="flex-1 overflow-y-auto p-3 flex flex-col gap-3 relative pb-28 bg-grid scanline"><h1 class="j2-titre-campagne">Le Silence de Varn</h1><div class="j2-projection" aria-label="Surface de projection"></div><section class="j2-chroniques"><h2>Chroniques de séance</h2><p>Aucun résumé public.</p></section></main><footer id="navigation-j2"><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button" class="j2-actif" aria-current="page">Direct</button><button type="button">Archives</button><button type="button">PNJ</button></div><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button">Lieux</button><button type="button">Inventaire</button><button type="button">Cartes</button></div><div class="j2-rangee" style="grid-template-columns: repeat(4, minmax(0,1fr));"><button type="button">Fiche</button><button type="button">Notes</button><button type="button" id="destination-messages" onclick="ouvrirMessagerie()">Messages<span id="badge-non-lu">1</span></button><button type="button" onclick="quitterSession()" class="j2-quitter">Quitter</button></div></footer><aside id="messagerie-j2" class="j2-messagerie hidden " aria-label="Messagerie"><div class="j2-chat-titre"><div><h2>Messagerie</h2><p id="canal-j2">Canal Direct MJ</p></div><button aria-label="Fermer la messagerie" onclick="fermerMessagerie()">Fermer</button></div>
+    <div class="j2-destinataire"><button id="choisir-destinataire" aria-label="Choisir le destinataire" aria-expanded="false" onclick="ouvrirDestinataires()">À : <span id="nom-destinataire">Maître du Jeu</span> <span aria-hidden="true">⌄</span></button>
+    <div id="destinataires-j2" class="hidden"><button onclick="choisirDestinataire('GM')">Maître du Jeu</button><button onclick="choisirDestinataire('all')">Tous les Joueurs</button><button onclick="choisirDestinataire('idris')">Idris Koa</button><button onclick="choisirDestinataire('sora')">Sora Adebayo</button></div></div>
+    <div id="conversation-j2" aria-live="polite"></div>
+    <div class="j2-saisie"><textarea id="message-saisi" aria-label="Entrer un message" title="Entrer un message" placeholder="Message à Maître du Jeu..." rows="2"></textarea><button id="envoyer-message" aria-label="Envoyer le message" onclick="envoyerMessage()" disabled="">Envoyer</button><p id="confidentialite-j2">Seul Maître du Jeu pourra lire ce message.</p></div></aside><button id="nouveau-message" class="j2-toast" onclick="ouvrirMessagerie()" aria-label="Ouvrir le nouveau message"><strong>Nouveau Message</strong><span>Maître du Jeu (Maître du Jeu)</span></button><section id="alerte-j2" class="j2-alerte hidden"><div class="j2-alerte-entete"><span>RECU DE : Maître du Jeu</span><button aria-label="Fermer la notification" onclick="document.getElementById('alerte-j2').classList.add('hidden')">Fermer</button></div><h2>Protocole du relais</h2><p>Gardez le sas fermé pendant la transmission.</p><span class="j2-note">NEXUS-COMM v5.2</span></section></div><script>// Prototype T3 : interactions locales, aucune connexion ou écriture dans GM-OS.
+const ecran = document.body.dataset.ecran;
+const variante = new URLSearchParams(location.search).get('etat');
+function basculerQualite() {
+  const texte = document.getElementById('mode-j2');
+  texte.textContent = texte.textContent.includes('PERFORMANCE') ? 'MODE QUALITÉ' : 'MODE PERFORMANCE';
+}
+function quitterSession() { window.confirm('Quitter la session ?'); }
+function fermerDetail() { document.getElementById('detail-j2')?.classList.add('hidden'); }
+function ouvrirDetail(index = 0) {
+  const detail = document.getElementById('detail-j2');
+  if (ecran === 'archives') {
+    const indices = [['Le café encore chaud', "Le départ date de moins d'une heure."], ['La signature unique', 'Tout le registre est signé « Hale », même les nuits où il dormait.']];
+    detail.querySelector('h2').textContent = indices[index][0];
+    detail.querySelector('[data-description]').textContent = indices[index][1];
+    detail.setAttribute('aria-label', indices[index][0]);
+  }
+  detail.classList.remove('hidden');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { fermerDetail(); fermerMessagerie(); } });
+
+const destinataires = { GM: 'Maître du Jeu', all: 'Tous les Joueurs', idris: 'Idris Koa', sora: 'Sora Adebayo' };
+let destinataire = 'GM';
+let messages = ecran === 'notifications'
+  ? [{ de: 'GM', vers: 'nel', texte: 'Le sas vient de se fermer.', heure: '23:38' }]
+  : [{ de: 'nel', vers: 'GM', texte: 'Le relais est ouvert.', heure: '23:37' }, { de: 'GM', vers: 'nel', texte: 'Vous entendez trois coups.', heure: '23:37' }];
+function ouvrirMessagerie() {
+  const panneau = document.getElementById('messagerie-j2');
+  if (!panneau) return;
+  panneau.classList.remove('hidden');
+  document.getElementById('nouveau-message')?.classList.add('hidden');
+  document.getElementById('badge-non-lu')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'true');
+  rendreConversation();
+}
+function fermerMessagerie() {
+  document.getElementById('messagerie-j2')?.classList.add('hidden');
+  document.getElementById('destinataires-j2')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'false');
+}
+function ouvrirDestinataires() {
+  const liste = document.getElementById('destinataires-j2');
+  liste.classList.toggle('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', String(!liste.classList.contains('hidden')));
+}
+function choisirDestinataire(id) {
+  destinataire = id;
+  document.getElementById('destinataires-j2').classList.add('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', 'false');
+  rendreConversation();
+}
+function actualiserEnvoi() {
+  document.getElementById('envoyer-message').disabled = !document.getElementById('message-saisi').value.trim();
+}
+function envoyerMessage() {
+  const saisie = document.getElementById('message-saisi');
+  const texte = saisie.value.trim();
+  if (!texte) return;
+  messages.push({ de: 'nel', vers: destinataire, texte, heure: ecran === 'notifications' ? '23:38' : '23:37' });
+  saisie.value = '';
+  rendreConversation(); actualiserEnvoi();
+}
+function rendreConversation() {
+  const nom = destinataires[destinataire];
+  document.getElementById('nom-destinataire').textContent = nom;
+  document.getElementById('canal-j2').textContent = destinataire === 'GM' ? 'Canal Direct MJ' : destinataire === 'all' ? 'Canal Général' : 'Canal Privé';
+  document.getElementById('message-saisi').placeholder = `Message à ${nom}...`;
+  document.getElementById('confidentialite-j2').textContent = destinataire === 'all' ? 'Tout le monde pourra lire ce message.' : `Seul ${nom} pourra lire ce message.`;
+  const conversation = messages.filter(m => destinataire === 'all' ? m.vers === 'all'
+    : m.de === 'nel' && m.vers === destinataire || m.de === destinataire && m.vers === 'nel');
+  const liste = document.getElementById('conversation-j2');
+  liste.replaceChildren();
+  if (!conversation.length) {
+    const vide = document.createElement('p'); vide.className = 'vide-conversation';
+    vide.textContent = `Aucun message avec ${nom}. Commencez la conversation !`; liste.append(vide);
+  }
+  for (const msg of conversation) {
+    const ligne = document.createElement('div'); ligne.className = `message-ligne ${msg.de === 'nel' ? 'message-moi' : ''}`;
+    const bulle = document.createElement('p'); bulle.className = 'message-bulle'; bulle.textContent = msg.texte;
+    const meta = document.createElement('p'); meta.className = 'message-meta';
+    meta.textContent = `${msg.de === 'nel' ? 'VOUS' : destinataires[msg.de]} · ${msg.heure}`;
+    ligne.append(bulle, meta); liste.append(ligne);
+  }
+  liste.scrollTop = liste.scrollHeight;
+}
+if (ecran === 'messages' || ecran === 'notifications') {
+  const saisie = document.getElementById('message-saisi');
+  saisie.addEventListener('input', actualiserEnvoi);
+  saisie.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); envoyerMessage(); }
+  });
+  actualiserEnvoi();
+  if (ecran === 'messages') ouvrirMessagerie();
+  if (ecran === 'notifications' && variante === 'alerte') {
+    document.getElementById('nouveau-message').classList.add('hidden');
+    document.getElementById('badge-non-lu').classList.add('hidden');
+    const alerte = document.getElementById('alerte-j2');
+    alerte.classList.remove('hidden');
+    setTimeout(() => alerte.classList.add('hidden'), 8000);
+  }
+  if (ecran === 'notifications' && variante !== 'alerte') {
+    setTimeout(() => document.getElementById('nouveau-message').classList.add('hidden'), 5000);
+  }
+}
+if (variante === 'vide' && ['archives', 'pnj', 'lieux'].includes(ecran)) {
+  document.querySelector('[data-liste-j2]').classList.add('hidden');
+  document.getElementById('vide-j2').classList.remove('hidden');
+  document.getElementById('compteur-j2').textContent = '0';
+}
+</script></body></html>

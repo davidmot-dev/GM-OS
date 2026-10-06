@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS // T3 TÉLÉCOMMANDE : M2 SONS</title>
+<!-- Polices Google : Inter, Space Grotesk (ou Orbitron-like), Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-lowest": "#070e1e",
+            "inverse-surface": "#dce2fa",
+            "surface-container": "#181f31",
+            "surface-container-highest": "#2e3548",
+            "on-surface": "#dce2fa",
+            "on-background": "#dce2fa",
+            "tertiary": "#4cd7f6",
+            "error": "#ef4444",
+            "on-secondary-container": "#c0c9e0",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-tertiary-container": "#00424f",
+            "on-tertiary-fixed": "#001f26",
+            "on-surface-variant": "#898c95",
+            "outline-variant": "#151b2d",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-primary-container": "#00424f",
+            "tertiary-fixed": "#acedff",
+            "surface-dim": "#0c1324",
+            "surface-bright": "#33394c",
+            "outline": "#1e293b",
+            "surface-variant": "#2e3447",
+            "on-secondary-fixed": "#111c2d",
+            "on-primary": "#003640",
+            "primary-container": "#004f5d",
+            "secondary": "#bcc7de",
+            "surface-container-low": "#141b2c",
+            "surface-container-high": "#232a3c",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-error-container": "#ffdad6",
+            "error-container": "#93000a",
+            "on-error": "#020617",
+            "surface-tint": "#4cd7f6",
+            "secondary-container": "#283347",
+            "primary": "#4cd7f6",
+            "background": "#020617",
+            "on-tertiary": "#003640",
+            "on-secondary": "#263143",
+            "inverse-primary": "#00687a",
+            "secondary-fixed-dim": "#bcc7de",
+            "secondary-fixed": "#d8e3fb",
+            "tertiary-container": "#06b6d4",
+            "on-secondary-fixed-variant": "#3c475a",
+            "surface": "#0c1324",
+            "primary-fixed": "#acedff",
+            "on-primary-fixed": "#001f26",
+            "inverse-on-surface": "#293042",
+            "primary-fixed-dim": "#4cd7f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          "fontFamily": {
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "code-lg": ["Space Mono", "monospace"],
+            "headline-sm": ["Space Grotesk", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "code-sm": ["Space Mono", "monospace"],
+            "code-md": ["Space Mono", "monospace"],
+            "body-md": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "headline-lg-mobile": ["Space Grotesk", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "number-md": ["Space Mono", "monospace"],
+            "label-lg": ["Inter", "sans-serif"],
+            "number-lg": ["Space Mono", "monospace"],
+            "headline-lg": ["Space Grotesk", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "code-lg": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "code-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "number-md": ["15px", { "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "number-lg": ["28px", { "fontWeight": "700" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Reset strict & sélection */
+    * {
+      border-radius: 0px !important;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 28px;
+      width: 14px;
+      background: #4cd7f6;
+      cursor: pointer;
+      border: 1px solid #004f5d;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 28px;
+      width: 14px;
+      background: #4cd7f6;
+      cursor: pointer;
+      border: 1px solid #004f5d;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #070e1e;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #4cd7f6;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden antialiased flex flex-col h-screen w-screen selection:bg-primary selection:text-background">
+<!-- ========================================================================= -->
+<!-- 2. LIGNE D'ÉTAT COMPACTE EN HAUT (~48px)                                   -->
+<!-- ========================================================================= -->
+<header class="h-12 w-full bg-surface-container-lowest border-b border-outline flex items-center justify-between px-3 md:px-4 z-50 shrink-0">
+<!-- Statut Appairage & Identité pupitre -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 bg-surface-container-low px-2 py-1 border border-outline-variant">
+<span class="inline-block w-2.5 h-2.5 bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-primary uppercase">APPAIRÉ // T3</span>
+</div>
+<div class="h-4 w-px bg-outline hidden sm:block"></div>
+<span class="font-label-md text-label-md text-on-surface font-medium hidden sm:inline">R1 · Nel Varga</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant bg-surface-container px-1.5 py-0.5 border border-outline-variant">CAMPAGNE E2E T0</span>
+</div>
+<!-- Télémétrie centrale en temps réel -->
+<div class="flex items-center gap-3 sm:gap-5">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">AMB :</span>
+<span class="font-code-sm text-code-sm text-primary font-bold">CH-01</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-on-surface-variant">schedule</span>
+<span class="font-code-sm text-code-sm text-on-surface font-medium">01:42:19</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-high px-1.5 py-0.5 border border-outline text-tertiary">
+<span class="material-symbols-outlined text-[14px]">mail</span>
+<span class="font-code-sm text-code-sm font-bold">2</span>
+</div>
+</div>
+<!-- Coupe d'urgence sonore tactile (Maintien 700ms) -->
+<div class="flex items-center">
+<button class="h-9 min-h-[44px] px-3 bg-error-container border border-error text-on-error-container font-label-sm text-label-sm uppercase flex items-center gap-1.5 active:bg-error active:text-on-error transition-colors cursor-pointer select-none" id="panic-mute-btn">
+<span class="material-symbols-outlined text-[18px]">volume_off</span>
+<span class="tracking-wider">COUPER LE SON [700MS]</span>
+</button>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- ZONE PRINCIPALE : NAVIGATION GAUCHE (150px) + CONTENU SCROLLABLE M2 SONS   -->
+<!-- ========================================================================= -->
+<div class="flex flex-1 w-full overflow-hidden">
+<!-- 1. NAVIGATION PERMANENTE À GAUCHE (150px) -->
+<aside class="w-[150px] shrink-0 bg-surface-container-lowest border-r border-outline flex flex-col justify-between z-40">
+<!-- Les 8 onglets de la télécommande (min 44px de haut) -->
+<nav class="flex flex-col w-full divide-y divide-outline-variant">
+<!-- PADS -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#pads">
+<span class="material-symbols-outlined text-[19px]">dashboard</span>
+<span class="font-label-sm text-label-sm tracking-wider">PADS</span>
+</a>
+<!-- DÉS -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#des">
+<span class="material-symbols-outlined text-[19px]">casino</span>
+<span class="font-label-sm text-label-sm tracking-wider">DÉS</span>
+</a>
+<!-- SONS (ACTIF) -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-primary-container text-primary font-bold border-l-4 border-l-primary border-b border-primary/40 shadow-inner" href="#sons">
+<span class="material-symbols-outlined text-[20px] text-primary" style="font-variation-settings: 'FILL' 1;">volume_up</span>
+<span class="font-label-sm text-label-sm tracking-wider text-primary">SONS</span>
+</a>
+<!-- SCÉNARIO -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#scenario">
+<span class="material-symbols-outlined text-[19px]">menu_book</span>
+<span class="font-label-sm text-label-sm tracking-wider">SCÉNARIO</span>
+</a>
+<!-- COMBAT -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#combat">
+<span class="material-symbols-outlined text-[19px]">swords</span>
+<span class="font-label-sm text-label-sm tracking-wider">COMBAT</span>
+</a>
+<!-- TABLEAU -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#tableau">
+<span class="material-symbols-outlined text-[19px]">grid_view</span>
+<span class="font-label-sm text-label-sm tracking-wider">TABLEAU</span>
+</a>
+<!-- NOTES -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#notes">
+<span class="material-symbols-outlined text-[19px]">edit_note</span>
+<span class="font-label-sm text-label-sm tracking-wider">NOTES</span>
+</a>
+<!-- MESSAGES -->
+<a class="min-h-[44px] h-12 w-full flex items-center gap-2.5 px-3 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-150" href="#messages">
+<span class="material-symbols-outlined text-[19px]">chat</span>
+<span class="font-label-sm text-label-sm tracking-wider">MESSAGES</span>
+</a>
+</nav>
+<!-- Mention compacte diégétique du terminal télécommande T3 -->
+<div class="p-3 border-t border-outline bg-surface-container-low">
+<div class="font-code-sm text-[10px] text-on-surface-variant leading-tight">
+<div class="text-primary font-bold">TERMINAL T3</div>
+<div>BUILD: 4.2.1-E2E</div>
+<div class="text-[9px] text-on-surface-variant/70 mt-1">SANS FIL SYNC 18MS</div>
+</div>
+</div>
+</aside>
+<!-- ZONE DE CONTENU PRINCIPAL SCROLLABLE -->
+<main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar bg-background">
+<!-- 3. EN-TÊTE DU MODULE M2 SONS -->
+<section class="p-4 md:p-6 pb-4 border-b border-outline bg-surface-container-lowest flex flex-col md:flex-row md:items-end justify-between gap-3 shrink-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-code-sm text-code-sm text-primary tracking-widest uppercase">REMOTESOUNDS // CONSOLE DE DÉCLENCHEMENT RAPIDE</span>
+<span class="px-1.5 py-0.2 bg-surface-container-high border border-outline font-label-sm text-[10px] text-on-surface-variant uppercase">CANAL FLUX BRUT</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-bold tracking-tight text-on-surface flex items-center gap-3">
+            M2 SONS
+            <span class="font-code-md text-code-md text-primary bg-primary-container/30 px-2 py-0.5 border border-primary/60 font-normal">TABLE T0</span>
+</h1>
+</div>
+<div class="flex items-center gap-2">
+<div class="px-3 py-1.5 bg-surface-container border border-outline flex items-center gap-2">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">MOTEUR AUDIO :</span>
+<span class="font-code-sm text-code-sm text-on-surface font-bold">ACTIF (WEB-AUDIO API)</span>
+</div>
+</div>
+</section>
+<!-- 4. ORGANISATION EN COLONNES RÉPARTIES (FORMAT IPAD AIR 1180x820 & PUPITRE 1440x900) -->
+<div class="p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+<!-- ========================================================================= -->
+<!-- COLONNE 1 : RÉGIE DU VOLUME & SORTIE AUDIO (5 COLONNES EN LARGE)          -->
+<!-- ========================================================================= -->
+<div class="lg:col-span-5 flex flex-col gap-5">
+<!-- BLOC : VOLUME — BRUITAGES -->
+<div class="bg-surface-container-low border border-outline flex flex-col">
+<!-- Header de bloc -->
+<div class="px-4 py-3 border-b border-outline-variant bg-surface-container flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">equalizer</span>
+                VOLUME — BRUITAGES
+              </span>
+<span class="font-code-sm text-code-sm text-primary bg-surface-container-lowest px-1.5 py-0.5 border border-outline">CH-FX DIRECT</span>
+</div>
+<div class="p-4 flex flex-col gap-4">
+<!-- Affichage numérique & Jauge tactile -->
+<div class="flex items-baseline justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">ATTÉNUATION FX</span>
+<div class="flex items-baseline gap-1">
+<span class="font-number-lg text-number-lg text-primary leading-none" id="volume-val">100</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">%</span>
+</div>
+</div>
+<!-- Fader tactile ergonomique horizontal (hauteur tactile min 44px) -->
+<div class="relative flex items-center h-12 w-full px-1 bg-surface-container-lowest border border-outline">
+<input class="w-full h-8 z-10 cursor-pointer" id="volume-slider" max="100" min="0" oninput="document.getElementById('volume-val').innerText = this.value; document.getElementById('gauge-bar').style.width = this.value + '%';" type="range" value="100"/>
+<!-- Barre de jauge diegetique d'arrière-plan -->
+<div class="absolute left-1 right-1 top-2 bottom-2 bg-surface-container pointer-events-none">
+<div class="h-full bg-primary/25 border-r-2 border-primary transition-all duration-75" id="gauge-bar" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Raccourcis de réglage rapide ou test de volume (boutons tactiles >=44px) -->
+<div class="grid grid-cols-4 gap-2 pt-1">
+<button class="h-11 min-h-[44px] bg-surface-container border border-outline hover:border-primary active:bg-primary-container text-on-surface font-code-md text-code-md flex items-center justify-center transition-colors" onclick="setVolume(100)">
+                  100%
+                </button>
+<button class="h-11 min-h-[44px] bg-surface-container border border-outline hover:border-primary active:bg-primary-container text-on-surface font-code-md text-code-md flex items-center justify-center transition-colors" onclick="setVolume(75)">
+                  75%
+                </button>
+<button class="h-11 min-h-[44px] bg-surface-container border border-outline hover:border-primary active:bg-primary-container text-on-surface font-code-md text-code-md flex items-center justify-center transition-colors" onclick="setVolume(50)">
+                  50%
+                </button>
+<button class="h-11 min-h-[44px] bg-surface-container border border-outline hover:border-error active:bg-error-container text-error font-code-md text-code-md flex items-center justify-center transition-colors" onclick="setVolume(0)">
+                  0% (MUET)
+                </button>
+</div>
+</div>
+</div>
+<!-- BLOC : SÉLECTEUR DE SORTIE ACTIVE -->
+<div class="bg-surface-container-low border border-outline flex flex-col">
+<div class="px-4 py-3 border-b border-outline-variant bg-surface-container flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">output</span>
+                SÉLECTEUR DE SORTIE ACTIVE
+              </span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">PUPITRE T3</span>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center justify-between">
+<span>SORTIE ACTIVE :</span>
+<span class="font-code-sm text-code-sm text-primary">ROUTEUR LOCAL</span>
+</label>
+<!-- Liste déroulante sobre et boxy -->
+<div class="relative">
+<select class="w-full h-11 min-h-[44px] bg-surface-container-lowest border border-outline text-on-surface font-body-md px-3 appearance-none focus:border-primary focus:ring-0 cursor-pointer">
+<option selected="">Sortie par défaut</option>
+<option>Table de mixage USB (Master Out 1-2)</option>
+<option>Casque Meneur (Sortie Jack 3.5mm T3)</option>
+<option>Diffuseur Sans Fil Bluetooth - Enceinte Salle</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-primary">
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Indicateur de latence et buffer -->
+<div class="flex items-center justify-between pt-2 border-t border-outline-variant font-code-sm text-[11px] text-on-surface-variant">
+<span>BUFFER AUDIO : 256 FRAMES</span>
+<span class="text-tertiary">LATENCE : &lt; 4.8 MS</span>
+</div>
+</div>
+</div>
+<!-- TEST AUDIO RAPIDE (AUDITION CONTRÔLE) -->
+<div class="bg-surface-container-lowest border border-outline p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[22px]">headphones</span>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface uppercase">CONTRÔLE CASQUE</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Vérification de gain sans diffuser en salle</div>
+</div>
+</div>
+<button class="h-11 min-h-[44px] px-4 bg-surface-container border border-outline hover:border-primary text-on-surface font-label-sm text-label-sm uppercase flex items-center gap-2 active:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+              TEST
+            </button>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- COLONNE 2 : SOUNDBOARD INSTANTANÉ (7 COLONNES EN LARGE)                   -->
+<!-- ========================================================================= -->
+<div class="lg:col-span-7 flex flex-col gap-5">
+<div class="bg-surface-container-low border border-outline flex flex-col flex-1">
+<!-- En-tête de section Soundboard -->
+<div class="px-4 py-3 border-b border-outline-variant bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">campaign</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">SOUNDBOARD INSTANTANÉ</span>
+</div>
+<span class="px-2 py-0.5 bg-surface-container-high border border-outline font-label-sm text-label-sm text-primary uppercase font-bold">
+                1 PAD DISPONIBLE
+              </span>
+</div>
+<div class="p-4 md:p-6 flex flex-col gap-6 flex-1">
+<!-- PAD ACTIF / PRÊT : ALARME DU RELAIS -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase font-semibold">PAD DE SÉANCE // DIRECT</span>
+<span class="font-code-sm text-code-sm text-primary bg-primary-container/20 px-2 py-0.5 border border-primary/40 font-bold">
+                    PRÊT // 1 CLIC
+                  </span>
+</div>
+<!-- CARTE DE DÉCLENCHEMENT TACTILE ROBUSTE (PUPITRE / IPAD) -->
+<div class="bg-surface-container border-2 border-outline hover:border-primary transition-all p-4 md:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-start sm:items-center gap-4">
+<!-- Pavé Icône Cloche / Alarme -->
+<div class="w-14 h-14 min-w-[56px] min-h-[56px] bg-surface-container-lowest border border-outline flex items-center justify-center text-primary group-hover:border-primary">
+<span class="material-symbols-outlined text-[32px] animate-pulse" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<!-- Métadonnées & description -->
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-wide uppercase font-bold">Alarme du relais</span>
+<span class="font-code-sm text-[11px] text-error bg-error-container/40 border border-error px-1.5 py-0.2">URGENT</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+                        Déclencheur d'urgence · Relais Varn
+                      </div>
+<div class="font-code-sm text-code-sm text-on-surface-variant/80 mt-1 flex items-center gap-3">
+<span>DURÉE : 00:14</span>
+<span>CANAL : FX-01</span>
+<span>BOUCLE : OFF</span>
+</div>
+</div>
+</div>
+<!-- Actions tactiles (Déclencheur Direct >=44px) -->
+<div class="flex items-center gap-2 shrink-0">
+<!-- Bouton écoute préalable au casque -->
+<button class="h-14 w-12 min-h-[44px] bg-surface-container-lowest border border-outline hover:border-primary active:bg-primary-container text-on-surface flex items-center justify-center transition-colors" title="Pré-écoute au casque">
+<span class="material-symbols-outlined text-[20px]">headphones</span>
+</button>
+<!-- Gros bouton tactile déclencheur -->
+<button class="h-14 min-h-[44px] px-6 bg-primary text-on-primary font-label-md text-label-md tracking-wider uppercase font-bold flex items-center gap-2 hover:bg-tertiary-fixed active:scale-95 transition-all shadow-md cursor-pointer" id="alarm-trigger-btn" onclick="triggerSound(this)">
+<span class="material-symbols-outlined text-[24px]">play_arrow</span>
+<span>DÉCLENCHER</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ÉTAT DES AUTRES PADS DANS L'AMBIANCE ACTIVE -->
+<div class="flex flex-col gap-2 flex-1 justify-center">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase font-semibold">BANQUE D'AMBIANCE : CH-01</span>
+<!-- Encadré neutre en pointillés diégétiques -->
+<div class="border-2 border-dashed border-outline bg-surface-container-lowest/60 p-8 flex flex-col items-center justify-center text-center gap-2 min-h-[160px]">
+<span class="material-symbols-outlined text-[36px] text-on-surface-variant/50">music_off</span>
+<div class="font-body-lg text-body-lg text-on-surface font-medium">
+                    Aucun bruitage dans l'ambiance active.
+                  </div>
+<div class="font-code-sm text-code-sm text-on-surface-variant max-w-md">
+                    Les bruitages contextuels s'alimentent dynamiquement selon la scène sélectionnée dans le module SCÉNARIO.
+                  </div>
+<button class="mt-2 h-9 min-h-[44px] px-4 bg-surface-container border border-outline hover:border-primary text-on-surface-variant hover:text-primary font-label-sm text-label-sm uppercase flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">add</span>
+                    ASPECT / ASSIGNER UN BRUITAGE RAPIDE
+                  </button>
+</div>
+</div>
+</div>
+<!-- Barre de contrôle de transport en bas de bloc -->
+<div class="px-4 py-3 bg-surface-container border-t border-outline flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">CANAL DISPONIBLE FX-02 : VEILLE</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="h-8 min-h-[44px] px-3 bg-surface-container-low border border-outline hover:border-error text-on-surface-variant hover:text-error font-code-sm text-code-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">stop</span>
+                  STOP TOUT
+                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interactions JS pour test ergonomique sur écran tactile -->
+<script>
+    function setVolume(val) {
+      const slider = document.getElementById('volume-slider');
+      const valDisp = document.getElementById('volume-val');
+      const gauge = document.getElementById('gauge-bar');
+      
+      slider.value = val;
+      valDisp.innerText = val;
+      gauge.style.width = val + '%';
+    }
+
+    function triggerSound(btn) {
+      const originalText = btn.innerHTML;
+      btn.classList.remove('bg-primary', 'text-on-primary');
+      btn.classList.add('bg-error', 'text-on-error', 'border-error');
+      btn.innerHTML = `<span class="material-symbols-outlined text-[24px] animate-spin">sync</span><span>EN DIFFUSION...</span>`;
+      
+      setTimeout(() => {
+        btn.classList.remove('bg-error', 'text-on-error', 'border-error');
+        btn.classList.add('bg-primary', 'text-on-primary');
+        btn.innerHTML = originalText;
+      }, 2500);
+    }
+
+    // Gestion du maintien sur le bouton Panique Coupe Son (700ms)
+    const panicBtn = document.getElementById('panic-mute-btn');
+    let panicTimer = null;
+
+    panicBtn.addEventListener('mousedown', startPanicMute);
+    panicBtn.addEventListener('touchstart', startPanicMute);
+    panicBtn.addEventListener('mouseup', cancelPanicMute);
+    panicBtn.addEventListener('mouseleave', cancelPanicMute);
+    panicBtn.addEventListener('touchend', cancelPanicMute);
+
+    function startPanicMute() {
+      panicBtn.classList.add('brightness-150');
+      panicTimer = setTimeout(() => {
+        setVolume(0);
+        panicBtn.classList.remove('brightness-150');
+        panicBtn.classList.add('bg-error', 'text-on-error');
+        panicBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">done_all</span><span>SON COMPLÈTEMENT COUPÉ</span>`;
+        setTimeout(() => {
+          panicBtn.classList.remove('bg-error', 'text-on-error');
+          panicBtn.classList.add('bg-error-container', 'text-on-error-container');
+          panicBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">volume_off</span><span class="tracking-wider">COUPER LE SON [700MS]</span>`;
+        }, 2000);
+      }, 700);
+    }
+
+    function cancelPanicMute() {
+      panicBtn.classList.remove('brightness-150');
+      if (panicTimer) {
+        clearTimeout(panicTimer);
+        panicTimer = null;
+      }
+    }
+  </script>
+</body></html>

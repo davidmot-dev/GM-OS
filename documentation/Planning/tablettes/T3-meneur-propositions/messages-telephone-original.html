@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>GM-OS — Télécommande Meneur : Messages (390×844)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            primary: '#06b6d4',
+            'on-primary': '#020617',
+            text: '#f8fafc',
+            'text-muted': '#898c95',
+            border: '#1e293b',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            success: '#10b981',
+          },
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    /* Conteneur 390x844 responsive jusqu'à 360px */
+    .remote-container {
+      width: 100%;
+      max-width: 390px;
+      min-height: 844px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #070d1f;
+      position: relative;
+      overflow: hidden;
+      border-left: 1px solid #151b2d;
+      border-right: 1px solid #151b2d;
+    }
+    /* Scrollbar personnalisée */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+  </style>
+</head>
+<body class="bg-background text-text">
+
+<div class="remote-container select-none">
+
+  <!-- ========================================== -->
+  <!-- 1. LIGNE D'ÉTAT PERMANENTE DU MENEUR (T3)  -->
+  <!-- ========================================== -->
+  <header class="w-full bg-[#0c1324] border-b border-[#1e293b] px-3 py-2 flex items-center justify-between shrink-0 z-30">
+    <div class="flex items-center gap-2">
+      <!-- Voyant connecté appairé -->
+      <span class="w-2.5 h-2.5 bg-primary shadow-[0_0_8px_#06b6d4] inline-block shrink-0"></span>
+      <div class="flex flex-col">
+        <span class="font-mono text-[11px] text-text-muted leading-tight tracking-wider">GM-OS // T3</span>
+        <span class="font-mono text-[13px] font-semibold text-text tracking-wide">R1 · Nel Varga</span>
+      </div>
+    </div>
+
+    <!-- Bouton Couper le son (Maintien 700ms avec progression visible) -->
+    <button 
+      id="btn-mute"
+      class="relative overflow-hidden h-[44px] px-3 bg-[#151b2d] hover:bg-[#1e293b] border border-[#1e293b] text-text font-mono text-[12px] font-semibold flex items-center justify-center min-w-[110px] active:scale-95 transition-transform"
+      aria-label="Couper le son"
+    >
+      <div id="mute-progress" class="absolute left-0 top-0 bottom-0 bg-danger/40 w-0 transition-none pointer-events-none"></div>
+      <span id="mute-label" class="relative z-10 text-danger flex items-center gap-1.5 font-bold tracking-wider">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+        COUPER SON
+      </span>
+    </button>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. EN-TÊTE DU MODULE M2 MESSAGES           -->
+  <!-- ========================================== -->
+  <section class="bg-[#0c1324]/80 px-4 pt-3 pb-2 border-b border-[#1e293b] shrink-0">
+    <div class="flex items-center justify-between mb-2">
+      <div>
+        <h1 class="font-display text-[18px] font-bold text-text tracking-wider uppercase">M2 MESSAGES</h1>
+        <p class="font-mono text-[11px] text-text-muted">Console de transmission directe</p>
+      </div>
+      <span class="font-mono text-[11px] px-2 py-0.5 bg-[#151b2d] border border-[#1e293b] text-primary">
+        TABLE T0
+      </span>
+    </div>
+
+    <!-- SÉLECTEUR DE CORRESPONDANTS (Tous, puis ordre alphabétique strict) -->
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar" role="tablist">
+      <button 
+        onclick="setFilter('Tous')" 
+        id="tab-Tous" 
+        class="filter-tab h-[44px] px-3.5 bg-primary text-on-primary font-mono text-[12px] font-bold tracking-wider shrink-0 flex items-center justify-center border border-primary transition-colors"
+      >
+        TOUS
+      </button>
+      <button 
+        onclick="setFilter('Idris Koa')" 
+        id="tab-Idris" 
+        class="filter-tab h-[44px] px-3 bg-[#151b2d] text-text font-mono text-[12px] font-medium tracking-wider shrink-0 flex items-center justify-center border border-[#1e293b] hover:border-primary/50 transition-colors"
+      >
+        IDRIS KOA
+      </button>
+      <button 
+        onclick="setFilter('Nel Varga')" 
+        id="tab-Nel" 
+        class="filter-tab h-[44px] px-3 bg-[#151b2d] text-text font-mono text-[12px] font-medium tracking-wider shrink-0 flex items-center justify-center border border-[#1e293b] hover:border-primary/50 transition-colors"
+      >
+        NEL VARGA
+      </button>
+      <button 
+        onclick="setFilter('Sora Adebayo')" 
+        id="tab-Sora" 
+        class="filter-tab h-[44px] px-3 bg-[#151b2d] text-text font-mono text-[12px] font-medium tracking-wider shrink-0 flex items-center justify-center border border-[#1e293b] hover:border-primary/50 transition-colors"
+      >
+        SORA ADEBAYO
+      </button>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 3. ZONE DÉFILANTE : FIL DE MESSAGES        -->
+  <!-- ========================================== -->
+  <main id="chat-thread" class="flex-1 overflow-y-auto p-3 space-y-3 bg-[#070d1f] relative">
+    <!-- Message état vide -->
+    <div id="empty-state" class="hidden h-full flex-col items-center justify-center text-center p-6 my-auto">
+      <div class="w-12 h-12 border border-[#1e293b] bg-[#0c1324] flex items-center justify-center text-text-muted mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      </div>
+      <p class="font-mono text-[14px] text-text-muted font-medium tracking-wide">Rien dans ce fil.</p>
+      <span class="font-mono text-[11px] text-text-muted/60 mt-1">Les transmissions pour ce canal apparaîtront ici.</span>
+    </div>
+
+    <!-- Conteneur des bulles -->
+    <div id="messages-container" class="space-y-3">
+      <!-- Les messages initiaux de la session T0 -->
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 4. ZONE DE SAISIE TACTILE (INPUT & ENVOYER)-->
+  <!-- ========================================== -->
+  <section class="bg-[#0c1324] border-t border-[#1e293b] p-2.5 shrink-0 z-20">
+    <form id="message-form" onsubmit="event.preventDefault(); handleSend();" class="flex items-center gap-2">
+      <div class="relative flex-1">
+        <input 
+          id="message-input"
+          type="text" 
+          aria-label="Message à envoyer"
+          placeholder="Écrire à Tous les joueurs…" 
+          class="w-full h-[44px] bg-[#151b2d] border border-[#1e293b] focus:border-primary text-text px-3 text-[14px] font-body outline-none placeholder:text-text-muted placeholder:text-[13px] transition-colors"
+          oninput="handleInputChange()"
+        />
+      </div>
+      <button 
+        id="send-button"
+        type="submit" 
+        disabled
+        class="h-[44px] px-4 bg-primary text-on-primary font-mono text-[12px] font-bold tracking-wider shrink-0 flex items-center justify-center border border-primary disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-[#1e293b] disabled:text-text-muted disabled:border-[#1e293b] transition-all"
+        aria-label="Envoyer le message"
+      >
+        <span class="flex items-center gap-1.5">
+          ENVOYER
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </span>
+      </button>
+    </form>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 5. HUIT ONGLETS DU PIED (2 RANGÉES DE 4)   -->
+  <!-- ========================================== -->
+  <nav class="bg-[#0c1324] border-t border-[#1e293b] grid grid-cols-4 shrink-0 z-30 divide-x divide-y divide-[#1e293b]" aria-label="Navigation Télécommande">
+    
+    <!-- Rangée 1 -->
+    <button class="h-[44px] flex flex-col items-center justify-center text-text-muted hover:text-text active:bg-[#151b2d]">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.8" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">PADS</span>
+    </button>
+
+    <button class="h-[44px] flex flex-col items-center justify-center text-text-muted hover:text-text active:bg-[#151b2d]">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.8" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">DÉS</span>
+    </button>
+
+    <button class="h-[44px] flex flex-col items-center justify-center text-text-muted hover:text-text active:bg-[#151b2d]">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.8" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">SONS</span>
+    </button>
+
+    <button class="h-[44px] flex flex-col items-center justify-center text-text-muted hover:text-text active:bg-[#151b2d]">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">SCÉNARIO</span>
+    </button>
+
+    <!-- Rangée 2 -->
+    <button class="h-[44px] flex flex-col items-center justify-center text-text-muted hover:text-text active:bg-[#151b2d]">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">COMBAT</span>
+    </button>
+
+    <button class="h-[44px] flex flex-col items-center justify-center text-text-muted hover:text-text active:bg-[#151b2d]">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.8" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">TABLEAU</span>
+    </button>
+
+    <button class="h-[44px] flex flex-col items-center justify-center text-text-muted hover:text-text active:bg-[#151b2d]">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.8" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">NOTES</span>
+    </button>
+
+    <!-- ONGLETS MESSAGES : ACTIF EN CYAN -->
+    <button class="h-[44px] flex flex-col items-center justify-center bg-[#151b2d] text-primary border-t-2 border-primary active:bg-[#1e293b]" aria-current="page">
+      <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+      <span class="font-mono text-[11px] font-bold tracking-wider">MESSAGES</span>
+    </button>
+
+  </nav>
+
+</div>
+
+<!-- ========================================== -->
+<!-- LOGIQUE INTERACTION LOCALE DU BANC T0      -->
+<!-- ========================================== -->
+<script>
+  // Données fictives initiales issues du banc e2e/tabletteMeneurT0.spec.ts et campagne-de-demo.json
+  const initialMessages = [
+    {
+      id: 1,
+      sender: "Nel Varga",
+      recipient: "MJ",
+      isMJ: false,
+      text: "Le relais est ouvert.",
+      time: "23:37",
+      targetPJ: "Nel Varga"
+    },
+    {
+      id: 2,
+      sender: "MJ",
+      recipient: "Nel Varga",
+      isMJ: true,
+      text: "Vous entendez trois coups.",
+      time: "23:37",
+      targetPJ: "Nel Varga"
+    }
+  ];
+
+  let messages = [...initialMessages];
+  let currentFilter = 'Tous'; // 'Tous' | 'Idris Koa' | 'Nel Varga' | 'Sora Adebayo'
+
+  // Rendu des messages
+  function renderMessages() {
+    const container = document.getElementById('messages-container');
+    const emptyState = document.getElementById('empty-state');
+    
+    // Filtrage
+    let filtered = [];
+    if (currentFilter === 'Tous') {
+      filtered = messages;
+    } else {
+      filtered = messages.filter(m => m.targetPJ === currentFilter);
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      emptyState.classList.add('flex');
+    } else {
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+
+      container.innerHTML = filtered.map(m => {
+        if (m.isMJ) {
+          // Envoi MJ : aligné à droite, bordure cyan, méta: → Tous ou → Nom / Heure
+          const targetLabel = m.recipient === "Tous" ? "→ Tous" : `→ ${m.recipient}`;
+          return `
+            <div class="flex flex-col items-end w-full">
+              <div class="max-w-[85%] bg-[#151b2d] border border-primary/60 p-3 shadow-[0_2px_10px_rgba(6,182,212,0.1)]">
+                <p class="text-[14px] font-body text-text leading-relaxed whitespace-pre-wrap">${escapeHTML(m.text)}</p>
+              </div>
+              <div class="flex items-center gap-2 mt-1 mr-1">
+                <span class="font-mono text-[11px] font-bold text-primary tracking-wider">${targetLabel}</span>
+                <span class="font-mono text-[11px] text-text-muted">${m.time}</span>
+              </div>
+            </div>
+          `;
+        } else {
+          // Message entrant PJ : aligné à gauche, cartouche sombre, expéditeur affiché
+          return `
+            <div class="flex flex-col items-start w-full">
+              <div class="flex items-center gap-1.5 mb-1 ml-1">
+                <span class="font-mono text-[11px] font-bold text-[#f59e0b] tracking-wider">${m.sender}</span>
+                <span class="font-mono text-[11px] text-text-muted">${m.time}</span>
+              </div>
+              <div class="max-w-[85%] bg-[#0c1324] border border-[#1e293b] p-3">
+                <p class="text-[14px] font-body text-text leading-relaxed whitespace-pre-wrap">${escapeHTML(m.text)}</p>
+              </div>
+            </div>
+          `;
+        }
+      }).join('');
+    }
+
+    // Scroll vers le bas
+    const thread = document.getElementById('chat-thread');
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+      tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag)
+    );
+  }
+
+  // Changement de filtre
+  function setFilter(filterName) {
+    currentFilter = filterName;
+
+    // Mise à jour visuelle des onglets
+    const tabs = document.querySelectorAll('.filter-tab');
+    tabs.forEach(tab => {
+      tab.classList.remove('bg-primary', 'text-on-primary', 'border-primary');
+      tab.classList.add('bg-[#151b2d]', 'text-text', 'border-[#1e293b]');
+    });
+
+    const activeId = filterName === 'Tous' ? 'tab-Tous' :
+                     filterName === 'Idris Koa' ? 'tab-Idris' :
+                     filterName === 'Nel Varga' ? 'tab-Nel' : 'tab-Sora';
+
+    const activeTab = document.getElementById(activeId);
+    if (activeTab) {
+      activeTab.classList.remove('bg-[#151b2d]', 'text-text', 'border-[#1e293b]');
+      activeTab.classList.add('bg-primary', 'text-on-primary', 'border-primary');
+    }
+
+    // Mise à jour placeholder
+    const input = document.getElementById('message-input');
+    if (filterName === 'Tous') {
+      input.placeholder = "Écrire à Tous les joueurs…";
+    } else {
+      input.placeholder = `Écrire à ${filterName}…`;
+    }
+
+    renderMessages();
+  }
+
+  // Gestion du champ de saisie
+  function handleInputChange() {
+    const input = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-button');
+    const hasText = input.value.trim().length > 0;
+    sendBtn.disabled = !hasText;
+  }
+
+  // Envoi du message
+  function handleSend() {
+    const input = document.getElementById('message-input');
+    const val = input.value.trim();
+    if (!val) return;
+
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const newMsg = {
+      id: Date.now(),
+      sender: "MJ",
+      recipient: currentFilter === 'Tous' ? 'Tous' : currentFilter,
+      isMJ: true,
+      text: val,
+      time: timeStr,
+      targetPJ: currentFilter === 'Tous' ? 'Tous' : currentFilter
+    };
+
+    messages.push(newMsg);
+    input.value = '';
+    handleInputChange();
+    renderMessages();
+  }
+
+  // Gestion du bouton COUPER LE SON (maintien 700ms)
+  const muteBtn = document.getElementById('btn-mute');
+  const muteProgress = document.getElementById('mute-progress');
+  const muteLabel = document.getElementById('mute-label');
+  let muteTimer = null;
+  let isMuted = false;
+
+  function startMute(e) {
+    if (e.type === 'touchstart') e.preventDefault();
+    muteProgress.style.transition = 'width 700ms linear';
+    muteProgress.style.width = '100%';
+    
+    muteTimer = setTimeout(() => {
+      isMuted = !isMuted;
+      if (isMuted) {
+        muteLabel.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          </svg>
+          RÉACTIVER
+        `;
+        muteLabel.classList.remove('text-danger');
+        muteLabel.classList.add('text-success');
+      } else {
+        muteLabel.innerHTML = `
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+          </svg>
+          COUPER SON
+        `;
+        muteLabel.classList.remove('text-success');
+        muteLabel.classList.add('text-danger');
+      }
+      cancelMute();
+    }, 700);
+  }
+
+  function cancelMute() {
+    clearTimeout(muteTimer);
+    muteProgress.style.transition = 'none';
+    muteProgress.style.width = '0%';
+  }
+
+  muteBtn.addEventListener('mousedown', startMute);
+  muteBtn.addEventListener('mouseup', cancelMute);
+  muteBtn.addEventListener('mouseleave', cancelMute);
+  muteBtn.addEventListener('touchstart', startMute);
+  muteBtn.addEventListener('touchend', cancelMute);
+
+  // Initialisation au chargement
+  window.addEventListener('DOMContentLoaded', () => {
+    renderMessages();
+  });
+</script>
+
+</body>
+</html>

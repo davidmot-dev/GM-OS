@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GM-OS — Télécommande Meneur : Pads (1180×820)</title>
+  
+  <!-- Polices Google Fonts conformes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'bg-base': '#020617',
+            'surface': '#0f172a',
+            'surface-raised': '#1e293b',
+            'surface-active': '#162238',
+            'primary': '#06b6d4',
+            'on-primary': '#020617',
+            'border-base': '#1e293b',
+            'text-main': '#f8fafc',
+            'text-muted': '#898c95',
+            'status-success': '#10b981',
+            'status-danger': '#ef4444',
+            'status-warning': '#f59e0b',
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Reset et accessibilité */
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important; /* Arêtes vives 0px conformément au DESIGN.md Brutal Diegetic Console */
+    }
+
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Range input stylisé diegétique */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #1e293b;
+      height: 8px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 36px;
+      background: #06b6d4;
+      cursor: pointer;
+      border: 1px solid #020617;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 28px;
+      height: 36px;
+      background: #06b6d4;
+      cursor: pointer;
+      border: 1px solid #020617;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+    }
+
+    /* Halo actif */
+    .glow-cyan {
+      box-shadow: 0 0 16px rgba(6, 182, 212, 0.35), inset 0 0 8px rgba(6, 182, 212, 0.15);
+    }
+
+    /* Grille de balayage cathodique discret */
+    .scanline-bg {
+      background-image: linear-gradient(rgba(15, 23, 42, 0) 50%, rgba(2, 6, 23, 0.5) 50%), linear-gradient(90deg, rgba(6, 182, 212, 0.02), rgba(6, 182, 212, 0.01), rgba(6, 182, 212, 0.02));
+      background-size: 100% 3px, 6px 100%;
+    }
+
+    /* Barre de défilement discrète */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border: 1px solid #06b6d4;
+    }
+  </style>
+</head>
+
+<body class="bg-bg-base text-text-main flex flex-col h-screen w-screen scanline-bg">
+
+  <!-- ========================================================================= -->
+  <!-- 1. LIGNE D'ÉTAT COMPACTE SUPÉRIEURE (Fixed Top Bar)                      -->
+  <!-- ========================================================================= -->
+  <header class="h-12 border-b border-border-base bg-[#070d1f] flex items-center justify-between px-4 z-50 shrink-0">
+    <!-- Gauche : Statut Appairé + Identifiant Meneur + Télémétrie Audio si active -->
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2.5 h-2.5 bg-status-success shadow-[0_0_8px_#10b981]"></span>
+        <span class="font-orbitron font-bold text-xs tracking-wider text-status-success uppercase">APPAIRÉ</span>
+        <span class="text-text-muted text-xs">|</span>
+        <span class="font-mono text-xs text-text-main font-semibold">CANAL T0</span>
+      </div>
+
+      <div class="h-4 w-px bg-border-base"></div>
+
+      <div class="flex items-center space-x-2 text-xs">
+        <span class="text-text-muted">SESSION :</span>
+        <span class="font-mono font-bold text-text-main">R1 · Nel Varga</span>
+      </div>
+
+      <!-- Informations actives uniquement si présentes dans le session context -->
+      <div class="h-4 w-px bg-border-base hidden sm:block"></div>
+      <div class="hidden sm:flex items-center space-x-3 text-xs">
+        <div class="flex items-center space-x-1.5 text-primary">
+          <svg class="w-3.5 h-3.5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+          </svg>
+          <span class="font-mono font-medium uppercase">AMB : ARCOLOGIE</span>
+        </div>
+        <span class="text-text-muted font-mono">BUS: 100%</span>
+      </div>
+    </div>
+
+    <!-- Droite : Actions d'urgence et Couper le son (Appui long 700ms) -->
+    <div class="flex items-center space-x-3">
+      <!-- Bouton MUTE [700MS] avec maintien tactile interactif -->
+      <button 
+        id="btn-mute"
+        class="relative h-9 px-3 bg-surface-raised border border-status-danger/60 hover:border-status-danger text-status-danger font-mono font-bold text-xs tracking-wider uppercase flex items-center space-x-2 active:bg-status-danger active:text-bg-base transition-colors duration-150 overflow-hidden"
+        title="Maintenir 700ms pour couper tous les flux sonores">
+        <!-- Jauge visuelle de progression du maintien -->
+        <span id="mute-progress" class="absolute left-0 bottom-0 top-0 bg-status-danger/30 w-0 transition-all duration-75 pointer-events-none"></span>
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+        <span class="relative z-10">COUPER LE SON <span class="text-[11px] opacity-75 font-normal">[700MS]</span></span>
+      </button>
+
+      <!-- Badge diegétique du module -->
+      <div class="h-9 px-2.5 bg-surface-raised border border-border-base flex items-center font-mono text-xs text-primary font-bold">
+        M1 // PADS
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. CONTENEUR PRINCIPAL : NAVIGATION GAUCHE 150PX + ZONE DE CONTENU       -->
+  <!-- ========================================================================= -->
+  <div class="flex flex-1 overflow-hidden">
+    
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- BARRE DE NAVIGATION GAUCHE FIXE (150px) - LES 8 ONGLETS ENTIERS         -->
+    <!-- ----------------------------------------------------------------------- -->
+    <aside class="w-[150px] bg-[#070d1f] border-r border-border-base flex flex-col shrink-0 z-40 select-none">
+      
+      <!-- En-tête navigation sobre -->
+      <div class="px-3 py-2 border-b border-border-base/60 text-[11px] font-mono text-text-muted uppercase tracking-wider">
+        TÉLÉCOMMANDE
+      </div>
+
+      <!-- Liste des 8 onglets entiers (Pads, Dés, Sons, Scénario, Combat, Tableau, Notes, Messages) -->
+      <nav class="flex-1 flex flex-col overflow-y-auto py-1">
+        
+        <!-- 1. PADS (ACTIF) -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 bg-surface border-l-4 border-primary text-primary font-orbitron font-bold text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          <span>PADS</span>
+        </button>
+
+        <!-- 2. DÉS -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 hover:bg-surface-raised border-l-4 border-transparent text-text-muted hover:text-text-main font-orbitron font-medium text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+          <span>DÉS</span>
+        </button>
+
+        <!-- 3. SONS -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 hover:bg-surface-raised border-l-4 border-transparent text-text-muted hover:text-text-main font-orbitron font-medium text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          </svg>
+          <span>SONS</span>
+        </button>
+
+        <!-- 4. SCÉNARIO -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 hover:bg-surface-raised border-l-4 border-transparent text-text-muted hover:text-text-main font-orbitron font-medium text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <span>SCÉNARIO</span>
+        </button>
+
+        <!-- 5. COMBAT -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 hover:bg-surface-raised border-l-4 border-transparent text-text-muted hover:text-text-main font-orbitron font-medium text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span>COMBAT</span>
+        </button>
+
+        <!-- 6. TABLEAU -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 hover:bg-surface-raised border-l-4 border-transparent text-text-muted hover:text-text-main font-orbitron font-medium text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+          </svg>
+          <span>TABLEAU</span>
+        </button>
+
+        <!-- 7. NOTES -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 hover:bg-surface-raised border-l-4 border-transparent text-text-muted hover:text-text-main font-orbitron font-medium text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span>NOTES</span>
+        </button>
+
+        <!-- 8. MESSAGES -->
+        <button class="w-full min-h-[48px] px-3 py-2.5 flex items-center space-x-3 hover:bg-surface-raised border-l-4 border-transparent text-text-muted hover:text-text-main font-orbitron font-medium text-xs tracking-wider uppercase transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          <span>MESSAGES</span>
+        </button>
+
+      </nav>
+
+      <!-- Pied de navigation : ID machine -->
+      <div class="p-3 border-t border-border-base text-[11px] font-mono text-text-muted">
+        <div class="text-text-main font-bold">GM-OS v6.5</div>
+        <div>T0_REMOTE</div>
+      </div>
+    </aside>
+
+    <!-- ----------------------------------------------------------------------- -->
+    <!-- ZONE DE CONTENU PRINCIPALE : RÉPARTITION 2 COLONNES (RÉGIE & PADS)      -->
+    <!-- ----------------------------------------------------------------------- -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col space-y-6">
+      
+      <!-- En-tête de vue avec statut de synchro -->
+      <div class="flex items-center justify-between border-b border-border-base pb-3">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="inline-block w-2 h-2 bg-primary"></span>
+            <span class="font-mono text-xs text-primary font-bold uppercase tracking-widest">MODULE M1 // TÉLÉCOMMANDE DU MENEUR</span>
+          </div>
+          <h1 class="font-orbitron font-bold text-2xl text-text-main tracking-wide uppercase mt-0.5">
+            RÉGIE DES FLUX & PADS SONORES
+          </h1>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <div class="bg-surface px-3 py-1.5 border border-border-base text-right">
+            <div class="text-[11px] font-mono text-text-muted uppercase">SOURCE DE PADS</div>
+            <div class="text-xs font-mono font-bold text-primary">UniversalPads // T0</div>
+          </div>
+          <div class="bg-surface px-3 py-1.5 border border-border-base text-right">
+            <div class="text-[11px] font-mono text-text-muted uppercase">TOTAL CONFIGURE</div>
+            <div class="text-xs font-mono font-bold text-text-main">3 AMBIANCES · 1 IMAGE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grille Principale 2 Colonnes : Colonne 1 Réglages Volumes (45%) / Colonne 2 Pads Tactiles (55%) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- =================================================================== -->
+        <!-- COLONNE GAUCHE (5/12) : RÉGIE DES FLUX // VOLUMES & SORTIES          -->
+        <!-- =================================================================== -->
+        <section class="lg:col-span-5 bg-surface border border-border-base p-4 space-y-5">
+          
+          <div class="flex items-center justify-between border-b border-border-base/80 pb-2">
+            <div class="flex items-center space-x-2">
+              <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              <h2 class="font-orbitron font-bold text-sm text-text-main tracking-wider uppercase">
+                RÉGIE DES FLUX // VOLUMES
+              </h2>
+            </div>
+            <span class="text-[11px] font-mono text-primary font-bold bg-surface-raised px-2 py-0.5 border border-border-base">
+              2 FLUX MASTER
+            </span>
+          </div>
+
+          <!-- FLUX 1 : MUSIQUE -->
+          <div class="bg-bg-base border border-border-base p-3.5 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-inter font-bold text-sm text-text-main">Musique</span>
+              <span id="label-vol-musique" class="font-mono font-bold text-sm text-primary">100%</span>
+            </div>
+            
+            <input 
+              type="range" 
+              id="slider-vol-musique" 
+              min="0" 
+              max="100" 
+              value="100" 
+              class="w-full"
+              oninput="document.getElementById('label-vol-musique').innerText = this.value + '%'"
+            >
+
+            <div class="pt-2">
+              <label class="block text-[11px] font-mono text-text-muted uppercase mb-1">
+                PÉRIPHÉRIQUE DE SORTIE
+              </label>
+              <div class="relative">
+                <select class="w-full h-11 bg-surface-raised border border-border-base text-text-main px-3 text-xs font-inter appearance-none focus:outline-none focus:border-primary">
+                  <option selected>Sortie par défaut</option>
+                  <option>Tablette Joueur Direct (CH 1-2)</option>
+                  <option>Casque Meneur (CH 3-4)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-muted">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <p class="text-[11px] font-inter text-text-muted/80 mt-1 italic">
+                Aucune autre sortie recensée sur la machine du meneur.
+              </p>
+            </div>
+          </div>
+
+          <!-- FLUX 2 : AMBIANCES -->
+          <div class="bg-bg-base border border-border-base p-3.5 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-inter font-bold text-sm text-text-main">Ambiances</span>
+              <span id="label-vol-ambiance" class="font-mono font-bold text-sm text-primary">100%</span>
+            </div>
+            
+            <input 
+              type="range" 
+              id="slider-vol-ambiance" 
+              min="0" 
+              max="100" 
+              value="100" 
+              class="w-full"
+              oninput="document.getElementById('label-vol-ambiance').innerText = this.value + '%'"
+            >
+
+            <div class="pt-2">
+              <label class="block text-[11px] font-mono text-text-muted uppercase mb-1">
+                PÉRIPHÉRIQUE DE SORTIE
+              </label>
+              <div class="relative">
+                <select class="w-full h-11 bg-surface-raised border border-border-base text-text-main px-3 text-xs font-inter appearance-none focus:outline-none focus:border-primary">
+                  <option selected>Sortie par défaut</option>
+                  <option>Tablette Joueur Direct (CH 1-2)</option>
+                  <option>Casque Meneur (CH 3-4)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-muted">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <p class="text-[11px] font-inter text-text-muted/80 mt-1 italic">
+                Aucune autre sortie recensée sur la machine du meneur.
+              </p>
+            </div>
+          </div>
+
+          <!-- État du Bus & Diagnostics rapides -->
+          <div class="p-3 bg-bg-base border border-border-base flex items-center justify-between text-xs font-mono">
+            <span class="text-text-muted">STATUT BUS MASTER :</span>
+            <span class="text-status-success font-bold flex items-center space-x-1.5">
+              <span class="w-2 h-2 bg-status-success inline-block"></span>
+              <span>NOMINAL · 0 dB</span>
+            </span>
+          </div>
+
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- COLONNE DROITE (7/12) : PADS SONORES & DÉCLENCHEURS INSTANTANÉS     -->
+        <!-- =================================================================== -->
+        <section class="lg:col-span-7 bg-surface border border-border-base p-4 space-y-4">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border-base/80 pb-3">
+            <div>
+              <h2 class="font-orbitron font-bold text-sm text-text-main tracking-wider uppercase">
+                AMBIANCES SONORES
+              </h2>
+              <span class="text-[11px] font-mono text-primary uppercase">BOUCLE CONTINUE · TAP DIRECT</span>
+            </div>
+
+            <!-- Champ de filtrage des pads (issu de l'écran mobile de référence) -->
+            <div class="relative w-full sm:w-64">
+              <input 
+                type="text" 
+                id="search-pads"
+                placeholder="Filtrer les pads..." 
+                class="w-full h-11 bg-bg-base border border-border-base px-3 text-xs text-text-main placeholder-text-muted/70 focus:outline-none focus:border-primary font-inter"
+                oninput="filterPads(this.value)"
+              >
+              <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-text-muted">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grille des Pads configurés dans la campagne de démo -->
+          <div class="space-y-3" id="pads-container">
+            
+            <!-- PAD 1 : ARCOLOGIE (ACTIF AU REPOS) -->
+            <div class="pad-card bg-bg-base border-2 border-primary glow-cyan p-4 flex items-center justify-between transition-all duration-150 cursor-pointer" onclick="togglePad(this)">
+              <div class="flex items-center space-x-3.5">
+                <!-- Voyant d'état actif cyan -->
+                <div class="w-3.5 h-3.5 bg-primary shadow-[0_0_8px_#06b6d4] shrink-0"></div>
+                
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="font-inter font-bold text-base text-text-main tracking-wide pad-title">Arcologie</span>
+                    <span class="text-[11px] font-mono text-text-muted border border-border-base px-1.5 py-0.2">BLADE RUNNER</span>
+                  </div>
+                  <p class="text-xs text-text-muted mt-0.5 font-inter">
+                    Ambiance sonore urbaine continue · Nappe synthétique & pluie battante
+                  </p>
+                </div>
+              </div>
+
+              <!-- Statut & Contrôle Play/Pause -->
+              <div class="flex items-center space-x-3 shrink-0">
+                <span class="pad-status px-2.5 py-1 bg-primary text-on-primary font-mono font-bold text-xs uppercase tracking-wider">
+                  ACTIF
+                </span>
+                <button class="w-11 h-11 bg-surface-raised border border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- PAD 2 : RELAIS VARN (PRÊT) -->
+            <div class="pad-card bg-bg-base border border-border-base hover:border-text-muted/60 p-4 flex items-center justify-between transition-all duration-150 cursor-pointer" onclick="togglePad(this)">
+              <div class="flex items-center space-x-3.5">
+                <div class="w-3.5 h-3.5 bg-border-base shrink-0"></div>
+                
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="font-inter font-bold text-base text-text-main tracking-wide pad-title">Relais Varn</span>
+                    <span class="text-[11px] font-mono text-text-muted border border-border-base px-1.5 py-0.2">STATION</span>
+                  </div>
+                  <p class="text-xs text-text-muted mt-0.5 font-inter">
+                    Bourdonnement de générateurs et alarmes sous-jacentes
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-3 shrink-0">
+                <span class="pad-status px-2.5 py-1 bg-surface-raised text-text-muted font-mono text-xs uppercase tracking-wider">
+                  PRÊT
+                </span>
+                <button class="w-11 h-11 bg-surface-raised border border-border-base text-text-main flex items-center justify-center hover:border-primary hover:text-primary transition-colors">
+                  <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- PAD 3 : SECTEUR DÉPRESSURISÉ (PRÊT) -->
+            <div class="pad-card bg-bg-base border border-border-base hover:border-text-muted/60 p-4 flex items-center justify-between transition-all duration-150 cursor-pointer" onclick="togglePad(this)">
+              <div class="flex items-center space-x-3.5">
+                <div class="w-3.5 h-3.5 bg-border-base shrink-0"></div>
+                
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="font-inter font-bold text-base text-text-main tracking-wide pad-title">Secteur Dépressurisé</span>
+                    <span class="text-[11px] font-mono text-text-muted border border-border-base px-1.5 py-0.2">VIDE</span>
+                  </div>
+                  <p class="text-xs text-text-muted mt-0.5 font-inter">
+                    Souffle étouffé, résonance métallique froide
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-3 shrink-0">
+                <span class="pad-status px-2.5 py-1 bg-surface-raised text-text-muted font-mono text-xs uppercase tracking-wider">
+                  PRÊT
+                </span>
+                <button class="w-11 h-11 bg-surface-raised border border-border-base text-text-main flex items-center justify-center hover:border-primary hover:text-primary transition-colors">
+                  <svg class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Consigne d'interaction tactile -->
+          <div class="pt-3 border-t border-border-base/70 flex items-center justify-between text-xs text-text-muted font-mono">
+            <span>UN CLIC = ENCLENCHEMENT IMMÉDIAT</span>
+            <span class="text-primary">FONDU AUTOMATIQUE 2.0S</span>
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SCRIPT LOGIQUE INTERACTIVE : MUTE [700MS] & COMMUTATION DES PADS          -->
+  <!-- ========================================================================= -->
+  <script>
+    // 1. Mute par appui long 700ms conforme aux directives e2e et design
+    const btnMute = document.getElementById('btn-mute');
+    const muteProgress = document.getElementById('mute-progress');
+    let muteTimer = null;
+    let muteStartTime = 0;
+    const MUTE_DURATION = 700; // ms
+
+    function startMuteHold(e) {
+      e.preventDefault();
+      muteStartTime = Date.now();
+      muteProgress.style.transition = 'width 700ms linear';
+      muteProgress.style.width = '100%';
+
+      muteTimer = setTimeout(() => {
+        // Déclenchement de la coupure générale
+        btnMute.classList.add('bg-status-danger', 'text-bg-base');
+        btnMute.querySelector('span:last-child').innerHTML = 'SON COUPÉ <span class="text-[11px] font-normal">[ACTIF]</span>';
+        
+        // Mute des sliders
+        document.getElementById('slider-vol-musique').value = 0;
+        document.getElementById('slider-vol-ambiance').value = 0;
+        document.getElementById('label-vol-musique').innerText = '0%';
+        document.getElementById('label-vol-ambiance').innerText = '0%';
+        
+        // Remise à zéro de la barre
+        muteProgress.style.transition = 'none';
+        muteProgress.style.width = '0%';
+      }, MUTE_DURATION);
+    }
+
+    function cancelMuteHold() {
+      if (muteTimer) {
+        clearTimeout(muteTimer);
+        muteTimer = null;
+        muteProgress.style.transition = 'none';
+        muteProgress.style.width = '0%';
+      }
+    }
+
+    btnMute.addEventListener('mousedown', startMuteHold);
+    btnMute.addEventListener('mouseup', cancelMuteHold);
+    btnMute.addEventListener('mouseleave', cancelMuteHold);
+    btnMute.addEventListener('touchstart', startMuteHold, { passive: false });
+    btnMute.addEventListener('touchend', cancelMuteHold);
+    btnMute.addEventListener('touchcancel', cancelMuteHold);
+
+    // 2. Commutation des pads d'ambiance
+    function togglePad(clickedCard) {
+      const allCards = document.querySelectorAll('.pad-card');
+      const isAlreadyActive = clickedCard.classList.contains('border-primary');
+
+      allCards.forEach(card => {
+        card.classList.remove('border-primary', 'border-2', 'glow-cyan');
+        card.classList.add('border-border-base', 'border');
+        const statusSpan = card.querySelector('.pad-status');
+        const dot = card.querySelector('.shrink-0 > div');
+        if (statusSpan) {
+          statusSpan.classList.remove('bg-primary', 'text-on-primary', 'font-bold');
+          statusSpan.classList.add('bg-surface-raised', 'text-text-muted');
+          statusSpan.innerText = 'PRÊT';
+        }
+        if (dot) {
+          dot.className = 'w-3.5 h-3.5 bg-border-base shrink-0';
+        }
+      });
+
+      if (!isAlreadyActive) {
+        clickedCard.classList.remove('border-border-base', 'border');
+        clickedCard.classList.add('border-primary', 'border-2', 'glow-cyan');
+        const statusSpan = clickedCard.querySelector('.pad-status');
+        const dot = clickedCard.querySelector('.shrink-0 > div');
+        if (statusSpan) {
+          statusSpan.classList.add('bg-primary', 'text-on-primary', 'font-bold');
+          statusSpan.classList.remove('bg-surface-raised', 'text-text-muted');
+          statusSpan.innerText = 'ACTIF';
+        }
+        if (dot) {
+          dot.className = 'w-3.5 h-3.5 bg-primary shadow-[0_0_8px_#06b6d4] shrink-0';
+        }
+      }
+    }
+
+    // 3. Filtrage en temps réel des pads
+    function filterPads(query) {
+      const term = query.toLowerCase().trim();
+      const padCards = document.querySelectorAll('.pad-card');
+      padCards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(term)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -9669,8 +9669,16 @@ T2, et les écarts les plus marqués ont été regardés. Sur téléphone, David
 sur une ligne défilante avec indice visible et onglet actif ramené à l'écran. L'inventaire réserve
 la place de cette navigation ; le test à 390 px vérifie que « Donner » reste accessible après
 défilement. Les étoiles de feedback et les réserves gardent leur disposition ; leurs cibles
-tactiles sont reportées à T4. Les défauts fonctionnels de T0 restent consignés ici. T3 à T6
-ne sont pas commencées.
+tactiles sont reportées à T4. Les défauts fonctionnels de T0 restent consignés ici.
+**T3 est terminé et retenu le 06/10** : David, « ok c'est bon pour moi, est-ce que t3 est fini ? ».
+Neuf écrans joueurs et huit onglets meneur, avec états et six vues des Notes ; 36 contrôles
+joueurs, 40 meneur. [Galerie J1/J2](tablettes/T3-propositions/index.html) et
+[galerie M1/M2](tablettes/T3-meneur-propositions/index.html). Références corrigées archivées
+dans [tablettes-joueurs](stitch/tablettes-joueurs/README.md) et
+[tablette-meneur](stitch/tablette-meneur/README.md), copies vérifiées par SHA-256.
+David demande ensuite « commit et push T3, met à jour la documentation, et commence T4 ».
+**T4 s'ouvre par J1, accueil « Qui es-tu ? »**, après confirmation que GM-OS est fermé ;
+un écran vérifié à la fois, séance jouée avant J2. T5 et T6 restent à faire.
 
 ---
 
@@ -9772,7 +9780,7 @@ place du chantier — **avant ou après la refonte des tablettes** (§ 123).
 | 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
-| 58 | **La refonte des tablettes** | ✅ **T2 terminé le 05/10** — T0 relevé (122 captures), T1 implémenté, boutons/panneaux/étiquettes/en-têtes migrés ; 39 scénarios joueurs et 44 meneur passent. Navigation joueurs sur une ligne défilante, inventaire contrôlé à 390 px. Étoiles de feedback et réserves : disposition conservée, cibles reportées à T4. Voir § 123 et `2026-10-04-refonte-tablettes.md` | T3 : maquettes Stitch, joueurs d'abord | Défauts T0 non corrigés |
+| 58 | **La refonte des tablettes** | ✅ **T3 terminé et retenu le 06/10** — J1/J2/M1/M2 archivés, 36 contrôles joueurs et 40 meneur. David demande le commit/push et le démarrage de T4. Voir § 123 et `2026-10-04-refonte-tablettes.md` | T4 : commencer J1 par l'accueil « Qui es-tu ? », puis Direct, Inventaire, Cartes ; séance avant J2 | Défauts T0 non corrigés ; vérifier que GM-OS est fermé avant le code |
 | 59 | **Le graphe de la Trame en cartes** | ⏳ **GARÉ le 04/10** — rapprocher le graphe de la maquette Stitch (cartes, flèches courbes, panneau du nœud) ; piste : React Flow pour la Trame seule. Voir § 124 | David : accord pour le paquet, et place avant ou après les tablettes | La décision de David |
 
 ### Ce que la soirée du 2026-08-23 a fermé

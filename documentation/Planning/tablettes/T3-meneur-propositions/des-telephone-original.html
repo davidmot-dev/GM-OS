@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>GM-OS — Télécommande Meneur : Dés (390×844)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            primary: '#06b6d4',
+            'on-primary': '#020617',
+            text: '#f8fafc',
+            'text-muted': '#898c95',
+            border: '#1e293b',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            success: '#10b981'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Orbitron', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      border-radius: 0px !important;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow-x: hidden;
+    }
+    .font-mono-numbers {
+      font-family: 'JetBrains Mono', monospace;
+      font-feature-settings: "tnum" 1, "zero" 1;
+    }
+    /* Mute button hold animation */
+    .mute-progress-fill {
+      transition: width 0.05s linear;
+    }
+    /* Touch target min constraints */
+    .touch-target {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #020617;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+  </style>
+</head>
+<body class="bg-background text-text flex flex-col min-h-screen w-full max-w-[430px] mx-auto relative border-x border-[#1e293b]">
+
+  <!-- LIGNE D'ÉTAT PERMANENTE HAUTE (Télécommande T3) -->
+  <header class="sticky top-0 z-40 bg-[#070d1a] border-b border-border px-3 py-2 flex items-center justify-between gap-2 select-none">
+    <div class="flex items-center gap-2 min-w-0">
+      <span class="inline-block w-2.5 h-2.5 bg-success shadow-[0_0_8px_#10b981] flex-shrink-0"></span>
+      <span class="font-display text-[12px] tracking-wider text-primary font-bold uppercase truncate">
+        GM-OS <span class="text-text-muted text-[11px] font-mono">T3</span>
+      </span>
+      <span class="text-text-muted text-[11px] font-mono bg-surface-raised px-1.5 py-0.5 border border-border truncate">
+        R1 · Nel Varga
+      </span>
+    </div>
+
+    <!-- BOUTON COUPER LE SON (Maintenir 700ms) -->
+    <div class="relative flex items-center flex-shrink-0">
+      <button id="muteBtn" 
+              class="touch-target relative overflow-hidden bg-surface-raised hover:bg-[#283548] active:bg-[#334155] border border-border px-2.5 py-1 text-[11px] font-bold text-text flex items-center gap-1.5 transition-colors cursor-pointer select-none"
+              title="Maintenir 700ms pour couper le son"
+              aria-label="Couper le son">
+        <svg class="w-3.5 h-3.5 text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+        <span id="muteLabel" class="tracking-wider uppercase text-[11px]">COUPER LE SON</span>
+        <!-- Barre de progression de maintien -->
+        <div id="muteProgress" class="absolute bottom-0 left-0 top-0 bg-danger/30 w-0 pointer-events-none mute-progress-fill"></div>
+      </button>
+    </div>
+  </header>
+
+  <!-- BANDEAU ÉTAT ACTIF CONDITIONNEL (uniquement si actif, aucun tiret vide) -->
+  <div id="activeStateRow" class="hidden bg-[#0a1122] border-b border-border px-3 py-1.5 flex items-center justify-between text-[11px] font-mono">
+    <!-- Rempli dynamiquement si musique/ambiance/minuteur/non-lus sont actifs -->
+    <div id="activeStateContent" class="flex items-center gap-2 overflow-x-auto text-primary"></div>
+  </div>
+
+  <!-- ZONE CONTENU DÉFILANT AU-DESSUS DU PIED -->
+  <main class="flex-1 overflow-y-auto px-3 pt-3 pb-36 space-y-3.5">
+    
+    <!-- EN-TÊTE DU MODULE DÉS -->
+    <div class="flex items-center justify-between border-b border-border pb-2">
+      <div>
+        <div class="text-[11px] font-mono uppercase text-text-muted tracking-widest">MODULE M1 // TÉLÉCOMMANDE</div>
+        <h1 class="font-display text-lg font-bold text-text tracking-wide uppercase flex items-center gap-2">
+          LANCEUR DE DÉS
+          <span id="manualBadge" class="hidden text-[10px] font-mono font-bold bg-warning text-black px-1.5 py-0.2 tracking-wider">MANUEL</span>
+        </h1>
+      </div>
+      <button id="resetBtn" class="touch-target bg-surface-raised hover:bg-[#283548] active:bg-[#334155] border border-border px-3 py-1 text-[11px] font-bold text-text-muted hover:text-text uppercase tracking-wider flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        RÉINITIALISER
+      </button>
+    </div>
+
+    <!-- SÉLECTEUR DE MODE DE LANCER (11 MODES DU CAHIER DES CHARGES) -->
+    <div class="bg-surface border border-border p-3 space-y-2">
+      <label class="block text-[11px] font-bold uppercase tracking-wider text-text-muted" for="modeSelect">
+        MODE DE LANCER
+      </label>
+      <div class="relative">
+        <select id="modeSelect" class="touch-target w-full bg-surface-raised border border-border text-text font-bold text-[13px] px-3 py-2 pr-8 appearance-none focus:outline-none focus:border-primary">
+          <option value="standard" selected>Standard (d20 / d6)</option>
+          <option value="somme_explosive">Somme Explosive</option>
+          <option value="formule_libre">Formule Libre</option>
+          <option value="seuil_target">Jet de Seuil (Target)</option>
+          <option value="pool_succes">Pool de Dés (Succès)</option>
+          <option value="pool_explosif">Pool Explosif</option>
+          <option value="avantage">Avantage (Garde Meilleur)</option>
+          <option value="desavantage">Désavantage (Garde Pire)</option>
+          <option value="yze">Year Zero Engine</option>
+          <option value="fate">FATE / Fudge</option>
+          <option value="rolemaster">Rolemaster</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-primary">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANNEAU CONFIGURATION STANDARD (Quantité, Modificateur, Seuil) -->
+    <div id="standardConfigPanel" class="bg-surface border border-border p-3 space-y-3">
+      
+      <!-- LIGNE 1 : QUANTITÉ (Base 1, borné 1..99) -->
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[12px] font-bold uppercase tracking-wider text-text">QUANTITÉ / BASE</span>
+        <div class="flex items-center gap-1">
+          <button id="qtyMinus" class="touch-target w-11 h-11 bg-surface-raised active:bg-primary active:text-on-primary border border-border text-text font-bold text-lg flex items-center justify-center select-none" aria-label="Diminuer quantité">−</button>
+          <span id="qtyVal" class="font-mono-numbers w-12 text-center text-lg font-bold text-primary">1</span>
+          <button id="qtyPlus" class="touch-target w-11 h-11 bg-surface-raised active:bg-primary active:text-on-primary border border-border text-text font-bold text-lg flex items-center justify-center select-none" aria-label="Augmenter quantité">+</button>
+        </div>
+      </div>
+
+      <!-- LIGNE 2 : MODIFICATEUR (Base 0, ±) -->
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
+        <span class="text-[12px] font-bold uppercase tracking-wider text-text">MODIFICATEUR</span>
+        <div class="flex items-center gap-1">
+          <button id="modMinus" class="touch-target w-11 h-11 bg-surface-raised active:bg-primary active:text-on-primary border border-border text-text font-bold text-lg flex items-center justify-center select-none" aria-label="Diminuer modificateur">−</button>
+          <span id="modVal" class="font-mono-numbers w-12 text-center text-lg font-bold text-text">0</span>
+          <button id="modPlus" class="touch-target w-11 h-11 bg-surface-raised active:bg-primary active:text-on-primary border border-border text-text font-bold text-lg flex items-center justify-center select-none" aria-label="Augmenter modificateur">+</button>
+        </div>
+      </div>
+
+      <!-- LIGNE 3 : SEUIL TARGET (Base 10, borné 0..99) -->
+      <div id="seuilRow" class="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
+        <span class="text-[12px] font-bold uppercase tracking-wider text-text">SEUIL (TARGET)</span>
+        <div class="flex items-center gap-1">
+          <button id="seuilMinus" class="touch-target w-11 h-11 bg-surface-raised active:bg-primary active:text-on-primary border border-border text-text font-bold text-lg flex items-center justify-center select-none" aria-label="Diminuer seuil">−</button>
+          <span id="seuilVal" class="font-mono-numbers w-12 text-center text-lg font-bold text-warning">10</span>
+          <button id="seuilPlus" class="touch-target w-11 h-11 bg-surface-raised active:bg-primary active:text-on-primary border border-border text-text font-bold text-lg flex items-center justify-center select-none" aria-label="Augmenter seuil">+</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PANNEAU FORMULE LIBRE (Affiché uniquement en mode 'formule_libre') -->
+    <div id="formulaPanel" class="hidden bg-surface border border-primary/50 p-3 space-y-3">
+      <div class="space-y-1">
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-primary" for="formulaInput">
+          EXPRESSION DE FORMULE LIBRE
+        </label>
+        <input id="formulaInput" 
+               type="text" 
+               value="2d10+1d4+5" 
+               placeholder="ex: 2d10+1d4+5"
+               class="touch-target w-full bg-surface-raised border border-border px-3 py-2 text-text font-mono font-bold text-base focus:outline-none focus:border-primary" />
+        <div class="text-[11px] text-text-muted">Exemples : 3d6+2, 1d20+1d4+5, 4d6k3</div>
+      </div>
+
+      <button id="launchFormulaBtn" class="touch-target w-full bg-primary hover:bg-[#22d3ee] active:bg-[#0891b2] text-on-primary font-display font-bold text-sm tracking-wider py-3 flex items-center justify-center gap-2 uppercase">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        LANCER LA FORMULE PERSONNALISÉE
+      </button>
+    </div>
+
+    <!-- CLAVIER DE DÉS RAPIDES (D4 D6 D8 D10 D12 D20 D100) -->
+    <div id="diceKeyboardSection" class="space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-text-muted">CLAVIER DES DÉS (APPUI DIRECT)</span>
+        <span class="text-[11px] font-mono text-primary font-semibold">T0 PAD</span>
+      </div>
+
+      <div class="grid grid-cols-4 gap-2">
+        <!-- D4 -->
+        <button data-die="4" class="die-btn touch-target h-14 bg-surface hover:bg-surface-raised active:bg-primary active:text-on-primary border border-border hover:border-primary flex flex-col items-center justify-center p-1 transition-colors">
+          <span class="font-display font-bold text-base text-primary group-active:text-on-primary">D4</span>
+          <span class="text-[10px] font-mono text-text-muted">1..4</span>
+        </button>
+
+        <!-- D6 -->
+        <button data-die="6" class="die-btn touch-target h-14 bg-surface hover:bg-surface-raised active:bg-primary active:text-on-primary border border-border hover:border-primary flex flex-col items-center justify-center p-1 transition-colors">
+          <span class="font-display font-bold text-base text-primary group-active:text-on-primary">D6</span>
+          <span class="text-[10px] font-mono text-text-muted">1..6</span>
+        </button>
+
+        <!-- D8 -->
+        <button data-die="8" class="die-btn touch-target h-14 bg-surface hover:bg-surface-raised active:bg-primary active:text-on-primary border border-border hover:border-primary flex flex-col items-center justify-center p-1 transition-colors">
+          <span class="font-display font-bold text-base text-primary group-active:text-on-primary">D8</span>
+          <span class="text-[10px] font-mono text-text-muted">1..8</span>
+        </button>
+
+        <!-- D10 -->
+        <button data-die="10" class="die-btn touch-target h-14 bg-surface hover:bg-surface-raised active:bg-primary active:text-on-primary border border-border hover:border-primary flex flex-col items-center justify-center p-1 transition-colors">
+          <span class="font-display font-bold text-base text-primary group-active:text-on-primary">D10</span>
+          <span class="text-[10px] font-mono text-text-muted">1..10</span>
+        </button>
+
+        <!-- D12 -->
+        <button data-die="12" class="die-btn touch-target h-14 bg-surface hover:bg-surface-raised active:bg-primary active:text-on-primary border border-border hover:border-primary flex flex-col items-center justify-center p-1 transition-colors">
+          <span class="font-display font-bold text-base text-primary group-active:text-on-primary">D12</span>
+          <span class="text-[10px] font-mono text-text-muted">1..12</span>
+        </button>
+
+        <!-- D20 (Accent mis en valeur) -->
+        <button data-die="20" class="die-btn touch-target h-14 bg-[#14233a] hover:bg-[#1a2f4e] active:bg-primary active:text-on-primary border border-primary/60 hover:border-primary flex flex-col items-center justify-center p-1 transition-colors shadow-[0_0_10px_rgba(6,182,212,0.15)]">
+          <span class="font-display font-black text-lg text-primary">D20</span>
+          <span class="text-[10px] font-mono text-primary/80">1..20</span>
+        </button>
+
+        <!-- D100 -->
+        <button data-die="100" class="die-btn touch-target h-14 bg-surface hover:bg-surface-raised active:bg-primary active:text-on-primary border border-border hover:border-primary flex flex-col items-center justify-center p-1 transition-colors">
+          <span class="font-display font-bold text-base text-primary group-active:text-on-primary">D100</span>
+          <span class="text-[10px] font-mono text-text-muted">%</span>
+        </button>
+
+        <!-- D66 (Spécifique systèmes d66) -->
+        <button data-die="66" class="die-btn touch-target h-14 bg-surface hover:bg-surface-raised active:bg-primary active:text-on-primary border border-border hover:border-primary flex flex-col items-center justify-center p-1 transition-colors">
+          <span class="font-display font-bold text-base text-primary group-active:text-on-primary">D66</span>
+          <span class="text-[10px] font-mono text-text-muted">11..66</span>
+        </button>
+      </div>
+
+      <!-- BOUTON D'ACTION PRINCIPALE : LANCER -->
+      <button id="mainLaunchBtn" class="touch-target w-full bg-primary hover:bg-[#22d3ee] active:bg-[#0891b2] text-on-primary font-display font-black text-base tracking-widest py-3.5 flex items-center justify-center gap-2 uppercase shadow-[0_0_16px_rgba(6,182,212,0.3)]">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+        </svg>
+        LANCER LES DÉS
+      </button>
+    </div>
+
+    <!-- DERNIER RÉSULTAT AU REPOS (Aperçu sobre) -->
+    <div id="standbyResultCard" class="bg-surface border border-border p-3 space-y-1">
+      <div class="flex items-center justify-between text-[11px] font-mono text-text-muted">
+        <span>STATUT // REPOS</span>
+        <span class="text-success">SYNCHRONISÉ</span>
+      </div>
+      <div class="text-[14px] text-text font-medium">
+        Sélectionnez un mode ou appuyez directement sur un dé pour propulser le jet sur la table.
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SURCOUCHE CONDITIONNELLE : DÉTAIL DU JET (RemoteDiceResultOverlay) -->
+  <!-- Toucher le fond FERME la surcouche ; expire et se ferme automatiquement après 15s -->
+  <div id="resultOverlay" class="hidden fixed inset-0 z-50 bg-[#020617]/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <!-- Panneau modal intérieur : Note : Le libellé "Cliquer pour fermer" reste présent dans le panneau conformément aux captures T0 -->
+    <div id="overlayModalPanel" class="bg-surface border-2 border-primary w-full max-w-[360px] p-4 shadow-[0_0_30px_rgba(6,182,212,0.35)] space-y-3 relative">
+      
+      <!-- En-tête surcouche -->
+      <div class="flex items-center justify-between border-b border-border pb-2">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 bg-primary"></span>
+          <span class="font-display text-xs font-bold text-primary uppercase tracking-wider">DÉTAIL DU JET</span>
+        </div>
+        <span id="overlayCountdown" class="text-[11px] font-mono text-text-muted">15s</span>
+      </div>
+
+      <!-- Corps du résultat -->
+      <div class="text-center py-2 space-y-1">
+        <div id="overlayFormula" class="text-[12px] font-mono text-text-muted uppercase">1d20 + 0</div>
+        <div id="overlayTotal" class="font-mono-numbers text-5xl font-black text-primary tracking-tight">17</div>
+        <div id="overlayDetail" class="text-[13px] font-mono text-text pt-1">[ 17 ]</div>
+        <!-- Verdict conditionnel si applicable -->
+        <div id="overlayVerdict" class="hidden inline-block text-[11px] font-bold px-2 py-0.5 mt-1 uppercase font-mono"></div>
+      </div>
+
+      <!-- Libellé conforme T0 maquette non intégrée -->
+      <div class="pt-2 border-t border-border flex items-center justify-between text-[11px] font-mono text-text-muted">
+        <span class="text-text-muted/60">Cliquer pour fermer</span>
+        <span class="text-primary text-[10px]">TOUCHER LE FOND ✕</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION FIXE COMPLÈTE EN PIED (8 ONGLETS SUR DEUX RANGÉES DE 4) -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#070d1a] border-t-2 border-border max-w-[430px] mx-auto select-none" aria-label="Navigation télécommande">
+    
+    <!-- RANGÉE 1 (4 onglets) -->
+    <div class="grid grid-cols-4 border-b border-border/70">
+      <!-- 1. Pads -->
+      <button class="nav-tab touch-target h-12 flex flex-col items-center justify-center text-text-muted hover:text-text hover:bg-surface-raised/40 transition-colors">
+        <span class="text-[11px] font-bold uppercase tracking-wider">PADS</span>
+      </button>
+
+      <!-- 2. Dés (ACTIF) -->
+      <button class="nav-tab touch-target h-12 bg-primary text-on-primary font-bold flex flex-col items-center justify-center transition-colors">
+        <span class="text-[11px] font-black uppercase tracking-wider">DÉS ●</span>
+      </button>
+
+      <!-- 3. Sons -->
+      <button class="nav-tab touch-target h-12 flex flex-col items-center justify-center text-text-muted hover:text-text hover:bg-surface-raised/40 transition-colors">
+        <span class="text-[11px] font-bold uppercase tracking-wider">SONS</span>
+      </button>
+
+      <!-- 4. Scénario -->
+      <button class="nav-tab touch-target h-12 flex flex-col items-center justify-center text-text-muted hover:text-text hover:bg-surface-raised/40 transition-colors">
+        <span class="text-[11px] font-bold uppercase tracking-wider">SCÉNARIO</span>
+      </button>
+    </div>
+
+    <!-- RANGÉE 2 (4 onglets) -->
+    <div class="grid grid-cols-4">
+      <!-- 5. Combat -->
+      <button class="nav-tab touch-target h-12 flex flex-col items-center justify-center text-text-muted hover:text-text hover:bg-surface-raised/40 transition-colors">
+        <span class="text-[11px] font-bold uppercase tracking-wider">COMBAT</span>
+      </button>
+
+      <!-- 6. Tableau -->
+      <button class="nav-tab touch-target h-12 flex flex-col items-center justify-center text-text-muted hover:text-text hover:bg-surface-raised/40 transition-colors">
+        <span class="text-[11px] font-bold uppercase tracking-wider">TABLEAU</span>
+      </button>
+
+      <!-- 7. Notes -->
+      <button class="nav-tab touch-target h-12 flex flex-col items-center justify-center text-text-muted hover:text-text hover:bg-surface-raised/40 transition-colors">
+        <span class="text-[11px] font-bold uppercase tracking-wider">NOTES</span>
+      </button>
+
+      <!-- 8. Messages -->
+      <button class="nav-tab touch-target h-12 flex flex-col items-center justify-center text-text-muted hover:text-text hover:bg-surface-raised/40 transition-colors">
+        <span class="text-[11px] font-bold uppercase tracking-wider">MESSAGES</span>
+      </button>
+    </div>
+
+  </nav>
+
+  <!-- LOGIQUE APPLICATIVE SIMULÉE LOCALEMENT SANS ÉCRITURE NI RÉSEAU -->
+  <script>
+    (function() {
+      // ÉTAT LOCAL
+      const state = {
+        mode: 'standard',
+        quantity: 1,
+        modifier: 0,
+        seuil: 10,
+        lastSelectedDie: 20,
+        isManual: false,
+        soundMuted: false,
+        overlayTimer: null,
+        countdownInterval: null
+      };
+
+      // ÉLÉMENTS DOM
+      const modeSelect = document.getElementById('modeSelect');
+      const standardConfigPanel = document.getElementById('standardConfigPanel');
+      const formulaPanel = document.getElementById('formulaPanel');
+      const formulaInput = document.getElementById('formulaInput');
+      const launchFormulaBtn = document.getElementById('launchFormulaBtn');
+      const mainLaunchBtn = document.getElementById('mainLaunchBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const manualBadge = document.getElementById('manualBadge');
+      const seuilRow = document.getElementById('seuilRow');
+
+      const qtyVal = document.getElementById('qtyVal');
+      const modVal = document.getElementById('modVal');
+      const seuilVal = document.getElementById('seuilVal');
+
+      const qtyMinus = document.getElementById('qtyMinus');
+      const qtyPlus = document.getElementById('qtyPlus');
+      const modMinus = document.getElementById('modMinus');
+      const modPlus = document.getElementById('modPlus');
+      const seuilMinus = document.getElementById('seuilMinus');
+      const seuilPlus = document.getElementById('seuilPlus');
+
+      const dieButtons = document.querySelectorAll('.die-btn');
+
+      // SURCOUCHE
+      const resultOverlay = document.getElementById('resultOverlay');
+      const overlayModalPanel = document.getElementById('overlayModalPanel');
+      const overlayFormula = document.getElementById('overlayFormula');
+      const overlayTotal = document.getElementById('overlayTotal');
+      const overlayDetail = document.getElementById('overlayDetail');
+      const overlayVerdict = document.getElementById('overlayVerdict');
+      const overlayCountdown = document.getElementById('overlayCountdown');
+
+      // BOUTON COUPER LE SON (Hold 700ms)
+      const muteBtn = document.getElementById('muteBtn');
+      const muteProgress = document.getElementById('muteProgress');
+      const muteLabel = document.getElementById('muteLabel');
+      let muteHoldTimeout = null;
+      let muteStartTime = 0;
+      let muteAnimFrame = null;
+      const HOLD_DURATION = 700; // ms
+
+      function startMuteHold(e) {
+        if (e.type === 'touchstart') e.preventDefault();
+        muteStartTime = Date.now();
+        
+        function updateProgress() {
+          const elapsed = Date.now() - muteStartTime;
+          const pct = Math.min(100, (elapsed / HOLD_DURATION) * 100);
+          muteProgress.style.width = pct + '%';
+          
+          if (elapsed < HOLD_DURATION) {
+            muteAnimFrame = requestAnimationFrame(updateProgress);
+          } else {
+            // Maintien réussi
+            cancelMuteHold();
+            toggleMute();
+          }
+        }
+        
+        muteAnimFrame = requestAnimationFrame(updateProgress);
+      }
+
+      function cancelMuteHold() {
+        if (muteAnimFrame) {
+          cancelAnimationFrame(muteAnimFrame);
+          muteAnimFrame = null;
+        }
+        muteProgress.style.width = '0%';
+      }
+
+      function toggleMute() {
+        state.soundMuted = !state.soundMuted;
+        if (state.soundMuted) {
+          muteLabel.textContent = 'SON COUPÉ';
+          muteBtn.classList.add('bg-danger', 'text-white', 'border-danger');
+          muteBtn.classList.remove('bg-surface-raised', 'text-text');
+        } else {
+          muteLabel.textContent = 'COUPER LE SON';
+          muteBtn.classList.remove('bg-danger', 'text-white', 'border-danger');
+          muteBtn.classList.add('bg-surface-raised', 'text-text');
+        }
+      }
+
+      muteBtn.addEventListener('mousedown', startMuteHold);
+      window.addEventListener('mouseup', cancelMuteHold);
+      muteBtn.addEventListener('touchstart', startMuteHold, { passive: false });
+      window.addEventListener('touchend', cancelMuteHold);
+      window.addEventListener('touchcancel', cancelMuteHold);
+
+      // GESTION DU MODE
+      modeSelect.addEventListener('change', (e) => {
+        state.mode = e.target.value;
+        state.isManual = true;
+        updateManualIndicator();
+
+        if (state.mode === 'formule_libre') {
+          standardConfigPanel.classList.add('hidden');
+          formulaPanel.classList.remove('hidden');
+        } else {
+          standardConfigPanel.classList.remove('hidden');
+          formulaPanel.classList.add('hidden');
+        }
+
+        // Visibilité ligne seuil si applicable
+        if (state.mode === 'seuil_target' || state.mode === 'pool_succes' || state.mode === 'pool_explosif') {
+          seuilRow.classList.remove('hidden');
+        } else {
+          seuilRow.classList.remove('hidden');
+        }
+      });
+
+      function updateManualIndicator() {
+        if (state.isManual) {
+          manualBadge.classList.remove('hidden');
+        } else {
+          manualBadge.classList.add('hidden');
+        }
+      }
+
+      // MODIFICATEURS DE VALEURS BORNÉES
+      qtyMinus.addEventListener('click', () => {
+        if (state.quantity > 1) {
+          state.quantity--;
+          qtyVal.textContent = state.quantity;
+          state.isManual = true;
+          updateManualIndicator();
+        }
+      });
+      qtyPlus.addEventListener('click', () => {
+        if (state.quantity < 99) {
+          state.quantity++;
+          qtyVal.textContent = state.quantity;
+          state.isManual = true;
+          updateManualIndicator();
+        }
+      });
+
+      modMinus.addEventListener('click', () => {
+        state.modifier--;
+        modVal.textContent = (state.modifier > 0 ? '+' : '') + state.modifier;
+        state.isManual = true;
+        updateManualIndicator();
+      });
+      modPlus.addEventListener('click', () => {
+        state.modifier++;
+        modVal.textContent = (state.modifier > 0 ? '+' : '') + state.modifier;
+        state.isManual = true;
+        updateManualIndicator();
+      });
+
+      seuilMinus.addEventListener('click', () => {
+        if (state.seuil > 0) {
+          state.seuil--;
+          seuilVal.textContent = state.seuil;
+          state.isManual = true;
+          updateManualIndicator();
+        }
+      });
+      seuilPlus.addEventListener('click', () => {
+        if (state.seuil < 99) {
+          state.seuil++;
+          seuilVal.textContent = state.seuil;
+          state.isManual = true;
+          updateManualIndicator();
+        }
+      });
+
+      // RÉINITIALISER AU SYSTÈME
+      resetBtn.addEventListener('click', () => {
+        state.mode = 'standard';
+        modeSelect.value = 'standard';
+        state.quantity = 1;
+        state.modifier = 0;
+        state.seuil = 10;
+        state.lastSelectedDie = 20;
+        state.isManual = false;
+
+        qtyVal.textContent = '1';
+        modVal.textContent = '0';
+        seuilVal.textContent = '10';
+
+        standardConfigPanel.classList.remove('hidden');
+        formulaPanel.classList.add('hidden');
+        updateManualIndicator();
+      });
+
+      // LANCER VIA CLAVIER DÉS
+      dieButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sides = parseInt(btn.getAttribute('data-die'), 10);
+          state.lastSelectedDie = sides;
+          triggerRoll(sides);
+        });
+      });
+
+      mainLaunchBtn.addEventListener('click', () => {
+        triggerRoll(state.lastSelectedDie);
+      });
+
+      launchFormulaBtn.addEventListener('click', () => {
+        triggerFormulaRoll(formulaInput.value);
+      });
+
+      // SIMULATION DU JET
+      function triggerRoll(sides) {
+        let rolls = [];
+        let total = 0;
+
+        if (sides === 66) {
+          const d1 = Math.floor(Math.random() * 6) + 1;
+          const d2 = Math.floor(Math.random() * 6) + 1;
+          total = d1 * 10 + d2;
+          rolls = [total];
+        } else {
+          for (let i = 0; i < state.quantity; i++) {
+            const val = Math.floor(Math.random() * sides) + 1;
+            rolls.push(val);
+            total += val;
+          }
+          total += state.modifier;
+        }
+
+        let formulaText = `${state.quantity}d${sides}`;
+        if (state.modifier !== 0) {
+          formulaText += (state.modifier > 0 ? ` + ${state.modifier}` : ` - ${Math.abs(state.modifier)}`);
+        }
+
+        let verdict = null;
+        let verdictClass = '';
+
+        // Application des règles selon le mode
+        if (state.mode === 'seuil_target') {
+          const success = total >= state.seuil;
+          verdict = success ? 'RÉUSSITE (SEUIL ATTEINT)' : 'ÉCHEC (SOUS LE SEUIL)';
+          verdictClass = success ? 'bg-success text-black' : 'bg-danger text-white';
+        } else if (state.mode === 'standard' && sides === 20 && state.quantity === 1) {
+          if (rolls[0] === 20) {
+            verdict = 'CRITIQUE NATUREL !';
+            verdictClass = 'bg-primary text-black';
+          } else if (rolls[0] === 1) {
+            verdict = 'ÉCHEC CRITIQUE';
+            verdictClass = 'bg-danger text-white';
+          }
+        }
+
+        displayOverlayResult({
+          formula: formulaText,
+          total: total,
+          detail: `[ ${rolls.join(', ')} ]${state.modifier !== 0 ? ` (mod: ${state.modifier > 0 ? '+' : ''}${state.modifier})` : ''}`,
+          verdict: verdict,
+          verdictClass: verdictClass
+        });
+      }
+
+      function triggerFormulaRoll(formulaStr) {
+        // Évaluation simple sécurisée de formule type XdY+Z
+        const clean = formulaStr.replace(/\s+/g, '');
+        let total = 0;
+        let details = [];
+
+        // Simulation d'une valeur vraisemblable
+        const match = clean.match(/^(\d+)d(\d+)(.*)$/);
+        if (match) {
+          const qty = parseInt(match[1], 10) || 1;
+          const sides = parseInt(match[2], 10) || 6;
+          for (let i = 0; i < qty; i++) {
+            const v = Math.floor(Math.random() * sides) + 1;
+            details.push(v);
+            total += v;
+          }
+          if (match[3]) {
+            const mod = parseInt(match[3], 10) || 0;
+            total += mod;
+          }
+        } else {
+          total = Math.floor(Math.random() * 20) + 1;
+          details = [total];
+        }
+
+        displayOverlayResult({
+          formula: `FORMULE : ${clean}`,
+          total: total,
+          detail: `Détail : [ ${details.join(', ')} ]`,
+          verdict: null
+        });
+      }
+
+      // AFFICHAGE SURCOUCHE & TIMER 15S
+      function displayOverlayResult(data) {
+        overlayFormula.textContent = data.formula;
+        overlayTotal.textContent = data.total;
+        overlayDetail.textContent = data.detail;
+
+        if (data.verdict) {
+          overlayVerdict.textContent = data.verdict;
+          overlayVerdict.className = `inline-block text-[11px] font-bold px-2 py-0.5 mt-1 uppercase font-mono ${data.verdictClass}`;
+          overlayVerdict.classList.remove('hidden');
+        } else {
+          overlayVerdict.classList.add('hidden');
+        }
+
+        // Afficher la surcouche
+        resultOverlay.classList.remove('hidden');
+
+        // Compte à rebours 15s
+        let timeLeft = 15;
+        overlayCountdown.textContent = timeLeft + 's';
+
+        if (state.countdownInterval) clearInterval(state.countdownInterval);
+        if (state.overlayTimer) clearTimeout(state.overlayTimer);
+
+        state.countdownInterval = setInterval(() => {
+          timeLeft--;
+          overlayCountdown.textContent = timeLeft + 's';
+          if (timeLeft <= 0) {
+            closeOverlay();
+          }
+        }, 1000);
+
+        state.overlayTimer = setTimeout(() => {
+          closeOverlay();
+        }, 15000);
+      }
+
+      function closeOverlay() {
+        resultOverlay.classList.add('hidden');
+        if (state.countdownInterval) clearInterval(state.countdownInterval);
+        if (state.overlayTimer) clearTimeout(state.overlayTimer);
+        state.countdownInterval = null;
+        state.overlayTimer = null;
+      }
+
+      // TOUCHER LE FOND FERME LA SURCOUCHE
+      resultOverlay.addEventListener('click', (e) => {
+        // Si le clic est sur l'arrière-plan flou (hors du panneau modal)
+        if (e.target === resultOverlay) {
+          closeOverlay();
+        }
+      });
+
+      // Note : le libellé "Cliquer pour fermer" dans le panneau est inopérant conformément à la maquette non intégrée T0
+      overlayModalPanel.addEventListener('click', (e) => {
+        // Empêche la propagation au fond pour respecter la consigne "toucher FOND ferme"
+        e.stopPropagation();
+      });
+
+    })();
+  </script>
+</body>
+</html>

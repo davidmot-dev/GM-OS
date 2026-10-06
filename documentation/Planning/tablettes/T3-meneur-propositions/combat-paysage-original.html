@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GM-OS — Télécommande Meneur : Combat (Tablette Paysage 1180×820)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'bg-root': '#020617',
+            'surface-dark': '#0c1324',
+            'surface-card': '#151b2d',
+            'surface-bright': '#1e293b',
+            'cyan-accent': '#06b6d4',
+            'cyan-glow': 'rgba(6, 182, 212, 0.25)',
+            'border-subtle': '#1e293b',
+            'danger-red': '#ef4444',
+            'danger-glow': 'rgba(239, 68, 68, 0.2)',
+            'success-green': '#10b981',
+            'muted-txt': '#898c95',
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Touch target guarantee */
+    .touch-target {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #0c1324;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border: 1px solid #06b6d4;
+    }
+  </style>
+</head>
+<body class="bg-bg-root text-slate-100 flex flex-col h-screen w-screen overflow-hidden select-none">
+
+  <!-- ================= LIGNE D'ÉTAT COMPACTE SUPÉRIEURE (H: 52px) ================= -->
+  <header class="h-[52px] bg-surface-dark border-b border-border-subtle px-4 flex items-center justify-between shrink-0 z-30">
+    <div class="flex items-center gap-4">
+      <!-- Voyant appairé -->
+      <div class="flex items-center gap-2 px-2.5 py-1 bg-surface-card border border-border-subtle">
+        <span class="w-2.5 h-2.5 bg-success-green animate-pulse"></span>
+        <span class="font-mono text-[11px] font-bold tracking-wider text-success-green uppercase">APPAIRÉ</span>
+        <span class="font-mono text-[11px] text-muted-txt">CANAL T3</span>
+      </div>
+
+      <!-- Séparateur vertical -->
+      <div class="h-4 w-px bg-border-subtle"></div>
+
+      <!-- Identité Meneur & Tour Actif -->
+      <div class="flex items-center gap-2">
+        <span class="font-mono text-[11px] text-muted-txt uppercase tracking-wider">TOUR ACTIF :</span>
+        <span class="font-orbitron text-sm font-bold text-cyan-accent tracking-wide">R1 · Nel Varga</span>
+      </div>
+    </div>
+
+    <!-- Actions Droite : Mute [700ms] -->
+    <div class="flex items-center gap-3">
+      <!-- Mute 700ms button (44px target) -->
+      <button 
+        id="btn-mute"
+        title="Maintenir 700ms pour couper le son"
+        class="touch-target px-3.5 py-1.5 flex items-center gap-2 bg-[#1a0f18] hover:bg-[#2a1324] border border-danger-red text-danger-red transition-all active:scale-[0.98] group">
+        <span class="material-symbols-outlined text-[18px]">volume_off</span>
+        <div class="flex flex-col text-left">
+          <span class="font-orbitron text-[11px] font-black tracking-wider leading-none">MUTE [700MS]</span>
+          <span class="font-inter text-[11px] text-red-400/80 leading-tight">MAINTENIR</span>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= CADRE PRINCIPAL : SIDEBAR + ZONE DE CONTENU ================= -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- NAVIGATION GAUCHE 150px (Les 8 onglets entiers) -->
+    <nav class="w-[150px] shrink-0 bg-surface-dark border-r border-border-subtle flex flex-col justify-between py-2 z-20 overflow-y-auto custom-scroll">
+      <div class="flex flex-col gap-1 w-full px-2">
+        <!-- 1. Pads -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 text-muted-txt hover:text-slate-100 hover:bg-surface-card border border-transparent hover:border-border-subtle transition-colors group">
+          <span class="material-symbols-outlined text-[20px] text-muted-txt group-hover:text-cyan-accent">grid_view</span>
+          <span class="font-orbitron text-xs font-semibold tracking-wider">Pads</span>
+        </a>
+
+        <!-- 2. Dés -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 text-muted-txt hover:text-slate-100 hover:bg-surface-card border border-transparent hover:border-border-subtle transition-colors group">
+          <span class="material-symbols-outlined text-[20px] text-muted-txt group-hover:text-cyan-accent">casino</span>
+          <span class="font-orbitron text-xs font-semibold tracking-wider">Dés</span>
+        </a>
+
+        <!-- 3. Sons -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 text-muted-txt hover:text-slate-100 hover:bg-surface-card border border-transparent hover:border-border-subtle transition-colors group">
+          <span class="material-symbols-outlined text-[20px] text-muted-txt group-hover:text-cyan-accent">volume_up</span>
+          <span class="font-orbitron text-xs font-semibold tracking-wider">Sons</span>
+        </a>
+
+        <!-- 4. Scénario -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 text-muted-txt hover:text-slate-100 hover:bg-surface-card border border-transparent hover:border-border-subtle transition-colors group">
+          <span class="material-symbols-outlined text-[20px] text-muted-txt group-hover:text-cyan-accent">menu_book</span>
+          <span class="font-orbitron text-xs font-semibold tracking-wider">Scénario</span>
+        </a>
+
+        <!-- 5. Combat (ACTIF) -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 bg-surface-card border-l-4 border-l-cyan-accent border border-cyan-accent/40 text-cyan-accent shadow-[inset_0_0_12px_rgba(6,182,212,0.15)] transition-colors">
+          <span class="material-symbols-outlined text-[20px] text-cyan-accent">swords</span>
+          <div class="flex items-center justify-between flex-1">
+            <span class="font-orbitron text-xs font-bold tracking-wider">Combat</span>
+            <span class="w-1.5 h-1.5 bg-cyan-accent"></span>
+          </div>
+        </a>
+
+        <!-- 6. Tableau -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 text-muted-txt hover:text-slate-100 hover:bg-surface-card border border-transparent hover:border-border-subtle transition-colors group">
+          <span class="material-symbols-outlined text-[20px] text-muted-txt group-hover:text-cyan-accent">draw</span>
+          <span class="font-orbitron text-xs font-semibold tracking-wider">Tableau</span>
+        </a>
+
+        <!-- 7. Notes -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 text-muted-txt hover:text-slate-100 hover:bg-surface-card border border-transparent hover:border-border-subtle transition-colors group">
+          <span class="material-symbols-outlined text-[20px] text-muted-txt group-hover:text-cyan-accent">edit_note</span>
+          <span class="font-orbitron text-xs font-semibold tracking-wider">Notes</span>
+        </a>
+
+        <!-- 8. Messages -->
+        <a href="#" class="touch-target w-full px-2.5 py-2.5 flex items-center gap-2 text-muted-txt hover:text-slate-100 hover:bg-surface-card border border-transparent hover:border-border-subtle transition-colors group">
+          <span class="material-symbols-outlined text-[20px] text-muted-txt group-hover:text-cyan-accent">chat</span>
+          <div class="flex items-center justify-between flex-1">
+            <span class="font-orbitron text-xs font-semibold tracking-wider">Messages</span>
+            <span class="w-2 h-2 bg-danger-red"></span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Pied de navigation discret (Info T0) -->
+      <div class="px-3 pt-3 border-t border-border-subtle text-[11px] font-mono text-muted-txt text-center">
+        T0 // E2E
+      </div>
+    </nav>
+
+    <!-- ================= ZONE DE TRAVAIL CENTRALE (DÉCLINAISON SUR 2 COLONNES) ================= -->
+    <main class="flex-1 flex overflow-hidden bg-bg-root">
+      
+      <!-- CONTENEUR FLUIDE À 2 COLONNES (COL 1: PILOTAGE ROUND & RÉGLAGES / COL 2: CARTES DE COMBAT) -->
+      <div class="flex-1 flex flex-col md:flex-row overflow-y-auto custom-scroll p-4 md:p-6 gap-6">
+
+        <!-- COLONNE 1 : RÉGIE DU TRACKER & CONTRÔLE DE ROUND (~340px) -->
+        <section class="w-full md:w-[360px] lg:w-[380px] shrink-0 flex flex-col gap-5">
+          
+          <!-- BLOC COMBAT // TRACKER (Identique téléphone) -->
+          <div class="bg-surface-dark border border-border-subtle p-5 flex flex-col gap-5">
+            <div class="flex items-center justify-between border-b border-border-subtle pb-4">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-cyan-accent text-2xl">swords</span>
+                <div>
+                  <h1 class="font-orbitron text-lg font-black tracking-wider text-slate-100">COMBAT // TRACKER</h1>
+                  <span class="font-mono text-[11px] text-muted-txt">RÉGIE SÉQUENTIELLE</span>
+                </div>
+              </div>
+              <div class="bg-surface-card border border-cyan-accent/30 px-3 py-2 text-right">
+                <div class="font-mono text-[11px] text-cyan-accent font-bold tracking-widest uppercase">ROUND</div>
+                <div class="font-mono text-2xl font-black text-slate-100 leading-none" id="round-number">01</div>
+              </div>
+            </div>
+
+            <!-- BOUTON PRIMAIRE : SUIVANT (Cible >= 44px) -->
+            <button 
+              id="btn-next-turn"
+              class="touch-target w-full h-[52px] bg-cyan-accent hover:bg-cyan-400 text-bg-root font-orbitron font-extrabold text-base tracking-widest flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(6,182,212,0.35)] transition-all active:scale-[0.99]">
+              <span>SUIVANT</span>
+              <span class="material-symbols-outlined text-2xl">arrow_forward</span>
+            </button>
+          </div>
+
+          <!-- BLOC STATUT REGISTRE & GESTION DU BANQUE E2E (Identique téléphone) -->
+          <div class="bg-surface-dark border border-border-subtle p-4 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[11px] text-muted-txt uppercase">REGISTRE :</span>
+              <span class="font-mono text-[11px] text-success-green font-bold tracking-wider">E2E : T0_OK</span>
+            </div>
+
+            <div class="h-px bg-border-subtle"></div>
+
+            <!-- Bascule État Vide (Identique bouton téléphone) -->
+            <button 
+              id="btn-toggle-empty"
+              class="touch-target w-full py-2.5 px-3 bg-surface-card hover:bg-surface-bright border border-border-subtle text-slate-300 font-mono text-[11px] font-bold tracking-wider uppercase transition-colors text-center">
+              BASCULER ÉTAT VIDE
+            </button>
+          </div>
+
+          <!-- RECALL SYNCHRONISATION TABLE COMPACTE -->
+          <div class="bg-surface-dark/70 border border-border-subtle/80 p-4 text-[11px] font-mono text-muted-txt flex flex-col gap-1.5">
+            <div class="flex justify-between">
+              <span>STATUT TABLE :</span>
+              <span class="text-cyan-accent">SYNCHRONISÉ</span>
+            </div>
+            <div class="flex justify-between">
+              <span>CANAL TÉLÉCOMMANDE :</span>
+              <span class="text-slate-300">ACTIF (T3)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- COLONNE 2 : LES CARTES DE COMBATTANTS (1180px Landscape Focus) -->
+        <section class="flex-1 flex flex-col gap-4">
+          <div class="flex items-center justify-between pb-1 border-b border-border-subtle">
+            <span class="font-orbitron text-xs font-bold uppercase tracking-widest text-muted-txt">ORDRE D'INITIATIVE</span>
+            <span class="font-mono text-[11px] text-muted-txt">3 COMBATTANTS INDEXÉS</span>
+          </div>
+
+          <!-- CONTENEUR DES CARTES -->
+          <div id="combatants-container" class="flex flex-col gap-4">
+
+            <!-- ================= CARTE 1 : NEL VARGA (JOUEUR / EN MAIN - ACTIF) ================= -->
+            <article class="bg-surface-dark border-2 border-cyan-accent shadow-[0_0_16px_rgba(6,182,212,0.18)] p-4 flex flex-col gap-3 relative transition-all">
+              <!-- En-tête de carte -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-cyan-accent text-bg-root font-inter font-bold text-[11px] tracking-wider uppercase">JOUEUR</span>
+                  <span class="flex items-center gap-1 font-mono text-[11px] text-cyan-accent font-bold tracking-wider">
+                    <span class="w-1.5 h-1.5 bg-cyan-accent"></span>
+                    EN MAIN
+                  </span>
+                </div>
+                <span class="font-mono text-[11px] text-muted-txt tracking-widest">ID: NV-01</span>
+              </div>
+
+              <!-- Corps : Initiative + Identité + Contrôles PV -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+                <!-- Initiative & Nom -->
+                <div class="flex items-center gap-4">
+                  <!-- Pavé Initiative Grand Format -->
+                  <div class="bg-surface-card border border-cyan-accent/50 px-3 py-2 flex flex-col items-center justify-center shrink-0 min-w-[64px]">
+                    <span class="font-mono text-[11px] font-bold text-cyan-accent tracking-widest leading-none">INIT</span>
+                    <span class="font-mono text-3xl font-black text-slate-100 leading-tight">17</span>
+                  </div>
+
+                  <!-- Nom et Rôle complets (Inter >= 14px) -->
+                  <div class="flex flex-col">
+                    <h2 class="font-orbitron text-lg font-bold text-slate-100 tracking-wide">Nel Varga</h2>
+                    <span class="font-inter text-sm text-muted-txt">Opératrice Tech</span>
+                  </div>
+                </div>
+
+                <!-- Contrôles PV (Boutons >= 44x44px, Inter / Mono) -->
+                <div class="flex items-center bg-surface-card border border-border-subtle shrink-0">
+                  <button 
+                    class="touch-target w-12 h-11 flex items-center justify-center bg-surface-card hover:bg-surface-bright text-slate-200 hover:text-cyan-accent font-mono text-xl font-bold border-r border-border-subtle transition-colors"
+                    title="Diminuer PV"
+                    onclick="adjustHp('hp-nel', -1)">
+                    −
+                  </button>
+                  <div class="px-4 py-1 flex flex-col items-center justify-center min-w-[56px]">
+                    <span class="font-mono text-[11px] font-bold text-muted-txt uppercase leading-none">PV</span>
+                    <span class="font-mono text-xl font-black text-cyan-accent leading-tight" id="hp-nel">9</span>
+                  </div>
+                  <button 
+                    class="touch-target w-12 h-11 flex items-center justify-center bg-surface-card hover:bg-surface-bright text-slate-200 hover:text-cyan-accent font-mono text-xl font-bold border-l border-border-subtle transition-colors"
+                    title="Augmenter PV"
+                    onclick="adjustHp('hp-nel', 1)">
+                    +
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- ================= CARTE 2 : L'ÉCHO (ENNEMI / HOSTILE) ================= -->
+            <article class="bg-surface-dark border border-border-subtle border-l-4 border-l-danger-red p-4 flex flex-col gap-3 transition-all hover:border-slate-700">
+              <!-- En-tête de carte -->
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 bg-danger-red text-white font-inter font-bold text-[11px] tracking-wider uppercase">ENNEMI</span>
+                <span class="font-mono text-[11px] text-muted-txt tracking-widest">ID: EC-99</span>
+              </div>
+
+              <!-- Corps : Initiative + Identité + Contrôles PV -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+                <!-- Initiative & Nom -->
+                <div class="flex items-center gap-4">
+                  <!-- Pavé Initiative -->
+                  <div class="bg-surface-card border border-border-subtle px-3 py-2 flex flex-col items-center justify-center shrink-0 min-w-[64px]">
+                    <span class="font-mono text-[11px] font-bold text-muted-txt tracking-widest leading-none">INIT</span>
+                    <span class="font-mono text-3xl font-black text-slate-100 leading-tight">12</span>
+                  </div>
+
+                  <!-- Nom et Rôle complets -->
+                  <div class="flex flex-col">
+                    <h2 class="font-orbitron text-lg font-bold text-slate-100 tracking-wide">L'Écho</h2>
+                    <span class="font-inter text-sm text-muted-txt">Entité Infiltrée</span>
+                  </div>
+                </div>
+
+                <!-- Contrôles PV -->
+                <div class="flex items-center bg-surface-card border border-border-subtle shrink-0">
+                  <button 
+                    class="touch-target w-12 h-11 flex items-center justify-center bg-surface-card hover:bg-surface-bright text-slate-200 hover:text-danger-red font-mono text-xl font-bold border-r border-border-subtle transition-colors"
+                    title="Diminuer PV"
+                    onclick="adjustHp('hp-echo', -1)">
+                    −
+                  </button>
+                  <div class="px-4 py-1 flex flex-col items-center justify-center min-w-[56px]">
+                    <span class="font-mono text-[11px] font-bold text-muted-txt uppercase leading-none">PV</span>
+                    <span class="font-mono text-xl font-black text-danger-red leading-tight" id="hp-echo">18</span>
+                  </div>
+                  <button 
+                    class="touch-target w-12 h-11 flex items-center justify-center bg-surface-card hover:bg-surface-bright text-slate-200 hover:text-danger-red font-mono text-xl font-bold border-l border-border-subtle transition-colors"
+                    title="Augmenter PV"
+                    onclick="adjustHp('hp-echo', 1)">
+                    +
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- ================= CARTE 3 : IDRIS KOA (JOUEUR / AUCUN PV) ================= -->
+            <article class="bg-surface-dark border border-border-subtle border-l-4 border-l-slate-600 p-4 flex flex-col gap-3 transition-all">
+              <!-- En-tête de carte -->
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 bg-surface-bright text-slate-300 font-inter font-bold text-[11px] tracking-wider uppercase">JOUEUR</span>
+                <span class="font-mono text-[11px] text-muted-txt tracking-widest">ID: IK-02</span>
+              </div>
+
+              <!-- Corps : Initiative + Identité + Pas de PV (Identique téléphone) -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+                <!-- Initiative & Nom -->
+                <div class="flex items-center gap-4">
+                  <!-- Pavé Initiative -->
+                  <div class="bg-surface-card border border-border-subtle px-3 py-2 flex flex-col items-center justify-center shrink-0 min-w-[64px]">
+                    <span class="font-mono text-[11px] font-bold text-muted-txt tracking-widest leading-none">INIT</span>
+                    <span class="font-mono text-3xl font-black text-slate-400 leading-tight">0</span>
+                  </div>
+
+                  <!-- Nom et Rôle complets -->
+                  <div class="flex flex-col">
+                    <h2 class="font-orbitron text-lg font-bold text-slate-100 tracking-wide">Idris Koa</h2>
+                    <span class="font-inter text-sm text-muted-txt">Éclaireur de Bord</span>
+                  </div>
+                </div>
+
+                <!-- Tag AUCUN PV (Identique téléphone) -->
+                <div class="px-4 py-2 bg-surface-card border border-border-subtle text-muted-txt font-mono text-xs font-bold tracking-widest uppercase shrink-0 text-center">
+                  AUCUN PV
+                </div>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- BANNER ÉTAT VIDE ALTERNATIF (Masqué par défaut) -->
+          <div id="empty-state-notice" class="hidden bg-surface-dark border border-dashed border-border-subtle p-8 text-center flex-col items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-4xl text-muted-txt">hourglass_empty</span>
+            <span class="font-orbitron text-sm text-muted-txt tracking-wider">AUCUN COMBAT ACTIF DANS CE REGISTRE</span>
+            <span class="font-inter text-xs text-muted-txt/80">Le tracker est en attente d'initialisation par le meneur.</span>
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- SCRIPT MINIMAL POUR LES INTERACTIONS DU BANC T0 -->
+  <script>
+    // Interaction incrémentation / décrémentation des PV
+    function adjustHp(id, delta) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      let val = parseInt(el.textContent, 10);
+      if (!isNaN(val)) {
+        val = Math.max(0, val + delta);
+        el.textContent = val;
+      }
+    }
+
+    // Bascule de round
+    const btnNext = document.getElementById('btn-next-turn');
+    const roundNumber = document.getElementById('round-number');
+    if (btnNext && roundNumber) {
+      btnNext.addEventListener('click', () => {
+        let r = parseInt(roundNumber.textContent, 10);
+        if (!isNaN(r)) {
+          r = r + 1;
+          roundNumber.textContent = r < 10 ? '0' + r : r;
+        }
+      });
+    }
+
+    // Bascule de l'état vide
+    const btnToggleEmpty = document.getElementById('btn-toggle-empty');
+    const combatantsContainer = document.getElementById('combatants-container');
+    const emptyNotice = document.getElementById('empty-state-notice');
+    if (btnToggleEmpty && combatantsContainer && emptyNotice) {
+      btnToggleEmpty.addEventListener('click', () => {
+        const isHidden = combatantsContainer.classList.contains('hidden');
+        if (isHidden) {
+          combatantsContainer.classList.remove('hidden');
+          emptyNotice.classList.add('hidden');
+        } else {
+          combatantsContainer.classList.add('hidden');
+          emptyNotice.classList.remove('hidden');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

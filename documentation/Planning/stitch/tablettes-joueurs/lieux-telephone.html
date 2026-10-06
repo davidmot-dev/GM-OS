@@ -1,0 +1,267 @@
+<!DOCTYPE html><html lang="fr" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GM-OS — Tablette Joueur : Lieux (390×844)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Orbitron:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            text: '#f8fafc',
+            'text-muted': '#898c95',
+            primary: '#06b6d4',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            success: '#10b981',
+            border: '#1e293b'
+          },
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Grille discrète diegetique */
+    .cyber-grid {
+      background-image: linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    /* Arêtes vives 0px strictes */
+    * {
+      border-radius: 0px !important;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #070d1f;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+  </style>
+<link rel="stylesheet" href="j2.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Orbitron:wght@600;700;800&amp;display=swap"></head>
+<body class="" data-ecran="lieux"><div id="cadre-j2" class="telephone"><header class="w-full bg-[#070d1f] border-b border-border px-3.5 py-2.5 flex items-center justify-between z-30 sticky top-0">
+      <div class="flex items-center gap-2">
+        <div class="w-2.5 h-2.5 bg-primary shadow-[0_0_8px_#06b6d4]"></div>
+        <span class="font-display text-[13px] font-bold tracking-wider text-text">GM-OS <span class="text-primary font-normal">// JOUEUR</span></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-[#0f172a] border border-border">
+          <span class="w-1.5 h-1.5 bg-success rounded-full animate-pulse"></span>
+          <span class="text-[11px] font-bold text-success tracking-wider uppercase font-mono">CONNECTÉ</span>
+        </div>
+        <!-- Bouton unique Mode performance / Mode qualité -->
+        <button id="bouton-mode-j2" class="min-h-[44px] px-2.5 py-1 bg-surface-raised border border-border hover:border-primary active:bg-primary active:text-background text-[11px] font-bold tracking-wider text-text flex items-center gap-1 transition-colors" onclick="basculerQualite()"><span id="mode-j2">MODE PERFORMANCE</span></button>
+      </div>
+    </header><section class="w-full bg-[#0a1022] border-b border-border px-3.5 py-2.5 grid grid-cols-2 gap-2 z-20">
+      <!-- Horloge projetée -->
+      <div class="flex flex-col justify-center">
+        <div class="flex items-center gap-1 text-[11px] font-mono text-text-muted">
+          <span>HORLOGE</span>
+          
+        </div>
+        <div class="font-mono text-[17px] font-bold text-text tracking-wide mt-0.5">
+          23:36:<span class="text-primary">58</span>
+        </div>
+        <div class="text-[11px] text-text-muted">Dimanche 4 octobre 2026</div>
+      </div>
+
+      <!-- Tension publique (Alerte de la station 3/8) -->
+      <div class="flex flex-col justify-center border-l border-border pl-2.5">
+        <div class="flex items-center justify-between text-[11px] font-mono">
+          <span class="text-warning font-bold tracking-wide">ALERTE DE LA STATION</span>
+          <span class="text-warning font-bold font-mono">3/8</span>
+        </div>
+        <!-- Rail segmenté 3 crans ambre / 5 crans éteints -->
+        <div class="grid grid-cols-8 gap-1 w-full h-2.5 mt-1.5 bg-[#020617] p-0.5 border border-border">
+          <div class="bg-warning"></div>
+          <div class="bg-warning"></div>
+          <div class="bg-warning"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+          <div class="bg-[#1e293b]"></div>
+        </div>
+        <div class="text-[11px] text-text-muted mt-1 break-words">Alerte de la station</div>
+      </div>
+    </section><main id="contenu-j2" class="w-full flex-1 px-3.5 py-3.5 overflow-y-auto custom-scroll flex flex-col gap-3.5">
+      
+      <!-- Titre de module & Compteur -->
+      <div class="flex items-start justify-between border-b border-border pb-2.5">
+        <div>
+          <h1 class="font-display text-[18px] font-bold text-text uppercase tracking-wide leading-tight">
+            Atlas des Lieux Visités
+          </h1>
+          <p class="text-[14px] text-text-muted mt-0.5 leading-snug">
+            Cartographie des territoires explorés par le groupe.
+          </p>
+        </div>
+        <div class="bg-[#0f172a] border border-primary/40 px-2 py-1 flex items-center shrink-0">
+          <span class="text-[11px] font-mono font-bold text-primary tracking-wider uppercase"><span id="compteur-j2">1</span> LIEUX DÉCOUVERTS</span>
+        </div>
+      </div>
+
+      <!-- Liste des Lieux (1 seul lieu touchable : Station Varn) -->
+      <section class="flex flex-col gap-3">
+        <!-- Carte touchable Station Varn -->
+        
+
+        <!-- État vide de référence (inclus conformément aux spécifications) -->
+        
+      </section>
+
+    <div data-liste-j2="" class="j2-liste "><article id="card-station-varn" class="w-full bg-surface border border-border hover:border-primary cursor-pointer transition-colors p-3 flex flex-col gap-2.5 active:bg-surface-raised j2-carte" onclick="ouvrirDetail(0)" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();ouvrirDetail(0)}">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-primary"></span>
+              <h2 class="font-display text-[16px] font-bold text-text uppercase tracking-wide">Station Varn</h2>
+            </div>
+            <span class="px-2 py-0.5 bg-[#1e293b] border border-primary/50 text-primary text-[11px] font-mono uppercase font-bold tracking-wider">
+              BATTLEMAP
+            </span>
+          </div>
+
+          <p class="text-[14px] text-text leading-relaxed">
+            Le pont C, entre le sas et le relais.
+          </p>
+
+          <!-- Emplacement neutre du plan technique (conformément aux consignes strictes) -->
+          <img src="assets/plan-station-varn.png" alt="Plan de Station Varn" class="j2-plan">
+
+          <div class="flex items-center justify-between text-[11px] font-mono text-text-muted pt-1 border-t border-border/60">
+            <span>EXPLORATION DOCUMENTÉE</span>
+            <span class="text-primary font-bold">TOUCHER POUR DÉTAIL →</span>
+          </div>
+        </article></div><p id="vide-j2" class="hidden j2-vide">Territoires inconnus / Aucun lieu n'a encore été marqué comme visité par le Maître de Jeu.</p></main><footer id="navigation-j2"><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button">Direct</button><button type="button">Archives</button><button type="button">PNJ</button></div><div class="j2-rangee" style="grid-template-columns: repeat(3, minmax(0,1fr));"><button type="button" class="j2-actif" aria-current="page">Lieux</button><button type="button">Inventaire</button><button type="button">Cartes</button></div><div class="j2-rangee" style="grid-template-columns: repeat(4, minmax(0,1fr));"><button type="button">Fiche</button><button type="button">Notes</button><button type="button" id="destination-messages">Messages</button><button type="button" onclick="quitterSession()" class="j2-quitter">Quitter</button></div></footer><div id="detail-j2" class="j2-detail hidden" role="dialog" aria-modal="true" aria-label="Station Varn" onclick="if(event.target===this)fermerDetail()"><section class="j2-detail-panneau"><div class="j2-detail-entete"><span>Lieu Visité · battlemap</span><button onclick="fermerDetail()" aria-label="Fermer">Fermer</button></div><div class="j2-detail-corps "><img src="assets/plan-station-varn.png" alt="Plan de Station Varn" class="j2-plan"><div><h2>Station Varn</h2><p class="j2-sous-titre">Exploration Documentée</p><p data-description="">Le pont C, entre le sas et le relais.</p><p class="j2-note">Atlas du Nexus</p></div></div></section></div></div><script>// Prototype T3 : interactions locales, aucune connexion ou écriture dans GM-OS.
+const ecran = document.body.dataset.ecran;
+const variante = new URLSearchParams(location.search).get('etat');
+function basculerQualite() {
+  const texte = document.getElementById('mode-j2');
+  texte.textContent = texte.textContent.includes('PERFORMANCE') ? 'MODE QUALITÉ' : 'MODE PERFORMANCE';
+}
+function quitterSession() { window.confirm('Quitter la session ?'); }
+function fermerDetail() { document.getElementById('detail-j2')?.classList.add('hidden'); }
+function ouvrirDetail(index = 0) {
+  const detail = document.getElementById('detail-j2');
+  if (ecran === 'archives') {
+    const indices = [['Le café encore chaud', "Le départ date de moins d'une heure."], ['La signature unique', 'Tout le registre est signé « Hale », même les nuits où il dormait.']];
+    detail.querySelector('h2').textContent = indices[index][0];
+    detail.querySelector('[data-description]').textContent = indices[index][1];
+    detail.setAttribute('aria-label', indices[index][0]);
+  }
+  detail.classList.remove('hidden');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { fermerDetail(); fermerMessagerie(); } });
+
+const destinataires = { GM: 'Maître du Jeu', all: 'Tous les Joueurs', idris: 'Idris Koa', sora: 'Sora Adebayo' };
+let destinataire = 'GM';
+let messages = ecran === 'notifications'
+  ? [{ de: 'GM', vers: 'nel', texte: 'Le sas vient de se fermer.', heure: '23:38' }]
+  : [{ de: 'nel', vers: 'GM', texte: 'Le relais est ouvert.', heure: '23:37' }, { de: 'GM', vers: 'nel', texte: 'Vous entendez trois coups.', heure: '23:37' }];
+function ouvrirMessagerie() {
+  const panneau = document.getElementById('messagerie-j2');
+  if (!panneau) return;
+  panneau.classList.remove('hidden');
+  document.getElementById('nouveau-message')?.classList.add('hidden');
+  document.getElementById('badge-non-lu')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'true');
+  rendreConversation();
+}
+function fermerMessagerie() {
+  document.getElementById('messagerie-j2')?.classList.add('hidden');
+  document.getElementById('destinataires-j2')?.classList.add('hidden');
+  document.getElementById('destination-messages')?.setAttribute('aria-pressed', 'false');
+}
+function ouvrirDestinataires() {
+  const liste = document.getElementById('destinataires-j2');
+  liste.classList.toggle('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', String(!liste.classList.contains('hidden')));
+}
+function choisirDestinataire(id) {
+  destinataire = id;
+  document.getElementById('destinataires-j2').classList.add('hidden');
+  document.getElementById('choisir-destinataire').setAttribute('aria-expanded', 'false');
+  rendreConversation();
+}
+function actualiserEnvoi() {
+  document.getElementById('envoyer-message').disabled = !document.getElementById('message-saisi').value.trim();
+}
+function envoyerMessage() {
+  const saisie = document.getElementById('message-saisi');
+  const texte = saisie.value.trim();
+  if (!texte) return;
+  messages.push({ de: 'nel', vers: destinataire, texte, heure: ecran === 'notifications' ? '23:38' : '23:37' });
+  saisie.value = '';
+  rendreConversation(); actualiserEnvoi();
+}
+function rendreConversation() {
+  const nom = destinataires[destinataire];
+  document.getElementById('nom-destinataire').textContent = nom;
+  document.getElementById('canal-j2').textContent = destinataire === 'GM' ? 'Canal Direct MJ' : destinataire === 'all' ? 'Canal Général' : 'Canal Privé';
+  document.getElementById('message-saisi').placeholder = `Message à ${nom}...`;
+  document.getElementById('confidentialite-j2').textContent = destinataire === 'all' ? 'Tout le monde pourra lire ce message.' : `Seul ${nom} pourra lire ce message.`;
+  const conversation = messages.filter(m => destinataire === 'all' ? m.vers === 'all'
+    : m.de === 'nel' && m.vers === destinataire || m.de === destinataire && m.vers === 'nel');
+  const liste = document.getElementById('conversation-j2');
+  liste.replaceChildren();
+  if (!conversation.length) {
+    const vide = document.createElement('p'); vide.className = 'vide-conversation';
+    vide.textContent = `Aucun message avec ${nom}. Commencez la conversation !`; liste.append(vide);
+  }
+  for (const msg of conversation) {
+    const ligne = document.createElement('div'); ligne.className = `message-ligne ${msg.de === 'nel' ? 'message-moi' : ''}`;
+    const bulle = document.createElement('p'); bulle.className = 'message-bulle'; bulle.textContent = msg.texte;
+    const meta = document.createElement('p'); meta.className = 'message-meta';
+    meta.textContent = `${msg.de === 'nel' ? 'VOUS' : destinataires[msg.de]} · ${msg.heure}`;
+    ligne.append(bulle, meta); liste.append(ligne);
+  }
+  liste.scrollTop = liste.scrollHeight;
+}
+if (ecran === 'messages' || ecran === 'notifications') {
+  const saisie = document.getElementById('message-saisi');
+  saisie.addEventListener('input', actualiserEnvoi);
+  saisie.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); envoyerMessage(); }
+  });
+  actualiserEnvoi();
+  if (ecran === 'messages') ouvrirMessagerie();
+  if (ecran === 'notifications' && variante === 'alerte') {
+    document.getElementById('nouveau-message').classList.add('hidden');
+    document.getElementById('badge-non-lu').classList.add('hidden');
+    const alerte = document.getElementById('alerte-j2');
+    alerte.classList.remove('hidden');
+    setTimeout(() => alerte.classList.add('hidden'), 8000);
+  }
+  if (ecran === 'notifications' && variante !== 'alerte') {
+    setTimeout(() => document.getElementById('nouveau-message').classList.add('hidden'), 5000);
+  }
+}
+if (variante === 'vide' && ['archives', 'pnj', 'lieux'].includes(ecran)) {
+  document.querySelector('[data-liste-j2]').classList.add('hidden');
+  document.getElementById('vide-j2').classList.remove('hidden');
+  document.getElementById('compteur-j2').textContent = '0';
+}
+</script></body></html>

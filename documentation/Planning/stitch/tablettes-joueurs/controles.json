@@ -1,0 +1,6574 @@
+[
+  {
+    "fichier": "accueil-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "GM-OS\nlogout\nQUITTER LA SESSION\nAGENT DE LA SESSION\n03/10/2026\nQUI ES-TU ?\n\nLe Silence de Varn • Session 2\n\n● CONNECTABLE\nperson\nNel Varga\nTECHNICIENNE DE BORD\nJoué par :\nCamille\nPRENDRE CE PERSONNAGE\n→\n● CONNECTABLE\nperson\nIdris Koa\nNÉGOCIATEUR\nJoué par :\nMathis\nPRENDRE CE PERSONNAGE\n→\n● CONNECTABLE\nperson\nSora Adebayo\nMÉDECIN DE BORD\nJoué par :\nInès\nPRENDRE CE PERSONNAGE\n→\nGM-OS v6.5.0\n•\nnexus_bridge_active\nLAT :\n--\nDevice ID: T0-JOUEURS-P...",
+    "police": "ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "logout\nQUITTER LA SESSION",
+        "largeur": 199.921875,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE\n→",
+        "largeur": 313.328125,
+        "hauteur": 48,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE\n→",
+        "largeur": 313.328125,
+        "hauteur": 48,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE\n→",
+        "largeur": 313.34375,
+        "hauteur": 48,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesAccueil": {
+      "cacheeAvant": true,
+      "visibleApres": true,
+      "cacheeApresAnnulation": true,
+      "ciblesConfirmation": [
+        {
+          "texte": "Non",
+          "largeur": 64.40625,
+          "hauteur": 44
+        },
+        {
+          "texte": "Oui, quitter",
+          "largeur": 111.96875,
+          "hauteur": 44
+        }
+      ],
+      "troisiemeChoix": {
+        "x": 812.65625,
+        "y": 606.5,
+        "width": 313.34375,
+        "height": 48
+      }
+    }
+  },
+  {
+    "fichier": "accueil-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS\nQUITTER LA SESSION\nAGENT DE LA SESSION\n03/10/2026\nQUI ES-TU ?\n\nLe Silence de Varn\n•\nSession 2\n\nNel Varga\n\nTechnicienne de bord\n\nJoué par : Camille\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nIdris Koa\n\nNégociateur\n\nJoué par : Mathis\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nSora Adebayo\n\nMédecin de bord\n\nJoué par : Inès\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nGM-OS v6.5.0\n•\nnexus_bridge_active\nLAT :\n--\nDevice ID: T0-JOUEURS-P...",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "QUITTER LA SESSION",
+        "largeur": 189.078125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 324,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 324,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 324,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesAccueil": {
+      "cacheeAvant": true,
+      "visibleApres": true,
+      "cacheeApresAnnulation": true,
+      "ciblesConfirmation": [
+        {
+          "texte": "Oui, quitter",
+          "largeur": 111.75,
+          "hauteur": 44
+        },
+        {
+          "texte": "Non",
+          "largeur": 53.34375,
+          "hauteur": 44
+        }
+      ],
+      "troisiemeChoix": {
+        "x": 33,
+        "y": 674.5,
+        "width": 324,
+        "height": 44
+      }
+    }
+  },
+  {
+    "fichier": "accueil-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS\nQUITTER LA SESSION\nAGENT DE LA SESSION\n03/10/2026\nQUI ES-TU ?\n\nLe Silence de Varn\n•\nSession 2\n\nNel Varga\n\nTechnicienne de bord\n\nJoué par : Camille\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nIdris Koa\n\nNégociateur\n\nJoué par : Mathis\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nSora Adebayo\n\nMédecin de bord\n\nJoué par : Inès\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nGM-OS v6.5.0\n•\nnexus_bridge_active\nLAT :\n--\nDevice ID: T0-JOUEURS-P...",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "QUITTER LA SESSION",
+        "largeur": 189.078125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 294,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 294,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 294,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesAccueil": {
+      "cacheeAvant": true,
+      "visibleApres": true,
+      "cacheeApresAnnulation": true,
+      "ciblesConfirmation": [
+        {
+          "texte": "Oui, quitter",
+          "largeur": 111.75,
+          "hauteur": 44
+        },
+        {
+          "texte": "Non",
+          "largeur": 53.34375,
+          "hauteur": 44
+        }
+      ],
+      "troisiemeChoix": {
+        "x": 33,
+        "y": 713,
+        "width": 294,
+        "height": 44
+      }
+    }
+  },
+  {
+    "fichier": "accueil-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS\nQUITTER LA SESSION\nAGENT DE LA SESSION\n03/10/2026\nQUI ES-TU ?\n\nLe Silence de Varn\n•\nSession 2\n\nNel Varga\n\nTechnicienne de bord\n\nJoué par : Camille\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nIdris Koa\n\nNégociateur\n\nJoué par : Mathis\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nSora Adebayo\n\nMédecin de bord\n\nJoué par : Inès\n\nCONNECTABLE\nPRENDRE CE PERSONNAGE\nGM-OS v6.5.0\n•\nnexus_bridge_active\nLAT :\n--\nDevice ID: T0-JOUEURS-P...",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "QUITTER LA SESSION",
+        "largeur": 189.078125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 382,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 382,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PRENDRE CE PERSONNAGE",
+        "largeur": 382,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesAccueil": {
+      "cacheeAvant": true,
+      "visibleApres": true,
+      "cacheeApresAnnulation": true,
+      "ciblesConfirmation": [
+        {
+          "texte": "Oui, quitter",
+          "largeur": 111.75,
+          "hauteur": 44
+        },
+        {
+          "texte": "Non",
+          "largeur": 53.34375,
+          "hauteur": 44
+        }
+      ],
+      "troisiemeChoix": {
+        "x": 219,
+        "y": 636,
+        "width": 382,
+        "height": 44
+      }
+    }
+  },
+  {
+    "fichier": "direct-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "GM-OS // JOUEUR\nOPÉRATION EN COURS\nLE SILENCE DE VARN\n● CONNECTÉ\n⚡\nMODE PERFORMANCE\nHORLOGE\n23:36\n:17\nDimanche 4 octobre 2026\nAlerte de la station · 3/8\nCHRONIQUES DE SÉANCE\nAucun résumé public.\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡\nMODE PERFORMANCE",
+        "largeur": 193.046875,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 196.328125,
+        "hauteur": 54.46875,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 54.46875,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 196.328125,
+        "hauteur": 54.46875,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 196.34375,
+        "hauteur": 54.46875,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 196.328125,
+        "hauteur": 54.46875,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 196.328125,
+        "hauteur": 54.46875,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 294.5,
+        "hauteur": 47.53125,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 294.5,
+        "hauteur": 47.53125,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 294.5,
+        "hauteur": 47.53125,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 294.5,
+        "hauteur": 47.53125,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesDirect": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 716,
+            "width": 196.328125,
+            "height": 54.46875
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 716,
+            "width": 196.328125,
+            "height": 54.46875
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 716,
+            "width": 196.328125,
+            "height": 54.46875
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 716,
+            "width": 196.34375,
+            "height": 54.46875
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 716,
+            "width": 196.328125,
+            "height": 54.46875
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 716,
+            "width": 196.328125,
+            "height": 54.46875
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 771.46875,
+            "width": 294.5,
+            "height": 47.53125
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 771.46875,
+            "width": 294.5,
+            "height": 47.53125
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 771.46875,
+            "width": 294.5,
+            "height": 47.53125
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 771.46875,
+            "width": 294.5,
+            "height": 47.53125
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    }
+  },
+  {
+    "fichier": "direct-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS\nCONNECTÉ\n⚡ MODE PERFORMANCE\n▶\nOPÉRATION EN COURS\nLE SILENCE DE VARN\nHORLOGE\n23:36\n17\nDimanche 4 octobre 2026\nAlerte de la station\n3/8\n3\nCHRONIQUES DE SÉANCE\nAucun résumé public.\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏻\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡ MODE PERFORMANCE",
+        "largeur": 159.21875,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 92.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 92.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 92.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏻\nQUITTER",
+        "largeur": 92.5,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesDirect": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 0,
+            "y": 703,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130,
+            "y": 703,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 260,
+            "y": 703,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 0,
+            "y": 747,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130,
+            "y": 747,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 260,
+            "y": 747,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 4,
+            "y": 796,
+            "width": 92.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 100.5,
+            "y": 796,
+            "width": 92.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 197,
+            "y": 796,
+            "width": 92.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 293.5,
+            "y": 796,
+            "width": 92.5,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    }
+  },
+  {
+    "fichier": "direct-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS\nCONNECTÉ\n⚡ MODE PERFORMANCE\n▶\nOPÉRATION EN COURS\nLE SILENCE DE VARN\nHORLOGE\n23:36\n17\nDimanche 4 octobre 2026\nAlerte de la station\n3/8\n3\nCHRONIQUES DE SÉANCE\nAucun résumé public.\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏻\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡ MODE PERFORMANCE",
+        "largeur": 159.21875,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 85,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 85,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 85,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏻\nQUITTER",
+        "largeur": 85,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesDirect": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 0,
+            "y": 659,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120,
+            "y": 659,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 240,
+            "y": 659,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 0,
+            "y": 703,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120,
+            "y": 703,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 240,
+            "y": 703,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 4,
+            "y": 752,
+            "width": 85,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 93,
+            "y": 752,
+            "width": 85,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 182,
+            "y": 752,
+            "width": 85,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 271,
+            "y": 752,
+            "width": 85,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    }
+  },
+  {
+    "fichier": "direct-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS\nCONNECTÉ\n⚡ MODE PERFORMANCE\n▶\nOPÉRATION EN COURS\nLE SILENCE DE VARN\nHORLOGE\n23:36\n17\nDimanche 4 octobre 2026\nAlerte de la station\n3/8\n3\nCHRONIQUES DE SÉANCE\nAucun résumé public.\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏻\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡ MODE PERFORMANCE",
+        "largeur": 159.21875,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 273.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 273.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 273.34375,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 273.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 273.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 273.34375,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 200,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 200,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 200,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏻\nQUITTER",
+        "largeur": 200,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesDirect": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 0,
+            "y": 1039,
+            "width": 273.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 273.328125,
+            "y": 1039,
+            "width": 273.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 546.65625,
+            "y": 1039,
+            "width": 273.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 0,
+            "y": 1083,
+            "width": 273.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 273.328125,
+            "y": 1083,
+            "width": 273.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 546.65625,
+            "y": 1083,
+            "width": 273.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 4,
+            "y": 1132,
+            "width": 200,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 208,
+            "y": 1132,
+            "width": 200,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 412,
+            "y": 1132,
+            "width": 200,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 616,
+            "y": 1132,
+            "width": 200,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    }
+  },
+  {
+    "fichier": "cartes-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "GM-OS\n■ ● CONNECTÉ\n⚡\nMODE PERFORMANCE\n23:43:22\nDimanche 4 octobre 2026\nALERTE DE LA STATION\n3/8\nCARTES\nPAQUETS OUVERTS\n\nCartes de complication\n\nRestant : 4\nPiocher\nCARTES EN MAIN\n1 CARTE\nCARTE 2\n\nCartes de complication\n\nJouer\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n●\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡\nMODE PERFORMANCE",
+        "largeur": 187.265625,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Piocher",
+        "largeur": 499,
+        "hauteur": 322,
+        "visible": true
+      },
+      {
+        "texte": "Agrandir Carte 2",
+        "largeur": 162,
+        "hauteur": 226,
+        "visible": true
+      },
+      {
+        "texte": "Jouer",
+        "largeur": 295,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 196.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 196.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 196.34375,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 196.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES\n●",
+        "largeur": 196.328125,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 294.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 294.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 294.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 294.5,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 731,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 731,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 731,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 731,
+            "width": 196.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 731,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 731,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesCartes": {
+      "sansDonAuRepos": true,
+      "actionJouer": {
+        "x": 818,
+        "y": 324,
+        "width": 295,
+        "height": 44
+      },
+      "detailOuvert": true,
+      "fermeParEchap": true,
+      "fermeParToucher": true,
+      "piocheCorrecte": true,
+      "carteJoueeRetiree": true,
+      "propositionAvantPaquets": true,
+      "refusCorrect": true,
+      "acceptationCorrecte": true,
+      "destinataires": [
+        "Donner à",
+        "Idris Koa"
+      ],
+      "donEnAttente": true,
+      "scelleeAnonyme": true,
+      "paquetVideBloque": true,
+      "mainVide": true
+    }
+  },
+  {
+    "fichier": "cartes-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS\nCONNECTÉ\n⚡\nMODE PERFORMANCE\nHORLOGE\n23:43:22\nDimanche 4 octobre 2026\nALERTE STATION\n3/8\nAlerte de la station\nCARTES\nPAQUETS OUVERTS\nToucher pour piocher\nCARTES DE COMPLICATION\nRESTANT :\n4\nPiocher\nCARTES EN MAIN\n1 CARTE\nCARTE 2\n\nCartes de complication\n\nJouer\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡\nMODE PERFORMANCE",
+        "largeur": 155.515625,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Piocher",
+        "largeur": 326,
+        "hauteur": 110,
+        "visible": true
+      },
+      {
+        "texte": "Agrandir Carte 2",
+        "largeur": 98,
+        "hauteur": 136.390625,
+        "visible": true
+      },
+      {
+        "texte": "Jouer",
+        "largeur": 216,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 0,
+            "y": 710,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130,
+            "y": 710,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 260,
+            "y": 710,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 0,
+            "y": 755,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130,
+            "y": 755,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 260,
+            "y": 755,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 0,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 97.5,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 195,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 292.5,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesCartes": {
+      "sansDonAuRepos": true,
+      "actionJouer": {
+        "x": 144,
+        "y": 532.5,
+        "width": 216,
+        "height": 44
+      },
+      "detailOuvert": true,
+      "fermeParEchap": true,
+      "fermeParToucher": true,
+      "piocheCorrecte": true,
+      "carteJoueeRetiree": true,
+      "propositionAvantPaquets": true,
+      "refusCorrect": true,
+      "acceptationCorrecte": true,
+      "destinataires": [
+        "Donner à",
+        "Idris Koa"
+      ],
+      "donEnAttente": true,
+      "scelleeAnonyme": true,
+      "paquetVideBloque": true,
+      "mainVide": true
+    }
+  },
+  {
+    "fichier": "cartes-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS\nCONNECTÉ\n⚡\nMODE PERFORMANCE\nHORLOGE\n23:43:22\nDimanche 4 octobre 2026\nALERTE STATION\n3/8\nAlerte de la station\nCARTES\nPAQUETS OUVERTS\nToucher pour piocher\nCARTES DE COMPLICATION\nRESTANT :\n4\nPiocher\nCARTES EN MAIN\n1 CARTE\nCARTE 2\n\nCartes de complication\n\nJouer\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡\nMODE PERFORMANCE",
+        "largeur": 155.515625,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Piocher",
+        "largeur": 296,
+        "hauteur": 110,
+        "visible": true
+      },
+      {
+        "texte": "Agrandir Carte 2",
+        "largeur": 98,
+        "hauteur": 136.390625,
+        "visible": true
+      },
+      {
+        "texte": "Jouer",
+        "largeur": 186,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 0,
+            "y": 666,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120,
+            "y": 666,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 240,
+            "y": 666,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 0,
+            "y": 711,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120,
+            "y": 711,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 240,
+            "y": 711,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 0,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 90,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 180,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 270,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesCartes": {
+      "sansDonAuRepos": true,
+      "actionJouer": {
+        "x": 144,
+        "y": 560.5,
+        "width": 186,
+        "height": 44
+      },
+      "detailOuvert": true,
+      "fermeParEchap": true,
+      "fermeParToucher": true,
+      "piocheCorrecte": true,
+      "carteJoueeRetiree": true,
+      "propositionAvantPaquets": true,
+      "refusCorrect": true,
+      "acceptationCorrecte": true,
+      "destinataires": [
+        "Donner à",
+        "Idris Koa"
+      ],
+      "donEnAttente": true,
+      "scelleeAnonyme": true,
+      "paquetVideBloque": true,
+      "mainVide": true
+    }
+  },
+  {
+    "fichier": "cartes-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS\nCONNECTÉ\n⚡\nMODE PERFORMANCE\nHORLOGE\n23:43:22\nDimanche 4 octobre 2026\nALERTE STATION\n3/8\nAlerte de la station\nCARTES\nPAQUETS OUVERTS\nToucher pour piocher\nCARTES DE COMPLICATION\nRESTANT :\n4\nPiocher\nCARTES EN MAIN\n1 CARTE\nCARTE 2\n\nCartes de complication\n\nJouer\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "⚡\nMODE PERFORMANCE",
+        "largeur": 155.515625,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Piocher",
+        "largeur": 416,
+        "hauteur": 110,
+        "visible": true
+      },
+      {
+        "texte": "Agrandir Carte 2",
+        "largeur": 98,
+        "hauteur": 136.390625,
+        "visible": true
+      },
+      {
+        "texte": "Jouer",
+        "largeur": 306,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 170,
+            "y": 1046,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 330,
+            "y": 1046,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 490,
+            "y": 1046,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 170,
+            "y": 1091,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 330,
+            "y": 1091,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 490,
+            "y": 1091,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 170,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 290,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 410,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 530,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesCartes": {
+      "sansDonAuRepos": true,
+      "actionJouer": {
+        "x": 314,
+        "y": 532.5,
+        "width": 306,
+        "height": 44
+      },
+      "detailOuvert": true,
+      "fermeParEchap": true,
+      "fermeParToucher": true,
+      "piocheCorrecte": true,
+      "carteJoueeRetiree": true,
+      "propositionAvantPaquets": true,
+      "refusCorrect": true,
+      "acceptationCorrecte": true,
+      "destinataires": [
+        "Donner à",
+        "Idris Koa"
+      ],
+      "donEnAttente": true,
+      "scelleeAnonyme": true,
+      "paquetVideBloque": true,
+      "mainVide": true
+    }
+  },
+  {
+    "fichier": "inventaire-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "GM-OS\n■ ● CONNECTÉ\nbolt\nMODE PERFORMANCE\nschedule\n23:37:05\nDimanche 4 octobre 2026\nwarning\nALERTE DE LA STATION\n3/8\nINVENTAIRE\n1 OBJETS\n\nTrésors, reliques et possessions personnelles.\n\nSAC À DOS (INTERACTIF)\nOUTIL MULTIFONCTION\nx1\nCOMMON\n\nPour ouvrir le relais.\n\nsync_alt\nDONNER\ndelete\nJETER\nradio_button_checked\nDIRECT\ninventory_2\nARCHIVES\ngroup\nPNJ\nlocation_on\nLIEUX\nbackpack\nINVENTAIRE ●\nmap\nCARTES\nperson\n◆ FICHE\nedit_note\n✎ NOTES\nmail\n✉ MESSAGES\nstop_circle\n⏹ QUITTER",
+    "police": "Inter",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "bolt\nMODE PERFORMANCE",
+        "largeur": 189.609375,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "sync_alt\nDONNER",
+        "largeur": 140,
+        "hauteur": 48,
+        "visible": true
+      },
+      {
+        "texte": "delete\nJETER",
+        "largeur": 120,
+        "hauteur": 48,
+        "visible": true
+      },
+      {
+        "texte": "radio_button_checked\nDIRECT",
+        "largeur": 196.328125,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "inventory_2\nARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "group\nPNJ",
+        "largeur": 196.328125,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "location_on\nLIEUX",
+        "largeur": 196.34375,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "backpack\nINVENTAIRE ●",
+        "largeur": 196.328125,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "map\nCARTES",
+        "largeur": 196.328125,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "person\n◆ FICHE",
+        "largeur": 294.5,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "edit_note\n✎ NOTES",
+        "largeur": 294.5,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "mail\n✉ MESSAGES",
+        "largeur": 294.5,
+        "hauteur": 46,
+        "visible": true
+      },
+      {
+        "texte": "stop_circle\n⏹ QUITTER",
+        "largeur": 294.5,
+        "hauteur": 46,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 726,
+            "width": 196.328125,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 726,
+            "width": 196.328125,
+            "height": 46
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 726,
+            "width": 196.328125,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 726,
+            "width": 196.34375,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 726,
+            "width": 196.328125,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 726,
+            "width": 196.328125,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 773,
+            "width": 294.5,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 773,
+            "width": 294.5,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 773,
+            "width": 294.5,
+            "height": 46
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 773,
+            "width": 294.5,
+            "height": 46
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesInventaire": {
+      "cadreAction": {
+        "x": 850,
+        "y": 324,
+        "width": 140,
+        "height": 48
+      },
+      "cadreNavigation": {
+        "x": 1,
+        "y": 725,
+        "width": 1178,
+        "height": 94
+      },
+      "jeterDemandeConfirmation": true,
+      "ciblesDon": [
+        {
+          "texte": "Fermer le don",
+          "largeur": 137.390625,
+          "hauteur": 44,
+          "x": 655.609375,
+          "droite": 793
+        },
+        {
+          "texte": "Idris Koa\nNégociateur\n→",
+          "largeur": 406,
+          "hauteur": 58.5,
+          "x": 387,
+          "droite": 793
+        },
+        {
+          "texte": "Sora Adebayo\nMédecin de bord\n→",
+          "largeur": 406,
+          "hauteur": 58.5,
+          "x": 387,
+          "droite": 793
+        }
+      ],
+      "fermeParBouton": true,
+      "fermeApresChoix": true,
+      "donnerBloque": true,
+      "jeterBloque": true,
+      "attenteSansChevauchement": true
+    }
+  },
+  {
+    "fichier": "inventaire-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:37:05\nDimanche 4 octobre 2026\nTENSION\n3/8\nAlerte de la station\nINVENTAIRE\n1\nOBJETS\n\nTrésors, reliques et possessions personnelles.\n\nSAC À DOS (INTERACTIF)\nOUTIL MULTIFONCTION\nx1\nCOMMON\nPour ouvrir le relais.\nDonner\nJeter\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE ●\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 156.40625,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Donner",
+        "largeur": 161,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Jeter",
+        "largeur": 161,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE ●",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 130,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 97.5,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 0,
+            "y": 710,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130,
+            "y": 710,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 260,
+            "y": 710,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 0,
+            "y": 755,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130,
+            "y": 755,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 260,
+            "y": 755,
+            "width": 130,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 0,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 97.5,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 195,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 292.5,
+            "y": 800,
+            "width": 97.5,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesInventaire": {
+      "cadreAction": {
+        "x": 30,
+        "y": 352,
+        "width": 161,
+        "height": 44
+      },
+      "cadreNavigation": {
+        "x": 0,
+        "y": 709,
+        "width": 390,
+        "height": 135
+      },
+      "jeterDemandeConfirmation": true,
+      "ciblesDon": [
+        {
+          "texte": "Fermer le don",
+          "largeur": 135.203125,
+          "hauteur": 44,
+          "x": 237.796875,
+          "droite": 373
+        },
+        {
+          "texte": "Idris Koa\nNégociateur\n→",
+          "largeur": 356,
+          "hauteur": 58.5,
+          "x": 17,
+          "droite": 373
+        },
+        {
+          "texte": "Sora Adebayo\nMédecin de bord\n→",
+          "largeur": 356,
+          "hauteur": 58.5,
+          "x": 17,
+          "droite": 373
+        }
+      ],
+      "fermeParBouton": true,
+      "fermeApresChoix": true,
+      "donnerBloque": true,
+      "jeterBloque": true,
+      "attenteSansChevauchement": true
+    }
+  },
+  {
+    "fichier": "inventaire-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:37:05\nDimanche 4 octobre 2026\nTENSION\n3/8\nAlerte de la station\nINVENTAIRE\n1\nOBJETS\n\nTrésors, reliques et possessions personnelles.\n\nSAC À DOS (INTERACTIF)\nOUTIL MULTIFONCTION\nx1\nCOMMON\nPour ouvrir le relais.\nDonner\nJeter\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE ●\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 156.40625,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Donner",
+        "largeur": 146,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Jeter",
+        "largeur": 146,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE ●",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 90,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 0,
+            "y": 666,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120,
+            "y": 666,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 240,
+            "y": 666,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 0,
+            "y": 711,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120,
+            "y": 711,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 240,
+            "y": 711,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 0,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 90,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 180,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 270,
+            "y": 756,
+            "width": 90,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesInventaire": {
+      "cadreAction": {
+        "x": 30,
+        "y": 380,
+        "width": 146,
+        "height": 44
+      },
+      "cadreNavigation": {
+        "x": 0,
+        "y": 665,
+        "width": 360,
+        "height": 135
+      },
+      "jeterDemandeConfirmation": true,
+      "ciblesDon": [
+        {
+          "texte": "Fermer le don",
+          "largeur": 135.203125,
+          "hauteur": 44,
+          "x": 207.796875,
+          "droite": 343
+        },
+        {
+          "texte": "Idris Koa\nNégociateur\n→",
+          "largeur": 326,
+          "hauteur": 58.5,
+          "x": 17,
+          "droite": 343
+        },
+        {
+          "texte": "Sora Adebayo\nMédecin de bord\n→",
+          "largeur": 326,
+          "hauteur": 58.5,
+          "x": 17,
+          "droite": 343
+        }
+      ],
+      "fermeParBouton": true,
+      "fermeApresChoix": true,
+      "donnerBloque": true,
+      "jeterBloque": true,
+      "attenteSansChevauchement": true
+    }
+  },
+  {
+    "fichier": "inventaire-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:37:05\nDimanche 4 octobre 2026\nTENSION\n3/8\nAlerte de la station\nINVENTAIRE\n1\nOBJETS\n\nTrésors, reliques et possessions personnelles.\n\nSAC À DOS (INTERACTIF)\nOUTIL MULTIFONCTION\nx1\nCOMMON\nPour ouvrir le relais.\nDonner\nJeter\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE ●\nCARTES\n◆\nFICHE\n✎\nNOTES\n✉\nMESSAGES\n⏹\nQUITTER",
+    "police": "Inter, sans-serif",
+    "fond": "rgb(2, 6, 23)",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 156.40625,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Donner",
+        "largeur": 206,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "Jeter",
+        "largeur": 206,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "INVENTAIRE ●",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 160,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "◆\nFICHE",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✎\nNOTES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "✉\nMESSAGES",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      },
+      {
+        "texte": "⏹\nQUITTER",
+        "largeur": 120,
+        "hauteur": 44,
+        "visible": true
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 170,
+            "y": 1046,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 330,
+            "y": 1046,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 490,
+            "y": 1046,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 170,
+            "y": 1091,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 330,
+            "y": 1091,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 490,
+            "y": 1091,
+            "width": 160,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 170,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 290,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 410,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 530,
+            "y": 1136,
+            "width": 120,
+            "height": 44
+          }
+        }
+      ],
+      "qualiteApres": true,
+      "confirmationRecue": true
+    },
+    "gestesInventaire": {
+      "cadreAction": {
+        "x": 200,
+        "y": 352,
+        "width": 206,
+        "height": 44
+      },
+      "cadreNavigation": {
+        "x": 170,
+        "y": 1045,
+        "width": 480,
+        "height": 135
+      },
+      "jeterDemandeConfirmation": true,
+      "ciblesDon": [
+        {
+          "texte": "Fermer le don",
+          "largeur": 135.203125,
+          "hauteur": 44,
+          "x": 477.796875,
+          "droite": 613
+        },
+        {
+          "texte": "Idris Koa\nNégociateur\n→",
+          "largeur": 406,
+          "hauteur": 58.5,
+          "x": 207,
+          "droite": 613
+        },
+        {
+          "texte": "Sora Adebayo\nMédecin de bord\n→",
+          "largeur": 406,
+          "hauteur": 58.5,
+          "x": 207,
+          "droite": 613
+        }
+      ],
+      "fermeParBouton": true,
+      "fermeApresChoix": true,
+      "donnerBloque": true,
+      "jeterBloque": true,
+      "attenteSansChevauchement": true
+    }
+  },
+  {
+    "fichier": "archives-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\n23:36:43\nDimanche 4 octobre 2026\nALERTE DE LA STATION\n3/8\nARCHIVES DU GROUPE\n2 FRAGMENTS DÉCOUVERTS\n\nPreuves et indices collectés lors de la campagne.\n\ndescription\nLe café encore chaud\n\nLe départ date de moins d'une heure.\n\ndescription\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "description\nLe café encore chaud\n\nLe départ date de moins d'une heure.",
+        "largeur": 356,
+        "hauteur": 83
+      },
+      {
+        "texte": "description\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.",
+        "largeur": 356,
+        "hauteur": 104
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 97,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 98,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 195,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 292,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Le café encore chaud",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        },
+        {
+          "titre": "La signature unique",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "archives-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\n23:36:43\nDimanche 4 octobre 2026\nALERTE DE LA STATION\n3/8\nARCHIVES DU GROUPE\n2 FRAGMENTS DÉCOUVERTS\n\nPreuves et indices collectés lors de la campagne.\n\ndescription\nLe café encore chaud\n\nLe départ date de moins d'une heure.\n\ndescription\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "description\nLe café encore chaud\n\nLe départ date de moins d'une heure.",
+        "largeur": 326,
+        "hauteur": 83
+      },
+      {
+        "texte": "description\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.",
+        "largeur": 326,
+        "hauteur": 104
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 89.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 668,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 712,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 90.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 180,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 269.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Le café encore chaud",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        },
+        {
+          "titre": "La signature unique",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "archives-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\n23:36:43\nDimanche 4 octobre 2026\nALERTE DE LA STATION\n3/8\nARCHIVES DU GROUPE\n2 FRAGMENTS DÉCOUVERTS\n\nPreuves et indices collectés lors de la campagne.\n\ndescription\nLe café encore chaud\n\nLe départ date de moins d'une heure.\n\ndescription\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "description\nLe café encore chaud\n\nLe départ date de moins d'une heure.",
+        "largeur": 446,
+        "hauteur": 83
+      },
+      {
+        "texte": "description\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.",
+        "largeur": 446,
+        "hauteur": 104
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 119.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 171,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 171,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 171,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 290.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 410,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 529.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Le café encore chaud",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        },
+        {
+          "titre": "La signature unique",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "archives-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "GM-OS\n■ ● CONNECTÉ\nMODE PERFORMANCE\nschedule\n23:36:43\n|\nDIMANCHE 4 OCTOBRE 2026\nALERTE DE LA STATION :\n3/8\nALERTE DE LA STATION\nARCHIVES DU GROUPE\n2\nFRAGMENTS DÉCOUVERTS\n\nPreuves et indices collectés lors de la campagne.\n\ndescription\nLe café encore chaud\n\nLe départ date de moins d'une heure.\n\ndescription\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "description\nLe café encore chaud\n\nLe départ date de moins d'une heure.",
+        "largeur": 561,
+        "hauteur": 141
+      },
+      {
+        "texte": "description\nLa signature unique\n\nTout le registre est signé « Hale », même les nuits où il dormait.",
+        "largeur": 561,
+        "hauteur": 141
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 196.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 294.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 732,
+            "width": 196.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Le café encore chaud",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        },
+        {
+          "titre": "La signature unique",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "pnj-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "■ GM-OS\n● CONNECTÉ\nMODE PERFORMANCE\n23:36:50\nDimanche 4 octobre 2026\nALERTE STATION\nAlerte de la station\n3/8\nTROMBINOSCOPE\n1 PROFILS RÉPERTORIÉS\n\nRegistre des individus et entités identifiés.\n\nSuperviseur Hale\nNEUTRAL\nCivil / Neutre\n›\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "Superviseur Hale\nNEUTRAL\nCivil / Neutre\n›",
+        "largeur": 356,
+        "hauteur": 75
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 97,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 98,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 195,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 292,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Superviseur Hale",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "pnj-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "■ GM-OS\n● CONNECTÉ\nMODE PERFORMANCE\n23:36:50\nDimanche 4 octobre 2026\nALERTE STATION\nAlerte de la station\n3/8\nTROMBINOSCOPE\n1 PROFILS RÉPERTORIÉS\n\nRegistre des individus et entités identifiés.\n\nSuperviseur Hale\nNEUTRAL\nCivil / Neutre\n›\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "Superviseur Hale\nNEUTRAL\nCivil / Neutre\n›",
+        "largeur": 326,
+        "hauteur": 75
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 89.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 668,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 712,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 90.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 180,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 269.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Superviseur Hale",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "pnj-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "■ GM-OS\n● CONNECTÉ\nMODE PERFORMANCE\n23:36:50\nDimanche 4 octobre 2026\nALERTE STATION\nAlerte de la station\n3/8\nTROMBINOSCOPE\n1 PROFILS RÉPERTORIÉS\n\nRegistre des individus et entités identifiés.\n\nSuperviseur Hale\nNEUTRAL\nCivil / Neutre\n›\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "Superviseur Hale\nNEUTRAL\nCivil / Neutre\n›",
+        "largeur": 446,
+        "hauteur": 75
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 119.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 171,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 171,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 171,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 290.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 410,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 529.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Superviseur Hale",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "pnj-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "■\nGM-OS\n■\nCONNECTÉ\nMODE PERFORMANCE\nschedule\n23:36:50\n/\nDIMANCHE 4 OCTOBRE 2026\nALERTE DE LA STATION\n3/8\nTROMBINOSCOPE\n1 PROFILS RÉPERTORIÉS\n\nRegistre des individus et entités identifiés.\n\nSuperviseur Hale\n\nneutral\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 149.953125,
+        "hauteur": 44
+      },
+      {
+        "texte": "Superviseur Hale\n\nneutral",
+        "largeur": 1146,
+        "hauteur": 164
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 196.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 294.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 732,
+            "width": 196.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Superviseur Hale",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "lieux-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS // JOUEUR\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:36:58\nDimanche 4 octobre 2026\nALERTE DE LA STATION\n3/8\nAlerte de la station\nATLAS DES LIEUX VISITÉS\n\nCartographie des territoires explorés par le groupe.\n\n1 LIEUX DÉCOUVERTS\nSTATION VARN\nBATTLEMAP\n\nLe pont C, entre le sas et le relais.\n\nEXPLORATION DOCUMENTÉE\nTOUCHER POUR DÉTAIL →\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 151.609375,
+        "hauteur": 44
+      },
+      {
+        "texte": "STATION VARN\nBATTLEMAP\n\nLe pont C, entre le sas et le relais.\n\nEXPLORATION DOCUMENTÉE\nTOUCHER POUR DÉTAIL →",
+        "largeur": 356,
+        "hauteur": 328.75
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 97,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 98,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 195,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 292,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Station Varn",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "lieux-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS // JOUEUR\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:36:58\nDimanche 4 octobre 2026\nALERTE DE LA STATION\n3/8\nAlerte de la station\nATLAS DES LIEUX VISITÉS\n\nCartographie des territoires explorés par le groupe.\n\n1 LIEUX DÉCOUVERTS\nSTATION VARN\nBATTLEMAP\n\nLe pont C, entre le sas et le relais.\n\nEXPLORATION DOCUMENTÉE\nTOUCHER POUR DÉTAIL →\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 151.609375,
+        "hauteur": 44
+      },
+      {
+        "texte": "STATION VARN\nBATTLEMAP\n\nLe pont C, entre le sas et le relais.\n\nEXPLORATION DOCUMENTÉE\nTOUCHER POUR DÉTAIL →",
+        "largeur": 326,
+        "hauteur": 310
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 89.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 668,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 712,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 90.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 180,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 269.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Station Varn",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "lieux-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS // JOUEUR\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:36:58\nDimanche 4 octobre 2026\nALERTE DE LA STATION\n3/8\nAlerte de la station\nATLAS DES LIEUX VISITÉS\n\nCartographie des territoires explorés par le groupe.\n\n1 LIEUX DÉCOUVERTS\nSTATION VARN\nBATTLEMAP\n\nLe pont C, entre le sas et le relais.\n\nEXPLORATION DOCUMENTÉE\nTOUCHER POUR DÉTAIL →\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 151.609375,
+        "hauteur": 44
+      },
+      {
+        "texte": "STATION VARN\nBATTLEMAP\n\nLe pont C, entre le sas et le relais.\n\nEXPLORATION DOCUMENTÉE\nTOUCHER POUR DÉTAIL →",
+        "largeur": 446,
+        "hauteur": 385
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 119.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 171,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 171,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 171,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 290.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 410,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 529.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Station Varn",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "lieux-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "■\nGM-OS\n23:36:58\nDimanche 4 octobre 2026\n■ ●\nCONNECTÉ\nMODE PERFORMANCE\nALERTE DE LA STATION :\n3/8\n[Alerte de la station]\nATLAS DES LIEUX VISITÉS\n\nCartographie des territoires explorés par le groupe.\n\n1 LIEUX DÉCOUVERTS\nStation Varn\nbattlemap\n\nLe pont C, entre le sas et le relais.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "Station Varn\nbattlemap\n\nLe pont C, entre le sas et le relais.",
+        "largeur": 1146,
+        "hauteur": 439
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 196.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 294.5,
+        "hauteur": 44
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 732,
+            "width": 196.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesConsultation": {
+      "gestes": [
+        {
+          "titre": "Station Varn",
+          "ouvert": true,
+          "fermeParBouton": true,
+          "fermeParEchap": true
+        }
+      ],
+      "sansSecrets": true,
+      "vide": true
+    }
+  },
+  {
+    "fichier": "messages-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:37:32\nDimanche 4 octobre 2026\nALERTE STATION\n3/8\nALERTE DE LA STATION\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER\nMessagerie\n\nCanal Direct MJ\n\nFermer\nÀ : Maître du Jeu ⌄\n\nLe relais est ouvert.\n\nVOUS · 23:37\n\nVous entendez trois coups.\n\nMaître du Jeu · 23:37\n\nEnvoyer\n\nSeul Maître du Jeu pourra lire ce message.",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "Fermer la messagerie",
+        "largeur": 74.203125,
+        "hauteur": 44
+      },
+      {
+        "texte": "Choisir le destinataire",
+        "largeur": 338,
+        "hauteur": 44
+      },
+      {
+        "texte": "Entrer un message",
+        "largeur": 249.140625,
+        "hauteur": 64
+      },
+      {
+        "texte": "Envoyer le message",
+        "largeur": 80.859375,
+        "hauteur": 64
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 98,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 195,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 292,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  },
+  {
+    "fichier": "messages-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:37:32\nDimanche 4 octobre 2026\nALERTE STATION\n3/8\nALERTE DE LA STATION\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER\nMessagerie\n\nCanal Direct MJ\n\nFermer\nÀ : Maître du Jeu ⌄\n\nLe relais est ouvert.\n\nVOUS · 23:37\n\nVous entendez trois coups.\n\nMaître du Jeu · 23:37\n\nEnvoyer\n\nSeul Maître du Jeu pourra lire ce message.",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "Fermer la messagerie",
+        "largeur": 74.203125,
+        "hauteur": 44
+      },
+      {
+        "texte": "Choisir le destinataire",
+        "largeur": 308,
+        "hauteur": 44
+      },
+      {
+        "texte": "Entrer un message",
+        "largeur": 219.140625,
+        "hauteur": 64
+      },
+      {
+        "texte": "Envoyer le message",
+        "largeur": 80.859375,
+        "hauteur": 64
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 668,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 712,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 90.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 180,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 269.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  },
+  {
+    "fichier": "messages-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE\n23:37:32\nDimanche 4 octobre 2026\nALERTE STATION\n3/8\nALERTE DE LA STATION\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER\nMessagerie\n\nCanal Direct MJ\n\nFermer\nÀ : Maître du Jeu ⌄\n\nLe relais est ouvert.\n\nVOUS · 23:37\n\nVous entendez trois coups.\n\nMaître du Jeu · 23:37\n\nEnvoyer\n\nSeul Maître du Jeu pourra lire ce message.",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "Fermer la messagerie",
+        "largeur": 74.203125,
+        "hauteur": 44
+      },
+      {
+        "texte": "Choisir le destinataire",
+        "largeur": 428,
+        "hauteur": 44
+      },
+      {
+        "texte": "Entrer un message",
+        "largeur": 339.140625,
+        "hauteur": 64
+      },
+      {
+        "texte": "Envoyer le message",
+        "largeur": 80.859375,
+        "hauteur": 64
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 171,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 171,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 171,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 290.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 410,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 529.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  },
+  {
+    "fichier": "messages-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "GM-OS\n▶\nOPÉRATION EN COURS : LE SILENCE DE VARN\nCONNECTÉ\nMODE PERFORMANCE\nHORLOGE :\n23:37:32\nDimanche 4 octobre 2026\nwarning\nALERTE DE LA STATION 3/8\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\nQUITTER\nMessagerie\n\nCanal Direct MJ\n\nFermer\nÀ : Maître du Jeu ⌄\n\nLe relais est ouvert.\n\nVOUS · 23:37\n\nVous entendez trois coups.\n\nMaître du Jeu · 23:37\n\nEnvoyer\n\nSeul Maître du Jeu pourra lire ce message.",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 163.9375,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 196.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "Fermer la messagerie",
+        "largeur": 74.203125,
+        "hauteur": 44
+      },
+      {
+        "texte": "Choisir le destinataire",
+        "largeur": 414,
+        "hauteur": 44
+      },
+      {
+        "texte": "Entrer un message",
+        "largeur": 325.140625,
+        "hauteur": 64
+      },
+      {
+        "texte": "Envoyer le message",
+        "largeur": 80.859375,
+        "hauteur": 64
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 732,
+            "width": 196.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  },
+  {
+    "fichier": "notifications-telephone.html",
+    "largeur": 390,
+    "hauteur": 844,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 390,
+    "largeurEcran": 390,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nOPÉRATION EN COURS : LE SILENCE DE VARN\nDimanche 4 octobre 2026\n23:38:05\nALERTE DE LA STATION 3/8\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\n1\nQUITTER\nNouveau Message\nMaître du Jeu (Maître du Jeu)",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 129.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES\n1",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 97,
+        "hauteur": 44
+      },
+      {
+        "texte": "Ouvrir le nouveau message",
+        "largeur": 364,
+        "hauteur": 68
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 712,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 130.328125,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 259.65625,
+            "y": 756,
+            "width": 129.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 98,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 195,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 292,
+            "y": 800,
+            "width": 97,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesNotification": {
+      "ouvert": true,
+      "lu": true,
+      "messageRecu": true,
+      "toastExpire": true,
+      "badgePersiste": true,
+      "alerteExpire": true,
+      "alerteFermee": true
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  },
+  {
+    "fichier": "notifications-telephone.html",
+    "largeur": 360,
+    "hauteur": 800,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 360,
+    "largeurEcran": 360,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nOPÉRATION EN COURS : LE SILENCE DE VARN\nDimanche 4 octobre 2026\n23:38:05\nALERTE DE LA STATION 3/8\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\n1\nQUITTER\nNouveau Message\nMaître du Jeu (Maître du Jeu)",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 119.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 119.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES\n1",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 89.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "Ouvrir le nouveau message",
+        "largeur": 334,
+        "hauteur": 68
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 668,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 668,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 1,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 120.328125,
+            "y": 712,
+            "width": 119.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 239.65625,
+            "y": 712,
+            "width": 119.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 90.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 180,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 269.5,
+            "y": 756,
+            "width": 89.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesNotification": {
+      "ouvert": true,
+      "lu": true,
+      "messageRecu": true,
+      "toastExpire": true,
+      "badgePersiste": true,
+      "alerteExpire": true,
+      "alerteFermee": true
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  },
+  {
+    "fichier": "notifications-telephone.html",
+    "largeur": 820,
+    "hauteur": 1180,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 820,
+    "largeurEcran": 820,
+    "texte": "GM-OS\nCONNECTÉ\nMODE PERFORMANCE\nOPÉRATION EN COURS : LE SILENCE DE VARN\nDimanche 4 octobre 2026\n23:38:05\nALERTE DE LA STATION 3/8\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\n1\nQUITTER\nNouveau Message\nMaître du Jeu (Maître du Jeu)",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 141.15625,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 159.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES\n1",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 119.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "Ouvrir le nouveau message",
+        "largeur": 454,
+        "hauteur": 68
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 171,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1048,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 171,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 330.328125,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 489.65625,
+            "y": 1092,
+            "width": 159.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 171,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 290.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 410,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 529.5,
+            "y": 1136,
+            "width": 119.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesNotification": {
+      "ouvert": true,
+      "lu": true,
+      "messageRecu": true,
+      "toastExpire": true,
+      "badgePersiste": true,
+      "alerteExpire": true,
+      "alerteFermee": true
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  },
+  {
+    "fichier": "notifications-paysage.html",
+    "largeur": 1180,
+    "hauteur": 820,
+    "erreurs": [],
+    "ressourcesEnEchec": [],
+    "largeurPage": 1180,
+    "largeurEcran": 1180,
+    "texte": "GM-OS\n|\nOPÉRATION EN COURS : LE SILENCE DE VARN\nCONNECTÉ\nMODE PERFORMANCE\nschedule\nHORLOGE :\n23:38:05\nDimanche 4 octobre 2026\nALERTE DE LA STATION : 3/8\nLe Silence de Varn\nChroniques de séance\n\nAucun résumé public.\n\nDIRECT\nARCHIVES\nPNJ\nLIEUX\nINVENTAIRE\nCARTES\nFICHE\nNOTES\nMESSAGES\n1\nQUITTER\nNouveau Message\nMaître du Jeu (Maître du Jeu)",
+    "cibles": [
+      {
+        "texte": "MODE PERFORMANCE",
+        "largeur": 151.609375,
+        "hauteur": 44
+      },
+      {
+        "texte": "DIRECT",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "ARCHIVES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "PNJ",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "LIEUX",
+        "largeur": 196.34375,
+        "hauteur": 44
+      },
+      {
+        "texte": "INVENTAIRE",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "CARTES",
+        "largeur": 196.328125,
+        "hauteur": 44
+      },
+      {
+        "texte": "FICHE",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "NOTES",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "MESSAGES\n1",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "QUITTER",
+        "largeur": 294.5,
+        "hauteur": 44
+      },
+      {
+        "texte": "Ouvrir le nouveau message",
+        "largeur": 221.828125,
+        "hauteur": 68
+      }
+    ],
+    "petitesCibles": [],
+    "gestesNavigation": {
+      "qualiteApres": true,
+      "confirmationRecue": true,
+      "navigation": [
+        {
+          "destination": "Direct",
+          "rectangle": {
+            "x": 1,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Archives",
+          "rectangle": {
+            "x": 197.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "PNJ",
+          "rectangle": {
+            "x": 393.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Lieux",
+          "rectangle": {
+            "x": 589.984375,
+            "y": 732,
+            "width": 196.34375,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Inventaire",
+          "rectangle": {
+            "x": 786.328125,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Cartes",
+          "rectangle": {
+            "x": 982.65625,
+            "y": 732,
+            "width": 196.328125,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Fiche",
+          "rectangle": {
+            "x": 1,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Notes",
+          "rectangle": {
+            "x": 295.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Messages",
+          "rectangle": {
+            "x": 590,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        },
+        {
+          "destination": "Quitter",
+          "rectangle": {
+            "x": 884.5,
+            "y": 776,
+            "width": 294.5,
+            "height": 44
+          }
+        }
+      ]
+    },
+    "gestesNotification": {
+      "ouvert": true,
+      "lu": true,
+      "messageRecu": true,
+      "toastExpire": true,
+      "badgePersiste": true,
+      "alerteExpire": true,
+      "alerteFermee": true
+    },
+    "gestesMessagerie": {
+      "videDesactive": true,
+      "espacesDesactives": true,
+      "envoiBouton": true,
+      "destinataires": [
+        "Maître du Jeu",
+        "Tous les Joueurs",
+        "Idris Koa",
+        "Sora Adebayo"
+      ],
+      "generalVide": true,
+      "sautDeLigne": true,
+      "envoiEnter": true,
+      "priveVide": true,
+      "conversationsSeparees": true,
+      "ferme": true,
+      "rouvert": true
+    }
+  }
+]

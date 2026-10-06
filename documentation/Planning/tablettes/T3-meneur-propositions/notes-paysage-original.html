@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GM-OS // M2 NOTES - Pupitre MJ</title>
+<!-- Google Fonts: Space Mono, Space Grotesk, Inter, Orbitron -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Space+Grotesk:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-bright": "#33394c",
+            "primary": "#4cd7f6",
+            "surface-container-high": "#232a3c",
+            "on-surface": "#dee2f7",
+            "surface-container-lowest": "#070e1e",
+            "on-tertiary-container": "#9bf0ff",
+            "surface-variant": "#2e3447",
+            "on-background": "#dce2fa",
+            "on-error": "#020617",
+            "on-secondary-container": "#aeb9d0",
+            "outline": "#1e293b",
+            "tertiary-container": "#004f5d",
+            "on-surface-variant": "#898c95",
+            "primary-container": "#06b6d4",
+            "tertiary": "#4cd7f6",
+            "outline-variant": "#3d494c",
+            "on-primary-container": "#9bf0ff",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "on-tertiary": "#003640",
+            "on-primary": "#003640",
+            "secondary-container": "#283347",
+            "secondary-fixed-dim": "#bcc7de",
+            "on-primary-fixed-variant": "#004e5c",
+            "surface-container-highest": "#2e3447",
+            "error": "#ef4444",
+            "surface-container": "#192031",
+            "error-container": "#93000a",
+            "surface-tint": "#4cd7f6",
+            "secondary-fixed": "#d8e3fb",
+            "on-tertiary-fixed": "#001f26",
+            "surface-dim": "#0c1324",
+            "surface-container-low": "#151b2d",
+            "on-secondary-fixed": "#111c2d",
+            "surface": "#0c1324",
+            "primary-fixed-dim": "#4cd7f6",
+            "inverse-primary": "#00687a",
+            "inverse-surface": "#dce2fa",
+            "on-primary-fixed": "#001f26",
+            "on-secondary-fixed-variant": "#3c475a",
+            "on-secondary": "#263143",
+            "inverse-on-surface": "#293042",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "primary-fixed": "#acedff",
+            "secondary": "#bcc7de",
+            "background": "#020617",
+            "tertiary-fixed": "#acedff",
+            "on-error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            sm: "0px",
+            md: "0px",
+            lg: "0px",
+            xl: "0px",
+            full: "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "code-lg": ["Space Mono"],
+            "label-lg": ["Inter"],
+            "number-lg": ["Space Mono"],
+            "label-sm": ["Inter"],
+            "number-md": ["Space Mono"],
+            "code-md": ["Space Mono"],
+            "code-sm": ["Space Mono"],
+            "headline-sm": ["Space Grotesk"],
+            "label-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Space Grotesk"],
+            "headline-md": ["Space Grotesk"]
+          },
+          fontSize: {
+            "code-lg": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+            "label-lg": ["13px", { lineHeight: "18px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "number-lg": ["28px", { fontWeight: "700" }],
+            "label-sm": ["11px", { lineHeight: "15px", letterSpacing: "0.12em", fontWeight: "700" }],
+            "number-md": ["15px", { fontWeight: "600" }],
+            "code-md": ["15px", { lineHeight: "22px", fontWeight: "600" }],
+            "code-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+            "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "600" }],
+            "body-sm": ["12px", { lineHeight: "1.4", fontWeight: "400" }],
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "headline-lg": ["32px", { lineHeight: "40px", fontWeight: "700" }],
+            "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+    /* Hide scrollbars while maintaining ergonomics */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md select-none overflow-hidden h-screen w-screen flex flex-col antialiased">
+<!-- ===================================================================== -->
+<!-- BARRE D'ÉTAT FIXE COMPACTE HAUTE (Format iPad 1180px - Pupitre 1440px) -->
+<!-- ===================================================================== -->
+<header class="h-[46px] w-full bg-surface-container-lowest border-b border-outline flex items-center justify-between px-4 shrink-0 z-50 text-label-sm font-label-sm">
+<!-- Identité et Appairage -->
+<div class="flex items-center space-x-3">
+<div class="flex items-center space-x-1.5 px-2 py-1 bg-surface-container-low border border-outline">
+<span class="w-2 h-2 bg-emerald-400 inline-block"></span>
+<span class="text-emerald-400 font-code-sm font-bold tracking-wider">■ APPAIRÉ CANAL T3</span>
+</div>
+<div class="h-4 w-[1px] bg-outline"></div>
+<div class="text-primary font-bold tracking-wider font-headline-sm text-[13px]">
+        GM-OS // T3
+      </div>
+<span class="text-on-surface-variant font-code-sm">::</span>
+<div class="px-2 py-0.5 bg-surface-container border border-outline text-on-surface font-code-sm">
+        R1 · Nel Varga
+      </div>
+</div>
+<!-- Télémétrie de séance & État Réel -->
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-1.5 text-on-surface-variant font-code-sm">
+<span class="text-[10px] text-primary">AUDIO</span>
+<span class="text-on-surface font-bold">AMB : CH-01</span>
+</div>
+<div class="h-4 w-[1px] bg-outline"></div>
+<div class="flex items-center space-x-1.5 font-code-sm">
+<span class="material-symbols-outlined text-[15px] text-primary" data-icon="timer">timer</span>
+<span class="text-primary font-bold tracking-widest text-[13px]">01:42:19</span>
+</div>
+<div class="h-4 w-[1px] bg-outline"></div>
+<!-- Messages non-lus -->
+<div class="flex items-center space-x-1 px-2 py-0.5 bg-error/10 border border-error text-error font-code-sm font-bold">
+<span>✉</span>
+<span>2</span>
+</div>
+<div class="h-4 w-[1px] bg-outline"></div>
+<!-- Commande d'urgence : Couper le son (Hold 700ms) -->
+<button class="h-8 px-3 bg-surface-container hover:bg-error-container hover:text-on-error-container border border-outline hover:border-error flex items-center space-x-2 text-label-sm font-label-sm uppercase transition-colors duration-150 active:bg-error" title="Appui long pour couper immédiatement le mixage" type="button">
+<span class="material-symbols-outlined text-[16px] text-error" data-icon="volume_off">volume_off</span>
+<span class="text-on-surface font-bold">COUPER LE SON</span>
+<span class="text-[9px] text-on-surface-variant border border-outline px-1 font-code-sm">700MS</span>
+</button>
+</div>
+</header>
+<!-- ===================================================================== -->
+<!-- CORPS PRINCIPAL : SIDEBAR 150PX + CONTENU M2 NOTES                     -->
+<!-- ===================================================================== -->
+<div class="flex flex-1 overflow-hidden relative">
+<!-- NAVIGATION LATÉRALE GAUCHE STRICTE : 150PX -->
+<nav class="w-[150px] min-w-[150px] max-w-[150px] h-full bg-surface-container-lowest border-r border-outline flex flex-col justify-between shrink-0 z-30">
+<div class="flex flex-col w-full divide-y divide-outline/40">
+<!-- 1. PADS -->
+<button class="w-full h-[58px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="grid_view">grid_view</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold">PADS</span>
+</button>
+<!-- 2. DÉS -->
+<button class="w-full h-[58px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="casino">casino</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold">DÉS</span>
+</button>
+<!-- 3. SONS -->
+<button class="w-full h-[58px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="graphic_eq">graphic_eq</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold">SONS</span>
+</button>
+<!-- 4. SCÉNARIO -->
+<button class="w-full h-[58px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="auto_stories">auto_stories</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold">SCÉNARIO</span>
+</button>
+<!-- 5. COMBAT -->
+<button class="w-full h-[58px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="swords">swords</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold">COMBAT</span>
+</button>
+<!-- 6. TABLEAU -->
+<button class="w-full h-[58px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold">TABLEAU</span>
+</button>
+<!-- 7. NOTES (ACTIF - BORDURE ET ACCENTUATION CYAN) -->
+<button class="w-full h-[62px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container text-primary border-l-4 border-l-primary-container border-y border-outline relative" type="button">
+<div class="absolute right-2 top-2 w-1.5 h-1.5 bg-primary"></div>
+<span class="material-symbols-outlined text-[22px] text-primary" data-icon="description">description</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold text-primary">NOTES</span>
+</button>
+<!-- 8. MESSAGES (AVEC BADGE DE NOTIFICATION ROUGE CARRÉ) -->
+<button class="w-full h-[58px] min-h-[44px] flex flex-col items-center justify-center space-y-1 bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors duration-150 relative" type="button">
+<!-- Badge Notification Carré Rouge Brutaliste -->
+<div class="absolute top-2 right-4 bg-error text-on-error font-code-sm text-[10px] font-bold px-1.5 py-0.2 border border-error">
+            2
+          </div>
+<span class="material-symbols-outlined text-[20px]" data-icon="chat">chat</span>
+<span class="text-[11px] font-label-sm tracking-widest font-bold">MESSAGES</span>
+</button>
+</div>
+<!-- Pied de navigation GM-OS Telemetry status -->
+<div class="p-2 border-t border-outline bg-surface-container-low text-center">
+<div class="text-[9px] font-code-sm text-on-surface-variant leading-tight">NODE LINK</div>
+<div class="text-[10px] font-code-sm text-primary font-bold">1180×820 L</div>
+</div>
+</nav>
+<!-- ZONE DE TRAVAIL PRINCIPALE : MODULE M2 NOTES -->
+<main class="flex-1 flex flex-col min-w-0 bg-background overflow-hidden">
+<!-- EN-TÊTE MODULE M2 NOTES -->
+<section class="border-b border-outline bg-surface-container-low px-6 py-3 shrink-0">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<!-- Titre Orbitron + Badge + Sous-titre -->
+<div class="flex flex-col">
+<div class="flex items-center space-x-3">
+<h1 class="font-orbitron text-2xl font-bold tracking-wider text-primary">M2 NOTES</h1>
+<span class="px-2 py-0.5 bg-surface-container-high border border-outline-variant font-code-sm text-primary text-[11px] font-bold">
+                SYS.V4.2
+              </span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant font-code-sm text-[11px]">
+                CAMPAGNE: LE SILENCE DE VARN
+              </span>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider mt-0.5">
+              REMOTENOTES // CARNET DE BORD & DOCUMENTATION DE CAMPAGNE
+            </p>
+</div>
+<!-- Onglets de vue interne pupitre -->
+<div class="flex items-center bg-surface-container-lowest border border-outline p-0.5">
+<button class="h-9 px-4 bg-primary text-background font-label-sm text-[12px] font-bold tracking-wider uppercase flex items-center space-x-1.5" type="button">
+<span class="w-1.5 h-1.5 bg-background inline-block"></span>
+<span>SÉANCE</span>
+</button>
+<button class="h-9 px-4 text-on-surface-variant hover:text-on-surface font-label-sm text-[12px] font-semibold tracking-wider uppercase transition-colors" type="button">
+              TRAME
+            </button>
+<button class="h-9 px-4 text-on-surface-variant hover:text-on-surface font-label-sm text-[12px] font-semibold tracking-wider uppercase transition-colors" type="button">
+              CHRONIQUES
+            </button>
+<button class="h-9 px-4 text-on-surface-variant hover:text-on-surface font-label-sm text-[12px] font-semibold tracking-wider uppercase flex items-center space-x-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="search">search</span>
+<span>NEXUS WIKI</span>
+</button>
+</div>
+</div>
+<!-- Sous-barre d'outils et champ d'indexation Obsidian -->
+<div class="mt-3 pt-2.5 border-t border-outline flex items-center justify-between text-body-sm">
+<div class="flex items-center space-x-2 w-full max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-[16px] text-on-surface-variant" data-icon="folder_open">folder_open</span>
+<input class="w-full h-8 pl-8 pr-3 bg-surface-container-lowest border border-outline text-on-surface placeholder-on-surface-variant font-code-sm text-[12px] focus:outline-none focus:border-primary" placeholder="Recherche indexée dans le coffre (Obsidian Vault)..." readonly="" type="text" value="Actes / Nel Varga / Hale"/>
+</div>
+<button class="h-8 px-2.5 bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface font-code-sm text-[11px] flex items-center shrink-0" type="button">
+              FILTRER
+            </button>
+</div>
+<div class="flex items-center space-x-4 text-code-sm text-on-surface-variant">
+<span>SYNCHRONISATION TABLE: <strong class="text-emerald-400">EN DIRECT</strong></span>
+<span>RELAIS BUFFER: <strong class="text-primary">64 KB</strong></span>
+</div>
+</div>
+</section>
+<!-- CONTENU CENTRAL SPLIT : 2 COLONNES ERGONOMIQUES (IPAD AIR 1180px PAYSAGE) -->
+<div class="flex-1 grid grid-cols-12 gap-4 p-4 overflow-y-auto no-scrollbar">
+<!-- ================================================================= -->
+<!-- COLONNE GAUCHE (7/12) : SÉQUENCE ACTIVE & EN PAUSE & DIFFUSION    -->
+<!-- ================================================================= -->
+<div class="col-span-7 flex flex-col space-y-4">
+<!-- SECTION 1 : CE QUI SE JOUE (1) (ACTIF // FOCUS) -->
+<div class="border border-primary bg-surface-container-low flex flex-col">
+<!-- Header du volet actif -->
+<div class="bg-surface-container px-4 py-2.5 border-b border-primary/40 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 bg-primary animate-pulse inline-block"></span>
+<span class="font-label-sm font-bold text-primary tracking-widest text-[12px]">■ CE QUI SE JOUE (1)</span>
+<span class="text-on-surface-variant font-code-sm text-[11px]">// SÉQUENCE PRINCIPALE</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="px-2 py-0.5 bg-primary/10 border border-primary text-primary text-[10px] font-code-sm font-bold">TEMPS RÉEL</span>
+<button class="w-7 h-7 flex items-center justify-center bg-surface-container-lowest border border-outline text-on-surface hover:text-primary" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="keyboard_arrow_up">keyboard_arrow_up</span>
+</button>
+</div>
+</div>
+<!-- Contenu du bloc dépliable : Acte & Entretien avec Hale -->
+<div class="p-4 space-y-4">
+<!-- Cartouche de repère narratif -->
+<div class="flex flex-col border-l-2 border-primary pl-3 py-0.5 bg-surface-container-lowest/60">
+<div class="text-[11px] font-label-sm tracking-widest font-bold text-on-surface-variant uppercase">
+                  ACTE: CE QUE HALE N'A PAS DIT
+                </div>
+<div class="text-headline-sm font-headline-sm font-bold text-on-surface mt-0.5 flex items-center justify-between">
+<span>Entretien avec Hale</span>
+<span class="text-code-sm text-primary font-normal">REF: VARN-T3-ACT2</span>
+</div>
+</div>
+<!-- Notes de meneur & Points clés (Strict Banc e2e T0) -->
+<div class="space-y-2.5 text-body-md text-on-surface">
+<p class="leading-relaxed">
+                  Hale s'obstine à dissimuler la chronologie réelle de la rupture de faisceau. Son terminal personnel porte une signature de transmission vers la station relai distante de 14 minutes avant le blackout officiel.
+                </p>
+<!-- Points clés MJ tactiles et lisibles -->
+<div class="bg-surface-container p-3 border border-outline space-y-2">
+<div class="text-label-sm font-bold text-primary tracking-wider uppercase flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-[15px]" data-icon="checklist">checklist</span>
+<span>POINTS D'APPUI MENEUR DE JEU</span>
+</div>
+<ul class="space-y-1.5 text-body-sm font-body-sm text-on-background/90 list-none">
+<li class="flex items-start space-x-2">
+<span class="text-primary font-code-sm text-[12px] font-bold mt-0.5">01.</span>
+<span><strong>Posture :</strong> Froid, verres polarisés intacts, micro-tremblement à la main gauche dès que le nom de <em>Varga</em> est évoqué.</span>
+</li>
+<li class="flex items-start space-x-2">
+<span class="text-primary font-code-sm text-[12px] font-bold mt-0.5">02.</span>
+<span><strong>Déclencheur d'aveu :</strong> Présenter le double journal de bord extrait du pont inférieur annule immédiatement ses réponses préparées.</span>
+</li>
+<li class="flex items-start space-x-2">
+<span class="text-primary font-code-sm text-[12px] font-bold mt-0.5">03.</span>
+<span><strong>Alerte critique :</strong> Si la jauge de tension dépasse 4 crans, Hale déclenche la purge de la salle des commandes auxiliaires.</span>
+</li>
+</ul>
+</div>
+<!-- Indices et variables débloquées -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<div class="bg-surface-container-lowest p-2 border border-outline">
+<span class="text-[10px] font-label-sm text-on-surface-variant block uppercase">INDICE CLÉ DISPONIBLE</span>
+<span class="text-[12px] font-code-sm text-primary font-bold">CLÉ CHIFFRÉE CY-09</span>
+</div>
+<div class="bg-surface-container-lowest p-2 border border-outline">
+<span class="text-[10px] font-label-sm text-on-surface-variant block uppercase">DIFFICULTÉ ANALYSE</span>
+<span class="text-[12px] font-code-sm text-on-surface font-bold">INGÉNIERIE // DIFFICILE (3D)</span>
+</div>
+</div>
+</div>
+<!-- Commandes tactiles d'action directe -->
+<div class="flex items-center justify-between pt-2 border-t border-outline">
+<div class="flex items-center space-x-2">
+<button class="h-9 px-3 bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface text-label-sm font-label-sm flex items-center space-x-1.5" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="edit_note">edit_note</span>
+<span>ANNOTER</span>
+</button>
+<button class="h-9 px-3 bg-surface-container hover:bg-surface-container-high border border-outline text-on-surface text-label-sm font-label-sm flex items-center space-x-1.5" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="bookmark">bookmark</span>
+<span>MARQUEUR</span>
+</button>
+</div>
+<button class="h-9 px-4 bg-primary text-background font-label-sm font-bold tracking-wider uppercase flex items-center space-x-1.5 hover:bg-on-tertiary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle">check_circle</span>
+<span>CLÔTURER LA SCÈNE</span>
+</button>
+</div>
+</div>
+</div>
+<!-- SECTION 2 : EN PAUSE (0) -->
+<div class="border border-outline bg-surface-container-lowest">
+<div class="px-4 py-2 bg-surface-container-low border-b border-outline flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="w-2 h-2 bg-on-surface-variant inline-block"></span>
+<span class="font-label-sm font-bold text-on-surface-variant tracking-widest text-[11px]">■ EN PAUSE (0)</span>
+</div>
+<span class="text-code-sm text-on-surface-variant text-[11px]">AUCUN ÉVÉNEMENT EN ATTENTE</span>
+</div>
+<div class="p-3 text-center">
+<div class="text-body-md text-on-surface-variant/80 font-code-sm italic py-2">
+                Rien ici.
+              </div>
+</div>
+</div>
+<!-- SECTION 3 : RÉSUMÉ PUBLIC (DIFFUSION JOUEURS) -->
+<div class="border border-outline bg-surface-container-low">
+<div class="px-4 py-2 bg-surface-container border-b border-outline flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="w-2 h-2 bg-primary inline-block"></span>
+<span class="font-label-sm font-bold text-primary tracking-widest text-[11px]">■ RÉSUMÉ PUBLIC (DIFFUSION JOUEURS)</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-[10px] font-code-sm text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5">
+                  ÉCRAN JOUEUR V-LINK ACTIF
+                </span>
+<button class="h-6 px-2 bg-surface-container-lowest hover:bg-surface-container border border-outline text-on-surface text-[10px] font-label-sm" type="button">
+                  ÉDITER
+                </button>
+</div>
+</div>
+<div class="p-4 space-y-3 bg-surface-container-lowest/80">
+<div class="p-3 bg-surface-container border border-outline-variant text-on-surface">
+<span class="text-[10px] font-code-sm text-primary uppercase block mb-1">TEXTE ENVOYÉ SUR LE TERMINAL DES JOUEURS :</span>
+<p class="font-body-lg text-[15px] font-medium text-primary-fixed tracking-wide">
+                  « Le relais demeure silencieux. »
+                </p>
+</div>
+<div class="flex items-center justify-between text-code-sm text-on-surface-variant">
+<span>Dernière émission : T+01:38:00</span>
+<span class="flex items-center space-x-1">
+<span class="w-1.5 h-1.5 bg-emerald-400 inline-block"></span>
+<span>4 terminaux récepteurs synchronisés</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ================================================================= -->
+<!-- COLONNE DROITE (5/12) : SÉQUENCES À JOUER & ACCÈS DIRECT           -->
+<!-- ================================================================= -->
+<div class="col-span-5 flex flex-col space-y-4">
+<!-- BLOC SÉQUENCE SUIVANTE / À JOUER -->
+<div class="border border-outline bg-surface-container-low flex flex-col h-full">
+<!-- Header À JOUER (4) -->
+<div class="px-4 py-2.5 bg-surface-container border-b border-outline flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 bg-amber-400 inline-block"></span>
+<span class="font-label-sm font-bold text-on-surface tracking-widest text-[12px]">■ À JOUER (4)</span>
+<span class="text-on-surface-variant font-code-sm text-[11px]">// SÉQUENCE SUIVANTE</span>
+</div>
+<button class="h-6 px-2 bg-surface-container-lowest border border-outline text-primary text-[10px] font-code-sm hover:border-primary" type="button">
+                + AJOUTER
+              </button>
+</div>
+<!-- Liste ordonnée exacte du banc T0 -->
+<div class="p-3 space-y-2.5 flex-1 overflow-y-auto no-scrollbar">
+<!-- 1. La voix dans le relais [FILE: 01] -->
+<div class="p-3 bg-surface-container border border-outline hover:border-primary/60 transition-colors flex flex-col space-y-2">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center space-x-2">
+<span class="px-1.5 py-0.2 bg-surface-container-lowest border border-outline text-primary font-code-sm text-[11px] font-bold">FILE: 01</span>
+<span class="text-label-sm font-bold text-on-surface text-[13px]">1. La voix dans le relais</span>
+</div>
+<span class="text-code-sm text-on-surface-variant text-[11px] mt-0.5">Signal sub-harmonique sur la bande de secours</span>
+</div>
+<!-- Contrôles rapides haut/bas/actif -->
+<div class="flex items-center space-x-1">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Monter" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Descendre" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_downward">arrow_downward</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-outline/50">
+<span class="text-[11px] font-code-sm text-amber-400">STATUS: PRÊT</span>
+<button class="h-7 px-2.5 bg-surface-container-lowest hover:bg-primary hover:text-background border border-primary text-primary font-label-sm text-[11px] font-bold uppercase transition-colors" type="button">
+                    ACTIVER SCÈNE
+                  </button>
+</div>
+</div>
+<!-- 2. Le registre réécrit [FILE: 02] -->
+<div class="p-3 bg-surface-container border border-outline hover:border-primary/60 transition-colors flex flex-col space-y-2">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center space-x-2">
+<span class="px-1.5 py-0.2 bg-surface-container-lowest border border-outline text-primary font-code-sm text-[11px] font-bold">FILE: 02</span>
+<span class="text-label-sm font-bold text-on-surface text-[13px]">2. Le registre réécrit</span>
+</div>
+<span class="text-code-sm text-on-surface-variant text-[11px] mt-0.5">Corruption intentionnelle du bloc mémoire 8</span>
+</div>
+<div class="flex items-center space-x-1">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Monter" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Descendre" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_downward">arrow_downward</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-outline/50">
+<span class="text-[11px] font-code-sm text-on-surface-variant">STATUS: EN ATTENTE</span>
+<button class="h-7 px-2.5 bg-surface-container-lowest hover:bg-primary hover:text-background border border-outline hover:border-primary text-on-surface font-label-sm text-[11px] font-bold uppercase transition-colors" type="button">
+                    ACTIVER SCÈNE
+                  </button>
+</div>
+</div>
+<!-- 3. Descente vers le noyau [FILE: 03] -->
+<div class="p-3 bg-surface-container border border-outline hover:border-primary/60 transition-colors flex flex-col space-y-2">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center space-x-2">
+<span class="px-1.5 py-0.2 bg-surface-container-lowest border border-outline text-primary font-code-sm text-[11px] font-bold">FILE: 03</span>
+<span class="text-label-sm font-bold text-on-surface text-[13px]">3. Descente vers le noyau</span>
+</div>
+<span class="text-code-sm text-on-surface-variant text-[11px] mt-0.5">Atmosphère dépressurisée et fuite de liquide de refroidissement</span>
+</div>
+<div class="flex items-center space-x-1">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Monter" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Descendre" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_downward">arrow_downward</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-outline/50">
+<span class="text-[11px] font-code-sm text-on-surface-variant">STATUS: SÉQUENCE VERROUILLÉE</span>
+<button class="h-7 px-2.5 bg-surface-container-lowest hover:bg-primary hover:text-background border border-outline hover:border-primary text-on-surface font-label-sm text-[11px] font-bold uppercase transition-colors" type="button">
+                    ACTIVER SCÈNE
+                  </button>
+</div>
+</div>
+<!-- 4. Confrontation avec l'Écho [FILE: 04] -->
+<div class="p-3 bg-surface-container border border-outline hover:border-primary/60 transition-colors flex flex-col space-y-2">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center space-x-2">
+<span class="px-1.5 py-0.2 bg-surface-container-lowest border border-outline text-primary font-code-sm text-[11px] font-bold">FILE: 04</span>
+<span class="text-label-sm font-bold text-on-surface text-[13px]">4. Confrontation avec l'Écho</span>
+</div>
+<span class="text-code-sm text-on-surface-variant text-[11px] mt-0.5">Rencontre non-organique au cœur du régulateur Varn</span>
+</div>
+<div class="flex items-center space-x-1">
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Monter" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_upward">arrow_upward</span>
+</button>
+<button class="w-7 h-7 bg-surface-container-lowest hover:bg-surface-container-high border border-outline flex items-center justify-center text-on-surface" title="Descendre" type="button">
+<span class="material-symbols-outlined text-[15px]" data-icon="arrow_downward">arrow_downward</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-outline/50">
+<span class="text-[11px] font-code-sm text-error">CLIMAX SCÈNE</span>
+<button class="h-7 px-2.5 bg-surface-container-lowest hover:bg-primary hover:text-background border border-outline hover:border-primary text-on-surface font-label-sm text-[11px] font-bold uppercase transition-colors" type="button">
+                    ACTIVER SCÈNE
+                  </button>
+</div>
+</div>
+</div>
+<!-- Pied de liste : action globale pupitre -->
+<div class="p-3 bg-surface-container border-t border-outline flex items-center justify-between">
+<span class="text-code-sm text-on-surface-variant text-[11px]">4 SCÈNES CHARGÉES</span>
+<button class="h-8 px-3 bg-surface-container-lowest hover:bg-surface-container-high border border-outline text-on-surface font-code-sm text-[11px] flex items-center space-x-1" type="button">
+<span class="material-symbols-outlined text-[14px]" data-icon="sync">sync</span>
+<span>RÉINITIALISER L'ORDRE</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- ===================================================================== -->
+<!-- FOOTER TÉLÉMÉTRIE PARTAGÉ (Shared Components Blueprint)              -->
+<!-- ===================================================================== -->
+<footer class="h-[32px] w-full bg-surface-container-lowest border-t border-outline flex items-center justify-between px-6 shrink-0 z-40 text-label-sm font-label-sm">
+<div class="flex items-center space-x-3">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span class="text-[11px] font-code-sm text-on-surface-variant">
+        GM-OS PROTOCOL V4.2.1 // SYS.HEALTH: NOMINAL // BUFFER: SECURE
+      </span>
+</div>
+<!-- Liens d'actions d'urgence et flux audio -->
+<div class="flex items-center space-x-6 text-[11px] font-label-sm tracking-wider">
+<a class="text-primary underline decoration-primary hover:text-primary transition-colors duration-150" href="#audio">
+        AUDIO FEED [CH-1]
+      </a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#diagnostics">
+        DIAGNOSTICS
+      </a>
+<a class="text-error hover:text-error-container hover:underline transition-colors duration-150 font-bold" href="#override">
+        EMERGENCY OVERRIDE
+      </a>
+</div>
+</footer>
+</body></html>

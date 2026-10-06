@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GM-OS — Télécommande Meneur : Notes (390×844)</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Orbitron:wght@500;700;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#232a3c",
+            "surface-container-lowest": "#070e1e",
+            "on-secondary-fixed": "#111c2d",
+            "on-primary": "#003640",
+            "on-secondary": "#263143",
+            "surface-container-low": "#141b2c",
+            "primary-fixed": "#acedff",
+            "on-background": "#dee2f7",
+            "secondary-fixed": "#d8e3fb",
+            "outline-variant": "#151b2d",
+            "error-container": "#93000a",
+            "secondary-fixed-dim": "#bcc7de",
+            "surface-bright": "#32394c",
+            "primary-container": "#06b6d4",
+            "secondary-container": "#283347",
+            "on-tertiary": "#003640",
+            "on-secondary-container": "#aeb9d0",
+            "tertiary": "#4cd7f6",
+            "on-error-container": "#ffdad6",
+            "surface-tint": "#4cd7f6",
+            "on-secondary-fixed-variant": "#3c475a",
+            "tertiary-fixed": "#acedff",
+            "tertiary-fixed-dim": "#4cd7f6",
+            "on-error": "#020617",
+            "tertiary-container": "#06b6d4",
+            "on-primary-fixed-variant": "#004e5c",
+            "on-surface": "#dee2f7",
+            "inverse-on-surface": "#293042",
+            "on-tertiary-container": "#00424f",
+            "surface-container-highest": "#2e3447",
+            "on-tertiary-fixed-variant": "#004e5c",
+            "surface": "#0c1324",
+            "inverse-primary": "#00687a",
+            "on-primary-container": "#00424f",
+            "on-surface-variant": "#bcc9cd",
+            "inverse-surface": "#dce2fa",
+            "error": "#ef4444",
+            "background": "#020617",
+            "primary-fixed-dim": "#4cd7f6",
+            "surface-variant": "#2e3447",
+            "surface-dim": "#0c1324",
+            "secondary": "#bcc7de",
+            "surface-container": "#181f31",
+            "on-tertiary-fixed": "#001f26",
+            "primary": "#06b6d4",
+            "on-primary-fixed": "#001f26",
+            "outline": "#1e293b"
+          },
+          borderRadius: {
+            "DEFAULT": "0px",
+            "none": "0px",
+            "sm": "0px",
+            "md": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+          fontFamily: {
+            "orbitron": ["Orbitron", "sans-serif"],
+            "code-md": ["Space Mono", "monospace"],
+            "code-sm": ["Space Mono", "monospace"],
+            "number-md": ["Space Mono", "monospace"],
+            "label-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "number-lg": ["Space Mono", "monospace"],
+            "code-lg": ["Space Mono", "monospace"],
+            "headline-sm": ["Orbitron", "sans-serif"],
+            "label-lg": ["Inter", "sans-serif"],
+            "headline-lg": ["Orbitron", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"],
+            "headline-md": ["Orbitron", "sans-serif"],
+            "headline-lg-mobile": ["Orbitron", "sans-serif"]
+          },
+          fontSize: {
+            "code-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+            "code-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "number-md": ["15px", { "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "number-lg": ["28px", { "fontWeight": "700" }],
+            "code-lg": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "15px", "letterSpacing": "0.12em", "fontWeight": "700" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Hide scrollbars for brutalist HUD styling */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* CRT subtle screen scanline hint */
+    .scanline-bg {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 2px, 3px 100%;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex justify-center selection:bg-primary selection:text-background font-body-md overflow-x-hidden antialiased">
+<!-- Mobile Tactical Container: 390px locked chassis -->
+<div class="w-full max-w-[390px] min-h-screen bg-background border-x border-outline flex flex-col relative shadow-2xl pb-[110px]">
+<!-- ========================================== -->
+<!-- 1. TOP PERMANENT STATUS BAR                -->
+<!-- ========================================== -->
+<header class="sticky top-0 z-50 bg-surface-container-lowest border-b border-outline px-3 py-2 flex flex-col gap-1.5 select-none">
+<div class="flex items-center justify-between">
+<!-- Paired Status & Telemetry -->
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 text-label-sm font-label-sm text-primary tracking-wider uppercase">
+<span class="w-2 h-2 bg-emerald-500 animate-pulse"></span>
+            CONNECTÉ
+          </span>
+<span class="text-outline-variant font-code-sm">|</span>
+<span class="text-on-surface-variant font-code-sm text-[11px] tracking-tight">GM-OS // T3</span>
+</div>
+<!-- Emergency Sound Hold Button -->
+<div class="relative overflow-hidden">
+<button aria-label="Couper le son (maintenir 700ms)" class="relative px-2.5 py-1 bg-surface-container border border-error/60 text-error font-label-sm tracking-wider uppercase flex items-center gap-1.5 hover:bg-error-container/30 active:scale-95 transition-all" id="btn-sound-cut">
+<span class="material-symbols-outlined text-[14px]">volume_off</span>
+<span class="text-[10px] font-bold">COUPER LE SON</span>
+<!-- Progress hold bar indicator -->
+<div class="absolute bottom-0 left-0 h-[2px] w-0 bg-error transition-all duration-75" id="sound-hold-bar"></div>
+</button>
+</div>
+</div>
+<!-- Real Telemetry Indicators Strip -->
+<div class="flex items-center justify-between pt-1 border-t border-outline/50 text-[11px] font-code-sm">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="text-on-surface-variant font-label-sm">R1 · Nel Varga</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[13px]">graphic_eq</span>
+<span>AMB: CH-01</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px]">timer</span>
+<span class="font-mono">01:42:19</span>
+</div>
+<div class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[13px]">mail</span>
+<span>2</span>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. MODULE HEADER                           -->
+<!-- ========================================== -->
+<section class="px-3 pt-3 pb-2 bg-surface-container-lowest/60 border-b border-outline">
+<div class="flex items-baseline justify-between">
+<h1 class="font-headline-sm text-headline-sm font-bold tracking-wider text-primary font-orbitron">M2 NOTES</h1>
+<span class="text-[10px] font-code-sm px-1.5 py-0.5 bg-surface-container text-on-surface-variant border border-outline">SYS.V4.2</span>
+</div>
+<p class="font-code-sm text-[11px] text-on-surface-variant mt-0.5 uppercase tracking-wide">
+        RemoteNotes // Carnet de bord &amp; Documentation de campagne
+      </p>
+</section>
+<!-- ========================================== -->
+<!-- 3. SUB-NAVIGATION BAR (6 Views)            -->
+<!-- ========================================== -->
+<nav aria-label="Sub-modules M2 Notes" class="sticky top-[67px] z-40 bg-surface-container-lowest border-b border-outline flex overflow-x-auto no-scrollbar">
+<button class="tab-btn flex-shrink-0 px-3 py-2 text-label-sm font-label-sm font-bold border-b-2 border-primary text-primary bg-surface-container/50" data-tab="seance">
+        [SÉANCE]
+      </button>
+<button class="tab-btn flex-shrink-0 px-3 py-2 text-label-sm font-label-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" data-tab="trame">
+        [TRAME]
+      </button>
+<button class="tab-btn flex-shrink-0 px-3 py-2 text-label-sm font-label-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" data-tab="chroniques">
+        [CHRONIQUES]
+      </button>
+<button class="tab-btn flex-shrink-0 px-3 py-2 text-label-sm font-label-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" data-tab="nexus">
+        [NEXUS WIKI]
+      </button>
+<button class="tab-btn flex-shrink-0 px-3 py-2 text-label-sm font-label-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" data-tab="indices">
+        [INDICES]
+      </button>
+<button class="tab-btn flex-shrink-0 px-3 py-2 text-label-sm font-label-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-on-surface" data-tab="secrets">
+        [SECRETS]
+      </button>
+</nav>
+<!-- ========================================== -->
+<!-- 4. TAB CONTENTS CONTAINER                  -->
+<!-- ========================================== -->
+<main class="flex-1 p-3">
+<!-- ====================================== -->
+<!-- VIEW 1: SÉANCE                         -->
+<!-- ====================================== -->
+<section class="tab-pane space-y-4" id="view-seance">
+<!-- CE QUI SE JOUE (1) -->
+<div>
+<div class="flex items-center justify-between pb-1 mb-2 border-b border-outline">
+<span class="text-label-sm font-label-sm text-primary tracking-wider uppercase font-bold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-primary"></span> CE QUI SE JOUE (1)
+            </span>
+<span class="text-[10px] font-code-sm text-on-surface-variant">ACTIF // FOCUS</span>
+</div>
+<!-- Scene Card with Expandable Summary -->
+<div class="bg-surface-container border border-primary p-3 relative cursor-pointer group" onclick="toggleDetails('scene-hale-details')">
+<div class="flex items-start justify-between">
+<div>
+<div class="text-[10px] font-code-sm text-primary/80 uppercase">ACTE: CE QUE HALE N'A PAS DIT</div>
+<div class="text-body-md font-bold text-on-surface font-orbitron mt-0.5">Entretien avec Hale</div>
+</div>
+<span class="material-symbols-outlined text-primary text-lg transition-transform duration-200" id="icon-scene-hale-details">expand_more</span>
+</div>
+<!-- Expandable Summary Panel -->
+<div class="hidden mt-3 pt-2.5 border-t border-outline text-body-sm text-on-surface-variant space-y-2" id="scene-hale-details">
+<div class="bg-surface-container-lowest p-2 border border-outline">
+<span class="text-[10px] font-bold text-primary block uppercase">DÉTAILS OPÉRATIONNELS</span>
+<p class="text-on-surface mt-1 text-[13px] leading-relaxed">
+                  L'interlocuteur élude toute mention du module thermique. Tension palpable dans l'attitude corporelle. Attendre le test de Psychologie pour déverrouiller la suite de l'arbre.
+                </p>
+</div>
+<div class="bg-surface-container-lowest p-2 border border-outline">
+<span class="text-[10px] font-bold text-secondary block uppercase">SYNOPSIS PUBLIC ENVOYÉ</span>
+<p class="text-on-surface mt-1 text-[13px] leading-relaxed">
+                  L'équipe fait face à Hale dans la baie de pressurisation secondaire.
+                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- EN PAUSE (0) -->
+<div>
+<div class="flex items-center justify-between pb-1 mb-2 border-b border-outline">
+<span class="text-label-sm font-label-sm text-on-surface-variant tracking-wider uppercase font-bold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-outline"></span> EN PAUSE (0)
+            </span>
+</div>
+<div class="bg-surface-container-lowest border border-outline/70 p-3 text-center">
+<p class="font-code-sm text-on-surface-variant text-[12px] italic">Rien ici.</p>
+</div>
+</div>
+<!-- À JOUER (4) -->
+<div>
+<div class="flex items-center justify-between pb-1 mb-2 border-b border-outline">
+<span class="text-label-sm font-label-sm text-on-surface-variant tracking-wider uppercase font-bold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-secondary"></span> À JOUER (4)
+            </span>
+<span class="text-[10px] font-code-sm text-on-surface-variant">SÉQUENCE SUIVANTE</span>
+</div>
+<div class="space-y-1.5 font-code-sm text-[13px]">
+<div class="p-2.5 bg-surface-container-low border border-outline flex items-center justify-between">
+<span class="text-on-surface">1. La voix dans le relais</span>
+<span class="text-[10px] text-on-surface-variant uppercase border border-outline px-1.5 py-0.5">FILE: 01</span>
+</div>
+<div class="p-2.5 bg-surface-container-low border border-outline flex items-center justify-between">
+<span class="text-on-surface">2. Le registre réécrit</span>
+<span class="text-[10px] text-on-surface-variant uppercase border border-outline px-1.5 py-0.5">FILE: 02</span>
+</div>
+<div class="p-2.5 bg-surface-container-low border border-outline flex items-center justify-between">
+<span class="text-on-surface">3. Descente vers le noyau</span>
+<span class="text-[10px] text-on-surface-variant uppercase border border-outline px-1.5 py-0.5">FILE: 03</span>
+</div>
+<div class="p-2.5 bg-surface-container-low border border-outline flex items-center justify-between">
+<span class="text-on-surface">4. Confrontation avec l'Écho</span>
+<span class="text-[10px] text-on-surface-variant uppercase border border-outline px-1.5 py-0.5">FILE: 04</span>
+</div>
+</div>
+</div>
+<!-- RÉSUMÉ PUBLIC -->
+<div>
+<div class="flex items-center justify-between pb-1 mb-2 border-b border-outline">
+<span class="text-label-sm font-label-sm text-secondary tracking-wider uppercase font-bold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-secondary"></span> RÉSUMÉ PUBLIC
+            </span>
+<span class="text-[10px] font-code-sm text-primary uppercase">DIFFUSION JOUEURS</span>
+</div>
+<div class="bg-surface-container border border-outline p-3">
+<p class="font-body-md text-on-surface text-[14px] leading-relaxed">
+              Le relais demeure silencieux.
+            </p>
+</div>
+</div>
+</section>
+<!-- ====================================== -->
+<!-- VIEW 2: TRAME                          -->
+<!-- ====================================== -->
+<section class="tab-pane hidden space-y-3" id="view-trame">
+<div class="text-[11px] font-code-sm text-on-surface-variant pb-1 border-b border-outline">
+          ARBRE NARRATIF // STRUCTURE EN 3 ACTES
+        </div>
+<!-- ACTE 01 -->
+<div class="border border-outline bg-surface-container-low">
+<div class="p-3 bg-surface-container flex items-center justify-between cursor-pointer" onclick="toggleDetails('act-1-body')">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary">folder</span>
+<span class="font-bold font-orbitron text-on-surface text-[13px]">Acte 01: L'arrivée</span>
+</div>
+<span class="text-[10px] font-label-sm px-2 py-0.5 bg-surface-container-high border border-outline text-secondary font-bold">ACHEVÉ</span>
+</div>
+<div class="p-2.5 space-y-2 border-t border-outline" id="act-1-body">
+<div class="p-2 bg-surface-container-lowest border border-outline flex items-center justify-between text-body-sm">
+<span class="text-on-surface-variant">Scène: Amarrage</span>
+<span class="text-[10px] font-code-sm px-1.5 py-0.5 bg-surface-container text-on-surface-variant border border-outline">CLOSE</span>
+</div>
+</div>
+</div>
+<!-- ACTE 02 -->
+<div class="border border-primary bg-surface-container-low">
+<div class="p-3 bg-surface-container flex items-center justify-between cursor-pointer" onclick="toggleDetails('act-2-body')">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">play_arrow</span>
+<span class="font-bold font-orbitron text-primary text-[13px]">Acte 02: Ce que Hale n'a pas dit</span>
+</div>
+<span class="text-[10px] font-label-sm px-2 py-0.5 bg-primary text-background font-bold tracking-wider">EN COURS</span>
+</div>
+<div class="p-2.5 space-y-2 border-t border-outline" id="act-2-body">
+<div class="p-2 bg-surface-container-lowest border border-outline flex items-center justify-between text-body-sm">
+<span class="text-on-surface">1. Sas d'accès</span>
+<span class="text-[10px] font-code-sm text-secondary">TERMINÉ</span>
+</div>
+<div class="p-2 bg-surface-container border border-primary flex items-center justify-between text-body-sm font-semibold">
+<span class="text-primary flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-primary animate-pulse"></span>
+                2. Entretien avec Hale
+              </span>
+<span class="text-[10px] font-code-sm text-primary">EN COURS</span>
+</div>
+<div class="p-2 bg-surface-container-lowest border border-outline flex items-center justify-between text-body-sm">
+<span class="text-on-surface-variant">3. Le silence des balises</span>
+<span class="text-[10px] font-code-sm text-on-surface-variant">EN ATTENTE</span>
+</div>
+</div>
+</div>
+<!-- ACTE 03 -->
+<div class="border border-outline bg-surface-container-low opacity-80">
+<div class="p-3 bg-surface-container flex items-center justify-between cursor-pointer" onclick="toggleDetails('act-3-body')">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-surface-variant">lock</span>
+<span class="font-bold font-orbitron text-on-surface-variant text-[13px]">Acte 03: Ce qui écoute</span>
+</div>
+<span class="text-[10px] font-label-sm px-2 py-0.5 bg-surface-container-high border border-outline text-error font-bold">VERROUILLÉ</span>
+</div>
+<div class="hidden p-2.5 space-y-2 border-t border-outline" id="act-3-body">
+<div class="p-2 bg-surface-container-lowest border border-outline text-body-sm text-on-surface-variant flex justify-between">
+<span>Scène: Descente vers le noyau</span>
+<span class="text-[10px] font-code-sm">LOCKED</span>
+</div>
+<div class="p-2 bg-surface-container-lowest border border-outline text-body-sm text-on-surface-variant flex justify-between">
+<span>Scène: Confrontation avec l'Écho</span>
+<span class="text-[10px] font-code-sm">LOCKED</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ====================================== -->
+<!-- VIEW 3: CHRONIQUES                     -->
+<!-- ====================================== -->
+<section class="tab-pane hidden space-y-3" id="view-chroniques">
+<!-- Search Bar -->
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline text-body-sm text-on-surface px-3 py-2 pl-9 placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary" placeholder="Rechercher dans les chroniques..." type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-on-surface-variant text-base">search</span>
+</div>
+<!-- List of Chroniques -->
+<div class="space-y-2" id="chroniques-list">
+<!-- Fiche 1: Station Varn -->
+<div class="p-3 bg-surface-container border border-outline hover:border-primary cursor-pointer transition-colors" onclick="openChronique('station-varn')">
+<div class="flex items-center justify-between">
+<span class="text-body-md font-bold text-on-surface font-orbitron">Station Varn</span>
+<span class="text-[10px] font-label-sm uppercase px-1.5 py-0.5 bg-surface-container-high border border-outline text-primary">Lieux</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Avant-poste minier déclassé en orbite synchrone.</p>
+</div>
+<!-- Fiche 2: Ancre-7 -->
+<div class="p-3 bg-surface-container border border-outline hover:border-primary cursor-pointer transition-colors" onclick="openChronique('ancre-7')">
+<div class="flex items-center justify-between">
+<span class="text-body-md font-bold text-on-surface font-orbitron">Ancre-7</span>
+<span class="text-[10px] font-label-sm uppercase px-1.5 py-0.5 bg-surface-container-high border border-outline text-secondary">Vaisseaux / Tech</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Plateforme stabilisatrice gravitique auxiliaire.</p>
+</div>
+<!-- Fiche 3: Protocole de quarantaine -->
+<div class="p-3 bg-surface-container border border-outline hover:border-primary cursor-pointer transition-colors" onclick="openChronique('protocole')">
+<div class="flex items-center justify-between">
+<span class="text-body-md font-bold text-on-surface font-orbitron">Protocole de quarantaine</span>
+<span class="text-[10px] font-label-sm uppercase px-1.5 py-0.5 bg-surface-container-high border border-outline text-error">Règles / Procédures</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mt-1">Directive d'isolement biologique niveau IV.</p>
+</div>
+</div>
+<!-- Chronique Markdown Detail View -->
+<div class="hidden bg-surface-container-lowest border border-outline p-3.5 space-y-3" id="chroniques-detail">
+<button class="flex items-center gap-1.5 text-label-sm text-primary font-bold hover:underline mb-2" onclick="closeChronique()">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+            ← Retour aux chroniques
+          </button>
+<div class="border-b border-outline pb-2">
+<div class="text-[10px] font-code-sm text-primary uppercase" id="chronique-cat">LIEUX // SECTEUR EXTERNE</div>
+<h2 class="text-headline-sm font-orbitron font-bold text-on-surface mt-0.5" id="chronique-title">Station Varn</h2>
+</div>
+<div class="font-body-md text-on-surface/90 space-y-2 text-[13px] leading-relaxed" id="chronique-content">
+<p>Construite durant le second cycle d'extraction par le consortium Sol-Varn, cette infrastructure modulaire abritait jusqu'à deux cents techniciens avant les incidents de rupture de confinement.</p>
+<div class="p-2 border-l-2 border-primary bg-surface-container font-code-sm text-[12px] text-on-surface-variant">
+              STATUS: Dépressurisation partielle sur les niveaux 3 et 4.<br/>
+              SURVEILLANCE: Aucune émission radio depuis 4 cycles standards.
+            </div>
+</div>
+</div>
+</section>
+<!-- ====================================== -->
+<!-- VIEW 4: NEXUS WIKI (Obsidian Vault)    -->
+<!-- ====================================== -->
+<section class="tab-pane hidden space-y-3" id="view-nexus">
+<!-- Search & Reload Bar -->
+<div class="flex items-center gap-2">
+<div class="relative flex-1">
+<input class="w-full bg-surface-container-lowest border border-outline text-body-sm text-on-surface px-3 py-2 pl-9 placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary" placeholder="Rechercher dans le Nexus..." type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-on-surface-variant text-base">search</span>
+</div>
+<button class="px-3 py-2 bg-surface-container border border-outline hover:border-primary text-on-surface" title="Rafraîchir l'index">
+<span class="material-symbols-outlined text-base">refresh</span>
+</button>
+</div>
+<!-- Folders and Files Tree -->
+<div class="space-y-1.5 font-code-sm text-[13px]" id="nexus-list">
+<!-- Folder: PNJ -->
+<div class="p-2.5 bg-surface-container border border-outline flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-amber-400 text-sm">folder</span>
+<span>📁 PNJ</span>
+</div>
+<span class="text-[10px] text-on-surface-variant">4 ENTRIES</span>
+</div>
+<!-- Folder: Lieux -->
+<div class="p-2.5 bg-surface-container border border-outline flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-amber-400 text-sm">folder</span>
+<span>📁 Lieux</span>
+</div>
+<span class="text-[10px] text-on-surface-variant">2 ENTRIES</span>
+</div>
+<!-- Folder: Séances -->
+<div class="p-2.5 bg-surface-container border border-outline flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-amber-400 text-sm">folder</span>
+<span>📁 Séances</span>
+</div>
+<span class="text-[10px] text-on-surface-variant">6 LOGS</span>
+</div>
+<!-- Root Document: Station Varn.md -->
+<div class="p-2.5 bg-surface-container-lowest border border-primary/70 flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors" onclick="openNexusReader()">
+<div class="flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined text-primary text-sm">description</span>
+<span>📄 Station Varn.md</span>
+</div>
+<span class="text-[10px] text-primary uppercase font-label-sm">VAULT ROOT</span>
+</div>
+</div>
+<!-- Nexus Markdown Viewer -->
+<div class="hidden bg-surface-container-lowest border border-outline p-3.5 space-y-3 font-mono" id="nexus-reader">
+<button class="flex items-center gap-1.5 text-label-sm text-primary font-bold hover:underline mb-2" onclick="closeNexusReader()">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+            ← Retour à la liste
+          </button>
+<div class="border-b border-outline pb-2">
+<span class="text-[10px] text-on-surface-variant uppercase font-code-sm">VAULT // STATION_VARN.MD</span>
+<h2 class="text-headline-sm font-orbitron font-bold text-on-surface mt-1"># STATION VARN</h2>
+</div>
+<div class="text-[13px] text-on-surface/90 space-y-3 leading-relaxed font-body-sm">
+<p>## 1. Topographie</p>
+<p>La station est segmentée en trois sections annulaires concentriques. Le secteur zéro héberge le contrôle atmosphérique autonome.</p>
+<p>## 2. Anomalies Détectées</p>
+<ul class="list-disc pl-4 space-y-1 text-on-surface-variant">
+<li>Perturbation électrostatique permanente près de la turbine ouest.</li>
+<li>Traces d'écrasement mécanique au sas D-04.</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- ====================================== -->
+<!-- VIEW 5: INDICES                        -->
+<!-- ====================================== -->
+<section class="tab-pane hidden space-y-3" id="view-indices">
+<div class="flex items-center justify-between pb-1 border-b border-outline">
+<span class="text-label-sm font-label-sm text-primary tracking-wider uppercase font-bold">
+            INDICES ENQUÊTE (4)
+          </span>
+<span class="text-[10px] font-code-sm text-on-surface-variant">CAMPAIGN SEED</span>
+</div>
+<div class="space-y-2">
+<!-- Clue 1 -->
+<div class="p-3 bg-surface-container border border-outline flex items-center justify-between">
+<div>
+<div class="text-[10px] font-code-sm text-on-surface-variant uppercase">CLUE // REF-01</div>
+<div class="text-body-md font-bold text-on-surface font-orbitron mt-0.5">Le café encore chaud</div>
+</div>
+<span class="text-[10px] font-label-sm px-2 py-0.5 bg-surface-container-high border border-outline text-primary font-bold">DONNÉ</span>
+</div>
+<!-- Clue 2 -->
+<div class="p-3 bg-surface-container border border-outline flex items-center justify-between">
+<div>
+<div class="text-[10px] font-code-sm text-on-surface-variant uppercase">CLUE // REF-02</div>
+<div class="text-body-md font-bold text-on-surface font-orbitron mt-0.5">La signature unique</div>
+</div>
+<span class="text-[10px] font-label-sm px-2 py-0.5 bg-surface-container-high border border-outline text-secondary font-bold">EN MAIN</span>
+</div>
+<!-- Clue 3 -->
+<div class="p-3 bg-surface-container border border-outline flex items-center justify-between">
+<div>
+<div class="text-[10px] font-code-sm text-on-surface-variant uppercase">CLUE // REF-03</div>
+<div class="text-body-md font-bold text-on-surface font-orbitron mt-0.5">Outil multifonction</div>
+</div>
+<span class="text-[10px] font-label-sm px-2 py-0.5 bg-surface-container-high border border-outline text-primary font-bold">DONNÉ</span>
+</div>
+<!-- Clue 4 -->
+<div class="p-3 bg-surface-container border border-outline flex items-center justify-between">
+<div>
+<div class="text-[10px] font-code-sm text-on-surface-variant uppercase">CLUE // REF-04</div>
+<div class="text-body-md font-bold text-on-surface font-orbitron mt-0.5">Rapport de maintenance dépressurisé</div>
+</div>
+<span class="text-[10px] font-label-sm px-2 py-0.5 bg-surface-container-high border border-outline text-secondary font-bold">EN MAIN</span>
+</div>
+</div>
+</section>
+<!-- ====================================== -->
+<!-- VIEW 6: SECRETS                        -->
+<!-- ====================================== -->
+<section class="tab-pane hidden space-y-3" id="view-secrets">
+<div class="flex items-center justify-between pb-1 border-b border-outline">
+<span class="text-label-sm font-label-sm text-error tracking-wider uppercase font-bold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-error animate-pulse"></span> YEUX DU MENEUR SEUL
+          </span>
+<span class="text-[10px] font-code-sm text-error">NIVEAU 5 CLASSIFIÉ</span>
+</div>
+<!-- Confidential GM Card -->
+<div class="bg-surface-container border-2 border-error/80 p-3.5 relative overflow-hidden">
+<div class="absolute -right-8 -top-8 w-24 h-24 bg-error/10 border border-error/20 rotate-45 pointer-events-none"></div>
+<div class="flex items-center gap-2 text-error font-bold font-orbitron text-[12px] tracking-wider uppercase mb-2">
+<span class="material-symbols-outlined text-base">warning</span>
+<span>AVENTURE // CONFIDENTIEL</span>
+</div>
+<div class="bg-surface-container-lowest border border-error/40 p-3 mt-1">
+<span class="text-[10px] font-code-sm text-error block uppercase mb-1">NOTES SECRÈTES DE RÉGIE:</span>
+<p class="text-on-surface font-bold font-body-md text-[15px] tracking-wide">
+              Hale connaît la panne.
+            </p>
+</div>
+<div class="mt-3 text-[11px] font-code-sm text-on-surface-variant flex items-center justify-between">
+<span>RÉVÉLATION: CLIMAX ACTE II</span>
+<span class="text-error uppercase">STRICT SECRECY</span>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================== -->
+<!-- 5. PERMANENT BOTTOM NAVIGATION             -->
+<!-- 8 Tabs on 2 rows of 4 (>=44x44px target)   -->
+<!-- ========================================== -->
+<footer class="fixed bottom-0 left-0 right-0 z-50 flex justify-center bg-surface-container-lowest border-t border-outline pointer-events-auto">
+<div class="w-full max-w-[390px] grid grid-rows-2 grid-cols-4 bg-surface-container-lowest">
+<!-- Row 1: [PADS] [DÉS] [SONS] [SCÉNARIO] -->
+<button class="h-[48px] border-r border-b border-outline flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5">PADS</span>
+</button>
+<button class="h-[48px] border-r border-b border-outline flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">casino</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5">DÉS</span>
+</button>
+<button class="h-[48px] border-r border-b border-outline flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">volume_up</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5">SONS</span>
+</button>
+<button class="h-[48px] border-b border-outline flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">auto_stories</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5">SCÉNARIO</span>
+</button>
+<!-- Row 2: [COMBAT] [TABLEAU] [NOTES (ACTIF - cyan)] [MESSAGES] -->
+<button class="h-[48px] border-r border-outline flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">sports_kabaddi</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5">COMBAT</span>
+</button>
+<button class="h-[48px] border-r border-outline flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5">TABLEAU</span>
+</button>
+<!-- NOTES: Active Tab (Cyan) -->
+<button class="h-[48px] border-r border-outline flex flex-col items-center justify-center text-primary bg-surface-container border-t-2 border-t-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5 text-primary">NOTES</span>
+</button>
+<button class="h-[48px] flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="text-[9px] font-label-sm font-bold tracking-widest uppercase mt-0.5">MESSAGES</span>
+<span class="absolute top-1.5 right-3 w-1.5 h-1.5 bg-error"></span>
+</button>
+</div>
+</footer>
+</div>
+<!-- Interactive Logic -->
+<script>
+    // Tab switching for 6 Views
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+
+        tabButtons.forEach(b => {
+          b.classList.remove('border-primary', 'text-primary', 'bg-surface-container/50');
+          b.classList.add('border-transparent', 'text-on-surface-variant');
+        });
+
+        button.classList.remove('border-transparent', 'text-on-surface-variant');
+        button.classList.add('border-primary', 'text-primary', 'bg-surface-container/50');
+
+        tabPanes.forEach(pane => {
+          pane.classList.add('hidden');
+        });
+
+        const activePane = document.getElementById(`view-${targetTab}`);
+        if (activePane) {
+          activePane.classList.remove('hidden');
+        }
+      });
+    });
+
+    // Expandable details helper
+    function toggleDetails(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.classList.toggle('hidden');
+      }
+      const icon = document.getElementById(`icon-${elementId}`);
+      if (icon) {
+        icon.classList.toggle('rotate-180');
+      }
+    }
+
+    // Chronique Markdown viewer interaction
+    function openChronique(type) {
+      document.getElementById('chroniques-list').classList.add('hidden');
+      const detail = document.getElementById('chroniques-detail');
+      detail.classList.remove('hidden');
+
+      const title = document.getElementById('chronique-title');
+      const cat = document.getElementById('chronique-cat');
+      const content = document.getElementById('chronique-content');
+
+      if (type === 'station-varn') {
+        title.innerText = 'Station Varn';
+        cat.innerText = 'LIEUX // SECTEUR EXTERNE';
+        content.innerHTML = `
+          <p>Construite durant le second cycle d'extraction par le consortium Sol-Varn, cette infrastructure modulaire abritait jusqu'à deux cents techniciens avant les incidents de rupture de confinement.</p>
+          <div class="p-2 border-l-2 border-primary bg-surface-container font-code-sm text-[12px] text-on-surface-variant">
+            STATUS: Dépressurisation partielle sur les niveaux 3 et 4.<br>
+            SURVEILLANCE: Aucune émission radio depuis 4 cycles standards.
+          </div>
+        `;
+      } else if (type === 'ancre-7') {
+        title.innerText = 'Ancre-7';
+        cat.innerText = 'VAISSEAUX / TECH // CLASSE B';
+        content.innerHTML = `
+          <p>Plateforme stabilisatrice gravitique auxiliaire conçue pour maintenir les stations en orbite basse instable.</p>
+          <div class="p-2 border-l-2 border-secondary bg-surface-container font-code-sm text-[12px] text-on-surface-variant">
+            PROPULSION: Réacteurs inertiels ioniques.<br>
+            ACCÈS: Verrouillage par clé chiffrée GM.
+          </div>
+        `;
+      } else if (type === 'protocole') {
+        title.innerText = 'Protocole de quarantaine';
+        cat.innerText = 'RÈGLES / PROCÉDURES // DIRECTIVE 4';
+        content.innerHTML = `
+          <p>En cas de rupture d'étanchéité biologique de niveau IV, les portes étanches doivent être scellées thermiquement sans préavis pour le personnel en zone rouge.</p>
+        `;
+      }
+    }
+
+    function closeChronique() {
+      document.getElementById('chroniques-detail').classList.add('hidden');
+      document.getElementById('chroniques-list').classList.remove('hidden');
+    }
+
+    // Nexus Vault reader interaction
+    function openNexusReader() {
+      document.getElementById('nexus-list').classList.add('hidden');
+      document.getElementById('nexus-reader').classList.remove('hidden');
+    }
+
+    function closeNexusReader() {
+      document.getElementById('nexus-reader').classList.add('hidden');
+      document.getElementById('nexus-list').classList.remove('hidden');
+    }
+
+    // 700ms Hold Progress for "COUPER LE SON" button
+    const cutBtn = document.getElementById('btn-sound-cut');
+    const holdBar = document.getElementById('sound-hold-bar');
+    let holdTimeout = null;
+    let holdStart = 0;
+    let holdInterval = null;
+
+    function startHold(e) {
+      e.preventDefault();
+      holdStart = Date.now();
+      holdBar.style.width = '0%';
+      holdInterval = setInterval(() => {
+        const elapsed = Date.now() - holdStart;
+        const progress = Math.min(100, (elapsed / 700) * 100);
+        holdBar.style.width = `${progress}%`;
+        if (elapsed >= 700) {
+          clearInterval(holdInterval);
+          holdBar.style.width = '100%';
+          cutBtn.classList.add('bg-error', 'text-background');
+          cutBtn.querySelector('span:nth-child(2)').innerText = 'SON COUPÉ';
+        }
+      }, 20);
+    }
+
+    function cancelHold() {
+      clearInterval(holdInterval);
+      const elapsed = Date.now() - holdStart;
+      if (elapsed < 700) {
+        holdBar.style.width = '0%';
+      }
+    }
+
+    cutBtn.addEventListener('mousedown', startHold);
+    cutBtn.addEventListener('touchstart', startHold, { passive: false });
+    window.addEventListener('mouseup', cancelHold);
+    window.addEventListener('touchend', cancelHold);
+  </script>
+</body></html>

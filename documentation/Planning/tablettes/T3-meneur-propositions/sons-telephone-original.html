@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>GM-OS — Télécommande Meneur : Sons (390×844)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            'surface-subtle': '#0b1120',
+            primary: '#06b6d4',
+            'on-primary': '#020617',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            success: '#10b981',
+            text: '#f8fafc',
+            'text-muted': '#898c95',
+            border: '#1e293b',
+          },
+          fontFamily: {
+            display: ['Orbitron', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .device-viewport {
+      width: 100%;
+      max-width: 390px;
+      min-width: 360px;
+      height: 100%;
+      max-height: 844px;
+      background-color: #020617;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+    }
+    .status-hold-progress {
+      transition: stroke-dashoffset 0.7s linear;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 8px;
+      background: #1e293b;
+      border-radius: 0;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 28px;
+      width: 28px;
+      background: #06b6d4;
+      border: 2px solid #020617;
+      margin-top: -10px;
+      cursor: pointer;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body class="bg-black flex items-center justify-center p-0 m-0">
+
+  <!-- Mobile Viewport Container 390x844 (adaptable à 360px) -->
+  <div class="device-viewport flex flex-col justify-between" id="appRoot">
+
+    <!-- ==================== 1. LIGNE D'ÉTAT PERMANENTE ==================== -->
+    <header class="w-full bg-surface border-b border-border px-3 py-2.5 flex-none z-30 flex items-center justify-between gap-2">
+      <!-- Identité appairage & rôle -->
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="relative flex h-2.5 w-2.5 flex-none">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+        </span>
+        <div class="flex flex-col min-w-0">
+          <span class="text-[11px] font-bold tracking-wider text-text-muted uppercase leading-none">GM-OS // T3</span>
+          <span class="text-[13px] font-semibold text-text truncate leading-tight mt-0.5">R1 · Nel Varga</span>
+        </div>
+      </div>
+
+      <!-- Action critique : Couper le son (Hold 700ms) -->
+      <div class="relative flex-none">
+        <button id="btnMuteAll"
+          class="relative flex items-center justify-center gap-1.5 px-3 py-2 bg-surface-raised border border-border text-danger hover:border-danger active:bg-danger/10 text-xs font-semibold uppercase tracking-wider min-h-[44px] min-w-[44px] touch-manipulation transition-colors"
+          title="Maintenir 700ms pour couper le son">
+          <!-- SVG jauge circulaire de maintien -->
+          <svg class="w-4 h-4 transform -rotate-90 flex-none" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#1e293b" stroke-width="4"></circle>
+            <circle id="holdProgressCircle" cx="18" cy="18" r="15.9155" fill="none" stroke="#ef4444" stroke-width="4"
+              stroke-dasharray="100" stroke-dashoffset="100" class="status-hold-progress"></circle>
+          </svg>
+          <span class="text-[11px] font-bold text-danger">Couper son</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==================== 2. CONTENU DÉFILANT AU-DESSUS DU PIED ==================== -->
+    <main class="flex-1 overflow-y-auto px-3.5 py-4 space-y-4" style="padding-bottom: 24px;">
+
+      <!-- En-tête de section du module M2 Sons -->
+      <div class="flex items-center justify-between pb-1 border-b border-border/70">
+        <div>
+          <h1 class="font-display text-lg font-bold text-text uppercase tracking-wider">M2 Sons</h1>
+          <p class="text-xs text-text-muted mt-0.5 font-body">Console de déclenchement rapide</p>
+        </div>
+        <span class="text-[11px] font-mono font-bold bg-surface-raised border border-border text-primary px-2 py-1 uppercase">
+          Table T0
+        </span>
+      </div>
+
+      <!-- Volume & Sortie Audio -->
+      <section class="bg-surface border border-border p-3.5 space-y-3">
+        <!-- Titre & Valeur en JetBrains Mono -->
+        <div class="flex items-center justify-between">
+          <label for="sliderVolume" class="text-sm font-semibold text-text">
+            Volume — Bruitages
+          </label>
+          <span id="labelVolumeVal" class="font-mono text-sm font-bold text-primary">
+            100%
+          </span>
+        </div>
+
+        <!-- Curseur tactile >=44px de zone tactile -->
+        <div class="py-1">
+          <input type="range" id="sliderVolume" min="0" max="100" value="100"
+            class="w-full h-11 cursor-pointer touch-manipulation" aria-label="Volume des bruitages">
+        </div>
+
+        <!-- Sortie par défaut / Menu sélecteur -->
+        <div class="pt-2 border-t border-border/70 flex items-center justify-between gap-2">
+          <span class="text-xs text-text-muted font-body">Sortie active :</span>
+          <div class="relative flex-1 max-w-[190px]">
+            <select id="selectOutput"
+              class="w-full bg-surface-raised border border-border text-text text-xs px-2.5 py-2 font-medium min-h-[44px] appearance-none focus:outline-none focus:border-primary truncate pr-7">
+              <option value="default" selected>Sortie par défaut</option>
+              <option value="table">Haut-parleurs Table</option>
+              <option value="direct">Ambiance Master</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Pads de Bruitages -->
+      <section class="space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-text-muted">Soundboard instantané</span>
+          <span class="text-[11px] font-mono text-text-muted">1 PAD DISPONIBLE</span>
+        </div>
+
+        <!-- Pad unique : Alarme du relais -->
+        <div class="grid grid-cols-1 gap-2.5">
+          <button id="padAlarme"
+            class="relative w-full p-4 bg-surface border border-border hover:border-primary active:bg-primary/10 flex items-center justify-between gap-3 text-left min-h-[64px] touch-manipulation transition-all duration-100 group"
+            style="border-left: 3px solid #06b6d4;">
+            <div class="flex items-center gap-3 min-w-0">
+              <!-- Icône neutre -->
+              <div class="w-10 h-10 flex-none bg-surface-raised border border-border flex items-center justify-center text-primary group-active:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <div class="font-body text-sm font-bold text-text group-hover:text-primary transition-colors">
+                  Alarme du relais
+                </div>
+                <div class="text-xs text-text-muted mt-0.5 truncate font-body">
+                  Déclencheur d'urgence · Relais Varn
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col items-end flex-none">
+              <span id="badgePadState" class="text-[11px] font-mono font-bold text-text-muted bg-surface-raised px-2 py-0.5 border border-border">
+                PRÊT
+              </span>
+              <span class="text-[10px] text-text-muted mt-1 uppercase font-body">1 clic</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- État vide explicite du décor T0 -->
+        <div class="p-3 bg-surface-subtle border border-dashed border-border/80 text-center">
+          <p class="text-xs text-text-muted font-body leading-relaxed">
+            Aucun bruitage dans l’ambiance active.
+          </p>
+        </div>
+      </section>
+
+      <!-- Feedback visuel de simulation locale -->
+      <div id="toastFeedback" class="hidden p-2.5 bg-surface border border-primary/40 text-xs text-primary font-mono flex items-center justify-between">
+        <span>ACTION : ALARME DÉCLENCHÉE</span>
+        <span class="text-[11px] text-text-muted">SIMULATION LOCALE</span>
+      </div>
+
+    </main>
+
+    <!-- ==================== 3. HUIT ONGLETS EN PIED SUR DEUX RANGÉES DE 4 ==================== -->
+    <footer class="w-full bg-surface border-t border-border flex-none z-30">
+      <!-- Rangée 1 : Pads, Dés, Sons (Actif), Scénario -->
+      <div class="grid grid-cols-4 border-b border-border/60">
+        <!-- 1. Pads -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 text-text-muted hover:text-text active:bg-surface-raised min-h-[44px] touch-manipulation transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate">Pads</span>
+        </button>
+
+        <!-- 2. Dés -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 text-text-muted hover:text-text active:bg-surface-raised min-h-[44px] touch-manipulation transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate">Dés</span>
+        </button>
+
+        <!-- 3. Sons (Actif) -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 bg-surface-raised text-primary border-b-2 border-primary min-h-[44px] touch-manipulation">
+          <svg class="w-4 h-4 mb-0.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate text-primary">Sons</span>
+        </button>
+
+        <!-- 4. Scénario -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 text-text-muted hover:text-text active:bg-surface-raised min-h-[44px] touch-manipulation transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate">Scénario</span>
+        </button>
+      </div>
+
+      <!-- Rangée 2 : Combat, Tableau, Notes, Messages -->
+      <div class="grid grid-cols-4">
+        <!-- 5. Combat -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 text-text-muted hover:text-text active:bg-surface-raised min-h-[44px] touch-manipulation transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate">Combat</span>
+        </button>
+
+        <!-- 6. Tableau -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 text-text-muted hover:text-text active:bg-surface-raised min-h-[44px] touch-manipulation transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate">Tableau</span>
+        </button>
+
+        <!-- 7. Notes -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 text-text-muted hover:text-text active:bg-surface-raised min-h-[44px] touch-manipulation transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate">Notes</span>
+        </button>
+
+        <!-- 8. Messages -->
+        <button class="flex flex-col items-center justify-center py-2 px-1 text-text-muted hover:text-text active:bg-surface-raised min-h-[44px] touch-manipulation transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          <span class="text-[11px] font-bold uppercase tracking-wider truncate">Messages</span>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Script d'interaction locale pure (aucun appel réseau ni écriture) -->
+  <script>
+    // 1. Gestion du volume
+    const sliderVolume = document.getElementById('sliderVolume');
+    const labelVolumeVal = document.getElementById('labelVolumeVal');
+    sliderVolume.addEventListener('input', (e) => {
+      labelVolumeVal.textContent = `${e.target.value}%`;
+    });
+
+    // 2. Gestion du déclenchement local du pad "Alarme du relais"
+    const padAlarme = document.getElementById('padAlarme');
+    const badgePadState = document.getElementById('badgePadState');
+    const toastFeedback = document.getElementById('toastFeedback');
+    let isPlaying = false;
+
+    padAlarme.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        badgePadState.textContent = 'ACTIF';
+        badgePadState.classList.remove('text-text-muted', 'bg-surface-raised');
+        badgePadState.classList.add('text-black', 'bg-primary');
+        padAlarme.classList.add('bg-primary/5', 'border-primary');
+        toastFeedback.classList.remove('hidden');
+      } else {
+        badgePadState.textContent = 'PRÊT';
+        badgePadState.classList.add('text-text-muted', 'bg-surface-raised');
+        badgePadState.classList.remove('text-black', 'bg-primary');
+        padAlarme.classList.remove('bg-primary/5', 'border-primary');
+        toastFeedback.classList.add('hidden');
+      }
+    });
+
+    // 3. Gestion du maintien 700ms pour "Couper le son"
+    const btnMuteAll = document.getElementById('btnMuteAll');
+    const holdProgressCircle = document.getElementById('holdProgressCircle');
+    let holdTimeout = null;
+    let holdStartTime = null;
+
+    function startHold(e) {
+      e.preventDefault();
+      holdStartTime = Date.now();
+      holdProgressCircle.style.strokeDashoffset = '0';
+      holdTimeout = setTimeout(() => {
+        // Déclenchement de la coupure de son après 700ms
+        sliderVolume.value = 0;
+        labelVolumeVal.textContent = '0%';
+        badgePadState.textContent = 'COUPÉ';
+        badgePadState.classList.remove('text-black', 'bg-primary');
+        badgePadState.classList.add('text-danger', 'bg-surface-raised');
+        isPlaying = false;
+        toastFeedback.classList.remove('hidden');
+        toastFeedback.innerHTML = '<span>TOUS LES SONS ONT ÉTÉ COUPÉS (STOP ALL)</span>';
+        resetHold();
+      }, 700);
+    }
+
+    function cancelHold() {
+      if (holdTimeout) {
+        clearTimeout(holdTimeout);
+        holdTimeout = null;
+      }
+      resetHold();
+    }
+
+    function resetHold() {
+      holdProgressCircle.style.strokeDashoffset = '100';
+    }
+
+    // Événements tactiles et souris pour le maintien
+    btnMuteAll.addEventListener('mousedown', startHold);
+    btnMuteAll.addEventListener('touchstart', startHold, { passive: false });
+    btnMuteAll.addEventListener('mouseup', cancelHold);
+    btnMuteAll.addEventListener('mouseleave', cancelHold);
+    btnMuteAll.addEventListener('touchend', cancelHold);
+    btnMuteAll.addEventListener('touchcancel', cancelHold);
+  </script>
+</body>
+</html>

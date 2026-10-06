@@ -1,0 +1,188 @@
+<!DOCTYPE html><html lang="fr" class=""><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>GM Remote — Pads — proposition T3</title>
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="meneur.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Orbitron:wght@600;700;800&amp;display=swap"></head>
+<body class="" data-ecran="pads" data-format="telephone"><div id="cadre" class="telephone"><header aria-label="Ligne d’état"><div class="statut" id="informations"></div><button id="couper" class="couper" aria-label="Couper le son — maintenir appuyé" title="Maintenir 700 ms"><span>Couper le son</span></button></header><main aria-label="Pads"></main><nav id="navigation" aria-label="Navigation du meneur"><a href="pads-telephone.html" role="button" aria-current="page">Pads</a><a href="des-telephone.html" role="button">Dés</a><a href="sons-telephone.html" role="button">Sons</a><a href="scenario-telephone.html" role="button">Scénario</a><a href="combat-telephone.html" role="button">Combat</a><a href="tableau-telephone.html" role="button">Tableau</a><a href="notes-telephone.html" role="button">Notes</a><a href="messages-telephone.html" role="button">Messages</a></nav></div><div id="jet" class="surcouche hidden"></div><script>const donnees={"actes":[{"id":"temoin-acte-1","campaignId":"temoin-campagne","ordre":1,"titre":"L'arrivee","resume":"Le groupe atteint la station et constate le silence.","acheve":true},{"id":"temoin-acte-2","campaignId":"temoin-campagne","ordre":2,"titre":"Ce que Hale n'a pas dit","resume":"Le superviseur cache un depart qui n'en etait pas un.","notesDuMeneur":"Hale ment sur la date, pas sur le nombre."},{"id":"demo-acte-3","campaignId":"temoin-campagne","ordre":3,"titre":"Ce qui écoute","resume":"Le groupe descend au noyau et rencontre l'Écho.","acheve":false}],"scenes":[{"id":"temoin-scene-1","campaignId":"temoin-campagne","acteId":"temoin-acte-1","ordre":1,"titre":"Amarrage","resume":"Le sas s'ouvre sur un couloir eclaire et vide.","origine":"preparee","lieuId":"temoin-lieu-station","entiteIds":[],"personnagesIds":["temoin-pj-1","temoin-pj-2"],"indiceIds":["temoin-indice-1"],"passages":[{"debut":1789156800000,"fin":1789159500000,"seanceId":"temoin-seance-1"}],"termineeLe":1789159500000,"creeeLe":1789156000000},{"id":"temoin-scene-2","campaignId":"temoin-campagne","acteId":"temoin-acte-2","ordre":1,"titre":"Entretien avec Hale","resume":"Il repond a tout, et trop vite.","origine":"preparee","entiteIds":["temoin-pnj-1"],"personnagesIds":["temoin-pj-2"],"indiceIds":["temoin-indice-2"],"passages":[{"debut":1789160400000,"seanceId":"temoin-seance-1"}],"creeeLe":1789156100000},{"id":"temoin-scene-3","campaignId":"temoin-campagne","acteId":"temoin-acte-2","ordre":2,"titre":"La voix dans le relais","resume":"Scene improvisee : Ancre-7 prend la parole sans qu'on l'appelle.","origine":"improvisee","entiteIds":["temoin-pnj-2"],"indiceIds":[],"creeeLe":1789160500000},{"id":"demo-scene-4","campaignId":"temoin-campagne","acteId":"temoin-acte-2","ordre":3,"titre":"Le registre réécrit","resume":"Les entrées des trois derniers jours ont la même signature.","origine":"preparee","entiteIds":["temoin-pnj-2"],"indiceIds":[],"creeeLe":1789160500000,"passages":[]},{"id":"demo-scene-5","campaignId":"temoin-campagne","acteId":"demo-acte-3","ordre":1,"titre":"Descente vers le noyau","resume":"L'ascenseur s'arrête entre deux ponts. Les lumières suivent le groupe.","origine":"preparee","entiteIds":["temoin-pnj-2"],"indiceIds":[],"creeeLe":1789160500000,"passages":[]},{"id":"demo-scene-6","campaignId":"temoin-campagne","acteId":"demo-acte-3","ordre":2,"titre":"Confrontation avec l'Écho","resume":"La voix de Nel répond avant que Nel ait parlé.","origine":"preparee","entiteIds":["temoin-pnj-2"],"indiceIds":[],"creeeLe":1789160500000,"passages":[]}],"wiki":[{"id":"temoin-wiki-1","campaignId":"temoin-campagne","title":"Station Varn","content":"Relais de communication en orbite basse. Équipage nominal : neuf.","tags":["lieu"],"category":"location","imageUrls":[],"linkedEntityIds":[],"html":"\u003cp>Relais de communication en orbite basse. Équipage nominal : neuf.\u003c/p>"},{"id":"demo-wiki-2","campaignId":"temoin-campagne","title":"Ancre-7","content":"L'intelligence de bord. Elle compte encore neuf membres d'équipage.","tags":["pnj","machine"],"category":"npc","imageUrls":[],"linkedEntityIds":[],"html":"\u003cp>L&#x27;intelligence de bord. Elle compte encore neuf membres d&#x27;équipage.\u003c/p>"},{"id":"demo-wiki-3","campaignId":"temoin-campagne","title":"Protocole de quarantaine","content":"Scelle les ponts inférieurs au moindre signal non identifié.","tags":["règle de bord"],"category":"lore","imageUrls":[],"linkedEntityIds":[],"html":"\u003cp>Scelle les ponts inférieurs au moindre signal non identifié.\u003c/p>"}],"indices":[{"id":"temoin-indice-1","campaignId":"temoin-campagne","title":"Le café encore chaud","content":"Le départ date de moins d'une heure.","isRevealed":true,"locationId":"temoin-lieu-station"},{"id":"temoin-indice-2","campaignId":"temoin-campagne","title":"La date corrigee","content":"Le registre a ete reecrit, une seule fois.","isRevealed":false},{"id":"demo-indice-3","campaignId":"temoin-campagne","title":"La signature unique","content":"Tout le registre est signé « Hale », même les nuits où il dormait.","isRevealed":true,"ownerId":"temoin-pnj-1"},{"id":"demo-indice-4","campaignId":"temoin-campagne","title":"La pièce manquante","content":"Le module de coupure du relais est dans la soute de Teo.","isRevealed":false,"ownerId":"demo-pnj-4"}],"coffre":[{"chemin":"Lieux/Le relais.md","contenu":"# Le relais\n\nUne salle ronde au pont C, des antennes en faisceau, un bourdonnement qui ne s'arrête jamais.\nC'est là que vit [[L'Écho]].\n\n> Les lumières suivent le groupe. Personne ne les a programmées pour ça.\n","html":"\u003ch1>Le relais\u003c/h1>\n\u003cp>Une salle ronde au pont C, des antennes en faisceau, un bourdonnement qui ne s&#x27;arrête jamais.\nC&#x27;est là que vit [[L&#x27;Écho]].\u003c/p>\n\u003cblockquote>\n\u003cp>Les lumières suivent le groupe. Personne ne les a programmées pour ça.\u003c/p>\n\u003c/blockquote>"},{"chemin":"PNJ/L'Écho.md","contenu":"# L'Écho\n\nCe qui parle dans le [[Le relais|relais]], avec la voix de l'équipage. Il ne parle jamais avec sa\npropre voix — il imite celle du dernier qui a parlé.\n\nIl n'existe que tant que le relais émet : le module de coupure est dans la soute de Teo.\n","html":"\u003ch1>L&#x27;Écho\u003c/h1>\n\u003cp>Ce qui parle dans le [[Le relais|relais]], avec la voix de l&#x27;équipage. Il ne parle jamais avec sa\npropre voix — il imite celle du dernier qui a parlé.\u003c/p>\n\u003cp>Il n&#x27;existe que tant que le relais émet : le module de coupure est dans la soute de Teo.\u003c/p>"},{"chemin":"PNJ/Superviseur Hale.md","contenu":"# Superviseur Hale\n\nResponsable de la [[Station Varn]] depuis six ans. Répond trop vite aux questions qu'on ne lui a\npas posées, et regarde la porte quand il ment.\n\n**Secret** : il a réécrit le registre lui-même. Toutes les entrées des trois derniers jours portent\nsa signature, même les nuits où il dormait.\n","html":"\u003ch1>Superviseur Hale\u003c/h1>\n\u003cp>Responsable de la [[Station Varn]] depuis six ans. Répond trop vite aux questions qu&#x27;on ne lui a\npas posées, et regarde la porte quand il ment.\u003c/p>\n\u003cp>\u003cstrong>Secret\u003c/strong> : il a réécrit le registre lui-même. Toutes les entrées des trois derniers jours portent\nsa signature, même les nuits où il dormait.\u003c/p>"},{"chemin":"Station Varn.md","contenu":"# Station Varn\n\nRelais de communication en orbite basse, au-dessus d'une géante gazeuse sans nom. Neuf membres\nd'équipage au registre ; le [[Superviseur Hale]] la dirige depuis six ans.\n\n## Ce que les joueurs savent\n\n- La station a cessé d'émettre il y a trois jours.\n- L'équipage est toujours à bord — et personne ne répond.\n- Le café du mess était encore chaud à l'arrivée ([[Séance 1 — Amarrage]]).\n\n## Ce que le meneur sait\n\nLe [[Le relais|relais]] émet seul, avec la voix de l'équipage. Ce qui parle s'appelle\n[[L'Écho]], et il n'existe que tant que le relais émet.\n\n## Les ponts\n\n| Pont | Ce qu'on y trouve |\n| --- | --- |\n| A | Quartiers, mess |\n| B | Infirmerie du Dr Moreau |\n| C | Le relais, scellé par le protocole de quarantaine |\n","html":"\u003ch1>Station Varn\u003c/h1>\n\u003cp>Relais de communication en orbite basse, au-dessus d&#x27;une géante gazeuse sans nom. Neuf membres\nd&#x27;équipage au registre ; le [[Superviseur Hale]] la dirige depuis six ans.\u003c/p>\n\u003ch2>Ce que les joueurs savent\u003c/h2>\n\u003cul>\n\u003cli>La station a cessé d&#x27;émettre il y a trois jours.\u003c/li>\n\u003cli>L&#x27;équipage est toujours à bord — et personne ne répond.\u003c/li>\n\u003cli>Le café du mess était encore chaud à l&#x27;arrivée ([[Séance 1 — Amarrage]]).\u003c/li>\n\u003c/ul>\n\u003ch2>Ce que le meneur sait\u003c/h2>\n\u003cp>Le [[Le relais|relais]] émet seul, avec la voix de l&#x27;équipage. Ce qui parle s&#x27;appelle\n[[L&#x27;Écho]], et il n&#x27;existe que tant que le relais émet.\u003c/p>\n\u003ch2>Les ponts\u003c/h2>\n\u003cdiv class=\"table-markdown\">\u003ctable>\u003cthead>\u003ctr>\u003cth>Pont\u003c/th>\u003cth>Ce qu&#x27;on y trouve\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>A\u003c/td>\u003ctd>Quartiers, mess\u003c/td>\u003c/tr>\u003ctr>\u003ctd>B\u003c/td>\u003ctd>Infirmerie du Dr Moreau\u003c/td>\u003c/tr>\u003ctr>\u003ctd>C\u003c/td>\u003ctd>Le relais, scellé par le protocole de quarantaine\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\u003c/div>"},{"chemin":"Séances/Séance 1 — Amarrage.md","contenu":"# Séance 1 — Amarrage\n\nLe groupe s'amarre à la [[Station Varn]] et trouve le café encore chaud. Le [[Superviseur Hale]]\nles accueille seul, et refuse de dire où est passé l'équipage.\n\n- Indice trouvé : le café encore chaud.\n- Fil ouvert : la date corrigée du registre.\n","html":"\u003ch1>Séance 1 — Amarrage\u003c/h1>\n\u003cp>Le groupe s&#x27;amarre à la [[Station Varn]] et trouve le café encore chaud. Le [[Superviseur Hale]]\nles accueille seul, et refuse de dire où est passé l&#x27;équipage.\u003c/p>\n\u003cul>\n\u003cli>Indice trouvé : le café encore chaud.\u003c/li>\n\u003cli>Fil ouvert : la date corrigée du registre.\u003c/li>\n\u003c/ul>"}]};
+/* Simulations de maquettes T3 uniquement : aucune connexion à GM-OS, aucun stockage. */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const ecran=document.body.dataset.ecran,etat=new URLSearchParams(location.search).get('etat');
+const echapper=s=>String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const aplati=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const bouton=(texte,action,attrs='')=>`<button data-action="${action}" ${attrs}>${echapper(texte)}</button>`;
+const entete=titre=>`<div class="module"><h1>${titre}</h1></div>`;
+const nomVue={pads:'Pads',des:'Dés',combat:'Combat',sons:'Sons',scenario:'Scénario',tableau:'Tableau',notes:'Notes',messages:'Messages'};
+let tour=0,round=1,ambiance=null,muet=false,tempsAppui=null,debutAppui=0,animationAppui=null;
+const combattants=[{nom:'Nel Varga',init:17,pv:9,max:12,joueur:true},{nom:"L’Écho",init:12,pv:18,max:24,joueur:false},{nom:'Idris Koa',init:0,pv:null,joueur:true}];
+const aventure=etat==='aventure';
+function statut(){
+ const liaison=etat==='non-appairee'?'Non appairée':etat==='reconnexion'?'Reconnexion':'';
+ const dot=`<i class="connexion ${liaison==='Non appairée'?'alerte':liaison?'danger':''}" aria-label="${liaison||'Connectée et appairée'}"></i>`;
+ $('#informations').innerHTML=dot+(liaison?`<span>${liaison}</span>`:'')+(etat==='non-appairee'||(ecran==='combat'&&etat==='vide')?'':`<span class="nombre" id="tour-statut">R${round} · ${echapper(combattants[tour].nom)}</span>`)
+  +(ambiance&&!muet?`<span id="ambiance-statut">${echapper(ambiance)}</span>`:'')
+  +(etat==='statut'?'<span class="nombre" id="minuteur">2:00</span>':'')
+  +(etat==='recu'?'<a role="button" class="badge" href="messages-'+document.body.dataset.format+'.html?etat=recu" aria-label="1 message non lu">Messages 1</a>':'');
+}
+const couper=$('#couper');
+function annulerAppui(){clearTimeout(tempsAppui);cancelAnimationFrame(animationAppui);tempsAppui=null;couper.style.setProperty('--progression','0%');}
+couper.addEventListener('pointerdown',event=>{if(event.button!==0)return;annulerAppui();debutAppui=performance.now();const avancer=()=>{couper.style.setProperty('--progression',Math.min(100,(performance.now()-debutAppui)/7)+'%');animationAppui=requestAnimationFrame(avancer);};avancer();tempsAppui=setTimeout(()=>{muet=true;ambiance=null;$$('[data-action^="ambiance:"].actif,[data-action="alarme"].actif').forEach(n=>n.classList.remove('actif'));document.body.dataset.arretAudio='true';statut();annulerAppui();},700);});
+for(const nom of ['pointerup','pointerleave','pointercancel'])couper.addEventListener(nom,annulerAppui);
+couper.addEventListener('contextmenu',e=>e.preventDefault());
+function volume(nom){return `<section class="panneau volume"><strong>${nom}</strong><input type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume — ${nom}" data-volume="${nom}"><output data-volume-sortie="${nom}">100%</output>${bouton('Sortie par défaut','sortie:'+nom,`class="sortie" aria-label="Sortie — ${nom}"`)}<div class="menu pleine hidden" data-menu-sortie="${nom}" role="menu" aria-label="Sorties disponibles — ${nom}">${bouton('Sortie par défaut','fermer-sortie:'+nom,'role="menuitem"')}<p class="discret">Aucune autre sortie recensée sur la machine du meneur.</p></div></section>`;}
+function sortie(action){const nom=action.split(':')[1];$$('[data-menu-sortie]').forEach(n=>n.classList.add('hidden'));$(`[data-menu-sortie="${nom}"]`).classList.toggle('hidden',action.startsWith('fermer'));}
+function audio(){
+ const vide=etat==='vide'||etat==='non-appairee';
+ if(ecran==='pads'){
+  $('main').innerHTML=entete('Pads')+`<div class="reglages">${volume('Musique')}${volume('Ambiances')}</div>`
+   +(vide?'<p class="panneau centre discret">Aucun pad configuré sur cet univers.</p>':`<div class="filtre"><input type="search" aria-label="Filtrer les pads" placeholder="Filtrer les pads…" id="filtre-pads">${bouton('Effacer','effacer-filtre','aria-label="Effacer le filtre" class="hidden" id="effacer-filtre"')}</div><section id="famille-ambiances" class="pile"><h2>Ambiances</h2><div class="grille">${[['Arcologie','Cyberpunk'],['Club Néon','Cyberpunk'],['Forêt Enchantée','Fantastique']].map(([nom,theme])=>`<button class="pad" data-pad="${nom}" data-action="ambiance:${nom}"><span class="titre-carte">${nom}</span><small class="discret">${theme}</small></button>`).join('')}</div></section><section id="famille-images" class="pile"><h2>Images</h2><button class="pad pad-image" data-pad="Plan du relais" data-action="image"><img src="assets/plan-station-varn.png" alt="Plan du relais"><span class="titre-carte">Plan du relais</span></button></section><p id="rien-pads" class="hidden discret"></p>`);
+ }else $('main').innerHTML=entete('Sons')+volume('Bruitages')+(vide?'<p class="panneau centre discret">Aucun bruitage dans l’ambiance active.</p>':`<div class="grille">${bouton('Alarme du relais','alarme','class="pad" data-pad="Alarme du relais"')}</div>`);
+}
+const modes=[['standard','Standard d20/d6'],['exploding','Somme Explosive'],['formula','Formule Libre'],['threshold','Jet de Seuil (Target)'],['pool','Pool de Dés (Succès)'],['pool_explode','Pool Explosif'],['advantage','Avantage (Garde Meilleur)'],['disadvantage','Désavantage (Garde Pire)'],['yze','Year Zero Engine'],['fate','FATE / Fudge'],['rolemaster','Rolemaster']];
+let quantite=1,modificateur=0,seuil=10,mode='standard',manuel=false,formule='',timerResultat;
+const pilote=etat==='pilote'||etat==='echelonne';
+let attribut='B',competence='C',equipement='',avantage='Normal';
+const faces={A:12,B:10,C:8,D:6};
+function poignee(){let des=[faces[attribut],faces[competence]];if(avantage==='Avantage')des.push(Math.min(...des));if(avantage==='Désavantage')des.splice(des.indexOf(Math.min(...des)),1);let douze=0;des=des.map(n=>n===12&&++douze>2?10:n);return des.map(n=>'D'+n).join(' + ')+(equipement?' + D'+faces[equipement]:'');}
+function compteur(titre,cle,valeur){return `<div class="compteur"><h2>${titre}</h2><div class="ligne">${bouton('−','decrement:'+cle,`aria-label="Diminuer ${cle==='quantite'?'la quantité':cle==='modificateur'?'le modificateur':'le seuil'}"`)}<output id="${cle}" class="nombre grand">${valeur}</output>${bouton('+','increment:'+cle,`aria-label="Augmenter ${cle==='quantite'?'la quantité':cle==='modificateur'?'le modificateur':'le seuil'}"`)}</div></div>`;}
+function des(){
+ const echelonne=etat==='echelonne'&&!manuel;
+ const niveaux=(titre,cle,valeur,facultatif)=>`<label class="pile">${titre}<select data-niveau="${cle}" aria-label="${titre}">${facultatif?'<option value="">—</option>':''}${Object.entries(faces).map(([lettre,face])=>`<option value="${lettre}" ${valeur===lettre?'selected':''}>${lettre} (D${face})</option>`).join('')}</select></label>`;
+ $('main').innerHTML=entete('Dés')+(pilote?`<section class="panneau ligne"><div class="souple"><small class="discret">Système Actif</small><h2>${etat==='echelonne'?'yze-échelonné':'standard'} ${manuel?'· Manuel':''}</h2></div>${bouton('Lancer Système','lancer-systeme','class="primaire"')}</section>`:'')
+ +(echelonne?`<section class="panneau pile"><div class="grille">${niveaux('Attribut','attribut',attribut)}${niveaux('Compétence','competence',competence)}${niveaux('Équip.','equipement',equipement,true)}</div><div class="outils">${['Normal','Avantage','Désavantage'].map(n=>bouton(n,'avantage:'+n,`aria-pressed="${avantage===n}"`)).join('')}</div><p class="nombre grand" id="poignee">D${faces[attribut]} + D${faces[competence]}${equipement?' + D'+faces[equipement]:''}</p><small>6+ réussite · 10+ en vaut deux</small></section>`
+ :mode==='formula'?`<section class="panneau pile"><h2>Formule de dés</h2><div class="formule"><input type="text" id="formule" aria-label="Formule de dés" placeholder="ex: 2d10+1d4+5" value="${echapper(formule)}">${bouton('Lancer','lancer-formule',`aria-label="Lancer la formule personnalisée" class="primaire" ${formule.trim()?'':'disabled'}`)}</div><p class="discret">Supporte les opérateurs (+,-,*,/), les pools (ex: 5d6s6) et les fonctions.</p></section>`
+ :`<section class="compteurs">${mode==='rolemaster'?'':compteur(mode==='yze'?'Dés Base':'Quantité / Base','quantite',quantite)}${mode==='yze'?'':compteur('Modificateur','modificateur',modificateur)}${mode==='rolemaster'?'':compteur(mode==='yze'?'Dés Equip. (E)':'Seuil (Target)','seuil',seuil)}</section>`)
+ +`<section class="pile"><h2>Mode de Lancer ${manuel?'<small class="badge">Manuel</small>':''}</h2>${bouton(modes.find(m=>m[0]===mode)[1],'menu-mode','class="choix-mode" aria-expanded="false" id="choix-mode"')}<div class="menu hidden" id="modes">${modes.map(([cle,nom])=>bouton(nom,'mode:'+cle)).join('')}${manuel?bouton('Réinitialiser au système','systeme'):''}</div></section>`
+ +`<section class="des">${(mode==='rolemaster'?[100]:[4,6,8,10,12,20,100]).map(n=>bouton(mode==='rolemaster'?'Lancer d100 Rolemaster':'D'+n,'lancer:'+n,`aria-label="Lancer D${n}"`)).join('')}${bouton('↺','reinitialiser','aria-label="Réinitialiser les dés"')}</section>`;
+ if(echelonne)$('#poignee').textContent=poignee();
+}
+function resultat(facesDe=20){
+ clearTimeout(timerResultat);const nombre=mode==='formula'?1:quantite;const valeur=Math.min(12,facesDe);const total=valeur*nombre+modificateur;
+ $('#jet').innerHTML=`<section class="dialogue" role="dialog" aria-label="Résultat du jet"><h2>${mode==='formula'?'Formule : '+echapper(formule):'DÉTAIL DU JET'}</h2><strong class="total">${total}</strong><div class="ligne nombre">${Array.from({length:Math.min(nombre,99)},()=>`<span class="badge">${valeur}</span>`).join('')}${modificateur?'<span class="badge">'+(modificateur>0?'+':'')+modificateur+'</span>':''}</div><span class="discret">CLIQUER POUR FERMER</span><div class="minuterie-jet"></div></section>`;
+ $('#jet').classList.remove('hidden');$('#jet').querySelector('section').addEventListener('click',e=>e.stopPropagation());timerResultat=setTimeout(fermerJet,15000);
+}
+function fermerJet(){clearTimeout(timerResultat);$('#jet').classList.add('hidden');}
+function combat(){
+ $('main').innerHTML=entete('Combat')+(etat==='vide'?'<p class="panneau centre discret">Aucun combat en cours.</p>':`<section class="panneau tour"><span>Round <strong class="nombre grand" id="round">${round}</strong></span>${bouton('Suivant','suivant','class="primaire"')}</section><div class="grille combats">${combattants.map((c,i)=>`<section class="panneau pile combatant ${i===tour?'courant':''}" data-combattant="${i}"><div class="ligne"><span class="initiative">${c.init}</span><div class="souple"><h2>${echapper(c.nom)}</h2><small class="discret">${c.joueur?'Joueur':'Ennemi'}</small></div></div>${aventure&&!c.joueur?'<p class="badge discret">Caché</p>':`<div class="pv">${bouton('−','pv:'+i+':-1',`aria-label="Retirer un point de vie à ${echapper(c.nom)}" class="danger"`)}<div class="pile"><output class="valeur" data-pv="${i}">${c.pv??''}</output><small class="discret">PV</small></div>${bouton('+','pv:'+i+':1',`aria-label="Ajouter un point de vie à ${echapper(c.nom)}" class="succes"`)}</div>`}</section>`).join('')}</div>`);
+}
+function scenario(){ $('main').innerHTML=entete('Scénario')+(etat==='vide'?'<p class="panneau centre discret">Aucun moment dans le storyboard de cette campagne.</p>':`<div class="grille moments">${['Amarrage au relais','La voix dans le relais'].map((nom,i)=>`<button class="moment" data-action="moment:${i}" data-moment="${i}"><span class="nombre grand">0${i+1}</span><span class="titre-carte">${nom}</span><span aria-hidden="true">▶</span></button>`).join('')}</div>`);}
+let vue='seance',filtreWiki='',filtreCoffre='',dossierCoffre='',noteOuverte=null;
+const vues=[['seance','Séance'],['trame','Trame 3'],['wiki','Chroniques 3'],['coffre','Nexus Wiki'],['indices','Indices 4'],['secrets','Secrets']];
+const etatScene=s=>s.termineeLe?'Close':!(s.passages?.length)?'À jouer':s.passages.some(p=>!p.fin)?'En cours':'En pause';
+function scene(s){return `<details data-scene="${s.id}"><summary><span class="badge ${etatScene(s)==='En cours'?'succes':''}">${etatScene(s)}</span><strong>${echapper(s.titre)}</strong></summary><div class="texte-detail"><p>${echapper(s.resume)}</p>${s.notesDuMeneur?'<p class="note-mj">'+echapper(s.notesDuMeneur)+'</p>':''}</div></details>`;}
+function notes(){
+ $('main').innerHTML=entete('Notes')+`<div class="vues">${vues.map(([cle,nom])=>bouton(nom,'vue:'+cle,`aria-current="${vue===cle?'page':'false'}" class="${vue===cle?'actif':''}"`)).join('')}</div><div id="lecture" class="lecture"></div>`;lecture();
+}
+function lecture(){
+ let html='';
+ if(vue==='seance'){
+  for(const [titre,etatVise] of [['Ce qui se joue','En cours'],['En pause','En pause'],['À jouer','À jouer']]){
+   const scenes=donnees.scenes.filter(s=>etatScene(s)===etatVise&&!(etatVise==='À jouer'&&donnees.actes.find(a=>a.id===s.acteId)?.acheve));
+   html+=`<section class="pile"><h2>${titre} <span class="nombre discret">${scenes.length}</span></h2>${scenes.length?scenes.map(s=>`<div class="pile"><small class="discret">${echapper(donnees.actes.find(a=>a.id===s.acteId)?.titre)}</small>${scene(s)}</div>`).join(''):'<p class="discret">Rien ici.</p>'}</section>`;
+  }
+  html+='<section class="panneau pile"><h2>Résumé public</h2><p>Le relais demeure silencieux.</p></section>';
+ }else if(vue==='trame')html=donnees.actes.map(a=>`<details open data-acte="${a.id}"><summary><strong class="${a.acheve?'acheve':''}">${echapper(a.titre)}</strong>${a.acheve?'<small>achevé</small>':''}<small>${donnees.scenes.filter(s=>s.acteId===a.id).length} scènes</small></summary><div class="texte-detail"><p>${echapper(a.resume)}</p>${a.notesDuMeneur?'<p class="note-mj">'+echapper(a.notesDuMeneur)+'</p>':''}${donnees.scenes.filter(s=>s.acteId===a.id).map(scene).join('')}</div></details>`).join('');
+ else if(vue==='wiki'){
+  html=`<div class="filtre"><input type="search" id="filtre-wiki" aria-label="Chercher dans le wiki" placeholder="Chercher dans le wiki…" value="${echapper(filtreWiki)}">${bouton('Effacer','effacer-wiki',`aria-label="Effacer la recherche" ${filtreWiki?'':'class="hidden"'}`)}</div><div id="resultats-wiki" class="pile"></div>`;
+ }else if(vue==='indices')html=`<div class="grille">${donnees.indices.map(i=>`<section class="panneau pile"><span class="badge ${i.isRevealed?'succes':''}">${i.isRevealed?'Donné':'En main'}</span><h3>${echapper(i.title)}</h3><p>${echapper(i.content)}</p></section>`).join('')}</div>`;
+ else if(vue==='secrets')html=`<section class="panneau ${aventure?'protege':''}"><p>${aventure?'Contenu protégé par le Mode Aventure.':'Hale connaît la panne.'}</p></section>`;
+ else if(vue==='coffre'){
+  if(noteOuverte){const note=donnees.coffre.find(n=>n.chemin===noteOuverte);html=`<div class="ligne">${bouton('Retour','retour-note','aria-label="Revenir à la liste"')}<strong>${echapper(note.chemin.replace(/\.md$/,''))}</strong></div><article class="panneau markdown">${note.html}</article>`;}
+  else html=`<div class="filtre"><input type="search" id="filtre-coffre" aria-label="Chercher une note dans le coffre" placeholder="Chercher dans tout le coffre…" value="${echapper(filtreCoffre)}">${bouton('Recharger','recharger-coffre','aria-label="Recharger le coffre"')}</div><div class="chemin" id="chemin-coffre"></div><div class="pile" id="resultats-coffre"></div>`;
+ }
+ $('#lecture').innerHTML=html;
+ if(vue==='wiki')rechercheWiki();if(vue==='coffre'&&!noteOuverte)rechercheCoffre();
+}
+function rechercheWiki(){
+ const fiches=donnees.wiki.filter(f=>aplati(f.title+' '+f.content+' '+f.tags.join(' ')).includes(aplati(filtreWiki.trim())));
+ const categories={npc:'PNJ',location:'Lieu',lore:'Savoir'};
+ $('#resultats-wiki').innerHTML=fiches.length?Object.entries(categories).filter(([c])=>fiches.some(f=>f.category===c)).map(([c,titre])=>`<section class="pile"><h2>${titre} ${fiches.filter(f=>f.category===c).length}</h2>${fiches.filter(f=>f.category===c).map(f=>`<details><summary><span class="badge">${titre}</span><strong>${echapper(f.title)}</strong></summary><div class="texte-detail markdown">${f.html}<small class="discret">${echapper(f.tags.join(' · '))}</small></div></details>`).join('')}</section>`).join(''):`<p class="discret">Rien ne correspond à « ${echapper(filtreWiki)} ».</p>`;
+}
+function rechercheCoffre(){
+ const recherche=aplati(filtreCoffre.trim());let notes=donnees.coffre;
+ if(recherche){$('#chemin-coffre').innerHTML='';notes=notes.filter(n=>aplati(n.chemin).includes(recherche));$('#resultats-coffre').innerHTML=notes.length?notes.map(n=>bouton(n.chemin.replace(/\.md$/,''),'note:'+n.chemin)).join(''):`<p>Aucune note ne correspond à « ${echapper(filtreCoffre)} ».</p>`;return;}
+ $('#chemin-coffre').innerHTML=dossierCoffre?bouton('Coffre','dossier:')+`<span>${echapper(dossierCoffre)}</span>`:'';
+ const enfants=notes.filter(n=>n.chemin.startsWith(dossierCoffre));const dossiers=[...new Set(enfants.map(n=>n.chemin.slice(dossierCoffre.length).split('/')).filter(p=>p.length>1).map(p=>p[0]))].sort();
+ $('#resultats-coffre').innerHTML=dossiers.map(n=>bouton('▣ '+n,'dossier:'+dossierCoffre+n+'/')).join('')+enfants.filter(n=>!n.chemin.slice(dossierCoffre.length).includes('/')).map(n=>bouton(n.chemin.slice(dossierCoffre.length).replace(/\.md$/,''),'note:'+n.chemin)).join('');
+}
+let destinataire='tous';const correspondants=[['idris','Idris Koa'],['nel','Nel Varga'],['sora','Sora Adebayo']];
+const messages=etat==='recu'?[{de:'nel',nom:'Nel Varga',vers:'GM',versNom:'Maître du Jeu',texte:'Le relais est ouvert.'}]:[];
+function messagerie(){
+ $('main').innerHTML=entete('Messages')+`<div class="correspondants">${[['tous','Tous'],...correspondants].map(([cle,nom])=>bouton(nom,'destinataire:'+cle,`aria-pressed="${cle===destinataire}"`)).join('')}</div><div id="conversation" aria-live="polite"></div><div class="saisie"><input type="text" id="message" aria-label="Message à envoyer">${bouton('Envoyer','envoyer','aria-label="Envoyer le message" class="primaire" id="envoyer" disabled')}</div>`;conversation();
+}
+function conversation(){
+ const nom=destinataire==='tous'?'Tous les joueurs':correspondants.find(c=>c[0]===destinataire)[1];$('#message').placeholder='Écrire à '+nom+'…';
+ const fil=destinataire==='tous'?messages:messages.filter(m=>m.de===destinataire||m.vers===destinataire);
+ $('#conversation').innerHTML=fil.length?fil.map(m=>`<div class="message ${m.de==='GM'?'moi':''}"><div class="bulle"><p class="meta">${m.de==='GM'?'→ '+echapper(m.vers==='all'?'Tous':m.versNom):echapper(m.nom)} · 23:40</p><p>${echapper(m.texte)}</p></div></div>`).join(''):'<p class="centre discret">Rien dans ce fil.</p>';
+ $('#conversation').scrollTop=$('#conversation').scrollHeight;
+}
+function envoyer(){const texte=$('#message').value.trim();if(!texte)return;const [vers,nom]=destinataire==='tous'?['all','Tous les joueurs']:correspondants.find(c=>c[0]===destinataire);messages.push({de:'GM',vers,versNom:nom,texte});$('#message').value='';$('#envoyer').disabled=true;conversation();}
+let outil='brush',couleur='#ffffff',epaisseur=4,clair=etat==='clair';
+let traces=[{outil:'rect',couleur:'#22d3ee',epaisseur:4,points:[{x:.15,y:.2},{x:.55,y:.7}]}],retablir=[],trace=null,laser=null,observateurCanvas=null;
+function tableau(){
+ $('main').innerHTML=entete('Tableau')+`<div class="outils">${[['brush','Crayon'],['eraser','Gomme'],['laser','Laser'],['rect','Rectangle'],['circle','Cercle']].map(([cle,nom])=>bouton(nom,'outil:'+cle,`aria-label="${nom}" aria-pressed="${outil===cle}"`)).join('')}</div><div class="outils">${[[2,'Fin'],[4,'Moyen'],[8,'Épais']].map(([n,nom])=>bouton(nom,'epaisseur:'+n,`aria-label="Trait ${nom.toLowerCase()}" aria-pressed="${epaisseur===n}"`)).join('')}${bouton(clair?'Fond sombre':'Fond clair','fond',`aria-label="Passer en fond ${clair?'sombre':'clair'}"`)}${bouton('Annuler','annuler')}${bouton('Rétablir','retablir')}${bouton('Effacer tout','effacer-tableau','class="danger"')}</div><div class="surface-dessin ${clair?'clair':''}"><canvas aria-label="Surface de dessin" id="dessin"></canvas></div><div class="couleurs">${[clair?'#000000':'#ffffff','#ef4444','#3b82f6','#10b981','#f59e0b','#a855f7','#ec4899','#06b6d4'].map(c=>bouton('','couleur:'+c,`style="background:${c}" aria-label="Choisir la couleur ${c}" aria-pressed="${couleur===c}"`)).join('')}</div>`;
+ const canvas=$('#dessin');observateurCanvas?.disconnect();observateurCanvas=new ResizeObserver(()=>{const r=canvas.getBoundingClientRect();canvas.width=Math.round(r.width);canvas.height=Math.round(r.height);dessiner();});observateurCanvas.observe(canvas);
+ const point=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};};
+ canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);const p=point(e);if(outil==='laser'){laser=p;dessiner();return;}trace={outil,couleur,epaisseur,points:[p]};dessiner();};
+ canvas.onpointermove=e=>{if(!(e.buttons&1))return;if(outil==='laser'){laser=point(e);dessiner();return;}if(!trace)return;trace.points.push(point(e));dessiner();};
+ canvas.onpointerup=()=>{if(trace){traces.push(trace);trace=null;retablir=[];}laser=null;dessiner();};canvas.onpointercancel=()=>{trace=null;laser=null;dessiner();};
+}
+function dessiner(){
+ const c=$('#dessin');if(!c)return;const ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+ for(const t of [...traces,...(trace?[trace]:[])]){ctx.globalCompositeOperation=t.outil==='eraser'?'destination-out':'source-over';ctx.strokeStyle=t.couleur;ctx.lineWidth=t.epaisseur;ctx.lineCap='round';const points=t.points.map(p=>({x:p.x*c.width,y:p.y*c.height}));if(points.length<2)continue;const a=points[0],b=points.at(-1);ctx.beginPath();if(t.outil==='rect')ctx.rect(a.x,a.y,b.x-a.x,b.y-a.y);else if(t.outil==='circle')ctx.ellipse((a.x+b.x)/2,(a.y+b.y)/2,Math.abs(b.x-a.x)/2,Math.abs(b.y-a.y)/2,0,0,Math.PI*2);else{ctx.moveTo(a.x,a.y);for(const p of points.slice(1))ctx.lineTo(p.x,p.y);}ctx.stroke();}
+ ctx.globalCompositeOperation='source-over';if(laser){ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(laser.x*c.width,laser.y*c.height,5,0,Math.PI*2);ctx.fill();}
+ c.dataset.traces=String(traces.length);c.dataset.outil=outil;c.dataset.couleur=couleur;c.dataset.epaisseur=String(epaisseur);
+}
+document.addEventListener('input',e=>{
+ const n=e.target;if(n.dataset.volume){$(`[data-volume-sortie="${n.dataset.volume}"]`).textContent=Math.round(n.value*100)+'%';}
+ if(n.id==='filtre-pads'){const cherche=aplati(n.value);const pads=$$('[data-pad]');pads.forEach(p=>p.hidden=!aplati(p.textContent).includes(cherche));$('#famille-ambiances').hidden=!pads.some(p=>!p.hidden&&p.dataset.action.startsWith('ambiance'));$('#famille-images').hidden=!pads.some(p=>!p.hidden&&p.dataset.action==='image');$('#rien-pads').classList.toggle('hidden',pads.some(p=>!p.hidden));$('#rien-pads').textContent='Rien ne correspond à « '+n.value+' ».';$('#effacer-filtre').classList.toggle('hidden',!n.value);}
+ if(n.id==='formule'){formule=n.value;$('[data-action="lancer-formule"]').disabled=!formule.trim();}
+ if(n.id==='message')$('#envoyer').disabled=!n.value.trim();
+ if(n.id==='filtre-wiki'){filtreWiki=n.value;rechercheWiki();$('[data-action="effacer-wiki"]').classList.toggle('hidden',!n.value);}
+ if(n.id==='filtre-coffre'){filtreCoffre=n.value;rechercheCoffre();}
+});
+document.addEventListener('change',e=>{if(e.target.dataset.niveau){if(e.target.dataset.niveau==='attribut')attribut=e.target.value;if(e.target.dataset.niveau==='competence')competence=e.target.value;if(e.target.dataset.niveau==='equipement')equipement=e.target.value;des();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$$('[data-menu-sortie]').forEach(n=>n.classList.add('hidden'));if(e.target.id==='message'&&e.key==='Enter'){e.preventDefault();envoyer();}});
+document.addEventListener('click',e=>{
+ if(!e.target.closest('.volume'))$$('[data-menu-sortie]').forEach(n=>n.classList.add('hidden'));
+ const cible=e.target.closest('[data-action]');if(!cible)return;const action=cible.dataset.action;const [cle,param,pv]=action.split(':');
+ if(cle==='sortie'||cle==='fermer-sortie')sortie(action);
+ if(cle==='ambiance'){ambiance=param;muet=false;$$('[data-action^="ambiance:"]').forEach(n=>n.classList.remove('actif'));cible.classList.add('actif');statut();}
+ if(cle==='image'||cle==='alarme'){cible.classList.add('actif');document.body.dataset[cle==='image'?'projection':'bruitage']='true';muet=false;}
+ if(cle==='effacer-filtre'){$('#filtre-pads').value='';$('#filtre-pads').dispatchEvent(new Event('input',{bubbles:true}));}
+ if(cle==='increment'||cle==='decrement'){const delta=cle==='increment'?1:-1;if(param==='quantite')quantite=Math.max(1,Math.min(99,quantite+delta));if(param==='modificateur')modificateur+=delta;if(param==='seuil')seuil=Math.max(0,Math.min(99,seuil+delta));des();}
+ if(cle==='menu-mode'){$('#modes').classList.toggle('hidden');cible.setAttribute('aria-expanded',String(!$('#modes').classList.contains('hidden')));}
+ if(cle==='mode'){mode=param;manuel=true;des();}
+ if(cle==='systeme'){mode='standard';manuel=false;des();}
+ if(cle==='reinitialiser'){quantite=1;modificateur=0;seuil=10;manuel=false;mode='standard';fermerJet();des();}
+ if(cle==='avantage'){avantage=param;des();}
+ if(cle==='lancer'||cle==='lancer-systeme'||cle==='lancer-formule')resultat(Number(param)||20);
+ if(cle==='pv'){const c=combattants[Number(param)];if(c.pv!==null)c.pv=Math.max(0,Math.min(c.max,c.pv+Number(pv)));combat();}
+ if(cle==='suivant'){tour=(tour+1)%combattants.length;if(!tour)round++;combat();statut();}
+ if(cle==='moment'){$$('[data-moment]').forEach(n=>n.classList.remove('actif'));cible.classList.add('actif');document.body.dataset.moment=param;}
+ if(cle==='vue'){vue=param;notes();}
+ if(cle==='effacer-wiki'){filtreWiki='';lecture();}
+ if(cle==='dossier'){dossierCoffre=param;filtreCoffre='';lecture();}
+ if(cle==='note'){noteOuverte=action.slice(5);lecture();}
+ if(cle==='retour-note'){noteOuverte=null;lecture();}
+ if(cle==='recharger-coffre'){document.body.dataset.coffreRecharge='true';rechercheCoffre();}
+ if(cle==='destinataire'){destinataire=param;const texte=$('#message').value;messagerie();$('#message').value=texte;$('#envoyer').disabled=!texte.trim();}
+ if(cle==='envoyer')envoyer();
+ if(cle==='outil'){outil=param;tableau();}
+ if(cle==='epaisseur'){epaisseur=Number(param);tableau();}
+ if(cle==='couleur'){couleur=param;tableau();}
+ if(cle==='fond'){clair=!clair;tableau();}
+ if(cle==='annuler'){if(traces.length)retablir.push(traces.pop());dessiner();}
+ if(cle==='retablir'){if(retablir.length)traces.push(retablir.pop());dessiner();}
+ if(cle==='effacer-tableau'){traces=[];retablir=[];dessiner();}
+});
+$('#jet').addEventListener('click',e=>{if(e.target===$('#jet'))fermerJet();});
+document.body.className=ecran;statut();
+if(ecran==='pads'||ecran==='sons')audio();if(ecran==='des')des();if(ecran==='combat')combat();if(ecran==='scenario')scenario();if(ecran==='notes')notes();if(ecran==='messages')messagerie();if(ecran==='tableau')tableau();
+if(ecran==='des'&&etat==='resultat')resultat();if(etat==='statut'){ambiance='Arcologie';statut();}
+</script></body></html>

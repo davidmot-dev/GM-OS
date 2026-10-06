@@ -21,6 +21,25 @@ de Direct remplace pour T4 la navigation sur une ligne choisie à apparence cons
 Les jetons et polices de GM-OS s'appliqueront lors de l'intégration ; le thème Cyberpunk du
 dessin reste une référence.
 
-**Inventaire, Cartes et les cinq écrans J2 sont proposés** dans la galerie, avant les lots meneur.
-Ils restent à choisir ; seuls Accueil et Direct sont retenus ici. La demande « commit J2 » du
-05/10 archive les propositions et leurs supports, sans changer ce statut.
+**David, le 06/10 : « ok c'est bon pour moi, est-ce que t3 est fini ? ».** Son accord est
+consigné sur l’ensemble présenté J1/J2/M1/M2. Les neuf écrans joueurs sont maintenant
+retenus ; **T3 est terminé**. La demande antérieure « commit J2 » archivait seulement
+les propositions ; la validation est celle du 06/10.
+
+Les copies complètes des propositions corrigées sont conservées à la racine de ce dossier,
+avec les assets, les rendus et les contrôles. Les dossiers `accueil/` et `direct/` restent
+les premières références choisies le 05/10.
+
+| Écran | Téléphone | Paysage |
+| --- | --- | --- |
+| Inventaire | [HTML](inventaire-telephone.html) | [HTML](inventaire-paysage.html) |
+| Cartes | [HTML](cartes-telephone.html) | [HTML](cartes-paysage.html) |
+| Archives | [HTML](archives-telephone.html) | [HTML](archives-paysage.html) |
+| PNJ | [HTML](pnj-telephone.html) | [HTML](pnj-paysage.html) |
+| Lieux | [HTML](lieux-telephone.html) | [HTML](lieux-paysage.html) |
+| Messages | [HTML](messages-telephone.html) | [HTML](messages-paysage.html) |
+| Notifications | [HTML](notifications-telephone.html) | [HTML](notifications-paysage.html) |
+
+Les rendus 360, 390, 820 et 1180 px sont dans `rendus/`. Les chemins de requêtes et d’exports
+bruts de `ecrans.json` se rapportent au dossier de production `tablettes/T3-propositions/`.
+Identité des copies : [manifeste SHA-256](../../tablettes/T3-references-retenues.json).

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>GM-OS — Télécommande Meneur : Tableau (390×844)</title>
+  <!-- Polices Google requises par le DESIGN.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            'text-primary': '#f8fafc',
+            'text-muted': '#898c95',
+            primary: '#06b6d4',
+            danger: '#ef4444',
+            success: '#10b981',
+            warning: '#f59e0b',
+            border: '#1e293b'
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Space Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .viewport-container {
+      width: 100%;
+      max-width: 390px;
+      min-height: 844px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #020617;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+    }
+    /* Surface canvas */
+    .board-canvas-wrapper {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      touch-action: none;
+      overflow: hidden;
+      background-color: #070d1f;
+      cursor: crosshair;
+    }
+    .board-canvas-wrapper.light-mode {
+      background-color: #f1f5f9;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    /* Barre de progression maintien Couper son */
+    .mute-hold-progress {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      background-color: #ef4444;
+      width: 0%;
+      transition: width 0.05s linear;
+    }
+    /* Touch target minimum 44x44 */
+    .touch-target {
+      min-width: 44px;
+      min-height: 44px;
+    }
+    /* Scrollbar discrète si overflow */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+    }
+  </style>
+</head>
+<body class="bg-[#020617] text-[#f8fafc] antialiased">
+
+  <div class="viewport-container" id="remoteApp">
+    
+    <!-- ========================================== -->
+    <!-- 1. LIGNE D'ÉTAT PERMANENTE (Remote Status Bar) -->
+    <!-- ========================================== -->
+    <header class="flex items-center justify-between px-3 py-2 bg-[#0c1324] border-b border-[#1e293b] z-30 shrink-0">
+      <div class="flex items-center space-x-2">
+        <!-- Voyant connecté appairé -->
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#10b981] shadow-[0_0_8px_#10b981]" title="Appairé"></span>
+        <div class="flex flex-col">
+          <span class="font-mono text-[11px] text-[#898c95] leading-none uppercase tracking-wider font-bold">GM-OS // T3</span>
+          <span class="font-inter text-[13px] font-semibold text-[#f8fafc] leading-tight">R1 · Nel Varga</span>
+        </div>
+      </div>
+
+      <!-- Bouton Couper le son (Maintenir 700ms) -->
+      <button id="btnHoldMute" 
+              class="relative touch-target px-3 py-1.5 bg-[#1e293b] hover:bg-[#283548] active:bg-[#334155] border border-[#334155] flex items-center justify-center overflow-hidden transition-colors"
+              title="Maintenir 700ms pour couper le son">
+        <div id="muteProgressBar" class="mute-hold-progress"></div>
+        <span class="font-mono text-[11px] font-bold text-[#ef4444] uppercase tracking-wider flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+          <span id="muteLabel">Couper son</span>
+        </span>
+      </button>
+    </header>
+
+    <!-- Zone défilante au-dessus du pied -->
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+
+      <!-- ========================================== -->
+      <!-- 2. EN-TÊTE DU MODULE (M2 Tableau) -->
+      <!-- ========================================== -->
+      <div class="px-3 pt-2 pb-1.5 bg-[#0f172a] border-b border-[#1e293b] shrink-0">
+        <div class="flex items-center justify-between">
+          <div class="flex items-baseline gap-2">
+            <h1 class="font-orbitron font-bold text-[16px] tracking-wide text-white uppercase">M2 TABLEAU</h1>
+            <span class="font-mono text-[11px] text-primary tracking-wider uppercase font-semibold">RemoteWhiteboardView</span>
+          </div>
+          <span class="px-2 py-0.5 text-[11px] font-mono font-bold bg-[#06b6d4]/15 text-primary border border-primary/30 uppercase">Table T0</span>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- 3. BARRES DE RÉGLAGE & OUTILS TACTILES (≥44px) -->
+      <!-- ========================================== -->
+      <section class="bg-[#0f172a] border-b border-[#1e293b] p-2 space-y-1.5 shrink-0 z-20">
+        
+        <!-- Rangée 1 : Outils de dessin + Actions d'historique -->
+        <div class="flex items-center justify-between gap-1 overflow-x-auto pb-0.5">
+          <!-- Groupe Outils (Crayon, Gomme, Laser, Rectangle, Cercle) -->
+          <div class="flex items-center gap-1" role="toolbar" aria-label="Outils de tracé">
+            <button id="toolCrayon" class="tool-btn touch-target flex-1 px-2 flex flex-col items-center justify-center border border-primary bg-primary/20 text-primary" data-tool="crayon" title="Crayon">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              <span class="text-[11px] font-mono leading-none mt-0.5">Crayon</span>
+            </button>
+            <button id="toolGomme" class="tool-btn touch-target flex-1 px-2 flex flex-col items-center justify-center border border-[#1e293b] bg-[#1e293b] text-[#898c95] hover:text-white" data-tool="gomme" title="Gomme">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M15.14 3c-.4 0-.8.16-1.1.46l-9.58 9.58c-.6.6-.6 1.6 0 2.2l5.3 5.3c.3.3.7.46 1.1.46h7.14v-2H12.4l4.94-4.94c.6-.6.6-1.6 0-2.2l-5.3-5.3c-.3-.3-.7-.46-1.1-.46h4.2z"/></svg>
+              <span class="text-[11px] font-mono leading-none mt-0.5">Gomme</span>
+            </button>
+            <button id="toolLaser" class="tool-btn touch-target flex-1 px-2 flex flex-col items-center justify-center border border-[#1e293b] bg-[#1e293b] text-[#898c95] hover:text-white" data-tool="laser" title="Laser (temporaire)">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+              <span class="text-[11px] font-mono leading-none mt-0.5">Laser</span>
+            </button>
+            <button id="toolRect" class="tool-btn touch-target flex-1 px-2 flex flex-col items-center justify-center border border-[#1e293b] bg-[#1e293b] text-[#898c95] hover:text-white" data-tool="rectangle" title="Rectangle">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="0"/></svg>
+              <span class="text-[11px] font-mono leading-none mt-0.5">Rect</span>
+            </button>
+            <button id="toolCercle" class="tool-btn touch-target flex-1 px-2 flex flex-col items-center justify-center border border-[#1e293b] bg-[#1e293b] text-[#898c95] hover:text-white" data-tool="cercle" title="Cercle">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+              <span class="text-[11px] font-mono leading-none mt-0.5">Cercle</span>
+            </button>
+          </div>
+
+          <!-- Actions d'historique directes : Annuler, Rétablir, Effacer tout (sans confirmation ajoutée) -->
+          <div class="flex items-center gap-1 border-l border-[#1e293b] pl-1.5">
+            <button id="btnUndo" class="touch-target px-2 bg-[#1e293b] hover:bg-[#283548] active:bg-[#334155] border border-[#334155] text-[#f8fafc] flex items-center justify-center" title="Annuler">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+            </button>
+            <button id="btnRedo" class="touch-target px-2 bg-[#1e293b] hover:bg-[#283548] active:bg-[#334155] border border-[#334155] text-[#f8fafc] flex items-center justify-center" title="Rétablir">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/></svg>
+            </button>
+            <button id="btnClear" class="touch-target px-2 bg-[#ef4444]/15 hover:bg-[#ef4444]/25 active:bg-[#ef4444]/40 border border-[#ef4444]/40 text-[#ef4444] flex items-center justify-center" title="Effacer tout">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Rangée 2 : Épaisseur des traits + Fond clair/sombre -->
+        <div class="flex items-center justify-between gap-1">
+          <!-- Traits : Fin 2, Moyen 4, Épais 8 -->
+          <div class="flex items-center gap-1.5">
+            <span class="text-[11px] font-mono text-[#898c95] uppercase font-bold mr-0.5">Trait :</span>
+            <button class="stroke-btn touch-target px-2.5 py-1 text-[12px] font-mono border border-[#1e293b] bg-[#1e293b] text-[#898c95] flex items-center gap-1.5" data-size="2" title="Trait Fin (2px)">
+              <span class="w-1.5 h-1.5 rounded-full bg-current"></span> Fin 2
+            </button>
+            <button class="stroke-btn touch-target px-2.5 py-1 text-[12px] font-mono border border-primary bg-primary/20 text-primary font-bold flex items-center gap-1.5" data-size="4" title="Trait Moyen (4px)">
+              <span class="w-2.5 h-2.5 rounded-full bg-current"></span> Moyen 4
+            </button>
+            <button class="stroke-btn touch-target px-2.5 py-1 text-[12px] font-mono border border-[#1e293b] bg-[#1e293b] text-[#898c95] flex items-center gap-1.5" data-size="8" title="Trait Épais (8px)">
+              <span class="w-3.5 h-3.5 rounded-full bg-current"></span> Épais 8
+            </button>
+          </div>
+
+          <!-- Bascule Fond Clair / Sombre -->
+          <button id="btnToggleTheme" class="touch-target px-2.5 py-1 border border-[#334155] bg-[#1e293b] hover:bg-[#283548] text-white flex items-center gap-1.5" title="Basculer fond clair/sombre">
+            <span id="themeIndicator" class="w-3 h-3 border border-[#898c95] bg-[#070d1f]"></span>
+            <span id="themeLabel" class="text-[11px] font-mono uppercase font-bold text-[#898c95]">Sombre</span>
+          </button>
+        </div>
+
+        <!-- Rangée 3 : Les 8 Couleurs requises (Blanc/Noir selon fond, Rouge, Bleu, Vert, Ambre, Violet, Rose, Cyan) -->
+        <div class="flex items-center justify-between gap-1 pt-0.5">
+          <!-- 8 pastilles de couleur ≥44x44px target -->
+          <div class="grid grid-cols-8 gap-1 w-full" id="colorPalette">
+            <!-- 1. Noir/Blanc adaptatif -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-white/80 bg-[#1e293b]" data-color="#f8fafc" data-base="adaptive" title="Blanc / Noir">
+              <span class="w-5 h-5 rounded-none bg-[#f8fafc] border border-black/40"></span>
+            </button>
+            <!-- 2. Rouge -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-transparent bg-[#1e293b]" data-color="#ef4444" title="Rouge">
+              <span class="w-5 h-5 rounded-none bg-[#ef4444]"></span>
+            </button>
+            <!-- 3. Bleu -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-transparent bg-[#1e293b]" data-color="#3b82f6" title="Bleu">
+              <span class="w-5 h-5 rounded-none bg-[#3b82f6]"></span>
+            </button>
+            <!-- 4. Vert -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-transparent bg-[#1e293b]" data-color="#10b981" title="Vert">
+              <span class="w-5 h-5 rounded-none bg-[#10b981]"></span>
+            </button>
+            <!-- 5. Ambre -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-transparent bg-[#1e293b]" data-color="#f59e0b" title="Ambre">
+              <span class="w-5 h-5 rounded-none bg-[#f59e0b]"></span>
+            </button>
+            <!-- 6. Violet -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-transparent bg-[#1e293b]" data-color="#8b5cf6" title="Violet">
+              <span class="w-5 h-5 rounded-none bg-[#8b5cf6]"></span>
+            </button>
+            <!-- 7. Rose -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-transparent bg-[#1e293b]" data-color="#ec4899" title="Rose">
+              <span class="w-5 h-5 rounded-none bg-[#ec4899]"></span>
+            </button>
+            <!-- 8. Cyan (actif par défaut) -->
+            <button class="color-btn touch-target flex items-center justify-center p-1 border-2 border-primary bg-primary/20" data-color="#06b6d4" title="Cyan">
+              <span class="w-5 h-5 rounded-none bg-[#06b6d4]"></span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 4. SURFACE DE DESSIN T0 (Prend la place restante) -->
+      <!-- ========================================== -->
+      <div class="board-canvas-wrapper" id="canvasWrapper">
+        <!-- Canvas principal pour le dessin persistant -->
+        <canvas id="paintCanvas"></canvas>
+        <!-- Canvas d'aperçu pour les formes en cours et le laser temporaire -->
+        <canvas id="overlayCanvas"></canvas>
+      </div>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- 5. HUIT ONGLETS EN PIED (2 rangées de 4) -->
+    <!-- ========================================== -->
+    <nav class="bg-[#0c1324] border-t border-[#1e293b] shrink-0 z-30" aria-label="Navigation télécommande">
+      <!-- Rangée 1 : Pads, Dés, Sons, Scénario -->
+      <div class="grid grid-cols-4 border-b border-[#1e293b]/60">
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-[#898c95] hover:text-[#f8fafc] transition-colors">
+          <svg class="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider">PADS</span>
+        </button>
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-[#898c95] hover:text-[#f8fafc] transition-colors">
+          <svg class="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider">DÉS</span>
+        </button>
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-[#898c95] hover:text-[#f8fafc] transition-colors">
+          <svg class="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider">SONS</span>
+        </button>
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-[#898c95] hover:text-[#f8fafc] transition-colors">
+          <svg class="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider">SCÉNARIO</span>
+        </button>
+      </div>
+
+      <!-- Rangée 2 : Combat, Tableau (ACTIF), Notes, Messages -->
+      <div class="grid grid-cols-4">
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-[#898c95] hover:text-[#f8fafc] transition-colors">
+          <svg class="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider">COMBAT</span>
+        </button>
+        <!-- TABLEAU ACTIF : cyan contrasté avec indicateur plein -->
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-primary bg-[#06b6d4]/10 border-t-2 border-primary" aria-current="page">
+          <svg class="w-4 h-4 mb-0.5 stroke-primary" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="0"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider text-primary">TABLEAU</span>
+        </button>
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-[#898c95] hover:text-[#f8fafc] transition-colors">
+          <svg class="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider">NOTES</span>
+        </button>
+        <button class="touch-target flex flex-col items-center justify-center py-1 text-[#898c95] hover:text-[#f8fafc] transition-colors">
+          <svg class="w-4 h-4 mb-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="font-mono text-[11px] font-bold uppercase tracking-wider">MESSAGES</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 6. LOGIQUE DE DESSIN T0 & INTERACTIONS -->
+  <!-- ========================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const wrapper = document.getElementById('canvasWrapper');
+      const paintCanvas = document.getElementById('paintCanvas');
+      const overlayCanvas = document.getElementById('overlayCanvas');
+      const pctx = paintCanvas.getContext('2d');
+      const octx = overlayCanvas.getContext('2d');
+
+      // État de l'application
+      let currentTool = 'crayon'; // 'crayon' | 'gomme' | 'laser' | 'rectangle' | 'cercle'
+      let strokeWidth = 4;
+      let currentColor = '#06b6d4'; // Cyan par défaut
+      let isDarkTheme = true;
+      let isDrawing = false;
+      let startX = 0, startY = 0;
+      let laserTimeout = null;
+
+      // Historique Annuler / Rétablir
+      const history = [];
+      let historyStep = -1;
+      const MAX_HISTORY = 25;
+
+      // Redimensionnement du Canvas
+      function resizeCanvas() {
+        const rect = wrapper.getBoundingClientRect();
+        // Conserver le contenu si déjà initialisé
+        let tempCanvas = null;
+        if (paintCanvas.width > 0 && paintCanvas.height > 0) {
+          tempCanvas = document.createElement('canvas');
+          tempCanvas.width = paintCanvas.width;
+          tempCanvas.height = paintCanvas.height;
+          tempCanvas.getContext('2d').drawImage(paintCanvas, 0, 0);
+        }
+
+        paintCanvas.width = rect.width;
+        paintCanvas.height = rect.height;
+        overlayCanvas.width = rect.width;
+        overlayCanvas.height = rect.height;
+
+        if (tempCanvas) {
+          pctx.drawImage(tempCanvas, 0, 0);
+        } else {
+          // Premier affichage : Initialiser avec le rectangle cyan du banc T0
+          // e2e T0 : rectangle cyan x: 15%..55%, y: 20%..70%
+          drawInitialT0Rectangle();
+          saveState();
+        }
+      }
+
+      // Rectangle cyan de référence T0
+      function drawInitialT0Rectangle() {
+        const w = paintCanvas.width;
+        const h = paintCanvas.height;
+        const rx = w * 0.15;
+        const ry = h * 0.20;
+        const rw = w * (0.55 - 0.15);
+        const rh = h * (0.70 - 0.20);
+
+        pctx.strokeStyle = '#06b6d4';
+        pctx.lineWidth = 4;
+        pctx.strokeRect(rx, ry, rw, rh);
+      }
+
+      function saveState() {
+        if (historyStep < history.length - 1) {
+          history.splice(historyStep + 1);
+        }
+        history.push(paintCanvas.toDataURL());
+        if (history.length > MAX_HISTORY) {
+          history.shift();
+        } else {
+          historyStep++;
+        }
+      }
+
+      function restoreState(step) {
+        if (step >= 0 && step < history.length) {
+          const img = new Image();
+          img.src = history[step];
+          img.onload = () => {
+            pctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+            pctx.drawImage(img, 0, 0);
+          };
+          historyStep = step;
+        }
+      }
+
+      // Gestion des coordonnées tactiles / souris
+      function getCoordinates(e) {
+        const rect = wrapper.getBoundingClientRect();
+        if (e.touches && e.touches.length > 0) {
+          return {
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top
+          };
+        }
+        return {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        };
+      }
+
+      // Événements de tracé
+      function handleStart(e) {
+        e.preventDefault();
+        isDrawing = true;
+        const coords = getCoordinates(e);
+        startX = coords.x;
+        startY = coords.y;
+
+        if (currentTool === 'crayon') {
+          pctx.beginPath();
+          pctx.moveTo(startX, startY);
+          pctx.strokeStyle = currentColor;
+          pctx.lineWidth = strokeWidth;
+          pctx.lineCap = 'round';
+          pctx.lineJoin = 'round';
+        } else if (currentTool === 'gomme') {
+          pctx.save();
+          pctx.globalCompositeOperation = 'destination-out';
+          pctx.beginPath();
+          pctx.arc(startX, startY, strokeWidth * 3, 0, Math.PI * 2);
+          pctx.fill();
+        } else if (currentTool === 'laser') {
+          octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          drawLaserPoint(startX, startY);
+        }
+      }
+
+      function handleMove(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const coords = getCoordinates(e);
+        const currX = coords.x;
+        const currY = coords.y;
+
+        if (currentTool === 'crayon') {
+          pctx.lineTo(currX, currY);
+          pctx.stroke();
+        } else if (currentTool === 'gomme') {
+          pctx.beginPath();
+          pctx.arc(currX, currY, strokeWidth * 3, 0, Math.PI * 2);
+          pctx.fill();
+        } else if (currentTool === 'laser') {
+          octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          drawLaserPoint(currX, currY);
+        } else if (currentTool === 'rectangle') {
+          octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          octx.strokeStyle = currentColor;
+          octx.lineWidth = strokeWidth;
+          octx.strokeRect(startX, startY, currX - startX, currY - startY);
+        } else if (currentTool === 'cercle') {
+          octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          octx.strokeStyle = currentColor;
+          octx.lineWidth = strokeWidth;
+          const radius = Math.sqrt(Math.pow(currX - startX, 2) + Math.pow(currY - startY, 2));
+          octx.beginPath();
+          octx.arc(startX, startY, radius, 0, Math.PI * 2);
+          octx.stroke();
+        }
+      }
+
+      function handleEnd(e) {
+        if (!isDrawing) return;
+        isDrawing = false;
+
+        if (currentTool === 'gomme') {
+          pctx.restore();
+          saveState();
+        } else if (currentTool === 'crayon') {
+          pctx.closePath();
+          saveState();
+        } else if (currentTool === 'rectangle') {
+          const coords = getCoordinates(e.changedTouches ? e.changedTouches[0] : e);
+          pctx.strokeStyle = currentColor;
+          pctx.lineWidth = strokeWidth;
+          pctx.strokeRect(startX, startY, coords.x - startX, coords.y - startY);
+          octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          saveState();
+        } else if (currentTool === 'cercle') {
+          const coords = getCoordinates(e.changedTouches ? e.changedTouches[0] : e);
+          const radius = Math.sqrt(Math.pow(coords.x - startX, 2) + Math.pow(coords.y - startY, 2));
+          pctx.strokeStyle = currentColor;
+          pctx.lineWidth = strokeWidth;
+          pctx.beginPath();
+          pctx.arc(startX, startY, radius, 0, Math.PI * 2);
+          pctx.stroke();
+          octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          saveState();
+        } else if (currentTool === 'laser') {
+          // Effacer le point laser après un court délai
+          clearTimeout(laserTimeout);
+          laserTimeout = setTimeout(() => {
+            octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          }, 400);
+        }
+      }
+
+      function drawLaserPoint(x, y) {
+        octx.save();
+        octx.shadowColor = '#ef4444';
+        octx.shadowBlur = 12;
+        octx.fillStyle = '#ef4444';
+        octx.beginPath();
+        octx.arc(x, y, 6, 0, Math.PI * 2);
+        octx.fill();
+        octx.fillStyle = '#ffffff';
+        octx.beginPath();
+        octx.arc(x, y, 2.5, 0, Math.PI * 2);
+        octx.fill();
+        octx.restore();
+      }
+
+      // Écouteurs de canvas
+      wrapper.addEventListener('mousedown', handleStart);
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('mouseup', handleEnd);
+
+      wrapper.addEventListener('touchstart', handleStart, { passive: false });
+      wrapper.addEventListener('touchmove', handleMove, { passive: false });
+      wrapper.addEventListener('touchend', handleEnd, { passive: false });
+
+      // Sélection d'outils
+      const toolButtons = document.querySelectorAll('.tool-btn');
+      toolButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          toolButtons.forEach(b => {
+            b.classList.remove('border-primary', 'bg-primary/20', 'text-primary');
+            b.classList.add('border-[#1e293b]', 'bg-[#1e293b]', 'text-[#898c95]');
+          });
+          btn.classList.remove('border-[#1e293b]', 'bg-[#1e293b]', 'text-[#898c95]');
+          btn.classList.add('border-primary', 'bg-primary/20', 'text-primary');
+          currentTool = btn.dataset.tool;
+        });
+      });
+
+      // Épaisseur de trait
+      const strokeButtons = document.querySelectorAll('.stroke-btn');
+      strokeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          strokeButtons.forEach(b => {
+            b.classList.remove('border-primary', 'bg-primary/20', 'text-primary', 'font-bold');
+            b.classList.add('border-[#1e293b]', 'bg-[#1e293b]', 'text-[#898c95]');
+          });
+          btn.classList.remove('border-[#1e293b]', 'bg-[#1e293b]', 'text-[#898c95]');
+          btn.classList.add('border-primary', 'bg-primary/20', 'text-primary', 'font-bold');
+          strokeWidth = parseInt(btn.dataset.size, 10);
+        });
+      });
+
+      // Choix de couleur (8 couleurs)
+      const colorButtons = document.querySelectorAll('.color-btn');
+      colorButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          colorButtons.forEach(b => {
+            b.classList.remove('border-primary', 'border-white/80', 'bg-primary/20');
+            b.classList.add('border-transparent');
+          });
+          btn.classList.remove('border-transparent');
+          btn.classList.add('border-primary', 'bg-primary/20');
+
+          if (btn.dataset.base === 'adaptive') {
+            currentColor = isDarkTheme ? '#f8fafc' : '#020617';
+          } else {
+            currentColor = btn.dataset.color;
+          }
+        });
+      });
+
+      // Bascule Fond Clair / Sombre
+      const btnToggleTheme = document.getElementById('btnToggleTheme');
+      const themeIndicator = document.getElementById('themeIndicator');
+      const themeLabel = document.getElementById('themeLabel');
+      const adaptiveBtn = document.querySelector('[data-base="adaptive"] span');
+
+      btnToggleTheme.addEventListener('click', () => {
+        isDarkTheme = !isDarkTheme;
+        if (isDarkTheme) {
+          wrapper.classList.remove('light-mode');
+          themeIndicator.style.backgroundColor = '#070d1f';
+          themeLabel.textContent = 'Sombre';
+          adaptiveBtn.style.backgroundColor = '#f8fafc';
+          if (currentColor === '#020617') currentColor = '#f8fafc';
+        } else {
+          wrapper.classList.add('light-mode');
+          themeIndicator.style.backgroundColor = '#f1f5f9';
+          themeLabel.textContent = 'Clair';
+          adaptiveBtn.style.backgroundColor = '#020617';
+          if (currentColor === '#f8fafc') currentColor = '#020617';
+        }
+      });
+
+      // Actions directes : Annuler, Rétablir, Effacer tout
+      document.getElementById('btnUndo').addEventListener('click', () => {
+        if (historyStep > 0) {
+          restoreState(historyStep - 1);
+        }
+      });
+
+      document.getElementById('btnRedo').addEventListener('click', () => {
+        if (historyStep < history.length - 1) {
+          restoreState(historyStep + 1);
+        }
+      });
+
+      document.getElementById('btnClear').addEventListener('click', () => {
+        // Efface tout immédiatement sans confirmation ajoutée selon consigne stricte
+        pctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+        octx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        saveState();
+      });
+
+      // ==========================================
+      // BOUTON COUPER LE SON : MAINTENIR 700ms
+      // ==========================================
+      const btnMute = document.getElementById('btnHoldMute');
+      const muteBar = document.getElementById('muteProgressBar');
+      const muteLabel = document.getElementById('muteLabel');
+      let muteTimer = null;
+      let muteStartTime = 0;
+      let isMuted = false;
+      const HOLD_DURATION = 700;
+
+      function startMuteHold(e) {
+        if (e) e.preventDefault();
+        muteStartTime = Date.now();
+        muteBar.style.width = '0%';
+        muteBar.style.transition = 'width 0.7s linear';
+        // Déclencher l'animation
+        requestAnimationFrame(() => {
+          muteBar.style.width = '100%';
+        });
+
+        muteTimer = setTimeout(() => {
+          // Action après 700ms maintenu
+          isMuted = !isMuted;
+          muteBar.style.transition = 'none';
+          muteBar.style.width = '0%';
+          if (isMuted) {
+            muteLabel.textContent = 'Son coupé';
+            btnMute.classList.add('bg-[#ef4444]/25', 'border-[#ef4444]');
+          } else {
+            muteLabel.textContent = 'Couper son';
+            btnMute.classList.remove('bg-[#ef4444]/25', 'border-[#ef4444]');
+          }
+        }, HOLD_DURATION);
+      }
+
+      function cancelMuteHold() {
+        if (muteTimer) {
+          clearTimeout(muteTimer);
+          muteTimer = null;
+          muteBar.style.transition = 'none';
+          muteBar.style.width = '0%';
+        }
+      }
+
+      btnMute.addEventListener('mousedown', startMuteHold);
+      btnMute.addEventListener('mouseup', cancelMuteHold);
+      btnMute.addEventListener('mouseleave', cancelMuteHold);
+
+      btnMute.addEventListener('touchstart', startMuteHold, { passive: false });
+      btnMute.addEventListener('touchend', cancelMuteHold);
+      btnMute.addEventListener('touchcancel', cancelMuteHold);
+
+      // Initialiser la taille au chargement
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+    });
+  </script>
+</body>
+</html>

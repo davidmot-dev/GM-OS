@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>GM-OS — Télécommande Meneur : Scénario (390×844)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#020617',
+            surface: '#0f172a',
+            'surface-raised': '#1e293b',
+            text: '#f8fafc',
+            'text-muted': '#898c95',
+            primary: '#06b6d4',
+            danger: '#ef4444',
+            warning: '#f59e0b',
+            success: '#10b981'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            display: ['Orbitron', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+    /* Conteneur principal téléphone 390x844 */
+    .phone-canvas {
+      width: 100%;
+      max-width: 390px;
+      min-height: 844px;
+      height: 100vh;
+      max-height: 844px;
+      background-color: #070d1f;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    @media (max-width: 390px) {
+      .phone-canvas {
+        height: 100vh;
+        max-height: 100vh;
+        border: none;
+      }
+    }
+    /* Barre de progression pour le maintien de Couper le son */
+    .mute-progress-bar {
+      transition: width 50ms linear;
+    }
+    /* Bouton scénario actif */
+    .scenario-btn:active {
+      background-color: rgba(6, 182, 212, 0.15);
+      border-color: #06b6d4;
+    }
+  </style>
+</head>
+<body class="bg-background text-text">
+
+  <div class="phone-canvas">
+
+    <!-- LIGNE D'ÉTAT PERMANENTE HAUTE (voyant appairé, R1 · Nel Varga, Couper le son avec hold 700ms) -->
+    <header class="flex-none bg-[#091024] border-b border-[#1e293b] px-4 py-2.5 flex items-center justify-between z-30 select-none">
+      <div class="flex items-center space-x-2">
+        <!-- Voyant connecté appairé -->
+        <span class="inline-block w-2.5 h-2.5 bg-primary shadow-[0_0_8px_#06b6d4]"></span>
+        <div class="flex flex-col">
+          <span class="text-[11px] font-mono tracking-wider text-text-muted uppercase leading-none">GM-OS // T3</span>
+          <span class="text-[14px] font-medium text-text leading-tight tracking-wide">R1 · Nel Varga</span>
+        </div>
+      </div>
+
+      <!-- Bouton COUPER LE SON (maintenir 700ms, progression visible, relâcher annule) -->
+      <div class="relative">
+        <button id="mute-btn" 
+          class="relative overflow-hidden h-[44px] min-w-[110px] px-3.5 bg-[#151d33] border border-[#1e293b] text-[12px] font-bold tracking-wider text-text flex items-center justify-center active:border-danger transition-colors cursor-pointer select-none">
+          <span id="mute-label" class="relative z-10 text-danger font-display tracking-wider">COUPER LE SON</span>
+          <!-- Jauge de progression interne -->
+          <div id="mute-fill" class="absolute top-0 left-0 bottom-0 bg-danger/40 w-0 mute-progress-bar pointer-events-none"></div>
+        </button>
+      </div>
+    </header>
+
+    <!-- BANDEAU SOUS-TITRE / IDENTIFIANT MODULE M2 -->
+    <div class="flex-none bg-[#0b1328] px-4 py-2.5 border-b border-[#1e293b] flex items-center justify-between select-none">
+      <div>
+        <h1 class="text-[17px] font-display font-bold tracking-wider text-text flex items-center gap-2 m-0">
+          M2 SCÉNARIO
+        </h1>
+        <p class="text-[12px] text-text-muted m-0 leading-tight">RemoteStoryboard · Déclenchement direct</p>
+      </div>
+      <div class="bg-[#151f38] border border-[#1e293b] px-2.5 py-1 text-[11px] font-mono font-bold tracking-widest text-primary">
+        TABLE T0
+      </div>
+    </div>
+
+    <!-- ZONE DE CONTENU DÉFILANT AU-DESSUS DU PIED -->
+    <main class="flex-1 overflow-y-auto px-4 py-4 space-y-3.5 select-none" id="main-content">
+      
+      <!-- EN-TÊTE DE SECTION STORYBOARD -->
+      <div class="flex items-center justify-between border-b border-[#1e293b] pb-1.5 mb-1">
+        <span class="text-[11px] font-bold tracking-widest text-text-muted uppercase">MOMENTS DISPONIBLES</span>
+        <span class="text-[11px] font-mono text-primary font-bold">2 SÉQUENCES</span>
+      </div>
+
+      <!-- BOUTON 01 : Amarrage au relais -->
+      <button type="button" 
+        onclick="triggerMoment('01', 'Amarrage au relais')"
+        class="scenario-btn w-full min-h-[58px] bg-surface border-l-4 border-l-primary border-t border-r border-b border-[#1e293b] p-3.5 flex items-center justify-between text-left hover:border-primary/80 transition-all cursor-pointer">
+        <div class="flex items-center gap-3.5">
+          <!-- Numéro en JetBrains Mono grand format -->
+          <span class="font-mono text-[22px] font-bold text-primary w-8 flex-none">01</span>
+          <!-- Nom du moment (Inter lecture >= 14px) -->
+          <span class="text-[15px] font-semibold text-text tracking-wide leading-snug">Amarrage au relais</span>
+        </div>
+        <!-- Icône lecture diégétique -->
+        <div class="w-9 h-9 bg-surface-raised border border-[#1e293b] flex items-center justify-center flex-none text-primary">
+          <svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+      </button>
+
+      <!-- BOUTON 02 : La voix dans le relais -->
+      <button type="button" 
+        onclick="triggerMoment('02', 'La voix dans le relais')"
+        class="scenario-btn w-full min-h-[58px] bg-surface border-l-4 border-l-primary border-t border-r border-b border-[#1e293b] p-3.5 flex items-center justify-between text-left hover:border-primary/80 transition-all cursor-pointer">
+        <div class="flex items-center gap-3.5">
+          <!-- Numéro en JetBrains Mono grand format -->
+          <span class="font-mono text-[22px] font-bold text-primary w-8 flex-none">02</span>
+          <!-- Nom du moment (Inter lecture >= 14px) -->
+          <span class="text-[15px] font-semibold text-text tracking-wide leading-snug">La voix dans le relais</span>
+        </div>
+        <!-- Icône lecture diégétique -->
+        <div class="w-9 h-9 bg-surface-raised border border-[#1e293b] flex items-center justify-center flex-none text-primary">
+          <svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+      </button>
+
+      <!-- RETOUR D'ACTION TACTILE DIRECT (SIMULATION LOCALE) -->
+      <div id="feedback-toast" class="hidden mt-4 p-3 bg-surface-raised border border-primary/40 flex items-center justify-between animate-pulse">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 bg-primary"></span>
+          <span class="text-[12px] font-mono text-text" id="feedback-text">Déclenché : 01 Amarrage au relais</span>
+        </div>
+        <span class="text-[11px] font-mono text-primary font-bold">TRANSMIS TABLE</span>
+      </div>
+
+    </main>
+
+    <!-- NAVIGATION COMPLÈTE EN PIED (8 onglets sur deux rangées de 4) -->
+    <!-- Rangée 1 : Pads, Dés, Sons, Scénario (actif) -->
+    <!-- Rangée 2 : Combat, Tableau, Notes, Messages -->
+    <nav class="flex-none bg-[#070e22] border-t border-[#1e293b] z-30 select-none">
+      <!-- Rangée 1 -->
+      <div class="grid grid-cols-4 border-b border-[#151f38]">
+        <!-- Pads -->
+        <a href="#pads" class="h-[46px] flex flex-col items-center justify-center text-text-muted hover:text-text transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">PADS</span>
+        </a>
+
+        <!-- Dés -->
+        <a href="#des" class="h-[46px] flex flex-col items-center justify-center text-text-muted hover:text-text transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">DÉS</span>
+        </a>
+
+        <!-- Sons -->
+        <a href="#sons" class="h-[46px] flex flex-col items-center justify-center text-text-muted hover:text-text transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">SONS</span>
+        </a>
+
+        <!-- Scénario (ONGLET ACTIF : CYAN PLEIN #06b6d4) -->
+        <a href="#scenario" class="h-[46px] flex flex-col items-center justify-center bg-primary text-background font-bold border-t-2 border-primary">
+          <svg class="w-4 h-4 mb-0.5 fill-current" viewBox="0 0 24 24">
+            <path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm4-4H6v-2h10v2zm0-4H6V6h10v2z"/>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">SCÉNARIO</span>
+        </a>
+      </div>
+
+      <!-- Rangée 2 -->
+      <div class="grid grid-cols-4">
+        <!-- Combat -->
+        <a href="#combat" class="h-[46px] flex flex-col items-center justify-center text-text-muted hover:text-text transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">COMBAT</span>
+        </a>
+
+        <!-- Tableau -->
+        <a href="#tableau" class="h-[46px] flex flex-col items-center justify-center text-text-muted hover:text-text transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">TABLEAU</span>
+        </a>
+
+        <!-- Notes -->
+        <a href="#notes" class="h-[46px] flex flex-col items-center justify-center text-text-muted hover:text-text transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">NOTES</span>
+        </a>
+
+        <!-- Messages -->
+        <a href="#messages" class="h-[46px] flex flex-col items-center justify-center text-text-muted hover:text-text transition-colors">
+          <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+          </svg>
+          <span class="text-[11px] font-bold tracking-wider uppercase leading-none">MESSAGES</span>
+        </a>
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- SCRIPT DE GESTION DES INTERACTIONS LOCALES -->
+  <script>
+    // 1. Déclenchement de moment scénario
+    function triggerMoment(num, title) {
+      const feedback = document.getElementById('feedback-toast');
+      const text = document.getElementById('feedback-text');
+      text.innerText = "Déclenché : " + num + " " + title;
+      feedback.classList.remove('hidden');
+      setTimeout(() => {
+        feedback.classList.add('hidden');
+      }, 2500);
+    }
+
+    // 2. Gestion de l'appui long 700ms pour COUPER LE SON
+    const muteBtn = document.getElementById('mute-btn');
+    const muteFill = document.getElementById('mute-fill');
+    const muteLabel = document.getElementById('mute-label');
+
+    let pressTimer = null;
+    let progressInterval = null;
+    let startTime = 0;
+    const HOLD_DURATION = 700; // ms
+
+    function startPress(e) {
+      e.preventDefault();
+      startTime = Date.now();
+      muteFill.style.width = '0%';
+      
+      progressInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const pct = Math.min(100, (elapsed / HOLD_DURATION) * 100);
+        muteFill.style.width = pct + '%';
+      }, 20);
+
+      pressTimer = setTimeout(() => {
+        clearInterval(progressInterval);
+        muteFill.style.width = '100%';
+        muteLabel.innerText = "SON COUPÉ";
+        muteBtn.classList.add('bg-danger');
+        muteLabel.classList.replace('text-danger', 'text-background');
+        setTimeout(() => {
+          muteLabel.innerText = "COUPER LE SON";
+          muteBtn.classList.remove('bg-danger');
+          muteLabel.classList.replace('text-background', 'text-danger');
+          muteFill.style.width = '0%';
+        }, 1800);
+      }, HOLD_DURATION);
+    }
+
+    function cancelPress() {
+      if (pressTimer) {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+      }
+      if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+      }
+      muteFill.style.width = '0%';
+    }
+
+    // Événements tactiles et souris
+    muteBtn.addEventListener('mousedown', startPress);
+    muteBtn.addEventListener('mouseup', cancelPress);
+    muteBtn.addEventListener('mouseleave', cancelPress);
+    muteBtn.addEventListener('touchstart', startPress, { passive: false });
+    muteBtn.addEventListener('touchend', cancelPress);
+    muteBtn.addEventListener('touchcancel', cancelPress);
+  </script>
+
+</body>
+</html>
