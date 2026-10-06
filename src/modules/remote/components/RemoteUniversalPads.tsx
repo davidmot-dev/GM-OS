@@ -72,7 +72,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
       moment où il sert.*
     */
     const reglages = (
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 min-[700px]:grid-cols-2 gap-3">
             <LigneDeVolume
                 voie="music" reglages={audio} icone={<Music size={15} />}
                 onVolume={(v) => onVolume('music', v)}
@@ -91,7 +91,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
             <div className="flex flex-col gap-3">
                 {reglages}
                 <Panneau as="div" habillage="libre" className="text-center py-16 rounded-2xl border border-app-text/5 bg-app-text/[0.02]">
-                    <p className="text-sm italic text-app-muted">Aucun pad configuré sur cet univers.</p>
+                    <p className="text-[16px] italic text-app-muted">Aucun pad configuré sur cet univers.</p>
                 </Panneau>
             </div>
         );
@@ -112,13 +112,13 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                     onChange={(e) => setFiltre(e.target.value)}
                     placeholder="Filtrer les pads…"
                     aria-label="Filtrer les pads"
-                    className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
+                    className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-[16px] text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
                 />
                 {filtre && (
                     <Bouton habillage="libre" cibleTactile
                         onClick={() => setFiltre('')}
                         aria-label="Effacer le filtre"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] w-6 h-6 rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-[44px] h-[44px] rounded-lg flex items-center justify-center text-app-muted hover:text-app-text"
                     >
                         <X size={14} />
                     </Bouton>
@@ -126,7 +126,7 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
             </div>
 
             {filtre && totalRetenu === 0 && (
-                <p className="text-center py-10 text-sm italic text-app-muted">
+                <p className="text-center py-10 text-[16px] italic text-app-muted">
                     Rien ne correspond à « {filtre} ».
                 </p>
             )}
@@ -140,24 +140,24 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                 const tronque = !filtre && compte && compte.total > compte.montres;
 
                 return (
-                    <section key={type} className="flex flex-col gap-2">
+                    <section key={type} className="flex flex-col gap-3">
                         <div className="flex items-baseline gap-2 px-1">
                             <Icone size={13} className={`${teinte} shrink-0 self-center`} />
-                            <h2 className="text-ui-10 font-black uppercase tracking-widest text-app-muted">{titre}</h2>
+                            <h2 className="text-[14px] font-black uppercase tracking-widest text-app-muted">{titre}</h2>
                             {tronque && (
-                                <span className="text-ui-10 text-etat-alerte/80 italic">
+                                <span className="text-[14px] text-etat-alerte/80 italic">
                                     {compte.montres} sur {compte.total} — les autres restent sur le PC
                                 </span>
                             )}
                         </div>
 
                         {type === 'image' ? (
-                            <div className="grid grid-cols-3 min-[700px]:grid-cols-4 min-[1000px]:grid-cols-6 gap-2">
+                            <div className="grid grid-cols-1 min-[700px]:grid-cols-2 min-[1100px]:grid-cols-3 gap-2">
                                 {padsDeLaFamille.map(pad => (
                                     <Bouton habillage="libre" cibleTactile
                                         key={pad.id}
                                         onClick={() => onTrigger(pad.id)}
-                                        className={`group relative overflow-hidden aspect-[4/3] rounded-xl border transition-colors ${
+                                        className={`group relative overflow-hidden min-h-[80px] flex flex-col rounded-xl border transition-colors ${
                                             pad.isActive ? 'border-accent' : 'border-app-text/5 hover:border-app-text/20'
                                         }`}
                                     >
@@ -165,14 +165,14 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                                             <img
                                                 src={pad.imageUrl}
                                                 alt=""
-                                                className={`absolute inset-0 w-full h-full object-cover transition-opacity ${pad.isActive ? 'opacity-70' : 'opacity-35 group-hover:opacity-55'}`}
+                                                className={`w-full h-[180px] object-contain bg-app-bg/40 transition-opacity ${pad.isActive ? 'opacity-70' : 'opacity-100'}`}
                                             />
                                         ) : (
                                             <div className="absolute inset-0 bg-app-text/5" />
                                         )}
                                         {/* Le voile part du bas : le titre reste lisible sur une image claire. */}
-                                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-app-bg/85 to-transparent px-2 pt-4 pb-1.5">
-                                            <span className={`block text-ui-10 font-bold leading-tight text-left line-clamp-2 ${pad.isActive ? 'text-accent' : 'text-app-text'}`}>
+                                        <div className="w-full p-3">
+                                            <span className={`block text-[16px] font-bold leading-snug text-left break-words [overflow-wrap:anywhere] ${pad.isActive ? 'text-accent' : 'text-app-text'}`}>
                                                 {pad.label}
                                             </span>
                                         </div>
@@ -187,12 +187,12 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                               Sans image, un cadre 16/9 est un rectangle vide :
                               ces pads passent en lignes, quatre fois plus denses.
                             */
-                            <div className="grid grid-cols-2 min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4 gap-2">
+                            <div className="grid grid-cols-2 min-[900px]:grid-cols-3 gap-2">
                                 {padsDeLaFamille.map(pad => (
                                     <Bouton habillage="libre" cibleTactile
                                         key={pad.id}
                                         onClick={() => onTrigger(pad.id)}
-                                        className={`flex items-center gap-2.5 px-3 h-14 rounded-xl border text-left transition-colors ${
+                                        className={`flex items-center gap-2.5 p-3 min-h-[80px] rounded-xl border text-left transition-colors ${
                                             pad.isActive
                                                 ? 'border-accent bg-accent/10'
                                                 : 'border-app-text/5 bg-app-text/[0.03] hover:border-app-text/20'
@@ -200,11 +200,11 @@ const RemoteUniversalPads: React.FC<RemoteUniversalPadsProps> = ({
                                     >
                                         <Icone size={15} className={`shrink-0 ${pad.isActive ? 'text-accent' : teinte}`} />
                                         <span className="flex flex-col min-w-0">
-                                            <span className={`text-xs font-bold truncate ${pad.isActive ? 'text-accent' : 'text-app-text'}`}>
+                                            <span className={`text-[16px] font-bold break-words [overflow-wrap:anywhere] ${pad.isActive ? 'text-accent' : 'text-app-text'}`}>
                                                 {pad.label}
                                             </span>
                                             {pad.sublabel && (
-                                                <span className="text-ui-10 text-app-muted truncate">{pad.sublabel}</span>
+                                                <span className="text-[14px] text-app-muted break-words [overflow-wrap:anywhere]">{pad.sublabel}</span>
                                             )}
                                         </span>
                                         {pad.isActive && (

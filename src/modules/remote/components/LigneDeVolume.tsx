@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Bouton } from '../../../components/socle/Bouton';
 import { Panneau } from '../../../components/socle/Panneau';
 import { Check, ChevronDown, AlertTriangle } from 'lucide-react';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import {
     sortieChoisie, type RemoteReglagesAudio, type NomDeVoie, LIBELLE_DE_LA_VOIE,
 } from '../reglagesAudio';
@@ -32,13 +33,14 @@ const LigneDeVolume: React.FC<{
     onSortie: (sortieId: string) => void;
 }> = ({ voie, reglages, icone, onVolume, onSortie }) => {
     const [menuOuvert, setMenuOuvert] = useState(false);
+    useFermetureParEchap(menuOuvert, () => setMenuOuvert(false), 'Choix de sortie audio');
     const volume = reglages[voie].volume;
     const choisie = sortieChoisie(reglages, voie);
 
     return (
-        <div className="relative flex items-center gap-2 px-3 h-11 rounded-xl bg-app-text/[0.03] border border-app-text/5">
-            <span className="shrink-0 text-app-muted">{icone}</span>
-            <span className="shrink-0 w-20 text-ui-10 font-black uppercase tracking-wider text-app-muted">
+        <div className="relative grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 p-3 rounded-xl bg-app-text/[0.03] border border-app-text/5">
+            <span className="flex items-center gap-2 text-[14px] font-bold text-app-muted">
+                {icone}
                 {LIBELLE_DE_LA_VOIE[voie]}
             </span>
 
@@ -49,11 +51,11 @@ const LigneDeVolume: React.FC<{
                 step="0.01"
                 value={volume}
                 onChange={(e) => onVolume(parseFloat(e.target.value))}
-                className="flex-1 min-w-0 h-1.5 bg-app-bg/40 rounded-lg appearance-none cursor-pointer accent-accent"
+                className="row-start-2 col-span-2 w-full min-w-0 h-[44px] cursor-pointer accent-accent"
                 title={`Volume — ${LIBELLE_DE_LA_VOIE[voie]}`}
                 aria-label={`Volume — ${LIBELLE_DE_LA_VOIE[voie]}`}
             />
-            <span className="shrink-0 w-10 text-right text-xs font-black text-accent tabular-nums">
+            <span className="col-start-2 row-start-1 text-right text-[14px] font-bold text-accent tabular-nums">
                 {Math.round(volume * 100)}%
             </span>
 
@@ -68,14 +70,15 @@ const LigneDeVolume: React.FC<{
                 title={choisie.absente
                     ? 'Cette sortie n’est plus branchée'
                     : `Sort sur : ${choisie.nom}`}
-                className={`shrink-0 flex items-center gap-1 max-w-[9rem] px-2 py-1.5 rounded-lg border text-ui-10 font-bold transition-colors ${
+                aria-expanded={menuOuvert}
+                className={`col-span-2 min-w-0 min-h-[44px] flex items-center justify-between gap-2 px-3 py-2 rounded-lg border text-[14px] font-bold transition-colors ${
                     choisie.absente
                         ? 'border-etat-alerte/40 bg-etat-alerte/10 text-etat-alerte'
                         : 'border-app-text/10 bg-app-text/[0.03] text-app-text hover:border-app-text/25'
                 }`}
             >
                 {choisie.absente && <AlertTriangle size={11} className="shrink-0" />}
-                <span className="truncate">{choisie.nom}</span>
+                <span className="min-w-0 break-words text-left">{choisie.nom}</span>
                 <ChevronDown size={11} className="shrink-0 opacity-60" />
             </Bouton>
 
@@ -91,25 +94,25 @@ const LigneDeVolume: React.FC<{
                     <Panneau as="div" habillage="libre"
                         role="menu"
                         aria-label={`Sorties disponibles — ${LIBELLE_DE_LA_VOIE[voie]}`}
-                        className="absolute right-0 top-12 z-50 w-64 max-h-64 overflow-y-auto rounded-xl border border-app-text/10 bg-app-bg shadow-2xl p-1"
+                        className="absolute right-0 top-full z-50 w-full max-h-[240px] overflow-y-auto rounded-xl border border-app-text/10 bg-app-bg shadow-2xl p-1"
                     >
                         {reglages.sorties.map(sortie => (
                             <Bouton habillage="libre" cibleTactile
                                 key={sortie.id}
                                 role="menuitem"
                                 onClick={() => { onSortie(sortie.id); setMenuOuvert(false); }}
-                                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left text-ui-11 font-bold transition-colors ${
+                                className={`w-full min-h-[44px] flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-left text-[14px] font-bold transition-colors ${
                                     sortie.id === choisie.id
                                         ? 'bg-accent/20 text-app-text'
                                         : 'text-app-muted hover:bg-app-text/5 hover:text-app-text'
                                 }`}
                             >
-                                <span className="min-w-0 truncate">{sortie.nom}</span>
+                                <span className="min-w-0 break-words">{sortie.nom}</span>
                                 {sortie.id === choisie.id && <Check size={12} className="shrink-0 text-accent" />}
                             </Bouton>
                         ))}
                         {reglages.sorties.length <= 1 && (
-                            <p className="px-3 py-2 text-ui-10 italic text-app-subtle">
+                            <p className="px-3 py-2 text-[14px] italic text-app-muted">
                                 Aucune autre sortie recensée sur la machine du meneur.
                             </p>
                         )}
