@@ -23,6 +23,7 @@ import RemoteDiceResultOverlay from './components/RemoteDiceResultOverlay';
 import RemoteWhiteboardView from './components/RemoteWhiteboardView';
 import RemoteStatusBar from './components/RemoteStatusBar';
 import RemoteMessenger from './components/RemoteMessenger';
+import { RemoteModule } from './components/RemoteModule';
 import { useDernierJet } from './hooks/useDernierJet';
 
 /**
@@ -122,8 +123,8 @@ const RemoteControl: React.FC = () => {
             case 'pads':
                 return (
                     <RemoteUniversalPads
-                        pads={syncData.universalPads}
-                        comptes={syncData.comptesDePads}
+                        pads={isPaired ? syncData.universalPads : []}
+                        comptes={isPaired ? syncData.comptesDePads : undefined}
                         audio={syncData.audio}
                         onVolume={(voie, volume) => sendAction(VOLUME_DE[voie], { volume })}
                         onSortie={(voie, sortie) => sendAction(SORTIE_DE[voie], { sortie })}
@@ -133,8 +134,8 @@ const RemoteControl: React.FC = () => {
             case 'dice':
                 return (
                     <RemoteDicePad
-                        activeDiceConfig={syncData.session?.activeDiceConfig}
-                        desEchelonnes={syncData.session?.desEchelonnes}
+                        activeDiceConfig={isPaired ? syncData.session?.activeDiceConfig : undefined}
+                        desEchelonnes={isPaired ? syncData.session?.desEchelonnes : undefined}
                         onRoll={(dice) => sendAction('remote:dice:roll', dice)}
                         onClear={() => sendAction('remote:dice:clear', {})}
                     />
@@ -142,7 +143,7 @@ const RemoteControl: React.FC = () => {
             case 'sound':
                 return (
                     <RemoteSoundboard
-                        sounds={syncData.sounds}
+                        sounds={isPaired ? syncData.sounds : []}
                         audio={syncData.audio}
                         onVolumeChange={(vol) => sendAction('remote:sound:volume', { volume: vol })}
                         onSortie={(sortie) => sendAction('remote:sound:sortie', { sortie })}
@@ -152,7 +153,7 @@ const RemoteControl: React.FC = () => {
             case 'combat':
                 return (
                     <RemoteCombatTracker
-                        combat={syncData.combat}
+                        combat={isPaired ? syncData.combat : { combatants: [], currentTurnIdx: 0, round: 1 }}
                         isAventureMode={isAventureMode}
                         onNextTurn={() => sendAction('remote:combat:next', {})}
                         onUpdateHp={(id, delta) => sendAction('remote:combat:hp', { id, delta })}
@@ -168,8 +169,8 @@ const RemoteControl: React.FC = () => {
             case 'notes':
                 return (
                     <RemoteNotes
-                        notes={syncData.notes}
-                        lecture={syncData.lectureDuMeneur}
+                        notes={isPaired ? syncData.notes : { public: '', private: '' }}
+                        lecture={isPaired ? syncData.lectureDuMeneur : undefined}
                         isAventureMode={isAventureMode}
                         coffre={coffre}
                         onChargerLeCoffre={demanderLeCoffre}
@@ -180,8 +181,8 @@ const RemoteControl: React.FC = () => {
             case 'messages':
                 return (
                     <RemoteMessenger
-                        messages={syncData.messages ?? []}
-                        destinataires={destinataires}
+                        messages={isPaired ? syncData.messages ?? [] : []}
+                        destinataires={isPaired ? destinataires : []}
                         onEnvoyer={(toId, toName, content) =>
                             sendAction('remote:session:gm-message', { toId, toName, content })}
                     />
@@ -189,7 +190,7 @@ const RemoteControl: React.FC = () => {
             case 'story':
                 return (
                     <RemoteStoryboard
-                        moments={syncData.moments}
+                        moments={isPaired ? syncData.moments : []}
                         onTrigger={(index) => sendAction('remote:story:trigger', { index })}
                     />
                 );
@@ -214,11 +215,11 @@ const RemoteControl: React.FC = () => {
                 className={`flex items-center transition-colors duration-200 select-none ${
                     enColonne
                         ? `w-full gap-3 px-3 py-2.5 rounded-xl ${actif ? 'bg-accent/15 text-accent' : 'text-app-muted hover:text-app-text hover:bg-app-text/5'}`
-                        : `flex-1 flex-col gap-0.5 py-1.5 rounded-lg ${actif ? 'text-accent' : 'text-app-muted'}`
+                        : `min-h-[48px] min-w-0 flex-col gap-0.5 py-1.5 rounded-lg ${actif ? 'text-accent' : 'text-app-muted'}`
                 }`}
             >
                 <Icon size={enColonne ? 18 : 20} strokeWidth={actif ? 2.5 : 2} className="shrink-0" />
-                <span className={`font-black uppercase tracking-wider ${enColonne ? 'text-ui-11' : 'text-ui-9'}`}>
+                <span className="text-[14px] font-bold">
                     {onglet.label}
                 </span>
             </Bouton>
@@ -232,11 +233,11 @@ const RemoteControl: React.FC = () => {
               prend le relais. `w-32` suffit au plus long des sept libellés
               (« Scénario ») sans jamais imposer de coupure.
             */}
-            <nav className="hidden min-[900px]:flex flex-col gap-1 w-32 shrink-0 p-2 border-r border-app-text/5 bg-app-bg">
+            <nav aria-label="Navigation du meneur" className="hidden min-[900px]:flex flex-col gap-2 w-[152px] shrink-0 p-2 border-r border-app-text/5 bg-app-bg">
                 <div className="px-3 pt-2 pb-3">
-                    <span className="text-ui-9 font-black uppercase tracking-[0.2em] text-app-subtle">GM Remote</span>
+                    <span className="text-[14px] font-black uppercase tracking-[0.2em] text-app-subtle">GM Remote</span>
                     {isAventureMode && (
-                        <span className="block mt-1 text-ui-9 font-black uppercase tracking-widest text-etat-alerte">Aventure</span>
+                        <span className="block mt-1 text-[14px] font-black uppercase tracking-widest text-etat-alerte">Aventure</span>
                     )}
                 </div>
                 {boutonsDOnglet(true)}
@@ -246,24 +247,24 @@ const RemoteControl: React.FC = () => {
                 <RemoteStatusBar
                     status={status}
                     isPaired={isPaired}
-                    lecture={syncData.lecture}
-                    combat={syncData.combat}
-                    minuteur={syncData.clock}
-                    messagesNonLus={messagesNonLus}
+                    lecture={isPaired ? syncData.lecture : undefined}
+                    combat={isPaired ? syncData.combat : { combatants: [], currentTurnIdx: 0, round: 1 }}
+                    minuteur={isPaired ? syncData.clock : undefined}
+                    messagesNonLus={isPaired ? messagesNonLus : 0}
                     onVoirLesMessages={() => setActiveTab('messages')}
                     onStopAll={() => sendAction('remote:sound:stop-all', {})}
                 />
 
                 {/*
-                  `p-3` au lieu de `p-4 md:p-10` : quarante pixels de marge de
-                  chaque côté sur une tablette, c'est une colonne de pads perdue.
+                  T4 : les huit panneaux partagent le titre fixe du socle.
+                  Leurs zones de lecture ou de dessin gardent la hauteur restante.
                 */}
-                <main className="flex-1 overflow-y-auto no-scrollbar p-3">
-                    {renderContent()}
+                <main className="flex-1 min-h-0 overflow-hidden">
+                    <RemoteModule titre={ONGLETS.find(o => o.id === activeTab)!.label} icone={ONGLETS.find(o => o.id === activeTab)!.icon}>{renderContent()}</RemoteModule>
                 </main>
 
                 {/* Le repli sous 900 px : collée au bord, sans marge flottante. */}
-                <nav className="min-[900px]:hidden shrink-0 flex items-stretch gap-0.5 px-1 py-1 border-t border-app-text/5 bg-app-bg">
+                <nav aria-label="Navigation du meneur" className="min-[900px]:hidden shrink-0 grid grid-cols-4 items-stretch gap-1 p-1 pb-[max(4px,env(safe-area-inset-bottom))] border-t border-app-text/5 bg-app-bg">
                     {boutonsDOnglet(false)}
                 </nav>
             </div>

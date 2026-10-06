@@ -99,7 +99,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
         ?? (lecture?.pistesDAmbiance ? `${lecture.pistesDAmbiance} pistes` : null);
 
     return (
-        <header className="shrink-0 flex items-center gap-3 px-3 h-12 border-b border-app-text/5 bg-app-bg/80 backdrop-blur-xl">
+        <header className="shrink-0 flex flex-wrap items-center gap-2 px-3 py-2 min-h-[52px] border-b border-app-text/5 bg-app-bg/80 backdrop-blur-xl">
             {/* L'état de liaison : un point, et un mot seulement quand ça ne va pas. */}
             <div className="flex items-center gap-2 shrink-0">
                 <span
@@ -108,12 +108,12 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                         : 'bg-etat-danger animate-pulse'}`}
                 />
                 {status !== 'connected' && (
-                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-etat-danger">
+                    <span className="flex items-center gap-1 text-[14px] font-black uppercase tracking-widest text-etat-danger">
                         <WifiOff size={12} /> Reconnexion
                     </span>
                 )}
                 {status === 'connected' && !isPaired && (
-                    <span className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-etat-alerte">
+                    <span className="flex items-center gap-1 text-[14px] font-black uppercase tracking-widest text-etat-alerte">
                         <ShieldAlert size={12} /> Non appairée
                     </span>
                 )}
@@ -123,23 +123,23 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
               Ce qui joue. Chaque élément disparaît quand il n'a rien à dire —
               la ligne se remplit à mesure que la séance se met en route.
             */}
-            <div className="flex items-center gap-4 min-w-0 flex-1 overflow-hidden">
+            <div className="order-last min-[900px]:order-none flex flex-wrap items-center gap-x-4 gap-y-2 min-w-0 w-full min-[900px]:w-auto min-[900px]:flex-1">
                 {lecture?.musique && (
                     <span className="flex items-center gap-1.5 min-w-0 text-app-text">
                         <Music size={13} className="text-accent shrink-0" />
-                        <span className="text-xs truncate">{lecture.musique}</span>
+                        <span className="text-[14px] break-words [overflow-wrap:anywhere]">{lecture.musique}</span>
                     </span>
                 )}
                 {ambiance && (
                     <span className="flex items-center gap-1.5 min-w-0 text-app-text">
                         <Waves size={13} className="text-gm-cyan shrink-0" />
-                        <span className="text-xs truncate">{ambiance}</span>
+                        <span className="text-[14px] break-words [overflow-wrap:anywhere]">{ambiance}</span>
                     </span>
                 )}
                 {enCombat && (
                     <span className="flex items-center gap-1.5 min-w-0 text-app-text">
                         <Swords size={13} className="text-etat-danger shrink-0" />
-                        <span className="text-xs whitespace-nowrap">
+                        <span className="text-[14px] break-words [overflow-wrap:anywhere]">
                             R{combat.round}
                             {combattantCourant && <span className="text-app-muted"> · {combattantCourant}</span>}
                         </span>
@@ -148,7 +148,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                 {minuteurActif && (
                     <span className={`flex items-center gap-1.5 shrink-0 ${minuteur!.timerRemaining <= 10 ? 'text-etat-danger' : 'text-app-text'}`}>
                         <Timer size={13} className="shrink-0" />
-                        <span className="text-xs font-mono tabular-nums">{enMinutes(minuteur!.timerRemaining)}</span>
+                        <span className="text-[14px] font-mono tabular-nums">{enMinutes(minuteur!.timerRemaining)}</span>
                     </span>
                 )}
             </div>
@@ -166,10 +166,10 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                     onClick={onVoirLesMessages}
                     title={`${messagesNonLus} message(s) non lu(s)`}
                     aria-label={`${messagesNonLus} message(s) non lu(s)`}
-                    className="shrink-0 h-8 px-2.5 rounded-lg border border-accent/40 bg-accent/15 text-accent flex items-center gap-1.5 active:scale-95 transition-transform"
+                    className="shrink-0 min-h-[44px] px-2.5 rounded-lg border border-accent/40 bg-accent/15 text-accent flex items-center gap-1.5 active:scale-95 transition-transform"
                 >
                     <MessageSquare size={13} strokeWidth={2.5} />
-                    <span className="text-xs font-black tabular-nums">{messagesNonLus}</span>
+                    <span className="text-[14px] font-black tabular-nums">{messagesNonLus}</span>
                 </Bouton>
             )}
 
@@ -181,7 +181,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                 onContextMenu={(e) => e.preventDefault()}
                 title="Couper le son — maintenir appuyé"
                 aria-label="Couper le son — maintenir appuyé"
-                className="relative shrink-0 h-8 px-3 rounded-lg border border-etat-danger/30 bg-etat-danger/10 text-etat-danger flex items-center gap-1.5 overflow-hidden select-none touch-none"
+                className="relative ml-auto shrink-0 min-h-[44px] px-3 rounded-lg border border-etat-danger/30 bg-etat-danger/10 text-etat-danger flex items-center gap-1.5 overflow-hidden select-none touch-none"
             >
                 {/* La jauge de l'appui : le geste se voit avancer, donc s'annule. */}
                 <span
@@ -189,7 +189,7 @@ const RemoteStatusBar: React.FC<RemoteStatusBarProps> = ({
                     style={{ width: `${progression * 100}%` }}
                 />
                 <Power size={14} strokeWidth={2.5} className="relative" />
-                <span className="relative text-ui-10 font-black uppercase tracking-widest">Couper le son</span>
+                <span className="relative text-[14px] font-black uppercase tracking-widest">Couper le son</span>
             </Bouton>
         </header>
     );
