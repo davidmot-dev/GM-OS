@@ -184,6 +184,7 @@ export const useHubSync = () => {
     const sessions = useMagasin('useSessionOSStore', s => s.sessions, EMPTY_ARR);
     const transferRequests = useMagasin('useSessionOSStore', s => s.transferRequests, EMPTY_ARR);
     const clues = useMagasin('useSessionOSStore', s => s.clues, EMPTY_ARR);
+    const atlasMaps = useMagasin('useSessionOSStore', s => s.atlasMaps, EMPTY_ARR);
     const connectedCharacters = useMagasin('useSessionOSStore', s => s.connectedCharacters, EMPTY_OBJ);
 
     const deviceId = useMagasin('useClientStore', s => s.deviceId, 'guest');
@@ -600,6 +601,7 @@ export const useHubSync = () => {
           avant de diffuser. Les rejouer doublerait l'écriture.
         */
         const AREACHEMINER = [
+            'session:update-character-vitals',
             'session:update-character-sheet-data',
             'session:update-character-narrative',
             /*
@@ -672,8 +674,7 @@ export const useHubSync = () => {
                 avatar: await resolveMediaToDataUrl(e.avatar) || e.avatar
             })));
 
-            const sSession = getStore('useSessionOSStore');
-            const activeMaps = (sSession?.getState()?.atlasMaps || []).filter((m: any) => String(m.campaignId) === String(activeCampaignId) && m.isVisited);
+            const activeMaps = atlasMaps.filter((m: any) => String(m.campaignId) === String(activeCampaignId) && m.isVisited);
             const resMaps = await Promise.all(activeMaps.map(async (m: any) => ({
                 ...m,
                 fileUrl: await resolveMediaToDataUrl(m.fileUrl) || m.fileUrl
@@ -687,7 +688,7 @@ export const useHubSync = () => {
         };
         resolveAssets();
         return () => { mounted = false; };
-    }, [favorites, entities, activeCampaignId, characterId]);
+    }, [favorites, entities, atlasMaps, activeCampaignId, characterId]);
 
     /*
       ─────────────────────────────────────────────────────────────────────────

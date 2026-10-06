@@ -28,6 +28,7 @@ const EXPECTED_TYPES = [
     'combat:update-hp', 'remote:combat:hp',
     'combat:next-turn', 'remote:combat:next',
     // Session
+    'session:update-character-vitals',
     'session:update-character-narrative', 'remote:session:update-character-narrative',
     'session:update-character-sheet-data', 'remote:session:update-character-sheet-data',
     'session:submit-feedback', 'remote:session:submit-feedback',

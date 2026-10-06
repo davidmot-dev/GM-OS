@@ -1,6 +1,28 @@
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import type { SessionMessage } from '../../session/store/types';
 import type { ActionRegistry } from './types';
+import i18next from 'i18next';
+import { pointsDeVieApres } from '../../combat/logic/SanteDuCombattant';
+
+/** T4/J1 : appliquer la jauge reçue, sans renvoyer l'événement vers la tablette. */
+const updateCharacterVitals = (payload: unknown) => {
+    const { playerId, characterId, updates } = (payload ?? {}) as {
+        playerId?: string; characterId?: string; updates?: { hp?: unknown };
+    };
+    if (typeof updates?.hp !== 'number' || !Number.isFinite(updates.hp)) return;
+    const store = useSessionOSStore.getState();
+    const player = store.players.find(p => p.id === playerId);
+    const character = player?.characters.find(c => c.id === characterId);
+    if (!player || !character) return;
+    const hp = pointsDeVieApres(character, updates.hp - (character.hp ?? 0));
+    if (hp === null || hp === character.hp) return;
+    store.updateCharacterHP(player.id, character.id, hp);
+    store.addRemoteNotification({
+        type: 'vitals_update', characterId: character.id, characterName: character.name,
+        playerName: player.realName,
+        message: i18next.t('modules:session.toasts.remote_vitals_update', { details: `PV: ${hp}/${character.maxHp}` }),
+    });
+};
 
 const updateCharacterNarrative = (payload: any) => {
     const { playerId, characterId, updates } = payload as { playerId: string; characterId: string; updates: any };
@@ -92,6 +114,7 @@ const removeInventoryItem = (payload: any) => {
 };
 
 export const sessionActions: ActionRegistry = {
+    'session:update-character-vitals': updateCharacterVitals,
     'session:update-character-narrative': updateCharacterNarrative,
     'remote:session:update-character-narrative': updateCharacterNarrative,
     'session:update-character-sheet-data': updateCharacterSheetData,

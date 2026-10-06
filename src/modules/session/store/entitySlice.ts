@@ -549,7 +549,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
      * ne l'apprend qu'à la séance suivante.
      *
      * Calqué sur `remoteUpdateCharacterNarrative` et **pas** sur
-     * `remoteUpdateCharacterVitals`, qui ne diffuse rien du tout.
+     * `remoteUpdateCharacterVitals`, qui ne diffusait rien avant T4/J1 (06/10).
      *
      * Il écrit d'abord chez lui pour que l'écran suive tout de suite, puis
      * diffuse. Sur la tablette, `useHubSync` capte l'événement et le passe au
@@ -677,6 +677,7 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
         const character = player?.characters.find((c) => c.id === characterId);
 
         if (!player || !character) return;
+        if (updates.hp === undefined || !Number.isFinite(updates.hp)) return;
 
         // Apply updates locally
         if (updates.hp !== undefined) get().updateCharacterHP(playerId, characterId, updates.hp);
@@ -694,6 +695,12 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 playerName: player.realName,
                 message: i18next.t('modules:session.toasts.remote_vitals_update', { details: messageParts.join(', ') }),
             });
+        }
+        // T4/J1, 06/10 : la jauge locale ne suffisait pas ; le meneur doit l'apprendre.
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('session:update-character-vitals', {
+                detail: { playerId, characterId, updates: { hp: updates.hp } },
+            }));
         }
     },
 

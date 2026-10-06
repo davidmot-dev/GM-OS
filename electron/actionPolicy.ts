@@ -45,6 +45,8 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
     */
     'session:update-character-sheet-data',
     'session:update-character-narrative',
+    // T4/J1 : modifier ses PV depuis la fiche, avec le même contrôle de propriété.
+    'session:update-character-vitals',
     // Envoyée par le Tablet Hub juste après son enregistrement (useHubSync).
     // Elle ne demande que la rediffusion d'un état auquel le client a déjà
     // droit, caviardé selon son rôle : aucun gain de privilège.
@@ -138,6 +140,7 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     // propre tablette — et la fiche fait foi, donc GM-OS le croirait.
     'session:update-character-sheet-data': 'characterId',
     'session:update-character-narrative': 'characterId',
+    'session:update-character-vitals': 'characterId',
     // Un joueur ne joue que ses cartes, ne propose que les siennes, et ne
     // pioche qu'en son propre nom — sans quoi il remplirait la main d'un autre.
     'deck:piocher': 'characterId',

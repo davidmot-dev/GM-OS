@@ -193,6 +193,7 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'session:submit-feedback',
             'session:update-character-narrative',
             'session:update-character-sheet-data',
+            'session:update-character-vitals',
             'table:ajuster',
         ]);
     });
@@ -205,7 +206,7 @@ describe('evaluateAction — actions permises aux joueurs', () => {
      * lui — *le chemin s'arrête avant le moteur, et rien ne se plaint.*
      */
     it('laisse un joueur remplir SA fiche, et seulement la sienne', () => {
-        for (const type of ['session:update-character-sheet-data', 'session:update-character-narrative']) {
+        for (const type of ['session:update-character-sheet-data', 'session:update-character-narrative', 'session:update-character-vitals']) {
             expect(
                 evaluateAction(type, { characterId: CHAR, updates: {} }, 'player', CHAR).allowed,
                 `${type} sur son propre personnage`,

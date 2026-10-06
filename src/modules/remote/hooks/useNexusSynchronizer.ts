@@ -6,7 +6,8 @@ import { useCombatStore } from '../../combat/useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useFavoriteStore } from '../../favorite/useFavoriteStore';
 import { useWhiteboardStore } from '../../whiteboard/useWhiteboardStore';
-import { useClockStore, jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
+import { useClockStore } from '../../../store/useClockStore';
+import { segmentDesHorloges } from '../logic/segmentDesHorloges';
 import { segmentDuTableau } from '../segmentDuTableau';
 import { segmentDesDes } from '../segmentDesDes';
 import { segmentDeLecture } from '../segmentDeLecture';
@@ -75,11 +76,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 payload.dice = segmentDesDes(s);
             } else if (segmentName === 'clock') {
                 const s = useClockStore.getState();
-                payload.clock = { 
-                    timestamp: s.timestamp, mode: s.mode, isClockProjected: s.isClockProjected, 
-                    theme: s.theme, tensions: jaugesVuesParLesJoueurs(s.tensions), timerRemaining: s.timerRemaining,
-                    timerIsRunning: s.timerIsRunning, timerLabel: s.timerLabel, timerDuration: s.timerDuration
-                };
+                payload.clock = segmentDesHorloges(s);
             } else if (segmentName === 'combat') {
                 const s = useCombatStore.getState();
                 // `isCombatProjected` fait partie du segment, comme `isClockProjected`
@@ -94,11 +91,9 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             } else if (segmentName === 'whiteboard') {
                 const s = useWhiteboardStore.getState();
                 payload.whiteboard = { 
-                    paths: s.paths,
-                    activePath: s.activePath, 
-                    laserPointer: s.laserPointer, 
+                    // T4/M2 : les choix faits sur le PC voyagent aussi dans le flux rapide.
+                    ...segmentDuTableau(s),
                     activeDrawerId: s.activeDrawerId, 
-                    backgroundMode: s.backgroundMode,
                     pathsCount: s.paths.length, 
                     version: s.version
                 };
@@ -313,7 +308,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             const platineQuiJoue = platines.find(d => d?.isPlaying);
             const lecture = {
                 musique: platineQuiJoue?.activeTrackLabel ?? null,
-                ambiance: ambientStore.presets.find(p => p.id === themeDAmbianceActif)?.name ?? null,
+                // T4/M1 : la ligne d'état porte le même nom traduit que le pad.
+                ambiance: traduit(ambientStore.presets.find(p => p.id === themeDAmbianceActif)?.name ?? '') || null,
                 pistesDAmbiance,
             };
 
@@ -454,7 +450,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                   écrit et celui qui lit est indétectable par construction.*
                 */
                 whiteboard: segmentDuTableau(whiteboardStore),
-                clock: { timestamp: clockStore.timestamp, tensions: jaugesVuesParLesJoueurs(clockStore.tensions), timerRemaining: clockStore.timerRemaining, timerIsRunning: clockStore.timerIsRunning },
+                clock: segmentDesHorloges(clockStore),
                 universalPads,
                 comptesDePads,
                 lecture,
