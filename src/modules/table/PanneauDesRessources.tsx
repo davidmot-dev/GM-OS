@@ -80,19 +80,19 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     if (montrees.length === 0) return null;
 
     return (
-        <div className="flex items-center gap-6 px-6 py-2 border-b border-app-border/20 bg-app-bg/40">
+        <div className={`flex items-center border-b border-app-border/20 bg-app-bg/40 ${pourLesJoueurs ? 'flex-wrap gap-3 p-3' : 'gap-6 px-6 py-2'}`}>
             {montrees.map(r => {
                 const valeur = etat[r.id] ?? r.depart;
                 const auPlafond = r.max !== undefined && valeur >= r.max;
                 const manipulable = !pourLesJoueurs || manipulableParUnJoueur(r);
 
                 return (
-                    <div key={r.id} className="flex items-center gap-2" title={r.description}>
+                    <div key={r.id} className={`flex items-center gap-2 ${pourLesJoueurs ? 'min-w-0 flex-wrap' : ''}`} title={r.description}>
                         {r.proprietaire === 'joueurs'
                             ? <Users size={12} className="text-app-text/30" />
                             : <Crown size={12} className="text-app-text/30" />}
 
-                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                        <span className={pourLesJoueurs ? 'text-[14px] font-bold text-app-text' : 'text-ui-9 font-black uppercase tracking-widest text-app-text/40'}>
                             {r.label}
                         </span>
 
@@ -105,7 +105,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                         {manipulable && (
                         <button
                             onClick={() => bouger(r, -1)}
-                            className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                            className={`p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors ${pourLesJoueurs ? 'min-h-[44px] min-w-[44px] flex items-center justify-center' : ''}`}
                             aria-label={`Retirer un point de ${r.label}`}
                         ><Minus size={11} /></button>
                         )}
@@ -116,7 +116,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                             pas de maximum, et six carrés lui en inventeraient un.
                         */}
                         {r.max !== undefined ? (
-                            <div className="flex items-center gap-1">
+                            <div className={`flex items-center gap-1 ${pourLesJoueurs ? 'flex-wrap' : ''}`}>
                                 {Array.from({ length: r.max }, (_, i) => (
                                     <span
                                         key={i}
@@ -140,7 +140,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                         {manipulable && (
                         <button
                             onClick={() => bouger(r, 1)}
-                            className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                            className={`p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors ${pourLesJoueurs ? 'min-h-[44px] min-w-[44px] flex items-center justify-center' : ''}`}
                             aria-label={`Ajouter un point de ${r.label}`}
                         ><Plus size={11} /></button>
                         )}

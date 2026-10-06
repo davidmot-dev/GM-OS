@@ -144,7 +144,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gm-cyan to-transparent opacity-50" />
 
             {/* Header */}
-            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 flex-shrink-0">
+            <EnTeteDeModule habillage="libre" className="flex flex-wrap items-start justify-between gap-3 mb-4 flex-shrink-0">
                 <Bouton habillage="libre" cibleTactile
                     onClick={onClose}
                     title="Fermer la fiche"
@@ -168,9 +168,9 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                         {surLaFiche ? 'Vue synthétique' : 'Ma fiche'}
                     </Bouton>
                 )}
-                <div className="text-right">
-                    <h2 className="text-3xl font-black text-app-text uppercase tracking-tighter leading-none mb-1">{character.name}</h2>
-                    <div className="flex items-center justify-end gap-2">
+                <div className="min-w-0 text-right">
+                    <h2 className="text-[24px] font-bold text-app-text leading-tight mb-1 break-words">{character.name}</h2>
+                    <div className="flex flex-wrap items-center justify-end gap-2">
                         <Etiquette habillage="libre" ton="accent" className="px-2 py-0.5 bg-accent/10 border border-accent/30 rounded text-ui-9 font-black text-accent uppercase tracking-widest flex items-center gap-1.5 shadow-glow-accent/5">
                             <Shield size={10} />
                             SYSTÈME : {template.name}
@@ -236,7 +236,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     
                     {/* Portrait & Vitals */}
                     <div className="lg:col-span-4 space-y-6">
-                        <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden border border-app-border/20 shadow-2xl bg-app-surface">
+                        <div className="relative mx-auto aspect-[3/4] w-full max-w-[180px] lg:max-w-none rounded-[2.5rem] overflow-hidden border border-app-border/20 shadow-2xl bg-app-surface">
                             {character.portraitUrl ? (
                                 <ResolvedImage src={character.portraitUrl} alt={character.name} className="w-full h-full object-cover" />
                             ) : (
