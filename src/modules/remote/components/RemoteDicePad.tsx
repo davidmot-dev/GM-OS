@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Bouton } from '../../../components/socle/Bouton';
 import { Panneau } from '../../../components/socle/Panneau';
 import { Minus, Plus, RotateCcw, Dices, Info, ChevronDown, Check, AlertCircle } from 'lucide-react';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { type DiceConfig } from '../../../types/drivers';
 import {
     facesDuNiveau, poigneeDepuisLesLettres, type ModificateurDeDes,
@@ -58,6 +59,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
     const [isManualMode, setIsManualMode] = useState(false);
     const [prevSystemEngine, setPrevSystemEngine] = useState<string | undefined>(activeDiceConfig?.engine);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    useFermetureParEchap(isMenuOpen, () => setIsMenuOpen(false), 'Mode de lancer');
     const modeMenuRef = useRef<HTMLDivElement>(null);
     const [threshold, setThreshold] = useState(activeDiceConfig?.successThreshold || 10);
     const [diceFormula, setDiceFormula] = useState('');
@@ -167,30 +169,30 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
     const currentModeLabel = DICE_MODES.find(m => m.id === diceMode)?.label || 'Standard';
 
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="space-y-4 pb-2">
             {/* System Info & Active Config */}
             {activeDiceConfig && (
-                <Panneau as="div" habillage="libre" className="flex items-center gap-3 p-4 premium-glass rounded-3xl border-accent/20 bg-accent/5">
+                <Panneau as="div" habillage="libre" className="flex flex-wrap items-center gap-3 p-4 premium-glass rounded-3xl border-accent/20 bg-accent/5">
                     <div className="w-10 h-10 rounded-2xl bg-accent/20 flex items-center justify-center text-accent shadow-glow-accent/10">
                         <Dices size={20} />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-ui-10 font-black uppercase text-accent tracking-tighter">Système Actif</span>
+                        <span className="text-[14px] font-black uppercase text-accent tracking-tighter">Système Actif</span>
                         <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-app-text uppercase">{activeDiceConfig.engine || 'Standard'}</span>
+                            <span className="text-[14px] font-bold text-app-text uppercase">{activeDiceConfig.engine || 'Standard'}</span>
                             {isManualMode ? (
                                 <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-etat-alerte/10 border border-etat-alerte/20">
                                     <AlertCircle size={8} className="text-etat-alerte" />
-                                    <span className="text-ui-8 font-black text-etat-alerte uppercase tracking-tighter">Manuel</span>
+                                    <span className="text-[14px] font-black text-etat-alerte uppercase tracking-tighter">Manuel</span>
                                 </div>
                             ) : (
-                                <span className="text-ui-10 text-app-muted">({activeDiceConfig.logic})</span>
+                                <span className="text-[14px] text-app-muted">({activeDiceConfig.logic})</span>
                             )}
                         </div>
                     </div>
                     <Bouton habillage="libre" cibleTactile
                         onClick={handleSystemRoll}
-                        className="ml-auto px-6 py-3 bg-accent text-app-on-accent text-xs font-black uppercase rounded-2xl shadow-glow-accent active:scale-95 transition-all"
+                        className="min-h-[44px] ml-auto px-4 py-3 bg-accent text-app-on-accent text-[14px] font-black uppercase rounded-2xl shadow-glow-accent active:scale-95 transition-all"
                     >
                         Lancer Système
                     </Bouton>
@@ -206,17 +208,17 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
             */}
             {estEchelonne && (
                 <Panneau as="div" habillage="libre" className="flex flex-col gap-3 p-5 premium-glass rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-300">
-                    <span className="text-ui-10 font-black uppercase text-app-muted tracking-widest pl-1">
+                    <span className="text-[14px] font-black uppercase text-app-muted tracking-widest pl-1">
                         Attribut / Compétence / Équipement
                     </span>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 min-[700px]:grid-cols-3 gap-3">
                         {([
                             { cle: 'attribut', titre: 'Attribut', valeur: niveauAttribut, poser: setNiveauAttribut, facultatif: false },
                             { cle: 'competence', titre: 'Compétence', valeur: niveauCompetence, poser: setNiveauCompetence, facultatif: false },
                             { cle: 'equipement', titre: 'Équip.', valeur: niveauEquipement, poser: setNiveauEquipement, facultatif: true },
                         ] as const).map(({ cle, titre, valeur, poser, facultatif }) => (
                             <div key={cle} className="flex flex-col gap-1">
-                                <span className="text-ui-9 font-black uppercase text-app-muted tracking-tighter pl-1">{titre}</span>
+                                <span className="text-[14px] font-black uppercase text-app-muted tracking-tighter pl-1">{titre}</span>
                                 <select
                                     value={valeur}
                                     onChange={(e) => poser(e.target.value)}
@@ -243,7 +245,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                 key={cle}
                                 onClick={() => { haptic(10); setModificateurEchelonne(cle); }}
                                 aria-pressed={modificateurEchelonne === cle}
-                                className={`flex-1 px-2 py-3 rounded-2xl border text-ui-10 font-black uppercase tracking-tighter transition-all active:scale-95 ${modificateurEchelonne === cle
+                                className={`flex-1 px-2 py-3 rounded-2xl border text-[14px] font-black uppercase tracking-tighter transition-all active:scale-95 ${modificateurEchelonne === cle
                                     ? 'bg-accent text-app-on-accent border-accent/40 shadow-glow-accent'
                                     : 'bg-app-text/5 border-app-text/10 text-app-muted'}`}
                             >
@@ -253,8 +255,8 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                     </div>
 
                     <div className="flex items-center gap-2 pl-1">
-                        <span className="text-lg font-black text-app-text font-mono">{libelleDeLaPoignee || '—'}</span>
-                        <span className="text-ui-9 text-app-muted uppercase tracking-widest ml-auto">6+ réussite · 10+ en vaut deux</span>
+                        <span className="text-[18px] font-bold text-app-text font-mono">{libelleDeLaPoignee || '—'}</span>
+                        <span className="text-[14px] text-app-muted uppercase tracking-widest ml-auto">6+ réussite · 10+ en vaut deux</span>
                     </div>
 
                     {/*
@@ -263,7 +265,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                       poignée. Quand la composition corrige, elle le dit.
                     */}
                     {poigneeEchelonnee.remarques.map((remarque, i) => (
-                        <p key={i} className="text-ui-10 italic text-etat-alerte/80">{remarque}</p>
+                        <p key={i} className="text-[14px] italic text-etat-alerte/80">{remarque}</p>
                     ))}
                 </Panneau>
             )}
@@ -271,14 +273,14 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
             {/* Controls */}
             {estEchelonne ? null : diceMode === 'formula' ? (
                 <Panneau as="div" habillage="libre" className="flex flex-col gap-3 p-5 premium-glass rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-300">
-                    <span className="text-ui-10 font-black uppercase text-app-muted tracking-widest pl-1">Formule de dés</span>
+                    <span className="text-[14px] font-black uppercase text-app-muted tracking-widest pl-1">Formule de dés</span>
                     <div className="flex gap-3">
                         <input 
                             type="text"
                             value={diceFormula}
                             onChange={(e) => setDiceFormula(e.target.value)}
-                            placeholder="ex: 2d10+1d4+5"
-                            className="flex-1 bg-app-text/5 border border-app-text/10 p-4 rounded-2xl text-xl font-black text-accent outline-none focus:border-accent/50 transition-all placeholder:text-app-subtle"
+                            placeholder="ex: 2d10+1d4+5" aria-label="Formule de dés"
+                            className="flex-1 min-w-0 bg-app-text/5 border border-app-text/10 p-4 rounded-2xl text-xl font-black text-accent outline-none focus:border-accent/50 transition-all placeholder:text-app-subtle"
                         />
                         <Bouton habillage="libre" cibleTactile
                             onClick={() => handleRollClick({
@@ -297,13 +299,13 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                             <Dices size={24} />
                         </Bouton>
                     </div>
-                    <span className="text-ui-10 text-app-muted italic pl-1">Supporte les opérateurs (+,-,*,/), les pools (ex: 5d6s6) et les fonctions.</span>
+                    <span className="text-[14px] text-app-muted italic pl-1">Supporte les opérateurs (+,-,*,/), les pools (ex: 5d6s6) et les fonctions.</span>
                 </Panneau>
             ) : (
-                <div className={`grid ${diceMode === 'yze' ? 'grid-cols-2' : (diceMode === 'rolemaster' ? 'grid-cols-1' : 'grid-cols-2 lg:grid-cols-4')} gap-4`}>
+                <div className={`grid ${diceMode === 'yze' ? 'grid-cols-2' : (diceMode === 'rolemaster' ? 'grid-cols-1' : 'grid-cols-2 min-[700px]:grid-cols-3')} gap-4`}>
                     {diceMode !== 'rolemaster' && (
-                        <Panneau as="div" habillage="libre" className="flex flex-col gap-2 p-4 premium-glass rounded-3xl">
-                            <span className="text-ui-10 font-black uppercase text-app-muted tracking-widest">
+                        <Panneau as="div" habillage="libre" className={`flex flex-col gap-2 p-3 premium-glass rounded-3xl ${diceMode === 'yze' ? '' : 'col-span-2 min-[700px]:col-span-1'}`}>
+                            <span className="text-[14px] font-black uppercase text-app-muted tracking-widest">
                                 {diceMode === 'yze' ? 'Dés Base' : 'Quantité / Base'}
                             </span>
                             <div className="flex items-center justify-between">
@@ -314,7 +316,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                     }} 
                                     title="Diminuer la quantité"
                                     aria-label="Diminuer la quantité"
-                                    className="min-w-[44px] w-10 h-10 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
+                                    className="w-[44px] h-[44px] shrink-0 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
                                 >
                                     <Minus size={16} />
                                 </Bouton>
@@ -326,7 +328,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                     }} 
                                     title="Augmenter la quantité"
                                     aria-label="Augmenter la quantité"
-                                    className="min-w-[44px] w-10 h-10 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
+                                    className="w-[44px] h-[44px] shrink-0 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
                                 >
                                     <Plus size={16} />
                                 </Bouton>
@@ -334,16 +336,16 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                         </Panneau>
                     )}
 
-                    <div className={`${diceMode === 'yze' ? 'col-span-1' : (diceMode === 'rolemaster' ? 'col-span-1' : 'grid grid-cols-2 gap-3 col-span-2 lg:col-span-2')}`}>
+                    <div className={`${diceMode === 'yze' ? 'col-span-1' : (diceMode === 'rolemaster' ? 'col-span-1' : 'grid grid-cols-2 gap-3 col-span-2 min-[700px]:col-span-2')}`}>
                         {diceMode !== 'yze' && (
-                            <Panneau as="div" habillage="libre" className="flex flex-col gap-2 p-4 premium-glass rounded-3xl">
-                                <span className="text-ui-10 font-black uppercase text-app-muted tracking-widest">Modificateur</span>
+                            <Panneau as="div" habillage="libre" className="flex flex-col gap-2 p-3 premium-glass rounded-3xl">
+                                <span className="text-[14px] font-black uppercase text-app-muted tracking-widest">Modificateur</span>
                                 <div className="flex items-center justify-between">
                                     <Bouton habillage="libre" cibleTactile
                                         onClick={() => setDiceModifier(diceModifier - 1)} 
                                         title="Diminuer le modificateur"
                                         aria-label="Diminuer le modificateur"
-                                        className="min-w-[44px] w-10 h-10 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
+                                        className="w-[44px] h-[44px] shrink-0 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
                                     >
                                         <Minus size={16} />
                                     </Bouton>
@@ -354,7 +356,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                         onClick={() => setDiceModifier(diceModifier + 1)} 
                                         title="Augmenter le modificateur"
                                         aria-label="Augmenter le modificateur"
-                                        className="min-w-[44px] w-10 h-10 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
+                                        className="w-[44px] h-[44px] shrink-0 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
                                     >
                                         <Plus size={16} />
                                     </Bouton>
@@ -363,8 +365,8 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                         )}
 
                         {diceMode !== 'rolemaster' && (
-                            <Panneau as="div" habillage="libre" className="flex flex-col gap-2 p-4 premium-glass rounded-3xl h-full">
-                                <span className="text-ui-10 font-black uppercase text-app-muted tracking-widest">
+                            <Panneau as="div" habillage="libre" className="flex flex-col gap-2 p-3 premium-glass rounded-3xl h-full">
+                                <span className="text-[14px] font-black uppercase text-app-muted tracking-widest">
                                     {diceMode === 'yze' ? 'Dés Equip. (E)' : 'Seuil (Target)'}
                                 </span>
                                 <div className="flex items-center justify-between">
@@ -372,7 +374,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                         onClick={() => setThreshold(Math.max(0, threshold - 1))} 
                                         title={diceMode === 'yze' ? 'Diminuer l\'expertise' : 'Diminuer le seuil'}
                                         aria-label={diceMode === 'yze' ? 'Diminuer l\'expertise' : 'Diminuer le seuil'}
-                                        className="min-w-[44px] w-10 h-10 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
+                                        className="w-[44px] h-[44px] shrink-0 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
                                     >
                                         <Minus size={16} />
                                     </Bouton>
@@ -381,7 +383,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                         onClick={() => setThreshold(Math.min(99, threshold + 1))} 
                                         title={diceMode === 'yze' ? 'Augmenter l\'expertise' : 'Augmenter le seuil'}
                                         aria-label={diceMode === 'yze' ? 'Augmenter l\'expertise' : 'Augmenter le seuil'}
-                                        className="min-w-[44px] w-10 h-10 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
+                                        className="w-[44px] h-[44px] shrink-0 rounded-xl flex items-center justify-center bg-app-text/5 active:scale-90 transition-all font-black text-app-text hover:bg-app-text/10"
                                     >
                                         <Plus size={16} />
                                     </Bouton>
@@ -394,11 +396,11 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
 
             {/* Mode Selector - Refactored to Dropdown */}
             <div className="flex flex-col gap-2">
-                <label className="text-ui-10 font-black uppercase text-app-muted tracking-widest pl-1">Mode de Lancer</label>
+                <label className="text-[14px] font-black uppercase text-app-muted tracking-widest pl-1">Mode de Lancer</label>
                 <div className="relative" ref={modeMenuRef}>
                     <Bouton habillage="libre" cibleTactile
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className={`w-full p-4 flex items-center justify-between premium-glass rounded-3xl border transition-all ${
+                        onClick={() => setIsMenuOpen(!isMenuOpen)} aria-expanded={isMenuOpen} aria-label="Mode de lancer"
+                        className={`w-full p-4 min-h-[44px] flex items-center justify-between gap-2 premium-glass rounded-3xl border transition-all ${
                             isMenuOpen ? 'border-accent/50 ring-4 ring-accent/10' : 'border-app-text/5'
                         }`}
                     >
@@ -406,7 +408,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                             <div className={`p-2 rounded-xl ${isManualMode ? 'bg-etat-alerte/10 text-etat-alerte' : 'bg-accent/10 text-accent'}`}>
                                 <Dices size={18} />
                             </div>
-                            <span className="text-sm font-bold text-app-text uppercase">{currentModeLabel}</span>
+                            <span className="text-[16px] font-bold text-app-text uppercase">{currentModeLabel}</span>
                         </div>
                         <ChevronDown size={18} className={`text-app-muted transition-transform duration-300 ${isMenuOpen ? 'rotate-180' : ''}`} />
                     </Bouton>
@@ -428,7 +430,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                             diceMode === mode.id ? 'bg-accent text-app-on-accent' : 'text-app-muted hover:bg-app-text/5 hover:text-app-text'
                                         }`}
                                     >
-                                        <span className="text-xs font-black uppercase tracking-tight">{mode.label}</span>
+                                        <span className="text-[14px] font-black uppercase tracking-tight">{mode.label}</span>
                                         {diceMode === mode.id && <Check size={14} />}
                                     </Bouton>
                                 ))}
@@ -443,7 +445,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                                         className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-4 rounded-2xl bg-etat-alerte/10 text-etat-alerte hover:bg-etat-alerte/20 transition-all border border-etat-alerte/20"
                                     >
                                         <RotateCcw size={14} />
-                                        <span className="text-ui-10 font-black uppercase tracking-widest">Réinitialiser au système</span>
+                                        <span className="text-[14px] font-black uppercase tracking-widest">Réinitialiser au système</span>
                                     </Bouton>
                                 )}
                             </div>
@@ -469,9 +471,9 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                         <div className="absolute inset-0 bg-accent/5 group-hover:bg-accent/10 transition-colors" />
                         <Dices size={48} className="text-accent mb-2 animate-in zoom-in duration-300" />
                         <span className="text-2xl font-black text-app-text tracking-widest uppercase">Lancer d100 Rolemaster</span>
-                        <span className="text-ui-10 text-app-muted font-bold uppercase tracking-[0.2em]">Open-Ended Roll (Explosif)</span>
+                        <span className="text-[14px] text-app-muted font-bold uppercase tracking-wide">Open-Ended Roll (Explosif)</span>
                         {diceModifier !== 0 && (
-                            <div className="mt-2 px-4 py-1 rounded-full bg-accent/20 border border-accent/30 text-accent text-sm font-black">
+                            <div className="mt-2 px-4 py-1 rounded-full bg-accent/20 border border-accent/30 text-accent text-[16px] font-black">
                                 Modificateur: {diceModifier > 0 ? '+' : ''}{diceModifier}
                             </div>
                         )}
@@ -485,11 +487,11 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                         className="w-full p-4 bg-etat-danger/10 border border-etat-danger/20 text-etat-danger rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all font-black hover:bg-etat-danger/20"
                     >
                         <RotateCcw size={18} />
-                        <span className="text-xs uppercase tracking-widest">Réinitialiser</span>
+                        <span className="text-[14px] uppercase tracking-widest">Réinitialiser</span>
                     </Bouton>
                 </div>
             ) : (
-                <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3">
+                <div className="grid grid-cols-4 min-[700px]:grid-cols-8 gap-3">
                     {diceTypes.map(d => (
                         <Bouton habillage="libre" cibleTactile
                             key={d}
@@ -503,10 +505,10 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                             })}
                             title={`Lancer D${d}`}
                             aria-label={`Lancer D${d}`}
-                            className="aspect-square premium-glass border border-app-text/5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-90 transition-all group overflow-hidden relative"
+                            className="min-h-[72px] premium-glass border border-app-text/5 rounded-2xl flex flex-col items-center justify-center gap-1 active:scale-90 transition-all group overflow-hidden relative"
                         >
                             <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors" />
-                            <span className="text-xs font-black text-accent group-active:text-app-text z-10 font-mono">D{d}</span>
+                            <span className="text-[14px] font-black text-accent group-active:text-app-text z-10 font-mono">D{d}</span>
                             <div className="w-1.5 h-1.5 rounded-full bg-app-text/10 group-hover:bg-accent/40 transition-colors z-10" />
                         </Bouton>
                     ))}
@@ -520,7 +522,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                         }}
                         title="Réinitialiser les dés"
                         aria-label="Réinitialiser les dés"
-                        className="aspect-square bg-etat-danger/10 border border-etat-danger/20 text-etat-danger rounded-2xl flex items-center justify-center active:scale-90 transition-all font-black hover:bg-etat-danger/20 shadow-glow-rose/5"
+                        className="min-h-[72px] bg-etat-danger/10 border border-etat-danger/20 text-etat-danger rounded-2xl flex items-center justify-center active:scale-90 transition-all font-black hover:bg-etat-danger/20 shadow-glow-rose/5"
                     >
                         <RotateCcw size={20} />
                     </Bouton>
@@ -531,7 +533,7 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
             {activeDiceConfig?.engine === 'yze' && (
                 <Panneau as="div" habillage="libre" className="flex items-center gap-2 p-3 bg-app-text/5 rounded-2xl border border-app-text/5">
                     <Info size={14} className="text-app-muted" />
-                    <span className="text-ui-9 text-app-muted font-medium italic">
+                    <span className="text-[14px] text-app-muted font-medium italic">
                         Le moteur Year Zero gère automatiquement les 6 comme succès et les 1 comme complications sur les dés de base/skill et de gear.
                     </span>
                 </Panneau>

@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { type RollRecord } from '../hooks/useRemoteSync';
 import { type DieResult } from '../../dice/DiceEngine';
 import { Panneau } from '../../../components/socle/Panneau';
+import { Bouton } from '../../../components/socle/Bouton';
+import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 
 interface RemoteDiceResultOverlayProps {
     result: RollRecord | null;
@@ -11,6 +13,7 @@ interface RemoteDiceResultOverlayProps {
 }
 
 const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ result, onClose }) => {
+    useFermetureParEchap(!!result, onClose, 'Résultat des dés du meneur');
     // Standard timer for 15s
     React.useEffect(() => {
         if (result) {
@@ -34,9 +37,16 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.9, opacity: 0, y: -20 }}
                         onClick={(e) => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Résultat du jet"
                         className="w-full max-w-lg"
                     >
-                        <Panneau as="div" habillage="libre" className="relative w-full premium-glass rounded-[40px] border border-app-text/10 shadow-3xl overflow-hidden p-8 flex flex-col items-center gap-6">
+                        <Panneau as="div" habillage="libre" className="relative w-full max-h-[calc(100dvh-32px)] premium-glass rounded-2xl border border-app-text/10 shadow-3xl p-4 flex flex-col gap-3 overflow-hidden">
+                        <Bouton habillage="libre" cibleTactile onClick={onClose}
+                            aria-label="Fermer le résultat"
+                            className="shrink-0 self-end min-h-[44px] px-4 bg-app-bg border border-app-text/20 text-[14px] font-bold">Fermer</Bouton>
+                        <div data-resultat-des-contenu="" className="min-h-0 overflow-y-auto flex flex-col items-center gap-4 py-3">
                         {/* Progress bar for auto-dismiss */}
                         <motion.div 
                             initial={{ width: '100%' }}
@@ -46,14 +56,14 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                         />
 
                         <div className="text-center space-y-1">
-                            <span className="text-xs font-black uppercase tracking-[0.3em] text-accent/80 drop-shadow-sm">
+                            <span className="text-[16px] font-bold text-accent break-words [overflow-wrap:anywhere]">
                                 {result.title || 'DÉTAIL DU JET'}
                             </span>
                         </div>
 
                         <div className="relative group">
                             <div className="absolute inset-0 bg-app-text/5 rounded-full blur-3xl group-hover:bg-app-text/10 transition-all duration-500" />
-                            <h2 className="relative text-7xl md:text-9xl font-black text-app-text tracking-tighter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                            <h2 className="relative text-[64px] font-bold text-app-text break-words [overflow-wrap:anywhere]">
                                 {result.totalDisplay || result.total}
                             </h2>
                         </div>
@@ -112,10 +122,13 @@ const RemoteDiceResultOverlay: React.FC<RemoteDiceResultOverlayProps> = ({ resul
                             )}
                         />
 
-                        <div className="mt-2 text-ui-10 font-black text-app-text/20 uppercase tracking-widest flex items-center gap-2">
+                        <Bouton habillage="libre" cibleTactile onClick={onClose}
+                            aria-label="Cliquer pour fermer"
+                            className="min-h-[44px] px-4 text-[14px] font-bold text-app-text border border-app-text/20 flex items-center gap-2">
                             <span className="w-4 h-px bg-app-text/10" />
                             CLIQUER POUR FERMER
                             <span className="w-4 h-px bg-app-text/10" />
+                        </Bouton>
                         </div>
                         </Panneau>
                     </motion.div>
