@@ -65,7 +65,7 @@ const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
                         onChange={(e) => setFiltre(e.target.value)}
                         placeholder="Filtrer les bruitages…"
                         aria-label="Filtrer les bruitages"
-                        className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
+                        className="w-full h-[44px] pl-9 pr-16 rounded-xl bg-app-text/5 border border-app-text/10 text-[16px] text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 transition-colors"
                     />
                     {filtre && (
                         <Bouton habillage="libre" cibleTactile
@@ -80,20 +80,20 @@ const RemoteSoundboard: React.FC<RemoteSoundboardProps> = ({
             )}
 
             {retenus.length > 0 ? (
-                <div className="grid grid-cols-3 min-[700px]:grid-cols-4 min-[1000px]:grid-cols-6 gap-2">
+                <div className="grid grid-cols-2 min-[700px]:grid-cols-3 min-[1100px]:grid-cols-4 gap-3">
                     {retenus.map(s => (
                         <Bouton habillage="libre" cibleTactile
                             key={s.id}
                             onClick={() => onTrigger(s.id)}
                             disabled={!s.active}
-                            className={`h-16 px-2 rounded-xl border flex flex-col items-center justify-center gap-1 active:scale-95 transition-all ${
+                            className={`min-h-[80px] min-w-0 p-3 rounded-xl border flex flex-col items-center justify-center gap-2 active:scale-95 transition-all ${
                                 s.active
                                     ? 'bg-app-text/[0.03] border-app-text/5 hover:border-app-text/20 text-app-text'
                                     : 'bg-app-bg/20 border-app-text/5 text-app-text/20'
                             }`}
                         >
                             <Volume2 size={16} className={s.active ? 'text-etat-danger' : ''} />
-                            <span className="text-ui-10 font-bold leading-tight text-center line-clamp-2 w-full">
+                            <span className="text-[16px] font-bold leading-snug text-center [overflow-wrap:anywhere] w-full">
                                 {s.title}
                             </span>
                         </Bouton>
