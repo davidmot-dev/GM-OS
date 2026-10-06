@@ -41,7 +41,6 @@ const sources = import.meta.glob('/src/**/*.tsx', {
 const DISPENSEES: ReadonlyArray<readonly [string, string]> = [
     // ── Des écrans entiers, pas des boîtes qu'on referme ──────────────────
     ['/src/components/PlayerHub.tsx', "l'écran des joueurs ; il se vide par Ctrl+0, il ne se ferme pas"],
-    ['/src/components/TabletHub.tsx', "l'écran de la tablette : ni clavier, ni meneur devant"],
     ['/src/components/common/LoadingOverlay.tsx', 'une attente : il n’y a rien à fermer'],
     ['/src/modules/dice/DiceBox3D.tsx', 'la surface de rendu des dés, pas une boîte'],
     ['/src/modules/system/archive/NexusHUD.tsx', 'un import en cours ; une opération qui travaille ne s’annule pas d’une touche'],
@@ -57,7 +56,6 @@ const DISPENSEES: ReadonlyArray<readonly [string, string]> = [
     ['/src/components/hub/HubRuleViewer.tsx', 'vue joueurs, pilotée depuis le poste du meneur'],
     ['/src/components/hub/HubMainDeCartes.tsx', 'vue joueurs ; sa carte agrandie porte déjà son propre Échap, sur son conteneur focalisé'],
     ['/src/components/hub/LobbyOnboarding.tsx', 'l’accueil d’un joueur qui se connecte : il n’a rien à refermer'],
-    ['/src/modules/remote/components/RemoteDiceResultOverlay.tsx', 'un résultat de jet qui se retire tout seul'],
 
     // ── Le démarrage ─────────────────────────────────────────────────────
     ['/src/components/splash/CyberpunkSplash.tsx', 'écran de démarrage : il s’efface quand l’application est prête, personne ne le referme'],
@@ -69,8 +67,6 @@ const DISPENSEES: ReadonlyArray<readonly [string, string]> = [
     // ── Des fonds de menus déroulants, déjà fermés au clic extérieur ──────
     ['/src/modules/map/components/MapControls.tsx', 'le fond cliquable d’un menu de sortie, pas une surcouche'],
     ['/src/modules/session/components/SocialGraph/SocialGraphFilters.tsx', 'le fond cliquable d’une liste de choix'],
-    ['/src/modules/remote/components/LigneDeVolume.tsx',
-        'le fond cliquable du choix de sortie, sur la tablette : ni clavier, ni meneur devant'],
     /*
       ⭐ **Dispense retirée le 2026-09-20.** Elle disait vrai tant que le menu
       vivait dans la barre d'onglets : son voile y était enfermé dans un

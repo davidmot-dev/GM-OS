@@ -1,27 +1,22 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { EtiquetteDuDegre } from '../modules/dice/EtiquetteDuDegre';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Monitor, 
     Archive, 
     MessageSquare, 
-    BookOpen,
     Wifi,
     WifiOff,
-    User,
-    LogOut,
     Users,
     Globe,
     Package,
     Swords,
-    ChevronRight,
     Layers
 } from 'lucide-react';
+import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import { ResolvedImage } from './ResolvedImage';
 import { Bouton, EnTeteDeModule, Etiquette, Panneau } from './socle';
-import NarrativeClock from '../modules/clock/components/NarrativeClock';
-import ClockVisualizer from '../modules/clock/components/ClockVisualizer';
 import LobbyOnboarding from './hub/LobbyOnboarding';
 import HubCharacterSheet from './hub/HubCharacterSheet';
 import { HubMessenger } from './hub/HubMessenger';
@@ -36,14 +31,14 @@ import { HubAtlas } from './hub/HubAtlas';
 import { getDieCssClass } from '../modules/dice/DiceUIUtils';
 import { HubInventory } from './hub/HubInventory';
 import HubMainDeCartes from './hub/HubMainDeCartes';
-import { HubProjectionCard } from './hub/HubProjectionCard';
+import { HubDirect } from './hub/HubDirect';
+import { HubHorlogesPubliques } from './hub/HubHorlogesPubliques';
 import { HubRuleViewer } from './hub/HubRuleViewer';
 import { useHubSync } from '../modules/session/hooks/useHubSync';
 import PlayerPrivateNotes from '../modules/session/components/PlayerPrivateNotes';
 import { type Clue, type Entity, type AtlasMap } from '../modules/session/store/types';
 import { type FavoriteEntity } from '../modules/favorite/useFavoriteStore';
 import { type Combatant, type StatusEffect } from '../modules/combat/types';
-import { type TensionClock } from '../store/useClockStore';
 import { useDiceStore } from '../stores/useDiceStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useClientStore } from '../stores/useClientStore';
@@ -91,8 +86,6 @@ const TabletHub: React.FC = () => {
     const { setLowGraphics } = usePerformanceStore();
 
     const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory' | 'cartes'>('live');
-    const navScrollRef = useRef<HTMLDivElement>(null);
-    const [navEdges, setNavEdges] = useState({ left: false, right: false });
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
@@ -103,7 +96,7 @@ const TabletHub: React.FC = () => {
     const [selectedItem, setSelectedItem] = useState<FavoriteEntity | null>(null);
     const [lastReadMessageTime, setLastReadMessageTime] = useState(() => Date.now());
     const [selectedRecipientId, setSelectedRecipientId] = useState<string>('GM');
-    const [activeToast, setActiveToast] = useState<{ fromName: string; channel: string } | null>(null);
+    const [activeToast, setActiveToast] = useState<{ fromName: string; channel: string; recipientId: string } | null>(null);
 
     const activeHubId = projections['hub'];
     const activeSession = sessions.find((s: { status: string }) => s.status === 'active');
@@ -155,7 +148,12 @@ const TabletHub: React.FC = () => {
  
     const toggleMessenger = () => {
         setIsMessengerOpen(!isMessengerOpen);
-        if (!isMessengerOpen) setLastReadMessageTime(Date.now());
+        setIsNotesOpen(false);
+        setIsInventoryOpen(false);
+        if (!isMessengerOpen) {
+            setLastReadMessageTime(Date.now());
+            setActiveToast(null);
+        }
     };
 
     // Priority: live projection > media library projection > campaign wallpaper
@@ -176,6 +174,7 @@ const TabletHub: React.FC = () => {
     useEffect(() => {
         if (messages.length === 0) return;
         const lastMsg = messages[messages.length - 1];
+        if (lastMsg.timestamp <= lastReadMessageTime) return;
         
         // Only notify for incoming messages
         if (lastMsg.fromId === characterId) return;
@@ -185,18 +184,18 @@ const TabletHub: React.FC = () => {
         if (!isForMe) return;
 
         // Check if we are currently looking at the right queue
-        const msgQueue = lastMsg.toId === 'all' ? 'all' : (lastMsg.fromId === 'GM' ? 'GM' : lastMsg.fromId);
+        const msgQueue = lastMsg.toId === 'all' || !lastMsg.toId ? 'all' : lastMsg.fromId;
         const isRightQueue = isMessengerOpen && selectedRecipientId === msgQueue;
 
         if (!isRightQueue) {
-            const channelName = lastMsg.toId === 'all' ? 'Canal Général' : (lastMsg.fromId === 'GM' ? 'Maître du Jeu' : 'Canal Privé');
-            setActiveToast({ fromName: lastMsg.fromName, channel: channelName });
+            const channelName = msgQueue === 'all' ? 'Canal Général' : (lastMsg.fromId === 'GM' ? 'Maître du Jeu' : 'Canal Privé');
+            setActiveToast({ fromName: lastMsg.fromName, channel: channelName, recipientId: msgQueue });
             
             // Auto-clear toast
             const timer = setTimeout(() => setActiveToast(null), 5000);
             return () => clearTimeout(timer);
         }
-    }, [messages, characterId, isMessengerOpen, selectedRecipientId]);
+    }, [messages, characterId, isMessengerOpen, selectedRecipientId, lastReadMessageTime]);
 
     useEffect(() => {
         if (activeCampaignWallpaper) {
@@ -207,29 +206,6 @@ const TabletHub: React.FC = () => {
         }
     }, [activeCampaignWallpaper, resolvedCampaignWallpaper]);
 
-    useEffect(() => {
-        const nav = navScrollRef.current;
-        if (!nav) return;
-
-        const updateEdges = () => setNavEdges({
-            left: nav.scrollLeft > 1,
-            right: nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 1,
-        });
-        const active = nav.querySelector<HTMLElement>(`[data-hub-tab="${currentTab}"]`);
-        if (active) {
-            const activeCenter = active.getBoundingClientRect().left - nav.getBoundingClientRect().left
-                + nav.scrollLeft + active.offsetWidth / 2;
-            const scrollLeft = activeCenter - nav.clientWidth / 2;
-            if (typeof nav.scrollTo === 'function') {
-                nav.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-            } else {
-                nav.scrollLeft = scrollLeft;
-            }
-        }
-        updateEdges();
-        window.addEventListener('resize', updateEdges);
-        return () => window.removeEventListener('resize', updateEdges);
-    }, [currentTab]);
 
     const rootStyles = {
         '--hub-bg-url': resolvedBackground ? `url('${resolvedBackground}')` : "none",
@@ -237,11 +213,9 @@ const TabletHub: React.FC = () => {
         '--hub-blur-bg-url': resolvedCampaignWallpaper ? `url("${resolvedCampaignWallpaper}")` : "none",
     } as React.CSSProperties;
 
-    return (
-        <div className={`min-h-screen bg-app-bg text-app-text font-inter overflow-hidden flex flex-col relative select-none ${performance.isLowGraphics ? '' : 'will-change-transform'}`} style={rootStyles}>
-            
-            {/* Status & Connection */}
-            <div className={`fixed top-4 right-4 z-50 flex items-center gap-2`}>
+    const estDirect = currentTab === 'live';
+    const commandesDeConnexion = (
+        <div className={'flex flex-wrap items-center gap-2'}>
                 {/* Sur un appareil géré automatiquement, le réglage est en lecture
                     seule : la détection réimposerait aussitôt son choix, et un
                     bouton qui revient tout seul vaut moins qu'un simple témoin. */}
@@ -262,25 +236,23 @@ const TabletHub: React.FC = () => {
                 >
                     {performance.isLowGraphics ? 'Mode Performance' : 'Mode Qualité'}
                 </Bouton>
-                <div className={`p-1.5 rounded-full backdrop-blur-md border transition-colors ${
+                <div className={`flex items-center gap-2 p-1.5 rounded-full backdrop-blur-md border transition-colors ${
                     status === 'connected' 
                         ? (latency !== null && latency < 100 ? 'bg-etat-succes/10 text-etat-succes border-etat-succes/20 shadow-[0_0_10px_color-mix(in_srgb,var(--etat-succes)_20%,transparent)]' : 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20')
                         : 'bg-etat-danger/10 text-etat-danger border-etat-danger/20 animate-pulse'
                 }`} title={status === 'connected' ? `Synchronisé (${latency}ms)` : 'Déconnecté du MJ'}>
                     {status === 'connected' ? <Wifi size={14} /> : <WifiOff size={14} />}
+                    {<span className="text-[12px] font-bold">{status === 'connected' ? 'Connecté' : 'Déconnecté'}</span>}
                 </div>
+                {hasCombatants && <Bouton cibleTactile onClick={() => setIsCombatOverlayOpen(!isCombatOverlayOpen)} aria-pressed={isCombatOverlayOpen} icone={<Swords size={16} />}>Initiative</Bouton>}
             </div>
+    );
 
-            {/* Campaign Header */}
-            {activeCampaignName && currentTab === 'live' && (
-                <div className="fixed top-12 md:top-6 left-4 md:left-8 z-40 animate-in fade-in slide-in-from-left duration-1000 pointer-events-none flex flex-col">
-                    <span className="hidden md:block text-ui-10 font-black text-accent/60 uppercase tracking-[0.4em] mb-1">Opération en cours</span>
-                    <h1 className="text-xl md:text-3xl font-black text-app-text uppercase tracking-tightest drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] opacity-50 md:opacity-100">
-                        {activeCampaignName}
-                    </h1>
-                </div>
-            )}
+    useFermetureParEchap(isNotesOpen, () => setIsNotesOpen(false), 'Notes joueur');
+    useFermetureParEchap(isCombatOverlayOpen, () => setIsCombatOverlayOpen(false), 'Initiative tablette');
 
+    return (
+        <div className={`h-dvh [--hub-navigation-hauteur:148px] lg:[--hub-navigation-hauteur:100px] bg-app-bg text-app-text font-inter overflow-hidden flex flex-col relative select-none ${performance.isLowGraphics ? '' : 'will-change-transform'}`} style={rootStyles}>
             {/* Background Layers */}
             {/* Layer 1 (z-0): Campaign wallpaper — always visible as base atmosphere */}
             {resolvedCampaignWallpaper && (
@@ -369,138 +341,42 @@ const TabletHub: React.FC = () => {
                 <div className={`fixed inset-0 z-5 bg-app-bg/40 pointer-events-none transition-all duration-700 opacity-100 ${performance.isLowGraphics ? '' : 'backdrop-blur-[1px]'}`}></div>
             )}
 
-            {/* Main Content Area */}
-            <div className="relative z-40 flex h-screen w-full flex-col overflow-hidden pointer-events-none p-4 md:p-8">
-                
-                {/* Widgets: Clock & Narrative Indicators */}
-                <div className="flex flex-col gap-4 mb-6 pl-12 w-full max-w-[460px] pointer-events-auto animate-in fade-in slide-in-from-left duration-700">
-                    {isClockProjected && String(mode) !== 'hidden' && (
-                        <Panneau as="div" habillage="libre" className={`bg-app-surface/40 border border-app-border/40 p-2 rounded-2xl shadow-2xl flex items-center justify-center w-full aspect-square max-w-[250px] overflow-hidden ${performance.blurClass}`}>
-                            <div className="scale-[0.5] origin-center transform-gpu">
-                                <ClockVisualizer theme={theme} timestamp={timestamp} mode={mode} />
-                            </div>
-                        </Panneau>
-                    )}
-
-                    {isClockProjected && tensions.length > 0 && (
-                        <div className="grid grid-cols-2 gap-4 w-full h-fit overflow-y-auto max-h-[220px] pr-2 custom-scrollbar">
-                            {tensions.map((clock: TensionClock) => (
-                                <Panneau as="div" habillage="libre" key={clock.id} className={`flex items-center gap-3 bg-app-surface/60 border border-app-border/40 rounded-2xl p-3 shadow-xl ${performance.blurClass}`}>
-                                    <NarrativeClock clock={clock} theme={theme} size={48} />
-                                    <div className="flex flex-col flex-1 overflow-hidden">
-                                        <p className={`text-sm font-black truncate w-full ${theme === 'cyberpunk' ? 'text-accent font-mono tracking-wider' : 'text-app-text uppercase tracking-tight'}`}>{clock.name}</p>
-                                        <p className="text-ui-10 mt-0.5 font-bold text-app-text/60">
-                                            {clock.filledSegments} / {clock.totalSegments}
-                                        </p>
-                                    </div>
-                                </Panneau>
-                            ))}
-                        </div>
-                    )}
-
+            {estDirect ? (
+                <HubDirect {...{ activeCampaignName, activeCampaignWallpaper, liveImagePath, liveMediaEstUneVideo, liveEntity, resolvedFavorites, isClockProjected, timestamp, mode, theme, tensions, sessionSummary }} commandes={commandesDeConnexion} />
+            ) : currentTab === 'inventory' ? (
+                <div className="relative z-40 min-h-0 flex-1 overflow-hidden">
+                    <HubInventory
+                        items={inventoryItems}
+                        structuredItems={playerWithChar?.characters.find(c => c.id === characterId)?.inventoryItems || []}
+                        characters={players.flatMap(p => p.characters.map(c => ({ ...c, playerId: p.id }))).filter(c => c.campaignId === activeCampaignId)}
+                        transferRequests={transferRequests}
+                        currentCharacterId={characterId ?? undefined}
+                        onSelectItem={setSelectedItem}
+                        commandes={commandesDeConnexion}
+                        informations={<HubHorlogesPubliques {...{ isClockProjected, timestamp, mode, theme, tensions }} />}
+                    />
                 </div>
-
-                {/* Centered Content Area */}
-                {/* Inventaire mobile : garder les cartes et réserver 88 px sous leur zone de défilement
-                    pour la navigation fixe (choix de David, T2, 05/10). */}
-                <div className={`flex-1 flex items-center justify-center transition-all duration-1000 pt-16 md:pt-0 ${hasCombatants ? 'pr-0 md:pr-72' : ''} ${currentTab === 'inventory' ? 'pb-[88px] md:pb-0' : ''} md:pl-32 pointer-events-none overflow-hidden`}>
-                    {currentTab === 'live' && (resolvedFavorites.length > 0 || liveEntity || (liveImagePath && liveImagePath !== activeCampaignWallpaper)) && (
-                        <div className="w-full h-full flex items-center justify-center overflow-hidden pointer-events-auto">
-                            <div className="w-full max-h-full overflow-y-auto custom-scrollbar p-2 md:p-8 flex flex-col items-center justify-center">
-                                {(() => {
-                                    // 1. Filter favorites to avoid duplication with liveEntity
-                                    const filteredFavorites = resolvedFavorites.filter(fav => 
-                                        !liveEntity || (fav.id !== liveEntity.id && fav.name.toLowerCase() !== liveEntity.name.toLowerCase())
-                                    );
-
-                                    // 2. Identify all images already shown in entity cards
-                                    const shownImages = new Set<string>();
-                                    if (liveEntity) {
-                                        if (liveEntity.avatar) shownImages.add(liveEntity.avatar);
-                                        if (liveEntity.imageUrl) shownImages.add(liveEntity.imageUrl);
-                                        if (liveEntity.portraitUrl) shownImages.add(liveEntity.portraitUrl);
-                                    }
-                                    filteredFavorites.forEach(fav => {
-                                        if (fav.imageUrl) shownImages.add(fav.imageUrl);
-                                    });
-
-                                    // 3. Decide if we show the raw image card
-                                    const isWallpaper = liveImagePath === activeCampaignWallpaper;
-                                    const imageAlreadyShownAsEntity = !!liveImagePath && shownImages.has(liveImagePath);
-                                    /*
-                                      ⚠️ **Pas de carte pour un film — 2026-09-05.**
-                                      Le fond le joue déjà en plein écran, ce qui est
-                                      ce qu'on veut d'une vidéo. Une carte en plus
-                                      afficherait le *même* film une seconde fois :
-                                      deux décodages, deux horloges qui divergent, et
-                                      une vignette qui contredit le fond.
-                                    */
-                                    const showImageCard = !!liveImagePath && !isWallpaper
-                                        && !imageAlreadyShownAsEntity && !liveMediaEstUneVideo;
-
-                                    const count = filteredFavorites.length + (liveEntity ? 1 : 0) + (showImageCard ? 1 : 0);
-                                    
-                                    return (
-                                        <div className={`grid grid-cols-1 ${count > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:max-w-4xl'} gap-8 md:gap-12 w-full place-items-center`}>
-                                            {showImageCard && <HubProjectionCard src={liveImagePath!} count={count} />}
-                                            {liveEntity && <HubProjectionCard entity={liveEntity} count={count} />}
-                                            {filteredFavorites.map(fav => <HubProjectionCard key={fav.id} entity={fav} count={count} />)}
-                                        </div>
-                                    );
-                                })()}
-                            </div>
-                        </div>
-                    )}
-
-                    {currentTab === 'archives' && <HubArchives clues={clues} activeCampaignId={activeCampaignId} onSelectClue={setSelectedClue} />}
-                    {currentTab === 'trombinoscope' && <HubTrombinoscope npcs={resolvedNpcs} onSelectNpc={setSelectedNpc} />}
-                    {currentTab === 'atlas' && <HubAtlas atlasMaps={resolvedAtlasMaps} onSelectMap={setSelectedAtlasMap} />}
-                    {/*
-                      **Les cartes ont leur propre onglet depuis le 2026-08-30.**
-
-                      Elles vivaient dans la colonne de gauche, avec l'horloge
-                      et les jauges. David l'a vu à l'écran et a demandé un menu
-                      à part : cette colonne fait 460 px et partage sa hauteur
-                      avec le minuteur — une main de cinq cartes n'y tient pas,
-                      et une pioche encore moins. *Un panneau qu'on ne peut pas
-                      agrandir finit par cacher ce qu'il montre.*
-                    */}
-                    {currentTab === 'cartes' && <HubMainDeCartes characterId={characterId} />}
-                    {currentTab === 'inventory' && (
-                        <HubInventory
-                            items={inventoryItems} 
-                            structuredItems={playerWithChar?.characters.find(c => c.id === characterId)?.inventoryItems || []}
-                            characters={players.flatMap(p => p.characters.map(c => ({ ...c, playerId: p.id }))).filter(c => c.campaignId === activeCampaignId)}
-                            transferRequests={transferRequests}
-                            currentCharacterId={characterId ?? undefined}
-                            onSelectItem={setSelectedItem} 
-                        />
-                    )}
+            ) : currentTab === 'cartes' ? (
+                <div className="relative z-40 min-h-0 flex-1 overflow-hidden">
+                    <HubMainDeCartes characterId={characterId} commandes={commandesDeConnexion}
+                        informations={<HubHorlogesPubliques {...{ isClockProjected, timestamp, mode, theme, tensions }} />} />
                 </div>
+            ) : (
+            <div className="relative z-40 min-h-0 flex-1 overflow-hidden">
+                {currentTab === 'archives' && <HubArchives clues={clues} activeCampaignId={activeCampaignId} onSelectClue={setSelectedClue} commandes={commandesDeConnexion}
+                    informations={<HubHorlogesPubliques {...{ isClockProjected, timestamp, mode, theme, tensions }} />} />}
+                {currentTab === 'trombinoscope' && <HubTrombinoscope npcs={resolvedNpcs} onSelectNpc={setSelectedNpc} commandes={commandesDeConnexion}
+                    informations={<HubHorlogesPubliques {...{ isClockProjected, timestamp, mode, theme, tensions }} />} />}
+                {currentTab === 'atlas' && <HubAtlas atlasMaps={resolvedAtlasMaps} onSelectMap={setSelectedAtlasMap} commandes={commandesDeConnexion}
+                    informations={<HubHorlogesPubliques {...{ isClockProjected, timestamp, mode, theme, tensions }} />} />}
             </div>
-
-            {/* Floatings: Session Summary */}
-            {sessionSummary && currentTab === 'live' && (
-                <Panneau as="div" habillage="libre" className={`fixed bottom-28 left-8 z-[60] w-full max-w-2xl bg-app-surface/20 border border-app-border/40 rounded-[2.5rem] p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000 pointer-events-auto ${performance.blurClass}`}>
-                    <div className="flex items-center gap-5 mb-6 opacity-40">
-                        <BookOpen size={20} className="text-app-text" />
-                        <h3 className="text-ui-10 font-black text-app-text uppercase tracking-[0.4em]">Chroniques de Séance</h3>
-                    </div>
-                    <div className="max-h-[220px] overflow-y-auto custom-scrollbar-minimal pr-6 group">
-                        <p className="text-xl text-app-text/70 leading-relaxed font-serif italic text-justify group-hover:opacity-100 transition-opacity duration-700">
-                            {sessionSummary}
-                        </p>
-                    </div>
-                </Panneau>
             )}
 
             {/* Bottom Navigation */}
-            <nav className="fixed bottom-2 md:bottom-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto w-full max-w-full px-2 pb-2 md:pb-0" aria-label="Navigation Hub">
-                <div ref={navScrollRef} data-hub-nav-scroll onScroll={() => {
-                    const nav = navScrollRef.current;
-                    if (nav) setNavEdges({ left: nav.scrollLeft > 1, right: nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 1 });
-                }} className="w-full overflow-x-auto custom-scrollbar-minimal">
-                <Panneau as="div" habillage="libre" className={`bg-app-surface/90 md:bg-app-surface/80 border border-app-border/40 p-1 md:p-1.5 rounded-full shadow-2xl flex items-center gap-1 w-max mx-auto ${performance.heavyBlurClass}`}>
+            <nav className={'relative z-[100] shrink-0 w-full border-t border-app-border bg-app-surface p-1 pb-[max(4px,env(safe-area-inset-bottom))]'} aria-label="Navigation Hub">
+                <div data-hub-nav-scroll className={'w-full'}>
+                <Panneau as="div" habillage="libre" className={'flex flex-col gap-1'}>
+                    <div className={'grid grid-cols-3 gap-1 lg:grid-cols-6'}>
                     {(
                         [
                             { id: 'live', icon: Monitor, label: 'Direct' },
@@ -511,20 +387,15 @@ const TabletHub: React.FC = () => {
                             { id: 'cartes', icon: Layers, label: 'Cartes' }
                         ] as const
                     ).map((tab) => (
-                        <Bouton habillage="libre" cibleTactile
+                        <Bouton habillage="socle" variante={currentTab === tab.id ? 'accent' : 'neutre'} cibleTactile
                             key={tab.id}
                             data-hub-tab={tab.id}
                             onClick={() => setCurrentTab(tab.id)}
                             aria-pressed={currentTab === tab.id}
-                            className={`relative flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${
-                                currentTab === tab.id
-                                    ? 'bg-accent text-app-on-accent'
-                                    : 'text-app-text/40 hover:text-app-text'
-                            }`}
+                            className={'relative w-full min-w-[44px] px-1'}
                             title={tab.label}
                         >
-                            <tab.icon className="w-5 h-5 md:w-3.5 md:h-3.5" />
-                            <span className="hidden md:inline">{tab.label}</span>
+                            <span className={'text-[12px] tracking-normal'}>{tab.label}</span>
                             {/* Une carte qu'on me tend attend une réponse : elle
                                 se signale même onglet fermé. */}
                             {tab.id === 'cartes' && cartesProposees > 0 && currentTab !== 'cartes' && (
@@ -535,33 +406,39 @@ const TabletHub: React.FC = () => {
                             )}
                         </Bouton>
                     ))}
-                    <div className="w-[1px] h-4 bg-app-border/40 mx-1 md:mx-2" />
-                    <Bouton habillage="libre" cibleTactile
-                        onClick={() => setIsInventoryOpen(!isInventoryOpen)}
+                    </div>
+                    <div className={'grid grid-cols-4 gap-1'}>
+                    <Bouton habillage="socle" variante={isInventoryOpen ? 'accent' : 'neutre'} cibleTactile
+                        onClick={() => {
+                            setIsInventoryOpen(!isInventoryOpen);
+                            setIsNotesOpen(false);
+                            setIsMessengerOpen(false);
+                        }}
                         aria-pressed={isInventoryOpen}
-                        className={`flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isInventoryOpen ? 'bg-accent text-app-on-accent' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={'relative w-full min-w-[44px] px-1'}
                         title="Fiche Personnage"
                     >
-                        <User className="w-5 h-5 md:w-3.5 md:h-3.5" />
-                        <span className="hidden md:inline">Fiche</span>
+                        <span className={'text-[12px] tracking-normal'}>Fiche</span>
                     </Bouton>
-                    <Bouton habillage="libre" cibleTactile
-                        onClick={() => setIsNotesOpen(!isNotesOpen)}
+                    <Bouton habillage="socle" variante={isNotesOpen ? 'accent' : 'neutre'} cibleTactile
+                        onClick={() => {
+                            setIsNotesOpen(!isNotesOpen);
+                            setIsInventoryOpen(false);
+                            setIsMessengerOpen(false);
+                        }}
                         aria-pressed={isNotesOpen}
-                        className={`relative flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isNotesOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={'relative w-full min-w-[44px] px-1'}
                         title="Notes Personnelles"
                     >
-                        <BookOpen className="w-5 h-5 md:w-3.5 md:h-3.5" />
-                        <span className="hidden md:inline">Notes</span>
+                        <span className={'text-[12px] tracking-normal'}>Notes</span>
                     </Bouton>
-                    <Bouton habillage="libre" cibleTactile
+                    <Bouton habillage="socle" variante={isMessengerOpen ? 'accent' : 'neutre'} cibleTactile
                         onClick={toggleMessenger}
                         aria-pressed={isMessengerOpen}
-                        className={`relative flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-4 md:py-2 rounded-full text-ui-10 font-black uppercase tracking-widest transition-all ${isMessengerOpen ? 'bg-accent text-app-on-accent shadow-glow-accent/40' : 'text-app-text/40 hover:text-app-text'}`}
+                        className={'relative w-full min-w-[44px] px-1'}
                         title="Messages"
                     >
-                        <MessageSquare className="w-5 h-5 md:w-3.5 md:h-3.5" />
-                        <span className="hidden md:inline">Messages</span>
+                        <span className={'text-[12px] tracking-normal'}>Messages</span>
                         {unreadCount > 0 && !isMessengerOpen && (
                             <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-etat-danger opacity-75"></span>
@@ -569,39 +446,28 @@ const TabletHub: React.FC = () => {
                             </span>
                         )}
                     </Bouton>
-                    <Bouton habillage="libre" cibleTactile
+                    <Bouton habillage="socle" variante={'danger'} cibleTactile
                         onClick={() => window.confirm('Quitter la session ?') && resetIdentity()}
                         className="flex min-w-[44px] items-center justify-center gap-2 p-3 md:px-6 md:py-2.5 rounded-full text-ui-10 font-black uppercase tracking-widest text-etat-danger hover:text-etat-danger hover:bg-etat-danger/10 transition-all ml-1 md:ml-0"
                         title="Quitter"
                     >
-                        <LogOut className="w-5 h-5 md:w-3.5 md:h-3.5" />
-                        <span className="hidden md:inline">Quitter</span>
+                        <span className={'text-[12px] tracking-normal'}>Quitter</span>
                     </Bouton>
+                    </div>
                 </Panneau>
                 </div>
-                {navEdges.left && <span aria-hidden="true" className="pointer-events-none absolute left-2 top-0 bottom-2 md:bottom-0 w-8 rounded-l-full bg-gradient-to-r from-app-bg/95 to-transparent" />}
-                {navEdges.right && <span aria-hidden="true" className="pointer-events-none absolute right-2 top-0 bottom-2 md:bottom-0 w-8 rounded-r-full bg-gradient-to-l from-app-bg/95 to-transparent flex items-center justify-end text-accent"><ChevronRight size={14} /></span>}
             </nav>
 
             {/* Combat Overlay */}
             {hasCombatants && activeCombatant && (
                 <>
                     {/* Mobile Toggle Button */}
-                    <Bouton habillage="libre" cibleTactile
-                        onClick={() => setIsCombatOverlayOpen(!isCombatOverlayOpen)}
-                        aria-pressed={isCombatOverlayOpen}
-                        className={`fixed md:hidden top-4 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl transition-all ${isCombatOverlayOpen ? 'bg-etat-danger text-app-bg' : 'bg-app-surface/90 border border-etat-danger/30 text-etat-danger'}`}
-                    >
-                        <Swords size={16} />
-                        {isCombatOverlayOpen ? 'Fermer' : 'Initiative'}
-                    </Bouton>
-
                     {/* Combat Sidebar */}
-                    <Panneau as="aside" habillage="libre" className={`fixed right-0 md:right-4 top-0 md:top-4 w-full md:w-80 h-screen md:h-[calc(100vh-2rem)] z-50 bg-app-surface/95 md:bg-app-surface/60 border-l md:border border-app-border/40 flex flex-col gap-4 p-6 md:rounded-[2rem] shadow-2xl transition-transform duration-300 pointer-events-auto ${performance.heavyBlurClass} ${isCombatOverlayOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}`}>
+                    <Panneau as="aside" habillage="libre" className={`fixed right-0 top-0 z-[110] h-dvh w-full sm:w-80 bg-app-surface border-l border-app-border p-4 flex flex-col gap-4 overflow-auto ${isCombatOverlayOpen ? '' : 'hidden'}`}>
                         <EnTeteDeModule habillage="libre" className="flex items-center justify-between border-b border-app-border/40 pb-3 mt-12 md:mt-0">
                             <h2 className="text-app-text text-lg font-bold tracking-tight">Initiative</h2>
-                            <Bouton habillage="libre" cibleTactile className="md:hidden min-w-[44px] p-2 rounded-full text-app-text/40 hover:bg-app-text/5" onClick={() => setIsCombatOverlayOpen(false)} title="Fermer l'initiative">
-                                <ChevronRight size={20} />
+                            <Bouton habillage="socle" cibleTactile className={'min-w-[44px] p-2'} onClick={() => setIsCombatOverlayOpen(false)} title="Fermer l'initiative">
+                                {'Fermer'}
                             </Bouton>
                         </EnTeteDeModule>
                     <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar pr-2">
@@ -609,15 +475,15 @@ const TabletHub: React.FC = () => {
                             <div className="flex items-center gap-3">
                                 <ResolvedImage className="size-8 rounded-full border border-etat-danger" src={activeCombatant.avatar} alt={activeCombatant.name} />
                                 <div className="flex flex-col">
-                                    <p className="text-app-text text-xs font-bold leading-none">{activeCombatant.name}</p>
-                                    <p className="text-etat-danger text-ui-8 font-bold uppercase mt-1">À toi</p>
+                                    <p className={`text-app-text ${'text-[14px]'} font-bold leading-none`}>{activeCombatant.name}</p>
+                                    <p className={`text-etat-danger ${'text-[14px]'} font-bold uppercase mt-1`}>À toi</p>
                                 </div>
                             </div>
                         </Panneau>
                         {upcomingCombatants.slice(0, 5).map((c: Combatant) => (
                             <Panneau as="div" habillage="libre" key={c.id} className="flex items-center gap-3 p-3 rounded-2xl bg-app-surface/20 border border-app-border/10 opacity-60">
                                 <ResolvedImage className="size-8 rounded-full border border-app-border/10" src={c.avatar} alt={c.name} />
-                                <p className="text-app-text/90 text-xs font-medium truncate">{c.name}</p>
+                                <p className={`text-app-text/90 ${'text-[14px] break-words'} font-medium`}>{c.name}</p>
                             </Panneau>
                         ))}
                     </div>
@@ -632,14 +498,16 @@ const TabletHub: React.FC = () => {
                     {isInventoryOpen && <HubCharacterSheet onClose={() => setIsInventoryOpen(false)} />}
                     <AnimatePresence>
                         {isNotesOpen && playerId && (
-                            <motion.div 
-                                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                                className="fixed bottom-24 right-8 z-[150] w-full max-w-xl pointer-events-auto"
-                            >
-                                <PlayerPrivateNotes playerId={playerId} characterId={characterId} />
-                            </motion.div>
+                            <motion.section role="dialog" aria-modal="true" aria-label="Notes & Feedback"
+                                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                                className="fixed inset-3 z-[150] flex min-h-0 flex-col border border-app-border bg-app-surface shadow-2xl lg:left-auto lg:w-[560px]">
+                                <div className="flex shrink-0 justify-end border-b border-app-border p-2">
+                                    <Bouton cibleTactile onClick={() => setIsNotesOpen(false)} title="Fermer les notes">Fermer</Bouton>
+                                </div>
+                                <div className="min-h-0 overflow-auto">
+                                    <PlayerPrivateNotes playerId={playerId} characterId={characterId} />
+                                </div>
+                            </motion.section>
                         )}
                     </AnimatePresence>
                     <HubMessenger 
@@ -651,6 +519,7 @@ const TabletHub: React.FC = () => {
                         onRecipientChange={(id) => {
                             setSelectedRecipientId(id);
                             setLastReadMessageTime(Date.now());
+                            setActiveToast(null);
                         }}
                     />
                 </>
@@ -662,6 +531,9 @@ const TabletHub: React.FC = () => {
                         fromName={activeToast.fromName} 
                         channel={activeToast.channel} 
                         onClick={() => {
+                            setSelectedRecipientId(activeToast.recipientId);
+                            setIsNotesOpen(false);
+                            setIsInventoryOpen(false);
                             setIsMessengerOpen(true);
                             setLastReadMessageTime(Date.now());
                             setActiveToast(null);
@@ -783,18 +655,18 @@ const DiceResultDisplay: React.FC = () => {
 const MessageToast: React.FC<{ fromName: string; channel: string; onClick: () => void }> = ({ fromName, channel, onClick }) => {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 50, x: '-50%', scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, x: '-50%', scale: 1 }}
-            exit={{ opacity: 0, y: 20, x: '-50%', scale: 0.9 }}
-            className="fixed bottom-24 left-1/2 z-[200] cursor-pointer"
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-[calc(var(--hub-navigation-hauteur)+env(safe-area-inset-bottom)+8px)] inset-x-3 z-[200] cursor-pointer lg:left-auto lg:w-[440px]"
         >
-            <Bouton habillage="libre" cibleTactile onClick={onClick} title="Ouvrir le nouveau message" className="bg-accent text-app-on-accent backdrop-blur-xl border border-app-on-accent/20 px-6 py-3 rounded-2xl shadow-[0_20px_50px_color-mix(in_srgb,var(--app-accent)_40%,transparent)] flex items-center gap-4 text-left hover:brightness-110 transition-all active:scale-95 group">
+            <Bouton habillage="libre" cibleTactile onClick={onClick} title="Ouvrir le nouveau message" className="w-full bg-accent text-app-on-accent backdrop-blur-xl border border-app-on-accent/20 px-6 py-3 rounded-2xl shadow-[0_20px_50px_color-mix(in_srgb,var(--app-accent)_40%,transparent)] flex items-center gap-4 text-left hover:brightness-110 transition-all active:scale-95 group">
                 <div className="p-2 bg-app-on-accent/20 rounded-lg group-hover:scale-110 transition-transform">
                     <MessageSquare size={18} />
                 </div>
-                <div className="flex flex-col">
-                    <span className="text-ui-10 font-black opacity-60 uppercase tracking-widest leading-none mb-1">Nouveau Message</span>
-                    <p className="text-sm font-bold leading-tight">
+                <div className="min-w-0 flex flex-col">
+                    <span className="text-[14px] font-black opacity-60 uppercase tracking-widest leading-none mb-1">Nouveau Message</span>
+                    <p className="break-words text-[16px] font-bold leading-tight">
                         {fromName} <span className="opacity-60 font-medium ml-1">({channel})</span>
                     </p>
                 </div>
