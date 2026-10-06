@@ -1,0 +1,29 @@
+{
+  "jpeg": 19,
+  "erreurs": [],
+  "fichiers": [
+    "tablette-des-joueurs-archives.jpg",
+    "tablette-des-joueurs-cartes.jpg",
+    "tablette-des-joueurs-direct.jpg",
+    "tablette-des-joueurs-feedback.jpg",
+    "tablette-des-joueurs-fiche.jpg",
+    "tablette-des-joueurs-inventaire.jpg",
+    "tablette-des-joueurs-lieux.jpg",
+    "tablette-des-joueurs-messages.jpg",
+    "tablette-des-joueurs-notes.jpg",
+    "tablette-des-joueurs-pnj.jpg",
+    "tablette-des-joueurs.jpg",
+    "tablette-du-meneur-combat.jpg",
+    "tablette-du-meneur-des.jpg",
+    "tablette-du-meneur-messages.jpg",
+    "tablette-du-meneur-notes.jpg",
+    "tablette-du-meneur-scenario.jpg",
+    "tablette-du-meneur-sons.jpg",
+    "tablette-du-meneur-tableau.jpg",
+    "tablette-du-meneur.jpg"
+  ],
+  "planches": [
+    "revues-manuel/tablette-des-joueurs.png",
+    "revues-manuel/tablette-du-meneur.png"
+  ]
+}

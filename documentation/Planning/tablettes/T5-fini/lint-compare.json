@@ -1,0 +1,36 @@
+{
+  "reference": "edcdb68a",
+  "fichiers": [
+    {
+      "fichier": "src/components/TabletHub.tsx",
+      "avant": 1,
+      "apres": 1,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/RemoteControl.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteDiceResultOverlay.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/socle/CadreDeTablette.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/finiTablettesT5.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    }
+  ],
+  "nouveaux": 0
+}

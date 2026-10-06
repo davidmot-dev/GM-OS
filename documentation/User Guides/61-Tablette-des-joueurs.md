@@ -7,6 +7,12 @@ tout ce que le meneur décide de projeter.
 Deux guides le couvrent : celui-ci monte la table, le
 [guide détaillé](./62-Tablette-des-joueurs-reglages-fins.md) explique ce qu'un joueur y fait.
 
+Les tablettes suivent les couleurs du PC. Le halo de l'onglet sélectionné dépend
+du thème ; les thèmes sans halo et le mode léger gardent la sélection par sa couleur.
+Le contour de focus reste visible au clavier. Les transitions sont courtes ; le
+mode léger et la préférence système de réduction des animations retirent les
+mouvements décoratifs. Dans ces modes, les nouveaux messages restent signalés sans pulsation.
+
 ---
 
 ## 🔌 Brancher une tablette
@@ -196,3 +202,7 @@ réserves tactiles et horloge reçue dès la connexion. Vérifié avec la campag
 
 *J2, 2026-10-06 : Archives, PNJ, Lieux, messagerie, notifications et Notes/Feedback réagencés.
 La navigation reste nommée dans les six onglets ; les lecteurs gardent leur sortie visible.*
+
+*Relu le 2026-10-07 pour T5 : halos et focus intérieur contrasté suivent le thème du PC,
+graphismes légers et réduction des animations respectés. Captures de démonstration
+régénérées et regardées ; les essais sur les vrais appareils restent en T6.*

@@ -142,6 +142,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
+| ⚠️ **06/10 : le lint global ne parcourt plus tout le dépôt.** | `npm run lint` s'arrête sur un `ENOENT: scandir` d'une entrée au nom illisible à la racine ; `git status` signalait déjà cette entrée. Observé dans le pré-push T4, dont le lint est non bloquant | **Hors T5, entrée préexistante non modifiée.** Le typage, la construction et 6 774 tests pré-push passent ; les comparaisons ESLint ciblées restent disponibles. Ne pas supprimer une entrée inconnue pour contourner le contrôle. [Relevé T5](2026-10-06-T5-fini-tablettes.md) |
 | ✅ **T4 Direct, 06/10 : l'horloge initiale affichait le temps réel malgré le mode statique du meneur.** | Le snapshot omettait `mode`, `theme`, `timerDuration` et `timerLabel`, présents seulement dans le segment rapide | **Réparé pour terminer J1** : `segmentDesHorloges` fournit les mêmes champs au snapshot et aux changements, en excluant les jauges secrètes. Trois tests unitaires ; le banc Direct vérifie 21:00 dès la connexion aux quatre formats, avant toute modification du meneur. [Relevé J1](2026-10-06-T4-J1-joueurs.md). Le transport du calendrier fantastique reste à éprouver |
 | ✅ **T0 joueurs, 04/10 : les PV saisis sur tablette restaient locaux.** | `remoteUpdateCharacterVitals` écrivait sans événement ; `useHubSync` ne relayait pas ces vitaux | **Réparé pour terminer J1 le 06/10** : événement dédié, relais WebSocket, contrôle du personnage propriétaire, valeur finie bornée à la jauge existante et notification au meneur, sans boucle. Neuf tests du handler ; assertions PV du banc T0 conservées aux trois formats, sans échec attendu, et quatre cas Fiche J1. [Relevé](2026-10-06-T4-J1-joueurs.md) |
 | ✅ **T0 joueurs, 04/10 : sur téléphone, la navigation recouvrait « Jouer » en bas de Cartes.** | Capture T0 `telephone/12-cartes.png` ; navigation fixe dans `TabletHub.tsx` devant la surface défilante | **Traité dans T4/J1 Cartes le 06/10** : navigation dans le flux, zone de travail défilante, action de 44 px au-dessus de la barre. Assertion T0 conservée sans échec attendu ; quatre cas J1 font réellement piocher/jouer/donner/refuser/accepter. [Captures regardées](tablettes/T4-joueurs/j1/index.html) |
@@ -9736,6 +9737,30 @@ Sa confirmation de fermeture reste valable ; aucun essai de M1 depuis n'est déc
 **Reprise : essai de M2 par David.** Les quatre lots sont intégrés ; T5/T6 restent ouverts.
 T4 non commité ; le commit/push demandé concernait T3.
 
+**Demande suivante de David, 06/10 : « commit, push et fais T5, GM-os est fermé ».**
+T4 enregistré en commits par écran et poussé sur `origin/feature/tablet-hub-pwa`
+jusqu'à **`edcdb68a`**. Typage/construction et **6 774 tests unitaires** pré-push
+verts, quatre ignorés ; lint global interrompu par l'entrée préexistante au nom
+illisible (§ 1 bis). Le hook NotebookLM synchronise **22 guides sur 22**.
+**T5 développé et vérifié le 07/10, non commité** : cadre commun des deux tablettes, focus intérieur contrasté, halo du
+thème, transitions courtes, graphismes légers et animations réduites. La jauge des
+quinze secondes reste fonctionnelle. La demande explicite ouvre T5 sans déclarer
+un essai physique supplémentaire de J2/M1/M2. Construction/typage et 707 tests
+ciblés passent ; 45 scénarios T5 distincts validés après correction d'une assertion
+de contraste et rejeu ciblé, 84 régressions validées avant le dernier ajustement de
+couleur du focus. Aucun nouveau diagnostic ESLint sur cinq fichiers ; 132 PNG et
+19 JPEG relus, 20 étapes du manuel passent sur la construction finale.
+**Reprise : T6 sur les vrais appareils.** [Relevé T5 et détail des passages](2026-10-06-T5-fini-tablettes.md),
+[galerie](tablettes/T5-fini/index.html).
+
+**Clôture par David le 07/10**, après l'explication des essais réels T6 :
+**« j'ai testé c'est bon, tu peux faire le commit et poussé »**. T6 validé,
+refonte des tablettes terminée. T5 enregistré dans **`e920abc1`** ; la documentation
+de clôture archive ses preuves et consigne l'autorisation de pousser la série.
+Aucun détail par appareil n'est inventé. Les indications « non commité » et
+« T6 à faire » des paragraphes précédents sont historiques.
+[Validation T6](2026-10-07-T6-validation-tablettes.md), [note du jour](2026-10-07-etat-et-reprise.md).
+
 ---
 
 ### 124 · Le graphe de la Trame en cartes, comme la maquette de Stitch (garé le 2026-10-04)
@@ -9836,7 +9861,7 @@ place du chantier — **avant ou après la refonte des tablettes** (§ 123).
 | 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
-| 58 | **La refonte des tablettes** | 🔄 **T3 retenu, commité et poussé (`1a8c8019`) ; les quatre lots de T4 développés et vérifiés le 06/10, J1 testé par David** — M2 : 36 scénarios distincts et 81 régressions M1/T0 validés sur les passages, 201 tests unitaires ciblés ; guides et captures actualisés. Voir § 123 et les relevés J1/J2/M1/M2 | Essai de M2 ; puis T5/T6 | T4 non commité ; essais de J2/M1/M2 par David non déclarés ici |
+| 58 | **La refonte des tablettes** | ✅ **Clôturée le 07/10 : T6 validé par David**, « j'ai testé c'est bon, tu peux faire le commit et poussé ». T4 poussé (`edcdb68a`), T5 commité (`e920abc1`) ; preuves et clôture archivées, voir § 123 | Terminé | Validation T6 consignée ; commit et push autorisés par David |
 | 59 | **Le graphe de la Trame en cartes** | ⏳ **GARÉ le 04/10** — rapprocher le graphe de la maquette Stitch (cartes, flèches courbes, panneau du nœud) ; piste : React Flow pour la Trame seule. Voir § 124 | David : accord pour le paquet, et place avant ou après les tablettes | La décision de David |
 
 ### Ce que la soirée du 2026-08-23 a fermé

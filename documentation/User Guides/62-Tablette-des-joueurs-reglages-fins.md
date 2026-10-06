@@ -3,6 +3,12 @@
 Cette page s'adresse aux **joueurs**. Pour brancher les tablettes et comprendre les onglets, voir
 d'abord le [guide du Tablet Hub](./61-Tablette-des-joueurs.md).
 
+Au clavier, **Tab** et **Maj + Tab** montrent la commande ciblée par un contour
+intérieur. La sélection des onglets garde les couleurs du PC ; sa lueur suit le
+thème et disparaît en mode léger. Si votre appareil demande de réduire les
+animations, les panneaux s'ouvrent sans glissement et les signaux de nouveaux
+messages restent visibles sans pulsation.
+
 ---
 
 ## 🔌 Se connecter
@@ -228,3 +234,7 @@ accessibles, détail refermable, PV transmis et réserves tactiles. Captures de 
 
 *J2, 2026-10-06 : listes et lecteurs d'Archives/PNJ/Lieux, messagerie avec saisie accessible,
 notifications au-dessus de la navigation, Notes et feedback tactile. Captures sur la campagne de démonstration.*
+
+*Relu le 2026-10-07 pour T5 : focus Tab/Maj+Tab, contour contrasté des commandes pleines,
+signaux sans pulsation et panneaux sans glissement en mode réduit. Captures de
+démonstration régénérées et regardées ; clavier Safari et veille/reconnexion en T6.*

@@ -6,6 +6,14 @@ qui est l'écran de vos joueurs.
 Elle est pensée pour une **tablette tenue en paysage**, et fonctionne sur un téléphone en repli.
 C'est une page web : rien à installer, on scanne un QR code.
 
+Les couleurs suivent le thème choisi sur le PC. Les onglets sélectionnés et les
+commandes actives prennent son halo, quand le thème en prévoit un. Au clavier,
+un contour intérieur indique la commande ciblée, même au bord de l'écran.
+Le mode léger retire cette lueur et réduit les mouvements décoratifs ; la
+préférence système de réduction des animations est aussi respectée.
+La jauge du résultat des dés continue d'indiquer ses quinze secondes, et
+**Couper le son** conserve son maintien de 700 ms.
+
 > 🔒 **Elle voit ce que vos joueurs ne voient pas** — vos notes privées, les notes de meneur de
 > votre trame, les secrets de vos PNJ, et votre coffre Obsidian. C'est l'appairage qui lui donne ce
 > droit, et **une tablette non appairée est rétrogradée en simple écran de joueur** : le bandeau du
@@ -468,3 +476,7 @@ Les captures du manuel sont régénérées sur le profil de démonstration et re
 et Messages. Les réglages du Tableau choisis sur le PC arrivent aussi dans le
 flux rapide. Captures de démonstration régénérées et regardées ; gestes sur le
 matériel physique à éprouver en T6.*
+
+*Relu le 2026-10-07 pour T5 : halos du thème, focus clavier contrasté, transitions
+courtes, mode léger et réduction des animations. Jauge de quinze secondes et
+maintien de Couper le son conservés. Captures de démonstration régénérées et regardées.*

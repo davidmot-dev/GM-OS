@@ -1,6 +1,30 @@
 # État et reprise — 2026-10-06
 
-**État courant : les quatre lots de T4 sont développés et vérifiés ; J1 testé par David.** Accueil, Direct,
+**Clôture le 07/10 : T6 validé par David, T5 commité (`e920abc1`).**
+David confirme « j'ai testé c'est bon, tu peux faire le commit et poussé ».
+La [note du 07/10](2026-10-07-etat-et-reprise.md) et le
+[relevé de validation T6](2026-10-07-T6-validation-tablettes.md) font foi pour l'état final.
+
+**État conservé avant cette clôture : T4 commité et poussé (`edcdb68a`) ; T5 développé et vérifié, non commité.**
+David demande « commit, push et fais T5, GM-os est fermé ». La série T4 est
+enregistrée par écran et poussée sur `origin/feature/tablet-hub-pwa` ; typage,
+construction et 6 774 tests pré-push passent, quatre ignorés. Le lint global
+rencontre une entrée au nom illisible à la racine, consignée au § 1 bis ; les
+comparaisons ciblées restent disponibles. 22 guides synchronisés par le hook NotebookLM.
+T5 apporte le cadre commun, le focus intérieur, les halos du thème, les transitions
+courtes, le mode léger et la réduction des animations. La jauge de quinze secondes
+est conservée. [Relevé T5](2026-10-06-T5-fini-tablettes.md).
+La relecture corrige l'attente de Synchronisation avant les captures et le contraste
+du focus sur les boutons pleins. Construction/typage et 707 tests ciblés passent.
+45 scénarios T5 distincts validés (44 au passage final, puis rejeu d'une assertion
+obsolète corrigée), 84 régressions validées avant le dernier ajustement de couleur ;
+aucun nouveau diagnostic ESLint sur cinq fichiers. 132 PNG et 19 JPEG relus,
+20 étapes du manuel passent sur la construction finale. **Reprise : T6 sur les vrais
+appareils** ; Safari, veille/reconnexion et lisibilité à la table restent à éprouver.
+
+**Les paragraphes suivants conservent l'état et les étapes avant le commit T4.**
+
+**T4 avant le commit : les quatre lots sont développés et vérifiés ; J1 testé par David.** Accueil, Direct,
 Inventaire, Cartes, fiche et réserves tactiles intégrés. Typage/construction et 6 774 tests
 unitaires verts ; 59 scénarios Electron validés après rejeu ciblé, sans échec attendu.
 PV vers le meneur, horloge statique initiale et Jouer recouvert sur téléphone réparés.

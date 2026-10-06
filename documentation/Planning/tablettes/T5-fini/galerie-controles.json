@@ -1,0 +1,20 @@
+{
+  "captures": 132,
+  "erreurs": [],
+  "groupes": [
+    "cyberpunk",
+    "medieval",
+    "modern",
+    "claire",
+    "mouvement-reduit",
+    "leger"
+  ],
+  "planches": [
+    "revues/cyberpunk.png",
+    "revues/medieval.png",
+    "revues/modern.png",
+    "revues/claire.png",
+    "revues/mouvement-reduit.png",
+    "revues/leger.png"
+  ]
+}

@@ -1,0 +1,757 @@
+{
+  "date": "2026-10-07",
+  "phase": "T5 fini des deux tablettes",
+  "autorisation": "David : commit, push et fais T5, GM-os est fermé. Aucun essai physique supplémentaire déclaré.",
+  "t4": {
+    "commit": "edcdb68a",
+    "pousse": true,
+    "unitairesPrePush": 6774,
+    "ignores": 4,
+    "guidesNotebookLM": 22
+  },
+  "construction": {
+    "types": 0,
+    "code": 0
+  },
+  "unites": {
+    "fichiers": 43,
+    "reussis": 707,
+    "code": 0
+  },
+  "e2e": {
+    "passageFinal": {
+      "reussis": 44,
+      "assertionObsoleteAccent": 1
+    },
+    "rejeuAccentCorrige": {
+      "reussis": 1,
+      "echecs": 0
+    },
+    "t5DistinctsValides": 45,
+    "regressions": {
+      "joueurs": 39,
+      "meneur": 44,
+      "apparenceT1": 1,
+      "total": 84
+    },
+    "distinctsValides": 129,
+    "echecsAttendus": 0,
+    "manuel": 20,
+    "historique": "Jauge fonctionnelle et contraste du focus sur accent plein corrigés après les essais et la relecture. Décor du signal, nom accessible Envoyer, choix de pastille et attente de fin de Synchronisation corrigés dans le banc. Le halo garde la teinte du thème selon le contrat du PC. Passage final : 44 réussis et une assertion devenue obsolète comparant le focus contrasté au focus accent ; assertion corrigée pour contrôler chaque variable du PC, puis rejeu réussi de ce scénario, sans changement du produit. Ainsi 45 scénarios T5 distincts validés ; 84 régressions jouées avant le dernier ajustement de couleur du focus, sans changement de disposition ou de geste ; manuel rejoué sur le build final."
+  },
+  "lint": {
+    "reference": "edcdb68a",
+    "fichiers": 5,
+    "nouveaux": 0
+  },
+  "galerie": {
+    "captures": 132,
+    "erreurs": [],
+    "regardees": true,
+    "planches": [
+      "revues/cyberpunk.png",
+      "revues/medieval.png",
+      "revues/modern.png",
+      "revues/claire.png",
+      "revues/mouvement-reduit.png",
+      "revues/leger.png"
+    ]
+  },
+  "manuel": {
+    "jpeg": 19,
+    "regardes": true
+  },
+  "limites": "Edge sur cinq formats, profils et campagne fictifs. Les appareils réels, Safari, la lisibilité à la table et la reconnexion après veille restent en T6.",
+  "commitT5": false,
+  "pushT5": false,
+  "empreintes": [
+    {
+      "source": "src/components/TabletHub.tsx",
+      "sha256": "1f301c97f793849c2ddde74f5f1ca54bd3c9e7cc2b170748585dadd33fddb932"
+    },
+    {
+      "source": "src/modules/remote/RemoteControl.tsx",
+      "sha256": "acdee6b79b1436c1ebd39a59859f2a384e1d81c9decd49c420d272ef1cf09f74"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteDiceResultOverlay.tsx",
+      "sha256": "8d1129d2b4bc9cb880a1d0497af78f60327ae5fcc9b1f200d531b1e34f603a3d"
+    },
+    {
+      "source": "src/components/socle/CadreDeTablette.tsx",
+      "sha256": "0c3056c6f7bbf7504de77acd2672b4f1669942218ebe825b2f99d49500640f76"
+    },
+    {
+      "source": "src/components/socle/tablettes.css",
+      "sha256": "259833e4323a4a70eeec36d0dc4745e628b92efc2ac34f179ef782edffb4b283"
+    },
+    {
+      "source": "e2e/finiTablettesT5.spec.ts",
+      "sha256": "7e665e84ed5e32c28419ef2b6b838811be6e6e205d0f7e38cbc66077a631ccf3"
+    },
+    {
+      "source": "documentation/User Guides/60-Tablette-du-meneur.md",
+      "sha256": "958eb27392ff4a651abf834b0b5ef15d878a2469ed9a15899587612bae4c44d7"
+    },
+    {
+      "source": "documentation/User Guides/61-Tablette-des-joueurs.md",
+      "sha256": "f1104dd93a781e93a591c925734db378baab2b0c9c5287a0d3f9583c7c5b317b"
+    },
+    {
+      "source": "documentation/User Guides/62-Tablette-des-joueurs-reglages-fins.md",
+      "sha256": "f526ee2103cb4f97cfc25532c92f654b5fcc6834c30f12e4049d15e800d8c43e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/regarder-galerie.cjs",
+      "sha256": "47a449387ccd32d5c7ad6546f1351b87ed3b6992b97d5df340de81d16b0febf4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/regarder-manuel.cjs",
+      "sha256": "3caeec3f1a2f90bdb3f6969179ae87d1b4a7c555594236316fd26503ccdd4209"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/verifier-lint.cjs",
+      "sha256": "2519df1533bea162e31e3e9b7981b0003a4023be6b57be483a41b8a912879f94"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/enregistrer-controles.cjs",
+      "sha256": "80086df953e03f4a85a43c7ea8be4a586ac16d14e1623b1edd4e86f4eb758224"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-compact-joueur-focus.png",
+      "sha256": "237cf31fc849ebf1d272061ca2f846356cfc3e1964b41f9aebdddd36e0440676"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-compact-meneur-focus.png",
+      "sha256": "8acbb6a42ee419077f41559dcffe461cfe4f17f97c0062312f701f3fa7121263"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-compact-saisie.png",
+      "sha256": "7794fb29bbd8be6fa2367826832cea6dedb781f547cfadb7e5113d02df5dec3b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-paysage-joueur-focus.png",
+      "sha256": "866f9a37cb005b079ff66f227f33d87e4f1cad9bf2e4fd2d6152e6fbfdc88beb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-paysage-meneur-focus.png",
+      "sha256": "d516e8522b7439996396f713fd2895409691cbf9d6edb0ae66c573821b3293db"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-paysage-saisie.png",
+      "sha256": "64a1aadea8ca4d86fb3de58a8c1d6d78176de396cfe9dce7c8e9901a96a16bad"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-portrait-joueur-focus.png",
+      "sha256": "84f499b6dd8f13cc534f7e0bc1c9e2bca39a912eef04841ed7b7575ea37931cf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-portrait-meneur-focus.png",
+      "sha256": "7b07224b9b644eff8de38c8c3dbfbd1fb02d038d58e5e96f07ad170ae8ee76b0"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-portrait-saisie.png",
+      "sha256": "d437683ac7111ea3875a37ec7a9795c3ed461badc886fde1fe2d2d596be02e9d"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-pupitre-joueur-focus.png",
+      "sha256": "3498ce6df195a9f4e690ac5a8c769ff8e86f82fe4f4075430c5191f3e0b79acb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-pupitre-meneur-focus.png",
+      "sha256": "08ac2894030434592ee6b91f81aa6513b844d6ceb5d1e2bd0f66ee5e6d5d608d"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-pupitre-saisie.png",
+      "sha256": "383d741dae18b1a15dd64370f23b1bc9b684da4d996ab559ae91a5cbd681ca28"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-telephone-joueur-focus.png",
+      "sha256": "4665b7835f3182d407fc07461a9e680ad38328f95209a03edf866a29e732d36a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-telephone-meneur-focus.png",
+      "sha256": "2241869947fa321790a29bb10ec6ac517bc09b46174a33fa6be0abb69de955f3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-base-telephone-saisie.png",
+      "sha256": "27db3287002675c82db449a701dd69b657f0cfc9d8e8eb1d806ed31f0ec02420"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-compact-joueur-focus.png",
+      "sha256": "c1931e862df0cd86558e7919778d5545f829398bd917d7ee4a6e5238b575378e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-compact-meneur-focus.png",
+      "sha256": "ecdcf73b054419cdf8c1b8deb4dcf6b06b53d0d6a55bee740981a0847bac3b24"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-compact-saisie.png",
+      "sha256": "b500d61f9fc0dbde1ea0ed85946fa8f948249b9cb1009733d5065004b3eaf10b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-paysage-joueur-focus.png",
+      "sha256": "93ad6de728ddbf63a20e26bd8ffe18049e004cea83feb8b8bbb2dd626cf22ef2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-paysage-meneur-focus.png",
+      "sha256": "34044fe88edbacaf51d3ae8aa946f9029e8ff76af4db612c24c74ce02dec410b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-paysage-saisie.png",
+      "sha256": "4d9e5f60c1dc76b18f60645e3215367e6b79dbef26bbb736f79b8d3e2e48eb44"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-portrait-joueur-focus.png",
+      "sha256": "ec1c78fc055c44d41c4bd4a745e8360a347551a20d84dd890c2b6f4107377d83"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-portrait-meneur-focus.png",
+      "sha256": "c25c779e1fa2b6a9f4f78f3c02ccfdb2e120d3a748d662f0823c657a7a0fc3c5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-portrait-saisie.png",
+      "sha256": "2a5570da9f8228385628ee7cd63d37035b27ecb17599f0e57402e1032148924a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-pupitre-joueur-focus.png",
+      "sha256": "d2d71db5de4033cd6e09b7f37a61d3cb5e82857c72e92c60d067cda361d96dc6"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-pupitre-meneur-focus.png",
+      "sha256": "2325b97402fb121803c9b4b8558677d9104f944de85a1dfb92a4245408cf9a41"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-pupitre-saisie.png",
+      "sha256": "0c0c8930557550631918ead60336f012ccf664852ad67e29296dd48297c18b09"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-telephone-joueur-focus.png",
+      "sha256": "5c8ac26b0aabd2b06f9408bbe7bf4ed333877fb510d2fd55d81c1d6ffbae8d6c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-telephone-meneur-focus.png",
+      "sha256": "a7196162a0182071e50b728a658d6bf6a8a9680c3500f9fc27d06a934c72f81b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/claire-personnalites-telephone-saisie.png",
+      "sha256": "b4260765af01fa144284731a798db0fbdcc74657303ef76ec6ce5ee1f6a4c4c8"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/compact-leger-auto-joueur.png",
+      "sha256": "176ba65d4863effd514331db2af0e9386f5315efaac9343fe158cb09140062dc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/compact-leger-auto-meneur.png",
+      "sha256": "f5badac6f0e6c5c14ad37086fbd8c18489c16df89d69dce1f5b486baa28e2a28"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/compact-leger-manuel-joueur.png",
+      "sha256": "2972452fd8b468f74082bc23f7c44cebab72f488a90ba9c7d3aed331a5842a8e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/compact-leger-manuel-meneur.png",
+      "sha256": "f5badac6f0e6c5c14ad37086fbd8c18489c16df89d69dce1f5b486baa28e2a28"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/compact-mouvement-reduit-joueur.png",
+      "sha256": "1eb9aba6d85b9d651f1922e8450c07a7c243fc49b3c7efe629d243e5ad63adb8"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/compact-mouvement-reduit-meneur.png",
+      "sha256": "035c7c7803b4db050550f2adaeee70d3df8bfcaebc20cd0a14f16ad47eeb74b4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/compact-mouvement-reduit-resultat.png",
+      "sha256": "5b012a315338d0c783d9aa7e913739869825438abf12f27ea91dd948e3688655"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-accent-manuel-joueur.png",
+      "sha256": "f6994c9fc4cf00fdd4eb93e4620f370bacc67a3d087c8eb2f8985d91ff98165b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-accent-manuel-meneur.png",
+      "sha256": "5c27ed205b213546079dffed4d83ed797fbe007b04ec2a14eaf740096ce570bb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-compact-joueur-focus.png",
+      "sha256": "4cf870eba38f9c1789461b6f13a26e0303efae7d9e21624e18d0e837b6d06047"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-compact-meneur-focus.png",
+      "sha256": "4d81d1ff23e1aa14655481c8e21e57d121632dbb5336d0db2eab208f0f8c9c06"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-compact-saisie.png",
+      "sha256": "a9c40a34e6e7aa89e43c2d763fb2906f7ce1b4c53962eeb6490b15e2e67cafd7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-paysage-joueur-focus.png",
+      "sha256": "166a9b2c0a08e009cc61a75a019e572675cef82f2c7ccbd51d6e3bad8803fa56"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-paysage-meneur-focus.png",
+      "sha256": "a7fa2971298a34478af64b0f5ace1fde8c4d37b93c1026219a405b22635b7a17"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-paysage-saisie.png",
+      "sha256": "acf26fda27be00d2538d3f1045336c1e02bafb7046cd545f1bc373fa6485e9fb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-portrait-joueur-focus.png",
+      "sha256": "832ff06d2e8709f92ce3731699b27f69f397d14f706e2def0ef42562fcce3c88"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-portrait-meneur-focus.png",
+      "sha256": "3c570fff70ce3d0fa6955799a9ff6c53b11e1fce1ba50a9d4fe1440786f4003f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-portrait-saisie.png",
+      "sha256": "650c5679a56fa8f6afd423a486cecf322ad47d7b9c3b9b22eb98c859de0a60c7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-pupitre-joueur-focus.png",
+      "sha256": "3ba581c0f33ab37fc7044be9e5ca7d0562107045de4a6213e409bab8cc871f53"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-pupitre-meneur-focus.png",
+      "sha256": "766330bc2c7179982571845e5c448de7205f96f3b52a3dbb2470c0612fae0a47"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-pupitre-saisie.png",
+      "sha256": "30b55b55cccd327d87b153426e0ea0f986c82d06e9f0e41c7c4b8fc9c9dad97b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-telephone-joueur-focus.png",
+      "sha256": "9a2f028705b9dda15f9826cf7afb3e9ac1f0dc4eb26a5c2f882eec9cf4199a7b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-telephone-meneur-focus.png",
+      "sha256": "56d4a5735e34d790552c86b3d19d8249025672d69e94407a9a7c125493e8628a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-base-telephone-saisie.png",
+      "sha256": "bd35a712f9ade58bce9a51d92322947fcebdb7d9ec9f9383dfaa9269c465428b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-compact-joueur-focus.png",
+      "sha256": "8bc28885bd3d394978459c91fc1ad2e4cc16a5dafcc4d798cd90afc89ab09b71"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-compact-meneur-focus.png",
+      "sha256": "53f4ad1812498fe1b1631ed9a104058465a8c8b2932f85f77a45c906f58e4426"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-compact-saisie.png",
+      "sha256": "273cce25d91c103756bd393fdcf63c9676eb1842efa59aabf18661bfff561052"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-paysage-joueur-focus.png",
+      "sha256": "95c02067931bb2f2904d6e26fb89dfa1491172dd19a3993fdce746fa56bbc542"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-paysage-meneur-focus.png",
+      "sha256": "ead04e9b61c3898d45a59d0ef20e81b8038fde7b5f717c97e836e6a762857515"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-paysage-saisie.png",
+      "sha256": "cc81c00b448871991bd1e3ab3bb70edf6320248f4051951742e02e7458fde665"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-portrait-joueur-focus.png",
+      "sha256": "f31c31b83348a9e032247971452b95c945f840be881456644ed167552836dd65"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-portrait-meneur-focus.png",
+      "sha256": "ca7ab8e9076ad4539ec24c2ca355ddbfcce71c1a0d6f20ce47538b4bf5338fbb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-portrait-saisie.png",
+      "sha256": "8245fe686c9f5d09d988c0dc5c0886bb06a37f58a7cf31bfd7e4dc51e341aa35"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-pupitre-joueur-focus.png",
+      "sha256": "83dbcce8e88de8b59f71a5d55b9db9ad479608747d04b9be002e543cf3453d09"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-pupitre-meneur-focus.png",
+      "sha256": "8acd92d1a7732b9f65ee6d19626f9add47edc0f05fa204fa5c898c5084010baf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-pupitre-saisie.png",
+      "sha256": "ae225e51233b7ae551780dbcfaf6f993aff4636cbb5cb3705681536dc977052a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-telephone-joueur-focus.png",
+      "sha256": "0b32280ba17543ef8e3a100cce312d5dcfbf754f7d698f4ead98c29e890e4041"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-telephone-meneur-focus.png",
+      "sha256": "a228287ce6a9f2c13b45fb46caf30aaa54ca4c430f325d7de4086741e6c9d8b3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/cyberpunk-personnalites-telephone-saisie.png",
+      "sha256": "660ed960a832506d3d489d7b37acb9cb38e1cfe62099f984b8b8f9ef2789f7b3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-compact-joueur-focus.png",
+      "sha256": "19ca4a22e0efc631bc3d9e7e9628b5bc2f7d80c06601d5b637834dd1f2bfe22e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-compact-meneur-focus.png",
+      "sha256": "5385d13bd7bf60f9550bea675816fd909e2ae8119329eea90d0cb5af503036fd"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-compact-saisie.png",
+      "sha256": "607152bcb583669f332c17a196d0d2b614e16065b6b8915fe8d535d498d8e9a4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-paysage-joueur-focus.png",
+      "sha256": "872d9b8aa691293c1a1156b863b694e101fe2488367da73fb1d810b48ed6cbc3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-paysage-meneur-focus.png",
+      "sha256": "1bd11c62cd53f22f402b82792d1a4575323ecf1e6b80bfd321f0018a93e58796"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-paysage-saisie.png",
+      "sha256": "1dbaca1620273c683ce3416b41d42e2acedea08444e96ac1cf184d6c854aada4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-portrait-joueur-focus.png",
+      "sha256": "beb658b2c05ece87bda66a41ed5e7e07e318409e8978afe835bc3585c7c8fc89"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-portrait-meneur-focus.png",
+      "sha256": "47f29b8bbc12846211089d9151396d4bbd371f81c8eef8d9b0267ce3cf8a79b6"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-portrait-saisie.png",
+      "sha256": "87dcdd5ba2ca155eb7986c3d4d585f6aea459b06bf034a5afdfdaffde1d89c09"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-pupitre-joueur-focus.png",
+      "sha256": "82bb670248af1d05de5630bef3683cf346c82ae8800e6d6d9cb0dbbb50437a45"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-pupitre-meneur-focus.png",
+      "sha256": "06ae24dddb36c61218a20fefb218352bed1cbdc50e39fe4885636bf553ddd6eb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-pupitre-saisie.png",
+      "sha256": "a166880b27cfe4e1f858cf5a10c1f1578e65afd11329c600cf0f15d06b3b89e6"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-telephone-joueur-focus.png",
+      "sha256": "37f1cb8d5e0743da57e615cbf7adabc4505a65d28f79e73ba6b469535c380871"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-telephone-meneur-focus.png",
+      "sha256": "b80749c0ea29bdf5333a0aa37d42b38a2a7c4234394cdecd9a2ee5788075ca4e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-base-telephone-saisie.png",
+      "sha256": "c1c085e1616a123cf6f6904acda012cdeb3c55c484aeacb83b00d74c0a24e714"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-compact-joueur-focus.png",
+      "sha256": "21fa3953146cdf08da5be741a162f7419041e33209b2c1f4b5e41a0573aeb9c2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-compact-meneur-focus.png",
+      "sha256": "6c093d1ccad48709237fd87887a678026fa7b5465eeab2fc701bbffc1ad8dfb2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-compact-saisie.png",
+      "sha256": "3162983f415bb73084d1c7d9e486ee557200a34dd458985dcc1424a236914da2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-paysage-joueur-focus.png",
+      "sha256": "86e5e1395d2f53f74f8acd251718d604e25307b0acf59b8946b33738c3318d22"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-paysage-meneur-focus.png",
+      "sha256": "7e3cc49be3ff3118096a3e68669be14391bf4b6dd051b4e31d01046f8a96f8c0"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-paysage-saisie.png",
+      "sha256": "a586fd3ff268559e10ce19c2bb01ee56c39bd744551472dab4203d327af7138e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-portrait-joueur-focus.png",
+      "sha256": "38645626ad11da05dbe11f986138030decdd25bbb330fce08982f810461676c3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-portrait-meneur-focus.png",
+      "sha256": "1c910576669556269e67fe1b866ebfcee1f46e1c5452084302e2bee43dec829b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-portrait-saisie.png",
+      "sha256": "e64e92316a8190d82cae196c9395dfaaa8b7f8180eef816b7bfabafb040a9050"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-pupitre-joueur-focus.png",
+      "sha256": "02b3556a3ed69e91293b91ec379c85a98578e52963c84ca2080460318f15a7ba"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-pupitre-meneur-focus.png",
+      "sha256": "acccbd8d27ecf60f2a9abbd495fa3f71a9b480b585b65767a648c4a6cc5b09bc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-pupitre-saisie.png",
+      "sha256": "e57d10b3acad2696acab7b482592999c275bb6bfb1206e193cdbed6f0a6e853f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-telephone-joueur-focus.png",
+      "sha256": "0814c578d080387a910f54207af62dca6ffe73864184171bb6402aadfd84dac4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-telephone-meneur-focus.png",
+      "sha256": "758cca6360e0723414bc09ff9a45cc3ed4b6b0bf97421d1fca1d056bf94db7cd"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/medieval-personnalites-telephone-saisie.png",
+      "sha256": "90f6c5d635d950ff9cd8c3090c9111450865e74b6150d5276259b5ec588e4e60"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-compact-joueur-focus.png",
+      "sha256": "5c9b6de26089c7c0f40fee407821f4f1dd53571e74e894d0869bdc55c6da3a7d"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-compact-meneur-focus.png",
+      "sha256": "43fecb4f79d1b34610f2989185fcef0a0af67f86c2ed084b1864c653b619da38"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-compact-saisie.png",
+      "sha256": "f1df9ef3d88e9e6c8e1af4ac06f7930a0510d255bb6f01fd55a5c29763646ed9"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-paysage-joueur-focus.png",
+      "sha256": "ea08c63beef4f185b2380466fa756880984c917eaa8f652a4c2d62d50a6709af"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-paysage-meneur-focus.png",
+      "sha256": "43c2f3af8e3b3e5b0bbd3b6703708ed7d570cbde8c76248f2a907eee261472fe"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-paysage-saisie.png",
+      "sha256": "1fb9b87ece4044184466287b3bf1f5f9c645a4e18027040228912d0d82746092"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-portrait-joueur-focus.png",
+      "sha256": "d4b99aa54ab9230899d3cf63a282ba4660f0ee40b43c35e5bc522a423e395cba"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-portrait-meneur-focus.png",
+      "sha256": "35416a55c0b556b766ed14c1508d96a574962f4ff0bd91ca1fa9e58dd9b4bba9"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-portrait-saisie.png",
+      "sha256": "a9bf582346162f4ca4da608bdfc3c510efb6af963c12aaf755fdc353b52f71b8"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-pupitre-joueur-focus.png",
+      "sha256": "3caab7dbfe3b6851f13e21673a34f0c7323870b6c09527e5fc99dc91eac3966e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-pupitre-meneur-focus.png",
+      "sha256": "87f6324c42e392060025e810178f0405c4f3eb6601eed3969dd449e103fde500"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-pupitre-saisie.png",
+      "sha256": "d59ae5f9434ffc8ec0fc34cff510dcff1630105d57e9db312efd8b0a531bb5da"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-telephone-joueur-focus.png",
+      "sha256": "ae839ea3f3b88dc2bb87e059c048a87b3952b6f118ce746fe56499f95a7d8935"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-telephone-meneur-focus.png",
+      "sha256": "73e6c5e1a414695ece3d07a4339d5b1527b0ff475fa476ba88dacfa09fe45baf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-base-telephone-saisie.png",
+      "sha256": "f2977fed75b6212e1c24a0635b73bb4fe4dc5226d78463060d91397c96c7646c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-compact-joueur-focus.png",
+      "sha256": "f7366f6262b7481f62786ca6ee3566e7a876130ede6140969b087d00b4074bd1"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-compact-meneur-focus.png",
+      "sha256": "374e8217780f4208696aaff7fd86b2b9eec61b62c806d87f402248c489ccdd05"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-compact-saisie.png",
+      "sha256": "d158a13b88bf3728801fcc197d269c6a12b89876e11e9f93a2798eb81c2d459a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-paysage-joueur-focus.png",
+      "sha256": "ad358a084fab207d3cf9b9fbece6ab92f5e4f48e7532991b2818406b368a1c2b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-paysage-meneur-focus.png",
+      "sha256": "49dffba0868733abb395982f49b7cd46fcc3876ccbfe1299679883f9a0c4a641"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-paysage-saisie.png",
+      "sha256": "5106300ca5b67252b27e229ce85869c188866195ec864ea42094e2a68352c561"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-portrait-joueur-focus.png",
+      "sha256": "175603fc7afe5bed44de921f9be01f4f51d5b22e335c45c5b258ec044721ac13"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-portrait-meneur-focus.png",
+      "sha256": "183b2d7be14d4f1f8a6f54b6646936d14c641b8254485a4ef30de5e15609ed2d"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-portrait-saisie.png",
+      "sha256": "9af0a210fcd7c313ab9139f5c437e2ddfa3a68a8a9989c2c0f1a5cc6838da125"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-pupitre-joueur-focus.png",
+      "sha256": "5d818c75e613380385403a54c1983f1b4efed8022d65df0010e0da53d8bd9a02"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-pupitre-meneur-focus.png",
+      "sha256": "31b2a1473efe33b4097244094e49f4e1dd30f26bbee363f9dcc94a5ccd8dd3dc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-pupitre-saisie.png",
+      "sha256": "91dcf11301510ed56e7274be16b3fc9b834b336a91965920ab4323e43ea840bc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-telephone-joueur-focus.png",
+      "sha256": "5cc62f523489bf7b228bbc68cce121e46194bae88afbcea54e2d91d540ef8790"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-telephone-meneur-focus.png",
+      "sha256": "7821a651f9899798cc7ede09c91d8b3e5d3aa435ec1eda8c3139fc18ca4f0fd1"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/modern-personnalites-telephone-saisie.png",
+      "sha256": "8904e38c6888d4fa284ad8a4877f170f0436c835eabb6d94fe15de9af91637f7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/paysage-mouvement-reduit-joueur.png",
+      "sha256": "c0589d0045fe566bfaa142fa93f855b5a4f9b73e32c2cd38c8f4bc4c57a33b84"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/paysage-mouvement-reduit-meneur.png",
+      "sha256": "a115a84d315fd71d74d3035f325fed9a89d5909112572ae3bd0bc3d95c56b785"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/paysage-mouvement-reduit-resultat.png",
+      "sha256": "85c5eca0744f29a104bf59b9a81d259d361361835151699b28d4b3230a7c26fe"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues/cyberpunk.png",
+      "sha256": "b173895d4622c1e40b173928945fc7c63c5c45db7ebd8f6631305bd1f150d50a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues/medieval.png",
+      "sha256": "5f9a7cf404f13696576a26f35c9bd5aa3213232dfbb3e77068cd9330a6c55a25"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues/modern.png",
+      "sha256": "5f9dbcf5826dc0cf7ec1b52e1af554f5bcc18abd09aab853cf99cba7679b15c6"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues/claire.png",
+      "sha256": "0dca17f9727e5baee5a03c4f6b042dc98f5315e8994ad3c5daf073cfe495018c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues/mouvement-reduit.png",
+      "sha256": "b51c1f5b1bb820a2edd78ae3eb074ff4a6a67ae752f2f97907ef257596e6812c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues/leger.png",
+      "sha256": "d4e642f89414e427b5ce0f9813fa2ee8ccf1c2822322ef7337ca01073c59a071"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues-manuel/tablette-des-joueurs.png",
+      "sha256": "cf5878c053e7bffd5084a9d287e408110f6f73aa6f56e276f9ec4c781f963ede"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T5-fini/revues-manuel/tablette-du-meneur.png",
+      "sha256": "3150c0225b673c1e6ed4ad7cd6f2eaddaa7d25b77473deba243294c75a5a32dc"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-archives.jpg",
+      "sha256": "481ce4c81aecd487a3f81835a27cf8053849751428a75158cb47713785897d83"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-cartes.jpg",
+      "sha256": "74fcb3acada72a19c567a2eb9aa68c3292fea89198d7cdcea0f42375b2dede48"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-direct.jpg",
+      "sha256": "96ccf4ba5af827cf3bf5b4cce8384fa8a5929a74553724ad2ec2a0f78879a66d"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-feedback.jpg",
+      "sha256": "c6cb1f5ef6822a158c307f575424f50ae658ad7adc5a6d79c2ece72c7cf78d0d"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-fiche.jpg",
+      "sha256": "96f94425c30e591dcd1ec0e2ce0110f294f1766e2346eb0e51fbcadc7b208b11"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-inventaire.jpg",
+      "sha256": "2b42630d334ed2ea9b1ca104174fb579457cf8607b53b0aad1b1852abdd55832"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-lieux.jpg",
+      "sha256": "0e52d93b7227d1c0a88f6c0b5e69596a747bda10ae4d2030cf17d38c8c3cbc9c"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-messages.jpg",
+      "sha256": "4b40512a62ae4aa78262593e7f2ff6ac2daa4ba8436dea5c07f46a9a5dbd1cee"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-notes.jpg",
+      "sha256": "0d2d5ec89012857ea03f4b08b9b1abd97323daac14ec5eccbcdeec40f4d745a0"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs-pnj.jpg",
+      "sha256": "3d478a37861f68ac0858f11f576bbe508c1b7c8387d5bdc2cf6e06b50ba5a942"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-des-joueurs.jpg",
+      "sha256": "8f42bf723331083691514caa7937fe44e45f4dac292cc2ee1a1459ff248b4627"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-combat.jpg",
+      "sha256": "994368ebfdaef4ce9562264b705aa3295b795719bdf33b498f35f8c369817ae1"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-des.jpg",
+      "sha256": "96e26d79182ddf4e034c9c695fcea0fc04a87a23363525f0029cb2a98be9349a"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-messages.jpg",
+      "sha256": "5bd00f0a3288c653ec0c584bed1326e415d3be5e5de06c3e3a6ee84a032a87e3"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-notes.jpg",
+      "sha256": "2eec83f1d7030a93cb75a2fa7247884dd660b4491cd600dabdfbd62b8f763116"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-scenario.jpg",
+      "sha256": "cb37d51b500b0ec5a8b044c54c14789d5a0bcd8f0556df6ff3a2f80c0e007c78"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-sons.jpg",
+      "sha256": "7c8e69aca644c67470f3789c17c91101b86e6165ed977469cbc3d89775a98c65"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-tableau.jpg",
+      "sha256": "320b542c1faa7f31985a88dfa9ed8320afbe0d372c7631f1883637fec9d4cb56"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur.jpg",
+      "sha256": "5554f4edb8f7dba8b930cc3dd290f1217f5c9eaf9c214a00e7ff488633bad022"
+    }
+  ]
+}
