@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import TexteMarkdown from '../TexteMarkdown';
-import { MessageSquare, Bell, X, ShieldAlert } from 'lucide-react';
+import { MessageSquare, Bell, ShieldAlert } from 'lucide-react';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bouton, Panneau } from '../socle';
@@ -40,73 +40,24 @@ const HubNotificationCenter: React.FC = () => {
     }, [hubNotifications, clearHubNotification]);
 
     return (
-        <div className="fixed bottom-24 right-6 z-[300] flex flex-col gap-3 pointer-events-none max-w-sm w-full">
+        <div aria-label="Notifications du MJ" className="fixed bottom-[calc(var(--hub-navigation-hauteur)+env(safe-area-inset-bottom)+8px)] inset-x-3 z-[300] flex max-h-[50dvh] flex-col gap-3 overflow-y-auto pointer-events-none lg:left-auto lg:w-[440px]">
             <AnimatePresence mode="popLayout">
-                {hubNotifications.map((notif) => (
-                    <motion.div
-                        key={notif.id}
-                        layout
-                        initial={{ opacity: 0, x: 50, scale: 0.9 }}
-                        animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
-                        className="pointer-events-auto group relative overflow-hidden"
-                    >
-                        <Panneau as="div" habillage="libre" className="bg-app-surface/90 backdrop-blur-2xl border border-app-border/20 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex gap-4">
-                            {/* Accent line */}
-                            <div className={`absolute top-0 left-0 h-full w-1 ${
-                                notif.type === 'alert' ? 'bg-etat-danger shadow-[0_0_10px_color-mix(in_srgb,var(--etat-danger)_50%,transparent)]' : 
-                                notif.type === 'system' ? 'bg-etat-alerte shadow-[0_0_10px_color-mix(in_srgb,var(--etat-alerte)_50%,transparent)]' :
-                                'bg-accent shadow-[0_0_10px_var(--app-accent)]'
-                            }`} />
-
-                            {/* Icon */}
-                            <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center border transition-all duration-300 ${
-                                notif.type === 'alert' ? 'bg-etat-danger/10 text-etat-danger border-etat-danger/20 shadow-[0_0_15px_color-mix(in_srgb,var(--etat-danger)_10%,transparent)]' :
-                                notif.type === 'system' ? 'bg-etat-alerte/10 text-etat-alerte border-etat-alerte/20 shadow-[0_0_15px_color-mix(in_srgb,var(--etat-alerte)_10%,transparent)]' :
-                                'bg-accent/10 text-accent border-accent/20 shadow-[0_0_15px_var(--app-accent)]'
-                            }`}>
-                                {notif.type === 'alert' ? <ShieldAlert size={22} /> : 
-                                 notif.type === 'system' ? <Bell size={22} /> : 
-                                 <MessageSquare size={22} />}
+                {hubNotifications.map(notif => (
+                    <motion.div key={notif.id} layout role="status" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                        className="pointer-events-auto">
+                        <Panneau className={`space-y-2 border-l-4 bg-app-surface p-3 shadow-2xl ${notif.type === 'alert' ? 'border-l-etat-danger' : notif.type === 'system' ? 'border-l-etat-alerte' : 'border-l-accent'}`}>
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0 space-y-1">
+                                    <p className="break-words text-[14px] text-app-muted">Reçu de : {notif.fromName}</p>
+                                    <h3 className="flex items-start gap-2 break-words text-[16px] font-bold text-app-text">
+                                        {notif.type === 'alert' ? <ShieldAlert size={20} className="shrink-0 text-etat-danger" /> : notif.type === 'system' ? <Bell size={20} className="shrink-0 text-etat-alerte" /> : <MessageSquare size={20} className="shrink-0 text-accent" />}
+                                        {notif.title}
+                                    </h3>
+                                </div>
+                                <Bouton cibleTactile onClick={() => clearHubNotification(notif.id)} title="Fermer" className="shrink-0">Fermer</Bouton>
                             </div>
-
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center justify-between mb-0.5">
-                                    <span className="text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/30 truncate pr-4">
-                                        RECU DE : {notif.fromName}
-                                    </span>
-                                    <Bouton habillage="libre" cibleTactile
-                                        onClick={() => clearHubNotification(notif.id)}
-                                        className="min-w-[44px] text-app-text/20 hover:text-app-text transition-colors p-1 -m-1"
-                                        title="Fermer"
-                                    >
-                                        <X size={14} />
-                                    </Bouton>
-                                </div>
-
-                                <h4 className="text-sm font-bold text-app-text mb-1 leading-tight">
-                                    {notif.title}
-                                </h4>
-                                
-                                <div className="text-xs text-app-text/80 line-clamp-4 leading-relaxed prose-sm prose-invert prose-p:my-0.5 prose-li:my-0">
-                                    <TexteMarkdown>
-                                        {notif.content}
-                                    </TexteMarkdown>
-                                </div>
-
-                                <div className="mt-3 flex items-center justify-between">
-                                    <div className="flex gap-1.5 opacity-40">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse [animation-delay:0.2s]" />
-                                    </div>
-                                    <span className="text-ui-9 font-bold text-app-text/10 italic">NEXUS-COMM v5.2</span>
-                                </div>
-                            </div>
+                            <div className="break-words text-[16px] leading-relaxed text-app-text prose-p:my-1"><TexteMarkdown>{notif.content}</TexteMarkdown></div>
                         </Panneau>
-
-                        {/* Background glow sweep */}
-                        <div className="absolute -inset-[100%] bg-gradient-to-r from-transparent via-app-text/[0.03] to-transparent -rotate-45 pointer-events-none translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                     </motion.div>
                 ))}
             </AnimatePresence>
