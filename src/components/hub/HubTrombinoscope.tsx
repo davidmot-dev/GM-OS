@@ -1,77 +1,35 @@
 import React from 'react';
-import { Users, Sparkles } from 'lucide-react';
+import { Users, User, ChevronRight } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
+import { Bouton, Panneau } from '../socle';
 import { type Entity } from '../../modules/session/store/types';
+import { HubConsultation, type CommandesDeConsultation } from './HubConsultation';
 
-interface HubTrombinoscopeProps {
+interface HubTrombinoscopeProps extends CommandesDeConsultation {
     npcs: Entity[];
     onSelectNpc: (npc: Entity) => void;
 }
 
-export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ npcs, onSelectNpc }) => {
-    return (
-        <div className="w-full h-full p-4 overflow-hidden flex flex-col pointer-events-auto">
-            <EnTeteDeModule habillage="libre" className="flex items-center justify-between mb-8 px-4">
-                <div className="space-y-1">
-                    <h2 className="text-3xl font-black tracking-tight text-app-text flex items-center gap-4">
-                        <Users className="text-accent" size={30} />
-                        Trombinoscope
-                    </h2>
-                    <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-[0.5em]">Registre des individus et entités identifiés.</p>
-                </div>
-                <div className="flex gap-2">
-                    <Etiquette habillage="libre" ton="accent" className="text-ui-10 font-black bg-accent/10 border border-accent/20 px-6 py-2 rounded-full text-accent uppercase tracking-widest flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                        {npcs.length} Profils Répertoriés
-                    </Etiquette>
-                </div>
-            </EnTeteDeModule>
-
-            <div className="flex-1 overflow-y-auto custom-scrollbar-minimal pr-4 pb-32">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6 place-items-start">
-                    {npcs.map((npc, idx) => (
-                        <Bouton habillage="libre" cibleTactile
-                            key={npc.id}
-                            onClick={() => onSelectNpc(npc)}
-                            type="button"
-                            className={`group relative flex flex-col gap-2 md:gap-4 p-3 md:p-4 rounded-[1.5rem] md:rounded-[2.5rem] bg-app-surface/40 border border-app-border/10 hover:bg-app-surface/80 hover:border-accent/30 transition-all duration-500 cursor-pointer animate-in fade-in zoom-in duration-500 delay-${Math.min(idx * 50, 500)} w-full`}
-                        >
-                            <div className="relative aspect-[3/4] w-full rounded-[2rem] overflow-hidden bg-app-bg shadow-xl">
-                                <div className="absolute inset-0 bg-gradient-to-t from-app-bg/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10" />
-                                <ResolvedImage 
-                                    src={npc.avatar} 
-                                    className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" 
-                                />
-                                <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                                    <div className="px-4 py-1.5 bg-accent/90 backdrop-blur-md rounded-full text-ui-8 font-black text-app-bg uppercase tracking-widest">
-                                        Inspecter
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="px-1 text-center">
-                                <h3 className="text-ui-11 font-black text-app-text uppercase tracking-wider truncate mb-1">{npc.name}</h3>
-                                <p className="text-ui-7 font-black text-app-text/20 uppercase tracking-[0.2em]">{npc.role || 'Citoyen'}</p>
-                            </div>
-                            <div className="absolute top-2 right-2 p-2 bg-app-bg/60 backdrop-blur-md rounded-full border border-app-border/10 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Sparkles size={10} className="text-accent" />
-                            </div>
-                        </Bouton>
-                    ))}
-
-                    {npcs.length === 0 && (
-                        <Panneau as="div" habillage="libre" vide className="col-span-full py-32 flex flex-col items-center justify-center text-center gap-6 border border-dashed border-app-border/20 rounded-[3rem] bg-app-surface/20">
-                            <div className="p-8 bg-app-surface/40 rounded-full border border-app-border/10">
-                                <Users size={64} className="text-app-text/5" />
-                            </div>
-                            <div className="space-y-2">
-                                <p className="text-xs font-black uppercase tracking-[0.3em] text-app-text/20">Aucun sujet identifié</p>
-                                <p className="text-ui-10 text-app-text/10 font-bold uppercase">En attente de transmission par le MJ</p>
-                            </div>
-                        </Panneau>
-                    )}
-                </div>
-            </div>
+export const HubTrombinoscope: React.FC<HubTrombinoscopeProps> = React.memo(({ npcs, onSelectNpc, commandes, informations }) => (
+    <HubConsultation ecran="pnj" titre="Trombinoscope" description="Registre des individus et entités identifiés."
+        compteur={`${npcs.length} Profils Répertoriés`} icone={Users} {...{ commandes, informations }}>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {npcs.map(npc => (
+                <Bouton habillage="libre" cibleTactile key={npc.id} onClick={() => onSelectNpc(npc)}
+                    className="flex w-full min-w-0 items-center gap-3 border border-app-border bg-app-surface p-3 text-left hover:border-accent">
+                    <div className="flex size-[64px] shrink-0 items-center justify-center overflow-hidden bg-app-bg text-app-muted">
+                        {npc.avatar ? <ResolvedImage src={npc.avatar} alt="" className="size-full object-cover" /> : <User size={28} />}
+                    </div>
+                    <div className="min-w-0 flex-1 space-y-1">
+                        <h3 className="break-words text-[16px] font-bold text-app-text">{npc.name}</h3>
+                        <p className="break-words text-[14px] font-normal text-app-muted">{npc.role || 'Citoyen'}</p>
+                    </div>
+                    <ChevronRight size={20} className="shrink-0 text-accent" />
+                </Bouton>
+            ))}
+            {npcs.length === 0 && <Panneau as="div" vide className="col-span-full space-y-2 p-6 text-center text-[14px] text-app-muted">
+                <p>Aucun sujet identifié</p><p>En attente de transmission par le MJ</p>
+            </Panneau>}
         </div>
-    );
-});
+    </HubConsultation>
+));
