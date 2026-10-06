@@ -101,12 +101,13 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
     };
 
     return (
-        <div className="flex flex-col gap-3 h-full">
-            <div className="flex gap-1 overflow-x-auto no-scrollbar shrink-0">
+        <div className="flex min-w-0 min-h-0 flex-col gap-3 h-full">
+            <nav aria-label="Destinataires des messages" className="grid grid-cols-2 min-[700px]:grid-cols-4 gap-2 shrink-0">
                 <Bouton habillage="libre" cibleTactile
                     onClick={() => setFiltre('tous')}
+                    aria-pressed={filtre === 'tous'}
                     title="Tout le fil, et le canal général pour écrire"
-                    className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase transition-colors ${filtre === 'tous' ? 'bg-accent text-app-on-accent' : 'bg-app-text/5 text-app-muted hover:text-app-text'}`}
+                    className={`min-w-0 min-h-[44px] px-3 py-2 rounded-lg text-[14px] font-bold [overflow-wrap:anywhere] transition-colors ${filtre === 'tous' ? 'bg-accent text-app-on-accent' : 'bg-app-text/5 text-app-muted hover:text-app-text'}`}
                 >
                     Tous
                 </Bouton>
@@ -114,16 +115,17 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                     <Bouton habillage="libre" cibleTactile
                         key={id}
                         onClick={() => setFiltre(id)}
-                        className={`shrink-0 px-3 py-1.5 rounded-lg text-ui-10 font-black uppercase transition-colors ${filtre === id ? 'bg-accent text-app-on-accent' : 'bg-app-text/5 text-app-muted hover:text-app-text'}`}
+                        aria-pressed={filtre === id}
+                        className={`min-w-0 min-h-[44px] px-3 py-2 rounded-lg text-[14px] font-bold [overflow-wrap:anywhere] transition-colors ${filtre === id ? 'bg-accent text-app-on-accent' : 'bg-app-text/5 text-app-muted hover:text-app-text'}`}
                     >
                         {nom}
                     </Bouton>
                 ))}
-            </div>
+            </nav>
 
             <Panneau as="div" habillage="libre" className="flex-1 min-h-0 overflow-y-auto no-scrollbar rounded-2xl bg-app-text/[0.03] border border-app-text/5 p-3 flex flex-col gap-2">
                 {fil.length === 0 ? (
-                    <p className="text-sm italic text-app-muted text-center py-10">
+                    <p className="text-[16px] italic text-app-muted text-center py-10">
                         {correspondants.length === 0
                             ? 'Aucun joueur connecté, et aucun message.'
                             : 'Rien dans ce fil.'}
@@ -132,15 +134,15 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                     const duMeneur = m.fromId === 'GM';
                     return (
                         <div key={m.id} className={`flex ${duMeneur ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[75%] rounded-xl px-3 py-2 flex flex-col gap-0.5 ${duMeneur ? 'bg-accent/15 border border-accent/30' : 'bg-app-text/5 border border-app-text/10'}`}>
-                                <span className="flex items-center gap-1.5 text-ui-9 font-black uppercase tracking-wider text-app-muted">
+                            <div className={`min-w-0 max-w-[90%] rounded-xl px-3 py-2 flex flex-col gap-1 [overflow-wrap:anywhere] ${duMeneur ? 'bg-accent/15 border border-accent/30' : 'bg-app-text/5 border border-app-text/10'}`}>
+                                <span className="flex flex-wrap items-center gap-1.5 text-[14px] font-bold text-app-muted">
                                     {duMeneur ? <Shield size={10} /> : <User size={10} />}
                                     {duMeneur
                                         ? `→ ${m.toId === CANAL_GENERAL ? 'Tous' : m.toName}`
                                         : m.fromName}
                                     <span className="ml-auto font-mono tabular-nums">{heure(m.timestamp)}</span>
                                 </span>
-                                <span className="text-xs leading-relaxed text-app-text whitespace-pre-wrap">{m.content}</span>
+                                <span className="text-[16px] leading-relaxed text-app-text whitespace-pre-wrap">{m.content}</span>
                             </div>
                         </div>
                     );
@@ -166,15 +168,15 @@ const RemoteMessenger: React.FC<RemoteMessengerProps> = ({ messages, destinatair
                         : 'Choisissez un destinataire ci-dessus'}
                     title={destinataireChoisi ? `Message à ${destinataireChoisi.nom}` : undefined}
                     aria-label="Message à envoyer"
-                    className="flex-1 h-[44px] px-3 rounded-xl bg-app-text/5 border border-app-text/10 text-sm text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 disabled:opacity-40"
+                    className="min-w-0 flex-1 h-[44px] px-3 rounded-xl bg-app-text/5 border border-app-text/10 text-[16px] text-app-text placeholder:text-app-subtle outline-none focus:border-accent/40 disabled:opacity-40"
                 />
                 <Bouton habillage="libre" cibleTactile
                     onClick={envoyer}
                     disabled={!destinataireChoisi || !texte.trim()}
                     aria-label="Envoyer le message"
-                    className="shrink-0 min-w-[44px] w-10 h-10 rounded-xl bg-accent text-app-on-accent flex items-center justify-center active:scale-95 transition-transform disabled:opacity-30 disabled:grayscale"
+                    className="shrink-0 min-h-[44px] px-3 rounded-xl bg-accent text-app-on-accent flex items-center justify-center gap-2 text-[14px] font-bold active:scale-95 transition-transform disabled:opacity-30 disabled:grayscale"
                 >
-                    <Send size={16} />
+                    <Send size={16} /> Envoyer
                 </Bouton>
             </div>
         </div>
