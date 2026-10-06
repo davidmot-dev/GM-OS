@@ -191,8 +191,7 @@ for (const taille of TAILLES) {
             await expect(page.getByText(/Cliquer pour fermer/i)).toHaveCount(0);
         });
 
-        test('Défaut T0 — toucher « Cliquer pour fermer » doit fermer le résultat', async ({ page }) => {
-            test.fail(true, 'Le panneau interne arrête la propagation du clic ; son libellé de fermeture est inopérant.');
+        test('Résultat — toucher « Cliquer pour fermer » ferme le résultat', async ({ page }) => {
             await ouvrir(page);
             await onglet(page, 'Dés');
             await page.getByRole('button', { name: 'Lancer D20' }).click();

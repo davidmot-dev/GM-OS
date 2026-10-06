@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -454,12 +455,108 @@ test.describe('les écrans des guides', () => {
         });
     }
 
+    // T4/J1 et J2 : chaque écran intégré a sa capture, après le choix du personnage.
+    // En exécution filtrée, inclure aussi « la séance commence ».
+    for (const destination of ['direct', 'inventaire', 'cartes', 'fiche', 'archives', 'pnj', 'lieux', 'messages', 'notes', 'feedback'] as const) test(`tablette-des-joueurs-${destination}`, async () => {
+        await fermer();
+        if (destination === 'pnj' || destination === 'lieux') {
+            const plan = 'data:image/png;base64,' + fs.readFileSync(path.join(ICI, 'donnees', 'plan-station-varn.png')).toString('base64');
+            await gmos.fenetre.evaluate(({ ecran, image }) => {
+                const magasin = (window as unknown as { useSessionOSStore: typeof useSessionOSStore }).useSessionOSStore;
+                const s = magasin.getState();
+                if (ecran === 'pnj') magasin.setState({ entities: s.entities.map(e => ({ ...e,
+                    isVisibleByPlayers: ['temoin-pnj-1', 'demo-pnj-3', 'demo-pnj-4'].includes(e.id) })) });
+                if (ecran === 'lieux') magasin.setState({ atlasMaps: s.atlasMaps.map(l => ({ ...l, isVisited: true,
+                    fileUrl: image, type: 'battlemap', narrativeDescription: 'Le pont C, entre le sas et le relais.' })) });
+            }, { ecran: destination, image: plan });
+        }
+        if (destination === 'inventaire' || destination === 'cartes') {
+            await gmos.fenetre.evaluate(ecran => {
+                const magasin = (window as unknown as { useSessionOSStore: typeof useSessionOSStore }).useSessionOSStore;
+                const s = magasin.getState(), joueur = s.players[0], personnage = joueur.characters[0];
+                if (ecran === 'inventaire' && !personnage.inventoryItems?.length) s.addInventoryItem(joueur.id, personnage.id, {
+                    name: 'Outil multifonction', quantity: 1, type: 'equipment', rarity: 'common', weight: 1,
+                    description: 'Pour ouvrir le relais.', properties: {},
+                });
+                if (ecran === 'cartes') magasin.setState({ deckStates: { ...s.deckStates, 'temoin-paquet': {
+                    deckId: 'temoin-paquet', remainingIndices: [3, 4, 5, 6], discardedIndices: [1], currentCardIndex: null,
+                    enMain: [{ index: 2, porteur: personnage.id, face: 'revelee' }],
+                } } });
+            }, destination);
+        }
+        const [fenetre] = await Promise.all([
+            gmos.application.waitForEvent('window', { timeout: 15_000 }),
+            gmos.fenetre.getByTitle(/Lancer le Hub Tablette/).first().click(),
+        ]);
+        await fenetre.waitForLoadState('domcontentloaded');
+        // file:// n'a pas d'hôte pour le WebSocket ; charger l'adresse de tablette
+        // sur le serveur déjà lancé par le banc, avec son port isolé.
+        await fenetre.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
+        const cadre = await gmos.application.browserWindow(fenetre);
+        try {
+            if (destination === 'cartes') await fenetre.route('**/assets/decks/generic/temoin-paquet/**', route => route.fulfill({
+                contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="250" height="350"><rect width="250" height="350" fill="#142637"/><text x="125" y="175" text-anchor="middle" font-size="22" fill="white">STATION VARN</text></svg>',
+            }));
+            await cadre.evaluate(w => { w.setContentSize(1280, 800); });
+            await fenetre.getByRole('button', { name: /Nel Varga/ }).click();
+            await expect(fenetre.getByText('Synchronisation', { exact: true })).toHaveCount(0);
+            await expect(fenetre.locator('[data-direct-joueur]')).toBeVisible();
+            await expect(fenetre.getByText('Connecté', { exact: true })).toBeVisible();
+            await expect(fenetre.getByRole('heading', { name: 'Le Silence de Varn', exact: true })).toBeVisible();
+            if (destination === 'inventaire' || destination === 'cartes') {
+                await fenetre.getByRole('navigation').getByTitle(destination === 'inventaire' ? 'Inventaire' : 'Cartes', { exact: true }).click();
+                await expect(fenetre.locator(destination === 'inventaire' ? '[data-inventaire-joueur]' : '[data-cartes-joueur]')).toBeVisible();
+            }
+            if (destination === 'fiche') {
+                await fenetre.getByTitle('Fiche Personnage', { exact: true }).click();
+                await expect(fenetre.getByRole('heading', { name: 'Nel Varga', exact: true })).toBeVisible();
+            }
+            if (destination === 'archives' || destination === 'pnj' || destination === 'lieux') {
+                const nom = { archives: 'Archives', pnj: 'PNJ', lieux: 'Lieux' }[destination];
+                await fenetre.getByRole('navigation').getByTitle(nom, { exact: true }).click();
+                await expect(fenetre.locator('[data-hub-consultation]')).toBeVisible();
+            }
+            if (destination === 'messages') {
+                await fenetre.getByRole('navigation').getByTitle('Messages', { exact: true }).click();
+                await fenetre.getByTitle('Entrer un message').fill('Le relais est ouvert.');
+                await fenetre.getByTitle('Envoyer le message').click();
+                await gmos.fenetre.evaluate(() => (window as unknown as { useSessionOSStore: typeof useSessionOSStore }).useSessionOSStore.getState().sendDirectMessage('temoin-pj-1', 'Nel Varga', 'Gardez le sas fermé pendant la transmission.'));
+                await expect(fenetre.getByText('Gardez le sas fermé pendant la transmission.', { exact: true })).toBeVisible();
+            }
+            if (destination === 'notes' || destination === 'feedback') {
+                await fenetre.getByRole('navigation').getByTitle('Notes Personnelles', { exact: true }).click();
+                await fenetre.getByPlaceholder(/Notez ici vos théories/).fill('Revenir au relais après la relève.');
+                if (destination === 'feedback') {
+                    await fenetre.getByRole('button', { name: 'Feedback MJ', exact: true }).click();
+                    await fenetre.getByRole('button', { name: 'Plaisir de jeu : 4 sur 5', exact: true }).click();
+                    await fenetre.getByPlaceholder(/Ce que vous avez aimé/).fill('Les échanges au relais ont bien fait avancer l’enquête.');
+                }
+            }
+            await fenetre.evaluate(() => document.fonts.ready);
+            await fenetre.waitForTimeout(800);
+            await fenetre.screenshot({ path: path.join(SORTIE, `tablette-des-joueurs-${destination}.jpg`), type: 'jpeg', quality: 82, scale: 'css', animations: 'disabled' });
+            // Libérer Nel et son identité avant la prochaine fenêtre de cette série.
+            if (destination === 'fiche') await fenetre.getByRole('button', { name: 'Retour', exact: true }).click();
+            if (destination === 'messages') await fenetre.getByTitle('Fermer la messagerie').click();
+            if (destination === 'notes' || destination === 'feedback') await fenetre.getByTitle('Fermer les notes').click();
+            fenetre.once('dialog', dialogue => dialogue.accept());
+            await fenetre.getByRole('navigation').getByTitle('Quitter', { exact: true }).click();
+            await expect(fenetre.getByRole('heading', { name: 'Qui es-tu ?', exact: true })).toBeVisible();
+        } finally {
+            await cadre.evaluate(w => w.close());
+        }
+    });
+
     /**
      * La tablette du meneur n'a pas de bouton : son QR code l'ouvre, jeton d'appairage compris.
      * On ouvre la même adresse que le pupitre de l'écran du bas — sans le jeton, elle reste
      * en « Reconnexion », rétrogradée en écran de joueur.
      */
-    test('tablette-du-meneur', async () => {
+    for (const [suffixe, onglet] of [
+        ['', 'Pads'], ['-des', 'Dés'], ['-combat', 'Combat'],
+        ['-sons', 'Sons'], ['-scenario', 'Scénario'], ['-tableau', 'Tableau'],
+        ['-notes', 'Notes'], ['-messages', 'Messages'],
+    ] as const) test('tablette-du-meneur' + suffixe, async () => {
         await fermer();
         const secret = await gmos.fenetre.evaluate(() => (window as any).appBridge.pairing.getSecret() as Promise<string>);
         const adresse = `http://127.0.0.1:${gmos.ports.sync}/?window=remote&sync=${gmos.ports.sync}#token=${encodeURIComponent(secret)}`;
@@ -476,8 +573,9 @@ test.describe('les écrans des guides', () => {
         await fenetre.waitForTimeout(3500);
         // Le dernier jet projeté s'affiche aussi chez le meneur, puis s'efface de lui-même.
         await expect(fenetre.getByText(/Cliquer pour fermer/i)).toHaveCount(0, { timeout: 20_000 });
+        await fenetre.getByRole('button', { name: onglet, exact: true }).first().click();
         await fenetre.waitForTimeout(600);
-        await fenetre.screenshot({ path: path.join(SORTIE, 'tablette-du-meneur.jpg'), type: 'jpeg', quality: 82, scale: 'css', animations: 'disabled' });
+        await fenetre.screenshot({ path: path.join(SORTIE, 'tablette-du-meneur' + suffixe + '.jpg'), type: 'jpeg', quality: 82, scale: 'css', animations: 'disabled' });
         await cadre.evaluate(w => w.close());
     });
 

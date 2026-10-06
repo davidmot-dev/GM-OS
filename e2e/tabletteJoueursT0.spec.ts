@@ -145,13 +145,11 @@ for (const taille of TAILLES) {
             await expect(page.getByTitle('Fermer la fiche')).toHaveCount(0);
         });
 
-        test('défaut T0 — les PV modifiés sur tablette doivent atteindre le meneur', async ({ page }) => {
+        test('Fiche — les PV modifiés sur tablette atteignent le meneur', async ({ page }) => {
             await rejoindre(page);
             await onglet(page, 'Fiche Personnage');
             await page.getByTitle('-1 PV', { exact: true }).click();
-            // Registre § 1 bis : les vitaux sont écrits seulement en local.
-            // Le test échouera de façon inattendue le jour où ce défaut sera réparé.
-            test.fail(true, 'Défaut existant : les PV ne remontent pas au MJ (registre § 1 bis, T0 joueurs).');
+            // T4/J1 : vérifier le retour au meneur, au-delà de l'état local.
             await expect.poll(() => gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().players[0].characters[0].hp)).toBe(8);
         });
 
@@ -213,9 +211,6 @@ for (const taille of TAILLES) {
         });
 
         test('Cartes — piocher, agrandir et jouer sa carte', async ({ page }) => {
-            if (taille.nom === 'telephone') {
-                test.fail(true, 'Défaut T0 : la navigation masque « Jouer » en bas de la main à 390 px.');
-            }
             await rejoindre(page);
             await onglet(page, 'Cartes');
             await expect(page.getByRole('button', { name: 'Carte 2', exact: true })).toBeVisible();
@@ -250,7 +245,7 @@ for (const taille of TAILLES) {
             await page.getByPlaceholder(/Notez ici vos théories/).fill('Revenir au relais après la relève.');
             await expect.poll(() => gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().players[0].characters[0].playerNotes)).toBe('Revenir au relais après la relève.');
             await capturer(page, '15-notes');
-            await onglet(page, 'Notes Personnelles');
+            await page.getByTitle('Fermer les notes').click();
             await expect(page.getByPlaceholder(/Notez ici vos théories/)).toHaveCount(0);
         });
 
