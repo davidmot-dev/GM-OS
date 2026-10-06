@@ -6,7 +6,7 @@ import { DeckInterpreter } from '../../modules/session/logic/DeckInterpreter';
 import { voisinsAQuiDonner } from '../../modules/session/logic/aQuiDonnerUneCarte';
 import { paquetsOffertsAuxJoueurs, systemeDeLaCampagne } from '../../modules/session/logic/paquetsDuJeu';
 import { ResolvedImage } from '../ResolvedImage';
-import { Bouton, Panneau } from '../socle';
+import { Bouton, EnTeteDeModule, GabaritDeModule, Panneau } from '../socle';
 
 /**
  * **L'onglet Cartes de la tablette : ce que ce joueur tient, et ce qu'il peut
@@ -40,7 +40,7 @@ const demanderAuMeneur = (type: string, detail: Record<string, unknown>) => {
     window.dispatchEvent(new CustomEvent(type, { detail }));
 };
 
-const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId }) => {
+const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.ReactNode; informations?: React.ReactNode }> = ({ characterId, commandes, informations }) => {
     const { t } = useTranslation(['modules']);
     const decks = useSessionOSStore(s => s.decks);
     const mainsDesPaquets = useSessionOSStore(s => s.mainsDesPaquets);
@@ -123,252 +123,103 @@ const HubMainDeCartes: React.FC<{ characterId: string | null }> = ({ characterId
     const mesPropositions = (demandesDeCarte ?? []).filter(d => d.deQui === characterId);
 
     return (
-        <div className="pointer-events-auto flex h-full w-full max-w-5xl flex-col gap-6 overflow-y-auto custom-scrollbar p-2 md:p-6">
-            {/*
-              **La carte en grand, par-dessus tout le reste.**
-
-              Elle se ferme d'un clic n'importe où : sur une tablette, chercher
-              une petite croix pendant qu'on lit est le geste qu'on rate.
-              `Échap` marche aussi pour ceux qui ont un clavier.
-            */}
-            {carteEnGrand && (
-                <div
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label={carteEnGrand.nom}
-                    onClick={() => setCarteEnGrand(null)}
-                    onKeyDown={(e) => { if (e.key === 'Escape') setCarteEnGrand(null); }}
-                    tabIndex={-1}
-                    ref={(n) => n?.focus()}
-                    className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-app-bg/90 p-6 backdrop-blur-md"
-                >
-                    <ResolvedImage
-                        src={carteEnGrand.url}
-                        alt={carteEnGrand.nom}
-                        className="max-h-[75vh] max-w-full rounded-2xl border border-accent/40 object-contain shadow-2xl"
-                    />
-                    <p className="text-center text-lg font-bold text-app-text">{carteEnGrand.nom}</p>
-                    {carteEnGrand.texte && (
-                        <p className="max-w-xl text-center text-sm leading-relaxed text-app-text/70">
-                            {carteEnGrand.texte}
-                        </p>
-                    )}
-                    <p className="text-ui-10 uppercase tracking-[0.2em] text-app-text/30">
-                        {t('modules:session.deck_module.player.hands.tap_to_close')}
-                    </p>
-                </div>
-            )}
-
-            {/*
-              Ce qu'on me propose passe **en tête** : c'est la seule chose ici
-              qui attende une réponse de ma part, et une décision en attente ne
-              se met pas au bas d'une liste.
-            */}
-            {proposeesAMoi.map(demande => (
-                <Panneau as="div" key={demande.id} className="!overflow-visible !rounded-2xl !border-accent/40 !bg-accent/10 !shadow-none p-4">
-                    <p className="mb-3 text-sm text-app-text">
-                        {t('modules:session.deck_module.player.hands.offered', { qui: nomDuPersonnage(demande.deQui) })}
-                    </p>
-                    <div className="flex gap-2">
-                        <Bouton
-                            cibleTactile
-                            variante="accent"
-                            onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })}
-                            className="flex-1 !gap-1.5 !px-3 !text-ui-10 !font-black !font-[inherit] !tracking-widest"
-                        >
-                            <Check size={12} /> {t('modules:session.deck_module.player.hands.accept')}
-                        </Bouton>
-                        <Bouton
-                            cibleTactile
-                            onClick={() => demanderAuMeneur('deck:refuser-don', { demandeId: demande.id, characterId })}
-                            className="flex-1 !gap-1.5 !border-app-border !bg-transparent !px-3 !text-ui-10 !font-black !font-[inherit] !tracking-widest !text-app-text/60"
-                        >
-                            <X size={12} /> {t('modules:session.deck_module.player.hands.refuse')}
-                        </Bouton>
-                    </div>
-                </Panneau>
-            ))}
-
-            {/*
-              **Les paquets où l'on peut piocher.** Ils passent avant la main :
-              c'est le geste qu'on vient chercher dans cet onglet, et une pioche
-              sous une main de six cartes serait hors de l'écran.
-
-              Le dos du paquet fait le bouton — on tape le paquet pour tirer,
-              comme sur une table. Un paquet vide reste affiché, éteint : le
-              faire disparaître donnerait à croire que le meneur l'a retiré.
-            */}
-            {paquetsOuverts.length > 0 && (
-                <Panneau className="!overflow-visible !rounded-2xl !border-app-border/40 !bg-app-surface/50 !shadow-none p-4 backdrop-blur-xl">
-                    <p className="mb-3 flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
-                        <Hand size={12} /> {t('modules:session.deck_module.player.hands.open_decks')}
-                    </p>
-                    <div className="flex flex-wrap gap-5">
-                        {paquetsOuverts.map(paquet => {
-                            const restantes = cartesRestantes?.[paquet.id] ?? 0;
-                            const vide = restantes === 0;
-                            return (
-                                <div key={paquet.id} className="flex flex-col items-center gap-2">
-                                    <Bouton
-                                        habillage="libre"
-                                        cibleTactile
-                                        type="button"
-                                        disabled={vide}
-                                        onClick={() => demanderAuMeneur('deck:piocher', { deckId: paquet.id, characterId })}
-                                        title={vide
-                                            ? t('modules:session.deck_module.player.hands.deck_empty')
-                                            : t('modules:session.deck_module.player.hands.draw')}
-                                        className={`relative rounded-xl transition-transform ${vide ? 'opacity-30' : 'active:scale-95'}`}
-                                    >
-                                        <ResolvedImage
-                                            src={DeckInterpreter.getBackImageUrl(paquet.folderPath, paquet)}
-                                            alt={paquet.name}
-                                            className="h-32 rounded-xl border border-accent/40 object-cover shadow-lg"
-                                        />
-                                        <span className="absolute inset-x-0 bottom-1 mx-auto w-fit rounded-full bg-app-bg/80 px-2 py-0.5 text-ui-10 font-black text-accent">
-                                            {restantes}
-                                        </span>
-                                    </Bouton>
-                                    <span className="max-w-[9rem] truncate text-center text-ui-10 font-bold uppercase tracking-widest text-app-text/40">
-                                        {paquet.name}
-                                    </span>
-                                    <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/25">
-                                        {vide
-                                            ? t('modules:session.deck_module.player.hands.deck_empty')
-                                            : t('modules:session.deck_module.player.hands.draw')}
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </Panneau>
-            )}
-
-            <Panneau className="!overflow-visible !rounded-2xl !border-app-border/40 !bg-app-surface/50 !shadow-none p-4 backdrop-blur-xl">
-                <p className="mb-3 flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-app-text/40">
-                    <Layers size={12} /> {t('modules:session.deck_module.player.hands.title')}
-                </p>
-
-                {/*
-                  **L'onglet dit ce qu'il en est même quand il n'y a rien.**
-                  Dans la colonne de gauche, ce panneau s'effaçait quand la main
-                  était vide — c'était juste, un cadre en attente y aurait pris
-                  la place de l'horloge. Un onglet, lui, ne peut pas être muet :
-                  un joueur qui l'ouvre et ne voit rien croit à une panne.
-                */}
-                {mesCartes.length === 0 ? (
-                    <p className="py-6 text-center text-xs text-app-text/30">
-                        {t('modules:session.deck_module.player.hands.empty')}
-                    </p>
-                ) : (
-                    <div className="flex flex-col gap-5">
-                        {mesCartes.map(({ paquet, revelees, scellees }) => (
-                            <div key={paquet.id} className="flex flex-col gap-2">
-                                <span className="text-ui-10 font-bold uppercase tracking-widest text-app-text/30">
-                                    {paquet.name}
-                                </span>
-
-                                <div className="flex flex-wrap gap-3">
-                                    {revelees.map(index => {
-                                        const enAttente = mesPropositions.some(
-                                            d => d.deckId === paquet.id && d.index === index);
-                                        return (
-                                            <div key={index} className="flex flex-col gap-1">
-                                                {/*
-                                                  **Un clic agrandit la carte.** Demandé
-                                                  par David le 2026-08-30 : à 112 px de
-                                                  haut sur une tablette, le texte d'une
-                                                  carte ne se lit pas. Une vignette
-                                                  qu'on ne peut pas lire ne sert qu'à
-                                                  rappeler qu'on a une carte.
-                                                */}
-                                                <Bouton
-                                                    habillage="libre"
-                                                    cibleTactile
-                                                    type="button"
-                                                    onClick={() => setCarteEnGrand({
-                                                        url: DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet),
-                                                        nom: DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`,
+        <div data-cartes-joueur="" className="pointer-events-auto h-full min-h-0 w-full">
+            <GabaritDeModule className="mx-auto max-w-7xl" entete={<EnTeteDeModule titre="Cartes" surtitre="Les paquets ouverts et votre main" />} barreDOutils={commandes}>
+                <div className="space-y-4 pb-2">
+                    {informations}
+                    {proposeesAMoi.map(demande => (
+                        <Panneau key={demande.id} className="space-y-3 p-4">
+                            <p className="text-[14px]">{t('modules:session.deck_module.player.hands.offered', { qui: nomDuPersonnage(demande.deQui) })}</p>
+                            <div className="grid grid-cols-2 gap-2">
+                                <Bouton cibleTactile variante="accent" onClick={() => demanderAuMeneur('deck:accepter-don', { demandeId: demande.id, characterId })} icone={<Check size={16} />}>
+                                    {t('modules:session.deck_module.player.hands.accept')}
+                                </Bouton>
+                                <Bouton cibleTactile onClick={() => demanderAuMeneur('deck:refuser-don', { demandeId: demande.id, characterId })} icone={<X size={16} />}>
+                                    {t('modules:session.deck_module.player.hands.refuse')}
+                                </Bouton>
+                            </div>
+                        </Panneau>
+                    ))}
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                        <Panneau className="min-w-0 space-y-3 p-4">
+                            <h2 className="flex items-center gap-2 text-[16px] font-bold"><Hand size={18} />{t('modules:session.deck_module.player.hands.open_decks')}</h2>
+                            {!paquetsOuverts.length && <p className="text-[14px] text-app-muted">Aucun paquet ouvert aux joueurs.</p>}
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                                {paquetsOuverts.map(paquet => {
+                                    const restantes = cartesRestantes?.[paquet.id] ?? 0;
+                                    const vide = restantes === 0;
+                                    return (
+                                        <div key={paquet.id} className="min-w-0 space-y-3 border border-app-border p-3">
+                                            <h3 className="text-[16px] font-bold break-words">{paquet.name}</h3>
+                                            <p className="text-[14px] text-app-muted">Restant : {restantes}</p>
+                                            <Bouton habillage="libre" cibleTactile disabled={vide}
+                                                onClick={() => demanderAuMeneur('deck:piocher', { deckId: paquet.id, characterId })}
+                                                title={t(`modules:session.deck_module.player.hands.${vide ? 'deck_empty' : 'draw'}`)}
+                                                className="flex min-w-0 w-full items-center gap-3 border border-app-border bg-app-surface-2 p-3 disabled:opacity-40">
+                                                <ResolvedImage src={DeckInterpreter.getBackImageUrl(paquet.folderPath, paquet)} alt={paquet.name} className="h-[84px] w-[60px] shrink-0 object-contain" />
+                                                <span className="text-[14px] font-bold text-accent">{t(`modules:session.deck_module.player.hands.${vide ? 'deck_empty' : 'draw'}`)}</span>
+                                            </Bouton>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </Panneau>
+                        <Panneau className="min-w-0 space-y-3 p-4">
+                            <h2 className="flex items-center gap-2 text-[16px] font-bold"><Layers size={18} />{t('modules:session.deck_module.player.hands.title')}</h2>
+                            {!mesCartes.length && <p className="text-[14px] text-app-muted">{t('modules:session.deck_module.player.hands.empty')}</p>}
+                            <div className="space-y-4">
+                                {mesCartes.map(({ paquet, revelees, scellees }) => (
+                                    <section key={paquet.id} className="min-w-0 space-y-3">
+                                        <h3 className="text-[14px] font-bold text-app-muted break-words">{paquet.name}</h3>
+                                        {revelees.map(index => {
+                                            const enAttente = mesPropositions.some(d => d.deckId === paquet.id && d.index === index);
+                                            const nom = DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`;
+                                            return (
+                                                <div key={index} className="flex min-w-0 flex-col gap-3 border border-app-border p-3 sm:flex-row">
+                                                    <Bouton habillage="libre" cibleTactile onClick={() => setCarteEnGrand({
+                                                        url: DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet), nom,
                                                         texte: DeckInterpreter.getCardMetadata(paquet, index)?.description ?? '',
-                                                    })}
-                                                    className="rounded-lg"
-                                                >
-                                                    <ResolvedImage
-                                                        src={DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet)}
-                                                        alt={DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`}
-                                                        className={`h-32 rounded-lg border object-cover shadow-lg transition-transform active:scale-95 ${enAttente
-                                                            ? 'border-app-border opacity-40 grayscale'
-                                                            : 'border-accent/40'}`}
-                                                    />
-                                                </Bouton>
-
-                                                {/*
-                                                  Une carte déjà proposée n'offre plus
-                                                  ses gestes : la reproposer ou la jouer
-                                                  pendant qu'on attend une réponse
-                                                  créerait deux vérités sur une carte.
-                                                */}
-                                                {enAttente ? (
-                                                    <span className="text-center text-ui-9 font-bold uppercase tracking-wider text-app-text/30">
-                                                        {t('modules:session.deck_module.player.hands.pending')}
-                                                    </span>
-                                                ) : (
-                                                    <div className="flex gap-1">
-                                                        <Bouton
-                                                            cibleTactile
-                                                            onClick={() => demanderAuMeneur('deck:jouer-carte', {
-                                                                deckId: paquet.id, index, characterId,
-                                                            })}
-                                                            className="flex-1 !rounded-md !border-app-border !bg-transparent !px-2 !text-ui-9 !font-black !font-[inherit] !tracking-wider !text-app-text/60 hover:!border-accent/40 hover:!text-app-text"
-                                                        >
-                                                            {t('modules:session.deck_module.player.hands.play_own')}
-                                                        </Bouton>
-                                                        {voisins.length > 0 && (
-                                                            <select
-                                                                value=""
-                                                                onChange={(e) => e.target.value && demanderAuMeneur('deck:demander-don', {
-                                                                    deckId: paquet.id, index,
-                                                                    deQui: characterId, versQui: e.target.value,
-                                                                })}
-                                                                title={t('modules:session.deck_module.player.hands.give_to')}
-                                                                aria-label={t('modules:session.deck_module.player.hands.give_to')}
-                                                                className="min-h-[44px] flex-1 cursor-pointer rounded-md border border-app-border bg-transparent px-1 py-1.5 text-ui-9 font-black uppercase tracking-wider text-app-text/60"
-                                                            >
-                                                                <option value="">{t('modules:session.deck_module.player.hands.give_to')}</option>
-                                                                {voisins.map(v => (
-                                                                    <option key={v.id} value={v.id} className="bg-app-bg text-app-text">
-                                                                        {v.nom}
-                                                                    </option>
-                                                                ))}
-                                                            </select>
+                                                    })} className="self-center rounded-lg">
+                                                        <ResolvedImage src={DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet)} alt={nom} className={`h-[168px] w-[120px] object-contain ${enAttente ? 'opacity-50 grayscale' : ''}`} />
+                                                    </Bouton>
+                                                    <div className="min-w-0 flex-1 space-y-3">
+                                                        <h4 className="text-[16px] font-bold break-words">{nom}</h4>
+                                                        {enAttente ? <p role="status" className="text-[14px] text-etat-alerte">{t('modules:session.deck_module.player.hands.pending')}</p> : (
+                                                            <div className="flex flex-col gap-2">
+                                                                <Bouton cibleTactile variante="accent" onClick={() => demanderAuMeneur('deck:jouer-carte', { deckId: paquet.id, index, characterId })}>
+                                                                    {t('modules:session.deck_module.player.hands.play_own')}
+                                                                </Bouton>
+                                                                {voisins.length > 0 && <select value="" onChange={e => e.target.value && demanderAuMeneur('deck:demander-don', { deckId: paquet.id, index, deQui: characterId, versQui: e.target.value })}
+                                                                    title={t('modules:session.deck_module.player.hands.give_to')} aria-label={t('modules:session.deck_module.player.hands.give_to')}
+                                                                    className="min-h-[44px] min-w-[44px] w-full border border-app-border bg-app-surface-2 px-2 text-[14px] text-app-text">
+                                                                    <option value="">{t('modules:session.deck_module.player.hands.give_to')}</option>
+                                                                    {voisins.map(v => <option key={v.id} value={v.id}>{v.nom}</option>)}
+                                                                </select>}
+                                                            </div>
                                                         )}
                                                     </div>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
-
-                                    {/*
-                                      Le dos, autant de fois qu'il y a de cartes sous
-                                      scellé. Le joueur sait qu'il en tient, et combien ;
-                                      il ne sait pas lesquelles, et ne peut donc rien en
-                                      faire tant que le meneur ne les a pas révélées.
-                                    */}
-                                    {Array.from({ length: scellees }, (_, i) => (
-                                        <div
-                                            key={`scelle-${i}`}
-                                            title={t('modules:session.deck_module.player.hands.hidden')}
-                                            className="flex h-32 w-24 items-center justify-center rounded-lg border border-dashed border-app-border bg-app-bg/60 text-app-text/20"
-                                        >
-                                            <Layers size={20} />
-                                        </div>
-                                    ))}
-                                </div>
+                                                </div>
+                                            );
+                                        })}
+                                        {Array.from({ length: scellees }, (_, i) => <div key={`scelle-${i}`} aria-label={t('modules:session.deck_module.player.hands.hidden')}
+                                            className="flex items-center gap-3 border border-dashed border-app-border p-4 text-[14px] text-app-muted">
+                                            <Layers size={24} />{t('modules:session.deck_module.player.hands.hidden')}
+                                        </div>)}
+                                    </section>
+                                ))}
                             </div>
-                        ))}
+                        </Panneau>
                     </div>
-                )}
-            </Panneau>
+                </div>
+            </GabaritDeModule>
+            {carteEnGrand && <div role="dialog" aria-modal="true" aria-label={carteEnGrand.nom}
+                onClick={() => setCarteEnGrand(null)} onKeyDown={e => { if (e.key === 'Escape') setCarteEnGrand(null); }} tabIndex={-1} ref={n => n?.focus()}
+                className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-3 bg-app-bg/95 p-4">
+                <ResolvedImage src={carteEnGrand.url} alt={carteEnGrand.nom} className="max-h-[65dvh] max-w-full object-contain" />
+                <p className="text-center text-[18px] font-bold break-words">{carteEnGrand.nom}</p>
+                {carteEnGrand.texte && <p className="max-h-[15dvh] max-w-xl overflow-auto text-[14px] text-app-muted">{carteEnGrand.texte}</p>}
+                <Bouton cibleTactile onClick={() => setCarteEnGrand(null)}>{t('modules:session.deck_module.player.hands.tap_to_close')}</Bouton>
+            </div>}
         </div>
     );
 };
