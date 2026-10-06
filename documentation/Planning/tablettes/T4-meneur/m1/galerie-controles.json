@@ -1,0 +1,40 @@
+{
+  "vues": 66,
+  "erreurs": [],
+  "groupes": {
+    "Pads": [
+      "01-pads",
+      "02-pads-filtre",
+      "03-pads-vides"
+    ],
+    "Des": [
+      "04-des",
+      "05-resultat",
+      "06-formule",
+      "07-echelonnes"
+    ],
+    "Combat": [
+      "08-combat",
+      "09-combat-vide",
+      "10-combat-aventure"
+    ],
+    "Etat": [
+      "11-etat",
+      "12-etat-messages",
+      "13-non-appairee"
+    ]
+  },
+  "formats": [
+    "compact",
+    "telephone",
+    "portrait",
+    "paysage",
+    "pupitre"
+  ],
+  "planches": [
+    "revues/Pads.png",
+    "revues/Des.png",
+    "revues/Combat.png",
+    "revues/Etat.png"
+  ]
+}

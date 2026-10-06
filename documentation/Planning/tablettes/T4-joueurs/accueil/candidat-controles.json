@@ -1,0 +1,17 @@
+{
+  "source": "src/components/hub/LobbyOnboarding.tsx",
+  "sha256Source": "15ec4d0d6ef48ff927040783152b518c204a5bc76dae1a2dbe6be7d004456732",
+  "syntaxe": true,
+  "typageEnMemoire": true,
+  "eslint": [
+    {
+      "erreurs": 0,
+      "avertissements": 0
+    }
+  ],
+  "applique": true,
+  "synchronisationValidee": true,
+  "controleAccueilQuatreTailles": true,
+  "porteeSynchronisation": "Choix du personnage et retour du verrou, via WebSocket avec la semence de demonstration",
+  "sha256SourceIntegree": "ac4a39ec3b3fbd49e380fde03f2d8f229ffca284960b4db143a8cb6dc91719e7"
+}

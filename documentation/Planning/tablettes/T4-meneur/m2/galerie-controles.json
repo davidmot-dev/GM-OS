@@ -1,0 +1,56 @@
+{
+  "vues": 116,
+  "erreurs": [],
+  "groupes": {
+    "Sons": [
+      "01-sons",
+      "02-sons-filtre",
+      "03-sons-vides"
+    ],
+    "Scénario": [
+      "04-scenario",
+      "05-scenario-vide"
+    ],
+    "Tableau": [
+      "06-tableau",
+      "07-tableau-dessine",
+      "08-tableau-clair"
+    ],
+    "Notes": [
+      "09-notes-seance",
+      "10-notes-detail",
+      "11-notes-trame",
+      "12-notes-chroniques",
+      "13-notes-indices",
+      "14-notes-secrets",
+      "22-notes-aventure"
+    ],
+    "Coffre": [
+      "15-coffre",
+      "16-coffre-dossier",
+      "17-coffre-recherche",
+      "18-coffre-note"
+    ],
+    "Messages": [
+      "19-messages",
+      "20-messages-prives",
+      "21-messages-longs",
+      "23-non-appairee"
+    ]
+  },
+  "formats": [
+    "compact",
+    "telephone",
+    "portrait",
+    "paysage",
+    "pupitre"
+  ],
+  "planches": [
+    "revues/Sons.png",
+    "revues/Scénario.png",
+    "revues/Tableau.png",
+    "revues/Notes.png",
+    "revues/Coffre.png",
+    "revues/Messages.png"
+  ]
+}

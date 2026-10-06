@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4 · Archives, PNJ, Lieux et échanges J2</title>
+<style>
+body{margin:0;padding:24px;font:16px system-ui;background:#12171f;color:#e4eaf2}main{max-width:1300px;margin:auto}a{color:#8bd8ff}p{line-height:1.6}nav,.choix{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}button{min-height:44px;padding:8px 14px;background:#202733;border:1px solid #718397;color:#e4eaf2;font:inherit;border-radius:4px}button[aria-pressed=true]{background:#24516c}figure{margin:20px 0;padding:12px;background:#202733}img{display:block;max-width:100%;height:auto;margin:auto}figcaption{margin-bottom:16px}
+</style>
+<main>
+<h1>T4 · J2 intégré</h1>
+<p>Application réelle et campagne fictive de Varn. Consultation, échanges et feedback aux quatre formats. Les alertes génériques montrent leur état local ; les messages passent par le vrai serveur du banc.</p>
+<nav><a href="../../../2026-10-06-T4-J2-joueurs.md">Relevé J2 et vérifications</a><a href="../j1/index.html">J1</a><a href="../direct/index.html">Direct</a></nav>
+<div class="choix" aria-label="Écran"><button data-ecran="archives" aria-pressed="true">Archives</button><button data-ecran="pnj" aria-pressed="false">PNJ</button><button data-ecran="lieux" aria-pressed="false">Lieux</button><button data-ecran="messagerie" aria-pressed="false">Messagerie</button><button data-ecran="notes" aria-pressed="false">Notes et feedback</button><button data-ecran="notifications" aria-pressed="false">Notifications</button></div>
+<div class="choix" aria-label="Format"><button data-format="petit-telephone" aria-pressed="false">360 × 800</button><button data-format="telephone" aria-pressed="true">390 × 844</button><button data-format="portrait" aria-pressed="false">820 × 1180</button><button data-format="paysage" aria-pressed="false">1180 × 820</button></div>
+<div class="choix" id="etats" aria-label="État"></div>
+<figure><figcaption id="legende"></figcaption><a id="original" href="telephone-archives.png"><img id="capture" src="telephone-archives.png" alt="Archives sur téléphone"></a></figure>
+<p>Les entrées non partagées restent absentes des listes. Le feedback rejoint le meneur ; les échanges privés entre joueurs sont éprouvés avec deux tablettes.</p>
+</main>
+<script>
+let ecran='archives',format='telephone',etat='-archives';
+const noms={'petit-telephone':'Petit téléphone',telephone:'Téléphone',portrait:'Tablette portrait',paysage:'Tablette paysage'};
+const largeurs={'petit-telephone':360,telephone:390,portrait:820,paysage:1180};
+const consulter=nom=>[[`-${nom}`,'Liste'],[`-${nom}-bas`,'Après défilement'],[`-${nom}-lecture`,'Lecture'],[`-${nom}-lecture-bas`,'Fin de lecture'],[`-${nom}-vide`,'État vide']];
+const vues={archives:consulter('archives'),pnj:consulter('pnj'),lieux:consulter('lieux'),messagerie:[['-messagerie','Conversation avec le meneur'],['-destinataires','Destinataires'],['-messagerie-generale','Canal général'],['-messagerie-privee','Conversation entre joueurs']],notes:[['-notes','Notes privées'],['-feedback','Feedback'],['-feedback-bas','Envoi accessible après défilement'],['-feedback-transmis','Retour du meneur']],notifications:[['-notification-message','Message reçu'],['-alerte','Alerte locale'],['-notification-systeme','Signal système local']]};
+function afficher(){
+const fichier=format+etat+'.png',capture=document.getElementById('capture');
+capture.src=fichier;capture.style.width=largeurs[format]+'px';capture.alt=noms[format]+' · '+vues[ecran].find(v=>v[0]===etat)[1];
+document.getElementById('original').href=fichier;document.getElementById('legende').textContent=capture.alt;
+document.querySelectorAll('[data-ecran]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ecran===ecran)));
+document.querySelectorAll('[data-format]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.format===format)));
+document.getElementById('etats').replaceChildren(...vues[ecran].map(([valeur,nom])=>{const b=document.createElement('button');b.textContent=nom;b.setAttribute('aria-pressed',String(valeur===etat));b.addEventListener('click',()=>{etat=valeur;afficher()});return b}));
+}
+document.querySelectorAll('[data-ecran]').forEach(b=>b.addEventListener('click',()=>{ecran=b.dataset.ecran;etat=vues[ecran][0][0];afficher()}));
+document.querySelectorAll('[data-format]').forEach(b=>b.addEventListener('click',()=>{format=b.dataset.format;afficher()}));
+afficher();
+</script>
+</html>

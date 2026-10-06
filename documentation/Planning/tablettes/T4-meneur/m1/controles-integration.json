@@ -1,0 +1,399 @@
+{
+  "date": "2026-10-06",
+  "lot": "T4/M1 meneur",
+  "autorisation": "David confirme GM-OS eteint, puis demande commence M1 et continue.",
+  "construction": {
+    "types": 0,
+    "code": 0
+  },
+  "unites": {
+    "fichiers": 26,
+    "reussis": 201,
+    "code": 0
+  },
+  "e2e": {
+    "passageComplet": {
+      "m1": 36,
+      "t0": 44,
+      "total": 80,
+      "code": 0
+    },
+    "relecture": {
+      "total": 15,
+      "reussis": 14,
+      "echecs": [
+        "Le resultat long perdait sa fermeture apres defilement."
+      ],
+      "manuelReussis": 4
+    },
+    "dernierRejeuDes": {
+      "m1": 12,
+      "t0": 8,
+      "total": 20,
+      "code": 0
+    },
+    "distinctsValidesApresRejeu": 81,
+    "echecsAttendus": 0
+  },
+  "lint": {
+    "fichiers": 13,
+    "nouveaux": 0
+  },
+  "galerie": {
+    "vues": 66,
+    "erreurs": [],
+    "regardees": true,
+    "planches": [
+      "revues/Pads.png",
+      "revues/Des.png",
+      "revues/Combat.png",
+      "revues/Etat.png"
+    ]
+  },
+  "sources": [
+    {
+      "source": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "sha256": "4abeee640c107942a0cda6fa671884635b84b891a7f28d8eda3aba06211e2a5d"
+    },
+    {
+      "source": "src/modules/remote/RemoteControl.tsx",
+      "sha256": "ca35d7bffec1f9a766933e58d143a832f6e2a3b9845edb68a77e37d55d3de6d6"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteModule.tsx",
+      "sha256": "49ab956b05e109e315152d2acdb84006359db901d199cc87ff6547bb206a0696"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteUniversalPads.tsx",
+      "sha256": "09634539a555561f17be68eb9d65cad822e25a4cb2b3071293192c6aca152870"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteDicePad.tsx",
+      "sha256": "163b06e6f9acf58bdd9e4a73b59e12a5cd438032988eb003abae1f869ab5743c"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteDiceResultOverlay.tsx",
+      "sha256": "40de08aa8d53cfa5d08042983a1b7ea9a94e82d13862593829e5e1b314200f6c"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteCombatTracker.tsx",
+      "sha256": "bb7e51c2d331ae5f0f5554046d21f5e5ec012a7a1e0423d346fcdbf9b84ef4f1"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteStatusBar.tsx",
+      "sha256": "cdb78ac7f703031210400c801a6dd808378a0133e12e7671d252408d5b862b27"
+    },
+    {
+      "source": "src/modules/remote/components/LigneDeVolume.tsx",
+      "sha256": "a40357046c4d006f3e931e5594a104c07353a0302ab0940b2453d0b7bc6db3c0"
+    },
+    {
+      "source": "src/components/echapFermeLesSurcouches.test.ts",
+      "sha256": "8ed52966af16c7342d320ef33bfd93735703f3b30c7a515bf98dd067bd5923b5"
+    },
+    {
+      "source": "e2e/tabletteM1T4.spec.ts",
+      "sha256": "27d499ce5a64b6c263af9101e595e33d43f096bb114d9b208b72830d513e827a"
+    },
+    {
+      "source": "e2e/tabletteMeneurT0.spec.ts",
+      "sha256": "8a0aa658cf9121831ceeb460a52363fec1d72b1be6eff49f0cb28d245b0ffb5d"
+    },
+    {
+      "source": "e2e/capturesDuManuel.spec.ts",
+      "sha256": "c4f7e0d33389dd6bcb25f3480ccd320b8218ade41b9d2cf9bb12cbf0fdf3fe5c"
+    },
+    {
+      "source": "documentation/User Guides/60-Tablette-du-meneur.md",
+      "sha256": "cc29ac64fd667ca6b316bcb36da87af564acf746001d867e1c1ba3b568bee5c0"
+    }
+  ],
+  "captures": [
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/01-pads.png",
+      "sha256": "90ed0ea2e4b920f68ca4bc9710715b3fa29a4eb7f004d69fa50b79f24d4284e2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/02-pads-filtre.png",
+      "sha256": "92e470d4ab739e7d702fe0045cd6bae9882597702d76d3724663fc7027338825"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/03-pads-vides.png",
+      "sha256": "5002a1d6e4ac2e36ada3993b853aca8c7c5412e3cdfa325cd86ebca99576feee"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/04-des.png",
+      "sha256": "a1322e0cffbfea15296e00754a217565b68a823e3c57719e4f451b2d8b98fa26"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/05-resultat.png",
+      "sha256": "632f33d72ef04bcecc64ae53cf7640e8f1008d9a50509e5783abd1a5df9a1ed7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/06-formule.png",
+      "sha256": "b235555303721802ee3dc63b6cfccee195c6f10bbc9d894c0e4d6e9f4331764f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/07-echelonnes.png",
+      "sha256": "6654991e652053b3adbd632078be47e9114576a615ac861f81ce33ac4669efca"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/08-combat.png",
+      "sha256": "0829ddbab624e405b6b516732608e84f0ee05e36420bdcb1b9342d2c736f580e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/09-combat-vide.png",
+      "sha256": "b7f160d33591839eef6afc742eb898f798b6a55dfe1bb86d0a3c1745b9f18160"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/10-combat-aventure.png",
+      "sha256": "0041373dacdfcadff03486223986d41675757cabb57df3451811de70049e9ac0"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/11-etat.png",
+      "sha256": "c1b24b4db55cc45ce81c29ef02dd5d14e5dadf3e65a66077c4693ec823e7052f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/12-etat-messages.png",
+      "sha256": "41d8dcad8d7a2ea3ea26a01a76eaebd547eede350070384e55061ef5786c1914"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/13-non-appairee.png",
+      "sha256": "d7fa6852ff0afd834a53ec528a9e6699ffeee5da422c0dbb975fdee1df9945d7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/compact/14-resultat-long.png",
+      "sha256": "553148a6f569d789ec2e8de6be2404733a5f7419f7776747e8e4095462ace631"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/01-pads.png",
+      "sha256": "315f2a4b7059f544fc5843b66a46fdd15f073442a02b4d9bffe7086fca688cf9"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/02-pads-filtre.png",
+      "sha256": "439eb2d4440e520c19194bbbc571b6f792b25bf2041ce0c318107f87d0d30335"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/03-pads-vides.png",
+      "sha256": "1197dd25789ef3f98c7c4c9ff5f162ea1da6255c3c77d2ba4ba886befb89b7bf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/04-des.png",
+      "sha256": "ca03f90f09ebe2a52fa95dfa16291e4ced252f2d3d9a5a22775a26433da8ac54"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/05-resultat.png",
+      "sha256": "74126c5b88dc2d6902687626099205b8ae24620c59073a87605f45ba8ff867a5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/06-formule.png",
+      "sha256": "450f39e49144e3f6fa4c29578b74a7759a9f05f18b5e73ba969934d7b25f1918"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/07-echelonnes.png",
+      "sha256": "1ef6ffcbfddc4a70b9600a0fc5756c0aa7cb2acae0fbfb22b1e4e114b715708a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/08-combat.png",
+      "sha256": "ae14c1e80b1c8acc7755eb9aa32b2a3674374ae77c00e76ae0eed6185f0533b9"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/09-combat-vide.png",
+      "sha256": "0e172b49841978932ed3f42c5e6e2c7dc7a814783038799f22c4b2ae73d3ab59"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/10-combat-aventure.png",
+      "sha256": "aaebccdd7965b1b03beb4945b8fb74f16095ba9b23700214cc31d8518c9b4223"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/11-etat.png",
+      "sha256": "ca36838f0256d98da2ce2aebd54ef51ab2db408ed5e2683bfbb0e73e6d260e63"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/12-etat-messages.png",
+      "sha256": "0c6810a6f6eef833a1a0c957c43c68ec97e7165bc80a42e25c9ac3a75fde1578"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/telephone/13-non-appairee.png",
+      "sha256": "05395f3af406ffdb68707f940b38e59b8bb49a8255eeb59bdb8878d570090b19"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/01-pads.png",
+      "sha256": "2cabe13ea6f0b98c73ee3f41f0c1c91afcd6e10da8f580f145c80622b700bd6b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/02-pads-filtre.png",
+      "sha256": "9129ee25950081b6cc9d61d2dcd4dad89b1fa2e90e41e2ecde6b2fc40245b0ac"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/03-pads-vides.png",
+      "sha256": "6f6d017c442df87916cd96be2e58a037b43d86057f64dbb91d7c82b6902851f5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/04-des.png",
+      "sha256": "d84508ba1a07d95ce2f4f90cc3c61c10471098c9eb1ade40c7bcbc1c07a52291"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/05-resultat.png",
+      "sha256": "8cfb3039905ef6a9671a0ec5d74b38002b7b4744271772c7f849aef3ba8dfdc8"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/06-formule.png",
+      "sha256": "d24889ac04441081aca0dae06b4f2b5115756b4f9b2ea5ed835ed3c24e6ecc37"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/07-echelonnes.png",
+      "sha256": "4bcfc2f6256c7876b83b6cb840d6d347274ba89e56ca5aa0caff444c0e57c8b7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/08-combat.png",
+      "sha256": "c96598b6d7980864bb4f410271338b086d9f52565f5c4646aedaf37919ffee72"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/09-combat-vide.png",
+      "sha256": "2c0c5d2a683e405b36775a567fb85ea035ab1d22f17d9334d9749450c561796b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/10-combat-aventure.png",
+      "sha256": "de6ee355929a4c1d09089a7eaf5f86f423e4faadcd97811b4ce771c7bb70aa0e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/11-etat.png",
+      "sha256": "d8b9d3d185458aee8347eaa0eb9feca6833f050f5342a25ae2c9788b739a17ad"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/12-etat-messages.png",
+      "sha256": "2621e7fb0aa7344e3ff6c1b5980109eb5d5ffa2bfa698cae0c8adaf8b19c0a1b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/portrait/13-non-appairee.png",
+      "sha256": "67882278cb058a8f7c3514da4541ab0b3ad4e87cec1a75db96b78f952da22234"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/01-pads.png",
+      "sha256": "4a8539e56fe0b3e0dcd1bf1a41cf0f3f7f4b617f2dbb9e2e8156b862ad08234d"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/02-pads-filtre.png",
+      "sha256": "4fb5aea45df15c2460dc1370f36a283ad4e693c4385a5fc21ee9de4f5f7514bd"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/03-pads-vides.png",
+      "sha256": "7bcaf4a362de7657dc7442ecb4dd06679f2fe2c2fe5bc20c235ab078ad5af5cf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/04-des.png",
+      "sha256": "5eb58596e8c79a8241ee5f6f6986d0cfb310a2a1a17b05a028061cd68ae94a14"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/05-resultat.png",
+      "sha256": "04123c0571cc7f8a02ceb9fa844e86b3f089fee802f41234a48b6d39f217e2da"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/06-formule.png",
+      "sha256": "d0a6d02685ff0194d96b454dd155cf74426f0dc83f470ea5ba2752ebc0f4c053"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/07-echelonnes.png",
+      "sha256": "0e05c08e1b56d62eb5ef327d12f56b3a0007d1a2efb0d09d7b5417af62f830ea"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/08-combat.png",
+      "sha256": "12d064e33080470bfb83adc52e6ad0aff8ff3a19421e6e036d3b99b4a4257983"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/09-combat-vide.png",
+      "sha256": "5331e8cadc8f9550c202dabbbaf082c56d7afba4d4a5c922b233cef42caa12df"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/10-combat-aventure.png",
+      "sha256": "4180f7099b274c294246972c82e9c9add881cc51200ee2b52f59d3e5071e8bb5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/11-etat.png",
+      "sha256": "d430e4104c6e4f18c966dcae6ad2a5b74f2e5432141d6baa144a0d4e16d040c1"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/12-etat-messages.png",
+      "sha256": "f5a7c967d9ceb342b0c1dd1d022202ee2649f9bf08893397835f35b0e7a443ca"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/paysage/13-non-appairee.png",
+      "sha256": "93735567e6b4dc7cf3d6ae20753f898561b819c285b1e938fbae8d7be93c7c5c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/01-pads.png",
+      "sha256": "6884cea2195bfb92df8a55a9945ae1b14c6a30e8d384fa4283669bd0d2a8981e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/02-pads-filtre.png",
+      "sha256": "9c824ae5bc5d45642c5cad19c46c74a4f2cad14137567b489650d854c192bfd2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/03-pads-vides.png",
+      "sha256": "b362d655f0bda5de943036212cdf4beeceab68d38b30b63dfb99ee7ad6337b21"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/04-des.png",
+      "sha256": "ee5b6d198cbf3b66d79bdff6c941c4ce0a2fe5289fec08c114140cd84241ee63"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/05-resultat.png",
+      "sha256": "fe9ec6908beefb3be9297f4f5df745ebc3b34b693ae7cbf4477e039a910baa01"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/06-formule.png",
+      "sha256": "cfaffea35e1b1648fff5c9e6c572e85096a2979b821b7ac6b5cb3c2375669905"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/07-echelonnes.png",
+      "sha256": "4317275bcded798a65ef08aaa45c07178fb5569c6055b3ebcdd2a4ac6bfc30d5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/08-combat.png",
+      "sha256": "6abc54adba1a125f18cf3f96685c581521b3576921f8f5e67fd95d3e174108f4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/09-combat-vide.png",
+      "sha256": "3d575aeb364dab121d82a5b75edad52d96b9bce0a3cde0b0d9b4697ca5d01bc7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/10-combat-aventure.png",
+      "sha256": "f60ecccd9cfaf95ef28c6498f3fb50766eadd669581c7cc4f2ef46e3d437fe24"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/11-etat.png",
+      "sha256": "d58679db21413aac08176a51daf4b10112fbf469bcdc9002583a99fad62f81bc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/12-etat-messages.png",
+      "sha256": "5983b4146793f39336427b49e12286dbd08f6dddad2832df8cc8fb6ca4d23af4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m1/pupitre/13-non-appairee.png",
+      "sha256": "a0b2cab1341c8ee05a3dd18c3dc18fbac58e8adbc59806885afa2e518f7d596d"
+    }
+  ],
+  "manuelCaptures": [
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur.jpg",
+      "sha256": "7a0b48fad7439cc36e86703aa9cb930a529b2c25f83d2a5dc23b0367c7ad8ad7"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-des.jpg",
+      "sha256": "e34bc5c5b67e937b1d947026895bc95f73575684cca719f7e3927bca231b0377"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-combat.jpg",
+      "sha256": "89603ca54776ce9d15237375066e6aa2a073486d6dfe36f330d90ff1e79c8154"
+    }
+  ],
+  "limites": [
+    "La seconde demande de synchronisation T0 reste utilisee : course initiale du serveur non corrigee.",
+    "Les protections de presentation ne constituent pas un audit des donnees transportees.",
+    "Pas de validation des appareils physiques, de Safari ou des mises en veille.",
+    "M1 pret pour un essai de David avant M2."
+  ],
+  "commit": false,
+  "push": false
+}

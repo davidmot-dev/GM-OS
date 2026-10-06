@@ -1,0 +1,601 @@
+{
+  "date": "2026-10-06",
+  "lot": "T4/M2 meneur",
+  "autorisation": "David demande continue apres M1. Sa confirmation GM-OS eteint reste valable ; aucun essai physique de M1 declare.",
+  "construction": {
+    "types": 0,
+    "code": 0
+  },
+  "unites": {
+    "fichiers": 26,
+    "reussis": 201,
+    "code": 0
+  },
+  "e2e": {
+    "m2Complet": {
+      "total": 35,
+      "code": 0
+    },
+    "rejeuCompactAvecCheminLong": {
+      "total": 8,
+      "code": 0
+    },
+    "m2DistinctsValides": 36,
+    "regressions": {
+      "m1": 37,
+      "t0": 44,
+      "total": 81,
+      "code": 0
+    },
+    "distinctsValides": 117,
+    "echecsAttendus": 0,
+    "manuel": {
+      "total": 6,
+      "code": 0
+    }
+  },
+  "lint": {
+    "fichiers": 11,
+    "nouveaux": 0
+  },
+  "galerie": {
+    "vues": 116,
+    "erreurs": [],
+    "regardees": true,
+    "planches": [
+      "revues/Sons.png",
+      "revues/Scénario.png",
+      "revues/Tableau.png",
+      "revues/Notes.png",
+      "revues/Coffre.png",
+      "revues/Messages.png"
+    ]
+  },
+  "sources": [
+    {
+      "source": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "sha256": "ab08ba2b0fa9807baa82249ecf20fda7c5130543fccb41987f0fdc68a13304b4"
+    },
+    {
+      "source": "src/modules/remote/RemoteControl.tsx",
+      "sha256": "ede70bafce4e17855b1a5973dfed8ae8902c41d6812987e1e2a759050473a841"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteModule.tsx",
+      "sha256": "cdc3e3b5c0037e5426ca6f4b5a7a9059d8d0c79aac1aa5b36916bede04b0a0cb"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteSoundboard.tsx",
+      "sha256": "53d58537459ab27c1fe25136bddca1d2bf32053f866b9a5020eec573951cd3d4"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteStoryboard.tsx",
+      "sha256": "b8da88b2eeb82552967ddd4207bd3d0b0d3253423f1b1ce214bf8a3529c029b4"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteWhiteboardView.tsx",
+      "sha256": "82a4f5990eb0e4e185e5a21483fb210e0f7f6cff1c88ac73ddb01bcc92986ada"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteNotes.tsx",
+      "sha256": "728059536898aa4e3372060f313aa0fc72791233035d3655a142f17df1a1e6a0"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteObsidian.tsx",
+      "sha256": "313ae295232a2f2434df249b978c1a5faeac44e80246d8e88646eee16ba308eb"
+    },
+    {
+      "source": "src/modules/remote/components/RemoteMessenger.tsx",
+      "sha256": "3ae4c98bc5fc7c73efbdcbaa8d0915f245b0cd59268560e9e49bfb25cc3664eb"
+    },
+    {
+      "source": "e2e/tabletteM2T4.spec.ts",
+      "sha256": "fa1105a4239534ca4e7943dfd0fff5c3e5a0e284d0c7f5477f9b94dd80e8bbed"
+    },
+    {
+      "source": "e2e/capturesDuManuel.spec.ts",
+      "sha256": "660ca7ed7412c092b624d4629fe7f7844d31aac1d31d6f33cecc113e00150bc5"
+    },
+    {
+      "source": "documentation/User Guides/60-Tablette-du-meneur.md",
+      "sha256": "c840100e3b53a98c99c0b829f9a7ae42c659ced70ed74565fb13503955f5f290"
+    }
+  ],
+  "captures": [
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/01-sons.png",
+      "sha256": "2b5d1aa3aac8305c8f12e85f447b262dbeea495294d2d0467a22529fb27f5faf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/02-sons-filtre.png",
+      "sha256": "391fbb09d3fd038d7cb4dd43cf407b39c8efaa684a1361e903bc5e1d97d45bde"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/03-sons-vides.png",
+      "sha256": "1011bc2a0dba4ec540a372088f7c61fca0b8c57c1191149d7844d2e9879239bc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/04-scenario.png",
+      "sha256": "69a4f72da5e5a887e12aaa0a4e50d92df3148ce15f0fe8cbcb4132af72d449cb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/05-scenario-vide.png",
+      "sha256": "40c620ffdcd37a4503ab5e920766fbc27560fea9ff221791b0446d5dc305a12e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/06-tableau.png",
+      "sha256": "cc4e6de15846ac4c2207342394f4bea152fe3597b280a11b825bb040217adf09"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/07-tableau-dessine.png",
+      "sha256": "22a9905bfee3befc98c81b6cef2207b7e9a842b77ee9c314f03ab14cee9fa238"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/08-tableau-clair.png",
+      "sha256": "83b3b21637f490bf2c9b644433251621238b1560000a0fb2cebf7a3b6b59e8bf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/09-notes-seance.png",
+      "sha256": "179b552f196cbc7491570d3a4391db5c129057e070ef329d160be0bad1154f81"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/10-notes-detail.png",
+      "sha256": "0e47f7aea878d6303e68f852109e8d9f04dd2c20ab5dab594134d59c8fff576b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/11-notes-trame.png",
+      "sha256": "c0ec45ec64e3a2f236fe04bc67ecc9cd51b8cf2241862fc3693ff78b7cf67ebb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/12-notes-chroniques.png",
+      "sha256": "ff8c511c08d828b47ed533a2b9247cc0a29f367f9a9b1c78a7a794ca5f320495"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/13-notes-indices.png",
+      "sha256": "4396b179b53c23058d0f9522bb938cabc150dd34d52b7069f583257649c2560a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/14-notes-secrets.png",
+      "sha256": "b330af0270ee167d9e976f7dd6c90acd4e265b8b12db6e710ff76e2bcef38b03"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/15-coffre.png",
+      "sha256": "c76307f1b33845925a0f8d7d13e4d6f7bfb570501c47a2c041c67001e6f6ffda"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/16-coffre-dossier.png",
+      "sha256": "27f3c8eff6565a53233fa0db46bc5f888704faa2141bdc39e7c16cf23b3a598e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/17-coffre-recherche.png",
+      "sha256": "85ada04fee8147ff358afaef1e2bc595a3a74326f87f4819efc7ace18de94445"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/18-coffre-note.png",
+      "sha256": "1628c5057258a3486f57f955d8d56ef0cfe071f0c8517970a26c6ec0ac5f693b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/19-messages.png",
+      "sha256": "2d97da9ffec990b441921d02cde72ceaa7d72a9623ba0e5dad8a9c340e5a5ae3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/20-messages-prives.png",
+      "sha256": "dbed510e3c986ba7c8b7ea4b920e92518302a428050ab26d5cd72d4558db7d49"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/21-messages-longs.png",
+      "sha256": "e279a792191ca75f63309a17f7bc8cdbb00df0b4d4b8a4978255912d46917928"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/22-notes-aventure.png",
+      "sha256": "bd6b2bbbb722b09b471978eaf2bc21af99a7e7a4ce34c2e3064ac3486b0bcf39"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/23-non-appairee.png",
+      "sha256": "be0d361650f5d04ee1a1c90e4aaa157aef9f65c85bed2fac96960241809adbc5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/compact/24-coffre-chemin-long.png",
+      "sha256": "89ba95ae6fd331d833df1abe14b2b486e9fc2d26255aeac6126b746261a169ea"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/01-sons.png",
+      "sha256": "a2dbd80fe1ae2c4f082238f598878a4aba1de70009991adb571117e6d8882eff"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/02-sons-filtre.png",
+      "sha256": "fcff9056f4c4963ca5dd34e5f1e5a07bfd3bdb01d788f88d56ab7900d998233f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/03-sons-vides.png",
+      "sha256": "a4449477fe5b268ad118f3164c21eb786f2aa0de3262890f51c2713dc5319b1f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/04-scenario.png",
+      "sha256": "7596779f50b7e5c0e61771233f0457ee26b5c996e0dd8c933f371812a01c5a2f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/05-scenario-vide.png",
+      "sha256": "5ca97227e58aff1fc003701f3a7e124bcb568d8c46ce4bedfb522cd9d9f9c7de"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/06-tableau.png",
+      "sha256": "1efa5c8e6d06ff4a98021cfcfc8b3bf9b9c03bcdaaa7c1b89b17c190e5795501"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/07-tableau-dessine.png",
+      "sha256": "f71a270dc808dfe402f043e36d067e8d628337aaccd2009541aeddd74679c566"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/08-tableau-clair.png",
+      "sha256": "8486d3775b70a45fa1ed225dd228b376e0a2a7a0bd217d92a7872c78015846f7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/09-notes-seance.png",
+      "sha256": "822ca715ca4ff2cee13c4e528d1c153b936be48399f50980b9b87e843f8732fa"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/10-notes-detail.png",
+      "sha256": "a9318bb27de4d80c2c64cc38206a162c210e91ff9d951a68c1021a2140400a5e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/11-notes-trame.png",
+      "sha256": "68a4811f438fa452193271fffd7bc4dc04f69bd5bdb5562a998b0cd9dc9983bc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/12-notes-chroniques.png",
+      "sha256": "5ffbfb94aea8603715df8ee2a06c212de537d24956ae1d3018fb8cd8439867be"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/13-notes-indices.png",
+      "sha256": "b1225a0f1f5e99cf224907b08c23162d1489224a4a80df17dccdba75bd0b9210"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/14-notes-secrets.png",
+      "sha256": "cb8eb2d85efdfd9a665c0d57bca6f7cffbc193bf6ebf061ae6152cec475d7fd5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/15-coffre.png",
+      "sha256": "a8af66b5cad212ad4e4e0092c6db586663c2ee6b015287f1c82885f6d3db820b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/16-coffre-dossier.png",
+      "sha256": "33dccda91f947a6e29083057a3b9d5e0eb540eb740e53bcfe5a059f7023d1690"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/17-coffre-recherche.png",
+      "sha256": "44d555d004923dece3a71b54cdbcec0d95b67a99d0f2938f142254b064d9fae2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/18-coffre-note.png",
+      "sha256": "39d739a41c26044d24424d37685d1df7d175dfea8bd85c9433db78fe63bc7159"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/19-messages.png",
+      "sha256": "6a25b8ef4d573babe3eb4796152c03739fe0b5c9fc5e4fc303c7fcf5983e8c65"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/20-messages-prives.png",
+      "sha256": "3ac570f8a982795cdf5e23109fa2bda7e0eb28008936c4908604c4414518ff67"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/21-messages-longs.png",
+      "sha256": "6aa040d30c97c00ea66c638f62c837546bbca60047f475dbbfab14e9b0e8b209"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/22-notes-aventure.png",
+      "sha256": "45b3b729a1d09e45e474b92f07645e2ca085f228335c3622b063ece27ca89078"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/telephone/23-non-appairee.png",
+      "sha256": "25ade77256e679a1b30c389b2fdc7dfc02903f25aed3addfc53b2d1016b6e3b3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/01-sons.png",
+      "sha256": "07bccedbf544bb996a15f12d1897526b17de356fdf91465ebde41a089c59b581"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/02-sons-filtre.png",
+      "sha256": "41b151a659b86252dcb0fa4628940f13bcc0e971f4638bebd331c69cbc6ff6a2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/03-sons-vides.png",
+      "sha256": "37b25eab9da0e7b955ca3254e0fe3e865bb6f1c1b0cb9fafa53bc1052f02aef6"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/04-scenario.png",
+      "sha256": "488488f9e84c7c09bbd5130a33c14b269878c9b5943c5039e80759ac63a1f6d4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/05-scenario-vide.png",
+      "sha256": "6e8f422a06068dfb0622229dad1819a073999a4e4575f939010ef2727c827d2b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/06-tableau.png",
+      "sha256": "569c71ba92981507f7745f84606d53da370d2a81b7e83a6dc4569b8b3321de70"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/07-tableau-dessine.png",
+      "sha256": "9be23e08387b3922b9f4099bad6d0e0b92a39dd0285b86c58a800b99966c0240"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/08-tableau-clair.png",
+      "sha256": "43861e6cb59762c392627ec192944e912ba92c89420d1286cd08d3ff8972c1cb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/09-notes-seance.png",
+      "sha256": "b5d190637d4e22c11d2d5fa64995f14dde5eb4884dd25225c4c9663f6401d9b2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/10-notes-detail.png",
+      "sha256": "0f36c385cc6b18012b29ede0c750c8f53d9903c4cb04a7724c831e355a0e4028"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/11-notes-trame.png",
+      "sha256": "6e731ea04ddd8f601f8eb1b5b94137ffb971d1f8833f14393f17e58aceb88668"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/12-notes-chroniques.png",
+      "sha256": "c257b0590a1e662c8ba983c873a65d43e514a554c162d5213016bdc404dcc48e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/13-notes-indices.png",
+      "sha256": "89a2bea0f259c0326bf8a257fa7254bf4767f8910f642942b6a8b3ea2f83c7b1"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/14-notes-secrets.png",
+      "sha256": "7944f1452ed3453fbecad9d0103e073441c047ac2aa22cb707b749ef23c3a3fb"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/15-coffre.png",
+      "sha256": "ff15dcfe94bb7239ed22e009d381fb3e1b84fe606a3e5485836418ff7f878e5a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/16-coffre-dossier.png",
+      "sha256": "2fc66513751366760c9e9492c46d437a7e7b03a0c34ca62add0cb0dcb7f9707d"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/17-coffre-recherche.png",
+      "sha256": "1905a5147e6afba5711af7704cb098b39789559777e252f515022af215e7f7a0"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/18-coffre-note.png",
+      "sha256": "eebc1deb992cc7ee248c1dd454c2cf45fc9138f34e8c38a4ebf6eee067873e8a"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/19-messages.png",
+      "sha256": "4f07e4792e832857b18771fac58325e19d99bc57041c646ecc3528bdc2ea7d9f"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/20-messages-prives.png",
+      "sha256": "bb2bc1adf2736fdfb394b54fa8250b51d2c126196d01a65cf73ef6c1930132f1"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/21-messages-longs.png",
+      "sha256": "b3b4e68bdf25a65a28bfa6509f0b3223fe990a49ecb87fc9a9fcb3623caca952"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/22-notes-aventure.png",
+      "sha256": "362f96f79e3bc8c3d66f9cf9c3f9130696a120ae59c04c40cd79cb461bc9153c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/portrait/23-non-appairee.png",
+      "sha256": "2887eb7eb6af2cbc803409652cd9acddf359e4f235d58304eb8fead36feb9870"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/01-sons.png",
+      "sha256": "7042e20623a66ac685d18f24d5e70dc7db152db3915424561837adfc4030c8b5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/02-sons-filtre.png",
+      "sha256": "3b79d593f1e1999584804fd30770631091cf6c3e9b62785ceb7b4a2c434c9e49"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/03-sons-vides.png",
+      "sha256": "47a33b634acbbe5684fa7b0d5b0b75a884afd15aac661ddbda0b49c81c671ab5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/04-scenario.png",
+      "sha256": "aeb82f5afa46c6763a203e950094b30bd7919493c6c8b73de4bd74c2d7450509"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/05-scenario-vide.png",
+      "sha256": "db0a22f109c4b82663c8e06ca55da06a7ae6d902a08bc0e5b8c3dda1b63529dc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/06-tableau.png",
+      "sha256": "32137f8daaad172f8858fc3a0c1be189d434d1ff01f833fca986485f36f62826"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/07-tableau-dessine.png",
+      "sha256": "4b7f59b779faf7bfa32631b4af33de2c69109a2f3a017083aadf52a16e0b0d91"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/08-tableau-clair.png",
+      "sha256": "1737fa6c4b67917917dfdc6b60081f08532cd976cdf183a46c4915cb4dccf411"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/09-notes-seance.png",
+      "sha256": "9338d6746405107fc4606e43ed904ab28ca284ab2c4a7e9ca7f35b0a3ffa3624"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/10-notes-detail.png",
+      "sha256": "72af1c981ffe4bd5406b05e25675316ada14448972294646e13623c9428adf51"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/11-notes-trame.png",
+      "sha256": "06b99fcb85fb111d3b61437f1658c4d6ab3d1f562828fd1c75fff99e9d7d8fce"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/12-notes-chroniques.png",
+      "sha256": "725f5198dbe095794b0955c537742bb4a47d27834c8cc3bc3384bedbac8dbd1c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/13-notes-indices.png",
+      "sha256": "be9cf7ce4e8faf421665fda36bbe5ff7077939cb57e62e8d4b0d14d672691b8e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/14-notes-secrets.png",
+      "sha256": "c81ae1085c2dd36ca67010d948dbede6b13de2dba6a6b0bc4be687dc0e9ea68e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/15-coffre.png",
+      "sha256": "1158a4ee8dd480e53c480324e29184df1c99e68038e467f7e9996a8abbbf8597"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/16-coffre-dossier.png",
+      "sha256": "433013cbb4a7e7cdfbe8f96a7eabf2a6e89979c9c3155246d7e110ad220d5203"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/17-coffre-recherche.png",
+      "sha256": "8623a2e69a3f1939fc8ead60410bb6adbe00c2b02bcba742f61fab046f5ee478"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/18-coffre-note.png",
+      "sha256": "c67b26e1755f4ce1c62631e6be76bda827b01ac28323ae39839dd519b26d4d60"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/19-messages.png",
+      "sha256": "9e1d096b20d9378b2a52696e8ed8b73fd0d23a1fe6f763613a70324473861f0b"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/20-messages-prives.png",
+      "sha256": "d501dd73a4a0df0f25ed4a34573cda37a6cd92eb5dc6d889c3ef120dc73559cc"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/21-messages-longs.png",
+      "sha256": "5127649e5b722dfa4efe8474eb254279d7fe013d2de2604904285abbc5af7996"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/22-notes-aventure.png",
+      "sha256": "1b86a6975f3feb01eb06918cfe096cae93615d04c110167e7baab03848bab9ff"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/paysage/23-non-appairee.png",
+      "sha256": "08cdc08bef82286ce6256cdfe8203df027ae296f0a69c61f0818f67713393b1d"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/01-sons.png",
+      "sha256": "e1fc40771860d2e974813b223d3359cad52884fc457c47dec429eb5aaaf4e3e4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/02-sons-filtre.png",
+      "sha256": "2982cd1e282c8c0f344b0e42b7953d199147d623138c49f0a6280faf4b729fdf"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/03-sons-vides.png",
+      "sha256": "de8b76e2032d57b26c396fc28e459550e8291bc8fdabae24d5a09712bf1607f0"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/04-scenario.png",
+      "sha256": "827d555495ce9a4bc186840e78f08259c8dcc32ac399c955cbc5a6c4a96fe6e4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/05-scenario-vide.png",
+      "sha256": "64533123bbe1292b28347aa1009fd1c8ff11c8d9b2aa9f88f3f8ad34b36981c3"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/06-tableau.png",
+      "sha256": "2cd1235d3f26bb0a3afb7679ba6939cbea063226928bee9076fcdc8774a9b6a4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/07-tableau-dessine.png",
+      "sha256": "29b91239ff5ac198d993092c172d3045879acee5be6a2f44de489c6f159842a5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/08-tableau-clair.png",
+      "sha256": "db9e20836ca419c8d893e5a4a5da18e88798e3051127733d6e0b1150e84d2952"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/09-notes-seance.png",
+      "sha256": "08f15dee7c0f32c1eaa1e7ea494c124fee634310872980bd66441181db5374e7"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/10-notes-detail.png",
+      "sha256": "720f9918a4563d08f5594207fbf302418af1eb65745518207510dbf5d0c04ba5"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/11-notes-trame.png",
+      "sha256": "b39756cc4a8ac124a189bb5d544df00df0ec633394ebc333443566f50cbf5734"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/12-notes-chroniques.png",
+      "sha256": "a80a6099030f38a108d6c26f52e4cf715b34a326844290910724d899a72594ae"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/13-notes-indices.png",
+      "sha256": "09efdac48518767f60b007258999f0135c5cdf1d4cd9ad84666c5ae8af3d748c"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/14-notes-secrets.png",
+      "sha256": "79ce685c45d50ffc1141a7ee37589646c09921f2ececf813cacaf6abb35817c6"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/15-coffre.png",
+      "sha256": "5a64b14e2d2fc5584145b50cd09efe746602b7face4f9e747f215bd897590cd6"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/16-coffre-dossier.png",
+      "sha256": "adfd0ad84dd341ad5536d2c248a831b7af542bc7da0c04aba5ae1ba8b9ebf1a4"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/17-coffre-recherche.png",
+      "sha256": "d86135f839792babbf20d368dc29e5b61b5bbdea69ea92c618d8d12fe1b4f9a2"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/18-coffre-note.png",
+      "sha256": "63129baa29b88610e1b7da5d60297b99fa396a40f02d7cab7d32d3ba88a9a9ea"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/19-messages.png",
+      "sha256": "93a75d315b856bcb42b4c2286d535ef421be64f8667db79dae479a08bc526250"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/20-messages-prives.png",
+      "sha256": "01ae1bf8e013b9fc7078fa190c91a76616578f655eee50b258ce0920d9288d76"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/21-messages-longs.png",
+      "sha256": "4e0506e901f1634b5f2fb0bb31f6a2468de876c57f2adc5248cd7e2efea3ebaa"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/22-notes-aventure.png",
+      "sha256": "a4da60e993cd58042436b18f621cb51240a7fcd84c7a6132cb6d60a3976f0b2e"
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-meneur/m2/pupitre/23-non-appairee.png",
+      "sha256": "e461ab7b77b604434b7d214fe10dfd41b84db79f96e634a131abd6123083ab96"
+    }
+  ],
+  "manuelCaptures": [
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-sons.jpg",
+      "sha256": "e8ad60d53e38e7e5409891833df3027c2413642ad96e83354028e6d53cd5df16"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-scenario.jpg",
+      "sha256": "6ef4dab8083f3fa05611be5130998448120fc12a50e1f47793f4c3a60836a4fd"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-tableau.jpg",
+      "sha256": "7c8264c0ddc0bcfd380879ba62deb945ce80302804ccdd66990663ee0c4c30c4"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-notes.jpg",
+      "sha256": "36d9172a0b9ff8b4f9ad55a45a4c9f8f5270b4a0074d3a744780c2881145f037"
+    },
+    {
+      "source": "documentation/User Guides/captures/tablette-du-meneur-messages.jpg",
+      "sha256": "d86a05f3248c3ad71719a7c2b61bc7de5756eb4a958d6d328fade4468d00a207"
+    }
+  ],
+  "limites": [
+    "Seconde demande de synchronisation T0 conservee : course initiale du serveur non corrigee.",
+    "Gardes de presentation : pas un audit des donnees reseau.",
+    "Appareils physiques, Safari, clavier virtuel et veille a eprouver en T6.",
+    "Les captures Sons et Messages du manuel montrent les etats vides de la campagne de demonstration.",
+    "M2 pret pour un essai de David ; T5 et T6 restent ouverts."
+  ],
+  "commit": false,
+  "push": false
+}

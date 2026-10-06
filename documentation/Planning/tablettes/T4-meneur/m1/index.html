@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4 · M1 — pupitre intégré</title>
+<style>
+body{margin:0;padding:20px;background:#101722;color:#eef2f7;font:16px/1.5 system-ui}main{max-width:1400px;margin:auto}h1{font-size:24px;margin:0}a{color:#70d7ef}p{margin:8px 0 16px}nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}button,select{min-height:44px;min-width:44px;padding:8px 12px;font:inherit;color:inherit;background:#1d293b;border:1px solid #526178;cursor:pointer}button[aria-pressed=true]{background:#174c64;border-color:#70d7ef}button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #70d7ef;outline-offset:3px}figure{margin:16px 0;padding:12px;background:#182131}img{display:block;width:auto;max-width:100%;max-height:78vh;margin:auto}figcaption{margin:12px 0;text-align:center}
+</style>
+<main>
+<h1>T4 · M1 — pupitre intégré</h1>
+<p>Pads, Dés, Combat et ligne d’état. Captures du navigateur appairé à une instance GM-OS jetable, sur une campagne fictive. Les gestes passent par le WebSocket réel ; l’audio de test reste muet.</p>
+<p><a href="../../../2026-10-06-T4-M1-meneur.md">Relevé M1</a> · <a href="../../../stitch/tablette-meneur/README.md">Maquettes retenues</a> · <a href="../../T4-joueurs/j2/index.html">J2 joueurs</a></p>
+<nav id="ecrans" aria-label="Écran"></nav>
+<nav id="formats" aria-label="Format"></nav>
+<nav id="etats" aria-label="État"></nav>
+<figure><img id="capture" alt=""><figcaption><a id="original" target="_blank">Ouvrir la capture en pleine résolution</a> · <span id="nom"></span></figcaption></figure>
+<p><a href="compact/14-resultat-long.png" id="long">Résultat de 99 dés, défilé en bas à 360 px : Fermer reste visible.</a></p>
+<p>Les gestes sur appareils physiques, Safari et les mises en veille restent à éprouver en T6. M2 concerne Sons, Scénario, Tableau, Notes et Messages.</p>
+</main>
+<script>
+const formats={compact:'360 × 800',telephone:'390 × 844',portrait:'820 × 1180',paysage:'1180 × 820',pupitre:'1440 × 900'};
+const groupes={Pads:[['01-pads','Pads'],['02-pads-filtre','Filtre'],['03-pads-vides','Aucun pad']],Dés:[['04-des','Dés'],['05-resultat','Résultat'],['06-formule','Formule'],['07-echelonnes','Dés échelonnés']],Combat:[['08-combat','Combat'],['09-combat-vide','Aucun combat'],['10-combat-aventure','Mode Aventure']],État:[['11-etat','Lecture et minuteur'],['12-etat-messages','Accès aux messages'],['13-non-appairee','Sans appairage']]};
+let ecran='Pads',format='compact',etat=0;
+function boutons(id,items,actif,choisir){const nav=document.getElementById(id);nav.replaceChildren();for(const [cle,nom] of items){const b=document.createElement('button');b.type='button';b.textContent=nom;b.setAttribute('aria-pressed',String(cle===actif));b.onclick=()=>{choisir(cle);rendre()};nav.append(b)}}
+function rendre(){boutons('ecrans',Object.keys(groupes).map(k=>[k,k]),ecran,k=>{ecran=k;etat=0});boutons('formats',Object.entries(formats),format,k=>format=k);boutons('etats',groupes[ecran].map(([_,n],i)=>[i,n]),etat,k=>etat=k);const [fichier,nom]=groupes[ecran][etat],source=`${format}/${fichier}.png`;document.getElementById('capture').src=source;document.getElementById('capture').alt=`${nom} — ${formats[format]}`;document.getElementById('original').href=source;document.getElementById('nom').textContent=`${nom} — ${formats[format]}`}
+rendre();
+</script>
+</html>

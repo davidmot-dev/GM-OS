@@ -1,0 +1,58 @@
+{
+  "vues": 104,
+  "erreurs": [],
+  "groupes": {
+    "archives": [
+      "archives",
+      "archives-bas",
+      "archives-lecture",
+      "archives-lecture-bas",
+      "archives-vide"
+    ],
+    "pnj": [
+      "pnj",
+      "pnj-bas",
+      "pnj-lecture",
+      "pnj-lecture-bas",
+      "pnj-vide"
+    ],
+    "lieux": [
+      "lieux",
+      "lieux-bas",
+      "lieux-lecture",
+      "lieux-lecture-bas",
+      "lieux-vide"
+    ],
+    "messagerie": [
+      "messagerie",
+      "destinataires",
+      "messagerie-generale",
+      "messagerie-privee"
+    ],
+    "notes": [
+      "notes",
+      "feedback",
+      "feedback-bas",
+      "feedback-transmis"
+    ],
+    "notifications": [
+      "notification-message",
+      "alerte",
+      "notification-systeme"
+    ]
+  },
+  "formats": [
+    "petit-telephone",
+    "telephone",
+    "portrait",
+    "paysage"
+  ],
+  "planches": [
+    "revues/archives.png",
+    "revues/pnj.png",
+    "revues/lieux.png",
+    "revues/messagerie.png",
+    "revues/notes.png",
+    "revues/notifications.png"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-06",
+  "code": "1a8c8019",
+  "semence": "e2e/donnees/campagne-de-demo.json",
+  "constats": [
+    {
+      "largeur": 360,
+      "carteHauteur": 374.109375,
+      "attenduMax": 200
+    },
+    {
+      "largeur": 390,
+      "sortiePositionY": -723.8125
+    },
+    {
+      "largeur": 820,
+      "sortieHorsEcranApresDefilement": true
+    },
+    {
+      "largeur": 1180,
+      "confirmationResteAfficheeApresOui": true
+    }
+  ],
+  "animationConfirmation": "Mesures attendues apres stabilisation : faux echec transitoire ecarte.",
+  "sourceModifiee": false
+}

@@ -46,9 +46,10 @@ On la ferme aussi depuis elle-même avec **Alt+F4**, et elle part toujours avec 
 
 ---
 
-## 🧭 L'écran, refait le 2026-09-05
+## 🧭 L'écran
 
-La télécommande est pensée pour une **tablette tenue en paysage**.
+La télécommande s'adapte du téléphone de **360 px** au pupitre en paysage. Chaque
+panneau a un titre visible et une zone de travail qui défile indépendamment des onglets.
 
 ![La télécommande du meneur sur l'onglet Pads : les huit onglets à gauche, les volumes de la musique et des ambiances en haut, puis les pastilles de Music-OS et les thèmes d'ambiance](captures/tablette-du-meneur.jpg)
 
@@ -74,7 +75,8 @@ musique, les ambiances et les bruitages — en le tenant enfoncé.*
 > Les sept onglets étaient des icônes nues. Leurs noms vivaient dans une infobulle — *c'est-à-dire
 > nulle part sur un écran tactile, où l'on ne survole rien.*
 
-> 🔎 **Sur un téléphone**, ou une tablette tenue debout, la colonne redevient une barre en bas. Le
+> 🔎 **Sur un téléphone**, ou une tablette tenue debout, les huit onglets restent nommés sur
+> **deux rangées de quatre en bas**. Chaque commande mesure au moins 44 × 44 px. Le
 > basculement se fait tout seul à 900 px de large.
 
 ### La ligne d'état
@@ -88,6 +90,8 @@ Elle affiche, quel que soit l'onglet ouvert :
 - l'état de la liaison, et un avertissement si la tablette n'est **pas appairée**.
 
 Ce qui n'a rien à dire **disparaît** au lieu d'afficher un tiret.
+Les noms longs reviennent à la ligne : sur téléphone, la ligne d'état peut occuper
+plusieurs lignes sans recouvrir les commandes ou la navigation.
 
 > ⚠️ **« Couper le son » se tient enfoncé** — sept dixièmes de seconde, avec une jauge qui avance.
 > C'est un geste d'urgence, il devait être atteignable depuis n'importe quel onglet ; mais un bouton
@@ -104,20 +108,22 @@ Ce qui n'a rien à dire **disparaît** au lieu d'afficher un tiret.
 
 ---
 
-## 🕹️ Les sept panneaux
+## 🕹️ Les huit panneaux
 
 > ⛔ **Ce guide décrivait cinq panneaux. Il y en a sept**, et il manquait **celui qui s'ouvre en
 > premier**. Corrigé le 2026-09-04.
 
 ### 1. 🗂️ Pads — l'onglet par défaut
 
-Une grille de raccourcis, remplie automatiquement avec deux choses et deux seulement :
+Une grille de raccourcis, remplie automatiquement avec trois familles :
 
 - **Jusqu'à cinq morceaux** de la playlist active de Music-OS ;
 - **Jusqu'à huit thèmes d'ambiance**, avec leur univers en sous-titre ;
 - **Jusqu'à douze images** marquées en favori dans Image-OS — avec leur vignette.
 
 Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
+Les noms restent entiers. Les images sont contenues dans leur carte, avec leur nom
+en dessous ; les ambiances et les morceaux se présentent sur deux ou trois colonnes.
 
 > ✅ **Trois choses ont changé le 2026-09-05.** Les trois familles sont **séparées et nommées** ; un
 > **champ de filtre** évite de faire défiler d'une main pendant qu'on décrit une scène (il ignore
@@ -150,7 +156,10 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 ### 2. 🎲 Dés
 - Lancez des dés (D4, D6, D8, D10, D12, D20, D100) d'une simple pression.
 - Le résultat s'affiche instantanément sur l'écran de votre PC.
-- Utilisez le bouton **Vider** (rose) pour nettoyer l'historique des lancers sur le PC.
+- Utilisez **Réinitialiser les dés** pour retrouver la quantité et les réglages de départ
+  et nettoyer l'historique des lancers sur le PC.
+- **Mode de lancer** ouvre les onze modes disponibles ; **Formule Libre** permet de saisir
+  une expression et de la lancer. Échap referme le choix du mode.
 - **Système actif** *(corrigé le 03/09/2026)* : quand une campagne est ouverte, le pad affiche le jeu en cours et un bouton **Lancer Système** qui applique ses règles — au lieu d'un jet manuel. Cette carte existait dans l'interface mais ne s'était **jamais** affichée : le système de jeu n'était pas transmis à la tablette, et tout jet parti d'un appareil mobile était donc un jet manuel.
 - **Dés échelonnés** : si le jeu en lance (Blade Runner), la tablette propose les **lettres** — attribut, compétence, équipement — et le modificateur d'avantage ou de désavantage. Basculer en **mode manuel** reprend la main sur le système.
 
@@ -158,10 +167,23 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 > l'onglet ouvert — **et pour tous les jets**, y compris ceux lancés à votre pupitre. Il s'efface
 > seul au bout de quinze secondes, ou d'un appui.
 >
+> ✅ **Corrigé le 2026-10-06 (T4/M1)** : le libellé **Cliquer pour fermer** referme
+> effectivement le résultat. **Fermer** reste accessible en haut pendant le défilement ;
+> toucher le fond ou appuyer sur Échap le referme aussi.
+
+![Le panneau Dés du pupitre](captures/tablette-du-meneur-des.jpg)
+>
 > ⛔ **Cet écran existait déjà et n'avait jamais pu s'afficher** : il guettait un message que
 > personne n'émettait. *Un destinataire sans expéditeur ne lève aucune erreur — il attend.*
 
 ### 3. 🔊 Sons
+
+Les bruitages se présentent sur deux colonnes au téléphone, puis trois ou quatre
+sur une tablette. Les noms restent entiers. Volume et sortie restent accessibles
+même lorsque l'ambiance ne contient aucun bruitage. À partir de neuf bruitages,
+un filtre permet de les retrouver, avec ou sans accents.
+
+![Les bruitages sur le pupitre](captures/tablette-du-meneur-sons.jpg)
 - **Synchronisation** : Les boutons affichent les vrais noms de vos Pads configurés sur PC.
 - **Volume Maître** : une ligne en haut du panneau, **avec le choix de la sortie**.
 - **Filtre** : au-delà de huit bruitages, un champ de recherche apparaît.
@@ -178,7 +200,8 @@ Un appui lance le morceau, démarre l'ambiance, ou projette l'image.
 #### 🔌 Choisir où le son sort, depuis la tablette
 
 Chaque ligne de volume — **Bruitages** dans l'onglet Sons, **Musique** et **Ambiances** dans
-l'onglet Pads — porte à sa droite un bouton qui nomme sa sortie. Un appui déroule la liste.
+l'onglet Pads — porte sous son curseur un bouton qui nomme sa sortie. Un appui déroule la liste.
+Échap ou un appui à côté referme ce choix.
 
 **Les noms sont les vôtres.** Ce sont les alias que vous avez donnés dans les Paramètres —
 « Enceintes du salon » plutôt que « Realtek(R) Audio (High Definition Audio Device) ».
@@ -196,6 +219,11 @@ l'onglet Pads — porte à sa droite un bouton qui nomme sa sortie. Un appui dé
 > le vouloir.*
 
 ### 4. 🎬 Scénario
+
+Chaque moment garde son numéro et son nom entier. Touchez-le pour le déclencher ;
+la grille passe d'une colonne sur téléphone à deux ou trois sur tablette.
+
+![Les moments du scénario](captures/tablette-du-meneur-scenario.jpg)
 - Retrouvez tous les moments du **storyboard** de la campagne active.
 - Lancez un moment (musique, lumières, image, écran) sans toucher à votre souris.
 - Idéal pour les changements d'ambiance en plein milieu d'une description.
@@ -209,6 +237,12 @@ l'onglet Pads — porte à sa droite un bouton qui nomme sa sortie. Un appui dé
 - Le personnage dont c'est le tour est mis en évidence.
 - **Gestion des PV** : Modifiez les points de vie via les boutons `+` et `-`.
 - **Tour Suivant** : Faites progresser l'initiative d'un simple geste.
+- Les noms restent entiers ; les commandes de PV sont sur une ligne distincte et
+  mesurent 44 × 44 px. Les valeurs restent bornées à la jauge du combattant.
+- Un combattant sans jauge n'a pas de boutons de PV. En mode Aventure, les PV et
+  le modèle de santé des ennemis sont masqués.
+
+![L'ordre de combat sur le pupitre](captures/tablette-du-meneur-combat.jpg)
 
 > ✅ **Densifié le 2026-09-05** : l'en-tête occupait 120 px pour un chiffre et un bouton, alors que
 > le round et « Suivant » disent la même chose — *où en est le tour*. Les combattants passent en
@@ -224,6 +258,12 @@ vous le projetez. → [Guide de Whiteboard-OS](./27-Tableau-blanc.md)
 La barre du haut porte **cinq outils** (crayon, gomme, laser, rectangle, cercle), **trois
 épaisseurs**, le **fond clair ou sombre**, annuler, rétablir et tout effacer. Les couleurs sont en
 bas.
+
+Les outils et les épaisseurs portent leur nom à l'écran ; **Annuler**, **Rétablir**
+et **Effacer tout** restent visibles. Sur téléphone, les commandes et les huit
+couleurs reviennent à la ligne, au-dessus et au-dessous du canevas.
+
+![Les commandes nommées du tableau](captures/tablette-du-meneur-tableau.jpg)
 
 > ⛔ **Le défaut le plus coûteux de cette tablette, corrigé le 2026-09-05.** Le meneur envoyait
 > **quatre** des sept réglages du tableau : l'outil, la couleur et l'épaisseur n'arrivaient jamais et
@@ -248,7 +288,7 @@ bas.
 
 ### 7. 📑 Notes — le panneau de lecture
 
-**Cinq vues, dans l'ordre où l'on s'en sert**, demandées par David le 2026-09-05. Le panneau ne
+**Six vues, dans l'ordre où l'on s'en sert**, demandées par David le 2026-09-05. Le panneau ne
 portait jusque-là que deux champs de texte libre ; tout ce qu'un meneur relit vraiment en jouant
 vivait sur l'écran du PC — c'est-à-dire hors de portée dès qu'on tient la tablette.
 
@@ -260,6 +300,12 @@ vivait sur l'écran du PC — c'est-à-dire hors de portée dès qu'on tient la 
 | **Nexus Wiki** | Le **coffre Obsidian** de la campagne, avec une recherche |
 | **Indices** | Ceux que vous avez donnés, et ceux qui vous restent en main |
 | **Secrets** | Vos notes privées sur la séance active |
+
+Les six vues sont visibles sur deux rangées de trois au téléphone, puis sur une
+rangée en paysage. Les titres longs des scènes, actes et fiches reviennent à la
+ligne. Le bandeau des vues reste en place pendant la lecture.
+
+![Les six vues des Notes](captures/tablette-du-meneur-notes.jpg)
 
 > ⚠️ **Deux choses distinctes, et il est facile de les confondre.** *Chroniques* montre les fiches
 > que vous écrivez dans GM-OS ; ***Nexus Wiki*** ouvre le **coffre Obsidian rattaché à la
@@ -345,6 +391,14 @@ cockpit, sur la tablette.
 - Le champ **dit toujours à qui vous parlez**. *Deviner le destinataire enverrait un jour le secret
   d'un joueur à un autre.*
 
+Les destinataires sont disposés sur deux colonnes au téléphone et quatre sur
+tablette, avec leurs noms entiers. Le bouton **Envoyer** et la touche **Entrée**
+envoient le message ; le champ se vide après l'envoi. Les textes longs reviennent
+à la ligne dans le fil. **Tous** montre aussi les conversations privées dans la
+vue du meneur, tout en envoyant les nouveaux messages au canal général.
+
+![Les destinataires et le champ des messages](captures/tablette-du-meneur-messages.jpg)
+
 > ⛔ **Le canal général était fermé à sa sortie, et c'était mon erreur.** J'avais interdit d'écrire
 > sur « Tous » au motif qu'un message sans destinataire n'existe pas — alors que le cockpit le
 > permet depuis toujours et que les tablettes des joueurs savent le recevoir. *Une précaution qui
@@ -406,3 +460,11 @@ curseur des bruitages, réparé le 20/09, fonctionne.*
 télécommande.*
 
 *Le 2026-10-04 : les noms des thèmes livrés sont traduits sur la télécommande.*
+
+*Relu le 2026-10-06 pour T4/M1 : Pads, Dés, Combat, navigation et ligne d'état.
+Les captures du manuel sont régénérées sur le profil de démonstration et regardées.*
+
+*Relu le 2026-10-06 pour T4/M2 : Sons, Scénario, Tableau, les six vues des Notes
+et Messages. Les réglages du Tableau choisis sur le PC arrivent aussi dans le
+flux rapide. Captures de démonstration régénérées et regardées ; gestes sur le
+matériel physique à éprouver en T6.*

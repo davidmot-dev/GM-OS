@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4 · Direct joueurs intégré</title>
+<style>
+body{margin:0;padding:24px;font:16px system-ui;background:#12171f;color:#e4eaf2}main{max-width:1250px;margin:auto}a{color:#8bd8ff}h1{font-size:26px}p{line-height:1.6}nav,.choix{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}button{min-height:44px;padding:8px 14px;background:#202733;border:1px solid #718397;color:#e4eaf2;font:inherit;border-radius:4px}button[aria-pressed=true]{background:#24516c}figure{margin:20px 0;padding:12px;background:#202733}img{display:block;max-width:100%;height:auto;margin:auto}figcaption{margin-bottom:16px}#capture{width:390px}
+</style>
+<main>
+<h1>T4 · Direct intégré</h1>
+<p>Application réelle, campagne fictive de Varn, le 6 octobre 2026. Projection, chroniques et horloges occupent des zones distinctes. Les onglets et actions restent nommés dès 360 px. J1 reste en cours.</p>
+<nav><a href="../../../2026-10-06-T4-Direct-joueurs.md">Relevé et vérifications</a><a href="../accueil/index.html">Accueil intégré</a><a href="../../T3-propositions/index.html">Maquettes T3</a></nav>
+<div class="choix" aria-label="Format">
+<button data-format="petit-telephone" aria-pressed="false">360 × 800</button><button data-format="telephone" aria-pressed="true">390 × 844</button><button data-format="portrait" aria-pressed="false">820 × 1180</button><button data-format="paysage" aria-pressed="false">1180 × 820</button>
+</div>
+<div class="choix" aria-label="État">
+<button data-etat="" aria-pressed="true">Direct</button><button data-etat="-projection" aria-pressed="false">Image et chroniques longues</button><button data-etat="-pnj" aria-pressed="false">Favori PNJ partagé</button><button data-etat="-initiative" aria-pressed="false">Initiative ouverte</button>
+</div>
+<figure><figcaption id="legende">Téléphone · Direct</figcaption><a id="original" href="telephone.png"><img id="capture" src="telephone.png" alt="Direct sur téléphone"></a></figure>
+<p>L’horloge statique de ces captures suit un changement réellement envoyé après la connexion. Le défaut existant du snapshot initial est consigné dans le relevé.</p>
+</main>
+<script>
+let format='telephone',etat='';
+const noms={'petit-telephone':'Petit téléphone','telephone':'Téléphone','portrait':'Tablette portrait','paysage':'Tablette paysage'};
+const largeurs={'petit-telephone':360,'telephone':390,'portrait':820,'paysage':1180};
+function afficher(){
+const fichier=format+etat+'.png',image=document.getElementById('capture');
+image.src=fichier;image.style.width=largeurs[format]+'px';image.alt=noms[format]+' · '+document.querySelector('[data-etat="'+etat+'"]').textContent;
+document.getElementById('original').href=fichier;document.getElementById('legende').textContent=image.alt;
+document.querySelectorAll('[data-format]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.format===format)));
+document.querySelectorAll('[data-etat]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.etat===etat)));
+}
+document.querySelectorAll('[data-format]').forEach(b=>b.addEventListener('click',()=>{format=b.dataset.format;afficher()}));
+document.querySelectorAll('[data-etat]').forEach(b=>b.addEventListener('click',()=>{etat=b.dataset.etat;afficher()}));
+</script>
+</html>

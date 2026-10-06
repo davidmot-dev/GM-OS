@@ -94,3 +94,14 @@ les deux surfaces sont inventoriées et capturées. La sortie stricte de T0 (« 
 code d'aujourd'hui ») reste à arbitrer : les défauts connus de la fiche joueurs, de l'appairage
 MJ et de la fermeture du résultat empêchent de qualifier la base d'entièrement saine. T1 n'est
 pas commencé.
+
+## Mise à jour — T4/M1, 2026-10-06
+
+Le constat ci-dessus décrit la base du 05/10 et ses captures restent archivées.
+**« Cliquer pour fermer » est réparé en M1** : bouton de 44 px, fermeture haute
+visible après défilement, Échap et expiration conservés. Les quatre anciens
+échecs attendus sont devenus des tests ordinaires réussis. Les 44 scénarios T0
+passent avec M1 ; les fermetures sont également rejouées après la correction
+du résultat à 99 dés. Voir le [relevé M1](2026-10-06-T4-M1-meneur.md) et sa
+[galerie](tablettes/T4-meneur/m1/index.html). La seconde demande de synchronisation
+reste utilisée : la course de première connexion n'est pas réparée par ce lot.

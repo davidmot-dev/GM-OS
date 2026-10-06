@@ -1,0 +1,677 @@
+{
+  "date": "2026-10-06",
+  "lot": "T4/J1 joueurs",
+  "sources": [
+    {
+      "source": "src/components/TabletHub.tsx",
+      "sha256": "f1403e448fe512a842bdb0ec0669cac5dd824ade2a107e313a7e7c55e1972ff5"
+    },
+    {
+      "source": "src/components/hub/HubInventory.tsx",
+      "sha256": "9f8e6eab4bd0a39ce6d5ae65748ccaf4c0dcba5838badc49439d2f0b5dbbbdaa"
+    },
+    {
+      "source": "src/components/hub/HubMainDeCartes.tsx",
+      "sha256": "c55e0e6623e3891292e553efd985a3d390cdfe849f076edf5f72082478eaaa49"
+    },
+    {
+      "source": "src/components/hub/HubDirect.tsx",
+      "sha256": "f98dc3e2a6960caa030de3040c968d6e26dc61aad8b3e57546603c82e107f79b"
+    },
+    {
+      "source": "src/components/hub/HubHorlogesPubliques.tsx",
+      "sha256": "c3a24617a0c4ff6051830fe2e87def6c909e70b103a49e0f0774ee9144194681"
+    },
+    {
+      "source": "src/components/hub/HubCharacterSheet.tsx",
+      "sha256": "90863f432a35ac1e535cc9c83ef07747985f56ff965c1e87b72d872fa916ea97"
+    },
+    {
+      "source": "src/modules/table/PanneauDesRessources.tsx",
+      "sha256": "373222f62324b9c0fb3e1ea27cd5f64ba6d572e66d2fc9d10bb11d071ef936d9"
+    },
+    {
+      "source": "src/modules/session/store/entitySlice.ts",
+      "sha256": "9c50d22091551580ab5d27e5e46fe2430944315dc94e31b367340d8cd324c32c"
+    },
+    {
+      "source": "src/modules/session/hooks/useHubSync.ts",
+      "sha256": "05bb16105305a1fd08c80df529dc14dbec802c0a3611fe237ebcedfa6a20d65c"
+    },
+    {
+      "source": "src/modules/remote/actions/sessionActions.ts",
+      "sha256": "5404b0bd2ed6b39c08743da776d510503027f9a884d791bd6001c2babeae1402"
+    },
+    {
+      "source": "src/modules/remote/actions/vitauxDepuisLaTablette.test.ts",
+      "sha256": "95e381b4d8e90a915367c6a301e6a0606c3a79aa781e6e86d52e1de0b2340a11"
+    },
+    {
+      "source": "src/modules/remote/logic/segmentDesHorloges.ts",
+      "sha256": "18e13d72610c111ad303cbcbd8961c86ee2ba32842d81a14d789265aaf7ff998"
+    },
+    {
+      "source": "src/modules/remote/logic/segmentDesHorloges.test.ts",
+      "sha256": "d0f379c83cc4661f3586bd0b5a407cec16b29203dad1ea4eb81dbc286ac52d95"
+    },
+    {
+      "source": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "sha256": "8d9efb2a2ec698726e0177fd1e041548a8e8820b1d3b5eb32feccd97107c3665"
+    },
+    {
+      "source": "src/modules/remote/types/remote.types.ts",
+      "sha256": "fb87b32bc82268fcb86482535805adc3f0d7518627833d0643775b569ff1e4db"
+    },
+    {
+      "source": "src/modules/remote/actions/registry.test.ts",
+      "sha256": "a85e6c4cb46c31cde70963d8cee0bfd486342b21fa75f9a461b8a5f506f3db48"
+    },
+    {
+      "source": "electron/actionPolicy.ts",
+      "sha256": "2055582d6cbbcf379d1366ca47022213f046cc8ebc3d9070334d406755aa14af"
+    },
+    {
+      "source": "electron/actionPolicy.test.ts",
+      "sha256": "281b814211880990c0d1196d12e1bf2fe3fbe492eebac6735a44dd5a29af0a2c"
+    },
+    {
+      "source": "e2e/tabletteJ1T4.spec.ts",
+      "sha256": "4a27fa2c57f0b69c400fbac451f6e9e40ddccd986cea632ab2f9aa0174095526"
+    },
+    {
+      "source": "e2e/tabletteDirectT4.spec.ts",
+      "sha256": "a34ac0e6198e77362b05a74373a027dee5ec4470d568ce030b8cd7bdab0af86c"
+    },
+    {
+      "source": "e2e/tabletteJoueursT0.spec.ts",
+      "sha256": "e9a997c62bb6243350a58820dacbc687105383a99fe8b59734418044e2dbe8d5"
+    },
+    {
+      "source": "e2e/capturesDuManuel.spec.ts",
+      "sha256": "e423dcc262c6b8308261e3363c790fdb5ede79965ba9de76f87b761e72d2ba5d"
+    }
+  ],
+  "constructionEtTypes": true,
+  "testsUnitaires": {
+    "fichiersReussis": 522,
+    "fichiersIgnores": 1,
+    "reussis": 6774,
+    "ignores": 4,
+    "commande": "npx.cmd vitest run --maxWorkers=4"
+  },
+  "electron": {
+    "premierRejeuComplet": {
+      "reussis": 58,
+      "echecs": 1,
+      "incident": "Inventaire paysage: chargement initial 49.7 s, limite globale 60 s"
+    },
+    "rejeuCible": {
+      "reussis": 12,
+      "echecs": 0,
+      "source": "e2e/tabletteJ1T4.spec.ts",
+      "dureeInventairePaysageSecondes": 14.6
+    },
+    "totalScenariosDistinctsValides": 59,
+    "echecsAttendus": 0,
+    "accueil": 4,
+    "direct": 4,
+    "inventaire": 4,
+    "cartes": 4,
+    "fiche": 4,
+    "bancT0": 39,
+    "formats": [
+      [
+        360,
+        800
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        820,
+        1180
+      ],
+      [
+        1180,
+        820
+      ]
+    ],
+    "webSocketReel": true,
+    "donCarteDeuxNavigateurs": true,
+    "capturesDuBanc": 55,
+    "repertoireDuBanc": "documentation/Planning/tablettes/T4-joueurs/regressions-j1"
+  },
+  "eslint": {
+    "fichiers": 22,
+    "nouveauxDiagnostics": 0,
+    "comparaison": [
+      {
+        "file": "src/components/TabletHub.tsx",
+        "current": {
+          "errors": 1,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 1,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/components/hub/HubInventory.tsx",
+        "current": {
+          "errors": 0,
+          "warnings": 2
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 2
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/components/hub/HubMainDeCartes.tsx",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/components/hub/HubDirect.tsx",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/components/hub/HubHorlogesPubliques.tsx",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/components/hub/HubCharacterSheet.tsx",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/table/PanneauDesRessources.tsx",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/session/store/entitySlice.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 4
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 4
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/session/hooks/useHubSync.ts",
+        "current": {
+          "errors": 1,
+          "warnings": 33
+        },
+        "base": {
+          "errors": 1,
+          "warnings": 33
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/remote/actions/sessionActions.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 13
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 13
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/remote/actions/vitauxDepuisLaTablette.test.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/remote/logic/segmentDesHorloges.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/remote/logic/segmentDesHorloges.test.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+        "current": {
+          "errors": 2,
+          "warnings": 3
+        },
+        "base": {
+          "errors": 2,
+          "warnings": 3
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/remote/types/remote.types.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "src/modules/remote/actions/registry.test.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "electron/actionPolicy.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "electron/actionPolicy.test.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "e2e/tabletteJ1T4.spec.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "e2e/tabletteDirectT4.spec.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "e2e/tabletteJoueursT0.spec.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 0
+        },
+        "newRules": []
+      },
+      {
+        "file": "e2e/capturesDuManuel.spec.ts",
+        "current": {
+          "errors": 0,
+          "warnings": 27
+        },
+        "base": {
+          "errors": 0,
+          "warnings": 27
+        },
+        "newRules": []
+      }
+    ]
+  },
+  "capturesJ1": [
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-attente.png",
+      "sha256": "de6ec50b1b62661e33a2abf0ca126a2fde43552c69f5b91aeee644170d16c0c1",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-carte-attente.png",
+      "sha256": "deb3a9d868d6f06526eea2b472034f6a62c15056d2b8d4e34bf980f4cd5bc23f",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-carte-detail.png",
+      "sha256": "f408e31157d6daa7409d45a927f90d395c912d61a14324f186b38605945c72d6",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-carte-proposition.png",
+      "sha256": "f12fbba1a0d8a5687bc73706bdd30afd12937f90cbc91e5cd00123306a1c7873",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-cartes-vide.png",
+      "sha256": "3ddbb6552ee1f143e7a70f6a3d200bba94f18fcbb46933a4e2eb8a53c917d416",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-cartes.png",
+      "sha256": "ee4831ce95284e0e97c47a71195a90ac3a7904d9e497332df115d8c3c1fb9fd7",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-don.png",
+      "sha256": "0d2a7cda2335dab4140b9d8249ca15871d9cf19370e72d568db3b9a627924972",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-fiche.png",
+      "sha256": "f660dc95513f752703de020b14a4c2288493d98e28aaeb7b2d000fecc472b6bc",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-inventaire-bas.png",
+      "sha256": "d56259f310737058e8ea786d23acd61a3d9b3d569c41063b13b314d30cc7789d",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-inventaire-vide.png",
+      "sha256": "3734e084859b460304a3f4ddfa3a5b10700a6de4fd921ab7b1289a29c436bc5f",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/paysage-inventaire.png",
+      "sha256": "9c686c73fd79230e235ac7cf1f16725ea639b48a3fe8a2508d5719b1948fc8a8",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-attente.png",
+      "sha256": "e7dd826db54689e553adf83be259b73cb54f213dd4ffa77928736a30b79582b0",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-carte-attente.png",
+      "sha256": "8a16b098cf6bd318f34366d5df4eac33cd4f0c6a22d725c6e11ddf8e33630e43",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-carte-detail.png",
+      "sha256": "3f5cbde57483a1c1f61e23df7210ea06eb51506e251757a5eb01349747e93282",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-carte-proposition.png",
+      "sha256": "00401f0cc069c790bbe9d295c2c5af9f406e30e7dc9297b945c398bf8bd7e323",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-cartes-vide.png",
+      "sha256": "e01fbdd0f0497b0bf3c815dd7520760743d44851487604483c84f40302b434ac",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-cartes.png",
+      "sha256": "401014fc17cccc154babaea7eb7c996e2a2d8ea4dd3c6b658b59d3f3c2384acf",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-don.png",
+      "sha256": "228c59b97f712d53f7b4291b7ebc56e0475fa37eaca3b8444fe1e7bdd4518476",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-fiche.png",
+      "sha256": "d48a2cbd8a3de8619eca765b2fe9cb6eb39cf37db3b16c5a7592df80e46a41f0",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-inventaire-bas.png",
+      "sha256": "3e60c185572c7c5162a300706d361de0ad803f651d9a3d2f99bc755c61cf9793",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-inventaire-vide.png",
+      "sha256": "f0cc5593640a54093258a935712f5b5112312f33665318bc950b901b64a28795",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/petit-telephone-inventaire.png",
+      "sha256": "ffe1294df2adb8f157a182300dbf0ad99d09789b11e22174f990f42a431066b6",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-attente.png",
+      "sha256": "3c2196a8de6e70bb3096e297587486ab6952e901cc63a70c04b7703461807e65",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-carte-attente.png",
+      "sha256": "e46cff0bf097ca870cad76ceddd663fc3bb71bcf61d6d1a095b697b5a523233c",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-carte-detail.png",
+      "sha256": "ab584c0317a8423de979b1fe90c5611b446f24c8efa79c319df3673252f663eb",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-carte-proposition.png",
+      "sha256": "4c138be3e99a4e2841e3b79197d813228cf52d0c65c2b4a6fb6783d734d6f49b",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-cartes-vide.png",
+      "sha256": "63cd83ef877cf960a35f3cba5e4958baaad572427ae6de6395ff437a87f227d9",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-cartes.png",
+      "sha256": "3333eef25e4b1f968e7443038008235552bad4f961576bf8440a9ec37b948408",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-don.png",
+      "sha256": "af29f6436ce7dc885c8600f3ee2544fd5718480afb7e5e2d2399d4a9e0e0d99e",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-fiche.png",
+      "sha256": "d1ca785d22537df2f64fefbc9962cd26d4e437a7afc22e2428c224696eeac1c0",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-inventaire-bas.png",
+      "sha256": "6aaffb9cc5f42c7ad46d20269ffd873c29ff97e89fabd53329a6a5017b737041",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-inventaire-vide.png",
+      "sha256": "4426c34d9894030deca55a17fd7a068ad40be52b56a463ec84fc216d23bbe45e",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/portrait-inventaire.png",
+      "sha256": "9aeaded0215f183b99b35a579edcd1a32c46ea341f89bd5a442034deac3735fe",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-attente.png",
+      "sha256": "33bc37a76d6b878f46ddfc95eedd2acd1d18b5652c24d64e49095af063481ca5",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-carte-attente.png",
+      "sha256": "51273fb2926aee411a730dec3e32e2243d7fd749b2e0d14943aead8ada8a1ec9",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-carte-detail.png",
+      "sha256": "ff7c833cb94594d893206243f667c216ca9d5e77fd98661dc5399e5dbe392f46",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-carte-proposition.png",
+      "sha256": "5454f228f792023d4d04a38e112e5288aa34ecc499218449b890359e230b5f70",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-cartes-vide.png",
+      "sha256": "18fb7aac811ed31f60b187c7968d112588f9011c5d26c7d45f9b66ebd7e2e5f3",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-cartes.png",
+      "sha256": "e0447927d8736cb4c2fa2f2868ce2dadeaec2f5b9036f089dd1e2c3c9f355490",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-don.png",
+      "sha256": "d07b1e5213a6301a461a1cbedc0aa79475858b4cee60c31414ec6d1da202e123",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-fiche.png",
+      "sha256": "7f1626a675649099cc7dcb1502e5660205ddd50de2bf39392f3110aa427b9d02",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-inventaire-bas.png",
+      "sha256": "55bfbc5e0df73ae780e704046286715c23f9fe6b7fa3ccd2cc1e1a5e1402b5df",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-inventaire-vide.png",
+      "sha256": "9942e58143e3b77b8afc9742f34e7043a53fe0dd738a2df325477b7e9d7d1fb2",
+      "regardee": true
+    },
+    {
+      "source": "documentation/Planning/tablettes/T4-joueurs/j1/telephone-inventaire.png",
+      "sha256": "be9b96d512c9bdfb6930cc9a3a4aa284e9ce5b0560aa79431f4d76cf83ed5eb4",
+      "regardee": true
+    }
+  ],
+  "manuel": {
+    "etapesReussies": 5,
+    "captures": [
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-direct.jpg",
+        "sha256": "932549e7cb0e227950e2e497f05daa456fa618385246a7061c4cbb298c7f0db9",
+        "regardee": true
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-inventaire.jpg",
+        "sha256": "0e7d51fa9a8a191781ef5ff45df1d59166371c6464800d6c9bc0e6fb25e00e0b",
+        "regardee": true
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-cartes.jpg",
+        "sha256": "6c0dfcdba7d973e66906af87055ffe629d71b70c43005b7689192826843c79ca",
+        "regardee": true
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-fiche.jpg",
+        "sha256": "a2b63b6f1a51687df9cb1a51e2c6655114d34af4ca53b52a594fdd62323e6f51",
+        "regardee": true
+      }
+    ]
+  },
+  "corrections": {
+    "pvTransmisAuMeneur": true,
+    "proprietePersonnageControlee": true,
+    "pvBornesALaJaugeExistante": true,
+    "snapshotInitialHorlogeValide": true,
+    "jaugesSecretesExclues": true,
+    "jouerAccessibleSurTelephone": true
+  },
+  "limites": {
+    "transportCalendrierFantastiqueValide": false,
+    "seanceJouee": false,
+    "vraisAppareilsEtSafariValides": false
+  },
+  "commitT3": "1a8c8019",
+  "t4Commite": false
+}

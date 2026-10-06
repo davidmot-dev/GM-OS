@@ -1,0 +1,126 @@
+{
+  "reference": "HEAD",
+  "fichiers": [
+    {
+      "fichier": "src/components/hub/HubConsultation.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubLecture.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubArchives.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubTrombinoscope.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubAtlas.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubClueViewer.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubNpcViewer.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubAtlasViewer.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubMessenger.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/hub/HubNotificationCenter.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/TabletHub.tsx",
+      "avant": 1,
+      "apres": 1,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/session/components/PlayerPrivateNotes.tsx",
+      "avant": 2,
+      "apres": 2,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "avant": 34,
+      "apres": 34,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/echapFermeLesSurcouches.test.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteJ2T4.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteJoueursT0.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "avant": 27,
+      "apres": 27,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteAccueilT4.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteDirectT4.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteJ1T4.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    }
+  ],
+  "nouveaux": 0
+}

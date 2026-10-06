@@ -1,0 +1,597 @@
+{
+  "date": "2026-10-06",
+  "lot": "T4/J2 joueurs",
+  "autorisation": "David a teste J1 et demande J2, puis confirme que GM-OS est ferme.",
+  "commandes": {
+    "types": "npx.cmd tsc -b",
+    "construction": "npm.cmd run build",
+    "unites": "npx.cmd vitest run --maxWorkers=4",
+    "e2e": "npx.cmd playwright test ... --reporter=list"
+  },
+  "construction": {
+    "code": 0,
+    "types": 0
+  },
+  "unites": {
+    "premierPassage": {
+      "total": 6778,
+      "reussis": 6773,
+      "echecs": [
+        {
+          "fichier": "C:/Projet_David/GM-OS-v5/src/components/echapFermeLesSurcouches.test.ts",
+          "test": "les surcouches se ferment par Échap aucune dispense ne parle d’un fichier disparu ou déjà réparé"
+        }
+      ],
+      "ignores": 4
+    },
+    "rejeuCible": {
+      "fichier": "src/components/echapFermeLesSurcouches.test.ts",
+      "reussis": 4,
+      "code": 0
+    },
+    "validesApresRejeu": 6774,
+    "ignores": 4
+  },
+  "e2e": {
+    "j2PremierRejeuVert": 28,
+    "regressionJoueurs": 59,
+    "dernierRejeuApresExclusiviteDesPanneaux": {
+      "j2": 13,
+      "t0": 9,
+      "total": 22
+    },
+    "scenariosDistinctsValidesApresRejeu": 88,
+    "echecsAttendus": 0,
+    "manuel": 7
+  },
+  "lint": {
+    "fichiers": 20,
+    "nouveaux": 0
+  },
+  "sources": [
+    {
+      "source": "src/components/hub/HubConsultation.tsx",
+      "sha256": "6dee06e0f02aaedd7d812b49b345e9e549e22eede45f2693555ff903d08bcbb6"
+    },
+    {
+      "source": "src/components/hub/HubLecture.tsx",
+      "sha256": "011dd7111e177caacb6c7fc5eb44756fb85554fc94b796ed6757d88d314c169d"
+    },
+    {
+      "source": "src/components/hub/HubArchives.tsx",
+      "sha256": "7727712a4445b0fed116820511db47195ba0dc8f549e8d354f48350be087a196"
+    },
+    {
+      "source": "src/components/hub/HubTrombinoscope.tsx",
+      "sha256": "cb2b1216ec829f2ee2879b5586598eae11aaab2d1a97f07594f09b28dc215ce1"
+    },
+    {
+      "source": "src/components/hub/HubAtlas.tsx",
+      "sha256": "8feb5f28317bfc8d9ae8745a49f69ab9b3213fdd10e66c6543698d8675a6b716"
+    },
+    {
+      "source": "src/components/hub/HubClueViewer.tsx",
+      "sha256": "eb7d73493a95c960a057a9742c94819fc11a7eeb1c9e7d18d2b18b86322784a9"
+    },
+    {
+      "source": "src/components/hub/HubNpcViewer.tsx",
+      "sha256": "0d2ede6401861c57f584cf870c14329b4b1afc6633c179bbdcd4205f676db647"
+    },
+    {
+      "source": "src/components/hub/HubAtlasViewer.tsx",
+      "sha256": "5e3df62be708425e403616d8abef0d95f1e714fffb4eb8f6c93995d7b9a63f0e"
+    },
+    {
+      "source": "src/components/hub/HubMessenger.tsx",
+      "sha256": "c5a5f83addb9e1c3666241640c0fafbb42979f9a6e272920b763052ea85b2fec"
+    },
+    {
+      "source": "src/components/hub/HubNotificationCenter.tsx",
+      "sha256": "d81c424418fd00a299d39e8b4f2b2e7a603dba534f176fa4f0ffc10206c7025a"
+    },
+    {
+      "source": "src/components/TabletHub.tsx",
+      "sha256": "eea5d9e59d06d8e2e03aa5f8530cec788f4d9dc2f4edfe1a88f82199166ef9d1"
+    },
+    {
+      "source": "src/modules/session/components/PlayerPrivateNotes.tsx",
+      "sha256": "4e5231f4721570d4d3d1b49c2284abf72caf6350dab151619aa33cf68e314389"
+    },
+    {
+      "source": "src/modules/session/hooks/useHubSync.ts",
+      "sha256": "8b758bebcc0a9e13b32ecf2354cdbe967051a51b0ecdae4faf793a76f61c1519"
+    },
+    {
+      "source": "src/components/echapFermeLesSurcouches.test.ts",
+      "sha256": "e3f53a3edcfcac8664cd4812f20f188ab3a33bb2776ddf2370fe80825094f8ce"
+    },
+    {
+      "source": "e2e/tabletteJ2T4.spec.ts",
+      "sha256": "1d9df828f11e617760b37f6f9d1973f379cb1b26b4b5e20330a196741195690f"
+    },
+    {
+      "source": "e2e/tabletteJoueursT0.spec.ts",
+      "sha256": "b9c8570f6b8203df2c6dce1ed7184417401882ca1f10a894339696a401c2063f"
+    },
+    {
+      "source": "e2e/capturesDuManuel.spec.ts",
+      "sha256": "2df0789659e43d939f11e925beeecb524bb48e7f276b933342d53dd8e4659081"
+    },
+    {
+      "source": "e2e/tabletteAccueilT4.spec.ts",
+      "sha256": "fa02ad0a88eced7dbab47e4d333709ef6f3bf06544a1bd3dfed37b390d5f9fd9"
+    },
+    {
+      "source": "e2e/tabletteDirectT4.spec.ts",
+      "sha256": "ebcab49907036c2303ddf60aadd4e61fb715662be10ed3801a04ac13844fc041"
+    },
+    {
+      "source": "e2e/tabletteJ1T4.spec.ts",
+      "sha256": "21efea039345939f6a20158c0dd9c0d765492024b126954c511d37847c4a7021"
+    }
+  ],
+  "captures": {
+    "nombre": 104,
+    "regardees": true,
+    "fichiers": [
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-alerte.png",
+        "sha256": "5f4c6c464708b429c340db55a1d06cd2dc9919efd760043c7b9abdc72844511c"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-archives-bas.png",
+        "sha256": "7fd4244020a60eaeb70d3124b6bb5fd8c6b894b69f69a7c6abc5d1bc065f7841"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-archives-lecture-bas.png",
+        "sha256": "a5471d4032e9b40894127de51eaeff77cfcd30fedfe28624c00bccac25b2685e"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-archives-lecture.png",
+        "sha256": "213c37d3e3d50e62fa368e204cdc337fe66e38c011841bd9ad4cb229be44917d"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-archives-vide.png",
+        "sha256": "b2bec855f09c280ae269e2eb4c25c87806e9759327eec49a2d991c220152b4fc"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-archives.png",
+        "sha256": "22e5b206bad80e7d87ce42d746317e6ab79769b16cd6ce72093beb4ba6434a81"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-destinataires.png",
+        "sha256": "375209f4e70eff5d41e700123105fc7be84fee81468abc0283f0ca64eed47017"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-feedback-bas.png",
+        "sha256": "d797b1c6c71399a1b0fcf8c749a30c3392b26a43976e4b4df98402213212dd69"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-feedback-transmis.png",
+        "sha256": "7ab54151af7659a9300d265e22f33f63c69e7aa279d4915f219376b4d8130064"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-feedback.png",
+        "sha256": "d797b1c6c71399a1b0fcf8c749a30c3392b26a43976e4b4df98402213212dd69"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-lieux-bas.png",
+        "sha256": "f9bd9194771943d04918f65cc4924a6423f19cc38c372071b970b76f49bb4c5a"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-lieux-lecture-bas.png",
+        "sha256": "724286b7b806885cdb9309e4c64f08f913a9ec783098f6dc8f0ed21977ecea64"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-lieux-lecture.png",
+        "sha256": "f476c2704df8c5b9c6d59d1ab801eaef7566c355ae7a2bf23161f74b2e6d9340"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-lieux-vide.png",
+        "sha256": "fe2817a17ae3c1b3aa30d9db330e963cb195a47f9f10ef47c9a1edb3a27a1346"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-lieux.png",
+        "sha256": "f247480014318a12b9050086320bd66b7d801776d5069dd49bb0ebcd5c27449b"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-messagerie-generale.png",
+        "sha256": "5bfe415498e139fe1a06a854803440157534db0dce309cdddbd1e9875d044523"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-messagerie-privee.png",
+        "sha256": "b08b87572d55715d1edb72f2cd3468b2e92ec7d825352a2c7f7624c98318ffc8"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-messagerie.png",
+        "sha256": "b687f52ce5c4ffa10fd9734907d268427af4743a69fb3fa9d2eab79a59843966"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-notes.png",
+        "sha256": "70260f93cad475fa7e9255731508956877156e5f47402d0d1563a2505387e88c"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-notification-message.png",
+        "sha256": "c991b1818b1c451dcece26f9d06278efb7fc655cc79588f9c741ff11060acecd"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-notification-systeme.png",
+        "sha256": "380afdf04a78461a63dae57e62b42ea21f5d53bb6528b6ec2bdbf7a88e438d7c"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-pnj-bas.png",
+        "sha256": "fa6022167a437111312f6a7b838033fecfbd06834b22fb8edd7b054be8bfa4c3"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-pnj-lecture-bas.png",
+        "sha256": "6e2db019c8241a2671161006118af3c2233eaa1630178a753153e9ace80284d3"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-pnj-lecture.png",
+        "sha256": "ec663bc2daa1cf8d8054069cdfc8a09ac436d1134959a409949248c633852610"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-pnj-vide.png",
+        "sha256": "9ab0ee8bc5b9efe9fbb73ce44dfae575b3f49e3ca5bee221955254e7ff333c23"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/paysage-pnj.png",
+        "sha256": "f3b497afe9b974ddc5d330243f59cc9ce69bdb858b45e259a8d6993d02031691"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-alerte.png",
+        "sha256": "0314d70710d02478f6517f89e5a0ecab83998cd3e5eb1b4c58da5ac9df9befe1"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-archives-bas.png",
+        "sha256": "777fdab1bfbc86d939ea61e72e905b6cac8150596ed22938bb52758343a9e9cf"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-archives-lecture-bas.png",
+        "sha256": "4d927679e921c213c69cc7cfd87cc2382c3c1d3e76963fe7d425e2108165c042"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-archives-lecture.png",
+        "sha256": "73dad8d700d0562b9431b6cd149fe9df2475ce508f5ba021a4039045efb54d6a"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-archives-vide.png",
+        "sha256": "ffee8fb6b9bbf876890657af13e09ea9a10bb76365016e225b2f58bc8bfef37a"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-archives.png",
+        "sha256": "d50d338417b93d8adfa689972a98e8d9cfc653b34f3a190d1665348b5f6b62a8"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-destinataires.png",
+        "sha256": "10ca2ed260f48a8fad0397123fed243c5f2d61a0bce377c376fd8258ed0d504a"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-feedback-bas.png",
+        "sha256": "a8fef50d94ad4ae03e0b4698a935d85ad18285c2d49fedb8aff3f4cd7b112dec"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-feedback-transmis.png",
+        "sha256": "d6b3106a63fc1fc1577ea17f9303509fd66be7523a2e2701330ebbd3d6b0df3e"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-feedback.png",
+        "sha256": "a8fef50d94ad4ae03e0b4698a935d85ad18285c2d49fedb8aff3f4cd7b112dec"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-lieux-bas.png",
+        "sha256": "9497571dba1f890335aef7f789f6005bdaf231e2a0b6260b8413f41528a89593"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-lieux-lecture-bas.png",
+        "sha256": "1ac9c982935d0286622e7fddf24cb458c6d3f42405128c64e6210118d3d67035"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-lieux-lecture.png",
+        "sha256": "357d2b39b4302c1ac3a9cd8be6e79a8fd6b4403ebadfa18b864675a99413fe2e"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-lieux-vide.png",
+        "sha256": "78289926b894ed94e1b3ad29646365ba5bf24eda010ea2d90ca6f94464db0635"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-lieux.png",
+        "sha256": "345271952d69d1128fb7e2fb182bb029e12737beceb1cfaa53d8c52b61f415bf"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-messagerie-generale.png",
+        "sha256": "762a2dbc0139a37073508f1a8b1b37536d4a71f0da54f202bee80c1417626efc"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-messagerie-privee.png",
+        "sha256": "eca1e645707ccb16f162485c752fa3fb623df05512da2f2f212317a409735058"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-messagerie.png",
+        "sha256": "6b4dbd8ccfd37c2ad5973ea5418469e8fb7df8df13cff5deeb9c4dfc72560652"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-notes.png",
+        "sha256": "fdf3b603cbe786f0a7434151d04e1f72cd9f58754c844743a541ebc3d2c3bc39"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-notification-message.png",
+        "sha256": "18c66ec97bce1e0b01d0a08275a525d90e512bf1860bf1bc9b13cb77ee05804e"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-notification-systeme.png",
+        "sha256": "632b5f8a63285a274329a88496196b1a672780faf9987d98c6f94d8907c2eb77"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-pnj-bas.png",
+        "sha256": "2833abe66cb961a4c93caa995e46dad4cdb63c6026f2051baa5802f8ffc5ae4f"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-pnj-lecture-bas.png",
+        "sha256": "ee92e01c1cfe88b7e3bb8425ef1b41801a7ef8b8f30b2dcbcd4f78be4007f853"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-pnj-lecture.png",
+        "sha256": "b313fac23586f5961508261018b2e74ea333e6b623a70ab36aafb8fdcb465f72"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-pnj-vide.png",
+        "sha256": "5568f0254c028f5583a8ec058ec524f935af23e65f13bebdf521bf3e6cda416a"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/petit-telephone-pnj.png",
+        "sha256": "47120fb023e36e0ebc499cd12c2e159e43461d9b7b7cc2880952c455d8e43bb6"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-alerte.png",
+        "sha256": "e804924c4dc2a9510f25f99ae4151b740c3542e64c132a9a3e96a61868ba9d54"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-archives-bas.png",
+        "sha256": "5f7a1920bcce77c993b93f209560b65fb19897066760e23fdb8841356a2a9b82"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-archives-lecture-bas.png",
+        "sha256": "cd8793a0d55a69a75566bd35aeb604c7829d21e24ce02fae8dfe644b413ca453"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-archives-lecture.png",
+        "sha256": "14281c6d73cc3f7615c5fe00f8723b934692060416bf345ee7326d907523ea74"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-archives-vide.png",
+        "sha256": "9b2149f7c53b03e47fe7cc738881da057b5cca8a3e5d5eeef7ac0f56f5f804dc"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-archives.png",
+        "sha256": "009f32cbc9d0cfea4e1e277cd9a149a77b242a780ff7e58d44056540899f29a2"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-destinataires.png",
+        "sha256": "de4c539d268ac3879f7ef729eebc968adc97b124ed39cb1763931b7e11f32024"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-feedback-bas.png",
+        "sha256": "cd1b425e21f8eab4476279617288daf0c6fc73de50333e370261c92b2e9adfd8"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-feedback-transmis.png",
+        "sha256": "af518d6c116ed151a4ca9a949a2dc55d4345827871aa35768cfbfce20b081a96"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-feedback.png",
+        "sha256": "cd1b425e21f8eab4476279617288daf0c6fc73de50333e370261c92b2e9adfd8"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-lieux-bas.png",
+        "sha256": "d4774c570a1f504ca0f644fb8c3ee2c93ea7872daeee925216d76fa188dadb81"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-lieux-lecture-bas.png",
+        "sha256": "d81dd0fab5fb5ee50b098d79b33dee5b42bb1791076bb077226b231c049b32d8"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-lieux-lecture.png",
+        "sha256": "24efcbcdd5860a1066f760e38f08f751682235c13c2a6fa9709edfc5ef1a1533"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-lieux-vide.png",
+        "sha256": "0a4b5335d85b6f7301f4023ab630554ca392c1571f567c954b008bd934d80466"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-lieux.png",
+        "sha256": "cff105e90837a9e5aa5bfd46fee4d282f3bd053c06d255eed364c7f59fc16030"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-messagerie-generale.png",
+        "sha256": "7f310c160318724bda0061b707cc2714f41383ee6f502488940fd8781265f94f"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-messagerie-privee.png",
+        "sha256": "7a634df223550b85ed3ad234d2c98924b03e26cf4cefcf6ba779fb23fe2318c6"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-messagerie.png",
+        "sha256": "ed6f5050b0edb731dd3aea29b67d89f206841b4d3a5496c3470f0ddd42f2e8c7"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-notes.png",
+        "sha256": "5e186acc1602bc975fe5ab2a2f90cc3eee20c2f5f54064529ec32ba72d87acb2"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-notification-message.png",
+        "sha256": "6663254e52326f1ac24827f08d74b5c96a3859770fd3256faf96028fedf3952d"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-notification-systeme.png",
+        "sha256": "501ae14dd495069055b0336ed79b51c269bf006f1cadf70198bc43d9b4a45728"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-pnj-bas.png",
+        "sha256": "d77cb70d35ef8336a27ba2ac526754248525a2bbdcfc8857069e3ea9c19a1161"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-pnj-lecture-bas.png",
+        "sha256": "6315c9c57257335463b52134dcae69e107d289189646cbe042823879dc63650e"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-pnj-lecture.png",
+        "sha256": "81f6795e3e01398aa2288c3d6d1c4adbf582890bc186384473f2a7180e66eccd"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-pnj-vide.png",
+        "sha256": "3a1851e17865140a733eaa3fde60b0af72c0c87a8363602def3c772cd79c788e"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/portrait-pnj.png",
+        "sha256": "d77cb70d35ef8336a27ba2ac526754248525a2bbdcfc8857069e3ea9c19a1161"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-alerte.png",
+        "sha256": "c910012e84773d54b103a7c66105e093dbd9f8b99c436e48da4aae985f1e0280"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-archives-bas.png",
+        "sha256": "4198878433f260d4a3d7bdd8a53c94ee9cc9e4b241f336cc151c0699255e93ee"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-archives-lecture-bas.png",
+        "sha256": "6162e7fa4b41acef18267c742fc84c8b1833c492e6a9205acca2b0ee45185c35"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-archives-lecture.png",
+        "sha256": "1e6673a8172a18da56b1a937f97d95f1e4a12f57fccf92c0ca57335bb7d5f0ff"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-archives-vide.png",
+        "sha256": "a63c9055cee844a535d882fd09cc36876078d898370fa041b93e621d0a089016"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-archives.png",
+        "sha256": "d502b9a90b17fffdd5affde3b73b1e9669fd3bf6e607eefcf649abaa6b3efaa8"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-destinataires.png",
+        "sha256": "d42eede170d1cb70821a845f9fd76fb7787b2037870277f81596cb3feeaf8c45"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-feedback-bas.png",
+        "sha256": "bc6212bdb284de4091268cefec5250b0f9d990760c8a5cf941425c0adb54f330"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-feedback-transmis.png",
+        "sha256": "82563aeec5bf1b2f85c533d95b88fe4dd18a5e8c7573052b7fc6790f8d7ef985"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-feedback.png",
+        "sha256": "bc6212bdb284de4091268cefec5250b0f9d990760c8a5cf941425c0adb54f330"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-lieux-bas.png",
+        "sha256": "1dc6e8c7b20f8146bf980196b78efaf19dea7bd75abe77b413d8ab1c4332d0c2"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-lieux-lecture-bas.png",
+        "sha256": "f92067018589b2b4fd5f5a4af1ffbea877622fc996407d9cc2da8c63911d7b30"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-lieux-lecture.png",
+        "sha256": "007bf8722fae8557927236620e9a3724e1603ec12b7df641ffb85f1af641299e"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-lieux-vide.png",
+        "sha256": "3beb0689d58afec504b584c6ec95c3eb7c52b3d12e312913884820de6ec491d6"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-lieux.png",
+        "sha256": "7bcfaa8c2ac4f7357e419b02979a62c5662c2902840ce767e3fab58a5336993c"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-messagerie-generale.png",
+        "sha256": "3d9c4e362616e7264fcdcb7f22cea82e331f8c7999a937adfd9e7572af3f52b2"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-messagerie-privee.png",
+        "sha256": "5552e886dad8696acbb3b3c6db7863f9c77e7b8b1a4c19e0ffe6b58bb9c7c91c"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-messagerie.png",
+        "sha256": "74f8eb1b7c133ac80d152cf87992db4fc619ca9279f97118d844de263d810f83"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-notes.png",
+        "sha256": "e4cf0e44269a95def284da637fc684dacc8fa12caeee442363d9ac0681c97843"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-notification-message.png",
+        "sha256": "9eba02c6d330f69a92e289ffed2535e65b7b67dd595aad906f8dcb2c9270ab23"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-notification-systeme.png",
+        "sha256": "72eb2d5df90aa6f1b88559c8d62fc0906d2db3539ef4cd9b160b0a0ddcc2319d"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-pnj-bas.png",
+        "sha256": "a72f3fe3cba08704da642acd623f5c14c13ca712caec77c98664c2513ca2a9f3"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-pnj-lecture-bas.png",
+        "sha256": "731cb65afc5fae3caecc0f191c47610e671c78f131bfa3f70a0426ceb721b352"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-pnj-lecture.png",
+        "sha256": "ef50f0958c7affb8a00d1f24ea1486862de28539fb294219690097400205e323"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-pnj-vide.png",
+        "sha256": "83c69cb723e3ddaab90779f9d7db185840bc0017786cc29899af6eb605861a58"
+      },
+      {
+        "source": "C:/Projet_David/GM-OS-v5/documentation/Planning/tablettes/T4-joueurs/j2/telephone-pnj.png",
+        "sha256": "4eb5282ef58094191d1623fee1ce028ef01aaaf1a9ea4c3a46d9f88c9f53b817"
+      }
+    ]
+  },
+  "galerie": {
+    "vues": 104,
+    "erreurs": [],
+    "regardee": true
+  },
+  "manuel": {
+    "nombre": 6,
+    "regardees": true,
+    "fichiers": [
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-archives.jpg",
+        "sha256": "f658e58db34776fa2c6a2eb6d01a557290f33087c88a522c5ec26767c3bb8703"
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-pnj.jpg",
+        "sha256": "f5f3cf41858fb554f2535686f7ea5f7c9078660c3335bb3e084ce9ab5163380a"
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-lieux.jpg",
+        "sha256": "7faf701e4f201288421e14962d74b6d2065af969157d74378c72870d2d265b1d"
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-messages.jpg",
+        "sha256": "8ee561ea37d412af7e231085fde8bc4d3bc53aa14051b0ca99b50df4c8aba638"
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-notes.jpg",
+        "sha256": "5654782ea1c72c1e64ebea3fd2cced505eee40fa50d480d5c76f1cc2719862b7"
+      },
+      {
+        "source": "documentation/User Guides/captures/tablette-des-joueurs-feedback.jpg",
+        "sha256": "10b64b8846c4275176099f83d08af189a2410e29d3db2dbc5cedc041f47d23e6"
+      }
+    ]
+  },
+  "limites": [
+    "Alertes generiques testees via leur etat local, sans validation de transport reseau.",
+    "Vrais appareils, clavier Safari et mises en veille : T6.",
+    "Essai de David requis avant M1."
+  ],
+  "commit": false,
+  "push": false
+}

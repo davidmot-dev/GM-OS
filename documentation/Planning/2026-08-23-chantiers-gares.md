@@ -142,11 +142,13 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
-| ⚠️ **T0 joueurs, 04/10 : les PV saisis sur une vraie tablette ne remontent pas au meneur.** Nel reste à 9 PV chez le MJ après « −1 PV » dans la fiche du navigateur | `e2e/tabletteJoueursT0.spec.ts`, cas « défaut T0 — les PV modifiés sur tablette doivent atteindre le meneur ». `entitySlice.ts:675` (`remoteUpdateCharacterVitals`) écrit localement et ajoute une notification locale ; il ne diffuse pas le changement. `useHubSync.ts` ne comporte pas de relais pour ces vitaux | **Hors T0**, qui inventorie et éprouve sans modifier `src/`. Test marqué en échec attendu, assertion conservée : il signalera une réussite inattendue une fois réparé. Ce défaut doit être arbitré avant de déclarer la base T0 entièrement verte |
-| ⚠️ **T0 joueurs, 04/10 : sur téléphone 390 × 844, la barre de navigation recouvre « Jouer » sur une carte en bas de l'onglet.** Le bouton existe et est visible mais chaque clic est intercepté par « Archives » dans la navigation ; Playwright attend puis expire | `e2e/tabletteJoueursT0.spec.ts`, cas « Cartes — piocher, agrandir et jouer sa carte » ; capture `documentation/Planning/tablettes/T0-joueurs/telephone/12-cartes.png`. La navigation est `fixed bottom-2` dans `TabletHub.tsx`, tandis que `HubMainDeCartes.tsx` scrolle sa propre surface | **Hors T0**, correction de mise en page pour un lot J1. Le test reste actif et marque seulement la variante téléphone en échec attendu ; s'il peut cliquer avant la correction, l'échec attendu devient une erreur |
-| ⚠️ **T0 joueurs, 04/10 : sur iPad portrait et paysage, le nom de la campagne se superpose à l'horloge.** « Le Silence de Varn » commence sous le bloc de l'heure ; à 390 px, il passe au-dessus | Captures `documentation/Planning/tablettes/T0-joueurs/portrait/02-direct.png` et `paysage/02-direct.png` ; l'en-tête de campagne et l'horloge sont deux blocs fixes indépendants dans `TabletHub.tsx` | **Hors T0**, à reprendre dans le lot J1 de réagencement. Trouvaille visuelle : aucun test de texte ou de visibilité ne peut garantir l'absence de chevauchement |
+| ✅ **T4 Direct, 06/10 : l'horloge initiale affichait le temps réel malgré le mode statique du meneur.** | Le snapshot omettait `mode`, `theme`, `timerDuration` et `timerLabel`, présents seulement dans le segment rapide | **Réparé pour terminer J1** : `segmentDesHorloges` fournit les mêmes champs au snapshot et aux changements, en excluant les jauges secrètes. Trois tests unitaires ; le banc Direct vérifie 21:00 dès la connexion aux quatre formats, avant toute modification du meneur. [Relevé J1](2026-10-06-T4-J1-joueurs.md). Le transport du calendrier fantastique reste à éprouver |
+| ✅ **T0 joueurs, 04/10 : les PV saisis sur tablette restaient locaux.** | `remoteUpdateCharacterVitals` écrivait sans événement ; `useHubSync` ne relayait pas ces vitaux | **Réparé pour terminer J1 le 06/10** : événement dédié, relais WebSocket, contrôle du personnage propriétaire, valeur finie bornée à la jauge existante et notification au meneur, sans boucle. Neuf tests du handler ; assertions PV du banc T0 conservées aux trois formats, sans échec attendu, et quatre cas Fiche J1. [Relevé](2026-10-06-T4-J1-joueurs.md) |
+| ✅ **T0 joueurs, 04/10 : sur téléphone, la navigation recouvrait « Jouer » en bas de Cartes.** | Capture T0 `telephone/12-cartes.png` ; navigation fixe dans `TabletHub.tsx` devant la surface défilante | **Traité dans T4/J1 Cartes le 06/10** : navigation dans le flux, zone de travail défilante, action de 44 px au-dessus de la barre. Assertion T0 conservée sans échec attendu ; quatre cas J1 font réellement piocher/jouer/donner/refuser/accepter. [Captures regardées](tablettes/T4-joueurs/j1/index.html) |
+| ✅ **T0 joueurs, 04/10 : sur iPad portrait et paysage, le nom de la campagne se superposait à l'horloge.** | Captures T0 `portrait/02-direct.png` et `paysage/02-direct.png` ; deux blocs fixes indépendants dans `TabletHub.tsx` | **Traité dans T4/J1 Direct le 06/10** : en-tête dans le flux et horloge dans sa zone. [Captures regardées aux quatre formats](tablettes/T4-joueurs/direct/index.html). Les assertions complètent le regard ; elles ne garantissent pas à elles seules l'absence de chevauchement |
 | ⚠️ **T0 meneur, 05/10 : la première connexion pourtant appairée ne reçoit pas toujours le flux.** Les pads restent absents ; une nouvelle connexion les fait apparaître. Sur quatre variantes d'un essai exploratoire, trois sont restées vides et une s'est peuplée | `electron/SyncServer.ts` demande `remote:request-sync` dès `handleConnection`, avant `remote:register` ; le rôle privilégié arrive ensuite. `e2e/tabletteMeneurT0.spec.ts` demande une seconde synchronisation après appairage pour établir un état de référence fiable. Voir `documentation/Planning/2026-10-05-T0-tablette-meneur.md` | **Hors T0**, à stabiliser avant le critère de reconnexion de T1. C'est une course intermittente : pas de `test.fail()` automatique qui deviendrait rouge quand elle réussit |
-| ⚠️ **T0 meneur, 05/10 : « Cliquer pour fermer » sous le résultat de dés ne ferme rien quand on le touche.** Le fond ferme le panneau ; le libellé ne le fait pas, aux quatre tailles | `RemoteDiceResultOverlay.tsx` : `onClose` sur le conteneur extérieur, `stopPropagation()` sur le panneau intérieur qui porte le libellé. `e2e/tabletteMeneurT0.spec.ts`, cas « Défaut T0 — toucher… », en échec attendu | **Hors T0**, à reprendre avec l'écran Dés du lot M1. L'assertion sera une réussite inattendue quand le libellé fonctionnera |
+| ✅ **Réparé en T4/M1, 06/10 : « Cliquer pour fermer » ferme le résultat de dés.** Fermeture haute visible même après défilement de 99 dés ; fond, Échap et expiration à quinze secondes conservés | `RemoteDiceResultOverlay.tsx` : bouton tactile et en-tête fixe hors du contenu défilant. `e2e/tabletteMeneurT0.spec.ts` : quatre cas de fermeture ordinaires, sans échec attendu ; cas long dans `e2e/tabletteM1T4.spec.ts` | [Relevé M1](2026-10-06-T4-M1-meneur.md), 81 scénarios distincts M1/T0 validés après rejeux ciblés |
+| ✅ **Réparé en T4/M2, 06/10 : les choix d'outil, couleur et épaisseur faits sur le PC n'arrivaient pas au Tableau de la tablette.** | Le flux rapide de `useNexusSynchronizer.ts` omettait ces trois champs ; il réutilise maintenant `segmentDuTableau`, comme le flux complet, sans changer sa cadence | Le parcours Tableau de `e2e/tabletteM2T4.spec.ts` vérifie les trois réglages venus du PC, le dessin tactile et l'historique. [Relevé M2](2026-10-06-T4-M2-meneur.md) |
 | ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
 | ⚠️ **L'en-tête écrit « Combat-OS OS »**, « Dice-OS OS »… et à 1440 px de large le titre passe sur trois lignes (celui de Dice-OS est rogné en haut), tandis que la droite de l'en-tête déborde (`GM-OS_V` coupé) | `Shell.tsx:551` ajoute `<span>OS</span>` après `t('modules:names.…')`, alors que la plupart des noms portent déjà « -OS ». Visible sur toute capture de la vitrine (`e2e/vitrine.spec.ts`) | **Trouvé le 2026-09-25 par la vitrine**, premier essai de faisabilité de la refonte. C'est de l'habillage : il se traite dans la refonte ou juste avant, pas en passant |
@@ -9677,8 +9679,62 @@ joueurs, 40 meneur. [Galerie J1/J2](tablettes/T3-propositions/index.html) et
 dans [tablettes-joueurs](stitch/tablettes-joueurs/README.md) et
 [tablette-meneur](stitch/tablette-meneur/README.md), copies vérifiées par SHA-256.
 David demande ensuite « commit et push T3, met à jour la documentation, et commence T4 ».
-**T4 s'ouvre par J1, accueil « Qui es-tu ? »**, après confirmation que GM-OS est fermé ;
-un écran vérifié à la fois, séance jouée avant J2. T5 et T6 restent à faire.
+**T3 commité et poussé : `1a8c8019`, sur `origin/feature/tablet-hub-pwa`.**
+**T4/J1 commencé, accueil intégré après David, « gm-os est fermé » (06/10).**
+`LobbyOnboarding.tsx` utilise le gabarit commun : en-tête et sortie accessibles pendant le
+défilement, cartes compactes, trois colonnes en paysage et confirmation repliée après sortie.
+[Relevé T4](2026-10-06-T4-tablette-joueurs.md), [galerie intégrée](tablettes/T4-joueurs/accueil/index.html).
+Quatre cas accueil de 360 à 1180 px, typage/construction, lint ciblé et 35 tests socle/apparence
+verts ; huit captures regardées. Banc T0 joueurs : 39 scénarios validés, dont quatre échecs
+attendus connus. Guides 61/62 relus, capture du manuel régénérée puis regardée. Constat avant
+T4 et candidat préparé conservés. **À cette étape : T4 non commité** ; prochains écrans
+Inventaire, puis Cartes. Un écran vérifié à la fois, séance jouée avant J2.
+**Direct intégré dans T4/J1**, après une nouvelle confirmation « gm-os est fermé » :
+`HubDirect.tsx`, gabarit commun, dix commandes nommées, informations séparées de la projection,
+horloge compacte et initiative refermable. [Relevé](2026-10-06-T4-Direct-joueurs.md),
+[galerie](tablettes/T4-joueurs/direct/index.html) ; quatre cas Direct et 31 tests horloge verts.
+Rejeu final : 47 scénarios validés (quatre échecs attendus connus), 55 captures du banc,
+seize captures Direct regardées. Guides 61/62 relus ; deux étapes du manuel passent,
+capture Direct régénérée puis regardée. Erreur de lint TabletHub
+préexistante conservée. Défaut initial de transport Clock-OS consigné au § 1 bis, sans correctif
+glissé dans ce premier réagencement. J1 restait ouvert à cette étape,
+T4 non commité. T5 et T6 restent à faire.
+
+**Après David, « ok fini J1 » (06/10) : développement et contrôles J1 terminés.**
+Inventaire et Cartes rejoignent le gabarit commun, leurs actions nommées restent accessibles
+après défilement ; dons, scellés et paquets vides éprouvés. En-tête de fiche repliable et
+réserves de 44 px côté joueur. PV transmis au meneur, horloge statique initiale et Jouer
+sur téléphone réparés (§ 1 bis). Typage/construction et **6 774 tests unitaires** verts.
+**59 scénarios Electron validés après rejeu ciblé, sans échec attendu** ; 44 captures J1
+regardées, guides 61/62 actualisés, quatre captures du manuel régénérées puis regardées
+(cinq étapes vertes). Lint comparé sur 22 fichiers sans nouveau diagnostic. [Relevé J1](2026-10-06-T4-J1-joueurs.md),
+[galerie intégrée](tablettes/T4-joueurs/j1/index.html).
+**David, « ok c'est testé fais J2 » : essai de J1 consigné et J2 autorisé.** Il confirme
+ensuite « Non, GM-OS est fermé ». **J2 développé et vérifié** : Archives, PNJ, Lieux,
+messagerie, notifications et Notes/Feedback. Typage/construction réussis ; 88 scénarios
+distincts et 6 774 tests unitaires validés après rejeux ciblés, quatre tests unitaires
+ignorés et aucun échec E2E attendu. 104 PNG et six JPEG regardés, sept étapes du manuel
+passent, guides 61/62 actualisés ; lint comparé sur 20 fichiers sans nouveau diagnostic.
+[Relevé J2](2026-10-06-T4-J2-joueurs.md), [galerie](tablettes/T4-joueurs/j2/index.html).
+**David confirme « GM-OS est éteint », puis demande « commence M1 ».** M1 est développé
+et vérifié : Pads, Dés, Combat, navigation, ligne d'état et Couper le son. Typage et
+construction réussis ; **81 scénarios distincts validés après rejeux ciblés**, sans
+échec attendu, et **201 tests unitaires ciblés** verts. Lint comparé sur 13 fichiers
+sans nouveau diagnostic ; 66 PNG et trois JPEG regardés, quatre étapes du manuel
+passent et guide 60 actualisé. [Relevé M1](2026-10-06-T4-M1-meneur.md),
+[galerie](tablettes/T4-meneur/m1/index.html). Aucun essai de J2 par David n'est déclaré
+dans cet échange ; M1 s'ouvre sur sa demande explicite.
+**Après M1, David demande « continue » : M2 est développé et vérifié.** Sons,
+Scénario, Tableau, les six vues des Notes et Messages sont intégrés. Le flux rapide
+du Tableau réutilise `segmentDuTableau` pour transmettre outil, couleur et épaisseur
+choisis sur le PC. Typage/construction et **201 tests unitaires ciblés** verts ;
+**36 scénarios M2 distincts et 81 régressions M1/T0 validés sur les passages**,
+sans échec attendu. 116 PNG et cinq JPEG regardés ; six étapes du manuel passent,
+guide 60 actualisé et lint comparé sur 11 fichiers sans nouveau diagnostic.
+[Relevé M2](2026-10-06-T4-M2-meneur.md), [galerie](tablettes/T4-meneur/m2/index.html).
+Sa confirmation de fermeture reste valable ; aucun essai de M1 depuis n'est déclaré.
+**Reprise : essai de M2 par David.** Les quatre lots sont intégrés ; T5/T6 restent ouverts.
+T4 non commité ; le commit/push demandé concernait T3.
 
 ---
 
@@ -9780,7 +9836,7 @@ place du chantier — **avant ou après la refonte des tablettes** (§ 123).
 | 55 | **Les titres en lettres espacées** | ✅ **CORRIGÉ ET VU le 25/09** — `S TA R T I N G  S C E N E` devient *Starting Scene*. ⛔ Sans le titre du livre gardé en coulisse, **toutes les scènes d'Anges de Feu** auraient été écartées à la reforge (§ 119) | — | Rien |
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
-| 58 | **La refonte des tablettes** | ✅ **T3 terminé et retenu le 06/10** — J1/J2/M1/M2 archivés, 36 contrôles joueurs et 40 meneur. David demande le commit/push et le démarrage de T4. Voir § 123 et `2026-10-04-refonte-tablettes.md` | T4 : commencer J1 par l'accueil « Qui es-tu ? », puis Direct, Inventaire, Cartes ; séance avant J2 | Défauts T0 non corrigés ; vérifier que GM-OS est fermé avant le code |
+| 58 | **La refonte des tablettes** | 🔄 **T3 retenu, commité et poussé (`1a8c8019`) ; les quatre lots de T4 développés et vérifiés le 06/10, J1 testé par David** — M2 : 36 scénarios distincts et 81 régressions M1/T0 validés sur les passages, 201 tests unitaires ciblés ; guides et captures actualisés. Voir § 123 et les relevés J1/J2/M1/M2 | Essai de M2 ; puis T5/T6 | T4 non commité ; essais de J2/M1/M2 par David non déclarés ici |
 | 59 | **Le graphe de la Trame en cartes** | ⏳ **GARÉ le 04/10** — rapprocher le graphe de la maquette Stitch (cartes, flèches courbes, panneau du nœud) ; piste : React Flow pour la Trame seule. Voir § 124 | David : accord pour le paquet, et place avant ou après les tablettes | La décision de David |
 
 ### Ce que la soirée du 2026-08-23 a fermé

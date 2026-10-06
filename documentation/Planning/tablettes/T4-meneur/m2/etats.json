@@ -1,0 +1,106 @@
+{
+  "Sons": [
+    [
+      "01-sons",
+      "Bruitages"
+    ],
+    [
+      "02-sons-filtre",
+      "Filtre"
+    ],
+    [
+      "03-sons-vides",
+      "Aucun bruitage"
+    ]
+  ],
+  "Scénario": [
+    [
+      "04-scenario",
+      "Moments"
+    ],
+    [
+      "05-scenario-vide",
+      "Aucun moment"
+    ]
+  ],
+  "Tableau": [
+    [
+      "06-tableau",
+      "Outils"
+    ],
+    [
+      "07-tableau-dessine",
+      "Dessin"
+    ],
+    [
+      "08-tableau-clair",
+      "Fond clair et gomme"
+    ]
+  ],
+  "Notes": [
+    [
+      "09-notes-seance",
+      "Séance"
+    ],
+    [
+      "10-notes-detail",
+      "Scène dépliée"
+    ],
+    [
+      "11-notes-trame",
+      "Trame"
+    ],
+    [
+      "12-notes-chroniques",
+      "Chroniques"
+    ],
+    [
+      "13-notes-indices",
+      "Indices"
+    ],
+    [
+      "14-notes-secrets",
+      "Secrets"
+    ],
+    [
+      "22-notes-aventure",
+      "Mode Aventure"
+    ]
+  ],
+  "Coffre": [
+    [
+      "15-coffre",
+      "Racine"
+    ],
+    [
+      "16-coffre-dossier",
+      "Dossier"
+    ],
+    [
+      "17-coffre-recherche",
+      "Recherche"
+    ],
+    [
+      "18-coffre-note",
+      "Note Markdown"
+    ]
+  ],
+  "Messages": [
+    [
+      "19-messages",
+      "Fil vide"
+    ],
+    [
+      "20-messages-prives",
+      "Conversation privée"
+    ],
+    [
+      "21-messages-longs",
+      "Texte long"
+    ],
+    [
+      "23-non-appairee",
+      "Sans appairage"
+    ]
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "confirmation": "David : Non, GM-OS est ferme, apres son essai J1.",
+  "fichiers": [
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubArchives.tsx",
+      "target": "src/components/hub/HubArchives.tsx",
+      "avant": "13503382a372cacb01cef5c55c0a1bb4f30f389c3dfe60712f29fb3889fc7f0d",
+      "candidat": "6b57c61333c233ce3ba21aaba686595d2501681ef9d4e21e579866b50a417e5b"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubAtlas.tsx",
+      "target": "src/components/hub/HubAtlas.tsx",
+      "avant": "f4c704c96503bb74ef561cec53bd9e4158d6693f9026c4bccb5fc223b31efa5e",
+      "candidat": "8feb5f28317bfc8d9ae8745a49f69ab9b3213fdd10e66c6543698d8675a6b716"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubAtlasViewer.tsx",
+      "target": "src/components/hub/HubAtlasViewer.tsx",
+      "avant": "352beb055b399ac74b3aad098fb6425a4211d778d3baaf263ce49486adbd27d8",
+      "candidat": "5e3df62be708425e403616d8abef0d95f1e714fffb4eb8f6c93995d7b9a63f0e"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubClueViewer.tsx",
+      "target": "src/components/hub/HubClueViewer.tsx",
+      "avant": "2aca639a8581662fcf604d15e0073832ff60e10d894b15a4db9a6cc7b7d07611",
+      "candidat": "eb7d73493a95c960a057a9742c94819fc11a7eeb1c9e7d18d2b18b86322784a9"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubConsultation.tsx",
+      "target": "src/components/hub/HubConsultation.tsx",
+      "avant": null,
+      "candidat": "6dee06e0f02aaedd7d812b49b345e9e549e22eede45f2693555ff903d08bcbb6"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubLecture.tsx",
+      "target": "src/components/hub/HubLecture.tsx",
+      "avant": null,
+      "candidat": "011dd7111e177caacb6c7fc5eb44756fb85554fc94b796ed6757d88d314c169d"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubMessenger.tsx",
+      "target": "src/components/hub/HubMessenger.tsx",
+      "avant": "b4f451134dde090eff13df30e7e7c52b8f667775ee578061ac228e981e407a79",
+      "candidat": "c5a5f83addb9e1c3666241640c0fafbb42979f9a6e272920b763052ea85b2fec"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubNotificationCenter.tsx",
+      "target": "src/components/hub/HubNotificationCenter.tsx",
+      "avant": "34670d62b07f8cafbf8be2f8970c278a3727d0e5a5c65878125cb5ee31a10876",
+      "candidat": "d81c424418fd00a299d39e8b4f2b2e7a603dba534f176fa4f0ffc10206c7025a"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubNpcViewer.tsx",
+      "target": "src/components/hub/HubNpcViewer.tsx",
+      "avant": "06913f53d556a0f7a3cf87d2af99666ff01aed96361bd547ccb79d4dbb92e82d",
+      "candidat": "0d2ede6401861c57f584cf870c14329b4b1afc6633c179bbdcd4205f676db647"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\HubTrombinoscope.tsx",
+      "target": "src/components/hub/HubTrombinoscope.tsx",
+      "avant": "b76d1b6754df389fff22a1adad10d1dd20ef57f7fe5fcbd2fc617785ec67c74b",
+      "candidat": "bd5555dc5be922c4b75a90b9e6c0abccdc230cdf0fb1464842915ce1d11384f3"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\PlayerPrivateNotes.tsx",
+      "target": "src/modules/session/components/PlayerPrivateNotes.tsx",
+      "avant": "f62d467a5f117b89aa37cb780080d83e1ccf5768882893d50119bce679886783",
+      "candidat": "07ca36671cc1c73e3a4a94e88fd65877af6ef14a6380170ccb1406bce701c6af"
+    },
+    {
+      "candidate": "documentation\\Planning\\tablettes\\T4-joueurs\\j2\\candidats\\TabletHub.tsx",
+      "target": "src/components/TabletHub.tsx",
+      "avant": "f1403e448fe512a842bdb0ec0669cac5dd824ade2a107e313a7e7c55e1972ff5",
+      "candidat": "0949d10805fc18e35739bf2a928cbc5a2ed012cd4d92cbff9514bd786c71b70a"
+    }
+  ]
+}

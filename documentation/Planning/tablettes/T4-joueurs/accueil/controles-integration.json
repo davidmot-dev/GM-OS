@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-06",
+  "ecran": "Accueil joueurs",
+  "source": "src/components/hub/LobbyOnboarding.tsx",
+  "sha256Source": "ac4a39ec3b3fbd49e380fde03f2d8f229ffca284960b4db143a8cb6dc91719e7",
+  "constructionEtTypes": true,
+  "eslint": {
+    "erreurs": 0,
+    "avertissements": 0
+  },
+  "testsSocleEtApparence": {
+    "reussis": 35
+  },
+  "accueil": {
+    "reussis": 4,
+    "formats": [
+      [
+        360,
+        800
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        820,
+        1180
+      ],
+      [
+        1180,
+        820
+      ]
+    ],
+    "capturesRegardees": 8
+  },
+  "bancJoueurs": {
+    "scenariosValides": 39,
+    "echecsAttendusConnus": 4,
+    "captures": 55,
+    "source": "e2e/tabletteJoueursT0.spec.ts"
+  },
+  "manuel": {
+    "etapesReussies": 2,
+    "capture": "documentation/User Guides/captures/tablette-des-joueurs.jpg",
+    "sha256": "e9be971de0ce5fe4ad85e2c317c91e2b7949dc0b6a3d66b1452be0bbf49c0389",
+    "regardee": true
+  },
+  "commitT3": "1a8c8019",
+  "t4Commite": false
+}

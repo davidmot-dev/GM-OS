@@ -1,0 +1,84 @@
+{
+  "reference": "HEAD",
+  "fichiers": [
+    {
+      "fichier": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "avant": 5,
+      "apres": 5,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/RemoteControl.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteModule.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteUniversalPads.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteDicePad.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteDiceResultOverlay.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteCombatTracker.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteStatusBar.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/LigneDeVolume.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/components/echapFermeLesSurcouches.test.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteM1T4.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteMeneurT0.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "avant": 27,
+      "apres": 27,
+      "nouveaux": []
+    }
+  ],
+  "nouveaux": 0
+}

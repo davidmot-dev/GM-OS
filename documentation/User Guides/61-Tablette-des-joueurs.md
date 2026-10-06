@@ -43,11 +43,18 @@ Toutes les machines doivent être sur **le même réseau Wi-Fi**.
 qui déclarez le groupe présent, depuis le cockpit (*Gérer le groupe*) ; un personnage déjà pris par
 une autre tablette n'est plus proposé.
 
+Sur téléphone, les personnages apparaissent en cartes compactes ; en paysage, trois cartes
+peuvent tenir côte à côte. Le nom de la campagne, la séance et **Quitter la session** restent
+accessibles pendant que la liste défile. Chaque carte montre le personnage et son joueur.
+
 ![La tablette d'un joueur à l'ouverture : « Qui es-tu ? », et les trois personnages présents à la séance](captures/tablette-des-joueurs.jpg)
 
 ### Choisir son personnage
 
 À la première connexion, le joueur choisit son personnage dans la liste.
+
+Avant ce choix, **Quitter la session** demande confirmation : **Non** revient à la liste,
+**Oui, quitter** confirme la sortie. Le bandeau de confirmation se referme ensuite.
 
 - **Un personnage à la fois.** Si quelqu'un l'utilise déjà, la connexion est refusée : c'est ce qui
   empêche deux tablettes de modifier la même fiche.
@@ -62,7 +69,9 @@ une autre tablette n'est plus proposé.
 
 ## 🧭 Les six onglets, et les quatre panneaux
 
-La barre du bas est tout le Hub. Six onglets à gauche, quatre boutons à droite.
+La barre du bas donne accès aux six onglets et aux quatre panneaux. Dans chaque onglet,
+les six onglets affichent leur nom sur deux rangées en portrait, une en paysage ;
+**Fiche**, **Notes**, **Messages** et **Quitter** occupent la rangée suivante.
 
 | Onglet | Ce qu'on y trouve |
 | :--- | :--- |
@@ -76,12 +85,19 @@ La barre du bas est tout le Hub. Six onglets à gauche, quatre boutons à droite
 | Bouton | Ce qu'il ouvre |
 | :--- | :--- |
 | **Fiche** | La fiche de personnage complète, au format du jeu |
-| **Notes** | Les notes privées du joueur |
+| **Notes** | Les notes privées du joueur et son feedback de séance au meneur |
 | **Messages** | La messagerie, avec le compte des non-lus |
 | **Quitter** | Libère le personnage, après confirmation |
 
 > 🔎 **Cette page ne décrivait aucun de ces onglets** — ni les indices, ni l'Atlas, ni les cartes en
 > main, qui sont pourtant l'essentiel de ce qu'un joueur touche. Ajoutés le 2026-09-04.
+
+**Archives**, **PNJ** et **Lieux** gardent leur titre et les commandes au-dessus de la liste.
+Les noms peuvent revenir à la ligne. Faites défiler la liste pour retrouver une entrée,
+puis touchez-la : son image et son texte s'ouvrent dans un lecteur avec **Fermer** en haut.
+Le texte long défile sans déplacer ce bouton.
+
+![Les indices révélés restent consultables dans les Archives](captures/tablette-des-joueurs-archives.jpg)
 
 ---
 
@@ -89,7 +105,8 @@ La barre du bas est tout le Hub. Six onglets à gauche, quatre boutons à droite
 
 ### L'horloge et les jauges de tension
 
-Elles apparaissent en haut à gauche **si le meneur a laissé la projection allumée dans Clock-OS**,
+Sur **Direct**, elles apparaissent au-dessus de la projection en portrait, à sa droite en
+paysage, **si le meneur a laissé la projection allumée dans Clock-OS**,
 ce qui est le cas par défaut. Le Hub adopte le thème choisi par le meneur — Moderne, Cyberpunk ou
 Old Style.
 
@@ -102,6 +119,11 @@ Dès qu'il projette un PNJ, un lieu ou une image, l'onglet **Direct** l'affiche 
 du joueur. Plusieurs éléments s'organisent en grille, et un même personnage projeté par deux
 chemins n'apparaît qu'une fois.
 
+Les **Chroniques de séance** montrent le résumé public du meneur. Un texte long se lit en
+faisant défiler ce panneau. La navigation reste accessible pendant la lecture.
+
+![Direct en paysage : projection à gauche, horloges et chroniques à droite, navigation en bas](captures/tablette-des-joueurs-direct.jpg)
+
 ### Les jets de dés
 
 Un jet projeté s'affiche en plein écran pendant cinq secondes. →
@@ -109,8 +131,9 @@ Un jet projeté s'affiche en plein écran pendant cinq secondes. →
 
 ### Le combat
 
-Quand un combat est en cours, l'ordre d'initiative apparaît en surimpression. Sur mobile, un bouton
-**Initiative** l'ouvre et le referme.
+Dans chaque onglet, le bouton **Initiative** dans la barre du haut ouvre l'ordre du combat.
+**Fermer** revient à la projection. Les adversaires invisibles ou cachés ne figurent pas
+dans cette liste.
 
 ### Le signal de voix
 
@@ -166,3 +189,10 @@ les quatre panneaux, qui n'étaient décrits nulle part.*
 
 *Relu le 2026-10-03 : le QR code est aussi dans les Paramètres refondus. Captures de la campagne de
 démonstration.*
+
+*Relu le 2026-10-06 : J1 intégré (accueil, Direct, Inventaire, Cartes et fiche).
+Navigation nommée, actions accessibles après défilement, PV transmis au meneur,
+réserves tactiles et horloge reçue dès la connexion. Vérifié avec la campagne de démonstration.*
+
+*J2, 2026-10-06 : Archives, PNJ, Lieux, messagerie, notifications et Notes/Feedback réagencés.
+La navigation reste nommée dans les six onglets ; les lecteurs gardent leur sortie visible.*

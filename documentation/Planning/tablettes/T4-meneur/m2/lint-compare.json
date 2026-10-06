@@ -1,0 +1,72 @@
+{
+  "reference": "HEAD",
+  "fichiers": [
+    {
+      "fichier": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "avant": 5,
+      "apres": 5,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/RemoteControl.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteModule.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteSoundboard.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteStoryboard.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteWhiteboardView.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteNotes.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteObsidian.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "src/modules/remote/components/RemoteMessenger.tsx",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/tabletteM2T4.spec.ts",
+      "avant": 0,
+      "apres": 0,
+      "nouveaux": []
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "avant": 27,
+      "apres": 27,
+      "nouveaux": []
+    }
+  ],
+  "nouveaux": 0
+}

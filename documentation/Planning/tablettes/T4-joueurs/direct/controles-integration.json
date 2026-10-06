@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-06",
+  "ecran": "Direct joueurs",
+  "sources": [
+    {
+      "source": "src/components/hub/HubDirect.tsx",
+      "sha256": "3c2108c0f962d9292e9125252010e494618247adf3204749c9d0b745d3db10ec"
+    },
+    {
+      "source": "src/components/TabletHub.tsx",
+      "sha256": "e2b9fee69d28e5248cd93665ee453061e30ab5f1bdaad650a1cacfa941b02895"
+    },
+    {
+      "source": "src/modules/clock/components/ClockVisualizer.tsx",
+      "sha256": "b70b59a1ebaa3a886630d1d0aac56954fd2175f18a57e9a2f772dd6bfdf57310"
+    }
+  ],
+  "constructionEtTypes": true,
+  "eslint": {
+    "nouveauxFichiersEtClockVisualizer": {
+      "erreurs": 0,
+      "avertissements": 0
+    },
+    "TabletHub": {
+      "erreursPreexistantes": 1,
+      "nouveauxDiagnostics": 0,
+      "regle": "react-hooks/set-state-in-effect",
+      "ligne": 193
+    },
+    "capturesDuManuel": {
+      "erreurs": 0,
+      "avertissementsPreexistants": 27,
+      "nouveauxDiagnostics": 0
+    }
+  },
+  "testsHorloge": {
+    "reussis": 31,
+    "nouveauxCas": 5
+  },
+  "direct": {
+    "reussis": 4,
+    "formats": [
+      [
+        360,
+        800
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        820,
+        1180
+      ],
+      [
+        1180,
+        820
+      ]
+    ],
+    "capturesRegardees": 16
+  },
+  "rejeuAccueil": {
+    "reussis": 4
+  },
+  "bancJoueurs": {
+    "scenariosValides": 39,
+    "echecsAttendusConnus": 4,
+    "captures": 55,
+    "vuesDirectRegardees": 3,
+    "source": "e2e/tabletteJoueursT0.spec.ts",
+    "repertoire": "documentation/Planning/tablettes/T4-joueurs/regressions-direct"
+  },
+  "totalScenariosValides": 47,
+  "manuel": {
+    "etapesReussies": 2,
+    "capture": "documentation/User Guides/captures/tablette-des-joueurs-direct.jpg",
+    "sha256": "9e0ce9934684f65de62b601b9b1f512899bef0de87ac1c62ea94538883aa7f60",
+    "regardee": true
+  },
+  "limites": {
+    "snapshotInitialHorlogeValide": false,
+    "transportCalendrierFantastiqueValide": false,
+    "seanceJouee": false
+  },
+  "commitT3": "1a8c8019",
+  "t4Commite": false
+}
