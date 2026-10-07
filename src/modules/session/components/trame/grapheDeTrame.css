@@ -1,0 +1,72 @@
+/* G2–G5, 07/10/2026 : borné à la Trame ; les quatre thèmes fournissent les jetons. */
+.toile-de-trame { width: 100%; height: 100%; --xy-background-color: transparent; --xy-edge-stroke: var(--app-border); --xy-controls-button-background-color: var(--app-surface); --xy-controls-button-background-color-hover: var(--app-bg); --xy-controls-button-color: var(--app-text); --xy-controls-button-border-color: var(--app-border); --xy-edge-label-background-color: var(--app-surface); }
+.toile-de-trame .react-flow__node-trame { border-radius: var(--rayon-md, 12px); }
+.toile-de-trame .react-flow__node:focus-visible { outline: 3px solid var(--app-accent); outline-offset: 4px; }
+.toile-de-trame .react-flow__handle { width: 12px; height: 12px; border: 2px solid var(--app-surface); background: var(--app-accent); opacity: 0; }
+.toile-de-trame[data-liaison] .react-flow__handle { opacity: 1; width: 18px; height: 18px; cursor: crosshair; }
+.toile-de-trame .react-flow__handle.accroche-structurelle { visibility: hidden; pointer-events: none; }
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle { opacity: 1; visibility: visible; pointer-events: auto; }
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle { background: transparent; border-color: transparent; cursor: pointer; }
+/* Agrandir la cible sans déplacer le port ni changer les trajets enregistrés. */
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle::before,
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; }
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle::before { width: calc(32px / var(--zoom-de-trame, 1)); height: calc(32px / var(--zoom-de-trame, 1)); }
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle::after { width: calc(14px / var(--zoom-de-trame, 1)); height: calc(14px / var(--zoom-de-trame, 1)); box-sizing: border-box; background: var(--app-accent); border: calc(2px / var(--zoom-de-trame, 1)) solid var(--app-surface); pointer-events: none; }
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle:is(:hover, :focus-visible)::after { background: var(--etat-succes); outline: calc(2px / var(--zoom-de-trame, 1)) solid var(--app-text); }
+.toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle.connectingto.valid::after { background: var(--etat-succes); outline: calc(3px / var(--zoom-de-trame, 1)) solid var(--etat-succes); }
+.toile-de-trame .react-flow__edge.selected .react-flow__edgeupdater { fill: var(--app-surface); stroke: var(--app-accent); stroke-width: 2; vector-effect: non-scaling-stroke; cursor: grab; }
+.toile-de-trame .react-flow__edge.selected .react-flow__edgeupdater:hover { fill: var(--app-accent); stroke: var(--app-text); }
+.toile-de-trame .react-flow__controls button:focus-visible { outline: 2px solid var(--app-accent); outline-offset: -3px; }
+.selection-multiple-trame { padding: 8px 12px; border: 1px solid var(--app-border); border-radius: var(--rayon-sm, 6px); background: var(--app-surface); color: var(--app-text); font-size: 11px; flex-shrink: 0; }
+.toile-de-trame :is(.react-flow__selection, .react-flow__nodesselection-rect) { border: 1px dashed var(--app-accent); background: color-mix(in srgb, var(--app-accent) 8%, transparent); }
+.carte-de-trame { width: 100%; height: 100%; box-sizing: border-box; padding: 14px 16px; color: var(--app-text); background: var(--app-surface); border: 1px solid var(--app-border); border-left: 3px solid var(--teinte-trame); border-radius: var(--rayon-md, 12px); box-shadow: var(--elev-1, none); }
+.carte-de-trame[data-selection] { border-color: var(--app-accent); box-shadow: 0 0 15px 2px color-mix(in srgb, var(--halo-accent) calc(40% * var(--halo-facteur, 1)), transparent); }
+.carte-de-trame[data-estompe] { opacity: .18; }
+.carte-de-trame[data-etat='terminee'] { opacity: .65; }
+.carte-de-trame[data-etat='en-cours'] .carte-de-trame-etat { color: var(--etat-succes); }
+.carte-de-trame[data-importance='optionnelle'] { border-style: dashed; }
+.carte-de-trame[data-importance='optionnelle'] h3 { font-style: italic; font-weight: 400; }
+.carte-de-trame[data-importance='principale'] h3 { font-weight: 900; }
+.carte-de-trame-entete { display: flex; align-items: center; gap: 8px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.carte-de-trame-type { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--teinte-trame); display: flex; align-items: center; gap: 5px; }
+.carte-de-trame-etat { flex-shrink: 0; }
+.carte-de-trame h3 { margin: 7px 0 5px; font-family: var(--font-display); font-size: 16px; line-height: 1.3; font-weight: 700; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.carte-de-trame-details { font-size: 10px; display: grid; gap: 3px; }
+.carte-de-trame-details span { display: inline-flex; gap: 4px; align-items: center; }
+.carte-de-trame-details > div { display: flex; gap: 14px; }
+.carte-de-trame-lieu { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.carte-de-trame-lieu svg { flex-shrink: 0; }
+.inspecteur-de-trame { width: 300px; flex-shrink: 0; min-height: 0; overflow: auto; border: 1px solid var(--app-border); background: var(--app-surface); border-radius: var(--rayon-md, 12px); padding: 16px; }
+.inspecteur-de-trame :where(button, input, select):focus-visible { outline: 2px solid var(--app-accent); outline-offset: 2px; }
+.toile-de-trame .react-flow__edge:focus-visible { outline: none; }
+.toile-de-trame .react-flow__edge:focus-visible .react-flow__edge-path, .toile-de-trame .react-flow__edge.selected .react-flow__edge-path { filter: drop-shadow(0 0 3px var(--app-accent)); }
+.inspecteur-de-lien { display: flex; flex-direction: column; gap: 12px; }
+.inspecteur-de-lien h2 { font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
+.inspecteur-de-lien .type-du-lien { color: var(--app-accent); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.inspecteur-de-lien label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 600; }
+.inspecteur-de-lien :where(select, input, button) { border: 1px solid var(--app-border); border-radius: var(--rayon-sm, 6px); background: var(--app-bg); color: var(--app-text); padding: 8px; font-size: 12px; }
+.inspecteur-de-lien button { cursor: pointer; }
+.inspecteur-de-lien button:disabled { opacity: .5; cursor: default; }
+.inspecteur-de-lien .fermer-inspecteur-de-lien { align-self: flex-start; background: transparent; border: none; padding: 0; }
+.inspecteur-de-lien .aide-du-style-de-lien, .inspecteur-de-lien .condition-du-lien { font-size: 11px; line-height: 1.5; }
+.couleur-personnalisee-du-lien { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; }
+.couleur-personnalisee-du-lien input[type='color'] { width: 48px; height: 36px; padding: 3px; cursor: pointer; }
+.couleur-personnalisee-du-lien label { flex: 1; min-width: 120px; }
+.couleur-personnalisee-du-lien input[aria-invalid='true'] { border-color: var(--etat-danger); }
+.couleur-personnalisee-du-lien [role='alert'] { color: var(--etat-danger); font-size: 11px; }
+.actions-du-style-de-lien { display: flex; gap: 8px; flex-wrap: wrap; }
+.inspecteur-de-lien .appliquer-style-de-lien { border-color: var(--app-accent); color: var(--app-accent); font-weight: 700; }
+.inspecteur-de-lien .retirer-lien { color: var(--etat-danger); }
+.commande-organiser-trame { display: flex; gap: 4px; flex-wrap: wrap; }
+.commande-organiser-trame :where(button, select), .retour-disposition-trame, .apercu-organisation-trame button { padding: 7px 10px; border: 1px solid var(--app-border); border-radius: var(--rayon-sm, 6px); color: var(--app-text); background: var(--app-surface); font-size: 11px; cursor: pointer; }
+.commande-organiser-trame button, .apercu-organisation-trame button:first-of-type { color: var(--app-accent); border-color: var(--app-accent); }
+.commande-organiser-trame :where(button, select):disabled, .retour-disposition-trame:disabled { opacity: .5; cursor: default; }
+.apercu-organisation-trame { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; flex-shrink: 0; padding: 9px 12px; border: 1px solid var(--app-accent); border-radius: var(--rayon-sm, 6px); background: var(--app-surface); color: var(--app-text); font-size: 12px; }
+.apercu-organisation-trame span { flex: 1; min-width: 160px; }
+.groupes-de-trame { pointer-events: none; }
+.toile-de-trame .react-flow__viewport-portal { z-index: -1; }
+.groupe-de-trame { position: absolute; box-sizing: border-box; border: 1px dashed var(--app-border); border-radius: var(--rayon-md, 12px); background: color-mix(in srgb, var(--app-surface) 20%, transparent); }
+.groupe-de-trame > span { display: block; margin: 10px 16px; color: var(--app-text); font-size: 12px; font-weight: 700; }
+.toile-de-trame[data-graphismes-legers] { --halo-facteur: 0; }
+@media (max-width: 1000px) { .corps-du-graphe-de-trame { flex-direction: column; } .inspecteur-de-trame { width: 100%; max-height: 42%; box-sizing: border-box; } .surface-du-graphe-de-trame { min-height: 100px; } }
+@media (prefers-reduced-motion: reduce) { .toile-de-trame * { transition: none !important; animation: none !important; } }

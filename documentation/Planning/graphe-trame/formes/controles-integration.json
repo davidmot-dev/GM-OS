@@ -1,0 +1,208 @@
+{
+  "date": "2026-10-07",
+  "chantier": 124,
+  "extension": "formes-de-rangement",
+  "committed": false,
+  "userValidationPending": true,
+  "forms": [
+    "automatique",
+    "etoile",
+    "ligne",
+    "colonne",
+    "arbre",
+    "grille"
+  ],
+  "build": {
+    "command": "npm.cmd run build",
+    "success": true,
+    "includesTypeScriptBuild": true
+  },
+  "unit": {
+    "command": "npx.cmd vitest run src/modules/session/logic src/modules/session/store src/theme/apparenceDAujourdhui.test.ts --maxWorkers=4",
+    "passed": 724,
+    "files": 60
+  },
+  "lint": {
+    "files": 8,
+    "diagnostics": 0
+  },
+  "e2e": {
+    "passed": 34,
+    "newScenarios": 3,
+    "regressionScenarios": 31,
+    "isolatedProfiles": true,
+    "fictiveCampaignsOnly": true,
+    "commands": [
+      "npx.cmd playwright test e2e/formesDeTrame.spec.ts --reporter=list",
+      "npx.cmd playwright test e2e/cartesDeTrame.spec.ts e2e/organisationDeLaTrame.spec.ts e2e/stylesDesLiensDeTrame.spec.ts e2e/selectionMultipleDeTrame.spec.ts e2e/priseDesJonctionsDeTrame.spec.ts --reporter=list",
+      "npx.cmd playwright test e2e/cartesDeTrame.spec.ts --grep \"une liaison et un cycle\" --reporter=list",
+      "npx.cmd playwright test e2e/cartesDeTrame.spec.ts --grep \"une trame dense et une constellation\" --reporter=list"
+    ],
+    "finalPass": {
+      "newScenarios": 3,
+      "regressionBatchPassed": 29,
+      "regressionBatchFailedBeforeHarnessFix": 2,
+      "regressionFollowUpsPassed": 2
+    },
+    "verified": [
+      "six forms compared in preview without writing",
+      "one write on Apply",
+      "saved form and spacing restored after relaunch and previous disposition",
+      "no card overlaps",
+      "shared cards placed once",
+      "star follows scene centers, line follows scene order, grid uses several rows",
+      "scene order, act membership, link colors, widths and handles preserved",
+      "frozen state preserved",
+      "group movement and reconnection gestures preserved",
+      "all card borders remain inside a 900-pixel canvas after fitting",
+      "drag harness waits for camera motion and targets an on-screen card"
+    ]
+  },
+  "visualReview": {
+    "captures": 7,
+    "reviewed": true,
+    "regressionContactSheets": 12
+  },
+  "files": [
+    {
+      "file": "src/types/campaign.types.ts",
+      "sha256": "ce866ee1a68f39dbe5aa88ed9033c19ef0417ab827e482294edbf6c601e78d97"
+    },
+    {
+      "file": "src/modules/session/logic/formesDeTrame.ts",
+      "sha256": "c8989f81be316ebcd623941c6f5bb34feb0f49c646abec1fcca865a314dee3c9"
+    },
+    {
+      "file": "src/modules/session/logic/formesDeTrame.test.ts",
+      "sha256": "e588e22403f2fe502f912a8bfe5f00c29d3f8b54f0322778edc3174541d1dd85"
+    },
+    {
+      "file": "src/modules/session/logic/organiserLaTrame.ts",
+      "sha256": "dfa6d9f397f3ceb1085db42f20509a64683286ee3ba4b191bc28921476ee990f"
+    },
+    {
+      "file": "src/modules/session/components/trame/GrapheDeLaTrame.tsx",
+      "sha256": "559491606990c17410eca4344309e94fa602fc35d5ab83f5400fd54be0dae384"
+    },
+    {
+      "file": "src/modules/session/components/trame/ToileDeLaTrame.tsx",
+      "sha256": "2ad5b73824ccbdbf9495ac4ed8db3a3d22d1901480b547cb02542c2db5e620b4"
+    },
+    {
+      "file": "src/modules/session/components/trame/grapheDeTrame.css",
+      "sha256": "eff9e2911ebe5d86f1b6e2b8f91edf29c79f946c9da3d877fd08480d8ddadba9"
+    },
+    {
+      "file": "e2e/formesDeTrame.spec.ts",
+      "sha256": "f573efda489898aed2cbd5999110bb92060a9988f892dabc2af0f7e0af61e8cc"
+    },
+    {
+      "file": "e2e/cartesDeTrame.spec.ts",
+      "sha256": "696796f6e5f6a7064e7b726c4615d9d7df96da93b2e2a60ebe2a77a7c50640f8"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-trame-types-de-rangement.md",
+      "sha256": "b4973cc4a5431bbc852d3e9e0f707a26432b6de2fef49efa9255551ae65ee3b1"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-etat-et-reprise.md",
+      "sha256": "f59523fa24df45309dd99fea7ef534a6841e34e620a12d54841724bd135596a5"
+    },
+    {
+      "file": "documentation/Planning/2026-08-23-chantiers-gares.md",
+      "sha256": "64caf189d5b6d7ee9747b94ac2f6d0b384956ea47aaaf842f17ddd0af30a64ca"
+    },
+    {
+      "file": "documentation/User Guides/11-Trame-actes-et-scenes.md",
+      "sha256": "4232272b77adcac2a817feb422ca1d3032ea25c1beb2c2789a153c76bcd6470c"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/formes/index.html",
+      "sha256": "ac5fae8cc24c560ac0dae232aa786fc406d7e644c6dea3ffa4b41d41681f3a48"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/index.html",
+      "sha256": "69f9f7bfa4fbb11e35832166b2a1615b5967aaefd1a6fcbef2f8635d3f6f9c4d"
+    }
+  ],
+  "captures": [
+    {
+      "file": "documentation/Planning/graphe-trame/formes/automatique-1440.png",
+      "sha256": "ef3165be5684dc416b9f41aaf427a09163c1f91239020338b7363f8bd20256ba"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/formes/etoile-1440.png",
+      "sha256": "4bbcf243f3295d3ed5ae13bd7d8d360fdf991bdd11d1156d139bdf0651b94bd6"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/formes/ligne-1440.png",
+      "sha256": "d6cf3c4582b78868d2ba3cefe667d1fb05d13b4e0ad20e8734fa16996cb38531"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/formes/colonne-1440.png",
+      "sha256": "54416f6fb2e08484c51e3f7b6d1f57529fd7ca3164da9fe4b42f06a826d21331"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/formes/arbre-1440.png",
+      "sha256": "fa43c3b9ffa1968b9393ef695f78d4370f30f5f5c15ffb2d9fbd99982f11064d"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/formes/grille-1440.png",
+      "sha256": "d45df42528435cf7888ca80b5afcab6501b3a1a3b0624e74ab40206cce6fc981"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/formes/grille-900.png",
+      "sha256": "c4e3c4ed2f2f80812e3a5c9765492de8d30751a98e8354c462c16c67a3873de0"
+    }
+  ],
+  "regressionContactSheets": [
+    {
+      "file": "documentation/Planning/graphe-trame/planche-cyberpunk.png",
+      "sha256": "c650029b4d9d073915d6268b126db463a1ddd04406031e397350eb7283cc41ed"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-medieval.png",
+      "sha256": "30ac751a12b9ed23b36e656ce96765d241ffcf097bae8a9d0ee4c9b481adea08"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-modern.png",
+      "sha256": "af45ca71bda3dbfd2447597c99325b8bb3772767e66869d174e107b99e82e6d5"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-claire.png",
+      "sha256": "5f476f3388dd621f896e533f35ea3c3630f9b9609ae9bdc32fe19510f3595198"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-cyberpunk.png",
+      "sha256": "996d2af5c32ec763819c73abc04d998b416ea573791334037a19451a90cd261e"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-medieval.png",
+      "sha256": "dfd55edb4413cdd805b36a7e5b58d00c0da052077087df4aa54c2a28341cc40a"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-modern.png",
+      "sha256": "d8d9546d052dfd1979f4a7fccd7e7933969affce9272e0d32db1004609dd3dd2"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-claire.png",
+      "sha256": "de8da4bbef25506f9c302ad6a9aa07d7c9df4ca1f75f2139d3e4942d90eb89bb"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-cyberpunk.png",
+      "sha256": "bdfbb0d4c0b7694a9f3cfc1f42358ca4534df2a6012c2f4d7ac92b65967a5b95"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-medieval.png",
+      "sha256": "3e6c5930ce0f608893705458b69499e37314fbbc0d6eadc6e8a2fa198df2ac9d"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-modern.png",
+      "sha256": "b6ab9771dff90265ffc559539a5976d1772d6e2e0a111829d26216c35cf8ee65"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-claire.png",
+      "sha256": "5300482f77ab85f6234fc75fb8ec233a9b2da19bcfb50be95fd7625deb9e8b49"
+    }
+  ]
+}

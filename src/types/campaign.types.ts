@@ -8,6 +8,41 @@
 
 import type { ModuleID, ThemeID } from '../store/useSessionStore';
 
+/** 07/10/2026, David : pointillés, gras et couleur indépendants pour les liens de Trame. */
+export interface StyleDeLienDeTrame {
+    depart?: 'haut' | 'bas' | 'gauche' | 'droite';
+    arrivee?: 'haut' | 'bas' | 'gauche' | 'droite';
+    trace?: 'continu' | 'tirets' | 'points';
+    epaisseur?: 'fin' | 'normal' | 'gras' | 'tres-gras';
+    couleur?: 'accent' | 'texte' | 'succes' | 'alerte' | 'info' | `#${string}`;
+}
+
+export type PointDeTrame = { x: number; y: number };
+export type EspacementDeTrame = 'compact' | 'equilibre' | 'aere';
+export type FormeDeTrame = 'automatique' | 'etoile' | 'ligne' | 'colonne' | 'arbre' | 'grille';
+export interface TrajetDeTrame {
+    points: PointDeTrame[];
+    depart: NonNullable<StyleDeLienDeTrame['depart']>;
+    arrivee: NonNullable<StyleDeLienDeTrame['arrivee']>;
+    positionDepart: PointDeTrame; positionArrivee: PointDeTrame;
+    etiquette?: PointDeTrame; libelle?: string;
+}
+export interface OrganisationDeTrame {
+    positions: Record<string, PointDeTrame>;
+    trajets: Record<string, TrajetDeTrame>;
+    groupes: { id: string; nom: string; x: number; y: number; largeur: number; hauteur: number; membres: string[] }[];
+    espacement: EspacementDeTrame;
+    /** Absente dans les dispositions antérieures au menu de formes. */
+    forme?: FormeDeTrame;
+}
+export interface DispositionPrecedenteDeTrame {
+    positionsVivantes: Record<string, PointDeTrame>;
+    epingles?: Record<string, PointDeTrame>;
+    positions?: Record<string, PointDeTrame>;
+    fige?: boolean;
+    organisation?: OrganisationDeTrame;
+}
+
 // ─────────────────────────────────────────────
 // Layout
 // ─────────────────────────────────────────────
@@ -168,4 +203,8 @@ export interface Campaign {
     /** Les nœuds de la trame posés à la main. Une décision, pas une capture. */
     noeudsEpinglesDeLaTrame?: Record<string, { x: number; y: number }>;
     trameFigee?: boolean;
+    /** Apparence par identité de lien ; distincte des positions et des liens métier. */
+    stylesDesLiensDeTrame?: Record<string, StyleDeLienDeTrame>;
+    organisationDeLaTrame?: OrganisationDeTrame;
+    dispositionPrecedenteDeTrame?: DispositionPrecedenteDeTrame;
 }

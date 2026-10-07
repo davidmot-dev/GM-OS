@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-07",
+  "chantier": 124,
+  "extension": "selection-multiple",
+  "committed": false,
+  "userValidationPending": true,
+  "build": {
+    "command": "npm.cmd run build",
+    "success": true,
+    "includesTypeScriptBuild": true
+  },
+  "unit": {
+    "command": "npx.cmd vitest run src/modules/session/logic src/modules/session/store src/theme/apparenceDAujourdhui.test.ts --maxWorkers=4",
+    "passed": 721,
+    "files": 59
+  },
+  "lint": {
+    "files": 6,
+    "diagnostics": 0
+  },
+  "e2e": {
+    "passed": 45,
+    "newScenarios": 3,
+    "regressionScenarios": 42,
+    "isolatedProfiles": true,
+    "fictiveCampaignsOnly": true,
+    "commands": [
+      "npx.cmd playwright test e2e/selectionMultipleDeTrame.spec.ts --reporter=list",
+      "npx.cmd playwright test e2e/cartesDeTrame.spec.ts e2e/grapheDeLaTrame.spec.ts e2e/priseDesJonctionsDeTrame.spec.ts e2e/stylesDesLiensDeTrame.spec.ts e2e/organisationDeLaTrame.spec.ts --reporter=list"
+    ],
+    "verified": [
+      "Ctrl click adds and removes a card",
+      "Shift rectangle selects cards",
+      "dragging a card or selection frame preserves offsets",
+      "no write during drag, one write on drop",
+      "keyboard arrows move the group",
+      "Escape clears selection without writing",
+      "frozen cards do not move",
+      "Relier clears selection",
+      "filters remove hidden cards from selection",
+      "positions persist in a new process",
+      "scene order and act membership stay unchanged",
+      "existing link styles, reconnection and ELK preview / undo preserved"
+    ]
+  },
+  "visualReview": {
+    "captures": 2,
+    "reviewed": true,
+    "regressionContactSheets": 12
+  },
+  "files": [
+    {
+      "file": "src/modules/session/store/campaignSlice.ts",
+      "sha256": "83f95d70dc8debcdc559abc3ae30151382838c9473afdbc9092ccea7373b3c0e"
+    },
+    {
+      "file": "src/modules/session/logic/adapterLeGrapheDeTrame.ts",
+      "sha256": "255261c585be151a52b25fd76ad7d430304435963a188a868261f8276423a866"
+    },
+    {
+      "file": "src/modules/session/components/trame/ToileDeLaTrame.tsx",
+      "sha256": "b20f9ecf3b980f0db7f3b0601323a49078c2872a05d948decf910ed460dbbf8f"
+    },
+    {
+      "file": "src/modules/session/components/trame/GrapheDeLaTrame.tsx",
+      "sha256": "97c6af377827ff267e7b8ffbea00148f730ab0dbe4a1b803f94cf3f7b1f8147f"
+    },
+    {
+      "file": "src/modules/session/components/trame/grapheDeTrame.css",
+      "sha256": "183878d8667422fba61299798d35a8e19d299a6c8e7bbbec1fec5f593aa23397"
+    },
+    {
+      "file": "src/modules/session/logic/selectionMultipleDeTrame.test.ts",
+      "sha256": "eefdfee5e92a389d7c56430384d0fd61e793252f334e6040e2feb38233d6a3d9"
+    },
+    {
+      "file": "e2e/selectionMultipleDeTrame.spec.ts",
+      "sha256": "ab36c1d44860440bd1ba7a6c2868ba57f2f5c98c5c69c21f06a2e76a339c9cb5"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-trame-selection-multiple.md",
+      "sha256": "395a8f543d6a09ad10f339be2c32cd73ad94d831359b0160d01c0bf0e7c17b28"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-etat-et-reprise.md",
+      "sha256": "54f96026d57e823cc37d1b125f6ca7837ff643cde37d152584eeed11b8e41880"
+    },
+    {
+      "file": "documentation/Planning/2026-08-23-chantiers-gares.md",
+      "sha256": "498482f5bfecfcc7ad71b4b6b33e426492f138a15ca0be62ee51c13cd01fca13"
+    },
+    {
+      "file": "documentation/User Guides/11-Trame-actes-et-scenes.md",
+      "sha256": "d497a6ef1c89c804c098de48be864ffa3e90c1cc2a5ae1057969f54f3a701500"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/selection-multiple/index.html",
+      "sha256": "1041c3ec4015e483816be34a343e463e09b5b231152dce03e36678c134f6267b"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/index.html",
+      "sha256": "ab1819667ff862c97268d9c143b3223d8810e2df39d6190f13b06bae63d4bb77"
+    }
+  ],
+  "captures": [
+    {
+      "file": "documentation/Planning/graphe-trame/selection-multiple/groupe-1440.png",
+      "sha256": "53ae2a670ec47bd6daa6d3b67aa4d7e8e96c26537c414484081ef3adee7bf026"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/selection-multiple/groupe-900.png",
+      "sha256": "46face10ed4fe8963585ce8a4ca14cc83f09ecef78d7bd5f5acba048d97dc7fa"
+    }
+  ],
+  "regressionContactSheets": [
+    {
+      "file": "documentation/Planning/graphe-trame/planche-cyberpunk.png",
+      "sha256": "b235486024da6d947d219f666d6a100db23a671e8693e1fcdd2d554c3dd1c6f2"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-medieval.png",
+      "sha256": "f3e729e08c1f5bfb737e3a0a2c388e45c980cc1274bc1d105a86c68729e9cf18"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-modern.png",
+      "sha256": "383d52c83418a39b9cf41501f99618a7e5ffb9b271fd56d82227096311f2b909"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-claire.png",
+      "sha256": "59e6acbe27d40a3db621ed2658c30122077d58cad7767d825758449e99b80538"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-cyberpunk.png",
+      "sha256": "6b83faaed408eb2a473548ebdfdeaf46adbff8e0a09a8407cbaf9439f2498e83"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-medieval.png",
+      "sha256": "72cfd43d96e600dff188c28a90e63ef420695032f230b01c808468f091878ed7"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-modern.png",
+      "sha256": "ab83cb0653101d2caa8ee08030384130ce3b2198aa30ce2a5e62a533dadd6806"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-claire.png",
+      "sha256": "38dbdf1128a00d35d74e6d31e2d7fafef3da19f4a770ecda53343722e24d309b"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-cyberpunk.png",
+      "sha256": "2bf034cee961fd0afa5e35f697ec57c41cdd3da4e45d0629f2f08d5fb50fd988"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-medieval.png",
+      "sha256": "ca2f6ffd2f11d6fedb0b8453b5aa282b6345646be1f1496b9a5434c817d4a9bd"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-modern.png",
+      "sha256": "366279095af6915c82a2a88979c67540e9dabaf5b9ec6b495d347e0c68f8b03d"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-claire.png",
+      "sha256": "317f4bd3b33fbcb030a44e4d9290117b886cf4eafff823716c55a64cfc67edbb"
+    }
+  ]
+}

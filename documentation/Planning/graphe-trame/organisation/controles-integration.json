@@ -1,0 +1,333 @@
+{
+  "date": "2026-10-07",
+  "chantier": 124,
+  "extension": "organisation-elk",
+  "baseCommit": "cc736062",
+  "committed": false,
+  "userValidationPending": true,
+  "dependency": {
+    "package": "elkjs",
+    "version": "0.12.0",
+    "exact": true,
+    "installScripts": false
+  },
+  "build": {
+    "command": "npm.cmd run build",
+    "success": true,
+    "includesTypeScriptBuild": true
+  },
+  "unit": {
+    "command": "npx.cmd vitest run src/modules/session/logic src/modules/session/store src/theme/apparenceDAujourdhui.test.ts --maxWorkers=4",
+    "passed": 720,
+    "files": 58
+  },
+  "lint": {
+    "files": 10,
+    "diagnostics": 0
+  },
+  "diffCheck": {
+    "success": true
+  },
+  "e2e": {
+    "passed": 46,
+    "newScenarios": 5,
+    "regressionScenarios": 41,
+    "isolatedProfiles": true,
+    "fictiveCampaignsOnly": true,
+    "commands": [
+      "npx.cmd playwright test e2e/organisationDeLaTrame.spec.ts --reporter=list",
+      "npx.cmd playwright test e2e/stylesDesLiensDeTrame.spec.ts e2e/grapheDeLaTrame.spec.ts e2e/cartesDeTrame.spec.ts e2e/curerLaTrame.spec.ts e2e/capturesDuManuel.spec.ts --grep \"styles des liens de Trame|le graphe de la trame|garanties G3|revue de séance|session-trame\" --reporter=list"
+    ],
+    "verified": [
+      "local preview and cancellation without writes",
+      "one write to apply and one to restore",
+      "restart and campaign isolation",
+      "frozen state and styles preserved",
+      "side selections preserved",
+      "manual movement invalidates old routes",
+      "dense graph has no overlapping cards"
+    ]
+  },
+  "dense": {
+    "cartes": 137,
+    "calculEtControleMs": 3663,
+    "trajets": 195,
+    "ecrituresAvantApplication": 0,
+    "ecrituresApplication": 1
+  },
+  "visualReview": {
+    "captures": 28,
+    "contactSheets": 4,
+    "reviewed": true,
+    "manualViewsRegeneratedAndReviewed": 3,
+    "regressionContactSheetsRegeneratedAndReviewed": 8
+  },
+  "files": [
+    {
+      "file": "package.json",
+      "sha256": "d59715a6c300bdd735391fda3b9ec3ea4edfd4c33c6777f921bc50a281b8eba8"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "83ccde070ec9916274fef9013df3f292bf379a1c5b1c79891500fb1c21c5a12f"
+    },
+    {
+      "file": "src/types/campaign.types.ts",
+      "sha256": "1c9082d9631e2a77e27b993ce7cd8d1242c636aa4d4b45225037c260319cea18"
+    },
+    {
+      "file": "src/modules/session/store/campaignSlice.ts",
+      "sha256": "32e03250427162caa5118771686b80dfb3b770da9f339adde38cc9b83d68f3b4"
+    },
+    {
+      "file": "src/modules/session/logic/organiserLaTrame.ts",
+      "sha256": "067c437d2da4be4e5006c6316b0d1c23baa4dd3b6d90204fe7834d8ad6e847bf"
+    },
+    {
+      "file": "src/modules/session/logic/trajetsDeTrame.ts",
+      "sha256": "23399b0c24c95408552f537afcd2afee159b2725a735608ce3fc71a38a185cf7"
+    },
+    {
+      "file": "src/modules/session/logic/adapterLeGrapheDeTrame.ts",
+      "sha256": "02d66ab55d9e76e2afe66b6cf4dda4a5908868d33cb004c6e503c0bf39258b67"
+    },
+    {
+      "file": "src/modules/session/logic/organiserLaTrame.test.ts",
+      "sha256": "3a1e2acd6d4e23709f77dc5bce1e306926ee45586849a1a2c9d8fdd5b573a028"
+    },
+    {
+      "file": "src/modules/session/components/trame/GrapheDeLaTrame.tsx",
+      "sha256": "35577241fe5d747f6550025e29e9197964ca4df9dd14da48a322ee5ec863d041"
+    },
+    {
+      "file": "src/modules/session/components/trame/ToileDeLaTrame.tsx",
+      "sha256": "5d9231ddbe22623ba88af13f314e64d35da00a74d230d277b92aa2b990ea5266"
+    },
+    {
+      "file": "src/modules/session/components/trame/LienDeTrame.tsx",
+      "sha256": "0d9924e2fab273fe4bb6184211adbee31fae865a7ea78b62ec64ad937e5b9ec2"
+    },
+    {
+      "file": "src/modules/session/components/trame/grapheDeTrame.css",
+      "sha256": "c3e5a310f585628b4e80f31f2d6def00f220279b0a29ebb40e6ed67e47f429b3"
+    },
+    {
+      "file": "e2e/organisationDeLaTrame.spec.ts",
+      "sha256": "00e14564424ff1245924926d38ec624e972b43fa475ef4099a6ff4ad3c7c1684"
+    },
+    {
+      "file": "e2e/stylesDesLiensDeTrame.spec.ts",
+      "sha256": "0910170256c40f72fd2fc70bc21abce73365c10ba70722b3ce29925060bea8b7"
+    },
+    {
+      "file": "e2e/grapheDeLaTrame.spec.ts",
+      "sha256": "306c7f35ec51551532b44b563ce54d10e11922c3828e8cd5c3abd3afc95a9348"
+    },
+    {
+      "file": "e2e/cartesDeTrame.spec.ts",
+      "sha256": "2d8fa2290257b14560237ec7e8ae554c0b7417f2a42773bbc3317a8143b25e3a"
+    },
+    {
+      "file": "e2e/curerLaTrame.spec.ts",
+      "sha256": "70216efb1ddab107d0889b8b26e68780252c65c674a601859fd7c5648ebca4d8"
+    },
+    {
+      "file": "e2e/capturesDuManuel.spec.ts",
+      "sha256": "660ca7ed7412c092b624d4629fe7f7844d31aac1d31d6f33cecc113e00150bc5"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-trame-organisation-elk.md",
+      "sha256": "075d3f9869cf014e4509fe5a44c0db260ed141bd2398d41bfce2e624a3dcb8e5"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-etat-et-reprise.md",
+      "sha256": "3f9273fe68c18c559e6dbbc29b7e30e4e8bcdcc438201d936a03162db8dfaa59"
+    },
+    {
+      "file": "documentation/Planning/2026-08-23-chantiers-gares.md",
+      "sha256": "3197aeba565f035a4cdfaae39b0c50bd551e6d6a76be3dc29b391b3069c296f3"
+    },
+    {
+      "file": "documentation/User Guides/11-Trame-actes-et-scenes.md",
+      "sha256": "073f1173a7282f27e8ad0be6d7dfd6bd220444cb5adecc31f2afe3964c065f50"
+    }
+  ],
+  "captures": [
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/claire-base-1180.png",
+      "sha256": "80828b1c94f2a0a02a1588a65e0c7b4af20f665c65eac288814a6458879dbcb8"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/claire-base-1440.png",
+      "sha256": "6cfe7bde9a4e1c53acbb398497c46900b6b510282594f495f24159d6426c0ecd"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/claire-base-900.png",
+      "sha256": "8b6e5eeadd5f8aaef8bff1a52c2e71965812416b2c355acdc4401d5410f869e8"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/claire-personnalites-1180.png",
+      "sha256": "f385dc11df39d30e75e23af0883328e32ed5b0bee20816d5b64d7a07cebc8737"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/claire-personnalites-1440.png",
+      "sha256": "7e1a6d5e03a0bec0634ff6af32638e8c0c2a76d1e7b9c3e91774f7aed2e3f87f"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/claire-personnalites-900.png",
+      "sha256": "0936f61338c62261f12d15bc142b26aefb22235bbcd7320d6c7420dbf59dfda2"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/cyberpunk-base-1180.png",
+      "sha256": "84cb9fe4b0878f2a3b098fb7c4fe73a5bb874044c73965097ec80735af0c5993"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/cyberpunk-base-1440.png",
+      "sha256": "9790d3ba542687d03def48ab207824643be7a13822c107bcddfbdcb9972a8772"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/cyberpunk-base-900.png",
+      "sha256": "ced16f81cad5530f2afe03010ad104e2ce62544e1d6f6c361359b9ffed48bfa4"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/cyberpunk-personnalites-1180.png",
+      "sha256": "ef6b3982d62beeb50d750946481b6965adbdd66ca7f98b09ea532ed9b3849e5d"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/cyberpunk-personnalites-1440.png",
+      "sha256": "b3c33fac952209d86d496a4c4b9b9a9cfc49e6fc540386806dc1ff1b6532ce60"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/cyberpunk-personnalites-900.png",
+      "sha256": "3652a92ee64308641e36a90bc3660f7d729706a170f49c27203260d571634234"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/dense-apercu.png",
+      "sha256": "b8d43de6ee2e51ccf45295b308ac2c7205c9ef51078d5f59eae7b45b87ce4def"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/espacement-aere.png",
+      "sha256": "985cadb521bb26e9100bcde4226fe90e138ecd9193a14fd2344d70507bc498fd"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/espacement-compact.png",
+      "sha256": "17ebedadc8aea675c39c9308124b32f14e9473471c441e9568151ae2ded6666f"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/espacement-equilibre.png",
+      "sha256": "02da007075ae31921c8feea1c6101257f98df638fc59a3b74eb65423c2ce14dd"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/medieval-base-1180.png",
+      "sha256": "5a22674cee3f77ac84ea5913acfc8a69c4a9a7d0e78562263664d20843543327"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/medieval-base-1440.png",
+      "sha256": "3292f0a41f6a5c89637b8b63c238d1908d7ca4a1d90a82f5744a1b2dff4c235a"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/medieval-base-900.png",
+      "sha256": "07a00a7a3a3cdd58aafbe9db168930f2cad4b1075fc8bc127c6581149176b41d"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/medieval-personnalites-1180.png",
+      "sha256": "4fe54f8188e31efbebb0f8114d862317b89b460dd92471676f3b6630a1d0d86b"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/medieval-personnalites-1440.png",
+      "sha256": "902612c85dcda394d2aec44e7dc904d69c7033d895dece9677a6a5029675d1fd"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/medieval-personnalites-900.png",
+      "sha256": "327c86825419d30445aa72ea9a72ac401af46763a331c5ded7c9f91892eb898a"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/modern-base-1180.png",
+      "sha256": "6c82d5988d81eee5e224b85396de004cff340d512f9a0e757060d84b859afdc2"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/modern-base-1440.png",
+      "sha256": "bdc57c870f9ca81576cd47bfc06ab622bfbc6b477d504b560b947b5044d96abd"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/modern-base-900.png",
+      "sha256": "e6ce3a0db0c5eaaebe8539b55e6d53e617e8c062e9539baffe8cb0c03400db65"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/modern-personnalites-1180.png",
+      "sha256": "0cc208a22622c08785fcbd671266a6306ac1bc893dcf2cc4d6ee7a959e2ae0ad"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/modern-personnalites-1440.png",
+      "sha256": "01f5cd203fc2689fbf550f5cb27ba4ef88bd5795b8c9705a7084ab8b6c9053f1"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/modern-personnalites-900.png",
+      "sha256": "f3aa04cbe6124e340477e5e5ae1e806308e562ed10342ed01b9d5ae1d0841465"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-claire.png",
+      "sha256": "c538d27148d32b88b6a99d53a6ad9a0a963e92930a2a13212b9034e36218da02"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-cyberpunk.png",
+      "sha256": "431ec55136aaf104f14cf74166cfdbde865f9f85f8cf332c817566cba5d3d74c"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-medieval.png",
+      "sha256": "7a0157382350ee8f0e6096580aebb78a3a3ea8cdfb409ea490b873eaae6febeb"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/organisation/planche-modern.png",
+      "sha256": "694387f0c08e7e551b1b7b18cb23cded082ea50f5742b99cd582fcd9133e71ce"
+    }
+  ],
+  "vuesDuManuel": [
+    {
+      "file": "documentation/User Guides/captures/session-trame.jpg",
+      "sha256": "4233049e2bd465728f145108601e9e2bcd58a67fde96df5eb17304eea916ba5f"
+    },
+    {
+      "file": "documentation/User Guides/captures/session-trame-graphe.jpg",
+      "sha256": "2be9b56b9e295971ec55e685cffcbdfe410e451d2843f663d5cae7a414f8ea2a"
+    },
+    {
+      "file": "documentation/User Guides/captures/session-trame-scene.jpg",
+      "sha256": "c05236705f0ece6e97394ca2eb6762797ef24dad57d3c4fe6476af314cdb9988"
+    }
+  ],
+  "planchesRegression": [
+    {
+      "file": "documentation/Planning/graphe-trame/planche-cyberpunk.png",
+      "sha256": "07e3f06987b2f0f0405b5663a918271fbb9520179e1ef087243f605cf49d854e"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-medieval.png",
+      "sha256": "98d20fc678b7e3ddbf1f3eb7c09fcceff3863d6a7673ba00f299550628bdb41f"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-modern.png",
+      "sha256": "a1e2c38d82a57234640470404992957fd1e0af67b534aa2fd818766b1bc3d4a0"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/planche-claire.png",
+      "sha256": "50fa772dddbe3e92820daa90b7738bc3495216884f4c326fe2cbfa3a10e94c32"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-cyberpunk.png",
+      "sha256": "3cbc41384cf6525b57d7d204fdffab558b0f9c2eb3ed971cc8e2cfcce4d26f3c"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-medieval.png",
+      "sha256": "dfc73e7d9a1f084a13705b208702dcc80856f821fa2fcc10b59dde9f16195a2b"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-modern.png",
+      "sha256": "029cbd5d8d0dc9af712ef1674ecefe71ed4680118a0ddc307aa3ab1c39a348f7"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-claire.png",
+      "sha256": "b263a8b6743a612aff98e8044b4039a07d7032b7100f46f51796f055820cfc93"
+    }
+  ]
+}

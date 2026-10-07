@@ -1,0 +1,252 @@
+{
+  "date": "2026-10-07",
+  "chantier": 124,
+  "base": "cc736062",
+  "etat": "G0?G6 achev?s ; G7 attend la validation de David",
+  "commitTrame": null,
+  "paquet": "@xyflow/react@12.12.0",
+  "controles": {
+    "construction": {
+      "commande": "npm.cmd run build",
+      "resultat": "r?ussite, inclut tsc -b"
+    },
+    "unitaires": {
+      "commande": "npx.cmd vitest run src/modules/session/logic src/modules/session/store src/theme/apparenceDAujourdhui.test.ts --maxWorkers=4",
+      "fichiers": 56,
+      "reussis": 712
+    },
+    "lint": {
+      "resultat": "aucun diagnostic",
+      "portee": "9 fichiers TypeScript du chantier et 3 bancs E2E ; pas de lint global"
+    },
+    "e2e": {
+      "commande": "npx.cmd playwright test e2e/grapheDeLaTrame.spec.ts e2e/cartesDeTrame.spec.ts e2e/curerLaTrame.spec.ts e2e/capturesDuManuel.spec.ts --grep 'le graphe de la trame|garanties G3|revue de s?ance|session-trame' --reporter=list",
+      "reussis": 33,
+      "dureeAffichee": "5.1m",
+      "historiques": 14,
+      "nouveaux": 13,
+      "curation": 3,
+      "capturesManuel": 3
+    }
+  },
+  "isolation": "Campagnes de test et de d?monstration ; profils fictifs jetables contr?l?s par lancerGmOs ; aucune donn?e de David",
+  "revueVisuelle": {
+    "pngFinaux": 29,
+    "matrice": {
+      "themes": 4,
+      "personnalites": 2,
+      "formats": 3,
+      "planchesRelues": 4
+    },
+    "cas": [
+      "cycle",
+      "dense-constellation",
+      "leger-mouvement-reduit",
+      "filtre-vide",
+      "lien-conditionnel"
+    ],
+    "jpegManuelRelus": 3,
+    "temoinsG0Relus": 5
+  },
+  "mesureDense": {
+    "noeuds": 137,
+    "semenceMs": 7.699999999720603,
+    "ecrituresPendantZoom": 0,
+    "ecrituresAuLacher": 1,
+    "dureeDuGesteMs": 489.3000000002794,
+    "mutationsDuContenuPendantGlisser": 0
+  },
+  "limiteMesure": "La dur?e du geste inclut Playwright ; aucune mesure de fr?quence d?images.",
+  "empreintes": [
+    {
+      "fichier": "src/modules/session/components/trame/GrapheDeLaTrame.tsx",
+      "sha256": "9f15de196d6043bebcf47c9904f9ab81f36f0d4bab2c758d1d1d83c0827cb93d"
+    },
+    {
+      "fichier": "src/modules/session/components/trame/ToileDeLaTrame.tsx",
+      "sha256": "6fd527b998dbc6840f309c863942d5879d0edf1abfec907706afcb38fb0cd0c4"
+    },
+    {
+      "fichier": "src/modules/session/components/trame/CarteDeTrame.tsx",
+      "sha256": "8e77d62f864de5b06d7317600249f76dbb6c14eedea7621bbf6a63ed2f93b7b2"
+    },
+    {
+      "fichier": "src/modules/session/components/trame/LienDeTrame.tsx",
+      "sha256": "6e905977e76ce18f8aaa0030f2256aff8db912f2f784a7deabfdb1d689d95965"
+    },
+    {
+      "fichier": "src/modules/session/components/trame/InspecteurDeTrame.tsx",
+      "sha256": "261633236606e23c796607ced68b6cdd2304212a63d62303375f775d66f04da5"
+    },
+    {
+      "fichier": "src/modules/session/components/trame/grapheDeTrame.css",
+      "sha256": "a09031d19996107956f391216414b6d0bb8b95062598c32a4eb3344373f7f8a9"
+    },
+    {
+      "fichier": "src/modules/session/logic/adapterLeGrapheDeTrame.ts",
+      "sha256": "1d36b7916110da21aa37c87fc7872fe94c3204697da01cc5d3695cec8fa8bdea"
+    },
+    {
+      "fichier": "src/modules/session/logic/geometrieDesCartesDeTrame.ts",
+      "sha256": "27515984e4ac2df98bc659b80d44854438a292387ab955504001ef27d7747565"
+    },
+    {
+      "fichier": "src/modules/session/logic/rangementDeLaTrame.ts",
+      "sha256": "8cbb4558392edee3a36d1d99ce70806bc5f2f24a3157a683969d24c12f2030db"
+    },
+    {
+      "fichier": "src/modules/session/logic/cartesDeTrame.test.ts",
+      "sha256": "d9b1da45530cba2b67a708ebbc4cd6ba04a8f9fbbbfe6f74b315a20b0cf617c2"
+    },
+    {
+      "fichier": "package.json",
+      "sha256": "2b0737c003a8ebdc2dc075d49447da79bd883d2d84c58081979abc310653b425"
+    },
+    {
+      "fichier": "package-lock.json",
+      "sha256": "38eaaa747442e6c80508397ffc8c83954b77b9164690ed1ff7dcc915f11d5651"
+    },
+    {
+      "fichier": "e2e/grapheDeLaTrame.spec.ts",
+      "sha256": "306c7f35ec51551532b44b563ce54d10e11922c3828e8cd5c3abd3afc95a9348"
+    },
+    {
+      "fichier": "e2e/cartesDeTrame.spec.ts",
+      "sha256": "2d8fa2290257b14560237ec7e8ae554c0b7417f2a42773bbc3317a8143b25e3a"
+    },
+    {
+      "fichier": "e2e/referenceTrameG0.spec.ts",
+      "sha256": "366689e1a6d0177fcc49fe54344e6d8d44a9b569ee8a25c8bb8c624267447d1d"
+    }
+  ],
+  "captures": [
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/claire-base-1180.png",
+      "sha256": "4680cfd9c5300f571bc3f2fe19a5726bd9a7d069ebb4991064eb4d6046ad2cce"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/claire-base-1440.png",
+      "sha256": "da4219091072b3f9e4180b3ce1877bd3aa5ca8952c835477f69e9e94d00b5faa"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/claire-base-900.png",
+      "sha256": "b89fa4530adc6c2f1a0d8e0221489fd7936439b450a8d39054e4005ed56cb112"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/claire-personnalites-1180.png",
+      "sha256": "1c7a3bf8bf181082c8256f2806672e38672facbd7b3c4275c6395dda345b46d6"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/claire-personnalites-1440.png",
+      "sha256": "88505e8c84a87b7fe875d6146307d8ed96a03af5c7594682e3bbdee9f53016e8"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/claire-personnalites-900.png",
+      "sha256": "01a793e8745034be69e9733fbb72fc3802748c07332dbead4fd794cda4d23919"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/cyberpunk-base-1180.png",
+      "sha256": "2d6fd1de85dc97246affa3ba7e133f9df71294e6a366efd6203ef417e1480795"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/cyberpunk-base-1440.png",
+      "sha256": "a35c3b4596e4606fef628b2e2eefee4c0a1d0a7d5627486fc814bf2efbe43332"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/cyberpunk-base-900.png",
+      "sha256": "f45d5e4551ab75da2660e5897f43bc9261176ef36bbd783e1f731feac774f0f9"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/cyberpunk-personnalites-1180.png",
+      "sha256": "b8c9809e72572d6f32fbb20593920e47cf670b529a6b505e5e62d72f3bed8fa0"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/cyberpunk-personnalites-1440.png",
+      "sha256": "6c381ce030e9cd39a873277b2c6f8cfeabce28a418f40d523351ab3e924d333d"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/cyberpunk-personnalites-900.png",
+      "sha256": "4ea8e414463c6f4ccf12b5c00607b0944226abf47498599b9e7bc3eab4d9afe5"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/cycle.png",
+      "sha256": "927b76fb14ab9fbfa75512bd264d1c4b25edf48caf9a74e7498cd06501b7e159"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/dense-constellation.png",
+      "sha256": "8fd8bf84110dd1f4658a3d2b08c10a6095a1bc93f0b39e434c491a47abca6bdb"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/filtre-vide.png",
+      "sha256": "9666ce7dc009bbf16ef901221a3c19cf8b8483b287cc79a978b88e405a86ad94"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/leger-mouvement-reduit.png",
+      "sha256": "2e79824aa6b6d272aae29439c76782014b0fe72322e2cda76a7fe75fa8978698"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/lien-conditionnel.png",
+      "sha256": "36c9507b1776684a26cb41d061e1e62da8d85b06e56bcbf6b1c98bd7d403c07e"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/medieval-base-1180.png",
+      "sha256": "9fdb0593fe7d1f89261b799da56015caf7623f33033b2743330577ffb13a7b4a"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/medieval-base-1440.png",
+      "sha256": "6545c92fb71f39de5dc700944ce4327af9fcbf244ab9b987901bffcd845aea0c"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/medieval-base-900.png",
+      "sha256": "c7e1194c7c4a19e3981301ee085a197943c08baf2a3d2824ee35efe069ed3da0"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/medieval-personnalites-1180.png",
+      "sha256": "8d9a72a7a78fc6dcfad3aeb6d582a319b136a2de9090c4991f482eca77b1f895"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/medieval-personnalites-1440.png",
+      "sha256": "528e28f30b6cfcbad5f3a5e841c125866ead5586531123448c0f0bdb8ac745ba"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/medieval-personnalites-900.png",
+      "sha256": "edfe87c881431b6b2ba5175242c8aa3b8abb2c01319bba89a42c3f1d0078dbc5"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/modern-base-1180.png",
+      "sha256": "f88405c66e375aebd8b00c0114997ef69e7f55a08e8f52952a1ad26bac6a2f31"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/modern-base-1440.png",
+      "sha256": "3d4ea222cbc9678ba7b400cbca64aadd617a90fdc53b8ee6d89c0c04b9c2e921"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/modern-base-900.png",
+      "sha256": "f44759669f249dbb749765bd60533c889e4c1b03ba19b50631592535a85ec774"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/modern-personnalites-1180.png",
+      "sha256": "1b1ed46e4c10f38aad511bf1ed871d170a1c218d6ecf125e14703a45aaac3a89"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/modern-personnalites-1440.png",
+      "sha256": "09be7880d95367cb9ede72b655cf7203ac8362324206a73b88b738ac572e2753"
+    },
+    {
+      "fichier": "documentation/Planning/graphe-trame/G6-cartes/modern-personnalites-900.png",
+      "sha256": "85ef33256f281421c5be848fe3555791f1f5053da3fd40bfb040b818403255e6"
+    },
+    {
+      "fichier": "documentation/User Guides/captures/session-trame.jpg",
+      "sha256": "4233049e2bd465728f145108601e9e2bcd58a67fde96df5eb17304eea916ba5f"
+    },
+    {
+      "fichier": "documentation/User Guides/captures/session-trame-graphe.jpg",
+      "sha256": "27b6154adaf9550307b47f463d193419a371dd0ac3fe0aa5b20640f4936c2496"
+    },
+    {
+      "fichier": "documentation/User Guides/captures/session-trame-scene.jpg",
+      "sha256": "c05236705f0ece6e97394ca2eb6762797ef24dad57d3c4fe6476af314cdb9988"
+    }
+  ]
+}

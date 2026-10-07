@@ -1,5 +1,15 @@
 import { test, expect } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
+import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import { lancerGmOs, attendreLHydratation, CAMPAGNE_TEMOIN, type GmOsLance } from './lancerGmOs';
+
+const SORTIE = path.resolve('documentation/Planning/graphe-trame/G6-cartes');
+
+async function capturer(gmos: GmOsLance, nom: string) {
+    fs.mkdirSync(SORTIE, { recursive: true });
+    await gmos.fenetre.screenshot({ path: path.join(SORTIE, nom + '.png') });
+}
 
 /**
  * **Le graphe de la trame s'ouvre, se règle, et revient à la fiche.**
@@ -11,9 +21,7 @@ import { lancerGmOs, attendreLHydratation, CAMPAGNE_TEMOIN, type GmOsLance } fro
  * Le calcul du graphe est couvert par 31 essais sans fenêtre
  * (`grapheDeLaTrame.test.ts`). **Rien de ce qui suit n'en fait partie** :
  *
- * - ⛔ **Le canevas se dessine-t-il vraiment ?** `ForceGraph2D` ne rend rien tant
- *   que son conteneur mesure zéro — et `ResizeObserver` ne répond jamais sur un
- *   élément `hidden`. *Un écran vide ne lève aucune erreur.*
+ * - ⛔ **Les cartes ont-elles une toile mesurable et se rendent-elles vraiment ?**
  * - ⛔ **La porte existe-t-elle ?** Quatre fois en trois jours, ce dépôt a livré
  *   une fonctionnalité dont le chemin n'existait pas depuis l'endroit où le
  *   meneur se tenait. Un essai qui appelle la fonction ne prouve pas qu'on peut
@@ -33,96 +41,7 @@ async function ouvrirLaTrame(gmos: GmOsLance): Promise<void> {
         }).useSessionOSStore;
         S.getState().setCurrentView('trame');
     });
-    /* `exact` : l'en-tête de Session OS porte le même nom que l'écran. */
-    await expect(gmos.fenetre.getByRole('heading', { name: 'Trame narrative', exact: true }))
-        .toBeVisible();
-}
-
-/**
- * **Épingle des nœuds à des coordonnées connues.**
- *
- * ⛔ **Sans ça, aucun geste sur la toile n’est testable.** La simulation pose
- * les nœuds où elle veut, et un canevas n’offre aucune cible à Playwright. Une
- * épingle donne à la fois une position **et** l’immobilité : `placerLeNoeud`
- * rend `fx/fy` pour un nœud épinglé, donc d3 ne le déplace plus.
- *
- * ⚠️ Les identifiants sont ceux **du graphe**, préfixés par leur type.
- */
-async function epingler(gmos: GmOsLance, places: Record<string, { x: number; y: number }>): Promise<void> {
-    await gmos.fenetre.evaluate((carte) => {
-        const S = (window as never as {
-            useSessionOSStore: {
-                getState: () => {
-                    activeCampaignId: string | null;
-                    epinglerDansLaTrame: (c: string, n: string, p: { x: number; y: number }) => void;
-                };
-            };
-        }).useSessionOSStore;
-        const etat = S.getState();
-        if (!etat.activeCampaignId) throw new Error('aucune campagne active');
-        for (const [noeud, place] of Object.entries(carte)) {
-            etat.epinglerDansLaTrame(etat.activeCampaignId, noeud, place);
-        }
-    }, places);
-
-    /*
-      ⚠️ **Une attente en dur, et c’est le bon outil ici.** Épingler déclenche un
-      rendu, puis `placerLeNoeud` donne au nœud ses `fx/fy`, puis d3 redessine.
-      Un canevas n’expose **aucun état accessible** à attendre : il n’y a ni rôle,
-      ni texte, ni attribut qui dise « le nœud est arrivé ». *La première version
-      de ces essais cliquait avant, et échouait sans que rien ne soit cassé.*
-    */
-    await gmos.fenetre.waitForTimeout(900);
-}
-
-/** Les épingles de la campagne — c’est là qu’un glisser laisse sa trace. */
-async function lireLesEpingles(gmos: GmOsLance): Promise<Record<string, { x: number; y: number }>> {
-    return gmos.fenetre.evaluate(() => {
-        const S = (window as never as {
-            useSessionOSStore: {
-                getState: () => {
-                    activeCampaignId: string | null;
-                    campaigns: { id: string; noeudsEpinglesDeLaTrame?: Record<string, { x: number; y: number }> }[];
-                };
-            };
-        }).useSessionOSStore;
-        const etat = S.getState();
-        return etat.campaigns.find(c => c.id === etat.activeCampaignId)?.noeudsEpinglesDeLaTrame ?? {};
-    });
-}
-
-/**
- * **Combien de pixels d’écran valent une unité de graphe.**
- *
- * ⛔ **Mesurée, jamais supposée.** La toile s’ouvre à une échelle de 2 dans cet
- * environnement : un glisser de 110 px ne déplace le nœud que de 55 unités.
- * *Mes premiers essais de glisser échouaient pour ça, et rien dans le code
- * n’était cassé.* L’inscrire en dur les aurait rendus faux le jour où la
- * bibliothèque change son cadrage par défaut — **sans les faire échouer pour la
- * bonne raison**.
- *
- * On glisse donc ce qui se trouve au centre, et on lit dans le magasin de combien
- * il a bougé. Peu importe de quel nœud il s’agit : le rapport est le même pour
- * tous.
- */
-async function mesurerLEchelle(gmos: GmOsLance): Promise<number> {
-    const PAS = 40;
-    const avant = await lireLesEpingles(gmos);
-    const depart = await point(gmos, 0);
-    await glisser(gmos, depart, { x: depart.x + PAS, y: depart.y });
-    await gmos.fenetre.waitForTimeout(400);
-
-    /* Un glisser de calibrage peut poser une scène sur un voisin : on refuse. */
-    const question = gmos.fenetre.getByRole('button', { name: 'Annuler' });
-    if (await question.count() > 0) await question.click();
-
-    const apres = await lireLesEpingles(gmos);
-    for (const [noeud, place] of Object.entries(apres)) {
-        const ancien = avant[noeud];
-        const bouge = ancien ? place.x - ancien.x : 0;
-        if (Math.abs(bouge) > 1) return PAS / bouge;
-    }
-    throw new Error('calibrage impossible : aucun nœud n’a bougé au centre de la toile');
+    await expect(gmos.fenetre.getByRole('button', { name: 'Graphe', exact: true })).toBeVisible();
 }
 
 /**
@@ -137,6 +56,8 @@ async function mesurerLEchelle(gmos: GmOsLance): Promise<number> {
 async function entrerEnLiaison(gmos: GmOsLance): Promise<void> {
     await gmos.fenetre.getByRole('button', { name: 'Relier', exact: true }).click();
     await expect(gmos.fenetre.getByText(/Glisse d’une scène vers une autre/)).toBeVisible();
+    // Le bandeau réduit la toile : laisser son ResizeObserver finir avant de viser.
+    await gmos.fenetre.waitForTimeout(200);
 }
 
 /** Et en sortir, de même. */
@@ -159,27 +80,54 @@ async function lireLaScene(gmos: GmOsLance, id: string) {
     }, id);
 }
 
-/**
- * Le centre du canevas, et un point à `dx` pixels de lui.
- *
- * ⚠️ **Le graphe n’est jamais recadré** — aucun `zoomToFit` n’est appelé —
- * donc l’origine du repère du graphe tombe au centre du canevas, à l’échelle 1.
- * *Un recadrage automatique rendrait ces essais faux sans les faire échouer.*
- */
-async function point(gmos: GmOsLance, dx: number, dy = 0): Promise<{ x: number; y: number }> {
-    const cadre = await gmos.fenetre.locator('canvas').first().boundingBox();
-    if (!cadre) throw new Error('canevas introuvable');
-    return { x: cadre.x + cadre.width / 2 + dx, y: cadre.y + cadre.height / 2 + dy };
+/** Le centre réel de la carte ou de son point d’accroche, au zoom courant. */
+async function point(gmos: GmOsLance, id: string, accroche?: 'sortie' | 'entree'): Promise<{ x: number; y: number }> {
+    const cible = gmos.fenetre.locator(`[data-id='${id}']`);
+    const boite = await (accroche ? cible.locator(`[data-handleid='${accroche}']`) : cible).boundingBox();
+    if (!boite) throw new Error('carte introuvable : ' + id);
+    return { x: boite.x + boite.width / 2, y: boite.y + boite.height / 2 };
+}
+
+async function milieuDuLien(gmos: GmOsLance, nature: string, de: string, vers: string) {
+    const id = JSON.stringify([nature, de, vers]);
+    return gmos.fenetre.locator(`[data-id='${id}'] .react-flow__edge-interaction`).evaluate((el: SVGPathElement) => {
+        const p = el.getPointAtLength(el.getTotalLength() / 2);
+        const m = el.getScreenCTM();
+        if (!m) throw new Error('lien sans transformation');
+        const ecran = new DOMPoint(p.x, p.y).matrixTransform(m);
+        return { x: ecran.x, y: ecran.y };
+    });
 }
 
 async function glisser(gmos: GmOsLance, de: { x: number; y: number }, vers: { x: number; y: number }) {
     await gmos.fenetre.mouse.move(de.x, de.y);
     await gmos.fenetre.mouse.down();
-    /* Deux pas : un seul mouvement ne produit qu’un `pointermove`, et le fil
-       élastique ne serait jamais dessiné. */
-    await gmos.fenetre.mouse.move((de.x + vers.x) / 2, (de.y + vers.y) / 2);
-    await gmos.fenetre.mouse.move(vers.x, vers.y);
+    // Dépasser le seuil de glisser avant de parcourir la distance entière :
+    // un premier mouvement de centaines de pixels n'est pas un geste humain.
+    await gmos.fenetre.mouse.move(de.x + 3, de.y);
+    await gmos.fenetre.mouse.move(vers.x, vers.y, { steps: 12 });
     await gmos.fenetre.mouse.up();
+}
+
+/** Séparer les cartes de la semence avant un geste ciblé, puis cadrer le résultat. */
+async function epingler(gmos: GmOsLance, places: Record<string, { x: number; y: number }>): Promise<void> {
+    await expect(gmos.fenetre.locator('.react-flow__node').first()).toBeVisible();
+    const ids = await gmos.fenetre.locator('.react-flow__node').evaluateAll(elements =>
+        elements.map(el => (el as HTMLElement).dataset.id!));
+    await gmos.fenetre.evaluate(({ ids, places }) => {
+        const etat = (window as Window & { useSessionOSStore: typeof useSessionOSStore }).useSessionOSStore.getState();
+        if (!etat.activeCampaignId) throw new Error('aucune campagne active');
+        const positions = Object.fromEntries(ids.map((id, i) => [id, places[id] ?? { x: -600, y: (i - (ids.length - 1) / 2) * 220 }]));
+        etat.rangerLeGrapheDeTrame(etat.activeCampaignId, positions);
+    }, { ids, places });
+    for (const [id, p] of Object.entries(places)) {
+        await expect.poll(() => gmos.fenetre.locator(`.react-flow__node[data-id='${id}']`).evaluate(el => {
+            const n = el as HTMLElement, m = new DOMMatrixReadOnly(n.style.transform);
+            return { x: m.m41 + n.offsetWidth / 2, y: m.m42 + n.offsetHeight / 2 };
+        })).toEqual(p);
+    }
+    await gmos.fenetre.getByRole('button', { name: 'Cadrer la trame', exact: true }).click();
+    await gmos.fenetre.waitForTimeout(200);
 }
 
 const bouton = (gmos: GmOsLance, nom: string) =>
@@ -208,29 +156,24 @@ test.describe('le graphe de la trame', () => {
 
     test.beforeEach(async () => {
         gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
+        await gmos.fenetre.setViewportSize({ width: 1440, height: 900 });
         await attendreLHydratation(gmos);
         await ouvrirLaTrame(gmos);
     });
 
     test.afterEach(async () => { await gmos?.fermer(); });
 
-    /**
-     * ⛔ **La porte, et le canevas derrière.** Le `<canvas>` est la seule preuve
-     * que `ForceGraph2D` a reçu une taille : *son conteneur mesurait zéro, il
-     * n'aurait rien dessiné et rien dit.*
-     */
+    /** La porte, les dimensions de la toile et les huit cartes de la semence. */
     test('s’ouvre depuis l’arbre et dessine quelque chose', async () => {
         await expect(bouton(gmos, 'Graphe')).toBeVisible();
         await bouton(gmos, 'Graphe').click();
 
-        const canevas = gmos.fenetre.locator('canvas');
-        await expect(canevas.first()).toBeVisible();
-
-        const taille = await canevas.first().evaluate((el: HTMLCanvasElement) => ({
-            largeur: el.width, hauteur: el.height,
-        }));
-        expect(taille.largeur, 'le conteneur du graphe mesure zéro').toBeGreaterThan(100);
-        expect(taille.hauteur).toBeGreaterThan(100);
+        const toile = gmos.fenetre.locator('.react-flow');
+        await expect(toile).toBeVisible();
+        const taille = await toile.boundingBox();
+        expect(taille!.width, 'le conteneur du graphe mesure zéro').toBeGreaterThan(100);
+        expect(taille!.height).toBeGreaterThan(100);
+        await expect(gmos.fenetre.locator('.react-flow__node')).toHaveCount(8);
     });
 
     /**
@@ -270,6 +213,7 @@ test.describe('le graphe de la trame', () => {
         await gmos.fenetre.getByRole('combobox').first().selectOption('principale');
 
         await expect(gmos.fenetre.getByText(/Aucune scène n’est classée/)).toBeVisible();
+        await capturer(gmos, 'filtre-vide');
     });
 
     /**
@@ -325,7 +269,7 @@ test.describe('le graphe de la trame', () => {
      */
     test('revient à l’arbre, sur la fiche du nœud choisi', async () => {
         await bouton(gmos, 'Graphe').click();
-        await expect(gmos.fenetre.locator('canvas').first()).toBeVisible();
+        await expect(gmos.fenetre.locator('.react-flow').first()).toBeVisible();
 
         await bouton(gmos, 'Arbre').click();
 
@@ -350,22 +294,19 @@ test.describe('le graphe de la trame', () => {
         await cran(gmos, 3, 'indices').click();
         await epingler(gmos, {
             'scene:temoin-scene-3': { x: 0, y: 0 },
-            'indice:temoin-indice-1': { x: 90, y: 0 },
+            'indice:temoin-indice-1': { x: 420, y: 0 },
         });
 
         const avant = await lireLaScene(gmos, 'temoin-scene-3');
         expect(avant.indiceIds, 'la semence a changé : cette scène porte déjà un indice').toEqual([]);
 
-        const echelle = await mesurerLEchelle(gmos);
-        /* ⚠️ Le calibrage a déplacé UN des deux nœuds, et on ne sait pas lequel :
-           on les repose donc tous les deux. */
         await epingler(gmos, {
             'scene:temoin-scene-3': { x: 0, y: 0 },
-            'indice:temoin-indice-1': { x: 90, y: 0 },
+            'indice:temoin-indice-1': { x: 420, y: 0 },
         });
 
         await entrerEnLiaison(gmos);
-        await glisser(gmos, await point(gmos, 0), await point(gmos, 90 * echelle));
+        await glisser(gmos, await point(gmos, 'scene:temoin-scene-3', 'sortie'), await point(gmos, 'indice:temoin-indice-1', 'entree'));
 
         await expect.poll(async () => (await lireLaScene(gmos, 'temoin-scene-3')).indiceIds)
             .toEqual(['temoin-indice-1']);
@@ -381,12 +322,10 @@ test.describe('le graphe de la trame', () => {
         await bouton(gmos, 'Graphe').click();
         await epingler(gmos, {
             'scene:temoin-scene-2': { x: 0, y: 0 },
-            'pnj:temoin-pnj-1': { x: 90, y: 0 },
+            'pnj:temoin-pnj-1': { x: 420, y: 0 },
         });
 
-        /* Le trait est droit — voir `linkCurvature` — donc il passe bien à
-           mi-chemin des deux nœuds épinglés. */
-        const milieu = await point(gmos, 45);
+        const milieu = await milieuDuLien(gmos, 'pnj', 'scene:temoin-scene-2', 'pnj:temoin-pnj-1');
         await gmos.fenetre.mouse.click(milieu.x, milieu.y);
         await expect.poll(async () => (await lireLaScene(gmos, 'temoin-scene-2')).entiteIds)
             .toEqual(['temoin-pnj-1']);
@@ -395,7 +334,8 @@ test.describe('le graphe de la trame', () => {
         /* Quelques pixels de marge : la zone sensible d'un trait est fine, et
            l'essai ne doit pas échouer pour un demi-pixel d'arrondi. */
         for (const dy of [0, -2, 2, -4, 4]) {
-            const vise = await point(gmos, 45, dy);
+            const vise = await milieuDuLien(gmos, 'pnj', 'scene:temoin-scene-2', 'pnj:temoin-pnj-1');
+            vise.y += dy;
             await gmos.fenetre.mouse.click(vise.x, vise.y);
             const scene = await lireLaScene(gmos, 'temoin-scene-2');
             if (scene.entiteIds.length === 0) break;
@@ -413,14 +353,12 @@ test.describe('le graphe de la trame', () => {
         await bouton(gmos, 'Graphe').click();
         await epingler(gmos, {
             'scene:temoin-scene-1': { x: 0, y: 0 },
-            'acte:temoin-acte-2': { x: 110, y: 0 },
+            'acte:temoin-acte-2': { x: 420, y: 0 },
         });
 
         expect((await lireLaScene(gmos, 'temoin-scene-1')).acteId).toBe('temoin-acte-1');
 
-        const echelle = await mesurerLEchelle(gmos);
-        await epingler(gmos, { 'scene:temoin-scene-1': { x: 0, y: 0 } });
-        await glisser(gmos, await point(gmos, 0), await point(gmos, 110 * echelle));
+        await glisser(gmos, await point(gmos, 'scene:temoin-scene-1'), await point(gmos, 'acte:temoin-acte-2'));
 
         await expect(gmos.fenetre.getByText(/Rattacher .* à l’acte/)).toBeVisible();
         await gmos.fenetre.getByRole('button', { name: 'Confirmer' }).click();
@@ -434,12 +372,10 @@ test.describe('le graphe de la trame', () => {
         await bouton(gmos, 'Graphe').click();
         await epingler(gmos, {
             'scene:temoin-scene-1': { x: 0, y: 0 },
-            'acte:temoin-acte-2': { x: 110, y: 0 },
+            'acte:temoin-acte-2': { x: 420, y: 0 },
         });
 
-        const echelle = await mesurerLEchelle(gmos);
-        await epingler(gmos, { 'scene:temoin-scene-1': { x: 0, y: 0 } });
-        await glisser(gmos, await point(gmos, 0), await point(gmos, 110 * echelle));
+        await glisser(gmos, await point(gmos, 'scene:temoin-scene-1'), await point(gmos, 'acte:temoin-acte-2'));
 
         await expect(gmos.fenetre.getByText(/Rattacher .* à l’acte/)).toBeVisible();
         await gmos.fenetre.getByRole('button', { name: 'Annuler' }).click();
@@ -452,7 +388,7 @@ test.describe('le graphe de la trame', () => {
         await bouton(gmos, 'Graphe').click();
         await epingler(gmos, { 'scene:temoin-scene-2': { x: 0, y: 0 } });
 
-        const centre = await point(gmos, 0);
+        const centre = await point(gmos, 'scene:temoin-scene-2');
         await gmos.fenetre.mouse.click(centre.x, centre.y);
 
         const champ = gmos.fenetre.getByRole('textbox').first();
@@ -479,16 +415,15 @@ test.describe('le graphe de la trame', () => {
         await bouton(gmos, 'Graphe').click();
         await epingler(gmos, {
             'scene:temoin-scene-2': { x: 0, y: 0 },
-            'scene:temoin-scene-3': { x: 90, y: 0 },
+            'scene:temoin-scene-3': { x: 420, y: 0 },
         });
-        const echelle = await mesurerLEchelle(gmos);
         await epingler(gmos, {
             'scene:temoin-scene-2': { x: 0, y: 0 },
-            'scene:temoin-scene-3': { x: 90, y: 0 },
+            'scene:temoin-scene-3': { x: 420, y: 0 },
         });
 
         await entrerEnLiaison(gmos);
-        await glisser(gmos, await point(gmos, 0), await point(gmos, 90 * echelle));
+        await glisser(gmos, await point(gmos, 'scene:temoin-scene-2', 'sortie'), await point(gmos, 'scene:temoin-scene-3', 'entree'));
 
         await expect.poll(async () => (await lireLaScene(gmos, 'temoin-scene-2')).enchainements)
             .toEqual([{ vers: 'temoin-scene-3' }]);
@@ -496,7 +431,7 @@ test.describe('le graphe de la trame', () => {
         /* La condition se tape dans le panneau — le geste crée la branche, le
            panneau lui donne son sens. */
         await sortirDeLiaison(gmos);
-        const centre = await point(gmos, 0);
+        const centre = await point(gmos, 'scene:temoin-scene-2');
         await gmos.fenetre.mouse.click(centre.x, centre.y);
         /*
           ⛔ **`pressSequentially` et non `fill`, et c'est tout le sujet.** David a
@@ -510,6 +445,11 @@ test.describe('le graphe de la trame', () => {
 
         await expect.poll(async () => (await lireLaScene(gmos, 'temoin-scene-2')).enchainements)
             .toEqual([{ vers: 'temoin-scene-3', libelle: 'si Hale se tait' }]);
+        await bouton(gmos, 'Ranger').click();
+        await bouton(gmos, 'Confirmer').click();
+        await expect(gmos.fenetre.locator('.react-flow__edge-text')).toContainText('si Hale se tait');
+        await gmos.fenetre.waitForTimeout(200);
+        await capturer(gmos, 'lien-conditionnel');
     });
 
     /**
@@ -571,7 +511,7 @@ test.describe('le graphe de la trame', () => {
         await expect.poll(async () => (await lireLaScene(gmos, 'temoin-scene-2')).enchainements)
             .toEqual([{ vers: 'temoin-scene-3' }]);
 
-        const centre = await point(gmos, 0);
+        const centre = await point(gmos, 'scene:temoin-scene-3');
         await gmos.fenetre.mouse.click(centre.x, centre.y);
         await bouton(gmos, 'Supprimer').click();
         await gmos.fenetre.getByRole('button', { name: 'Confirmer' }).click();

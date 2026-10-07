@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-07",
+  "chantier": 124,
+  "extension": "styles-des-liens",
+  "baseCommit": "cc736062",
+  "committed": false,
+  "userValidationPending": true,
+  "build": {
+    "command": "npm.cmd run build",
+    "success": true,
+    "includesTypeScriptBuild": true
+  },
+  "unit": {
+    "command": "npx.cmd vitest run src/modules/session/logic src/modules/session/store src/theme/apparenceDAujourdhui.test.ts --maxWorkers=4",
+    "passed": 715,
+    "files": 57
+  },
+  "lint": {
+    "files": 9,
+    "diagnostics": 0
+  },
+  "e2e": {
+    "command": "npx.cmd playwright test e2e/stylesDesLiensDeTrame.spec.ts e2e/grapheDeLaTrame.spec.ts e2e/cartesDeTrame.spec.ts e2e/curerLaTrame.spec.ts e2e/capturesDuManuel.spec.ts --grep 'styles des liens de Trame|le graphe de la trame|garanties G3|revue de séance|session-trame' --reporter=list",
+    "passed": 39,
+    "newScenarios": 6,
+    "regressionScenarios": 33,
+    "durationMinutes": 7.1,
+    "isolatedProfiles": true,
+    "fictiveCampaignsOnly": true
+  },
+  "visualReview": {
+    "captures": 24,
+    "contactSheets": 4,
+    "manualViewsRegeneratedAndReviewed": 3,
+    "reviewed": true
+  },
+  "files": [
+    {
+      "file": "src/types/campaign.types.ts",
+      "sha256": "36f2290ed47f549f1ecc2a21e5325c2d34242c797aa3175ebcc0facca368a9a8"
+    },
+    {
+      "file": "src/modules/session/store/campaignSlice.ts",
+      "sha256": "a0f50cf8f08755f2c953fd72de65fbbbb5668fa0f7e14fbaa280b97a7a4d8c1d"
+    },
+    {
+      "file": "src/modules/session/logic/stylesDesLiensDeTrame.ts",
+      "sha256": "4060c0c3392fe6f9c34fd01146af4e55d83bcb02d8b2a139d2a4e603bfea8003"
+    },
+    {
+      "file": "src/modules/session/logic/stylesDesLiensDeTrame.test.ts",
+      "sha256": "8be740be616a89f2cd8819b8fba444e69f9be15a47cdeab37002dcfe48471629"
+    },
+    {
+      "file": "src/modules/session/logic/adapterLeGrapheDeTrame.ts",
+      "sha256": "e0f0d9f6a060e6ad5268710121b7067e3a8731a242d77461f9c9d8370483f2b8"
+    },
+    {
+      "file": "src/modules/session/components/trame/GrapheDeLaTrame.tsx",
+      "sha256": "dc24fef1d993af90af1e731a18a602688d0eedae738438115a3a32baafd4a5eb"
+    },
+    {
+      "file": "src/modules/session/components/trame/ToileDeLaTrame.tsx",
+      "sha256": "72d2e0fa4ffc9cb9498943522e74ad4f7bca70454d16f73643ca3924a281e102"
+    },
+    {
+      "file": "src/modules/session/components/trame/InspecteurDeLienDeTrame.tsx",
+      "sha256": "d32e5294445921ad16e0611088f23258533c4dbfe8a58be0e7b01e767e43fc63"
+    },
+    {
+      "file": "src/modules/session/components/trame/grapheDeTrame.css",
+      "sha256": "b9236bd457d2f65cc77673e253a82c72e59082e84ee82720ba0bdbd926013af3"
+    },
+    {
+      "file": "e2e/stylesDesLiensDeTrame.spec.ts",
+      "sha256": "69d27c6f9c3a0b725f7aa305ce316744d4ce3099c808172968216b305386a59e"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/claire-base-1180.png",
+      "sha256": "ab64203a32eeaed94715c21c30bdf0575ab967b5b2633e0eadee625a89343c09"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/claire-base-1440.png",
+      "sha256": "38cfd329b8edd8dacd2cf086bb5851ba3d77ba1427b2213744d17ba89bbf5bbf"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/claire-base-900.png",
+      "sha256": "a93069122b090151256772e019155be6b56b104b161ba7f4d8eb32a4f7ae668c"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/claire-personnalites-1180.png",
+      "sha256": "7aa3d6e6aec73c7934fa8c8360b585d5cbb49274c2271ea49fcbbabb0739ab04"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/claire-personnalites-1440.png",
+      "sha256": "2e9f5d0426a5630da7eba40058e6990ff84255524a5638e06c3b973ad05c2072"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/claire-personnalites-900.png",
+      "sha256": "f86fdb35aefbf2c434533bd41780fb457301b6d285b51d2eb3cd1fc4a880749e"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/cyberpunk-base-1180.png",
+      "sha256": "7cbc37cb63658b4caf6a3a3171525f32311462dbe31df01ad7c8842022eebab4"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/cyberpunk-base-1440.png",
+      "sha256": "4a623ad98ae89e9947cf47558217578e271d904b879a3f9988f48cc866ad1407"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/cyberpunk-base-900.png",
+      "sha256": "c7475ccb37abce6fd0103406707c386c6212d5e5b1f2600d328a25b537ef3a3f"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/cyberpunk-personnalites-1180.png",
+      "sha256": "83a22a47bc1c49cc22734b1964730916efc4325ddbe55d4676629730ff29a90f"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/cyberpunk-personnalites-1440.png",
+      "sha256": "1c4ea405827788a8320bc41180385ef45f4ebc8203e970e7570bb66043f2c9d1"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/cyberpunk-personnalites-900.png",
+      "sha256": "51a32e0c194043a22a27d0d526974199c6ee4eb334ea28818b9b6f920cd9b831"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/medieval-base-1180.png",
+      "sha256": "a7dfbb1cc0c4bd0d17513daa38b24d7b92ab3c9923eb2baf3feff4de28e885a5"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/medieval-base-1440.png",
+      "sha256": "bbd0ab3a4fd3141f47a3f0dec24bc5cd38e36fb5aaa61a5eb2584b51b08b5ef3"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/medieval-base-900.png",
+      "sha256": "22b3d8e82ce0cc7f75daa6935bf84b2f627f7518d34c932ff4404c0bb0204dbc"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/medieval-personnalites-1180.png",
+      "sha256": "5625063f8c7bb544ef1f548f0daef0759669ae1456c52c546f87807df75fa813"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/medieval-personnalites-1440.png",
+      "sha256": "d971c8022249b800132ee35cf9afcaa5789c3251c3f726fd6f7e2650810ce30b"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/medieval-personnalites-900.png",
+      "sha256": "1e248d8034b33978e445e076304f24ea33d2ab2275502c65137b541d45cfd691"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/modern-base-1180.png",
+      "sha256": "a990cb800d909253707c19a044f6666616ce6c57391802f59aedee66a7450e91"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/modern-base-1440.png",
+      "sha256": "016b80e24892ee4f2e67235563cef12b16a8c12a79f4ec4872ccf77c58f02261"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/modern-base-900.png",
+      "sha256": "011e4c4f8bb0a254623a2bcad77ed945a96d96283f78b104aa9151151d181ac8"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/modern-personnalites-1180.png",
+      "sha256": "da65d27d1999af2e40738f0259b4d949c95aacd03347d1a7af21cf2e1e2bfdee"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/modern-personnalites-1440.png",
+      "sha256": "ac2efe54f0c3b10cf80fbdb00f0a5d398ea88071610b942cb6f6c9dcaa6ed69f"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/modern-personnalites-900.png",
+      "sha256": "b1a976d8d2d805fe4f1f86f8220442de2f191730be55dc57917dc7de786b4fad"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-claire.png",
+      "sha256": "8f5f123552cba4c66b66480b66b1b765cf54c3126f7a8c610cb446983fc528d9"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-cyberpunk.png",
+      "sha256": "6d2ace05514d79199f2b1e2246b3eadca77a0285eb372434a384afd1fe04dc20"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-medieval.png",
+      "sha256": "28acaeffefeb64d65bc0a4979a324e58c1607308c8093300309881752fdba5c1"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-modern.png",
+      "sha256": "6f0dc486cc224f4346c37a3f892f84d31d9bc0a98f48285f29ec5eb991d38f55"
+    },
+    {
+      "file": "documentation/User Guides/captures/session-trame.jpg",
+      "sha256": "1e9cd0723f6371478de319534fbb716379af4857776154963d296fe72df9991c"
+    },
+    {
+      "file": "documentation/User Guides/captures/session-trame-graphe.jpg",
+      "sha256": "27b6154adaf9550307b47f463d193419a371dd0ac3fe0aa5b20640f4936c2496"
+    },
+    {
+      "file": "documentation/User Guides/captures/session-trame-scene.jpg",
+      "sha256": "889a22f0b19e714a7da453c9ff7954311c6620bbc99b199f5bbe6ee51ce2ec13"
+    }
+  ]
+}

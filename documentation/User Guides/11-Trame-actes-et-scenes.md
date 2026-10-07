@@ -228,7 +228,9 @@ Deux gestes pour rattraper la réalité d'une partie :
 ## 7. Le graphe de la trame
 
 Dans l'en-tête de la trame, deux boutons : **Arbre** et **Graphe**. L'arbre sert à **écrire**, le
-graphe à **voir**.
+graphe à **voir et relier**. Depuis le 07/10, ses nœuds sont des **cartes** : acte, état, titre,
+rang, lieu et nombres de PNJ et d'indices. Les flèches courbes portent les conditions des
+enchaînements. Le titre complet se lit au survol et dans l'inspecteur.
 
 ![Le graphe de la trame : les actes, leurs scènes et ce qu'elles convoquent](captures/session-trame-graphe.jpg)
 
@@ -261,14 +263,18 @@ monte au niveau qui les montre.
 | Geste | Ce qu'il fait |
 | :--- | :--- |
 | **Clic sur un nœud** | ouvre son panneau : titre, rang, commencer/terminer, supprimer, ses liens |
+| **Clic sur un trait, hors Relier** | ouvre l'inspecteur du lien : côtés de départ/arrivée, tracé, épaisseur, couleur et retrait explicite |
+| **Glisser une extrémité du lien sélectionné** | déplace son accroche sur un autre côté de la même carte ; **Appliquer** conserve le choix |
 | **Glisser un nœud** | le déplace et l'épingle |
 | **Glisser une scène SUR un acte** | la rattache à cet acte — *avec confirmation* |
 | **Glisser une scène SUR une scène** | la pose juste après — *avec confirmation* |
-| **Mode Relier** | glisser crée un lien, cliquer un lien le retire |
+| **Mode Relier** | glisser entre les points d'accroche des cartes crée un lien, cliquer un lien le retire |
 | **Ranger** | pose toute la trame d'un coup — voir ci-dessous |
-| **Libre / Figé** · **↺** | garde la disposition, ou la rend à la simulation |
+| **Organiser** | prévisualise une disposition par acte et les trajets des liens, pour les cartes affichées |
+| **Libre / Figé** | autorise ou bloque le déplacement ; garde les positions à la réouverture |
+| **↺ Réinitialiser les positions** | efface les épingles et l'instantané figé, puis revient à un rangement calculé |
 
-> ⚠️ **Hors du mode Relier, la toile n'écrit rien.** Un clic sur un trait est trop facile à rater.
+> ⚠️ **Hors du mode Relier, cliquer un trait ne retire rien.** Un clic sur un trait est trop facile à rater.
 > Et le mode Relier **suspend le déplacement des nœuds** : sans ça, relier réarrangerait ce que vous
 > venez de ranger.
 
@@ -276,15 +282,131 @@ monte au niveau qui les montre.
 > déplacer un PNJ ici ne le déplace pas là-bas.
 
 Le graphe **n'écrit rien que vous n'ayez demandé** : il ne sait que ranger ses nœuds, et relayer vos
-gestes aux mêmes commandes que la fiche.
+gestes aux mêmes commandes que la fiche ; les réglages d'apparence se conservent par lien.
+
+L'inspecteur réserve sa place **à droite** ; sur une fenêtre étroite, il se range **sous la toile**
+et défile dans son propre panneau. **Entrée** sélectionne une carte focalisée ; les **flèches** la
+déplacent en mode Libre. **Échap** quitte Relier, puis ferme la sélection. Les touches de suppression
+ne suppriment pas les cartes : le bouton **Supprimer** garde sa confirmation.
+
+**Agrandir**, **Réduire** et **Cadrer la trame** sont en haut à gauche de la toile. Zoomer, parcourir,
+sélectionner ou filtrer ne change pas les positions enregistrées. Une liaison conserve la place des
+cartes ; un déplacement enregistre sa position au lâcher. **Détacher** retire l'épingle en gardant
+la place affichée pendant cette ouverture.
+
+### Déplacer plusieurs cartes ensemble
+
+En mode **Libre**, maintenez **Ctrl** et cliquez sur les cartes à déplacer.
+Un nouveau Ctrl + clic retire une carte du groupe. Vous pouvez mélanger scènes,
+actes, lieux, PNJ et les autres éléments affichés.
+
+Pour choisir une zone, maintenez **Maj** et glissez depuis un espace vide de la
+toile : le rectangle sélectionne les cartes qu'il rencontre. Le bandeau indique
+le nombre de cartes sélectionnées.
+
+Glissez ensuite **une carte sélectionnée** ou **le cadre de sélection** : le
+groupe se déplace en gardant les écarts entre ses cartes, et les liens suivent.
+Les positions sont enregistrées ensemble au lâcher et conservées après relance.
+Ce déplacement groupé garde l'ordre des scènes et leur acte, même si vous passez
+au-dessus d'une autre carte. Les flèches déplacent aussi le groupe quand une de
+ses cartes a le focus. **Échap** ou un clic dans le vide vide la sélection.
+
+**Figé** permet de sélectionner mais bloque le déplacement. **Relier** et
+l'aperçu d'une organisation suspendent la sélection multiple. Un filtre retire
+de la sélection les cartes qu'il masque.
+
+### Régler l'apparence d'un lien
+
+Hors **Relier**, cliquez sur le trait ; au clavier, focalisez le lien puis appuyez sur **Entrée**.
+Son inspecteur propose trois réglages indépendants : **Tracé** (continu, tirets, petits points),
+**Épaisseur** (fin, normal, gras, très gras) et **Couleur** (palette du thème ou personnalisée).
+Vous pouvez donc combiner un trait violet, gras et pointillé. La flèche reprend sa couleur ;
+la condition reste lisible sur son propre fond.
+
+Les changements donnent un **aperçu immédiat**. **Appliquer** les conserve pour ce lien dans
+cette campagne. **Annuler les réglages** retrouve les valeurs enregistrées ; fermer la sélection
+ou presser **Échap** abandonne l'aperçu. Une couleur personnalisée se choisit avec le sélecteur ou
+sa valeur hexadécimale, par exemple `#8b5cf6`.
+
+**Revenir au style du thème** retire les personnalisations de tracé, d'épaisseur et de couleur
+de ce seul lien, en gardant ses jonctions. Une couleur de la
+palette suit le thème ; une couleur personnalisée reste celle que vous avez choisie.
+**Ranger** et **Réinitialiser les positions** conservent les styles des liens.
+
+### Déplacer une connexion au-dessus ou au-dessous d'une carte
+
+Hors **Relier**, cliquez sur le trait. Dans l'inspecteur, choisissez **Côté de départ**
+et **Côté d’arrivée** : **Haut**, **Bas**, **Gauche** ou **Droite**. Le lien suit immédiatement
+ces côtés ; **Appliquer** conserve le réglage dans la campagne.
+
+Vous pouvez aussi faire glisser l'un des deux grands cercles à l'extrémité du lien
+sélectionné vers une accroche visible sur **la même carte**. Le départ et l'arrivée
+se règlent indépendamment ; les cartes reliées et la condition restent les mêmes.
+Un dépôt dans le vide ou sur une autre carte laisse le lien en place.
+
+**Le geste le plus simple est un clic** : une fois le lien sélectionné, cliquez
+directement sur un point **Haut, Bas, Gauche ou Droite** de sa carte de départ ou
+d'arrivée. Aucun glissement n'est nécessaire. Au clavier, focalisez le point puis
+appuyez sur **Entrée** ou **Espace**. Le panneau suit votre choix ; **Appliquer** le
+conserve. Les points ont une zone de clic élargie et les cercles de glissement
+gardent leur taille à l'écran pendant le zoom. En glissant, vous pouvez relâcher
+près du point : il attire l'extrémité et devient vert quand le dépôt est accepté.
+La sélection d'un lien cadre la toile en tenant compte du panneau qui s'ouvre.
+
+**Annuler les réglages** ou **Échap** abandonne l'aperçu. **Revenir aux jonctions par défaut**
+prévisualise les côtés d'origine ; validez avec **Appliquer**. Ranger les cartes ne
+réinitialise pas les côtés choisis.
+
+**Retirer le lien** demande confirmation dans l'inspecteur. Les traits d'ordre ou d'appartenance
+à un acte gardent leur fonction : ils n'offrent pas ce bouton de retrait.
+
+### Organiser automatiquement les cartes et les liens
+
+Choisissez d'abord le **niveau de détail** et les **filtres** : Organiser travaille
+sur ce qui est affiché. Choisissez une **Disposition**, puis **Compact**,
+**Équilibré** ou **Aéré**, et cliquez **Organiser**.
+
+| Disposition | Quand l'utiliser |
+| --- | --- |
+| **Automatique** | Répartir les branches en adaptant l'orientation à la fenêtre. |
+| **Étoile** | Lire une enquête autour d'une scène carrefour ; sans carrefour, l'acte est au centre. |
+| **Ligne horizontale** | Lire les scènes de chaque acte de gauche à droite, dans leur ordre. |
+| **Colonne verticale** | Lire les scènes de chaque acte de haut en bas, dans leur ordre. |
+| **Arbre** | Lire les branches narratives de haut en bas. |
+| **Grille** | Répartir les scènes en rangées et colonnes ; dès quatre scènes, plusieurs rangées. |
+
+Les cartes se regroupent par acte dans des cadres nommés ;
+les éléments partagés entre actes restent communs. Les liens suivent des trajets
+à angles droits en Automatique et en Arbre, et des courbes dans les autres formes.
+Ils gardent leur couleur, leur épaisseur et vos côtés de jonction. Une longue ligne
+ou une grande étoile peut demander de zoomer pour lire une partie du graphe.
+
+Le bandeau indique **Aperçu de la disposition**. Vous pouvez changer l'espacement
+ou la forme pour comparer les résultats. **Appliquer la disposition** enregistre
+cette organisation pour la campagne, avec sa forme et son espacement ; les
+éléments masqués conservent leurs positions.
+**Annuler l'aperçu** ou **Échap** retrouve la disposition de départ. Changer un
+filtre abandonne aussi l'aperçu ; le calcul en cours est annulable.
+
+Après application, **Disposition précédente** revient au dernier arrangement
+remplacé, même après fermeture et relance. Les menus retrouvent la forme et
+l'espacement de cette disposition. Le retour conserve aussi l'état
+**Libre / Figé**. Il offre un niveau de retour, pas un historique complet.
+
+En mode Libre, vous pouvez ajuster les cartes à la main. Les liens concernés
+retrouvent alors des courbes ; relancez **Organiser** pour recalculer leurs trajets.
+Le cadre d'un acte déplacé disparaît plutôt que de garder un contour périmé.
+**Ranger** reste une autre façon de disposer la Trame entière, en chaînes ou
+étoiles. Ranger ou réinitialiser les positions retire les cadres et trajets de
+l'organisation automatique. Aucun de ces arrangements ne change votre histoire.
 
 ### Ranger la trame
 
-*Nouveau le 2026-09-25.* Laissée à elle-même, la toile est une simulation physique : elle ne connaît
-ni « avant » ni « après », et ranger une trame de cinq actes à la main revient à se battre contre
-elle. **Ranger** pose tout d'un coup :
+*Introduit le 2026-09-25, adapté aux cartes le 2026-10-07.* **Ranger** pose toute la trame d'un coup,
+même les nœuds masqués par le niveau ou un filtre. Chaque carte réserve son rectangle et l'espace
+de ses annexes. La toile garde cette disposition sans simulation physique :
 
-- **Chaque acte est un bloc**, avec un cadre discret autour, et les blocs se suivent comme les mots
+- **Chaque acte est un bloc**, annoncé par sa carte, et les blocs se suivent comme les mots
   d'une page.
 - **Un acte prend la forme de sa trame :**
   - une **chaîne** quand l'histoire y avance pas à pas — une scène se place à droite de celle qui y
@@ -294,12 +416,17 @@ elle. **Ranger** pose tout d'un coup :
     c'est l'acte lui-même qui prend le centre. *Une enquête ouverte est une étoile.*
 - **La page prend les proportions de votre fenêtre** : les chaînes s'allongent ou se replient pour
   remplir la largeur disponible.
-- **Lieux, PNJ, indices** se rangent en petite grappe sous la première scène qui les convoque.
-  Ceux qu'aucune scène ne convoque vont en rangées sous la trame, une par sorte : un orphelin qu'on
+- **Les annexes** se rangent en cartes compactes sous la première scène qui les convoque.
+  Une annexe partagée reste une seule carte. Celles qu'aucune scène ne convoque vont sous la trame : un orphelin qu'on
   voit à l'écart est un constat qu'on lit sans le chercher.
 
 > ⚠️ **Ranger remplace vos épingles** — la toile vous le demande avant. Tout reste ensuite
 > déplaçable à la main, et **rien n'est écrit dans la trame** : seules les positions changent.
+
+> ⛔ **Correction du 07/10.** L'ancien rendu enregistrait les positions figées sans relire cet
+> instantané après réouverture. ✅ Les cartes relisent les épingles puis l'instantané figé de
+> leur campagne. Les anciennes coordonnées sont conservées ; un ancien rangement serré peut
+> demander un nouveau **Ranger**, avec confirmation avant remplacement.
 
 <!-- -->
 
@@ -340,3 +467,6 @@ idée**, et elle était meilleure que les sept cases à cocher prévues. ✅ **�
 même**, correctif des espaces compris.*
 
 *Illustré le 2026-10-03 avec la campagne de démonstration.*
+
+*Relu le 2026-10-07 : graphe en cartes, gestes, sélection multiple, styles, jonctions et six formes d'organisation automatique ; essais sur profils fictifs.
+L'essai final de David reste à faire.*

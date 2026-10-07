@@ -9794,8 +9794,103 @@ gardent ; les « à régler à l'intégration » de la maquette (noms tronqués,
 inventions de Stitch à écarter : « ID : SCN-0314 », « Verrouillage édition », « Session live
 #42 », « + Ajouter une sortie »).
 
-**État** : ⏳ **garé, rien de commencé.** **À trancher par David** : l'accord pour le paquet, et la
-place du chantier — **avant ou après la refonte des tablettes** (§ 123).
+**État au 07/10** : 🚧 **repris après les tablettes**. David confirme **« Non, GM-OS est fermé »**
+et **« Oui, installer @xyflow/react »**. Version **12.12.0** installée et verrouillée ; nouveau
+rendu en cartes, courbes et inspecteur construit. **G0–G6 achevés** : construction/types et
+lint ciblé réussis, 712 tests, 33 scénarios E2E, 29 PNG finaux et trois vues du manuel relus.
+**G7 reste l'essai de David**. Voir la [réalisation](2026-10-07-trame-cartes-realisation.md).
+
+**Plan préparé le 07/10**, après la clôture des tablettes, à la demande de David :
+**« fais moi un plan exacte »**. [Plan d'exécution G0 à G7](2026-10-07-graphe-trame-en-cartes.md) :
+état témoin, moteur/adaptateur, cartes/liens, rangement/positions, gestes,
+inspecteur/fini, contrôles/documentation, puis essai de David. La maquette réelle
+dans cette copie du dépôt est le `screen.png` de `stitch/trame/stitch_syst_me_design_bureau_modulaire/gm_os_trame_narrative_graphe/`.
+Le plan traite explicitement les dimensions des cartes, la lecture des anciennes
+positions et les actions d'édition existantes. **Ce plan décrivait l'état avant développement.**
+La reprise du 07/10 remplace seulement le moteur de la Trame ; le Nexus social garde son moteur.
+La lecture des instantanés figés est corrigée, les caches de positions sont séparés par campagne,
+et les déplacements enregistrent une fois au lâcher. Les anciennes coordonnées restent lisibles.
+David autorise aussi à compléter le registre, la note du jour et le guide 11 en conservant leurs
+modifications antérieures. Aucun commit ni push n'a été demandé pour cette reprise.
+
+**Suite demandée le 07/10**, après « c'est bien » : David demande des options pour
+les jonctions, traits et commentaires, puis « je voudrais aussi si possible pouvoir
+définir des lien en pointiller, gras ou autre » et **« oui prévoit la couleurs
+(GM-OS est éteint) »**. [Options d'édition des liens](2026-10-07-trame-edition-des-liens.md) :
+tracé, épaisseur et couleur indépendants, aperçu immédiat, retour au style du thème.
+David demande ensuite **« implémente »** : inspecteur de lien et réglages construits,
+construction/types et lint ciblé réussis, 715 tests dans 57 fichiers et 39 scénarios
+E2E passent (six nouveaux, 33 régressions). Les 24 captures des réglages et trois
+vues du manuel sont relues ; [galerie et preuves](graphe-trame/edition-liens/index.html).
+Les autres gestes sont des propositions. L'essai de David reste attendu ; le bilan
+G0–G6 porte sur le premier lot, pas sur cette extension.
+
+**Après l'essai du 07/10**, David signale « je n'arrive pas à déplacer une connexion
+sur le dessus ou le dessous d'une case » et confirme **« GM-OS est fermé »**.
+Les [jonctions sur quatre côtés](2026-10-07-trame-jonctions.md) sont construites :
+deux choix dans l'inspecteur ou glissement de l'extrémité sur la même carte, aperçu
+puis Appliquer. Le sens et les cartes reliées restent inchangés. Construction/types,
+lint et 716 tests réussis ; 33 scénarios E2E distincts passent. Deux captures des
+jonctions et 24 vues de cartes régénérées sont relues. Essai de David attendu.
+
+**Organisation automatique, suite du 07/10** : David demande un moteur pour
+répartir les scènes, limiter le mélange et occuper l'espace ; il accepte la
+proposition par **« ok vas y gm-os est éteint »**. [ELK.js 0.12.0 intégré](2026-10-07-trame-organisation-elk.md),
+version verrouillée : actes regroupés, trajets à angles droits, trois espacements,
+aperçu puis application, retour durable à la disposition précédente. Organiser
+porte sur la vue visible ; Ranger reste le rangement complet en chaînes/étoiles.
+Styles, jonctions, positions cachées et Libre/Figé conservés. Construction/types,
+lint ciblé et 720 tests dans 58 fichiers réussis ; 46 E2E distincts passent
+(cinq nouveaux, 41 régressions), dont 137 cartes et 195 trajets sans chevauchement.
+Les 28 captures d'organisation, trois vues du manuel et huit planches régénérées
+de cartes/liens sont relues. Les contrôles finaux vivent dans
+la [galerie de ce lot](graphe-trame/organisation/index.html) et son manifeste.
+Essai G7 attendu ; aucun commit/push demandé.
+
+**Prise des extrémités, suite du 07/10** : David dit « j'ai beaucoup de difficulté
+à déplacer les extrémités, peux-tu m'aider à cela ? » et confirme **« GM-OS est fermé »**.
+[Prise facilitée](2026-10-07-trame-prise-des-jonctions.md) : clic sur le côté d'une
+carte, Entrée/Espace, cibles agrandies et cercles de taille constante à l'écran,
+attraction du point et lien sélectionné au premier plan. L'inspecteur recadre la
+toile ; le choix reste un aperçu jusqu'à Appliquer. Construction/types, lint et
+16 tests ciblés réussis ; 31 E2E distincts passent (deux nouveaux, 29 régressions).
+Deux captures et quatre planches de réglages relues, [galerie](graphe-trame/prise-jonctions/index.html).
+Reprendre par l'essai de David ; pas de commit/push demandé.
+
+**Sélection multiple, suite du 07/10** : David dit « c'est beaucoup mieux » pour
+les extrémités, demande de déplacer plusieurs éléments en un mouvement, accepte
+par **« ok »** et confirme **« GM-OS est fermé »**. [Sélection multiple construite](2026-10-07-trame-selection-multiple.md) :
+Ctrl + clic, Maj + rectangle, glissement d'une carte ou du cadre, flèches et Échap.
+Compteur des cartes choisies ; une écriture au lâcher conserve toutes les positions
+du groupe et ses écarts. Les actes et l'ordre des scènes restent conservés.
+Figé bloque le mouvement, Relier libère la sélection et les filtres retirent les
+cartes masquées. Construction/types, lint ciblé et 721 tests dans 59 fichiers passent.
+45 scénarios Electron distincts passent (trois nouveaux, 42 régressions) ; deux
+captures et douze planches sont relues.
+Preuves finales dans la [galerie et son manifeste](graphe-trame/selection-multiple/index.html).
+Essai de David attendu ; aucun commit/push demandé.
+
+**Formes de rangement, suite du 07/10** : David valide la sélection multiple par
+**« ok c'est très bien »**, demande **« des types de rangement automatique, en
+étoile et ligne etc... ? »**, puis confirme **« GM-OS est fermé »**.
+[Menu Disposition construit](2026-10-07-trame-types-de-rangement.md) : Automatique,
+Étoile, Ligne horizontale, Colonne verticale, Arbre et Grille ; les trois
+espacements restent disponibles. Aperçu sans écriture, application en une écriture,
+retour précédent et choix conservés après relance. Les formes imposées utilisent
+des courbes ; Automatique et Arbre gardent les trajets ELK. Scènes, actes, ordre et
+styles conservés. Le cadrage tient compte des rectangles et de la place disponible.
+Preuves finales dans la [galerie et son manifeste](graphe-trame/formes/index.html).
+Construction/types et lint ciblé passent ; **724 tests dans 60 fichiers et 34
+scénarios Electron distincts** sont validés (trois nouveaux, 29 régressions dans
+le lot final et deux régressions relancées après correction du banc de glissement).
+Sept captures et douze planches dans les quatre apparences sont relues.
+Essai de David attendu ; aucun commit/push demandé.
+
+**Enregistrement demandé le 07/10** : David dit **« document, commit et push »**.
+[Bilan et périmètre](2026-10-07-trame-enregistrement.md) : ensemble des lots Trame,
+documentation et preuves, sans les modifications des autres chantiers. Cette
+autorisation remplace les mentions historiques d'absence de demande de commit/push.
+Elle ne fournit pas de nouveau compte rendu d'essai global G7.
 
 ---
 
@@ -9862,7 +9957,7 @@ place du chantier — **avant ou après la refonte des tablettes** (§ 123).
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
 | 58 | **La refonte des tablettes** | ✅ **Clôturée le 07/10 : T6 validé par David**, « j'ai testé c'est bon, tu peux faire le commit et poussé ». T4 poussé (`edcdb68a`), T5 commité (`e920abc1`) ; preuves et clôture archivées, voir § 123 | Terminé | Validation T6 consignée ; commit et push autorisés par David |
-| 59 | **Le graphe de la Trame en cartes** | ⏳ **GARÉ le 04/10** — rapprocher le graphe de la maquette Stitch (cartes, flèches courbes, panneau du nœud) ; piste : React Flow pour la Trame seule. Voir § 124 | David : accord pour le paquet, et place avant ou après les tablettes | La décision de David |
+| 59 | **Le graphe de la Trame en cartes** | 🚧 **G0–G6 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Essai G7 ; commentaires et accroches multiples proposés | [Commit/push autorisés](2026-10-07-trame-enregistrement.md) : « document, commit et push » ; essai global G7 à consigner |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

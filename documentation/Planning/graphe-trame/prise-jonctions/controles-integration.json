@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-07",
+  "chantier": 124,
+  "extension": "prise-des-jonctions",
+  "committed": false,
+  "userValidationPending": true,
+  "build": {
+    "command": "npm.cmd run build",
+    "success": true,
+    "includesTypeScriptBuild": true
+  },
+  "unit": {
+    "command": "npx.cmd vitest run src/modules/session/logic/cartesDeTrame.test.ts src/modules/session/logic/stylesDesLiensDeTrame.test.ts src/modules/session/logic/organiserLaTrame.test.ts --maxWorkers=4",
+    "passed": 16,
+    "files": 3
+  },
+  "lint": {
+    "files": 6,
+    "diagnostics": 0
+  },
+  "e2e": {
+    "passed": 31,
+    "newScenarios": 2,
+    "regressionScenarios": 29,
+    "isolatedProfiles": true,
+    "fictiveCampaignsOnly": true,
+    "commands": [
+      "npx.cmd playwright test e2e/priseDesJonctionsDeTrame.spec.ts --reporter=list",
+      "npx.cmd playwright test e2e/grapheDeLaTrame.spec.ts e2e/stylesDesLiensDeTrame.spec.ts e2e/organisationDeLaTrame.spec.ts e2e/cartesDeTrame.spec.ts --grep \"le graphe de la trame|les styles des liens de Trame|organisation automatique de la Trame|le clavier sélectionne|zoom, panoramique\" --reporter=list"
+    ],
+    "verified": [
+      "four sides by direct click at two zooms",
+      "keyboard Enter and Space on handles",
+      "arrows on a handle do not move the card",
+      "click and grip tolerate a 10-pixel offset",
+      "drag tolerates an 18-pixel offset at drop",
+      "reconnect circles remain 28 pixels at both zooms",
+      "no writes before Apply",
+      "same cards and link styles preserved",
+      "Relier unchanged",
+      "ELK preview, persistence and rollback preserved"
+    ]
+  },
+  "visualReview": {
+    "captures": 2,
+    "reviewed": true,
+    "regressionContactSheets": 4
+  },
+  "files": [
+    {
+      "file": "src/modules/session/logic/adapterLeGrapheDeTrame.ts",
+      "sha256": "6847f515e731ebdb5db0b2c506edd7dad72408074d376dd42e0fe4ae04b8cfaf"
+    },
+    {
+      "file": "src/modules/session/components/trame/CarteDeTrame.tsx",
+      "sha256": "2204c7203a9401680882993f5ffdd0dde50046a723d4d03724a10e348146369d"
+    },
+    {
+      "file": "src/modules/session/components/trame/ToileDeLaTrame.tsx",
+      "sha256": "671a603af5cd255a44120e79834816aba6016f517c6176cb410897fc19839ae6"
+    },
+    {
+      "file": "src/modules/session/components/trame/GrapheDeLaTrame.tsx",
+      "sha256": "1d766219ee6d495f1499ff1af29e529c9bd5f242607f755e39fbc86286cddf1a"
+    },
+    {
+      "file": "src/modules/session/components/trame/InspecteurDeLienDeTrame.tsx",
+      "sha256": "5ffb2378e74f02f2d9ae8c692741d5777c5d79cd18dd232d2293957c084293a6"
+    },
+    {
+      "file": "src/modules/session/components/trame/grapheDeTrame.css",
+      "sha256": "b99eeebcc629f6981247ca2b593df1e62745fa8fae5d173a954efda8557d891b"
+    },
+    {
+      "file": "e2e/priseDesJonctionsDeTrame.spec.ts",
+      "sha256": "c67d745889b3b759d7ed977889adf86d0e1f3a93922fe8bc15c671aeadb86aa3"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-trame-prise-des-jonctions.md",
+      "sha256": "5834bb5967a92a2e97c95f59254f089efc059d1c9a45698583199bfe52378e3f"
+    },
+    {
+      "file": "documentation/Planning/2026-10-07-etat-et-reprise.md",
+      "sha256": "f7aee4d5e801a80cc864a23f9fdcaff7c7fc21190e9c8c55a8e3b55cc648d8b6"
+    },
+    {
+      "file": "documentation/Planning/2026-08-23-chantiers-gares.md",
+      "sha256": "e84673f25f5ef4262b5dd4de16b6edc78fbc18d3c5bd614f109e49ce0ab5bbdd"
+    },
+    {
+      "file": "documentation/User Guides/11-Trame-actes-et-scenes.md",
+      "sha256": "2a39bcedc0de0fe46815dce7e80d16449c6d950cd7c4e31bb953946bd7544ded"
+    }
+  ],
+  "captures": [
+    {
+      "file": "documentation/Planning/graphe-trame/prise-jonctions/points-cliquables-1440.png",
+      "sha256": "84b73dc8710e0502e8c1c9d77f393988cdde19828baa8014b0bc4ca809593758"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/prise-jonctions/points-cliquables-900.png",
+      "sha256": "2f3dcb731116cbcdefe4b8072368b893d6388bf88949a2a39ad8375c46f768ea"
+    }
+  ],
+  "regressionContactSheets": [
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-cyberpunk.png",
+      "sha256": "62cbc5cbf948cbcf51f34b65a719033f64ff8d937c4b4d0b2ee6d191b9521add"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-medieval.png",
+      "sha256": "71522e6fb8e7c0245947daa203f21a4a9b69c09e39a2dab89431aaafc5475a19"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-modern.png",
+      "sha256": "8fc45b4837ce39cfdcb47cc54cf6cf7a5e1d703e63344899b27db5d880cc08fc"
+    },
+    {
+      "file": "documentation/Planning/graphe-trame/edition-liens/planche-claire.png",
+      "sha256": "2c4009b0ab9ae2cef970c725da206488dba02bcee7860de101f95840f1270cdc"
+    }
+  ]
+}

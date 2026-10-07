@@ -1,0 +1,434 @@
+[
+  {
+    "theme": "cyberpunk",
+    "personnalites": true,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 532.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 869.4140625,
+      "height": 530.0546875
+    }
+  },
+  {
+    "theme": "cyberpunk",
+    "personnalites": true,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "cyberpunk",
+    "personnalites": true,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.875,
+      "width": 641.609375,
+      "height": 118.125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 389.734375,
+      "width": 639.609375,
+      "height": 150.9453125
+    }
+  },
+  {
+    "theme": "cyberpunk",
+    "personnalites": false,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 532.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 869.4140625,
+      "height": 530.0546875
+    }
+  },
+  {
+    "theme": "cyberpunk",
+    "personnalites": false,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "cyberpunk",
+    "personnalites": false,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.875,
+      "width": 641.609375,
+      "height": 118.125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 389.734375,
+      "width": 639.609375,
+      "height": 150.9453125
+    }
+  },
+  {
+    "theme": "medieval",
+    "personnalites": true,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 333.5546875,
+      "width": 300,
+      "height": 536.4453125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 334.5546875,
+      "width": 869.4140625,
+      "height": 534.4453125
+    }
+  },
+  {
+    "theme": "medieval",
+    "personnalites": true,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "medieval",
+    "personnalites": true,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.453125,
+      "width": 641.609375,
+      "height": 118.546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 388.734375,
+      "width": 639.609375,
+      "height": 151.5234375
+    }
+  },
+  {
+    "theme": "medieval",
+    "personnalites": false,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 532.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 869.4140625,
+      "height": 530.0546875
+    }
+  },
+  {
+    "theme": "medieval",
+    "personnalites": false,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "medieval",
+    "personnalites": false,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.875,
+      "width": 641.609375,
+      "height": 118.125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 389.734375,
+      "width": 639.609375,
+      "height": 150.9453125
+    }
+  },
+  {
+    "theme": "modern",
+    "personnalites": true,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 532.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 869.4140625,
+      "height": 530.0546875
+    }
+  },
+  {
+    "theme": "modern",
+    "personnalites": true,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "modern",
+    "personnalites": true,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.875,
+      "width": 641.609375,
+      "height": 118.125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 389.734375,
+      "width": 639.609375,
+      "height": 150.9453125
+    }
+  },
+  {
+    "theme": "modern",
+    "personnalites": false,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 334.5546875,
+      "width": 300,
+      "height": 535.4453125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 335.5546875,
+      "width": 869.4140625,
+      "height": 533.4453125
+    }
+  },
+  {
+    "theme": "modern",
+    "personnalites": false,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "modern",
+    "personnalites": false,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.875,
+      "width": 641.609375,
+      "height": 118.125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 389.734375,
+      "width": 639.609375,
+      "height": 150.9453125
+    }
+  },
+  {
+    "theme": "claire",
+    "personnalites": true,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 532.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 869.4140625,
+      "height": 530.0546875
+    }
+  },
+  {
+    "theme": "claire",
+    "personnalites": true,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "claire",
+    "personnalites": true,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.875,
+      "width": 641.609375,
+      "height": 118.125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 389.734375,
+      "width": 639.609375,
+      "height": 150.9453125
+    }
+  },
+  {
+    "theme": "claire",
+    "personnalites": false,
+    "width": 1440,
+    "height": 900,
+    "panneau": {
+      "x": 1119.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 532.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 869.4140625,
+      "height": 530.0546875
+    }
+  },
+  {
+    "theme": "claire",
+    "personnalites": false,
+    "width": 1180,
+    "height": 820,
+    "panneau": {
+      "x": 859.6015625,
+      "y": 337.9453125,
+      "width": 300,
+      "height": 452.0546875
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 338.9453125,
+      "width": 609.4140625,
+      "height": 450.0546875
+    }
+  },
+  {
+    "theme": "claire",
+    "personnalites": false,
+    "width": 900,
+    "height": 700,
+    "panneau": {
+      "x": 237.9921875,
+      "y": 551.875,
+      "width": 641.609375,
+      "height": 118.125
+    },
+    "toile": {
+      "x": 238.9921875,
+      "y": 389.734375,
+      "width": 639.609375,
+      "height": 150.9453125
+    }
+  }
+]

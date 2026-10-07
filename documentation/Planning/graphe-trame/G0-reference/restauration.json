@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-07",
+  "instantane": {
+    "scene:temoin-scene-1": {
+      "x": 9876,
+      "y": 5432
+    }
+  },
+  "positionDessinee": false,
+  "methode": "Réouverture dans un nouveau renderer, sur le même profil fictif ; interception des arcs de scènes."
+}

@@ -1,4 +1,5 @@
 import type { GrapheDeTrame, NoeudDeTrame, TypeDeNoeud } from './grapheDeLaTrame';
+import { DIMENSIONS_DES_CARTES } from './geometrieDesCartesDeTrame';
 
 /**
  * **Ranger la trame — chaque acte selon sa forme : une chaîne, ou une étoile.**
@@ -90,6 +91,8 @@ export interface RangementDeLaTrame {
 export interface OptionsDeRangement {
     /** Largeur sur hauteur de la fenêtre du graphe. 16:9 par défaut. */
     proportions?: number;
+    /** G3, 07/10/2026 : réserver les rectangles des cartes et de leurs annexes. */
+    cartes?: boolean;
 }
 
 const idDe = (bout: string | NoeudDeTrame): string => (typeof bout === 'string' ? bout : bout.id);
@@ -207,6 +210,7 @@ function rangerEnChaine(
 }
 
 export function rangerLaTrame(graphe: GrapheDeTrame, options: OptionsDeRangement = {}): RangementDeLaTrame {
+    if (options.cartes) return rangerLesCartes(graphe, options);
     const epingles: Record<string, Position> = {};
     const proportions = options.proportions && Number.isFinite(options.proportions) && options.proportions > 0
         ? options.proportions : 16 / 9;
@@ -350,4 +354,140 @@ export function rangerLaTrame(graphe: GrapheDeTrame, options: OptionsDeRangement
     }
 
     return { epingles, page: { largeur: largeurTotale, hauteur: hauteurTotale, colonnesParLigne: colonnesRetenues } };
+}
+
+/**
+ * Même grammaire chaîne/étoile, mais chaque scène réserve aussi ses annexes.
+ * Une annexe partagée n'appartient qu'à sa première scène pour le placement.
+ * Les blocs englobent les rectangles entiers : leurs centres seuls ne suffisent
+ * plus à garantir une disposition lisible (plan G3, David, 07/10/2026).
+ */
+function rangerLesCartes(graphe: GrapheDeTrame, options: OptionsDeRangement): RangementDeLaTrame {
+    const marge = 48;
+    const scene = DIMENSIONS_DES_CARTES.scene, carteActe = DIMENSIONS_DES_CARTES.acte, annexe = DIMENSIONS_DES_CARTES.pnj;
+    const actes = graphe.noeuds.filter(n => n.type === 'acte');
+    const parId = new Map(graphe.noeuds.map(n => [n.id, n]));
+    const scenesDe = new Map(actes.map(a => [a.id, [] as string[]]));
+    const acteDe = new Map<string, string>();
+    for (const l of graphe.liens) if (l.nature === 'appartenance') {
+        scenesDe.get(l.source)?.push(l.target);
+        acteDe.set(l.target, l.source);
+    }
+    const menesPar = new Map<string, string[]>();
+    const annexesDe = new Map<string, string[]>();
+    const dejaPosees = new Set<string>();
+    for (const l of graphe.liens) {
+        if (l.nature === 'suite' || l.nature === 'enchainement') {
+            if (acteDe.has(l.source) && acteDe.get(l.source) === acteDe.get(l.target))
+                menesPar.set(l.target, [...(menesPar.get(l.target) ?? []), l.source]);
+        } else if (l.nature !== 'appartenance' && parId.get(l.source)?.type === 'scene' && !dejaPosees.has(l.target)) {
+            annexesDe.set(l.source, [...(annexesDe.get(l.source) ?? []), l.target]);
+            dejaPosees.add(l.target);
+        }
+    }
+    const grappe = (id: string): Bloc => {
+        const annexes = annexesDe.get(id) ?? [];
+        const colonnes = Math.min(2, annexes.length);
+        const largeur = Math.max(scene.largeur, colonnes * annexe.largeur + Math.max(0, colonnes - 1) * marge);
+        const hauteur = scene.hauteur + Math.ceil(annexes.length / 2) * (annexe.hauteur + marge);
+        const positions = new Map<string, Position>([[id, { x: largeur / 2, y: scene.hauteur / 2 }]]);
+        annexes.forEach((a, i) => positions.set(a, {
+            x: largeur / 2 + ((i % 2) - (colonnes - 1) / 2) * (annexe.largeur + marge),
+            y: scene.hauteur + marge + annexe.hauteur / 2 + Math.floor(i / 2) * (annexe.hauteur + marge),
+        }));
+        return { largeur, hauteur, positions };
+    };
+    const ajouter = (dans: Map<string, Position>, bloc: Bloc, x: number, y: number) => {
+        for (const [id, p] of bloc.positions) dans.set(id, { x: x + p.x, y: y + p.y });
+    };
+    const blocsPour = (parLigne: number): Bloc[] => actes.map(acte => {
+        const scenes = scenesDe.get(acte.id) ?? [];
+        const grappes = new Map(scenes.map(id => [id, grappe(id)]));
+        const positions = new Map<string, Position>();
+        const centre = centreDeLEtoile(acte.id, scenes, menesPar);
+        let largeur = carteActe.largeur, hauteur = carteActe.hauteur;
+        if (centre) {
+            const branches = scenes.filter(id => id !== centre);
+            const diametre = Math.max(scene.largeur, ...[...grappes.values()].map(g => Math.hypot(g.largeur, g.hauteur))) + marge;
+            const rayon = Math.max(diametre, diametre / (2 * Math.sin(Math.PI / Math.max(2, branches.length))));
+            largeur = 2 * rayon + diametre;
+            const cx = largeur / 2, cy = carteActe.hauteur + marge + rayon + diametre / 2;
+            branches.forEach((id, i) => {
+                const angle = -Math.PI / 2 + i * 2 * Math.PI / branches.length;
+                const g = grappes.get(id)!;
+                ajouter(positions, g, cx + rayon * Math.cos(angle) - g.largeur / 2,
+                    cy + rayon * Math.sin(angle) - g.hauteur / 2);
+            });
+            if (centre === acte.id) positions.set(acte.id, { x: cx, y: cy });
+            else {
+                const g = grappes.get(centre)!;
+                ajouter(positions, g, cx - g.largeur / 2, cy - g.hauteur / 2);
+                positions.set(acte.id, { x: cx, y: carteActe.hauteur / 2 });
+            }
+            hauteur = cy + rayon + diametre / 2;
+        } else {
+            const rang = rangs(scenes, menesPar);
+            const colonnes: string[][] = [];
+            for (const id of scenes) (colonnes[rang.get(id)!] ??= []).push(id);
+            const nonVides = colonnes.filter(Boolean);
+            const pasX = Math.max(scene.largeur, ...[...grappes.values()].map(g => g.largeur)) + marge;
+            largeur = Math.max(scene.largeur, Math.min(parLigne, nonVides.length) * pasX - marge);
+            let y = carteActe.hauteur + marge;
+            for (let debut = 0, ligne = 0; debut < nonVides.length; debut += parLigne, ligne++) {
+                const cetteLigne = nonVides.slice(debut, debut + parLigne);
+                let hauteurLigne = 0;
+                cetteLigne.forEach((colonne, j) => {
+                    let bas = 0;
+                    const x = (ligne % 2 ? Math.min(parLigne, nonVides.length) - 1 - j : j) * pasX;
+                    for (const id of colonne) {
+                        const g = grappes.get(id)!;
+                        ajouter(positions, g, x + (pasX - marge - g.largeur) / 2, y + bas);
+                        bas += g.hauteur + marge;
+                    }
+                    hauteurLigne = Math.max(hauteurLigne, bas);
+                });
+                y += hauteurLigne + marge;
+            }
+            hauteur = Math.max(carteActe.hauteur, y - marge);
+            positions.set(acte.id, { x: largeur / 2, y: carteActe.hauteur / 2 });
+        }
+        return { largeur, hauteur, positions };
+    });
+    // Les scènes hors bloc et les annexes orphelines restent visibles et rangées.
+    const restants = graphe.noeuds.filter(n => !acteDe.has(n.id) && n.type !== 'acte' && !dejaPosees.has(n.id));
+    const proportions = options.proportions && Number.isFinite(options.proportions) && options.proportions > 0 ? options.proportions : 16 / 9;
+    let meilleur: RangementDeLaTrame = { epingles: {}, page: { largeur: 0, hauteur: 0, colonnesParLigne: 4 } };
+    let ecart = Infinity;
+    for (const parLigne of [4, 3, 5, 6, 8]) {
+        const blocs = blocsPour(parLigne);
+        const largeurMax = Math.max(scene.largeur, ...blocs.map(b => b.largeur));
+        const largeurLigne = blocs.reduce((s, b) => s + b.largeur + ENTRE_BLOCS, 0);
+        for (let essai = 0; essai <= 20; essai++) {
+            const visee = largeurMax + (largeurLigne - largeurMax) * essai / 20;
+            const places = new Map<string, Position>();
+            let x = 0, y = 0, hauteurLigne = 0, largeur = 0;
+            for (const bloc of blocs) {
+                if (x && x + bloc.largeur > visee) { y += hauteurLigne + ENTRE_BLOCS; x = 0; hauteurLigne = 0; }
+                ajouter(places, bloc, x, y);
+                largeur = Math.max(largeur, x + bloc.largeur);
+                x += bloc.largeur + ENTRE_BLOCS;
+                hauteurLigne = Math.max(hauteurLigne, bloc.hauteur);
+            }
+            y += hauteurLigne;
+            if (restants.length) {
+                y += ENTRE_BLOCS;
+                const parRangee = Math.max(1, Math.floor(Math.max(largeur, scene.largeur) / (scene.largeur + marge)));
+                restants.forEach((n, i) => places.set(n.id, { x: scene.largeur / 2 + (i % parRangee) * (scene.largeur + marge), y: y + scene.hauteur / 2 + Math.floor(i / parRangee) * (scene.hauteur + marge) }));
+                largeur = Math.max(largeur, Math.min(parRangee, restants.length) * (scene.largeur + marge) - marge);
+                y += Math.ceil(restants.length / parRangee) * (scene.hauteur + marge);
+            }
+            const e = y ? Math.abs(Math.log((largeur / y) / proportions)) : 0;
+            if (e < ecart) {
+                ecart = e;
+                meilleur = { epingles: Object.fromEntries([...places].map(([id, p]) => [id, { x: p.x - largeur / 2, y: p.y - y / 2 }])),
+                    page: { largeur, hauteur: y, colonnesParLigne: parLigne } };
+            }
+        }
+    }
+    return meilleur;
 }

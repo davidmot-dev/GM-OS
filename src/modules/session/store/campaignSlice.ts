@@ -15,6 +15,8 @@ import type { Campaign, LayoutConfig } from './types';
 import { momentDeJeu } from '../../ai/budgetsDeTemps';
 import { sessionBackupManager } from '../logic/SessionBackupManager';
 import { useObsidianStore } from '../useObsidianStore';
+import type { StyleDeLienDeTrame, OrganisationDeTrame, PointDeTrame } from '../../../types/campaign.types';
+import { normaliserLeStyleDeLien } from '../logic/stylesDesLiensDeTrame';
 
 // ─────────────────────────────────────────────
 // State
@@ -50,6 +52,8 @@ export interface CampaignSliceActions {
     libererLeGrapheDeTrame: (campaignId: string) => void;
     reinitialiserLeGrapheDeTrame: (campaignId: string) => void;
     epinglerDansLaTrame: (campaignId: string, noeudId: string, position: { x: number; y: number }) => void;
+    /** Déplacement d'un groupe : fusionner les positions en une seule écriture. */
+    epinglerPlusieursDansLaTrame: (campaignId: string, positions: Record<string, PointDeTrame>) => void;
     /**
      * **Remplace toutes les épingles d'un coup** — le rangement en colonnes du
      * 2026-09-25. Une seule écriture pour trente nœuds : trente appels à
@@ -58,6 +62,10 @@ export interface CampaignSliceActions {
      */
     rangerLeGrapheDeTrame: (campaignId: string, epingles: Record<string, { x: number; y: number }>) => void;
     detacherDeLaTrame: (campaignId: string, noeudId?: string) => void;
+    /** Sans style, rend ce seul lien à son apparence du thème. */
+    stylerLeLienDeTrame: (campaignId: string, lienId: string, style?: StyleDeLienDeTrame) => void;
+    organiserLeGrapheDeTrame: (campaignId: string, organisation: OrganisationDeTrame, positionsAvant: Record<string, PointDeTrame>) => void;
+    restaurerLaDispositionDeTrame: (campaignId: string) => void;
 }
 
 export type CampaignSlice = CampaignSliceState & CampaignSliceActions;
@@ -266,7 +274,7 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
         set((state) => ({
             campaigns: state.campaigns.map((c) =>
                 c.id === campaignId
-                    ? { ...c, positionsDeLaTrame: undefined, noeudsEpinglesDeLaTrame: undefined, trameFigee: false }
+                    ? { ...c, positionsDeLaTrame: undefined, noeudsEpinglesDeLaTrame: undefined, trameFigee: false, organisationDeLaTrame: undefined }
                     : c
             ),
         })),
@@ -280,14 +288,56 @@ export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSl
             ),
         })),
 
+    epinglerPlusieursDansLaTrame: (campaignId, positions) =>
+        set(state => {
+            const campagne = state.campaigns.find(c => c.id === campaignId);
+            if (!campagne || campagne.trameFigee) return state;
+            const valides = Object.fromEntries(Object.entries(positions).filter(([id, p]) =>
+                id && p && Number.isFinite(p.x) && Number.isFinite(p.y)).map(([id, p]) => [id, { ...p }]));
+            if (!Object.keys(valides).length || Object.entries(valides).every(([id, p]) =>
+                campagne.noeudsEpinglesDeLaTrame?.[id]?.x === p.x && campagne.noeudsEpinglesDeLaTrame?.[id]?.y === p.y)) return state;
+            return { campaigns: state.campaigns.map(c => c.id === campaignId
+                ? { ...c, noeudsEpinglesDeLaTrame: { ...c.noeudsEpinglesDeLaTrame, ...valides } } : c) };
+        }),
+
     rangerLeGrapheDeTrame: (campaignId, epingles) =>
         set((state) => ({
             campaigns: state.campaigns.map((c) =>
                 c.id === campaignId
-                    ? { ...c, noeudsEpinglesDeLaTrame: { ...epingles }, positionsDeLaTrame: undefined, trameFigee: false }
+                    ? { ...c, noeudsEpinglesDeLaTrame: { ...epingles }, positionsDeLaTrame: undefined, trameFigee: false, organisationDeLaTrame: undefined }
                     : c
             ),
         })),
+
+    stylerLeLienDeTrame: (campaignId, lienId, brut) =>
+        set((state) => {
+            const campagne = state.campaigns.find(c => c.id === campaignId);
+            const style = normaliserLeStyleDeLien(brut);
+            if (!campagne || !lienId || JSON.stringify(campagne.stylesDesLiensDeTrame?.[lienId]) === JSON.stringify(style)) return state;
+            const styles = { ...campagne.stylesDesLiensDeTrame };
+            if (style) styles[lienId] = style; else delete styles[lienId];
+            return { campaigns: state.campaigns.map(c => c.id === campaignId
+                ? { ...c, stylesDesLiensDeTrame: Object.keys(styles).length ? styles : undefined } : c) };
+        }),
+
+    organiserLeGrapheDeTrame: (campaignId, organisation, positionsAvant) =>
+        set(state => ({ campaigns: state.campaigns.map(c => c.id === campaignId ? {
+            ...c, noeudsEpinglesDeLaTrame: { ...c.noeudsEpinglesDeLaTrame, ...organisation.positions },
+            positionsDeLaTrame: c.trameFigee ? { ...positionsAvant, ...organisation.positions } : c.positionsDeLaTrame,
+            organisationDeLaTrame: organisation,
+            dispositionPrecedenteDeTrame: { positionsVivantes: positionsAvant, epingles: c.noeudsEpinglesDeLaTrame,
+                positions: c.positionsDeLaTrame, fige: c.trameFigee, organisation: c.organisationDeLaTrame },
+        } : c) })),
+
+    restaurerLaDispositionDeTrame: campaignId =>
+        set(state => {
+            const c = state.campaigns.find(c => c.id === campaignId), avant = c?.dispositionPrecedenteDeTrame;
+            if (!avant) return state;
+            return { campaigns: state.campaigns.map(c => c.id === campaignId ? {
+                ...c, noeudsEpinglesDeLaTrame: avant.epingles, positionsDeLaTrame: avant.positions,
+                trameFigee: avant.fige, organisationDeLaTrame: avant.organisation, dispositionPrecedenteDeTrame: undefined,
+            } : c) };
+        }),
 
     detacherDeLaTrame: (campaignId, noeudId) =>
         set((state) => ({
