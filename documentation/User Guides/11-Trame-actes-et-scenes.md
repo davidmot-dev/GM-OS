@@ -469,4 +469,4 @@ même**, correctif des espaces compris.*
 *Illustré le 2026-10-03 avec la campagne de démonstration.*
 
 *Relu le 2026-10-07 : graphe en cartes, gestes, sélection multiple, styles, jonctions et six formes d'organisation automatique ; essais sur profils fictifs.
-L'essai final de David reste à faire.*
+Essai de David consigné le 2026-10-07 : « j'ai testé Trame et notamment les 6 dispositions ».*

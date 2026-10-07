@@ -1,6 +1,23 @@
 # État et reprise — 2026-10-07
 
+**Lint global remis en service le 07/10** : demande **« corrige le lint global »**,
+fermeture de GM-OS confirmée. [Réalisation et périmètre](2026-10-07-lint-global.md).
+Parcours des fichiers connus de Git, y compris les nouveaux non ignorés ; premier
+passage corrigé : 1 526 fichiers, zéro erreur, 540 avertissements visibles. Le lint
+devient bloquant dans la validation. Le témoin non suivi est bien refusé (code 1),
+puis retiré. **Validation complète réussie** : types, lint, 6 797 tests dans
+528 fichiers (un fichier et quatre tests ignorés), construction ; code 0.
+La passation est actualisée ; correctif commité dans `57d0193c`. David demande
+**« commit et push »** : envoi avec le hook complet vers `origin/feature/tablet-hub-pwa`.
+
 **Refonte des tablettes clôturée : T6 validé par David ; T5 commité dans `e920abc1`.**
+
+**Trame clôturé après l'essai G7 du 07/10** : David confirme **« j'ai testé Trame
+et notamment les 6 dispositions »**. [Essai consigné](2026-10-07-trame-validation.md).
+Réalisation et documentation poussées (`1d94f84f`, `ed29f301`) ; les attentes d'essai
+dans les bilans ci-dessous sont historiques. Les évolutions proposées restent
+distinctes du chantier livré. La clôture est enregistrée à la demande de David
+**« commit et push »**, avec le bilan du lint global.
 
 **Enregistrement de Trame demandé le 07/10** : David dit **« document, commit et
 push »**. [Bilan et périmètre](2026-10-07-trame-enregistrement.md) : tous les lots

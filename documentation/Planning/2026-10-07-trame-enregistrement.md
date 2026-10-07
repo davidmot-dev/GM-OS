@@ -48,8 +48,9 @@ Les modifications locales étrangères à Trame restent hors de cet enregistreme
 
 ## Reprise
 
-David a validé l'amélioration de la prise des extrémités et la sélection multiple
-dans ses réponses. Un essai global G7 des derniers arrangements reste à consigner
-si David le fait ; sa demande de commit/push ne fournit pas ce détail.
+**G7 effectué et consigné le 07/10** : David confirme **« j'ai testé Trame et
+notamment les 6 dispositions »**, après le push de `1d94f84f` et `ed29f301`.
+Voir la [note d'essai et de clôture](2026-10-07-trame-validation.md).
+Les gestes détaillés de cet essai ne sont pas précisés dans sa réponse.
 Commentaires dédiés sur les liens et accroches multiples restent des propositions,
 pas des fonctions annoncées comme réalisées.

@@ -142,7 +142,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
-| ⚠️ **06/10 : le lint global ne parcourt plus tout le dépôt.** | `npm run lint` s'arrête sur un `ENOENT: scandir` d'une entrée au nom illisible à la racine ; `git status` signalait déjà cette entrée. Observé dans le pré-push T4, dont le lint est non bloquant | **Hors T5, entrée préexistante non modifiée.** Le typage, la construction et 6 774 tests pré-push passent ; les comparaisons ESLint ciblées restent disponibles. Ne pas supprimer une entrée inconnue pour contourner le contrôle. [Relevé T5](2026-10-06-T5-fini-tablettes.md) |
+| ✅ **06/10 : le lint global ne parcourait plus tout le dépôt — réparé le 07/10, § 125.** | `eslint .` échouait sur un profil Chrome local (`EPERM`) ou une entrée au nom invalide (`ENOENT`). `scripts/lint.mjs` utilise maintenant les fichiers suivis et nouveaux non ignorés de Git | [Réparation du contrôle](2026-10-07-lint-global.md) : aucun dossier inconnu supprimé ; premier passage complet corrigé, 1 526 fichiers, zéro erreur. Les avertissements restent visibles ; lint bloquant dans la validation |
 | ✅ **T4 Direct, 06/10 : l'horloge initiale affichait le temps réel malgré le mode statique du meneur.** | Le snapshot omettait `mode`, `theme`, `timerDuration` et `timerLabel`, présents seulement dans le segment rapide | **Réparé pour terminer J1** : `segmentDesHorloges` fournit les mêmes champs au snapshot et aux changements, en excluant les jauges secrètes. Trois tests unitaires ; le banc Direct vérifie 21:00 dès la connexion aux quatre formats, avant toute modification du meneur. [Relevé J1](2026-10-06-T4-J1-joueurs.md). Le transport du calendrier fantastique reste à éprouver |
 | ✅ **T0 joueurs, 04/10 : les PV saisis sur tablette restaient locaux.** | `remoteUpdateCharacterVitals` écrivait sans événement ; `useHubSync` ne relayait pas ces vitaux | **Réparé pour terminer J1 le 06/10** : événement dédié, relais WebSocket, contrôle du personnage propriétaire, valeur finie bornée à la jauge existante et notification au meneur, sans boucle. Neuf tests du handler ; assertions PV du banc T0 conservées aux trois formats, sans échec attendu, et quatre cas Fiche J1. [Relevé](2026-10-06-T4-J1-joueurs.md) |
 | ✅ **T0 joueurs, 04/10 : sur téléphone, la navigation recouvrait « Jouer » en bas de Cartes.** | Capture T0 `telephone/12-cartes.png` ; navigation fixe dans `TabletHub.tsx` devant la surface défilante | **Traité dans T4/J1 Cartes le 06/10** : navigation dans le flux, zone de travail défilante, action de 44 px au-dessus de la barre. Assertion T0 conservée sans échec attendu ; quatre cas J1 font réellement piocher/jouer/donner/refuser/accepter. [Captures regardées](tablettes/T4-joueurs/j1/index.html) |
@@ -9894,6 +9894,31 @@ Elle ne fournit pas de nouveau compte rendu d'essai global G7.
 **Réalisation commitée dans `1d94f84f`**, sur `feature/tablet-hub-pwa` ; guide 11
 synchronisé vers NotebookLM (1/1). Envoi demandé vers `origin`, avec le hook complet.
 
+**G7 effectué le 07/10, après le push** : David confirme **« j'ai testé Trame et
+notamment les 6 dispositions »**. [Essai et clôture consignés](2026-10-07-trame-validation.md).
+Le chantier demandé est clôturé. Les commentaires sur les liens, accroches
+multiples et trajets manuels restent des évolutions proposées. Les détails des
+autres gestes de l'essai ne sont pas inventés ; aucun défaut n'est signalé dans ce retour.
+
+---
+
+### 125 · Le lint global remis en service — 07/10/2026
+
+David demande **« corrige le lint global »** et confirme **« GM-OS est fermé »**.
+[Parcours, corrections et contrôles](2026-10-07-lint-global.md) : liste Git des
+fichiers suivis et nouveaux non ignorés, sans visite des profils locaux ni
+suppression de dossiers inconnus. Le premier parcours révèle 95 erreurs ; après
+corrections et politique explicite des avertissements, 1 526 fichiers passent
+avec zéro erreur et 540 avertissements. Le lint redevient bloquant pour la
+validation. Le témoin non suivi porte une erreur volontaire : correctement refusé
+avec le code 1, puis retiré. **Validation complète réussie** : types, lint global,
+6 797 tests dans 528 fichiers (un fichier et quatre tests ignorés), construction,
+code 0. La passation est actualisée.
+Ancres : `scripts/lint.mjs`, `eslint.config.js`, `scripts/validate.ps1`.
+Correctif commité dans `57d0193c` ; David demande **« commit et push »**.
+Envoi vers `origin/feature/tablet-hub-pwa`, avec le hook complet ; les modifications
+antérieures sont conservées.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -9959,7 +9984,8 @@ synchronisé vers NotebookLM (1/1). Envoi demandé vers `origin`, avec le hook c
 | 56 | **Ranger le graphe de la trame** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok c'est bien »*) — cinq essais. ⭐ *La forme vient de la trame* : une chaîne, ou une **étoile** pour un acte ouvert ; la page suit les proportions de la toile (§ 120) | — | Rien |
 | 57 | **Le pupitre de l'écran du bas** | ✅ **LIVRÉ ET ÉPROUVÉ le 25/09** (*« ok ça fonctionne bien »*) — la télécommande sur la dalle du Duo, déjà appairée. ⛔ Sa propre session de stockage : même origine que la fenêtre MJ en développement (§ 121) | — | Rien |
 | 58 | **La refonte des tablettes** | ✅ **Clôturée le 07/10 : T6 validé par David**, « j'ai testé c'est bon, tu peux faire le commit et poussé ». T4 poussé (`edcdb68a`), T5 commité (`e920abc1`) ; preuves et clôture archivées, voir § 123 | Terminé | Validation T6 consignée ; commit et push autorisés par David |
-| 59 | **Le graphe de la Trame en cartes** | 🚧 **G0–G6 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Essai G7 ; commentaires et accroches multiples proposés | [Commit/push autorisés](2026-10-07-trame-enregistrement.md) : « document, commit et push » ; essai global G7 à consigner |
+| 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions proposées : commentaires, accroches multiples, trajets manuels | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
+| 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
