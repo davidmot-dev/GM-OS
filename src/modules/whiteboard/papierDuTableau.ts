@@ -30,6 +30,12 @@ export interface Papier {
     tourDePastille: string;
 }
 
+/** La première couleur du crayon suit le papier, comme ses barres d'outils. */
+export const couleursDuTableau = (clair: boolean) => [
+    clair ? '#000000' : '#ffffff',
+    '#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#a855f7', '#ec4899', '#06b6d4',
+];
+
 export const PAPIER: Readonly<Record<'clair' | 'sombre', Papier>> = {
     clair: {
         fond: 'bg-white',

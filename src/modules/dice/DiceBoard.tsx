@@ -400,11 +400,12 @@ const DiceBoard: React.FC = () => {
                     result = DiceEngine.rollPool(sides, finalCount, modVal, finalTarget, true, { sens: targetRule });
                     title = t('dice.results.pool_explode', { count: finalCount, sides, target: finalTarget });
                     break;
-                case 'threshold':
+                case 'threshold': {
                     result = DiceEngine.rollThreshold(sides, finalCount, modVal, finalTarget, targetRule);
                     const ruleSym = targetRule === 'over' ? '≥' : '≤';
                     title = t('dice.results.threshold', { count: finalCount, sides, rule: ruleSym, target: finalTarget });
                     break;
+                }
                 case 'advantage':
                     result = DiceEngine.rollAdvantage(sides, modVal, true, finalTarget, targetRule);
                     title = t('dice.results.advantage', { sides });

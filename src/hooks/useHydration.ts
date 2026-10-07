@@ -29,7 +29,6 @@ export function useHydration() {
             ];
 
             const allHydrated = stores.every(store => {
-                // @ts-ignore - persist might not be typed on all stores if not using middleware correctly
                 return store.persist?.hasHydrated() ?? true;
             });
 
@@ -48,13 +47,9 @@ export function useHydration() {
 
         // Abonnements aux événements d'hydratation
         const unsubs = [
-            // @ts-ignore
             useSessionStore.persist?.onFinishHydration(() => checkHydration()),
-            // @ts-ignore
             useMapStore.persist?.onFinishHydration(() => checkHydration()),
-            // @ts-ignore
             useCombatStore.persist?.onFinishHydration(() => checkHydration()),
-            // @ts-ignore
             useSessionOSStore.persist?.onFinishHydration(() => checkHydration()),
         ];
 

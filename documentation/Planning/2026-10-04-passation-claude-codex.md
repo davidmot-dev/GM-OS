@@ -134,7 +134,7 @@ registre.
 | :--- | :--- | :--- |
 | Tests | `npx vitest run --maxWorkers=4` | ⛔ sans la bride, les ~520 fichiers échouent **sans qu'un test ait tourné** |
 | Types | `npx tsc -b` | ⛔ `tsc --noEmit` ne vérifie **rien** ici |
-| Lint | `npx eslint <fichiers>` | deux erreurs **préexistantes** dans `src/modules/remote/hooks/useNexusSynchronizer.ts` (vers les lignes 611 et 644) ; la validation les tolère |
+| Lint | `npm run lint` ; ciblé : `npx eslint <fichiers>` | **Réparé le 07/10** : fichiers suivis et nouveaux non ignorés de Git, sans parcourir les profils locaux. Zéro erreur ; avertissements visibles. Une erreur bloque désormais la validation. [Périmètre et contrôles](2026-10-07-lint-global.md) |
 | Construire | `npm run build` | **obligatoire avant tout e2e** (Playwright lance l'application construite) |
 | E2E | `npx playwright test e2e/<fichier>.spec.ts --reporter=list` | ⛔ **ne jamais lancer** `vitrine`, `vitrineDuSocle`, `campagnesEtThemes`, `profilageDesRendus` : ils lisent les sauvegardes de David |
 | Captures du manuel | `npx playwright test e2e/capturesDuManuel.spec.ts` | ~2 min 30 ; campagne de démo, jamais les données de David ; **relire les images** (planche contact), pas seulement le compte |

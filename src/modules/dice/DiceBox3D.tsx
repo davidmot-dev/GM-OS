@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { type RollRecord } from '../../stores/useDiceStore';
@@ -208,10 +208,12 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll, style = S
         aLiberer: { dispose: () => void }[];
     } | null>(null);
     const styleRef = useRef(style);
-    styleRef.current = style;
     /* La référence évite de relancer la boucle d'animation à chaque rendu du hub. */
     const onReposRef = useRef(onRepos);
-    onReposRef.current = onRepos;
+    useLayoutEffect(() => {
+        styleRef.current = style;
+        onReposRef.current = onRepos;
+    }, [style, onRepos]);
     /** Le signal de pose n'est envoyé qu'une fois par jet. */
     const reposAnnonceRef = useRef(false);
     const departDuJetRef = useRef(0);

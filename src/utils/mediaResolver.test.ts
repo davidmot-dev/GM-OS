@@ -47,8 +47,7 @@ describe('mediaResolver - resolveToSendableUrl', () => {
     });
 
     it('should NOT convert if IP is loopback', async () => {
-        //@ts-ignore
-        window.appBridge.remote.getConnectionInfo.mockResolvedValue({
+        vi.mocked(window.appBridge!.remote!.getConnectionInfo!).mockResolvedValue({
             ip: '127.0.0.1',
             port: 3001
         });

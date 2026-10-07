@@ -739,7 +739,7 @@ ${pratique.trim()}`;
           await new Promise(resolve => setTimeout(resolve, 2500));
           await callWithTimeout('notebooklm-mcp-server', 'healthcheck', {}).catch(() => {});
           return await callWithTimeout(serverName, toolName, args) as unknown as T;
-        } catch (retryErr) {
+        } catch {
           throw new Error("MCP_AUTH_EXPIRED: Recovery failed.");
         }
       }

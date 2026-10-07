@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 import { useSoundStore } from '../../sound/useSoundStore';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
@@ -639,7 +639,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
     // Le report du frein passe par cette référence : `handleSync` ne peut pas
     // s'appeler lui-même depuis son propre `useCallback`.
-    handleSyncRef.current = handleSync;
+    useLayoutEffect(() => { handleSyncRef.current = handleSync; }, [handleSync]);
 
     // Subscriptions logic
     useEffect(() => {

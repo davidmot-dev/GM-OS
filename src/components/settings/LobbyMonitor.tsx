@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Users, Tablet, Smartphone, XCircle, CheckCircle2, AlertCircle, Trash2, RotateCw } from 'lucide-react';
 import type { ClientContext } from '../../types/shared';
+import { useHeureDuRendu } from '../../hooks/useHeureDuRendu';
 
 const LobbyMonitor: React.FC = () => {
     const { t } = useTranslation('settings');
     const [clients, setClients] = useState<ClientContext[]>([]);
+    const heure = useHeureDuRendu(1000);
 
     useEffect(() => {
         const handleSyncClients = (clients: unknown[]) => {
@@ -34,7 +36,7 @@ const LobbyMonitor: React.FC = () => {
     };
 
     const formatRelativeTime = (timestamp: number) => {
-        const seconds = Math.floor((Date.now() - timestamp) / 1000);
+        const seconds = Math.floor((heure - timestamp) / 1000);
         if (seconds < 5) return t('remote.lobby.just_now');
         if (seconds < 60) return `${seconds}s`;
         const mins = Math.floor(seconds / 60);

@@ -102,7 +102,12 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit, onOuvrir, numero,
             aria-pressed={actif}
             className={`relative group flex min-h-[5.5rem] w-52 shrink-0 cursor-pointer flex-col justify-between gap-1 overflow-hidden rounded-xl border-2 p-3 transition-all duration-300 ${currentClasses} ${actif ? 'ring-2 ring-accent ring-offset-2 ring-offset-app-bg' : ''}`}
             onClick={() => (onOuvrir ? onOuvrir(link) : openLink(link.url))}
-            onKeyDown={(e) => { if (e.key === 'Enter') (onOuvrir ? onOuvrir(link) : openLink(link.url)); }}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    if (onOuvrir) onOuvrir(link);
+                    else openLink(link.url);
+                }
+            }}
         >
             <div className="flex items-center justify-between gap-2">
                 {/* Le pictogramme dit ce que le lien est, avant qu'on survole. */}

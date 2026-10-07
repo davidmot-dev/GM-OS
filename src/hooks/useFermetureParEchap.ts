@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { empilerLaSurcouche, depilerLaSurcouche } from '../utils/surcouchesOuvertes';
 
 /**
@@ -46,7 +46,7 @@ export function useFermetureParEchap(
     nom: string,
 ): void {
     const rappel = useRef(onFermer);
-    rappel.current = onFermer;
+    useLayoutEffect(() => { rappel.current = onFermer; }, [onFermer]);
 
     useEffect(() => {
         if (!actif) return;

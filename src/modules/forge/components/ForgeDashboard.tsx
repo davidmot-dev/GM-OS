@@ -562,7 +562,7 @@ const ForgeDashboard: React.FC = () => {
       await forgeService.callMcpTool('notebooklm-mcp-server', 'refresh_auth', {});
       addLog("BRIDGE RESTORED. PLEASE TRY AGAIN.");
       gmToast("Connexion rétablie. Vous pouvez réessayer l'import.", "success");
-    } catch (err) {
+    } catch {
       addLog("RECONNECTION FAILED. CHECK BROWSER LOGIN.");
       gmToast("Échec de la reconnexion. Vérifiez votre session Google.", "error");
     }

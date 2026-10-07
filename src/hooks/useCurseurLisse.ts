@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 /**
  * **Un curseur qui suit le doigt, et un magasin qui n'apprend la valeur qu'au
@@ -47,9 +47,11 @@ export function useCurseurLisse(
       rendu — et cet effet-là *dépose la valeur*.
     */
     const deposerRef = useRef(deposer);
-    deposerRef.current = deposer;
     const pendantLeGesteRef = useRef(pendantLeGeste);
-    pendantLeGesteRef.current = pendantLeGeste;
+    useLayoutEffect(() => {
+        deposerRef.current = deposer;
+        pendantLeGesteRef.current = pendantLeGeste;
+    }, [deposer, pendantLeGeste]);
 
     /** Un cran de plus : l'effet suit tout de suite, le magasin attend. */
     const tirer = useCallback((valeur: number) => {

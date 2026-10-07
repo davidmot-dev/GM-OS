@@ -1734,15 +1734,16 @@ export class HueEngine {
                     }
                     break;
 
-                case 'cyber-night':
+                case 'cyber-night': {
                     payload.transitiontime = 0;
                     const cyberColors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0000'];
                     payload.xy = this.hexToXy(cyberColors[Math.floor(Math.random() * cyberColors.length)]);
                     payload.bri = Math.random() > 0.2 ? 254 : 50;
                     interval = 150 + Math.random() * 300;
                     break;
+                }
 
-                case 'disco':
+                case 'disco': {
                     /*
                       ⛔ **Un `xy` tiré au hasard n'est pas une couleur.**
                       `[Math.random(), Math.random()]` tombait hors du triangle
@@ -1766,14 +1767,16 @@ export class HueEngine {
                     payload.bri = 254;
                     interval = 300;
                     break;
+                }
 
-                case 'aurore':
+                case 'aurore': {
                     payload.transitiontime = 50;
                     const auroreColors = ['#22c55e', '#3b82f6', '#a855f7'];
                     payload.xy = this.hexToXy(auroreColors[tick % auroreColors.length]);
                     payload.bri = 120 + Math.sin(tick * 0.2) * 60;
                     interval = 5000;
                     break;
+                }
 
                 case 'lave':
                     payload.transitiontime = 15;
@@ -1833,13 +1836,14 @@ export class HueEngine {
                     interval = 100;
                     break;
 
-                case 'crepuscule':
+                case 'crepuscule': {
                     payload.transitiontime = 100;
                     const sunsetColors = ['#f59e0b', '#dc2626', '#7e22ce'];
                     payload.xy = this.hexToXy(sunsetColors[tick % sunsetColors.length]);
                     payload.bri = 100 - (tick % 10) * 5;
                     interval = 10000;
                     break;
+                }
 
                 case 'toxique':
                     payload.transitiontime = 20;
@@ -2071,7 +2075,7 @@ export class HueEngine {
                     break;
                 }
 
-                case 'lever-soleil':
+                case 'lever-soleil': {
                     payload.transitiontime = 100; // 10s transitions
                     const sunriseStep = tick % 30; // 5-minute cycle
                     if (sunriseStep < 5) payload.xy = this.hexToXy('#450a0a'); // Deep Red
@@ -2082,6 +2086,7 @@ export class HueEngine {
                     payload.bri = Math.min(254, 40 + (sunriseStep * 8));
                     interval = 10000;
                     break;
+                }
             }
 
             /*

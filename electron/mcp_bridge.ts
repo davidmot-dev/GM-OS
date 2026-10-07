@@ -421,7 +421,6 @@ export function registerMcpHandlers() {
 
             /* Une seule réponse, quelle que soit la voie qui arrive la première. */
             let repondu = false;
-            let earlyExit: NodeJS.Timeout | undefined;
             const repondre = (r: { success: boolean; message: string }) => {
                 if (repondu) return;
                 repondu = true;
@@ -449,7 +448,7 @@ export function registerMcpHandlers() {
             authProcess.stderr?.on('data', collect);
 
             // Le CLI meurt-il avant même d'avoir ouvert le navigateur ?
-            earlyExit = setTimeout(() => {
+            const earlyExit = setTimeout(() => {
                 authProcess.removeAllListeners('exit');
                 authProcess.unref();
                 repondre({

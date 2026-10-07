@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useUlanziStore } from '../useUlanziStore';
 import { actionDuGeste } from '../logic/gestesDesBoutons';
 import type { BoutonUlanzi } from '../../../../electron/boutonsDeLUlanzi';
@@ -38,7 +38,7 @@ export const useBoutonsDeLUlanzi = (isMainPC: boolean, declencher: Declencheur) 
       lui-même sur ce qu'il écrivait.
     */
     const dernierDeclencheur = useRef(declencher);
-    dernierDeclencheur.current = declencher;
+    useLayoutEffect(() => { dernierDeclencheur.current = declencher; }, [declencher]);
 
     useEffect(() => {
         if (!isMainPC) return;

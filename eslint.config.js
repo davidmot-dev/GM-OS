@@ -6,7 +6,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'dist-electron', 'v7-migration', 'backups', 'chrome_profile_notebooklm']),
+  // Les candidats archivés sont des témoins de conception, pas le code exécuté.
+  globalIgnores(['dist', 'dist-electron', 'v7-migration', 'backups', '**/chrome_profile_notebooklm', 'documentation/**/candidats/**']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -35,7 +36,18 @@ export default defineConfig([
   */
   {
     files: ['**/*.{ts,tsx}'],
-    rules: { '@typescript-eslint/no-explicit-any': 'warn' },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      // Un nom préfixé par _ et les champs retirés d'un objet sont intentionnels.
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_', varsIgnorePattern: '^_', ignoreRestSiblings: true,
+      }],
+      // 07/10/2026 : React Compiler n'est pas activé dans Vite. Ces deux
+      // diagnostics de performance restent visibles, à traiter par écran ;
+      // ils ne bloquent pas le contrôle des hooks, refs et rendus impurs.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/preserve-manual-memoization': 'warn',
+    },
   },
   /* Les tests montent des modules par `require` a dessein, pour contourner le
      cache d'ESM entre deux cas. Ce n'est pas une dette, c'est leur outillage. */

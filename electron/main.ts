@@ -5,9 +5,6 @@ import fs from 'fs-extra'
 import { verdictDOuverture } from './ouvertureDeFichier'
 import http from 'node:http'
 import https from 'node:https'
-import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
-const { WebSocketServer } = require('ws');
 import os from 'node:os';
 import dns from 'node:dns';
 
@@ -15,7 +12,6 @@ import dns from 'node:dns';
 if (os.platform() === 'win32') {
     dns.setDefaultResultOrder('ipv4first');
 }
-import type { WebSocket } from 'ws';
 import log from 'electron-log';
 
 // Set app name explicitly to gm-os-v5 to lock the storage path before any getPath calls
@@ -55,9 +51,6 @@ if (profilDeDonnees.accepte) {
     app.exit(1);
 }
 
-interface ExtendedWebSocket extends WebSocket {
-    isAlive?: boolean;
-}
 
 interface AIProxyResponse {
     ok: boolean;

@@ -51,7 +51,9 @@ const getStableDeviceId = () => {
                 return id;
             }
         }
-    } catch (e) {}
+    } catch {
+        // Un stockage indisponible n'empêche pas de créer l'identifiant local.
+    }
     
     // 3. Generate and persist new stable ID
     const newId = generateUUID();

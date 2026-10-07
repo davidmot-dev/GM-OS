@@ -1,7 +1,7 @@
 import React from 'react';
 import { PanelBottom } from 'lucide-react';
 import { useHardwareStore } from '../../stores/useHardwareStore';
-import { gmToast } from '../../stores/useToastStore';
+import { ouvrirLePupitre } from './ouvrirLePupitre';
 
 /**
  * **La télécommande sur l'écran du bas** — le pupitre du Zenbook Duo.
@@ -13,21 +13,6 @@ import { gmToast } from '../../stores/useToastStore';
  * ⚠️ **Un refus se dit.** Sans écran sous celui de GM-OS — clavier posé sur la
  * dalle, écran éteint —, un bouton qui ne ferait rien passerait pour une panne.
  */
-
-/** Ce qu'on dit au meneur quand le pupitre ne s'ouvre pas. */
-export const RAISONS_DU_REFUS: Record<'pas-d-ecran-du-bas' | 'pas-de-fenetre-mj', string> = {
-    'pas-d-ecran-du-bas': 'Aucun écran sous celui de GM-OS — le clavier est-il posé sur la dalle du bas ?',
-    'pas-de-fenetre-mj': 'La fenêtre de GM-OS est introuvable.',
-};
-
-/** Ouvre le pupitre, et dit pourquoi quand il refuse. */
-export async function ouvrirLePupitre(): Promise<boolean> {
-    const pont = window.appBridge?.pupitre;
-    if (!pont) return false;
-    const resultat = await pont.ouvrir();
-    if (!resultat.ok) gmToast(RAISONS_DU_REFUS[resultat.raison], 'warning');
-    return resultat.ok;
-}
 
 const PupitreDuBas: React.FC = () => {
     const pupitreAuLancement = useHardwareStore(s => s.pupitreAuLancement);

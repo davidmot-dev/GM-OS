@@ -7,7 +7,7 @@ import { Etiquette } from '../../../components/socle';
 import { reparerLeMojibake } from '../../../utils/reparerLeMojibake';
 
 /** Les huit catégories du wiki — `chronicle.types.ts`. */
-export const CATEGORIES_DU_WIKI: Record<string, string> = {
+const CATEGORIES_DU_WIKI: Record<string, string> = {
     npc: 'PNJ', location: 'Lieu', organization: 'Organisation', lore: 'Lore',
     item: 'Objet', clue: 'Indice', rumor: 'Rumeur', other: 'Autre',
 };

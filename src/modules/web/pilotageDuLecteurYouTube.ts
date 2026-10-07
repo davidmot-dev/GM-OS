@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 /**
  * **Piloter le volume d'une vidéo YouTube, depuis GM-OS.**
@@ -88,7 +88,7 @@ export function useNiveauDuLecteurYouTube(
 ): void {
     /* Le niveau lu au moment de la relance, et non celui figé à sa création. */
     const dernier = useRef(niveau);
-    dernier.current = niveau;
+    useLayoutEffect(() => { dernier.current = niveau; }, [niveau]);
 
     useEffect(() => {
         const voulu = () => (actif ? dernier.current : 0);

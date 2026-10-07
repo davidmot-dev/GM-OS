@@ -14,7 +14,8 @@ import {
     palierDeLEchelle, PALIERS_DE_TAILLE, type JetonEditable,
 } from './editionDuTheme';
 import { Bouton, Etiquette } from '../components/socle';
-import { VignetteDeZone, ZONE_DU_JETON } from './VignetteDeZone';
+import { VignetteDeZone } from './VignetteDeZone';
+import { ZONE_DU_JETON } from './zonesDuTheme';
 
 /**
  * **L'atelier de thème — demandé par David le 2026-09-03 :** *« si je veux

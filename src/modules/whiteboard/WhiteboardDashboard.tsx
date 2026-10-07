@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { DrawingCanvas, type DrawingCanvasRef } from './components/DrawingCanvas';
-import WhiteboardToolbar, { couleursDuTableau } from './components/WhiteboardToolbar';
+import WhiteboardToolbar from './components/WhiteboardToolbar';
+import { couleursDuTableau } from './papierDuTableau';
 import { useWhiteboardStore } from './useWhiteboardStore';
 import { useMediaStore } from '../../stores/useMediaStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';

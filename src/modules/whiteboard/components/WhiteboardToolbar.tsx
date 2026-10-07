@@ -14,7 +14,7 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import { useWhiteboardStore, type WhiteboardTool } from '../useWhiteboardStore';
 import { useTranslation } from 'react-i18next';
-import { PAPIER } from '../papierDuTableau';
+import { PAPIER, couleursDuTableau } from '../papierDuTableau';
 
 interface WhiteboardToolbarProps {
     className?: string;
@@ -25,18 +25,6 @@ interface WhiteboardToolbarProps {
      */
     meneur?: boolean;
 }
-
-/** Les couleurs du crayon : la première suit le papier, noire sur le clair, blanche sur le sombre. */
-export const couleursDuTableau = (clair: boolean) => [
-    clair ? '#000000' : '#ffffff', // Black or White
-    '#ef4444', // Red
-    '#3b82f6', // Blue
-    '#10b981', // Emerald
-    '#f59e0b', // Amber
-    '#a855f7', // Purple
-    '#ec4899', // Pink
-    '#06b6d4', // Cyan
-];
 
 const WhiteboardToolbar: React.FC<WhiteboardToolbarProps> = ({ className = "", meneur = false }) => {
     const { 

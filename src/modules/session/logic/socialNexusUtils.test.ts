@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it, expect } from 'vitest';
 import { prepareSocialGraphData, getUniqueFactions } from './socialNexusUtils';
 import { type Entity, type PlayerCharacter } from '../useSessionOSStore';
@@ -14,7 +13,7 @@ describe('socialNexusUtils', () => {
             relations: [
                 { targetId: 'npc2', targetType: 'npc', type: 'ally', description: 'Friend' }
             ]
-        } as Entity,
+        } as unknown as Entity, // Fixture limitée aux champs lus par le graphe.
         {
             id: 'npc2',
             name: 'Jane Smith',
@@ -22,7 +21,7 @@ describe('socialNexusUtils', () => {
             type: 'npc',
             faction: 'The Guild',
             relations: []
-        } as Entity
+        } as unknown as Entity
     ];
 
     const mockPlayers = [

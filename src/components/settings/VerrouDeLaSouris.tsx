@@ -31,7 +31,7 @@ interface Souris {
 }
 
 /** Ce que l'identifiant Windows a de lisible : le fabricant et le produit. */
-export function signatureLisible(id: string): string {
+function signatureLisible(id: string): string {
     const m = /VID_([0-9A-F]{4})&PID_([0-9A-F]{4})/i.exec(id);
     return m ? `${m[1]}:${m[2]}` : id.slice(0, 24);
 }

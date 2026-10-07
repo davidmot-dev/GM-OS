@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, Suspense, lazy, useCallback } from 'react';
 import { useHardwareStore } from './stores/useHardwareStore';
-import { ouvrirLePupitre } from './components/settings/PupitreDuBas';
+import { ouvrirLePupitre } from './components/settings/ouvrirLePupitre';
 import { useSessionStore } from './store/useSessionStore';
 import Shell from './components/Shell';
 import { useModalStore } from './stores/useModalStore';

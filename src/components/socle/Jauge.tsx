@@ -1,4 +1,5 @@
 import React from 'react';
+import { tonAutomatique } from './tonAutomatique';
 
 /**
  * **`<Jauge>`** — socle, P3.5, 2026-09-30.
@@ -20,13 +21,6 @@ const PAR_TON: Record<Exclude<TonDeJauge, 'auto'>, string> = {
     danger: 'bg-etat-danger',
     info: 'bg-etat-info',
 };
-
-/** Le ton que prend une jauge `auto` à cette fraction. */
-export function tonAutomatique(fraction: number): Exclude<TonDeJauge, 'auto'> {
-    if (fraction < 0.25) return 'danger';
-    if (fraction < 0.5) return 'alerte';
-    return 'succes';
-}
 
 export interface JaugeProps {
     /** La fraction remplie, de 0 à 1 ; bornée. */

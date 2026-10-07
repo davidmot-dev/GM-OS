@@ -90,7 +90,7 @@ const ProjectorView: React.FC = () => {
       sortie reste hors de portée ; le niveau, non. Voir
       [[pilotageDuLecteurYouTube]].
     */
-    const muetAuDepart = useRef(niveauDuSon === 0);
+    const [muetAuDepart] = useState(() => niveauDuSon === 0);
 
     /* Sans condition : un cadre absent ne reçoit rien, et il n'y a rien à dire. */
     useNiveauDuLecteurYouTube(cadreYouTube, niveauDuSon, true);
@@ -345,7 +345,7 @@ const ProjectorView: React.FC = () => {
                         <iframe
                             ref={cadreYouTube}
                             key={imagePath}
-                            src={adresseDIntegration(videoDuMarqueur(imagePath ?? '')!, { muet: muetAuDepart.current })}
+                            src={adresseDIntegration(videoDuMarqueur(imagePath ?? '')!, { muet: muetAuDepart })}
                             title="Vidéo YouTube projetée"
                             allow="autoplay; encrypted-media; picture-in-picture"
                             allowFullScreen

@@ -65,8 +65,7 @@ describe('une étape, menée', () => {
     it('sans message, elle en porte quand même un', async () => {
         const promesse = menerUneEtape({
             nom: 'Trousseau', delaiMs: 8_000,
-            // eslint-disable-next-line @typescript-eslint/no-throw-literal
-            faire: async () => { throw { code: 42 }; },
+            faire: () => Promise.reject({ code: 42 }),
         });
 
         await expect(promesse).resolves.toMatchObject({ motif: 'erreur sans message' });

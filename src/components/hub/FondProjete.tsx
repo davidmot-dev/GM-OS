@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { videoDuMarqueur, adresseDIntegration } from '../../modules/web/youtube';
 import { useNiveauDuLecteurYouTube } from '../../modules/web/pilotageDuLecteurYouTube';
 
@@ -80,7 +80,7 @@ const FondProjete: React.FC<FondProjeteProps> = ({
       niveau rechargerait le cadre — *la vidéo repartirait du début à chaque coup
       de curseur.*
     */
-    const muetAuDepart = useRef(!avecSon || niveauSonore === 0);
+    const [muetAuDepart] = useState(() => !avecSon || niveauSonore === 0);
 
     /*
       **Le niveau s'applique à l'élément, pas par un attribut** — React n'a pas de
@@ -115,7 +115,7 @@ const FondProjete: React.FC<FondProjeteProps> = ({
         return (
             <iframe
                 ref={cadre}
-                src={adresseDIntegration(video, { muet: muetAuDepart.current })}
+                src={adresseDIntegration(video, { muet: muetAuDepart })}
                 title="Vidéo YouTube projetée"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen

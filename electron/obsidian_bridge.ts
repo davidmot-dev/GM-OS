@@ -177,7 +177,7 @@ export function registerObsidianHandlers() {
         }
     });
 
-    ipcMain.handle('obsidian:select-vault', async (_event) => {
+    ipcMain.handle('obsidian:select-vault', async () => {
         const { filePaths } = await dialog.showOpenDialog({
             title: 'Sélectionner le coffre Obsidian',
             properties: ['openDirectory', 'createDirectory']

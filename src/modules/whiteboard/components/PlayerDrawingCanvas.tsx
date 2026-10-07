@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { useWhiteboardStore, type DrawingPath, type Point } from '../useWhiteboardStore';
 import { limiteurDeCadence } from '../../../utils/limiteurDeCadence';
 import { dessinerUnTrace, outilDeTrait } from '../logic/dessinerUnTrace';
@@ -79,7 +79,7 @@ export const PlayerDrawingCanvas: React.FC = () => {
 
     // Ref stable pour accéder à redraw sans créer de dépendance d'effet
     const redrawRef = useRef(redraw);
-    redrawRef.current = redraw;
+    useLayoutEffect(() => { redrawRef.current = redraw; }, [redraw]);
 
     // RESIZE: Ne s'exécute qu'au montage — utilise ResizeObserver
     useEffect(() => {

@@ -9,11 +9,13 @@ import { estDeLaCampagne } from '../store/lootSlice';
 import { estRemarquable, nomDeLaMonnaie } from '../logic/vocabulaireDuButin';
 import { motion } from 'framer-motion';
 import { Panneau, Etiquette, Icone } from '../../../components/socle';
+import { useHeureDuRendu } from '../../../hooks/useHeureDuRendu';
 
 const LootOS: React.FC = () => {
     const { t } = useTranslation(['modules']);
     const { lootPool, lootHistory, activeCampaignId, getActiveDriver } = useSessionOSStore();
     const [activeTab, setActiveTab] = useState<'generate' | 'pool' | 'history'>('generate');
+    const heure = useHeureDuRendu();
 
     const driver = getActiveDriver();
     // Le résumé compte ce que l'écran montre, donc le butin de cette campagne.
@@ -30,9 +32,9 @@ const LootOS: React.FC = () => {
 
     const dailyQuote = useMemo(() => {
         if (!Array.isArray(gmQuotes) || gmQuotes.length === 0) return '';
-        const quoteIndex = Math.floor((Date.now() / 3600000) % gmQuotes.length);
+        const quoteIndex = Math.floor((heure / 3600000) % gmQuotes.length);
         return gmQuotes[quoteIndex];
-    }, [gmQuotes]);
+    }, [gmQuotes, heure]);
 
     const distribues = lootHistory.filter(e => estDeLaCampagne(e.campaignId, activeCampaignId)).length;
     /*

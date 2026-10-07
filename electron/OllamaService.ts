@@ -48,7 +48,7 @@ export function sommaireDuSysteme(
     const systeme = messages.find(m => m.role === 'system')?.content ?? '';
     if (!systeme) return 'aucun message systeme';
 
-    const titres = [...systeme.matchAll(/^[ 	]*#{2,4} +(.+?)[ 	]*$/gm)];
+    const titres = [...systeme.matchAll(/^[ \t]*#{2,4} +(.+?)[ \t]*$/gm)];
     const sommaire = titres.map((t, i) => {
         const debut = (t.index ?? 0) + t[0].length;
         const fin = i + 1 < titres.length ? (titres[i + 1].index ?? systeme.length) : systeme.length;
@@ -769,7 +769,7 @@ export class OllamaService {
                             const visible = filtre.pousser(json.message.content);
                             if (visible) onToken(visible);
                         }
-                    } catch (e) {
+                    } catch {
                          // On ignore les lignes corrompues
                     }
                 }

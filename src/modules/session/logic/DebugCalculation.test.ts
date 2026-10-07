@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it, expect } from 'vitest';
 import { calculationEngine } from './CalculationEngine';
 
@@ -71,7 +70,6 @@ describe('Calculation Engine Debug', () => {
     });
     
     it('should return default 0 for non-existent variables present in template', () => {
-         const ctx = getContext(character, template);
          // @Force is NOT in sheetData but IS in template (hypothetically)
          // Wait, the template in the test has f1/f2. Let's add f3 (Force)
          const extendedTemplate = {

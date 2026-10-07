@@ -9,11 +9,13 @@ import { libelleDeRarete } from '../logic/vocabulaireDuButin';
 import { couleurDeRarete } from './couleurDeRarete';
 import { Etiquette } from '../../../components/socle';
 import { gmConfirm } from '../../../stores/useModalStore';
+import { useHeureDuRendu } from '../../../hooks/useHeureDuRendu';
 
 const LootHistoryViewer: React.FC = () => {
     const { t } = useTranslation(['modules']);
     const { lootHistory, lootReserve, clearLootHistory, remettreAuPool, activeCampaignId, getActiveDriver } = useSessionOSStore();
     const driver = getActiveDriver();
+    const heure = useHeureDuRendu();
 
     // L'historique se lit campagne par campagne, comme le pool qui l'alimente.
     const dons = React.useMemo(
@@ -28,7 +30,7 @@ const LootHistoryViewer: React.FC = () => {
     );
 
     const formatTime = (ts: number) => {
-        const diff = Date.now() - ts;
+        const diff = heure - ts;
         const mins = Math.floor(diff / 60000);
         if (mins < 1) return t('modules:loot.history.time.just_now');
         if (mins < 60) return t('modules:loot.history.time.mins_ago', { count: mins });

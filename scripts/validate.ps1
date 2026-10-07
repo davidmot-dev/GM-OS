@@ -29,10 +29,12 @@ try {
     Write-Header "Etape 2 : Analyse Statique (Linting)"
     npm run lint
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "  [WARN] Des problemes de linting ont ete detectes dans le projet (non bloquant)." -ForegroundColor Yellow
-    } else {
-        Write-Success "Code propre (Linting OK)."
+        # 07/10/2026 : le parcours global est réparé ; une erreur ne doit plus
+        # être annoncée comme une validation réussie avant le push.
+        Write-Failure "Le lint global a echoue."
+        exit 1
     }
+    Write-Success "Linting valide (aucune erreur)."
 
     # 3. Unit & Integration Tests
     Write-Header "Etape 3 : Execution des Tests Unitaires et d'Integration"

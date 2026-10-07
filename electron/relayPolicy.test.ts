@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { evaluateRelay, type RelayRole } from './relayPolicy';
-import { installWindowRelay, RELAY_PUBLISH_CHANNEL, type RelayTarget } from './WindowRelay';
+import { installWindowRelay, type RelayTarget } from './WindowRelay';
 
 describe('relayPolicy — la politique seule', () => {
     it('la fenêtre MJ émet tout, y compris ce qui n\'est listé nulle part', () => {
