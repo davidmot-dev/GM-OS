@@ -9891,6 +9891,8 @@ Essai de David attendu ; aucun commit/push demandé.
 documentation et preuves, sans les modifications des autres chantiers. Cette
 autorisation remplace les mentions historiques d'absence de demande de commit/push.
 Elle ne fournit pas de nouveau compte rendu d'essai global G7.
+**Réalisation commitée dans `1d94f84f`**, sur `feature/tablet-hub-pwa` ; guide 11
+synchronisé vers NotebookLM (1/1). Envoi demandé vers `origin`, avec le hook complet.
 
 ---
 

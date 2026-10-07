@@ -8,6 +8,9 @@ Trame ci-dessous, sans les modifications étrangères au chantier. La documentat
 est finalisée et les hooks conservés. Les mentions « aucun commit/push demandé »
 ci-dessous décrivent l'état historique de chaque lot avant cette autorisation.
 L'essai global G7 des derniers arrangements n'est pas déclaré fait par cette demande.
+**Réalisation commitée dans `1d94f84f`**, branche `feature/tablet-hub-pwa` ; guide 11
+synchronisé vers NotebookLM (1/1). L'envoi vers `origin` conserve le hook pré-push
+complet. Les autres modifications locales sont préservées hors du commit Trame.
 
 **Chantier Trame repris le 07/10 par Codex**, demande **« reprendrre le chantier “Trame” »**.
 Le [plan G0–G7 préparé](2026-10-07-graphe-trame-en-cartes.md) est mis en œuvre après les tablettes.

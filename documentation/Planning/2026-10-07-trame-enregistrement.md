@@ -4,6 +4,11 @@ David demande **« document, commit et push »** après la réalisation des six
 dispositions. Cette demande autorise l'enregistrement et l'envoi de l'ensemble
 du chantier Trame ; elle ne décrit pas un nouvel essai global G7.
 
+**Commit de réalisation : `1d94f84f`**, `feat(trame): livrer le graphe en cartes et
+ses outils d edition`, sur `feature/tablet-hub-pwa`. Le hook post-commit a
+synchronisé le guide 11 vers NotebookLM (1/1). Le push est demandé vers `origin`
+sur cette même branche, avec validation complète par le hook pré-push.
+
 ## Résultat livré
 
 - Graphe en cartes React Flow et inspecteurs des éléments et des liens.
