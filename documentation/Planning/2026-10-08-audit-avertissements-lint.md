@@ -202,3 +202,15 @@ l'inventaire JSON des 540 alertes initiales restent inchangés.
 Types, construction, **128 tests ciblés** dans 14 fichiers, **6 846 tests de
 la suite complète** et cinq scénarios Electron/tablettes passent. Les messages
 entre fenêtres sont la suite de l'étape 2, avant les effets et les autres domaines/tests.
+Cinquième lot commité et poussé sous **`43854adb`**, après les contrôles complets du hook.
+
+Le [sixième lot](2026-10-08-lint-echanges-fenetres.md) type les sept messages locaux
+et leur application par `CrossWindowEventService`. La réception relit les enveloppes
+et les champs de données ; la fusion des jetons ne modifie plus la charge reçue.
+**12 `any` retirés : 11 applicatifs et un dans les tests.** Lint global :
+**1 539 fichiers, zéro erreur, 377 avertissements**, dont 353 `any` (130 applicatifs,
+223 dans les tests), 20 effets, trois diagnostics de mémoïsation et une directive
+inutile. Types, construction, **120 tests ciblés dans huit fichiers**, **6 858 tests
+unitaires** et **13 scénarios Electron** passent, dont un véritable aller-retour
+MJ/Hub par le relais. La suite passe aux 20 effets, écran par écran, avant le
+typage des autres domaines/tests. L'inventaire JSON des 540 alertes initiales reste inchangé.

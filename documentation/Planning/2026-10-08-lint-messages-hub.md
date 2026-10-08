@@ -82,10 +82,11 @@ muets. Les captures vont dans un dossier temporaire, sans modifier le manuel.
 
 ## Reprise
 
-Lot réalisé et documenté : sept fichiers de code/tests et cinq documents.
-Publication demandée par David : **« commit, pousse et passe à l'étape suivante
-(GM-OS est éteint) »**. Le commit publié au début du tour précédent concerne le quatrième lot.
-Reprendre `CrossWindowEventService` : contrat des messages entre fenêtres,
-autorité de projection du MJ, positions des jetons saisis et absence de renvoi.
-Les 20 effets, le typage des autres domaines et les faux objets de tests suivent.
+Lot commité et poussé sous **`43854adb`** sur `origin/feature/tablet-hub-pwa`,
+après les contrôles complets du hook. Publication demandée par David :
+**« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+La suite est réalisée dans le [sixième lot](2026-10-08-lint-echanges-fenetres.md) :
+contrat des messages entre fenêtres, autorité de projection du MJ, positions
+des jetons saisis et absence de renvoi. Les 20 effets, le typage des autres
+domaines et les faux objets de tests suivent.
 Les changements antérieurs de Claude sont conservés hors du lot.

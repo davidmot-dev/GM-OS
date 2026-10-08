@@ -4,6 +4,9 @@ import { useWhiteboardStore, type DrawingPath } from '../modules/whiteboard/useW
 import { useClockStore } from '../store/useClockStore';
 import { useCombatStore } from '../modules/combat/useCombatStore';
 import { WindowTransport, type WindowMessage, type SenderRole } from './windowTransport';
+import { estObjet } from '../modules/remote/actions/contratsSessionDistante';
+import { lireMessageEntreFenetres, type CarteEntreFenetres, type DiffusionEntreFenetres, type MiseAJourEntreFenetres } from './contratsEntreFenetres';
+import type { TableauDuHub } from '../modules/remote/types/donneesDuHub';
 
 /** Types qu'une fenêtre secondaire peut émettre avant d'avoir reçu l'état partagé. */
 const GATE_EXEMPT_TYPES = new Set(['map:lock', 'map:unlock', 'hub:ready']);
@@ -17,8 +20,10 @@ const LOCK_TTL_MS = 5000;
  * Exporté pour être testé directement : c'est une garde de correction, et une
  * garde qu'on ne peut pas exercer se retire toute seule au fil du temps.
  */
-export function stripProjectionTarget(payload: any): any {
-    if (!payload || typeof payload !== 'object') return payload;
+export function stripProjectionTarget<T extends object>(payload: T): Omit<T, 'projectionTarget'>;
+export function stripProjectionTarget(payload: unknown): unknown;
+export function stripProjectionTarget(payload: unknown): unknown {
+    if (!estObjet(payload)) return payload;
     if (!('projectionTarget' in payload)) return payload;
 
     // Copie : le payload reçu peut être partagé avec d'autres destinataires.
@@ -33,11 +38,13 @@ export function stripProjectionTarget(payload: any): any {
  * copie des deux dans chacune de ses mises à jour — et une copie en retard
  * éteindrait la projection, ou la ferait changer d'écran.
  */
-export function stripProjectionDeLaCarte(payload: any): any {
+export function stripProjectionDeLaCarte<T extends object>(payload: T): Omit<T, 'projectionTarget' | 'ecranDeLaCarte'>;
+export function stripProjectionDeLaCarte(payload: unknown): unknown;
+export function stripProjectionDeLaCarte(payload: unknown): unknown {
     const sansCible = stripProjectionTarget(payload);
-    if (!sansCible || typeof sansCible !== 'object' || !('ecranDeLaCarte' in sansCible)) return sansCible;
+    if (!estObjet(sansCible) || !('ecranDeLaCarte' in sansCible)) return sansCible;
 
-    const copy = sansCible === payload ? { ...payload } : sansCible;
+    const copy = { ...sansCible };
     delete copy.ecranDeLaCarte;
     return copy;
 }
@@ -125,9 +132,10 @@ class CrossWindowEventService {
         this.setupSubscribers();
     }
 
-    private handleMessage(message: WindowMessage, senderRole?: SenderRole) {
+    private handleMessage(recu: WindowMessage, senderRole?: SenderRole) {
+        const message = lireMessageEntreFenetres(recu);
+        if (!message) return;
         const { type, senderId } = message;
-        const payload = message.payload as any;
 
         // Ignore messages from ourselves.
         // Le relais du process principal ne renvoie déjà rien à l'émetteur ;
@@ -137,11 +145,11 @@ class CrossWindowEventService {
 
         // Handle locks (Always)
         if (type === 'map:lock') {
-            this.tokenLocks.set(payload.tokenId, { ownerId: senderId, timestamp: Date.now() });
+            this.tokenLocks.set(message.payload.tokenId, { ownerId: senderId, timestamp: Date.now() });
             this.notifyLocksChanged();
             return;
         } else if (type === 'map:unlock') {
-            this.tokenLocks.delete(payload.tokenId);
+            this.tokenLocks.delete(message.payload.tokenId);
             this.notifyLocksChanged();
             return;
         }
@@ -171,10 +179,9 @@ class CrossWindowEventService {
                       *Le tableau avait payé ce défaut et reçu sa garde ; la
                       carte, voisine de trois lignes, ne l'avait pas reçue.*
                     */
-                    this.applyRemoteUpdate(
-                        'map',
-                        senderRole === 'gm' ? payload : stripProjectionDeLaCarte(payload),
-                    );
+                    this.applyRemoteUpdate({ ...message,
+                        payload: senderRole === 'gm' ? message.payload : stripProjectionDeLaCarte(message.payload),
+                    });
                     // Le payload brut d'une fenêtre secondaire n'atteint plus les
                     // autres : le relais ne le livre qu'au MJ (voir
                     // electron/relayPolicy.ts, `relayAudience`). C'est donc à lui
@@ -203,10 +210,9 @@ class CrossWindowEventService {
                     // pas se déclarer MJ pour échapper au retrait. Hors Electron il
                     // n'y a personne pour l'attester — l'absence de rôle est donc
                     // traitée comme le cas le moins fiable.
-                    this.applyRemoteUpdate(
-                        'whiteboard',
-                        senderRole === 'gm' ? payload : stripProjectionTarget(payload),
-                    );
+                    this.applyRemoteUpdate({ ...message,
+                        payload: senderRole === 'gm' ? message.payload : stripProjectionTarget(message.payload),
+                    });
                     // Seul le tableau a changé. Rediffuser la carte au passage
                     // renvoyait `projectedFogDataUrl` — un PNG en base64 de
                     // plusieurs centaines de kilooctets — à chaque rafale de
@@ -217,9 +223,9 @@ class CrossWindowEventService {
                     }, 50);
                     break;
             }
-        } else {
+        } else if (message.type === 'map' || message.type === 'whiteboard' || message.type === 'combat' || message.type === 'clock') {
             // Slaves handle state updates
-            this.applyRemoteUpdate(type, payload);
+            this.applyRemoteUpdate(message);
         }
     }
 
@@ -305,13 +311,17 @@ class CrossWindowEventService {
         );
     }
 
-    private applyRemoteUpdate(type: string, payload: any) {
+    private applyRemoteUpdate(message: MiseAJourEntreFenetres) {
         this.hasReceivedSharedState = true;
         this.isApplyingRemoteUpdate = true;
         try {
-            switch (type) {
+            switch (message.type) {
                 case 'map':
                     {
+                        // La charge peut être partagée avec un autre destinataire.
+                        // Les fusions locales se font sur une copie, même si un
+                        // jeton est saisi ou si le MJ remonte sa position source.
+                        const payload = { ...message.payload };
                         const ui = useMapUIStore.getState();
                         const store = useMapStore.getState();
                         
@@ -321,7 +331,7 @@ class CrossWindowEventService {
                             const currentTokens = store.tokens;
                             
                             if (payload.projectedTokens) {
-                                payload.projectedTokens = payload.projectedTokens.map((t: any) => {
+                                payload.projectedTokens = payload.projectedTokens.map((t) => {
                                     if (t.id === ui.selectedTokenId) {
                                         const localToken = currentProjected.find(lt => lt.id === t.id);
                                         return localToken ? { ...t, x: localToken.x, y: localToken.y } : t;
@@ -331,7 +341,7 @@ class CrossWindowEventService {
                             }
 
                             if (payload.tokens) {
-                                payload.tokens = payload.tokens.map((t: any) => {
+                                payload.tokens = payload.tokens.map((t) => {
                                     if (t.id === ui.selectedTokenId) {
                                         const localToken = currentTokens.find(lt => lt.id === t.id);
                                         return localToken ? { ...t, x: localToken.x, y: localToken.y } : t;
@@ -348,10 +358,11 @@ class CrossWindowEventService {
                         // payload is only applied locally on Master. The relay to other slaves
                         // is done via broadcastFullState() which reads from the already-updated store.
                         if (this.isMainInstance) {
-                            if (payload.projectedTokens) {
+                            const projectedTokens = payload.projectedTokens;
+                            if (projectedTokens) {
                                 const currentTokens = store.tokens;
                                 const updatedTokens = currentTokens.map(ct => {
-                                    const incoming = payload.projectedTokens.find((pt: any) => pt.id === ct.id);
+                                    const incoming = projectedTokens.find(pt => pt.id === ct.id);
                                     return incoming ? { ...ct, x: incoming.x, y: incoming.y } : ct;
                                 });
                                 payload.tokens = updatedTokens;
@@ -362,17 +373,17 @@ class CrossWindowEventService {
                             }
                         }
 
-                        useMapStore.setState(prev => ({ ...prev, ...payload }));
+                        useMapStore.setState(payload);
                     }
                     break;
                 case 'whiteboard':
-                    useWhiteboardStore.setState(prev => ({ ...prev, ...payload }));
+                    useWhiteboardStore.setState(message.payload);
                     break;
                 case 'combat':
-                    useCombatStore.setState(prev => ({ ...prev, ...payload }));
+                    useCombatStore.setState(message.payload);
                     break;
                 case 'clock':
-                    useClockStore.setState(prev => ({ ...prev, ...payload }));
+                    useClockStore.setState(message.payload);
                     break;
             }
         } finally {
@@ -430,7 +441,7 @@ class CrossWindowEventService {
                     lastMapBroadcast = Date.now();
                     
                     // Lean Payload: Only send what is necessary
-                    const payload: any = {
+                    const payload: CarteEntreFenetres = {
                         projectionTarget: state.projectionTarget,
                         /* Le moniteur voyage avec la cible : sans lui, `'monitor'`
                            allumait la carte dans toutes les fenêtres (2026-09-25). */
@@ -513,7 +524,7 @@ class CrossWindowEventService {
 
             lastWhiteboardBroadcast = now;
 
-            const payload: Record<string, unknown> = {
+            const payload: TableauDuHub = {
                 activePath: state.activePath,
                 laserPointer: state.laserPointer,
                 activeDrawerId: state.activeDrawerId,
@@ -563,7 +574,8 @@ class CrossWindowEventService {
      * qui tient une trace de ce qu'il a déjà envoyé — le flux du tableau blanc —
      * doit le savoir : sinon il croirait avoir diffusé des tracés restés sur place.
      */
-    public broadcast(type: string, payload: any): boolean {
+    public broadcast(...message: DiffusionEntreFenetres): boolean {
+        const [type, payload] = message;
         // Une fenêtre secondaire qui n'a pas encore reçu l'état partagé n'a rien
         // à dire : ce qu'elle diffuserait viendrait de sa valeur initiale ou de
         // sa réhydratation, et écraserait la fenêtre qui fait autorité.

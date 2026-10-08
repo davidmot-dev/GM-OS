@@ -60,13 +60,13 @@ const channel = () => channels[0] as FakeBroadcastChannel;
 
 /** Identifiant d'instance, déduit du premier message émis. */
 function ownInstanceId(): string {
-    crossWindowSync.broadcast('sonde', {});
+    crossWindowSync.broadcast('clock', {});
     const msg = channel().posted.pop();
     return msg.senderId;
 }
 
 /** Simule l'arrivée d'un message venu d'une autre fenêtre. */
-function receive(type: string, payload: any, senderId = 'autre-fenetre') {
+function receive(type: string, payload: unknown, senderId = 'autre-fenetre') {
     channel().onmessage?.({ data: { type, payload, senderId } });
 }
 
@@ -176,6 +176,26 @@ describe('verrous de jetons', () => {
 });
 
 describe('filtrage des messages', () => {
+    it('ignore des verrous mal formés sans interrompre le message suivant', () => {
+        const version = crossWindowSync.getLocksVersion();
+        for (const payload of [undefined, null, [], 'jeton', { tokenId: 42 }]) {
+            expect(() => receive('map:lock', payload)).not.toThrow();
+            expect(() => receive('map:unlock', payload)).not.toThrow();
+        }
+        expect(crossWindowSync.getLocksVersion()).toBe(version);
+        receive('map:lock', { tokenId: 'apres-invalide' });
+        expect(crossWindowSync.isTokenLocked('apres-invalide')).toBe(true);
+    });
+
+    it('un diff ne remplace pas les méthodes du magasin', () => {
+        crossWindowSync.init(false);
+        const modifier = vi.fn();
+        stores.clock.setState({ timerRemaining: 8, setTimestamp: modifier });
+        receive('clock', { timerRemaining: 0, setTimestamp: 'remplacer' });
+        expect(stores.clock.getState().timerRemaining).toBe(0);
+        expect(stores.clock.getState().setTimestamp).toBe(modifier);
+    });
+
     it('ignore ses propres messages', () => {
         // Garde essentielle : sans elle, chaque diffusion se réappliquerait
         // localement et relancerait une diffusion.
@@ -204,6 +224,53 @@ describe('filtrage des messages', () => {
  * tableau blanc avait déjà cette garde ; la carte, non.
  */
 describe('flux de la carte — ce qu’une fenêtre secondaire peut dire', () => {
+    const token = { id: 't1', name: 'PJ', avatar: '', x: 10, y: 20, size: 1 };
+
+    it('le MJ remonte les positions et pings sans modifier une charge gelée', () => {
+        stores.mapUI.setState({ isDraggingToken: false, selectedTokenId: null });
+        stores.map.setState({ tokens: [token], projectedTokens: [token], projectionTarget: 'hub' });
+        const ping = { id: 'p1', x: 3, y: 4, color: '#fff', createdAt: 1 };
+        const charge = Object.freeze({
+            projectionTarget: null,
+            projectedTokens: Object.freeze([{ ...token, x: 70, y: 80 }]),
+            projectedPings: Object.freeze([ping]),
+        });
+        expect(() => receive('map', charge)).not.toThrow();
+        expect(stores.map.getState().tokens).toEqual([{ ...token, x: 70, y: 80 }]);
+        expect(stores.map.getState().pings).toEqual([ping]);
+        expect(stores.map.getState().projectionTarget).toBe('hub');
+        expect(charge).not.toHaveProperty('tokens');
+        expect(charge).not.toHaveProperty('pings');
+        expect(charge.projectionTarget).toBeNull();
+    });
+
+    it('la fenêtre secondaire garde les deux positions locales du jeton saisi', () => {
+        crossWindowSync.init(false);
+        stores.mapUI.setState({ isDraggingToken: true, selectedTokenId: token.id });
+        stores.map.setState({ tokens: [token], projectedTokens: [{ ...token, x: 30, y: 40 }] });
+        const charge = Object.freeze({
+            tokens: Object.freeze([{ ...token, x: 70, y: 80 }]),
+            projectedTokens: Object.freeze([{ ...token, x: 90, y: 100 }]),
+        });
+        expect(() => receive('map', charge)).not.toThrow();
+        expect(stores.map.getState().tokens).toEqual([token]);
+        expect(stores.map.getState().projectedTokens).toEqual([{ ...token, x: 30, y: 40 }]);
+        expect(charge.tokens[0].x).toBe(70);
+        expect(charge.projectedTokens[0].x).toBe(90);
+        stores.mapUI.setState({ isDraggingToken: false });
+    });
+
+    it('conserve météo, brouillard et effets tout en refusant les scalaires invalides', () => {
+        crossWindowSync.init(false);
+        const charge = { projectedWeatherType: 'snow', projectedWeatherIntensity: 0,
+            projectedTimeOfDay: 'night', projectedFogDataUrl: null,
+            projectedDangerZones: [], projectedMagicEffects: [], projectedIsMapMuted: false };
+        receive('map', charge);
+        expect(stores.map.getState()).toMatchObject(charge);
+        receive('map', { projectedWeatherType: 'pluie-inventée', projectedTimeOfDay: 'day' });
+        expect(stores.map.getState().projectedTimeOfDay).toBe('night');
+    });
+
     it('le MJ garde SA cible quand une fenêtre secondaire en envoie une autre', () => {
         stores.map.setState({ projectionTarget: 'hub', projectedMapUrl: 'carte-egouts' });
 
@@ -222,7 +289,7 @@ describe('flux de la carte — ce qu’une fenêtre secondaire peut dire', () =>
 
     it('mais adopte ses pings — ça, c’est légitime', () => {
         stores.map.setState({ projectionTarget: 'hub', projectedPings: [] });
-        const ping = { id: 'p-1', x: 10, y: 20, color: '#06b6d4' };
+        const ping = { id: 'p-1', x: 10, y: 20, color: '#06b6d4', createdAt: 123 };
 
         receive('map', { projectionTarget: null, projectedPings: [ping] });
 
@@ -258,6 +325,19 @@ describe('flux du tableau blanc — volume du payload', () => {
         // connu, sinon l'ordre d'exécution déciderait du résultat.
         (crossWindowSync as any).hasReceivedSharedState = false;
         (crossWindowSync as any).lastBroadcastPaths = null;
+    });
+
+    it('un flux inconnu ou mal formé ne lève pas la garde de démarrage', () => {
+        crossWindowSync.init(false);
+        channel().posted.length = 0;
+        receive('inconnu', {});
+        receive('clock', { timerRemaining: 'non' });
+        receive('map', null);
+        subscriber()(wbState([]));
+        expect(channel().posted).toHaveLength(0);
+        receive('clock', { timerRemaining: 0 });
+        subscriber()(wbState([]));
+        expect(lastWhiteboard()).toBeDefined();
     });
 
     it('envoie les tracés au premier passage', () => {

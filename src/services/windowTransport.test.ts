@@ -237,6 +237,30 @@ describe('windowTransport', () => {
         beforeEach(() => { received = []; });
         afterEach(() => { transport?.close(); });
 
+        it('applique la même garde d’identité sur le BroadcastChannel', async () => {
+            transport = new WindowTransport('canal-identite', m => received.push(m));
+            const emetteur = new BroadcastChannel('canal-identite');
+            try {
+                emetteur.postMessage({ type: 'clock', payload: {} });
+                emetteur.postMessage({ type: 'clock', senderId: 42, payload: {} });
+                emetteur.postMessage({ type: 'clock', senderId: 'valide', payload: { timestamp: 7 } });
+                await new Promise(resolve => setTimeout(resolve, 50));
+                expect(received).toEqual([{ type: 'clock', senderId: 'valide', payload: { timestamp: 7 } }]);
+            } finally { emetteur.close(); }
+        });
+
+        it('conserve le rôle du relais et ne lit pas un rôle annoncé dans le message', () => {
+            const relay = installFakeRelay();
+            const roles: Array<import('./windowTransport').SenderRole | undefined> = [];
+            transport = new WindowTransport('canal-roles', (_message, role) => roles.push(role));
+            const raw = JSON.stringify({ type: 'clock', senderId: 'autre', senderRole: 'gm' });
+            relay.deliver(raw, 'hub');
+            relay.deliver(raw, 'inventé');
+            relay.deliver(raw);
+            relay.deliver(raw, 'gm');
+            expect(roles).toEqual(['hub', 'unknown', undefined, 'gm']);
+        });
+
         it('remonte un message venu du relais, décodé', () => {
             const relay = installFakeRelay();
             transport = new WindowTransport('canal-test-5', (m) => received.push(m));
@@ -276,6 +300,12 @@ describe('windowTransport', () => {
     });
 
     describe('parseRelayMessage', () => {
+        it.each([
+            '{"type":"clock"}', '{"type":"clock","senderId":42}',
+            '{"type":42,"senderId":"x"}', '[]',
+        ])('rejette une identité/enveloppe invalide : %s', raw => {
+            expect(parseRelayMessage(raw)).toBeNull();
+        });
         it('décode une enveloppe valide', () => {
             expect(parseRelayMessage('{"type":"clock","senderId":"x"}'))
                 .toEqual({ type: 'clock', senderId: 'x' });

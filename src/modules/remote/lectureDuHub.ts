@@ -20,7 +20,7 @@ const trace = (v: unknown) => identifie(v) && estObjet(v) && tableau(point)(v.po
 const jeton = (v: unknown) => nomme(v) && estObjet(v) && point(v) && texte(v.avatar) && nombre(v.size);
 const ping = (v: unknown) => identifie(v) && estObjet(v) && point(v) && texte(v.color) && nombre(v.createdAt);
 
-type Regles<T> = { [Cle in keyof T]-?: (valeur: unknown) => boolean };
+export type Regles<T> = { [Cle in keyof T]-?: (valeur: unknown) => boolean };
 
 /**
  * Frontière du transport interne : ne retenir que les données déclarées.
@@ -30,7 +30,7 @@ type Regles<T> = { [Cle in keyof T]-?: (valeur: unknown) => boolean };
  * La conversion est regroupée ici, jamais vers un état complet avec ses méthodes.
  * Aucun défaut n'est ajouté : une absence dans un diff doit rester une absence.
  */
-function lireChamps<T>(valeur: unknown, regles: Regles<T>): Partial<T> | null {
+export function lireChamps<T>(valeur: unknown, regles: Regles<T>): Partial<T> | null {
     if (!estObjet(valeur)) return null;
     const lus: Record<string, unknown> = {};
     for (const cle of Object.keys(regles) as (keyof T & string)[]) {
@@ -54,7 +54,7 @@ const combat: Regles<CombatDuHub> = {
         && (v.hp === undefined || nombre(v.hp)) && (v.hpMax === undefined || nombre(v.hpMax))),
     currentTurnIdx: nombre, round: nombre, isCombatProjected: booleen,
 };
-const carte: Regles<CarteDuHub> = {
+export const reglesCarteDuHub: Regles<CarteDuHub> = {
     projectionTarget: nullable(choix('hub', 'monitor')), projectedMapUrl: nullable(texte),
     projectedIsVideo: booleen, projectedTokens: tableau(jeton), projectedPings: tableau(ping),
     projectedFogDataUrl: nullable(texte), projectedMapWidth: nombre, projectedMapHeight: nombre,
@@ -104,7 +104,7 @@ export function lireDonneesDuHub(valeur: unknown): DonneesDuHub | null {
     if (!estObjet(valeur)) return null;
     const clock = valeur.clock === undefined ? undefined : lireChamps(valeur.clock, horloges);
     const combatLu = valeur.combat === undefined ? undefined : lireChamps(valeur.combat, combat);
-    const map = valeur.map === undefined ? undefined : lireChamps(valeur.map, carte);
+    const map = valeur.map === undefined ? undefined : lireChamps(valeur.map, reglesCarteDuHub);
     const whiteboard = valeur.whiteboard === undefined ? undefined : lireChamps(valeur.whiteboard, tableauBlanc);
     const sessionLue = valeur.session === undefined ? undefined : lireChamps(valeur.session, session);
     const dice = valeur.dice === undefined ? undefined : lireChamps(valeur.dice, des);

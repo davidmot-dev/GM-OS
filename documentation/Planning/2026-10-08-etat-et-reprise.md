@@ -183,3 +183,33 @@ autorité de projection du MJ, absence de renvoi et maintien des jetons saisis.
 Les 20 effets et les autres domaines/tests viennent ensuite. L'inventaire JSON
 conserve les 540 alertes initiales ; les modifications antérieures de Claude
 restent hors du lot.
+
+Publication terminée : **`43854adb`** sur `origin/feature/tablet-hub-pwa`, après
+les contrôles complets du hook de pré-push.
+
+## Sixième lot : échanges entre fenêtres
+
+David confirme **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+[Contrats, essais et reprise](2026-10-08-lint-echanges-fenetres.md). Les sept messages
+locaux partagent un contrat avec leurs producteurs. Les enveloppes des deux voies
+de transport sont relues ; le rôle reste établi par le relais. La garde de démarrage,
+l'autorité du MJ, les verrous et l'absence de renvoi sont conservés. Les fusions
+de carte s'appliquent sur une copie de la charge reçue.
+
+**12 `any` retirés : 11 applicatifs et un dans les tests.** Lint global :
+**1 539 fichiers, zéro erreur, 377 avertissements**, règles inchangées.
+Types, construction, **120 tests ciblés dans huit fichiers** et **6 858 tests
+dans 533 fichiers** (un fichier et quatre tests ignorés) passent. **Douze nouveaux
+cas unitaires** et **un nouveau scénario Electron** couvrent les messages invalides,
+la garde de démarrage, l'identité/rôle, les méthodes, les charges gelées et les
+fusions. Les **13 scénarios Electron** passent : Map-OS, tableau blanc et véritable
+relais MJ/Hub. Profils jetables, données fictives, appareils muets ; aucun artefact
+du manuel régénéré. `git diff --check` passe.
+
+**Sixième lot réalisé et documenté, non commité : sept fichiers de code/tests et
+cinq documents.** Reprendre les **20 effets**, suivant l'étape 3 de l'audit : commencer
+par les états dérivables et les initialisations, puis traiter les synchronisations
+par écran. Conserver les durées des dés, les fondus, les notes et les projections ;
+ne pas remplacer les effets par des temporisations pour faire taire le lint.
+Les autres domaines et faux objets de tests suivent. L'inventaire JSON conserve
+les 540 alertes initiales et les changements antérieurs de Claude restent hors du lot.

@@ -9994,10 +9994,16 @@ diffusions complètes/partielles à leur émission et à leur réception par le 
 les projections et les fusions sont typées. **20 `any` applicatifs retirés**,
 lint global **1 537 fichiers, zéro erreur et 389 avertissements**. Types,
 construction, **128 tests ciblés**, **6 846 tests de la suite complète** et cinq
-scénarios Electron/tablettes passent. Ce cinquième lot reste distinct du commit
-publié. Reprendre les échanges entre fenêtres, en conservant l'autorité de
-projection du MJ et les positions des jetons saisis. Les effets et les autres
-domaines/tests viennent après.
+scénarios Electron/tablettes passent. Cinquième lot commité et poussé sous
+**`43854adb`**, après les contrôles complets du hook. Le
+[sixième lot](2026-10-08-lint-echanges-fenetres.md) type les sept messages locaux
+et les fusions, conserve l'autorité de projection du MJ et ne modifie plus une
+charge de jetons reçue. **12 `any` retirés (11 applicatifs, un dans les tests)** :
+**1 539 fichiers, zéro erreur et 377 avertissements**. Types, construction,
+**120 tests ciblés**, **6 858 tests unitaires** et **13 scénarios Electron** passent,
+dont un aller-retour réel entre le MJ et le Hub. Ce sixième lot reste distinct
+du commit publié. Reprendre les **20 effets**, écran par écran, puis les autres
+domaines/tests, suivant l'ordre de l'audit.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10069,7 +10075,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Quatre lots poussés (dernier `777adc68`), messages du Hub réalisés**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 avertissements, zéro erreur | Typer les échanges entre fenêtres, puis les effets | [Analyse](2026-10-08-audit-avertissements-lint.md), [cinquième lot](2026-10-08-lint-messages-hub.md) distinct du commit publié |
+| 62 | **Avertissements du lint** | 🔧 **Cinq lots poussés (dernier `43854adb`), échanges entre fenêtres réalisés**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 avertissements, zéro erreur | Revoir les 20 effets écran par écran, puis les autres domaines/tests | [Analyse](2026-10-08-audit-avertissements-lint.md), [sixième lot](2026-10-08-lint-echanges-fenetres.md) distinct du commit publié |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

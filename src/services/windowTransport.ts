@@ -114,16 +114,16 @@ export class WindowTransport {
     ) {
         this.onMessage = onMessage;
         this.channel = new BroadcastChannel(channelName);
-        this.channel.onmessage = (event: MessageEvent) => {
-            const message = event.data as WindowMessage | undefined;
-            if (message && typeof message.type === 'string') this.onMessage(message);
+        this.channel.onmessage = (event: MessageEvent<unknown>) => {
+            const message = lireEnveloppeFenetre(event.data);
+            if (message) this.onMessage(message);
         };
 
         const relay = typeof window !== 'undefined' ? window.appBridge?.relay : undefined;
         if (relay) {
             this.detachRelay = relay.onMessage((raw, senderRole) => {
                 const message = parseRelayMessage(raw);
-                if (message) this.onMessage(message, senderRole as SenderRole);
+                if (message) this.onMessage(message, lireRoleDeLEmetteur(senderRole));
             });
         }
     }
@@ -168,14 +168,24 @@ export function parseRelayMessage(raw: unknown): WindowMessage | null {
     if (typeof raw !== 'string') return null;
 
     try {
-        const parsed = JSON.parse(raw) as unknown;
-        if (!parsed || typeof parsed !== 'object') return null;
-
-        const message = parsed as WindowMessage;
-        if (typeof message.type !== 'string') return null;
-
-        return message;
+        const parsed: unknown = JSON.parse(raw);
+        return lireEnveloppeFenetre(parsed);
     } catch {
         return null;
     }
+}
+
+/** Même frontière pour JSON et le clone structuré du BroadcastChannel. */
+function lireEnveloppeFenetre(valeur: unknown): WindowMessage | null {
+    if (valeur === null || typeof valeur !== 'object' || Array.isArray(valeur)) return null;
+    const champs = valeur as Record<string, unknown>;
+    if (typeof champs.type !== 'string' || typeof champs.senderId !== 'string') return null;
+    return { type: champs.type, senderId: champs.senderId,
+        ...('payload' in champs && { payload: champs.payload }) };
+}
+
+/** Le rôle provient du relais, jamais des champs du message. */
+function lireRoleDeLEmetteur(valeur: unknown): SenderRole | undefined {
+    if (valeur === undefined) return undefined;
+    return valeur === 'gm' || valeur === 'hub' || valeur === 'projector' ? valeur : 'unknown';
 }
