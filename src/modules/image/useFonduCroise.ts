@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * **Deux images à l'écran le temps d'un fondu — l'ancienne dessous, la nouvelle
@@ -73,6 +73,11 @@ export const FONDU_COTE_JOUEURS_MS = 1500;
 /** Ce qui décide qu'une image est **prête à être montrée**. */
 export type ChargeurDImage = (url: string) => Promise<void>;
 
+interface EtatDuFondu extends FonduCroise {
+    cible: string | null;
+    transition: { dureeMs: number } | null;
+}
+
 /**
  * **Le chargeur réel : télécharger *et* décoder.**
  *
@@ -100,45 +105,33 @@ export function useFonduCroise(
     dureeMs: number,
     charger: ChargeurDImage = chargerLImage,
 ): FonduCroise {
-    const [entrante, setEntrante] = useState<string | null>(null);
-    const [sortante, setSortante] = useState<string | null>(null);
+    const cible = url ?? null;
+    const [fondu, setFondu] = useState<EtatDuFondu>(() => ({
+        cible, entrante: null, sortante: null, transition: null,
+    }));
 
     /*
-      L'image montrée est tenue **aussi** dans une référence : l'effet doit la
-      lire sans figurer dans ses dépendances, sinon il se relancerait à chaque
-      fondu et rechargerait l'image qu'il vient d'afficher.
+      **L'extinction appartient au changement de cible, pas à un effet.**
+      Audit du lint, 08/10/2026 : cette garde ajuste uniquement l'état de ce
+      crochet, avant le commit. Le Hub voit donc tout de suite l'ancienne en
+      sortie ; le projecteur conserve son propre mécanisme d'extinction.
+      Une autre image, elle, attend toujours son décodage.
     */
-    const montree = useRef<string | null>(null);
-    const minuterie = useRef<ReturnType<typeof setTimeout> | null>(null);
+    if (fondu.cible !== cible) {
+        const suivant = { ...fondu, cible };
+        if (cible === null) {
+            suivant.entrante = null;
+            if (fondu.entrante !== null) {
+                suivant.sortante = fondu.entrante;
+                suivant.transition = { dureeMs };
+            }
+        }
+        setFondu(suivant);
+    }
 
     useEffect(() => {
-        const cible = url ?? null;
-
-        /*
-          **Plus rien à montrer est une transition comme une autre** : `entrante`
-          tombe à `null`, et l'ancienne reste en `sortante` le temps du fondu.
-
-          C'est ce dont le **Player Hub** a besoin pour éteindre en fondu ; le
-          projecteur, lui, ne rend rien quand `entrante` est nulle — il a son
-          propre mécanisme d'extinction, qui garde le chemin le temps du fondu.
-          *Une valeur rendue n'oblige personne à la dessiner.*
-        */
-        if (cible === null) {
-            const ancienne = montree.current;
-            montree.current = null;
-            setEntrante(null);
-            if (ancienne === null) return;
-            setSortante(ancienne);
-            if (minuterie.current) clearTimeout(minuterie.current);
-            minuterie.current = setTimeout(() => {
-                setSortante(null);
-                minuterie.current = null;
-            }, dureeMs);
-            return;
-        }
-
         /* Déjà à l'écran : un rendu de plus ne rejoue pas un fondu. */
-        if (cible === montree.current) return;
+        if (cible === null || cible === fondu.entrante) return;
 
         let abandonne = false;
         void charger(cible).then(() => {
@@ -150,28 +143,32 @@ export function useFonduCroise(
             */
             if (abandonne) return;
 
-            const ancienne = montree.current;
-            montree.current = cible;
-            setEntrante(cible);
-
-            if (ancienne === null || ancienne === cible) return;
-
-            setSortante(ancienne);
-            if (minuterie.current) clearTimeout(minuterie.current);
-            minuterie.current = setTimeout(() => {
-                setSortante(null);
-                minuterie.current = null;
-            }, dureeMs);
+            setFondu(courant => {
+                if (courant.cible !== cible || courant.entrante === cible) return courant;
+                return {
+                    ...courant, entrante: cible,
+                    ...(courant.entrante !== null ? {
+                        sortante: courant.entrante, transition: { dureeMs },
+                    } : {}),
+                };
+            });
         });
 
         return () => { abandonne = true; };
-    }, [url, dureeMs, charger]);
+    }, [cible, fondu.entrante, dureeMs, charger]);
 
-    /* Au démontage seulement : une fenêtre de projection qu'on ferme ne doit pas
-       laisser un minuteur écrire dans un composant parti. */
-    useEffect(() => () => {
-        if (minuterie.current) clearTimeout(minuterie.current);
-    }, []);
+    /* Chaque transition garde sa durée de départ. Le nettoyage annule son
+       minuteur quand elle est remplacée ou quand la fenêtre est fermée. */
+    useEffect(() => {
+        const transition = fondu.transition;
+        if (!transition) return;
+        const minuterie = setTimeout(() => {
+            setFondu(courant => courant.transition === transition
+                ? { ...courant, sortante: null, transition: null }
+                : courant);
+        }, transition.dureeMs);
+        return () => clearTimeout(minuterie);
+    }, [fondu.transition]);
 
-    return { entrante, sortante };
+    return { entrante: fondu.entrante, sortante: fondu.sortante };
 }
