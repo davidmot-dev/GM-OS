@@ -10016,9 +10016,55 @@ sont liés au contexte courant ; le rendu masque l'ancien dès un changement et
 les réponses obsolètes sont ignorées. **1 546 fichiers, zéro erreur et 371
 avertissements**, dont **14 effets**. Types, construction, **102 tests ciblés**,
 **6 891 tests dans 538 fichiers** et **trois scénarios Electron** passent.
-Ce huitième lot reste distinct du commit publié. Reprendre les replis des vignettes,
-du visualiseur d'ambiance et de l'atelier des tables, puis les autres synchronisations
-écran par écran, avant les autres domaines/tests, suivant l'ordre de l'audit.
+Huitième lot commité et poussé sous **`a749007e`**, après les contrôles complets
+du hook. Les replis des vignettes, du visualiseur d'ambiance et de l'atelier des
+tables constituent le neuvième lot. Puis reprendre le fondu et les autres
+synchronisations écran par écran, avant les autres domaines/tests, suivant l'ordre de l'audit.
+Le [neuvième lot](2026-10-08-lint-replis-react.md) traite les trois replis : vignettes
+sans observateur, visualiseur arrêté et liste sans univers. Les valeurs de repli
+sont dérivées au rendu ; observation, animation et lecture restent dans leurs effets.
+Le visualiseur annule la frame zéro et les rappels tardifs. La liste de l'atelier
+ignore les réponses dépassées et se recharge après écriture ou réouverture.
+**1 549 fichiers, zéro erreur et 368 avertissements**, dont **11 effets**.
+Types, construction, **18 nouveaux tests**, **6 909 tests dans 541 fichiers** et
+**16 scénarios Electron** passent. Neuvième lot réalisé/documenté **non commité**.
+
+Le fondu croisé est repris dans le [dixième lot](2026-10-08-lint-fondu-croise.md),
+sans publication du neuvième lot. Le changement de cible ajuste les couches
+localement au rendu ; les effets gardent le décodage et le minuteur, avec la
+durée capturée au départ. Les chargements et échéances dépassés sont ignorés.
+**1 550 fichiers, zéro erreur et 367 avertissements**, dont **10 effets**.
+Types, construction, **57 tests ciblés** (13 nouveaux cas), **6 922 tests dans
+541 fichiers** et **huit scénarios Electron** passent. Neuvième et dixième lots
+réalisés/documentés **non commités**. Le QR et le verrou sont repris dans
+le [onzième lot](2026-10-08-lint-reseau-et-souris.md). Le repli web vient du
+rendu, les lectures appartiennent à l'ouverture ou au pont courant et ignorent
+les anciennes réponses. Le décompte expire dans son rappel ; le retour réel
+reste dans le processus principal, sans modification des handlers matériels.
+**1 553 fichiers, zéro erreur et 364 avertissements**, dont **sept effets**.
+Types, construction, **55 tests ciblés** (18 nouveaux cas), **6 940 tests dans
+543 fichiers** et **trois scénarios Electron** passent. Les souris des essais
+sont fictives, y compris leur inventaire. Les notes privées et le retour de séance
+sont repris dans le [douzième lot](2026-10-08-lint-notes-privees.md). La saisie et
+les rappels sont propres au personnage ; un écho n'efface pas la nouvelle saisie,
+un rappel ne renvoie pas une version dépassée et la fermeture sauve la bonne
+identité. Le retour suit sa clé de séance, sans effet de réinitialisation.
+Délais et envois conservés. **1 554 fichiers, zéro erreur et 362 avertissements**,
+dont **cinq effets**. Types, construction, **23 tests ciblés** (21 nouveaux cas),
+**6 961 tests dans 544 fichiers** et **quatre scénarios Electron/tablette** passent.
+Captures J2 temporaires séparées de celles du manuel. La notification de la
+tablette est reprise dans le [treizième lot](2026-10-08-lint-notifications-tablette.md).
+Le suivi reconnaît le nouveau message au rendu ; l'effet garde ses cinq secondes.
+Un message étranger ne supprime plus l'échéance, une recopie ne prolonge ni ne
+rejoue le signal. Destination, clic et présentation restent. **1 556 fichiers,
+zéro erreur et 361 avertissements**, dont **quatre effets**. Types, construction,
+**21 tests ciblés** (20 nouveaux cas), **6 981 tests dans 545 fichiers** et
+**quatre scénarios Electron/tablette** passent, avec réception d'un message
+pour un autre joueur pendant le signal. Captures temporaires séparées du manuel.
+Lots 9 à 13 maintenant **commités sur demande de David** sous `38bd33c6`, `020bae8e`,
+`b5a110e0`, `db052c6f` et `af2d6b2c` ; envoi demandé avec le hook complet, suivi
+dans la [note du jour](2026-10-08-etat-et-reprise.md). Reprendre dés et projection,
+quatre effets dans trois fichiers, après réussite du push.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10090,7 +10136,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Sept lots poussés (dernier `8f912061`), contexte des chargements du jeu réalisé**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 avertissements, zéro erreur | Revoir les 14 effets restants écran par écran, puis les autres domaines/tests | [Analyse](2026-10-08-audit-avertissements-lint.md), [huitième lot](2026-10-08-lint-contexte-du-jeu.md) distinct du commit publié |
+| 62 | **Avertissements du lint** | 🔧 **13 lots commités, envoi demandé jusqu'à `af2d6b2c`**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 avertissements, zéro erreur | Après le push, revoir les quatre effets restants (dés et projection), puis les autres domaines/tests | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -73,11 +73,12 @@ et une directive inutile. Les règles et le JSON des 540 alertes initiales reste
 
 ## Reprise
 
-Lot réalisé et documenté, **non commité** : cinq fichiers de code/tests et cinq
-documents. Le commit publié au début de ce tour concerne le septième lot.
-Continuer les replis de `MediaItemThumbnail` (sans observateur), `AmbientTrack`
-(visualiseur arrêté) et `AtelierDesTables` (sans univers), vérifiés dans le code.
-Puis traiter le fondu et les synchronisations des 14 effets restants écran par
-écran. Préserver les durées des dés, fondus, notes et projections. Les autres
-domaines et les faux objets de tests suivent. Les changements antérieurs de
-Claude restent hors du lot.
+Lot commité et poussé sous **`a749007e`** sur
+`origin/feature/tablet-hub-pwa`, à la demande suivante de David le 08/10,
+après les contrôles complets du hook. Les replis de `MediaItemThumbnail`
+(sans observateur), `AmbientTrack` (visualiseur arrêté) et `AtelierDesTables`
+(sans univers) sont traités dans le [neuvième lot](2026-10-08-lint-replis-react.md).
+Puis traiter le fondu et les synchronisations restantes écran par écran.
+Préserver les durées des dés, fondus, notes et projections. Les autres domaines
+et les faux objets de tests suivent. Les changements antérieurs de Claude
+restent hors du lot.

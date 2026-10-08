@@ -1,5 +1,10 @@
 # Douzième lot du lint — notes privées et retour de séance
 
+> Publication demandée le 08/10 : **« commit, pousse et passe à l'étape suivante
+> (GM-OS est éteint) »**. Ce lot est maintenant commité sous **`db052c6f`**.
+> La [note du jour](2026-10-08-etat-et-reprise.md) suit l'envoi et la reprise.
+> Les mentions « non commité » ci-dessous décrivent l'état avant cette demande.
+
 David demande le 08/10 **« passe à l'étape suivante (GM-OS est éteint) »**.
 Les lots 9 à 11 restent non commités ; aucune publication n'est demandée dans
 ce tour. Le dernier commit publié reste **`a749007e`**.

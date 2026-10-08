@@ -267,10 +267,191 @@ désactivés ; aucune capture du manuel remplacée. Le nouveau scénario de fich
 cliquait d'abord sur le nom : le geste a été corrigé vers le bouton **Fiche**,
 puis les deux scénarios du contexte passent. `git diff --check` passe.
 
-**Huitième lot réalisé et documenté, non commité : cinq fichiers de code/tests
-et cinq documents.** Le commit publié dans ce tour est le septième lot, **`8f912061`**.
-Reprendre les replis de `MediaItemThumbnail`, `AmbientTrack` et `AtelierDesTables`,
-vérifiés dans le code, puis le fondu et les synchronisations écran par écran.
+**Huitième lot commité et poussé sous `a749007e`**, à la demande suivante de
+David le 08/10, après les contrôles complets du hook. Les replis de
+`MediaItemThumbnail`, `AmbientTrack` et `AtelierDesTables` constituent le
+neuvième lot ci-dessous, puis viennent le fondu et les synchronisations écran par écran.
 Conserver les durées des dés, les fondus, les notes et les projections. Les autres
 domaines et les faux objets de tests viennent après. Aucun gain de fluidité n'est
 annoncé sans mesure ; les changements antérieurs de Claude restent hors du lot.
+
+## Neuvième lot : replis des vignettes, ambiances et tables
+
+David demande **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Le huitième lot est publié sous **`a749007e`** sur
+`origin/feature/tablet-hub-pwa`, après les contrôles complets du hook.
+
+[Détail et reprise](2026-10-08-lint-replis-react.md). Sans observateur, les
+vignettes sont directement visibles au rendu. Le visualiseur de piste rend son
+minimum dès l'arrêt ou le changement de contexte ; sa boucle s'annule même pour
+la frame zéro et les rappels tardifs ne la réarment pas. La liste de l'atelier
+appartient à l'univers, à l'ouverture et à sa révision ; les réponses dépassées
+sont ignorées. Les sauvegardes/suppressions et la réouverture la rechargent.
+
+Lint global : **1 549 fichiers, zéro erreur, 368 avertissements**, contre 371.
+Trois alertes d'effets retirées ; restent 353 `any`, **11 effets**, trois diagnostics
+de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+Types, construction, **18 nouveaux tests dans trois fichiers** et **6 909 tests
+dans 541 fichiers** passent ; un fichier et quatre tests ignorés. **16 scénarios
+Electron passent** : sept Ambient-OS et neuf Table-OS, dont les gestes de
+l'atelier. Profils, sauvegardes et corpus jetables, campagne fictive et appareils
+désactivés ; aucune capture du manuel remplacée. `git diff --check` passe.
+
+**Neuvième lot réalisé et documenté, non commité : six fichiers de code/tests
+et cinq documents.** Le fondu croisé est repris dans le dixième lot ci-dessous,
+sans publication du neuvième lot. Le décodage préalable, l'abandon des chargements
+dépassés et les durées restent. Puis les dix autres
+synchronisations (notes, notifications, QR, projection, verrou de souris), écran
+par écran, avant les autres domaines et les faux objets de tests.
+Les changements antérieurs de Claude restent hors du lot.
+
+## Dixième lot : extinction du fondu croisé
+
+David demande **« passe à l'étape suivante (GM-OS est éteint) »**.
+[Détail et reprise](2026-10-08-lint-fondu-croise.md). `useFonduCroise` ajuste
+localement les couches quand la cible disparaît, avant le commit. Les effets
+gardent le décodage et le minuteur de la transition ; une image dépassée ne
+rallume pas l'écran, une ancienne échéance ne retire pas la nouvelle sortante.
+Les durées de 700 ms et 1 500 ms sont conservées, capturées au départ de chaque
+transition. Les consommateurs et leur balisage restent.
+
+Lint global : **1 550 fichiers, zéro erreur, 367 avertissements**, contre 368.
+Une alerte d'effet retirée ; restent 353 `any`, **10 effets**, trois diagnostics
+de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+Types, construction, **57 tests ciblés** (13 nouveaux cas) et **6 922 tests dans
+541 fichiers** passent ; un fichier et quatre tests ignorés. **Huit scénarios
+Electron passent** : six Image-OS et deux nouveaux dans une vraie fenêtre
+Player Hub. Ils vérifient les couches, les animations et le décodage retenu
+pendant l'extinction ; images copiées dans le corpus jetable, profils et
+sauvegardes isolés, appareils désactivés, aucune capture du manuel remplacée.
+`git diff --check` passe.
+
+Le premier essai cherchait l'URL `data:` alors que le résolveur produit une URL
+Blob. Les deux nouveaux scénarios utilisent désormais les images copiées dans
+le corpus jetable avec une adresse `gmos://`, puis passent. Les six scénarios
+existants passaient dans le premier essai. Aucun changement du résolveur.
+
+**Neuvième et dixième lots non commités : 15 fichiers propres à Codex**
+(neuf de code/tests et six documents). Aucun commit ni push demandé dans ce tour ;
+le dernier publié reste **`a749007e`**. Le QR et le verrou de souris sont repris
+dans le onzième lot ci-dessous, avant les notes, notifications, dés et projection,
+écran par écran. Préserver les changements antérieurs de Claude, les durées
+et l'isolation des essais.
+
+## Onzième lot : QR réseau et verrou de souris
+
+David demande **« passe à l'étape suivante (GM-OS est éteint) »**.
+[Détail et reprise](2026-10-08-lint-reseau-et-souris.md). Le QR dérive son repli
+web au rendu ; la lecture Electron appartient à l'ouverture et à son lecteur,
+avec annulation des anciennes réponses. Les deux ports restent composés par
+`adresseDeLaTablette`. L'inventaire des souris se recharge depuis les actions,
+ignore les anciennes réponses et garde la liste connue pendant une lecture ;
+un rejet est traité et peut être réessayé. Le rappel d'une seconde termine
+le sursis et relit l'inventaire, sans mise à jour synchrone dans l'effet.
+Le renderer ne rend pas lui-même une souris à l'expiration : le filet du
+processus principal et ses vingt secondes ne sont pas modifiés.
+
+Lint global : **1 553 fichiers, zéro erreur, 364 avertissements**, contre 367.
+Trois alertes d'effets retirées ; restent 353 `any`, **sept effets**, trois
+diagnostics de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+Types, construction, **55 tests ciblés** (18 nouveaux cas) et **6 940 tests dans
+543 fichiers** passent ; un fichier et quatre tests ignorés. **Trois scénarios
+Electron passent** dans `e2e/reseauEtSouris.spec.ts` : vrais ports du QR et Échap,
+retour automatique simulé, confirmation et retour manuel dans les réglages.
+Les quatre handlers de souris sont remplacés avant les réglages, y compris
+l'inventaire : périphériques fictifs et délai de trois secondes dans le
+processus principal, aucune lecture/coupure matérielle ni élévation.
+Profils, sauvegardes et corpus jetables, appareils désactivés et aucune capture
+du manuel remplacée. `git diff --check` passe.
+
+**Neuvième, dixième et onzième lots non commités : 21 fichiers propres à Codex**
+(quatorze de code/tests et sept documents). Aucun commit ni push demandé dans
+ce tour ; le dernier publié reste **`a749007e`**. Reprendre
+`src/modules/session/components/PlayerPrivateNotes.tsx` (retour de séance dans
+`localStorage`, notes synchronisées au magasin), avec identité du personnage,
+saisie, sauvegarde différée et indicateur d'envoi préservés. Puis notifications,
+dés et projection : sept alertes dans cinq fichiers confirmées au lint courant.
+Préserver les changements antérieurs de Claude et l'isolation des essais.
+
+## Douzième lot : notes privées et retour de séance
+
+David demande **« passe à l'étape suivante (GM-OS est éteint) »**.
+[Détail et reprise](2026-10-08-lint-notes-privees.md). Le panneau est propre au
+couple joueur/personnage : l'ancien brouillon est sauvegardé pour l'ancienne
+identité à la fermeture, les rappels sont nettoyés. La saisie suit le magasin
+avant le commit ; un écho ne retire pas une saisie plus récente et le rappel
+lit la version courante. Les délais de 1 500 et 800 ms restent. Le retour de
+séance est initialisé puis ajusté à sa clé de stockage, avec validation des
+notes et du commentaire ; absence de séance et changement d'identité retirent
+l'ancien état transmis. Les onglets et le repli gardent le brouillon.
+
+Lint global : **1 554 fichiers, zéro erreur, 362 avertissements**, contre 364.
+Deux alertes d'effets retirées ; restent 353 `any`, **cinq effets**, trois
+diagnostics de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+Types, construction, **23 tests ciblés** (21 nouveaux cas) et **6 961 tests dans
+544 fichiers** passent ; un fichier et quatre tests ignorés. **Quatre scénarios
+Electron/tablette passent**, `Notes T4 J2`, à 360, 390, 820 et 1 180 px : vraie
+synchronisation des notes et du retour, puis sauvegarde à la fermeture par Échap.
+Profils, sauvegardes et corpus jetables, appareils désactivés. La relance hors
+bac à sable résout le blocage initial d'Electron. Le test accepte un dossier
+de captures séparé : seize captures temporaires, deux vues relues, aucun
+fichier du manuel remplacé. `git diff --check` passe.
+
+**Lots 9 à 12 non commités : 25 fichiers propres à Codex** (dix-sept de code/tests,
+huit documents). Aucun commit ni push demandé dans ce tour ; le dernier publié
+reste **`a749007e`**. Prochaine étape : notification `TabletHub`, puis dés
+`PlayerHub`/`useHubSync`, puis `ProjectorView`, soit cinq alertes dans quatre
+fichiers. Préserver les changements de Claude et l'isolation des essais.
+
+## Treizième lot : notifications de la tablette
+
+David demande **« passe à l'étape suivante (GM-OS est éteint) »**.
+[Détail et reprise](2026-10-08-lint-notifications-tablette.md). `TabletHub`
+délègue le signal au hook `useNotificationDeMessage`. Le suivi local reconnaît
+les nouveaux messages avant le commit ; l'effet garde seulement l'échéance de
+cinq secondes liée au signal et au personnage. Une recopie ne prolonge ni ne
+rejoue le signal. Un message pour quelqu'un d'autre garde le signal courant
+et son échéance, corrigeant l'annulation sans remplacement de l'ancien effet.
+Les rappels dépassés sont ignorés ; changement d'identité, liste vide et
+démontage nettoient le signal ou son rappel. Filtres, destinations, ouverture
+de la bonne conversation, présentation et commandes sont conservés.
+
+Lint global : **1 556 fichiers, zéro erreur, 361 avertissements**, contre 362.
+Une alerte d'effet retirée ; restent 353 `any`, **quatre effets**, trois
+diagnostics de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+Types, construction, **21 tests ciblés** (20 nouveaux cas) et **6 981 tests dans
+545 fichiers** passent ; un fichier et quatre tests ignorés. **Quatre scénarios
+Electron/tablette passent**, `Notifications T4 J2`, à 360, 390, 820 et 1 180 px :
+clic après une autre conversation, signal au-dessus de la navigation, message
+destiné à un autre joueur reçu par le vrai WebSocket puis expiration du signal.
+Profils, sauvegardes et corpus jetables, appareils désactivés ; lancement hors
+bac à sable comme au lot précédent. Quatre captures temporaires séparées du
+manuel, vues 360 et 1 180 px relues. `git diff --check` passe.
+
+**Lots 9 à 13 non commités : 29 fichiers propres à Codex** (vingt de code/tests,
+neuf documents). Aucun commit ni push demandé dans ce tour ; le dernier publié
+reste **`a749007e`**. Prochaine étape : dés `PlayerHub`/`useHubSync`, puis
+`ProjectorView`, soit quatre alertes dans trois fichiers. Préserver les
+changements de Claude et l'isolation des essais.
+
+## Publication des lots 9 à 13 et reprise demandée
+
+David demande **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Les 29 fichiers propres à Codex sont publiés par sujet ; les changements de
+Claude (guides, note du 07/10, fins de ligne et configuration locale) restent hors des commits.
+
+| Lot | Commit |
+| --- | --- |
+| 9 — replis React | `38bd33c6` |
+| 10 — fondu croisé | `020bae8e` |
+| 11 — QR et souris | `b5a110e0` |
+| 12 — notes privées | `db052c6f` |
+| 13 — notifications tablette | `af2d6b2c` |
+
+Les notes de lots gardent les résultats historiques ; leurs bandeaux indiquent
+les commits. Les documents communs sont rangés après ces cinq commits.
+L'envoi est demandé sur `feature/tablet-hub-pwa`, avec le hook complet
+types/lint/tests/build ; attendre sa réussite avant toute modification dans `src/`.
+État avant envoi : zéro erreur et **361 avertissements**, **6 981 tests**, les
+essais Electron/tablette des lots passent. Reprendre ensuite les deux effets
+des dés (`PlayerHub` et `useHubSync`), puis les deux de `ProjectorView`.

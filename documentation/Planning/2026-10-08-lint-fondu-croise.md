@@ -1,5 +1,10 @@
 # Dixième lot du lint — extinction du fondu croisé
 
+> Publication demandée le 08/10 : **« commit, pousse et passe à l'étape suivante
+> (GM-OS est éteint) »**. Ce lot est maintenant commité sous **`020bae8e`**.
+> La [note du jour](2026-10-08-etat-et-reprise.md) suit l'envoi et la reprise.
+> Les mentions « non commité » ci-dessous décrivent l'état avant cette demande.
+
 David demande le 08/10 **« passe à l'étape suivante (GM-OS est éteint) »**.
 Le neuvième lot reste non commité ; aucune publication n'est demandée dans
 ce tour. Le dernier lot publié reste le huitième, **`a749007e`**.

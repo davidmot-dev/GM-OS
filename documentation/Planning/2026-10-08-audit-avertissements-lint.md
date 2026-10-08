@@ -240,7 +240,93 @@ leur autorité ; éditer `sheetData` ne relance pas la lecture de sa corresponda
 zéro erreur et 371 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
 les tests), **14 effets**, trois diagnostics de mémoïsation et une directive inutile.
 Types, construction, **102 tests ciblés** (19 nouveaux cas), **6 891 tests** dans
-538 fichiers et **trois scénarios Electron** passent. Ce huitième lot reste
-**non commité**, distinct du septième lot publié. Reprendre les replis des vignettes,
-du visualiseur d'ambiance et de l'atelier des tables, puis les autres synchronisations
-écran par écran. L'inventaire JSON des 540 alertes initiales reste inchangé.
+538 fichiers et **trois scénarios Electron** passent. Huitième lot commité et
+poussé sous **`a749007e`**, après les contrôles complets du hook.
+L'inventaire JSON des 540 alertes initiales reste inchangé.
+
+Le [neuvième lot](2026-10-08-lint-replis-react.md) traite les replis des vignettes
+sans observateur, du visualiseur d'ambiance arrêté et de la liste de tables sans
+univers. Le rendu fournit le repli ; les effets gardent l'observation, les mesures
+et les lectures externes. Le visualiseur annule la frame zéro et ignore les rappels
+tardifs. Les listes de tables sont liées à leur contexte ; une ancienne réponse
+ne remplace plus celle du nouvel univers, et une réouverture relit la liste.
+**Trois alertes d'effets retirées**, sans changement des règles : **1 549 fichiers,
+zéro erreur et 368 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
+les tests), **11 effets**, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, **18 nouveaux tests**, **6 909 tests dans 541 fichiers** et
+**16 scénarios Electron** passent. Ce neuvième lot reste **non commité**, distinct
+du huitième lot publié. Le fondu croisé est repris dans le dixième lot ci-dessous.
+Puis les dix autres synchronisations écran par écran. Les durées restent, et le JSON conserve
+les 540 alertes initiales.
+
+Le [dixième lot](2026-10-08-lint-fondu-croise.md) traite l'extinction du fondu
+croisé. Le changement de cible ajuste localement les couches au rendu ; les
+effets gardent le décodage et le minuteur de la transition. Les lectures
+abandonnées sont ignorées, la durée est capturée au départ et le nettoyage
+annule les anciennes échéances. Les consommateurs et leurs durées restent.
+**Une alerte d'effet retirée**, sans changement des règles : **1 550 fichiers,
+zéro erreur et 367 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
+les tests), **10 effets**, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, **57 tests ciblés** (13 nouveaux cas), **6 922 tests dans
+541 fichiers** et **huit scénarios Electron** passent, dont deux nouveaux dans
+une vraie fenêtre Player Hub. Neuvième et dixième lots restent **non commités**.
+Le QR et le verrou de souris sont repris dans le onzième lot ci-dessous.
+Puis notes, notifications, dés et projection, écran par écran.
+Le JSON garde les 540 alertes initiales.
+
+Le [onzième lot](2026-10-08-lint-reseau-et-souris.md) traite le QR réseau et le
+verrou de souris. Le repli web vient du rendu ; une lecture du pont appartient
+à son ouverture. Les inventaires dépassés sont ignorés et une actualisation
+garde la liste connue pendant la lecture ; une panne est traitée et permet
+un réessai. Le rappel du décompte termine le sursis et relit l'inventaire.
+Le retour matériel reste dans le processus principal, sans modification des handlers.
+**Trois alertes d'effets retirées**, sans changement des règles : **1 553 fichiers,
+zéro erreur et 364 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
+les tests), **sept effets**, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, **55 tests ciblés** (18 nouveaux cas), **6 940 tests dans
+543 fichiers** et **trois scénarios Electron** passent. Les souris des essais
+sont des doubles, y compris leur inventaire ; aucune coupure réelle.
+Neuvième, dixième et onzième lots restent **non commités**. Reprendre les notes
+privées et le retour de séance dans le douzième lot ci-dessous, puis
+notifications, dés et projection, écran par écran. Le JSON garde les 540 alertes initiales.
+
+Le [douzième lot](2026-10-08-lint-notes-privees.md) traite les notes privées et
+le retour de séance. La saisie et ses rappels appartiennent au personnage ;
+la fermeture sauvegarde son dernier texte pour la bonne identité. Un écho
+n'efface pas la nouvelle saisie et un rappel ne renvoie pas une version
+dépassée par le magasin. Le retour est initialisé puis ajusté selon la clé de
+la séance, avec vérification des valeurs lues ; onglets et repli gardent le
+brouillon. Les délais et la forme des envois restent.
+**Deux alertes d'effets retirées**, sans changement des règles : **1 554 fichiers,
+zéro erreur et 362 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
+les tests), **cinq effets**, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, **23 tests ciblés** (21 nouveaux cas), **6 961 tests dans
+544 fichiers** et **quatre scénarios Electron/tablette** passent aux largeurs
+360, 390, 820 et 1 180 px. Captures dans un dossier temporaire séparé du manuel.
+Lots 9 à 12 **non commités**. La notification est reprise dans le treizième lot
+ci-dessous, avant les dés et la projection. Le JSON garde les 540 alertes initiales.
+
+Le [treizième lot](2026-10-08-lint-notifications-tablette.md) traite le signal
+de message de `TabletHub`. Le suivi reconnaît le nouveau message avant le
+commit ; l'effet garde son échéance de cinq secondes. Un message étranger
+n'annule plus cette échéance, une recopie du magasin ne la prolonge pas et
+ne rejoue pas un signal expiré. Le contexte du personnage et les gardes des
+rappels empêchent un ancien signal ou rappel de remplacer le courant.
+Destinations, libellés, clic vers la bonne conversation et présentation restent.
+**Une alerte d'effet retirée**, sans changement des règles : **1 556 fichiers,
+zéro erreur et 361 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
+les tests), **quatre effets**, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, **21 tests ciblés** (20 nouveaux cas), **6 981 tests dans
+545 fichiers** et **quatre scénarios Electron/tablette** passent aux largeurs
+360, 390, 820 et 1 180 px. Les scénarios vérifient désormais aussi la réception
+d'un message étranger pendant l'affichage et l'expiration du signal courant.
+Captures temporaires séparées de celles du manuel. Lots 9 à 13 **non commités**.
+Reprendre dés et projection, quatre effets dans trois fichiers, puis les autres
+domaines/tests. Le JSON garde les 540 alertes initiales.
+
+Publication demandée le 08/10 : **« commit, pousse et passe à l'étape suivante
+(GM-OS est éteint) »**. Les lots 9 à 13 sont maintenant commités sous `38bd33c6`,
+`020bae8e`, `b5a110e0`, `db052c6f` et `af2d6b2c` ; leurs mentions antérieures
+« non commités » décrivent l'état avant cette demande. La
+[note du jour](2026-10-08-etat-et-reprise.md) suit l'envoi avec le hook complet
+et la reprise des dés. L'inventaire JSON initial reste inchangé.

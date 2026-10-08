@@ -1,5 +1,10 @@
 # Onzième lot du lint — QR réseau et verrou de souris
 
+> Publication demandée le 08/10 : **« commit, pousse et passe à l'étape suivante
+> (GM-OS est éteint) »**. Ce lot est maintenant commité sous **`b5a110e0`**.
+> La [note du jour](2026-10-08-etat-et-reprise.md) suit l'envoi et la reprise.
+> Les mentions « non commité » ci-dessous décrivent l'état avant cette demande.
+
 David demande le 08/10 **« passe à l'étape suivante (GM-OS est éteint) »**.
 Le neuvième et le dixième lots restent non commités ; aucun commit ni push
 n'est demandé dans ce tour. Le dernier publié reste **`a749007e`**.
