@@ -9941,7 +9941,8 @@ Mesures conservées, prise par le bord sans saut et inspecteur stable ; types,
 construction, lint global sans erreur et **19 scénarios Electron distincts**
 passent après correction, dont le geste continu dans quatre directions à deux
 zooms. **Essai de David validé le 08/10** : **« c'est bon documente, commit et
-push »**. Lot clos ; documentation et publication demandées.
+push »**. Lot clos ; réalisation commitée **`84bc01c8`**, documentation et
+publication sur `origin/feature/tablet-hub-pwa` demandées.
 
 ---
 
@@ -10010,7 +10011,7 @@ push »**. Lot clos ; documentation et publication demandées.
 | 58 | **La refonte des tablettes** | ✅ **Clôturée le 07/10 : T6 validé par David**, « j'ai testé c'est bon, tu peux faire le commit et poussé ». T4 poussé (`edcdb68a`), T5 commité (`e920abc1`) ; preuves et clôture archivées, voir § 123 | Terminé | Validation T6 consignée ; commit et push autorisés par David |
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
-| 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; commit et push demandés |
+| 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
