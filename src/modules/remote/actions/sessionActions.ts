@@ -1,14 +1,17 @@
 import { useSessionOSStore } from '../../session/useSessionOSStore';
-import type { SessionMessage } from '../../session/store/types';
 import type { ActionRegistry } from './types';
+import {
+    estObjet, estMiseAJourDePersonnage, estNarrationDistante, estFicheDistante,
+    estObjetInventaire, estRetourDeSeance, estMessageDeSeance,
+} from './contratsSessionDistante';
 import i18next from 'i18next';
 import { pointsDeVieApres } from '../../combat/logic/SanteDuCombattant';
 
 /** T4/J1 : appliquer la jauge reçue, sans renvoyer l'événement vers la tablette. */
 const updateCharacterVitals = (payload: unknown) => {
-    const { playerId, characterId, updates } = (payload ?? {}) as {
-        playerId?: string; characterId?: string; updates?: { hp?: unknown };
-    };
+    if (!estObjet(payload) || typeof payload.playerId !== 'string'
+        || typeof payload.characterId !== 'string' || !estObjet(payload.updates)) return;
+    const { playerId, characterId, updates } = payload;
     if (typeof updates?.hp !== 'number' || !Number.isFinite(updates.hp)) return;
     const store = useSessionOSStore.getState();
     const player = store.players.find(p => p.id === playerId);
@@ -24,9 +27,17 @@ const updateCharacterVitals = (payload: unknown) => {
     });
 };
 
-const updateCharacterNarrative = (payload: any) => {
-    const { playerId, characterId, updates } = payload as { playerId: string; characterId: string; updates: any };
-    useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, updates);
+const updateCharacterNarrative = (payload: unknown) => {
+    if (!estMiseAJourDePersonnage(payload, estNarrationDistante)) return;
+    const { playerId, characterId, updates } = payload;
+    // Les champs supplémentaires du réseau ne deviennent pas des champs du personnage.
+    useSessionOSStore.getState().updateCharacterNarrative(playerId, characterId, {
+        ...(updates.description !== undefined ? { description: updates.description } : {}),
+        ...(updates.gmNotes !== undefined ? { gmNotes: updates.gmNotes } : {}),
+        ...(updates.playerNotes !== undefined ? { playerNotes: updates.playerNotes } : {}),
+        ...(updates.inventory !== undefined ? { inventory: updates.inventory } : {}),
+        ...(updates.linkedDocumentIds !== undefined ? { linkedDocumentIds: updates.linkedDocumentIds } : {}),
+    });
 };
 
 /**
@@ -36,11 +47,9 @@ const updateCharacterNarrative = (payload: any) => {
  * qui rediffuserait l'action à celui qui vient de l'envoyer — un aller-retour
  * sans fin entre les deux écrans.
  */
-const updateCharacterSheetData = (payload: any) => {
-    const { playerId, characterId, updates } = payload as {
-        playerId: string; characterId: string;
-        updates: { sheetData?: Record<string, unknown>; description?: string; playerNotes?: string; inventory?: string; inventoryItems?: any[] };
-    };
+const updateCharacterSheetData = (payload: unknown) => {
+    if (!estMiseAJourDePersonnage(payload, estFicheDistante)) return;
+    const { playerId, characterId, updates } = payload;
     const store = useSessionOSStore.getState();
     const perso = store.players
         .find(p => p.id === playerId)?.characters
@@ -57,14 +66,16 @@ const updateCharacterSheetData = (payload: any) => {
     });
 };
 
-const submitFeedback = (payload: any) => {
-    const { sessionId, feedback } = payload as { sessionId: string; feedback: any };
+const submitFeedback = (payload: unknown) => {
+    if (!estObjet(payload) || typeof payload.sessionId !== 'string' || !estRetourDeSeance(payload.feedback)) return;
+    const { sessionId, feedback } = payload;
     useSessionOSStore.getState().submitSessionFeedback(sessionId, feedback);
 };
 
-const receiveMessage = (payload: any) => {
-    console.log('[Actions] Receiving message action:', payload?.id);
-    useSessionOSStore.getState().addSessionMessage(payload as SessionMessage);
+const receiveMessage = (payload: unknown) => {
+    if (!estMessageDeSeance(payload)) return;
+    console.log('[Actions] Receiving message action:', payload.id);
+    useSessionOSStore.getState().addSessionMessage(payload);
 };
 
 /**
@@ -85,31 +96,39 @@ const receiveMessage = (payload: any) => {
  * action qu'à un appareil appairé : sans quoi n'importe quel joueur connecté
  * pourrait parler au nom du meneur.
  */
-const messageDuMeneur = (payload: any) => {
-    const { toId, toName, content } = (payload ?? {}) as { toId?: string; toName?: string; content?: string };
+const messageDuMeneur = (payload: unknown) => {
+    if (!estObjet(payload) || typeof payload.toId !== 'string' || typeof payload.content !== 'string'
+        || (payload.toName !== undefined && typeof payload.toName !== 'string')) return;
+    const { toId, toName, content } = payload;
     if (!toId || !content?.trim()) return;
 
     useSessionOSStore.getState().sendDirectMessage(toId, toName || toId, content.trim());
 };
 
-const requestItemTransfer = (payload: any) => {
-    const { fromCharId, toCharId, item } = payload as { fromCharId: string; toCharId: string; item: any };
+const requestItemTransfer = (payload: unknown) => {
+    if (!estObjet(payload) || typeof payload.fromCharId !== 'string' || typeof payload.toCharId !== 'string'
+        || !estObjetInventaire(payload.item)) return;
+    const { fromCharId, toCharId, item } = payload;
     console.log(`[Actions] Receiving transfer request: ${item?.name} from ${fromCharId} to ${toCharId}`);
     useSessionOSStore.getState().requestItemTransfer(fromCharId, toCharId, item);
 };
 
-const approveItemTransfer = (payload: any) => {
-    const { requestId } = payload as { requestId: string };
+const approveItemTransfer = (payload: unknown) => {
+    if (!estObjet(payload) || typeof payload.requestId !== 'string') return;
+    const { requestId } = payload;
     useSessionOSStore.getState().approveItemTransfer(requestId);
 };
 
-const rejectItemTransfer = (payload: any) => {
-    const { requestId } = payload as { requestId: string };
+const rejectItemTransfer = (payload: unknown) => {
+    if (!estObjet(payload) || typeof payload.requestId !== 'string') return;
+    const { requestId } = payload;
     useSessionOSStore.getState().rejectItemTransfer(requestId);
 };
 
-const removeInventoryItem = (payload: any) => {
-    const { playerId, characterId, itemId } = payload as { playerId: string; characterId: string; itemId: string };
+const removeInventoryItem = (payload: unknown) => {
+    if (!estObjet(payload) || typeof payload.playerId !== 'string' || typeof payload.characterId !== 'string'
+        || typeof payload.itemId !== 'string') return;
+    const { playerId, characterId, itemId } = payload;
     useSessionOSStore.getState().removeInventoryItem(playerId, characterId, itemId);
 };
 

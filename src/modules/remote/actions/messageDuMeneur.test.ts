@@ -62,7 +62,10 @@ describe('remote:session:gm-message', () => {
 
 describe('ce que les deux autres chemins font toujours', () => {
     it('session:send-message inscrit sans diffuser — c’est bien pour ça qu’il ne convenait pas', () => {
-        sessionActions['session:send-message']!({ id: 'm1', content: 'coucou' }, CONTEXTE);
+        sessionActions['session:send-message']!({
+            id: 'm1', fromId: 'pc-1', fromName: 'Alia', toId: 'GM', toName: 'MJ',
+            content: 'coucou', timestamp: 1000, isRead: false,
+        }, CONTEXTE);
 
         expect(addSessionMessage).toHaveBeenCalledTimes(1);
         expect(sendDirectMessage).not.toHaveBeenCalled();

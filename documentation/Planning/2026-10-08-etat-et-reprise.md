@@ -88,5 +88,36 @@ du lot final passe : **6 811 tests dans 531 fichiers**, un fichier et quatre
 tests ignorés ; **sept scénarios Electron** de curation de Trame et de projection
 du Hub passent avec des profils jetables. Publication de ce deuxième lot demandée
 par David : **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Deuxième lot commité et poussé sous **`55e94341`**, sur
+`origin/feature/tablet-hub-pwa`, après les contrôles complets du hook.
 La suite porte sur les données de synchronisation du Hub et les messages entre
 fenêtres/tablettes, puis sur les effets et les faux objets de tests.
+
+## Troisième lot : actions Session reçues des tablettes
+
+David demande de poursuivre et confirme **« GM-OS est éteint »**.
+[Contrats, essais et reprise](2026-10-08-lint-actions-session-distantes.md).
+Les signatures du registre et du dispatch reçoivent un `unknown`. Les handlers
+Session relisent les données avant application : fiches, narration, objets,
+messages, retours de séance et commandes de transfert. Les types de fiche et
+de narration dérivent de Session. Les champs supplémentaires d'une narration
+ne peuvent plus écraser les autres champs du personnage. La fusion des fiches,
+les effacements volontaires et les chemins sans renvoi sont éprouvés.
+
+**15 `any` applicatifs retirés** ; lint global **1 533 fichiers, zéro erreur,
+433 avertissements**. Les règles restent inchangées. TypeScript et construction
+passent ; 101 tests ciblés dans 13 fichiers passent, dont les **27 nouveaux
+cas**. Suite complète : **6 838 tests dans 532 fichiers**, un fichier et
+quatre tests ignorés. Trois scénarios Electron/tablettes à 390 px passent :
+inventaire (don et retrait), messagerie (MJ/général/privé), notes et retour de
+séance. Profils jetables, ports de test, appareils muets ; captures du manuel
+conservées à l'identique. `git diff --check` passe.
+
+**Troisième lot validé : six fichiers de code/tests et cinq documents.**
+Publication demandée par David : **« commit, pousse et passe à l'étape suivante
+(GM-OS est éteint) »**. Les changements antérieurs de Claude restent hors de ce lot.
+Reprendre `useHubSync` : accès dynamique aux magasins et charge réelle de
+synchronisation ; `RemoteSyncData` ne décrit pas tout ce qu'applique le Hub.
+Puis `CrossWindowEventService` : préserver l'autorité de projection du MJ et
+les positions des jetons saisis. Les 20 effets et les autres domaines/tests
+viennent après. L'inventaire JSON conserve les 540 alertes initiales.

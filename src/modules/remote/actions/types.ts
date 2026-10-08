@@ -19,7 +19,8 @@ export interface ActionContext {
     sync: (force?: boolean) => void;
 }
 
-export type ActionHandler = (payload: any, ctx: ActionContext) => void;
+/** Le transport ne garantit pas la forme du payload : chaque domaine doit le relire. */
+export type ActionHandler = (payload: unknown, ctx: ActionContext) => void;
 
 export type ActionRegistry = Record<string, ActionHandler>;
 

@@ -60,7 +60,7 @@ export function isKnownActionType(type: string): boolean {
  * Retourne `true` si l'action a été reconnue et traitée.
  */
 export function dispatchRemoteAction(
-    action: { type: string; payload?: any },
+    action: { type: string; payload?: unknown },
     ctx: ActionContext
 ): boolean {
     const { type, payload } = action || {};

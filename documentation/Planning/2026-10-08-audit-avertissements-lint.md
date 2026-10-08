@@ -170,4 +170,15 @@ des règles : **1 531 fichiers, zéro erreur et 448 avertissements**. Restent
 424 `any` (200 applicatifs, 224 dans les tests), 20 effets, trois diagnostics
 de mémoïsation et une directive inutile. Les contrats des données de
 synchronisation du Hub et des messages entre fenêtres/tablettes sont la suite
-de cette étape. Deuxième lot non commité.
+de cette étape. Deuxième lot commité et poussé sous **`55e94341`**.
+
+Le [troisième lot](2026-10-08-lint-actions-session-distantes.md) traite les
+actions Session reçues des tablettes et les signatures du registre/dispatch :
+**15 `any` applicatifs retirés**, contrôles des données reçues, fusion des
+fiches et chemins sans renvoi conservés. **1 533 fichiers, zéro erreur et
+433 avertissements** : 409 `any` (185 applicatifs, 224 dans les tests), 20
+effets, trois diagnostics de mémoïsation et une directive inutile.
+Les 27 nouveaux cas de test, la suite complète (**6 838 tests**) et trois
+scénarios Electron/tablettes passent. Troisième lot validé, publication demandée.
+Les contrats du Hub puis des messages entre fenêtres restent la suite de
+l'étape 2 ; les effets et les autres domaines/tests viennent après.

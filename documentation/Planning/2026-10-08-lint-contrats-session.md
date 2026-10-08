@@ -72,5 +72,8 @@ inexact. Les 20 effets et le typage des faux objets de tests viennent ensuite.
 
 Publication de ce deuxième lot demandée par David le 08/10 :
 **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Publication terminée : **`55e94341`** sur `origin/feature/tablet-hub-pwa`, après
+types, lint, suite complète et construction dans le hook de pré-push.
+La reprise commence par les [actions Session reçues des tablettes](2026-10-08-lint-actions-session-distantes.md).
 Les modifications étrangères des guides,
 de la note du 07/10, de `HubDiceDisplay.tsx` et du lanceur Electron sont conservées.
