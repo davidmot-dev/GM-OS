@@ -19,7 +19,11 @@ export interface ActionContext {
     sync: (force?: boolean) => void;
 }
 
-/** Le transport ne garantit pas la forme du payload : chaque domaine doit le relire. */
+/**
+ * Le transport ne garantit pas la forme du payload : chaque domaine doit le relire.
+ * 08/10/2026, David : « regrouper les erreurs any ». Les six autres domaines
+ * reprennent aussi cette frontière unknown et leurs contrats métier existants.
+ */
 export type ActionHandler = (payload: unknown, ctx: ActionContext) => void;
 
 export type ActionRegistry = Record<string, ActionHandler>;

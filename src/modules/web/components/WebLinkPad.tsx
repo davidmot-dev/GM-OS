@@ -77,7 +77,7 @@ const WebLinkPad: React.FC<WebLinkPadProps> = ({ link, onEdit, onOuvrir, numero,
             return;
         }
 
-        await ImageService.projectMedia(marqueur, ecranId as any);
+        await ImageService.projectMedia(marqueur, ecranId);
         /*
           **Le seul avertissement qui compte, au moment où il compte.**
 

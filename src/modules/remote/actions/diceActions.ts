@@ -114,7 +114,7 @@ export function rollManually(
     }
 }
 
-const roll = (payload: any) => {
+const roll = (payload: unknown) => {
     const p = (payload || {}) as DiceRollPayload;
     const sides = p.sides || p.die || 20;
     const count = p.count || 1;

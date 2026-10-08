@@ -738,3 +738,76 @@ Reprendre les migrations persistantes des dés et gemmes : deux `any` dans
 dans le code. Puis les autres contrats applicatifs et les faux objets des
 tests ; mémoïsation et directive gardent leurs lots ciblés.
 Préserver les changements de Claude.
+
+## Commit de Music-OS, puis vingt-et-unième lot : dés et gemmes
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 20 et ses documents sont commités sous **`fd585aaf`**, sept fichiers
+Codex sélectionnés explicitement, aucun changement de Claude inclus.
+**Aucun push demandé ni exécuté** ; dernier poussé documenté : `861eaca4`.
+Les mentions « non commité » ci-dessus décrivent l'état avant cette demande.
+
+[Détail du lot 21](2026-10-08-lint-migrations-des-gemmes.md). Les migrations
+persistantes des dés et des gemmes prennent `unknown` et les contrats réels
+partiels de leurs magasins. Les trois `any` applicatifs sont retirés.
+La version reste à 1 dans les deux magasins ; champs annexes, formules,
+raccourcis personnalisés, identités et états partiels restent. La collection
+de gemmes de version zéro garde son remplacement historique par les modèles.
+Un état des dés absent en version zéro garde l'erreur existante ; aucune
+nouvelle garde ni validation des contenus. Stockage réservé au MJ et
+synchronisation des gemmes inchangés.
+
+Lint global : **1 565 fichiers, zéro erreur et 306 avertissements**, contre 309.
+Restent 302 `any` (80 applicatifs, 222 dans les tests), trois diagnostics de
+mémoïsation et une directive inutile. Types, construction, **368 tests ciblés
+dans 23 fichiers** et **21 nouveaux cas rejoués** passent. Vraies fonctions
+des options du middleware, données artificielles, stockage de session simulé
+en mémoire, aucun fichier réel ni réseau ni appareil sollicité. Aucun scénario
+Electron pour ce lot de types, aucune donnée réelle ni capture du manuel
+touchée. Lint ciblé final propre, règles et inventaire JSON initial inchangés.
+**7 086 tests dans 550 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre.
+
+**Lot 21 réalisé, validé et documenté, non commité : huit fichiers Codex**,
+trois de code/tests et cinq documents. Dernier commit local **`fd585aaf`**,
+dernier poussé `861eaca4`.
+Reprendre les neuf `any` applicatifs des autres actions distantes, vérifiés
+dans le code et le lint : audio (2), scènes (3), combat, dés, tables et tableau
+blanc (1 chacun). Puis les autres contrats applicatifs et les faux objets des
+tests ; mémoïsation et directive gardent leurs lots ciblés.
+Préserver les changements de Claude.
+
+## Vingt-deuxième lot : accélérer par groupes de contrats
+
+David demande **« essaie de regrouper les erreurs "any" pour accélérer un peu
+les corrections sans pour autant perdre en qualité »**, puis confirme GM-OS
+fermé. Aucun commit ou push demandé. Le lot 21 reste non commité ; dernier
+commit local **`fd585aaf`**, dernier poussé documenté `861eaca4`.
+
+[Détail et cinq groupes de reprise](2026-10-08-lint-lots-regroupes.md).
+Le lot 22 réunit les six domaines d'actions distantes, les accès/expositions
+globaux déjà déclarés, la comparaison récursive des états et le choix d'écran
+web : **18 `any` applicatifs retirés**, plus trois dans le test de routage.
+Les types existants servent de contrats, les valeurs reçues restent `unknown`.
+Commandes, alias, charges, ordre de recherche, gardes et données persistées
+restent. Les entrées invalides du test de routage restent essayées.
+
+Types, construction et **765 tests ciblés dans 80 fichiers** passent.
+Deux nouveaux fichiers ajoutent **22 cas** sur les vraies commandes et la
+garde de relecture entre fenêtres, avec magasins/sorties simulés. Aucun réseau,
+appareil ou profil réel sollicité, aucun scénario Electron pour ces types.
+Lint global : **1 567 fichiers, zéro erreur et 285 avertissements**, contre 306.
+Restent **281 `any` (62 applicatifs, 219 dans les tests)**, trois diagnostics
+de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+**7 108 tests dans 552 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre.
+
+**Lot 22 réalisé, validé et documenté, non commité : 21 fichiers Codex**, 17 de
+code/tests et quatre documents. Avec le lot 21 : **26 fichiers Codex non
+commités** (trois documents communs). Reprendre les groupes Interfaces et
+fiches (23), IA/fournisseurs (15), relais/archives (10), calcul/recherche/audio
+(9), messages d'erreur (5), puis les tests. Chaque lot mutualise la validation
+globale après les essais ciblés ; ne rejouer qu'en cas de modification ou échec.
+`HubDiceDisplay.tsx` est modifié hors Codex : coordonner avant d'y écrire,
+traiter les autres fichiers du groupe sans toucher à ce changement. Préserver
+les changements de Claude.

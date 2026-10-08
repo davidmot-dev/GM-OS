@@ -3,7 +3,7 @@ import { useMusicStore } from '../../music/useMusicStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
 import type { ActionRegistry } from './types';
 
-const trigger = (payload: any) => {
+const trigger = (payload: unknown) => {
     const soundId = (payload as { id?: string })?.id || (payload as { padId?: string })?.padId || '';
     console.log(`[Actions] Remote Trigger Sound (+Lights): ${soundId}`, payload);
     if (soundId) {
@@ -14,7 +14,7 @@ const trigger = (payload: any) => {
     }
 };
 
-const setVolume = (payload: any) => {
+const setVolume = (payload: unknown) => {
     useSoundStore.getState().setMasterVolume((payload as { volume: number }).volume);
 };
 

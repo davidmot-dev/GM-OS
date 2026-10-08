@@ -10182,6 +10182,49 @@ Lint ciblé final et diff propres, règles et JSON initial inchangés.
 Reprendre les migrations persistantes des dés et gemmes : deux `any` dans
 `useDiceStore.ts`, un dans `useGemStore.ts`, puis les autres modules/tests
 et les lots mémoïsation/directive.
+**Demande suivante de David**, le 08/10 : **« commit et passe à l'étape suivante
+(GM-OS est éteint) »**. Le lot 20 est commité sous **`fd585aaf`**, sept fichiers
+Codex sélectionnés explicitement, sans push ni changement de Claude inclus.
+Les mentions précédentes « non commité » sont l'état avant cette demande.
+Le [lot 21](2026-10-08-lint-migrations-des-gemmes.md) type les migrations
+persistantes des dés et gemmes par les contrats réels partiels des magasins.
+**Trois `any` applicatifs retirés** : **1 565 fichiers, zéro erreur et
+306 avertissements**, dont 302 `any` (80 applicatifs, 222 dans les tests),
+trois diagnostics de mémoïsation et une directive inutile. Versions,
+raccourcis personnalisés, formules, champs annexes et identités conservés ;
+remplacement historique des gemmes et erreur des dés absents en version zéro
+inchangés. Aucune nouvelle validation ni modification du stockage.
+Types, construction, **368 tests ciblés dans 23 fichiers** et **21 nouveaux
+cas rejoués** passent. Fonctions réelles du middleware, données artificielles,
+stockage en mémoire, aucun fichier réel ni scénario Electron sollicité.
+Lint ciblé final propre, règles et JSON initial inchangés.
+**7 086 tests dans 550 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre.
+**Lot 21 réalisé, validé et documenté, non commité**, huit fichiers Codex.
+Reprendre les neuf `any` applicatifs des autres actions distantes, puis les
+autres modules/tests et les lots mémoïsation/directive.
+**Demande suivante de David**, le 08/10 : **« essaie de regrouper les erreurs
+"any" pour accélérer un peu les corrections sans pour autant perdre en qualité »**,
+puis confirmation GM-OS fermé. Le [lot 22](2026-10-08-lint-lots-regroupes.md)
+réunit commandes distantes, accès globaux déjà déclarés, comparaison des états
+et projection web : **18 `any` applicatifs et trois dans les tests retirés**.
+Contrats du registre, de `window`, valeurs comparées et cible de projection
+repris sans modifier les comportements ou validations existantes. Entrées
+invalides du test de routage conservées. Types, construction et **765 tests
+ciblés dans 80 fichiers** passent ; **22 nouveaux cas**, sorties simulées.
+**1 567 fichiers, zéro erreur et 285 avertissements**, dont 281 `any`
+(62 applicatifs, 219 dans les tests), trois diagnostics de mémoïsation et une
+directive inutile. Règles/JSON initial inchangés, aucun profil réel sollicité.
+**7 108 tests dans 552 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre.
+**Lot 22 réalisé, validé et documenté, non commité**, 21 fichiers Codex ; avec le lot 21,
+26 fichiers Codex non commités. Aucun commit ou push demandé, dernier local
+`fd585aaf`, dernier poussé documenté `861eaca4`.
+Reprendre les cinq groupes vérifiés : Interfaces/fiches (23), IA/fournisseurs
+(15), relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5).
+Essais ciblés par domaine, une validation globale par lot livré. Coordonner
+l'écriture de `HubDiceDisplay.tsx`, modifié hors Codex ; préserver les autres
+changements de Claude. Puis les tests et les lots mémoïsation/directive.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10253,7 +10296,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 19 commités localement (dernier `b908bc92`), lot 20 réalisé non commité**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 → 321 → 313 → 309 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer les migrations des dés et gemmes (trois `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md), [migration](2026-10-08-lint-migration-medias.md), [restauration](2026-10-08-lint-restauration-session.md), [Music-OS](2026-10-08-lint-migration-musique.md) |
+| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 20 commités localement (dernier `fd585aaf`), lots 21 à 22 réalisés non commités**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 → 321 → 313 → 309 → 306 → 285 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Groupes de `any` applicatifs : Interfaces/fiches (23), IA/fournisseurs (15), relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), puis tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md), [migration](2026-10-08-lint-migration-medias.md), [restauration](2026-10-08-lint-restauration-session.md), [Music-OS](2026-10-08-lint-migration-musique.md), [dés et gemmes](2026-10-08-lint-migrations-des-gemmes.md), [lots regroupés](2026-10-08-lint-lots-regroupes.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

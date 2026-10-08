@@ -350,7 +350,7 @@ export const syncStorageAcrossWindows = (rehydrate: () => Promise<void>) => {
     onPersistedStateChanged(SESSION_STORE_KEY, () => {
         // Prevent rehydration if the current window is currently performing an atomic sync (like Nexus import)
         // This prevents race conditions where storage updates itself while being re-populated.
-        const store = (window as any).useSessionOSStore?.getState();
+        const store = window.useSessionOSStore?.getState();
         if (store?.isSystemSyncing) {
             console.log('[PersistenceService] Storage update ignored: system is syncing.');
             return;

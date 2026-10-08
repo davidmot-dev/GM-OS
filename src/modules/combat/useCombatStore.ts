@@ -691,7 +691,7 @@ export const useCombatStore = create<CombatState>()(
 
             broadcastSync: async () => {
                 if (typeof window === 'undefined') return;
-                const bridge = (window as any).appBridge;
+                const bridge = window.appBridge;
                 if (!bridge?.remote?.sendSync) return;
                 
                 const { combatants, currentTurnIdx, round, isCombatProjected } = get();

@@ -268,7 +268,7 @@ export class SpatialTriggerService {
         console.log("[SpatialTrigger] Restauration du snapshot...", this.worldSnapshot);
 
         // 1. Restaurer Hue
-        const hue = (window as any).hueEngine;
+        const hue = window.hueEngine;
         if (hue) {
             console.log(`[SpatialTrigger] Restauration Hue vers: ${this.worldSnapshot.hueSceneId}`);
             hue.applyScene(this.worldSnapshot.hueSceneId, true);
@@ -304,7 +304,7 @@ export class SpatialTriggerService {
 
         // 💡 Logique Hue
         if (zone.hueSceneId) {
-            const hue = (window as any).hueEngine;
+            const hue = window.hueEngine;
             if (hue) {
                 hue.applyScene(zone.hueSceneId, true);
             } else {

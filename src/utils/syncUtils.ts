@@ -26,10 +26,15 @@ export function isDeepEqual(obj1: unknown, obj2: unknown): boolean {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
 
+    // Objets déjà relus ci-dessus ; les valeurs restent unknown et sont
+    // comparées récursivement, y compris les indices des tableaux.
+    const valeurs1 = obj1 as Record<string, unknown>;
+    const valeurs2 = obj2 as Record<string, unknown>;
+
     if (keys1.length !== keys2.length) return false;
 
     for (const key of keys1) {
-        if (!keys2.includes(key) || !isDeepEqual((obj1 as any)[key], (obj2 as any)[key])) {
+        if (!keys2.includes(key) || !isDeepEqual(valeurs1[key], valeurs2[key])) {
             return false;
         }
     }

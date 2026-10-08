@@ -6,7 +6,7 @@ import { useImageStore } from '../../image/useImageStore';
 import { useAmbientStore } from '../../ambient/useAmbientStore';
 import type { ActionContext, ActionRegistry } from './types';
 
-const ping = (payload: any) => {
+const ping = (payload: unknown) => {
     const { x, y, color } = payload as { x: number; y: number; color?: string };
     console.log(`[Actions] Remote Map Ping: (${x}, ${y})`);
     // addPing déclenche sa propre synchronisation si nécessaire ; le handler
@@ -15,7 +15,7 @@ const ping = (payload: any) => {
     useMapStore.getState().addPing(x, y, color || '#06b6d4');
 };
 
-const triggerStoryboardMoment = (payload: any, ctx: ActionContext) => {
+const triggerStoryboardMoment = (payload: unknown, ctx: ActionContext) => {
     const storyboard = useStoryboardStore.getState();
     const moments = storyboard.moments.filter(m => m.campaignId === ctx.activeCampaignId);
     const moment = moments[(payload as { index: number }).index];
@@ -27,7 +27,7 @@ const triggerStoryboardMoment = (payload: any, ctx: ActionContext) => {
  * recherché successivement dans la musique, les bruitages, les images puis les
  * ambiances. Le premier module qui le reconnaît le déclenche.
  */
-const triggerUniversalPad = (payload: any) => {
+const triggerUniversalPad = (payload: unknown) => {
     const { id } = payload as { id: string };
     console.log(`[Actions] [Remote:Pad:Trigger] id: ${id}`);
 

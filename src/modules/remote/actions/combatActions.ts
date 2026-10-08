@@ -2,7 +2,7 @@ import { useCombatStore } from '../../combat/useCombatStore';
 import { pointsDeVieApres } from '../../combat/logic/SanteDuCombattant';
 import type { ActionRegistry } from './types';
 
-const updateHp = (payload: any) => {
+const updateHp = (payload: unknown) => {
     const { id, delta } = payload as { id: string; delta: number };
     const store = useCombatStore.getState();
     const combatant = store.combatants.find(c => c.id === id);

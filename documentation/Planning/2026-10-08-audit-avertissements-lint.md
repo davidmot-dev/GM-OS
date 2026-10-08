@@ -493,3 +493,58 @@ Lint ciblé final propre, règles et inventaire JSON initial inchangés.
 Lot 20 non commité, sept fichiers Codex. Reprendre les migrations des dés
 et gemmes : deux `any` dans `useDiceStore.ts`, un dans `useGemStore.ts`,
 puis les autres modules/tests et les lots mémoïsation/directive.
+
+## Vingt-et-unième lot — migrations persistantes des dés et gemmes
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 20 est commité sous **`fd585aaf`**, sept fichiers Codex sélectionnés
+explicitement, sans push ni changement de Claude inclus. Les mentions
+précédentes « non commité » décrivent l'état avant cette demande.
+Le [lot 21](2026-10-08-lint-migrations-des-gemmes.md) reprend les contrats
+partiels réels des deux magasins, avec une entrée `unknown`.
+**Trois `any` applicatifs retirés** : **1 565 fichiers, zéro erreur et
+306 avertissements**, dont 302 `any` (80 applicatifs, 222 dans les tests),
+trois diagnostics de mémoïsation et une directive inutile.
+
+Versions, formules, raccourcis personnalisés, champs annexes et identités
+restent. La collection de gemmes en version zéro garde son remplacement
+historique par les modèles ; un état des dés absent en version zéro garde
+son erreur existante. Aucune nouvelle validation, aucun changement de stockage.
+Types, construction, **368 tests ciblés dans 23 fichiers** et **21 nouveaux
+cas rejoués** passent. Vraies fonctions du middleware sur données artificielles,
+stockage en mémoire, aucun fichier réel ni scénario Electron sollicité.
+Lint ciblé final propre, règles et inventaire JSON initial inchangés.
+**7 086 tests dans 550 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre.
+Lot 21 non commité, huit fichiers Codex. Reprendre les neuf `any` applicatifs
+des autres actions distantes (audio, scènes, combat, dés, tables, tableau blanc),
+puis les autres modules/tests et les lots mémoïsation/directive.
+
+## Vingt-deuxième lot — corrections regroupées par contrat
+
+David demande **« essaie de regrouper les erreurs "any" pour accélérer un peu
+les corrections sans pour autant perdre en qualité »**, puis confirme GM-OS
+fermé. Le [lot 22 et son plan de regroupement](2026-10-08-lint-lots-regroupes.md)
+réunit les actions distantes restantes, les accès globaux déjà déclarés,
+la comparaison des états et la projection web : **18 `any` applicatifs et
+trois dans les tests retirés**. Signatures du registre, déclarations réelles
+de `window`, valeurs `unknown` dans la comparaison et paramètre de projection
+acceptant déjà une chaîne : aucun comportement ou contrôle réseau modifié.
+Les entrées invalides du test de routage restent effectivement essayées.
+
+**1 567 fichiers, zéro erreur et 285 avertissements**, dont 281 `any`
+(62 applicatifs, 219 dans les tests), trois diagnostics de mémoïsation et
+une directive inutile. Types, construction et **765 tests ciblés dans
+80 fichiers** passent ; deux nouveaux fichiers ajoutent **22 cas** sur les
+commandes et la garde de relecture entre fenêtres, avec sorties/magasins simulés.
+Règles et inventaire JSON initial inchangés, aucun profil réel sollicité.
+**7 108 tests dans 552 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre.
+
+Les 62 `any` applicatifs sont répartis en cinq groupes vérifiés : interfaces
+et fiches (23), IA et fournisseurs (15), relais et archives (10), calcul/
+recherche/audio (9), messages d'erreur (5). Types, lint, construction et suite
+complète sont mutualisés à la fin de chaque lot livré ; essais ciblés par domaine.
+Lot 22 non commité, 21 fichiers Codex ; avec le lot 21, 26 fichiers Codex
+non commités. Aucun commit ou push demandé. Reprendre Interfaces et fiches,
+en coordonnant l'écriture de `HubDiceDisplay.tsx`, modifié hors Codex.

@@ -39,7 +39,7 @@ function reservesDeLaCampagne(campaignId: string | null): RessourceDeTable[] {
  * que le meneur — donc avec le report sur épuisement, le plafond et leurs
  * avertissements : *la règle ne change pas selon qui l'applique.*
  */
-const ajusterUneReserve = (payload: any, ctx: ActionContext) => {
+const ajusterUneReserve = (payload: unknown, ctx: ActionContext) => {
     const { ressourceId, delta } = (payload ?? {}) as { ressourceId?: string; delta?: number };
     const campaignId = ctx.activeCampaignId;
 

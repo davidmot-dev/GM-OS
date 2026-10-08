@@ -6,7 +6,7 @@ import {
 } from '../../whiteboard/useWhiteboardStore';
 import type { ActionRegistry } from './types';
 
-const addPath = (payload: any) => {
+const addPath = (payload: unknown) => {
     useWhiteboardStore.getState().addPath(payload as DrawingPath);
 };
 

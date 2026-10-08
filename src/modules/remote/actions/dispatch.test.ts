@@ -30,6 +30,12 @@ const { dispatchRemoteAction, isKnownActionType } = await import('./index');
 const sync = vi.fn();
 const ctx = { activeCampaignId: 'camp-1', sync };
 
+// Le répartiteur reçoit aussi des charges invalides en exécution. Le contrat
+// réel reste visible, avec une conversion unique à la frontière de ces essais.
+const repartirUneEntreeInvalide = (action: unknown) => dispatchRemoteAction(
+    action as Parameters<typeof dispatchRemoteAction>[0], ctx,
+);
+
 beforeEach(() => {
     vi.clearAllMocks();
 });
@@ -65,13 +71,13 @@ describe('dispatchRemoteAction — types refusés', () => {
 
     it('ignore une action sans type', () => {
         expect(dispatchRemoteAction({ type: '' }, ctx)).toBe(false);
-        expect(dispatchRemoteAction({} as any, ctx)).toBe(false);
-        expect(dispatchRemoteAction(null as any, ctx)).toBe(false);
+        expect(repartirUneEntreeInvalide({})).toBe(false);
+        expect(repartirUneEntreeInvalide(null)).toBe(false);
         expect(sync).not.toHaveBeenCalled();
     });
 
     it('ignore un type non textuel', () => {
-        expect(dispatchRemoteAction({ type: 42 as any }, ctx)).toBe(false);
+        expect(repartirUneEntreeInvalide({ type: 42 })).toBe(false);
     });
 
     it('résiste aux noms hérités du prototype', () => {

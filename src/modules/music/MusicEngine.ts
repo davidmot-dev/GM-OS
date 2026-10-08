@@ -1083,5 +1083,5 @@ export const musicEngine = new MusicEngine();
 
 // Export for cross-store access
 if (typeof window !== 'undefined') {
-    (window as any).musicEngine = musicEngine;
+    window.musicEngine = musicEngine;
 }
