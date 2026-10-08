@@ -10,8 +10,14 @@ import { useMediaStore } from '../stores/useMediaStore';
  * 
  * Auto-cleans up ObjectURLs on unmount or when the source changes to prevent memory leaks.
  */
-export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefined => {
-    const [resolvedUrl, setResolvedUrl] = useState<string | undefined>(undefined);
+export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefined =>
+    useMediaUrlAvecSource(sourceIdOrUrl).url;
+
+/** Le projecteur doit savoir à quel média appartient une adresse encore en mémoire. */
+export const useMediaUrlAvecSource = (sourceIdOrUrl: string | undefined) => {
+    const [resolution, setResolution] = useState<{ source: string | undefined; url: string | undefined }>({
+        source: undefined, url: undefined,
+    });
     const getMediaBlob = useMediaStore(state => state.getMediaBlob);
     /*
       **Le média est-il en base ?** Trouvé par la vitrine le 2026-09-27 : les
@@ -33,6 +39,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
     useEffect(() => {
         let objectUrl: string | null = null;
         let isMounted = true;
+        const setResolvedUrl = (url: string | undefined) => setResolution({ source: sourceIdOrUrl, url });
 
         const resolveSource = async () => {
             try {
@@ -182,5 +189,5 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
         };
     }, [sourceIdOrUrl, estEnBase, getMediaBlob]);
 
-    return resolvedUrl;
+    return resolution;
 };

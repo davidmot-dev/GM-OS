@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useMediaUrl } from '../../../hooks/useMediaUrl';
+import React, { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
+import { useMediaUrlAvecSource } from '../../../hooks/useMediaUrl';
+import { useNatureDuMediaProjete } from '../useNatureDuMediaProjete';
 import { useFonduCroise } from '../useFonduCroise';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useMapStore } from '../../map/useMapStore';
@@ -22,23 +23,59 @@ import { useNiveauDuLecteurYouTube } from '../../web/pilotageDuLecteurYouTube';
  */
 export const FONDU_DE_LIMAGE_MS = 700;
 
+type SourceProjetee = {
+    magasin: string | null | undefined;
+    imagePath: string | null;
+    ipcRecu: boolean;
+    enSortie: boolean;
+    revision: number;
+};
+
+function changerLaSource(etat: SourceProjetee, source: string | null, estUneVideo: boolean): SourceProjetee {
+    // Deux IPC successifs peuvent arriver avant le commit du cadre YouTube.
+    const video = estUneVideo || !!etat.imagePath?.startsWith(PREFIXE_YOUTUBE);
+    const enSortie = source === null && !!etat.imagePath && !video;
+    return { ...etat, imagePath: enSortie ? etat.imagePath : source, enSortie, revision: etat.revision + 1 };
+}
+
 /**
  * ProjectorView - VERSION DEBUG ROBUSTE
  */
 const ProjectorView: React.FC = () => {
-    const { t } = useTranslation('common');
     const storeTarget = useMapStore(state => state.projectionTarget);
     const searchParams = new URLSearchParams(window.location.search);
     const isProjectorWindow = searchParams.get('window') === 'projector' || window.location.pathname.includes('/projector');
     const urlDisplayId = searchParams.get('displayId');
     const targetId = (urlDisplayId || (isProjectorWindow ? 'monitor' : storeTarget) || 'hub') as string;
 
-    const projections = useImageStore(state => state.projections);
-    
-    const [ipcCount, setIpcCount] = useState(0);
-    const [imagePath, setImagePath] = useState<string | null>(null);
+    // Une autre cible possède son propre démarrage, ses abonnements et ses délais.
+    return <ProjectionDeLEcran key={targetId} targetId={targetId} isProjectorWindow={isProjectorWindow} />;
+};
 
-    const resolvedUrl = useMediaUrl(imagePath && !imagePath.startsWith('__') ? imagePath : undefined);
+const ProjectionDeLEcran: React.FC<{ targetId: string; isProjectorWindow: boolean }> = ({ targetId, isProjectorWindow }) => {
+    const { t } = useTranslation('common');
+    const sourceDuMagasin = useImageStore(state => state.projections[targetId]);
+    const [source, setSource] = useState<SourceProjetee>(() => ({
+        magasin: sourceDuMagasin, imagePath: sourceDuMagasin || null,
+        ipcRecu: false, enSortie: false, revision: 0,
+    }));
+    const { imagePath, enSortie, revision } = source;
+    const mediaType = useNatureDuMediaProjete(imagePath);
+
+    // Le magasin local sert seulement jusqu'au premier IPC d'image. Une commande
+    // nulle est mémorisée même pendant le fondu, pour ne pas réarmer son délai.
+    if (!source.ipcRecu && sourceDuMagasin !== undefined && source.magasin !== sourceDuMagasin) {
+        setSource({ ...changerLaSource(source, sourceDuMagasin || null, mediaType === 'video' || mediaType === 'youtube'), magasin: sourceDuMagasin });
+    } else if (enSortie && (mediaType === 'video' || mediaType === 'youtube')) {
+        // L'extinction a pu arriver pendant la lecture du type : une vidéo
+        // découverte ensuite ne doit jamais démarrer au milieu de la sortie.
+        setSource({ ...source, imagePath: null, enSortie: false });
+    }
+
+    const cheminDuMedia = imagePath && !imagePath.startsWith('__') ? imagePath : undefined;
+    const resolution = useMediaUrlAvecSource(cheminDuMedia);
+    // Les images gardent leur fondu ; une vidéo attend l'adresse de SA source.
+    const resolvedUrl = mediaType === 'video' && resolution.source !== cheminDuMedia ? undefined : resolution.url;
     /*
       **L'image d'avant reste sous celle qui arrive, le temps du fondu — et
       rien ne bouge avant que la nouvelle soit décodée.**
@@ -54,9 +91,10 @@ const ProjectorView: React.FC = () => {
       ⚠️ **C'est donc `entrante` qu'on rend, jamais `resolvedUrl`** : la
       dernière image **prête**, et non la dernière adresse reçue.
     */
-    const { entrante, sortante } = useFonduCroise(resolvedUrl, FONDU_DE_LIMAGE_MS);
-    const { initDB, getMediaBlob } = useMediaStore();
-    const [mediaType, setMediaType] = useState<'image' | 'video' | 'youtube' | 'unknown'>('unknown');
+    const adresseDeLImage = imagePath && !imagePath.startsWith('__') && mediaType !== 'video' && mediaType !== 'youtube'
+        ? resolvedUrl : undefined;
+    const { entrante, sortante } = useFonduCroise(adresseDeLImage, FONDU_DE_LIMAGE_MS);
+    const initDB = useMediaStore(s => s.initDB);
     /*
       ⭐ **La boucle est un réglage du média**, depuis le 2026-09-21 : *« c'est
       bien que cela boucle, mais je voudrais avoir le choix »*. L'absence vaut
@@ -64,9 +102,11 @@ const ProjectorView: React.FC = () => {
       coup. La règle est partagée avec le fond du Player Hub, qui rend l'autre
       `<video>` de la même vidéo.
     */
-    const [boucler, setBoucler] = useState(true);
+    const media = useMediaStore(s => s.mediaList.find(m => m.id === imagePath));
+    const boucler = laVideoBoucle(media);
     /* Le même fait que `mediaType`, lisible depuis un rappel qui ne re-rend pas. */
     const estUneVideo = useRef(false);
+    useLayoutEffect(() => { estUneVideo.current = mediaType === 'video' || mediaType === 'youtube'; }, [mediaType]);
 
     /*
       **Le niveau dicté par le meneur — 2026-09-05.**
@@ -110,42 +150,34 @@ const ProjectorView: React.FC = () => {
       transparente la laisserait **jouer son son**. Une image muette peut
       s'attarder, pas une vidéo.
     */
-    const [enSortie, setEnSortie] = useState(false);
-    const sortieEnCours = useRef<ReturnType<typeof setTimeout> | null>(null);
+    useEffect(() => {
+        if (!enSortie) return;
+        const delai = setTimeout(() => {
+            setSource(etat => etat.enSortie && etat.revision === revision
+                ? { ...etat, imagePath: null, enSortie: false } : etat);
+        }, FONDU_DE_LIMAGE_MS);
+        return () => clearTimeout(delai);
+    }, [enSortie, revision]);
 
     const updateImageSource = useCallback((newSource: string | null) => {
         console.log(`[ProjectorView] [${targetId}] Updating Source:`, newSource);
-        if (sortieEnCours.current) {
-            clearTimeout(sortieEnCours.current);
-            sortieEnCours.current = null;
-        }
-
-        if (newSource === null && !estUneVideo.current) {
-            setEnSortie(true);
-            sortieEnCours.current = setTimeout(() => {
-                setImagePath(null);
-                setEnSortie(false);
-            }, FONDU_DE_LIMAGE_MS);
-            return;
-        }
-
-        setEnSortie(false);
-        setImagePath(newSource);
+        setSource(etat => ({ ...changerLaSource(etat, newSource, estUneVideo.current), ipcRecu: true }));
     }, [targetId]);
 
     // Initialisation
     useEffect(() => {
         initDB();
+        let actif = true;
 
         const handleUpdateDisplay = (paths: string[]) => {
-            setIpcCount(c => c + 1);
+            if (!actif) return;
             const data = paths && paths.length > 0 ? paths[0] : 'EMPTY';
             updateImageSource(data === 'EMPTY' ? null : data);
         };
 
         const handleSyncHubData = (type: string, data: string) => {
+            if (!actif) return;
             if (type === 'image') {
-                setIpcCount(c => c + 1);
                 updateImageSource(data || null);
             }
             if (type === 'son-video') {
@@ -182,64 +214,12 @@ const ProjectorView: React.FC = () => {
                reellement pose. L'ancien `off` visait une autre fonction et ne
                retirait donc rien : chaque remontage laissait un doublon. */
             return () => {
+                actif = false;
                 retirerAffichage();
                 retirerDonnees();
             };
         }
     }, [initDB, targetId, updateImageSource]);
-
-    // Synchronisation via le Store (UNIQUEMENT AU BOOT)
-    // Le store Zustand n'est pas synchronisé entre les fenêtres Electron en temps réel.
-    // Dès qu'on reçoit un IPC (ipcCount > 0), le store local devient obsolète et on l'ignore définitivement.
-    useEffect(() => {
-        if (!targetId || ipcCount > 0) return;
-        
-        const activeMediaId = projections[targetId];
-        
-        console.log(`[ProjectorView] [${targetId}] Store Sync Check:`, activeMediaId);
-
-        if (activeMediaId !== undefined && activeMediaId !== imagePath) {
-            console.log(`[ProjectorView] [${targetId}] Store Syncing to:`, activeMediaId);
-            updateImageSource(activeMediaId || null);
-        }
-    }, [projections, targetId, imagePath, updateImageSource, ipcCount]);
-
-    // Détection du type de média
-    useEffect(() => {
-        if (!imagePath) return;
-
-        /*
-          **Une vidéo YouTube se reconnaît à son marqueur, pas à un blob.** Elle
-          ne passe pas par le Media Hub : rien à charger, rien à renifler.
-
-          Elle compte comme une vidéo pour `estUneVideo` — donc elle **part sans
-          attendre le fondu**. Un cadre distant gardé monté et transparent
-          continuerait de jouer son son, et aucun réglage de GM-OS ne pourrait
-          l'en empêcher.
-        */
-        if (imagePath.startsWith(PREFIXE_YOUTUBE)) {
-            estUneVideo.current = true;
-            setMediaType('youtube');
-            return;
-        }
-        if (imagePath.startsWith('__')) return;
-
-        const detectType = async () => {
-            if (imagePath.startsWith('m-')) {
-                const blob = await getMediaBlob(imagePath);
-                const type = blob?.type.startsWith('video/') ? 'video' : 'image';
-                estUneVideo.current = type === 'video';
-                setMediaType(type);
-                setBoucler(laVideoBoucle(
-                    useMediaStore.getState().mediaList.find(m => m.id === imagePath),
-                ));
-            } else {
-                estUneVideo.current = false;
-                setMediaType('image');
-            }
-        };
-        detectType();
-    }, [imagePath, getMediaBlob]);
 
     /*
       **Le niveau s'applique à l'élément, pas par un attribut.**
@@ -253,7 +233,7 @@ const ProjectorView: React.FC = () => {
         const element = elementVideo.current;
         if (!element) return;
         element.volume = niveauDuSon;
-    }, [niveauDuSon, imagePath, mediaType]);
+    }, [niveauDuSon, imagePath, mediaType, resolvedUrl]);
 
     /*
       **Si la lecture avec son est refusée, on joue en muet plutôt que rien.**
@@ -267,13 +247,16 @@ const ProjectorView: React.FC = () => {
     useEffect(() => {
         const element = elementVideo.current;
         if (!element || mediaType !== 'video') return;
+        let actif = true;
 
         element.play().catch((raison) => {
+            if (!actif) return;
             console.warn('[ProjectorView] Lecture avec son refusée, reprise en muet :', raison);
             element.muted = true;
             element.play().catch(() => { /* Là, il n'y a plus rien à tenter. */ });
         });
-    }, [imagePath, mediaType]);
+        return () => { actif = false; };
+    }, [imagePath, mediaType, resolvedUrl]);
 
     const { projectedMapUrl, projectionTarget: mapTarget, ecranDeLaCarte } = useMapStore();
     const { projectionTarget: whiteboardTarget, backgroundMode } = useWhiteboardStore();

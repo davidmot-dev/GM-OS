@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useMediaUrl } from './useMediaUrl';
+import { useMediaUrl, useMediaUrlAvecSource } from './useMediaUrl';
 import { useMediaStore, type MediaItem } from '../stores/useMediaStore';
 
 /**
@@ -75,5 +75,27 @@ describe('useMediaUrl — le média qui arrive après la tuile', () => {
         rerender({ source: 'https://exemple.org/nouveau.png' });
         await act(async () => { terminer(new Blob(['ancien'])); });
         expect(result.current).toBe('https://exemple.org/nouveau.png');
+    });
+
+    it('identifie la source de l’adresse conservée pendant un nouveau chargement', async () => {
+        let terminer!: (blob: Blob) => void;
+        useMediaStore.setState({ getMediaBlob: vi.fn(() => new Promise<Blob>(resolve => { terminer = resolve; })) });
+        const { result, rerender } = renderHook(source => useMediaUrlAvecSource(source), {
+            initialProps: 'https://exemple.org/avant.png',
+        });
+        await waitFor(() => expect(result.current.url).toBe('https://exemple.org/avant.png'));
+        rerender('m-video');
+        expect(result.current).toEqual({ source: 'https://exemple.org/avant.png', url: 'https://exemple.org/avant.png' });
+        await act(async () => terminer(new Blob(['film'], { type: 'video/webm' })));
+        await waitFor(() => expect(result.current).toEqual({ source: 'm-video', url: expect.stringMatching(/^data:video\/webm;base64,/) }));
+    });
+
+    it('une ancienne lecture ne change pas l’identité de la nouvelle adresse', async () => {
+        let terminer!: (blob: Blob) => void;
+        useMediaStore.setState({ getMediaBlob: vi.fn(() => new Promise<Blob>(resolve => { terminer = resolve; })) });
+        const { result, rerender } = renderHook(source => useMediaUrlAvecSource(source), { initialProps: 'm-ancien' });
+        rerender('https://exemple.org/apres.png');
+        await act(async () => terminer(new Blob(['ancien'], { type: 'video/webm' })));
+        expect(result.current).toEqual({ source: 'https://exemple.org/apres.png', url: 'https://exemple.org/apres.png' });
     });
 });
