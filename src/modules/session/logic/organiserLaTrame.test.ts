@@ -27,6 +27,19 @@ function temoin(): GrapheDeTrame {
 const id = JSON.stringify(['enchainement', 's1', 's2']);
 
 describe('organiser les cartes et les trajets de Trame', () => {
+    it('le vrai moteur respecte les accroches décentrées et les restitue au rendu', async () => {
+        const graphe = temoin();
+        const styles = { [id]: { depart: 'bas' as const, arrivee: 'haut' as const, pointDepart: 1 as const, pointArrivee: 3 as const } };
+        const resultat = await organiserLaTrame(graphe, styles, { espacement: 'equilibre', proportions: 1.7 }, new ELK());
+        const trajet = resultat.trajets[id];
+        expect(trajet).toMatchObject({ pointDepart: 1, pointArrivee: 3 });
+        expect(trajet.points[0].x).toBeCloseTo(resultat.positions.s1.x - DIMENSIONS_DES_CARTES.scene.largeur / 4);
+        expect(trajet.points.at(-1)!.x).toBeCloseTo(resultat.positions.s2.x + DIMENSIONS_DES_CARTES.scene.largeur / 4);
+        expect(trajetDeTrameValide(trajet, resultat.positions.s1, resultat.positions.s2, styles[id])).toBe(true);
+        const rendu = adapterLeGrapheDeTrame(graphe, {}, { positionDe: n => resultat.positions[n], choisi: null,
+            liaison: false, surlignes: new Set(), fige: false, organisation: resultat, styles }).liens.find(l => l.id === id)!;
+        expect(rendu).toMatchObject({ sourceHandle: 'bas-1', targetHandle: 'haut-3', data: { trajet } });
+    });
     it('le vrai moteur place les cartes sans chevauchement, groupe les actes et respecte les jonctions dans les trois espacements', async () => {
         const graphe = temoin(), avant = structuredClone(graphe), moteur = new ELK();
         for (const espacement of ['compact', 'equilibre', 'aere'] as const) {

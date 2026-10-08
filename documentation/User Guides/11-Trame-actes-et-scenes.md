@@ -263,7 +263,7 @@ monte au niveau qui les montre.
 | Geste | Ce qu'il fait |
 | :--- | :--- |
 | **Clic sur un nœud** | ouvre son panneau : titre, rang, commencer/terminer, supprimer, ses liens |
-| **Clic sur un trait, hors Relier** | ouvre l'inspecteur du lien : côtés de départ/arrivée, tracé, épaisseur, couleur et retrait explicite |
+| **Clic sur un trait, hors Relier** | ouvre l'inspecteur du lien : commentaire, côtés et points de départ/arrivée, points de passage, tracé, épaisseur, couleur et retrait explicite |
 | **Glisser une extrémité du lien sélectionné** | déplace son accroche sur un autre côté de la même carte ; **Appliquer** conserve le choix |
 | **Glisser un nœud** | le déplace et l'épingle |
 | **Glisser une scène SUR un acte** | la rattache à cet acte — *avec confirmation* |
@@ -329,7 +329,7 @@ ou presser **Échap** abandonne l'aperçu. Une couleur personnalisée se choisit
 sa valeur hexadécimale, par exemple `#8b5cf6`.
 
 **Revenir au style du thème** retire les personnalisations de tracé, d'épaisseur et de couleur
-de ce seul lien, en gardant ses jonctions. Une couleur de la
+de ce seul lien, en gardant ses jonctions, son commentaire et son trajet manuel. Une couleur de la
 palette suit le thème ; une couleur personnalisée reste celle que vous avez choisie.
 **Ranger** et **Réinitialiser les positions** conservent les styles des liens.
 
@@ -359,6 +359,36 @@ réinitialise pas les côtés choisis.
 
 **Retirer le lien** demande confirmation dans l'inspecteur. Les traits d'ordre ou d'appartenance
 à un acte gardent leur fonction : ils n'offrent pas ce bouton de retrait.
+
+### Commenter un lien et dessiner son trajet
+
+Dans l'inspecteur, **Commentaire du lien** ajoute une note de 1 000 caractères
+maximum. Elle apparaît sur le trait avec sa condition, sans changer cette
+condition narrative. Le texte complet reste disponible dans le panneau.
+
+Chaque côté propose **trois points** : le premier vers le haut ou la gauche,
+le deuxième au centre, le troisième vers le bas ou la droite. Utilisez
+**Point de départ** et **Point d’arrivée**, ou cochez **Afficher les trois points
+par côté** pour les choisir directement sur les cartes. Les quatre points
+centraux restent seuls visibles par défaut pour faciliter la prise quand on dézoome.
+
+**Ajouter un point de passage** crée une poignée sur le lien sélectionné.
+Vous pouvez aussi **double-cliquer le trait** à l'endroit du détour.
+**Maintenez le bouton gauche sur la poignée et glissez-la** pour dessiner le
+trajet librement dans toutes les directions, même en dézoomant. Vous pouvez la
+saisir par le bord sans faire sauter le point. Au clavier, cliquez la poignée
+ou focalisez-la avec **Tab**, puis les **flèches** la déplacent de dix unités
+à chaque pression, sans devoir la sélectionner de nouveau.
+**Double-clic**, **Suppr** ou **Retour arrière** retire
+la poignée. Le lien accepte jusqu'à vingt points de passage.
+
+Les points dessinent des segments droits et gardent leur place sur la toile
+quand les cartes bougent : seules les extrémités suivent les cartes. Ils
+priment aussi sur les trajets d'une organisation automatique.
+**Revenir au trajet automatique** retire ces détours en aperçu ; **Appliquer**
+conserve ce retour. Commentaire, jonctions, points et apparence sont enregistrés
+ensemble avec **Appliquer** ; **Annuler les réglages** ou **Échap** abandonnent
+l'aperçu. Le retour au trajet automatique conserve les autres réglages.
 
 ### Organiser automatiquement les cartes et les liens
 
@@ -470,3 +500,8 @@ même**, correctif des espaces compris.*
 
 *Relu le 2026-10-07 : graphe en cartes, gestes, sélection multiple, styles, jonctions et six formes d'organisation automatique ; essais sur profils fictifs.
 Essai de David consigné le 2026-10-07 : « j'ai testé Trame et notamment les 6 dispositions ».*
+
+*Complété le 2026-10-08 : commentaire dédié, trois accroches par côté et points de
+passage manuels. Premier retour de David le 08/10 : déplacement des points
+interrompu, corrigé ; nouvel essai validé par David le même jour : « c'est bon
+documente, commit et push ».*

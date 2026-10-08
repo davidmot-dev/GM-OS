@@ -13,7 +13,22 @@ export function trajetDeTrameValide(trajet: TrajetDeTrame | undefined, depart: P
         && trajet.points.every(pointDeTrameValide)
         && Object.hasOwn(JONCTIONS_DES_LIENS, trajet.depart) && Object.hasOwn(JONCTIONS_DES_LIENS, trajet.arrivee)
         && memePositionDeTrame(trajet.positionDepart, depart) && memePositionDeTrame(trajet.positionArrivee, arrivee)
+        && (trajet.pointDepart ?? 2) === (style?.pointDepart ?? 2) && (trajet.pointArrivee ?? 2) === (style?.pointArrivee ?? 2)
         && (!style?.depart || trajet.depart === style.depart) && (!style?.arrivee || trajet.arrivee === style.arrivee);
+}
+
+/** Insère sur le segment le plus proche, sans inverser l'ordre des détours. */
+export function ajouterUnPointDePassage(points: PointDeTrame[], point: PointDeTrame): PointDeTrame[] {
+    let segment = 0, minimum = Infinity;
+    for (let i = 0; i < points.length - 1; i++) {
+        const a = points[i], b = points[i + 1], dx = b.x - a.x, dy = b.y - a.y;
+        const t = Math.max(0, Math.min(1, ((point.x - a.x) * dx + (point.y - a.y) * dy) / (dx * dx + dy * dy || 1)));
+        const distance = Math.hypot(point.x - a.x - t * dx, point.y - a.y - t * dy);
+        if (distance < minimum) { minimum = distance; segment = i; }
+    }
+    const suite = points.slice(1, -1).map(p => ({ ...p }));
+    suite.splice(segment, 0, { ...point });
+    return suite;
 }
 
 /** Les extrémités React Flow sont au bord extérieur des accroches, six pixels hors carte. */

@@ -5,7 +5,10 @@
 .toile-de-trame .react-flow__handle { width: 12px; height: 12px; border: 2px solid var(--app-surface); background: var(--app-accent); opacity: 0; }
 .toile-de-trame[data-liaison] .react-flow__handle { opacity: 1; width: 18px; height: 18px; cursor: crosshair; }
 .toile-de-trame .react-flow__handle.accroche-structurelle { visibility: hidden; pointer-events: none; }
+.toile-de-trame .react-flow__handle.accroche-supplementaire { visibility: hidden; pointer-events: none; }
 .toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle { opacity: 1; visibility: visible; pointer-events: auto; }
+.toile-de-trame .carte-de-trame[data-jonction]:not([data-points-multiples]) .react-flow__handle.accroche-supplementaire { visibility: hidden; pointer-events: none; }
+.inspecteur-de-lien .affichage-des-accroches { flex-direction: row; align-items: center; }
 .toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle { background: transparent; border-color: transparent; cursor: pointer; }
 /* Agrandir la cible sans déplacer le port ni changer les trajets enregistrés. */
 .toile-de-trame .carte-de-trame[data-jonction] .react-flow__handle::before,
@@ -37,14 +40,18 @@
 .carte-de-trame-lieu { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .carte-de-trame-lieu svg { flex-shrink: 0; }
 .inspecteur-de-trame { width: 300px; flex-shrink: 0; min-height: 0; overflow: auto; border: 1px solid var(--app-border); background: var(--app-surface); border-radius: var(--rayon-md, 12px); padding: 16px; }
-.inspecteur-de-trame :where(button, input, select):focus-visible { outline: 2px solid var(--app-accent); outline-offset: 2px; }
+.inspecteur-de-trame :where(button, input, select, textarea):focus-visible { outline: 2px solid var(--app-accent); outline-offset: 2px; }
 .toile-de-trame .react-flow__edge:focus-visible { outline: none; }
 .toile-de-trame .react-flow__edge:focus-visible .react-flow__edge-path, .toile-de-trame .react-flow__edge.selected .react-flow__edge-path { filter: drop-shadow(0 0 3px var(--app-accent)); }
 .inspecteur-de-lien { display: flex; flex-direction: column; gap: 12px; }
 .inspecteur-de-lien h2 { font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
 .inspecteur-de-lien .type-du-lien { color: var(--app-accent); font-size: 10px; font-weight: 900; text-transform: uppercase; }
 .inspecteur-de-lien label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 600; }
-.inspecteur-de-lien :where(select, input, button) { border: 1px solid var(--app-border); border-radius: var(--rayon-sm, 6px); background: var(--app-bg); color: var(--app-text); padding: 8px; font-size: 12px; }
+.inspecteur-de-lien :where(select, input, button, textarea) { border: 1px solid var(--app-border); border-radius: var(--rayon-sm, 6px); background: var(--app-bg); color: var(--app-text); padding: 8px; font-size: 12px; }
+.inspecteur-de-lien textarea { resize: vertical; min-height: 72px; }
+.edition-du-trajet { display: grid; gap: 8px; }
+.toile-de-trame .point-de-passage { fill: var(--app-surface); stroke: var(--app-accent); stroke-width: 2; vector-effect: non-scaling-stroke; cursor: grab; touch-action: none; pointer-events: all; }
+.toile-de-trame .point-de-passage:focus-visible { outline: none; fill: var(--app-accent); stroke: var(--app-text); }
 .inspecteur-de-lien button { cursor: pointer; }
 .inspecteur-de-lien button:disabled { opacity: .5; cursor: default; }
 .inspecteur-de-lien .fermer-inspecteur-de-lien { align-self: flex-start; background: transparent; border: none; padding: 0; }

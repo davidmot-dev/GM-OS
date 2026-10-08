@@ -15,6 +15,11 @@ export interface StyleDeLienDeTrame {
     trace?: 'continu' | 'tirets' | 'points';
     epaisseur?: 'fin' | 'normal' | 'gras' | 'tres-gras';
     couleur?: 'accent' | 'texte' | 'succes' | 'alerte' | 'info' | `#${string}`;
+    /** 07/10/2026, David : commentaires, accroches multiples et trajets manuels. */
+    commentaire?: string;
+    pointDepart?: 1 | 2 | 3;
+    pointArrivee?: 1 | 2 | 3;
+    pointsDePassage?: PointDeTrame[];
 }
 
 export type PointDeTrame = { x: number; y: number };
@@ -25,6 +30,7 @@ export interface TrajetDeTrame {
     depart: NonNullable<StyleDeLienDeTrame['depart']>;
     arrivee: NonNullable<StyleDeLienDeTrame['arrivee']>;
     positionDepart: PointDeTrame; positionArrivee: PointDeTrame;
+    pointDepart?: 1 | 2 | 3; pointArrivee?: 1 | 2 | 3;
     etiquette?: PointDeTrame; libelle?: string;
 }
 export interface OrganisationDeTrame {

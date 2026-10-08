@@ -28,12 +28,12 @@ function entreeDuMoteur(graphe: GrapheDeTrame, styles: Record<string, StyleDeLie
         noeuds.set(n.id, { id: n.id, width: taille.largeur, height: taille.hauteur, ports: [],
             layoutOptions: { 'elk.portConstraints': 'FIXED_POS' } });
     }
-    const ports = new Map<string, { depart: Cote; arrivee: Cote }>();
+    const ports = new Map<string, { depart: Cote; arrivee: Cote; pointDepart?: 1 | 2 | 3; pointArrivee?: 1 | 2 | 3 }>();
     const edges: ElkExtendedEdge[] = [];
-    const port = (noeud: ElkNode, id: string, cote: Cote): ElkPort => ({
+    const port = (noeud: ElkNode, id: string, cote: Cote, point = 2): ElkPort => ({
         id, width: 0, height: 0,
-        x: cote === 'gauche' ? 0 : cote === 'droite' ? noeud.width : noeud.width! / 2,
-        y: cote === 'haut' ? 0 : cote === 'bas' ? noeud.height : noeud.height! / 2,
+        x: cote === 'gauche' ? 0 : cote === 'droite' ? noeud.width : noeud.width! * point / 4,
+        y: cote === 'haut' ? 0 : cote === 'bas' ? noeud.height : noeud.height! * point / 4,
         layoutOptions: { 'elk.port.side': SIDES[cote] },
     });
     for (const l of [...graphe.liens].sort((a, b) => identite(a).localeCompare(identite(b)))) {
@@ -44,7 +44,8 @@ function entreeDuMoteur(graphe: GrapheDeTrame, styles: Record<string, StyleDeLie
         const depart = style?.depart ?? (narratif && direction === 'RIGHT' ? 'droite' : 'bas');
         const arrivee = style?.arrivee ?? (narratif && direction === 'RIGHT' ? 'gauche' : 'haut');
         const pa = JSON.stringify([id, 'depart']), pb = JSON.stringify([id, 'arrivee']);
-        a.ports!.push(port(a, pa, depart)); b.ports!.push(port(b, pb, arrivee)); ports.set(id, { depart, arrivee });
+        a.ports!.push(port(a, pa, depart, style?.pointDepart)); b.ports!.push(port(b, pb, arrivee, style?.pointArrivee));
+        ports.set(id, { depart, arrivee, pointDepart: style?.pointDepart, pointArrivee: style?.pointArrivee });
         edges.push({ id, sources: [pa], targets: [pb],
             labels: l.libelle ? [{ text: l.libelle, width: Math.min(260, Math.max(40, l.libelle.length * 6.5 + 16)), height: 24 }] : undefined });
     }
@@ -62,7 +63,7 @@ function entreeDuMoteur(graphe: GrapheDeTrame, styles: Record<string, StyleDeLie
     return { root, ports };
 }
 
-function lireLeResultat(root: ElkNode, graphe: GrapheDeTrame, ports: Map<string, { depart: Cote; arrivee: Cote }>, espacement: EspacementDeTrame): OrganisationDeTrame {
+function lireLeResultat(root: ElkNode, graphe: GrapheDeTrame, ports: Map<string, { depart: Cote; arrivee: Cote; pointDepart?: 1 | 2 | 3; pointArrivee?: 1 | 2 | 3 }>, espacement: EspacementDeTrame): OrganisationDeTrame {
     const positions: OrganisationDeTrame['positions'] = {}, trajets: OrganisationDeTrame['trajets'] = {}, groupes: OrganisationDeTrame['groupes'] = [];
     const origines = new Map<string, PointDeTrame>([[root.id, { x: 0, y: 0 }]]);
     const noms = new Map(graphe.noeuds.map(n => [n.id, n.nom]));

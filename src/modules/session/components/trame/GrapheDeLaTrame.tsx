@@ -16,7 +16,7 @@ import { InspecteurDeTrame } from './InspecteurDeTrame';
 import { InspecteurDeLienDeTrame } from './InspecteurDeLienDeTrame';
 import type { StyleDeLienDeTrame, OrganisationDeTrame, EspacementDeTrame, FormeDeTrame } from '../../../../types/campaign.types';
 import { FORMES_DE_TRAME } from '../../logic/formesDeTrame';
-import { coteDeLAccroche } from '../../logic/stylesDesLiensDeTrame';
+import { coteDeLAccroche, pointDeLAccroche } from '../../logic/stylesDesLiensDeTrame';
 import { memePositionDeTrame } from '../../logic/trajetsDeTrame';
 
 /** Cache par campagne seulement ; le magasin conserve les décisions persistées. */
@@ -39,7 +39,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const setChoisi = React.useCallback((id: string | null) => setSelection(new Set(id ? [id] : [])), []);
     const [lienChoisi, setLienChoisi] = React.useState<string | null>(null);
     const [apercu, setApercu] = React.useState<{ id: string; style?: StyleDeLienDeTrame } | null>(null);
-    const [revisionDeJonction, setRevisionDeJonction] = React.useState(0);
+    const [jonctionsMultiples, setJonctionsMultiples] = React.useState(false);
     const [surlignes, setSurlignes] = React.useState<Set<string>>(new Set());
     const [liaison, setLiaison] = React.useState(false);
     const [cadrage, setCadrage] = React.useState(0);
@@ -79,8 +79,8 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const organisation = organisationApercue ?? campagne?.organisationDeLaTrame;
     const positionAffichee = React.useCallback((id: string) => organisationApercue?.positions[id] ?? positionDe(id), [organisationApercue, positionDe]);
     const donnees = React.useMemo(() => adapterLeGrapheDeTrame(graphe, source, { positionDe: positionAffichee, choisi, selection, liaison, surlignes,
-        fige: fige || !!organisationApercue || calculEnCours, styles, lienChoisi, organisation }),
-        [graphe, source, positionAffichee, choisi, selection, liaison, surlignes, fige, styles, lienChoisi, organisation, organisationApercue, calculEnCours]);
+        fige: fige || !!organisationApercue || calculEnCours, styles, lienChoisi, organisation, jonctionsMultiples }),
+        [graphe, source, positionAffichee, choisi, selection, liaison, surlignes, fige, styles, lienChoisi, organisation, organisationApercue, calculEnCours, jonctionsMultiples]);
     const groupes = React.useMemo(() => Array.isArray(organisation?.groupes) ? organisation.groupes.filter(g =>
         g && typeof g.nom === 'string' && Array.isArray(g.membres) && g.membres.every(id => graphe.noeuds.some(n => n.id === id)
             && memePositionDeTrame(positionAffichee(id), organisation.positions?.[id]))
@@ -228,6 +228,8 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const choisirLien = (trait: TraitDeTrame) => {
         if (liaison) { delier(trait); return; }
         if (trait.id === lienChoisi) return;
+        const reglage = campagne?.stylesDesLiensDeTrame?.[trait.id];
+        setJonctionsMultiples(!!reglage?.pointDepart || !!reglage?.pointArrivee);
         setChoisi(null); setLienChoisi(trait.id); setApercu(null); setSurlignes(new Set());
         // Le panneau prend sa place : garder les deux cartes et leurs cibles visibles.
         setCadrage(c => c + 1);
@@ -455,10 +457,13 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                             groupes={groupes} apercuOrganisation={!!organisationApercue || calculEnCours}
                             onDeplacer={deplacer} onDeplacerPlusieurs={deplacerPlusieurs} onSelectionner={onSelectionner}
                             onRelier={relier} onChoisirLien={choisirLien}
+                            onModifierPoints={(lien, pointsDePassage) => {
+                                setApercu({ id: lien.id, style: { ...styles?.[lien.id], pointsDePassage } });
+                            }}
                             onJonction={(lien, connexion) => {
                                 setApercu({ id: lien.id, style: { ...styles?.[lien.id],
-                                    depart: coteDeLAccroche(connexion.sourceHandle), arrivee: coteDeLAccroche(connexion.targetHandle) } });
-                                setRevisionDeJonction(r => r + 1);
+                                    depart: coteDeLAccroche(connexion.sourceHandle), arrivee: coteDeLAccroche(connexion.targetHandle),
+                                    pointDepart: pointDeLAccroche(connexion.sourceHandle), pointArrivee: pointDeLAccroche(connexion.targetHandle) } });
                             }} />
                     )}
                     {/* La légende ne montre que ce que le niveau affiche. */}
@@ -476,11 +481,12 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                 </div>
                 {noeudChoisi && <InspecteurDeTrame noeudChoisi={noeudChoisi} voisins={voisins}
                     onChoisir={onChoisir} onDetacher={detacher} onOuvrirLaFiche={onOuvrirLaFiche} />}
-                {traitChoisi && <InspecteurDeLienDeTrame key={activeCampaignId + traitChoisi.id + revisionDeJonction} lien={traitChoisi}
+                {traitChoisi && <InspecteurDeLienDeTrame key={activeCampaignId + traitChoisi.id} lien={traitChoisi}
+                    jonctionsMultiples={jonctionsMultiples} onJonctionsMultiples={setJonctionsMultiples}
                     depart={graphe.noeuds.find(n => n.id === traitChoisi.source)?.nom ?? ''}
                     arrivee={graphe.noeuds.find(n => n.id === traitChoisi.target)?.nom ?? ''}
                     style={campagne?.stylesDesLiensDeTrame?.[traitChoisi.id]}
-                    brouillonInitial={apercu?.id === traitChoisi.id ? apercu.style : undefined}
+                    styleApercu={apercu?.id === traitChoisi.id ? apercu.style : undefined}
                     onFermer={() => onChoisir(null)}
                     onApercu={style => setApercu(style ? { id: traitChoisi.id, style } : null)}
                     onAppliquer={style => { stylerLeLienDeTrame(activeCampaignId, traitChoisi.id, style); setApercu(null); }}

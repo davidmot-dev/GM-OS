@@ -29,6 +29,7 @@ interface Props {
     onRelier: (source: string, cible: string) => void;
     onChoisirLien: (lien: TraitDeTrame) => void;
     onJonction: (lien: TraitDeTrame, connexion: Connection) => void;
+    onModifierPoints: (lien: TraitDeTrame, points?: Position[]) => void;
 }
 
 /** Le moteur ne conserve que l'affichage : aucune écriture par mouvement de souris. */
@@ -38,6 +39,7 @@ export const ToileDeLaTrame = React.forwardRef<ToileDeTrameExposee, Props>((prop
     const moteur = React.useRef<ReactFlowInstance<Carte, TraitDeTrame> | null>(null);
     const cadreDeToile = React.useRef<HTMLDivElement>(null);
     const reconnexion = React.useRef<TraitDeTrame | null>(null);
+    const reconnexionReussie = React.useRef(false);
     const { isLowGraphics } = usePerformanceControl();
     const reduit = isLowGraphics || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cadrer = React.useCallback(() => {
@@ -61,7 +63,18 @@ export const ToileDeLaTrame = React.forwardRef<ToileDeTrameExposee, Props>((prop
     React.useImperativeHandle(ref, () => ({
         positions: () => Object.fromEntries((moteur.current?.getNodes() ?? []).map(n => [n.id, { ...n.position }])), cadrer,
     }), [cadrer]);
-    React.useEffect(() => { setNoeuds(props.noeuds); }, [props.noeuds]);
+    React.useEffect(() => {
+        setNoeuds(avant => {
+            const precedents = new Map(avant.map(n => [n.id, n]));
+            return props.noeuds.map(n => {
+                const precedent = precedents.get(n.id);
+                // Conserver les mesures pendant l'édition d'un lien : sans elles,
+                // React Flow retire brièvement le trait et perd focus/capture de sa poignée.
+                return precedent && precedent.width === n.width && precedent.height === n.height
+                    ? { ...n, measured: n.measured ?? precedent.measured } : n;
+            });
+        });
+    }, [props.noeuds]);
     React.useEffect(() => {
         const image = requestAnimationFrame(cadrer);
         return () => cancelAnimationFrame(image);
@@ -123,7 +136,9 @@ export const ToileDeLaTrame = React.forwardRef<ToileDeTrameExposee, Props>((prop
             const selection = moteur.current?.getNodes().filter(n => n.selected) ?? [];
             if (selection.some(n => n.id === id)) terminerDeplacement(selection, false);
         }}>
-        <ReactFlow<Carte, TraitDeTrame> nodes={noeuds} edges={props.liens}
+        <ReactFlow<Carte, TraitDeTrame> nodes={noeuds} edges={props.liens.map(lien => ({ ...lien,
+            data: lien.data ? { ...lien.data, onModifierPoints: lien.selected && !props.liaison && !props.apercuOrganisation
+                ? (points?: Position[]) => props.onModifierPoints(lien, points) : undefined } : undefined }))}
             nodeTypes={TYPES_DE_NOEUDS} edgeTypes={TYPES_DE_LIENS} nodeOrigin={[0.5, 0.5]}
             onInit={instance => { moteur.current = instance; setZoom(instance.getZoom()); }} onNodesChange={onNodesChange}
             onMove={(_, viewport) => setZoom(viewport.zoom)}
@@ -138,8 +153,28 @@ export const ToileDeLaTrame = React.forwardRef<ToileDeTrameExposee, Props>((prop
             // Les rayons sont en coordonnées de graphe : garder une cible de 28 px
             // à l'écran, même quand le meneur dézoome pour lire toute la Trame.
             edgesReconnectable={false} reconnectRadius={14 / zoom} connectionRadius={24 / zoom}
-            onReconnectStart={(_, lien) => { reconnexion.current = lien; }}
-            onReconnectEnd={() => { reconnexion.current = null; }}
+            onReconnectStart={(_, lien) => { reconnexion.current = lien; reconnexionReussie.current = false; }}
+            onReconnectEnd={(e, lien, oppose) => {
+                // React Flow choisit aussi le port caché le plus proche, puis le
+                // refuse. Garder l'attraction de 24 px vers les seules cibles visibles.
+                if (!reconnexionReussie.current && reconnexion.current && !props.liaison && !props.apercuOrganisation) {
+                    const point = 'clientX' in e ? e : e.changedTouches[0];
+                    const id = oppose === 'target' ? lien.source : lien.target;
+                    const cibles = [...cadreDeToile.current?.querySelectorAll<HTMLElement>('.react-flow__handle.connectable') ?? []]
+                        .filter(el => el.getAttribute('data-nodeid') === id && getComputedStyle(el).visibility !== 'hidden')
+                        .map(el => { const b = el.getBoundingClientRect(); return { el,
+                            distance: point ? Math.hypot(b.x + b.width / 2 - point.clientX, b.y + b.height / 2 - point.clientY) : Infinity }; })
+                        .sort((a, b) => a.distance - b.distance);
+                    const cible = cibles[0];
+                    if (cible?.distance <= 24) {
+                        const accroche = cible.el.getAttribute('data-handleid');
+                        props.onJonction(lien, { source: lien.source, target: lien.target,
+                            sourceHandle: oppose === 'target' ? accroche : lien.sourceHandle ?? null,
+                            targetHandle: oppose === 'source' ? accroche : lien.targetHandle ?? null });
+                    }
+                }
+                reconnexion.current = null;
+            }}
             isValidConnection={connexion => {
                 const lien = reconnexion.current;
                 return lien ? connexion.source === lien.source && connexion.target === lien.target
@@ -147,8 +182,10 @@ export const ToileDeLaTrame = React.forwardRef<ToileDeTrameExposee, Props>((prop
             }}
             onReconnect={(lien, connexion) => {
                 if (connexion.source === lien.source && connexion.target === lien.target
-                    && coteDeLAccroche(connexion.sourceHandle) && coteDeLAccroche(connexion.targetHandle))
+                    && coteDeLAccroche(connexion.sourceHandle) && coteDeLAccroche(connexion.targetHandle)) {
+                    reconnexionReussie.current = true;
                     props.onJonction(lien, connexion);
+                }
             }}
             deleteKeyCode={null} selectionKeyCode={props.liaison || props.apercuOrganisation ? null : 'Shift'}
             multiSelectionKeyCode={props.liaison || props.apercuOrganisation ? null : 'Control'}

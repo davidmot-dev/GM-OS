@@ -7,8 +7,20 @@ export const JONCTIONS_DES_LIENS = {
 } as const;
 
 export function coteDeLAccroche(accroche: string | null | undefined): StyleDeLienDeTrame['depart'] {
+    const centre = accroche?.replace(/-[13]$/, '');
     return (Object.keys(JONCTIONS_DES_LIENS) as (keyof typeof JONCTIONS_DES_LIENS)[])
-        .find(cote => JONCTIONS_DES_LIENS[cote].accroche === accroche);
+        .find(cote => JONCTIONS_DES_LIENS[cote].accroche === centre);
+}
+
+export const POINTS_DES_JONCTIONS = [1, 2, 3] as const;
+export const COMMENTAIRE_MAXIMUM = 1000;
+export const POINTS_DE_PASSAGE_MAXIMUM = 20;
+export function accrocheDuLien(cote: keyof typeof JONCTIONS_DES_LIENS, point = 2): string {
+    return JONCTIONS_DES_LIENS[cote].accroche + (point === 2 ? '' : `-${point}`);
+}
+export function pointDeLAccroche(accroche: string | null | undefined): 1 | 2 | 3 | undefined {
+    if (!coteDeLAccroche(accroche)) return undefined;
+    return accroche?.endsWith('-1') ? 1 : accroche?.endsWith('-3') ? 3 : 2;
 }
 
 export const COULEURS_DES_LIENS = {
@@ -30,6 +42,13 @@ export function normaliserLeStyleDeLien(brut: unknown): StyleDeLienDeTrame | und
     for (const cle of ['depart', 'arrivee'] as const)
         if (typeof b[cle] === 'string' && Object.hasOwn(JONCTIONS_DES_LIENS, b[cle]))
             style[cle] = b[cle] as StyleDeLienDeTrame['depart'];
+    for (const cle of ['pointDepart', 'pointArrivee'] as const)
+        if (b[cle] === 1 || b[cle] === 3) style[cle] = b[cle];
+    // Le texte reste brut pendant la frappe ; la limite protège les imports.
+    if (typeof b.commentaire === 'string' && b.commentaire.trim()) style.commentaire = b.commentaire.slice(0, COMMENTAIRE_MAXIMUM);
+    if (Array.isArray(b.pointsDePassage) && b.pointsDePassage.length > 0 && b.pointsDePassage.length <= POINTS_DE_PASSAGE_MAXIMUM
+        && b.pointsDePassage.every(p => p && typeof p === 'object' && Number.isFinite(p.x) && Number.isFinite(p.y)))
+        style.pointsDePassage = b.pointsDePassage.map(p => ({ x: p.x, y: p.y }));
     if (b.trace === 'continu' || b.trace === 'tirets' || b.trace === 'points') style.trace = b.trace;
     if (typeof b.epaisseur === 'string' && Object.hasOwn(EPAISSEURS_DES_LIENS, b.epaisseur))
         style.epaisseur = b.epaisseur as StyleDeLienDeTrame['epaisseur'];
