@@ -39,30 +39,51 @@ function signatureLisible(id: string): string {
 const VerrouDeLaSouris: React.FC = () => {
     const pont = typeof window !== 'undefined' ? window.appBridge?.souris : undefined;
 
-    const [souris, setSouris] = useState<Souris[]>([]);
+    const [revisionInventaire, setRevisionInventaire] = useState(0);
+    const [inventaireLu, setInventaireLu] = useState<{
+        pont: typeof pont; souris: Souris[]; erreur: string | null;
+    } | null>(null);
+    const inventaireCourant = inventaireLu?.pont === pont ? inventaireLu : null;
+    const souris = inventaireCourant?.souris ?? [];
     const [occupe, setOccupe] = useState(false);
     const [erreur, setErreur] = useState<string | null>(null);
+    const erreurAffichee = erreur ?? inventaireCourant?.erreur;
     /** La coupure en attente de confirmation, et les secondes qui lui restent. */
     const [enSursis, setEnSursis] = useState<{ id: string; secondes: number } | null>(null);
 
-    const rafraichir = useCallback(async () => {
-        if (!pont) return;
-        setSouris(await pont.inventaire());
-    }, [pont]);
+    const rafraichir = useCallback(() => {
+        setRevisionInventaire(revision => revision + 1);
+    }, []);
 
-    useEffect(() => { void rafraichir(); }, [rafraichir]);
+    useEffect(() => {
+        if (!pont) return;
+        let vivant = true;
+        void pont.inventaire().then(souris => {
+            if (vivant) setInventaireLu({ pont, souris, erreur: null });
+        }).catch(() => {
+            if (vivant) setInventaireLu(courant => ({
+                pont, souris: courant?.pont === pont ? courant.souris : [],
+                erreur: 'Inventaire des souris indisponible.',
+            }));
+        });
+        return () => { vivant = false; };
+    }, [pont, revisionInventaire]);
 
     // Le compte à rebours n'est qu'un reflet : le vrai minuteur vit dans le
     // process principal, seul endroit qui survive à un écran figé.
     useEffect(() => {
         if (!enSursis) return;
-        if (enSursis.secondes <= 0) {
-            setEnSursis(null);
-            void rafraichir();
-            return;
-        }
-        const t = setTimeout(() => setEnSursis(s => (s ? { ...s, secondes: s.secondes - 1 } : null)), 1000);
-        return () => clearTimeout(t);
+        let vivant = true;
+        const t = setTimeout(() => {
+            if (!vivant) return;
+            if (enSursis.secondes <= 1) {
+                setEnSursis(null);
+                rafraichir();
+            } else {
+                setEnSursis(s => s === enSursis ? { ...s, secondes: s.secondes - 1 } : s);
+            }
+        }, 1000);
+        return () => { vivant = false; clearTimeout(t); };
     }, [enSursis, rafraichir]);
 
     if (!pont) {
@@ -79,7 +100,8 @@ const VerrouDeLaSouris: React.FC = () => {
         const verdict = await pont.couper(id);
         setOccupe(false);
         if (!verdict.ok) { setErreur(verdict.message ?? 'Coupure impossible.'); return; }
-        setEnSursis({ id, secondes: Math.round((verdict.retourDans ?? 20000) / 1000) });
+        const secondes = Math.round((verdict.retourDans ?? 20000) / 1000);
+        setEnSursis(secondes > 0 ? { id, secondes } : null);
         void rafraichir();
     };
 
@@ -118,9 +140,9 @@ const VerrouDeLaSouris: React.FC = () => {
                 vingt secondes. Fermer GM-OS rend aussi toutes les souris coupées.
             </p>
 
-            {erreur && (
+            {erreurAffichee && (
                 <p role="alert" className="text-ui-11 font-semibold text-etat-danger flex items-start gap-2 px-1">
-                    <AlertTriangle size={13} className="shrink-0 mt-0.5" />{erreur}
+                    <AlertTriangle size={13} className="shrink-0 mt-0.5" />{erreurAffichee}
                 </p>
             )}
 

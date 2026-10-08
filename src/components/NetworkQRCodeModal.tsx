@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Wifi, X, Smartphone } from 'lucide-react';
 import { useModalStore } from '../stores/useModalStore';
@@ -7,23 +7,25 @@ import { adresseDeLaTablette, type InfoDeConnexion } from '../utils/portsDuRende
 
 export const NetworkQRCodeModal: React.FC = () => {
     const { isNetworkModalOpen, closeNetworkModal } = useModalStore();
-    const [networkInfo, setNetworkInfo] = useState<InfoDeConnexion | null>(null);
+    const lireConnexion = window.appBridge?.remote?.getConnectionInfo;
+    const contexte = useMemo(() => ({ ouvert: isNetworkModalOpen, lireConnexion }),
+        [isNetworkModalOpen, lireConnexion]);
+    const [lecture, setLecture] = useState<{ contexte: typeof contexte; info: InfoDeConnexion } | null>(null);
+
+    // Hors Electron, le repli vient du rendu ; dans Electron, une réponse
+    // appartient à l'ouverture qui l'a demandée, jamais à la suivante.
+    const networkInfo = lireConnexion
+        ? (lecture?.contexte === contexte ? lecture.info : null)
+        : { ip: window.location.hostname, port: parseInt(window.location.port) || 80 };
 
     useEffect(() => {
-        if (isNetworkModalOpen && window.appBridge?.remote?.getConnectionInfo) {
-            window.appBridge.remote.getConnectionInfo().then((info: InfoDeConnexion) => {
-                setNetworkInfo(info);
-            }).catch(console.error);
-        } else if (isNetworkModalOpen) {
-            /*
-              Repli pour le dev en web, hors Electron : il n'y a pas de pont
-              pour dire où est le SyncServer, donc `adresseDeLaTablette`
-              retombera sur son port par défaut. C'est le bon repli — le
-              SyncServer y est, puisque c'est Electron qui l'ouvre.
-            */
-            setNetworkInfo({ ip: window.location.hostname, port: parseInt(window.location.port) || 80 });
-        }
-    }, [isNetworkModalOpen]);
+        if (!contexte.ouvert || !contexte.lireConnexion) return;
+        let vivant = true;
+        void contexte.lireConnexion().then(info => {
+            if (vivant) setLecture({ contexte, info });
+        }).catch(erreur => { if (vivant) console.error(erreur); });
+        return () => { vivant = false; };
+    }, [contexte]);
 
     /*
       Elle vit à côté du `ModalProvider` et non dedans — son drapeau est
