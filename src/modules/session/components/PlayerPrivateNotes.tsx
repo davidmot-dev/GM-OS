@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { BookText, Save, RefreshCcw, ChevronDown, ChevronUp, Star, Send, CheckCircle, MessageSquare } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Bouton } from '../../../components/socle';
+import type { PlayerCharacter } from '../../../types/player.types';
+import type { SessionFeedback } from '../../../types/session.types';
 
 interface PlayerPrivateNotesProps {
     playerId: string;
@@ -13,23 +15,55 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
     const character = useSessionOSStore(state => 
         state.players.find(p => p.id === playerId)?.characters.find(c => c.id === characterId)
     );
+    if (!character) return null;
+    return <NotesDuPersonnage key={JSON.stringify([playerId, characterId])} playerId={playerId} character={character} />;
+};
+
+type RetourDeSeance = Pick<SessionFeedback, 'funRating' | 'storyRating' | 'combatRating' | 'notes'> & {
+    cle: string | null;
+    isSubmitted: boolean;
+};
+
+function lireRetourDeSeance(cle: string | null): RetourDeSeance {
+    const vide: RetourDeSeance = { cle, funRating: 5, storyRating: 5, combatRating: 5, notes: '', isSubmitted: false };
+    if (!cle) return vide;
+    const saved = localStorage.getItem(cle);
+    if (!saved) return vide;
+    try {
+        const parsed: unknown = JSON.parse(saved);
+        if (typeof parsed !== 'object' || parsed === null) return vide;
+        const retour = parsed as Record<string, unknown>;
+        const estNote = (valeur: unknown): valeur is number =>
+            typeof valeur === 'number' && Number.isInteger(valeur) && valeur >= 1 && valeur <= 5;
+        if (!estNote(retour.funRating) || !estNote(retour.storyRating) || !estNote(retour.combatRating) || typeof retour.notes !== 'string') return vide;
+        return { cle, funRating: retour.funRating, storyRating: retour.storyRating, combatRating: retour.combatRating, notes: retour.notes, isSubmitted: true };
+    } catch (e) {
+        console.error('Failed to parse saved feedback', e);
+        return vide;
+    }
+}
+
+const NotesDuPersonnage: React.FC<{ playerId: string; character: PlayerCharacter }> = ({ playerId, character }) => {
+    const characterId = character.id;
     const remoteUpdateCharacterNarrative = useSessionOSStore(state => state.remoteUpdateCharacterNarrative);
-    
-    const [localNotes, setLocalNotes] = useState(character?.playerNotes || '');
+    const notesDuMagasin = character.playerNotes ?? '';
+    const [notes, setNotes] = useState({ valeurDuMagasin: notesDuMagasin, texte: notesDuMagasin, reference: notesDuMagasin });
+    // Un écho de notre sauvegarde ne doit pas effacer une saisie plus récente.
+    if (notes.valeurDuMagasin !== notesDuMagasin) {
+        setNotes({
+            ...notes,
+            valeurDuMagasin: notesDuMagasin,
+            ...(notesDuMagasin === notes.reference ? {} : { texte: notesDuMagasin, reference: notesDuMagasin }),
+        });
+    }
+    const localNotes = notes.texte;
     const [isSaving, setIsSaving] = useState(false);
     const [isExpanded, setIsExpanded] = useState(true);
     const [activeTab, setActiveTab] = useState<'notes' | 'feedback'>('notes');
 
-    // Feedback State
-    const [funRating, setFunRating] = useState(5);
-    const [storyRating, setStoryRating] = useState(5);
-    const [combatRating, setCombatRating] = useState(5);
-    const [feedbackComments, setFeedbackComments] = useState('');
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    
-    const lastSyncRef = useRef(character?.playerNotes || '');
-    const notesRef = useRef(localNotes);
+    const notesRef = useRef(notes);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const indicateurRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const activeSession = useSessionOSStore(state =>
         state.sessions.find(s => s.status === 'active' && s.campaignId === character?.campaignId)
@@ -39,62 +73,43 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
         ? `feedback:${character.campaignId}:${activeSession.id}:${character.id}`
         : null;
 
-    // Load saved feedback status
-    useEffect(() => {
-        if (!storageKey) return;
-        const saved = localStorage.getItem(storageKey);
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                setFunRating(parsed.funRating);
-                setStoryRating(parsed.storyRating);
-                setCombatRating(parsed.combatRating);
-                setFeedbackComments(parsed.notes);
-                setIsSubmitted(true);
-            } catch (e) {
-                console.error('Failed to parse saved feedback', e);
-            }
-        } else {
-            setFunRating(5);
-            setStoryRating(5);
-            setCombatRating(5);
-            setFeedbackComments('');
-            setIsSubmitted(false);
-        }
-    }, [storageKey]);
+    const [retour, setRetour] = useState(() => lireRetourDeSeance(storageKey));
+    if (retour.cle !== storageKey) setRetour(lireRetourDeSeance(storageKey));
+    const { funRating, storyRating, combatRating, notes: feedbackComments, isSubmitted } = retour;
+    const setFunRating = (valeur: number) => setRetour(precedent => ({ ...precedent, funRating: valeur }));
+    const setStoryRating = (valeur: number) => setRetour(precedent => ({ ...precedent, storyRating: valeur }));
+    const setCombatRating = (valeur: number) => setRetour(precedent => ({ ...precedent, combatRating: valeur }));
+    const setFeedbackComments = (valeur: string) => setRetour(precedent => ({ ...precedent, notes: valeur }));
+    const setIsSubmitted = (valeur: boolean) => setRetour(precedent => ({ ...precedent, isSubmitted: valeur }));
 
-    // Mettre à jour la ref à chaque changement de localNotes sans déclencher d'effet
-    useEffect(() => {
-        notesRef.current = localNotes;
-    }, [localNotes]);
+    useLayoutEffect(() => {
+        notesRef.current = notes;
+    }, [notes]);
 
-    // Sync local state with store ONLY if store changes from outside (e.g. sync from MJ)
-    useEffect(() => {
-        if (character?.playerNotes !== undefined && character.playerNotes !== lastSyncRef.current) {
-            if (character.playerNotes !== notesRef.current) {
-                setLocalNotes(character.playerNotes);
-                lastSyncRef.current = character.playerNotes;
-            }
-        }
-    }, [character?.playerNotes]);
-
-    const saveNotes = useCallback((content: string) => {
-        if (content === lastSyncRef.current) return;
-        
+    const saveNotes = useCallback(() => {
+        const { texte, reference } = notesRef.current;
+        if (texte === reference) return;
+        // Poser la référence avant l'appel : le magasin peut répondre immédiatement.
+        notesRef.current = { ...notesRef.current, reference: texte };
+        setNotes(precedent => ({ ...precedent, reference: texte }));
         setIsSaving(true);
-        remoteUpdateCharacterNarrative(playerId, characterId, { playerNotes: content });
-        lastSyncRef.current = content;
-        
-        setTimeout(() => setIsSaving(false), 800);
+        if (indicateurRef.current !== null) clearTimeout(indicateurRef.current);
+        indicateurRef.current = setTimeout(() => {
+            indicateurRef.current = null;
+            setIsSaving(false);
+        }, 800);
+        remoteUpdateCharacterNarrative(playerId, characterId, { playerNotes: texte });
     }, [playerId, characterId, remoteUpdateCharacterNarrative]);
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = e.target.value;
-        setLocalNotes(val);
+        notesRef.current = { ...notesRef.current, texte: val };
+        setNotes(precedent => ({ ...precedent, texte: val }));
 
-        if (timerRef.current) clearTimeout(timerRef.current);
+        if (timerRef.current !== null) clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => {
-            saveNotes(val);
+            timerRef.current = null;
+            saveNotes();
         }, 1500);
     };
 
@@ -125,14 +140,15 @@ const PlayerPrivateNotes: React.FC<PlayerPrivateNotesProps> = ({ playerId, chara
     // Cleanup timer on unmount and final save
     useEffect(() => {
         return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            if (notesRef.current !== lastSyncRef.current) {
-                remoteUpdateCharacterNarrative(playerId, characterId, { playerNotes: notesRef.current });
+            if (timerRef.current !== null) clearTimeout(timerRef.current);
+            if (indicateurRef.current !== null) clearTimeout(indicateurRef.current);
+            const { texte, reference } = notesRef.current;
+            if (texte !== reference) {
+                notesRef.current = { ...notesRef.current, reference: texte };
+                remoteUpdateCharacterNarrative(playerId, characterId, { playerNotes: texte });
             }
         };
     }, [playerId, characterId, remoteUpdateCharacterNarrative]);
-
-    if (!character) return null;
 
     return (
         <div className="flex flex-col bg-app-bg/40 backdrop-blur-md border border-app-text/10 rounded-xl overflow-hidden transition-all duration-300 shadow-2xl">
