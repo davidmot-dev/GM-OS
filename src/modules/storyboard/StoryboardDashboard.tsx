@@ -29,7 +29,8 @@ import {
 } from './titreProjete';
 import { POLICES_CONNUES } from '../../theme/editionDuTheme';
 import { estUneVideo } from '../../stores/typesDeMedia';
-import { bruitagesProposes, type EtatDeSoundOS } from './bruitageDuMoment';
+import { bruitagesProposes } from './bruitageDuMoment';
+import { magasinDuHub } from '../../utils/magasinsDuHub';
 
 // DND Kit Imports
 import {
@@ -173,7 +174,7 @@ const StoryboardDashboard: React.FC = () => {
         const avecVolume = (nom: string | undefined, v?: number) => [nom, volume(v)].filter(Boolean).join(' · ') || '—';
         switch (cle) {
             case 'musique': {
-                const listes = ((window as any).useMusicStore?.getState()?.playlists ?? []) as Array<{ pads: Array<{ id: string; label: string }> }>;
+                const listes = magasinDuHub('useMusicStore')?.getState().playlists ?? [];
                 const pad = listes.flatMap(pl => pl.pads).find(pd => pd.id === m.musicPadId);
                 return avecVolume(pad?.label ?? m.musicPadId, m.musicVolume);
             }
@@ -187,15 +188,12 @@ const StoryboardDashboard: React.FC = () => {
             case 'carte':
                 return atlasMaps.find(a => a.fileUrl === m.mapUrl)?.name ?? (m.mapUrl?.split(/[\\/]/).pop() || '—');
             case 'image': {
-                const image = (window as any).useImageStore?.getState() as {
-                    mediaList?: Array<{ id: string; name: string }>;
-                    diaporamas?: Array<{ id: string; nom: string }>;
-                } | undefined;
+                const image = magasinDuHub('useImageStore')?.getState();
                 if (m.diaporamaId) return image?.diaporamas?.find(d => d.id === m.diaporamaId)?.nom ?? m.diaporamaId;
                 return image?.mediaList?.find(x => x.id === m.imageMediaId)?.name ?? m.imageMediaId ?? '—';
             }
             case 'bruitage': {
-                const atmospheres = ((window as any).useSoundStore?.getState()?.atmospheres ?? []) as Array<{ id: string; pads?: Record<string, { id: string; title?: string }> }>;
+                const atmospheres = magasinDuHub('useSoundStore')?.getState().atmospheres ?? [];
                 const pad = atmospheres
                     .filter(a => !m.soundAtmosphereId || a.id === m.soundAtmosphereId)
                     .flatMap(a => Object.values(a.pads ?? {}))
@@ -232,7 +230,7 @@ const StoryboardDashboard: React.FC = () => {
         */
         setSoundAtmosphereId(moment.soundAtmosphereId
             || (moment.soundPadId
-                ? ((window as any).useSoundStore?.getState()?.activeAtmosphereId ?? '')
+                ? (magasinDuHub('useSoundStore')?.getState().activeAtmosphereId ?? '')
                 : ''));
         setMusicVolume(typeof moment.musicVolume === 'number' ? moment.musicVolume : null);
         setMusicVolumeFondu(moment.musicVolumeFondu ?? 1500);
@@ -293,21 +291,21 @@ const StoryboardDashboard: React.FC = () => {
 
         switch (type) {
             case 'music': {
-                const musicStore = (window as any).useMusicStore?.getState();
+                const musicStore = magasinDuHub('useMusicStore')?.getState();
                 if (musicStore) {
                     const padId = musicStore.deckA.isPlaying ? musicStore.deckA.activePadId : 
                                  (musicStore.deckB.isPlaying ? musicStore.deckB.activePadId : musicStore.deckA.activePadId);
                     if (padId) {
-                        setMusicPadId(padId as string);
+                        setMusicPadId(padId);
                         gmToast('ID Musique capturé !', 'info');
                     }
                 }
                 break;
             }
             case 'light': {
-                const lightStore = (window as any).useLightStore?.getState();
+                const lightStore = magasinDuHub('useLightStore')?.getState();
                 if (lightStore?.activeSceneId) {
-                    setLightSceneId(lightStore.activeSceneId as string);
+                    setLightSceneId(lightStore.activeSceneId);
                     gmToast('Scène Lumière capturée !', 'info');
                 }
                 break;
@@ -319,9 +317,9 @@ const StoryboardDashboard: React.FC = () => {
               est indiscernable d'une capture qui n'a rien trouvé.*
             */
             case 'map': {
-                const mapStore = (window as any).useMapStore?.getState();
+                const mapStore = magasinDuHub('useMapStore')?.getState();
                 if (mapStore?.mapUrl) {
-                    setMapUrl(mapStore.mapUrl as string);
+                    setMapUrl(mapStore.mapUrl);
                     /*
                       **Le magasin de la carte fait foi**, pas l'extension : une
                       carte peut venir d'une adresse sans extension. On recopie
@@ -344,14 +342,14 @@ const StoryboardDashboard: React.FC = () => {
               médias qui fait le pont entre les deux.
             */
             case 'image': {
-                const imageStore = (window as any).useImageStore?.getState();
-                const cible = (imageStore?.projectionTarget as string) || 'hub';
+                const imageStore = magasinDuHub('useImageStore')?.getState();
+                const cible = imageStore?.projectionTarget || 'hub';
                 const chemin = imageStore?.projections?.[cible];
                 const media = chemin && imageStore?.mediaList?.find(
-                    (m: { id: string; path: string }) => m.path === chemin || m.id === chemin,
+                    m => m.path === chemin || m.id === chemin,
                 );
                 if (media) {
-                    setImageMediaId(media.id as string);
+                    setImageMediaId(media.id);
                     gmToast(t('modules:storyboard.editor.captured_image'), 'info');
                 } else {
                     gmToast(t('modules:storyboard.editor.capture_nothing'), 'warning');
@@ -560,9 +558,9 @@ const StoryboardDashboard: React.FC = () => {
                                         title={t('modules:storyboard.editor.music_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
-                                        {((window as any).useMusicStore?.getState() as { playlists: Array<{ id: string, name: string, pads: Array<{ id: string, label: string }> }> })?.playlists?.map((pl: any) => (
+                                        {magasinDuHub('useMusicStore')?.getState().playlists?.map(pl => (
                                             <optgroup key={pl.id} label={pl.name}>
-                                                {pl.pads.map((pad: any) => (
+                                                {pl.pads.map(pad => (
                                                     <option key={pad.id} value={pad.id}>{pad.label}</option>
                                                 ))}
                                             </optgroup>
@@ -761,7 +759,7 @@ const StoryboardDashboard: React.FC = () => {
                                           pour la campagne ouverte (`bruitagesProposes`).
                                         */}
                                         {bruitagesProposes(
-                                            (window as any).useSoundStore?.getState() as EtatDeSoundOS | undefined,
+                                            magasinDuHub('useSoundStore')?.getState(),
                                             activeCampaignId ?? null,
                                             campaigns.map(c => c.id),
                                         ).map(({ atmosphere, pads }) => (
@@ -898,7 +896,7 @@ const StoryboardDashboard: React.FC = () => {
                                         title={t('modules:storyboard.editor.image_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.none')}</option>
-                                        {((window as unknown as Record<string, unknown>).useImageStore as { getState: () => { mediaList: Array<{ id: string, name: string }> } })?.getState()?.mediaList?.map((m) => (
+                                        {magasinDuHub('useImageStore')?.getState().mediaList?.map(m => (
                                             <option key={m.id} value={m.id}>{m.name}</option>
                                         ))}
                                     </select>
@@ -925,7 +923,7 @@ const StoryboardDashboard: React.FC = () => {
                                         title={t('modules:storyboard.editor.diaporama_label')}
                                     >
                                         <option value="">{t('modules:storyboard.editor.diaporama_none')}</option>
-                                        {((window as unknown as Record<string, unknown>).useImageStore as { getState: () => { diaporamas?: Array<{ id: string, nom: string, imageIds: string[] }> } })?.getState()?.diaporamas?.map((d) => (
+                                        {magasinDuHub('useImageStore')?.getState().diaporamas?.map(d => (
                                             <option key={d.id} value={d.id}>{d.nom} ({d.imageIds.length})</option>
                                         ))}
                                     </select>

@@ -10108,6 +10108,18 @@ documents communs. Les mentions « non commités » sont l'état avant cette
 demande. Les 23 fichiers Codex sont sélectionnés explicitement ; changements
 de Claude préservés. **Aucun push demandé ni exécuté** : dernier poussé
 `861eaca4`. Reprendre Storyboard depuis les 346 avertissements validés.
+Les documents communs sont commités sous **`cc91326f`**, sans push. Storyboard
+est repris dans le [dix-septième lot](2026-10-08-lint-storyboard.md) : types
+réels Music/Sound/Light dans le registre, lectures des sources sans `any`,
+listes et captures conservées. **Douze `any` applicatifs retirés** :
+**1 563 fichiers, zéro erreur et 334 avertissements**, dont 330 `any`, trois
+diagnostics de mémoïsation et une directive inutile ; aucun effet.
+Types, construction, **131 tests ciblés**, **7 042 tests dans 548 fichiers**
+et **neuf scénarios Electron** validés, dont deux nouveaux pour les captures
+et l'identité des bruitages. Vrais magasins avec états artificiels jetables,
+aucune lecture sonore ni commande de lampes, aucune capture du manuel modifiée.
+**Lot 17 non commité**, huit fichiers Codex. Reprendre les neuf `any` de la
+migration des médias intégrés, puis les autres modules/tests.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10179,7 +10191,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 16 commités localement (dernier code `089ed4fe`)**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer Storyboard (douze `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md) |
+| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 16 commités localement (documents `cc91326f`), lot 17 réalisé non commité**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer la migration des médias intégrés (neuf `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

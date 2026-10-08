@@ -3,6 +3,9 @@ import type { StoreApi } from 'zustand';
 /** Les états viennent des magasins réels ; ces imports de types ne chargent aucun magasin. */
 export interface EtatsDuHub {
     useImageStore: ReturnType<typeof import('../modules/image/useImageStore').useImageStore.getState>;
+    useMusicStore: ReturnType<typeof import('../modules/music/useMusicStore').useMusicStore.getState>;
+    useSoundStore: ReturnType<typeof import('../modules/sound/useSoundStore').useSoundStore.getState>;
+    useLightStore: ReturnType<typeof import('../modules/light/useLightStore').useLightStore.getState>;
     useClockStore: ReturnType<typeof import('../store/useClockStore').useClockStore.getState>;
     useFavoriteStore: ReturnType<typeof import('../modules/favorite/useFavoriteStore').useFavoriteStore.getState>;
     useCombatStore: ReturnType<typeof import('../modules/combat/useCombatStore').useCombatStore.getState>;

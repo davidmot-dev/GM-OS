@@ -400,3 +400,21 @@ précédentes « non commités » sont historiques. Les 23 fichiers Codex sont
 sélectionnés explicitement, aucun changement de Claude inclus. Aucun push
 demandé ni exécuté ; dernier poussé `861eaca4`. Reprendre Storyboard depuis
 les **346 avertissements** et les **7 042 tests** validés du lot 16.
+
+Les documents communs sont commités sous **`cc91326f`**, après les trois
+commits de code, sans push. Le
+[dix-septième lot](2026-10-08-lint-storyboard.md) reprend ensuite Storyboard.
+Les états Music/Sound/Light étendent le registre par des types, sans charger
+leurs moteurs. Le tableau, le détail, les captures et les listes lisent les
+contrats réels, sans formes recopiées ni conversions `any`.
+**Douze `any` applicatifs retirés** : **1 563 fichiers, zéro erreur et
+334 avertissements**. Restent 330 `any` (107 applicatifs, 223 dans les tests),
+trois diagnostics de mémoïsation et une directive inutile ; aucun effet.
+Types, construction, **131 tests ciblés**, **7 042 tests dans 548 fichiers**
+et **neuf scénarios Electron** validés. Deux nouveaux contrôles des captures,
+du changement de platine après ouverture, de l'identité image et du pad
+distingué par son atmosphère ; profils jetables, sans lecture sonore ni
+commande de lampes, aucune capture documentaire remplacée.
+Ce nouveau lot est **non commité**, huit fichiers Codex. Reprendre les neuf
+`any` d'`InlinedMediaMigration.ts`, puis les autres modules/tests.
+Règles et inventaire JSON initial inchangés.

@@ -584,3 +584,39 @@ types/construction, zéro erreur et **346 avertissements**, **7 042 tests**,
 sept scénarios Electron validés. Aucun code modifié depuis ces contrôles.
 **Aucun push demandé ni exécuté** : dernier poussé `861eaca4`.
 Reprendre les douze `any` de `StoryboardDashboard.tsx`.
+
+## Dix-septième lot : sources de Storyboard
+
+Les **quatre commits locaux** des lots 14 à 16 se terminent par les documents
+communs sous **`cc91326f`**. Les 23 fichiers sont vérifiés dans le diff depuis
+`861eaca4` : aucun changement de Claude inclus. Aucun push exécuté.
+[Détail et reprise](2026-10-08-lint-storyboard.md). Le registre ajoute les
+types réels Music/Sound/Light sans imports de moteurs à l'exécution.
+Storyboard lit désormais ses sources par leurs vrais contrats : noms,
+listes et captures, images et diaporamas compris. Les douze `any`, les formes
+locales recopiées et les conversions de chaînes inutiles sont retirés.
+Les lectures restent courantes au rendu/clic, sans nouvel abonnement ;
+priorité musicale, carte vidéo, identité image et atmosphère du bruitage restent.
+Présentation, persistance, filtres, temporisations et commandes conservés.
+
+Lint global : **1 563 fichiers, zéro erreur, 334 avertissements**, contre 346.
+Douze `any` applicatifs retirés ; restent 330 `any` (107 applicatifs,
+223 dans les tests), trois diagnostics de mémoïsation et une directive
+inutile. Aucun effet ne revient ; règles et JSON initial inchangés.
+Types, construction, **131 tests ciblés** et **7 042 tests dans 548 fichiers**
+passent ; un fichier et quatre tests ignorés. **Neuf scénarios Electron**
+validés : accès en/hors séance, éditeur/enregistrement, puis deux nouveaux
+cas des captures et bruitages. Platine modifiée après ouverture, lumière,
+carte vidéo sans extension, chemin image converti en identité du pad, deux
+atmosphères avec le même `PAD_01` et nom dans le détail sont vérifiés.
+Les sélecteurs des deux nouveaux essais sont corrigés après un premier échec,
+puis les deux passent. États artificiels dans les vrais magasins jetables,
+aucun son joué ni lampe commandée, aucune capture du manuel modifiée.
+Lint ciblé final et `git diff --check` propres.
+
+**Dix-septième lot réalisé, documenté et non commité : huit fichiers Codex**,
+trois de code/tests et cinq documents. Dernier commit local : **`cc91326f`**,
+dernier poussé documenté : **`861eaca4`**. Reprendre les neuf `any` de
+`src/modules/system/logic/InlinedMediaMigration.ts`, puis les autres modules
+et les faux objets des tests. Mémoïsation et directive gardent leurs lots
+ciblés. Préserver les changements de Claude et l'isolation des essais.

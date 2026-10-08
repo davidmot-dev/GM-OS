@@ -70,3 +70,12 @@ Reprendre les douze `any` du
 `StoryboardDashboard.tsx`, puis les autres modules et les faux objets des
 tests selon l'audit. Les trois diagnostics de mémoïsation et la directive
 inutile gardent leurs lots ciblés. Préserver les changements de Claude.
+
+**Commit et reprise effectués** à la demande suivante de David : lot 16
+sous `089ed4fe`, lots 14/15 sous `f72243d0` et `b08b836d`, documents communs
+sous `cc91326f`. Aucun push demandé ni exécuté. Les mentions précédentes
+« non commités » décrivent l'état avant cette demande.
+Le [dix-septième lot, Storyboard](2026-10-08-lint-storyboard.md), retire ses
+douze `any` : **334 avertissements, zéro erreur**, types, construction,
+**7 042 tests** et neuf scénarios Electron validés. Ce nouveau lot reste
+non commité ; reprendre la migration des médias intégrés, neuf `any`.
