@@ -39,10 +39,8 @@ export const SpotlightSearch: React.FC = () => {
     useEffect(() => {
         if (isOpen) {
             setTimeout(() => inputRef.current?.focus(), 50);
-        } else {
-            setQuery('');
         }
-    }, [isOpen, setQuery]);
+    }, [isOpen]);
 
     // Keep selected item in view
     useEffect(() => {

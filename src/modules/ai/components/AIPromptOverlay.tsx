@@ -13,8 +13,8 @@ interface AIPromptOverlayProps {
     initialPrompt?: string;
 }
 
-const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
-    isOpen,
+// La saisie vit seulement pendant l'ouverture : fermer abandonne le brouillon.
+const InviteOuverte: React.FC<Omit<AIPromptOverlayProps, 'isOpen'>> = ({
     onClose,
     onGenerate,
     title = "IA Image Prompt",
@@ -29,24 +29,20 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
     isGenerating = false,
     initialPrompt = ""
 }) => {
-    const [inputValue, setInputValue] = useState('');
+    const [saisie, setSaisie] = useState(() => ({ initialPrompt, valeur: initialPrompt }));
+    if (saisie.initialPrompt !== initialPrompt) {
+        // Une nouvelle proposition sert un champ vide, jamais un texte en cours.
+        setSaisie({ initialPrompt, valeur: saisie.valeur || initialPrompt });
+    }
+    const inputValue = saisie.valeur;
+    const setInputValue = (valeur: React.SetStateAction<string>) => setSaisie(prev => ({
+        ...prev, valeur: typeof valeur === 'function' ? valeur(prev.valeur) : valeur,
+    }));
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        if (isOpen) {
-            // Functional update to avoid dependencies issues and loops
-            if (initialPrompt) {
-                setInputValue(prev => prev || initialPrompt);
-            }
-            
-            if (inputRef.current) {
-                inputRef.current.focus();
-            }
-        } else {
-            // Reset state when overlay is closed
-            setInputValue('');
-        }
-    }, [isOpen, initialPrompt]);
+        inputRef.current?.focus();
+    }, [initialPrompt]);
 
     /*
       Elle se rend **par-dessus la fiche du lieu** de l'atlas. Son Échap vivait
@@ -54,9 +50,7 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
       rendait pas le clavier à la boîte — une lettre frappée à côté lançait
       la pastille de son liée à cette touche.
     */
-    useFermetureParEchap(isOpen, onClose, 'Invite de génération');
-
-    if (!isOpen) return null;
+    useFermetureParEchap(true, onClose, 'Invite de génération');
 
     const handleSubmit = () => {
         if (inputValue.trim() || !isGenerating) {
@@ -166,5 +160,8 @@ const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({
         </div>
     );
 };
+
+const AIPromptOverlay: React.FC<AIPromptOverlayProps> = ({ isOpen, ...props }) =>
+    isOpen ? <InviteOuverte {...props} /> : null;
 
 export default AIPromptOverlay;

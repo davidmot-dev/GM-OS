@@ -74,9 +74,11 @@ Les règles restent inchangées ; l'inventaire JSON garde les 540 alertes initia
 
 ## Reprise
 
-Lot réalisé et documenté, **non commité** : sept fichiers de code/tests et cinq
-documents. Le commit publié au début de ce tour concerne le cinquième lot.
-Passer aux **20 effets**, suivant l'étape 3 de l'audit : états dérivables et
+Lot commité et poussé sous **`513e4d94`** sur `origin/feature/tablet-hub-pwa`,
+à la nouvelle demande de David **« commit, pousse et passe à l'étape suivante
+(GM-OS est éteint) »**. Le hook complet valide types, lint, les **6 858 tests**
+et la construction avant l'envoi. Le [septième lot](2026-10-08-lint-saisies-react.md)
+commence les **20 effets**, suivant l'étape 3 de l'audit : états dérivables et
 initialisations d'abord, synchronisations ensuite, écran par écran. Préserver
 les durées des dés, les fondus, les notes et les projections ; ne pas injecter
 des temporisations destinées seulement à faire taire la règle. Le typage des

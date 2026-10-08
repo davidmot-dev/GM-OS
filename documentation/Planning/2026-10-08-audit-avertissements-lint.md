@@ -214,3 +214,19 @@ inutile. Types, construction, **120 tests ciblés dans huit fichiers**, **6 858 
 unitaires** et **13 scénarios Electron** passent, dont un véritable aller-retour
 MJ/Hub par le relais. La suite passe aux 20 effets, écran par écran, avant le
 typage des autres domaines/tests. L'inventaire JSON des 540 alertes initiales reste inchangé.
+Sixième lot commité et poussé sous **`513e4d94`**, après les contrôles complets du hook.
+
+Le [septième lot](2026-10-08-lint-saisies-react.md) commence l'étape 3 : les
+initialisations/réinitialisations des prompts, de l'invite IA, du calculateur
+de dégâts et de la sélection de recherche. Les brouillons vivent pendant
+l'ouverture ; recherche et sélection changent dans un seul geste ; les nouveaux
+jets/propositions ajustent localement l'état sous une garde explicite.
+**Quatre alertes d'effets retirées**, sans changement des règles : **1 543 fichiers,
+zéro erreur et 373 avertissements**. Restent 353 `any` (130 applicatifs, 223
+dans les tests), **16 effets**, trois diagnostics de mémoïsation et une directive
+inutile. Types, construction, **18 tests ciblés** (14 nouveaux cas), **6 872 tests
+de la suite complète** dans 536 fichiers et **huit scénarios Electron** passent.
+Lot réalisé et documenté, **non commité**, distinct du sixième lot publié.
+Continuer les replis asynchrones puis les autres synchronisations écran par écran.
+Les fondus, minuteurs, notes et projections gardent leurs contrats ; aucun gain
+de fluidité n'est annoncé sans mesure. Le JSON garde les 540 alertes initiales.

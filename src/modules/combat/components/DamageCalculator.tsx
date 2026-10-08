@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useCombatStore, type Combatant } from '../useCombatStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
@@ -27,15 +27,17 @@ const DamageCalculator: React.FC = () => {
         }
         return [];
     });
-    const [amount, setAmount] = useState<number>(10);
+    const [saisie, setSaisie] = useState(() => ({
+        jet: lastRoll, amount: lastRoll && lastRoll.total > 0 ? lastRoll.total : 10,
+    }));
+    if (saisie.jet !== lastRoll) {
+        // Seul un nouveau jet positif reprend la main sur le montant saisi.
+        setSaisie({ jet: lastRoll, amount: lastRoll && lastRoll.total > 0 ? lastRoll.total : saisie.amount });
+    }
+    const amount = saisie.amount;
+    const setAmount = (amount: number) => setSaisie(prev => ({ ...prev, amount }));
     const [type, setType] = useState<string>(damageTypes[0]);
     const [isHealing, setIsHealing] = useState(false);
-
-    useEffect(() => {
-        if (lastRoll && lastRoll.total > 0) {
-            setAmount(lastRoll.total);
-        }
-    }, [lastRoll]);
 
     const toggleTarget = (id: string) => {
         setSelectedIds(prev => 

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 
 /**
  * **Le bouton Annuler n'annulait pas.**
@@ -32,6 +32,41 @@ beforeEach(() => {
 });
 
 const laBoiteEstOuverte = () => useModalStore.getState().type !== null;
+
+describe('la saisie d’un prompt', () => {
+    it('sert la valeur initiale, garde la saisie lors d’un rafraîchissement et valide par Entrée', () => {
+        const valider = vi.fn();
+        gmPrompt('Nom :', 'Sentinelle', valider);
+        const { rerender } = render(<ModalProvider />);
+        const champ = screen.getByRole('textbox');
+        expect((champ as HTMLInputElement).value).toBe('Sentinelle');
+        fireEvent.change(champ, { target: { value: 'Ancre' } });
+        rerender(<ModalProvider />);
+        fireEvent.keyDown(champ, { key: 'Enter' });
+        expect(valider).toHaveBeenCalledWith('Ancre');
+        expect(laBoiteEstOuverte()).toBe(false);
+    });
+
+    it('abandonne le brouillon à la fermeture et réinitialise même avec le même défaut', () => {
+        gmPrompt('Nom :', 'Sentinelle', vi.fn());
+        render(<ModalProvider />);
+        fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Brouillon' } });
+        fireEvent.click(screen.getByText('common:cancel'));
+        act(() => gmPrompt('Autre nom :', 'Sentinelle', vi.fn()));
+        expect((screen.getByRole('textbox') as HTMLInputElement).value).toBe('Sentinelle');
+    });
+
+    it('reprend un défaut remplacé pendant l’ouverture et le valide par bouton', () => {
+        gmPrompt('Nom :', 'Avant', vi.fn());
+        render(<ModalProvider />);
+        fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Brouillon' } });
+        const valider = vi.fn();
+        act(() => gmPrompt('Nom :', 'Après', valider));
+        expect((screen.getByRole('textbox') as HTMLInputElement).value).toBe('Après');
+        fireEvent.click(screen.getByText('common:validate'));
+        expect(valider).toHaveBeenCalledWith('Après');
+    });
+});
 
 describe('le bouton Annuler d’une confirmation', () => {
     /** Le cas exact de David : `onCancel` ne fait rien, et ne fermait rien. */

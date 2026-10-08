@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, type SetStateAction } from 'react';
 import { useSessionStore, type ModuleID } from '../store/useSessionStore';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useMusicStore } from '../modules/music/useMusicStore';
@@ -39,9 +39,27 @@ export interface SpotlightResult {
 }
 
 export const useSpotlight = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [{ isOpen, query, selectedIndex }, setRecherche] = useState({
+    isOpen: false, query: '', selectedIndex: 0,
+  });
+  const setIsOpen = useCallback((valeur: SetStateAction<boolean>) => {
+    setRecherche(prev => {
+      const isOpen = typeof valeur === 'function' ? valeur(prev.isOpen) : valeur;
+      return isOpen ? { ...prev, isOpen } : { isOpen, query: '', selectedIndex: 0 };
+    });
+  }, []);
+  const setQuery = useCallback((valeur: SetStateAction<string>) => {
+    setRecherche(prev => {
+      const query = typeof valeur === 'function' ? valeur(prev.query) : valeur;
+      // La frappe et le retour au premier résultat sont un seul geste.
+      return query === prev.query ? prev : { ...prev, query, selectedIndex: 0 };
+    });
+  }, []);
+  const setSelectedIndex = useCallback((valeur: SetStateAction<number>) => {
+    setRecherche(prev => ({
+      ...prev, selectedIndex: typeof valeur === 'function' ? valeur(prev.selectedIndex) : valeur,
+    }));
+  }, []);
 
   const { t } = useTranslation(['modules']);
   const places = useRaccourcisStore(s => s.places);
@@ -116,7 +134,7 @@ export const useSpotlight = () => {
       */
       shortcut: places.indexOf(id) >= 0 ? `Ctrl+${places.indexOf(id) + 1}` : undefined,
     })),
-    [t, setActiveModule, places],
+    [t, setActiveModule, places, setIsOpen],
   );
 
   const results = useMemo(() => {
@@ -338,9 +356,9 @@ export const useSpotlight = () => {
       viser.*
     */
     return [...destinationsFiltrees, ...matches];
-  }, [query, destinations, entities, atlasMaps, wikiEntries, customGameDrivers, ruleForgeDocs, playlists, presets, scenes, atmospheres, setActiveModule, setCurrentView, setSelectedAtlasMap, setSelectedEntity, setSelectedWikiEntryId, playPad, loadTheme, applyScene]);
+  }, [query, destinations, entities, atlasMaps, wikiEntries, customGameDrivers, ruleForgeDocs, playlists, presets, scenes, atmospheres, setActiveModule, setCurrentView, setSelectedAtlasMap, setSelectedEntity, setSelectedWikiEntryId, playPad, loadTheme, applyScene, setIsOpen]);
 
-  const toggle = useCallback(() => setIsOpen(prev => !prev), []);
+  const toggle = useCallback(() => setIsOpen(prev => !prev), [setIsOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -369,11 +387,7 @@ export const useSpotlight = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, results, selectedIndex, toggle]);
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
+  }, [isOpen, results, selectedIndex, toggle, setSelectedIndex]);
 
   return {
     isOpen,

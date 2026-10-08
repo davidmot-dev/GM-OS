@@ -206,10 +206,40 @@ fusions. Les **13 scénarios Electron** passent : Map-OS, tableau blanc et véri
 relais MJ/Hub. Profils jetables, données fictives, appareils muets ; aucun artefact
 du manuel régénéré. `git diff --check` passe.
 
-**Sixième lot réalisé et documenté, non commité : sept fichiers de code/tests et
-cinq documents.** Reprendre les **20 effets**, suivant l'étape 3 de l'audit : commencer
+**Sixième lot commité et poussé sous `513e4d94`**, sur `origin/feature/tablet-hub-pwa`,
+après les contrôles complets du hook. David redemande **« commit, pousse et passe
+à l'étape suivante (GM-OS est éteint) »**. Reprendre les **20 effets**, suivant l'étape 3 de l'audit : commencer
 par les états dérivables et les initialisations, puis traiter les synchronisations
 par écran. Conserver les durées des dés, les fondus, les notes et les projections ;
 ne pas remplacer les effets par des temporisations pour faire taire le lint.
 Les autres domaines et faux objets de tests suivent. L'inventaire JSON conserve
 les 540 alertes initiales et les changements antérieurs de Claude restent hors du lot.
+
+## Septième lot : saisies React
+
+[Détail et reprise](2026-10-08-lint-saisies-react.md). Le sixième lot est publié
+sous **`513e4d94`** ; la nouvelle demande de David porte aussi sur l'étape suivante.
+Les quatre initialisations de saisie de l'audit sont traitées : prompt, invite IA,
+montant des dégâts et sélection de recherche. Les brouillons vivent pendant
+l'ouverture, les réinitialisations suivent le geste, et les changements de jet
+ou de proposition ajustent l'état local sous une garde explicite. `SpotlightSearch`
+ne réinitialise plus depuis son effet de fermeture.
+
+Lint global : **1 543 fichiers, zéro erreur, 373 avertissements**, contre 377.
+Quatre alertes d'effets retirées ; restent 353 `any`, **16 effets**, trois
+diagnostics de mémoïsation et une directive inutile. Règles et inventaire JSON
+initial inchangés. Types, construction, **18 tests ciblés dans quatre fichiers**
+(**14 nouveaux cas**) et **6 872 tests dans 536 fichiers** passent ; un fichier et
+quatre tests ignorés. **Huit scénarios Electron passent**, dont trois nouveaux
+sur les vrais gestes de saisie/recherche et l'application du montant de dégâts.
+Profils jetables, campagne fictive, appareils désactivés ; aucune génération IA
+réelle ni capture du manuel remplacée. `git diff --check` passe.
+
+**Septième lot réalisé et documenté, non commité : dix fichiers de code/tests
+et cinq documents.** Reprendre les **16 effets restants**, d'abord les replis
+asynchrones de bannière/correspondance et leur contexte, puis les autres replis
+et synchronisations par écran. Conserver durées des dés, fondus, notes et
+projections ; ne pas ajouter de minuteurs pour masquer les alertes. Le typage
+des autres domaines et des faux objets de tests vient ensuite. Aucun gain de
+fluidité n'est annoncé sans mesure. Les modifications antérieures de Claude
+restent hors du lot.

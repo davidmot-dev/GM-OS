@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useModalStore } from '../stores/useModalStore';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 import { useTranslation } from 'react-i18next';
@@ -35,22 +35,55 @@ import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 import VitrineDuSocle from './socle/VitrineDuSocle';
 import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire } from './socle/CadreDeSurcouche';
 
+// Chaque ouverture porte sa saisie ; une nouvelle valeur initiale la remonte.
+const SaisieDuPrompt: React.FC = () => {
+    const { message, defaultValue, onPromptConfirm, confirmLabel, cancelLabel, closeModal } = useModalStore();
+    const { t } = useTranslation(['common']);
+    const [inputValue, setInputValue] = useState(() => typeof defaultValue === 'string' ? defaultValue : '');
+    return (
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+            <CadreDeSurcouche
+                titre={t('common:prompt_title')}
+                icone={<Edit3 size={18} />}
+                onFermer={closeModal}
+                libelleFermer={t('common:close_window')}
+                pied={<>
+                    <BoutonSecondaire onClick={closeModal}>{cancelLabel || t('common:cancel')}</BoutonSecondaire>
+                    <BoutonPrincipal onClick={() => { onPromptConfirm?.(inputValue); closeModal(); }}>{confirmLabel || t('common:validate')}</BoutonPrincipal>
+                </>}
+            >
+                {/* Le libellé au-dessus du champ : c'est la question posée. */}
+                <label className="flex flex-col gap-2 px-5 py-4">
+                    <span className="text-sm font-bold text-app-text">{message}</span>
+                    <input
+                        type="text"
+                        autoFocus
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        className="w-full rounded-lg border border-app-border bg-app-bg px-4 py-2.5 font-medium text-app-text outline-none transition-all focus:border-accent"
+                        title={t('common:prompt_title')}
+                        placeholder={t('common:placeholder_input')}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                onPromptConfirm?.(inputValue);
+                                closeModal();
+                            }
+                        }}
+                    />
+                </label>
+            </CadreDeSurcouche>
+        </div>
+    );
+};
+
 const ModalProvider: React.FC = () => {
     const {
-        type, message, onConfirm, onCancel, onPromptConfirm,
+        type, message, onConfirm, onCancel,
         defaultValue, confirmLabel, cancelLabel, customVariant,
         isNetworkModalOpen, closeModal
     } = useModalStore();
 
     const { t } = useTranslation(['common']);
-    const [inputValue, setInputValue] = useState('');
-
-    useEffect(() => {
-        if (type === 'prompt' && defaultValue !== undefined) {
-            setInputValue(defaultValue as string);
-        }
-    }, [type, defaultValue]);
-
     /*
       **Échap ferme la boîte — les quatre types, d'un seul endroit.**
 
@@ -141,40 +174,7 @@ const ModalProvider: React.FC = () => {
                 </div>
             )}
 
-            {type === 'prompt' && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/70 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <CadreDeSurcouche
-                        titre={t('common:prompt_title')}
-                        icone={<Edit3 size={18} />}
-                        onFermer={closeModal}
-                        libelleFermer={t('common:close_window')}
-                        pied={<>
-                            <BoutonSecondaire onClick={closeModal}>{cancelLabel || t('common:cancel')}</BoutonSecondaire>
-                            <BoutonPrincipal onClick={() => { onPromptConfirm?.(inputValue); closeModal(); }}>{confirmLabel || t('common:validate')}</BoutonPrincipal>
-                        </>}
-                    >
-                        {/* Le libellé au-dessus du champ : c'est la question posée. */}
-                        <label className="flex flex-col gap-2 px-5 py-4">
-                            <span className="text-sm font-bold text-app-text">{message}</span>
-                            <input
-                                type="text"
-                                autoFocus
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                                className="w-full rounded-lg border border-app-border bg-app-bg px-4 py-2.5 font-medium text-app-text outline-none transition-all focus:border-accent"
-                                title={t('common:prompt_title')}
-                                placeholder={t('common:placeholder_input')}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        onPromptConfirm?.(inputValue);
-                                        closeModal();
-                                    }
-                                }}
-                            />
-                        </label>
-                    </CadreDeSurcouche>
-                </div>
-            )}
+            {type === 'prompt' && <SaisieDuPrompt key={typeof defaultValue === 'string' ? defaultValue : ''} />}
 
             {type === 'custom' && (
                 <div role="dialog" aria-modal="true" className={`fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/80 backdrop-blur-md animate-in fade-in duration-300 ${

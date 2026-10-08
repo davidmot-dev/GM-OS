@@ -10001,9 +10001,17 @@ et les fusions, conserve l'autorité de projection du MJ et ne modifie plus une
 charge de jetons reçue. **12 `any` retirés (11 applicatifs, un dans les tests)** :
 **1 539 fichiers, zéro erreur et 377 avertissements**. Types, construction,
 **120 tests ciblés**, **6 858 tests unitaires** et **13 scénarios Electron** passent,
-dont un aller-retour réel entre le MJ et le Hub. Ce sixième lot reste distinct
-du commit publié. Reprendre les **20 effets**, écran par écran, puis les autres
-domaines/tests, suivant l'ordre de l'audit.
+dont un aller-retour réel entre le MJ et le Hub. Sixième lot commité et poussé sous
+**`513e4d94`**, après les contrôles complets du hook. Le
+[septième lot](2026-10-08-lint-saisies-react.md) traite les quatre initialisations
+de saisie : prompt, invite IA, montant de dégâts et sélection de recherche.
+**1 543 fichiers, zéro erreur et 373 avertissements** : 353 `any`, **16 effets**,
+trois diagnostics de mémoïsation et une directive inutile. Les règles ne changent pas.
+Types, construction, **18 tests ciblés** (14 nouveaux cas) et **huit scénarios
+Electron** passent, ainsi que **6 872 tests dans 536 fichiers** (un fichier et
+quatre tests ignorés). Ce septième lot est distinct du commit publié. Reprendre les
+replis asynchrones puis les synchronisations des 16 effets restants, écran par écran,
+avant les autres domaines/tests, suivant l'ordre de l'audit.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10075,7 +10083,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Cinq lots poussés (dernier `43854adb`), échanges entre fenêtres réalisés**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 avertissements, zéro erreur | Revoir les 20 effets écran par écran, puis les autres domaines/tests | [Analyse](2026-10-08-audit-avertissements-lint.md), [sixième lot](2026-10-08-lint-echanges-fenetres.md) distinct du commit publié |
+| 62 | **Avertissements du lint** | 🔧 **Six lots poussés (dernier `513e4d94`), saisies React réalisées**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 avertissements, zéro erreur | Revoir les 16 effets restants écran par écran, puis les autres domaines/tests | [Analyse](2026-10-08-audit-avertissements-lint.md), [septième lot](2026-10-08-lint-saisies-react.md) distinct du commit publié |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
