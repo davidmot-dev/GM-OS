@@ -70,7 +70,6 @@ export type {
 // ─────────────────────────────────────────────
 
 import { useSessionOSStore } from './store/index';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 
-if (typeof window !== 'undefined') {
-    (window as any).useSessionOSStore = useSessionOSStore;
-}
+exposerMagasinDuHub('useSessionOSStore', useSessionOSStore);

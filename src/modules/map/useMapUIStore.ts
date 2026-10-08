@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { MapTool, MagicStyle, MagicShape, FogMode } from './types';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 
 interface MapUIState {
     currentTool: MapTool;
@@ -93,6 +94,4 @@ export const useMapUIStore = create<MapUIState>()(
     )
 );
 
-if (typeof window !== 'undefined') {
-    (window as any).useMapUIStore = useMapUIStore;
-}
+exposerMagasinDuHub('useMapUIStore', useMapUIStore);

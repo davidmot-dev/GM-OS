@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { exposerMagasinDuHub } from '../utils/magasinsDuHub';
 
 interface SyncVolatileState {
     voiceLevel: number;
@@ -10,6 +11,4 @@ export const useSyncStore = create<SyncVolatileState>((set) => ({
     setVoiceLevel: (voiceLevel) => set({ voiceLevel }),
 }));
 
-if (typeof window !== 'undefined') {
-    (window as any).useSyncStore = useSyncStore;
-}
+exposerMagasinDuHub('useSyncStore', useSyncStore);

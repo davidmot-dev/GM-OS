@@ -179,6 +179,16 @@ fiches et chemins sans renvoi conservés. **1 533 fichiers, zéro erreur et
 433 avertissements** : 409 `any` (185 applicatifs, 224 dans les tests), 20
 effets, trois diagnostics de mémoïsation et une directive inutile.
 Les 27 nouveaux cas de test, la suite complète (**6 838 tests**) et trois
-scénarios Electron/tablettes passent. Troisième lot validé, publication demandée.
+scénarios Electron/tablettes passent. Troisième lot commité et poussé : **`63cccdda`**.
 Les contrats du Hub puis des messages entre fenêtres restent la suite de
 l'étape 2 ; les effets et les autres domaines/tests viennent après.
+
+Le [quatrième lot](2026-10-08-lint-magasins-hub.md) type les accès aux douze
+magasins du Hub et leurs douze points d'exposition sous un contrat commun :
+**24 `any` applicatifs retirés**. Lint global : **1 534 fichiers, zéro erreur
+et 409 avertissements** — 385 `any` (161 applicatifs, 224 dans les tests),
+20 effets, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, 242 tests ciblés, **6 838 tests de la suite complète**
+et six scénarios Electron/tablettes passent. Quatrième lot validé, publication demandée. Les charges reçues par le Hub
+restent à typer, puis les messages entre fenêtres ; l'accès aux magasins
+et le DTO reçu constituent des contrats distincts.

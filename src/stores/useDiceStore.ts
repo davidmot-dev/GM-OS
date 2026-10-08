@@ -4,6 +4,7 @@ import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
 import { consignerLeJet } from '../modules/journal/consignerLeJet';
 import type { RollResult } from '../modules/dice/DiceEngine';
 import { STYLE_PAR_DEFAUT, type StyleDeDes } from '../modules/dice/logic/stylesDeDes';
+import { exposerMagasinDuHub } from '../utils/magasinsDuHub';
 
 export interface QuickRoll {
     id: string;
@@ -146,6 +147,4 @@ export const useDiceStore = create<DiceState>()(
 );
 
 // Cross-store access
-if (typeof window !== 'undefined') {
-    (window as unknown as Record<string, unknown>).useDiceStore = useDiceStore;
-}
+exposerMagasinDuHub('useDiceStore', useDiceStore);

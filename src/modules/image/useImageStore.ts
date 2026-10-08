@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity, Diaporama, DiaporamaEnCours } from './types';
 import {
     imagesDuDiaporama, indexSuivant, cadenceDuDiaporama, peutTourner,
@@ -877,4 +878,4 @@ export const useImageStore = create<ImageState>()(
     )
 );
 
-if (typeof window !== 'undefined') { (window as any).useImageStore = useImageStore; }
+exposerMagasinDuHub('useImageStore', useImageStore);

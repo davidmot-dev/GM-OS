@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 import {
     etatInitial,
     valeurDe,
@@ -210,13 +211,11 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
 );
 
 /*
-  **Exposé sur `window` comme les huit autres stores que la tablette applique.**
+  **Exposé sur `window` sous le contrat commun des magasins du Hub.**
   `useHubSync` les atteint tous par `getStore(nom)` et n'en importe aucun : il
   vit dans le même code que le Hub embarqué comme que la PWA distante, où tous
-  les modules ne sont pas chargés. Un store absent y rend `null`, et la branche
+  les modules ne sont pas chargés. Un store absent y rend `undefined`, et la branche
   correspondante ne fait rien — c'est ce qui permet à ce fichier d'ignorer ce
   qui n'est pas là plutôt que d'échouer à l'import.
 */
-if (typeof window !== 'undefined') {
-    (window as unknown as Record<string, unknown>).useRessourcesDeTableStore = useRessourcesDeTableStore;
-}
+exposerMagasinDuHub('useRessourcesDeTableStore', useRessourcesDeTableStore);

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../utils/ecritureReserveeAuMJ';
+import { exposerMagasinDuHub } from '../utils/magasinsDuHub';
 import type { FormeDeJauge } from '../modules/clock/components/formesDeJauge';
 import {
     dateDeDepart,
@@ -916,6 +917,4 @@ export const useClockStore = create<ClockState>()(
     )
 );
 
-if (typeof window !== 'undefined') {
-    (window as any).useClockStore = useClockStore;
-}
+exposerMagasinDuHub('useClockStore', useClockStore);

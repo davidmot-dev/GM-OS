@@ -65,8 +65,11 @@ et quatre tests ignorés. `git diff --check` passe.
 ## Reprise
 
 Publication de ce troisième lot demandée par David : **« commit, pousse et passe
-à l'étape suivante (GM-OS est éteint) »**. Reprendre `useHubSync` : typer
-l'accès dynamique aux magasins et la charge effectivement reçue, qui dépasse
+à l'étape suivante (GM-OS est éteint) »**.
+Publication terminée : **`63cccdda`** sur `origin/feature/tablet-hub-pwa`, après
+les contrôles complets du hook. La reprise commence par les
+[accès aux magasins du Hub](2026-10-08-lint-magasins-hub.md).
+Reste à typer la charge effectivement reçue, qui dépasse
 le DTO partiel `RemoteSyncData`. Puis reprendre `CrossWindowEventService` :
 conserver les gardes de projection du MJ, les positions des jetons saisis et
 la fusion des mises à jour partielles. Les effets et les autres domaines/tests

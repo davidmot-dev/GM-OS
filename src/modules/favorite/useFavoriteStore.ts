@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../../utils/ecritureReserveeAuMJ';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 import { useJournalStore } from '../journal/useJournalStore';
 import i18next from 'i18next';
 
@@ -273,6 +274,4 @@ export const useFavoriteStore = create<FavoriteState>()(
     )
 );
 
-if (typeof window !== 'undefined') {
-    (window as any).useFavoriteStore = useFavoriteStore;
-}
+exposerMagasinDuHub('useFavoriteStore', useFavoriteStore);

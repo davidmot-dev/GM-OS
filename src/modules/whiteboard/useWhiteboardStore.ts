@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { stockageLocalDuMJ } from '../../utils/ecritureReserveeAuMJ';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 
 /** Outils de dessin disponibles sur le Whiteboard */
 export type WhiteboardTool = 'brush' | 'eraser' | 'rect' | 'circle' | 'laser'
@@ -261,6 +262,4 @@ export const useWhiteboardStore = create<WhiteboardState>()(
     )
 );
 
-if (typeof window !== 'undefined') {
-    (window as any).useWhiteboardStore = useWhiteboardStore;
-}
+exposerMagasinDuHub('useWhiteboardStore', useWhiteboardStore);

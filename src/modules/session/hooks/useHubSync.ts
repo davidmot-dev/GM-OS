@@ -4,14 +4,12 @@ import { jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import type { TensionClock } from '../../../store/useClockStore';
 import { openDB } from 'idb';
 import { DUREE_DU_RESULTAT_MS } from '../../dice/logic/choregraphieDuJet';
-import { imageApresMessage, papierPeintDeLaCampagne, type CampagneConnue } from '../../../components/hub/fondDuPlayerHub';
+import { imageApresMessage, papierPeintDeLaCampagne } from '../../../components/hub/fondDuPlayerHub';
 import { appliquerApparenceTablettes } from '../../../theme/apparenceTablettes';
-
-// 🛡️ Safe Dynamic Store Access Helpers
-const getStore = (name: string) => (typeof window !== 'undefined' ? (window as any)[name] : null);
+import { magasinDuHub as getStore, type EtatsDuHub, type NomDeMagasinDuHub } from '../../../utils/magasinsDuHub';
 
 const EMPTY_OBJ = {};
-const EMPTY_ARR: any[] = [];
+const EMPTY_ARR: never[] = [];
 
 /**
  * L'instant de repli de l'horloge, fige au chargement du module.
@@ -29,7 +27,7 @@ const NE_CHANGE_JAMAIS = () => () => {};
 /**
  * **Lire un magasin resolu par son nom, a cout de crochets FIXE.**
  *
- * Ce crochet atteint huit magasins par `window` sans en importer aucun. C'est
+ * Ce crochet atteint douze magasins par `window` sans importer leurs valeurs. C'est
  * delibere, et `useRessourcesDeTableStore.ts` l'enonce. Mais la version d'avant
  * appelait chaque magasin derriere un ternaire :
  *
@@ -54,7 +52,10 @@ const NE_CHANGE_JAMAIS = () => () => {};
  *  - `defaut` doit etre une constante de module (`EMPTY_ARR`, `EMPTY_OBJ`) : un
  *    litteral neuf a chaque rendu relance la boucle decrite plus haut.
  */
-function useMagasin<T>(nom: string, choisir: (etat: any) => T, defaut: T): T {
+function useMagasin<Nom extends NomDeMagasinDuHub, T>(
+    // Le sélecteur dicte le type ; le repli ne peut pas l'élargir à un autre domaine.
+    nom: Nom, choisir: (etat: EtatsDuHub[Nom]) => T, defaut: NoInfer<T>,
+): T {
     const magasin = getStore(nom);
     return useSyncExternalStore(
         magasin?.subscribe ?? NE_CHANGE_JAMAIS,
@@ -127,12 +128,12 @@ export const useHubSync = () => {
     const [sharedRule, setSharedRule] = useState<any | null>(null);
     const [latency, setLatency] = useState<number | null>(null);
 
-    const [resolvedFavorites, setResolvedFavorites] = useState<any[]>([]);
-    const [resolvedNpcs, setResolvedNpcs] = useState<any[]>([]);
-    const [resolvedAtlasMaps, setResolvedAtlasMaps] = useState<any[]>([]);
+    const [resolvedFavorites, setResolvedFavorites] = useState<EtatsDuHub['useFavoriteStore']['favorites']>([]);
+    const [resolvedNpcs, setResolvedNpcs] = useState<EtatsDuHub['useSessionOSStore']['entities']>([]);
+    const [resolvedAtlasMaps, setResolvedAtlasMaps] = useState<EtatsDuHub['useSessionOSStore']['atlasMaps']>([]);
 
     const socketRef = useRef<WebSocket | null>(null);
-    const diceTimerRef = useRef<any>(null);
+    const diceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastDiceTriggerRef = useRef(0);
 
     // ─────────────────────────────────────────────
@@ -165,10 +166,10 @@ export const useHubSync = () => {
     const isCombatProjected = useMagasin('useCombatStore', s => s.isCombatProjected, false);
 
     const entities = useMagasin('useSessionOSStore', s => s.entities, EMPTY_ARR);
-    const activeCampaignId = useMagasin<string | null>('useSessionOSStore', s => s.activeCampaignId, null);
+    const activeCampaignId = useMagasin('useSessionOSStore', s => s.activeCampaignId, null);
     const activeCampaignName = useMagasin('useSessionOSStore', s => s.activeCampaignName, '');
-    const wallpaperEnvoye = useMagasin<string | null>('useSessionOSStore', s => s.activeCampaignWallpaper, null);
-    const campaigns = useMagasin<CampagneConnue[]>('useSessionOSStore', s => s.campaigns, EMPTY_ARR as never);
+    const wallpaperEnvoye = useMagasin('useSessionOSStore', s => s.activeCampaignWallpaper, null);
+    const campaigns = useMagasin('useSessionOSStore', s => s.campaigns, EMPTY_ARR);
     /*
       ⛔ **Le Hub attendait ce qu'il pouvait déduire.** `activeCampaignWallpaper`
       est le seul des deux champs à **ne pas être persisté** : au lancement il
@@ -190,7 +191,7 @@ export const useHubSync = () => {
     const deviceId = useMagasin('useClientStore', s => s.deviceId, 'guest');
     const pseudo = useMagasin('useClientStore', s => s.pseudo, '');
     const playerName = useMagasin('useClientStore', s => s.playerName, '');
-    const characterId = useMagasin<string | null>('useClientStore', s => s.characterId, null);
+    const characterId = useMagasin('useClientStore', s => s.characterId, null);
     const isOnboarded = useMagasin('useClientStore', s => s.isOnboarded, false);
 
     const voiceLevel = useMagasin('useSyncStore', s => s.voiceLevel, 0);
@@ -232,7 +233,7 @@ export const useHubSync = () => {
                 const incomingTokens = map.projectedTokens;
                 const mergedTokens = incomingTokens.map((t: any) => {
                     if (t.id === ui.selectedTokenId) {
-                        const localToken = currentTokens.find((lt: any) => lt.id === t.id);
+                        const localToken = currentTokens.find(lt => lt.id === t.id);
                         return localToken ? { ...t, x: localToken.x, y: localToken.y } : t;
                     }
                     return t;
@@ -328,7 +329,7 @@ export const useHubSync = () => {
         if (!sClient) return;
 
         let socket: WebSocket | null = null;
-        let reconnectTimer: any = null;
+        let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
         let isActive = true;
 
         const startConnection = () => {
@@ -661,21 +662,21 @@ export const useHubSync = () => {
     useEffect(() => {
         let mounted = true;
         const resolveAssets = async () => {
-            const sharedFavs = favorites.filter((f: any) => f.isSyncedToPlayerHub || (characterId && f.ownerId === characterId));
-            const resFavs = await Promise.all(sharedFavs.map(async (f: any) => ({
+            const sharedFavs = favorites.filter(f => f.isSyncedToPlayerHub || (characterId && f.ownerId === characterId));
+            const resFavs = await Promise.all(sharedFavs.map(async f => ({
                 ...f,
                 imageUrl: await resolveMediaToDataUrl(f.imageUrl) || f.imageUrl,
                 tokenUrl: await resolveMediaToDataUrl(f.tokenUrl) || f.tokenUrl
             })));
 
-            const activeNpcs = entities.filter((e: any) => String(e.campaignId) === String(activeCampaignId) && e.isVisibleByPlayers);
-            const resNpcs = await Promise.all(activeNpcs.map(async (e: any) => ({
+            const activeNpcs = entities.filter(e => String(e.campaignId) === String(activeCampaignId) && e.isVisibleByPlayers);
+            const resNpcs = await Promise.all(activeNpcs.map(async e => ({
                 ...e,
                 avatar: await resolveMediaToDataUrl(e.avatar) || e.avatar
             })));
 
-            const activeMaps = atlasMaps.filter((m: any) => String(m.campaignId) === String(activeCampaignId) && m.isVisited);
-            const resMaps = await Promise.all(activeMaps.map(async (m: any) => ({
+            const activeMaps = atlasMaps.filter(m => String(m.campaignId) === String(activeCampaignId) && m.isVisited);
+            const resMaps = await Promise.all(activeMaps.map(async m => ({
                 ...m,
                 fileUrl: await resolveMediaToDataUrl(m.fileUrl) || m.fileUrl
             })));

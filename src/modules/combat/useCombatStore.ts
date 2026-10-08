@@ -10,6 +10,7 @@ import { raconterLImpact } from './logic/RecitDeLImpact';
 import { observerLesChutes, raconterLeDeces } from './logic/DecesAuJournal';
 import { isMainWindow } from '../../utils/windowRole';
 import { stockageLocalDuMJ } from '../../utils/ecritureReserveeAuMJ';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 import type { Player, Entity, PlayerCharacter, SessionOSState } from '../session/useSessionOSStore';
 import { 
     type Combatant, 
@@ -1393,9 +1394,7 @@ export const useCombatStore = create<CombatState>()(
 );
 
 // Export for cross-store access (safe window cast)
-if (typeof window !== 'undefined') {
-    (window as unknown as { useCombatStore: typeof useCombatStore }).useCombatStore = useCombatStore;
-}
+exposerMagasinDuHub('useCombatStore', useCombatStore);
 
 /*
   **Les décès s'écrivent au journal quand ils arrivent.** Voir `DecesAuJournal.ts`

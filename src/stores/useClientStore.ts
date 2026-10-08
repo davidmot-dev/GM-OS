@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { exposerMagasinDuHub } from '../utils/magasinsDuHub';
 
 interface ClientState {
     deviceId: string;
@@ -109,6 +110,4 @@ export const useClientStore = create<ClientState>()(
     )
 );
 
-if (typeof window !== 'undefined') {
-    (window as any).useClientStore = useClientStore;
-}
+exposerMagasinDuHub('useClientStore', useClientStore);

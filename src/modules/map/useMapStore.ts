@@ -7,6 +7,7 @@ import type {
 } from './types';
 import { useJournalStore } from '../journal/useJournalStore';
 import { fogDB } from '../../utils/indexedDB';
+import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
 
 /**
  * Le combattant né de cette entité, s'il y en a un sur le plateau.
@@ -762,7 +763,5 @@ export const useMapStore = create<MapState>()(
     )
 );
 
-if (typeof window !== 'undefined') {
-    (window as Window & { useMapStore?: any }).useMapStore = useMapStore;
-}
+exposerMagasinDuHub('useMapStore', useMapStore);
 

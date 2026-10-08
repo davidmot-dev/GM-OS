@@ -116,8 +116,41 @@ conservées à l'identique. `git diff --check` passe.
 **Troisième lot validé : six fichiers de code/tests et cinq documents.**
 Publication demandée par David : **« commit, pousse et passe à l'étape suivante
 (GM-OS est éteint) »**. Les changements antérieurs de Claude restent hors de ce lot.
+Publication terminée : **`63cccdda`** sur `origin/feature/tablet-hub-pwa`,
+après les contrôles complets du hook de pré-push.
 Reprendre `useHubSync` : accès dynamique aux magasins et charge réelle de
 synchronisation ; `RemoteSyncData` ne décrit pas tout ce qu'applique le Hub.
 Puis `CrossWindowEventService` : préserver l'autorité de projection du MJ et
 les positions des jetons saisis. Les 20 effets et les autres domaines/tests
 viennent après. L'inventaire JSON conserve les 540 alertes initiales.
+
+## Quatrième lot : magasins du Hub
+
+[Contrat, essais et suite](2026-10-08-lint-magasins-hub.md). Un adaptateur
+commun associe les douze noms de magasins à leurs états réels, par des imports
+de types seuls. Les sélecteurs du Hub, les favoris/PNJ/lieux résolus et les
+minuteurs sont typés. Les douze points d'exposition des magasins reprennent ce
+contrat. Les abonnements gardent leur référence et les hooks leur nombre
+fixe, y compris si un magasin apparaît tardivement.
+
+**24 `any` applicatifs retirés** ; lint global **1 534 fichiers, zéro erreur,
+409 avertissements**, sans abaisser les règles. TypeScript, construction et
+**242 tests ciblés dans 14 fichiers** passent. **Six scénarios Electron/tablettes**
+passent : les quatre gardes de remise à zéro du Player Hub, l'inventaire avec
+don/retrait et la fiche avec PV/réserve à 390 px. Profils jetables, ports de
+test, appareils muets ; captures préexistantes du manuel conservées à l'identique.
+La suite complète de la version finale passe : **6 838 tests dans 532 fichiers**,
+un fichier et quatre tests ignorés. `git diff --check` passe.
+
+**Quatrième lot validé : quatorze fichiers de code et cinq documents.**
+Publication demandée par David : **« commit, pousse et passe à l'étape suivante
+(GM-OS est éteint) »**.
+La reprise reste dans l'étape 2 de l'audit : typer les charges reçues par le
+Hub en vérifiant ensemble le message construit par `useNexusSynchronizer`,
+sa sérialisation et les magasins destinataires. Le DTO `RemoteSyncData` ne
+décrit pas toutes les données reçues. Le crochet garde 17 `any` liés aux
+charges et projections, ainsi que l'effet des dés ; ne pas affirmer un état
+complet de magasin sur un message reconstruit et réduit. Puis reprendre
+`CrossWindowEventService`, en conservant l'autorité du MJ et les jetons saisis.
+Les effets et les autres domaines/tests viennent après. Les changements
+antérieurs de Claude sont conservés hors de ce lot.
