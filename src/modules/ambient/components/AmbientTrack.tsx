@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Play, Square, Lightbulb, Trash2 } from 'lucide-react';
 import { gmCustom } from '../../../stores/useModalStore';
@@ -11,32 +11,37 @@ interface AmbientTrackProps {
     onRequestMediaBrowser: () => void;
 }
 
+const SILENCE_VISUEL = new Uint8Array(16);
+
 const TrackVisualizer: React.FC<{ index: number; color: string; isPlaying: boolean }> = ({ index, color, isPlaying }) => {
-    const [data, setData] = useState(new Uint8Array(16).fill(0));
-    const rafRef = useRef<number | undefined>(undefined);
+    const lecture = useMemo(() => ({ index, isPlaying }), [index, isPlaying]);
+    const [mesure, setMesure] = useState<{ lecture: typeof lecture; data: Uint8Array } | null>(null);
+    const data = isPlaying && mesure?.lecture === lecture ? mesure.data : SILENCE_VISUEL;
 
     useEffect(() => {
-        if (!isPlaying) {
-            setData(new Uint8Array(16).fill(0));
-            return;
-        }
+        const { index, isPlaying } = lecture;
+        if (!isPlaying) return;
+        let vivant = true;
+        let frame: number;
 
         const update = () => {
+            if (!vivant) return;
             const track = ambientEngine.tracks[index];
             if (track) {
                 const analyser = track.getAnalyser();
                 const freqData = new Uint8Array(16);
                 analyser.getByteFrequencyData(freqData);
-                setData(freqData);
+                setMesure({ lecture, data: freqData });
             }
-            rafRef.current = requestAnimationFrame(update);
+            frame = requestAnimationFrame(update);
         };
 
-        rafRef.current = requestAnimationFrame(update);
+        frame = requestAnimationFrame(update);
         return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            vivant = false;
+            cancelAnimationFrame(frame);
         };
-    }, [isPlaying, index]);
+    }, [lecture]);
 
     return (
         <div className="flex items-end justify-center gap-[2px] h-4 w-full px-2 overflow-hidden pointer-events-none opacity-50">

@@ -22,11 +22,11 @@ const Duree: React.FC<{ secondes: number | null }> = ({ secondes }) => (
 /** Vrai quand l'élément entre à l'écran — et le reste : on ne décode qu'une fois. */
 function useVisible<T extends Element>(): [React.RefObject<T | null>, boolean] {
     const ref = useRef<T>(null);
-    const [visible, setVisible] = useState(false);
+    const [dejaVisible, setVisible] = useState(false);
+    const visible = dejaVisible || typeof IntersectionObserver === 'undefined';
     useEffect(() => {
         const el = ref.current;
         if (!el || visible) return;
-        if (typeof IntersectionObserver === 'undefined') { setVisible(true); return; }
         const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { rootMargin: '200px' });
         obs.observe(el);
         return () => obs.disconnect();

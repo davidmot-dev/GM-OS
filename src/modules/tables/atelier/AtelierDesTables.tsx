@@ -67,7 +67,11 @@ export const AtelierDesTables: React.FC<Props> = ({
     const [univers, setUnivers] = useState<string[]>([]);
     const [universChoisi, setUniversChoisi] = useState(universDepart ?? '');
     const [universNeuf, setUniversNeuf] = useState('');
-    const [tables, setTables] = useState<string[]>([]);
+    const [revisionDesTables, setRevisionDesTables] = useState(0);
+    const contexteTables = useMemo(() => ({ univers: universChoisi, revision: revisionDesTables, ouvert }),
+        [universChoisi, revisionDesTables, ouvert]);
+    const [listeLue, setListeLue] = useState<{ contexte: typeof contexteTables; fichiers: string[] } | null>(null);
+    const tables = listeLue?.contexte === contexteTables ? listeLue.fichiers : [];
     const [nomDeFichier, setNomDeFichier] = useState('');
     const [table, setTable] = useState<TableData>(TABLE_NEUVE);
     const [enCours, setEnCours] = useState(false);
@@ -84,12 +88,18 @@ export const AtelierDesTables: React.FC<Props> = ({
         pontDesTables()?.listUniverses().then(setUnivers).catch(() => setUnivers([]));
     }, [ouvert]);
 
-    const rechargerLesTables = useCallback((u: string) => {
-        if (!u) { setTables([]); return; }
-        pontDesTables()?.listTables(u).then(setTables).catch(() => setTables([]));
+    const rechargerLesTables = useCallback(() => {
+        setRevisionDesTables(revision => revision + 1);
     }, []);
 
-    useEffect(() => { rechargerLesTables(universChoisi); }, [universChoisi, rechargerLesTables]);
+    useEffect(() => {
+        if (!contexteTables.ouvert || !contexteTables.univers) return;
+        let vivant = true;
+        pontDesTables()?.listTables(contexteTables.univers)
+            .then(fichiers => { if (vivant) setListeLue({ contexte: contexteTables, fichiers }); })
+            .catch(() => { if (vivant) setListeLue({ contexte: contexteTables, fichiers: [] }); });
+        return () => { vivant = false; };
+    }, [contexteTables]);
 
     const ouvrirUneTable = async (nom: string) => {
         setEssai(null);
@@ -159,7 +169,7 @@ export const AtelierDesTables: React.FC<Props> = ({
             setUniversNeuf('');
             pontDesTables()?.listUniverses().then(setUnivers).catch(() => {});
         }
-        rechargerLesTables(universVise);
+        rechargerLesTables();
         onTablesChangees(universVise);
     };
 
@@ -173,7 +183,7 @@ export const AtelierDesTables: React.FC<Props> = ({
         gmToast(`« ${nomDeFichier} » supprimée.`);
         setNomDeFichier('');
         setTable(TABLE_NEUVE());
-        rechargerLesTables(universChoisi);
+        rechargerLesTables();
         onTablesChangees(universChoisi);
     };
 
