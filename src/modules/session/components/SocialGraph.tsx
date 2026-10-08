@@ -3,7 +3,7 @@ import ForceGraph2D from 'react-force-graph-2d';
 import { useSessionOSStore, type EntityRelation } from '../useSessionOSStore';
 import { Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import * as d3 from 'd3';
+import { reglerLesForcesDuGraphe, libererLesNoeudsDuGraphe, type GrapheSocial } from '../logic/commandesDuGrapheSocial';
 
 
 
@@ -15,7 +15,7 @@ import { prepareSocialGraphData, getUniqueFactions, type GraphNode, type GraphLi
   formulaire une troisième liste de types : elles avaient divergé au point
   qu'« Ami » enregistrait `romantic`.
 */
-import { couleurDeRelation, distanceDeRelation, NATURES_DE_RELATION, NATURES_ORDONNEES } from '../logic/relationsSociales';
+import { couleurDeRelation, NATURES_DE_RELATION, NATURES_ORDONNEES } from '../logic/relationsSociales';
 
 // Hooks
 import { useAvatarResolver } from '../hooks/useAvatarResolver';
@@ -119,10 +119,10 @@ const SocialGraph: React.FC = () => {
     const [graphCollision, setGraphCollision] = useState<number>(40);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const graphRef = useRef<any>(null);
+    const graphRef = useRef<GrapheSocial | undefined>(undefined);
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const estCanevasVisible = dimensions.width > 0;
 
     // --- Dimensionnement Réactif ---
     useEffect(() => {
@@ -224,7 +224,6 @@ const SocialGraph: React.FC = () => {
             
             // Mise à jour des forces via l'API du composant
             try {
-                if (fg.d3Force('charge')) fg.d3Force('charge').strength(graphCharge).distanceMax(1000);
                 /*
                   **La distance suit la nature du lien** — l'« influence sur la
                   physique du graphe » du jalon d'avril 2026, qui n'avait jamais
@@ -233,27 +232,14 @@ const SocialGraph: React.FC = () => {
                   déjà. Le curseur du meneur reste la référence, la nature ne
                   fait que la moduler.
                 */
-                if (fg.d3Force('link')) {
-                    fg.d3Force('link').distance((lien: GraphLink) =>
-                        distanceDeRelation(lien.type, graphDistance));
-                }
-                fg.d3Force('collide', d3.forceCollide(graphCollision));
-                
-                const sim = fg.d3Simulation();
-                if (sim) {
-                    // Si les réglages sont ouverts, on garde la simulation active (alphaTarget > 0)
-                    // pour que les changements soient fluides et visibles immédiatement
-                    if (isSettingsOpen) {
-                        sim.alphaTarget(0.3).restart();
-                    } else {
-                        sim.alphaTarget(0).alpha(0.5).restart();
-                    }
-                }
+                reglerLesForcesDuGraphe(fg, {
+                    charge: graphCharge, distance: graphDistance, collision: graphCollision,
+                });
             } catch (e) {
                 console.warn('[SocialGraph] Physics update error:', e);
             }
         }
-    }, [data.nodes, data.links, graphCharge, graphDistance, graphCollision, isSettingsOpen]);
+    }, [data.nodes, data.links, graphCharge, graphDistance, graphCollision, isSettingsOpen, estCanevasVisible]);
 
     const handleToggleLock = useCallback(() => {
         if (!activeCampaignId) return;
@@ -302,37 +288,23 @@ const SocialGraph: React.FC = () => {
         if (!activeCampaignId) return;
         detacherLesNoeuds(activeCampaignId, noeudId);
 
-        const fg = graphRef.current;
-        const sim = fg && typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        sim?.nodes().forEach((node: any) => {
-            if (!noeudId || node.id === noeudId) {
-                node.fx = null;
-                node.fy = null;
-            }
-        });
-        sim?.alpha(0.3).restart();
-    }, [activeCampaignId, detacherLesNoeuds]);
+        libererLesNoeudsDuGraphe(data.nodes, noeudId);
+        graphRef.current?.d3ReheatSimulation();
+    }, [activeCampaignId, detacherLesNoeuds, data.nodes]);
 
     const handleResetLayout = useCallback(() => {
         if (!activeCampaignId) return;
         resetGraphLayout(activeCampaignId);
+        libererLesNoeudsDuGraphe(data.nodes);
         
         // Petit délai pour laisser le store se mettre à jour avant de tenter le rafraîchissement
         setTimeout(() => {
             const fg = graphRef.current;
             if (!fg) return;
             
-            const sim = typeof fg.d3Simulation === 'function' ? fg.d3Simulation() : null;
-            if (sim) {
-                sim.nodes().forEach((node: any) => {
-                    node.fx = null;
-                    node.fy = null;
-                });
-                sim.alpha(0.5).restart();
-            }
+            fg.d3ReheatSimulation();
         }, 150);
-    }, [activeCampaignId, resetGraphLayout]);
+    }, [activeCampaignId, resetGraphLayout, data.nodes]);
 
     const handleSaveFaction = useCallback(() => {
         const node = data.nodes.find(n => n.id === selectedNodeId);
@@ -518,7 +490,7 @@ const SocialGraph: React.FC = () => {
                 plus un verre posé par-dessus — il « se voyait mal ». */}
             <div className="flex flex-1 min-h-0">
                 <div ref={containerRef} className="flex-1 relative min-w-0">
-                    {dimensions.width > 0 && (
+                    {estCanevasVisible && (
                         <ForceGraph2D
                             ref={graphRef}
                             width={dimensions.width}

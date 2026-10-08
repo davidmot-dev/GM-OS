@@ -586,6 +586,8 @@ const CharacterSheetEditor: React.FC = () => {
                                                         type: 'objet',
                                                         rarity: 'commun',
                                                         quantity: 1,
+                                                        weight: 0,
+                                                        properties: {},
                                                         description: ''
                                                     });
                                                     gmToast(`Objet "${newItemName.trim()}" ajouté !`);
@@ -609,6 +611,8 @@ const CharacterSheetEditor: React.FC = () => {
                                                         type: 'objet',
                                                         rarity: 'commun',
                                                         quantity: 1,
+                                                        weight: 0,
+                                                        properties: {},
                                                         description: ''
                                                     });
                                                     gmToast(`Objet "${newItemName.trim()}" ajouté !`);

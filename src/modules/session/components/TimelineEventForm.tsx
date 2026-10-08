@@ -101,18 +101,20 @@ export const TimelineEventForm: React.FC<TimelineEventFormProps> = ({ event, onC
             <div className="space-y-2">
                 <label className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{t('modules:session.timeline_form.type_label')}</label>
                 <div className="flex flex-wrap gap-2">
-                    {(['session', 'combat', 'quest', 'lore', 'major', 'minor', 'discovery'] as const).map(itemType => (
+                    {/* 08/10/2026, David : aligner les cinq catégories sur le modèle.
+                        « major-event » garde le libellé traduit « major ». */}
+                    {(['session', 'combat', 'quest', 'lore', 'major-event'] as const).map(itemType => (
                         <button
                             key={itemType}
                             type="button"
-                            onClick={() => setType(itemType as any)}
+                            onClick={() => setType(itemType)}
                             className={`px-4 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest border transition-all ${
                                 type === itemType 
                                     ? 'bg-accent/10 border-accent/40 text-accent shadow-glow-accent/10' 
                                     : 'bg-app-bg/20 border-app-border text-app-text/40 hover:text-app-text'
                             }`}
                         >
-                            {t(`modules:session.timeline_form.types.${itemType}`)}
+                            {t(`modules:session.timeline_form.types.${itemType === 'major-event' ? 'major' : itemType}`)}
                         </button>
                     ))}
                 </div>
