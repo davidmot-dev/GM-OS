@@ -7,7 +7,7 @@
  * @module session/store/cluesSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import type { Clue } from './types';
 
 // ─────────────────────────────────────────────
@@ -35,7 +35,7 @@ export type CluesSlice = CluesSliceState & CluesSliceActions;
 // Creator (Winston Pattern)
 // ─────────────────────────────────────────────
 
-export const createCluesSlice: StateCreator<CluesSlice, [], [], CluesSlice> = (set) => ({
+export const createCluesSlice: CreateurDeSlice<CluesSlice> = (set) => ({
     // Initial State
     clues: [],
 

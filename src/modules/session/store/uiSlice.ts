@@ -10,7 +10,7 @@
  * @module session/store/uiSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import type { CurrentView, RemoteNotification, HubNotification, SessionMessage } from './types';
 
 // ─────────────────────────────────────────────
@@ -83,7 +83,7 @@ export type UiSlice = UiSliceState & UiSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createUiSlice: StateCreator<UiSlice, [], [], UiSlice> = (set, get) => ({
+export const createUiSlice: CreateurDeSlice<UiSlice> = (set, get) => ({
     // Initial State
     currentView: 'cockpit',
     wikiTab: 'timeline',

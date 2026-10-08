@@ -6,7 +6,8 @@
  * @module session/store/lootSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
+import type { SessionOSStore } from './index';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 import type { InventoryItem, LootHistoryEntry } from './types';
@@ -66,7 +67,7 @@ export interface LootSliceActions {
 
 export type LootSlice = LootSliceState & LootSliceActions;
 
-export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set, get) => ({
+export const createLootSlice: CreateurDeSlice<LootSlice, SessionOSStore> = (set, get) => ({
     // Initial State
     lootPool: [],
     lootHistory: [],
@@ -76,7 +77,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
     addLootToPool: (items) => {
         // Casté pour lire la campagne ouverte via le store racine, comme
         // `assignLootToCharacter` lit `players` et `addInventoryItem`.
-        const campaignId = (get() as unknown as { activeCampaignId?: string | null }).activeCampaignId ?? undefined;
+        const campaignId = get().activeCampaignId ?? undefined;
         const marques: ObjetDuButin[] = items.map(item => ({ ...item, campaignId }));
         set((state) => ({ lootPool: [...state.lootPool, ...marques] }));
         gmToast(`${items.length} objet(s) ajouté(s) au butin de séance.`, 'info');
@@ -94,7 +95,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
      * bouton porte sur ce que le meneur a sous les yeux.
      */
     clearLootPool: () => {
-        const campaignId = (get() as unknown as { activeCampaignId?: string | null }).activeCampaignId ?? undefined;
+        const campaignId = get().activeCampaignId ?? undefined;
         set((state) => ({
             lootPool: state.lootPool.filter((it) => !estDeLaCampagne(it.campaignId, campaignId)),
         }));
@@ -102,7 +103,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
     },
 
     clearLootHistory: () => {
-        const campaignId = (get() as unknown as { activeCampaignId?: string | null }).activeCampaignId ?? undefined;
+        const campaignId = get().activeCampaignId ?? undefined;
         set((state) => ({
             lootHistory: state.lootHistory.filter((e) => !estDeLaCampagne(e.campaignId, campaignId)),
         }));
@@ -137,7 +138,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
     },
 
     archiverLesReliquats: () => {
-        const campaignId = (get() as unknown as { activeCampaignId?: string | null }).activeCampaignId ?? undefined;
+        const campaignId = get().activeCampaignId ?? undefined;
         const reliquats = get().lootPool.filter(it => estDeLaCampagne(it.campaignId, campaignId));
         if (reliquats.length === 0) return;
         set((state) => ({
@@ -159,7 +160,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
     },
 
     assignLootToCharacter: (itemId, playerId, characterId) => {
-        const state = get() as any; // Casté pour accéder aux autres slices via le root store
+        const state = get();
         const item = state.lootPool.find((it: ObjetDuButin) => it.id === itemId);
 
         if (!item) {
@@ -177,7 +178,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
             // 2. Retirer du pool
             get().removeFromPool(itemId);
 
-            const char = state.players.flatMap((p: any) => p.characters).find((c: any) => c.id === characterId);
+            const char = state.players.flatMap(p => p.characters).find(c => c.id === characterId);
 
             // 3. Enregistrer dans l'historique
             const historyEntry: LootHistoryEntry = {
@@ -219,9 +220,7 @@ export const createLootSlice: StateCreator<LootSlice, [], [], LootSlice> = (set,
               pouvoir le rendre — mais **n'entre pas dans le résumé**. Les trois
               portes sont ainsi d'accord, ce qui était la question posée.
             */
-            const journal = (window as unknown as {
-                useJournalStore?: { getState: () => { addEvent: (e: unknown) => void } };
-            }).useJournalStore?.getState();
+            const journal = window.useJournalStore?.getState();
             journal?.addEvent({
                 type: 'SYSTEM',
                 title: i18next.t('modules:session.events.loot_grant_title', { item: item.name }),

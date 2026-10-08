@@ -9,10 +9,10 @@
  * @module session/store/sessionSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
-import type { GameSession, TransferRequest, SessionFeedback } from './types';
+import type { GameSession, TransferRequest, SessionFeedback, InventoryItem } from './types';
 import type { Scene } from '../../../types/trame.types';
 import { sanitizeSession } from '../logic/sanitization';
 import { suspendreLesScenes, reprendreLesScenes } from '../logic/trame';
@@ -89,7 +89,7 @@ export type SessionSlice = SessionSliceState & SessionSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice> = (set, get) => ({
+export const createSessionSlice: CreateurDeSlice<SessionSlice> = (set, get) => ({
     // Initial State
     sessions: [],
     pendingPreFill: null,
@@ -324,8 +324,8 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         }
 
         // 2. Effectuer le transfert atomique
-        const cleanItem = { ...request.item };
-        delete (cleanItem as any).status; // L'objet n'est plus en attente pour le destinataire
+        const cleanItem: InventoryItem & { status?: unknown } = { ...request.item };
+        delete cleanItem.status; // Retire aussi une marque laissée par une ancienne version.
 
         state.removeInventoryItem(fromPlayer.id, request.fromCharacterId, request.item.id);
         state.addInventoryItem(toPlayer.id, request.toCharacterId, cleanItem);
@@ -341,7 +341,7 @@ export const createSessionSlice: StateCreator<SessionSlice, [], [], SessionSlice
         
 
         // Log dans le journal
-        const journal = (window as any).useJournalStore?.getState();
+        const journal = window.useJournalStore?.getState();
         if (journal) {
             journal.addEvent({
                 type: 'SYSTEM',

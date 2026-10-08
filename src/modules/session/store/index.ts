@@ -156,17 +156,17 @@ export const useSessionOSStore = create<SessionOSStore>()(
     persist(
         (set, get, api) => ({
             // ── Slice Assembly ──────────────────────────
-            ...createCampaignSlice(set as any, get as any, api as any),
-            ...createSessionSlice(set as any, get as any, api as any),
-            ...createEntitySlice(set as any, get as any, api as any),
-            ...createAtlasSlice(set as any, get as any, api as any),
-            ...createChronicleSlice(set as any, get as any, api as any),
-            ...createTrameSlice(set as any, get as any, api as any),
-            ...createForgeSlice(set as any, get as any, api as any),
-            ...createUiSlice(set as any, get as any, api as any),
-            ...createCluesSlice(set as any, get as any, api as any),
-            ...createDeckSlice(set as any, get as any, api as any),
-            ...createLootSlice(set as any, get as any, api as any),
+            ...createCampaignSlice(set, get, api),
+            ...createSessionSlice(set, get, api),
+            ...createEntitySlice(set, get, api),
+            ...createAtlasSlice(set, get, api),
+            ...createChronicleSlice(set, get, api),
+            ...createTrameSlice(set, get, api),
+            ...createForgeSlice(set, get, api),
+            ...createUiSlice(set, get, api),
+            ...createCluesSlice(set, get, api),
+            ...createDeckSlice(set, get, api),
+            ...createLootSlice(set, get, api),
 
             lastBackupAt: null as string | null,
 

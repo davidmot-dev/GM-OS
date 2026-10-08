@@ -7,7 +7,7 @@
  * @module session/store/trameSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import type { Acte, Scene, OrigineDeScene } from '../../../types/trame.types';
 import type { GameSession } from '../../../types/session.types';
 import {
@@ -178,7 +178,7 @@ export type TrameSlice = TrameSliceState & TrameSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createTrameSlice: StateCreator<TrameSlice, [], [], TrameSlice> = (set, get) => ({
+export const createTrameSlice: CreateurDeSlice<TrameSlice> = (set, get) => ({
     actes: [],
     scenes: [],
 

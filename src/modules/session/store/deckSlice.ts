@@ -8,7 +8,7 @@
  * @module session/store/deckSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import i18next from 'i18next';
 import { DeckInterpreter } from '../logic/DeckInterpreter';
 import type { DeckManifest, DeckSessionState } from './types';
@@ -116,7 +116,7 @@ export interface DeckSliceActions {
 
 export type DeckSlice = DeckSliceState & DeckSliceActions;
 
-export const createDeckSlice: StateCreator<DeckSlice, [], [], DeckSlice> = (set, get) => ({
+export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
     // Initial State
     decks: [],
     deckStates: {},

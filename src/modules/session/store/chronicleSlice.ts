@@ -7,7 +7,7 @@
  * @module session/store/chronicleSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import type { WikiEntry, TimelineEvent } from './types';
 
 // ─────────────────────────────────────────────
@@ -40,7 +40,7 @@ export type ChronicleSlice = ChronicleSliceState & ChronicleSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createChronicleSlice: StateCreator<ChronicleSlice, [], [], ChronicleSlice> = (set) => ({
+export const createChronicleSlice: CreateurDeSlice<ChronicleSlice> = (set) => ({
     // Initial State
     wikiEntries: [],
     timelineEvents: [],

@@ -7,7 +7,7 @@
  * @module session/store/entitySlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
@@ -163,7 +163,7 @@ export type EntitySlice = EntitySliceState & EntitySliceActions;
 const CLES_DES_DONNEES = ['sheetData', 'description', 'gmNotes', 'playerNotes', 'inventory', 'inventoryItems'] as const;
 const toucheLesDonnees = (updates: Partial<PlayerCharacter>) => CLES_DES_DONNEES.some(k => k in updates);
 
-export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> = (set, get) => ({
+export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
     // Initial State
     entities: [],
     players: [],
@@ -745,8 +745,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 hp: newHp, healthSystem: updatedHealth,
             });
 
-            if (typeof window !== 'undefined' && (window as any).useJournalStore) {
-                (window as any).useJournalStore.getState().addEvent({
+            if (typeof window !== 'undefined' && window.useJournalStore) {
+                window.useJournalStore.getState().addEvent({
                     type: 'COMBAT',
                     title: i18next.t('modules:session.events.impact_title', { name: entity.name }),
                     content: raconterLImpact(impact, {
@@ -782,8 +782,8 @@ export const createEntitySlice: StateCreator<EntitySlice, [], [], EntitySlice> =
                 hp: newHp, healthSystem: updatedHealth,
             });
 
-            if (typeof window !== 'undefined' && (window as any).useJournalStore) {
-                (window as any).useJournalStore.getState().addEvent({
+            if (typeof window !== 'undefined' && window.useJournalStore) {
+                window.useJournalStore.getState().addEvent({
                     type: 'COMBAT',
                     title: i18next.t('modules:session.events.impact_title', { name: character.name }),
                     content: raconterLImpact(impact, {

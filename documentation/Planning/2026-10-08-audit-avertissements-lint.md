@@ -161,5 +161,13 @@ Le [premier lot](2026-10-08-lint-dependances-react.md) corrige les 15 dépendanc
 React ; quatre diagnostics de mémoïsation associés disparaissent également.
 Le lint global compte maintenant **1 530 fichiers, zéro erreur, 521 avertissements** :
 497 `any`, 20 effets, trois diagnostics de mémoïsation et une directive inutile.
-Les contrôles d'exécution propres à ce lot sont décrits dans sa note. Prochaine
-étape : contrats communs de typage. Aucun commit/push demandé pour ces corrections.
+Les contrôles d'exécution propres à ce lot sont décrits dans sa note.
+Publication ensuite demandée : premier lot poussé sous **`8c0e4aa9`**.
+
+Le [deuxième lot](2026-10-08-lint-contrats-session.md) reprend les contrats de
+Session et du pont Electron. **73 `any` applicatifs retirés**, sans changement
+des règles : **1 531 fichiers, zéro erreur et 448 avertissements**. Restent
+424 `any` (200 applicatifs, 224 dans les tests), 20 effets, trois diagnostics
+de mémoïsation et une directive inutile. Les contrats des données de
+synchronisation du Hub et des messages entre fenêtres/tablettes sont la suite
+de cette étape. Deuxième lot non commité.

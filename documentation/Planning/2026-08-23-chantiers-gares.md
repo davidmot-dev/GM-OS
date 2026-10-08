@@ -9968,6 +9968,14 @@ six scénarios Electron Dice-OS** passent.
 La suite vise les contrats de typage communs, puis les effets écran par écran
 et le typage des tests. Publication du premier lot demandée le 08/10 :
 **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Premier lot poussé : **`8c0e4aa9`**. Reprise du typage :
+[contrats de Session et du pont Electron](2026-10-08-lint-contrats-session.md).
+L'assemblage des onze slices, SessionManager, les gestionnaires transversaux
+et les déclarations du pont sont typés : **73 `any` applicatifs retirés**, lint
+global **1 531 fichiers, zéro erreur et 448 avertissements** ; types,
+construction, **6 811 tests unitaires et sept scénarios Electron** passent.
+Deuxième lot validé, publication demandée. Les contrats des données de synchronisation restent la suite de
+cette étape, avant les effets et le typage des tests.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10039,7 +10047,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Premier lot réalisé le 08/10**, § 127 : les 15 dépendances React corrigées ; 540 → 521 avertissements, zéro erreur | Typer les contrats communs de Session et des échanges | [Analyse](2026-10-08-audit-avertissements-lint.md), [premier lot](2026-10-08-lint-dependances-react.md) ; publication demandée |
+| 62 | **Avertissements du lint** | 🔧 **Premier lot poussé (`8c0e4aa9`), contrats de Session et du pont réalisés**, § 127 : 540 → 521 → 448 avertissements, zéro erreur | Continuer les contrats des messages du Hub et des échanges entre fenêtres/tablettes | [Analyse](2026-10-08-audit-avertissements-lint.md), [deuxième lot](2026-10-08-lint-contrats-session.md) ; deuxième lot non commité |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

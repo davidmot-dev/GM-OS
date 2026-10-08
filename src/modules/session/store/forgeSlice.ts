@@ -8,7 +8,7 @@
  * @module session/store/forgeSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import type { GameDriver } from '../../../types/drivers';
@@ -66,7 +66,7 @@ export type ForgeSlice = ForgeSliceState & ForgeSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createForgeSlice: StateCreator<ForgeSlice, [], [], ForgeSlice> = (set, get) => ({
+export const createForgeSlice: CreateurDeSlice<ForgeSlice> = (set, get) => ({
     // Initial State
     customSheetTemplates: [],
     customGameDrivers: [],

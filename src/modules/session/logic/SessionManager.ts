@@ -4,7 +4,7 @@ import { useJournalStore } from '../../journal/useJournalStore';
 import { cloturerLeJournalDeLaSeance } from '../../journal/clotureDeSeance';
 import { useMediaStore } from '../../../stores/useMediaStore';
 import { useObsidianStore } from '../useObsidianStore';
-import type { SessionOSStore } from '../store/index';
+import type { LireLaSession, PoserLaSession } from '../store/contratDesSlices';
 import type { GameSession, Campaign } from '../store/types';
 import { suspendreLesScenes, reprendreLesScenes, laTrameALaCloture } from './trame';
 
@@ -26,8 +26,8 @@ export class SessionManager {
      * termine : par son statut (`updateSession`) ou parce qu'une autre prend sa
      * place (`launchSession`).
      */
-    static setActiveCampaign(set: any, get: any, id: string | null) {
-        const state = get() as SessionOSStore;
+    static setActiveCampaign(set: PoserLaSession, get: LireLaSession, id: string | null) {
+        const state = get();
         const campaign = state.campaigns.find(c => c.id === id);
         set({
             activeCampaignId: id,
@@ -66,8 +66,8 @@ export class SessionManager {
     /**
      * Launches a session, updating statuses and starting the Journal.
      */
-    static launchSession(set: any, get: any, sessionId: string) {
-        const { sessions, campaigns, scenes } = get() as SessionOSStore;
+    static launchSession(set: PoserLaSession, get: LireLaSession, sessionId: string) {
+        const { sessions, campaigns, scenes } = get();
         const session = sessions.find((s: GameSession) => s.id === sessionId);
         if (!session) return;
 
@@ -203,8 +203,8 @@ export class SessionManager {
      * qu'on y joue laisserait un journal ouvert sur une campagne close, et un
      * `activeSessionId` qui désigne une séance d'une campagne finie.
      */
-    static cloturerLaCampagne(set: any, get: any, id: string) {
-        const state = get() as SessionOSStore;
+    static cloturerLaCampagne(set: PoserLaSession, get: LireLaSession, id: string) {
+        const state = get();
         const campaign = state.campaigns.find((c: Campaign) => c.id === id);
         if (!campaign || campaign.clotureeLe) return;
 
@@ -213,7 +213,7 @@ export class SessionManager {
             state.scenes, state.actes, id, quand,
         );
 
-        set((s: SessionOSStore) => ({
+        set((s) => ({
             campaigns: s.campaigns.map(c => (c.id === id ? { ...c, clotureeLe: quand } : c)),
             scenes,
             actes,
@@ -240,12 +240,12 @@ export class SessionManager {
      * aussi ce que le meneur avait clos de sa main avant la clôture, et on ne
      * saurait plus lequel était lequel.
      */
-    static rouvrirLaCampagne(set: any, get: any, id: string) {
-        const state = get() as SessionOSStore;
+    static rouvrirLaCampagne(set: PoserLaSession, get: LireLaSession, id: string) {
+        const state = get();
         const campaign = state.campaigns.find((c: Campaign) => c.id === id);
         if (!campaign?.clotureeLe) return;
 
-        set((s: SessionOSStore) => ({
+        set((s) => ({
             campaigns: s.campaigns.map(c => {
                 if (c.id !== id) return c;
                 // On retire la date plutôt que de la mettre à `undefined` : une
@@ -259,12 +259,12 @@ export class SessionManager {
         gmToast(`« ${campaign.name} » est rouverte. Sa trame reste telle quelle.`, 'info');
     }
 
-    static deleteCampaign(set: any, get: any, id: string) {
-        const state = get() as SessionOSStore;
+    static deleteCampaign(set: PoserLaSession, get: LireLaSession, id: string) {
+        const state = get();
         const campaign = state.campaigns.find((c: Campaign) => c.id === id);
         if (!campaign) return;
 
-        set((state: SessionOSStore) => ({
+        set((state) => ({
             campaigns: state.campaigns.filter((c) => c.id !== id),
             activeCampaignId: state.activeCampaignId === id ? null : state.activeCampaignId,
             
@@ -335,11 +335,11 @@ export class SessionManager {
      * pouvoir dire quelle carte le meneur a ouverte. Le déplacement, lui, a
      * désormais son propre geste — `leGroupeSyRend` ci-dessous.
      */
-    static navigateToAtlasMap(set: any, get: any, id: string | null) {
+    static navigateToAtlasMap(set: PoserLaSession, get: LireLaSession, id: string | null) {
         set({ selectedAtlasMapId: id, currentView: 'world-atlas' });
         if (!id) return;
 
-        const map = (get() as SessionOSStore).atlasMaps.find(m => m.id === id);
+        const map = get().atlasMaps.find(m => m.id === id);
         if (!map) return;
 
         useJournalStore.getState().addEvent({
@@ -375,8 +375,8 @@ export class SessionManager {
      * écrite par le code, pas par le meneur — et c'est elle, précisément, qui
      * entrait dans les résumés jusqu'ici.
      */
-    static leGroupeSyRend(set: any, get: any, id: string) {
-        const state = get() as SessionOSStore;
+    static leGroupeSyRend(set: PoserLaSession, get: LireLaSession, id: string) {
+        const state = get();
         const map = state.atlasMaps.find(m => m.id === id);
         if (!map) return;
 

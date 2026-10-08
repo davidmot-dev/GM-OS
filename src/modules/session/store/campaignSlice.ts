@@ -9,7 +9,7 @@
  * @module session/store/campaignSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import { gmToast } from '../../../stores/useToastStore';
 import type { Campaign, LayoutConfig } from './types';
 import { momentDeJeu } from '../../ai/budgetsDeTemps';
@@ -74,7 +74,7 @@ export type CampaignSlice = CampaignSliceState & CampaignSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createCampaignSlice: StateCreator<CampaignSlice, [], [], CampaignSlice> = (set, get) => ({
+export const createCampaignSlice: CreateurDeSlice<CampaignSlice> = (set, get) => ({
     // Initial State
     campaigns: [],
     activeCampaignId: null,

@@ -17,6 +17,8 @@ import { VoiceState } from '../modules/voice/useVoiceStore';
 import { ClockState } from '../store/useClockStore';
 import { ImageBridge } from '../modules/image/types';
 import { WebState } from '../modules/web/useWebStore';
+import type { MusicEngine } from '../modules/music/MusicEngine';
+import type { DiceEngine } from '../modules/dice/DiceEngine';
 // Import de type seul, à travers la frontière des projets TypeScript :
 // `mcpActivity` est volontairement sans dépendance à `electron` ni à `node`,
 // et c'est le contrat du canal `mcp:activity` qu'on veut partager, pas du code.
@@ -238,7 +240,7 @@ declare global {
              *             reçoivent l'action**. Sans lui, tout le monde reçoit
              *             — y compris les tablettes des joueurs.
              */
-            broadcastUIAction?: (action: any, role?: string) => void;
+            broadcastUIAction?: (action: RemoteAction, role?: string) => void;
             getDisplays: () => Promise<DisplayInfo[]>;
             onAction: (callback: (data: RemoteAction) => void) => () => void;
             // Ordre des arguments aligné sur preload.ts : (buffer, id).
@@ -271,10 +273,10 @@ declare global {
             onDisplayChanged: (callback: (count: number) => void) => () => void;
         };
         logger?: {
-            info: (message: string, ...args: any[]) => void;
-            warn: (message: string, ...args: any[]) => void;
-            error: (message: string, ...args: any[]) => void;
-            debug: (message: string, ...args: any[]) => void;
+            info: (message: string, ...args: unknown[]) => void;
+            warn: (message: string, ...args: unknown[]) => void;
+            error: (message: string, ...args: unknown[]) => void;
+            debug: (message: string, ...args: unknown[]) => void;
         };
         security?: {
             getSecret: (id: string) => Promise<string | null>;
@@ -452,11 +454,11 @@ declare global {
             listSounds: () => Promise<string[]>;
         };
         light?: {
-            request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) => Promise<any>;
+            request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) => Promise<unknown>;
         };
         /** Alias du relais ci-dessus, pour l'afficheur Ulanzi. Un seul canal. */
         ulanzi?: {
-            request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) => Promise<any>;
+            request: (url: string, method: string, body?: unknown, headers?: Record<string, string>) => Promise<unknown>;
             /** GM-OS va se fermer : dernière occasion de rendre l'afficheur. */
             surDemandeDeFermeture?: (rappel: () => void) => void;
             /** « J'ai rendu » — la fermeture n'attend pas le délai de sécurité. */
@@ -573,10 +575,10 @@ declare global {
             saveAvatar: (buffer: ArrayBuffer, fileName: string) => Promise<string | null>;
         };
         logger?: {
-            info: (message: string, ...args: any[]) => void;
-            warn: (message: string, ...args: any[]) => void;
-            error: (message: string, ...args: any[]) => void;
-            debug: (message: string, ...args: any[]) => void;
+            info: (message: string, ...args: unknown[]) => void;
+            warn: (message: string, ...args: unknown[]) => void;
+            error: (message: string, ...args: unknown[]) => void;
+            debug: (message: string, ...args: unknown[]) => void;
         };
     }
 
@@ -625,8 +627,8 @@ declare global {
             crossfadeTo: (target: 'A' | 'B', durationMs: number) => void;
             positionDuCrossfader: () => number;
             resume: () => Promise<void>;
-            deckA: any;
-            deckB: any;
+            deckA: MusicEngine['deckA'];
+            deckB: MusicEngine['deckB'];
         };
         voiceEngine?: {
             initialize: () => Promise<void>;
@@ -634,11 +636,7 @@ declare global {
             refreshAvailableDevices: () => Promise<void>;
             updateOutputDevice: (id: string) => Promise<void>;
         };
-        diceEngine?: {
-            roll: (sides: number) => number;
-            rollFormula: (formula: string) => any;
-            rollFromConfig: (config: any, options?: any) => any;
-        };
+        diceEngine?: Pick<typeof DiceEngine, 'roll' | 'rollFormula' | 'rollFromConfig'>;
     }
 }
 

@@ -9,7 +9,7 @@
  * @module session/store/atlasSlice
  */
 
-import type { StateCreator } from 'zustand';
+import type { CreateurDeSlice } from './contratDesSlices';
 import type { AtlasMap, AtlasLinkedEntity } from './types';
 
 // ─────────────────────────────────────────────
@@ -43,7 +43,7 @@ export type AtlasSlice = AtlasSliceState & AtlasSliceActions;
 
 // Ni `get` ni le journal ici : le seul usage qu'en faisait ce slice était
 // l'émetteur mort de `setSelectedAtlasMap`.
-export const createAtlasSlice: StateCreator<AtlasSlice, [], [], AtlasSlice> = (set) => ({
+export const createAtlasSlice: CreateurDeSlice<AtlasSlice> = (set) => ({
     // Initial State
     atlasMaps: [],
 

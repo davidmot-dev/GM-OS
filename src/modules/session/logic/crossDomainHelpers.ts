@@ -1,6 +1,6 @@
 import { gmToast } from '../../../stores/useToastStore';
 import { invitePourUnIndice } from './inviteDImage';
-import type { SessionOSStore } from '../store/index';
+import type { LireLaSession, PoserLaSession } from '../store/contratDesSlices';
 import type {
     Campaign, Entity, AtlasMap, WikiEntry, EntityRelation, Acte, Scene, Clue,
 } from '../store/types';
@@ -38,8 +38,8 @@ export interface CampagneForgee {
  * meneur cessera de retravailler.*
  */
 export const handleAppliquerLaCampagneForgee = (
-    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
-    get: () => SessionOSStore,
+    set: PoserLaSession,
+    get: LireLaSession,
     ecriture: CampagneForgee,
 ) => {
     const { campaignId, campagne, liensSurExistants } = ecriture;
@@ -127,7 +127,7 @@ export const handleAppliquerLaCampagneForgee = (
  * lieu de quatre fois.
  */
 async function demanderUneImage(
-    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
+    set: PoserLaSession,
     quoi: string,
     invite: string,
     poser: (mediaId: string) => void,
@@ -146,8 +146,8 @@ async function demanderUneImage(
 }
 
 export const handleGenerateEntityPortrait = async (
-    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
-    get: () => SessionOSStore,
+    set: PoserLaSession,
+    get: LireLaSession,
     entityId: string, 
     instructions?: string
 ) => {
@@ -162,8 +162,8 @@ export const handleGenerateEntityPortrait = async (
 };
 
 export const handleGenerateAtlasMapImage = async (
-    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
-    get: () => SessionOSStore,
+    set: PoserLaSession,
+    get: LireLaSession,
     mapId: string, 
     instructions?: string
 ) => {
@@ -178,8 +178,8 @@ export const handleGenerateAtlasMapImage = async (
 };
 
 export const handleGeneratePlayerPortrait = async (
-    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
-    get: () => SessionOSStore,
+    set: PoserLaSession,
+    get: LireLaSession,
     playerId: string, 
     characterId: string, 
     instructions?: string
@@ -208,8 +208,8 @@ export const handleGeneratePlayerPortrait = async (
  * d'être lisible ailleurs que noyé dans un gabarit de chaîne.*
  */
 export const handleGenerateClueImage = async (
-    set: (partial: Partial<SessionOSStore> | ((state: SessionOSStore) => Partial<SessionOSStore>)) => void,
-    get: () => SessionOSStore,
+    set: PoserLaSession,
+    get: LireLaSession,
     clueId: string,
     instructions?: string,
 ) => {
@@ -237,7 +237,7 @@ export const handleGenerateClueImage = async (
  * pour que l'atelier des règles en bénéficie sans qu'on ait à y penser.
  */
 export const handleExportActiveCampaignToObsidian = async (
-    get: () => SessionOSStore
+    get: LireLaSession
 ): Promise<{ success: boolean; message: string }> => {
     const { obsidianExportService } = await import('../ObsidianExportService');
     const state = get();

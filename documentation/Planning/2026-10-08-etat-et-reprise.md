@@ -66,7 +66,27 @@ Reprendre ensuite les contrats communs de typage, d'abord les signatures
 d'assemblage des slices Session, puis les échanges entre magasins, Electron
 et tablettes. Les effets par écran et le typage des tests viennent après.
 David demande ensuite **« commit, pousse et passe à l'étape suivante (GM-OS est
-éteint) »** : publication du premier lot autorisée, puis reprise du typage.
+éteint) »** : premier lot commité et poussé sous **`8c0e4aa9`** sur
+`origin/feature/tablet-hub-pwa`, après validation complète du hook.
 Les modifications
 antérieures des guides, de la note du 07/10 et des deux fichiers à fins de
 ligne différentes sont conservées hors du lot.
+
+## Deuxième lot : contrats de Session et du pont Electron
+
+[Contrats, contrôles et suite](2026-10-08-lint-contrats-session.md) : signature de
+fusion partielle commune aux onze slices, assemblage sans ses 33 `any`,
+SessionManager et gestionnaires transversaux typés, butin relié explicitement
+au contexte de Session. Les accès au journal reprennent le type global existant.
+Les 17 `any` des déclarations du pont Electron sont également retirés : journaux,
+relais HTTP, action diffusée, platines musicales et moteur de dés.
+
+TypeScript et construction passent ; 229 tests ciblés réussissent avant
+l'élargissement au pont. Le lint global compte **1 531 fichiers, zéro erreur,
+448 avertissements**, soit **73 `any` applicatifs retirés**. La suite complète
+du lot final passe : **6 811 tests dans 531 fichiers**, un fichier et quatre
+tests ignorés ; **sept scénarios Electron** de curation de Trame et de projection
+du Hub passent avec des profils jetables. Publication de ce deuxième lot demandée
+par David : **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+La suite porte sur les données de synchronisation du Hub et les messages entre
+fenêtres/tablettes, puis sur les effets et les faux objets de tests.
