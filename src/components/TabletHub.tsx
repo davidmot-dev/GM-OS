@@ -15,6 +15,7 @@ import {
     Layers
 } from 'lucide-react';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
+import { useNotificationDeMessage } from '../hooks/useNotificationDeMessage';
 import { useMediaUrl } from '../hooks/useMediaUrl';
 import { ResolvedImage } from './ResolvedImage';
 import { Bouton, EnTeteDeModule, Etiquette, Panneau } from './socle';
@@ -97,12 +98,14 @@ const TabletHub: React.FC = () => {
     const [selectedItem, setSelectedItem] = useState<FavoriteEntity | null>(null);
     const [lastReadMessageTime, setLastReadMessageTime] = useState(() => Date.now());
     const [selectedRecipientId, setSelectedRecipientId] = useState<string>('GM');
-    const [activeToast, setActiveToast] = useState<{ fromName: string; channel: string; recipientId: string } | null>(null);
 
     const activeHubId = projections['hub'];
     const activeSession = sessions.find((s: { status: string }) => s.status === 'active');
     const messages = useSessionOSStore((state) => state.messages);
     const players = useSessionOSStore((state) => state.players);
+    const { activeToast, masquerNotification } = useNotificationDeMessage({
+        messages, characterId, lastReadMessageTime, isMessengerOpen, selectedRecipientId,
+    });
 
     // Derived State - Memoized for performance
     const unreadCount = useMemo(() => {
@@ -153,7 +156,7 @@ const TabletHub: React.FC = () => {
         setIsInventoryOpen(false);
         if (!isMessengerOpen) {
             setLastReadMessageTime(Date.now());
-            setActiveToast(null);
+            masquerNotification();
         }
     };
 
@@ -171,32 +174,6 @@ const TabletHub: React.FC = () => {
     const { entrante: fondEntrant, sortante: fondSortant } =
         useFonduCroise(liveMediaEstUneVideo ? null : resolvedBackground, FONDU_COTE_JOUEURS_MS);
     const resolvedCampaignWallpaper = useMediaUrl(activeCampaignWallpaper || undefined);
-
-    useEffect(() => {
-        if (messages.length === 0) return;
-        const lastMsg = messages[messages.length - 1];
-        if (lastMsg.timestamp <= lastReadMessageTime) return;
-        
-        // Only notify for incoming messages
-        if (lastMsg.fromId === characterId) return;
-        
-        // Only notify if relevant to me
-        const isForMe = lastMsg.toId === characterId || lastMsg.toId === 'all' || !lastMsg.toId;
-        if (!isForMe) return;
-
-        // Check if we are currently looking at the right queue
-        const msgQueue = lastMsg.toId === 'all' || !lastMsg.toId ? 'all' : lastMsg.fromId;
-        const isRightQueue = isMessengerOpen && selectedRecipientId === msgQueue;
-
-        if (!isRightQueue) {
-            const channelName = msgQueue === 'all' ? 'Canal Général' : (lastMsg.fromId === 'GM' ? 'Maître du Jeu' : 'Canal Privé');
-            setActiveToast({ fromName: lastMsg.fromName, channel: channelName, recipientId: msgQueue });
-            
-            // Auto-clear toast
-            const timer = setTimeout(() => setActiveToast(null), 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [messages, characterId, isMessengerOpen, selectedRecipientId, lastReadMessageTime]);
 
     useEffect(() => {
         if (activeCampaignWallpaper) {
@@ -520,7 +497,7 @@ const TabletHub: React.FC = () => {
                         onRecipientChange={(id) => {
                             setSelectedRecipientId(id);
                             setLastReadMessageTime(Date.now());
-                            setActiveToast(null);
+                            masquerNotification();
                         }}
                     />
                 </>
@@ -537,7 +514,7 @@ const TabletHub: React.FC = () => {
                             setIsInventoryOpen(false);
                             setIsMessengerOpen(true);
                             setLastReadMessageTime(Date.now());
-                            setActiveToast(null);
+                            masquerNotification();
                         }}
                     />
                 )}

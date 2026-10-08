@@ -11,7 +11,9 @@ import type { useCombatStore } from '../src/modules/combat/useCombatStore';
 // J2 : navigateur sans pont Electron, meneur sur profil jetable, vrai WebSocket.
 // Aucun accès au profil de David ; seule la campagne de démonstration est employée.
 const ICI = path.dirname(fileURLToPath(import.meta.url));
-const SORTIE = path.join(ICI, '../documentation/Planning/tablettes/T4-joueurs/j2');
+const SORTIE = process.env.GMOS_TABLET_CAPTURES_DIR
+    ? path.join(path.resolve(process.env.GMOS_TABLET_CAPTURES_DIR), 'j2')
+    : path.join(ICI, '../documentation/Planning/tablettes/T4-joueurs/j2');
 const SEMENCE = path.join(ICI, 'donnees/campagne-de-demo.json');
 const DEMO = JSON.parse(fs.readFileSync(SEMENCE, 'utf8'));
 const PLAN = 'data:image/png;base64,' + fs.readFileSync(path.join(ICI, 'donnees/plan-station-varn.png')).toString('base64');
@@ -272,6 +274,12 @@ for (const taille of TAILLES) test(`Notifications T4 J2 — message visible au-d
     await expect(notification).toHaveCount(0);
     await gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().sendDirectMessage('temoin-pj-1', 'Nel Varga', 'La relève arrive.'));
     await expect(notification).toBeVisible();
+    // Une mise à jour pour un autre joueur ne doit ni remplacer le signal ni
+    // annuler son échéance. Le flux réel transmet aussi ce message à la tablette.
+    await gmos.fenetre.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().sendDirectMessage('temoin-pj-2', 'Idris Koa', 'Message privé pour Idris.'));
+    await expect.poll(() => page.evaluate(() => (window as unknown as Magasins).useSessionOSStore.getState().messages.some(m => m.content === 'Message privé pour Idris.'))).toBe(true);
+    await expect(notification).toBeVisible();
+    await expect(notification).toContainText('Maître du Jeu');
     await expect(notification).toHaveCount(0, { timeout: 8_000 });
     await verifierNavigation(page);
 });
