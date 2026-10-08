@@ -200,6 +200,24 @@ interface MusicState {
     reset: () => void;
 }
 
+/** La sélection persistée donne aussi son contrat à la migration, sans liste recopiée. */
+const donneesPersistantesDeLaMusique = (state: MusicState) => ({
+    playlists: state.playlists,
+    crossfader: state.crossfader,
+    masterVolume: state.masterVolume,
+    autoFadeDuration: state.autoFadeDuration,
+    outputDeviceId: state.outputDeviceId,
+    sonies: state.sonies,
+    normalisation: state.normalisation,
+    cibleDeSonie: state.cibleDeSonie,
+});
+
+type PadAvantMigration = MusicPad & { lightLinkId?: string | null };
+type PlaylistAvantMigration = Omit<Playlist, 'pads'> & { pads: PadAvantMigration[] };
+type MusiqueAvantMigration = Omit<ReturnType<typeof donneesPersistantesDeLaMusique>, 'playlists'> & {
+    playlists: PlaylistAvantMigration[];
+};
+
 export const useMusicStore = create<MusicState>()(
     persist(
         (set, get) => {
@@ -737,26 +755,19 @@ export const useMusicStore = create<MusicState>()(
 
         {
             name: 'gmos-music-storage',
-            partialize: (state) => ({
-                playlists: state.playlists,
-                crossfader: state.crossfader,
-                masterVolume: state.masterVolume,
-                autoFadeDuration: state.autoFadeDuration,
-                outputDeviceId: state.outputDeviceId,
-                sonies: state.sonies,
-                normalisation: state.normalisation,
-                cibleDeSonie: state.cibleDeSonie
-            }),
+            partialize: donneesPersistantesDeLaMusique,
             version: 1,
-            migrate: (persistedState: any, version: number) => {
+            migrate: (persistedState: unknown, version: number) => {
+                // 08/10/2026, David : poursuivre le lint. Contrat de l'ancien champ,
+                // sans filtrer, compléter ou durcir les données déjà enregistrées.
+                const state = persistedState as MusiqueAvantMigration;
                 // Handle both null (no previous version) and 0 (initial version)
                 if (version === 0 || version === null || version === undefined) {
                     console.log('[MusicStore] Migrating storage to v1...');
-                    const state = persistedState as any;
                     if (state && state.playlists) {
-                        state.playlists = state.playlists.map((p: any) => ({
+                        state.playlists = state.playlists.map(p => ({
                             ...p,
-                            pads: p.pads.map((pad: any) => {
+                            pads: p.pads.map(pad => {
                                 // Migrate old lightLinkId to linkedLightSceneId
                                 if (pad.lightLinkId !== undefined && pad.linkedLightSceneId === undefined) {
                                     const { lightLinkId, ...rest } = pad;
@@ -767,9 +778,9 @@ export const useMusicStore = create<MusicState>()(
                         }));
                         console.log('[MusicStore] Migration complete.', state.playlists);
                     }
-                    return state ?? persistedState;
+                    return state;
                 }
-                return persistedState;
+                return state;
             },
             onRehydrateStorage: () => (state) => {
                 if (state) {

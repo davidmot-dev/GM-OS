@@ -10160,6 +10160,28 @@ ces changements de types. Règles/JSON initial inchangés, diff propre.
 **Lot 19 réalisé, validé et documenté, non commité**, sept fichiers Codex.
 Reprendre les quatre `any` de la migration persistante de Music-OS, puis
 les autres modules/tests et les lots mémoïsation/directive.
+**Demande suivante de David**, le 08/10 : **« commit et passe à l'étape suivante
+(GM-OS est éteint) »**. Le lot 19 est commité sous **`b908bc92`**, sept fichiers
+Codex sélectionnés explicitement, sans push ni changement de Claude inclus.
+Les mentions précédentes « non commité » sont l'état avant cette demande.
+Le [lot 20](2026-10-08-lint-migration-musique.md) tire le contrat de migration
+Music-OS de la sélection persistée, avec le seul ancien champ lumineux
+ajouté aux types des pads. **Quatre `any` applicatifs retirés** :
+**1 564 fichiers, zéro erreur et 309 avertissements**, dont 305 `any`
+(83 applicatifs, 222 dans les tests), trois diagnostics de mémoïsation et
+une directive inutile. Version, priorité au nouveau lien, champs annexes,
+réglages, données partielles et sélection persistante conservés ; aucune
+nouvelle validation des données, aucune lecture audio déclenchée.
+Types, construction, **147 tests ciblés** et **7 065 tests dans 549 fichiers**
+passent ; un fichier et quatre tests ignorés. **17 nouveaux cas** de migration
+rejoués au vert après resserrement du contrôle de sélection. Vraie fonction
+du middleware, données artificielles, aucun fichier réel ni réseau ni
+appareil sollicité ; aucun scénario Electron pour ce lot de types.
+Lint ciblé final et diff propres, règles et JSON initial inchangés.
+**Lot 20 réalisé, validé et documenté, non commité**, sept fichiers Codex.
+Reprendre les migrations persistantes des dés et gemmes : deux `any` dans
+`useDiceStore.ts`, un dans `useGemStore.ts`, puis les autres modules/tests
+et les lots mémoïsation/directive.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10231,7 +10253,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 18 commités localement (dernier `59aba15a`), lot 19 réalisé non commité**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 → 321 → 313 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer la migration persistante de Music-OS (quatre `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md), [migration](2026-10-08-lint-migration-medias.md), [restauration](2026-10-08-lint-restauration-session.md) |
+| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 19 commités localement (dernier `b908bc92`), lot 20 réalisé non commité**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 → 321 → 313 → 309 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer les migrations des dés et gemmes (trois `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md), [migration](2026-10-08-lint-migration-medias.md), [restauration](2026-10-08-lint-restauration-session.md), [Music-OS](2026-10-08-lint-migration-musique.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

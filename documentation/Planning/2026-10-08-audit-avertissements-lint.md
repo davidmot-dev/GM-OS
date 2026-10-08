@@ -469,3 +469,27 @@ Règles et JSON initial inchangés, `git diff --check` propre.
 Lot 19 non commité, sept fichiers Codex. Reprendre les quatre `any` de la
 migration persistante de Music-OS, puis les autres modules/tests et les
 lots mémoïsation/directive.
+
+## Vingtième lot — migration persistante de Music-OS
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 19 est commité sous **`b908bc92`**, sept fichiers Codex, sans push ni
+changement de Claude inclus. Les mentions précédentes « non commité »
+décrivent l'état avant cette demande.
+Le [lot 20](2026-10-08-lint-migration-musique.md) tire son contrat de la
+sélection persistée, avec le seul ancien champ `lightLinkId` ajouté aux
+pads. **Quatre `any` applicatifs retirés** : **1 564 fichiers, zéro erreur
+et 309 avertissements**, dont 305 `any` (83 applicatifs, 222 dans les tests),
+trois diagnostics de mémoïsation et une directive inutile.
+
+Version 1, anciennes versions acceptées, priorité au nouveau lien, champs
+annexes, réglages, données partielles et sélection persistée conservés.
+Aucune nouvelle validation du contenu ; aucun son déclenché par la migration.
+Types, construction, **147 tests ciblés** et **17 nouveaux cas rejoués** passent.
+**7 065 tests dans 549 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre. Vraie fonction du middleware, données artificielles,
+aucun fichier réel, réseau ou appareil sollicité ; aucun scénario Electron.
+Lint ciblé final propre, règles et inventaire JSON initial inchangés.
+Lot 20 non commité, sept fichiers Codex. Reprendre les migrations des dés
+et gemmes : deux `any` dans `useDiceStore.ts`, un dans `useGemStore.ts`,
+puis les autres modules/tests et les lots mémoïsation/directive.

@@ -699,3 +699,42 @@ Reprendre les quatre `any` de la migration persistante dans
 `src/modules/music/useMusicStore.ts`, vérifiés dans le code, puis les autres
 contrats applicatifs et les faux objets des tests. Mémoïsation et directive
 gardent leurs lots ciblés. Préserver les changements de Claude.
+
+## Commit de la restauration, puis vingtième lot : migration Music-OS
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 19 et ses documents sont commités sous **`b908bc92`**, sept fichiers
+Codex sélectionnés explicitement, aucun changement de Claude inclus.
+**Aucun push demandé ni exécuté** ; dernier poussé documenté : `861eaca4`.
+Les mentions « non commité » ci-dessus décrivent l'état avant cette demande.
+
+[Détail du lot 20](2026-10-08-lint-migration-musique.md). La sélection
+persistée Music-OS devient la source du contrat de migration, avec le
+seul champ historique `lightLinkId` ajouté aux types réels des pads.
+Les quatre `any` sont retirés. Version, anciennes versions tolérées,
+priorité au nouveau champ, liens vides, données annexes, réglages et
+états partiels restent. La conversion de type ne valide ni ne filtre
+les données enregistrées. Les platines/actions restent hors persistance,
+aucune lecture audio ni commande de matériel ajoutée.
+
+Lint global : **1 564 fichiers, zéro erreur et 309 avertissements**, contre 313.
+Restent 305 `any` (83 applicatifs, 222 dans les tests), trois diagnostics
+de mémoïsation et une directive inutile. Types, construction, **147 tests
+ciblés dans douze fichiers** passent, dont **17 nouveaux cas** de migration.
+Le contrôle de sélection est resserré sur les données conservées et celles
+de séance exclues ; les 17 cas sont rejoués au vert. **7 065 tests dans
+549 fichiers** passent, un fichier et quatre tests ignorés ; diff propre.
+Vraie fonction des options du middleware sur données artificielles, stockage
+de session et cycle de ducking simulés, aucun fichier réel ni réseau ni
+appareil sollicité. Aucun scénario Electron pour ce lot de types, aucune
+donnée réelle ni capture du manuel touchée. Lint ciblé final propre,
+règles et inventaire JSON initial inchangés.
+
+**Lot 20 réalisé, validé et documenté, non commité : sept fichiers Codex**,
+deux de code/tests et cinq documents. Dernier commit local **`b908bc92`**,
+dernier poussé `861eaca4`.
+Reprendre les migrations persistantes des dés et gemmes : deux `any` dans
+`src/stores/useDiceStore.ts`, un dans `src/stores/useGemStore.ts`, vérifiés
+dans le code. Puis les autres contrats applicatifs et les faux objets des
+tests ; mémoïsation et directive gardent leurs lots ciblés.
+Préserver les changements de Claude.
