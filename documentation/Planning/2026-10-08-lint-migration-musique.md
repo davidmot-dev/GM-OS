@@ -64,3 +64,13 @@ gemmes : deux `any` dans `src/stores/useDiceStore.ts`, un dans
 `src/stores/useGemStore.ts`, vérifiés dans le code. Puis les autres contrats
 applicatifs et les faux objets des tests ; mémoïsation et directive inutile
 gardent leurs lots ciblés. Préserver les changements de Claude.
+
+## Commit demandé, puis reprise
+
+David demande ensuite **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 20 est commité sous **`fd585aaf`**, sept fichiers Codex sélectionnés
+explicitement, sans changement de Claude inclus. Aucun push demandé ni
+exécuté ; dernier poussé documenté : `861eaca4`. Les mentions « non commité »
+ci-dessus décrivent l'état avant cette demande.
+Le [lot 21](2026-10-08-lint-migrations-des-gemmes.md) reprend les trois `any`
+des migrations persistantes des dés et des gemmes.

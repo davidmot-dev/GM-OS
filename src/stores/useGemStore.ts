@@ -210,15 +210,18 @@ export const useGemStore = create<GemState>()(
     {
       name: 'gmos-gem-storage',
       version: 1,
-      migrate: (persistedState: any, version: number) => {
+      migrate: (persistedState: unknown, version: number) => {
+        // 08/10/2026, David : poursuivre le lint. Le contrat partiel ne change
+        // pas le remplacement historique des gemmes de version 0.
+        const state = persistedState as Partial<GemState>;
         if (version === 0) {
           // Force apply default gems to ensure keys are used instead of old hardcoded strings
           return {
-            ...persistedState,
+            ...state,
             gems: defaultGems
           };
         }
-        return persistedState;
+        return state;
       }
     }
   )

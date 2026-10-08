@@ -128,11 +128,14 @@ export const useDiceStore = create<DiceState>()(
             */
             storage: stockageLocalDuMJ(),
             version: 1,
-            migrate: (persistedState: any, version: number) => {
-                if (version === 0 && persistedState.quickRolls) {
+            migrate: (persistedState: unknown, version: number) => {
+                // 08/10/2026, David : poursuivre le lint. Ancien état partiel,
+                // sans ajout de défauts ni filtrage des champs persistés.
+                const state = persistedState as Partial<DiceState>;
+                if (version === 0 && state.quickRolls) {
                     return {
-                        ...persistedState,
-                        quickRolls: persistedState.quickRolls.map((qr: any) => {
+                        ...state,
+                        quickRolls: state.quickRolls.map(qr => {
                             if (qr.label === 'Attaque Épée Longue') return { ...qr, label: 'dice.quick_rolls.defaults.attack' };
                             if (qr.label === 'Dégâts') return { ...qr, label: 'dice.quick_rolls.defaults.damage' };
                             if (qr.label === 'Lancer D66') return { ...qr, label: 'dice.quick_rolls.defaults.d66' };
@@ -140,7 +143,7 @@ export const useDiceStore = create<DiceState>()(
                         })
                     };
                 }
-                return persistedState;
+                return state;
             }
         }
     )
