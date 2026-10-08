@@ -6,6 +6,15 @@ import { laVideoBoucle } from '../../../components/media/boucleDeLaVideo';
 import { ecranJoignable } from './ecranJoignable';
 import { gmToast } from '../../../stores/useToastStore';
 import i18n from '../../../i18n';
+import { magasinDuHub } from '../../../utils/magasinsDuHub';
+
+// Le magasin importe ce service à la demande : importer le magasin ici
+// fermerait un cycle. Le registre garde cette frontière et son vrai contrat.
+function etatDesImages() {
+    const etat = magasinDuHub('useImageStore')?.getState();
+    if (!etat) throw new Error('Magasin des images indisponible');
+    return etat;
+}
 
 /**
  * ImageService - Gère la logique métier de projection d'images.
@@ -51,7 +60,7 @@ export class ImageService {
                   « le recensement n'a pas encore eu lieu », pas « aucun écran ».
                   Voir `ecranJoignable`.
                 */
-                const ecrans = (window as any).useImageStore?.getState()?.displays;
+                const ecrans = magasinDuHub('useImageStore')?.getState().displays;
                 if (!ecranJoignable(target, ecrans).joignable) {
                     console.error(`[ImageService] Écran ${target} introuvable — rien n'est projeté.`);
                     gmToast(i18n.t('modules:image.notifications.screenUnknown'), 'warning');
@@ -60,7 +69,7 @@ export class ImageService {
                 console.log(`[ImageService] Sending Local Projection via launchDisplay`);
                 bridge?.image?.launchDisplay([mediaPath], target);
                 
-                (window as any).useImageStore.getState().setProjection(target, marque);
+                etatDesImages().setProjection(target, marque);
                 return mediaPath;
             }
 
@@ -77,7 +86,7 @@ export class ImageService {
                 window.appBridge?.image?.syncHubData('image', mediaPath);
                 /* Le Hub reconnaît lui-même le marqueur YouTube : il le porte
                    en clair, contrairement à une adresse résolue. */
-                (window as any).useImageStore.getState().setProjection(target, marque);
+                etatDesImages().setProjection(target, marque);
                 return mediaPath;
             }
 
@@ -114,7 +123,7 @@ export class ImageService {
                     );
                 }
                 window.appBridge?.image?.syncHubData(nature === 'video' ? 'video' : 'image', resolvedPath);
-                (window as any).useImageStore.getState().setProjection(target, marque);
+                etatDesImages().setProjection(target, marque);
                 return resolvedPath;
             }
 
@@ -156,7 +165,7 @@ export class ImageService {
             return null;
         }
         console.log(`[ImageService] Projecting Entity: ${name} (${portrait})...`);
-        const target = (window as any).useImageStore.getState().projectionTarget;
+        const target = etatDesImages().projectionTarget;
         // L'entité occupe la cible sous son identifiant, jamais sous l'adresse de
         // son portrait : c'est ce lien-là qui rattache la projection à la fiche.
         return this.projectMedia(portrait, target, marque ?? portrait);
@@ -166,7 +175,7 @@ export class ImageService {
      * Efface la projection.
      */
     static async blackout(targetId?: string): Promise<void> {
-        const store = (window as any).useImageStore.getState();
+        const store = etatDesImages();
         const target = targetId || store.projectionTarget;
         
         console.log(`[ImageService] Blackout for ${target}...`);

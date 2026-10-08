@@ -328,7 +328,7 @@ export const useImageStore = create<ImageState>()(
                                 const media = get().mediaList.find(m => m.path === currentMediaPath);
                                 if (media) {
                                     import('./logic/ImageService').then(({ ImageService }) => {
-                                        ImageService.projectMedia(media.path, targetId as any);
+                                        ImageService.projectMedia(media.path, targetId);
                                     });
                                 }
                             }
@@ -451,7 +451,7 @@ export const useImageStore = create<ImageState>()(
                     return;
                 }
 
-                const ecran = cible || (get().projectionTarget as string);
+                const ecran = cible || get().projectionTarget;
                 set({ diaporamaEnCours: { id, index: 0, cible: ecran } });
                 projeterLImageDuDiaporama(get, set);
             },
@@ -485,7 +485,7 @@ export const useImageStore = create<ImageState>()(
             },
 
             projectSolo: async (media, cible) => {
-                const target = (cible || get().projectionTarget) as string;
+                const target = cible || get().projectionTarget;
 
                 /*
                   ⛔ **Une image projetée à la main arrête le diaporama qui
@@ -528,7 +528,7 @@ export const useImageStore = create<ImageState>()(
                 // 2. Mettre à jour le store global via setProjection(target, path)
                 console.log(`[useImageStore] Proj. ${media.path} -> ${target}`);
                 const { ImageService } = await import('./logic/ImageService');
-                const success = await ImageService.projectMedia(media.path, target as any);
+                const success = await ImageService.projectMedia(media.path, target);
                 
                 if (success) {
                     /*
@@ -568,7 +568,7 @@ export const useImageStore = create<ImageState>()(
             },
 
             projectUrl: async (url) => {
-                const target = get().projectionTarget as string;
+                const target = get().projectionTarget;
                 if (get().projections[target] === url) {
                     get().blackout();
                     return;
@@ -582,7 +582,7 @@ export const useImageStore = create<ImageState>()(
                     projectedEntity: null,
                 }));
                 import('./logic/ImageService').then(({ ImageService }) => {
-                    ImageService.projectMedia(url, target as any).then(() => {
+                    ImageService.projectMedia(url, target).then(() => {
                         /*
                           **Projeter une URL ne laissait aucune trace**, alors
                           que projeter un fichier en laissait une : le même geste
@@ -602,7 +602,7 @@ export const useImageStore = create<ImageState>()(
             },
 
             projectEntity: async (entity, options) => {
-                const target = get().projectionTarget as string;
+                const target = get().projectionTarget;
                 /*
                   Rappuyer sur la fiche affichée, ou passer `null` : dans les deux
                   cas la fiche s'en va, et le décor revient s'il y en avait un.
@@ -724,7 +724,7 @@ export const useImageStore = create<ImageState>()(
              * de côté, on éteint comme avant.
              */
             terminerLaFiche: async () => {
-                const target = get().projectionTarget as string;
+                const target = get().projectionTarget;
                 const decor = get().imagePrecedente[target];
 
                 if (!decor) {
@@ -741,7 +741,7 @@ export const useImageStore = create<ImageState>()(
                 }));
 
                 const { ImageService } = await import('./logic/ImageService');
-                const revenu = await ImageService.projectMedia(decor, target as ProjectionTarget);
+                const revenu = await ImageService.projectMedia(decor, target);
                 // Un décor devenu introuvable — média supprimé entre-temps — ne
                 // doit pas laisser la fiche à l'écran : on retombe sur le noir.
                 if (!revenu) get().blackout();
@@ -750,7 +750,7 @@ export const useImageStore = create<ImageState>()(
 
 
             blackout: () => {
-                const target = get().projectionTarget as string;
+                const target = get().projectionTarget;
                 /* Le noir voulu sur cet écran arrête ce qui l'occupait : sinon
                    le diaporama le rallumerait à son tour suivant. */
                 if (get().diaporamaEnCours?.cible === target) get().arreterLeDiaporama();
@@ -766,7 +766,7 @@ export const useImageStore = create<ImageState>()(
                     projectedEntity: target === 'hub' ? null : s.projectedEntity,
                 }));
                 import('./logic/ImageService').then(({ ImageService }) => {
-                    ImageService.blackout(target as any);
+                    ImageService.blackout(target);
                 });
             },
 
@@ -797,7 +797,7 @@ export const useImageStore = create<ImageState>()(
               `Ctrl+Maj+N` (`Ctrl+Maj+0` jusqu'au 2026-09-25 : Windows le réserve).
             */
             noirTotal: () => {
-                const target = get().projectionTarget as string;
+                const target = get().projectionTarget;
                 get().blackout();
                 if (target === 'hub') {
                     import('./logic/noircirLePlayerHub').then(({ noircirLePlayerHub }) => {
@@ -826,7 +826,7 @@ export const useImageStore = create<ImageState>()(
                             const media = get().mediaList.find(m => m.id === id);
                             if (media) {
                                 import('./logic/ImageService').then(({ ImageService }) => {
-                                    ImageService.projectMedia(media.path, target as any);
+                                    ImageService.projectMedia(media.path, target);
                                 });
                             }
                         }
