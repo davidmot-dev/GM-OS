@@ -10139,6 +10139,27 @@ manuel touchée. Règles et JSON initial inchangés, `git diff --check` propre.
 **Lot 18 non commité**, huit fichiers Codex. Reprendre les huit `any` de
 `src/store/SessionService.ts` (distribution des données restaurées),
 puis les autres modules/tests et les lots mémoïsation/directive.
+**Demande suivante de David**, le 08/10 : **« commit et passe à l'étape suivante
+(GM-OS est éteint) »**. Le lot 18 est commité sous **`59aba15a`**, huit fichiers
+Codex sélectionnés explicitement, sans push ni changement de Claude inclus.
+Les mentions précédentes « non commité » sont l'état avant cette demande.
+Le [lot 19](2026-10-08-lint-restauration-session.md) type la restauration de
+la session depuis sa liste de données durables, NPC depuis son magasin ;
+web et horloge sont compatibles après le schéma. **Huit `any` applicatifs
+retirés** : **1 563 fichiers, zéro erreur et 313 avertissements**, dont
+309 `any` (87 applicatifs, 222 dans les tests), trois diagnostics de
+mémoïsation et une directive inutile. Dernière occurrence des doublons,
+ordre, champs annexes et supplémentaires, listes absentes/vides, écritures
+partielles et refus d'une archive illisible conservés. Schéma et parties
+permissives inchangés ; aucune nouvelle validation des entités/fiches NPC.
+Types, construction, **64 tests ciblés** et **7 048 tests dans 548 fichiers**
+passent ; un fichier et quatre tests ignorés. Cinq nouveaux cas via les
+vrais magasins sous jsdom, archives artificielles et pont simulé ; aucune
+donnée réelle ni capture du manuel touchée, aucun scénario Electron pour
+ces changements de types. Règles/JSON initial inchangés, diff propre.
+**Lot 19 réalisé, validé et documenté, non commité**, sept fichiers Codex.
+Reprendre les quatre `any` de la migration persistante de Music-OS, puis
+les autres modules/tests et les lots mémoïsation/directive.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10210,7 +10231,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 17 commités localement (dernier `7c10b41b`), lot 18 réalisé non commité**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 → 321 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer la restauration dans SessionService (huit `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md), [migration](2026-10-08-lint-migration-medias.md) |
+| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 18 commités localement (dernier `59aba15a`), lot 19 réalisé non commité**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 → 321 → 313 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer la migration persistante de Music-OS (quatre `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md), [migration](2026-10-08-lint-migration-medias.md), [restauration](2026-10-08-lint-restauration-session.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

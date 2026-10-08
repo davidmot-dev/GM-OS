@@ -659,3 +659,43 @@ Reprendre les huit `any` de `src/store/SessionService.ts`, vérifiés dans la
 distribution des données restaurées et la déduplication, puis les autres
 contrats applicatifs et les faux objets des tests. Mémoïsation et directive
 gardent leurs lots ciblés. Préserver les changements de Claude.
+
+## Commit de la migration des médias, puis dix-neuvième lot : restauration
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 18 et ses documents sont commités sous **`59aba15a`**, huit fichiers
+Codex sélectionnés explicitement, aucun changement de Claude inclus.
+**Aucun push demandé ni exécuté** ; dernier poussé documenté : `861eaca4`.
+Les mentions « non commité » ci-dessus décrivent l'état avant cette demande.
+
+[Détail du lot 19](2026-10-08-lint-restauration-session.md).
+La session restaurée prend les types de la liste partagée des données
+durables, sous forme partielle ; NPC prend ceux des fiches du magasin.
+Web et horloge sont déjà compatibles avec leurs magasins après le schéma.
+Les huit `any` sont retirés. Les champs transmis, y compris supplémentaires,
+ne sont pas reconstruits ou filtrés. Déduplication avec dernière occurrence,
+ordre de première apparition, données annexes, listes absentes/vraiment
+vides et refus avant distribution d'une archive illisible sont conservés.
+Le schéma et ses parties permissives restent : aucune nouvelle validation
+des entités ou fiches NPC, aucun changement de format ou de persistance.
+
+Lint global : **1 563 fichiers, zéro erreur et 313 avertissements**, contre 321.
+Restent 309 `any` (87 applicatifs, 222 dans les tests), trois diagnostics de
+mémoïsation et une directive inutile. Types, construction et **64 tests
+ciblés dans sept fichiers** passent. Cinq nouveaux cas vérifient les doublons,
+les listes absentes/vides, le chargement NPC/web/horloge via un pont simulé,
+et le refus sans écriture d'une campagne malformée. **7 048 tests dans
+548 fichiers** passent, un fichier et quatre tests ignorés.
+Archives artificielles et vrais magasins sous jsdom, états remis en place
+après chaque nouveau cas, aucun fichier réel ni réseau ni appareil sollicité.
+Aucun scénario Electron lancé pour ces changements de types ; aucune donnée
+réelle ni capture du manuel touchée. Règles et JSON initial inchangés ;
+`git diff --check` propre.
+
+**Lot 19 réalisé, validé et documenté, non commité : sept fichiers Codex**,
+deux de code/tests et cinq documents. Dernier commit local **`59aba15a`**,
+dernier poussé `861eaca4`.
+Reprendre les quatre `any` de la migration persistante dans
+`src/modules/music/useMusicStore.ts`, vérifiés dans le code, puis les autres
+contrats applicatifs et les faux objets des tests. Mémoïsation et directive
+gardent leurs lots ciblés. Préserver les changements de Claude.

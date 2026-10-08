@@ -61,3 +61,9 @@ dans la distribution des données restaurées (déduplication et magasins),
 puis les autres contrats applicatifs et les faux objets des tests.
 Mémoïsation et directive inutile gardent leurs lots ciblés.
 Préserver les changements de Claude et l'isolation des essais.
+
+**Commit effectué à la demande suivante de David**, le 08/10 :
+**« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Les huit fichiers Codex sont commités sous **`59aba15a`**, sans push ;
+les mentions « non commité » ci-dessus décrivent l'état avant cette demande.
+La reprise porte sur le [lot 19, restauration de session](2026-10-08-lint-restauration-session.md).

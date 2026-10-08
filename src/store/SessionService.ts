@@ -350,20 +350,23 @@ export const SessionService = {
         // Modules
         if (data.modules) {
             if (data.modules.sessionOS) {
-                const sessionOS = data.modules.sessionOS as any;
+                // 08/10/2026, David : poursuivre le lint. Le schéma reste compatible
+                // avec les anciennes archives ; ce contrat ne filtre ni ne complète
+                // les champs transmis au magasin, notamment ceux du passthrough.
+                const sessionOS = data.modules.sessionOS as Partial<ReturnType<typeof lesDonneesDeLaSession>>;
                 
                 // Deduplicate Players and their Characters
                 if (sessionOS.players) {
-                    sessionOS.players = sessionOS.players.map((p: any) => ({
+                    sessionOS.players = sessionOS.players.map(p => ({
                         ...p,
-                        characters: Array.from(new Map((p.characters || []).map((c: any) => [c.id, c])).values())
+                        characters: Array.from(new Map((p.characters || []).map(c => [c.id, c])).values())
                     }));
-                    sessionOS.players = Array.from(new Map(sessionOS.players.map((p: any) => [p.id, p])).values());
+                    sessionOS.players = Array.from(new Map(sessionOS.players.map(p => [p.id, p])).values());
                 }
 
                 // Deduplicate Global Entities (NPCs)
                 if (sessionOS.entities) {
-                    sessionOS.entities = Array.from(new Map(sessionOS.entities.map((e: any) => [e.id, e])).values());
+                    sessionOS.entities = Array.from(new Map(sessionOS.entities.map(e => [e.id, e])).values());
                 }
 
                 // Hydrate custom drivers and templates
@@ -376,10 +379,13 @@ export const SessionService = {
 
                 useSessionOSStore.setState(sessionOS);
             }
-            if (data.modules.npc) useNPCStore.setState(data.modules.npc as any);
-            if (data.modules.web) useWebStore.setState(data.modules.web as any);
+            if (data.modules.npc) {
+                const npc = data.modules.npc as Pick<ReturnType<typeof useNPCStore.getState>, 'savedEntities'>;
+                useNPCStore.setState(npc);
+            }
+            if (data.modules.web) useWebStore.setState(data.modules.web);
             if (data.modules.clock) {
-                useClockStore.setState(data.modules.clock as any);
+                useClockStore.setState(data.modules.clock);
             }
             /*
               **Une bibliothèque vide n'en remplace jamais une pleine.** Une

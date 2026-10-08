@@ -442,3 +442,30 @@ ni capture documentaire touchée. Règles et inventaire JSON initial inchangés.
 Lot 18 non commité, huit fichiers Codex. Reprendre les huit `any` de
 `src/store/SessionService.ts` (distribution des données restaurées),
 puis les autres modules/tests et les lots mémoïsation/directive.
+
+## Dix-neuvième lot — restauration de session
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 18 est commité sous **`59aba15a`**, huit fichiers Codex, sans push ;
+les changements de Claude restent hors du commit. Les mentions précédentes
+« non commité » décrivent l'état avant cette demande.
+Le [lot 19](2026-10-08-lint-restauration-session.md) utilise les types de la
+liste partagée des données durables pour la session et du magasin pour
+les fiches NPC. Web et horloge sont déjà compatibles après le schéma.
+**Huit `any` applicatifs retirés** : **1 563 fichiers, zéro erreur et
+313 avertissements**, dont 309 `any` (87 applicatifs, 222 dans les tests),
+trois diagnostics de mémoïsation et une directive inutile.
+
+Dernière occurrence des doublons, ordre, champs annexes, distinction entre
+listes absentes et vides, écritures partielles et refus d'une archive
+illisible restent. Le schéma et ses parties permissives restent inchangés :
+ces contrats n'ajoutent pas une validation des entités/fiches NPC.
+Types, construction et **64 tests ciblés dans sept fichiers** passent,
+dont cinq nouveaux cas de restauration. **7 048 tests dans 548 fichiers**
+passent, un fichier et quatre tests ignorés.
+Magasins réels sous jsdom, pont simulé et archives artificielles uniquement,
+aucun scénario Electron, aucune donnée réelle ni capture du manuel touchée.
+Règles et JSON initial inchangés, `git diff --check` propre.
+Lot 19 non commité, sept fichiers Codex. Reprendre les quatre `any` de la
+migration persistante de Music-OS, puis les autres modules/tests et les
+lots mémoïsation/directive.
