@@ -7,6 +7,10 @@ import { DUREE_DU_RESULTAT_MS } from '../../dice/logic/choregraphieDuJet';
 import { imageApresMessage, papierPeintDeLaCampagne } from '../../../components/hub/fondDuPlayerHub';
 import { appliquerApparenceTablettes } from '../../../theme/apparenceTablettes';
 import { magasinDuHub as getStore, type EtatsDuHub, type NomDeMagasinDuHub } from '../../../utils/magasinsDuHub';
+import { estObjet, estMessageDeSeance } from '../../remote/actions/contratsSessionDistante';
+import { lireDonneesDuHub, lireEntiteProjetee, lireRegleDuHub, jetDuMagasin } from '../../remote/lectureDuHub';
+import type { ProjectedEntity } from '../../image/types';
+import type { RegleDuHub } from '../../remote/types/donneesDuHub';
 
 const EMPTY_OBJ = {};
 const EMPTY_ARR: never[] = [];
@@ -122,10 +126,10 @@ export const useHubSync = () => {
      * trop fort.* Le meneur le renvoie à chaque changement de projection.
      */
     const [niveauSonVideo, setNiveauSonVideo] = useState(1);
-    const [liveEntity, setLiveEntity] = useState<any | null>(null);
+    const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
     const [sessionSummary, setSessionSummary] = useState<string>('');
     const [showDice, setShowDice] = useState(false);
-    const [sharedRule, setSharedRule] = useState<any | null>(null);
+    const [sharedRule, setSharedRule] = useState<RegleDuHub | null>(null);
     const [latency, setLatency] = useState<number | null>(null);
 
     const [resolvedFavorites, setResolvedFavorites] = useState<EtatsDuHub['useFavoriteStore']['favorites']>([]);
@@ -205,7 +209,8 @@ export const useHubSync = () => {
     // ─────────────────────────────────────────────
     // Handlers
     // ─────────────────────────────────────────────
-    const applySyncPayload = useCallback((payload: any) => {
+    const applySyncPayload = useCallback((valeur: unknown) => {
+        const payload = lireDonneesDuHub(valeur);
         if (!payload) return;
         const { clock, combat, voiceLevel: vLevel, session, notes, dice, map, whiteboard, apparence } = payload;
         if (apparence) appliquerApparenceTablettes(apparence);
@@ -220,37 +225,42 @@ export const useHubSync = () => {
         const sSession = getStore('useSessionOSStore');
         const sFavorite = getStore('useFavoriteStore');
 
-        if (clock && sClock) sClock.setState((prev: any) => ({ ...prev, ...clock }));
-        if (combat && sCombat) sCombat.setState((prev: any) => ({ ...prev, ...combat }));
+        if (clock && sClock) sClock.setState(clock);
+        if (combat && sCombat) sCombat.setState(combat);
         if (vLevel !== undefined && sSync) sSync.getState().setVoiceLevel(vLevel);
         if (notes?.public !== undefined) setSessionSummary(notes.public);
-        if (dice && sDice) sDice.setState((prev: any) => ({ ...prev, ...dice }));
+        if (dice && sDice) {
+            const { lastRoll, ...reglages } = dice;
+            sDice.setState({ ...reglages, ...(lastRoll !== undefined && {
+                lastRoll: lastRoll === null ? null : jetDuMagasin(lastRoll),
+            }) });
+        }
         
         if (map && sMap) {
             const ui = sMapUI?.getState();
             if (ui?.isDraggingToken && ui?.selectedTokenId && map.projectedTokens) {
                 const currentTokens = sMap.getState().projectedTokens || [];
                 const incomingTokens = map.projectedTokens;
-                const mergedTokens = incomingTokens.map((t: any) => {
+                const mergedTokens = incomingTokens.map((t) => {
                     if (t.id === ui.selectedTokenId) {
                         const localToken = currentTokens.find(lt => lt.id === t.id);
                         return localToken ? { ...t, x: localToken.x, y: localToken.y } : t;
                     }
                     return t;
                 });
-                sMap.setState((prev: any) => ({ ...prev, ...map, projectedTokens: mergedTokens }));
+                sMap.setState({ ...map, projectedTokens: mergedTokens });
             } else {
-                sMap.setState((prev: any) => ({ ...prev, ...map }));
+                sMap.setState(map);
             }
         }
 
         if (whiteboard && sWhiteboard) {
-            sWhiteboard.setState((prev: any) => ({ ...prev, ...whiteboard }));
+            sWhiteboard.setState(whiteboard);
         }
 
         if (session && sSession) {
-            sSession.setState((prev: any) => {
-                const updates: any = {};
+            sSession.setState((prev) => {
+                const updates: Partial<EtatsDuHub['useSessionOSStore']> = {};
                 if (session.sessions !== undefined) updates.sessions = session.sessions;
                 if (session.campaigns !== undefined) updates.campaigns = session.campaigns;
                 if (session.players !== undefined) updates.players = session.players;
@@ -296,7 +306,7 @@ export const useHubSync = () => {
                 if (session.connectedCharacters !== undefined) updates.connectedCharacters = session.connectedCharacters;
                 
                 updates.activeCampaignId = session.activeCampaignId ?? prev.activeCampaignId;
-                updates.activeCampaignName = session.activeCampaignName ?? (session.campaigns || prev.campaigns).find((c: any) => c.id === updates.activeCampaignId)?.name;
+                updates.activeCampaignName = session.activeCampaignName ?? (session.campaigns || prev.campaigns).find(c => c.id === updates.activeCampaignId)?.name ?? prev.activeCampaignName;
                 if (session.activeCampaignWallpaper !== undefined) updates.activeCampaignWallpaper = session.activeCampaignWallpaper;
                 return { ...prev, ...updates };
             });
@@ -314,9 +324,11 @@ export const useHubSync = () => {
               sommeil.
             */
             const sReserves = getStore('useRessourcesDeTableStore');
-            if (session.reservesDeTable !== undefined && sReserves && session.activeCampaignId) {
-                sReserves.setState((prev: any) => ({
-                    reserves: { ...prev.reserves, [session.activeCampaignId]: session.reservesDeTable },
+            const campagne = session.activeCampaignId;
+            const reserves = session.reservesDeTable;
+            if (reserves !== undefined && sReserves && campagne) {
+                sReserves.setState((prev) => ({
+                    reserves: { ...prev.reserves, [campagne]: reserves },
                 }));
             }
         }
@@ -366,17 +378,18 @@ export const useHubSync = () => {
             socket.onmessage = (event) => {
                 if (!isActive) return;
                 try {
-                    const data = JSON.parse(event.data);
+                    const data: unknown = JSON.parse(event.data);
+                    if (!estObjet(data)) return;
                     
                     // 🛡️ Handle server-side character collision rejection
-                    if (data.type === 'remote:error') {
-                        const { code, message } = data.payload || {};
+                    if (data.type === 'remote:error' && estObjet(data.payload)) {
+                        const { code, message } = data.payload;
                         console.error(`[useHubSync] Server Error (${code}):`, message);
                         if (code === 'character_taken') {
                             const sClient = getStore('useClientStore');
                             if (sClient) {
                                 sClient.getState().setCharacterId(null);
-                                sClient.getState().setLastError(message || 'Ce personnage est déjà connecté sur un autre appareil.');
+                                sClient.getState().setLastError(typeof message === 'string' && message ? message : 'Ce personnage est déjà connecté sur un autre appareil.');
                             }
                         }
                     }
@@ -392,9 +405,9 @@ export const useHubSync = () => {
                     }
                     
                     if (data.type === 'sync' && data.payload) applySyncPayload(data.payload);
-                    if (data.type === 'hub-projection') {
+                    if (data.type === 'hub-projection' && estObjet(data.payload)) {
                         const { type, data: payload } = data.payload;
-                        if (type === 'image') {
+                        if (type === 'image' && (typeof payload === 'string' || payload === null)) {
                             setLiveImagePath(imageApresMessage(payload));
                             setLiveMediaEstUneVideo(false);
                             /* Même discipline que le drapeau au-dessus : *un
@@ -402,16 +415,19 @@ export const useHubSync = () => {
                                à la vidéo suivante, qui ne l'a pas demandé.* */
                             setLiveVideoBoucle(true);
                         }
-                        if (type === 'video-boucle') setLiveVideoBoucle(payload !== '0');
-                        if (type === 'video') {
+                        if (type === 'video-boucle' && typeof payload === 'string') setLiveVideoBoucle(payload !== '0');
+                        if (type === 'video' && (typeof payload === 'string' || payload === null)) {
                             setLiveImagePath(imageApresMessage(payload));
                             setLiveMediaEstUneVideo(!!payload);
                         }
-                        if (type === 'son-video') {
+                        if (type === 'son-video' && (typeof payload === 'string' || typeof payload === 'number')) {
                             const niveau = Number(payload);
                             if (Number.isFinite(niveau)) setNiveauSonVideo(Math.min(1, Math.max(0, niveau)));
                         }
-                        if (type === 'entity') setLiveEntity(payload ? JSON.parse(payload) : null);
+                        if (type === 'entity') {
+                            const entite = lireEntiteProjetee(payload);
+                            if (entite !== undefined) setLiveEntity(entite);
+                        }
                         /*
                           Le canal porte aussi un type `titre`, qui n'est pas lu
                           ici : **le storyboard ne vise pas les tablettes**
@@ -419,16 +435,19 @@ export const useHubSync = () => {
                           sur les écrans de projection et le Player Hub.
                         */
                     }
-                    if (data.type === 'session:receive-message' && data.payload) {
+                    if (data.type === 'session:receive-message' && estMessageDeSeance(data.payload)) {
                         const sSession = getStore('useSessionOSStore');
                         if (sSession) sSession.getState().addSessionMessage(data.payload);
                     }
                     if (data.type === 'remote:pong') {
                         const now = Date.now();
-                        const sentAt = data.payload?.sentAt || now;
+                        const sentAt = estObjet(data.payload) && typeof data.payload.sentAt === 'number' && Number.isFinite(data.payload.sentAt) ? data.payload.sentAt : now;
                         setLatency(now - sentAt);
                     }
-                    if (data.type === 'session:display-rule' && data.payload) setSharedRule(data.payload);
+                    if (data.type === 'session:display-rule') {
+                        const regle = lireRegleDuHub(data.payload);
+                        if (regle !== undefined) setSharedRule(regle);
+                    }
                 } catch (err) { console.error('[useHubSync] Sync error:', err); }
             };
         };
@@ -469,31 +488,38 @@ export const useHubSync = () => {
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
-        const handleIpcUpdate = (type: string, data: any) => {
-            if (type === 'image') {
+        const handleIpcUpdate = (type: string, data: unknown) => {
+            if (type === 'image' && (typeof data === 'string' || data === null)) {
                 setLiveImagePath(imageApresMessage(data));
                 setLiveMediaEstUneVideo(false);
             }
-            else if (type === 'video') {
+            else if (type === 'video' && (typeof data === 'string' || data === null)) {
                 setLiveImagePath(imageApresMessage(data));
                 setLiveMediaEstUneVideo(!!data);
             }
-            else if (type === 'son-video') {
+            else if (type === 'son-video' && (typeof data === 'string' || typeof data === 'number')) {
                 const niveau = Number(data);
                 if (Number.isFinite(niveau)) setNiveauSonVideo(Math.min(1, Math.max(0, niveau)));
             }
-            else if (type === 'entity') setLiveEntity(data ? JSON.parse(data) : null);
-            else if (type === 'voice-level') {
+            else if (type === 'entity') {
+                const entite = lireEntiteProjetee(data);
+                if (entite !== undefined) setLiveEntity(entite);
+            }
+            else if (type === 'voice-level' && (typeof data === 'string' || typeof data === 'number')) {
                 const sSync = getStore('useSyncStore');
-                if (sSync) sSync.getState().setVoiceLevel(parseFloat(data) || 0);
+                const niveau = typeof data === 'number' ? data : parseFloat(data);
+                if (sSync && Number.isFinite(niveau)) sSync.getState().setVoiceLevel(niveau);
             }
             else if (type === 'map-ping') {
                 // Handled via map-os canvas
             }
-            else if (type === 'session:display-rule') setSharedRule(data as any);
+            else if (type === 'session:display-rule') {
+                const regle = lireRegleDuHub(data);
+                if (regle !== undefined) setSharedRule(regle);
+            }
         };
 
-        const handleBroadcastSync = (payload: any) => {
+        const handleBroadcastSync = (payload: unknown) => {
             /*
               ⭐ **Le vrai noir est un geste explicite, et lui seul pose `null`.**
 
@@ -502,14 +528,14 @@ export const useHubSync = () => {
               l'écran de la table doit être noir. *Deux intentions qui produisent
               le même pixel ne sont pas la même intention.*
             */
-            if (payload?.type === 'BLACKOUT') {
+            if (estObjet(payload) && payload.type === 'BLACKOUT') {
                 setLiveImagePath(null);
                 setLiveEntity(null);
                 setLiveMediaEstUneVideo(false);
                 return;
             }
 
-            if (payload?.type === 'FULL_RESET') {
+            if (estObjet(payload) && payload.type === 'FULL_RESET') {
                 /*
                   ⛔ **`undefined`, et surtout pas `null`.** Les deux ne veulent
                   pas dire la même chose : `undefined` rend la main au décor de la

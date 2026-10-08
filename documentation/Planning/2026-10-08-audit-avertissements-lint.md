@@ -189,6 +189,16 @@ magasins du Hub et leurs douze points d'exposition sous un contrat commun :
 et 409 avertissements** — 385 `any` (161 applicatifs, 224 dans les tests),
 20 effets, trois diagnostics de mémoïsation et une directive inutile.
 Types, construction, 242 tests ciblés, **6 838 tests de la suite complète**
-et six scénarios Electron/tablettes passent. Quatrième lot validé, publication demandée. Les charges reçues par le Hub
-restent à typer, puis les messages entre fenêtres ; l'accès aux magasins
-et le DTO reçu constituent des contrats distincts.
+et six scénarios Electron/tablettes passent. Quatrième lot commité et poussé
+sous **`777adc68`**, après les contrôles complets du hook.
+
+Le [cinquième lot](2026-10-08-lint-messages-hub.md) type les données réellement
+émises et appliquées par le Hub, y compris les diffusions partielles et les
+projections. **20 `any` applicatifs retirés** : 17 dans le Hub, trois dans le
+caviardage du synchroniseur. Lint global : **1 537 fichiers, zéro erreur et
+389 avertissements** — 365 `any` (141 applicatifs, 224 dans les tests), 20 effets,
+trois diagnostics de mémoïsation et une directive inutile. Les règles et
+l'inventaire JSON des 540 alertes initiales restent inchangés.
+Types, construction, **128 tests ciblés** dans 14 fichiers, **6 846 tests de
+la suite complète** et cinq scénarios Electron/tablettes passent. Les messages
+entre fenêtres sont la suite de l'étape 2, avant les effets et les autres domaines/tests.

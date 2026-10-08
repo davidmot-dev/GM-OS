@@ -154,3 +154,32 @@ complet de magasin sur un message reconstruit et réduit. Puis reprendre
 `CrossWindowEventService`, en conservant l'autorité du MJ et les jetons saisis.
 Les effets et les autres domaines/tests viennent après. Les changements
 antérieurs de Claude sont conservés hors de ce lot.
+
+Publication terminée : **`777adc68`** sur `origin/feature/tablet-hub-pwa`, après
+les contrôles complets du hook de pré-push.
+
+## Cinquième lot : messages et projections du Hub
+
+David confirme **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+[Contrat, essais et reprise](2026-10-08-lint-messages-hub.md). Le message réellement
+émis et les champs appliqués par le Hub partagent désormais un contrat de données,
+sans méthodes de magasins. Les diffusions partielles conservent leurs absences ;
+les projections d'entité/règle sont relues et les dates des jets restaurées.
+L'émetteur transmet les factions et conserve une chaîne pour les portraits vides.
+
+**20 `any` applicatifs retirés** : 17 du Hub, trois du caviardage à l'émission.
+Lint global : **1 537 fichiers, zéro erreur, 389 avertissements**, règles inchangées.
+Types, construction, **128 tests ciblés dans 14 fichiers**, **6 846 tests dans 533
+fichiers** (un fichier et quatre tests ignorés) et **cinq scénarios Electron/tablettes**
+passent. Huit nouveaux cas couvrent les diffs, réserves par campagne, jetons saisis,
+dates, projections, charges mal formées et données envoyées sans secrets.
+Les profils sont jetables, les appareils muets ; les captures de cette validation
+vivent dans un dossier temporaire et ne remplacent aucune capture du manuel.
+
+**Cinquième lot réalisé et documenté : sept fichiers de code/tests et cinq documents.**
+Publication demandée par David : **« commit, pousse et passe à l'étape suivante
+(GM-OS est éteint) »**. Reprendre `CrossWindowEventService` : contrats des messages,
+autorité de projection du MJ, absence de renvoi et maintien des jetons saisis.
+Les 20 effets et les autres domaines/tests viennent ensuite. L'inventaire JSON
+conserve les 540 alertes initiales ; les modifications antérieures de Claude
+restent hors du lot.

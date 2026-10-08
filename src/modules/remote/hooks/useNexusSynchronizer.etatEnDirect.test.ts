@@ -1,5 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import type { DonneesDuHub } from '../types/donneesDuHub';
 
 /**
  * **L'état en direct se lit après les résolutions de médias, jamais avant.**
@@ -40,11 +41,19 @@ const storeVide = vi.hoisted(() => (extra: Record<string, unknown> = {}) => ({
 
 vi.mock('../../sound/useSoundStore', () => ({ useSoundStore: storeVide({ activeAtmosphereId: null }) }));
 vi.mock('../../storyboard/useStoryboardStore', () => ({ useStoryboardStore: storeVide() }));
-vi.mock('../../combat/useCombatStore', () => ({ useCombatStore: storeVide() }));
+vi.mock('../../combat/useCombatStore', () => ({ useCombatStore: storeVide({
+    combatants: [
+        { id: 'pj', name: 'PJ', init: 10, isPlayer: true, faction: 'player', statuses: [], gmSecretInfo: 'secret' },
+        { id: 'cache', name: 'PNJ caché', init: 5, isPlayer: false, faction: 'enemy', statuses: [{ id: 's1', name: 'hidden' }] },
+    ],
+}) }));
 /* Une entité à portrait : c'est elle qui oblige à attendre une résolution. */
 vi.mock('../../session/useSessionOSStore', () => ({
     useSessionOSStore: storeVide({
-        entities: [{ id: 'e-1', name: 'Rachael', avatar: 'rachael.png' }],
+        entities: [{ id: 'e-1', name: 'Rachael', avatar: 'rachael.png', gmSecretInfo: 'secret', roleplayingNotes: 'secret' }],
+        players: [{ id: 'p1', realName: 'Joueur', avatarUrl: '', isOnline: true,
+            characters: [{ id: 'pj', name: 'PJ', portraitUrl: '', campaignId: null, templateId: 'generic', sheetData: {} }],
+        }],
         getActiveDriver: () => null,
     }),
 }));
@@ -72,6 +81,20 @@ afterEach(() => {
 });
 
 describe('useNexusSynchronizer — ce qui part est l’état du départ', () => {
+    it('transmet faction et portraits vides, sans PNJ caché ni secrets au Hub', async () => {
+        const envois: DonneesDuHub[] = [];
+        (window as unknown as { appBridge: unknown }).appBridge = {
+            remote: { sendSync: (payload: DonneesDuHub, cible: string) => { if (cible === 'hub') envois.push(payload); } },
+        };
+        renderHook(() => useNexusSynchronizer(true));
+        await vi.waitFor(() => expect(envois.length).toBeGreaterThan(0));
+        const paquet = envois.at(-1)!;
+        expect(paquet.combat?.combatants?.map(c => [c.id, c.faction])).toEqual([['pj', 'player']]);
+        expect(paquet.session?.players?.[0].avatarUrl).toBe('');
+        expect(paquet.session?.players?.[0].characters[0].portraitUrl).toBe('');
+        expect(JSON.stringify(paquet)).not.toContain('"secret"');
+    });
+
     /** **Le test qui garde le signalement de David.** */
     it('la carte projetée PENDANT la résolution des médias part telle qu’elle est à l’envoi', async () => {
         const envoisAuHub: Array<{ map?: { projectionTarget?: string | null } }> = [];

@@ -58,10 +58,11 @@ manuel sont conservées à l'identique. `git diff --check` passe.
 
 ## Reprise
 
-Ce quatrième lot est validé : quatorze fichiers de code et cinq documents.
+Ce quatrième lot est commité et poussé sous **`777adc68`** sur
+`origin/feature/tablet-hub-pwa`, après les contrôles complets du hook.
 Publication demandée par David : **« commit, pousse et passe à l'étape suivante
-(GM-OS est éteint) »**. L'accès aux magasins est typé ; les **charges reçues par le Hub
-restent à typer**, avant `CrossWindowEventService`. `useHubSync` conserve 17
+(GM-OS est éteint) »**. À cette publication, l'accès aux magasins est typé ; les **charges reçues par le Hub
+restent à typer**, avant `CrossWindowEventService`. `useHubSync` conserve alors 17
 `any` sur ces charges, leurs fusions et les projections, ainsi que son effet
 de déclenchement des dés. Ne pas les retirer en affirmant que `RemoteSyncData`
 est l'état complet du Hub : ce DTO ne décrit ni toutes les données Session
@@ -75,3 +76,7 @@ Conserver les gardes sur les jetons saisis, la fusion des données de fiche,
 les réserves par campagne, les manifestes/cartes et les données caviardées.
 Les 20 effets et les autres domaines/tests viennent ensuite ; l'inventaire
 JSON garde les 540 alertes initiales.
+
+La suite est réalisée dans le [cinquième lot](2026-10-08-lint-messages-hub.md) :
+contrat commun à l'émetteur et au Hub, relecture des charges et projections,
+20 `any` applicatifs retirés. Le nouveau lot reste distinct de ce commit.

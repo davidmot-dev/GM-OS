@@ -26,6 +26,7 @@ import { resolveToSendableUrl } from '../../../utils/mediaResolver';
 import { crossWindowSync } from '../../../services/CrossWindowEventService';
 import { cartesRestantesPourLaTable, mainsPourLaTable } from '../../session/logic/mainsDuPaquet';
 import { abonnerApparenceTablettes, lireApparenceTablettes } from '../../../theme/apparenceTablettes';
+import type { DonneesDuHub } from '../types/donneesDuHub';
 
 /**
  * Intervalle minimal entre deux synchronisations **forcées**.
@@ -70,7 +71,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
         }
         
         try {
-            const payload: Record<string, unknown> = {};
+            const payload: DonneesDuHub = {};
             if (segmentName === 'dice') {
                 const s = useDiceStore.getState();
                 payload.dice = segmentDesDes(s);
@@ -315,7 +316,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
             // 3. COMBAT & ENTITIES
             const resolvedCombatants = (await Promise.all(combatStore.combatants.map(async (c) => ({
-                id: c.id, name: c.name, hp: c.hp, hpMax: c.hpMax, init: c.init, isPlayer: c.isPlayer,
+                id: c.id, name: c.name, hp: c.hp, hpMax: c.hpMax, init: c.init, isPlayer: c.isPlayer, faction: c.faction,
                 healthSystem: c.healthSystem, avatar: await resolveToSendableUrl(c.avatar || ''), statuses: c.statuses
             })))).filter(c => c.isPlayer || !c.statuses?.some(s => ['invisible', 'caché', 'hidden'].includes(s.name.toLowerCase())));
 
@@ -337,10 +338,10 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             // 4a. Avatars des joueurs et portraits des personnages
             const resolvedPlayers = await Promise.all(players.map(async (player) => ({
                 ...player,
-                avatarUrl: player.avatarUrl ? await resolveToSendableUrl(player.avatarUrl) : undefined,
+                avatarUrl: player.avatarUrl ? await resolveToSendableUrl(player.avatarUrl) : '',
                 characters: await Promise.all((player.characters || []).map(async (char) => ({
                     ...char,
-                    portraitUrl: char.portraitUrl ? await resolveToSendableUrl(char.portraitUrl) : undefined,
+                    portraitUrl: char.portraitUrl ? await resolveToSendableUrl(char.portraitUrl) : '',
                 }))),
             })));
 
@@ -574,7 +575,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                             .filter(([, mains]) => (mains as unknown[]).length > 0),
                     ),
                 },
-            };
+            } satisfies DonneesDuHub;
 
             if (isMainPC) {
                 console.log('[NexusSync] Broadcasting state update:', {
@@ -590,29 +591,33 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             // personnage retransmettait tout le reste ; comparé champ par champ,
             // seul ce qui bouge repart. Les destinataires appliquent déjà ces
             // champs individuellement (voir applySyncPayload).
-            const diffPayload = force
+            // La comparaison ne fabrique aucune valeur : elle ne conserve que
+            // des champs de fullState, lui-même contrôlé par DonneesDuHub.
+            const diffPayload: DonneesDuHub = force
                 ? fullState
-                : getDifferentialPayload(fullState, lastBroadcastRef.current, { deepSegments: ['session'] });
+                : getDifferentialPayload(fullState, lastBroadcastRef.current, { deepSegments: ['session'] }) as DonneesDuHub;
             
             if (Object.keys(diffPayload).length > 0 && window.appBridge) {
                 // Roles: remote/gm see everything. player sees sanitized.
                 window.appBridge.remote?.sendSync?.(diffPayload, 'remote');
                 window.appBridge.remote?.sendSync?.(diffPayload, 'gm');
 
-                const playerDiff = JSON.parse(JSON.stringify(diffPayload));
+                // Copie de notre propre message typé, pas une entrée distante.
+                // JetTransmis accepte la chaîne produite par JSON pour Date.
+                const playerDiff = JSON.parse(JSON.stringify(diffPayload)) as DonneesDuHub;
                 
                 // Sanitization for Player Role
                 if (playerDiff.notes) playerDiff.notes.private = '•••••';
                 
                 if (playerDiff.session?.sessions) {
-                    playerDiff.session.sessions = playerDiff.session.sessions.map((s: any) => {
+                    playerDiff.session.sessions = playerDiff.session.sessions.map((s) => {
                         const { feedbacks, ...rest } = s;
                         return rest;
                     });
                 }
 
                 if (playerDiff.session?.entities) {
-                    playerDiff.session.entities = playerDiff.session.entities.map((e: any) => ({
+                    playerDiff.session.entities = playerDiff.session.entities.map((e) => ({
                         ...e,
                         gmSecretInfo: '•••••',
                         roleplayingNotes: '•••••'
@@ -620,7 +625,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 }
 
                 if (playerDiff.combat?.combatants) {
-                    playerDiff.combat.combatants = playerDiff.combat.combatants.map((c: any) => ({
+                    playerDiff.combat.combatants = playerDiff.combat.combatants.map((c) => ({
                         ...c,
                         gmSecretInfo: '•••••',
                         roleplayingNotes: '•••••'

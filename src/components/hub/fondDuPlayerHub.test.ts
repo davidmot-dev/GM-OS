@@ -160,13 +160,13 @@ describe('les quatre chemins passent tous par la même règle', () => {
     it('seul le message d’extinction pose `null`', () => {
         expect(CROCHET.match(/setLiveImagePath\(null\)/g) ?? []).toHaveLength(1);
 
-        const depart = CROCHET.indexOf("payload?.type === 'BLACKOUT'");
+        const depart = CROCHET.indexOf("payload.type === 'BLACKOUT'");
         expect(depart, 'le message d’extinction est introuvable').toBeGreaterThan(0);
         expect(CROCHET.slice(depart, depart + 400)).toContain('setLiveImagePath(null)');
     });
 
     it('la remise à zéro rend le décor, elle n’éteint pas', () => {
-        const depart = CROCHET.indexOf("payload?.type === 'FULL_RESET'");
+        const depart = CROCHET.indexOf("payload.type === 'FULL_RESET'");
         expect(depart).toBeGreaterThan(0);
         expect(CROCHET.slice(depart, depart + 900)).toContain('setLiveImagePath(undefined)');
     });
