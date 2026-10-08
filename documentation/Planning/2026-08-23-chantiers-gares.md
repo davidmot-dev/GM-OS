@@ -9946,6 +9946,33 @@ publication sur `origin/feature/tablet-hub-pwa` demandées.
 
 ---
 
+### 127 · Audit des 540 avertissements du lint — 08/10/2026
+
+David demande **« peux-tu revoir les 540 avertissements et me faire un topos ? »**.
+[Rapport détaillé](2026-10-08-audit-avertissements-lint.md) et
+[inventaire des emplacements](2026-10-08-inventaire-avertissements-lint.json) :
+1 527 fichiers analysés, zéro erreur, 540 avertissements dans 132 fichiers.
+497 concernent `any` (273 hors tests, 224 dans les tests), 15 les dépendances
+React, 20 des mises à jour d'état dans les effets, sept la mémoïsation du
+compilateur React non activé et une directive inutilisée. Certains diagnostics
+se recoupent ; ce ne sont pas 540 défauts indépendants.
+
+**Audit effectué ; premier lot de corrections demandé le 08/10** par David :
+**« ok on commence suivant ton ordre »**, puis **« GM-OS est fermé »**.
+Les 15 dépendances React dans 12 fichiers sont corrigées ; quatre diagnostics
+de mémoïsation associés disparaissent aussi. Le lint global passe à
+**1 530 fichiers, zéro erreur, 521 avertissements**. Les règles restent inchangées.
+[Corrections, essais et reprise](2026-10-08-lint-dependances-react.md).
+Lot validé : types et construction réussis, **6 811 tests unitaires et
+six scénarios Electron Dice-OS** passent.
+La suite vise les contrats de typage communs, puis les effets écran par écran
+et le typage des tests. Publication du premier lot demandée le 08/10 :
+**« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
+pas le rétablissement de son fonctionnement.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -10012,6 +10039,7 @@ publication sur `origin/feature/tablet-hub-pwa` demandées.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
+| 62 | **Avertissements du lint** | 🔧 **Premier lot réalisé le 08/10**, § 127 : les 15 dépendances React corrigées ; 540 → 521 avertissements, zéro erreur | Typer les contrats communs de Session et des échanges | [Analyse](2026-10-08-audit-avertissements-lint.md), [premier lot](2026-10-08-lint-dependances-react.md) ; publication demandée |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

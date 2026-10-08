@@ -173,7 +173,7 @@ const TemplateDashboard: React.FC = () => {
                 setSelectedId(allTemplates[0].id);
             }
         }
-    }, [activeTab, activeCampaignId, customGameDrivers, selectedId]);
+    }, [activeTab, activeCampaignId, customGameDrivers, selectedId, campaigns, customSheetTemplates]);
     // ────────────────────────────────────────────────────────────────
 
     const allTemplates = [...DEFAULT_SHEET_TEMPLATES, ...customSheetTemplates];

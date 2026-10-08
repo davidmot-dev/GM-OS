@@ -458,7 +458,7 @@ const DiceBoard: React.FC = () => {
     }, [useSystemDriver, activeDriver, modifier, diceCount, gearCount, target, formulaInput, mode, targetRule,
         // Sans elles, un changement de niveau ne serait pas relu : le pupitre
         // lancerait la poignée d'avant, et le résultat resterait plausible.
-        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource]);
+        poigneeEchelonnee, facesDeLEquipement, libelleDeLaPoignee, modificateurSauvegarde, libelleDeLaRessource, t]);
 
     const handleRoll = useCallback((sides: number = 20, isFormulaText: boolean = false, customFormula: string = "", remoteOverrides?: RemoteDiceOptions): RollRecord | null => {
         try {
@@ -496,7 +496,7 @@ const DiceBoard: React.FC = () => {
             console.error("Erreur de lancer:", error);
             return null;
         }
-    }, [batchCount, mode, executeRoll, isDiceProjected, triggerDiceProjection, setLastRoll]);
+    }, [batchCount, mode, executeRoll, isDiceProjected, triggerDiceProjection, setLastRoll, t]);
 
     const handleQuickRoll = (formula: string, label: string) => {
         handleRoll(0, true, formula, { mode: 'formula', title: label });

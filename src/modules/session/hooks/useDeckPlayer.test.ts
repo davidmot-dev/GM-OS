@@ -5,6 +5,9 @@ import { useSessionOSStore } from '../useSessionOSStore';
 import { useImageStore } from '../../image/useImageStore';
 import type { DeckManifest } from '../store/types';
 
+const traduction = vi.hoisted(() => ({ t: (cle: string) => cle }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: traduction.t }) }));
+
 // Mock stores
 vi.mock('../useSessionOSStore', () => ({
     useSessionOSStore: vi.fn()
@@ -47,6 +50,7 @@ describe('useDeckPlayer', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        traduction.t = (cle: string) => cle;
         mockStore = {
             decks: mockDecks,
             deckStates: mockDeckStates,
@@ -110,6 +114,18 @@ describe('useDeckPlayer', () => {
         act(() => { result.current.handleFlip(); });
         expect(mockImageStoreState.projectEntity).toHaveBeenCalledWith(expect.objectContaining({
             name: 'modules:session.deck_module.player.projection.hidden_name'
+        }));
+    });
+
+    it('projette dans la langue choisie après un changement de langue sans changer de carte', () => {
+        mockStore.isProjecting = true;
+        const { result, rerender } = renderHook(() => useDeckPlayer());
+        traduction.t = (cle: string) => `fr:${cle}`;
+        rerender();
+        act(() => { result.current.handleFlip(); });
+        expect(mockImageStoreState.projectEntity).toHaveBeenCalledWith(expect.objectContaining({
+            name: 'fr:modules:session.deck_module.player.projection.hidden_name',
+            subtitle: 'fr:modules:session.deck_module.player.projection.hidden_subtitle',
         }));
     });
 });

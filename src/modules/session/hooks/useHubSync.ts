@@ -438,7 +438,7 @@ export const useHubSync = () => {
             if (socket) { socket.onclose = null; socket.close(); }
             socketRef.current = null;
         };
-    }, [host, applySyncPayload]);
+    }, [host, port, applySyncPayload]);
 
     // 🛰️ Latency / Ping Monitoring
     useEffect(() => {

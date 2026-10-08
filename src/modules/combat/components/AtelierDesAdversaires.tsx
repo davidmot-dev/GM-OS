@@ -192,7 +192,9 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
         return { sheetData, fabrique, gabarit };
     };
 
-    const apercu = useMemo(() => fabriquerUn(0), [source, rangId, repartition, graine, champs, gabarits]);
+    // Le tirage est déterministe pour cette graine ; la liste du bestiaire est
+    // reconstruite à chaque rendu, donc la mémoïsation ne conservait rien.
+    const apercu = fabriquerUn(0);
 
     const nomDeBase = nom.trim()
         || (source.genre === 'gabarit' ? gabarits.find(g => g.id === source.id)?.nom : '')

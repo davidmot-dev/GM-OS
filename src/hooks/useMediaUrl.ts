@@ -12,7 +12,7 @@ import { useMediaStore } from '../stores/useMediaStore';
  */
 export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefined => {
     const [resolvedUrl, setResolvedUrl] = useState<string | undefined>(undefined);
-    const { getMediaBlob } = useMediaStore();
+    const getMediaBlob = useMediaStore(state => state.getMediaBlob);
     /*
       **Le média est-il en base ?** Trouvé par la vitrine le 2026-09-27 : les
       tuiles d'Image-OS montées pendant « Restaurer depuis la sauvegarde »
@@ -38,11 +38,6 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
             try {
                 if (!sourceIdOrUrl || typeof sourceIdOrUrl !== 'string' || sourceIdOrUrl.trim() === '') {
                     if (isMounted) setResolvedUrl(undefined);
-                    return;
-                }
-
-                // Optimization: If the source matches the already resolved URL (e.g. data URI already proxied), skip
-                if (sourceIdOrUrl === resolvedUrl) {
                     return;
                 }
 
@@ -185,7 +180,7 @@ export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefin
                 }, 1000);
             }
         };
-    }, [sourceIdOrUrl, estEnBase]); // getMediaBlob exclu : le store instable relançait sans cesse
+    }, [sourceIdOrUrl, estEnBase, getMediaBlob]);
 
     return resolvedUrl;
 };

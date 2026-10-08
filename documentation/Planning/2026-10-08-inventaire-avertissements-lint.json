@@ -1,0 +1,3800 @@
+{
+  "date": "2026-10-08",
+  "commit": "b36157cf65c41074722e3efeb2929ddf24fdc853",
+  "perimetre": "Copie de travail ; même sélection que scripts/lint.mjs, scripts temporaires de l’audit exclus ; aucune correction.",
+  "fichiersAnalyses": 1527,
+  "erreurs": 0,
+  "total": 540,
+  "fichiersConcernes": 132,
+  "regles": {
+    "@typescript-eslint/no-explicit-any": 497,
+    "react-hooks/set-state-in-effect": 20,
+    "react-hooks/exhaustive-deps": 15,
+    "react-hooks/preserve-manual-memoization": 7,
+    "directive-inutile": 1
+  },
+  "anyTests": 224,
+  "anyHorsTests": 273,
+  "avertissements": [
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 59,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 70,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 74,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 75,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 83,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 87,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 88,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 94,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 95,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 104,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 117,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 121,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 123,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 136,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 138,
+      "colonne": 90,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 150,
+      "colonne": 56,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 188,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 196,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 204,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 214,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 214,
+      "colonne": 97,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 221,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 223,
+      "colonne": 57,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 223,
+      "colonne": 65,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 226,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 254,
+      "colonne": 50,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "e2e/capturesDuManuel.spec.ts",
+      "ligne": 561,
+      "colonne": 69,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/RAGEngine.ts",
+      "ligne": 21,
+      "colonne": 10,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/RAGEngine.ts",
+      "ligne": 521,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 54,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 144,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 144,
+      "colonne": 76,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 147,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 153,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 163,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 174,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 195,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.register.test.ts",
+      "ligne": 207,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.ts",
+      "ligne": 347,
+      "colonne": 38,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.ts",
+      "ligne": 389,
+      "colonne": 60,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.ts",
+      "ligne": 434,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.ts",
+      "ligne": 453,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.ts",
+      "ligne": 467,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/SyncServer.ts",
+      "ligne": 485,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 70,
+      "colonne": 33,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 71,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 73,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 82,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 92,
+      "colonne": 22,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 138,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 139,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 142,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 150,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 178,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 179,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 192,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 207,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 215,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 225,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 234,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 236,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 273,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 292,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 304,
+      "colonne": 22,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 312,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 313,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 333,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 334,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 344,
+      "colonne": 22,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 345,
+      "colonne": 43,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 347,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 396,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 414,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 439,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 444,
+      "colonne": 70,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 456,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 469,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 471,
+      "colonne": 49,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 486,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 493,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 495,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "electron/coutureDesFiches.test.ts",
+      "ligne": 509,
+      "colonne": 65,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/App.tsx",
+      "ligne": 37,
+      "colonne": 13,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/ModalProvider.tsx",
+      "ligne": 50,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/components/NetworkQRCodeModal.tsx",
+      "ligne": 24,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/components/PlayerHub.tsx",
+      "ligne": 68,
+      "colonne": 9,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/components/TabletHub.tsx",
+      "ligne": 193,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/components/__tests__/TabletHub.test.tsx",
+      "ligne": 21,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/__tests__/TabletHub.test.tsx",
+      "ligne": 21,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/__tests__/TabletHub.test.tsx",
+      "ligne": 21,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/hub/HubClockWidgets.tsx",
+      "ligne": 8,
+      "colonne": 11,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/hub/HubClockWidgets.tsx",
+      "ligne": 9,
+      "colonne": 12,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/hub/HubClockWidgets.tsx",
+      "ligne": 10,
+      "colonne": 15,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/hub/HubDiceDisplay.tsx",
+      "ligne": 9,
+      "colonne": 15,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/hub/HubInventory.tsx",
+      "ligne": 14,
+      "colonne": 24,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/hub/HubInventory.tsx",
+      "ligne": 15,
+      "colonne": 26,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/settings/InlinedMediaPanel.tsx",
+      "ligne": 97,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/settings/InlinedMediaPanel.tsx",
+      "ligne": 98,
+      "colonne": 56,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/settings/InlinedMediaPanel.tsx",
+      "ligne": 99,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/settings/LobbyMonitor.tsx",
+      "ligne": 133,
+      "colonne": 65,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/components/settings/VerrouDeLaSouris.tsx",
+      "ligne": 53,
+      "colonne": 28,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/components/settings/VerrouDeLaSouris.tsx",
+      "ligne": 60,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/hooks/useMediaUrl.ts",
+      "ligne": 188,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has missing dependencies: 'getMediaBlob' and 'resolvedUrl'. Either include them or remove the dependency array."
+    },
+    {
+      "fichier": "src/hooks/useSpotlight.ts",
+      "ligne": 61,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/hooks/useSpotlight.ts",
+      "ligne": 69,
+      "colonne": 33,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/hooks/useSpotlight.ts",
+      "ligne": 69,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/hooks/useSpotlight.ts",
+      "ligne": 375,
+      "colonne": 5,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/locales/inlinedMediaKeys.test.ts",
+      "ligne": 19,
+      "colonne": 95,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/locales/inlinedMediaKeys.test.ts",
+      "ligne": 38,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/locales/inlinedMediaKeys.test.ts",
+      "ligne": 39,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/locales/inlinedMediaKeys.test.ts",
+      "ligne": 50,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 339,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 467,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 555,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 889,
+      "colonne": 115,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 1546,
+      "colonne": 22,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 1575,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 1586,
+      "colonne": 17,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/AIService.ts",
+      "ligne": 1596,
+      "colonne": 25,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/AIService.test.ts",
+      "ligne": 62,
+      "colonne": 12,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/AIService.test.ts",
+      "ligne": 104,
+      "colonne": 12,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/AIService.test.ts",
+      "ligne": 157,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 21,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 27,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 33,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 40,
+      "colonne": 30,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 50,
+      "colonne": 30,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 51,
+      "colonne": 30,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 65,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/JSONExtraction.test.ts",
+      "ligne": 73,
+      "colonne": 24,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/RAGService.test.ts",
+      "ligne": 27,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/RAGService.test.ts",
+      "ligne": 40,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/RAGService.test.ts",
+      "ligne": 45,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/RAGService.test.ts",
+      "ligne": 72,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/RAGService.test.ts",
+      "ligne": 78,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/RAGService.test.ts",
+      "ligne": 89,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/__tests__/RAGService.test.ts",
+      "ligne": 97,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/components/AIPromptOverlay.tsx",
+      "ligne": 39,
+      "colonne": 17,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/ai/components/AISettings.tsx",
+      "ligne": 143,
+      "colonne": 6,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has missing dependencies: 'aUneCle' and 'configs'. Either include them or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 33,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 39,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 49,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 55,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 74,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 82,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 84,
+      "colonne": 80,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 85,
+      "colonne": 83,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 113,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 119,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 121,
+      "colonne": 80,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ai/hooks/useOracleContext.test.ts",
+      "ligne": 122,
+      "colonne": 83,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/ambient/components/AmbientTrack.tsx",
+      "ligne": 20,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/clock/services/ChimeEngine.ts",
+      "ligne": 12,
+      "colonne": 68,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/combat/components/AtelierDesAdversaires.tsx",
+      "ligne": 96,
+      "colonne": 9,
+      "regle": "react-hooks/preserve-manual-memoization",
+      "message": "Compilation Skipped: Existing memoization could not be preserved"
+    },
+    {
+      "fichier": "src/modules/combat/components/AtelierDesAdversaires.tsx",
+      "ligne": 195,
+      "colonne": 20,
+      "regle": "react-hooks/preserve-manual-memoization",
+      "message": "Compilation Skipped: Existing memoization could not be preserved"
+    },
+    {
+      "fichier": "src/modules/combat/components/AtelierDesAdversaires.tsx",
+      "ligne": 195,
+      "colonne": 50,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useMemo has a missing dependency: 'fabriquerUn'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/combat/components/AtelierDesAdversaires.tsx",
+      "ligne": 195,
+      "colonne": 96,
+      "regle": "react-hooks/preserve-manual-memoization",
+      "message": "Compilation Skipped: Existing memoization could not be preserved"
+    },
+    {
+      "fichier": "src/modules/combat/components/CombatCard.tsx",
+      "ligne": 300,
+      "colonne": 92,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/combat/components/CombatControls.tsx",
+      "ligne": 97,
+      "colonne": 85,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/combat/components/CombatControls.tsx",
+      "ligne": 97,
+      "colonne": 93,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/combat/components/DamageCalculator.tsx",
+      "ligne": 36,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/combat/useCombatStore.sync.test.ts",
+      "ligne": 13,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/combat/useCombatStore.ts",
+      "ligne": 693,
+      "colonne": 43,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/dice/DiceBoard.tsx",
+      "ligne": 293,
+      "colonne": 37,
+      "regle": "react-hooks/preserve-manual-memoization",
+      "message": "Compilation Skipped: Existing memoization could not be preserved"
+    },
+    {
+      "fichier": "src/modules/dice/DiceBoard.tsx",
+      "ligne": 458,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/dice/DiceBoard.tsx",
+      "ligne": 458,
+      "colonne": 26,
+      "regle": "react-hooks/preserve-manual-memoization",
+      "message": "Compilation Skipped: Existing memoization could not be preserved"
+    },
+    {
+      "fichier": "src/modules/dice/DiceBoard.tsx",
+      "ligne": 463,
+      "colonne": 36,
+      "regle": "react-hooks/preserve-manual-memoization",
+      "message": "Compilation Skipped: Existing memoization could not be preserved"
+    },
+    {
+      "fichier": "src/modules/dice/DiceBoard.tsx",
+      "ligne": 499,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/dice/DiceBox3D.tsx",
+      "ligne": 547,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 'lastRoll'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/dice/DiceEngineAlignment.test.ts",
+      "ligne": 19,
+      "colonne": 88,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/dice/DiceEngineAlignment.test.ts",
+      "ligne": 20,
+      "colonne": 99,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/dice/DiceUIUtils.ts",
+      "ligne": 11,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/favorite/useFavoriteStore.ts",
+      "ligne": 160,
+      "colonne": 48,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/favorite/useFavoriteStore.ts",
+      "ligne": 277,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/fiches/FicheHote.tsx",
+      "ligne": 263,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook React.useCallback has a missing dependency: 'accueillirEtCopier'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/fiches/FicheHote.tsx",
+      "ligne": 284,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook React.useCallback has a missing dependency: 'accueillirEtCopier'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/fiches/pontDeLaFiche.test.ts",
+      "ligne": 59,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/fiches/pontDeLaFiche.test.ts",
+      "ligne": 61,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/fiches/useCorrespondanceDuJeu.ts",
+      "ligne": 36,
+      "colonne": 27,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/forge/ForgeService.test.ts",
+      "ligne": 70,
+      "colonne": 31,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/forge/ForgeService.test.ts",
+      "ligne": 403,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/forge/ForgeService.ts",
+      "ligne": 701,
+      "colonne": 67,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/forge/components/ForgeDashboard.tsx",
+      "ligne": 538,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/forge/rules/components/BrainstormOverlay.tsx",
+      "ligne": 232,
+      "colonne": 6,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has a missing dependency: 'brainstormStore'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/forge/rules/components/BrainstormOverlay.tsx",
+      "ligne": 272,
+      "colonne": 6,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has missing dependencies: 'brainstormStore' and 'construireCandidats'. Either include them or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/forge/rules/schemaDuGabarit.test.ts",
+      "ligne": 38,
+      "colonne": 56,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/forge/rules/schemaDuGabarit.test.ts",
+      "ligne": 51,
+      "colonne": 58,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/forge/rules/schemaDuGabarit.test.ts",
+      "ligne": 62,
+      "colonne": 56,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/components/MediaItemThumbnail.tsx",
+      "ligne": 29,
+      "colonne": 60,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/image/components/ProjectorView.tsx",
+      "ligne": 203,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/image/components/ProjectorView.tsx",
+      "ligne": 222,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/image/logic/ImageService.ts",
+      "ligne": 54,
+      "colonne": 43,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/logic/ImageService.ts",
+      "ligne": 63,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/logic/ImageService.ts",
+      "ligne": 80,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/logic/ImageService.ts",
+      "ligne": 117,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/logic/ImageService.ts",
+      "ligne": 159,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/logic/ImageService.ts",
+      "ligne": 169,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/useFonduCroise.ts",
+      "ligne": 129,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/image/useImageStore.ts",
+      "ligne": 330,
+      "colonne": 91,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/useImageStore.ts",
+      "ligne": 530,
+      "colonne": 87,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/useImageStore.ts",
+      "ligne": 584,
+      "colonne": 62,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/useImageStore.ts",
+      "ligne": 768,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/useImageStore.ts",
+      "ligne": 828,
+      "colonne": 85,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/image/useImageStore.ts",
+      "ligne": 880,
+      "colonne": 49,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/journal/JournalDashboard.tsx",
+      "ligne": 180,
+      "colonne": 19,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/journal/useJournalStore.ts",
+      "ligne": 498,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/journal/useJournalStore.ts",
+      "ligne": 570,
+      "colonne": 14,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/light/HueEngine.ts",
+      "ligne": 254,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/light/catalogueDesEffets.test.ts",
+      "ligne": 150,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/light/catalogueDesEffets.test.ts",
+      "ligne": 151,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/light/catalogueDesEffets.test.ts",
+      "ligne": 368,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/map/SpatialTriggerService.ts",
+      "ligne": 271,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/map/SpatialTriggerService.ts",
+      "ligne": 307,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/map/useMapStore.ts",
+      "ligne": 766,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/map/useMapUIStore.ts",
+      "ligne": 97,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/music/MusicEngine.ts",
+      "ligne": 1086,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/music/useMusicStore.ts",
+      "ligne": 751,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/music/useMusicStore.ts",
+      "ligne": 755,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/music/useMusicStore.ts",
+      "ligne": 757,
+      "colonne": 67,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/music/useMusicStore.ts",
+      "ligne": 759,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/audioActions.ts",
+      "ligne": 6,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/audioActions.ts",
+      "ligne": 17,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/combatActions.ts",
+      "ligne": 5,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/diceActions.ts",
+      "ligne": 117,
+      "colonne": 24,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/dispatch.test.ts",
+      "ligne": 68,
+      "colonne": 43,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/dispatch.test.ts",
+      "ligne": 69,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/dispatch.test.ts",
+      "ligne": 74,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/index.ts",
+      "ligne": 63,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sceneActions.ts",
+      "ligne": 9,
+      "colonne": 24,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sceneActions.ts",
+      "ligne": 18,
+      "colonne": 43,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sceneActions.ts",
+      "ligne": 30,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 27,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 28,
+      "colonne": 109,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 39,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 42,
+      "colonne": 138,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 60,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 61,
+      "colonne": 79,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 65,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 88,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 95,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 96,
+      "colonne": 101,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 101,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 106,
+      "colonne": 38,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/sessionActions.ts",
+      "ligne": 111,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/tableActions.ts",
+      "ligne": 42,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/types.ts",
+      "ligne": 22,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/actions/whiteboardActions.ts",
+      "ligne": 9,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "ligne": 608,
+      "colonne": 87,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "ligne": 615,
+      "colonne": 87,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/hooks/useNexusSynchronizer.ts",
+      "ligne": 623,
+      "colonne": 89,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/hooks/useRemoteSync.test.ts",
+      "ligne": 37,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/hooks/useRemoteSync.test.ts",
+      "ligne": 38,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/hooks/useRemoteSync.test.ts",
+      "ligne": 39,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/remote/hooks/useRemoteSync.test.ts",
+      "ligne": 40,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/AddEntityForm.tsx",
+      "ligne": 91,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/session/components/LootGeneratorPanel.tsx",
+      "ligne": 110,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/NpcDetail.tsx",
+      "ligne": 388,
+      "colonne": 87,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/NpcGallery.tsx",
+      "ligne": 279,
+      "colonne": 8,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/PlayerPrivateNotes.tsx",
+      "ligne": 49,
+      "colonne": 17,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/session/components/PlayerPrivateNotes.tsx",
+      "ligne": 75,
+      "colonne": 17,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/session/components/RuleEngineEditor.tsx",
+      "ligne": 147,
+      "colonne": 76,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/RulebookViewer.tsx",
+      "ligne": 198,
+      "colonne": 72,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/SheetTemplateEditor.tsx",
+      "ligne": 15,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/SocialGraph.tsx",
+      "ligne": 328,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/TemplateDashboard.tsx",
+      "ligne": 176,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook React.useEffect has missing dependencies: 'campaigns' and 'customSheetTemplates'. Either include them or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/session/components/TemplateManager.tsx",
+      "ligne": 11,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/TimelineEventForm.tsx",
+      "ligne": 108,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/TimelineView.tsx",
+      "ligne": 57,
+      "colonne": 38,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/TimelineView.tsx",
+      "ligne": 146,
+      "colonne": 50,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/fields/PanneauDeJet.tsx",
+      "ligne": 94,
+      "colonne": 11,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "The 'monnaie' conditional could make the dependencies of useMemo Hook (at line 233) change on every render. To fix this, wrap the initialization of 'monnaie' in its own useMemo() Hook."
+    },
+    {
+      "fichier": "src/modules/session/components/health/HealthManager.tsx",
+      "ligne": 365,
+      "colonne": 91,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/health/HealthManager.tsx",
+      "ligne": 366,
+      "colonne": 83,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/components/rules/moteursDuJet.test.ts",
+      "ligne": 22,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useBanniereDuJeu.ts",
+      "ligne": 21,
+      "colonne": 26,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/session/hooks/useCharacterEditor.ts",
+      "ligne": 197,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useDeckPlayer.ts",
+      "ligne": 82,
+      "colonne": 36,
+      "regle": "react-hooks/preserve-manual-memoization",
+      "message": "Compilation Skipped: Existing memoization could not be preserved"
+    },
+    {
+      "fichier": "src/modules/session/hooks/useDeckPlayer.ts",
+      "ligne": 102,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useCallback has a missing dependency: 't'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 11,
+      "colonne": 80,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 14,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 57,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 124,
+      "colonne": 50,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 127,
+      "colonne": 50,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 130,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 131,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 132,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 135,
+      "colonne": 33,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 207,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 222,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 223,
+      "colonne": 56,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 226,
+      "colonne": 50,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 233,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 235,
+      "colonne": 68,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 240,
+      "colonne": 38,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 242,
+      "colonne": 38,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 247,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 251,
+      "colonne": 38,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 252,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 298,
+      "colonne": 123,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 317,
+      "colonne": 43,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 331,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 441,
+      "colonne": 8,
+      "regle": "react-hooks/exhaustive-deps",
+      "message": "React Hook useEffect has a missing dependency: 'port'. Either include it or remove the dependency array."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 471,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 492,
+      "colonne": 77,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 495,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 664,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 665,
+      "colonne": 72,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 671,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 672,
+      "colonne": 72,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 677,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 678,
+      "colonne": 72,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useHubSync.ts",
+      "ligne": 730,
+      "colonne": 13,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/session/hooks/useNotebookLM.ts",
+      "ligne": 81,
+      "colonne": 25,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useSheetCalculator.ts",
+      "ligne": 13,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/hooks/useSheetCalculator.ts",
+      "ligne": 22,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/CalculationEngine.ts",
+      "ligne": 114,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/CalculationEngine.ts",
+      "ligne": 121,
+      "colonne": 48,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/DebugCalculation.test.ts",
+      "ligne": 5,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/DebugCalculation.test.ts",
+      "ligne": 5,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/DebugCalculation.test.ts",
+      "ligne": 6,
+      "colonne": 31,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/DebugCalculation.test.ts",
+      "ligne": 13,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/DebugCalculation.test.ts",
+      "ligne": 14,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/PersistenceService.ts",
+      "ligne": 353,
+      "colonne": 34,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.test.ts",
+      "ligne": 37,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.test.ts",
+      "ligne": 38,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 29,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 29,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 69,
+      "colonne": 31,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 69,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 206,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 206,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 243,
+      "colonne": 35,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 243,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 262,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 262,
+      "colonne": 42,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 338,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 338,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 378,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/SessionManager.ts",
+      "ligne": 378,
+      "colonne": 42,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/logic/storageDiagnostics.test.ts",
+      "ligne": 21,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/entitySlice.ts",
+      "ligne": 748,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/entitySlice.ts",
+      "ligne": 749,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/entitySlice.ts",
+      "ligne": 785,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/entitySlice.ts",
+      "ligne": 786,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 159,
+      "colonne": 43,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 159,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 159,
+      "colonne": 67,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 160,
+      "colonne": 42,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 160,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 160,
+      "colonne": 66,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 161,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 161,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 161,
+      "colonne": 65,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 162,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 162,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 162,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 163,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 163,
+      "colonne": 56,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 163,
+      "colonne": 68,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 164,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 164,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 164,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 165,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 165,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 165,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 166,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 166,
+      "colonne": 49,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 166,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 167,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 167,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 167,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 168,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 168,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 168,
+      "colonne": 63,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 169,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 169,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/index.ts",
+      "ligne": 169,
+      "colonne": 63,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/lootSlice.ts",
+      "ligne": 162,
+      "colonne": 32,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/lootSlice.ts",
+      "ligne": 180,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/lootSlice.ts",
+      "ligne": 180,
+      "colonne": 83,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/sessionSlice.ts",
+      "ligne": 328,
+      "colonne": 30,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/store/sessionSlice.ts",
+      "ligne": 344,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/session/useSessionOSStore.ts",
+      "ligne": 75,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 176,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 190,
+      "colonne": 42,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 198,
+      "colonne": 49,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 235,
+      "colonne": 31,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 296,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 308,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 322,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 347,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 563,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 563,
+      "colonne": 205,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 565,
+      "colonne": 68,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/storyboard/StoryboardDashboard.tsx",
+      "ligne": 764,
+      "colonne": 56,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/archive/NexusService.test.ts",
+      "ligne": 84,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/archive/NexusService.test.ts",
+      "ligne": 423,
+      "colonne": 9,
+      "regle": "directive-inutile",
+      "message": "Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')."
+    },
+    {
+      "fichier": "src/modules/system/archive/NexusService.test.ts",
+      "ligne": 953,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/archive/NexusService.test.ts",
+      "ligne": 962,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/archive/NexusService.test.ts",
+      "ligne": 964,
+      "colonne": 64,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/archive/NexusService.ts",
+      "ligne": 1092,
+      "colonne": 33,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.test.ts",
+      "ligne": 122,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 100,
+      "colonne": 17,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 101,
+      "colonne": 17,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 102,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 103,
+      "colonne": 15,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 104,
+      "colonne": 13,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 108,
+      "colonne": 17,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 125,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 126,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/system/logic/InlinedMediaMigration.ts",
+      "ligne": 142,
+      "colonne": 30,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/tables/atelier/AtelierDesTables.tsx",
+      "ligne": 92,
+      "colonne": 23,
+      "regle": "react-hooks/set-state-in-effect",
+      "message": "Error: Calling setState synchronously within an effect can trigger cascading renders"
+    },
+    {
+      "fichier": "src/modules/tactical-ai/__tests__/ControlPanel.test.tsx",
+      "ligne": 14,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/tactical-ai/__tests__/ControlPanel.test.tsx",
+      "ligne": 31,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/tactical-ai/__tests__/ControlPanel.test.tsx",
+      "ligne": 52,
+      "colonne": 75,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/tactical-ai/useTacticalAIStore.ts",
+      "ligne": 55,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/tactical-ai/useTacticalAIStore.ts",
+      "ligne": 133,
+      "colonne": 55,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/tactical-ai/useTacticalAIStore.ts",
+      "ligne": 178,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/web/components/WebLinkPad.tsx",
+      "ligne": 80,
+      "colonne": 62,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/modules/whiteboard/useWhiteboardStore.ts",
+      "ligne": 265,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 140,
+      "colonne": 13,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 141,
+      "colonne": 17,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 142,
+      "colonne": 15,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 143,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 148,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 152,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 190,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 208,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 260,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 261,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 282,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 297,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 298,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 307,
+      "colonne": 28,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 307,
+      "colonne": 74,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 316,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.relay.test.ts",
+      "ligne": 329,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 8,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 11,
+      "colonne": 40,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 12,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 18,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 27,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 30,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 38,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 39,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 40,
+      "colonne": 25,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 41,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 42,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 69,
+      "colonne": 41,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 240,
+      "colonne": 87,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 243,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 259,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 260,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.test.ts",
+      "ligne": 325,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 20,
+      "colonne": 48,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 20,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 36,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 36,
+      "colonne": 57,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 130,
+      "colonne": 44,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 308,
+      "colonne": 54,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 324,
+      "colonne": 91,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 334,
+      "colonne": 73,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 354,
+      "colonne": 88,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 433,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/CrossWindowEventService.ts",
+      "ligne": 566,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 34,
+      "colonne": 22,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 35,
+      "colonne": 19,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 36,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 37,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 38,
+      "colonne": 22,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 39,
+      "colonne": 24,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 40,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 41,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 42,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 43,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 44,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 45,
+      "colonne": 24,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 46,
+      "colonne": 18,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 48,
+      "colonne": 30,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 49,
+      "colonne": 33,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 54,
+      "colonne": 50,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 55,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 57,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 58,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 60,
+      "colonne": 52,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 61,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 63,
+      "colonne": 51,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 80,
+      "colonne": 31,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 99,
+      "colonne": 36,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 164,
+      "colonne": 48,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 188,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 266,
+      "colonne": 94,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/purge/detenteurs.test.ts",
+      "ligne": 296,
+      "colonne": 45,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/windowTransport.test.ts",
+      "ligne": 12,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/services/windowTransport.test.ts",
+      "ligne": 36,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 353,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 357,
+      "colonne": 67,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 359,
+      "colonne": 85,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 361,
+      "colonne": 86,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 366,
+      "colonne": 88,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 379,
+      "colonne": 76,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 380,
+      "colonne": 76,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/SessionService.ts",
+      "ligne": 382,
+      "colonne": 62,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/store/useClockStore.ts",
+      "ligne": 920,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/stores/useClientStore.ts",
+      "ligne": 113,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/stores/useDiceStore.ts",
+      "ligne": 130,
+      "colonne": 39,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/stores/useDiceStore.ts",
+      "ligne": 134,
+      "colonne": 72,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/stores/useGemStore.ts",
+      "ligne": 213,
+      "colonne": 33,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/stores/useSyncStore.ts",
+      "ligne": 14,
+      "colonne": 16,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/drivers.ts",
+      "ligne": 26,
+      "colonne": 31,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 241,
+      "colonne": 42,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 274,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 275,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 276,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 277,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 455,
+      "colonne": 113,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 459,
+      "colonne": 113,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 576,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 577,
+      "colonne": 46,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 578,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 579,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 628,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 629,
+      "colonne": 20,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 639,
+      "colonne": 47,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 640,
+      "colonne": 38,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 640,
+      "colonne": 53,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/types/window.d.ts",
+      "ligne": 640,
+      "colonne": 61,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 57,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 65,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 73,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 81,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 89,
+      "colonne": 21,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 102,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 110,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 114,
+      "colonne": 27,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 122,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 125,
+      "colonne": 23,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 126,
+      "colonne": 29,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/persistanceDesStoresPartages.test.ts",
+      "ligne": 128,
+      "colonne": 37,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/syncUtils.ts",
+      "ligne": 32,
+      "colonne": 59,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    },
+    {
+      "fichier": "src/utils/syncUtils.ts",
+      "ligne": 32,
+      "colonne": 79,
+      "regle": "@typescript-eslint/no-explicit-any",
+      "message": "Unexpected any. Specify a different type."
+    }
+  ]
+}

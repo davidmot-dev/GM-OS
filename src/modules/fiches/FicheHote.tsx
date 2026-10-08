@@ -260,7 +260,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
             }
         }
         setEtat({ nom: 'a-lier', bibliotheque: (await p.bibliotheque()).characters });
-    }, [accueillir, liaison, semer]);
+    }, [accueillirEtCopier, liaison, semer]);
 
     const surCharge = React.useCallback(() => {
         const fenetre = cadre.current?.contentWindow;
@@ -281,7 +281,7 @@ const FicheHote: React.FC<FicheHoteProps> = ({
         p.bonjour()
             .then(() => brancher(p))
             .catch(err => setEtat({ nom: 'erreur', motif: String(err?.message ?? err) }));
-    }, [fabriquerLePont, accueillir, brancher]);
+    }, [fabriquerLePont, accueillirEtCopier, brancher]);
 
     /**
      * **Changer de personnage doit changer de fiche.**

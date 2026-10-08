@@ -99,7 +99,7 @@ export const useDeckPlayer = () => {
             type: 'Oracle',
             lore: nextFlipped ? '' : (DeckInterpreter.getCardMetadata(activeDeck, idx)?.description || '')
         });
-    }, [isFlipped, isProjecting, activeDeck, activeState, cardBackUrl, currentCardUrl]);
+    }, [isFlipped, isProjecting, activeDeck, activeState, cardBackUrl, currentCardUrl, t]);
 
     const handleDraw = useCallback(() => {
         if (!activeDeck) return;

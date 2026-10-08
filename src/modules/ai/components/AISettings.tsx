@@ -112,9 +112,13 @@ const AISettings: React.FC = () => {
     return () => { vivant = false; };
   }, [configs]);
 
+  const cleGeminiPresente = clesPresentes.gemini === true;
+  const endpointDesModeles = activeProvider === 'ollama' || activeProvider === 'ollama_cloud'
+    ? configs[activeProvider].endpoint : undefined;
+
   useEffect(() => {
     const fetchModels = async () => {
-      if (activeProvider === 'gemini' && aUneCle('gemini')) {
+      if (activeProvider === 'gemini' && cleGeminiPresente) {
         setIsLoadingModels(prev => ({ ...prev, gemini: true }));
         try {
           const data = await aiService.listModels();
@@ -127,8 +131,7 @@ const AISettings: React.FC = () => {
       } else if ((activeProvider === 'ollama' || activeProvider === 'ollama_cloud') && window.appBridge?.ai?.ollamaListModels) {
         setIsLoadingModels(prev => ({ ...prev, [activeProvider]: true }));
         try {
-          const endpoint = configs[activeProvider].endpoint;
-          const models = await window.appBridge.ai.ollamaListModels(endpoint);
+          const models = await window.appBridge.ai.ollamaListModels(endpointDesModeles);
           setDiscoveredModels(prev => ({ ...prev, [activeProvider]: models }));
         } catch (err) {
           console.error(`Failed to discover ${activeProvider} models:`, err);
@@ -140,7 +143,7 @@ const AISettings: React.FC = () => {
     };
 
     fetchModels();
-  }, [activeProvider, clesPresentes.gemini, configs.ollama.endpoint, configs.ollama_cloud.endpoint]);
+  }, [activeProvider, cleGeminiPresente, endpointDesModeles]);
 
   const toggleKeyVisibility = (provider: string) => {
     setShowKeys(prev => ({ ...prev, [provider]: !prev[provider] }));

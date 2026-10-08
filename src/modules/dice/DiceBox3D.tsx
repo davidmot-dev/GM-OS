@@ -208,12 +208,18 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll, style = S
         aLiberer: { dispose: () => void }[];
     } | null>(null);
     const styleRef = useRef(style);
+    // Un objet reçu à nouveau pour le même jet ne doit pas rejouer son animation.
+    const dernierJetRef = useRef(lastRoll);
+    const idDuJet = lastRoll?.id;
     /* La référence évite de relancer la boucle d'animation à chaque rendu du hub. */
     const onReposRef = useRef(onRepos);
     useLayoutEffect(() => {
         styleRef.current = style;
         onReposRef.current = onRepos;
     }, [style, onRepos]);
+    useLayoutEffect(() => {
+        dernierJetRef.current = lastRoll;
+    }, [lastRoll]);
     /** Le signal de pose n'est envoyé qu'une fois par jet. */
     const reposAnnonceRef = useRef(false);
     const departDuJetRef = useRef(0);
@@ -443,7 +449,8 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll, style = S
     // ------------------------------------------------------------------
     useEffect(() => {
         const courant = sceneRef.current;
-        if (!active || !lastRoll || !courant) return;
+        const jet = dernierJetRef.current;
+        if (!active || !jet || !courant) return;
 
         const { scene, des } = courant;
         des.forEach(de => {
@@ -458,7 +465,7 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll, style = S
         departDuJetRef.current = performance.now();
 
         const recette = RECETTES[styleRef.current] ?? RECETTES[STYLE_PAR_DEFAUT];
-        const nombre = lastRoll.rolls.length;
+        const nombre = jet.rolls.length;
 
         /*
           ⛔ **L'ancien écart RÉTRÉCISSAIT quand les dés étaient nombreux** :
@@ -470,10 +477,10 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll, style = S
           au départ.*** L'écart est maintenant un plancher : quand la rangée
           déborde du tapis, on passe à la rangée suivante.
         */
-        const rayonMax = Math.max(...lastRoll.rolls.map(r => solideDuDe(r.sides || 20).rayonDeCollision));
+        const rayonMax = Math.max(...jet.rolls.map(r => solideDuDe(r.sides || 20).rayonDeCollision));
         const places = placementDuJet(nombre, rayonMax * 2.3, RAYON_DU_TAPIS);
 
-        lastRoll.rolls.forEach((r, i) => {
+        jet.rolls.forEach((r, i) => {
             const sides = r.sides || 20;
             const solide = solideDuDe(sides);
             const nbFaces = FACES_DU_SOLIDE[sides] ?? 20;
@@ -544,7 +551,7 @@ const PlayerDiceBox3D: React.FC<DiceBox3DProps> = ({ active, lastRoll, style = S
             scene.add(de);
             des.push(de);
         });
-    }, [active, lastRoll?.id, style]);
+    }, [active, idDuJet, style]);
 
     return (
         <div

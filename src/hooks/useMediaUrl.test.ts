@@ -17,6 +17,7 @@ describe('useMediaUrl — le média qui arrive après la tuile', () => {
     });
 
     afterEach(() => {
+        vi.unstubAllGlobals();
         useMediaStore.setState(etatDOrigine, true);
         delete (window as unknown as { appBridge?: unknown }).appBridge;
     });
@@ -48,5 +49,31 @@ describe('useMediaUrl — le média qui arrive après la tuile', () => {
 
         act(() => useMediaStore.setState({ mediaList: [media] }));
         expect(getMediaBlob).not.toHaveBeenCalled();
+    });
+
+    it('convertit une data URI une seule fois malgré les autres médias et les rendus', async () => {
+        const charger = vi.fn(async () => ({ blob: async () => new Blob(['png']) }));
+        vi.stubGlobal('fetch', charger);
+        const creer = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:carte');
+        useMediaStore.setState({ mediaList: [], getMediaBlob: vi.fn() });
+        const { result, rerender } = renderHook(() => useMediaUrl('data:image/png;base64,cG5n'));
+        await waitFor(() => expect(result.current).toBe('blob:carte'));
+        act(() => useMediaStore.setState({ mediaList: [media] }));
+        rerender();
+        expect(charger).toHaveBeenCalledTimes(1);
+        expect(creer).toHaveBeenCalledTimes(1);
+    });
+
+    it('ignore un ancien chargement qui arrive après le changement de source', async () => {
+        let terminer!: (blob: Blob) => void;
+        useMediaStore.setState({
+            getMediaBlob: vi.fn(() => new Promise<Blob>(resolve => { terminer = resolve; })),
+        });
+        const { result, rerender } = renderHook(({ source }) => useMediaUrl(source), {
+            initialProps: { source: 'm-ancien' },
+        });
+        rerender({ source: 'https://exemple.org/nouveau.png' });
+        await act(async () => { terminer(new Blob(['ancien'])); });
+        expect(result.current).toBe('https://exemple.org/nouveau.png');
     });
 });

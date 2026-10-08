@@ -62,6 +62,7 @@ interface ResolutionDesSections {
 export const BrainstormOverlay: React.FC = () => {
   const { t } = useTranslation(['modules', 'common']);
   const brainstormStore = useBrainstormStore();
+  const { customSubject, setCandidates, notebookId, selectedSourceIds, setProcessing, setError } = brainstormStore;
   // Rien de la campagne ouverte n'entre ici : l'atelier documente un livre.
   // La seule chose qu'on demande à Session OS est le chemin du retour au
   // Grimoire, qui lui y est resté.
@@ -219,17 +220,17 @@ export const BrainstormOverlay: React.FC = () => {
     //
     // Et elle ne se dédouble pas : taper « Poursuites » ne doit pas créer une
     // seconde ligne pour un sujet que l'inventaire porte déjà.
-    const libre = brainstormStore.customSubject.trim();
+    const libre = customSubject.trim();
     const slugLibre = libre ? slugFiche(libre) : '';
     const inedit = slugLibre && !candidats.some(c => c.id === slugLibre);
 
-    brainstormStore.setCandidates(
+    setCandidates(
       inedit
         ? [{ id: slugLibre, title: libre, category: 'rule' as const, summary: '', tags: ['hors canevas'] }, ...candidats]
         : candidats,
       inventaire,
     );
-  }, [brainstormStore.customSubject, brainstormStore.setCandidates]);
+  }, [customSubject, setCandidates]);
 
   /**
    * Reprend l'inventaire déjà enregistré, sans rien demander au carnet.
@@ -252,24 +253,24 @@ export const BrainstormOverlay: React.FC = () => {
   }, [corpus, construireCandidats]);
 
   const handleDiscover = useCallback(async () => {
-    if (!brainstormStore.notebookId) return;
+    if (!notebookId) return;
     const gen = reserverLeCarnet();
     if (gen === null) return;
-    brainstormStore.setProcessing(true);
+    setProcessing(true);
     try {
       const { inventaire } = await forgeService.discoverCandidates(
-        brainstormStore.notebookId,
-        brainstormStore.selectedSourceIds
+        notebookId,
+        selectedSourceIds
       );
       if (gen !== generationCourante()) return;   // abandonnée entre-temps
       construireCandidats(inventaire);
     } catch (err: unknown) {
       if (gen !== generationCourante()) return;
-      brainstormStore.setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
+      setError(messageErreur(err, t('session.forge_module.atelier.error_title')));
     } finally {
       libererLeCarnet(gen);
     }
-  }, [brainstormStore.notebookId, brainstormStore.selectedSourceIds, t, brainstormStore.setProcessing, brainstormStore.setCandidates, brainstormStore.setError]);
+  }, [notebookId, selectedSourceIds, t, setProcessing, setError, construireCandidats]);
 
   /**
    * Le sujet libre se répercute sans repayer l'inventaire.

@@ -35,3 +35,38 @@ Les 540 avertissements du lint restent une dette visible, sans erreur bloquante.
 Par quoi reprendre : aucune tâche de développement prévue pour ce lot Trame.
 Le retour de David valide le déplacement corrigé. Ne pas rouvrir la validation
 des six dispositions ni le correctif du parcours du lint.
+
+## Audit des avertissements du lint
+
+David demande **« peux-tu revoir les 540 avertissements et me faire un topos ? »**.
+[Rapport et ordre de traitement](2026-10-08-audit-avertissements-lint.md),
+[inventaire des 540 emplacements](2026-10-08-inventaire-avertissements-lint.json).
+Comptage relancé : 1 527 fichiers, zéro erreur, 540 avertissements dans 132 fichiers.
+497 `any` (273 hors tests, 224 dans les tests), 15 dépendances React, 20 mises
+à jour d'état dans des effets, sept diagnostics de mémoïsation du compilateur,
+une directive devenue inutile. Le rapport distingue les risques à vérifier,
+les contrats déjà justifiés et les simples nettoyages ; aucun bug supplémentaire
+n'est annoncé comme reproduit par cette seule lecture statique.
+
+L'inventaire JSON conserve le diagnostic initial des 540 avertissements.
+
+## Premier lot : dépendances React
+
+David demande **« ok on commence suivant ton ordre »**, puis confirme que
+**GM-OS est fermé**. Les 15 dépendances dans 12 fichiers sont corrigées ;
+quatre diagnostics de mémoïsation associés disparaissent aussi.
+[Modifications, essais et reprise](2026-10-08-lint-dependances-react.md).
+Lint global : **1 530 fichiers, zéro erreur, 521 avertissements**. Les règles
+restent inchangées ; `npm run build` (avec `tsc -b`) passe. Neuf tests de
+régression sont ajoutés. Les contrôles ciblés et les six scénarios Electron
+Dice-OS passent. La suite complète réussit : **6 811 tests dans 531 fichiers**,
+un fichier et quatre tests ignorés. Le premier lot est validé.
+
+Reprendre ensuite les contrats communs de typage, d'abord les signatures
+d'assemblage des slices Session, puis les échanges entre magasins, Electron
+et tablettes. Les effets par écran et le typage des tests viennent après.
+David demande ensuite **« commit, pousse et passe à l'étape suivante (GM-OS est
+éteint) »** : publication du premier lot autorisée, puis reprise du typage.
+Les modifications
+antérieures des guides, de la note du 07/10 et des deux fichiers à fins de
+ligne différentes sont conservées hors du lot.

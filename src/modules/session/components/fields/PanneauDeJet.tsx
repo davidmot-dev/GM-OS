@@ -91,7 +91,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [mouvements, setMouvements] = useState<string[]>([]);
 
     const { etatDe, depenser, gagner, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
-    const monnaie = campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null;
+    const monnaie = useMemo(
+        () => campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null,
+        [campaignId, ressourcesDeTable],
+    );
 
     /**
      * Débiter ou créditer la réserve, du bon côté du réseau.

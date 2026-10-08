@@ -88,7 +88,7 @@ const AddEntityForm: React.FC = () => {
             clearPendingPreFill();
             gmToast(t('modules:session.toasts.wiki_data_received'), 'success');
         }
-    }, [pendingPreFill, clearPendingPreFill]);
+    }, [pendingPreFill, clearPendingPreFill, t]);
     /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleSubmit = (e: React.FormEvent) => {
