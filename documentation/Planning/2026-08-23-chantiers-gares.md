@@ -142,6 +142,9 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
+| ✅ **08/10 : catégories du formulaire de chronologie hors contrat.** | Sept boutons dont `major/minor/discovery`, contre cinq catégories dans `TimelineEvent` et les filtres | **Corrigé dans le lot 23 du § 127**, selon David : « Aligner le formulaire sur les cinq catégories du modèle (recommandé) ». Les créations utilisent `major-event` ; pas de migration des événements existants. Formulaire et filtre majeur testés. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
+| ✅ **08/10 : graphe social, méthode de simulation absente et premier affichage sans réglage des forces.** | `d3Simulation` n'existe pas dans l'API installée ; l'effet initial précède l'apparition du canevas dimensionné. Les gardes de libération/réinitialisation n'accèdent pas aux nœuds vivants | **Corrigé dans le lot 23 du § 127** : forces publiques, libération de `fx/fy` en conservant `x/y`, `d3ReheatSimulation`, effet relancé à l'apparition du canevas. Sept nouveaux cas avec D3 réel et composant simulé limité à l'API publique. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
+| ✅ **08/10 : créations manuelles d'inventaire incomplètes.** | Les deux chemins Entrée/bouton de `CharacterSheetEditor` omettent `weight/properties`, requis par `InventoryItem` ; révélé par le retrait du `any` du hook | **Corrigé dans le lot 23 du § 127** : valeurs neutres `0` et `{}`, sans réécriture des objets déjà enregistrés. Contrat vérifié par `tsc -b`. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
 | ✅ **06/10 : le lint global ne parcourait plus tout le dépôt — réparé le 07/10, § 125.** | `eslint .` échouait sur un profil Chrome local (`EPERM`) ou une entrée au nom invalide (`ENOENT`). `scripts/lint.mjs` utilise maintenant les fichiers suivis et nouveaux non ignorés de Git | [Réparation du contrôle](2026-10-07-lint-global.md) : aucun dossier inconnu supprimé ; premier passage complet corrigé, 1 526 fichiers, zéro erreur. Les avertissements restent visibles ; lint bloquant dans la validation |
 | ✅ **T4 Direct, 06/10 : l'horloge initiale affichait le temps réel malgré le mode statique du meneur.** | Le snapshot omettait `mode`, `theme`, `timerDuration` et `timerLabel`, présents seulement dans le segment rapide | **Réparé pour terminer J1** : `segmentDesHorloges` fournit les mêmes champs au snapshot et aux changements, en excluant les jauges secrètes. Trois tests unitaires ; le banc Direct vérifie 21:00 dès la connexion aux quatre formats, avant toute modification du meneur. [Relevé J1](2026-10-06-T4-J1-joueurs.md). Le transport du calendrier fantastique reste à éprouver |
 | ✅ **T0 joueurs, 04/10 : les PV saisis sur tablette restaient locaux.** | `remoteUpdateCharacterVitals` écrivait sans événement ; `useHubSync` ne relayait pas ces vitaux | **Réparé pour terminer J1 le 06/10** : événement dédié, relais WebSocket, contrôle du personnage propriétaire, valeur finie bornée à la jauge existante et notification au meneur, sans boucle. Neuf tests du handler ; assertions PV du banc T0 conservées aux trois formats, sans échec attendu, et quatre cas Fiche J1. [Relevé](2026-10-06-T4-J1-joueurs.md) |
@@ -10228,6 +10231,33 @@ changements de Claude. Puis les tests et les lots mémoïsation/directive.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
+**Reprise suivante, 08/10 :** David demande **« commit et passe à l'étape
+suivante (GM-OS est éteint) »**. Lots 21–22 commités séparément : `093c4203`
+(cinq fichiers), puis `6d22466d` (21 fichiers, dont les documents communs),
+sans push ni modification étrangère incluse. Les mentions précédentes
+« non commité » décrivent l'état avant cette demande.
+
+Le [lot 23 interfaces et fiches](2026-10-08-lint-interfaces-et-fiches.md)
+retire **22 `any` applicatifs**, plus deux déjà désactivés hors compteur.
+Les contrats des widgets, traductions, jauges, navigation, événements,
+inventaires et méthodes du graphe sont repris. Les écarts fonctionnels sont
+consignés au § 1 bis : catégories de chronologie alignées selon la décision
+explicite de David, champs obligatoires des objets complétés, graphe social
+adapté à son API publique et initialisé dès l'apparition du canevas.
+
+**Lint : 1 572 fichiers, zéro erreur et 263 avertissements**, dont **259
+`any` (40 applicatifs, 219 dans les tests)**, trois diagnostics de mémoïsation
+et une directive inutile. Types, construction et **32 tests ciblés dans six
+fichiers**, dont **16 nouveaux cas**, passent. **7 124 tests dans 556 fichiers**
+passent, un fichier et quatre tests ignorés ; `git diff --check` propre.
+Lot 23 réalisé, validé et documenté, **28 fichiers Codex non commités**
+(23 de code/tests, cinq documents).
+`HubDiceDisplay.tsx` reste intact et son avertissement attend une réponse à
+la demande de coordination. Reprendre **IA et fournisseurs (15)**, puis
+relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), le
+dé du Hub (1) après coordination, les tests et les diagnostics ciblés.
+Dernier commit local `6d22466d`, dernier poussé documenté `861eaca4`.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10296,7 +10326,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 20 commités localement (dernier `fd585aaf`), lots 21 à 22 réalisés non commités**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 → 334 → 321 → 313 → 309 → 306 → 285 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Groupes de `any` applicatifs : Interfaces/fiches (23), IA/fournisseurs (15), relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), puis tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md), [Storyboard](2026-10-08-lint-storyboard.md), [migration](2026-10-08-lint-migration-medias.md), [restauration](2026-10-08-lint-restauration-session.md), [Music-OS](2026-10-08-lint-migration-musique.md), [dés et gemmes](2026-10-08-lint-migrations-des-gemmes.md), [lots regroupés](2026-10-08-lint-lots-regroupes.md) |
+| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 22 commités localement (dernier `6d22466d`), lot 23 interfaces/fiches réalisé non commité**, § 127 : **540 → 263 avertissements, zéro erreur**, 40 `any` applicatifs et 219 dans les tests | IA/fournisseurs (15), relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [interfaces/fiches](2026-10-08-lint-interfaces-et-fiches.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -194,7 +194,7 @@ export function useCharacterEditor() {
         updateCharacterHP: (hp: number) => { if(selectedPlayer && character) updateCharacterHP(selectedPlayer.id, character.id, hp); },
         updateCharacterMaxHP: (maxHp: number) => { if(selectedPlayer && character) updateCharacterMaxHP(selectedPlayer.id, character.id, maxHp); },
         updateCharacterHubOptions: (opts: Partial<NonNullable<PlayerCharacter['hubOptions']>>) => { if(selectedPlayer && character) updateCharacterHubOptions(selectedPlayer.id, character.id, opts); },
-        addInventoryItem: (item: any) => { if(selectedPlayer && character) addInventoryItem(selectedPlayer.id, character.id, item); },
+        addInventoryItem: (item: Parameters<typeof addInventoryItem>[2]) => { if(selectedPlayer && character) addInventoryItem(selectedPlayer.id, character.id, item); },
         removeInventoryItem: (itemId: string) => { if(selectedPlayer && character) removeInventoryItem(selectedPlayer.id, character.id, itemId); }
     };
 }

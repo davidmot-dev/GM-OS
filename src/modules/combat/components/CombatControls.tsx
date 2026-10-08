@@ -94,7 +94,7 @@ const CombatControls: React.FC = () => {
                     init: 0,
                     ...pointsDeVie,
                     healthSystem: HealthInterpreter.createDefault(modeleDeSante),
-                    sheetData: (activeDriver?.ui_config?.gauges || []).reduce((acc: any, g: any) => {
+                    sheetData: (activeDriver?.ui_config?.gauges || []).reduce<Record<string, number>>((acc, g) => {
                         acc[g.fieldId] = 0;
                         return acc;
                     }, {}),

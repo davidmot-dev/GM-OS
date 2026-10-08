@@ -77,7 +77,7 @@ export const RuleEngineEditor: React.FC = () => {
         { id: 'ai', label: t('modules:session.rule_engine_editor.nav.ai'), icon: Sparkles, color: 'text-gm-violet', bg: 'bg-gm-violet/10' },
         { id: 'loot', label: t('modules:session.rule_engine_editor.nav.loot'), icon: Archive, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
         { id: 'notebook', label: t('modules:session.rule_engine_editor.nav.notebook'), icon: BookOpen, color: 'text-etat-info', bg: 'bg-etat-info/10' },
-    ];
+    ] as const;
 
     return (
         <div className="flex-1 flex flex-col h-full overflow-hidden bg-app-bg font-sans text-app-text/90">
@@ -144,7 +144,7 @@ export const RuleEngineEditor: React.FC = () => {
                         return (
                             <button
                                 key={item.id}
-                                onClick={() => setActiveSection(item.id as any)}
+                                onClick={() => setActiveSection(item.id)}
                                 aria-current={actif ? 'page' : undefined}
                                 className={`flex flex-col gap-1 rounded-lg border-l-2 px-3 py-2.5 text-left transition-all ${
                                     actif ? 'border-accent bg-accent/10' : 'border-transparent hover:bg-app-text/5'

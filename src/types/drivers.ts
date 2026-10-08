@@ -1,4 +1,5 @@
 // src/types/drivers.ts
+import type { InventoryItem } from './player.types';
 
 export type DiceRollLogic = 'sum' | 'highest' | 'lowest' | 'count-success' | 'd100-low' | 'd100-high';
 export type LootRollMode = 'weighted' | 'independent';
@@ -23,7 +24,8 @@ export interface LootEntry {
     type: 'item' | 'table' | 'currency' | 'other' | 'oracle';
     minAmount?: number | string; // Supporte les formules comme "1d6"
     maxAmount?: number;
-    metadata?: Record<string, any>; // Rareté, poids, description, etc.
+    /** Métadonnées versées à l'inventaire ; la quantité peut être une formule de dés. */
+    metadata?: InventoryItem['properties'] & { quantityFormula?: number | string };
 }
 
 /**

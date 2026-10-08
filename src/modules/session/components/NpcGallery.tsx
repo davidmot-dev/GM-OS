@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
@@ -276,7 +277,7 @@ const NpcGalleryItem: React.FC<{
     onPickImage: () => void,
     onDelete: () => void,
     regime: import('../logic/regimeDInterface').RegimeDInterface,
-    t: any
+    t: TFunction
 }> = ({ npc, isSelected, isPinned, onSelect, onTogglePin, onGenerateImage, onPickImage, onDelete, regime, t }) => {
 
     return (

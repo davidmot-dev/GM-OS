@@ -297,7 +297,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
                 <Select
                     value={combatant.faction}
-                    onChange={(value) => updateCombatant(combatant.id, { faction: value as any })}
+                    onChange={(value) => updateCombatant(combatant.id, { faction: value as Combatant['faction'] })}
                     options={[
                         { value: 'player', label: t('combat.card.faction.player'), icon: <User size={12} /> },
                         { value: 'enemy', label: t('combat.card.faction.enemy'), icon: <Swords size={12} /> },

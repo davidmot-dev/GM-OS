@@ -811,3 +811,41 @@ globale après les essais ciblés ; ne rejouer qu'en cas de modification ou éch
 `HubDiceDisplay.tsx` est modifié hors Codex : coordonner avant d'y écrire,
 traiter les autres fichiers du groupe sans toucher à ce changement. Préserver
 les changements de Claude.
+
+## Vingt-troisième lot : interfaces et fiches
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Les lots 21–22 sont commités en deux sujets : **`093c4203`** (cinq fichiers,
+migrations dés/gemmes et notes) puis **`6d22466d`** (21 fichiers,
+commandes/synchronisation et trois documents communs). Les 26 fichiers Codex
+en attente sont rangés ; aucun push demandé ou exécuté. Les mentions
+« non commité » des sections précédentes restent l'historique avant cette demande.
+
+[Lot 23, contrats, décisions et contrôles](2026-10-08-lint-interfaces-et-fiches.md).
+**22 avertissements `any` applicatifs retirés**, plus deux déjà désactivés
+hors compteur. Les types réels des widgets, inventaire, jauges, santé,
+traductions, navigation, chronologie, fiches et graphe sont repris.
+Les écarts fonctionnels découverts sont explicités au § 1 bis du registre :
+David choisit **« Aligner le formulaire sur les cinq catégories du modèle
+(recommandé) »** ; les deux créations manuelles d'objets complètent
+`weight/properties` ; le graphe social utilise l'API publique et règle ses
+forces dès l'apparition du canevas. Pas de migration des données existantes.
+
+**32 tests ciblés dans six fichiers**, dont **16 nouveaux cas**, types et
+construction passent. Lint global : **1 572 fichiers, zéro erreur et 263
+avertissements**, contre 285. Restent **259 `any` (40 applicatifs, 219 dans
+les tests)**, trois diagnostics de mémoïsation et une directive inutile.
+Règles et inventaire initial inchangés. **7 124 tests dans 556 fichiers**
+passent, un fichier et quatre tests ignorés ; `git diff --check` propre.
+Aucun profil réel, réseau ou appareil sollicité ; aucun scénario Electron
+lancé pour ce lot, commandes du graphe et formulaires couverts en tests.
+
+Lot 23 réalisé, validé et documenté, **28 fichiers Codex non commités**
+(23 de code/tests, cinq documents), dernier local `6d22466d`, dernier poussé documenté
+`861eaca4`. Reprendre **IA et fournisseurs (15)** : `AIService.ts` (8),
+`src/modules/tactical-ai/useTacticalAIStore.ts` (3), `ForgeService.ts` (1),
+`HueEngine.ts` (1), `electron/RAGEngine.ts` (2). Puis relais/archives (10),
+calcul/recherche/audio (9), messages d'erreur (5), tests et diagnostics ciblés.
+Un `any` supplémentaire reste dans le dé du Hub : `HubDiceDisplay.tsx`
+était modifié hors Codex avant la session ; autorisation de reprise demandée,
+aucune réponse reçue, fichier intact. Préserver les modifications de Claude.

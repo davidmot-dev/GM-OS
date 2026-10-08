@@ -47,15 +47,20 @@ const TimelineView: React.FC = () => {
             title: entry.title,
             description: entry.content.substring(0, 200) + (entry.content.length > 200 ? '...' : ''),
             type: entry.category === 'npc' ? 'lore' : (entry.category === 'location' ? 'lore' : 'lore'), // Mapping simplifié
-            isWikiSource: true,
+            isWikiSource: true as const,
             originalCategory: entry.category
         }));
 
-    const mergedEvents = [...campaignEvents, ...wikiEvents]
+    // 08/10/2026, David : regrouper les any. La provenance distingue les
+    // événements durables des entrées Wiki, sans reconstruire leurs données.
+    type EvenementAffiche = (typeof campaignEvents[number] & {
+        isWikiSource?: false; originalCategory?: never;
+    }) | (typeof wikiEvents[number] & { locationId?: never });
+    const mergedEvents: EvenementAffiche[] = [...campaignEvents, ...wikiEvents]
         .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
 
-    const handleEventClick = (event: any) => {
-        if (event.isWikiSource) {
+    const handleEventClick = (event: typeof mergedEvents[number]) => {
+        if ('isWikiSource' in event && event.isWikiSource) {
             setSelectedWikiEntryId(event.id);
             setWikiTab('wiki');
         } else {
@@ -143,7 +148,7 @@ const TimelineView: React.FC = () => {
                     <div className="absolute left-[22.5px] top-6 bottom-6 w-0.5 bg-gradient-to-b from-accent/0 via-accent/20 to-accent/0 shadow-[0_0_10px_rgba(var(--accent-rgb),0.2)]" />
 
                     {mergedEvents.length > 0 ? (
-                        mergedEvents.map((event: any) => (
+                        mergedEvents.map(event => (
                             <motion.div
                                 key={event.id}
                                 variants={itemVariants}

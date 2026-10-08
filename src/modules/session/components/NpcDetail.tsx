@@ -385,7 +385,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                     <button
                         onClick={() => {
                             const roles: (keyof typeof ROLE_LABELS)[] = ['ally', 'neutral', 'hostile', 'boss'];
-                            const nextRole = roles[(roles.indexOf(selectedNpc.role as any || 'neutral') + 1) % roles.length];
+                            const nextRole = roles[(roles.indexOf(selectedNpc.role || 'neutral') + 1) % roles.length];
                             updateEntity(selectedNpc.id, { role: nextRole });
                         }}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${ROLE_COLORS[selectedNpc.role || 'neutral']}`}

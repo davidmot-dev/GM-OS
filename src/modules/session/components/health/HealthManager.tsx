@@ -362,8 +362,8 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
         >
             {health.type === 'hp' && (
                 <HealthBarDriver
-                    current={nombreOuRepli(health.data.current, nombreOuRepli((porteur as any)?.hp, 0))}
-                    max={nombreOuRepli(health.data.max, nombreOuRepli((porteur as any)?.maxHp, 10))}
+                    current={nombreOuRepli(health.data.current, nombreOuRepli(porteur?.hp, 0))}
+                    max={nombreOuRepli(health.data.max, nombreOuRepli(porteur?.maxHp, 10))}
                     onCurrentChange={(val) => {
                         if (type === 'pc') {
                             const player = players.find(p => p.characters.some(c => c.id === id));

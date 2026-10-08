@@ -3,6 +3,7 @@ import { Package, Send, User, ChevronRight, Clock, Trash2 } from 'lucide-react';
 import { ResolvedImage } from '../ResolvedImage';
 import { type FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
 import { type InventoryItem, type PlayerCharacter } from '../../modules/session/store/types';
+import type { TransferRequest } from '../../types/player.types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bouton, EnTeteDeModule, Etiquette, GabaritDeModule, Panneau } from '../socle';
 
@@ -11,8 +12,8 @@ interface HubInventoryProps {
     structuredItems?: InventoryItem[]; // New structured inventory
     characters?: (PlayerCharacter & { playerId?: string })[]; // Potential recipients
     currentCharacterId?: string;
-    transferRequests?: any[]; // To show pending status
-    onSelectItem: (item: any) => void;
+    transferRequests?: TransferRequest[]; // To show pending status
+    onSelectItem: (item: FavoriteEntity) => void;
     commandes?: React.ReactNode;
     informations?: React.ReactNode;
 }

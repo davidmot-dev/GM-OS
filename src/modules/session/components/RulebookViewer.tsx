@@ -103,7 +103,7 @@ export const RulebookViewer: React.FC = () => {
         { id: 'ai', label: t('modules:session.rule_engine_editor.nav.ai'), icon: Sparkles, color: 'text-gm-violet', bg: 'bg-gm-violet/10' },
         { id: 'loot', label: t('modules:session.rule_engine_editor.nav.loot'), icon: Archive, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
         { id: 'notebook', label: t('modules:session.rule_engine_editor.nav.notebook'), icon: BookOpen, color: 'text-etat-info', bg: 'bg-etat-info/10' },
-    ];
+    ] as const;
 
     return (
         <div className="flex-1 flex flex-col h-full overflow-hidden bg-app-bg text-app-text">
@@ -195,7 +195,7 @@ export const RulebookViewer: React.FC = () => {
                     {navItems.map((item) => (
                         <button
                             key={item.id}
-                            onClick={() => setActiveSection(item.id as any)}
+                            onClick={() => setActiveSection(item.id)}
                             className={`group relative w-16 h-16 flex flex-col items-center justify-center rounded-2xl transition-all duration-300 ${
                                 activeSection === item.id 
                                 ? `${item.bg} ${item.color} shadow-glow-accent/10 ring-1 ring-app-text/10` 

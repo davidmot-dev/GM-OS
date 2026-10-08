@@ -96,3 +96,18 @@ documents communs, **26 fichiers Codex restent non commités**.
 Reprendre le groupe Interfaces et fiches, puis les quatre autres groupes ;
 les 219 `any` des tests viennent après les contrats applicatifs. Vérifier les
 compteurs au lint à chaque lot, préserver les changements de Claude.
+
+## Reprise suivante — commits et groupe interfaces/fiches
+
+Le 08/10, David demande **« commit et passe à l'étape suivante (GM-OS est
+éteint) »** : les lots 21–22 sont commités séparément, **`093c4203`** (cinq
+fichiers) et **`6d22466d`** (21 fichiers, dont trois documents communs), sans
+push ni modification étrangère incluse. Les mentions « non commité »
+ci-dessus décrivent l'état avant cette demande.
+
+Le [lot 23 interfaces et fiches](2026-10-08-lint-interfaces-et-fiches.md)
+retire 22 des 23 avertissements du premier groupe ; `HubDiceDisplay.tsx`
+reste en attente de coordination. Lint : **263 avertissements, zéro erreur**,
+dont **40 `any` applicatifs et 219 dans les tests**. Types et construction
+passent ; contrôles et état de clôture dans la note du lot 23.
+La prochaine étape est le groupe **IA et fournisseurs (15)**.

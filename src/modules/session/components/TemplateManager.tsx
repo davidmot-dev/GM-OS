@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useModalStore } from '../../../stores/useModalStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
@@ -8,7 +9,7 @@ import { Plus, Trash2, ChevronDown, ChevronRight, Pencil, Sparkles, Brain, BookO
 import { useGemStore } from '../../../stores/useGemStore';
 import { aiService } from '../../ai/AIService';
 
-const getFieldTypeLabels = (t: any): Record<SheetFieldType, string> => ({
+const getFieldTypeLabels = (t: TFunction): Record<SheetFieldType, string> => ({
     gauge: t('modules:session.template_manager.field_types.gauge'),
     number: t('modules:session.template_manager.field_types.number'),
     text: t('modules:session.template_manager.field_types.text'),

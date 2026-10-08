@@ -1,13 +1,14 @@
 import React from 'react';
 import ClockVisualizer from '../../modules/clock/components/ClockVisualizer';
 import NarrativeClock from '../../modules/clock/components/NarrativeClock';
+import type { ClockMode, ClockTheme, TensionClock } from '../../store/useClockStore';
 
 interface HubClockWidgetsProps {
     isClockProjected: boolean;
     timestamp: number;
-    mode: any;
-    theme: any;
-    tensions: any[];
+    mode: ClockMode;
+    theme: ClockTheme;
+    tensions: TensionClock[];
 }
 
 export const HubClockWidgets: React.FC<HubClockWidgetsProps> = ({

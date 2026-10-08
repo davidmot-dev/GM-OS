@@ -81,7 +81,7 @@ const EditeurDesTablesDeButin: React.FC<EditeurDesTablesDeButinProps> = ({ drive
         onUpdate({ lootTables: suivantes });
     };
 
-    const majMetadata = (tIdx: number, eIdx: number, patch: Record<string, unknown>) => {
+    const majMetadata = (tIdx: number, eIdx: number, patch: NonNullable<LootEntry['metadata']>) => {
         const entree = tables[tIdx].entries[eIdx];
         majEntree(tIdx, eIdx, { metadata: { ...(entree.metadata || {}), ...patch } });
     };

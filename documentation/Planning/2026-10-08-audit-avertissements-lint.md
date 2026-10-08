@@ -548,3 +548,30 @@ complète sont mutualisés à la fin de chaque lot livré ; essais ciblés par d
 Lot 22 non commité, 21 fichiers Codex ; avec le lot 21, 26 fichiers Codex
 non commités. Aucun commit ou push demandé. Reprendre Interfaces et fiches,
 en coordonnant l'écriture de `HubDiceDisplay.tsx`, modifié hors Codex.
+
+## Vingt-troisième lot — interfaces et fiches
+
+Après la demande de commit/reprise du 08/10, les lots 21–22 sont commités
+**`093c4203`** et **`6d22466d`**, sans push. Les anciennes mentions
+« non commité » décrivent l'état avant cette demande.
+Le [lot 23](2026-10-08-lint-interfaces-et-fiches.md) retire **22 `any`
+applicatifs** du premier groupe, en reprenant les contrats réels des
+interfaces et des fiches. Deux `any` déjà désactivés disparaissent aussi,
+hors compteur. Le dé du Hub (1) reste en attente de coordination.
+
+**1 572 fichiers, zéro erreur et 263 avertissements**, dont **259 `any`
+(40 applicatifs, 219 dans les tests), trois diagnostics de mémoïsation
+et une directive inutile. Types, construction et **32 tests ciblés dans
+six fichiers** passent, dont **16 nouveaux cas**. **7 124 tests dans 556
+fichiers** passent, un fichier et quatre tests ignorés ; `git diff --check`
+propre. Règles et inventaire JSON initial inchangés.
+
+Les écarts révélés par le typage sont enregistrés au § 1 bis du registre :
+chronologie alignée sur cinq catégories selon le choix de David, objets
+manuels complétés et commandes du graphe social adaptées à l'API installée,
+avec initialisation après dimensionnement. Ils ne sont pas présentés comme
+de simples annotations de types ; aucune migration des données existantes.
+Lot 23 réalisé, validé et documenté, **28 fichiers Codex non commités**
+(23 de code/tests, cinq documents). Reprendre **IA et fournisseurs (15)**, puis
+relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5),
+le dé du Hub (1) après coordination, puis tests/mémoïsation/directive.
