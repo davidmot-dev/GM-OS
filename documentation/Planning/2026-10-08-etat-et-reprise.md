@@ -235,11 +235,42 @@ sur les vrais gestes de saisie/recherche et l'application du montant de dégâts
 Profils jetables, campagne fictive, appareils désactivés ; aucune génération IA
 réelle ni capture du manuel remplacée. `git diff --check` passe.
 
-**Septième lot réalisé et documenté, non commité : dix fichiers de code/tests
-et cinq documents.** Reprendre les **16 effets restants**, d'abord les replis
+**Septième lot commité et poussé sous `8f912061`** sur `origin/feature/tablet-hub-pwa`,
+après les contrôles complets du hook. David redemande **« commit, pousse et passe
+à l'étape suivante (GM-OS est éteint) »**. Reprendre les **16 effets restants**, d'abord les replis
 asynchrones de bannière/correspondance et leur contexte, puis les autres replis
 et synchronisations par écran. Conserver durées des dés, fondus, notes et
 projections ; ne pas ajouter de minuteurs pour masquer les alertes. Le typage
 des autres domaines et des faux objets de tests vient ensuite. Aucun gain de
 fluidité n'est annoncé sans mesure. Les modifications antérieures de Claude
 restent hors du lot.
+
+## Huitième lot : contexte des chargements du jeu
+
+[Détail et reprise](2026-10-08-lint-contexte-du-jeu.md). Les deux hooks de bannière
+et de correspondance rendent uniquement une lecture liée à leur contexte courant.
+Une ancienne bannière/table disparaît dès le rendu du nouveau contexte, avant
+les effets ; une réponse obsolète ne peut pas la remettre. Les paramètres de
+résolution sont suivis même si l'identifiant de campagne/personnage ne change pas.
+Une édition de `sheetData`, de notes ou de métadonnées étrangères à la résolution
+ne relance plus la correspondance. Le pilote du personnage garde son autorité.
+La résolution de correspondance traite aussi les rejets avant la lecture du fichier.
+
+Lint global : **1 546 fichiers, zéro erreur, 371 avertissements**, contre 373.
+Deux alertes d'effets retirées ; restent 353 `any`, **14 effets**, trois diagnostics
+de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+Types, construction, **102 tests ciblés dans six fichiers**, dont **19 nouveaux
+cas**, et **6 891 tests dans 538 fichiers** passent ; un fichier et quatre tests
+ignorés. **Trois scénarios Electron passent** : bannière, fiche selon le jeu du
+personnage et icônes du jeu. Corpus/profils jetables, campagne fictive et appareils
+désactivés ; aucune capture du manuel remplacée. Le nouveau scénario de fiche
+cliquait d'abord sur le nom : le geste a été corrigé vers le bouton **Fiche**,
+puis les deux scénarios du contexte passent. `git diff --check` passe.
+
+**Huitième lot réalisé et documenté, non commité : cinq fichiers de code/tests
+et cinq documents.** Le commit publié dans ce tour est le septième lot, **`8f912061`**.
+Reprendre les replis de `MediaItemThumbnail`, `AmbientTrack` et `AtelierDesTables`,
+vérifiés dans le code, puis le fondu et les synchronisations écran par écran.
+Conserver les durées des dés, les fondus, les notes et les projections. Les autres
+domaines et les faux objets de tests viennent après. Aucun gain de fluidité n'est
+annoncé sans mesure ; les changements antérieurs de Claude restent hors du lot.

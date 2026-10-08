@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { resoudreCorpus } from '../../../electron/corpusSysteme';
 import { piloteDuPersonnage } from '../session/logic/piloteDuPersonnage';
 import { useSessionOSStore } from '../session/useSessionOSStore';
@@ -29,29 +29,41 @@ export function useCorrespondanceDuJeu(character: PlayerCharacter | null | undef
     const customGameDrivers = useSessionOSStore(s => s.customGameDrivers);
     const activeCampaignId = useSessionOSStore(s => s.activeCampaignId);
 
-    const [table, setTable] = useState<CorrespondanceDeFiche | null>(null);
+    const pilote = piloteDuPersonnage(character, campaigns, customGameDrivers, activeCampaignId);
+    const campagne = campaigns?.find(c => c.id === (character?.campaignId ?? activeCampaignId));
+    const personnageId = character?.id;
+    const personnageNom = character?.name;
+    const systemId = pilote?.id ?? campagne?.system ?? '';
+    const systemName = pilote?.name;
+    const systemPath = campagne?.systemPath;
+    const corpusId = pilote?.corpusId;
+    const ragPath = pilote?.ragPath;
+    // Les données éditées de la fiche ne changent pas sa table de correspondance.
+    const contexte = useMemo(() => personnageId === undefined ? null : ({
+        personnageId, personnageNom, systemId, systemName, systemPath, corpusId, ragPath,
+    }), [personnageId, personnageNom, systemId, systemName, systemPath, corpusId, ragPath]);
+    const [lecture, setLecture] = useState<{ contexte: typeof contexte; table: CorrespondanceDeFiche | null } | null>(null);
 
     useEffect(() => {
+        if (!contexte) return;
         let annule = false;
-        if (!character) { setTable(null); return; }
 
         const relire = async () => {
-            const pilote = piloteDuPersonnage(character, campaigns, customGameDrivers, activeCampaignId);
-            const campagne = campaigns?.find(c => c.id === (character.campaignId ?? activeCampaignId));
             const dossiersConnus = (await window.appBridge?.ai?.listSystems?.()) ?? [];
+            if (annule) return;
 
             const corpus = resoudreCorpus({
-                systemId: pilote?.id ?? campagne?.system ?? '',
-                systemName: pilote?.name,
-                systemPath: campagne?.systemPath,
-                corpusId: pilote?.corpusId,
-                ragPath: pilote?.ragPath,
+                systemId: contexte.systemId,
+                systemName: contexte.systemName,
+                systemPath: contexte.systemPath,
+                corpusId: contexte.corpusId,
+                ragPath: contexte.ragPath,
                 dossiersConnus,
             });
 
             const lue = await chargerLaCorrespondance(corpus.racine);
             if (annule) return;
-            setTable(lue);
+            setLecture({ contexte, table: lue });
 
             /*
               Dire ce qu'on a retenu — la règle du journal de l'Oracle, qui vaut
@@ -61,15 +73,19 @@ export function useCorrespondanceDuJeu(character: PlayerCharacter | null | undef
             */
             if (lue) {
                 console.info(
-                    `[Correspondance] « ${character.name} » → docs/${corpus.racine}/fiche/correspondance.json `
+                    `[Correspondance] « ${contexte.personnageNom} » → docs/${corpus.racine}/fiche/correspondance.json `
                     + `(${lue.champs.length} champs, gabarit « ${lue.gabaritDeLaFiche} »)`,
                 );
             }
         };
 
-        void relire();
+        void relire().catch(err => {
+            if (annule) return;
+            console.error('[Correspondance] Résolution du jeu impossible :', err);
+            setLecture({ contexte, table: null });
+        });
         return () => { annule = true; };
-    }, [character, campaigns, customGameDrivers, activeCampaignId]);
+    }, [contexte]);
 
-    return table;
+    return contexte && lecture?.contexte === contexte ? lecture.table : null;
 }

@@ -63,11 +63,13 @@ l'inventaire initial des 540 alertes.
 
 ## Reprise
 
-Lot réalisé et documenté, **non commité** : dix fichiers de code/tests et cinq
-documents. Le commit publié au début de ce tour concerne le sixième lot.
-Continuer les **16 effets restants**, en commençant par les replis asynchrones
-de bannière/correspondance : afficher uniquement le résultat du contexte courant
-et vérifier l'annulation d'une lecture obsolète. Puis traiter les autres replis
+Lot commité et poussé sous **`8f912061`** sur `origin/feature/tablet-hub-pwa`,
+à la nouvelle demande de David **« commit, pousse et passe à l'étape suivante
+(GM-OS est éteint) »**. Le hook complet valide types, lint, les **6 872 tests**
+et la construction avant l'envoi. Le [huitième lot](2026-10-08-lint-contexte-du-jeu.md)
+traite les replis asynchrones de bannière/correspondance : afficher uniquement le
+résultat du contexte courant et vérifier l'annulation d'une lecture obsolète.
+Puis traiter les autres replis
 et synchronisations écran par écran. Conserver les durées des dés, les fondus,
 les notes et les projections. Les autres domaines et les faux objets de tests
 suivent. Les changements antérieurs de Claude restent hors du lot.

@@ -226,7 +226,21 @@ zéro erreur et 373 avertissements**. Restent 353 `any` (130 applicatifs, 223
 dans les tests), **16 effets**, trois diagnostics de mémoïsation et une directive
 inutile. Types, construction, **18 tests ciblés** (14 nouveaux cas), **6 872 tests
 de la suite complète** dans 536 fichiers et **huit scénarios Electron** passent.
-Lot réalisé et documenté, **non commité**, distinct du sixième lot publié.
+Septième lot commité et poussé sous **`8f912061`**, après les contrôles complets du hook.
 Continuer les replis asynchrones puis les autres synchronisations écran par écran.
 Les fondus, minuteurs, notes et projections gardent leurs contrats ; aucun gain
 de fluidité n'est annoncé sans mesure. Le JSON garde les 540 alertes initiales.
+
+Le [huitième lot](2026-10-08-lint-contexte-du-jeu.md) traite les replis de bannière
+et de correspondance de fiche. Les lectures portent leur contexte de résolution ;
+le rendu masque une lecture d'un autre contexte avant les effets, et les réponses
+anciennes sont ignorées. Le pilote du personnage et les chemins déclarés gardent
+leur autorité ; éditer `sheetData` ne relance pas la lecture de sa correspondance.
+**Deux alertes d'effets retirées**, sans changement des règles : **1 546 fichiers,
+zéro erreur et 371 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
+les tests), **14 effets**, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, **102 tests ciblés** (19 nouveaux cas), **6 891 tests** dans
+538 fichiers et **trois scénarios Electron** passent. Ce huitième lot reste
+**non commité**, distinct du septième lot publié. Reprendre les replis des vignettes,
+du visualiseur d'ambiance et de l'atelier des tables, puis les autres synchronisations
+écran par écran. L'inventaire JSON des 540 alertes initiales reste inchangé.
