@@ -455,3 +455,132 @@ types/lint/tests/build ; attendre sa réussite avant toute modification dans `sr
 État avant envoi : zéro erreur et **361 avertissements**, **6 981 tests**, les
 essais Electron/tablette des lots passent. Reprendre ensuite les deux effets
 des dés (`PlayerHub` et `useHubSync`), puis les deux de `ProjectorView`.
+
+## Quatorzième lot : déroulé des dés du Player Hub
+
+Le push des six commits réussit jusqu'à **`861eaca4`** sur
+`feature/tablet-hub-pwa` : hook complet, **6 981 tests**, zéro erreur et
+361 avertissements. La référence distante et HEAD sont vérifiées identiques.
+Les 29 fichiers Codex sont publiés ; aucun changement de Claude n'est inclus.
+David ajoute **« continue »** à sa demande de publication et de reprise.
+
+[Détail et reprise](2026-10-08-lint-deroule-des-des.md). `useAffichageDuJet`
+reconnaît le nouveau signal de projection au rendu ; l'effet garde l'échéance.
+`usePoseDesDes` réarme le drapeau à l'identifiant du jet ; son maintien et ses
+callbacks sont propres au cycle. Les anciens rappels, callbacks de scène et
+signaux de pose n'effacent ni ne prolongent un nouveau jet. Les deux durées
+restent : deux secondes de maintien et cinq secondes de lecture. La pose
+réarme immédiatement le filet avant le maintien, puis l'effacement relance
+la lecture : cela couvre le cas limite pose à quatre secondes/effacement à six,
+où l'ancien filet initial fermait le résultat à cinq secondes. Sans pose
+signalée, la tablette et le mode 2D gardent leurs cinq secondes au lancer.
+Le plafond, la scène physique, les matières et la présentation restent.
+
+Lint global : **1 559 fichiers, zéro erreur, 359 avertissements**, contre 361.
+Deux alertes d'effets retirées ; restent 353 `any`, **deux effets**, trois
+diagnostics de mémoïsation et une directive inutile. Règles et JSON initial inchangés.
+Types, construction, **40 tests ciblés** et **6 999 tests dans 546 fichiers**
+passent ; un fichier et quatre tests ignorés. 22 nouveaux cas de comportement,
+quatre anciennes recherches dans le texte des effets retirées : gain net de 18.
+**Trois scénarios Electron passent** dans `e2e/derouleDuJet.spec.ts` : vrai pont
+vers Player Hub, résultat 2D, second jet pendant le premier et vraie scène 3D
+qui s'efface avant la fin de la lecture. Le cas plafond/maintien est piloté
+par l'horloge des tests unitaires, la vraie physique décide de la pose en Electron.
+Profils, sauvegardes et corpus jetables, appareils désactivés, aucune capture
+du manuel remplacée. `git diff --check` passe.
+
+**Nouveau lot non commité : 12 fichiers propres à Codex** (sept de code/tests,
+cinq documents), distinct des lots 9 à 13 poussés au début du tour. Dernier
+publié : **`861eaca4`**. Reprendre `ProjectorView.tsx` : suivi du magasin avant
+le premier IPC et détection du type de média, dont YouTube. Ce fichier porte
+les deux alertes d'effets restantes ; puis les autres domaines/tests.
+Préserver les changements de Claude et l'isolation des essais.
+
+## Quinzième lot : fenêtre de projection
+
+David demande **« passe à l'étape suivante (GM-OS est éteint) »**.
+[Détail et reprise](2026-10-08-lint-projecteur.md). La source du projecteur
+suit le magasin au rendu jusqu'au premier IPC d'image. Les marqueurs ont
+leur nature immédiatement ; la lecture du blob appartient à sa source et
+ignore les réponses tardives. L'adresse résolue porte aussi son identité :
+une vidéo ne joue jamais l'ancien fichier sous le nouveau type. Si son type
+arrive après l'extinction, elle ne démarre pas pendant le fondu réservé aux
+images. Le volume se réapplique à l'arrivée de l'adresse et la boucle suit
+les métadonnées. Changement de cible, démontage et nouvelles commandes
+invalident les anciens écouteurs/délais. Fondu de **700 ms**, arrêt immédiat
+des vidéos, carte/tableau blanc, titre et contrat IPC conservés.
+
+Lint global : **1 562 fichiers, zéro erreur, 357 avertissements**, contre 359.
+Les deux dernières alertes `set-state-in-effect` sont retirées ; aucune ne
+reste. Restent 353 `any`, trois diagnostics de mémoïsation et une directive
+inutile. Règles et JSON initial inchangés.
+Types, construction, **90 tests ciblés** (26 nouveaux cas) et **7 025 tests dans
+547 fichiers** passent ; un fichier et quatre tests ignorés. **Six scénarios
+Electron passent** : deux fondus Player Hub et quatre projecteur, avec vrai
+IPC, rechargement, images, remplacement pendant la sortie, vidéo locale
+(volume/boucle) et cadre YouTube intercepté sans accès au réseau. Le retrait
+des lecteurs est observé à la frame suivante ; la lecture distante YouTube
+reste hors de ce test. Profils, sauvegardes et corpus jetables, appareils
+désactivés, aucune capture du manuel remplacée. `git diff --check` passe.
+
+**Lots 14 et 15 réalisés, documentés et non commités : 19 fichiers Codex**,
+treize de code/tests et six documents. Dernier publié : **`861eaca4`**.
+Reprendre le typage des autres modules selon l'audit : projection
+(`ImageService.ts`, six `any`, `useImageStore.ts`, cinq), puis Storyboard
+(`StoryboardDashboard.tsx`, douze) et les faux objets des tests. Les trois
+diagnostics de mémoïsation et la directive inutile restent dans des lots
+ciblés. Préserver les changements de Claude et l'isolation des essais.
+
+## Seizième lot : contrats de projection des médias
+
+David demande **« passe à l'étape suivante (GM-OS est éteint) »**.
+[Détail et reprise](2026-10-08-lint-projection-medias.md). `ImageService`
+emploie le registre de magasins déjà typé pour ses six accès globaux,
+sans import direct qui fermerait un cycle. Les cinq `as any` du magasin
+et ses conversions inutiles de cibles sont retirés. La présence du magasin
+nécessaire est vérifiée ; le recensement des écrans reste facultatif.
+Chemin envoyé et marque de la fiche restent distincts, comme projections
+locale et Hub, marqueurs, ordre boucle/vidéo et extinctions ciblées.
+Contrats IPC, persistance, temporisations et présentation conservés.
+
+Lint global : **1 563 fichiers, zéro erreur, 346 avertissements**, contre 357.
+Onze `any` applicatifs retirés ; restent 342 `any` (119 applicatifs,
+223 dans les tests), trois diagnostics de mémoïsation et une directive
+inutile. Aucune alerte `set-state-in-effect` ne revient. Règles et JSON
+initial inchangés. Types, construction, **179 tests ciblés** (17 nouveaux cas)
+et **7 042 tests dans 548 fichiers** passent ; un fichier et quatre tests ignorés.
+
+**Sept scénarios Electron sont validés** : deux fondus Player Hub et cinq
+projecteur. La projection passe désormais par le vrai magasin et le service,
+le volume par le réglage du meneur. Un premier essai a montré que l'ancien
+IPC de volume isolé était écrasé par le recalcul normal ; le test corrigé
+passe. Le nouveau cas d'extinction vérifie la fermeture du projecteur et
+l'occupation effacée. Profils/sauvegardes/corpus jetables, appareils désactivés,
+cadre YouTube intercepté sans accès distant, aucune capture du manuel modifiée.
+Lint ciblé final et `git diff --check` propres.
+
+**Lots 14 à 16 réalisés, documentés et non commités : 23 fichiers Codex**,
+seize de code/tests et sept documents. Dernier publié : **`861eaca4`**.
+Reprendre les douze `any` de `StoryboardDashboard.tsx`, puis les autres
+modules et les faux objets des tests. Mémoïsation et directive inutile
+gardent leurs lots ciblés. Préserver les changements de Claude.
+
+## Commits des lots 14 à 16, puis reprise de Storyboard
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Les trois lots sont commités localement, chacun avec sa note :
+
+| Lot | Commit | Sujet |
+| :--- | :--- | :--- |
+| 14 | `f72243d0` | Déroulé des dés |
+| 15 | `b08b836d` | Fenêtre de projection |
+| 16 | `089ed4fe` | Contrats de projection des médias |
+
+Les quatre documents communs suivent dans un commit de documentation.
+Les mentions « non commités » ci-dessus décrivent l'état avant cette demande.
+Les **23 fichiers Codex** sont sélectionnés explicitement ; les changements
+de Claude restent hors des commits. Validation conservée du lot 16 :
+types/construction, zéro erreur et **346 avertissements**, **7 042 tests**,
+sept scénarios Electron validés. Aucun code modifié depuis ces contrôles.
+**Aucun push demandé ni exécuté** : dernier poussé `861eaca4`.
+Reprendre les douze `any` de `StoryboardDashboard.tsx`.

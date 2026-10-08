@@ -80,7 +80,16 @@ du douzième lot). Aucun commit ni push demandé dans ce tour.
 
 Les lots **9 à 13** représentent **29 fichiers propres à Codex non commités** :
 vingt de code/tests et neuf documents. Préserver les changements de Claude.
-Reprendre les dés de `PlayerHub` et `useHubSync` (deux effets), puis `ProjectorView`
-(deux effets), soit quatre alertes dans trois fichiers. Le typage des autres
-domaines/tests, les trois diagnostics de mémoïsation et la directive inutile
-restent dans la suite du chantier.
+Les lots 9 à 13 sont maintenant poussés, avec les documents communs, jusqu'à
+**`861eaca4`**, après le hook complet. Les dés de `PlayerHub` et `useHubSync`
+sont repris dans le [quatorzième lot](2026-10-08-lint-deroule-des-des.md),
+distinct et non commité. Le lint courant passe à **359 avertissements**, dont
+**deux effets**, tous deux dans `ProjectorView`. Reprendre ce fichier, puis
+les autres domaines/tests, les trois diagnostics de mémoïsation et la directive inutile.
+
+Reprises effectuées : dés, projecteur et contrats de projection, lots 14 à 16.
+Ils sont maintenant commités localement sur demande de David sous `f72243d0`,
+`b08b836d` et `089ed4fe`, avec les documents communs ; aucun push demandé.
+État validé : **346 avertissements sans erreur**, aucun `set-state-in-effect`,
+**7 042 tests** et sept scénarios Electron. Reprendre les douze `any` de
+Storyboard ; dernier poussé `861eaca4`.

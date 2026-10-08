@@ -10062,9 +10062,52 @@ zéro erreur et 361 avertissements**, dont **quatre effets**. Types, constructio
 **quatre scénarios Electron/tablette** passent, avec réception d'un message
 pour un autre joueur pendant le signal. Captures temporaires séparées du manuel.
 Lots 9 à 13 maintenant **commités sur demande de David** sous `38bd33c6`, `020bae8e`,
-`b5a110e0`, `db052c6f` et `af2d6b2c` ; envoi demandé avec le hook complet, suivi
-dans la [note du jour](2026-10-08-etat-et-reprise.md). Reprendre dés et projection,
-quatre effets dans trois fichiers, après réussite du push.
+`b5a110e0`, `db052c6f` et `af2d6b2c`, puis documents communs sous `861eaca4` ;
+**push réussi avec le hook complet**, suivi dans la [note du jour](2026-10-08-etat-et-reprise.md).
+Les dés sont repris dans le [quatorzième lot](2026-10-08-lint-deroule-des-des.md).
+Le signal et l'identifiant ajustent l'état au rendu ; les effets gardent les
+échéances et nettoient les anciens rappels. Deux secondes de maintien et cinq
+de lecture restent. Le filet est réarmé dès la pose pour couvrir aussi la pose
+au plafond de quatre secondes suivie du maintien, puis à l'effacement pour la lecture.
+**1 559 fichiers, zéro erreur et 359 avertissements**, dont **deux effets**.
+Types, construction, **40 tests ciblés**, **6 999 tests dans 546 fichiers** et
+**trois scénarios Electron** passent : 2D, jets successifs et vraie scène 3D.
+22 nouveaux cas remplacent notamment quatre recherches textuelles d'effets.
+Quatorzième lot **non commité**. Le projecteur est repris dans le
+[quinzième lot](2026-10-08-lint-projecteur.md) sur demande de David, GM-OS fermé.
+Le magasin ajuste la source au rendu jusqu'au premier IPC d'image. Les
+marqueurs et la détection du blob appartiennent à la source ; une réponse
+tardive ne change pas le nouveau type, et une vidéo attend son propre fichier.
+Fondu image de 700 ms et retrait immédiat des vidéos restent, y compris
+l'extinction pendant la détection. Volume et boucle suivent le bon média ;
+abonnements et délais sont nettoyés. **1 562 fichiers, zéro erreur et
+357 avertissements**, **aucune alerte `set-state-in-effect` restante**.
+Types, construction, **90 tests ciblés**, **7 025 tests dans 547 fichiers** et
+**six scénarios Electron** passent, avec vraie vidéo locale et cadre YouTube
+intercepté sans réseau. 26 nouveaux cas, profils jetables, aucune capture
+documentaire remplacée. **Lots 14 et 15 non commités**, 19 fichiers Codex.
+Reprendre le typage des autres modules : projection (`ImageService` et
+`useImageStore`, onze `any`), puis Storyboard (douze) et les tests. Restent
+aussi les trois diagnostics de mémoïsation et la directive inutile.
+Les contrats de projection sont repris dans le
+[seizième lot](2026-10-08-lint-projection-medias.md) : registre de magasins typé
+dans `ImageService`, cibles déjà typées transmises sans `any` dans
+`useImageStore`. Chemin et marque, local/Hub, marqueurs, ordre boucle/vidéo
+et extinction ciblée conservés. **Onze `any` applicatifs retirés** :
+**1 563 fichiers, zéro erreur et 346 avertissements**, dont 342 `any`, trois
+diagnostics de mémoïsation et une directive inutile. Aucun effet ne revient.
+Types, construction, **179 tests ciblés**, **7 042 tests dans 548 fichiers** et
+**sept scénarios Electron** validés. 17 nouveaux cas ; vrai magasin/service,
+volume piloté par le magasin et nouveau contrôle de fermeture du projecteur
+au noir. Profils jetables, cadre YouTube intercepté, aucune capture du manuel
+modifiée. **Lots 14 à 16 non commités**, 23 fichiers Codex. Reprendre les douze
+`any` de Storyboard, puis les autres modules/tests.
+**Commit demandé ensuite par David**, GM-OS fermé : les lots 14 à 16 sont
+commités localement sous `f72243d0`, `b08b836d` et `089ed4fe`, puis les quatre
+documents communs. Les mentions « non commités » sont l'état avant cette
+demande. Les 23 fichiers Codex sont sélectionnés explicitement ; changements
+de Claude préservés. **Aucun push demandé ni exécuté** : dernier poussé
+`861eaca4`. Reprendre Storyboard depuis les 346 avertissements validés.
 Le lint global lui-même est réparé (`57d0193c`) : ce lot concerne son diagnostic,
 pas le rétablissement de son fonctionnement.
 
@@ -10136,7 +10179,7 @@ pas le rétablissement de son fonctionnement.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **13 lots commités, envoi demandé jusqu'à `af2d6b2c`**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 avertissements, zéro erreur | Après le push, revoir les quatre effets restants (dés et projection), puis les autres domaines/tests | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md) |
+| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 16 commités localement (dernier code `089ed4fe`)**, § 127 : 540 → 521 → 448 → 433 → 409 → 389 → 377 → 373 → 371 → 368 → 367 → 364 → 362 → 361 → 359 → 357 → 346 avertissements, zéro erreur, aucun `set-state-in-effect` restant | Typer Storyboard (douze `any`), puis les autres modules et les tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [replis](2026-10-08-lint-replis-react.md), [fondu](2026-10-08-lint-fondu-croise.md), [QR et souris](2026-10-08-lint-reseau-et-souris.md), [notes et retour](2026-10-08-lint-notes-privees.md), [notifications](2026-10-08-lint-notifications-tablette.md), [dés](2026-10-08-lint-deroule-des-des.md), [projecteur](2026-10-08-lint-projecteur.md), [projection](2026-10-08-lint-projection-medias.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

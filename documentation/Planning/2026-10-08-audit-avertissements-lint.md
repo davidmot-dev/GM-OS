@@ -330,3 +330,73 @@ Publication demandée le 08/10 : **« commit, pousse et passe à l'étape suivan
 « non commités » décrivent l'état avant cette demande. La
 [note du jour](2026-10-08-etat-et-reprise.md) suit l'envoi avec le hook complet
 et la reprise des dés. L'inventaire JSON initial reste inchangé.
+
+Le push réussit jusqu'à **`861eaca4`**, après types, lint à 361 avertissements,
+6 981 tests et construction dans le hook. Aucun changement de Claude inclus.
+
+Le [quatorzième lot](2026-10-08-lint-deroule-des-des.md) traite l'affichage du
+résultat et le maintien des dés. Le nouveau signal et l'identifiant du jet
+ajustent l'état avant le commit ; les effets gardent les échéances, avec
+nettoyage et gardes contre les anciens callbacks. Les durées restent : deux
+secondes de maintien et cinq de lecture. La pose réarme aussi immédiatement
+le filet : au plafond de quatre secondes, celui-ci ne ferme plus le résultat
+avant la fin du maintien à six secondes. L'effacement réarme ensuite les cinq
+secondes de lecture ; sans pose, le filet initial reste cinq secondes.
+**Deux alertes d'effets retirées**, sans changement des règles : **1 559 fichiers,
+zéro erreur et 359 avertissements**. Restent 353 `any` (130 applicatifs, 223 dans
+les tests), **deux effets**, trois diagnostics de mémoïsation et une directive inutile.
+Types, construction, **40 tests ciblés**, **6 999 tests dans 546 fichiers** et
+**trois scénarios Electron** passent. 22 nouveaux cas de comportement remplacent
+notamment quatre recherches dans le texte des effets, soit un gain net de 18 tests.
+Vrai pont vers Player Hub, résultat 2D, jets successifs et vraie scène 3D ;
+profils jetables, aucune capture documentaire remplacée. Ce lot est **non commité**.
+Reprendre les deux effets de `ProjectorView`, puis les autres domaines/tests.
+Le JSON garde les 540 alertes initiales.
+
+Le [quinzième lot](2026-10-08-lint-projecteur.md) reprend le projecteur.
+Sa source suit le magasin au rendu jusqu'au premier IPC d'image ; les
+marqueurs se reconnaissent au rendu, et la détection asynchrone du blob
+ignore les anciennes sources. L'adresse résolue porte son identité : une
+vidéo attend son propre fichier. L'extinction conserve le fondu image de
+700 ms et retire immédiatement les vidéos, y compris si leur type arrive
+après l'ordre d'extinction. Abonnements et délais sont nettoyés ; une nouvelle
+cible reprend un cycle indépendant. Volume et boucle suivent le bon média.
+**Deux alertes d'effets retirées**, sans changement des règles : **1 562 fichiers,
+zéro erreur et 357 avertissements**. **Aucune alerte `set-state-in-effect`
+restante** ; restent 353 `any` (130 applicatifs, 223 dans les tests), trois
+diagnostics de mémoïsation et une directive inutile. Types, construction,
+**90 tests ciblés**, **7 025 tests dans 547 fichiers** et **six scénarios Electron**
+passent. 26 nouveaux cas, profils jetables et cadre YouTube intercepté sans
+accès au réseau ; aucune capture documentaire remplacée. Lots 14 et 15
+**non commités**, dernier publié `861eaca4`.
+Reprendre le typage des autres modules selon l'audit : projection
+(`ImageService`, six `any`, `useImageStore`, cinq), puis Storyboard (douze dans
+`StoryboardDashboard`) et les tests. Mémoïsation et directive gardent leurs
+lots ciblés. Le JSON garde les 540 alertes initiales.
+
+Le [seizième lot](2026-10-08-lint-projection-medias.md) type la projection.
+`ImageService` lit le magasin par le registre déjà typé, sans import direct
+qui refermerait un cycle. Les cibles du magasin restent des chaînes, sans
+conversion `any`. Chemin envoyé et identité de la fiche restent distincts,
+ainsi que projection locale et Hub, marqueurs et adresses, boucle avant
+vidéo et extinction ciblée. **Onze `any` applicatifs retirés** : **1 563 fichiers,
+zéro erreur et 346 avertissements**. Restent 342 `any` (119 applicatifs,
+223 dans les tests), trois diagnostics de mémoïsation et une directive
+inutile ; aucune alerte `set-state-in-effect`. Types, construction,
+**179 tests ciblés** (17 nouveaux cas) et **7 042 tests dans 548 fichiers** passent.
+**Sept scénarios Electron sont validés** : deux fondus Player Hub et cinq
+projecteur, désormais via le vrai magasin et le service, avec volume du
+magasin et un nouveau contrôle de fermeture/occupation après le noir.
+Profils jetables, cadre YouTube intercepté, aucune capture documentaire
+remplacée. Lots 14 à 16 **non commités**, dernier publié `861eaca4`.
+Reprendre les douze `any` de `StoryboardDashboard.tsx`, puis les autres
+modules/tests ; mémoïsation et directive gardent leurs lots ciblés.
+Règles et JSON des 540 alertes initiales inchangés.
+
+Sur la demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**,
+les lots 14 à 16 sont maintenant commités localement : `f72243d0`,
+`b08b836d`, `089ed4fe`, puis les quatre documents communs. Les mentions
+précédentes « non commités » sont historiques. Les 23 fichiers Codex sont
+sélectionnés explicitement, aucun changement de Claude inclus. Aucun push
+demandé ni exécuté ; dernier poussé `861eaca4`. Reprendre Storyboard depuis
+les **346 avertissements** et les **7 042 tests** validés du lot 16.
