@@ -119,7 +119,7 @@ describe('scanInlinedMedia', () => {
     it('ne bronche pas sur un état vide ou incomplet', () => {
         expect(scanInlinedMedia({})).toEqual([]);
         expect(scanInlinedMedia({ players: [{ id: 'p1' }] })).toEqual([]);
-        expect(scanInlinedMedia({ atlasMaps: [null as any] })).toEqual([]);
+        expect(scanInlinedMedia({ atlasMaps: [null, undefined] })).toEqual([]);
     });
 
     it('apply remplace le champ sans toucher au reste', () => {
@@ -193,6 +193,50 @@ describe('migrateInlinedMedia', () => {
         await migrateInlinedMedia(scanInlinedMedia(state), lib);
 
         expect(state.atlasMaps[0].fileUrl).toBe('m-test-1');
+    });
+
+    it('migre toutes les familles sur une copie sans perdre les autres données ni modifier les originaux', async () => {
+        const original = {
+            session: {
+                campaigns: [{ id: 'c1', name: 'Campagne', wallpaperUrl: PNG, notes: 'notes de campagne' }],
+                atlasMaps: [{ id: 'a1', name: 'Lieu', fileUrl: PNG, linkedEntities: ['e1'] }],
+                entities: [{ id: 'e1', name: 'PNJ', avatar: PNG, hp: 7 }],
+                clues: [{ id: 'i1', name: 'Ancien indice', mediaUrl: PNG, isRevealed: true }],
+                players: [{ id: 'p1', name: 'Joueur', avatarUrl: PNG, characters: [
+                    { id: 'pj1', name: 'Personnage', portraitUrl: PNG, tokenUrl: 'm-jeton', sheetData: { score: 12 } },
+                ] }],
+            },
+            favoris: { favorites: [{ id: 'f1', name: 'Favori', imageUrl: PNG, tokenUrl: PNG, secretNotes: 'secret' }] },
+            npc: {
+                currentEntity: { id: 'n1', name: 'Fiche', avatar: PNG, fields: { métier: 'pilote' } },
+                savedEntities: [{ id: 'n1', name: 'Fiche', avatar: PNG, fields: { métier: 'pilote' } }],
+            },
+        };
+        const temoin = structuredClone(original);
+        const copie = structuredClone(original);
+        const entries = scanInlinedMedia(copie.session, copie.favoris, copie.npc);
+        expect(entries.map(e => e.field)).toEqual([
+            'Ambiance de campagne', 'Lieu', 'PNJ', 'Indice', 'Joueur', 'Personnage',
+            'Fiche NPC-OS ouverte', 'Fiche NPC-OS', 'Favori', 'Jeton de favori',
+        ]);
+        expect(entries.find(e => e.field === 'Indice')?.label).toBe('indice Ancien indice');
+
+        const report = await migrateInlinedMedia(entries, makeLibrary());
+
+        expect(report).toEqual({ migrated: 10, skipped: 0, failed: 0, freedBytes: PNG.length * 10, errors: [] });
+        expect(original).toEqual(temoin);
+        const attendu = structuredClone(temoin);
+        attendu.session.campaigns[0].wallpaperUrl = 'm-test-1';
+        attendu.session.atlasMaps[0].fileUrl = 'm-test-2';
+        attendu.session.entities[0].avatar = 'm-test-3';
+        attendu.session.clues[0].mediaUrl = 'm-test-4';
+        attendu.session.players[0].avatarUrl = 'm-test-5';
+        attendu.session.players[0].characters[0].portraitUrl = 'm-test-6';
+        attendu.npc.currentEntity.avatar = 'm-test-7';
+        attendu.npc.savedEntities[0].avatar = 'm-test-8';
+        attendu.favoris.favorites[0].imageUrl = 'm-test-9';
+        attendu.favoris.favorites[0].tokenUrl = 'm-test-10';
+        expect(copie).toEqual(attendu);
     });
 
     it('conserve le base64 si la relecture est incohérente', async () => {

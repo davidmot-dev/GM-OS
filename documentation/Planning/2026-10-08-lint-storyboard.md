@@ -70,3 +70,9 @@ Reprendre les neuf `any` d'`InlinedMediaMigration.ts` (listes de données et
 hôte de migration), puis les autres modules et les faux objets des tests,
 selon l'audit ; mémoïsation et directive inutile gardent leurs lots ciblés.
 Préserver les changements de Claude et l'isolation des essais.
+
+**Commit effectué à la demande suivante de David**, le 08/10 :
+**« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Les huit fichiers Codex sont commités sous **`7c10b41b`**, sans push ;
+les mentions « non commité » ci-dessus décrivent l'état avant cette demande.
+La reprise porte sur le [lot 18, migration des médias intégrés](2026-10-08-lint-migration-medias.md).

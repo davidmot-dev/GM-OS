@@ -94,9 +94,9 @@ export const InlinedMediaPanel: React.FC = () => {
             });
 
             if (result.migrated > 0) {
-                useSessionOSStore.setState(state as any);
-                useFavoriteStore.setState(favorites as any);
-                useNPCStore.setState(npc as any);
+                useSessionOSStore.setState(state);
+                useFavoriteStore.setState(favorites);
+                useNPCStore.setState(npc);
 
                 /*
                   ⛔ **Sans cette ligne, la sauvegarde automatique refuse d'écrire

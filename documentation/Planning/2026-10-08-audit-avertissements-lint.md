@@ -418,3 +418,27 @@ commande de lampes, aucune capture documentaire remplacée.
 Ce nouveau lot est **non commité**, huit fichiers Codex. Reprendre les neuf
 `any` d'`InlinedMediaMigration.ts`, puis les autres modules/tests.
 Règles et inventaire JSON initial inchangés.
+
+## Dix-huitième lot — migration des médias intégrés
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Storyboard est commité localement sous **`7c10b41b`**, huit fichiers Codex,
+sans push ni changement de Claude inclus. Les mentions précédentes
+« non commité » décrivent l'état avant cette demande.
+Le [lot 18](2026-10-08-lint-migration-medias.md) type ensuite les tranches
+parcourues par la migration depuis les contrats réels. Les entrées absentes
+et les anciens libellés restent acceptés ; seuls les champs médias peuvent
+être écrits par les remplacements. Le panneau conserve ses copies complètes.
+Les gardes de relecture et `baisseAttendue` restent.
+
+**Treize `any` retirés**, douze applicatifs et un dans les tests :
+**1 563 fichiers, zéro erreur et 321 avertissements**, dont 317 `any`
+(95 applicatifs, 222 dans les tests), trois diagnostics de mémoïsation et
+une directive inutile. Types, construction et **42 tests ciblés** passent.
+**7 043 tests dans 548 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre. Aucun scénario Electron pour ces changements de
+types, données artificielles et médiathèque en mémoire, aucune donnée réelle
+ni capture documentaire touchée. Règles et inventaire JSON initial inchangés.
+Lot 18 non commité, huit fichiers Codex. Reprendre les huit `any` de
+`src/store/SessionService.ts` (distribution des données restaurées),
+puis les autres modules/tests et les lots mémoïsation/directive.

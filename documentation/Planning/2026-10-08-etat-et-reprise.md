@@ -620,3 +620,42 @@ dernier poussé documenté : **`861eaca4`**. Reprendre les neuf `any` de
 `src/modules/system/logic/InlinedMediaMigration.ts`, puis les autres modules
 et les faux objets des tests. Mémoïsation et directive gardent leurs lots
 ciblés. Préserver les changements de Claude et l'isolation des essais.
+
+## Commit de Storyboard, puis dix-huitième lot : migration des médias intégrés
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 17 et ses documents sont commités sous **`7c10b41b`**, huit fichiers
+Codex sélectionnés explicitement, aucun changement de Claude inclus.
+**Aucun push demandé ni exécuté** ; dernier poussé documenté : `861eaca4`.
+Les mentions « non commité » du lot 17 décrivent l'état avant cette demande.
+Sous PowerShell, écrire les messages de commit en UTF-8 sans BOM avec
+`System.Text.UTF8Encoding(false)` : `Set-Content -Encoding UTF8` ajoute ici
+un caractère invisible au début du titre.
+
+[Détail et reprise du lot 18](2026-10-08-lint-migration-medias.md).
+Les tranches minimales du scanner viennent des types réels, sans imports
+de magasins à l'exécution. Les données partielles, entrées absentes et
+anciens libellés restent tolérés ; les copies complètes du panneau et leurs
+champs sont conservés. L'hôte et la clé de remplacement sont typés ensemble.
+Enregistrement avant remplacement, relecture de même taille et demande de
+sauvegarde avec `baisseAttendue: true` restent. Aucun changement d'interface,
+de schéma de sauvegarde ou de persistance.
+
+Lint global : **1 563 fichiers, zéro erreur et 321 avertissements**, contre 334.
+Treize `any` retirés, douze applicatifs et un dans les tests : restent
+317 `any` (95 applicatifs, 222 dans les tests), trois diagnostics de
+mémoïsation et une directive inutile. Types, construction et **42 tests
+ciblés** passent, dont un nouveau contrôle des dix champs médias sur une
+copie, des deux porteurs NPC, des champs annexes et des originaux intacts.
+**7 043 tests dans 548 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre. Aucun scénario Electron lancé pour ce lot de types ;
+tests sur données artificielles et médiathèque en mémoire, aucune donnée
+réelle ni capture du manuel touchée. Règles et inventaire JSON inchangés.
+
+**Lot 18 réalisé, validé et documenté, non commité : huit fichiers Codex**,
+trois de code/tests et cinq documents. Dernier commit local **`7c10b41b`**,
+dernier poussé `861eaca4`.
+Reprendre les huit `any` de `src/store/SessionService.ts`, vérifiés dans la
+distribution des données restaurées et la déduplication, puis les autres
+contrats applicatifs et les faux objets des tests. Mémoïsation et directive
+gardent leurs lots ciblés. Préserver les changements de Claude.

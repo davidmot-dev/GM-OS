@@ -15,6 +15,13 @@
  * une image qu'on ne saurait pas relire est laissée en base64, intacte.
  */
 
+import type { Campaign } from '../../../types/campaign.types';
+import type { AtlasMap, Clue } from '../../../types/chronicle.types';
+import type { Entity } from '../../../types/entity.types';
+import type { Player, PlayerCharacter } from '../../../types/player.types';
+import type { FavoriteEntity } from '../../favorite/useFavoriteStore';
+import type { NPCEntity } from '../../npc/useNPCStore';
+
 /** Emplacement d'un média inline dans l'état. */
 export interface InlinedEntry {
     /** Libellé lisible, pour le rapport présenté au MJ. */
@@ -96,16 +103,27 @@ export function suggestFileName(label: string, dataUrl: string): string {
 }
 
 /** Forme minimale des tranches d'état parcourues, pour rester testable. */
+type ChampsParcourus<T, Cles extends keyof T> = Partial<Pick<T, Cles>>;
+// Les entrées absentes restent tolérées dans les anciennes données et les essais.
+type ElementParcouru<T> = T | null | undefined;
+type JoueurParcouru = ChampsParcourus<Player, 'id' | 'avatarUrl'> & {
+    /** Ancien libellé lu par la migration ; ne pas le remplacer par realName. */
+    name?: string;
+    characters?: ElementParcouru<ChampsParcourus<PlayerCharacter, 'id' | 'name' | 'portraitUrl'>>[];
+};
+type IndiceParcouru = ChampsParcourus<Clue, 'id' | 'title' | 'mediaUrl'> & { name?: string };
+type FicheNpcParcourue = ChampsParcourus<NPCEntity, 'id' | 'name' | 'avatar'>;
+
 export interface ScannableState {
-    campaigns?: any[];
-    atlasMaps?: any[];
-    entities?: any[];
-    players?: any[];
-    clues?: any[];
+    campaigns?: ElementParcouru<ChampsParcourus<Campaign, 'id' | 'name' | 'wallpaperUrl'>>[];
+    atlasMaps?: ElementParcouru<ChampsParcourus<AtlasMap, 'id' | 'name' | 'fileUrl'>>[];
+    entities?: ElementParcouru<ChampsParcourus<Entity, 'id' | 'name' | 'avatar'>>[];
+    players?: ElementParcouru<JoueurParcouru>[];
+    clues?: ElementParcouru<IndiceParcouru>[];
 }
 
 export interface ScannableFavorites {
-    favorites?: any[];
+    favorites?: ElementParcouru<ChampsParcourus<FavoriteEntity, 'id' | 'name' | 'imageUrl' | 'tokenUrl'>>[];
 }
 
 /**
@@ -122,8 +140,8 @@ export interface ScannableFavorites {
  * premier rechargement.
  */
 export interface ScannableNpc {
-    currentEntity?: any | null;
-    savedEntities?: any[];
+    currentEntity?: ElementParcouru<FicheNpcParcourue>;
+    savedEntities?: ElementParcouru<FicheNpcParcourue>[];
 }
 
 /**
@@ -138,9 +156,9 @@ export function scanInlinedMedia(
 ): InlinedEntry[] {
     const entries: InlinedEntry[] = [];
 
-    const consider = (
-        host: Record<string, any> | undefined | null,
-        key: string,
+    const consider = <Cle extends 'wallpaperUrl' | 'fileUrl' | 'avatar' | 'mediaUrl' | 'avatarUrl' | 'portraitUrl' | 'imageUrl' | 'tokenUrl'>(
+        host: Partial<Record<Cle, string>> | undefined | null,
+        key: Cle,
         field: string,
         label: string
     ) => {
