@@ -6,7 +6,6 @@ import {
     dureeTotaleDuJet,
     PLAFOND_DE_CHUTE_MS,
 } from './choregraphieDuJet';
-import CROCHET from '../../session/hooks/useHubSync.ts?raw';
 import SCENE from '../DiceBox3D.tsx?raw';
 import HUB from '../../../components/PlayerHub.tsx?raw';
 
@@ -22,9 +21,9 @@ import HUB from '../../../components/PlayerHub.tsx?raw';
  * active : *il restait trois secondes et demie pour lire*, pendant que les dés
  * roulaient par-dessus.
  *
- * ⚠️ **Ces essais ne mesurent pas le temps** — *un essai qui mesure une durée
- * devient rouge sur une machine chargée.* Ils vérifient les valeurs déclarées et
- * le **branchement** : que le compte part bien de la pose, et qu'il a un filet.
+ * Ces essais gardent les valeurs déclarées et le branchement de la scène.
+ * Les échéances et le réarmement sont exercés à horloge pilotée dans
+ * `useDerouleDuJet.test.tsx`, plutôt que par des recherches dans le code des effets.
  */
 
 describe('les durées du déroulé', () => {
@@ -66,35 +65,7 @@ describe('les durées du déroulé', () => {
  * *Une durée déclarée et non branchée est une durée absente* — la leçon des
  * quatre étages de l'Oracle, écrits et inatteignables.
  */
-/**
- * Le corps de l'effet du hub qui réarme le drapeau, et lui seul.
- *
- * *Un repère cherché dans tout un fichier ne dit rien de l'endroit où il compte.*
- */
-const blocDeLEffetDuJet = (): string => {
-    const depart = HUB.lastIndexOf('useEffect(', HUB.indexOf('setDesPoses(false);'));
-    const fin = HUB.indexOf('}, [', depart);
-    expect(depart, 'l’effet du jet est introuvable').toBeGreaterThan(0);
-    return HUB.slice(depart, fin);
-};
-
 describe('le déroulé est vraiment branché', () => {
-    it('le hub ne garde plus de cinq secondes écrites à la main', () => {
-        /* L'ancien code : `setTimeout(() => setShowDice(false), 5000)`. */
-        expect(CROCHET).not.toMatch(/setShowDice\(false\),\s*\d+/);
-        expect(CROCHET).toContain('DUREE_DU_RESULTAT_MS');
-    });
-
-    /**
-     * ⭐ **Le compte est armé au lancer ET relancé à la pose.** C'est ce qui fait
-     * que l'absence de signal — la tablette n'a pas de 3D — dégrade vers le
-     * comportement d'avant au lieu de figer l'écran.
-     */
-    it('le compte est armé au lancer et relancé à la pose', () => {
-        const appels = CROCHET.match(/fermerApresLeResultat\(\)/g) ?? [];
-        expect(appels.length).toBeGreaterThanOrEqual(1);
-        expect(CROCHET).toContain('signalerLesDesPoses: fermerApresLeResultat');
-    });
 
     /** La scène doit annoncer la pose, et l'annoncer **une seule fois**. */
     it('la scène signale la pose, avec son plafond', () => {
@@ -109,43 +80,4 @@ describe('le déroulé est vraiment branché', () => {
         expect(HUB).toContain('onRepos={auReposDesDes}');
     });
 
-    /**
-     * ⚠️ **Le maintien passe par un minuteur qu'il faut annuler.** Sans
-     * l'annulation, un second jet lancé pendant le maintien du premier ferait
-     * disparaître ses dés au bout du compte de l'ancien — *et on chercherait
-     * pourquoi un jet sur deux est plus court.*
-     */
-    it('le maintien est annulé quand un nouveau jet arrive', () => {
-        expect(HUB).toContain('DUREE_DE_MAINTIEN_MS');
-
-        /*
-          ⛔ **Une première version cherchait `clearTimeout(maintienRef.current)`
-          dans tout le fichier** — et la chaîne existe aussi dans
-          `auReposDesDes`. L'essai restait donc vert alors que l'annulation avait
-          été retirée de l'effet, vérifié en dégradant le code.
-
-          ⭐ ***Un repère cherché dans tout un fichier ne dit rien de l'endroit où
-          il compte.*** C'est la quatrième fois de la journée qu'un repère non
-          situé me mord. On regarde donc **le bloc de l'effet**, et lui seul.
-        */
-        const effet = blocDeLEffetDuJet();
-        expect(effet).toContain('clearTimeout(maintienRef.current)');
-        /* Deux fois : au réarmement, et au nettoyage du démontage. */
-        expect(effet.match(/clearTimeout\(maintienRef\.current\)/g)).toHaveLength(2);
-    });
-
-    /**
-     * ⚠️ **Le réarmement se fait sur l'identifiant du jet.** Deux jets successifs
-     * dans la même fenêtre d'affichage ne font pas repasser `showDice` par
-     * `false` : s'y fier laisserait *le second jet sans dés, sans que rien ne le
-     * dise.*
-     */
-    it('le drapeau se réarme sur le jet, pas sur l’affichage', () => {
-        const depart = HUB.indexOf('setDesPoses(false);');
-        expect(depart, 'le réarmement du drapeau est introuvable').toBeGreaterThan(0);
-
-        /* Les dépendances de l'effet qui contient ce réarmement. */
-        const dependances = HUB.slice(depart).match(/\}, \[([^\]]*)\]\);/);
-        expect(dependances?.[1]).toBe('lastRoll?.id');
-    });
 });

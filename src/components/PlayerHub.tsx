@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useFonduCroise, FONDU_COTE_JOUEURS_MS } from '../modules/image/useFonduCroise';
 
 // Modules & Stores
@@ -27,7 +27,7 @@ import { HubDiceDisplay } from './hub/HubDiceDisplay';
 import { HubCombatTracker } from './hub/HubCombatTracker';
 import FondProjete from './hub/FondProjete';
 import { fondDuPlayerHub } from './hub/fondDuPlayerHub';
-import { DUREE_DE_MAINTIEN_MS } from '../modules/dice/logic/choregraphieDuJet';
+import { usePoseDesDes } from '../modules/dice/useDerouleDuJet';
 
 const PlayerHub: React.FC = React.memo(() => {
     // 1. Unified Synchronization Hook (Bridge Isolation)
@@ -61,14 +61,7 @@ const PlayerHub: React.FC = React.memo(() => {
       repasser `showDice` par `false` : *le dé du second jet ne serait jamais
       lancé, et rien ne le dirait.*
     */
-    const [desPoses, setDesPoses] = useState(false);
-    const maintienRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    useEffect(() => {
-        setDesPoses(false);
-        if (maintienRef.current) clearTimeout(maintienRef.current);
-        return () => { if (maintienRef.current) clearTimeout(maintienRef.current); };
-    }, [lastRoll?.id]);
+    const { desPoses, auReposDesDes } = usePoseDesDes(lastRoll?.id, signalerLesDesPoses);
 
     /*
       ⭐ **Les dés restent posés deux secondes avant de s'effacer**, demandé par
@@ -78,13 +71,6 @@ const PlayerHub: React.FC = React.memo(() => {
       Le compte des cinq secondes du panneau part de **l'effacement**, pas de la
       pose : la fenêtre de lecture promise reste entière.
     */
-    const auReposDesDes = useCallback(() => {
-        if (maintienRef.current) clearTimeout(maintienRef.current);
-        maintienRef.current = setTimeout(() => {
-            setDesPoses(true);
-            signalerLesDesPoses();
-        }, DUREE_DE_MAINTIEN_MS);
-    }, [signalerLesDesPoses]);
     const activeHubId = hubSync.projections['hub'];
 
     // 3. Asset Resolution

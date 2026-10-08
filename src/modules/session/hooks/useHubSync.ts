@@ -3,7 +3,7 @@ import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
 import { jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import type { TensionClock } from '../../../store/useClockStore';
 import { openDB } from 'idb';
-import { DUREE_DU_RESULTAT_MS } from '../../dice/logic/choregraphieDuJet';
+import { useAffichageDuJet } from '../../dice/useDerouleDuJet';
 import { imageApresMessage, papierPeintDeLaCampagne } from '../../../components/hub/fondDuPlayerHub';
 import { appliquerApparenceTablettes } from '../../../theme/apparenceTablettes';
 import { magasinDuHub as getStore, type EtatsDuHub, type NomDeMagasinDuHub } from '../../../utils/magasinsDuHub';
@@ -128,7 +128,6 @@ export const useHubSync = () => {
     const [niveauSonVideo, setNiveauSonVideo] = useState(1);
     const [liveEntity, setLiveEntity] = useState<ProjectedEntity | null>(null);
     const [sessionSummary, setSessionSummary] = useState<string>('');
-    const [showDice, setShowDice] = useState(false);
     const [sharedRule, setSharedRule] = useState<RegleDuHub | null>(null);
     const [latency, setLatency] = useState<number | null>(null);
 
@@ -137,8 +136,6 @@ export const useHubSync = () => {
     const [resolvedAtlasMaps, setResolvedAtlasMaps] = useState<EtatsDuHub['useSessionOSStore']['atlasMaps']>([]);
 
     const socketRef = useRef<WebSocket | null>(null);
-    const diceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const lastDiceTriggerRef = useRef(0);
 
     // ─────────────────────────────────────────────
     // Lecture des magasins - voir `useMagasin` : un crochet par ligne, toujours,
@@ -202,6 +199,7 @@ export const useHubSync = () => {
     
     const projectionTrigger = useMagasin('useDiceStore', s => s.projectionTrigger, 0);
     const isDiceProjected = useMagasin('useDiceStore', s => s.isDiceProjected, false);
+    const { showDice, signalerLesDesPoses } = useAffichageDuJet(isDiceProjected, projectionTrigger);
 
     const host = window.location.hostname;
     const port = portDeSynchronisation();
@@ -730,13 +728,12 @@ export const useHubSync = () => {
       1,5 s — *il restait donc trois secondes et demie pour lire un résultat*,
       pendant que les dés finissaient de rouler par-dessus.
 
-      ⭐ **Le compte de cinq secondes part maintenant de la POSE des dés**, que la
-      scène 3D signale. Mais il est **armé dès le lancer**, et le signal ne fait
-      que le redémarrer :
+      ⭐ **Le compte de cinq secondes est armé dès le lancer**, puis réarmé à
+      la pose pour couvrir le maintien, et à l'effacement pour la lecture :
 
       | | Ce qui se passe |
       | --- | --- |
-      | Player Hub, 3D active | les dés se posent vers 2,5 s → le résultat tient jusqu'à ~7,5 s |
+      | Player Hub, 3D active | pose vers 2,5 s → maintien 2 s → résultat jusqu'à ~9,5 s |
       | Tablette, ou 3D coupée | personne ne signale → **la fenêtre reste celle d'aujourd'hui, 5 s** |
       | Un dé qui ne se pose jamais | la scène déclare la pose d'office à 4 s ; et même sans elle, le compte initial ferme |
 
@@ -745,20 +742,6 @@ export const useHubSync = () => {
       expéditeur ne lève aucune erreur — il attend*, et ce dépôt l'a déjà payé sur
       la tablette qui guettait un `dice:result` que personne n'émettait.
     */
-    const fermerApresLeResultat = useCallback(() => {
-        if (diceTimerRef.current) clearTimeout(diceTimerRef.current);
-        diceTimerRef.current = setTimeout(() => setShowDice(false), DUREE_DU_RESULTAT_MS);
-    }, []);
-
-    // Dice Trigger
-    useEffect(() => {
-        if (isDiceProjected && projectionTrigger !== lastDiceTriggerRef.current) {
-            lastDiceTriggerRef.current = projectionTrigger;
-            setShowDice(true);
-            fermerApresLeResultat();
-        }
-    }, [isDiceProjected, projectionTrigger, fermerApresLeResultat]);
-
     return {
         status,
         liveImagePath,
@@ -773,7 +756,7 @@ export const useHubSync = () => {
          * À appeler quand les dés en 3D sont posés : le résultat reste alors
          * lisible {@link DUREE_DU_RESULTAT_MS} de plus.
          */
-        signalerLesDesPoses: fermerApresLeResultat,
+        signalerLesDesPoses,
         resolvedFavorites,
         resolvedNpcs,
         resolvedAtlasMaps,

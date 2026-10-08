@@ -128,6 +128,23 @@ describe('messages réels du Hub, par IPC et WebSocket', () => {
         expect(dice.getState().lastRoll).toBeNull();
     });
 
+    it('affiche le résultat reçu par synchronisation et ferme son filet après cinq secondes', () => {
+        vi.useFakeTimers();
+        installer('useDiceStore', { lastRoll: null, isDiceProjected: false, projectionTrigger: 0 });
+        const { result, unmount } = renderHook(() => useHubSync());
+        try {
+            recevoir('sync', { dice: { isDiceProjected: true, projectionTrigger: 1 } } satisfies DonneesDuHub);
+            expect(result.current.showDice).toBe(true);
+            act(() => vi.advanceTimersByTime(4999)); expect(result.current.showDice).toBe(true);
+            act(() => vi.advanceTimersByTime(1)); expect(result.current.showDice).toBe(false);
+            recevoir('sync', { dice: { projectionTrigger: 2 } } satisfies DonneesDuHub);
+            expect(result.current.showDice).toBe(true);
+        } finally {
+            unmount();
+            vi.useRealTimers();
+        }
+    });
+
     it('ignore une charge mal formée, puis reçoit le message suivant', () => {
         const magasin = installer('useSessionOSStore', sessionInitiale());
         const { result } = renderHook(() => useHubSync());
