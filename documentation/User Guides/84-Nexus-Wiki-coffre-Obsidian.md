@@ -1,6 +1,8 @@
 # 📔 Nexus Wiki — votre coffre Obsidian
 
-Le module **Nexus Wiki** permet d'intégrer vos notes personnelles de préparation directement dans l'interface de GM-OS. Il crée un pont intelligent entre votre savoir accumulé dans Obsidian et l'intelligence artificielle de l'Oracle.
+Le module **Nexus Wiki** permet d'intégrer vos notes personnelles de préparation directement dans
+l'interface de GM-OS. Il crée un pont intelligent entre votre savoir accumulé dans Obsidian et
+l'intelligence artificielle de l'Oracle.
 
 ![Nexus Wiki : l'arborescence du coffre à gauche, la note « Station Varn » au centre avec ses liens internes, la table des matières à droite](captures/module-nexus-wiki.jpg)
 
@@ -162,12 +164,16 @@ Vous avez une fiche de PNJ très détaillée dans Obsidian.
 
 ---
 
-- **Emplacement du coffre** : par défaut, GM-OS cherche votre coffre dans `OneDrive/Obsidian Vault`. Ce chemin est modifiable dans les réglages.
-- **Sécurité et Écritures** : GM-OS ne modifie jamais vos notes existantes. En revanche, il a l'autorisation de **créer de nouveaux dossiers et fichiers** dans le cadre de la fonction "Exporter vers Obsidian".
+- **Emplacement du coffre** : par défaut, GM-OS cherche votre coffre dans `OneDrive/Obsidian Vault`.
+  Ce chemin est modifiable dans les réglages.
+- **Sécurité et Écritures** : GM-OS ne modifie jamais vos notes existantes. En revanche, il a
+  l'autorisation de **créer de nouveaux dossiers et fichiers** dans le cadre de la fonction
+  "Exporter vers Obsidian".
 
 ---
 > [!TIP]
-> Si vous venez d'ajouter une note dans Obsidian et qu'elle n'apparaît pas encore, cliquez sur **Recharger le coffre**, en haut à droite.
+> Si vous venez d'ajouter une note dans Obsidian et qu'elle n'apparaît pas encore, cliquez sur
+> **Recharger le coffre**, en haut à droite.
 
 ---
 

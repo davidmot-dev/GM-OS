@@ -29,8 +29,8 @@ manuel viennent de cette campagne fictive.*
 
 - **À gauche, la barre des modules**, rangée par familles (Audio, Global, Aventure, Outils). En bas,
   sept raccourcis : Cortex, thème, **aide** (`Ctrl+H`), journal technique, **Paramètres**,
-  sauvegarder et charger une sauvegarde ; puis les deux boutons qui ouvrent le **Player Hub** (l'écran des joueurs) et le **Hub
-  Tablette**.
+  sauvegarder et charger une sauvegarde ; puis les deux boutons qui ouvrent le **Player Hub**
+  (l'écran des joueurs) et le **Hub Tablette**.
 - **En haut, la tour de contrôle audio** — volume général, Focus Chat, **Stop All** — et, à droite,
   le **moment** : *Atelier* (hors séance) ou *Table* (séance ouverte). Voir
   [la tour de contrôle](./70-Tour-de-controle-audio.md).
