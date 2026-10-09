@@ -1,5 +1,20 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { SessionManager } from './SessionManager';
+import type { LireLaSession, PoserLaSession } from '../store/contratDesSlices';
+import type { SessionOSStore } from '../store/index';
+
+/** Le harnais garde les données minimales, y compris l'absence des anciens champs de butin. */
+type EtatPourGestion = {
+    campaigns: Pick<SessionOSStore['campaigns'][number], 'id' | 'name'>[];
+    sessions: (Pick<SessionOSStore['sessions'][number], 'id' | 'campaignId' | 'number' | 'status'>
+        & Partial<Pick<SessionOSStore['sessions'][number], 'publicSummary'>>)[];
+    entities: Pick<SessionOSStore['entities'][number], 'id' | 'campaignId'>[];
+    actes: Pick<SessionOSStore['actes'][number], 'id' | 'campaignId'>[];
+    scenes: Pick<SessionOSStore['scenes'][number], 'id' | 'campaignId'>[];
+} & Pick<SessionOSStore, 'players' | 'atlasMaps' | 'wikiEntries' | 'timelineEvents' | 'clues'>;
+
+// Seule frontière avec le magasin complet ; les autres slices restent absentes.
+const lireFixture = (etat: EtatPourGestion): SessionOSStore => etat as SessionOSStore;
 
 // Mocks
 // Des espions PARTAGÉS : `getState: () => ({ startJournal: vi.fn() })` en
@@ -34,8 +49,8 @@ vi.mock('../../../stores/useToastStore', () => ({
 }));
 
 describe('SessionManager', () => {
-    let mockSet: any;
-    let mockGet: any;
+    let mockSet: Mock<PoserLaSession>;
+    let mockGet: Mock<LireLaSession>;
 
     beforeEach(() => {
         journal.startJournal.mockClear();
@@ -43,8 +58,8 @@ describe('SessionManager', () => {
         journal.addEvent.mockClear();
         journal.isRecording = false;
         cloture.mockClear();
-        mockSet = vi.fn();
-        mockGet = vi.fn(() => ({
+        mockSet = vi.fn<PoserLaSession>();
+        const etat: EtatPourGestion = {
             campaigns: [{ id: 'c1', name: 'Campaign 1' }],
             sessions: [{ id: 's1', campaignId: 'c1', number: 1, publicSummary: 'Test', status: 'planned' }],
             entities: [{ id: 'e1', campaignId: 'c1' }],
@@ -55,7 +70,8 @@ describe('SessionManager', () => {
             clues: [],
             actes: [{ id: 'a1', campaignId: 'c1' }, { id: 'a2', campaignId: 'c2' }],
             scenes: [{ id: 'sc1', campaignId: 'c1' }, { id: 'sc2', campaignId: 'c2' }],
-        }));
+        };
+        mockGet = vi.fn<LireLaSession>(() => lireFixture(etat));
     });
 
     it('should set active campaign correctly', () => {
@@ -74,7 +90,8 @@ describe('SessionManager', () => {
         
         // Check if session status was updated
         const callArgs = mockSet.mock.calls[0][0];
-        expect(callArgs.sessions[0].status).toBe('active');
+        if (typeof callArgs === 'function') throw new Error('Le lancement doit poser un objet.');
+        expect(callArgs.sessions?.[0].status).toBe('active');
     });
 
     /**
@@ -124,7 +141,7 @@ describe('SessionManager', () => {
      * puis devenait orphelin quand `startJournal` prenait sa place.
      */
     describe('une seule seance a la fois', () => {
-        const avecSeanceActive = (campaignId: string) => vi.fn(() => ({
+        const avecSeanceActive = (campaignId: string) => vi.fn<LireLaSession>(() => lireFixture({
             ...mockGet(),
             sessions: [
                 { id: 's1', campaignId: 'c1', number: 1, publicSummary: 'Test', status: 'planned' },
@@ -148,7 +165,7 @@ describe('SessionManager', () => {
         /* Relancer la séance déjà active est bien un journal sortant — celui de
            la même séance, que la recherche d'une « autre » active ne voit pas. */
         it('relancer la seance active clot son propre journal', () => {
-            const dejaActive = vi.fn(() => ({
+            const dejaActive = vi.fn<LireLaSession>(() => lireFixture({
                 ...mockGet(),
                 sessions: [{ id: 's1', campaignId: 'c1', number: 1, status: 'active' }],
             }));
@@ -193,6 +210,7 @@ describe('SessionManager', () => {
         
         // We need to check the function passed to set
         const setUpdateFn = mockSet.mock.calls[0][0];
+        if (typeof setUpdateFn !== 'function') throw new Error('La cascade doit calculer une mise à jour.');
         const result = setUpdateFn(mockGet());
         
         expect(result.campaigns).toHaveLength(0);
@@ -211,9 +229,11 @@ describe('SessionManager', () => {
      */
     it('la suppression emporte la trame de cette campagne, et d\'aucune autre', () => {
         SessionManager.deleteCampaign(mockSet, mockGet, 'c1');
-        const result = mockSet.mock.calls[0][0](mockGet());
+        const setUpdateFn = mockSet.mock.calls[0][0];
+        if (typeof setUpdateFn !== 'function') throw new Error('La cascade doit calculer une mise à jour.');
+        const result = setUpdateFn(mockGet());
 
-        expect(result.actes.map((a: { id: string }) => a.id)).toEqual(['a2']);
-        expect(result.scenes.map((s: { id: string }) => s.id)).toEqual(['sc2']);
+        expect(result.actes?.map(a => a.id)).toEqual(['a2']);
+        expect(result.scenes?.map(s => s.id)).toEqual(['sc2']);
     });
 });

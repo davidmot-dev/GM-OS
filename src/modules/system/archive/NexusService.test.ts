@@ -12,6 +12,7 @@ import { NexusService } from './NexusService';
 import { NEXUS_SCHEMA_VERSION } from './nexus.types';
 import type { NexusCampaignState, NexusManifest } from './nexus.types';
 import type { Campaign, Entity, Player, GameSession, AtlasMap, WikiEntry, Clue } from '../../session/store/types';
+import type { SessionOSStore } from '../../session/store/index';
 
 // Mock global Audio API pour MusicEngine (importé via stores)
 vi.stubGlobal('AudioContext', vi.fn().mockImplementation(() => ({
@@ -81,7 +82,7 @@ vi.mock('../../sound/useSoundStore', () => ({
 // Mock i18next
 vi.mock('i18next', () => ({
     default: {
-        t: (key: string, options?: any) => {
+        t: (key: string, options?: Record<string, unknown>) => {
             if (options?.errors) return `${key}: ${options.errors}`;
             if (options?.field) return `${key}: ${options.field}`;
             if (options?.path) return `${key}: ${options.path}`;
@@ -420,7 +421,6 @@ describe('validateManifest', () => {
 
     it('rejette un manifeste sans campaignId', () => {
         // Destructuring intentionnel : on teste ce qui se passe sans campaignId
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { campaignId: _campaignId, ...withoutId } = validManifest;
         const errors = service.validateManifest(withoutId);
         expect(errors.some((e) => e.includes('campaignId'))).toBe(true);
@@ -944,26 +944,28 @@ describe('INTEGRATION : Round-Trip complet (Scrape -> Import)', () => {
         // Vérification : setState doit avoir été appelé pour mettre à jour les entities
         // et inclure l'entité avec son nouveau chemin d'avatar remappé.
         expect(setStateSpy).toHaveBeenCalled();
+
+        const etatPourInjection: Pick<SessionOSStore, 'entities' | 'campaigns' | 'players'> = {
+            entities: [], campaigns: [], players: [],
+        };
+        const prochaineSession = (miseAJour: Parameters<typeof useSessionOSStore.setState>[0]) =>
+            typeof miseAJour === 'function'
+                // Seule frontière du harnais partiel : mêmes tableaux vides qu'avant.
+                ? miseAJour(etatPourInjection as SessionOSStore)
+                : miseAJour;
         
         // On cherche l'appel qui met à jour les entities
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const entitiesUpdateCall = setStateSpy.mock.calls.find((call: any) => {
-            const arg = call[0];
-            const nextState = typeof arg === 'function'
-                ? (arg as any)({ entities: [], campaigns: [], players: [] })
-                : arg;
+        const entitiesUpdateCall = setStateSpy.mock.calls.find(call => {
+            const nextState = prochaineSession(call[0]);
             return nextState && nextState.entities !== undefined;
         });
 
         expect(entitiesUpdateCall).toBeDefined();
         if (entitiesUpdateCall) {
-            const arg = entitiesUpdateCall[0];
-            const nextState = typeof arg === 'function'
-                ? (arg as any)({ entities: [], campaigns: [], players: [] })
-                : arg;
-            const remappedEntity = nextState.entities.find((e: any) => e.id === 'e-001');
+            const nextState = prochaineSession(entitiesUpdateCall[0]);
+            const remappedEntity = nextState.entities?.find(e => e.id === 'e-001');
             expect(remappedEntity).toBeDefined();
-            expect(remappedEntity.avatar).toBe(assetMap['m-avatar-001']);
+            expect(remappedEntity?.avatar).toBe(assetMap['m-avatar-001']);
         }
     });
 

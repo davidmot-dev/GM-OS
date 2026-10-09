@@ -68,3 +68,15 @@ Dernier commit local et poussé : **`d0fd965b`**.
 
 Préserver les fichiers étrangers des guides, du 07/10, de l'e2e et de `.claude`.
 Aucun profil réel, e2e, paquet installé ou service démarré pour ce lot.
+
+## Commit et étape suivante — 09/10
+
+À la demande de David, les onze fichiers du lot 33 sont commités sous
+**`96a80f0b`**. Dernier poussé : **`d0fd965b`**. Le
+[lot 34 archives/session](2026-10-09-lint-archives-et-session.md) retire ensuite
+les **huit annotations** de trois tests, dont celle masquée dans NexusService,
+et la directive devenue inutile. Types, lint ciblé et **145 tests dans huit
+fichiers** passent sur les sources finales. Lint global : **37 avertissements,
+zéro erreur**. Restent **39 annotations** : 34 dans les tests, cinq applicatives
+déjà masquées. Huit fichiers du nouveau lot restent non commités ; reprendre
+inventaires/catalogues (7), puis captures et diagnostics de mémoïsation.

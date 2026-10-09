@@ -851,3 +851,27 @@ local et poussé **`d0fd965b`**. Reprendre archives/session (7 signalées + 1
 masquée), inventaires/catalogues (7), captures (27), mémoïsation/directive,
 puis les quatre annotations masquées Storyboard. L'annotation PDF reste dans
 le chantier v1/v2 au § 1 bis. Préserver les modifications étrangères.
+
+## Lot 34 — archives/session, 09/10
+
+Les onze fichiers Codex du lot 33 sont commités sous **`96a80f0b`**, à la demande
+de David. Dernier poussé **`d0fd965b`**. Le
+[lot 34](2026-10-09-lint-archives-et-session.md) retire ensuite **huit annotations
+dans trois tests**, dont une déjà masquée, et la directive de lint inutile dans
+NexusService. Signatures des espions et mises à jour objet/fonction relues,
+fixtures partielles projetées sans ajouter leurs données absentes. Les 78 noms
+de scénarios et 143 expressions d'assertion sont conservés. Aucun code
+applicatif ni règle de lint modifié.
+
+Types et lint ciblé propres ; **145 tests dans huit fichiers passent** sur les
+sources finales. Lint global : **1 585 fichiers, zéro erreur, 37 avertissements**,
+dont **34 `any`**, tous dans les tests, et trois diagnostics de mémoïsation.
+La baisse de huit alertes comprend sept `any` signalés et une directive inutile.
+Comptage brut : **39 annotations**, 34 dans les tests, cinq applicatives déjà
+masquées. `git diff --check` propre ; fichiers étrangers inchangés. Suite
+complète et construction non rejouées pour ce harnais uniquement.
+
+**Huit fichiers Codex non commités**, trois tests et cinq documents. Dernier
+local **`96a80f0b`**, dernier poussé **`d0fd965b`**. Reprendre inventaires/
+catalogues (7), captures (27), mémoïsation (3), puis Storyboard masqué (4).
+L'annotation PDF reste dans le chantier v1/v2 au § 1 bis.

@@ -10540,6 +10540,28 @@ local et poussé **`d0fd965b`**. Reprendre archives/session (7 avertissements,
 directive et annotations masquées du Storyboard. PDF v1/v2 reste au § 1 bis.
 Préserver les fichiers étrangers.
 
+**09/10 — lot 33 commité, lot 34 archives/session réalisé.** David demande
+« commit et passe à l'étape suivante (GM-OS est éteint) », puis « continue ».
+Les onze fichiers du lot 33 sont commités sous **`96a80f0b`** ; dernier poussé
+**`d0fd965b`**, un commit local d'avance. Les fichiers étrangers restent exclus.
+
+Le [lot 34](2026-10-09-lint-archives-et-session.md) retire **huit annotations
+dans trois tests**, dont celle déjà masquée de NexusService, et sa directive
+de lint devenue inutile. Signatures réelles des espions, projections des
+fixtures et discrimination objet/fonction ; données absentes conservées.
+Les 78 scénarios et 143 expressions d'assertion restent. Aucun code applicatif
+ni règle de lint modifié. Types, lint ciblé et **145 tests dans huit fichiers**
+passent sur les sources finales. Lint global : **1 585 fichiers, zéro erreur,
+37 avertissements**, soit **34 `any` et trois diagnostics de mémoïsation**.
+Comptage brut : **39 annotations**, 34 dans les tests et cinq applicatives
+déjà masquées. `git diff --check` propre ; les 21 fichiers étrangers gardent
+leurs empreintes. Suite complète et construction non rejouées pour ce harnais.
+
+**Huit fichiers Codex non commités**, trois tests et cinq documents. Reprendre
+inventaires/catalogues (7), captures du manuel (27), mémoïsation (3), puis
+Storyboard masqué (4). L'annotation PDF reste dans le chantier v1/v2 au § 1 bis.
+Préserver les fichiers étrangers.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10608,7 +10630,7 @@ Préserver les fichiers étrangers.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lots 31–32 commités et poussés (`d0fd965b`), lot 33 réalisé non commité**, § 127 : **540 → 45 avertissements, zéro erreur** ; 41 diagnostics `any`, 42 annotations dans les tests et 5 applicatives déjà masquées | Archives/session (7 + 1 masquée), inventaires/catalogues (7), captures (27), puis mémoïsation/directive et Storyboard masqué ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-regles-jets-et-pilotes.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lot 33 commité (`96a80f0b`), lot 34 réalisé non commité**, dernier poussé `d0fd965b`, § 127 : **540 → 37 avertissements, zéro erreur** ; 34 diagnostics `any`, 34 annotations dans les tests et 5 applicatives déjà masquées | Inventaires/catalogues (7), captures (27), mémoïsation (3), puis Storyboard masqué (4) ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-archives-et-session.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

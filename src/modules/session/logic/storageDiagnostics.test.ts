@@ -18,7 +18,6 @@ class FakeStorage implements Storage {
     setItem(key: string, value: string): void { this.map.set(key, value); }
     removeItem(key: string): void { this.map.delete(key); }
     clear(): void { this.map.clear(); }
-    [name: string]: any;
 }
 
 describe('measureEntryBytes', () => {

@@ -381,3 +381,31 @@ local et poussé : **`d0fd965b`**. Reprendre archives/session (7 avertissements,
 8 annotations), inventaires/catalogues (7), captures (27), puis mémoïsation
 et directive. Revoir les quatre annotations masquées du Storyboard séparément ;
 PDF v1/v2 reste au § 1 bis. Préserver les fichiers étrangers.
+
+## Commit du lot 33 et lot 34 — archives/session
+
+David demande « commit et passe à l'étape suivante (GM-OS est éteint) », puis
+« continue ». Les onze fichiers Codex du lot 33 sont commités sous
+**`96a80f0b`**. Dernier poussé **`d0fd965b`**, un commit local d'avance.
+Les modifications étrangères restent hors du commit.
+
+Le [lot 34](2026-10-09-lint-archives-et-session.md) retire **huit annotations
+dans trois tests**, dont une déjà masquée dans NexusService. Espions Session
+avec signatures réelles, projections des fixtures partielles, discrimination
+objet/fonction des écritures Nexus et Session ; indexeur inutile de FakeStorage
+retiré. Les données absentes restent absentes. La directive `no-explicit-any`
+correspondante et la directive `no-unused-vars` inutile de Nexus sont retirées.
+Aucun code applicatif ni règle de lint modifié. Les **78 scénarios et 143
+expressions d'assertion** sont conservés.
+
+Types et lint ciblé propres ; **145 tests dans huit fichiers passent** sur les
+sources finales. Lint global : **1 585 fichiers, zéro erreur, 37 avertissements**
+(34 `any`, trois diagnostics de mémoïsation). Comptage brut : **39 annotations**,
+34 dans les tests, cinq applicatives déjà masquées. `git diff --check` propre,
+21 fichiers étrangers inchangés par empreinte. Suite complète et construction
+non rejouées pour ce harnais uniquement.
+
+**Huit fichiers Codex non commités**, trois tests et cinq documents. Dernier
+local **`96a80f0b`**, dernier poussé **`d0fd965b`**. Reprendre inventaires/
+catalogues (7), captures (27), mémoïsation (3), puis annotations masquées du
+Storyboard (4). PDF v1/v2 reste au § 1 bis ; préserver les fichiers étrangers.
