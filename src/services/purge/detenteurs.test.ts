@@ -1,4 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { SessionOSState } from '../../modules/session/useSessionOSStore';
+import type { Journal } from '../../modules/journal/types';
+import type { StoryboardMoment } from '../../modules/storyboard/useStoryboardStore';
+import type { FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
+import type { Playlist } from '../../modules/music/useMusicStore';
+import type { GabaritDAdversaire } from '../../modules/combat/useBestiaireStore';
+import type { GemDefinition } from '../../stores/useGemStore';
+import type { QuestionNotee } from '../../modules/ai/lacunes/useJournalDesLacunes';
+import type { CibleCampagne } from './detenteursDeLaCampagne';
+import type { CiblePilote } from './detenteursDuPilote';
+import type { Detenteur } from './typesDeLaPurge';
 
 /**
  * **Ce que chaque détenteur rend, et surtout ce qu'il ne rend pas.**
@@ -30,37 +41,50 @@ function magasin<T extends object>(faire: () => T) {
     };
 }
 
+/* Les fixtures ne portent que les champs utiles au recensement et à la purge.
+   Leurs projections reprennent les modèles réels, sans prétendre fournir les
+   magasins complets. Le jeu et le titre ne servent que dans certains cas. */
+type CampagneDeTest = Pick<SessionOSState['campaigns'][number], 'id' | 'name'>
+    & Partial<Pick<SessionOSState['campaigns'][number], 'system'>>;
+type PiloteDeTest = Pick<SessionOSState['customGameDrivers'][number], 'id' | 'name' | 'templateId'>;
+type ModeleDeTest = Pick<SessionOSState['customSheetTemplates'][number], 'id'>
+    & Partial<Pick<SessionOSState['customSheetTemplates'][number], 'name'>>;
+type JournalDeTest = Pick<Journal, 'id' | 'campaignId'> & Partial<Pick<Journal, 'title'>>;
+
 const session = magasin(() => ({
-    campaigns: [] as any[],
-    scenes: [] as any[],
-    sessions: [] as any[],
-    entities: [] as any[],
-    atlasMaps: [] as any[],
-    wikiEntries: [] as any[],
-    timelineEvents: [] as any[],
-    clues: [] as any[],
-    actes: [] as any[],
-    players: [] as any[],
-    lootPool: [] as any[],
-    lootHistory: [] as any[],
-    decks: [] as any[],
+    campaigns: [] as CampagneDeTest[],
+    scenes: [] as Pick<SessionOSState['scenes'][number], 'id' | 'campaignId'>[],
+    sessions: [] as SessionOSState['sessions'],
+    entities: [] as SessionOSState['entities'],
+    atlasMaps: [] as SessionOSState['atlasMaps'],
+    wikiEntries: [] as SessionOSState['wikiEntries'],
+    timelineEvents: [] as SessionOSState['timelineEvents'],
+    clues: [] as SessionOSState['clues'],
+    actes: [] as SessionOSState['actes'],
+    players: [] as SessionOSState['players'],
+    lootPool: [] as SessionOSState['lootPool'],
+    lootHistory: [] as SessionOSState['lootHistory'],
+    decks: [] as Pick<SessionOSState['decks'][number], 'id' | 'systemId'>[],
     deckStates: {} as Record<string, unknown>,
-    customGameDrivers: [] as any[],
-    customSheetTemplates: [] as any[],
-    deleteCampaign: vi.fn(),
-    deleteGameDriver: vi.fn(),
-    deleteSheetTemplate: vi.fn(),
+    customGameDrivers: [] as PiloteDeTest[],
+    customSheetTemplates: [] as ModeleDeTest[],
+    deleteCampaign: vi.fn<SessionOSState['deleteCampaign']>(),
+    deleteGameDriver: vi.fn<SessionOSState['deleteGameDriver']>(),
+    deleteSheetTemplate: vi.fn<SessionOSState['deleteSheetTemplate']>(),
 }));
-const journal = magasin(() => ({ journals: [] as any[] }));
-const storyboard = magasin(() => ({ moments: [] as any[] }));
+const journal = magasin(() => ({ journals: [] as JournalDeTest[] }));
+const storyboard = magasin(() => ({ moments: [] as Pick<StoryboardMoment, 'id' | 'campaignId'>[] }));
 const ressources = magasin(() => ({ reserves: {} as Record<string, unknown> }));
-const favoris = magasin(() => ({ favorites: [] as any[] }));
-const musique = magasin(() => ({ playlists: [] as any[] }));
+const favoris = magasin(() => ({ favorites: [] as FavoriteEntity[] }));
+const musique = magasin(() => ({ playlists: [] as Pick<Playlist, 'id' | 'name' | 'campagneId'>[] }));
 const combat = magasin(() => ({ combatsGares: {} as Record<string, unknown> }));
-const bestiaire = magasin(() => ({ gabarits: [] as any[], repartitions: {} as Record<string, unknown> }));
-const gemmes = magasin(() => ({ gems: [] as any[] }));
+const bestiaire = magasin(() => ({
+    gabarits: [] as Pick<GabaritDAdversaire, 'id' | 'jeuId'>[],
+    repartitions: {} as Record<string, unknown>,
+}));
+const gemmes = magasin(() => ({ gems: [] as Pick<GemDefinition, 'id' | 'name' | 'systemOverrides'>[] }));
 const ulanzi = magasin(() => ({ selection: {} as Record<string, unknown> }));
-const lacunes = magasin(() => ({ questions: [] as any[] }));
+const lacunes = magasin(() => ({ questions: [] as QuestionNotee[] }));
 
 vi.mock('../../modules/session/useSessionOSStore', () => ({ useSessionOSStore: session }));
 vi.mock('../../modules/journal/useJournalStore', () => ({ useJournalStore: journal }));
@@ -77,7 +101,7 @@ vi.mock('../../data/defaultSheetTemplates', () => ({
     DEFAULT_SHEET_TEMPLATES: [{ id: 'tpl-integre', name: 'Référence', isBuiltin: true }],
 }));
 vi.mock('../../modules/session/store/tousLesPilotes', () => ({
-    tousLesPilotes: (customs: any[]) => customs,
+    tousLesPilotes: (customs: PiloteDeTest[]) => customs,
 }));
 
 const {
@@ -96,7 +120,11 @@ beforeEach(() => {
     vi.clearAllMocks();
 });
 
-const detenteur = (liste: readonly any[], nom: string) => liste.find(d => d.module === nom)!;
+function detenteur<Cible>(liste: readonly Detenteur<Cible>[], nom: string): Detenteur<Cible> {
+    const trouve = liste.find(d => d.module === nom);
+    if (!trouve) throw new Error(`Détenteur absent du registre : ${nom}`);
+    return trouve;
+}
 
 describe('la cible d’une campagne fige ses scènes', () => {
     it('emporte la liste des scènes, parce que Session-OS va les effacer', () => {
@@ -113,7 +141,7 @@ describe('la cible d’une campagne fige ses scènes', () => {
 });
 
 describe('les résidus d’une campagne', () => {
-    const cible = { id: 'c1', nom: 'Milo', sceneIds: ['s1', 's2'] };
+    const cible: CibleCampagne = { id: 'c1', nom: 'Milo', sceneIds: ['s1', 's2'] };
 
     it('Combat-OS rend les combats garés de SES scènes, et laisse les autres', () => {
         /*
@@ -161,7 +189,7 @@ describe('les résidus d’une campagne', () => {
 
         expect(d.recenser(cible)).toEqual([{ sujet: 'journaux', compte: 1 }]);
         d.purger(cible);
-        expect(journal.lire().journals.map((j: any) => j.id)).toEqual(['j2', 'j3']);
+        expect(journal.lire().journals.map(j => j.id)).toEqual(['j2', 'j3']);
     });
 
     it('les réserves de table partent par campagne, et elles seules', () => {
@@ -180,12 +208,12 @@ describe('les résidus d’une campagne', () => {
     });
 
     it('un module muet rend le recensement incomplet, et il est nommé', () => {
-        const fautif = [{
+        const fautif: Detenteur<CibleCampagne>[] = [{
             module: 'Fautif',
             recenser: () => { throw new Error('magasin illisible'); },
             purger: () => undefined,
         }];
-        const recensement = recenserLesDetenteurs(fautif as any, cible);
+        const recensement = recenserLesDetenteurs(fautif, cible);
         expect(recensement.complet).toBe(false);
         expect(recensement.modulesEnEchec).toEqual(['Fautif']);
     });
@@ -241,7 +269,7 @@ describe('les garde-fous d’un pilote', () => {
 });
 
 describe('les résidus d’un pilote', () => {
-    const cible = { id: 'alien', nom: 'Alien' };
+    const cible: CiblePilote = { id: 'alien', nom: 'Alien' };
 
     it('le bestiaire rend ses gabarits et ses répartitions', () => {
         bestiaire.setState({
@@ -263,7 +291,7 @@ describe('les résidus d’un pilote', () => {
         // `dnd` ne doit pas emporter `dnd-5e` : la clé est `jeuId:archetype`,
         // donc c'est le deux-points qui fait la frontière, pas une inclusion.
         bestiaire.setState({ gabarits: [], repartitions: { 'dnd-5e:brute': {} } });
-        detenteur(LES_DETENTEURS_DE_PILOTE, 'Bestiaire').purger({ id: 'dnd', nom: 'D&D' } as any);
+        detenteur(LES_DETENTEURS_DE_PILOTE, 'Bestiaire').purger({ id: 'dnd', nom: 'D&D' });
         expect(Object.keys(bestiaire.lire().repartitions)).toEqual(['dnd-5e:brute']);
     });
 
@@ -293,7 +321,7 @@ describe('les résidus d’un pilote', () => {
 
         expect(d.recenser(cible)).toEqual([{ sujet: 'paquets de ce jeu', compte: 1 }]);
         d.purger(cible);
-        expect(session.lire().decks.map((x: any) => x.id)).toEqual(['d2']);
+        expect(session.lire().decks.map(x => x.id)).toEqual(['d2']);
         expect(Object.keys(session.lire().deckStates)).toEqual(['d2']);
     });
 

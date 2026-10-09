@@ -273,3 +273,30 @@ contrat. Contexte Oracle (12), enregistrement SyncServer (9), captures du
 manuel (27) distinctes ; ensuite mémoïsation et directive.
 Préserver les fichiers étrangers ; ne pas changer le moteur HTML ni rouvrir
 les interfaces partagées. La migration PDF v1/v2 reste séparée au § 1 bis.
+
+## Lot 29 commité, lot 30 purge/détenteurs
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Le lot 29 est commité en **`c282f2f7`**, ses huit fichiers Codex uniquement ;
+dernier poussé `8e6a0939`. Les anciennes mentions « non commités » sont historiques.
+
+Le [lot 30](2026-10-09-lint-purge-detenteurs.md) retire les **28 `any`** du seul
+test des détenteurs. Les magasins factices reprennent les types des modèles et
+des projections des champs exercés ; les callbacks de suppression sont typés,
+les cartes à contenu opaque restent inconnues. Le lecteur de détenteur conserve
+la cible générique et refuse explicitement un module absent. Fixtures, assertions,
+recensement fautif et espions sans cascade réelle restent en place. Aucun code
+applicatif ni donnée réelle modifié.
+
+**21 tests de purge/complétude passent**, types globaux et lint ciblé propres.
+La construction et les 7 198 tests globaux restent les contrôles du lot 29 ;
+le lot 30 ne modifie qu'un harnais de tests et ne les rejoue pas.
+Lint global : **1 585 fichiers, zéro erreur et 110 avertissements**, dont
+**106 `any`, tous dans les tests**, trois diagnostics de mémoïsation et une
+directive inutile. Comptage recoupé par fichier/règle ; `git diff --check` propre.
+
+**Six fichiers Codex non commités**, un test et cinq documents. Reprendre
+**contexte Oracle (12)**, puis enregistrement SyncServer (9), autres tests et
+diagnostics ciblés. Captures du manuel distinctes, migration PDF au § 1 bis.
+Préserver les fichiers étrangers ; ne pas transformer les espions en vraies
+purges ni refaire les contrats de la couture des fiches.

@@ -10442,6 +10442,30 @@ par contrat ; captures du manuel (27) distinctes, puis diagnostics ciblés.
 Préserver les fichiers étrangers et garder la migration PDF séparée au § 1 bis.
 [État du 09/10](2026-10-09-etat-et-reprise.md).
 
+**09/10, demande suivante :** David demande « commit et passe à l'étape suivante
+(GM-OS est éteint) ». Les huit fichiers Codex du lot 29 couture sont commités
+en **`c282f2f7`**, sans fichier étranger ; dernier poussé **`8e6a0939`**.
+
+Le [lot 30 purge/détenteurs](2026-10-09-lint-purge-detenteurs.md) retire les
+**28 `any`** du seul test des détenteurs : collections issues des modèles et
+projections des champs exercés, callbacks de suppression typés et lecteur
+générique sur la cible. Les fabriques des onze magasins, leurs sentinelles,
+les assertions et le recensement fautif restent. Code de purge applicatif intact.
+
+**21 tests de purge/complétude passent**, types globaux et lint ciblé propres.
+Lint global : **1 585 fichiers, zéro erreur et 110 avertissements**, dont
+**106 `any`, tous dans les tests**, trois diagnostics de mémoïsation et une
+directive inutile. Comptage recoupé par fichier/règle ; `git diff --check` propre.
+Le lot ne change qu'un harnais de tests : construction et suite complète
+restent les validations du lot 29, sans nouveau passage annoncé.
+
+Lot 30 réalisé, validé et documenté, **six fichiers Codex non commités** : un
+test et cinq documents. Dernier local **`c282f2f7`**, dernier poussé **`8e6a0939`**.
+Reprendre **contexte Oracle (12)**, puis enregistrement SyncServer (9) et autres
+tests par contrat ; captures du manuel (27) distinctes, puis diagnostics ciblés.
+Préserver les fichiers étrangers ; migration PDF séparée au § 1 bis.
+[État du 09/10](2026-10-09-etat-et-reprise.md).
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10510,7 +10534,7 @@ Préserver les fichiers étrangers et garder la migration PDF séparée au § 1 
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lot 28 commité (`853a9a28`), lot 29 couture des fiches réalisé non commité**, dernier poussé `8e6a0939`, § 127 : **540 → 138 avertissements, zéro erreur**, zéro `any` applicatif et 134 dans les tests | Purge/détenteurs (28), puis autres tests par contrat ; trois diagnostics de mémoïsation et une directive. Captures du manuel distinctes, migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [couture des fiches](2026-10-09-lint-couture-des-fiches.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lot 29 commité (`c282f2f7`), lot 30 purge/détenteurs réalisé non commité**, dernier poussé `8e6a0939`, § 127 : **540 → 110 avertissements, zéro erreur**, zéro `any` applicatif et 106 dans les tests | Contexte Oracle (12), puis enregistrement SyncServer (9) et autres tests par contrat ; trois diagnostics de mémoïsation et une directive. Captures du manuel distinctes, migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [purge/détenteurs](2026-10-09-lint-purge-detenteurs.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

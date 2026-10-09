@@ -758,3 +758,24 @@ code/tests, cinq documents). Reprendre purge/détenteurs (28), puis les autres
 groupes de tests par contrat, avant mémoïsation/directive. Captures du manuel
 (27) et migration PDF distinctes. État courant dans la
 [note du 09/10](2026-10-09-etat-et-reprise.md).
+
+## Trentième lot — purge/détenteurs, 09/10
+
+Le lot 29 est commité en **`c282f2f7`**, huit fichiers Codex ; dernier poussé
+`8e6a0939`. Le [lot 30](2026-10-09-lint-purge-detenteurs.md) retire les **28 `any`**
+du seul test des détenteurs. Les magasins mimés conservent leurs fabriques et
+sentinelles, avec collections et signatures issues des modèles ; leurs fixtures
+partielles sont des projections explicites. Le lecteur des détenteurs conserve
+leur cible générique et garde leur présence. Les assertions et le module fautif
+sont conservés, sans modifier le service ou les magasins applicatifs.
+
+**21 tests de purge/complétude passent**, types globaux et lint ciblé propres.
+Lint global : **1 585 fichiers, zéro erreur et 110 avertissements**, dont
+**106 `any`, tous dans les tests**, trois diagnostics de mémoïsation et une
+directive inutile. Comptage recoupé par fichier/règle ; `git diff --check` propre.
+Construction et suite complète restent celles du lot 29, pas rejouées pour
+ce harnais uniquement.
+
+**Six fichiers Codex non commités**, un test et cinq documents. Reprendre
+contexte Oracle (12), puis enregistrement SyncServer (9), autres groupes par
+contrat et diagnostics restants. Captures du manuel et migration PDF distinctes.

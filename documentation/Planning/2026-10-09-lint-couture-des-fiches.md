@@ -93,3 +93,12 @@ dont contexte Oracle (12) et enregistrement SyncServer (9). Les captures du
 manuel (27) restent distinctes. Terminer ensuite les trois diagnostics de
 mémoïsation et la directive inutile. La migration PDF v1/v2 du § 1 bis reste
 un sujet séparé ; ne pas rouvrir les contrats ou changer le moteur HTML.
+
+## Mise à jour — lot 29 commité
+
+À la nouvelle demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**,
+les huit fichiers Codex sont commités en **`c282f2f7`**, sans fichier étranger.
+Aucun push demandé ; dernier poussé `8e6a0939`. Les contrôles précédents ne
+sont pas rejoués pour le commit. La suite est le
+[lot 30 purge/détenteurs](2026-10-09-lint-purge-detenteurs.md) ; les mentions
+« non commités » ci-dessus décrivent l'état avant cette demande.
