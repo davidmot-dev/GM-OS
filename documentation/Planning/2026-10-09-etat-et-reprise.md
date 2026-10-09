@@ -409,3 +409,32 @@ non rejouées pour ce harnais uniquement.
 local **`96a80f0b`**, dernier poussé **`d0fd965b`**. Reprendre inventaires/
 catalogues (7), captures (27), mémoïsation (3), puis annotations masquées du
 Storyboard (4). PDF v1/v2 reste au § 1 bis ; préserver les fichiers étrangers.
+
+## Commit du lot 34 et lot 35 — inventaires/catalogues
+
+David demande « commit et passe à l'étape suivante (GM-OS est éteint) ».
+Les huit fichiers Codex du lot 34 sont commités sous **`4cbca217`**, sans les
+modifications étrangères. Dernier poussé **`d0fd965b`**, deux commits locaux
+d'avance.
+
+Le [lot 35](2026-10-09-lint-inventaires-et-catalogues.md) retire **sept
+annotations dans deux tests** : clés de reprise des médias (4), catalogue des
+effets Light (3). Table de langues et dictionnaires typés, accès JSON directs,
+conversion de nom `as string` inutile retirée. Les clés, interpolations, alias,
+gardes du moteur et attentes sur le guide sont conservés. **16 définitions de
+cas et 23 expressions d'assertion** inchangées. Aucun code applicatif, traduction,
+catalogue ou règle de lint modifié.
+
+Types et lint ciblé propres ; **64 tests dans six fichiers passent**. Lint
+global : **1 585 fichiers, zéro erreur, 30 avertissements**, dont **27 `any`**
+dans les captures du manuel et trois diagnostics de mémoïsation. Comptage
+brut : **32 annotations**, 27 dans les captures, cinq applicatives déjà
+masquées. Plus d'annotation explicite `any` dans les tests unitaires de `src/` et
+`electron/`. `git diff --check` propre ; 21 fichiers étrangers inchangés par
+empreinte. Suite complète et construction non rejouées pour ce lot de tests.
+
+**Sept fichiers Codex non commités**, deux tests et cinq documents. Dernier
+local **`4cbca217`**, dernier poussé **`d0fd965b`**. Reprendre captures du manuel
+(27), mémoïsation (3), puis Storyboard masqué (4). Construire avant les e2e et
+relire les images ; préserver `e2e/lancerGmOs.ts`, les guides et les autres
+fichiers étrangers. PDF v1/v2 reste au § 1 bis.

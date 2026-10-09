@@ -147,8 +147,8 @@ describe('le catalogue des effets — cohérence interne', () => {
     });
 
     it('tout effet proposé porte un nom dans les deux langues', () => {
-        const fr = (FR as any).light.footer.effects;
-        const en = (EN as any).light.footer.effects;
+        const fr: Record<string, string> = FR.light.footer.effects;
+        const en: Record<string, string> = EN.light.footer.effects;
         const muets = offerts.filter(e => !fr[cleDeTraduction(e)] || !en[cleDeTraduction(e)]);
         expect(muets).toEqual([]);
     });
@@ -365,7 +365,7 @@ describe('le catalogue des effets — cohérence avec le matériel', () => {
  */
 describe('le guide du meneur suit le catalogue', () => {
     it('décrit chaque effet offert, sous son nom français', () => {
-        const fr = (FR as any).light.footer.effects;
+        const fr: Record<string, string> = FR.light.footer.effects;
         const jouables = offerts.filter(e => !HORS_BOUCLE.includes(e));
 
         /* Témoin : un guide illisible passerait au vert sans rien garder. */
@@ -382,7 +382,7 @@ describe('le guide du meneur suit le catalogue', () => {
           garde.
         */
         const absents = jouables
-            .map(e => ({ e, nom: fr[cleDeTraduction(e)] as string }))
+            .map(e => ({ e, nom: fr[cleDeTraduction(e)] }))
             .filter(({ nom }) => nom && !GUIDE.includes(`**${nom}**`))
             .map(({ e, nom }) => `${e} (« ${nom} »)`);
 

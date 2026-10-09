@@ -875,3 +875,25 @@ complète et construction non rejouées pour ce harnais uniquement.
 local **`96a80f0b`**, dernier poussé **`d0fd965b`**. Reprendre inventaires/
 catalogues (7), captures (27), mémoïsation (3), puis Storyboard masqué (4).
 L'annotation PDF reste dans le chantier v1/v2 au § 1 bis.
+
+## Lot 35 — inventaires/catalogues, 09/10
+
+Les huit fichiers du lot 34 sont commités sous **`4cbca217`**, à la demande de
+David. Dernier poussé **`d0fd965b`**, deux commits locaux d'avance. Le
+[lot 35](2026-10-09-lint-inventaires-et-catalogues.md) retire ensuite **sept
+annotations dans deux tests** : reprise des médias et catalogue des effets.
+Projections des traductions, dictionnaires typés et accès JSON directs ; les
+16 définitions de cas et 23 expressions d'assertion restent. Aucun code
+applicatif, traduction, catalogue ni règle de lint modifié.
+
+Types et lint ciblé propres ; **64 tests dans six fichiers passent**. Lint
+global : **1 585 fichiers, zéro erreur, 30 avertissements** : **27 `any` dans
+les captures du manuel**, trois diagnostics de mémoïsation. Comptage brut :
+**32 annotations**, 27 dans les tests de captures, cinq applicatives déjà
+masquées. Les tests unitaires de `src/` et `electron/` n'ont plus d'annotation
+explicite `any`. `git diff --check` propre ; fichiers étrangers inchangés. Suite
+complète et construction non rejouées pour ce lot de tests uniquement.
+
+**Sept fichiers Codex non commités**, deux tests et cinq documents. Reprendre
+captures (27), mémoïsation (3), puis Storyboard masqué (4). Préserver le harnais
+e2e et les guides étrangers ; l'annotation PDF reste au chantier v1/v2, § 1 bis.

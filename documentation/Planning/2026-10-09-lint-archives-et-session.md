@@ -69,3 +69,15 @@ local **`96a80f0b`**, dernier poussé **`d0fd965b`**.
    L'annotation PDF reste liée à la migration v1/v2 au § 1 bis du registre.
 
 Préserver les fichiers étrangers des guides, du 07/10, de l'e2e et de `.claude`.
+
+## Commit et étape suivante — 09/10
+
+À la demande de David, les huit fichiers Codex du lot 34 sont commités sous
+**`4cbca217`**. Dernier poussé **`d0fd965b`**, deux commits locaux d'avance.
+Le [lot 35 inventaires/catalogues](2026-10-09-lint-inventaires-et-catalogues.md)
+retire ensuite **sept annotations dans deux tests**. Types, lint ciblé et
+**64 tests dans six fichiers** passent. Lint global : **30 avertissements,
+zéro erreur** (27 `any` dans les captures, trois diagnostics de mémoïsation).
+Comptage brut : **32 annotations**, 27 dans les tests de captures, cinq
+applicatives déjà masquées. Sept fichiers du nouveau lot restent non commités ;
+reprendre les captures du manuel, en préservant l'e2e et les guides étrangers.
