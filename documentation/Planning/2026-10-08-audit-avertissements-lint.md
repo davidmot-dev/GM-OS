@@ -920,3 +920,26 @@ complète n'est pas rejouée. Huit fichiers Codex non commités. Reprendre les
 trois diagnostics de mémoïsation, puis les quatre annotations Storyboard ;
 PDF v1/v2 séparé au § 1 bis. Le cadrage du dernier jet est également consigné
 dans cette section, sans modifier les captures des guides dans ce lot.
+
+## Lot 37 — mémoïsation des pilotes, 09/10
+
+Le lot 36 est commité et poussé sous **`916a3842`**, à la demande de David,
+avec les trois commits locaux précédents. Le pré-push passe : types,
+lint (trois avertissements, zéro erreur), **7 198 tests dans 566 fichiers**
+(un fichier et quatre tests ignorés), construction.
+
+Le [lot 37](2026-10-09-lint-memoisation-des-pilotes.md) retire les **trois
+diagnostics de mémoïsation**, en lisant les pilotes dans des sélecteurs
+réactifs. Les objets des pilotes, l'ordre de résolution, les caches et leurs
+dépendances restent. Aucune règle désactivée ni directive ajoutée.
+
+Lint global : **1 585 fichiers, zéro erreur, zéro avertissement**. Les **540
+avertissements initiaux sont traités**. Construction avec `tsc -b` et **96
+tests dans neuf fichiers** passent, dont huit nouveaux cas. Suite complète
+non rejouée après ce lot ; aucun nouvel e2e.
+
+**Neuf fichiers Codex non commités**, deux écrans, deux tests et cinq documents.
+Les **cinq annotations applicatives déjà masquées** restent : quatre
+Storyboard à revoir ensemble, une PDF dans la migration séparée du § 1 bis.
+Zéro annotation explicite dans les tests. Fichiers étrangers inchangés et
+`git diff --check` propre. Dernier local et poussé **`916a3842`**.

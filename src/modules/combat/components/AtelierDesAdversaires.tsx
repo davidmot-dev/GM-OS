@@ -71,7 +71,7 @@ type Source = { genre: 'archetype'; id: string } | { genre: 'gabarit'; id: strin
 
 export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) => {
     const {
-        getActiveDriver, customGameDrivers, customSheetTemplates, addEntity, activeCampaignId,
+        customSheetTemplates, addEntity, activeCampaignId,
     } = useSessionOSStore();
     const addCombatant = useCombatStore(e => e.addCombatant);
     const {
@@ -83,9 +83,10 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
       dans la liste COMPLETE, references comprises : la Forge en montre dix, et
       seuls les pilotes forges vivent dans `customGameDrivers`.
     */
-    const driver = jeuDemande
-        ? tousLesPilotes(customGameDrivers ?? []).find(d => d.id === jeuDemande) ?? getActiveDriver()
-        : getActiveDriver();
+    // Le sélecteur conserve l'identité du pilote du magasin pour les dépendances des champs.
+    const driver = useSessionOSStore(etat => jeuDemande
+        ? tousLesPilotes(etat.customGameDrivers ?? []).find(d => d.id === jeuDemande) ?? etat.getActiveDriver()
+        : etat.getActiveDriver());
     const jeuId = driver?.id ?? 'sans-pilote';
 
     /** Les champs de la fiche du jeu — la seule source des échelles. */

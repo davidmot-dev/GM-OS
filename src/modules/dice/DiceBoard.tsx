@@ -137,8 +137,9 @@ const DiceBoard: React.FC = () => {
         setFormulaInput('2d6+5');
     };
 
-    const { getActiveDriver, players, activeCampaignId, updateCharacterSheetData } = useSessionOSStore();
-    const activeDriver = getActiveDriver();
+    const { players, activeCampaignId, updateCharacterSheetData } = useSessionOSStore();
+    // Une dépendance réactive, avec l'identité du pilote conservée entre deux changements.
+    const activeDriver = useSessionOSStore(state => state.getActiveDriver());
     const [useSystemDriver, setUseSystemDriver] = useState(false);
 
     /*

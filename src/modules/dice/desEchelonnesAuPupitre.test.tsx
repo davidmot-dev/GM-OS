@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 
 /**
  * **Le pilote actif écrasait les dés échelonnés du pupitre.**
@@ -163,5 +163,44 @@ describe('les dés échelonnés au pupitre, pilote actif', () => {
         reglerEtLancer('A', 'B');
 
         expect(useDiceStore.getState().lastRoll?.title).toContain('D12 + D10');
+    });
+
+    it('relit les dés du pilote remplacé sans changer son identifiant', () => {
+        ouvrirLaCampagneAvec(PILOTE_MUET);
+        render(<DiceBoard />);
+        act(() => ouvrirLaCampagneAvec({
+            ...PILOTE_MUET,
+            dice: { defaultDice: '1d8', logic: 'sum', engine: 'standard' },
+        }));
+
+        expect((screen.getByLabelText('dice.inputs.mode') as HTMLSelectElement).value).toBe('standard');
+        fireEvent.click(screen.getByText('dice.actions.roll'));
+        expect(facesLancees()).toEqual([8]);
+    });
+
+    it('une mise à jour sans rapport conserve le mode et la poignée choisis', () => {
+        ouvrirLaCampagneAvec(PILOTE_MUET);
+        render(<DiceBoard />);
+        fireEvent.change(screen.getByLabelText('dice.inputs.mode'), { target: { value: 'yze-echelonne' } });
+        fireEvent.change(screen.getByLabelText('Attribut'), { target: { value: 'A' } });
+        fireEvent.change(screen.getByLabelText('Compétence'), { target: { value: 'C' } });
+
+        act(() => useSessionOSStore.setState({ selectedEntityId: 'autre-entite' }));
+
+        expect((screen.getByLabelText('dice.inputs.mode') as HTMLSelectElement).value).toBe('yze-echelonne');
+        fireEvent.click(screen.getByText('dice.actions.roll'));
+        expect(facesLancees()).toEqual([12, 8]);
+    });
+
+    it('fermer la campagne rend le choix du dé au meneur', () => {
+        ouvrirLaCampagneAvec(PILOTE_MUET);
+        render(<DiceBoard />);
+        act(() => useSessionOSStore.setState({ activeCampaignId: null }));
+
+        expect((screen.getByLabelText('dice.inputs.mode') as HTMLSelectElement).value).toBe('standard');
+        fireEvent.click(screen.getByText('d10'));
+        fireEvent.click(screen.getByText('dice.actions.roll'));
+        // La fermeture conserve le nombre de dés réglé par le pilote, ici deux.
+        expect(facesLancees()).toEqual([10, 10]);
     });
 });

@@ -10609,6 +10609,30 @@ tests. Pas de nouvelle suite Vitest complète. Cadrage du dernier jet au § 1 bi
 documents. Reprendre mémoïsation (3), puis Storyboard masqué (4). Préserver le
 lanceur, les guides et les autres fichiers étrangers. PDF v1/v2 séparé au § 1 bis.
 
+**09/10 — lot 36 poussé, lot 37 mémoïsation réalisé : lint global propre.**
+À la demande « commit, pousse et passe à l'étape suivante (GM-OS est éteint) »,
+les huit fichiers Codex du lot 36 sont commités et poussés sous **`916a3842`**,
+avec les trois commits locaux précédents. Pré-push : types, lint (trois
+avertissements, zéro erreur), **7 198 tests dans 566 fichiers** (un fichier et
+quatre tests ignorés), construction ; modifications étrangères hors du commit.
+
+Le [lot 37](2026-10-09-lint-memoisation-des-pilotes.md) retire les **trois
+derniers avertissements** : AtelierDesAdversaires (1), DiceBoard (2). Les
+pilotes sont lus dans des sélecteurs réactifs conservant leur identité et
+l'ordre de résolution ; les caches et leurs dépendances restent. Aucun
+moteur, rendu ou règle de lint modifié ; React Compiler n'est pas activé.
+
+Lint global : **1 585 fichiers, zéro erreur, zéro avertissement** (**540 → 0**).
+Construction avec `tsc -b` et **96 tests dans neuf fichiers** passent ; huit
+cas ajoutés sur les changements de fiche/pilote et les réglages conservés.
+Suite complète non rejouée après ce lot, aucun nouvel e2e. Comptage brut :
+**cinq annotations applicatives déjà masquées**, zéro dans les tests.
+`git diff --check` propre ; empreintes des 21 fichiers étrangers inchangées.
+
+**Neuf fichiers Codex non commités**, deux écrans, deux tests et cinq documents.
+Dernier local et poussé **`916a3842`**. Reprendre Storyboard masqué (4) ; PDF
+v1/v2 et cadrage du dernier jet séparés au § 1 bis. Préserver les fichiers étrangers.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10677,7 +10701,7 @@ lanceur, les guides et les autres fichiers étrangers. PDF v1/v2 séparé au § 
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lot 35 commité (`1413f6da`), lot 36 réalisé non commité**, dernier poussé `d0fd965b`, § 127 : **540 → 3 avertissements, zéro erreur** ; zéro `any` dans les tests ; 5 applicatives déjà masquées ; types/construction, 52 tests de protection et 79 e2e passent, 78 captures relues | Mémoïsation (3), puis Storyboard masqué (4) ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-captures-du-manuel.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lint global propre**, lot 36 poussé (`916a3842`), lot 37 réalisé non commité, § 127 : **540 → 0 avertissement, zéro erreur** ; zéro `any` dans les tests ; 5 applicatives déjà masquées ; construction/types et 96 tests ciblés passent | Storyboard masqué (4) ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-memoisation-des-pilotes.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

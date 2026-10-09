@@ -85,3 +85,18 @@ Comptage syntaxique des TS/TSX suivis dans `src/`, `electron/`, `e2e/` : **cinq
 annotations explicites au total**, toutes applicatives et déjà masquées ;
 **zéro dans les tests**, unitaires comme e2e. Préserver les modifications
 étrangères des guides, du lanceur, du 07/10 et de `.claude`.
+
+## Publication et étape suivante
+
+À la demande de David « commit, pousse et passe à l'étape suivante (GM-OS est
+éteint) », les huit fichiers du lot 36 sont commités et poussés sous
+**`916a3842`**. Le pré-push passe : types, lint (trois avertissements, zéro
+erreur), **7 198 tests dans 566 fichiers** (un fichier et quatre tests ignorés),
+construction. Les trois commits locaux précédents sont également publiés.
+
+Le [lot 37 — mémoïsation des pilotes](2026-10-09-lint-memoisation-des-pilotes.md)
+retire les **trois derniers avertissements** : sélecteurs réactifs, caches et
+résolution des pilotes conservés. Lint global propre, construction/types et
+**96 tests dans neuf fichiers** passent ; huit cas ajoutés. **Neuf fichiers
+Codex non commités**. Reprendre Storyboard masqué (4) ; PDF et cadrage du
+dernier jet restent séparés au § 1 bis.

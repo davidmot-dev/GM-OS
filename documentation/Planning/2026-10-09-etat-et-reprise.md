@@ -472,3 +472,36 @@ empreintes des 21 fichiers étrangers inchangées.
 documents. Reprendre **mémoïsation (3)**, puis **Storyboard masqué (4)**.
 Dernier local **`1413f6da`**, dernier poussé **`d0fd965b`**. Préserver les guides,
 le lanceur, le 07/10 et `.claude` étrangers ; migration PDF séparée au § 1 bis.
+
+## Publication du lot 36 et lot 37 — mémoïsation des pilotes
+
+David demande « commit, pousse et passe à l'étape suivante (GM-OS est éteint) ».
+Les huit fichiers Codex du lot 36 sont commités et poussés sous **`916a3842`**,
+avec les trois commits locaux précédents. Pré-push complet vert : types,
+lint (trois avertissements, zéro erreur), **7 198 tests dans 566 fichiers**
+(un fichier et quatre tests ignorés), construction. Fichiers étrangers exclus.
+
+Le [lot 37](2026-10-09-lint-memoisation-des-pilotes.md) retire ensuite les
+**trois derniers avertissements**, AtelierDesAdversaires (1), DiceBoard (2).
+Les pilotes sont lus dans des sélecteurs réactifs retournant les mêmes objets,
+sans supprimer les caches ni changer leurs dépendances. Jeu demandé,
+personnalisé/référence et repli actif conservés ; aucun moteur ou rendu modifié.
+Aucune règle désactivée, aucun React Compiler activé.
+
+Lint global : **1 585 fichiers, zéro erreur, zéro avertissement** (**540 → 0**).
+Construction avec `tsc -b` et **96 tests dans neuf fichiers** passent. Huit cas
+ajoutés sur les changements de fiche/pilote et la conservation des réglages.
+Piège du nouveau test : fermer la campagne conserve la quantité de dés réglée,
+seul le mode revient à standard ; ne pas changer l'application pour forcer une
+quantité de un. Le passage final est vert. Pas de nouvelle suite complète
+après ce lot ; aucun e2e ou lancement Electron.
+
+Comptage brut : **cinq annotations applicatives déjà masquées**, zéro dans
+les tests. `git diff --check` propre ; empreintes des 21 fichiers étrangers
+inchangées. **Neuf fichiers Codex non commités**, deux écrans, deux tests et
+cinq documents. Dernier local et poussé **`916a3842`**.
+
+Reprendre **Storyboard masqué (4)**, deux annotations dans chacun de
+`sonsDuMoment.ts` et `useStoryboardStore.ts`. Migration PDF v1/v2 et cadrage
+du dernier jet restent séparés au § 1 bis. Préserver les guides, le lanceur,
+le 07/10 et `.claude` étrangers.

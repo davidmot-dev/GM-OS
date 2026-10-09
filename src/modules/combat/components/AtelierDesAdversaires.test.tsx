@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AtelierDesAdversaires } from './AtelierDesAdversaires';
 import { useBestiaireStore } from '../useBestiaireStore';
+import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
+import type { GameDriver } from '../../../types/drivers';
 
 /**
  * **L'atelier, monté pour de vrai.**
@@ -32,15 +34,27 @@ const GABARIT = {
     }],
 };
 
+const sessionSimulee: {
+    pilote: typeof PILOTE;
+    customGameDrivers: GameDriver[];
+    customSheetTemplates: typeof GABARIT[];
+} = { pilote: PILOTE, customGameDrivers: [], customSheetTemplates: [GABARIT] };
+
+const lireSessionSimulee = () => ({
+    getActiveDriver: () => sessionSimulee.pilote,
+    customGameDrivers: sessionSimulee.customGameDrivers,
+    customSheetTemplates: sessionSimulee.customSheetTemplates,
+    addEntity: vi.fn(),
+    activeCampaignId: 'c-1',
+});
+
 vi.mock('../../session/useSessionOSStore', () => ({
     useSessionOSStore: Object.assign(
-        () => ({
-            getActiveDriver: () => PILOTE,
-            customSheetTemplates: [GABARIT],
-            addEntity: vi.fn(),
-            activeCampaignId: 'c-1',
-        }),
-        { getState: () => ({ getActiveDriver: () => PILOTE }) },
+        (selecteur?: (etat: ReturnType<typeof lireSessionSimulee>) => unknown) => {
+            const etat = lireSessionSimulee();
+            return selecteur ? selecteur(etat) : etat;
+        },
+        { getState: () => lireSessionSimulee() },
     ),
 }));
 
@@ -52,6 +66,9 @@ vi.mock('../../../stores/useToastStore', () => ({ gmToast: vi.fn() }));
 
 describe('AtelierDesAdversaires', () => {
     beforeEach(() => {
+        sessionSimulee.pilote = PILOTE;
+        sessionSimulee.customGameDrivers = [];
+        sessionSimulee.customSheetTemplates = [GABARIT];
         useBestiaireStore.setState({ gabarits: [], repartitions: {} });
     });
 
@@ -99,5 +116,63 @@ describe('AtelierDesAdversaires', () => {
 
         expect(screen.queryByText('Pillard')).toBeNull();
         expect(screen.getByText(/Aucun gabarit pour Alien/)).toBeTruthy();
+    });
+
+    it('relit les champs quand le gabarit est remplacé avec le même identifiant', () => {
+        const { rerender } = render(<AtelierDesAdversaires onClose={() => {}} />);
+        sessionSimulee.customSheetTemplates = [{
+            ...GABARIT,
+            sections: GABARIT.sections.map(section => ({
+                ...section,
+                fields: section.fields.map(champ => champ.id === 'force' ? { ...champ, label: 'Vigueur' } : champ),
+            })),
+        }];
+
+        rerender(<AtelierDesAdversaires onClose={() => {}} />);
+
+        expect(screen.queryByText('Force')).toBeNull();
+        expect(screen.getAllByText('Vigueur').length).toBeGreaterThan(0);
+    });
+
+    it('relit la fiche quand le pilote actif change de gabarit', () => {
+        const { rerender } = render(<AtelierDesAdversaires onClose={() => {}} />);
+        sessionSimulee.pilote = { ...PILOTE, templateId: 'gabarit-revise' };
+        sessionSimulee.customSheetTemplates = [...sessionSimulee.customSheetTemplates, {
+            ...GABARIT, id: 'gabarit-revise',
+            sections: [{ ...GABARIT.sections[0], fields: [{ ...GABARIT.sections[0].fields[0], id: 'intuition', label: 'Intuition' }] }],
+        }];
+
+        rerender(<AtelierDesAdversaires onClose={() => {}} />);
+
+        expect(screen.queryByText('Force')).toBeNull();
+        expect(screen.getAllByText('Intuition').length).toBeGreaterThan(0);
+    });
+
+    it('le pilote personnalisé demandé prend le pas sur le pilote de la campagne', () => {
+        sessionSimulee.customGameDrivers = [{
+            ...DEFAULT_GAME_DRIVERS[0], id: 'jeu-demande', name: 'Jeu demandé', templateId: GABARIT.id,
+        }];
+        render(<AtelierDesAdversaires onClose={() => {}} jeuDemande="jeu-demande" />);
+
+        expect(screen.getByText('Jeu demandé')).toBeTruthy();
+        expect(screen.getAllByText('Force').length).toBeGreaterThan(0);
+    });
+
+    it('résout aussi un pilote de référence demandé, puis revient au pilote actif', () => {
+        const reference = DEFAULT_GAME_DRIVERS[0];
+        const { rerender } = render(<AtelierDesAdversaires onClose={() => {}} jeuDemande={reference.id} />);
+        expect(screen.getByText(reference.name)).toBeTruthy();
+
+        rerender(<AtelierDesAdversaires onClose={() => {}} />);
+
+        expect(screen.getByText(PILOTE.name)).toBeTruthy();
+        expect(screen.getAllByText('Force').length).toBeGreaterThan(0);
+    });
+
+    it('un jeu demandé introuvable garde le repli sur le pilote actif', () => {
+        render(<AtelierDesAdversaires onClose={() => {}} jeuDemande="jeu-introuvable" />);
+
+        expect(screen.getByText(PILOTE.name)).toBeTruthy();
+        expect(screen.getAllByText('Force').length).toBeGreaterThan(0);
     });
 });
