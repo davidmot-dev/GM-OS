@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { WindowRole } from './windowRole';
 
 /**
  * **Les cinq stores partagés n'acceptent d'écriture que de la fenêtre MJ.**
@@ -16,7 +17,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
  * celui-là qu'elle écrasait.
  */
 
-const role = vi.hoisted(() => ({ current: 'gm' as string }));
+const role = vi.hoisted(() => ({ current: 'gm' as WindowRole }));
 
 vi.mock('./windowRole', () => ({
     getWindowRole: () => role.current,
@@ -39,56 +40,91 @@ const { viderLesEcrituresDifferees } = await import('./ecritureReserveeAuMJ');
 const surLeDisque = (cle: string) => { viderLesEcrituresDifferees(); return localStorage.getItem(cle); };
 
 /** Ce que le magasin contient réellement, une fois le JSON de Zustand déballé. */
-const persiste = (cle: string) => {
+const persiste = <S extends object>(cle: string): Partial<S> | null => {
     const brut = surLeDisque(cle);
-    return brut ? JSON.parse(brut).state : null;
+    // Le JSON vient du magasin réel de ce cas, écrit ici sur le localStorage
+    // artificiel. Cette annotation décrit l'enveloppe, pas un validateur d'import.
+    return brut ? (JSON.parse(brut) as { state: Partial<S> }).state : null;
 };
+
+interface MagasinPersistant<S extends object> {
+    getState: () => S;
+    setState: (etat: Partial<S>) => void;
+    persist: { rehydrate: () => void | Promise<void> };
+}
+
+/** Garde store, mises à jour et témoin liés avant le tableau de cas hétérogènes. */
+function casDePersistance<S extends object>({ nom, cle, store, duMJ, duHub, temoin }: {
+    nom: string;
+    cle: string;
+    store: MagasinPersistant<S>;
+    duMJ: Partial<NoInfer<S>>;
+    duHub: Partial<NoInfer<S>>;
+    temoin: (etat: Partial<NoInfer<S>> | null) => number | undefined;
+}) {
+    return {
+        nom, cle,
+        ecrireDuMJ: () => store.setState(duMJ),
+        ecrireDuHub: () => store.setState(duHub),
+        rehydrater: () => store.persist.rehydrate(),
+        temoinSurDisque: () => temoin(persiste<S>(cle)),
+        temoinEnMemoire: () => temoin(store.getState()),
+    };
+}
 
 /**
  * Chaque cas : le store, sa clé, ce que le MJ pose, et ce qu'une fenêtre
  * secondaire tenterait d'écrire par-dessus.
  */
 const CAS = [
-    {
+    casDePersistance({
         nom: 'useDiceStore',
         cle: 'gmos-dice-storage',
         store: useDiceStore,
-        duMJ: { quickRolls: [{ label: 'Attaque', sides: 20 }] },
-        temoin: (e: any) => e?.quickRolls?.length,
+        duMJ: { quickRolls: [{ id: 'qr-test', label: 'Attaque', formula: '1d20' }] },
+        temoin: e => e?.quickRolls?.length,
         duHub: { quickRolls: [] },
-    },
-    {
+    }),
+    casDePersistance({
         nom: 'useClockStore',
         cle: 'gm-os-clock-storage',
         store: useClockStore,
-        duMJ: { calendars: { 'cal-1': { name: 'Calendrier impérial' } } },
-        temoin: (e: any) => Object.keys(e?.calendars ?? {}).length,
+        duMJ: { calendars: { 'cal-1': {
+            id: 'cal-1', name: 'Calendrier impérial', months: [{ name: 'Mois artificiel', days: 30 }],
+            daysPerWeek: 7, hoursPerDay: 24, minutesPerHour: 60,
+        } } },
+        temoin: e => Object.keys(e?.calendars ?? {}).length,
         duHub: { calendars: {} },
-    },
-    {
+    }),
+    casDePersistance({
         nom: 'useWhiteboardStore',
         cle: 'gm-os-whiteboard-storage-v1',
         store: useWhiteboardStore,
         duMJ: { paths: [{ id: 'p1', points: [], tool: 'brush', color: '#fff', width: 2 }] },
-        temoin: (e: any) => e?.paths?.length,
+        temoin: e => e?.paths?.length,
         duHub: { paths: [] },
-    },
-    {
+    }),
+    casDePersistance({
         nom: 'useFavoriteStore',
         cle: 'gm-os-favorites-storage',
         store: useFavoriteStore,
-        duMJ: { favorites: [{ id: 'f1', name: 'Le Rachaghal' }] },
-        temoin: (e: any) => e?.favorites?.length,
+        duMJ: { favorites: [{ id: 'f1', type: 'npc', name: 'Le Rachaghal' }] },
+        temoin: e => e?.favorites?.length,
         duHub: { favorites: [] },
-    },
-    {
+    }),
+    casDePersistance({
         nom: 'useMapStore',
         cle: 'gmos-map-storage',
         store: useMapStore,
-        duMJ: { mapPresets: [{ id: 'm1', name: 'Le Bunker' }] },
-        temoin: (e: any) => e?.mapPresets?.length,
+        duMJ: { mapPresets: [{
+            id: 'm1', name: 'Le Bunker', mapUrl: null, mapName: null, isVideo: false,
+            tokens: [], dangerZones: [], magicEffects: [], weatherType: 'none', weatherIntensity: 0,
+            isGridEnabled: false, gridSize: 50, gridColor: '#fff', gridOpacity: 0.5,
+            fogDataUrl: null, mapWidth: 100, mapHeight: 100, zoom: 1, panX: 0, panY: 0,
+        }] },
+        temoin: e => e?.mapPresets?.length,
         duHub: { mapPresets: [] },
-    },
+    }),
 ] as const;
 
 beforeEach(() => {
@@ -97,35 +133,35 @@ beforeEach(() => {
 });
 
 describe('les stores partagés entre fenêtres', () => {
-    describe.each(CAS)('$nom', ({ cle, store, duMJ, temoin, duHub }) => {
+    describe.each(CAS)('$nom', ({ cle, ecrireDuMJ, ecrireDuHub, rehydrater, temoinSurDisque, temoinEnMemoire }) => {
         it('la fenêtre MJ persiste ce qu’elle change', () => {
-            (store as any).setState(duMJ);
+            ecrireDuMJ();
 
-            expect(temoin(persiste(cle))).toBeGreaterThan(0);
+            expect(temoinSurDisque()).toBeGreaterThan(0);
         });
 
-        it.each(['hub', 'projector'])(
+        it.each(['hub', 'projector'] as const)(
             'la fenêtre « %s » n’écrase pas le magasin du MJ',
             (secondaire) => {
-                (store as any).setState(duMJ);
+                ecrireDuMJ();
                 const ecritParLeMJ = surLeDisque(cle);
 
                 role.current = secondaire;
-                (store as any).setState(duHub);
+                ecrireDuHub();
 
                 expect(surLeDisque(cle)).toBe(ecritParLeMJ);
-                expect(temoin(persiste(cle))).toBeGreaterThan(0);
+                expect(temoinSurDisque()).toBeGreaterThan(0);
             },
         );
 
         it('la lecture reste ouverte — la fenêtre secondaire s’hydrate encore', async () => {
-            (store as any).setState(duMJ);
+            ecrireDuMJ();
 
             role.current = 'hub';
-            (store as any).setState(duHub);
-            await (store as any).persist.rehydrate();
+            ecrireDuHub();
+            await rehydrater();
 
-            expect(temoin((store as any).getState())).toBeGreaterThan(0);
+            expect(temoinEnMemoire()).toBeGreaterThan(0);
         });
     });
 });

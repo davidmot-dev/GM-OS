@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { installWindowRelay, type RelayTarget } from '../../electron/WindowRelay';
 import type { RelayRole } from '../../electron/relayPolicy';
 
+const pontInitial = window.appBridge;
+
 /**
  * Harnais à deux fenêtres, pour reproduire la panne du tableau blanc sur le
  * Player Hub (bascule `1ae1936`, annulée par `79610ac`).
@@ -137,19 +139,21 @@ describe('relais — deux fenêtres, tableau blanc', () => {
     // s'applique donc ici comme en production.
     const hub = createRelayHub((id) => (id === 1 ? 'gm' : 'hub'));
 
-    let gm: any;
-    let hubWin: any;
-    let wbGm: any;
-    let wbHub: any;
+    type FenetreDuHarnais = Awaited<ReturnType<typeof loadWindow>>;
+    let gm: FenetreDuHarnais['service'];
+    let hubWin: FenetreDuHarnais['service'];
+    let wbGm: FenetreDuHarnais['store'];
+    let wbHub: FenetreDuHarnais['store'];
 
     /** Charge un graphe de modules complet pour une fenêtre. */
     async function loadWindow(windowId: number) {
         vi.resetModules();
-        (window as any).appBridge = hub.bridgeFor(windowId);
+        // Ce harnais n'expose que le relais : aucun autre service du pont.
+        vi.stubGlobal('appBridge', hub.bridgeFor(windowId));
 
         vi.doMock('./windowTransport', async (importOriginal) => {
             const actual = await importOriginal<typeof import('./windowTransport')>();
-            const capturedRelay = (window as any).appBridge?.relay;
+            const capturedRelay = window.appBridge?.relay;
 
             class HarnessTransport extends actual.WindowTransport {
                 publish(message: import('./windowTransport').WindowMessage) {
@@ -187,7 +191,7 @@ describe('relais — deux fenêtres, tableau blanc', () => {
 
     afterEach(() => {
         vi.doUnmock('./windowTransport');
-        delete (window as any).appBridge;
+        vi.stubGlobal('appBridge', pontInitial);
     });
 
     it('les deux fenêtres ont bien des stores indépendants', () => {
@@ -205,7 +209,7 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         await settle();
 
         expect(wbHub.getState().projectionTarget).toBe('hub');
-        expect(wbHub.getState().paths.map((p: any) => p.id)).toContain('p1');
+        expect(wbHub.getState().paths.map(p => p.id)).toContain('p1');
     });
 
     it('le hub dessine à son tour : la projection ne doit pas s\'éteindre', async () => {
@@ -257,8 +261,8 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         });
         await settle();
 
-        expect(wbGm.getState().paths.map((p: any) => p.id)).toContain('trace-hub');
-        expect(wbHub.getState().paths.map((p: any) => p.id)).toContain('trace-hub');
+        expect(wbGm.getState().paths.map(p => p.id)).toContain('trace-hub');
+        expect(wbHub.getState().paths.map(p => p.id)).toContain('trace-hub');
         expect(wbHub.getState().projectionTarget).toBe('hub');
     });
 
@@ -279,7 +283,7 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         await settleWithRelayTimer();
 
         expect(wbHub.getState().projectionTarget).toBe('hub');
-        expect(wbHub.getState().paths.map((p: any) => p.id)).toContain('deja-la');
+        expect(wbHub.getState().paths.map(p => p.id)).toContain('deja-la');
     });
 
     it('la rediffusion du maître n\'efface pas le tracé en cours du hub', async () => {
@@ -294,8 +298,8 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         });
         await settleWithRelayTimer();
 
-        expect(wbHub.getState().paths.map((p: any) => p.id)).toContain('trace-hub');
-        expect(wbGm.getState().paths.map((p: any) => p.id)).toContain('trace-hub');
+        expect(wbHub.getState().paths.map(p => p.id)).toContain('trace-hub');
+        expect(wbGm.getState().paths.map(p => p.id)).toContain('trace-hub');
         expect(wbHub.getState().projectionTarget).toBe('hub');
     });
 
@@ -304,7 +308,7 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         // protocole parce qu'elle ne vaut qu'une fois par instance : il faut un
         // service neuf, donc un graphe de modules neuf.
         const vuParLeMaitre: string[] = [];
-        wbGm.subscribe((s: any) => vuParLeMaitre.push(...s.paths.map((p: any) => p.id)));
+        wbGm.subscribe(s => vuParLeMaitre.push(...s.paths.map(p => p.id)));
 
         wbHub.getState().addPath({
             id: 'avant-sync', points: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
@@ -313,7 +317,7 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         await settleWithRelayTimer();
 
         expect(vuParLeMaitre).not.toContain('avant-sync');
-        expect(wbGm.getState().paths.map((p: any) => p.id)).not.toContain('avant-sync');
+        expect(wbGm.getState().paths.map(p => p.id)).not.toContain('avant-sync');
     });
 
     it('elle émet dès qu\'elle a reçu l\'état partagé', async () => {
@@ -326,7 +330,7 @@ describe('relais — deux fenêtres, tableau blanc', () => {
         });
         await settle();
 
-        expect(wbGm.getState().paths.map((p: any) => p.id)).toContain('apres-sync');
+        expect(wbGm.getState().paths.map(p => p.id)).toContain('apres-sync');
     });
 
     it('les verrous échappent à la garde de démarrage', async () => {

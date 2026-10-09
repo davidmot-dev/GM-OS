@@ -691,3 +691,36 @@ par contrats communs, puis mémoïsation/directive. Le prochain groupe à
 relire est le relais et la persistance partagée (33 + 12 avertissements).
 Les captures du manuel sont distinctes ; la migration PDF v1/v2 reste séparée.
 État courant dans la [note du 09/10](2026-10-09-etat-et-reprise.md).
+
+## Vingt-huitième lot — tests du relais et de la persistance, 09/10
+
+Le lot 27 est commité en **`8e6a0939`**, 16 fichiers Codex, puis poussé sur
+`origin/feature/tablet-hub-pwa`, depuis `b612123a`. Hook complet réussi :
+types, zéro erreur/223 avertissements, **7 198 tests dans 566 fichiers** et
+construction. Aucun fichier étranger inclus ni modification applicative
+pendant le push. Les mentions antérieures « non commités » sont historiques.
+
+Le [lot 28](2026-10-09-lint-tests-relais-et-persistance.md) retire **47 `any`
+dans quatre fichiers de tests** : service interfenêtres (16), harnais du
+relais (17), transport (2) et persistance partagée (12). Les faux magasins
+partiels reprennent les états réels, les callbacks sont inférés et les
+messages émis discriminés. Une instance neuve remplace les accès aux champs
+privés dans les essais des tracés ; la fabrique des cas de persistance
+conserve le lien magasin/mise à jour/témoin. Données artificielles complétées
+selon les modèles ; assertions et essais de charges mal formées conservés.
+Aucun fichier applicatif modifié.
+
+**140 tests ciblés dans neuf fichiers** passent. Lint ciblé propre, types et
+construction passent. **1 584 fichiers, zéro erreur et 176 avertissements**,
+dont **172 `any`, tous dans les tests**, trois diagnostics de mémoïsation
+et une directive inutile. Comptage recoupé par fichier ; aucune modification
+des règles ni de l'inventaire JSON initial.
+
+La suite complète passe : **7 198 tests dans 566 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre. Contrôles sur les tests finaux.
+
+Lot 28 réalisé, validé et documenté, **neuf fichiers Codex non commités** (quatre tests,
+cinq documents). Reprendre la couture des fiches (38), puis purge/détenteurs
+(28) et les autres groupes de tests par contrat, avant mémoïsation/directive.
+Les captures du manuel (27) et la migration PDF restent des sujets distincts.
+État courant dans la [note du 09/10](2026-10-09-etat-et-reprise.md).

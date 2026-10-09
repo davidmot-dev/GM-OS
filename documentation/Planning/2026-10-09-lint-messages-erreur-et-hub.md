@@ -90,3 +90,13 @@ partagée est un prochain lot cohérent à relire, plutôt qu'une sélection
 arbitraire des plus gros fichiers. Les captures du manuel (27) restent un
 groupe distinct. Préserver les fichiers étrangers ; la migration PDF v1/v2
 du § 1 bis reste séparée.
+
+## Mise à jour du 09/10 — lot 27 commité et poussé
+
+À la demande suivante de David, les 16 fichiers Codex de ce lot sont commités
+en **`8e6a0939`**, puis poussés sur `origin/feature/tablet-hub-pwa`, depuis
+`b612123a`. Hook complet réussi : types, lint zéro erreur/223 avertissements,
+**7 198 tests dans 566 fichiers**, construction ; un fichier et quatre tests
+ignorés. Aucun fichier étranger inclus ni modification applicative pendant
+le push. Les mentions antérieures « non commités » gardent l'état historique.
+La reprise est dans le [lot 28 tests du relais et de la persistance](2026-10-09-lint-tests-relais-et-persistance.md).

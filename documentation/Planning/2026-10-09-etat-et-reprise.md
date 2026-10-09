@@ -182,3 +182,50 @@ Puis les trois diagnostics de mémoïsation et la directive inutile.
 Préserver les modifications étrangères des guides, du 07/10 et de l'e2e ;
 ne pas rejouer le push réussi ni réorganiser les types d'erreur déjà validés.
 La migration PDF v1/v2 du § 1 bis reste un sujet séparé.
+
+## Lot 27 commité et poussé, lot 28 tests du relais et de la persistance
+
+David demande **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Les 16 fichiers Codex du lot 27 sont commités en **`8e6a0939`**, puis poussés
+sur `origin/feature/tablet-hub-pwa`, depuis `b612123a`. Hook complet réussi :
+types, lint zéro erreur/223 avertissements, **7 198 tests dans 566 fichiers**,
+construction ; un fichier et quatre tests ignorés. Aucun fichier étranger
+inclus ni modification dans `src/` ou `electron/` pendant le push. Les mentions
+antérieures « non commités » gardent l'état avant cette demande.
+
+Le [lot 28 tests du relais et de la persistance](2026-10-09-lint-tests-relais-et-persistance.md)
+retire **47 `any` de tests**, dans quatre fichiers : protocole du service (16),
+harnais à deux fenêtres (17), transport (2) et persistance partagée (12).
+États/callbacks issus des vrais magasins, messages émis discriminés, ponts
+factices installés par Vitest et restaurés, fixtures complétées selon les
+modèles réels. Les données mal formées et les rôles absents/inconnus restent
+injectables pour tester les gardes. Aucun fichier applicatif modifié.
+
+Une instance neuve dans les essais du volume des tracés remplace les deux
+accès aux champs privés du service. La fabrique des cas de persistance garde
+le lien entre chaque magasin, sa mise à jour et son témoin avant le tableau
+hétérogène. Le JSON relu vient du stockage artificiel que le vrai magasin
+vient d'écrire ; l'annotation d'enveloppe n'est pas un validateur d'import.
+
+**140 tests ciblés dans neuf fichiers** passent, avec les assertions existantes
+sur verrous, échanges, gardes, tracés et refus des écritures du Hub/projecteur.
+Lint ciblé propre ; types et construction passent. Lint global : **1 584
+fichiers, zéro erreur et 176 avertissements**, dont **172 `any`, tous dans
+les tests**, trois diagnostics de mémoïsation et une directive inutile.
+Comptage recoupé dans le rapport final ; règles et inventaire initial inchangés.
+Aucun paquet installé ni service démarré manuellement.
+
+La suite complète passe : **7 198 tests dans 566 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre. Contrôles sur les tests finaux,
+sans essai Electron ni donnée réelle utilisée dans les tests modifiés.
+
+Lot 28 réalisé, validé et documenté, **neuf fichiers Codex non commités** (quatre tests,
+cinq documents). Dernier local et poussé **`8e6a0939`**.
+Reprendre **la couture des fiches (38)**, dans `electron/coutureDesFiches.test.ts` :
+vrai moteur HTML chargé en JSDOM, faux IndexedDB et surface de lecture/écriture
+à typer sans remplacer le moteur testé. Puis purge/détenteurs (28) et autres
+groupes de tests ; captures du manuel (27) distinctes. Terminer ensuite les
+trois diagnostics de mémoïsation et la directive inutile.
+Préserver les fichiers étrangers des guides, du 07/10, de l'e2e et de `.claude`.
+Ne pas rejouer le push réussi ni retirer les essais de messages hors contrat.
+La migration PDF v1/v2 reste séparée au § 1 bis.

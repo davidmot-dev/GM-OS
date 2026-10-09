@@ -10372,6 +10372,40 @@ en relisant relais et persistance partagée (33 + 12 `any`), puis les diagnostic
 ciblés. Préserver les fichiers étrangers ; garder la migration PDF séparée.
 [État du 09/10](2026-10-09-etat-et-reprise.md).
 
+**09/10, demande suivante :** David demande « commit, pousse et passe à l'étape
+suivante (GM-OS est éteint) ». Les 16 fichiers Codex du lot 27 sont commités en
+**`8e6a0939`**, puis poussés sur `origin/feature/tablet-hub-pwa`, depuis
+`b612123a`. Hook complet réussi : types, zéro erreur/223 avertissements,
+**7 198 tests dans 566 fichiers**, construction ; un fichier et quatre tests
+ignorés. Aucun fichier étranger inclus ni modification applicative pendant
+le push. Les mentions antérieures « non commités » gardent l'état historique.
+
+Le [lot 28 tests du relais et de la persistance](2026-10-09-lint-tests-relais-et-persistance.md)
+retire **47 `any` dans quatre fichiers de tests** : `CrossWindowEventService`
+(16), harnais du relais (17), transport (2), persistance des magasins partagés
+(12). Les vrais contrats des magasins/services donnent les états et callbacks ;
+les messages mal formés restent injectables. Les tests du volume des tracés
+utilisent une instance neuve, sans forcer les champs privés. La fabrique de
+persistance lie magasin/mise à jour/témoin avant le tableau hétérogène,
+avec fixtures conformes aux modèles réels. Aucun fichier applicatif modifié.
+
+**140 tests ciblés dans neuf fichiers** passent ; assertions existantes et
+scénarios hors contrat conservés. Lint ciblé propre, types et construction
+passent. Lint : **1 584 fichiers, zéro erreur et 176 avertissements**, dont
+**172 `any`, tous dans les tests**, trois diagnostics de mémoïsation et une
+directive inutile. Comptage recoupé, règles et inventaire initial inchangés.
+Aucun paquet installé ni service démarré manuellement.
+
+**7 198 tests dans 566 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre. Tous les contrôles portent sur les tests finaux.
+
+Lot 28 réalisé, validé et documenté, **neuf fichiers Codex non commités** (quatre tests,
+cinq documents). Dernier local et poussé **`8e6a0939`**. Reprendre **la couture
+des fiches (38)**, puis purge/détenteurs (28) et autres groupes de tests par
+contrat, avant les diagnostics ciblés. Captures du manuel (27) distinctes.
+Préserver les fichiers étrangers ; la migration PDF reste séparée au § 1 bis.
+[État du 09/10](2026-10-09-etat-et-reprise.md).
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10440,7 +10474,7 @@ ciblés. Préserver les fichiers étrangers ; garder la migration PDF séparée.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 26 poussés (`b612123a`), lot 27 messages d'erreur/Hub réalisé non commité**, § 127 : **540 → 223 avertissements, zéro erreur**, zéro `any` applicatif et 219 dans les tests | Simulations et fixtures de tests par contrats communs, puis trois diagnostics de mémoïsation et une directive. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [messages/Hub](2026-10-09-lint-messages-erreur-et-hub.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 27 poussés (`8e6a0939`), lot 28 tests relais/persistance réalisé non commité**, § 127 : **540 → 176 avertissements, zéro erreur**, zéro `any` applicatif et 172 dans les tests | Couture des fiches (38), puis purge/détenteurs (28) et autres tests par contrat ; trois diagnostics de mémoïsation et une directive. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [tests relais/persistance](2026-10-09-lint-tests-relais-et-persistance.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

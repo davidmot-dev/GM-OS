@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { WindowTransport, parseRelayMessage, RELAYED_TYPES, isRelayAvailable, type WindowMessage } from './windowTransport';
 
+const pontInitial = window.appBridge;
+
 /** Pont Electron factice : enregistre ce qui est publié, permet d'injecter des messages. */
 function installFakeRelay() {
     const published: string[] = [];
@@ -9,7 +11,9 @@ function installFakeRelay() {
     let listener: ((message: string, senderRole?: string) => void) | null = null;
     const detach = vi.fn(() => { listener = null; });
 
-    (window as any).appBridge = {
+    // Pont réduit au relais ; le rôle absent/invalide reste injectable pour
+    // exercer la garde du transport, même hors du contrat du preload.
+    vi.stubGlobal('appBridge', {
         relay: {
             publish: (type: string, message: string) => {
                 publishedTypes.push(type);
@@ -20,7 +24,7 @@ function installFakeRelay() {
                 return detach;
             },
         },
-    };
+    });
 
     return {
         published,
@@ -33,7 +37,7 @@ function installFakeRelay() {
 
 describe('windowTransport', () => {
     afterEach(() => {
-        delete (window as any).appBridge;
+        vi.stubGlobal('appBridge', pontInitial);
         vi.restoreAllMocks();
     });
 

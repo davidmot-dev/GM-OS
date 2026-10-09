@@ -1,21 +1,27 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import type { useMapStore } from '../modules/map/useMapStore';
+import type { useMapUIStore } from '../modules/map/useMapUIStore';
+import type { useWhiteboardStore, DrawingPath } from '../modules/whiteboard/useWhiteboardStore';
+import type { useClockStore } from '../store/useClockStore';
+import type { useCombatStore } from '../modules/combat/useCombatStore';
+import type { MessageEntreFenetres } from './contratsEntreFenetres';
 
 /**
  * Le service s'abonne à cinq stores et parle sur un BroadcastChannel. On
  * substitue les deux : ce qui est testé ici est le protocole — verrous de
  * jetons, filtrage des messages, garde anti-boucle — pas le contenu des stores.
  */
-const channels = vi.hoisted(() => [] as any[]);
+const channels = vi.hoisted(() => [] as FakeBroadcastChannel[]);
 
 class FakeBroadcastChannel {
-    public onmessage: ((event: { data: any }) => void) | null = null;
-    public posted: any[] = [];
+    public onmessage: ((event: { data: unknown }) => void) | null = null;
+    public posted: MessageEntreFenetres[] = [];
     public name: string;
     constructor(name: string) {
         this.name = name;
         channels.push(this);
     }
-    postMessage(data: any) { this.posted.push(data); }
+    postMessage(data: MessageEntreFenetres) { this.posted.push(data); }
     close() { /* rien */ }
     addEventListener() { /* rien */ }
     removeEventListener() { /* rien */ }
@@ -23,29 +29,25 @@ class FakeBroadcastChannel {
 
 vi.stubGlobal('BroadcastChannel', FakeBroadcastChannel);
 
-const makeStore = vi.hoisted(() => () => {
-    let state: any = {};
+// Les magasins factices gardent seulement les champs posés par chaque scénario.
+const makeStore = vi.hoisted(() => <S extends object>() => {
+    let state: Partial<S> = {};
     return {
         getState: () => state,
-        setState: (updater: any) => {
+        setState: (updater: Partial<S> | ((state: Partial<S>) => Partial<S>)) => {
             state = typeof updater === 'function' ? updater(state) : { ...state, ...updater };
         },
-        subscribe: vi.fn(),
+        subscribe: vi.fn<(listener: (state: Partial<S>) => void) => void>(),
     };
 });
 
 const stores = vi.hoisted(() => ({
-    map: null as any,
-    mapUI: null as any,
-    whiteboard: null as any,
-    clock: null as any,
-    combat: null as any,
+    map: makeStore<ReturnType<typeof useMapStore.getState>>(),
+    mapUI: makeStore<ReturnType<typeof useMapUIStore.getState>>(),
+    whiteboard: makeStore<ReturnType<typeof useWhiteboardStore.getState>>(),
+    clock: makeStore<ReturnType<typeof useClockStore.getState>>(),
+    combat: makeStore<ReturnType<typeof useCombatStore.getState>>(),
 }));
-stores.map = makeStore();
-stores.mapUI = makeStore();
-stores.whiteboard = makeStore();
-stores.clock = makeStore();
-stores.combat = makeStore();
 
 vi.mock('../modules/map/useMapStore', () => ({ useMapStore: stores.map }));
 vi.mock('../modules/map/useMapUIStore', () => ({ useMapUIStore: stores.mapUI }));
@@ -53,15 +55,17 @@ vi.mock('../modules/whiteboard/useWhiteboardStore', () => ({ useWhiteboardStore:
 vi.mock('../store/useClockStore', () => ({ useClockStore: stores.clock }));
 vi.mock('../modules/combat/useCombatStore', () => ({ useCombatStore: stores.combat }));
 
-const { crossWindowSync, stripProjectionTarget } = await import('./CrossWindowEventService');
+const { stripProjectionTarget } = await import('./CrossWindowEventService');
+let { crossWindowSync } = await import('./CrossWindowEventService');
 
 /** Le canal créé par le singleton à l'import. */
-const channel = () => channels[0] as FakeBroadcastChannel;
+const channel = () => channels[0];
 
 /** Identifiant d'instance, déduit du premier message émis. */
 function ownInstanceId(): string {
     crossWindowSync.broadcast('clock', {});
     const msg = channel().posted.pop();
+    if (!msg) throw new Error('Le service doit émettre son identifiant.');
     return msg.senderId;
 }
 
@@ -304,10 +308,13 @@ describe('flux du tableau blanc — volume du payload', () => {
      * `init()` en réenregistre un à chaque test ; le dernier est celui de
      * l'instance dans son état courant.
      */
-    const subscriber = () => stores.whiteboard.subscribe.mock.calls.at(-1)![0] as (s: any) => void;
+    const subscriber = () => stores.whiteboard.subscribe.mock.calls.at(-1)![0];
+
+    const trace = (id: string): DrawingPath => ({ id, points: [], color: '#fff', width: 2, tool: 'brush' });
 
     /** État de tableau blanc minimal, hors tracé en cours pour éviter l'étranglement. */
-    const wbState = (paths: any[], extra: Record<string, unknown> = {}) => ({
+    const wbState = (paths: DrawingPath[], extra: Partial<ReturnType<typeof useWhiteboardStore.getState>> = {}):
+        Partial<ReturnType<typeof useWhiteboardStore.getState>> => ({
         paths,
         activePath: null,
         laserPointer: null,
@@ -317,14 +324,19 @@ describe('flux du tableau blanc — volume du payload', () => {
         ...extra,
     });
 
-    const lastWhiteboard = () => channel().posted.filter(m => m.type === 'whiteboard').at(-1);
+    const lastWhiteboard = () => {
+        const message = channel().posted.filter(m => m.type === 'whiteboard').at(-1);
+        if (!message) throw new Error('Aucun message de tableau blanc émis.');
+        return message;
+    };
 
-    beforeEach(() => {
-        // Le service est un singleton partagé par tout le fichier, et les tests
-        // précédents ont pu lever sa garde de démarrage. On repart d'un état
-        // connu, sinon l'ordre d'exécution déciderait du résultat.
-        (crossWindowSync as any).hasReceivedSharedState = false;
-        (crossWindowSync as any).lastBroadcastPaths = null;
+    beforeEach(async () => {
+        // Une instance neuve remet garde et cache à leur état de démarrage,
+        // sans modifier les champs privés du service depuis le test.
+        vi.resetModules();
+        channels.length = 0;
+        crossWindowSync = (await import('./CrossWindowEventService')).crossWindowSync;
+        crossWindowSync.init(true);
     });
 
     it('un flux inconnu ou mal formé ne lève pas la garde de démarrage', () => {
@@ -341,7 +353,7 @@ describe('flux du tableau blanc — volume du payload', () => {
     });
 
     it('envoie les tracés au premier passage', () => {
-        const paths = [{ id: 'p1' }];
+        const paths = [trace('p1')];
         subscriber()(wbState(paths));
 
         expect(lastWhiteboard().payload.paths).toBe(paths);
@@ -350,7 +362,7 @@ describe('flux du tableau blanc — volume du payload', () => {
     it('les omet tant qu\'ils n\'ont pas changé', () => {
         // Le cas courant : c'est `activePath` ou `laserPointer` qui bouge, pas
         // les tracés. Les renvoyer coûtait 106 Ko par mise à jour.
-        const paths = [{ id: 'p1' }];
+        const paths = [trace('p1')];
         subscriber()(wbState(paths));
         subscriber()(wbState(paths, { laserPointer: { x: 0.5, y: 0.5 } }));
 
@@ -360,9 +372,9 @@ describe('flux du tableau blanc — volume du payload', () => {
     });
 
     it('les renvoie dès que le tableau change', () => {
-        const paths = [{ id: 'p1' }];
+        const paths = [trace('p1')];
         subscriber()(wbState(paths));
-        const suivants = [{ id: 'p1' }, { id: 'p2' }];
+        const suivants = [trace('p1'), trace('p2')];
         subscriber()(wbState(suivants));
 
         expect(lastWhiteboard().payload.paths).toBe(suivants);
@@ -371,7 +383,7 @@ describe('flux du tableau blanc — volume du payload', () => {
     it('renvoie aussi un tableau vidé — la référence change', () => {
         // Effacer le tableau produit un nouveau tableau vide. Sans cela, un
         // effacement serait le seul changement jamais transmis.
-        subscriber()(wbState([{ id: 'p1' }]));
+        subscriber()(wbState([trace('p1')]));
         subscriber()(wbState([]));
 
         expect(lastWhiteboard().payload.paths).toEqual([]);
@@ -384,7 +396,7 @@ describe('flux du tableau blanc — volume du payload', () => {
         crossWindowSync.init(false);
         channel().posted.length = 0;
 
-        const paths = [{ id: 'p1' }];
+        const paths = [trace('p1')];
         subscriber()(wbState(paths));
         expect(channel().posted).toHaveLength(0);
 
@@ -402,12 +414,15 @@ describe('garde anti-boucle', () => {
         // isSyncing doit être vrai *pendant* l'application, pour que les
         // abonnés aux stores n'en rediffusent pas l'effet.
         let seenDuringApply: boolean | null = null;
-        stores.combat.setState = (updater: any) => {
+        const setStateInitial = stores.combat.setState;
+        stores.combat.setState = () => {
             seenDuringApply = crossWindowSync.isSyncing();
-            void updater;
         };
-
-        receive('combat', { round: 3 });
+        try {
+            receive('combat', { round: 3 });
+        } finally {
+            stores.combat.setState = setStateInitial;
+        }
 
         expect(seenDuringApply).toBe(true);
         expect(crossWindowSync.isSyncing()).toBe(false);
