@@ -154,12 +154,12 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | ✅ **T0 joueurs, 04/10 : les PV saisis sur tablette restaient locaux.** | `remoteUpdateCharacterVitals` écrivait sans événement ; `useHubSync` ne relayait pas ces vitaux | **Réparé pour terminer J1 le 06/10** : événement dédié, relais WebSocket, contrôle du personnage propriétaire, valeur finie bornée à la jauge existante et notification au meneur, sans boucle. Neuf tests du handler ; assertions PV du banc T0 conservées aux trois formats, sans échec attendu, et quatre cas Fiche J1. [Relevé](2026-10-06-T4-J1-joueurs.md) |
 | ✅ **T0 joueurs, 04/10 : sur téléphone, la navigation recouvrait « Jouer » en bas de Cartes.** | Capture T0 `telephone/12-cartes.png` ; navigation fixe dans `TabletHub.tsx` devant la surface défilante | **Traité dans T4/J1 Cartes le 06/10** : navigation dans le flux, zone de travail défilante, action de 44 px au-dessus de la barre. Assertion T0 conservée sans échec attendu ; quatre cas J1 font réellement piocher/jouer/donner/refuser/accepter. [Captures regardées](tablettes/T4-joueurs/j1/index.html) |
 | ✅ **T0 joueurs, 04/10 : sur iPad portrait et paysage, le nom de la campagne se superposait à l'horloge.** | Captures T0 `portrait/02-direct.png` et `paysage/02-direct.png` ; deux blocs fixes indépendants dans `TabletHub.tsx` | **Traité dans T4/J1 Direct le 06/10** : en-tête dans le flux et horloge dans sa zone. [Captures regardées aux quatre formats](tablettes/T4-joueurs/direct/index.html). Les assertions complètent le regard ; elles ne garantissent pas à elles seules l'absence de chevauchement |
-| ⚠️ **T0 meneur, 05/10 : la première connexion pourtant appairée ne reçoit pas toujours le flux.** Les pads restent absents ; une nouvelle connexion les fait apparaître. Sur quatre variantes d'un essai exploratoire, trois sont restées vides et une s'est peuplée | `electron/SyncServer.ts` demande `remote:request-sync` dès `handleConnection`, avant `remote:register` ; le rôle privilégié arrive ensuite. `e2e/tabletteMeneurT0.spec.ts` demande une seconde synchronisation après appairage pour établir un état de référence fiable. Voir `documentation/Planning/2026-10-05-T0-tablette-meneur.md` | **Hors T0**, à stabiliser avant le critère de reconnexion de T1. C'est une course intermittente : pas de `test.fail()` automatique qui deviendrait rouge quand elle réussit |
+| ✅ **09/10 : première connexion de la tablette du meneur sans flux — corrigé au § 130.** *Constat du 05/10 (T0 meneur) : pads absents jusqu'à une nouvelle connexion, trois essais vides sur quatre* | `SyncServer` demandait l'état complet dès `handleConnection` ; diffusé au seul rôle `remote`, il n'atteignait pas un socket encore sans rôle, et les diffusions suivantes ne portent que ce qui change | **Corrigé le 09/10** : la demande part après `remote:register`. Le contournement par seconde connexion est retiré des trois e2e meneur, qui passent sans lui (117/117). Pas encore vu sur une vraie tablette |
 | ✅ **Réparé en T4/M1, 06/10 : « Cliquer pour fermer » ferme le résultat de dés.** Fermeture haute visible même après défilement de 99 dés ; fond, Échap et expiration à quinze secondes conservés | `RemoteDiceResultOverlay.tsx` : bouton tactile et en-tête fixe hors du contenu défilant. `e2e/tabletteMeneurT0.spec.ts` : quatre cas de fermeture ordinaires, sans échec attendu ; cas long dans `e2e/tabletteM1T4.spec.ts` | [Relevé M1](2026-10-06-T4-M1-meneur.md), 81 scénarios distincts M1/T0 validés après rejeux ciblés |
 | ✅ **Réparé en T4/M2, 06/10 : les choix d'outil, couleur et épaisseur faits sur le PC n'arrivaient pas au Tableau de la tablette.** | Le flux rapide de `useNexusSynchronizer.ts` omettait ces trois champs ; il réutilise maintenant `segmentDuTableau`, comme le flux complet, sans changer sa cadence | Le parcours Tableau de `e2e/tabletteM2T4.spec.ts` vérifie les trois réglages venus du PC, le dessin tactile et l'historique. [Relevé M2](2026-10-06-T4-M2-meneur.md) |
 | ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
 | ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
-| ⚠️ **L'en-tête écrit « Combat-OS OS »**, « Dice-OS OS »… et à 1440 px de large le titre passe sur trois lignes (celui de Dice-OS est rogné en haut), tandis que la droite de l'en-tête déborde (`GM-OS_V` coupé) | `Shell.tsx:551` ajoute `<span>OS</span>` après `t('modules:names.…')`, alors que la plupart des noms portent déjà « -OS ». Visible sur toute capture de la vitrine (`e2e/vitrine.spec.ts`) | **Trouvé le 2026-09-25 par la vitrine**, premier essai de faisabilité de la refonte. C'est de l'habillage : il se traite dans la refonte ou juste avant, pas en passant |
+| ⚠️ ~~**L'en-tête écrit « Combat-OS OS »**~~ — *ce point est corrigé depuis le 30/09 (`TitreDuModule`, `Shell.tsx`), relevé le 09/10 ; le titre sur trois lignes et le débordement à droite n'ont pas été revérifiés à l'écran* — « Dice-OS OS »… et à 1440 px de large le titre passe sur trois lignes (celui de Dice-OS est rogné en haut), tandis que la droite de l'en-tête déborde (`GM-OS_V` coupé) | `Shell.tsx:551` ajoute `<span>OS</span>` après `t('modules:names.…')`, alors que la plupart des noms portent déjà « -OS ». Visible sur toute capture de la vitrine (`e2e/vitrine.spec.ts`) | **Trouvé le 2026-09-25 par la vitrine**, premier essai de faisabilité de la refonte. C'est de l'habillage : il se traite dans la refonte ou juste avant, pas en passant |
 | ⚠️ **Combat-OS : « PERCUTANT » et « FICHE » se chevauchent** sur la carte d'un combattant, à 1440 px — pas sur toutes les cartes (celle de Gaff est propre), donc la largeur du nom décide | La vitrine : 11 combattants sous le pilote Blade Runner, `1-combat.png` | Même trouvaille, même motif de renvoi. *C'est la largeur réelle du Zenbook qui l'a montré — aucun essai ne tournait à cette taille* |
 | ✅ ~~**Une carte projetée sur un moniteur s'affiche dans TOUTES les fenêtres de projection ouvertes**~~ — **corrigé le soir même, § 118** — en couche 0, sous leur image. `projectionTarget` vaut `'monitor'` sans dire lequel, et `ProjectorView` dessine la carte dès que `mapTarget === 'monitor' && isProjectorWindow` | Projeter une carte sur le moniteur 2 pendant que le moniteur 1 est ouvert **sans image** : la carte y apparaît aussi | **Antérieur au 25/09, et jamais signalé à l'écran.** Le corriger demande de faire voyager `ecranDeLaCarte` (§ 114) jusqu'aux projecteurs — un champ de plus dans le protocole entre fenêtres, donc un chantier à part. *Une image opaque le cache ; un écran au repos le montre.* |
 
@@ -10732,6 +10732,36 @@ cette entrée ; push autorisé sur `feature/tablet-hub-pwa`, pré-push complet
 conservé et fichiers étrangers exclus. Trame, lint, PDF et cadrage terminés ;
 les essais en séance et sur le matériel restent distincts.
 
+### 130 · La première connexion de la tablette du meneur — 09/10/2026
+
+**Origine.** Reprise de Claude Code après Codex. David : *« gm-os est éteint vérifie bien les
+choses avant de commencer Codex m'a dit que tout était fini »*. La série de Codex (§§ 125 à 129)
+est bien close ; la ligne T0 meneur du § 1 bis, ouverte le 05/10, ne l'était pas.
+
+**La cause, en trois maillons.** `SyncServer.handleConnection` demandait l'état complet au meneur
+dès l'ouverture du socket. Le meneur le diffuse **par rôle** (`useNexusSynchronizer`), et
+`broadcastAction` ne remet qu'aux sockets dont le rôle correspond : si `remote:register` n'avait pas
+encore été traité, l'état complet ne partait vers personne. Les diffusions suivantes ne portent que
+**ce qui change** — des pads immobiles n'arrivaient donc jamais. Le Hub des joueurs y échappait
+parce qu'il redemande l'état lui-même après son inscription (`useHubSync`) ; la tablette du meneur
+(`useRemoteSync`) ne le faisait pas.
+
+**La correction.** La demande part de `handleRegister`, après l'attribution du rôle, et pas pour une
+inscription refusée (personnage déjà pris). Une réinscription redemande l'état, exprès : le rôle ou
+le personnage, donc le caviardage, peut avoir changé ; le plancher des synchronisations forcées
+fond les rafales. Seuls deux clients ouvrent un socket et tous deux s'inscrivent : retirer la
+demande de la connexion ne prive personne.
+
+**Éprouvé.** `tsc -b`, lint ciblé, construction. Deux cas ajoutés à
+`electron/SyncServer.relais.test.ts`, tous deux rouges sur l'ancien code (34 tests du serveur au
+vert). Le contournement par seconde connexion est **retiré** de `tabletteMeneurT0`, `tabletteM1T4`
+et `tabletteM2T4` : **117 scénarios sur 117** passent sans lui, chacun ouvrant une première
+connexion qui doit montrer « Plan du relais ». Suite complète avant la correction : **7 222 tests**
+(568 fichiers). Les 88 scénarios des tablettes des joueurs passent aussi. Profils jetables, aucune donnée de David lue.
+
+**Reste.** La voir sur une vraie tablette appairée — première ouverture, pads présents sans
+rechargement.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10803,6 +10833,7 @@ les essais en séance et sur le matériel restent distincts.
 | 62 | **Avertissements du lint** | ✅ **540 → 0 avertissement, zéro erreur**, § 127 ; lot 38 commité `4e080992` et poussé jusqu'à `1aefeb99`. Après la migration PDF séparée : zéro annotation explicite `any` dans `src/`, `electron/` et `e2e/` | Chantier lint terminé | [Analyse](2026-10-08-audit-avertissements-lint.md), [lot 38](2026-10-09-lint-ponts-du-storyboard.md) |
 | 63 | **Lecteurs PDF v2** | ✅ **Lot 39 commité et poussé `1aefeb99`**, § 128 ; import PDF dans l'interface validé par David le 09/10 : « j'ai fait l'import d'un PDF c'est bon ». Pré-push : types, lint, 7 222 tests, construction réussis | Terminé | [Migration et reprise](2026-10-09-migration-pdf.md) |
 | 64 | **Capture du dernier jet** | ✅ **Lot 40 livré dans le commit contenant cette entrée**, § 129 ; commit et push demandés par David le 09/10. Panneau entier, scénario autonome, image remplacée et relue ; construction, types, lint, 52 tests de protection et un scénario Electron passent | Terminé | [Correction et reprise](2026-10-09-cadrage-dernier-jet.md) |
+| 65 | **Première connexion de la tablette du meneur** | ✅ **Corrigé le 09/10**, § 130 : l'état complet est demandé après l'inscription, plus à la connexion ; contournement retiré des e2e meneur, 117/117 | La voir sur une vraie tablette appairée | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

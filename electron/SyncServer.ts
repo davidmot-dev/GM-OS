@@ -369,11 +369,8 @@ export class SyncServer {
         const remoteAddress = ws._socket?.remoteAddress;
         ws.remoteAddress = remoteAddress;
         console.log(`[Nexus Sync] New device connected from ${remoteAddress}`);
-        
-        // Request initial full sync from GM
-        if (this.mainWindow && !this.mainWindow.isDestroyed()) {
-            this.mainWindow.webContents.send('remote:request-sync');
-        }
+
+        // Pas de demande d'état complet ici : voir `handleRegister` (§ 130).
 
         ws.on('message', (message: string) => {
             try {
@@ -453,6 +450,23 @@ export class SyncServer {
             ws.send(JSON.stringify({ type: 'remote:registered', payload: { deviceId: actualDeviceId, role: ws.role } }));
             if (this.derniereApparence) {
                 ws.send(JSON.stringify({ type: 'sync', payload: { apparence: this.derniereApparence } }));
+            }
+
+            /*
+              **L'état complet se demande une fois le rôle connu**, pas à la
+              connexion (2026-10-09, § 130 du registre). Le meneur diffuse par
+              rôle et `broadcastAction` ne remet qu'aux sockets dont le rôle
+              correspond : demandé dès `handleConnection`, l'état complet
+              pouvait partir avant `remote:register` et n'atteindre personne.
+              Les diffusions suivantes ne portent que ce qui change — les pads
+              d'une tablette du meneur restaient donc absents jusqu'à une
+              nouvelle connexion (constat T0 du 05/10 : trois essais vides sur
+              quatre). Une réinscription redemande l'état, et c'est voulu : le
+              rôle ou le personnage, donc le caviardage, peut avoir changé. Le
+              plancher de `useNexusSynchronizer` fond les rafales.
+            */
+            if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+                this.mainWindow.webContents.send('remote:request-sync');
             }
         } catch (err: unknown) {
             if (err && typeof err === 'object' && 'message' in err && err.message === 'character_taken') {

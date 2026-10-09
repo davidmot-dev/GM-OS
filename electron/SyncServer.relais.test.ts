@@ -63,12 +63,34 @@ afterEach(() => {
 });
 
 describe('SyncServer — messages reçus et relais', () => {
-    it('transmet au registre l’adresse du transport et demande la synchronisation initiale', () => {
+    it('transmet au registre l’adresse du transport', () => {
         const socket = new SocketFictif();
         serveur.handleConnection(socket);
-        expect(versLeMJ).toHaveBeenCalledWith('remote:request-sync');
         inscrire(socket, 'tablette', 'hub');
         expect(sessionManager.getClient('tablette')?.ip).toBe('192.0.2.42');
+    });
+
+    // § 130 : demandé à la connexion, l'état complet partait avant que le rôle
+    // existe, et la diffusion par rôle ne l'adressait à personne.
+    it('ne demande la synchronisation initiale qu’une fois le rôle attribué', () => {
+        const socket = new SocketFictif();
+        serveur.handleConnection(socket);
+        expect(versLeMJ).not.toHaveBeenCalledWith('remote:request-sync');
+        recevoir({ type: 'remote:register', payload: {
+            deviceId: 'tablette-mj', pseudo: 'MJ', role: 'remote', token: 'secret-artificiel',
+        } }, socket);
+        expect(socket.role).toBe('remote');
+        expect(versLeMJ.mock.calls.filter(([canal]) => canal === 'remote:request-sync')).toHaveLength(1);
+    });
+
+    it('ne demande pas d’état pour une inscription refusée (personnage déjà pris)', () => {
+        inscrire(emetteur, 'joueur-a', 'hub', 'perso-a');
+        serveur.handleConnection(destinataire);
+        recevoir({ type: 'remote:register', payload: {
+            deviceId: 'joueur-b', pseudo: 'Test', role: 'hub', characterId: 'perso-a',
+        } }, destinataire);
+        expect(destinataire.send.mock.calls.some(([brut]) => brut.includes('character_taken'))).toBe(true);
+        expect(versLeMJ).not.toHaveBeenCalledWith('remote:request-sync');
     });
 
     it.each([null, 'texte', [1, { libre: true }], { libre: { valeurs: [1, 2] } }])(

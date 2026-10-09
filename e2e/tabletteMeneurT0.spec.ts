@@ -118,14 +118,9 @@ for (const taille of TAILLES) {
             expect(await page.evaluate(() => Boolean(window.appBridge)), 'une tablette MJ n’a pas le pont Electron').toBe(false);
             await expect(page.getByRole('button', { name: 'Pads', exact: true })).toHaveAttribute('aria-current', 'page', { timeout: 20_000 });
             await expect(page.getByText('Non appairée', { exact: true })).toHaveCount(0);
-            // La demande initiale du serveur peut précéder le registre du rôle
-            // remote. Une seconde connexion réclame le flux complet alors que
-            // la vraie tablette est déjà appairée ; aucune donnée n'est forgée.
-            await page.evaluate(port => new Promise<void>((resolve, reject) => {
-                const socket = new WebSocket(`ws://127.0.0.1:${port}`);
-                socket.addEventListener('open', () => { socket.close(); resolve(); }, { once: true });
-                socket.addEventListener('error', () => reject(new Error('Demande de synchronisation impossible')), { once: true });
-            }), gmos.ports.sync);
+            // Plus de seconde connexion pour réclamer le flux (§ 130, 09/10) : le
+            // serveur demande l'état complet après l'inscription. Le plan visible
+            // ci-dessous prouve que la première connexion suffit.
             await expect(page.getByRole('button', { name: 'Plan du relais' })).toBeVisible({ timeout: 20_000 });
         }
         async function onglet(page: Page, nom: string) {

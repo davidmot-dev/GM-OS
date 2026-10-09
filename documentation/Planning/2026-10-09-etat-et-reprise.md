@@ -605,3 +605,44 @@ explicites, lecteurs PDF et capture du dernier jet. Rien à reprendre dans
 ces corrections ; les essais en conditions de séance et sur le matériel
 restent distincts. Vérifier `git log` pour le hash de cette livraison et
 l'état de l'envoi ; préserver les modifications étrangères.
+
+## Reprise Claude Code — première connexion de la tablette du meneur, 09/10
+
+David : *« gm-os est éteint vérifie bien les choses avant de commencer Codex
+m'a dit que tout était fini »*. Vérifié : la série de Codex est close et
+poussée jusqu'à `b5b56538` ; types propres et **7 222 tests au vert**
+(568 fichiers, 1 ignoré) avant toute modification. Mais le § 1 bis gardait
+des lignes ouvertes, dont une confirmée dans le code : la tablette du meneur
+pouvait ouvrir sans flux.
+
+**Corrigé au § 130 du registre.** `electron/SyncServer.ts` demande l'état
+complet après `remote:register`, plus à la connexion. Deux cas ajoutés à
+`SyncServer.relais.test.ts`. Le contournement par seconde connexion est retiré
+de `tabletteMeneurT0`, `tabletteM1T4` et `tabletteM2T4`. Construction, puis
+**117/117** scénarios meneur et **88/88** joueurs (`tabletteJoueursT0`,
+`J1`, `J2`, `Accueil`, `Direct`) sur profils jetables.
+
+Le registre corrige aussi une ligne périmée du § 1 bis : « Combat-OS OS » est
+réparé depuis le 30/09 (`TitreDuModule`) ; le titre sur trois lignes et le
+débordement de l'en-tête à 1 440 px n'ont pas été revérifiés.
+
+**Non commité** : `electron/SyncServer.ts`, `electron/SyncServer.relais.test.ts`,
+les trois e2e, le registre et cette note. **Fichiers étrangers à ne pas
+toucher** : guides 01, 02 et 84 (lignes recollées ; dans le 01, des `>` de
+citation se retrouvent au milieu d'une phrase), note du 07/10, et les guides
+qui ne diffèrent que par les fins de ligne.
+
+**Par quoi reprendre.** Ouvrir une vraie tablette du meneur appairée : les pads
+doivent apparaître sans rechargement. Puis, au § 1 bis : le chevauchement
+« PERCUTANT »/« FICHE » de Combat-OS, la séquence de storyboard en séance, le
+plantage intermittent d'une exécution e2e complète.
+
+⚠️ **Piège payé : les e2e des tablettes écrivent leurs captures dans les
+archives.** `tabletteMeneurT0`, `tabletteM1T4`, `tabletteM2T4`,
+`tabletteJoueursT0`, `J1`, `J2`, `Accueil` et `Direct` réécrivent
+`documentation/Planning/tablettes/T0-*` et `T4-*`, qui sont les preuves
+datées des relevés. Relancer ces essais modifie environ 360 images suivies.
+Ces images ne doivent pas être commitées : les rétablir depuis `HEAD`, avec
+l'accord de David (commande git qui écrit).
+
+**Rétabli le 09/10**, David : *« oui lance la restauration »* — `git restore documentation/Planning/tablettes/`, plus aucune image modifiée dans ce dossier.
