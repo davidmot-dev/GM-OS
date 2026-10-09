@@ -26,6 +26,7 @@ import { volumesDuMoment, NOM_DE_LA_SOURCE } from './volumesDuMoment';
 /* Type seul : effacé à la compilation, donc aucun cycle à l'exécution — et une
    forme déclarée une fois vaut mieux qu'une forme recopiée ici. */
 import type { AmbientTheme } from '../ambient/useAmbientStore';
+import type { FenetreDuStoryboard } from './pontsDuStoryboard';
 import { Logger } from '../../utils/logger';
 /*
   ⛔ **Importé, et non lu sur `window` — c'est le défaut du 2026-09-12.**
@@ -298,8 +299,7 @@ export const useStoryboardStore = create<StoryboardState>()(
 
             arreterLeMoment: () => {
                 const { imageAvantLeMoment, activeMomentId, moments } = get();
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const gWindow = window as any;
+                const gWindow = window as unknown as FenetreDuStoryboard;
 
                 /*
                   **Un titre permanent s'en va avec son moment.** C'est ce qui le
@@ -518,8 +518,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                 }
 
                 // Cross-store orchestration
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const gWindow = window as any;
+                const gWindow = window as unknown as FenetreDuStoryboard;
 
                 // 1. Music-OS
                 if (moment.musicPadId) {
@@ -527,7 +526,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                         effets.push({ nom: 'Musique', sort: 'module-absent' });
                     } else {
                         const musicStore = gWindow.useMusicStore.getState();
-                        const pad = musicStore.playlists.flatMap((p: { pads: { id: string, label: string }[] }) => p.pads).find((p: { id: string }) => p.id === moment.musicPadId);
+                        const pad = musicStore.playlists.flatMap(p => p.pads).find(p => p.id === moment.musicPadId);
 
                         if (pad) {
                             console.log(`[Storyboard] Music: Found pad ${pad.label} (${pad.id}). Playing...`);
@@ -746,7 +745,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                     } else {
                         const imageStore = gWindow.useImageStore.getState();
                         const diaporama = imageStore.diaporamas?.find(
-                            (d: { id: string }) => d.id === pose.diaporamaId);
+                            d => d.id === pose.diaporamaId);
                         if (diaporama) {
                             /* Déjà en cours et sur le même écran : on le laisse
                                tourner. Le relancer le ramènerait à sa première
@@ -768,7 +767,7 @@ export const useStoryboardStore = create<StoryboardState>()(
                         set({ cibleDeLImageDuMoment: null });
                     } else {
                         const imageStore = gWindow.useImageStore.getState();
-                        const media = imageStore.mediaList.find((m: { id: string, name: string }) => m.id === moment.imageMediaId);
+                        const media = imageStore.mediaList.find(m => m.id === moment.imageMediaId);
                         if (media) {
                             console.log(`[Storyboard] Image: Projecting solo ${media.name}`);
                             imageStore.projectSolo(media, moment.imageTarget);

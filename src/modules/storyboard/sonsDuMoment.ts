@@ -1,3 +1,5 @@
+import type { FenetreDuStoryboard } from './pontsDuStoryboard';
+
 /**
  * **Ce qu'une séquence laisse sonner derrière elle.**
  *
@@ -92,8 +94,6 @@ export function cequUnArretEteint(precedent: SonsDuMoment | null): SonsDuMoment 
     return { ...precedent, musicPadId: null };
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Coupe ce qui a été décidé, chaque moteur par son propre geste d'arrêt.
  *
@@ -103,7 +103,7 @@ export function cequUnArretEteint(precedent: SonsDuMoment | null): SonsDuMoment 
  * accompagne ne fait jamais tomber ce qui est demandé.*
  */
 export async function eteindreLesSons(aEteindre: SonsDuMoment): Promise<void> {
-    const gWindow = window as any;
+    const gWindow = window as unknown as FenetreDuStoryboard;
 
     /*
       **La platine ne s'arrête que si elle joue encore CE morceau-là.** Si le
@@ -132,8 +132,8 @@ export async function eteindreLesSons(aEteindre: SonsDuMoment): Promise<void> {
               pad fantôme dans l'atmosphère affichée.
             */
             const sound = gWindow.useSoundStore?.getState?.();
-            const affichee = sound?.atmospheres?.find((a: { id: string }) => a.id === sound.activeAtmosphereId);
-            if (affichee?.pads?.[aEteindre.soundPadId]) {
+            const affichee = sound?.atmospheres?.find(a => a.id === sound.activeAtmosphereId);
+            if (sound && affichee?.pads?.[aEteindre.soundPadId]) {
                 sound.setPadActive?.(aEteindre.soundPadId, false);
             }
         } catch (e) {
@@ -154,12 +154,13 @@ export async function eteindreLesSons(aEteindre: SonsDuMoment): Promise<void> {
     */
     if (aEteindre.ambientSceneId) {
         try {
-            const ambient = gWindow.useAmbientStore?.getState?.();
-            const scene = ambient?.scenes?.find((s: any) => s.id === aEteindre.ambientSceneId);
-            if (scene && ambient?.toggleTrack) {
+            const magasin = gWindow.useAmbientStore;
+            const ambient = magasin?.getState?.();
+            const scene = ambient?.scenes?.find(s => s.id === aEteindre.ambientSceneId);
+            if (magasin && scene && ambient?.toggleTrack) {
                 for (let i = 0; i < scene.activeTracks.length; i++) {
                     if (!scene.activeTracks[i]) continue;
-                    const piste = gWindow.useAmbientStore.getState().tracks?.[i];
+                    const piste = magasin.getState().tracks?.[i];
                     if (piste?.isPlaying) await ambient.toggleTrack(i);
                 }
             }

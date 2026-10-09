@@ -10633,6 +10633,30 @@ Suite complète non rejouée après ce lot, aucun nouvel e2e. Comptage brut :
 Dernier local et poussé **`916a3842`**. Reprendre Storyboard masqué (4) ; PDF
 v1/v2 et cadrage du dernier jet séparés au § 1 bis. Préserver les fichiers étrangers.
 
+**09/10 — lot 37 commité, lot 38 ponts du Storyboard réalisé.** À la demande
+« commit et passe à l'étape suivante (GM-OS est éteint) », les neuf fichiers
+Codex du lot 37 sont commités sous **`004a814e`**. Dernier poussé **`916a3842`**,
+un commit local d'avance ; modifications étrangères exclues, aucun push.
+
+Le [lot 38](2026-10-09-lint-ponts-du-storyboard.md) retire **quatre annotations
+masquées** et leurs trois directives, dans les deux fichiers de Storyboard.
+Contrat partagé facultatif avec les signatures réelles de cinq magasins et
+deux moteurs, par imports de types seuls. Les callbacks sont inférés ; gardes
+des modules absents, relecture des pistes et règles d'arrêt/relais conservées.
+Aucune fixture, attente, persistance ou règle de lint modifiée.
+
+Types, construction et **131 tests dans 14 fichiers** passent. Les fichiers
+de tests sont inchangés. Lint global : **1 586 fichiers, zéro erreur, zéro
+avertissement**. Comptage brut : **une seule annotation explicite**, dans
+`electron/lectureDeSource.ts`, déjà masquée ; **zéro dans `src/` et les tests**.
+`git diff --check` propre ; empreintes des 21 fichiers étrangers inchangées.
+Pas de nouvelle suite complète ni d'e2e, aucun lancement Electron.
+
+**Huit fichiers Codex non commités**, trois sources et cinq documents. Dernier
+local **`004a814e`**, dernier poussé **`916a3842`**. Storyboard terminé ; reprendre
+la migration PDF v1/v2 du § 1 bis, sur des PDF artificiels. Le cadrage du dernier
+jet y reste séparément. Préserver les fichiers étrangers.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10701,7 +10725,7 @@ v1/v2 et cadrage du dernier jet séparés au § 1 bis. Préserver les fichiers �
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lint global propre**, lot 36 poussé (`916a3842`), lot 37 réalisé non commité, § 127 : **540 → 0 avertissement, zéro erreur** ; zéro `any` dans les tests ; 5 applicatives déjà masquées ; construction/types et 96 tests ciblés passent | Storyboard masqué (4) ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-memoisation-des-pilotes.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lint global propre**, lot 37 commité (`004a814e`), lot 38 réalisé non commité, dernier poussé `916a3842`, § 127 : **540 → 0 avertissement, zéro erreur** ; zéro `any` dans `src/` et les tests ; 1 dans Electron, déjà masqué ; types/construction et 131 tests Storyboard passent | Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-ponts-du-storyboard.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

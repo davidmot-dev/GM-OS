@@ -505,3 +505,31 @@ Reprendre **Storyboard masqué (4)**, deux annotations dans chacun de
 `sonsDuMoment.ts` et `useStoryboardStore.ts`. Migration PDF v1/v2 et cadrage
 du dernier jet restent séparés au § 1 bis. Préserver les guides, le lanceur,
 le 07/10 et `.claude` étrangers.
+
+## Commit du lot 37 et lot 38 — ponts du Storyboard
+
+David demande « commit et passe à l'étape suivante (GM-OS est éteint) ».
+Les neuf fichiers Codex du lot 37 sont commités sous **`004a814e`**, sans les
+modifications étrangères. Dernier poussé **`916a3842`**, un commit local d'avance.
+Aucun push dans cette session.
+
+Le [lot 38](2026-10-09-lint-ponts-du-storyboard.md) retire les **quatre `any`
+masqués de Storyboard**, deux dans `sonsDuMoment.ts`, deux dans
+`useStoryboardStore.ts`, et les trois directives correspondantes. Contrat
+partagé facultatif, dérivé des signatures réelles de cinq magasins et deux
+moteurs ; imports de types seuls pour préserver les frontières entre modules.
+Callbacks inférés, présence du magasin de bruitage explicitée, état des pistes
+d'ambiance relu à chaque tour. Règles d'arrêt/relais et orchestration conservées.
+
+Types, construction et **131 tests dans 14 fichiers** passent sur les sources
+finales ; les fichiers de tests sont inchangés. Lint global : **1 586 fichiers,
+zéro erreur, zéro avertissement**. Comptage brut : **une seule annotation**,
+dans `electron/lectureDeSource.ts`, déjà masquée ; zéro dans `src/` et les tests.
+`git diff --check` propre ; empreintes des 21 fichiers étrangers inchangées.
+Pas de nouvelle suite complète ni d'e2e, aucun lancement Electron.
+
+**Huit fichiers Codex non commités**, trois sources et cinq documents.
+Dernier local **`004a814e`**, dernier poussé **`916a3842`**. Reprendre la
+**migration PDF v1/v2 au § 1 bis**, sur des PDF artificiels, sans toucher aux
+données réelles. Le cadrage du dernier jet y reste séparément. Préserver les
+guides, le lanceur, le 07/10 et `.claude` étrangers.

@@ -82,3 +82,16 @@ au **§ 1 bis du registre**. Le cadrage de la capture du dernier jet y reste
 Préserver les fichiers étrangers des guides, du lanceur e2e, du 07/10 et de
 `.claude`. Les images du contrôle du lot 36 restent ignorées dans
 `e2e-resultats/` ; elles ne sont pas republiées par ce lot.
+
+## Commit et étape suivante
+
+À la demande de David « commit et passe à l'étape suivante (GM-OS est éteint) »,
+les neuf fichiers du lot 37 sont commités sous **`004a814e`**. Dernier poussé
+**`916a3842`**, un commit local d'avance ; aucun push dans cette session.
+
+Le [lot 38 — ponts du Storyboard](2026-10-09-lint-ponts-du-storyboard.md) retire
+les **quatre annotations masquées** et leurs directives, avec un contrat
+facultatif dérivé des magasins et moteurs réels. Types, construction et **131
+tests dans 14 fichiers** passent ; lint global **sans erreur ni avertissement**.
+Huit fichiers Codex non commités. **Un seul `any` restant**, dans le lecteur
+PDF d'Electron ; reprendre la migration séparée du § 1 bis.

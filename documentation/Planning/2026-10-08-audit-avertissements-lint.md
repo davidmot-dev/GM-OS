@@ -943,3 +943,24 @@ Les **cinq annotations applicatives déjà masquées** restent : quatre
 Storyboard à revoir ensemble, une PDF dans la migration séparée du § 1 bis.
 Zéro annotation explicite dans les tests. Fichiers étrangers inchangés et
 `git diff --check` propre. Dernier local et poussé **`916a3842`**.
+
+## Lot 38 — ponts du Storyboard, 09/10
+
+Le lot 37 est commité sous **`004a814e`**, à la demande de David. Dernier poussé
+**`916a3842`**, un commit local d'avance. Le
+[lot 38](2026-10-09-lint-ponts-du-storyboard.md) retire les **quatre annotations
+masquées de Storyboard** et leurs trois directives. Contrat facultatif partagé,
+dérivé des signatures réelles de cinq magasins et deux moteurs, uniquement
+par imports de types. Gardes des modules absents et relecture de l'état des
+pistes conservées ; aucun test ou réglage du lint modifié.
+
+Types, construction et **131 tests dans 14 fichiers** passent. Lint global :
+**1 586 fichiers, zéro erreur, zéro avertissement**. Le fichier supplémentaire
+est le contrat de ponts. Le comptage syntaxique ne trouve plus qu'**une
+annotation explicite**, dans `electron/lectureDeSource.ts`, déjà masquée et
+liée au chantier PDF du § 1 bis. **Zéro dans `src/` et dans les tests.**
+
+**Huit fichiers Codex non commités**, trois sources et cinq documents.
+Fichiers étrangers inchangés, `git diff --check` propre. Pas de nouvelle suite
+complète ni d'e2e. Reprendre la migration PDF v1/v2 séparée du lint ; le cadrage
+du dernier jet reste également au § 1 bis. Aucun push dans cette session.
