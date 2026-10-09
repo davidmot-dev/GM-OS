@@ -575,3 +575,33 @@ Lot 23 réalisé, validé et documenté, **28 fichiers Codex non commités**
 (23 de code/tests, cinq documents). Reprendre **IA et fournisseurs (15)**, puis
 relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5),
 le dé du Hub (1) après coordination, puis tests/mémoïsation/directive.
+
+## Vingt-quatrième lot — IA et fournisseurs, 09/10
+
+David demande « commit, pousse et passe à l'étape suivante (GM-OS est éteint) »,
+puis « continue ». Le lot 23 est commité en `c5935958` et `10cce98e`, puis
+poussé jusqu'à `10cce98e` sur `origin/feature/tablet-hub-pwa`. Le hook complet
+passe : types, lint zéro erreur/263 avertissements, 7 124 tests, construction.
+Les anciennes mentions « non commité » décrivent l'état avant cette demande.
+
+Le [lot 24 IA et fournisseurs](2026-10-09-lint-ia-et-fournisseurs.md) retire
+**15 `any` applicatifs**. Les requêtes et réponses, messages de progression
+et conseils générés, signatures MCP, réponses Hue et arbre documentaire
+reprennent des contrats explicites. Les invites et messages du Cortex restent.
+L'option Gradio ignorée est corrigée et testée ; les exceptions inconnues et
+charges d'erreur nulles ont des replis explicites. Aucun paquet installé.
+
+**1 577 fichiers, zéro erreur et 248 avertissements**, dont **244 `any`
+(25 applicatifs, 219 dans les tests), trois diagnostics de mémoïsation et
+une directive inutile. **23 nouveaux cas ciblés dans quatre fichiers** passent.
+Types et construction passent ; **7 147 tests dans 560 fichiers** passent,
+un fichier et quatre tests ignorés ; `git diff --check` propre. Règles
+et inventaire JSON initial inchangés. Aucun profil réel, appareil ou réseau
+sollicité. Contrôles définitifs et reprise dans la [note du 09/10](2026-10-09-etat-et-reprise.md).
+
+Lot 24 réalisé, validé et documenté, **18 fichiers Codex non commités**
+(13 de code/tests, cinq documents) ; reprendre **Relais et archives (10)**, puis calcul/
+recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination,
+tests et diagnostics ciblés. Une incompatibilité PDF v1/v2 a été vérifiée
+sur les exports locaux et consignée au § 1 bis du registre ; sa migration
+reste un sujet séparé, distinct des avertissements du lint.

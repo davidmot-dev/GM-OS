@@ -698,7 +698,7 @@ ${pratique.trim()}`;
     */
     const TIMEOUT_MS = budgetDuMoment(useSessionOSStore.getState().sessions);
 
-    const callWithTimeout = async (name: string, tool: string, a: any) => {
+    const callWithTimeout = async (name: string, tool: string, a: Parameters<typeof mcpBridge.callTool>[2]) => {
       return Promise.race([
         mcpBridge.callTool(name, tool, a),
         new Promise((_, reject) =>

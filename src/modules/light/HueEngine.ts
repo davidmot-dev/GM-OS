@@ -251,7 +251,7 @@ export class HueEngine {
         const url = `https://${bridgeIp}/api/${username}${endpoint}`;
         try {
             const bridge = window.appBridge?.light;
-            let data: any;
+            let data: unknown;
 
             if (bridge) {
                 data = await bridge.request(url, method, body);
@@ -264,10 +264,12 @@ export class HueEngine {
             }
 
             // Check for common Hue error responses (Array of objects)
-            if (Array.isArray(data) && data[0]?.error) {
-                const error = data[0].error;
+            const premier: unknown = Array.isArray(data) ? data[0] : undefined;
+            const erreur = premier && typeof premier === 'object' && 'error' in premier ? premier.error : undefined;
+            if (erreur && typeof erreur === 'object' && 'type' in erreur) {
+                const error = erreur;
                 if (error.type === 1) { // Unauthorized user
-                    console.error('[HueEngine] Token invalid or expired:', error.description);
+                    console.error('[HueEngine] Token invalid or expired:', 'description' in error ? error.description : undefined);
                     throw new Error("UNAUTHORIZED");
                 }
             }

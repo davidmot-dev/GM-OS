@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useSessionOSStore } from '../session/useSessionOSStore';
-import type { TacticalAIState } from './types';
+import type { TacticalAIState, ConseilGenere } from './types';
 
 export const useTacticalAIStore = create<TacticalAIState>()(
   persist(
@@ -52,7 +52,7 @@ export const useTacticalAIStore = create<TacticalAIState>()(
         })),
 
       requestTacticalAnalysis: async (combatantId?: string, macroContext?: string) => {
-        const getStore = () => (useTacticalAIStore as any).getState() as TacticalAIState;
+        const getStore = () => useTacticalAIStore.getState();
 
         set({ status: 'analyzing', strategicNarration: '', activeAdvices: [] });
 
@@ -130,7 +130,7 @@ export const useTacticalAIStore = create<TacticalAIState>()(
             (token) => {
               set(state => ({ strategicNarration: state.strategicNarration + token }));
             },
-            (statusMsg) => set({ status: statusMsg as any }),
+            (statusMsg) => set({ status: statusMsg }),
             'oracle'
           );
 
@@ -175,7 +175,7 @@ export const useTacticalAIStore = create<TacticalAIState>()(
                secondes, parce que son conseil se périme ; il payait le double
                de prefill pour un contexte qu'il envoyait en double.
              */
-             return aiService.generateJSON<any[]>(advicePrompt, fullSystemPrompt, undefined, { sansPersona: true });
+             return aiService.generateJSON<ConseilGenere[]>(advicePrompt, fullSystemPrompt, undefined, { sansPersona: true });
           })();
 
           /*

@@ -43,3 +43,5 @@ export interface AIServiceInterface {
   generateJSON<T>(prompt: string, systemPrompt: string): Promise<T>;
   generateEmbeddings(text: string): Promise<number[]>;
 }
+/** Messages émis par le flux, distincts des états de travail du Cortex. */
+export type ProgressionDuFluxIA = 'Mode bloquant actif...' | 'Analyses tactiques & grimoires...' | 'Réception de la vision...' | '';

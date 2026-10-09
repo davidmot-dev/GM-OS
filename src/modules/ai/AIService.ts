@@ -13,7 +13,7 @@ import { ragService } from './RAGService';
 import { attenteAnnoncee, budgetDuMoment } from './budgetsDeTemps';
 import { tenterLaDiffusionLocale } from './modeDeContexte';
 import { genererViaCloudflare, octetsDeLImage } from './cloudflareImage';
-import type { AIResponse, AIProvider } from './types';
+import type { AIResponse, AIProvider, ProgressionDuFluxIA } from './types';
 import type { JournalEvent } from '../journal/types';
 import { contexteEstVide, type ContexteDeCampagne } from '../journal/contexteDeCampagne';
 import i18n from '../../i18n';
@@ -37,6 +37,24 @@ interface GeminiResponse {
       }[];
     };
   }[];
+}
+
+interface ReponseCustom {
+  choices?: { message?: { content?: string } }[];
+  text?: string;
+}
+
+interface RequeteJsonGemini {
+  contents: { parts: ({ text: string } | { inline_data: { mime_type: string; data: string } })[] }[];
+  generationConfig: { response_mime_type: string; temperature: number };
+  system_instruction?: { parts: { text: string }[] };
+}
+
+/** Une exception reçue du pont n'est pas nécessairement une instance Error. */
+function messageDeLErreur(erreur: unknown, repli: () => string): string {
+  const message = erreur && (typeof erreur === 'object' || typeof erreur === 'function') && 'message' in erreur
+    ? erreur.message : undefined;
+  return message ? String(message) : repli();
 }
 
 /**
@@ -336,7 +354,7 @@ export class AIService {
     prompt: string,
     systemPrompt: string,
     _gemId: string,
-    _ragOptions: any,
+    _ragOptions: Parameters<AIService['generateText']>[3],
     _lite?: boolean,
     attendJson: boolean = false,
     schema?: Record<string, unknown>,
@@ -464,7 +482,7 @@ export class AIService {
             throw new Error(`Erreur API Custom (${bridgeResponse.status}): ${bridgeResponse.statusText}`);
           }
 
-          const data = bridgeResponse.data as any;
+          const data = bridgeResponse.data as ReponseCustom;
           const text = data.choices?.[0]?.message?.content || data.text || JSON.stringify(data);
           return { text, metadata: { provider: 'custom', model } };
         }
@@ -552,8 +570,8 @@ export class AIService {
           metadata: { provider: activeProvider, model: config.modelId }
         };
 
-      } catch (error: any) {
-        const message = error?.message || String(error);
+      } catch (error: unknown) {
+        const message = messageDeLErreur(error, () => String(error));
         if (message.includes('ERR_NETWORK_CHANGED') && retries < MAX_RETRIES) {
           retries++;
           console.warn(`[AIService] ERR_NETWORK_CHANGED détecté. Tentative ${retries}/${MAX_RETRIES}...`);
@@ -883,10 +901,12 @@ Use the names above verbatim. Do not invent a setting title.
         const { Client } = await import('@gradio/client');
         
         // Utilisation du token fourni par l'environnement
-        const env = (import.meta as unknown as { env: Record<string, string> }).env;
-        const hfToken = env?.VITE_HF_TOKEN || ''; 
+        const hfToken: string = import.meta.env.VITE_HF_TOKEN || '';
         
-        const client = await Client.connect('https://mrfakename-z-image-turbo.hf.space', { hf_token: hfToken } as any);
+        const client = await Client.connect('https://mrfakename-z-image-turbo.hf.space', {
+          // 09/10/2026 : le SDK 2.1 lit « token », l'ancien hf_token était ignoré.
+          token: hfToken as NonNullable<Parameters<typeof Client.connect>[1]>['token'],
+        });
         
         // Paramètres Z-Image : prompt, height, width, num_inference_steps, seed, randomize_seed
         const isLandscape = aspectRatio === '16:9';
@@ -1139,7 +1159,7 @@ Use the names above verbatim. Do not invent a setting title.
   public async generateTextStream(
     prompt: string,
     onToken: (token: string) => void,
-    onStatusUpdate?: (status: string) => void,
+    onStatusUpdate?: (status: ProgressionDuFluxIA) => void,
     gemId: string = 'sage',
     ragOptions: { systemOnly?: boolean; systemName?: string } = {},
     /**
@@ -1543,7 +1563,7 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
       // jeu, et c'est le moment qui décide de la patience du meneur.
       const TIMEOUT_MS = budgetDuMoment(useSessionOSStore.getState().sessions);
       
-      const payload: any = {
+      const payload: RequeteJsonGemini = {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { 
           response_mime_type: "application/json",
@@ -1572,7 +1592,8 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
         });
       }
 
-      let response: any;
+      // Toute sortie normale de la boucle suit une réponse ; les autres lèvent.
+      let response!: AIProxyResponse;
       let retries = 0;
       const MAX_RETRIES = 2;
 
@@ -1580,10 +1601,10 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
         try {
           response = await Promise.race([
             window.appBridge.ai.proxyRequest(url, 'POST', { 'Content-Type': 'application/json' }, payload, 'gemini'),
-            new Promise((_, reject) => 
+            new Promise<never>((_, reject) =>
               setTimeout(() => reject(new Error(`TIMEOUT : Gemini n'a pas répondu en ${attenteAnnoncee(TIMEOUT_MS)}.`)), TIMEOUT_MS)
             )
-          ]) as any;
+          ]);
 
           if (response.ok) break;
 
@@ -1593,8 +1614,8 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
             throw new Error(`Status ${response.status}`);
           }
           break; // Pas retryable ou max atteint
-        } catch (error: any) {
-          const errorMsg = error.message || '';
+        } catch (error: unknown) {
+          const errorMsg = messageDeLErreur(error, () => '');
           const isRetryableError = errorMsg.includes('503') || errorMsg.includes('429') || errorMsg.includes('Service Unavailable');
           
           if (isRetryableError && retries < MAX_RETRIES) {
@@ -1609,9 +1630,9 @@ ${CONSIGNE_DE_JUGEMENT}` : ''}`;
       }
 
       if (!response.ok) {
-        const errorData = response.data;
+        const errorData = response.data as { error?: { message?: string } } | null;
         console.error("[AIService] Gemini API Error Details:", typeof errorData === 'object' ? JSON.stringify(errorData) : errorData);
-        throw new Error(`Erreur API Gemini JSON: ${response.statusText || response.status}. ${typeof errorData === 'object' ? (errorData.error?.message || '') : ''}`);
+        throw new Error(`Erreur API Gemini JSON: ${response.statusText || response.status}. ${typeof errorData === 'object' ? (errorData?.error?.message || '') : ''}`);
       }
 
       const data = response.data as GeminiResponse;

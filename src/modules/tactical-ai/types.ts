@@ -1,3 +1,5 @@
+import type { ProgressionDuFluxIA } from '../ai/types';
+
 export interface TacticalAISecrets {
   hueBridgeIp?: string;
   hueUsername?: string;
@@ -42,11 +44,11 @@ export interface TacticalAdvice {
 }
 
 export interface TacticalAIState {
-  status: 'idle' | 'analyzing' | 'applying' | 'error';
+  status: 'idle' | 'analyzing' | 'applying' | 'error' | ProgressionDuFluxIA;
   settings: TacticalAISettings;
   secrets: TacticalAISecrets;
   logs: TacticalAILogs[];
-  activeAdvices: TacticalAdvice[];
+  activeAdvices: (TacticalAdvice | ConseilGenere)[];
   strategicNarration: string;
   hardwareStatus: {
     hue: 'disconnected' | 'connected' | 'pairing';
@@ -65,3 +67,9 @@ export interface TacticalAIState {
   setIsPanelOpen: (isOpen: boolean) => void;
   requestTacticalAnalysis: (combatantId?: string, macroContext?: string) => Promise<void>;
 }
+
+/** L'invite historique du modèle diffère des conseils de l'orchestrateur. */
+export type ConseilGenere = Omit<TacticalAdvice, 'type' | 'sourceId'> & {
+  type: 'attack' | 'move' | 'spell' | 'defense';
+  sourceId?: string;
+};

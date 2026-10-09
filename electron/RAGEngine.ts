@@ -16,9 +16,12 @@ import {
 import { chargerIndex, chercherDansLIndex, verifierLesCitations } from './bookIndex';
 import { strictementSous, sousOuEgal } from './sousChemin';
 import { racineDuCorpus } from './perimetreDeLInstance';
+import type { DocumentIA } from '../src/types/documentsIA';
 
 const require = createRequire(import.meta.url);
-let pdf: any;
+// Chargement CommonJS : ne pas prétendre que le module installé est callable.
+type ParseurPdfHistorique = (donnees: Buffer) => Promise<{ text?: string }>;
+let pdf: unknown;
 try {
     pdf = require('pdf-parse');
 } catch (e) {
@@ -466,7 +469,7 @@ export class RAGEngine {
             } else if (ext === '.pdf') {
                 const dataBuffer = await fs.readFile(filePath);
                 if (typeof pdf === 'function') {
-                    const data = await pdf(dataBuffer);
+                    const data = await (pdf as ParseurPdfHistorique)(dataBuffer);
                     return data.text || '';
                 }
             }
@@ -518,9 +521,9 @@ export function registerRagHandlers() {
             return [];
         }
         
-        async function getFiles(dir: string): Promise<any[]> {
+        async function getFiles(dir: string): Promise<DocumentIA[]> {
             const items = await fs.readdir(dir, { withFileTypes: true });
-            const result = await Promise.all(items.map(async item => {
+            const result = await Promise.all(items.map(async (item): Promise<DocumentIA | null> => {
                 const fullPath = path.join(dir, item.name);
                 const relativePath = path.relative(root, fullPath);
                 
@@ -702,7 +705,9 @@ export function registerRagHandlers() {
         try {
             const dataBuffer = await fs.readFile(fullPath);
             if (pdf) {
-                const data = await pdf(dataBuffer);
+                // L'appel historique et son erreur éventuelle restent ; la
+                // migration de pdf-parse v2 est un chantier séparé (§ 1 bis).
+                const data = await (pdf as ParseurPdfHistorique)(dataBuffer);
                 return data.text || '';
             }
             return "PDF Parser non disponible.";

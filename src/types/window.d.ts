@@ -1,4 +1,5 @@
 import { SessionOSState } from '../modules/session/useSessionOSStore';
+import type { DocumentIA } from './documentsIA';
 import { MusicState } from '../modules/music/useMusicStore';
 import { CombatState } from '../modules/combat/useCombatStore';
 import { LightState } from '../modules/light/useLightStore';
@@ -44,13 +45,7 @@ declare global {
         label: string;
     }
 
-    export interface AIDocument {
-        name: string;
-        path: string;
-        type: 'file' | 'directory';
-        children?: AIDocument[];
-        extension?: string;
-    }
+    export type AIDocument = DocumentIA;
 
     export interface AIProxyResponse {
         ok: boolean;

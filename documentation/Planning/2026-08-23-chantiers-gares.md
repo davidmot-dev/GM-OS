@@ -142,6 +142,8 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
+| ⚠️ **09/10 : le lecteur PDF RAG attend l'API v1 de pdf-parse, module installé v2.4.5.** | `RAGEngine.ts` appelle la valeur de `require('pdf-parse')` comme une fonction ; les exports locaux sont un objet contenant le constructeur `PDFParse`. Le chemin d'index retourne sans texte ; `ai:extract-pdf` rend son erreur historique | **Migration séparée du lint**, sans lecture de PDF réel : adapter les deux appels, gérer la destruction du parseur et vérifier sur PDF artificiels. Le lot 24 retire le `any` et documente le contrat historique, il ne répare pas cette incompatibilité. [Constat et preuve](2026-10-09-lint-ia-et-fournisseurs.md) |
+| ✅ **09/10 : l'option hf_token de Gradio est ignorée par le SDK installé.** | `ClientOptions` 2.1 expose `token`, pas `hf_token` ; le typage de la génération d'image révèle ce décalage | **Corrigé dans le lot 24 du § 127** : même valeur d'environnement via `token`, deux cas de génération d'image avec SDK/téléchargement/rangement simulés et jeton artificiel ou absent. [Note](2026-10-09-lint-ia-et-fournisseurs.md) |
 | ✅ **08/10 : catégories du formulaire de chronologie hors contrat.** | Sept boutons dont `major/minor/discovery`, contre cinq catégories dans `TimelineEvent` et les filtres | **Corrigé dans le lot 23 du § 127**, selon David : « Aligner le formulaire sur les cinq catégories du modèle (recommandé) ». Les créations utilisent `major-event` ; pas de migration des événements existants. Formulaire et filtre majeur testés. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
 | ✅ **08/10 : graphe social, méthode de simulation absente et premier affichage sans réglage des forces.** | `d3Simulation` n'existe pas dans l'API installée ; l'effet initial précède l'apparition du canevas dimensionné. Les gardes de libération/réinitialisation n'accèdent pas aux nœuds vivants | **Corrigé dans le lot 23 du § 127** : forces publiques, libération de `fx/fy` en conservant `x/y`, `d3ReheatSimulation`, effet relancé à l'apparition du canevas. Sept nouveaux cas avec D3 réel et composant simulé limité à l'API publique. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
 | ✅ **08/10 : créations manuelles d'inventaire incomplètes.** | Les deux chemins Entrée/bouton de `CharacterSheetEditor` omettent `weight/properties`, requis par `InventoryItem` ; révélé par le retrait du `any` du hook | **Corrigé dans le lot 23 du § 127** : valeurs neutres `0` et `{}`, sans réécriture des objets déjà enregistrés. Contrat vérifié par `tsc -b`. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
@@ -10258,6 +10260,33 @@ relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), le
 dé du Hub (1) après coordination, les tests et les diagnostics ciblés.
 Dernier commit local `6d22466d`, dernier poussé documenté `861eaca4`.
 
+**Reprise suivante, 09/10 :** à la demande de David **« commit, pousse et
+passe à l'étape suivante (GM-OS est éteint) »**, puis **« continue »**, le
+lot 23 est commité en `c5935958` (correctifs) et `10cce98e` (contrats/docs),
+puis poussé jusqu'à `10cce98e` sur `origin/feature/tablet-hub-pwa`. Le hook
+complet passe : types, 263 avertissements/zéro erreur, 7 124 tests, construction.
+Aucune modification applicative pendant le push, aucun changement étranger inclus.
+Les anciennes mentions « non commité » gardent l'état avant cette demande.
+
+Le [lot 24 IA et fournisseurs](2026-10-09-lint-ia-et-fournisseurs.md) retire
+**15 `any` applicatifs**, par les vrais contrats des réponses/requêtes,
+progression et conseils du Cortex, arguments MCP, charges Hue et arbre
+documentaire partagé. Les messages et invites du Cortex restent ; l'option
+Gradio ignorée est corrigée et testée, les charges d'erreur atypiques relues.
+Une incompatibilité du lecteur PDF avec son module v2 est consignée au § 1 bis
+pour un sujet séparé ; elle n'est pas réparée par une conversion de types.
+
+**Lint : 1 577 fichiers, zéro erreur et 248 avertissements**, dont **244
+`any` (25 applicatifs, 219 dans les tests)**, trois diagnostics de mémoïsation
+et une directive inutile. Types, construction et **23 nouveaux cas ciblés
+dans quatre fichiers** passent. **7 147 tests dans 560 fichiers** passent,
+un fichier et quatre tests ignorés ; `git diff --check` propre.
+Lot 24 réalisé, validé et documenté, **18 fichiers Codex non commités**
+(13 de code/tests, cinq documents). [État du 09/10](2026-10-09-etat-et-reprise.md).
+Reprendre **Relais et archives (10)**, puis calcul/recherche/audio (9),
+messages d'erreur (5), dé du Hub (1) après coordination, tests et diagnostics
+ciblés. Préserver les modifications étrangères. Dernier local et poussé `10cce98e`.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10326,7 +10355,7 @@ Dernier commit local `6d22466d`, dernier poussé documenté `861eaca4`.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **13 lots poussés (dernier `861eaca4`), lots 14 à 22 commités localement (dernier `6d22466d`), lot 23 interfaces/fiches réalisé non commité**, § 127 : **540 → 263 avertissements, zéro erreur**, 40 `any` applicatifs et 219 dans les tests | IA/fournisseurs (15), relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [interfaces/fiches](2026-10-08-lint-interfaces-et-fiches.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 23 poussés (dernier `10cce98e`), lot 24 IA/fournisseurs réalisé non commité**, § 127 : **540 → 248 avertissements, zéro erreur**, 25 `any` applicatifs et 219 dans les tests | Relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [IA/fournisseurs](2026-10-09-lint-ia-et-fournisseurs.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

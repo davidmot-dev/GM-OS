@@ -106,3 +106,15 @@ Reprendre **IA et fournisseurs : 15 `any`** dans `AIService.ts` (8),
 calcul/recherche/audio (9), messages d'erreur (5), plus le dé du Hub (1) en
 attente de coordination. Puis les tests et les diagnostics ciblés.
 Préserver les changements de Claude ; ne pas toucher aux profils de David.
+
+## Reprise suivante — commit et push réalisés
+
+À la demande de David **« commit, pousse et passe à l'étape suivante
+(GM-OS est éteint) »**, le lot 23 est commité en **`c5935958`** (sept fichiers,
+correctifs fonctionnels), puis **`10cce98e`** (21 fichiers, contrats et cinq
+documents). Le push réussit jusqu'à `10cce98e`, avec le hook complet : types,
+lint (263 avertissements, zéro erreur), 7 124 tests, construction. Les mentions
+précédentes « non commité » décrivent l'état avant cette demande.
+La [reprise du 09/10](2026-10-09-etat-et-reprise.md) et le
+[lot 24 IA/fournisseurs](2026-10-09-lint-ia-et-fournisseurs.md) portent l'état
+suivant. Aucun changement étranger inclus ; `HubDiceDisplay.tsx` reste intact.
