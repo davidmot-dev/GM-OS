@@ -19,9 +19,10 @@ const { pairingManager } = await import('./PairingManager');
 const { sessionManager } = await import('./SessionManager');
 
 /** Fenêtre principale factice : handleRegister pousse la liste des clients dessus. */
+const envoiAuMJ = vi.fn<(channel: string, ...args: unknown[]) => void>();
 const fakeWindow = {
     isDestroyed: () => false,
-    webContents: { send: vi.fn() },
+    webContents: { send: envoiAuMJ },
 } as unknown as import('electron').BrowserWindow;
 
 let server: InstanceType<typeof SyncServer>;
@@ -37,13 +38,13 @@ afterAll(() => {
 });
 
 interface FakeSocket {
-    send: ReturnType<typeof vi.fn>;
+    send: ReturnType<typeof vi.fn<(message: string) => void>>;
     remoteAddress: string;
     role?: string;
     deviceId?: string;
 }
 
-const makeSocket = (): FakeSocket => ({ send: vi.fn(), remoteAddress: '192.168.1.99' });
+const makeSocket = (): FakeSocket => ({ send: vi.fn<(message: string) => void>(), remoteAddress: '192.168.1.99' });
 
 /** handleRegister est privée : c'est le point d'entrée réel de l'attaque. */
 const register = (ws: FakeSocket, payload: Record<string, unknown>) => {
@@ -51,10 +52,17 @@ const register = (ws: FakeSocket, payload: Record<string, unknown>) => {
 };
 
 /** Messages `remote:error` émis vers ce socket. */
-const errorsSentTo = (ws: FakeSocket): any[] =>
+const errorsSentTo = (ws: FakeSocket) =>
     ws.send.mock.calls
-        .map(([raw]) => JSON.parse(raw as string))
-        .filter(msg => msg.type === 'remote:error');
+        .map(([raw]): unknown => JSON.parse(raw))
+        .filter((msg): msg is { type: 'remote:error'; payload: { code: string } } => {
+            if (!msg || typeof msg !== 'object' || !('type' in msg) || msg.type !== 'remote:error') return false;
+            if (!('payload' in msg) || !msg.payload || typeof msg.payload !== 'object'
+                || !('code' in msg.payload) || typeof msg.payload.code !== 'string') {
+                throw new Error('Message remote:error sans code');
+            }
+            return true;
+        });
 
 describe('handleRegister — rôles privilégiés', () => {
     it('refuse le rôle gm sans token et rétrograde en player', () => {
@@ -141,16 +149,16 @@ describe('forwardToGM — autorisation', () => {
 
     /** Actions effectivement transmises au renderer MJ. */
     const forwarded = () =>
-        (fakeWindow.webContents.send as any).mock.calls.filter(([channel]: any[]) => channel === 'remote:action');
+        envoiAuMJ.mock.calls.filter(([channel]) => channel === 'remote:action');
 
     beforeEach(() => {
-        (fakeWindow.webContents.send as any).mockClear();
+        envoiAuMJ.mockClear();
     });
 
     it('transmet une action de joueur sur son propre personnage', () => {
         const ws = makeSocket();
         register(ws, { deviceId: 'tablette-alice', role: 'hub', characterId: 'perso-alice' });
-        (fakeWindow.webContents.send as any).mockClear();
+        envoiAuMJ.mockClear();
 
         forward(ws, { type: 'session:remove-inventory-item', payload: { characterId: 'perso-alice', itemId: 'i1' } });
 
@@ -160,7 +168,7 @@ describe('forwardToGM — autorisation', () => {
     it('bloque une action réservée aux rôles appairés', () => {
         const ws = makeSocket();
         register(ws, { deviceId: 'tablette-pirate', role: 'hub' });
-        (fakeWindow.webContents.send as any).mockClear();
+        envoiAuMJ.mockClear();
 
         forward(ws, { type: 'whiteboard:clear', payload: {} });
         forward(ws, { type: 'combat:next-turn', payload: {} });
@@ -171,7 +179,7 @@ describe('forwardToGM — autorisation', () => {
     it('bloque une action visant le personnage d\'un autre', () => {
         const ws = makeSocket();
         register(ws, { deviceId: 'tablette-bob', role: 'hub', characterId: 'perso-bob' });
-        (fakeWindow.webContents.send as any).mockClear();
+        envoiAuMJ.mockClear();
 
         forward(ws, { type: 'session:remove-inventory-item', payload: { characterId: 'perso-alice', itemId: 'i1' } });
 
@@ -192,7 +200,7 @@ describe('forwardToGM — autorisation', () => {
     it('transmet tout pour un rôle appairé', () => {
         const ws = makeSocket();
         register(ws, { deviceId: 'mj-remote', role: 'remote', token: pairingManager.getSecret() });
-        (fakeWindow.webContents.send as any).mockClear();
+        envoiAuMJ.mockClear();
 
         forward(ws, { type: 'whiteboard:clear', payload: {} });
         forward(ws, { type: 'session:remove-inventory-item', payload: { characterId: 'perso-de-nimporte-qui' } });
@@ -204,7 +212,7 @@ describe('forwardToGM — autorisation', () => {
         // Le rôle a été rétrogradé à l'enregistrement : l'autorisation suit.
         const ws = makeSocket();
         register(ws, { deviceId: 'faux-mj', role: 'gm' });
-        (fakeWindow.webContents.send as any).mockClear();
+        envoiAuMJ.mockClear();
 
         forward(ws, { type: 'combat:next-turn', payload: {} });
 

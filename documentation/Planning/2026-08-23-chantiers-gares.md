@@ -10466,6 +10466,55 @@ tests par contrat ; captures du manuel (27) distinctes, puis diagnostics ciblés
 Préserver les fichiers étrangers ; migration PDF séparée au § 1 bis.
 [État du 09/10](2026-10-09-etat-et-reprise.md).
 
+**09/10, demande suivante :** David demande « commit et passe à l'étape suivante
+(GM-OS est éteint) ». Les six fichiers du lot 30 sont commités en **`e377d82c`**,
+sans fichier étranger ; dernier poussé **`8e6a0939`**.
+
+Le [lot 31 contexte Oracle](2026-10-09-lint-contexte-oracle.md) retire **12 `any`**
+du seul test du hook : quatre lectures de magasins typées et projections des
+modèles, santé/initiative facultatives et carte absente préservées. Le rôle de
+fixture `Villain`, hors contrat, devient `hostile`. Trois scénarios et leurs
+13 assertions conservés ; hook et magasins applicatifs intacts.
+
+**43 tests ciblés dans trois fichiers passent**, types globaux et lint ciblé
+propres après correction. Lint global : **1 585 fichiers, zéro erreur et 98
+avertissements**, dont **94 `any`, tous dans les tests**, trois diagnostics de
+mémoïsation et une directive inutile. Comptage recoupé ; `git diff --check` propre.
+Construction et suite complète restent celles du lot 29, sans nouveau passage.
+
+**Six fichiers Codex non commités**, un test et cinq documents. Dernier local
+**`e377d82c`**, dernier poussé **`8e6a0939`**. Reprendre **enregistrement SyncServer
+(9)**, puis autres groupes par contrat (extraction JSON 8, RAGService 7) et
+diagnostics ciblés. Captures du manuel distinctes, migration PDF au § 1 bis.
+Préserver les fichiers étrangers et les cas de santé absente des tests Oracle.
+[État du 09/10](2026-10-09-etat-et-reprise.md).
+
+**09/10, demande suivante :** David demande « essaie de regrouper les erreurs
+"any" pour accélérer un peu les corrections sans pour autant perdre en qualité ».
+Le lot 31 reste non commité ; aucun commit/push demandé pour le lot suivant.
+
+Le [lot 32 IA/RAG et messages](2026-10-09-lint-lots-ia-et-messages.md) retire
+**37 annotations dans huit tests**, en deux groupes : IA/RAG (18) et messages
+serveur/tablettes/fiches (19). Espions/signatures et états projetés, résultats
+inconnus gardés avant lecture ; charges invalides et assertions conservées.
+Code applicatif intact, aucune règle désactivée.
+
+**75 tests ciblés dans onze fichiers passent**, types globaux et lint ciblé propres.
+Lint global : **1 585 fichiers, zéro erreur et 61 avertissements**, dont **57 liés
+aux `any`**. Le code porte **58 annotations dans les tests** : une annotation
+supplémentaire est déjà masquée par directive dans NexusService. La reprise
+la compte explicitement. Trois diagnostics de mémoïsation et une directive inutile
+restent. La suite complète passe : **7 198 tests dans 566 fichiers**, un fichier
+et quatre tests ignorés. `git diff --check` propre ; construction non rejouée
+pour ces harnais uniquement.
+
+**Quinze fichiers Codex non commités au total**, neuf tests et six documents.
+Dernier local **`e377d82c`**, dernier poussé **`8e6a0939`**. Reprendre règles/jets/
+fixtures (16), archives/session (7 avertissements, 8 annotations), inventaires/
+catalogues (7), captures du manuel (27), puis diagnostics ciblés. Préserver les
+fichiers étrangers ; migration PDF séparée au § 1 bis.
+[État du 09/10](2026-10-09-etat-et-reprise.md).
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10534,7 +10583,7 @@ Préserver les fichiers étrangers ; migration PDF séparée au § 1 bis.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lot 29 commité (`c282f2f7`), lot 30 purge/détenteurs réalisé non commité**, dernier poussé `8e6a0939`, § 127 : **540 → 110 avertissements, zéro erreur**, zéro `any` applicatif et 106 dans les tests | Contexte Oracle (12), puis enregistrement SyncServer (9) et autres tests par contrat ; trois diagnostics de mémoïsation et une directive. Captures du manuel distinctes, migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [purge/détenteurs](2026-10-09-lint-purge-detenteurs.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lot 30 commité (`e377d82c`), lots 31–32 réalisés non commités**, dernier poussé `8e6a0939`, § 127 : **540 → 61 avertissements, zéro erreur**, zéro `any` applicatif ; 57 diagnostics et 58 annotations dans les tests (une déjà masquée) | Groupes règles/jets/fixtures (16), archives/session (7 + 1 masquée), inventaires/catalogues (7), captures (27), puis mémoïsation/directive | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes corrigés et reprise](2026-10-09-lint-lots-ia-et-messages.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

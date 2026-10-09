@@ -1,58 +1,98 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useOracleContext } from './useOracleContext';
-import { useSessionOSStore } from '../../session/useSessionOSStore';
-import { useCombatStore } from '../../combat/useCombatStore';
-import { useMapStore } from '../../map/useMapStore';
-import { useGemStore } from '../../../stores/useGemStore';
+import type { useSessionOSStore } from '../../session/useSessionOSStore';
+import type { useCombatStore } from '../../combat/useCombatStore';
+import type { useMapStore } from '../../map/useMapStore';
+import type { useGemStore } from '../../../stores/useGemStore';
 
-// Mocking stores
-vi.mock('../../session/useSessionOSStore');
-vi.mock('../../combat/useCombatStore');
-vi.mock('../../map/useMapStore');
-vi.mock('../../../stores/useGemStore');
+type EtatSession = ReturnType<typeof useSessionOSStore.getState>;
+type EtatCombat = ReturnType<typeof useCombatStore.getState>;
+type EtatCarte = ReturnType<typeof useMapStore.getState>;
+type EtatCortex = ReturnType<typeof useGemStore.getState>;
+
+/* Le hook lit ces projections, sans sélecteur ni action de magasin. Les mocks
+   sont des fonctions de lecture, pas des magasins Zustand complets. */
+type SessionPourOracle = Pick<EtatSession, 'activeCampaignId'> & {
+    campaigns: Pick<EtatSession['campaigns'][number], 'id' | 'name' | 'synopsis'>[];
+    players: {
+        id: EtatSession['players'][number]['id'];
+        characters: Pick<EtatSession['players'][number]['characters'][number],
+            'name' | 'classRace' | 'campaignId' | 'description' | 'hp' | 'maxHp' | 'healthSystem'>[];
+    }[];
+    entities: Pick<EtatSession['entities'][number],
+        'id' | 'name' | 'role' | 'description' | 'campaignId' | 'status' | 'gmSecretInfo'>[];
+    clues: Pick<EtatSession['clues'][number], 'id' | 'title' | 'content' | 'isRevealed' | 'campaignId'>[];
+    getActiveDriver?: EtatSession['getActiveDriver'];
+};
+type CombattantPourOracle = Pick<EtatCombat['combatants'][number],
+    'name' | 'hp' | 'hpMax' | 'healthSystem' | 'statuses'>
+    & Partial<Pick<EtatCombat['combatants'][number], 'init'>>;
+type CombatPourOracle = Pick<EtatCombat, 'round'> & {
+    combatants: CombattantPourOracle[];
+} & Partial<Pick<EtatCombat, 'currentTurnIdx'>>;
+type CartePourOracle = (Pick<EtatCarte,
+    'mapUrl' | 'mapName' | 'timeOfDay' | 'weatherType' | 'weatherIntensity'> | { mapUrl: null }) & {
+    tokens: Pick<EtatCarte['tokens'][number], 'name' | 'isVisible'>[];
+};
+type CortexPourOracle = {
+    // Les cas existants simulent aussi un identifiant absent avec null.
+    activeGemId: EtatCortex['activeGemId'] | null;
+    gems: Pick<EtatCortex['gems'][number], 'id' | 'name' | 'baseInstructions'>[];
+};
+
+const magasins = vi.hoisted(() => ({
+    session: vi.fn<() => SessionPourOracle>(),
+    combat: vi.fn<() => CombatPourOracle>(),
+    carte: vi.fn<() => CartePourOracle>(),
+    cortex: vi.fn<() => CortexPourOracle>(),
+}));
+vi.mock('../../session/useSessionOSStore', () => ({ useSessionOSStore: magasins.session }));
+vi.mock('../../combat/useCombatStore', () => ({ useCombatStore: magasins.combat }));
+vi.mock('../../map/useMapStore', () => ({ useMapStore: magasins.carte }));
+vi.mock('../../../stores/useGemStore', () => ({ useGemStore: magasins.cortex }));
 
 describe('useOracleContext', () => {
     it('should aggregate campaign and player data into a snapshot', () => {
         const mockCampaignId = 'camp-123';
         
         // Setup Session Store Mock
-        vi.mocked(useSessionOSStore).mockReturnValue({
+        magasins.session.mockReturnValue({
             activeCampaignId: mockCampaignId,
             campaigns: [{ id: mockCampaignId, name: 'Test Campaign', synopsis: 'A grand adventure' }],
             players: [
                 { id: 'p1', characters: [{ name: 'Valerius', classRace: 'Warrior', hp: 20, maxHp: 20, campaignId: mockCampaignId }] }
             ],
             entities: [
-                { id: 'npc-1', name: 'Zalthoz', role: 'Villain', description: 'Very evil', campaignId: mockCampaignId, status: 'alive', gmSecretInfo: 'Afraid of cats' }
+                { id: 'npc-1', name: 'Zalthoz', role: 'hostile', description: 'Very evil', campaignId: mockCampaignId, status: 'alive', gmSecretInfo: 'Afraid of cats' }
             ],
             clues: [
                 { id: 'clue-1', title: 'The Secret Map', content: 'Follow the North Star', isRevealed: true, campaignId: mockCampaignId }
             ],
-            getActiveDriver: vi.fn()
-        } as any);
+            getActiveDriver: vi.fn<EtatSession['getActiveDriver']>()
+        });
 
         // Setup Combat Store Mock
-        vi.mocked(useCombatStore).mockReturnValue({
+        magasins.combat.mockReturnValue({
             combatants: [],
             round: 0
-        } as any);
+        });
 
         // Setup Map Store Mock
-        vi.mocked(useMapStore).mockReturnValue({
+        magasins.carte.mockReturnValue({
             mapUrl: 'map-url',
             mapName: 'The Dark Forest',
             timeOfDay: 'night',
             weatherType: 'rain',
             weatherIntensity: 0.8,
             tokens: [{ name: 'Valerius', isVisible: true }]
-        } as any);
+        });
 
         // Setup Gem Store Mock
-        vi.mocked(useGemStore).mockReturnValue({
+        magasins.cortex.mockReturnValue({
             activeGemId: 'gem-1',
             gems: [{ id: 'gem-1', name: 'Oracle', baseInstructions: 'Be wise' }]
-        } as any);
+        });
 
         const { result } = renderHook(() => useOracleContext());
 
@@ -65,24 +105,24 @@ describe('useOracleContext', () => {
     });
 
     it('should include combat data when combat is active', () => {
-        vi.mocked(useSessionOSStore).mockReturnValue({
+        magasins.session.mockReturnValue({
             activeCampaignId: 'c1',
             campaigns: [{ id: 'c1', name: 'War' }],
             players: [],
             entities: [],
             clues: []
-        } as any);
+        });
 
-        vi.mocked(useCombatStore).mockReturnValue({
+        magasins.combat.mockReturnValue({
             combatants: [
                 { name: 'Goblin', hp: 5, hpMax: 10, init: 15, statuses: [] }
             ],
             round: 2,
             currentTurnIdx: 0
-        } as any);
+        });
 
-        vi.mocked(useMapStore).mockReturnValue({ mapUrl: null, tokens: [] } as any);
-        vi.mocked(useGemStore).mockReturnValue({ activeGemId: null, gems: [] } as any);
+        magasins.carte.mockReturnValue({ mapUrl: null, tokens: [] });
+        magasins.cortex.mockReturnValue({ activeGemId: null, gems: [] });
 
         const { result } = renderHook(() => useOracleContext());
 
@@ -104,22 +144,22 @@ describe('useOracleContext', () => {
          * *Une valeur fausse dans une invite est une affirmation, pas un
          * silence.* On n'écrit que ce qu'on sait.
          */
-        vi.mocked(useSessionOSStore).mockReturnValue({
+        magasins.session.mockReturnValue({
             activeCampaignId: 'c1',
             campaigns: [{ id: 'c1', name: 'Hadley' }],
             players: [],
             entities: [],
             clues: []
-        } as any);
+        });
 
-        vi.mocked(useCombatStore).mockReturnValue({
+        magasins.combat.mockReturnValue({
             combatants: [{ name: 'Xénomorphe', statuses: [] }],
             round: 1,
             currentTurnIdx: 0
-        } as any);
+        });
 
-        vi.mocked(useMapStore).mockReturnValue({ mapUrl: null, tokens: [] } as any);
-        vi.mocked(useGemStore).mockReturnValue({ activeGemId: null, gems: [] } as any);
+        magasins.carte.mockReturnValue({ mapUrl: null, tokens: [] });
+        magasins.cortex.mockReturnValue({ activeGemId: null, gems: [] });
 
         const { result } = renderHook(() => useOracleContext());
 

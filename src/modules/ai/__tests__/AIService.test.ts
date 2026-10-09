@@ -1,11 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { aiService } from '../AIService';
-import { useAIStore } from '../../../stores/useAIStore';
+import type { useAIStore } from '../../../stores/useAIStore';
+
+type EtatIA = ReturnType<typeof useAIStore.getState>;
+type EtatPourGeneration = Pick<EtatIA, 'activeProvider' | 'aUneCle' | 'setProvider' | 'updateConfig'> & {
+  configs: Pick<EtatIA['configs'], 'gemini' | 'openai' | 'anthropic'>;
+};
+const { lireIA } = vi.hoisted(() => ({ lireIA: vi.fn<() => EtatPourGeneration>() }));
 
 // Mock the stores
 vi.mock('../../../stores/useAIStore', () => ({
   useAIStore: {
-    getState: vi.fn()
+    getState: lireIA
   }
 }));
 
@@ -26,7 +32,8 @@ vi.mock('../RAGService', () => ({
 }));
 
 // Mock appBridge
-const mockProxyRequest = vi.fn();
+type PontIA = NonNullable<NonNullable<Window['appBridge']>['ai']>;
+const mockProxyRequest = vi.fn<PontIA['proxyRequest']>();
 
 Object.defineProperty(globalThis, 'window', {
   value: {
@@ -47,7 +54,7 @@ describe('AIService', () => {
   describe('generateText - Gemini', () => {
     it('should call Gemini API via proxy', async () => {
       // Setup store mock
-      vi.mocked(useAIStore.getState).mockReturnValue({
+      lireIA.mockReturnValue({
         activeProvider: 'gemini',
         configs: {
           gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
@@ -57,9 +64,8 @@ describe('AIService', () => {
         /* La cle vit au coffre : le magasin n'en dit que la presence. */
         aUneCle: () => true,
         setProvider: vi.fn(),
-        updateConfig: vi.fn(),
-        getApiKey: vi.fn()
-      } as any);
+        updateConfig: vi.fn()
+      });
 
       // Setup bridge mock
       mockProxyRequest.mockResolvedValue({
@@ -89,7 +95,7 @@ describe('AIService', () => {
   describe('generateText - Anthropic', () => {
     it('should call Anthropic API via proxy', async () => {
       // Setup store mock
-      vi.mocked(useAIStore.getState).mockReturnValue({
+      lireIA.mockReturnValue({
         activeProvider: 'anthropic',
         configs: {
           gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
@@ -99,9 +105,8 @@ describe('AIService', () => {
         /* La cle vit au coffre : le magasin n'en dit que la presence. */
         aUneCle: () => true,
         setProvider: vi.fn(),
-        updateConfig: vi.fn(),
-        getApiKey: vi.fn()
-      } as any);
+        updateConfig: vi.fn()
+      });
 
       // Setup bridge mock
       mockProxyRequest.mockResolvedValue({
@@ -143,7 +148,7 @@ describe('AIService', () => {
     });
 
     it('should handle Anthropic errors', async () => {
-        vi.mocked(useAIStore.getState).mockReturnValue({
+        lireIA.mockReturnValue({
           activeProvider: 'anthropic',
           configs: {
             gemini: { provider: 'gemini', modelId: 'gemini-1.5-flash' },
@@ -152,9 +157,8 @@ describe('AIService', () => {
           },
           aUneCle: () => true,
           setProvider: vi.fn(),
-          updateConfig: vi.fn(),
-          getApiKey: vi.fn()
-        } as any);
+          updateConfig: vi.fn()
+        });
   
         mockProxyRequest.mockResolvedValue({
           ok: false,

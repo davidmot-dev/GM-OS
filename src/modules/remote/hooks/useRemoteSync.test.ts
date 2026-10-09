@@ -30,14 +30,10 @@ describe('useRemoteSync', () => {
         vi.useFakeTimers();
         originalWebSocket = globalThis.WebSocket;
 
-        const MockWS = vi.fn().mockImplementation(function () {
+        const MockWS = Object.assign(vi.fn().mockImplementation(function () {
             mockWebSocket = { send: vi.fn(), close: vi.fn(), readyState: 0 }; // CONNECTING
             return mockWebSocket;
-        });
-        (MockWS as any).CONNECTING = 0;
-        (MockWS as any).OPEN = 1;
-        (MockWS as any).CLOSING = 2;
-        (MockWS as any).CLOSED = 3;
+        }), { CONNECTING: 0, OPEN: 1, CLOSING: 2, CLOSED: 3 });
 
         mockWebSocketSpy = MockWS;
         globalThis.WebSocket = MockWS as unknown as typeof WebSocket;

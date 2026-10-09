@@ -1,23 +1,24 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useCombatStore } from './useCombatStore';
+import type { SessionOSState } from '../session/useSessionOSStore';
 
 describe('Combat-OS to Session-OS Alignment', () => {
-    const mockUpdateEntityHP = vi.fn();
-    const mockUpdateEntity = vi.fn();
+    const mockUpdateEntityHP = vi.fn<SessionOSState['updateEntityHP']>();
+    const mockUpdateEntity = vi.fn<SessionOSState['updateEntity']>();
 
     beforeEach(() => {
         useCombatStore.getState().reset();
         vi.clearAllMocks();
 
         // Mocker window.useSessionOSStore
-        (window as any).useSessionOSStore = {
-            getState: () => ({
+        Object.defineProperty(window, 'useSessionOSStore', { configurable: true, writable: true, value: {
+            getState: (): Pick<SessionOSState, 'players' | 'entities' | 'updateEntityHP' | 'updateEntity'> => ({
                 players: [],
                 entities: [],
                 updateEntityHP: mockUpdateEntityHP,
                 updateEntity: mockUpdateEntity
             })
-        };
+        } });
     });
 
     it('should synchronize HP to Session-OS when applying damage', () => {

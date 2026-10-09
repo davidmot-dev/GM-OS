@@ -17,19 +17,20 @@ interface MockAppBridge {
     persist: { rehydrate: vi.fn(() => Promise.resolve()) }
 };
 
-interface StoreMock {
-    (selector?: (s: any) => any): any;
+interface StoreMock<Etat extends object> {
+    (): Etat;
+    <Selection>(selector: (s: Etat) => Selection): Selection;
     persist: { rehydrate: ReturnType<typeof vi.fn> };
     setState: ReturnType<typeof vi.fn>;
-    getState: ReturnType<typeof vi.fn>;
+    getState: ReturnType<typeof vi.fn<() => Etat>>;
     subscribe: ReturnType<typeof vi.fn>;
 }
 
 const { createStoreMock } = vi.hoisted(() => {
-    const createStoreMock = (data: Record<string, unknown>): StoreMock => {
-        const mock = vi.fn((selector?: (s: Record<string, unknown>) => unknown) => {
+    const createStoreMock = <Etat extends object>(data: Etat): StoreMock<Etat> => {
+        const mock = vi.fn((selector?: (s: Etat) => unknown) => {
             return selector ? selector(data) : data;
-        }) as unknown as StoreMock;
+        }) as unknown as StoreMock<Etat>;
         mock.persist = { rehydrate: vi.fn(() => Promise.resolve()) };
         mock.setState = vi.fn();
         mock.getState = vi.fn(() => data);

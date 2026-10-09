@@ -300,3 +300,55 @@ directive inutile. Comptage recoupé par fichier/règle ; `git diff --check` pro
 diagnostics ciblés. Captures du manuel distinctes, migration PDF au § 1 bis.
 Préserver les fichiers étrangers ; ne pas transformer les espions en vraies
 purges ni refaire les contrats de la couture des fiches.
+
+## Lot 30 commité, lot 31 contexte Oracle
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Les six fichiers du lot 30 sont commités en **`e377d82c`**, sans fichier étranger.
+Dernier poussé `8e6a0939` ; les mentions « non commités » précédentes sont historiques.
+
+Le [lot 31](2026-10-09-lint-contexte-oracle.md) retire les **12 `any`** du test
+du contexte Oracle. Quatre fonctions de lecture typées et des projections des
+états réels remplacent les conversions des magasins incomplets. Santé/initiative
+absentes et carte non chargée restent des cas explicites ; le `null` du cortex
+reste local aux simulations. Le typage révèle le rôle de fixture `Villain`, hors
+contrat ; il devient `hostile`, sans changer le modèle applicatif. Les trois
+scénarios et leurs 13 assertions sont conservés, code du hook inchangé.
+
+**43 tests ciblés dans trois fichiers passent** après correction, types globaux
+et lint ciblé propres. Lint global : **1 585 fichiers, zéro erreur et 98
+avertissements**, dont **94 `any`, tous dans les tests**, trois diagnostics de
+mémoïsation et une directive inutile. Comptage recoupé ; `git diff --check` propre.
+Construction et suite complète restent les contrôles du lot 29, sans les rejouer
+pour ce harnais uniquement.
+
+**Six fichiers Codex non commités**, un test et cinq documents. Reprendre
+**enregistrement SyncServer (9)**, puis autres tests par contrat (extraction JSON
+8, RAGService 7) ; captures du manuel distinctes. Préserver les fichiers étrangers,
+garder la migration PDF au § 1 bis et ne pas inventer de santé pour typer un test.
+
+## Lot 32 regroupé — IA/RAG et messages
+
+David demande **« essaie de regrouper les erreurs "any" pour accélérer un peu
+les corrections sans pour autant perdre en qualité »**. Aucun commit demandé ;
+le lot 31 reste en attente, dernier local `e377d82c`, dernier poussé `8e6a0939`.
+
+Le [lot 32](2026-10-09-lint-lots-ia-et-messages.md) retire **37 annotations dans
+huit tests** : IA/RAG (18) et messages serveur/tablettes/fiches (19). Lectures et
+espions reprennent les signatures existantes, résultats JSON gardés comme inconnus,
+messages inspectés avant lecture. Cas invalides d'autorisation et santé absente
+conservés. Aucun code applicatif changé ni règle désactivée. 53 noms de cas et
+76 expressions d'assertion conservés ; mêmes attentes après relecture.
+
+**75 tests ciblés dans onze fichiers passent**, types globaux et lint ciblé propres.
+Lint global : **1 585 fichiers, zéro erreur et 61 avertissements**, dont **57 liés
+aux `any`**. Comptage brut : **58 annotations dans les tests**, dont une déjà masquée
+par directive dans NexusService ; elle reste à traiter dans le groupe archives.
+Trois diagnostics de mémoïsation et une directive inutile. La suite complète passe :
+**7 198 tests dans 566 fichiers**, un fichier et quatre tests ignorés.
+`git diff --check` propre ; construction non rejouée pour ces harnais uniquement.
+
+**Quinze fichiers Codex non commités au total**, neuf tests et six documents.
+Reprendre par groupes : règles/jets/fixtures (16), archives/session (7 avertissements
+et 8 annotations), inventaires/catalogues (7), captures du manuel (27), puis
+diagnostics ciblés. Préserver les fichiers étrangers ; migration PDF au § 1 bis.

@@ -56,9 +56,18 @@ describe('adresseDuMoteur', () => {
 
 /** Un moteur en carton : il reçoit, il répond quand on le lui dit. */
 function faireUnMoteur() {
-    const recus: any[] = [];
+    type Demande = { channel: string; type: string; id: number; data?: unknown };
+    const estUneDemande = (msg: unknown): msg is Demande =>
+        !!msg && typeof msg === 'object' && 'channel' in msg && typeof msg.channel === 'string'
+        && 'type' in msg && typeof msg.type === 'string' && 'id' in msg && typeof msg.id === 'number';
+    const recus: Demande[] = [];
     const cible = {
-        postMessage: (msg: any) => { recus.push(msg); },
+        postMessage: (msg: unknown) => {
+            if (!estUneDemande(msg)) {
+                throw new Error('Demande de fiche sans canal, verbe ou identifiant');
+            }
+            recus.push(msg);
+        },
     } as unknown as Window;
 
     /** Le moteur parle : on rejoue un `message` comme le navigateur le ferait. */

@@ -779,3 +779,45 @@ ce harnais uniquement.
 **Six fichiers Codex non commités**, un test et cinq documents. Reprendre
 contexte Oracle (12), puis enregistrement SyncServer (9), autres groupes par
 contrat et diagnostics restants. Captures du manuel et migration PDF distinctes.
+
+## Trente et unième lot — contexte Oracle, 09/10
+
+Le lot 30 est commité en **`e377d82c`**, six fichiers Codex ; dernier poussé
+`8e6a0939`. Le [lot 31](2026-10-09-lint-contexte-oracle.md) retire les **12 `any`**
+du test Oracle : fonctions de lecture typées pour ses quatre magasins, projections
+des états existants, cas sans santé/initiative conservé. Le rôle hors contrat
+`Villain` de la fixture devient `hostile`. Trois scénarios et 13 assertions
+inchangés ; aucun code applicatif modifié.
+
+**43 tests ciblés dans trois fichiers passent**, types globaux et lint ciblé
+propres après correction. Lint global : **1 585 fichiers, zéro erreur et 98
+avertissements**, dont **94 `any`, tous dans les tests**, trois diagnostics de
+mémoïsation et une directive inutile. Comptage recoupé ; `git diff --check` propre.
+Construction et suite complète restent celles du lot 29, pas rejouées ici.
+
+**Six fichiers Codex non commités**, un test et cinq documents. Reprendre
+enregistrement SyncServer (9), puis autres groupes par contrat, dont extraction
+JSON (8) et RAGService (7). Captures du manuel et migration PDF distinctes.
+
+## Lot 32 — deux groupes de tests, 09/10
+
+À la demande de David de regrouper les corrections, le
+[lot 32 IA/RAG et messages](2026-10-09-lint-lots-ia-et-messages.md) retire **37
+annotations dans huit tests** : trois IA/RAG (18), cinq transport/clients/fiches
+(19). Signatures des espions et projections des états, résultats inconnus gardés
+avant lecture ; charges invalides et assertions conservées. Aucun code applicatif
+ou règle de lint modifié. Le lot 31 n'est pas commité.
+
+**75 tests ciblés dans onze fichiers passent**, types globaux et lint ciblé propres.
+Lint global : **1 585 fichiers, zéro erreur et 61 avertissements**, dont **57 liés
+aux `any`**. Le comptage du code est **58 annotations dans les tests** : une
+annotation de NexusService est déjà masquée par directive. Les anciens comptes
+se fondaient sur les diagnostics, sans cette exception. Trois diagnostics de
+mémoïsation et une directive inutile restent. La suite complète passe : **7 198
+tests dans 566 fichiers**, un fichier et quatre tests ignorés. `git diff --check`
+propre ; construction non rejouée pour ces harnais uniquement.
+
+**Quinze fichiers Codex non commités au total**, neuf tests et six documents.
+Reprendre règles/jets/fixtures (16), archives/session (7 signalées + 1 masquée),
+inventaires/catalogues (7), captures (27), puis diagnostics ciblés. Détails dans
+la note du lot ; migration PDF séparée au § 1 bis.

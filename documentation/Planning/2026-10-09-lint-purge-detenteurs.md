@@ -73,3 +73,11 @@ les simulations. Les captures du manuel (27) restent un groupe distinct ;
 terminer ensuite les trois diagnostics de mémoïsation et la directive inutile.
 La migration PDF v1/v2 reste séparée au § 1 bis. Ne pas refaire la couture ni
 transformer les espions de purge en vrais magasins persistants.
+
+## Mise à jour — lot 30 commité
+
+À la nouvelle demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**,
+les six fichiers Codex sont commités en **`e377d82c`**, sans fichier étranger.
+Dernier poussé `8e6a0939` ; aucun push demandé. Les contrôles ci-dessus ne sont
+pas rejoués pour le commit ; les mentions « non commités » sont historiques.
+La suite est le [lot 31 contexte Oracle](2026-10-09-lint-contexte-oracle.md).
