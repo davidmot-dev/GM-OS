@@ -1,5 +1,6 @@
 import path from 'node:path';
 import fs from 'fs-extra';
+import { extraireTextePdf, pdfDisponible } from './extractionPdf';
 
 /**
  * **Lire le fichier qu'un meneur vient de choisir, quel qu'il soit.**
@@ -21,22 +22,6 @@ import fs from 'fs-extra';
  * ce soit vrai, pas supposé*, d'où la signature qui n'accepte qu'un chemin
  * absolu déjà rendu par `showOpenDialog`.
  */
-
-/*
-  `pdf-parse` est déjà une dépendance du projet — le moteur RAG s'en sert pour
-  indexer les manuels. Il le charge de son côté ; `require` rend le même module
-  en cache, et le duplicat n'a pas de coût. On ne partage pas la fonction pour
-  autant : le RAG *parcourt un corpus*, ceci *ouvre un fichier*. Deux gestes, et
-  celui-ci doit pouvoir échouer sans qu'un index s'arrête.
-*/
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let pdf: any;
-try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    pdf = require('pdf-parse');
-} catch (e) {
-    console.error('[Sources] pdf-parse indisponible :', e);
-}
 
 /** Ce qu'une source peut rendre. */
 export type SourceLue =
@@ -68,10 +53,9 @@ export async function lireUneSource(chemin: string): Promise<SourceLue> {
 
     try {
         if (ext === '.pdf') {
-            if (typeof pdf !== 'function') return { genre: 'refus', motif: 'pdf-indisponible', nom };
+            if (!pdfDisponible) return { genre: 'refus', motif: 'pdf-indisponible', nom };
             const donnees = await fs.readFile(chemin);
-            const extrait = await pdf(donnees);
-            return { genre: 'texte', texte: String(extrait?.text ?? ''), nom };
+            return { genre: 'texte', texte: await extraireTextePdf(donnees), nom };
         }
 
         if (MIME_DES_IMAGES[ext]) {

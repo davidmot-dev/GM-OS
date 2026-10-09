@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { createRequire } from 'node:module';
+import { extraireTextePdf, pdfDisponible } from './extractionPdf';
 import log from 'electron-log';
 import { RAGIGNORE_FILENAME, isIgnored, parseRagIgnore, type IgnoreScope } from './ragIgnore';
 import {
@@ -17,16 +17,6 @@ import { chargerIndex, chercherDansLIndex, verifierLesCitations } from './bookIn
 import { strictementSous, sousOuEgal } from './sousChemin';
 import { racineDuCorpus } from './perimetreDeLInstance';
 import type { DocumentIA } from '../src/types/documentsIA';
-
-const require = createRequire(import.meta.url);
-// Chargement CommonJS : ne pas prétendre que le module installé est callable.
-type ParseurPdfHistorique = (donnees: Buffer) => Promise<{ text?: string }>;
-let pdf: unknown;
-try {
-    pdf = require('pdf-parse');
-} catch (e) {
-    console.error('[RAG Engine] Failed to load pdf-parse:', e);
-}
 
 interface IndexedFile extends SelectableFile {
     mtime: number;
@@ -468,9 +458,8 @@ export class RAGEngine {
                 return text.length > MAX_SIZE ? text.substring(0, MAX_SIZE) + '... [Tronqué]' : text;
             } else if (ext === '.pdf') {
                 const dataBuffer = await fs.readFile(filePath);
-                if (typeof pdf === 'function') {
-                    const data = await (pdf as ParseurPdfHistorique)(dataBuffer);
-                    return data.text || '';
+                if (pdfDisponible) {
+                    return await extraireTextePdf(dataBuffer);
                 }
             }
         } catch (err) {
@@ -704,11 +693,8 @@ export function registerRagHandlers() {
 
         try {
             const dataBuffer = await fs.readFile(fullPath);
-            if (pdf) {
-                // L'appel historique et son erreur éventuelle restent ; la
-                // migration de pdf-parse v2 est un chantier séparé (§ 1 bis).
-                const data = await (pdf as ParseurPdfHistorique)(dataBuffer);
-                return data.text || '';
+            if (pdfDisponible) {
+                return await extraireTextePdf(dataBuffer);
             }
             return "PDF Parser non disponible.";
         } catch (error) {

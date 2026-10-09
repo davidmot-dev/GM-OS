@@ -72,3 +72,17 @@ capture du dernier jet reste également dans cette section, séparé du lint.
 Préserver les fichiers étrangers des guides, du lanceur e2e, du 07/10 et de
 `.claude`. Les images de contrôle du lot 36 restent ignorées dans
 `e2e-resultats/` ; elles ne sont pas remplacées par ce lot.
+
+## Commit et étape suivante — lot 39
+
+À la nouvelle demande de David, les huit fichiers de ce lot sont commités
+sous **`4e080992`**, sans fichiers étrangers. Dernier poussé **`916a3842`** ;
+deux commits locaux d'avance, aucun push.
+
+La [migration PDF](2026-10-09-migration-pdf.md), séparée du lint, est réalisée :
+les trois lecteurs utilisent `PDFParse` v2 et attendent sa destruction.
+La dernière annotation explicite est retirée : **zéro dans `src/`,
+`electron/` et `e2e/`**. Construction, lint global sans diagnostic et
+179 tests ciblés passent ; contrôle PDF artificiel sous Electron en mode Node.
+Douze fichiers Codex du lot 39 non commités ; cadrage du dernier jet encore
+séparé au § 1 bis. Les 21 fichiers étrangers sont inchangés.

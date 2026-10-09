@@ -533,3 +533,30 @@ Dernier local **`004a814e`**, dernier poussé **`916a3842`**. Reprendre la
 **migration PDF v1/v2 au § 1 bis**, sur des PDF artificiels, sans toucher aux
 données réelles. Le cadrage du dernier jet y reste séparément. Préserver les
 guides, le lanceur, le 07/10 et `.claude` étrangers.
+
+## Commit du lot 38 et lot 39 — migration PDF
+
+David demande « commit et passe à l'étape suivante (GM-OS est éteint) ».
+Les huit fichiers Codex du lot 38 sont commités sous **`4e080992`**.
+Dernier poussé **`916a3842`**, deux commits locaux d'avance ; aucun push.
+
+La [migration PDF](2026-10-09-migration-pdf.md), § 128 du registre, corrige
+le contrat v1 utilisé avec pdf-parse 2.4.5. Import de sources, index RAG et
+IPC partagent un lecteur typé : constructeur `PDFParse`, `getText` sans
+marqueurs de pagination et `destroy()` attendu même en cas d'erreur.
+Replis et confinement conservés. Dernier `any` explicite retiré :
+**zéro dans `src/`, `electron/` et `e2e/`**.
+
+Construction avec `tsc -b`, lint global (**1 590 fichiers, zéro erreur,
+zéro avertissement**) et **179 tests dans huit fichiers** passent.
+16 cas ajoutés ; PDF artificiels valides/vides/invalides également éprouvés
+sous **Electron en mode Node 20.19.1**, sans lancer GM-OS. Bundle Electron
+vérifié ; aucune donnée réelle lue. Pas de nouvelle suite complète ni d'e2e.
+`git diff --check` propre ; empreintes des 21 fichiers étrangers inchangées.
+
+**Douze fichiers Codex non commités**, sept fichiers de code/tests/fixture et
+cinq documents. Reprendre par leur commit sur demande. Le lint est terminé ;
+le cadrage de la capture du dernier jet reste séparé au § 1 bis.
+Préserver les fichiers étrangers. Pièges : ne pas appeler directement le
+module pdf-parse v2 ; attendre la destruction ; employer `query` dans la
+sélection RAG. Les PDF artificiels ne valident pas tous les manuels, aucun OCR.

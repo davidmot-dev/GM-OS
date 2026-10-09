@@ -3,6 +3,7 @@ import path from 'node:path';
 import os from 'node:os';
 import fs from 'fs-extra';
 import { lireUneSource, EXTENSIONS_TEXTE, EXTENSIONS_IMAGE } from './lectureDeSource';
+import { pdfArtificiel } from './fixtures/pdfArtificiel';
 
 /**
  * **Ce qu'un fichier choisi rend, et ce qu'il refuse de rendre.**
@@ -11,12 +12,9 @@ import { lireUneSource, EXTENSIONS_TEXTE, EXTENSIONS_IMAGE } from './lectureDeSo
  * *pourquoi* il ne peut rien faire de ce fichier : « pas le bon format » et
  * « illisible » n'appellent pas le même geste du meneur.
  *
- * ⛔ **Le PDF n'est pas éprouvé ici.** Fabriquer un PDF valide dans un test
- * reviendrait à écrire un encodeur, et l'éprouver sur un PDF fabriqué par nous
- * ne dirait rien des manuels réels — *un jeu d'essai qui ne ressemble pas à la
- * donnée ne garde que lui-même*. Ce qui est gardé ici, c'est que l'extension
- * `.pdf` **prend la bonne branche** ; la branche elle-même est celle que le
- * moteur RAG emprunte depuis des mois.
+ * Les PDF artificiels vérifient le branchement du vrai parseur v2 et les
+ * réponses du lecteur, sans ouvrir un manuel ou un document de David.
+ * Ils ne prétendent pas couvrir toutes les mises en page des manuels réels.
  */
 
 let dossier: string;
@@ -72,6 +70,23 @@ describe('lireUneSource — les images', () => {
     it('suit l’extension, majuscules comprises', async () => {
         const lue = await lireUneSource(await ecrire('PHOTO.PNG', Buffer.from([1, 2])));
         expect(lue).toMatchObject({ genre: 'image', mimeType: 'image/png' });
+    });
+});
+
+describe('lireUneSource — le PDF', () => {
+    it('rend le texte extrait et le nom, avec une extension en majuscules', async () => {
+        const lue = await lireUneSource(await ecrire('manuel.PDF', pdfArtificiel(['Regles du relais'])));
+        expect(lue).toMatchObject({ genre: 'texte', nom: 'manuel.PDF', texte: expect.stringContaining('Regles du relais') });
+    });
+
+    it('un PDF invalide revient en refus illisible', async () => {
+        expect(await lireUneSource(await ecrire('invalide.pdf', 'Pas un PDF')))
+            .toMatchObject({ genre: 'refus', motif: 'illisible', nom: 'invalide.pdf' });
+    });
+
+    it('un PDF absent revient en refus illisible', async () => {
+        expect(await lireUneSource(path.join(dossier, 'absent.pdf')))
+            .toMatchObject({ genre: 'refus', motif: 'illisible', nom: 'absent.pdf' });
     });
 });
 

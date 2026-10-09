@@ -964,3 +964,22 @@ liée au chantier PDF du § 1 bis. **Zéro dans `src/` et dans les tests.**
 Fichiers étrangers inchangés, `git diff --check` propre. Pas de nouvelle suite
 complète ni d'e2e. Reprendre la migration PDF v1/v2 séparée du lint ; le cadrage
 du dernier jet reste également au § 1 bis. Aucun push dans cette session.
+
+## Lot 39 — dernière annotation et migration PDF, 09/10
+
+Le lot 38 est commité sous **`4e080992`** ; dernier poussé **`916a3842`**,
+deux commits locaux d'avance. La [migration PDF](2026-10-09-migration-pdf.md)
+corrige le défaut fonctionnel séparé du § 1 bis, avec un lecteur v2 partagé
+par l'import de sources, l'index RAG et l'IPC. Elle retire aussi la dernière
+annotation masquée et les deux directives associées.
+
+**Zéro annotation explicite `any` dans les TS/TSX de `src/`, `electron/`
+et `e2e/`**, fichiers suivis et nouveaux non ignorés. Les **540 avertissements
+initiaux restent traités**. Lint global : **1 590 fichiers, zéro erreur,
+zéro avertissement**. Construction avec `tsc -b` et 179 tests dans huit fichiers
+passent, dont 16 nouveaux cas PDF ; extraction vérifiée aussi sous Electron
+en mode Node sur des PDF artificiels. Pas de nouvelle suite complète ni d'e2e.
+
+Douze fichiers Codex non commités ; aucune modification des 21 fichiers
+étrangers, `git diff --check` propre. Aucun push. Le cadrage du dernier jet
+reste au § 1 bis, hors de cette migration.
