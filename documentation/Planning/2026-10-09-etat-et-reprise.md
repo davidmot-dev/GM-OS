@@ -438,3 +438,37 @@ local **`4cbca217`**, dernier poussé **`d0fd965b`**. Reprendre captures du manu
 (27), mémoïsation (3), puis Storyboard masqué (4). Construire avant les e2e et
 relire les images ; préserver `e2e/lancerGmOs.ts`, les guides et les autres
 fichiers étrangers. PDF v1/v2 reste au § 1 bis.
+
+## Commit du lot 35 et lot 36 — captures du manuel
+
+David demande « commit et passe à l'étape suivante (GM-OS est éteint) ».
+Les sept fichiers Codex du lot 35 sont commités sous **`1413f6da`**, sans les
+modifications étrangères. Dernier poussé **`d0fd965b`**, trois commits locaux
+d'avance. Aucun push demandé dans cette session.
+
+Le [lot 36](2026-10-09-lint-captures-du-manuel.md) retire les **27 `any` des
+captures** : onze signatures réelles de magasins, vues/outils typés, gardes
+campagne et appairage. Fixtures de combat alignées sur leurs valeurs neutres
+existantes. Les 13 expressions d'assertion et dix enregistrements de tests
+restent ; **79 scénarios**. Un projet TypeScript dédié entre dans `tsc -b`.
+La sortie facultative `GMOS_SORTIE_CAPTURES_MANUEL` préserve les images suivies.
+
+Types dédiés et globaux, construction et lint ciblé passent. Lint global :
+**1 585 fichiers, zéro erreur, trois avertissements**, tous de mémoïsation.
+Comptage brut : **cinq annotations applicatives déjà masquées**, zéro dans les
+tests. **52 tests des protections d'isolation et de sauvegarde passent** ;
+**79 scénarios e2e passent**, **78 JPEG relus sur neuf planches**. Suite Vitest
+complète non rejouée, construction rejouée avant Electron.
+
+Piège payé : le premier lancement dans le bac d'exécution expire avant tout
+cas ; la relance hors bac est d'abord refusée par le contrôle automatique.
+Après preuve des chemins temporaires et 52 tests, la relance est autorisée et
+passe. Conserver les protections du lanceur étranger ; ne pas les contourner.
+Captures/traces ignorées dans `e2e-resultats/lint-captures-manuel-lot36*`.
+Cadrage du dernier jet à revoir, consigné au § 1 bis. `git diff --check` propre ;
+empreintes des 21 fichiers étrangers inchangées.
+
+**Huit fichiers Codex non commités** : un harnais, deux configurations et cinq
+documents. Reprendre **mémoïsation (3)**, puis **Storyboard masqué (4)**.
+Dernier local **`1413f6da`**, dernier poussé **`d0fd965b`**. Préserver les guides,
+le lanceur, le 07/10 et `.claude` étrangers ; migration PDF séparée au § 1 bis.

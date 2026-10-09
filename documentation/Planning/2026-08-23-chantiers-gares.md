@@ -142,6 +142,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
+| ⚠️ **09/10 : la capture du dernier jet laisse apparaître une partie du résultat précédent au bord inférieur.** | `dice-dernier-jet.jpg` du contrôle des 78 captures, dans `e2e-resultats/lint-captures-manuel-lot36` ; rectangle fixe du scénario inchangé (`x: 230, y: 208, width: 880, height: 206`) | **Cadrage du manuel à revoir séparément du typage** : viser le bloc du dernier jet et relire l'image. Aucune image suivie remplacée dans le lot 36. [Contrôle et reprise](2026-10-09-lint-captures-du-manuel.md) |
 | ⚠️ **09/10 : le lecteur PDF RAG attend l'API v1 de pdf-parse, module installé v2.4.5.** | `RAGEngine.ts` appelle la valeur de `require('pdf-parse')` comme une fonction ; les exports locaux sont un objet contenant le constructeur `PDFParse`. Le chemin d'index retourne sans texte ; `ai:extract-pdf` rend son erreur historique | **Migration séparée du lint**, sans lecture de PDF réel : adapter les deux appels, gérer la destruction du parseur et vérifier sur PDF artificiels. Le lot 24 retire le `any` et documente le contrat historique, il ne répare pas cette incompatibilité. [Constat et preuve](2026-10-09-lint-ia-et-fournisseurs.md) |
 | ✅ **09/10 : une exception nulle ou un message non textuel casse le diagnostic d'erreur.** | Les quatre écrans/hooks lisent directement `.message` ; `null` provoque une seconde exception, un message numérique casse `.includes` dans la Forge | **Corrigé dans le lot 27 du § 127** : lecteur de message gardé, replis historiques paresseux et marqueur d'authentification conservés. Cas nuls testés dans NotebookLM/butin, reprise vérifiée ; le journal transmet l'exception intacte. Pas d'essai de reconnexion dans l'écran Forge. [Note](2026-10-09-lint-messages-erreur-et-hub.md) |
 | ✅ **09/10 : l'option hf_token de Gradio est ignorée par le SDK installé.** | `ClientOptions` 2.1 expose `token`, pas `hf_token` ; le typage de la génération d'image révèle ce décalage | **Corrigé dans le lot 24 du § 127** : même valeur d'environnement via `token`, deux cas de génération d'image avec SDK/téléchargement/rangement simulés et jeton artificiel ou absent. [Note](2026-10-09-lint-ia-et-fournisseurs.md) |
@@ -10585,6 +10586,29 @@ captures du manuel (27), mémoïsation (3), puis Storyboard masqué (4). Constru
 avant les e2e et relire les images ; préserver le harnais et les guides étrangers.
 L'annotation PDF reste au chantier v1/v2, § 1 bis.
 
+**09/10 — lot 35 commité, lot 36 captures du manuel réalisé.** À la demande
+« commit et passe à l'étape suivante (GM-OS est éteint) », les sept fichiers
+Codex du lot 35 sont commités sous **`1413f6da`**. Dernier poussé **`d0fd965b`**,
+trois commits locaux d'avance ; aucun push dans cette session.
+
+Le [lot 36](2026-10-09-lint-captures-du-manuel.md) retire **27 `any`** des
+captures : signatures réelles de onze magasins, vues/outils typés, gardes
+campagne et appairage, fixtures de combat alignées sur les valeurs neutres
+existantes. Les 13 expressions d'assertion et dix enregistrements de tests
+restent. Un projet TypeScript dédié est référencé dans `tsc -b` ; sortie
+facultative des captures pour préserver les guides suivis.
+
+Types, construction et lint ciblé propres ; **52 tests des protections passent**,
+**79 scénarios e2e passent**, **78 JPEG relus sur neuf planches**. Lint global :
+**1 585 fichiers, zéro erreur, trois avertissements**, tous de mémoïsation.
+Comptage brut : **cinq annotations applicatives déjà masquées**, zéro dans les
+tests. Pas de nouvelle suite Vitest complète. Cadrage du dernier jet au § 1 bis.
+`git diff --check` propre ; empreintes des 21 fichiers étrangers inchangées.
+
+**Huit fichiers Codex non commités**, un harnais, deux configurations et cinq
+documents. Reprendre mémoïsation (3), puis Storyboard masqué (4). Préserver le
+lanceur, les guides et les autres fichiers étrangers. PDF v1/v2 séparé au § 1 bis.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10653,7 +10677,7 @@ L'annotation PDF reste au chantier v1/v2, § 1 bis.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lot 34 commité (`4cbca217`), lot 35 réalisé non commité**, dernier poussé `d0fd965b`, § 127 : **540 → 30 avertissements, zéro erreur** ; 27 `any` dans les captures, plus d'annotation `any` dans les tests unitaires ; 5 applicatives déjà masquées | Captures (27), mémoïsation (3), puis Storyboard masqué (4) ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-inventaires-et-catalogues.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lot 35 commité (`1413f6da`), lot 36 réalisé non commité**, dernier poussé `d0fd965b`, § 127 : **540 → 3 avertissements, zéro erreur** ; zéro `any` dans les tests ; 5 applicatives déjà masquées ; types/construction, 52 tests de protection et 79 e2e passent, 78 captures relues | Mémoïsation (3), puis Storyboard masqué (4) ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-captures-du-manuel.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

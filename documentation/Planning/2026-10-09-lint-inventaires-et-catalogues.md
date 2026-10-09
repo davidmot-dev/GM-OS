@@ -58,3 +58,15 @@ local **`4cbca217`**, dernier poussé **`d0fd965b`**.
    L'annotation PDF reste liée à la migration v1/v2 au § 1 bis du registre.
 
 Préserver également les fichiers étrangers du 07/10 et de `.claude`.
+
+## Commit et étape suivante
+
+À la demande de David « commit et passe à l'étape suivante (GM-OS est éteint) »,
+les sept fichiers du lot 35 sont commités sous **`1413f6da`**. Dernier poussé
+**`d0fd965b`**, trois commits locaux d'avance ; aucun push dans cette session.
+
+Le [lot 36 — captures du manuel](2026-10-09-lint-captures-du-manuel.md) retire
+les **27 annotations restantes des tests**. Types, construction, 52 tests de
+protection et **79 scénarios e2e** passent ; **78 captures relues**. Lint global :
+**trois avertissements, zéro erreur**. Huit fichiers Codex non commités.
+Reprendre mémoïsation (3), puis Storyboard masqué (4) ; PDF séparé au § 1 bis.

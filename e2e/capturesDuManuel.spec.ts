@@ -1,5 +1,16 @@
 import { test, expect } from '@playwright/test';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
+import type { useMapStore } from '../src/modules/map/useMapStore';
+import type { useStoryboardStore } from '../src/modules/storyboard/useStoryboardStore';
+import type { useClockStore } from '../src/store/useClockStore';
+import type { useFavoriteStore } from '../src/modules/favorite/useFavoriteStore';
+import type { useWhiteboardStore, WhiteboardTool } from '../src/modules/whiteboard/useWhiteboardStore';
+import type { useMusicStore } from '../src/modules/music/useMusicStore';
+import type { useSoundStore } from '../src/modules/sound/useSoundStore';
+import type { useAmbientStore } from '../src/modules/ambient/useAmbientStore';
+import type { useJournalStore } from '../src/modules/journal/useJournalStore';
+import type { useCombatStore } from '../src/modules/combat/useCombatStore';
+import type { CurrentView } from '../src/types/campaign.types';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,7 +34,9 @@ import { lancerGmOs, attendreLHydratation, ouvrirLeModule, LES_PANNEAUX, type Gm
  */
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));
-const SORTIE = path.join(ICI, '..', 'documentation', 'User Guides', 'captures');
+/** Une sortie dédiée permet de relire les nouvelles captures dans e2e-resultats/. */
+const SORTIE = path.resolve(process.env.GMOS_SORTIE_CAPTURES_MANUEL
+    ?? path.join(ICI, '..', 'documentation', 'User Guides', 'captures'));
 /** La campagne de démonstration — la campagne d'essai enrichie, à part pour ne pas déranger les essais. */
 const DEMO = path.join(ICI, 'donnees', 'campagne-de-demo.json');
 /** Des images du dépôt, pour que la médiathèque et Image-OS ne soient pas vides. */
@@ -55,8 +68,20 @@ test.beforeAll(async () => {
     await gmos.fenetre.addStyleTag({ content: '[data-depend-du-materiel] { filter: blur(6px); }' });
 });
 
-/** Un magasin exposé sur `window`. */
-type Magasin = { getState: () => any; setState: (p: object) => void };
+/** Les magasins exposés dans le renderer ; ces imports de types sont effacés avant evaluate. */
+type FenetreDeCapture = {
+    useSessionOSStore: typeof useSessionOSStore;
+    useMapStore: typeof useMapStore;
+    useStoryboardStore: typeof useStoryboardStore;
+    useClockStore: typeof useClockStore;
+    useFavoriteStore: typeof useFavoriteStore;
+    useWhiteboardStore: typeof useWhiteboardStore;
+    useMusicStore: typeof useMusicStore;
+    useSoundStore: typeof useSoundStore;
+    useAmbientStore: typeof useAmbientStore;
+    useJournalStore: typeof useJournalStore;
+    useCombatStore: typeof useCombatStore;
+};
 
 /**
  * **La partie en cours** — ce qu'un meneur aurait sous les yeux un soir de jeu,
@@ -67,12 +92,13 @@ async function mettreEnScene(): Promise<void> {
 
     // La Cartographie : un plan de la station, dessiné pour la démo.
     const plan = 'data:image/png;base64,' + fs.readFileSync(path.join(ICI, 'donnees', 'plan-station-varn.png')).toString('base64');
-    await f.evaluate(url => ((window as any).useMapStore as Magasin).getState().setMap(url, false, 'Station Varn — pont C'), plan);
+    await f.evaluate(url => (window as unknown as FenetreDeCapture).useMapStore.getState().setMap(url, false, 'Station Varn — pont C'), plan);
 
     // Trois moments de storyboard, pour que le tableau de montage ait des lignes.
     await f.evaluate(url => {
-        const sb = ((window as any).useStoryboardStore as Magasin).getState();
-        const campaignId = ((window as any).useSessionOSStore as Magasin).getState().activeCampaignId;
+        const sb = (window as unknown as FenetreDeCapture).useStoryboardStore.getState();
+        const campaignId = (window as unknown as FenetreDeCapture).useSessionOSStore.getState().activeCampaignId;
+        if (!campaignId) throw new Error('La campagne de démonstration doit être active.');
         sb.addMoment({ campaignId, name: 'Amarrage', description: "Le sas s'ouvre sur un couloir éclairé et vide.", color: 'cyan', icon: 'Anchor', mapUrl: url, titre: 'STATION VARN', musicVolume: 0.7 });
         sb.addMoment({ campaignId, name: 'La voix dans le relais', description: "Le relais émet avec la voix de l'équipage.", color: 'violet', icon: 'Radio', ambientVolume: 0.6, soundVolume: 0.8, titre: 'Il parle avec vos voix' });
         sb.addMoment({ campaignId, name: "Confrontation avec l'Écho", description: 'Le noyau, et ce qui écoute.', color: 'crimson', icon: 'Zap', mapUrl: url, mapBrouillard: 'revelee', titre: "L'ÉCHO", musicVolume: 0 });
@@ -80,19 +106,19 @@ async function mettreEnScene(): Promise<void> {
 
     // 3 · Les jauges de tension.
     await f.evaluate(() => {
-        const horloge = ((window as any).useClockStore as Magasin).getState();
+        const horloge = (window as unknown as FenetreDeCapture).useClockStore.getState();
         horloge.addTensionClock('Alerte de la station', 8, 'anneau', 'remplissage');
         horloge.addTensionClock('Oxygène du pont C', 6, 'barre', 'epuisement');
         horloge.addTensionClock("L'Écho se rapproche", 4, 'points', 'remplissage');
-        const jauges = ((window as any).useClockStore as Magasin).getState().tensions ?? [];
-        jauges.forEach((j: any, i: number) => horloge.updateTensionSegments(j.id, [5, -2, 3][i] ?? 1));
+        const jauges = (window as unknown as FenetreDeCapture).useClockStore.getState().tensions ?? [];
+        jauges.forEach((j, i) => horloge.updateTensionSegments(j.id, [5, -2, 3][i] ?? 1));
     });
 
     // 4 · Les favoris du meneur.
     await f.evaluate(() => {
         // Les exemples livrés (en anglais) laissent la place à ceux de la campagne.
-        ((window as any).useFavoriteStore as Magasin).setState({ favorites: [] });
-        const favoris = ((window as any).useFavoriteStore as Magasin).getState();
+        (window as unknown as FenetreDeCapture).useFavoriteStore.setState({ favorites: [] });
+        const favoris = (window as unknown as FenetreDeCapture).useFavoriteStore.getState();
         favoris.addFavorite({ type: 'npc', name: 'Superviseur Hale', subtitle: 'Il a réécrit le registre', attributes: { Rôle: 'Superviseur', Attitude: 'Fuyant' }, lore: "Responsable de la station depuis six ans.", secretNotes: 'Il a signé toutes les entrées des trois derniers jours.', isStarred: true });
         favoris.addFavorite({ type: 'place', name: 'Le relais', subtitle: "Le cœur de la station", lore: "Une salle ronde, des antennes en faisceau, un bourdonnement qui ne s'arrête jamais." });
         favoris.addFavorite({ type: 'item', name: 'Module de coupure', subtitle: 'La pièce qui manque', attributes: { Poids: '4 kg', Où: 'Soute de Teo' } });
@@ -101,8 +127,8 @@ async function mettreEnScene(): Promise<void> {
 
     // 5 · Un plan de pont au tableau blanc.
     await f.evaluate(() => {
-        const tableau = ((window as any).useWhiteboardStore as Magasin).getState();
-        const trait = (id: string, tool: string, color: string, points: [number, number][]) =>
+        const tableau = (window as unknown as FenetreDeCapture).useWhiteboardStore.getState();
+        const trait = (id: string, tool: WhiteboardTool, color: string, points: [number, number][]) =>
             tableau.addPath({ id, tool, color, width: 4, points: points.map(([x, y]) => ({ x, y })) });
         trait('demo-salle', 'rect', '#22d3ee', [[0.15, 0.2], [0.55, 0.7]]);
         trait('demo-couloir', 'brush', '#22d3ee', [[0.55, 0.45], [0.7, 0.45], [0.85, 0.3]]);
@@ -114,40 +140,40 @@ async function mettreEnScene(): Promise<void> {
     // 5 bis · Les pupitres audio : des titres, des couleurs et des volumes, sans un seul son —
     // le manuel montre un pupitre préparé, et l'instance de capture est muette.
     await f.evaluate(() => {
-        const w = window as any;
-        const musique = w.useMusicStore as Magasin;
+        const w = window as unknown as FenetreDeCapture;
+        const musique = w.useMusicStore;
         const morceaux: [string, string][] = [['Station Varn — thème', 'cyan'], ['Couloirs vides', 'aucune'], ['Le relais émet', 'violet'], ['Descente au noyau', 'ambre'], ["Confrontation avec l'Écho", 'rouge']];
         musique.setState({
-            playlists: musique.getState().playlists.map((p: any, n: number) => n > 0 ? p : {
+            playlists: musique.getState().playlists.map((p, n) => n > 0 ? p : {
                 ...p, name: 'Station Varn',
-                pads: p.pads.map((pad: any, i: number) => morceaux[i]
+                pads: p.pads.map((pad, i) => morceaux[i]
                     ? { ...pad, label: morceaux[i][0], url: 'demo/musique-' + i + '.ogg', type: 'local', couleur: morceaux[i][1] }
                     : pad),
             }),
         });
 
-        const son = w.useSoundStore as Magasin;
+        const son = w.useSoundStore;
         const bruitages: [string, string, string][] = [
             ['Sas qui s’ouvre', 'porte', '#22d3ee'], ['Alarme de pont', 'sirene', '#ef4444'], ['Grésillement radio', 'radio', '#a855f7'],
             ['Pas dans la coursive', 'pas', '#94a3b8'], ['Voix de l’Écho', 'voix', '#a855f7'], ['Coupure de courant', 'eclair', '#f59e0b'],
             ['Ascenseur bloqué', 'machine', '#94a3b8'], ['Coup de feu', 'viseur', '#ef4444'],
         ];
         son.setState({
-            atmospheres: son.getState().atmospheres.map((a: any, n: number) => n > 0 ? a : {
+            atmospheres: son.getState().atmospheres.map((a, n) => n > 0 ? a : {
                 ...a, name: 'Station Varn',
-                pads: Object.fromEntries(Object.entries(a.pads).map(([id, pad]: [string, any], i) => [id, bruitages[i]
+                pads: Object.fromEntries(Object.entries(a.pads).map(([id, pad], i) => [id, bruitages[i]
                     ? { ...pad, title: bruitages[i][0], filePath: 'demo/bruitage-' + i + '.ogg', icone: bruitages[i][1], color: bruitages[i][2] }
                     : pad])),
             }),
         });
 
-        const ambiance = w.useAmbientStore as Magasin;
+        const ambiance = w.useAmbientStore;
         const pistes: [string, number, string][] = [
             ['Air', 0.6, '#94a3b8'], ['Relais', 0.45, '#a855f7'], ['Coque', 0.3, '#f59e0b'], ['Gouttes', 0.2, '#06b6d4'],
             ['Voix', 0.15, '#f43f5e'], ['Moteurs', 0.4, '#3b82f6'], ['Parasites', 0.1, '#a855f7'], ['Noyau', 0, '#64748b'],
         ];
         ambiance.setState({
-            tracks: ambiance.getState().tracks.map((t: any, i: number) => pistes[i]
+            tracks: ambiance.getState().tracks.map((t, i) => pistes[i]
                 ? { ...t, label: pistes[i][0], volume: pistes[i][1], color: pistes[i][2], url: 'demo/ambiance-' + i + '.ogg' }
                 : t),
         });
@@ -185,7 +211,7 @@ async function lancerLaSeance(): Promise<void> {
     const f = gmos.fenetre;
     // La séance 2, lancée depuis le cockpit — le vrai geste, qui ouvre le journal.
     await ouvrirLeModule(gmos, 'Tableau de Bord');
-    await f.evaluate(() => ((window as any).useSessionOSStore as Magasin).getState().setCurrentView('cockpit'));
+    await f.evaluate(() => (window as unknown as FenetreDeCapture).useSessionOSStore.getState().setCurrentView('cockpit'));
     await f.getByRole('button', { name: /Lancer Session/i }).first().click();
     await f.getByRole('dialog').getByRole('button', { name: /Séance 2|Session #2/ }).first().click();
     // Le lancement range les PJ de la scène au combat : on le laisse finir avant de poser le nôtre.
@@ -193,7 +219,7 @@ async function lancerLaSeance(): Promise<void> {
 
     // Quelques lignes de récit au journal — les modules en écrivent d'eux-mêmes ; le meneur, des notes.
     await f.evaluate(() => {
-        const journal = ((window as any).useJournalStore as Magasin).getState();
+        const journal = (window as unknown as FenetreDeCapture).useJournalStore.getState();
         journal.addEvent({ type: 'LOCATION', title: 'Le relais', content: 'Le groupe force la porte du relais. Le bourdonnement couvre les voix.' });
         journal.addEvent({ type: 'NPC', title: 'Superviseur Hale', content: "Hale jure que le dernier départ date d'hier. Le café dit le contraire." });
         journal.addEvent({ type: 'NOTE', title: 'Promesse', content: "Idris a promis à Teo de l'aider à repartir avant la quarantaine." });
@@ -201,29 +227,29 @@ async function lancerLaSeance(): Promise<void> {
 
     // Le combat : l'équipage face à l'Écho.
     await f.evaluate(() => {
-        const combat = ((window as any).useCombatStore as Magasin).getState();
+        const combat = (window as unknown as FenetreDeCapture).useCombatStore.getState();
         combat.clearCombatants();
         // Les PJ de la séance arrivent par le combat lui-même : on repart d'une liste propre.
-        const unites = [
-            { name: 'Nel Varga', init: 17, hp: 9, hpMax: 12, isPlayer: true, faction: 'player' },
-            { name: "L'Écho", init: 15, hp: 18, hpMax: 24, isPlayer: false, faction: 'enemy' },
-            { name: 'Idris Koa', init: 12, hp: 11, hpMax: 11, isPlayer: true, faction: 'player' },
-            { name: 'Sora Adebayo', init: 8, hp: 4, hpMax: 10, isPlayer: true, faction: 'player' },
+        const unites: Parameters<typeof combat.addCombatant>[0][] = [
+            { name: 'Nel Varga', init: 17, hp: 9, hpMax: 12, isPlayer: true, faction: 'player', statuses: [] },
+            { name: "L'Écho", init: 15, hp: 18, hpMax: 24, isPlayer: false, faction: 'enemy', statuses: [] },
+            { name: 'Idris Koa', init: 12, hp: 11, hpMax: 11, isPlayer: true, faction: 'player', statuses: [] },
+            { name: 'Sora Adebayo', init: 8, hp: 4, hpMax: 10, isPlayer: true, faction: 'player', statuses: [] },
         ];
         for (const u of unites) combat.addCombatant(u);
-        const echo = ((window as any).useCombatStore as Magasin).getState().combatants.find((c: any) => c.name === "L'Écho");
-        if (echo) combat.addStatus(echo.id, { name: 'Brouillé', duration: 2 });
+        const echo = (window as unknown as FenetreDeCapture).useCombatStore.getState().combatants.find(c => c.name === "L'Écho");
+        if (echo) combat.addStatus(echo.id, { name: 'Brouillé', duration: 2, icon: '' });
     });
 
     // Un PJ de la scène arrive encore après coup, à l'initiative 0 : on ne garde qu'un exemplaire de chacun.
     await f.waitForTimeout(800);
     await f.evaluate(() => {
-        const combat = ((window as any).useCombatStore as Magasin).getState();
+        const combat = (window as unknown as FenetreDeCapture).useCombatStore.getState();
         const vus = new Set<string>();
-        for (const c of [...combat.combatants].sort((a: any, b: any) => b.init - a.init)) {
+        for (const c of [...combat.combatants].sort((a, b) => b.init - a.init)) {
             if (vus.has(c.name)) combat.removeCombatant(c.id); else vus.add(c.name);
         }
-        ((window as any).useCombatStore as Magasin).getState().sortInitiative();
+        (window as unknown as FenetreDeCapture).useCombatStore.getState().sortInitiative();
     });
 
 }
@@ -249,9 +275,9 @@ const nomDeFichier = (panneau: string) => panneau
     .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 /** Ouvre une vue de Session-OS, comme le menu du cockpit. */
-async function vue(nom: string): Promise<void> {
+async function vue(nom: CurrentView): Promise<void> {
     await ouvrirLeModule(gmos, 'Tableau de Bord');
-    await gmos.fenetre.evaluate(v => ((window as any).useSessionOSStore as Magasin).getState().setCurrentView(v), nom);
+    await gmos.fenetre.evaluate(v => (window as unknown as FenetreDeCapture).useSessionOSStore.getState().setCurrentView(v), nom);
 }
 
 /** Referme toute surcouche ouverte. */
@@ -558,7 +584,11 @@ test.describe('les écrans des guides', () => {
         ['-notes', 'Notes'], ['-messages', 'Messages'],
     ] as const) test('tablette-du-meneur' + suffixe, async () => {
         await fermer();
-        const secret = await gmos.fenetre.evaluate(() => (window as any).appBridge.pairing.getSecret() as Promise<string>);
+        const secret = await gmos.fenetre.evaluate(() => {
+            const appairage = window.appBridge?.pairing;
+            if (!appairage) throw new Error('Le pont d’appairage est absent du renderer.');
+            return appairage.getSecret();
+        });
         const adresse = `http://127.0.0.1:${gmos.ports.sync}/?window=remote&sync=${gmos.ports.sync}#token=${encodeURIComponent(secret)}`;
         const [fenetre] = await Promise.all([
             gmos.application.waitForEvent('window', { timeout: 15_000 }),

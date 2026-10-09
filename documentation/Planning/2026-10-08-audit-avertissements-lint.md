@@ -897,3 +897,26 @@ complète et construction non rejouées pour ce lot de tests uniquement.
 **Sept fichiers Codex non commités**, deux tests et cinq documents. Reprendre
 captures (27), mémoïsation (3), puis Storyboard masqué (4). Préserver le harnais
 e2e et les guides étrangers ; l'annotation PDF reste au chantier v1/v2, § 1 bis.
+
+## Lot 36 — captures du manuel, 09/10
+
+Le lot 35 est commité sous **`1413f6da`**, à la demande de David. Dernier poussé
+**`d0fd965b`**, trois commits locaux d'avance. Le
+[lot 36](2026-10-09-lint-captures-du-manuel.md) retire **27 annotations** du
+harnais de captures : signatures réelles des magasins, vues/outils et fixtures
+de combat typés ; campagnes/appairage gardés. Les attentes et les 79 scénarios
+sont conservés. Nouveau projet TypeScript référencé dans le contrôle global ;
+sortie facultative des captures pour garder les guides suivis intacts.
+
+Types, construction et lint ciblé passent. **52 tests des protections passent**,
+puis **79 scénarios e2e**, avec **78 captures relues sur neuf planches**.
+Lint global : **1 585 fichiers, zéro erreur, trois avertissements**, contre 30.
+Depuis le début du chantier : **540 → 3**. Zéro diagnostic `no-explicit-any`,
+zéro annotation explicite dans les tests. Comptage brut applicatif : **cinq
+annotations déjà masquées**, quatre Storyboard, une PDF.
+
+`git diff --check` propre ; fichiers étrangers inchangés. La suite Vitest
+complète n'est pas rejouée. Huit fichiers Codex non commités. Reprendre les
+trois diagnostics de mémoïsation, puis les quatre annotations Storyboard ;
+PDF v1/v2 séparé au § 1 bis. Le cadrage du dernier jet est également consigné
+dans cette section, sans modifier les captures des guides dans ce lot.
