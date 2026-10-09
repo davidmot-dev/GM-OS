@@ -165,7 +165,7 @@ la [galerie](tablettes/T5-fini/index.html) et le
 [manifeste](tablettes/T5-fini/controles-integration.json).
 
 **T6 validé et refonte clôturée.** [Validation de David et enregistrement](2026-10-07-T6-validation-tablettes.md).
-Il ne reste pas de développement prévu par ce plan. Les appareils et gestes
+Il ne reste pas de développement prévu par le plan des tablettes. Les appareils et gestes
 précis de l'essai ne sont pas détaillés dans sa réponse. Le manifeste T5 conserve
 ses valeurs historiques, antérieures au commit et à la validation T6.
 
