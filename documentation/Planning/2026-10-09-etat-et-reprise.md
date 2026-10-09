@@ -229,3 +229,47 @@ trois diagnostics de mémoïsation et la directive inutile.
 Préserver les fichiers étrangers des guides, du 07/10, de l'e2e et de `.claude`.
 Ne pas rejouer le push réussi ni retirer les essais de messages hors contrat.
 La migration PDF v1/v2 reste séparée au § 1 bis.
+
+## Lot 28 commité, lot 29 couture des fiches
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Les neuf fichiers Codex du lot 28 sont commités en **`853a9a28`**, sans fichier
+étranger. **Aucun push demandé ni effectué** ; dernier poussé **`8e6a0939`**.
+Les mentions antérieures « non commités » gardent l'état avant cette demande.
+
+Le [lot 29 couture des fiches](2026-10-09-lint-couture-des-fiches.md) retire
+**38 `any`** dans `electron/coutureDesFiches.test.ts`. Le vrai moteur HTML
+reste chargé, avec gabarit et IndexedDB artificiels. Fenêtre et DOM typés,
+requêtes génériques, événements issus du contrat existant et messages de
+réponse dont le résultat reste inconnu. Lectures gardées et corrélation par
+identifiant ; les attentes asynchrones restent distinctes des réponses requises.
+Les assertions existantes sont conservées, dont restauration sans effacement,
+redessin, désabonnement, copie des données et refus des demandes invalides.
+
+L'import initial des types depuis le pont entraînait son code renderer dans
+le projet Electron et deux erreurs `appBridge`. Les **sept interfaces** sont
+déplacées à l'identique dans `contratsDeLaFiche.ts`, fichier de types sans
+dépendance d'exécution ; le pont réexporte les mêmes noms. Reste de son
+implémentation vérifié inchangé, sans assouplir TypeScript ni modifier le
+moteur HTML ou les constructeurs. Le test vérifie bien neuf fonctions, pas
+huit comme son ancien libellé le disait.
+
+**132 tests ciblés dans huit fichiers** passent. Lint ciblé propre ; types
+et construction passent après extraction des interfaces. Lint global :
+**1 585 fichiers, zéro erreur et 138 avertissements**, dont **134 `any`, tous
+dans les tests**, trois diagnostics de mémoïsation et une directive inutile.
+Comptage recoupé par fichier, règles et inventaire initial inchangés. Aucun
+profil réel, paquet installé, service lancé ou scénario Electron utilisé.
+
+La suite complète passe : **7 198 tests dans 566 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre. Tous les contrôles globaux
+portent sur les fichiers finaux après extraction des interfaces.
+
+Lot 29 réalisé, validé et documenté, **huit fichiers Codex non commités** (trois de
+code/tests, cinq documents). Dernier local **`853a9a28`**, dernier poussé
+**`8e6a0939`**. Reprendre **purge/détenteurs (28)** dans
+`src/services/purge/detenteurs.test.ts`, puis les autres groupes de tests par
+contrat. Contexte Oracle (12), enregistrement SyncServer (9), captures du
+manuel (27) distinctes ; ensuite mémoïsation et directive.
+Préserver les fichiers étrangers ; ne pas changer le moteur HTML ni rouvrir
+les interfaces partagées. La migration PDF v1/v2 reste séparée au § 1 bis.

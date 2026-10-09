@@ -93,3 +93,11 @@ scénarios. Puis les détenteurs de données de la purge (28) et les autres
 groupes de tests par contrat. Les captures du manuel (27) restent distinctes.
 Terminer ensuite les trois diagnostics de mémoïsation et la directive inutile.
 La migration PDF v1/v2 du § 1 bis du registre reste séparée.
+
+## Mise à jour du 09/10 — lot 28 commité
+
+À la demande suivante de David, les neuf fichiers Codex de ce lot sont commités
+en **`853a9a28`**, sans fichier étranger. Aucun push demandé ni effectué ;
+dernier poussé **`8e6a0939`**. Les mentions antérieures « non commités » gardent
+l'état historique. Les contrôles validés de ce lot ne sont pas rejoués au commit.
+La reprise est dans le [lot 29 couture des fiches](2026-10-09-lint-couture-des-fiches.md).

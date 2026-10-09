@@ -724,3 +724,37 @@ cinq documents). Reprendre la couture des fiches (38), puis purge/détenteurs
 (28) et les autres groupes de tests par contrat, avant mémoïsation/directive.
 Les captures du manuel (27) et la migration PDF restent des sujets distincts.
 État courant dans la [note du 09/10](2026-10-09-etat-et-reprise.md).
+
+## Vingt-neuvième lot — couture des fiches, 09/10
+
+Le lot 28 est commité en **`853a9a28`**, neuf fichiers Codex, sans fichier
+étranger. Aucun push demandé ni effectué ; dernier poussé `8e6a0939`.
+Les mentions antérieures « non commités » décrivent l'état historique.
+
+Le [lot 29](2026-10-09-lint-couture-des-fiches.md) retire **38 `any`** du test
+de couture, avec le vrai moteur HTML et les scénarios existants. Fenêtre/DOM,
+IndexedDB en mémoire et événements reprennent leurs types ; les résultats
+des réponses restent inconnus et sont inspectés par assertions/gardes.
+La présence des données requises et la corrélation par identifiant restent.
+
+Les sept interfaces du pont sont déplacées à l'identique dans un fichier de
+types, puis réexportées : leur import depuis le renderer provoquait deux
+erreurs de contexte `appBridge` dans le projet Electron. Implémentation du
+pont vérifiée inchangée, contrats publics et configuration conservés.
+Le moteur HTML et les sources des constructeurs restent intacts.
+
+**132 tests ciblés dans huit fichiers** passent. Lint ciblé propre ; types
+et construction passent après extraction. **1 585 fichiers, zéro erreur
+et 138 avertissements**, dont **134 `any`, tous dans les tests**, trois
+diagnostics de mémoïsation et une directive inutile. Comptage recoupé par
+fichier ; aucune modification des règles ni de l'inventaire JSON initial.
+
+La suite complète passe : **7 198 tests dans 566 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre. Contrôles globaux sur les
+fichiers finaux après extraction des interfaces.
+
+Lot 29 réalisé, validé et documenté, **huit fichiers Codex non commités** (trois de
+code/tests, cinq documents). Reprendre purge/détenteurs (28), puis les autres
+groupes de tests par contrat, avant mémoïsation/directive. Captures du manuel
+(27) et migration PDF distinctes. État courant dans la
+[note du 09/10](2026-10-09-etat-et-reprise.md).
