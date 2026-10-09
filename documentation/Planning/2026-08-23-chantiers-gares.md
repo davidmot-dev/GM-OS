@@ -10515,6 +10515,31 @@ catalogues (7), captures du manuel (27), puis diagnostics ciblés. Préserver le
 fichiers étrangers ; migration PDF séparée au § 1 bis.
 [État du 09/10](2026-10-09-etat-et-reprise.md).
 
+**09/10 — lots 31–32 publiés, lot 33 règles/jets/fixtures réalisé.** À la demande
+de David, quinze fichiers Codex sont commités et poussés sous **`d0fd965b`**.
+Le hook passe : types, lint (61 avertissements, zéro erreur), **7 198 tests
+dans 566 fichiers** (un fichier et quatre tests ignorés), construction.
+Les fichiers étrangers restent hors du commit.
+
+Le [lot 33](2026-10-09-lint-regles-jets-et-pilotes.md) retire **16 `any` dans
+six tests** ; contrats existants et lectures simulées typées. Deux fixtures
+hors contrat corrigées (statut audio Cortex et fournisseur Ollama), attentes
+conservées. Noms des scénarios et 154 expressions d'assertion inchangés.
+Aucun code applicatif ni règle de lint modifié. Types, lint ciblé et **119
+tests dans neuf fichiers** passent ; lint global : **1 585 fichiers, zéro
+erreur, 45 avertissements** (41 `any`, trois mémoïsations, une directive).
+`git diff --check` propre. Suite complète et construction non rejouées après
+ce lot de harnais.
+
+Comptage direct : **42 annotations dans les tests**, dont une déjà masquée,
+et **cinq applicatives déjà masquées** (quatre Storyboard, une PDF), soit **47**.
+Les mentions précédentes « zéro `any` applicatif » désignaient les avertissements.
+**Onze fichiers Codex non commités**, six tests et cinq documents ; dernier
+local et poussé **`d0fd965b`**. Reprendre archives/session (7 avertissements,
+8 annotations), inventaires/catalogues (7), captures (27), puis mémoïsation/
+directive et annotations masquées du Storyboard. PDF v1/v2 reste au § 1 bis.
+Préserver les fichiers étrangers.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10583,7 +10608,7 @@ fichiers étrangers ; migration PDF séparée au § 1 bis.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lot 30 commité (`e377d82c`), lots 31–32 réalisés non commités**, dernier poussé `8e6a0939`, § 127 : **540 → 61 avertissements, zéro erreur**, zéro `any` applicatif ; 57 diagnostics et 58 annotations dans les tests (une déjà masquée) | Groupes règles/jets/fixtures (16), archives/session (7 + 1 masquée), inventaires/catalogues (7), captures (27), puis mémoïsation/directive | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes corrigés et reprise](2026-10-09-lint-lots-ia-et-messages.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lots 31–32 commités et poussés (`d0fd965b`), lot 33 réalisé non commité**, § 127 : **540 → 45 avertissements, zéro erreur** ; 41 diagnostics `any`, 42 annotations dans les tests et 5 applicatives déjà masquées | Archives/session (7 + 1 masquée), inventaires/catalogues (7), captures (27), puis mémoïsation/directive et Storyboard masqué ; PDF séparé | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupe corrigé et reprise](2026-10-09-lint-regles-jets-et-pilotes.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

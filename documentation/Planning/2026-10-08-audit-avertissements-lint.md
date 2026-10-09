@@ -821,3 +821,33 @@ propre ; construction non rejouée pour ces harnais uniquement.
 Reprendre règles/jets/fixtures (16), archives/session (7 signalées + 1 masquée),
 inventaires/catalogues (7), captures (27), puis diagnostics ciblés. Détails dans
 la note du lot ; migration PDF séparée au § 1 bis.
+
+## Lot 33 — règles, jets et fixtures de pilotes, 09/10
+
+Les quinze fichiers Codex des lots 31–32 sont commités et poussés sous
+**`d0fd965b`**, après validation du hook : types, lint (61 avertissements,
+zéro erreur), **7 198 tests dans 566 fichiers** (un fichier et quatre tests
+ignorés), construction.
+
+Le [lot 33](2026-10-09-lint-regles-jets-et-pilotes.md) retire ensuite **16
+annotations dans six tests**. Contrats de calcul, schéma, Cortex, moteurs de
+jets, Forge et traductions ; deux fixtures hors contrat corrigées. Noms des
+scénarios et 154 expressions d'assertion conservés. Aucun code applicatif
+ni règle de lint modifié.
+
+Types, lint ciblé et **119 tests dans neuf fichiers** passent. Lint global :
+**1 585 fichiers, zéro erreur, 45 avertissements**, dont **41 `any`**, trois
+diagnostics de mémoïsation et une directive inutile. Comptage direct : **42
+annotations dans les tests**, dont une déjà masquée dans NexusService.
+Le même contrôle de tous les fichiers TS/TSX suivis trouve **cinq annotations
+applicatives masquées** : sonsDuMoment (2), useStoryboardStore (2),
+lectureDeSource (1). « Zéro applicatif » dans les notes précédentes concernait
+donc les diagnostics, pas toutes les annotations. Total brut : **47**.
+`git diff --check` propre. Suite complète et construction non rejouées après
+ce lot de tests uniquement.
+
+**Onze fichiers Codex non commités**, six tests et cinq documents ; dernier
+local et poussé **`d0fd965b`**. Reprendre archives/session (7 signalées + 1
+masquée), inventaires/catalogues (7), captures (27), mémoïsation/directive,
+puis les quatre annotations masquées Storyboard. L'annotation PDF reste dans
+le chantier v1/v2 au § 1 bis. Préserver les modifications étrangères.

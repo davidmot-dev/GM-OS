@@ -1,17 +1,22 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { TacticalAIControlPanel } from '../components/TacticalAIControlPanel';
-import { useTacticalAIStore } from '../useTacticalAIStore';
+import type { TacticalAIState } from '../types';
 
+type EtatPourPanneau = Pick<TacticalAIState,
+  'status' | 'logs' | 'isPanelOpen' | 'updateSettings' | 'clearLogs' | 'setIsPanelOpen' | 'activeAdvices' | 'hardwareStatus'> & {
+  settings: Pick<TacticalAIState['settings'], 'isMuted' | 'autoApplyDispel'>;
+};
+const { lireCortex } = vi.hoisted(() => ({ lireCortex: vi.fn<() => EtatPourPanneau>() }));
 
 // Mock the store
 vi.mock('../useTacticalAIStore', () => ({
-  useTacticalAIStore: vi.fn(),
+  useTacticalAIStore: lireCortex,
 }));
 
 describe('TacticalAIControlPanel', () => {
   it('should render the trigger button when closed', () => {
-    (useTacticalAIStore as any).mockReturnValue({
+    lireCortex.mockReturnValue({
       status: 'idle',
       settings: { isMuted: false, autoApplyDispel: false },
       logs: [],
@@ -28,7 +33,7 @@ describe('TacticalAIControlPanel', () => {
   });
 
   it('should open the panel when clicked', () => {
-    (useTacticalAIStore as any).mockReturnValue({
+    lireCortex.mockReturnValue({
       status: 'idle',
       settings: { isMuted: false, autoApplyDispel: false },
       logs: [],
@@ -37,7 +42,7 @@ describe('TacticalAIControlPanel', () => {
       clearLogs: vi.fn(),
       setIsPanelOpen: vi.fn(),
       activeAdvices: [],
-      hardwareStatus: { hue: 'connected', autoApplyDispel: false },
+      hardwareStatus: { hue: 'connected', audio: 'ready' },
     });
 
     render(<TacticalAIControlPanel />);
@@ -49,7 +54,7 @@ describe('TacticalAIControlPanel', () => {
 
   /** Échap referme le bandeau — sauf quand un autre écouteur l'a déjà revendiquée (2026-10-03). */
   describe('Échap', () => {
-    const ouvert = (setIsPanelOpen: () => void) => (useTacticalAIStore as any).mockReturnValue({
+    const ouvert = (setIsPanelOpen: TacticalAIState['setIsPanelOpen']) => lireCortex.mockReturnValue({
       status: 'idle',
       settings: { isMuted: false, autoApplyDispel: false },
       logs: [],

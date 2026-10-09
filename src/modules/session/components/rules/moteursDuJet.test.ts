@@ -19,7 +19,8 @@ describe('les moteurs du Grimoire', () => {
 
     it('disent chacun ce qu’ils font, avec un exemple, dans les deux langues', () => {
         for (const langue of [fr, en]) {
-            const moteurs = (langue as any).session.rule_engine_editor.core.agencement.moteurs;
+            const moteurs: Record<string, { nom: string; clair: string; exemple: string }> =
+                langue.session.rule_engine_editor.core.agencement.moteurs;
             for (const m of MOTEURS_DU_JET) {
                 expect(moteurs[m.cle]?.nom, m.cle).toBeTruthy();
                 expect(moteurs[m.cle]?.clair, m.cle).toBeTruthy();

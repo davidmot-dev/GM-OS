@@ -1,17 +1,27 @@
 import { describe, it, expect } from 'vitest';
 import { calculationEngine } from './CalculationEngine';
+import type { ContexteDeCalcul } from './CalculationEngine';
+import type { PlayerCharacter } from '../../../types/player.types';
+import type { SheetField } from '../../../data/defaultSheetTemplates';
+
+type PersonnagePourCalcul = Pick<PlayerCharacter, 'hp' | 'maxHp'> & {
+    sheetData: NonNullable<PlayerCharacter['sheetData']>;
+};
+type GabaritPourCalcul = {
+    sections: { fields: (Pick<SheetField, 'id' | 'label'> & Partial<Pick<SheetField, 'defaultValue'>>)[] }[];
+};
 
 // Simulating the logic from useSheetCalculator
-function getContext(character: any, template: any) {
-    const ctx: Record<string, any> = {
+function getContext(character: PersonnagePourCalcul, template: GabaritPourCalcul | null | undefined) {
+    const ctx: ContexteDeCalcul = {
         hp: character.hp || 0,
         maxHp: character.maxHp || 0,
         ...character.sheetData
     };
 
     if (template) {
-        template.sections.forEach((section: any) => {
-            section.fields.forEach((field: any) => {
+        template.sections.forEach(section => {
+            section.fields.forEach(field => {
                 const rawValue = character.sheetData[field.id] ?? field.defaultValue ?? 0;
                 
                 const sanitizedLabel = field.label

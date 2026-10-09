@@ -35,7 +35,7 @@ describe('le gabarit de fiche est contraint par un schéma', () => {
      * champ — et donc de reproduire le `{":false,` ou le `_Note:` qui
      * cassaient le parsing.
      */
-    const schema = SCHEMA_DU_GABARIT as Record<string, any>;
+    const schema = SCHEMA_DU_GABARIT;
     const gabarit = schema.properties.template;
     const section = gabarit.properties.sections.items;
     const champ = section.properties.fields.items;
@@ -48,7 +48,7 @@ describe('le gabarit de fiche est contraint par un schéma', () => {
 
   it('une section a toujours ses champs, même vides', () => {
     // `fields` requis évite la section fantôme, que rien n'aurait signalée.
-    const section = (SCHEMA_DU_GABARIT as Record<string, any>)
+    const section = SCHEMA_DU_GABARIT
       .properties.template.properties.sections.items;
     expect(section.required).toEqual(['id', 'label', 'fields']);
   });
@@ -59,7 +59,7 @@ describe('le gabarit de fiche est contraint par un schéma', () => {
      * de fiche serait retombé sur son cas par défaut, sans rien dire. Ici il
      * ne peut plus : l'énumération est dans la grammaire.
      */
-    const champ = (SCHEMA_DU_GABARIT as Record<string, any>)
+    const champ = SCHEMA_DU_GABARIT
       .properties.template.properties.sections.items.properties.fields.items;
     expect(champ.properties.type.enum).toEqual(
       ['number', 'text', 'checkbox', 'gauge', 'select', 'textarea', 'rating'],

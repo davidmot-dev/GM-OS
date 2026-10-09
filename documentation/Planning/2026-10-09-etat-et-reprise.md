@@ -352,3 +352,32 @@ Trois diagnostics de mémoïsation et une directive inutile. La suite complète 
 Reprendre par groupes : règles/jets/fixtures (16), archives/session (7 avertissements
 et 8 annotations), inventaires/catalogues (7), captures du manuel (27), puis
 diagnostics ciblés. Préserver les fichiers étrangers ; migration PDF au § 1 bis.
+
+## Publication des lots 31–32 et lot 33 — règles/jets/fixtures
+
+David demande « commit, pousse et passe à l'étape suivante (GM-OS est éteint) ».
+Les quinze fichiers Codex des lots 31–32 sont commités et poussés sous
+**`d0fd965b`**. Le hook passe : types, lint (61 avertissements, zéro erreur),
+**7 198 tests dans 566 fichiers** (un fichier et quatre tests ignorés),
+construction. Les fichiers étrangers restent hors du commit.
+
+Le [lot 33](2026-10-09-lint-regles-jets-et-pilotes.md) retire **16 `any` dans
+six tests** de règles, jets et pilotes. Projections des contrats existants et
+espions typés ; fixtures Cortex et fournisseur Ollama corrigées, attentes
+conservées. Noms des scénarios et 154 expressions d'assertion inchangés.
+Aucun code applicatif ni règle de lint modifié.
+
+Types, lint ciblé et **119 tests dans neuf fichiers** passent. Lint global :
+**1 585 fichiers, zéro erreur, 45 avertissements** (41 `any`, trois diagnostics
+de mémoïsation, une directive inutile). **42 annotations dans les tests**,
+dont une déjà masquée. Le comptage syntaxique complet trouve également **cinq
+annotations applicatives déjà masquées** : quatre Storyboard, une PDF. Les
+mentions antérieures « zéro `any` applicatif » concernaient les avertissements.
+`git diff --check` propre ; pas de nouvelle suite complète ou construction
+après ce lot de harnais.
+
+**Onze fichiers Codex non commités**, six tests et cinq documents. Dernier
+local et poussé : **`d0fd965b`**. Reprendre archives/session (7 avertissements,
+8 annotations), inventaires/catalogues (7), captures (27), puis mémoïsation
+et directive. Revoir les quatre annotations masquées du Storyboard séparément ;
+PDF v1/v2 reste au § 1 bis. Préserver les fichiers étrangers.

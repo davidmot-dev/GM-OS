@@ -115,3 +115,20 @@ sa surface explicite ; un résultat inconnu se garde à la lecture.
 du lot 32 et cette note (les trois documents d'état communs sont mis à jour).
 Dernier local `e377d82c`, dernier poussé `8e6a0939`. Préserver les fichiers étrangers
 des guides, du 07/10, de l'e2e et de `.claude`. Migration PDF v1/v2 séparée au § 1 bis.
+
+## Publication et suite — 09/10
+
+À la demande de David, les quinze fichiers Codex des lots 31–32 sont commités
+et poussés sous **`d0fd965b`**. Le hook pré-push passe : types, lint global
+(61 avertissements, zéro erreur), **7 198 tests dans 566 fichiers** (un fichier
+et quatre tests ignorés), construction. Les modifications étrangères restent
+hors du commit.
+
+Le [lot 33 règles/jets/fixtures](2026-10-09-lint-regles-jets-et-pilotes.md) retire
+ensuite **16 `any` dans six tests**, sans changement applicatif. Types, lint
+ciblé et **119 tests dans neuf fichiers** passent ; lint global : **45
+avertissements, zéro erreur**. Il reste 42 annotations dans les tests (41
+signalées, une masquée). Le comptage direct trouve aussi cinq annotations
+applicatives déjà masquées : quatre Storyboard et une PDF. « Zéro applicatif »
+dans l'état précédent désignait les avertissements. Onze fichiers Codex du
+nouveau lot restent non commités ; reprendre archives/session (8 annotations).

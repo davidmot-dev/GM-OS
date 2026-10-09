@@ -2,7 +2,15 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ForgeService, estErreurAuth, type ForgeContextItem } from './ForgeService';
 import { CANEVAS } from './rules/canevas';
 import { GROUPES } from './rules/GroupesDeChamps';
+import type { useAIStore } from '../../stores/useAIStore';
 
+type EtatIA = ReturnType<typeof useAIStore.getState>;
+// Le budget lit la configuration Ollama avant de refuser les pièces visuelles.
+type EtatPourForge = { activeProvider: Exclude<EtatIA['activeProvider'], 'ollama'> }
+  | { activeProvider: 'ollama'; configs: Pick<EtatIA['configs'], 'ollama'> };
+const { lireIA } = vi.hoisted(() => ({
+  lireIA: vi.fn<() => EtatPourForge>(() => ({ activeProvider: 'gemini' })),
+}));
 
 const mockGenerateJSON = vi.fn();
 
@@ -16,9 +24,7 @@ vi.mock('../ai/AIService', () => ({
 
 vi.mock('../../stores/useAIStore', () => ({
   useAIStore: {
-    getState: vi.fn(() => ({
-      activeProvider: 'gemini'
-    }))
+    getState: lireIA
   }
 }));
 
@@ -66,8 +72,8 @@ describe('ForgeService', () => {
       ];
 
       // Temporarily change provider mock
-      const { useAIStore } = await import('../../stores/useAIStore');
-      (useAIStore.getState as any).mockReturnValue({ activeProvider: 'gemma' });
+      lireIA.mockReturnValue({ activeProvider: 'ollama',
+        configs: { ollama: { provider: 'ollama', modelId: 'gemma4:26b' } } });
 
       await expect(forgeService.forgeSystem(items)).rejects.toThrow(
         "Gemma 4 ne supporte pas l'analyse visuelle de multiples fichiers"
@@ -399,8 +405,7 @@ describe('canevas du pilote', () => {
   /** Le prompt réellement envoyé, pour une forge quelconque. */
   const promptDeForge = async () => {
     mockGenerateJSON.mockClear();
-    const { useAIStore } = await import('../../stores/useAIStore');
-    (useAIStore.getState as any).mockReturnValue({ activeProvider: 'gemini' });
+    lireIA.mockReturnValue({ activeProvider: 'gemini' });
     await forge.forgeSystem([{ name: 'Livre', type: 'text', content: 'Des règles.' }]);
     return mockGenerateJSON.mock.calls[0][0] as string;
   };

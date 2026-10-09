@@ -16,8 +16,12 @@ describe('DiceEngine Alignment', () => {
     });
 
     it('should support both yze and year-zero identifiers', () => {
-        const configYze = { defaultDice: '1', logic: 'count-success', engine: 'yze' as any };
-        const configYearZero = { defaultDice: '1', logic: 'count-success', engine: 'year-zero' as any };
+        const configYze: Parameters<typeof DiceEngine.rollFromConfig>[0] = {
+            defaultDice: '1', logic: 'count-success', engine: 'yze',
+        };
+        const configYearZero: Parameters<typeof DiceEngine.rollFromConfig>[0] = {
+            defaultDice: '1', logic: 'count-success', engine: 'year-zero',
+        };
         
         expect(DiceEngine.rollFromConfig(configYze).rolls.length).toBe(1);
         expect(DiceEngine.rollFromConfig(configYearZero).rolls.length).toBe(1);
