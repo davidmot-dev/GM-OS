@@ -133,3 +133,52 @@ après coordination, tests (219) et diagnostics ciblés. `HubDiceDisplay.tsx`
 reste étranger et intact, demande de coordination sans réponse ; ne pas
 l'indexer. Migration PDF séparée au § 1 bis. Ne pas rejouer le push déjà réussi
 ni rouvrir les règles de conversion ou de retenue des dés.
+
+## Lot 26 commité et poussé, lot 27 messages d'erreur et Hub
+
+David demande **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Les 13 fichiers Codex du lot 26 sont commités en **`b612123a`**, puis poussés
+sur `origin/feature/tablet-hub-pwa`, depuis `567f94de`. Hook complet réussi :
+types, lint zéro erreur/229 avertissements, **7 177 tests dans 562 fichiers**,
+construction ; un fichier et quatre tests ignorés. Aucun fichier étranger
+inclus, aucune modification applicative pendant le push. Les mentions
+antérieures « non commités » gardent l'état avant cette demande.
+
+Le [lot 27 messages d'erreur et Hub](2026-10-09-lint-messages-erreur-et-hub.md)
+retire **les six derniers `any` applicatifs** : cinq exceptions deviennent
+inconnues, et le Hub reprend le vrai `RollRecord | null` du magasin.
+**David autorise le 09/10 : « Oui, corriger aussi le dernier `any` du Hub ».**
+Ses fins de ligne existantes sont conservées ; les autres fichiers étrangers
+restent intacts. L'attente de coordination mentionnée plus haut est levée.
+
+Le lecteur de message commun garde les objets structurés et les replis
+paresseux propres à chaque écran ; le magasin du journal retransmet l'exception
+intacte. L'accès à `null.message` et les messages non textuels pouvaient
+provoquer une seconde exception : gardes corrigées et effet fonctionnel
+consigné au § 1 bis. La détection de `MCP_AUTH_EXPIRED` reste inchangée.
+
+**84 tests ciblés dans huit fichiers** passent, dont **21 nouveaux cas dans
+quatre fichiers**. Ils contrôlent messages/replis, identité de l'exception,
+conservation du journal et de la saisie, et reprise après échec de NotebookLM
+ou du butin. Pont et campagnes artificiels ; pas de service distant ou de
+profil réel utilisés par les nouveaux essais. Pas d'essai Electron nécessaire
+pour ces contrats. Types et construction passent. Lint : **1 584 fichiers,
+zéro erreur et 223 avertissements**, dont **219 `any`, tous dans les tests**,
+trois diagnostics de mémoïsation et une directive inutile. Règles et inventaire
+initial inchangés ; aucun paquet installé ni service démarré manuellement.
+
+La suite complète passe : **7 198 tests dans 566 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre. Contrôles sur les types,
+le code et les tests finaux, sans rejouer de scénario Electron.
+
+Lot 27 réalisé et documenté, **16 fichiers Codex non commités** (onze de
+code/tests, cinq documents). Dernier local et poussé **`b612123a`**.
+Reprendre les **simulations et fixtures des tests par contrats communs**,
+en relisant le groupe relais/persistance partagée : les deux tests
+`CrossWindowEventService` comptent 33 `any`, `persistanceDesStoresPartages`
+en compte 12. Les 38 de `coutureDesFiches`, les 28 de `detenteurs` et les 27
+des captures du manuel forment d'autres groupes à traiter séparément.
+Puis les trois diagnostics de mémoïsation et la directive inutile.
+Préserver les modifications étrangères des guides, du 07/10 et de l'e2e ;
+ne pas rejouer le push réussi ni réorganiser les types d'erreur déjà validés.
+La migration PDF v1/v2 du § 1 bis reste un sujet séparé.

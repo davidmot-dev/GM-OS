@@ -26,6 +26,7 @@ import {
   declarationAffichee, fusionnerLaDeclaration, type DeclarationSaisie,
 } from '../rules/declarationDuCorpus';
 import { SelecteurDeMoteur } from '../../ai/SelecteurDeMoteur';
+import { messageDException } from '../../../utils/messageDException';
 
 interface NotebookSource {
   id: string;
@@ -535,11 +536,11 @@ const ForgeDashboard: React.FC = () => {
             return next;
           });
 
-        } catch (err: any) {
+        } catch (err: unknown) {
           addLog(t('modules:session.forge_module.notebook.import_error'));
           console.error(err);
           
-          if (err.message?.includes('MCP_AUTH_EXPIRED')) {
+          if (messageDException(err, () => '').includes('MCP_AUTH_EXPIRED')) {
             gmToast("Authentification NotebookLM expirée. Tentative de reconnexion forcée...", "warning");
             handleReconnect();
           } else {

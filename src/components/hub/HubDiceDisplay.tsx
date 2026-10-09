@@ -2,11 +2,11 @@ import React from 'react';
 import { EtiquetteDuDegre } from '../../modules/dice/EtiquetteDuDegre';
 import { useTranslation } from 'react-i18next';
 import { getFateRankLabel, getDieCssClass } from '../../modules/dice/DiceUIUtils';
-import type { DieResult } from '../../modules/dice/DiceEngine';
+import type { RollRecord } from '../../stores/useDiceStore';
 
 interface HubDiceDisplayProps {
     showDice: boolean;
-    lastRoll: any;
+    lastRoll: RollRecord | null;
     enable3D: boolean;
 }
 
@@ -52,7 +52,7 @@ export const HubDiceDisplay: React.FC<HubDiceDisplayProps> = ({ showDice, lastRo
                 )}
 
                 <div className="flex flex-wrap gap-4 justify-center mt-4">
-                    {(lastRoll.rolls as DieResult[]).map((r, i) => (
+                    {lastRoll.rolls.map((r, i) => (
                         <div 
                             key={i} 
                             className={`size-16 flex flex-col items-center justify-center rounded-2xl text-2xl font-black border transition-all relative group ${getDieCssClass(r)}`}

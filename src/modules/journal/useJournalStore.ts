@@ -495,7 +495,7 @@ export const useJournalStore = create<JournalState>()(
             throw new Error(i18next.t('modules:journal.messages.notebook_not_available'));
           }
 
-        } catch (err: any) {
+        } catch (err: unknown) {
           console.error("[JournalStore] Sync failed:", err);
           throw err;
         }

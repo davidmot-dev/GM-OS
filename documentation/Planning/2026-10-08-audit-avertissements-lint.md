@@ -660,3 +660,34 @@ documenté, **13 fichiers Codex non commités** (huit de code/tests, cinq docume
 Reprendre **Messages d'erreur (5)**, puis dé du Hub (1) après coordination,
 tests (219) et diagnostics ciblés. La migration PDF v1/v2 reste séparée ; état
 de reprise dans la [note du 09/10](2026-10-09-etat-et-reprise.md).
+
+## Vingt-septième lot — messages d'erreur et Hub, 09/10
+
+Le lot 26 est commité en **`b612123a`**, 13 fichiers Codex, puis poussé sur
+`origin/feature/tablet-hub-pwa`, depuis `567f94de`. Hook complet réussi :
+types, zéro erreur/229 avertissements, **7 177 tests dans 562 fichiers** et
+construction. Aucun fichier étranger inclus. Les mentions antérieures
+« non commités » gardent l'état historique.
+
+Le [lot 27](2026-10-09-lint-messages-erreur-et-hub.md) retire **les six derniers
+`any` applicatifs**, dont le Hub repris avec l'accord explicite de David et
+ses fins de ligne conservées. Les exceptions sont inconnues ; leurs messages
+structurés et leurs replis paresseux sont conservés, et le journal transmet
+l'exception intacte. Les gardes contre les exceptions nulles et les messages
+non textuels corrigent aussi un défaut fonctionnel enregistré au § 1 bis.
+
+**84 tests ciblés dans huit fichiers** passent, dont **21 nouveaux cas** sur
+les diagnostics et la reprise après échec. Types et construction passent.
+**1 584 fichiers, zéro erreur et 223 avertissements**, dont **219 `any`, tous
+dans les tests**, trois diagnostics de mémoïsation et une directive inutile.
+Comptage recoupé par fichier, règles et inventaire JSON initial inchangés.
+
+La suite complète passe : **7 198 tests dans 566 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre.
+
+Lot 27 réalisé et documenté, **16 fichiers Codex non commités** (onze de
+code/tests, cinq documents). Reprendre les simulations et fixtures de tests
+par contrats communs, puis mémoïsation/directive. Le prochain groupe à
+relire est le relais et la persistance partagée (33 + 12 avertissements).
+Les captures du manuel sont distinctes ; la migration PDF v1/v2 reste séparée.
+État courant dans la [note du 09/10](2026-10-09-etat-et-reprise.md).

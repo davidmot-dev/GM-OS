@@ -36,6 +36,7 @@ import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import HorsDePortee from '../session/components/HorsDePortee';
 import { gmConfirm } from '../../stores/useModalStore';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule } from '../../components/socle';
+import { messageDException } from '../../utils/messageDException';
 
 /**
  * **Chaque type, sa couleur et son pictogramme** — des catégories, pas des
@@ -177,8 +178,8 @@ const JournalDashboard: React.FC = () => {
     try {
       await syncToNotebook(activeJournalId);
       gmToast(t('modules:journal.messages.sync_success'), "success");
-    } catch (err: any) {
-      gmToast(err.message || t('modules:journal.messages.sync_error'), "error");
+    } catch (err: unknown) {
+      gmToast(messageDException(err, () => t('modules:journal.messages.sync_error')), "error");
     } finally {
       setIsSyncing(false);
     }

@@ -82,3 +82,15 @@ mémoïsation/directive. `HubDiceDisplay.tsx` était modifié hors Codex et rest
 intact ; la demande de reprise de ce fichier est toujours sans réponse.
 Préserver les autres modifications étrangères. La migration PDF v1/v2 du
 § 1 bis reste un sujet séparé.
+
+## Mise à jour du 09/10 — lot 26 commité et poussé
+
+À la demande suivante de David, les 13 fichiers Codex de ce lot sont commités
+en **`b612123a`**, puis poussés sur `origin/feature/tablet-hub-pwa` depuis
+`567f94de`. Hook complet réussi : types, lint zéro erreur/229 avertissements,
+**7 177 tests dans 562 fichiers**, construction ; un fichier et quatre tests
+ignorés. Aucun fichier étranger inclus ni modification applicative pendant
+le push. Les mentions antérieures « non commités » gardent l'état historique.
+
+La reprise et l'autorisation reçue pour le Hub sont dans le
+[lot 27 messages d'erreur et Hub](2026-10-09-lint-messages-erreur-et-hub.md).

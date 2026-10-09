@@ -143,6 +143,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
 | ⚠️ **09/10 : le lecteur PDF RAG attend l'API v1 de pdf-parse, module installé v2.4.5.** | `RAGEngine.ts` appelle la valeur de `require('pdf-parse')` comme une fonction ; les exports locaux sont un objet contenant le constructeur `PDFParse`. Le chemin d'index retourne sans texte ; `ai:extract-pdf` rend son erreur historique | **Migration séparée du lint**, sans lecture de PDF réel : adapter les deux appels, gérer la destruction du parseur et vérifier sur PDF artificiels. Le lot 24 retire le `any` et documente le contrat historique, il ne répare pas cette incompatibilité. [Constat et preuve](2026-10-09-lint-ia-et-fournisseurs.md) |
+| ✅ **09/10 : une exception nulle ou un message non textuel casse le diagnostic d'erreur.** | Les quatre écrans/hooks lisent directement `.message` ; `null` provoque une seconde exception, un message numérique casse `.includes` dans la Forge | **Corrigé dans le lot 27 du § 127** : lecteur de message gardé, replis historiques paresseux et marqueur d'authentification conservés. Cas nuls testés dans NotebookLM/butin, reprise vérifiée ; le journal transmet l'exception intacte. Pas d'essai de reconnexion dans l'écran Forge. [Note](2026-10-09-lint-messages-erreur-et-hub.md) |
 | ✅ **09/10 : l'option hf_token de Gradio est ignorée par le SDK installé.** | `ClientOptions` 2.1 expose `token`, pas `hf_token` ; le typage de la génération d'image révèle ce décalage | **Corrigé dans le lot 24 du § 127** : même valeur d'environnement via `token`, deux cas de génération d'image avec SDK/téléchargement/rangement simulés et jeton artificiel ou absent. [Note](2026-10-09-lint-ia-et-fournisseurs.md) |
 | ✅ **08/10 : catégories du formulaire de chronologie hors contrat.** | Sept boutons dont `major/minor/discovery`, contre cinq catégories dans `TimelineEvent` et les filtres | **Corrigé dans le lot 23 du § 127**, selon David : « Aligner le formulaire sur les cinq catégories du modèle (recommandé) ». Les créations utilisent `major-event` ; pas de migration des événements existants. Formulaire et filtre majeur testés. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
 | ✅ **08/10 : graphe social, méthode de simulation absente et premier affichage sans réglage des forces.** | `d3Simulation` n'existe pas dans l'API installée ; l'effet initial précède l'apparition du canevas dimensionné. Les gardes de libération/réinitialisation n'accèdent pas aux nœuds vivants | **Corrigé dans le lot 23 du § 127** : forces publiques, libération de `fx/fy` en conservant `x/y`, `d3ReheatSimulation`, effet relancé à l'apparition du canevas. Sept nouveaux cas avec D3 réel et composant simulé limité à l'API publique. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
@@ -10338,6 +10339,39 @@ et diagnostics ciblés. Dernier local et poussé `567f94de`. Préserver les
 fichiers étrangers et garder la migration PDF du § 1 bis séparée.
 [État du 09/10](2026-10-09-etat-et-reprise.md).
 
+**09/10, demande suivante :** David demande « commit, pousse et passe à l'étape
+suivante (GM-OS est éteint) ». Les 13 fichiers Codex du lot 26 sont commités en
+**`b612123a`**, puis poussés sur `origin/feature/tablet-hub-pwa`, depuis
+`567f94de`. Hook complet réussi : types, zéro erreur/229 avertissements,
+**7 177 tests dans 562 fichiers**, construction ; un fichier et quatre tests
+ignorés. Aucun fichier étranger inclus ni modification applicative pendant
+le push. Les mentions antérieures « non commités » gardent l'état historique.
+
+Le [lot 27 messages d'erreur et Hub](2026-10-09-lint-messages-erreur-et-hub.md)
+retire **les six derniers `any` applicatifs** : cinq exceptions inconnues,
+lecture commune des messages structurés/replis paresseux et contrat réel
+`RollRecord | null` pour le Hub. Le journal retransmet l'exception intacte.
+**Coordination du 09/10 : David répond « Oui, corriger aussi le dernier `any`
+du Hub ».** Ses fins de ligne préexistantes sont conservées ; l'attente de
+coordination est levée. Les autres fichiers étrangers restent intacts.
+
+Les gardes corrigent aussi l'accès à `null.message` et la comparaison d'un
+message non textuel, défaut consigné au § 1 bis. Le marqueur de reconnexion
+`MCP_AUTH_EXPIRED` reste le même ; pas de changement des catégories d'erreur.
+**84 tests ciblés dans huit fichiers** passent, dont **21 nouveaux cas** sur
+messages, identité des exceptions et reprise après échec. Types et construction
+passent. Lint : **1 584 fichiers, zéro erreur et 223 avertissements**, dont
+**219 `any`, tous dans les tests**, trois diagnostics de mémoïsation et une
+directive inutile. Comptage recoupé, règles et inventaire initial inchangés.
+
+**7 198 tests dans 566 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre. Lot 27 réalisé, validé et documenté, **16 fichiers
+Codex non commités** (onze de code/tests, cinq documents). Dernier local et
+poussé **`b612123a`**. Reprendre les simulations/fixtures par contrats communs,
+en relisant relais et persistance partagée (33 + 12 `any`), puis les diagnostics
+ciblés. Préserver les fichiers étrangers ; garder la migration PDF séparée.
+[État du 09/10](2026-10-09-etat-et-reprise.md).
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10406,7 +10440,7 @@ fichiers étrangers et garder la migration PDF du § 1 bis séparée.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 25 poussés (`567f94de`), lot 26 calcul/recherche/audio réalisé non commité**, § 127 : **540 → 229 avertissements, zéro erreur**, 6 `any` applicatifs et 219 dans les tests | Messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [calcul/recherche/audio](2026-10-09-lint-calcul-recherche-et-audio.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 26 poussés (`b612123a`), lot 27 messages d'erreur/Hub réalisé non commité**, § 127 : **540 → 223 avertissements, zéro erreur**, zéro `any` applicatif et 219 dans les tests | Simulations et fixtures de tests par contrats communs, puis trois diagnostics de mémoïsation et une directive. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [messages/Hub](2026-10-09-lint-messages-erreur-et-hub.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

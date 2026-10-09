@@ -8,6 +8,7 @@ import { chargerLesOracles } from '../../tables/pontDesTables';
 import { proposerDesObjets } from '../logic/propositionDeButinIA';
 import { Sparkles, Dices, Layers, Wand2, Search, Loader2, Zap, BookOpen } from 'lucide-react';
 import { gmToast } from '../../../stores/useToastStore';
+import { messageDException } from '../../../utils/messageDException';
 
 const LootGeneratorPanel: React.FC = () => {
     const { t } = useTranslation(['modules']);
@@ -107,9 +108,9 @@ const LootGeneratorPanel: React.FC = () => {
             } else {
                 gmToast(t('modules:loot.generator.toasts.ai_no_valid'), "warning");
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("AI Loot Generation failed:", err);
-            gmToast(t('modules:loot.generator.toasts.ai_failed', { message: err.message || 'Error' }), "error");
+            gmToast(t('modules:loot.generator.toasts.ai_failed', { message: messageDException(err, () => 'Error') }), "error");
         } finally {
             setIsGenerating(false);
         }

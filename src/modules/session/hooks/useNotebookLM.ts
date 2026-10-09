@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useOracleContext } from '../../ai/hooks/useOracleContext';
 import { questionAuCarnet } from '../logic/questionAuCarnet';
+import { messageDException } from '../../../utils/messageDException';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -78,9 +79,9 @@ export const useNotebookLM = () => {
             } else {
                 setMessages(prev => [...prev, { role: 'assistant', content: "L'Oracle reste silencieux... (Réponse vide)" }]);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("useNotebookLM: Query failed", error);
-            setMessages(prev => [...prev, { role: 'assistant', content: `Rupture de liaison : ${error.message || 'Erreur MCP'}` }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: `Rupture de liaison : ${messageDException(error, () => 'Erreur MCP')}` }]);
         } finally {
             setIsQuerying(false);
         }
