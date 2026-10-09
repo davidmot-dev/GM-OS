@@ -91,3 +91,45 @@ Prochain groupe **Calcul, recherche et audio (9)** : `useSpotlight` (3),
 tests (219) et diagnostics ciblés. `HubDiceDisplay.tsx` reste étranger et intact ;
 demande de coordination sans réponse. Ne pas l'indexer. Le constat PDF séparé
 reste ouvert ; ne pas mélanger sa migration au retrait des prochains `any`.
+
+## Lot 25 commité et poussé, lot 26 calcul/recherche/audio
+
+David demande **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Les 12 fichiers Codex du lot 25 sont commités en **`567f94de`**. Push réussi
+sur `origin/feature/tablet-hub-pwa`, de `10cce98e` jusqu'à `567f94de`, avec le
+commit IA/fournisseurs `2215836b`. Hook complet réussi : types, lint zéro
+erreur/238 avertissements, **7 165 tests dans 561 fichiers**, construction.
+Un fichier et quatre tests ignorés ; aucun fichier étranger inclus, aucune
+modification applicative pendant le push. Les mentions antérieures « non
+commités » gardent l'état avant cette demande.
+
+Le [lot 26 calcul, recherche et audio](2026-10-09-lint-calcul-recherche-et-audio.md)
+retire **9 `any` applicatifs** dans cinq fichiers. La recherche reprend le
+contrat documentaire partagé, la fiche ses données locales et le contexte
+du calculateur, les couleurs le résultat du vrai moteur de dés et la cloche
+son constructeur Web Audio avec repli local WebKit.
+
+Les données libres de fiche restent inconnues jusqu'au parseur : ses types
+excluent booléens et tableaux, mais son exécution les accepte. Conversion
+limitée à l'appel du SDK, sans filtrage ni transformation ; valeurs locales,
+zéros et retenue/relance des dés restent. **49 tests ciblés dans sept fichiers**
+passent, dont **12 nouveaux cas** dans trois fichiers sur recherche, moteur et
+vrai hook de calcul. Annotation d'une fixture corrigée ; les cinq cas du hook
+repassent et son lint ciblé est propre. Types et construction passent.
+
+Lint global : **1 579 fichiers, zéro erreur et 229 avertissements**, contre
+238, dont **225 `any` (6 applicatifs, 219 dans les tests)**, trois diagnostics
+de mémoïsation et une directive inutile. Comptage recoupé par fichier, règles
+et inventaire initial inchangés. Aucun paquet installé ni service lancé.
+
+La suite complète passe : **7 177 tests dans 562 fichiers**, un fichier et
+quatre tests ignorés. `git diff --check` propre. Lot 26 réalisé, validé et
+documenté, **13 fichiers Codex non commités** (huit de code/tests, cinq documents).
+Dernier local et poussé **`567f94de`**.
+
+Reprendre **Messages d'erreur (5)** : `ForgeDashboard`, `JournalDashboard`,
+`useJournalStore`, `LootGeneratorPanel`, `useNotebookLM`. Puis le dé du Hub (1)
+après coordination, tests (219) et diagnostics ciblés. `HubDiceDisplay.tsx`
+reste étranger et intact, demande de coordination sans réponse ; ne pas
+l'indexer. Migration PDF séparée au § 1 bis. Ne pas rejouer le push déjà réussi
+ni rouvrir les règles de conversion ou de retenue des dés.

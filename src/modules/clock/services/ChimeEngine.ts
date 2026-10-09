@@ -9,7 +9,8 @@ class ChimeEngine {
 
     private initContext() {
         if (!this.audioCtx) {
-            this.audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const fenetreAudio = window as Window & { webkitAudioContext?: typeof AudioContext };
+            this.audioCtx = new (window.AudioContext || fenetreAudio.webkitAudioContext)();
         }
     }
 

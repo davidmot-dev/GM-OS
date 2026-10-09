@@ -76,3 +76,15 @@ coordination, tests (219) et diagnostics mémoïsation/directive. Le dé du Hub
 était modifié hors Codex et reste intact ; la demande de reprise de ce fichier
 n'a toujours pas reçu de réponse. Préserver les autres changements étrangers.
 La migration PDF v1/v2 du § 1 bis reste un sujet séparé.
+
+## Commit et push à la demande suivante
+
+David demande **« commit, pousse et passe à l'étape suivante (GM-OS est éteint) »**.
+Les 12 fichiers Codex sont commités en **`567f94de`**, sans changement étranger.
+Push réussi sur `origin/feature/tablet-hub-pwa`, de `10cce98e` jusqu'à `567f94de`,
+avec le commit IA/fournisseurs **`2215836b`**. Le hook complet passe : types,
+lint zéro erreur/238 avertissements, **7 165 tests dans 561 fichiers**,
+construction. Un fichier et quatre tests ignorés. Aucune modification
+applicative pendant le push. Les mentions « non commités » ci-dessus décrivent
+l'état antérieur à la demande.
+La reprise traite le [lot 26 calcul, recherche et audio](2026-10-09-lint-calcul-recherche-et-audio.md).

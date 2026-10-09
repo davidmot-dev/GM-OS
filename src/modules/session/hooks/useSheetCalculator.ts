@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { calculationEngine } from '../logic/CalculationEngine';
+import { calculationEngine, type ContexteDeCalcul } from '../logic/CalculationEngine';
 import type { PlayerCharacter, Entity } from '../store/types';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 
@@ -10,7 +10,7 @@ import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 export function useSheetCalculator(
     character: PlayerCharacter | Entity | null, 
     template: SheetTemplate | null = null,
-    overrideData?: Record<string, any>
+    overrideData?: PlayerCharacter['sheetData']
 ) {
     /**
      * Context Preparation
@@ -19,7 +19,7 @@ export function useSheetCalculator(
     const context = useMemo(() => {
         if (!character) return {};
         
-        const ctx: Record<string, any> = {
+        const ctx: ContexteDeCalcul = {
             name: character.name,
             hp: (character as PlayerCharacter).hp || 0,
             maxHp: (character as PlayerCharacter).maxHp || 0,

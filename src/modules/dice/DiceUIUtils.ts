@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next';
+import type { DieResult } from './DiceEngine';
 
 export const getFateRankLabel = (rank: number, t: TFunction) => {
     if (rank >= 8) return t('dice.fate_ranks.legendary');
@@ -8,7 +9,7 @@ export const getFateRankLabel = (rank: number, t: TFunction) => {
     return t('dice.fate_ranks.neutral');
 };
 
-export const getDieCssClass = (r: any) => {
+export const getDieCssClass = (r: DieResult) => {
     if (r.isExploded) return 'bg-etat-alerte/30 text-etat-alerte border border-etat-alerte/50';
     if (r.isCritMax) return 'bg-etat-succes/30 text-etat-succes border border-etat-succes/50';
     if (r.isCritMin) return 'bg-etat-danger/30 text-etat-danger border border-etat-danger/50';

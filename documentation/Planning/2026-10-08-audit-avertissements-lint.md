@@ -631,3 +631,32 @@ documenté, **12 fichiers Codex non commités** (sept de code/tests, cinq docume
 Reprendre **Calcul, recherche et audio (9)**, puis messages d'erreur (5),
 dé du Hub (1) après coordination, tests (219) et diagnostics ciblés. La
 migration PDF v1/v2 reste séparée ; état de reprise dans la [note du 09/10](2026-10-09-etat-et-reprise.md).
+
+## Vingt-sixième lot — calcul, recherche et audio, 09/10
+
+David demande « commit, pousse et passe à l'étape suivante (GM-OS est éteint) ».
+Lot 25 commité en **`567f94de`** (12 fichiers Codex), puis poussé sur
+`origin/feature/tablet-hub-pwa`, avec `2215836b`, depuis `10cce98e`.
+Hook complet réussi : types, zéro erreur/238 avertissements, **7 165 tests
+dans 561 fichiers**, construction. Aucun changement étranger inclus.
+Les anciennes mentions « non commités » gardent l'état avant cette demande.
+
+Le [lot 26](2026-10-09-lint-calcul-recherche-et-audio.md) retire **9 `any`
+applicatifs** dans la recherche rapide, le hook/moteur de calcul, les couleurs
+des dés et la cloche. Contrats réels repris ; données libres préservées, sans
+conversion des valeurs ni filtrage. La conversion SDK reste au seul appel
+du parseur, dont les déclarations excluent des valeurs acceptées à l'exécution.
+
+**49 tests ciblés dans sept fichiers** passent, dont **12 nouveaux cas** sur
+les documents de recherche et les vrais chemins de calcul. Types et construction
+passent ; **1 579 fichiers, zéro erreur et 229 avertissements**, dont **225
+`any` (6 applicatifs, 219 dans les tests)**, trois diagnostics de mémoïsation
+et une directive inutile. Comptage recoupé par fichier ; règles et inventaire
+JSON initial inchangés. Aucun profil réel, son ou réseau sollicité par les nouveaux essais.
+
+La suite complète passe : **7 177 tests dans 562 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre. Lot 26 réalisé, validé et
+documenté, **13 fichiers Codex non commités** (huit de code/tests, cinq documents).
+Reprendre **Messages d'erreur (5)**, puis dé du Hub (1) après coordination,
+tests (219) et diagnostics ciblés. La migration PDF v1/v2 reste séparée ; état
+de reprise dans la [note du 09/10](2026-10-09-etat-et-reprise.md).

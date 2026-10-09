@@ -2,6 +2,21 @@ import { describe, it, expect } from 'vitest';
 import { calculationEngine } from './CalculationEngine';
 
 describe('CalculationEngine', () => {
+    it('nettoie les préfixes des clés sans changer les valeurs du contexte fourni', () => {
+        const contexte = { '@Force': 4, Bonus: 2 };
+        expect(calculationEngine.evaluate('@Force + @Bonus', contexte)).toBe(6);
+        expect(contexte).toEqual({ '@Force': 4, Bonus: 2 });
+    });
+
+    it.each([
+        { formule: '@Actif ? 7 : 0', contexte: { Actif: true }, attendu: 7 },
+        { formule: 'length(@Bagage)', contexte: { Bagage: [1, 2, 3] }, attendu: 3 },
+        { formule: '@stats.force + 2', contexte: { stats: { force: 4 } }, attendu: 6 },
+        { formule: 'bonus(3)', contexte: { bonus: (valeur: number) => valeur * 2 }, attendu: 6 },
+    ])('garde les valeurs acceptées par le parseur : $formule', ({ formule, contexte, attendu }) => {
+        expect(calculationEngine.evaluate(formule, contexte)).toBe(attendu);
+    });
+
     it('should perform basic math', () => {
         expect(calculationEngine.evaluate('10 + 5')).toBe(15);
         expect(calculationEngine.evaluate('10 * 2')).toBe(20);

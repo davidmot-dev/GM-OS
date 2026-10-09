@@ -1,4 +1,7 @@
-import { Parser } from 'expr-eval';
+import { Parser, type Values } from 'expr-eval';
+
+/** Données libres des fiches, conservées telles quelles jusqu'au parseur. */
+export type ContexteDeCalcul = Record<string, unknown>;
 
 /**
  * CalculationEngine
@@ -111,20 +114,26 @@ export class CalculationEngine {
      *              faut pour un champ de fiche. Sans lui, chaque évaluation
      *              lance de vrais dés.
      */
-    evaluate(formula: string, context: Record<string, any> = {}, champ?: string): number {
+    evaluate(formula: string, context: ContexteDeCalcul = {}, champ?: string): number {
         this.cleCourante = champ === undefined ? null : `${champ}|${formula.trim()}`;
         this.rangDuDe = 0;
         try {
             const { prepared } = this.prepareFormula(formula);
             
             // Clean context: remove @ prefix if user mistakenly kept it in data keys
-            const cleanContext: Record<string, any> = {};
+            const cleanContext: ContexteDeCalcul = {};
             for (const key in context) {
                 const cleanKey = key.startsWith('@') ? key.slice(1) : key;
                 cleanContext[cleanKey] = context[key];
             }
 
-            return this.parser.evaluate(prepared, cleanContext);
+            /*
+              Les déclarations d'expr-eval ne couvrent pas les booléens et
+              tableaux qu'il sait pourtant lire (vérifié le 09/10/2026).
+              La conversion reste à cette frontière : filtrer les données
+              libres de fiche changerait les formules qui fonctionnent déjà.
+            */
+            return this.parser.evaluate(prepared, cleanContext as Values);
         } catch (error) {
             console.error(`CalculationEngine Error: Failed to evaluate "${formula}"`, error);
             return 0;

@@ -23,6 +23,7 @@ import { gmCustom } from '../stores/useModalStore';
 import { useTranslation } from 'react-i18next';
 import { CATALOGUE_DES_MODULES, MODULES_DE_LA_PALETTE, ICONE_DU_MODULE } from '../data/catalogueDesModules';
 import { useRaccourcisStore } from '../stores/useRaccourcisStore';
+import type { DocumentIA } from '../types/documentsIA';
 
 export type SpotlightCategory = 'entity' | 'audio' | 'map' | 'rule' | 'action';
 
@@ -76,7 +77,7 @@ export const useSpotlight = () => {
     setCurrentView 
   } = useSessionOSStore();
 
-  const [ruleForgeDocs, setRuleForgeDocs] = useState<any[]>([]);
+  const [ruleForgeDocs, setRuleForgeDocs] = useState<DocumentIA[]>([]);
 
   // Fetch rule forge docs on mount
   useEffect(() => {
@@ -84,8 +85,8 @@ export const useSpotlight = () => {
       try {
         const docs = await window.appBridge?.ai?.listDocs?.() || [];
         // Flatten the tree to a simple list of files
-        const flatten = (items: any[]): any[] => {
-          return items.reduce((acc, item) => {
+        const flatten = (items: DocumentIA[]): DocumentIA[] => {
+          return items.reduce<DocumentIA[]>((acc, item) => {
             if (item.type === 'directory') return [...acc, ...flatten(item.children || [])];
             return [...acc, item];
           }, []);

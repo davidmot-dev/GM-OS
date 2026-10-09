@@ -1,7 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { renderHook, act, fireEvent, waitFor } from '@testing-library/react';
 import { useSpotlight } from './useSpotlight';
 import { useSessionStore } from '../store/useSessionStore';
+import { useSessionOSStore } from '../modules/session/useSessionOSStore';
+import type { DocumentIA } from '../types/documentsIA';
 
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({ t: (cle: string) => cle }),
@@ -9,6 +11,44 @@ vi.mock('react-i18next', () => ({
 }));
 
 beforeEach(() => useSessionStore.getState().setActiveModule('dashboard'));
+afterEach(() => vi.unstubAllGlobals());
+
+describe('documents de la Forge dans la recherche', () => {
+    it('parcourt l’arbre dans son ordre, garde les fichiers sans filtrer leur extension et ouvre l’atelier', async () => {
+        const documents: DocumentIA[] = [{
+            name: 'dossier', path: '/dossier', type: 'directory', children: [
+                { name: 'codex-lint-test.md', path: '/dossier/a.md', type: 'file' },
+                { name: 'sous-dossier', path: '/dossier/sous', type: 'directory', children: [
+                    { name: 'codex-lint-test.txt', path: '/dossier/sous/b.txt', type: 'file' },
+                ] },
+                { name: 'sans enfants', path: '/dossier/vide', type: 'directory' },
+            ],
+        }, { name: 'codex-lint-test-fin.md', path: '/fin.md', type: 'file' }];
+        const lister = vi.fn<() => Promise<DocumentIA[]>>().mockResolvedValue(documents);
+        vi.stubGlobal('appBridge', { ...window.appBridge, ai: { listDocs: lister } });
+        const { result } = renderHook(() => useSpotlight());
+        act(() => { result.current.setIsOpen(true); result.current.setQuery('codex-lint-test'); });
+        await waitFor(() => expect(result.current.results).toHaveLength(3));
+        expect(result.current.results.map(r => [r.id, r.title])).toEqual([
+            ['forged-/dossier/a.md', 'codex-lint-test'],
+            ['forged-/dossier/sous/b.txt', 'codex-lint-test.txt'],
+            ['forged-/fin.md', 'codex-lint-test-fin'],
+        ]);
+        act(() => result.current.results[1].action());
+        expect(useSessionOSStore.getState().currentView).toBe('rule-workshop');
+        expect(result.current.isOpen).toBe(false);
+        expect(documents[0].children).toHaveLength(3);
+    });
+
+    it('une erreur de lecture des documents laisse les destinations de la palette utilisables', async () => {
+        const erreur = vi.spyOn(console, 'error').mockImplementation(() => {});
+        vi.stubGlobal('appBridge', { ...window.appBridge, ai: { listDocs: vi.fn().mockRejectedValue(new Error('lecture simulée')) } });
+        const { result } = renderHook(() => useSpotlight());
+        await waitFor(() => expect(erreur).toHaveBeenCalled());
+        expect(result.current.results.length).toBeGreaterThan(0);
+        expect(result.current.results.every(r => r.id.startsWith('module-'))).toBe(true);
+    });
+});
 
 describe('la sélection de la recherche rapide', () => {
     it('revient au premier résultat quand la recherche change et garde la sélection si elle reste identique', () => {

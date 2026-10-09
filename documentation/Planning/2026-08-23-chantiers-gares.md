@@ -10310,6 +10310,34 @@ après coordination, tests (219) et diagnostics ciblés. Dernier local `2215836b
 dernier poussé `10cce98e`. Préserver les fichiers étrangers et garder la
 migration PDF du § 1 bis séparée. [État du 09/10](2026-10-09-etat-et-reprise.md).
 
+**09/10, demande suivante :** David demande « commit, pousse et passe à l'étape
+suivante (GM-OS est éteint) ». Lot 25 commité en **`567f94de`**, 12 fichiers
+Codex, puis poussé sur `origin/feature/tablet-hub-pwa` avec `2215836b`, depuis
+`10cce98e`. Hook complet réussi : types, zéro erreur/238 avertissements,
+**7 165 tests dans 561 fichiers**, construction. Aucun fichier étranger inclus,
+aucune modification applicative pendant le push. Les mentions antérieures
+« non commités » gardent l'état avant cette demande.
+
+Le [lot 26 calcul, recherche et audio](2026-10-09-lint-calcul-recherche-et-audio.md)
+retire **9 `any` applicatifs** : documents de la recherche, données locales et
+contexte du calculateur, résultat du vrai moteur de dés et constructeur audio
+avec repli WebKit local. Les valeurs libres des fiches sont préservées ;
+conversion limitée au SDK, dont les types ne couvrent pas toutes les valeurs
+qu'il accepte à l'exécution. **49 tests ciblés dans sept fichiers** passent,
+dont **12 nouveaux cas** sur recherche et vrai chemin de calcul.
+Types et construction passent ; **1 579 fichiers, zéro erreur et 229
+avertissements**, dont **225 `any` (6 applicatifs, 219 dans les tests)**,
+trois diagnostics de mémoïsation et une directive inutile. Règles et inventaire
+initial inchangés.
+
+**7 177 tests dans 562 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre. Lot 26 réalisé, validé et documenté, **13 fichiers
+Codex non commités** (huit de code/tests, cinq documents). Reprendre
+**Messages d'erreur (5)**, puis dé du Hub (1) après coordination, tests (219)
+et diagnostics ciblés. Dernier local et poussé `567f94de`. Préserver les
+fichiers étrangers et garder la migration PDF du § 1 bis séparée.
+[État du 09/10](2026-10-09-etat-et-reprise.md).
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10378,7 +10406,7 @@ migration PDF du § 1 bis séparée. [État du 09/10](2026-10-09-etat-et-reprise
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 23 poussés (`10cce98e`), lot 24 commité localement (`2215836b`), lot 25 relais/archives réalisé non commité**, § 127 : **540 → 238 avertissements, zéro erreur**, 15 `any` applicatifs et 219 dans les tests | Calcul/recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [relais/archives](2026-10-09-lint-relais-et-archives.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 25 poussés (`567f94de`), lot 26 calcul/recherche/audio réalisé non commité**, § 127 : **540 → 229 avertissements, zéro erreur**, 6 `any` applicatifs et 219 dans les tests | Messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [calcul/recherche/audio](2026-10-09-lint-calcul-recherche-et-audio.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
