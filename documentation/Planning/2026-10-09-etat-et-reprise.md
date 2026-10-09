@@ -560,3 +560,48 @@ le cadrage de la capture du dernier jet reste séparé au § 1 bis.
 Préserver les fichiers étrangers. Pièges : ne pas appeler directement le
 module pdf-parse v2 ; attendre la destruction ; employer `query` dans la
 sélection RAG. Les PDF artificiels ne valident pas tous les manuels, aucun OCR.
+
+## Publication du lot 39 et lot 40 — cadrage du dernier jet
+
+David demande « ok commit et pousse 1 et 2 ». Les douze fichiers Codex PDF
+sont commités sous **`1aefeb99`** et poussés avec `004a814e` et `4e080992`.
+Pré-push vert : types, lint global sans diagnostic, **7 222 tests dans
+568 fichiers** (un fichier et quatre tests ignorés), construction.
+Le contrôle automatique avait refusé l'envoi faute d'identification suffisante
+du distant ; après vérification du remote existant et de ses envois antérieurs,
+le même push a été autorisé. Branche synchronisée, modifications étrangères exclues.
+
+Puis David demande « fais le 3 ». Le [lot 40](2026-10-09-cadrage-dernier-jet.md)
+remplace le rectangle fixe du dernier jet par la capture du panneau entier,
+repéré par son titre. Le scénario prépare son propre jet et passe seul.
+**Diagnostic précisé :** le fragment du bas était le dé courant, pas un résultat
+précédent ; son libellé et le contour étaient coupés.
+
+La nouvelle image **883 × 238 px** est relue et remplace uniquement
+`documentation/User Guides/captures/dice-dernier-jet.jpg`, déjà liée au guide 35.
+Formule, total, dé, libellé et bouton Projeter sont entiers. Construction,
+types, lint ciblé/global (**1 590 fichiers, zéro diagnostic**), 52 tests
+d'isolation/sauvegarde et **un scénario Electron ciblé** passent.
+Profil jetable et chemins confinés vérifiés ; aucun code applicatif modifié.
+Les 79 captures ne sont pas régénérées. `git diff --check` propre et
+empreintes des 21 fichiers étrangers inchangées.
+
+**Six fichiers Codex non commités**, scénario, image et quatre documents.
+Dernier local et poussé **`1aefeb99`**. Correction du cadrage terminée ;
+commit sur demande. L'essai d'un PDF représentatif dans l'interface reste
+une validation distincte. Préserver les fichiers étrangers.
+
+## Validation PDF et clôture du lot 40 — 09/10
+
+David confirme **« j'ai fait l'import d'un PDF c'est bon. Commite et pousse
+ce qu'il reste »**. L'essai PDF dans l'interface est réussi et consigné au
+registre. Les six fichiers Codex du cadrage sont réunis dans le commit
+contenant cette note, puis poussés sur la branche existante
+`feature/tablet-hub-pwa`, avec le contrôle complet pré-push conservé.
+Les fichiers étrangers sont exclus.
+
+Les travaux de cette série sont terminés : Trame, lint et annotations
+explicites, lecteurs PDF et capture du dernier jet. Rien à reprendre dans
+ces corrections ; les essais en conditions de séance et sur le matériel
+restent distincts. Vérifier `git log` pour le hash de cette livraison et
+l'état de l'envoi ; préserver les modifications étrangères.

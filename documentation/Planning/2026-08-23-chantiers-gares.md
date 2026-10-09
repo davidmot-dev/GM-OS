@@ -142,8 +142,8 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 
 | Ce qu'on a vu | Comment le revoir | Pourquoi c'est différé |
 | --- | --- | --- |
-| ⚠️ **09/10 : la capture du dernier jet laisse apparaître une partie du résultat précédent au bord inférieur.** | `dice-dernier-jet.jpg` du contrôle des 78 captures, dans `e2e-resultats/lint-captures-manuel-lot36` ; rectangle fixe du scénario inchangé (`x: 230, y: 208, width: 880, height: 206`) | **Cadrage du manuel à revoir séparément du typage** : viser le bloc du dernier jet et relire l'image. Aucune image suivie remplacée dans le lot 36. [Contrôle et reprise](2026-10-09-lint-captures-du-manuel.md) |
-| ✅ **09/10 : incompatibilité PDF v1/v2 corrigée au § 128.** | Constat initial : les lecteurs appelaient le module v2.4.5 comme une fonction v1 ; l'import refusait le parseur, l'index n'avait pas de texte PDF et l'IPC échouait | **Lot 39 réalisé, non commité** : lecteur `PDFParse` partagé, destruction attendue, PDF artificiels éprouvés dans l'import, l'index et l'IPC, puis sous Electron en mode Node. Aucun PDF réel lu. [Migration et contrôles](2026-10-09-migration-pdf.md), [constat initial](2026-10-09-lint-ia-et-fournisseurs.md) |
+| ✅ **09/10 : cadrage du dernier jet corrigé au § 129.** | Le rectangle fixe coupait le détail du **jet courant** et le bas du panneau ; le constat initial l'avait pris pour un résultat précédent | **Lot 40 livré dans le commit contenant cette entrée**, commit/push demandés par David : capture du panneau DOM entier, scénario autonome éprouvé seul, image du guide remplacée et relue. [Correction et reprise](2026-10-09-cadrage-dernier-jet.md), [constat initial](2026-10-09-lint-captures-du-manuel.md) |
+| ✅ **09/10 : incompatibilité PDF v1/v2 corrigée au § 128.** | Constat initial : les lecteurs appelaient le module v2.4.5 comme une fonction v1 ; l'import refusait le parseur, l'index n'avait pas de texte PDF et l'IPC échouait | **Lot 39 commité et poussé `1aefeb99`** : lecteur `PDFParse` partagé, destruction attendue, PDF artificiels éprouvés dans l'import, l'index et l'IPC, puis sous Electron en mode Node. Aucun PDF réel lu. [Migration et contrôles](2026-10-09-migration-pdf.md), [constat initial](2026-10-09-lint-ia-et-fournisseurs.md) |
 | ✅ **09/10 : une exception nulle ou un message non textuel casse le diagnostic d'erreur.** | Les quatre écrans/hooks lisent directement `.message` ; `null` provoque une seconde exception, un message numérique casse `.includes` dans la Forge | **Corrigé dans le lot 27 du § 127** : lecteur de message gardé, replis historiques paresseux et marqueur d'authentification conservés. Cas nuls testés dans NotebookLM/butin, reprise vérifiée ; le journal transmet l'exception intacte. Pas d'essai de reconnexion dans l'écran Forge. [Note](2026-10-09-lint-messages-erreur-et-hub.md) |
 | ✅ **09/10 : l'option hf_token de Gradio est ignorée par le SDK installé.** | `ClientOptions` 2.1 expose `token`, pas `hf_token` ; le typage de la génération d'image révèle ce décalage | **Corrigé dans le lot 24 du § 127** : même valeur d'environnement via `token`, deux cas de génération d'image avec SDK/téléchargement/rangement simulés et jeton artificiel ou absent. [Note](2026-10-09-lint-ia-et-fournisseurs.md) |
 | ✅ **08/10 : catégories du formulaire de chronologie hors contrat.** | Sept boutons dont `major/minor/discovery`, contre cinq catégories dans `TimelineEvent` et les filtres | **Corrigé dans le lot 23 du § 127**, selon David : « Aligner le formulaire sur les cinq catégories du modèle (recommandé) ». Les créations utilisent `major-event` ; pas de migration des événements existants. Formulaire et filtre majeur testés. [Note](2026-10-08-lint-interfaces-et-fiches.md) |
@@ -10695,6 +10695,45 @@ dernier jet reste au § 1 bis. Préserver les fichiers étrangers.
 
 ---
 
+**Publication du lot 39.** À la demande « ok commit et pousse 1 et 2 »,
+les douze fichiers PDF sont commités sous **`1aefeb99`** et poussés avec
+`004a814e` et `4e080992`. Pré-push réussi : types, lint sans diagnostic,
+**7 222 tests dans 568 fichiers** (un fichier et quatre tests ignorés),
+construction. Dernier local et poussé `1aefeb99`, branche synchronisée.
+
+### 129 · Cadrage du dernier jet dans le manuel — 09/10/2026
+
+**Origine.** David demande « fais le 3 » : corriger la capture du dernier jet,
+constat du § 1 bis, après publication du lot PDF.
+
+**Réalisé, non commité — lot 40.** `e2e/capturesDuManuel.spec.ts` capture
+le panneau entier, repéré par son titre, au lieu du rectangle fixe.
+Le scénario lance son propre jet rapide « Attaque Épée Longue » ; il est
+exécutable seul. L'image du guide 35 est remplacée et relue : **883 × 238 px**,
+formule, total, dé courant, libellé, bouton et contour complets.
+**Diagnostic précisé :** le morceau coupé était le dé courant, pas un résultat
+précédent. [Preuves et reprise](2026-10-09-cadrage-dernier-jet.md).
+
+**Éprouvé.** Construction, types, lint global (**1 590 fichiers, zéro erreur,
+zéro avertissement**), 52 tests de protection et un scénario Electron ciblé
+passent. Profil temporaire, chemins confinés et matériel désactivé ;
+aucun code applicatif modifié, aucune donnée réelle lue. Pas de nouvelle
+suite complète ou des 79 captures. `git diff --check` propre ; les 21 fichiers
+étrangers sont inchangés.
+
+**Reprise.** Six fichiers Codex non commités : scénario, image et quatre
+documents. Dernier local et poussé `1aefeb99`. Commit sur demande ; l'essai
+PDF représentatif dans l'interface reste distinct. Préserver les fichiers étrangers.
+
+**Clôture le 09/10.** David : **« j'ai fait l'import d'un PDF c'est bon.
+Commite et pousse ce qu'il reste »**. La validation dans l'interface du § 128
+est acquise. Les six fichiers du lot 40 sont livrés dans le commit contenant
+cette entrée ; push autorisé sur `feature/tablet-hub-pwa`, pré-push complet
+conservé et fichiers étrangers exclus. Trame, lint, PDF et cadrage terminés ;
+les essais en séance et sur le matériel restent distincts.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -10761,8 +10800,9 @@ dernier jet reste au § 1 bis. Préserver les fichiers étrangers.
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | ✅ **540 → 0 avertissement, zéro erreur**, § 127 ; lot 38 commité `4e080992`, dernier poussé `916a3842`. Après la migration PDF séparée : zéro annotation explicite `any` dans `src/`, `electron/` et `e2e/` | Chantier lint terminé | [Analyse](2026-10-08-audit-avertissements-lint.md), [lot 38](2026-10-09-lint-ponts-du-storyboard.md) |
-| 63 | **Lecteurs PDF v2** | ✅ **Lot 39 réalisé non commité**, § 128 : import, index RAG et IPC corrigés ; destruction attendue ; construction, lint et 179 tests passent, PDF artificiels aussi éprouvés sous Electron en mode Node | Commit sur demande | [Migration et reprise](2026-10-09-migration-pdf.md) |
+| 62 | **Avertissements du lint** | ✅ **540 → 0 avertissement, zéro erreur**, § 127 ; lot 38 commité `4e080992` et poussé jusqu'à `1aefeb99`. Après la migration PDF séparée : zéro annotation explicite `any` dans `src/`, `electron/` et `e2e/` | Chantier lint terminé | [Analyse](2026-10-08-audit-avertissements-lint.md), [lot 38](2026-10-09-lint-ponts-du-storyboard.md) |
+| 63 | **Lecteurs PDF v2** | ✅ **Lot 39 commité et poussé `1aefeb99`**, § 128 ; import PDF dans l'interface validé par David le 09/10 : « j'ai fait l'import d'un PDF c'est bon ». Pré-push : types, lint, 7 222 tests, construction réussis | Terminé | [Migration et reprise](2026-10-09-migration-pdf.md) |
+| 64 | **Capture du dernier jet** | ✅ **Lot 40 livré dans le commit contenant cette entrée**, § 129 ; commit et push demandés par David le 09/10. Panneau entier, scénario autonome, image remplacée et relue ; construction, types, lint, 52 tests de protection et un scénario Electron passent | Terminé | [Correction et reprise](2026-10-09-cadrage-dernier-jet.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

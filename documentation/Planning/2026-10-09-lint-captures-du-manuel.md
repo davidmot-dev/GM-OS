@@ -100,3 +100,22 @@ résolution des pilotes conservés. Lint global propre, construction/types et
 **96 tests dans neuf fichiers** passent ; huit cas ajoutés. **Neuf fichiers
 Codex non commités**. Reprendre Storyboard masqué (4) ; PDF et cadrage du
 dernier jet restent séparés au § 1 bis.
+
+## Cadrage corrigé séparément — lot 40
+
+Après publication du lot PDF sous **`1aefeb99`**, David demande « fais le 3 ».
+La [correction du cadrage](2026-10-09-cadrage-dernier-jet.md) capture le panneau
+entier à partir du titre « Dernier jet », sans rectangle fixe. Le scénario
+lance son propre jet et passe seul ; une seule image du guide est remplacée.
+
+La relecture précise le constat : le fragment était le dé du jet courant,
+pas un résultat précédent. La nouvelle image **883 × 238 px** montre le dé
+et son libellé, la formule, le total, le bouton et le contour complet.
+Construction, types, lint global sans diagnostic, 52 tests des protections
+et un scénario Electron ciblé passent. Aucun code applicatif ou fichier étranger
+modifié. Six fichiers Codex non commités ; dernier local et poussé `1aefeb99`.
+
+**Clôture du 09/10.** David valide l'import PDF (« j'ai fait l'import d'un PDF
+c'est bon ») et demande « Commite et pousse ce qu'il reste ». Les six fichiers
+du cadrage sont livrés dans le commit contenant cette entrée, avec contrôle
+pré-push complet. Aucun fichier étranger inclus ; ce cadrage n'est plus à reprendre.

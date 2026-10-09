@@ -455,7 +455,20 @@ test.describe('les écrans des guides', () => {
     test('le dernier jet de dés', async () => {
         await fermer();
         await ouvrirLeModule(gmos, 'Dice-OS');
-        await capturer('dice-dernier-jet', { x: 230, y: 208, width: 880, height: 206 });
+        // 09/10 : capturer le panneau entier ; un rectangle fixe coupait le détail du dé.
+        // Le scénario prépare son propre jet pour pouvoir régénérer cette seule image.
+        await gmos.fenetre.getByText('Attaque Épée Longue', { exact: true }).click();
+        const dernierJet = gmos.fenetre.locator('[data-panneau="2"]').filter({
+            has: gmos.fenetre.getByRole('heading', { name: 'Dernier jet', exact: true }),
+        });
+        await expect(dernierJet).toHaveCount(1);
+        await expect(dernierJet).toContainText('1d20+7');
+        await fermer();
+        await expect(dernierJet.getByRole('button', { name: 'Projeter', exact: true })).toBeVisible();
+        await dernierJet.screenshot({
+            path: path.join(SORTIE, 'dice-dernier-jet.jpg'), type: 'jpeg', quality: 82, scale: 'css',
+            animations: 'disabled', caret: 'hide',
+        });
     });
 
     test('la carte d’un combattant', async () => {
