@@ -130,7 +130,7 @@ const LobbyMonitor: React.FC = () => {
                                 setClients([]);
                                 // Reset character locks in session store
                                 try {
-                                    const sSession = (window as any).useSessionOSStore;
+                                    const sSession = window.useSessionOSStore;
                                     if (sSession) sSession.getState().setCharacterLocks({});
                                 } catch { /* non-critical */ }
                             }

@@ -1,5 +1,6 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import http from 'node:http';
+import type { Socket } from 'node:net';
 import { WebSocketServer, WebSocket } from 'ws';
 import path from 'node:path';
 import fs from 'fs-extra';
@@ -31,10 +32,31 @@ const MEDIA_MIME_TYPES: Record<string, string> = {
 };
 
 interface ExtendedWebSocket extends WebSocket {
+    /** Champ du transport ws lu uniquement pour l'adresse, absent des types publics. */
+    _socket?: Pick<Socket, 'remoteAddress'>;
     isAlive?: boolean;
     deviceId?: string;
     role?: ClientRole;
     remoteAddress?: string;
+}
+
+/** Enveloppe attendue sur le fil ; la charge reste opaque pour ce relais. */
+interface MessageRecu {
+    type: string;
+    payload?: unknown;
+    [champ: string]: unknown;
+}
+
+type ArgumentsDuRegistre = Parameters<typeof sessionManager.registerClient>;
+
+/** Champs attendus à l'inscription, sans présumer du rôle ni du jeton reçus. */
+interface InscriptionRecue {
+    deviceId?: unknown;
+    pseudo?: ArgumentsDuRegistre[1];
+    role?: unknown;
+    playerName?: ArgumentsDuRegistre[3];
+    characterId?: ArgumentsDuRegistre[4];
+    token?: unknown;
 }
 
 export class SyncServer {
@@ -344,7 +366,7 @@ export class SyncServer {
     }
 
     private handleConnection(ws: ExtendedWebSocket) {
-        const remoteAddress = (ws as any)._socket?.remoteAddress;
+        const remoteAddress = ws._socket?.remoteAddress;
         ws.remoteAddress = remoteAddress;
         console.log(`[Nexus Sync] New device connected from ${remoteAddress}`);
         
@@ -355,7 +377,8 @@ export class SyncServer {
 
         ws.on('message', (message: string) => {
             try {
-                const data = JSON.parse(message);
+                // Contrat attendu, pas une validation du JSON : le relais conserve la charge brute.
+                const data = JSON.parse(message) as MessageRecu;
                 
                 if (data.type === 'remote:register') {
                     this.handleRegister(ws, data.payload);
@@ -386,15 +409,15 @@ export class SyncServer {
         });
     }
 
-    private handleRegister(ws: ExtendedWebSocket, payload: any) {
-        const { deviceId, pseudo, role, playerName, characterId, token } = payload || {};
+    private handleRegister(ws: ExtendedWebSocket, payload: unknown) {
+        const { deviceId, pseudo, role, playerName, characterId, token } = (payload || {}) as InscriptionRecue;
         const actualDeviceId = typeof deviceId === 'string' && deviceId
             ? deviceId
             : `remote-${Math.random().toString(36).substring(2, 9)}`;
 
         // Un rôle non reconnu ne doit pas se retrouver tel quel dans le routage des
         // broadcasts : on retombe sur le rôle le moins privilégié.
-        let claimedRole: ClientRole = ALLOWED_ROLES.includes(role) ? role : 'player';
+        let claimedRole: ClientRole = ALLOWED_ROLES.includes(role as ClientRole) ? role as ClientRole : 'player';
 
         // Les rôles privilégiés reçoivent le flux non caviardé (notes privées,
         // gmSecretInfo). Le rôle étant déclaré par le client, seul le secret
@@ -431,8 +454,8 @@ export class SyncServer {
             if (this.derniereApparence) {
                 ws.send(JSON.stringify({ type: 'sync', payload: { apparence: this.derniereApparence } }));
             }
-        } catch (err: any) {
-            if (err.message === 'character_taken') {
+        } catch (err: unknown) {
+            if (err && typeof err === 'object' && 'message' in err && err.message === 'character_taken') {
                 ws.send(JSON.stringify({ 
                     type: 'remote:error', 
                     payload: { 
@@ -450,7 +473,7 @@ export class SyncServer {
      * Un refus est jeté en silence côté émetteur — inutile de lui apprendre ce
      * qui existe — mais journalisé côté MJ avec de quoi identifier l'appareil.
      */
-    private isActionAuthorized(ws: ExtendedWebSocket, data: any): boolean {
+    private isActionAuthorized(ws: ExtendedWebSocket, data: MessageRecu): boolean {
         const client = ws.deviceId ? sessionManager.getClient(ws.deviceId) : undefined;
         const verdict = evaluateAction(data?.type, data?.payload, ws.role, client?.characterId);
 
@@ -464,25 +487,28 @@ export class SyncServer {
         return true;
     }
 
-    private forwardToGM(ws: ExtendedWebSocket, data: any) {
+    private forwardToGM(ws: ExtendedWebSocket, data: MessageRecu) {
         // Contrôle avant tout effet : la branche P2P ci-dessous rediffuse aux
         // autres clients sans repasser par le renderer.
         if (!this.isActionAuthorized(ws, data)) return;
 
         // P2P Logic: If it's a message for others, broadcast it directly
-        if (data.type === 'session:send-message' && data.payload?.toId !== 'GM') {
+        const toId = data.type === 'session:send-message'
+            ? (data.payload as { toId?: unknown } | null | undefined)?.toId
+            : undefined;
+        if (data.type === 'session:send-message' && toId !== 'GM') {
             this.broadcastAction({ ...data, type: 'session:receive-message' }, ws);
         }
 
         // Forward to Renderer (GM) unless it's pure P2P (character to character)
-        const isStrictP2P = data.type === 'session:send-message' && data.payload?.toId !== 'GM' && data.payload?.toId !== 'all';
+        const isStrictP2P = data.type === 'session:send-message' && toId !== 'GM' && toId !== 'all';
         
         if (this.mainWindow && !this.mainWindow.isDestroyed() && !isStrictP2P) {
             this.mainWindow.webContents.send('remote:action', data);
         }
     }
 
-    private broadcastAction(action: any, sender?: WebSocket, targetRole?: string) {
+    private broadcastAction(action: unknown, sender?: WebSocket, targetRole?: string) {
         if (!this.wss) return;
         const message = JSON.stringify(action);
         this.wss.clients.forEach((client: ExtendedWebSocket) => {

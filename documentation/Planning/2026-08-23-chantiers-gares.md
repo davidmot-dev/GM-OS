@@ -10287,6 +10287,29 @@ Reprendre **Relais et archives (10)**, puis calcul/recherche/audio (9),
 messages d'erreur (5), dé du Hub (1) après coordination, tests et diagnostics
 ciblés. Préserver les modifications étrangères. Dernier local et poussé `10cce98e`.
 
+**09/10, demande suivante :** David demande « commit et passe à l'étape suivante
+(GM-OS est éteint) ». Lot 24 commité en **`2215836b`**, 18 fichiers Codex,
+aucun fichier étranger. **Pas de push demandé ni effectué** ; dernier poussé
+`10cce98e`. Les anciennes mentions « non commités » décrivent l'état antérieur.
+
+Le [lot 25 relais et archives](2026-10-09-lint-relais-et-archives.md) retire
+**10 `any` applicatifs**, en reprenant les contrats du transport/enveloppe/
+inscription, du dispatcher et des magasins globaux, et la mise à jour partielle
+Nexus. Contrôles de privilège/propriété et charges brutes conservés.
+**269 tests ciblés dans 21 fichiers** passent, dont **18 nouveaux cas** sur
+le relais et l'import des archives anciennes, vides ou récentes. Types et
+construction passent ; **1 578 fichiers, zéro erreur et 238 avertissements**,
+dont **234 `any` (15 applicatifs, 219 dans les tests)**, trois diagnostics de
+mémoïsation et une directive inutile. Règles et inventaire initial inchangés.
+
+**7 165 tests dans 561 fichiers** passent, un fichier et quatre tests ignorés ;
+`git diff --check` propre. Lot 25 réalisé, validé et documenté, **12 fichiers
+Codex non commités** (sept de code/tests, cinq documents). Reprendre
+**Calcul, recherche et audio (9)**, puis messages d'erreur (5), dé du Hub (1)
+après coordination, tests (219) et diagnostics ciblés. Dernier local `2215836b`,
+dernier poussé `10cce98e`. Préserver les fichiers étrangers et garder la
+migration PDF du § 1 bis séparée. [État du 09/10](2026-10-09-etat-et-reprise.md).
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10355,7 +10378,7 @@ ciblés. Préserver les modifications étrangères. Dernier local et poussé `10
 | 59 | **Le graphe de la Trame en cartes** | ✅ **G0–G7 achevés le 07/10**, § 124. [Cartes et inspecteur](2026-10-07-trame-cartes-realisation.md), [styles](2026-10-07-trame-edition-des-liens.md), [jonctions](2026-10-07-trame-jonctions.md), [ELK intégré](2026-10-07-trame-organisation-elk.md), [prise facilitée](2026-10-07-trame-prise-des-jonctions.md), [sélection multiple construite](2026-10-07-trame-selection-multiple.md). [Six dispositions construites](2026-10-07-trame-types-de-rangement.md) : automatique, étoile, ligne, colonne, arbre, grille ; 724 tests et 34 E2E distincts validés pour ce lot, sept captures et douze planches relues | Évolutions du § 126 également validées par David le 08/10 | [Essai de David consigné le 07/10](2026-10-07-trame-validation.md) ; réalisation et reprise poussées (`1d94f84f`, `ed29f301`) |
 | 60 | **Le lint global** | ✅ **Réparé et contrôlé le 07/10**, § 125 : 1 526 fichiers, zéro erreur, 540 avertissements visibles ; validation complète, types, 6 797 tests et construction passent ; une erreur de lint bloque la validation | Traiter les avertissements à la reprise des modules | [Contrôles et reprise](2026-10-07-lint-global.md), correctif `57d0193c` ; commit et push demandés |
 | 61 | **Édition avancée des liens de Trame** | ✅ **Close et validée par David le 08/10**, § 126 : commentaire, trois accroches par côté, trajet manuel ; déplacement corrigé, types, lint global et construction passent, 19 scénarios Electron distincts après correction (6 802 tests validés pour le lot initial) | — | [Réalisation et reprise](2026-10-08-trame-edition-avancee.md) ; réalisation `84bc01c8`, push demandé |
-| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 23 poussés (dernier `10cce98e`), lot 24 IA/fournisseurs réalisé non commité**, § 127 : **540 → 248 avertissements, zéro erreur**, 25 `any` applicatifs et 219 dans les tests | Relais/archives (10), calcul/recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [IA/fournisseurs](2026-10-09-lint-ia-et-fournisseurs.md) |
+| 62 | **Avertissements du lint** | 🔧 **Lots 1 à 23 poussés (`10cce98e`), lot 24 commité localement (`2215836b`), lot 25 relais/archives réalisé non commité**, § 127 : **540 → 238 avertissements, zéro erreur**, 15 `any` applicatifs et 219 dans les tests | Calcul/recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination, puis tests ; mémoïsation et directive dans des lots ciblés. Migration PDF séparée au § 1 bis | [Analyse](2026-10-08-audit-avertissements-lint.md), [groupes](2026-10-08-lint-lots-regroupes.md), [relais/archives](2026-10-09-lint-relais-et-archives.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -605,3 +605,29 @@ recherche/audio (9), messages d'erreur (5), dé du Hub (1) après coordination,
 tests et diagnostics ciblés. Une incompatibilité PDF v1/v2 a été vérifiée
 sur les exports locaux et consignée au § 1 bis du registre ; sa migration
 reste un sujet séparé, distinct des avertissements du lint.
+
+## Vingt-cinquième lot — relais et archives, 09/10
+
+David demande « commit et passe à l'étape suivante (GM-OS est éteint) ».
+Le lot 24 est commité en **`2215836b`** (18 fichiers Codex), sans push ; dernier
+poussé `10cce98e`. Les anciennes mentions « non commités » gardent l'état
+avant cette demande.
+
+Le [lot 25](2026-10-09-lint-relais-et-archives.md) retire **10 `any`
+applicatifs** dans SyncServer, App, LobbyMonitor, les favoris et l'injection
+Nexus. Charges réseau opaques, contrôles de privilège/propriété et règles de
+fusion des archives conservés. **269 tests ciblés dans 21 fichiers** passent,
+dont **18 nouveaux cas** sur le relais et la distinction archive ancienne/vide/
+récente, sans serveur démarré ni profil réel dans les nouveaux essais.
+
+Types et construction passent. **1 578 fichiers, zéro erreur et 238
+avertissements**, dont **234 `any` (15 applicatifs, 219 dans les tests)**,
+trois diagnostics de mémoïsation et une directive inutile. Comptage recoupé
+par fichier ; règles et inventaire JSON initial inchangés.
+
+La suite complète passe : **7 165 tests dans 561 fichiers**, un fichier et
+quatre tests ignorés ; `git diff --check` propre. Lot 25 réalisé, validé et
+documenté, **12 fichiers Codex non commités** (sept de code/tests, cinq documents).
+Reprendre **Calcul, recherche et audio (9)**, puis messages d'erreur (5),
+dé du Hub (1) après coordination, tests (219) et diagnostics ciblés. La
+migration PDF v1/v2 reste séparée ; état de reprise dans la [note du 09/10](2026-10-09-etat-et-reprise.md).

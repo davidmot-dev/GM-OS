@@ -1089,7 +1089,7 @@ export class NexusService {
         const finalPlayers = [...mergedPlayers, ...newPlayers];
 
         // 4. Sous-systèmes (Sessions, Maps, Wiki, etc.)
-        const nextPartialState: any = {
+        const nextPartialState: Partial<ReturnType<typeof useSessionOSStore.getState>> = {
             campaigns: updatedCampaigns,
             entities: updatedEntities,
             players: finalPlayers,

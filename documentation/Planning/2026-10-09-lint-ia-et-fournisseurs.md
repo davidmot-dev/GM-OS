@@ -98,3 +98,12 @@ mémoïsation/directive. `HubDiceDisplay.tsx` était modifié hors Codex et rest
 intact, autorisation de reprise toujours sans réponse. Préserver les autres
 modifications de Claude. La migration PDF est un constat séparé du compteur
 des avertissements restants.
+
+## Commit à la demande suivante
+
+David demande **« commit et passe à l'étape suivante (GM-OS est éteint) »**.
+Les 18 fichiers Codex de ce lot sont commités en **`2215836b`**, avec le
+correctif Gradio explicité dans le message. Aucun fichier étranger inclus.
+**Pas de push demandé ni effectué** : dernier poussé `10cce98e`. Les mentions
+« non commités » ci-dessus décrivent l'état avant cette demande.
+La reprise traite le [lot 25 relais et archives](2026-10-09-lint-relais-et-archives.md).

@@ -32,10 +32,7 @@ import { dispatchRemoteAction } from './modules/remote/actions';
 import { useThemeDuJeu } from './theme/useThemeDuJeu';
 import { isMainWindow } from './utils/windowRole';
 
-interface RemoteAction {
-  type: string;
-  payload?: any;
-}
+type RemoteAction = Parameters<typeof dispatchRemoteAction>[0];
 
 // --- LAZY COMPONENTS (Critical for Remote Stability) ---
 const RemoteControl = lazy(() => import('./modules/remote/RemoteControl'));

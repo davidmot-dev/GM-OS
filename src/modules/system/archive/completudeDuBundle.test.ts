@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { NexusCampaignState } from './nexus.types';
 
 /**
  * **Ce qu'une archive emporte, et ce qu'elle repose.**
@@ -29,6 +30,11 @@ const etat = {
     getActiveDriver: () => null,
 };
 
+const journaux = [
+    { id: 'j1', campaignId: CAMPAGNE, events: [] },
+    { id: 'j2', campaignId: 'camp-autre', events: [] },
+];
+
 vi.mock('../../session/useSessionOSStore', () => ({
     useSessionOSStore: { getState: () => etat, setState: vi.fn() },
 }));
@@ -36,10 +42,56 @@ vi.mock('../../sound/useSoundStore', () => ({ useSoundStore: { getState: () => (
 vi.mock('../../music/useMusicStore', () => ({ useMusicStore: { getState: () => ({ playlists: [] }) } }));
 vi.mock('../../../stores/useMediaStore', () => ({ useMediaStore: { getState: () => ({}) } }));
 vi.mock('../../../stores/useToastStore', () => ({ gmToast: vi.fn() }));
+vi.mock('../../journal/useJournalStore', () => ({
+    useJournalStore: { getState: () => ({ journals: journaux }), setState: vi.fn() },
+}));
 
 const { nexusService } = await import('./NexusService');
+const { useSessionOSStore } = await import('../../session/useSessionOSStore');
+const { useJournalStore } = await import('../../journal/useJournalStore');
 
 beforeEach(() => vi.clearAllMocks());
+
+function injecter(paquet: NexusCampaignState) {
+    (nexusService as unknown as { injectState: (state: NexusCampaignState) => void }).injectState(paquet);
+    expect(useSessionOSStore.setState).toHaveBeenCalledTimes(1);
+    const miseAJour = vi.mocked(useSessionOSStore.setState).mock.calls[0]?.[0];
+    if (!miseAJour || typeof miseAJour === 'function') throw new Error('Injection objet attendue');
+    return miseAJour;
+}
+
+describe('injection des archives anciennes ou récentes', () => {
+    it('préserve la trame et les journaux locaux si une archive ancienne ne les déclare pas', () => {
+        const paquet = nexusService.scrapeCampaignData(CAMPAGNE);
+        delete paquet.actes;
+        delete paquet.scenes;
+        delete paquet.journaux;
+        const miseAJour = injecter(paquet);
+        expect(miseAJour).not.toHaveProperty('actes');
+        expect(miseAJour).not.toHaveProperty('scenes');
+        expect(useJournalStore.setState).not.toHaveBeenCalled();
+    });
+
+    it('un tableau vide efface uniquement la trame et les journaux de la campagne importée', () => {
+        const miseAJour = injecter({
+            ...nexusService.scrapeCampaignData(CAMPAGNE), actes: [], scenes: [], journaux: [],
+        });
+        expect(miseAJour.actes).toEqual([etat.actes[1]]);
+        expect(miseAJour.scenes).toEqual([etat.scenes[1]]);
+        expect(useJournalStore.setState).toHaveBeenCalledExactlyOnceWith({ journals: [journaux[1]] });
+    });
+
+    it('remplace la trame et les journaux ciblés sans perdre ceux des autres campagnes', () => {
+        const paquet = nexusService.scrapeCampaignData(CAMPAGNE);
+        const acte = { ...paquet.actes![0], id: 'a3' };
+        const scene = { ...paquet.scenes![0], id: 's3', acteId: acte.id };
+        const journal = { id: 'j3', campaignId: CAMPAGNE, events: [] };
+        const miseAJour = injecter({ ...paquet, actes: [acte], scenes: [scene], journaux: [journal] });
+        expect(miseAJour.actes).toEqual([etat.actes[1], acte]);
+        expect(miseAJour.scenes).toEqual([etat.scenes[1], scene]);
+        expect(useJournalStore.setState).toHaveBeenCalledExactlyOnceWith({ journals: [journaux[1], journal] });
+    });
+});
 
 describe("la trame entre dans l'archive", () => {
     it('emporte les actes et les scènes de CETTE campagne, et pas des autres', () => {

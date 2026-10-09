@@ -155,12 +155,7 @@ export const useFavoriteStore = create<FavoriteState>()(
 
                 // Handle projection sync
                 if (favBefore) {
-                    const imageStore = (window as unknown as { useImageStore?: { 
-                        getState: () => { 
-                            projectedEntity?: { id: string }, 
-                            projectEntity: (e: any, options?: { forcer?: boolean }) => Promise<void> 
-                        } 
-                    } }).useImageStore;
+                    const imageStore = window.useImageStore;
                     
                     if (imageStore) {
                         const isCurrentlyProjected = imageStore.getState().projectedEntity?.id === id;
