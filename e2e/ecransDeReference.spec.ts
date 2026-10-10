@@ -55,12 +55,39 @@ const nomDeFichier = (panneau: string) =>
 
 let gmos: GmOsLance;
 
+/**
+ * **La taille s'impose avant chaque capture, et se vérifie** (2026-10-10).
+ *
+ * Donnée une fois au démarrage, elle ne tenait pas toujours : Windows peut
+ * ramener la fenêtre à la zone utile de l'écran — **1 426 × 791** sur le
+ * Zenbook, barre des tâches et titre ôtés. Vu deux fois le 10/10 : quand
+ * David a ouvert GM-OS pendant une suite complète, et au premier écran d'un
+ * test lancé seul. L'échec se lisait comme un écart de 15 % dans l'image,
+ * c'est-à-dire comme un changement d'habillage qui n'existait pas. Ici, une
+ * fenêtre qui refuse sa taille échoue en le disant.
+ *
+ * ⚠️ **Un pixel d'arrondi est la norme, pas un écart** : à 200 %, Windows rend
+ * 1 441 × 901 pour 1 440 × 900 demandés — c'est la taille des références.
+ * Exiger l'égalité stricte faisait échouer toute la série (mesuré le 10/10).
+ */
+async function imposerLaTaille(): Promise<void> {
+    const fenetre = await gmos.application.browserWindow(gmos.fenetre);
+    await fenetre.evaluate((w, [l, h]) => { if (w.isMaximized()) w.unmaximize(); w.setContentSize(l, h); }, [LARGEUR, HAUTEUR]);
+    await expect.poll(async () => {
+        const [l, h] = await fenetre.evaluate(w => w.getContentSize());
+        return Math.abs(l - LARGEUR) <= 1 && Math.abs(h - HAUTEUR) <= 1 ? 'ok' : `${l} × ${h}`;
+    }, {
+        message: `la fenêtre n'a pas pris ${LARGEUR} × ${HAUTEUR} : écran trop petit, ou ramenée par Windows`,
+        timeout: 5_000,
+    }).toBe('ok');
+}
+
 test.beforeAll(async () => {
     gmos = await lancerGmOs({ semence: CAMPAGNE_TEMOIN });
     await attendreLHydratation(gmos);
 
     const fenetre = await gmos.application.browserWindow(gmos.fenetre);
-    await fenetre.evaluate((w, [l, h]) => { w.unmaximize(); w.setContentSize(l, h); }, [LARGEUR, HAUTEUR]);
+    await imposerLaTaille();
     await fenetre.evaluate(w => w.webContents.setAudioMuted(true));
     await gmos.fenetre.clock.setFixedTime(L_HEURE);
 
@@ -100,6 +127,7 @@ for (const [serie, allumees, suffixe] of [
                 await expect.poll(() => gmos.fenetre.locator('main').last().innerText(), { timeout: 15_000 }).not.toBe('');
                 /* Les modules chargés à la demande, leurs images et leurs polices. */
                 await gmos.fenetre.waitForTimeout(1_500);
+                await imposerLaTaille();
 
                 await expect(gmos.fenetre).toHaveScreenshot(nomDeFichier(panneau).replace('.png', `${suffixe}.png`), {
                     animations: 'disabled',
