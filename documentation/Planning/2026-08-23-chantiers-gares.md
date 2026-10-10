@@ -4839,6 +4839,33 @@ reste **non suivi** ; son auto-test passe (`python pdf_vers_md.py --selftest`).
 
 **Motif du gel** : le moment, pas une objection. *Se rouvre à la demande de David.*
 
+#### ⏸ Rendre les ornements de thème visibles dans GM-OS — garé le 2026-10-10
+
+**Origine.** David, après le paquet Blade Runner du § 134 : *« les coins ne se voient que dans
+Dice-OS et les séparateurs sont très petits, ou alors je ne les vois pas »*. Puis : *« on garde
+cela pour après, consigne ce chantier »*.
+
+**Ce n'est pas un défaut du thème — vérifié dans le code le 10/10 :**
+- **Coins** : un `Panneau` ne les porte que s'il le demande (`orne`, `socle/Panneau.tsx`).
+  Deux seulement le font : « Dernier jet » de Dice-OS et « En direct » d'Image-OS. Choix de la
+  refonte : *« un ou deux par écran — un écran qui orne tout n'orne rien »*.
+- **Séparateur** : le composant `Separateur` (`socle/GabaritDeModule.tsx`) n'est employé que par
+  la vitrine du socle. **Aucun écran de GM-OS ne l'affiche** ; il mesure 160 × 12 px.
+- **En-tête** : l'emplacement `entete` est posé sous le titre de **29 modules**
+  (`socle/EnTeteDeModule.tsx`). Cthulhu Hack en fournit un ; **Blade Runner n'en a pas**
+  (`ornements.json` : `coin`, `separateur`).
+
+**Les trois voies, de la plus simple à la plus engageante :**
+1. **Un ornement `entete` pour Blade Runner** — thème seulement, par Codex et RPG Theme Builder,
+   même validateur ; resynchroniser `outils/rpg-theme-builder/…/references/blade-runner.css` si
+   `theme.css` change. *Recommandé : le gain le plus visible, sans code.*
+2. **Employer le séparateur dans l'interface** (entre sections de la préparation, des
+   Paramètres…) — touche `src/`, et vaut pour **tous** les jeux ; à décider écran par écran.
+3. **Orner davantage de panneaux** — touche `src/`, et va contre la règle « un ou deux par
+   écran ». Seulement si David le veut.
+
+**Motif du gel** : le moment, pas une objection. *Se rouvre à la demande de David.*
+
 #### ✅ Ouvrir la télécommande du MJ sur le second écran — garé le 2026-09-22, **construit le 2026-09-25 (§ 121)**
 
 > ⭐ **Rouvert par la raison la plus simple : David l'a demandé.** Le motif du gel était un confort
