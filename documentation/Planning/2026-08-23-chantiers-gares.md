@@ -158,7 +158,8 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | ✅ **09/10 : première connexion de la tablette du meneur sans flux — corrigé au § 130.** *Constat du 05/10 (T0 meneur) : pads absents jusqu'à une nouvelle connexion, trois essais vides sur quatre* | `SyncServer` demandait l'état complet dès `handleConnection` ; diffusé au seul rôle `remote`, il n'atteignait pas un socket encore sans rôle, et les diffusions suivantes ne portent que ce qui change | **Corrigé le 09/10** : la demande part après `remote:register`. Le contournement par seconde connexion est retiré des trois e2e meneur, qui passent sans lui (117/117). ✅ **Éprouvé sur une vraie tablette le 10/10**, David : *« pour les pads tablette ça fonctionne »* |
 | ✅ **Réparé en T4/M1, 06/10 : « Cliquer pour fermer » ferme le résultat de dés.** Fermeture haute visible même après défilement de 99 dés ; fond, Échap et expiration à quinze secondes conservés | `RemoteDiceResultOverlay.tsx` : bouton tactile et en-tête fixe hors du contenu défilant. `e2e/tabletteMeneurT0.spec.ts` : quatre cas de fermeture ordinaires, sans échec attendu ; cas long dans `e2e/tabletteM1T4.spec.ts` | [Relevé M1](2026-10-06-T4-M1-meneur.md), 81 scénarios distincts M1/T0 validés après rejeux ciblés |
 | ✅ **Réparé en T4/M2, 06/10 : les choix d'outil, couleur et épaisseur faits sur le PC n'arrivaient pas au Tableau de la tablette.** | Le flux rapide de `useNexusSynchronizer.ts` omettait ces trois champs ; il réutilise maintenant `segmentDuTableau`, comme le flux complet, sans changer sa cadence | Le parcours Tableau de `e2e/tabletteM2T4.spec.ts` vérifie les trois réglages venus du PC, le dessin tactile et l'historique. [Relevé M2](2026-10-06-T4-M2-meneur.md) |
-| ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué — **Rejoué le 10/10 (§ 133) : 645 scénarios en 1 h, zéro `Target crashed`**, un seul échec, sans rapport (référence périmée, ligne suivante). *Une exécution propre contre cinq sur six le 13/09 : à confirmer par une seconde avant de fermer* |
+| ✅ **10/10 : le plantage du rendu en exécution e2e complète ne se reproduit plus (§ 133).** *Constat du 13/09 : `Target crashed`, cinq exécutions sur six, victime jamais la même* | Deux suites complètes le 10/10, sans les quatre spécifications interdites : **645 scénarios chacune, zéro `Target crashed`** | Fermée sur la mesure, pas sur une cause : aucune correction n'a visé ce plantage, et la base a beaucoup changé depuis le 13/09. *S'il revient, rouvrir ici avec le nom de la victime* |
+| ✅ **10/10 : un écran de référence pouvait être pris dans une fenêtre réduite — corrigé (§ 133).** `Tableau de Bord` : attendu 1 441 × 901, reçu **1 426 × 791**, la zone utile du Zenbook | La taille n'était donnée qu'une fois au démarrage ; Windows peut ensuite ramener la fenêtre à l'écran (vu pendant que David ouvrait GM-OS, et sur un test lancé seul) | `imposerLaTaille()` dans `e2e/ecransDeReference.spec.ts` : la taille est réimposée **avant chaque capture** et vérifiée, à un pixel d'arrondi près (à 200 %, 1 440 × 900 demandés rendent 1 441 × 901 — une égalité stricte faisait tout échouer, mesuré). Une fenêtre réduite échoue désormais en le disant. Série 40/40 ; Cortex IA seul a la bonne taille (il diffère encore par son fond, voir la ligne de la référence) |
 | ✅ **10/10 : la référence `cortex-ia-personnalite` était périmée — rafraîchie (§ 133).** `ecransDeReference` échoue sur Cortex IA en personnalités : 7 500 pixels (1 %). L'image attendue montre l'ancien Nexus Wiki en fond et l'ancien accueil du Sage | `npx playwright test e2e/ecransDeReference.spec.ts` (Zenbook en écran principal) ; diff dans `test-results/` | Le 03/10, `19f59d1f` a rafraîchi `nexus-wiki`, `nexus-wiki-personnalite` et `cortex-ia`, **pas** `cortex-ia-personnalite` : la référence date du 02/10. Changement voulu, pas une régression. **Rafraîchie le 10/10 avec l'accord de David** (« oui ») : seule image régénérée (`--update-snapshots=changed`, série entière), puis **40/40 sans mise à jour**. ⛔ *Ne pas la régénérer seule* (`-g`) : Cortex IA est un panneau latéral, son fond est le module du test **précédent** — seule, elle capture le cockpit et la série échoue |
 | ✅ **10/10 : l'en-tête des modules — corrigé par la refonte (§ 133).** *Constat du 25/09 : « Combat-OS OS », titre sur trois lignes à 1 440 px, droite de l'en-tête coupée* | Le doublon « OS » est réparé le 30/09 (`TitreDuModule`, `Shell.tsx`) ; la barre du haut ne se replie plus (`abb6e98f`, 30/09) | **Vu le 10/10** sur les captures du manuel à 1 440 × 900 : « COMBAT-OS » et « DICE-OS » sur une ligne, l'en-tête entier jusqu'à l'icône Wi-Fi |
 | ✅ **10/10 : Combat-OS, « Percutant » sur « Fiche » — corrigé le 30/09 (§ 133).** *Constat du 25/09 : la carte d'un combattant à 1 440 px* | `3e1c8603` (30/09) range la carte en trois lignes ; son commentaire cite ce défaut. La ligne des gestes est en `flex-wrap` et le choix du type plafonné à 110 px (`HealthManager.tsx`) : un libellé long se coupe dans son menu, il ne recouvre plus | **Vu le 10/10** sur la capture de Combat-OS (manuel, 1 440 × 900). Le pilote Blade Runner n'y est pas : « Percutant » n'est pas vu à l'écran, l'impossibilité du chevauchement se lit dans le code |
@@ -4814,6 +4815,29 @@ physiques* — en est sortie le jour où sa raison d'être a disparu (§ 49).
 > raison écrite était un coût d'infrastructure, pas une impossibilité. *Une ligne garée avec son
 > motif se rouvre toute seule le jour où le motif tombe ; une ligne garée sans motif ne se rouvre
 > jamais.*
+
+#### ⏸ L'outil `outils/jdr-pdf-vers-md/` (PDF → Markdown par Marker) — garé le 2026-10-10
+
+**Origine.** Écrit par une autre session de Claude, hors commit. Relu à la demande de David
+(*« tu peux le lire et me donner ton avis »*), puis garé : *« on fera cela plus tard »*. Le dossier
+reste **non suivi** ; son auto-test passe (`python pdf_vers_md.py --selftest`).
+
+**L'idée tient** : chapitres découpés aux titres, repère `[p. N]` par page, ni `sujet:` ni `relu:`
+(matière brute, sous les fiches), arrêt net sans séparateur de page, `--offset` et `--pages`.
+
+**À corriger avant tout usage :**
+1. ⛔ **Il écrase `.ragignore`, `manifest.json` et `full_book_by_pdf_page.md`** dans
+   `<sortie>/<système>/` sans regarder l'existant. Vers `docs/systems/alien`, il remplacerait un
+   `.ragignore` de trente lignes de décisions (dont l'archive `rules-v1/`) par deux lignes.
+2. **La taille cible est fausse** : 1 200 jetons × 3,5 caractères (`ragSelection.ts`) = 4 200
+   caractères, pas ~4 800. À 4 500 plus l'en-tête et les `[p. N]`, la fin des gros chapitres est
+   tronquée par l'Oracle. Viser ~3 600.
+3. **`setup.sh` suppose Linux** (`venv/bin/activate`) ; pas de NVIDIA sur la machine de David :
+   CPU, lent (une heure ou plus pour un livre de 300 pages), plusieurs Go de PyTorch et de
+   modèles. Installer demande l'accord de David (`AGENTS.md`).
+4. **`venv/` et `sortie/` naissent dans le dépôt** et `.gitignore` ne les exclut pas.
+
+**Motif du gel** : le moment, pas une objection. *Se rouvre à la demande de David.*
 
 #### ✅ Ouvrir la télécommande du MJ sur le second écran — garé le 2026-09-22, **construit le 2026-09-25 (§ 121)**
 
@@ -10808,7 +10832,7 @@ texte). Un cas dans `SessionPrepEntityManager.test.tsx`.
 l'application construite (campagne de démo, profil jetable, description longue injectée en
 mémoire) : deux lignes lisibles, avec et sans icône. Captures hors du dépôt.
 
-**Reste.** Le voir sur les PNJ d'*Anges de Feu*.
+**✅ Validé par David le 10/10** sur les PNJ d'*Anges de Feu* : *« pour les PNJ Anges de Feu c'est bon »*.
 
 ### 133 · Le § 1 bis repris, ligne par ligne — 10/10/2026
 
@@ -10836,7 +10860,14 @@ captures du manuel hors du dépôt.*
 puis 40/40 sans mise à jour. Un premier essai en filtrant le seul test avait capturé un autre fond —
 voir la ligne du § 1 bis.
 
-**Reste.** Une seconde exécution complète pour fermer la ligne du plantage.
+**Seconde suite complète, le 10/10 : zéro `Target crashed`**, 640 réussis, 1 ignoré, 4 échecs.
+Les trois spécifications en cause passent **isolément, 81/81** : `projecteur` (5), `ecransDeReference`
+(40), `tabletteM2T4` (36). David a ouvert GM-OS pendant cette suite pour voir ses PNJ ; l'interférence
+est plausible pour le projecteur, **pas démontrée**. Le seul échec qui ressemble à un défaut du banc
+(la taille du premier écran) a sa ligne au § 1 bis. 487 images réécrites, remises depuis la copie.
+
+**La taille des écrans de référence, corrigée le même jour** : réimposée et vérifiée avant chaque
+capture (`imposerLaTaille`). **Le § 1 bis ne garde plus de ligne ouverte.**
 
 ---
 
@@ -10911,8 +10942,8 @@ voir la ligne du § 1 bis.
 | 64 | **Capture du dernier jet** | ✅ **Lot 40 livré dans le commit contenant cette entrée**, § 129 ; commit et push demandés par David le 09/10. Panneau entier, scénario autonome, image remplacée et relue ; construction, types, lint, 52 tests de protection et un scénario Electron passent | Terminé | [Correction et reprise](2026-10-09-cadrage-dernier-jet.md) |
 | 65 | **Première connexion de la tablette du meneur** | ✅ **Corrigé le 09/10, ÉPROUVÉ sur tablette le 10/10**, § 130 : l'état complet est demandé après l'inscription, plus à la connexion ; contournement retiré des e2e meneur, 117/117 | — | Rien |
 | 66 | **Trame prévue : toutes les scènes** | ✅ **Construit et VALIDÉ par David le 10/10**, § 131 : scènes de tous les actes, groupées et repliables, case à cocher, compteur ; un seul acte principal, modèle inchangé | — | Rien |
-| 67 | **Description des PNJ d'une séance** | ✅ **Corrigé le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | La voir sur *Anges de Feu* | Rien |
-| 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; suite e2e complète sans plantage (645) ; référence `cortex-ia-personnalite` rafraîchie, 40/40 | Seconde suite complète | Rien |
+| 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
+| 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
