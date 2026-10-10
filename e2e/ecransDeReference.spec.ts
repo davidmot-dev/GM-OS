@@ -60,9 +60,8 @@ let gmos: GmOsLance;
  *
  * Donnée une fois au démarrage, elle ne tenait pas toujours : Windows peut
  * ramener la fenêtre à la zone utile de l'écran — **1 426 × 791** sur le
- * Zenbook, barre des tâches et titre ôtés. Vu deux fois le 10/10 : quand
- * David a ouvert GM-OS pendant une suite complète, et au premier écran d'un
- * test lancé seul. L'échec se lisait comme un écart de 15 % dans l'image,
+ * Zenbook, barre des tâches et titre ôtés. Vu deux fois le 10/10 : au cours
+ * d'une suite e2e complète, et au premier écran d'un test lancé seul. L'échec se lisait comme un écart de 15 % dans l'image,
  * c'est-à-dire comme un changement d'habillage qui n'existait pas. Ici, une
  * fenêtre qui refuse sa taille échoue en le disant.
  *
