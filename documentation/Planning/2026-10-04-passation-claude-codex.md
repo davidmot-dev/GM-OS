@@ -138,6 +138,7 @@ registre.
 | Construire | `npm run build` | **obligatoire avant tout e2e** (Playwright lance l'application construite) |
 | E2E | `npx playwright test e2e/<fichier>.spec.ts --reporter=list` | ⛔ **ne jamais lancer** `vitrine`, `vitrineDuSocle`, `campagnesEtThemes`, `profilageDesRendus` : ils lisent les sauvegardes de David |
 | Captures du manuel | `npx playwright test e2e/capturesDuManuel.spec.ts` | ~2 min 30 ; campagne de démo, jamais les données de David ; **relire les images** (planche contact), pas seulement le compte |
+| E2E qui capturent (tablettes, trame) et suite complète | — | ⛔ **ils réécrivent les images suivies** de `documentation/Planning/` (486 en suite complète, payé deux fois le 10/10). **Copier `documentation/` avant**, remettre ensuite ; `GMOS_SORTIE_CAPTURES_MANUEL=<dossier>` envoie les captures du manuel hors du dépôt. Registre § 133 |
 | Écrans de référence | `npx playwright test e2e/ecransDeReference.spec.ts` | exigent le Zenbook en écran **principal** (200 %) : sur l'écran externe, **toutes** les captures échouent sans que rien n'ait changé |
 | Lancer l'appli depuis un shell d'agent | `env -u ELECTRON_RUN_AS_NODE npm run dev` | la variable héritée empêche Electron de démarrer |
 | Instance jetable | `npm run repetition` | pour essayer sans toucher aux données de David |

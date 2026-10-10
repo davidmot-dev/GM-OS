@@ -101,6 +101,7 @@ consigne, c'est un vœu.* Une séance ne dira quelque chose que si l'on sait d'a
 | La **carte d'un moment qui s'en va** | 25/09 → ✅ **le moniteur ÉPROUVÉ le 25/09 au soir** | L'arrêt vers un moniteur est vu (David : *« validé »*). ⚠️ **Reste un cas** : une carte **projetée à la main** depuis Map-OS avant un moment qui en projette une autre — à l'arrêt, **la vôtre doit revenir sur son écran**. |
 | ✅ Un **bruitage pris dans une atmosphère inactive** | 25/09 → ✅ **ÉPROUVÉ le 25/09 au soir** | David : *« validé »*. Le son de l'atmosphère nommée sort, le pad affiché ne s'allume pas. *La ligne reste ici, close, parce qu'elle a servi.* |
 | Le **journal de contexte d'Ollama** | 22/08 | `~/ollama_debug.log` dit les titres du contexte **et leur poids** depuis le 22/08. À ouvrir après une question : une section vide et une section pleine portaient le même titre, c'est ce qu'il devait corriger. |
+| La **séquence de storyboard qui s'exécute à moitié** | 12/09 → **descendue du § 1 bis le 10/10** (accord de David : « ok ») | Jamais reproduite : le journal compte ~80 moments depuis l'instrumentation, **73 depuis le 22/09, tous les effets à « joue »** ; seul écart, « Interrogatoire » le 20/09, une musique supprimée (donnée, signalée à l'écran). À regarder en séance : si un moment manque un effet, **un avertissement s'affiche** et `main.log` porte `[Storyboard] Moment « … » incomplet — <effet> : introuvable / module non chargé`. *Introuvable* = une donnée à refaire ; *module non chargé* = un défaut de code |
 
 ### 1 bis · ⚠️ Constaté, pas encore traité
 
@@ -157,10 +158,10 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | ✅ **09/10 : première connexion de la tablette du meneur sans flux — corrigé au § 130.** *Constat du 05/10 (T0 meneur) : pads absents jusqu'à une nouvelle connexion, trois essais vides sur quatre* | `SyncServer` demandait l'état complet dès `handleConnection` ; diffusé au seul rôle `remote`, il n'atteignait pas un socket encore sans rôle, et les diffusions suivantes ne portent que ce qui change | **Corrigé le 09/10** : la demande part après `remote:register`. Le contournement par seconde connexion est retiré des trois e2e meneur, qui passent sans lui (117/117). ✅ **Éprouvé sur une vraie tablette le 10/10**, David : *« pour les pads tablette ça fonctionne »* |
 | ✅ **Réparé en T4/M1, 06/10 : « Cliquer pour fermer » ferme le résultat de dés.** Fermeture haute visible même après défilement de 99 dés ; fond, Échap et expiration à quinze secondes conservés | `RemoteDiceResultOverlay.tsx` : bouton tactile et en-tête fixe hors du contenu défilant. `e2e/tabletteMeneurT0.spec.ts` : quatre cas de fermeture ordinaires, sans échec attendu ; cas long dans `e2e/tabletteM1T4.spec.ts` | [Relevé M1](2026-10-06-T4-M1-meneur.md), 81 scénarios distincts M1/T0 validés après rejeux ciblés |
 | ✅ **Réparé en T4/M2, 06/10 : les choix d'outil, couleur et épaisseur faits sur le PC n'arrivaient pas au Tableau de la tablette.** | Le flux rapide de `useNexusSynchronizer.ts` omettait ces trois champs ; il réutilise maintenant `segmentDuTableau`, comme le flux complet, sans changer sa cadence | Le parcours Tableau de `e2e/tabletteM2T4.spec.ts` vérifie les trois réglages venus du PC, le dessin tactile et l'historique. [Relevé M2](2026-10-06-T4-M2-meneur.md) |
-| ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
-| ⚠️ **La séquence de storyboard s'est mal exécutée en séance** : pas d'image projetée, lumières éteintes, ambiance interrompue. Le § 50 explique l'écran devenu inaccessible — **il n'explique pas ça** | Rejouer la séquence. Le journal porte désormais une ligne par moment : `[Storyboard] Moment « … » : Musique=joue Image=introuvable Lumières=module-absent`. **« introuvable »** désigne une donnée disparue, **« module-absent »** un magasin jamais chargé — deux réparations opposées | L'incident n'a laissé **aucune trace** : ni `error`, ni `warn`. *Sans instrumentation, chercher aurait été deviner* — elle est posée, il faut maintenant que le défaut se reproduise |
-| ⚠️ ~~**L'en-tête écrit « Combat-OS OS »**~~ — *ce point est corrigé depuis le 30/09 (`TitreDuModule`, `Shell.tsx`), relevé le 09/10 ; le titre sur trois lignes et le débordement à droite n'ont pas été revérifiés à l'écran* — « Dice-OS OS »… et à 1440 px de large le titre passe sur trois lignes (celui de Dice-OS est rogné en haut), tandis que la droite de l'en-tête déborde (`GM-OS_V` coupé) | `Shell.tsx:551` ajoute `<span>OS</span>` après `t('modules:names.…')`, alors que la plupart des noms portent déjà « -OS ». Visible sur toute capture de la vitrine (`e2e/vitrine.spec.ts`) | **Trouvé le 2026-09-25 par la vitrine**, premier essai de faisabilité de la refonte. C'est de l'habillage : il se traite dans la refonte ou juste avant, pas en passant |
-| ⚠️ **Combat-OS : « PERCUTANT » et « FICHE » se chevauchent** sur la carte d'un combattant, à 1440 px — pas sur toutes les cartes (celle de Gaff est propre), donc la largeur du nom décide | La vitrine : 11 combattants sous le pilote Blade Runner, `1-combat.png` | Même trouvaille, même motif de renvoi. *C'est la largeur réelle du Zenbook qui l'a montré — aucun essai ne tournait à cette taille* |
+| ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué — **Rejoué le 10/10 (§ 133) : 645 scénarios en 1 h, zéro `Target crashed`**, un seul échec, sans rapport (référence périmée, ligne suivante). *Une exécution propre contre cinq sur six le 13/09 : à confirmer par une seconde avant de fermer* |
+| ✅ **10/10 : la référence `cortex-ia-personnalite` était périmée — rafraîchie (§ 133).** `ecransDeReference` échoue sur Cortex IA en personnalités : 7 500 pixels (1 %). L'image attendue montre l'ancien Nexus Wiki en fond et l'ancien accueil du Sage | `npx playwright test e2e/ecransDeReference.spec.ts` (Zenbook en écran principal) ; diff dans `test-results/` | Le 03/10, `19f59d1f` a rafraîchi `nexus-wiki`, `nexus-wiki-personnalite` et `cortex-ia`, **pas** `cortex-ia-personnalite` : la référence date du 02/10. Changement voulu, pas une régression. **Rafraîchie le 10/10 avec l'accord de David** (« oui ») : seule image régénérée (`--update-snapshots=changed`, série entière), puis **40/40 sans mise à jour**. ⛔ *Ne pas la régénérer seule* (`-g`) : Cortex IA est un panneau latéral, son fond est le module du test **précédent** — seule, elle capture le cockpit et la série échoue |
+| ✅ **10/10 : l'en-tête des modules — corrigé par la refonte (§ 133).** *Constat du 25/09 : « Combat-OS OS », titre sur trois lignes à 1 440 px, droite de l'en-tête coupée* | Le doublon « OS » est réparé le 30/09 (`TitreDuModule`, `Shell.tsx`) ; la barre du haut ne se replie plus (`abb6e98f`, 30/09) | **Vu le 10/10** sur les captures du manuel à 1 440 × 900 : « COMBAT-OS » et « DICE-OS » sur une ligne, l'en-tête entier jusqu'à l'icône Wi-Fi |
+| ✅ **10/10 : Combat-OS, « Percutant » sur « Fiche » — corrigé le 30/09 (§ 133).** *Constat du 25/09 : la carte d'un combattant à 1 440 px* | `3e1c8603` (30/09) range la carte en trois lignes ; son commentaire cite ce défaut. La ligne des gestes est en `flex-wrap` et le choix du type plafonné à 110 px (`HealthManager.tsx`) : un libellé long se coupe dans son menu, il ne recouvre plus | **Vu le 10/10** sur la capture de Combat-OS (manuel, 1 440 × 900). Le pilote Blade Runner n'y est pas : « Percutant » n'est pas vu à l'écran, l'impossibilité du chevauchement se lit dans le code |
 | ✅ ~~**Une carte projetée sur un moniteur s'affiche dans TOUTES les fenêtres de projection ouvertes**~~ — **corrigé le soir même, § 118** — en couche 0, sous leur image. `projectionTarget` vaut `'monitor'` sans dire lequel, et `ProjectorView` dessine la carte dès que `mapTarget === 'monitor' && isProjectorWindow` | Projeter une carte sur le moniteur 2 pendant que le moniteur 1 est ouvert **sans image** : la carte y apparaît aussi | **Antérieur au 25/09, et jamais signalé à l'écran.** Le corriger demande de faire voyager `ecranDeLaCarte` (§ 114) jusqu'aux projecteurs — un champ de plus dans le protocole entre fenêtres, donc un chantier à part. *Une image opaque le cache ; un écran au repos le montre.* |
 
 ### 2 · Ce qui se décide à la table — axe N.3
@@ -10809,6 +10810,34 @@ mémoire) : deux lignes lisibles, avec et sans icône. Captures hors du dépôt.
 
 **Reste.** Le voir sur les PNJ d'*Anges de Feu*.
 
+### 133 · Le § 1 bis repris, ligne par ligne — 10/10/2026
+
+**Origine.** David : *« traite le 1 bis »*. Quatre lignes ouvertes ; chacune vérifiée avant d'être
+annoncée, aucune modification de code.
+
+- **En-tête des modules** et **Combat-OS « Percutant » / « Fiche »** : **corrigés le 30/09** par la
+  refonte (`TitreDuModule`, `abb6e98f`, `3e1c8603`), sans que le § 1 bis le sache. Vus le 10/10
+  sur les 79 captures du manuel (campagne de démo, profil jetable, sortie hors du dépôt par
+  `GMOS_SORTIE_CAPTURES_MANUEL`). La vitrine qui les avait trouvés lit les sauvegardes de David :
+  elle n'a pas été lancée.
+- **Storyboard à moitié exécuté** : jamais reproduit en quatre semaines (journal de l'application,
+  **lu sans rien modifier**). Descendu au § 1 avec l'accord de David : il se juge en séance.
+- **Plantage d'une exécution e2e complète** : suite complète sans les quatre spécifications
+  interdites — **645 scénarios, 643 réussis, 1 ignoré, 1 échec, zéro `Target crashed`**, 1 h.
+  L'échec est une **référence périmée** (`cortex-ia-personnalite`), consignée au § 1 bis.
+
+**Piège payé, à ne pas repayer.** Une suite complète **réécrit 486 images suivies** de
+`documentation/Planning/` (relevés des tablettes, graphe de la trame). `documentation/` avait été
+copié avant ; les 486 fichiers ont été remis depuis cette copie, et `git status` est revenu
+identique à l'avant-suite. *Avant toute suite complète : copier `documentation/`, et diriger les
+captures du manuel hors du dépôt.*
+
+**Référence rafraîchie le 10/10**, accord de David (« oui ») : régénérée dans l'ordre de la série,
+puis 40/40 sans mise à jour. Un premier essai en filtrant le seul test avait capturé un autre fond —
+voir la ligne du § 1 bis.
+
+**Reste.** Une seconde exécution complète pour fermer la ligne du plantage.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -10883,6 +10912,7 @@ mémoire) : deux lignes lisibles, avec et sans icône. Captures hors du dépôt.
 | 65 | **Première connexion de la tablette du meneur** | ✅ **Corrigé le 09/10, ÉPROUVÉ sur tablette le 10/10**, § 130 : l'état complet est demandé après l'inscription, plus à la connexion ; contournement retiré des e2e meneur, 117/117 | — | Rien |
 | 66 | **Trame prévue : toutes les scènes** | ✅ **Construit et VALIDÉ par David le 10/10**, § 131 : scènes de tous les actes, groupées et repliables, case à cocher, compteur ; un seul acte principal, modèle inchangé | — | Rien |
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | La voir sur *Anges de Feu* | Rien |
+| 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; suite e2e complète sans plantage (645) ; référence `cortex-ia-personnalite` rafraîchie, 40/40 | Seconde suite complète | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
