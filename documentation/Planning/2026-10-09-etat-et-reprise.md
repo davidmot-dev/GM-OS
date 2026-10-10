@@ -646,3 +646,8 @@ Ces images ne doivent pas être commitées : les rétablir depuis `HEAD`, avec
 l'accord de David (commande git qui écrit).
 
 **Rétabli le 09/10**, David : *« oui lance la restauration »* — `git restore documentation/Planning/tablettes/`, plus aucune image modifiée dans ce dossier.
+
+**10/10 — éprouvé en réel.** David : *« pour les pads tablette ça fonctionne »*.
+§ 130 clos au registre. Guides 01, 02 et 84 harmonisés (`6cc99289`, aucun mot
+changé), précision de la note du 07/10 gardée (`a9c31b5f`) ; plus aucun
+fichier étranger en attente.

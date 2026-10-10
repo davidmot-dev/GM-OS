@@ -154,7 +154,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | ✅ **T0 joueurs, 04/10 : les PV saisis sur tablette restaient locaux.** | `remoteUpdateCharacterVitals` écrivait sans événement ; `useHubSync` ne relayait pas ces vitaux | **Réparé pour terminer J1 le 06/10** : événement dédié, relais WebSocket, contrôle du personnage propriétaire, valeur finie bornée à la jauge existante et notification au meneur, sans boucle. Neuf tests du handler ; assertions PV du banc T0 conservées aux trois formats, sans échec attendu, et quatre cas Fiche J1. [Relevé](2026-10-06-T4-J1-joueurs.md) |
 | ✅ **T0 joueurs, 04/10 : sur téléphone, la navigation recouvrait « Jouer » en bas de Cartes.** | Capture T0 `telephone/12-cartes.png` ; navigation fixe dans `TabletHub.tsx` devant la surface défilante | **Traité dans T4/J1 Cartes le 06/10** : navigation dans le flux, zone de travail défilante, action de 44 px au-dessus de la barre. Assertion T0 conservée sans échec attendu ; quatre cas J1 font réellement piocher/jouer/donner/refuser/accepter. [Captures regardées](tablettes/T4-joueurs/j1/index.html) |
 | ✅ **T0 joueurs, 04/10 : sur iPad portrait et paysage, le nom de la campagne se superposait à l'horloge.** | Captures T0 `portrait/02-direct.png` et `paysage/02-direct.png` ; deux blocs fixes indépendants dans `TabletHub.tsx` | **Traité dans T4/J1 Direct le 06/10** : en-tête dans le flux et horloge dans sa zone. [Captures regardées aux quatre formats](tablettes/T4-joueurs/direct/index.html). Les assertions complètent le regard ; elles ne garantissent pas à elles seules l'absence de chevauchement |
-| ✅ **09/10 : première connexion de la tablette du meneur sans flux — corrigé au § 130.** *Constat du 05/10 (T0 meneur) : pads absents jusqu'à une nouvelle connexion, trois essais vides sur quatre* | `SyncServer` demandait l'état complet dès `handleConnection` ; diffusé au seul rôle `remote`, il n'atteignait pas un socket encore sans rôle, et les diffusions suivantes ne portent que ce qui change | **Corrigé le 09/10** : la demande part après `remote:register`. Le contournement par seconde connexion est retiré des trois e2e meneur, qui passent sans lui (117/117). Pas encore vu sur une vraie tablette |
+| ✅ **09/10 : première connexion de la tablette du meneur sans flux — corrigé au § 130.** *Constat du 05/10 (T0 meneur) : pads absents jusqu'à une nouvelle connexion, trois essais vides sur quatre* | `SyncServer` demandait l'état complet dès `handleConnection` ; diffusé au seul rôle `remote`, il n'atteignait pas un socket encore sans rôle, et les diffusions suivantes ne portent que ce qui change | **Corrigé le 09/10** : la demande part après `remote:register`. Le contournement par seconde connexion est retiré des trois e2e meneur, qui passent sans lui (117/117). ✅ **Éprouvé sur une vraie tablette le 10/10**, David : *« pour les pads tablette ça fonctionne »* |
 | ✅ **Réparé en T4/M1, 06/10 : « Cliquer pour fermer » ferme le résultat de dés.** Fermeture haute visible même après défilement de 99 dés ; fond, Échap et expiration à quinze secondes conservés | `RemoteDiceResultOverlay.tsx` : bouton tactile et en-tête fixe hors du contenu défilant. `e2e/tabletteMeneurT0.spec.ts` : quatre cas de fermeture ordinaires, sans échec attendu ; cas long dans `e2e/tabletteM1T4.spec.ts` | [Relevé M1](2026-10-06-T4-M1-meneur.md), 81 scénarios distincts M1/T0 validés après rejeux ciblés |
 | ✅ **Réparé en T4/M2, 06/10 : les choix d'outil, couleur et épaisseur faits sur le PC n'arrivaient pas au Tableau de la tablette.** | Le flux rapide de `useNexusSynchronizer.ts` omettait ces trois champs ; il réutilise maintenant `segmentDuTableau`, comme le flux complet, sans changer sa cadence | Le parcours Tableau de `e2e/tabletteM2T4.spec.ts` vérifie les trois réglages venus du PC, le dessin tactile et l'historique. [Relevé M2](2026-10-06-T4-M2-meneur.md) |
 | ⚠️ **Une exécution E2E complète perd parfois un fichier**, sur un **plantage du rendu** (`Target crashed`) et non sur une assertion — la victime n'est **jamais la même**, et tous passent isolément | Relancer `npx playwright test` en entier. Cinq exécutions sur six l'ont montré le 13/09 au soir, la sixième a rendu **171 verts** | **Le mesuré ne s'explique pas encore.** La base de la veille passe 168 verts **deux fois sur deux** ; le même arbre avec trois tests de moins aussi ; avec eux, ça plante — mais **deux fois la victime tournait AVANT eux dans l'ordre des fichiers**, ce qu'aucune causalité n'explique. *Un résultat qu'on n'explique pas se rejoue avant de se raconter* : rejoué six fois, il n'est toujours pas expliqué |
@@ -10759,8 +10759,55 @@ et `tabletteM2T4` : **117 scénarios sur 117** passent sans lui, chacun ouvrant 
 connexion qui doit montrer « Plan du relais ». Suite complète avant la correction : **7 222 tests**
 (568 fichiers). Les 88 scénarios des tablettes des joueurs passent aussi. Profils jetables, aucune donnée de David lue.
 
-**Reste.** La voir sur une vraie tablette appairée — première ouverture, pads présents sans
-rechargement.
+**✅ Éprouvé en réel le 10/10.** David, sur sa tablette du meneur : *« pour les pads tablette ça
+fonctionne »*. Commits `51a10b75` (correction) et `6cc99289`, `a9c31b5f` (documents), poussés
+sur `feature/tablet-hub-pwa`. Rien ne reste sur ce chantier.
+
+### 131 · La trame prévue d'une séance montre toutes les scènes — 10/10/2026
+
+**Origine.** David, devant *Préparer la séance* : *« je ne vois pas comment rajouter un acte ou une
+scène à ma préparation de séance »*, puis *« mais si je veux rajouter 2 actes ? »*. Deux voies
+proposées — toutes les scènes groupées par acte, ou plusieurs actes par séance (modèle, migration,
+une dizaine de lecteurs de `acteId`). **Décision de David : *« je veux afficher toutes les
+scènes »*.** Le modèle ne change pas : une séance garde **un** acte principal, et
+`scenesPrevuesIds` accepte déjà des scènes de n'importe quel acte.
+
+**Le défaut.** Le panneau ne montrait que les scènes de l'acte choisi dans le menu ; en prévoir une
+d'un autre acte demandait de changer d'acte, et la précédente partait sous « Prévues hors de cet
+acte », en couleur d'alerte. Et **rien ne disait qu'une ligne se cliquait** : pas de case.
+
+**Réalisé.** `PanneauDeTrameDeSeance.tsx` : menu renommé **Acte principal** ; toutes les scènes de
+la campagne, groupées par acte repliable (ouverts d'emblée : l'acte principal et ceux qui portent
+une scène prévue, sinon tous) ; une **case à cocher** par scène (`role="checkbox"`) ; compteur de
+scènes prévues ; une scène prévue dont l'acte a quitté la campagne reste visible à part. Guide 11,
+§ 4, étape « Avant ».
+
+**Éprouvé.** `tsc -b`, lint ciblé, construction ; **5 cas** dans
+`PanneauDeTrameDeSeance.test.tsx` (aucun ne passerait sur l'ancien panneau) et les **983 tests**
+du module de session. Vu dans l'application construite, campagne de démo, profil jetable : trois
+actes, six cases, deux cochées dans deux actes, compteur « 2 prévues ». Captures hors du dépôt.
+
+**✅ Validé par David le 10/10**, sur *Anges de Feu* : *« le travail au niveau de la définition de
+la trame et des scènes est correct »*.
+
+### 132 · La description des PNJ d'une séance se lit — 10/10/2026
+
+**Origine.** David, sur la même capture de *Préparer la séance* : *« tu peux me dire pourquoi la
+description des PNJ est en majuscule ? »*. La carte d'Ézéchiel prenait quinze lignes de capitales.
+
+**La cause.** `SessionPrepEntityManager.tsx` affichait `entity.description` avec le style d'une
+étiquette courte — `uppercase font-mono tracking-tighter` — et sans limite : le paragraphe entier
+passait en capitales serrées. Les données étaient justes.
+
+**Réalisé.** Casse et police normales, deux lignes (`line-clamp-2`), texte entier au survol ;
+l'emplacement de l'icône de rôle n'existe que s'il y a une icône (un rôle sans icône décalait le
+texte). Un cas dans `SessionPrepEntityManager.test.tsx`.
+
+**Éprouvé.** `tsc -b`, lint ciblé, **984 tests** du module de session, construction ; vu dans
+l'application construite (campagne de démo, profil jetable, description longue injectée en
+mémoire) : deux lignes lisibles, avec et sans icône. Captures hors du dépôt.
+
+**Reste.** Le voir sur les PNJ d'*Anges de Feu*.
 
 ---
 
@@ -10833,7 +10880,9 @@ rechargement.
 | 62 | **Avertissements du lint** | ✅ **540 → 0 avertissement, zéro erreur**, § 127 ; lot 38 commité `4e080992` et poussé jusqu'à `1aefeb99`. Après la migration PDF séparée : zéro annotation explicite `any` dans `src/`, `electron/` et `e2e/` | Chantier lint terminé | [Analyse](2026-10-08-audit-avertissements-lint.md), [lot 38](2026-10-09-lint-ponts-du-storyboard.md) |
 | 63 | **Lecteurs PDF v2** | ✅ **Lot 39 commité et poussé `1aefeb99`**, § 128 ; import PDF dans l'interface validé par David le 09/10 : « j'ai fait l'import d'un PDF c'est bon ». Pré-push : types, lint, 7 222 tests, construction réussis | Terminé | [Migration et reprise](2026-10-09-migration-pdf.md) |
 | 64 | **Capture du dernier jet** | ✅ **Lot 40 livré dans le commit contenant cette entrée**, § 129 ; commit et push demandés par David le 09/10. Panneau entier, scénario autonome, image remplacée et relue ; construction, types, lint, 52 tests de protection et un scénario Electron passent | Terminé | [Correction et reprise](2026-10-09-cadrage-dernier-jet.md) |
-| 65 | **Première connexion de la tablette du meneur** | ✅ **Corrigé le 09/10**, § 130 : l'état complet est demandé après l'inscription, plus à la connexion ; contournement retiré des e2e meneur, 117/117 | La voir sur une vraie tablette appairée | Rien |
+| 65 | **Première connexion de la tablette du meneur** | ✅ **Corrigé le 09/10, ÉPROUVÉ sur tablette le 10/10**, § 130 : l'état complet est demandé après l'inscription, plus à la connexion ; contournement retiré des e2e meneur, 117/117 | — | Rien |
+| 66 | **Trame prévue : toutes les scènes** | ✅ **Construit et VALIDÉ par David le 10/10**, § 131 : scènes de tous les actes, groupées et repliables, case à cocher, compteur ; un seul acte principal, modèle inchangé | — | Rien |
+| 67 | **Description des PNJ d'une séance** | ✅ **Corrigé le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | La voir sur *Anges de Feu* | Rien |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
