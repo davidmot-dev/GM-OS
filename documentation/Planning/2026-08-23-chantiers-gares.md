@@ -10920,6 +10920,19 @@ de campagne. Vitrine seulement sur accord, puisqu'elle lit ses sauvegardes.
 Matière/ornements réalisés ; éventuelle évolution des noms à décider séparément.
 Commit et push autorisés pour ce paquet ; fichiers étrangers exclus.
 
+**Livraison du 10/10.** Paquet et documentation commités en **`509b52c2`**
+(22 fichiers). David confirme la destination `davidmot-dev/GM-OS`, branche
+`feature/tablet-hub-pwa`. Le premier hook passe types et lint (1 592 fichiers,
+zéro erreur, zéro avertissement), puis 7 229 tests ; un seul échoue : la copie
+de référence du constructeur n'est plus identique au thème, quatre tests ignorés.
+Le push est arrêté par le hook, sans contournement.
+
+David autorise l'exception au périmètre initial : **« Oui, synchroniser la copie
+et pousser »**. `outils/rpg-theme-builder/skills/instructions/references/blade-runner.css`
+est synchronisé exactement ; les 16 tests constructeur/validation passent.
+Second commit limité à cette copie et ces deux documents, puis nouvelle
+validation globale du push. Aucun fichier étranger, test ou code applicatif modifié.
+
 ---
 
 ## La vue d'un coup d'œil

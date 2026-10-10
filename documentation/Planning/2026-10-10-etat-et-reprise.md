@@ -89,3 +89,24 @@ Matière et ornements choisis, réalisés et revalidés ; le jugement en GM-OS r
 Blade Runner`, attribution Codex, puis push sur `feature/tablet-hub-pwa` avec
 la validation du hook. Le commit fait foi pour son identifiant et le périmètre
 livré ; ne pas inclure les fichiers étrangers.
+
+## Livraison Git et copie du constructeur
+
+Le paquet et les deux documents sont commités en **`509b52c2`** (22 fichiers).
+David confirme explicitement le push vers `davidmot-dev/GM-OS`, branche
+`feature/tablet-hub-pwa`, après un refus du contrôle automatique portant sur
+la destination insuffisamment explicitée.
+
+Le premier hook passe les types et le lint (**1 592 fichiers, zéro erreur,
+zéro avertissement**), puis révèle un seul échec sur **7 230 tests exécutés** :
+`electron/constructeurDeThemes.test.ts` exige que la copie CSS de RPG Theme
+Builder reflète le thème du dépôt ; 7 229 autres tests passent, quatre ignorés.
+Le push n'a pas été effectué à ce stade, ni la construction.
+
+**Élargissement explicitement autorisé le 10/10** : David répond **« Oui,
+synchroniser la copie et pousser »**. Le fichier
+`outils/rpg-theme-builder/skills/instructions/references/blade-runner.css`
+est recopié à l'identique depuis le thème validé. Aucun test ni code applicatif
+modifié. Les **16 tests ciblés** du constructeur et de la validation passent.
+Cette correction et les deux documents font un second commit, puis le push
+relance normalement le hook complet, sans contournement.
