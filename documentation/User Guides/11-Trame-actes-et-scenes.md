@@ -183,6 +183,11 @@ sinon son premier passage, et le journal ne saurait plus rattacher ce qui s'y es
 ## 4. Le parcours d'une soirée
 
 1. **Avant** — vous écrivez vos actes et vos scènes, et la pastille vous dit ce qui manque.
+   Puis, dans **Préparer la séance**, le panneau **Trame prévue** dit ce que la soirée devrait
+   traverser : **cochez les scènes que vous pensez jouer**, dans n'importe quel acte. Le menu
+   **Acte principal** dit seulement l'acte où la séance se déroule surtout ; il ne limite pas les
+   scènes qu'on peut cocher. Chaque acte se replie ; s'ouvrent d'emblée l'acte principal et ceux
+   qui portent déjà une scène prévue.
 2. **Vous lancez la séance** — les scènes en pause de cette campagne repartent avec elle.
 3. **Vous ouvrez une scène** — un passage s'ouvre, **et le journal le note** : l'acte, le lieu, les
    PJ présents, les PNJ, le synopsis. Deux scènes ouvertes en même temps, c'est un groupe séparé —
@@ -505,3 +510,7 @@ Essai de David consigné le 2026-10-07 : « j'ai testé Trame et notamment les 6
 passage manuels. Premier retour de David le 08/10 : déplacement des points
 interrompu, corrigé ; nouvel essai validé par David le même jour : « c'est bon
 documente, commit et push ».*
+
+*Complété le 2026-10-10 : la Trame prévue d'une séance montre toutes les scènes de la campagne,
+groupées par acte, avec une case à cocher. David : « je ne vois pas comment rajouter un acte ou une
+scène à ma préparation de séance ».*
