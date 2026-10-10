@@ -10872,6 +10872,56 @@ capture (`imposerLaTaille`). **Le § 1 bis ne garde plus de ligne ouverte.**
 
 ---
 
+### 134 · Compléter le paquet de thème Blade Runner — 10/10/2026
+
+**Origine.** David : **« compléter le thème de jeu Blade Runner (icônes,
+et plus si pertinent) »**, **« Compléter […] pas le reconstruire »**,
+avec RPG Theme Builder ; puis « continue ».
+
+**Décisions.** Palette, polices et arrondis conservés ; seule la couleur
+d'information est ajustée pour corriger l'avertissement. Dix noms du § 9,
+les mêmes que Cthulhu Hack, sans nouveau nom. Le 10/10, après la recommandation
+« papier froid très léger + coins techniques + séparateur discret », David
+répond **« ok avec ta proposition »** : ces trois ajouts sont autorisés.
+Hors du paquet, seuls le registre et la note du jour demandés sont écrits.
+
+**Réalisé et validé.** `docs/systems/blade-runner/theme/icones.json`
+et dix SVG originaux en `icones/` : `pj`, `pnj`, `combat`, `des`,
+`indice`, `lieu`, `scene`, `sante`, `oracle`, `journal`.
+Trait technique néo-noir, `viewBox` carré 24 × 24, `currentColor`,
+trait de 1,75 et moins de 20 Ko. Deux valeurs CSS modifiées :
+`--rpg-info: #84bcd2 → #84b2e4` et `--rpg-texture-panel` remplacé par
+`url('matieres/papier-froid.svg')`, à opacité **0,14 inchangée**.
+`matieres/papier-froid.svg`, `ornements.json`, `ornements/coin.svg` et
+`ornements/separateur.svg` complètent le paquet ; ni en-tête ni filigrane.
+Quatre commentaires précisent la v1.7
+et les personnalités. `intention.md` corrige l'obsolescence V2 et indique
+les polices approchées ainsi que les limites réelles du contrat.
+`humanite`/`promotion` absents de la liste gelée : signalés, jamais inventés.
+
+**Éprouvé.** Validateur **ACCEPTÉ, zéro erreur, zéro avertissement** ;
+neuf tests de `electron/validationDesThemes.test.ts` passent avec
+`--maxWorkers=4`. Contrastes lus dans le rapport : texte/fond 17,7,
+texte/panneau 16,66, information/fond 9,1. Diff CSS relu, `git diff --check`
+propre. [Planche des dix SVG](../../docs/systems/blade-runner/theme/apercu/icones.png)
+relue à 16/24/48 px ; [planche matière/ornements](../../docs/systems/blade-runner/theme/apercu/matiere-ornements.png)
+relue aux tailles d'usage et agrandie ; [rapport complet actualisé](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md).
+Sous la matière : texte/panneau 16,66 et texte discret/panneau 5,88.
+Pas de lancement GM-OS ni de vitrine ; aucun code applicatif modifié.
+Empreintes des 19 fichiers étrangers inchangées.
+
+**Livraison Git.** David demande **« ok commite et pousse »** le 10/10 :
+**22 fichiers Codex**, 20 du paquet et deux documents, à livrer avec le titre
+`feat(theme): completer les icones et ornements de Blade Runner` et l'attribution
+Codex. Base locale `59d4bbb0` ; le commit fait foi pour son identifiant.
+[Note du jour](2026-10-10-etat-et-reprise.md).
+David peut juger dans GM-OS avec les personnalités allumées et un changement
+de campagne. Vitrine seulement sur accord, puisqu'elle lit ses sauvegardes.
+Matière/ornements réalisés ; éventuelle évolution des noms à décider séparément.
+Commit et push autorisés pour ce paquet ; fichiers étrangers exclus.
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -10945,6 +10995,7 @@ capture (`imposerLaTaille`). **Le § 1 bis ne garde plus de ligne ouverte.**
 | 66 | **Trame prévue : toutes les scènes** | ✅ **Construit et VALIDÉ par David le 10/10**, § 131 : scènes de tous les actes, groupées et repliables, case à cocher, compteur ; un seul acte principal, modèle inchangé | — | Rien |
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
+| 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

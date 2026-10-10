@@ -1,6 +1,6 @@
 /* ==========================================================================
    RPG THEME — BLADE RUNNER
-   Contrat GM-OS v1.2 — jetons de l’interface et démonstration SDK
+   Contrat GM-OS v1.7 — jetons de l’interface et démonstration SDK
    Références visuelles : mise en page éditoriale néo-noir, cadres techniques,
    papier gris froid, accents corail / ambre.
    Polices : approximations libres (Barlow Condensed, Source Serif 4, IBM Plex Mono).
@@ -39,13 +39,13 @@
   --rpg-radius-md: 0px;
   --rpg-radius-lg: 0px;
 
-  /* 4.2 · États — V2 */
+  /* 4.2 · États — appliqués avec les personnalités */
   --rpg-success: #80cfa5;
   --rpg-danger: #e74d8e;
   --rpg-warning: #d9b56c;
-  --rpg-info: #84bcd2;
+  --rpg-info: #84b2e4;
 
-  /* 4.5–4.7 · Forme, relief et verre — V2 */
+  /* 4.5–4.7 · Forme, relief et verre — appliqués avec les personnalités */
   --rpg-border-width: 1px;
   --rpg-border-style: solid;
   --rpg-elevation-1: 0 3px 10px rgba(0, 0, 0, 0.32);
@@ -58,9 +58,9 @@
   --rpg-glass-border: rgba(195, 154, 88, 0.28);
   --rpg-glass-blur: 8px;
 
-  /* 7 · Matière — V2 */
+  /* 7 · Matière — appliquée avec les personnalités */
   --rpg-texture-bg: none;
-  --rpg-texture-panel: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 4px);
+  --rpg-texture-panel: url('matieres/papier-froid.svg');
   --rpg-texture-opacity: 0.14;
   --rpg-title-tracking: 0.18em;
   --rpg-kicker-tracking: 0.24em;

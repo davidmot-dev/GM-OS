@@ -1,0 +1,12 @@
+{
+  "pj": "icones/pj.svg",
+  "pnj": "icones/pnj.svg",
+  "combat": "icones/combat.svg",
+  "des": "icones/des.svg",
+  "indice": "icones/indice.svg",
+  "lieu": "icones/lieu.svg",
+  "scene": "icones/scene.svg",
+  "sante": "icones/sante.svg",
+  "oracle": "icones/oracle.svg",
+  "journal": "icones/journal.svg"
+}
