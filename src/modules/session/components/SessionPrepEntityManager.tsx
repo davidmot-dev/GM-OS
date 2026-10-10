@@ -63,9 +63,19 @@ const SessionPrepEntityManager: React.FC<SessionPrepEntityManagerProps> = ({ ses
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h5 className="text-xs font-bold text-app-text truncate">{entity.name}</h5>
-                                    <div className="flex items-center gap-1.5 mt-0.5">
-                                        {getRoleIcon(entity.role)}
-                                        <span className="text-ui-9 text-app-text/60 uppercase font-mono tracking-tighter">{entity.description}</span>
+                                    {/*
+                                      **La description se lit, elle ne s'affiche pas en étiquette**
+                                      (2026-10-10). Le style d'une étiquette courte — capitales,
+                                      chasse fixe, lettres serrées — recevait le paragraphe entier :
+                                      David, *« pourquoi la description des PNJ est en majuscule ? »*,
+                                      sur une carte de quinze lignes. Deux lignes ; le reste au survol.
+                                    */}
+                                    <div className="flex items-start gap-1.5 mt-0.5">
+                                        {getRoleIcon(entity.role) && <span className="mt-0.5 shrink-0">{getRoleIcon(entity.role)}</span>}
+                                        <span
+                                            className="text-ui-11 leading-snug text-app-text/60 line-clamp-2"
+                                            title={entity.description || undefined}
+                                        >{entity.description}</span>
                                     </div>
                                 </div>
                                 <button 
