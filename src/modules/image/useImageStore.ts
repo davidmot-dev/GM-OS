@@ -18,6 +18,7 @@ const journal = () =>
         };
     }).useJournalStore?.getState();
 import { gmToast } from '../../stores/useToastStore';
+import { useHardwareStore } from '../../stores/useHardwareStore';
 import { leRepliEstNecessaire, ECRAN_DU_HUB } from './logic/ecranJoignable';
 import i18n from '../../i18n';
 // import { ImageService } from './logic/ImageService'; // Broken by circular dependency
@@ -180,6 +181,12 @@ interface ImageState {
 let abonnementAuxProjecteurs: (() => void) | null = null;
 
 /**
+ * L'abonnement aux branchements d'écran, posé une seule fois lui aussi.
+ * Voir `fetchDisplays`.
+ */
+let abonnementAuxEcrans: (() => void) | null = null;
+
+/**
  * **L'horloge du diaporama.**
  *
  * ⛔ **Un `setTimeout` qui se replante, et non un `setInterval`.** Un intervalle
@@ -333,6 +340,28 @@ export const useImageStore = create<ImageState>()(
                                 }
                             }
                         }
+                    });
+                }
+
+                /*
+                  🖥️ **La liste suit les branchements, au lieu d'attendre la
+                  prochaine ouverture d'Image-OS.**
+
+                  Défaut trouvé par David le 2026-10-11 : *« j'en ai 4 de
+                  branchés et je n'en vois que 3 »*. Windows voyait bien
+                  l'ARZOPA ; la liste, elle, datait de l'ouverture du module, et
+                  le signal `app:display-changed` n'était écouté que par le
+                  toast de `useDisplayDetection`. *Un écran branché en cours de
+                  séance n'existait pas pour l'écran cible.*
+
+                  Le magasin du matériel est relu avec : c'est lui qui donne
+                  leur nom aux boutons, et sans lui le nouvel écran
+                  s'afficherait sous son identifiant brut.
+                */
+                if (!abonnementAuxEcrans && bridge?.app?.onDisplayChanged) {
+                    abonnementAuxEcrans = bridge.app.onDisplayChanged(() => {
+                        void get().fetchDisplays();
+                        void useHardwareStore.getState().fetchDisplays();
                     });
                 }
             },
