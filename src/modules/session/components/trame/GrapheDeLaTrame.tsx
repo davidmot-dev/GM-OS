@@ -18,12 +18,14 @@ import type { StyleDeLienDeTrame, OrganisationDeTrame, EspacementDeTrame, FormeD
 import { FORMES_DE_TRAME } from '../../logic/formesDeTrame';
 import { coteDeLAccroche, pointDeLAccroche } from '../../logic/stylesDesLiensDeTrame';
 import { memePositionDeTrame } from '../../logic/trajetsDeTrame';
+import { seanceDeReferenceDeLaTrame } from '../../logic/seanceDeLaTrame';
+import { LegendeDeTrame } from './LegendeDeTrame';
 
 /** Cache par campagne seulement ; le magasin conserve les décisions persistées. */
 const POSITIONS_VIVANTES = new Map<string, Record<string, Position>>();
 
 const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: string) => void }> = ({ onOuvrirLaFiche }) => {
-    const { actes, scenes, atlasMaps, entities, clues, players, campaigns, activeCampaignId,
+    const { actes, scenes, atlasMaps, entities, clues, players, campaigns, sessions, activeCampaignId,
         figerLeGrapheDeTrame, libererLeGrapheDeTrame, reinitialiserLeGrapheDeTrame, rangerLeGrapheDeTrame,
         epinglerDansLaTrame, epinglerPlusieursDansLaTrame, detacherDeLaTrame, modifierScene, placerLaSceneApres, rattacherSceneAUnActe,
         ajouterUnEnchainement, retirerUnEnchainement, stylerLeLienDeTrame,
@@ -31,6 +33,10 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const moments = useStoryboardStore(s => s.moments);
     const campagne = campaigns.find(c => c.id === activeCampaignId);
     const fige = !!campagne?.trameFigee;
+    const seance = React.useMemo(() => seanceDeReferenceDeLaTrame(sessions, campagne), [sessions, campagne]);
+    // Clé textuelle : éditer une autre séance ne doit pas redessiner toutes les cartes.
+    const clePrevues = (seance?.scenesPrevuesIds ?? []).join('|');
+    const scenesDeLaSeance = React.useMemo(() => new Set(clePrevues ? clePrevues.split('|') : []), [clePrevues]);
     const [niveau, setNiveau] = React.useState(2);
     const [portee, setPortee] = React.useState<PorteeDeLIntrigue>('tout');
     const [masquerTerminees, setMasquerTerminees] = React.useState(false);
@@ -79,8 +85,8 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
     const organisation = organisationApercue ?? campagne?.organisationDeLaTrame;
     const positionAffichee = React.useCallback((id: string) => organisationApercue?.positions[id] ?? positionDe(id), [organisationApercue, positionDe]);
     const donnees = React.useMemo(() => adapterLeGrapheDeTrame(graphe, source, { positionDe: positionAffichee, choisi, selection, liaison, surlignes,
-        fige: fige || !!organisationApercue || calculEnCours, styles, lienChoisi, organisation, jonctionsMultiples }),
-        [graphe, source, positionAffichee, choisi, selection, liaison, surlignes, fige, styles, lienChoisi, organisation, organisationApercue, calculEnCours, jonctionsMultiples]);
+        fige: fige || !!organisationApercue || calculEnCours, styles, lienChoisi, organisation, jonctionsMultiples, scenesDeLaSeance }),
+        [graphe, source, positionAffichee, choisi, selection, liaison, surlignes, fige, styles, lienChoisi, organisation, organisationApercue, calculEnCours, jonctionsMultiples, scenesDeLaSeance]);
     const groupes = React.useMemo(() => Array.isArray(organisation?.groupes) ? organisation.groupes.filter(g =>
         g && typeof g.nom === 'string' && Array.isArray(g.membres) && g.membres.every(id => graphe.noeuds.some(n => n.id === id)
             && memePositionDeTrame(positionAffichee(id), organisation.positions?.[id]))
@@ -467,7 +473,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                             }} />
                     )}
                     {/* La légende ne montre que ce que le niveau affiche. */}
-                    <div className="absolute bottom-3 left-3 flex flex-wrap gap-x-3 gap-y-1 max-w-[70%] pointer-events-none">
+                    <div className="absolute bottom-3 left-3 flex flex-wrap gap-x-3 gap-y-1 max-w-[calc(100%_-_240px)] pointer-events-none">
                         {(Object.keys(TEINTE_DE_TRAME) as TypeDeNoeud[]).filter(t => typesVisibles.has(t)).map(type => (
                             <span key={type} className="flex items-center gap-1.5 text-ui-9 font-bold uppercase tracking-widest text-app-text/70">
                                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: TEINTE_DE_TRAME[type] }} />
@@ -478,6 +484,7 @@ const GrapheDeLaTrame: React.FC<{ onOuvrirLaFiche: (type: TypeDeNoeud, refId: st
                             · {scenesVisibles} scène{scenesVisibles > 1 ? 's' : ''}
                         </span>
                     </div>
+                    {!rienAMontrer && <LegendeDeTrame numeroDeSeance={seance?.number} />}
                 </div>
                 {noeudChoisi && <InspecteurDeTrame noeudChoisi={noeudChoisi} voisins={voisins}
                     onChoisir={onChoisir} onDetacher={detacher} onOuvrirLaFiche={onOuvrirLaFiche} />}

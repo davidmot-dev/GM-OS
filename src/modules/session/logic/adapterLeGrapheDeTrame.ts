@@ -6,6 +6,7 @@ import type { Position } from './rangementDeLaTrame';
 import type { StyleDeLienDeTrame, OrganisationDeTrame, TrajetDeTrame } from '../../../types/campaign.types';
 import { apparenceDuLien, accrocheDuLien, normaliserLeStyleDeLien } from './stylesDesLiensDeTrame';
 import { trajetDeTrameValide } from './trajetsDeTrame';
+import { closeSansAvoirEteJouee } from './trame';
 
 /** Couleurs sémantiques : la palette effective vient du socle, y compris en clair. */
 export const TEINTE_DE_TRAME: Record<TypeDeNoeud, string> = {
@@ -15,6 +16,10 @@ export const TEINTE_DE_TRAME: Record<TypeDeNoeud, string> = {
 export type DonneesDeCarte = Record<string, unknown> & {
     noeud: NoeudDeTrame; acte?: string; lieu?: string; nombrePnj?: number; nombreIndices?: number;
     liaison: boolean; jonction: boolean; jonctionsMultiples?: boolean; extremite?: 'depart' | 'arrivee'; estompe: boolean;
+    /** Close sans avoir été jouée : barrée ET grisée, jamais confondue avec du vécu. */
+    annulee?: boolean;
+    /** Cochée dans la préparation de la séance de référence (`seanceDeReferenceDeLaTrame`). */
+    prevueEnSeance?: boolean;
 };
 export type CarteDeTrame = Node<DonneesDeCarte, 'trame'>;
 export type TraitDeTrame = Edge<{ lien: GrapheDeTrame['liens'][number]; trajet?: TrajetDeTrame;
@@ -37,6 +42,7 @@ export function adapterLeGrapheDeTrame(graphe: GrapheDeTrame, source: SourceDeLa
     styles?: Record<string, StyleDeLienDeTrame>; lienChoisi?: string | null; selection?: ReadonlySet<string>;
     organisation?: OrganisationDeTrame;
     jonctionsMultiples?: boolean;
+    scenesDeLaSeance?: ReadonlySet<string>;
 }): { noeuds: CarteDeTrame[]; liens: TraitDeTrame[] } {
     const ids = new Set(graphe.noeuds.map(n => n.id));
     const noms = new Map(graphe.noeuds.map(n => [n.id, n.nom]));
@@ -62,7 +68,9 @@ export function adapterLeGrapheDeTrame(graphe: GrapheDeTrame, source: SourceDeLa
                     liaison: options.liaison, jonction: !options.liaison && !!selection && (selection.source === noeud.id || selection.target === noeud.id),
                     jonctionsMultiples: options.jonctionsMultiples,
                     extremite: selection?.source === noeud.id ? 'depart' : selection?.target === noeud.id ? 'arrivee' : undefined,
-                    estompe: options.surlignes.size > 0 && !options.surlignes.has(noeud.id) },
+                    estompe: options.surlignes.size > 0 && !options.surlignes.has(noeud.id),
+                    annulee: scene ? closeSansAvoirEteJouee(scene) : undefined,
+                    prevueEnSeance: scene ? options.scenesDeLaSeance?.has(scene.id) : undefined },
             };
         }),
         liens: graphe.liens.filter(l => ids.has(l.source) && ids.has(l.target)).map(lien => {

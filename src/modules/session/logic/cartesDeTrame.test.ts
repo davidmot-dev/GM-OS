@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { adapterLeGrapheDeTrame, positionDeLaCarte } from './adapterLeGrapheDeTrame';
 import { rangerLaTrame } from './rangementDeLaTrame';
 import { DIMENSIONS_DES_CARTES, contientLeCentre } from './geometrieDesCartesDeTrame';
-import type { GrapheDeTrame, NoeudDeTrame } from './grapheDeLaTrame';
+import type { GrapheDeTrame, NoeudDeTrame, SourceDeLaTrame } from './grapheDeLaTrame';
 
 const noeud = (type: NoeudDeTrame['type'], refId: string): NoeudDeTrame => ({ id: `${type}:${refId}`, type, refId, nom: refId });
 function fixture(n: number, etoile = false): GrapheDeTrame {
@@ -83,5 +83,20 @@ describe('cartes de Trame — adaptation et positions', () => {
         const a = adapterLeGrapheDeTrame(g, {}, { positionDe: () => ({ x: 0, y: 0 }), choisi: null, liaison: true, surlignes: new Set(), fige: false });
         expect(a.noeuds).toHaveLength(g.noeuds.length);
         expect(a.liens.some(l => l.target === 'scene:absente')).toBe(false);
+    });
+    it('porte « annulée » et « prévue dans la séance » sur les seules cartes de scène', () => {
+        const g: GrapheDeTrame = { noeuds: [noeud('acte', 'a'), noeud('scene', 'jouee'), noeud('scene', 'annulee'), noeud('scene', 'libre')], liens: [] };
+        const scenes = [
+            { id: 'jouee', acteId: 'a', titre: 'jouee', ordre: 0, termineeLe: 2, passages: [{ debut: 1, fin: 2 }] },
+            { id: 'annulee', acteId: 'a', titre: 'annulee', ordre: 1, termineeLe: 2 },
+            { id: 'libre', acteId: 'a', titre: 'libre', ordre: 2 },
+        ] as unknown as NonNullable<SourceDeLaTrame['scenes']>;
+        const { noeuds } = adapterLeGrapheDeTrame(g, { scenes }, { positionDe: () => ({ x: 0, y: 0 }), choisi: null, liaison: false,
+            surlignes: new Set(), fige: false, scenesDeLaSeance: new Set(['libre']) });
+        const carte = (id: string) => noeuds.find(n => n.id === id)!.data;
+        expect(carte('scene:jouee')).toMatchObject({ annulee: false, prevueEnSeance: false });
+        expect(carte('scene:annulee').annulee).toBe(true);
+        expect(carte('scene:libre')).toMatchObject({ annulee: false, prevueEnSeance: true });
+        expect(carte('acte:a').annulee).toBeUndefined();
     });
 });
