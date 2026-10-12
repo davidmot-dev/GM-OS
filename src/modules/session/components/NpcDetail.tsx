@@ -8,6 +8,7 @@ import { FieldGauge, FieldRating } from './fields/SheetFields';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
 import { useMapStore } from '../../map/useMapStore';
 import { useCombatStore } from '../../combat/useCombatStore';
+import { combattantDeLEntite } from '../../combat/logic/invocationDeRencontre';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
@@ -251,17 +252,13 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
     };
 
     const handleAddToCombat = () => {
-        useCombatStore.getState().addCombatant({
-            name: selectedNpc.name,
-            init: selectedNpc.initiative,
-            hp: selectedNpc.hp,
-            hpMax: selectedNpc.maxHp,
-            avatar: selectedNpc.avatar,
-            isPlayer: false,
-            faction: 'enemy',
-            sourceEntityId: selectedNpc.id,
-            statuses: []
-        });
+        /*
+          **Le camp suit le rôle du PNJ** (2026-10-12). Cette fiche l'envoyait
+          toujours en `enemy`, la galerie selon son rôle : un allié entrait au
+          combat comme ennemi ou comme allié selon le bouton cliqué. Une règle,
+          celle des rencontres préparées : `combat/logic/invocationDeRencontre`.
+        */
+        useCombatStore.getState().addCombatant(combattantDeLEntite(selectedNpc));
         gmToast(t('modules:session.toasts.entity_added_to_combat', { name: selectedNpc.name }));
     };
 

@@ -23,9 +23,7 @@ l'appellent désormais), action `invoquerLaRencontre` de `useCombatStore`, panne
 ⚠️ **Le piège payé à l'écriture** : `addCombatant` rattache seul un plateau vide à la scène en cours
 **et y fait entrer tous ses PJ**. L'invocation rattache donc la scène elle-même, *sans* ses PJ
 (`rattacherLeCombat`/`basculerVersLaScene` prennent `{ sansLesPJ }`), avant le premier combattant. Les
-essais échouent bien quand on retire l'option (vérifié). ⚠️ **Défaut voisin, non corrigé** :
-`NpcDetail` envoie un PNJ au combat toujours en `enemy`, la galerie selon son rôle — deux portes, deux
-camps.
+essais échouent bien quand on retire l'option (vérifié). ✅ **Défaut voisin, corrigé le 12/10** : `NpcDetail` envoyait un PNJ au combat toujours en `enemy`, la galerie selon son rôle ; les deux passent désormais par `combattantDeLEntite`.
 
 ## Ce qui existe déjà — et ce qui manque
 

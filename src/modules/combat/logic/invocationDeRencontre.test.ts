@@ -65,6 +65,16 @@ describe('adversairesDeLaRencontre — fabriqués à neuf', () => {
         expect(combattantDeLEntite(luv, 'ally').faction).toBe('ally');
     });
 
+    /*
+      La fiche d'un PNJ l'envoyait toujours en ennemi, la galerie selon son rôle
+      (corrigé le 2026-10-12) : les deux portes passent désormais par ici.
+    */
+    it.each([['ally', 'ally'], ['neutral', 'neutral'], ['hostile', 'enemy'], ['boss', 'enemy']] as const)(
+        'un PNJ de rôle %s entre au combat en %s', (role, camp) => {
+            expect(combattantDeLEntite({ ...luv, role }).faction).toBe(camp);
+        },
+    );
+
     it('deux invocations fabriquent des exemplaires neufs — une rencontre est un modèle', () => {
         const r = rencontre([{ genre: 'archetype', archetypeId: 'brute', rangId: 'pietaille', nombre: 1 }]);
         const a = adversairesDeLaRencontre(r, ctx({ graine: 1 })).combattants;
