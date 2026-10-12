@@ -15,6 +15,7 @@ import { useJournalStore } from '../../journal/useJournalStore';
 import { RecipientSelector } from '../../session/components/RecipientSelector';
 import { useTranslation } from 'react-i18next';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
+import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 
 const NPCCard: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
@@ -76,15 +77,23 @@ const NPCCard: React.FC = () => {
 
     const handleAddToCombat = () => {
         if (currentEntity.category === 'npcs') {
+            /*
+              **Comme un adversaire de l'Atelier** (décision de David, 2026-10-12).
+              Un PNJ de NPC-OS n'a pas de caractéristiques de jeu : les 10 PV en
+              dur et l'initiative tirée au hasard ne venaient de nulle part. Il
+              reçoit la santé par défaut **du jeu** (horloge, blessures ou PV
+              selon le pilote), et une initiative à 0 — le meneur la tire, comme
+              pour une rencontre préparée. Ennemi : NPC-OS ne dit pas qui est allié.
+            */
+            const typeDeSante = useSessionOSStore.getState().getActiveDriver()?.combat?.defaultHealthType ?? 'hp';
             addCombatant({
                 name: currentEntity.name,
-                hp: 10,
-                hpMax: 10,
-                init: Math.floor(Math.random() * 20) + 1,
+                init: 0,
                 isPlayer: false,
                 avatar: avatarSrc || undefined,
                 statuses: [],
-                faction: 'enemy' // Default to enemy for Combat OS addition
+                faction: 'enemy',
+                healthSystem: HealthInterpreter.createDefault(typeDeSante),
             });
             gmToast(t('npc.card.combat_success', { name: currentEntity.name }));
         } else {
