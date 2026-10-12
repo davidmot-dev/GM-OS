@@ -48,7 +48,15 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > le sera sur `feature/tablet-hub-pwa` ; la prochaine séance est l'essai. Réponses du 12/10 : le PNJ montré
 > **garde la trace** de sa première rencontre ; la description narrative **ne se projette pas** ; Ctrl+E
 > rouvre l'écran ; une rencontre peut exister **sans scène**, **aucun pion** à l'invocation. Reste au plan de
-> l'écran : L4, la Forge qui remplit les nouveaux champs — *après* que l'écran a été joué. ⛔ *Demander
+> l'écran : L4, la Forge qui remplit les nouveaux champs — *après* que l'écran a été joué.
+>
+> ⚠️ **12/10 au soir, essai de David : après « Éjecter tout », les joueurs ont tourné près de dix
+> minutes sur « Saisie du signal », sur la même tablette.** Cause trouvée et corrigée, à éprouver :
+> l'attente de 1,5 s de `LobbyOnboarding` repartait de zéro à chaque copie de la séance active (chaque
+> tablette qui se reconnecte fait renvoyer l'état complet aux autres) ; elle suit maintenant
+> l'**identifiant** de la séance. Si l'écran tourne encore : lire **Active Session** dans le panneau
+> « HUB SYNC DEBUG » en bas à gauche — *None Detected* voudrait dire que la tablette n'a pas reçu la
+> séance, une autre cause. ⛔ *Demander
 > « GM-OS tourne-t-il ? » avant toute édition de `src/`.*
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O

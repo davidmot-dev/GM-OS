@@ -121,22 +121,32 @@ const LobbyOnboarding: React.FC<LobbyOnboardingProps> = memo(({ latency: propLat
         return filtered;
     }, [activeSession, players, characterLocks, deviceId]);
 
+    /*
+      ⛔ **L'identifiant de la séance, pas la séance** (2026-10-12). L'attente de
+      1,5 s dépendait de l'objet `activeSession` : chaque synchronisation qui
+      recopie la liste des séances en fabrique un nouveau, même identique, et
+      **remettait l'attente à zéro**. Après « Éjecter tout », chaque tablette qui
+      se reconnecte déclenche un envoi complet vers toutes les autres — et David
+      a vu ses joueurs tourner près de dix minutes sur « Saisie du signal ».
+    */
+    const idDeLaSeanceActive = activeSession?.id ?? null;
+
     // Gestion des transitions d'étapes (Onboarding & Session Guard)
     useEffect(() => {
-        if (!activeSession) {
+        if (!idDeLaSeanceActive) {
             if (step !== 'SCANNING') {
                 queueMicrotask(() => setStep('SCANNING'));
             }
             return;
         }
 
-        console.log('[LobbyOnboarding] Active session detected:', activeSession.id, 'Status:', activeSession.status);
+        console.log('[LobbyOnboarding] Active session detected:', idDeLaSeanceActive);
 
         if (step === 'SCANNING') {
             const timer = setTimeout(() => setStep('SELECTION'), 1500);
             return () => clearTimeout(timer);
         }
-    }, [activeSession, step]);
+    }, [idDeLaSeanceActive, step]);
 
     const haptic = (pattern: number | number[] = 50) => {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
