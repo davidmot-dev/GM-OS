@@ -17,11 +17,20 @@ import { etatDeLaScene } from './trame';
  * *une règle posée chez les appelants en oublierait un.* Une scène déjà en
  * cours qui change de titre n'ouvre rien ; une scène reprise après une pause,
  * si — elle recommence à se jouer.
+ *
+ * ⛔ **La scène doit avoir existé juste avant, sans être en cours.** Une scène
+ * qui APPARAÎT déjà en cours n'a pas commencé : elle revient d'une sauvegarde
+ * rechargée ou d'une semence. Ce chemin-là (`SessionService`) ne lève pas
+ * `isSystemSyncing` — seul l'import Nexus-OS le fait —, et l'écran s'ouvrait à
+ * la restauration (trouvé le 2026-10-12 en préparant les captures du manuel).
  */
 export function scenesEntreesEnCours(avant: readonly Scene[], apres: readonly Scene[]): string[] {
-    const etaitEnCours = new Set(avant.filter(s => etatDeLaScene(s) === 'en-cours').map(s => s.id));
+    const avantParId = new Map(avant.map(s => [s.id, s]));
     return apres
-        .filter(s => etatDeLaScene(s) === 'en-cours' && !etaitEnCours.has(s.id))
+        .filter(s => {
+            const precedente = avantParId.get(s.id);
+            return !!precedente && etatDeLaScene(precedente) !== 'en-cours' && etatDeLaScene(s) === 'en-cours';
+        })
         .map(s => s.id);
 }
 

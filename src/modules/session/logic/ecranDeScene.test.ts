@@ -18,6 +18,11 @@ describe('scenesEntreesEnCours — ce qui ouvre l’écran', () => {
         expect(scenesEntreesEnCours([enPause('A')], [scene('A', { passages: [{ debut: 10, fin: 20 }, { debut: 30 }] })])).toEqual(['A']);
     });
 
+    it('⛔ rien pour une scène qui APPARAÎT déjà en cours — une sauvegarde rechargée', () => {
+        expect(scenesEntreesEnCours([], [enCours('A')])).toEqual([]);
+        expect(scenesEntreesEnCours([scene('autre')], [scene('autre'), enCours('A')])).toEqual([]);
+    });
+
     it('rien pour une scène déjà en cours qui change de titre, ni pour une scène qu’on termine', () => {
         expect(scenesEntreesEnCours([enCours('A')], [enCours('A', { titre: 'Autre' })])).toEqual([]);
         expect(scenesEntreesEnCours([enCours('A')], [enCours('A', { termineeLe: 30 })])).toEqual([]);

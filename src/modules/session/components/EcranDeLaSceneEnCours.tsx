@@ -52,8 +52,10 @@ const Bloc: React.FC<{ icone: React.ReactNode; titre: string; children: React.Re
     </section>
 );
 
+/* Les listes gardent leurs puces : sans elles, « - Obtenir l'aveu » devenait une
+   ligne nue (vu sur la capture du manuel, 2026-10-12). */
 const Texte: React.FC<{ children?: string }> = ({ children }) => (
-    <div className="prose-p:my-1 break-words text-[15px] leading-relaxed text-app-text">
+    <div className="prose-p:my-1 break-words text-[15px] leading-relaxed text-app-text [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:my-0.5">
         <TexteMarkdown>{children}</TexteMarkdown>
     </div>
 );
