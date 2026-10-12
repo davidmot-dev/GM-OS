@@ -29,12 +29,17 @@ import type { RencontrePreparee } from '../../../types/rencontres.types';
  */
 interface Props {
     onClose: () => void;
+    /**
+     * Ouvre directement « Qui entre ? » pour cette rencontre — l'écran
+     * « Scène en cours » invoque ainsi (R4, 2026-10-12).
+     */
+    rencontreInitiale?: string;
 }
 
 /* Une seule façon de lire une rencontre, partagée avec la Trame. */
 const resumeDesLignes = resumeDeLaRencontre;
 
-const PanneauDesRencontres: React.FC<Props> = ({ onClose }) => {
+const PanneauDesRencontres: React.FC<Props> = ({ onClose, rencontreInitiale }) => {
     const {
         rencontres, scenes, actes, entities, players, activeCampaignId, customSheetTemplates,
         supprimerUneRencontre, ajouterUneRencontre,
@@ -43,8 +48,6 @@ const PanneauDesRencontres: React.FC<Props> = ({ onClose }) => {
     const { sceneId: sceneDuCombat, combatants, invoquerLaRencontre, reset: viderLePlateau } = useCombatStore();
     const { gabaritsDuJeu, repartitionRetenue } = useBestiaireStore();
 
-    const [enChoix, setEnChoix] = useState<RencontrePreparee | null>(null);
-    const [coches, setCoches] = useState<Set<string>>(new Set());
     const [autresOuvertes, setAutresOuvertes] = useState(false);
     /** « Garder le plateau comme rencontre » (R2) : le formulaire, quand il est ouvert. */
     const [garde, setGarde] = useState<{ nom: string; sceneId: string; notes: string; vider: boolean } | null>(null);
@@ -71,12 +74,24 @@ const PanneauDesRencontres: React.FC<Props> = ({ onClose }) => {
     const personnages = useMemo(() => players.flatMap(p => p.characters ?? []), [players]);
     const engages = combatants.map(c => c.sourcePlayerId).filter((id): id is string => !!id);
 
-    /** Ouvre « Qui entre ? », cochés d'avance : les PJ que la scène déclare présents. */
-    const choisirLesPJ = (r: RencontrePreparee) => {
+    /** Cochés d'avance : les PJ que la scène déclare présents, et pas déjà au combat. */
+    const cochesParDefaut = (r: RencontrePreparee) => {
         const cible = sceneDeLInvocation(r, sceneDuCombat, enCours);
         const presents = scenes.find(s => s.id === cible)?.personnagesIds ?? [];
         const candidats = pjsCandidats(personnages, activeCampaignId, presents, engages);
-        setCoches(new Set(candidats.filter(c => c.present && !c.dejaEngage).map(c => c.id)));
+        return new Set(candidats.filter(c => c.present && !c.dejaEngage).map(c => c.id));
+    };
+
+    /* Initialisés à la première lecture, pour s'ouvrir sur « Qui entre ? »
+       quand l'écran de la scène a désigné la rencontre. */
+    const [enChoix, setEnChoix] = useState<RencontrePreparee | null>(
+        () => deLaCampagne.find(r => r.id === rencontreInitiale) ?? null);
+    const [coches, setCoches] = useState<Set<string>>(
+        () => (enChoix ? cochesParDefaut(enChoix) : new Set()));
+
+    /** Ouvre « Qui entre ? », cochés d'avance : les PJ que la scène déclare présents. */
+    const choisirLesPJ = (r: RencontrePreparee) => {
+        setCoches(cochesParDefaut(r));
         setEnChoix(r);
     };
 

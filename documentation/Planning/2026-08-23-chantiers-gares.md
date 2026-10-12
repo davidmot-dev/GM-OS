@@ -31,24 +31,25 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > tout »* — l'ordre est retenu, **du plus petit au plus gros** :
 >
 > 1. ✅ **Les banques MIDI** — **fait le 12/10**, à éprouver sur le Pocket Pad (§ 1 bis).
-> 2. **Les messages entre tablettes** — le meneur les garde avec la séance et rend à chaque tablette
+> 2. ✅ **Les messages entre tablettes** — le meneur les garde avec la séance et rend à chaque tablette
 >    qui se (re)connecte **les siens seulement** : [plan du 12/10](2026-10-12-messages-entre-tablettes.md)
 >    (fil de campagne ; joueur → joueur gardés **mais cachés** au meneur). ⛔ La lecture du 12/10 a
 >    trouvé que **toutes les tablettes reçoivent tous les messages privés**. **12/10 : M1 à M4 faits** — à éprouver avec deux tablettes : message privé entre joueurs, message privé du meneur, tablette rechargée qui retrouve son fil, redémarrage de GM-OS.
-> 3. **L'écran « Scène en cours »** — L1 et L3, puis L2 :
+> 3. ✅ **L'écran « Scène en cours »** — L1 et L3, puis L2 :
 >    [plan](2026-10-11-ecran-scene-en-cours.md). **12/10 : L1 et L3 faits** (les six champs dans la Trame ;
->    « Montré aux joueurs » pour un PNJ) — reste L2, l'écran. Il absorbe les lignes des indices, du PNJ « vu » et
+>    « Montré aux joueurs » pour un PNJ) ; **L2 fait** (l'écran plein, ouvert seul au début d'une scène, Échap / Ctrl+E) — à éprouver en séance. Il absorbe les lignes des indices, du PNJ « vu » et
 >    de la scène illisible.
 >
-> 4. **Les rencontres préparées** (12/10) — composées dans la scène ou dans Combat-OS, **invoquées
+> 4. ✅ **Les rencontres préparées** (12/10) — composées dans la scène ou dans Combat-OS, **invoquées
 >    dans Combat-OS**, les PJ entrent à l'invocation, l'initiative ne se tire pas seule :
->    [plan](2026-10-12-rencontres-preparees.md). **12/10 : R1 fait** (modèle, invocation, panneau « Rencontres préparées » de Combat-OS) ; **R2 fait** (« Garder le plateau comme rencontre… ») ; **R3 fait** (section « Rencontres » de la fiche de scène, dans la Trame) — à éprouver à l'écran. Reste R4, qui attend l'écran 3.
+>    [plan](2026-10-12-rencontres-preparees.md). **12/10 : R1 fait** (modèle, invocation, panneau « Rencontres préparées » de Combat-OS) ; **R2 fait** (« Garder le plateau comme rencontre… ») ; **R3 fait** (section « Rencontres » de la fiche de scène, dans la Trame) ; **R4 fait** (« Invoquer » depuis l'écran de la scène) — à éprouver à l'écran.
 >
-> Restent sans réponse : le PNJ « vu » sert-il aussi de trace des rencontres ; la description
-> narrative se projette-t-elle. *(Rencontres, 12/10 : une rencontre peut exister **sans scène** ;
-> **aucun pion** sur la carte à l'invocation.)* David peut en
-> ajouter d'autres après une nuit. ⛔ *Demander « GM-OS tourne-t-il ? » avant toute édition de
-> `src/` — la question était posée et sans réponse au coucher.*
+> ⭐ **Fin de journée du 12/10 : les quatre chantiers sont faits, rien n'est éprouvé.** Tout est commité ou
+> le sera sur `feature/tablet-hub-pwa` ; la prochaine séance est l'essai. Réponses du 12/10 : le PNJ montré
+> **garde la trace** de sa première rencontre ; la description narrative **ne se projette pas** ; Ctrl+E
+> rouvre l'écran ; une rencontre peut exister **sans scène**, **aucun pion** à l'invocation. Reste au plan de
+> l'écran : L4, la Forge qui remplit les nouveaux champs — *après* que l'écran a été joué. ⛔ *Demander
+> « GM-OS tourne-t-il ? » avant toute édition de `src/`.*
 
 **Pourquoi cette section existe.** Le 31/08, j'ai annoncé à David quatre défauts du Cortex et l'axe O
 comme « à faire » — **ils étaient tous corrigés depuis les 22-24/08.** L'erreur ne venait d'aucun

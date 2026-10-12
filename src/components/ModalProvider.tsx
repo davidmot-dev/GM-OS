@@ -311,7 +311,12 @@ const ModalProvider: React.FC = () => {
                                     jeuDemande={(defaultValue as { jeuId?: string } | undefined)?.jeuId}
                                 />
                             )}
-                            {customVariant === 'rencontres' && <PanneauDesRencontres onClose={closeModal} />}
+                            {customVariant === 'rencontres' && (
+                                <PanneauDesRencontres
+                                    onClose={closeModal}
+                                    rencontreInitiale={(defaultValue as { rencontreId?: string } | undefined)?.rencontreId}
+                                />
+                            )}
                             {customVariant === 'fiche-combattant' && <FicheDuCombattant />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>

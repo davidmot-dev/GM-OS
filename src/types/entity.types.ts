@@ -100,6 +100,13 @@ export interface Entity {
     faction?: string;
     isVisibleByPlayers?: boolean;
     /**
+     * **La première fois que ce PNJ a été montré aux joueurs** (2026-10-12).
+     * David : un PNJ montré une fois reste « rencontré », avec la scène et la
+     * date — pour le résumé, et pour ne plus se demander « l'ont-ils déjà vu ? ».
+     * Posé une seule fois : le cacher ensuite ne l'efface pas.
+     */
+    vuParLesJoueurs?: { le: number; sceneId?: string };
+    /**
      * **La voix de ce PNJ, réglée une fois et rappelée ensuite.**
      *
      * Le profilage vocal existait depuis toujours — mais uniquement sur les

@@ -7,7 +7,7 @@ informations ne sont pas facilement accessibles ; il faudrait un écran scène e
 éléments descriptifs, les secrets MJ, les indices, les PNJ, les lieux »*. Et : *« en définitive
 je ne me suis pas servi de Combat-OS »* — **parce qu'il était trop lourd à ouvrir.**
 
-**État au 12/10 : L1 et L3 faits, à éprouver à l'écran ; reste L2, l'écran lui-même (avec R4, « Invoquer » une rencontre préparée).** L1 : les six champs sur `Scene`, leur saisie dans la fiche de la Trame (`TexteDeScene`, `trame/LiensDeLaScene.tsx` pour les morceaux et la note) ; la fusion accole les textes et réunit les morceaux, la scission laisse les textes à la première moitié. Le taux de préparation n'en tient pas compte — même règle que le rang et les PJ présents. L3 : « Montré aux joueurs / Caché aux joueurs », avec un œil, dans `NpcDetail` — le seul écran qui porte ce geste.
+**État au 12/10 : L1 et L3 (`b16b19a5`) et L2 faits, à éprouver à l'écran ; reste L4 (la Forge, plus tard).** L2 : `components/EcranDeLaSceneEnCours.tsx`, monté dans la fenêtre du meneur (`App.tsx`), état dans `useEcranDeSceneStore` ; s'ouvre quand une scène **entre** en cours (`logic/ecranDeScene.ts`, `scenesEntreesEnCours` — jamais pendant la relecture de la base ni un import), Échap le ferme, Ctrl+E le rouvre. Onglet par scène en cours, « Changer de scène ». Textes en Markdown ; notes du meneur éditables (le champ de la scène) ; musique (idées, ambiance liée, morceaux allumés s'ils jouent) ; indices (Révéler, Révéler et projeter, Projeter ; découverts, ils restent avec leur date) ; PNJ (Montré/Caché, **trace de la première rencontre** `vuParLesJoueurs`, fiche) ; lieu (« Mettre sur la table ») ; **rencontres (R4 : « Invoquer » ouvre Combat-OS sur « Qui entre ? »)** ; note Obsidian repliée. ⚠️ Deux projections d'indice coexistaient (`avatar` d'un côté, `imageUrl` de l'autre) : `indiceProjete` porte les deux. L1 : les six champs sur `Scene`, leur saisie dans la fiche de la Trame (`TexteDeScene`, `trame/LiensDeLaScene.tsx` pour les morceaux et la note) ; la fusion accole les textes et réunit les morceaux, la scission laisse les textes à la première moitié. Le taux de préparation n'en tient pas compte — même règle que le rang et les PJ présents. L3 : « Montré aux joueurs / Caché aux joueurs », avec un œil, dans `NpcDetail` — le seul écran qui porte ce geste.
 
 ## Le diagnostic — l'espace de séance lit la séance, pas la scène
 
@@ -101,6 +101,14 @@ Deux scènes ouvertes en même temps (groupe séparé) : un onglet par scène.
 `ecritureDeLaCampagne.ts` remplit déjà résumé, notes, lieu, PNJ, indices. Lui apprendre
 description, enjeux, répliques et idées musicales est un lot à part, **après** que l'écran a été
 joué : *on ne fait pas remplir à une machine des cases dont on n'a pas encore vu l'usage.*
+
+## Les décisions de David (12/10)
+
+| Question | Décision |
+| --- | --- |
+| Le raccourci qui rouvre l'écran | **Ctrl+E** |
+| La description narrative se projette-t-elle | **Non** : elle reste au meneur, qui la lit |
+| Le PNJ « montré aux joueurs » garde-t-il une trace | **Oui** : un PNJ montré une fois reste « rencontré », avec la scène et la date |
 
 ## Ce qui reste ouvert
 

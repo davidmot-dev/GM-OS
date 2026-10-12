@@ -8,6 +8,8 @@
  */
 
 import type { CreateurDeSlice } from './contratDesSlices';
+import type { Scene } from '../../../types/trame.types';
+import { premiereFoisVu } from '../logic/ecranDeScene';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
@@ -95,7 +97,12 @@ export interface EntitySliceActions {
     updateEntityHP: (entityId: string, hp: number) => void;
     updateEntityMaxHP: (entityId: string, maxHp: number) => void;
     updateEntityHealth: (entityId: string, health: HealthSystem) => void;
-    toggleEntityVisibility: (entityId: string) => void;
+    /**
+     * Montre ou cache un PNJ aux joueurs. La première fois qu'il est montré,
+     * il reste « vu », avec la scène — celle donnée, sinon une scène en cours
+     * qui le compte parmi ses PNJ.
+     */
+    toggleEntityVisibility: (entityId: string, sceneId?: string) => void;
     updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => void;
     autoSelectFirstEntity: () => void;
 
@@ -284,11 +291,21 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             }),
         })),
 
-    toggleEntityVisibility: (entityId) =>
+    toggleEntityVisibility: (entityId, sceneId) =>
         set((state) => ({
-            entities: state.entities.map((e) => 
-                e.id === entityId ? { ...e, isVisibleByPlayers: !e.isVisibleByPlayers } : e
-            )
+            entities: state.entities.map((e) => {
+                if (e.id !== entityId) return e;
+                const montre = !e.isVisibleByPlayers;
+                return {
+                    ...e,
+                    isVisibleByPlayers: montre,
+                    ...(montre && !e.vuParLesJoueurs
+                        /* Les scènes vivent dans la tranche de la trame : ce `set` reçoit
+                           le magasin entier, la tranche n'en connaît que sa part. */
+                        ? { vuParLesJoueurs: premiereFoisVu(e, (state as { scenes?: Scene[] }).scenes ?? [], Date.now(), sceneId) }
+                        : {}),
+                };
+            })
         })),
 
     updateEntitySheetData: (id, fieldId, value) =>

@@ -70,6 +70,7 @@ const AudioRouter = lazy(() => import('./modules/music/components/AudioRouter'))
 const MediaBrowser = lazy(() => import('./components/MediaBrowser').then(m => ({ default: m.MediaBrowser })));
 const GlobalKeybinds = lazy(() => import('./components/GlobalKeybinds').then(m => ({ default: m.GlobalKeybinds })));
 const SpotlightSearch = lazy(() => import('./components/SpotlightSearch').then(m => ({ default: m.SpotlightSearch })));
+const EcranDeLaSceneEnCours = lazy(() => import('./modules/session/components/EcranDeLaSceneEnCours'));
 const MessageAlertOverlay = lazy(() => import('./modules/session/components/MessageAlertOverlay').then(m => ({ default: m.MessageAlertOverlay })));
 const BrainstormOverlay = lazy(() => import('./modules/forge/rules/components/BrainstormOverlay').then(m => ({ default: m.BrainstormOverlay })));
 
@@ -380,6 +381,9 @@ function App() {
           
           <Suspense fallback={null}>
             <MessageAlertOverlay />
+            {/* L'écran « Scène en cours » (2026-10-12) : s'ouvre seul quand une
+                scène commence, Échap le ferme, Ctrl+E le rouvre. */}
+            <EcranDeLaSceneEnCours />
             <BrainstormOverlay />
           </Suspense>
           
