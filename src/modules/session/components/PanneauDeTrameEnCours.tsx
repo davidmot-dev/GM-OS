@@ -2,7 +2,6 @@ import React from 'react';
 import { Play, Square, Plus, ExternalLink, CheckCircle2, Circle, PauseCircle, ChevronRight, ChevronDown, ArrowRight,
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { useMapStore } from '../../map/useMapStore';
 import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
 import {
     actesOrdonnes, etatDeLaScene, closeSansAvoirEteJouee,
@@ -42,7 +41,6 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
         players, entities, atlasMaps,
         ouvrirLaScene, terminerLaScene, creerSceneImprovisee, modifierActe, modifierScene,
     } = useSessionOSStore();
-    const setMap = useMapStore(s => s.setMap);
     const { moments, activeMomentId, triggerMoment, arreterLeMoment } = useStoryboardStore();
 
     /*
@@ -121,17 +119,15 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
     };
 
     /**
-     * Ouvrir une scène amène son décor sur la table.
-     *
-     * La scène porte déjà son `lieuId` ; le meneur le rechargeait à la main à
-     * chaque bascule. **On ne projette rien si la scène ne désigne pas de
-     * lieu** — vider l'écran de la table serait pire que de laisser la carte
-     * précédente, qui reste au moins un décor plausible.
+     * **Ouvrir une scène ne charge plus rien dans Map-OS** (décision de David,
+     * 2026-10-12, L5). Ce geste chargeait l'image du lieu comme plateau — or un
+     * lieu est souvent une **illustration**, et ses battlemaps sont d'autres
+     * cartes : l'illustration du Palais de Justice devenait le plateau. L'écran
+     * « Scène en cours », qui s'ouvre avec la scène, distingue « Projeter
+     * l'image » et « Charger dans Map-OS » ; c'est au meneur de choisir.
      */
-    const ouvrirEtProjeter = (scene: Scene) => {
+    const ouvrir = (scene: Scene) => {
         ouvrirLaScene(scene.id, session.id);
-        const lieu = scene.lieuId ? atlasMaps.find(m => m.id === scene.lieuId) : undefined;
-        if (lieu?.fileUrl) setMap(lieu.fileUrl, lieu.isVideo, lieu.name, lieu.narrativeDescription);
     };
 
     /**
@@ -198,9 +194,9 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                         /* La suite arrive avec son décor, comme toute scène
                            qu'on ouvre d'ici — et celle-ci reste ouverte. */
                         const suite = scenes.find(sc => sc.id === id);
-                        if (suite) ouvrirEtProjeter(suite);
+                        if (suite) ouvrir(suite);
                     }}
-                    onOuvrir={() => ouvrirEtProjeter(scene)}
+                    onOuvrir={() => ouvrir(scene)}
                     onTerminer={() => terminerLaScene(scene.id)}
                     onModifier={u => modifierScene(scene.id, u)}
                 />
@@ -226,9 +222,9 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                         /* La suite arrive avec son décor, comme toute scène
                            qu'on ouvre d'ici — et celle-ci reste ouverte. */
                         const suite = scenes.find(sc => sc.id === id);
-                        if (suite) ouvrirEtProjeter(suite);
+                        if (suite) ouvrir(suite);
                     }}
-                    onOuvrir={() => ouvrirEtProjeter(scene)}
+                    onOuvrir={() => ouvrir(scene)}
                             onTerminer={() => terminerLaScene(scene.id)}
                             onModifier={u => modifierScene(scene.id, u)}
                         />
@@ -254,9 +250,9 @@ const PanneauDeTrameEnCours: React.FC<{ session: GameSession }> = ({ session }) 
                         /* La suite arrive avec son décor, comme toute scène
                            qu'on ouvre d'ici — et celle-ci reste ouverte. */
                         const suite = scenes.find(sc => sc.id === id);
-                        if (suite) ouvrirEtProjeter(suite);
+                        if (suite) ouvrir(suite);
                     }}
-                    onOuvrir={() => ouvrirEtProjeter(scene)}
+                    onOuvrir={() => ouvrir(scene)}
                             onTerminer={() => terminerLaScene(scene.id)}
                             onModifier={u => modifierScene(scene.id, u)}
                         />

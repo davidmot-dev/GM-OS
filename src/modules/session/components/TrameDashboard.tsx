@@ -16,7 +16,7 @@ import MarqueDIntrigue from './trame/MarqueDIntrigue';
 import GrapheDeLaTrame from './trame/GrapheDeLaTrame';
 import ChoixDuRang from './trame/ChoixDuRang';
 import RencontresDeLaScene from './trame/RencontresDeLaScene';
-import { ChoixDeLaNote, ChoixDesMorceaux } from './trame/LiensDeLaScene';
+import { ChoixDeLaNote, ChoixDesBattlemaps, ChoixDesMorceaux } from './trame/LiensDeLaScene';
 import {
     sortiesDeLaScene, entreesDeLaScene, libelleLisible, LIBELLE_MAXIMUM,
 } from '../logic/enchainementsDeLaTrame';
@@ -695,6 +695,9 @@ const EditeurDeScene: React.FC<{
                 </Champ>
             </div>
             {/* On lie une ambiance, on ne la duplique pas : la même sert plusieurs scènes. */}
+
+            {/* Le lieu se projette, ses battlemaps se chargent dans Map-OS (L5, 2026-10-12). */}
+            <ChoixDesBattlemaps scene={scene} onChange={onChange} />
 
             {/*
               **L'IA compose l'éclairage de la scène.**

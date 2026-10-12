@@ -82,6 +82,24 @@ describe('EcranDeLaSceneEnCours', () => {
         expect(useSessionOSStore.getState().scenes[0].notesDuMeneur).toBe('Il dit vrai.');
     });
 
+    /* L5 : un lieu-image se projette, une battlemap se charge dans Map-OS. */
+    it('le lieu propose « Projeter l’image », ses battlemaps « Charger dans Map-OS »', () => {
+        const carte = (id: string, type: 'city' | 'battlemap', liens: string[] = []) => ({
+            id, name: id, fileUrl: `${id}.jpg`, isVideo: false, type, narrativeDescription: '', gmNotes: '',
+            campaignId: 'c-1', linkedEntities: liens.map(mapId => ({ id: `l-${mapId}`, name: mapId, category: 'lieu' as const, mapId })),
+        });
+        useSessionOSStore.setState(s => ({
+            atlasMaps: [carte('Palais', 'city', ['Hall']), carte('Hall', 'battlemap')],
+            scenes: s.scenes.map(x => ({ ...x, lieuId: 'Palais' })),
+        }));
+        render(<EcranDeLaSceneEnCours />);
+        commencer();
+
+        expect(screen.getByText('Projeter l’image')).toBeTruthy();
+        expect(screen.getAllByText('Charger dans Map-OS')).toHaveLength(1);
+        expect(screen.queryByText('Mettre sur la table')).toBeNull();
+    });
+
     it('montrer un PNJ aux joueurs garde la trace de la rencontre, avec la scène', () => {
         render(<EcranDeLaSceneEnCours />);
         commencer();

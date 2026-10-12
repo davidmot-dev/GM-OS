@@ -1,10 +1,14 @@
 import React, { useEffect, useMemo } from 'react';
-import { Music2, FileText, X } from 'lucide-react';
+import { Music2, FileText, X, Swords } from 'lucide-react';
 import { useMusicStore } from '../../../music/useMusicStore';
 import { playlistsVisibles } from '../../../music/logic/playlistsDeLaCampagne';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { useObsidianStore } from '../../useObsidianStore';
 import { nomDeLaNote, notesDuCoffre } from '../../logic/noteDeLaScene';
+import {
+    ajouterLaBattlemap, battlemapsDeLaScene, battlemapsDuLieu, estUneBattlemap, retirerLaBattlemap,
+} from '../../logic/battlemapsDeLaScene';
+import type { Scene } from '../../../../types/trame.types';
 
 /**
  * **Ce qu'une scène emporte avec elle à l'écran « Scène en cours »** —
@@ -66,6 +70,60 @@ export const ChoixDesMorceaux: React.FC<{
                     </optgroup>
                 ))}
             </select>
+        </div>
+    );
+};
+
+/**
+ * **Les battlemaps de la scène** (L5, 2026-10-12) : celles que son lieu propose,
+ * plus celles qu'on ajoute, moins celles qu'on écarte. Retirer une battlemap du
+ * lieu ne touche pas au lieu — les autres scènes la gardent.
+ */
+export const ChoixDesBattlemaps: React.FC<{
+    scene: Scene;
+    onChange: (updates: Pick<Scene, 'battlemapIds' | 'battlemapsRetirees'>) => void;
+}> = ({ scene, onChange }) => {
+    const atlasMaps = useSessionOSStore(s => s.atlasMaps);
+    const atlas = useMemo(() => atlasMaps.filter(m => m.campaignId === scene.campaignId), [atlasMaps, scene.campaignId]);
+    const lieu = atlas.find(m => m.id === scene.lieuId);
+    const choisies = battlemapsDeLaScene(scene, atlas);
+    const duLieu = new Set(battlemapsDuLieu(lieu, atlas).map(m => m.id));
+    const proposables = atlas.filter(m => estUneBattlemap(m) && m.id !== lieu?.id && !choisies.some(c => c.id === m.id));
+
+    return (
+        <div className="space-y-2">
+            <label className={etiquette}><Swords size={12} /> Battlemaps</label>
+            {lieu && estUneBattlemap(lieu) && (
+                <p className="text-ui-11 text-app-text/40 px-1">Le lieu est lui-même une battlemap : il se charge dans Map-OS.</p>
+            )}
+            {choisies.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                    {choisies.map(m => (
+                        <span key={m.id} className="flex items-center gap-1 rounded-lg border border-accent/40 bg-accent/15 px-2 py-1 text-ui-10 font-bold text-accent">
+                            {m.name}
+                            {duLieu.has(m.id) && <span className="font-normal text-accent/60">· du lieu</span>}
+                            <button
+                                type="button" title="Retirer cette battlemap de la scène"
+                                onClick={() => onChange(retirerLaBattlemap(scene, m.id, atlas))}
+                            ><X size={10} /></button>
+                        </span>
+                    ))}
+                </div>
+            )}
+            {proposables.length > 0 && (
+                <select
+                    aria-label="Ajouter une battlemap"
+                    value=""
+                    onChange={e => { if (e.target.value) onChange(ajouterLaBattlemap(scene, e.target.value)); }}
+                    className={`w-full cursor-pointer ${champ}`}
+                >
+                    <option value="">+ Ajouter une battlemap de l’Atlas…</option>
+                    {proposables.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                </select>
+            )}
+            {choisies.length === 0 && proposables.length === 0 && !(lieu && estUneBattlemap(lieu)) && (
+                <p className="text-ui-11 text-app-text/25 italic px-1">Aucune battlemap dans l’Atlas de cette campagne.</p>
+            )}
         </div>
     );
 };

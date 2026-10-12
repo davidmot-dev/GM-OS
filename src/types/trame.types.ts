@@ -279,6 +279,14 @@ export interface Scene {
     morceauxIds?: string[];
     /** Le chemin de la note de la scène, **relatif au coffre** Obsidian. */
     noteObsidian?: string;
+    /**
+     * **Les battlemaps ajoutées à la scène** (2026-10-12, L5), en plus de celles
+     * que son lieu propose. Des cartes de l'Atlas, chargées dans Map-OS d'un
+     * clic. Voir `logic/battlemapsDeLaScene`.
+     */
+    battlemapIds?: string[];
+    /** Les battlemaps du lieu que cette scène écarte. */
+    battlemapsRetirees?: string[];
 
     /**
      * Ce que la scène a réellement vécu, dans l'ordre.

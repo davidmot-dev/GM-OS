@@ -341,6 +341,11 @@ export function fusionnerLesScenes(gardee: Scene, absorbee: Scene): Scene {
         morceauxIds: gardee.morceauxIds || absorbee.morceauxIds
             ? reunir(gardee.morceauxIds, absorbee.morceauxIds) : undefined,
         noteObsidian: gardee.noteObsidian ?? absorbee.noteObsidian,
+        // Les battlemaps : celles ajoutées se réunissent ; on n'écarte que ce que les deux écartaient.
+        battlemapIds: gardee.battlemapIds || absorbee.battlemapIds
+            ? reunir(gardee.battlemapIds, absorbee.battlemapIds) : undefined,
+        battlemapsRetirees: gardee.battlemapsRetirees && absorbee.battlemapsRetirees
+            ? gardee.battlemapsRetirees.filter(id => absorbee.battlemapsRetirees!.includes(id)) : undefined,
         passages: passages.length > 0 ? passages : undefined,
         termineeLe,
         creeeLe: Math.min(gardee.creeeLe, absorbee.creeeLe),
@@ -392,6 +397,8 @@ export function secondeMoitieDeLaScene(
         repliques: undefined,
         ideesMusicales: undefined,
         morceauxIds: scene.morceauxIds ? [...scene.morceauxIds] : undefined,
+        battlemapIds: scene.battlemapIds ? [...scene.battlemapIds] : undefined,
+        battlemapsRetirees: scene.battlemapsRetirees ? [...scene.battlemapsRetirees] : undefined,
         entiteIds: [...scene.entiteIds],
         indiceIds: [...scene.indiceIds],
         personnagesIds: scene.personnagesIds ? [...scene.personnagesIds] : undefined,

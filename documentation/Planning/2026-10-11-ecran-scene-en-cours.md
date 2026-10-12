@@ -110,6 +110,30 @@ joué : *on ne fait pas remplir à une machine des cases dont on n'a pas encore 
 | La description narrative se projette-t-elle | **Non** : elle reste au meneur, qui la lit |
 | Le PNJ « montré aux joueurs » garde-t-il une trace | **Oui** : un PNJ montré une fois reste « rencontré », avec la scène et la date |
 
+## L5 · Le lieu et ses battlemaps — décidé et fait le 12/10, à éprouver
+
+*Constat de David, devant l'écran, le 12/10 : « il y a plusieurs choses dans les lieux : le lieu même,
+généralement une image, et des battlemaps qui doivent être chargées dans Map-OS ».* Le bouton « Mettre
+sur la table » chargeait l'**image** du lieu dans Map-OS, comme une battlemap — et ouvrir une scène depuis
+le panneau de séance faisait déjà de même (`PanneauDeTrameEnCours.ouvrirEtProjeter`) : l'illustration du
+Palais de Justice devenait le plateau.
+
+| Question | Décision |
+| --- | --- |
+| Où ranger les battlemaps | **Les deux** : le lieu de l'Atlas propose les siennes (ses liens « lieu » vers des cartes de type `battlemap`, et lui-même s'il en est une) ; la scène peut en **ajouter** ou en **retirer** |
+| Au début d'une scène | **Rien** : ni projection ni chargement automatique ; le chargement de `ouvrirEtProjeter` est retiré |
+
+À l'écran : le bloc **Lieu** distingue **Projeter l'image** (sur un écran de la table, comme « Projeter »
+dans l'Atlas) et, pour chaque battlemap, **Charger dans Map-OS**. Sur `Scene` : `battlemapIds?` (ajoutées)
+et `battlemapsRetirees?` (celles du lieu qu'on écarte) — facultatifs ; la fusion les réunit, la scission
+et le clone les recopient (décor).
+
+**Fait le 12/10** : `logic/battlemapsDeLaScene.ts`, `ChoixDesBattlemaps` dans la fiche de la Trame, le bloc
+Lieu de l'écran (« Projeter l'image » sur `projectionTarget` d'Image-OS, `BoutonProjeterLeLieu.tsx` ;
+« Charger dans Map-OS » allumé si c'est la carte du plateau), et `ouvrirEtProjeter` devenu `ouvrir`. ⛔
+**L'Atlas n'est pas touché** (David, 12/10) : une extraction de son bouton « Projeter » en composant
+partagé a été écrite puis retirée — sa fiche est identique au commit précédent.
+
 ## Ce qui reste ouvert
 
 - **Le PNJ « vu »** : montrer aux tablettes seulement, ou aussi garder la trace de qui a été

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Clapperboard, Lock, Music2, Play, Search, Users, MapPin, Swords, FileText, Eye, EyeOff,
-    ExternalLink, ChevronDown, ChevronRight, Cast, Sparkles,
+    ExternalLink, ChevronDown, ChevronRight, Cast, Sparkles, Map as MapIcon,
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useEcranDeSceneStore } from '../useEcranDeSceneStore';
@@ -20,8 +20,11 @@ import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { actesOrdonnes, etatDeLaScene, scenesOrdonnees } from '../logic/trame';
 import { indiceProjete, scenesEntreesEnCours } from '../logic/ecranDeScene';
 import { nomDeLaNote } from '../logic/noteDeLaScene';
+import { battlemapsDeLaScene, estUneBattlemap } from '../logic/battlemapsDeLaScene';
+import { BoutonProjeterSurLEcranParDefaut } from './BoutonProjeterLeLieu';
 import { resumeDeLaRencontre } from '../../combat/logic/lignesDeRencontre';
 import type { Scene } from '../../../types/trame.types';
+import type { AtlasMap } from '../../../types/chronicle.types';
 
 /**
  * **L'écran « Scène en cours »** (2026-10-12, L2).
@@ -170,12 +173,12 @@ const ContenuDeLaScene: React.FC<{ scene: Scene; fermer: () => void }> = ({ scen
         modifierScene, clues, revealClue, entities, toggleEntityVisibility, atlasMaps, rencontres,
     } = useSessionOSStore();
     const projectEntity = useImageStore(s => s.projectEntity);
-    const setMap = useMapStore(s => s.setMap);
     const setActiveModule = useSessionStore(s => s.setActiveModule);
 
     const indices = clues.filter(c => scene.indiceIds.includes(c.id));
     const pnj = entities.filter(e => scene.entiteIds.includes(e.id));
     const lieu = atlasMaps.find(m => m.id === scene.lieuId);
+    const battlemaps = battlemapsDeLaScene(scene, atlasMaps.filter(m => m.campaignId === scene.campaignId));
     const rencontresDeLaScene = (rencontres ?? []).filter(r => r.sceneId === scene.id);
     const nomDuPNJ = (id: string) => entities.find(e => e.id === id)?.name;
     const vide = (t?: string) => !t || !t.trim();
@@ -269,24 +272,34 @@ const ContenuDeLaScene: React.FC<{ scene: Scene; fermer: () => void }> = ({ scen
                     </Bloc>
                 )}
 
-                {lieu && (
+                {/* Le lieu se PROJETTE (écran par défaut d'Image-OS) ; une battlemap se
+                    CHARGE dans Map-OS (L5 — David, 2026-10-12). Rien ne part tout seul. */}
+                {(lieu || battlemaps.length > 0) && (
                     <Bloc icone={<MapPin size={14} />} titre="Lieu">
-                        <div className="flex items-center gap-3">
-                            <div className="h-14 w-20 shrink-0 overflow-hidden rounded bg-app-surface-2">
-                                <ResolvedAsset src={lieu.fileUrl} isVideo={lieu.isVideo} className="h-full w-full object-cover" alt="" />
-                            </div>
-                            <span className="min-w-0 flex-1 truncate text-sm font-bold">{lieu.name}</span>
-                            <button
-                                type="button" className={petitBouton}
-                                onClick={() => {
-                                    if (!lieu.fileUrl) return;
-                                    setMap(lieu.fileUrl, lieu.isVideo, lieu.name, lieu.narrativeDescription);
-                                    gmToast(`« ${lieu.name} » sur la table`, 'success');
-                                }}
-                            >
-                                <Cast size={12} /> Mettre sur la table
-                            </button>
-                        </div>
+                        <ul className="flex flex-col gap-2">
+                            {lieu && (
+                                <li className="flex items-center gap-3">
+                                    <div className="h-14 w-20 shrink-0 overflow-hidden rounded bg-app-surface-2">
+                                        <ResolvedAsset src={lieu.fileUrl} isVideo={lieu.isVideo} className="h-full w-full object-cover" alt="" />
+                                    </div>
+                                    <span className="min-w-0 flex-1 truncate text-sm font-bold">{lieu.name}</span>
+                                    {estUneBattlemap(lieu)
+                                        ? <BoutonCharger carte={lieu} />
+                                        : <BoutonProjeterSurLEcranParDefaut lieu={lieu} className={petitBouton} />}
+                                </li>
+                            )}
+                            {battlemaps.map(m => (
+                                <li key={m.id} className="flex items-center gap-3">
+                                    <div className="h-9 w-14 shrink-0 overflow-hidden rounded bg-app-surface-2">
+                                        <ResolvedAsset src={m.fileUrl} isVideo={m.isVideo} className="h-full w-full object-cover" alt="" />
+                                    </div>
+                                    <span className="min-w-0 flex-1 truncate text-sm">
+                                        <span className="mr-2 text-ui-10 uppercase tracking-widest text-app-muted">Battlemap</span>{m.name}
+                                    </span>
+                                    <BoutonCharger carte={m} />
+                                </li>
+                            ))}
+                        </ul>
                     </Bloc>
                 )}
 
@@ -317,6 +330,26 @@ const ContenuDeLaScene: React.FC<{ scene: Scene; fermer: () => void }> = ({ scen
                 )}
             </div>
         </div>
+    );
+};
+
+/** Charge une battlemap dans Map-OS — allumé si c'est déjà la carte du plateau. */
+const BoutonCharger: React.FC<{ carte: AtlasMap }> = ({ carte }) => {
+    const setMap = useMapStore(s => s.setMap);
+    const chargee = useMapStore(s => s.mapUrl) === carte.fileUrl;
+    return (
+        <button
+            type="button"
+            disabled={!carte.fileUrl}
+            aria-pressed={chargee}
+            className={`${petitBouton} ${chargee ? 'border-accent/50 bg-accent/15 text-accent' : ''}`}
+            onClick={() => {
+                void setMap(carte.fileUrl, carte.isVideo, carte.name, carte.narrativeDescription);
+                gmToast(`« ${carte.name} » chargée dans Map-OS`, 'success');
+            }}
+        >
+            <MapIcon size={12} /> {chargee ? 'Dans Map-OS' : 'Charger dans Map-OS'}
+        </button>
     );
 };
 
