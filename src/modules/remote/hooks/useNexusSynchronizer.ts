@@ -27,6 +27,7 @@ import { crossWindowSync } from '../../../services/CrossWindowEventService';
 import { cartesRestantesPourLaTable, mainsPourLaTable } from '../../session/logic/mainsDuPaquet';
 import { abonnerApparenceTablettes, lireApparenceTablettes } from '../../../theme/apparenceTablettes';
 import type { DonneesDuHub } from '../types/donneesDuHub';
+import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
 
 /**
  * Intervalle minimal entre deux synchronisations **forcées**.
@@ -456,12 +457,18 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 comptesDePads,
                 lecture,
                 /*
-                  **Le fil de messages, ajouté le 2026-09-05.** Les cinquante
-                  derniers seulement : le magasin en garde cent, et les envoyer
-                  tous à chaque diffusion grossirait la charge pour un historique
-                  que personne ne relit sur une tablette.
+                  **Le fil de messages, ajouté le 2026-09-05.** Les cent
+                  derniers seulement : les envoyer tous à chaque diffusion
+                  grossirait la charge pour un historique que personne ne relit
+                  sur une tablette.
+
+                  ⛔ **Le fil DU MENEUR, de la campagne active** (2026-10-12) : la
+                  tablette du meneur reçoit ce que GM-OS montre — jamais ce que
+                  deux joueurs se disent (décision de David : gardés mais
+                  cachés). Et cette clé est **retirée** de la charge des joueurs
+                  plus bas : elle partait à chaque tablette.
                 */
-                messages: (freshSessionOS.messages ?? []).slice(-50),
+                messages: filDuLecteur(freshSessionOS.messages ?? [], currentCampaignId, { role: 'meneur' }, 100),
                 /*
                   **La trame, le wiki et les indices** — ajoutés le 2026-09-05.
                   L'onglet Notes ne portait que deux champs de texte libre ;
@@ -608,6 +615,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                 
                 // Sanitization for Player Role
                 if (playerDiff.notes) playerDiff.notes.private = '•••••';
+
+                /*
+                  ⛔ **Le fil du meneur ne part jamais aux joueurs** (2026-10-12).
+                  Les cent derniers messages voyageaient jusqu'à chaque tablette,
+                  privés compris — ignorés à la fusion, mais reçus. Un joueur
+                  reçoit ses messages un par un, par le serveur, et son fil à la
+                  reconnexion — les siens seulement.
+                */
+                delete playerDiff.messages;
                 
                 if (playerDiff.session?.sessions) {
                     playerDiff.session.sessions = playerDiff.session.sessions.map((s) => {

@@ -303,6 +303,9 @@ export class SessionManager {
             lootPool: (state.lootPool ?? []).filter(i => i.campaignId !== id),
             lootHistory: (state.lootHistory ?? []).filter(e => e.campaignId !== id),
             lootReserve: (state.lootReserve ?? []).filter(i => i.campaignId !== id),
+            /* Le fil des messages (2026-10-12) : ajouté ici en même temps qu'aux
+               champs durables, pour ne pas rejouer l'oubli du butin. */
+            messages: (state.messages ?? []).filter(m => m.campaignId !== id),
 
 
             players: state.players.map(p => ({

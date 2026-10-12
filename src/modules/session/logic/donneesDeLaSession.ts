@@ -59,6 +59,13 @@ export const lesDonneesDeLaSession = (state: SessionOSStore) => ({
     /* La réserve des reliquats (2026-10-02) : ajoutée ici d'emblée, pour ne
        pas rejouer l'oubli du 2026-09-04. */
     lootReserve: state.lootReserve,
+    /*
+      **Le fil des messages, ajouté le 2026-10-12.** Il ne vivait qu'en mémoire :
+      un redémarrage de GM-OS le vidait partout, et le meneur ne pouvait rien
+      rendre à une tablette rechargée. Décision de David : un fil de campagne,
+      que le meneur garde et rend à chacun — les siens seulement.
+    */
+    messages: state.messages,
 });
 
 /**

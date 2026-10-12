@@ -11,6 +11,7 @@ import { estObjet, estMessageDeSeance } from '../../remote/actions/contratsSessi
 import { lireDonneesDuHub, lireEntiteProjetee, lireRegleDuHub, jetDuMagasin } from '../../remote/lectureDuHub';
 import type { ProjectedEntity } from '../../image/types';
 import type { RegleDuHub } from '../../remote/types/donneesDuHub';
+import { messagePourLeLecteur } from '../../../../electron/destinatairesDesMessages';
 
 const EMPTY_OBJ = {};
 const EMPTY_ARR: never[] = [];
@@ -434,8 +435,17 @@ export const useHubSync = () => {
                         */
                     }
                     if (data.type === 'session:receive-message' && estMessageDeSeance(data.payload)) {
+                        /*
+                          **Une seconde porte, pas la seule** (2026-10-12) : le
+                          serveur ne remet déjà à une tablette que ses messages.
+                          Un message qui ne la concerne pas ne doit pas pour
+                          autant entrer dans son magasin s'il arrive quand même.
+                        */
+                        const monPersonnage = getStore('useClientStore')?.getState().characterId ?? undefined;
                         const sSession = getStore('useSessionOSStore');
-                        if (sSession) sSession.getState().addSessionMessage(data.payload);
+                        if (sSession && messagePourLeLecteur(data.payload, { role: 'joueur', characterId: monPersonnage })) {
+                            sSession.getState().addSessionMessage(data.payload);
+                        }
                     }
                     if (data.type === 'remote:pong') {
                         const now = Date.now();

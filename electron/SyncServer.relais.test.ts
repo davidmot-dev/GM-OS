@@ -27,6 +27,7 @@ const fenetre = { isDestroyed: () => false, webContents: { send: versLeMJ } };
 interface RelaisTeste {
     handleConnection: (socket: SocketFictif) => void;
     broadcastAction: (message: unknown, sender?: SocketFictif, role?: string) => void;
+    acheminerLeMessage: (envoi: unknown, message: { fromId: string; toId?: string }, sender?: SocketFictif) => void;
     wss: { clients: Set<SocketFictif> };
 }
 
@@ -103,21 +104,57 @@ describe('SyncServer — messages reçus et relais', () => {
         },
     );
 
-    it.each(['perso-b', 'all', 'GM'])('route le message destiné à %s', toId => {
-        inscrire(emetteur, 'joueur-a', 'hub', 'perso-a');
-        const action = { type: 'session:send-message', payload: {
-            fromId: 'perso-a', toId, text: 'Bonjour', extension: { conservee: true },
-        }, correlation: 'message-42' };
-        recevoir(action);
-        expect(emetteur.send).not.toHaveBeenCalled();
-        if (toId === 'GM') {
+    /*
+      ⛔ **Acheminé, plus diffusé** (2026-10-12). Avant, le relais partait vers
+      toutes les sockets — Carl recevait ce qu'Alice disait à Bob — et le
+      message de joueur à joueur n'atteignait jamais le meneur, qui ne pouvait
+      donc pas le rendre à une tablette rechargée.
+    */
+    describe('l’acheminement d’un message de séance', () => {
+        const brancher = (deviceId: string, role: ClientRole, characterId?: string) => {
+            const socket = new SocketFictif();
+            serveur.wss.clients.add(socket);
+            serveur.handleConnection(socket);
+            inscrire(socket, deviceId, role, characterId);
+            return socket;
+        };
+
+        it.each([
+            { toId: 'perso-b', bob: true, carl: false, mj: false },
+            { toId: 'all', bob: true, carl: true, mj: true },
+            { toId: 'GM', bob: false, carl: false, mj: true },
+        ])('remet le message destiné à $toId à ses seuls lecteurs', ({ toId, bob, carl, mj }) => {
+            inscrire(emetteur, 'joueur-a', 'hub', 'perso-a');
+            const tabletteDeBob = brancher('joueur-b', 'hub', 'perso-b');
+            const tabletteDeCarl = brancher('joueur-c', 'hub', 'perso-c');
+            const tabletteDuMeneur = brancher('tablette-mj', 'remote');
+            const action = { type: 'session:send-message', payload: {
+                fromId: 'perso-a', toId, text: 'Bonjour', extension: { conservee: true },
+            }, correlation: 'message-42' };
+
+            recevoir(action);
+
+            const recu = [[JSON.stringify({ ...action, type: 'session:receive-message' })]];
+            expect(tabletteDeBob.send.mock.calls).toEqual(bob ? recu : []);
+            expect(tabletteDeCarl.send.mock.calls, 'Carl reçoit un message qui ne le concerne pas').toEqual(carl ? recu : []);
+            expect(tabletteDuMeneur.send.mock.calls).toEqual(mj ? recu : []);
+            expect(emetteur.send).not.toHaveBeenCalled();
+            // Une socket qui ne s'est pas inscrite n'a ni rôle ni personnage.
             expect(destinataire.send).not.toHaveBeenCalled();
-        } else {
-            expect(destinataire.send.mock.calls).toEqual([
-                [JSON.stringify({ ...action, type: 'session:receive-message' })],
-            ]);
-        }
-        expect(versLeMJ.mock.calls).toEqual(toId === 'perso-b' ? [] : [['remote:action', action]]);
+            // Le meneur reçoit TOUT, pour le garder — même ce qu'il ne montre pas.
+            expect(versLeMJ.mock.calls).toEqual([['remote:action', action]]);
+        });
+
+        it('remet un message privé du meneur à son seul destinataire', () => {
+            const tabletteDAlice = brancher('joueur-a2', 'hub', 'perso-a');
+            const tabletteDeBob = brancher('joueur-b', 'hub', 'perso-b');
+            const message = { fromId: 'GM', toId: 'perso-a', content: 'Tu entends un bruit.' };
+
+            serveur.acheminerLeMessage({ type: 'session:receive-message', payload: message }, message);
+
+            expect(tabletteDAlice.send).toHaveBeenCalledTimes(1);
+            expect(tabletteDeBob.send, 'Bob reçoit ce que le meneur dit à Alice').not.toHaveBeenCalled();
+        });
     });
 
     it.each([

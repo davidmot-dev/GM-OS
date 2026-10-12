@@ -13,10 +13,22 @@ import {
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Player, PlayerCharacter, SessionMessage } from '../store/types';
 import { format } from 'date-fns';
+import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
+import { MESSAGES_PAR_CAMPAGNE } from '../logic/filDesMessages';
 
 export const CockpitMessenger: React.FC = () => {
     const { t } = useTranslation(['modules']);
-    const { messages, players, sendDirectMessage, saveMessageToJournal, activeCampaignId } = useSessionOSStore();
+    const { messages: tousLesMessages, players, sendDirectMessage, saveMessageToJournal, activeCampaignId } = useSessionOSStore();
+    /*
+      **Le fil du meneur, de la campagne active** (2026-10-12). Le magasin garde
+      aussi ce que deux joueurs se disent, pour le rendre à une tablette
+      rechargée ; le meneur ne le voit pas (décision de David : gardés mais
+      cachés). Même règle que le serveur et la tablette du meneur.
+    */
+    const messages = useMemo(
+        () => filDuLecteur(tousLesMessages, activeCampaignId, { role: 'meneur' }, MESSAGES_PAR_CAMPAGNE),
+        [tousLesMessages, activeCampaignId],
+    );
     const [selectedFilter, setSelectedFilter] = useState<'all' | string>('all');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [messageInput, setMessageInput] = useState('');

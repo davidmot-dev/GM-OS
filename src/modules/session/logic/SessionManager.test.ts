@@ -236,4 +236,26 @@ describe('SessionManager', () => {
         expect(result.actes?.map(a => a.id)).toEqual(['a2']);
         expect(result.scenes?.map(s => s.id)).toEqual(['sc2']);
     });
+
+    /**
+     * **Le fil des messages, persisté depuis le 2026-10-12.** Ajouté à la
+     * cascade le même jour qu'aux champs durables, pour ne pas rejouer l'oubli
+     * du butin : des messages sans campagne reviendraient dans une campagne
+     * recréée.
+     */
+    it('la suppression emporte les messages de cette campagne, et d’aucune autre', () => {
+        const message = (id: string, campaignId: string) => ({
+            id, fromId: 'GM', fromName: 'MJ', toId: 'all', toName: 'Tous',
+            content: id, timestamp: 1, isRead: true, campaignId,
+        });
+        const base = mockGet();
+        const avecMessages = vi.fn(() => ({ ...base, messages: [message('m1', 'c1'), message('m2', 'c2')] }));
+
+        SessionManager.deleteCampaign(mockSet, avecMessages, 'c1');
+        const setUpdateFn = mockSet.mock.calls[0][0];
+        if (typeof setUpdateFn !== 'function') throw new Error('La cascade doit calculer une mise à jour.');
+        const result = setUpdateFn(avecMessages());
+
+        expect(result.messages?.map(m => m.id)).toEqual(['m2']);
+    });
 });

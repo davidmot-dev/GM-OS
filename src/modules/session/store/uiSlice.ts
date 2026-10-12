@@ -11,7 +11,9 @@
  */
 
 import type { CreateurDeSlice } from './contratDesSlices';
+import type { SessionOSStore } from './index';
 import type { CurrentView, RemoteNotification, HubNotification, SessionMessage } from './types';
+import { ajouterAuFil } from '../logic/filDesMessages';
 
 // ─────────────────────────────────────────────
 // State
@@ -83,7 +85,7 @@ export type UiSlice = UiSliceState & UiSliceActions;
 // Creator
 // ─────────────────────────────────────────────
 
-export const createUiSlice: CreateurDeSlice<UiSlice> = (set, get) => ({
+export const createUiSlice: CreateurDeSlice<UiSlice, SessionOSStore> = (set, get) => ({
     // Initial State
     currentView: 'cockpit',
     wikiTab: 'timeline',
@@ -174,11 +176,9 @@ export const createUiSlice: CreateurDeSlice<UiSlice> = (set, get) => ({
 
     addSessionMessage: (message) =>
         set((state) => {
-            // Éviter les doublons (fréquant en cas de sync multi-canaux)
-            if (state.messages.some(m => m.id === message.id)) return state;
-            return {
-                messages: [...state.messages, message].slice(-100), // Garder les 100 derniers
-            };
+            // Éviter les doublons (fréquent en cas de sync multi-canaux)
+            const messages = ajouterAuFil(state.messages, message, state.activeCampaignId);
+            return messages === state.messages ? state : { messages };
         }),
 
     remoteSendMessage: (toId, toName, fromId, fromName, content) => {
@@ -191,10 +191,11 @@ export const createUiSlice: CreateurDeSlice<UiSlice> = (set, get) => ({
             content,
             timestamp: Date.now(),
             isRead: true,
+            campaignId: get().activeCampaignId ?? undefined,
         };
 
         // Ajout local (Optimistic)
-        set((state) => ({ messages: [...state.messages, msg].slice(-100) }));
+        get().addSessionMessage(msg);
 
         // Envoi via Bridge/Socket
         if (typeof window !== 'undefined') {
@@ -212,18 +213,20 @@ export const createUiSlice: CreateurDeSlice<UiSlice> = (set, get) => ({
             content,
             timestamp: Date.now(),
             isRead: true,
+            campaignId: get().activeCampaignId ?? undefined,
         };
 
         // Ajout local
-        set((state) => ({ messages: [...state.messages, msg].slice(-100) }));
+        get().addSessionMessage(msg);
 
-        // Broadcast aux Hubs
-        if (window.appBridge?.remote?.broadcastUIAction) {
-            window.appBridge.remote.broadcastUIAction({
-                type: 'session:receive-message',
-                payload: msg
-            });
-        }
+        /*
+          ⛔ **Acheminé, plus diffusé** (2026-10-12). `broadcastUIAction` partait
+          vers toutes les sockets : un message privé du meneur arrivait sur
+          chaque tablette, qui le cachait à l'affichage. Le serveur ne le remet
+          plus qu'à son destinataire et à la tablette du meneur — voir
+          `electron/destinatairesDesMessages.ts`.
+        */
+        window.appBridge?.remote?.acheminerUnMessage?.(msg);
     },
 
     saveMessageToJournal: (messageId) => {

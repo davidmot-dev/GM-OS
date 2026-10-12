@@ -184,4 +184,10 @@ export interface SessionMessage {
     content: string;
     timestamp: number;
     isRead: boolean;
+    /**
+     * **La campagne du fil.** Posée le 2026-10-12 : le meneur garde un fil par
+     * campagne, et le rend à chaque tablette qui se reconnecte. Facultative —
+     * posée par l'expéditeur, sinon par le meneur à la réception.
+     */
+    campaignId?: string;
 }

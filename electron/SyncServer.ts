@@ -9,6 +9,7 @@ import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
 import { evaluateAction } from './actionPolicy';
 import { auditDenied } from './auditLog';
+import { lecteurDuRole, messagePourLeLecteur, type MessageAchemine } from './destinatairesDesMessages';
 import {
     lireLAppui, ENTETE_DU_JETON, TAILLE_MAX_DU_CORPS,
 } from './boutonsDeLUlanzi';
@@ -38,6 +39,13 @@ interface ExtendedWebSocket extends WebSocket {
     deviceId?: string;
     role?: ClientRole;
     remoteAddress?: string;
+}
+
+/** Ce que l'acheminement lit d'un message ; le reste voyage tel quel. */
+function estUnMessage(valeur: unknown): valeur is MessageAchemine {
+    if (!valeur || typeof valeur !== 'object') return false;
+    const m = valeur as Record<string, unknown>;
+    return typeof m.fromId === 'string' && (m.toId === undefined || typeof m.toId === 'string');
 }
 
 /** Enveloppe attendue sur le fil ; la charge reste opaque pour ce relais. */
@@ -506,20 +514,39 @@ export class SyncServer {
         // autres clients sans repasser par le renderer.
         if (!this.isActionAuthorized(ws, data)) return;
 
-        // P2P Logic: If it's a message for others, broadcast it directly
-        const toId = data.type === 'session:send-message'
-            ? (data.payload as { toId?: unknown } | null | undefined)?.toId
-            : undefined;
-        if (data.type === 'session:send-message' && toId !== 'GM') {
-            this.broadcastAction({ ...data, type: 'session:receive-message' }, ws);
+        /*
+          ⛔ **Un message de séance est ACHEMINÉ, plus diffusé** (2026-10-12).
+          Le relais partait vers toutes les sockets, et le message de joueur à
+          joueur n'atteignait jamais le meneur. Désormais : remis à ses seuls
+          lecteurs, et **toujours** transmis au meneur, qui le garde avec la
+          campagne pour le rendre à une tablette rechargée — même ce qu'il ne
+          montre pas (décision de David : gardés mais cachés).
+        */
+        if (data.type === 'session:send-message' && estUnMessage(data.payload)) {
+            this.acheminerLeMessage({ ...data, type: 'session:receive-message' }, data.payload, ws);
         }
 
-        // Forward to Renderer (GM) unless it's pure P2P (character to character)
-        const isStrictP2P = data.type === 'session:send-message' && toId !== 'GM' && toId !== 'all';
-        
-        if (this.mainWindow && !this.mainWindow.isDestroyed() && !isStrictP2P) {
+        if (this.mainWindow && !this.mainWindow.isDestroyed()) {
             this.mainWindow.webContents.send('remote:action', data);
         }
+    }
+
+    /**
+     * **Remet un message à ses seuls lecteurs** : la règle de
+     * `destinatairesDesMessages`, appliquée à chaque socket inscrite. Une
+     * socket qui ne s'est pas encore inscrite n'a ni rôle ni personnage : elle
+     * ne reçoit rien.
+     */
+    private acheminerLeMessage(envoi: unknown, message: MessageAchemine, sender?: WebSocket) {
+        if (!this.wss) return;
+        const brut = JSON.stringify(envoi);
+        this.wss.clients.forEach((client: ExtendedWebSocket) => {
+            if (client === sender || client.readyState !== WebSocket.OPEN || !client.role) return;
+            const characterId = client.deviceId ? sessionManager.getClient(client.deviceId)?.characterId : undefined;
+            if (messagePourLeLecteur(message, lecteurDuRole(client.role, characterId))) {
+                client.send(brut);
+            }
+        });
     }
 
     private broadcastAction(action: unknown, sender?: WebSocket, targetRole?: string) {
@@ -550,6 +577,11 @@ export class SyncServer {
 
         ipcMain.on('remote:broadcast-ui-action', (_event, action, role?: string) => {
             this.broadcastAction(action, undefined, role);
+        });
+
+        ipcMain.on('remote:acheminer-un-message', (_event, message: unknown) => {
+            if (!estUnMessage(message)) return;
+            this.acheminerLeMessage({ type: 'session:receive-message', payload: message }, message);
         });
 
         ipcMain.on('remote:request-client-sync', () => {

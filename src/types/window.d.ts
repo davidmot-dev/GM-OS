@@ -1,5 +1,6 @@
 import { SessionOSState } from '../modules/session/useSessionOSStore';
 import type { DocumentIA } from './documentsIA';
+import type { SessionMessage } from './session.types';
 import { MusicState } from '../modules/music/useMusicStore';
 import { CombatState } from '../modules/combat/useCombatStore';
 import { LightState } from '../modules/light/useLightStore';
@@ -236,6 +237,12 @@ declare global {
              *             — y compris les tablettes des joueurs.
              */
             broadcastUIAction?: (action: RemoteAction, role?: string) => void;
+            /**
+             * Un message de séance, remis par le serveur à ses seuls lecteurs
+             * (`electron/destinatairesDesMessages.ts`). ⛔ Jamais
+             * `broadcastUIAction` pour un message : il partirait à tous.
+             */
+            acheminerUnMessage?: (message: SessionMessage) => void;
             getDisplays: () => Promise<DisplayInfo[]>;
             onAction: (callback: (data: RemoteAction) => void) => () => void;
             // Ordre des arguments aligné sur preload.ts : (buffer, id).

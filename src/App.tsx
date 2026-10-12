@@ -31,6 +31,7 @@ import { crossWindowSync } from './services/CrossWindowEventService';
 import { dispatchRemoteAction } from './modules/remote/actions';
 import { useThemeDuJeu } from './theme/useThemeDuJeu';
 import { isMainWindow } from './utils/windowRole';
+import type { SessionMessage } from './types/session.types';
 
 type RemoteAction = Parameters<typeof dispatchRemoteAction>[0];
 
@@ -205,14 +206,11 @@ function App() {
   useEffect(() => {
     if (!isMainPC) return;
 
+    // Acheminé, jamais diffusé : un message privé ne part qu'à ses lecteurs
+    // (electron/destinatairesDesMessages.ts, 2026-10-12).
     const handleSendMessage = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      if (window.appBridge?.remote?.broadcastUIAction) {
-        window.appBridge.remote.broadcastUIAction({
-          type: 'session:receive-message',
-          payload: customEvent.detail
-        });
-      }
+      const customEvent = e as CustomEvent<SessionMessage>;
+      window.appBridge?.remote?.acheminerUnMessage?.(customEvent.detail);
     };
 
     window.addEventListener('session:send-message', handleSendMessage);

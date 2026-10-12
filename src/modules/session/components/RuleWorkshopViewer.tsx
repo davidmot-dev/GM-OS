@@ -272,22 +272,12 @@ export const RuleWorkshopViewer: React.FC<RuleWorkshopViewerProps> = ({ driverId
                 payload: payload 
             });
 
-            // Envoi également d'un message court pour l'historique du chat
-            const msg = {
-                id: `rule-msg-${Date.now()}`,
-                fromId: 'GM',
-                fromName: 'MJ',
-                toId: 'all',
-                toName: 'Tous',
-                content: `📜 **RÈGLE PARTAGÉE : ${selectedCard.title}** (Affichée sur votre écran)`,
-                timestamp: Date.now(),
-                isRead: false
-            };
-
-            window.appBridge.remote.broadcastUIAction({ 
-                type: 'session:receive-message', 
-                payload: msg 
-            });
+            // Envoi également d'un message court pour l'historique du chat —
+            // par le chemin du meneur, qui le garde dans le fil de la campagne.
+            useSessionOSStore.getState().sendDirectMessage(
+                'all', 'Tous',
+                `📜 **RÈGLE PARTAGÉE : ${selectedCard.title}** (Affichée sur votre écran)`,
+            );
         }
         
         // Notification locale

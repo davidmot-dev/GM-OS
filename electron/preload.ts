@@ -479,6 +479,13 @@ contextBridge.exposeInMainWorld('appBridge', {
         */
         broadcastUIAction: (action: unknown, role?: string) =>
             ipcRenderer.send('remote:broadcast-ui-action', action, role),
+        /**
+         * **Un message de séance, remis à ses seuls lecteurs** (2026-10-12).
+         * Le serveur applique `electron/destinatairesDesMessages.ts` : jamais
+         * `broadcastUIAction` pour un message, qui le remettrait à tous.
+         */
+        acheminerUnMessage: (message: unknown) =>
+            ipcRenderer.send('remote:acheminer-un-message', message),
         cacheMedia: (buffer: ArrayBuffer, id: string) => ipcRenderer.invoke('remote:cache-media', buffer, id),
     },
     relay: {

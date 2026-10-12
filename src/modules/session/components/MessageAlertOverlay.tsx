@@ -6,6 +6,7 @@ import {
     Check
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
+import { messagePourLeLecteur } from '../../../../electron/destinatairesDesMessages';
 
 interface Alert {
     id: string;
@@ -20,6 +21,12 @@ export const MessageAlertOverlay: React.FC = () => {
     const { messages, saveMessageToJournal } = useSessionOSStore();
     const [alerts, setAlerts] = useState<Alert[]>([]);
     const lastProcessedMessageId = useRef<string | null>(null);
+    /*
+      **Seuls les messages arrivés depuis l'ouverture alertent** (2026-10-12) :
+      le fil est désormais gardé d'une séance à l'autre, et le dernier message
+      relu au démarrage n'est pas une nouvelle.
+    */
+    const [ouvertLe] = useState(() => Date.now());
 
     // Monitor messages for new ones coming from players
     useEffect(() => {
@@ -28,7 +35,11 @@ export const MessageAlertOverlay: React.FC = () => {
         const latestMsg = messages[messages.length - 1];
         
         // Only trigger for new messages NOT from GM and NOT already processed
-        if (latestMsg.fromId !== 'GM' && latestMsg.id !== lastProcessedMessageId.current) {
+        // ⛔ Ni ce que deux joueurs se disent (gardés mais cachés, 12/10), ni
+        // un message relu au démarrage.
+        if (latestMsg.fromId !== 'GM' && latestMsg.id !== lastProcessedMessageId.current
+            && latestMsg.timestamp >= ouvertLe
+            && messagePourLeLecteur(latestMsg, { role: 'meneur' })) {
             lastProcessedMessageId.current = latestMsg.id;
             
             // Add new alert (stack it)
@@ -44,7 +55,7 @@ export const MessageAlertOverlay: React.FC = () => {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setAlerts(prev => [...prev, newAlert]);
         }
-    }, [messages]);
+    }, [messages, ouvertLe]);
 
     const handleDismiss = (alertId: string) => {
         setAlerts(prev => prev.filter(a => a.id !== alertId));
