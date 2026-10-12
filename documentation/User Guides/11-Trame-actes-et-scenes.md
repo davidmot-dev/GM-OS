@@ -67,6 +67,8 @@ même raison.
 *Ajoutées le 2026-10-12.* Sous les indices, la section **Rencontres** prépare les combats de la
 scène — une scène peut en avoir plusieurs (« la patrouille », « les renforts au round 3 »).
 
+![La fiche d'Entretien avec Hale : ses battlemaps, puis la rencontre « Les gardes de Hale » dépliée — trois gardes et Hale lui-même, en ennemis](captures/session-trame-scene-rencontres.jpg)
+
 - **Nouvelle rencontre** en crée une ; dépliez-la pour la nommer et la composer.
 - **+ Ajouter…** prend une ligne dans le **bestiaire du jeu**, les **PNJ de la scène**, un
   **archétype** (avec son rang) ou les autres PNJ de la campagne. Le nombre proposé suit le rang,

@@ -5,6 +5,8 @@ démarre une scène, ses informations ne sont pas facilement accessibles »*. To
 [Trame](./11-Trame-actes-et-scenes.md) a préparé pour une scène se lisait en dépliant sa ligne, en
 noms seuls. Cet écran le met **en plein écran, dans l'ordre où l'on s'en sert**.
 
+![L'écran « Scène en cours » sur Entretien avec Hale : description, enjeux, répliques et notes à gauche ; musique, indices, PNJ, lieu et battlemap, rencontres à droite](captures/scene-en-cours.jpg)
+
 ---
 
 ## 1. Quand il s'ouvre, et comment le refermer

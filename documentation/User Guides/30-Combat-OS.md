@@ -160,10 +160,14 @@ Ce que devient le plateau quand on le garde :
 **Rencontres préparées** liste, dans l'ordre : celles de la **scène du combat**, des **scènes en
 cours**, les **rencontres libres**, puis — repliées — celles des autres scènes.
 
+![Le panneau des rencontres préparées : « Garder le plateau comme rencontre… » en tête, la rencontre de la scène du combat, puis une rencontre libre](captures/combat-rencontres.jpg)
+
 1. **Invoquer** ouvre **« Qui entre ? »** : les PJ de la campagne, **cochés d'avance quand la
    scène les déclare présents**, grisés s'ils sont déjà au combat. **Entrée** valide.
 2. Le combat se rattache à la scène de la rencontre ; une rencontre libre rejoint la scène du
    combat, ou la seule scène en cours.
+![« Qui entre ? » : Idris Koa est coché d'avance, la scène le déclare présent](captures/combat-qui-entre.jpg)
+
 3. Une seconde invocation **ajoute** au plateau — les renforts. Une rencontre d'une autre scène
    **gare** le combat en cours et passe à la sienne.
 
