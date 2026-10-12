@@ -6,7 +6,8 @@ demande : **prévoir les rencontres à l'avance, les lier à une scène, et n'aj
 moment où le combat démarre.** Ligne « trop lourd à ouvrir » du § 1 bis du
 [registre](2026-08-23-chantiers-gares.md).
 
-**État au 12/10 : R1 (`e6826f28`) et R2 faits, à éprouver à l'écran ; restent R3 (la Trame) et R4.**
+**État au 12/10 : R1 (`e6826f28`), R2 (`77d5ab4e`) et R3 faits, à éprouver à l'écran ; reste R4, qui attend l'écran « Scène en cours ».**
+R3 : section « Rencontres » de la fiche de scène (`trame/RencontresDeLaScene.tsx`, montée dans `EditeurDeScene`) — nouvelle rencontre, lignes depuis le bestiaire du jeu, un archétype (avec son rang) ou un PNJ (ceux de la scène en tête), nombre borné 1-20 et proposé par le rang, camp, notes ; détacher (la rencontre devient libre) et rattacher une rencontre libre. Lecture et écriture d'une ligne : `combat/logic/lignesDeRencontre.ts`, partagé avec le panneau de Combat-OS.
 R2 : dans le panneau « Rencontres préparées », **« Garder le plateau comme rencontre… »** — nom, scène
 (prévue, en cours, ou aucune), notes, et « vider le plateau ensuite » coché d'avance quand le combat n'a
 pas de scène (préparation). Le plateau devient un modèle (`combat/logic/rencontreDuPlateau.ts`) : PJ

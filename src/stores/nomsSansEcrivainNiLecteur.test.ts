@@ -122,7 +122,6 @@ const TOLERES: Record<string, string> = {
     'removePing': 'appelée par le minuteur de son propre magasin (useMapStore)',
     'showAlert': 'appelée par le raccourci `gmAlert`, dans le même fichier',
     'allumeeLe': "l'instant d'allumage d'une piste, lu par le tri du repli lumineux (useAmbientStore)",
-    'creeLe': "l'instant de création d'un gabarit, lu par son propre tri (useBestiaireStore)",
     'imagePrecedente': "le décor qui revient quand une fiche s'en va — écrit et relu dans useImageStore",
     'fogRegistry': 'le cache de brouillard par carte, écrit et relu dans useMapStore',
     'lastSyncedEntityId': "garde-fou contre la resynchronisation d'un même PNJ, lu dans useVoiceStore",

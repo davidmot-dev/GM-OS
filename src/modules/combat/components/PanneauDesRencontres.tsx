@@ -12,6 +12,7 @@ import {
     adversairesDeLaRencontre, champsDuPilote, pjsCandidats, sceneDeLInvocation,
 } from '../logic/invocationDeRencontre';
 import { rencontreDuPlateau } from '../logic/rencontreDuPlateau';
+import { resumeDeLaRencontre } from '../logic/lignesDeRencontre';
 import type { RencontrePreparee } from '../../../types/rencontres.types';
 
 /**
@@ -30,12 +31,8 @@ interface Props {
     onClose: () => void;
 }
 
-const resumeDesLignes = (r: RencontrePreparee, nomDuPNJ: (id: string) => string | undefined) =>
-    r.lignes.map(l => {
-        if (l.genre === 'entite') return nomDuPNJ(l.entiteId) ?? 'PNJ disparu';
-        const nom = l.genre === 'gabarit' ? l.nom : (l.nom?.trim() || archetypeParId(l.archetypeId).nom);
-        return l.nombre > 1 ? `${l.nombre} × ${nom}` : nom;
-    }).join(', ');
+/* Une seule façon de lire une rencontre, partagée avec la Trame. */
+const resumeDesLignes = resumeDeLaRencontre;
 
 const PanneauDesRencontres: React.FC<Props> = ({ onClose }) => {
     const {

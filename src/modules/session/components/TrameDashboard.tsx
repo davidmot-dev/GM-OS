@@ -15,6 +15,7 @@ import PastilleDePreparation from './trame/PastilleDePreparation';
 import MarqueDIntrigue from './trame/MarqueDIntrigue';
 import GrapheDeLaTrame from './trame/GrapheDeLaTrame';
 import ChoixDuRang from './trame/ChoixDuRang';
+import RencontresDeLaScene from './trame/RencontresDeLaScene';
 import {
     sortiesDeLaScene, entreesDeLaScene, libelleLisible, LIBELLE_MAXIMUM,
 } from '../logic/enchainementsDeLaTrame';
@@ -704,6 +705,10 @@ const EditeurDeScene: React.FC<{
                 choisis={scene.indiceIds}
                 onBascule={id => onChange({ indiceIds: bascule(scene.indiceIds, id) })}
             />
+
+            {/* Les rencontres préparées (2026-10-12, R3) : composées ici,
+                invoquées dans Combat-OS. */}
+            <RencontresDeLaScene scene={scene} />
 
             <Champ label="Notes du meneur">
                 <textarea

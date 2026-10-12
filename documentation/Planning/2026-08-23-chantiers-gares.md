@@ -41,7 +41,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 >
 > 4. **Les rencontres préparées** (12/10) — composées dans la scène ou dans Combat-OS, **invoquées
 >    dans Combat-OS**, les PJ entrent à l'invocation, l'initiative ne se tire pas seule :
->    [plan](2026-10-12-rencontres-preparees.md). **12/10 : R1 fait** (modèle, invocation, panneau « Rencontres préparées » de Combat-OS) ; **R2 fait** (« Garder le plateau comme rencontre… ») — à éprouver à l'écran. Restent R3 (la section de la scène dans la Trame) et R4, qui attend l'écran 3.
+>    [plan](2026-10-12-rencontres-preparees.md). **12/10 : R1 fait** (modèle, invocation, panneau « Rencontres préparées » de Combat-OS) ; **R2 fait** (« Garder le plateau comme rencontre… ») ; **R3 fait** (section « Rencontres » de la fiche de scène, dans la Trame) — à éprouver à l'écran. Reste R4, qui attend l'écran 3.
 >
 > Restent sans réponse : le PNJ « vu » sert-il aussi de trace des rencontres ; la description
 > narrative se projette-t-elle. *(Rencontres, 12/10 : une rencontre peut exister **sans scène** ;
