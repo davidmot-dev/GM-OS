@@ -182,6 +182,49 @@ async function mettreEnScene(): Promise<void> {
         return ambiance.getState().loadTheme('Cyberpunk', 'Station Varn');
     });
 
+    // 5 ter · La scène en cours, préparée comme le montre l'écran « Scène en cours » (2026-10-12) :
+    // ses textes, un morceau, son lieu — une image — et une battlemap liée, et deux rencontres.
+    const relais = 'data:image/png;base64,' + fs.readFileSync(path.join(ICI, 'donnees', 'demo-relais.png')).toString('base64');
+    await f.evaluate(({ relais, plan }) => {
+        const w = window as unknown as FenetreDeCapture;
+        const s = w.useSessionOSStore.getState();
+        const campaignId = s.activeCampaignId!;
+        s.updateAtlasMap('temoin-lieu-station', {
+            // La carte de la démo date d'un format sans liens : l'Atlas en attend une liste.
+            fileUrl: relais, isVideo: false, type: 'city', linkedEntities: [], gmNotes: '',
+            narrativeDescription: 'Une station minière en orbite basse, silencieuse depuis trois jours.',
+        });
+        s.addAtlasMap({
+            name: 'Station Varn — pont C (tactique)', fileUrl: plan, isVideo: false, type: 'battlemap',
+            narrativeDescription: '', gmNotes: '', linkedEntities: [], campaignId,
+        });
+        const pontC = w.useSessionOSStore.getState().atlasMaps.find(m => m.type === 'battlemap')!;
+        s.addLinkedEntity('temoin-lieu-station', { name: pontC.name, category: 'lieu', mapId: pontC.id });
+
+        const morceau = w.useMusicStore.getState().playlists[0]?.pads[1]?.id;
+        s.modifierScene('temoin-scene-2', {
+            lieuId: 'temoin-lieu-station',
+            descriptionNarrative: "Le bureau du superviseur sent le **café froid**. Sur l'écran, le registre de bord défile trop vite pour être lu.\n\nHale ne s'assoit pas.",
+            enjeux: "- Obtenir l'aveu : Hale a réécrit le registre.\n- S'il se sent acculé, il déclenche la quarantaine.",
+            repliques: "« Le dernier départ ? Hier. Tout est dans le registre. »\n\n« Vous croyez que j'ai le temps de mentir ? »",
+            ideesMusicales: 'Un bourdonnement grave, qui monte quand Hale ment.',
+            morceauxIds: morceau ? [morceau] : undefined,
+            notesDuMeneur: 'Il a signé toutes les entrées des trois derniers jours.',
+        });
+        s.ajouterUneRencontre({
+            campaignId, sceneId: 'temoin-scene-2', nom: 'Les gardes de Hale',
+            notes: 'Ils ne tirent que si Hale le leur ordonne.',
+            lignes: [
+                { genre: 'archetype', archetypeId: 'brute', rangId: 'pietaille', nombre: 3, nom: 'Garde de la station' },
+                { genre: 'entite', entiteId: 'temoin-pnj-1', faction: 'enemy' },
+            ],
+        });
+        s.ajouterUneRencontre({
+            campaignId, nom: 'Drones de maintenance',
+            lignes: [{ genre: 'archetype', archetypeId: 'tireur', rangId: 'aguerri', nombre: 2, nom: 'Drone' }],
+        });
+    }, { relais, plan });
+
     // 6 · Des images dans la médiathèque.
     await ouvrirLeModule(gmos, 'Médiathèque');
     await f.locator('input[type="file"][multiple]').first().setInputFiles(IMAGES_DE_DEMO.filter(i => fs.existsSync(i)));
@@ -307,6 +350,17 @@ const PREPARATION: [string, () => Promise<void>][] = [
         await gmos.fenetre.getByText("Ce que Hale n'a pas dit").first().click();
         await gmos.fenetre.getByText('Entretien avec Hale').first().click();
     }],
+    // 2026-10-12 : la section Rencontres de la fiche de scène, une rencontre dépliée.
+    ['session-trame-scene-rencontres', async () => {
+        await vue('trame');
+        await gmos.fenetre.getByRole('button', { name: /^Arbre$/ }).first().click().catch(() => undefined);
+        // L'acte est resté déplié par la capture précédente : un clic de plus le replierait.
+        const entretien = gmos.fenetre.getByText('Entretien avec Hale').first();
+        if (!(await entretien.isVisible())) await gmos.fenetre.getByText("Ce que Hale n'a pas dit").first().click();
+        await entretien.click();
+        await gmos.fenetre.getByText('Les gardes de Hale').first().click();
+        await gmos.fenetre.getByLabel('Nom de la rencontre').scrollIntoViewIfNeeded();
+    }],
     ['session-storyboard', () => vue('storyboard')],
     ['session-storyboard-regler', async () => { await vue('storyboard'); await gmos.fenetre.getByTitle(/Régler/).first().click(); }],
     ['session-galerie-pnj', () => vue('npc-gallery')],
@@ -355,6 +409,24 @@ const ECRANS: [string, () => Promise<void>][] = [
     }],
     ['session-loot-os', async () => { await vue('cockpit'); await gmos.fenetre.getByRole('button', { name: /^Loot-OS$/ }).first().click(); }],
     ['forge-campagne', async () => { await ouvrirLeModule(gmos, 'Forge'); await gmos.fenetre.getByRole('button', { name: /Campagne/ }).first().click(); }],
+    // 2026-10-12 : l'écran « Scène en cours », rouvert par Ctrl+E.
+    ['scene-en-cours', async () => {
+        await ouvrirLeModule(gmos, 'Tableau de Bord');
+        await gmos.fenetre.keyboard.press('Control+e');
+        await gmos.fenetre.getByRole('dialog', { name: 'Scène en cours' }).waitFor();
+    }],
+    // 2026-10-12 : les rencontres préparées, et « Qui entre ? » — on n'invoque pas.
+    ['combat-rencontres', async () => {
+        await ouvrirLeModule(gmos, 'Combat-OS');
+        await gmos.fenetre.getByRole('button', { name: /Rencontres préparées/ }).first().click();
+        await gmos.fenetre.getByText('Les gardes de Hale').first().waitFor();
+    }],
+    ['combat-qui-entre', async () => {
+        await ouvrirLeModule(gmos, 'Combat-OS');
+        await gmos.fenetre.getByRole('button', { name: /Rencontres préparées/ }).first().click();
+        await gmos.fenetre.getByRole('button', { name: /Invoquer/ }).first().click();
+        await gmos.fenetre.getByText('Qui entre ?').waitFor();
+    }],
     ['combat-calcul-des-degats', async () => { await ouvrirLeModule(gmos, 'Combat-OS'); await gmos.fenetre.getByRole('button', { name: /Calculateur de dégâts/i }).first().click(); }],
     ['dice-un-jet', async () => {
         await ouvrirLeModule(gmos, 'Dice-OS');
@@ -427,6 +499,8 @@ test.describe('la préparation', () => {
 test('la séance commence', async () => {
     await fermer();
     await lancerLaSeance();
+    // L'écran « Scène en cours » s'ouvre si une scène reprend : il ne doit pas couvrir les modules.
+    await fermer();
 });
 
 test.describe('les modules', () => {
