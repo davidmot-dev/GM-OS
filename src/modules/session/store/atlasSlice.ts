@@ -68,7 +68,8 @@ export const createAtlasSlice: CreateurDeSlice<AtlasSlice> = (set) => ({
         set((state) => ({
             atlasMaps: state.atlasMaps.map((m) =>
                 m.id === mapId
-                    ? { ...m, linkedEntities: [...m.linkedEntities, newLinked] }
+                    // `?? []` : un lieu d'ancien format n'a pas de liens, et l'Atlas plantait (2026-10-12).
+                    ? { ...m, linkedEntities: [...(m.linkedEntities ?? []), newLinked] }
                     : m
             ),
         }));
@@ -78,7 +79,7 @@ export const createAtlasSlice: CreateurDeSlice<AtlasSlice> = (set) => ({
         set((state) => ({
             atlasMaps: state.atlasMaps.map((m) =>
                 m.id === mapId
-                    ? { ...m, linkedEntities: m.linkedEntities.filter((e) => e.id !== entityId) }
+                    ? { ...m, linkedEntities: (m.linkedEntities ?? []).filter((e) => e.id !== entityId) }
                     : m
             ),
         })),
