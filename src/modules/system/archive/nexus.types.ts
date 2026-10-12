@@ -18,6 +18,7 @@ import type {
     Clue,
 } from '../../session/store/types';
 import type { Acte, Scene } from '../../../types/trame.types';
+import type { RencontrePreparee } from '../../../types/rencontres.types';
 import type { Atmosphere } from '../../sound/useSoundStore';
 import type { Playlist } from '../../music/useMusicStore';
 import type { DeckManifest, DeckSessionState } from '../../session/store/types';
@@ -144,6 +145,8 @@ export interface NexusCampaignState {
      */
     actes?: Acte[];
     scenes?: Scene[];
+    /** Les rencontres préparées (2026-10-12). Facultatives, comme la trame. */
+    rencontres?: RencontrePreparee[];
     /**
      * **Les journaux de seance de la campagne — ajoutes le 2026-09-12.**
      *

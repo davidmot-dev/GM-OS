@@ -6,7 +6,20 @@ demande : **prévoir les rencontres à l'avance, les lier à une scène, et n'aj
 moment où le combat démarre.** Ligne « trop lourd à ouvrir » du § 1 bis du
 [registre](2026-08-23-chantiers-gares.md).
 
-**Aucune ligne de code modifiée à ce jour.**
+**État au 12/10 : R1 fait, non commité, à éprouver à l'écran.** Rien ne permet encore de *créer* une
+rencontre à l'écran (R2 et R3) : le panneau « Rencontres préparées » de Combat-OS est vide tant
+qu'elles n'existent pas. Fichiers : modèle `src/types/rencontres.types.ts`, tranche
+`session/store/rencontresSlice.ts`, gestes de la trame `session/logic/rencontresDeLaTrame.ts`,
+fabrication et invocation `combat/logic/invocationDeRencontre.ts` (l'Atelier et la galerie des PNJ
+l'appellent désormais), action `invoquerLaRencontre` de `useCombatStore`, panneau
+`combat/components/PanneauDesRencontres.tsx`.
+
+⚠️ **Le piège payé à l'écriture** : `addCombatant` rattache seul un plateau vide à la scène en cours
+**et y fait entrer tous ses PJ**. L'invocation rattache donc la scène elle-même, *sans* ses PJ
+(`rattacherLeCombat`/`basculerVersLaScene` prennent `{ sansLesPJ }`), avant le premier combattant. Les
+essais échouent bien quand on retire l'option (vérifié). ⚠️ **Défaut voisin, non corrigé** :
+`NpcDetail` envoie un PNJ au combat toujours en `enemy`, la galerie selon son rôle — deux portes, deux
+camps.
 
 ## Ce qui existe déjà — et ce qui manque
 

@@ -29,6 +29,8 @@ import { useClockStore } from '../../../store/useClockStore';
 import { annoncesDeLUsure, type UsureDUneJauge } from '../../clock/logic/sensDeLaJauge';
 import { gmToast } from '../../../stores/useToastStore';
 import type { AtlasMap } from '../../../types/chronicle.types';
+import type { RencontrePreparee } from '../../../types/rencontres.types';
+import { rencontresDuClone, rencontresSansLesScenes } from '../logic/rencontresDeLaTrame';
 
 /**
  * **Ce qu'une fin de scène a coûté aux jauges, dit à voix haute.**
@@ -56,7 +58,7 @@ function annoncerLUsureDesJauges(usures: UsureDUneJauge[]): void {
  * fermerait un cycle entre les deux modules, et c'est le geste déjà retenu dans
  * `entitySlice`.
  */
-type AvecSeances = TrameSlice & { sessions: GameSession[] };
+type AvecSeances = TrameSlice & { sessions: GameSession[]; rencontres?: RencontrePreparee[] };
 
 /**
  * Ce que la capture d'une scène improvisée doit voir chez ses voisins.
@@ -243,6 +245,8 @@ export const createTrameSlice: CreateurDeSlice<TrameSlice> = (set, get) => ({
                 // sans dire pourquoi. On oublie la référence en même temps que
                 // sa cible.
                 sessions: oublierDansLesSeances(state.sessions ?? [], { acteId: id, sceneIds: emportees }),
+                // Les rencontres des scènes emportées deviennent libres, jamais effacées.
+                rencontres: rencontresSansLesScenes(state.rencontres, emportees),
             };
         }),
 
@@ -308,6 +312,8 @@ export const createTrameSlice: CreateurDeSlice<TrameSlice> = (set, get) => ({
                         return maj ? { ...s, enchainements: maj.enchainements } : s;
                     }),
                 sessions: oublierDansLesSeances(state.sessions ?? [], { sceneIds: disparues }),
+                // Ses rencontres deviennent libres, jamais effacées (2026-10-12).
+                rencontres: rencontresSansLesScenes(state.rencontres, disparues),
             };
         }),
 
@@ -567,7 +573,9 @@ export const createTrameSlice: CreateurDeSlice<TrameSlice> = (set, get) => ({
             Date.now(),
         );
 
-        set((state) => ({
+        (set as unknown as (fn: (state: AvecSeances) => Partial<AvecSeances>) => void)((state) => ({
+            // Les rencontres de la scène suivent le clone, recopiées (2026-10-12).
+            rencontres: [...(state.rencontres ?? []), ...rencontresDuClone(state.rencontres, id, nouvelId, Date.now())],
             scenes: [
                 // Le clone se pose JUSTE APRÈS son original, pas à la fin : une
                 // scène clonée l'est pour être rejouée là où elle est, et la

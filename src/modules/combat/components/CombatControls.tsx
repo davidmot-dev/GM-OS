@@ -406,6 +406,20 @@ const CombatControls: React.FC = () => {
                   manuel reste au-dessus — il sert encore à poser un nom sans
                   caractéristiques.
                 */}
+                {/*
+                  **Les rencontres préparées — 2026-10-12.** En tête de la
+                  liste : c'est le geste qui manquait à la première séance
+                  jouée, où Combat-OS n'a pas servi faute de temps pour le
+                  garnir.
+                */}
+                <button
+                    onClick={() => gmCustom('rencontres')}
+                    className="w-full bg-accent/10 hover:bg-accent/20 border border-accent/40 text-accent px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors font-bold"
+                >
+                    <Swords size={18} />
+                    <span>Rencontres préparées</span>
+                </button>
+
                 <button
                     onClick={() => gmCustom('atelier-adversaires')}
                     className="w-full bg-app-bg hover:bg-app-surface border border-app-border hover:border-accent/40 text-app-text/80 hover:text-accent px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"

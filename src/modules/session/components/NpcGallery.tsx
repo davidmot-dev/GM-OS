@@ -4,6 +4,7 @@ import type { TFunction } from 'i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { Entity } from '../useSessionOSStore';
 import { useCombatStore } from '../../combat/useCombatStore';
+import { combattantDeLEntite } from '../../combat/logic/invocationDeRencontre';
 import { abregerLaSante, decrireLaSante, fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { gmToast } from '../../../stores/useToastStore';
 import { useImageStore } from '../../image/useImageStore';
@@ -472,24 +473,9 @@ const NpcGalleryItem: React.FC<{
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                useCombatStore.getState().addCombatant({
-                                    name: npc.name,
-                                    /* `NpcDetail` envoyait `npc.initiative`, cet
-                                       écran envoyait zéro : le même PNJ entrait
-                                       en combat avec deux initiatives selon le
-                                       bouton cliqué, et rien ne le disait. */
-                                    init: npc.initiative ?? 0,
-                                    hp: npc.hp,
-                                    hpMax: npc.maxHp,
-                                    avatar: npc.avatar,
-                                    isPlayer: false,
-                                    faction: npc.role === 'ally' ? 'ally' :
-                                             (npc.role === 'hostile' || npc.role === 'boss') ? 'enemy' : 'neutral',
-                                    sourceEntityId: npc.id,
-                                    statuses: [],
-                                    roleplayingNotes: npc.roleplayingNotes,
-                                    gmSecretInfo: npc.gmSecretInfo
-                                });
+                                /* La même entrée que les rencontres préparées : une règle,
+                                   `combat/logic/invocationDeRencontre` (2026-10-12). */
+                                useCombatStore.getState().addCombatant(combattantDeLEntite(npc));
                                 gmToast(t('modules:session.toasts.entity_added_to_combat', { name: npc.name }));
                             }}
                             className="w-9 h-9 flex items-center justify-center bg-etat-danger/10 border border-etat-danger/20 text-etat-danger hover:bg-etat-danger hover:text-app-bg rounded-lg transition-all"

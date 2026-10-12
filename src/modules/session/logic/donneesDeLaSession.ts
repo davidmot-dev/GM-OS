@@ -66,6 +66,9 @@ export const lesDonneesDeLaSession = (state: SessionOSStore) => ({
       que le meneur garde et rend à chacun — les siens seulement.
     */
     messages: state.messages,
+    /* Les rencontres préparées (2026-10-12) : de la préparation, comme la
+       trame — ajoutées ici d'emblée. */
+    rencontres: state.rencontres,
 });
 
 /**

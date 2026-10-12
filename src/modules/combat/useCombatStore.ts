@@ -176,7 +176,19 @@ function faireEntrerLesPJDeLaScene(
     sceneId: string,
     get: () => Pick<CombatState, 'combatants' | 'addCombatant'>,
 ): void {
-    const perso = personnagesDeLaScene(sceneId);
+    faireEntrerCesPJ(personnagesDeLaScene(sceneId), get);
+}
+
+/**
+ * **Ces PJ-là entrent sur le plateau**, s'ils n'y sont pas déjà. La scène en
+ * fournit la liste à la bascule ; le meneur la coche à l'invocation d'une
+ * rencontre (2026-10-12 : *« je veux pouvoir mettre les PJ au moment de
+ * commencer le combat »*).
+ */
+function faireEntrerCesPJ(
+    perso: readonly { id: string; name: string; portraitUrl?: string }[],
+    get: () => Pick<CombatState, 'combatants' | 'addCombatant'>,
+): void {
     const dejaLa = new Set(get().combatants.map(c => c.sourcePlayerId).filter(Boolean));
     for (const pj of perso) {
         if (dejaLa.has(pj.id)) continue;
@@ -552,7 +564,7 @@ interface CombatState {
      * c'est la moitié du geste, puisque la scène sait qui est présent et que le
      * meneur vient de les y placer.
      */
-    rattacherLeCombat: (sceneId: string) => void;
+    rattacherLeCombat: (sceneId: string, options?: { sansLesPJ?: boolean }) => void;
     /**
      * Gare le plateau courant sous sa scène, et restaure celui de la scène visée.
      *
@@ -561,7 +573,24 @@ interface CombatState {
      * une scène posent le même plateau. Rien d'autre n'est fabriqué : un plateau
      * garé est restauré tel qu'il a été laissé.
      */
-    basculerVersLaScene: (sceneId: string) => void;
+    basculerVersLaScene: (sceneId: string, options?: { sansLesPJ?: boolean }) => void;
+
+    /**
+     * **Invoque une rencontre préparée** (2026-10-12) : rattache le combat à sa
+     * scène, pose les adversaires et **les PJ cochés par le meneur** — et ne
+     * tire pas l'initiative (décision de David).
+     *
+     * ⛔ **La scène se rattache AVANT le premier combattant, et sans ses PJ.**
+     * `addCombatant` rattache tout seul un plateau vide à la scène en cours et
+     * y fait entrer **tous** ses PJ : un PJ décoché entrerait quand même.
+     *
+     * Une seconde invocation (les renforts) **ajoute** au plateau.
+     */
+    invoquerLaRencontre: (invocation: {
+        sceneId: string | null;
+        adversaires: Omit<Combatant, 'id'>[];
+        pjs: { id: string; name: string; portraitUrl?: string }[];
+    }) => void;
 }
 
 export const useCombatStore = create<CombatState>()(
@@ -611,12 +640,12 @@ export const useCombatStore = create<CombatState>()(
                 }));
             },
 
-            rattacherLeCombat: (sceneId) => {
+            rattacherLeCombat: (sceneId, options) => {
                 set({ sceneId });
-                faireEntrerLesPJDeLaScene(sceneId, get);
+                if (!options?.sansLesPJ) faireEntrerLesPJDeLaScene(sceneId, get);
             },
 
-            basculerVersLaScene: (sceneId) => {
+            basculerVersLaScene: (sceneId, options) => {
                 const { sceneId: courante, combatants, currentTurnIdx, round, combatsGares, dejaConsigne, ouvertureConsignee, faitsDArmes } = get();
                 if (courante === sceneId) return;
 
@@ -659,11 +688,29 @@ export const useCombatStore = create<CombatState>()(
                   ressusciterait ceux que le meneur en a retirés. *Restaurer,
                   c'est rendre ce qu'on avait, pas ce qu'on aurait dû avoir.*
                 */
-                if (!repris) faireEntrerLesPJDeLaScene(sceneId, get);
+                if (!repris && !options?.sansLesPJ) faireEntrerLesPJDeLaScene(sceneId, get);
 
                 // Un plateau jamais joué n'a pas de carte à reposer : on laisse
                 // celle qui est là plutôt que de vider l'écran de la table.
                 reposerLaCarte(repris?.carte);
+                get().broadcastSync();
+            },
+
+            invoquerLaRencontre: ({ sceneId, adversaires, pjs }) => {
+                const { sceneId: courante, combatants } = get();
+                if (sceneId && sceneId !== courante) {
+                    /* Un plateau vide et sans scène se rattache ; un plateau en
+                       jeu se gare sous sa scène, comme à la bascule. */
+                    if (!courante && combatants.length === 0) get().rattacherLeCombat(sceneId, { sansLesPJ: true });
+                    else get().basculerVersLaScene(sceneId, { sansLesPJ: true });
+                } else if (!sceneId && !courante && combatants.length === 0) {
+                    /* Une rencontre libre, nulle part où se jouer : le rattachement
+                       qu'aurait fait le premier combattant (scène unique, ou scène
+                       improvisée), mais SANS ses PJ — ce sont ceux cochés qui entrent. */
+                    rattacherLeCombatQuiDemarre(id => get().rattacherLeCombat(id, { sansLesPJ: true }));
+                }
+                faireEntrerCesPJ(pjs, get);
+                adversaires.forEach(a => get().addCombatant(a));
                 get().broadcastSync();
             },
 

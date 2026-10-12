@@ -234,6 +234,9 @@ export class NexusService {
         */
         const actes = store.actes?.filter((a: { campaignId: string }) => a.campaignId === campaignId) ?? [];
         const scenes = store.scenes?.filter((sc: { campaignId: string }) => sc.campaignId === campaignId) ?? [];
+        /* Les rencontres préparées (2026-10-12) : de la préparation, elles
+           voyagent avec la trame. */
+        const rencontres = store.rencontres?.filter((r: { campaignId: string }) => r.campaignId === campaignId) ?? [];
 
         /*
           **Les journaux de seance, ajoutes le 2026-09-12.** Meme filtre que la
@@ -323,6 +326,7 @@ export class NexusService {
             clues,
             actes,
             scenes,
+            rencontres,
             journaux,
             deckManifests,
             deckSessionStates,
@@ -1143,6 +1147,13 @@ export class NexusService {
             nextPartialState.scenes = [
                 ...(store.scenes ?? []).filter((sc: { campaignId: string }) => sc.campaignId !== campaignId),
                 ...state.scenes,
+            ];
+        }
+        // Même règle que la trame : une archive qui n'en parle pas ne vide rien.
+        if (state.rencontres !== undefined) {
+            nextPartialState.rencontres = [
+                ...(store.rencontres ?? []).filter((r: { campaignId: string }) => r.campaignId !== campaignId),
+                ...state.rencontres,
             ];
         }
 

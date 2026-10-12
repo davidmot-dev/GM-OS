@@ -5,11 +5,12 @@ import { tousLesPilotes } from '../../session/store/tousLesPilotes';
 import { useCombatStore } from '../useCombatStore';
 import { useBestiaireStore } from '../useBestiaireStore';
 import { gmToast } from '../../../stores/useToastStore';
-import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
+import type { SheetField } from '../../../data/defaultSheetTemplates';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
+import { champsDuPilote, fabriquerLesExemplaires, ficheDUnExemplaire } from '../logic/invocationDeRencontre';
 import { santeDeDepart, valeurDuChamp } from '../logic/SanteDuCombattant';
 import { ARCHETYPES, archetypeParId, proposerLesChamps, RANGS, rangParId } from '../logic/archetypes';
-import { fabriquer, hasardDeGraine, nommerLExemplaire } from '../logic/fabriqueDAdversaire';
+import { nommerLExemplaire } from '../logic/fabriqueDAdversaire';
 import {
     NOMBRE_MAX, NOMBRE_MIN, nombreApresChangementDeRang, nombreSaisi, reprendreLaSuggestion,
 } from '../logic/nombreDExemplaires';
@@ -90,11 +91,10 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
     const jeuId = driver?.id ?? 'sans-pilote';
 
     /** Les champs de la fiche du jeu — la seule source des échelles. */
-    const champs: SheetField[] = useMemo(() => {
-        const tous = [...DEFAULT_SHEET_TEMPLATES, ...(customSheetTemplates || [])];
-        const gabarit = tous.find(t => t.id === driver?.templateId);
-        return gabarit ? gabarit.sections.flatMap(s => s.fields) : [];
-    }, [driver?.templateId, customSheetTemplates]);
+    const champs: SheetField[] = useMemo(
+        () => champsDuPilote(driver?.templateId, customSheetTemplates),
+        [driver?.templateId, customSheetTemplates],
+    );
 
     const gabarits = gabaritsDuJeu(jeuId);
 
@@ -177,19 +177,10 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
     /** Fabrique un exemplaire. Le gabarit du bestiaire, s'il y en a un, fait foi. */
     const fabriquerUn = (index: number) => {
         const gabarit = source.genre === 'gabarit' ? gabarits.find(g => g.id === source.id) : undefined;
-        const fabrique = fabriquer({
-            champs, repartition, archetypeId: archetypeCourant.id, rangId,
-            hasard: hasardDeGraine(graine + index * 7919),
-        });
-
-        /*
-          **Le gabarit passe par-dessus la fabrique, champ par champ.** C'est la
-          réponse à « une combinaison des deux » : ce que David a saisi est une
-          décision, ce que la fabrique tire est un remplissage. *Une décision
-          passe devant un tirage* — et les champs qu'il n'a pas renseignés sont
-          quand même remplis, au lieu de rester à zéro.
-        */
-        const sheetData = gabarit ? { ...fabrique.sheetData, ...gabarit.sheetData } : fabrique.sheetData;
+        /* Le gabarit passe par-dessus la fabrique, champ par champ : la règle vit
+           dans `logic/invocationDeRencontre`, partagée avec les rencontres. */
+        const { sheetData, fabrique } = ficheDUnExemplaire(
+            { champs, repartition, archetypeId: archetypeCourant.id, rangId, gabarit, graine }, index);
         return { sheetData, fabrique, gabarit };
     };
 
@@ -202,23 +193,12 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
         || `${archetypeCourant.nom} (${rangParId(rangId).nom})`;
 
     const envoyerAuCombat = () => {
-        for (let i = 0; i < nombre; i++) {
-            const { sheetData } = fabriquerUn(i);
-            addCombatant({
-                name: nommerLExemplaire(nomDeBase, i, nombre),
-                init: 0,
-                isPlayer: false,
-                faction: 'enemy',
-                statuses: [],
-                sheetData,
-                healthSystem: HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp'),
-                /* Pour que sa fiche sache le ranger au bestiaire plus tard. */
-                origineFabriquee: { archetypeId: archetypeCourant.id, rangId },
-                roleplayingNotes: source.genre === 'gabarit'
-                    ? gabarits.find(g => g.id === source.id)?.notes ?? ''
-                    : archetypeCourant.resume,
-            });
-        }
+        fabriquerLesExemplaires({
+            champs, repartition, archetypeId: archetypeCourant.id, rangId, graine,
+            gabarit: source.genre === 'gabarit' ? gabarits.find(g => g.id === source.id) : undefined,
+            nomDeBase, nombre,
+            typeDeSante: driver?.combat?.defaultHealthType ?? 'hp',
+        }).forEach(addCombatant);
         gmToast(`${nombre} adversaire(s) dans l’ordre du tour`, 'success');
         onClose();
     };

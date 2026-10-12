@@ -4,6 +4,8 @@ import {
 } from './trame';
 import type { Scene } from '../../../types/trame.types';
 import type { GameSession } from '../store/types';
+import type { RencontrePreparee } from '../../../types/rencontres.types';
+import { rencontresReportees } from './rencontresDeLaTrame';
 
 /**
  * **Fusionner et scinder** — les deux derniers gestes du § 4.1 du plan du
@@ -30,6 +32,7 @@ import type { GameSession } from '../store/types';
 type MagasinDeTrame = {
     scenes: Scene[];
     sessions?: GameSession[];
+    rencontres?: RencontrePreparee[];
 };
 
 type Poser = (fn: (state: MagasinDeTrame) => Partial<MagasinDeTrame>) => void;
@@ -106,6 +109,8 @@ export function fusionnerDeuxScenes(
                 return s;
             }),
         sessions: reporterLesPrevisions(state.sessions ?? [], absorbeeId, gardeeId),
+        // Les rencontres de l'absorbée passent à la scène qui reste (2026-10-12).
+        rencontres: rencontresReportees(state.rencontres, absorbeeId, gardeeId),
     }));
 
     /*

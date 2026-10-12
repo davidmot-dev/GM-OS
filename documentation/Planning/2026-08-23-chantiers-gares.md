@@ -34,14 +34,14 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > 2. **Les messages entre tablettes** — le meneur les garde avec la séance et rend à chaque tablette
 >    qui se (re)connecte **les siens seulement** : [plan du 12/10](2026-10-12-messages-entre-tablettes.md)
 >    (fil de campagne ; joueur → joueur gardés **mais cachés** au meneur). ⛔ La lecture du 12/10 a
->    trouvé que **toutes les tablettes reçoivent tous les messages privés**. **12/10 : M1, M2, M4 faits** (non commités, à éprouver avec deux tablettes) ; **reste M3**, le fil rendu à la reconnexion.
+>    trouvé que **toutes les tablettes reçoivent tous les messages privés**. **12/10 : M1 à M4 faits** — à éprouver avec deux tablettes : message privé entre joueurs, message privé du meneur, tablette rechargée qui retrouve son fil, redémarrage de GM-OS.
 > 3. **L'écran « Scène en cours »** — L1 et L3, puis L2 :
 >    [plan](2026-10-11-ecran-scene-en-cours.md). Il absorbe les lignes des indices, du PNJ « vu » et
 >    de la scène illisible.
 >
 > 4. **Les rencontres préparées** (12/10) — composées dans la scène ou dans Combat-OS, **invoquées
 >    dans Combat-OS**, les PJ entrent à l'invocation, l'initiative ne se tire pas seule :
->    [plan](2026-10-12-rencontres-preparees.md). R1 ne dépend de rien ; R4 attend l'écran 3.
+>    [plan](2026-10-12-rencontres-preparees.md). **12/10 : R1 fait** (modèle, invocation, panneau « Rencontres préparées » de Combat-OS) — rien ne crée encore une rencontre à l'écran : **R2 ensuite**. R4 attend l'écran 3.
 >
 > Restent sans réponse : le PNJ « vu » sert-il aussi de trace des rencontres ; la description
 > narrative se projette-t-elle. *(Rencontres, 12/10 : une rencontre peut exister **sans scène** ;

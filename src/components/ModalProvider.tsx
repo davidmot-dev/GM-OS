@@ -16,6 +16,7 @@ import { FavoriteFullDossier } from '../modules/favorite/components/FavoriteFull
 import { TimelineEventForm } from '../modules/session/components/TimelineEventForm';
 import { WikiEntryForm } from '../modules/session/components/WikiEntryForm';
 import AtelierDesAdversaires from '../modules/combat/components/AtelierDesAdversaires';
+import PanneauDesRencontres from '../modules/combat/components/PanneauDesRencontres';
 import FicheDuCombattant from '../modules/combat/components/FicheDuCombattant';
 import GlobalSettingsModal from './GlobalSettingsModal';
 import LightSceneSelector from '../modules/light/components/LightSceneSelector';
@@ -216,6 +217,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'loot-os' && <Package size={18} />}
                                         {customVariant === 'aide-du-meneur' && <Keyboard size={18} />}
                                         {customVariant === 'atelier-adversaires' && <Swords size={18} />}
+                                        {customVariant === 'rencontres' && <Swords size={18} />}
                                         {customVariant === 'fiche-combattant' && <ScrollText size={18} />}
                                         {customVariant === 'vitrine-du-socle' && <Shapes size={18} />}
                                     </div>
@@ -245,6 +247,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'aide-du-meneur' && 'Écran du Meneur'}
                                         {/* Littéral, comme au-dessus : cet écran n'a qu'un lecteur. */}
                                         {customVariant === 'atelier-adversaires' && 'Atelier des adversaires'}
+                                        {customVariant === 'rencontres' && 'Rencontres préparées'}
                                         {customVariant === 'fiche-combattant' && 'Fiche du combattant'}
                                         {/* Littéral comme ses voisins : cet écran n'a qu'un lecteur. */}
                                         {customVariant === 'music-pad-edit' && 'Pastille'}
@@ -308,6 +311,7 @@ const ModalProvider: React.FC = () => {
                                     jeuDemande={(defaultValue as { jeuId?: string } | undefined)?.jeuId}
                                 />
                             )}
+                            {customVariant === 'rencontres' && <PanneauDesRencontres onClose={closeModal} />}
                             {customVariant === 'fiche-combattant' && <FicheDuCombattant />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>

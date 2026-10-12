@@ -34,6 +34,7 @@ import { createUiSlice, type UiSlice } from './uiSlice';
 import { createCluesSlice, type CluesSlice } from './cluesSlice';
 import { createDeckSlice, type DeckSlice } from './deckSlice';
 import { createLootSlice, type LootSlice } from './lootSlice';
+import { createRencontresSlice, type RencontresSlice } from './rencontresSlice';
 
 import type { SessionModuleSnapshot } from './types';
 import { resolveSheetTemplate } from '../logic/templateResolver';
@@ -146,6 +147,7 @@ export type SessionOSStore = CampaignSlice &
     CluesSlice &
     DeckSlice &
     LootSlice &
+    RencontresSlice &
     CrossDomainActions;
 
 // ─────────────────────────────────────────────
@@ -167,6 +169,7 @@ export const useSessionOSStore = create<SessionOSStore>()(
             ...createCluesSlice(set, get, api),
             ...createDeckSlice(set, get, api),
             ...createLootSlice(set, get, api),
+            ...createRencontresSlice(set, get, api),
 
             lastBackupAt: null as string | null,
 
