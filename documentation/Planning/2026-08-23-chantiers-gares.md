@@ -32,7 +32,9 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 >
 > 1. ✅ **Les banques MIDI** — **fait le 12/10**, à éprouver sur le Pocket Pad (§ 1 bis).
 > 2. **Les messages entre tablettes** — le meneur les garde avec la séance et rend à chaque tablette
->    qui se (re)connecte **les siens seulement**.
+>    qui se (re)connecte **les siens seulement** : [plan du 12/10](2026-10-12-messages-entre-tablettes.md)
+>    (fil de campagne ; joueur → joueur gardés **mais cachés** au meneur). ⛔ La lecture du 12/10 a
+>    trouvé que **toutes les tablettes reçoivent tous les messages privés**. **12/10 : M1, M2, M4 faits** (non commités, à éprouver avec deux tablettes) ; **reste M3**, le fil rendu à la reconnexion.
 > 3. **L'écran « Scène en cours »** — L1 et L3, puis L2 :
 >    [plan](2026-10-11-ecran-scene-en-cours.md). Il absorbe les lignes des indices, du PNJ « vu » et
 >    de la scène illisible.
@@ -42,7 +44,8 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 >    [plan](2026-10-12-rencontres-preparees.md). R1 ne dépend de rien ; R4 attend l'écran 3.
 >
 > Restent sans réponse : le PNJ « vu » sert-il aussi de trace des rencontres ; la description
-> narrative se projette-t-elle ; une rencontre peut-elle exister **sans scène**. David peut en
+> narrative se projette-t-elle. *(Rencontres, 12/10 : une rencontre peut exister **sans scène** ;
+> **aucun pion** sur la carte à l'invocation.)* David peut en
 > ajouter d'autres après une nuit. ⛔ *Demander « GM-OS tourne-t-il ? » avant toute édition de
 > `src/` — la question était posée et sans réponse au coucher.*
 
