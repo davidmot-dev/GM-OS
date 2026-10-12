@@ -43,7 +43,7 @@ import type { GameDriver } from '../../../types/drivers';
 import { santeSelonLeJeu } from '../../session/logic/santeDesAdversaires';
 import { normaliser } from '../rules/canevas';
 import type {
-    ProjetDeCampagne, PnjProjete, IndiceProjete,
+    ProjetDeCampagne, PnjProjete, IndiceProjete, SceneProjetee,
 } from './ForgeDeCampagne';
 import { memeTitreSansEspaces } from './titreLisible';
 
@@ -506,6 +506,12 @@ export function ecrireLaCampagne(
     }
 
     // ── Les scènes ───────────────────────────────
+    /** Les champs de l'écran « Scène en cours » : seulement ceux qui disent quelque chose. */
+    const champsDeLEcranDeScene = (s: SceneProjetee) => Object.fromEntries(
+        (['descriptionNarrative', 'enjeux', 'repliques', 'ideesMusicales'] as const)
+            .map(cle => [cle, s[cle]?.trim()] as const)
+            .filter(([, valeur]) => !!valeur),
+    ) as Pick<Scene, 'descriptionNarrative' | 'enjeux' | 'repliques' | 'ideesMusicales'>;
     const scenesExistantes = existant.scenes ?? [];
     const rangParActe = new Map<string, number>();
     const scenes: Scene[] = [];
@@ -534,6 +540,8 @@ export function ecrireLaCampagne(
             titre: projete.titre,
             resume: projete.resume ?? '',
             ...(projete.notesDuMeneur ? { notesDuMeneur: projete.notesDuMeneur } : {}),
+            // L4 (2026-10-13) : un champ vide reste absent, comme sur une scène écrite à la main.
+            ...champsDeLEcranDeScene(projete),
             // Une scène tirée du livre est une scène préparée : c'est l'origine
             // qui distingue le prévu de l'improvisé, et le remplissage se calcule.
             origine: 'preparee',

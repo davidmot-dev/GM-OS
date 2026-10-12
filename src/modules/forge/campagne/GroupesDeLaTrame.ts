@@ -437,6 +437,11 @@ export const GROUPES_DE_LA_TRAME: readonly GroupeDeLaTrame[] = [
             titre: { type: 'string' },
             resume: { type: 'string' },
             notesDuMeneur: { type: 'string' },
+            /* L4 (2026-10-13) : les champs de l'écran « Scène en cours ». */
+            descriptionNarrative: { type: 'string' },
+            enjeux: { type: 'string' },
+            repliques: { type: 'string' },
+            ideesMusicales: { type: 'string' },
             lieu: { type: 'string' },
             pnj: CHAINES,
             indices: CHAINES,
@@ -444,11 +449,17 @@ export const GROUPES_DE_LA_TRAME: readonly GroupeDeLaTrame[] = [
         cible: () =>
             '"scenes" : les scènes prévues de CETTE partie, DANS L\'ORDRE où le livre les présente. '
             + '"resume" dit ce qui s\'y joue du point de vue du meneur ; "notesDuMeneur" ce qui ne '
-            + 'se dit pas à voix haute. "lieu" est un nom RECOPIÉ de la liste des lieux ; "pnj" un '
+            + 'se dit pas à voix haute. "descriptionNarrative" est ce que les joueurs voient, '
+            + 'entendent et sentent en entrant : le texte à lire du livre s\'il en donne un, sinon '
+            + 'quelques phrases tirées des fiches, au présent. "enjeux" dit ce qui peut se gagner '
+            + 'et se perdre ici. "repliques" ne contient QUE des répliques RECOPIÉES du livre, '
+            + 'une par ligne, avec qui les dit — s\'il n\'en donne aucune, omets le champ, n\'en '
+            + 'invente jamais. "ideesMusicales" est une phrase sur l\'ambiance sonore, omise si '
+            + 'rien dans les fiches ne la suggère. "lieu" est un nom RECOPIÉ de la liste des lieux ; "pnj" un '
             + 'tableau de noms recopiés de la liste des personnages ; "indices" un tableau de '
             + 'titres recopiés de la liste des indices. Chacun s\'omet si rien ne convient — mais '
             + 'ne laisse pas vide ce que les fiches donnent : c\'est ce qui rend la scène jouable',
-        exemple: '{"scenes":[{"titre":"<le titre de la scène>","resume":"<ce qui s\'y joue>","lieu":"<un lieu de la liste>","pnj":["<un personnage de la liste>"],"indices":["<un indice de la liste>"]}]}',
+        exemple: '{"scenes":[{"titre":"<le titre de la scène>","resume":"<ce qui s\'y joue>","descriptionNarrative":"<ce que les joueurs perçoivent>","enjeux":"<ce qui peut se gagner et se perdre>","lieu":"<un lieu de la liste>","pnj":["<un personnage de la liste>"],"indices":["<un indice de la liste>"]}]}',
     },
     {
         id: 'savoir',

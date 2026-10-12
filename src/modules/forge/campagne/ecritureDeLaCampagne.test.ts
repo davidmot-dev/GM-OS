@@ -388,4 +388,20 @@ describe('ecrireLaCampagne — un titre d’acte rendu lisible', () => {
         expect(ecrit.actes).toHaveLength(0);
         expect(ecrit.scenes[0].acteId).toBe('acte-propre');
     });
+
+    /* L4 (2026-10-13) : les champs de l'écran « Scène en cours ». */
+    it('écrit les champs de l’écran de la scène, et laisse absents ceux qui sont vides', () => {
+        const projet = PROJET();
+        projet.scenes[0] = {
+            ...projet.scenes[0],
+            descriptionNarrative: '  La pluie sur les fenêtres.  ',
+            enjeux: 'Trouver le codex.',
+            repliques: '   ',
+        };
+        const scene = ecrireLaCampagne(projet, options()).scenes[0];
+        expect(scene.descriptionNarrative).toBe('La pluie sur les fenêtres.');
+        expect(scene.enjeux).toBe('Trouver le codex.');
+        expect('repliques' in scene, 'un champ vide devient une chaîne vide au lieu de rester absent').toBe(false);
+        expect('ideesMusicales' in scene).toBe(false);
+    });
 });

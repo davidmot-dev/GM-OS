@@ -99,6 +99,15 @@ export interface SceneProjetee {
     titre: string;
     resume?: string;
     notesDuMeneur?: string;
+    /*
+      L4 (2026-10-13) : ce que montre l'écran « Scène en cours », dans son ordre.
+      Facultatifs comme sur `Scene` : une passe qui ne les rend pas laisse la
+      scène telle qu'avant.
+    */
+    descriptionNarrative?: string;
+    enjeux?: string;
+    repliques?: string;
+    ideesMusicales?: string;
     lieu?: string;
     pnj?: string[];
     indices?: string[];

@@ -202,4 +202,21 @@ describe('la santé des PNJ vient du pilote', () => {
         expect(Object.keys((item as { properties: Record<string, unknown> }).properties))
             .not.toContain('ac');
     });
+
+    /* L4 (2026-10-13) : la Forge remplit ce que montre l'écran « Scène en cours ». */
+    it('demande aux scènes les champs de l’écran « Scène en cours »', () => {
+        const schema = groupe('scenes').schema(contexte());
+        const item = (schema.properties as Record<string, { items: { properties: Record<string, unknown>; required: string[] } }>).scenes.items;
+        for (const champ of ['descriptionNarrative', 'enjeux', 'repliques', 'ideesMusicales']) {
+            expect(item.properties, champ).toHaveProperty(champ);
+        }
+        // Facultatifs : une scène sans répliques dans le livre n'en reçoit pas.
+        expect(item.required).toEqual(['titre']);
+    });
+
+    it('interdit d’inventer des répliques', () => {
+        const consigne = groupe('scenes').cible(contexte());
+        expect(consigne).toContain('"repliques" ne contient QUE des répliques RECOPIÉES du livre');
+        expect(consigne).toContain("n'en invente jamais");
+    });
 });
