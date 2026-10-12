@@ -253,6 +253,33 @@ export interface Scene {
      */
     momentDeStoryboardId?: string;
 
+    /*
+      ─── L'ÉCRAN « SCÈNE EN COURS », 2026-10-12 ───────────────────────────
+      Né du débriefing de la première séance jouée (11/10) : *« lorsque je
+      démarre une scène, ses informations ne sont pas facilement accessibles »*.
+      Six champs **facultatifs**, lus avec un repli : les scènes d'avant n'en
+      portent pas, et *une migration est l'endroit où les données de ce projet
+      sont déjà mortes deux fois.* Plan :
+      `documentation/Planning/2026-10-11-ecran-scene-en-cours.md`.
+
+      Les textes se rendent en Markdown. Comme le résumé et les notes, une
+      fusion les accole et une scission les laisse à la première moitié ; les
+      morceaux et la note sont du décor, et passent aux deux.
+    */
+
+    /** Ce que les joueurs voient, entendent, sentent — distinct du résumé, qui est pour le meneur. */
+    descriptionNarrative?: string;
+    /** Ce qui doit se jouer, ce qui peut se perdre. */
+    enjeux?: string;
+    /** Des exemples de répliques, en texte libre. */
+    repliques?: string;
+    /** Des idées de musique, en texte libre — l'ambiance liée reste `momentDeStoryboardId`. */
+    ideesMusicales?: string;
+    /** Des pads de Music-OS (`MusicPad.id`) jouables d'un clic — des identifiants, jamais des contenus. */
+    morceauxIds?: string[];
+    /** Le chemin de la note de la scène, **relatif au coffre** Obsidian. */
+    noteObsidian?: string;
+
     /**
      * Ce que la scène a réellement vécu, dans l'ordre.
      *

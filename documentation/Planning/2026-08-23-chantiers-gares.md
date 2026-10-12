@@ -36,7 +36,8 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 >    (fil de campagne ; joueur → joueur gardés **mais cachés** au meneur). ⛔ La lecture du 12/10 a
 >    trouvé que **toutes les tablettes reçoivent tous les messages privés**. **12/10 : M1 à M4 faits** — à éprouver avec deux tablettes : message privé entre joueurs, message privé du meneur, tablette rechargée qui retrouve son fil, redémarrage de GM-OS.
 > 3. **L'écran « Scène en cours »** — L1 et L3, puis L2 :
->    [plan](2026-10-11-ecran-scene-en-cours.md). Il absorbe les lignes des indices, du PNJ « vu » et
+>    [plan](2026-10-11-ecran-scene-en-cours.md). **12/10 : L1 et L3 faits** (les six champs dans la Trame ;
+>    « Montré aux joueurs » pour un PNJ) — reste L2, l'écran. Il absorbe les lignes des indices, du PNJ « vu » et
 >    de la scène illisible.
 >
 > 4. **Les rencontres préparées** (12/10) — composées dans la scène ou dans Combat-OS, **invoquées

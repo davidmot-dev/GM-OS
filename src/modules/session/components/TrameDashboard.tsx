@@ -16,6 +16,7 @@ import MarqueDIntrigue from './trame/MarqueDIntrigue';
 import GrapheDeLaTrame from './trame/GrapheDeLaTrame';
 import ChoixDuRang from './trame/ChoixDuRang';
 import RencontresDeLaScene from './trame/RencontresDeLaScene';
+import { ChoixDeLaNote, ChoixDesMorceaux } from './trame/LiensDeLaScene';
 import {
     sortiesDeLaScene, entreesDeLaScene, libelleLisible, LIBELLE_MAXIMUM,
 } from '../logic/enchainementsDeLaTrame';
@@ -630,6 +631,47 @@ const EditeurDeScene: React.FC<{
                 />
             </Champ>
 
+            {/*
+              **Ce que l'écran « Scène en cours » montrera, dans cet ordre**
+              (2026-10-12, L1). Le résumé ci-dessus reste pour le meneur ; la
+              description est ce que les joueurs perçoivent. Markdown accepté.
+            */}
+            <TexteDeScene
+                label="Description narrative"
+                aide="Ce que les joueurs voient, entendent, sentent."
+                valeur={scene.descriptionNarrative}
+                onChange={v => onChange({ descriptionNarrative: v })}
+                lignes={4}
+            />
+            <TexteDeScene
+                label="Enjeux"
+                aide="Ce qui doit se jouer, ce qui peut se perdre."
+                valeur={scene.enjeux}
+                onChange={v => onChange({ enjeux: v })}
+            />
+            <TexteDeScene
+                label="Exemples de répliques"
+                aide="Quelques phrases à dire tel quel."
+                valeur={scene.repliques}
+                onChange={v => onChange({ repliques: v })}
+            />
+            <TexteDeScene
+                label="Idées musicales"
+                aide="L'inspiration ; les morceaux liés se jouent d'un clic à l'écran de la scène."
+                valeur={scene.ideesMusicales}
+                onChange={v => onChange({ ideesMusicales: v })}
+                lignes={2}
+            />
+            <ChoixDesMorceaux
+                campagneId={scene.campaignId}
+                choisis={scene.morceauxIds ?? []}
+                onChange={ids => onChange({ morceauxIds: ids })}
+            />
+            <ChoixDeLaNote
+                valeur={scene.noteObsidian}
+                onChange={chemin => onChange({ noteObsidian: chemin })}
+            />
+
             <div className="grid grid-cols-2 gap-4">
                 <Champ label="Lieu">
                     <select
@@ -727,6 +769,25 @@ const EditeurDeScene: React.FC<{
         </div>
     );
 };
+
+/** Un texte facultatif de la scène : vide, il redevient absent plutôt qu'une chaîne vide. */
+const TexteDeScene: React.FC<{
+    label: string;
+    aide: string;
+    valeur?: string;
+    onChange: (valeur: string | undefined) => void;
+    lignes?: number;
+}> = ({ label, aide, valeur, onChange, lignes = 3 }) => (
+    <Champ label={label}>
+        <textarea
+            value={valeur ?? ''}
+            placeholder={`${aide} Markdown accepté.`}
+            onChange={e => onChange(e.target.value.trim() ? e.target.value : undefined)}
+            rows={lignes}
+            className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 text-sm focus:border-accent/50 outline-none resize-none leading-relaxed"
+        />
+    </Champ>
+);
 
 const Cases: React.FC<{
     icone: React.ReactNode;

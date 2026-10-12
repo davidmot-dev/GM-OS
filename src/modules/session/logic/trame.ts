@@ -332,6 +332,15 @@ export function fusionnerLesScenes(gardee: Scene, absorbee: Scene): Scene {
         entiteIds: reunir(gardee.entiteIds, absorbee.entiteIds),
         indiceIds: reunir(gardee.indiceIds, absorbee.indiceIds),
         personnagesIds: reunir(gardee.personnagesIds, absorbee.personnagesIds),
+        /* L'écran « Scène en cours » (2026-10-12) : les textes s'accolent comme
+           le résumé ; les morceaux se réunissent ; la note est celle de la gardée. */
+        descriptionNarrative: accoler(gardee.descriptionNarrative, absorbee.descriptionNarrative) || undefined,
+        enjeux: accoler(gardee.enjeux, absorbee.enjeux) || undefined,
+        repliques: accoler(gardee.repliques, absorbee.repliques) || undefined,
+        ideesMusicales: accoler(gardee.ideesMusicales, absorbee.ideesMusicales) || undefined,
+        morceauxIds: gardee.morceauxIds || absorbee.morceauxIds
+            ? reunir(gardee.morceauxIds, absorbee.morceauxIds) : undefined,
+        noteObsidian: gardee.noteObsidian ?? absorbee.noteObsidian,
         passages: passages.length > 0 ? passages : undefined,
         termineeLe,
         creeeLe: Math.min(gardee.creeeLe, absorbee.creeeLe),
@@ -376,6 +385,13 @@ export function secondeMoitieDeLaScene(
         ordre,
         resume: '',
         notesDuMeneur: undefined,
+        /* Les textes de l'écran « Scène en cours » restent à la première, comme
+           le résumé ; les morceaux sont du décor, la seconde les reçoit. */
+        descriptionNarrative: undefined,
+        enjeux: undefined,
+        repliques: undefined,
+        ideesMusicales: undefined,
+        morceauxIds: scene.morceauxIds ? [...scene.morceauxIds] : undefined,
         entiteIds: [...scene.entiteIds],
         indiceIds: [...scene.indiceIds],
         personnagesIds: scene.personnagesIds ? [...scene.personnagesIds] : undefined,

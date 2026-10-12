@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { Activity, Swords, MapPin, Monitor, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search, Users, FolderOpen, Network, EyeOff } from 'lucide-react';
+import { Activity, Swords, MapPin, Monitor, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search, Users, FolderOpen, Network, Eye, EyeOff } from 'lucide-react';
 import { Panneau, Etiquette, EnTeteDeModule } from '../../../components/socle';
 import { couleurDeRelation, libelleDeRelation } from '../logic/relationsSociales';
 import { FieldGauge, FieldRating } from './fields/SheetFields';
@@ -402,12 +402,19 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         <Skull size={14} />
                         {mort && <span className="text-ui-10 font-black uppercase tracking-widest">{t('modules:session.npc_detail.status.dead')}</span>}
                     </button>
+                    {/*
+                      **« Montré aux joueurs », plus « En ligne »** (2026-10-12, L3).
+                      Le geste rend le PNJ visible sur les tablettes ; « En ligne »
+                      se lisait comme l'état d'une connexion, et David ne savait pas
+                      ce qu'il faisait en le touchant (première séance, 11/10).
+                    */}
                     <button
                         onClick={() => toggleEntityVisibility(selectedNpc.id)}
+                        aria-pressed={!!selectedNpc.isVisibleByPlayers}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedNpc.isVisibleByPlayers ? 'bg-accent/20 border-accent/40 text-accent' : 'bg-app-surface/40 border-app-border/40 text-app-muted'}`}
                     >
-                        <Monitor size={14} />
-                        <span className="text-ui-10 font-black uppercase tracking-widest">{selectedNpc.isVisibleByPlayers ? t('common:status.online') : t('common:status.offline')}</span>
+                        {selectedNpc.isVisibleByPlayers ? <Eye size={14} /> : <EyeOff size={14} />}
+                        <span className="text-ui-10 font-black uppercase tracking-widest">{selectedNpc.isVisibleByPlayers ? t('modules:session.npc_detail.status.montre') : t('modules:session.npc_detail.status.cache')}</span>
                     </button>
 
                     {/*

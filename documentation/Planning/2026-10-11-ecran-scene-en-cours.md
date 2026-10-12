@@ -7,7 +7,7 @@ informations ne sont pas facilement accessibles ; il faudrait un écran scène e
 éléments descriptifs, les secrets MJ, les indices, les PNJ, les lieux »*. Et : *« en définitive
 je ne me suis pas servi de Combat-OS »* — **parce qu'il était trop lourd à ouvrir.**
 
-**Aucune ligne de code modifiée à ce jour.**
+**État au 12/10 : L1 et L3 faits, à éprouver à l'écran ; reste L2, l'écran lui-même (avec R4, « Invoquer » une rencontre préparée).** L1 : les six champs sur `Scene`, leur saisie dans la fiche de la Trame (`TexteDeScene`, `trame/LiensDeLaScene.tsx` pour les morceaux et la note) ; la fusion accole les textes et réunit les morceaux, la scission laisse les textes à la première moitié. Le taux de préparation n'en tient pas compte — même règle que le rang et les PJ présents. L3 : « Montré aux joueurs / Caché aux joueurs », avec un œil, dans `NpcDetail` — le seul écran qui porte ce geste.
 
 ## Le diagnostic — l'espace de séance lit la séance, pas la scène
 
@@ -108,7 +108,7 @@ joué : *on ne fait pas remplir à une machine des cases dont on n'a pas encore 
   rencontré ? (question posée le 11/10, sans réponse)
 - **La description narrative se projette-t-elle** au Player Hub, comme un indice ?
 - **Le raccourci** qui rouvre l'écran : à choisir parmi les libres.
-- **Combat-OS « trop lourd à ouvrir »** : ce qui pèse n'est pas encore dit (le nombre d'écrans ?
-  la saisie des combattants ?). Ligne à part au § 1 bis, hors de ce plan.
+- ~~**Combat-OS « trop lourd à ouvrir »**~~ — dit le 12/10 : *la mise en place*. Réponse : les
+  [rencontres préparées](2026-10-12-rencontres-preparees.md) ; leur bouton « Invoquer » entre dans L2 (R4).
 
 ⛔ **Avant toute édition de `src/` : demander à David « GM-OS tourne-t-il ? »** et attendre.

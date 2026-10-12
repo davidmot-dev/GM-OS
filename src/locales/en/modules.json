@@ -2183,7 +2183,9 @@
       "placeholder": "Select an entity to view details",
       "status": {
         "dead": "DECEASED",
-        "generating": "GENERATING PORTRAIT..."
+        "generating": "GENERATING PORTRAIT...",
+        "montre": "Shown to players",
+        "cache": "Hidden from players"
       },
       "affinity": {
         "ally": "Ally",
