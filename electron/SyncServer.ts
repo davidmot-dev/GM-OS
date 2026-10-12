@@ -475,6 +475,19 @@ export class SyncServer {
             */
             if (this.mainWindow && !this.mainWindow.isDestroyed()) {
                 this.mainWindow.webContents.send('remote:request-sync');
+                /*
+                  **Et son fil de messages, à elle seule** (2026-10-12, M3). Une
+                  tablette rechargée — veille de l'iPad, Vite en développement —
+                  repartait d'un fil vide : le meneur ne rendait rien. La tablette
+                  du meneur, elle, reçoit son fil dans l'état complet.
+                */
+                if (!PRIVILEGED_ROLES.includes(claimedRole)) {
+                    this.mainWindow.webContents.send('remote:demande-du-fil', {
+                        deviceId: actualDeviceId,
+                        role: claimedRole,
+                        characterId: sessionManager.getClient(actualDeviceId)?.characterId,
+                    });
+                }
             }
         } catch (err: unknown) {
             if (err && typeof err === 'object' && 'message' in err && err.message === 'character_taken') {
@@ -532,6 +545,27 @@ export class SyncServer {
     }
 
     /**
+     * **Rend son fil à UN appareil** — celui qui vient de s'inscrire.
+     *
+     * Le meneur a déjà choisi les messages de cette tablette (`filDuLecteur`) ;
+     * le serveur **refiltre** quand même avec le personnage qu'il connaît, lui :
+     * c'est la seule porte vers l'appareil, et une erreur du côté meneur ne doit
+     * pas pouvoir y faire passer le message d'un autre.
+     */
+    private rendreLeFil(deviceId: unknown, messages: unknown) {
+        if (typeof deviceId !== 'string' || !Array.isArray(messages)) return;
+        const sockets = this.deviceSocketMap.get(deviceId);
+        if (!sockets) return;
+        const lecteur = lecteurDuRole(
+            sessionManager.getClient(deviceId)?.role, sessionManager.getClient(deviceId)?.characterId);
+        const siens = messages.filter(m => estUnMessage(m) && messagePourLeLecteur(m, lecteur));
+        const brut = JSON.stringify({ type: 'session:fil-de-messages', payload: siens });
+        sockets.forEach(ws => {
+            if (ws.readyState === WebSocket.OPEN) ws.send(brut);
+        });
+    }
+
+    /**
      * **Remet un message à ses seuls lecteurs** : la règle de
      * `destinatairesDesMessages`, appliquée à chaque socket inscrite. Une
      * socket qui ne s'est pas encore inscrite n'a ni rôle ni personnage : elle
@@ -577,6 +611,10 @@ export class SyncServer {
 
         ipcMain.on('remote:broadcast-ui-action', (_event, action, role?: string) => {
             this.broadcastAction(action, undefined, role);
+        });
+
+        ipcMain.on('remote:rendre-le-fil', (_event, deviceId: unknown, messages: unknown) => {
+            this.rendreLeFil(deviceId, messages);
         });
 
         ipcMain.on('remote:acheminer-un-message', (_event, message: unknown) => {

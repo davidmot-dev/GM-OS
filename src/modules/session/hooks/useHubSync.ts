@@ -12,6 +12,7 @@ import { lireDonneesDuHub, lireEntiteProjetee, lireRegleDuHub, jetDuMagasin } fr
 import type { ProjectedEntity } from '../../image/types';
 import type { RegleDuHub } from '../../remote/types/donneesDuHub';
 import { messagePourLeLecteur } from '../../../../electron/destinatairesDesMessages';
+import type { SessionMessage } from '../../../types/session.types';
 
 const EMPTY_OBJ = {};
 const EMPTY_ARR: never[] = [];
@@ -446,6 +447,15 @@ export const useHubSync = () => {
                         if (sSession && messagePourLeLecteur(data.payload, { role: 'joueur', characterId: monPersonnage })) {
                             sSession.getState().addSessionMessage(data.payload);
                         }
+                    }
+                    if (data.type === 'session:fil-de-messages' && Array.isArray(data.payload)) {
+                        /* M3 (2026-10-12) : le fil que le meneur rend à une tablette
+                           rechargée. Même seconde porte que pour un message seul. */
+                        const monPersonnage = getStore('useClientStore')?.getState().characterId ?? undefined;
+                        const sSession = getStore('useSessionOSStore');
+                        const siens = data.payload.filter((m: unknown): m is SessionMessage =>
+                            estMessageDeSeance(m) && messagePourLeLecteur(m, { role: 'joueur', characterId: monPersonnage }));
+                        if (sSession && siens.length > 0) sSession.getState().fusionnerLeFil(siens);
                     }
                     if (data.type === 'remote:pong') {
                         const now = Date.now();

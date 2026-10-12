@@ -73,6 +73,8 @@ export interface UiSliceActions {
     addHubNotification: (notif: Omit<HubNotification, 'id' | 'timestamp'>) => void;
     clearHubNotification: (id: string) => void;
     addSessionMessage: (message: SessionMessage) => void;
+    /** Le fil rendu par le meneur à la (re)connexion : fusionné sans doublon, dans l'ordre. */
+    fusionnerLeFil: (messages: SessionMessage[]) => void;
     remoteSendMessage: (toId: string, toName: string, fromId: string, fromName: string, content: string) => void;
     sendDirectMessage: (toId: string, toName: string, content: string) => void;
     saveMessageToJournal: (messageId: string) => void;
@@ -179,6 +181,18 @@ export const createUiSlice: CreateurDeSlice<UiSlice, SessionOSStore> = (set, get
             // Éviter les doublons (fréquent en cas de sync multi-canaux)
             const messages = ajouterAuFil(state.messages, message, state.activeCampaignId);
             return messages === state.messages ? state : { messages };
+        }),
+
+    fusionnerLeFil: (recus) =>
+        set((state) => {
+            const fusion = recus.reduce(
+                (fil, message) => ajouterAuFil(fil, message, state.activeCampaignId),
+                state.messages,
+            );
+            if (fusion === state.messages) return state;
+            // Le fil rendu arrive après les messages reçus depuis la reconnexion :
+            // on le remet dans l'ordre où les choses ont été dites.
+            return { messages: [...fusion].sort((a, b) => a.timestamp - b.timestamp) };
         }),
 
     remoteSendMessage: (toId, toName, fromId, fromName, content) => {

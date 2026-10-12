@@ -28,6 +28,7 @@ interface RelaisTeste {
     handleConnection: (socket: SocketFictif) => void;
     broadcastAction: (message: unknown, sender?: SocketFictif, role?: string) => void;
     acheminerLeMessage: (envoi: unknown, message: { fromId: string; toId?: string }, sender?: SocketFictif) => void;
+    rendreLeFil: (deviceId: unknown, messages: unknown) => void;
     wss: { clients: Set<SocketFictif> };
 }
 
@@ -143,6 +144,53 @@ describe('SyncServer — messages reçus et relais', () => {
             expect(destinataire.send).not.toHaveBeenCalled();
             // Le meneur reçoit TOUT, pour le garder — même ce qu'il ne montre pas.
             expect(versLeMJ.mock.calls).toEqual([['remote:action', action]]);
+        });
+
+        /*
+          M3 (2026-10-12) : une tablette rechargée repartait d'un fil vide. Le
+          serveur demande son fil au meneur à chaque inscription d'un joueur —
+          la tablette du meneur reçoit le sien dans l'état complet.
+        */
+        it('demande au meneur le fil d’une tablette de joueur qui s’inscrit, pas celui du meneur', () => {
+            const socketJoueur = new SocketFictif();
+            serveur.handleConnection(socketJoueur);
+            recevoir({ type: 'remote:register', payload: {
+                deviceId: 'joueur-b', pseudo: 'Bob', role: 'hub', characterId: 'perso-b',
+            } }, socketJoueur);
+            expect(versLeMJ).toHaveBeenCalledWith('remote:demande-du-fil',
+                { deviceId: 'joueur-b', role: 'hub', characterId: 'perso-b' });
+
+            versLeMJ.mockClear();
+            const socketMeneur = new SocketFictif();
+            serveur.handleConnection(socketMeneur);
+            recevoir({ type: 'remote:register', payload: {
+                deviceId: 'tablette-mj', pseudo: 'MJ', role: 'remote', token: 'secret-artificiel',
+            } }, socketMeneur);
+            expect(versLeMJ.mock.calls.some(([canal]) => canal === 'remote:demande-du-fil')).toBe(false);
+        });
+
+        it('rend son fil à UN appareil, et refiltre ce que le meneur lui envoie', () => {
+            const tabletteDeBob = brancher('joueur-b', 'hub', 'perso-b');
+            const tabletteDeCarl = brancher('joueur-c', 'hub', 'perso-c');
+            const fil = [
+                { id: 'm1', fromId: 'GM', toId: 'perso-b' },
+                { id: 'm2', fromId: 'perso-a', toId: 'perso-c' },
+                { id: 'm3', fromId: 'perso-c', toId: 'all' },
+            ];
+
+            serveur.rendreLeFil('joueur-b', fil);
+
+            expect(tabletteDeBob.send).toHaveBeenCalledExactlyOnceWith(JSON.stringify({
+                type: 'session:fil-de-messages', payload: [fil[0], fil[2]],
+            }));
+            expect(tabletteDeCarl.send, 'le fil de Bob part chez Carl').not.toHaveBeenCalled();
+        });
+
+        it('ignore un fil pour un appareil inconnu ou une charge qui n’est pas une liste', () => {
+            const tabletteDeBob = brancher('joueur-b', 'hub', 'perso-b');
+            serveur.rendreLeFil('inconnu', []);
+            serveur.rendreLeFil('joueur-b', 'pas une liste');
+            expect(tabletteDeBob.send).not.toHaveBeenCalled();
         });
 
         it('remet un message privé du meneur à son seul destinataire', () => {

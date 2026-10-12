@@ -243,6 +243,10 @@ declare global {
              * `broadcastUIAction` pour un message : il partirait à tous.
              */
             acheminerUnMessage?: (message: SessionMessage) => void;
+            /** Une tablette de joueur vient de s'inscrire. Rend sa fonction de retrait. */
+            onDemandeDuFil?: (rappel: (demande: unknown) => void) => () => void;
+            /** Rend son fil à un appareil ; le serveur le refiltre (`destinatairesDesMessages`). */
+            rendreLeFil?: (deviceId: string, messages: SessionMessage[]) => void;
             getDisplays: () => Promise<DisplayInfo[]>;
             onAction: (callback: (data: RemoteAction) => void) => () => void;
             // Ordre des arguments aligné sur preload.ts : (buffer, id).

@@ -4,7 +4,7 @@
 disparaissent — souvent tous d'un coup*. Ligne du § 1 bis du
 [registre](2026-08-23-chantiers-gares.md), chantier n° 2 de la reprise.
 
-**État au 12/10 : M1, M2 et M4 faits, non commités, à éprouver avec deux tablettes. Reste M3.**
+**État au 12/10 : M1 à M4 faits (M1, M2, M4 commités sous `bad8c163`), à éprouver avec deux tablettes.** M3 : à l'inscription d'une tablette de joueur, le serveur demande son fil au meneur (`remote:demande-du-fil`) ; le meneur répond par `filDuLecteur` (`App.tsx`), et le serveur **refiltre** avant de le remettre à ce seul appareil (`rendreLeFil`, `remote:rendre-le-fil`). La tablette le fond dans l'ordre (`fusionnerLeFil`) et n'affiche que la campagne en cours.
 La règle vit dans `electron/destinatairesDesMessages.ts` ; le fil du meneur dans
 `src/modules/session/logic/filDesMessages.ts`. ⚠️ M4 est passé **avec** M2 et non après : dès que le
 meneur reçoit les messages de joueur à joueur, son fil (`CockpitMessenger`) et sa fenêtre d'alerte

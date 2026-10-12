@@ -32,6 +32,7 @@ import { dispatchRemoteAction } from './modules/remote/actions';
 import { useThemeDuJeu } from './theme/useThemeDuJeu';
 import { isMainWindow } from './utils/windowRole';
 import type { SessionMessage } from './types/session.types';
+import { filDuLecteur, lecteurDuRole } from '../electron/destinatairesDesMessages';
 
 type RemoteAction = Parameters<typeof dispatchRemoteAction>[0];
 
@@ -252,6 +253,21 @@ function App() {
         handleSync(true);
     });
 
+    /*
+      **Le fil d'une tablette qui (re)vient** (2026-10-12, M3) : les siens
+      seulement, de la campagne active. Le meneur fait foi.
+    */
+    const retirerDemandeDuFil = bridge.remote.onDemandeDuFil?.((demande) => {
+        const d = demande as { deviceId?: unknown; role?: unknown; characterId?: unknown } | null;
+        if (!d || typeof d.deviceId !== 'string') return;
+        const { messages, activeCampaignId } = useSessionOSStore.getState();
+        const lecteur = lecteurDuRole(
+            typeof d.role === 'string' ? d.role : undefined,
+            typeof d.characterId === 'string' ? d.characterId : undefined,
+        );
+        bridge.remote.rendreLeFil?.(d.deviceId, filDuLecteur(messages, activeCampaignId, lecteur));
+    });
+
     const retirerListeDesClients = bridge.remote.onSyncClients?.((liste) => {
         const clients = liste as import('./types/shared').ClientContext[];
         if (!clients || !Array.isArray(clients)) return;
@@ -270,6 +286,7 @@ function App() {
     return () => {
       cleanupAction();
       retirerDemandeDeSync?.();
+      retirerDemandeDuFil?.();
       retirerListeDesClients?.();
       unsubscribeCombat();
       console.log('[App] Remote action listeners removed.');

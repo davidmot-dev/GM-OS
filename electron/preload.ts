@@ -486,6 +486,15 @@ contextBridge.exposeInMainWorld('appBridge', {
          */
         acheminerUnMessage: (message: unknown) =>
             ipcRenderer.send('remote:acheminer-un-message', message),
+        /** Une tablette de joueur vient de s'inscrire : le meneur lui doit son fil. */
+        onDemandeDuFil: (rappel: (demande: unknown) => void) => {
+            const ecouteur = (_event: Electron.IpcRendererEvent, demande: unknown) => rappel(demande);
+            ipcRenderer.on('remote:demande-du-fil', ecouteur);
+            return () => ipcRenderer.off('remote:demande-du-fil', ecouteur);
+        },
+        /** Le fil d'un appareil, que le serveur refiltre avant de le lui remettre. */
+        rendreLeFil: (deviceId: string, messages: unknown[]) =>
+            ipcRenderer.send('remote:rendre-le-fil', deviceId, messages),
         cacheMedia: (buffer: ArrayBuffer, id: string) => ipcRenderer.invoke('remote:cache-media', buffer, id),
     },
     relay: {

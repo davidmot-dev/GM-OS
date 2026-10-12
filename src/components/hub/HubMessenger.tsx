@@ -50,6 +50,8 @@ export const HubMessenger: React.FC<HubMessengerProps> = memo(({ isOpen, onClose
 
     // Filter messages for the current conversation
     const chatMessages = messages.filter(m => {
+        // Le fil est un fil de campagne (2026-10-12) : pas celui d'une autre table.
+        if (m.campaignId && activeCampaignId && m.campaignId !== activeCampaignId) return false;
         // 1. General Channel ('all') - Show only broadcasts
         if (selectedRecipientId === 'all') {
             return m.toId === 'all' || !m.toId;
