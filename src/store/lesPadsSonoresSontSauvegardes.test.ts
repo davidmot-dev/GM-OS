@@ -37,6 +37,7 @@ const atmosphereDEssai = {
             volume: 0.8,
             color: 'var(--electric-violet)',
             midiMapping: 36,
+            midiChannel: 2,
             keyMapping: 'KeyA',
             /* Ce pad joue au moment où la sauvegarde part. */
             isActive: true,
@@ -80,6 +81,7 @@ describe('les pads sonores entrent dans la sauvegarde', () => {
 
         expect(pad.filePath, 'le chemin du son est perdu').toBe('C:/sons/mouettes.wav');
         expect(pad.midiMapping).toBe(36);
+        expect(pad.midiChannel, 'le canal de la banque est perdu').toBe(2);
         expect(pad.keyMapping).toBe('KeyA');
         expect(pad.linkedLightSceneId, 'le lien vers la tuile lumineuse est perdu').toBe('SCENE_07');
         expect(pad.volume).toBe(0.8);

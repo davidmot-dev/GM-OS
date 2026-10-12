@@ -6,6 +6,7 @@ import { gmCustom, gmPrompt, gmConfirm } from '../../../stores/useModalStore';
 import { COULEUR_PAD_DEFAUT, couleurDuPad, couleurDuPadAttenuee } from '../logic/couleurDuPad';
 import { Plus, Zap, Keyboard, Lightbulb, Volume2, MoreHorizontal, Edit2, Trash2, RefreshCcw } from 'lucide-react';
 import { iconeDuSon } from '../logic/iconesDuSon';
+import { libelleMidi } from '../logic/attributionMidi';
 import { ChoixDIcone } from './ChoixDIcone';
 
 interface SoundPadProps {
@@ -14,7 +15,7 @@ interface SoundPadProps {
 }
 
 const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
-    const { id, title, filePath, volume, midiMapping, keyMapping, isActive, linkedLightSceneId } = pad;
+    const { id, title, filePath, volume, midiMapping, midiChannel, keyMapping, isActive, linkedLightSceneId } = pad;
     /*
       **Une seule porte pour la couleur.** Les cinq usages ci-dessous la
       prenaient brute — et elle valait `var(--electric-violet)`, une variable
@@ -145,8 +146,8 @@ const SoundPad: React.FC<SoundPadProps> = ({ pad, onAssignMedia }) => {
                             <span className="text-ui-7 font-black uppercase tracking-widest hidden group-hover:block">Light Linked</span>
                         </div>
                     )}
-                    {midiMapping ? (
-                        <span className="text-ui-9 font-black text-etat-alerte">#{midiMapping}</span>
+                    {midiMapping !== null && midiMapping !== undefined ? (
+                        <span className="text-ui-9 font-black text-etat-alerte">{libelleMidi(midiMapping, midiChannel)}</span>
                     ) : (
                         <Zap size={10} className="text-app-subtle" />
                     )}

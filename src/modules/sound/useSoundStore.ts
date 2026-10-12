@@ -10,6 +10,13 @@ export interface SoundPad {
     volume: number; // 0.0 to 1.5
     color: string;
     midiMapping: number | null; // e.g., 36 for C1
+    /**
+     * **Le canal MIDI appris avec la note, de 1 à 16.** Posé le 2026-10-12 : les
+     * banques du Pocket Pad changent de canal en gardant les mêmes notes. Absent ou
+     * `null` : la pastille répond à tous les canaux — celles d'avant n'ont rien à
+     * migrer. Voir `logic/attributionMidi`.
+     */
+    midiChannel?: number | null;
     keyMapping: string | null; // e.g., 'KeyA'
     isActive: boolean;
     linkedLightSceneId: string | null;
@@ -79,7 +86,7 @@ interface SoundState {
     setPadVolume: (padId: string, volume: number) => void;
     setPadColor: (padId: string, color: string) => void;
     setPadActive: (padId: string, isActive: boolean) => void;
-    setPadMidiMapping: (padId: string, midiNote: number | null) => void;
+    setPadMidiMapping: (padId: string, midiNote: number | null, midiChannel?: number | null) => void;
     setPadKeyMapping: (padId: string, keyCode: string | null) => void;
     setPadLightLink: (padId: string, sceneId: string | null) => void;
     renamePad: (padId: string, title: string) => void;
@@ -223,10 +230,10 @@ export const useSoundStore = create<SoundState>()(
                 )
             })),
 
-            setPadMidiMapping: (padId, midiNote) => set((state) => ({
+            setPadMidiMapping: (padId, midiNote, midiChannel = null) => set((state) => ({
                 atmospheres: state.atmospheres.map(a =>
                     a.id === state.activeAtmosphereId
-                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], midiMapping: midiNote } } }
+                        ? { ...a, pads: { ...a.pads, [padId]: { ...a.pads[padId], midiMapping: midiNote, midiChannel } } }
                         : a
                 )
             })),
@@ -270,6 +277,7 @@ export const useSoundStore = create<SoundState>()(
                                         linkedLightSceneId: null,
                                         keyMapping: null,
                                         midiMapping: null,
+                                        midiChannel: null,
                                         volume: 1.0,
                                         icone: null
                                     }

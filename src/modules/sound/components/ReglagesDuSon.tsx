@@ -3,6 +3,7 @@ import { Check, RefreshCcw, RotateCcw } from 'lucide-react';
 import { useSoundStore } from '../useSoundStore';
 import { soundEngine } from '../SoundEngine';
 import { useMidiControls } from '../useMidiControls';
+import { libelleMidi } from '../logic/attributionMidi';
 import { useHardwareStore } from '../../../stores/useHardwareStore';
 import { gmConfirm } from '../../../stores/useModalStore';
 import { useCurseurLisse } from '../../../hooks/useCurseurLisse';
@@ -105,7 +106,7 @@ const ReglagesDuSon: React.FC<{ atmosphereId: string }> = ({ atmosphereId }) => 
                                 )}
                                 {p.midiMapping !== null && (
                                     <span className="shrink-0 rounded bg-etat-alerte/15 px-1.5 py-0.5 font-mono text-ui-10 font-black text-etat-alerte">
-                                        #{p.midiMapping}
+                                        {libelleMidi(p.midiMapping, p.midiChannel)}
                                     </span>
                                 )}
                                 <span className="min-w-0 flex-1 truncate text-xs font-bold text-app-text">{p.title || p.id}</span>

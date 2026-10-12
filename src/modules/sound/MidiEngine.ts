@@ -1,5 +1,6 @@
 import { useSoundStore } from './useSoundStore';
 import { soundController } from './SoundController';
+import { canalDuStatut, padPourLaNote } from './logic/attributionMidi';
 
 /**
  * Interfaces locales pour la gestion MIDI (évite les conflits d'environnement).
@@ -127,22 +128,26 @@ export class MidiEngine {
 
     /**
      * Analyse un message MIDI entrant. Filtre les événements Note On.
+     * ⛔ Le canal se garde : les banques du Pocket Pad changent de canal en
+     * gardant les mêmes notes (2026-10-12).
      */
     private onMIDIMessage(event: GMMIDIMessageEvent): void {
         const [status, note, velocity] = event.data;
         const isNoteOn = (status & 0xF0) === 0x90 && velocity > 0;
         
         if (isNoteOn) {
-            console.log(`[MIDI] Note On: ${note} (Vel: ${velocity})`);
-            this.handleMIDINote(note);
+            const canal = canalDuStatut(status);
+            console.log(`[MIDI] Note On: ${note} (Vel: ${velocity}, canal ${canal})`);
+            this.handleMIDINote(note, canal);
         }
     }
 
     /**
      * Traite une note MIDI reçue en fonction du mode (Normal ou Learning).
      * @param midiNote Numéro de la note MIDI (0-127).
+     * @param canal Canal MIDI, de 1 à 16.
      */
-    private handleMIDINote(midiNote: number): void {
+    private handleMIDINote(midiNote: number, canal: number): void {
         const { atmospheres, activeAtmosphereId, isMidiLearnActive } = useSoundStore.getState();
         const activeAtmosphere = atmospheres.find(a => a.id === activeAtmosphereId);
         if (!activeAtmosphere) return;
@@ -151,18 +156,18 @@ export class MidiEngine {
         if (isMidiLearnActive) {
             const { activePadLearnId, setPadMidiMapping, toggleMidiLearn } = useSoundStore.getState();
             if (activePadLearnId) {
-                console.log(`[MIDI] Mapping Note ${midiNote} to ${activePadLearnId}`);
-                setPadMidiMapping(activePadLearnId, midiNote);
+                console.log(`[MIDI] Mapping Note ${midiNote} (canal ${canal}) to ${activePadLearnId}`);
+                setPadMidiMapping(activePadLearnId, midiNote, canal);
                 toggleMidiLearn(); // Automatiquement quitter le mode learn après capture
             }
             return;
         }
 
-        // Mode Normal : On cherche si un pad est mappé à cette note
+        // Mode Normal : la pastille apprise sur ce canal, sinon celle qui n'a pas de canal
         const pads = Object.values(activeAtmosphere.pads);
-        const padToTrigger = pads.find(p => p.midiMapping === midiNote);
+        const padToTrigger = padPourLaNote(pads, midiNote, canal);
         if (padToTrigger) {
-            console.log(`[MIDI] Triggering pad: ${padToTrigger.title || padToTrigger.id} via Note ${midiNote}`);
+            console.log(`[MIDI] Triggering pad: ${padToTrigger.title || padToTrigger.id} via Note ${midiNote} (canal ${canal})`);
             soundController.togglePad(padToTrigger.id);
         }
     }

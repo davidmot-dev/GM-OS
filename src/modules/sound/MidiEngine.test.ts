@@ -101,7 +101,39 @@ describe('MidiEngine', () => {
         const event = { data: new Uint8Array([144, 72, 100]) };
         mockInput.onmidimessage!(event);
 
-        expect(mockSetPadMidiMapping).toHaveBeenCalledWith('PAD_02', 72);
+        expect(mockSetPadMidiMapping).toHaveBeenCalledWith('PAD_02', 72, 1);
         expect(mockToggleMidiLearn).toHaveBeenCalled();
+    });
+
+    it('retient le canal de la banque à l’apprentissage', async () => {
+        vi.mocked(useSoundStore.getState).mockReturnValue({
+            isMidiLearnActive: true,
+            activePadLearnId: 'PAD_02',
+            setPadMidiMapping: mockSetPadMidiMapping,
+            toggleMidiLearn: mockToggleMidiLearn,
+            atmospheres: [{ id: 'default', pads: {} }],
+            activeAtmosphereId: 'default'
+        } as unknown as ReturnType<typeof useSoundStore.getState>);
+
+        // Note On canal 2 (0x91) : la banque B du Pocket Pad
+        mockInput.onmidimessage!({ data: new Uint8Array([0x91, 36, 100]) });
+
+        expect(mockSetPadMidiMapping).toHaveBeenCalledWith('PAD_02', 36, 2);
+    });
+
+    it('en banque B, déclenche la pastille de la banque B et non celle de la banque A', async () => {
+        vi.mocked(useSoundStore.getState).mockReturnValue({
+            atmospheres: [{ id: 'default', pads: {
+                PAD_01: { id: 'PAD_01', title: 'Banque A', midiMapping: 36, midiChannel: 1 },
+                PAD_02: { id: 'PAD_02', title: 'Banque B', midiMapping: 36, midiChannel: 2 },
+            } }],
+            activeAtmosphereId: 'default',
+            isMidiLearnActive: false,
+        } as unknown as ReturnType<typeof useSoundStore.getState>);
+
+        mockInput.onmidimessage!({ data: new Uint8Array([0x91, 36, 100]) });
+
+        expect(soundController.togglePad).toHaveBeenCalledTimes(1);
+        expect(soundController.togglePad).toHaveBeenCalledWith('PAD_02');
     });
 });
