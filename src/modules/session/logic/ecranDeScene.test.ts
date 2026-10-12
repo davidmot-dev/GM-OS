@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { indiceProjete, premiereFoisVu, scenesEntreesEnCours } from './ecranDeScene';
+import { ceQueDeclencheLeMoment, indiceProjete, premiereFoisVu, scenesEntreesEnCours } from './ecranDeScene';
 import type { Scene } from '../../../types/trame.types';
 
 const scene = (id: string, patch: Partial<Scene> = {}): Scene => ({
@@ -50,5 +50,15 @@ describe('indiceProjete', () => {
     it('porte l’image sous les deux noms que lisent les écrans', () => {
         expect(indiceProjete({ id: 'i', title: 'La photo', content: 'Floue.', mediaUrl: 'photo.png' }))
             .toMatchObject({ id: 'i', name: 'La photo', description: 'Floue.', imageUrl: 'photo.png', avatar: 'photo.png' });
+    });
+});
+
+describe('ceQueDeclencheLeMoment', () => {
+    it('dit ce qui va bouger dans la pièce', () => {
+        expect(ceQueDeclencheLeMoment({ musicPadId: 'p', lightSceneId: 'l', mapUrl: 'm', imageMediaId: 'i', titre: 'STATION' }))
+            .toEqual(['Musique', 'Lumière', 'Carte', 'Image', 'Titre']);
+        expect(ceQueDeclencheLeMoment({ diaporamaId: 'd', imageMediaId: 'i', soundPadId: 's', ambientThemeId: 't', titre: '  ' }))
+            .toEqual(['Diaporama', 'Son', 'Ambiance']);
+        expect(ceQueDeclencheLeMoment({})).toEqual([]);
     });
 });

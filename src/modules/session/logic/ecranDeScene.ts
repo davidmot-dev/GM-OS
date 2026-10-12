@@ -52,6 +52,25 @@ export function premiereFoisVu(
 }
 
 /**
+ * **Ce qu'un moment de storyboard déclenche**, dit en mots — pour que le
+ * meneur sache, avant de lancer, ce qui va bouger dans la pièce (2026-10-12).
+ */
+export function ceQueDeclencheLeMoment(moment: {
+    musicPadId?: string; lightSceneId?: string; mapUrl?: string; imageMediaId?: string;
+    diaporamaId?: string; soundPadId?: string; ambientSceneId?: string; ambientThemeId?: string; titre?: string;
+}): string[] {
+    return [
+        moment.musicPadId && 'Musique',
+        moment.lightSceneId && 'Lumière',
+        moment.mapUrl && 'Carte',
+        moment.diaporamaId ? 'Diaporama' : moment.imageMediaId && 'Image',
+        moment.soundPadId && 'Son',
+        (moment.ambientSceneId || moment.ambientThemeId) && 'Ambiance',
+        moment.titre?.trim() && 'Titre',
+    ].filter((x): x is string => !!x);
+}
+
+/**
  * **Un indice tel qu'il part au Player Hub.** Les deux écrans qui projetaient
  * un indice ne le décrivaient pas pareil (`avatar` ici, `imageUrl` là) : celui-ci
  * porte les deux, pour que la fiche ait son image quel que soit son lecteur.

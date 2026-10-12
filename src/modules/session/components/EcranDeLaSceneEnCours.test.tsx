@@ -3,6 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import EcranDeLaSceneEnCours from './EcranDeLaSceneEnCours';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useEcranDeSceneStore } from '../useEcranDeSceneStore';
+import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
 import type { Scene } from '../../../types/trame.types';
 import type { Entity } from '../../../types/entity.types';
 
@@ -80,6 +81,31 @@ describe('EcranDeLaSceneEnCours', () => {
         commencer();
         fireEvent.change(screen.getByLabelText('Notes du meneur'), { target: { value: 'Il dit vrai.' } });
         expect(useSessionOSStore.getState().scenes[0].notesDuMeneur).toBe('Il dit vrai.');
+    });
+
+    /* David, 2026-10-12 : le moment de storyboard de la scène se lance d'ici. */
+    it('lance le moment de storyboard de la scène, et l’arrête quand il joue', () => {
+        const lances: string[] = [];
+        let arrets = 0;
+        const initialStoryboard = useStoryboardStore.getState();
+        useStoryboardStore.setState({
+            moments: [{ id: 'm-1', campaignId: 'c-1', name: 'Amarrage', description: 'Le sas s’ouvre.', color: 'cyan', icon: 'Anchor', lightSceneId: 'l', titre: 'STATION' }],
+            activeMomentId: null,
+            triggerMoment: async (id: string) => { lances.push(id); useStoryboardStore.setState({ activeMomentId: id }); },
+            arreterLeMoment: () => { arrets++; useStoryboardStore.setState({ activeMomentId: null }); },
+        } as never);
+        useSessionOSStore.setState(s => ({ scenes: s.scenes.map(x => ({ ...x, momentDeStoryboardId: 'm-1' })) }));
+        render(<EcranDeLaSceneEnCours />);
+        commencer();
+
+        expect(screen.getByText('Amarrage')).toBeTruthy();
+        expect(screen.getByText('Lumière')).toBeTruthy();
+        fireEvent.click(screen.getByText('Lancer'));
+        expect(lances).toEqual(['m-1']);
+
+        fireEvent.click(screen.getByText('Arrêter'));
+        expect(arrets).toBe(1);
+        useStoryboardStore.setState(initialStoryboard, true);
     });
 
     /* L5 : un lieu-image se projette, une battlemap se charge dans Map-OS. */

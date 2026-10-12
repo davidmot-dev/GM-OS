@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Clapperboard, Lock, Music2, Play, Search, Users, MapPin, Swords, FileText, Eye, EyeOff,
-    ExternalLink, ChevronDown, ChevronRight, Cast, Sparkles, Map as MapIcon,
+    ExternalLink, ChevronDown, ChevronRight, Cast, Sparkles, Map as MapIcon, Square,
 } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useEcranDeSceneStore } from '../useEcranDeSceneStore';
@@ -18,7 +18,7 @@ import { CadreDeSurcouche } from '../../../components/socle';
 import TexteMarkdown from '../../../components/TexteMarkdown';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { actesOrdonnes, etatDeLaScene, scenesOrdonnees } from '../logic/trame';
-import { indiceProjete, scenesEntreesEnCours } from '../logic/ecranDeScene';
+import { ceQueDeclencheLeMoment, indiceProjete, scenesEntreesEnCours } from '../logic/ecranDeScene';
 import { nomDeLaNote } from '../logic/noteDeLaScene';
 import { battlemapsDeLaScene, estUneBattlemap } from '../logic/battlemapsDeLaScene';
 import { BoutonProjeterSurLEcranParDefaut } from './BoutonProjeterLeLieu';
@@ -216,6 +216,7 @@ const ContenuDeLaScene: React.FC<{ scene: Scene; fermer: () => void }> = ({ scen
 
             {/* ── Ce qu'on manipule ── */}
             <div className="flex flex-col gap-4">
+                <MomentDeStoryboard scene={scene} />
                 <Musique scene={scene} />
 
                 {indices.length > 0 && (
@@ -355,33 +356,77 @@ const BoutonCharger: React.FC<{ carte: AtlasMap }> = ({ carte }) => {
     );
 };
 
-/** Les idées, l'ambiance liée, et les morceaux jouables d'un clic — allumés s'ils jouent. */
+/**
+ * **Le moment de storyboard de la scène — lancé d'ici, en séance** (David,
+ * 2026-10-12 : *« si dans la définition d'une scène il y a une séquence du
+ * storyboard, cela doit pouvoir être lancé à partir de l'écran de scène »*).
+ *
+ * Il avait d'abord sa place dans le bloc Musique, sous « Lancer l'ambiance » —
+ * or un moment pose aussi la lumière, la carte, l'image, le son et le titre. Il
+ * dit donc ce qu'il déclenche, et « Arrêter » referme la parenthèse quand il
+ * joue (la musique reste : décision du 2026-09-13).
+ */
+const MomentDeStoryboard: React.FC<{ scene: Scene }> = ({ scene }) => {
+    const moment = useStoryboardStore(s => s.moments.find(m => m.id === scene.momentDeStoryboardId));
+    const momentActif = useStoryboardStore(s => s.activeMomentId);
+    const triggerMoment = useStoryboardStore(s => s.triggerMoment);
+    const arreterLeMoment = useStoryboardStore(s => s.arreterLeMoment);
+    if (!moment) return null;
+    const actif = momentActif === moment.id;
+    const effets = ceQueDeclencheLeMoment(moment);
+
+    return (
+        <section className={`flex flex-col gap-2 rounded-xl border p-4 ${actif ? 'border-accent/60 bg-accent/10' : 'border-app-border bg-app-bg/40'}`}>
+            {titreDeBloc(<Clapperboard size={14} />, actif ? 'Storyboard — en cours' : 'Storyboard')}
+            <div className="flex flex-wrap items-center gap-3">
+                <div className="min-w-0 flex-1">
+                    <p className="text-sm font-bold text-app-text">{moment.name}</p>
+                    {moment.description && <p className="text-ui-11 text-app-muted">{moment.description}</p>}
+                    {effets.length > 0 && (
+                        <p className="mt-1 flex flex-wrap gap-1">
+                            {effets.map(e => (
+                                <span key={e} className="rounded border border-app-border px-1.5 py-0.5 text-ui-10 text-app-text/70">{e}</span>
+                            ))}
+                        </p>
+                    )}
+                </div>
+                {actif ? (
+                    <button type="button" className={`${petitBouton} border-accent/50 text-accent`} onClick={arreterLeMoment}>
+                        <Square size={12} /> Arrêter
+                    </button>
+                ) : (
+                    <button
+                        type="button"
+                        className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-2 text-ui-11 font-black uppercase tracking-widest text-app-on-accent hover:brightness-110"
+                        onClick={() => void triggerMoment(moment.id)}
+                    >
+                        <Play size={12} /> Lancer
+                    </button>
+                )}
+            </div>
+        </section>
+    );
+};
+
+/** Les idées et les morceaux jouables d'un clic — allumés s'ils jouent. */
 const Musique: React.FC<{ scene: Scene }> = ({ scene }) => {
     const playlists = useMusicStore(s => s.playlists);
     const playPad = useMusicStore(s => s.playPad);
     const deckA = useMusicStore(s => s.deckA);
     const deckB = useMusicStore(s => s.deckB);
-    const moments = useStoryboardStore(s => s.moments);
-    const triggerMoment = useStoryboardStore(s => s.triggerMoment);
 
-    const moment = moments.find(m => m.id === scene.momentDeStoryboardId);
     const pads = (scene.morceauxIds ?? [])
         .map(id => playlists.flatMap(p => p.pads).find(p => p.id === id))
         .filter((p): p is NonNullable<typeof p> => !!p);
     const joue = (id: string) =>
         (deckA.activePadId === id && deckA.isPlaying) || (deckB.activePadId === id && deckB.isPlaying);
 
-    if (!moment && pads.length === 0 && !scene.ideesMusicales?.trim()) return null;
+    if (pads.length === 0 && !scene.ideesMusicales?.trim()) return null;
 
     return (
         <Bloc icone={<Music2 size={14} />} titre="Musique">
             {scene.ideesMusicales?.trim() && <Texte>{scene.ideesMusicales}</Texte>}
             <div className="flex flex-wrap gap-2">
-                {moment && (
-                    <button type="button" className={petitBouton} onClick={() => void triggerMoment(moment.id)}>
-                        <Sparkles size={12} /> Lancer l’ambiance « {moment.name} »
-                    </button>
-                )}
                 {pads.map(pad => (
                     <button
                         key={pad.id} type="button"
