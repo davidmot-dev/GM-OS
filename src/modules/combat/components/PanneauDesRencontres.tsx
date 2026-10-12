@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { Swords, Trash2, Users, MapPin, ChevronDown, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Swords, Trash2, Users, MapPin, ChevronDown, ChevronRight, AlertTriangle, Save } from 'lucide-react';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
-import { scenesDansLEtat } from '../../session/logic/trame';
+import { actesOrdonnes, scenesDansLEtat, scenesOrdonnees } from '../../session/logic/trame';
 import { useCombatStore } from '../useCombatStore';
 import { useBestiaireStore } from '../useBestiaireStore';
 import { gmConfirm } from '../../../stores/useModalStore';
@@ -11,6 +11,7 @@ import { archetypeParId, proposerLesChamps } from '../logic/archetypes';
 import {
     adversairesDeLaRencontre, champsDuPilote, pjsCandidats, sceneDeLInvocation,
 } from '../logic/invocationDeRencontre';
+import { rencontreDuPlateau } from '../logic/rencontreDuPlateau';
 import type { RencontrePreparee } from '../../../types/rencontres.types';
 
 /**
@@ -39,15 +40,17 @@ const resumeDesLignes = (r: RencontrePreparee, nomDuPNJ: (id: string) => string 
 const PanneauDesRencontres: React.FC<Props> = ({ onClose }) => {
     const {
         rencontres, scenes, actes, entities, players, activeCampaignId, customSheetTemplates,
-        supprimerUneRencontre,
+        supprimerUneRencontre, ajouterUneRencontre,
     } = useSessionOSStore();
     const driver = useSessionOSStore(s => s.getActiveDriver());
-    const { sceneId: sceneDuCombat, combatants, invoquerLaRencontre } = useCombatStore();
+    const { sceneId: sceneDuCombat, combatants, invoquerLaRencontre, reset: viderLePlateau } = useCombatStore();
     const { gabaritsDuJeu, repartitionRetenue } = useBestiaireStore();
 
     const [enChoix, setEnChoix] = useState<RencontrePreparee | null>(null);
     const [coches, setCoches] = useState<Set<string>>(new Set());
     const [autresOuvertes, setAutresOuvertes] = useState(false);
+    /** « Garder le plateau comme rencontre » (R2) : le formulaire, quand il est ouvert. */
+    const [garde, setGarde] = useState<{ nom: string; sceneId: string; notes: string; vider: boolean } | null>(null);
 
     const deLaCampagne = useMemo(
         () => (rencontres ?? []).filter(r => r.campaignId === activeCampaignId),
@@ -110,6 +113,106 @@ const PanneauDesRencontres: React.FC<Props> = ({ onClose }) => {
         gmToast(`« ${enChoix.nom} » : ${combattants.length} adversaire(s) dans l’ordre du tour`, 'success');
         onClose();
     };
+
+    /* ── « Garder le plateau comme rencontre » (R2) ─────────── */
+    const adversairesSurLePlateau = combatants.filter(c => !c.isPlayer && c.faction !== 'player').length;
+
+    if (garde) {
+        const jeuId = driver?.id ?? 'sans-pilote';
+        const { lignes, avertissements } = rencontreDuPlateau(combatants, gabaritsDuJeu(jeuId));
+        const brouillon: RencontrePreparee = {
+            id: '', campaignId: activeCampaignId ?? '', nom: garde.nom, lignes, creeeLe: 0,
+        };
+        const garder = () => {
+            if (!activeCampaignId || !garde.nom.trim() || lignes.length === 0) return;
+            ajouterUneRencontre({
+                campaignId: activeCampaignId,
+                ...(garde.sceneId ? { sceneId: garde.sceneId } : {}),
+                nom: garde.nom.trim(),
+                ...(garde.notes.trim() ? { notes: garde.notes.trim() } : {}),
+                lignes,
+            });
+            if (garde.vider) viderLePlateau();
+            gmToast(`« ${garde.nom.trim()} » est gardée`, 'success');
+            setGarde(null);
+        };
+
+        return (
+            <div className="flex flex-col gap-4 p-5">
+                <div>
+                    <p className="text-ui-11 font-bold uppercase tracking-widest text-app-muted">Garder le plateau comme rencontre</p>
+                    <p className="text-sm text-app-text">{resumeDesLignes(brouillon, nomDuPNJ) || 'Aucun adversaire sur le plateau.'}</p>
+                    <p className="text-ui-11 text-app-muted">Les PJ ne sont pas gardés : tu les coches à l’invocation.</p>
+                </div>
+
+                <label className="flex flex-col gap-1">
+                    <span className="text-ui-11 font-bold uppercase tracking-widest text-app-muted">Nom</span>
+                    <input
+                        autoFocus
+                        className="rounded-lg border border-app-border bg-app-bg px-3 py-2 text-app-text"
+                        value={garde.nom}
+                        onChange={(e) => setGarde({ ...garde, nom: e.target.value })}
+                        placeholder="La patrouille"
+                    />
+                </label>
+
+                <label className="flex flex-col gap-1">
+                    <span className="text-ui-11 font-bold uppercase tracking-widest text-app-muted">Scène</span>
+                    <select
+                        className="rounded-lg border border-app-border bg-app-bg px-3 py-2 text-app-text"
+                        value={garde.sceneId}
+                        onChange={(e) => setGarde({ ...garde, sceneId: e.target.value })}
+                    >
+                        <option value="">Aucune — une rencontre libre</option>
+                        {actesOrdonnes(actes, activeCampaignId).map(acte => (
+                            <optgroup key={acte.id} label={acte.titre}>
+                                {scenesOrdonnees(scenes, acte.id).map(s => (
+                                    <option key={s.id} value={s.id}>{s.titre}</option>
+                                ))}
+                            </optgroup>
+                        ))}
+                    </select>
+                </label>
+
+                <label className="flex flex-col gap-1">
+                    <span className="text-ui-11 font-bold uppercase tracking-widest text-app-muted">Notes</span>
+                    <textarea
+                        rows={2}
+                        className="rounded-lg border border-app-border bg-app-bg px-3 py-2 text-app-text"
+                        value={garde.notes}
+                        onChange={(e) => setGarde({ ...garde, notes: e.target.value })}
+                        placeholder="Tactique, déclencheur, terrain"
+                    />
+                </label>
+
+                <label className="flex items-center gap-2 text-sm text-app-text">
+                    <input
+                        type="checkbox"
+                        className="accent-[var(--accent)]"
+                        checked={garde.vider}
+                        onChange={(e) => setGarde({ ...garde, vider: e.target.checked })}
+                    />
+                    Vider le plateau ensuite (préparation)
+                </label>
+
+                {avertissements.map(a => (
+                    <p key={a} className="flex items-start gap-2 text-ui-11 text-etat-alerte">
+                        <AlertTriangle size={12} className="mt-0.5 shrink-0" /> {a}
+                    </p>
+                ))}
+
+                <div className="flex justify-end gap-2">
+                    <BoutonSecondaire onClick={() => setGarde(null)}>Retour</BoutonSecondaire>
+                    <BoutonPrincipal
+                        disabled={!garde.nom.trim() || lignes.length === 0 || !activeCampaignId}
+                        onClick={garder}
+                    >
+                        Garder
+                    </BoutonPrincipal>
+                </div>
+            </div>
+        );
+    }
 
     /* ── « Qui entre ? » ───────────────────────────────────── */
     if (enChoix) {
@@ -204,13 +307,25 @@ const PanneauDesRencontres: React.FC<Props> = ({ onClose }) => {
 
     return (
         <div className="flex flex-col gap-5 p-5">
+            <BoutonSecondaire
+                className="flex items-center justify-center gap-2"
+                disabled={adversairesSurLePlateau === 0}
+                title={adversairesSurLePlateau === 0 ? 'Compose d’abord le plateau : Atelier, PNJ…' : undefined}
+                onClick={() => setGarde({
+                    nom: '', sceneId: sceneDuCombat ?? '', notes: '',
+                    // En préparation (aucune scène au combat), on vide d'habitude après avoir gardé.
+                    vider: !sceneDuCombat,
+                })}
+            >
+                <Save size={14} /> Garder le plateau comme rencontre…
+            </BoutonSecondaire>
             {deLaCampagne.length === 0 ? (
                 <div className="flex flex-col items-center gap-2 py-8 text-center">
                     <Users size={28} className="text-app-muted" />
                     <p className="font-bold text-app-text">Aucune rencontre préparée dans cette campagne.</p>
                     <p className="max-w-md text-sm text-app-muted">
-                        Une rencontre se prépare à l’avance — une scène peut en avoir plusieurs, et une
-                        rencontre peut n’en avoir aucune.
+                        Compose le plateau comme d’habitude — Atelier, PNJ —, puis garde-le comme
+                        rencontre. Une scène peut en avoir plusieurs, et une rencontre peut n’en avoir aucune.
                     </p>
                 </div>
             ) : (

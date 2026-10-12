@@ -6,9 +6,14 @@ demande : **prévoir les rencontres à l'avance, les lier à une scène, et n'aj
 moment où le combat démarre.** Ligne « trop lourd à ouvrir » du § 1 bis du
 [registre](2026-08-23-chantiers-gares.md).
 
-**État au 12/10 : R1 fait, non commité, à éprouver à l'écran.** Rien ne permet encore de *créer* une
-rencontre à l'écran (R2 et R3) : le panneau « Rencontres préparées » de Combat-OS est vide tant
-qu'elles n'existent pas. Fichiers : modèle `src/types/rencontres.types.ts`, tranche
+**État au 12/10 : R1 (`e6826f28`) et R2 faits, à éprouver à l'écran ; restent R3 (la Trame) et R4.**
+R2 : dans le panneau « Rencontres préparées », **« Garder le plateau comme rencontre… »** — nom, scène
+(prévue, en cours, ou aucune), notes, et « vider le plateau ensuite » coché d'avance quand le combat n'a
+pas de scène (préparation). Le plateau devient un modèle (`combat/logic/rencontreDuPlateau.ts`) : PJ
+écartés, exemplaires numérotés regroupés (« 3 × Goule »), gabarit du bestiaire désigné quand le nom et
+l'archétype concordent, PNJ en renvoi. ⚠️ Les adversaires fabriqués sont **refabriqués** à l'invocation :
+leurs valeurs exactes ne sont pas gardées (le formulaire le dit, et renvoie au bestiaire).
+Fichiers : modèle `src/types/rencontres.types.ts`, tranche
 `session/store/rencontresSlice.ts`, gestes de la trame `session/logic/rencontresDeLaTrame.ts`,
 fabrication et invocation `combat/logic/invocationDeRencontre.ts` (l'Atelier et la galerie des PNJ
 l'appellent désormais), action `invoquerLaRencontre` de `useCombatStore`, panneau
