@@ -202,6 +202,8 @@ async function mettreEnScene(): Promise<void> {
         s.addLinkedEntity('temoin-lieu-station', { name: pontC.name, category: 'lieu', mapId: pontC.id });
 
         const morceau = w.useMusicStore.getState().playlists[0]?.pads[1]?.id;
+        // Le moment de storyboard de la scène : l'écran le montre en tête, avec « Lancer ».
+        const moment = w.useStoryboardStore.getState().moments.find(m => m.name === 'La voix dans le relais')?.id;
         s.modifierScene('temoin-scene-2', {
             lieuId: 'temoin-lieu-station',
             descriptionNarrative: "Le bureau du superviseur sent le **café froid**. Sur l'écran, le registre de bord défile trop vite pour être lu.\n\nHale ne s'assoit pas.",
@@ -209,6 +211,7 @@ async function mettreEnScene(): Promise<void> {
             repliques: "« Le dernier départ ? Hier. Tout est dans le registre. »\n\n« Vous croyez que j'ai le temps de mentir ? »",
             ideesMusicales: 'Un bourdonnement grave, qui monte quand Hale ment.',
             morceauxIds: morceau ? [morceau] : undefined,
+            momentDeStoryboardId: moment,
             notesDuMeneur: 'Il a signé toutes les entrées des trois derniers jours.',
         });
         s.ajouterUneRencontre({

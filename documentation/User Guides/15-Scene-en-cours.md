@@ -5,7 +5,7 @@ démarre une scène, ses informations ne sont pas facilement accessibles »*. To
 [Trame](./11-Trame-actes-et-scenes.md) a préparé pour une scène se lisait en dépliant sa ligne, en
 noms seuls. Cet écran le met **en plein écran, dans l'ordre où l'on s'en sert**.
 
-![L'écran « Scène en cours » sur Entretien avec Hale : description, enjeux, répliques et notes à gauche ; musique, indices, PNJ, lieu et battlemap, rencontres à droite](captures/scene-en-cours.jpg)
+![L'écran « Scène en cours » sur Entretien avec Hale : description, enjeux, répliques et notes à gauche ; le moment de storyboard et son bouton Lancer, la musique, les indices, les PNJ, le lieu et sa battlemap, les rencontres à droite](captures/scene-en-cours.jpg)
 
 ---
 
@@ -44,7 +44,8 @@ rempli, l'écran montre le **résumé** de la scène à leur place.
 
 | Bloc | Gestes |
 | :--- | :--- |
-| **Musique** | Vos idées musicales ; **Lancer l'ambiance** (le moment de storyboard lié) ; les **morceaux liés**, jouables d'un clic et **allumés quand ils jouent**. |
+| **Storyboard** | Le **moment de storyboard** de la scène, en tête : son nom, sa description, et ce qu'il déclenche (musique, lumière, carte, image, son, ambiance, titre). **Lancer** le joue ; pendant qu'il joue, le bloc s'allume et **Arrêter** referme la parenthèse — la musique, elle, continue. |
+| **Musique** | Vos idées musicales ; les **morceaux liés**, jouables d'un clic et **allumés quand ils jouent**. |
 | **Indices de la scène** | **Révéler**, **Révéler et projeter**. Un indice découvert **reste là**, avec sa date, et garde **Projeter**. |
 | **PNJ de la scène** | **Montré aux joueurs / Caché aux joueurs** ; un clic sur le nom ouvre sa fiche. La première fois qu'un PNJ est montré, il reste marqué **« rencontré le… »** — le cacher ensuite n'efface pas la rencontre. |
 | **Lieu** | Un lieu-**image** : **Projeter l'image**, d'un clic, sur l'**écran par défaut d'Image-OS** (un second clic la retire). Une **battlemap** — le lieu lui-même s'il en est une, et chacune des battlemaps de la scène : **Charger dans Map-OS** (allumé quand c'est la carte du plateau). |
