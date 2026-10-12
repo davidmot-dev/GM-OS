@@ -33,7 +33,7 @@ Les sujets du canevas :
 | **Personnages non joueurs** | Qui compte, ce qu'ils veulent. |
 | **Secrets et indices** | Ce qui est caché, qui le sait, où ça peut se révéler. |
 | **Amorces** | Comment les PJ entrent dans l'histoire. |
-| **Scènes prévues** | Titre, ce qui s'y joue, le lieu, les personnages. |
+| **Scènes prévues** | Titre, ce qui s'y joue, le lieu, les personnages — et, depuis le 2026-10-13, ce que montre l'[écran « Scène en cours »](./15-Scene-en-cours.md) : la **description narrative** (le texte à lire du livre, sinon tiré des fiches), les **enjeux**, les **répliques** (**recopiées du livre seulement**, jamais inventées) et une **idée musicale** quand les fiches en suggèrent une. Chacun reste vide plutôt que d'être inventé. |
 | **Règles propres à cette campagne** | ⚠️ Voir plus bas — cette fiche est **mise à part**. |
 
 Deux de ces sujets — les PNJ et les scènes — se découpent **par acte**. Une fiche porte donc son

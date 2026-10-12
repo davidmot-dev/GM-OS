@@ -47,8 +47,8 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > ⭐ **Fin de journée du 12/10 : les quatre chantiers sont faits, rien n'est éprouvé.** Tout est commité ou
 > le sera sur `feature/tablet-hub-pwa` ; la prochaine séance est l'essai. Réponses du 12/10 : le PNJ montré
 > **garde la trace** de sa première rencontre ; la description narrative **ne se projette pas** ; Ctrl+E
-> rouvre l'écran ; une rencontre peut exister **sans scène**, **aucun pion** à l'invocation. Reste au plan de
-> l'écran : L4, la Forge qui remplit les nouveaux champs — *après* que l'écran a été joué.
+> rouvre l'écran ; une rencontre peut exister **sans scène**, **aucun pion** à l'invocation. **L4 fait le
+> 13/10** : la Forge remplit description, enjeux, répliques (recopiées du livre seulement) et idée musicale.
 >
 > ⚠️ **12/10 au soir, essai de David : après « Éjecter tout », les joueurs ont tourné près de dix
 > minutes sur « Saisie du signal », sur la même tablette.** Cause trouvée et corrigée, à éprouver :

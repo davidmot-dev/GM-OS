@@ -96,11 +96,18 @@ Deux scènes ouvertes en même temps (groupe séparé) : un onglet par scène.
 « En ligne / Hors ligne » devient « Montré aux joueurs / Caché », avec un œil, aussi dans
 `NpcDetail.tsx`. Petit, et utile même sans L2.
 
-### L4 · La Forge apprend les nouveaux champs — plus tard
+### L4 · La Forge apprend les nouveaux champs — ✅ fait le 13/10, à la demande de David
 
 `ecritureDeLaCampagne.ts` remplit déjà résumé, notes, lieu, PNJ, indices. Lui apprendre
 description, enjeux, répliques et idées musicales est un lot à part, **après** que l'écran a été
 joué : *on ne fait pas remplir à une machine des cases dont on n'a pas encore vu l'usage.*
+
+**Fait le 13/10**, David ayant essayé l'écran (*« tout fonctionne »*) et demandé L4 : les quatre
+champs entrent dans le schéma et la consigne du groupe « scènes » (`GroupesDeLaTrame.ts`), facultatifs ;
+`ecritureDeLaCampagne.ts` les pose sur la scène, un champ vide reste absent. ⛔ **Les répliques ne
+sont que recopiées du livre** : la consigne interdit d'en inventer, un essai la tient. À éprouver sur
+une vraie forge : la description est-elle le texte à lire du livre, et les répliques viennent-elles
+bien des fiches ?
 
 ## Les décisions de David (12/10)
 
