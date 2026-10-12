@@ -133,7 +133,7 @@ pour une migration.
 
 La campagne · ses **PNJ** · ses **joueurs et leurs personnages** · l'historique des **séances** ·
 les **cartes de l'Atlas** · le **wiki** · la **chronologie** · les **indices** · **la trame**, actes
-et scènes · les **paquets de cartes** · le **système de jeu forgé** et son gabarit de fiche · et,
+et scènes · les **rencontres préparées** (depuis le 12/10) · les **paquets de cartes** · le **système de jeu forgé** et son gabarit de fiche · et,
 côté médias, toutes les images moissonnées avec leur empreinte de contrôle.
 
 Deux inclusions qui surprennent :
@@ -167,6 +167,8 @@ Deux inclusions qui surprennent :
 | :--- | :--- |
 | **Le plateau tactique (Map-OS)** | Brouillard et pions ne voyagent pas. Voir le [guide de Map-OS](./22-Map-OS-le-plateau.md). |
 | **Les sons distants** | Un pad ou une piste qui pointe vers Spotify, SoundCloud ou une URL quelconque reste un lien. |
+| **Les messages entre tablettes** | Ce qui s'est dit à la table ne fait pas partie d'une campagne qu'on partage. Ils restent dans la sauvegarde automatique. |
+| **Le bestiaire du jeu** | Une rencontre qui désigne un adversaire du bestiaire arrive sans lui : à l'invocation, il est **refabriqué depuis son archétype**, et GM-OS le dit. |
 
 > ✅ **Quatre manques comblés le 2026-09-04.** Jusqu'à cette date, l'archive **laissait la trame**
 > — actes et scènes — sur la machine d'origine, et **mettait dedans sans jamais reposer** les

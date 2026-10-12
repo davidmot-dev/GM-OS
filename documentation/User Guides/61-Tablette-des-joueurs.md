@@ -152,6 +152,21 @@ Une icône Wi-Fi en haut à droite dit si la tablette est synchronisée.
 
 ---
 
+## 💬 Les messages
+
+- **Privé** : un message à un joueur n'arrive **que sur sa tablette** ; un message au meneur, que
+  chez le meneur. **Tous** part à toute la table.
+- **Le fil revient** : une tablette mise en veille, rechargée ou reconnectée retrouve ses messages
+  de la campagne — **les siens seulement**. Le meneur les garde, d'une séance à l'autre.
+- Le meneur **ne lit pas** ce que deux joueurs se disent : GM-OS le garde pour vous le rendre, sans
+  le lui montrer.
+
+> ⛔ **Avant le 2026-10-12, les messages disparaissaient** — souvent tous d'un coup, au moindre
+> rechargement de la page — et **chaque tablette recevait les messages privés des autres**, cachés
+> seulement à l'affichage. Les deux sont corrigés.
+
+---
+
 ## 🛠️ Côté meneur : le lobby des terminaux
 
 Dans les paramètres, le lobby montre en temps réel qui est connecté, avec quel personnage, et la
@@ -173,6 +188,8 @@ qualité du signal.
 | **Pas d'horloge sur la tablette** | Le meneur a éteint la projection dans Clock-OS. C'est un interrupteur unique pour l'horloge, les jauges **et** l'afficheur de table. |
 | **Les images n'arrivent pas** | Elles passent par le port 3001. Une tablette connectée sur le port du serveur de développement ne les verra pas. |
 | **L'onglet Cartes clignote** | On vous tend une carte : ouvrez-le pour l'accepter ou la refuser. |
+| **« Saisie du signal » tourne longtemps après « Éjecter tout »** | Corrigé le 2026-10-12 : l'écran attendait 1,5 s de calme, et chaque tablette qui se reconnectait relançait l'attente des autres. Si ça recommence, notez la ligne **Active Session** du panneau « HUB SYNC DEBUG », en bas à gauche, et dites-la au développeur. |
+| **Les messages ont disparu après une veille** | Ils reviennent à la reconnexion : attendez que la tablette se reconnecte. S'ils ne reviennent pas, le meneur a peut-être changé de campagne — le fil est celui de la campagne ouverte. |
 
 ---
 

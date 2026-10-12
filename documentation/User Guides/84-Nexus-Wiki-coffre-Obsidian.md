@@ -90,6 +90,13 @@ Le lecteur de GM-OS est principalement conçu pour la consultation.
 - Pour modifier une note, cliquez sur **Ouvrir dans Obsidian**, en haut à droite : la note
   affichée s'ouvre dans Obsidian, quel que soit le nom de votre coffre.
 
+### 5 bis. Lier une note à une scène
+
+*Depuis le 2026-10-12.* Dans la fiche d'une scène de la Trame, le champ **Note Obsidian** propose
+les notes du coffre à la saisie. L'[écran « Scène en cours »](./15-Scene-en-cours.md) l'affiche
+repliée, rendue, avec **Ouvrir dans Obsidian**. La scène ne garde que le **chemin** de la note :
+déplacer la note dans le coffre casse le lien.
+
 ### 6. Exporter vers Obsidian 📤
 Vous pouvez désormais exporter vos données GM-OS vers Obsidian pour archive ou préparation approfondie.
 1. Ouvrez la **page de la campagne** : *Bibliothèque* → **Gérer la campagne**.

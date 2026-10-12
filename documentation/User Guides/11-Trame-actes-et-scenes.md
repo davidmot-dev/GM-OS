@@ -44,11 +44,40 @@ quelles scènes seront jouées* — c'est tout ce que le modèle promet.
 | **Personnages présents** | Qui est là. **Renseigné en jouant, pas en préparant.** |
 | **Rang dans l'intrigue** | Principale, secondaire, optionnelle — ou rien. Voir § 2.1. |
 | **Mène à** | Les suites possibles, chacune avec sa condition. Voir § 2.2. |
+| **Description narrative** | Ce que les joueurs voient, entendent, sentent. Distincte du résumé, qui est pour vous. |
+| **Enjeux** | Ce qui doit se jouer, ce qui peut se perdre. |
+| **Exemples de répliques** | Quelques phrases à dire telles quelles. |
+| **Idées musicales** et **morceaux liés** | L'inspiration, et des pads de Music-OS jouables d'un clic pendant la scène. |
+| **Note Obsidian** | La note de la scène dans votre coffre — la saisie propose les notes existantes. |
+| **Battlemaps** | Les cartes à charger dans Map-OS. Le **lieu** propose les siennes (ses liens « lieu » de l'Atlas vers des cartes de type *battlemap*) ; la scène peut en **ajouter** (« + Ajouter une battlemap de l'Atlas… ») ou en **retirer** (✕) — sans toucher au lieu, les autres scènes les gardent. |
+| **Rencontres** | Les combats préparés pour cette scène. Voir § 2.3. |
+
+*Les champs de la description aux battlemaps sont arrivés le 2026-10-12 : c'est ce que montre
+l'[écran « Scène en cours »](./15-Scene-en-cours.md), dans cet ordre. Les textes acceptent le
+Markdown. Ils sont tous facultatifs.*
 
 **La pastille de préparation** compte cinq choses : résumé, lieu, PNJ, indices, ambiance. Cinq sur
 cinq, elle est pleine. Les **personnages présents n'y entrent pas** : qui est là est un fait de
 partie, pas un élément qu'on prépare — les compter ferait chuter la pastille de toutes vos scènes
-déjà écrites, et pour une raison fausse.
+déjà écrites, et pour une raison fausse. **Les champs du 12/10 n'y entrent pas non plus**, pour la
+même raison.
+
+### 2.3 · Les rencontres de la scène
+
+*Ajoutées le 2026-10-12.* Sous les indices, la section **Rencontres** prépare les combats de la
+scène — une scène peut en avoir plusieurs (« la patrouille », « les renforts au round 3 »).
+
+- **Nouvelle rencontre** en crée une ; dépliez-la pour la nommer et la composer.
+- **+ Ajouter…** prend une ligne dans le **bestiaire du jeu**, les **PNJ de la scène**, un
+  **archétype** (avec son rang) ou les autres PNJ de la campagne. Le nombre proposé suit le rang,
+  comme dans l'Atelier : quatre piétailles, deux aguerris, un boss.
+- Chaque ligne a son **nombre** (1 à 20), son **camp** (ennemi, allié, neutre — ou « selon son
+  rôle » pour un PNJ), et ✕ pour la retirer.
+- **Détacher** rend la rencontre *libre* (sans scène) ; **Rattacher une rencontre libre…** fait
+  l'inverse.
+
+Elles **s'invoquent dans Combat-OS** ou depuis l'écran de la scène : voir
+[Combat-OS](./30-Combat-OS.md#-les-rencontres-préparées).
 
 ### 2.1 · Le rang dans l'intrigue
 
@@ -222,6 +251,11 @@ Deux gestes pour rattraper la réalité d'une partie :
   la rejoignent **dans tous les journaux** : la trame et le journal ne peuvent pas être d'accord à
   moitié.
 - **Scinder une scène** à partir d'un instant — la seconde moitié devient une scène à part.
+
+Ce que deviennent les champs : une fusion **accole** les textes (résumé, notes, description,
+enjeux, répliques, idées) et **réunit** les morceaux ; une scission laisse les textes à la
+**première** moitié et donne le décor aux deux. Les **rencontres** suivent la scène qui reste ; un
+clone les recopie ; **supprimer une scène rend ses rencontres libres, jamais effacées.**
 
 > ⚠️ **Ces deux gestes ne sont pas sur cet écran.** Ils vivent dans le module **Journal de Jeu**,
 > section « Revue de la séance ». C'est cohérent : on cure en relisant ce qui s'est passé, pas en

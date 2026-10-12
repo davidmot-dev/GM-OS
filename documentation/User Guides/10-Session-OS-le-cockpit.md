@@ -245,6 +245,10 @@ dessus ouvre la trame.
 Les **gestes** — ouvrir une scène, la terminer — ne sont pas là : ils vivent dans le panneau de
 séance. *Un second endroit pour ouvrir une scène ferait deux écrans à tenir d'accord.*
 
+Quand une scène commence, l'**écran « Scène en cours »** s'ouvre par-dessus le cockpit : sa
+description, ses enjeux, ses notes, ses indices, ses PNJ, son lieu et ses rencontres. **Échap** le
+ferme, **Ctrl+E** le rouvre. → [Guide de l'écran « Scène en cours »](./15-Scene-en-cours.md)
+
 → [Guide de la trame narrative](./11-Trame-actes-et-scenes.md)
 
 ## 📓 Le journal, et la clôture d'une séance

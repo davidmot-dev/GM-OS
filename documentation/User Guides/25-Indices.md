@@ -69,6 +69,11 @@ Par défaut, un nouvel indice est **Masqué**.
 ### Projeter vers le Player Hub
 Une fois l'indice révélé, cliquez sur l'icône **Externe** (ou via le Deck de Session) pour l'envoyer sur le grand écran des joueurs.
 
+### Depuis l'écran « Scène en cours »
+*Depuis le 2026-10-12.* Les indices **de la scène** y ont leurs deux gestes : **Révéler**, et
+**Révéler et projeter** en un clic. Un indice découvert **reste affiché avec sa date** et garde
+**Projeter**. → [Guide de l'écran](./15-Scene-en-cours.md)
+
 ---
 
 ## 🎴 Deck de Session (Cockpit MJ)

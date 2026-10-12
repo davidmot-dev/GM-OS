@@ -415,8 +415,12 @@ vue du meneur, tout en envoyant les nouveaux messages au canal général.
 - Un joueur qui a écrit puis s'est déconnecté **reste joignable** : une conversation ne disparaît
   pas parce que l'appareil d'en face s'est éteint.
 
-> ⚠️ **Les cinquante derniers messages seulement.** L'historique complet grossirait chaque
-> rafraîchissement.
+> ⚠️ **Les cent derniers messages de la campagne ouverte.** L'historique complet grossirait
+> chaque rafraîchissement ; le cockpit, lui, garde tout le fil de la campagne.
+
+> 🔒 **Ce que deux joueurs se disent ne vous est jamais montré** (décision du 2026-10-12). GM-OS le
+> **garde** — pour le rendre à une tablette rechargée —, mais ni le cockpit ni cette tablette ne
+> l'affichent.
 
 > 🔒 **Seule une tablette appairée peut parler au nom du meneur.** Un appareil joueur qui tenterait
 > l'action est refusé par le serveur, pas par l'écran.

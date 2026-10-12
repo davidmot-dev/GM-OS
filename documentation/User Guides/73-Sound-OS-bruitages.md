@@ -91,6 +91,15 @@ clavier maître. Le panneau **Périphérique MIDI**, dans la colonne de droite, 
 branché ; son bouton ⟳ rafraîchit la liste si vous branchez le vôtre après coup. Le panneau
 **Touches assignées**, juste dessous, récapitule les touches de l'atmosphère.
 
+**Les banques du contrôleur** (*depuis le 2026-10-12*). Un pad comme le Pocket Pad change souvent
+de **canal** d'une banque à l'autre en gardant les mêmes notes. GM-OS retient désormais le canal
+avec la note : l'étiquette dit **`#36 · c2`** (note 36, canal 2). Une pastille apprise **avant**
+cette date affiche `#36` et répond **sur tous les canaux** ; dès qu'une autre pastille apprend la
+même note sur un canal précis, c'est elle qui joue sur ce canal.
+
+> 💡 **Pour séparer deux banques**, refaites le MIDI Learn des pastilles de la banque B, la banque
+> B active sur le contrôleur.
+
 ---
 
 ## 🎚️ Le volume, et ce que le Focus Chat en fait
@@ -126,6 +135,8 @@ n'est pas une coupure sèche, contrairement à ce qu'annonçait la tour de contr
 | :--- | :--- |
 | **Ma touche ne déclenche rien** | Un champ de saisie a le focus. Cliquez dans le vide et réessayez. |
 | **Le contrôleur MIDI n'apparaît pas** | Branchez-le, puis rafraîchissez le panneau **Périphérique MIDI**. |
+| **En banque B, un pad déclenche la pastille de la banque A** | La pastille a été apprise sans canal (`#36` sans `· c…`). Refaites son MIDI Learn, et celui de la pastille de la banque B. |
+| **« MIDI branché », mais plus rien ne répond, même les pastilles apprises** | Redémarrez le PC d'abord : le 11/10, Windows listait le contrôleur sans transmettre ses notes, et le redémarrage a suffi. |
 | **Le son part sur la mauvaise enceinte** | Sound-OS a sa sortie propre, dans sa colonne de réglages — distincte de celle de Music-OS. |
 | **Les bruitages sont faibles pendant que je parle** | Le Focus Chat est actif : ils sont à 50 %. |
 | **J'ai perdu mes atmosphères** | Le bouton de réinitialisation les efface toutes. Elles sont dans la [sauvegarde automatique](./91-Sauvegarde-automatique.md). |

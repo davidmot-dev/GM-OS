@@ -14,8 +14,8 @@ Le module **Combat OS** est votre tour de contrôle pour les affrontements. Il a
   **Calculer**. Le combattant dont c'est le tour se détache. **Les hors-de-combat se regroupent en
   bas**, pour ne pas encombrer l'ordre.
 - **À droite, les contrôles** : la projection (*ON*), le système actif, le **round** et **Tour
-  suivant**, l'**auto-initiative** (le dé, et le mode *Standard*), puis **Ajouter un combattant**,
-  **Fabriquer des adversaires**, le **calculateur de dégâts**, les deux **tris**, et en bas **Sync PV
+  suivant**, l'**auto-initiative** (le dé, et le mode *Standard*), puis **Rencontres préparées**,
+  **Ajouter un combattant**, **Fabriquer des adversaires**, le **calculateur de dégâts**, les deux **tris**, et en bas **Sync PV
   vers Session**, **Fin de combat**, **Reset combat**.
 
 ## 📋 Présentation du Module
@@ -122,6 +122,58 @@ Le bouton **"Tout Effacer"** (Fin de Combat) déclenche plusieurs actions de ses
 
 - **Jet Système** : Utilise le moteur de dés interne (**Dice OS**).
 - **Snapshot** : Le combat en cours est sauvegardé en temps réel. Si l'application redémarre, le combat reprend exactement au même round et au même tour.
+
+---
+
+## ⚔️ Les rencontres préparées
+
+*Ajoutées le 2026-10-12.* À la première séance jouée, Combat-OS n'a pas servi : *« la mise en place
+est trop longue »*. Une rencontre se **prépare à l'avance** ; en séance, on l'**invoque** — les
+adversaires arrivent, et vous **cochez les PJ** qui entrent. **L'initiative ne se tire pas** : à
+vous de la lancer, ou aux joueurs.
+
+### Préparer — deux portes
+
+1. **Dans Combat-OS** : composez le plateau comme d'habitude (Atelier, PNJ), puis **Rencontres
+   préparées → Garder le plateau comme rencontre…** Donnez un nom, une scène (prévue, en cours, ou
+   **aucune** pour une rencontre libre), des notes. **Vider le plateau ensuite** est coché d'avance
+   quand le combat n'a pas de scène — c'est le cas en préparation.
+2. **Dans la Trame**, section **Rencontres** de la fiche de scène : voir
+   [§ 2.3 du guide de la Trame](./11-Trame-actes-et-scenes.md#23--les-rencontres-de-la-scène).
+
+Ce que devient le plateau quand on le garde :
+
+| Sur le plateau | Dans la rencontre |
+| :--- | :--- |
+| Les **PJ** | Rien : ils se cochent à l'invocation. |
+| « Goule 1 », « Goule 2 », « Goule 3 » | Une ligne **« 3 × Goule »**. |
+| Un adversaire du **bestiaire** (même nom, même archétype) | Le gabarit lui-même : ses valeurs feront foi. |
+| Un **PNJ** de la campagne | Un renvoi vers sa fiche. |
+| Un combattant **ajouté à la main** | Un adversaire quelconque — le formulaire le signale. |
+
+> ⚠️ **Une rencontre est un modèle** : les adversaires fabriqués sont **refabriqués à chaque
+> invocation**, leurs valeurs exactes ne sont pas gardées. Pour des valeurs précises, rangez
+> l'adversaire au **bestiaire** depuis sa fiche avant de garder.
+
+### Invoquer
+
+**Rencontres préparées** liste, dans l'ordre : celles de la **scène du combat**, des **scènes en
+cours**, les **rencontres libres**, puis — repliées — celles des autres scènes.
+
+1. **Invoquer** ouvre **« Qui entre ? »** : les PJ de la campagne, **cochés d'avance quand la
+   scène les déclare présents**, grisés s'ils sont déjà au combat. **Entrée** valide.
+2. Le combat se rattache à la scène de la rencontre ; une rencontre libre rejoint la scène du
+   combat, ou la seule scène en cours.
+3. Une seconde invocation **ajoute** au plateau — les renforts. Une rencontre d'une autre scène
+   **gare** le combat en cours et passe à la sienne.
+
+Aucun pion n'est posé sur la carte : l'invocation remplit l'ordre du tour.
+
+> 💡 **Depuis l'écran « Scène en cours »**, le bloc **Rencontres** a son bouton **Invoquer** : il
+> passe à Combat-OS et ouvre directement « Qui entre ? ». → [Guide de l'écran](./15-Scene-en-cours.md)
+
+Si un adversaire du bestiaire manque sur cette machine (campagne importée), il est **fabriqué depuis
+son archétype**, et GM-OS le dit ; un PNJ supprimé depuis est sauté, et GM-OS le dit aussi.
 
 ---
 

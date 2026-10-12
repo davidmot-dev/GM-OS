@@ -106,7 +106,8 @@ tout le reste. C'est le seul écran dont vous avez besoin le premier soir.
 
 **La Trame**
 Les actes et les scènes de la campagne, avec une pastille qui dit ce qui manque encore à préparer.
-C'est elle qui donne leurs scènes aux événements du journal.
+C'est elle qui donne leurs scènes aux événements du journal. Quand une scène commence, l'**écran
+« Scène en cours »** montre tout ce qu'elle a préparé, en plein écran (Échap / Ctrl+E).
 
 **La Forge de campagne**
 Elle transforme un scénario écrit en objets jouables : actes, scènes, PNJ, lieux, indices. Vous
@@ -144,7 +145,8 @@ l'écran de la table, son compris.
 
 **Combat-OS**
 L'initiative, la santé, les états, le tour par tour. Son affichage s'adapte au jeu : les jauges ne
-ressemblent pas aux mêmes choses selon votre pilote.
+ressemblent pas aux mêmes choses selon votre pilote. Les **rencontres préparées** s'y invoquent en
+un geste : les adversaires arrivent, vous cochez les PJ qui entrent.
 
 **Map-OS — le plateau tactique**
 La carte de combat : pions, brouillard de guerre, zones de danger, mesures. Elle se projette en

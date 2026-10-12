@@ -105,6 +105,15 @@ quelque chose. En tête, **Retour**, **Modifier** et l'état ; puis **Projeter**
 **Carte**. À droite : la campagne, les **relations clés** (celles du Social Nexus), les **secrets
 du MJ marqués « Non projeté »**, les notes, les indices et les cartes.
 
+**Montré aux joueurs / Caché aux joueurs** (avec un œil) rend le PNJ visible sur les tablettes. *Il
+se lisait « En ligne / Hors ligne » jusqu'au 2026-10-12 — comme l'état d'une connexion, ce qu'il
+n'est pas.* La première fois qu'un PNJ est montré, GM-OS retient **qu'il a été rencontré**, avec la
+date et la scène ; le cacher ensuite n'efface pas la rencontre.
+
+**Combat** l'envoie dans l'ordre du tour **dans le camp de son rôle** : un allié en allié, un
+neutre en neutre, un hostile ou un boss en ennemi. *Jusqu'au 2026-10-12, la fiche l'envoyait
+toujours en ennemi, la galerie selon son rôle.*
+
 
 - **Préservation du Contexte** : Si vous accédez à la galerie via un lien direct (ex: depuis le Social Nexus), l'OS vous affiche immédiatement la fiche détaillée demandée.
 - **Navigation Fluide** : Le bouton "Retour à la Galerie" vous permet de revenir instantanément à la liste complète tout en gardant vos filtres de recherche.

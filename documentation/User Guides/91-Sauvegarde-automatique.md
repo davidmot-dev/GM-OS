@@ -67,12 +67,13 @@ Une sauvegarde peut être **refusée**, et le journal de l'application le dit. C
 ## 4. Ce qui est dedans
 
 - **Toute la session** : campagnes, séances, PNJ, joueurs, cartes, chronologie, wiki, indices,
-  actes et scènes, gabarits et pilotes personnalisés, paquets de cartes, et depuis le 04/09 le
-  **butin de séance**.
+  actes et scènes, gabarits et pilotes personnalisés, paquets de cartes, depuis le 04/09 le
+  **butin de séance**, et depuis le 12/10 les **messages** avec les tablettes (le fil de chaque
+  campagne) et les **rencontres préparées**.
 - **Les playlists de Music-OS.** Pas les réglages de sortie audio : *ils décrivent votre pièce, pas
   votre univers.*
 - **Les atmosphères de Sound-OS**, depuis le 19/09 — chaque pad avec son **fichier**, son titre, son
-  volume, sa couleur, sa **note MIDI**, sa **touche de clavier** et sa scène lumineuse liée. Pas le
+  volume, sa couleur, sa **note MIDI** et son **canal**, sa **touche de clavier** et sa scène lumineuse liée. Pas le
   volume général ni la sortie audio, et **pas les pads en train de jouer** : *un pad qui revient
   allumé six mois plus tard, sans qu'aucun son ne sorte, est un mensonge visuel.*
 - **Les tuiles de Light-OS**, depuis le 19/09 — l'état de chaque lampe, le nom, l'icône, la couleur
