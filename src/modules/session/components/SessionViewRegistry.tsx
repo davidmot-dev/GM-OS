@@ -6,6 +6,7 @@ import ModuleSnapshots from './ModuleSnapshots';
 import CampaignDetails from './CampaignDetails';
 import CampaignLibrary from './CampaignLibrary';
 import PlayerManagement from './PlayerManagement';
+import FicheDuGroupe from './FicheDuGroupe';
 import WorldAtlas from './WorldAtlas';
 import NpcManagement from './NpcManagement';
 import SessionPrep from './SessionPrep';
@@ -45,6 +46,8 @@ const SessionViewRegistry: React.FC = () => {
                 return <WorldAtlas />;
             case 'players':
                 return <PlayerManagement />;
+            case 'group-sheet':
+                return <FicheDuGroupe />;
             case 'session-prep':
                 return <SessionPrep />;
             case 'session-focus':

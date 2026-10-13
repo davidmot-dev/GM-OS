@@ -292,6 +292,29 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(constats[1].message).toContain('elle-même');
     });
 
+    it('une fiche de groupe sans nom ni gabarit, ou qui vise celui des personnages', () => {
+        const sans = controlerLePilote(
+            { ficheDeGroupe: { libelle: ' ', gabaritDeLaFiche: '' } } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(sans.filter(c => c.ou.startsWith('ficheDeGroupe')).map(c => [c.ou, c.gravite])).toEqual([
+            ['ficheDeGroupe.libelle', 'erreur'],
+            ['ficheDeGroupe.gabaritDeLaFiche', 'erreur'],
+        ]);
+
+        const meme = controlerLePilote(
+            { templateId: 'noc-reference', ficheDeGroupe: { libelle: 'Cabale', gabaritDeLaFiche: 'noc-reference' } } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(meme.filter(c => c.ou.startsWith('ficheDeGroupe')).map(c => c.gravite)).toEqual(['avertissement']);
+
+        const juste = controlerLePilote(
+            { templateId: 'noc-reference', ficheDeGroupe: { libelle: 'Cabale', gabaritDeLaFiche: 'noc-cabale' } } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(juste.filter(c => c.ou.startsWith('ficheDeGroupe'))).toEqual([]);
+    });
+
     it("un débordement qui vise le vide, elle-même, ou qui n'a pas de seuil", () => {
         const constats = controlerLePilote(
             {

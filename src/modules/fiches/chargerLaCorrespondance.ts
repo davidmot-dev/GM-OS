@@ -1,6 +1,6 @@
 import {
     cheminDeLaCorrespondance, lireLaCorrespondance, verifierLaCorrespondance,
-    type CorrespondanceDeFiche,
+    type CorrespondanceDeFiche, type FichierDeCorrespondance,
 } from './correspondanceDeFiche';
 import { origineDesFiches } from './pontDeLaFiche';
 
@@ -17,9 +17,15 @@ export * from './correspondanceDeFiche';
  *
  * Passe par `readDoc`, qui lit n'importe quel fichier sous `docs/` : aucun IPC
  * nouveau, comme pour les thèmes.
+ *
+ * `fichier` choisit la table : celle des personnages par défaut, ou celle de la
+ * fiche de groupe (`correspondance-groupe.json`).
  */
-export async function chargerLaCorrespondance(racine: string): Promise<CorrespondanceDeFiche | null> {
-    const chemin = cheminDeLaCorrespondance(racine);
+export async function chargerLaCorrespondance(
+    racine: string,
+    fichier: FichierDeCorrespondance = 'correspondance.json',
+): Promise<CorrespondanceDeFiche | null> {
+    const chemin = cheminDeLaCorrespondance(racine, fichier);
 
     // Le type vient de `types/window.d.ts` : si la signature du pont change, ce
     // fichier cesse de compiler au lieu de rendre `null` en silence.

@@ -221,6 +221,19 @@ export interface GameDriver {
 
     // Linked assets
     templateId: string; // The ID of the primary SheetTemplate used by this system
+    /**
+     * **La fiche du GROUPE** — la Cabale de NOC, 2026-10-13.
+     *
+     * Un personnage de plus, commun à toute la table : sa propre feuille, ses
+     * Domaines, ses Atouts, ses réserves (`docs/systems/noc/rules/la-cabale.md`).
+     * Ses valeurs vivent sur la **campagne** (`Campaign.groupe`), jamais chez un
+     * joueur : elle n'entre ni dans l'initiative ni dans le panneau de jet.
+     *
+     * `gabaritDeLaFiche` est l'identifiant du gabarit dans le moteur de fiches
+     * (`noc-cabale`) ; sa correspondance est `fiche/correspondance-groupe.json`.
+     * Absent : le jeu n'a pas de fiche de groupe, et rien ne s'affiche.
+     */
+    ficheDeGroupe?: { libelle: string; gabaritDeLaFiche: string };
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
     /** Les mots de ce jeu pour la monnaie et la rareté — voir `VocabulaireDuButin`. */
     vocabulaireDuButin?: VocabulaireDuButin;

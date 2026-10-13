@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { gabaritsDuMoteur, validerLaFiche } from '../src/modules/fiches/validationDeLaFiche';
-import { lireLaCorrespondance } from '../src/modules/fiches/correspondanceDeFiche';
+import { lireLaCorrespondance, FICHIERS_DE_CORRESPONDANCE } from '../src/modules/fiches/correspondanceDeFiche';
 
 /**
  * **Les fiches du dépôt passent le cahier des charges** — le garde de
@@ -23,7 +23,8 @@ const SYSTEMES = path.join(RACINE, 'docs', 'systems');
 const MOTEURS = gabaritsDuMoteur(fs.readFileSync(path.join(FICHES, 'Character_Sheet_Manager.html'), 'utf8'));
 const CORRESPONDANCES = fs.readdirSync(SYSTEMES, { withFileTypes: true })
     .filter(e => e.isDirectory())
-    .map(e => path.join(SYSTEMES, e.name, 'fiche', 'correspondance.json'))
+    // La table des personnages ET celle de la fiche de groupe (la Cabale de NOC).
+    .flatMap(e => FICHIERS_DE_CORRESPONDANCE.map(nom => path.join(SYSTEMES, e.name, 'fiche', nom)))
     .filter(c => fs.existsSync(c))
     .map(c => ({ chemin: c, table: lireLaCorrespondance(fs.readFileSync(c, 'utf8'))! }));
 

@@ -212,6 +212,23 @@ const CampaignCockpit: React.FC = () => {
                         <span className="font-bold">{rattachement.pilote.name}</span>
                     </p>
                 )}
+                {/*
+                    **La fiche du groupe** — la Cabale de NOC (2026-10-13). Sur la
+                    carte de la campagne, parce qu'elle lui appartient : la grille
+                    des personnages est rangée par joueur, et le groupe n'est à
+                    aucun.
+                */}
+                {rattachement?.pilote?.ficheDeGroupe && (
+                    <button
+                        type="button"
+                        onClick={e => { e.stopPropagation(); setCurrentView('group-sheet'); }}
+                        className="mt-2 w-full flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-2 py-1.5 text-left text-ui-10 font-black uppercase tracking-widest text-accent hover:bg-accent/20 transition-colors"
+                    >
+                        <Users2 size={13} className="shrink-0" />
+                        <span className="truncate">{rattachement.pilote.ficheDeGroupe.libelle}</span>
+                        <span className="ml-auto text-app-text/30 normal-case tracking-normal font-bold">Fiche du groupe</span>
+                    </button>
+                )}
                 {rattachement && !rattachement.pilote && (
                     <button
                         type="button"

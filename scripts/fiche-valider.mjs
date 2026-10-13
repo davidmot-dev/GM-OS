@@ -36,7 +36,7 @@ registerHooks({
 });
 
 const { validerLaFiche, rapportEnTexte, gabaritsDuMoteur } = await import('../src/modules/fiches/validationDeLaFiche.ts');
-const { lireLaCorrespondance } = await import('../src/modules/fiches/correspondanceDeFiche.ts');
+const { lireLaCorrespondance, FICHIERS_DE_CORRESPONDANCE } = await import('../src/modules/fiches/correspondanceDeFiche.ts');
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));
 const DOCS = path.resolve(ICI, '..', 'docs');
@@ -49,10 +49,13 @@ const relatif = (chemin) => path.relative(path.resolve(ICI, '..'), chemin).split
 
 const MOTEURS = fs.existsSync(MOTEUR) ? gabaritsDuMoteur(lire(MOTEUR)) : [];
 
-/** Toutes les correspondances déposées : la fiche est rattachée par l'identifiant de son gabarit. */
+/**
+ * Toutes les correspondances déposées — celle des personnages et celle de la
+ * fiche de groupe : la fiche est rattachée par l'identifiant de son gabarit.
+ */
 const CORRESPONDANCES = fs.readdirSync(SYSTEMES, { withFileTypes: true })
     .filter(e => e.isDirectory())
-    .map(e => path.join(SYSTEMES, e.name, 'fiche', 'correspondance.json'))
+    .flatMap(e => FICHIERS_DE_CORRESPONDANCE.map(nom => path.join(SYSTEMES, e.name, 'fiche', nom)))
     .filter(chemin => fs.existsSync(chemin))
     .map(chemin => ({ chemin: relatif(chemin), table: lireLaCorrespondance(lire(chemin), relatif(chemin)) }))
     .filter(c => c.table);

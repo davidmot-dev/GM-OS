@@ -83,12 +83,24 @@ export type CurrentView =
     | 'deck-player'
     | 'rulebook'
     | 'rule-workshop'
-    | 'campaign-form';
+    | 'campaign-form'
+    /** La fiche du groupe de la campagne — la Cabale de NOC (`GameDriver.ficheDeGroupe`). */
+    | 'group-sheet';
 
 
 // ─────────────────────────────────────────────
 // Campaign
 // ─────────────────────────────────────────────
+
+/** Le groupe d'une campagne — voir `Campaign.groupe`. */
+export interface GroupeDeCampagne {
+    /** L'identifiant de sa fiche dans la bibliothèque du moteur, une fois liée. */
+    ficheId?: string;
+    /** Les valeurs de la fiche, sous les identifiants de sa correspondance. */
+    sheetData: Record<string, unknown>;
+    /** Quand GM-OS a écrit ces valeurs pour la dernière fois — l'arbitre à l'ouverture. */
+    donneesModifieesLe?: number;
+}
 
 export interface Campaign {
     id: string;
@@ -149,6 +161,15 @@ export interface Campaign {
      * avant le réglage. *On ne fait pas payer une nouveauté à l'existant.*
      */
     themeDuJeu?: boolean;
+    /**
+     * **Le groupe de la campagne** — la Cabale de NOC, quand le pilote déclare
+     * une `ficheDeGroupe`. Créé à la première ouverture de sa fiche.
+     *
+     * Sur la campagne et non chez un joueur : c'est un personnage commun à toute
+     * la table. Il porte ce que l'hôte des fiches attend d'un personnage, et
+     * rien de plus — la fiche HTML fait foi, ses valeurs redescendent ici.
+     */
+    groupe?: GroupeDeCampagne;
 
     /**
      * Quand la campagne a été clôturée. C'est elle qui la range.

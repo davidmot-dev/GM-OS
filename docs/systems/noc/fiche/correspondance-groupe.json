@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "noc-cabale",
+  "commentaire": "Correspondance de la fiche de groupe de NOC — la Cabale, commune à toute la table. Écrite le 2026-10-13. Ses valeurs vivent sur la campagne (Campaign.groupe), pas chez un joueur ; aucun gabarit GM-OS n'est tenu en double, chaque clé de la fiche garde donc son nom côté GM-OS. Les sept pistes de l'étoile sont des hotspots numérotés : elles remontent en un seul nombre.",
+  "champs": [
+    {
+      "gmos": "identity.name",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "identity.archetype",
+      "fiche": "identity.archetype"
+    },
+    {
+      "gmos": "identity.quality",
+      "fiche": "identity.quality"
+    },
+    {
+      "gmos": "identity.flaw",
+      "fiche": "identity.flaw"
+    },
+    {
+      "gmos": "identity.weaknesses",
+      "fiche": "identity.weaknesses"
+    },
+    {
+      "gmos": "identity.block",
+      "fiche": "identity.block"
+    },
+    {
+      "gmos": "identity.coordinates",
+      "fiche": "identity.coordinates"
+    },
+    {
+      "gmos": "identity.description",
+      "fiche": "identity.description"
+    },
+    {
+      "gmos": "identity.front_companies",
+      "fiche": "identity.front_companies"
+    },
+    {
+      "gmos": "identity.staff",
+      "fiche": "identity.staff"
+    },
+    {
+      "gmos": "network.informants",
+      "fiche": "network.informants"
+    },
+    {
+      "gmos": "progression.points",
+      "fiche": "progression.points"
+    },
+    {
+      "gmos": "progression.regressions",
+      "fiche": "progression.regressions"
+    },
+    {
+      "gmos": "domains.life",
+      "fiche": "domains.life"
+    },
+    {
+      "gmos": "assets.life.asylum",
+      "fiche": "assets.life.asylum"
+    },
+    {
+      "gmos": "assets.life.infirmary",
+      "fiche": "assets.life.infirmary"
+    },
+    {
+      "gmos": "assets.life.creed",
+      "fiche": "assets.life.creed"
+    },
+    {
+      "gmos": "assets.life.legends",
+      "fiche": "assets.life.legends"
+    },
+    {
+      "gmos": "domains.erudition",
+      "fiche": "domains.erudition"
+    },
+    {
+      "gmos": "assets.erudition.library",
+      "fiche": "assets.erudition.library"
+    },
+    {
+      "gmos": "assets.erudition.files",
+      "fiche": "assets.erudition.files"
+    },
+    {
+      "gmos": "assets.erudition.laboratory",
+      "fiche": "assets.erudition.laboratory"
+    },
+    {
+      "gmos": "assets.erudition.informants",
+      "fiche": "assets.erudition.informants"
+    },
+    {
+      "gmos": "domains.social",
+      "fiche": "domains.social"
+    },
+    {
+      "gmos": "assets.social.false_identities",
+      "fiche": "assets.social.false_identities"
+    },
+    {
+      "gmos": "assets.social.staff",
+      "fiche": "assets.social.staff"
+    },
+    {
+      "gmos": "assets.social.expert",
+      "fiche": "assets.social.expert"
+    },
+    {
+      "gmos": "assets.social.unity",
+      "fiche": "assets.social.unity"
+    },
+    {
+      "gmos": "domains.technical",
+      "fiche": "domains.technical"
+    },
+    {
+      "gmos": "assets.technical.passages",
+      "fiche": "assets.technical.passages"
+    },
+    {
+      "gmos": "assets.technical.workshop",
+      "fiche": "assets.technical.workshop"
+    },
+    {
+      "gmos": "assets.technical.clean_room",
+      "fiche": "assets.technical.clean_room"
+    },
+    {
+      "gmos": "assets.technical.observatory",
+      "fiche": "assets.technical.observatory"
+    },
+    {
+      "gmos": "domains.soul",
+      "fiche": "domains.soul"
+    },
+    {
+      "gmos": "assets.soul.museum",
+      "fiche": "assets.soul.museum"
+    },
+    {
+      "gmos": "assets.soul.interrogation_room",
+      "fiche": "assets.soul.interrogation_room"
+    },
+    {
+      "gmos": "assets.soul.truth_fragments",
+      "fiche": "assets.soul.truth_fragments"
+    },
+    {
+      "gmos": "assets.soul.refuge",
+      "fiche": "assets.soul.refuge"
+    },
+    {
+      "gmos": "domains.action",
+      "fiche": "domains.action"
+    },
+    {
+      "gmos": "assets.action.armory",
+      "fiche": "assets.action.armory"
+    },
+    {
+      "gmos": "assets.action.vehicles",
+      "fiche": "assets.action.vehicles"
+    },
+    {
+      "gmos": "assets.action.access_level",
+      "fiche": "assets.action.access_level"
+    },
+    {
+      "gmos": "assets.action.fortifications",
+      "fiche": "assets.action.fortifications"
+    },
+    {
+      "gmos": "domains.status",
+      "fiche": "domains.status"
+    },
+    {
+      "gmos": "assets.status.capital",
+      "fiche": "assets.status.capital"
+    },
+    {
+      "gmos": "assets.status.standing",
+      "fiche": "assets.status.standing"
+    },
+    {
+      "gmos": "assets.status.network",
+      "fiche": "assets.status.network"
+    },
+    {
+      "gmos": "assets.status.front_companies",
+      "fiche": "assets.status.front_companies"
+    },
+    {
+      "gmos": "tracks.espoir",
+      "fiche": "tracks.espoir"
+    },
+    {
+      "gmos": "tracks.vecu",
+      "fiche": "tracks.vecu"
+    },
+    {
+      "gmos": "tracks.singularite",
+      "fiche": "tracks.singularite"
+    },
+    {
+      "gmos": "tracks.traque",
+      "fiche": "tracks.traque"
+    },
+    {
+      "gmos": "tracks.noirceur",
+      "fiche": "tracks.noirceur"
+    },
+    {
+      "gmos": "tracks.division",
+      "fiche": "tracks.division"
+    },
+    {
+      "gmos": "tracks.degradation",
+      "fiche": "tracks.degradation"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "identity.symbol",
+      "pourquoi": "Le Symbole est une image : elle reste dans la fiche du moteur, que GM-OS sauvegarde déjà avec sa bibliothèque. La transporter dans la campagne alourdirait chaque sauvegarde et chaque envoi aux tablettes."
+    }
+  ]
+}

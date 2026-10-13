@@ -319,6 +319,14 @@ export const RevueDuPilote: React.FC<{
         </Bloc>
       )}
 
+      {driver.ficheDeGroupe && (
+        <Bloc titre="Fiche du groupe">
+          <Ligne clef={driver.ficheDeGroupe.libelle}>
+            gabarit <Id valeur={driver.ficheDeGroupe.gabaritDeLaFiche} /> — sur la campagne, commune à toute la table
+          </Ligne>
+        </Bloc>
+      )}
+
       {(driver.ressourcesDeTable?.length ?? 0) > 0 && (
         <Bloc titre="Monnaie de table">
           {driver.ressourcesDeTable!.map((ressource, i) => (

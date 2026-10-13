@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
     lireLaCorrespondance, verifierLaCorrespondance, cheminDeLaCorrespondance,
+    FICHIERS_DE_CORRESPONDANCE,
     type CorrespondanceDeFiche,
 } from '../src/modules/fiches/correspondanceDeFiche';
 
@@ -52,19 +53,25 @@ function gabaritsDuMoteur(): GabaritDuMoteur[] {
 const champsDu = (gabarit: GabaritDuMoteur): ChampDuGabarit[] =>
     (gabarit.pages ?? []).flatMap(p => p.fields ?? []);
 
-/** Les jeux qui déclarent une correspondance, découverts et non recopiés. */
+/**
+ * Les tables déposées, découvertes et non recopiées — `jeu/fichier`, pour
+ * qu'un échec nomme la bonne : un jeu peut porter celle de ses personnages ET
+ * celle de sa fiche de groupe (la Cabale de NOC).
+ */
 const AVEC_TABLE = fs
     .readdirSync(SYSTEMES, { withFileTypes: true })
     .filter(e => e.isDirectory())
-    .map(e => e.name)
-    .filter(jeu => fs.existsSync(path.join(SYSTEMES, jeu, 'fiche', 'correspondance.json')));
+    .flatMap(e => FICHIERS_DE_CORRESPONDANCE.map(fichier => `${e.name}/${fichier}`))
+    .filter(t => fs.existsSync(path.join(SYSTEMES, path.dirname(t), 'fiche', path.basename(t))));
 
 const MOTEURS = gabaritsDuMoteur();
 
-function tableDe(jeu: string): CorrespondanceDeFiche {
-    const chemin = path.join(SYSTEMES, jeu, 'fiche', 'correspondance.json');
-    const table = lireLaCorrespondance(fs.readFileSync(chemin, 'utf8'), `docs/${cheminDeLaCorrespondance(`systems/${jeu}`)}`);
-    expect(table, `la table de ${jeu}`).not.toBeNull();
+function tableDe(jeuEtFichier: string): CorrespondanceDeFiche {
+    const jeu = path.dirname(jeuEtFichier);
+    const fichier = path.basename(jeuEtFichier) as typeof FICHIERS_DE_CORRESPONDANCE[number];
+    const chemin = path.join(SYSTEMES, jeu, 'fiche', fichier);
+    const table = lireLaCorrespondance(fs.readFileSync(chemin, 'utf8'), `docs/${cheminDeLaCorrespondance(`systems/${jeu}`, fichier)}`);
+    expect(table, `la table ${jeuEtFichier}`).not.toBeNull();
     return table!;
 }
 

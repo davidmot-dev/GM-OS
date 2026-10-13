@@ -49,9 +49,10 @@ describe('les portes du cockpit', () => {
         expect(portes.has(vue)).toBe(true);
     });
 
-    it('en couvre bien sept — sans quoi la boucle ci-dessus ne prouverait rien', () => {
+    it('en couvre bien huit — sans quoi la boucle ci-dessus ne prouverait rien', () => {
         /* Une liste vide fait passer `it.each` sans exécuter un seul cas. */
-        expect(desDeuxCotes.length).toBe(7);
+        // Huit depuis la fiche du groupe (la Cabale de NOC, 2026-10-13).
+        expect(desDeuxCotes.length).toBe(8);
     });
 
     it('trouve les portes en lisant vraiment le fichier', () => {

@@ -78,6 +78,8 @@ export const AFFINITE_DES_VUES: Record<CurrentView, Affinite> = {
       étaient le même.*
     */
     storyboard: 'les-deux',
+    // La fiche du groupe (la Cabale de NOC) : bâtie avant, dépensée pendant.
+    'group-sheet': 'les-deux',
 };
 
 /**

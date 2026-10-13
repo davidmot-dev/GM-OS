@@ -252,9 +252,17 @@ export interface CorrespondanceDeFiche {
     absents?: ChampAbsent[];
 }
 
+/**
+ * Les deux correspondances qu'un jeu peut déposer dans `fiche/` : celle des
+ * personnages, et celle de la **fiche de groupe** (la Cabale de NOC,
+ * `GameDriver.ficheDeGroupe`). Les contrôles du dépôt les parcourent toutes.
+ */
+export const FICHIERS_DE_CORRESPONDANCE = ['correspondance.json', 'correspondance-groupe.json'] as const;
+export type FichierDeCorrespondance = typeof FICHIERS_DE_CORRESPONDANCE[number];
+
 /** Le chemin, relatif à `docs/`, de la correspondance d'un système. */
-export function cheminDeLaCorrespondance(racine: string): string {
-    return `${racine}/fiche/correspondance.json`;
+export function cheminDeLaCorrespondance(racine: string, fichier: FichierDeCorrespondance = 'correspondance.json'): string {
+    return `${racine}/fiche/${fichier}`;
 }
 
 /**

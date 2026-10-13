@@ -1145,6 +1145,22 @@ export function controlerLePilote(
 
     }
 
+    // ---- La fiche du groupe (la Cabale de NOC) ------------------------------
+    const groupe = driver.ficheDeGroupe;
+    if (groupe) {
+        if (!groupe.libelle?.trim()) {
+            erreur('ficheDeGroupe.libelle', 'La fiche de groupe doit dire comment le jeu appelle son groupe (« Cabale »).');
+        }
+        if (!groupe.gabaritDeLaFiche?.trim()) {
+            erreur('ficheDeGroupe.gabaritDeLaFiche', 'La fiche de groupe doit nommer son gabarit dans le moteur de fiches (« noc-cabale »).');
+        } else if (groupe.gabaritDeLaFiche === driver.templateId) {
+            avertir(
+                'ficheDeGroupe.gabaritDeLaFiche',
+                'La fiche de groupe vise le gabarit des personnages : le groupe porterait la feuille d’un Héros.',
+            );
+        }
+    }
+
     // ---- Les réserves de table ---------------------------------------------
     (driver.ressourcesDeTable ?? []).forEach((ressource, i) => {
         const report = ressource.reportSurEpuisement;
