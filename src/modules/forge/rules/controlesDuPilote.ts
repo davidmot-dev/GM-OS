@@ -968,6 +968,15 @@ export function controlerLePilote(
         );
     }
 
+    const modeDInitiative = typeof driver.combat?.initiative === 'object' ? driver.combat.initiative?.mode : undefined;
+    if (modeDInitiative !== undefined && !['formule', 'alternance', 'paquet'].includes(modeDInitiative)) {
+        erreur('combat.initiative.mode', `« ${String(modeDInitiative)} » n'est pas un ordre d'action connu : formule, alternance (Dune) ou paquet (Torg).`);
+    }
+    // Torg : Inspiration et Fatigués de la carte d'Action ajoutent ou retirent du Choc.
+    if (modeDInitiative === 'paquet' && !driver.combat?.dommages?.choc) {
+        avertir('combat.initiative.mode', "Le Paquet d'Action applique Inspiration et Fatigués au Choc, mais le pilote ne déclare pas où il vit (`combat.dommages.choc`) : ces deux boutons ne feront rien.");
+    }
+
     const tri = driver.combat?.initiativeSort;
     if (tri !== undefined && tri !== 'asc' && tri !== 'desc') {
         erreur('combat.initiativeSort', `« ${String(tri)} » n'est ni « asc » ni « desc ».`);

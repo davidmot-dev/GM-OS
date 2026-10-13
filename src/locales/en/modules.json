@@ -2670,6 +2670,7 @@
         "moteur_inconnu": "Engine “{{moteur}}”: not in this list — pick one.",
         "resume_cartes": "Initiative cards (1–{{count}})",
         "resume_alternance": "Alternating sides",
+        "resume_paquet": "Action deck",
         "resume_initiative": "Numbered initiative",
         "resume_portees": "{{count}} range bands",
         "resume_personas": "{{count}} persona(s) set",

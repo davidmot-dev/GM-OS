@@ -7,6 +7,50 @@
  */
 
 export type CardFormat = 'poker' | 'tarot';
+
+/** Voir `DeckManifest.role`. */
+export type RoleDuPaquet = 'action' | 'destin';
+
+/**
+ * **Ce que la Ligne de Conflit d'une carte d'Action peut donner à un camp** —
+ * la liste fermée de Torg Eternity (carnet NotebookLM « Torg », 2026-10-13).
+ * Les effets sont dans `modules/combat/logic/paquetDAction.ts`.
+ */
+export type EffetDeConflit =
+    | 'inspiration' | 'un-de-plus' | 'vivacite'
+    | 'deferlement' | 'desorientes' | 'destabilises' | 'fatigues' | 'revers';
+
+/** Une Ligne de Conflit : le camp qui agit en premier, et ce que chaque camp reçoit. */
+export interface LigneDeConflit {
+    /** `H` : les Héros agissent d'abord ; `V` : les Vilains. */
+    premier: 'H' | 'V';
+    heros?: EffetDeConflit[];
+    vilains?: EffetDeConflit[];
+}
+
+/** Les Actions approuvées que le bas d'une carte d'Action peut nommer. */
+export type ActionApprouvee =
+    | 'attaque' | 'defense' | 'intimidation' | 'manoeuvre' | 'provocation' | 'ruse' | 'actions-multiples' | 'toutes';
+
+/**
+ * **Ce qu'une carte d'Action dit** — saisi par le meneur, une fois : à la
+ * première retourne, ou d'avance dans Deck-OS (décision de David, 2026-10-13).
+ * Les cartes sont des images ; ce qui est imprimé dessus, GM-OS ne le lit pas.
+ */
+export interface CarteDAction {
+    /** La ligne claire, des scènes standard. */
+    standard: LigneDeConflit;
+    /** La ligne sombre, des scènes dramatiques. */
+    dramatique: LigneDeConflit;
+    approuvees: ActionApprouvee[];
+}
+
+export interface MetadonneesDeCarte {
+    name?: string;
+    description?: string;
+    /** Une carte d'un Paquet d'Action, décrite. */
+    action?: CarteDAction;
+}
 export type CardOrientation = 'portrait' | 'landscape';
 
 export interface DeckManifest {
@@ -22,7 +66,14 @@ export interface DeckManifest {
     filenamePattern?: string; // Optionnel : pattern (ex: "card_{n}" ou "{n}")
     startAtZero?: boolean;  // Si vrai, l'index commence à 0 (default: false = 1)
     padding?: number;       // Optionnel : nombre de chiffres (ex: 2 pour "01")
-    cardMetadata?: Record<number, { name?: string; description?: string }>; // Optionnel : métadonnées par index
+    cardMetadata?: Record<number, MetadonneesDeCarte>; // Optionnel : métadonnées par index
+    /**
+     * **Ce que le paquet est pour son jeu** — Torg, 2026-10-13. Le **Paquet
+     * d'Action** reste chez le meneur et rythme les rounds de Combat-OS ; le
+     * **Paquet du Destin** se distribue aux joueurs. Absent : un paquet comme
+     * les autres, oracle ou butin.
+     */
+    role?: RoleDuPaquet;
     /**
      * **Les joueurs peuvent-ils piocher eux-mêmes dans ce paquet ?**
      *

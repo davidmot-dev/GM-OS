@@ -115,16 +115,54 @@ part de quel coup retirer.
 
   « Soins » ne touche pas au Choc : il décoche les Blessures.
 - **« Soins »** décoche les Blessures sans passer par la table.
-- **Initiative :** la Dextérité, dans l'ordre croissant — en attendant le Paquet d'Action.
 - **Distances** en mètres, de « au corps à corps » à « Portée Longue ».
+
+---
+
+## Le Paquet d'Action — l'ordre du round
+
+![Le Paquet d'Action dans Combat-OS : la carte du round, le camp qui commence, la Ligne de Conflit et l'Action approuvée](captures/jeu-torg-paquet-d-action.jpg)
+
+Il n'y a pas d'initiative individuelle. **Au début de chaque round, le meneur retourne une carte
+d'Action** (Combat-OS, bloc d'initiative) :
+
+1. **Standard ou Dramatique** : choisissez la ligne avant de retourner. La ligne claire sert à la
+   plupart des combats ; la sombre aux moments charnières, aux dénouements, et à toute scène face à
+   une créature à **Effroi**.
+2. **Qui commence** : **H**, les Héros (les joueurs et leurs alliés), ou **V**, les Vilains. Le camp
+   désigné joue **tous ses tours, dans l'ordre de son choix** — cliquez chacun quand il agit —, puis
+   l'autre camp. Le round fini : **« Retourner la carte suivante »**.
+3. **La Ligne de Conflit** donne à chaque camp ses avantages ou désavantages. Ils s'annoncent sur la
+   carte ; trois se jouent d'un clic :
+
+   | Effet | Ce qu'il fait | Dans GM-OS |
+   | :--- | :--- | :--- |
+   | **Inspiration** | Le camp récupère 2 Choc — un KO reprend connaissance | bouton « −2 Choc » |
+   | **Un de plus !** | Un second d20 s'ajoute à chaque test (il explose, sans minimum de 10) | le bouton « Un de plus ! » du jet est mis en avant |
+   | **Vivacité** | Le camp prend un second tour complet | bouton « Second tour » |
+   | **Déferlement** | Test de Contradiction pour qui n'est pas natif du cosm | annoncé |
+   | **Désorientés** | Aucune carte ne se joue depuis la Réserve d'Action ce round | annoncé |
+   | **Déstabilisés** | −2 à tous les tests | **retiré seul** au jet des Héros |
+   | **Fatigués** | 2 Choc à la fin du tour de chacun | bouton « +2 Choc » |
+   | **Revers** | Une complication — à défaut, le camp perd son tour | annoncé |
+
+4. **L'Action approuvée** (en bas de la carte) : un héros qui la réussit pioche une Carte du Destin.
+
+**Vos cartes, décrites une fois.** Dans Deck-OS, marquez votre paquet **Rôle : Paquet d'Action**.
+Quand une carte encore inconnue sort, Combat-OS vous demande ce qu'elle dit — les deux lignes,
+les effets de chaque camp, l'Action approuvée — et s'en souvient. Vous pouvez aussi les décrire
+d'avance, carte par carte, dans le lecteur de Deck-OS. Sans paquet, Combat-OS vous laisse désigner
+le camp qui commence.
+
+> Les effets se lisent dans le panneau de jet **de votre fenêtre** : une tablette ne voit pas la carte
+> du round (Déstabilisés n'y est pas retiré seul).
 
 ---
 
 ## Ce qui manque encore
 
-- **Le Paquet d'Action** (l'initiative par faction, la Ligne de Conflit, l'Action approuvée) et
-  **les Cartes du Destin** (la main, la Réserve d'Action) : en chantier, ils attendent vos cartes. L'avantage
-  **Inspiration** (2 Choc rendus à toute une faction) viendra avec eux.
+- **Les Cartes du Destin** (la main, la Réserve d'Action, le Moment critique, la pioche sur Action
+  approuvée) : en chantier.
 - **La Loi de l'Action** de l'Empire du Nil (une seconde Possibilité pour relancer) et **les Lois
   des cosms** qui changent l'Annulation.
 - **Les sbires** (vaincus dès la première Blessure) et **les hordes** (Choc mis en commun) n'ont pas

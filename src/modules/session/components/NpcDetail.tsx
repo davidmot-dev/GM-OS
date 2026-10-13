@@ -20,6 +20,7 @@ import { useVoiceStore } from '../../voice/useVoiceStore';
 import { depuisUnPnjDeCampagne } from '../../voice/logic/personnageAVoix';
 import { AudioLines } from 'lucide-react';
 import { HealthManager } from './health/HealthManager';
+import { initiativeParCamps } from '../../combat/logic/OrdreDuTour';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
 
@@ -197,7 +198,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
      */
     const piloteActif = getActiveDriver();
     const initiativeChiffree = !piloteActif?.combat?.initiativeCards
-        && piloteActif?.combat?.initiative?.mode !== 'alternance';
+        && !initiativeParCamps(piloteActif?.combat?.initiative?.mode);
     const { closeModal } = useModalStore();
     const { addToken } = useMapStore();
     const currentId = embeddedId || selectedEntityId;

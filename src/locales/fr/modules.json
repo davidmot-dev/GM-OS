@@ -2670,6 +2670,7 @@
         "moteur_inconnu": "Moteur « {{moteur}} » : inconnu de cette liste — choisissez-en un.",
         "resume_cartes": "Cartes d’initiative (1–{{count}})",
         "resume_alternance": "Alternance des camps",
+        "resume_paquet": "Paquet d'Action",
         "resume_initiative": "Initiative chiffrée",
         "resume_portees": "{{count}} paliers de portée",
         "resume_personas": "{{count}} persona(s) réglé(s)",

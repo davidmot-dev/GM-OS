@@ -56,6 +56,8 @@ interface MiseEnScene {
     casesCochees?: number;
     /** Un coup porté avant la photo — un total de dommages, que la règle du jeu traduit (Torg). */
     coup?: number;
+    /** La carte d'Action que le round retourne (Torg) — un Vilain entre en combat face au PJ. */
+    paquetDAction?: Record<string, unknown>;
 }
 
 const MISES_EN_SCENE: MiseEnScene[] = [
@@ -111,6 +113,11 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         composantes: ['dexterite', 'esquive'],
         casesCochees: 1,
         coup: 17,
+        paquetDAction: {
+            standard: { premier: 'H', heros: ['inspiration'], vilains: ['destabilises'] },
+            dramatique: { premier: 'V', vilains: ['vivacite'], heros: ['fatigues'] },
+            approuvees: ['provocation'],
+        },
     },
 ];
 
@@ -118,7 +125,7 @@ interface Seuil { aPartirDe: number; label: string; etat?: string }
 interface Pilote {
     gameDriver: {
         id: string; name: string; corpusId?: string; templateId: string; ressourcesDeTable?: unknown[]; ficheDeGroupe?: unknown;
-        combat?: { casesDeSante?: { nombre: number; seuils?: Seuil[]; libelle?: string; champ?: string } };
+        combat?: { casesDeSante?: { nombre: number; seuils?: Seuil[]; libelle?: string; champ?: string }; initiative?: { mode?: string } };
     };
     sheetTemplate?: { id: string };
 }
@@ -325,6 +332,30 @@ for (const { mise, pilote } of JEUX) {
             const carte = f.locator('[data-combattant]').first();
             await expect(carte).toBeVisible({ timeout: 15_000 });
             await photographier(carte, `jeu-${mise.slug}-sante`);
+        }
+
+        // Le Paquet d'Action : une carte décrite, un Vilain en face, la première carte retournée.
+        if (mise.paquetDAction && pilote.gameDriver.combat?.initiative?.mode === 'paquet') {
+            const systeme = await f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState().campaigns.find(c => c.id === id)?.system ?? '', campagne);
+            await f.evaluate(({ systeme, carte }) => {
+                const w = window as unknown as Fenetre;
+                w.useSessionOSStore.setState(st => ({
+                    decks: [...st.decks.filter(d => d.id !== 'capture-action'), {
+                        id: 'capture-action', name: 'Paquet d’Action', systemId: systeme, folderPath: 'decks/torg/action',
+                        cardCount: 66, format: 'poker', orientation: 'portrait', useDiscard: true, role: 'action',
+                        cardMetadata: { 12: { name: 'Carte n° 12', action: carte as never } },
+                    }],
+                    deckStates: { ...st.deckStates, 'capture-action': { deckId: 'capture-action', remainingIndices: [12], discardedIndices: [], currentCardIndex: null } },
+                }));
+                w.useCombatStore.getState().addCombatant({ name: 'Gospog', init: 0, isPlayer: false, faction: 'enemy', statuses: [] });
+            }, { systeme, carte: mise.paquetDAction });
+            const paquet = f.locator('[data-paquet-d-action]').first();
+            await expect(paquet).toBeVisible({ timeout: 15_000 });
+            await paquet.getByRole('button', { name: 'Retourner la première carte d’Action' }).click();
+            await expect(paquet.locator('[data-qui-commence]')).toBeVisible();
+            // Les notifications du coup et de la pioche passent par-dessus : on les laisse s'éteindre (3 s).
+            await f.waitForTimeout(3_500);
+            await photographier(paquet, `jeu-${mise.slug}-paquet-d-action`);
         }
     });
 }

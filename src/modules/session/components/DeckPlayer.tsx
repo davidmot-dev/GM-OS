@@ -16,6 +16,8 @@ import {
 import { useDeckPlayer } from '../hooks/useDeckPlayer';
 import { DeckInterpreter } from '../logic/DeckInterpreter';
 import { Panneau, Etiquette } from '../../../components/socle';
+import { gmToast } from '../../../stores/useToastStore';
+import FicheDeCarteDAction from './FicheDeCarteDAction';
 
 const DeckPlayer: React.FC = () => {
     const { t } = useTranslation();
@@ -273,6 +275,21 @@ const DeckPlayer: React.FC = () => {
                                     <div className="text-center">
                                         <p className="font-display text-base font-bold text-app-text">{nomDeLaCarte(activeState.currentCardIndex)}</p>
                                         <p className="text-ui-10 text-app-muted">{t('modules:session.deck_module.player.flip_card_tooltip')}</p>
+                                    </div>
+                                )}
+                                {/*
+                                  **Décrire une carte d'Action d'avance** — Torg, 2026-10-13. Le même
+                                  formulaire qu'à la première retourne dans Combat-OS : une carte ne
+                                  se décrit jamais de deux façons.
+                                */}
+                                {activeDeck.role === 'action' && activeState.currentCardIndex !== null && (
+                                    <div className="w-full rounded-xl border border-app-border/40 p-3">
+                                        <FicheDeCarteDAction
+                                            key={`${activeDeck.id}-${activeState.currentCardIndex}`}
+                                            deck={activeDeck}
+                                            index={activeState.currentCardIndex}
+                                            onEnregistree={() => gmToast('Carte d’Action décrite.', 'success')}
+                                        />
                                     </div>
                                 )}
                             </div>

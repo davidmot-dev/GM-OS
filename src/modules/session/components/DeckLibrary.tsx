@@ -16,7 +16,7 @@ import {
     ChevronLeft,
 } from 'lucide-react';
 import { Panneau, Etiquette } from '../../../components/socle';
-import type { CardFormat, CardOrientation } from '../store/types';
+import type { CardFormat, CardOrientation, DeckManifest } from '../store/types';
 import { useDeckLibrary } from '../hooks/useDeckLibrary';
 
 const DeckLibrary: React.FC = () => {
@@ -42,6 +42,14 @@ const DeckLibrary: React.FC = () => {
 
     /* Le paquet que le lecteur a chargé — « En service » dans la liste. */
     const enService = useSessionOSStore(s => s.selectedDeckId);
+    const updateDeck = useSessionOSStore(s => s.updateDeck);
+    const getGameDriver = useSessionOSStore(s => s.getGameDriver);
+    /**
+     * **Le rôle d'un paquet ne se propose qu'aux jeux qui en ont un** — Torg,
+     * 2026-10-13 : un jeu dont l'ordre d'action passe par le Paquet d'Action.
+     * Ailleurs, le choix serait un réglage mort.
+     */
+    const rolesDuJeu = (systemId: string) => getGameDriver(systemId)?.combat?.initiative?.mode === 'paquet';
 
     return (
         <div className="flex h-full w-full flex-col overflow-hidden bg-app-bg">
@@ -345,6 +353,21 @@ const DeckLibrary: React.FC = () => {
                                                     : t('modules:session.deck_module.library.agencement.phrase_ferme')}
                                             </span>
                                         </div>
+                                        {rolesDuJeu(deck.systemId) && (
+                                            <label className="flex items-center gap-2 text-ui-10 text-app-muted">
+                                                <span className="font-black uppercase tracking-widest">Rôle</span>
+                                                <select
+                                                    value={deck.role ?? ''}
+                                                    onChange={e => updateDeck(deck.id, { role: (e.target.value || undefined) as DeckManifest['role'] })}
+                                                    className="rounded-md border border-app-border bg-app-surface px-2 py-0.5 text-ui-10 font-bold text-app-text"
+                                                    data-role-du-paquet={deck.id}
+                                                >
+                                                    <option value="">Aucun — oracle, butin…</option>
+                                                    <option value="action">Paquet d’Action — rythme les rounds de Combat-OS</option>
+                                                    <option value="destin">Paquet du Destin — les mains des joueurs</option>
+                                                </select>
+                                            </label>
+                                        )}
                                     </div>
                                     <div className="flex shrink-0 flex-col items-end justify-between gap-2">
                                         <span className="text-right">

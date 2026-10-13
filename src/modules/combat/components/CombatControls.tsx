@@ -14,6 +14,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useTranslation } from 'react-i18next';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import PanneauDAlternance from './PanneauDAlternance';
+import PanneauDuPaquetDAction from './PanneauDuPaquetDAction';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import { taille } from '../../session/logic/regimeDInterface';
@@ -64,6 +65,8 @@ const CombatControls: React.FC = () => {
     const alternance = activeDriver?.combat.initiative?.mode === 'alternance'
         ? activeDriver.combat.initiative
         : null;
+    /** Torg : une carte d'Action désigne le camp qui commence chaque round. */
+    const parLePaquet = activeDriver?.combat.initiative?.mode === 'paquet';
 
     const handleAddCombatant = () => {
         /*
@@ -334,7 +337,9 @@ const CombatControls: React.FC = () => {
                     reviendrait à proposer une initiative au d20 à un jeu qui
                     n'en a pas — c'est le pis-aller qu'on vient de retirer.
                 */}
-                {alternance ? (
+                {parLePaquet ? (
+                    <PanneauDuPaquetDAction />
+                ) : alternance ? (
                     <PanneauDAlternance
                         descripteur={alternance}
                         campaignId={activeCampaignId ?? undefined}

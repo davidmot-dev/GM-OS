@@ -7,6 +7,8 @@ import PanneauDeJet from './PanneauDeJet';
 import { DiceEngine } from '../../../dice/DiceEngine';
 import { preparerLeJet, type DescripteurDeJet } from '../../../dice/DescripteurDeJet';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
+import { useSessionOSStore } from '../../useSessionOSStore';
+import { useOrdreDuTourStore } from '../../../combat/useOrdreDuTourStore';
 
 /**
  * **Le jet de Torg depuis la fiche** — 2026-10-13, relu contre le carnet
@@ -164,5 +166,47 @@ describe('le 10 de NOC', () => {
         );
         expect(res.rolls.map(r => r.val)).toEqual([10, 3, 8]);
         expect(res.successes).toBe(2);
+    });
+});
+
+/**
+ * **La carte d'Action du round, lue par le jet** (2026-10-13) : la fiche est
+ * celle d'un Héros. « Déstabilisés » retire 2 ; « Un de plus ! » se signale.
+ */
+describe('la carte d’Action du round', () => {
+    const poserLaCarte = (heros: ('destabilises' | 'un-de-plus')[]) => {
+        useSessionOSStore.setState({ decks: [{
+            id: 'pa', name: 'Action', systemId: 'torg', folderPath: 'x', cardCount: 66, format: 'poker', orientation: 'portrait', useDiscard: true,
+            role: 'action', cardMetadata: { 7: { action: { standard: { premier: 'V', heros }, dramatique: { premier: 'V' }, approuvees: [] } } },
+        }] } as never);
+        useOrdreDuTourStore.setState({
+            tour: { round: 1, campActif: 'adversaires', ontAgi: [], activationsConsecutives: 0, enAttenteDeDecision: false },
+            carte: { deckId: 'pa', index: 7 }, carteEnAttente: false, scene: 'standard',
+        });
+    };
+    afterEach(() => useOrdreDuTourStore.setState({ tour: null, carte: null, carteEnAttente: false }));
+
+    it('Déstabilisés : −2 au total d’action, ajouté aux Blessures', () => {
+        poserLaCarte(['destabilises']);
+        faces(13);
+        monter({ blessures: 1 });
+        retenir();
+        expect(screen.getByText(/Malus : −3 au total d'action — 1 Blessure, Déstabilisés \(carte d’Action\)/)).toBeTruthy();
+        lancer();
+        expect(ligne()).toMatch(/total d'action 9 \(niveau 11, −3 \(1 Blessure, Déstabilisés\)\)/);
+    });
+
+    it('« Un de plus ! » se signale avant de lancer', () => {
+        poserLaCarte(['un-de-plus']);
+        monter();
+        expect(screen.getByText(/accorde « Un de plus ! » aux Héros/)).toBeTruthy();
+    });
+
+    it('sans round ouvert, la carte ne compte pas', () => {
+        poserLaCarte(['destabilises']);
+        useOrdreDuTourStore.setState({ tour: null });
+        monter();
+        retenir();
+        expect(screen.queryByText(/Déstabilisés/)).toBeNull();
     });
 });

@@ -362,6 +362,20 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         ]);
     });
 
+    it('l’ordre d’action : un mode connu ; le Paquet d’Action veut un champ de Choc', () => {
+        const inconnu = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: '', initiative: { mode: 'tarot' } } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(inconnu.filter(c => c.ou === 'combat.initiative.mode').map(c => c.gravite)).toEqual(['erreur']);
+
+        const sansChoc = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: '', initiative: { mode: 'paquet' } } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(sansChoc.filter(c => c.ou === 'combat.initiative.mode').map(c => c.gravite)).toEqual(['avertissement']);
+    });
+
     it('les gestes d’une jauge : un nom, et un effet chiffré', () => {
         const constats = controlerLePilote(
             { combat: {

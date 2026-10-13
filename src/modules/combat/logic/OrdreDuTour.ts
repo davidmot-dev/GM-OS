@@ -31,7 +31,16 @@ import type { Combatant } from '../types';
  */
 export type Camp = 'joueurs' | 'adversaires';
 
-export type ModeDInitiative = 'formule' | 'alternance';
+/**
+ * `paquet` : Torg (2026-10-13). Une carte d'Action désigne le camp qui commence ;
+ * il joue **tous** ses tours, dans l'ordre de son choix, puis l'autre. Ni
+ * cession ni rétention : la main ne passe que quand le camp est épuisé.
+ */
+export type ModeDInitiative = 'formule' | 'alternance' | 'paquet';
+
+/** L'ordre d'action se joue-t-il par camps, sans initiative chiffrée à saisir ? */
+export const initiativeParCamps = (mode: ModeDInitiative | undefined): boolean =>
+    mode === 'alternance' || mode === 'paquet';
 
 /** Ce qu'un geste coûte, et sur quelle réserve de table. */
 export interface CoutDInitiative {
@@ -243,4 +252,29 @@ export function ouvertureGratuite(combattants: Combatant[], etat: EtatDuTour): C
 /** Le round suivant s'ouvre sur le camp désigné. */
 export function ouvrirLeRoundSuivant(etat: EtatDuTour, camp: Camp): EtatDuTour {
     return ouvrirLeRound(camp, etat.round + 1);
+}
+
+/**
+ * **Torg : un combattant prend son tour, et son camp garde la main** tant qu'il
+ * lui reste quelqu'un. Quand il est épuisé, `candidats` passe déjà à l'autre
+ * camp : le repli du livre d'alternance est exactement la règle du Paquet
+ * d'Action.
+ */
+export function agirDansSonCamp(etat: EtatDuTour, combattantId: string): EtatDuTour {
+    return conserverLaMain(agir(etat, combattantId));
+}
+
+/** Le camp chez qui l'on choisit maintenant — celui des candidats. */
+export function campQuiALaMain(combattants: Combatant[], etat: EtatDuTour): Camp {
+    const premier = candidats(combattants, etat)[0];
+    return premier ? campDe(premier) : etat.campActif;
+}
+
+/**
+ * **Vivacité** : le camp prend un second tour complet. Ses membres redeviennent
+ * libres d'agir, une fois — l'écran ne propose le geste qu'une fois par round.
+ */
+export function secondTourDuCamp(combattants: Combatant[], etat: EtatDuTour, camp: Camp): EtatDuTour {
+    const duCamp = new Set(combattants.filter(c => campDe(c) === camp).map(c => c.id));
+    return { ...etat, campActif: camp, ontAgi: etat.ontAgi.filter(id => !duCamp.has(id)), enAttenteDeDecision: false };
 }

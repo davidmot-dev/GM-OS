@@ -14,6 +14,7 @@ import { useTacticalAIStore } from '../../tactical-ai/useTacticalAIStore';
 import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { ficheDuCombattant } from '../logic/ficheDuCombattant';
+import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
 import { useDiceStore } from '../../../stores/useDiceStore';
@@ -62,10 +63,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     const { t } = useTranslation(['modules', 'common']);
     const regime = useRegimeDInterface();
 
-    const { 
-        entities, players, customSheetTemplates,
-        updateCharacterSheetData, updateEntitySheetData 
-    } = useSessionOSStore();
+    const { entities, players, customSheetTemplates } = useSessionOSStore();
     
     // Source data for dynamic stats
     const sourceCharacter = combatant.isPlayer 
@@ -120,22 +118,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
     // Target Info
     const currentTarget = combatants.find(c => c.id === combatant.targetId);
 
-    /** Écrire un champ de la fiche, par le chemin de son porteur — PJ, PNJ, ou combattant autonome. */
-    const ecrireSurLaFiche = (fieldId: string, newVal: string | number) => {
-        if (combatant.isPlayer && combatant.sourcePlayerId) {
-            const player = players.find(p => p.characters.some(c => c.id === combatant.sourcePlayerId));
-            if (player) {
-                updateCharacterSheetData(player.id, combatant.sourcePlayerId, fieldId, newVal);
-            }
-        } else if (combatant.sourceEntityId) {
-            updateEntitySheetData(combatant.sourceEntityId, fieldId, newVal);
-        } else {
-            // Standalone update
-            updateCombatant(combatant.id, { 
-                sheetData: { ...(combatant.sheetData || {}), [fieldId]: newVal }
-            });
-        }
-    };
+    /** Écrire un champ de la fiche, par le chemin de son porteur — voir `ficheDesCombattants.ts`, la seule porte. */
+    const ecrireSurLaFiche = (fieldId: string, newVal: string | number) =>
+        ecrireLaFicheDuCombattant(combatant, { [fieldId]: newVal });
 
     /** `valeur` pose la jauge au lieu de l'ajuster — un geste de la règle, « reprendre son souffle ». */
     const handleGaugeClick = (e: React.MouseEvent, fieldId: string, delta: number, valeur?: number) => {

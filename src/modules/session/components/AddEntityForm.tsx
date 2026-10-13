@@ -7,6 +7,7 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { gmToast } from '../../../stores/useToastStore';
 import { HealthInterpreter } from '../logic/HealthInterpreter';
+import { initiativeParCamps } from '../../combat/logic/OrdreDuTour';
 const AddEntityForm: React.FC = () => {
     const { t, i18n } = useTranslation(['modules', 'common']);
     const { 
@@ -39,7 +40,7 @@ const AddEntityForm: React.FC = () => {
      * d'un PNJ ne sera jamais lue : la demander invite à remplir un champ mort.
      */
     const initiativeChiffree = !pilote?.combat?.initiativeCards
-        && pilote?.combat?.initiative?.mode !== 'alternance';
+        && !initiativeParCamps(pilote?.combat?.initiative?.mode);
 
     const [name, setName] = useState('');
     const [type, setType] = useState<Entity['type']>('npc');

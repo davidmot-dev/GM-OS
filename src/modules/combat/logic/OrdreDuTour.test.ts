@@ -12,6 +12,10 @@ import {
     retentionPossible,
     ouvertureGratuite,
     ouvrirLeRoundSuivant,
+    agirDansSonCamp,
+    campQuiALaMain,
+    secondTourDuCamp,
+    initiativeParCamps,
     type DescripteurDInitiative,
 } from './OrdreDuTour';
 import type { Combatant } from '../types';
@@ -197,5 +201,43 @@ describe('le round suivant', () => {
             activationsConsecutives: 0,
             enAttenteDeDecision: false,
         });
+    });
+});
+
+/**
+ * **Torg : le Paquet d'Action** (2026-10-13). La carte désigne le camp qui
+ * commence ; il joue tous ses tours dans l'ordre de son choix, puis l'autre.
+ */
+describe('le mode « paquet » de Torg', () => {
+    it('le camp garde la main tant qu’il lui reste quelqu’un — ni cession, ni rétention', () => {
+        let tour = ouvrirLeRound('joueurs');
+        tour = agirDansSonCamp(tour, 'paul');
+        expect(tour.enAttenteDeDecision).toBe(false);
+        expect(candidats(TABLE, tour).map(c => c.id)).toEqual(['duncan']);
+        expect(campQuiALaMain(TABLE, tour)).toBe('joueurs');
+    });
+
+    it('le camp épuisé, l’autre joue tous ses tours', () => {
+        let tour = ouvrirLeRound('joueurs');
+        tour = agirDansSonCamp(agirDansSonCamp(tour, 'paul'), 'duncan');
+        expect(campQuiALaMain(TABLE, tour)).toBe('adversaires');
+        expect(candidats(TABLE, tour).map(c => c.id)).toEqual(['harkonnen', 'sardaukar']);
+        tour = agirDansSonCamp(agirDansSonCamp(tour, 'harkonnen'), 'sardaukar');
+        expect(roundTermine(TABLE, tour)).toBe(true);
+    });
+
+    it('Vivacité : le camp rejoue un tour complet', () => {
+        let tour = ouvrirLeRound('joueurs');
+        tour = agirDansSonCamp(agirDansSonCamp(tour, 'paul'), 'duncan');
+        tour = secondTourDuCamp(TABLE, tour, 'joueurs');
+        expect(campQuiALaMain(TABLE, tour)).toBe('joueurs');
+        expect(candidats(TABLE, tour).map(c => c.id)).toEqual(['paul', 'duncan']);
+    });
+
+    it('ne demande pas d’initiative chiffrée, comme l’alternance', () => {
+        expect(initiativeParCamps('paquet')).toBe(true);
+        expect(initiativeParCamps('alternance')).toBe(true);
+        expect(initiativeParCamps('formule')).toBe(false);
+        expect(initiativeParCamps(undefined)).toBe(false);
     });
 });

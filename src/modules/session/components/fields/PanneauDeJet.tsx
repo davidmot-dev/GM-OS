@@ -15,6 +15,7 @@ import {
     lancerUneChaine, lancerLaPossibilite, ceQueLAnnulationAnnule, resoudreTorg, ND_DE_L_ANNULATION,
     type DesDeTorg, type OptionsDeTorg,
 } from '../../../dice/systemes/torg';
+import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
@@ -239,6 +240,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ? Math.min(3, Math.max(0, niveauDuGroupe(valeurs, descripteur.torg.blessures))) : 0;
     const possibilitesTorg = torg && descripteur.torg?.possibilites
         ? Math.max(0, niveauDuGroupe(valeurs, descripteur.torg.possibilites)) : 0;
+    /*
+      **La carte d'Action du round** (2026-10-13) : le panneau de jet est celui
+      des fiches de personnage, donc des Héros. « Déstabilisés » retire 2 au
+      total d'action ; « Un de plus ! » se signale sur son bouton.
+    */
+    const effetsDuRound = useEffetsDuRound('joueurs');
+    const destabilises = torg && effetsDuRound.includes('destabilises');
+    const unDePlusDeLaCarte = torg && effetsDuRound.includes('un-de-plus');
+    const malusTorg = blessuresTorg + (destabilises ? 2 : 0);
+    const raisonsDuMalusTorg = [
+        blessuresTorg ? `${blessuresTorg} Blessure${blessuresTorg > 1 ? 's' : ''}` : '',
+        destabilises ? 'Déstabilisés (carte d’Action)' : '',
+    ].filter(Boolean).join(', ');
     const [plageCritique, setPlageCritique] = useState(1);
     const [testDeTorg, setTestDeTorg] = useState<{
         des: DesDeTorg; options: OptionsDeTorg; niveau: number; difficulte: number; entraine: boolean; titre: string;
@@ -512,8 +526,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         // Torg : le niveau est le seuil additionné, la difficulté le Niveau de Difficulté.
         const optionsTorg: OptionsDeTorg = {
             plageCritique,
-            malus: blessuresTorg,
-            raisonDuMalus: blessuresTorg ? `Blessure${blessuresTorg > 1 ? 's' : ''}` : undefined,
+            malus: malusTorg,
+            // « −3 Blessures », « −2 Déstabilisés », « −4 (2 Blessures, Déstabilisés) ».
+            raisonDuMalus: blessuresTorg && destabilises ? `(${raisonsDuMalusTorg.replace(' (carte d’Action)', '')})`
+                : blessuresTorg ? `Blessure${blessuresTorg > 1 ? 's' : ''}`
+                : destabilises ? 'Déstabilisés' : undefined,
         };
         const desTorg: DesDeTorg | null = torg ? { premier: lancerUneChaine(() => DiceEngine.roll(20), entraine) } : null;
         setTestDeTorg(desTorg ? {
@@ -928,9 +945,14 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <option value={4}>1 – 4</option>
                         </select>
                     </label>
-                    {blessuresTorg > 0 && (
-                        <span className="text-etat-alerte/80">
-                            Malus : −{blessuresTorg} au total d'action — {blessuresTorg} Blessure{blessuresTorg > 1 ? 's' : ''}
+                    {malusTorg > 0 && (
+                        <span className="text-etat-alerte/80" data-malus-de-torg>
+                            Malus : −{malusTorg} au total d'action — {raisonsDuMalusTorg}
+                        </span>
+                    )}
+                    {unDePlusDeLaCarte && (
+                        <span className="text-etat-succes/80" data-un-de-plus-de-la-carte>
+                            La carte d’Action accorde « Un de plus ! » aux Héros ce round.
                         </span>
                     )}
                     {!entraine && <span className="text-app-text/40 italic">Sans compétence : seul le 10 explose, pas le 20.</span>}
@@ -1182,7 +1204,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     )}
                     {!testDeTorg.des.unDePlus && (
                         <button type="button" onClick={() => completerTorg('unDePlus')}
-                            className="px-3 py-1 rounded-lg border border-app-border/40 text-ui-10 font-bold hover:border-accent/40 transition-colors">
+                            className={`px-3 py-1 rounded-lg border text-ui-10 font-bold hover:border-accent/40 transition-colors ${
+                                unDePlusDeLaCarte ? 'border-etat-succes/60 bg-etat-succes/10 text-etat-succes' : 'border-app-border/40'}`}>
                             Un de plus !
                         </button>
                     )}

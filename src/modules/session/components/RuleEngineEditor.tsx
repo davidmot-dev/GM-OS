@@ -63,6 +63,8 @@ export const RuleEngineEditor: React.FC = () => {
             ? t('modules:session.rule_engine_editor.agencement.resume_cartes', { count: combat.initiativeCards })
             : combat?.initiative?.mode === 'alternance'
                 ? t('modules:session.rule_engine_editor.agencement.resume_alternance')
+            : combat?.initiative?.mode === 'paquet'
+                ? t('modules:session.rule_engine_editor.agencement.resume_paquet')
                 : t('modules:session.rule_engine_editor.agencement.resume_initiative'),
         tactical: t('modules:session.rule_engine_editor.agencement.resume_portees', { count: Object.keys(tactical?.ranges ?? {}).length }),
         ai: t('modules:session.rule_engine_editor.agencement.resume_personas', { count: Object.keys(driver.aiPersonas ?? {}).length }),
