@@ -140,10 +140,38 @@ export const LIGNES: Transformation = {
     },
 };
 
+/**
+ * **Une piste de cases à cocher ↔ un nombre** — NOC et Star Trek, 2026-10-13.
+ *
+ * Leurs fiches HTML encodent les pistes imprimées (Stress, Blessures, Vécu…) en
+ * cases indépendantes `stress.1` … `stress.19`, quand GM-OS tient **un nombre**.
+ * On compte les cases cochées, où qu'elles soient : un joueur qui coche la
+ * troisième sans la deuxième a quand même trois marques à la lecture de la
+ * piste imprimée — compter « jusqu'au premier trou » perdrait la sienne.
+ *
+ * Dans l'autre sens, on coche les N premières et on décoche le reste : un nombre
+ * qui baisse (des soins) doit effacer des cases, sinon la fiche affiche un état
+ * que GM-OS a déjà quitté. Au-delà du nombre de cases, la fiche plafonne.
+ *
+ * Le cahier des charges (§ 4) demande désormais des hotspots pour une piste,
+ * qui sont un nombre d'emblée ; cette transformation sert les fiches d'avant.
+ */
+export const SERIE: Transformation = {
+    cles: 'plusieurs',
+    decomposer(valeur, nombreDeCles) {
+        const n = Math.max(0, Math.min(nombreDeCles, Math.round(Number(valeur) || 0)));
+        return Array.from({ length: nombreDeCles }, (_, i) => i < n);
+    },
+    composer(valeurs) {
+        return valeurs.filter(v => v === true || v === 'true' || v === 1 || v === '1' || v === 'on').length;
+    },
+};
+
 /** Les transformations que le format connaît, par le nom qu'une table emploie. */
 export const TRANSFORMATIONS: Record<string, Transformation> = {
     niveauEtDe: NIVEAU_ET_DE,
     lignes: LIGNES,
+    serie: SERIE,
 };
 
 /**

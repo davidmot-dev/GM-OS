@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "star-trek-adventures-2e-dossier-personnel-fr",
+  "commentaire": "Correspondance entre la fiche de Star Trek dans GM-OS et le dossier personnel du moteur de fiches. Écrite le 2026-10-13, avec la fiche GM-OS corrigée le même jour (les six attributs et les six départements de Star Trek Adventures, au lieu d'attributs d'un autre jeu et de fonctions génériques). Stress et Détermination, imprimés en cases, se comptent par la transformation « serie ». L'autre équipement descend dans l'inventaire du personnage.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "pronoms",
+      "fiche": "identity.pronouns"
+    },
+    {
+      "gmos": "grade",
+      "fiche": "identity.rank"
+    },
+    {
+      "gmos": "affectation",
+      "fiche": "identity.assignment"
+    },
+    {
+      "gmos": "role",
+      "fiche": "identity.role"
+    },
+    {
+      "gmos": "reputation",
+      "fiche": "identity.reputation"
+    },
+    {
+      "gmos": "traits_description",
+      "fiche": "identity.species_traits"
+    },
+    {
+      "gmos": "capacite_espece",
+      "fiche": "species.ability"
+    },
+    {
+      "gmos": "ideaux_description",
+      "fiche": "values.ideals"
+    },
+    {
+      "gmos": "milieu",
+      "fiche": "background.environment"
+    },
+    {
+      "gmos": "education",
+      "fiche": "background.education"
+    },
+    {
+      "gmos": "carriere",
+      "fiche": "background.career"
+    },
+    {
+      "gmos": "experience",
+      "fiche": "background.experience"
+    },
+    {
+      "gmos": "evenement_1",
+      "fiche": "background.career_event_1"
+    },
+    {
+      "gmos": "evenement_2",
+      "fiche": "background.career_event_2"
+    },
+    {
+      "gmos": "resistance",
+      "fiche": "resistance"
+    },
+    {
+      "gmos": "stress_max",
+      "fiche": "stress.max"
+    },
+    {
+      "gmos": "maitrise",
+      "fiche": "attributes.mastery"
+    },
+    {
+      "gmos": "forme",
+      "fiche": "attributes.fitness"
+    },
+    {
+      "gmos": "presence",
+      "fiche": "attributes.presence"
+    },
+    {
+      "gmos": "audace",
+      "fiche": "attributes.daring"
+    },
+    {
+      "gmos": "intuition",
+      "fiche": "attributes.insight"
+    },
+    {
+      "gmos": "raison",
+      "fiche": "attributes.reason"
+    },
+    {
+      "gmos": "commandement",
+      "fiche": "departments.command"
+    },
+    {
+      "gmos": "navigation",
+      "fiche": "departments.conn"
+    },
+    {
+      "gmos": "ingenierie",
+      "fiche": "departments.engineering"
+    },
+    {
+      "gmos": "securite",
+      "fiche": "departments.security"
+    },
+    {
+      "gmos": "medecine",
+      "fiche": "departments.medicine"
+    },
+    {
+      "gmos": "science",
+      "fiche": "departments.science"
+    },
+    {
+      "gmos": "talents",
+      "fiche": "talents"
+    },
+    {
+      "gmos": "specialisations",
+      "fiche": "specializations"
+    },
+    {
+      "gmos": "passe_temps",
+      "fiche": "hobbies"
+    },
+    {
+      "gmos": "attaques",
+      "fiche": "attacks"
+    },
+    {
+      "gmos": "regles_speciales",
+      "fiche": "special_rules"
+    },
+    {
+      "gmos": "stress",
+      "fiche": [
+        "stress.1",
+        "stress.2",
+        "stress.3",
+        "stress.4",
+        "stress.5",
+        "stress.6",
+        "stress.7",
+        "stress.8",
+        "stress.9",
+        "stress.10",
+        "stress.11",
+        "stress.12",
+        "stress.13",
+        "stress.14",
+        "stress.15",
+        "stress.16",
+        "stress.17",
+        "stress.18",
+        "stress.19"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "determination",
+      "fiche": [
+        "determination.1",
+        "determination.2",
+        "determination.3"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "inventory",
+      "fiche": "equipment.other",
+      "destination": "personnage"
+    }
+  ]
+}

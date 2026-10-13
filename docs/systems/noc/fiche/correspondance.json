@@ -1,0 +1,341 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "noc-reference",
+  "commentaire": "Correspondance entre la fiche de NOC dans GM-OS et le gabarit noc-reference du moteur de fiches. Écrite le 2026-10-13, avec la fiche GM-OS corrigée le même jour (Caractéristiques inventées retirées, Talents nommés, identité complétée). Les pistes imprimées en cases numérotées (Vécu, Espoir, Singularité, Faveurs, jauges de Péril) se comptent par la transformation « serie ». Les Domaines et les Talents sont des cases sans niveau sur cette version de la fiche : ils attendent sa régénération (cahier des charges des fiches, § 4 et § 6).",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "archetype",
+      "fiche": "identity.archetype"
+    },
+    {
+      "gmos": "description",
+      "fiche": "identity.description"
+    },
+    {
+      "gmos": "theme",
+      "fiche": "identity.theme"
+    },
+    {
+      "gmos": "qualite",
+      "fiche": "identity.quality"
+    },
+    {
+      "gmos": "defaut",
+      "fiche": "identity.flaw"
+    },
+    {
+      "gmos": "bloc",
+      "fiche": "identity.block"
+    },
+    {
+      "gmos": "cabale",
+      "fiche": "identity.cabal"
+    },
+    {
+      "gmos": "relations",
+      "fiche": [
+        "contacts.1",
+        "contacts.2",
+        "contacts.3",
+        "contacts.4"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "objets",
+      "fiche": "possessions"
+    },
+    {
+      "gmos": "faveur",
+      "fiche": [
+        "favours.current.1",
+        "favours.current.2",
+        "favours.current.3",
+        "favours.current.4"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "vecu",
+      "fiche": [
+        "tracks.vecu.1",
+        "tracks.vecu.2",
+        "tracks.vecu.3",
+        "tracks.vecu.4",
+        "tracks.vecu.5",
+        "tracks.vecu.6",
+        "tracks.vecu.7",
+        "tracks.vecu.8",
+        "tracks.vecu.9",
+        "tracks.vecu.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "espoir",
+      "fiche": [
+        "tracks.espoir.1",
+        "tracks.espoir.2",
+        "tracks.espoir.3",
+        "tracks.espoir.4",
+        "tracks.espoir.5",
+        "tracks.espoir.6",
+        "tracks.espoir.7",
+        "tracks.espoir.8",
+        "tracks.espoir.9",
+        "tracks.espoir.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "singularite",
+      "fiche": [
+        "tracks.singularite.1",
+        "tracks.singularite.2",
+        "tracks.singularite.3",
+        "tracks.singularite.4",
+        "tracks.singularite.5",
+        "tracks.singularite.6",
+        "tracks.singularite.7",
+        "tracks.singularite.8",
+        "tracks.singularite.9",
+        "tracks.singularite.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "blessures",
+      "fiche": [
+        "tracks.blessures.1",
+        "tracks.blessures.2",
+        "tracks.blessures.3",
+        "tracks.blessures.4",
+        "tracks.blessures.5",
+        "tracks.blessures.6",
+        "tracks.blessures.7",
+        "tracks.blessures.8",
+        "tracks.blessures.9",
+        "tracks.blessures.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "trauma",
+      "fiche": [
+        "tracks.trauma.1",
+        "tracks.trauma.2",
+        "tracks.trauma.3",
+        "tracks.trauma.4",
+        "tracks.trauma.5",
+        "tracks.trauma.6",
+        "tracks.trauma.7",
+        "tracks.trauma.8",
+        "tracks.trauma.9",
+        "tracks.trauma.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "traque",
+      "fiche": [
+        "tracks.traque.1",
+        "tracks.traque.2",
+        "tracks.traque.3",
+        "tracks.traque.4",
+        "tracks.traque.5",
+        "tracks.traque.6",
+        "tracks.traque.7",
+        "tracks.traque.8",
+        "tracks.traque.9",
+        "tracks.traque.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "noirceur",
+      "fiche": [
+        "tracks.noirceur.1",
+        "tracks.noirceur.2",
+        "tracks.noirceur.3",
+        "tracks.noirceur.4",
+        "tracks.noirceur.5",
+        "tracks.noirceur.6",
+        "tracks.noirceur.7",
+        "tracks.noirceur.8",
+        "tracks.noirceur.9",
+        "tracks.noirceur.10"
+      ],
+      "transforme": "serie"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "progression.points",
+      "pourquoi": "La progression se tient sur la fiche ; GM-OS n'en a pas besoin pour le jeu."
+    },
+    {
+      "fiche": "progression.regressions",
+      "pourquoi": "La progression se tient sur la fiche ; GM-OS n'en a pas besoin pour le jeu."
+    },
+    {
+      "fiche": "favours.max.1",
+      "pourquoi": "Le maximum de Faveurs n'a pas de champ dans GM-OS ; seules les Faveurs actuelles remontent."
+    },
+    {
+      "fiche": "favours.max.2",
+      "pourquoi": "Le maximum de Faveurs n'a pas de champ dans GM-OS ; seules les Faveurs actuelles remontent."
+    },
+    {
+      "fiche": "favours.max.3",
+      "pourquoi": "Le maximum de Faveurs n'a pas de champ dans GM-OS ; seules les Faveurs actuelles remontent."
+    },
+    {
+      "fiche": "favours.max.4",
+      "pourquoi": "Le maximum de Faveurs n'a pas de champ dans GM-OS ; seules les Faveurs actuelles remontent."
+    },
+    {
+      "fiche": "domains.life",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand GM-OS tient le score du Domaine (il fixe le nombre de d10 du jet). Reliée quand la fiche sera régénérée avec des Domaines chiffrés."
+    },
+    {
+      "fiche": "skills.life.appeasement",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.life.fervor",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.life.light",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.life.care",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "domains.erudition",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand GM-OS tient le score du Domaine (il fixe le nombre de d10 du jet). Reliée quand la fiche sera régénérée avec des Domaines chiffrés."
+    },
+    {
+      "fiche": "skills.erudition.culture",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.erudition.office",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.erudition.research",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.erudition.society",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "domains.social",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand GM-OS tient le score du Domaine (il fixe le nombre de d10 du jet). Reliée quand la fiche sera régénérée avec des Domaines chiffrés."
+    },
+    {
+      "fiche": "skills.social.charisma",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.social.conviction",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.social.psychology",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.social.deception",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "domains.technical",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand GM-OS tient le score du Domaine (il fixe le nombre de d10 du jet). Reliée quand la fiche sera régénérée avec des Domaines chiffrés."
+    },
+    {
+      "fiche": "skills.technical.artifact",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.technical.craft",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.technical.engineering",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.technical.survival",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "domains.soul",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand GM-OS tient le score du Domaine (il fixe le nombre de d10 du jet). Reliée quand la fiche sera régénérée avec des Domaines chiffrés."
+    },
+    {
+      "fiche": "skills.soul.ecstasy",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.soul.madness",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.soul.sensitivity",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.soul.darkness",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "domains.action",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand GM-OS tient le score du Domaine (il fixe le nombre de d10 du jet). Reliée quand la fiche sera régénérée avec des Domaines chiffrés."
+    },
+    {
+      "fiche": "skills.action.combat",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.action.movement",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.action.instinct",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.action.constitution",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "domains.status",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand GM-OS tient le score du Domaine (il fixe le nombre de d10 du jet). Reliée quand la fiche sera régénérée avec des Domaines chiffrés."
+    },
+    {
+      "fiche": "skills.status.fortune",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.status.rank",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.status.contacts",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    },
+    {
+      "fiche": "skills.status.facade",
+      "pourquoi": "Une case sans niveau sur cette version de la fiche, quand un Talent a un niveau (de -1 à 4). Relié quand la fiche sera régénérée avec des Talents chiffrés."
+    }
+  ]
+}

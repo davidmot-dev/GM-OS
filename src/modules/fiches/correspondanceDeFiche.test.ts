@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
-    NIVEAU_ET_DE, LIGNES, cheminDeLaCorrespondance, lireLaCorrespondance,
+    NIVEAU_ET_DE, LIGNES, SERIE, cheminDeLaCorrespondance, lireLaCorrespondance,
     verifierLaCorrespondance, versLaFiche, versGmOs,
     type CorrespondanceDeFiche,
 } from './correspondanceDeFiche';
@@ -363,5 +363,35 @@ describe('la traduction de valeurs vers la fiche', () => {
     it('et remonte la case cochée en dé de GM-OS', () => {
         expect(versGmOs({ 'resources.torch': '8' }, table).sheetData).toEqual({ torche: 'd8' });
         expect(versGmOs({ 'resources.torch': 12 }, table).sheetData).toEqual({ torche: 'd12' });
+    });
+});
+
+/**
+ * **Une piste de cases ↔ un nombre** — NOC et Star Trek, 2026-10-13. Leurs
+ * fiches HTML encodent Stress, Blessures, Vécu… en cases numérotées.
+ */
+describe('la transformation « serie »', () => {
+    it('coche les N premières cases et décoche le reste', () => {
+        expect(SERIE.decomposer(3, 5)).toEqual([true, true, true, false, false]);
+        expect(SERIE.decomposer('', 3)).toEqual([false, false, false]);
+    });
+
+    it('plafonne au nombre de cases', () => {
+        expect(SERIE.decomposer(12, 4)).toEqual([true, true, true, true]);
+    });
+
+    it('compte les cases cochées, même avec un trou', () => {
+        expect(SERIE.composer([true, false, true, false])).toBe(2);
+        expect(SERIE.composer([undefined, '', false])).toBe(0);
+    });
+
+    it('fait l’aller-retour par la table', () => {
+        const table = {
+            ...TABLE, objets: undefined, absents: undefined,
+            champs: [{ gmos: 'stress', fiche: ['stress.1', 'stress.2', 'stress.3'], transforme: 'serie' }],
+        };
+        const lot = versLaFiche({ sheetData: { stress: 2 } }, table);
+        expect(lot).toEqual({ 'stress.1': true, 'stress.2': true, 'stress.3': false });
+        expect(versGmOs(lot, table).sheetData.stress).toBe(2);
     });
 });

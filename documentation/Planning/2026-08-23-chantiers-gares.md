@@ -211,6 +211,9 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | ✅ **13/10 : le contrôle de la Forge criait à tort sur deux points — corrigé le jour même.** Quatre fausses erreurs sur les onze pilotes | `controlesDuPilote.ts` affirme que Dice-OS et la tablette « ne lisent que `dice.engine` » : faux depuis le 30/09 (`DiceBoard` et `RemoteDicePad` lisent `jet.desEchelonnes`) — deux erreurs sur Blade Runner, dont « yze lance des d6, le jet en compose à 12 ». Il exige que `tacheDeDefaite.sectionDuSeuil` existe, champ **lu nulle part** — une erreur sur Dune, le pilote de référence. *Un contrôle qui crie à tort apprend à ne plus être lu.* **Corrigé** : les dés échelonnés n'appellent plus qu'un **avertissement** sur le nom du moteur (seule trace réelle : l'aide de la tablette), sans contrôle des faces ; la tâche de défaite contrôle le **champ par défaut** — absent ou introuvable, c'est une erreur (seuil au minimum) — et la section ne donne plus qu'un avertissement. Nouvel essai : le pilote de Dune livré dans le code ne reçoit aucune erreur. Sur les onze pilotes réels, il ne reste qu'**une** erreur, et elle est vraie : Srd Yze, sans fiche, invoque `dex`. |
 | ✅ **13/10 : « ATELIER » et « STOP ALL » illisibles sur le cadre de Rêve de Dragon — corrigé.** Bleu `#354d88` et rouge `#9e2257` sur un cadre vert `#26473f` | Le bandeau renvoie le texte et l'accent vers ceux du cadre (`STYLE_DU_CADRE`), **pas les couleurs d'état**, réglées pour le fond des panneaux. `IndicateurDeRegime` : « Atelier » au texte du cadre, « Table » à son accent (contrastes garantis par le § 6). `MasterAudioController` : « STOP ALL » au texte du cadre, le danger reste dans la bordure et la teinte. Les autres écrans du bandeau gardent leurs couleurs d'état : à surveiller sur les cadres qui s'éloignent du fond. Les deux références de Combat-OS rafraîchies — elles étaient périmées depuis « Rencontres préparées » (12/10) ; la barre latérale garde son défilement d'un écran à l'autre, une référence se prend donc **dans le passage complet**, jamais seule. |
 | ✅ **13/10 : un personnage qui ne joue pas le jeu de sa campagne — signalé, et convertible.** « TEst NOC », lié à TEST NOC (NOC), déclarait Within et portait sa fiche : pas de panneau de jet, et la carte ne montrait que la campagne | `piloteDuPersonnage` fait passer le jeu du personnage avant celui de la campagne, à raison (15/08). Nouveau : `logic/jeuDuPersonnage.ts` — `ecartDeJeu` (comparé à la campagne **du personnage**, jamais à l'ouverte), `passerAuJeu` (reprend les champs de même identifiant, nomme les perdus), `naissanceDansLeJeu` (la règle de naissance, **extraite** de `AddCharacterForm` qui l'emploie désormais). `EcartDeJeuDuPersonnage` sur la carte (`CharacterGrid`) et en tête de la fiche (`CharacterSheetEditor`), bouton « Passer au jeu de la campagne » avec confirmation. Guide 10 mis à jour. Reste : `linkCharacterToCampaign` laisse toujours lier un personnage à une campagne d'un autre jeu — l'avertissement le dira, rien ne l'empêche. |
+| ✅ **13/10 : les fiches HTML de NOC et de Star Trek se lient à GM-OS.** David : *« la fiche NOC et la fiche Star Trek ne se lient pas »* — aucune `correspondance.json` | Écrites : `docs/systems/noc/fiche/` (18 champs, 41 absents motivés) et `docs/systems/star-trek/fiche/` (37 champs, aucun absent). Nouvelle transformation **`serie`** (`correspondanceDeFiche.ts`) : une piste de cases cochées ↔ un nombre — Stress, Détermination, Vécu, Blessures… En les écrivant, **les fiches GM-OS des deux jeux se sont révélées fausses**, corrigées par export/réimport : Star Trek portait des attributs d'un autre jeu (Force, Agilité, Perception…) et des fonctions génériques → les six attributs et les six départements de Star Trek Adventures, plus identité, historique et divers ; NOC portait des **Caractéristiques inventées** (le jeu n'en a pas) et des talents génériques → section retirée, 28 Talents nommés, initiative du pilote `instinct` (le livre : *« opposition passive de leur niveau de Talent Instinct »*). |
+| ⚠️ **13/10 : la fiche HTML de NOC ne porte pas les niveaux** — Domaines et Talents en cases sans valeur, quand GM-OS tient des nombres (le Domaine fixe les d10 du jet) | En absents motivés dans la correspondance. À régénérer par Character Sheet HTML Studio, **mêmes clés**, Domaines et Talents chiffrés (cahier § 6) ; puis les relier. |
+| ⚠️ **13/10 : la santé de NOC est mal modélisée** — le pilote a des « Points de Vie » et une « Endurance », que le livre ignore | NOC compte des **Blessures qui montent** de 0 à 10 (Choqué à 5, blessure lourde à 8, agonie à 10). Le modèle `hp` compte à rebours : à décider avec David (jauge montante, ou cases). Non traité. |
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -5920,6 +5923,27 @@ thèmes.
 fiches devra fixer** dans `Pipeline-des-fiches.md`. ⛔ **Découvert en chemin** : le moteur de fiches
 n'emploie aucun jeton ni composant `.rpg-*` — le cahier des thèmes affirmait l'inverse, corrigé en
 v1.2.
+
+#### ✅ 2026-10-13 — le cahier des charges des fiches et son validateur
+
+- **Le cahier** : `documentation/Architecture/Cahier-des-charges-fiche-de-personnage.md` (v1.0),
+  copié dans le constructeur et gardé identique par `electron/constructeurDeFiches.test.ts`.
+  Manifeste obligatoire (§ 2), fonds intégrés (§ 3), pistes en hotspots (§ 4), hors ligne (§ 5),
+  **les clés sont un contrat** (§ 6), correspondance (§ 7), livraison (§ 8).
+- **Deux décisions de David** : la correspondance est **écrite par Claude Code**, pas par le
+  constructeur ; la fiche **reste utilisable seule** (zoom, export…), sans que le validateur le
+  contrôle.
+- **Le validateur** : `npm run fiche:valider -- <Jeu>` (`--tous`, `--json`),
+  `src/modules/fiches/validationDeLaFiche.ts` (17 essais) ; `electron/fichesDuDepot.test.ts` passe
+  les vraies fiches à chaque essai. La règle qui manquait depuis le 24/08 : **une clé disparue par
+  rapport au gabarit intégré au moteur est une erreur**.
+- **État** : Cthulhu Hack, NOC et Star Trek acceptées ; **Alien et Blade Runner refusées, sans
+  manifeste** — les deux fiches de référence du constructeur n'en ont pas non plus, d'où la mise en
+  garde du § 2. NOC porte 113 cases à cocher qui gagneraient à devenir des hotspots.
+- **Constructeur en 0.3.0** (`SKILL.md` renvoie au cahier) — ⚠️ **à recharger dans ChatGPT**, avec
+  le cahier comme nouveau fichier de connaissance.
+- **Reste** : les correspondances d'Alien, NOC et Star Trek (Claude Code) ; le manifeste d'Alien et
+  de Blade Runner à leur prochaine régénération ; la vitrine d'une fiche (Pipeline § 5).
 
 #### ✅ 2026-09-26 — P0 des thèmes : le contrat en données, le validateur, la vitrine d'un jeu
 
