@@ -4898,6 +4898,15 @@ reste **non suivi** ; son auto-test passe (`python pdf_vers_md.py --selftest`).
 >   redessiné en `0 0 160 12` — l'actuel, en `0 0 320 16` à 1,5, ne fait que 0,75 px à l'écran) a été remise à
 >   David le 13/10. ⚠️ `intention.md` disait *« aucun en-tête décoratif »* : la phrase est à changer avec lui.
 > - Le validateur signale aussi les ornements absents de Dune, NOC, Star Trek et Torg (avertissements).
+> - **13/10, suite** : l'en-tête Blade Runner livré par RPG Theme Builder (et le séparateur redessiné en
+>   `0 0 160 12`), validé sans avertissement, vu en vitrine. Puis, à la demande de David : l'**en-tête agrandi**
+>   (24 px de haut, calé à gauche — il ne faisait que 80 px de large), le **séparateur agrandi** (240 × 16 px) ;
+>   des **coins sur les fenêtres** (`CadreDeSurcouche`, les modales, la palette) ; un **second panneau orné**
+>   par écran (espace de séance, préparation, journal, campagne, PNJ, Dice-OS, Tables, Image-OS) ; le
+>   **filigrane `fond`** sur le dernier jet vide de Dice-OS et le plateau vide de Combat-OS ; un séparateur
+>   dans les contrôles de Combat-OS. ⚠️ Vus en vitrine : un coin effleure le titre du panneau qu'il orne
+>   (« Paramètres du jet », pied de la palette) — à juger par David. ⏸ Blade Runner n'a pas de `fond` : la
+>   demande à RPG Theme Builder lui a été remise.
 
 **Origine.** David, après le paquet Blade Runner du § 134 : *« les coins ne se voient que dans
 Dice-OS et les séparateurs sont très petits, ou alors je ne les vois pas »*. Puis : *« on garde

@@ -321,9 +321,9 @@ le distingue d'un autre jeu.*
 
 | Emplacement | Où GM-OS le pose | Forme attendue |
 | --- | --- | --- |
-| `entete` | Sous le titre de **chaque module** (29 écrans) | Frise horizontale, rapport 8:1 environ — `viewBox` de l'ordre de `0 0 640 80` |
+| `entete` | Sous le titre de **chaque module** (29 écrans), calé à gauche, **24 px de haut** | Frise horizontale, rapport 8:1 environ — `viewBox` de l'ordre de `0 0 640 80` ; elle paraît donc à ~190 × 24 px |
 | `coin` | Coin supérieur gauche d'un panneau ; GM-OS le retourne pour les trois autres | Carré — `viewBox` de l'ordre de `0 0 80 80`, le dessin collé à l'angle haut-gauche |
-| `separateur` | Entre deux sections | Frise horizontale fine — **GM-OS la pose à 160 × 12 px** : un motif central lisible à cette taille, `viewBox` de l'ordre de `0 0 160 12` |
+| `separateur` | Entre deux sections | Frise horizontale fine — **GM-OS la pose à 240 × 16 px** : un motif central lisible à cette taille, `viewBox` de rapport 15:1 (`0 0 240 16`, ou `0 0 160 12` qui s'y inscrit) |
 | `fond` | En filigrane dans un panneau vide | Motif centré |
 
 **Pour qu'ils se voient à la table** : GM-OS les dessine en masque sur l'accent, à petite taille. Un

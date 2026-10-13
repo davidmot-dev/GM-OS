@@ -1011,7 +1011,8 @@ test.describe('la vitrine d\'un thème de jeu', () => {
           supposait Blade Runner actif ; le 2026-09-30, la sauvegarde avait Le
           Secret de Milo (Cthulhu Hack) : trente secondes d'attente, puis échec.
         */
-        const lancer = gmos.fenetre.getByRole('button', { name: /^Lancer$/i });
+        // Le bouton porte aussi les dés du jet (« Lancer D10+D8 ») depuis la refonte du pupitre.
+        const lancer = gmos.fenetre.getByRole('button', { name: /^Lancer(\s|$)/i });
         if (await lancer.count()) await lancer.first().click();
         // Le nom accessible d'une face est « d20 d20 » : le texte de l'image, puis le libellé.
         else await gmos.fenetre.getByRole('button', { name: /^d20(\s|$)/i }).first().click();
