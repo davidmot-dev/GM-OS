@@ -14,7 +14,7 @@ import { useSessionStore } from '../../../store/useSessionStore';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import { gmCustom } from '../../../stores/useModalStore';
 import { gmToast } from '../../../stores/useToastStore';
-import { CadreDeSurcouche } from '../../../components/socle';
+import { CadreDeSurcouche, Separateur } from '../../../components/socle';
 import TexteMarkdown from '../../../components/TexteMarkdown';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { actesOrdonnes, etatDeLaScene, scenesOrdonnees } from '../logic/trame';
@@ -198,6 +198,9 @@ const ContenuDeLaScene: React.FC<{ scene: Scene; fermer: () => void }> = ({ scen
                 {vide(scene.descriptionNarrative) && vide(scene.enjeux) && vide(scene.repliques) && !vide(scene.resume) && (
                     <Bloc icone={<Clapperboard size={14} />} titre="Ce qui s’y joue"><Texte>{scene.resume}</Texte></Bloc>
                 )}
+
+                {/* Ornements visibles (2026-10-13) : la narration, puis ce qui est au meneur. */}
+                <Separateur />
 
                 {/* Les notes du meneur : LE champ de la scène, pas une copie —
                     deux zones de notes pour une scène finiraient par se contredire. */}

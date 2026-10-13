@@ -347,8 +347,8 @@ const JournalDashboard: React.FC = () => {
             </Panneau>
           ) : (
             <div className="flex flex-col gap-4">
-              {/* 1. Pendant la partie — le fil */}
-              <Panneau className="flex flex-col gap-3 p-4">
+              {/* 1. Pendant la partie — le fil. Ornements visibles (2026-10-13) : il porte les coins. */}
+              <Panneau orne className="flex flex-col gap-3 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h2 className={titreDeZone}><span className="text-accent">1.</span> {t('modules:journal.fil.zone_live')}</h2>

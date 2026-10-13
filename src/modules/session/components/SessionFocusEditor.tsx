@@ -23,7 +23,7 @@ import {
     Check,
 } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
-import { Panneau, Etiquette } from '../../../components/socle';
+import { Panneau, Etiquette, Separateur } from '../../../components/socle';
 import SessionChecklist from './SessionChecklist';
 import SessionPrepEntityManager from './SessionPrepEntityManager';
 import PanneauDeTrameDeSeance from './PanneauDeTrameDeSeance';
@@ -174,7 +174,8 @@ const SessionFocusEditor: React.FC = () => {
                     <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
                         <div className="flex flex-col gap-4 xl:col-span-8">
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                                <Panneau className="flex min-h-[20rem] flex-col focus-within:border-accent/50">
+                                {/* Ornements visibles (2026-10-13) : le premier panneau porte ses coins. */}
+                                <Panneau orne className="flex min-h-[20rem] flex-col focus-within:border-accent/50">
                                     {titreDeBloc(<Eye size={16} />, t('modules:session.focus.synopsis_players'),
                                         <Etiquette ton="info">{t('modules:session.focus.agencement.public')}</Etiquette>)}
                                     <p className="px-5 text-ui-10 text-app-muted">{t('modules:session.focus.agencement.public_aide')}</p>
@@ -316,6 +317,8 @@ const SessionFocusEditor: React.FC = () => {
                         </div>
                     </div>
 
+                    {/* Ornements visibles (2026-10-13) : un séparateur entre les temps de la partie. */}
+                    <Separateur />
                     {/* ─── 2. Pendant la partie ─── */}
                     <TempsDeLaPartie numero={2} titre={t('modules:session.focus.agencement.pendant')} />
                     {/*
@@ -349,6 +352,7 @@ const SessionFocusEditor: React.FC = () => {
                         </div>
                     </Panneau>
 
+                    <Separateur />
                     {/* ─── 3. Après la partie ─── */}
                     <TempsDeLaPartie numero={3} titre={t('modules:session.focus.agencement.apres')} />
                     <Panneau>

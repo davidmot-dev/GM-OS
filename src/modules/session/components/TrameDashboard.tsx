@@ -16,6 +16,7 @@ import MarqueDIntrigue from './trame/MarqueDIntrigue';
 import GrapheDeLaTrame from './trame/GrapheDeLaTrame';
 import ChoixDuRang from './trame/ChoixDuRang';
 import RencontresDeLaScene from './trame/RencontresDeLaScene';
+import { Separateur } from '../../../components/socle';
 import { ChoixDeLaNote, ChoixDesBattlemaps, ChoixDesMorceaux } from './trame/LiensDeLaScene';
 import {
     sortiesDeLaScene, entreesDeLaScene, libelleLisible, LIBELLE_MAXIMUM,
@@ -672,6 +673,9 @@ const EditeurDeScene: React.FC<{
                 onChange={chemin => onChange({ noteObsidian: chemin })}
             />
 
+            {/* Ornements visibles (2026-10-13) : les textes, puis le décor et les présences. */}
+            <Separateur />
+
             <div className="grid grid-cols-2 gap-4">
                 <Champ label="Lieu">
                     <select
@@ -752,7 +756,8 @@ const EditeurDeScene: React.FC<{
             />
 
             {/* Les rencontres préparées (2026-10-12, R3) : composées ici,
-                invoquées dans Combat-OS. */}
+                invoquées dans Combat-OS. Un séparateur les détache des présences. */}
+            <Separateur />
             <RencontresDeLaScene scene={scene} />
 
             <Champ label="Notes du meneur">

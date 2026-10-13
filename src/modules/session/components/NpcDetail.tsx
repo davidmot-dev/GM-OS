@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { Activity, Swords, MapPin, Monitor, Shield, Wind, Zap, Lock, BookOpen, ArrowLeft, Edit2, CheckCircle, Image as ImageIcon, Sparkles, Layers, Skull, Search, Users, FolderOpen, Network, Eye, EyeOff } from 'lucide-react';
-import { Panneau, Etiquette, EnTeteDeModule } from '../../../components/socle';
+import { Panneau, Etiquette, EnTeteDeModule, CoinsOrnes } from '../../../components/socle';
 import { couleurDeRelation, libelleDeRelation } from '../logic/relationsSociales';
 import { FieldGauge, FieldRating } from './fields/SheetFields';
 import { DEFAULT_SHEET_TEMPLATES, type SheetField } from '../../../data/defaultSheetTemplates';
@@ -496,6 +496,9 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         }`}
                         onClick={() => isEditing && setIsMediaBrowserOpen(true)}
                     >
+                        {/* Ornements visibles (2026-10-13) : les coins encadrent le portrait,
+                            au-dessus de l'image et sous les gestes de survol. */}
+                        <span className="pointer-events-none absolute inset-0 z-[15]"><CoinsOrnes /></span>
                         {/* Sans portrait, une silhouette : l'image vide
                             montrait son texte de remplacement, cassée. */}
                         {selectedNpc.avatar ? (

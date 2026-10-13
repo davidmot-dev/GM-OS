@@ -195,8 +195,9 @@ const CampaignDetails: React.FC = () => {
 
             <div className="grid grid-cols-1 gap-4 p-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
                 <div className="flex flex-col gap-4">
-                    {/* L'aperçu, repliable : on le connaît, on vient chercher le reste */}
-                    <Panneau>
+                    {/* L'aperçu, repliable : on le connaît, on vient chercher le reste.
+                        Ornements visibles (2026-10-13) : c'est lui qui porte les coins. */}
+                    <Panneau orne>
                         {titreDeBloc(<Info size={16} />, t('modules:session.campaign_details.sections.overview'),
                             <button onClick={() => setApercuReplie(!apercuReplie)} className="flex items-center gap-1 text-ui-10 font-black uppercase tracking-widest text-app-muted hover:text-accent">
                                 {apercuReplie ? <ChevronDown size={12} /> : <ChevronUp size={12} />}

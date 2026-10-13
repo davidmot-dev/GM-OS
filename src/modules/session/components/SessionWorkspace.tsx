@@ -128,7 +128,8 @@ const SessionWorkspace: React.FC = () => {
     return (
         <section className="h-full col-span-6 flex flex-col gap-4 p-4 overflow-y-auto custom-scrollbar">
             {/* 1. Où on en est : la scène en cours, en grand */}
-            <Panneau className="flex-shrink-0 p-5">
+            {/* Ornements visibles (2026-10-13) : le panneau principal de l'écran porte ses coins. */}
+            <Panneau orne className="flex-shrink-0 p-5">
                 <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
                     <div className="min-w-[12rem] flex-1">
                         <p className="text-ui-10 font-black uppercase tracking-[0.2em] text-accent">
