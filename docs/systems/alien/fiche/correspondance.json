@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "alien-v2-normalise",
+  "commentaire": "Correspondance entre la fiche d'Alien dans GM-OS et le gabarit alien-v2-normalise du moteur de fiches. Écrite le 2026-10-13. Les pistes imprimées en cases (Stress, Santé, Radiation, Expérience, Points de Récit) se comptent par la transformation « serie » ; les dix lignes d'équipement forment l'inventaire. Les champs « field-… » sont ceux que David a ajoutés à la main dans la fiche GM-OS. Elle compte deux « Points de Récit » : celui que suit le pilote (points_de_recit) est relié.",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "type_personnage",
+      "fiche": "identity.career"
+    },
+    {
+      "gmos": "camarade",
+      "fiche": "relations.buddy"
+    },
+    {
+      "gmos": "rival",
+      "fiche": "relations.rival"
+    },
+    {
+      "gmos": "field-1786783062962",
+      "fiche": "profile.personal_goal"
+    },
+    {
+      "gmos": "field-1786783025666",
+      "fiche": "health.critical_injuries"
+    },
+    {
+      "gmos": "field-1786782975662",
+      "fiche": "inventory.tiny_items"
+    },
+    {
+      "gmos": "objet_fetiche",
+      "fiche": "inventory.signature_item"
+    },
+    {
+      "gmos": "field-1786783170092",
+      "fiche": "protection.rating"
+    },
+    {
+      "gmos": "field-1786783108730",
+      "fiche": "weapons.names"
+    },
+    {
+      "gmos": "field-1786783213114",
+      "fiche": "encumbrance.level"
+    },
+    {
+      "gmos": "force",
+      "fiche": "attributes.strength"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "attributes.agility"
+    },
+    {
+      "gmos": "esprit",
+      "fiche": "attributes.wits"
+    },
+    {
+      "gmos": "empathie",
+      "fiche": "attributes.empathy"
+    },
+    {
+      "gmos": "combat_rapproche",
+      "fiche": "skills.close_combat"
+    },
+    {
+      "gmos": "machines_lourdes",
+      "fiche": "skills.heavy_machinery"
+    },
+    {
+      "gmos": "endurance",
+      "fiche": "skills.stamina"
+    },
+    {
+      "gmos": "combat_a_distance",
+      "fiche": "skills.ranged_combat"
+    },
+    {
+      "gmos": "mobilite",
+      "fiche": "skills.mobility"
+    },
+    {
+      "gmos": "pilotage",
+      "fiche": "skills.piloting"
+    },
+    {
+      "gmos": "commandement",
+      "fiche": "skills.command"
+    },
+    {
+      "gmos": "observation",
+      "fiche": "skills.observation"
+    },
+    {
+      "gmos": "survie",
+      "fiche": "skills.survival"
+    },
+    {
+      "gmos": "comtech",
+      "fiche": "skills.comtech"
+    },
+    {
+      "gmos": "soins_medicaux",
+      "fiche": "skills.medical_aid"
+    },
+    {
+      "gmos": "manipulation",
+      "fiche": "skills.manipulation"
+    },
+    {
+      "gmos": "air",
+      "fiche": "consumables.air"
+    },
+    {
+      "gmos": "nourriture",
+      "fiche": "consumables.food"
+    },
+    {
+      "gmos": "energie",
+      "fiche": "consumables.power"
+    },
+    {
+      "gmos": "eau",
+      "fiche": "consumables.water"
+    },
+    {
+      "gmos": "description",
+      "fiche": "profile.appearance",
+      "destination": "personnage"
+    },
+    {
+      "gmos": "inventaire",
+      "fiche": [
+        "equipment.1",
+        "equipment.2",
+        "equipment.3",
+        "equipment.4",
+        "equipment.5",
+        "equipment.6",
+        "equipment.7",
+        "equipment.8",
+        "equipment.9",
+        "equipment.10"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "niveau_de_stress",
+      "fiche": [
+        "trackers.stress.1",
+        "trackers.stress.2",
+        "trackers.stress.3",
+        "trackers.stress.4",
+        "trackers.stress.5",
+        "trackers.stress.6",
+        "trackers.stress.7",
+        "trackers.stress.8",
+        "trackers.stress.9",
+        "trackers.stress.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "sante",
+      "fiche": [
+        "trackers.health.1",
+        "trackers.health.2",
+        "trackers.health.3",
+        "trackers.health.4",
+        "trackers.health.5",
+        "trackers.health.6",
+        "trackers.health.7",
+        "trackers.health.8",
+        "trackers.health.9",
+        "trackers.health.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "field-1786782860390",
+      "fiche": [
+        "trackers.radiation.1",
+        "trackers.radiation.2",
+        "trackers.radiation.3",
+        "trackers.radiation.4",
+        "trackers.radiation.5",
+        "trackers.radiation.6",
+        "trackers.radiation.7",
+        "trackers.radiation.8",
+        "trackers.radiation.9",
+        "trackers.radiation.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "field-1786782929062",
+      "fiche": [
+        "trackers.experience.1",
+        "trackers.experience.2",
+        "trackers.experience.3",
+        "trackers.experience.4",
+        "trackers.experience.5",
+        "trackers.experience.6",
+        "trackers.experience.7",
+        "trackers.experience.8",
+        "trackers.experience.9",
+        "trackers.experience.10"
+      ],
+      "transforme": "serie"
+    },
+    {
+      "gmos": "points_de_recit",
+      "fiche": [
+        "trackers.story_points.1",
+        "trackers.story_points.2",
+        "trackers.story_points.3"
+      ],
+      "transforme": "serie"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "profile.talent",
+      "pourquoi": "La fiche d'Alien dans GM-OS n'a pas de champ Talent : il reste sur la fiche."
+    },
+    {
+      "fiche": "protection.name",
+      "pourquoi": "GM-OS ne garde que le niveau de protection, qui compte au jet ; le nom de la protection reste sur la fiche."
+    },
+    {
+      "fiche": "weapons.bonus",
+      "pourquoi": "GM-OS tient les armes en un seul texte, relié aux noms : la colonne Bonus reste sur la fiche."
+    },
+    {
+      "fiche": "weapons.damage",
+      "pourquoi": "GM-OS tient les armes en un seul texte, relié aux noms : la colonne Dégâts reste sur la fiche."
+    },
+    {
+      "fiche": "weapons.range",
+      "pourquoi": "GM-OS tient les armes en un seul texte, relié aux noms : la colonne Portée reste sur la fiche."
+    },
+    {
+      "fiche": "states.hungry",
+      "pourquoi": "L'état « Affamé » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
+    },
+    {
+      "fiche": "states.dehydrated",
+      "pourquoi": "L'état « Déshydraté » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
+    },
+    {
+      "fiche": "states.exhausted",
+      "pourquoi": "L'état « Épuisé » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
+    },
+    {
+      "fiche": "states.freezing",
+      "pourquoi": "L'état « Gelé » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
+    }
+  ]
+}
