@@ -675,6 +675,12 @@ export const useHubSync = () => {
               et son journal.
             */
             'fiche:resultat',
+            /*
+              **La fiche du groupe** — la Cabale de NOC (2026-10-13). Même rail
+              que la fiche du personnage : le store de la tablette a déjà
+              écrit chez lui (`remoteEcrireLeGroupe`), il ne reste qu'à le dire.
+            */
+            'groupe:ecrire',
         ] as const;
 
         const acheminer = (e: Event) => {

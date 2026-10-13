@@ -186,6 +186,8 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'fiche:jet',
             // Le résultat d'un jet de tablette, qui remonte — 2026-09-30.
             'fiche:resultat',
+            // La fiche du groupe, commune à la table — 2026-10-13 (la Cabale de NOC).
+            'groupe:ecrire',
             'remote:request-sync',
             'session:remove-inventory-item',
             'session:request-item-transfer',
@@ -227,6 +229,17 @@ describe('evaluateAction — lancer depuis sa fiche', () => {
     it('laisse un joueur lancer pour SON personnage, et seulement le sien', () => {
         expect(evaluateAction('fiche:jet', { characterId: CHAR, genre: 'ressource', champ: 'torche' }, 'player', CHAR).allowed).toBe(true);
         const verdict = evaluateAction('fiche:jet', { characterId: 'char-d-un-autre', genre: 'ressource', champ: 'torche' }, 'player', CHAR);
+        expect(verdict.allowed).toBe(false);
+        expect(verdict.reason).toBe('ownership');
+    });
+
+    /**
+     * La Cabale de NOC, 2026-10-13 : commune à la table, chaque joueur l'écrit —
+     * mais en son nom. La campagne visée se déduit ensuite de SON personnage.
+     */
+    it('laisse un joueur écrire dans la fiche du groupe, en son nom seulement', () => {
+        expect(evaluateAction('groupe:ecrire', { characterId: CHAR, sheetData: { 'domains.action': 2 } }, 'player', CHAR).allowed).toBe(true);
+        const verdict = evaluateAction('groupe:ecrire', { characterId: 'char-d-un-autre', sheetData: {} }, 'player', CHAR);
         expect(verdict.allowed).toBe(false);
         expect(verdict.reason).toBe('ownership');
     });

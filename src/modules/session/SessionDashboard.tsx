@@ -9,6 +9,7 @@ import { useSessionOSStore } from './useSessionOSStore';
 import { useSessionStore } from '../../store/useSessionStore';
 import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { tousLesPilotes } from './store/tousLesPilotes';
+import { ressourcesDeLaTable } from '../table/reservesDuGroupe';
 
 /**
  * SessionDashboard - Point d'entrée principal de l'OS de Session.
@@ -88,7 +89,7 @@ const SessionDashboard: React.FC = () => {
             {activeCampaignId && (activeDriver?.ressourcesDeTable?.length ?? 0) > 0 && (
                 <PanneauDesRessources
                     campaignId={activeCampaignId}
-                    ressources={activeDriver!.ressourcesDeTable!}
+                    ressources={ressourcesDeLaTable(activeDriver, activeCampaign)}
                 />
             )}
 

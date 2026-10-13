@@ -78,3 +78,47 @@ export function appliquerAuGroupe(
 export function lierLeGroupe(groupe: GroupeDeCampagne | undefined, ficheId: string): GroupeDeCampagne {
     return { ...(groupe ?? GROUPE_VIERGE), ficheId };
 }
+
+/**
+ * **La campagne dont un joueur voit le groupe** — celle de son personnage,
+ * sinon la campagne ouverte. La même règle sur la tablette et chez le meneur :
+ * c'est elle qui décide où une écriture venue d'un joueur atterrit, et le
+ * meneur ne croit pas la campagne qu'un message annoncerait.
+ */
+export function campagneDuGroupe<C extends Pick<Campaign, 'id'>>(
+    personnage: { campaignId?: string | null },
+    campagnes: C[],
+    campagneOuverteId: string | null | undefined,
+): C | undefined {
+    const id = personnage.campaignId ?? campagneOuverteId;
+    return id ? campagnes.find(c => c.id === id) : undefined;
+}
+
+/** Une valeur qu'une fiche peut écrire — rien qui porte une structure. */
+export type ValeurDeFiche = string | number | boolean | null;
+
+/**
+ * **Ce qu'une tablette demande d'écrire dans la fiche du groupe**, relu champ
+ * par champ.
+ *
+ * Seules les valeurs simples passent : une fiche n'écrit que des textes, des
+ * nombres et des cases. Un objet glissé dans un message fabriqué ne devient
+ * pas une donnée de la campagne.
+ */
+export function lireLEcritureDuGroupe(
+    payload: unknown,
+): { characterId: string; sheetData: Record<string, ValeurDeFiche> } | null {
+    if (!payload || typeof payload !== 'object') return null;
+    const { characterId, sheetData } = payload as { characterId?: unknown; sheetData?: unknown };
+    if (typeof characterId !== 'string' || !characterId) return null;
+    if (!sheetData || typeof sheetData !== 'object' || Array.isArray(sheetData)) return null;
+
+    const valeurs: Record<string, ValeurDeFiche> = {};
+    for (const [cle, valeur] of Object.entries(sheetData)) {
+        if (valeur === null || typeof valeur === 'string' || typeof valeur === 'boolean'
+            || (typeof valeur === 'number' && Number.isFinite(valeur))) {
+            valeurs[cle] = valeur;
+        }
+    }
+    return Object.keys(valeurs).length > 0 ? { characterId, sheetData: valeurs } : null;
+}

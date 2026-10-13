@@ -117,6 +117,13 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
       connaît ; le contrôle de propriété empêche d'envoyer au nom d'un autre.
     */
     'fiche:resultat',
+    /*
+      **Écrire dans la fiche du groupe** — la Cabale de NOC, commune à toute la
+      table (2026-10-13). Le contrôle de propriété authentifie l'émetteur par son
+      `characterId` ; c'est `groupeActions` qui en déduit la campagne et vérifie
+      que son jeu déclare une fiche de groupe — le message n'en choisit aucune.
+    */
+    'groupe:ecrire',
 ]);
 
 /** Rôles qui peuvent tout déclencher — ceux qui ont présenté le secret d'appairage. */
@@ -154,6 +161,7 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     'fiche:jet': 'characterId',
     // Un joueur n'envoie que SES jets : pas de résultat au nom d'un autre.
     'fiche:resultat': 'characterId',
+    'groupe:ecrire': 'characterId',
 };
 
 export type DenialReason = 'role' | 'ownership';

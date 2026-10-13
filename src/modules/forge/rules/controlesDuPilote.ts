@@ -1159,6 +1159,37 @@ export function controlerLePilote(
                 'La fiche de groupe vise le gabarit des personnages : le groupe porterait la feuille d’un Héros.',
             );
         }
+
+        // Ce que le groupe apporte aux jets — les dés, l'Espoir, les Atouts de la Cabale.
+        const composantesDuJet = new Set([
+            ...(driver.jet?.seuil ?? []),
+            ...(driver.jet?.reserve?.composantes ?? []),
+        ].map(c => c.id));
+        (groupe.apports ?? []).forEach((apport, i) => {
+            const ou = `ficheDeGroupe.apports[${i}]`;
+            const nom = apport.label || apport.id || `n° ${i + 1}`;
+            if (apport.effet !== 'des' && apport.effet !== 'bonus') {
+                erreur(`${ou}.effet`, `« ${nom} » doit donner des dés (« des ») ou un bonus (« bonus »).`);
+            }
+            if (!(Number.isInteger(apport.parPoint) && apport.parPoint > 0)) {
+                erreur(`${ou}.parPoint`, `« ${nom} » doit rapporter un nombre entier positif par point.`);
+            }
+            if (apport.epuisement !== 'piste' && apport.epuisement !== 'scenario') {
+                erreur(`${ou}.epuisement`, `« ${nom} » s'épuise sur sa piste (« piste ») ou par scénario (« scenario »).`);
+            }
+            if (!apport.stocks?.length) {
+                erreur(`${ou}.stocks`, `« ${nom} » ne dit pas où se lit son stock.`);
+                return;
+            }
+            if (apport.composante) {
+                if (!composantesDuJet.has(apport.composante)) {
+                    erreur(`${ou}.composante`, `« ${nom} » suit la composante « ${apport.composante} », que le jet ne déclare pas.`);
+                }
+                if (apport.stocks.some(s => !s.pour)) {
+                    avertir(`${ou}.stocks`, `« ${nom} » suit une composante, mais certains stocks ne disent pas pour quel champ : ils ne seront jamais retenus.`);
+                }
+            }
+        });
     }
 
     // ---- Les réserves de table ---------------------------------------------

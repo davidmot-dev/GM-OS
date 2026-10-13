@@ -315,6 +315,31 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(juste.filter(c => c.ou.startsWith('ficheDeGroupe'))).toEqual([]);
     });
 
+    it('des apports du groupe mal déclarés', () => {
+        const constats = controlerLePilote(
+            {
+                jet: { sens: 'superieur-ou-egal', reserve: { base: 0, max: 6, faces: 10, composantes: [{ id: 'domaine', label: 'Domaine', sectionId: 'domaines' }] } },
+                ficheDeGroupe: {
+                    libelle: 'Cabale', gabaritDeLaFiche: 'noc-cabale',
+                    apports: [
+                        { id: 'des', label: 'Dés', effet: 'des', parPoint: 1, epuisement: 'scenario', composante: 'talent', stocks: [{ champ: 'domains.action', label: 'Action' }] },
+                        { id: 'x', label: 'X', effet: 'magie', parPoint: 0, epuisement: 'jamais', stocks: [] },
+                        { id: 'ok', label: 'Espoir', effet: 'des', parPoint: 3, epuisement: 'piste', stocks: [{ champ: 'tracks.espoir', label: 'Espoir' }] },
+                    ],
+                },
+            } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.filter(c => c.ou.startsWith('ficheDeGroupe.apports')).map(c => [c.ou, c.gravite])).toEqual([
+            ['ficheDeGroupe.apports[0].composante', 'erreur'],
+            ['ficheDeGroupe.apports[0].stocks', 'avertissement'],
+            ['ficheDeGroupe.apports[1].effet', 'erreur'],
+            ['ficheDeGroupe.apports[1].parPoint', 'erreur'],
+            ['ficheDeGroupe.apports[1].epuisement', 'erreur'],
+            ['ficheDeGroupe.apports[1].stocks', 'erreur'],
+        ]);
+    });
+
     it("un débordement qui vise le vide, elle-même, ou qui n'a pas de seuil", () => {
         const constats = controlerLePilote(
             {

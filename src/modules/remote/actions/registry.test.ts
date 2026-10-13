@@ -84,6 +84,8 @@ const EXPECTED_TYPES = [
     'fiche:jet',
     // Le résultat d'un jet lancé sur la tablette, qui remonte au meneur (2026-09-30).
     'fiche:resultat',
+    // Un joueur écrit dans la fiche du groupe — la Cabale de NOC (2026-10-13).
+    'groupe:ecrire', 'remote:groupe:ecrire',
 ];
 
 describe('actionRegistry', () => {

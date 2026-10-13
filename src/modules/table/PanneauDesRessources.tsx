@@ -56,13 +56,16 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     const { etatDe, gagner, depenser, finDeScene, debutDeSeance, nouveauScenario, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const etat = etatDe(campaignId, ressources);
 
-    const montrees = pourLesJoueurs ? ressources.filter(visiblePourUnJoueur) : ressources;
+    // Les réserves de la Cabale se lisent dans le panneau de jet, là où l'on puise.
+    const dansLeBandeau = ressources.filter(r => !r.horsDuBandeau);
+    const montrees = pourLesJoueurs ? dansLeBandeau.filter(visiblePourUnJoueur) : dansLeBandeau;
     const erosionPossible = !pourLesJoueurs && ressources.some(r => r.erosionFinDeScene);
     const seancePossible = !pourLesJoueurs && ressources.some(r => r.erosionDebutDeSeance);
     const scenarioPossible = !pourLesJoueurs && ressources.some(r => r.remiseAuDepartParScenario);
 
     /** Les réserves qui reviennent à leur départ, nommées — la confirmation dit ce qu'elle efface. */
-    const remisesAuDepart = ressources.filter(r => r.remiseAuDepartParScenario);
+    const remisesAuDepart = dansLeBandeau.filter(r => r.remiseAuDepartParScenario);
+    const reservesCachees = ressources.some(r => r.horsDuBandeau && r.remiseAuDepartParScenario);
 
     /**
      * Un point en plus ou en moins.
@@ -202,7 +205,10 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                     {scenarioPossible && (
                         <button
                             onClick={() => gmConfirm(
-                                `Nouveau scénario : ${remisesAuDepart.map(r => `${r.label} revient à ${r.depart}`).join(', ')}.`,
+                                `Nouveau scénario : ${[
+                                    ...remisesAuDepart.map(r => `${r.label} revient à ${r.depart}`),
+                                    ...(reservesCachees ? ['les réserves du groupe se rechargent'] : []),
+                                ].join(', ')}.`,
                                 () => {
                                     const r = nouveauScenario(campaignId, ressources);
                                     annoncer(r);

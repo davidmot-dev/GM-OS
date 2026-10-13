@@ -133,6 +133,51 @@ export interface DeDUsureDuPilote {
     plafond?: number;
 }
 
+/**
+ * **Ce que le groupe apporte à un jet** — la Cabale de NOC, 2026-10-13.
+ *
+ * *« Ses scores de Domaine forment des réserves collectives de dés de destin
+ * dans lesquelles chaque Héros peut puiser »* ; ses réserves communes d'Espoir
+ * et de Vécu se piochent comme celles d'un Héros ; un point d'Atout donne plus
+ * un au Talent lié (`docs/systems/noc/rules/la-cabale.md`).
+ *
+ * Une forme pour les quatre : un point dépensé rapporte `parPoint` **dés** de
+ * plus, ou un **bonus** au résultat, pris sur un **stock** du groupe.
+ */
+export interface ApportDuGroupe {
+    id: string;
+    /** « Dés de la Cabale », « Espoir de la Cabale ». */
+    label: string;
+    /** Des dés de plus dans la réserve, ou un bonus ajouté au résultat. */
+    effet: 'des' | 'bonus';
+    /** Ce que rapporte un point : trois dés pour un point d'Espoir. */
+    parPoint: number;
+    /**
+     * `piste` : la valeur du groupe EST le stock — l'Espoir de la feuille
+     * descend d'un point. `scenario` : la valeur est un plafond, et ce qu'on a
+     * puisé revient à « Nouveau scénario » — les dés d'un Domaine.
+     */
+    epuisement: 'piste' | 'scenario';
+    /**
+     * Où se lit chaque stock, dans les valeurs du groupe. Un seul : il
+     * s'applique d'office. Plusieurs : `composante` choisit, sinon le joueur.
+     */
+    stocks: { champ: string; label: string; pour?: string }[];
+    /**
+     * La composante du jet qui désigne le stock : le Domaine retenu par le
+     * Héros (`action`) prend le stock dont `pour` vaut `action`.
+     */
+    composante?: string;
+}
+
+/** La fiche du groupe — voir `GameDriver.ficheDeGroupe`. */
+export interface FicheDeGroupe {
+    libelle: string;
+    gabaritDeLaFiche: string;
+    /** Ce que le groupe apporte aux jets des personnages. Absent : rien. */
+    apports?: ApportDuGroupe[];
+}
+
 export interface GameDriver {
     id: string;
     name: string;
@@ -233,7 +278,7 @@ export interface GameDriver {
      * (`noc-cabale`) ; sa correspondance est `fiche/correspondance-groupe.json`.
      * Absent : le jeu n'a pas de fiche de groupe, et rien ne s'affiche.
      */
-    ficheDeGroupe?: { libelle: string; gabaritDeLaFiche: string };
+    ficheDeGroupe?: FicheDeGroupe;
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
     /** Les mots de ce jeu pour la monnaie et la rareté — voir `VocabulaireDuButin`. */
     vocabulaireDuButin?: VocabulaireDuButin;

@@ -2,6 +2,7 @@ import { useRessourcesDeTableStore } from '../../table/useRessourcesDeTableStore
 import { manipulableParUnJoueur, type RessourceDeTable } from '../../table/RessourcesDeTable';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { tousLesPilotes } from '../../session/store/tousLesPilotes';
+import { ressourcesDeLaTable } from '../../table/reservesDuGroupe';
 import type { ActionContext, ActionRegistry } from './types';
 
 /**
@@ -23,13 +24,16 @@ import type { ActionContext, ActionRegistry } from './types';
  * comme les refus de la politique de relais.
  */
 
-/** Les réserves que le pilote de la campagne active déclare. */
+/**
+ * Les réserves de la campagne active — celles du pilote ET celles de son groupe
+ * (les dés de la Cabale) : la tablette puise dans les mêmes que le meneur.
+ */
 function reservesDeLaCampagne(campaignId: string | null): RessourceDeTable[] {
     if (!campaignId) return [];
     const session = useSessionOSStore.getState();
     const campagne = session.campaigns.find(c => c.id === campaignId);
     const pilote = tousLesPilotes(session.customGameDrivers).find(d => d.id === campagne?.system);
-    return pilote?.ressourcesDeTable ?? [];
+    return ressourcesDeLaTable(pilote, campagne);
 }
 
 /**

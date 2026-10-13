@@ -324,6 +324,14 @@ export const RevueDuPilote: React.FC<{
           <Ligne clef={driver.ficheDeGroupe.libelle}>
             gabarit <Id valeur={driver.ficheDeGroupe.gabaritDeLaFiche} /> — sur la campagne, commune à toute la table
           </Ligne>
+          {(driver.ficheDeGroupe.apports ?? []).map(apport => (
+            <Ligne key={apport.id} clef={apport.label}>
+              {apport.effet === 'des' ? `${apport.parPoint} dé(s)` : `+${apport.parPoint}`} par point,{' '}
+              {apport.epuisement === 'piste' ? 'pris sur sa piste' : 'rechargé à chaque scénario'} —{' '}
+              {apport.stocks.length} stock{apport.stocks.length > 1 ? 's' : ''}
+              {apport.composante && <> selon <Id valeur={apport.composante} /></>}
+            </Ligne>
+          ))}
         </Bloc>
       )}
 

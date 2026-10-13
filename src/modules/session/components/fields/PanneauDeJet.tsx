@@ -9,6 +9,11 @@ import {
 } from '../../../dice/DescripteurDeJet';
 import { ventilerLaDepense, type RessourceDeTable } from '../../../table/RessourcesDeTable';
 import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableStore';
+import { apportsDisponibles, effetDesApports, idDeReserveDuGroupe, niveauDuGroupe } from '../../../table/reservesDuGroupe';
+import { useSessionOSStore } from '../../useSessionOSStore';
+import { tousLesPilotes } from '../../store/tousLesPilotes';
+import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
+import ApportsDuGroupe from './ApportsDuGroupe';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
 import type { DiceConfig } from '../../../../types/drivers';
 
@@ -95,6 +100,41 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         () => campaignId && ressourcesDeTable?.length ? { campaignId, ressourcesDeTable } : null,
         [campaignId, ressourcesDeTable],
     );
+
+    /**
+     * **Ce que le groupe apporte au jet** — la Cabale de NOC (2026-10-13) : les
+     * dés de ses Domaines, son Espoir, son Vécu, ses Atouts. Le groupe est celui
+     * de la campagne où l'on joue, déclaré par son pilote.
+     *
+     * Absent des dés échelonnés : ils décident seuls de leur poignée, et une
+     * réserve ajoutée n'y aurait pas de sens.
+     */
+    const campagnes = useSessionOSStore(s => s.campaigns);
+    const pilotesPerso = useSessionOSStore(s => s.customGameDrivers);
+    const updateCampaign = useSessionOSStore(s => s.updateCampaign);
+    const remoteEcrireLeGroupe = useSessionOSStore(s => s.remoteEcrireLeGroupe);
+    const campagne = campaignId ? campagnes.find(c => c.id === campaignId) : undefined;
+    const ficheDeGroupe = campagne
+        ? tousLesPilotes(pilotesPerso).find(d => d.id === campagne.system)?.ficheDeGroupe
+        : undefined;
+    const apports = descripteur.desEchelonnes ? [] : (ficheDeGroupe?.apports ?? []);
+    const [engages, setEngages] = useState<Record<string, number>>({});
+    /** Le bonus que le groupe a donné au dernier lancer — dit à côté des réussites. */
+    const [bonusDuLancer, setBonusDuLancer] = useState(0);
+    const [choixDesApports, setChoixDesApports] = useState<Record<string, string>>({});
+    const etatDesReserves = monnaie ? etatDe(monnaie.campaignId, monnaie.ressourcesDeTable) : {};
+    const disponibles = apportsDisponibles(
+        apports, choix, choixDesApports, engages, campagne?.groupe?.sheetData, etatDesReserves,
+    );
+    const { des: desDuGroupe, bonus: bonusDuGroupe } = effetDesApports(disponibles);
+    /** Ce qui reste dans un stock précis — pour proposer les Atouts encore garnis. */
+    const resteDe = (apportId: string, champ: string) => {
+        const apport = apports.find(a => a.id === apportId);
+        if (!apport) return 0;
+        return Math.max(0, apport.epuisement === 'piste'
+            ? niveauDuGroupe(campagne?.groupe?.sheetData, champ)
+            : (etatDesReserves[idDeReserveDuGroupe(champ)] ?? 0));
+    };
 
     /**
      * Débiter ou créditer la réserve, du bon côté du réseau.
@@ -264,6 +304,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 ? `Jet : ${poigneeDite}`
                 : `Jet : ${jet.nombreDeDes}d${jet.faces}`) + dit;
 
+        /*
+          **Ce qu'on a puisé dans le groupe part avec le lancer.** Une piste
+          (l'Espoir de la Cabale) descend sur sa feuille — par le meneur, ou par
+          la tablette qui le prévient ; une réserve de scénario (les dés d'un
+          Domaine) se débite comme toute réserve de table.
+        */
+        const engagesDuGroupe = disponibles.filter(d => d.points > 0 && d.stock);
+        const surLaFeuille: Record<string, number> = {};
+        for (const { apport, stock, dispo, points } of engagesDuGroupe) {
+            if (apport.epuisement === 'piste') {
+                surLaFeuille[stock!.champ] = dispo - points;
+                dits.push(`${apport.label} −${points} → ${dispo - points}`);
+            } else {
+                dits.push(...mouvoir(idDeReserveDuGroupe(stock!.champ), -points, `${enTete}, ${apport.label} — ${stock!.label}`).avertissements);
+            }
+        }
+        if (campagne && Object.keys(surLaFeuille).length > 0) {
+            if (pourLesJoueurs && personnageId) remoteEcrireLeGroupe(campagne.id, personnageId, surLaFeuille);
+            else if (!pourLesJoueurs) updateCampaign(campagne.id, { groupe: appliquerAuGroupe(campagne.groupe, { aEcrire: surLaFeuille }) });
+        }
+        setEngages({});
+
         if (monnaie && jet.cout.ressource && jet.cout.total > 0) {
             dits.push(...mouvoir(
                 jet.cout.ressource, -jet.cout.total,
@@ -313,7 +375,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           `preparerLeJet` — ils ajoutent ou retirent un dé, ils n'en gardent pas
           un sur deux comme `rollAdvantage`.
         */
-        const res = jet.desEchelonnes.length > 0
+        const brut = jet.desEchelonnes.length > 0
             ? DiceEngine.rollFromConfig(
                 { ...dice, engine: 'yze-echelonne' },
                 { taillesDeBase: jet.desEchelonnes.map(d => d.faces) },
@@ -336,7 +398,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 // réussites plausibles et exactement inverses.
                 { ...dice, successThreshold: seuilDuMoteur, sens: jet.sens },
                 {
-                    baseCount: jet.nombreDeDes,
+                    // Les dés puisés dans le groupe s'ajoutent à la réserve.
+                    baseCount: jet.nombreDeDes + desDuGroupe,
                     gearCount: jet.desSecondaires,
                     doubleSous: jet.doubleSous,
                     // Sans elle, le moteur retomberait sur le booléen : réussi ou
@@ -345,7 +408,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     echelle: jet.echelle,
                 },
             );
+        /*
+          Le bonus du groupe (Vécu, Atout) s'ajoute au résultat compté : chez NOC
+          chaque réussite élève le niveau d'un point, comme lui.
+        */
+        const res: RollResult = bonusDuGroupe > 0
+            ? { ...brut, successes: (brut.successes ?? 0) + bonusDuGroupe, totalDisplay: `${brut.totalDisplay} (+${bonusDuGroupe} ${ficheDeGroupe?.libelle ?? 'groupe'})` }
+            : brut;
         setSeuilDuLancer(jet.seuil);
+        setBonusDuLancer(bonusDuGroupe);
         setResultat(res);
 
         /*
@@ -359,11 +430,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           joueurs — un changement de comportement que ce chantier n'a pas à
           faire. On appelle donc le même décideur, par l'autre porte.
         */
-        const titreDuJet = jet.composantes.length > 0
+        const titreDuJet = (jet.composantes.length > 0
             ? jet.composantes.map(c => c.label).join(' + ')
             : jet.desEchelonnes.length > 0
                 ? jet.desEchelonnes.map(d => `${d.label} D${d.faces}`).join(' + ')
-                : `${jet.nombreDeDes}d${jet.faces}`;
+                : `${jet.nombreDeDes}d${jet.faces}`)
+            // Ce qu'on a puisé dans le groupe se relit avec le jet.
+            + (engagesDuGroupe.length > 0
+                ? ` · ${engagesDuGroupe.map(d => `${d.apport.label}${d.apport.stocks.length > 1 ? ` (${d.stock!.label})` : ''} ×${d.points}`).join(', ')}`
+                : '');
         /*
           ⛔ **Sur la tablette, le jet restait chez le joueur** (David,
           2026-09-30 : *« je voudrais que les jets des tablettes remontent vers
@@ -614,6 +689,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 </div>
             )}
 
+            {apports.length > 0 && ficheDeGroupe && (
+                <ApportsDuGroupe
+                    libelle={ficheDeGroupe.libelle}
+                    disponibles={disponibles}
+                    choixDuJoueur={choixDesApports}
+                    onChoisir={(id, champ) => {
+                        setChoixDesApports(c => ({ ...c, [id]: champ }));
+                        setEngages(e => ({ ...e, [id]: 0 }));
+                    }}
+                    onEngager={(id, points) => setEngages(e => ({ ...e, [id]: points }))}
+                    resteDe={resteDe}
+                />
+            )}
+
             <div className="flex items-center gap-6">
                 {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
                 <div className="flex items-center gap-2">
@@ -842,6 +931,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             qu'on annonce. */}
                         <span className="text-app-text/50 font-mono">
                             {reussites} réussite{reussites > 1 ? 's' : ''}
+                            {bonusDuLancer > 0 && ` (dont +${bonusDuLancer} ${ficheDeGroupe?.libelle ?? 'groupe'})`}
                             {descripteur.difficulte
                                 ? ` / difficulté ${difficulte}`
                                 : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}

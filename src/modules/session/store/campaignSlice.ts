@@ -17,6 +17,7 @@ import { sessionBackupManager } from '../logic/SessionBackupManager';
 import { useObsidianStore } from '../useObsidianStore';
 import type { StyleDeLienDeTrame, OrganisationDeTrame, PointDeTrame } from '../../../types/campaign.types';
 import { normaliserLeStyleDeLien } from '../logic/stylesDesLiensDeTrame';
+import { appliquerAuGroupe } from '../logic/groupeDeLaCampagne';
 
 // ─────────────────────────────────────────────
 // State
@@ -35,6 +36,16 @@ export interface CampaignSliceActions {
     setActiveCampaign: (id: string | null) => void;
     addCampaign: (campaign: Omit<Campaign, 'id'>) => void;
     updateCampaign: (id: string, updates: Partial<Campaign>) => void;
+    /**
+     * **Ce que la fiche du groupe impose, depuis la tablette d'un joueur** — la
+     * Cabale de NOC, commune à toute la table (2026-10-13).
+     *
+     * Calqué sur `remoteUpdateCharacterSheetData` : il écrit d'abord ici, pour
+     * que la tablette suive tout de suite, puis diffuse `groupe:ecrire`, que
+     * `useHubSync` porte au meneur. Le `characterId` sert à l'authentifier — le
+     * meneur en déduit la campagne, il ne la croit pas.
+     */
+    remoteEcrireLeGroupe: (campaignId: string, characterId: string, aEcrire: Record<string, unknown>) => void;
     deleteCampaign: (id: string) => void;
     updateCampaignLayout: (campaignId: string, layout: Partial<LayoutConfig>) => void;
     toggleActiveLocation: (mapId: string) => void;
@@ -102,6 +113,20 @@ export const createCampaignSlice: CreateurDeSlice<CampaignSlice> = (set, get) =>
 
         set((state) => ({
             campaigns: state.campaigns.map((c) => (c.id === id ? { ...c, ...updates } : c)),
+        }));
+    },
+
+    remoteEcrireLeGroupe: (campaignId, characterId, aEcrire) => {
+        if (!get().campaigns.some(c => c.id === campaignId)) return;
+        set((state) => ({
+            campaigns: state.campaigns.map((c) => (c.id === campaignId
+                ? { ...c, groupe: appliquerAuGroupe(c.groupe, { aEcrire }) }
+                : c)),
+        }));
+
+        if (typeof window === 'undefined') return;
+        window.dispatchEvent(new CustomEvent('groupe:ecrire', {
+            detail: { characterId, sheetData: aEcrire },
         }));
     },
 

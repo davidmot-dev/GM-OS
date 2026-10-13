@@ -77,6 +77,13 @@ export interface RessourceDeTable {
      * Menace de NOC, « remise à zéro au début de chaque nouvelle aventure ».
      */
     remiseAuDepartParScenario?: boolean;
+    /**
+     * Tenue par la table mais **pas dessinée dans le bandeau** — les réserves de
+     * la Cabale (`reservesDuGroupe`), trente-cinq stocks qui se lisent dans le
+     * panneau de jet, là où l'on puise. Les gestes de séance et de scénario les
+     * touchent comme les autres.
+     */
+    horsDuBandeau?: boolean;
     description?: string;
     /**
      * La réserve est-elle **montrée aux joueurs**, sur leur tablette ?

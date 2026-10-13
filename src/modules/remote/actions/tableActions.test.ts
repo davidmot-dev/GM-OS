@@ -97,3 +97,34 @@ describe('un joueur ajuste une réserve depuis sa tablette', () => {
         expect(useRessourcesDeTableStore.getState().reserves[CAMPAGNE]).toBeUndefined();
     });
 });
+
+/**
+ * La Cabale de NOC (2026-10-13) : ses dés de Domaine sont des réserves que le
+ * meneur dérive de la feuille du groupe. Un joueur qui y puise depuis sa
+ * tablette doit être reconnu ICI — sans quoi la dépense resterait chez lui.
+ */
+describe('un joueur puise dans les dés de la Cabale', () => {
+    beforeEach(() => {
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
+        useSessionOSStore.setState({
+            campaigns: [{
+                id: CAMPAGNE, name: 'Test NOC', system: 'noc', activeLocationIds: [],
+                groupe: { sheetData: { 'domains.action': 3 } },
+            }],
+            customGameDrivers: [{
+                id: 'noc', name: 'NOC', emoji: '🌑', templateId: 'tpl',
+                ficheDeGroupe: {
+                    libelle: 'Cabale', gabaritDeLaFiche: 'noc-cabale',
+                    apports: [{ id: 'des', label: 'Dés de la Cabale', effet: 'des', parPoint: 1, epuisement: 'scenario', composante: 'domaine',
+                        stocks: [{ champ: 'domains.action', label: 'Action', pour: 'action' }] }],
+                },
+            } as unknown as GameDriver],
+        } as never);
+        useRessourcesDeTableStore.setState({ reserves: {} });
+    });
+
+    it('la réserve dérivée du groupe se débite chez le meneur', () => {
+        ajuster({ ressourceId: 'groupe:domains.action', delta: -2 }, ctx);
+        expect(useRessourcesDeTableStore.getState().reserves[CAMPAGNE]?.['groupe:domains.action']).toBe(1);
+    });
+});

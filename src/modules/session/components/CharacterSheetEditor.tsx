@@ -18,6 +18,7 @@ import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
 import FicheHote from '../../fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../fiches/useCorrespondanceDuJeu';
+import { ressourcesDeLaTable } from '../../table/reservesDuGroupe';
 import type { Rapprochement } from '../../fiches/rapprochementDeLaFiche';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
 import type { PlayerCharacter } from '../store/types';
@@ -456,7 +457,7 @@ const CharacterSheetEditor: React.FC = () => {
                                 template={template}
                                 valeurs={editor.localData}
                                 campaignId={activeCampaignId ?? undefined}
-                                ressourcesDeTable={piloteDeLaFiche.ressourcesDeTable}
+                                ressourcesDeTable={ressourcesDeLaTable(piloteDeLaFiche, campaigns.find(c => c.id === activeCampaignId))}
                             />
                         )}
 

@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout, FileText } from 'lucide-react';
+import { ChevronLeft, Package, BookOpen, PenTool, Shield, Layout, FileText, Users2 } from 'lucide-react';
 import { pointsDeVieApres } from '../../modules/combat/logic/SanteDuCombattant';
 import EtatDeSante from '../../modules/combat/components/EtatDeSante';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
@@ -9,6 +9,10 @@ import { ResolvedImage } from '../ResolvedImage';
 import type { SheetSection, SheetField } from '../../data/defaultSheetTemplates';
 import FicheHote from '../../modules/fiches/FicheHote';
 import { useCorrespondanceDuJeu } from '../../modules/fiches/useCorrespondanceDuJeu';
+import { useCorrespondanceDuGroupe } from '../../modules/fiches/useCorrespondanceDuGroupe';
+import { tousLesPilotes } from '../../modules/session/store/tousLesPilotes';
+import { campagneDuGroupe, groupePourLHote, nomDuGroupe } from '../../modules/session/logic/groupeDeLaCampagne';
+import { ressourcesDeLaTable } from '../../modules/table/reservesDuGroupe';
 import type { Rapprochement } from '../../modules/fiches/rapprochementDeLaFiche';
 import type { PlayerCharacter, Campaign, SheetTemplate, InventoryItem } from '../../modules/session/store/types';
 import { resolveSheetTemplate } from '../../modules/session/logic/templateResolver';
@@ -113,6 +117,25 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
     const [surLaFiche, setSurLaFiche] = useState(false);
     const [ficheDejaOuverte, setFicheDejaOuverte] = useState(false);
 
+    /**
+     * **La fiche du groupe, sur la tablette** — la Cabale de NOC, commune à
+     * toute la table (2026-10-13). Celle de la campagne du personnage, dans le
+     * jeu de cette campagne : le groupe n'appartient à aucun joueur, chacun le
+     * voit et le remplit. Même hôte, même liaison locale que la fiche du PJ.
+     */
+    const campagneDeLaTable = campagneDuGroupe(character, campaigns, campaignId);
+    const piloteDeLaTable = campagneDeLaTable
+        ? tousLesPilotes(customGameDrivers).find(d => d.id === campagneDeLaTable.system)
+        : undefined;
+    const correspondanceDuGroupe = useCorrespondanceDuGroupe(campagneDeLaTable, piloteDeLaTable);
+    const ficheDeGroupe = piloteDeLaTable?.ficheDeGroupe;
+    const [surLeGroupe, setSurLeGroupe] = useState(false);
+    const [groupeDejaOuvert, setGroupeDejaOuvert] = useState(false);
+    const remoteEcrireLeGroupe = useSessionOSStore(s => s.remoteEcrireLeGroupe);
+    const nomDeLaCabale = ficheDeGroupe
+        ? nomDuGroupe(campagneDeLaTable?.groupe, correspondanceDuGroupe, ficheDeGroupe.libelle)
+        : '';
+
     const appliquerLeRapprochement = (releve: Rapprochement) => {
         remoteUpdateCharacterSheetData(playerId, character.id, {
             sheetData: releve.aEcrire,
@@ -156,7 +179,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 {/* La bascule n'apparaît que si le jeu a une fiche branchable. */}
                 {correspondance && (
                     <Bouton habillage="libre" cibleTactile
-                        onClick={() => { setSurLaFiche(v => !v); setFicheDejaOuverte(true); }}
+                        onClick={() => { setSurLaFiche(v => !v); setFicheDejaOuverte(true); setSurLeGroupe(false); }}
                         title={surLaFiche ? 'Revenir à la vue synthétique' : 'Afficher ma fiche'}
                         className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
                             surLaFiche
@@ -166,6 +189,20 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                     >
                         <FileText size={14} />
                         {surLaFiche ? 'Vue synthétique' : 'Ma fiche'}
+                    </Bouton>
+                )}
+                {ficheDeGroupe && campagneDeLaTable && (
+                    <Bouton habillage="libre" cibleTactile
+                        onClick={() => { setSurLeGroupe(v => !v); setGroupeDejaOuvert(true); setSurLaFiche(false); }}
+                        title={surLeGroupe ? 'Revenir à la vue synthétique' : `Afficher la fiche de la ${ficheDeGroupe.libelle}`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border text-ui-10 font-black uppercase tracking-widest transition-all ${
+                            surLeGroupe
+                                ? 'bg-accent/20 border-accent/40 text-accent'
+                                : 'bg-app-surface/40 border-app-border text-app-text/40 hover:text-app-text'
+                        }`}
+                    >
+                        <Users2 size={14} />
+                        {surLeGroupe ? 'Vue synthétique' : ficheDeGroupe.libelle}
                     </Bouton>
                 )}
                 <div className="min-w-0 text-right">
@@ -198,7 +235,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 <Panneau as="div" habillage="libre" className="flex-shrink-0 mb-4 rounded-2xl border border-app-border/20 overflow-hidden">
                     <PanneauDesRessources
                         campaignId={campaignId}
-                        ressources={pilote!.ressourcesDeTable!}
+                        ressources={ressourcesDeLaTable(pilote, campagneDeLaTable)}
                         pourLesJoueurs
                     />
                 </Panneau>
@@ -231,7 +268,25 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                 </div>
             )}
 
-            <div className={`flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12 ${surLaFiche ? 'hidden' : ''}`}>
+            {/*
+                La Cabale : montée à la première bascule, gardée montée et
+                masquée, comme la fiche du PJ. Ce que le joueur y écrit part au
+                meneur par `remoteEcrireLeGroupe`.
+            */}
+            {groupeDejaOuvert && ficheDeGroupe && campagneDeLaTable && (
+                <div className={`flex-1 overflow-hidden pb-4 ${surLeGroupe ? '' : 'hidden'}`}>
+                    <FicheHote
+                        personnage={groupePourLHote(campagneDeLaTable, campagneDeLaTable.groupe, nomDeLaCabale)}
+                        table={correspondanceDuGroupe}
+                        liaison="locale"
+                        onFicheLiee={() => { /* locale à l'appareil : rien à ranger sur la campagne */ }}
+                        onRapprochement={(releve: Rapprochement) =>
+                            remoteEcrireLeGroupe(campagneDeLaTable.id, character.id, releve.aEcrire)}
+                    />
+                </div>
+            )}
+
+            <div className={`flex-1 overflow-y-auto custom-scrollbar pr-2 pb-12 ${surLaFiche || surLeGroupe ? 'hidden' : ''}`}>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-7xl mx-auto">
                     
                     {/* Portrait & Vitals */}
@@ -319,7 +374,7 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 template={template}
                                 valeurs={character.sheetData ?? {}}
                                 campaignId={campaignId ?? undefined}
-                                ressourcesDeTable={pilote.ressourcesDeTable}
+                                ressourcesDeTable={ressourcesDeLaTable(pilote, campagneDeLaTable)}
                                 pourLesJoueurs
                                 personnageId={character.id}
                             />
