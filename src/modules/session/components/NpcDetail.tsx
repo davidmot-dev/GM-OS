@@ -533,7 +533,7 @@ const NpcDetail: React.FC<NpcDetailProps> = ({ embeddedId }) => {
                         )}
                     </div>
 
-                    <Panneau className="p-4 flex flex-col gap-2 flex-shrink-0">
+                    <Panneau orne className="p-4 flex flex-col gap-2 flex-shrink-0">
                         <span className="text-ui-10 font-black uppercase tracking-widest text-app-muted">{t('modules:session.npc_detail.agencement.profil')}</span>
                         {isEditing ? (
                             <textarea

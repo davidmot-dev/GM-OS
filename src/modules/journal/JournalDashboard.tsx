@@ -410,9 +410,9 @@ const JournalDashboard: React.FC = () => {
                 )}
               </Panneau>
 
-              {/* 2. Après la partie — compte rendu et revue */}
+              {/* 2. Après la partie — compte rendu et revue. Ornements visibles (2026-10-13) : il porte aussi ses coins. */}
               {events.length > 0 && activeJournal && (
-                <Panneau className="flex flex-col gap-6 p-4">
+                <Panneau orne className="flex flex-col gap-6 p-4">
                   <div>
                     <h2 className={titreDeZone}><span className="text-accent">2.</span> {t('modules:journal.fil.zone_after')}</h2>
                     <p className="mt-0.5 text-xs text-app-muted">{t('modules:journal.fil.zone_after_desc')}</p>

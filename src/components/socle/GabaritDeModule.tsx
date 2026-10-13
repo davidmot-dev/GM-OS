@@ -65,8 +65,9 @@ export const GabaritDeModule: React.FC<GabaritDeModuleProps> = ({
  * deux bouts (phase 5, le fini, choix de David du 2026-10-03).
  */
 export const Separateur: React.FC<{ className?: string }> = ({ className = '' }) => (
-    <div role="separator" className={`relative flex items-center justify-center py-1 ${className}`}>
+    <div role="separator" className={`relative flex items-center justify-center py-2 ${className}`}>
         <span className="h-px w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
-        <Ornement emplacement="separateur" className="absolute inset-x-0 mx-auto h-3 w-40" />
+        {/* Agrandi le 2026-10-13 (David) : à 136 × 10 px, le motif central ne se voyait pas. */}
+        <Ornement emplacement="separateur" className="absolute inset-x-0 mx-auto h-[16px] w-[240px] max-w-full" />
     </div>
 );

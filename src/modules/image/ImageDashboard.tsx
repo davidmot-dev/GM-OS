@@ -162,7 +162,8 @@ const ImageDashboard: React.FC = () => {
 
     const reglages = (
         <>
-            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-3">
+            {/* Ornements visibles (2026-10-13, David) : l'écran cible porte aussi ses coins. */}
+            <Panneau niveau={1} orne className="shrink-0 p-4 flex flex-col gap-3">
                 <h2 className={titreDeSection}>{t('image.agencement.ecranCible')}</h2>
                 <div className="grid grid-cols-2 gap-1.5">
                     {['hub', ...displays.map(d => d.id)].map(id => (

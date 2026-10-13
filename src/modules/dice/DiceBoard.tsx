@@ -614,7 +614,8 @@ const DiceBoard: React.FC = () => {
     */
     const reglages = (
         <>
-            <Panneau niveau={1} className="shrink-0 p-4 flex flex-col gap-4">
+            {/* Ornements visibles (2026-10-13, David) : un second panneau porte ses coins. */}
+            <Panneau niveau={1} orne className="shrink-0 p-4 flex flex-col gap-4">
                 <h2 className={etiquetteDeChamp}>{t('dice.agencement.parameters')}</h2>
 
                 {activeDriver && (
@@ -1196,7 +1197,8 @@ const DiceBoard: React.FC = () => {
         >
             <div className="flex h-full min-h-0 flex-col gap-4">
                 {/* ── Le dernier jet domine ── */}
-                <Panneau niveau={2} orne className="shrink-0 p-6 flex flex-col items-center">
+                {/* Sans jet, le filigrane du thème (« fond ») habite le panneau (2026-10-13). */}
+                <Panneau niveau={2} orne vide={history.length === 0} className="shrink-0 p-6 flex flex-col items-center">
                     <div className="flex w-full items-center justify-between mb-2">
                         <h2 className={etiquetteDeChamp}>{t('dice.agencement.last_roll')}</h2>
                         {/*

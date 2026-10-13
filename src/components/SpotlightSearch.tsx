@@ -15,7 +15,7 @@ import {
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { fractionDeVie, decrireLaSante } from '../modules/combat/logic/SanteDuCombattant';
 import { ResolvedImage } from './ResolvedImage';
-import { Etiquette, Icone } from './socle';
+import { Etiquette, Icone, CoinsOrnes } from './socle';
 import { useTranslation } from 'react-i18next';
 import { useSpotlight, type SpotlightResult } from '../hooks/useSpotlight';
 
@@ -206,6 +206,8 @@ export const SpotlightSearch: React.FC = () => {
                     </div>
                     {query.trim() && <span className="font-bold text-accent">{results.length} résultat(s)</span>}
                 </div>
+                {/* Ornements visibles (2026-10-13) : la palette porte les coins du thème. */}
+                <CoinsOrnes />
             </div>
         </div>
     );

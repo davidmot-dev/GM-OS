@@ -149,8 +149,9 @@ const SessionWorkspace: React.FC = () => {
                 {scene?.resume && <p className="mt-3 max-w-3xl text-base leading-relaxed text-app-text">{scene.resume}</p>}
             </Panneau>
 
-            {/* 2. Qui est là : le groupe, puis les PNJ de la scène */}
-            <Panneau className="flex-shrink-0">
+            {/* 2. Qui est là : le groupe, puis les PNJ de la scène.
+                Ornements visibles (2026-10-13) : le second panneau à porter ses coins. */}
+            <Panneau orne className="flex-shrink-0">
                 {titreDeBloc(<Icone nom="pj" taille={16} repli={<Users size={16} />} />, t('modules:session.workspace.agencement.groupe', { count: groupe.length }),
                     lienDeBloc(t('modules:session.workspace.manage_group'), () => setCurrentView('players')))}
                 <div className="grid grid-cols-1 gap-3 px-4 pb-4 md:grid-cols-2">

@@ -21,7 +21,7 @@ import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { CSS } from '@dnd-kit/utilities';
 import { Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Etiquette } from '../../../components/socle';
+import { Etiquette, Ornement } from '../../../components/socle';
 import { estHorsDeCombat } from '../logic/SanteDuCombattant';
 
 interface SortableCombatCardProps {
@@ -82,7 +82,9 @@ const InitiativeList: React.FC = () => {
 
     if (combatants.length === 0) {
         return (
-             <div className="flex-1 flex flex-col items-center justify-center text-app-text/20 p-8 text-center animate-in fade-in duration-500">
+             <div className="relative isolate flex-1 flex flex-col items-center justify-center text-app-text/20 p-8 text-center animate-in fade-in duration-500">
+                {/* Le filigrane du thème (« fond ») habite le plateau vide (2026-10-13), comme un panneau vide. */}
+                <Ornement emplacement="fond" className="absolute inset-0 -z-10 m-auto opacity-15" style={{ width: '40%', height: '40%' }} />
                 <Zap size={64} className="mb-4 opacity-10 rotate-12 text-accent" />
                 <h3 className="text-xl font-display font-black uppercase tracking-widest">{t('modules:combat.initiative.empty_title')}</h3>
                 <p className="max-w-[200px] text-sm font-medium mt-2">{t('modules:combat.initiative.empty_desc')}</p>

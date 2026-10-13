@@ -18,6 +18,7 @@ import { decrireLaSante } from '../logic/SanteDuCombattant';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import { taille } from '../../session/logic/regimeDInterface';
 import HorsDePortee from '../../session/components/HorsDePortee';
+import { Separateur } from '../../../components/socle';
 
 const CombatControls: React.FC = () => {
     /**
@@ -389,6 +390,8 @@ const CombatControls: React.FC = () => {
                 )}
             </div>
 
+            {/* Ornements visibles (2026-10-13, David) : l'initiative, puis la liste. */}
+            <Separateur className="mb-4" />
             {/* List Management */}
             <div className="space-y-2 mb-6">
                 <button

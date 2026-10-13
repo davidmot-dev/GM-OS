@@ -46,6 +46,12 @@ export const EnTeteDeModule: React.FC<EnTeteDeModuleProps> = ({ titre, habillage
             {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </div>
         {etat && <div className="flex flex-wrap items-center gap-1.5">{etat}</div>}
-        <Ornement emplacement="entete" className="h-3 w-48 max-w-full" />
+        {/* Agrandi le 2026-10-13 (David) : dans 163 × 10 px, une frise 8:1 ne
+            faisait que 80 px de large. 24 px de haut, calée à gauche sous le titre. */}
+        <Ornement
+            emplacement="entete"
+            className="h-[24px] w-full"
+            style={{ maskPosition: 'left center', WebkitMaskPosition: 'left center' }}
+        />
     </header>
 );

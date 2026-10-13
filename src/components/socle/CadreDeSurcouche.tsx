@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import { CoinsOrnes } from './Ornement';
 
 /**
  * **`<CadreDeSurcouche>`** — le cadre commun des fenêtres, refonte L5,
@@ -50,7 +51,7 @@ export const CadreDeSurcouche: React.FC<CadreDeSurcoucheProps> = ({
 }) => (
     <div
         data-cadre-de-surcouche=""
-        className={`flex flex-col overflow-hidden border border-app-border bg-app-surface text-app-text shadow-2xl animate-in zoom-in-95 duration-200 ${
+        className={`relative flex flex-col overflow-hidden border border-app-border bg-app-surface text-app-text shadow-2xl animate-in zoom-in-95 duration-200 ${
             largeur === 'plein' ? 'rounded-none' : 'rounded-xl'
         } ${LARGEURS[largeur]} ${className}`}
     >
@@ -74,6 +75,8 @@ export const CadreDeSurcouche: React.FC<CadreDeSurcoucheProps> = ({
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto custom-scrollbar">{children}</div>
         {pied && <div className="flex shrink-0 items-center justify-end gap-2 border-t border-app-border px-5 py-3">{pied}</div>}
+        {/* Ornements visibles (2026-10-13, David) : les fenêtres portent les coins du thème. */}
+        <CoinsOrnes />
     </div>
 );
 

@@ -35,6 +35,7 @@ import LootOS from '../modules/session/components/LootOS';
 import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 import VitrineDuSocle from './socle/VitrineDuSocle';
 import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire } from './socle/CadreDeSurcouche';
+import { CoinsOrnes } from './socle/Ornement';
 
 // Chaque ouverture porte sa saisie ; une nouvelle valeur initiale la remonte.
 const SaisieDuPrompt: React.FC = () => {
@@ -181,7 +182,7 @@ const ModalProvider: React.FC = () => {
                 <div role="dialog" aria-modal="true" className={`fixed inset-0 z-[150] flex items-center justify-center bg-app-bg/80 backdrop-blur-md animate-in fade-in duration-300 ${
                     customVariant === 'campaign-add' || customVariant === 'campaign-edit' ? 'p-0' : 'p-4'
                 }`}>
-                    <div data-cadre-de-surcouche="" className={`bg-app-surface border border-app-border overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col ${
+                    <div data-cadre-de-surcouche="" className={`relative bg-app-surface border border-app-border overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col ${
                         customVariant === 'campaign-add' || customVariant === 'campaign-edit'
                             ? 'w-full h-full rounded-none'
                             : customVariant === 'global-settings' || customVariant === 'favorite-dossier' || customVariant === 'npc-detail' || customVariant === 'session-summary' || customVariant === 'session-notes' || customVariant === 'session-feedback' || customVariant === 'danger-preset-editor' || customVariant === 'loot-os' || customVariant === 'aide-du-meneur' || customVariant === 'vitrine-du-socle'
@@ -320,6 +321,8 @@ const ModalProvider: React.FC = () => {
                             {customVariant === 'fiche-combattant' && <FicheDuCombattant />}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
+                        {/* Ornements visibles (2026-10-13) : les fenêtres portent les coins du thème. */}
+                        <CoinsOrnes />
                     </div>
                 </div>
             )}

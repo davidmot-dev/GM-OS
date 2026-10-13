@@ -292,7 +292,8 @@ const TableDashboard: React.FC = () => {
         >
             <div className="flex flex-col gap-4">
                 {/* ── Le réglage, en une rangée, et le lancer ── */}
-                <Panneau className="flex flex-col gap-4 p-4">
+                {/* Ornements visibles (2026-10-13, David) : un second panneau porte ses coins. */}
+                <Panneau orne className="flex flex-col gap-4 p-4">
                     <div className="flex flex-wrap items-end gap-4">
                         <label className="flex min-w-[12rem] flex-1 flex-col gap-1.5">
                             <span className={etiquetteDeChamp}><Globe size={12} />1. {t('random_tables.sidebar.universe_label')}</span>

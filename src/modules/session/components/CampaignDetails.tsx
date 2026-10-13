@@ -217,8 +217,9 @@ const CampaignDetails: React.FC = () => {
                         )}
                     </Panneau>
 
-                    {/* Les séances d'abord : la séance en cours se détache */}
-                    <Panneau>
+                    {/* Les séances d'abord : la séance en cours se détache.
+                        Ornements visibles (2026-10-13) : le second panneau à porter ses coins. */}
+                    <Panneau orne>
                         {titreDeBloc(<Calendar size={16} />, t('modules:session.campaign_details.sections.sessions'),
                             <span className="flex items-center gap-1.5">
                                 <Etiquette>{t('modules:session.campaign_details.agencement.seances', { count: seances.length })}</Etiquette>

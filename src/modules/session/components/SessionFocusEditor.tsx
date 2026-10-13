@@ -187,7 +187,8 @@ const SessionFocusEditor: React.FC = () => {
                                         className="flex-1 resize-none border-none bg-transparent px-5 py-3 text-base leading-relaxed text-app-text outline-none placeholder:text-app-subtle focus:ring-0 custom-scrollbar"
                                     />
                                 </Panneau>
-                                <Panneau className="flex min-h-[20rem] flex-col border-accent/30 focus-within:border-accent/60">
+                                {/* Ornements visibles (2026-10-13, David) : un second panneau porte ses coins. */}
+                                <Panneau orne className="flex min-h-[20rem] flex-col border-accent/30 focus-within:border-accent/60">
                                     {titreDeBloc(<Lock size={16} />, t('modules:session.focus.secrets_title'),
                                         <Etiquette ton="accent"><EyeOff size={10} className="mr-1 inline -mt-0.5" />{t('modules:session.focus.agencement.jamais_partage')}</Etiquette>)}
                                     <p className="px-5 text-ui-10 text-app-muted">{t('modules:session.focus.secrets_tooltip')}</p>
