@@ -10,7 +10,9 @@ Les dix noms du contrat présents sont `pj`, `pnj`, `combat`, `des`, `indice`, `
 
 David a choisi le 10/10/2026 **« ok avec ta proposition »** : papier froid très léger, coins techniques et séparateur discret. Le grain SVG remplace les lignes horizontales des panneaux, à l’opacité existante de 0,14 ; le fond reste sans texture. Le bruit est ramené à `SourceGraphic` en `currentColor`, sans inventer de couleur, afin que le validateur puisse mesurer son contraste.
 
-`ornements.json` associe `entete`, `coin` et `separateur` aux emplacements du contrat. GM-OS colore ces dessins avec son accent et retourne le coin supérieur gauche pour les autres angles. L’en-tête est une frise technique rectiligne à angles francs, avec un réticule central ; le séparateur conserve son losange, avec un trait renforcé pour l’affichage à 160 × 12 px.
+`ornements.json` associe `entete`, `coin`, `separateur` et `fond` aux emplacements du contrat. GM-OS colore ces dessins avec son accent et retourne le coin supérieur gauche pour les autres angles. L’en-tête est une frise technique rectiligne à angles francs, avec un réticule central ; le séparateur conserve son losange, avec un trait renforcé pour l’affichage à 160 × 12 px.
+
+Le filigrane des panneaux vides est un réticule centré en traits rectilignes de 2 unités, encadré de coins techniques, que GM-OS affiche à 40 % du panneau et à 15 % d’opacité.
 
 ## Limites
 
