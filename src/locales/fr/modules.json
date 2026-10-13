@@ -2132,6 +2132,8 @@
       "filter_monsters": "Monstres",
       "filter_allies": "Alliés",
       "filter_hostiles": "Hostiles",
+      "rencontre": "Rencontré",
+      "rencontre_le": "Rencontré par les joueurs le {{date}}",
       "new_npc": "NOUVEAU PNJ",
       "delete_confirm": "Voulez-vous vraiment supprimer définitivement \"{{name}}\" ?",
       "empty_state_init": "Initialiser une Entité",

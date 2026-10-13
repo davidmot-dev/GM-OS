@@ -103,6 +103,12 @@ export interface EntitySliceActions {
      * qui le compte parmi ses PNJ.
      */
     toggleEntityVisibility: (entityId: string, sceneId?: string) => void;
+    /**
+     * Retient que les joueurs ont rencontré ce PNJ, sans le montrer aux tablettes
+     * — la première fois seulement. Appelé quand son portrait est projeté
+     * (David, 2026-10-13 : « projeter = rencontrer »). Un PJ n'est jamais marqué.
+     */
+    marquerRencontre: (entityId: string, sceneId?: string) => void;
     updateEntitySheetData: (id: string, fieldId: string, value: string | number | boolean) => void;
     autoSelectFirstEntity: () => void;
 
@@ -307,6 +313,14 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 };
             })
         })),
+
+    marquerRencontre: (entityId, sceneId) =>
+        set((state) => {
+            const cible = state.entities.find(e => e.id === entityId);
+            if (!cible || cible.type === 'pc' || cible.vuParLesJoueurs) return {};
+            const vu = premiereFoisVu(cible, (state as { scenes?: Scene[] }).scenes ?? [], Date.now(), sceneId);
+            return { entities: state.entities.map(e => e.id === entityId ? { ...e, vuParLesJoueurs: vu } : e) };
+        }),
 
     updateEntitySheetData: (id, fieldId, value) =>
         set((state) => ({

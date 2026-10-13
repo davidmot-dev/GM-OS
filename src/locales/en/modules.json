@@ -2143,6 +2143,8 @@
       "filter_monsters": "Monsters",
       "filter_allies": "Allies",
       "filter_hostiles": "Hostiles",
+      "rencontre": "Met",
+      "rencontre_le": "Met by the players on {{date}}",
       "new_npc": "NEW NPC",
       "delete_confirm": "Do you really want to permanently delete \"{{name}}\"?",
       "empty_state_init": "Initialize an Entity",

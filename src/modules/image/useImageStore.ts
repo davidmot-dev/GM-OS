@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { exposerMagasinDuHub } from '../../utils/magasinsDuHub';
+import { exposerMagasinDuHub, magasinDuHub } from '../../utils/magasinsDuHub';
 import type { ImageMedia, ProjectionTarget, DisplayInfo, ImageFolder, ProjectedEntity, Diaporama, DiaporamaEnCours } from './types';
 import {
     imagesDuDiaporama, indexSuivant, cadenceDuDiaporama, peutTourner,
@@ -701,6 +701,13 @@ export const useImageStore = create<ImageState>()(
                             get().blackout();
                             gmToast(i18n.t('modules:image.notifications.projectionFailed'));
                         } else if (entity) {
+                            /*
+                              **Projeter un PNJ, c'est le faire rencontrer**
+                              (David, 2026-10-13). Le magasin de séance ne marque
+                              que ses PNJ et monstres, et seulement la première
+                              fois : un indice ou un PJ projeté n'y change rien.
+                            */
+                            magasinDuHub('useSessionOSStore')?.getState().marquerRencontre(entity.id);
                             /*
                               **La chronique garde cette marque — décision de
                               David du 2026-08-21.**

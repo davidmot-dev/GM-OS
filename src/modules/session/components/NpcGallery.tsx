@@ -341,6 +341,21 @@ const NpcGalleryItem: React.FC<{
                     {t(`modules:session.npc_gallery.roles.${npc.role}`, { defaultValue: npc.role })}
                 </div>
 
+                {/* Rencontré par les joueurs (David, 2026-10-13) : montré aux
+                    tablettes ou projeté, au moins une fois. */}
+                {npc.vuParLesJoueurs && (
+                    <div
+                        className="absolute top-3 left-3 flex items-center gap-1 rounded border border-accent/40 bg-app-bg/70 px-2 py-1 text-ui-9 font-black uppercase tracking-widest text-accent backdrop-blur-md"
+                        title={t('modules:session.npc_gallery.rencontre_le', {
+                            date: new Date(npc.vuParLesJoueurs.le).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }),
+                        })}
+                        data-pnj-rencontre=""
+                    >
+                        <Eye size={11} />
+                        {t('modules:session.npc_gallery.rencontre')}
+                    </div>
+                )}
+
                 {/* Les gestes du portrait, au survol — l'épingle reste visible
                     tant que le PNJ est épinglé à la séance. */}
                 <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">

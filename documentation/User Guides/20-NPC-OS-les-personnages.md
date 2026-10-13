@@ -93,7 +93,8 @@ Dans le Cockpit de session, colonne de gauche : **Galerie PNJ**.
 *Refondue le 2026-10-02.* En haut, **Nouveau PNJ** et la recherche ; les **onglets** Tous, PNJ,
 Monstres, Alliés, Hostiles portent leur nombre — qui suit la recherche. Chaque carte montre le
 portrait (une silhouette s'il n'y en a pas) avec le **camp** posé dessus, la vitalité, et trois
-gestes : **Fiche**, **Combat**, **Projeter**.
+gestes : **Fiche**, **Combat**, **Projeter**. Un PNJ que les joueurs ont déjà **rencontré** porte la
+pastille **Rencontré** en haut à gauche du portrait ; la date est dans son info-bulle.
 
 ### La fiche d'un PNJ
 
@@ -108,7 +109,9 @@ du MJ marqués « Non projeté »**, les notes, les indices et les cartes.
 **Montré aux joueurs / Caché aux joueurs** (avec un œil) rend le PNJ visible sur les tablettes. *Il
 se lisait « En ligne / Hors ligne » jusqu'au 2026-10-12 — comme l'état d'une connexion, ce qu'il
 n'est pas.* La première fois qu'un PNJ est montré, GM-OS retient **qu'il a été rencontré**, avec la
-date et la scène ; le cacher ensuite n'efface pas la rencontre.
+date et la scène ; le cacher ensuite n'efface pas la rencontre. **Projeter** son portrait (depuis la
+galerie ou la fiche) le marque aussi rencontré, sans le montrer aux tablettes *(depuis le
+2026-10-13)*.
 
 **Combat** l'envoie dans l'ordre du tour **dans le camp de son rôle** : un allié en allié, un
 neutre en neutre, un hostile ou un boss en ennemi. *Jusqu'au 2026-10-12, la fiche l'envoyait
