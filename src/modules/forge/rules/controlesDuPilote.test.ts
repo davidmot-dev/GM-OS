@@ -234,17 +234,35 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(constats).toEqual([]);
     });
 
-    it('une tâche de défaite dont la section n\'existe pas', () => {
+    /*
+      2026-10-13 : la séance lit le champ par défaut, jamais la section — aucun
+      écran ne propose encore de choisir. Une section fausse n'est donc qu'un
+      avertissement ; un champ introuvable, lui, met le seuil au minimum.
+    */
+    it('une tâche de défaite dont la section n\'existe pas : averti, pas refusé', () => {
         const constats = controlerLePilote(
             {
                 combat: {
                     statsToTrack: [], initiativeFormula: '',
-                    tacheDeDefaite: { sectionDuSeuil: 'aptitudes', seuil: { min: 4, max: 8 }, progressionDeBase: 2, qualiteMax: 4 },
+                    tacheDeDefaite: { sectionDuSeuil: 'aptitudes', champParDefaut: 'combat', seuil: { min: 4, max: 8 }, progressionDeBase: 2, qualiteMax: 4 },
                 },
             } as Partial<GameDriver>,
             fiche,
         );
-        expect(constats.map(c => c.ou)).toEqual(['combat.tacheDeDefaite.sectionDuSeuil']);
+        expect(constats.map(c => [c.ou, c.gravite])).toEqual([['combat.tacheDeDefaite.sectionDuSeuil', 'avertissement']]);
+    });
+
+    it('une tâche de défaite dont le champ par défaut n\'existe pas : une erreur', () => {
+        const constats = controlerLePilote(
+            {
+                combat: {
+                    statsToTrack: [], initiativeFormula: '',
+                    tacheDeDefaite: { sectionDuSeuil: 'competences', champParDefaut: 'esquive', seuil: { min: 4, max: 8 }, progressionDeBase: 2, qualiteMax: 4 },
+                },
+            } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => [c.ou, c.gravite])).toEqual([['combat.tacheDeDefaite.champParDefaut', 'erreur']]);
     });
 
     it('un champ par défaut pris dans la mauvaise section', () => {
@@ -257,7 +275,7 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
             } as Partial<GameDriver>,
             fiche,
         );
-        expect(constats.map(c => c.ou)).toEqual(['combat.tacheDeDefaite.champParDefaut']);
+        expect(constats.map(c => [c.ou, c.gravite])).toEqual([['combat.tacheDeDefaite.champParDefaut', 'avertissement']]);
     });
 
     it('une réserve qui se déverse dans le vide, ou dans elle-même', () => {
@@ -537,10 +555,14 @@ describe('un jet que le moteur ne saurait pas résoudre', () => {
         const surLaVariante = (engine: string) =>
             avec(engine).filter(c => c.message.includes('yze-echelonne'));
 
-        // `yze` en récolte deux : celui-ci, et le contrôle des faces — cette
-        // variante lance des d6, et le pilote en compose à dix.
-        expect(surLaVariante('yze'), 'la variante à pools n\'est pas celle-ci').toHaveLength(1);
-        expect(surLaVariante('yze')[0].gravite).toBe('erreur');
+        /*
+          2026-10-13 : Dice-OS et la tablette suivent `jet.desEchelonnes` depuis
+          le 30/09 — le jet est juste quel que soit le moteur. Il reste un nom
+          inexact (l'aide de la tablette) : un avertissement, plus une erreur.
+          Et plus de contrôle des faces : chaque dé prend celles de sa lettre.
+        */
+        expect(avec('yze'), 'un seul constat : le nom, pas les faces').toHaveLength(1);
+        expect(surLaVariante('yze')[0].gravite).toBe('avertissement');
         expect(surLaVariante('standard')).toHaveLength(1);
         expect(avec('yze-echelonne'), 'le bon moteur ne dit rien').toEqual([]);
     });
@@ -712,7 +734,7 @@ describe('la tâche de défaite, qui l\'emporte sur ce que le pilote annonce', (
      */
     const avecTache = (extra: Record<string, unknown>) => ({
         combat: {
-            tacheDeDefaite: { sectionDuSeuil: 'competences', seuil: { min: 4, max: 8 }, progressionDeBase: 2, qualiteMax: 4 },
+            tacheDeDefaite: { sectionDuSeuil: 'competences', champParDefaut: 'combat', seuil: { min: 4, max: 8 }, progressionDeBase: 2, qualiteMax: 4 },
             ...extra,
         },
     }) as unknown as Partial<GameDriver>;
@@ -727,13 +749,20 @@ describe('la tâche de défaite, qui l\'emporte sur ce que le pilote annonce', (
         expect(controlerLePilote(avecTache({ defaultHealthType: 'clocks' }), fiche)).toEqual([]);
     });
 
-    it('une tâche sans section où lire son seuil est pire qu\'absente', () => {
+    /* Le pilote de référence ne doit recevoir aucune erreur de son propre contrôle (2026-10-13). */
+    it('le pilote de Dune livré dans le code, avec sa fiche, ne reçoit aucune erreur', () => {
+        const dune = DEFAULT_GAME_DRIVERS.find(d => d.id === 'dune')!;
+        const saFiche = DEFAULT_SHEET_TEMPLATES.find(t => t.id === dune.templateId)!;
+        expect(controlerLePilote(dune, saFiche).filter(c => c.gravite === 'erreur')).toEqual([]);
+    });
+
+    it('une tâche sans champ où lire son seuil est pire qu\'absente', () => {
         const constats = controlerLePilote(
             { combat: { tacheDeDefaite: { seuil: { min: 0, max: 0 } } } } as unknown as Partial<GameDriver>,
             fiche,
         );
         expect(constats.map(c => c.ou)).toEqual([
-            'combat.tacheDeDefaite.sectionDuSeuil',
+            'combat.tacheDeDefaite.champParDefaut',
             'combat.tacheDeDefaite.seuil',
         ]);
         expect(constats[0].message).toContain("l'omettre");

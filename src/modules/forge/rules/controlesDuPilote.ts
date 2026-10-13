@@ -417,13 +417,22 @@ export function controlerLePilote(
       `dice.engine`. Un pilote qui déclare l'un sans l'autre marche depuis la
       fiche d'un personnage et rend une poignée de d6 depuis le pupitre — *des
       réussites plausibles, et le dé à douze faces du personnage nulle part.*
+
+      ⚠️ **Ce n'est plus vrai depuis le 2026-09-30**, et le contrôle criait à
+      tort (relevé le 2026-10-13 sur Blade Runner, en évaluant les onze
+      pilotes) : `DiceBoard` passe en dés échelonnés dès que `jet.desEchelonnes`
+      existe, et `RemoteDicePad` les lance de même. Le jet est juste quel que
+      soit le moteur. Il ne reste qu'une trace : la tablette affiche l'aide du
+      Year Zero à réserve quand le moteur vaut `yze`. D'où un avertissement,
+      qui dit le nom exact, et plus une erreur. *Un contrôle qui crie à tort
+      apprend à ne plus être lu.*
     */
     if (driver.jet?.desEchelonnes && driver.dice && driver.dice.engine !== 'yze-echelonne') {
-        erreur(
+        avertir(
             'dice.engine',
-            `Ce pilote lance des dés échelonnés, mais son moteur est « ${driver.dice.engine ?? 'absent'} ». `
-            + 'Le panneau de fiche lira bien la poignée ; le pupitre et la tablette, qui ne lisent que '
-            + '« dice.engine », lanceront autre chose. Le moteur doit valoir « yze-echelonne ».',
+            `Ce pilote lance des dés échelonnés, et son moteur se nomme « ${driver.dice.engine ?? 'absent'} ». `
+            + 'Le jet reste juste — Dice-OS et la tablette suivent « jet.desEchelonnes » — mais la '
+            + 'tablette affichera l\'aide d\'un autre moteur. Le nom exact est « yze-echelonne ».',
         );
     }
 
@@ -589,7 +598,12 @@ export function controlerLePilote(
         );
     }
 
-    const facesAttendues = moteur ? FACES_DU_MOTEUR[moteur] : undefined;
+    /*
+      Les dés échelonnés n'ont pas de faces de moteur : chaque dé prend celles
+      de sa lettre sur la fiche. Comparer `yze` (d6) à la réserve d'un tel
+      pilote reprochait une incohérence qui ne se lance nulle part (2026-10-13).
+    */
+    const facesAttendues = moteur && !driver.jet?.desEchelonnes ? FACES_DU_MOTEUR[moteur] : undefined;
     const facesObservees = facesLancees(driver);
     if (facesAttendues !== undefined && facesObservees !== undefined
         && facesObservees !== facesAttendues) {
@@ -1030,18 +1044,39 @@ export function controlerLePilote(
             );
         }
 
-        if (!tache.sectionDuSeuil) {
+        /*
+          **Ce que la séance lit, c'est le champ par défaut — pas la section.**
+
+          `seuilDeDefaite` lit `champChoisi || champParDefaut`, et aucun écran
+          ne propose encore de choisir : `sectionDuSeuil` n'est lue **nulle
+          part** en séance. Le contrôle en faisait pourtant une erreur, et
+          laissait passer le seul vrai défaut — un champ par défaut absent ou
+          introuvable, qui met le seuil au minimum pour tout le monde. Relevé
+          le 2026-10-13 : Dune, le pilote de référence, recevait une fausse
+          erreur (`competences` au lieu de `stats`) alors que son champ
+          `combat` se lit très bien.
+        */
+        const champDuSeuil = tache.champParDefaut;
+        if (!champDuSeuil) {
             erreur(
-                'combat.tacheDeDefaite.sectionDuSeuil',
-                "La tâche de défaite ne dit pas dans quelle section lire son seuil : il retomberait " +
-                'sur son minimum pour tout le monde. Un objet incomplet est plus dangereux ' +
-                "qu'absent — si le jeu n'a pas de tâche étendue de défaite, il faut l'omettre.",
+                'combat.tacheDeDefaite.champParDefaut',
+                'La tâche de défaite ne nomme pas le champ où lire son seuil : aucun écran ne propose ' +
+                'encore de le choisir en séance, il retomberait donc sur son minimum pour tout le ' +
+                "monde. Si le jeu n'a pas de tâche étendue de défaite, il faut l'omettre.",
             );
-        } else if (!idsDeSections.has(tache.sectionDuSeuil)) {
+        } else if (!tousLesChamps.has(champDuSeuil)) {
             erreur(
+                'combat.tacheDeDefaite.champParDefaut',
+                `« ${champDuSeuil} » n'est un champ d'aucune section : le seuil de défaite retomberait ` +
+                'sur son minimum pour tout le monde.',
+            );
+        }
+        if (tache.sectionDuSeuil && !idsDeSections.has(tache.sectionDuSeuil)) {
+            avertir(
                 'combat.tacheDeDefaite.sectionDuSeuil',
-                `« ${tache.sectionDuSeuil} » n'est pas une section de la fiche : le seuil de défaite ` +
-                'retomberait sur son minimum pour tout le monde.',
+                `« ${tache.sectionDuSeuil} » n'est pas une section de la fiche. Sans effet aujourd'hui ` +
+                '— la séance lit le champ par défaut —, mais c\'est là que le meneur choisira la ' +
+                'compétence défensive quand l\'écran le proposera.',
             );
         }
         // Un seuil de 0 à 0 met tout le monde hors de combat au premier coup.
@@ -1052,9 +1087,10 @@ export function controlerLePilote(
                 'réussie mettrait sa cible hors de combat.',
             );
         }
-        if (tache.champParDefaut && idsDeSections.has(tache.sectionDuSeuil)
-            && !champsParSection.get(tache.sectionDuSeuil)?.has(tache.champParDefaut)) {
-            erreur(
+        if (champDuSeuil && tousLesChamps.has(champDuSeuil) && idsDeSections.has(tache.sectionDuSeuil)
+            && !champsParSection.get(tache.sectionDuSeuil)?.has(champDuSeuil)) {
+            // Même raison : la section ne servira qu'au choix à venir.
+            avertir(
                 'combat.tacheDeDefaite.champParDefaut',
                 `« ${tache.champParDefaut} » n'appartient pas à la section « ${tache.sectionDuSeuil} ».`,
             );
