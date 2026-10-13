@@ -37,8 +37,8 @@ const SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path f
 
 const INTENTION = '# Intention\nTerminal industriel.\n\n# Limites signalées\nAucune.\n';
 
-/* Un thème complet livre ses quatre ornements (contrat, 2026-10-13). */
-const ORNEMENTS = JSON.stringify({ entete: 'ornements/entete.svg', coin: 'ornements/coin.svg', separateur: 'ornements/separateur.svg', fond: 'ornements/fond.svg' });
+/* Un thème complet livre ses trois ornements (contrat, 2026-10-13) ; `entete` n'est plus attendu. */
+const ORNEMENTS = JSON.stringify({ coin: 'ornements/coin.svg', separateur: 'ornements/separateur.svg', fond: 'ornements/fond.svg' });
 
 function feuille(surcharges: Record<string, string | null> = {}, avant = IMPORT, polarite = 'dark'): string {
     const valeurs = { ...JETONS, ...surcharges };
@@ -53,7 +53,6 @@ function fichiers(autres: Record<string, FichierDuTheme | null> = {}): Record<st
         'intention.md': { taille: INTENTION.length, contenu: INTENTION },
         'matieres/grain.svg': { taille: SVG.length, contenu: SVG },
         'ornements.json': { taille: ORNEMENTS.length, contenu: ORNEMENTS },
-        'ornements/entete.svg': { taille: SVG.length, contenu: SVG },
         'ornements/coin.svg': { taille: SVG.length, contenu: SVG },
         'ornements/separateur.svg': { taille: SVG.length, contenu: SVG },
         'ornements/fond.svg': { taille: SVG.length, contenu: SVG },
@@ -82,15 +81,26 @@ describe('validerLeTheme — le cas normal', () => {
         const r = valider(feuille(), { 'ornements.json': null });
         expect(r.accepte).toBe(true);
         expect(r.erreurs).toEqual([]);
-        expect(r.avertissements.map(a => a.message).join(' ')).toContain('entete, coin, separateur, fond');
+        expect(r.avertissements.map(a => a.message).join(' ')).toContain('coin, separateur, fond');
     });
 
     it('nomme les ornements qui manquent', () => {
         const partiel = JSON.stringify({ coin: 'ornements/coin.svg' });
         const r = valider(feuille(), { 'ornements.json': { taille: partiel.length, contenu: partiel } });
         const message = r.avertissements.find(a => a.regle === '§ 8')?.message ?? '';
-        expect(message).toContain('entete, separateur, fond');
+        expect(message).toContain('separateur, fond');
         expect(message).not.toContain('coin,');
+    });
+
+    /* David, 2026-10-13 : GM-OS ne pose plus l'en-tête, mais les thèmes qui le livrent passent. */
+    it('accepte encore un ornement `entete`, sans rien signaler', () => {
+        const avecEntete = JSON.stringify({ ...JSON.parse(ORNEMENTS), entete: 'ornements/entete.svg' });
+        const r = valider(feuille(), {
+            'ornements.json': { taille: avecEntete.length, contenu: avecEntete },
+            'ornements/entete.svg': { taille: SVG.length, contenu: SVG },
+        });
+        expect(r.erreurs).toEqual([]);
+        expect(r.avertissements).toEqual([]);
     });
 
     it('range les jetons par ce que GM-OS en fait', () => {

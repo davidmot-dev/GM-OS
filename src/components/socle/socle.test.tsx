@@ -121,14 +121,15 @@ describe('<Etiquette>', () => {
 });
 
 describe('<EnTeteDeModule> et <GabaritDeModule>', () => {
-    it('l’en-tête porte le titre, la ligne d’état, les actions et l’ornement d’en-tête', () => {
+    /* L'ornement d'en-tête est retiré le 2026-10-13 (David : « l'entête n'apporte rien »). */
+    it('l’en-tête porte le titre, la ligne d’état et les actions, sans ornement d’en-tête', () => {
         const { container } = render(
             <EnTeteDeModule titre="Combat-OS" surtitre="Round 3" etat={<Etiquette ton="danger">3 hostiles</Etiquette>} actions={<Bouton>Fin</Bouton>} />,
         );
         expect(screen.getByRole('heading', { name: 'Combat-OS' })).not.toBeNull();
         expect(screen.getByText('3 hostiles')).not.toBeNull();
         expect(screen.getByRole('button', { name: 'Fin' })).not.toBeNull();
-        expect(container.querySelector('[data-ornement="entete"]')).not.toBeNull();
+        expect(container.querySelector('[data-ornement="entete"]')).toBeNull();
     });
 
     it('la grammaire : en-tête, barre d’outils, zone de travail, réglages à droite', () => {

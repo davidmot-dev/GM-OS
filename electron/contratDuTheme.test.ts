@@ -7,6 +7,7 @@ import {
 } from '../src/theme/contratDuTheme';
 import { pontVersLInterface } from '../src/theme/jetonsDeTheme';
 import { JETONS_EDITABLES } from '../src/theme/editionDuTheme';
+import { ORNEMENTS_ATTENDUS } from '../src/theme/validationDuTheme';
 
 /**
  * **Le contrat en données dit la même chose que le cahier des charges.**
@@ -115,9 +116,14 @@ describe('le contrat en données suit le cahier des charges', () => {
         expect([...phrase.matchAll(/`([\w.-]+)`/g)].map(m => m[1])).toEqual([...HOTES_DE_POLICES]);
     });
 
+    /* 2026-10-13 : `entete` n'est plus posé ni demandé, mais reste accepté.
+       L'exemple du cahier montre ce qu'on livre ; son tableau, tout ce qui est accepté. */
     it('les mêmes emplacements d\'ornement (§ 8)', () => {
-        const bloc = /## 8 ·[\s\S]*?```json\n([\s\S]*?)```/.exec(CAHIER)![1];
-        expect(Object.keys(JSON.parse(bloc))).toEqual([...EMPLACEMENTS_D_ORNEMENT]);
+        const section = /## 8 ·[\s\S]*?(?=\n## )/.exec(CAHIER)![0];
+        const bloc = /```json\n([\s\S]*?)```/.exec(section)![1];
+        expect(Object.keys(JSON.parse(bloc))).toEqual([...ORNEMENTS_ATTENDUS]);
+        const lignes = [...section.matchAll(/^\| (?:~~)?`(\w+)`/gm)].map(m => m[1]);
+        expect(lignes).toEqual([...EMPLACEMENTS_D_ORNEMENT]);
     });
 
     /* v1.6 : la liste se fige comme les emplacements — le cahier et le code disent les mêmes noms, dans le même ordre. */

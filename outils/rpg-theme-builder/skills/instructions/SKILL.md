@@ -64,8 +64,8 @@ Dans `docs/systems/<jeu>/theme/`, où `<jeu>` est le nom du dossier du jeu :
 1. `theme.css` — le bloc de jetons (squelette du § 12 du cahier) ;
 2. `intention.md` — **obligatoire** : l'intention visuelle en trois phrases au plus, puis les
    **limites signalées** avec leur classe (§ 1.1 du cahier) ;
-3. **toujours** `ornements.json` et `ornements/*.svg` avec **les quatre emplacements `entete`, `coin`,
-   `separateur` et `fond`** (§ 8). Un jeu sobre reçoit des ornements sobres, pas aucun ;
+3. **toujours** `ornements.json` et `ornements/*.svg` avec **les trois emplacements `coin`,
+   `separateur` et `fond`** (§ 8) — **plus d'`entete`** : GM-OS ne le pose plus. Un jeu sobre reçoit des ornements sobres, pas aucun ;
    dis-le dans `intention.md` ;
 3 bis. au besoin : `matieres/*.svg` (§ 7) ;
 4. au besoin : `icones.json` et `icones/*.svg` (§ 9) — **seulement les noms du tableau du § 9**, et
@@ -87,7 +87,7 @@ RÈGLES QUI PIÈGENT LE PLUS (le détail est dans le cahier)
 - Polices importées en tête, depuis `fonts.googleapis.com` ou `fonts.bunny.net` seulement.
 - Un jeton, une déclaration ; pas de `!important` dans le bloc des jetons.
 - Chemins de matières et d'ornements **dans** `theme/` ; SVG en `currentColor`, sans script.
-- Ornements : **les quatre** — `entete` (frise 8:1, vue à ~190 × 24 px), `coin` (carré vu à 28 px, dessin
+- Ornements : **les trois** — `coin` (carré vu à 28 px, dessin
   collé en haut à gauche et **tenu dans le tiers extérieur**, sinon il passe sur les titres),
   `separateur` (posé à 240 × 16 px), `fond` (motif carré centré, vu à 40 % du panneau et 15 % d'opacité). Des traits de 1,5 à 2,5 unités : un filet de 1 sur 640 ne se voit
   pas à l'écran.

@@ -620,8 +620,11 @@ function verifierLesOrnements(fichier: FichierDuTheme, theme: ThemeAValider, err
     }
 }
 
-/** Les quatre ornements que chaque thème livre depuis le 2026-10-13 (§ 8). */
-export const ORNEMENTS_ATTENDUS = ['entete', 'coin', 'separateur', 'fond'] as const;
+/**
+ * Les trois ornements que chaque thème livre depuis le 2026-10-13 (§ 8).
+ * `entete` reste accepté, mais GM-OS ne le pose plus : il n'est plus attendu.
+ */
+export const ORNEMENTS_ATTENDUS = ['coin', 'separateur', 'fond'] as const;
 
 /**
  * **Un ornement absent se signale, sans refuser le thème** (David, 2026-10-13 :
@@ -639,7 +642,7 @@ function signalerLesOrnementsAbsents(fichier: FichierDuTheme | undefined, averti
     }
     const absents = ORNEMENTS_ATTENDUS.filter(e => typeof table[e] !== 'string');
     if (absents.length > 0) {
-        avertir('§ 8', `Ornement(s) absent(s) : ${absents.join(', ')}. Chaque thème livre \`entete\`, \`coin\`, \`separateur\` et \`fond\` — un jeu sobre reçoit des ornements sobres, pas aucun.`);
+        avertir('§ 8', `Ornement(s) absent(s) : ${absents.join(', ')}. Chaque thème livre \`coin\`, \`separateur\` et \`fond\` — un jeu sobre reçoit des ornements sobres, pas aucun.`);
     }
 }
 

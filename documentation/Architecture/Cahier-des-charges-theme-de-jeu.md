@@ -301,8 +301,9 @@ Des éléments décoratifs posés par GM-OS à des **emplacements fixes**. Le je
 GM-OS décide où et à quelle taille. **Appliqués quand le meneur allume les personnalités** (LU ⚙),
 avec parcimonie : le `coin` sur un ou deux panneaux principaux par écran, pas sur chacun.
 
-⭐ **Livre les quatre à chaque thème : `entete`, `coin`, `separateur` et `fond`** (demandé par David
-le 2026-10-13). Un thème sans ornement reste **valide**, mais GM-OS n'a alors rien à poser : le
+⭐ **Livre les trois à chaque thème : `coin`, `separateur` et `fond`** (demandé par David
+le 2026-10-13). **`entete` n'est plus posé** (David, même jour : « l'entête n'apporte rien ») : ne le
+livre plus ; un thème qui le livre encore reste valide, GM-OS l'ignore. Un thème sans ornement reste **valide**, mais GM-OS n'a alors rien à poser : le
 validateur le signale par un **avertissement**. Si l'esprit du jeu est sobre,
 dessine un ornement **sobre** — un filet, un trait, une marque discrète — plutôt que de l'omettre, et
 dis ton choix dans `intention.md`. *Un thème qui renonce à ses ornements renonce à la moitié de ce qui
@@ -312,7 +313,6 @@ le distingue d'un autre jeu.*
 
 ```json
 {
-  "entete": "ornements/entete.svg",
   "coin": "ornements/coin.svg",
   "separateur": "ornements/separateur.svg",
   "fond": "ornements/fond.svg"
@@ -321,7 +321,7 @@ le distingue d'un autre jeu.*
 
 | Emplacement | Où GM-OS le pose | Forme attendue |
 | --- | --- | --- |
-| `entete` | Sous le titre de **chaque module** (29 écrans), calé à gauche, **24 px de haut** | Frise horizontale, rapport 8:1 environ — `viewBox` de l'ordre de `0 0 640 80` ; elle paraît donc à ~190 × 24 px : le motif doit se lire à cette taille |
+| ~~`entete`~~ | **Plus posé depuis le 2026-10-13** — accepté, ignoré | Ne plus le livrer |
 | `coin` | Coin supérieur gauche d'un panneau **et des fenêtres** ; GM-OS le retourne pour les trois autres, à **28 × 28 px** | Carré — `viewBox` de l'ordre de `0 0 80 80`, le dessin collé à l'angle haut-gauche et **contenu dans son tiers extérieur** (environ 0 à 30 sur 80) : un trait qui avance vers le centre passe sur le titre du panneau |
 | `separateur` | Entre deux sections | Frise horizontale fine — **GM-OS la pose à 240 × 16 px** : un motif central lisible à cette taille, `viewBox` de rapport 15:1 (`0 0 240 16`, ou `0 0 160 12` qui s'y inscrit) |
 | `fond` | En filigrane dans un panneau vide (dernier jet, plateau de combat, archives…), **à 40 % du panneau et 15 % d'opacité** | Motif centré dans un `viewBox` carré — une mire, un sceau, un emblème ; des traits nets, il est très atténué |

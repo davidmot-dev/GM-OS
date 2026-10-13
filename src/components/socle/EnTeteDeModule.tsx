@@ -1,5 +1,4 @@
 import React from 'react';
-import { Ornement } from './Ornement';
 
 /**
  * **`<EnTeteDeModule>`** — socle, P3.6, 2026-09-30.
@@ -7,8 +6,10 @@ import { Ornement } from './Ornement';
  * Le premier des quatre étages de la grammaire d'écran : le titre du module
  * dans la police des titres, avec l'espacement et la casse du thème
  * (`--titre-espacement`, `--titre-casse`), un surtitre, une **ligne d'état en
- * pastilles**, et les actions de l'en-tête à droite. L'ornement `entete` du
- * thème se pose dessous, en frise.
+ * pastilles**, et les actions de l'en-tête à droite.
+ *
+ * L'ornement `entete` du thème n'y est plus posé (David, 2026-10-13 : « l'entête
+ * n'apporte rien ») ; les thèmes qui le livrent encore restent valides.
  */
 interface EnTeteCommunProps {
     surtitre?: React.ReactNode;
@@ -46,12 +47,5 @@ export const EnTeteDeModule: React.FC<EnTeteDeModuleProps> = ({ titre, habillage
             {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </div>
         {etat && <div className="flex flex-wrap items-center gap-1.5">{etat}</div>}
-        {/* Agrandi le 2026-10-13 (David) : dans 163 × 10 px, une frise 8:1 ne
-            faisait que 80 px de large. 24 px de haut, calée à gauche sous le titre. */}
-        <Ornement
-            emplacement="entete"
-            className="h-[24px] w-full"
-            style={{ maskPosition: 'left center', WebkitMaskPosition: 'left center' }}
-        />
     </header>
 );
