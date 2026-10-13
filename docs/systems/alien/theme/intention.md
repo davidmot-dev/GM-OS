@@ -2,6 +2,8 @@
 
 Une interface de terminal spatial industriel, aux surfaces sombres presque métalliques et aux caractères froids de la fin des années 1970. Les panneaux sont anguleux, le relief est discret et la lumière vert désaturé semble provenir d’écrans anciens.
 
+Ornements : dans `archive/autonome-v1.css`, le coin reprend l’équerre épaisse de `.alien-darkbox::before` et rappelle les chanfreins de `.alien-panel` par une petite diagonale ; le séparateur reprend les crochets de `.alien-section-tag` autour d’un filet et le curseur plein de `.alien-terminal::after` au centre ; le fond conserve la mire radar créée précédemment, indépendante de cette feuille d’origine.
+
 ## Limites
 
 - **PARTIELLEMENT RÉALISABLE** — Les fines lignes de balayage, le verre, le halo et les couleurs d’état passent par des jetons V2, sans effet visible dans la version actuelle de GM-OS.
