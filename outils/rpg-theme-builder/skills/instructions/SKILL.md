@@ -64,7 +64,10 @@ Dans `docs/systems/<jeu>/theme/`, où `<jeu>` est le nom du dossier du jeu :
 1. `theme.css` — le bloc de jetons (squelette du § 12 du cahier) ;
 2. `intention.md` — **obligatoire** : l'intention visuelle en trois phrases au plus, puis les
    **limites signalées** avec leur classe (§ 1.1 du cahier) ;
-3. au besoin : `matieres/*.svg`, `ornements.json` et `ornements/*.svg` (§ 7 et § 8) ;
+3. **toujours** `ornements.json` et `ornements/*.svg` avec **les trois emplacements `entete`, `coin` et
+   `separateur`** (§ 8) — `fond` au besoin. Un jeu sobre reçoit des ornements sobres, pas aucun ;
+   dis-le dans `intention.md` ;
+3 bis. au besoin : `matieres/*.svg` (§ 7) ;
 4. au besoin : `icones.json` et `icones/*.svg` (§ 9) — **seulement les noms du tableau du § 9**, et
    seulement les icônes qui comptent pour le jeu : quinze bien choisies valent mieux que trente.
 
@@ -84,6 +87,9 @@ RÈGLES QUI PIÈGENT LE PLUS (le détail est dans le cahier)
 - Polices importées en tête, depuis `fonts.googleapis.com` ou `fonts.bunny.net` seulement.
 - Un jeton, une déclaration ; pas de `!important` dans le bloc des jetons.
 - Chemins de matières et d'ornements **dans** `theme/` ; SVG en `currentColor`, sans script.
+- Ornements : **les trois** — `entete` (frise 8:1), `coin` (carré, dessin collé en haut à gauche),
+  `separateur` (posé à 160 × 12 px). Des traits de 1,5 à 2,5 unités : un filet de 1 sur 640 ne se voit
+  pas à l'écran.
 - Icônes : un nom **du § 9** (jamais inventé — signale au meneur celle qui manque), un SVG carré
   lisible à 16 px, en `currentColor`, 20 Ko au plus, dans `icones/`.
 

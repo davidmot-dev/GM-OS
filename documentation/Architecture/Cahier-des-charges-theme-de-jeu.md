@@ -301,7 +301,14 @@ Des éléments décoratifs posés par GM-OS à des **emplacements fixes**. Le je
 GM-OS décide où et à quelle taille. **Appliqués quand le meneur allume les personnalités** (LU ⚙),
 avec parcimonie : le `coin` sur un ou deux panneaux principaux par écran, pas sur chacun.
 
-`ornements.json`, chaque emplacement facultatif :
+⭐ **Livre les trois premiers à chaque thème : `entete`, `coin` et `separateur`** (demandé par David
+le 2026-10-13). `fond` reste facultatif. Un thème sans ornement reste **valide**, mais GM-OS n'a alors
+rien à poser : le validateur le signale par un **avertissement**. Si l'esprit du jeu est sobre,
+dessine un ornement **sobre** — un filet, un trait, une marque discrète — plutôt que de l'omettre, et
+dis ton choix dans `intention.md`. *Un thème qui renonce à ses ornements renonce à la moitié de ce qui
+le distingue d'un autre jeu.*
+
+`ornements.json` :
 
 ```json
 {
@@ -314,10 +321,14 @@ avec parcimonie : le `coin` sur un ou deux panneaux principaux par écran, pas s
 
 | Emplacement | Où GM-OS le pose | Forme attendue |
 | --- | --- | --- |
-| `entete` | Sous le titre d'un module | Frise horizontale, rapport 8:1 environ |
-| `coin` | Coin supérieur gauche d'un panneau ; GM-OS le retourne pour les trois autres | Carré |
-| `separateur` | Entre deux sections | Frise horizontale fine |
+| `entete` | Sous le titre de **chaque module** (29 écrans) | Frise horizontale, rapport 8:1 environ — `viewBox` de l'ordre de `0 0 640 80` |
+| `coin` | Coin supérieur gauche d'un panneau ; GM-OS le retourne pour les trois autres | Carré — `viewBox` de l'ordre de `0 0 80 80`, le dessin collé à l'angle haut-gauche |
+| `separateur` | Entre deux sections | Frise horizontale fine — **GM-OS la pose à 160 × 12 px** : un motif central lisible à cette taille, `viewBox` de l'ordre de `0 0 160 12` |
 | `fond` | En filigrane dans un panneau vide | Motif centré |
+
+**Pour qu'ils se voient à la table** : GM-OS les dessine en masque sur l'accent, à petite taille. Un
+trait de 1 px sur un `viewBox` de 640 disparaît à l'écran ; vise une épaisseur de **1,5 à 2,5 unités**
+à l'échelle du `viewBox`, et un motif qui se lit encore réduit.
 
 **Règles des SVG** (matières comprises) :
 

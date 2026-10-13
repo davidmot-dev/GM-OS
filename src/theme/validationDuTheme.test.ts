@@ -37,6 +37,9 @@ const SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><path f
 
 const INTENTION = '# Intention\nTerminal industriel.\n\n# Limites signalées\nAucune.\n';
 
+/* Un thème complet livre ses trois ornements (contrat, 2026-10-13). */
+const ORNEMENTS = JSON.stringify({ entete: 'ornements/entete.svg', coin: 'ornements/coin.svg', separateur: 'ornements/separateur.svg' });
+
 function feuille(surcharges: Record<string, string | null> = {}, avant = IMPORT, polarite = 'dark'): string {
     const valeurs = { ...JETONS, ...surcharges };
     const lignes = Object.entries(valeurs)
@@ -49,6 +52,10 @@ function fichiers(autres: Record<string, FichierDuTheme | null> = {}): Record<st
     const tous: Record<string, FichierDuTheme | null> = {
         'intention.md': { taille: INTENTION.length, contenu: INTENTION },
         'matieres/grain.svg': { taille: SVG.length, contenu: SVG },
+        'ornements.json': { taille: ORNEMENTS.length, contenu: ORNEMENTS },
+        'ornements/entete.svg': { taille: SVG.length, contenu: SVG },
+        'ornements/coin.svg': { taille: SVG.length, contenu: SVG },
+        'ornements/separateur.svg': { taille: SVG.length, contenu: SVG },
         ...autres,
     };
     return Object.fromEntries(Object.entries(tous).filter(([, f]) => f !== null)) as Record<string, FichierDuTheme>;
@@ -67,6 +74,22 @@ describe('validerLeTheme — le cas normal', () => {
         expect(r.erreurs).toEqual([]);
         expect(r.avertissements).toEqual([]);
         expect(r.accepte).toBe(true);
+    });
+
+    /* David, 2026-10-13 : le constructeur livre ses ornements. Un oubli se signale, sans refuser. */
+    it('avertit d’un thème sans ornements, sans le refuser', () => {
+        const r = valider(feuille(), { 'ornements.json': null });
+        expect(r.accepte).toBe(true);
+        expect(r.erreurs).toEqual([]);
+        expect(r.avertissements.map(a => a.message).join(' ')).toContain('entete, coin, separateur');
+    });
+
+    it('nomme les ornements qui manquent', () => {
+        const partiel = JSON.stringify({ coin: 'ornements/coin.svg' });
+        const r = valider(feuille(), { 'ornements.json': { taille: partiel.length, contenu: partiel } });
+        const message = r.avertissements.find(a => a.regle === '§ 8')?.message ?? '';
+        expect(message).toContain('entete, separateur');
+        expect(message).not.toContain('coin,');
     });
 
     it('range les jetons par ce que GM-OS en fait', () => {

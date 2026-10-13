@@ -332,6 +332,7 @@ export function validerLeTheme(theme: ThemeAValider): RapportDeTheme {
 
     const ornements = theme.fichiers['ornements.json'];
     if (ornements) verifierLesOrnements(ornements, theme, erreur);
+    signalerLesOrnementsAbsents(ornements, avertir);
 
     /* ── § 9 · Les icônes (v1.6) ─────────────────────────────────────────── */
 
@@ -616,6 +617,29 @@ function verifierLesOrnements(fichier: FichierDuTheme, theme: ThemeAValider, err
             continue;
         }
         verifierUnFichierJoint(`ornement « ${emplacement} »`, undefined, chemin, 'ornement', theme, erreur);
+    }
+}
+
+/** Les trois ornements que chaque thème livre depuis le 2026-10-13 (§ 8). */
+export const ORNEMENTS_ATTENDUS = ['entete', 'coin', 'separateur'] as const;
+
+/**
+ * **Un ornement absent se signale, sans refuser le thème** (David, 2026-10-13 :
+ * le constructeur doit livrer ses ornements). Un thème sans ornement reste
+ * jouable — GM-OS n'a seulement rien à poser —, d'où un avertissement et non
+ * une erreur : les thèmes écrits avant cette date passent toujours.
+ */
+function signalerLesOrnementsAbsents(fichier: FichierDuTheme | undefined, avertir: Signaler): void {
+    let table: Record<string, unknown> = {};
+    try {
+        const lu: unknown = fichier ? JSON.parse(fichier.contenu ?? '') : {};
+        if (lu && typeof lu === 'object' && !Array.isArray(lu)) table = lu as Record<string, unknown>;
+    } catch {
+        return; // Le JSON invalide est déjà une erreur, plus haut.
+    }
+    const absents = ORNEMENTS_ATTENDUS.filter(e => typeof table[e] !== 'string');
+    if (absents.length > 0) {
+        avertir('§ 8', `Ornement(s) absent(s) : ${absents.join(', ')}. Chaque thème livre \`entete\`, \`coin\` et \`separateur\` — un jeu sobre reçoit des ornements sobres, pas aucun.`);
     }
 }
 
