@@ -1,0 +1,62 @@
+/* RÊVE DE DRAGON — Parchemin des voyageurs | Contrat GM-OS v1.7
+   Références : rdd1 à rdd6, fournies par David.
+   Fondamento et Source Serif 4 approchent les titres et le texte du livre.
+   Les fiches de personnage restent indépendantes de ce thème.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Fondamento&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
+
+:root[data-theme="reves de dragons"] {
+  color-scheme: light;
+
+  /* Papier ivoire, encre brune et lettrines terre cuite. */
+  --rpg-bg: #e6e0d5;
+  --rpg-surface: #f4f0e7;
+  --rpg-surface-2: #ede6d8;
+  --rpg-text: #26231e;
+  --rpg-muted: #5e574e;
+  --rpg-accent: #783b28;
+  --rpg-accent-contrast: #fff9ed;
+  --rpg-border: #a39a83;
+  --rpg-border-soft: rgba(100, 88, 65, 0.22);
+
+  /* États : vert de feuille, pourpre, ocre et bleu d'encre. */
+  --rpg-success: #336247;
+  --rpg-danger: #9e2257;
+  --rpg-warning: #806900;
+  --rpg-info: #354d88;
+
+  /* Titres calligraphiques approchés, corps de livre, chiffres sobres. */
+  --rpg-font-display: "Fondamento", Georgia, serif;
+  --rpg-font-body: "Source Serif 4", Georgia, serif;
+  --rpg-font-mono: "Courier New", Courier, monospace;
+  --rpg-title-tracking: 0.01em;
+  --rpg-kicker-tracking: 0.08em;
+  --rpg-title-transform: none;
+
+  /* Feuilles et encadrements presque droits. */
+  --rpg-radius-sm: 2px;
+  --rpg-radius-md: 3px;
+  --rpg-radius-lg: 4px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  /* Papier posé, ombres chaudes et mates. */
+  --rpg-elevation-1: 0 1px 3px rgba(58, 45, 29, 0.12);
+  --rpg-elevation-2: 0 5px 16px rgba(58, 45, 29, 0.18);
+  --rpg-elevation-3: 0 14px 38px rgba(38, 35, 30, 0.25);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(244, 240, 231, 0.95);
+  --rpg-glass-border: rgba(100, 88, 65, 0.4);
+  --rpg-glass-blur: 0px;
+
+  /* Vert de bibliothèque et dorure sourde de la couverture rdd1. */
+  --rpg-frame-bg: #26473f;
+  --rpg-frame-text: #f1eadc;
+  --rpg-frame-accent: #d9b66e;
+
+  /* Patine du papier rdd2 à rdd6, légère sous le texte. */
+  --rpg-texture-bg: url('matieres/parchemin.svg');
+  --rpg-texture-panel: url('matieres/parchemin.svg');
+  --rpg-texture-opacity: 0.06;
+}

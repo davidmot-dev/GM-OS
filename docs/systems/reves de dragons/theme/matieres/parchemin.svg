@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <filter id="grain-parchemin" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045 0.07" numOctaves="3" seed="19" stitchTiles="stitch" result="bruit"/>
+      <feColorMatrix in="bruit" type="luminanceToAlpha" result="patine"/>
+      <feComposite in="SourceGraphic" in2="patine" operator="in"/>
+    </filter>
+  </defs>
+  <rect width="192" height="192" fill="currentColor" filter="url(#grain-parchemin)"/>
+  <path d="m15 31 11 1m40 20 8-1m65 46 13 1M31 133l9-1m53 33 12 1m50-31 9-1" fill="none" stroke="currentColor" stroke-width="0.45" opacity="0.2"/>
+</svg>
