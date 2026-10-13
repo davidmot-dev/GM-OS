@@ -18,5 +18,5 @@
   },
   "name": "gpt-57cda0ce7ee94beef5f7f7c640a1525c",
   "skills": "./skills/",
-  "version": "0.2.1+bundle.b2f812da47ab5a69f30213b42f3f06ea"
+  "version": "0.3.0"
 }

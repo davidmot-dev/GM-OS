@@ -4,8 +4,10 @@
 [`Flux-des-constructeurs.md`](./Flux-des-constructeurs.md). Cette page dit **ce qui est propre
 aux fiches**. Le chantier est **indépendant des thèmes** : une fiche ne lit jamais `theme.css`.
 
-⏳ **Le cahier des charges des fiches n'est pas encore écrit** — c'est un chantier distinct, inscrit
-au registre (§ 76). Cette page rassemble ce qu'il devra fixer.
+✅ **Le cahier des charges est écrit le 2026-10-13** :
+[`Cahier-des-charges-fiche-de-personnage.md`](./Cahier-des-charges-fiche-de-personnage.md), avec
+son validateur, `npm run fiche:valider -- <Jeu>`. Le § 3 ci-dessous garde les questions qu'il a
+tranchées, et comment.
 
 ---
 
@@ -34,28 +36,35 @@ PDF ─→ Character Sheet HTML Studio ─→ HTML + manifeste « character-shee
   (`src/modules/fiches/pontDeLaFiche.ts`, `FicheHote.tsx`).
 - **La correspondance** traduit les clés de la fiche vers les champs de GM-OS — renommages,
   compositions (`"C (D8)"` ↔ niveau + dé), destinations comme l'inventaire
-  (`src/modules/fiches/correspondanceDeFiche.ts`). **Elle n'existe aujourd'hui que pour Blade
-  Runner.**
+  (`src/modules/fiches/correspondanceDeFiche.ts`). **Elle existe pour Blade Runner et Cthulhu
+  Hack** (au 13/10) ; Alien, NOC et Star Trek n'en ont pas encore.
 
-## 3 · Ce que le cahier des charges des fiches devra fixer
+## 3 · Ce que le cahier des charges a fixé
 
-| Point | Aujourd'hui | Pourquoi |
+| Point | Avant le 13/10 | Tranché |
 | --- | --- | --- |
-| **Les clés de données sont un contrat** | Rien ne l'interdit | ⛔ Renommer une clé en régénérant casse la correspondance **en silence** — arrivé le 2026-08-24 avec les `.level` de Blade Runner |
-| **Le manifeste est obligatoire** | Spécifié (`HTML_MANIFEST_SPEC.md`) mais **pas exigé** par les instructions du constructeur | Sans lui, le moteur ne peut pas importer la fiche comme modèle. NOC et Star Trek l'ont ; **Alien et Blade Runner non** |
-| **Où livrer** | Non dit | `docs/fiches/<Jeu>/`, et la correspondance dans `docs/systems/<jeu>/fiche/` |
-| **Qui écrit la correspondance** | Écrite à la main, pour un seul jeu | À trancher : le constructeur la propose, ou Claude Code la dérive des clés |
-| **Les fonctions exigées du HTML** | Zoom, export, import… | À confronter à ce que le moteur fournit déjà : ne pas payer deux fois |
+| **Les clés de données sont un contrat** | Rien ne l'interdit | **§ 6** : on ajoute, on ne renomme jamais ; le validateur compare au gabarit intégré au moteur — une clé disparue est une erreur |
+| **Le manifeste est obligatoire** | Spécifié mais **pas exigé** ; Alien et Blade Runner n'en ont pas | **§ 2** : obligatoire, erreur sans lui. Les deux fiches de référence du constructeur n'en ont pas non plus — le cahier le dit |
+| **Où livrer** | Non dit | **§ 8** : `docs/fiches/<Jeu>/` ; Claude Code intègre au moteur et monte `BUILTIN_VERSION` |
+| **Qui écrit la correspondance** | Écrite à la main, pour deux jeux | **§ 7, David** : Claude Code, après la livraison ; le constructeur ne la produit pas |
+| **Les fonctions exigées du HTML** | Zoom, export, import… | **§ 5, David** : la fiche reste utilisable seule ; ces fonctions ne sont pas contrôlées, GM-OS passe par le moteur |
 
-## 4 · Le validateur — `fiche:valider`, à construire
+## 4 · Le validateur — `npm run fiche:valider -- <Jeu>` ✅ (2026-10-13)
 
 Sa **pièce maîtresse existe déjà** : `verifierLaCorrespondance`
 (`src/modules/fiches/correspondanceDeFiche.ts`, éprouvée par
 `electron/correspondanceDesFiches.test.ts`) regarde **dans les deux sens** — aucune clé citée qui
 n'existe pas, aucune clé de la fiche oubliée. C'est elle qui aurait attrapé les `.level`.
 
-Il lui restera à vérifier : le manifeste présent et lisible, **aucune clé disparue ou renommée**
-par rapport à la version précédente de la fiche, les fonds de page intégrés (fiche autonome).
+Construit autour d'elle : `src/modules/fiches/validationDeLaFiche.ts` (logique pure, 17 essais),
+`scripts/fiche-valider.mjs` (lecture du disque, rapport à coller dans ChatGPT, `--tous`, `--json`),
+et `electron/fichesDuDepot.test.ts`, qui passe les vraies fiches du dépôt à chaque essai. Il vérifie
+le manifeste (§ 2), les pages et leurs fonds intégrés (§ 3), les champs et les pistes (§ 4),
+l'absence de ressource distante (§ 5), **les clés disparues par rapport au moteur** (§ 6) et la
+correspondance dans les deux sens (§ 7).
+
+État au 13/10 : Cthulhu Hack, NOC et Star Trek **acceptées** ; Alien et Blade Runner **refusées**,
+faute de manifeste — connues, elles en recevront un à leur prochaine régénération.
 
 ## 5 · La vitrine — la fiche ouverte dans le moteur
 
