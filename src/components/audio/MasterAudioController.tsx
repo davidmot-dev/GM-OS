@@ -167,13 +167,22 @@ const MasterAudioController: React.FC = () => {
                 </div>
             )}
 
-            {/* Panic Button / Stop All */}
+            {/*
+              Panic Button / Stop All.
+
+              **Le texte prend la couleur du cadre, le danger reste dans la
+              bordure et la teinte** (2026-10-13, David, Rêve de Dragon : « STOP
+              ALL » délavé). Le bouton vit dans le bandeau, où `STYLE_DU_CADRE`
+              renvoie `--app-text` vers le texte du cadre, contraste garanti ;
+              la couleur de danger, elle, est réglée pour le fond des panneaux —
+              un rouge sombre fait pour l'ivoire disparaît sur un cadre vert.
+            */}
             <button
                 onClick={handleStopAll}
-                className={`flex items-center gap-2 px-4 py-2 border transition-all duration-300 group/panic ${
-                    theme === 'medieval' 
-                    ? 'rounded-md bg-etat-danger/20 border-etat-danger/40 text-etat-danger hover:bg-etat-danger/40' 
-                    : 'rounded-xl bg-etat-danger/10 border-etat-danger/20 text-etat-danger hover:bg-etat-danger/20 hover:border-etat-danger/40 hover:shadow-glow-red/20'
+                className={`flex items-center gap-2 px-4 py-2 border transition-all duration-300 group/panic text-app-text ${
+                    theme === 'medieval'
+                    ? 'rounded-md bg-etat-danger/20 border-etat-danger/60 hover:bg-etat-danger/40'
+                    : 'rounded-xl bg-etat-danger/15 border-etat-danger/50 hover:bg-etat-danger/25 hover:border-etat-danger hover:shadow-glow-red/20'
                 }`}
                 title={t('common:actions.stop_all')}
             >

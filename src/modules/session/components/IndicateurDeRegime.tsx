@@ -56,7 +56,16 @@ export const IndicateurDeRegime: React.FC = () => {
         : aLaTable ? 'séance ouverte' : 'hors séance';
 
     const Icone = aLaTable ? Users : Armchair;
-    const teinte = aLaTable ? 'text-etat-succes' : 'text-etat-info';
+    /*
+      **Les couleurs du cadre, pas celles d'état** (2026-10-13, David, Rêve de
+      Dragon : « ATELIER » bleu illisible sur le cadre vert). L'indicateur vit
+      dans le bandeau, où `STYLE_DU_CADRE` renvoie le texte et l'accent vers
+      ceux du cadre — mais pas les couleurs d'état, réglées pour le fond des
+      panneaux. Le texte et l'accent du cadre ont leur contraste garanti par
+      le contrat (§ 6 : 4,5 et 3 sur `frame-bg`) ; neutre contre accentué
+      distingue toujours les deux régimes.
+    */
+    const teinte = aLaTable ? 'text-accent' : 'text-app-text';
 
     return (
         <div className="flex items-center gap-2">
