@@ -198,6 +198,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
             gabarit: source.genre === 'gabarit' ? gabarits.find(g => g.id === source.id) : undefined,
             nomDeBase, nombre,
             typeDeSante: driver?.combat?.defaultHealthType ?? 'hp',
+            casesDeSante: driver?.combat?.casesDeSante,
         }).forEach(addCombatant);
         gmToast(`${nombre} adversaire(s) dans l’ordre du tour`, 'success');
         onClose();
@@ -233,7 +234,7 @@ export const AtelierDesAdversaires: React.FC<Props> = ({ onClose, jeuDemande }) 
                 campaignId: activeCampaignId,
                 templateId: driver?.templateId,
                 sheetData,
-                healthSystem: HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp'),
+                healthSystem: HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp', { cases: driver?.combat?.casesDeSante }),
             });
         }
         gmToast(`${nombre} PNJ ajouté(s) à la campagne`, 'success');

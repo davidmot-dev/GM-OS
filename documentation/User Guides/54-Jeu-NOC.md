@@ -71,10 +71,19 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 
 ---
 
-## Combat et santé
+## Combat et santé — les dix cases Blessures
 
+![La carte de combattant d'un Héros : dix cases Blessures, six cochées, les seuils Choqué, Lourdement blessé et Agonie, et en dessous Trauma, Traque et Noirceur](captures/jeu-noc-sante.jpg)
+
+- **Santé : la jauge Blessures, dix cases** qu'on coche de gauche à droite. Un coup en coche autant
+  que ses dégâts ; « Soins » en décoche.
+  - à **5** cases : **Choqué** (−1 à tous les Domaines) ;
+  - à **8** : **Lourdement blessé** (−1 aux Talents, un point permanent) ;
+  - à **10** : **Agonie**, puis la mort en dix minutes.
+- **La jauge « Blessures » de la fiche suit les cases** : ce qu'on coche au combat s'y reporte, sur
+  la fiche HTML comme sur la tablette.
+- **Trauma, Traque et Noirceur** sont suivis sur chaque carte de combattant.
 - **Initiative :** l'Instinct, du plus haut au plus bas.
-- **Santé :** points de vie et Endurance.
 - **Types de dégâts :** Choc, Perforant, Tranchant, Multiple, Quantique, Énergie noire, Chutes,
   Brûlures, Asphyxie, Poisons.
 
@@ -86,6 +95,9 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
   réussites des dés de destin, rien de plus.
 - **Le 1 qui verse une goutte de Fiel** n'est pas fait par le panneau (gardé pour plus tard) : il
   s'affiche « fléau » sous le jet, et chacun est une goutte à poser d'un clic sur le + du Fiel.
-- **La santé de NOC** demande des cases que le pilote ne peut pas encore régler : GM-OS en dessine
-  cinq (Léger, Grave, Critique) pour tous les jeux, NOC en veut dix, avec ses seuils à 5, 8 et 10.
+- **Les malus de seuil** (−1 aux Domaines quand on est Choqué, −1 aux Talents au-delà) ne
+  s'appliquent pas tout seuls au jet : l'état s'affiche, le malus reste votre geste.
+- **Un Héros né avant le 2026-10-13** a des points de vie : sur sa carte de combattant, cliquer sur
+  le nom du moteur de santé (« Points de Vie », en haut à gauche du bloc) fait défiler les modèles —
+  quatre clics mènent aux dix cases Blessures.
 - **Le Soupçon** (Cabale Dykovienne) n'est pas sur la fiche.

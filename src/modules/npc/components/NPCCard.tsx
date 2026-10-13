@@ -85,7 +85,8 @@ const NPCCard: React.FC = () => {
               selon le pilote), et une initiative à 0 — le meneur la tire, comme
               pour une rencontre préparée. Ennemi : NPC-OS ne dit pas qui est allié.
             */
-            const typeDeSante = useSessionOSStore.getState().getActiveDriver()?.combat?.defaultHealthType ?? 'hp';
+            const combatDuJeu = useSessionOSStore.getState().getActiveDriver()?.combat;
+            const typeDeSante = combatDuJeu?.defaultHealthType ?? 'hp';
             addCombatant({
                 name: currentEntity.name,
                 init: 0,
@@ -93,7 +94,7 @@ const NPCCard: React.FC = () => {
                 avatar: avatarSrc || undefined,
                 statuses: [],
                 faction: 'enemy',
-                healthSystem: HealthInterpreter.createDefault(typeDeSante),
+                healthSystem: HealthInterpreter.createDefault(typeDeSante, { cases: combatDuJeu?.casesDeSante }),
             });
             gmToast(t('npc.card.combat_success', { name: currentEntity.name }));
         } else {

@@ -138,6 +138,7 @@ ressources suivies en combat dont le champ contient un dé. Voir [Cthulhu Hack](
 | **Ordre alterné** (`initiative`) | Pas d'initiative individuelle : le tour **alterne** entre les camps, garder la main ou l'ouvrir coûte une réserve (Dune) |
 | **Modèle de santé** (`defaultHealthType`) | Points de vie, horloges, anatomie, blessures ou cases — la carte du combattant change d'aspect |
 | **Santé de départ** (`santeDeDepart`) | Le maximum se lit sur la fiche (Alien : la Force) |
+| **Cases de santé** (`casesDeSante`) | Pour le modèle « cases » : leur **nombre**, leurs **seuils** nommés (« Choqué » à 5) et l'état que chacun déclenche, le **libellé** de la jauge, et le **champ** de la fiche qui la suit (NOC : dix cases Blessures). Sans elles, cinq cases (Léger, Grave, Critique) |
 | **Tâche de défaite** (`tacheDeDefaite`) | Vaincre un adversaire est une tâche étendue, pas une jauge qui tombe à zéro (Dune) |
 | **Ressources suivies** (`statsToTrack`) | Les jauges que Combat-OS montre sur chaque carte |
 | **Types de dégâts** (`damageTypes`) | Proposés au calculateur de dégâts |

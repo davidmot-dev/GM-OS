@@ -25,7 +25,8 @@ export const HarmBoxesDriver: React.FC<HarmBoxesDriverProps> = ({ boxes }) => {
           <span className={`text-ui-9 font-black uppercase tracking-wider transition-colors ${
             box.filled ? 'text-etat-danger' : 'text-app-text/30'
           }`}>
-            {box.label}
+            {/* Le nom ne s'écrit qu'où un seuil commence : dix cases « Choqué » ne disent rien de plus qu'une. */}
+            {i === 0 || box.label !== boxes[i - 1].label ? box.label : ''}
           </span>
         </div>
       ))}

@@ -94,7 +94,7 @@ const CombatControls: React.FC = () => {
                     name: name.trim(),
                     init: 0,
                     ...pointsDeVie,
-                    healthSystem: HealthInterpreter.createDefault(modeleDeSante),
+                    healthSystem: HealthInterpreter.createDefault(modeleDeSante, { cases: activeDriver?.combat?.casesDeSante }),
                     sheetData: (activeDriver?.ui_config?.gauges || []).reduce<Record<string, number>>((acc, g) => {
                         acc[g.fieldId] = 0;
                         return acc;

@@ -170,6 +170,24 @@ export interface ApportDuGroupe {
     composante?: string;
 }
 
+/** Les cases de santé d'un jeu — voir `GameDriver.combat.casesDeSante`. */
+export interface CasesDeSante {
+    /** Le nom de la jauge — « Blessures ». */
+    libelle?: string;
+    nombre: number;
+    /**
+     * À partir de quelle case un état s'installe, et lequel. Une case prend le
+     * nom du dernier seuil qu'elle atteint ; l'état du personnage suit le
+     * dernier seuil coché.
+     */
+    seuils?: { aPartirDe: number; label: string; etat?: 'scratched' | 'wounded' | 'critical' | 'dead' }[];
+    /**
+     * Le champ de la fiche qui porte la même jauge (`blessures`) : il suit les
+     * cases, pour qu'il n'y ait pas deux vérités.
+     */
+    champ?: string;
+}
+
 /** La fiche du groupe — voir `GameDriver.ficheDeGroupe`. */
 export interface FicheDeGroupe {
     libelle: string;
@@ -259,6 +277,16 @@ export interface GameDriver {
          * Facultatif : un système à jauge fixe n'en déclare pas.
          */
         tacheDeDefaite?: import('../modules/combat/logic/TacheDeDefaite').TacheDeDefaite;
+        /**
+         * **Les cases du modèle « boxes », réglées par le jeu** — NOC, 2026-10-13.
+         *
+         * GM-OS dessinait cinq cases (Léger, Grave, Critique) pour tous les jeux.
+         * NOC en veut dix, sa jauge Blessures, avec des seuils nommés : *« À cinq
+         * points : Choqué. À huit : lourdement blessé. À dix : agonie »*
+         * (`docs/systems/noc/rules/sante-et-blessures.md`). Absent : les cinq
+         * d'avant.
+         */
+        casesDeSante?: CasesDeSante;
     };
 
     // UI Customization

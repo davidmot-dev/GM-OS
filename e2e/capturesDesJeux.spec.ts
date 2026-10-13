@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { lancerGmOs, attendreLHydratation, ouvrirLeModule, type GmOsLance } from './lancerGmOs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useRessourcesDeTableStore } from '../src/modules/table/useRessourcesDeTableStore';
+import type { useCombatStore } from '../src/modules/combat/useCombatStore';
 import type { CurrentView } from '../src/types/campaign.types';
 
 /**
@@ -51,6 +52,8 @@ interface MiseEnScene {
     /** La feuille du groupe, et ce qu'on y puise. */
     groupe?: Record<string, unknown>;
     puiser?: string[];
+    /** Des cases de santé déjà cochées, pour une carte de combattant qui raconte un combat. */
+    casesCochees?: number;
 }
 
 const MISES_EN_SCENE: MiseEnScene[] = [
@@ -64,6 +67,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             'tracks.espoir': 4, 'tracks.vecu': 2, 'assets.action.armory': 2, 'assets.erudition.library': 1,
         },
         puiser: ['Dés de la Cabale', 'Dés de la Cabale', 'Espoir de la Cabale'],
+        casesCochees: 6,
     },
     {
         corpusId: 'dune', slug: 'dune', personnage: 'Irulan Vaeth',
@@ -106,7 +110,34 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
 ];
 
-interface Pilote { gameDriver: { id: string; name: string; corpusId?: string; templateId: string; ressourcesDeTable?: unknown[]; ficheDeGroupe?: unknown }; sheetTemplate?: { id: string } }
+interface Seuil { aPartirDe: number; label: string; etat?: string }
+interface Pilote {
+    gameDriver: {
+        id: string; name: string; corpusId?: string; templateId: string; ressourcesDeTable?: unknown[]; ficheDeGroupe?: unknown;
+        combat?: { casesDeSante?: { nombre: number; seuils?: Seuil[]; libelle?: string; champ?: string } };
+    };
+    sheetTemplate?: { id: string };
+}
+
+/**
+ * La santé en cases d'un personnage fictif, déjà entamée — la forme que
+ * `HealthInterpreter` écrit pour un jeu qui déclare ses cases (NOC).
+ */
+function santeEnCases(cases: NonNullable<NonNullable<Pilote['gameDriver']['combat']>['casesDeSante']>, cochees: number) {
+    const seuils = [...(cases.seuils ?? [])].sort((a, b) => a.aPartirDe - b.aPartirDe);
+    const atteint = seuils.filter(s => cochees >= s.aPartirDe).pop();
+    return {
+        type: 'boxes',
+        data: {
+            boxes: Array.from({ length: cases.nombre }, (_, i) => ({
+                label: seuils.filter(s => i + 1 >= s.aPartirDe).pop()?.label ?? '', filled: i < cochees,
+            })),
+            seuils, libelle: cases.libelle, champ: cases.champ,
+        },
+        state: atteint?.etat ?? (cochees > 0 ? 'scratched' : 'healthy'),
+        badges: [],
+    };
+}
 
 function lireLesPilotes(): Pilote[] {
     if (!fs.existsSync(PILOTES)) return [];
@@ -139,11 +170,17 @@ function ecrireLaSemence(): string {
     }
     s.players.push({
         id: JOUEUR, realName: 'Joueuse de démonstration', avatarUrl: '', isOnline: false,
-        characters: JEUX.map(({ mise, pilote }) => ({
-            id: personnageDe(mise.slug), name: mise.personnage, portraitUrl: '',
-            campaignId: campagneDe(mise.slug), templateId: pilote.gameDriver.templateId,
-            systemId: pilote.gameDriver.id, sheetData: mise.sheetData,
-        })),
+        characters: JEUX.map(({ mise, pilote }) => {
+            const cases = pilote.gameDriver.combat?.casesDeSante;
+            const avecCases = cases && mise.casesCochees !== undefined;
+            return {
+                id: personnageDe(mise.slug), name: mise.personnage, portraitUrl: '',
+                campaignId: campagneDe(mise.slug), templateId: pilote.gameDriver.templateId,
+                systemId: pilote.gameDriver.id,
+                sheetData: avecCases && cases.champ ? { ...mise.sheetData, [cases.champ]: mise.casesCochees } : mise.sheetData,
+                ...(avecCases ? { healthSystem: santeEnCases(cases, mise.casesCochees!) } : {}),
+            };
+        }),
     });
     const chemin = path.join(os.tmpdir(), `gmos-semence-des-jeux-${process.pid}.json`);
     fs.writeFileSync(chemin, JSON.stringify(semence));
@@ -153,6 +190,7 @@ function ecrireLaSemence(): string {
 type Fenetre = {
     useSessionOSStore: typeof useSessionOSStore;
     useRessourcesDeTableStore: typeof useRessourcesDeTableStore;
+    useCombatStore: typeof useCombatStore;
 };
 
 let gmos: GmOsLance;
@@ -261,6 +299,19 @@ for (const { mise, pilote } of JEUX) {
             await expect(f.getByText(/À quelle fiche relier/)).toHaveCount(0, { timeout: 30_000 });
             await f.waitForTimeout(2_000);
             await photographier(f.locator('body'), `jeu-${mise.slug}-fiche-du-groupe`);
+        }
+
+        // La santé en cases, sur la carte de combattant — le PJ entre en combat.
+        if (mise.casesCochees !== undefined && pilote.gameDriver.combat?.casesDeSante) {
+            await f.evaluate(({ id, nom }) => {
+                const combat = (window as unknown as Fenetre).useCombatStore.getState();
+                combat.clearCombatants();
+                combat.addCombatant({ name: nom, init: 0, isPlayer: true, faction: 'player', statuses: [], sourcePlayerId: id });
+            }, { id: personnageDe(mise.slug), nom: mise.personnage });
+            await ouvrirLeModule(gmos, 'Combat-OS');
+            const carte = f.locator('[data-combattant]').first();
+            await expect(carte).toBeVisible({ timeout: 15_000 });
+            await photographier(carte, `jeu-${mise.slug}-sante`);
         }
     });
 }

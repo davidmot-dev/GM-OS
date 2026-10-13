@@ -168,6 +168,8 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   // 1. Resolve Current Health State
   // Priority: Internal State (Immediate Feedback) > Store Target > initialHealthSystem > Default
   const defaultType = activeDriver?.combat?.defaultHealthType || 'hp';
+  // Les cases que le jeu déclare (NOC : dix, Blessures) — sinon les cinq d'avant.
+  const casesDuJeu = activeDriver?.combat?.casesDeSante;
   
   let health: HealthSystem;
   if (internalHealth) {
@@ -177,9 +179,9 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   } else if (initialHealthSystem) {
     health = initialHealthSystem;
   } else if (porteur) {
-     health = HealthInterpreter.createDefault(defaultType);
+     health = HealthInterpreter.createDefault(defaultType, { cases: casesDuJeu });
   } else {
-     health = HealthInterpreter.createDefault(defaultType);
+     health = HealthInterpreter.createDefault(defaultType, { cases: casesDuJeu });
   }
 
   // NOTE: We don't return null if the bearer is missing, to allow standalone combatants.
@@ -228,7 +230,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     if (versLaCible && cibleDesCoups) {
         const avant = ficheDeLaCible?.healthSystem
             ?? cibleDesCoups.healthSystem
-            ?? HealthInterpreter.createDefault(defaultType);
+            ?? HealthInterpreter.createDefault(defaultType, { cases: casesDuJeu });
         const apres = HealthInterpreter.calculateNextState(avant, impact);
 
         /*
@@ -298,7 +300,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     const currentIndex = engines.indexOf(health.type);
     const nextType = engines[(currentIndex + 1) % engines.length];
     
-    const nextHealth = HealthInterpreter.createDefault(nextType);
+    const nextHealth = HealthInterpreter.createDefault(nextType, { cases: casesDuJeu });
 
     if (porteur) {
         if (type === 'pc') {
@@ -328,7 +330,7 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
               {health.type === 'clocks' && 'Horloges'}
               {health.type === 'anatomy' && 'Anatomie'}
               {health.type === 'wounds' && 'Blessures'}
-              {health.type === 'boxes' && 'Stress'}
+              {health.type === 'boxes' && (typeof health.data.libelle === 'string' ? health.data.libelle : 'Stress')}
             </span>
           </button>
 

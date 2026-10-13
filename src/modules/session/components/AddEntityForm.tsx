@@ -106,7 +106,7 @@ const AddEntityForm: React.FC = () => {
         */
         const sante = tacheDeDefaite
             ? { type: 'clocks' as const, data: { filled: 0, segments: seuilDeDefaite }, state: 'healthy' as const, badges: [] }
-            : HealthInterpreter.createDefault(modeleDeSante);
+            : HealthInterpreter.createDefault(modeleDeSante, { cases: pilote?.combat?.casesDeSante });
 
         addEntity({
             name,

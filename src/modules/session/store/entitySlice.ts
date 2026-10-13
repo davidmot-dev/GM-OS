@@ -13,7 +13,7 @@ import { premiereFoisVu } from '../logic/ecranDeScene';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
-import { HealthInterpreter } from '../logic/HealthInterpreter';
+import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
 import { transfererLePersonnage } from '../logic/transfertDePersonnage';
@@ -475,6 +475,18 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 if (health.type === 'hp') {
                                     updated.hp = Number(health.data.current) || 0;
                                     updated.maxHp = Number(health.data.max) || 10;
+                                }
+                                /*
+                                  **La jauge de la fiche suit les cases** — NOC, 2026-10-13 :
+                                  la fiche porte « Blessures », la santé ses dix cases. Sans ce
+                                  report, la fiche HTML et la tablette montreraient une autre
+                                  blessure que le plateau. Le champ voyage avec la santé
+                                  (`casesDeSante.champ`), comme les points de vie ci-dessus.
+                                */
+                                if (health.type === 'boxes' && typeof health.data.champ === 'string' && health.data.champ) {
+                                    const cochees = listeOuVide<{ filled?: boolean }>(health.data.boxes).filter(b => b.filled).length;
+                                    updated.sheetData = { ...c.sheetData, [health.data.champ]: cochees };
+                                    updated.donneesModifieesLe = Date.now();
                                 }
                                 return updated;
                           }),

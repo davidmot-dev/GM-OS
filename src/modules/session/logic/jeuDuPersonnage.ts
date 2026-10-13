@@ -33,7 +33,7 @@ export function naissanceDansLeJeu(
     const tache = pilote?.combat?.tacheDeDefaite;
     const sante = tache
         ? horlogeDeDefaite(tache, valeurs).sante
-        : HealthInterpreter.createDefault(modele);
+        : HealthInterpreter.createDefault(modele, { cases: pilote?.combat?.casesDeSante });
 
     return {
         sheetData: valeurs,

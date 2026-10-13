@@ -110,6 +110,7 @@ const PanneauDesRencontres: React.FC<Props> = ({ onClose, rencontreInitiale }) =
         const { combattants, avertissements } = adversairesDeLaRencontre(enChoix, {
             champs,
             typeDeSante: driver?.combat?.defaultHealthType ?? 'hp',
+            casesDeSante: driver?.combat?.casesDeSante,
             gabarits: gabaritsDuJeu(jeuId),
             entites: entities,
             repartitionDe: (archetypeId) =>

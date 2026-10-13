@@ -1,6 +1,7 @@
 import type { SheetField } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import type { HealthSystem } from '../../../types/entity.types';
+import type { CasesDeSante } from '../../../types/drivers';
 import type { Entity } from '../../../types/entity.types';
 import type { CampDeRencontre, LigneDeRencontre, RencontrePreparee } from '../../../types/rencontres.types';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
@@ -41,13 +42,15 @@ export interface DemandeDExemplaires {
     nombre: number;
     graine: number;
     typeDeSante: HealthSystem['type'];
+    /** Les cases du jeu, quand son modèle de santé en compte (NOC). */
+    casesDeSante?: CasesDeSante;
     faction?: CampDeRencontre;
     /** Les notes de jeu ; à défaut, celles du gabarit, sinon le résumé de l'archétype. */
     notes?: string;
 }
 
 /** Les valeurs d'UN exemplaire — l'aperçu de l'atelier en a besoin seul. */
-export function ficheDUnExemplaire(demande: Omit<DemandeDExemplaires, 'nomDeBase' | 'nombre' | 'typeDeSante'>, index: number) {
+export function ficheDUnExemplaire(demande: Omit<DemandeDExemplaires, 'nomDeBase' | 'nombre' | 'typeDeSante' | 'casesDeSante'>, index: number) {
     const fabrique = fabriquer({
         champs: demande.champs, repartition: demande.repartition,
         archetypeId: demande.archetypeId, rangId: demande.rangId,
@@ -75,7 +78,7 @@ export function fabriquerLesExemplaires(demande: DemandeDExemplaires): NouveauCo
         faction: demande.faction ?? 'enemy',
         statuses: [],
         sheetData: ficheDUnExemplaire(demande, i).sheetData,
-        healthSystem: HealthInterpreter.createDefault(demande.typeDeSante),
+        healthSystem: HealthInterpreter.createDefault(demande.typeDeSante, { cases: demande.casesDeSante }),
         /* Pour que sa fiche sache le ranger au bestiaire plus tard. */
         origineFabriquee: { archetypeId: archetype.id, rangId: demande.rangId },
         roleplayingNotes: notes,
@@ -107,6 +110,7 @@ export function combattantDeLEntite(entite: Entity, faction?: CampDeRencontre): 
 export interface ContexteDInvocation {
     champs: SheetField[];
     typeDeSante: HealthSystem['type'];
+    casesDeSante?: CasesDeSante;
     gabarits: readonly GabaritDAdversaire[];
     entites: readonly Entity[];
     /** La répartition retenue par le meneur pour un archétype, sinon la proposition. */
@@ -162,6 +166,7 @@ export function adversairesDeLaRencontre(rencontre: RencontrePreparee, ctx: Cont
             nombre: Math.max(1, ligne.nombre),
             graine,
             typeDeSante: ctx.typeDeSante,
+            casesDeSante: ctx.casesDeSante,
             faction: ligne.faction,
         }));
     });

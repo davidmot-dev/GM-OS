@@ -1,4 +1,5 @@
 import type { HealthSystem, DamageImpact } from '../useSessionOSStore';
+import type { CasesDeSante } from '../../../types/drivers';
 
 /**
  * Le palier de blessure courant, tel qu'on l'affiche.
@@ -81,11 +82,54 @@ export function objetOuVide<T>(valeur: unknown): Record<string, T> {
  * Pure logic for calculating health state transitions.
  * Decoupled from React and Store for maximum testability.
  */
+type SeuilDeCases = NonNullable<CasesDeSante['seuils']>[number];
+
+/** L'état d'une jauge de cases, au nombre de cases cochées, selon ses seuils. */
+export function etatDesCases(seuils: readonly SeuilDeCases[], cochees: number): HealthSystem['state'] {
+    const atteint = [...seuils].sort((a, b) => a.aPartirDe - b.aPartirDe).filter(s => cochees >= s.aPartirDe).pop();
+    if (atteint?.etat) return atteint.etat;
+    return cochees > 0 ? 'scratched' : 'healthy';
+}
+
+/** Le seuil le plus haut qu'une jauge de cases a atteint — « Choqué ». */
+export function seuilAtteint(health: { data: Record<string, unknown> }): string | null {
+    const seuils = listeOuVide<SeuilDeCases>(health.data.seuils);
+    const cochees = listeOuVide<{ filled?: boolean }>(health.data.boxes).filter(b => b.filled).length;
+    return [...seuils].sort((a, b) => a.aPartirDe - b.aPartirDe).filter(s => cochees >= s.aPartirDe).pop()?.label ?? null;
+}
+
+/**
+ * Les cases que le jeu déclare. Chaque case prend le nom du dernier seuil
+ * qu'elle atteint ; les seuils, le libellé et le champ voyagent avec la santé,
+ * pour que le compte et l'écran n'aient pas à relire le pilote.
+ */
+function casesDuPilote(cases: CasesDeSante): HealthSystem {
+    const seuils = [...(cases.seuils ?? [])].sort((a, b) => a.aPartirDe - b.aPartirDe);
+    const boxes = Array.from({ length: Math.floor(cases.nombre) }, (_, i) => ({
+        label: seuils.filter(s => i + 1 >= s.aPartirDe).pop()?.label ?? '',
+        filled: false,
+    }));
+    return {
+        type: 'boxes',
+        data: {
+            boxes,
+            ...(seuils.length ? { seuils } : {}),
+            ...(cases.libelle ? { libelle: cases.libelle } : {}),
+            ...(cases.champ ? { champ: cases.champ } : {}),
+        },
+        state: 'healthy',
+        badges: [],
+    };
+}
+
 export const HealthInterpreter = {
     /**
      * Creates a default health system structure for a given type.
+     *
+     * `options.cases` : les cases que le pilote déclare pour le modèle « boxes »
+     * (`combat.casesDeSante`). Sans elles, les cinq d'avant.
      */
-    createDefault: (type: HealthSystem['type']): HealthSystem => {
+    createDefault: (type: HealthSystem['type'], options?: { cases?: CasesDeSante }): HealthSystem => {
         switch (type) {
             case 'hp':
                 return { type: 'hp', data: { current: 10, max: 10 }, state: 'healthy', badges: [] };
@@ -118,6 +162,7 @@ export const HealthInterpreter = {
                     badges: [] 
                 };
             case 'boxes':
+                if (options?.cases && options.cases.nombre > 0) return casesDuPilote(options.cases);
                 return { 
                     type: 'boxes', 
                     data: { 
@@ -300,8 +345,12 @@ export const HealthInterpreter = {
             filled: i < nextCount
         }));
         
+        const seuils = listeOuVide<SeuilDeCases>(health.data.seuils);
         let state: HealthSystem['state'] = 'healthy';
-        if (nextCount === boxes.length) state = 'dead';
+        if (seuils.length > 0) {
+            // Le jeu nomme ses seuils : l'état est celui du dernier atteint.
+            state = etatDesCases(seuils, nextCount);
+        } else if (nextCount === boxes.length) state = 'dead';
         else if (nextCount >= boxes.length * 0.75) state = 'critical';
         else if (nextCount > 0) state = 'wounded';
         

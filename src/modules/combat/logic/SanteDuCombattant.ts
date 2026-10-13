@@ -1,3 +1,4 @@
+import { seuilAtteint } from '../../session/logic/HealthInterpreter';
 
 /**
  * Une seule réponse à « comment va ce combattant ».
@@ -95,7 +96,11 @@ export function abregerLaSante(
                 ? `Horloge ${d.filled}/${d.segments}` : etat;
         case 'boxes': {
             const cases = Array.isArray(d.boxes) ? (d.boxes as { filled?: boolean }[]) : [];
-            return cases.length > 0 ? `Cases ${cases.filter(b => b.filled).length}/${cases.length}` : etat;
+            // Le seuil que le jeu nomme (« Choqué ») dit plus qu'un compte.
+            const seuil = seuilAtteint(sys);
+            return cases.length > 0
+                ? `${seuil ? `${seuil} · ` : 'Cases '}${cases.filter(b => b.filled).length}/${cases.length}`
+                : etat;
         }
         case 'wounds': {
             const niveaux = Array.isArray(d.levels) ? (d.levels as string[]) : [];
@@ -133,8 +138,9 @@ export function decrireLaSante(c: PorteurDeSante): string | null {
             }
             case 'boxes': {
                 const cases = Array.isArray(d.boxes) ? (d.boxes as { filled?: boolean }[]) : [];
+                const seuil = seuilAtteint(sys);
                 return cases.length > 0
-                    ? `${cases.filter(b => b.filled).length}/${cases.length} cases cochées (${etat})`
+                    ? `${cases.filter(b => b.filled).length}/${cases.length} cases cochées (${seuil ?? etat})`
                     : etat;
             }
             default:

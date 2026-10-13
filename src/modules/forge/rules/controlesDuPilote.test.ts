@@ -315,6 +315,20 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(juste.filter(c => c.ou.startsWith('ficheDeGroupe'))).toEqual([]);
     });
 
+    it('des cases de santé : un nombre, des seuils sur les cases, un champ de la fiche', () => {
+        const mal = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: '', defaultHealthType: 'hp', casesDeSante: {
+                nombre: 10, champ: 'nulle_part', seuils: [{ aPartirDe: 12, label: 'Agonie' }],
+            } } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(mal.filter(c => c.ou.startsWith('combat.casesDeSante')).map(c => [c.ou, c.gravite])).toEqual([
+            ['combat.casesDeSante.seuils[0].aPartirDe', 'erreur'],
+            ['combat.casesDeSante', 'avertissement'],
+            ['combat.casesDeSante.champ', 'avertissement'],
+        ]);
+    });
+
     it('la Table des Bonus : un nom connu, un niveau et une difficulté', () => {
         const mal = controlerLePilote(
             { jet: { sens: 'superieur-ou-egal', tableDeBonus: 'torg-v2' } } as unknown as Partial<GameDriver>,

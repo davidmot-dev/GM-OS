@@ -1162,6 +1162,25 @@ export function controlerLePilote(
 
     }
 
+    // ---- Les cases de santé (NOC : dix cases Blessures) ----------------------
+    const cases = driver.combat?.casesDeSante;
+    if (cases) {
+        if (!(Number.isInteger(cases.nombre) && cases.nombre > 0)) {
+            erreur('combat.casesDeSante.nombre', 'Les cases de santé doivent être un nombre entier positif.');
+        }
+        (cases.seuils ?? []).forEach((s, i) => {
+            if (!(Number.isInteger(s.aPartirDe) && s.aPartirDe >= 1 && s.aPartirDe <= cases.nombre)) {
+                erreur(`combat.casesDeSante.seuils[${i}].aPartirDe`, `Le seuil « ${s.label} » doit tomber sur une case, de 1 à ${cases.nombre}.`);
+            }
+        });
+        if (driver.combat?.defaultHealthType !== 'boxes') {
+            avertir('combat.casesDeSante', 'Des cases de santé sont déclarées, mais le modèle de santé n’est pas « boxes » : elles ne serviront qu’en changeant de moteur sur la fiche.');
+        }
+        if (cases.champ && !tousLesChamps.has(cases.champ)) {
+            avertir('combat.casesDeSante.champ', `Les cases doivent suivre le champ « ${cases.champ} », absent de la fiche : la jauge de la fiche ne bougera pas.`);
+        }
+    }
+
     // ---- La fiche du groupe (la Cabale de NOC) ------------------------------
     const groupe = driver.ficheDeGroupe;
     if (groupe) {

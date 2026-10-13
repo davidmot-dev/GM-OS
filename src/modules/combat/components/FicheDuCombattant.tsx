@@ -116,7 +116,7 @@ export const FicheDuCombattant: React.FC = () => {
             templateId: gabarit?.id,
             sheetData: valeurs,
             healthSystem: combattant.healthSystem
-                ?? HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp'),
+                ?? HealthInterpreter.createDefault(driver?.combat?.defaultHealthType ?? 'hp', { cases: driver?.combat?.casesDeSante }),
         } as Parameters<typeof addEntity>[0]);
 
         /*
