@@ -620,8 +620,8 @@ function verifierLesOrnements(fichier: FichierDuTheme, theme: ThemeAValider, err
     }
 }
 
-/** Les trois ornements que chaque thème livre depuis le 2026-10-13 (§ 8). */
-export const ORNEMENTS_ATTENDUS = ['entete', 'coin', 'separateur'] as const;
+/** Les quatre ornements que chaque thème livre depuis le 2026-10-13 (§ 8). */
+export const ORNEMENTS_ATTENDUS = ['entete', 'coin', 'separateur', 'fond'] as const;
 
 /**
  * **Un ornement absent se signale, sans refuser le thème** (David, 2026-10-13 :
@@ -639,7 +639,7 @@ function signalerLesOrnementsAbsents(fichier: FichierDuTheme | undefined, averti
     }
     const absents = ORNEMENTS_ATTENDUS.filter(e => typeof table[e] !== 'string');
     if (absents.length > 0) {
-        avertir('§ 8', `Ornement(s) absent(s) : ${absents.join(', ')}. Chaque thème livre \`entete\`, \`coin\` et \`separateur\` — un jeu sobre reçoit des ornements sobres, pas aucun.`);
+        avertir('§ 8', `Ornement(s) absent(s) : ${absents.join(', ')}. Chaque thème livre \`entete\`, \`coin\`, \`separateur\` et \`fond\` — un jeu sobre reçoit des ornements sobres, pas aucun.`);
     }
 }
 
