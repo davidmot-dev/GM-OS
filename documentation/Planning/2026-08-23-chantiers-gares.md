@@ -4909,22 +4909,22 @@ reste **non suivi** ; son auto-test passe (`python pdf_vers_md.py --selftest`).
 >   13/10 (un réticule encadré de coins), validé sans avertissement. Le constructeur passe en **0.8.0** : les
 >   **quatre** ornements attendus (`fond` compris), le coin tenu dans son tiers extérieur, l'en-tête vu à
 >   ~190 × 24 px. ⚠️ **David doit recharger RPG Theme Builder dans ChatGPT** (`SKILL.md`, le cahier,
->   `plugin.json`) : le dépôt n'y arrive pas tout seul.
+>   `plugin.json`) : le dépôt n'y arrive pas tout seul. ✅ Fait le 13/10, en 0.9.0.
 > - **13/10, fin : l'en-tête retiré partout.** David : *« l'entête n'apporte rien, enlève le »*.
 >   `EnTeteDeModule` ne pose plus l'ornement `entete` ; le validateur n'attend plus que **trois**
 >   ornements (`coin`, `separateur`, `fond`) et accepte encore `entete` sans rien dire, pour que les
 >   thèmes qui le livrent passent — Blade Runner garde son `entete.svg`, inutilisé ; Cthulhu Hack a retiré le sien.
 >   Cahier § 8 (les deux copies) et `SKILL.md` disent de ne plus le livrer ; constructeur **0.9.0** —
->   ⚠️ à recharger dans ChatGPT, comme le 0.8.0.
+>   ✅ **rechargé dans ChatGPT par David le 13/10.**
 > - **13/10, les cinq autres thèmes ornés.** Alien, Dune, NOC, Star Trek, Torg (aucun ornement) et
 >   Cthulhu Hack (coin trop grand, séparateur invisible) livrés par RPG Theme Builder, chacun **tiré de
 >   ses sources** : feuilles d'origine (`theme/archive/` ; celles de Dune et Torg ressorties de Git en
 >   `origine-v1.css`), captures du livre (`apercu/`), bannières. `intention.md` dit d'où vient chaque
 >   ornement. Tous validés sans avertissement d'ornement, vus en vitrine. Le coin de Star Trek a dû être
 >   refait : un arc doit **suivre** le bord arrondi (centre (46, 46), rayon 34 sur 80, coin posé à 4 px
->   d'un panneau de 20 px de rayon), le premier se creusait à l'envers. Reste à juger : le séparateur de
->   Torg, barre pleine plus lourde que les autres — un ornement n'a qu'une couleur, le carré bronze du
->   livre ne s'en détache plus.
+>   d'un panneau de 20 px de rayon), le premier se creusait à l'envers. Le séparateur de Torg, barre
+>   pleine plus lourde que les autres (le carré bronze du livre ne se détache plus, un ornement n'a qu'une
+>   couleur) : **gardé tel quel par David le 13/10**.
 > - **Piste, non décidée : le vrai biseau d'Alien.** Un ornement ajoute, il ne découpe pas ; le chanfrein
 >   des panneaux de la feuille d'origine demanderait un jeton de contrat (`--rpg-chanfrein`, `clip-path`
 >   sur panneaux et boutons, l'ornement `coin` redessinant la diagonale). La découpe emporte bordure,
@@ -6052,7 +6052,7 @@ v1.2.
   **seulement sous l'interrupteur des personnalités** (décision de David : les six thèmes de jeu les
   déclaraient déjà, Blade Runner aurait changé du jour au lendemain). Accents `gm-*` dérivés (R7,
   sous l'interrupteur aussi), garde de distinction, T0.3 sur les 12 paires. 20 captures identiques.
-  ⚠️ **La copie du cahier dans RPG Theme Builder est en v1.4 : à recharger dans ChatGPT.** Ce que
+  ~~La copie du cahier dans RPG Theme Builder est en v1.4 : à recharger dans ChatGPT.~~ ✅ Rechargée depuis (13/10, constructeur 0.9.0). Ce que
   P1.7 doit brancher : liste dans le plan de la phase 1.
 - ✅ **P1.7 construit le 2026-09-29 — à juger par David** : les quatre personnalités derrière un
   interrupteur des Paramètres, éteint par défaut (20 captures de référence identiques). 48 captures
