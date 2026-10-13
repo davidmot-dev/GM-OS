@@ -85,7 +85,7 @@ part de quel coup retirer.
 
 ## Combat et santé
 
-![La carte de combattant d'un Chevalier des Tempêtes : quatre cases de Blessures, et le Choc](captures/jeu-torg-sante.jpg)
+![La carte de combattant d'un Chevalier des Tempêtes : quatre cases de Blessures, et le Choc avec ses boutons « Récupérer −2 », « Reprendre son souffle », − et +](captures/jeu-torg-sante.jpg)
 
 - **Les dommages se calculent seuls.** Dans « Dégâts » sur la carte de combattant, saisissez le
   **total de dommages** de l'attaque : GM-OS lit la **Résistance** de la cible et applique la Table
@@ -105,6 +105,15 @@ part de quel coup retirer.
   La jauge « Blessures » de la fiche suit les cases, et le jet en tire son malus.
 - **Choc** : suivi sur la carte de combattant, **plafonné à l'Esprit** du personnage. Le dépasser
   met **KO** — GM-OS l'annonce ; le surplus est ignoré. Le Choc ne donne aucun malus.
+- **Faire baisser le Choc** — les boutons de la jauge Choc, sur la carte :
+
+  | Bouton | La règle |
+  | :--- | :--- |
+  | **Récupérer −2** | Le personnage **sacrifie tout son tour** (ni déplacement ni action), **hors de la mêlée** : 2 Choc, sans test |
+  | **Reprendre son souffle** | Fin du combat ou de la scène, **si le meneur estime qu'on peut souffler** : tout le Choc s'efface (un KO se réveille alors) |
+  | **−** / **+** | Un point à la main — hors combat, on récupère **1 Choc par minute** |
+
+  « Soins » ne touche pas au Choc : il décoche les Blessures.
 - **« Soins »** décoche les Blessures sans passer par la table.
 - **Initiative :** la Dextérité, dans l'ordre croissant — en attendant le Paquet d'Action.
 - **Distances** en mètres, de « au corps à corps » à « Portée Longue ».
@@ -114,7 +123,8 @@ part de quel coup retirer.
 ## Ce qui manque encore
 
 - **Le Paquet d'Action** (l'initiative par faction, la Ligne de Conflit, l'Action approuvée) et
-  **les Cartes du Destin** (la main, la Réserve d'Action) : en chantier, ils attendent vos cartes.
+  **les Cartes du Destin** (la main, la Réserve d'Action) : en chantier, ils attendent vos cartes. L'avantage
+  **Inspiration** (2 Choc rendus à toute une faction) viendra avec eux.
 - **La Loi de l'Action** de l'Empire du Nil (une seconde Possibilité pour relancer) et **les Lois
   des cosms** qui changent l'Annulation.
 - **Les sbires** (vaincus dès la première Blessure) et **les hordes** (Choc mis en commun) n'ont pas

@@ -1214,6 +1214,14 @@ export function controlerLePilote(
         }
     }
     (driver.combat?.statsToTrack ?? []).forEach((stat, i) => {
+        // Les gestes de la règle (le Choc de Torg) : un nom, et un effet chiffré.
+        (stat.gestes ?? []).forEach((geste, j) => {
+            const ou = `combat.statsToTrack[${i}].gestes[${j}]`;
+            if (!geste.libelle?.trim()) erreur(ou, `Un geste de « ${stat.label} » n'a pas de nom : son bouton serait vide.`);
+            const aUnEffet = (geste.valeur !== undefined && Number.isFinite(geste.valeur))
+                || (geste.delta !== undefined && Number.isFinite(geste.delta) && geste.delta !== 0);
+            if (!aUnEffet) erreur(ou, `Le geste « ${geste.libelle ?? '?'} » de « ${stat.label} » ne dit ni ce qu'il ajoute (delta) ni ce qu'il pose (valeur) : le bouton ne ferait rien.`);
+        });
         if (!stat.max) return;
         const absents = champsDUneFormule(stat.max).filter(c => !tousLesChamps.has(c));
         if (absents.length > 0) {

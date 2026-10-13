@@ -362,6 +362,25 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         ]);
     });
 
+    it('les gestes d’une jauge : un nom, et un effet chiffré', () => {
+        const constats = controlerLePilote(
+            { combat: {
+                statsToTrack: [{ fieldId: 'choc', label: 'Choc', isMainHP: false, isResource: true, gestes: [
+                    { libelle: 'Récupérer', delta: -2 },
+                    { libelle: 'Reprendre son souffle', valeur: 0 },
+                    { libelle: '', delta: -1 },
+                    { libelle: 'Rien', delta: 0 },
+                ] }],
+                initiativeFormula: '',
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.filter(c => c.ou.startsWith('combat.statsToTrack[0].gestes')).map(c => [c.ou, c.gravite])).toEqual([
+            ['combat.statsToTrack[0].gestes[2]', 'erreur'],
+            ['combat.statsToTrack[0].gestes[3]', 'erreur'],
+        ]);
+    });
+
     it('la Table des Bonus : un nom connu, un niveau et une difficulté', () => {
         const mal = controlerLePilote(
             { jet: { sens: 'superieur-ou-egal', tableDeBonus: 'torg-v2' } } as unknown as Partial<GameDriver>,

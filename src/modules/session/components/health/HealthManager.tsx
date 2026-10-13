@@ -271,15 +271,25 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
         return;
     }
 
-    // 1. Update Persistent Store if the bearer exists
+    /*
+      **Un seul écrivain quand le porteur a une fiche** — même règle que pour la
+      cible, plus haut. Trouvé le 2026-10-13 sur Torg : `handleApplyImpact`
+      convertit les dommages par la table du jeu (29 dommages → 2 Blessures)
+      et reflète le résultat sur le plateau ; ce panneau recalculait ensuite le
+      coup **brut** de son côté et l'écrivait sur le combattant — 29 sur 10 PV,
+      la carte passait « Hors de combat » pendant que la fiche affichait 5/10.
+      Tant que le magasin et le panneau appliquaient la même règle, les deux
+      calculs concordaient et rien ne se voyait.
+
+      Le calcul local ne sert donc plus qu'au combattant **autonome**.
+    */
     if (porteur) {
         storeApplyImpact(id, type, impact);
+    } else {
+        const nextHealth = HealthInterpreter.calculateNextState(health, impact);
+        setInternalHealth(nextHealth);
+        if (onHealthChange) onHealthChange(nextHealth);
     }
-
-    // 2. Local Logic for immediate feedback and standalone mode
-    const nextHealth = HealthInterpreter.calculateNextState(health, impact);
-    setInternalHealth(nextHealth);
-    if (onHealthChange) onHealthChange(nextHealth);
 
     // Visual Feedback
     setLastImpactType(impact.type || 'generic');

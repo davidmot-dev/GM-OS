@@ -26,6 +26,13 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> **13/10 — Accessoires Alien (§ 135).** Première application séparée dans
+> `outils/alien` : MU/TH/UR avec effets et codes, détecteur dont le meneur règle
+> l'intensité. David : *« c'est un bon début documente »*. Prototype accepté
+> comme point de départ ; essais réseau réels et liaison au pilote à reprendre.
+> [État du 13/10](2026-10-13-etat-et-reprise.md),
+> [guide d'utilisation](../../outils/alien/README.md).
+
 > 🎲 **REPRISE — la première séance jouée, le 11/10/2026.** Le débriefing a produit six lignes au
 > § 1 bis, toutes **datées 11/10** ; **aucun code modifié**. David, le soir même : *« ok pour
 > tout »* — l'ordre est retenu, **du plus petit au plus gros** :
@@ -217,7 +224,7 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | ✅ **13/10 : le manuel des jeux.** Demande de David : *« un manuel utilisateur avec les différentes options propres à certains drivers […] Il faudra tenir à jour ce manuel lorsque de nouveaux drivers apparaîtront ou seront améliorés »* | `documentation/User Guides/53-Les-jeux-et-leurs-mecaniques.md` (chaque mécanique une fois, où la voir) et une page par jeu `54-Jeu-….md` (NOC, Dune, Star Trek, Alien, Blade Runner, Cthulhu Hack, Rêves de Dragons, Torg), **au premier niveau** parce que l'aide intégrée ne lit pas les sous-dossiers. Captures : `e2e/capturesDesJeux.spec.ts` lit les pilotes exportés dans `Export Dirvers/` (jamais commités), les charge dans une instance jetable avec des campagnes fictives — **le corpus de l'instance est vide : on y copie `fiche/` et `theme/` de chaque jeu** —, 19 images `captures/jeu-*.jpg`. Garde : `electron/manuelDesJeux.test.ts` lit les champs des types (`GameDriver`, `combat`, `FicheDeGroupe`, `ApportDuGroupe`, `RessourceDeTable`, `DescripteurDeJet`) et refuse une mécanique sans ligne au manuel. Règle écrite dans `AGENTS.md` et la passation (§ 4). **Écarts révélés, corrigés le même soir** à la demande de David (*« Corrige les différents pilotes avant que je ne les remporte. Puis termine Torg »*) : pilotes corrigés dans `Export Dirvers/corriges/` (Star Trek : propriétaires, −1 Impulsion en fin de scène, manque reporté sur la Menace ; carnets NotebookLM — **Torg visait celui de Blade Runner**, Cthulhu Hack, Rêves de Dragons et Star Trek n'en avaient pas, Alien et Dune normalisés vers `notebooklm.google.com`), tous sans erreur aux contrôles de la Forge ; le 10 de NOC relance enfin depuis le panneau (`rollFromConfig` ne passait pas `pool_explode` à `rollPool`) ; sous un jet à verdict unique (Sauvegarde, pourcentage, Table des Bonus) le panneau dit le calcul au lieu de « 0 réussite / … », et « sous 0 » ne s'affiche plus sur une réserve. **Torg terminé** : `systemes/torg.ts` (d20 qui explose sur 10 et 20, Table des Bonus p. 109 **transcrite du carnet NotebookLM « Torg », pas du corpus — à relire**, niveaux Simple/Supérieur/Spectaculaire rangés sur l'échelle commune, échec critique sur un 1 au premier dé), `DescripteurDeJet.tableDeBonus` et `ComposanteDeJet.facultative` (compétence non entraînée), contrôles de la Forge, invite de la Forge. **Restent** : les Possibilités, l'échec critique étendu et les compétences favorisées de Torg ; ~~le 1 de NOC qui verse le Fiel~~ (fait, voir la ligne du jet de NOC) ; ~~la santé de NOC~~ **faite le même soir** : `combat.casesDeSante` (nombre, seuils nommés avec leur état, libellé, champ de fiche suivi) ; `HealthInterpreter.createDefault(type, { cases })` à ses dix appelants, état par seuil (`etatDesCases`), seuil dit dans les résumés et une seule fois sous les cases, la jauge de la fiche suit les cases dans `updateCharacterHealth` ; contrôles de la Forge ; pilote NOC corrigé (dix cases Blessures, seuils 5/8/10, Trauma/Traque/Noirceur suivis à la place des PV et Endurance inventés). Les malus de seuil ne s'appliquent pas au jet. |
 | ✅ **13/10 : la santé de NOC est mal modélisée** — le pilote a des « Points de Vie » et une « Endurance », que le livre ignore | **Fait le 13/10 (`2ecb31cc`)** : cases réglables par le pilote (`combat.casesDeSante`), pilote NOC corrigé — dix cases Blessures, Choqué à 5, Lourdement blessé à 8, Agonie à 10, la jauge de la fiche suit. Voir la ligne du manuel des jeux. |
 | ✅ **13/10 : le jet complet de NOC.** David : *« on va traiter tous les points de NOC, si besoin regarde dans NotebookLM »* | Règles relues contre le carnet NotebookLM « NOC » (le niveau est le Talent seul ; dés de destin de zéro au Domaine ; Choqué retire au Domaine, donc aux dés ; les états graves au Talent ; un seul Vécu et un seul Atout par test ; la relance d'un 10 compte aussi ses 1 en Fiel ; **aucune difficulté par défaut** — c'est le niveau de Talent requis, −1 à 4 ; la Cabale se recharge par scénario, ses Espoir, Vécu et Singularité compris). `DescripteurDeJet.destin` (Fiel, jauges de péril) et `reservesDuPersonnage` ; `systemes/nocturne.ts` (`malusDePeril` cumulé, `resoudreLeDestin`) ; `ApportDuGroupe.effet: 'annuleLesUns'` (seuls les 1 annulés se dépensent, Singularité du Héros puis de la Cabale) et `maxParJet` ; **chaque 1 restant verse son Fiel tout seul** (débordement en Menace compris) ; le verdict suit le niveau (`reussitesRequises` à 1) ; panneau : « Provoquer le destin » de 0 au plafond, « Puiser dans ses réserves », malus nommés. Pilote NOC : le jet, les quatre jauges (Choqué à 5 pour Blessures et Trauma, Grave à 8 pour les quatre), Vécu/Espoir/Singularité du Héros, Singularité de la Cabale, Soupçon sur la fiche. **Restent** : l'Atout Capital (plusieurs points par test), l'état Fatigué, les Rouages qui retirent du Fiel (au bandeau), les effets du Soupçon sur la récupération. |
-| ⏳ **13/10 : Torg, au complet.** David : *« ensuite on regarde Torg »*, puis le Paquet d'Action, les Cartes du Destin et l'Annulation des dommages (*« je chargerai les cartes plus tard »*) | Règles relues contre le carnet NotebookLM « Torg » (`894bb0f5-…` ; le pilote visait celui de Blade Runner, corrigé). **A fait** : `systemes/torg.ts` — `DesDeTorg` (premier dé, Possibilité, Un de plus, relance), `lancerUneChaine` (sans entraînement, seul le 10 explose), `lancerLaPossibilite` (1 à 9 → 10 sans relance), `resoudreTorg` (plage critique, malus) ; `DescripteurDeJet.torg` (Blessures −1 chacune jusqu'à −3, Possibilités, Annulation) ; panneau : plage d'échec critique, malus dit, puis « Relancer (compétence favorisée) », « Dépenser une Possibilité » (décomptée sur la fiche), « Un de plus ! » — une fois chacun, rien après un échec critique. **B fait** (données) : Blessures en quatre cases (Blessé, Grièvement blessé à 3, Vaincu à 4), Choc suivi. **C fait** : « Annulation des dommages » — une Possibilité, Esprit + Réalité contre ND 10, ce qu'annule chaque niveau dit (Simple 1 Blessure, Supérieur 2, Spectaculaire tout, et tout le Choc) ; les cases se décochent par « Soins ». **Faits ensuite, à la demande de David** (*« fais le maximum du choc et le calcul des dommages »*) : `statsToTrack[].max` (formule lue sur la fiche, `maximumDeLaJauge`, aux deux jauges de `CombatCard`) — le Choc plafonne à l'Esprit, pour tous les jeux qui le déclarent ; `combat.dommages: { mecanique: 'torg', resistance, choc }` — dans `handleApplyImpact` (seul écrivain), la valeur saisie devient un total de dommages, la Table des Dommages (carnet « Torg » : −6 rien, −5 à −1 un Choc, 0 à 4 deux, puis +1 Blessure et +2 Choc par tranche de 5) coche les Blessures, ajoute le Choc plafonné (KO au-delà, surplus ignoré), le dit au journal et à l'écran ; `refleterLaFiche` porte aussi les valeurs de fiche au plateau. Sbires et hordes sans modèle à part. **D et E à faire** : le Paquet d'Action (initiative H/V, Ligne de Conflit Standard/Dramatique, Action approuvée) et les Cartes du Destin (main de 4, Réserve d'Action, Moment critique), sur Deck-OS et Combat-OS, prêts à recevoir les cartes de David. |
+| ⏳ **13/10 : Torg, au complet.** David : *« ensuite on regarde Torg »*, puis le Paquet d'Action, les Cartes du Destin et l'Annulation des dommages (*« je chargerai les cartes plus tard »*) | Règles relues contre le carnet NotebookLM « Torg » (`894bb0f5-…` ; le pilote visait celui de Blade Runner, corrigé). **A fait** : `systemes/torg.ts` — `DesDeTorg` (premier dé, Possibilité, Un de plus, relance), `lancerUneChaine` (sans entraînement, seul le 10 explose), `lancerLaPossibilite` (1 à 9 → 10 sans relance), `resoudreTorg` (plage critique, malus) ; `DescripteurDeJet.torg` (Blessures −1 chacune jusqu'à −3, Possibilités, Annulation) ; panneau : plage d'échec critique, malus dit, puis « Relancer (compétence favorisée) », « Dépenser une Possibilité » (décomptée sur la fiche), « Un de plus ! » — une fois chacun, rien après un échec critique. **B fait** (données) : Blessures en quatre cases (Blessé, Grièvement blessé à 3, Vaincu à 4), Choc suivi. **C fait** : « Annulation des dommages » — une Possibilité, Esprit + Réalité contre ND 10, ce qu'annule chaque niveau dit (Simple 1 Blessure, Supérieur 2, Spectaculaire tout, et tout le Choc) ; les cases se décochent par « Soins ». **Faits ensuite, à la demande de David** (*« fais le maximum du choc et le calcul des dommages »*) : `statsToTrack[].max` (formule lue sur la fiche, `maximumDeLaJauge`, aux deux jauges de `CombatCard`) — le Choc plafonne à l'Esprit, pour tous les jeux qui le déclarent ; `combat.dommages: { mecanique: 'torg', resistance, choc }` — dans `handleApplyImpact` (seul écrivain), la valeur saisie devient un total de dommages, la Table des Dommages (carnet « Torg » : −6 rien, −5 à −1 un Choc, 0 à 4 deux, puis +1 Blessure et +2 Choc par tranche de 5) coche les Blessures, ajoute le Choc plafonné (KO au-delà, surplus ignoré), le dit au journal et à l'écran ; `refleterLaFiche` porte aussi les valeurs de fiche au plateau. Sbires et hordes sans modèle à part. **Puis, sur *« le choc ne diminue pas »*** : le clic sur la jauge marchait, mais il n'était annoncé que par une infobulle — chaque jauge de `CombatCard` a désormais ses boutons − et +, et `statsToTrack[].gestes` (`{ libelle, delta | valeur, aide }`, contrôlé par la Forge) pose les gestes de la règle : pour Torg « Récupérer −2 » (le tour sacrifié, hors mêlée) et « Reprendre son souffle » (fin de combat ou de scène, Choc à 0). **Défaut trouvé au passage** : `HealthManager` recalculait le coup BRUT après `handleApplyImpact` et l'écrivait sur le combattant (29 dommages sur 10 PV → « Hors de combat » sur le plateau, 5/10 sur la fiche) — le porteur qui a une fiche n'a plus de calcul local, un seul écrivain. L'Inspiration (−2 Choc à une faction) viendra avec le Paquet d'Action. **D et E à faire** : le Paquet d'Action (initiative H/V, Ligne de Conflit Standard/Dramatique, Action approuvée) et les Cartes du Destin (main de 4, Réserve d'Action, Moment critique), sur Deck-OS et Combat-OS, prêts à recevoir les cartes de David. |
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -11087,6 +11094,51 @@ validation globale du push. Aucun fichier étranger, test ou code applicatif mod
 
 ---
 
+### 135 · Accessoires Alien : MU/TH/UR et détecteur de tension — 13/10/2026
+
+**Origine.** David explore les modules Foundry pour GM-OS, puis cite MU/TH/UR
+et le Motion Tracker d'Alien. Il demande les effets CRT/parasites, des mots
+de passe et codes, un tracker dont **il donne l'intensité**, et une liaison
+aux pilotes/jeux Alien. Il choisit une petite application séparée et demande :
+*« ok commence crée cela dans outils\\alien »*.
+
+**Première version livrée.** [`outils/alien`](../../outils/alien/README.md),
+version 0.1.0 : atelier hors ligne avec poste meneur et aperçu joueur ;
+terminal et dossiers éditables, codes exacts avec zéros initiaux, dialogues,
+piratage décidé par le meneur et compte à rebours fictif ; radar animé,
+intensité, contacts, proximité, parasites, volume indépendant et faux écho.
+Sons synthétisés et effets originaux, sans dépendre de Foundry.
+Serveur Node sans paquet supplémentaire, HTTP + SSE, connexion de table,
+instantanés joueurs filtrés et sauvegarde dans `.local/` ignoré par Git.
+
+**Décisions à préserver.** L'intensité est un outil de mise en scène et ne
+modifie aucun Stress de PJ. Les comptes à rebours ne décident d'aucun décès.
+Le manifeste indique Alien ; la liaison automatique aux pilotes et campagnes
+reste à développer. Le serveur porte actuellement une table autonome.
+Les codes de scénario ne doivent pas être placés dans le corpus partagé.
+
+**État vérifié.** Syntaxe et ESLint propres ; parcours navigateur hors ligne
+et meneur/joueur, codes personnalisés et sauvegardés, droits, révocation,
+filtrage des documents et des scans, piratage, reconnexion et affichage à
+390 px. **Sans serveur réseau lancé** : protocole réel appelé en mémoire et
+requêtes interceptées. Pas de test sur les tablettes physiques ni d'écoute
+comparative avec Foundry. Aucun changement de `src/` ou `electron/`.
+
+**Retour de David, 13/10 :** *« c'est un bon début documente »*. La direction
+de la première version est retenue ; ce n'est pas une clôture du chantier.
+Guide, architecture et reprise écrits. Aucun commit ou push demandé pour
+ce lot. [Étude et décisions](2026-10-13-integration-foundry-vtt.md),
+[architecture](../../outils/alien/ARCHITECTURE.md),
+[note de reprise](2026-10-13-etat-et-reprise.md).
+
+**Premier geste à la reprise.** Essayer le serveur local avec deux appareils,
+juger les effets et sons, puis définir la liaison au pilote Alien et à la
+campagne. L'essai d'un service réseau doit être demandé par David ; toute
+modification ultérieure de `src/` ou `electron/` attend sa réponse à
+« GM-OS tourne-t-il ? ».
+
+---
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11161,6 +11213,7 @@ validation globale du push. Aucun fichier étranger, test ou code applicatif mod
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
+| 70 | **Accessoires Alien : MU/TH/UR et tracker** | Première application 0.1.0 livrée, § 135 ; David : « c'est un bon début documente » ; guide, architecture et contrôles consignés | Essai réel avec deux appareils, puis liaison au pilote Alien | Réseau et sons à éprouver ; intégration GM-OS à développer |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

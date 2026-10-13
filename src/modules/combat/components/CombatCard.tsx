@@ -137,7 +137,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         }
     };
 
-    const handleGaugeClick = (e: React.MouseEvent, fieldId: string, delta: number) => {
+    /** `valeur` pose la jauge au lieu de l'ajuster — un geste de la règle, « reprendre son souffle ». */
+    const handleGaugeClick = (e: React.MouseEvent, fieldId: string, delta: number, valeur?: number) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -150,8 +151,51 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
           de ressource se LANCE (voir `lancerLaRessource`), il ne se compte pas.
         */
         if (!Number.isFinite(currentVal)) return;
-        ecrireSurLaFiche(fieldId, Math.max(0, currentVal + delta));
+        ecrireSurLaFiche(fieldId, Math.max(0, valeur ?? currentVal + delta));
     };
+
+    /*
+      **Les boutons − et + d'une jauge** (2026-10-13). Le seul geste était un
+      clic gauche ou droit sur la barre, annoncé par une infobulle : David a
+      cherché comment faire baisser le Choc de Torg sans le trouver. *Une
+      fonctionnalité invisible coûte plus qu'une absence.* Le clic sur la barre
+      reste, pour qui l'a pris en main.
+    */
+    const reglageDeJauge = (fieldId: string, label: string, chiffre: React.ReactNode) => (
+        <span className="flex items-center gap-1" data-reglage-de-jauge={fieldId}>
+            {/* Les gestes que la règle déclare sur cette jauge — le Choc de Torg. */}
+            {(activeDriver?.combat?.statsToTrack?.find(st => st.fieldId === fieldId)?.gestes ?? []).map(geste => (
+                <button
+                    key={geste.libelle}
+                    type="button"
+                    className="mr-1 px-1.5 h-5 rounded-sm border border-app-border/40 text-ui-10 font-bold uppercase tracking-wider text-app-text/80 hover:text-primary hover:border-primary/60 leading-none"
+                    onClick={(e) => handleGaugeClick(e, fieldId, geste.delta ?? 0, geste.valeur)}
+                    onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    title={geste.aide ?? geste.libelle}
+                    data-geste-de-jauge={geste.libelle}
+                >
+                    {geste.libelle}{geste.valeur === undefined && geste.delta ? ` ${geste.delta > 0 ? '+' : '−'}${Math.abs(geste.delta)}` : ''}
+                </button>
+            ))}
+            <button
+                type="button"
+                className="w-5 h-5 grid place-items-center rounded-sm border border-app-border/40 text-app-text/80 hover:text-primary hover:border-primary/60 leading-none"
+                onClick={(e) => handleGaugeClick(e, fieldId, -1)}
+                onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                aria-label={`${label} : retirer 1`}
+                title={`${label} : retirer 1`}
+            >−</button>
+            {chiffre}
+            <button
+                type="button"
+                className="w-5 h-5 grid place-items-center rounded-sm border border-app-border/40 text-app-text/80 hover:text-primary hover:border-primary/60 leading-none"
+                onClick={(e) => handleGaugeClick(e, fieldId, 1)}
+                onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                aria-label={`${label} : ajouter 1`}
+                title={`${label} : ajouter 1`}
+            >+</button>
+        </span>
+    );
 
     /*
       **Le dé de ressource, lancé depuis la carte** (Cthulhu Hack, 2026-09-30) :
@@ -561,7 +605,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex items-center justify-between px-1">
                                         <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
-                                        <span className="text-ui-12 font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>
+                                        {reglageDeJauge(gaugeConfig.fieldId, gaugeConfig.label, <span className="text-ui-12 font-black text-primary drop-shadow-[0_0_3px_rgba(231,176,8,0.3)]" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>)}
                                     </div>
                                     <div className="flex gap-1 h-2.5 bg-app-bg/40 p-0.5 rounded-sm border border-app-border/20">
                                         {Array.from({ length: segments }).map((_, sIdx) => (
@@ -592,7 +636,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 >
                                     <div className="flex justify-between items-center px-1">
                                         <span className="stitch-label text-app-text">{gaugeConfig.label}</span>
-                                        <span className="text-ui-12 font-black text-primary" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>
+                                        {reglageDeJauge(gaugeConfig.fieldId, gaugeConfig.label, <span className="text-ui-12 font-black text-primary" style={styleDuChiffre}>{val} <span className="opacity-50">/ {max}</span></span>)}
                                     </div>
                                     <div className="h-3 bg-app-bg/60 rounded-full overflow-hidden border border-app-border/30 p-[1.5px]">
                                         <div 
@@ -615,7 +659,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                             >
                                 <div className="flex justify-between items-center px-0.5">
                                     <span className="text-ui-10 font-black uppercase tracking-wider text-app-text/80">{gaugeConfig.label}</span>
-                                    <span className="text-ui-10 font-bold text-app-text/90">{val} <span className="opacity-50">/ {max}</span></span>
+                                    {reglageDeJauge(gaugeConfig.fieldId, gaugeConfig.label, <span className="text-ui-10 font-bold text-app-text/90">{val} <span className="opacity-50">/ {max}</span></span>)}
                                 </div>
                                 <div className="h-2 bg-app-bg/40 border border-app-border/20 rounded-full overflow-hidden">
                                     <div 
@@ -659,7 +703,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                     >
                                         <div className="flex items-center justify-between px-1">
                                             <span className="stitch-label text-app-text/70">{stat.label}</span>
-                                            <span className="text-ui-11 font-black text-primary">{val} <span className="opacity-50">/ {max}</span></span>
+                                            {reglageDeJauge(stat.fieldId, stat.label, <span className="text-ui-11 font-black text-primary">{val} <span className="opacity-50">/ {max}</span></span>)}
                                         </div>
                                         <div className="flex gap-1 h-1.5 bg-app-bg/40 p-[1px] rounded-full border border-app-border/20">
                                             {Array.from({ length: segments }).map((_, sIdx) => {

@@ -122,6 +122,24 @@ export interface CombatStatMapping {
      * (2026-10-13). Absent : la valeur par défaut du champ, sinon 10.
      */
     max?: string;
+    /**
+     * **Les gestes de la règle sur cette jauge**, en boutons sur la carte de
+     * combattant (2026-10-13). Le Choc de Torg : « Récupérer » (le tour
+     * sacrifié, −2) et « Reprendre son souffle » (fin de combat ou de scène,
+     * remis à 0). `delta` ajoute ; `valeur` pose. Absent : les seuls − et +.
+     */
+    gestes?: GesteDeJauge[];
+}
+
+/** Un geste de la règle sur une jauge suivie — voir `CombatStatMapping.gestes`. */
+export interface GesteDeJauge {
+    libelle: string;
+    /** Ce que le geste ajoute — `-2` pour la Récupération de Torg. */
+    delta?: number;
+    /** La valeur que le geste pose — `0` pour reprendre son souffle. L'emporte sur `delta`. */
+    valeur?: number;
+    /** Ce que la règle demande, en infobulle. */
+    aide?: string;
 }
 
 export interface UIConfig {

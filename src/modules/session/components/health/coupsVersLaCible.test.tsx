@@ -199,28 +199,37 @@ describe('quand le coup ne change rien', () => {
  *
  * Invisible tant que chaque ligne n'était modifiée que par elle-même. Depuis que
  * les coups arrivent d'une autre ligne, c'est ce qui fige la barre de la cible.
+ *
+ * **Puis, le 2026-10-13 (Torg)** : le porteur qui a une fiche n'a plus de calcul
+ * local du tout. Le magasin convertit le coup par la règle du jeu (29 dommages →
+ * 2 Blessures) ; le panneau recalculait le coup BRUT et l'écrivait sur le
+ * combattant — 29 sur 10 PV, la carte passait « Hors de combat » pendant que la
+ * fiche affichait 5/10.
  */
 describe('la barre suit le magasin, pas son propre souvenir', () => {
-    it('repart de la valeur du magasin après un changement extérieur', () => {
+    it('le porteur qui a une fiche : le magasin écrit seul, le panneau ne recalcule rien', () => {
         const surLePorteur = vi.fn();
         etat.players = [{ id: 'j1', characters: [{ id: 'perso-tom', name: 'Tom', healthSystem: sante(10) }] }];
 
-        const { rerender } = render(
-            <HealthManager id="perso-tom" type="pc" onHealthChange={surLePorteur} />,
-        );
-
-        // Un premier coup sur sa propre barre : l'état local se remplit.
+        render(<HealthManager id="perso-tom" type="pc" onHealthChange={surLePorteur} />);
         fireEvent.click(screen.getByTitle(/Clic gauche/));
-        expect(surLePorteur.mock.calls[0][0].data.current, '10 → 9').toBe(9);
 
-        // Quelqu'un d'autre soigne Tom : la fiche remonte à 5… puis à 5 tout court.
+        expect(etat.handleApplyImpact, 'le magasin reçoit le coup').toHaveBeenCalledTimes(1);
+        expect(etat.handleApplyImpact.mock.calls[0][0]).toBe('perso-tom');
+        expect(surLePorteur, 'et personne ne réécrit le plateau avec le coup brut').not.toHaveBeenCalled();
+    });
+
+    it('repart de la valeur du magasin après un changement extérieur', () => {
+        etat.players = [{ id: 'j1', characters: [{ id: 'perso-tom', name: 'Tom', healthSystem: sante(10) }] }];
+        const { rerender, container } = render(<HealthManager id="perso-tom" type="pc" />);
+        fireEvent.click(screen.getByTitle(/Clic gauche/));
+
+        // Quelqu'un d'autre soigne — ou la règle du jeu convertit le coup : la fiche dit 5.
         etat.players = [{ id: 'j1', characters: [{ id: 'perso-tom', name: 'Tom', healthSystem: sante(5) }] }];
-        rerender(<HealthManager id="perso-tom" type="pc" onHealthChange={surLePorteur} />);
+        rerender(<HealthManager id="perso-tom" type="pc" />);
 
-        fireEvent.click(screen.getByTitle(/Clic gauche/));
-
-        expect(surLePorteur.mock.calls[1][0].data.current,
-            'le second coup part de 5 (le magasin), pas de 9 (le souvenir local)').toBe(4);
+        const chiffres = [...container.querySelectorAll('input')].map(i => i.value);
+        expect(chiffres, 'la barre montre le magasin').toContain('5');
     });
 });
 
