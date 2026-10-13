@@ -73,6 +73,24 @@ const refuserLeDon = (payload: unknown) => {
 };
 
 /*
+  **Les Cartes du Destin de Torg** (2026-10-14) : poser sa carte en Réserve
+  d'Action, jouer son Moment critique. Le magasin vérifie que le demandeur tient
+  la carte — ou qu'il joue bien son propre Moment critique.
+*/
+const poserEnReserve = (payload: unknown) => {
+    const { deckId, index, characterId } = (payload ?? {}) as
+        { deckId?: string; index?: number; characterId?: string | null };
+    if (!deckId || typeof index !== 'number') return;
+    useSessionOSStore.getState().poserEnReserve(deckId, index, characterId ?? null);
+};
+
+const momentCritique = (payload: unknown) => {
+    const { deckId, characterId } = (payload ?? {}) as { deckId?: string; characterId?: string | null };
+    if (!deckId || !characterId) return;
+    useSessionOSStore.getState().jouerLeMomentCritique(deckId, characterId, characterId);
+};
+
+/*
   Les deux préfixes mènent au même endroit, comme pour les objets : un message
   arrivé par la télécommande porte `remote:`, un message arrivé par une tablette
   ne le porte pas. Oublier l'un des deux fait marcher la tablette et pas la
@@ -89,4 +107,8 @@ export const deckActions: ActionRegistry = {
     'remote:deck:accepter-don': accepterLeDon,
     'deck:refuser-don': refuserLeDon,
     'remote:deck:refuser-don': refuserLeDon,
+    'deck:poser-en-reserve': poserEnReserve,
+    'remote:deck:poser-en-reserve': poserEnReserve,
+    'deck:moment-critique': momentCritique,
+    'remote:deck:moment-critique': momentCritique,
 };

@@ -66,6 +66,9 @@ const EXPECTED_TYPES = [
     'deck:demander-don', 'remote:deck:demander-don',
     'deck:accepter-don', 'remote:deck:accepter-don',
     'deck:refuser-don', 'remote:deck:refuser-don',
+    // Torg : la Réserve d'Action et le Moment critique (2026-10-14).
+    'deck:poser-en-reserve', 'remote:deck:poser-en-reserve',
+    'deck:moment-critique', 'remote:deck:moment-critique',
     /*
       Le défilé des Quarts de l'afficheur. Les deux gestes vivaient déjà dans
       `useUlanziStore`, offerts par le tableau de bord et par rien d'autre ; ils

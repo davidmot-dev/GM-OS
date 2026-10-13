@@ -356,6 +356,36 @@ for (const { mise, pilote } of JEUX) {
             // Les notifications du coup et de la pioche passent par-dessus : on les laisse s'éteindre (3 s).
             await f.waitForTimeout(3_500);
             await photographier(paquet, `jeu-${mise.slug}-paquet-d-action`);
+
+            // Les Cartes du Destin : un Paquet du Destin, une main dont une carte en Réserve.
+            const perso = personnageDe(mise.slug);
+            await f.evaluate(({ systeme, perso }) => {
+                const w = window as unknown as Fenetre;
+                w.useSessionOSStore.setState(st => ({
+                    decks: [...st.decks.filter(d => d.id !== 'capture-destin'), {
+                        id: 'capture-destin', name: 'Paquet du Destin', systemId: systeme, folderPath: 'decks/torg/destin',
+                        cardCount: 40, format: 'poker', orientation: 'portrait', useDiscard: true, role: 'destin',
+                        cardMetadata: { 3: { name: 'Coup de grâce' }, 5: { name: 'Seconde chance' }, 8: { name: 'Héroïsme' } },
+                    }],
+                    deckStates: { ...st.deckStates, 'capture-destin': {
+                        deckId: 'capture-destin', remainingIndices: [1, 2, 4, 6, 7, 9, 10], discardedIndices: [], currentCardIndex: null,
+                        enMain: [
+                            { index: 3, porteur: perso, face: 'revelee' },
+                            { index: 5, porteur: perso, face: 'revelee', enReserve: true },
+                            { index: 8, porteur: perso, face: 'revelee' },
+                        ],
+                    } },
+                }));
+            }, { systeme, perso });
+            const carteDuHeros = f.locator('[data-combattant]').first();
+            await expect(carteDuHeros.locator('[data-actions-approuvees]')).toBeVisible({ timeout: 15_000 });
+            await photographier(carteDuHeros, `jeu-${mise.slug}-action-approuvee`);
+
+            await vue(campagne, 'deck-player');
+            await f.getByRole('button', { name: 'Paquet du Destin', exact: true }).click();
+            await expect(f.locator('[data-gestes-du-destin]')).toBeVisible({ timeout: 15_000 });
+            await f.waitForTimeout(3_500);
+            await photographier(f.locator('body'), `jeu-${mise.slug}-destin`);
         }
     });
 }

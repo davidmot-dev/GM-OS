@@ -159,10 +159,41 @@ le camp qui commence.
 
 ---
 
+## Les Cartes du Destin
+
+![Le Paquet du Destin dans Deck-OS : les gestes de fin de combat, de scène et d'Acte, le Moment critique, et les mains des héros](captures/jeu-torg-destin.jpg)
+
+Chaque héros tient une **main de 4 Cartes du Destin**. Leurs effets sont imprimés sur les cartes :
+GM-OS ne les joue pas à votre place, il tient les mains. Dans Deck-OS, marquez votre paquet
+**Rôle : Paquet du Destin**.
+
+| Geste | Où | Ce qu'il fait |
+| :--- | :--- | :--- |
+| **Poser en Réserve** | la tablette du joueur, ou votre lecteur | En combat, une carte par fin de tour, face visible devant soi : **toute la table la voit** et elle se joue à tout moment |
+| **Moment critique** | la tablette, ou votre lecteur (liste « Moment critique… ») | **Une fois par Acte** : toute la main passe en Réserve — ce qui n'est pas joué aussitôt est défaussé |
+| **Jouer** | la tablette, ou votre lecteur | La carte part en défausse |
+| **Fin du combat** | votre lecteur | Les cartes de Réserve reviennent en main |
+| **Fin de scène** | votre lecteur | Chaque héros de la campagne **complète sa main à 4**. Qui en a plus doit défausser l'excédent : GM-OS le dit, il ne choisit pas pour lui |
+| **Fin d'Acte** | votre lecteur | Chacun défausse toute sa main, Réserve comprise, et en tire une nouvelle ; les Moments critiques reviennent |
+
+**L'Action approuvée.** Quand la carte d'Action du round en nomme une, la carte de combat de
+chaque héros montre un bouton par action :
+
+![Sur la carte de combat d'un héros, les Actions approuvées du round : un clic, une Carte du Destin en main](captures/jeu-torg-action-approuvee.jpg)
+
+Cliquez quand le héros la réussit : il pioche **une Carte du Destin en main** (pas en Réserve).
+Une fois par action et par round — deux actions sur la carte, deux cartes possibles.
+
+Le don de carte entre joueurs reste celui de Deck-OS (proposé, accepté ou refusé, vous arbitrez) :
+la règle du livre — **en combat, une carte contre une carte, de Réserve à Réserve** — reste à la
+table. **Désorientés** (aucune carte jouée depuis la Réserve ce round) est annoncé, pas bloqué.
+
+---
+
 ## Ce qui manque encore
 
-- **Les Cartes du Destin** (la main, la Réserve d'Action, le Moment critique, la pioche sur Action
-  approuvée) : en chantier.
+- **Les Cartes de Cosm** (une par Acte, hors de la main) et les Atouts qui touchent aux cartes
+  (Chef naturel…).
 - **La Loi de l'Action** de l'Empire du Nil (une seconde Possibilité pour relancer) et **les Lois
   des cosms** qui changent l'Annulation.
 - **Les sbires** (vaincus dès la première Blessure) et **les hordes** (Choc mis en commun) n'ont pas

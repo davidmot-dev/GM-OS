@@ -124,6 +124,19 @@ dit à côté des réussites (« 3 réussites (dont +1 Cabale) »).
 
 ---
 
+## Les Cartes du Destin (`cartesDuDestin`)
+
+Une **main de cartes** par personnage, tirée d'un paquet de Deck-OS marqué **Rôle : Paquet du
+Destin**. Le pilote en dit la **taille** (`taille` : 4 chez Torg). Dans le lecteur de Deck-OS, trois
+gestes : **Fin du combat** (la Réserve revient en main), **Fin de scène** (chacun complète sa main ;
+qui en a trop doit défausser, GM-OS ne choisit pas pour lui) et **Fin d'Acte** (nouvelles mains).
+Une carte peut être **posée en Réserve d'Action** — publique, toute la table la voit — et le
+**Moment critique** pose toute la main en Réserve, une fois par Acte ; les deux se font aussi depuis
+la tablette du joueur. Sur la carte de combat d'un héros, **l'Action approuvée** de la carte du
+round lui fait piocher une carte. Voir [Torg](./54-Jeu-Torg.md).
+
+---
+
 ## Les dés d'usure (`desDUsure`)
 
 Une ressource qui **est un dé** : on la lance quand on la sollicite, et un 1 ou un 2 la fait

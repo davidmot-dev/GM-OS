@@ -376,6 +376,13 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(sansChoc.filter(c => c.ou === 'combat.initiative.mode').map(c => c.gravite)).toEqual(['avertissement']);
     });
 
+    it('les Cartes du Destin : une taille de main entière et positive', () => {
+        const mal = controlerLePilote({ cartesDuDestin: { taille: 0 } } as unknown as Partial<GameDriver>, fiche);
+        expect(mal.filter(c => c.ou === 'cartesDuDestin.taille').map(c => c.gravite)).toEqual(['erreur']);
+        const bon = controlerLePilote({ cartesDuDestin: { taille: 4 } } as unknown as Partial<GameDriver>, fiche);
+        expect(bon.filter(c => c.ou === 'cartesDuDestin.taille')).toEqual([]);
+    });
+
     it('les gestes d’une jauge : un nom, et un effet chiffré', () => {
         const constats = controlerLePilote(
             { combat: {

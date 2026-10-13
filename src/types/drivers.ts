@@ -348,6 +348,13 @@ export interface GameDriver {
      * Absent : le jeu n'a pas de fiche de groupe, et rien ne s'affiche.
      */
     ficheDeGroupe?: FicheDeGroupe;
+    /**
+     * **Les Cartes du Destin** — Torg, 2026-10-14. La taille de la main que
+     * « Fin de scène » complète (4 ; 5 sous la Loi de l'Héroïsme). La pioche est
+     * le paquet du jeu marqué « Paquet du Destin » dans Deck-OS ; la Réserve
+     * d'Action et le Moment critique viennent avec. Absent : pas de main à tenir.
+     */
+    cartesDuDestin?: { taille: number };
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
     /** Les mots de ce jeu pour la monnaie et la rareté — voir `VocabulaireDuButin`. */
     vocabulaireDuButin?: VocabulaireDuButin;

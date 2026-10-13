@@ -114,9 +114,31 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
             const paquet = decks.find(d => d.id === deckId);
             const mienne = mains.find(m => m.porteur === characterId);
             if (!paquet || !mienne) return [];
-            return [{ paquet, revelees: mienne.revelees, scellees: mienne.scellees }];
+            return [{
+                paquet, revelees: mienne.revelees, scellees: mienne.scellees,
+                enReserve: mienne.enReserve ?? [], momentCritiqueJoue: !!mienne.momentCritiqueJoue,
+            }];
         });
     }, [characterId, mainsDesPaquets, decks]);
+
+    /** Torg : la taille de la main que la fin de scène complète. */
+    const tailleDeMain = useSessionOSStore(s => s.getActiveDriver?.()?.cartesDuDestin?.taille ?? 4);
+
+    /*
+      **Les Réserves d'Action de la table** — Torg, 2026-10-14. Elles sont
+      publiques : posées face visible devant chacun, tout le monde les voit et
+      peut les jouer pour s'entraider. Le reste de la main du voisin, non.
+    */
+    const reservesDeLaTable = React.useMemo(() => {
+        if (!mainsDesPaquets) return [];
+        return Object.entries(mainsDesPaquets).flatMap(([deckId, mains]) => {
+            const paquet = decks.find(d => d.id === deckId);
+            if (!paquet || paquet.role !== 'destin') return [];
+            return mains
+                .filter(m => m.porteur !== characterId && (m.enReserve?.length ?? 0) > 0)
+                .map(m => ({ paquet, porteur: m.porteur, cartes: m.enReserve ?? [] }));
+        });
+    }, [mainsDesPaquets, decks, characterId]);
 
     /** Ce qu'on me propose, et ce que j'ai proposé et qui attend encore. */
     const proposeesAMoi = (demandesDeCarte ?? []).filter(d => d.versQui === characterId);
@@ -168,9 +190,20 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
                             <h2 className="flex items-center gap-2 text-[16px] font-bold"><Layers size={18} />{t('modules:session.deck_module.player.hands.title')}</h2>
                             {!mesCartes.length && <p className="text-[14px] text-app-muted">{t('modules:session.deck_module.player.hands.empty')}</p>}
                             <div className="space-y-4">
-                                {mesCartes.map(({ paquet, revelees, scellees }) => (
-                                    <section key={paquet.id} className="min-w-0 space-y-3">
-                                        <h3 className="text-[14px] font-bold text-app-muted break-words">{paquet.name}</h3>
+                                {mesCartes.map(({ paquet, revelees, scellees, enReserve, momentCritiqueJoue }) => (
+                                    <section key={paquet.id} className="min-w-0 space-y-3" data-main-du-paquet={paquet.id}>
+                                        <h3 className="text-[14px] font-bold text-app-muted break-words">
+                                            {paquet.name}
+                                            {paquet.role === 'destin' && <span className="ml-2 text-app-text">— main {revelees.length + scellees - enReserve.length}/{tailleDeMain}{enReserve.length ? `, ${enReserve.length} en Réserve` : ''}</span>}
+                                        </h3>
+                                        {/* Le Moment critique : une fois par Acte, toute la main en Réserve. */}
+                                        {paquet.role === 'destin' && (
+                                            <Bouton cibleTactile disabled={momentCritiqueJoue || revelees.length + scellees - enReserve.length === 0}
+                                                onClick={() => demanderAuMeneur('deck:moment-critique', { deckId: paquet.id, characterId })}
+                                                title="Une fois par Acte : toute votre main passe en Réserve d’Action — ce qui n’est pas joué aussitôt est défaussé">
+                                                {momentCritiqueJoue ? 'Moment critique joué cet Acte' : 'Moment critique'}
+                                            </Bouton>
+                                        )}
                                         {revelees.map(index => {
                                             const enAttente = mesPropositions.some(d => d.deckId === paquet.id && d.index === index);
                                             const nom = DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`;
@@ -184,8 +217,14 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
                                                     </Bouton>
                                                     <div className="min-w-0 flex-1 space-y-3">
                                                         <h4 className="text-[16px] font-bold break-words">{nom}</h4>
+                                                        {enReserve.includes(index) && <p className="text-[14px] font-bold text-accent">En Réserve d’Action — visible de toute la table</p>}
                                                         {enAttente ? <p role="status" className="text-[14px] text-etat-alerte">{t('modules:session.deck_module.player.hands.pending')}</p> : (
                                                             <div className="flex flex-col gap-2">
+                                                                {paquet.role === 'destin' && !enReserve.includes(index) && (
+                                                                    <Bouton cibleTactile onClick={() => demanderAuMeneur('deck:poser-en-reserve', { deckId: paquet.id, index, characterId })}>
+                                                                        Poser en Réserve
+                                                                    </Bouton>
+                                                                )}
                                                                 <Bouton cibleTactile variante="accent" onClick={() => demanderAuMeneur('deck:jouer-carte', { deckId: paquet.id, index, characterId })}>
                                                                     {t('modules:session.deck_module.player.hands.play_own')}
                                                                 </Bouton>
@@ -210,6 +249,29 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
                             </div>
                         </Panneau>
                     </div>
+                    {reservesDeLaTable.length > 0 && (
+                        <Panneau className="min-w-0 space-y-3 p-4" data-reserves-de-la-table>
+                            <h2 className="flex items-center gap-2 text-[16px] font-bold"><Layers size={18} />Les Réserves d’Action de la table</h2>
+                            {reservesDeLaTable.map(({ paquet, porteur, cartes }) => (
+                                <div key={`${paquet.id}-${porteur}`} className="space-y-2">
+                                    <h3 className="text-[14px] font-bold text-app-muted">{nomDuPersonnage(porteur)}</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {cartes.map(index => {
+                                            const nom = DeckInterpreter.getCardMetadata(paquet, index)?.name ?? `Carte ${index}`;
+                                            return (
+                                                <Bouton key={index} habillage="libre" cibleTactile onClick={() => setCarteEnGrand({
+                                                    url: DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet), nom,
+                                                    texte: DeckInterpreter.getCardMetadata(paquet, index)?.description ?? '',
+                                                })} className="rounded-lg">
+                                                    <ResolvedImage src={DeckInterpreter.getCardImageUrl(paquet.folderPath, index, paquet)} alt={nom} className="h-[112px] w-[80px] object-contain" />
+                                                </Bouton>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
+                        </Panneau>
+                    )}
                 </div>
             </GabaritDeModule>
             {carteEnGrand && <div role="dialog" aria-modal="true" aria-label={carteEnGrand.nom}

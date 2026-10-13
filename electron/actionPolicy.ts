@@ -103,6 +103,13 @@ export const PLAYER_ALLOWED_ACTIONS: ReadonlySet<string> = new Set([
     */
     'deck:piocher',
     /*
+      **Les Cartes du Destin de Torg** (2026-10-14) : poser sa carte en Réserve
+      d'Action, jouer son Moment critique. Même partage qu'au-dessus : l'identité
+      ici, la possession de la carte dans `deckSlice`.
+    */
+    'deck:poser-en-reserve',
+    'deck:moment-critique',
+    /*
       **Lancer depuis sa propre fiche** — Cthulhu Hack, demandé par David le
       2026-09-30. Le joueur ne dit que ce qu'il lance (« ma Sauvegarde de
       Force », « ma Torche ») : c'est le meneur qui lit la valeur sur la fiche
@@ -157,6 +164,9 @@ const OWNERSHIP_FIELD: Record<string, string> = {
     // magasin qui dira si cette proposition lui était bien adressée.
     'deck:accepter-don': 'characterId',
     'deck:refuser-don': 'characterId',
+    // Sa carte en Réserve, son Moment critique — jamais ceux d'un autre.
+    'deck:poser-en-reserve': 'characterId',
+    'deck:moment-critique': 'characterId',
     // Un joueur ne lance que pour lui : ni les Sauvegardes, ni la Torche d'un autre.
     'fiche:jet': 'characterId',
     // Un joueur n'envoie que SES jets : pas de résultat au nom d'un autre.

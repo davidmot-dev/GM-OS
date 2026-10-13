@@ -46,10 +46,14 @@ const DeckLibrary: React.FC = () => {
     const getGameDriver = useSessionOSStore(s => s.getGameDriver);
     /**
      * **Le rôle d'un paquet ne se propose qu'aux jeux qui en ont un** — Torg,
-     * 2026-10-13 : un jeu dont l'ordre d'action passe par le Paquet d'Action.
+     * 2026-10-13 : un jeu dont l'ordre d'action passe par le Paquet d'Action, ou
+     * qui déclare des Cartes du Destin.
      * Ailleurs, le choix serait un réglage mort.
      */
-    const rolesDuJeu = (systemId: string) => getGameDriver(systemId)?.combat?.initiative?.mode === 'paquet';
+    const rolesDuJeu = (systemId: string) => {
+        const pilote = getGameDriver(systemId);
+        return pilote?.combat?.initiative?.mode === 'paquet' || !!pilote?.cartesDuDestin;
+    };
 
     return (
         <div className="flex h-full w-full flex-col overflow-hidden bg-app-bg">

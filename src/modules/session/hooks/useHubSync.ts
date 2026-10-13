@@ -663,6 +663,9 @@ export const useHubSync = () => {
             'deck:demander-don',
             'deck:accepter-don',
             'deck:refuser-don',
+            // Torg : la Réserve d'Action et le Moment critique (2026-10-14).
+            'deck:poser-en-reserve',
+            'deck:moment-critique',
             /*
               **Un jet demandé depuis la fiche** (Cthulhu Hack, 2026-09-30).
               Il ne s'applique PAS ici : la tablette ne lance rien, c'est le

@@ -18,10 +18,11 @@ import { DeckInterpreter } from '../logic/DeckInterpreter';
 import { Panneau, Etiquette } from '../../../components/socle';
 import { gmToast } from '../../../stores/useToastStore';
 import FicheDeCarteDAction from './FicheDeCarteDAction';
+import GestesDuDestin from './GestesDuDestin';
 
 const DeckPlayer: React.FC = () => {
     const { t } = useTranslation();
-    const { setCurrentView, decks, updateDeck } = useSessionOSStore();
+    const { setCurrentView, decks, updateDeck, poserEnReserve } = useSessionOSStore();
     const {
         propositionsEnAttente,
         accepterLeDonDeCarte,
@@ -212,6 +213,9 @@ const DeckPlayer: React.FC = () => {
                         </div>
                     </div>
 
+                    {/* Torg : les gestes du Paquet du Destin (2026-10-14). */}
+                    {activeDeck.role === 'destin' && <GestesDuDestin deck={activeDeck} />}
+
                     {/* Les trois tas, d'un coup d'œil */}
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_minmax(0,1fr)]">
                         <Panneau className="flex flex-col">
@@ -381,7 +385,10 @@ const DeckPlayer: React.FC = () => {
                                             style={{ aspectRatio }}
                                         />
                                         <div className="flex min-w-0 flex-1 flex-col gap-2">
-                                            <Etiquette ton={main.porteur === null ? 'alerte' : 'succes'} className="self-start">{main.nom}</Etiquette>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                <Etiquette ton={main.porteur === null ? 'alerte' : 'succes'} className="self-start">{main.nom}</Etiquette>
+                                                {carte.enReserve && <Etiquette ton="accent">En Réserve</Etiquette>}
+                                            </div>
                                             <p className="truncate text-sm font-black uppercase text-app-text" title={carte.nomDeLaCarte}>{carte.nomDeLaCarte}</p>
                                             <p className={`flex items-start gap-1.5 text-ui-10 font-bold ${scellee ? 'text-etat-alerte' : 'text-gm-cyan'}`}>
                                                 {scellee ? <Lock size={11} className="mt-0.5 shrink-0" /> : <Eye size={11} className="mt-0.5 shrink-0" />}
@@ -405,6 +412,16 @@ const DeckPlayer: React.FC = () => {
                                                 {/* L'infobulle et le libellé disent l'action, pas
                                                     l'état : un libellé qui décrit l'état ne dit
                                                     jamais ce qu'un clic va produire. */}
+                                                {activeDeck.role === 'destin' && !carte.enReserve && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => poserEnReserve(activeDeck.id, carte.index)}
+                                                        title="Réserve d’Action : face visible, toute la table la voit, elle se joue à tout moment"
+                                                        className="col-span-2 rounded-md border border-accent/40 px-2 py-1.5 text-ui-9 font-black uppercase tracking-widest text-accent transition-all hover:bg-accent/10"
+                                                    >
+                                                        Poser en Réserve
+                                                    </button>
+                                                )}
                                                 <button
                                                     type="button"
                                                     onClick={() => handleRetourner(carte.index)}

@@ -15,6 +15,7 @@ import { aiService } from '../../ai/AIService';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { ficheDuCombattant } from '../logic/ficheDuCombattant';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
+import ActionsApprouvees from './ActionsApprouvees';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
 import { useDiceStore } from '../../../stores/useDiceStore';
@@ -528,6 +529,9 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     </Bouton>
                 </>}
             />
+
+            {/* Torg : l'Action approuvée de la carte du round, pour un Héros. */}
+            <ActionsApprouvees combatant={combatant} />
 
             {activeDriver?.ui_config?.gauges && activeDriver.ui_config.gauges.length > 0 ? (
                 <div className="flex gap-6 px-3">

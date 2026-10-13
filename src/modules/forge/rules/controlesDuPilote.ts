@@ -977,6 +977,12 @@ export function controlerLePilote(
         avertir('combat.initiative.mode', "Le Paquet d'Action applique Inspiration et Fatigués au Choc, mais le pilote ne déclare pas où il vit (`combat.dommages.choc`) : ces deux boutons ne feront rien.");
     }
 
+    // Torg : la main de Cartes du Destin que « Fin de scène » complète.
+    const mainDuDestin = driver.cartesDuDestin;
+    if (mainDuDestin !== undefined && !(Number.isInteger(mainDuDestin?.taille) && mainDuDestin.taille > 0)) {
+        erreur('cartesDuDestin.taille', `« ${String(mainDuDestin?.taille)} » n'est pas une taille de main : un entier positif (4 chez Torg, 5 sous la Loi de l'Héroïsme).`);
+    }
+
     const tri = driver.combat?.initiativeSort;
     if (tri !== undefined && tri !== 'asc' && tri !== 'desc') {
         erreur('combat.initiativeSort', `« ${String(tri)} » n'est ni « asc » ni « desc ».`);

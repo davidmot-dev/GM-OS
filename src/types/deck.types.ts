@@ -130,6 +130,11 @@ export interface CarteEnMain {
      */
     porteur: string | null;
     face: FaceDeCarte;
+    /**
+     * **Posée en Réserve d'Action** — Torg, 2026-10-14. Face visible devant son
+     * porteur : toute la table la voit, et elle se joue à tout moment.
+     */
+    enReserve?: boolean;
 }
 
 /**
@@ -175,4 +180,9 @@ export interface DeckSessionState {
      * comportent exactement comme hier. Aucune migration.
      */
     enMain?: CarteEnMain[];
+    /**
+     * Les personnages qui ont joué leur **Moment critique** pendant l'Acte en
+     * cours — une fois par Acte (Torg). Remis à zéro par « Fin d'Acte ».
+     */
+    momentsCritiques?: string[];
 }

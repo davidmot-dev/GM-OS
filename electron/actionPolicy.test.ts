@@ -61,6 +61,13 @@ describe('evaluateAction — les cartes d’un joueur', () => {
             .toBe(false);
     });
 
+    it('la Réserve d’Action et le Moment critique : en son nom seulement', () => {
+        expect(evaluateAction('deck:poser-en-reserve', { deckId: 'd-1', index: 7, characterId: CHAR }, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('deck:poser-en-reserve', { deckId: 'd-1', index: 7, characterId: 'perso-bob' }, 'hub', CHAR).allowed).toBe(false);
+        expect(evaluateAction('deck:moment-critique', { deckId: 'd-1', characterId: CHAR }, 'hub', CHAR).allowed).toBe(true);
+        expect(evaluateAction('deck:moment-critique', { deckId: 'd-1', characterId: 'perso-bob' }, 'hub', CHAR).allowed).toBe(false);
+    });
+
     it('les cinq actions sont declarées', () => {
         for (const type of ['deck:jouer-carte', 'deck:demander-don', 'deck:accepter-don', 'deck:refuser-don', 'deck:piocher']) {
             expect(PLAYER_ALLOWED_ACTIONS.has(type), type).toBe(true);
@@ -179,8 +186,12 @@ describe('evaluateAction — actions permises aux joueurs', () => {
             'deck:accepter-don',
             'deck:demander-don',
             'deck:jouer-carte',
+            // Torg : le Moment critique — 2026-10-14.
+            'deck:moment-critique',
             // Piocher soi-même — ajouté le 2026-08-30.
             'deck:piocher',
+            // Torg : la Réserve d'Action — 2026-10-14.
+            'deck:poser-en-reserve',
             'deck:refuser-don',
             // Lancer depuis sa fiche — ajouté le 2026-09-30 (Cthulhu Hack).
             'fiche:jet',

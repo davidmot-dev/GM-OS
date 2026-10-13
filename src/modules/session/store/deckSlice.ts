@@ -25,6 +25,15 @@ import {
     tientLaCarte,
     type MainDiffusee,
 } from '../logic/mainsDuPaquet';
+import {
+    completerLesMains,
+    momentCritique,
+    nouvellesMains,
+    piocherPour,
+    poserEnReserve,
+    reprendreLesReserves,
+    type BilanDesMains,
+} from '../logic/cartesDuDestin';
 
 export interface DeckSliceState {
     decks: DeckManifest[];
@@ -112,9 +121,59 @@ export interface DeckSliceActions {
      */
     accepterLeDonDeCarte: (demandeId: string, parQui?: string | null) => void;
     refuserLeDonDeCarte: (demandeId: string, parQui?: string | null) => void;
+
+    /* ── Les Cartes du Destin de Torg (2026-10-14) ─────────────────────────
+       La règle vit dans `logic/cartesDuDestin`. `parQui` absent : le meneur,
+       depuis son écran, qui arbitre ; fourni (tablette), il doit tenir la carte. */
+
+    /** Une carte tenue passe en Réserve d'Action — publique. */
+    poserEnReserve: (deckId: string, index: number, parQui?: string | null) => void;
+    /** Le Moment critique : toute la main en Réserve, une fois par Acte. */
+    jouerLeMomentCritique: (deckId: string, porteur: string, parQui?: string | null) => void;
+    /** Fin du combat : les Réserves reviennent en main. */
+    reprendreLesReserves: (deckId: string) => void;
+    /** Fin de scène : chaque personnage de la campagne complète sa main. */
+    completerLesMainsDuDestin: (deckId: string) => void;
+    /** Fin d'Acte : mains défaussées, nouvelles mains, Moments critiques rendus. */
+    nouvellesMainsDuDestin: (deckId: string) => void;
+    /** L'Action approuvée réussie : une Carte du Destin dans la main du personnage. */
+    piocherUneCarteDuDestin: (deckId: string, characterId: string) => void;
 }
 
 export type DeckSlice = DeckSliceState & DeckSliceActions;
+
+/*
+  La tranche ne connaît que ses champs : les personnages, la campagne et les
+  pilotes se lisent sur le magasin entier, comme `handleApplyImpact` le fait.
+*/
+type MagasinEntier = {
+    players?: { characters?: { id: string; name: string; campaignId?: string | null }[] }[];
+    activeCampaignId?: string | null;
+    getActiveDriver?: () => { cartesDuDestin?: { taille: number } } | null | undefined;
+};
+
+const nomDuPersonnage = (magasin: unknown, id: string) =>
+    ((magasin as MagasinEntier).players ?? []).flatMap(p => p.characters ?? []).find(c => c.id === id)?.name ?? 'Un personnage';
+
+/** Les personnages de la campagne ouverte, et la taille de main du jeu (4 par défaut). */
+function mainsDeLaCampagne(magasin: unknown): { porteurs: string[]; taille: number } {
+    const m = magasin as MagasinEntier;
+    const porteurs = (m.players ?? []).flatMap(p => p.characters ?? [])
+        .filter(c => c.campaignId === m.activeCampaignId)
+        .map(c => c.id);
+    return { porteurs, taille: m.getActiveDriver?.()?.cartesDuDestin?.taille ?? 4 };
+}
+
+/** Le bilan en une phrase : qui a pioché, qui a trop de cartes, ce qui a manqué. */
+function direLeBilan(magasin: unknown, bilan: BilanDesMains, taille: number): string {
+    const pioches = Object.entries(bilan.pioches).map(([id, n]) => `${nomDuPersonnage(magasin, id)} +${n}`);
+    const trop = Object.entries(bilan.enTrop).map(([id, n]) => `${nomDuPersonnage(magasin, id)} doit défausser ${n}`);
+    return [
+        pioches.length ? `Mains complétées à ${taille} : ${pioches.join(', ')}.` : `Toutes les mains sont à ${taille}.`,
+        trop.length ? `${trop.join(', ')}.` : '',
+        bilan.manquantes ? `Le paquet n’a pas suffi : ${bilan.manquantes} carte${bilan.manquantes > 1 ? 's' : ''} manquante${bilan.manquantes > 1 ? 's' : ''}.` : '',
+    ].filter(Boolean).join(' ');
+}
 
 export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
     // Initial State
@@ -499,6 +558,69 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
             return { ...d, statut: 'refusee' as const };
         }),
     })),
+
+    poserEnReserve: (deckId, index, parQui) => {
+        const etat = get().deckStates[deckId];
+        if (!etat) return;
+        // Même contrôle que jouer : depuis une tablette, on ne pose que SA carte.
+        if (parQui !== undefined) {
+            const carte = (etat.enMain ?? []).find(c => c.index === index);
+            if (!carte || carte.porteur !== parQui || parQui === null) return;
+        }
+        get().appliquerAuPaquet(deckId, e => poserEnReserve(e, index));
+    },
+
+    jouerLeMomentCritique: (deckId, porteur, parQui) => {
+        const etat = get().deckStates[deckId];
+        if (!etat) return;
+        if (parQui !== undefined && parQui !== porteur) return;
+        const { etat: apres, refus } = momentCritique(etat, porteur);
+        if (refus) {
+            if (parQui === undefined) gmToast(refus, 'warning');
+            return;
+        }
+        get().appliquerAuPaquet(deckId, () => apres);
+        gmToast(`${nomDuPersonnage(get(), porteur)} joue son Moment critique : toute sa main passe en Réserve — ce qui n’est pas joué aussitôt est défaussé.`, 'info');
+    },
+
+    reprendreLesReserves: (deckId) => {
+        const etat = get().deckStates[deckId];
+        if (!etat) return;
+        const { etat: apres, reprises } = reprendreLesReserves(etat);
+        get().appliquerAuPaquet(deckId, () => apres);
+        gmToast(reprises ? `${reprises} carte${reprises > 1 ? 's' : ''} de Réserve revenue${reprises > 1 ? 's' : ''} en main.` : 'Aucune carte en Réserve.', 'info');
+    },
+
+    completerLesMainsDuDestin: (deckId) => {
+        const etat = get().deckStates[deckId];
+        if (!etat) return;
+        const { porteurs, taille } = mainsDeLaCampagne(get());
+        const bilan = completerLesMains(etat, porteurs, taille, DeckInterpreter.shuffle);
+        get().appliquerAuPaquet(deckId, () => bilan.etat);
+        gmToast(direLeBilan(get(), bilan, taille), 'info');
+    },
+
+    nouvellesMainsDuDestin: (deckId) => {
+        const etat = get().deckStates[deckId];
+        const deck = get().decks.find(d => d.id === deckId);
+        if (!etat || !deck) return;
+        const { porteurs, taille } = mainsDeLaCampagne(get());
+        const bilan = nouvellesMains(etat, porteurs, taille, deck.useDiscard, DeckInterpreter.shuffle);
+        get().appliquerAuPaquet(deckId, () => bilan.etat);
+        gmToast(`Fin d’Acte — nouvelles mains. ${direLeBilan(get(), bilan, taille)}`, 'info');
+    },
+
+    piocherUneCarteDuDestin: (deckId, characterId) => {
+        const etat = get().deckStates[deckId];
+        if (!etat) return;
+        const { etat: apres, index } = piocherPour(etat, characterId, DeckInterpreter.shuffle);
+        if (index === null) {
+            gmToast('Le Paquet du Destin est vide.', 'warning');
+            return;
+        }
+        get().appliquerAuPaquet(deckId, () => apres);
+        gmToast(`${nomDuPersonnage(get(), characterId)} pioche une Carte du Destin.`, 'success');
+    },
 
     selectDeck: (id) => {
         set({ selectedDeckId: id });

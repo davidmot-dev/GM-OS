@@ -225,6 +225,13 @@ export interface MainDiffusee {
     revelees: number[];
     /** Combien de cartes sont tenues face cachée. Leur identité ne sort pas. */
     scellees: number;
+    /**
+     * Les cartes posées en **Réserve d'Action** (Torg) — publiques, toute la
+     * table les voit. Elles sont aussi dans `revelees`.
+     */
+    enReserve?: number[];
+    /** Le porteur a joué son Moment critique pendant cet Acte. */
+    momentCritiqueJoue?: boolean;
 }
 
 /**
@@ -251,6 +258,8 @@ export function mainsPourLaTable(etat: DeckSessionState): MainDiffusee[] {
             porteur,
             revelees: tenues.filter(c => c.face === 'revelee').map(c => c.index),
             scellees: tenues.filter(c => c.face === 'scellee').length,
+            ...(tenues.some(c => c.enReserve) ? { enReserve: tenues.filter(c => c.enReserve).map(c => c.index) } : {}),
+            ...(porteur !== null && (etat.momentsCritiques ?? []).includes(porteur) ? { momentCritiqueJoue: true } : {}),
         };
     });
 }
