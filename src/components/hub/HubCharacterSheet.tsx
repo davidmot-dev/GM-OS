@@ -375,6 +375,8 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 valeurs={character.sheetData ?? {}}
                                 campaignId={campaignId ?? undefined}
                                 ressourcesDeTable={ressourcesDeLaTable(pilote, campagneDeLaTable)}
+                                // La réserve dépensée remonte au meneur, comme ce que la fiche HTML impose.
+                                ecrireSurLaFiche={maj => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: maj })}
                                 pourLesJoueurs
                                 personnageId={character.id}
                             />

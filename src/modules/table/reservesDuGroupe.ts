@@ -94,26 +94,35 @@ export function stockRetenu(
     return choixDuJoueur ? apport.stocks.find(s => s.champ === choixDuJoueur) : undefined;
 }
 
-/** Ce que les points engagés rapportent au jet. */
+/**
+ * Ce que les points engagés rapportent au jet.
+ *
+ * `annule` : combien de 1 peuvent être annulés après le lancer (la Singularité).
+ * Il ne s'ajoute ni aux dés ni au résultat — d'où son compte à part.
+ */
 export function effetDesApports(
     engagements: { apport: Pick<ApportDuGroupe, 'effet' | 'parPoint'>; points: number }[],
-): { des: number; bonus: number } {
+): { des: number; bonus: number; annule: number } {
     let des = 0;
     let bonus = 0;
+    let annule = 0;
     for (const { apport, points } of engagements) {
         const n = Math.max(0, Math.floor(points)) * Math.max(0, apport.parPoint);
         if (apport.effet === 'des') des += n;
+        else if (apport.effet === 'annuleLesUns') annule += n;
         else bonus += n;
     }
-    return { des, bonus };
+    return { des, bonus, annule };
 }
 
 /** Un apport tel que le panneau de jet le présente : son stock, ce qui reste, ce qu'on engage. */
 export interface ApportDisponible {
     apport: ApportDuGroupe;
     stock: ApportDuGroupe['stocks'][number] | undefined;
-    /** Ce qu'on peut encore y prendre. */
+    /** Ce qu'on peut engager sur CE jet — le reste, borné par `maxParJet`. */
     dispo: number;
+    /** Ce qui reste dans le stock. */
+    reste: number;
     /** Ce que le joueur engage, ramené à ce qui reste. */
     points: number;
 }
@@ -136,9 +145,11 @@ export function apportsDisponibles(
 ): ApportDisponible[] {
     return apports.map(apport => {
         const stock = stockRetenu(apport, choixDuJet, choixDuJoueur[apport.id]);
-        const dispo = !stock ? 0 : Math.max(0, apport.epuisement === 'piste'
+        const reste = !stock ? 0 : Math.max(0, apport.epuisement === 'piste'
             ? niveauDuGroupe(sheetData, stock.champ)
             : (etatDesReserves[idDeReserveDuGroupe(stock.champ)] ?? 0));
-        return { apport, stock, dispo, points: Math.min(Math.max(0, engages[apport.id] ?? 0), dispo) };
+        // Un point de Vécu, un point d'Atout par test : le plafond du jet borne ce qu'on engage.
+        const dispo = apport.maxParJet !== undefined ? Math.min(reste, apport.maxParJet) : reste;
+        return { apport, stock, dispo, reste, points: Math.min(Math.max(0, engages[apport.id] ?? 0), dispo) };
     });
 }

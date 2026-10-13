@@ -329,6 +329,23 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         ]);
     });
 
+    it('provoquer le destin : un Fiel qui existe, des jauges et des réserves sur la fiche', () => {
+        const constats = controlerLePilote(
+            { jet: {
+                sens: 'superieur-ou-egal',
+                destin: { fiel: 'Fiel', peril: [{ champ: 'nulle_part', label: 'Blessures', seuils: [] }] },
+                reservesDuPersonnage: [{ id: 'vecu', label: 'Vécu', effet: 'bonus', parPoint: 1, epuisement: 'piste', stocks: [{ champ: 'absent', label: 'Vécu' }] }],
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.filter(c => c.ou.startsWith('jet.destin') || c.ou.startsWith('jet.reservesDuPersonnage')).map(c => [c.ou, c.gravite])).toEqual([
+            ['jet.destin.fiel', 'erreur'],
+            ['jet.destin', 'erreur'],
+            ['jet.destin.peril[0].champ', 'avertissement'],
+            ['jet.reservesDuPersonnage[0]', 'avertissement'],
+        ]);
+    });
+
     it('la Table des Bonus : un nom connu, un niveau et une difficulté', () => {
         const mal = controlerLePilote(
             { jet: { sens: 'superieur-ou-egal', tableDeBonus: 'torg-v2' } } as unknown as Partial<GameDriver>,

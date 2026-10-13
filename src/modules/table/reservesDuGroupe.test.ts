@@ -84,7 +84,7 @@ describe('ce que les points rapportent', () => {
     it('des dés, ou un bonus', () => {
         expect(effetDesApports([
             { apport: DES, points: 2 }, { apport: ESPOIR, points: 1 }, { apport: ATOUT, points: 1 },
-        ])).toEqual({ des: 5, bonus: 1 });
+        ])).toEqual({ des: 5, bonus: 1, annule: 0 });
     });
 
     it("l'engagement est ramené à ce qui reste", () => {

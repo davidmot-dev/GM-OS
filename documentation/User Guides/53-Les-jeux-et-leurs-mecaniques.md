@@ -54,6 +54,8 @@ choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Dés échelonnés** (`desEchelonnes`) | **Un dé par valeur**, dont la taille se lit sur la fiche | Blade Runner : A = D12 … D = D6 |
 | **Cible en pourcentage** (`cible`) | Un d100 sous un pourcentage, lu dans la table du jeu | Rêves de Dragons |
 | **Table des Bonus** (`tableDeBonus`) | Le dé se convertit en **bonus** par la table du jeu, s'ajoute au **niveau** (le seuil additionné) et se compare à la difficulté | Torg : un d20 qui explose sur 10 et 20 |
+| **Provoquer le destin** (`destin`) | Le **niveau** (le seuil : le Talent) contre la difficulté ; on lance de zéro au **plafond** (la réserve : le Domaine) de dés à dix faces, chaque 8 et plus élève le niveau, un 10 fait lancer un dé de plus, **chaque 1 verse une goutte dans la réserve de table** déclarée. Des **jauges de péril** retirent au Domaine et au Talent selon leurs seuils, cumulés | NOC |
+| **Réserves du personnage** (`reservesDuPersonnage`) | Ce que le personnage puise dans **ses** réserves, sur **sa** fiche, au moment du jet — même forme que les apports du groupe | NOC : Vécu, Espoir, Singularité |
 | **Composante facultative** (`facultative`) | Un choix qu'on peut laisser vide sans bloquer le jet | Torg : la compétence, absente d'un test non entraîné |
 | **Critique, complication** (`critique`, `complication`) | Les faces qui comptent double, ou qui compliquent | 2d20 : 1 et 20 |
 | **Difficulté** (`difficulte`) | Le nombre de réussites à atteindre, réglable avant de lancer | Dune : de 0 à 5 |
@@ -109,11 +111,12 @@ test » montre alors une section **« Puiser dans la … »**, une ligne par app
 
 | Réglage | Ce qu'il change |
 | :--- | :--- |
-| **Effet** (`effet`) | Des **dés** de plus dans la réserve, ou un **bonus** ajouté au résultat |
+| **Effet** (`effet`) | Des **dés** de plus dans la réserve, un **bonus** ajouté au résultat, ou des **1 annulés** après le lancer (`annuleLesUns` : seuls ceux qui servent se dépensent) |
 | **Par point** (`parPoint`) | Ce que rapporte un point : trois dés pour un point d'Espoir de la Cabale |
 | **Épuisement** (`epuisement`) | `piste` : la piste de la feuille du groupe descend (l'Espoir). `scenario` : une réserve rechargée par **« Nouveau scénario »** (les dés d'un Domaine) |
 | **Stocks** (`stocks`) | Où se lit chaque stock sur la feuille du groupe |
 | **Composante** (`composante`) | Le stock suit ce que le personnage a retenu : le Domaine du Héros choisit le Domaine de la Cabale |
+| **Par jet** (`maxParJet`) | Combien de points au plus sur un même jet — un seul point d'Atout ou de Vécu chez NOC |
 
 Rien ne se dépense avant **Lancer**, et l'on ne peut pas engager plus qu'il ne reste. Un bonus se
 dit à côté des réussites (« 3 réussites (dont +1 Cabale) »).

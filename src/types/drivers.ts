@@ -148,10 +148,19 @@ export interface ApportDuGroupe {
     id: string;
     /** « Dés de la Cabale », « Espoir de la Cabale ». */
     label: string;
-    /** Des dés de plus dans la réserve, ou un bonus ajouté au résultat. */
-    effet: 'des' | 'bonus';
+    /**
+     * Des dés de plus dans la réserve, un bonus ajouté au résultat, ou des 1
+     * annulés après le lancer (la Singularité de NOC : chaque point empêche une
+     * goutte de Fiel ; seul ce qui sert est dépensé).
+     */
+    effet: 'des' | 'bonus' | 'annuleLesUns';
     /** Ce que rapporte un point : trois dés pour un point d'Espoir. */
     parPoint: number;
+    /**
+     * Combien de points au plus sur un même jet. NOC : un seul point de Vécu,
+     * un seul point d'Atout (sauf Capital). Absent : autant qu'il en reste.
+     */
+    maxParJet?: number;
     /**
      * `piste` : la valeur du groupe EST le stock — l'Espoir de la feuille
      * descend d'un point. `scenario` : la valeur est un plafond, et ce qu'on a

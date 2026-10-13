@@ -521,6 +521,33 @@ export function controlerLePilote(
         }
     }
 
+    /*
+      **Provoquer le destin** (NOC, 2026-10-13) : le Fiel est une réserve de table,
+      les jauges de péril et les réserves du Héros des champs de sa fiche. Un nom
+      qui ne désigne rien ferait un jet qui a l'air juste — sans Fiel, sans malus.
+    */
+    const destin = driver.jet?.destin;
+    if (destin) {
+        if (destin.fiel && !ressources.has(destin.fiel)) {
+            erreur('jet.destin.fiel', `Les 1 doivent verser dans « ${destin.fiel} », qui n'est pas une réserve de table du jeu.`);
+        }
+        if (!driver.jet?.seuil?.length || !driver.jet?.reserve?.composantes?.length) {
+            erreur('jet.destin', 'Provoquer le destin demande un niveau (« seuil » : le Talent) et un plafond de dés (« reserve.composantes » : le Domaine).');
+        }
+        (destin.peril ?? []).forEach((jauge, i) => {
+            if (!tousLesChamps.has(jauge.champ)) {
+                avertir(`jet.destin.peril[${i}].champ`, `La jauge de péril « ${jauge.label} » vise le champ « ${jauge.champ} », absent de la fiche : ses malus ne s'appliqueront jamais.`);
+            }
+        });
+    }
+    (driver.jet?.reservesDuPersonnage ?? []).forEach((reserve, i) => {
+        for (const stock of reserve.stocks ?? []) {
+            if (!tousLesChamps.has(stock.champ)) {
+                avertir(`jet.reservesDuPersonnage[${i}]`, `La réserve « ${reserve.label} » se lit dans « ${stock.champ} », absent de la fiche : elle restera à zéro.`);
+            }
+        }
+    });
+
     if (driver.jet?.cible && !(driver.jet.cible.mecanique in MECANIQUES_DE_CIBLE)) {
         erreur(
             'jet.cible.mecanique',
@@ -1204,8 +1231,8 @@ export function controlerLePilote(
         (groupe.apports ?? []).forEach((apport, i) => {
             const ou = `ficheDeGroupe.apports[${i}]`;
             const nom = apport.label || apport.id || `n° ${i + 1}`;
-            if (apport.effet !== 'des' && apport.effet !== 'bonus') {
-                erreur(`${ou}.effet`, `« ${nom} » doit donner des dés (« des ») ou un bonus (« bonus »).`);
+            if (apport.effet !== 'des' && apport.effet !== 'bonus' && apport.effet !== 'annuleLesUns') {
+                erreur(`${ou}.effet`, `« ${nom} » doit donner des dés (« des »), un bonus (« bonus ») ou annuler des 1 (« annuleLesUns »).`);
             }
             if (!(Number.isInteger(apport.parPoint) && apport.parPoint > 0)) {
                 erreur(`${ou}.parPoint`, `« ${nom} » doit rapporter un nombre entier positif par point.`);

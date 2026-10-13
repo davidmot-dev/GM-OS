@@ -17,23 +17,52 @@ cellule commune à toute la table.
 | **Fiel** (0 à 5) | Une goutte par 1 sur un dé de destin. Les joueurs la voient et la font monter eux-mêmes, depuis leur tablette. **À la cinquième goutte, la jauge se vide et la Menace monte de 1** ; un message le dit, c'est le moment où la Loi applique autant d'effets du Fiel que la Menace |
 | **Menace** (sans plafond) | Aux mains de la Loi, visible des joueurs. **« Début de séance »** lui retire un point ; **« Nouveau scénario »** la remet à zéro |
 
-> ⚠️ **Les gouttes ne s'ajoutent pas seules** quand un dé de destin fait 1 : on clique sur le + du
-> Fiel. L'automatiser au panneau de jet est gardé pour plus tard (décision du 2026-10-13).
+Les gouttes **s'ajoutent seules** quand un dé de destin fait 1, depuis le panneau de jet ; le + du
+Fiel reste là pour un 1 tiré ailleurs (au pupitre, par un Rouage).
 
 Si le Fiel est à 4 et reçoit 3 gouttes, la jauge se vide une fois et **reste à 2** : les gouttes
 se posent une à une. Les règles ne tranchent pas ce cas.
 
 ---
 
-## Le jet — les dés de destin
+## Le jet — le Talent, et provoquer le destin
 
-![Le panneau de jet de NOC : le Domaine retenu, la réserve, et la section « Puiser dans la Cabale »](captures/jeu-noc-jet.jpg)
+![Le panneau de jet de NOC : le Talent et le Domaine retenus, le malus « Choqué », les dés de destin, les réserves du Héros et celles de la Cabale](captures/jeu-noc-jet.jpg)
 
-- On retient un **Domaine** sur la fiche du Héros : il donne autant de d10.
-- Chaque **8, 9 ou 10** est une réussite, et un **10 fait lancer un dé de plus** (le livre le dit
-  facultatif : un dé de trop se retire à la voix).
-- Le panneau compte les réussites. **Comparer le niveau de Talent, plus les réussites, à la
-  difficulté reste votre geste** : le pilote ne demande pas encore le Talent.
+1. On retient le **Talent** et son **Domaine**. Le Talent donne le **niveau** ; le Domaine, le
+   **plafond des dés de destin**.
+2. On règle la **difficulté** : le niveau de Talent que la Loi estime nécessaire (le livre ne fixe
+   pas de difficulté par défaut ; le panneau part de 0, la maîtrise basique).
+3. **Provoquer le destin** : on lance **de zéro au plafond** de dés à dix faces. Sans dé, le Talent
+   seul affronte la difficulté.
+4. Chaque **8, 9 ou 10** élève le niveau d'un point ; un **10 fait lancer un dé de plus** ; **chaque
+   1 verse une goutte dans le Fiel**, automatiquement — et la jauge déborde en Menace à cinq.
+5. Le résultat se dit en entier : « Réussite, marge 1 — niveau 2 + 3 réussites (5 dés de destin) =
+   5 contre difficulté 4 · 1 goutte de Fiel ». Un **seul degré d'échec** peut devenir un échec
+   partiel : c'est la Loi qui tranche.
+
+### Les réserves du Héros
+
+La section **« Puiser dans ses réserves »** se lit sur la fiche du Héros et s'y décompte :
+
+| Réserve | Ce qu'elle donne |
+| :--- | :--- |
+| **Vécu** | +1 au niveau — **un seul point par test** |
+| **Espoir** | 3 dés de destin de plus par point |
+| **Singularité** | Chaque point **annule un 1** avant qu'il ne rejoigne le Fiel ; **seuls les points qui servent sont dépensés** |
+
+### Les malus de péril
+
+Les quatre jauges de péril pénalisent le jet, et **leurs malus se cumulent** :
+
+| Jauge | À 5 points | À 8 points |
+| :--- | :--- | :--- |
+| Blessures | **Choqué** : −1 au Domaine | **Blessure lourde** : −1 au Talent |
+| Trauma | **Choqué** : −1 au Domaine | **Traumatisé** : −1 au Talent |
+| Traque | Signalé (sans malus au jet) | **Recherché** : −1 au Talent |
+| Noirceur | Teinté (sans malus au jet) | **Possédé** : −1 au Talent |
+
+Le panneau les nomme avant de lancer : « Malus : −1 au Domaine — Choqué (Blessures) ».
 
 ---
 
@@ -60,14 +89,18 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 | :--- | :--- | :--- |
 | **Dés de la Cabale** | 1 dé par point | Le Domaine de la Cabale qui correspond au Domaine retenu par le Héros. **Rechargé par « Nouveau scénario »** |
 | **Espoir de la Cabale** | 3 dés par point | La piste Espoir de la feuille, qui descend |
-| **Vécu de la Cabale** | +1 au résultat | La piste Vécu de la feuille, qui descend |
-| **Atout de la Cabale** | +1 au résultat | L'Atout choisi dans la liste (seuls les Atouts garnis sont proposés). **Rechargé par « Nouveau scénario »**. Une Faille (Atout à −1) ne fournit rien |
+| **Vécu de la Cabale** | +1 au niveau — **un seul point par test** | La piste Vécu de la feuille, qui descend |
+| **Atout de la Cabale** | +1 au niveau — **un seul point par test** | L'Atout choisi dans la liste (seuls les Atouts garnis sont proposés). **Rechargé par « Nouveau scénario »**. Une Faille (Atout à −1) ne fournit rien |
+| **Singularité de la Cabale** | Annule un 1 par point | La piste Singularité de la feuille, qui descend — après celle du Héros |
 
 ![Après le lancer : huit dés (trois du Domaine, deux de la Cabale, trois pour un point d'Espoir), et ce qui a été puisé](captures/jeu-noc-jet-lance.jpg)
 
-> ⚠️ **Règles prises de la note NotebookLM, non relues** : la recharge des Domaines et des Atouts à
-> chaque scénario, et le +1 d'un point d'Atout. Si le livre dit autre chose, c'est le pilote qui
-> change, pas le code.
+> **Relu contre le carnet NotebookLM « NOC » le 2026-10-13** : les Domaines, les Atouts, l'Espoir,
+> le Vécu et la Singularité de la Cabale **se rechargent au début de chaque scénario**, un point
+> d'Atout donne +1 au Talent lié, **un seul par test** (sauf l'Atout Capital, que le pilote ne
+> distingue pas encore). **L'Espoir, le Vécu et la Singularité de la Cabale sont des pistes de sa
+> feuille : remettez-les à leur valeur en début de scénario** — « Nouveau scénario » ne recharge que
+> les Domaines et les Atouts.
 
 ---
 
@@ -91,13 +124,10 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 
 ## Ce qui manque encore
 
-- **Le Talent n'entre pas dans le jet**, et la difficulté n'est pas réglable : le panneau compte les
-  réussites des dés de destin, rien de plus.
-- **Le 1 qui verse une goutte de Fiel** n'est pas fait par le panneau (gardé pour plus tard) : il
-  s'affiche « fléau » sous le jet, et chacun est une goutte à poser d'un clic sur le + du Fiel.
-- **Les malus de seuil** (−1 aux Domaines quand on est Choqué, −1 aux Talents au-delà) ne
-  s'appliquent pas tout seuls au jet : l'état s'affiche, le malus reste votre geste.
-- **Un Héros né avant le 2026-10-13** a des points de vie : sur sa carte de combattant, cliquer sur
-  le nom du moteur de santé (« Points de Vie », en haut à gauche du bloc) fait défiler les modèles —
-  quatre clics mènent aux dix cases Blessures.
-- **Le Soupçon** (Cabale Dykovienne) n'est pas sur la fiche.
+- **L'Atout Capital**, le seul dont on peut dépenser plusieurs points sur un test, est borné à un
+  comme les autres.
+- **L'état Fatigué** (−1 aux Talents quand l'Espoir est épuisé par un effet du Fiel) ne se suit
+  pas : ajoutez 1 à la difficulté à la main.
+- **Les Rouages** qui tirent un 1 retirent une goutte de Fiel : le − du bandeau.
+- **Le Soupçon** (Cabale Dykovienne) est sur la fiche, de 0 à 10 ; ses effets jouent sur la
+  récupération aux moments de calme, que GM-OS ne compte pas.

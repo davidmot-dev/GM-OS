@@ -458,6 +458,14 @@ const CharacterSheetEditor: React.FC = () => {
                                 valeurs={editor.localData}
                                 campaignId={activeCampaignId ?? undefined}
                                 ressourcesDeTable={ressourcesDeLaTable(piloteDeLaFiche, campaigns.find(c => c.id === activeCampaignId))}
+                                // Le Vécu, l'Espoir, la Singularité dépensés au jet se décomptent sur la fiche.
+                                ecrireSurLaFiche={maj => {
+                                    if (editor.character && editor.selectedPlayer) {
+                                        updateCharacter(editor.selectedPlayer.id, editor.character.id, {
+                                            sheetData: { ...editor.character.sheetData, ...maj },
+                                        });
+                                    }
+                                }}
                             />
                         )}
 

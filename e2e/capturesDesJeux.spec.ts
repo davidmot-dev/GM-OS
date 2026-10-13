@@ -59,14 +59,14 @@ interface MiseEnScene {
 const MISES_EN_SCENE: MiseEnScene[] = [
     {
         corpusId: 'noc', slug: 'noc', personnage: 'Ilya Vorn',
-        sheetData: { action: 3, vie: 2, instinct: 2, pv: 12, endurance: 8 },
-        composantes: ['action'],
+        sheetData: { combat: 2, action: 3, vie: 2, vecu: 2, espoir: 3, singularite: 1, trauma: 2 },
+        composantes: ['combat', 'action'],
         reserves: { Fiel: 3, Menace: 2 },
         groupe: {
             'identity.name': 'Cellule du Quai Gris', 'domains.action': 3, 'domains.life': 2,
             'tracks.espoir': 4, 'tracks.vecu': 2, 'assets.action.armory': 2, 'assets.erudition.library': 1,
         },
-        puiser: ['Dés de la Cabale', 'Dés de la Cabale', 'Espoir de la Cabale'],
+        puiser: ['Espoir', 'Singularité', 'Dés de la Cabale', 'Dés de la Cabale'],
         casesCochees: 6,
     },
     {
@@ -281,12 +281,16 @@ for (const { mise, pilote } of JEUX) {
             await panneau.locator('div', { has: f.getByText('Dés', { exact: true }) }).last().locator('button').nth(1).click();
         }
         for (const apport of mise.puiser ?? []) {
-            await panneau.getByRole('button', { name: `Un point de plus : ${apport}` }).click();
+            await panneau.getByRole('button', { name: `Un point de plus : ${apport}`, exact: true }).click();
         }
+        // Un panneau plus haut que la fenêtre se photographierait coupé : on l'agrandit le temps des deux prises.
+        const fenetre = await gmos.application.browserWindow(f);
+        await fenetre.evaluate(w => w.setContentSize(1440, 1800));
         await photographier(panneau, `jeu-${mise.slug}-jet`);
 
         await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
         await photographier(panneau, `jeu-${mise.slug}-jet-lance`);
+        await fenetre.evaluate(w => w.setContentSize(1440, 900));
 
         // La fiche du groupe — la Cabale, commune à toute la table.
         if (pilote.gameDriver.ficheDeGroupe) {

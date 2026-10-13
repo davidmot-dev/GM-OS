@@ -256,6 +256,27 @@ export interface DescripteurDeJet {
      * NOMME la table ; il n'en porte aucun nombre.
      */
     tableDeBonus?: 'torg';
+    /**
+     * **Provoquer le destin** — le système Nocturne de NOC, 2026-10-13
+     * (`systemes/nocturne.ts`).
+     *
+     * Le `seuil` additionné devient le **niveau du Talent**, la `reserve` le
+     * **Domaine** — le plafond des dés de destin, que le joueur lance ou non —,
+     * la `difficulte` celle de la Loi. Chaque 8 et plus ajoute un au niveau,
+     * un 10 fait lancer un dé de plus, un 1 verse une goutte dans `fiel`.
+     */
+    destin?: {
+        /** La réserve de table où chaque 1 verse une goutte (« Fiel »). */
+        fiel?: string;
+        /** Les jauges de péril dont les seuils pénalisent Domaines et Talents. */
+        peril?: import('./systemes/nocturne').JaugeDePeril[];
+    };
+    /**
+     * **Ce que le personnage puise dans ses propres réserves** — le Vécu,
+     * l'Espoir, la Singularité d'un Héros de NOC. La forme des apports du
+     * groupe, mais les stocks se lisent sur SA fiche et s'y décomptent.
+     */
+    reservesDuPersonnage?: import('../../types/drivers').ApportDuGroupe[];
 }
 
 /** Ce que le joueur a retenu sur sa fiche pour ce jet précis. */
@@ -948,7 +969,8 @@ export function preparerLeJet(
           réclame le retrait du champ inutile.
         */
         // Torg compare un total à un Niveau de Difficulté : il ne compte pas de réussites.
-        reussitesRequises: descripteur.cible || descripteur.tableDeBonus ? 1 : bornes ? difficulte : 1,
+        // NOC compare aussi un niveau à la difficulté : sa difficulté n'est pas un compte de réussites.
+        reussitesRequises: descripteur.cible || descripteur.tableDeBonus || descripteur.destin ? 1 : bornes ? difficulte : 1,
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de

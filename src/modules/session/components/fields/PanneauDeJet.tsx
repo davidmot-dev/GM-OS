@@ -9,7 +9,8 @@ import {
 } from '../../../dice/DescripteurDeJet';
 import { ventilerLaDepense, type RessourceDeTable } from '../../../table/RessourcesDeTable';
 import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableStore';
-import { apportsDisponibles, effetDesApports, idDeReserveDuGroupe, niveauDuGroupe } from '../../../table/reservesDuGroupe';
+import { apportsDisponibles, effetDesApports, idDeReserveDuGroupe, niveauDuGroupe, type ApportDisponible } from '../../../table/reservesDuGroupe';
+import { malusDePeril, resoudreLeDestin } from '../../../dice/systemes/nocturne';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
@@ -64,10 +65,17 @@ interface PanneauDeJetProps {
      * que personne ne lit (demandé par David le 2026-09-30).
      */
     personnageId?: string;
+    /**
+     * Écrit sur la fiche du personnage ce que ses réserves ont donné — le Vécu,
+     * l'Espoir, la Singularité d'un Héros de NOC. Sans elle, ces réserves ne se
+     * proposent pas : on ne dépense pas ce qu'on ne saurait décompter.
+     */
+    ecrireSurLaFiche?: (maj: Record<string, unknown>) => void;
 }
 
 const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     descripteur, dice, template, valeurs, campaignId, ressourcesDeTable, pourLesJoueurs = false, personnageId,
+    ecrireSurLaFiche,
 }) => {
     /** Champ retenu pour chaque composante — `{ competence: 'combat' }`. */
     const [choix, setChoix] = useState<Record<string, string>>({});
@@ -126,7 +134,18 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const disponibles = apportsDisponibles(
         apports, choix, choixDesApports, engages, campagne?.groupe?.sheetData, etatDesReserves,
     );
-    const { des: desDuGroupe, bonus: bonusDuGroupe } = effetDesApports(disponibles);
+    const { des: desDuGroupe, bonus: bonusDuGroupe, annule: annuleDuGroupe } = effetDesApports(disponibles);
+
+    /*
+      **Les réserves du personnage** — le Vécu, l'Espoir, la Singularité d'un Héros
+      de NOC. Même forme que les apports du groupe ; les stocks se lisent sur SA
+      fiche et s'y décomptent, par `ecrireSurLaFiche`.
+    */
+    const reservesPerso = ecrireSurLaFiche && !descripteur.desEchelonnes ? (descripteur.reservesDuPersonnage ?? []) : [];
+    const [engagesPerso, setEngagesPerso] = useState<Record<string, number>>({});
+    const disponiblesPerso = apportsDisponibles(reservesPerso, choix, {}, engagesPerso, valeurs, {});
+    const { des: desPerso, bonus: bonusPerso, annule: annulePerso } = effetDesApports(disponiblesPerso);
+
     /** Ce qui reste dans un stock précis — pour proposer les Atouts encore garnis. */
     const resteDe = (apportId: string, champ: string) => {
         const apport = apports.find(a => a.id === apportId);
@@ -192,6 +211,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ),
         [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateur, template.sections],
     );
+
+    /*
+      **Provoquer le destin** (NOC). Le plafond des dés est le Domaine, moins les
+      malus de péril ; le joueur en lance autant qu'il veut, de zéro au plafond.
+      `null` : il n'a pas touché au compte, on propose le plafond.
+    */
+    const destin = descripteur.destin;
+    const malus = destin?.peril ? malusDePeril(destin.peril, valeurs) : { domaines: 0, talents: 0, etats: [] as string[] };
+    const plafondDuDestin = destin ? Math.max(0, jet.nombreDeDes - malus.domaines) : 0;
+    const [desDeDestin, setDesDeDestin] = useState<number | null>(null);
+    const desLances = Math.min(desDeDestin ?? plafondDuDestin, plafondDuDestin);
+    /** Le niveau du Talent, malus retirés, Vécu et Atouts ajoutés — avant les dés. */
+    const niveauDuDestin = jet.seuil - malus.talents + bonusPerso + bonusDuGroupe;
 
     /*
       **Le seuil composé ne remplace un seuil fixe que s'il existe.**
@@ -314,21 +346,37 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           Domaine) se débite comme toute réserve de table.
         */
         const engagesDuGroupe = disponibles.filter(d => d.points > 0 && d.stock);
-        const surLaFeuille: Record<string, number> = {};
-        for (const { apport, stock, dispo, points } of engagesDuGroupe) {
-            if (apport.epuisement === 'piste') {
-                surLaFeuille[stock!.champ] = dispo - points;
-                dits.push(`${apport.label} −${points} → ${dispo - points}`);
-            } else {
-                dits.push(`${apport.label} (${stock!.label}) −${points} → ${dispo - points}`);
-                dits.push(...mouvoir(idDeReserveDuGroupe(stock!.champ), -points, `${enTete}, ${apport.label} — ${stock!.label}`).avertissements);
+        const engagesPerso = disponiblesPerso.filter(d => d.points > 0 && d.stock);
+
+        /**
+         * Dépense ce que des apports ont donné. `combien` dit ce qui part
+         * vraiment : tout ce qu'on a engagé pour des dés ou un bonus, mais
+         * seulement les 1 effectivement annulés pour la Singularité.
+         */
+        const depenser = (liste: ApportDisponible[], porteur: 'groupe' | 'personnage', combien: (d: ApportDisponible) => number) => {
+            const surLaFeuille: Record<string, number> = {};
+            for (const d of liste) {
+                const n = combien(d);
+                if (n <= 0 || !d.stock) continue;
+                const nom = d.apport.stocks.length > 1 ? `${d.apport.label} (${d.stock.label})` : d.apport.label;
+                dits.push(`${nom} −${n} → ${d.reste - n}`);
+                if (d.apport.epuisement === 'piste') surLaFeuille[d.stock.champ] = d.reste - n;
+                else dits.push(...mouvoir(idDeReserveDuGroupe(d.stock.champ), -n, `${enTete}, ${nom}`).avertissements);
             }
-        }
-        if (campagne && Object.keys(surLaFeuille).length > 0) {
-            if (pourLesJoueurs && personnageId) remoteEcrireLeGroupe(campagne.id, personnageId, surLaFeuille);
-            else if (!pourLesJoueurs) updateCampaign(campagne.id, { groupe: appliquerAuGroupe(campagne.groupe, { aEcrire: surLaFeuille }) });
-        }
+            if (Object.keys(surLaFeuille).length === 0) return;
+            if (porteur === 'personnage') {
+                ecrireSurLaFiche?.(surLaFeuille);
+            } else if (campagne) {
+                if (pourLesJoueurs && personnageId) remoteEcrireLeGroupe(campagne.id, personnageId, surLaFeuille);
+                else if (!pourLesJoueurs) updateCampaign(campagne.id, { groupe: appliquerAuGroupe(campagne.groupe, { aEcrire: surLaFeuille }) });
+            }
+        };
+        // Avant le lancer : les dés et les bonus. Les annulations attendent de voir les 1.
+        const avant = (d: ApportDisponible) => (d.apport.effet === 'annuleLesUns' ? 0 : d.points);
+        depenser(engagesDuGroupe, 'groupe', avant);
+        depenser(engagesPerso, 'personnage', avant);
         setEngages({});
+        setEngagesPerso({});
 
         if (monnaie && jet.cout.ressource && jet.cout.total > 0) {
             dits.push(...mouvoir(
@@ -379,6 +427,66 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           `preparerLeJet` — ils ajoutent ou retirent un dé, ils n'en gardent pas
           un sur deux comme `rollAdvantage`.
         */
+        /*
+          **Provoquer le destin** (NOC) : les dés du Héros, ceux de l'Espoir et
+          ceux de la Cabale partent ensemble ; chaque 8 et plus élève le niveau,
+          un 10 fait lancer un dé de plus (le moteur `pool_explode`), un 1 verse
+          une goutte de Fiel — sauf ceux qu'une Singularité annule.
+        */
+        if (destin) {
+            const nombre = desLances + desPerso + desDuGroupe;
+            const tires = nombre > 0
+                ? DiceEngine.rollFromConfig({ ...dice, successThreshold: 8 }, { baseCount: nombre })
+                : null;
+            const faces = (tires?.rolls ?? []).map(r => (typeof r.val === 'number' ? r.val : 0));
+            const verdictDuDestin = resoudreLeDestin(niveauDuDestin, difficulte, faces, annulePerso + annuleDuGroupe);
+
+            // Les 1 annulés se paient d'abord sur la Singularité du Héros, puis sur celle du groupe.
+            let aPayer = verdictDuDestin.annules;
+            const apres = (d: ApportDisponible) => {
+                if (d.apport.effet !== 'annuleLesUns') return 0;
+                const n = Math.min(aPayer, d.points * d.apport.parPoint);
+                aPayer -= n;
+                return Math.ceil(n / Math.max(1, d.apport.parPoint));
+            };
+            depenser(engagesPerso, 'personnage', apres);
+            depenser(engagesDuGroupe, 'groupe', apres);
+            if (destin.fiel && verdictDuDestin.fiel > 0) {
+                dits.push(...mouvoir(destin.fiel, verdictDuDestin.fiel,
+                    `${enTete}, ${verdictDuDestin.fiel} goutte${verdictDuDestin.fiel > 1 ? 's' : ''} de Fiel`).avertissements);
+            }
+
+            const resultatDuDestin: RollResult = {
+                total: verdictDuDestin.niveauFinal,
+                rolls: tires?.rolls ?? [],
+                modifier: 0,
+                successes: verdictDuDestin.marge >= 0 ? 1 : 0,
+                // Les 1 sont du Fiel, dit dans la ligne : pas des « fléaux » à compter.
+                fails: 0,
+                tagSuccess: verdictDuDestin.marge >= 0,
+                degre: verdictDuDestin.degre,
+                totalDisplay: verdictDuDestin.texte,
+            };
+            setSeuilDuLancer(jet.seuil);
+            setBonusDuLancer(0);
+            setResultat(resultatDuDestin);
+            setDesDeDestin(null);
+            const titre = `${jet.composantes.map(c => c.label).join(' + ') || 'Destin'}`;
+            if (pourLesJoueurs && personnageId) {
+                window.dispatchEvent(new CustomEvent('fiche:resultat', {
+                    detail: {
+                        characterId: personnageId, titre, total: resultatDuDestin.total, modifier: 0,
+                        totalDisplay: verdictDuDestin.texte, rolls: resultatDuDestin.rolls,
+                        successes: resultatDuDestin.successes, tagSuccess: resultatDuDestin.tagSuccess, degre: resultatDuDestin.degre,
+                    },
+                }));
+            } else {
+                consignerLeJet({ titre, totalDisplay: verdictDuDestin.texte, degre: verdictDuDestin.degre, tagSuccess: resultatDuDestin.tagSuccess });
+            }
+            setMouvements(dits);
+            return;
+        }
+
         const brut = descripteur.tableDeBonus === 'torg'
             // Le niveau est le seuil additionné, la difficulté le Niveau de Difficulté.
             ? DiceEngine.rollTorg(jet.seuil, difficulte)
@@ -406,7 +514,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 { ...dice, successThreshold: seuilDuMoteur, sens: jet.sens },
                 {
                     // Les dés puisés dans le groupe s'ajoutent à la réserve.
-                    baseCount: jet.nombreDeDes + desDuGroupe,
+                    baseCount: jet.nombreDeDes + desDuGroupe + desPerso,
                     gearCount: jet.desSecondaires,
                     doubleSous: jet.doubleSous,
                     // Sans elle, le moteur retomberait sur le booléen : réussi ou
@@ -419,11 +527,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           Le bonus du groupe (Vécu, Atout) s'ajoute au résultat compté : chez NOC
           chaque réussite élève le niveau d'un point, comme lui.
         */
-        const res: RollResult = bonusDuGroupe > 0
-            ? { ...brut, successes: (brut.successes ?? 0) + bonusDuGroupe, totalDisplay: `${brut.totalDisplay} (+${bonusDuGroupe} ${ficheDeGroupe?.libelle ?? 'groupe'})` }
+        const bonusTotal = bonusDuGroupe + bonusPerso;
+        const res: RollResult = bonusTotal > 0
+            ? { ...brut, successes: (brut.successes ?? 0) + bonusTotal, totalDisplay: `${brut.totalDisplay} (+${bonusTotal})` }
             : brut;
         setSeuilDuLancer(jet.seuil);
-        setBonusDuLancer(bonusDuGroupe);
+        setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
 
         /*
@@ -505,7 +614,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
     const reussites = resultat?.successes ?? 0;
     /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
-    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus && !descripteur.destin
         && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
@@ -577,7 +686,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && (
                 <div className="flex items-baseline gap-2 text-xs">
                     <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
-                        {descripteur.cible ? 'Chances' : descripteur.tableDeBonus ? 'Niveau' : 'Seuil'}
+                        {descripteur.cible ? 'Chances' : descripteur.tableDeBonus || destin ? 'Niveau' : 'Seuil'}
                     </span>
                     <span className="font-mono text-lg font-black text-accent">
                         {jet.seuil}{descripteur.cible ? ' %' : ''}
@@ -681,7 +790,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 un nombre tombé du ciel. */}
             {jet.composantesDeLaReserve.length > 0 && (
                 <div className="flex items-baseline gap-2 text-xs">
-                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">Réserve</span>
+                    <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : 'Réserve'}</span>
                     <span className="font-mono text-lg font-black text-accent">{jet.nombreDeDes}</span>
                     <span className="text-app-text/30 font-mono">
                         = {[
@@ -700,9 +809,57 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 </div>
             )}
 
+            {/*
+                **Les malus de péril, dits avant de lancer.** Ils retirent au
+                Domaine (donc aux dés de destin) et au Talent ; on nomme les états
+                qui les causent, pour que le joueur sache d'où vient le moins.
+            */}
+            {destin && (malus.domaines > 0 || malus.talents > 0) && (
+                <p className="text-ui-11 text-etat-alerte/80">
+                    Malus : {malus.domaines > 0 && `−${malus.domaines} au Domaine`}
+                    {malus.domaines > 0 && malus.talents > 0 && ', '}
+                    {malus.talents > 0 && `−${malus.talents} au Talent`} — {malus.etats.join(', ')}
+                </p>
+            )}
+
+            {destin && (
+                <div data-destin className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Provoquer le destin</span>
+                    <button
+                        type="button"
+                        onClick={() => setDesDeDestin(Math.max(0, desLances - 1))}
+                        aria-label="Un dé de destin de moins"
+                        className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors"
+                    ><Minus size={12} /></button>
+                    <span className="font-mono text-sm font-black w-6 text-center">{desLances}</span>
+                    <button
+                        type="button"
+                        disabled={desLances >= plafondDuDestin}
+                        onClick={() => setDesDeDestin(Math.min(plafondDuDestin, desLances + 1))}
+                        aria-label="Un dé de destin de plus"
+                        className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors disabled:opacity-30"
+                    ><Plus size={12} /></button>
+                    <span className="text-app-text/40">
+                        sur {plafondDuDestin} — niveau {niveauDuDestin}
+                        {desLances === 0 && ' : sans dé, le Talent seul contre la difficulté'}
+                    </span>
+                </div>
+            )}
+
+            {reservesPerso.length > 0 && (
+                <ApportsDuGroupe
+                    titre="Puiser dans ses réserves"
+                    disponibles={disponiblesPerso}
+                    choixDuJoueur={{}}
+                    onChoisir={() => { /* un seul stock par réserve */ }}
+                    onEngager={(id, points) => setEngagesPerso(e => ({ ...e, [id]: points }))}
+                    resteDe={(_id, champ) => Math.max(0, niveauDuGroupe(valeurs, champ))}
+                />
+            )}
+
             {apports.length > 0 && ficheDeGroupe && (
                 <ApportsDuGroupe
-                    libelle={ficheDeGroupe.libelle}
+                    titre={`Puiser dans la ${ficheDeGroupe.libelle}`}
                     disponibles={disponibles}
                     choixDuJoueur={choixDesApports}
                     onChoisir={(id, champ) => {
@@ -716,7 +873,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
             <div className="flex items-center gap-6">
                 {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
-                <div className="flex items-center gap-2">
+                <div className={`flex items-center gap-2 ${destin ? 'hidden' : ''}`}>
                     <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                     <button
                         onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -992,7 +1149,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* Torg ne lance pas sous un seuil : son calcul dit déjà le ND. Une
                             réserve sans seuil (NOC, Alien) affichait « sous 0 ». */}
-                        {!descripteur.tableDeBonus && seuilDuLancer > 0 && (
+                        {!descripteur.tableDeBonus && !destin && seuilDuLancer > 0 && (
                             <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
                         )}
                     </div>

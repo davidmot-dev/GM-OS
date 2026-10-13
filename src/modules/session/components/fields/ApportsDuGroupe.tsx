@@ -14,7 +14,8 @@ import type { ApportDisponible } from '../../../table/reservesDuGroupe';
  * que le Héros l'ait retenue, et le dit.
  */
 interface ApportsDuGroupeProps {
-    libelle: string;
+    /** « Puiser dans la Cabale », « Puiser dans mes réserves ». */
+    titre: string;
     disponibles: ApportDisponible[];
     choixDuJoueur: Record<string, string>;
     onChoisir: (apportId: string, champ: string) => void;
@@ -24,17 +25,20 @@ interface ApportsDuGroupeProps {
 }
 
 const ApportsDuGroupe: React.FC<ApportsDuGroupeProps> = ({
-    libelle, disponibles, choixDuJoueur, onChoisir, onEngager, resteDe,
+    titre, disponibles, choixDuJoueur, onChoisir, onEngager, resteDe,
 }) => (
     <div data-apports-du-groupe className="space-y-2 rounded-xl border border-accent/15 bg-app-bg/30 p-3">
         <p className="flex items-center gap-2 text-ui-9 font-black uppercase tracking-widest text-accent/70">
-            <Users2 size={12} /> Puiser dans la {libelle}
+            <Users2 size={12} /> {titre}
         </p>
-        {disponibles.map(({ apport, stock, dispo, points }) => {
+        {disponibles.map(({ apport, stock, dispo, reste, points }) => {
             const aChoisir = apport.stocks.length > 1 && !apport.composante;
-            const gain = apport.effet === 'des'
+            const gain = (apport.effet === 'des'
                 ? `${apport.parPoint} dé${apport.parPoint > 1 ? 's' : ''} par point`
-                : `+${apport.parPoint} par point`;
+                : apport.effet === 'annuleLesUns'
+                    ? 'chaque point annule un 1 — seuls ceux qui servent sont dépensés'
+                    : `+${apport.parPoint} par point`)
+                + (apport.maxParJet !== undefined ? ` · ${apport.maxParJet} par jet au plus` : '');
             return (
                 <div key={apport.id} className="flex flex-wrap items-center gap-2 text-xs">
                     <span className="min-w-[10rem] font-bold text-app-text/70" title={gain}>{apport.label}</span>
@@ -76,10 +80,13 @@ const ApportsDuGroupe: React.FC<ApportsDuGroupeProps> = ({
                                 className="p-1 rounded-md bg-app-bg/60 border border-app-border/40 hover:border-accent/40 transition-colors disabled:opacity-30"
                             ><Plus size={11} /></button>
                             <span className="text-app-text/40">
-                                sur {dispo}
+                                sur {reste}
+                                {apport.maxParJet !== undefined && reste > dispo && ` (${dispo} par jet)`}
                                 {points > 0 && (
                                     <span className="ml-2 font-bold text-accent">
-                                        {apport.effet === 'des' ? `+${points * apport.parPoint} dés` : `+${points * apport.parPoint}`}
+                                        {apport.effet === 'des' ? `+${points * apport.parPoint} dés`
+                                            : apport.effet === 'annuleLesUns' ? `annule jusqu'à ${points * apport.parPoint} « 1 »`
+                                            : `+${points * apport.parPoint}`}
                                     </span>
                                 )}
                             </span>
