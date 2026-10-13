@@ -12,6 +12,7 @@ import {
 } from './fields/SheetFields';
 import { useCharacterEditor } from '../hooks/useCharacterEditor';
 import PanneauDeJet from './fields/PanneauDeJet';
+import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
 import { Calculator } from 'lucide-react';
@@ -437,6 +438,10 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Right Col: Sheet Sections */}
                     <div className="col-span-9 space-y-6">
+                        {/* Le jeu du personnage, quand ce n'est pas celui de sa campagne (2026-10-13). */}
+                        {editor.character && editor.selectedPlayer && (
+                            <EcartDeJeuDuPersonnage playerId={editor.selectedPlayer.id} personnage={editor.character as PlayerCharacter} />
+                        )}
                         {/*
                             Lancer depuis la fiche, à côté des valeurs qui font
                             le seuil. Chez Dune il vaut une compétence plus un

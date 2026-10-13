@@ -144,6 +144,17 @@ personnage qui change de propriétaire, et non une copie.
 
 La liste est grisée quand il n'y a qu'un seul joueur : il n'y a personne vers qui transférer.
 
+### Un personnage qui ne joue pas le jeu de sa campagne
+
+Un personnage garde **son propre jeu**, choisi à sa création : c'est lui qui décide de sa fiche, de
+ses dés et de son panneau de jet, même si sa campagne joue autre chose. Quand les deux diffèrent, sa
+carte et le haut de sa fiche le disent : **« Fiche Within — sa campagne joue NOC »**.
+
+Le bouton **Passer au jeu de la campagne** lui donne le jeu et la fiche de sa campagne. Son nom, son
+portrait, sa campagne, ses notes et son inventaire restent ; les valeurs de l'ancienne fiche que la
+nouvelle ne connaît pas sont perdues, et **la confirmation les nomme avant d'agir**. Sa santé repart
+comme celle d'un personnage neuf de ce jeu. *Ajouté le 2026-10-13.*
+
 ### Fiches de Personnage Dynamiques
 
 Les fiches sont entièrement adaptables :

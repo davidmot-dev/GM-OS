@@ -3165,6 +3165,14 @@
       "character_count_other": "{{count}} characters"
     },
     "characters": {
+      "ecart_jeu": "{{perso}} sheet — its campaign plays {{campagne}}",
+      "ecart_sans_jeu": "no game",
+      "passer_au_jeu": "Switch to the campaign's game",
+      "passer_confirm": "{{name}} will take the game {{jeu}} and its sheet. Name, portrait, campaign, notes and inventory are kept.",
+      "passer_perdus": "Values of the old sheet that do not exist in the new one will be lost ({{count}}): {{champs}}.",
+      "passer_rien_perdu": "No filled value will be lost.",
+      "passer_fait": "{{name}} now plays {{jeu}}.",
+      "passer_sans_fiche": "The game {{jeu}} has no character sheet: cannot switch to it.",
       "title": "Active Characters",
       "title_all": "All Characters",
       "total_suffix": "{{count}} total",

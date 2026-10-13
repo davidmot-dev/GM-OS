@@ -11,6 +11,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2, Camera } from 'lucide-react';
 import { useImageStore } from '../../image/useImageStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
+import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 
 const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCampaignFilter = false }) => {
     const { t } = useTranslation(['modules']);
@@ -233,7 +234,7 @@ const CharacterCard: React.FC<{
     /** Ceux vers qui ce personnage peut partir — le porteur actuel en est retiré. */
     autresJoueurs: Player[];
     onTransferer: (versJoueurId: string) => void;
-}> = ({ character, campaigns, isSelected, onSelect, onLink, onHPChange, onDelete, activeSession, isProjectedInSession, onToggleSession, autresJoueurs, onTransferer }) => {
+}> = ({ character, campaigns, playerId, isSelected, onSelect, onLink, onHPChange, onDelete, activeSession, isProjectedInSession, onToggleSession, autresJoueurs, onTransferer }) => {
     const { t } = useTranslation(['modules']);
     const linkedCampaign = campaigns.find(c => c.id === character.campaignId);
     /*
@@ -282,6 +283,8 @@ const CharacterCard: React.FC<{
 
             {/* Info */}
             <div className="p-4 flex flex-col gap-3 flex-1">
+                {/* Le jeu du personnage, quand ce n'est pas celui de sa campagne (2026-10-13). */}
+                <EcartDeJeuDuPersonnage playerId={playerId} personnage={character} />
 
                 {/* La barre de vie n'existe que si le jeu compte des points de vie.
                     Sans jauge, on montre l'état que le système décrit — « Brisé »,

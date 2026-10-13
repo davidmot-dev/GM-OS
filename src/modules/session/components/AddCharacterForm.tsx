@@ -6,10 +6,7 @@ import { MediaBrowser } from '../../../components/MediaBrowser';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { tousLesPilotes } from '../store/tousLesPilotes';
-import { ficheNeuve } from '../logic/ficheNeuve';
-import { horlogeDeDefaite } from '../../combat/logic/TacheDeDefaite';
-import { santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
-import { HealthInterpreter } from '../logic/HealthInterpreter';
+import { naissanceDansLeJeu } from '../logic/jeuDuPersonnage';
 
 export const AddCharacterForm: React.FC = () => {
     const { addCharacterToPlayer, selectedPlayerId, customSheetTemplates, customGameDrivers, campaigns, activeCampaignId } = useSessionOSStore();
@@ -80,12 +77,12 @@ export const AddCharacterForm: React.FC = () => {
           calcule sur les valeurs neuves de la fiche ; sans formule, on garde
           le dix historique plutôt que d'inventer autre chose.
         */
-        const valeurs = ficheNeuve(gabarit);
-        const depart = santeDeDepart(
-            jeuChoisi?.combat?.santeDeDepart,
-            // Même lecture que partout ailleurs : voir `valeurDuChamp`.
-            champ => valeurDuChamp(valeurs, champ),
-        ) ?? 10;
+        /*
+          La règle vit dans `naissanceDansLeJeu` depuis le 2026-10-13 : passer un
+          personnage au jeu de sa campagne le fait naître de la même façon. Les
+          raisons de chaque choix restent écrites ici, où elles ont été prises.
+        */
+        const naissance = naissanceDansLeJeu(jeuChoisi, gabarit);
 
         /*
           **Tout personnage naît avec un mécanisme de santé.** David, le
@@ -97,7 +94,6 @@ export const AddCharacterForm: React.FC = () => {
 
           Le modèle vient du pilote ; `hp` à défaut, comme demandé.
         */
-        const modele = jeuChoisi?.combat?.defaultHealthType ?? 'hp';
 
         /*
           **Six segments ne sont le chiffre d'aucun jeu.**
@@ -118,16 +114,9 @@ export const AddCharacterForm: React.FC = () => {
           La fiche neuve est déjà construite : ses champs sont lisibles, donc le
           seuil aussi.
         */
-        const tache = jeuChoisi?.combat?.tacheDeDefaite;
-        const sante = tache
-            ? horlogeDeDefaite(tache, valeurs).sante
-            : HealthInterpreter.createDefault(modele);
-
         addCharacterToPlayer(selectedPlayerId, {
             name,
-            healthSystem: modele === 'hp'
-                ? { ...sante, data: { ...sante.data, current: depart, max: depart } }
-                : sante,
+            healthSystem: naissance.healthSystem,
             /*
               **Pas de points de vie pour un jeu qui n'en compte pas.**
 
@@ -140,7 +129,7 @@ export const AddCharacterForm: React.FC = () => {
               *L'absence n'est pas un zéro — mais une présence inventée est pire
               qu'un zéro : elle se lit comme une mesure.*
             */
-            ...(modele === 'hp' ? { hp: depart, maxHp: depart } : {}),
+            ...(naissance.hp !== undefined ? { hp: naissance.hp, maxHp: naissance.maxHp } : {}),
             portraitUrl: portraitMediaId || 'https://api.dicebear.com/9.x/adventurer/svg?seed=' + name,
             campaignId,
             systemId,
@@ -152,7 +141,7 @@ export const AddCharacterForm: React.FC = () => {
               sur la fiche — santé de départ, seuil du jet, tâche de défaite —
               n'avait rien à lire.
             */
-            sheetData: valeurs,
+            sheetData: naissance.sheetData,
         });
 
         closeModal();

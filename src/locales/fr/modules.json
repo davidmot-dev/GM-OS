@@ -3165,6 +3165,14 @@
       "character_count_other": "{{count}} personnages"
     },
     "characters": {
+      "ecart_jeu": "Fiche {{perso}} — sa campagne joue {{campagne}}",
+      "ecart_sans_jeu": "sans jeu",
+      "passer_au_jeu": "Passer au jeu de la campagne",
+      "passer_confirm": "{{name}} prendra le jeu {{jeu}} et sa fiche. Son nom, son portrait, sa campagne, ses notes et son inventaire restent.",
+      "passer_perdus": "Valeurs de l'ancienne fiche qui n'existent pas dans la nouvelle, et seront perdues ({{count}}) : {{champs}}.",
+      "passer_rien_perdu": "Aucune valeur remplie ne sera perdue.",
+      "passer_fait": "{{name}} joue maintenant {{jeu}}.",
+      "passer_sans_fiche": "Le jeu {{jeu}} n'a pas de fiche de personnage : impossible d'y passer.",
       "title": "Personnages Actifs",
       "title_all": "Tous les Personnages",
       "total_suffix": "{{count}} au total",
