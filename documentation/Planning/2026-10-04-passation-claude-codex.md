@@ -78,6 +78,13 @@ registre (§ 3). Il dit **comment** travailler et se passer la main sans rien pe
   plan, commentaire du code). C'est ce qui empêche l'autre agent de la rouvrir.
 - **Un défaut trouvé en chemin, hors du chantier en cours** : au **§ 1 bis** du registre, pas dans un
   correctif glissé dans un autre commit.
+- **Un pilote nouveau ou amélioré, ou une mécanique de pilote nouvelle, se reporte au manuel des
+  jeux** (demande de David, 2026-10-13 : *« il faudra tenir à jour ce manuel lorsque de nouveaux
+  drivers apparaîtront ou seront améliorés »*) : la page `54-Jeu-….md` du jeu et sa ligne « Pilote
+  décrit », la mécanique dans `53-Les-jeux-et-leurs-mecaniques.md`, puis les captures
+  (`npm run build`, `npx playwright test e2e/capturesDesJeux.spec.ts`, pilotes exportés dans
+  `Export Dirvers/`, jamais commités). `electron/manuelDesJeux.test.ts` refuse une mécanique du code
+  sans sa ligne.
 
 ### En fin de session
 

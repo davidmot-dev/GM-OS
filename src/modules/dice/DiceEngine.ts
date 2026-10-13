@@ -1,4 +1,5 @@
 import { faitDescendre, deDUnCranPlusBas } from './desDUsure';
+import { lancerLeDeDeTorg, resoudreLeJetDeTorg, direLeJetDeTorg } from './systemes/torg';
 import { estUneSauvegarde, lireLaNotation } from './lectureDuPilote';
 import {
     degreDepuisLeBooleen, degreDuDe, estUneReussite,
@@ -308,7 +309,34 @@ export class DiceEngine {
         };
     }
 
-    // --- 5. AVANTAGE / DÉSAVANTAGE ---
+    /**
+     * **Le jet de Torg Eternity** — un d20 qui explose sur 10 et 20, converti
+     * par la Table des Bonus, ajouté au niveau, comparé au Niveau de Difficulté.
+     * Toute la règle vit dans `systemes/torg.ts` ; ici, seulement le hasard.
+     */
+    static rollTorg(niveau: number, difficulte: number): RollResult {
+        const jet = resoudreLeJetDeTorg(niveau, difficulte, lancerLeDeDeTorg(() => this.roll(20)));
+        const reussi = jet.degre.startsWith('reussite');
+        return {
+            total: jet.totalDAction,
+            rolls: jet.des.map((val, i) => ({
+                val,
+                sides: 20,
+                isExploded: i > 0,
+                isCritMin: i === 0 && val === 1,
+                isCritMax: val === 10 || val === 20,
+            })),
+            modifier: jet.bonus,
+            successes: reussi ? 1 : 0,
+            // Un échec n'est pas un « fléau » : ce compte-là est celui des 1 d'une réserve.
+            fails: 0,
+            tagSuccess: reussi,
+            degre: jet.degre,
+            totalDisplay: direLeJetDeTorg(jet, niveau, difficulte),
+        };
+    }
+
+        // --- 5. AVANTAGE / DÉSAVANTAGE ---
     /**
      * Lance deux dés et garde le meilleur (Avantage) ou le moins bon (Désavantage).
      * @param faces Nombre de faces.
@@ -895,7 +923,9 @@ export class DiceEngine {
 
         switch (config.logic) {
             case 'count-success':
-                return this.rollPool(faces, count, modifier, threshold, false, {
+                // `pool_explode` relance la face maximale — le 10 de NOC. Le pupitre
+                // le faisait ; le panneau de fiche, qui passe ici, l'oubliait.
+                return this.rollPool(faces, count, modifier, threshold, config.engine === 'pool_explode', {
                     sens: config.sens === 'sous-ou-egal' ? 'under' : 'over',
                 });
             case 'highest': {

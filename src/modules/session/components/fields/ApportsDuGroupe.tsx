@@ -26,7 +26,7 @@ interface ApportsDuGroupeProps {
 const ApportsDuGroupe: React.FC<ApportsDuGroupeProps> = ({
     libelle, disponibles, choixDuJoueur, onChoisir, onEngager, resteDe,
 }) => (
-    <div className="space-y-2 rounded-xl border border-accent/15 bg-app-bg/30 p-3">
+    <div data-apports-du-groupe className="space-y-2 rounded-xl border border-accent/15 bg-app-bg/30 p-3">
         <p className="flex items-center gap-2 text-ui-9 font-black uppercase tracking-widest text-accent/70">
             <Users2 size={12} /> Puiser dans la {libelle}
         </p>

@@ -504,6 +504,23 @@ export function controlerLePilote(
       C'est une erreur et non un avertissement : sans cible, le pilote n'a plus
       rien à comparer.
     */
+    /*
+      **La Table des Bonus de Torg** (2026-10-13) : un nom, comme la cible. Elle
+      convertit le dé en bonus ajouté au NIVEAU — le seuil additionné — et compare
+      le total à la difficulté. Sans l'un ou l'autre, le jet n'a rien à comparer.
+    */
+    if (driver.jet?.tableDeBonus !== undefined) {
+        if (driver.jet.tableDeBonus !== 'torg') {
+            erreur('jet.tableDeBonus', `« ${String(driver.jet.tableDeBonus)} » n'est pas une table connue. La seule admise est : torg.`);
+        }
+        if (!driver.jet.seuil?.length) {
+            erreur('jet.seuil', 'La Table des Bonus ajoute son bonus au niveau : le jet doit déclarer les composantes qui le forment (attribut, compétence).');
+        }
+        if (!driver.jet.difficulte) {
+            erreur('jet.difficulte', 'La Table des Bonus compare le total d’action au Niveau de Difficulté : le jet doit déclarer sa difficulté.');
+        }
+    }
+
     if (driver.jet?.cible && !(driver.jet.cible.mecanique in MECANIQUES_DE_CIBLE)) {
         erreur(
             'jet.cible.mecanique',

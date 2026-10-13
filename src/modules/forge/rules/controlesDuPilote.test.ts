@@ -315,6 +315,24 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(juste.filter(c => c.ou.startsWith('ficheDeGroupe'))).toEqual([]);
     });
 
+    it('la Table des Bonus : un nom connu, un niveau et une difficulté', () => {
+        const mal = controlerLePilote(
+            { jet: { sens: 'superieur-ou-egal', tableDeBonus: 'torg-v2' } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(mal.filter(c => ['jet.tableDeBonus', 'jet.seuil', 'jet.difficulte'].includes(c.ou)).map(c => c.ou))
+            .toEqual(['jet.tableDeBonus', 'jet.seuil', 'jet.difficulte']);
+
+        const juste = controlerLePilote(
+            { jet: {
+                sens: 'superieur-ou-egal', tableDeBonus: 'torg', difficulte: { min: 0, max: 30, defaut: 10 },
+                seuil: [{ id: 'attribut', label: 'Attribut', sectionId: 'competences' }],
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(juste.filter(c => c.ou.startsWith('jet.tableDeBonus'))).toEqual([]);
+    });
+
     it('des apports du groupe mal déclarés', () => {
         const constats = controlerLePilote(
             {

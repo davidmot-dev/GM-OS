@@ -220,7 +220,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * La liste des moteurs qui résolvent eux-mêmes vit dans `DiceEngine`, et
      * nulle part ailleurs : recopiée ici, elle dériverait.
      */
-    const avantagePossible = descripteur.desEchelonnes
+    const avantagePossible = descripteur.tableDeBonus
+        // Torg n'a pas d'avantage : son dé se relance quand il explose, il ne se double pas.
+        ? false
+        : descripteur.desEchelonnes
         // Sur les dés échelonnés, le livre les décrit explicitement : un
         // troisième dé copié du plus petit, ou le plus petit retiré.
         ? jet.desEchelonnes.length > 0
@@ -260,7 +263,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     // Un jeu qui ne compose rien depuis la fiche est prêt d'emblée. Les
     // composantes de la réserve comptent autant que celles du seuil : lancer
     // sans attribut ni compétence donnerait une poignée de dés arbitraire.
-    const pret = composantesARetenir.every(c => choix[c.id]) && jet.avertissements.length === 0;
+    const pret = composantesARetenir.every(c => c.facultative || choix[c.id]) && jet.avertissements.length === 0;
 
     /**
      * D'où sortiront les points, **avant** de lancer.
@@ -317,6 +320,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 surLaFeuille[stock!.champ] = dispo - points;
                 dits.push(`${apport.label} −${points} → ${dispo - points}`);
             } else {
+                dits.push(`${apport.label} (${stock!.label}) −${points} → ${dispo - points}`);
                 dits.push(...mouvoir(idDeReserveDuGroupe(stock!.champ), -points, `${enTete}, ${apport.label} — ${stock!.label}`).avertissements);
             }
         }
@@ -375,7 +379,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           `preparerLeJet` — ils ajoutent ou retirent un dé, ils n'en gardent pas
           un sur deux comme `rollAdvantage`.
         */
-        const brut = jet.desEchelonnes.length > 0
+        const brut = descripteur.tableDeBonus === 'torg'
+            // Le niveau est le seuil additionné, la difficulté le Niveau de Difficulté.
+            ? DiceEngine.rollTorg(jet.seuil, difficulte)
+            : jet.desEchelonnes.length > 0
             ? DiceEngine.rollFromConfig(
                 { ...dice, engine: 'yze-echelonne' },
                 { taillesDeBase: jet.desEchelonnes.map(d => d.faces) },
@@ -497,6 +504,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     };
 
     const reussites = resultat?.successes ?? 0;
+    /** Une réserve, qui compte ses réussites — et non un verdict sur un seul dé. */
+    const compteDeReussites = !descripteur.cible && !descripteur.tableDeBonus
+        && (jet.desEchelonnes.length > 0 || jet.nombreDeDes + jet.desSecondaires > 1);
     const v = verdict(reussites, jet.reussitesRequises);
     // Un dé écarté n'a rien déclenché : le compter ici annoncerait une
     // complication que le tirage vient précisément d'éviter.
@@ -507,7 +517,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         : 0;
 
     return (
-        <div className="space-y-3 rounded-2xl border border-accent/20 bg-accent/5 p-4">
+        <div data-panneau-de-jet className="space-y-3 rounded-2xl border border-accent/20 bg-accent/5 p-4">
             <h3 className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-[0.2em] text-accent">
                 <Dices size={14} /> Lancer un test
             </h3>
@@ -535,7 +545,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             onChange={e => setChoix(c => ({ ...c, [composante.id]: e.target.value }))}
                             className="bg-app-bg/60 border border-app-border/40 rounded-lg px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent/50"
                         >
-                            <option value="">— choisir —</option>
+                            {/* Facultative : la laisser vide est un choix (Torg, compétence non entraînée). */}
+                            <option value="">{composante.facultative ? '— aucune —' : '— choisir —'}</option>
                             {/*
                                 **Un seul sous-groupe ne s'annonce pas.** Coiffer
                                 une liste unique du nom de sa section ajouterait
@@ -566,7 +577,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             {((descripteur.seuil ?? []).length > 0 || descripteur.cible) && (
                 <div className="flex items-baseline gap-2 text-xs">
                     <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">
-                        {descripteur.cible ? 'Chances' : 'Seuil'}
+                        {descripteur.cible ? 'Chances' : descripteur.tableDeBonus ? 'Niveau' : 'Seuil'}
                     </span>
                     <span className="font-mono text-lg font-black text-accent">
                         {jet.seuil}{descripteur.cible ? ' %' : ''}
@@ -929,13 +940,24 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         {/* « difficulté 0 » ne voulait rien dire sur un jeu qui
                             n'en gradue aucune : il en faut une, et c'est ça
                             qu'on annonce. */}
-                        <span className="text-app-text/50 font-mono">
-                            {reussites} réussite{reussites > 1 ? 's' : ''}
-                            {bonusDuLancer > 0 && ` (dont +${bonusDuLancer} ${ficheDeGroupe?.libelle ?? 'groupe'})`}
-                            {descripteur.difficulte
-                                ? ` / difficulté ${difficulte}`
-                                : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}
-                        </span>
+                        {/*
+                            **Un compte de réussites n'a de sens que sur une réserve.**
+                            Sous une Sauvegarde, un pourcentage ou le jet de Torg, il
+                            écrivait « 0 réussite / 1 requise » à côté d'un verdict
+                            réussi (vu sur les captures du manuel, 2026-10-13) : on y
+                            dit plutôt ce que le moteur a calculé.
+                        */}
+                        {compteDeReussites ? (
+                            <span className="text-app-text/50 font-mono">
+                                {reussites} réussite{reussites > 1 ? 's' : ''}
+                                {bonusDuLancer > 0 && ` (dont +${bonusDuLancer} ${ficheDeGroupe?.libelle ?? 'groupe'})`}
+                                {descripteur.difficulte
+                                    ? ` / difficulté ${difficulte}`
+                                    : ` / ${jet.reussitesRequises} requise${jet.reussitesRequises > 1 ? 's' : ''}`}
+                            </span>
+                        ) : (
+                            <span className="text-app-text/50 font-mono">{resultat.totalDisplay}</span>
+                        )}
                         {/*
                             **Les 1 de la seconde poule, nommés par le jeu.**
 
@@ -968,7 +990,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 {complications} complication{complications > 1 ? 's' : ''}
                             </span>
                         )}
-                        <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
+                        {/* Torg ne lance pas sous un seuil : son calcul dit déjà le ND. Une
+                            réserve sans seuil (NOC, Alien) affichait « sous 0 ». */}
+                        {!descripteur.tableDeBonus && seuilDuLancer > 0 && (
+                            <span className="ml-auto text-app-text/25 font-mono text-ui-10">sous {seuilDuLancer}</span>
+                        )}
                     </div>
 
                     {/*

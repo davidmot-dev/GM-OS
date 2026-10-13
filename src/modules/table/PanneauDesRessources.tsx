@@ -91,7 +91,7 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     if (montrees.length === 0) return null;
 
     return (
-        <div className={`flex items-center border-b border-app-border/20 bg-app-bg/40 ${pourLesJoueurs ? 'flex-wrap gap-3 p-3' : 'gap-6 px-6 py-2'}`}>
+        <div data-bandeau-des-reserves className={`flex items-center border-b border-app-border/20 bg-app-bg/40 ${pourLesJoueurs ? 'flex-wrap gap-3 p-3' : 'gap-6 px-6 py-2'}`}>
             {montrees.map(r => {
                 const valeur = etat[r.id] ?? r.depart;
                 const auPlafond = r.max !== undefined && valeur >= r.max;

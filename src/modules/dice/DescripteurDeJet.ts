@@ -60,6 +60,13 @@ export interface ComposanteDeJet {
      * où le produit croisé les donne tous.
      */
     sectionsSupplementaires?: string[];
+    /**
+     * **On peut lancer sans la retenir** — Torg, 2026-10-13 : *« si un personnage
+     * tente une action avec une compétence sans entraînement, il réalise le test
+     * en utilisant uniquement la valeur de l'attribut associé »*. Non retenue,
+     * elle ne compte pour rien et ne bloque pas le bouton.
+     */
+    facultative?: boolean;
 }
 
 export type SensDuJet = 'sous-ou-egal' | 'superieur-ou-egal';
@@ -239,6 +246,16 @@ export interface DescripteurDeJet {
      * champ tenu pour universel parce qu'un seul jeu s'en servait.
      */
     difficulte?: { min: number; max: number; defaut: number };
+    /**
+     * **Le dé se convertit en bonus par la table du jeu** — Torg Eternity,
+     * 2026-10-13 (`systemes/torg.ts`).
+     *
+     * Le `seuil` additionné devient alors le **niveau** (attribut + compétence),
+     * la `difficulte` le **Niveau de Difficulté**, et le jet un d20 qui explose
+     * sur 10 et 20, converti par la Table des Bonus. Comme `cible`, le pilote
+     * NOMME la table ; il n'en porte aucun nombre.
+     */
+    tableDeBonus?: 'torg';
 }
 
 /** Ce que le joueur a retenu sur sa fiche pour ce jet précis. */
@@ -687,7 +704,8 @@ export function preparerLeJet(
 
             const champ = choix.champs[composante.id];
             if (!champ) {
-                avertissements.push(`${composante.label} : aucun champ retenu.`);
+                // Une composante facultative non retenue ne compte pour rien (Torg).
+                if (!composante.facultative) avertissements.push(`${composante.label} : aucun champ retenu.`);
                 continue;
             }
             const lu = lireLeChamp(valeursDeLaFiche, champ);
@@ -929,7 +947,8 @@ export function preparerLeJet(
           Quand la cible décide, on en demande **une**, et le contrôle du pilote
           réclame le retrait du champ inutile.
         */
-        reussitesRequises: descripteur.cible ? 1 : bornes ? difficulte : 1,
+        // Torg compare un total à un Niveau de Difficulté : il ne compte pas de réussites.
+        reussitesRequises: descripteur.cible || descripteur.tableDeBonus ? 1 : bornes ? difficulte : 1,
         /*
           Une poignée échelonnée n'a pas UNE taille. On rend celle du plus gros
           dé, pour que les écrans qui écrivent « 2d10 » disent quelque chose de
