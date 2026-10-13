@@ -4905,8 +4905,11 @@ reste **non suivi** ; son auto-test passe (`python pdf_vers_md.py --selftest`).
 >   par écran (espace de séance, préparation, journal, campagne, PNJ, Dice-OS, Tables, Image-OS) ; le
 >   **filigrane `fond`** sur le dernier jet vide de Dice-OS et le plateau vide de Combat-OS ; un séparateur
 >   dans les contrôles de Combat-OS. ⚠️ Vus en vitrine : un coin effleure le titre du panneau qu'il orne
->   (« Paramètres du jet », pied de la palette) — à juger par David. ⏸ Blade Runner n'a pas de `fond` : la
->   demande à RPG Theme Builder lui a été remise.
+>   (« Paramètres du jet », pied de la palette) — à juger par David. ✅ Le `fond` de Blade Runner est arrivé le
+>   13/10 (un réticule encadré de coins), validé sans avertissement. Le constructeur passe en **0.8.0** : les
+>   **quatre** ornements attendus (`fond` compris), le coin tenu dans son tiers extérieur, l'en-tête vu à
+>   ~190 × 24 px. ⚠️ **David doit recharger RPG Theme Builder dans ChatGPT** (`SKILL.md`, le cahier,
+>   `plugin.json`) : le dépôt n'y arrive pas tout seul.
 
 **Origine.** David, après le paquet Blade Runner du § 134 : *« les coins ne se voient que dans
 Dice-OS et les séparateurs sont très petits, ou alors je ne les vois pas »*. Puis : *« on garde
