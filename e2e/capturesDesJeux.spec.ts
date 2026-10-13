@@ -105,8 +105,9 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'torg', slug: 'torg', personnage: 'Mara Quill',
-        sheetData: { dexterite: 9, esquive: 2, choc: 8 },
+        sheetData: { dexterite: 9, esquive: 2, choc: 3, possibilites: 3, esprit: 9, realite: 2 },
         composantes: ['dexterite', 'esquive'],
+        casesCochees: 1,
     },
 ];
 

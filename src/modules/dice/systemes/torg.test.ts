@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bonusDeTorg, lancerLeDeDeTorg, resoudreLeJetDeTorg, direLeJetDeTorg } from './torg';
+import { bonusDeTorg, lancerLeDeDeTorg, resoudreLeJetDeTorg, direLeJetDeTorg, lancerLaPossibilite, lancerUneChaine, resoudreTorg } from './torg';
 
 /**
  * Les valeurs viennent de la Table des Bonus (livre de base, p. 109, transcrite
@@ -59,5 +59,28 @@ describe('le total d’action contre le Niveau de Difficulté', () => {
     it('se dit en une ligne, explosion comprise', () => {
         expect(direLeJetDeTorg(resoudreLeJetDeTorg(12, 10, [10, 13]), 12, 10))
             .toBe("Succès Spectaculaire — dé 10 + 13 = 23 → bonus +8 ; total d'action 20 (niveau 12) contre ND 10, marge +10");
+    });
+});
+
+describe('les dés d’après coup', () => {
+    it('la Possibilité : un 1 à 9 vaut 10, sans relance ; un 10 naturel explose', () => {
+        expect(lancerLaPossibilite(truque(3, 20))).toEqual([10]);
+        expect(lancerLaPossibilite(truque(10, 4))).toEqual([10, 4]);
+    });
+
+    it('sans entraînement, le 20 n’explose pas — le 10, si', () => {
+        expect(lancerUneChaine(truque(20, 5), false)).toEqual([20]);
+        expect(lancerUneChaine(truque(10, 5), false)).toEqual([10, 5]);
+    });
+
+    it('le total du dé réunit le premier, la Possibilité et « Un de plus ! »', () => {
+        const j = resoudreTorg(8, 10, { premier: [7], possibilite: [10] });
+        expect([j.totalDuDe, j.bonus, j.totalDAction, j.nom]).toEqual([17, 4, 12, 'Succès Simple']);
+    });
+
+    it('le malus de Blessures et la plage critique', () => {
+        expect(resoudreTorg(10, 10, { premier: [13] }, { malus: 2 }).totalDAction).toBe(9);
+        expect(resoudreTorg(30, 6, { premier: [3] }, { plageCritique: 4 }).echecCritique).toBe(true);
+        expect(resoudreTorg(30, 6, { premier: [3] }).echecCritique).toBe(false);
     });
 });

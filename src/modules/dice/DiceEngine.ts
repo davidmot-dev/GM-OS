@@ -1,5 +1,5 @@
 import { faitDescendre, deDUnCranPlusBas } from './desDUsure';
-import { lancerLeDeDeTorg, resoudreLeJetDeTorg, direLeJetDeTorg } from './systemes/torg';
+import { lancerUneChaine, resoudreTorg, direTorg, type DesDeTorg, type OptionsDeTorg } from './systemes/torg';
 import { estUneSauvegarde, lireLaNotation } from './lectureDuPilote';
 import {
     degreDepuisLeBooleen, degreDuDe, estUneReussite,
@@ -314,29 +314,38 @@ export class DiceEngine {
      * par la Table des Bonus, ajouté au niveau, comparé au Niveau de Difficulté.
      * Toute la règle vit dans `systemes/torg.ts` ; ici, seulement le hasard.
      */
-    static rollTorg(niveau: number, difficulte: number): RollResult {
-        const jet = resoudreLeJetDeTorg(niveau, difficulte, lancerLeDeDeTorg(() => this.roll(20)));
+    static rollTorg(niveau: number, difficulte: number, options: OptionsDeTorg & { entraine?: boolean } = {}): RollResult {
+        return this.resultatDeTorg(niveau, difficulte, { premier: lancerUneChaine(() => this.roll(20), options.entraine ?? true) }, options);
+    }
+
+    /**
+     * Le résultat d'un test de Torg à partir de ses dés — le premier, puis la
+     * Possibilité, « Un de plus ! », une relance favorisée, ajoutés après coup.
+     */
+    static resultatDeTorg(niveau: number, difficulte: number, des: DesDeTorg, options: OptionsDeTorg = {}): RollResult {
+        const jet = resoudreTorg(niveau, difficulte, des, options);
         const reussi = jet.degre.startsWith('reussite');
+        const chaine = (valeurs: number[] | undefined) => (valeurs ?? []).map((val, i) => ({
+            val, sides: 20, isExploded: i > 0, isCritMax: val === 10 || val === 20,
+        }));
         return {
             total: jet.totalDAction,
-            rolls: jet.des.map((val, i) => ({
-                val,
-                sides: 20,
-                isExploded: i > 0,
-                isCritMin: i === 0 && val === 1,
-                isCritMax: val === 10 || val === 20,
-            })),
+            rolls: [
+                ...chaine(des.premier).map((d, i) => ({ ...d, isCritMin: i === 0 && jet.echecCritique })),
+                ...chaine(des.possibilite),
+                ...chaine(des.unDePlus),
+            ],
             modifier: jet.bonus,
             successes: reussi ? 1 : 0,
             // Un échec n'est pas un « fléau » : ce compte-là est celui des 1 d'une réserve.
             fails: 0,
             tagSuccess: reussi,
             degre: jet.degre,
-            totalDisplay: direLeJetDeTorg(jet, niveau, difficulte),
+            totalDisplay: direTorg(jet, des, niveau, difficulte, options),
         };
     }
 
-        // --- 5. AVANTAGE / DÉSAVANTAGE ---
+    // --- 5. AVANTAGE / DÉSAVANTAGE ---
     /**
      * Lance deux dés et garde le meilleur (Avantage) ou le moins bon (Désavantage).
      * @param faces Nombre de faces.

@@ -257,6 +257,17 @@ export interface DescripteurDeJet {
      */
     tableDeBonus?: 'torg';
     /**
+     * Ce que le jet de Torg lit sur la fiche (2026-10-13) : le champ des
+     * **Blessures** (−1 par Blessure au total d'action, jusqu'à −3) et celui des
+     * **Possibilités**, qu'on dépense après avoir vu le premier dé.
+     */
+    torg?: {
+        blessures?: string;
+        possibilites?: string;
+        /** Le test de Réalité de l'Annulation des dommages : l'attribut et la compétence, lus sur la fiche. */
+        annulation?: { attribut: string; competence: string };
+    };
+    /**
      * **Provoquer le destin** — le système Nocturne de NOC, 2026-10-13
      * (`systemes/nocturne.ts`).
      *

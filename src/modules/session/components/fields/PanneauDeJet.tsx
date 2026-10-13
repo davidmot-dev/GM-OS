@@ -11,6 +11,10 @@ import { ventilerLaDepense, type RessourceDeTable } from '../../../table/Ressour
 import { useRessourcesDeTableStore } from '../../../table/useRessourcesDeTableStore';
 import { apportsDisponibles, effetDesApports, idDeReserveDuGroupe, niveauDuGroupe, type ApportDisponible } from '../../../table/reservesDuGroupe';
 import { malusDePeril, resoudreLeDestin } from '../../../dice/systemes/nocturne';
+import {
+    lancerUneChaine, lancerLaPossibilite, ceQueLAnnulationAnnule, resoudreTorg, ND_DE_L_ANNULATION,
+    type DesDeTorg, type OptionsDeTorg,
+} from '../../../dice/systemes/torg';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
@@ -222,6 +226,24 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const plafondDuDestin = destin ? Math.max(0, jet.nombreDeDes - malus.domaines) : 0;
     const [desDeDestin, setDesDeDestin] = useState<number | null>(null);
     const desLances = Math.min(desDeDestin ?? plafondDuDestin, plafondDuDestin);
+    /*
+      **Torg : le test se complète APRÈS le premier dé** — la Possibilité se
+      dépense quand on a vu le dé, la compétence favorisée relance le premier,
+      « Un de plus ! » vient de la carte d'action. On garde donc les dés du
+      dernier test pour les compléter (carnet « Torg », 2026-10-13).
+    */
+    const torg = descripteur.tableDeBonus === 'torg';
+    /** Une compétence facultative laissée vide : sans entraînement, le 20 n'explose pas. */
+    const entraine = !(descripteur.seuil ?? []).some(c => c.facultative && !choix[c.id]);
+    const blessuresTorg = torg && descripteur.torg?.blessures
+        ? Math.min(3, Math.max(0, niveauDuGroupe(valeurs, descripteur.torg.blessures))) : 0;
+    const possibilitesTorg = torg && descripteur.torg?.possibilites
+        ? Math.max(0, niveauDuGroupe(valeurs, descripteur.torg.possibilites)) : 0;
+    const [plageCritique, setPlageCritique] = useState(1);
+    const [testDeTorg, setTestDeTorg] = useState<{
+        des: DesDeTorg; options: OptionsDeTorg; niveau: number; difficulte: number; entraine: boolean; titre: string;
+    } | null>(null);
+
     /** Le niveau du Talent, malus retirés, Vécu et Atouts ajoutés — avant les dés. */
     const niveauDuDestin = jet.seuil - malus.talents + bonusPerso + bonusDuGroupe;
 
@@ -487,9 +509,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             return;
         }
 
-        const brut = descripteur.tableDeBonus === 'torg'
-            // Le niveau est le seuil additionné, la difficulté le Niveau de Difficulté.
-            ? DiceEngine.rollTorg(jet.seuil, difficulte)
+        // Torg : le niveau est le seuil additionné, la difficulté le Niveau de Difficulté.
+        const optionsTorg: OptionsDeTorg = {
+            plageCritique,
+            malus: blessuresTorg,
+            raisonDuMalus: blessuresTorg ? `Blessure${blessuresTorg > 1 ? 's' : ''}` : undefined,
+        };
+        const desTorg: DesDeTorg | null = torg ? { premier: lancerUneChaine(() => DiceEngine.roll(20), entraine) } : null;
+        setTestDeTorg(desTorg ? {
+            des: desTorg, options: optionsTorg, niveau: jet.seuil, difficulte, entraine,
+            titre: jet.composantes.map(c => c.label).join(' + '),
+        } : null);
+        const brut = desTorg
+            ? DiceEngine.resultatDeTorg(jet.seuil, difficulte, desTorg, optionsTorg)
             : jet.desEchelonnes.length > 0
             ? DiceEngine.rollFromConfig(
                 { ...dice, engine: 'yze-echelonne' },
@@ -610,6 +642,72 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
 
         setMouvements(dits);
+    };
+
+    /**
+     * Complète le dernier test de Torg et le redit — au journal, ou au meneur
+     * depuis la tablette, comme un jet neuf : c'est le résultat qui compte.
+     */
+    const completerTorg = (geste: 'relance' | 'possibilite' | 'unDePlus') => {
+        if (!testDeTorg) return;
+        const { des, options, niveau, difficulte: nd, entraine: ok, titre } = testDeTorg;
+        const de = () => DiceEngine.roll(20);
+        const suivants: DesDeTorg = geste === 'relance'
+            ? { ...des, premier: lancerUneChaine(de, ok), relance: true }
+            : geste === 'possibilite'
+                ? { ...des, possibilite: lancerLaPossibilite(de, ok) }
+                : { ...des, unDePlus: lancerUneChaine(de, ok) };
+        const res = DiceEngine.resultatDeTorg(niveau, nd, suivants, options);
+        setTestDeTorg({ ...testDeTorg, des: suivants });
+        setResultat(res);
+
+        const nomDuGeste = geste === 'relance' ? 'compétence favorisée' : geste === 'possibilite' ? 'Possibilité' : 'Un de plus !';
+        if (geste === 'possibilite' && descripteur.torg?.possibilites) {
+            ecrireSurLaFiche?.({ [descripteur.torg.possibilites]: possibilitesTorg - 1 });
+            setMouvements(m => [...m, `Possibilités −1 → ${possibilitesTorg - 1}`]);
+        }
+        if (pourLesJoueurs && personnageId) {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+                detail: {
+                    characterId: personnageId, titre: `${titre} · ${nomDuGeste}`, total: res.total, modifier: res.modifier,
+                    totalDisplay: res.totalDisplay, rolls: res.rolls, successes: res.successes, tagSuccess: res.tagSuccess, degre: res.degre,
+                },
+            }));
+        } else {
+            consignerLeJet({ titre: `${titre} · ${nomDuGeste}`, totalDisplay: res.totalDisplay, degre: res.degre, tagSuccess: res.tagSuccess });
+        }
+    };
+    const torgCritique = resultat?.degre === 'echec-total';
+
+    /**
+     * **L'Annulation des dommages** : une Possibilité, un test de Réalité
+     * (attribut + compétence) contre ND 10, et ce qu'il annule de l'attaque en
+     * cours. Le résultat se dit ; les cases se décochent par « Soins », sur la
+     * carte de combattant — GM-OS ne sait pas quelle part de quel coup annuler.
+     */
+    const annulation = torg ? descripteur.torg?.annulation : undefined;
+    const annuler = () => {
+        if (!annulation || !descripteur.torg?.possibilites) return;
+        const niveau = niveauDuGroupe(valeurs, annulation.attribut) + niveauDuGroupe(valeurs, annulation.competence);
+        const options: OptionsDeTorg = { malus: blessuresTorg, raisonDuMalus: blessuresTorg ? `Blessure${blessuresTorg > 1 ? 's' : ''}` : undefined };
+        const des: DesDeTorg = { premier: lancerUneChaine(() => DiceEngine.roll(20)) };
+        const res = DiceEngine.resultatDeTorg(niveau, ND_DE_L_ANNULATION, des, options);
+        const effet = ceQueLAnnulationAnnule(resoudreTorg(niveau, ND_DE_L_ANNULATION, des, options));
+        const ecrit: RollResult = { ...res, totalDisplay: `Annulation des dommages : ${effet} — ${res.totalDisplay}` };
+        ecrireSurLaFiche?.({ [descripteur.torg.possibilites]: possibilitesTorg - 1 });
+        setTestDeTorg(null);
+        setResultat(ecrit);
+        setMouvements([`Possibilités −1 → ${possibilitesTorg - 1}`]);
+        if (pourLesJoueurs && personnageId) {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+                detail: {
+                    characterId: personnageId, titre: 'Annulation des dommages', total: ecrit.total, modifier: ecrit.modifier,
+                    totalDisplay: ecrit.totalDisplay, rolls: ecrit.rolls, successes: ecrit.successes, tagSuccess: ecrit.tagSuccess, degre: ecrit.degre,
+                },
+            }));
+        } else {
+            consignerLeJet({ titre: 'Annulation des dommages', totalDisplay: ecrit.totalDisplay, degre: ecrit.degre, tagSuccess: ecrit.tagSuccess });
+        }
     };
 
     const reussites = resultat?.successes ?? 0;
@@ -814,6 +912,42 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 Domaine (donc aux dés de destin) et au Talent ; on nomme les états
                 qui les causent, pour que le joueur sache d'où vient le moins.
             */}
+            {torg && (
+                <div className="flex flex-wrap items-center gap-3 text-xs">
+                    <label className="flex items-center gap-2">
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Échec critique sur</span>
+                        <select
+                            value={plageCritique}
+                            onChange={e => setPlageCritique(Number(e.target.value))}
+                            title="Le livre l'étend selon le risque : rafale, axiomes, certains Atouts et pouvoirs"
+                            className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50"
+                        >
+                            <option value={1}>1</option>
+                            <option value={2}>1 – 2</option>
+                            <option value={3}>1 – 3</option>
+                            <option value={4}>1 – 4</option>
+                        </select>
+                    </label>
+                    {blessuresTorg > 0 && (
+                        <span className="text-etat-alerte/80">
+                            Malus : −{blessuresTorg} au total d'action — {blessuresTorg} Blessure{blessuresTorg > 1 ? 's' : ''}
+                        </span>
+                    )}
+                    {!entraine && <span className="text-app-text/40 italic">Sans compétence : seul le 10 explose, pas le 20.</span>}
+                    {annulation && ecrireSurLaFiche && descripteur.torg?.possibilites && (
+                        <button
+                            type="button"
+                            disabled={possibilitesTorg <= 0}
+                            onClick={annuler}
+                            title="Une Possibilité, un test de Réalité contre ND 10 — avant que les dommages de l'attaque ne prennent effet"
+                            className="ml-auto px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30"
+                        >
+                            Annulation des dommages ({possibilitesTorg})
+                        </button>
+                    )}
+                </div>
+            )}
+
             {destin && (malus.domaines > 0 || malus.talents > 0) && (
                 <p className="text-ui-11 text-etat-alerte/80">
                     Malus : {malus.domaines > 0 && `−${malus.domaines} au Domaine`}
@@ -873,7 +1007,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
             <div className="flex items-center gap-6">
                 {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
-                <div className={`flex items-center gap-2 ${destin ? 'hidden' : ''}`}>
+                <div className={`flex items-center gap-2 ${destin || torg ? 'hidden' : ''}`}>
                     <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                     <button
                         onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -1025,6 +1159,34 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </li>
                     ))}
                 </ul>
+            )}
+
+            {/*
+                **Compléter le test de Torg.** Chaque geste ne sert qu'une fois ; la
+                relance favorisée seulement avant les autres ; rien après un échec
+                critique — « aucune Possibilité ne peut modifier ce jet ».
+            */}
+            {torg && testDeTorg && resultat && !torgCritique && (
+                <div data-gestes-de-torg className="flex flex-wrap items-center gap-2">
+                    {!testDeTorg.des.relance && !testDeTorg.des.possibilite && !testDeTorg.des.unDePlus && (
+                        <button type="button" onClick={() => completerTorg('relance')}
+                            className="px-3 py-1 rounded-lg border border-app-border/40 text-ui-10 font-bold hover:border-accent/40 transition-colors">
+                            Relancer (compétence favorisée)
+                        </button>
+                    )}
+                    {!testDeTorg.des.possibilite && ecrireSurLaFiche && descripteur.torg?.possibilites && (
+                        <button type="button" disabled={possibilitesTorg <= 0} onClick={() => completerTorg('possibilite')}
+                            className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30">
+                            Dépenser une Possibilité ({possibilitesTorg})
+                        </button>
+                    )}
+                    {!testDeTorg.des.unDePlus && (
+                        <button type="button" onClick={() => completerTorg('unDePlus')}
+                            className="px-3 py-1 rounded-lg border border-app-border/40 text-ui-10 font-bold hover:border-accent/40 transition-colors">
+                            Un de plus !
+                        </button>
+                    )}
+                </div>
             )}
 
             {resultat && (

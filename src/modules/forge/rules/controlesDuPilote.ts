@@ -519,6 +519,18 @@ export function controlerLePilote(
         if (!driver.jet.difficulte) {
             erreur('jet.difficulte', 'La Table des Bonus compare le total d’action au Niveau de Difficulté : le jet doit déclarer sa difficulté.');
         }
+        for (const [cle, quoi] of [['blessures', 'Blessures'], ['possibilites', 'Possibilités']] as const) {
+            const champ = driver.jet.torg?.[cle];
+            if (champ && !tousLesChamps.has(champ)) {
+                avertir(`jet.torg.${cle}`, `Les ${quoi} se lisent dans « ${champ} », absent de la fiche : elles resteront à zéro.`);
+            }
+        }
+        const annulation = driver.jet.torg?.annulation;
+        for (const champ of annulation ? [annulation.attribut, annulation.competence] : []) {
+            if (!tousLesChamps.has(champ)) {
+                avertir('jet.torg.annulation', `Le test d'Annulation lit « ${champ} », absent de la fiche : il partira d'un niveau trop bas.`);
+            }
+        }
     }
 
     /*

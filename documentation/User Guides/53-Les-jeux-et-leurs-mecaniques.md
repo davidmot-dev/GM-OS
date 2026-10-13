@@ -23,7 +23,7 @@ fait.
 | 🌃 **Blade Runner** | **Dés échelonnés** : un dé par attribut et par compétence, de D6 à D12 | [Blade Runner](./54-Jeu-Blade-Runner.md) |
 | 🐙 **Cthulhu Hack** | **Sauvegardes** au d20 sous la caractéristique, **dés d'usure** (Torche, Bagou…) | [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md) |
 | 🐉 **Rêves de Dragons** | d100 sous un **pourcentage** lu dans la table de résolution, **degrés** de réussite | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
-| ⚡️ **Torg Eternity** | Un d20 qui **explose**, converti par la **Table des Bonus**, contre un **Niveau de Difficulté** | [Torg](./54-Jeu-Torg.md) |
+| ⚡️ **Torg Eternity** | Un d20 qui **explose**, converti par la **Table des Bonus**, contre un **Niveau de Difficulté** ; **Possibilité**, « Un de plus ! » et relance favorisée après le premier dé ; **Annulation des dommages** | [Torg](./54-Jeu-Torg.md) |
 
 ---
 
@@ -54,6 +54,7 @@ choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Dés échelonnés** (`desEchelonnes`) | **Un dé par valeur**, dont la taille se lit sur la fiche | Blade Runner : A = D12 … D = D6 |
 | **Cible en pourcentage** (`cible`) | Un d100 sous un pourcentage, lu dans la table du jeu | Rêves de Dragons |
 | **Table des Bonus** (`tableDeBonus`) | Le dé se convertit en **bonus** par la table du jeu, s'ajoute au **niveau** (le seuil additionné) et se compare à la difficulté | Torg : un d20 qui explose sur 10 et 20 |
+| **Réglages de Torg** (`torg`) | Le champ des **Blessures** (−1 au total d'action chacune, jusqu'à −3), celui des **Possibilités** (dépensées après le premier dé), et le test de Réalité de l'**Annulation des dommages** | Torg |
 | **Provoquer le destin** (`destin`) | Le **niveau** (le seuil : le Talent) contre la difficulté ; on lance de zéro au **plafond** (la réserve : le Domaine) de dés à dix faces, chaque 8 et plus élève le niveau, un 10 fait lancer un dé de plus, **chaque 1 verse une goutte dans la réserve de table** déclarée. Des **jauges de péril** retirent au Domaine et au Talent selon leurs seuils, cumulés | NOC |
 | **Réserves du personnage** (`reservesDuPersonnage`) | Ce que le personnage puise dans **ses** réserves, sur **sa** fiche, au moment du jet — même forme que les apports du groupe | NOC : Vécu, Espoir, Singularité |
 | **Composante facultative** (`facultative`) | Un choix qu'on peut laisser vide sans bloquer le jet | Torg : la compétence, absente d'un test non entraîné |
