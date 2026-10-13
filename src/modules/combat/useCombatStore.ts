@@ -495,7 +495,7 @@ interface CombatState {
      */
     refleterLaFiche: (
         cibleId: string,
-        sante: { hp?: number; healthSystem?: HealthSystem },
+        sante: { hp?: number; healthSystem?: HealthSystem; sheetData?: Record<string, string | number | boolean> },
     ) => void;
 
     // Initiative
@@ -635,6 +635,8 @@ export const useCombatStore = create<CombatState>()(
                             // elle existe.
                             ...(typeof sante.hp === 'number' ? { hp: sante.hp } : {}),
                             ...(sante.healthSystem ? { healthSystem: sante.healthSystem } : {}),
+                            // Le Choc de Torg : les valeurs de fiche qu'un coup a changées.
+                            ...(sante.sheetData ? { sheetData: { ...(c.sheetData ?? {}), ...sante.sheetData } } : {}),
                         }
                         : c),
                 }));

@@ -6,7 +6,7 @@ import { Select } from '../../../components/common/Select';
 import { gmPrompt, gmCustom } from '../../../stores/useModalStore';
 import { useSessionOSStore, type Entity } from '../../session/useSessionOSStore';
 import { HealthManager } from '../../session/components/health/HealthManager';
-import { estHorsDeCombat, santeAffichee } from '../logic/SanteDuCombattant';
+import { estHorsDeCombat, santeAffichee, maximumDeLaJauge } from '../logic/SanteDuCombattant';
 import type { HealthSystem } from '../../session/useSessionOSStore';
 import { Bouton, Icone } from '../../../components/socle';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
@@ -519,6 +519,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         // If it's something like Sanity or Stress, the max might be known, but 10 is a safe UI default for grids
                         // We take the max of 10 or the current value if it exceeds 10
                         max = Math.max(max, val > 0 ? val : 10);
+                        // Le maximum que le pilote déclare l'emporte : le Choc de Torg plafonne à l'Esprit.
+                        max = maximumDeLaJauge(gaugeConfig.fieldId, activeDriver?.combat?.statsToTrack, sheetData) ?? max;
 
                         const percent = Math.min(100, Math.max(0, (val / max) * 100));
 
@@ -642,6 +644,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                                 const fieldDef = sourceTemplate?.sections.flatMap(s => s.fields).find((f: { id: string; type: string; defaultValue?: string | number | boolean }) => f.id === stat.fieldId);
                                 if (fieldDef && fieldDef.type === 'number' && fieldDef.defaultValue) max = Number(fieldDef.defaultValue);
                                 max = Math.max(max, val > 0 ? val : 10);
+                                max = maximumDeLaJauge(stat.fieldId, activeDriver?.combat?.statsToTrack, ficheLue.valeurs) ?? max;
 
                                 const segments = 10;
                                 const activeSegments = Math.round((val / max) * segments);

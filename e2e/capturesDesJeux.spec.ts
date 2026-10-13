@@ -54,6 +54,8 @@ interface MiseEnScene {
     puiser?: string[];
     /** Des cases de santé déjà cochées, pour une carte de combattant qui raconte un combat. */
     casesCochees?: number;
+    /** Un coup porté avant la photo — un total de dommages, que la règle du jeu traduit (Torg). */
+    coup?: number;
 }
 
 const MISES_EN_SCENE: MiseEnScene[] = [
@@ -105,9 +107,10 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'torg', slug: 'torg', personnage: 'Mara Quill',
-        sheetData: { dexterite: 9, esquive: 2, choc: 3, possibilites: 3, esprit: 9, realite: 2 },
+        sheetData: { dexterite: 9, esquive: 2, choc: 3, possibilites: 3, esprit: 9, realite: 2, resistance: 10 },
         composantes: ['dexterite', 'esquive'],
         casesCochees: 1,
+        coup: 17,
     },
 ];
 
@@ -313,6 +316,11 @@ for (const { mise, pilote } of JEUX) {
                 combat.clearCombatants();
                 combat.addCombatant({ name: nom, init: 0, isPlayer: true, faction: 'player', statuses: [], sourcePlayerId: id });
             }, { id: personnageDe(mise.slug), nom: mise.personnage });
+            if (mise.coup !== undefined) {
+                await f.evaluate(({ id, coup }) => {
+                    (window as unknown as Fenetre).useSessionOSStore.getState().handleApplyImpact(id, 'pc', { value: coup, type: 'physique' });
+                }, { id: personnageDe(mise.slug), coup: mise.coup });
+            }
             await ouvrirLeModule(gmos, 'Combat-OS');
             const carte = f.locator('[data-combattant]').first();
             await expect(carte).toBeVisible({ timeout: 15_000 });

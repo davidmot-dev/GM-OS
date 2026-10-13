@@ -144,7 +144,8 @@ ressources suivies en combat dont le champ contient un dé. Voir [Cthulhu Hack](
 | **Santé de départ** (`santeDeDepart`) | Le maximum se lit sur la fiche (Alien : la Force) |
 | **Cases de santé** (`casesDeSante`) | Pour le modèle « cases » : leur **nombre**, leurs **seuils** nommés (« Choqué » à 5) et l'état que chacun déclenche, le **libellé** de la jauge, et le **champ** de la fiche qui la suit (NOC : dix cases Blessures). Sans elles, cinq cases (Léger, Grave, Critique) |
 | **Tâche de défaite** (`tacheDeDefaite`) | Vaincre un adversaire est une tâche étendue, pas une jauge qui tombe à zéro (Dune) |
-| **Ressources suivies** (`statsToTrack`) | Les jauges que Combat-OS montre sur chaque carte |
+| **Ressources suivies** (`statsToTrack`) | Les jauges que Combat-OS montre sur chaque carte ; leur **maximum** peut se lire sur la fiche par une formule (`max` : le Choc de Torg plafonne à l'Esprit) |
+| **Dommages selon la règle** (`dommages`) | La valeur saisie dans « Dégâts » devient un **total de dommages** : GM-OS lit la Résistance de la cible et applique la table du jeu — Blessures cochées, Choc ajouté et plafonné, KO annoncé (Torg) |
 | **Types de dégâts** (`damageTypes`) | Proposés au calculateur de dégâts |
 
 Le détail est dans [Combat-OS](./30-Combat-OS.md) et

@@ -460,3 +460,18 @@ export function santeAffichee(c: PorteurDeSante): PorteurDeSante['healthSystem']
         : 'healthy';
     return { type: 'hp', data: { current: actuel, max }, state };
 }
+
+/**
+ * **Le maximum d'une jauge suivie, lu sur la fiche** — Torg, 2026-10-13 : le
+ * Choc plafonne à l'Esprit du personnage. Le pilote le déclare par une formule
+ * (`statsToTrack[].max`), comme la santé de départ. `null` : rien de déclaré,
+ * l'écran garde son repli.
+ */
+export function maximumDeLaJauge(
+    fieldId: string,
+    statsToTrack: readonly { fieldId: string; max?: string }[] | undefined,
+    valeurs: Record<string, unknown> | undefined | null,
+): number | null {
+    const formule = statsToTrack?.find(s => s.fieldId === fieldId)?.max;
+    return santeDeDepart(formule, champ => valeurDuChamp(valeurs, champ));
+}

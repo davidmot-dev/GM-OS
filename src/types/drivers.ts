@@ -116,6 +116,12 @@ export interface CombatStatMapping {
     label: string;
     isMainHP: boolean;
     isResource: boolean; // Magic points, Sanity, etc.
+    /**
+     * **Le maximum de la jauge, lu sur la fiche** — une formule comme
+     * `santeDeDepart` (`esprit`, `force + 2`). Le Choc de Torg plafonne à l'Esprit
+     * (2026-10-13). Absent : la valeur par défaut du champ, sinon 10.
+     */
+    max?: string;
 }
 
 export interface UIConfig {
@@ -296,6 +302,14 @@ export interface GameDriver {
          * d'avant.
          */
         casesDeSante?: CasesDeSante;
+        /**
+         * **Les dommages se calculent selon la règle du jeu** — Torg, 2026-10-13
+         * (`combat/logic/dommagesDeTorg.ts`). La valeur saisie dans « Dégâts » est
+         * alors le total de dommages : on lit la `resistance` de la cible, on coche
+         * les Blessures (le modèle de santé) et on ajoute le Choc au champ `choc`,
+         * plafonné par le `max` que `statsToTrack` déclare pour lui.
+         */
+        dommages?: { mecanique: 'torg'; resistance: string; choc: string };
     };
 
     // UI Customization

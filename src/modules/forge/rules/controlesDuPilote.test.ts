@@ -346,6 +346,22 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         ]);
     });
 
+    it('les dommages de Torg : une règle connue, une Résistance et un Choc sur la fiche', () => {
+        const constats = controlerLePilote(
+            { combat: {
+                statsToTrack: [{ fieldId: 'choc', label: 'Choc', isMainHP: false, isResource: true, max: 'esprit_absent' }],
+                initiativeFormula: '',
+                dommages: { mecanique: 'torg', resistance: 'nulle_part', choc: 'absent' },
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.filter(c => c.ou.startsWith('combat.dommages') || c.ou.startsWith('combat.statsToTrack[0].max')).map(c => [c.ou, c.gravite])).toEqual([
+            ['combat.dommages.resistance', 'erreur'],
+            ['combat.dommages.choc', 'erreur'],
+            ['combat.statsToTrack[0].max', 'avertissement'],
+        ]);
+    });
+
     it('la Table des Bonus : un nom connu, un niveau et une difficulté', () => {
         const mal = controlerLePilote(
             { jet: { sens: 'superieur-ou-egal', tableDeBonus: 'torg-v2' } } as unknown as Partial<GameDriver>,

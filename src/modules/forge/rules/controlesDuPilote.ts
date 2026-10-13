@@ -1201,6 +1201,26 @@ export function controlerLePilote(
 
     }
 
+    // ---- Les dommages selon la règle du jeu (Torg) --------------------------
+    const dommages = driver.combat?.dommages;
+    if (dommages) {
+        if (dommages.mecanique !== 'torg') {
+            erreur('combat.dommages.mecanique', `« ${String(dommages.mecanique)} » n'est pas une règle de dommages connue. La seule admise est : torg.`);
+        }
+        for (const [cle, quoi] of [['resistance', 'la Résistance'], ['choc', 'le Choc']] as const) {
+            if (!tousLesChamps.has(dommages[cle])) {
+                erreur(`combat.dommages.${cle}`, `Les dommages lisent ${quoi} dans « ${dommages[cle]} », absent de la fiche : chaque coup partirait de zéro.`);
+            }
+        }
+    }
+    (driver.combat?.statsToTrack ?? []).forEach((stat, i) => {
+        if (!stat.max) return;
+        const absents = champsDUneFormule(stat.max).filter(c => !tousLesChamps.has(c));
+        if (absents.length > 0) {
+            avertir(`combat.statsToTrack[${i}].max`, `Le maximum de « ${stat.label} » lit ${absents.map(c => `« ${c} »`).join(', ')}, absent de la fiche.`);
+        }
+    });
+
     // ---- Les cases de santé (NOC : dix cases Blessures) ----------------------
     const cases = driver.combat?.casesDeSante;
     if (cases) {

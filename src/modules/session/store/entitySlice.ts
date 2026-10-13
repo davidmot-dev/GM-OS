@@ -15,6 +15,9 @@ import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
 import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
+import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
+import { maximumDeLaJauge, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
+import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
 import { transfererLePersonnage } from '../logic/transfertDePersonnage';
 import { tousLesPilotes } from './tousLesPilotes';
@@ -46,7 +49,7 @@ const plateauDeCombat = () => (window as unknown as {
             noterUnCoup?: (cibleId: string, impact: DamageImpact) => void;
             refleterLaFiche?: (
                 cibleId: string,
-                sante: { hp?: number; healthSystem?: HealthSystem },
+                sante: { hp?: number; healthSystem?: HealthSystem; sheetData?: Record<string, string | number | boolean> },
             ) => void;
         };
     };
@@ -749,8 +752,35 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
 
     // ─── Health / Impact System ───────────────────
 
-    handleApplyImpact: (targetId, targetType, impact) => {
+    handleApplyImpact: (targetId, targetType, impactSaisi) => {
         const { entities, players } = get();
+        // Même lecture du magasin entier que `santeSelonLeJeu` plus haut : la tranche ne connaît que ses champs.
+        const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+        const campaigns = etat.campaigns ?? [];
+        const customGameDrivers = etat.customGameDrivers ?? [];
+        const activeCampaignId = etat.activeCampaignId ?? null;
+
+        /*
+          **Les dommages selon la règle du jeu** — Torg, 2026-10-13. Quand le
+          pilote déclare `combat.dommages`, la valeur saisie est un total de
+          dommages : on lit la Résistance de la cible, la table donne les
+          Blessures (le coup qui frappe la santé) et le Choc (ajouté au champ de
+          la fiche, plafonné). Le journal et l'écran disent le calcul.
+        */
+        const selonLeJeu = (pilote: GameDriver | null | undefined, fiche: Record<string, unknown> | undefined) => {
+            const regle = pilote?.combat?.dommages;
+            if (!regle || regle.mecanique !== 'torg' || impactSaisi.isRecovery) return null;
+            const resistance = valeurDuChamp(fiche, regle.resistance) ?? 0;
+            const d = dommagesDeTorg(impactSaisi.value, resistance);
+            const max = maximumDeLaJauge(regle.choc, pilote?.combat?.statsToTrack, fiche);
+            const choc = ajouterLeChoc(valeurDuChamp(fiche, regle.choc) ?? 0, d.choc, max);
+            return {
+                impact: { ...impactSaisi, value: d.blessures },
+                fiche: d.choc > 0 ? { [regle.choc]: choc.valeur } : {},
+                texte: direLesDommages(impactSaisi.value, resistance, d, choc.ko),
+            };
+        };
+        const piloteOuvert = tousLesPilotes(customGameDrivers).find(d => d.id === campaigns.find(c => c.id === activeCampaignId)?.system);
 
         /*
           **Le coup est compté au combat en cours, s'il y en a un.**
@@ -762,11 +792,16 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
           `noterUnCoup` accepte l'identifiant de la fiche et ne fait rien si
           personne sur le plateau ne lui correspond.
         */
-        plateauDeCombat()?.noterUnCoup?.(targetId, impact);
-
         if (targetType === 'npc') {
             const entity = entities.find((e) => e.id === targetId);
             if (!entity) return;
+            const regle = selonLeJeu(piloteOuvert, entity.sheetData);
+            const impact = regle?.impact ?? impactSaisi;
+            plateauDeCombat()?.noterUnCoup?.(targetId, impact);
+            if (regle && Object.keys(regle.fiche).length > 0) {
+                get().updateEntity(targetId, { sheetData: { ...(entity.sheetData ?? {}), ...regle.fiche } });
+            }
+            if (regle) gmToast(`${entity.name} — ${regle.texte}`, 'info');
 
             const baseHealth = entity.healthSystem || HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
@@ -785,14 +820,14 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
               c'est ainsi qu'un soin disparaissait sans laisser de trace.
             */
             plateauDeCombat()?.refleterLaFiche?.(targetId, {
-                hp: newHp, healthSystem: updatedHealth,
+                hp: newHp, healthSystem: updatedHealth, ...(regle ? { sheetData: regle.fiche } : {}),
             });
 
             if (typeof window !== 'undefined' && window.useJournalStore) {
                 window.useJournalStore.getState().addEvent({
                     type: 'COMBAT',
                     title: i18next.t('modules:session.events.impact_title', { name: entity.name }),
-                    content: raconterLImpact(impact, {
+                    content: (regle ? `${regle.texte}\n` : '') + raconterLImpact(impact, {
                         hp: newHp, maxHp: entity.maxHp, healthSystem: updatedHealth,
                     }),
                     /*
@@ -812,8 +847,16 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             );
             const character = player?.characters.find((c) => c.id === targetId);
             if (!player || !character) return;
+            const regle = selonLeJeu(piloteDuPersonnage(character, campaigns, customGameDrivers, activeCampaignId), character.sheetData);
+            const impact = regle?.impact ?? impactSaisi;
+            plateauDeCombat()?.noterUnCoup?.(targetId, impact);
+            if (regle && Object.keys(regle.fiche).length > 0) {
+                get().updateCharacter(player.id, targetId, { sheetData: { ...character.sheetData, ...regle.fiche } });
+            }
+            if (regle) gmToast(`${character.name} — ${regle.texte}`, 'info');
 
-            const baseHealth = character.healthSystem || HealthInterpreter.createDefault('hp');
+            const baseHealth = get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId)?.healthSystem
+                || character.healthSystem || HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? character.hp;
             
@@ -829,7 +872,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 window.useJournalStore.getState().addEvent({
                     type: 'COMBAT',
                     title: i18next.t('modules:session.events.impact_title', { name: character.name }),
-                    content: raconterLImpact(impact, {
+                    content: (regle ? `${regle.texte}\n` : '') + raconterLImpact(impact, {
                         hp: newHp, maxHp: character.maxHp, healthSystem: updatedHealth,
                     }),
                     // Même rattachement que pour une entité : voir la branche ci-dessus.

@@ -87,11 +87,25 @@ part de quel coup retirer.
 
 ![La carte de combattant d'un Chevalier des Tempêtes : quatre cases de Blessures, et le Choc](captures/jeu-torg-sante.jpg)
 
+- **Les dommages se calculent seuls.** Dans « Dégâts » sur la carte de combattant, saisissez le
+  **total de dommages** de l'attaque : GM-OS lit la **Résistance** de la cible et applique la Table
+  des Dommages — et le dit, à l'écran et au journal : « 29 dommages contre Résistance 17 : 2
+  Blessures, 4 Choc ».
+
+  | Dommages − Résistance | Effet |
+  | :--- | :--- |
+  | −6 ou moins | rien |
+  | −5 à −1 | 1 Choc |
+  | 0 à 4 | 2 Choc |
+  | 5 à 9 | 1 Blessure, 2 Choc |
+  | puis par tranche de 5 | +1 Blessure, +2 Choc |
+
 - **Blessures : quatre cases.** Trois Blessures au plus (**Blessé**, puis **Grièvement blessé** à 3) ;
-  la quatrième, c'est **Vaincu** — le test de Défaite. La jauge « Blessures » de la fiche suit les
-  cases, et le jet en tire son malus.
-- **Choc** est suivi sur la carte de combattant (jusqu'à l'Esprit ; au-delà, KO). Il ne donne aucun
-  malus.
+  la quatrième, c'est **Vaincu** — le test de Défaite (ND 10, sous le plus faible de Force et Esprit).
+  La jauge « Blessures » de la fiche suit les cases, et le jet en tire son malus.
+- **Choc** : suivi sur la carte de combattant, **plafonné à l'Esprit** du personnage. Le dépasser
+  met **KO** — GM-OS l'annonce ; le surplus est ignoré. Le Choc ne donne aucun malus.
+- **« Soins »** décoche les Blessures sans passer par la table.
 - **Initiative :** la Dextérité, dans l'ordre croissant — en attendant le Paquet d'Action.
 - **Distances** en mètres, de « au corps à corps » à « Portée Longue ».
 
@@ -103,4 +117,5 @@ part de quel coup retirer.
   **les Cartes du Destin** (la main, la Réserve d'Action) : en chantier, ils attendent vos cartes.
 - **La Loi de l'Action** de l'Empire du Nil (une seconde Possibilité pour relancer) et **les Lois
   des cosms** qui changent l'Annulation.
-- **Le calcul des dommages** (dégâts moins Résistance → Choc et Blessures) se fait encore à la main.
+- **Les sbires** (vaincus dès la première Blessure) et **les hordes** (Choc mis en commun) n'ont pas
+  de modèle à part : réglez leur santé à la main.
