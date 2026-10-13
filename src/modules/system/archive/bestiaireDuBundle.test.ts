@@ -38,6 +38,20 @@ describe('le bestiaire dans un bundle de pilote', () => {
         expect(bundle.bestiaire?.[0].nom).toBe('Sentinelle');
     });
 
+    /*
+      2026-10-13 : la fiche était cherchée sous l'identifiant du pilote, qu'elle
+      ne porte jamais — les six exports du jour sont partis sans leur fiche.
+    */
+    it('⭐ emporte la fiche que le pilote désigne par templateId', () => {
+        const fiche = { id: 'tpl-123', name: 'Fiche du jeu de test', sections: [] };
+        useSessionOSStore.setState({
+            customGameDrivers: [{ ...(PILOTE as object), templateId: 'tpl-123' }],
+            customSheetTemplates: [fiche, { id: 'tpl-autre', name: 'Une autre', sections: [] }],
+        } as never);
+
+        expect(nexusService.scrapeDriverData('jeu-test').sheetTemplate?.id).toBe('tpl-123');
+    });
+
     it('⭐ n’ajoute rien au bundle quand le bestiaire est vide', () => {
         /* Un bundle ne doit pas grossir de champs qui ne disent rien. */
         expect(nexusService.scrapeDriverData('jeu-test').bestiaire).toBeUndefined();

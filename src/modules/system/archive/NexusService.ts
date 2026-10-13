@@ -351,8 +351,18 @@ export class NexusService {
             throw new Error(`[NexusService] Driver not found: ${driverId}`);
         }
 
-        // Si l'ID du driver correspond à un template (convention GM-OS), l'exporter
-        const sheetTemplate = customSheetTemplates.find((t: SheetTemplate) => t.id === driverId);
+        /*
+          **La fiche du jeu part avec lui — celle que désigne `templateId`.**
+
+          Elle était cherchée sous l'identifiant du PILOTE (« convention
+          GM-OS »), qu'aucune fiche ne porte : une fiche a le sien (`tpl-…`),
+          et le pilote la désigne par `templateId`. Relevé le 2026-10-13 : les
+          six exports du jour ne contenaient que `gameDriver` — partager un jeu
+          donnait un pilote sans fiche. L'ancienne règle reste en secours, pour
+          un pilote dont la fiche porterait vraiment son identifiant.
+        */
+        const sheetTemplate = customSheetTemplates.find((t: SheetTemplate) => t.id === gameDriver.templateId)
+            ?? customSheetTemplates.find((t: SheetTemplate) => t.id === driverId);
 
         /*
           **Le bestiaire voyage avec son jeu.** Il est deja indexe par
