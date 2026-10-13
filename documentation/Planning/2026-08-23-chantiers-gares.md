@@ -4881,7 +4881,23 @@ reste **non suivi** ; son auto-test passe (`python pdf_vers_md.py --selftest`).
 
 **Motif du gel** : le moment, pas une objection. *Se rouvre à la demande de David.*
 
-#### ⏸ Rendre les ornements de thème visibles dans GM-OS — garé le 2026-10-10
+#### ⭐ Rendre les ornements de thème visibles dans GM-OS — garé le 2026-10-10, **rouvert et traité le 2026-10-13**
+
+> **Rouvert par David le 13/10, les trois voies à la fois, plus une quatrième** : *« modifier les instructions
+> pour le theme builder pour qu'il intègre directement les ornements dans sa construction »*.
+> - **Voie 2, fait** : un `Separateur` entre les trois temps de la préparation de séance (`SessionFocusEditor`),
+>   entre les textes, le décor et les rencontres d'une scène de la Trame, et entre la narration et les notes de
+>   l'écran « Scène en cours ».
+> - **Voie 3, fait** : des coins (`orne`) sur le panneau principal de l'espace de séance, de la préparation, du
+>   journal (le fil) et de la fiche de campagne, et sur le portrait d'une fiche de PNJ (`CoinsOrnes`, calque
+>   `z-[15]`). Toujours un par écran — *un écran qui orne tout n'orne rien*.
+> - **Les instructions du constructeur, faites** : le § 8 du cahier (les deux copies) et `SKILL.md` exigent
+>   `entete`, `coin` et `separateur` ; des traits de 1,5 à 2,5 unités ; le séparateur posé à 160 × 12 px. Le
+>   validateur **avertit** d'un ornement absent, sans refuser (`signalerLesOrnementsAbsents`).
+> - **Voie 1, en attente de RPG Theme Builder** : la demande pour Blade Runner (un `entete`, et un séparateur
+>   redessiné en `0 0 160 12` — l'actuel, en `0 0 320 16` à 1,5, ne fait que 0,75 px à l'écran) a été remise à
+>   David le 13/10. ⚠️ `intention.md` disait *« aucun en-tête décoratif »* : la phrase est à changer avec lui.
+> - Le validateur signale aussi les ornements absents de Dune, NOC, Star Trek et Torg (avertissements).
 
 **Origine.** David, après le paquet Blade Runner du § 134 : *« les coins ne se voient que dans
 Dice-OS et les séparateurs sont très petits, ou alors je ne les vois pas »*. Puis : *« on garde
