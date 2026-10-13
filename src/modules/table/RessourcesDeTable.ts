@@ -11,8 +11,10 @@
  * personnage.
  *
  * **Ce que le modèle porte, et rien de plus** : combien il y en a, entre quelles
- * bornes, à qui elles sont, ce qu'elles perdent en fin de scène, et où va ce
- * qu'on ne peut pas payer. Il ne dit pas *à quoi* on les dépense — acheter un
+ * bornes, à qui elles sont, ce qu'elles perdent en fin de scène ou en début de
+ * séance, si elles reviennent à leur départ à chaque scénario, où va ce qu'on
+ * ne peut pas payer et où va ce qui déborde (le Fiel de NOC, qui se vide en
+ * Menace). Il ne dit pas *à quoi* on les dépense — acheter un
  * dé, annuler une complication, hausser une difficulté sont des décisions de
  * table, et elles restent dans les fiches de règles que le meneur lit.
  *
@@ -48,6 +50,33 @@ export interface RessourceDeTable {
      * tombée à zéro et aurait refusé.
      */
     reportSurEpuisement?: string;
+    /**
+     * Où va ce qui **déborde** — le contraire du report, qui porte le manque.
+     *
+     * **NOC, 2026-10-13** : « à cinq gouttes, la jauge de Fiel se vide pour
+     * augmenter la Menace de plus un » (`docs/systems/noc/rules/monnaie-de-table.md`).
+     * Le plafond n'y refuse rien : l'atteindre **vide** la réserve jusqu'à son
+     * plancher et fait gagner `gain` (un par défaut) à la réserve `vers`.
+     *
+     * **Un gain qui franchit le seuil continue de remplir la jauge vidée** : à
+     * quatre gouttes, en recevoir trois la vide une fois et en laisse deux. Les
+     * sources ne tranchent pas (« Non couvert » de la fiche) ; on suit le geste
+     * qu'elles décrivent, des marqueurs posés un à un au milieu de la table.
+     *
+     * Sans `max`, il n'y a pas de seuil : la déclaration est ignorée, et la
+     * Forge le signale.
+     */
+    debordement?: { vers: string; gain?: number };
+    /**
+     * Ce que la réserve perd au **début de chaque séance** — la soirée de jeu,
+     * pas le temps du récit. La Menace de NOC : un point.
+     */
+    erosionDebutDeSeance?: number;
+    /**
+     * La réserve revient-elle à son **départ** à chaque nouveau scénario ? La
+     * Menace de NOC, « remise à zéro au début de chaque nouvelle aventure ».
+     */
+    remiseAuDepartParScenario?: boolean;
     description?: string;
     /**
      * La réserve est-elle **montrée aux joueurs**, sur leur tablette ?
@@ -249,13 +278,29 @@ export function depenser(
 }
 
 /**
- * Ajoute à une réserve, en signalant ce que le plafond refuse.
+ * Ajoute à une réserve, en signalant ce que le plafond refuse — ou en la
+ * faisant déborder, si elle le déclare.
  */
 export function gagner(
     ressources: RessourceDeTable[],
     etat: EtatDesRessources,
     id: string,
     montant: number,
+): ResultatDeMouvement {
+    return gagnerEnCascade(ressources, etat, id, montant, []);
+}
+
+/**
+ * `traversees` : les réserves qui ont déjà débordé dans cette cascade. Une
+ * boucle déclarée (A déborde dans B, B dans A) s'arrête là où elle revient —
+ * la réserve plafonne alors normalement — au lieu de tourner sans fin.
+ */
+function gagnerEnCascade(
+    ressources: RessourceDeTable[],
+    etat: EtatDesRessources,
+    id: string,
+    montant: number,
+    traversees: string[],
 ): ResultatDeMouvement {
     const demande = Math.max(0, Math.floor(montant));
     const ressource = ressources.find(r => r.id === id);
@@ -269,6 +314,46 @@ export function gagner(
     }
 
     const avant = valeurDe(ressources, etat, id);
+
+    const { debordement, max } = ressource;
+    if (debordement && max !== undefined && max > ressource.min && !traversees.includes(id)) {
+        // Goutte à goutte : chaque fois que la jauge touche son seuil, elle se
+        // vide, et ce qui reste du gain continue de la remplir.
+        let valeur = avant;
+        let restant = demande;
+        let fois = 0;
+        while (restant > 0) {
+            if (valeur >= max) {
+                valeur = ressource.min;
+                fois++;
+                continue;
+            }
+            const pris = Math.min(max - valeur, restant);
+            valeur += pris;
+            restant -= pris;
+            if (valeur >= max) {
+                valeur = ressource.min;
+                fois++;
+            }
+        }
+
+        const suivant = { ...etat, [id]: valeur };
+        const mouvements: MouvementDeReserve[] = valeur === avant ? [] : [{ ressourceId: id, delta: valeur - avant }];
+        if (fois === 0) return { etat: suivant, mouvements, perdu: 0, avertissements: [] };
+
+        const gain = fois * Math.max(1, Math.floor(debordement.gain ?? 1));
+        const suite = gagnerEnCascade(ressources, suivant, debordement.vers, gain, [...traversees, id]);
+        const cible = ressources.find(r => r.id === debordement.vers);
+        const dit = `${ressource.label} atteint ${max}${fois > 1 ? ` ${fois} fois` : ''} : la jauge se vide, `
+            + `${cible?.label ?? debordement.vers} +${gain} → ${valeurDe(ressources, suite.etat, debordement.vers)}.`;
+        return {
+            etat: suite.etat,
+            mouvements: [...mouvements, ...suite.mouvements],
+            perdu: suite.perdu,
+            avertissements: [dit, ...suite.avertissements],
+        };
+    }
+
     const apres = ressource.max === undefined ? avant + demande : Math.min(ressource.max, avant + demande);
     const gagne = apres - avant;
     const perdu = demande - gagne;
@@ -326,18 +411,58 @@ export function finDeScene(
     ressources: RessourceDeTable[],
     etat: EtatDesRessources,
 ): ResultatDeMouvement {
+    return eroder(ressources, etat, r => r.erosionFinDeScene);
+}
+
+/**
+ * L'érosion de début de séance — la Menace de NOC perd un point « lors d'une
+ * nouvelle soirée de jeu autour de la table, et non in-game ». Un geste du
+ * meneur, pour la même raison que la fin de scène : rien ici ne sait qu'une
+ * soirée commence.
+ */
+export function debutDeSeance(
+    ressources: RessourceDeTable[],
+    etat: EtatDesRessources,
+): ResultatDeMouvement {
+    return eroder(ressources, etat, r => r.erosionDebutDeSeance);
+}
+
+/** Les réserves qui le déclarent reviennent à leur départ — un nouveau scénario commence. */
+export function nouveauScenario(
+    ressources: RessourceDeTable[],
+    etat: EtatDesRessources,
+): ResultatDeMouvement {
     let courant = { ...etat };
     const mouvements: MouvementDeReserve[] = [];
-    const avertissements: string[] = [];
 
     for (const r of ressources) {
-        if (!r.erosionFinDeScene) continue;
+        if (!r.remiseAuDepartParScenario) continue;
         const avant = valeurDe(ressources, courant, r.id);
-        const apres = Math.max(r.min, avant - r.erosionFinDeScene);
+        if (avant === r.depart) continue;
+        courant = { ...courant, [r.id]: r.depart };
+        mouvements.push({ ressourceId: r.id, delta: r.depart - avant });
+    }
+
+    return { etat: courant, mouvements, perdu: 0, avertissements: [] };
+}
+
+function eroder(
+    ressources: RessourceDeTable[],
+    etat: EtatDesRessources,
+    perte: (r: RessourceDeTable) => number | undefined,
+): ResultatDeMouvement {
+    let courant = { ...etat };
+    const mouvements: MouvementDeReserve[] = [];
+
+    for (const r of ressources) {
+        const p = perte(r);
+        if (!p) continue;
+        const avant = valeurDe(ressources, courant, r.id);
+        const apres = Math.max(r.min, avant - p);
         if (apres === avant) continue;
         courant = { ...courant, [r.id]: apres };
         mouvements.push({ ressourceId: r.id, delta: apres - avant });
     }
 
-    return { etat: courant, mouvements, perdu: 0, avertissements };
+    return { etat: courant, mouvements, perdu: 0, avertissements: [] };
 }

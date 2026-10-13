@@ -8,6 +8,8 @@ import {
     gagner as gagnerPur,
     fixer as fixerPur,
     finDeScene as finDeScenePur,
+    debutDeSeance as debutDeSeancePur,
+    nouveauScenario as nouveauScenarioPur,
     type EtatDesRessources,
     type RessourceDeTable,
     type ResultatDeMouvement,
@@ -62,6 +64,10 @@ interface RessourcesDeTableState {
     fixer: (campaignId: string, ressources: RessourceDeTable[], id: string, valeur: number, motif?: string) => ResultatDeMouvement;
     /** L'érosion de fin de scène, déclenchée par le meneur — lui seul sait qu'une scène s'achève. */
     finDeScene: (campaignId: string, ressources: RessourceDeTable[]) => ResultatDeMouvement;
+    /** L'érosion de début de séance — la soirée de jeu, que le meneur ouvre. */
+    debutDeSeance: (campaignId: string, ressources: RessourceDeTable[]) => ResultatDeMouvement;
+    /** Les réserves qui le déclarent reviennent à leur départ : un scénario commence. */
+    nouveauScenario: (campaignId: string, ressources: RessourceDeTable[]) => ResultatDeMouvement;
     /** Remet les réserves d'une campagne à leur valeur de départ. */
     reinitialiser: (campaignId: string, ressources: RessourceDeTable[]) => void;
     /**
@@ -104,9 +110,10 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
              * quatre à un ne veut rien dire sans ce qui l'a dépensée, et c'est
              * précisément ce qu'on se demande en relisant une séance.
              *
-             * **Écrit ici et nulle part ailleurs.** Cinq chemins font bouger une
+             * **Écrit ici et nulle part ailleurs.** Sept chemins font bouger une
              * réserve — le meneur, le panneau de jet, l'alternance d'initiative,
-             * la fin de scène, la tablette d'un joueur — et tous passent par
+             * la fin de scène, le début de séance, le nouveau scénario, la
+             * tablette d'un joueur — et tous passent par
              * `appliquer`. Les instrumenter un par un aurait garanti qu'un
              * sixième, ajouté plus tard, se taise sans que personne ne le
              * remarque.
@@ -174,6 +181,12 @@ export const useRessourcesDeTableStore = create<RessourcesDeTableState>()(
 
                 finDeScene: (campaignId, ressources) =>
                     appliquer(campaignId, finDeScenePur(ressources, lire(campaignId, ressources)), ressources, 'fin de scène'),
+
+                debutDeSeance: (campaignId, ressources) =>
+                    appliquer(campaignId, debutDeSeancePur(ressources, lire(campaignId, ressources)), ressources, 'début de séance'),
+
+                nouveauScenario: (campaignId, ressources) =>
+                    appliquer(campaignId, nouveauScenarioPur(ressources, lire(campaignId, ressources)), ressources, 'nouveau scénario'),
 
                 reinitialiser: (campaignId, ressources) => {
                     set(state => ({ reserves: { ...state.reserves, [campaignId]: etatInitial(ressources) } }));

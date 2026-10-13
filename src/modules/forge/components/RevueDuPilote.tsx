@@ -326,8 +326,13 @@ export const RevueDuPilote: React.FC<{
               <Id valeur={ressource.id} /> — {ressource.proprietaire}, départ {ressource.depart},
               min {ressource.min}{ressource.max !== undefined ? `, max ${ressource.max}` : ', sans plafond'}
               {ressource.erosionFinDeScene ? `, −${ressource.erosionFinDeScene} en fin de scène` : ''}
+              {ressource.erosionDebutDeSeance ? `, −${ressource.erosionDebutDeSeance} en début de séance` : ''}
+              {ressource.remiseAuDepartParScenario ? ', remise au départ à chaque scénario' : ''}
               {ressource.reportSurEpuisement && (
-                <> — trop-plein vers <Id valeur={ressource.reportSurEpuisement} resolu={driver.ressourcesDeTable!.some(r => r.id === ressource.reportSurEpuisement)} /></>
+                <> — manque reporté sur <Id valeur={ressource.reportSurEpuisement} resolu={driver.ressourcesDeTable!.some(r => r.id === ressource.reportSurEpuisement)} /></>
+              )}
+              {ressource.debordement && (
+                <> — déborde dans <Id valeur={ressource.debordement.vers} resolu={driver.ressourcesDeTable!.some(r => r.id === ressource.debordement?.vers)} /> (+{ressource.debordement.gain ?? 1})</>
               )}
             </Ligne>
           ))}

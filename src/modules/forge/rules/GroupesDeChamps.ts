@@ -226,7 +226,10 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             + 'meneur peut être publique — les joueurs la voient monter sans y toucher —, et une '
             + 'réserve commune aux joueurs se dépense en général par décision collective. '
             + 'OMETS ces deux champs si les fiches ne le disent pas : on suivra alors le '
-            + 'propriétaire',
+            + 'propriétaire. Si les fiches le disent, déclare aussi : "debordement" '
+            + '({"vers": id, "gain": n} — à son max la réserve se vide et la cible gagne n), '
+            + '"erosionDebutDeSeance" (perte à chaque soirée de jeu) et '
+            + '"remiseAuDepartParScenario" (true si elle revient à son départ à chaque scénario)',
         exemple: '{"driver":{"ressourcesDeTable":[{"id":"impulsion","label":"Impulsion","proprietaire":"joueurs","depart":0,"min":0,"max":6,"erosionFinDeScene":1,"reportSurEpuisement":"menace","visibleAuxJoueurs":true,"manipulableParLesJoueurs":true},{"id":"menace","label":"Menace","proprietaire":"meneur","depart":0,"min":0,"visibleAuxJoueurs":true,"manipulableParLesJoueurs":false}]}}',
     },
     {

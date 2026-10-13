@@ -1,6 +1,7 @@
 import React from 'react';
-import { Plus, Minus, Users, Crown, Hourglass } from 'lucide-react';
+import { Plus, Minus, Users, Crown, Hourglass, Sunrise, RotateCcw } from 'lucide-react';
 import { gmToast } from '../../stores/useToastStore';
+import { gmConfirm } from '../../stores/useModalStore';
 import { useRessourcesDeTableStore } from './useRessourcesDeTableStore';
 import {
     visiblePourUnJoueur, manipulableParUnJoueur,
@@ -40,6 +41,8 @@ interface PanneauDesRessourcesProps {
     pourLesJoueurs?: boolean;
 }
 
+const CLASSE_DU_GESTE = 'flex items-center gap-1.5 px-3 py-1 rounded-lg border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:border-accent/40 hover:text-accent transition-colors';
+
 /** Ce qu'un mouvement a produit, dit à voix haute. */
 function annoncer(resultat: ResultatDeMouvement) {
     for (const a of resultat.avertissements) {
@@ -50,11 +53,16 @@ function annoncer(resultat: ResultatDeMouvement) {
 const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     campaignId, ressources, pourLesJoueurs = false,
 }) => {
-    const { etatDe, gagner, depenser, finDeScene, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
+    const { etatDe, gagner, depenser, finDeScene, debutDeSeance, nouveauScenario, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const etat = etatDe(campaignId, ressources);
 
     const montrees = pourLesJoueurs ? ressources.filter(visiblePourUnJoueur) : ressources;
     const erosionPossible = !pourLesJoueurs && ressources.some(r => r.erosionFinDeScene);
+    const seancePossible = !pourLesJoueurs && ressources.some(r => r.erosionDebutDeSeance);
+    const scenarioPossible = !pourLesJoueurs && ressources.some(r => r.remiseAuDepartParScenario);
+
+    /** Les réserves qui reviennent à leur départ, nommées — la confirmation dit ce qu'elle efface. */
+    const remisesAuDepart = ressources.filter(r => r.remiseAuDepartParScenario);
 
     /**
      * Un point en plus ou en moins.
@@ -153,18 +161,64 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                 le meneur qui le décide. On lui donne le bouton plutôt que de
                 deviner à partir d'un combat ou d'un changement de carte.
             */}
-            {erosionPossible && (
-                <button
-                    onClick={() => {
-                        const r = finDeScene(campaignId, ressources);
-                        annoncer(r);
-                        if (r.mouvements.length === 0) gmToast('Rien à éroder : les réserves sont au plancher.', 'info');
-                    }}
-                    className="ml-auto flex items-center gap-1.5 px-3 py-1 rounded-lg border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:border-accent/40 hover:text-accent transition-colors"
-                    title="Applique l'érosion de fin de scène déclarée par le système"
-                >
-                    <Hourglass size={11} /> Fin de scène
-                </button>
+            {(erosionPossible || seancePossible || scenarioPossible) && (
+                <div className="ml-auto flex items-center gap-2">
+                    {erosionPossible && (
+                        <button
+                            onClick={() => {
+                                const r = finDeScene(campaignId, ressources);
+                                annoncer(r);
+                                if (r.mouvements.length === 0) gmToast('Rien à éroder : les réserves sont au plancher.', 'info');
+                            }}
+                            className={CLASSE_DU_GESTE}
+                            title="Applique l'érosion de fin de scène déclarée par le système"
+                        >
+                            <Hourglass size={11} /> Fin de scène
+                        </button>
+                    )}
+                    {/*
+                        La séance, c'est la soirée de jeu — pas le temps du
+                        récit. Comme la fin de scène, rien ne la détecte : le
+                        meneur l'ouvre.
+                    */}
+                    {seancePossible && (
+                        <button
+                            onClick={() => {
+                                const r = debutDeSeance(campaignId, ressources);
+                                annoncer(r);
+                                if (r.mouvements.length === 0) gmToast('Rien à éroder : les réserves sont au plancher.', 'info');
+                            }}
+                            className={CLASSE_DU_GESTE}
+                            title="Applique l'érosion de début de séance déclarée par le système"
+                        >
+                            <Sunrise size={11} /> Début de séance
+                        </button>
+                    )}
+                    {/*
+                        Le seul geste qui efface d'un coup une valeur sans
+                        plafond — une Menace à sept ne se remonte pas au clic.
+                        D'où la confirmation, qui nomme ce qu'elle remet.
+                    */}
+                    {scenarioPossible && (
+                        <button
+                            onClick={() => gmConfirm(
+                                `Nouveau scénario : ${remisesAuDepart.map(r => `${r.label} revient à ${r.depart}`).join(', ')}.`,
+                                () => {
+                                    const r = nouveauScenario(campaignId, ressources);
+                                    annoncer(r);
+                                    if (r.mouvements.length === 0) gmToast('Les réserves sont déjà à leur départ.', 'info');
+                                },
+                                undefined,
+                                'Remettre',
+                                'Annuler',
+                            )}
+                            className={CLASSE_DU_GESTE}
+                            title="Remet à leur départ les réserves que le système remet à chaque scénario"
+                        >
+                            <RotateCcw size={11} /> Nouveau scénario
+                        </button>
+                    )}
+                </div>
             )}
         </div>
     );

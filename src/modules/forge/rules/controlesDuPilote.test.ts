@@ -292,6 +292,39 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(constats[1].message).toContain('elle-même');
     });
 
+    it("un débordement qui vise le vide, elle-même, ou qui n'a pas de seuil", () => {
+        const constats = controlerLePilote(
+            {
+                ressourcesDeTable: [
+                    { id: 'fiel', label: 'Fiel', proprietaire: 'meneur', depart: 0, min: 0, max: 5, debordement: { vers: 'peril' } },
+                    { id: 'elan', label: 'Élan', proprietaire: 'joueurs', depart: 0, min: 0, max: 3, debordement: { vers: 'elan', gain: 0 } },
+                    { id: 'menace', label: 'Menace', proprietaire: 'meneur', depart: 0, min: 0, debordement: { vers: 'fiel' }, erosionDebutDeSeance: -1 },
+                ],
+            } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => [c.ou, c.gravite])).toEqual([
+            ['ressourcesDeTable[0].debordement', 'erreur'],
+            ['ressourcesDeTable[1].debordement', 'erreur'],
+            ['ressourcesDeTable[1].debordement.gain', 'erreur'],
+            ['ressourcesDeTable[2].debordement', 'avertissement'],
+            ['ressourcesDeTable[2].erosionDebutDeSeance', 'erreur'],
+        ]);
+    });
+
+    it('le Fiel et la Menace de NOC, déclarés juste, passent', () => {
+        const constats = controlerLePilote(
+            {
+                ressourcesDeTable: [
+                    { id: 'fiel', label: 'Fiel', proprietaire: 'meneur', depart: 0, min: 0, max: 5, debordement: { vers: 'menace' } },
+                    { id: 'menace', label: 'Menace', proprietaire: 'meneur', depart: 0, min: 0, erosionDebutDeSeance: 1, remiseAuDepartParScenario: true },
+                ],
+            } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.filter(c => c.ou.startsWith('ressourcesDeTable'))).toEqual([]);
+    });
+
     it('une logique de dés que le moteur ne connaît pas', () => {
         const constats = controlerLePilote(
             { dice: { defaultDice: '2d20', logic: 'compte-les-reussites' } } as unknown as Partial<GameDriver>,

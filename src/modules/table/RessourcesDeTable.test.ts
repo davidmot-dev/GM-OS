@@ -7,6 +7,8 @@ import {
     gagner,
     fixer,
     finDeScene,
+    debutDeSeance,
+    nouveauScenario,
     visiblePourUnJoueur,
     manipulableParUnJoueur,
     type RessourceDeTable,
@@ -210,5 +212,108 @@ describe('qui voit la réserve, et qui la fait bouger', () => {
         const tenue = { ...impulsion, manipulableParLesJoueurs: false };
         expect(visiblePourUnJoueur(tenue)).toBe(true);
         expect(manipulableParUnJoueur(tenue)).toBe(false);
+    });
+});
+
+/**
+ * NOC — `docs/systems/noc/rules/monnaie-de-table.md`. Le Fiel, de zéro à cinq,
+ * « se vide pour augmenter la Menace de plus un » ; la Menace, sans plafond,
+ * baisse d'un point à chaque séance et revient à zéro à chaque aventure.
+ */
+const FIEL: RessourceDeTable = {
+    id: 'fiel',
+    label: 'Fiel',
+    proprietaire: 'meneur',
+    depart: 0,
+    min: 0,
+    max: 5,
+    debordement: { vers: 'menace' },
+};
+
+const MENACE_NOC: RessourceDeTable = {
+    id: 'menace',
+    label: 'Menace',
+    proprietaire: 'meneur',
+    depart: 0,
+    min: 0,
+    erosionDebutDeSeance: 1,
+    remiseAuDepartParScenario: true,
+};
+
+const NOC = [FIEL, MENACE_NOC];
+
+describe('le débordement — à cinq gouttes, le Fiel se vide en Menace', () => {
+    it('la cinquième goutte vide la jauge et fait monter la Menace', () => {
+        const r = gagner(NOC, { fiel: 4, menace: 1 }, 'fiel', 1);
+        expect(r.etat).toEqual({ fiel: 0, menace: 2 });
+        expect(r.perdu).toBe(0);
+        expect(r.mouvements).toEqual([
+            { ressourceId: 'fiel', delta: -4 },
+            { ressourceId: 'menace', delta: 1 },
+        ]);
+        // Le moment où la Loi applique ses effets : il se dit, il ne se devine pas.
+        expect(r.avertissements).toEqual(['Fiel atteint 5 : la jauge se vide, Menace +1 → 2.']);
+    });
+
+    it('ce qui franchit le seuil continue de remplir la jauge vidée', () => {
+        const r = gagner(NOC, { fiel: 4, menace: 0 }, 'fiel', 3);
+        expect(r.etat).toEqual({ fiel: 2, menace: 1 });
+    });
+
+    it('un grand gain peut la vider plusieurs fois, et le dit', () => {
+        const r = gagner(NOC, { fiel: 0, menace: 0 }, 'fiel', 12);
+        expect(r.etat).toEqual({ fiel: 2, menace: 2 });
+        expect(r.avertissements[0]).toContain('2 fois');
+    });
+
+    it('sous le seuil, rien ne déborde et rien ne se dit', () => {
+        const r = gagner(NOC, { fiel: 1, menace: 0 }, 'fiel', 2);
+        expect(r.etat).toEqual({ fiel: 3, menace: 0 });
+        expect(r.avertissements).toEqual([]);
+    });
+
+    it('une jauge posée à la main sur son seuil déborde au gain suivant', () => {
+        const r = gagner(NOC, { fiel: 5, menace: 0 }, 'fiel', 1);
+        expect(r.etat).toEqual({ fiel: 1, menace: 1 });
+    });
+
+    it('sans plafond, un débordement déclaré est ignoré : la réserve monte', () => {
+        const sansSeuil = [{ ...FIEL, max: undefined }, MENACE_NOC];
+        const r = gagner(sansSeuil, { fiel: 4, menace: 0 }, 'fiel', 3);
+        expect(r.etat).toEqual({ fiel: 7, menace: 0 });
+    });
+
+    it("une boucle déclarée s'arrête là où elle revient", () => {
+        const a: RessourceDeTable = { id: 'a', label: 'A', proprietaire: 'meneur', depart: 0, min: 0, max: 2, debordement: { vers: 'b' } };
+        const b: RessourceDeTable = { id: 'b', label: 'B', proprietaire: 'meneur', depart: 0, min: 0, max: 2, debordement: { vers: 'a' } };
+        const r = gagner([a, b], { a: 1, b: 1 }, 'a', 1);
+        // A se vide dans B, B se vide dans A — qui, déjà traversée, monte simplement.
+        expect(r.etat).toEqual({ a: 1, b: 0 });
+    });
+});
+
+describe('les rythmes de la Menace — la séance et le scénario', () => {
+    it('le début de séance retire un point de Menace, et laisse le Fiel', () => {
+        const r = debutDeSeance(NOC, { fiel: 3, menace: 3 });
+        expect(r.etat).toEqual({ fiel: 3, menace: 2 });
+        expect(r.mouvements).toEqual([{ ressourceId: 'menace', delta: -1 }]);
+    });
+
+    it("à zéro, la séance n'érode plus rien", () => {
+        expect(debutDeSeance(NOC, { fiel: 0, menace: 0 }).mouvements).toEqual([]);
+    });
+
+    it('la fin de scène ne touche pas à la Menace de NOC', () => {
+        expect(finDeScene(NOC, { fiel: 3, menace: 3 }).mouvements).toEqual([]);
+    });
+
+    it('un nouveau scénario remet la Menace à son départ, même sans plafond', () => {
+        const r = nouveauScenario(NOC, { fiel: 3, menace: 7 });
+        expect(r.etat).toEqual({ fiel: 3, menace: 0 });
+        expect(r.mouvements).toEqual([{ ressourceId: 'menace', delta: -7 }]);
+    });
+
+    it('une réserve qui ne le déclare pas ne bouge pas au scénario', () => {
+        expect(nouveauScenario(DUNE, { impulsion: 4, menace: 5 }).mouvements).toEqual([]);
     });
 });

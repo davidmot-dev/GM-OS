@@ -1151,13 +1151,42 @@ export function controlerLePilote(
         if (report && !ressources.has(report)) {
             erreur(
                 `ressourcesDeTable[${i}].reportSurEpuisement`,
-                `« ${ressource.label} » déverse son trop-plein dans « ${report} », qui n'existe pas.`,
+                `« ${ressource.label} » reporte son manque sur « ${report} », qui n'existe pas.`,
             );
         }
         if (report && report === ressource.id) {
             erreur(
                 `ressourcesDeTable[${i}].reportSurEpuisement`,
                 `« ${ressource.label} » se déverse dans elle-même.`,
+            );
+        }
+
+        // Le débordement — le Fiel de NOC qui, à cinq, se vide en Menace.
+        const debordement = ressource.debordement;
+        if (debordement) {
+            const ou = `ressourcesDeTable[${i}].debordement`;
+            if (!debordement.vers || !ressources.has(debordement.vers)) {
+                erreur(ou, `« ${ressource.label} » déborde dans « ${debordement.vers ?? ''} », qui n'existe pas.`);
+            } else if (debordement.vers === ressource.id) {
+                erreur(ou, `« ${ressource.label} » déborde dans elle-même.`);
+            }
+            if (ressource.max === undefined || ressource.max <= ressource.min) {
+                // Ignoré à l'exécution, pas refusé : la réserve plafonne simplement.
+                avertir(
+                    ou,
+                    `« ${ressource.label} » déclare un débordement sans plafond au-dessus de son plancher : `
+                    + "sans seuil, elle ne débordera jamais.",
+                );
+            }
+            if (debordement.gain !== undefined && !(Number.isInteger(debordement.gain) && debordement.gain > 0)) {
+                erreur(`${ou}.gain`, `Le débordement de « ${ressource.label} » doit faire gagner un nombre entier positif.`);
+            }
+        }
+        if (ressource.erosionDebutDeSeance !== undefined
+            && !(Number.isInteger(ressource.erosionDebutDeSeance) && ressource.erosionDebutDeSeance > 0)) {
+            erreur(
+                `ressourcesDeTable[${i}].erosionDebutDeSeance`,
+                `L'érosion de début de séance de « ${ressource.label} » doit être un nombre entier positif.`,
             );
         }
     });
