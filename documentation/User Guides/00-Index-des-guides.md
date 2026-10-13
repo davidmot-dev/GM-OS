@@ -31,12 +31,12 @@ question la page répond — de quoi choisir sans ouvrir.
 
 ## 📖 Préparer une histoire, et la raconter
 
-| Guide | À quelle question il répond |
-| :--- | :--- |
-| [La Trame narrative](./11-Trame-actes-et-scenes.md) | Actes et scènes : le plan de la campagne, ce qui est joué, ce qui reste. |
+| Guide                                                | À quelle question il répond                                                                          |
+| :--------------------------------------------------- | :--------------------------------------------------------------------------------------------------- |
+| [La Trame narrative](./11-Trame-actes-et-scenes.md)  | Actes et scènes : le plan de la campagne, ce qui est joué, ce qui reste.                             |
 | [L'écran « Scène en cours »](./15-Scene-en-cours.md) | Tout ce que la scène a préparé, en plein écran, au moment de la jouer — ouvert seul, Échap / Ctrl+E. |
-| [La Forge de campagne](./12-Forge-de-campagne.md) | Transformer un scénario écrit en actes, scènes, PNJ et lieux. |
-| [Le Journal de séance](./14-Journal-de-seance.md) | Ce qui s'enregistre pendant la partie, et comment en tirer un compte rendu. |
+| [La Forge de campagne](./12-Forge-de-campagne.md)    | Transformer un scénario écrit en actes, scènes, PNJ et lieux.                                        |
+| [Le Journal de séance](./14-Journal-de-seance.md)    | Ce qui s'enregistre pendant la partie, et comment en tirer un compte rendu.                          |
 
 ## 🎭 Le monde et ceux qui l'habitent
 
