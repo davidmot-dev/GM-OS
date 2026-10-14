@@ -303,7 +303,23 @@ export interface DescripteurDeJet {
      * un dé de `faces`, plus la valeur de la seconde réserve (le Niveau de
      * Stress), lu dans `table` quand le jeu en livre une à Table-OS.
      */
-    panique?: { faces: number; table?: { univers: string; table: string } };
+    panique?: {
+        faces: number;
+        table?: { univers: string; table: string };
+        /**
+         * Le champ de la fiche qui garde la panique en cours (son total), pour le
+         * cumul — `cumulDePanique`. Remis à 0 quand la panique cesse.
+         */
+        champ?: string;
+        /** Le premier total qui est une panique : 7 chez Alien (de 1 à 6, on tient le coup). */
+        seuil?: number;
+    };
+    /**
+     * **Une réussite qui se paie** — le Point de Récit d'Alien, 2026-10-14 :
+     * *« dépenser un point offre un symbole de réussite (un six) automatique »*.
+     * Après le lancer, un point de `champ` ajoute un dé réussi au jet.
+     */
+    reussiteDepensee?: { champ: string; label: string };
     /**
      * **La spécialisation élargit le critique** — 2d20, 2026-10-14. Star Trek
      * (le Focus de l'édition anglaise) : *« si une spécialisation s'applique,

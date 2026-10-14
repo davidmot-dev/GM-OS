@@ -46,9 +46,10 @@ describe('Alien — le Stress et la Panique', () => {
         },
         forcer: {
             garde: 'reussites', bloqueParLaSeconde: true, monteeDeLaSeconde: 1,
-            interdit: [{ si: { champ: 'type_personnage', contient: ['androïde'] }, raison: 'Un androïde ne force jamais.' }],
+            interdit: [{ si: { champ: 'androide', coche: true }, raison: 'Un androïde ne force jamais.' }],
         },
-        panique: { faces: 6 },
+        panique: { faces: 6, champ: 'panique_en_cours', seuil: 7 },
+        reussiteDepensee: { champ: 'points_de_recit', label: 'Point de Récit' },
     };
     const DICE = { defaultDice: 'd6', logic: 'count-success', engine: 'yze', successThreshold: 6 } as unknown as DiceConfig;
     const FICHE = {
@@ -64,7 +65,7 @@ describe('Alien — le Stress et la Panique', () => {
     const monter = (valeurs: Record<string, unknown> = {}) => {
         const ecrire = vi.fn();
         render(<PanneauDeJet descripteur={JET} dice={DICE} template={FICHE}
-            valeurs={{ force: 3, combat: 2, niveau_de_stress: 1, type_personnage: 'Humain', ...valeurs }} ecrireSurLaFiche={ecrire} />);
+            valeurs={{ force: 3, combat: 2, niveau_de_stress: 1, type_personnage: 'Humain', points_de_recit: 2, panique_en_cours: 0, ...valeurs }} ecrireSurLaFiche={ecrire} />);
         const [attribut, competence, stress] = screen.getAllByRole('combobox');
         fireEvent.change(attribut, { target: { value: 'force' } });
         fireEvent.change(competence, { target: { value: 'combat' } });
@@ -112,8 +113,41 @@ describe('Alien — le Stress et la Panique', () => {
         expect(screen.getByText(/Test de Panique : 5 \+ 3 = 8/)).toBeTruthy();
     });
 
+    it('un Point de Récit ajoute un 6 au jet et se décompte', () => {
+        const ecrire = monter();
+        faces(2, 2, 2, 2, 2, 4);
+        lancer();
+        expect(screen.getByText(/^0 réussite/)).toBeTruthy();
+        fireEvent.click(screen.getByText('Dépenser un Point de Récit (2)'));
+        expect(ecrire).toHaveBeenCalledWith({ points_de_recit: 1 });
+        expect(screen.getByText(/^1 réussite/)).toBeTruthy();
+        expect(screen.getByText('Point de Récit −1 → 1 : un 6 ajouté')).toBeTruthy();
+        expect(screen.getByText('Dépenser un Point de Récit (1)')).toBeTruthy();
+    });
+
+    it('le 6 du Point de Récit reste sur la table quand on force', () => {
+        monter();
+        faces(2, 2, 2, 2, 2, 4);
+        lancer();
+        fireEvent.click(screen.getByText('Dépenser un Point de Récit (2)'));
+        faces(3, 3, 3, 3, 3, 3, 3);
+        forcer();
+        expect(screen.getByText('Jet forcé : 1 dé gardé, 7 relancés')).toBeTruthy();
+        expect(screen.getByText(/^1 réussite/)).toBeTruthy();
+    });
+
+    it('une panique s’inscrit sur la fiche ; déjà en panique, un total plus bas monte d’un cran', () => {
+        const ecrire = monter({ niveau_de_stress: 1, panique_en_cours: 9 });
+        faces(2, 2, 2, 2, 2, 1);
+        lancer();
+        faces(1);
+        fireEvent.click(screen.getByText('Test de Panique'));
+        expect(screen.getByText(/1 \+ 1 = 2 ; déjà en panique \(9\) : 10/)).toBeTruthy();
+        expect(ecrire).toHaveBeenCalledWith({ panique_en_cours: 10 });
+    });
+
     it('un androïde ne force jamais', () => {
-        monter({ type_personnage: 'Androïde', niveau_de_stress: 0 });
+        monter({ androide: true, niveau_de_stress: 0 });
         faces(3, 3, 3, 3, 3);
         lancer();
         expect(boutonForcer().disabled).toBe(true);

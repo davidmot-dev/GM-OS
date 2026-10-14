@@ -16,7 +16,7 @@ import {
     type DesDeTorg, type OptionsDeTorg,
 } from '../../../dice/systemes/torg';
 import {
-    entreeDeLaTable, forcerLeJet, pourquoiNePasForcer, prixDuForcage, testDePanique,
+    cumulDePanique, entreeDeLaTable, forcerLeJet, pourquoiNePasForcer, prixDuForcage, testDePanique,
     type FamilleYearZero,
 } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
@@ -288,6 +288,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     );
     const [paniqueJouee, setPaniqueJouee] = useState<{
         de: number; niveau: number; total: number; entree?: TableEntry;
+        /** Le total qui s'applique, après le cumul avec une panique en cours. */
+        effectif: number; precedent: number; cumule: boolean;
     } | null>(null);
     const lireLeNombre = (champ: string) => forcage.ecrits[champ] ?? (Number(valeurs[champ]) || 0);
 
@@ -853,11 +855,26 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (!regle || !dernierLancer) return;
         const niveau = dernierLancer.seconde ? lireLeNombre(dernierLancer.seconde.champ) : 0;
         const tire = testDePanique(niveau, regle.faces, faces => DiceEngine.roll(faces));
-        setPaniqueJouee(tire);
+        /*
+          **Le cumul** : déjà en panique, un total plus bas ou égal donne la ligne
+          juste au-dessus de la panique en cours. Celle-ci se garde sur la fiche,
+          et se remet à 0 sur la carte du combattant quand elle cesse.
+        */
+        const seuil = regle.seuil ?? 1;
+        const precedent = regle.champ ? lireLeNombre(regle.champ) : 0;
+        const { effectif, cumule } = cumulDePanique(tire.total, precedent, seuil);
+        const joue = { ...tire, effectif, precedent, cumule };
+        setPaniqueJouee(joue);
+        if (regle.champ && effectif >= seuil) {
+            const champ = regle.champ;
+            setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: effectif } }));
+            ecrireSurLaFiche?.({ [champ]: effectif });
+        }
         const nom = libelleDuUn ?? 'Panique';
-        const calcul = `1d${regle.faces} (${tire.de}) + ${dernierLancer.seconde?.label ?? 'Stress'} ${niveau} = ${tire.total}`;
+        const calcul = `1d${regle.faces} (${tire.de}) + ${dernierLancer.seconde?.label ?? 'Stress'} ${niveau} = ${tire.total}`
+            + (cumule ? ` ; déjà en panique (${precedent}) : ${effectif}` : '');
         const dire = (entree?: TableEntry) => redire(`Test de ${nom}`, {
-            total: tire.total, modifier: niveau, rolls: [{ val: tire.de, sides: regle.faces }],
+            total: effectif, modifier: niveau, rolls: [{ val: tire.de, sides: regle.faces }],
             totalDisplay: entree ? `${calcul} — ${entree.title}` : calcul,
         });
         const pont = pontDesTables();
@@ -867,11 +884,40 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
         pont.loadTable(regle.table.univers, regle.table.table)
             .then(data => {
-                const entree = data ? entreeDeLaTable(data.entries, tire.total) : undefined;
-                if (entree) setPaniqueJouee({ ...tire, entree });
+                const entree = data ? entreeDeLaTable(data.entries, effectif) : undefined;
+                if (entree) setPaniqueJouee({ ...joue, entree });
                 dire(entree);
             })
             .catch(() => dire());
+    };
+
+    /*
+      **Une réussite qui se paie** (le Point de Récit d'Alien) : après le lancer,
+      un point de la fiche ajoute un six au jet. Il reste sur la table si l'on
+      force ensuite — c'est une réussite.
+    */
+    const reussiteDepensee = descripteur.reussiteDepensee && ecrireSurLaFiche && !torg && !destin
+        ? descripteur.reussiteDepensee : undefined;
+    const pointsDisponibles = reussiteDepensee ? lireLeNombre(reussiteDepensee.champ) : 0;
+    const depenserUneReussite = () => {
+        if (!reussiteDepensee || !resultat || !dernierLancer || pointsDisponibles <= 0) return;
+        const { champ, label } = reussiteDepensee;
+        const reste = pointsDisponibles - 1;
+        setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: reste } }));
+        ecrireSurLaFiche?.({ [champ]: reste });
+        const successes = (resultat.successes ?? 0) + 1;
+        const res: RollResult = {
+            ...resultat,
+            rolls: [...resultat.rolls, { val: 6, sides: 6, source: 'base', isCritMax: true, cssClass: 'reussite-depensee' }],
+            total: successes,
+            successes,
+            tagSuccess: true,
+            degre: 'reussite-normale',
+            totalDisplay: `${resultat.totalDisplay} (+1 ${label})`,
+        };
+        setResultat(res);
+        setMouvements(m => [...m, `${label} −1 → ${reste} : un 6 ajouté`]);
+        redire(`${dernierLancer.titre} · ${label}`, res);
     };
 
     const reussites = resultat?.successes ?? 0;
@@ -1384,13 +1430,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 avec sa raison — une Panique, un forçage déjà fait, un androïde —,
                 jamais en silence.
             */}
-            {resultat && dernierLancer && (regleDuForcage || paniqueDeclenchee) && (
+            {resultat && dernierLancer && (regleDuForcage || paniqueDeclenchee || reussiteDepensee) && (
                 <div data-gestes-year-zero className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
                         {regleDuForcage && (
                             <button type="button" onClick={forcer} disabled={!!raisonDeNePasForcer}
                                 className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                                 Forcer le jet{forcage.fois > 0 ? ` (${forcage.fois + 1}e fois)` : ''}
+                            </button>
+                        )}
+                        {reussiteDepensee && compteDeReussites && (
+                            <button type="button" onClick={depenserUneReussite} disabled={pointsDisponibles <= 0}
+                                className="px-3 py-1 rounded-lg border border-etat-succes/50 bg-etat-succes/10 text-etat-succes text-ui-10 font-bold hover:bg-etat-succes/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                Dépenser un {reussiteDepensee.label} ({pointsDisponibles})
                             </button>
                         )}
                         {paniqueDeclenchee && !paniqueJouee && (
@@ -1455,7 +1507,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                                         : seconde
                                                             ? 'bg-app-text/5 border-dashed border-etat-alerte/40 text-app-text/50'
                                                             : 'bg-app-text/5 border-app-border/30 text-app-text/40'
-                                    }${d.relance ? ' ring-2 ring-accent/50' : ''}`}
+                                    }${d.relance ? ' ring-2 ring-accent/50' : ''}${d.cssClass === 'reussite-depensee' ? ' ring-2 ring-etat-succes/60' : ''}`}
                                 >
                                     {val}
                                 </span>
@@ -1555,6 +1607,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <div data-test-de-panique className="rounded-lg border border-etat-alerte/40 bg-etat-alerte/10 p-2 space-y-1">
                             <p className="text-ui-11 font-black uppercase tracking-widest text-etat-alerte">
                                 Test de {libelleDuUn ?? 'Panique'} : {paniqueJouee.de} + {paniqueJouee.niveau} = {paniqueJouee.total}
+                                {paniqueJouee.cumule ? ` ; déjà en panique (${paniqueJouee.precedent}) : ${paniqueJouee.effectif}` : ''}
                                 {paniqueJouee.entree ? ` — ${paniqueJouee.entree.title}` : ''}
                             </p>
                             {paniqueJouee.entree ? (

@@ -461,6 +461,20 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(juste.filter(c => c.ou.startsWith('jet.forcer') || c.ou.startsWith('jet.panique'))).toEqual([]);
     });
 
+    it('la panique en cours et la réussite dépensée vivent sur la fiche', () => {
+        const constats = (champ: string) => controlerLePilote(
+            { jet: {
+                sens: 'superieur-ou-egal',
+                reserve: { base: 0, max: 10, faces: 6, secondaire: { label: 'Stress', composantes: [] } },
+                panique: { faces: 6, champ, seuil: 7 },
+                reussiteDepensee: { champ, label: 'Point de Récit' },
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou === 'jet.panique.champ' || c.ou === 'jet.reussiteDepensee.champ').map(c => c.ou);
+        expect(constats('nulle_part')).toEqual(['jet.panique.champ', 'jet.reussiteDepensee.champ']);
+        expect(constats('determination')).toEqual([]);
+    });
+
     it('la spécialisation borne le critique par une composante du seuil', () => {
         const jet = (composante: string) => controlerLePilote(
             { jet: {

@@ -417,10 +417,11 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             // code relance et decompte (`dice/systemes/yearZero.ts`).
             'SI LE JEU FAIT FORCER UN JET (relancer après avoir vu les dés) : "jet.forcer":' +
             '{"garde":"reussites"|"reussites-et-uns","fois":1,"foisSi":[{"si":{"champ",' +
-            '"contient":[…]},"fois"}],"interdit":[{"si","raison"}],"monteeDeLaSeconde":1,' +
+            '"contient":[…] ou "coche":true},"fois"}],"interdit":[{"si","raison"}],"monteeDeLaSeconde":1,' +
             '"bloqueParLaSeconde":true,"prixDesUns":{"champ","label","si":[{"si":' +
             '{"composante","parmi":[…]},"champ"}]}} ; sur un 1 de la seconde réserve, ' +
-            '"jet.panique":{"faces","table":{"univers","table"}}. Si une spécialisation ' +
+            '"jet.panique":{"faces","table":{"univers","table"},"champ","seuil"}. Un point ' +
+            'qui achète une réussite : "jet.reussiteDepensee":{"champ","label"}. Si une spécialisation ' +
             'élargit le critique : "jet.specialisation":{"label","composante"} (un id de ' +
             '"jet.seuil"). Sinon, rien de tout cela. ' +
             '**(1) "jet.seuil" ET "jet.cible.ajustement" : UNE ENTRÉE PAR SECTION DE FICHE LUE, ' +

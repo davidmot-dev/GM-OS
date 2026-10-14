@@ -18,6 +18,12 @@ Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font mon
   propose **« Test de Panique »** : 1D6 + Niveau de Stress. Sur le poste du meneur, la ligne de la
   table `Alien/test_de_panique` s'affiche sous le résultat (au-delà de 15, c'est la Catatonie) ;
   sur la tablette, le total remonte au meneur, qui lit la ligne.
+- **Déjà en panique ?** Le total de la panique en cours se garde sur la fiche (« Panique en cours »).
+  Une nouvelle panique plus haute la remplace ; plus basse ou égale, c'est la **ligne juste
+  au-dessus** de l'ancienne. Quand la panique cesse, **« Calmé »** sur la carte du combattant la
+  remet à 0.
+- **« Dépenser un Point de Récit »**, après le lancer : un **6** s'ajoute au jet (cerclé de vert) et
+  la fiche perd un point. Il reste sur la table si l'on force ensuite.
 
 ![Après le lancer : deux réussites, et une Panique sur un dé de Stress](captures/jeu-alien-jet-lance.jpg)
 
@@ -30,14 +36,13 @@ Après le lancer, **« Forcer le jet »** :
 - le **Niveau de Stress monte d'un point** sur la fiche, avant la relance, et le **nouveau dé de
   Stress** part avec elle ;
 - les **6 restent** sur la table ; tout le reste se relance — les dés relancés sont **cerclés** ;
-- **une fois par test**. Le bouton se grise ensuite, et dit pourquoi.
+- **une fois par test**, ou **deux** avec le talent qui couvre l'attribut du jet (champ « Talent ») :
+  Dépassement de soi et Cran (Force), Vif et Téméraire (Agilité), Ruse et Curiosité (Esprit),
+  Compassion et Influence (Empathie). Le bouton se grise ensuite, et dit pourquoi.
 
 **On ne force pas** après une Panique au premier lancer (le bouton le dit), ni avec un **androïde**
-(un « Type » de personnage qui contient « androïde » ou « synthétique »). Une Panique sur la relance
+(case « Androïde » cochée sur la fiche). Une Panique sur la relance
 se joue de même, avec le Stress déjà monté.
-
-> Les talents qui font forcer **deux fois** (Dépassement de soi, Cran, Vif…) ne sont pas lus : le
-> second forçage se fait à la main.
 
 ---
 

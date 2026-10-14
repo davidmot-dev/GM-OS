@@ -616,6 +616,14 @@ export function controlerLePilote(
         if (!(driver.jet.panique.faces > 1)) {
             erreur('jet.panique.faces', 'Le test de Panique doit nommer le dé qu’il lance (6 pour Alien).');
         }
+        const champ = driver.jet.panique.champ;
+        if (champ && !tousLesChamps.has(champ)) {
+            erreur('jet.panique.champ', `La panique en cours se garde dans « ${champ} », absent de la fiche : le cumul ne se ferait jamais.`);
+        }
+    }
+    const reussiteDepensee = driver.jet?.reussiteDepensee;
+    if (reussiteDepensee && !tousLesChamps.has(reussiteDepensee.champ)) {
+        erreur('jet.reussiteDepensee.champ', `« ${reussiteDepensee.label} » se décompte dans « ${reussiteDepensee.champ} », absent de la fiche : le bouton n'aurait rien à dépenser.`);
     }
 
     if (driver.jet?.cible && !(driver.jet.cible.mecanique in MECANIQUES_DE_CIBLE)) {

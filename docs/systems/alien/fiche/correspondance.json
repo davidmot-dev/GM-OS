@@ -12,6 +12,10 @@
       "fiche": "identity.career"
     },
     {
+      "gmos": "talent",
+      "fiche": "profile.talent"
+    },
+    {
       "gmos": "camarade",
       "fiche": "relations.buddy"
     },
@@ -223,10 +227,6 @@
     }
   ],
   "absents": [
-    {
-      "fiche": "profile.talent",
-      "pourquoi": "La fiche d'Alien dans GM-OS n'a pas de champ Talent : il reste sur la fiche."
-    },
     {
       "fiche": "protection.name",
       "pourquoi": "GM-OS ne garde que le niveau de protection, qui compte au jet ; le nom de la protection reste sur la fiche."

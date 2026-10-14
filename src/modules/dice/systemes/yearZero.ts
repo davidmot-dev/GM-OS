@@ -39,6 +39,8 @@ export interface ConditionDeFiche {
     champ?: string;
     /** …dont la valeur contient l'un de ces mots, sans casse ni accents. `['réplicant']`. */
     contient?: string[];
+    /** …ou qui est une case cochée (`true`) ou décochée (`false`) — l'androïde d'Alien. */
+    coche?: boolean;
     /** Une composante du jet… `attribut`. */
     composante?: string;
     /** …retenue sur l'un de ces champs. `['intelligence', 'empathie']`. */
@@ -84,6 +86,10 @@ export interface RegleDuForcage {
  */
 export type FamilleYearZero = 'reserve' | 'echelonnee';
 
+/** Une case cochée, quelle que soit la forme sous laquelle la fiche l'a gardée. */
+const estCochee = (valeur: unknown): boolean =>
+    valeur === true || valeur === 1 || ['true', '1', 'on', 'oui'].includes(String(valeur).toLowerCase());
+
 const sansAccents = (texte: unknown): string =>
     String(texte ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 
@@ -94,7 +100,9 @@ export function conditionRemplie(
     choix: Record<string, string>,
 ): boolean {
     if (!si.champ && !si.composante) return false;
-    if (si.champ) {
+    if (si.champ && si.coche !== undefined) {
+        if (estCochee(valeurs[si.champ]) !== si.coche) return false;
+    } else if (si.champ) {
         const lu = sansAccents(valeurs[si.champ]);
         if (!lu || !(si.contient ?? []).some(mot => lu.includes(sansAccents(mot)))) return false;
     }
@@ -251,6 +259,20 @@ export function prixDuForcage(
 export function testDePanique(niveau: number, faces: number, de: (faces: number) => number) {
     const tire = de(faces);
     return { de: tire, niveau, total: tire + niveau };
+}
+
+/**
+ * **Le cumul des Paniques** : *« si un personnage déjà paniqué subit un nouveau
+ * test de Panique, le nouvel effet remplace le précédent s'il est plus élevé.
+ * S'il est plus bas, on applique l'effet situé exactement un cran au-dessus de la
+ * panique précédente »* (`la-mecanique-de-stress-et-de-panique.md`).
+ *
+ * `precedent` : la panique en cours, lue sur la fiche (0 : aucune). `seuil` : le
+ * premier total qui est une panique (7 chez Alien — de 1 à 6, on tient le coup).
+ */
+export function cumulDePanique(total: number, precedent: number, seuil: number): { effectif: number; cumule: boolean } {
+    if (precedent < seuil || total > precedent) return { effectif: total, cumule: false };
+    return { effectif: precedent + 1, cumule: true };
 }
 
 /**

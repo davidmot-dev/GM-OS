@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { DieResult, RollResult } from '../DiceEngine';
 import {
-    conditionRemplie, entreeDeLaTable, forcagesPermis, forcerLeJet, pourquoiNePasForcer,
+    conditionRemplie, cumulDePanique, entreeDeLaTable, forcagesPermis, forcerLeJet, pourquoiNePasForcer,
     prixDuForcage, reussitesDuDe, testDePanique, type RegleDuForcage,
 } from './yearZero';
 
@@ -56,6 +56,13 @@ describe('les conditions lues sur la fiche', () => {
         const si = { composante: 'attribut', parmi: ['intelligence', 'empathie'] };
         expect(conditionRemplie(si, {}, { attribut: 'empathie' })).toBe(true);
         expect(conditionRemplie(si, {}, { attribut: 'vigueur' })).toBe(false);
+    });
+    it('lit une case cochée', () => {
+        const si = { champ: 'androide', coche: true };
+        expect(conditionRemplie(si, { androide: true }, {})).toBe(true);
+        expect(conditionRemplie(si, { androide: 'true' }, {})).toBe(true);
+        expect(conditionRemplie(si, { androide: false }, {})).toBe(false);
+        expect(conditionRemplie(si, {}, {})).toBe(false);
     });
     it('une condition vide n’est jamais remplie', () => {
         expect(conditionRemplie({}, { nature: 'x' }, { attribut: 'y' })).toBe(false);
@@ -171,5 +178,22 @@ describe('le test de Panique', () => {
 
     it('au-delà de « 15+ », c’est encore la Catatonie', () => {
         expect(entreeDeLaTable(TABLE, 22)?.title).toBe('CATATONIE');
+    });
+});
+
+describe('le cumul des Paniques', () => {
+    it('sans panique en cours, le total s’applique', () => {
+        expect(cumulDePanique(8, 0, 7)).toEqual({ effectif: 8, cumule: false });
+    });
+    it('« je tiens le coup » n’est pas une panique en cours', () => {
+        expect(cumulDePanique(5, 6, 7)).toEqual({ effectif: 5, cumule: false });
+    });
+    it('plus élevé : le nouvel effet remplace le précédent', () => {
+        expect(cumulDePanique(12, 9, 7)).toEqual({ effectif: 12, cumule: false });
+    });
+    it('plus bas ou égal : un cran au-dessus du précédent', () => {
+        expect(cumulDePanique(8, 9, 7)).toEqual({ effectif: 10, cumule: true });
+        expect(cumulDePanique(9, 9, 7)).toEqual({ effectif: 10, cumule: true });
+        expect(cumulDePanique(3, 9, 7)).toEqual({ effectif: 10, cumule: true });
     });
 });

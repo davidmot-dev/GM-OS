@@ -37,8 +37,20 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > Pilotes corrigés dans `Export Dirvers/corriges/` (forcer, Panique, gestes Repos / Objet fétiche /
 > Pause, maxima de Santé et Sang-froid, moteur `yze-echelonne` de Blade Runner), **zéro constat**
 > de la Forge, réimportés par David. **Restent** : le forçage au pupitre et sur
-> `RemoteDicePad` ; les talents d'Alien qui forcent deux fois ; le Point de Récit qui donne un 6 ;
-> le cumul des Paniques ; les tables d'état Brisé de Blade Runner ; les captures du manuel.
+> `RemoteDicePad` ; ~~les talents d'Alien qui forcent deux fois ; le Point de Récit qui donne un 6 ;
+> le cumul des Paniques~~ (faits l'après-midi, ci-dessous) ; les tables d'état Brisé de Blade
+> Runner ; les captures du manuel.
+>
+> **14/10 après-midi — Alien fini, côté règles** (David : *« On finit Alien »* ; les accessoires
+> MU/TH/UR attendent son essai réseau). Champs **« Talent »** (zone de texte, reliée à
+> `profile.talent` de la fiche HTML) et **« Panique en cours »** ajoutés à la fiche GM-OS ;
+> `forcer.foisSi` : les huit talents, chacun sur son attribut (condition champ + composante) ;
+> `panique.champ` / `.seuil` et `cumulDePanique` (plus haut remplace, plus bas ou égal → un cran
+> au-dessus) ; geste « Calmé » (valeur 0) sur la carte ; `DescripteurDeJet.reussiteDepensee` — le
+> Point de Récit ajoute un 6 après le lancer, cerclé de vert, gardé si l'on force. Pilote corrigé dans
+> `Export Dirvers/corriges/`, zéro constat — **à réimporter**. `type_personnage` étant le **métier**
+> (« Marine, Marshall… »), une case **« Androïde »** est ajoutée à la fiche, à la demande de David ;
+> `ConditionDeFiche.coche` lit une case cochée.
 > ⚠️ Blade Runner : « on garde réussites et crânes » suit la convention Year Zero, le corpus
 > (`relu: false`) se contredit — à relire contre le livre.
 >
