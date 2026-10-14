@@ -956,3 +956,41 @@ describe('sous-groupes de la fiche', () => {
         expect(sectionDeLaComposante(FICHE_RDD, seule).section?.id).toBe('competences_generales');
     });
 });
+
+describe('la spécialisation élargit le critique', () => {
+    /**
+     * Star Trek, 2026-10-14 : *« si une spécialisation s'applique, tout dé
+     * inférieur ou égal à la fonction utilisée est aussi une réussite critique »*
+     * (`docs/systems/star-trek/rules/degres-de-reussite-et-critiques.md`).
+     */
+    const jetStarTrek: DescripteurDeJet = {
+        sens: 'sous-ou-egal',
+        seuil: [
+            { id: 'attribut', label: 'Attribut', sectionId: 'attributs' },
+            { id: 'fonction', label: 'Fonction', sectionId: 'fonctions' },
+        ],
+        reserve: { base: 2, max: 5, faces: 20 },
+        critique: 1,
+        specialisation: { label: 'Spécialisation', composante: 'fonction' },
+    };
+    const fiche = { audace: 9, securite: 4 };
+    const champs = { attribut: 'audace', fonction: 'securite' };
+
+    it('cochée : le critique va jusqu’à la Fonction', () => {
+        expect(preparerLeJet(jetStarTrek, fiche, { champs, specialisation: true }).doubleSous).toBe(4);
+    });
+
+    it('sans elle : le 1 seulement', () => {
+        expect(preparerLeJet(jetStarTrek, fiche, { champs }).doubleSous).toBe(1);
+        expect(preparerLeJet(jetStarTrek, fiche, { champs, specialisation: true, }).seuil).toBe(13);
+    });
+
+    it('une Fonction pas encore choisie ne borne rien', () => {
+        expect(preparerLeJet(jetStarTrek, fiche, { champs: { attribut: 'audace' }, specialisation: true }).doubleSous).toBe(1);
+    });
+
+    it('un pilote sans spécialisation ignore la case', () => {
+        const { specialisation: _, ...sans } = jetStarTrek;
+        expect(preparerLeJet(sans, fiche, { champs, specialisation: true }).doubleSous).toBe(1);
+    });
+});

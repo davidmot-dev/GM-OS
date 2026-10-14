@@ -6,7 +6,7 @@ comment on lance les dés, quelles réserves la table partage, comment on encais
 mécanique une fois**, et dit **où la voir**. Une page par jeu dit ensuite ce que *son* pilote en
 fait.
 
-> **Mis à jour le 2026-10-13**, sur les pilotes exportés ce jour-là. Un pilote nouveau ou amélioré
+> **Mis à jour le 2026-10-13**, sur les pilotes exportés ce jour-là ; **le 2026-10-14** pour Alien et Blade Runner (forcer le jet, Panique) et Star Trek (spécialisation). Un pilote nouveau ou amélioré
 > se reporte ici. La marche à suivre est en bas de page, sous « Tenir ce manuel à jour ». Les captures
 > sont celles des pilotes **corrigés** le même soir (`Export Dirvers/corriges/`).
 
@@ -57,8 +57,11 @@ choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Réglages de Torg** (`torg`) | Le champ des **Blessures** (−1 au total d'action chacune, jusqu'à −3), celui des **Possibilités** (dépensées après le premier dé), et le test de Réalité de l'**Annulation des dommages** | Torg |
 | **Provoquer le destin** (`destin`) | Le **niveau** (le seuil : le Talent) contre la difficulté ; on lance de zéro au **plafond** (la réserve : le Domaine) de dés à dix faces, chaque 8 et plus élève le niveau, un 10 fait lancer un dé de plus, **chaque 1 verse une goutte dans la réserve de table** déclarée. Des **jauges de péril** retirent au Domaine et au Talent selon leurs seuils, cumulés | NOC |
 | **Réserves du personnage** (`reservesDuPersonnage`) | Ce que le personnage puise dans **ses** réserves, sur **sa** fiche, au moment du jet — même forme que les apports du groupe | NOC : Vécu, Espoir, Singularité |
+| **Forcer le jet** (`forcer`) | Après avoir vu les dés, le bouton **« Forcer le jet »** relance ceux qui n’ont pas réussi — les 1 restent aussi, si le jeu le dit — et **fait payer** : la seconde réserve monte avant la relance (et gagne son dé), ou chaque 1 coûte un point sur la fiche. Combien de fois, qui ne force jamais, ce qui l’interdit : le bouton grisé **dit pourquoi** | Alien : +1 Stress ; Blade Runner : un point de Santé ou de Sang-froid par 1 |
+| **Panique** (`panique`) | Un 1 sur la seconde réserve fait paraître **« Test de Panique »** : un dé, plus la valeur de cette réserve, lu dans la table du jeu (Table-OS) sur le poste du meneur ; la tablette dit le total | Alien : 1D6 + Niveau de Stress |
 | **Composante facultative** (`facultative`) | Un choix qu'on peut laisser vide sans bloquer le jet | Torg : la compétence, absente d'un test non entraîné |
 | **Critique, complication** (`critique`, `complication`) | Les faces qui comptent double, ou qui compliquent | 2d20 : 1 et 20 |
+| **Spécialisation** (`specialisation`) | Une case au jet : cochée, **chaque dé inférieur ou égal** à la composante nommée (la Fonction) compte double, comme le critique. C’est le joueur qui sait si la tâche entre dans une de ses spécialisations | Star Trek : le Focus de l’édition anglaise |
 | **Difficulté** (`difficulte`) | Le nombre de réussites à atteindre, réglable avant de lancer | Dune : de 0 à 5 |
 | **Sens** (`sens`) | Réussir **sous** le seuil, ou **au-dessus** | Cthulhu Hack : sous ; NOC : au-dessus |
 

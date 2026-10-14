@@ -420,6 +420,60 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(juste.filter(c => c.ou.startsWith('jet.tableDeBonus'))).toEqual([]);
     });
 
+    it('forcer le jet et la Panique : une réserve, une garde connue, des champs qui existent', () => {
+        const mal = controlerLePilote(
+            { jet: {
+                sens: 'superieur-ou-egal',
+                seuil: [{ id: 'competence', label: 'Compétence', sectionId: 'competences' }],
+                forcer: {
+                    garde: 'tout', monteeDeLaSeconde: 1,
+                    foisSi: [{ si: { champ: 'nature', contient: ['réplicant'] }, fois: 2 }],
+                    prixDesUns: { champ: 'sante', si: [{ si: { composante: 'attribut', parmi: ['empathie'] }, champ: 'combat' }] },
+                },
+                panique: { faces: 0 },
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(mal.filter(c => c.ou.startsWith('jet.forcer') || c.ou.startsWith('jet.panique')).map(c => [c.ou, c.gravite])).toEqual([
+            ['jet.forcer', 'erreur'],
+            ['jet.forcer.garde', 'erreur'],
+            ['jet.forcer', 'erreur'],
+            ['jet.forcer.foisSi[0]', 'avertissement'],
+            ['jet.forcer.prixDesUns.si[0]', 'avertissement'],
+            ['jet.forcer.prixDesUns', 'erreur'],
+            ['jet.panique', 'erreur'],
+            ['jet.panique.faces', 'erreur'],
+        ]);
+
+        const juste = controlerLePilote(
+            { jet: {
+                sens: 'superieur-ou-egal',
+                reserve: {
+                    base: 0, max: 10, faces: 6,
+                    composantes: [{ id: 'competence', label: 'Compétence', sectionId: 'competences' }],
+                    secondaire: { label: 'Stress', libelleDuUn: 'Panique', composantes: [{ id: 'stress', label: 'Stress', sectionId: 'jauges' }] },
+                },
+                forcer: { garde: 'reussites', bloqueParLaSeconde: true, monteeDeLaSeconde: 1, prixDesUns: { champ: 'determination' } },
+                panique: { faces: 6, table: { univers: 'Alien', table: 'test_de_panique' } },
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        );
+        expect(juste.filter(c => c.ou.startsWith('jet.forcer') || c.ou.startsWith('jet.panique'))).toEqual([]);
+    });
+
+    it('la spécialisation borne le critique par une composante du seuil', () => {
+        const jet = (composante: string) => controlerLePilote(
+            { jet: {
+                sens: 'sous-ou-egal', critique: 1,
+                seuil: [{ id: 'fonction', label: 'Fonction', sectionId: 'competences' }],
+                specialisation: { label: 'Spécialisation', composante },
+            } } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou.startsWith('jet.specialisation')).map(c => [c.ou, c.gravite]);
+        expect(jet('departement')).toEqual([['jet.specialisation.composante', 'erreur']]);
+        expect(jet('fonction')).toEqual([]);
+    });
+
     it('des apports du groupe mal déclarés', () => {
         const constats = controlerLePilote(
             {

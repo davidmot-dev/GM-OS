@@ -1,6 +1,6 @@
 # 🖖 Jeu — Star Trek
 
-> **Pilote décrit :** « Star Trek », exporté le 2026-10-13. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Star Trek », exporté le 2026-10-14. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Star Trek Adventures, deuxième édition : le système 2d20, comme [Dune](./54-Jeu-Dune.md), avec un Attribut
 et une Fonction.
@@ -27,6 +27,9 @@ et une Fonction.
 
 - On retient un **Attribut** et une **Fonction** : leur somme est le **seuil**.
 - **2d20** sous le seuil ; un **1** vaut deux réussites, un **20** est une complication.
+- **Spécialisation** : cochez la case quand la tâche entre dans une spécialisation du personnage
+  (le *Focus* de l’édition anglaise). Chaque dé **inférieur ou égal à la Fonction** vaut alors deux
+  réussites ; la borne s’affiche à côté de la case, « critique ≤ 4 ».
 - Les dés achetés coûtent 1, 2 puis 3 points d'Impulsion, jusqu'à 5 dés.
 - La **difficulté** (0 à 5) est le nombre de réussites à atteindre.
 

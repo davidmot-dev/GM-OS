@@ -560,6 +560,64 @@ export function controlerLePilote(
         }
     });
 
+    /*
+      **Forcer le jet** (Year Zero, 2026-10-14). Il relance une réserve ou des dés
+      échelonnés, rien d'autre ; le Stress monté vit dans la seconde réserve ; les
+      champs nommés doivent exister — sinon le forçage écrit dans le vide, ou une
+      condition (« réplicant ») ne s'applique jamais.
+    */
+    const forcer = driver.jet?.forcer;
+    if (forcer) {
+        if (!driver.jet?.reserve && !driver.jet?.desEchelonnes) {
+            erreur('jet.forcer', 'Forcer relance une réserve de dés ou des dés échelonnés : le jet ne déclare ni « reserve » ni « desEchelonnes ».');
+        }
+        if (forcer.garde !== 'reussites' && forcer.garde !== 'reussites-et-uns') {
+            erreur('jet.forcer.garde', `« ${String(forcer.garde)} » n'est pas admis. Les seuls sont : reussites, reussites-et-uns.`);
+        }
+        if ((forcer.monteeDeLaSeconde || forcer.bloqueParLaSeconde) && !driver.jet?.reserve?.secondaire?.composantes?.length) {
+            erreur('jet.forcer', 'Le forçage monte ou lit la seconde réserve (le Stress), mais « reserve.secondaire.composantes » ne dit pas où la lire.');
+        }
+        const composantes = new Set([
+            ...(driver.jet?.reserve?.composantes ?? []), ...(driver.jet?.desEchelonnes?.composantes ?? []),
+            ...(driver.jet?.seuil ?? []), ...(driver.jet?.reserve?.secondaire?.composantes ?? []),
+        ].map(c => c.id));
+        const conditions = [
+            ...(forcer.foisSi ?? []).map((f, i) => [`jet.forcer.foisSi[${i}]`, f.si] as const),
+            ...(forcer.interdit ?? []).map((f, i) => [`jet.forcer.interdit[${i}]`, f.si] as const),
+            ...(forcer.prixDesUns?.si ?? []).map((f, i) => [`jet.forcer.prixDesUns.si[${i}]`, f.si] as const),
+        ];
+        for (const [chemin, si] of conditions) {
+            if (si.champ && !tousLesChamps.has(si.champ)) {
+                avertir(chemin, `La condition lit « ${si.champ} », absent de la fiche : elle ne s'appliquera jamais.`);
+            }
+            if (si.composante && !composantes.has(si.composante)) {
+                avertir(chemin, `La condition lit la composante « ${si.composante} », que le jet ne déclare pas : elle ne s'appliquera jamais.`);
+            }
+        }
+        for (const champ of [forcer.prixDesUns?.champ, ...(forcer.prixDesUns?.si ?? []).map(r => r.champ)]) {
+            if (champ && !tousLesChamps.has(champ)) {
+                erreur('jet.forcer.prixDesUns', `Le forçage se paie sur « ${champ} », absent de la fiche : il ne coûterait rien.`);
+            }
+        }
+    }
+    /*
+      **La spécialisation** (2d20, 2026-10-14) : elle borne le critique par la
+      valeur d'une composante du SEUIL. Une composante qui n'y est pas ne borne
+      rien, et la case cochée ne changerait aucun dé.
+    */
+    const specialisation = driver.jet?.specialisation;
+    if (specialisation && !(driver.jet?.seuil ?? []).some(c => c.id === specialisation.composante)) {
+        erreur('jet.specialisation.composante', `La spécialisation lit la composante « ${specialisation.composante} », qui n'est pas dans « jet.seuil » : la case ne changerait aucun dé.`);
+    }
+    if (driver.jet?.panique) {
+        if (!driver.jet.reserve?.secondaire) {
+            erreur('jet.panique', 'La Panique se déclenche sur un 1 de la seconde réserve, que le jet ne déclare pas.');
+        }
+        if (!(driver.jet.panique.faces > 1)) {
+            erreur('jet.panique.faces', 'Le test de Panique doit nommer le dé qu’il lance (6 pour Alien).');
+        }
+    }
+
     if (driver.jet?.cible && !(driver.jet.cible.mecanique in MECANIQUES_DE_CIBLE)) {
         erreur(
             'jet.cible.mecanique',

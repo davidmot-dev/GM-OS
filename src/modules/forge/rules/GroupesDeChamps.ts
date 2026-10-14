@@ -413,6 +413,16 @@ export const GROUPES: readonly GroupeDeChamps[] = [
             'CES JEUX N\'ONT AUCUN SEUIL : ils comptent les dés qui atteignent une valeur, et ce ' +
             'compte est dans le code. N\'écris donc NI "jet.seuil" NI "jet.cible" avec eux, et ' +
             'ne remplis pas "jet.reserve" — la poignée vient des composantes, pas d\'un nombre. ' +
+            // Forcer le jet, Year Zero (2026-10-14) : la regle se DECRIT, le
+            // code relance et decompte (`dice/systemes/yearZero.ts`).
+            'SI LE JEU FAIT FORCER UN JET (relancer après avoir vu les dés) : "jet.forcer":' +
+            '{"garde":"reussites"|"reussites-et-uns","fois":1,"foisSi":[{"si":{"champ",' +
+            '"contient":[…]},"fois"}],"interdit":[{"si","raison"}],"monteeDeLaSeconde":1,' +
+            '"bloqueParLaSeconde":true,"prixDesUns":{"champ","label","si":[{"si":' +
+            '{"composante","parmi":[…]},"champ"}]}} ; sur un 1 de la seconde réserve, ' +
+            '"jet.panique":{"faces","table":{"univers","table"}}. Si une spécialisation ' +
+            'élargit le critique : "jet.specialisation":{"label","composante"} (un id de ' +
+            '"jet.seuil"). Sinon, rien de tout cela. ' +
             '**(1) "jet.seuil" ET "jet.cible.ajustement" : UNE ENTRÉE PAR SECTION DE FICHE LUE, ' +
             'JAMAIS UNE PAR CHAMP.** Le ' +
             'nombre d\'entrées est le nombre de SECTIONS différentes où le joueur va lire une ' +

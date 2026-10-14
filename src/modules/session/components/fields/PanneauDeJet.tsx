@@ -15,6 +15,12 @@ import {
     lancerUneChaine, lancerLaPossibilite, ceQueLAnnulationAnnule, resoudreTorg, ND_DE_L_ANNULATION,
     type DesDeTorg, type OptionsDeTorg,
 } from '../../../dice/systemes/torg';
+import {
+    entreeDeLaTable, forcerLeJet, pourquoiNePasForcer, prixDuForcage, testDePanique,
+    type FamilleYearZero,
+} from '../../../dice/systemes/yearZero';
+import { pontDesTables } from '../../../tables/pontDesTables';
+import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
@@ -105,6 +111,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * BAS sur un jeu qui jette sous un seuil.
      */
     const [modificateur, setModificateur] = useState<'aucun' | 'avantage' | 'desavantage'>('aucun');
+    /** La spécialisation s'applique à ce jet — c'est le joueur qui le sait (Star Trek). */
+    const [specialisation, setSpecialisation] = useState(false);
     /** Ce que le dernier lancer a fait aux réserves de la table. */
     const [mouvements, setMouvements] = useState<string[]>([]);
 
@@ -203,7 +211,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         () => preparerLeJet(
             descripteur, valeurs,
             {
-                champs: choix, desSupplementaires: desAchetes, difficulte, ajustementDeDifficulte,
+                champs: choix, desSupplementaires: desAchetes, difficulte, ajustementDeDifficulte, specialisation,
                 /*
                   Sur un jeu à dés échelonnés, avantage et désavantage ajoutent
                   ou retirent un DÉ : c'est `preparerLeJet` qui les applique à la
@@ -214,7 +222,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             },
             template.sections,
         ),
-        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateur, template.sections],
+        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateur, specialisation, template.sections],
     );
 
     /*
@@ -257,6 +265,31 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [testDeTorg, setTestDeTorg] = useState<{
         des: DesDeTorg; options: OptionsDeTorg; niveau: number; difficulte: number; entraine: boolean; titre: string;
     } | null>(null);
+
+    /*
+      **Forcer le jet** (Year Zero, 2026-10-14 — `systemes/yearZero.ts`). Le
+      forçage se décide APRÈS avoir vu les dés : on garde le dernier lancer, ce
+      que le joueur avait retenu sur sa fiche, et ce que les forçages y ont déjà
+      écrit — sur la tablette, la fiche ne revient du meneur qu'après coup, et un
+      second forçage de réplicant ne doit pas relire l'ancienne Santé.
+    */
+    const regleDuForcage = descripteur.forcer && (descripteur.reserve || descripteur.desEchelonnes) && !torg && !destin
+        ? descripteur.forcer : undefined;
+    const familleYearZero: FamilleYearZero = descripteur.desEchelonnes ? 'echelonnee' : 'reserve';
+    const libelleDuUn = descripteur.reserve?.secondaire?.libelleDuUn;
+    const [dernierLancer, setDernierLancer] = useState<{
+        titre: string;
+        choix: Record<string, string>;
+        /** Le champ de la seconde réserve — le Niveau de Stress d'Alien. */
+        seconde?: { champ: string; label: string };
+    } | null>(null);
+    const [forcage, setForcage] = useState<{ fois: number; unsPayes: number; ecrits: Record<string, number> }>(
+        { fois: 0, unsPayes: 0, ecrits: {} },
+    );
+    const [paniqueJouee, setPaniqueJouee] = useState<{
+        de: number; niveau: number; total: number; entree?: TableEntry;
+    } | null>(null);
+    const lireLeNombre = (champ: string) => forcage.ecrits[champ] ?? (Number(valeurs[champ]) || 0);
 
     /** Le niveau du Talent, malus retirés, Vécu et Atouts ajoutés — avant les dés. */
     const niveauDuDestin = jet.seuil - malus.talents + bonusPerso + bonusDuGroupe;
@@ -351,6 +384,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
     const lancer = () => {
         const dits: string[] = [];
+        // Un nouveau jet : rien n'est encore forcé, aucune Panique n'est jouée.
+        setForcage({ fois: 0, unsPayes: 0, ecrits: {} });
+        setPaniqueJouee(null);
+        setDernierLancer(null);
 
         // Le coût se prélève au moment où l'on s'engage, pas pendant qu'on
         // tourne les boutons : régler avant de lancer ferait payer les
@@ -604,6 +641,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             + (engagesDuGroupe.length > 0
                 ? ` · ${engagesDuGroupe.map(d => `${d.apport.label}${d.apport.stocks.length > 1 ? ` (${d.stock!.label})` : ''} ×${d.points}`).join(', ')}`
                 : '');
+        const seconde = jet.composantesDeLaSecondeReserve[0];
+        setDernierLancer({
+            titre: titreDuJet + (modificateur !== 'aucun' ? ` · ${LIBELLES[modificateur]}` : ''),
+            choix: { ...choix },
+            seconde: seconde ? { champ: seconde.champ, label: seconde.label } : undefined,
+        });
         /*
           ⛔ **Sur la tablette, le jet restait chez le joueur** (David,
           2026-09-30 : *« je voudrais que les jets des tablettes remontent vers
@@ -725,6 +768,110 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         } else {
             consignerLeJet({ titre: 'Annulation des dommages', totalDisplay: ecrit.totalDisplay, degre: ecrit.degre, tagSuccess: ecrit.tagSuccess });
         }
+    };
+
+    /** Redit un jet complété — au journal, ou au meneur depuis la tablette. */
+    const redire = (titre: string, res: RollResult) => {
+        if (pourLesJoueurs && personnageId) {
+            window.dispatchEvent(new CustomEvent('fiche:resultat', {
+                detail: {
+                    characterId: personnageId, titre, total: res.total, modifier: res.modifier,
+                    totalDisplay: res.totalDisplay, rolls: res.rolls, successes: res.successes, tagSuccess: res.tagSuccess, degre: res.degre,
+                },
+            }));
+        } else {
+            consignerLeJet({ titre, totalDisplay: res.totalDisplay, degre: res.degre, tagSuccess: res.tagSuccess });
+        }
+    };
+
+    const raisonDeNePasForcer = regleDuForcage && resultat && dernierLancer
+        ? pourquoiNePasForcer(regleDuForcage, {
+            resultat, valeurs, choix: dernierLancer.choix, dejaForce: forcage.fois, libelleDuUn,
+        })
+        : null;
+
+    /**
+     * **Forcer le jet.** Ce qui se paie AVANT la relance (le Stress d'Alien, qui
+     * ajoute son dé) puis ce qui se paie APRÈS (un point par 1 chez Blade Runner),
+     * écrit sur la fiche et dit sous le résultat.
+     */
+    const forcer = () => {
+        if (!regleDuForcage || !resultat || !dernierLancer || raisonDeNePasForcer) return;
+        const ecrits = { ...forcage.ecrits };
+        const dits: string[] = [];
+        const aReporter = ecrireSurLaFiche ? '' : ' (à reporter sur la fiche)';
+
+        const montee = dernierLancer.seconde ? (regleDuForcage.monteeDeLaSeconde ?? 0) : 0;
+        if (montee > 0 && dernierLancer.seconde) {
+            const { champ, label } = dernierLancer.seconde;
+            ecrits[champ] = lireLeNombre(champ) + montee;
+            ecrireSurLaFiche?.({ [champ]: ecrits[champ] });
+            dits.push(`${label} +${montee} → ${ecrits[champ]}${aReporter}`);
+        }
+
+        const res = forcerLeJet(resultat, regleDuForcage, {
+            famille: familleYearZero, desEnPlus: montee, libelleDuUn, de: faces => DiceEngine.roll(faces),
+        });
+
+        const prix = prixDuForcage(regleDuForcage, {
+            resultat: res, valeurs, choix: dernierLancer.choix, dejaPayes: forcage.unsPayes,
+        });
+        if (prix && prix.points > 0) {
+            const reste = Math.max(0, lireLeNombre(prix.champ) - prix.points);
+            ecrits[prix.champ] = reste;
+            ecrireSurLaFiche?.({ [prix.champ]: reste });
+            dits.push(`${prix.label} −${prix.points} (${prix.points > 1 ? `${prix.points} dés` : 'un dé'} sur 1) → ${reste}${aReporter}`
+                // « L'action est résolue avant d'être Brisé. »
+                + (reste === 0 ? ' — Brisé, une fois l’action résolue' : ''));
+        } else if (prix) {
+            dits.push('Aucun 1 : le forçage ne coûte rien.');
+        }
+
+        const gardes = res.rolls.filter(d => d.relance === false).length;
+        const relances = res.rolls.length - gardes;
+        setForcage({ fois: forcage.fois + 1, unsPayes: forcage.unsPayes + (prix?.points ?? 0), ecrits });
+        setPaniqueJouee(null);
+        setResultat(res);
+        setMouvements(m => [
+            ...m,
+            `Jet forcé : ${gardes} dé${gardes > 1 ? 's' : ''} gardé${gardes > 1 ? 's' : ''}, ${relances} relancé${relances > 1 ? 's' : ''}`,
+            ...dits,
+        ]);
+        redire(`${dernierLancer.titre} · forcé`, res);
+    };
+
+    /*
+      **Le test de Panique** (Alien) : un 1 sur un dé de la seconde réserve le
+      déclenche. Un dé, plus le Niveau de Stress — celui d'après le forçage. La
+      table vit dans Table-OS, que seul le poste du meneur atteint : la tablette
+      dit le total, et c'est le meneur qui lit la ligne.
+    */
+    const paniqueDeclenchee = !!descripteur.panique
+        && !!resultat?.rolls.some(d => d.source === 'gear' && d.val === 1);
+    const jouerLaPanique = () => {
+        const regle = descripteur.panique;
+        if (!regle || !dernierLancer) return;
+        const niveau = dernierLancer.seconde ? lireLeNombre(dernierLancer.seconde.champ) : 0;
+        const tire = testDePanique(niveau, regle.faces, faces => DiceEngine.roll(faces));
+        setPaniqueJouee(tire);
+        const nom = libelleDuUn ?? 'Panique';
+        const calcul = `1d${regle.faces} (${tire.de}) + ${dernierLancer.seconde?.label ?? 'Stress'} ${niveau} = ${tire.total}`;
+        const dire = (entree?: TableEntry) => redire(`Test de ${nom}`, {
+            total: tire.total, modifier: niveau, rolls: [{ val: tire.de, sides: regle.faces }],
+            totalDisplay: entree ? `${calcul} — ${entree.title}` : calcul,
+        });
+        const pont = pontDesTables();
+        if (!regle.table || !pont || pourLesJoueurs) {
+            dire();
+            return;
+        }
+        pont.loadTable(regle.table.univers, regle.table.table)
+            .then(data => {
+                const entree = data ? entreeDeLaTable(data.entries, tire.total) : undefined;
+                if (entree) setPaniqueJouee({ ...tire, entree });
+                dire(entree);
+            })
+            .catch(() => dire());
     };
 
     const reussites = resultat?.successes ?? 0;
@@ -1125,6 +1272,26 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     *L'exclusivité doit être écrite, pas supposée.* Ici la cible
                     l'emporte, comme partout ailleurs.
                 */}
+                {/*
+                    **La spécialisation** (Star Trek) : cochée, chaque dé égal ou
+                    inférieur à la composante nommée vaut deux réussites. La borne
+                    se dit à côté, pour qu'on voie ce qu'elle change.
+                */}
+                {descripteur.specialisation && (
+                    <label className="flex items-center gap-2" title="Chaque dé inférieur ou égal à cette valeur vaut deux réussites">
+                        <input
+                            type="checkbox"
+                            checked={specialisation}
+                            onChange={e => setSpecialisation(e.target.checked)}
+                            className="accent-current"
+                        />
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">
+                            {descripteur.specialisation.label}
+                            {specialisation && jet.doubleSous > (descripteur.critique ?? 0) && ` (critique ≤ ${jet.doubleSous})`}
+                        </span>
+                    </label>
+                )}
+
                 {descripteur.difficulte && !descripteur.cible && (
                     <label className="flex items-center gap-2">
                         <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Difficulté</span>
@@ -1212,6 +1379,35 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 </div>
             )}
 
+            {/*
+                **Forcer le jet, jouer la Panique** (Year Zero). Le bouton se grise
+                avec sa raison — une Panique, un forçage déjà fait, un androïde —,
+                jamais en silence.
+            */}
+            {resultat && dernierLancer && (regleDuForcage || paniqueDeclenchee) && (
+                <div data-gestes-year-zero className="space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                        {regleDuForcage && (
+                            <button type="button" onClick={forcer} disabled={!!raisonDeNePasForcer}
+                                className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                Forcer le jet{forcage.fois > 0 ? ` (${forcage.fois + 1}e fois)` : ''}
+                            </button>
+                        )}
+                        {paniqueDeclenchee && !paniqueJouee && (
+                            <button type="button" onClick={jouerLaPanique}
+                                className="px-3 py-1 rounded-lg border border-etat-alerte/60 bg-etat-alerte/10 text-etat-alerte text-ui-10 font-bold hover:bg-etat-alerte/20 transition-colors">
+                                Test de {libelleDuUn ?? 'Panique'}
+                            </button>
+                        )}
+                    </div>
+                    {regleDuForcage && raisonDeNePasForcer && (
+                        <p className="flex items-start gap-2 text-ui-10 text-app-text/40">
+                            <Info size={11} className="mt-0.5 shrink-0" /> {raisonDeNePasForcer}
+                        </p>
+                    )}
+                </div>
+            )}
+
             {resultat && (
                 <div className="rounded-xl border border-app-border/30 bg-app-bg/40 p-3 space-y-2">
                     <div className="flex flex-wrap gap-1.5">
@@ -1259,7 +1455,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                                         : seconde
                                                             ? 'bg-app-text/5 border-dashed border-etat-alerte/40 text-app-text/50'
                                                             : 'bg-app-text/5 border-app-border/30 text-app-text/40'
-                                    }`}
+                                    }${d.relance ? ' ring-2 ring-accent/50' : ''}`}
                                 >
                                     {val}
                                 </span>
@@ -1353,6 +1549,29 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 </li>
                             ))}
                         </ul>
+                    )}
+
+                    {paniqueJouee && (
+                        <div data-test-de-panique className="rounded-lg border border-etat-alerte/40 bg-etat-alerte/10 p-2 space-y-1">
+                            <p className="text-ui-11 font-black uppercase tracking-widest text-etat-alerte">
+                                Test de {libelleDuUn ?? 'Panique'} : {paniqueJouee.de} + {paniqueJouee.niveau} = {paniqueJouee.total}
+                                {paniqueJouee.entree ? ` — ${paniqueJouee.entree.title}` : ''}
+                            </p>
+                            {paniqueJouee.entree ? (
+                                <>
+                                    {paniqueJouee.entree.description && (
+                                        <p className="text-ui-11 text-app-text/70">{paniqueJouee.entree.description}</p>
+                                    )}
+                                    {paniqueJouee.entree.effect && (
+                                        <p className="text-ui-11 font-bold text-app-text/80">{paniqueJouee.entree.effect}</p>
+                                    )}
+                                </>
+                            ) : (
+                                <p className="text-ui-10 text-app-text/50">
+                                    {pourLesJoueurs ? 'Le meneur lit la ligne dans la table.' : 'Cherchez ce total dans la table du jeu.'}
+                                </p>
+                            )}
+                        </div>
                     )}
                 </div>
             )}

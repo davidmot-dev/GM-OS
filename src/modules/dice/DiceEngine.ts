@@ -16,6 +16,8 @@ export interface DieResult {
     isDropped?: boolean; // For advantage/disadvantage
     source?: 'base' | 'gear' | 'digit'; // For YZE or Digits
     cssClass?: string;
+    /** Relancé (ou ajouté) en forçant le jet — Year Zero, `systemes/yearZero.ts`. */
+    relance?: boolean;
 }
 
 export interface RollResult {

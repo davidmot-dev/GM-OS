@@ -26,6 +26,34 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> **14/10 — Forcer le jet et le Stress, Alien et Blade Runner.** David : *« la partie gestion du
+> stress et du forçage des jets »*. **Fait et commité le 14/10 (non poussé) ; pilotes réimportés
+> et essayés par David le jour même — *« Ça marche »*** :
+> `dice/systemes/yearZero.ts` (pur : garde, conditions lues sur la fiche, prix des 1, test de
+> Panique, ligne de table bornée) ; `DescripteurDeJet.forcer` et `.panique` ; `PanneauDeJet` :
+> « Forcer le jet » (grisé avec sa raison), dés relancés cerclés, écriture sur la fiche, journal ou
+> remontée de la tablette, « Test de Panique » (table `Alien/test_de_panique` lue sur le poste du
+> meneur seulement) ; contrôles et invite de la Forge ; manuel (53, 54 Alien, 54 Blade Runner).
+> Pilotes corrigés dans `Export Dirvers/corriges/` (forcer, Panique, gestes Repos / Objet fétiche /
+> Pause, maxima de Santé et Sang-froid, moteur `yze-echelonne` de Blade Runner), **zéro constat**
+> de la Forge, réimportés par David. **Restent** : le forçage au pupitre et sur
+> `RemoteDicePad` ; les talents d'Alien qui forcent deux fois ; le Point de Récit qui donne un 6 ;
+> le cumul des Paniques ; les tables d'état Brisé de Blade Runner ; les captures du manuel.
+> ⚠️ Blade Runner : « on garde réussites et crânes » suit la convention Year Zero, le corpus
+> (`relu: false`) se contredit — à relire contre le livre.
+>
+> **14/10, suite — la Spécialisation de Star Trek** (le Focus anglais : tout dé ≤ la Fonction est
+> critique). `DescripteurDeJet.specialisation` (`label`, `composante` du seuil) ;
+> `ChoixDuJoueur.specialisation` → `preparerLeJet` borne `doubleSous` par la valeur retenue ; case
+> au panneau, borne affichée ; contrôle et invite de la Forge ; manuel. Pilote corrigé dans
+> `Export Dirvers/corriges/`, zéro constat, réimporté par David. ⛔ **Son carnet NotebookLM était
+> faux depuis le 13/10** : `e4670875-0418-…` n'existe pas (le début de « Star Trek Adventures »
+> collé à la fin de « Règles Fondamentales ») ; vérifié par `nlm notebook list`, corrigé en
+> `e4670875-daa3-4dad-b197-7bffba42f16d`. Alien et Blade Runner désignent les bons carnets. ⚠️
+> L'invite « Dés et composition du jet » frôle son budget sur les corpus Alien et Blade Runner
+> (`corpusDerivable.test.ts`) : resserrée de 1 508 à 696 caractères pour repasser. **Reste à
+> David** : la Menace de départ (2 par PJ), à la main.
+
 > **13/10 — Accessoires Alien (§ 135).** Première application séparée dans
 > `outils/alien` : MU/TH/UR avec effets et codes, détecteur dont le meneur règle
 > l'intensité. David : *« c'est un bon début documente »*. Prototype accepté

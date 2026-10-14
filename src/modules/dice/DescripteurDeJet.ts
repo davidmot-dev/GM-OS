@@ -288,6 +288,33 @@ export interface DescripteurDeJet {
      * groupe, mais les stocks se lisent sur SA fiche et s'y décomptent.
      */
     reservesDuPersonnage?: import('../../types/drivers').ApportDuGroupe[];
+    /**
+     * **Forcer le jet** — la famille Year Zero, 2026-10-14 (`systemes/yearZero.ts`).
+     *
+     * Après avoir vu les dés, le joueur relance ceux qui n'ont pas réussi, et il
+     * le paie : le Stress monte d'Alien, la Santé ou le Sang-froid de Blade
+     * Runner. Le pilote décrit qui force, combien de fois, ce qui reste sur la
+     * table et ce que ça coûte ; le panneau de fiche relance et décompte.
+     * Seulement sur une réserve (`reserve`) ou des dés échelonnés.
+     */
+    forcer?: import('./systemes/yearZero').RegleDuForcage;
+    /**
+     * **Le test que déclenche un 1 de la seconde réserve** — la Panique d'Alien :
+     * un dé de `faces`, plus la valeur de la seconde réserve (le Niveau de
+     * Stress), lu dans `table` quand le jeu en livre une à Table-OS.
+     */
+    panique?: { faces: number; table?: { univers: string; table: string } };
+    /**
+     * **La spécialisation élargit le critique** — 2d20, 2026-10-14. Star Trek
+     * (le Focus de l'édition anglaise) : *« si une spécialisation s'applique,
+     * tout dé inférieur ou égal à la fonction utilisée est aussi une réussite
+     * critique »* (`docs/systems/star-trek/rules/degres-de-reussite-et-critiques.md`).
+     *
+     * Le pilote nomme la `composante` du seuil dont la valeur devient la borne ;
+     * le joueur coche la case au moment du jet — c'est lui qui sait si la tâche
+     * entre dans une de ses spécialisations.
+     */
+    specialisation?: { label: string; composante: string };
 }
 
 /** Ce que le joueur a retenu sur sa fiche pour ce jet précis. */
@@ -317,6 +344,11 @@ export interface ChoixDuJoueur {
      * ordinaire — chez Dune, la compétence seule avec la spécialisation.
      */
     critiqueEtendu?: number;
+    /**
+     * La spécialisation du pilote s'applique à ce jet (`DescripteurDeJet.specialisation`) :
+     * le critique s'étend jusqu'à la valeur de sa composante.
+     */
+    specialisation?: boolean;
     /**
      * Avantage ou désavantage, sur un jeu à dés échelonnés.
      *
@@ -935,6 +967,17 @@ export function preparerLeJet(
         avertissements.push(`Difficulté ramenée entre ${bornes.min} et ${bornes.max}.`);
     }
 
+    /*
+      **La spécialisation** : la valeur de la composante nommée par le pilote —
+      la Fonction de Star Trek —, lue sur le champ que le joueur a retenu. Une
+      composante pas encore choisie ne borne rien.
+    */
+    const champDeLaSpecialisation = descripteur.specialisation && choix.specialisation
+        ? choix.champs[descripteur.specialisation.composante] : undefined;
+    const critiqueDeLaSpecialisation = champDeLaSpecialisation
+        ? Math.max(0, lireLeChamp(valeursDeLaFiche, champDeLaSpecialisation).valeur ?? 0)
+        : 0;
+
     return {
         seuil,
         composantes,
@@ -993,7 +1036,7 @@ export function preparerLeJet(
             : reserve?.faces ?? 0,
         sens: descripteur.sens,
         // La spécialisation élargit le critique ; sans elle, le critique ordinaire.
-        doubleSous: Math.max(choix.critiqueEtendu ?? 0, descripteur.critique ?? 0),
+        doubleSous: Math.max(choix.critiqueEtendu ?? 0, critiqueDeLaSpecialisation, descripteur.critique ?? 0),
         difficulte,
         avertissements,
         remarques,
