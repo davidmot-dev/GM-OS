@@ -36,7 +36,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > ou Sang-froid à 0, l'état se dit ; « Lancer l'effet critique (Empathie) » jette le dé échelonné,
 > lit la table humain ou réplicant (Table-OS, poste du meneur), et un 1 retire un point de
 > Sang-froid maximal à vie. Pilote Blade Runner corrigé dans `Export Dirvers/corriges/`, zéro constat
-> — **à réimporter**. **Non fait** : les captures du manuel (instance de GM-OS à lancer, mises en
+> — réimporté par David le 14/10. **Non fait** : les captures du manuel (instance de GM-OS à lancer, mises en
 > scène à écrire — à décider avec David) ; Brisé n'est dit qu'après un forçage, pas après un coup
 > reçu en combat.
 
@@ -73,7 +73,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > Choc) ; `combat.limitesDeBlessures` (« Type… » sur la santé d'un adversaire, même écrivain que le
 > changement de moteur) ; `Combatant.horde` et `HordeDuCombattant` sur la carte d'un adversaire de
 > Torg (former, frapper, attaque combinée) ; « Cibles » au jet de Torg. Pilote Torg corrigé
-> (`limitesDeBlessures` en plus), zéro constat — **à réimporter**. **Torg : il reste** la capacité
+> (`limitesDeBlessures` en plus), zéro constat — réimporté par David le 14/10. **Torg : il reste** la capacité
 > « Sbires » d'un vilain et la capacité « Horde » de certaines créatures (à la table), les Atouts qui
 > touchent aux cartes, et le chargement des paquets de Cosm (David). **Fiche Torg corrigée** dans le
 > même pilote : `choc` s'appelait « Points de Choc Max » (formule `esprit`, départ 8) et `blessures`
