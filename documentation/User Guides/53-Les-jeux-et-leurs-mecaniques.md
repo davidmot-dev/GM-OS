@@ -158,7 +158,14 @@ qui nomment une `mecanique` sont prises en charge par GM-OS (marque **GM-OS**) :
 | `tenacite` | **Annoncée** quand le Choc met KO : on peut encaisser une Blessure pour l'effacer |
 | `souffrance` | **Annoncée** quand une Blessure tombe : l'attaquant récupère un point de Choc |
 
-La tablette reçoit le cosm courant du meneur. Voir [Torg](./54-Jeu-Torg.md).
+La tablette reçoit le cosm courant du meneur.
+
+**Les Cartes de Cosm** : un paquet par cosm, marqué **Rôle : Paquet de Cosm** dans la bibliothèque
+de Deck-OS, puis rattaché à son cosm. Dans le lecteur d'un tel paquet, **Début d'Acte** (chacun
+défausse sa carte non jouée, le paquet du cosm courant est remélangé, une carte chacun) et
+**Changement de cosm** (la carte d'un cosm quitté s'échange, sauf pour qui a déjà joué la sienne
+cet Acte). La carte tient à part de la main du Destin et se joue depuis la tablette. Voir
+[Torg](./54-Jeu-Torg.md).
 
 ---
 

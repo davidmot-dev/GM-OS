@@ -42,8 +42,16 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > Lois restent en rappel. **Pilote corrigé** dans `Export Dirvers/corriges/`, zéro constat — **à
 > réimporter** : les huit cosms et leurs 24 Lois du livre de base, `jet.torg.choc`, et ce que
 > l'export du 14/10 n'avait pas reçu (`initiative.mode: 'paquet'`, `cartesDuDestin.taille: 4`, les
-> gestes « Récupérer −2 » et « Reprendre son souffle » du Choc). **Reste** : T2 (Cartes de Cosm) ;
-> T3 (sbires, hordes, Actions combinées, Cibles multiples).
+> gestes « Récupérer −2 » et « Reprendre son souffle » du Choc). T1 commité (`37ed0e9d`).
+>
+> **T2 fait — les Cartes de Cosm** (livre p. 113) : `RoleDuPaquet` « cosm » et `DeckManifest.cosm`
+> (bibliothèque) ; `DeckSessionState.cosmJoues` ; `session/logic/cartesDeCosm.ts` (Début d'Acte :
+> défausse, remélange du paquet courant, une carte chacun ; Changement de cosm : échange, rien pour
+> qui a joué la sienne ; zone mixte : paquet choisi par joueur) ; actions `cartesDeCosmDuDebutDActe`,
+> `cartesDeCosmAuChangement`, et `jouerLaCarteTenue` note la carte jouée ; `GestesDuCosm` dans le
+> lecteur de Deck-OS ; la tablette montre la carte à part (« hors de la main »). La carte tient dans la
+> main de SON paquet : elle ne compte jamais dans la taille de la main du Destin. **Reste** : T3
+> (sbires, hordes, Actions combinées, Cibles multiples) ; charger les paquets de Cosm (David).
 
 > **14/10 — Forcer le jet et le Stress, Alien et Blade Runner.** David : *« la partie gestion du
 > stress et du forçage des jets »*. **Fait, commité et poussé le 14/10 (`41cda346`) ; pilotes réimportés

@@ -9,7 +9,7 @@
 export type CardFormat = 'poker' | 'tarot';
 
 /** Voir `DeckManifest.role`. */
-export type RoleDuPaquet = 'action' | 'destin';
+export type RoleDuPaquet = 'action' | 'destin' | 'cosm';
 
 /**
  * **Ce que la Ligne de Conflit d'une carte d'Action peut donner à un camp** —
@@ -74,6 +74,11 @@ export interface DeckManifest {
      * les autres, oracle ou butin.
      */
     role?: RoleDuPaquet;
+    /**
+     * Pour un paquet de rôle `cosm` (Torg, 2026-10-14) : le cosm dont il est le
+     * paquet — un identifiant de `GameDriver.cosms`.
+     */
+    cosm?: string;
     /**
      * **Les joueurs peuvent-ils piocher eux-mêmes dans ce paquet ?**
      *
@@ -185,4 +190,10 @@ export interface DeckSessionState {
      * cours — une fois par Acte (Torg). Remis à zéro par « Fin d'Acte ».
      */
     momentsCritiques?: string[];
+    /**
+     * Les personnages qui ont joué leur **Carte de Cosm** pendant l'Acte en cours
+     * — ils n'en reçoivent pas d'autre en changeant de cosm. Remis à zéro au début
+     * de l'Acte suivant.
+     */
+    cosmJoues?: string[];
 }

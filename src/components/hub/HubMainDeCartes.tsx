@@ -199,6 +199,8 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
                                         <h3 className="text-[14px] font-bold text-app-muted break-words">
                                             {paquet.name}
                                             {paquet.role === 'destin' && <span className="ml-2 text-app-text">— main {revelees.length + scellees - enReserve.length}/{tailleDeMain}{enReserve.length ? `, ${enReserve.length} en Réserve` : ''}</span>}
+                                            {/* Torg : la Carte de Cosm, à part — hors de la main, jamais en Réserve ; elle se joue selon ce qu'elle dit. */}
+                                            {paquet.role === 'cosm' && <span className="ml-2 text-app-text">— Carte de Cosm, hors de la main</span>}
                                         </h3>
                                         {/* Le Moment critique : une fois par Acte, toute la main en Réserve. */}
                                         {paquet.role === 'destin' && (

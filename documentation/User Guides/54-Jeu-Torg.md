@@ -211,9 +211,27 @@ rappel.
 
 ---
 
+## Les Cartes de Cosm
+
+Un paquet par cosm (Empire du Nil, Aysle…) : dans la bibliothèque de Deck-OS, **Rôle : Paquet de
+Cosm**, puis **Cosm** : celui du paquet. Chargez les cartes que vous voulez — comme pour le Destin.
+
+Dans le lecteur d'un Paquet de Cosm :
+
+- **Début d'Acte** — chacun défausse la carte qu'il n'a pas jouée, le paquet du cosm courant est
+  remélangé, et chacun en reçoit une (livre p. 113).
+- **Changement de cosm** — en cours d'Acte, la carte d'un cosm quitté s'échange contre une du
+  nouveau ; qui a déjà joué la sienne cet Acte ne reçoit rien.
+- **Zone mixte** — un sélecteur par joueur : il pioche dans le paquet qu'il a choisi.
+
+La carte de Cosm n'est **pas** une Carte du Destin : elle ne compte pas dans la main, ne va jamais en
+Réserve, et se joue selon ce qu'elle dit — **« Jouer »** sur la tablette, ou depuis Deck-OS. Elle
+est alors comptée comme jouée pour l'Acte. Ce qu'elle fait reste à la table.
+
+---
+
 ## Ce qui manque encore
 
-- **Les Cartes de Cosm** (une par Acte, hors de la main) et les Atouts qui touchent aux cartes
-  (Chef naturel…).
+- Les Atouts qui touchent aux cartes (Chef naturel…).
 - **Les sbires** (vaincus dès la première Blessure) et **les hordes** (Choc mis en commun) n'ont pas
   de modèle à part : réglez leur santé à la main.

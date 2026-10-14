@@ -52,8 +52,10 @@ const DeckLibrary: React.FC = () => {
      */
     const rolesDuJeu = (systemId: string) => {
         const pilote = getGameDriver(systemId);
-        return pilote?.combat?.initiative?.mode === 'paquet' || !!pilote?.cartesDuDestin;
+        return pilote?.combat?.initiative?.mode === 'paquet' || !!pilote?.cartesDuDestin || !!pilote?.cosms?.length;
     };
+    /** Torg : les cosms du jeu, pour rattacher un Paquet de Cosm au sien (2026-10-14). */
+    const cosmsDuJeu = (systemId: string) => getGameDriver(systemId)?.cosms ?? [];
 
     return (
         <div className="flex h-full w-full flex-col overflow-hidden bg-app-bg">
@@ -369,6 +371,23 @@ const DeckLibrary: React.FC = () => {
                                                     <option value="">Aucun — oracle, butin…</option>
                                                     <option value="action">Paquet d’Action — rythme les rounds de Combat-OS</option>
                                                     <option value="destin">Paquet du Destin — les mains des joueurs</option>
+                                                    {cosmsDuJeu(deck.systemId).length > 0 && (
+                                                        <option value="cosm">Paquet de Cosm — une carte par Acte, hors de la main</option>
+                                                    )}
+                                                </select>
+                                            </label>
+                                        )}
+                                        {deck.role === 'cosm' && (
+                                            <label className="flex items-center gap-2 text-ui-10 text-app-muted">
+                                                <span className="font-black uppercase tracking-widest">Cosm</span>
+                                                <select
+                                                    value={deck.cosm ?? ''}
+                                                    onChange={e => updateDeck(deck.id, { cosm: e.target.value || undefined })}
+                                                    className="rounded-md border border-app-border bg-app-surface px-2 py-0.5 text-ui-10 font-bold text-app-text"
+                                                    data-cosm-du-paquet={deck.id}
+                                                >
+                                                    <option value="">— à choisir —</option>
+                                                    {cosmsDuJeu(deck.systemId).map(c => <option key={c.id} value={c.id}>{c.nom}</option>)}
                                                 </select>
                                             </label>
                                         )}

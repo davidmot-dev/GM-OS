@@ -19,6 +19,7 @@ import { Panneau, Etiquette } from '../../../components/socle';
 import { gmToast } from '../../../stores/useToastStore';
 import FicheDeCarteDAction from './FicheDeCarteDAction';
 import GestesDuDestin from './GestesDuDestin';
+import GestesDuCosm from './GestesDuCosm';
 
 const DeckPlayer: React.FC = () => {
     const { t } = useTranslation();
@@ -215,6 +216,8 @@ const DeckPlayer: React.FC = () => {
 
                     {/* Torg : les gestes du Paquet du Destin (2026-10-14). */}
                     {activeDeck.role === 'destin' && <GestesDuDestin deck={activeDeck} />}
+                    {/* Torg : les Cartes de Cosm, une par Acte (2026-10-14). */}
+                    {activeDeck.role === 'cosm' && <GestesDuCosm deck={activeDeck} />}
 
                     {/* Les trois tas, d'un coup d'œil */}
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)_minmax(0,1fr)]">

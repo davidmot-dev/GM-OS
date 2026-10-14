@@ -37,6 +37,10 @@ import {
     reprendreLesReserves,
     type BilanDesMains,
 } from '../logic/cartesDuDestin';
+import {
+    cartesDeCosmAuChangement, cartesDeCosmDuDebutDActe, jouerUneCarteDeCosm, paquetsDeCosm, paquetsDesCosmsCourants,
+    type DistributionDeCosm,
+} from '../logic/cartesDeCosm';
 
 export interface DeckSliceState {
     decks: DeckManifest[];
@@ -141,6 +145,15 @@ export interface DeckSliceActions {
     nouvellesMainsDuDestin: (deckId: string) => void;
     /** L'Action approuvée réussie : une Carte du Destin dans la main du personnage. */
     piocherUneCarteDuDestin: (deckId: string, characterId: string) => void;
+
+    /* ── Les Cartes de Cosm de Torg (2026-10-14) ───────────────────────────
+       La règle vit dans `logic/cartesDeCosm`. `choix` : en zone mixte, le
+       paquet que chaque joueur a choisi ; sinon, celui du premier cosm.      */
+
+    /** Début d'Acte : cartes non jouées défaussées, paquet remélangé, une carte chacun. */
+    cartesDeCosmDuDebutDActe: (choix?: Record<string, string>) => void;
+    /** Changement de cosm en cours d'Acte : la carte d'un cosm quitté s'échange. */
+    cartesDeCosmAuChangement: (choix?: Record<string, string>) => void;
 }
 
 export type DeckSlice = DeckSliceState & DeckSliceActions;
@@ -154,8 +167,28 @@ type MagasinEntier = {
     activeCampaignId?: string | null;
     campaigns?: { id: string; cosmsParDefaut?: string[] }[];
     scenes?: Scene[];
-    getActiveDriver?: () => { cartesDuDestin?: { taille: number }; cosms?: CosmDuJeu[] } | null | undefined;
+    getActiveDriver?: () => { id?: string; cartesDuDestin?: { taille: number }; cosms?: CosmDuJeu[] } | null | undefined;
 };
+
+/** Les cosms courants de la campagne ouverte, et le nom de chacun. */
+function cosmsDuMagasin(magasin: unknown): CosmDuJeu[] {
+    const m = magasin as MagasinEntier;
+    const campagne = (m.campaigns ?? []).find(c => c.id === m.activeCampaignId);
+    return cosmsDesIds(m.getActiveDriver?.()?.cosms, idsDesCosmsCourants(campagne, m.scenes ?? []));
+}
+
+/** La distribution en une phrase : qui a reçu quoi, qui n'a rien reçu, et pourquoi. */
+function direLaDistribution(magasin: unknown, d: DistributionDeCosm, decks: readonly DeckManifest[]): string {
+    const nom = (id: string) => nomDuPersonnage(magasin, id);
+    const cosmDe = (deckId: string) => decks.find(p => p.id === deckId)?.name ?? deckId;
+    const morceaux = [
+        Object.entries(d.recues).map(([p, deckId]) => `${nom(p)} : ${cosmDe(deckId)}`).join(', '),
+        d.defaussees.length ? `défaussée${d.defaussees.length > 1 ? 's' : ''} : ${d.defaussees.map(nom).join(', ')}` : '',
+        d.dejaJouee.length ? `déjà jouée cet Acte : ${d.dejaJouee.map(nom).join(', ')}` : '',
+        d.sansCarte.length ? `paquet vide pour ${d.sansCarte.map(nom).join(', ')}` : '',
+    ].filter(Boolean);
+    return morceaux.length ? morceaux.join(' — ') : 'personne ne reçoit de carte';
+}
 
 const nomDuPersonnage = (magasin: unknown, id: string) =>
     ((magasin as MagasinEntier).players ?? []).flatMap(p => p.characters ?? []).find(c => c.id === id)?.name ?? 'Un personnage';
@@ -182,6 +215,37 @@ function direLeBilan(magasin: unknown, bilan: BilanDesMains, taille: number): st
         trop.length ? `${trop.join(', ')}.` : '',
         bilan.manquantes ? `Le paquet n’a pas suffi : ${bilan.manquantes} carte${bilan.manquantes > 1 ? 's' : ''} manquante${bilan.manquantes > 1 ? 's' : ''}.` : '',
     ].filter(Boolean).join(' ');
+}
+
+/**
+ * **Distribuer les Cartes de Cosm** — au début d'un Acte, ou en changeant de
+ * cosm. Les paquets du jeu, les cosms courants (scène, sinon campagne) et les
+ * personnages de la campagne se lisent sur le magasin entier.
+ */
+function distribuerLesCartesDeCosm(
+    get: () => DeckSlice,
+    set: (partiel: (etat: DeckSlice) => Partial<DeckSlice>) => void,
+    choix: Record<string, string> | undefined,
+    debutDActe: boolean,
+): void {
+    const magasin = get();
+    const systeme = (magasin as unknown as MagasinEntier).getActiveDriver?.()?.id;
+    const paquets = paquetsDeCosm(magasin.decks, systeme);
+    const cosms = cosmsDuMagasin(magasin);
+    const courants = paquetsDesCosmsCourants(paquets, cosms.map(c => c.id));
+    if (courants.length === 0) {
+        gmToast(cosms.length === 0
+            ? 'Aucun cosm courant : choisissez-le sur la scène ou la campagne.'
+            : `Aucun paquet marqué « Paquet de Cosm » pour ${cosms.map(c => c.nom).join(' ou ')}.`, 'warning');
+        return;
+    }
+    const contexte = {
+        paquets, etats: magasin.deckStates, porteurs: mainsDeLaCampagne(magasin).porteurs,
+        courants, choix, melanger: DeckInterpreter.shuffle,
+    };
+    const d = debutDActe ? cartesDeCosmDuDebutDActe(contexte) : cartesDeCosmAuChangement(contexte);
+    set(store => ({ deckStates: { ...store.deckStates, ...d.etats } }));
+    gmToast(`${debutDActe ? 'Début d’Acte' : 'Changement de cosm'} — Cartes de Cosm. ${direLaDistribution(magasin, d, paquets)}.`, 'info');
 }
 
 export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
@@ -432,7 +496,15 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
         get().appliquerAuPaquet(deckId, e => retournerUneCarte(e, index)),
 
     jouerLaCarteTenue: (deckId, index) => {
-        const avecDefausse = get().decks.find(d => d.id === deckId)?.useDiscard ?? false;
+        const deck = get().decks.find(d => d.id === deckId);
+        const avecDefausse = deck?.useDiscard ?? false;
+        /* Une carte de Cosm jouée compte pour l'Acte : on n'en reçoit pas d'autre en changeant de cosm. */
+        if (deck?.role === 'cosm') {
+            const porteur = get().deckStates[deckId]?.enMain?.find(c => c.index === index)?.porteur;
+            get().appliquerAuPaquet(deckId, e => jouerUneCarteDeCosm(e, index, avecDefausse));
+            if (porteur) gmToast(`${nomDuPersonnage(get(), porteur)} joue sa Carte de Cosm (${deck.name}).`, 'info');
+            return;
+        }
         get().appliquerAuPaquet(deckId, e => jouerUneCarteTenue(e, index, avecDefausse));
     },
 
@@ -630,6 +702,9 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
         get().appliquerAuPaquet(deckId, () => apres);
         gmToast(`${nomDuPersonnage(get(), characterId)} pioche une Carte du Destin.`, 'success');
     },
+
+    cartesDeCosmDuDebutDActe: (choix) => distribuerLesCartesDeCosm(get, set, choix, true),
+    cartesDeCosmAuChangement: (choix) => distribuerLesCartesDeCosm(get, set, choix, false),
 
     selectDeck: (id) => {
         set({ selectedDeckId: id });
