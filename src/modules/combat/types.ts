@@ -79,4 +79,9 @@ export interface Combatant {
     healthSystem?: HealthSystem;
     /** Données de fiche locales (force, santé, sang-froid, etc.) */
     sheetData?: Record<string, string | number | boolean>;
+    /**
+     * **Une horde** — Torg, règle optionnelle (2026-10-14) : un combattant qui en
+     * représente plusieurs, au Choc commun. Voir `logic/sbiresEtHordes.ts`.
+     */
+    horde?: import('./logic/sbiresEtHordes').Horde;
 }

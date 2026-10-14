@@ -492,6 +492,14 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         ]);
     });
 
+    it('les limites de Blessures : des entiers, et des cases à recouper', () => {
+        const constats = controlerLePilote(
+            { combat: { statsToTrack: [], initiativeFormula: '', limitesDeBlessures: [{ libelle: 'Sbire', blessures: 0 }, { libelle: 'X', blessures: 1.5 }] } } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou.startsWith('combat.limitesDeBlessures')).map(c => c.ou);
+        expect(constats).toEqual(['combat.limitesDeBlessures[1].blessures', 'combat.limitesDeBlessures']);
+    });
+
     it('la spécialisation borne le critique par une composante du seuil', () => {
         const jet = (composante: string) => controlerLePilote(
             { jet: {

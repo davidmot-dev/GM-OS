@@ -23,6 +23,7 @@ import { pontDesTables } from '../../../tables/pontDesTables';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
+import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
@@ -258,11 +259,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const effetsDuRound = useEffetsDuRound('joueurs');
     const destabilises = torg && effetsDuRound.includes('destabilises');
     const unDePlusDeLaCarte = torg && effetsDuRound.includes('un-de-plus');
-    const malusTorg = blessuresTorg + (destabilises ? 2 : 0);
+    /** Les Cibles multiples (livre p. 122) : −2 par cible supplémentaire. */
+    const [cibles, setCibles] = useState(1);
+    const malusDesCibles = torg ? malusDesCiblesMultiples(cibles) : 0;
+    const malusTorg = blessuresTorg + (destabilises ? 2 : 0) + malusDesCibles;
     const raisonsDuMalusTorg = [
         blessuresTorg ? `${blessuresTorg} Blessure${blessuresTorg > 1 ? 's' : ''}` : '',
         destabilises ? 'Déstabilisés (carte d’Action)' : '',
+        malusDesCibles ? `${cibles} cibles` : '',
     ].filter(Boolean).join(', ');
+    const nombreDeRaisons = [blessuresTorg, destabilises, malusDesCibles].filter(Boolean).length;
     const [plageCritique, setPlageCritique] = useState(1);
     const [testDeTorg, setTestDeTorg] = useState<{
         des: DesDeTorg; options: OptionsDeTorg; niveau: number; difficulte: number; entraine: boolean; titre: string;
@@ -588,9 +594,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             plageCritique,
             malus: malusTorg,
             // « −3 Blessures », « −2 Déstabilisés », « −4 (2 Blessures, Déstabilisés) ».
-            raisonDuMalus: blessuresTorg && destabilises ? `(${raisonsDuMalusTorg.replace(' (carte d’Action)', '')})`
+            raisonDuMalus: nombreDeRaisons > 1 ? `(${raisonsDuMalusTorg.replace(' (carte d’Action)', '')})`
                 : blessuresTorg ? `Blessure${blessuresTorg > 1 ? 's' : ''}`
-                : destabilises ? 'Déstabilisés' : undefined,
+                : destabilises ? 'Déstabilisés'
+                : malusDesCibles ? `Cibles multiples (${cibles})` : undefined,
             bonus: chocDeMagie,
             raisonDuBonus: chocDeMagie ? 'Choc volontaire (Loi de la Magie)' : undefined,
         };
@@ -1164,6 +1171,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         <select
                             value={plageCritique}
                             onChange={e => setPlageCritique(Number(e.target.value))}
+                            data-plage-critique
                             title="Le livre l'étend selon le risque : rafale, axiomes, certains Atouts et pouvoirs"
                             className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50"
                         >
@@ -1171,6 +1179,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <option value={2}>1 – 2</option>
                             <option value={3}>1 – 3</option>
                             <option value={4}>1 – 4</option>
+                        </select>
+                    </label>
+                    <label className="flex items-center gap-2" title="Livre p. 122 : −2 par cible supplémentaire ; toutes les cibles touchées subissent les dommages">
+                        <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Cibles</span>
+                        <select
+                            value={cibles}
+                            onChange={e => setCibles(Number(e.target.value))}
+                            data-cibles-multiples
+                            className="bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-ui-11 font-bold focus:outline-none focus:border-accent/50"
+                        >
+                            {[1, 2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n}{n > 1 ? ` (−${malusDesCiblesMultiples(n)})` : ''}</option>)}
                         </select>
                     </label>
                     {malusTorg > 0 && (

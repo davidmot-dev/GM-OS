@@ -50,8 +50,18 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > qui a joué la sienne ; zone mixte : paquet choisi par joueur) ; actions `cartesDeCosmDuDebutDActe`,
 > `cartesDeCosmAuChangement`, et `jouerLaCarteTenue` note la carte jouée ; `GestesDuCosm` dans le
 > lecteur de Deck-OS ; la tablette montre la carte à part (« hors de la main »). La carte tient dans la
-> main de SON paquet : elle ne compte jamais dans la taille de la main du Destin. **Reste** : T3
-> (sbires, hordes, Actions combinées, Cibles multiples) ; charger les paquets de Cosm (David).
+> main de SON paquet : elle ne compte jamais dans la taille de la main du Destin. T2 commité
+> (`e21b343e`).
+>
+> **T3 fait — sbires, hordes, attaques à plusieurs** : `combat/logic/sbiresEtHordes.ts` (pur :
+> `casesPourLaLimite`, Table des Actions combinées p. 119, Cibles multiples p. 122, horde p. 264 —
+> Choc commun, un KO par tranche d'Esprit + 1, une Blessure élimine un membre sans toucher au
+> Choc) ; `combat.limitesDeBlessures` (« Type… » sur la santé d'un adversaire, même écrivain que le
+> changement de moteur) ; `Combatant.horde` et `HordeDuCombattant` sur la carte d'un adversaire de
+> Torg (former, frapper, attaque combinée) ; « Cibles » au jet de Torg. Pilote Torg corrigé
+> (`limitesDeBlessures` en plus), zéro constat — **à réimporter**. **Torg : il reste** la capacité
+> « Sbires » d'un vilain et la capacité « Horde » de certaines créatures (à la table), les Atouts qui
+> touchent aux cartes, et le chargement des paquets de Cosm (David).
 
 > **14/10 — Forcer le jet et le Stress, Alien et Blade Runner.** David : *« la partie gestion du
 > stress et du forçage des jets »*. **Fait, commité et poussé le 14/10 (`41cda346`) ; pilotes réimportés

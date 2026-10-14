@@ -354,6 +354,13 @@ export interface GameDriver {
          * plafonné par le `max` que `statsToTrack` déclare pour lui.
          */
         dommages?: { mecanique: 'torg'; resistance: string; choc: string };
+        /**
+         * **Les limites de Blessures des adversaires** — Torg, 2026-10-14. Un sbire
+         * (« — ») tombe à la première Blessure, un aguerri à la deuxième, un
+         * adversaire chargé en possibilités comme un héros. Le panneau de santé
+         * d'un adversaire propose ces types ; les `casesDeSante` se recoupent.
+         */
+        limitesDeBlessures?: { libelle: string; blessures: number }[];
     };
 
     // UI Customization

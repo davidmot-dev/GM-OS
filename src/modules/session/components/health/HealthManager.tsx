@@ -8,6 +8,7 @@ import { WoundLevelsDriver } from './WoundLevelsDriver';
 import { HarmBoxesDriver } from './HarmBoxesDriver';
 import { AnatomicalSilhouette, type PartStatus } from './AnatomicalSilhouette';
 import { typesDeDegats, nommerLeType } from '../../../combat/logic/TypesDeDegats';
+import { casesPourLaLimite } from '../../../combat/logic/sbiresEtHordes';
 import { Plus, Minus, Heart, Settings2, Swords, Crosshair } from 'lucide-react';
 
 /**
@@ -325,6 +326,23 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     if (onHealthChange) onHealthChange(nextHealth);
   };
 
+  /*
+    **Le type d'adversaire** — Torg, 2026-10-14 : un sbire tombe à la première
+    Blessure, un aguerri à la deuxième, un adversaire chargé en possibilités
+    comme un héros. Choisir recoupe les cases du jeu ; même écrivain que le
+    changement de moteur, juste au-dessus.
+  */
+  const limitesDuJeu = type === 'npc' && health.type === 'boxes' && casesDuJeu
+    ? activeDriver?.combat?.limitesDeBlessures ?? [] : [];
+  const limiteActuelle = (listeOuVide(health.data.boxes).length || 1) - 1;
+  const changerLaLimite = (blessures: number) => {
+    if (!casesDuJeu) return;
+    const nextHealth = HealthInterpreter.createDefault('boxes', { cases: casesPourLaLimite(casesDuJeu, blessures) });
+    if (porteur) updateEntityHealth(id, nextHealth);
+    setInternalHealth(nextHealth);
+    if (onHealthChange) onHealthChange(nextHealth);
+  };
+
   /* ── Les pièces du panneau, arrangées plus bas selon la disposition ── */
 
   const enTete = (
@@ -343,6 +361,19 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
               {health.type === 'boxes' && (typeof health.data.libelle === 'string' ? health.data.libelle : 'Stress')}
             </span>
           </button>
+          {limitesDuJeu.length > 0 && (
+            <select
+              aria-label="Type d'adversaire"
+              data-type-d-adversaire
+              value={limitesDuJeu.some(l => l.blessures === limiteActuelle) ? limiteActuelle : ''}
+              onChange={e => e.target.value !== '' && changerLaLimite(Number(e.target.value))}
+              title="Combien de Blessures il encaisse avant d'être vaincu"
+              className="bg-app-bg/60 border border-app-border/40 rounded-md px-1.5 py-0.5 text-ui-10 font-bold text-app-text/70 focus:outline-none focus:border-accent/50"
+            >
+              <option value="">Type…</option>
+              {limitesDuJeu.map(l => <option key={l.blessures} value={l.blessures}>{l.libelle}</option>)}
+            </select>
+          )}
 
           <div className={`px-2 py-0.5 rounded-md text-ui-10 font-black uppercase tracking-widest border transition-all ${
               health.state === 'healthy' ? 'bg-etat-succes/10 text-etat-succes border-etat-succes/20' :

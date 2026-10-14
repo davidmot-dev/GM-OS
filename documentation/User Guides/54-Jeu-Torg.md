@@ -230,8 +230,26 @@ est alors comptée comme jouée pour l'Acte. Ce qu'elle fait reste à la table.
 
 ---
 
+## Sbires, hordes, attaques à plusieurs
+
+- **Le type d'adversaire** — sur la santé d'un adversaire, « Type… » : **Sbire (—)** tombe à la
+  première Blessure, **Aguerri (1)** à la deuxième, **Chargé en possibilités (3)** comme un héros
+  (livre p. 263). Choisissez-le avant les coups : il remet les cases à neuf.
+- **La horde** (règle optionnelle, p. 264) — sur la carte d'un adversaire, **« En horde… »** : le
+  nombre de membres, l'Esprit et la Résistance d'un membre (lus sur sa fiche s'il en a une). Le
+  **Choc est commun** : un membre tombe KO chaque fois qu'il dépasse l'Esprit (Esprit 7 : un KO
+  tous les 8 points) ; **une Blessure élimine un membre** sans toucher au Choc. Les coups se portent
+  dans le bloc de la horde, en dommages.
+- **Les Actions combinées** (p. 119) — le bloc de la horde dit le bonus de ses assaillants : 2 → +1,
+  3 → +2, 4–5 → +3, 6–9 → +4, 10–14 → +5… En mêlée, quatre au plus contre un même défenseur.
+- **Les Cibles multiples** (p. 122) — au jet, « Cibles » : −2 par cible supplémentaire ; toutes les
+  cibles touchées subissent les dommages.
+
+---
+
 ## Ce qui manque encore
 
 - Les Atouts qui touchent aux cartes (Chef naturel…).
-- **Les sbires** (vaincus dès la première Blessure) et **les hordes** (Choc mis en commun) n'ont pas
-  de modèle à part : réglez leur santé à la main.
+- **La capacité « Sbires » d'un vilain** (transférer une attaque sur un laquais) et la capacité
+  **Horde** de certaines créatures (le bonus d'Actions combinées ajouté aux dommages) restent à la
+  table.

@@ -19,6 +19,7 @@ import ActionsApprouvees from './ActionsApprouvees';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
 import { useDiceStore } from '../../../stores/useDiceStore';
+import HordeDuCombattant from './HordeDuCombattant';
 import { useTranslation } from 'react-i18next';
 
 const PRESET_STATUSES = [
@@ -532,6 +533,16 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
 
             {/* Torg : l'Action approuvée de la carte du round, pour un Héros. */}
             <ActionsApprouvees combatant={combatant} />
+
+            {/* Torg : une horde de sbires, au Choc commun (règle optionnelle, 2026-10-14). */}
+            {!combatant.isPlayer && activeDriver?.combat?.dommages?.mecanique === 'torg' && (
+                <HordeDuCombattant
+                    horde={combatant.horde}
+                    espritParDefaut={maximumDeLaJauge(activeDriver.combat.dommages.choc, activeDriver.combat.statsToTrack, combatant.sheetData) ?? 0}
+                    resistanceParDefaut={Number(combatant.sheetData?.[activeDriver.combat.dommages.resistance]) || 0}
+                    onChange={horde => updateCombatant(combatant.id, { horde })}
+                />
+            )}
 
             {activeDriver?.ui_config?.gauges && activeDriver.ui_config.gauges.length > 0 ? (
                 <div className="flex gap-6 px-3">

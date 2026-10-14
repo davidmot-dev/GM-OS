@@ -1074,6 +1074,15 @@ export function controlerLePilote(
             }
         });
     });
+    /* Les limites de Blessures des adversaires recoupent les cases du jeu : sans cases, rien à recouper. */
+    (driver.combat?.limitesDeBlessures ?? []).forEach((limite, i) => {
+        if (!(Number.isInteger(limite.blessures) && limite.blessures >= 0)) {
+            erreur(`combat.limitesDeBlessures[${i}].blessures`, `« ${String(limite.blessures)} » n'est pas un nombre de Blessures : un entier, 0 pour un sbire (« — »).`);
+        }
+    });
+    if (driver.combat?.limitesDeBlessures?.length && !driver.combat.casesDeSante) {
+        erreur('combat.limitesDeBlessures', 'Les limites de Blessures recoupent « combat.casesDeSante », que le pilote ne déclare pas.');
+    }
     if (driver.jet?.torg?.choc && !tousLesChamps.has(driver.jet.torg.choc)) {
         avertir('jet.torg.choc', `Le Choc se lit dans « ${driver.jet.torg.choc} », absent de la fiche.`);
     }

@@ -88,7 +88,7 @@ describe('le jet de Torg', () => {
         faces(2);
         monter();
         retenir();
-        fireEvent.change(screen.getByDisplayValue('1'), { target: { value: '2' } });
+        fireEvent.change(document.querySelector('[data-plage-critique]')!, { target: { value: '2' } });
         lancer();
         expect(ligne()).toMatch(/^Échec critique — premier dé 2/);
         expect(screen.queryByText('Un de plus !')).toBeNull();
@@ -268,5 +268,25 @@ describe('les Lois du Monde au jet', () => {
         lancer();
         expect(ligne()).toMatch(/total d'action 14 \(niveau 11, \+2 Choc volontaire \(Loi de la Magie\)\)/);
         expect(ecrire).toHaveBeenCalledWith({ choc: 3 });
+    });
+});
+
+describe('les Cibles multiples', () => {
+    it('−2 par cible supplémentaire, dit avec le total', () => {
+        faces(13);
+        monter();
+        retenir();
+        fireEvent.change(document.querySelector('[data-cibles-multiples]')!, { target: { value: '3' } });
+        lancer();
+        expect(ligne()).toMatch(/total d'action 8 \(niveau 11, −4 Cibles multiples \(3\)\)/);
+    });
+
+    it('avec des Blessures, les raisons se joignent', () => {
+        faces(13);
+        monter({ blessures: 1 });
+        retenir();
+        fireEvent.change(document.querySelector('[data-cibles-multiples]')!, { target: { value: '2' } });
+        lancer();
+        expect(ligne()).toMatch(/total d'action 9 \(niveau 11, −3 \(1 Blessure, 2 cibles\)\)/);
     });
 });

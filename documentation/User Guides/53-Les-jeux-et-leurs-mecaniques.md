@@ -185,6 +185,7 @@ ressources suivies en combat dont le champ contient un dé. Voir [Cthulhu Hack](
 | **Initiative par formule** (`initiativeFormula`, `initiativeSort`) | Une valeur de la fiche ou un jet, triés dans un sens ou dans l'autre |
 | **Cartes d'initiative** (`initiativeCards`) | Un paquet de cartes numérotées, une par combattant (Alien, Blade Runner) |
 | **Ordre alterné** (`initiative`) | Pas d'initiative individuelle : le tour **alterne** entre les camps, garder la main ou l'ouvrir coûte une réserve (Dune) |
+| **Limites de Blessures** (`limitesDeBlessures`) | Sur la santé d'un **adversaire**, un choix « Type… » : combien de Blessures il encaisse avant d'être vaincu (sbire, aguerri…). Les cases du jeu se recoupent (Torg) |
 | **Paquet d'Action** (`initiative` en mode `paquet`) | Chaque round, une **carte d'Action** dit quel camp commence ; il joue tous ses tours, puis l'autre. La carte porte aussi une Ligne de Conflit (avantages, désavantages) et des Actions approuvées. Le paquet se marque **« Paquet d'Action »** dans Deck-OS (**Rôle**), et chaque carte s'y décrit une fois (Torg) |
 | **Modèle de santé** (`defaultHealthType`) | Points de vie, horloges, anatomie, blessures ou cases — la carte du combattant change d'aspect |
 | **Santé de départ** (`santeDeDepart`) | Le maximum se lit sur la fiche (Alien : la Force) |
