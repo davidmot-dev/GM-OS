@@ -621,6 +621,14 @@ export function controlerLePilote(
             erreur('jet.panique.champ', `La panique en cours se garde dans « ${champ} », absent de la fiche : le cumul ne se ferait jamais.`);
         }
     }
+    /* Brisé (Blade Runner) : les champs qu'il lit et écrit doivent exister. */
+    (driver.jet?.brise ?? []).forEach((b, i) => {
+        for (const [quoi, champ] of [['champ', b.champ], ['de', b.de], ['perteDuMaximum', b.perteDuMaximum]] as const) {
+            if (champ && !tousLesChamps.has(champ)) {
+                avertir(`jet.brise[${i}].${quoi}`, `« ${b.label} » lit « ${champ} », absent de la fiche.`);
+            }
+        }
+    });
     const reussiteDepensee = driver.jet?.reussiteDepensee;
     if (reussiteDepensee && !tousLesChamps.has(reussiteDepensee.champ)) {
         erreur('jet.reussiteDepensee.champ', `« ${reussiteDepensee.label} » se décompte dans « ${reussiteDepensee.champ} », absent de la fiche : le bouton n'aurait rien à dépenser.`);

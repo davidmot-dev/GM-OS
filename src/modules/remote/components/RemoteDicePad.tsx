@@ -36,6 +36,8 @@ interface RemoteDicePadProps {
         modificateurEchelonne?: ModificateurDeDes;
     }) => void;
     onClear: () => void;
+    /** Year Zero : forcer le dernier jet du pupitre. Absent : le jeu ne fait pas forcer. */
+    onForcer?: () => void;
 }
 
 const DICE_MODES = [
@@ -52,7 +54,7 @@ const DICE_MODES = [
     { id: 'rolemaster', label: 'Rolemaster' },
 ];
 
-const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEchelonnes, onRoll, onClear }) => {
+const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEchelonnes, onRoll, onClear, onForcer }) => {
     const [diceCount, setDiceCount] = useState(1);
     const [diceModifier, setDiceModifier] = useState(0);
     const [diceMode, setDiceMode] = useState<string>('standard');
@@ -454,6 +456,17 @@ const RemoteDicePad: React.FC<RemoteDicePadProps> = ({ activeDiceConfig, desEche
                 </div>
             </div>
 
+
+            {/* Year Zero : forcer le dernier jet du pupitre — il relance là-bas, et annonce le prix. */}
+            {onForcer && (
+                <Bouton habillage="libre" cibleTactile
+                    onClick={onForcer}
+                    data-forcer-le-dernier-jet
+                    className="w-full p-4 bg-accent/10 border border-accent/30 text-accent rounded-2xl flex items-center justify-center gap-2 active:scale-95 transition-all font-black hover:bg-accent/20"
+                >
+                    <span className="text-[14px] uppercase tracking-widest">Forcer le dernier jet</span>
+                </Bouton>
+            )}
 
             {/* Dice Buttons */}
             {diceMode === 'rolemaster' ? (

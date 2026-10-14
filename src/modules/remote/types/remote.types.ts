@@ -221,6 +221,8 @@ export interface RemoteSyncData {
          * un moteur qui dit autre chose. Le meneur tranche, la tablette obéit.
          */
         desEchelonnes?: boolean;
+        /** Le jeu fait forcer ses jets (Year Zero) : la télécommande propose « Forcer le dernier jet ». */
+        jetForcable?: boolean;
     };
 }
 
@@ -229,6 +231,7 @@ export type RemoteActionType =
     | 'remote:pad:trigger' 
     | 'remote:dice:roll' 
     | 'remote:dice:clear'
+    | 'remote:dice:forcer'
     | 'remote:sound:trigger' 
     | 'remote:sound:volume' 
     | 'remote:sound:stop-all'

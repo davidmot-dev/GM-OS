@@ -5,6 +5,7 @@ import {
 import { useDiceStore } from '../../../stores/useDiceStore';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import type { ActionRegistry } from './types';
+import { forcerLeDernierJet } from '../../dice/forcerAuPupitre';
 
 interface DiceRollPayload {
     sides?: number;
@@ -208,4 +209,6 @@ export const diceActions: ActionRegistry = {
     'dice:clear': clear,
     'remote:dice:clear': clear,
     'remote:dice:clear-dice': clear,
+    // Year Zero : la télécommande force le dernier jet du pupitre (2026-10-14).
+    'remote:dice:forcer': () => { forcerLeDernierJet(); },
 };

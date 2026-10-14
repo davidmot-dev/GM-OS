@@ -139,6 +139,7 @@ const RemoteControl: React.FC = () => {
                         desEchelonnes={isPaired ? syncData.session?.desEchelonnes : undefined}
                         onRoll={(dice) => sendAction('remote:dice:roll', dice)}
                         onClear={() => sendAction('remote:dice:clear', {})}
+                        onForcer={isPaired && syncData.session?.jetForcable ? () => sendAction('remote:dice:forcer', {}) : undefined}
                     />
                 );
             case 'sound':

@@ -547,6 +547,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     activeDiceConfig: piloteActif?.dice ?? null,
                     desEchelonnes: !!piloteActif?.jet?.desEchelonnes
                         || piloteActif?.dice?.engine === 'yze-echelonne',
+                    // Year Zero : le dernier jet du pupitre se force depuis la télécommande (2026-10-14).
+                    jetForcable: !!piloteActif?.jet?.forcer,
                     /*
                       **Les cartes tenues en main — décidé par David le 2026-08-30.**
 

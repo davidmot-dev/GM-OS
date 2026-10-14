@@ -26,6 +26,20 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> **14/10 nuit — les petits restes du forçage.** David : *« Fais les petits restes en code »*.
+> **Forcer au pupitre** : `dice/forcerAuPupitre.ts` — « Forcer le jet » sous le dernier jet Year
+> Zero du pupitre ; relance selon la règle du pilote (dé de Stress compris, refus après une
+> Panique), **annonce** le prix au lieu de l'écrire (le pupitre ne sait pas quels champs ont servi) ;
+> sans personnage, le plus grand nombre de forçages de la règle (2, le réplicant). La télécommande
+> envoie `remote:dice:forcer` (drapeau `jetForcable` dans la séance). **Brisé** (Blade Runner) :
+> `DescripteurDeJet.brise` (`EtatBrise`, `tableDuBrise`) — au panneau, quand un forçage met Santé
+> ou Sang-froid à 0, l'état se dit ; « Lancer l'effet critique (Empathie) » jette le dé échelonné,
+> lit la table humain ou réplicant (Table-OS, poste du meneur), et un 1 retire un point de
+> Sang-froid maximal à vie. Pilote Blade Runner corrigé dans `Export Dirvers/corriges/`, zéro constat
+> — **à réimporter**. **Non fait** : les captures du manuel (instance de GM-OS à lancer, mises en
+> scène à écrire — à décider avec David) ; Brisé n'est dit qu'après un forçage, pas après un coup
+> reçu en combat.
+
 > **14/10 soir — Torg, la fin : T1 fait (cosms et Lois du Monde), T2 et T3 à suivre.** David :
 > *« termine Torg »*, ordre T1 → T2 → T3 accepté, cosm réglé **sur la scène** avec un défaut sur la
 > campagne. Règles relues dans le carnet « Torg » par `nlm notebook query` (réponses citées ; une

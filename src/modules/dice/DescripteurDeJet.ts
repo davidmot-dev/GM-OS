@@ -323,6 +323,13 @@ export interface DescripteurDeJet {
      */
     reussiteDepensee?: { champ: string; label: string };
     /**
+     * **Brisé** — Blade Runner, 2026-10-14. Quand forcer met un de ces champs à
+     * zéro, le panneau le dit, et peut lancer l'effet critique : le dé `de` (un
+     * champ échelonné, l'Empathie), lu dans `table` (Table-OS) ; sur un 1, le
+     * `perteDuMaximum` perd un point à vie.
+     */
+    brise?: import('./systemes/yearZero').EtatBrise[];
+    /**
      * **La spécialisation élargit le critique** — 2d20, 2026-10-14. Star Trek
      * (le Focus de l'édition anglaise) : *« si une spécialisation s'applique,
      * tout dé inférieur ou égal à la fonction utilisée est aussi une réussite

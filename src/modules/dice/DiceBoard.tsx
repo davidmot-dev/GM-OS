@@ -16,6 +16,7 @@ import { deCourant, ecrireLeDe, ressourcesDUsure } from './ressourcesDUsure';
 import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
+import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -1261,6 +1262,26 @@ const DiceBoard: React.FC = () => {
                                     </div>
                                 ))}
                             </div>
+                            {/*
+                              **Forcer le dernier jet** — Year Zero, 2026-10-14. Le pupitre relance
+                              selon la règle du pilote et annonce le prix ; la fiche l'écrit.
+                            */}
+                            {activeDriver?.jet?.forcer && estUnJetYearZero(dernier) && (() => {
+                                const refus = pourquoiNePasForcerAuPupitre(dernier, activeDriver.jet);
+                                return (
+                                    <div className="mt-3 flex flex-col items-center gap-1" data-forcer-au-pupitre>
+                                        <button
+                                            type="button"
+                                            disabled={!!refus}
+                                            onClick={() => forcerLeDernierJet()}
+                                            className="px-4 py-1.5 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                        >
+                                            Forcer le jet
+                                        </button>
+                                        {refus && <span className="text-ui-10 text-app-muted text-center">{refus}</span>}
+                                    </div>
+                                );
+                            })()}
                         </>
                     ) : (
                         <div className="text-center py-6">

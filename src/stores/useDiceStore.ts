@@ -17,6 +17,10 @@ export interface RollRecord extends RollResult {
     timestamp: Date;
     title: string;
     batchId?: string;
+    /** Combien de fois ce jet a été forcé au pupitre (Year Zero) — voir `forcerAuPupitre`. */
+    forcages?: number;
+    /** Les 1 dont le prix a déjà été annoncé, pour ne pas les annoncer deux fois. */
+    unsAnnonces?: number;
 }
 
 /**

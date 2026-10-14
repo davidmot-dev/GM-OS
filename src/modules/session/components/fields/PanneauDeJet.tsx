@@ -16,10 +16,11 @@ import {
     type DesDeTorg, type OptionsDeTorg,
 } from '../../../dice/systemes/torg';
 import {
-    cumulDePanique, entreeDeLaTable, forcerLeJet, pourquoiNePasForcer, prixDuForcage, testDePanique,
-    type FamilleYearZero,
+    cumulDePanique, entreeDeLaTable, forcerLeJet, pourquoiNePasForcer, prixDuForcage, tableDuBrise, testDePanique,
+    type EtatBrise, type FamilleYearZero,
 } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
+import { facesDuNiveau } from '../../../dice/desEchelonnes';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
@@ -416,6 +417,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         // Un nouveau jet : rien n'est encore forcé, aucune Panique n'est jouée.
         setForcage({ fois: 0, unsPayes: 0, ecrits: {} });
         setPaniqueJouee(null);
+        setEffetsDuBrise({});
         setDernierLancer(null);
 
         // Le coût se prélève au moment où l'on s'engage, pas pendant qu'on
@@ -938,6 +940,45 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       un point de la fiche ajoute un six au jet. Il reste sur la table si l'on
       force ensuite — c'est une réussite.
     */
+    /*
+      **Brisé** (Blade Runner, 2026-10-14) : un forçage a mis la Santé ou le
+      Sang-froid à zéro. Le panneau le dit, et lance l'effet critique quand le jeu
+      en a un — le dé d'Empathie sur la table des effets de stress critiques.
+    */
+    const brises = (descripteur.brise ?? []).filter(b => forcage.ecrits[b.champ] === 0);
+    const [effetsDuBrise, setEffetsDuBrise] = useState<Record<string, { de: number; faces: number; entree?: TableEntry; perte?: string }>>({});
+    const nomDuChamp = (id: string) => template.sections.flatMap(s => s.fields).find(c => c.id === id)?.label ?? id;
+    const jouerLeBrise = (b: EtatBrise) => {
+        if (!dernierLancer) return;
+        const faces = (b.de ? facesDuNiveau(valeurs[b.de]) : null) ?? 6;
+        const tire = DiceEngine.roll(faces);
+        let perte: string | undefined;
+        if (tire === 1 && b.perteDuMaximum) {
+            const champ = b.perteDuMaximum;
+            const reste = Math.max(0, lireLeNombre(champ) - 1);
+            setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: reste } }));
+            ecrireSurLaFiche?.({ [champ]: reste });
+            perte = `${nomDuChamp(champ)} −1 à vie → ${reste}${reste === 0 ? ' — le personnage quitte la partie' : ''}`;
+        }
+        const effet = { de: tire, faces, perte };
+        setEffetsDuBrise(e => ({ ...e, [b.champ]: effet }));
+        const calcul = `${b.label} : D${faces}${b.de ? ` (${nomDuChamp(b.de)})` : ''} = ${tire}${perte ? ` ; ${perte}` : ''}`;
+        const dire = (entree?: TableEntry) => redire(b.label, {
+            total: tire, modifier: 0, rolls: [{ val: tire, sides: faces }],
+            totalDisplay: entree ? `${calcul} — ${entree.title}` : calcul,
+        });
+        const table = tableDuBrise(b, valeurs, dernierLancer.choix);
+        const pont = pontDesTables();
+        if (!table || !pont || pourLesJoueurs) { dire(); return; }
+        pont.loadTable(table.univers, table.table)
+            .then(data => {
+                const entree = data ? entreeDeLaTable(data.entries, tire) : undefined;
+                if (entree) setEffetsDuBrise(e => ({ ...e, [b.champ]: { ...effet, entree } }));
+                dire(entree);
+            })
+            .catch(() => dire());
+    };
+
     const reussiteDepensee = descripteur.reussiteDepensee && ecrireSurLaFiche && !torg && !destin
         ? descripteur.reussiteDepensee : undefined;
     const pointsDisponibles = reussiteDepensee ? lireLeNombre(reussiteDepensee.champ) : 0;
@@ -1528,6 +1569,33 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             <Info size={11} className="mt-0.5 shrink-0" /> {raisonDeNePasForcer}
                         </p>
                     )}
+                    {brises.map(b => {
+                        const effet = effetsDuBrise[b.champ];
+                        return (
+                            <div key={b.champ} data-brise={b.champ} className="space-y-1 rounded-lg border border-etat-danger/40 bg-etat-danger/10 p-2">
+                                <p className="text-ui-11 font-black uppercase tracking-widest text-etat-danger">{b.label}</p>
+                                <p className="text-ui-11 text-app-text/70">{b.rappel}</p>
+                                {b.de && !effet && (
+                                    <button type="button" onClick={() => jouerLeBrise(b)}
+                                        className="px-3 py-1 rounded-lg border border-etat-danger/60 text-etat-danger text-ui-10 font-bold hover:bg-etat-danger/20 transition-colors">
+                                        Lancer l’effet critique ({nomDuChamp(b.de)})
+                                    </button>
+                                )}
+                                {effet && (
+                                    <div className="text-ui-11">
+                                        <p className="font-bold text-etat-danger">
+                                            D{effet.faces} = {effet.de}{effet.entree ? ` — ${effet.entree.title}` : ''}
+                                        </p>
+                                        {effet.entree?.effect && <p className="text-app-text/80">{effet.entree.effect}</p>}
+                                        {!effet.entree && b.table && (
+                                            <p className="text-app-text/50">{pourLesJoueurs ? 'Le meneur lit la ligne dans la table.' : 'Cherchez ce résultat dans la table du jeu.'}</p>
+                                        )}
+                                        {effet.perte && <p className="font-bold text-etat-danger">{effet.perte}</p>}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
             )}
 

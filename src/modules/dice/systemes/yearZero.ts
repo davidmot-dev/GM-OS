@@ -255,6 +255,38 @@ export function prixDuForcage(
     return { champ, label, points: Math.max(0, uns - contexte.dejaPayes), uns };
 }
 
+/**
+ * **Brisé par les dégâts, Brisé par le stress** (Blade Runner, livre « BRISÉ PAR
+ * LES DÉGÂTS », « BRISÉ PAR LE STRESS », « PERTE DE SANG-FROID PERMANENTE ») : à
+ * zéro de Santé, le personnage s'effondre ; à zéro de Sang-froid, il lance son dé
+ * d'Empathie sur la table des effets de stress critiques (humain ou réplicant), et
+ * un 1 retire un point de Sang-froid maximal, à vie.
+ */
+export interface EtatBrise {
+    /** Le champ qui, à zéro, brise le personnage. */
+    champ: string;
+    label: string;
+    /** Ce que l'état fait, dit au meneur. */
+    rappel: string;
+    /** Le champ du dé de l'effet critique — un dé échelonné de la fiche. */
+    de?: string;
+    /** La table de l'effet ; `si` en choisit une autre (le réplicant). */
+    table?: { univers: string; table: string; si?: { si: ConditionDeFiche; table: string }[] };
+    /** Sur un 1 au dé, ce champ (le maximum) perd un point à vie. */
+    perteDuMaximum?: string;
+}
+
+/** La table de l'effet critique, selon la fiche. */
+export function tableDuBrise(
+    brise: EtatBrise,
+    valeurs: Record<string, unknown>,
+    choix: Record<string, string>,
+): { univers: string; table: string } | undefined {
+    if (!brise.table) return undefined;
+    const autre = (brise.table.si ?? []).find(s => conditionRemplie(s.si, valeurs, choix));
+    return { univers: brise.table.univers, table: autre?.table ?? brise.table.table };
+}
+
 /** Le test de Panique : un dé, plus le Niveau de Stress. */
 export function testDePanique(niveau: number, faces: number, de: (faces: number) => number) {
     const tire = de(faces);

@@ -40,6 +40,9 @@ Après le lancer, **« Forcer le jet »** :
   Dépassement de soi et Cran (Force), Vif et Téméraire (Agilité), Ruse et Curiosité (Esprit),
   Compassion et Influence (Empathie). Le bouton se grise ensuite, et dit pourquoi.
 
+**Au pupitre** (et depuis la télécommande), « Forcer le jet » relance le dernier jet, ajoute le dé de
+Stress et **annonce** « Stress +1 à reporter sur la fiche ».
+
 **On ne force pas** après une Panique au premier lancer (le bouton le dit), ni avec un **androïde**
 (case « Androïde » cochée sur la fiche). Une Panique sur la relance
 se joue de même, avec le Stress déjà monté.

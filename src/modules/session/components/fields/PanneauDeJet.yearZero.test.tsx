@@ -234,6 +234,35 @@ describe('Blade Runner — les crânes se paient', () => {
         expect(screen.getByText('Ce jet a déjà été forcé 2 fois.')).toBeTruthy();
     });
 
+    it('Brisé par le stress : le rappel, le dé d’Empathie, et un 1 coûte un point de Sang-froid maximal à vie', () => {
+        const brise = {
+            ...JET,
+            brise: [
+                { champ: 'sante', label: 'Brisé par les dégâts', rappel: 'Il s’effondre.' },
+                { champ: 'sangFroid', label: 'Brisé par le stress', rappel: 'Effet de stress critique.', de: 'empathie',
+                    table: { univers: 'Blade Runner', table: 'effets_de_stress_critiques_humain' }, perteDuMaximum: 'sangFroidMax' },
+            ],
+        };
+        const ecrire = vi.fn();
+        render(<PanneauDeJet descripteur={brise} dice={DICE} template={FICHE}
+            valeurs={{ vigueur: 'B', empathie: 'A', corpsACorps: 'C', nature: 'Réplicant', sante: 4, sangFroid: 1, sangFroidMax: 3 }}
+            ecrireSurLaFiche={ecrire} />);
+        const [a, c] = screen.getAllByRole('combobox');
+        fireEvent.change(a, { target: { value: 'vigueur' } });
+        fireEvent.change(c, { target: { value: 'corpsACorps' } });
+        faces(1, 4);
+        lancer();
+        faces(3);
+        forcer();
+        expect(screen.getByText('Brisé par le stress')).toBeTruthy();
+        expect(screen.queryByText('Brisé par les dégâts')).toBeNull();
+        faces(1);
+        fireEvent.click(screen.getByText('Lancer l’effet critique (Empathie)'));
+        expect(de).toHaveBeenLastCalledWith(12);
+        expect(ecrire).toHaveBeenLastCalledWith({ sangFroidMax: 2 });
+        expect(screen.getByText('sangFroidMax −1 à vie → 2')).toBeTruthy();
+    });
+
     it('sans forçage, les 1 ne coûtent rien', () => {
         const ecrire = monter('vigueur');
         faces(1, 1);

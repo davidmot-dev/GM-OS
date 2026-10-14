@@ -10,7 +10,7 @@ import { HIGH_FREQUENCY_ACTIONS } from './types';
 const EXPECTED_TYPES = [
     // Dés
     'dice:roll', 'remote:dice:roll',
-    'dice:clear', 'remote:dice:clear', 'remote:dice:clear-dice',
+    'dice:clear', 'remote:dice:clear', 'remote:dice:clear-dice', 'remote:dice:forcer',
     // Synchronisation
     'remote:request-sync',
     // Son

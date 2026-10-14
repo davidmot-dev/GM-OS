@@ -79,7 +79,7 @@ const session: Regles<SessionDuHub> = {
     activeCampaignId: nullable(texte), activeCampaignName: nullable(texte), activeCampaignWallpaper: nullable(texte),
     cosmsCourants: tableau(texte),
     favorites: tableau(identifie), reservesDeTable: dictionnaire(nombre),
-    activeDiceConfig: nullable(estObjet), desEchelonnes: booleen,
+    activeDiceConfig: nullable(estObjet), desEchelonnes: booleen, jetForcable: booleen,
 };
 
 function estJet(v: unknown): boolean {

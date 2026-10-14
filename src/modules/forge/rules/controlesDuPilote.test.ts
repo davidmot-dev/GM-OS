@@ -500,6 +500,14 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(constats).toEqual(['combat.limitesDeBlessures[1].blessures', 'combat.limitesDeBlessures']);
     });
 
+    it('Brisé : les champs lus et écrits existent', () => {
+        const constats = controlerLePilote(
+            { jet: { sens: 'superieur-ou-egal', brise: [{ champ: 'determination', label: 'Brisé', rappel: '…', de: 'absent', perteDuMaximum: 'combat' }] } } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou.startsWith('jet.brise')).map(c => c.ou);
+        expect(constats).toEqual(['jet.brise[0].de']);
+    });
+
     it('la spécialisation borne le critique par une composante du seuil', () => {
         const jet = (composante: string) => controlerLePilote(
             { jet: {
