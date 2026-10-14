@@ -61,7 +61,12 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > Torg (former, frapper, attaque combinée) ; « Cibles » au jet de Torg. Pilote Torg corrigé
 > (`limitesDeBlessures` en plus), zéro constat — **à réimporter**. **Torg : il reste** la capacité
 > « Sbires » d'un vilain et la capacité « Horde » de certaines créatures (à la table), les Atouts qui
-> touchent aux cartes, et le chargement des paquets de Cosm (David).
+> touchent aux cartes, et le chargement des paquets de Cosm (David). **Fiche Torg corrigée** dans le
+> même pilote : `choc` s'appelait « Points de Choc Max » (formule `esprit`, départ 8) et `blessures`
+> « Blessures Max » (départ 3), alors que les dommages y écrivent les valeurs **actuelles** — devenus
+> « Choc » et « Blessures », départ 0, sans formule (le maximum du Choc vient de `statsToTrack.max`).
+> La formule n'écrasait rien : elle ne s'applique qu'aux champs de type « formule ». Les personnages
+> déjà créés gardent leurs valeurs enregistrées.
 
 > **14/10 — Forcer le jet et le Stress, Alien et Blade Runner.** David : *« la partie gestion du
 > stress et du forçage des jets »*. **Fait, commité et poussé le 14/10 (`41cda346`) ; pilotes réimportés
