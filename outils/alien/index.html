@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr" data-system="alien">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f10">
+  <title>ALIEN — MU/TH/UR & détecteur</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="core.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="#" aria-label="Accessoires Alien"><span class="brand-symbol" aria-hidden="true">✳</span><span>ALIEN<small>INTERFACE DE BORD</small></span></a>
+    <div class="vessel"><span class="eyebrow">Vaisseau</span><strong id="vessel">USCSS ORPHEUS</strong></div>
+    <div class="connection"><i id="connectionDot"></i><span id="connectionLabel">INITIALISATION</span></div>
+    <button id="soundButton" class="subtle" type="button" aria-pressed="false">Son désactivé</button>
+  </header>
+
+  <section id="join" class="join hidden">
+    <div class="eyebrow">Liaison au terminal</div><h1>Bienvenue à bord.</h1>
+    <p>Entrez le code de table fourni par votre meneur.</p>
+    <form id="joinForm"><label>Votre nom<input id="joinName" autocomplete="nickname" maxlength="40" required placeholder="Nom de l’opérateur"></label><label>Code de table<input id="joinCode" maxlength="20" autocomplete="off" required placeholder="Six caractères"></label><button class="primary" type="submit">Établir la liaison <span>→</span></button></form>
+  </section>
+
+  <main id="workspace" class="hidden">
+    <div id="modebar" class="modebar">
+      <div><span class="eyebrow" id="modeLabel">POSTE MENEUR</span><span id="modeHint">Vous contrôlez ce que l’équipage reçoit.</span></div>
+      <button type="button" id="previewButton">Vue joueur ↗</button>
+    </div>
+    <div class="layout" id="layout">
+      <aside id="controls" class="controls">
+        <nav class="control-tabs" aria-label="Réglages"><button data-panel="terminal" aria-selected="true">Terminal</button><button data-panel="tracker" aria-selected="false">Détecteur</button><button data-panel="access" aria-selected="false">Accès</button></nav>
+
+        <section class="control-panel" id="panel-terminal">
+          <div class="section-heading"><span class="index">01</span><h2>Liaison MU/TH/UR</h2></div>
+          <label>Opérateur<select id="operator"></select></label>
+          <div id="request" class="request"><span class="status-led"></span><span>Aucune requête en attente.</span></div>
+          <div id="hackButtons" class="button-row hidden"><button id="hackSuccess" class="primary">Autoriser l’intrusion</button><button id="hackFail" class="danger">La repousser</button></div>
+          <form id="replyForm"><label>Répondre au nom de Maman<textarea id="replyText" rows="3" placeholder="Message à transmettre…" required maxlength="4000"></textarea></label><button class="primary wide" type="submit">Transmettre la réponse <span>↗</span></button></form>
+          <div class="section-heading minor"><h3>État du vaisseau</h3></div>
+          <form id="configForm"><label>Nom du vaisseau<input id="vesselInput" maxlength="64"></label><label>Réponse à STATUS<textarea id="statusInput" rows="3" maxlength="2000"></textarea></label><button type="submit" class="wide">Enregistrer l’état</button></form>
+          <div class="switch-row"><label><input id="crtToggle" type="checkbox"> Écran CRT</label><label><input id="glitchToggle" type="checkbox"> Parasites</label></div>
+          <div class="countdown-controls"><div class="eyebrow">Protocole d’urgence · fictif</div><div class="button-row"><input id="minutes" type="number" min="0.1" max="60" step="0.1" value="2" aria-label="Durée en minutes"><span>min</span><button id="startCountdown" class="danger">Démarrer</button><button id="stopCountdown">Arrêter</button></div></div>
+        </section>
+
+        <section class="control-panel hidden" id="panel-tracker">
+          <div class="section-heading"><span class="index">02</span><h2>Faire monter la tension</h2></div>
+          <p class="control-description">Le détecteur raconte ce que vous décidez. Aucun lien automatique avec le Stress des personnages.</p>
+          <button id="powerButton" class="primary wide" aria-pressed="false">Activer le détecteur</button>
+          <div class="range-header"><label for="intensity">Intensité</label><output id="intensityValue">25</output></div><input id="intensity" type="range" min="0" max="100" value="25">
+          <div class="presets"><button data-intensity="10">Calme</button><button data-intensity="45">Inquiétant</button><button data-intensity="75">Menaçant</button><button data-intensity="95">Critique</button></div>
+          <label>Destinataires<select id="trackerTarget"><option value="all">Tout l’équipage</option></select></label>
+          <div class="range-header"><label for="contacts">Contacts</label><output id="contactsValue">3</output></div><input id="contacts" type="range" min="0" max="9" value="3">
+          <div class="range-header"><label for="proximity">Proximité scénarisée</label><output id="proximityValue">45</output></div><input id="proximity" type="range" min="0" max="100" value="45">
+          <div class="range-header"><label for="noise">Parasites du radar</label><output id="noiseValue">10</output></div><input id="noise" type="range" min="0" max="100" value="10">
+          <div class="range-header"><label for="volume">Volume des bips</label><output id="volumeValue">25</output></div><input id="volume" type="range" min="0" max="100" value="25">
+          <button id="anomalyButton" class="wide">Injecter un faux écho · 9 s</button>
+          <p class="note">Intensité : cadence des bips et agitation visuelle. Volume : niveau sonore indépendant.</p>
+        </section>
+
+        <section class="control-panel hidden" id="panel-access">
+          <div class="section-heading"><span class="index">03</span><h2>Codes & dossiers</h2></div>
+          <form id="passwordForm"><label>Mot de passe administrateur<input id="adminPassword" type="password" autocomplete="off" maxlength="120" required></label><button type="submit" class="wide">Enregistrer le mot de passe</button></form>
+          <p class="note" id="demoCredentials">Exemples de la maquette : PROMETHEUS · code 0042. Modifiables ici.</p>
+          <div class="section-heading minor"><h3>Contenu du terminal</h3></div>
+          <form id="documentForm"><label>Dossier<select id="documentSelect"></select></label><label>Titre<input id="documentTitle" maxlength="80" required></label><label>Accès<select id="documentAccess"><option value="crew">Équipage</option><option value="code">Code requis</option><option value="admin">Administrateur</option></select></label><label>Code du dossier<input id="documentCode" autocomplete="off" maxlength="120" placeholder="Ex. 0042"></label><label>Contenu<textarea id="documentBody" rows="5" maxlength="10000"></textarea></label><button class="primary wide" type="submit">Enregistrer le dossier</button></form>
+          <button id="revokeButton" class="wide">Révoquer les accès de l’opérateur</button>
+          <details class="table-links"><summary>Connexion des joueurs</summary><p id="tableCode"></p><p id="playerAddress"></p></details>
+          <button id="resetButton" class="danger wide">Réinitialiser la maquette</button>
+        </section>
+      </aside>
+
+      <section class="instruments">
+        <nav class="instrument-tabs" aria-label="Accessoire"><button data-instrument="muthur" class="selected">MU/TH/UR <span>6000</span></button><button data-instrument="tracker">DÉTECTEUR <span>M314</span></button><span class="live-tag">● EN DIRECT</span></nav>
+        <div id="terminalInstrument" class="instrument">
+          <div class="instrument-header"><div><span class="eyebrow">Interface de bord / 6000</span><h1>MU/TH/UR</h1></div><div class="access-badge" id="accessBadge">ÉQUIPAGE</div></div>
+          <div class="terminal-screen crt" id="terminalScreen">
+            <div class="screen-top"><span id="terminalVessel">USCSS ORPHEUS</span><span>SESSION <b id="sessionName">REYES</b></span></div>
+            <div id="log" class="terminal-log" role="log" aria-live="polite" aria-label="Dialogue avec Maman"></div>
+            <div class="hack-overlay hidden" id="hackOverlay"><span>INTRUSION SYSTÈME</span><pre id="hackText"></pre><div class="hack-bar"><i id="hackProgress"></i></div></div>
+            <canvas id="noiseCanvas" class="noise-canvas" width="160" height="120" aria-hidden="true"></canvas>
+            <form id="commandForm" class="command-line"><label for="commandInput" class="prompt">&gt;_</label><input id="commandInput" autocomplete="off" spellcheck="false" maxlength="2000" placeholder="Saisir une commande…" aria-label="Commande du terminal"><button type="submit" aria-label="Envoyer la commande">↵</button></form>
+          </div>
+          <div class="terminal-shortcuts"><button data-command="HELP">HELP</button><button data-command="STATUS">STATUS</button><button data-command="LIST">DOSSIERS</button><button id="loginButton">S’identifier</button><button data-command="HACK">HACK</button></div>
+          <div class="instrument-footer"><span><i class="tiny-led"></i> LIAISON ÉTABLIE</span><span id="lastTransmission">EN ATTENTE D’INSTRUCTIONS</span></div>
+        </div>
+
+        <div id="trackerInstrument" class="instrument hidden">
+          <div class="instrument-header"><div><span class="eyebrow">Détecteur de mouvement / M314</span><h1>ÉCHOS À PROXIMITÉ</h1></div><div class="access-badge" id="trackerBadge">VEILLE</div></div>
+          <div id="radarScreen" class="radar-screen crt"><canvas id="radarCanvas" aria-label="Radar du détecteur de mouvement"></canvas><div class="radar-corners"><span>SCAN / 01</span><span id="radarState">VEILLE</span><span>RELATIVE POSITION</span><span id="radarEcho">—</span></div><div class="radar-idle" id="radarIdle"><span class="idle-symbol">◎</span><strong>DÉTECTEUR EN VEILLE</strong><span>En attente d’activation</span></div></div>
+          <div class="radar-readout"><div><span class="eyebrow">Signal</span><strong id="signalLabel">AUCUN BALAYAGE</strong></div><div><span class="eyebrow">État</span><strong id="scanLabel">VEILLE</strong></div></div>
+          <div class="instrument-footer"><span><i class="tiny-led"></i> CONTACTS ANONYMES</span><span id="radarFooter">ÉCHELLE SCÉNARISÉE</span></div>
+        </div>
+        <div id="countdown" class="countdown hidden"><span>PROTOCOLE D’URGENCE</span><strong id="countdownTime">02:00</strong><span>ATTENTE DES INSTRUCTIONS DU COMMANDEMENT</span></div>
+      </section>
+    </div>
+  </main>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="loginDialog"><form id="loginForm"><div class="eyebrow">Identification / MU/TH/UR</div><h2>Accès administrateur</h2><label>Mot de passe<input id="loginPassword" type="password" autocomplete="off" required maxlength="120"></label><div class="button-row"><button type="button" id="cancelLogin">Annuler</button><button type="submit" class="primary">S’identifier</button></div></form></dialog>
+  <footer class="page-footer"><span>ALIEN / ACCESSOIRES DE TABLE</span><span id="footerMode">MAQUETTE LOCALE</span><span>MU/TH/UR 6000 · M314</span></footer>
+</body>
+</html>

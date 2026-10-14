@@ -1,0 +1,17 @@
+{
+  "id": "alien-accessoires",
+  "name": "Alien — Accessoires de table",
+  "version": "0.1.0",
+  "system": "alien",
+  "corpusId": "alien",
+  "status": "prototype",
+  "tools": [
+    { "id": "muthur", "name": "MU/TH/UR 6000", "entry": "index.html?outil=muthur" },
+    { "id": "tracker", "name": "Détecteur de mouvement M314", "entry": "index.html?outil=tracker" }
+  ],
+  "integration": {
+    "driverBinding": "à développer dans GM-OS",
+    "transport": "HTTP local, événements serveur et commandes JSON",
+    "scope": "campagne Alien, avec contrôle meneur et accès joueur"
+  }
+}
