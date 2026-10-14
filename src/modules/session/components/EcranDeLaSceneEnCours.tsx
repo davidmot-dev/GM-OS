@@ -24,6 +24,9 @@ import { battlemapsDeLaScene, estUneBattlemap } from '../logic/battlemapsDeLaSce
 import { BoutonProjeterSurLEcranParDefaut } from './BoutonProjeterLeLieu';
 import { resumeDeLaRencontre } from '../../combat/logic/lignesDeRencontre';
 import type { Scene } from '../../../types/trame.types';
+import LoisDuCosm from './LoisDuCosm';
+import { useCosmsDuJeu } from '../hooks/useCosmsCourants';
+import { cosmsDesIds } from '../logic/cosmsCourants';
 import type { AtlasMap } from '../../../types/chronicle.types';
 
 /**
@@ -172,8 +175,12 @@ const EcranDeLaSceneEnCours: React.FC = () => {
 
 const ContenuDeLaScene: React.FC<{ scene: Scene; fermer: () => void }> = ({ scene, fermer }) => {
     const {
-        modifierScene, clues, revealClue, entities, toggleEntityVisibility, atlasMaps, rencontres,
+        modifierScene, clues, revealClue, entities, toggleEntityVisibility, atlasMaps, rencontres, campaigns,
     } = useSessionOSStore();
+    /* Torg : les Lois du cosm de CETTE scène — le sien, sinon celui de la campagne. */
+    const cosmsDuJeu = useCosmsDuJeu(scene.campaignId);
+    const cosms = cosmsDesIds(cosmsDuJeu, scene.cosms?.length
+        ? scene.cosms : campaigns.find(c => c.id === scene.campaignId)?.cosmsParDefaut ?? []);
     const projectEntity = useImageStore(s => s.projectEntity);
     const setActiveModule = useSessionStore(s => s.setActiveModule);
 
@@ -195,6 +202,7 @@ const ContenuDeLaScene: React.FC<{ scene: Scene; fermer: () => void }> = ({ scen
                 )}
                 {!vide(scene.enjeux) && <Bloc icone={<Swords size={14} />} titre="Enjeux"><Texte>{scene.enjeux}</Texte></Bloc>}
                 {!vide(scene.repliques) && <Bloc icone={<Users size={14} />} titre="Exemples de répliques"><Texte>{scene.repliques}</Texte></Bloc>}
+                <LoisDuCosm cosms={cosms} />
                 {vide(scene.descriptionNarrative) && vide(scene.enjeux) && vide(scene.repliques) && !vide(scene.resume) && (
                     <Bloc icone={<Clapperboard size={14} />} titre="Ce qui s’y joue"><Texte>{scene.resume}</Texte></Bloc>
                 )}

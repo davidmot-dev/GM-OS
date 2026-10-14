@@ -275,6 +275,8 @@ export interface Scene {
     repliques?: string;
     /** Des idées de musique, en texte libre — l'ambiance liée reste `momentDeStoryboardId`. */
     ideesMusicales?: string;
+    /** Torg : le ou les cosms de la scène (deux en zone mixte) ; sinon ceux de la campagne. */
+    cosms?: string[];
     /** Des pads de Music-OS (`MusicPad.id`) jouables d'un clic — des identifiants, jamais des contenus. */
     morceauxIds?: string[];
     /** Le chemin de la note de la scène, **relatif au coffre** Obsidian. */

@@ -13,6 +13,7 @@ import { scenesDansLEtat, actesOrdonnes } from '../logic/trame';
 import { DUREE_DE_PAUSE_PAR_DEFAUT_MS, estEnPause, libelleDeLaPause } from '../pauseDeSeance';
 import { depuisQuand, useFileDAttente } from '../../ai/useFileDAttente';
 import { ouvrirLeFichierDeLaSeance } from '../logic/ouvrirLeFichierDeLaSeance';
+import ChoixDesCosms from './ChoixDesCosms';
 
 const CampaignCockpit: React.FC = () => {
     const { t } = useTranslation();
@@ -211,6 +212,17 @@ const CampaignCockpit: React.FC = () => {
                         <span className="text-sm">{rattachement.pilote.emoji}</span>
                         <span className="font-bold">{rattachement.pilote.name}</span>
                     </p>
+                )}
+                {/* Torg : le cosm de la campagne, quand la scène n'en dit rien (2026-10-14). */}
+                {activeCampaign && (rattachement?.pilote?.cosms?.length ?? 0) > 0 && (
+                    <div className="mt-2" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
+                        <ChoixDesCosms
+                            cosms={rattachement!.pilote!.cosms!}
+                            choisis={activeCampaign.cosmsParDefaut ?? []}
+                            onChange={ids => updateCampaign(activeCampaign.id, { cosmsParDefaut: ids })}
+                            libelleVide="— cosm de la campagne —"
+                        />
+                    </div>
                 )}
                 {/*
                     **La fiche du groupe** — la Cabale de NOC (2026-10-13). Sur la

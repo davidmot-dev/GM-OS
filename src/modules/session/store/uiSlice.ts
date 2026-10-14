@@ -38,6 +38,12 @@ export interface UiSliceState {
     isHeaderHidden: boolean;
     activeCampaignName: string | null;
     activeCampaignWallpaper: string | null;
+    /**
+     * **Tablettes seulement** : les cosms courants de Torg, calculés par le meneur
+     * (`idsDesCosmsCourants`) et reçus avec la séance — la tablette n'a pas les
+     * scènes. Absent chez le meneur, qui les calcule lui-même.
+     */
+    cosmsCourants?: string[];
     editingClueId: string | null;
     remoteNotifications: RemoteNotification[];
     hubNotifications: HubNotification[];

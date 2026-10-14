@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bonusDeTorg, lancerLeDeDeTorg, resoudreLeJetDeTorg, direLeJetDeTorg, lancerLaPossibilite, lancerUneChaine, resoudreTorg } from './torg';
+import { bonusDeTorg, lancerLeDeDeTorg, resoudreLeJetDeTorg, direLeJetDeTorg, lancerLaPossibilite, lancerUneChaine, resoudreTorg, direTorg, ceQueLAnnulationAnnule } from './torg';
 
 /**
  * Les valeurs viennent de la Table des Bonus (livre de base, p. 109, transcrite
@@ -82,5 +82,36 @@ describe('les dés d’après coup', () => {
         expect(resoudreTorg(10, 10, { premier: [13] }, { malus: 2 }).totalDAction).toBe(9);
         expect(resoudreTorg(30, 6, { premier: [3] }, { plageCritique: 4 }).echecCritique).toBe(true);
         expect(resoudreTorg(30, 6, { premier: [3] }).echecCritique).toBe(false);
+    });
+});
+
+/** Les Lois du Monde qui touchent le jet (carnet « Torg », livre p. 42 et 55). */
+describe('les Lois du Monde au jet', () => {
+    it('Loi de l’Action : la meilleure des deux Possibilités compte', () => {
+        const des = { premier: [8], possibilite: [10, 3], possibiliteDeLAction: [17] };
+        const j = resoudreTorg(10, 10, des);
+        expect(j.totalDuDe).toBe(25);
+        expect(direTorg(j, des, 10, 10)).toContain("Possibilité 17 (Loi de l'Action : 10 + 3 ou 17)");
+    });
+
+    it('Loi de l’Action : une seconde Possibilité plus faible ne retire rien', () => {
+        expect(resoudreTorg(10, 10, { premier: [8], possibilite: [15], possibiliteDeLAction: [10, 2] }).totalDuDe).toBe(23);
+    });
+
+    it('Loi de la Persévérance : Simple n’annule plus de Blessure, Supérieur une seule', () => {
+        expect(ceQueLAnnulationAnnule({ degre: 'reussite-normale' }, { perseverance: true })).toMatch(/aucune Blessure/);
+        expect(ceQueLAnnulationAnnule({ degre: 'reussite-significative' }, { perseverance: true })).toMatch(/^annule 1 Blessure/);
+        expect(ceQueLAnnulationAnnule({ degre: 'reussite-particuliere' }, { perseverance: true })).toMatch(/toutes les Blessures/);
+        expect(ceQueLAnnulationAnnule({ degre: 'reussite-significative' })).toMatch(/^annule 2 Blessures/);
+    });
+});
+
+describe('la Loi de la Magie au jet', () => {
+    it('le Choc volontaire s’ajoute au total d’action, et se dit', () => {
+        const des = { premier: [13] };
+        const j = resoudreTorg(11, 10, des, { bonus: 3, raisonDuBonus: 'Choc volontaire (Loi de la Magie)' });
+        expect(j.totalDAction).toBe(15);
+        expect(direTorg(j, des, 11, 10, { bonus: 3, raisonDuBonus: 'Choc volontaire (Loi de la Magie)' }))
+            .toContain('niveau 11, +3 Choc volontaire (Loi de la Magie)');
     });
 });

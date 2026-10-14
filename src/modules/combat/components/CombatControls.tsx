@@ -15,6 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import PanneauDAlternance from './PanneauDAlternance';
 import PanneauDuPaquetDAction from './PanneauDuPaquetDAction';
+import LoisDuCosm from '../../session/components/LoisDuCosm';
+import { useCosmsCourants } from '../../session/hooks/useCosmsCourants';
 import { decrireLaSante } from '../logic/SanteDuCombattant';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import { taille } from '../../session/logic/regimeDInterface';
@@ -67,6 +69,7 @@ const CombatControls: React.FC = () => {
         : null;
     /** Torg : une carte d'Action désigne le camp qui commence chaque round. */
     const parLePaquet = activeDriver?.combat.initiative?.mode === 'paquet';
+    const cosmsCourants = useCosmsCourants();
 
     const handleAddCombatant = () => {
         /*
@@ -337,6 +340,8 @@ const CombatControls: React.FC = () => {
                     reviendrait à proposer une initiative au d20 à un jeu qui
                     n'en a pas — c'est le pis-aller qu'on vient de retirer.
                 */}
+                {/* Torg : les Lois du cosm courant, en rappel compact (2026-10-14). */}
+                <LoisDuCosm cosms={cosmsCourants} compact />
                 {parLePaquet ? (
                     <PanneauDuPaquetDAction />
                 ) : alternance ? (

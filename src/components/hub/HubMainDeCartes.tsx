@@ -6,6 +6,8 @@ import { DeckInterpreter } from '../../modules/session/logic/DeckInterpreter';
 import { voisinsAQuiDonner } from '../../modules/session/logic/aQuiDonnerUneCarte';
 import { paquetsOffertsAuxJoueurs, systemeDeLaCampagne } from '../../modules/session/logic/paquetsDuJeu';
 import { ResolvedImage } from '../ResolvedImage';
+import { useCosmsCourants } from '../../modules/session/hooks/useCosmsCourants';
+import { tailleDeLaMain } from '../../modules/session/logic/cosmsCourants';
 import { Bouton, EnTeteDeModule, GabaritDeModule, Panneau } from '../socle';
 
 /**
@@ -122,7 +124,9 @@ const HubMainDeCartes: React.FC<{ characterId: string | null; commandes?: React.
     }, [characterId, mainsDesPaquets, decks]);
 
     /** Torg : la taille de la main que la fin de scène complète. */
-    const tailleDeMain = useSessionOSStore(s => s.getActiveDriver?.()?.cartesDuDestin?.taille ?? 4);
+    const tailleDeBase = useSessionOSStore(s => s.getActiveDriver?.()?.cartesDuDestin?.taille ?? 4);
+    // La Loi de l'Héroïsme (Empire du Nil) porte la main à cinq cartes.
+    const tailleDeMain = tailleDeLaMain(tailleDeBase, useCosmsCourants());
 
     /*
       **Les Réserves d'Action de la table** — Torg, 2026-10-14. Elles sont

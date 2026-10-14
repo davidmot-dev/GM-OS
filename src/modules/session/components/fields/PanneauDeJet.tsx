@@ -22,6 +22,8 @@ import {
 import { pontDesTables } from '../../../tables/pontDesTables';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
+import { useCosmsCourants } from '../../hooks/useCosmsCourants';
+import { loiEnVigueur } from '../../logic/cosmsCourants';
 import { useSessionOSStore } from '../../useSessionOSStore';
 import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
@@ -292,6 +294,25 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         effectif: number; precedent: number; cumule: boolean;
     } | null>(null);
     const lireLeNombre = (champ: string) => forcage.ecrits[champ] ?? (Number(valeurs[champ]) || 0);
+
+    /*
+      **Les Lois du Monde du cosm courant** (Torg, 2026-10-14) : la Loi de l'Action
+      (une seconde Possibilité, la meilleure compte), la Persévérance (Annulation
+      réduite), la Magie (Choc volontaire en bonus aux compétences magiques).
+    */
+    const cosms = useCosmsCourants();
+    const loiAction = torg ? loiEnVigueur(cosms, 'action') : undefined;
+    const loiPerseverance = torg ? loiEnVigueur(cosms, 'perseverance') : undefined;
+    const loiMagie = torg ? loiEnVigueur(cosms, 'magie') : undefined;
+    /** La compétence magique retenue pour ce jet, s'il y en a une. */
+    const champMagique = loiMagie ? Object.values(choix).find(c => loiMagie.competences?.includes(c)) : undefined;
+    /** « Jusqu'à un maximum égal à son nombre de rangs dans la compétence utilisée. » */
+    const rangsMagiques = champMagique ? Math.max(0, Number(valeurs[champMagique]) || 0) : 0;
+    const [chocVolontaire, setChocVolontaire] = useState(0);
+    const chocDeMagie = champMagique && descripteur.torg?.choc && ecrireSurLaFiche ? Math.min(chocVolontaire, rangsMagiques) : 0;
+    /** Les Possibilités restantes, y compris celles que ce jet vient de dépenser. */
+    const possibilitesRestantes = descripteur.torg?.possibilites
+        ? (forcage.ecrits[descripteur.torg.possibilites] ?? possibilitesTorg) : 0;
 
     /** Le niveau du Talent, malus retirés, Vécu et Atouts ajoutés — avant les dés. */
     const niveauDuDestin = jet.seuil - malus.talents + bonusPerso + bonusDuGroupe;
@@ -570,7 +591,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             raisonDuMalus: blessuresTorg && destabilises ? `(${raisonsDuMalusTorg.replace(' (carte d’Action)', '')})`
                 : blessuresTorg ? `Blessure${blessuresTorg > 1 ? 's' : ''}`
                 : destabilises ? 'Déstabilisés' : undefined,
+            bonus: chocDeMagie,
+            raisonDuBonus: chocDeMagie ? 'Choc volontaire (Loi de la Magie)' : undefined,
         };
+        if (torg && chocDeMagie > 0 && descripteur.torg?.choc) {
+            const choc = (Number(valeurs[descripteur.torg.choc]) || 0) + chocDeMagie;
+            ecrireSurLaFiche?.({ [descripteur.torg.choc]: choc });
+            dits.push(`Choc +${chocDeMagie} → ${choc} (Loi de la Magie) — ne se récupère pas avant la fin du sort`);
+            setChocVolontaire(0);
+        }
         const desTorg: DesDeTorg | null = torg ? { premier: lancerUneChaine(() => DiceEngine.roll(20), entraine) } : null;
         setTestDeTorg(desTorg ? {
             des: desTorg, options: optionsTorg, niveau: jet.seuil, difficulte, entraine,
@@ -710,7 +739,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      * Complète le dernier test de Torg et le redit — au journal, ou au meneur
      * depuis la tablette, comme un jet neuf : c'est le résultat qui compte.
      */
-    const completerTorg = (geste: 'relance' | 'possibilite' | 'unDePlus') => {
+    const completerTorg = (geste: 'relance' | 'possibilite' | 'action' | 'unDePlus') => {
         if (!testDeTorg) return;
         const { des, options, niveau, difficulte: nd, entraine: ok, titre } = testDeTorg;
         const de = () => DiceEngine.roll(20);
@@ -718,15 +747,21 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             ? { ...des, premier: lancerUneChaine(de, ok), relance: true }
             : geste === 'possibilite'
                 ? { ...des, possibilite: lancerLaPossibilite(de, ok) }
-                : { ...des, unDePlus: lancerUneChaine(de, ok) };
+                : geste === 'action'
+                    ? { ...des, possibiliteDeLAction: lancerLaPossibilite(de, ok) }
+                    : { ...des, unDePlus: lancerUneChaine(de, ok) };
         const res = DiceEngine.resultatDeTorg(niveau, nd, suivants, options);
         setTestDeTorg({ ...testDeTorg, des: suivants });
         setResultat(res);
 
-        const nomDuGeste = geste === 'relance' ? 'compétence favorisée' : geste === 'possibilite' ? 'Possibilité' : 'Un de plus !';
-        if (geste === 'possibilite' && descripteur.torg?.possibilites) {
-            ecrireSurLaFiche?.({ [descripteur.torg.possibilites]: possibilitesTorg - 1 });
-            setMouvements(m => [...m, `Possibilités −1 → ${possibilitesTorg - 1}`]);
+        const nomDuGeste = geste === 'relance' ? 'compétence favorisée' : geste === 'possibilite' ? 'Possibilité'
+            : geste === 'action' ? 'Loi de l’Action' : 'Un de plus !';
+        if ((geste === 'possibilite' || geste === 'action') && descripteur.torg?.possibilites) {
+            const champ = descripteur.torg.possibilites;
+            const reste = possibilitesRestantes - 1;
+            setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: reste } }));
+            ecrireSurLaFiche?.({ [champ]: reste });
+            setMouvements(m => [...m, `Possibilités −1 → ${reste}${geste === 'action' ? ' (Loi de l’Action : la meilleure des deux compte)' : ''}`]);
         }
         if (pourLesJoueurs && personnageId) {
             window.dispatchEvent(new CustomEvent('fiche:resultat', {
@@ -754,7 +789,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const options: OptionsDeTorg = { malus: blessuresTorg, raisonDuMalus: blessuresTorg ? `Blessure${blessuresTorg > 1 ? 's' : ''}` : undefined };
         const des: DesDeTorg = { premier: lancerUneChaine(() => DiceEngine.roll(20)) };
         const res = DiceEngine.resultatDeTorg(niveau, ND_DE_L_ANNULATION, des, options);
-        const effet = ceQueLAnnulationAnnule(resoudreTorg(niveau, ND_DE_L_ANNULATION, des, options));
+        const effet = ceQueLAnnulationAnnule(resoudreTorg(niveau, ND_DE_L_ANNULATION, des, options), { perseverance: !!loiPerseverance });
         const ecrit: RollResult = { ...res, totalDisplay: `Annulation des dommages : ${effet} — ${res.totalDisplay}` };
         ecrireSurLaFiche?.({ [descripteur.torg.possibilites]: possibilitesTorg - 1 });
         setTestDeTorg(null);
@@ -1149,6 +1184,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </span>
                     )}
                     {!entraine && <span className="text-app-text/40 italic">Sans compétence : seul le 10 explose, pas le 20.</span>}
+                    {champMagique && descripteur.torg?.choc && ecrireSurLaFiche && (
+                        <label className="flex items-center gap-2" data-loi-de-la-magie
+                            title={`${loiMagie?.nom ?? 'Loi de la Magie'} : +1 par point de Choc, jusqu'aux rangs de la compétence (${rangsMagiques}). Annoncé avant le jet, il ne se récupère pas avant la fin du sort.`}>
+                            <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Choc volontaire</span>
+                            <input type="number" min={0} max={rangsMagiques} value={chocVolontaire}
+                                onChange={e => setChocVolontaire(Math.max(0, Math.min(rangsMagiques, Number(e.target.value) || 0)))}
+                                className="w-14 bg-app-bg/60 border border-app-border/40 rounded-lg px-2 py-1 text-xs font-mono font-bold focus:outline-none focus:border-accent/50" />
+                            <span className="text-app-text/40">max {rangsMagiques}</span>
+                        </label>
+                    )}
                     {annulation && ecrireSurLaFiche && descripteur.torg?.possibilites && (
                         <button
                             type="button"
@@ -1410,9 +1455,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </button>
                     )}
                     {!testDeTorg.des.possibilite && ecrireSurLaFiche && descripteur.torg?.possibilites && (
-                        <button type="button" disabled={possibilitesTorg <= 0} onClick={() => completerTorg('possibilite')}
+                        <button type="button" disabled={possibilitesRestantes <= 0} onClick={() => completerTorg('possibilite')}
                             className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30">
-                            Dépenser une Possibilité ({possibilitesTorg})
+                            Dépenser une Possibilité ({possibilitesRestantes})
+                        </button>
+                    )}
+                    {loiAction && testDeTorg.des.possibilite && !testDeTorg.des.possibiliteDeLAction && ecrireSurLaFiche && descripteur.torg?.possibilites && (
+                        <button type="button" disabled={possibilitesRestantes <= 0} onClick={() => completerTorg('action')}
+                            title={loiAction.texte}
+                            className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30">
+                            {loiAction.nom} : seconde Possibilité ({possibilitesRestantes})
                         </button>
                     )}
                     {!testDeTorg.des.unDePlus && (

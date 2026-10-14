@@ -9,6 +9,9 @@
  */
 
 import type { CreateurDeSlice } from './contratDesSlices';
+import { cosmsDesIds, idsDesCosmsCourants, tailleDeLaMain } from '../logic/cosmsCourants';
+import type { CosmDuJeu } from '../../../types/drivers';
+import type { Scene } from '../../../types/trame.types';
 import i18next from 'i18next';
 import { DeckInterpreter } from '../logic/DeckInterpreter';
 import type { DeckManifest, DeckSessionState } from './types';
@@ -149,7 +152,9 @@ export type DeckSlice = DeckSliceState & DeckSliceActions;
 type MagasinEntier = {
     players?: { characters?: { id: string; name: string; campaignId?: string | null }[] }[];
     activeCampaignId?: string | null;
-    getActiveDriver?: () => { cartesDuDestin?: { taille: number } } | null | undefined;
+    campaigns?: { id: string; cosmsParDefaut?: string[] }[];
+    scenes?: Scene[];
+    getActiveDriver?: () => { cartesDuDestin?: { taille: number }; cosms?: CosmDuJeu[] } | null | undefined;
 };
 
 const nomDuPersonnage = (magasin: unknown, id: string) =>
@@ -161,7 +166,11 @@ function mainsDeLaCampagne(magasin: unknown): { porteurs: string[]; taille: numb
     const porteurs = (m.players ?? []).flatMap(p => p.characters ?? [])
         .filter(c => c.campaignId === m.activeCampaignId)
         .map(c => c.id);
-    return { porteurs, taille: m.getActiveDriver?.()?.cartesDuDestin?.taille ?? 4 };
+    // La Loi de l'Héroïsme (Empire du Nil) porte la main à cinq cartes.
+    const pilote = m.getActiveDriver?.();
+    const campagne = (m.campaigns ?? []).find(c => c.id === m.activeCampaignId);
+    const cosms = cosmsDesIds(pilote?.cosms, idsDesCosmsCourants(campagne, m.scenes ?? []));
+    return { porteurs, taille: tailleDeLaMain(pilote?.cartesDuDestin?.taille ?? 4, cosms) };
 }
 
 /** Le bilan en une phrase : qui a pioché, qui a trop de cartes, ce qui a manqué. */

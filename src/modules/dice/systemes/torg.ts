@@ -126,6 +126,13 @@ export interface DesDeTorg {
     /** Le premier dé et ses relances. */
     premier: number[];
     possibilite?: number[];
+    /**
+     * **La Loi de l'Action** (Empire du Nil, livre p. 42) : *« immédiatement après
+     * avoir dépensé une Possibilité sur une action et obtenu un total, un personnage
+     * peut dépenser une seconde Possibilité pour relancer un autre dé et retenir le
+     * meilleur résultat des deux »*. Le meilleur des deux dés de Possibilité compte.
+     */
+    possibiliteDeLAction?: number[];
     unDePlus?: number[];
     /** La compétence favorisée a déjà servi. */
     relance?: boolean;
@@ -156,19 +163,26 @@ export interface OptionsDeTorg {
     malus?: number;
     /** D'où vient le malus, pour le dire. */
     raisonDuMalus?: string;
+    /** Ce qu'on ajoute au total d'action — le Choc volontaire de la Loi de la Magie (Aysle). */
+    bonus?: number;
+    /** D'où vient le bonus, pour le dire. */
+    raisonDuBonus?: string;
 }
 
 const somme = (des?: number[]) => (des ?? []).reduce((s, d) => s + d, 0);
 
+/** Ce que rapportent les Possibilités : la meilleure des deux sous la Loi de l'Action. */
+const apportDesPossibilites = (des: DesDeTorg) => Math.max(somme(des.possibilite), somme(des.possibiliteDeLAction));
+
 /** Ce que donne un test complet : le premier dé, puis ce qui s'y est ajouté. */
 export function resoudreTorg(niveau: number, difficulte: number, des: DesDeTorg, options: OptionsDeTorg = {}): JetDeTorg {
-    const totalDuDe = somme(des.premier) + somme(des.possibilite) + somme(des.unDePlus);
+    const totalDuDe = somme(des.premier) + apportDesPossibilites(des) + somme(des.unDePlus);
     const echecCritique = des.premier[0] <= Math.max(1, options.plageCritique ?? 1);
     const bonus = bonusDeTorg(totalDuDe);
     const malus = Math.max(0, options.malus ?? 0);
-    const totalDAction = niveau - malus + bonus;
+    const totalDAction = niveau - malus + Math.max(0, options.bonus ?? 0) + bonus;
     const marge = totalDAction - difficulte;
-    const tous = [...des.premier, ...(des.possibilite ?? []), ...(des.unDePlus ?? [])];
+    const tous = [...des.premier, ...(des.possibilite ?? []), ...(des.possibiliteDeLAction ?? []), ...(des.unDePlus ?? [])];
     const base = { des: tous, totalDuDe, echecCritique, bonus, totalDAction, marge };
     if (echecCritique) return { ...base, nom: 'Échec critique', degre: 'echec-total' };
     if (marge < 0) return { ...base, nom: 'Échec', degre: 'echec-normal' };
@@ -179,11 +193,15 @@ export function resoudreTorg(niveau: number, difficulte: number, des: DesDeTorg,
 /** Le test en une ligne : les dés et leur origine, le bonus, le malus, le verdict. */
 export function direTorg(j: JetDeTorg, des: DesDeTorg, niveau: number, difficulte: number, options: OptionsDeTorg = {}): string {
     const morceaux = [des.premier.join(' + ')];
-    if (des.possibilite) morceaux.push(`Possibilité ${des.possibilite.join(' + ')}`);
+    if (des.possibilite && des.possibiliteDeLAction) {
+        const garde = somme(des.possibiliteDeLAction) > somme(des.possibilite) ? des.possibiliteDeLAction : des.possibilite;
+        morceaux.push(`Possibilité ${garde.join(' + ')} (Loi de l'Action : ${des.possibilite.join(' + ')} ou ${des.possibiliteDeLAction.join(' + ')})`);
+    } else if (des.possibilite) morceaux.push(`Possibilité ${des.possibilite.join(' + ')}`);
     if (des.unDePlus) morceaux.push(`Un de plus ${des.unDePlus.join(' + ')}`);
     const de = morceaux.length > 1 || des.premier.length > 1 ? `${morceaux.join(' + ')} = ${j.totalDuDe}` : `${j.totalDuDe}`;
     const signe = j.bonus >= 0 ? `+${j.bonus}` : `${j.bonus}`;
-    const malus = options.malus ? `, −${options.malus}${options.raisonDuMalus ? ` ${options.raisonDuMalus}` : ''}` : '';
+    const malus = (options.malus ? `, −${options.malus}${options.raisonDuMalus ? ` ${options.raisonDuMalus}` : ''}` : '')
+        + (options.bonus ? `, +${options.bonus}${options.raisonDuBonus ? ` ${options.raisonDuBonus}` : ''}` : '');
     if (j.echecCritique) return `Échec critique — premier dé ${des.premier[0]} : l'action échoue, aucune Possibilité n'y change rien`;
     return `${j.nom} — dé ${de} → bonus ${signe} ; total d'action ${j.totalDAction} (niveau ${niveau}${malus}) contre ND ${difficulte}, marge ${j.marge >= 0 ? '+' : ''}${j.marge}`;
 }
@@ -196,12 +214,21 @@ export function direTorg(j: JetDeTorg, des: DesDeTorg, niveau: number, difficult
  */
 export const ND_DE_L_ANNULATION = 10;
 
-/** Ce qu'annule un test, selon son niveau de succès. */
-export function ceQueLAnnulationAnnule(j: Pick<JetDeTorg, 'degre'>): string {
+/**
+ * Ce qu'annule un test, selon son niveau de succès.
+ *
+ * **Sous la Loi de la Persévérance** (Orrorsh, livre p. 55) : un succès Simple
+ * annule le Choc mais aucune Blessure, un Supérieur une seule Blessure ; le
+ * Spectaculaire annule tout, comme ailleurs.
+ */
+export function ceQueLAnnulationAnnule(j: Pick<JetDeTorg, 'degre'>, options: { perseverance?: boolean } = {}): string {
+    const p = options.perseverance;
     switch (j.degre) {
         case 'reussite-particuliere': return "annule toutes les Blessures et tout le Choc de l'attaque";
-        case 'reussite-significative': return "annule 2 Blessures et tout le Choc de l'attaque";
-        case 'reussite-normale': return "annule 1 Blessure et tout le Choc de l'attaque";
+        case 'reussite-significative': return p ? "annule 1 Blessure et tout le Choc de l'attaque (Loi de la Persévérance)"
+            : "annule 2 Blessures et tout le Choc de l'attaque";
+        case 'reussite-normale': return p ? "annule tout le Choc de l'attaque, mais aucune Blessure (Loi de la Persévérance)"
+            : "annule 1 Blessure et tout le Choc de l'attaque";
         default: return "rien n'est annulé";
     }
 }

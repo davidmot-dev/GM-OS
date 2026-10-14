@@ -2,6 +2,8 @@ import React from 'react';
 import { Sparkles, Swords, Flag, BookOpen } from 'lucide-react';
 import { useSessionOSStore } from '../useSessionOSStore';
 import type { DeckManifest } from '../../../types/deck.types';
+import { useCosmsCourants } from '../hooks/useCosmsCourants';
+import { tailleDeLaMain } from '../logic/cosmsCourants';
 import { gmConfirm } from '../../../stores/useModalStore';
 
 /**
@@ -16,7 +18,9 @@ const GestesDuDestin: React.FC<{ deck: DeckManifest }> = ({ deck }) => {
         reprendreLesReserves, completerLesMainsDuDestin, nouvellesMainsDuDestin, jouerLeMomentCritique,
         players, activeCampaignId, deckStates,
     } = useSessionOSStore();
-    const taille = useSessionOSStore(s => s.getActiveDriver()?.cartesDuDestin?.taille ?? 4);
+    const tailleDeBase = useSessionOSStore(s => s.getActiveDriver()?.cartesDuDestin?.taille ?? 4);
+    // La Loi de l'Héroïsme (Empire du Nil) porte la main à cinq cartes.
+    const taille = tailleDeLaMain(tailleDeBase, useCosmsCourants());
     const personnages = (players ?? []).flatMap(p => p.characters ?? []).filter(c => c.campaignId === activeCampaignId);
     const dejaJoues = new Set(deckStates[deck.id]?.momentsCritiques ?? []);
 

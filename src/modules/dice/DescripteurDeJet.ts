@@ -264,6 +264,8 @@ export interface DescripteurDeJet {
     torg?: {
         blessures?: string;
         possibilites?: string;
+        /** Le Choc sur la fiche : la Loi de la Magie (Aysle) y ajoute le Choc volontaire. */
+        choc?: string;
         /** Le test de Réalité de l'Annulation des dommages : l'attribut et la compétence, lus sur la fiche. */
         annulation?: { attribut: string; competence: string };
     };

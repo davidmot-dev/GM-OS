@@ -131,6 +131,32 @@ export interface CombatStatMapping {
     gestes?: GesteDeJauge[];
 }
 
+/** Un cosm de Torg : une réalité, et les Lois du Monde qui s'y appliquent. */
+export interface CosmDuJeu {
+    id: string;
+    nom: string;
+    lois: LoiDuMonde[];
+}
+
+/**
+ * Les Lois que GM-OS sait appliquer, toutes du livre de base de Torg Eternity :
+ * `heroisme` (main +1), `action` (une seconde Possibilité, la meilleure
+ * compte), `perseverance` (Annulation réduite), `magie` (Choc volontaire en
+ * bonus aux compétences magiques), `tenacite` (au KO, une Blessure efface le
+ * Choc), `souffrance` (infliger une Blessure rend un point de Choc).
+ */
+export type MecaniqueDeLoi = 'heroisme' | 'action' | 'perseverance' | 'magie' | 'tenacite' | 'souffrance';
+
+/** Une Loi du Monde : son nom, ce qu'elle dit, et ce que GM-OS en applique. */
+export interface LoiDuMonde {
+    nom: string;
+    /** Ce que la Loi dit, en une ou deux phrases — le rappel affiché. */
+    texte: string;
+    mecanique?: MecaniqueDeLoi;
+    /** Pour `magie` : les champs de compétence magique de la fiche. */
+    competences?: string[];
+}
+
 /** Un geste de la règle sur une jauge suivie — voir `CombatStatMapping.gestes`. */
 export interface GesteDeJauge {
     libelle: string;
@@ -355,6 +381,14 @@ export interface GameDriver {
      * d'Action et le Moment critique viennent avec. Absent : pas de main à tenir.
      */
     cartesDuDestin?: { taille: number };
+    /**
+     * **Les cosms et leurs Lois du Monde** — Torg, 2026-10-14. Le cosm courant se
+     * règle sur la scène, avec un défaut sur la campagne ; ses Lois s'affichent en
+     * rappel, et celles qui nomment une `mecanique` sont appliquées par GM-OS
+     * (`session/logic/cosmsCourants.ts`). Le pilote nomme la mécanique ; il n'en
+     * porte aucun nombre.
+     */
+    cosms?: CosmDuJeu[];
     lootTables?: LootTable[]; // Optional tables for item/treasure generation
     /** Les mots de ce jeu pour la monnaie et la rareté — voir `VocabulaireDuButin`. */
     vocabulaireDuButin?: VocabulaireDuButin;

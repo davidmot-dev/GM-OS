@@ -6,7 +6,7 @@ comment on lance les dés, quelles réserves la table partage, comment on encais
 mécanique une fois**, et dit **où la voir**. Une page par jeu dit ensuite ce que *son* pilote en
 fait.
 
-> **Mis à jour le 2026-10-13**, sur les pilotes exportés ce jour-là ; **le 2026-10-14** pour Alien et Blade Runner (forcer le jet, Panique) et Star Trek (spécialisation). Un pilote nouveau ou amélioré
+> **Mis à jour le 2026-10-13**, sur les pilotes exportés ce jour-là ; **le 2026-10-14** pour Alien et Blade Runner (forcer le jet, Panique), Star Trek (spécialisation) et Torg (cosms). Un pilote nouveau ou amélioré
 > se reporte ici. La marche à suivre est en bas de page, sous « Tenir ce manuel à jour ». Les captures
 > sont celles des pilotes **corrigés** le même soir (`Export Dirvers/corriges/`).
 
@@ -138,6 +138,27 @@ Une carte peut être **posée en Réserve d'Action** — publique, toute la tabl
 **Moment critique** pose toute la main en Réserve, une fois par Acte ; les deux se font aussi depuis
 la tablette du joueur. Sur la carte de combat d'un héros, **l'Action approuvée** de la carte du
 round lui fait piocher une carte. Voir [Torg](./54-Jeu-Torg.md).
+
+---
+
+## Les cosms et leurs Lois (`cosms`)
+
+Un jeu dont la réalité change selon le lieu (Torg) déclare ses **cosms**, chacun avec ses **Lois du
+Monde** : un nom et ce qu'elle dit. Le cosm se choisit **sur la scène** (Trame, champ « Cosm »),
+avec un défaut sur la **campagne** (cockpit) ; deux cosms font une **zone mixte**, où les Lois des
+deux s'appliquent. Les Lois s'affichent en rappel sur l'écran de la scène et dans Combat-OS ; celles
+qui nomment une `mecanique` sont prises en charge par GM-OS (marque **GM-OS**) :
+
+| Mécanique | Ce que fait GM-OS |
+| :--- | :--- |
+| `heroisme` | La main de Cartes du Destin compte **une carte de plus** |
+| `action` | Après une Possibilité, **une seconde** : la meilleure des deux compte |
+| `perseverance` | L'Annulation des dommages **annule moins** (Simple : le Choc seul ; Supérieur : une Blessure) |
+| `magie` | Au jet d'une compétence magique (`competences`), du **Choc volontaire** donne +1 par point, jusqu'aux rangs, et s'écrit sur la fiche |
+| `tenacite` | **Annoncée** quand le Choc met KO : on peut encaisser une Blessure pour l'effacer |
+| `souffrance` | **Annoncée** quand une Blessure tombe : l'attaquant récupère un point de Choc |
+
+La tablette reçoit le cosm courant du meneur. Voir [Torg](./54-Jeu-Torg.md).
 
 ---
 

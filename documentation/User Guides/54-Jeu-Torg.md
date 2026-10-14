@@ -1,6 +1,6 @@
 # ⚡️ Jeu — Torg Eternity
 
-> **Pilote décrit :** « Torg Eternity », exporté le 2026-10-13, corrigé le même soir. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Torg Eternity », exporté le 2026-10-13, corrigé le même soir ; cosms ajoutés le 2026-10-14. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Les Chevaliers des Tempêtes contre les Seigneurs de Réalité. Les règles de cette page ont été
 relues contre le carnet NotebookLM « Torg » le 2026-10-13.
@@ -190,11 +190,30 @@ table. **Désorientés** (aucune carte jouée depuis la Réserve ce round) est a
 
 ---
 
+## Le cosm et ses Lois du Monde
+
+Le cosm se choisit **sur la scène**, dans la Trame (« Cosm », et « zone mixte avec… » pour un
+second) ; sans choix, c'est celui de la **campagne**, réglé sous son nom dans le cockpit. Ses Lois
+s'affichent sur l'écran de la scène et, en bref, dans Combat-OS. Celles marquées **GM-OS** jouent
+d'elles-mêmes, ou s'annoncent au bon moment (livre de base, relu contre le carnet « Torg ») :
+
+| Cosm | Loi | Dans GM-OS |
+| :--- | :--- | :--- |
+| Empire du Nil | **Héroïsme** | La main passe de 4 à **5** cartes |
+| Empire du Nil | **Action** | Après « Dépenser une Possibilité », **« seconde Possibilité »** : la meilleure des deux compte |
+| Orrorsh | **Persévérance** | Annulation : Simple n'annule que le Choc, Supérieur une seule Blessure |
+| Aysle | **Magie** | « Choc volontaire » au jet d'Altération, Cinétique, Conjuration ou Divination : +1 par point, jusqu'aux rangs ; ce Choc ne se récupère pas avant la fin du sort |
+| Pan-Pacifica | **Ténacité** | Annoncée quand le Choc met KO : une Blessure pour effacer tout le Choc |
+| Tharkold | **Souffrance** | Annoncée quand une Blessure tombe : l'attaquant récupère un point de Choc |
+
+Les autres Lois (Gloire, Outsider, Sauvagerie, Vie, Domination, Vengeance…) restent à la table, en
+rappel.
+
+---
+
 ## Ce qui manque encore
 
 - **Les Cartes de Cosm** (une par Acte, hors de la main) et les Atouts qui touchent aux cartes
   (Chef naturel…).
-- **La Loi de l'Action** de l'Empire du Nil (une seconde Possibilité pour relancer) et **les Lois
-  des cosms** qui changent l'Annulation.
 - **Les sbires** (vaincus dès la première Blessure) et **les hordes** (Choc mis en commun) n'ont pas
   de modèle à part : réglez leur santé à la main.

@@ -308,6 +308,7 @@ export const useHubSync = () => {
                 updates.activeCampaignId = session.activeCampaignId ?? prev.activeCampaignId;
                 updates.activeCampaignName = session.activeCampaignName ?? (session.campaigns || prev.campaigns).find(c => c.id === updates.activeCampaignId)?.name ?? prev.activeCampaignName;
                 if (session.activeCampaignWallpaper !== undefined) updates.activeCampaignWallpaper = session.activeCampaignWallpaper;
+                if (session.cosmsCourants !== undefined) updates.cosmsCourants = session.cosmsCourants;
                 return { ...prev, ...updates };
             });
 

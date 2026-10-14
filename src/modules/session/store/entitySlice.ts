@@ -16,6 +16,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
+import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
 import { maximumDeLaJauge, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
@@ -755,7 +756,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
     handleApplyImpact: (targetId, targetType, impactSaisi) => {
         const { entities, players } = get();
         // Même lecture du magasin entier que `santeSelonLeJeu` plus haut : la tranche ne connaît que ses champs.
-        const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+        const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null; scenes?: Scene[] };
         const campaigns = etat.campaigns ?? [];
         const customGameDrivers = etat.customGameDrivers ?? [];
         const activeCampaignId = etat.activeCampaignId ?? null;
@@ -774,10 +775,23 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             const d = dommagesDeTorg(impactSaisi.value, resistance);
             const max = maximumDeLaJauge(regle.choc, pilote?.combat?.statsToTrack, fiche);
             const choc = ajouterLeChoc(valeurDuChamp(fiche, regle.choc) ?? 0, d.choc, max);
+            /*
+              **Deux Lois du Monde se disent ici, sans s'appliquer seules** (Torg,
+              2026-10-14). La Ténacité (Pan-Pacifica) est un choix du joueur ; la
+              Souffrance (Tharkold) profite à l'attaquant, que ce calcul ne connaît
+              pas — l'initiative de Torg se joue par camp.
+            */
+            const cosms = cosmsDesIds(pilote?.cosms, idsDesCosmsCourants(campaigns.find(c => c.id === activeCampaignId), etat.scenes ?? []));
+            const tenacite = choc.ko ? loiEnVigueur(cosms, 'tenacite') : undefined;
+            const souffrance = d.blessures > 0 ? loiEnVigueur(cosms, 'souffrance') : undefined;
+            const lois = [
+                tenacite ? `${tenacite.nom} : s'il est chargé en possibilités, il peut encaisser 1 Blessure pour effacer tout son Choc` : '',
+                souffrance ? `${souffrance.nom} : l'attaquant récupère 1 point de Choc` : '',
+            ].filter(Boolean);
             return {
                 impact: { ...impactSaisi, value: d.blessures },
                 fiche: d.choc > 0 ? { [regle.choc]: choc.valeur } : {},
-                texte: direLesDommages(impactSaisi.value, resistance, d, choc.ko),
+                texte: direLesDommages(impactSaisi.value, resistance, d, choc.ko) + lois.map(l => ` — ${l}`).join(''),
             };
         };
         const piloteOuvert = tousLesPilotes(customGameDrivers).find(d => d.id === campaigns.find(c => c.id === activeCampaignId)?.system);

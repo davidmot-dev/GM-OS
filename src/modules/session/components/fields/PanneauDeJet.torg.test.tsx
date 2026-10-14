@@ -210,3 +210,63 @@ describe('la carte d’Action du round', () => {
         expect(screen.queryByText(/Déstabilisés/)).toBeNull();
     });
 });
+
+/**
+ * **Les Lois du Monde du cosm courant, au jet** (2026-10-14, carnet « Torg ») :
+ * la Loi de l'Action (Empire du Nil), la Persévérance (Orrorsh), la Magie (Aysle).
+ */
+describe('les Lois du Monde au jet', () => {
+    const poserLeCosm = (mecanique: 'action' | 'perseverance' | 'magie') => {
+        useSessionOSStore.setState({
+            activeCampaignId: 'camp', scenes: [], cosmsCourants: undefined,
+            campaigns: [{ id: 'camp', name: 'Torg', system: 'torg-test', cosmsParDefaut: ['cosm'] }],
+            customGameDrivers: [{ id: 'torg-test', name: 'Torg', cosms: [{ id: 'cosm', nom: 'Cosm', lois: [
+                { nom: 'Loi testée', texte: 'Ce que dit la Loi.', mecanique, competences: ['esquive'] },
+            ] }] }],
+        } as never);
+    };
+    afterEach(() => useSessionOSStore.setState({ campaigns: [], customGameDrivers: [], activeCampaignId: null } as never));
+
+    it('Loi de l’Action : une seconde Possibilité, la meilleure des deux compte', () => {
+        poserLeCosm('action');
+        faces(7, 3, 15);
+        const ecrire = monter({ possibilites: 3 });
+        retenir();
+        lancer();
+        fireEvent.click(screen.getByText('Dépenser une Possibilité (3)'));
+        fireEvent.click(screen.getByText('Loi testée : seconde Possibilité (2)'));
+        expect(ligne()).toMatch(/Possibilité 15 \(Loi de l'Action : 10 ou 15\) = 22/);
+        expect(ecrire).toHaveBeenLastCalledWith({ possibilites: 1 });
+    });
+
+    it('sans la Loi, pas de seconde Possibilité', () => {
+        faces(7, 3);
+        monter({ possibilites: 3 });
+        retenir();
+        lancer();
+        fireEvent.click(screen.getByText('Dépenser une Possibilité (3)'));
+        expect(screen.queryByText(/seconde Possibilité/)).toBeNull();
+    });
+
+    it('Loi de la Persévérance : un succès Supérieur n’annule qu’une Blessure', () => {
+        poserLeCosm('perseverance');
+        faces(17);
+        monter({ possibilites: 2, esprit: 9, realite: 3 });
+        fireEvent.click(screen.getByText('Annulation des dommages (2)'));
+        expect(screen.getByText(/^Annulation des dommages : annule 1 Blessure et tout le Choc de l'attaque \(Loi de la Persévérance\)/)).toBeTruthy();
+    });
+
+    it('Loi de la Magie : le Choc volontaire s’ajoute au total, jusqu’aux rangs, et s’écrit', () => {
+        poserLeCosm('magie');
+        faces(13);
+        const ecrire = vi.fn();
+        render(<PanneauDeJet descripteur={{ ...JET_TORG, torg: { ...JET_TORG.torg, choc: 'choc' } }} dice={DICE} template={FICHE}
+            valeurs={{ dexterite: 9, esquive: 2, choc: 1 }} ecrireSurLaFiche={ecrire} />);
+        retenir();
+        fireEvent.change(document.querySelector('[data-loi-de-la-magie] input')!, { target: { value: '5' } });
+        expect(screen.getByText('max 2')).toBeTruthy();
+        lancer();
+        expect(ligne()).toMatch(/total d'action 14 \(niveau 11, \+2 Choc volontaire \(Loi de la Magie\)\)/);
+        expect(ecrire).toHaveBeenCalledWith({ choc: 3 });
+    });
+});

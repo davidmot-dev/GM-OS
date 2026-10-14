@@ -77,6 +77,7 @@ const session: Regles<SessionDuHub> = {
     demandesDeCarte: tableau(identifie), cartesRestantes: dictionnaire(nombre),
     connectedCharacters: dictionnaire(texte), characterLocks: dictionnaire(texte),
     activeCampaignId: nullable(texte), activeCampaignName: nullable(texte), activeCampaignWallpaper: nullable(texte),
+    cosmsCourants: tableau(texte),
     favorites: tableau(identifie), reservesDeTable: dictionnaire(nombre),
     activeDiceConfig: nullable(estObjet), desEchelonnes: booleen,
 };

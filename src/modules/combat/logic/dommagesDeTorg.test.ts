@@ -4,6 +4,7 @@ import { maximumDeLaJauge } from './SanteDuCombattant';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
 import type { GameDriver } from '../../../types/drivers';
+import { useToastStore } from '../../../stores/useToastStore';
 
 /**
  * La Table des Dommages de Torg Eternity — livre de base, transcrite depuis le
@@ -90,6 +91,30 @@ describe('un coup sur un Chevalier des Tempêtes', () => {
     it('le Choc plafonne à l’Esprit', () => {
         useSessionOSStore.getState().handleApplyImpact('mara', 'pc', { value: 37, type: 'physique' });
         expect(mara().sheetData.choc).toBe(9);
+    });
+
+    /*
+      Les Lois du Monde qui se disent au coup (2026-10-14) : la Ténacité au KO,
+      la Souffrance quand une Blessure tombe — annoncées, pas appliquées.
+    */
+    const sousLaLoi = (mecanique: 'tenacite' | 'souffrance') => useSessionOSStore.setState({
+        customGameDrivers: [{ ...TORG, cosms: [{ id: 'x', nom: 'Cosm', lois: [{ nom: 'Loi testée', texte: '…', mecanique }] }] }],
+        campaigns: [{ id: 'c', name: 'Torg', system: 'torg', activeLocationIds: [], cosmsParDefaut: ['x'] }],
+    } as never);
+    const dernierToast = () => useToastStore.getState().toasts.at(-1)?.message ?? '';
+
+    it('Loi de la Ténacité : dite quand le Choc met KO', () => {
+        sousLaLoi('tenacite');
+        useSessionOSStore.getState().handleApplyImpact('mara', 'pc', { value: 37, type: 'physique' });
+        expect(dernierToast()).toMatch(/KO, le Choc dépasse son maximum — Loi testée : s'il est chargé en possibilités, il peut encaisser 1 Blessure/);
+    });
+
+    it('Loi de la Souffrance : dite quand une Blessure tombe, et seulement alors', () => {
+        sousLaLoi('souffrance');
+        useSessionOSStore.getState().handleApplyImpact('mara', 'pc', { value: 18, type: 'physique' });
+        expect(dernierToast()).not.toMatch(/Loi testée/);
+        useSessionOSStore.getState().handleApplyImpact('mara', 'pc', { value: 29, type: 'physique' });
+        expect(dernierToast()).toMatch(/Loi testée : l'attaquant récupère 1 point de Choc/);
     });
 
     it('un soin reste un soin : il décoche, sans passer par la table', () => {

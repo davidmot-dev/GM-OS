@@ -1049,6 +1049,35 @@ export function controlerLePilote(
         erreur('cartesDuDestin.taille', `« ${String(mainDuDestin?.taille)} » n'est pas une taille de main : un entier positif (4 chez Torg, 5 sous la Loi de l'Héroïsme).`);
     }
 
+    /*
+      **Les cosms et leurs Lois** (Torg, 2026-10-14). Un identifiant sert de clé
+      à la scène et à la campagne : deux pareils, et l'un des deux ne se choisit
+      plus. Une mécanique se NOMME dans une liste fermée ; la Loi de la Magie dit
+      quelles compétences elle touche, et où s'écrit le Choc.
+    */
+    const MECANIQUES_DE_LOI = ['heroisme', 'action', 'perseverance', 'magie', 'tenacite', 'souffrance'];
+    const vus = new Set<string>();
+    (driver.cosms ?? []).forEach((cosm, i) => {
+        if (!cosm.id || vus.has(cosm.id)) erreur(`cosms[${i}].id`, `« ${cosm.id} » : chaque cosm a un identifiant, et un seul cosm le porte.`);
+        vus.add(cosm.id);
+        (cosm.lois ?? []).forEach((loi, j) => {
+            const ou = `cosms[${i}].lois[${j}]`;
+            if (loi.mecanique !== undefined && !MECANIQUES_DE_LOI.includes(loi.mecanique)) {
+                erreur(`${ou}.mecanique`, `« ${String(loi.mecanique)} » n'est pas une mécanique connue. Les seules sont : ${MECANIQUES_DE_LOI.join(', ')}.`);
+            }
+            if (loi.mecanique === 'magie') {
+                if (!loi.competences?.length) erreur(`${ou}.competences`, 'La Loi de la Magie doit nommer les compétences magiques de la fiche.');
+                for (const champ of loi.competences ?? []) {
+                    if (!tousLesChamps.has(champ)) avertir(`${ou}.competences`, `« ${champ} » est absent de la fiche : la Loi ne s'y appliquera jamais.`);
+                }
+                if (!driver.jet?.torg?.choc) avertir(`${ou}.mecanique`, 'La Loi de la Magie écrit le Choc sur la fiche : « jet.torg.choc » doit dire où.');
+            }
+        });
+    });
+    if (driver.jet?.torg?.choc && !tousLesChamps.has(driver.jet.torg.choc)) {
+        avertir('jet.torg.choc', `Le Choc se lit dans « ${driver.jet.torg.choc} », absent de la fiche.`);
+    }
+
     const tri = driver.combat?.initiativeSort;
     if (tri !== undefined && tri !== 'asc' && tri !== 'desc') {
         erreur('combat.initiativeSort', `« ${String(tri)} » n'est ni « asc » ni « desc ».`);

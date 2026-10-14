@@ -475,6 +475,23 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         expect(constats('determination')).toEqual([]);
     });
 
+    it('les cosms : un identifiant chacun, une mécanique connue, la Magie nomme ses compétences', () => {
+        const constats = controlerLePilote(
+            { jet: { sens: 'superieur-ou-egal' }, cosms: [
+                { id: 'nil', nom: 'Empire du Nil', lois: [{ nom: 'Héroïsme', texte: '…', mecanique: 'heroisme' }] },
+                { id: 'nil', nom: 'Doublon', lois: [{ nom: 'X', texte: '…', mecanique: 'inventee' }] },
+                { id: 'aysle', nom: 'Aysle', lois: [{ nom: 'Magie', texte: '…', mecanique: 'magie', competences: ['combat', 'absente'] }] },
+            ] } as unknown as Partial<GameDriver>,
+            fiche,
+        ).filter(c => c.ou.startsWith('cosms')).map(c => [c.ou, c.gravite]);
+        expect(constats).toEqual([
+            ['cosms[1].id', 'erreur'],
+            ['cosms[1].lois[0].mecanique', 'erreur'],
+            ['cosms[2].lois[0].competences', 'avertissement'],
+            ['cosms[2].lois[0].mecanique', 'avertissement'],
+        ]);
+    });
+
     it('la spécialisation borne le critique par une composante du seuil', () => {
         const jet = (composante: string) => controlerLePilote(
             { jet: {

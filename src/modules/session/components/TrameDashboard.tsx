@@ -16,6 +16,8 @@ import MarqueDIntrigue from './trame/MarqueDIntrigue';
 import GrapheDeLaTrame from './trame/GrapheDeLaTrame';
 import ChoixDuRang from './trame/ChoixDuRang';
 import RencontresDeLaScene from './trame/RencontresDeLaScene';
+import ChoixDesCosms from './ChoixDesCosms';
+import { useCosmsDuJeu } from '../hooks/useCosmsCourants';
 import { Separateur } from '../../../components/socle';
 import { ChoixDeLaNote, ChoixDesBattlemaps, ChoixDesMorceaux } from './trame/LiensDeLaScene';
 import {
@@ -515,6 +517,8 @@ const EditeurDeScene: React.FC<{
 
     /* Le NOM du lieu, pas son identifiant : c'est ce que l'IA sait lire. */
     const lieuDeLaScene = lieux.find(l => l.id === scene.lieuId)?.name;
+    /* Torg : le cosm de la scène, et ses Lois (2026-10-14). */
+    const cosmsDuJeu = useCosmsDuJeu(scene.campaignId);
 
     const sorties = sortiesDeLaScene(toutesLesScenes, scene);
     const entrees = entreesDeLaScene(toutesLesScenes, scene.id);
@@ -698,6 +702,16 @@ const EditeurDeScene: React.FC<{
                     </select>
                 </Champ>
             </div>
+            {cosmsDuJeu.length > 0 && (
+                <Champ label="Cosm">
+                    <ChoixDesCosms
+                        cosms={cosmsDuJeu}
+                        choisis={scene.cosms ?? []}
+                        onChange={ids => onChange({ cosms: ids.length > 0 ? ids : undefined })}
+                        libelleVide="— celui de la campagne —"
+                    />
+                </Champ>
+            )}
             {/* On lie une ambiance, on ne la duplique pas : la même sert plusieurs scènes. */}
 
             {/* Le lieu se projette, ses battlemaps se chargent dans Map-OS (L5, 2026-10-12). */}

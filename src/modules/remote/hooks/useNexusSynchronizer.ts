@@ -27,6 +27,7 @@ import { crossWindowSync } from '../../../services/CrossWindowEventService';
 import { cartesRestantesPourLaTable, mainsPourLaTable } from '../../session/logic/mainsDuPaquet';
 import { abonnerApparenceTablettes, lireApparenceTablettes } from '../../../theme/apparenceTablettes';
 import type { DonneesDuHub } from '../types/donneesDuHub';
+import { idsDesCosmsCourants } from '../../session/logic/cosmsCourants';
 import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
 
 /**
@@ -511,6 +512,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     activeCampaignId: currentCampaignId,
                     activeCampaignName: freshSessionOS.activeCampaignName || campaigns.find(c => c.id === currentCampaignId)?.name || 'NONE',
                     activeCampaignWallpaper: resolvedWallpaper,
+                    // Torg : la tablette n'a pas les scènes, le meneur lui dit le cosm courant.
+                    cosmsCourants: idsDesCosmsCourants(activeCampaign, freshSessionOS.scenes ?? []),
                     characterLocks: freshSessionOS.connectedCharacters,
                     favorites: resolvedFavorites,
                     /*

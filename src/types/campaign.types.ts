@@ -161,6 +161,8 @@ export interface Campaign {
      * avant le réglage. *On ne fait pas payer une nouveauté à l'existant.*
      */
     themeDuJeu?: boolean;
+    /** Torg : le ou les cosms (deux en zone mixte) quand la scène n'en dit rien — `GameDriver.cosms`. */
+    cosmsParDefaut?: string[];
     /**
      * **Le groupe de la campagne** — la Cabale de NOC, quand le pilote déclare
      * une `ficheDeGroupe`. Créé à la première ouverture de sa fiche.

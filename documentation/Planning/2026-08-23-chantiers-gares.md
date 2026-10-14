@@ -26,6 +26,25 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> **14/10 soir — Torg, la fin : T1 fait (cosms et Lois du Monde), T2 et T3 à suivre.** David :
+> *« termine Torg »*, ordre T1 → T2 → T3 accepté, cosm réglé **sur la scène** avec un défaut sur la
+> campagne. Règles relues dans le carnet « Torg » par `nlm notebook query` (réponses citées ; une
+> première réponse **sans source** donnait une Table des Actions combinées fausse — 4 → +3, 5–9 →
+> +4 — écartée). **T1** : `GameDriver.cosms` (`CosmDuJeu`, `LoiDuMonde`, `MecaniqueDeLoi` fermée),
+> `Scene.cosms`, `Campaign.cosmsParDefaut` ; `session/logic/cosmsCourants.ts` (scène en cours, sinon
+> campagne ; zone mixte = deux cosms, Lois des deux) ; `useCosmsCourants` — la tablette reçoit
+> `cosmsCourants` avec la séance (elle n'a pas les scènes) ; choix dans la Trame et le cockpit ;
+> rappel `LoisDuCosm` sur l'écran de la scène et dans Combat-OS. Appliquées : **Héroïsme** (main +1,
+> trois lecteurs), **Action** (`DesDeTorg.possibiliteDeLAction`, la meilleure compte),
+> **Persévérance** (`ceQueLAnnulationAnnule`), **Magie** (Choc volontaire, `OptionsDeTorg.bonus`,
+> `jet.torg.choc`). **Annoncées seulement** dans le message des dommages : **Ténacité** (choix du
+> joueur) et **Souffrance** (l'attaquant n'est pas connu du calcul, initiative par camp). Les autres
+> Lois restent en rappel. **Pilote corrigé** dans `Export Dirvers/corriges/`, zéro constat — **à
+> réimporter** : les huit cosms et leurs 24 Lois du livre de base, `jet.torg.choc`, et ce que
+> l'export du 14/10 n'avait pas reçu (`initiative.mode: 'paquet'`, `cartesDuDestin.taille: 4`, les
+> gestes « Récupérer −2 » et « Reprendre son souffle » du Choc). **Reste** : T2 (Cartes de Cosm) ;
+> T3 (sbires, hordes, Actions combinées, Cibles multiples).
+
 > **14/10 — Forcer le jet et le Stress, Alien et Blade Runner.** David : *« la partie gestion du
 > stress et du forçage des jets »*. **Fait, commité et poussé le 14/10 (`41cda346`) ; pilotes réimportés
 > et essayés par David le jour même — *« Ça marche »*** :
