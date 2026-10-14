@@ -27,7 +27,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
 > **14/10 — Forcer le jet et le Stress, Alien et Blade Runner.** David : *« la partie gestion du
-> stress et du forçage des jets »*. **Fait et commité le 14/10 (non poussé) ; pilotes réimportés
+> stress et du forçage des jets »*. **Fait, commité et poussé le 14/10 (`41cda346`) ; pilotes réimportés
 > et essayés par David le jour même — *« Ça marche »*** :
 > `dice/systemes/yearZero.ts` (pur : garde, conditions lues sur la fiche, prix des 1, test de
 > Panique, ligne de table bornée) ; `DescripteurDeJet.forcer` et `.panique` ; `PanneauDeJet` :
