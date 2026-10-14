@@ -104,7 +104,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > `panique.champ` / `.seuil` et `cumulDePanique` (plus haut remplace, plus bas ou égal → un cran
 > au-dessus) ; geste « Calmé » (valeur 0) sur la carte ; `DescripteurDeJet.reussiteDepensee` — le
 > Point de Récit ajoute un 6 après le lancer, cerclé de vert, gardé si l'on force. Pilote corrigé dans
-> `Export Dirvers/corriges/`, zéro constat — **à réimporter**. `type_personnage` étant le **métier**
+> `Export Dirvers/corriges/`, zéro constat — réimporté par David le 14/10. `type_personnage` étant le **métier**
 > (« Marine, Marshall… »), une case **« Androïde »** est ajoutée à la fiche, à la demande de David ;
 > `ConditionDeFiche.coche` lit une case cochée.
 > ⚠️ Blade Runner : « on garde réussites et crânes » suit la convention Year Zero, le corpus
