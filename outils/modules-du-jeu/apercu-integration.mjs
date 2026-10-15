@@ -1,4 +1,4 @@
-/** Composants de G0/G1 en fichier local ; aucun lancement de GM-OS ou serveur. */
+/** Hôte G2 et composants en fichier local ; aucun lancement de GM-OS ou serveur. */
 import { build } from 'esbuild';
 import postcss from 'postcss';
 import tailwind from '@tailwindcss/postcss';
@@ -16,13 +16,20 @@ const code = await build({ entryPoints: [fileURLToPath(new URL('./apercu-integra
     define: { 'process.env.NODE_ENV': '"production"' },
     plugins: [{ name: 'store-fictif', setup(b) {
         b.onResolve({ filter: /useSessionOSStore$/ }, () => ({ path: 'store-fictif', namespace: 'demo' }));
-        b.onLoad({ filter: /.*/, namespace: 'demo' }, () => ({ contents: 'export const useSessionOSStore = () => globalThis.etatDeDemonstration;', loader: 'js' }));
+        b.onResolve({ filter: /useClientStore$/ }, () => ({ path: 'client-fictif', namespace: 'demo' }));
+        b.onLoad({ filter: /.*/, namespace: 'demo' }, args => ({ contents: args.path === 'client-fictif'
+            ? 'export const useClientStore = (select) => select(globalThis.identiteDeDemo);'
+            : 'export const useSessionOSStore = (select) => select ? select(globalThis.etatDeDemonstration) : globalThis.etatDeDemonstration;', loader: 'js' }));
+        b.onLoad({ filter: /[\\/]medias\.mjs$/ }, () => ({ contents: 'export const videoAlerteUrl = "./nostromo-autodestruction.webm";', loader: 'js' }));
     } }],
+    loader: { '.css': 'text' },
 });
 const sourceCss = path.join(racine, 'src/index.css');
 const css = await postcss([tailwind()]).process((await readFile(sourceCss, 'utf8')).replaceAll(/^@import url\([^\n]+\);\r?\n/gm, ''), { from: sourceCss });
 const fichier = path.join(sortie, 'apercu.html');
-await writeFile(fichier, `<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Modules du jeu — banc isolé</title><style>${css.css}</style><div id="root"></div><script>${code.outputFiles[0].text.replaceAll('</script', '<\\/script')}</script></html>`);
+const cssModule = await readFile(path.join(racine, 'outils/alien/modules/muthur/style.css'), 'utf8');
+await writeFile(fichier, `<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Modules du jeu — banc isolé</title><style>${css.css}\n${cssModule}</style><div id="root"></div><script>${code.outputFiles[0].text.replaceAll('</script', '<\\/script')}</script></html>`);
+await copyFile(path.join(racine, 'outils/alien/medias/nostromo-autodestruction.webm'), path.join(sortie, 'nostromo-autodestruction.webm'));
 console.log(`Banc isolé : ${fichier}`);
 if (process.argv.includes('--capturer')) {
     let navigateur;
@@ -33,6 +40,13 @@ if (process.argv.includes('--capturer')) {
         await contexte.route(/^https?:/, route => route.abort());
         const page = await contexte.newPage(), erreurs = [];
         page.on('pageerror', e => erreurs.push(e.message));
+        const photographierModule = async nom => {
+            const taille = page.viewportSize();
+            const module = page.locator('.gmos-muthur');
+            await page.setViewportSize({ width: taille.width, height: 2600 });
+            await module.screenshot({ path: path.join(sortie, nom), quality: 90 });
+            await page.setViewportSize(taille);
+        };
         for (const largeur of [360, 768, 1180]) {
             await page.setViewportSize({ width: largeur, height: 900 });
             await page.goto(pathToFileURL(fichier).href);
@@ -53,9 +67,43 @@ if (process.argv.includes('--capturer')) {
                 await page.screenshot({ path: image, fullPage: true, quality: 90 });
                 if (process.argv.includes('--manuel') && largeur === 1180 && vue === 'pilote') await copyFile(image, path.join(racine, 'documentation/User Guides/captures/jeu-alien-modules.jpg'));
             }
+            await page.getByRole('button', { name: 'Cockpit MJ', exact: true }).click();
+            await page.getByRole('checkbox', { name: 'Dana Okoro', exact: true }).check();
+            await page.waitForFunction(() => document.querySelector('fieldset input')?.checked === true);
+            await page.getByRole('button', { name: 'Ouvrir le pupitre', exact: true }).click();
+            await page.getByRole('heading', { name: 'MU/TH/UR · Poste meneur', exact: true }).waitFor();
+            assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+            await photographierModule(`pupitre-${largeur}.jpg`);
+            if (process.argv.includes('--manuel') && largeur === 1180) await copyFile(path.join(sortie, `pupitre-${largeur}.jpg`), path.join(racine, 'documentation/User Guides/captures/jeu-alien-pupitre-module.jpg'));
+            await page.getByRole('button', { name: 'Tablet Hub', exact: true }).click();
+            await page.getByRole('button', { name: 'Ouvrir MU/TH/UR 6000', exact: true }).click();
+            await page.getByRole('heading', { name: 'MU/TH/UR 6000', exact: true }).waitFor();
+            const avant = await page.locator('.muthur-message').count();
+            await page.getByRole('button', { name: 'HELP', exact: true }).click();
+            await page.waitForFunction(nombre => document.querySelectorAll('.muthur-message').length > nombre, avant);
+            await photographierModule(`joueur-${largeur}.jpg`);
+            assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+            if (process.argv.includes('--manuel') && largeur === 1180) await copyFile(path.join(sortie, `joueur-${largeur}.jpg`), path.join(racine, 'documentation/User Guides/captures/jeu-alien-module-joueur.jpg'));
+            await page.getByLabel('Commande ou /M votre question', { exact: true }).fill('CODE OMEGA-10');
+            await page.getByRole('button', { name: 'Transmettre', exact: true }).click();
+            await page.getByRole('timer', { name: 'Compte à rebours fictif' }).waitFor();
+            const film = page.getByLabel('Séquence d’alerte du Nostromo', { exact: true });
+            await film.waitFor();
+            await page.waitForFunction(() => { const film = document.querySelector('video'); return film && film.readyState >= 2 && film.videoWidth === 640; });
+            assert.equal(await film.evaluate(element => element.muted), true);
+            await photographierModule(`alerte-${largeur}.jpg`);
+            await page.getByRole('button', { name: 'Vue Parker', exact: true }).click();
+            await page.getByText('Aucun module ouvert par le meneur.').waitFor();
+            assert.equal(await page.locator('.gmos-muthur').count(), 0);
+            await page.getByRole('button', { name: 'Cockpit MJ', exact: true }).click();
+            await page.getByRole('checkbox', { name: 'Dana Okoro', exact: true }).uncheck();
+            await page.waitForFunction(() => document.querySelector('fieldset input')?.checked === false);
+            await page.getByRole('button', { name: 'Vue Dana Okoro', exact: true }).click();
+            await page.getByText('Aucun module ouvert par le meneur.').waitFor();
+            await page.screenshot({ path: path.join(sortie, `retrait-${largeur}.jpg`), quality: 90 });
         }
         assert.deepEqual(erreurs, []);
-        console.log('9 captures : pilote, cockpit et fragment Hub, 360/768/1180 px ; navigation, cibles tactiles et absence de débordement vérifiées.');
+        console.log('21 captures : pilote, cockpit, Hub vide, pupitre et terminal MU/TH/UR, alerte vidéo, retrait ; 360/768/1180 px. Ouverture MJ, commande privée, refus du second PJ, vidéo muette et fermeture vérifiés avec le vrai hôte en mémoire.');
         await contexte.close();
     } finally { await navigateur.close(); }
 }

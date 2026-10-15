@@ -7,14 +7,51 @@ Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font mon
 **Ajout du 15/10/2026 — préparation des modules :** dans l’éditeur du pilote, **Modules du jeu**
 permet de conserver ou retirer **MU/TH/UR 6000** et le **Détecteur de mouvement**. Un ancien pilote
 Alien les propose par défaut, même avec un identifiant personnalisé. Le choix est sauvegardé et
-exportable. Le cockpit possède aussi l’entrée **Modules du jeu** pour consulter cette sélection.
+exportable. Le cockpit possède aussi l’entrée **Modules du jeu** pour préparer et ouvrir MU/TH/UR.
 
 ![Sélection des modules du pilote Alien, composants réels dans un banc isolé avec données fictives](captures/jeu-alien-modules.jpg)
 
-La capture montre la section de l’éditeur sur un banc hors ligne. **L’ouverture des modules aux
-joueurs n’est pas encore disponible dans GM-OS** : l’onglet du Tablet Hub reste vide. L’adaptateur
-MU/TH/UR est prêt dans les outils externes ; le transport privé, les accès par personnage et
-l’adaptateur du détecteur constituent les étapes suivantes.
+Les captures de cette section montrent les composants et le moteur réels dans un banc hors ligne,
+avec données fictives. **Le détecteur attend encore son adaptateur** ; MU/TH/UR est raccordé au Hub.
+
+### Préparer et ouvrir MU/TH/UR
+
+1. Ouvre **Cockpit › Modules du jeu › Ouvrir le pupitre**.
+2. Prépare les **Dossiers**, **Protocoles** et **Réglages**. Les modifications sont enregistrées
+   automatiquement ; une erreur d’écriture est signalée et garde les données précédentes.
+3. Démarre une séance et coche les PJ dans **Accès des personnages**. Chaque joueur ouvre
+   **Tablet Hub › Modules du jeu › Ouvrir MU/TH/UR 6000**, avec son personnage habituel.
+4. Choisis un opérateur dans le pupitre pour répondre à ses questions ou arbitrer ses piratages.
+   Ses réponses et ses dossiers déverrouillés restent privés.
+
+![Le pupitre MU/TH/UR dans le cadre commun des modules](captures/jeu-alien-pupitre-module.jpg)
+
+![Le terminal reçu par le personnage autorisé](captures/jeu-alien-module-joueur.jpg)
+
+### Alerte et diffusion sonore
+
+Les protocoles associent des codes exacts à un message et, éventuellement, à l’ouverture/fermeture
+des portes fictives ou à l’autodestruction. Le code d’exemple **OMEGA-10** déclenche le film entier
+du Nostromo : le compte à rebours dure au moins **12 min 56 s**. **OMEGA-STOP** annule la séquence.
+Les codes se modifient dans **Protocoles**.
+
+Dans la carte du module, **Son : nom de l’appareil** réserve la diffusion à une seule tablette
+connectée et autorisée, ou à **Ce poste MJ**. Sur cet appareil, touche aussi **Activer le son**.
+Les autres écrans restent muets. La bande-son du film a priorité ; si l’alerte continue ensuite,
+la sirène et les annonces reprennent. La lecture automatique bloquée propose **Reprendre la vidéo**.
+
+### Fermer et reprendre
+
+Décocher un PJ ferme son module et ses effets locaux. **Fermer tous les accès et couper les effets**
+arrête aussi le compte à rebours. La fin de séance, un changement de campagne et le redémarrage
+ferment les accès et arrêtent les effets ; la préparation et les dialogues sont conservés.
+Une reconnexion pendant la même séance retrouve les droits toujours ouverts, après vérification
+de l’identité de l’appareil. Les commandes interrompues ne sont jamais rejouées automatiquement.
+
+Les données privées sont stockées à part des campagnes diffusées aux tablettes. Les sauvegardes
+complètes et exports de campagne incluent les dossiers, codes et dialogues ; un export de pilote
+contient seulement les références aux modules. Les essais sur le réseau et le matériel réels
+restent à faire ; le banc vérifie le parcours sans lancer GM-OS ni ouvrir de port.
 
 ---
 

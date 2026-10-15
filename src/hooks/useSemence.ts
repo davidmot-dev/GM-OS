@@ -78,7 +78,7 @@ export function useSemence(estLaFenetreDuMJ: boolean, estHydrate: boolean): void
                 /* Le même chemin que « charger une session » — validation
                    comprise. *Une seconde porte vers les mêmes données finirait
                    par diverger de la première.* */
-                SessionService.distributeData(validateSession(brut));
+                await SessionService.distributeData(validateSession(brut));
                 Logger.info('[Semence] Instance de répétition semée.');
             } catch (err) {
                 Logger.error('[Semence] Sauvegarde refusée par la validation', err);

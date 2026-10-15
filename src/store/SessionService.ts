@@ -1,4 +1,5 @@
 import { useSessionStore } from './useSessionStore';
+import { useModulesDuJeuMJ, importerLesModules } from '../modules/modulesDuJeu/magasins';
 import { useSessionOSStore } from '../modules/session/useSessionOSStore';
 import { useNPCStore } from '../modules/npc/useNPCStore';
 import { useWebStore } from '../modules/web/useWebStore';
@@ -58,6 +59,7 @@ export function construireLaSauvegarde() {
             activeModule: sessionState.activeModule,
         },
         modules: {
+            ...(useModulesDuJeuMJ.getState().sauvegarde ? { modulesDuJeu: useModulesDuJeuMJ.getState().sauvegarde } : {}),
             // Une seule liste de ce qu'une session contient, partagée avec
             // la persistance vivante : voir `donneesDeLaSession.ts`. Elle
             // était recopiée ici, et il y manquait `entities`, `clues` et
@@ -319,7 +321,7 @@ export const SessionService = {
 
                 if (data) {
                     const validatedData = validateSession(data);
-                    this.distributeData(validatedData);
+                    await this.distributeData(validatedData);
                     Logger.info('[Session] Session loaded and validated');
                     gmToast('Session chargée et vérifiée 📂');
                 }
@@ -336,8 +338,10 @@ export const SessionService = {
         }
     },
 
-    distributeData(data: FullSession) {
+    async distributeData(data: FullSession) {
         if (!data) return;
+        // Avant toute autre mutation : un refus du stockage privé ne doit pas annoncer un chargement réussi.
+        if (data.modules?.modulesDuJeu) await importerLesModules(data.modules.modulesDuJeu);
 
         // Global
         if (data.global) {

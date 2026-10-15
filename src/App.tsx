@@ -27,6 +27,7 @@ import { useMaterielDeTable } from './hooks/useMaterielDeTable';
 import { useDisplayDetection } from './hooks/useDisplayDetection';
 import { useRaccourcisDeNavigation } from './hooks/useRaccourcisDeNavigation';
 import { useNexusSynchronizer } from './modules/remote/hooks/useNexusSynchronizer';
+import { useHoteDesModules } from './modules/modulesDuJeu/useHoteDesModules';
 import { crossWindowSync } from './services/CrossWindowEventService';
 import { dispatchRemoteAction } from './modules/remote/actions';
 import { useThemeDuJeu } from './theme/useThemeDuJeu';
@@ -124,6 +125,7 @@ function App() {
 
   // Le système est "prêt" si hydraté et (si Main PC) si le bootstrap est fini
   const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
+  useHoteDesModules(isMainPC && isAppReady);
   /* De quoi peupler l'écran d'attente — voir la garde plus bas. */
   const etapeDeDemarrage = useDemarrageStore(state => state.etapeEnCours);
   const etapesRendues = useDemarrageStore(state => state.rendus);

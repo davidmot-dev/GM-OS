@@ -51,10 +51,15 @@ Les anciens pilotes Alien proposent **MU/TH/UR 6000** et le **Détecteur de mouv
 Tout décocher enregistre une liste vide : la proposition par défaut ne revient pas à la reprise.
 Les autres jeux attendent leurs modules compatibles.
 
-**État au 15/10/2026 :** le cockpit et le Tablet Hub possèdent l’entrée **Modules du jeu**.
-La sélection est disponible ; le pilotage des modules et leur ouverture par le MJ aux joueurs
-attendent le raccordement privé. L’onglet joueur indique pour l’instant **« Aucun module ouvert
-par le meneur. »** Les accessoires Alien peuvent toujours se jouer dans leur atelier autonome.
+Dans **Cockpit › Modules du jeu**, **Ouvrir le pupitre** prépare l’outil. Pendant une séance,
+coche les personnages dans **Accès des personnages** : leur Tablet Hub reçoit la carte du module.
+Décocher un personnage lui retire l’accès immédiatement. **Fermer tous les accès et couper les
+effets** conserve la préparation et les dialogues. Le détecteur Alien attend encore son adaptateur.
+
+Chaque joueur reçoit uniquement sa vue autorisée. Sans accès, l’onglet dit **« Aucun module
+ouvert par le meneur. »** Changer de campagne, terminer la séance ou redémarrer ferme les accès
+et arrête les effets. Les codes, dossiers et dialogues restent sauvegardés ; les sauvegardes
+complètes et exports de campagne les emportent, à garder entre meneurs.
 
 ---
 

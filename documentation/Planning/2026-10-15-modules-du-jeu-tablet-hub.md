@@ -1,7 +1,8 @@
 # Tablet Hub — un emplacement commun pour les modules du jeu
 
 **15/10/2026 — orientation demandée par David ; contrat v1 formalisé,
-outils locaux livrés ; intégration non codée.**
+outils locaux et deux tranches intégrées livrés.** G2 raccorde MU/TH/UR aux accès
+par personnage, au transport privé et aux sauvegardes. Essai matériel à faire.
 
 David : *« je voudrais avoir un placeholder générique sur Tablet Hub ou je
 pourrais mettre des modules spécifiques par jeu/drivers par exemple MU\TH\UR
@@ -65,11 +66,11 @@ sauvegardes et critères de conformité. Les
 [outils locaux](../../outils/modules-du-jeu/README.md) fournissent le contrôle
 statique du manifeste et un moteur d'exemple avec huit essais au vert.
 Le champ du pilote, le catalogue de métadonnées et son éditeur sont désormais intégrés.
-L’hôte exécutable et le registre des moteurs/vues attendent G2.
+L’hôte exécutable et le registre des moteurs/vues sont livrés avec G2.
 **Suite du 15/10 :** l'[adaptateur MU/TH/UR](../../outils/alien/modules/muthur/README.md)
 est désormais livré avec manifeste, moteur et vues React isolées. Les vues
-de l'hôte générique et le branchement au Hub restent à construire ; les
-composants du module ne rendent pas encore celui-ci disponible dans GM-OS.
+de l'hôte générique et le branchement au Hub sont maintenant livrés. Le module
+MU/TH/UR se prépare et s’ouvre depuis le cockpit.
 
 ### Déclaration dans le pilote
 
@@ -160,14 +161,13 @@ préserver les données antérieures et signaler l'échec au MJ.
 | Lot | Résultat | Vérification principale |
 | --- | --- | --- |
 | G0 — contrat | Livré : standard, validation partagée, champ du pilote, catalogue de métadonnées, édition, contrôles Forge/restauration et conservation export/import | Pilote Alien forgé, absent/vide, inconnu/incompatible, données privées refusées et aller-retour Nexus testés. Registre exécutable lié à G2. |
-| G1 — emplacement | Livré : entrée au cockpit, page MJ de disponibilité et onglet générique vide dans le Hub. Cartes autorisées et hôte exécutable attendent G2 | Navigation testée ; neuf captures isolées à 360/768/1180 px, cibles ≥ 44 px, aucun débordement. Parcours module factice et retrait d’accès à faire avec G2. |
-| G2 — socle de table | Identité, droits, commandes ciblées, état privé par campagne/module et sauvegarde | Deux PJ, accès MJ refusé au joueur, autre campagne, reconnexion et écritures échouées. |
-| A0/A2 — premier module | Adaptateur MU/TH/UR et composants React isolés livrés ; reste leur enregistrement et leur branchement dans le cadre commun | Essais isolés du moteur et des vues verts ; reste le parcours réel d'ouverture/retrait MJ dans le Hub. |
+| G1 — emplacement | Livré : cockpit, autorisations et pupitre MJ, cartes autorisées et vues du module dans le Hub | Navigation et parcours d’ouverture/retrait éprouvés dans le banc hors ligne aux trois tailles. |
+| G2 — socle de table | Livré : identité liée à la socket, secret de reprise, droits par PJ, commandes ciblées et sérialisées, état privé natif, sauvegarde de session/export de campagne | Deux PJ, commandes MJ et usurpation refusées, autre campagne, reprise, retrait et échecs d’écriture testés sans port ouvert. Réseau/matériel réel à éprouver. |
+| A0/A2 — premier module | MU/TH/UR enregistré dans le moteur natif et les vues de l’hôte ; pupitre, terminaux, vidéo et son ciblé raccordés | Vrai hôte et vues dans le banc, 21 captures, commande joueur et vidéo décodée ; essai en séance à faire. |
 | A3/A4 — suite Alien | Détecteur, améliorations, cycle de vie, manuel et essais | Coupure et silence, sauvegarde/export/import, capture et essai matériel. |
 | R0 — deuxième jeu | Définir le périmètre de la Table des Terres Médianes avec David | Puis livrer un module via le même contrat, sans modification spécifique de la navigation du Hub. |
 
-G1 est une étape d'interface : sa livraison aux joueurs attend G2 et un vrai
-module. Le module factice appartient uniquement aux essais. Le plan Alien
+Le socle commun est maintenant raccordé au vrai module MU/TH/UR. Le plan Alien
 [détaille ses améliorations](2026-10-15-alien-tablet-hub.md) ; son ancien A1
 est désormais couvert par G2 pour la partie commune. Les validations de code,
 captures et essais réseau suivront les consignes du dépôt au développement.

@@ -87,7 +87,7 @@ les sept onglets affichent leur nom sur deux rangées en portrait, une sur grand
 | **Lieux** | L'**Atlas** de la campagne : les lieux découverts, à rouvrir quand on veut. |
 | **Inventaire** | Le sac du personnage : donner, jeter, consulter. |
 | **Cartes** | Les cartes tenues en main (Deck-OS). **Une pastille rouge compte les cartes qu'on vous tend.** |
-| **Modules du jeu** | L’emplacement générique des outils propres au jeu. Au 15/10/2026, il indique **« Aucun module ouvert par le meneur. »** L’ouverture par le MJ sera raccordée dans une prochaine étape. |
+| **Modules du jeu** | Les outils ouverts à votre personnage par le meneur, par exemple MU/TH/UR pour Alien. Touchez la carte pour l’ouvrir et **Retour aux modules** pour revenir. Sans autorisation : **« Aucun module ouvert par le meneur. »** |
 
 | Bouton | Ce qu'il ouvre |
 | :--- | :--- |
@@ -103,6 +103,11 @@ les sept onglets affichent leur nom sur deux rangées en portrait, une sur grand
 Les noms peuvent revenir à la ligne. Faites défiler la liste pour retrouver une entrée,
 puis touchez-la : son image et son texte s'ouvrent dans un lecteur avec **Fermer** en haut.
 Le texte long défile sans déplacer ce bouton.
+
+Dans **Modules du jeu**, un retrait d’accès ou une déconnexion ferme l’instrument et arrête ses sons.
+Les dialogues restent liés au personnage ; changer de PJ efface l’ancienne vue de la tablette.
+Pour MU/TH/UR, **Activer le son** autorise la lecture locale ; la bande-son d’alerte ne joue que sur
+l’appareil choisi pour la diffusion. Les autres tablettes gardent le décompte visuel.
 
 ![Les indices révélés restent consultables dans les Archives](captures/tablette-des-joueurs-archives.jpg)
 

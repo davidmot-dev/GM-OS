@@ -296,6 +296,12 @@ for (const { mise, pilote } of JEUX) {
             await photographier(modules, 'jeu-alien-modules');
             await vue(campagne, 'modules-du-jeu');
             await expect(f.locator('[data-hub-consultation="modules-du-jeu-mj"]')).toBeVisible();
+            await f.getByRole('button', { name: 'Ouvrir le pupitre', exact: true }).click();
+            await expect(f.getByRole('heading', { name: 'MU/TH/UR · Poste meneur', exact: true })).toBeVisible();
+            const fenetreDuPupitre = await gmos.application.browserWindow(f);
+            await fenetreDuPupitre.evaluate(w => w.setContentSize(1440, 2200));
+            await photographier(f.locator('.gmos-muthur'), 'jeu-alien-pupitre-module');
+            await fenetreDuPupitre.evaluate(w => w.setContentSize(1440, 900));
         }
 
         // Le panneau de jet de la fiche, composantes retenues.

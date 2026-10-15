@@ -17,7 +17,11 @@ Créé le 15/10/2026 après accord de David pour formaliser ce standard.
 **G0 et l’emplacement G1 sont intégrés au code de GM-OS :** `GameDriver.modulesDuJeu`,
 catalogue de métadonnées, sélection dans le pilote, contrôle Forge/restauration/import,
 export/import conservant les références, entrée au cockpit et onglet vide dans le Hub.
-L’hôte exécutable, les droits et la connexion privée restent à construire.
+**G2 est livré :** hôte natif, droits par personnage, reprise d’appareil, transport
+ciblé, sauvegarde privée, fichiers de session et exports de campagne. Le moteur
+MU/TH/UR s’enregistre dans `electron/modulesDuJeu/registre.ts` et ses composants
+dans `src/modules/modulesDuJeu/vuesDuRegistre.tsx`. Aucun secret ne voyage dans
+la synchronisation commune. Le détecteur attend son adaptateur.
 Le prototype `outils/alien` garde son manifeste et son fonctionnement autonomes.
 
 Le banc des composants réels se construit sans GM-OS ni serveur :
@@ -26,9 +30,11 @@ Le banc des composants réels se construit sans GM-OS ni serveur :
 node outils/modules-du-jeu/apercu-integration.mjs --capturer
 ```
 
-Il écrit `scratch/modules-du-jeu-integration/apercu.html` et neuf images aux largeurs
-360, 768 et 1180 px. `--manuel` copie la vue de sélection dans le manuel des jeux.
-Les stores sont fictifs ; ces captures ne valident pas encore une partie en réseau.
+Il écrit `scratch/modules-du-jeu-integration/apercu.html` et 21 images aux largeurs
+360, 768 et 1180 px, dont ouverture MJ, terminal joueur, vidéo et retrait.
+`--manuel` copie les vues de sélection, pupitre et terminal dans le manuel des jeux.
+Le moteur/hôte et les vues sont réels, le stockage et la connexion sont en mémoire ;
+ces captures ne valident pas encore une partie en réseau.
 
 ## Vérifier un manifeste
 
@@ -67,5 +73,5 @@ Le standard d'interface permet des mécaniques propres à chaque jeu.
 
 Le [module MU/TH/UR](../alien/modules/muthur/README.md) fournit un manifeste
 v1, le moteur réutilisant le prototype Alien, des composants React et leurs
-essais. Il attend l'hôte du Hub pour son intégration ; son manifeste peut
-déjà être passé au validateur statique.
+essais. Il est raccordé au registre, aux autorisations, au stockage et aux vues du Hub.
+Son manifeste peut être passé au validateur statique.

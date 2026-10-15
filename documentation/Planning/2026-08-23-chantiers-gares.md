@@ -11431,6 +11431,22 @@ ouvrir MU/TH/UR à un PJ. Manuel 53/54 Alien/61 actualisé ; captures Electron
 essais Node verts, types et construction de production propres**, lint ciblé
 propre. Aucun service, installation ou donnée personnelle. Non commité.
 
+**Deuxième tranche, suite du 15/10.** David : *« fais la 2ième tranche »*, puis
+confirme GM-OS fermé. Hôte natif `electron/modulesDuJeu/`, commandes sérialisées,
+droits par PJ et projections privées via IPC/WebSocket. Identité liée à la socket,
+secret de reprise, collisions et usurpations refusées, anti-rejeu ; aucun secret
+ajouté à Campaign ou Nexus Sync. Stockage privé atomique, sauvegardes de session et
+exports/imports de campagne, modules inconnus conservés. Échecs d’écriture sans
+perte ni nouveau droit ; retrait immédiat, effets arrêtés à la fin de séance,
+au changement de campagne et à la reprise. MU/TH/UR enregistré dans le moteur et
+les vues génériques ; pupitre MJ, accès par personnage, choix sonore d’un appareil,
+carte/terminal dans le Hub, vidéo avec HEAD/Range. **392 tests ciblés + 70 essais
+Node**, types/lint/build ; **21 captures** avec le vrai hôte en mémoire, 360/768/1180 px.
+Manuel et captures actualisés ; essais Electron et sur matériel réel non lancés.
+Prochaine étape : essai en répétition/tablettes, puis adaptateur détecteur.
+Base **67900d3c**, deuxième tranche non commitée. Aucun service ou paquet installé,
+aucune donnée personnelle lue. [Détails de reprise](2026-10-15-etat-et-reprise.md).
+
 ---
 
 ## La vue d'un coup d'œil
@@ -11507,7 +11523,7 @@ propre. Aucun service, installation ou donnée personnelle. Non commité.
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
-| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; G0 intégré (pilote/catalogue/édition/validation/export), emplacement G1 au cockpit et Hub ; 248 tests ciblés + 70 essais locaux verts, 9 captures d’intégration isolées | G2 : identité/droits/transport privé/persistance, registre exécutable et branchement MU/TH/UR | Ouverture aux joueurs et essai matériel à faire ; adaptateur détecteur et Table des Terres Médianes ensuite |
+| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; G0–G2 et MU/TH/UR intégrés : accès PJ, hôte privé natif, sauvegardes/export, pupitre et terminaux ; 392 tests ciblés + 70 essais locaux, 21 captures | Essai sur instance jetable et tablettes réelles, puis adaptateur détecteur | Réseau/son/matériel réel à éprouver ; dossiers/file de demandes et Table des Terres Médianes ensuite |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

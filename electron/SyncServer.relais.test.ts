@@ -21,6 +21,7 @@ class SocketFictif extends EventEmitter {
 }
 
 const versLeMJ = vi.fn();
+const reprises = new Map<string, string>();
 const fenetre = { isDestroyed: () => false, webContents: { send: versLeMJ } };
 
 // Façade d'essai des points d'entrée privés, sans changer leur visibilité en production.
@@ -42,16 +43,21 @@ function recevoir(message: unknown, socket = emetteur) {
 
 function inscrire(socket: SocketFictif, deviceId: string, role: ClientRole, characterId?: string) {
     recevoir({ type: 'remote:register', payload: {
-        deviceId, pseudo: 'Test', role, characterId, token: 'secret-artificiel',
+        deviceId, pseudo: 'Test', role, characterId, token: 'secret-artificiel', repriseModules: reprises.get(deviceId),
     } }, socket);
+    for (const [brut] of socket.send.mock.calls) {
+        const message = JSON.parse(brut);
+        if (message.type === 'remote:registered') reprises.set(deviceId, message.payload.repriseModules);
+    }
     socket.send.mockClear();
     versLeMJ.mockClear();
 }
 
 beforeEach(() => {
+    reprises.clear();
     sessionManager.clearAll();
     versLeMJ.mockClear();
-    serveur = new SyncServer(fenetre as unknown as import('electron').BrowserWindow, 0, '') as unknown as RelaisTeste;
+    serveur = new SyncServer(fenetre as unknown as import('electron').BrowserWindow, 0, '', { lire: async () => null, ecrire: async () => {} }) as unknown as RelaisTeste;
     emetteur = new SocketFictif();
     destinataire = new SocketFictif();
     serveur.wss = { clients: new Set([emetteur, destinataire]) };

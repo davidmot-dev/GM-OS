@@ -1,4 +1,7 @@
 import { useEffect, useState, useCallback, useRef, useMemo, useSyncExternalStore } from 'react';
+import { lireRepriseDesModules, enregistrerRepriseDesModules } from '../../modulesDuJeu/reprise';
+import { CanalDesModulesJoueur } from '../../modulesDuJeu/canalJoueur';
+import { useModulesDuJeuJoueur } from '../../modulesDuJeu/magasins';
 import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
 import { jaugesVuesParLesJoueurs } from '../../../store/useClockStore';
 import type { TensionClock } from '../../../store/useClockStore';
@@ -344,12 +347,21 @@ export const useHubSync = () => {
         let socket: WebSocket | null = null;
         let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
         let isActive = true;
+        let canal: CanalDesModulesJoueur | null = null;
 
         const startConnection = () => {
             if (!isActive) return;
             const socketUrl = `ws://${host}:${port}`;
             socket = new WebSocket(socketUrl);
             socketRef.current = socket;
+            const connexion = socket;
+            canal = new CanalDesModulesJoueur(message => {
+                if (connexion.readyState !== WebSocket.OPEN) throw new Error('Déconnecté.');
+                connexion.send(JSON.stringify(message));
+            }, () => ({ personnageId: getStore('useClientStore')?.getState().characterId ?? null,
+                campagneId: getStore('useSessionOSStore')?.getState().activeCampaignId ?? null }),
+            vue => useModulesDuJeuJoueur.setState({ vue }));
+            useModulesDuJeuJoueur.setState({ commander: (id, commande) => canal!.commander(id, commande) });
 
             socket.onopen = () => {
                 if (!isActive) { socket?.close(); return; }
@@ -363,13 +375,14 @@ export const useHubSync = () => {
                         pseudo: client.pseudo, 
                         playerName: client.playerName, 
                         characterId: client.characterId, 
-                        role: 'hub' 
+                        role: 'hub', repriseModules: lireRepriseDesModules(client.deviceId)
                     }
                 }));
                 socket?.send(JSON.stringify({ type: 'remote:request-sync' }));
             };
 
             socket.onclose = () => {
+                canal?.fermer();
                 if (!isActive) return;
                 setStatus('error');
                 sClient.getState().setStatus('disconnected');
@@ -381,16 +394,22 @@ export const useHubSync = () => {
                 try {
                     const data: unknown = JSON.parse(event.data);
                     if (!estObjet(data)) return;
+                    canal?.recevoir(data);
+                    if (data.type === 'remote:registered' && estObjet(data.payload)) {
+                        enregistrerRepriseDesModules(sClient.getState().deviceId, data.payload.repriseModules);
+                        socket?.send(JSON.stringify({ type: 'modules:consulter' }));
+                    }
                     
                     // 🛡️ Handle server-side character collision rejection
                     if (data.type === 'remote:error' && estObjet(data.payload)) {
                         const { code, message } = data.payload;
                         console.error(`[useHubSync] Server Error (${code}):`, message);
-                        if (code === 'character_taken') {
+                        if (code === 'character_taken' || code === 'reprise_refusee') {
                             const sClient = getStore('useClientStore');
                             if (sClient) {
                                 sClient.getState().setCharacterId(null);
                                 sClient.getState().setLastError(typeof message === 'string' && message ? message : 'Ce personnage est déjà connecté sur un autre appareil.');
+                                if (code === 'reprise_refusee') sClient.getState().logout();
                             }
                         }
                     }
@@ -476,6 +495,7 @@ export const useHubSync = () => {
             if (reconnectTimer) clearTimeout(reconnectTimer);
             if (socket) { socket.onclose = null; socket.close(); }
             socketRef.current = null;
+            canal?.fermer();
         };
     }, [host, port, applySyncPayload]);
 
@@ -498,10 +518,15 @@ export const useHubSync = () => {
         if (socketRef.current?.readyState === WebSocket.OPEN) {
             socketRef.current.send(JSON.stringify({ 
                 type: 'remote:register',
-                payload: { deviceId, pseudo, playerName, characterId, role: 'hub' }
+                payload: { deviceId, pseudo, playerName, characterId, role: 'hub', repriseModules: lireRepriseDesModules(deviceId) }
             }));
         }
     }, [deviceId, pseudo, playerName, characterId]);
+
+    useEffect(() => {
+        useModulesDuJeuJoueur.setState({ vue: null });
+        if (socketRef.current?.readyState === WebSocket.OPEN) socketRef.current.send(JSON.stringify({ type: 'modules:consulter' }));
+    }, [characterId, activeCampaignId]);
 
     // IPC & Events
     useEffect(() => {

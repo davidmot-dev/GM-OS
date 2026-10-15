@@ -178,6 +178,8 @@ export interface NexusCampaignState {
      * Permet à l'importateur de vérifier leur disponibilité sur la machine cible.
      */
     requiredDriverData?: import('../../../types/drivers').GameDriver[];
+    /** Instances privées du MJ ; jamais placées dans Campaign ni dans la synchronisation commune. */
+    modulesDuJeu?: Record<string, import('../../modulesDuJeu/protocole').InstanceSauvegardee>;
     /**
      * Niveau 4 — Snapshot des SheetTemplates personnalisés requis.
      */

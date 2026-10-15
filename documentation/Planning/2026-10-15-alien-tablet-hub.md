@@ -1,8 +1,9 @@
 # Alien — améliorer les accessoires et les intégrer au Tablet Hub
 
 **15/10/2026 — plan et suivi. Registre § 135.** La sélection dans les pilotes et
-l’emplacement générique du Hub/cockpit sont codés. Le transport privé, les accès
-et l’exécution des modules dans GM-OS restent à construire.
+l’emplacement générique du Hub/cockpit sont codés. La deuxième tranche livre le transport
+privé, les accès par PJ, les sauvegardes et MU/TH/UR dans l’hôte commun. Le détecteur
+et les essais réels de réseau/matériel restent à faire.
 
 **Précision de David le même jour :** l'emplacement du Tablet Hub doit être
 générique et recevoir les modules propres aux jeux/pilotes, notamment Alien
@@ -15,7 +16,7 @@ Le manifeste du prototype Alien reste inchangé ; le module reçoit son propre m
 **Suite du 15/10 :** un [manifeste distinct et l'adaptateur MU/TH/UR v1](../../outils/alien/modules/muthur/README.md)
 sont livrés avec moteur réutilisé, composants React joueur/MJ et types publics.
 Le manifeste autonome reste un descripteur d'atelier ; il n'a pas à être
-remplacé par celui du module. G0 et l’emplacement G1 sont livrés ; l’usage dans le Hub attend G2.
+remplacé par celui du module. G0–G2 et MU/TH/UR dans le Hub sont livrés et testés hors ligne.
 
 David : *« le module externe beta d'Alien fonctionne bien pour une première
 version. Il faut toutefois l'amélioré et voir comment l'intégrer dans le

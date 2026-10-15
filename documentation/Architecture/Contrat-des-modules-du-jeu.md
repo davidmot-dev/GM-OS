@@ -1,6 +1,6 @@
 # Contrat des modules du jeu — Tablet Hub
 
-**Version 1 — 15/10/2026.** Standard de raccordement à implémenter dans GM-OS.
+**Version 1 — 15/10/2026.** Standard de raccordement des modules dans GM-OS.
 David demande un emplacement générique par jeu/pilote, puis approuve la
 formalisation du standard : *« ok vas-y »*, le 15/10.
 
@@ -8,8 +8,9 @@ Les mots **DOIT**, **NE DOIT PAS** et **PEUT** indiquent les obligations du
 contrat. Le [validateur statique et le moteur d'exemple](../../outils/modules-du-jeu/README.md)
 sont exécutables. **Au 15/10, le champ du pilote, son éditeur, le catalogue de métadonnées,
 la validation et la conservation à l’export/import sont implémentés. Le cockpit et le Hub
-possèdent un emplacement générique vide. L’hôte exécutable, le transport privé, les droits
-et le stockage des instances restent à construire.** Ce document fixe leur cible commune.
+possèdent un hôte générique. La deuxième tranche raccorde MU/TH/UR au processus principal,
+avec droits par personnage, transport ciblé, reprise d’appareil et stockage privé des instances.
+Les essais de réseau et de matériel réels restent à effectuer.** Ce document fixe leur cible commune.
 
 ## 1 · Trois éléments, trois responsabilités
 
@@ -73,7 +74,7 @@ du prototype autonome, n'est pas un manifeste v1 et reste inchangé.
 
 ## 3 · Références du pilote
 
-Le futur champ facultatif `GameDriver.modulesDuJeu` suit cette forme :
+Le champ facultatif `GameDriver.modulesDuJeu` suit cette forme :
 
 ```json
 {
@@ -237,8 +238,8 @@ propre et huit essais locaux au vert (format, droits, filtrage, restauration
 et CLI). Aucun essai d'interface, de transport ou d'appareil à ce stade.
 
 Le premier adaptateur réel, [MU/TH/UR](../../outils/alien/modules/muthur/README.md),
-est livré avec moteur, manifeste et composants React ; son intégration au
-registre et au transport GM-OS reste à construire.
+est livré avec moteur, manifeste et composants React, enregistré dans l’hôte et le transport privé
+de GM-OS. Le détecteur n’a pas encore d’adaptateur enregistré.
 
 Un module livré DOIT documenter ses commandes, ses données, ses migrations,
 ses effets, ses limites et ses essais. Sa page de jeu et le guide des

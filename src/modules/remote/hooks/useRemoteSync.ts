@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { lireRepriseDesModules, enregistrerRepriseDesModules } from '../../modulesDuJeu/reprise';
 import { reglagesAudio } from '../reglagesAudio';
 import { portDeSynchronisation } from '../../../utils/portsDuRenderer';
 import { useClientStore } from '../../../stores/useClientStore';
@@ -96,7 +97,7 @@ export const useRemoteSync = () => {
             // valide, le serveur rétrograde la connexion en simple joueur.
             socket.send(JSON.stringify({
                 type: 'remote:register',
-                payload: { deviceId, pseudo, role: 'remote', token: getPairingToken() }
+                payload: { deviceId, pseudo, role: 'remote', token: getPairingToken(), repriseModules: lireRepriseDesModules(deviceId) }
             }));
         };
 
@@ -173,6 +174,7 @@ export const useRemoteSync = () => {
                 // Le serveur confirme le rôle réellement accordé, qui peut être
                 // inférieur à celui demandé si l'appairage n'a pas été validé.
                 else if (data.type === 'remote:registered') {
+                    enregistrerRepriseDesModules(deviceId, data.payload?.repriseModules);
                     setIsPaired(data.payload?.role === 'remote');
                 }
                 // Handle Remote Errors (e.g. Character Collision)

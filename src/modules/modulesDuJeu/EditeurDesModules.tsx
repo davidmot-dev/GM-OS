@@ -11,7 +11,7 @@ export function EditeurDesModules({ pilote, onChange }: {
             <h2 className="text-2xl font-bold text-app-text">Modules du jeu</h2>
             <p className="text-sm text-app-muted">Choisis les outils proposés au meneur pour ce pilote. Ce choix est enregistré automatiquement et accompagne son export.</p>
         </header>
-        <p className="text-sm text-app-muted">L’accès des joueurs sera ouvert par le meneur pendant la partie. Cette première étape prépare la sélection ; l’ouverture sur les tablettes sera disponible dans une prochaine étape.</p>
+        <p className="text-sm text-app-muted">Prépare les outils depuis le cockpit, dans Modules du jeu. Pendant une séance, ouvre séparément leurs accès aux personnages choisis.</p>
         {resultat.implicite && <p className="text-sm text-accent">Sélection héritée du jeu. Ta première modification enregistrera un choix explicite.</p>}
         {resultat.erreurs.map(erreur => <p key={erreur} role="alert" className="text-etat-danger">{erreur}</p>)}
         {!compatibles.length && <p className="text-app-muted">Aucun module compatible n’est encore référencé pour ce jeu.</p>}
@@ -25,7 +25,7 @@ export function EditeurDesModules({ pilote, onChange }: {
                 <span className="min-w-0 space-y-1">
                     <span className="block font-bold text-app-text">{module.libelle}</span>
                     <span className="block text-sm text-app-muted">{module.description}</span>
-                    <span className="block text-sm text-app-muted">{module.adaptation === 'prete' ? 'Adaptateur prêt — raccordement au Hub à venir.' : 'Adaptateur à préparer.'}</span>
+                    <span className="block text-sm text-app-muted">{module.adaptation === 'prete' ? 'Disponible dans Modules du jeu au cockpit.' : 'Adaptateur à préparer.'}</span>
                 </span>
             </label>)}
         </div>

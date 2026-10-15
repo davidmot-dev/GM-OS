@@ -51,6 +51,8 @@ import {
 } from './nexus.types';
 import type { GameDriver } from '../../../types/drivers';
 import { exigerReferencesDeModules } from '../../modulesDuJeu/catalogue';
+import { useModulesDuJeuMJ, importerLesModules } from '../../modulesDuJeu/magasins';
+import { validerSauvegardeDesModules } from '../../modulesDuJeu/protocole';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import type {
     Campaign,
@@ -334,6 +336,7 @@ export class NexusService {
             deckSessionStates,
             relatedEntities,       // Méta : entités cross-campagne (pour info)
             requiredDriverData,    // Snapshot des drivers personnalisés requis
+            ...(useModulesDuJeuMJ.getState().sauvegarde?.campagnes[campaignId] ? { modulesDuJeu: useModulesDuJeuMJ.getState().sauvegarde!.campagnes[campaignId] } : {}),
             requiredTemplateData,  // Snapshot des templates personnalisés requis
             atmospheres,           // Niveau 5 : Sound pads
             playlists,             // Niveau 5 : Music playlists
@@ -624,7 +627,8 @@ export class NexusService {
                 return;
             }
 
-            Object.values(obj as Record<string, unknown>).forEach((value) => {
+            Object.entries(obj as Record<string, unknown>).forEach(([cle, value]) => {
+                if (cle === 'modulesDuJeu') return; // Les codes et textes privés ne sont pas des références de médias.
                 if (typeof value === 'string' && httpRegex.test(value)) {
                     // Exclure les domaines connus non-portables/techniques si besoin
                     if (!value.includes('youtube.com') && !value.includes('spotify.com') && !value.includes('localhost')) {
@@ -689,6 +693,7 @@ export class NexusService {
 
             const record = obj as Record<string, unknown>;
             Object.keys(record).forEach(key => {
+                if (key === 'modulesDuJeu') return;
                 const value = record[key];
                 if (typeof value === 'string' && urlToMediaId.has(value)) {
                     record[key] = urlToMediaId.get(value);
@@ -1560,6 +1565,7 @@ export class NexusService {
                     exigerReferencesDeModules(driverState.gameDriver.modulesDuJeu);
                 } else {
                     campaignState = JSON.parse(raw.stateJson) as NexusCampaignState;
+                    if (campaignState.modulesDuJeu !== undefined) validerSauvegardeDesModules({ version: 1, campagnes: { [campaignState.campaign.id]: campaignState.modulesDuJeu } });
                     for (const pilote of campaignState.requiredDriverData ?? []) exigerReferencesDeModules(pilote.modulesDuJeu);
                 }
             } catch {
@@ -1673,6 +1679,7 @@ export class NexusService {
                 const store = useSessionOSStore.getState();
                 
                 // Activer le mode Sync (bloque les re-renders intempestifs)
+                if (finalState.modulesDuJeu !== undefined) await importerLesModules({ version: 1, campagnes: { [finalState.campaign.id]: finalState.modulesDuJeu } });
                 store.setSystemSyncing(true);
 
                 try {

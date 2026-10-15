@@ -3,8 +3,13 @@
 **15/10/2026 — version du module 0.3.0, données v2, contrat v1.**
 Conforme au format du [contrat v1](../../../../documentation/Architecture/Contrat-des-modules-du-jeu.md).
 Ce dossier fournit le manifeste, le moteur et les composants React joueur/MJ.
-**Le registre, les autorisations de table et le branchement au Tablet Hub
-restent à implémenter dans GM-OS.** Le serveur et l'atelier autonome Alien
+**Le registre, les autorisations de table et le branchement au Tablet Hub sont livrés
+dans la deuxième tranche du 15/10.** Depuis **Cockpit › Modules du jeu**, le MJ prépare
+MU/TH/UR et, pendant une séance, ouvre l’accès aux personnages choisis. Le stockage
+privé natif conserve préparation et dialogues, séparément des campagnes synchronisées.
+Les sauvegardes de session et exports de campagne les emportent ; leur restauration
+ferme les accès et arrête les effets. Le détecteur attend son adaptateur.
+Le serveur et l'atelier autonome Alien
 gardent leur fonctionnement actuel et leur manifeste propre.
 
 ## Fichiers et point d'entrée

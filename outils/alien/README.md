@@ -327,9 +327,11 @@ conversion globale n'est pas nécessaire pour cet atelier.
 des types publics et des essais. La reprise des données v1 du prototype est
 prévue par une fonction pure, sans lecture des sauvegardes réelles. Le
 détecteur reste autonome. La sélection des modules dans le pilote, le catalogue
-de métadonnées, leur conservation à l’export/import et l’emplacement vide du
-Hub/cockpit sont maintenant intégrés. Le registre exécutable, le transport privé
-et les accès joueurs restent à construire. Les deux usages continuent à réutiliser
+de métadonnées et leur conservation à l’export/import sont intégrés. La deuxième
+tranche raccorde MU/TH/UR au registre exécutable, au transport privé, au stockage et
+aux accès par personnage du Hub. Ouvrir **Cockpit › Modules du jeu**, préparer le
+pupitre puis cocher les PJ pendant une séance. Le détecteur reste autonome.
+Les deux usages continuent à réutiliser
 la même logique de terminal.
 
 | Fichier | Responsabilité |

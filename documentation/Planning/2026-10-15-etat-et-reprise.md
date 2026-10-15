@@ -273,15 +273,58 @@ types `npx.cmd tsc -b`, lint ciblé et construction `npm.cmd run build` propres.
 La construction conserve ses avertissements de taille de chunks/imports mixtes et Browserslist.
 Modifications non commitées. Aucun service réseau, paquet ou profil personnel.
 
+## Deuxième tranche intégrée — hôte privé et MU/TH/UR
+
+David demande *« fais la 2ième tranche »*, puis confirme de nouveau *« Non, il est fermé. »*
+avant les modifications dans `src/` et `electron/`. Base : commit **67900d3c**.
+
+- `electron/modulesDuJeu/service.ts` : autorité native, file de mutations, droits par
+  campagne/module/PJ, manifeste des commandes et filtre `vuePour`. IPC réservé au `webContents`
+  du MJ ; projections séparées pour les sockets des joueurs. Aucune donnée privée dans Campaign.
+- `SyncServer.ts` : canal `modules:*`, identité liée à la socket après inscription réussie,
+  secret de reprise aléatoire, refus d’un appareil deviné, des collisions et de la récupération
+  par simple IP partagée. Sans PJ déclaré, aucune identité privée héritée. Réponses ciblées,
+  anti-rejeu borné, limite de commandes et seconde vérification de connexion dans la file.
+- `stockage.ts` : fichier privé `userData/modules-du-jeu/instances.json`, écriture temporaire
+  avec flush puis renommage ; publication après succès. Échec signalé jusqu’à une écriture
+  réussie, préparation précédente conservée. Un retrait coupe les droits même si le disque
+  échoue. Fichier illisible conservé sans écriture ni réinitialisation implicite.
+- `magasins.ts`, `useHoteDesModules.ts`, `protocole.ts` : miroir MJ en mémoire pour sauvegardes
+  manuelles/automatiques. Restauration par IPC avant les autres mutations de session, section
+  facultative sans défaut. Nexus exporte seulement les instances de la campagne ; import et
+  clone les rangent sous l’identifiant de destination. Codes/textes exclus du remappage média.
+  Modules inconnus conservés sans exécution.
+- `canalJoueur.ts` et `useHubSync.ts` : vues non persistées, contexte/révision/PJ vérifiés,
+  attentes annulées à la fermeture et aucun rejeu après délai/déconnexion. La reconnexion
+  redemande sa vue ; l’identité de la charge n’est jamais utilisée pour choisir son lecteur.
+- `registre.ts` et `vuesDuRegistre.tsx` réutilisent MU/TH/UR, ses styles isolés et ses vues
+  chargées à la demande. Cockpit : pupitre, accès par PJ pendant une séance, fermeture des
+  accès/effets et choix de l’appareil sonore connecté/autorisé. Hub : carte, terminal et retour.
+  Déconnexion/retrait/changement de PJ démontent la vue. Fin de séance, changement de campagne,
+  restauration et redémarrage ferment les accès et arrêtent les effets ; préparation conservée.
+- `video.ts` : média livré par Vite, GET/HEAD et Range 206/416 depuis dist/. Un seul appareil
+  diffuse, après clic local d’activation sonore. Vidéo entière et relais sirène/voix réutilisés.
+
+Validation : **392 tests ciblés (28 fichiers)**, **70 essais Node**, types, lint ciblé et
+construction de production. Service, routage réel avec sockets/IPC simulés, deux PJ,
+refus MJ/usurpations, stockage et sauvegardes éprouvés. Le banc `apercu-integration.mjs`
+utilise le vrai hôte/moteur avec stockage/transport en mémoire : **21 captures** à
+360/768/1180 px, ouverture MJ → commande PJ → vidéo muette décodée → retrait et refus du
+second PJ. Captures relues ; trois images dans le manuel. Captures Electron étendues,
+non lancées. Aucun port, application, installation ou profil personnel utilisé.
+
+Piège : la première construction redirigée par PowerShell a signalé un faux échec sur
+stderr (Browserslist), malgré la réussite Vite/Electron/PWA. Construction directe réussie
+ensuite ; utiliser `npm.cmd run build` sans redirection PowerShell. Avertissements habituels
+de taille de chunks/imports mixtes. Deuxième tranche **non commitée**.
+
 ## Reprendre
 
 Lire le contrat v1, le plan commun, puis le plan Alien. Le standard est
-formalisé ; G0 et l’emplacement G1 sont intégrés et testés. Reprendre par
-G2 (hôte privé, identité, droits, transport ciblé et persistance des instances),
-puis brancher le module MU/TH/UR et construire l’adaptateur détecteur.
-L'adaptateur et les composants MU/TH/UR sont déjà prêts pour cet enregistrement ;
-ne pas les réécrire. Leurs essais isolés ne valident pas l'hôte absent.
-Première tranche jouable : MU/TH/UR autorisé pour un PJ dans Modules du jeu.
+formalisé ; G0–G2 et MU/TH/UR dans le Hub sont codés et testés sans réseau.
+Reprendre par un essai sur instance jetable et appareils réels, puis l’adaptateur
+du détecteur, les améliorations de dossiers/file de demandes et le périmètre de la
+Table des Terres Médianes. Ne pas réécrire le moteur MU/TH/UR.
 Les essais réels de réseau, son et tablettes restent distincts
 du retour positif sur la bêta ; David n'a pas détaillé ces conditions d'essai.
 
@@ -292,7 +335,8 @@ fourni explicitement par David. Validation : 70 essais Node locaux verts
 (20 moteur/serveur MU/TH/UR, 20 composants, 10 protocoles/alarme, 6 vidéo, 3 configuration, 3 détecteur et 8 standard), manifestes
 conformes, syntaxe Node, déclarations TypeScript, lint ciblé, liens locaux
 et diff vérifiés. Soixante-six captures hors ligne sans débordement ni erreur de
-navigateur. Aucun test du transport Hub, d'écoute réseau ou d'appareil réel.
+navigateur, puis 21 captures de l’hôte. Transport testé par sockets simulées ;
+aucune écoute réseau ou appareil réel testé.
 Les annonces sont éprouvées avec une horloge et des voix de test ; la
 qualité des sirènes et des voix système réelles reste à juger sur le matériel.
 
@@ -307,3 +351,9 @@ adaptateur MU/TH/UR et première tranche intégrée sont regroupés dans le comm
 Les mentions « non commité » plus haut décrivent les étapes avant cette demande.
 Éléments non suivis présents avant la session et conservés hors du commit :
 `.claude/settings.local.json`, `Export Dirvers/`, `outils/jdr-pdf-vers-md/`.
+
+David demande ensuite un second *« commit »* pour la tranche G2. Elle est regroupée
+dans `feat(modules): raccorder MU-TH-UR au transport prive du Hub` ; `git log`
+fournit son identifiant. La mention « deuxième tranche non commitée » décrit
+l’état avant cette demande. Aucun push demandé ou effectué. Les trois éléments
+hors chantier ci-dessus restent exclus.

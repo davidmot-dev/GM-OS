@@ -189,10 +189,9 @@ declare global {
         aide?: {
             guides: () => Promise<GuideDuManuel[]>;
         };
-        /**
-         * La semence d'une instance de répétition. **`null` partout ailleurs** :
-         * sans `GMOS_SEMENCE`, aucun fichier n'est même ouvert.
-         */
+        /** Instances privées, accessibles uniquement à la fenêtre native du MJ. */
+        modulesDuJeu?: import('../modules/modulesDuJeu/protocole').PontDesModules;
+        /** La semence d'une instance de répétition ; null sans GMOS_SEMENCE. */
         semence?: {
             lire: () => Promise<unknown | null>;
         };

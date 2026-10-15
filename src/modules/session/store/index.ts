@@ -8,6 +8,7 @@
  */
 
 import { create } from 'zustand';
+import { useModulesDuJeuMJ } from '../../modulesDuJeu/magasins';
 import { persist } from 'zustand/middleware';
 import {
     handleGenerateClueImage,
@@ -411,4 +412,8 @@ useSoundStore.subscribe((etat, precedent) => {
     if (etat.atmospheres !== precedent.atmospheres) {
         sessionBackupManager.signalerUnChangement();
     }
+});
+
+useModulesDuJeuMJ.subscribe((etat, precedent) => {
+    if (etat.sauvegarde && etat.sauvegarde !== precedent.sauvegarde) sessionBackupManager.signalerUnChangement();
 });

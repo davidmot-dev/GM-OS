@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { validerSauvegardeDesModules, type SauvegardeDesModules } from '../modules/modulesDuJeu/protocole';
 import { validerLesReferences } from '../../outils/modules-du-jeu/contrat.mjs';
 
 // Le contrat ne porte que des références publiques. L'absence reste une absence.
@@ -101,6 +102,9 @@ export const FullSessionSchema = z.object({
     global: GlobalSettingsSchema,
     modules: z.object({
         sessionOS: SessionOSModuleSchema.optional(),
+        modulesDuJeu: z.custom<SauvegardeDesModules>(valeur => {
+            try { validerSauvegardeDesModules(valeur); return true; } catch { return false; }
+        }, 'Sauvegarde des modules illisible.').optional(),
         npc: z.object({ savedEntities: z.array(z.any()) }).optional(),
         /* Le journal de seance — absent de toute sauvegarde jusqu'au 2026-09-12. */
         journal: z.object({ journals: z.array(z.any()) }).optional(),

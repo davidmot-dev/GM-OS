@@ -171,13 +171,15 @@ David des effets originaux de l'application.
 
 [manifest.json](manifest.json) est un descripteur du prototype, **pas un
 contrat déjà consommé par GM-OS**. Il identifie le corpus Alien et deux
-points d'entrée. Aucun champ du type `GameDriver` n'a été ajouté.
+points d'entrée. Le raccordement intégré utilise son propre manifeste v1 et
+`GameDriver.modulesDuJeu`, jamais ce descripteur d’atelier.
 
-Le prochain contrat devra définir disponibilité par pilote, identité de
-campagne et d'opérateur, ouverture/fermeture, sauvegarde et arrêt des effets
-au changement de campagne. Les secrets resteront dans la configuration de
-campagne. L'identité devra reconnaître les pilotes forgés dont l'identifiant
-est horodaté, sans supposer `campaign.system === 'alien'`.
+Le contrat v1 et l’hôte G2 définissent disponibilité par pilote, identité de
+campagne et de personnage, ouverture/fermeture, sauvegarde et arrêt des effets.
+Le serveur natif garde les secrets dans un fichier privé d’instances, distinct
+de `Campaign` et du flux Nexus. Le corpus commun reconnaît les pilotes forgés
+sans supposer `campaign.system === 'alien'`. Le secret de reprise d’un appareil
+et l’identité liée à sa socket empêchent d’utiliser l’identifiant d’un voisin.
 
 Le service actuel n'héberge qu'une table. Le choix d'un nom à la connexion
 ne retrouve pas un ancien opérateur sans son jeton. Une reconnexion automatique

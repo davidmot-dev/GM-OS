@@ -1,7 +1,6 @@
 import { resoudreCorpus } from '../../../electron/corpusSysteme';
 import { validerLeManifeste, validerLesReferences } from '../../../outils/modules-du-jeu/contrat.mjs';
 import manifesteMuthur from '../../../outils/alien/modules/muthur/manifeste.json';
-import type { GameDriver } from '../../types/drivers';
 import type { ModuleDuCatalogue, ModuleDuPilote, ReferenceDeModuleDuJeu } from './types';
 
 // Registre explicite : aucun chemin, script ou URL fourni par un pilote n'est exécuté.
@@ -20,7 +19,7 @@ export function exigerReferencesDeModules(references: unknown): void {
     if (erreurs.length) throw new Error(`Modules du jeu invalides : ${erreurs.join(' ')}`);
 }
 
-type IdentiteDuPilote = Pick<GameDriver, 'id' | 'name' | 'corpusId' | 'ragPath' | 'modulesDuJeu'>;
+type IdentiteDuPilote = { id: string; name: string; corpusId?: string; ragPath?: string; modulesDuJeu?: ReferenceDeModuleDuJeu[] };
 export function modulesDuPilote(pilote: IdentiteDuPilote | null | undefined, systemPath?: string) {
     if (!pilote) return { corpusId: null, implicite: false, references: [] as ReferenceDeModuleDuJeu[], modules: [] as ModuleDuPilote[], erreurs: [] as string[] };
     const corpusId = resoudreCorpus({ systemId: pilote.id, systemName: pilote.name, corpusId: pilote.corpusId,

@@ -69,6 +69,19 @@ contextBridge.exposeInMainWorld('appBridge', {
     debug: {
         openConsole: () => ipcRenderer.send('debug:open-console')
     },
+    modulesDuJeu: {
+        contexte: (contexte: import('../src/modules/modulesDuJeu/protocole').ContexteDesModules) => ipcRenderer.invoke('modules:contexte', contexte),
+        lire: () => ipcRenderer.invoke('modules:lire'),
+        commander: (requete: import('../src/modules/modulesDuJeu/protocole').RequeteDeModule) => ipcRenderer.invoke('modules:commander', requete),
+        autoriser: (demande: { campagneId: string; moduleId: string; personnages: string[]; contexte: number }) => ipcRenderer.invoke('modules:autoriser', demande),
+        choisirDiffusion: (demande: { campagneId: string; moduleId: string; appareilId: string; contexte: number }) => ipcRenderer.invoke('modules:diffusion', demande),
+        importer: (sauvegarde: import('../src/modules/modulesDuJeu/protocole').SauvegardeDesModules) => ipcRenderer.invoke('modules:importer', sauvegarde),
+        surChangement: (rappel: (vue: import('../src/modules/modulesDuJeu/protocole').VueDesModulesMJ) => void) => {
+            const ecoute = (_e: Electron.IpcRendererEvent, vue: import('../src/modules/modulesDuJeu/protocole').VueDesModulesMJ) => rappel(vue);
+            ipcRenderer.on('modules:changement', ecoute);
+            return () => ipcRenderer.off('modules:changement', ecoute);
+        },
+    },
     session: {
         launchHubWindow: (mode?: string) => ipcRenderer.send('session:launch-hub-window', mode),
         saveSession: (data: unknown) => ipcRenderer.invoke('save-session', data),

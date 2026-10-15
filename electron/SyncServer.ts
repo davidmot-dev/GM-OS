@@ -1,4 +1,11 @@
-import { ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow, app } from 'electron';
+import { randomBytes, timingSafeEqual } from 'node:crypto';
+import { servirVideoDuModule } from './modulesDuJeu/video';
+import { ServiceDesModules } from './modulesDuJeu/service';
+import { stockageDesModules } from './modulesDuJeu/stockage';
+import type { StockageDesModules } from './modulesDuJeu/stockage';
+import { objetSimple, identifiantDeTable } from '../src/modules/modulesDuJeu/protocole';
+import type { ContexteDesModules, RequeteDeModule, SauvegardeDesModules } from '../src/modules/modulesDuJeu/protocole';
 import http from 'node:http';
 import type { Socket } from 'node:net';
 import { WebSocketServer, WebSocket } from 'ws';
@@ -38,6 +45,7 @@ interface ExtendedWebSocket extends WebSocket {
     isAlive?: boolean;
     deviceId?: string;
     role?: ClientRole;
+    identiteModules?: { appareilId: string; personnageId: string | null };
     remoteAddress?: string;
 }
 
@@ -64,6 +72,7 @@ interface InscriptionRecue {
     role?: unknown;
     playerName?: ArgumentsDuRegistre[3];
     characterId?: ArgumentsDuRegistre[4];
+    repriseModules?: unknown;
     token?: unknown;
 }
 
@@ -76,11 +85,14 @@ export class SyncServer {
     private deviceSocketMap = new Map<string, Set<WebSocket>>();
     /** Dernier segment public d'apparence, pour le client qui s'enregistre après la diffusion initiale. */
     private derniereApparence: unknown = null;
+    private modulesDuJeu: ServiceDesModules;
+    private reprisesDesModules = new Map<string, string>();
 
-    constructor(mainWindow: BrowserWindow, port: number, tempMediaDir: string) {
+    constructor(mainWindow: BrowserWindow, port: number, tempMediaDir: string, stockage?: StockageDesModules) {
         this.mainWindow = mainWindow;
         this.port = port;
         this.tempMediaDir = tempMediaDir;
+        this.modulesDuJeu = new ServiceDesModules(stockage ?? stockageDesModules(path.join(app.getPath('userData'), 'modules-du-jeu', 'instances.json')), () => { void this.diffuserLesModules(); });
     }
 
     public start() {
@@ -353,6 +365,7 @@ export class SyncServer {
 
         if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
             const ext = path.extname(filePath).toLowerCase();
+            if (ext === '.webm' || ext === '.mp4') { servirVideoDuModule(req, res, filePath, ext === '.webm' ? 'video/webm' : 'video/mp4'); return; }
             const mimeTypes: Record<string, string> = {
                 '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
                 '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml',
@@ -389,6 +402,8 @@ export class SyncServer {
                     this.handleRegister(ws, data.payload);
                 } else if (data.type === 'remote:ping') {
                     ws.send(JSON.stringify({ type: 'remote:pong', payload: data.payload }));
+                } else if (typeof data.type === 'string' && data.type.startsWith('modules:')) {
+                    void this.traiterCommandeDeModule(ws, data);
                 } else {
                     this.forwardToGM(ws, data);
                 }
@@ -398,6 +413,7 @@ export class SyncServer {
         });
 
         ws.on('close', () => {
+            ws.identiteModules = undefined;
             if (ws.deviceId) {
                 console.log(`[Nexus Sync] Socket closed for device: ${ws.deviceId}`);
                 const deviceSockets = this.deviceSocketMap.get(ws.deviceId);
@@ -410,13 +426,17 @@ export class SyncServer {
                     }
                 }
                 this.updateGMClients();
+                void this.diffuserLesModules();
             }
         });
     }
 
     private handleRegister(ws: ExtendedWebSocket, payload: unknown) {
-        const { deviceId, pseudo, role, playerName, characterId, token } = (payload || {}) as InscriptionRecue;
-        const actualDeviceId = typeof deviceId === 'string' && deviceId
+        const { deviceId, pseudo: nomRecu, role, playerName: joueurRecu, characterId: personnageRecu, token, repriseModules } = (payload || {}) as InscriptionRecue;
+        const pseudo = typeof nomRecu === 'string' ? nomRecu.slice(0, 80) : 'Unknown';
+        const playerName = typeof joueurRecu === 'string' ? joueurRecu.slice(0, 80) : undefined;
+        const characterId = identifiantDeTable(personnageRecu) ? personnageRecu : undefined;
+        const actualDeviceId = identifiantDeTable(deviceId)
             ? deviceId
             : `remote-${Math.random().toString(36).substring(2, 9)}`;
 
@@ -439,23 +459,45 @@ export class SyncServer {
             }));
         }
 
-        ws.deviceId = actualDeviceId;
-        ws.role = claimedRole;
-
-        // Track socket for this device
-        if (!this.deviceSocketMap.has(actualDeviceId)) {
-            this.deviceSocketMap.set(actualDeviceId, new Set());
+        const repriseConnue = this.reprisesDesModules.get(actualDeviceId);
+        const repriseValide = typeof repriseModules === 'string' && /^[a-f0-9]{64}$/.test(repriseModules)
+            && !!repriseConnue && timingSafeEqual(Buffer.from(repriseModules, 'hex'), Buffer.from(repriseConnue, 'hex'));
+        if (repriseConnue && ws.deviceId !== actualDeviceId && !repriseValide && !PRIVILEGED_ROLES.includes(claimedRole)) {
+            ws.send(JSON.stringify({ type: 'remote:error', payload: { code: 'reprise_refusee', message: 'Cet appareil est déjà enregistré. Reprends sa session d’origine ou utilise un nouvel appareil.' } }));
+            return;
         }
-        this.deviceSocketMap.get(actualDeviceId)!.add(ws);
+        if (characterId && sessionManager.getAllClients().some(client => client.characterId === characterId
+            && client.deviceId !== actualDeviceId && (client.status === 'active' || client.status === 'ghost'))) {
+            // Une adresse IP partagée (Wi-Fi/NAT) ne prouve pas l'identité d'une tablette.
+            ws.send(JSON.stringify({ type: 'remote:error', payload: { code: 'character_taken', message: 'Ce personnage est déjà réservé par un autre appareil.' } }));
+            return;
+        }
 
         try {
             // claimedRole, pas le rôle brut du payload : le registre de session ne
             // doit jamais mémoriser un privilège qui vient d'être refusé.
             sessionManager.registerClient(actualDeviceId, pseudo || 'Unknown', claimedRole, playerName, characterId, ws.remoteAddress);
+            // L'identité privée est portée par la socket qui a réussi son inscription.
+            // Une collision ne laisse donc ni rôle, ni personnage utilisable pour les modules.
+            if (ws.deviceId && ws.deviceId !== actualDeviceId) this.deviceSocketMap.get(ws.deviceId)?.delete(ws);
+            ws.deviceId = actualDeviceId; ws.role = claimedRole;
+            if (!this.deviceSocketMap.has(actualDeviceId)) this.deviceSocketMap.set(actualDeviceId, new Set());
+            for (const autre of this.deviceSocketMap.get(actualDeviceId) ?? []) {
+                const socket = autre as ExtendedWebSocket;
+                if (socket !== ws && socket.identiteModules?.personnageId !== (characterId || null)) {
+                    socket.identiteModules = undefined;
+                    if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: 'modules:fermes' }));
+                }
+            }
+            this.deviceSocketMap.get(actualDeviceId)!.add(ws);
+            ws.identiteModules = { appareilId: actualDeviceId, personnageId: typeof characterId === 'string' && characterId ? characterId : null };
+            const nouveauJeton = repriseConnue ?? randomBytes(32).toString('hex');
+            this.reprisesDesModules.set(actualDeviceId, nouveauJeton);
             this.updateGMClients();
             
             // Confirm registration and send role back
-            ws.send(JSON.stringify({ type: 'remote:registered', payload: { deviceId: actualDeviceId, role: ws.role } }));
+            ws.send(JSON.stringify({ type: 'remote:registered', payload: { deviceId: actualDeviceId, role: ws.role, repriseModules: nouveauJeton } }));
+            void this.diffuserLesModules();
             if (this.derniereApparence) {
                 ws.send(JSON.stringify({ type: 'sync', payload: { apparence: this.derniereApparence } }));
             }
@@ -508,6 +550,55 @@ export class SyncServer {
      * Un refus est jeté en silence côté émetteur — inutile de lui apprendre ce
      * qui existe — mais journalisé côté MJ avec de quoi identifier l'appareil.
      */
+    private async rendreLesModules(ws: ExtendedWebSocket) {
+        const identite = ws.identiteModules;
+        if (!identite || ws.readyState !== WebSocket.OPEN) return;
+        const vue = await this.modulesDuJeu.vueJoueur(identite.personnageId, identite.appareilId);
+        if (ws.identiteModules === identite && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'modules:vue', payload: vue }));
+    }
+
+    private async diffuserLesModules() {
+        const vueMJ = await this.modulesDuJeu.vueMJ();
+        vueMJ.appareils = this.appareilsDesModules();
+        if (!this.mainWindow.isDestroyed()) this.mainWindow.webContents.send('modules:changement', vueMJ);
+        if (this.wss) await Promise.all([...this.wss.clients].map(ws => this.rendreLesModules(ws as ExtendedWebSocket)));
+    }
+    private appareilsDesModules() {
+        const appareils = new Map<string, { id: string; libelle: string; personnageId: string }>();
+        for (const client of this.wss?.clients ?? []) {
+            const ws = client as ExtendedWebSocket, identite = ws.identiteModules;
+            if (ws.readyState === WebSocket.OPEN && identite?.personnageId) appareils.set(identite.appareilId, {
+                id: identite.appareilId, personnageId: identite.personnageId,
+                libelle: String(sessionManager.getClient(identite.appareilId)?.pseudo || identite.appareilId).slice(0, 80),
+            });
+        }
+        return [...appareils.values()];
+    }
+
+    private commandesDesModules = new WeakMap<WebSocket, { instant: number; nombre: number; dejaVues: Set<string> }>();
+    private async traiterCommandeDeModule(ws: ExtendedWebSocket, message: MessageRecu) {
+        if (!ws.identiteModules || ws.readyState !== WebSocket.OPEN) return;
+        if (message.type === 'modules:consulter') { await this.rendreLesModules(ws); return; }
+        if (message.type !== 'modules:commander' || !objetSimple(message.payload)) return;
+        const charge = message.payload, identite = ws.identiteModules;
+        if (typeof charge.requeteId !== 'string' || !/^[a-zA-Z0-9-]{1,100}$/.test(charge.requeteId)) return;
+        const requeteId = charge.requeteId;
+        const repondre = (ok: boolean, erreur?: string) => {
+            if (ws.readyState === WebSocket.OPEN && ws.identiteModules === identite) ws.send(JSON.stringify({ type: 'modules:resultat', payload: { requeteId, ok, erreur } }));
+        };
+        const compteur = this.commandesDesModules.get(ws) ?? { instant: Date.now(), nombre: 0, dejaVues: new Set<string>() };
+        if (Date.now() - compteur.instant > 10000) { compteur.instant = Date.now(); compteur.nombre = 0; }
+        if (++compteur.nombre > 30 || compteur.dejaVues.has(requeteId) || JSON.stringify(charge).length > 64000) { repondre(false, 'Commande refusée. Attends un instant avant de réessayer.'); return; }
+        compteur.dejaVues.add(requeteId);
+        if (compteur.dejaVues.size > 128) compteur.dejaVues.delete(compteur.dejaVues.values().next().value!);
+        this.commandesDesModules.set(ws, compteur);
+        try {
+            await this.modulesDuJeu.commander(charge as unknown as RequeteDeModule, { role: 'joueur', personnageId: identite.personnageId ?? undefined, appareilId: identite.appareilId },
+                () => ws.identiteModules === identite && ws.readyState === WebSocket.OPEN);
+            repondre(true);
+        } catch { repondre(false, 'La commande a été refusée ou n’a pas pu être enregistrée. Vérifie l’accès et l’état de la table.'); }
+    }
+
     private isActionAuthorized(ws: ExtendedWebSocket, data: MessageRecu): boolean {
         const client = ws.deviceId ? sessionManager.getClient(ws.deviceId) : undefined;
         const verdict = evaluateAction(data?.type, data?.payload, ws.role, client?.characterId);
@@ -602,6 +693,25 @@ export class SyncServer {
     }
 
     private registerIpcHandlers() {
+        // Ces méthodes sont réservées à la fenêtre MJ native, jamais au rôle déclaré par un renderer.
+        const proteger = <Charge>(action: (charge: Charge) => Promise<unknown>) => async (event: Electron.IpcMainInvokeEvent, charge: Charge) => {
+            if (this.mainWindow.isDestroyed() || event.sender !== this.mainWindow.webContents) return { ok: false, erreur: 'Accès MJ requis.' };
+            try { await action(charge); return { ok: true }; }
+            catch (e) { return { ok: false, erreur: e instanceof Error ? e.message : 'Commande du module refusée.' }; }
+        };
+        ipcMain.handle('modules:contexte', proteger((charge: ContexteDesModules) => this.modulesDuJeu.changerContexte(charge)));
+        ipcMain.handle('modules:commander', proteger((charge: RequeteDeModule) => this.modulesDuJeu.commander(charge, { role: 'mj', appareilId: 'poste-mj' })));
+        ipcMain.handle('modules:autoriser', proteger((charge: Parameters<ServiceDesModules['autoriser']>[0]) => this.modulesDuJeu.autoriser(charge)));
+        ipcMain.handle('modules:diffusion', proteger(async (charge: { campagneId: string; moduleId: string; appareilId: string; contexte: number }) => {
+            const appareil = charge.appareilId === 'poste-mj' ? { id: 'poste-mj' } : this.appareilsDesModules().find(a => a.id === charge.appareilId);
+            if (!appareil) throw new Error('Cet appareil n’est plus connecté.');
+            await this.modulesDuJeu.choisirDiffusion(charge, appareil);
+        }));
+        ipcMain.handle('modules:importer', proteger((charge: SauvegardeDesModules) => this.modulesDuJeu.importer(charge)));
+        ipcMain.handle('modules:lire', async event => {
+            if (this.mainWindow.isDestroyed() || event.sender !== this.mainWindow.webContents) throw new Error('Accès MJ requis.');
+            return { ...await this.modulesDuJeu.vueMJ(), appareils: this.appareilsDesModules() };
+        });
         ipcMain.on('remote:broadcast-sync', (_event, data, role?: string) => {
             if (data?.apparence && (role === 'player' || role === 'remote')) {
                 this.derniereApparence = data.apparence;
@@ -642,6 +752,7 @@ export class SyncServer {
                 });
             }
             sessionManager.clearAll();
+            this.reprisesDesModules.clear();
             this.updateGMClients();
         });
 
