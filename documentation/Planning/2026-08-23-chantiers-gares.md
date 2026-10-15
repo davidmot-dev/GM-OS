@@ -129,6 +129,34 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > [État du 13/10](2026-10-13-etat-et-reprise.md),
 > [guide d'utilisation](../../outils/alien/README.md).
 
+> **15/10 — Alien et Tablet Hub (§ 135).** David : *« le module externe beta
+> d'Alien fonctionne bien pour une première version »* ; il demande de préparer
+> le plan d'amélioration et d'intégration, avec activation par le MJ envisagée.
+> [Plan proposé](2026-10-15-alien-tablet-hub.md) : accès indépendants par outil
+> et personnage, transport du Hub, état privé par campagne, identité reconnue
+> côté serveur. Lots A0 à A4 ; aucune intégration codée dans cette session.
+> **Précision de David : emplacement générique par jeu/pilote**, avec MU/TH/UR
+> et la Table des Terres Médianes pour exemples. Le
+> [plan Modules du jeu](2026-10-15-modules-du-jeu-tablet-hub.md) passe le contrat
+> et l'hôte communs en premier (G0–G2), puis branche Alien. Aucun code livré.
+> **Standard formalisé ensuite**, après *« ok vas-y »* de David :
+> [contrat v1](../Architecture/Contrat-des-modules-du-jeu.md), validateur
+> statique et moteur d'exemple dans `outils/modules-du-jeu/`, huit essais
+> locaux verts. Champ du pilote, registre et hôte du Hub restent à intégrer.
+> **MU/TH/UR adapté ensuite au contrat**, à la demande de David :
+> [module v1](../../outils/alien/modules/muthur/README.md), moteur réutilisé,
+> vues React joueur/MJ, types et atelier hors ligne. Essais isolés verts ;
+> l'enregistrement et le transport du Hub restent à construire.
+> **Version 0.2 ensuite :** protocoles à codes et messages type ; autodestruction
+> de dix minutes avec alerte visuelle, sirène et voix à la minute. David choisit
+> **un seul appareil sonore** ; réservation/transfert implémentés. Données v2,
+> migration v1 sans ajout de codes actifs. 50 essais locaux verts, 21 captures
+> hors ligne ; voix et tablettes réelles restent à éprouver.
+> **Version 0.3 ensuite : vidéo du Nostromo fournie par David**, fichier local
+> inchangé. Choix explicites : bande-son sur l'appareil choisi et film entier,
+> alerte prolongée à au moins **12 min 56**. Reprise de la sirène/voix si du
+> temps reste après le film. 57 essais locaux verts ; intégration Hub toujours à faire.
+
 > 🎲 **REPRISE — la première séance jouée, le 11/10/2026.** Le débriefing a produit six lignes au
 > § 1 bis, toutes **datées 11/10** ; **aucun code modifié**. David, le soir même : *« ok pour
 > tout »* — l'ordre est retenu, **du plus petit au plus gros** :
@@ -11233,6 +11261,176 @@ campagne. L'essai d'un service réseau doit être demandé par David ; toute
 modification ultérieure de `src/` ou `electron/` attend sa réponse à
 « GM-OS tourne-t-il ? ».
 
+**15/10 — reprise de l'étude à la demande de David.** *« le module externe
+beta d'Alien fonctionne bien pour une première version. Il faut toutefois
+l'amélioré et voir comment l'intégrer dans le Tablet Hub correctement (activé
+par le mj par exemple). »* David choisit ensuite *« Préparer le plan
+d’amélioration et d’intégration au Tablet Hub »* et confirme GM-OS fermé.
+Le retour positif ne précise pas les conditions d'essai réseau ou matériel.
+
+Le [plan du 15/10](2026-10-15-alien-tablet-hub.md) propose une entrée
+Accessoires dans le Hub, autorisations séparées MU/TH/UR et détecteur par le
+MJ, destinataires par personnage, moteur réutilisé et transport WebSocket
+existant. État privé par campagne, hors du flux commun des campagnes ;
+association MJ/appareil/PJ à établir avant les dialogues privés. Améliorations
+prioritaires : gestion des dossiers, file des demandes, arrêt et reconnexion.
+**Propositions, pas décisions validées ni fonctions livrées.** Lots A0–A4 ;
+prochaine étape : discuter le parcours, puis moteur et hôte (A0/A1).
+Aucun code, service réseau ou paquet modifié. Prototype commité depuis
+l'ancienne note (`98ed80a6`). [Reprise](2026-10-15-etat-et-reprise.md).
+
+**Précision du 15/10 : le placeholder est générique.** David : *« je voudrais
+avoir un placeholder générique sur Tablet Hub ou je pourrais mettre des
+modules spécifiques par jeu/drivers par exemple MU\TH\UR sur Alien ou la
+gestion de Table des Terre Médiane pour Rêve de Dragon, etc... »* Le
+[plan commun Modules du jeu](2026-10-15-modules-du-jeu-tablet-hub.md) remplace
+la proposition d'une entrée Alien et le report du contrat générique :
+déclaration facultative par pilote, registre de modules, hôte commun,
+autorisations MJ et état par campagne/module. Parcours et schéma détaillés
+restent proposés. Ordre révisé : G0–G2 avant l'adaptation Alien A0/A2, puis
+détecteur ; périmètre de la Table des Terres Médianes à définir. Toujours
+uniquement documentaire à ce stade.
+
+**Standardisation, 15/10.** David approuve le contrat et les outils proposés :
+*« ok vas-y »*. Le [contrat des modules v1](../Architecture/Contrat-des-modules-du-jeu.md)
+fixe manifeste, déclaration du pilote, moteur, vues, droits, transport,
+persistance et cycle de vie. Les [outils de référence](../../outils/modules-du-jeu/README.md)
+livrent un validateur statique, le contrôle de la forme des références de
+pilote et un moteur d'exemple (message MJ, accusé privé par PJ). Huit essais
+Node verts, manifeste accepté, syntaxe et lint ciblé propres. **G0 partiel** :
+la déclaration intégrée à `GameDriver`, le registre, l'édition et les chemins
+d'export/import restent à coder, puis G1/G2. Aucun changement dans `src/` ou
+`electron/`, aucun réseau lancé. Aucun module visuel ou intégration Hub livré.
+
+**Adaptateur MU/TH/UR, 15/10.** David : *« peux-tu adapther MU\TH\UR à ce
+contrat ? »*. Le [module `alien-muthur`](../../outils/alien/modules/muthur/README.md)
+livre un manifeste v1 distinct, six fonctions du moteur réutilisant `core.js`,
+types publics, vues React joueur/MJ et styles isolés. Migration pure des données
+v1 du prototype ; radar exclu et effets arrêtés. ORDERS est désormais masqué
+dans le dialogue du prototype et lors de la reprise d'anciennes saisies.
+Le serveur et le manifeste autonomes conservent leur fonctionnement.
+**37 essais locaux verts**, dont 8 standard ; douze captures hors ligne
+à 360, 390 et 1 180 px, sans débordement ni erreur de navigateur ; vues téléphone
+relues. Syntaxe, types publics et lint ciblé propres. Pas d'hôte ou de transport
+Hub livré, pas d'essai réseau réel, pas de données de David lues. Continuer
+par la fin de G0, puis G1/G2 ; les composants MU/TH/UR sont prêts à enregistrer.
+
+**Protocoles et autodestruction, 15/10.** David veut des messages type déclenchés
+par code, ouverture/fermeture de portes, autodestruction de dix minutes et
+interface dédiée avec sirène et voix chaque minute. Choix sonore explicite :
+*« Sur un appareil choisi pour diffuser le son, avec le décompte visuel sur
+les autres. »* Version **0.2.0**, dans le module et l'atelier autonome :
+gestion des protocoles, code exact, message privé/public, effet fermé et durée ;
+quatre exemples sur une nouvelle table. Retaper le code ne reporte pas
+l'échéance. Annulation par code ou MJ, arrêt sonore à zéro, aucun effet de règle.
+`alarme.js` commun : un seul appareil autorisé, sirène synthétisée et voix
+française locale ; aucune voix distante. `appareilId` dans le contexte fourni
+par l'hôte, aucune substitution dans la charge. Données v2 et migration v1
+sans ajout implicite de protocoles actifs. **50 essais verts, 21 captures hors
+ligne**, syntaxe/types/lint propres. Voix réelles, son en séance et transport
+Hub restent à éprouver. Aucune donnée de David consultée ni service lancé.
+
+**Vidéo d'alerte, 15/10.** David fournit le WebM « Alien - Nostromo destruct
+sequence [360p] » et demande son intégration. Il choisit sa bande-son sur
+l'appareil réservé, puis le film entier avec prolongation de l'alerte à sa
+durée. **0.3.0 livrée** : copie locale inchangée (provenance/empreinte dans
+`outils/alien/medias/README.md`), durée 775,701 s, lecture synchronisée au
+temps écoulé et sans boucle. La séquence dure au moins 12 min 56 ; sirène
+et voix reprennent après le film si la durée choisie dépasse celle-ci.
+Annulation/déconnexion arrêtent le film ; lecture automatique bloquée et
+fichier absent disposent d'un secours sans bloquer le terminal. WebM servi
+avec HEAD et plages d'octets (206/416). **57 essais verts**, 21 captures et
+décodage navigateur hors ligne ; aucun port écouté. Le média de Downloads
+fourni par David est le seul fichier externe lu ; aucune campagne consultée.
+
+**CRT et parasites, suite du 15/10.** David : *« accentue les effets CRT ET
+Parasite »*. Module et atelier autonome renforcés : trame phosphore,
+scanlines, halo, vignette, bande de balayage, grain continu et courts
+décalages du texte. Interrupteurs indépendants et mouvements réduits
+respectés ; commandes et film hors déformation. Aperçu régénéré,
+29 captures hors ligne sans débordement ni erreur navigateur, dont les
+quatre combinaisons CRT/parasites à 390 et 1 180 px. Non commité.
+
+**Nouveau dossier, suite du 15/10.** David : *« tu peux mettre une entrée
+nouveau dossier pour que ce soit plus clair »*. Entrée et formulaire livrés
+dans le module et le prototype, avec création réelle réservée au MJ,
+identifiant fixe pour READ, titre, contenu et protection. Les exemples
+existants sont conservés ; doublons, codes de protocole réservés et plafond
+de 256 dossiers contrôlés avant ajout. Suppression/classement encore à faire.
+**61 essais verts, 35 captures hors ligne**, dont les nouveaux formulaires
+aux trois tailles et une création effective par interface. Données v2 et
+contrat v1 conservés ; aperçu React toujours en mémoire. Non commité.
+
+**Sauvegarde de la préparation, suite du 15/10.** David demande comment
+récupérer les configurations au redémarrage. L'aperçu sauvegarde désormais
+automatiquement ses réglages/dossiers/protocoles dans une clé locale dédiée,
+avec statut visible et export/import JSON confirmé dans le poste MJ.
+Format portable v1 validé ; aucune reprise automatique des dialogues,
+décomptes, vidéo ou diffusion sonore. Import invalide sans remplacement,
+copie locale illisible préservée et quota signalé ; export toujours disponible.
+**64 essais Node verts, 37 captures hors ligne** et parcours navigateur de
+rechargement, fermeture/réouverture, export/import, annulation et échecs de
+stockage. Persistance de campagne Hub toujours à faire. Non commité.
+
+**Refus de HACK sans CRT/parasites, suite du 15/10.** Signalé par David et
+reproduit : animation limitée au libellé, surcouches emportées par le défilement
+du journal et, dans le prototype, masquées par le panneau opaque de piratage.
+Cadre du journal désormais fixe ; refus avec halo/balayage CRT et grain/bandes/
+déchirures Parasites selon les interrupteurs. Bandeau de résultat visible,
+mouvements réduits respectés, phase active reprise après changement de vue
+sans prolongation ni rejeu d'une ancienne séquence. **66 essais Node verts,
+48 captures hors ligne**, dont onze dédiées au piratage. Aperçu régénéré ;
+aucune modification du moteur, des données ou de la persistance. Non commité.
+
+**Lisibilité du refus, suite du 15/10.** David : *« l'effet CRT sur le refus
+de Hack est trop fort on ne sait plus lire »*. Effets du refus atténués dans
+les deux interfaces : halo discret sur le pourtour, surcouche plus légère,
+balayage à 3,5 s, grain réduit et texte stabilisé. Le bandeau de résultat
+reste fixe ; le succès et l'habillage normal gardent leur intensité.
+48 captures navigateur vérifiées, dont le refus au maximum du halo.
+Logique et données inchangées ; aperçu régénéré, non commité.
+
+**Codes lisibles au poste MJ, suite du 15/10.** David : *« je ne sais pas lire
+les codes »*, avec capture des codes masqués du prototype. Boutons
+Afficher/Masquer ajoutés aux champs de code des protocoles et dossiers dans
+les deux interfaces. Aucune soumission ni changement de code à la bascule ;
+valeurs exactes et zéros conservés, remasquage au changement de sélection
+ou panneau, saisie sensible du joueur inchangée. **67 essais Node verts,
+54 captures navigateur**, dont six avec code visible aux trois tailles.
+Aperçu régénéré ; moteur, données et sauvegarde inchangés. Non commité.
+
+**Mot de passe administrateur lisible au MJ, suite du 15/10.** David :
+*« même chose ici »*, capture du champ administrateur dans Accès. Le bouton
+Afficher/Masquer couvre désormais aussi ce champ dans les deux interfaces,
+avec remasquage en quittant le panneau ou après enregistrement. Bascule sans
+soumission ni changement de valeur. Vingt essais de composants verts et
+soixante captures navigateur (six vues supplémentaires), sans débordement
+ni erreur. Aperçu régénéré ; données inchangées, non commité.
+
+**Placement du détecteur, suite du 15/10.** David demande les contacts au
+hasard dans la distance sélectionnée au démarrage. Tirage partagé renouvelé
+à chaque activation, directions/rayons variés dans la zone de proximité,
+positions stables lors des autres réglages et faux écho sans redistribution.
+Pas de mesure physique ni de champ d'état ajouté. Détecteur toujours autonome.
+**70 essais Node verts, 66 captures**, dont six vues de 1/3/9 points à trois
+proximités, bornes vérifiées sur les points réellement dessinés.
+Aperçu régénéré ; aucun service lancé, aucune donnée de campagne consultée.
+Modifications non commitées.
+
+**Début de l’intégration, suite du 15/10.** David : *« ok commence »*, puis
+confirme GM-OS fermé. `GameDriver.modulesDuJeu`, catalogue explicite de
+métadonnées et éditeur livrés ; repli Alien forgé, choix vide conservé,
+références inconnues/incompatibles signalées. Validation partagée du contrat,
+store, Forge, restauration et import Nexus avant mutation ; export/import
+du pilote conservant les références. Entrée **Modules du jeu** au cockpit
+avec disponibilité, septième onglet générique vide dans le Tablet Hub.
+Aucun moteur ni état privé chargé dans le Hub : G2 reste nécessaire pour
+ouvrir MU/TH/UR à un PJ. Manuel 53/54 Alien/61 actualisé ; captures Electron
+étendues mais non lancées. Banc isolé des composants réels : neuf captures
+360/768/1180 px, aucun débordement, cibles ≥ 44 px. **248 tests ciblés + 70
+essais Node verts, types et construction de production propres**, lint ciblé
+propre. Aucun service, installation ou donnée personnelle. Non commité.
+
 ---
 
 ## La vue d'un coup d'œil
@@ -11309,7 +11507,7 @@ modification ultérieure de `src/` ou `electron/` attend sa réponse à
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
-| 70 | **Accessoires Alien : MU/TH/UR et tracker** | Première application 0.1.0 livrée, § 135 ; David : « c'est un bon début documente » ; guide, architecture et contrôles consignés | Essai réel avec deux appareils, puis liaison au pilote Alien | Réseau et sons à éprouver ; intégration GM-OS à développer |
+| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; G0 intégré (pilote/catalogue/édition/validation/export), emplacement G1 au cockpit et Hub ; 248 tests ciblés + 70 essais locaux verts, 9 captures d’intégration isolées | G2 : identité/droits/transport privé/persistance, registre exécutable et branchement MU/TH/UR | Ouverture aux joueurs et essai matériel à faire ; adaptateur détecteur et Table des Terres Médianes ensuite |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

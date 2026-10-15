@@ -1,4 +1,5 @@
 import React from 'react';
+import { Blocks } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -359,6 +360,13 @@ const CampaignCockpit: React.FC = () => {
                     <span className={`text-sm tracking-tight ${theme === 'medieval' ? 'font-display' : 'font-bold'}`}>
                         {t('modules:session.cockpit.view_loot_os')}
                     </span>
+                </button>
+                <button
+                    onClick={() => setCurrentView('modules-du-jeu')}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg w-full text-left ${currentView === 'modules-du-jeu' ? 'bg-accent/10 text-accent' : 'text-app-text/80 hover:bg-app-bg'}`}
+                >
+                    <Blocks size={20} />
+                    <span className="text-sm font-medium">Modules du jeu</span>
                 </button>
                 <button
                     onClick={() => setCurrentView('session-prep')}

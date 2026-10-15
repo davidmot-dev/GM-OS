@@ -102,10 +102,16 @@ function fusionner(
         if (!prefixe && INTOUCHABLES.has(clef)) continue;
         // Une dérivation muette n'a rien à donner : elle ne peut ni remplir ni
         // contredire.
-        if (estVide(valeurDerivee)) continue;
+        const choixDeModules = !prefixe && clef === 'modulesDuJeu';
+        if (estVide(valeurDerivee) && !(choixDeModules && Array.isArray(valeurDerivee))) continue;
 
         const chemin = prefixe ? `${prefixe}.${clef}` : clef;
         const valeurExistante = existant[clef];
+        // Une liste vide est ici une décision explicite, pas un trou à remplir par la Forge.
+        if (choixDeModules && valeurExistante !== undefined) {
+            if (JSON.stringify(valeurExistante) !== JSON.stringify(valeurDerivee)) journal.conserves.push(chemin);
+            continue;
+        }
 
         if (estVide(valeurExistante)) {
             resultat[clef] = valeurDerivee;

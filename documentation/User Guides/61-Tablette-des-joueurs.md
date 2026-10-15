@@ -73,10 +73,10 @@ Avant ce choix, **Quitter la session** demande confirmation : **Non** revient à
 
 ---
 
-## 🧭 Les six onglets, et les quatre panneaux
+## 🧭 Les sept onglets, et les quatre panneaux
 
-La barre du bas donne accès aux six onglets et aux quatre panneaux. Dans chaque onglet,
-les six onglets affichent leur nom sur deux rangées en portrait, une en paysage ;
+La barre du bas donne accès aux sept onglets et aux quatre panneaux. Dans chaque onglet,
+les sept onglets affichent leur nom sur deux rangées en portrait, une sur grand écran ;
 **Fiche**, **Notes**, **Messages** et **Quitter** occupent la rangée suivante.
 
 | Onglet | Ce qu'on y trouve |
@@ -87,6 +87,7 @@ les six onglets affichent leur nom sur deux rangées en portrait, une en paysage
 | **Lieux** | L'**Atlas** de la campagne : les lieux découverts, à rouvrir quand on veut. |
 | **Inventaire** | Le sac du personnage : donner, jeter, consulter. |
 | **Cartes** | Les cartes tenues en main (Deck-OS). **Une pastille rouge compte les cartes qu'on vous tend.** |
+| **Modules du jeu** | L’emplacement générique des outils propres au jeu. Au 15/10/2026, il indique **« Aucun module ouvert par le meneur. »** L’ouverture par le MJ sera raccordée dans une prochaine étape. |
 
 | Bouton | Ce qu'il ouvre |
 | :--- | :--- |

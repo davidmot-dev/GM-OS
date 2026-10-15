@@ -1,4 +1,12 @@
 import { z } from 'zod';
+import { validerLesReferences } from '../../outils/modules-du-jeu/contrat.mjs';
+
+// Le contrat ne porte que des références publiques. L'absence reste une absence.
+const PiloteAvecModulesSchema = z.object({
+    modulesDuJeu: z.unknown().optional().superRefine((valeur, contexte) => {
+        for (const message of validerLesReferences(valeur)) contexte.addIssue({ code: 'custom', message });
+    }),
+}).passthrough();
 
 // --- Basic Types ---
 export const CampaignSchema = z.object({
@@ -70,6 +78,7 @@ export const SessionOSModuleSchema = z.object({
     sessions: z.array(z.any()).optional(),
     entities: z.array(z.any()).optional(),
     clues: z.array(z.any()).optional(),
+    customGameDrivers: z.array(PiloteAvecModulesSchema).optional(),
 }).passthrough();
 
 // --- Global Structure ---

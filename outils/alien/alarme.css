@@ -1,0 +1,11 @@
+.control-tabs { display: flex; flex-wrap: wrap; }
+.control-tabs button { flex: 1 1 90px; }
+.masthead { flex-wrap: wrap; }
+#alarmStatus { max-width: 280px; font-size: 11px; line-height: 1.5; }
+.auto-destruction { padding: 24px 16px; margin-bottom: 20px; border: 2px solid #de7957; background: repeating-linear-gradient(135deg, #b72c1a22 0 12px, transparent 12px 24px); text-align: center; color: #ffd7c3; }
+.auto-destruction h2 { font: bold clamp(18px, 3vw, 28px) Consolas, monospace; letter-spacing: .08em; overflow-wrap: anywhere; }
+.auto-destruction strong { display: block; font: bold clamp(60px, 10vw, 100px)/1.4 Consolas, monospace; }
+.auto-destruction p { font: 13px/1.7 Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.auto-destruction video { display: block; width: 100%; max-height: 55dvh; aspect-ratio: 16 / 9; object-fit: contain; background: #000; margin: 12px 0; }
+.alerte-autodestruction { --surface: #200e0d; --accent: #eeab88; --phosphor: #ffd7c3; --text: #ffe5d5; --muted: #d2a994; }
+.alerte-autodestruction .terminal-screen { border-color: #c45d3c; background: #1b0b09; }

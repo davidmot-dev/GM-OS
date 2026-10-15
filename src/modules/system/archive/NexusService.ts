@@ -50,6 +50,7 @@ import {
     DEFAULT_NEXUS_EXPORT_OPTIONS,
 } from './nexus.types';
 import type { GameDriver } from '../../../types/drivers';
+import { exigerReferencesDeModules } from '../../modulesDuJeu/catalogue';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import type {
     Campaign,
@@ -286,6 +287,7 @@ export class NexusService {
         const requiredDriverData = (store.customGameDrivers ?? []).filter(
             (d) => requiredDriverIds.includes(d.id)
         );
+        for (const pilote of requiredDriverData) exigerReferencesDeModules(pilote.modulesDuJeu);
         const allTemplateIds = [
             ...new Set([
                 ...entities.map((e) => e.templateId).filter(Boolean) as string[],
@@ -350,6 +352,7 @@ export class NexusService {
         if (!gameDriver) {
             throw new Error(`[NexusService] Driver not found: ${driverId}`);
         }
+        exigerReferencesDeModules(gameDriver.modulesDuJeu);
 
         /*
           **La fiche du jeu part avec lui — celle que désigne `templateId`.**
@@ -1249,6 +1252,7 @@ export class NexusService {
      * @param state - Données du driver à injecter
      */
     private injectDriverState(state: NexusDriverState): void {
+        exigerReferencesDeModules(state.gameDriver.modulesDuJeu);
         const store = useSessionOSStore.getState();
         const driverId = state.gameDriver.id;
 
@@ -1553,8 +1557,10 @@ export class NexusService {
             try {
                 if (isDriver) {
                     driverState = JSON.parse(raw.stateJson) as NexusDriverState;
+                    exigerReferencesDeModules(driverState.gameDriver.modulesDuJeu);
                 } else {
                     campaignState = JSON.parse(raw.stateJson) as NexusCampaignState;
+                    for (const pilote of campaignState.requiredDriverData ?? []) exigerReferencesDeModules(pilote.modulesDuJeu);
                 }
             } catch {
                 const errMsg = i18next.t('modules:system.nexus.messages.state_corrupted');

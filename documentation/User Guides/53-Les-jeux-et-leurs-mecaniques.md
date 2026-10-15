@@ -40,6 +40,24 @@ fait.
 
 ---
 
+## Les modules du jeu (`modulesDuJeu`)
+
+Dans **Bibliothèque des modèles › pilote du jeu › Modules du jeu**, le meneur choisit les outils
+proposés pour ce pilote. Le choix s’enregistre automatiquement et accompagne les exports/imports
+du pilote et de campagne. Une référence absente du catalogue est signalée au meneur et conservée
+à l’export ; elle peut être retirée explicitement.
+
+Les anciens pilotes Alien proposent **MU/TH/UR 6000** et le **Détecteur de mouvement** par défaut.
+Tout décocher enregistre une liste vide : la proposition par défaut ne revient pas à la reprise.
+Les autres jeux attendent leurs modules compatibles.
+
+**État au 15/10/2026 :** le cockpit et le Tablet Hub possèdent l’entrée **Modules du jeu**.
+La sélection est disponible ; le pilotage des modules et leur ouverture par le MJ aux joueurs
+attendent le raccordement privé. L’onglet joueur indique pour l’instant **« Aucun module ouvert
+par le meneur. »** Les accessoires Alien peuvent toujours se jouer dans leur atelier autonome.
+
+---
+
 ## Le jet (`jet`)
 
 Le panneau « Lancer un test » lit sur la fiche ce que le jeu demande, et ne lance que quand chaque

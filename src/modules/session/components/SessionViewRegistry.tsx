@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModulesDuJeuMJ } from '../../modulesDuJeu/ModulesDuJeuMJ';
 import { useTranslation } from 'react-i18next';
 import CampaignCockpit from './CampaignCockpit';
 import SessionWorkspace from './SessionWorkspace';
@@ -36,6 +37,8 @@ const SessionViewRegistry: React.FC = () => {
     // Rendu du contenu de la vue
     const renderViewContent = () => {
         switch (currentView) {
+            case 'modules-du-jeu':
+                return <ModulesDuJeuMJ />;
             case 'rulebook':
                 return <RulebookViewer />;
             case 'rule-workshop':

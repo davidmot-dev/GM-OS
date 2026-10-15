@@ -2,7 +2,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Etiquette } from '../../../components/socle';
 import { MOTEURS_DU_JET, moteurDuPilote } from './rules/moteursDuJet';
-import { Wrench, ExternalLink } from 'lucide-react';
+import { Wrench, ExternalLink, Blocks } from 'lucide-react';
+import { EditeurDesModules } from '../../modulesDuJeu/EditeurDesModules';
+import { modulesDuPilote } from '../../modulesDuJeu/catalogue';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { 
     Sparkles, Brain, ArrowLeft, PenTool, Music, Beaker, User,
@@ -58,6 +60,7 @@ export const RuleEngineEditor: React.FC = () => {
 
     const moteurChoisi = moteurDuPilote(dice.engine);
     const resumes: Record<string, string> = {
+        'modules-du-jeu': `${modulesDuPilote(driver).references.length} module(s) proposé(s)`,
         core: moteurChoisi ? t(`modules:session.rule_engine_editor.core.agencement.moteurs.${moteurChoisi.cle}.nom`) : String(dice.engine ?? ''),
         combat: combat?.initiativeCards
             ? t('modules:session.rule_engine_editor.agencement.resume_cartes', { count: combat.initiativeCards })
@@ -79,6 +82,7 @@ export const RuleEngineEditor: React.FC = () => {
         { id: 'ai', label: t('modules:session.rule_engine_editor.nav.ai'), icon: Sparkles, color: 'text-gm-violet', bg: 'bg-gm-violet/10' },
         { id: 'loot', label: t('modules:session.rule_engine_editor.nav.loot'), icon: Archive, color: 'text-gm-gold', bg: 'bg-gm-gold/10' },
         { id: 'notebook', label: t('modules:session.rule_engine_editor.nav.notebook'), icon: BookOpen, color: 'text-etat-info', bg: 'bg-etat-info/10' },
+        { id: 'modules-du-jeu', label: 'Modules du jeu', icon: Blocks, color: 'text-accent', bg: 'bg-accent/10' },
     ] as const;
 
     return (
@@ -180,6 +184,7 @@ export const RuleEngineEditor: React.FC = () => {
                 <div className="flex-1 overflow-y-auto custom-scrollbar bg-[radial-gradient(circle_at_top_right,rgba(var(--app-accent-rgb),0.05),transparent_40%)]">
                     <div className="max-w-5xl mx-auto p-12 animate-fade-in">
                         
+                        {activeSection === 'modules-du-jeu' && <EditeurDesModules pilote={driver} onChange={modulesDuJeu => handleUpdate({ modulesDuJeu })} />}
                         {activeSection === 'core' && (
                             <div className="space-y-8">
                                 <header className="space-y-2 mb-10">

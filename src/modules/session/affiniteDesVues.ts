@@ -51,6 +51,7 @@ export const AFFINITE_DES_VUES: Record<CurrentView, Affinite> = {
     // Les deux, et ce n'est pas un aveu d'indécision : on les bâtit le samedi
     // matin et on les consulte le samedi soir.
     cockpit: 'les-deux',
+    'modules-du-jeu': 'les-deux',
     'npc-gallery': 'les-deux',
     'world-atlas': 'les-deux',
     'social-graph': 'les-deux',

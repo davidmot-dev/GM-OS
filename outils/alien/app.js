@@ -6,9 +6,14 @@
   const storageKey = 'alien-accessoires:atelier:v1';
   const sessionKey = 'alien-accessoires:connexion';
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let engine, state, role = 'gm', token = '', playerId = '', preview = false, instrument = 'muthur';
+  let engine, state, role = 'gm', token = '', preview = false, instrument = 'muthur';
   let currentOperator = '', firstRender = true, lastCue = '', toastTimer, requestQueue = Promise.resolve();
-  let audio = null, soundEnabled = false, lastBeep = 0, lastTypeBeep = 0, lastNoise = 0, streamAbort;
+  let audio = null, alarme = null, soundEnabled = false, lastBeep = 0, lastTypeBeep = 0, lastNoise = 0, streamAbort;
+  let filmPrioritaire = false, liaisonActive = false;
+  const film = AlienVideoAlerte.creer({ element: $('videoAlerte'), source: 'medias/nostromo-autodestruction.webm',
+    signaler: message => { $('videoStatus').textContent = message; },
+    lectureChange: actif => { filmPrioritaire = actif; suivreAlarme(); } });
+  function suivreAlarme() { if (state) alarme?.suivre(state.autodestruction, state.countdown?.endAt, liaisonActive && soundEnabled && state.diffusionAutorisee && !filmPrioritaire); }
   const typing = new Map();
   const notification = (message, error = false) => {
     $('toast').textContent = message; $('toast').classList.toggle('error', error); $('toast').classList.add('visible');
@@ -16,7 +21,7 @@
   };
   const safeGet = key => { try { return localStorage.getItem(key); } catch { return null; } };
   const safeSave = () => { try { localStorage.setItem(storageKey, JSON.stringify(engine.sauvegarde())); } catch { notification('Sauvegarde locale indisponible.', true); } };
-  function connection(connected, label) { $('connectionDot').classList.toggle('offline', !connected); $('connectionLabel').textContent = label; }
+  function connection(connected, label) { liaisonActive = connected; $('connectionDot').classList.toggle('offline', !connected); $('connectionLabel').textContent = label; if (!connected) { alarme?.arreter(); film.arreter(); } }
   function beep(frequency = 660, duration = .07, volume = .06) {
     if (!audio || !soundEnabled || audio.state !== 'running') return;
     const oscillator = audio.createOscillator(), gain = audio.createGain(); oscillator.type = 'sine'; oscillator.frequency.value = frequency;
@@ -36,7 +41,7 @@
   function act(action) {
     if (['command', 'reply', 'hack', 'revoke'].includes(action.type) && role === 'gm') action.playerId = currentOperator;
     if (local) {
-      try { engine.agir('gm', '', action); state = engine.snapshot('gm'); safeSave(); render(); return Promise.resolve(true); }
+      try { engine.agir('gm', '', action, { appareilId: 'atelier-local' }); state = engine.snapshot('gm', '', 'atelier-local'); safeSave(); render(); return Promise.resolve(true); }
       catch (error) { notification(error.message, true); return Promise.resolve(false); }
     }
     const next = requestQueue.then(async () => {
@@ -55,12 +60,31 @@
     if ($(formId)?.dataset.dirty === 'true' || document.activeElement === $(id)) return;
     $(id).value = value ?? '';
   }
+  function reglerVisibiliteCode(id, visible = false) {
+    const saisie = $(id), bouton = document.querySelector(`[data-code="${id}"]`);
+    saisie.type = visible ? 'text' : 'password';
+    bouton.textContent = visible ? 'Masquer' : 'Afficher';
+    bouton.setAttribute('aria-label', bouton.textContent + ' le ' + bouton.dataset.libelle);
+    bouton.setAttribute('aria-pressed', String(visible));
+  }
+  document.querySelectorAll('[data-code]').forEach(bouton => {
+    bouton.onclick = () => reglerVisibiliteCode(bouton.dataset.code, $(bouton.dataset.code).type === 'password');
+  });
+  function masquerCodes() {
+    document.querySelectorAll('[data-code]').forEach(bouton => reglerVisibiliteCode(bouton.dataset.code));
+  }
   function renderDocument(force = false) {
     if (role !== 'gm' || !state) return;
     if ($('documentForm').dataset.dirty === 'true' && !force) return;
-    const doc = state.documents.find(d => d.id === $('documentSelect').value); if (!doc) return;
-    $('documentTitle').value = doc.title; $('documentAccess').value = doc.access; $('documentCode').value = doc.code; $('documentBody').value = doc.body;
-    $('documentCode').disabled = doc.access !== 'code';
+    const doc = state.documents.find(d => d.id === $('documentSelect').value);
+    $('documentId').value = doc?.id || ''; $('documentId').readOnly = !!doc;
+    if (doc) $('documentId').removeAttribute('pattern'); else $('documentId').pattern = '[a-z](?:[a-z0-9]|-){0,63}';
+    $('documentLecture').textContent = doc ? 'Commande de lecture : READ ' + doc.id : 'Identifiant pour READ : lettres minuscules sans accent, chiffres et tirets ; commencer par une lettre.';
+    $('documentTitle').value = doc?.title || ''; $('documentAccess').value = doc?.access || 'crew'; $('documentCode').value = doc?.code || ''; $('documentBody').value = doc?.body || '';
+    $('documentCode').disabled = $('documentAccess').value !== 'code'; $('documentCode').required = !doc && $('documentAccess').value === 'code';
+    $('afficherCodeDossier').disabled = $('documentCode').disabled;
+    if (force) reglerVisibiliteCode('documentCode');
+    $('documentEnregistrer').textContent = doc ? 'Enregistrer le dossier' : 'Créer le dossier';
   }
   function appendMessage(message, animated) {
     const item = document.createElement('div'); item.className = 'log-message ' + message.kind; item.dataset.messageId = message.id;
@@ -87,6 +111,16 @@
     }
     firstRender = false;
   }
+  function renderProtocole(force = false) {
+    if (role !== 'gm' || !state) return;
+    options($('protocoleSelect'), [['nouveau', 'Nouveau protocole…'], ...state.protocoles.map(pr => [pr.id, pr.nom + (pr.actif ? '' : ' · Inactif')])]);
+    if ($('protocoleForm').dataset.dirty === 'true' && !force) return;
+    if (force) reglerVisibiliteCode('protocoleCode');
+    const pr = state.protocoles.find(element => element.id === $('protocoleSelect').value);
+    $('protocoleForm').dataset.id = pr?.id || $('protocoleForm').dataset.id || 'protocole-' + crypto.randomUUID();
+    for (const [champ, cle, defaut] of [['Nom', 'nom', ''], ['Code', 'code', ''], ['Message', 'message', ''], ['Effet', 'effet', 'message'], ['Minutes', 'minutes', 10], ['Portee', 'portee', 'equipage']]) $('protocole' + champ).value = pr?.[cle] ?? defaut;
+    $('protocoleActif').checked = pr?.actif || false; $('supprimerProtocole').classList.toggle('hidden', !pr);
+  }
   function render() {
     if (!state) return;
     $('join').classList.add('hidden'); $('workspace').classList.remove('hidden');
@@ -101,7 +135,8 @@
       const players = Object.values(state.players); options($('operator'), players.map(p => [p.id, p.name]));
       if (!state.players[currentOperator]) currentOperator = players[0]?.id || '';
       $('operator').value = currentOperator; options($('trackerTarget'), [['all', 'Tout l’équipage'], ...players.map(p => [p.id, p.name])]); $('trackerTarget').value = state.tracker.target;
-      options($('documentSelect'), state.documents.map(d => [d.id, d.title])); renderDocument();
+      options($('documentSelect'), [['', 'Nouveau dossier…'], ...state.documents.map(d => [d.id, d.title])]); renderDocument();
+      renderProtocole();
       fill('vesselInput', state.config.vessel, 'configForm'); fill('statusInput', state.config.status, 'configForm'); fill('adminPassword', state.config.adminPassword, 'passwordForm');
       $('crtToggle').checked = state.config.crt; $('glitchToggle').checked = state.config.glitches;
       const p = selectedPlayer(), waiting = p?.request;
@@ -114,6 +149,13 @@
       $('resetButton').textContent = local ? 'Réinitialiser la maquette' : 'Réinitialiser la table';
     }
     const p = selectedPlayer(); $('sessionName').textContent = p?.name || 'EN ATTENTE';
+    document.body.classList.toggle('alerte-autodestruction', !!state.autodestruction);
+    $('autoDestruction').classList.toggle('hidden', !state.autodestruction);
+    $('autoDestructionMessage').textContent = state.autodestruction?.message || '';
+    $('diffusionButton').setAttribute('aria-pressed', String(state.diffusionAutorisee));
+    $('diffusionButton').textContent = state.diffusionAutorisee ? 'Ne plus diffuser ici' : 'Diffuser l’alarme ici';
+    film.suivre(state.autodestruction, state.countdown?.endAt, liaisonActive && soundEnabled && state.diffusionAutorisee);
+    suivreAlarme();
     $('accessBadge').textContent = p?.access === 'admin' ? 'ADMINISTRATEUR' : 'ÉQUIPAGE'; $('accessBadge').classList.toggle('admin', p?.access === 'admin');
     $('commandInput').disabled = !p; document.querySelectorAll('.terminal-shortcuts button').forEach(b => b.disabled = !p);
     $('terminalScreen').classList.toggle('crt-off', !state.config.crt); $('radarScreen').classList.toggle('crt-off', !state.config.crt);
@@ -128,17 +170,33 @@
     document.querySelectorAll('[data-instrument]').forEach(b => b.classList.toggle('selected', b.dataset.instrument === instrument));
   }
   document.querySelectorAll('[data-panel]').forEach(button => button.onclick = () => {
+    masquerCodes();
     document.querySelectorAll('[data-panel]').forEach(b => { const selected = b === button; b.setAttribute('aria-selected', String(selected)); $('panel-' + b.dataset.panel).classList.toggle('hidden', !selected); });
     if (button.dataset.panel === 'tracker') chooseInstrument('tracker'); else chooseInstrument('muthur');
   });
   document.querySelectorAll('[data-instrument]').forEach(button => button.onclick = () => chooseInstrument(button.dataset.instrument));
-  $('previewButton').onclick = () => { preview = !preview; render(); };
+  $('previewButton').onclick = () => { preview = !preview; masquerCodes(); render(); };
   $('operator').onchange = () => { currentOperator = $('operator').value; $('hackOverlay').dataset.until = '0'; render(); };
   $('soundButton').onclick = async () => {
-    try { if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)(); await audio.resume(); soundEnabled = !soundEnabled; $('soundButton').setAttribute('aria-pressed', String(soundEnabled)); $('soundButton').textContent = soundEnabled ? 'Son activé' : 'Son désactivé'; if (soundEnabled) beep(780, .08, .05); }
+    try { if (!audio) { audio = new (window.AudioContext || window.webkitAudioContext)(); alarme = AlienAlarme.creer({ audio, signaler: message => { $('alarmStatus').textContent = message; } }); } await audio.resume(); soundEnabled = !soundEnabled; if (!soundEnabled) alarme?.arreter(); $('soundButton').setAttribute('aria-pressed', String(soundEnabled)); $('soundButton').textContent = soundEnabled ? 'Son activé' : 'Son désactivé'; if (soundEnabled) beep(780, .08, .05); render(); }
     catch { notification('Le navigateur n’a pas autorisé le son.', true); }
   };
+  $('diffusionButton').onclick = () => act({ type: 'diffusion', actif: !state?.diffusionAutorisee });
+  $('reprendreVideo').onclick = () => film.reprendre();
+  $('protocoleSelect').onchange = () => { $('protocoleForm').dataset.dirty = 'false'; $('protocoleForm').dataset.id = ''; renderProtocole(true); };
+  $('protocoleForm').oninput = () => { $('protocoleForm').dataset.dirty = 'true'; };
+  $('protocoleForm').onsubmit = async event => {
+    event.preventDefault(); const id = $('protocoleForm').dataset.id;
+    const protocole = { id, nom: $('protocoleNom').value, code: $('protocoleCode').value.trim(), message: $('protocoleMessage').value, effet: $('protocoleEffet').value,
+      minutes: Number($('protocoleMinutes').value), portee: $('protocolePortee').value, actif: $('protocoleActif').checked };
+    if (await act({ type: 'protocole', protocole })) { $('protocoleForm').dataset.dirty = 'false'; renderProtocole(true); $('protocoleSelect').value = id; renderProtocole(true); notification('Protocole enregistré.'); }
+  };
+  $('supprimerProtocole').onclick = async () => {
+    if (!confirm('Supprimer ce protocole ? Une séquence déjà lancée reste active jusqu’à son annulation.')) return;
+    if (await act({ type: 'supprimer-protocole', id: $('protocoleSelect').value })) { $('protocoleForm').dataset.dirty = 'false'; $('protocoleForm').dataset.id = ''; $('protocoleSelect').value = 'nouveau'; renderProtocole(true); }
+  };
   $('commandForm').onsubmit = event => { event.preventDefault(); const text = $('commandInput').value; $('commandInput').value = ''; act({ type: 'command', text }); };
+  $('commandInput').oninput = () => { $('commandInput').type = /^(LOGIN|CODE|ORDERS)\s/i.test($('commandInput').value) ? 'password' : 'text'; };
   document.querySelectorAll('[data-command]').forEach(button => button.onclick = () => act({ type: 'command', text: button.dataset.command }));
   $('loginButton').onclick = () => { $('loginPassword').value = ''; $('loginDialog').showModal(); $('loginPassword').focus(); };
   $('cancelLogin').onclick = () => $('loginDialog').close();
@@ -146,10 +204,15 @@
   for (const id of ['configForm', 'passwordForm', 'documentForm']) $(id).addEventListener('input', () => $(id).dataset.dirty = 'true');
   $('replyForm').onsubmit = async event => { event.preventDefault(); if (await act({ type: 'reply', text: $('replyText').value })) $('replyText').value = ''; };
   $('configForm').onsubmit = async event => { event.preventDefault(); const c = { vessel: $('vesselInput').value, status: $('statusInput').value }; if (await act({ type: 'config', config: c })) { $('configForm').dataset.dirty = 'false'; render(); notification('État du vaisseau enregistré.'); } };
-  $('passwordForm').onsubmit = async event => { event.preventDefault(); if (await act({ type: 'config', config: { adminPassword: $('adminPassword').value } })) { $('passwordForm').dataset.dirty = 'false'; render(); notification('Mot de passe enregistré.'); } };
+  $('passwordForm').onsubmit = async event => { event.preventDefault(); if (await act({ type: 'config', config: { adminPassword: $('adminPassword').value } })) { $('passwordForm').dataset.dirty = 'false'; reglerVisibiliteCode('adminPassword'); render(); notification('Mot de passe enregistré.'); } };
   $('documentSelect').onchange = () => { $('documentForm').dataset.dirty = 'false'; renderDocument(true); };
-  $('documentAccess').onchange = () => $('documentCode').disabled = $('documentAccess').value !== 'code';
-  $('documentForm').onsubmit = async event => { event.preventDefault(); const d = { title: $('documentTitle').value, access: $('documentAccess').value, code: $('documentCode').value, body: $('documentBody').value }; if (await act({ type: 'document', id: $('documentSelect').value, document: d })) { $('documentForm').dataset.dirty = 'false'; render(); notification('Dossier enregistré.'); } };
+  $('documentAccess').onchange = () => { $('documentCode').disabled = $('documentAccess').value !== 'code'; $('documentCode').required = !$('documentSelect').value && $('documentAccess').value === 'code'; $('afficherCodeDossier').disabled = $('documentCode').disabled; };
+  $('documentForm').onsubmit = async event => {
+    event.preventDefault(); const nouveau = !$('documentSelect').value, id = nouveau ? $('documentId').value.trim() : $('documentSelect').value;
+    const d = { title: $('documentTitle').value, access: $('documentAccess').value, code: $('documentCode').disabled ? '' : $('documentCode').value, body: $('documentBody').value };
+    const action = nouveau ? { type: 'creer-document', document: { id, ...d } } : { type: 'document', id, document: d };
+    if (await act(action)) { $('documentForm').dataset.dirty = 'false'; $('documentSelect').value = id; renderDocument(true); notification(nouveau ? 'Dossier créé.' : 'Dossier enregistré.'); }
+  };
   $('crtToggle').onchange = () => act({ type: 'config', config: { crt: $('crtToggle').checked } }); $('glitchToggle').onchange = () => act({ type: 'config', config: { glitches: $('glitchToggle').checked } });
   $('hackSuccess').onclick = () => act({ type: 'hack', success: true }); $('hackFail').onclick = () => act({ type: 'hack', success: false });
   $('revokeButton').onclick = () => act({ type: 'revoke' });
@@ -165,6 +228,7 @@
   $('resetButton').onclick = async () => { if (!confirm('Réinitialiser les dialogues, codes, accès et effets de cette table Alien ?')) return; if (await act({ type: 'reset' })) { for (const id of ['configForm', 'documentForm', 'passwordForm']) $(id).dataset.dirty = 'false'; render(); notification('Table réinitialisée.'); } };
 
   const radar = $('radarCanvas'), ctx = radar.getContext('2d'), noise = $('noiseCanvas'), nctx = noise.getContext('2d'), noiseData = nctx.createImageData(160, 120);
+  let signatureContacts = '', positionsContacts = [];
   function drawRadar(time) {
     if (instrument !== 'tracker' || !state) return;
     const t = trackerState(), rect = radar.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
@@ -179,10 +243,13 @@
     const angle = time / (7000 - t.intensity * 40) * Math.PI * 2;
     for (let i = 30; i >= 0; i--) { const a = angle - i * .013; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, radius, a, a + .015); ctx.closePath(); ctx.fillStyle = 'rgba(128,228,157,' + (.17 * (1 - i / 31)) + ')'; ctx.fill(); }
     ctx.strokeStyle = '#9bddae99'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius); ctx.stroke();
-    const anomaly = t.anomalyUntil > Date.now(), count = t.contacts + (anomaly ? 1 : 0), tone = t.intensity > 89 ? '#e7b17d' : '#b9f8c9';
+    const anomaly = t.anomalyUntil > Date.now(), signature = [t.seed, t.contacts, t.proximity, anomaly].join(':');
+    if (signature !== signatureContacts) { positionsContacts = AlienCore.positionsDuDetecteur(t, anomaly); signatureContacts = signature; }
+    const count = positionsContacts.length, tone = t.intensity > 89 ? '#e7b17d' : '#b9f8c9';
     for (let i = 0; i < count; i++) {
-      const a = i * 2.39996 + t.seed * .67 + Math.sin(time / 800 + i) * t.intensity / 1000;
-      const r = radius * (.2 + (1 - t.proximity / 100) * .57) * (.75 + (i % 3) * .12);
+      const point = positionsContacts[i];
+      const a = Math.atan2(point.y, point.x) + Math.sin(time / 800 + i) * t.intensity / 1000;
+      const r = radius * Math.hypot(point.x, point.y);
       const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r, pulse = .6 + Math.sin(time / (500 - t.intensity * 3) + i) * .3;
       ctx.globalAlpha = pulse; ctx.shadowColor = tone; ctx.shadowBlur = 14; ctx.fillStyle = tone; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
       ctx.strokeStyle = tone; ctx.globalAlpha = .12; ctx.beginPath(); ctx.arc(x, y, 8 + Math.sin(time / 600 + i) * 3, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1;
@@ -204,15 +271,21 @@
     }
     const until = Number($('hackOverlay').dataset.until || 0), activeHack = Date.now() < until;
     $('hackOverlay').classList.toggle('hidden', !activeHack);
+    $('terminalScreen').classList.toggle('hack-actif', activeHack);
+    $('terminalScreen').classList.toggle('hack-refuse', activeHack && $('hackOverlay').classList.contains('failure'));
     if (activeHack) { const elapsed = Date.now() - Number($('hackOverlay').dataset.start), progress = Math.min(100, elapsed / 70); $('hackProgress').style.width = progress + '%'; const lines = ['> INITIALISATION DU CANAL', '> ANALYSE DES AUTORISATIONS', '> RECHERCHE DE MOT DE PASSE…', '> VÉRIFICATION DES CONTRE-MESURES', '> NÉGOCIATION DES PRIVILÈGES']; $('hackText').textContent = lines.slice(0, Math.min(5, 1 + Math.floor(progress / 20))).join('\n') + '\n\n' + (progress > 80 ? ($('hackOverlay').classList.contains('failure') ? 'ACCÈS REFUSÉ.' : 'ACCÈS ACCORDÉ.') : 'TRAITEMENT ' + Math.floor(progress) + '%'); }
     const glitch = state.config.glitches && !reduceMotion;
+    $('terminalScreen').classList.toggle('hack-parasites', activeHack && glitch);
     $('noiseCanvas').style.display = glitch ? 'block' : 'none';
     if (instrument === 'muthur' && glitch && time - lastNoise > 100) {
       lastNoise = time; for (let i = 0; i < noiseData.data.length; i += 4) { const v = Math.random() * 255; noiseData.data[i] = v; noiseData.data[i + 1] = v; noiseData.data[i + 2] = v; noiseData.data[i + 3] = 255; } nctx.putImageData(noiseData, 0, 0);
-      const burst = activeHack ? Math.sin(time / 130) * 3 : Math.floor(time / 160) % 47 === 0 ? 2 : 0; $('terminalScreen').style.setProperty('--glitch-shift', burst + 'px'); $('noiseCanvas').style.opacity = activeHack ? '.08' : '.025';
+      const phase = Math.floor(time / 140) % 61;
+      const burst = activeHack ? Math.sin(time / 130) * 5 : phase === 55 ? 3 : phase === 56 ? -3 : phase === 57 ? 1 : 0;
+      $('terminalScreen').style.setProperty('--glitch-shift', burst + 'px');
+      $('noiseCanvas').style.opacity = activeHack ? '.12' : phase >= 55 && phase <= 57 ? '.18' : '.09';
     } else if (!glitch) $('terminalScreen').style.setProperty('--glitch-shift', '0px');
-    drawRadar(time); const c = state.countdown; $('countdown').classList.toggle('hidden', !c);
-    if (c) { const seconds = Math.max(0, Math.ceil((c.endAt - Date.now()) / 1000)); $('countdownTime').textContent = String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0'); }
+    drawRadar(time); const c = state.countdown; $('countdown').classList.toggle('hidden', !c || !!state.autodestruction);
+    if (c) { const seconds = Math.max(0, Math.ceil((c.endAt - Date.now()) / 1000)); const valeur = String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0'); $('countdownTime').textContent = valeur; $('autoDestructionTime').textContent = valeur; }
   }
   async function stream() {
     while (token) {
@@ -224,12 +297,13 @@
         while (true) { const part = await reader.read(); if (part.done) break; buffer += decoder.decode(part.value, { stream: true }); let end;
           while ((end = buffer.indexOf('\n\n')) >= 0) { const block = buffer.slice(0, end); buffer = buffer.slice(end + 2); const line = block.split('\n').find(s => s.startsWith('data: ')); if (line) { state = JSON.parse(line.slice(6)); render(); } }
         }
+        connection(false, 'RECONNEXION…');
       } catch { connection(false, 'RECONNEXION…'); }
       await new Promise(resolve => setTimeout(resolve, 1500));
     }
   }
   async function connect() {
-    const result = await api('/api/session'); role = result.role; playerId = result.playerId || '';
+    const result = await api('/api/session'); role = result.role;
     state = await api('/api/state');
     if (role === 'gm') { const table = await api('/api/table'); $('tableCode').textContent = 'Code de table : ' + table.code; $('playerAddress').textContent = table.addresses.join(' · '); }
     $('demoCredentials').classList.toggle('hidden', !local); render(); stream();
@@ -243,8 +317,8 @@
     chooseInstrument(new URLSearchParams(location.search).get('outil'));
     if (local) {
       let saved; try { saved = JSON.parse(safeGet(storageKey) || 'null'); } catch { notification('Ancienne sauvegarde illisible : nouvel atelier.', true); }
-      if (saved) { saved.tracker.power = false; saved.countdown = null; Object.values(saved.players || {}).forEach(p => p.cue = null); }
-      engine = AlienCore.créer(saved); engine.inscrire('reyes', 'REYES'); engine.inscrire('sato', 'SATO'); state = engine.snapshot('gm'); currentOperator = 'reyes';
+      if (saved) { saved.tracker.power = false; saved.countdown = null; saved.autodestruction = null; saved.diffusionAlarme = null; Object.values(saved.players || {}).forEach(p => p.cue = null); }
+      engine = AlienCore.créer(saved); engine.inscrire('reyes', 'REYES'); engine.inscrire('sato', 'SATO'); state = engine.snapshot('gm', '', 'atelier-local'); currentOperator = 'reyes';
       connection(true, 'ATELIER LOCAL'); $('tableCode').textContent = 'Mode fichier : aperçu meneur et joueur dans ce navigateur.'; $('playerAddress').textContent = 'Le serveur local permet la connexion des tablettes.'; render();
     } else {
       const fragment = new URLSearchParams(location.hash.slice(1)); token = fragment.get('mj') || ''; if (token) history.replaceState(null, '', location.pathname + location.search);
@@ -254,5 +328,5 @@
     }
     requestAnimationFrame(frame);
   }
-  window.addEventListener('pagehide', () => streamAbort?.abort()); start().catch(error => notification(error.message, true));
+  window.addEventListener('pagehide', () => { liaisonActive = false; soundEnabled = false; streamAbort?.abort(); film.detruire(); alarme?.detruire(); if (audio) void audio.close().catch(() => {}); }); start().catch(error => notification(error.message, true));
 })();

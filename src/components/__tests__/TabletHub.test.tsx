@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, fireEvent, screen, cleanup } from '@testing-library/react';
 import TabletHub from '../TabletHub';
 
 // Types strictly defined for the mock appBridge
@@ -147,11 +147,22 @@ vi.mock('../../modules/session/hooks/useHubSync', () => ({
 
 describe('TabletHub', () => {
   beforeEach(() => {
+    cleanup();
     vi.clearAllMocks();
   });
 
   it('renders without crashing', () => {
     const { container } = render(<TabletHub />);
     expect(container).toBeTruthy();
+  });
+
+  it('ouvre un emplacement générique vide puis revient au Direct', () => {
+    render(<TabletHub />);
+    fireEvent.click(screen.getByRole('button', { name: 'Modules du jeu' }));
+    expect(screen.getByText('Aucun module ouvert par le meneur.')).toBeTruthy();
+    expect(screen.queryByText(/MU\/TH\/UR/)).toBeNull();
+    expect(screen.getByRole('button', { name: 'Modules du jeu' }).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(screen.getByRole('button', { name: 'Direct' }));
+    expect(screen.queryByText('Aucun module ouvert par le meneur.')).toBeNull();
   });
 });

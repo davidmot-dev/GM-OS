@@ -16,7 +16,7 @@ const DEFAULT_RANGES: TacticalConfig['ranges'] = {
 };
 
 
-export type RuleEngineSection = 'core' | 'combat' | 'tactical' | 'ai' | 'notebook' | 'loot';
+export type RuleEngineSection = 'core' | 'combat' | 'tactical' | 'ai' | 'notebook' | 'loot' | 'modules-du-jeu';
 
 export function useRuleEngine() {
     const { t } = useTranslation(['modules']);

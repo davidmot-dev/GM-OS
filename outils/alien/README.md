@@ -2,15 +2,26 @@
 
 Première application séparée demandée par David le 13/10/2026. Deux outils :
 **MU/TH/UR 6000** et un **détecteur de tension** dont le meneur règle l'intensité.
-Aucune installation de paquet nécessaire. Les visuels et sons sont originaux,
-produits par CSS, canvas et Web Audio ; aucune ressource réseau externe.
+Aucune installation de paquet nécessaire. Les effets sont produits par CSS,
+canvas et Web Audio ; la vidéo du Nostromo est le fichier fourni par David,
+conservé localement. Aucune ressource réseau externe n'est nécessaire.
 
-**Version 0.1.0 — prototype.** Retour de David, le 13/10/2026 :
+**Version 0.3.0 — 15/10/2026.** Protocoles à codes, messages type, alarme
+d'autodestruction et vidéo du Nostromo. Retour de David sur la version 0.1 du 13/10/2026 :
 *« c'est un bon début documente »*. Ce retour valide la direction de la
 première version ; les essais sur les tablettes physiques et l'intégration
 au pilote Alien restent à faire.
 
 ## Essayer sans serveur
+
+Pour l'aperçu React `scratch/muthur-v1/apercu.html`, la préparation est désormais
+sauvegardée automatiquement dans le navigateur : réglages, dossiers et
+protocoles. Le bandeau du **Poste meneur** propose **Exporter la configuration**
+et **Importer une configuration**, pour garder un JSON ou changer de poste.
+Voir le [parcours de sauvegarde](modules/muthur/README.md#retrouver-sa-préparation-à-la-prochaine-ouverture).
+L'export contient les secrets du MJ ; les dialogues et alertes en cours ne
+sont pas enregistrés. Cette sauvegarde de préparation est distincte du mode
+fichier du prototype ci-dessous et de la future persistance du Tablet Hub.
 
 Ouvrir [index.html](index.html) dans Chrome ou Edge. Le mode fichier est un **atelier local** :
 poste meneur, aperçu joueur et deux opérateurs fictifs, REYES et SATO. Il garde
@@ -28,6 +39,14 @@ Saisir `CODE 0042`, puis `READ ordre`. `CODE 42` est refusé.
 `HACK` crée une demande : le meneur autorise ou repousse l'intrusion, avec une
 séquence animée. HELP, STATUS, LIST, READ, LOGIN, CODE, /M et CLEAR sont disponibles.
 Les mots de passe saisis ne restent pas visibles dans le dialogue.
+
+Au refus d'un HACK, les contre-mesures renforcent les effets activés :
+balayage/halo pour CRT, grain et perturbations du texte pour Parasites.
+Le refus utilise un halo discret, un balayage plus lent et un bruit atténué
+pour préserver la lecture ; son bandeau de résultat reste fixe.
+Les effets passent au-dessus du panneau de piratage du prototype ; dans
+le module, le cadre du journal reste fixe pendant le défilement des messages.
+Le résultat reste lisible et les mouvements réduits arrêtent ces animations.
 
 ### Petit parcours de découverte
 
@@ -77,20 +96,29 @@ utiliser la révocation lorsque cela fait partie du scénario.
 
 Le meneur peut saisir des commandes dans l'aperçu de l'opérateur sélectionné.
 Cette possibilité sert à essayer le terminal et à préparer la mise en scène.
-Les dossiers sont actuellement les trois exemples éditables ; l'ajout et la
-suppression de dossiers restent des évolutions possibles.
+Pour ajouter un dossier, choisir **Nouveau dossier…** dans la liste des
+dossiers (onglet **Accès** du prototype, ou **Dossiers** du module), renseigner
+son identifiant, son titre, son contenu et sa protection, puis **Créer le
+dossier**. Par exemple, l'identifiant `rapport-medical` se lit avec
+`READ rapport-medical`. Utiliser une lettre minuscule initiale, puis des
+lettres minuscules sans accent, chiffres ou tirets, sur 64 caractères au plus.
+L'identifiant reste fixe après création ; le titre et le contenu restent
+modifiables. Le code est obligatoire pour un nouveau dossier à code.
+Les dossiers existants sont conservés ; les identifiants en double et les
+codes réservés aux protocoles sont refusés. La suppression et le classement
+des dossiers restent à ajouter.
 
 ### Piloter le détecteur
 
 | Réglage | Effet |
 | --- | --- |
-| Activation | Démarre ou arrête le radar et ses bips |
+| Activation | Démarre ou arrête le radar et ses bips ; nouveau placement aléatoire à chaque démarrage |
 | Intensité, de 0 à 100 | Cadence des bips, vitesse du balayage et agitation des échos |
 | Contacts, de 0 à 9 | Nombre de points scénarisés |
-| Proximité | Rapproche ou éloigne les points du centre, sans mesure physique |
+| Proximité | Définit la zone de placement : valeur élevée = contacts proches du centre, sans mesure physique |
 | Parasites du radar | Intensité de la bande parasite, si les parasites sont autorisés |
 | Volume des bips | Niveau sonore indépendant de l'intensité dramatique |
-| Faux écho | Ajoute un contact pendant neuf secondes et redistribue les échos |
+| Faux écho | Ajoute un contact pendant neuf secondes sans redistribuer les autres échos |
 | Destinataires | Tout l'équipage ou un seul opérateur |
 
 Les préréglages **Calme / Inquiétant / Menaçant / Critique** posent
@@ -99,10 +127,94 @@ plus fin. À zéro, le radar peut rester allumé mais ne produit pas de bips.
 À zéro contact, il ne produit pas de bips non plus, sauf pendant un faux écho.
 Le réglage ne lance aucun jet et ne modifie aucune fiche de personnage.
 
+Les contacts sont tirés au hasard dans la zone définie par la proximité,
+avec des directions et des distances variées. Leur répartition est commune
+aux appareils autorisés et reste stable jusqu'à une nouvelle activation
+(l'agitation visuelle suit toujours l'intensité). Changer le nombre de
+contacts conserve les premiers ; le faux écho s'ajoute sans déplacer les autres.
+Le volume et l'intensité ne provoquent pas de nouveau tirage.
+
+Essais du placement : `node --test outils/alien/verification-detecteur.mjs`.
+
+Les réglages **Écran CRT** et **Parasites** sont indépendants. Le CRT renforce
+les lignes de balayage, la trame phosphore, le halo et l'assombrissement des
+bords ; les parasites rendent le grain continu et les brèves perturbations du
+texte plus visibles, particulièrement pendant le piratage.
+
 Le son s'active sur chaque appareil par un clic. Les effets de mouvement
 réduits demandés par le navigateur diminuent l'animation du texte et les
-parasites ; le radar reste animé. Les comptes à rebours sont visuels dans
-cette version : il n'y a pas encore d'alarme sonore globale dédiée.
+parasites ; le radar reste animé. Le compte à rebours manuel reste visuel.
+Le protocole d'autodestruction possède une sirène et des annonces vocales
+sur le seul appareil choisi, comme décrit ci-dessous.
+
+## Préparer des messages type et des codes d'action
+
+Dans **Protocoles**, choisir un protocole ou **Nouveau protocole…**, puis
+renseigner son nom, son code exact, le message type, l'effet et ses
+destinataires. Cocher **Code actif** et enregistrer. Le joueur saisit
+`CODE votre_code`. La casse et les zéros initiaux sont conservés.
+
+| Exemple fourni dans une nouvelle table | Effet |
+| --- | --- |
+| `CODE PORTES-OUVRIR` | Message d'ouverture et état fictif « Portes ouvertes ». |
+| `CODE PORTES-FERMER` | Message de fermeture et état fictif « Portes fermées ». |
+| `CODE OMEGA-10` | Message d'évacuation, interface d'urgence, film entier et compte à rebours d'au moins 12 min 56 s. |
+| `CODE OMEGA-STOP` | Annulation de l'autodestruction et retour à l'interface normale. |
+
+Un effet **Message seulement** permet n'importe quelle réponse préparée.
+Le message peut être privé à l'opérateur ou envoyé à tout l'équipage connecté.
+L'alerte d'autodestruction et l'état des portes sont communs aux utilisateurs
+autorisés du terminal. Les protocoles, leurs codes et les messages non encore
+déclenchés ne sont pas envoyés aux joueurs.
+
+Les codes sont modifiables. Un code de protocole ne peut pas être celui
+d'un autre protocole ou d'un dossier protégé. Les exemples ci-dessus sont
+connus : les personnaliser avant de jouer. Une ancienne table v1 garde ses
+données et commence avec une liste de protocoles vide ; aucun nouveau code
+actif n'y est ajouté automatiquement.
+
+À côté de **Code du protocole**, **Code du dossier** et **Mot de passe
+administrateur**, le bouton **Afficher** permet au MJ de lire la valeur ;
+**Masquer** rétablit les points. Cela ne valide pas le formulaire et ne
+modifie pas la valeur. Un changement de sélection ou de panneau la remasque.
+La saisie sensible du joueur reste masquée.
+
+### Autodestruction : sirène et annonces chaque minute
+
+Sur **l'unique appareil choisi pour le son**, cliquer **Diffuser l’alarme ici**,
+puis activer le son. Choisir un autre appareil transfère la diffusion et
+arrête la sirène et la voix sur le précédent. Les autres gardent le décompte
+visuel. Ce choix peut se faire sur le poste du MJ ou une tablette autorisée.
+
+Le code lance le film fourni par David. Sa durée mesurée est **12 min 56 s** :
+à sa demande, l'alerte est prolongée à cette durée si le protocole prévoit
+moins. Une durée supérieure reste respectée. Le nom historique `OMEGA-10`
+est un code modifiable et ne fixe pas la durée effective.
+
+La bande-son du film est réservée à l'appareil choisi, après activation
+locale du son. Les autres appareils montrent la vidéo muette. La sirène
+et la voix de MU/TH/UR se taisent pendant la lecture ; elles reprennent à
+la fin si du temps reste dans l'alerte. Retaper le code ne relance ni le
+film ni la durée. L'annulation ferme la vidéo et coupe son son.
+
+Le fichier est copié sans modification dans `medias/`, avec sa
+[provenance et sa durée](medias/README.md). Il n'est pas téléchargé depuis
+un site pendant la séance. Si le navigateur refuse la lecture automatique,
+le bouton **Reprendre la vidéo** permet de la lancer. Un fichier indisponible
+laisse le décompte et l'alarme de secours fonctionner. Après reconnexion, la
+vidéo rejoint le temps écoulé, au lieu de repartir du début.
+
+Les annonces de secours suivent le temps restant, à la minute.
+Après une suspension, seule la minute courante est annoncée ; les minutes
+manquées ne se rejouent pas. Le code d'annulation et l'arrêt MJ coupent
+la séquence. À zéro, la sirène s'arrête ; aucun personnage n'est tué et
+aucune action GM-OS n'est déclenchée.
+
+La voix utilise uniquement une voix française locale proposée par le
+navigateur ([distinction local/distant](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisVoice/localService)).
+Si elle manque, un message le signale ; la sirène et le visuel fonctionnent.
+La qualité sonore et les voix réellement présentes restent à éprouver sur
+les appareils de la table. Aucun fichier audio externe n'est téléchargé.
 
 ## Utiliser comme page web avec les tablettes
 
@@ -190,12 +302,44 @@ restent à essayer. Les captures et données d'essai temporaires ont été suppr
 
 ## Reprendre le développement
 
+**Suite étudiée le 15/10/2026 :** David confirme que cette première version
+fonctionne bien et demande un plan d'amélioration et d'intégration au Tablet
+Hub. Le [plan dédié](../../documentation/Planning/2026-10-15-alien-tablet-hub.md)
+propose une activation séparée des deux outils par le MJ, des destinataires
+par personnage, la connexion existante du Hub et une sauvegarde privée par
+campagne. **Ces fonctions sont proposées, pas encore développées.**
+
+David précise ensuite qu'il souhaite un **emplacement générique par jeu/pilote**.
+Le [plan Modules du jeu](../../documentation/Planning/2026-10-15-modules-du-jeu-tablet-hub.md)
+décrit ce cadre commun : MU/TH/UR et le détecteur en seront les premiers
+modules, avant d'autres outils comme la Table des Terres Médianes pour
+Rêve de Dragon. L'intégration Alien suit désormais ce cadre.
+
+Le [contrat v1 des modules](../../documentation/Architecture/Contrat-des-modules-du-jeu.md)
+définit désormais le raccordement attendu. Un
+[validateur et moteur d'exemple](../modules-du-jeu/README.md) sont disponibles.
+Le manifeste actuel d'Alien décrit toujours le prototype autonome ; sa
+conversion globale n'est pas nécessaire pour cet atelier.
+
+**Adaptation MU/TH/UR livrée le 15/10 :** le
+[module v1](modules/muthur/README.md) possède son propre manifeste
+`alien-muthur`, un adaptateur du moteur existant, des vues React joueur/MJ,
+des types publics et des essais. La reprise des données v1 du prototype est
+prévue par une fonction pure, sans lecture des sauvegardes réelles. Le
+détecteur reste autonome. La sélection des modules dans le pilote, le catalogue
+de métadonnées, leur conservation à l’export/import et l’emplacement vide du
+Hub/cockpit sont maintenant intégrés. Le registre exécutable, le transport privé
+et les accès joueurs restent à construire. Les deux usages continuent à réutiliser
+la même logique de terminal.
+
 | Fichier | Responsabilité |
 | --- | --- |
 | [index.html](index.html) | Écrans et contrôles meneur/joueur |
 | [style.css](style.css) | Habillage Alien, CRT et adaptation aux petits écrans |
 | [app.js](app.js) | Interactions, aperçu local, animations, radar et synthèse sonore |
 | [core.js](core.js) | Commandes, droits fictifs, dossiers et état partagé |
+| [alarme.js](alarme.js) | Sirène et annonces vocales, partagées avec le module React |
+| [video-alerte.js](video-alerte.js) | Lecture du film, synchronisation et priorité audio |
 | [server.mjs](server.mjs) | HTTP, authentification, sauvegarde et diffusion ciblée |
 | [manifest.json](manifest.json) | Identité Alien et points d'entrée des deux accessoires |
 

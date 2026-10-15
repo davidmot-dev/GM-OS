@@ -1,5 +1,6 @@
 import { ECHELLE_D_USURE } from '../../dice/desDUsure';
 import type { GameDriver, DiceRollLogic, DiceConfig } from '../../../types/drivers';
+import { modulesDuPilote } from '../../modulesDuJeu/catalogue';
 import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
 import { sectionDeLaComposante, type SensDuJet } from '../../dice/DescripteurDeJet';
@@ -192,6 +193,11 @@ export function controlerLePilote(
     const constats: ConstatDuPilote[] = [];
     const erreur = (ou: string, message: string) => constats.push({ gravite: 'erreur', ou, message });
     const avertir = (ou: string, message: string) => constats.push({ gravite: 'avertissement', ou, message });
+    const modules = modulesDuPilote({ id: driver.id || '', name: driver.name || '', corpusId: driver.corpusId, ragPath: driver.ragPath, modulesDuJeu: driver.modulesDuJeu });
+    for (const message of modules.erreurs) erreur('modulesDuJeu', message);
+    for (const module of modules.modules) {
+        if (module.disponibilite === 'inconnu' || module.disponibilite === 'incompatible') avertir('modulesDuJeu', `${module.libelle} : module ${module.disponibilite === 'inconnu' ? 'absent du catalogue' : 'incompatible avec le jeu'}.`);
+    }
 
     const sections = template.sections ?? [];
     const idsDeSections = new Set(sections.map(s => s.id));

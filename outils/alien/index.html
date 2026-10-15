@@ -6,7 +6,10 @@
   <meta name="theme-color" content="#080f10">
   <title>ALIEN — MU/TH/UR & détecteur</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="alarme.css">
+  <script src="video-alerte.js" defer></script>
   <script src="core.js" defer></script>
+  <script src="alarme.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -15,6 +18,8 @@
     <div class="vessel"><span class="eyebrow">Vaisseau</span><strong id="vessel">USCSS ORPHEUS</strong></div>
     <div class="connection"><i id="connectionDot"></i><span id="connectionLabel">INITIALISATION</span></div>
     <button id="soundButton" class="subtle" type="button" aria-pressed="false">Son désactivé</button>
+    <button id="diffusionButton" class="subtle" type="button" aria-pressed="false">Diffuser l’alarme ici</button>
+    <small id="alarmStatus" role="status"></small>
   </header>
 
   <section id="join" class="join hidden">
@@ -30,7 +35,7 @@
     </div>
     <div class="layout" id="layout">
       <aside id="controls" class="controls">
-        <nav class="control-tabs" aria-label="Réglages"><button data-panel="terminal" aria-selected="true">Terminal</button><button data-panel="tracker" aria-selected="false">Détecteur</button><button data-panel="access" aria-selected="false">Accès</button></nav>
+        <nav class="control-tabs" aria-label="Réglages"><button data-panel="terminal" aria-selected="true">Terminal</button><button data-panel="tracker" aria-selected="false">Détecteur</button><button data-panel="access" aria-selected="false">Accès</button><button data-panel="protocoles" aria-selected="false">Protocoles</button></nav>
 
         <section class="control-panel" id="panel-terminal">
           <div class="section-heading"><span class="index">01</span><h2>Liaison MU/TH/UR</h2></div>
@@ -44,6 +49,25 @@
           <div class="countdown-controls"><div class="eyebrow">Protocole d’urgence · fictif</div><div class="button-row"><input id="minutes" type="number" min="0.1" max="60" step="0.1" value="2" aria-label="Durée en minutes"><span>min</span><button id="startCountdown" class="danger">Démarrer</button><button id="stopCountdown">Arrêter</button></div></div>
         </section>
 
+        <section class="control-panel hidden" id="panel-protocoles">
+          <div class="section-heading"><h2>Codes & messages type</h2></div>
+          <p class="note">Le joueur saisit CODE suivi du code exact. Un code peut produire un message, agir sur les portes fictives ou lancer/annuler l’autodestruction.</p>
+          <label>Protocole<select id="protocoleSelect"></select></label>
+          <form id="protocoleForm">
+            <label>Nom du protocole<input id="protocoleNom" maxlength="80" required></label>
+            <label for="protocoleCode">Code du protocole</label>
+            <div class="champ-code"><input id="protocoleCode" type="password" maxlength="120" autocomplete="off" autocapitalize="off" spellcheck="false" required><button id="afficherCodeProtocole" type="button" data-code="protocoleCode" data-libelle="code du protocole" aria-controls="protocoleCode" aria-pressed="false" aria-label="Afficher le code du protocole">Afficher</button></div>
+            <label>Message type<textarea id="protocoleMessage" rows="4" maxlength="4000" required></textarea></label>
+            <label>Effet<select id="protocoleEffet"><option value="message">Message seulement</option><option value="ouvrir-portes">Ouvrir les portes</option><option value="fermer-portes">Fermer les portes</option><option value="autodestruction">Lancer l’autodestruction</option><option value="annuler-autodestruction">Annuler l’autodestruction</option></select></label>
+            <label>Durée en minutes<input id="protocoleMinutes" type="number" min="0.1" max="60" step="0.1" value="10" required></label>
+            <p class="note">Le film complet impose au moins 12 min 56 s. Pour une alerte plus longue, la sirène et les annonces reprennent après le film.</p>
+            <label>Destinataires du message<select id="protocolePortee"><option value="equipage">Tout l’équipage</option><option value="operateur">Opérateur seulement</option></select></label>
+            <label><input id="protocoleActif" type="checkbox"> Code actif</label>
+            <button type="submit" class="primary wide">Enregistrer le protocole</button>
+          </form>
+          <button id="supprimerProtocole" class="danger wide">Supprimer le protocole</button>
+        </section>
+
         <section class="control-panel hidden" id="panel-tracker">
           <div class="section-heading"><span class="index">02</span><h2>Faire monter la tension</h2></div>
           <p class="control-description">Le détecteur raconte ce que vous décidez. Aucun lien automatique avec le Stress des personnages.</p>
@@ -53,6 +77,7 @@
           <label>Destinataires<select id="trackerTarget"><option value="all">Tout l’équipage</option></select></label>
           <div class="range-header"><label for="contacts">Contacts</label><output id="contactsValue">3</output></div><input id="contacts" type="range" min="0" max="9" value="3">
           <div class="range-header"><label for="proximity">Proximité scénarisée</label><output id="proximityValue">45</output></div><input id="proximity" type="range" min="0" max="100" value="45">
+          <p class="note">À chaque activation, les contacts sont répartis au hasard dans la zone choisie. Une proximité élevée les rapproche du centre.</p>
           <div class="range-header"><label for="noise">Parasites du radar</label><output id="noiseValue">10</output></div><input id="noise" type="range" min="0" max="100" value="10">
           <div class="range-header"><label for="volume">Volume des bips</label><output id="volumeValue">25</output></div><input id="volume" type="range" min="0" max="100" value="25">
           <button id="anomalyButton" class="wide">Injecter un faux écho · 9 s</button>
@@ -61,10 +86,24 @@
 
         <section class="control-panel hidden" id="panel-access">
           <div class="section-heading"><span class="index">03</span><h2>Codes & dossiers</h2></div>
-          <form id="passwordForm"><label>Mot de passe administrateur<input id="adminPassword" type="password" autocomplete="off" maxlength="120" required></label><button type="submit" class="wide">Enregistrer le mot de passe</button></form>
+          <form id="passwordForm">
+            <label for="adminPassword">Mot de passe administrateur</label>
+            <div class="champ-code"><input id="adminPassword" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" required><button id="afficherMotDePasse" type="button" data-code="adminPassword" data-libelle="mot de passe administrateur" aria-controls="adminPassword" aria-pressed="false" aria-label="Afficher le mot de passe administrateur">Afficher</button></div>
+            <button type="submit" class="wide">Enregistrer le mot de passe</button>
+          </form>
           <p class="note" id="demoCredentials">Exemples de la maquette : PROMETHEUS · code 0042. Modifiables ici.</p>
           <div class="section-heading minor"><h3>Contenu du terminal</h3></div>
-          <form id="documentForm"><label>Dossier<select id="documentSelect"></select></label><label>Titre<input id="documentTitle" maxlength="80" required></label><label>Accès<select id="documentAccess"><option value="crew">Équipage</option><option value="code">Code requis</option><option value="admin">Administrateur</option></select></label><label>Code du dossier<input id="documentCode" autocomplete="off" maxlength="120" placeholder="Ex. 0042"></label><label>Contenu<textarea id="documentBody" rows="5" maxlength="10000"></textarea></label><button class="primary wide" type="submit">Enregistrer le dossier</button></form>
+          <form id="documentForm">
+            <label>Dossier<select id="documentSelect"></select></label>
+            <label>Identifiant du dossier<input id="documentId" maxlength="64" placeholder="rapport-medical" required></label>
+            <p class="note" id="documentLecture"></p>
+            <label>Titre<input id="documentTitle" maxlength="80" required></label>
+            <label>Accès<select id="documentAccess"><option value="crew">Équipage</option><option value="code">Code requis</option><option value="admin">Administrateur</option></select></label>
+            <label for="documentCode">Code du dossier</label>
+            <div class="champ-code"><input id="documentCode" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="120" placeholder="Ex. 0042"><button id="afficherCodeDossier" type="button" data-code="documentCode" data-libelle="code du dossier" aria-controls="documentCode" aria-pressed="false" aria-label="Afficher le code du dossier">Afficher</button></div>
+            <label>Contenu<textarea id="documentBody" rows="5" maxlength="10000"></textarea></label>
+            <button id="documentEnregistrer" class="primary wide" type="submit">Créer le dossier</button>
+          </form>
           <button id="revokeButton" class="wide">Révoquer les accès de l’opérateur</button>
           <details class="table-links"><summary>Connexion des joueurs</summary><p id="tableCode"></p><p id="playerAddress"></p></details>
           <button id="resetButton" class="danger wide">Réinitialiser la maquette</button>
@@ -74,6 +113,7 @@
       <section class="instruments">
         <nav class="instrument-tabs" aria-label="Accessoire"><button data-instrument="muthur" class="selected">MU/TH/UR <span>6000</span></button><button data-instrument="tracker">DÉTECTEUR <span>M314</span></button><span class="live-tag">● EN DIRECT</span></nav>
         <div id="terminalInstrument" class="instrument">
+          <section id="autoDestruction" class="auto-destruction hidden" aria-label="Alerte autodestruction"><h2>AUTODESTRUCTION ENGAGÉE</h2><strong id="autoDestructionTime" role="timer">12:56</strong><video id="videoAlerte" muted playsinline preload="metadata" aria-label="Séquence d’alerte du Nostromo"></video><button id="reprendreVideo" type="button">Reprendre la vidéo</button><p id="videoStatus" role="status"></p><p id="autoDestructionMessage"></p><p>Saisir CODE suivi du code d’annulation pour interrompre la séquence.</p></section>
           <div class="instrument-header"><div><span class="eyebrow">Interface de bord / 6000</span><h1>MU/TH/UR</h1></div><div class="access-badge" id="accessBadge">ÉQUIPAGE</div></div>
           <div class="terminal-screen crt" id="terminalScreen">
             <div class="screen-top"><span id="terminalVessel">USCSS ORPHEUS</span><span>SESSION <b id="sessionName">REYES</b></span></div>

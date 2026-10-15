@@ -280,6 +280,24 @@ for (const { mise, pilote } of JEUX) {
             await photographier(f.locator('div.glass-bento', { has: porte }).first(), `jeu-${mise.slug}-carte-de-campagne`);
         }
 
+        // La sélection des modules d'Alien, depuis le pilote réellement importé.
+        if (mise.corpusId === 'alien') {
+            await f.evaluate(campagne => {
+                const s = (window as unknown as Fenetre).useSessionOSStore.getState();
+                const systeme = s.campaigns.find(c => c.id === campagne)?.system;
+                if (!systeme) throw new Error('Pilote Alien de capture absent.');
+                s.setEditingDriverId(systeme);
+                s.setCurrentView('driver-editor');
+            }, campagne);
+            await f.getByRole('button', { name: /Modules du jeu/ }).click();
+            const modules = f.getByRole('region', { name: 'Modules du jeu', exact: true });
+            await expect(modules).toBeVisible();
+            await expect(modules.getByRole('checkbox')).toHaveCount(2);
+            await photographier(modules, 'jeu-alien-modules');
+            await vue(campagne, 'modules-du-jeu');
+            await expect(f.locator('[data-hub-consultation="modules-du-jeu-mj"]')).toBeVisible();
+        }
+
         // Le panneau de jet de la fiche, composantes retenues.
         if (!mise.composantes) return;
         await vue(campagne, 'players', { joueur: JOUEUR, personnage: personnageDe(mise.slug) });

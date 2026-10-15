@@ -1,0 +1,13 @@
+{
+  "versionContrat": 1,
+  "id": "exemple-message",
+  "libelle": "Message et accusé de lecture",
+  "description": "Moteur de référence réservé aux essais : le MJ publie un texte, chaque PJ accuse sa propre lecture.",
+  "version": "0.1.0",
+  "versionDonnees": 1,
+  "corpusCompatibles": ["exemple"],
+  "commandes": [
+    { "id": "publier", "roles": ["mj"] },
+    { "id": "accuser-lecture", "roles": ["joueur"] }
+  ]
+}

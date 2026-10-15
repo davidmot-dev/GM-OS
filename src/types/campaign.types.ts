@@ -62,6 +62,7 @@ export interface LayoutConfig {
 }
 
 export type CurrentView =
+    | 'modules-du-jeu'
     | 'cockpit'
     | 'campaign-details'
     | 'campaign-editor'

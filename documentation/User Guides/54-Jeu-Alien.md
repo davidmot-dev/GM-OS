@@ -4,6 +4,18 @@
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
+**Ajout du 15/10/2026 — préparation des modules :** dans l’éditeur du pilote, **Modules du jeu**
+permet de conserver ou retirer **MU/TH/UR 6000** et le **Détecteur de mouvement**. Un ancien pilote
+Alien les propose par défaut, même avec un identifiant personnalisé. Le choix est sauvegardé et
+exportable. Le cockpit possède aussi l’entrée **Modules du jeu** pour consulter cette sélection.
+
+![Sélection des modules du pilote Alien, composants réels dans un banc isolé avec données fictives](captures/jeu-alien-modules.jpg)
+
+La capture montre la section de l’éditeur sur un banc hors ligne. **L’ouverture des modules aux
+joueurs n’est pas encore disponible dans GM-OS** : l’onglet du Tablet Hub reste vide. L’adaptateur
+MU/TH/UR est prêt dans les outils externes ; le transport privé, les accès par personnage et
+l’adaptateur du détecteur constituent les étapes suivantes.
+
 ---
 
 ## Le jet — la réserve et le Stress

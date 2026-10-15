@@ -1,5 +1,6 @@
 // src/types/drivers.ts
 import type { InventoryItem } from './player.types';
+import type { ReferenceDeModuleDuJeu } from '../modules/modulesDuJeu/types';
 
 export type DiceRollLogic = 'sum' | 'highest' | 'lowest' | 'count-success' | 'd100-low' | 'd100-high';
 export type LootRollMode = 'weighted' | 'independent';
@@ -441,6 +442,8 @@ export interface GameDriver {
      * s'affiche — plutôt qu'un bandeau vide qui suggérerait un oubli.
      */
     ressourcesDeTable?: import('../modules/table/RessourcesDeTable').RessourceDeTable[];
+    /** Outils proposés par le pilote ; [] désactive les propositions implicites du jeu. Aucun secret ici. */
+    modulesDuJeu?: ReferenceDeModuleDuJeu[];
     /**
      * **Les ressources à dé d'usure** — Cthulhu Hack, 2026-09-30.
      *

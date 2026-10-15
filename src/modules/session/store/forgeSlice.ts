@@ -12,6 +12,7 @@ import type { CreateurDeSlice } from './contratDesSlices';
 import { DEFAULT_SHEET_TEMPLATES, type SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { DEFAULT_GAME_DRIVERS } from '../../../data/defaultGameDrivers';
 import type { GameDriver } from '../../../types/drivers';
+import { exigerReferencesDeModules } from '../../modulesDuJeu/catalogue';
 
 // ─────────────────────────────────────────────
 // State
@@ -92,7 +93,8 @@ export const createForgeSlice: CreateurDeSlice<ForgeSlice> = (set, get) => ({
         })),
 
     // Game Driver Actions
-    saveGameDriver: (driver) =>
+    saveGameDriver: (driver) => {
+        exigerReferencesDeModules(driver.modulesDuJeu);
         set((state) => {
             const exists = state.customGameDrivers.some((d) => d.id === driver.id);
             return {
@@ -100,14 +102,17 @@ export const createForgeSlice: CreateurDeSlice<ForgeSlice> = (set, get) => ({
                     ? state.customGameDrivers.map((d) => (d.id === driver.id ? driver : d))
                     : [...state.customGameDrivers, driver],
             };
-        }),
+        });
+    },
 
-    updateGameDriver: (id, updates) =>
+    updateGameDriver: (id, updates) => {
+        exigerReferencesDeModules(updates.modulesDuJeu);
         set((state) => ({
             customGameDrivers: state.customGameDrivers.map((d) =>
                 d.id === id ? { ...d, ...updates } : d
             ),
-        })),
+        }));
+    },
 
     deleteGameDriver: (id) =>
         set((state) => ({

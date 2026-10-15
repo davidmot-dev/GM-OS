@@ -1,18 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { HubModulesDuJeu } from './hub/HubModulesDuJeu';
+import { NavigationDesOngletsDuHub, type OngletDuHub } from './hub/NavigationDesOngletsDuHub';
 import { EtiquetteDuDegre } from '../modules/dice/EtiquetteDuDegre';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CadreDeTablette } from './socle/CadreDeTablette';
 import { 
-    Monitor, 
-    Archive, 
     MessageSquare, 
     Wifi,
     WifiOff,
-    Users,
-    Globe,
-    Package,
-    Swords,
-    Layers
+    Swords
 } from 'lucide-react';
 import { useFermetureParEchap } from '../hooks/useFermetureParEchap';
 import { useNotificationDeMessage } from '../hooks/useNotificationDeMessage';
@@ -87,7 +83,7 @@ const TabletHub: React.FC = () => {
     const performance = usePerformanceControl();
     const { setLowGraphics } = usePerformanceStore();
 
-    const [currentTab, setCurrentTab] = useState<'live' | 'archives' | 'trombinoscope' | 'atlas' | 'inventory' | 'cartes'>('live');
+    const [currentTab, setCurrentTab] = useState<OngletDuHub>('live');
     const [isInventoryOpen, setIsInventoryOpen] = useState(false);
     const [isNotesOpen, setIsNotesOpen] = useState(false);
     const [isMessengerOpen, setIsMessengerOpen] = useState(false);
@@ -341,6 +337,8 @@ const TabletHub: React.FC = () => {
                 </div>
             ) : (
             <div className="relative z-40 min-h-0 flex-1 overflow-hidden">
+                {currentTab === 'modules-du-jeu' && <HubModulesDuJeu commandes={commandesDeConnexion}
+                    informations={<HubHorlogesPubliques {...{ isClockProjected, timestamp, mode, theme, tensions }} />} />}
                 {currentTab === 'archives' && <HubArchives clues={clues} activeCampaignId={activeCampaignId} onSelectClue={setSelectedClue} commandes={commandesDeConnexion}
                     informations={<HubHorlogesPubliques {...{ isClockProjected, timestamp, mode, theme, tensions }} />} />}
                 {currentTab === 'trombinoscope' && <HubTrombinoscope npcs={resolvedNpcs} onSelectNpc={setSelectedNpc} commandes={commandesDeConnexion}
@@ -354,37 +352,7 @@ const TabletHub: React.FC = () => {
             <nav className={'relative z-[100] shrink-0 w-full border-t border-app-border bg-app-surface p-1 pb-[max(4px,env(safe-area-inset-bottom))]'} aria-label="Navigation Hub">
                 <div data-hub-nav-scroll className={'w-full'}>
                 <Panneau as="div" habillage="libre" className={'flex flex-col gap-1'}>
-                    <div className={'grid grid-cols-3 gap-1 lg:grid-cols-6'}>
-                    {(
-                        [
-                            { id: 'live', icon: Monitor, label: 'Direct' },
-                            { id: 'archives', icon: Archive, label: 'Archives' },
-                            { id: 'trombinoscope', icon: Users, label: 'PNJ' },
-                            { id: 'atlas', icon: Globe, label: 'Lieux' },
-                            { id: 'inventory', icon: Package, label: 'Inventaire' },
-                            { id: 'cartes', icon: Layers, label: 'Cartes' }
-                        ] as const
-                    ).map((tab) => (
-                        <Bouton habillage="socle" variante={currentTab === tab.id ? 'accent' : 'neutre'} cibleTactile
-                            key={tab.id}
-                            data-hub-tab={tab.id}
-                            onClick={() => setCurrentTab(tab.id)}
-                            aria-pressed={currentTab === tab.id}
-                            className={'relative w-full min-w-[44px] px-1'}
-                            title={tab.label}
-                        >
-                            <span className={'text-[12px] tracking-normal'}>{tab.label}</span>
-                            {/* Une carte qu'on me tend attend une réponse : elle
-                                se signale même onglet fermé. */}
-                            {tab.id === 'cartes' && cartesProposees > 0 && currentTab !== 'cartes' && (
-                                <span className="absolute top-0 right-0 md:-top-1 md:-right-1 flex h-4 w-4">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-etat-danger opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-etat-danger text-ui-9 items-center justify-center font-bold text-app-bg">{cartesProposees}</span>
-                                </span>
-                            )}
-                        </Bouton>
-                    ))}
-                    </div>
+                    <NavigationDesOngletsDuHub courant={currentTab} onChange={setCurrentTab} cartesProposees={cartesProposees} />
                     <div className={'grid grid-cols-4 gap-1'}>
                     <Bouton habillage="socle" variante={isInventoryOpen ? 'accent' : 'neutre'} cibleTactile
                         onClick={() => {
