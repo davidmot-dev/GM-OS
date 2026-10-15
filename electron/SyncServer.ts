@@ -85,14 +85,21 @@ export class SyncServer {
     private deviceSocketMap = new Map<string, Set<WebSocket>>();
     /** Dernier segment public d'apparence, pour le client qui s'enregistre après la diffusion initiale. */
     private derniereApparence: unknown = null;
-    private modulesDuJeu: ServiceDesModules;
+    private instanceDesModules?: ServiceDesModules;
+    private stockageDesInstances?: StockageDesModules;
+    // Le constructeur peut être appelé avant le verrou du profil : résoudre au premier besoin.
+    private get modulesDuJeu(): ServiceDesModules {
+        return this.instanceDesModules ??= new ServiceDesModules(this.stockageDesInstances
+            ?? stockageDesModules(path.join(app.getPath('userData'), 'modules-du-jeu', 'instances.json')),
+        () => { void this.diffuserLesModules(); });
+    }
     private reprisesDesModules = new Map<string, string>();
 
     constructor(mainWindow: BrowserWindow, port: number, tempMediaDir: string, stockage?: StockageDesModules) {
         this.mainWindow = mainWindow;
         this.port = port;
         this.tempMediaDir = tempMediaDir;
-        this.modulesDuJeu = new ServiceDesModules(stockage ?? stockageDesModules(path.join(app.getPath('userData'), 'modules-du-jeu', 'instances.json')), () => { void this.diffuserLesModules(); });
+        this.stockageDesInstances = stockage;
     }
 
     public start() {

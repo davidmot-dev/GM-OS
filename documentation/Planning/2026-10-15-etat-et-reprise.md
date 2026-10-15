@@ -432,3 +432,10 @@ Les étapes 3 et 4 sont regroupées dans
 fournit l’identifiant. Le push est autorisé avec les hooks de validation et de
 synchronisation NotebookLM. Les mentions « non commitées » ci-dessus sont historiques.
 L’étape 5 commence après cet envoi : dossiers, file des demandes et préréglages nommés.
+
+Le premier pré-push a trouvé deux écarts (7 812 tests verts, deux échecs) : résolution
+de `userData` dans le constructeur de SyncServer et garde du nombre de portes du cockpit
+restée à huit depuis l’ajout de Modules du jeu. Correctif isolé : hôte privé initialisé
+par accesseur au premier besoin, test comportemental sans fichier/port ; garde portée à
+neuf sans retirer son contrôle d’existence. Aucun essai de GM-OS lancé depuis la dernière
+confirmation de fermeture. La validation complète est relancée avant le push.
