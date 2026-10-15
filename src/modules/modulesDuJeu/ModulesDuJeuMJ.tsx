@@ -36,6 +36,10 @@ export function ModulesDuJeuMJ() {
         compteur={`${resultat.modules.length} module(s) proposé(s)`} icone={Blocks}
         commandes={<div className="flex flex-wrap gap-3">
             <button type="button" onClick={() => setCurrentView('cockpit')} className="flex items-center gap-2 rounded border border-app-border px-3 py-2 text-sm text-app-text"><ArrowLeft size={16} />Retour au cockpit</button>
+            {courante && activeCampaignId && <button type="button" disabled={occupe} className="min-h-[44px] rounded border border-app-border px-4 text-app-text" onClick={() => {
+                const pont = window.appBridge?.modulesDuJeu;
+                if (pont) void executer(() => pont.toutCouper({ campagneId: activeCampaignId, contexte: courante.contexte }));
+            }}>Tout couper</button>}
             {pilote && customGameDrivers.some(p => p.id === pilote.id) && <button type="button" className="rounded border border-app-border px-3 py-2 text-sm text-app-text"
                 onClick={() => { setEditingDriverId(pilote.id); setCurrentView('driver-editor'); }}>Configurer le pilote</button>}
         </div>}>

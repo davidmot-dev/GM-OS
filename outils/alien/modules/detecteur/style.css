@@ -1,0 +1,29 @@
+/* Instrument isolé : aucune règle ne déborde sur l'hôte. */
+.gmos-detecteur { --detecteur-texte:#c5ebd0; --detecteur-discret:#9abbab; color:var(--detecteur-texte); background:#080e0c; border:1px solid #344b3f; border-radius:12px; padding:clamp(14px,3vw,28px); font:15px/1.6 ui-monospace,monospace; width:100%; max-width:1180px; margin:auto; box-sizing:border-box; }
+.gmos-detecteur * { box-sizing:border-box; }
+.gmos-detecteur header { margin-bottom:18px; }
+.gmos-detecteur h2 { font-size:clamp(21px,4vw,30px); font-weight:700; margin:0 0 8px; }
+.gmos-detecteur h3 { font-size:18px; font-weight:700; margin:0 0 12px; }
+.gmos-detecteur p { margin:0 0 12px; }
+.gmos-detecteur header p,.gmos-detecteur small,.gmos-detecteur aside p { color:var(--detecteur-discret); }
+.gmos-detecteur .detecteur-sur-titre { font-size:11px; letter-spacing:.1em; }
+.gmos-detecteur .detecteur-grille { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(260px,1fr); gap:24px; }
+.gmos-detecteur .detecteur-ecran { position:relative; background:#020a06; border:1px solid #46604e; border-radius:20px; overflow:hidden; max-width:650px; margin:auto; }
+.gmos-detecteur .detecteur-ecran.detecteur-crt::after { content:''; pointer-events:none; position:absolute; inset:0; border-radius:inherit; background:repeating-linear-gradient(0deg,transparent 0 2px,#0003 3px 4px); box-shadow:inset 0 0 40px #000b; }
+.gmos-detecteur .detecteur-canvas { display:block; width:100%; aspect-ratio:1; }
+.gmos-detecteur .detecteur-bandeau { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; padding:12px 18px; font-size:12px; letter-spacing:.05em; }
+.gmos-detecteur .detecteur-veille { position:absolute; top:50%; left:0; width:100%; text-align:center; font-size:13px; background:#020a06dd; }
+.gmos-detecteur button { min-height:44px; padding:10px 14px; border:1px solid #4c6f5a; border-radius:5px; background:#15291e; color:var(--detecteur-texte); cursor:pointer; font:inherit; }
+.gmos-detecteur button:hover { background:#213b2c; }
+.gmos-detecteur button:disabled { opacity:.5; cursor:default; }
+.gmos-detecteur button:focus-visible,.gmos-detecteur input:focus-visible { outline:2px solid #b8e2c4; outline-offset:3px; }
+.gmos-detecteur .detecteur-son { display:flex; align-items:start; flex-direction:column; gap:10px; margin-top:18px; }
+.gmos-detecteur .detecteur-actions { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+.gmos-detecteur .detecteur-reglages { margin:18px 0; }
+.gmos-detecteur fieldset { display:grid; gap:12px; border:0; padding:0; min-width:0; }
+.gmos-detecteur label { display:flex; flex-direction:column; gap:4px; }
+.gmos-detecteur input[type=number] { min-height:44px; width:100%; border:1px solid #42594b; border-radius:4px; background:#0b1710; padding:8px 12px; color:var(--detecteur-texte); font:inherit; }
+.gmos-detecteur .detecteur-case { min-height:44px; flex-direction:row; align-items:center; gap:12px; }
+.gmos-detecteur input[type=checkbox] { width:20px; height:20px; accent-color:#b8e2c4; }
+.gmos-detecteur [role=alert] { color:#f1b9a5; }
+@media (max-width:760px) { .gmos-detecteur .detecteur-grille { grid-template-columns:minmax(0,1fr); } }

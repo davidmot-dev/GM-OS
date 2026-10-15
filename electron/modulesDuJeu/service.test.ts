@@ -19,7 +19,7 @@ async function preparer(initial: unknown = null) {
 describe('hôte privé des modules', () => {
     it('ne montre aucune carte sans ouverture explicite, même pour un ancien pilote Alien', async () => {
         const { service } = await preparer();
-        expect((await service.vueMJ()).modules).toHaveLength(1);
+        expect((await service.vueMJ()).modules).toHaveLength(2);
         expect((await service.vueJoueur('alice', 'a')).modules).toEqual([]);
         expect((await service.vueJoueur(null, 'a')).modules).toEqual([]);
     });

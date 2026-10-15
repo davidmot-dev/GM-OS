@@ -318,27 +318,95 @@ stderr (Browserslist), malgré la réussite Vite/Electron/PWA. Construction dire
 ensuite ; utiliser `npm.cmd run build` sans redirection PowerShell. Avertissements habituels
 de taille de chunks/imports mixtes. Deuxième tranche **non commitée**.
 
+## Troisième tranche intégrée — détecteur et coupure générale
+
+David demande *« on fait l’étape 3 »* et confirme *« Non, il est fermé. »* avant
+les modifications de `src/` et `electron/`. Base : **a128c7af**, dont les trois guides
+ont été envoyés à NotebookLM après autorisation explicite. Aucun lancement d’application
+depuis cette confirmation ; essais hors ligne et construction seulement.
+
+- `outils/alien/modules/detecteur/` : manifeste, moteur pur v1, déclarations, vues React,
+  styles isolés, documentation et tests. Seuls radar et réglages sont conservés ; aucun
+  dialogue/code MU/TH/UR. Les commandes réutilisent `core.js`, le dessin est extrait dans
+  `outils/alien/detecteur.js`, partagé avec l’atelier dont l’asset HTTP est déclaré.
+- Registres natif et React/catalogue : détecteur disponible sans condition Alien dans
+  le Hub. Destinataires indépendants de MU/TH/UR, plusieurs PJ reçoivent le même scan.
+  Autoriser laisse en veille ; démarrer renouvelle les positions dans la proximité.
+  Réglages enregistrés, faux écho de neuf secondes, aucun Stress écrit.
+- Sons locaux sur clic, arrêt immédiat des oscillateurs et délais au retrait/démontage,
+  nettoyage de la boucle de dessin ; page masquée muette, mouvements réduits fixes.
+  Retour/reconnexion exigent une nouvelle activation sonore. Aucun haut-parleur réel testé.
+- `ServiceDesModules.toutCouper`, IPC protégé et bouton commun : fermeture de tous les droits
+  et effets. Même sur échec disque, la coupure en mémoire demeure et l’erreur reste visible.
+  Le dernier retrait d’un module bénéficie aussi de cette coupure immédiate. Clé d’ouverture
+  par PJ/module : un changement des droits d’un autre ne démonte plus son instrument ; une
+  nouvelle ouverture après retrait exige un clic, même si React regroupe les mises à jour.
+- Stockage/sauvegardes/export/import réutilisés ; restauration conserve les réglages mais
+  coupe scan/faux écho et ferme les accès. Manuel 53/54 Alien/61 et captures actualisés.
+  Banc : 33 captures de l’intégration + six de non-régression du détecteur autonome.
+
+Validation : **411 tests ciblés (31 fichiers)** et **74 essais Node**, types,
+lint ciblé et construction de production. **39 captures hors ligne** : 33 de
+l’intégration aux trois tailles, puis six du radar autonome ; vues du détecteur
+relues au téléphone, à 768 px et sur grand écran. Réseau/IPC testés en mémoire,
+sons et horloges simulés ; aucun essai matériel ou service réseau. La capture
+Electron est étendue, mais n’a pas été lancée. Troisième tranche non commitée.
+Aucun paquet ou profil personnel utilisé.
+
+## Quatrième étape — recette de bout en bout
+
+David demande *« on fait le step 4 »*, puis confirme *« Non, il est fermé. »*.
+Le lot A4 inclut les essais sur instance jetable : le vrai Electron, HTTP/WebSocket
+et deux sessions Edge isolées sont maintenant éprouvés sur le PC, sans lire les profils,
+sauvegardes ou pilotes exportés de David. Les modifications de la troisième tranche
+étaient présentes et sont conservées ; aucun correctif du code applicatif ajouté en A4.
+
+- `e2e/modulesDuJeuAlien.spec.ts` : six parcours réels, sans `appBridge` sur les clients.
+  Droits séparés, réponse privée absente chez l’autre PJ et de la synchronisation commune,
+  commande MJ falsifiée refusée ; scan partagé aux tailles 360/768/1180, retrait partiel,
+  Web Audio local sur clic, coupure de connexion et reprise reconnue/muette, Tout couper.
+- Film servi et décodé via HTTP ; plage 206 de 1 024 octets vérifiée, durée d’alerte
+  ≥ 775,701 s, transfert du seul lecteur non muet sans modifier l’échéance, annulation.
+  Fichier privé réellement écrit sous le profil jetable ; redémarrage et import par IPC
+  conservent les contacts, avec effets arrêtés et droits fermés. Sortie audio de test muette.
+- `outils/modules-du-jeu/recette-alien.mjs` et le pilote fictif
+  `e2e/donnees/pilote-alien-accessoires.json` fournissent la même semence à l’E2E et à
+  une répétition manuelle. Le script génère seulement un JSON dans `scratch/`. Toujours
+  passer cette semence explicitement à `repetition` : son défaut cherche une sauvegarde
+  personnelle, chemin interdit à l’agent. Pas de nouvelle mécanique de règles dans le pilote.
+- [Recette et limites matérielles](2026-10-15-recette-modules-alien.md) : commandes et
+  tableau des gestes sur Wi-Fi/tablettes/haut-parleurs. Aucun résultat physique prétendu.
+  Plans, contrat et guides actualisés ; captures E2E et traces restent dans `scratch/`.
+
+Pièges du banc : une case contrôlée par l’ACK natif se clique une fois puis s’attend par
+`toBeChecked`, sans attendre une mutation optimiste avec `setChecked`. La fermeture réelle
+d’un AudioContext coupe le graphe sans nécessairement émettre `ended` sur ses oscillateurs :
+la sonde observe aussi la résolution de `close()`, au lieu d’annoncer un son fantôme.
+
+Validation : six E2E au vert, build/types propres, lint du scénario et du générateur propre,
+semence fictive générée. Cinq captures du vrai Hub, dont les trois tailles de radar, terminal
+et film ; revue visuelle. Le film entier n’a pas joué treize minutes et aucune voix réelle
+n’a été écoutée. Profils jetables fermés et supprimés par le banc ; aucun service laissé ouvert.
+Étapes 3 et 4 non commitées. Aucun paquet installé.
+
 ## Reprendre
 
 Lire le contrat v1, le plan commun, puis le plan Alien. Le standard est
-formalisé ; G0–G2 et MU/TH/UR dans le Hub sont codés et testés sans réseau.
-Reprendre par un essai sur instance jetable et appareils réels, puis l’adaptateur
-du détecteur, les améliorations de dossiers/file de demandes et le périmètre de la
+formalisé ; G0–G2, MU/TH/UR et détecteur dans le Hub sont codés, testés hors ligne et
+éprouvés par six E2E sur le vrai transport entre Electron et Edge sur le PC.
+Reprendre par la recette sur deux appareils physiques, puis
+les améliorations de dossiers/file de demandes et le périmètre de la
 Table des Terres Médianes. Ne pas réécrire le moteur MU/TH/UR.
-Les essais réels de réseau, son et tablettes restent distincts
-du retour positif sur la bêta ; David n'a pas détaillé ces conditions d'essai.
+Le Wi-Fi, le clavier virtuel, la veille, la bande-son entière et les voix/sirènes réelles
+restent à éprouver, distinctement du retour positif initial sur la bêta.
 
 Redemander « GM-OS tourne-t-il ? » avant une future modification de `src/`
-ou `electron/`. Aucun service réseau lancé, aucun paquet installé, aucune
-donnée personnelle de campagne consultée. Le seul média externe lu est celui
-fourni explicitement par David. Validation : 70 essais Node locaux verts
-(20 moteur/serveur MU/TH/UR, 20 composants, 10 protocoles/alarme, 6 vidéo, 3 configuration, 3 détecteur et 8 standard), manifestes
-conformes, syntaxe Node, déclarations TypeScript, lint ciblé, liens locaux
-et diff vérifiés. Soixante-six captures hors ligne sans débordement ni erreur de
-navigateur, puis 21 captures de l’hôte. Transport testé par sockets simulées ;
-aucune écoute réseau ou appareil réel testé.
-Les annonces sont éprouvées avec une horloge et des voix de test ; la
-qualité des sirènes et des voix système réelles reste à juger sur le matériel.
+ou `electron/` : les E2E de cette étape ont lancé puis fermé l’application jetable.
+Aucun paquet installé, aucune donnée personnelle consultée. Le seul média externe
+est celui fourni par David. Validation de référence : 411 tests ciblés et 74 essais Node
+de la troisième tranche, build/types/lint, 39 captures hors ligne ; puis six E2E A4 et
+cinq captures du vrai Hub. Les annonces restent éprouvées par horloge/voix simulées ;
+leur restitution et celle des sirènes restent à juger sur le matériel.
 
 ## Git et passation
 
@@ -357,3 +425,10 @@ dans `feat(modules): raccorder MU-TH-UR au transport prive du Hub` ; `git log`
 fournit son identifiant. La mention « deuxième tranche non commitée » décrit
 l’état avant cette demande. Aucun push demandé ou effectué. Les trois éléments
 hors chantier ci-dessus restent exclus.
+
+David demande ensuite *« commit et pousse puis faire l’étape 5 - GM-OS est fermé »*.
+Les étapes 3 et 4 sont regroupées dans
+`feat(modules): integrer le detecteur Alien et valider le vrai Hub` ; `git log`
+fournit l’identifiant. Le push est autorisé avec les hooks de validation et de
+synchronisation NotebookLM. Les mentions « non commitées » ci-dessus sont historiques.
+L’étape 5 commence après cet envoi : dossiers, file des demandes et préréglages nommés.

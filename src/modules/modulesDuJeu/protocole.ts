@@ -11,7 +11,7 @@ export interface ContexteDesModules {
     systemPath?: string;
     personnages: { id: string; nom: string }[];
 }
-export interface CarteDeModule { id: string; libelle: string; revision: number; vue: unknown }
+export interface CarteDeModule { id: string; libelle: string; revision: number; ouverture?: number; vue: unknown }
 export interface VueDesModulesJoueur {
     campagneId: string | null; personnageId: string | null; contexte: number; revision: number; modules: CarteDeModule[];
 }
@@ -30,6 +30,7 @@ export interface PontDesModules {
     lire: () => Promise<VueDesModulesMJ>;
     commander: (requete: RequeteDeModule) => Promise<ResultatDeModule>;
     autoriser: (demande: { campagneId: string; moduleId: string; personnages: string[]; contexte: number }) => Promise<ResultatDeModule>;
+    toutCouper: (demande: { campagneId: string; contexte: number }) => Promise<ResultatDeModule>;
     choisirDiffusion: (demande: { campagneId: string; moduleId: string; appareilId: string; contexte: number }) => Promise<ResultatDeModule>;
     importer: (sauvegarde: SauvegardeDesModules) => Promise<ResultatDeModule>;
     surChangement: (rappel: (vue: VueDesModulesMJ) => void) => () => void;

@@ -1,16 +1,17 @@
 import { resoudreCorpus } from '../../../electron/corpusSysteme';
 import { validerLeManifeste, validerLesReferences } from '../../../outils/modules-du-jeu/contrat.mjs';
 import manifesteMuthur from '../../../outils/alien/modules/muthur/manifeste.json';
+import manifesteDetecteur from '../../../outils/alien/modules/detecteur/manifeste.json';
 import type { ModuleDuCatalogue, ModuleDuPilote, ReferenceDeModuleDuJeu } from './types';
 
 // Registre explicite : aucun chemin, script ou URL fourni par un pilote n'est exécuté.
 if (validerLeManifeste(manifesteMuthur).length) throw new Error('Manifeste MU/TH/UR invalide.');
+if (validerLeManifeste(manifesteDetecteur).length) throw new Error('Manifeste du détecteur invalide.');
 export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
     { id: manifesteMuthur.id, libelle: manifesteMuthur.libelle, description: manifesteMuthur.description,
         corpusCompatibles: manifesteMuthur.corpusCompatibles, adaptation: 'prete' },
-    { id: 'alien-detecteur', libelle: 'Détecteur de mouvement',
-        description: 'Contacts et proximité scénarisés, avec intensité réglée par le meneur.',
-        corpusCompatibles: ['alien'], adaptation: 'a-faire' },
+    { id: manifesteDetecteur.id, libelle: manifesteDetecteur.libelle, description: manifesteDetecteur.description,
+        corpusCompatibles: manifesteDetecteur.corpusCompatibles, adaptation: 'prete' },
 ];
 
 export { validerLesReferences };

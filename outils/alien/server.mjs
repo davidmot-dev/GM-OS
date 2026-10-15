@@ -13,6 +13,7 @@ const assets = new Map([['/', ['index.html', 'text/html']], ['/index.html', ['in
 const secret = () => randomBytes(32).toString('hex');
 assets.set('/alarme.css', ['alarme.css', 'text/css']);
 assets.set('/video-alerte.js', ['video-alerte.js', 'text/javascript']);
+assets.set('/detecteur.js', ['detecteur.js', 'text/javascript']);
 assets.set('/medias/nostromo-autodestruction.webm', ['medias/nostromo-autodestruction.webm', 'video/webm']);
 const securityHeaders = {
   'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Cache-Control': 'no-store',

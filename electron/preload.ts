@@ -74,6 +74,7 @@ contextBridge.exposeInMainWorld('appBridge', {
         lire: () => ipcRenderer.invoke('modules:lire'),
         commander: (requete: import('../src/modules/modulesDuJeu/protocole').RequeteDeModule) => ipcRenderer.invoke('modules:commander', requete),
         autoriser: (demande: { campagneId: string; moduleId: string; personnages: string[]; contexte: number }) => ipcRenderer.invoke('modules:autoriser', demande),
+        toutCouper: (demande: { campagneId: string; contexte: number }) => ipcRenderer.invoke('modules:tout-couper', demande),
         choisirDiffusion: (demande: { campagneId: string; moduleId: string; appareilId: string; contexte: number }) => ipcRenderer.invoke('modules:diffusion', demande),
         importer: (sauvegarde: import('../src/modules/modulesDuJeu/protocole').SauvegardeDesModules) => ipcRenderer.invoke('modules:importer', sauvegarde),
         surChangement: (rappel: (vue: import('../src/modules/modulesDuJeu/protocole').VueDesModulesMJ) => void) => {

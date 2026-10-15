@@ -2,8 +2,9 @@
 
 **15/10/2026 — plan et suivi. Registre § 135.** La sélection dans les pilotes et
 l’emplacement générique du Hub/cockpit sont codés. La deuxième tranche livre le transport
-privé, les accès par PJ, les sauvegardes et MU/TH/UR dans l’hôte commun. Le détecteur
-et les essais réels de réseau/matériel restent à faire.
+privé, les accès par PJ, les sauvegardes et MU/TH/UR dans l’hôte commun. La troisième
+ajoute le détecteur et la coupure générale. L’étape 4 éprouve le vrai HTTP/WebSocket avec
+Electron et deux sessions Edge isolées sur le PC. L’essai sur les appareils physiques reste à faire.
 
 **Précision de David le même jour :** l'emplacement du Tablet Hub doit être
 générique et recevoir les modules propres aux jeux/pilotes, notamment Alien
@@ -73,7 +74,7 @@ Le retrait ne peut pas effacer ce qu'un joueur a déjà lu ou mémorisé.
 | [`core.js`](../../outils/alien/core.js) | Moteur partagé, commandes et droits ; `snapshot('player', id)` filtre documents et radar par opérateur. Pas de droit d'ouverture séparé par accessoire. |
 | [`server.mjs`](../../outils/alien/server.mjs) | Une table autonome, HTTP + SSE, jetons propres, sauvegarde `.local/`. Arrêt du radar et du compte à rebours à la reprise. |
 | [`app.js`](../../outils/alien/app.js) | Interface liée au DOM et à ses transports fichier/HTTP ; son autorisé par clic sur chaque appareil. |
-| [`TabletHub.tsx`](../../src/components/TabletHub.tsx) et [`useHubSync.ts`](../../src/modules/session/hooks/useHubSync.ts) | Navigation et identité du personnage déjà présentes ; aucun accessoire Alien branché. |
+| [`TabletHub.tsx`](../../src/components/TabletHub.tsx) et [`useHubSync.ts`](../../src/modules/session/hooks/useHubSync.ts) | Navigation générique, identité et canal privé ; MU/TH/UR et détecteur enregistrés sans branche Alien dans le Hub. |
 | [`SyncServer.ts`](../../electron/SyncServer.ts) | HTTP + WebSocket natif `ws`, appairage MJ et registre des appareils ; acheminement individuel existant pour les messages. |
 | [`useNexusSynchronizer.ts`](../../src/modules/remote/hooks/useNexusSynchronizer.ts) | Diffusions communes par rôle, complètes et différentielles ; les campagnes sont incluses dans le segment session. |
 | [`drivers.ts`](../../src/types/drivers.ts) et [`corpusSysteme.ts`](../../electron/corpusSysteme.ts) | `corpusId` et `resoudreCorpus` permettent de retrouver Alien avec un identifiant de pilote forgé. |
@@ -158,7 +159,7 @@ retardé d'une ancienne campagne ne doit pas repeupler la vue courante.
 | --- | --- | --- |
 | Création livrée le 15/10 ; suppression/classement à faire | Créer, supprimer et classer les dossiers | « Nouveau dossier… » crée un dossier sans remplacer les exemples, avec protection et identifiant pour READ. Une future suppression devra retirer les déverrouillages correspondants. |
 | Première | File des demandes MU/TH/UR | Questions et piratages gardent leur contenu et leur statut jusqu'au traitement ; plusieurs questions ne se remplacent pas. |
-| Première | Accès indépendants et arrêt immédiat | Autoriser MU/TH/UR à un PJ et le détecteur à un autre ; retirer l'un coupe sa vue et son son. |
+| Livré en troisième tranche, matériel à essayer | Accès indépendants et arrêt immédiat | MU/TH/UR et détecteur ont leurs destinataires ; retrait partiel préserve les autres vues, dernier retrait arrête le scan. Tout couper ferme tous les outils et leurs effets même si le disque échoue. |
 | Première | Reconnexion et ergonomie tactile | Reprise du même opérateur ; terminal utilisable avec le clavier virtuel ; commandes lisibles à 360–390 px et sur iPad. |
 | Ensuite | Préréglages de mise en scène nommés | Sauver/rappeler intensité, contacts, proximité et parasites ; le rappel ne démarre pas seul le radar. |
 | Ensuite | Réglage des effets et du son | Choix CRT/parasites, mouvement réduit et performances ; volume local et autorisation audio par appareil. Arrêt muet sans dépendre de l'animation. |
@@ -171,17 +172,18 @@ lien entre intensité et Stress. Pas de nouveaux effets de règle dans ce lot.
 
 | Lot | Contenu | Validation avant de passer au suivant |
 | --- | --- | --- |
-| A0 — moteur | Adaptateur MU/TH/UR v1, types publics, validation et ajout de dossiers livrés ; restent suppression/classement des dossiers, file de plusieurs demandes et adaptateur du détecteur | Essais locaux de codes, secrets, droits, migration et compatibilité autonome verts. |
+| A0 — moteur | Adaptateurs MU/TH/UR et détecteur, types publics, validation et ajout de dossiers livrés ; restent suppression/classement des dossiers et file de plusieurs demandes | Essais locaux de codes, secrets, droits, migration et compatibilité autonome verts. |
 | A1 — hôte et identité | État privé par campagne, persistance, association MJ/appareil/PJ et transport ciblé | Sans port ouvert : vrais gestionnaires appelés en mémoire ; deux PJ, identité falsifiée, double `deviceId`, autre campagne, écriture échouée, reconnexion. |
-| A2 — première tranche jouable | Vues React MU/TH/UR joueur/MJ livrées en atelier isolé ; restent autoriser/retirer l'accès et carte Modules du jeu dans le Hub | Essais de composants et rendu hors ligne faits ; parcours réel du Hub à vérifier après G0–G2. |
-| A3 — détecteur et cycle de vie | Scan autorisé indépendamment, destinataires multiples, son, « Tout couper », changement de campagne | Radar seulement chez les destinataires ; silence après coupure, déconnexion et démontage ; anciens états ignorés. |
-| A4 — livraison | Sauvegarde locale/export/import de la préparation livrés dans l'aperçu ; restent export/import de campagne, manuel Alien et tablettes, captures et essais matériels après intégration Hub | Types, lint ciblé, tests ciblés avec `--maxWorkers=4` ; build avant e2e ; revue visuelle puis deux appareils réels. |
+| A2 — première tranche jouable | MU/TH/UR livré dans le véritable hôte depuis G2 : pupitre, cartes et droits par PJ | Parcours éprouvé avec hôte réel, puis HTTP/WebSocket réels entre Electron et Edge sur le même PC ; matériel à vérifier. |
+| A3 — détecteur et cycle de vie | Livré en troisième tranche : adaptateur v1, rendu partagé avec le prototype, accès indépendants, scan partagé, bips locaux, Tout couper et clé d’ouverture par PJ/module | Radar seulement chez les destinataires ; coupure immédiate, silence et nettoyage testés ; arrêt à la reprise/import, réglages conservés. 33 captures Hub + 6 du prototype. |
+| A4 — livraison | Volet logiciel validé : six parcours E2E sur instance jetable, vrais HTTP/WebSocket et fichier privé, deux PJ, déconnexion/reprise, vidéo, son ciblé et redémarrage/import ; recette reproductible fournie | Build avant E2E, lint, captures du vrai Hub relues. Audio réel observé mais sortie muette. Restent Wi-Fi, clavier virtuel, veille, écoute du film entier et sirène/voix sur deux appareils physiques. |
 
-Les essais réseau réels exigent une demande de David, selon `AGENTS.md`.
+David demande le 15/10 *« on fait le step 4 »* ; ce lot inclut les essais réseau
+de la [recette dédiée](2026-10-15-recette-modules-alien.md), sur instance jetable.
 Les e2e utilisent une campagne jetable et une sortie de captures dédiée,
 sans toucher aux données personnelles ni réécrire les captures existantes.
-Actualiser les pages 54 Alien et 61 Tablette des joueurs lorsque les fonctions
-seront livrées ; ce plan ne les annonce pas comme déjà disponibles.
+Les pages 53/54 Alien/61 sont actualisées. La recette matérielle utilise une semence
+fictive explicite, sans lecture des sauvegardes personnelles par le lanceur de répétition.
 
 **Ordre révisé après la précision de David : G0 → G1 → G2** du plan commun,
 puis A0/A2 et A3/A4. G2 reprend la partie commune d'A1. Première démonstration

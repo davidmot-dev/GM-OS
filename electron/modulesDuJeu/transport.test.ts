@@ -57,6 +57,7 @@ describe('transport privé des modules sans ouvrir de port', () => {
         expect(paquets(alice, 'modules:vue')).toEqual([]);
         expect(await invoquer('modules:contexte', {}, { send: vi.fn() })).toMatchObject({ ok: false });
         await expect(invoquer('modules:lire', undefined, { send: vi.fn() })).rejects.toThrow(/MJ/);
+        expect(await invoquer('modules:tout-couper', {}, { send: vi.fn() })).toMatchObject({ ok: false });
     });
     it('ne transmet jamais les secrets ou le dialogue d’un autre dans la projection réseau', async () => {
         inscrire(alice, 'a', 'alice'); inscrire(bob, 'b', 'bob'); await ouvrir();
@@ -103,6 +104,24 @@ describe('transport privé des modules sans ouvrir de port', () => {
         expect(bob.identiteModules?.personnageId).toBeNull();
         await ouvrir(); await serveur.diffuserLesModules();
         expect(paquets(bob, 'modules:vue').at(-1)?.payload.modules).toEqual([]);
+    });
+    it('achemine le détecteur seulement à ses destinataires et réserve Tout couper au MJ natif', async () => {
+        inscrire(alice, 'a', 'alice'); inscrire(bob, 'b', 'bob');
+        await ouvrir();
+        const demande = { campagneId: 'camp-a', moduleId: 'alien-detecteur', contexte: (await serveur.modulesDuJeu.vueMJ()).contexte };
+        expect(await invoquer('modules:autoriser', { ...demande, personnages: ['bob'] })).toEqual({ ok: true });
+        const contexte = (await serveur.modulesDuJeu.vueMJ()).contexte;
+        await invoquer('modules:commander', { ...demande, contexte, requeteId: 'radar', commande: { id: 'scanner', charge: { actif: true } } });
+        await serveur.diffuserLesModules();
+        expect(paquets(alice, 'modules:vue').at(-1).payload.modules.map((m: { id: string }) => m.id)).toEqual(['alien-muthur']);
+        expect(paquets(bob, 'modules:vue').at(-1).payload.modules.map((m: { id: string }) => m.id)).toEqual(['alien-muthur', 'alien-detecteur']);
+        bob.emit('message', JSON.stringify({ type: 'modules:tout-couper', payload: { campagneId: 'camp-a', contexte } }));
+        bob.emit('message', JSON.stringify({ type: 'modules:commander', payload: { ...demande, contexte, requeteId: 'faux-mj', role: 'mj', commande: { id: 'scanner', charge: { actif: false } } } }));
+        await serveur.modulesDuJeu.pret();
+        expect(paquets(bob, 'modules:resultat').at(-1)?.payload.ok).toBe(false);
+        expect(await invoquer('modules:tout-couper', { campagneId: 'camp-a', contexte })).toEqual({ ok: true });
+        await serveur.diffuserLesModules();
+        for (const ws of [alice, bob]) expect(paquets(ws, 'modules:vue').at(-1).payload.modules).toEqual([]);
     });
     it('confirme une commande une seule fois et refuse son rejeu', async () => {
         inscrire(alice, 'a', 'alice'); await ouvrir();

@@ -164,7 +164,7 @@ préserver les données antérieures et signaler l'échec au MJ.
 | G1 — emplacement | Livré : cockpit, autorisations et pupitre MJ, cartes autorisées et vues du module dans le Hub | Navigation et parcours d’ouverture/retrait éprouvés dans le banc hors ligne aux trois tailles. |
 | G2 — socle de table | Livré : identité liée à la socket, secret de reprise, droits par PJ, commandes ciblées et sérialisées, état privé natif, sauvegarde de session/export de campagne | Deux PJ, commandes MJ et usurpation refusées, autre campagne, reprise, retrait et échecs d’écriture testés sans port ouvert. Réseau/matériel réel à éprouver. |
 | A0/A2 — premier module | MU/TH/UR enregistré dans le moteur natif et les vues de l’hôte ; pupitre, terminaux, vidéo et son ciblé raccordés | Vrai hôte et vues dans le banc, 21 captures, commande joueur et vidéo décodée ; essai en séance à faire. |
-| A3/A4 — suite Alien | Détecteur, améliorations, cycle de vie, manuel et essais | Coupure et silence, sauvegarde/export/import, capture et essai matériel. |
+| A3/A4 — suite Alien | Détecteur enregistré, accès indépendants, scan partagé, son local, coupure générale et manuel ; étape 4 : six E2E avec Electron et deux sessions Edge sur le vrai HTTP/WebSocket | Retrait partiel, silence/déconnexion/reprise, vidéo/Range et transfert audio, fichier privé/redémarrage/import éprouvés sur le PC. Recette fictive fournie ; essai matériel encore à faire, dossiers/file de demandes ensuite. |
 | R0 — deuxième jeu | Définir le périmètre de la Table des Terres Médianes avec David | Puis livrer un module via le même contrat, sans modification spécifique de la navigation du Hub. |
 
 Le socle commun est maintenant raccordé au vrai module MU/TH/UR. Le plan Alien

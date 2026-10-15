@@ -15,6 +15,7 @@ export class ServiceDesModules {
     private generation = 0;
     private revision = 0;
     private acces = new Map<string, Set<string>>();
+    private ouvertures = new Map<string, Map<string, number>>();
     private erreur: string | undefined;
     private erreurEcriture: string | undefined;
     private file: Promise<unknown>;
@@ -64,6 +65,14 @@ export class ServiceDesModules {
         this.erreurEcriture = undefined;
     }
     private publier() { this.revision++; this.notifier(); }
+    // Un retrait chez Alice ne doit pas démonter le radar ni couper le son chez Bob.
+    private changerAcces(id: string, joueurs: Set<string>) {
+        const anciens = this.acces.get(id), ouvertures = new Map<string, number>();
+        for (const joueur of joueurs) ouvertures.set(joueur, anciens?.has(joueur)
+            ? this.ouvertures.get(id)!.get(joueur)! : this.generation + 1);
+        if (joueurs.size) { this.acces.set(id, joueurs); this.ouvertures.set(id, ouvertures); }
+        else { this.acces.delete(id); this.ouvertures.delete(id); }
+    }
     private arreter(donnees: SauvegardeDesModules, campagneId: string | null, modules?: Set<string>) {
         if (!campagneId) return;
         for (const [id, instance] of Object.entries(donnees.campagnes[campagneId] ?? {})) {
@@ -86,10 +95,9 @@ export class ServiceDesModules {
             // Fermer d'abord, même si le disque est indisponible : aucun ancien droit ne survit au contexte.
             this.generation++;
             this.contexte = copier(brut);
-            if (changementDeTable) this.acces.clear();
+            if (changementDeTable) { this.acces.clear(); this.ouvertures.clear(); }
             for (const [id, joueurs] of this.acces) {
-                if (retires.has(id)) this.acces.delete(id);
-                else for (const joueur of joueurs) if (!brut.personnages.some(p => p.id === joueur)) joueurs.delete(joueur);
+                this.changerAcces(id, new Set([...joueurs].filter(joueur => !retires.has(id) && brut.personnages.some(p => p.id === joueur))));
             }
             const suivante = copier(this.donnees);
             this.arreter(suivante, ancien.campagneId, changementDeTable ? undefined : retires);
@@ -116,10 +124,29 @@ export class ServiceDesModules {
             // Un retrait ne doit jamais attendre le disque pour couper une vue autorisée auparavant.
             const anciens = this.acces.get(demande.moduleId) ?? new Set<string>();
             const retrait = [...anciens].some(id => !demande.personnages.includes(id));
-            if (retrait) { this.acces.set(demande.moduleId, new Set([...anciens].filter(id => demande.personnages.includes(id)))); this.generation++; this.publier(); }
-            await this.ecrire(suivante);
-            this.acces.set(demande.moduleId, new Set(demande.personnages));
+            if (retrait) { this.changerAcces(demande.moduleId, new Set([...anciens].filter(id => demande.personnages.includes(id)))); this.generation++; this.publier(); }
+            try { await this.ecrire(suivante); }
+            catch (e) {
+                if (!demande.personnages.length) {
+                    const coupee = copier(this.donnees);
+                    this.arreter(coupee, campagne, new Set([demande.moduleId]));
+                    this.donnees = coupee; this.publier();
+                }
+                throw e;
+            }
+            this.changerAcces(demande.moduleId, new Set(demande.personnages));
             this.generation++; this.publier();
+        });
+    }
+    toutCouper(demande: { campagneId: string; contexte: number }) {
+        return this.serialiser(async () => {
+            // Même avec un fichier illisible, retirer les droits reste possible.
+            exiger(demande.campagneId === this.contexte.campagneId && demande.contexte === this.generation, 'La table a changé.');
+            this.acces.clear(); this.ouvertures.clear(); this.generation++;
+            const suivante = copier(this.donnees);
+            this.arreter(suivante, this.contexte.campagneId);
+            this.donnees = suivante; this.publier();
+            if (!this.erreur) { await this.ecrire(suivante); this.publier(); }
         });
     }
     private verifierContexte(requete: { campagneId: string; contexte: number }) {
@@ -169,7 +196,8 @@ export class ServiceDesModules {
         return { campagneId: this.contexte.campagneId, personnageId, contexte: this.generation, revision: this.revision,
             modules: this.erreur || !personnageId || !this.contexte.seanceId || !this.contexte.personnages.some(p => p.id === personnageId) ? []
                 : this.disponibles().filter(m => this.acces.get(m.reference.id)?.has(personnageId)).map(m => ({ id: m.reference.id, libelle: m.libelle,
-                    revision: this.revision, vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'joueur', personnageId, appareilId }) })),
+                    revision: this.revision, ouverture: this.ouvertures.get(m.reference.id)!.get(personnageId)!,
+                    vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'joueur', personnageId, appareilId }) })),
         };
     }
     importer(brut: SauvegardeDesModules) {
@@ -177,8 +205,9 @@ export class ServiceDesModules {
             const restauree = this.restaurer(brut);
             const suivante = copier(this.donnees);
             Object.assign(suivante.campagnes, restauree.campagnes);
+            this.arreter(suivante, this.contexte.campagneId);
             await this.ecrire(suivante);
-            this.acces.clear(); this.generation++; this.publier();
+            this.acces.clear(); this.ouvertures.clear(); this.generation++; this.publier();
         });
     }
 }

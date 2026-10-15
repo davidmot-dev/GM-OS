@@ -702,6 +702,7 @@ export class SyncServer {
         ipcMain.handle('modules:contexte', proteger((charge: ContexteDesModules) => this.modulesDuJeu.changerContexte(charge)));
         ipcMain.handle('modules:commander', proteger((charge: RequeteDeModule) => this.modulesDuJeu.commander(charge, { role: 'mj', appareilId: 'poste-mj' })));
         ipcMain.handle('modules:autoriser', proteger((charge: Parameters<ServiceDesModules['autoriser']>[0]) => this.modulesDuJeu.autoriser(charge)));
+        ipcMain.handle('modules:tout-couper', proteger((charge: Parameters<ServiceDesModules['toutCouper']>[0]) => this.modulesDuJeu.toutCouper(charge)));
         ipcMain.handle('modules:diffusion', proteger(async (charge: { campagneId: string; moduleId: string; appareilId: string; contexte: number }) => {
             const appareil = charge.appareilId === 'poste-mj' ? { id: 'poste-mj' } : this.appareilsDesModules().find(a => a.id === charge.appareilId);
             if (!appareil) throw new Error('Cet appareil n’est plus connecté.');

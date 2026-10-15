@@ -11444,8 +11444,36 @@ carte/terminal dans le Hub, vidéo avec HEAD/Range. **392 tests ciblés + 70 ess
 Node**, types/lint/build ; **21 captures** avec le vrai hôte en mémoire, 360/768/1180 px.
 Manuel et captures actualisés ; essais Electron et sur matériel réel non lancés.
 Prochaine étape : essai en répétition/tablettes, puis adaptateur détecteur.
-Base **67900d3c**, deuxième tranche non commitée. Aucun service ou paquet installé,
+Base **67900d3c**, deuxième tranche commitée depuis : **a128c7af**. Aucun service ou paquet installé,
 aucune donnée personnelle lue. [Détails de reprise](2026-10-15-etat-et-reprise.md).
+
+**Troisième tranche, suite du 15/10.** David : *« on fait l’étape 3 »*, puis
+*« Non, il est fermé. »* Le module `alien-detecteur` est enregistré dans les mêmes
+registres natif/React : moteur réutilisant `core.js`, dessin extrait dans `detecteur.js`
+commun au prototype et au Hub. Accès indépendants, scan partagé, contacts aléatoires,
+faux écho neuf secondes, réglages sauvegardés et bips locaux sur clic. Nettoyage des
+sons/animations au retrait, démontage, déconnexion et changement de PJ ; page masquée
+muette, mouvements réduits fixes. Une clé d’ouverture par PJ/module évite qu’un retrait
+ne ferme les instruments des autres. **Tout couper** est réservé au MJ natif, ferme
+tous les accès et coupe les effets même si le disque échoue (erreur visible).
+Reprise/import gardent les réglages, avec scan arrêté et droits fermés. Manuel 53/54/61,
+banc et capture Electron actualisés. **411 tests ciblés, 74 essais Node**, types,
+lint et build ; **39 captures hors ligne** (33 Hub + 6 prototype), revue visuelle.
+Capture Electron non lancée, réseau/matériel réel à éprouver ; aucun
+service réseau, installation ou profil personnel. Base **a128c7af**, non commité.
+Prochaine étape à cette date : essai jetable et tablettes réelles, puis dossiers/file des demandes.
+
+**Étape 4, suite du 15/10.** David : *« on fait le step 4 »*, puis GM-OS confirmé fermé.
+`e2e/modulesDuJeuAlien.spec.ts` éprouve le vrai paquet Electron et deux sessions Edge
+sur HTTP/WebSocket, profils et sauvegardes jetables : **six E2E verts**, droits distincts,
+confidentialité, commande MJ falsifiée refusée, radar à 360/768/1180, son et reprise après
+coupure, film décodé/Range 206, transfert du seul lecteur sonore, fichier privé et
+redémarrage/import. **Cinq captures** du vrai Hub, sorties dans `scratch/`, relues.
+Build/types/lint propres. Graphe audio réel, sorties muettes ; ni écoute sur enceinte,
+ni film entier, ni Wi-Fi/tablette physique validés. Le générateur `recette-alien.mjs`
+fournit une fiction explicite à `repetition`, sans lire les sauvegardes personnelles.
+[Recette matérielle](2026-10-15-recette-modules-alien.md). Instances de test fermées,
+aucun paquet installé, aucun code applicatif modifié dans cette étape ; étapes 3/4 non commitées.
 
 ---
 
@@ -11523,7 +11551,7 @@ aucune donnée personnelle lue. [Détails de reprise](2026-10-15-etat-et-reprise
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
-| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; G0–G2 et MU/TH/UR intégrés : accès PJ, hôte privé natif, sauvegardes/export, pupitre et terminaux ; 392 tests ciblés + 70 essais locaux, 21 captures | Essai sur instance jetable et tablettes réelles, puis adaptateur détecteur | Réseau/son/matériel réel à éprouver ; dossiers/file de demandes et Table des Terres Médianes ensuite |
+| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; G0–G2, MU/TH/UR et détecteur intégrés ; 411 tests ciblés/74 essais Node, 39 captures hors ligne puis six E2E sur vrai HTTP/WebSocket Electron/Edge et cinq captures Hub | Recette sur deux appareils physiques avec semence fictive | Wi-Fi/son/clavier/veille réels à éprouver ; dossiers/file de demandes et Table des Terres Médianes ensuite |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

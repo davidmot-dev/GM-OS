@@ -7,12 +7,12 @@ Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font mon
 **Ajout du 15/10/2026 — préparation des modules :** dans l’éditeur du pilote, **Modules du jeu**
 permet de conserver ou retirer **MU/TH/UR 6000** et le **Détecteur de mouvement**. Un ancien pilote
 Alien les propose par défaut, même avec un identifiant personnalisé. Le choix est sauvegardé et
-exportable. Le cockpit possède aussi l’entrée **Modules du jeu** pour préparer et ouvrir MU/TH/UR.
+exportable. Le cockpit possède aussi l’entrée **Modules du jeu** pour préparer et ouvrir ces outils.
 
 ![Sélection des modules du pilote Alien, composants réels dans un banc isolé avec données fictives](captures/jeu-alien-modules.jpg)
 
 Les captures de cette section montrent les composants et le moteur réels dans un banc hors ligne,
-avec données fictives. **Le détecteur attend encore son adaptateur** ; MU/TH/UR est raccordé au Hub.
+avec données fictives. MU/TH/UR et le détecteur sont raccordés au Hub, avec des accès indépendants.
 
 ### Préparer et ouvrir MU/TH/UR
 
@@ -40,18 +40,47 @@ connectée et autorisée, ou à **Ce poste MJ**. Sur cet appareil, touche aussi 
 Les autres écrans restent muets. La bande-son du film a priorité ; si l’alerte continue ensuite,
 la sirène et les annonces reprennent. La lecture automatique bloquée propose **Reprendre la vidéo**.
 
+### Préparer et ouvrir le détecteur
+
+1. Dans **Cockpit › Modules du jeu**, ouvre le pupitre de **Détecteur de mouvement**.
+2. Prépare **Contacts** (0–9), **Proximité** (0 loin, 100 près), **Intensité**, **Volume des bips**
+   et **Parasites**, puis **Enregistrer les réglages**. CRT et parasites se désactivent séparément.
+3. Pendant une séance, coche ses destinataires, indépendamment des accès à MU/TH/UR.
+   Autoriser l’instrument le laisse en veille ; **Démarrer le scan** le met en activité.
+4. Chaque activation tire les positions au hasard dans la proximité choisie, identiques sur
+   les appareils autorisés. **Faux écho · 9 s** ajoute un contact temporaire sans déplacer les autres.
+5. Le joueur ouvre sa carte dans le Hub et touche **Activer les bips ici** s’il souhaite les entendre.
+   Les bips sont locaux ; ils ne suivent pas le choix du diffuseur d’alarme MU/TH/UR.
+
+![Le pupitre du détecteur, réglages et scan dans le banc isolé](captures/jeu-alien-detecteur-mj.jpg)
+
+![Le détecteur reçu par un personnage autorisé](captures/jeu-alien-detecteur-joueur.jpg)
+
+**Arrêter le scan** garde les accès et les réglages. Retirer un PJ ferme uniquement son instrument,
+sans interrompre celui des autres ; le dernier retrait arrête le scan. Le détecteur est un
+accessoire de mise en scène : aucune distance réelle mesurée, aucun jet ou Stress automatique.
+Les mouvements réduits gardent le radar fixe. Un onglet masqué coupe ses bips.
+
 ### Fermer et reprendre
 
 Décocher un PJ ferme son module et ses effets locaux. **Fermer tous les accès et couper les effets**
-arrête aussi le compte à rebours. La fin de séance, un changement de campagne et le redémarrage
+arrête aussi les effets de cet instrument. **Tout couper**, en haut de la page, ferme les deux
+modules et arrête radar, faux écho et compte à rebours. La fin de séance, un changement de campagne et le redémarrage
 ferment les accès et arrêtent les effets ; la préparation et les dialogues sont conservés.
 Une reconnexion pendant la même séance retrouve les droits toujours ouverts, après vérification
 de l’identité de l’appareil. Les commandes interrompues ne sont jamais rejouées automatiquement.
+Après retour dans le détecteur, les bips nécessitent un nouveau clic local. Une coupure reste
+effective en mémoire si le disque échoue ; l’erreur est signalée au MJ.
 
 Les données privées sont stockées à part des campagnes diffusées aux tablettes. Les sauvegardes
 complètes et exports de campagne incluent les dossiers, codes et dialogues ; un export de pilote
-contient seulement les références aux modules. Les essais sur le réseau et le matériel réels
-restent à faire ; le banc vérifie le parcours sans lancer GM-OS ni ouvrir de port.
+contient seulement les références aux modules. Les réglages du détecteur sont aussi conservés,
+mais la reprise et l’import laissent le scan arrêté et ses accès fermés.
+Le vrai transport HTTP/WebSocket est aussi éprouvé entre une instance Electron jetable
+et deux sessions Edge isolées sur le même PC : six parcours couvrent confidentialité,
+droits, scan, déconnexion/reprise, vidéo et redémarrage/import. Le décodage et le graphe
+audio sont réels, avec sortie muette vers les enceintes. L’essai sur les tablettes,
+leur Wi-Fi, le clavier virtuel et les haut-parleurs physiques reste à faire.
 
 ---
 
@@ -113,3 +142,5 @@ se joue de même, avec le Stress déjà monté.
 La fiche d'Alien se relie à son personnage GM-OS (« Fiche du jeu »). Les pistes en cases (Stress,
 Santé, Radiation, Expérience, Points de Récit) se comptent, et les dix lignes d'équipement forment
 l'inventaire. Voir [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md).
+
+*Relu le 2026-10-15 : modules Alien et étape 4 ; parcours hors ligne et transport réel sur le PC vérifiés.*

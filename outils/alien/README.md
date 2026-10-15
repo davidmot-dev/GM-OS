@@ -9,8 +9,8 @@ conservé localement. Aucune ressource réseau externe n'est nécessaire.
 **Version 0.3.0 — 15/10/2026.** Protocoles à codes, messages type, alarme
 d'autodestruction et vidéo du Nostromo. Retour de David sur la version 0.1 du 13/10/2026 :
 *« c'est un bon début documente »*. Ce retour valide la direction de la
-première version ; les essais sur les tablettes physiques et l'intégration
-au pilote Alien restent à faire.
+première version ; les essais sur les tablettes physiques restent à faire.
+L’intégration au pilote Alien et au Tablet Hub est désormais livrée pour les deux outils.
 
 ## Essayer sans serveur
 
@@ -21,7 +21,7 @@ et **Importer une configuration**, pour garder un JSON ou changer de poste.
 Voir le [parcours de sauvegarde](modules/muthur/README.md#retrouver-sa-préparation-à-la-prochaine-ouverture).
 L'export contient les secrets du MJ ; les dialogues et alertes en cours ne
 sont pas enregistrés. Cette sauvegarde de préparation est distincte du mode
-fichier du prototype ci-dessous et de la future persistance du Tablet Hub.
+fichier du prototype ci-dessous et de la persistance privée du Tablet Hub.
 
 Ouvrir [index.html](index.html) dans Chrome ou Edge. Le mode fichier est un **atelier local** :
 poste meneur, aperçu joueur et deux opérateurs fictifs, REYES et SATO. Il garde
@@ -307,7 +307,7 @@ fonctionne bien et demande un plan d'amélioration et d'intégration au Tablet
 Hub. Le [plan dédié](../../documentation/Planning/2026-10-15-alien-tablet-hub.md)
 propose une activation séparée des deux outils par le MJ, des destinataires
 par personnage, la connexion existante du Hub et une sauvegarde privée par
-campagne. **Ces fonctions sont proposées, pas encore développées.**
+campagne. Elles sont maintenant livrées dans les tranches d’intégration décrites ci-dessous.
 
 David précise ensuite qu'il souhaite un **emplacement générique par jeu/pilote**.
 Le [plan Modules du jeu](../../documentation/Planning/2026-10-15-modules-du-jeu-tablet-hub.md)
@@ -326,13 +326,23 @@ conversion globale n'est pas nécessaire pour cet atelier.
 `alien-muthur`, un adaptateur du moteur existant, des vues React joueur/MJ,
 des types publics et des essais. La reprise des données v1 du prototype est
 prévue par une fonction pure, sans lecture des sauvegardes réelles. Le
-détecteur reste autonome. La sélection des modules dans le pilote, le catalogue
+détecteur a depuis son [adaptateur distinct](modules/detecteur/README.md). La sélection des modules dans le pilote, le catalogue
 de métadonnées et leur conservation à l’export/import sont intégrés. La deuxième
 tranche raccorde MU/TH/UR au registre exécutable, au transport privé, au stockage et
 aux accès par personnage du Hub. Ouvrir **Cockpit › Modules du jeu**, préparer le
-pupitre puis cocher les PJ pendant une séance. Le détecteur reste autonome.
+pupitre puis cocher les PJ pendant une séance. La troisième tranche raccorde aussi le détecteur :
+accès indépendants, réglages enregistrés, scan partagé, faux écho et bips locaux.
+**Tout couper** ferme les deux instruments et arrête leurs effets, même si le disque échoue.
 Les deux usages continuent à réutiliser
 la même logique de terminal.
+
+**Étape 4 :** six parcours de bout en bout éprouvent maintenant le vrai HTTP/WebSocket
+entre Electron et deux sessions Edge isolées sur le PC : confidentialité, droits,
+scan/reconnexion aux trois tailles, film/Range, transfert sonore et reprise/import.
+Une [recette avec semence fictive](../../documentation/Planning/2026-10-15-recette-modules-alien.md)
+permet de poursuivre sur deux appareils physiques sans campagnes personnelles.
+Le son des essais automatiques est muet vers les enceintes ; Wi-Fi, veille, clavier
+virtuel et restitution audio sur les tablettes restent à éprouver.
 
 | Fichier | Responsabilité |
 | --- | --- |
@@ -340,6 +350,7 @@ la même logique de terminal.
 | [style.css](style.css) | Habillage Alien, CRT et adaptation aux petits écrans |
 | [app.js](app.js) | Interactions, aperçu local, animations, radar et synthèse sonore |
 | [core.js](core.js) | Commandes, droits fictifs, dossiers et état partagé |
+| [detecteur.js](detecteur.js) | Dessin du radar partagé par le prototype et le module Hub |
 | [alarme.js](alarme.js) | Sirène et annonces vocales, partagées avec le module React |
 | [video-alerte.js](video-alerte.js) | Lecture du film, synchronisation et priorité audio |
 | [server.mjs](server.mjs) | HTTP, authentification, sauvegarde et diffusion ciblée |

@@ -41,6 +41,7 @@ const pont: PontDesModules = {
     contexte: charge => resultat(() => hote.changerContexte(charge)), lire: async () => ({ ...await hote.vueMJ(), appareils: personnages.map(p => ({ id: `tablette-${p.id}`, libelle: p.nom, personnageId: p.id })) }),
     commander: charge => resultat(() => hote.commander(charge, { role: 'mj', appareilId: 'poste-mj' })),
     autoriser: charge => resultat(() => hote.autoriser(charge)), importer: charge => resultat(() => hote.importer(charge)),
+    toutCouper: charge => resultat(() => hote.toutCouper(charge)),
     choisirDiffusion: charge => resultat(() => hote.choisirDiffusion(charge, { id: charge.appareilId, personnageId: charge.appareilId.replace('tablette-', '') })),
     surChangement: () => () => {},
 };

@@ -1,0 +1,13 @@
+{
+  "id": "custom-alien-recette",
+  "name": "Alien — recette des accessoires",
+  "author": "GM-OS — données fictives de test",
+  "version": "1.0.0",
+  "description": "Pilote fictif pour éprouver les modules du Hub, sans reproduire les règles d’Alien.",
+  "emoji": "👽",
+  "templateId": "generic",
+  "corpusId": "alien",
+  "dice": { "engine": "standard", "defaultDice": "1d6", "logic": "sum" },
+  "combat": { "statsToTrack": [], "initiativeFormula": "1d6" },
+  "modulesDuJeu": [{ "id": "alien-muthur" }, { "id": "alien-detecteur" }]
+}

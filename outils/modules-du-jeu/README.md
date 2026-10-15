@@ -21,7 +21,8 @@ export/import conservant les références, entrée au cockpit et onglet vide dan
 ciblé, sauvegarde privée, fichiers de session et exports de campagne. Le moteur
 MU/TH/UR s’enregistre dans `electron/modulesDuJeu/registre.ts` et ses composants
 dans `src/modules/modulesDuJeu/vuesDuRegistre.tsx`. Aucun secret ne voyage dans
-la synchronisation commune. Le détecteur attend son adaptateur.
+la synchronisation commune. La troisième tranche enregistre aussi le détecteur Alien,
+avec accès indépendants, scan partagé, bips locaux et commande MJ **Tout couper**.
 Le prototype `outils/alien` garde son manifeste et son fonctionnement autonomes.
 
 Le banc des composants réels se construit sans GM-OS ni serveur :
@@ -30,11 +31,31 @@ Le banc des composants réels se construit sans GM-OS ni serveur :
 node outils/modules-du-jeu/apercu-integration.mjs --capturer
 ```
 
-Il écrit `scratch/modules-du-jeu-integration/apercu.html` et 21 images aux largeurs
-360, 768 et 1180 px, dont ouverture MJ, terminal joueur, vidéo et retrait.
-`--manuel` copie les vues de sélection, pupitre et terminal dans le manuel des jeux.
+Il écrit `scratch/modules-du-jeu-integration/apercu.html` et 33 images aux largeurs
+360, 768 et 1180 px : MU/TH/UR, vidéo, détecteur, scan partagé, faux écho et coupure.
+`--manuel` copie les vues de sélection et des deux instruments dans le manuel des jeux.
+Six captures du radar autonome vérifient aussi la non-régression du dessin partagé.
 Le moteur/hôte et les vues sont réels, le stockage et la connexion sont en mémoire ;
 ces captures ne valident pas encore une partie en réseau.
+
+## Étape 4 : vrai transport et préparation de l’essai matériel
+
+`e2e/modulesDuJeuAlien.spec.ts` lance Electron sur profil jetable et deux contextes Edge,
+sans pont natif dans les navigateurs. Il éprouve HTTP/WebSocket, droits et confidentialité,
+scan/reconnexion aux trois tailles, vidéo/Range, transfert sonore, disque et reprise/import.
+Les captures et traces restent dans `scratch/modules-du-jeu-e2e/`. Les sorties audio sont
+muettes vers les enceintes ; le graphe Web Audio et le décodage vidéo sont réels.
+
+```powershell
+npm.cmd run build
+npx.cmd playwright test e2e/modulesDuJeuAlien.spec.ts --reporter=list --output=scratch/modules-du-jeu-e2e/resultats
+node outils/modules-du-jeu/recette-alien.mjs
+```
+
+La dernière commande génère une semence fictive pour une répétition matérielle sans
+campagnes personnelles. Elle ne lance aucun service. Suivre la
+[recette détaillée](../../documentation/Planning/2026-10-15-recette-modules-alien.md),
+en passant toujours le fichier généré à `npm.cmd run repetition -- …`.
 
 ## Vérifier un manifeste
 

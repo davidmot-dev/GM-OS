@@ -1,7 +1,9 @@
 import { lazy, Suspense, Component, type ReactNode } from 'react';
 import type { CommandeDeModule, ResultatDeModule } from './protocole';
 import type { VueMuthurMJ, VueMuthurJoueur } from '../../../outils/alien/modules/muthur/moteur.mjs';
+import type { EtatDetecteur } from '../../../outils/alien/modules/detecteur/moteur.mjs';
 import '../../../outils/alien/modules/muthur/style.css';
+import '../../../outils/alien/modules/detecteur/style.css';
 
 type Props = { vue: unknown; envoyerCommande: (commande: CommandeDeModule) => Promise<ResultatDeModule> };
 const joueurMuthur = lazy(async () => {
@@ -12,7 +14,18 @@ const mjMuthur = lazy(async () => {
     const { PupitreMJ } = await import('../../../outils/alien/modules/muthur/vues.mjs');
     return { default: (props: Props) => <PupitreMJ vue={props.vue as VueMuthurMJ} envoyerCommande={props.envoyerCommande} /> };
 });
-const REGISTRE_DES_VUES = new Map([['alien-muthur', { joueur: joueurMuthur, mj: mjMuthur }]]);
+const joueurDetecteur = lazy(async () => {
+    const { VueJoueur } = await import('../../../outils/alien/modules/detecteur/vues.mjs');
+    return { default: (props: Props) => <VueJoueur vue={props.vue as EtatDetecteur} envoyerCommande={props.envoyerCommande} /> };
+});
+const mjDetecteur = lazy(async () => {
+    const { PupitreMJ } = await import('../../../outils/alien/modules/detecteur/vues.mjs');
+    return { default: (props: Props) => <PupitreMJ vue={props.vue as EtatDetecteur} envoyerCommande={props.envoyerCommande} /> };
+});
+const REGISTRE_DES_VUES = new Map([
+    ['alien-muthur', { joueur: joueurMuthur, mj: mjMuthur }],
+    ['alien-detecteur', { joueur: joueurDetecteur, mj: mjDetecteur }],
+]);
 class GardeDuModule extends Component<{ children: ReactNode }, { echec: boolean }> {
     state = { echec: false };
     static getDerivedStateFromError() { return { echec: true }; }

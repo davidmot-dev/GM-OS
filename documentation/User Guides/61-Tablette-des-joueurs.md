@@ -87,7 +87,7 @@ les sept onglets affichent leur nom sur deux rangées en portrait, une sur grand
 | **Lieux** | L'**Atlas** de la campagne : les lieux découverts, à rouvrir quand on veut. |
 | **Inventaire** | Le sac du personnage : donner, jeter, consulter. |
 | **Cartes** | Les cartes tenues en main (Deck-OS). **Une pastille rouge compte les cartes qu'on vous tend.** |
-| **Modules du jeu** | Les outils ouverts à votre personnage par le meneur, par exemple MU/TH/UR pour Alien. Touchez la carte pour l’ouvrir et **Retour aux modules** pour revenir. Sans autorisation : **« Aucun module ouvert par le meneur. »** |
+| **Modules du jeu** | Les outils ouverts à votre personnage par le meneur, par exemple MU/TH/UR et le détecteur pour Alien. Touchez la carte pour l’ouvrir et **Retour aux modules** pour revenir. Sans autorisation : **« Aucun module ouvert par le meneur. »** |
 
 | Bouton | Ce qu'il ouvre |
 | :--- | :--- |
@@ -108,6 +108,12 @@ Dans **Modules du jeu**, un retrait d’accès ou une déconnexion ferme l’ins
 Les dialogues restent liés au personnage ; changer de PJ efface l’ancienne vue de la tablette.
 Pour MU/TH/UR, **Activer le son** autorise la lecture locale ; la bande-son d’alerte ne joue que sur
 l’appareil choisi pour la diffusion. Les autres tablettes gardent le décompte visuel.
+
+Le **Détecteur de mouvement** se reçoit séparément de MU/TH/UR. Le meneur démarre et règle
+le scan ; les PJ autorisés voient les mêmes contacts. Touchez **Activer les bips ici** pour
+les entendre sur cet appareil, ou **Couper les bips** pour le garder muet. Un onglet masqué se tait.
+Revenir dans l’instrument après une fermeture ou une déconnexion demande de réactiver les bips.
+Le radar respecte la préférence de mouvements réduits et n’écrit aucun Stress sur votre fiche.
 
 ![Les indices révélés restent consultables dans les Archives](captures/tablette-des-joueurs-archives.jpg)
 
@@ -229,3 +235,6 @@ La navigation reste nommée dans les six onglets ; les lecteurs gardent leur sor
 *Relu le 2026-10-07 pour T5 : halos et focus intérieur contrasté suivent le thème du PC,
 graphismes légers et réduction des animations respectés. Captures de démonstration
 régénérées et regardées ; les essais sur les vrais appareils restent en T6.*
+
+*Relu le 2026-10-15 : modules Alien, détecteur partagé et bips locaux vérifiés hors ligne,
+puis avec Electron et deux sessions Edge sur le même PC. Les appareils physiques restent à essayer.*

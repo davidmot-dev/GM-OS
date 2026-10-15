@@ -1,0 +1,14 @@
+{
+  "versionContrat": 1,
+  "id": "alien-detecteur",
+  "libelle": "Détecteur de mouvement",
+  "description": "Radar Alien scénarisé : contacts partagés, proximité, faux écho et intensité contrôlés par le meneur.",
+  "version": "0.1.0",
+  "versionDonnees": 1,
+  "corpusCompatibles": ["alien"],
+  "commandes": [
+    { "id": "configurer", "roles": ["mj"] },
+    { "id": "scanner", "roles": ["mj"] },
+    { "id": "faux-echo", "roles": ["mj"] }
+  ]
+}

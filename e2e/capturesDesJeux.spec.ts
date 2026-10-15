@@ -296,11 +296,17 @@ for (const { mise, pilote } of JEUX) {
             await photographier(modules, 'jeu-alien-modules');
             await vue(campagne, 'modules-du-jeu');
             await expect(f.locator('[data-hub-consultation="modules-du-jeu-mj"]')).toBeVisible();
-            await f.getByRole('button', { name: 'Ouvrir le pupitre', exact: true }).click();
+            await f.locator('article').filter({ has: f.getByRole('heading', { name: 'MU/TH/UR 6000', exact: true }) }).getByRole('button', { name: 'Ouvrir le pupitre', exact: true }).click();
             await expect(f.getByRole('heading', { name: 'MU/TH/UR · Poste meneur', exact: true })).toBeVisible();
             const fenetreDuPupitre = await gmos.application.browserWindow(f);
             await fenetreDuPupitre.evaluate(w => w.setContentSize(1440, 2200));
             await photographier(f.locator('.gmos-muthur'), 'jeu-alien-pupitre-module');
+            await f.locator('article').filter({ has: f.getByRole('heading', { name: 'Détecteur de mouvement', exact: true }) }).getByRole('button', { name: 'Ouvrir le pupitre', exact: true }).click();
+            await expect(f.locator('.gmos-detecteur')).toBeVisible();
+            await f.getByRole('button', { name: 'Démarrer le scan', exact: true }).click();
+            await expect(f.getByRole('button', { name: 'Arrêter le scan', exact: true })).toBeVisible();
+            await photographier(f.locator('.gmos-detecteur'), 'jeu-alien-detecteur-mj');
+            await f.getByRole('button', { name: 'Tout couper', exact: true }).click();
             await fenetreDuPupitre.evaluate(w => w.setContentSize(1440, 900));
         }
 

@@ -1,5 +1,8 @@
 import * as muthur from '../../outils/alien/modules/muthur/moteur.mjs';
 import manifeste from '../../outils/alien/modules/muthur/manifeste.json';
+import * as detecteur from '../../outils/alien/modules/detecteur/moteur.mjs';
+import manifesteDetecteur from '../../outils/alien/modules/detecteur/manifeste.json';
+import type { CommandeDetecteur } from '../../outils/alien/modules/detecteur/moteur.mjs';
 import type { CommandeMuthur, ContexteMuthur } from '../../outils/alien/modules/muthur/moteur.mjs';
 import type { CommandeDeModule } from '../../src/modules/modulesDuJeu/protocole';
 
@@ -37,5 +40,14 @@ export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new M
             return muthur.appliquerCommande(donnees, commande as CommandeMuthur, contexte(lecteur));
         },
         vuePour(donnees, lecteur) { muthur.validerEtat(donnees); return muthur.vuePour(donnees, contexte(lecteur)); },
+    }],
+    [manifesteDetecteur.id, {
+        manifeste: manifesteDetecteur, creerEtat: detecteur.creerEtat, migrerEtat: detecteur.migrerEtat,
+        arreterEffets(donnees) { detecteur.validerEtat(donnees); return detecteur.arreterEffets(donnees); },
+        appliquerCommande(donnees, commande, lecteur) {
+            detecteur.validerEtat(donnees);
+            return detecteur.appliquerCommande(donnees, commande as CommandeDetecteur, lecteur);
+        },
+        vuePour(donnees, lecteur) { detecteur.validerEtat(donnees); return detecteur.vuePour(donnees, lecteur); },
     }],
 ]);

@@ -9,7 +9,13 @@ six fonctions du moteur, un manifeste distinct et les composants React
 joueur/MJ. Son état exclut le radar ; aucun service partagé n'est déclaré
 pour ces deux modules à ce stade. L'adaptateur n'ajoute ni endpoint ni port,
 et le serveur autonome continue à utiliser le moteur d'origine.
-Le registre et l'hôte du Tablet Hub restent à implémenter. Le détail ci-dessous
+Le registre et l’hôte du Tablet Hub sont livrés depuis G2. La troisième tranche enregistre
+aussi [le détecteur](modules/detecteur/README.md), dont l’état exclut le terminal. Son radar
+est dessiné par `detecteur.js`, partagé avec `app.js`, et ses commandes réutilisent le cœur.
+Les destinataires sont ceux de l’hôte, indépendants de MU/TH/UR ; les bips sont locaux.
+**Tout couper** ferme les droits et arrête tous les effets, y compris en mémoire si le disque
+échoue. Une clé d’ouverture par PJ/module préserve les vues des autres destinataires.
+Le détail ci-dessous
 décrit toujours le transport et la persistance du prototype autonome.
 
 **Création de dossiers, 15/10 :** `creer-dossier` côté contrat est traduit en
@@ -55,7 +61,7 @@ protocoles) est conservée. `configuration.mjs` valide et copie le format
 portable ; `atelier.mjs` gère stockage, export Blob et import confirmé.
 Une restauration recrée un état de démonstration sans effets actifs. Les
 vues de contrat restent sans stockage propre et la sauvegarde par campagne
-du Hub reste une responsabilité de son futur hôte.
+du Hub est assurée par son hôte natif dans `electron/modulesDuJeu/`.
 
 En HTTP, les actions passent au serveur et les vues reçoivent des instantanés
 filtrés. Le transport est **HTTP + Server-Sent Events**, et non WebSocket.

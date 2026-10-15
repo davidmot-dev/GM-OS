@@ -13,7 +13,7 @@ describe('modules du pilote', () => {
         expect(resultat.corpusId).toBe('alien');
         expect(resultat.implicite).toBe(true);
         expect(resultat.references.map(r => r.id)).toEqual(['alien-muthur', 'alien-detecteur']);
-        expect(resultat.modules.map(m => m.disponibilite)).toEqual(['pret', 'a-adapter']);
+        expect(resultat.modules.map(m => m.disponibilite)).toEqual(['pret', 'pret']);
     });
     it('respecte une désactivation explicite', () => {
         expect(modulesDuPilote({ ...alien, modulesDuJeu: [] }).references).toEqual([]);

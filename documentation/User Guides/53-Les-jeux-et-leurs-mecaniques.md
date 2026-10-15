@@ -54,7 +54,11 @@ Les autres jeux attendent leurs modules compatibles.
 Dans **Cockpit › Modules du jeu**, **Ouvrir le pupitre** prépare l’outil. Pendant une séance,
 coche les personnages dans **Accès des personnages** : leur Tablet Hub reçoit la carte du module.
 Décocher un personnage lui retire l’accès immédiatement. **Fermer tous les accès et couper les
-effets** conserve la préparation et les dialogues. Le détecteur Alien attend encore son adaptateur.
+effets** conserve la préparation et les dialogues. **Tout couper** ferme tous les modules et leurs
+effets à la fois, même si le disque est indisponible (l’erreur de sauvegarde reste visible).
+MU/TH/UR et le détecteur Alien sont disponibles avec des accès indépendants. Le détecteur permet
+un scan partagé entre les PJ choisis, des contacts aléatoires dans la proximité retenue et un faux
+écho de neuf secondes. Chaque appareil active localement ses bips. Aucun Stress n’est modifié.
 
 Chaque joueur reçoit uniquement sa vue autorisée. Sans accès, l’onglet dit **« Aucun module
 ouvert par le meneur. »** Changer de campagne, terminer la séance ou redémarrer ferme les accès
@@ -249,3 +253,6 @@ Un pilote **nouveau ou amélioré** se reporte ici, dans le même mouvement :
    (`MISES_EN_SCENE`).
 4. **Une mécanique nouvelle dans le code** doit avoir sa ligne sur cette page : le test
    `electron/manuelDesJeux.test.ts` échoue tant qu'elle n'y est pas.
+
+*Relu le 2026-10-15 : les deux modules Alien, leurs accès indépendants et la coupure générale,
+puis six parcours sur le vrai transport Electron/Edge du PC. Appareils physiques à éprouver.*

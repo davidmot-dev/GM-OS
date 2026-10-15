@@ -10,7 +10,10 @@ sont exécutables. **Au 15/10, le champ du pilote, son éditeur, le catalogue de
 la validation et la conservation à l’export/import sont implémentés. Le cockpit et le Hub
 possèdent un hôte générique. La deuxième tranche raccorde MU/TH/UR au processus principal,
 avec droits par personnage, transport ciblé, reprise d’appareil et stockage privé des instances.
-Les essais de réseau et de matériel réels restent à effectuer.** Ce document fixe leur cible commune.
+La troisième ajoute le détecteur Alien et la coupure générale des modules. Les droits d’un
+PJ/module possèdent une clé d’ouverture : retirer un autre destinataire ne démonte pas sa vue.
+L’étape 4 éprouve le vrai HTTP/WebSocket entre Electron et deux sessions Edge isolées sur
+le PC ; réseau sans fil et matériel physique restent à essayer.** Ce document fixe leur cible commune.
 
 ## 1 · Trois éléments, trois responsabilités
 
@@ -26,7 +29,7 @@ version référence des implémentations livrées avec GM-OS. Le registre associ
 explicitement leurs manifestes à leur code ; la déclaration d'un pilote
 ne déclenche aucun chargement de script, chemin ou URL.
 
-MU/TH/UR et le détecteur Alien seront les premiers modules réels. La Table
+MU/TH/UR et le détecteur Alien sont les premiers modules réels. La Table
 des Terres Médianes de Rêve de Dragon est une deuxième cible à spécifier.
 Ce contrat n'en définit aucune règle de jeu.
 
@@ -200,7 +203,9 @@ l'import, signalés au MJ et laissés indisponibles.
 
 La mutation s'effectue sur un état candidat validé. L'hôte sérialise les
 écritures par instance et persiste atomiquement **avant** le succès et la
-diffusion. En cas d'échec, il conserve l'état précédent. Export/import et
+diffusion. En cas d'échec, il conserve la préparation précédente. Le retrait des droits et
+la coupure des effets restent immédiats en mémoire même si leur écriture échoue ; le MJ voit
+cet échec. Export/import et
 sauvegarde de campagne DOIVENT inclure ces données privées ; elles ne sont
 pas ajoutées aux objets `Campaign` diffusés au Hub.
 
@@ -239,7 +244,9 @@ et CLI). Aucun essai d'interface, de transport ou d'appareil à ce stade.
 
 Le premier adaptateur réel, [MU/TH/UR](../../outils/alien/modules/muthur/README.md),
 est livré avec moteur, manifeste et composants React, enregistré dans l’hôte et le transport privé
-de GM-OS. Le détecteur n’a pas encore d’adaptateur enregistré.
+de GM-OS. Le [détecteur Alien](../../outils/alien/modules/detecteur/README.md) est aussi enregistré,
+avec droits indépendants, scan partagé et bips locaux. Les essais d’interface et de transport
+hors ligne ne remplacent pas l’essai sur réseau et tablettes physiques.
 
 Un module livré DOIT documenter ses commandes, ses données, ses migrations,
 ses effets, ses limites et ses essais. Sa page de jeu et le guide des
