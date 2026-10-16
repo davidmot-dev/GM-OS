@@ -21,6 +21,8 @@ export interface RollRecord extends RollResult {
     forcages?: number;
     /** Les 1 dont le prix a déjà été annoncé, pour ne pas les annoncer deux fois. */
     unsAnnonces?: number;
+    /** NOC : à qui les 1 de ce jet de destin ont été attribués au pupitre — voir `fielAuPupitre`. */
+    fielAttribue?: 'heros' | 'rouage';
 }
 
 /**
@@ -41,6 +43,8 @@ interface DiceState {
     /** La matière des dés en 3D : résine, verre ou métal. */
     styleDesDes: StyleDeDes;
     setLastRoll: (roll: RollRecord) => void;
+    /** Annote un jet déjà consigné, sans le consigner de nouveau. */
+    annoterLeJet: (id: string, annotation: Pick<RollRecord, 'fielAttribue'>) => void;
     setIsDiceProjected: (projected: boolean) => void;
     setEnable3D: (enabled: boolean) => void;
     setStyleDesDes: (style: StyleDeDes) => void;
@@ -90,6 +94,10 @@ export const useDiceStore = create<DiceState>()(
                     history: [roll, ...state.history].slice(0, 50),
                 }));
             },
+            annoterLeJet: (id, annotation) => set((state) => ({
+                lastRoll: state.lastRoll?.id === id ? { ...state.lastRoll, ...annotation } : state.lastRoll,
+                history: state.history.map(r => r.id === id ? { ...r, ...annotation } : r),
+            })),
             setIsDiceProjected: (isDiceProjected) => set({ isDiceProjected }),
             setEnable3D: (enable3D) => set({ enable3D }),
             setStyleDesDes: (styleDesDes) => set({ styleDesDes }),

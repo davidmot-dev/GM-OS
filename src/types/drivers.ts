@@ -221,8 +221,13 @@ export interface ApportDuGroupe {
     /**
      * Où se lit chaque stock, dans les valeurs du groupe. Un seul : il
      * s'applique d'office. Plusieurs : `composante` choisit, sinon le joueur.
+     *
+     * `horsPlafondSi` : ce stock échappe à `maxParJet` quand le jet retient ce
+     * champ pour cette composante — l'**Atout Capital** de NOC, dont on dépense
+     * autant de points qu'on veut, mais seulement en préparant le Talent
+     * Fortune (carnet « NOC », section « Capital », 2026-10-16).
      */
-    stocks: { champ: string; label: string; pour?: string }[];
+    stocks: { champ: string; label: string; pour?: string; horsPlafondSi?: { composante: string; champ: string } }[];
     /**
      * La composante du jet qui désigne le stock : le Domaine retenu par le
      * Héros (`action`) prend le stock dont `pour` vaut `action`.
@@ -246,6 +251,95 @@ export interface CasesDeSante {
      * cases, pour qu'il n'y ait pas deux vérités.
      */
     champ?: string;
+}
+
+/**
+ * **Ce qu'un geste de table fait à un champ de la fiche de chaque Héros** —
+ * NOC, 2026-10-16 (`src/modules/table/gestesDesHeros.ts`).
+ *
+ * Un gain ou une perte, borné ; la perte peut être réduite par un Talent de
+ * résistance, et une réserve vide qui devrait perdre encore coche un état.
+ */
+export interface MouvementDeFiche {
+    /** Le champ qui bouge : `espoir`, `blessures`. */
+    champ: string;
+    /** Le nom dit dans l'aperçu ; à défaut, celui du champ. */
+    label?: string;
+    /** +1, −1, −2 ; `'plein'` remet le champ à son plafond (le Vécu d'un nouveau scénario). */
+    delta: number | 'plein';
+    /** Un champ dont la valeur s'ajoute au gain : l'Extase à l'Espoir regagné. */
+    plus?: string;
+    /**
+     * Un Talent qui réduit la perte de sa valeur : la Folie contre la Tension.
+     * Négatif, il l'aggrave (Folie −1 : trois points au lieu de deux).
+     */
+    resistance?: string;
+    /** Plancher. Absent : zéro. */
+    min?: number;
+    /**
+     * Plafond : un nombre, ou une valeur lue sur la fiche — `fois × champ + plus`,
+     * borné par `plafond`. L'Espoir de NOC : 2 × Ferveur + 3, au plus 10.
+     */
+    max?: number | { champ: string; fois?: number; plus?: number; plafond?: number };
+    /** Un champ qui porte un plancher qu'aucun repos ne retire : les séquelles. */
+    plancher?: string;
+    /** À son plancher et devant perdre encore : cette case se coche (Espoir → Fatigué). */
+    aVideCoche?: string;
+}
+
+/** Une réserve de table qui bouge avec un geste — le Fiel −1 d'un moment de calme. */
+export interface MouvementDeTable {
+    ressource: string;
+    delta: number;
+}
+
+/** Un effet que la Loi choisit au débordement — voir `GestesDesHeros.effetsDuDebordement`. */
+export interface EffetDeDebordement {
+    id: string;
+    label: string;
+    /** Ce que la Loi lit avant de choisir. */
+    description?: string;
+    /** Ce que l'effet fait à chaque Héros. Choisi deux fois, les pertes s'additionnent AVANT la résistance. */
+    heros?: MouvementDeFiche[];
+    /** Une case que l'effet coche chez chaque Héros : le Bouleversement administratif. */
+    coche?: string;
+    /** Ce que l'outil ne sait pas faire, dit après l'application : l'Aura de lumière, les alliés. */
+    aDire?: string;
+}
+
+/**
+ * **Les gestes de table qui touchent chaque Héros de la campagne** — NOC,
+ * 2026-10-16. Le bandeau des réserves les propose au meneur, avec un aperçu par
+ * Héros avant d'écrire.
+ */
+export interface GestesDesHeros {
+    /**
+     * **Le moment de calme** : la table respire, puis chaque Héros récupère —
+     * dans l'ordre du livre de NOC : −1 Fiel, +1 Espoir + Extase, −1 à chaque
+     * jauge de péril (jamais sous les séquelles), et Fatigué prend fin.
+     */
+    momentDeCalme?: {
+        table?: MouvementDeTable[];
+        heros: MouvementDeFiche[];
+        /** Les cases qui se décochent : Fatigué. */
+        leve?: string[];
+        /**
+         * Une récupération amputée, à répartir par le joueur — le Soupçon de la
+         * Cabale Dykovienne : à 5, 8 et 10 points, deux, quatre ou six points de
+         * moins. L'outil applique tout et **dit** ce qu'il faut reprendre.
+         */
+        amputation?: { champ: string; label: string; seuils: { aPartirDe: number; points: number }[]; parmi?: string };
+    };
+    /** Ce que chaque Héros regagne à « Début de séance » : le Vécu de NOC, +1. */
+    debutDeSeance?: MouvementDeFiche[];
+    /** Ce que chaque Héros regagne à « Nouveau scénario » : le Vécu de NOC, plein. */
+    nouveauScenario?: MouvementDeFiche[];
+    /**
+     * **Les effets du débordement** — les effets du Fiel de NOC : quand la
+     * `ressource` déborde, la Loi en choisit autant que vaut `nombreSelon`
+     * (la Menace), éventuellement le même plusieurs fois.
+     */
+    effetsDuDebordement?: { ressource: string; nombreSelon: string; effets: EffetDeDebordement[] };
 }
 
 /** La fiche du groupe — voir `GameDriver.ficheDeGroupe`. */
@@ -442,6 +536,12 @@ export interface GameDriver {
      * s'affiche — plutôt qu'un bandeau vide qui suggérerait un oubli.
      */
     ressourcesDeTable?: import('../modules/table/RessourcesDeTable').RessourceDeTable[];
+    /**
+     * **Les gestes de table qui touchent chaque Héros** — NOC, 2026-10-16 : le
+     * moment de calme, le Vécu de la séance et du scénario, les effets du Fiel.
+     * Absent : le bandeau ne propose que les gestes des réserves.
+     */
+    gestesDesHeros?: GestesDesHeros;
     /** Outils proposés par le pilote ; [] désactive les propositions implicites du jeu. Aucun secret ici. */
     modulesDuJeu?: ReferenceDeModuleDuJeu[];
     /**

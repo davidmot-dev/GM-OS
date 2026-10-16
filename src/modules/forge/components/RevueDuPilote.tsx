@@ -355,6 +355,32 @@ export const RevueDuPilote: React.FC<{
         </Bloc>
       )}
 
+      {driver.gestesDesHeros && (
+        <Bloc titre="Gestes sur chaque Héros">
+          {driver.gestesDesHeros.momentDeCalme && (
+            <Ligne clef="Moment de calme">
+              {[
+                ...(driver.gestesDesHeros.momentDeCalme.table ?? []).map(t => `${t.ressource} ${t.delta > 0 ? '+' : ''}${t.delta}`),
+                ...driver.gestesDesHeros.momentDeCalme.heros.map(m => `${m.label ?? m.champ} ${m.delta === 'plein' ? 'plein' : `${m.delta > 0 ? '+' : ''}${m.delta}`}${m.plus ? ` + ${m.plus}` : ''}`),
+                ...(driver.gestesDesHeros.momentDeCalme.leve ?? []).map(c => `${c} prend fin`),
+              ].join(', ')}
+            </Ligne>
+          )}
+          {(['debutDeSeance', 'nouveauScenario'] as const).map(cle => (driver.gestesDesHeros![cle]?.length ?? 0) > 0 && (
+            <Ligne key={cle} clef={cle === 'debutDeSeance' ? 'Début de séance' : 'Nouveau scénario'}>
+              {driver.gestesDesHeros![cle]!.map(m => `${m.label ?? m.champ} ${m.delta === 'plein' ? 'plein' : `${m.delta > 0 ? '+' : ''}${m.delta}`}`).join(', ')}
+            </Ligne>
+          ))}
+          {driver.gestesDesHeros.effetsDuDebordement && (
+            <Ligne clef="Effets du débordement">
+              autant que <Id valeur={driver.gestesDesHeros.effetsDuDebordement.nombreSelon} /> quand{' '}
+              <Id valeur={driver.gestesDesHeros.effetsDuDebordement.ressource} /> déborde :{' '}
+              {driver.gestesDesHeros.effetsDuDebordement.effets.map(e => e.label).join(', ')}
+            </Ligne>
+          )}
+        </Bloc>
+      )}
+
       <Bloc titre="Combat">
         <Ligne clef="Ordre d'action">
           {combat?.initiative?.mode

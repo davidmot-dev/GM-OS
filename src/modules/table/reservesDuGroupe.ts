@@ -148,8 +148,10 @@ export function apportsDisponibles(
         const reste = !stock ? 0 : Math.max(0, apport.epuisement === 'piste'
             ? niveauDuGroupe(sheetData, stock.champ)
             : (etatDesReserves[idDeReserveDuGroupe(stock.champ)] ?? 0));
-        // Un point de Vécu, un point d'Atout par test : le plafond du jet borne ce qu'on engage.
-        const dispo = apport.maxParJet !== undefined ? Math.min(reste, apport.maxParJet) : reste;
+        // Un point de Vécu, un point d'Atout par test : le plafond du jet borne ce qu'on engage —
+        // sauf le stock qui en est libéré par le champ retenu (Capital, sur le Talent Fortune).
+        const libere = !!stock?.horsPlafondSi && choixDuJet[stock.horsPlafondSi.composante] === stock.horsPlafondSi.champ;
+        const dispo = apport.maxParJet !== undefined && !libere ? Math.min(reste, apport.maxParJet) : reste;
         return { apport, stock, dispo, reste, points: Math.min(Math.max(0, engages[apport.id] ?? 0), dispo) };
     });
 }

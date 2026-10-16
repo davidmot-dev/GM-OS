@@ -95,3 +95,27 @@ describe('ce que les points rapportent', () => {
         expect(d.map(x => [x.apport.id, x.dispo, x.points])).toEqual([['des', 1, 1], ['espoir', 4, 4]]);
     });
 });
+
+describe("l'Atout Capital — plusieurs points, sur le Talent Fortune seulement", () => {
+    // Carnet « NOC », section « Capital » (2026-10-16) : les autres Atouts, un seul point par test.
+    const ATOUTS: ApportDuGroupe = {
+        id: 'atout', label: 'Atout', effet: 'bonus', parPoint: 1, epuisement: 'scenario', maxParJet: 1,
+        stocks: [
+            { champ: 'assets.statut.capital', label: 'Capital', horsPlafondSi: { composante: 'talent', champ: 'fortune' } },
+            { champ: 'assets.action.armory', label: 'Armurerie' },
+        ],
+    };
+    const etat = { [idDeReserveDuGroupe('assets.statut.capital')]: 3, [idDeReserveDuGroupe('assets.action.armory')]: 2 };
+    const dispo = (talent: string, stock: string) =>
+        apportsDisponibles([ATOUTS], { talent }, { atout: stock }, { atout: 3 }, {}, etat)[0];
+
+    it('sur Fortune, tout le Capital qui reste peut servir', () => {
+        expect(dispo('fortune', 'assets.statut.capital')).toMatchObject({ dispo: 3, points: 3 });
+    });
+    it('sur un autre Talent, le Capital reste à un point', () => {
+        expect(dispo('rang', 'assets.statut.capital')).toMatchObject({ dispo: 1, points: 1 });
+    });
+    it('les autres Atouts restent à un point, même sur Fortune', () => {
+        expect(dispo('fortune', 'assets.action.armory')).toMatchObject({ dispo: 1, points: 1 });
+    });
+});

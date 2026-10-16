@@ -1537,3 +1537,67 @@ describe('les dés d’usure déclarés par le pilote', () => {
         expect(surLUsure([{ fieldId: 'torche', label: 'Torche', plafond: 7 }]).map(c => c.ou)).toEqual(['desDUsure[0].plafond']);
     });
 });
+
+describe('les gestes qui touchent chaque Héros — NOC, 2026-10-16', () => {
+    const RESERVES = [
+        { id: 'Fiel', label: 'Fiel', proprietaire: 'meneur', depart: 0, min: 0, max: 5, debordement: { vers: 'Menace' } },
+        { id: 'Menace', label: 'Menace', proprietaire: 'meneur', depart: 0, min: 0 },
+    ];
+    const ficheNoc: Partial<SheetTemplate> = {
+        sections: [{ id: 'h', label: 'Héros', fields: ['espoir', 'extase', 'ferveur', 'trauma', 'folie', 'vecu', 'fatigue'].map(id => ({ id, label: id, type: 'number' })) }] as SheetTemplate['sections'],
+    };
+    const surLesGestes = (gestes: unknown) => controlerLePilote(
+        { ressourcesDeTable: RESERVES, gestesDesHeros: gestes } as unknown as Partial<GameDriver>, ficheNoc,
+    ).filter(c => c.ou.startsWith('gestesDesHeros')).map(c => [c.ou, c.gravite]);
+
+    it('des gestes déclarés juste passent', () => {
+        expect(surLesGestes({
+            momentDeCalme: { table: [{ ressource: 'Fiel', delta: -1 }], heros: [{ champ: 'espoir', delta: 1, plus: 'extase', max: { champ: 'ferveur', fois: 2, plus: 3, plafond: 10 } }], leve: ['fatigue'] },
+            debutDeSeance: [{ champ: 'vecu', delta: 1, max: 3 }],
+            nouveauScenario: [{ champ: 'vecu', delta: 'plein', max: 3 }],
+            effetsDuDebordement: { ressource: 'Fiel', nombreSelon: 'Menace', effets: [
+                { id: 'tension', label: 'Tension', heros: [{ champ: 'trauma', delta: 2, resistance: 'folie' }] },
+                { id: 'fatigue', label: 'Fatigue', heros: [{ champ: 'espoir', delta: -1, aVideCoche: 'fatigue' }] },
+            ] },
+        })).toEqual([]);
+    });
+
+    it('une réserve inconnue est une erreur, un champ absent un avertissement', () => {
+        expect(surLesGestes({
+            momentDeCalme: { table: [{ ressource: 'Elan', delta: -1 }], heros: [{ champ: 'nulle_part', delta: 0 }] },
+            nouveauScenario: [{ champ: 'vecu', delta: 'plein' }],
+            effetsDuDebordement: { ressource: 'Menace', nombreSelon: 'Absente', effets: [
+                { id: 'a', label: 'A', coche: 'introuvable' }, { id: 'a', label: 'Vide' },
+            ] },
+        })).toEqual([
+            ['gestesDesHeros.momentDeCalme.heros[0].delta', 'erreur'],
+            ['gestesDesHeros.momentDeCalme.heros[0]', 'avertissement'],
+            ['gestesDesHeros.momentDeCalme.table[0]', 'erreur'],
+            ['gestesDesHeros.nouveauScenario[0].max', 'erreur'],
+            ['gestesDesHeros.effetsDuDebordement.ressource', 'avertissement'],
+            ['gestesDesHeros.effetsDuDebordement.nombreSelon', 'erreur'],
+            ['gestesDesHeros.effetsDuDebordement.effets[0].coche', 'avertissement'],
+            ['gestesDesHeros.effetsDuDebordement.effets[1].id', 'erreur'],
+            ['gestesDesHeros.effetsDuDebordement.effets[1]', 'avertissement'],
+        ]);
+    });
+
+    it("l'Atout Capital et le Bouleversement visent des composantes du jet", () => {
+        const constats = controlerLePilote({
+            jet: {
+                sens: 'superieur-ou-egal',
+                seuil: [{ id: 'talent', label: 'Talent', sectionId: 'h' }],
+                reserve: { base: 0, faces: 10, composantes: [{ id: 'domaine', label: 'Domaine', sectionId: 'h' }] },
+                destin: { peril: [{ champ: 'fatigue', label: 'B', seuils: [{ aPartirDe: 1, label: 'Bouleversement', talents: -1, seulementSi: { composante: 'Domaine', champ: 'statut' } }] }] },
+            },
+            ficheDeGroupe: { libelle: 'Cabale', gabaritDeLaFiche: 'noc-cabale', apports: [{
+                id: 'atout', label: 'Atout', effet: 'bonus', parPoint: 1, epuisement: 'scenario', maxParJet: 1,
+                stocks: [{ champ: 'capital', label: 'Capital', horsPlafondSi: { composante: 'competence', champ: 'fortune' } }],
+            }] },
+        } as unknown as Partial<GameDriver>, ficheNoc);
+        expect(constats.filter(c => c.ou.includes('horsPlafondSi') || c.ou.includes('seulementSi')).map(c => [c.ou, c.gravite])).toEqual([
+            ['jet.destin.peril[0].seuils[0].seulementSi', 'erreur'],
+            ['ficheDeGroupe.apports[0].stocks[0].horsPlafondSi', 'erreur'],
+        ]);
+    });
+});

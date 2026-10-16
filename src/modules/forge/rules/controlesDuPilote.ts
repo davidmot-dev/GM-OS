@@ -1,5 +1,5 @@
 import { ECHELLE_D_USURE } from '../../dice/desDUsure';
-import type { GameDriver, DiceRollLogic, DiceConfig } from '../../../types/drivers';
+import type { GameDriver, DiceRollLogic, DiceConfig, MouvementDeFiche } from '../../../types/drivers';
 import { modulesDuPilote } from '../../modulesDuJeu/catalogue';
 import type { HealthSystemType } from '../../../types/entity.types';
 import type { SheetTemplate, SheetSection, SheetFieldType } from '../../../data/defaultSheetTemplates';
@@ -552,10 +552,17 @@ export function controlerLePilote(
         if (!driver.jet?.seuil?.length || !driver.jet?.reserve?.composantes?.length) {
             erreur('jet.destin', 'Provoquer le destin demande un niveau (« seuil » : le Talent) et un plafond de dés (« reserve.composantes » : le Domaine).');
         }
+        const composantes = new Set([...(driver.jet?.seuil ?? []), ...(driver.jet?.reserve?.composantes ?? [])].map(c => c.id));
         (destin.peril ?? []).forEach((jauge, i) => {
             if (!tousLesChamps.has(jauge.champ)) {
                 avertir(`jet.destin.peril[${i}].champ`, `La jauge de péril « ${jauge.label} » vise le champ « ${jauge.champ} », absent de la fiche : ses malus ne s'appliqueront jamais.`);
             }
+            // Le Bouleversement administratif : un malus réservé aux jets du Domaine Statut.
+            jauge.seuils.forEach((s, j) => {
+                if (s.seulementSi && !composantes.has(s.seulementSi.composante)) {
+                    erreur(`jet.destin.peril[${i}].seuils[${j}].seulementSi`, `« ${s.label} » ne vaut que pour la composante « ${s.seulementSi.composante} », que le jet ne déclare pas : il ne s'appliquera jamais.`);
+                }
+            });
         });
     }
     (driver.jet?.reservesDuPersonnage ?? []).forEach((reserve, i) => {
@@ -1425,6 +1432,19 @@ export function controlerLePilote(
                     avertir(`${ou}.stocks`, `« ${nom} » suit une composante, mais certains stocks ne disent pas pour quel champ : ils ne seront jamais retenus.`);
                 }
             }
+            // L'Atout Capital : libéré du plafond par un champ que le jet doit pouvoir retenir.
+            apport.stocks.forEach((stock, j) => {
+                const libere = stock.horsPlafondSi;
+                if (!libere) return;
+                if (!composantesDuJet.has(libere.composante)) {
+                    erreur(`${ou}.stocks[${j}].horsPlafondSi`, `« ${stock.label} » est libéré par la composante « ${libere.composante} », que le jet ne déclare pas.`);
+                } else if (!tousLesChamps.has(libere.champ)) {
+                    avertir(`${ou}.stocks[${j}].horsPlafondSi`, `« ${stock.label} » est libéré par « ${libere.champ} », absent de la fiche : il restera plafonné.`);
+                }
+                if (apport.maxParJet === undefined) {
+                    avertir(`${ou}.stocks[${j}].horsPlafondSi`, `« ${nom} » n'a pas de plafond par jet : libérer « ${stock.label} » ne change rien.`);
+                }
+            });
         });
     }
 
@@ -1473,6 +1493,68 @@ export function controlerLePilote(
             );
         }
     });
+
+    // ---- Les gestes qui touchent chaque Héros (NOC, 2026-10-16) ------------
+    /*
+      Un geste qui vise un champ absent ne fait rien en silence : le meneur
+      croit avoir rendu l'Espoir, aucune fiche n'a bougé. Un champ manquant est
+      donc dit ; une réserve de table manquante est une erreur.
+    */
+    const gestes = driver.gestesDesHeros;
+    if (gestes) {
+        const controlerLesMouvements = (mouvements: MouvementDeFiche[] | undefined, ou: string) => {
+            (mouvements ?? []).forEach((m, i) => {
+                const ici = `${ou}[${i}]`;
+                const nom = m.label ?? m.champ;
+                if (m.delta !== 'plein' && !(Number.isInteger(m.delta) && m.delta !== 0)) {
+                    erreur(`${ici}.delta`, `« ${nom} » doit bouger d'un nombre entier non nul, ou revenir « plein ».`);
+                }
+                if (m.delta === 'plein' && m.max === undefined) {
+                    erreur(`${ici}.max`, `« ${nom} » revient « plein » sans plafond : il ne bougerait jamais.`);
+                }
+                const lus = [m.champ, m.plus, m.resistance, m.plancher, m.aVideCoche,
+                    typeof m.max === 'object' ? m.max.champ : undefined].filter((c): c is string => !!c);
+                for (const champ of lus) {
+                    if (!tousLesChamps.has(champ)) avertir(ici, `« ${nom} » lit ou écrit « ${champ} », absent de la fiche.`);
+                }
+            });
+        };
+        const calme = gestes.momentDeCalme;
+        if (calme) {
+            controlerLesMouvements(calme.heros, 'gestesDesHeros.momentDeCalme.heros');
+            (calme.table ?? []).forEach((t, i) => {
+                if (!ressources.has(t.ressource)) {
+                    erreur(`gestesDesHeros.momentDeCalme.table[${i}]`, `Le moment de calme fait bouger « ${t.ressource} », qui n'est pas une réserve de table du jeu.`);
+                }
+            });
+            for (const champ of [...(calme.leve ?? []), ...(calme.amputation ? [calme.amputation.champ] : [])]) {
+                if (!tousLesChamps.has(champ)) avertir('gestesDesHeros.momentDeCalme', `Le moment de calme lit « ${champ} », absent de la fiche.`);
+            }
+        }
+        controlerLesMouvements(gestes.debutDeSeance, 'gestesDesHeros.debutDeSeance');
+        controlerLesMouvements(gestes.nouveauScenario, 'gestesDesHeros.nouveauScenario');
+        const effets = gestes.effetsDuDebordement;
+        if (effets) {
+            const ou = 'gestesDesHeros.effetsDuDebordement';
+            const source = (driver.ressourcesDeTable ?? []).find(r => r.id === effets.ressource);
+            if (!source) {
+                erreur(`${ou}.ressource`, `Les effets suivent « ${effets.ressource} », qui n'est pas une réserve de table du jeu.`);
+            } else if (!source.debordement) {
+                avertir(`${ou}.ressource`, `« ${source.label} » ne déclare pas de débordement : ses effets n'auront jamais de moment.`);
+            }
+            if (!ressources.has(effets.nombreSelon)) {
+                erreur(`${ou}.nombreSelon`, `Le nombre d'effets se lit dans « ${effets.nombreSelon} », qui n'est pas une réserve de table du jeu.`);
+            }
+            const ids = new Set<string>();
+            effets.effets.forEach((e, i) => {
+                if (ids.has(e.id)) erreur(`${ou}.effets[${i}].id`, `Deux effets portent l'identifiant « ${e.id} ».`);
+                ids.add(e.id);
+                controlerLesMouvements(e.heros, `${ou}.effets[${i}].heros`);
+                if (e.coche && !tousLesChamps.has(e.coche)) avertir(`${ou}.effets[${i}].coche`, `« ${e.label} » coche « ${e.coche} », absent de la fiche.`);
+                if (!e.heros?.length && !e.coche && !e.aDire) avertir(`${ou}.effets[${i}]`, `« ${e.label} » ne fait rien aux Héros et ne dit rien.`);
+            });
+        }
+    }
 
     return constats;
 }

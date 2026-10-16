@@ -250,3 +250,57 @@ se lit dans `git log`. Les mentions « non commité » précédentes décrivent 
 cette demande. Le push conserve les hooks types/lint/tests/build et la synchronisation
 NotebookLM du guide Alien, autorisée explicitement plus tôt par David. Les trois chemins
 non suivis déjà présents ne font pas partie de ce commit.
+
+## Horloges du décompte, du film, de l’alarme et du faux écho — Claude Code, 16/10
+
+David : *« corrige les trois horloges »*, puis *« gm-os est éteint »*. Le raccord du HACK
+(`instantServeur` → `horloge()`) est étendu aux autres lecteurs d’échéance serveur :
+`CompteARebours`, `VideoAlerte` et l’alarme de `outils/alien/modules/muthur/vues.mjs`, et le
+faux écho du détecteur (`modules/detecteur/vues.mjs`, option `instant` de `detecteur.js`,
+`vuesDuRegistre.tsx` qui transmet désormais l’horloge au détecteur). Film, alarme et boucle
+de dessin lisent la dernière horloge par `useHeureStable` (référence) : les recréer à chaque
+projection relancerait le film. Aucun format de données, aucun champ réseau nouveau.
+
+Validation : 85 vérifications Node d’Alien et du contrat, 138 tests Vitest (18 fichiers :
+modules, hôte, Hub), `npx tsc -b` et lint ciblé propres. Deux essais ajoutés : OMEGA-10 sur
+une tablette en avance d’une minute affiche 12:56 (11:56 avant), film et alarme reçoivent
+l’heure serveur puis suivent une nouvelle projection ; faux écho visible à +60 s (3 échos
+sans horloge, 4 avec). **Pas d’E2E Electron relancé** ni de construction de production.
+L’atelier autonome garde l’heure locale. Contrat, README des deux modules et registre
+actualisés. Non commité.
+
+## NOC — moment de calme, effets du Fiel, Fatigué, Capital, Vécu et Rouages — Claude Code, 16/10
+
+David : *« on va faire NOC »* ; les quatre lots retenus (moment de calme + Fatigué, effets du
+Fiel, Atout Capital, Vécu et Rouages) ; Cthulhu Hack et Blade Runner **après**. GM-OS confirmé
+éteint plus tôt (*« gm-os est éteint »*), rien lancé depuis. Règles : carnet NotebookLM « NOC »
+interrogé deux fois (lecture seule). Détail, règles et restes : registre § ⭐, entrée du 16/10.
+
+Fichiers : `src/types/drivers.ts` (`GestesDesHeros`, `MouvementDeFiche`, `EffetDeDebordement`,
+`stocks[].horsPlafondSi`), `src/modules/table/gestesDesHeros.ts` + `FenetreDesGestesDesHeros.tsx`
+(variante `gestes-des-heros` du `ModalProvider`), `PanneauDesRessources.tsx` (prop `gestes`,
+passée par `SessionDashboard`), `reservesDuGroupe.ts`, `dice/systemes/nocturne.ts`
+(`valeurDeJauge`, `seulementSi`), `dice/fielAuPupitre.ts` + `DiceBoard.tsx`, `useDiceStore`
+(`fielAttribue`, `annoterLeJet`), Forge (`controlesDuPilote.ts`, `RevueDuPilote.tsx`), manuel 53
+et 54 NOC.
+
+Validation : `npx tsc -b` propre ; **1 716 tests Vitest dans 118 fichiers** (table, dés, Forge,
+panneau de jet, composants dont la garde Échap, magasins, garde du manuel) ; lint des fichiers
+touchés propre. Essais nouveaux : `gestesDesHeros.test.ts` (15), `FenetreDesGestesDesHeros.test.tsx`
+(3), `fielAuPupitre.test.ts` (5), Capital, Fatigué/Bouleversement et contrôles de la Forge.
+**Rien vu à l'écran**, pas d'E2E. **Le pilote NOC de David n'est pas encore corrigé** : sans
+`gestesDesHeros` déclaré, le bandeau ne montre rien de neuf. Non commité.
+
+**Suite — pilote NOC corrigé.** David exporte le pilote (*« j'ai fait l'export (on fini NOC puis
+on commite et pousse) »*). Corrigé dans `Export Dirvers/corriges/` : sections États et Séquelles,
+deux jauges de malus, Capital libéré, `gestesDesHeros` ; zéro constat de la Forge. Trouvé en
+lisant la fiche : les Blessures sont portées par les cases de santé — `table/ecrireLesHeros.ts`
+passe par `updateCharacterHealth` pour ce champ (essai `ecrireLesHeros.test.ts`). Un Héros déjà
+Fatigué n'est plus annoncé « coché ». **David réimporte le pilote corrigé** (« Remplacer »).
+
+**Mise en version.** David demande *« on fini NOC puis on commite et pousse »*. Deux commits :
+`fix(alien): …` (horloges, avec le contrat et les README des modules) puis `feat(noc): …` (code,
+Forge, manuel, registre et cet état) ; `git log` donne leurs identifiants. Les mentions « non
+commité » ci-dessus décrivent l'état avant cette demande. Non suivis et hors commit :
+`Export Dirvers/`, `outils/jdr-pdf-vers-md/`, et `2026-10-16-analyse-lcars-star-trek.md`
+(pas écrit par Claude Code — laissé à son auteur).

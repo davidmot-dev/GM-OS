@@ -34,6 +34,7 @@ import NarrativeModal from '../modules/map/components/NarrativeModal';
 import LootOS from '../modules/session/components/LootOS';
 import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 import VitrineDuSocle from './socle/VitrineDuSocle';
+import FenetreDesGestesDesHeros, { type GesteDesHeros } from '../modules/table/FenetreDesGestesDesHeros';
 import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire } from './socle/CadreDeSurcouche';
 import { CoinsOrnes } from './socle/Ornement';
 
@@ -221,6 +222,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'rencontres' && <Swords size={18} />}
                                         {customVariant === 'fiche-combattant' && <ScrollText size={18} />}
                                         {customVariant === 'vitrine-du-socle' && <Shapes size={18} />}
+                                        {customVariant === 'gestes-des-heros' && <Users size={18} />}
                                     </div>
                                     <h3 className="font-display font-bold text-app-text uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && t('common:modals.player_add')}
@@ -254,6 +256,9 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'music-pad-edit' && 'Pastille'}
                                         {/* Littéral : un écran de refonte, pour un seul lecteur. */}
                                         {customVariant === 'vitrine-du-socle' && 'Vitrine du socle'}
+                                        {/* Littéral : deux gestes de NOC, pour un seul lecteur. */}
+                                        {customVariant === 'gestes-des-heros' && ((defaultValue as { geste?: GesteDesHeros } | undefined)?.geste === 'calme'
+                                            ? 'Moment de calme' : 'Effets du débordement')}
                                     </h3>
                                 </div>
                                 <button
@@ -319,6 +324,12 @@ const ModalProvider: React.FC = () => {
                                 />
                             )}
                             {customVariant === 'fiche-combattant' && <FicheDuCombattant />}
+                            {customVariant === 'gestes-des-heros' && (
+                                <FenetreDesGestesDesHeros
+                                    geste={(defaultValue as { geste?: GesteDesHeros } | undefined)?.geste ?? 'calme'}
+                                    onClose={closeModal}
+                                />
+                            )}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
                         {/* Ornements visibles (2026-10-13) : les fenêtres portent les coins du thème. */}

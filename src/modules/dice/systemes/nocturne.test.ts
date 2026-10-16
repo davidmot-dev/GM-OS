@@ -56,3 +56,28 @@ describe('provoquer le destin', () => {
         expect(resoudreLeDestin(1, 1, [8], 3).annules).toBe(0);
     });
 });
+
+describe('Fatigué et le Bouleversement administratif — 2026-10-16', () => {
+    const FATIGUE: JaugeDePeril = { champ: 'fatigue', label: 'Fatigue', seuils: [{ aPartirDe: 1, label: 'Fatigué', talents: -1 }] };
+    const BOULEVERSEMENT: JaugeDePeril = {
+        champ: 'bouleversement', label: 'Bouleversement',
+        seuils: [{ aPartirDe: 1, label: 'Bouleversement administratif', talents: -1, seulementSi: { composante: 'domaine', champ: 'statut' } }],
+    };
+
+    it('une case cochée vaut un : Fatigué retire un au Talent', () => {
+        expect(malusDePeril([FATIGUE], { fatigue: true })).toEqual({ domaines: 0, talents: 1, etats: ['Fatigué (Fatigue)'] });
+        expect(malusDePeril([FATIGUE], { fatigue: 'true' }).talents).toBe(1);
+        expect(malusDePeril([FATIGUE], { fatigue: false }).talents).toBe(0);
+        expect(malusDePeril([FATIGUE], {}).talents).toBe(0);
+    });
+
+    it('le Bouleversement ne touche que les jets du Domaine Statut', () => {
+        expect(malusDePeril([BOULEVERSEMENT], { bouleversement: true }, { domaine: 'statut' }).talents).toBe(1);
+        expect(malusDePeril([BOULEVERSEMENT], { bouleversement: true }, { domaine: 'action' }).talents).toBe(0);
+        expect(malusDePeril([BOULEVERSEMENT], { bouleversement: true }).talents).toBe(0);
+    });
+
+    it('Fatigué se cumule avec une séquelle à huit : −2 aux Talents', () => {
+        expect(malusDePeril([...JAUGES, FATIGUE], { blessures: 8, fatigue: true }).talents).toBe(2);
+    });
+});

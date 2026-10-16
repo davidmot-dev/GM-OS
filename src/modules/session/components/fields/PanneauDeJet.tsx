@@ -235,7 +235,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       `null` : il n'a pas touché au compte, on propose le plafond.
     */
     const destin = descripteur.destin;
-    const malus = destin?.peril ? malusDePeril(destin.peril, valeurs) : { domaines: 0, talents: 0, etats: [] as string[] };
+    const malus = destin?.peril ? malusDePeril(destin.peril, valeurs, choix) : { domaines: 0, talents: 0, etats: [] as string[] };
     const plafondDuDestin = destin ? Math.max(0, jet.nombreDeDes - malus.domaines) : 0;
     const [desDeDestin, setDesDeDestin] = useState<number | null>(null);
     const desLances = Math.min(desDeDestin ?? plafondDuDestin, plafondDuDestin);

@@ -90,6 +90,7 @@ const SessionDashboard: React.FC = () => {
                 <PanneauDesRessources
                     campaignId={activeCampaignId}
                     ressources={ressourcesDeLaTable(activeDriver, activeCampaign)}
+                    gestes={activeDriver?.gestesDesHeros}
                 />
             )}
 

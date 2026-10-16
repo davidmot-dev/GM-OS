@@ -1,12 +1,16 @@
 import React from 'react';
-import { Plus, Minus, Users, Crown, Hourglass, Sunrise, RotateCcw } from 'lucide-react';
+import { Plus, Minus, Users, Crown, Hourglass, Sunrise, RotateCcw, Coffee, Flame } from 'lucide-react';
 import { gmToast } from '../../stores/useToastStore';
-import { gmConfirm } from '../../stores/useModalStore';
+import { gmConfirm, gmCustom } from '../../stores/useModalStore';
 import { useRessourcesDeTableStore } from './useRessourcesDeTableStore';
+import { useSessionOSStore } from '../session/useSessionOSStore';
 import {
     visiblePourUnJoueur, manipulableParUnJoueur,
     type RessourceDeTable, type ResultatDeMouvement,
 } from './RessourcesDeTable';
+import type { GestesDesHeros, MouvementDeFiche } from '../../types/drivers';
+import { changementsEffectifs, herosDeLaCampagne, recuperationDesHeros } from './gestesDesHeros';
+import { ecrireLesHeros } from './ecrireLesHeros';
 
 /**
  * Les réserves de la table, sous la main du meneur.
@@ -39,6 +43,12 @@ interface PanneauDesRessourcesProps {
      * lui au lieu d'être seulement appliqués.
      */
     pourLesJoueurs?: boolean;
+    /**
+     * Les gestes qui touchent chaque Héros (NOC, 2026-10-16) : le moment de
+     * calme, les effets du débordement, et ce que la séance et le scénario
+     * rendent aux fiches — le Vécu. Réservés au meneur.
+     */
+    gestes?: GestesDesHeros;
 }
 
 const CLASSE_DU_GESTE = 'flex items-center gap-1.5 px-3 py-1 rounded-lg border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:border-accent/40 hover:text-accent transition-colors';
@@ -51,17 +61,38 @@ function annoncer(resultat: ResultatDeMouvement) {
 }
 
 const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
-    campaignId, ressources, pourLesJoueurs = false,
+    campaignId, ressources, pourLesJoueurs = false, gestes,
 }) => {
     const { etatDe, gagner, depenser, finDeScene, debutDeSeance, nouveauScenario, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const etat = etatDe(campaignId, ressources);
+    const players = useSessionOSStore(s => s.players);
+    const updateCharacter = useSessionOSStore(s => s.updateCharacter);
+    const updateCharacterHealth = useSessionOSStore(s => s.updateCharacterHealth);
+    const gestesDuMeneur = pourLesJoueurs ? undefined : gestes;
 
     // Les réserves de la Cabale se lisent dans le panneau de jet, là où l'on puise.
     const dansLeBandeau = ressources.filter(r => !r.horsDuBandeau);
     const montrees = pourLesJoueurs ? dansLeBandeau.filter(visiblePourUnJoueur) : dansLeBandeau;
     const erosionPossible = !pourLesJoueurs && ressources.some(r => r.erosionFinDeScene);
-    const seancePossible = !pourLesJoueurs && ressources.some(r => r.erosionDebutDeSeance);
-    const scenarioPossible = !pourLesJoueurs && ressources.some(r => r.remiseAuDepartParScenario);
+    const seancePossible = !pourLesJoueurs && (ressources.some(r => r.erosionDebutDeSeance) || !!gestesDuMeneur?.debutDeSeance?.length);
+    const scenarioPossible = !pourLesJoueurs && (ressources.some(r => r.remiseAuDepartParScenario) || !!gestesDuMeneur?.nouveauScenario?.length);
+    const calmePossible = !!gestesDuMeneur?.momentDeCalme;
+    const debordement = gestesDuMeneur?.effetsDuDebordement;
+    const nomDe = (id: string) => ressources.find(r => r.id === id)?.label ?? id;
+
+    /**
+     * Ce que la séance ou le scénario rend à chaque Héros — le Vécu de NOC.
+     * Écrit sur la fiche ; le nombre de fiches touchées est dit.
+     */
+    const rendreAuxHeros = (mouvements: MouvementDeFiche[] | undefined): number => {
+        const changements = changementsEffectifs(recuperationDesHeros(mouvements, herosDeLaCampagne(players, campaignId)));
+        return ecrireLesHeros(changements, { players, updateCharacter, updateCharacterHealth });
+    };
+    const direLesHeros = (n: number, quoi: string) => {
+        if (n > 0) gmToast(`${quoi} : ${n} fiche${n > 1 ? 's' : ''} de Héros mise${n > 1 ? 's' : ''} à jour.`, 'info');
+    };
+    const nomsDesMouvements = (mouvements: MouvementDeFiche[] | undefined) =>
+        [...new Set((mouvements ?? []).map(m => m.label ?? m.champ))].join(', ');
 
     /** Les réserves qui reviennent à leur départ, nommées — la confirmation dit ce qu'elle efface. */
     const remisesAuDepart = dansLeBandeau.filter(r => r.remiseAuDepartParScenario);
@@ -164,8 +195,31 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                 le meneur qui le décide. On lui donne le bouton plutôt que de
                 deviner à partir d'un combat ou d'un changement de carte.
             */}
-            {(erosionPossible || seancePossible || scenarioPossible) && (
+            {(erosionPossible || seancePossible || scenarioPossible || calmePossible || !!debordement) && (
                 <div className="ml-auto flex items-center gap-2">
+                    {/*
+                        Le moment de calme et les effets du débordement écrivent sur
+                        chaque fiche : ils ouvrent un aperçu, Héros par Héros, avant
+                        d'appliquer.
+                    */}
+                    {calmePossible && (
+                        <button
+                            onClick={() => gmCustom('gestes-des-heros', { geste: 'calme' })}
+                            className={CLASSE_DU_GESTE}
+                            title="La table respire : ce que chaque Héros récupère, à relire avant d'appliquer"
+                        >
+                            <Coffee size={11} /> Moment de calme
+                        </button>
+                    )}
+                    {debordement && (
+                        <button
+                            onClick={() => gmCustom('gestes-des-heros', { geste: 'debordement' })}
+                            className={CLASSE_DU_GESTE}
+                            title={`Choisir autant d'effets que vaut ${nomDe(debordement.nombreSelon)}, puis les appliquer à chaque Héros`}
+                        >
+                            <Flame size={11} /> Effets du {nomDe(debordement.ressource)}
+                        </button>
+                    )}
                     {erosionPossible && (
                         <button
                             onClick={() => {
@@ -189,7 +243,9 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                             onClick={() => {
                                 const r = debutDeSeance(campaignId, ressources);
                                 annoncer(r);
-                                if (r.mouvements.length === 0) gmToast('Rien à éroder : les réserves sont au plancher.', 'info');
+                                const heros = rendreAuxHeros(gestesDuMeneur?.debutDeSeance);
+                                direLesHeros(heros, `Début de séance (${nomsDesMouvements(gestesDuMeneur?.debutDeSeance)})`);
+                                if (r.mouvements.length === 0 && heros === 0) gmToast('Rien à éroder : les réserves sont au plancher.', 'info');
                             }}
                             className={CLASSE_DU_GESTE}
                             title="Applique l'érosion de début de séance déclarée par le système"
@@ -208,11 +264,15 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                                 `Nouveau scénario : ${[
                                     ...remisesAuDepart.map(r => `${r.label} revient à ${r.depart}`),
                                     ...(reservesCachees ? ['les réserves du groupe se rechargent'] : []),
+                                    ...(gestesDuMeneur?.nouveauScenario?.length
+                                        ? [`chaque Héros récupère : ${nomsDesMouvements(gestesDuMeneur.nouveauScenario)}`] : []),
                                 ].join(', ')}.`,
                                 () => {
                                     const r = nouveauScenario(campaignId, ressources);
                                     annoncer(r);
-                                    if (r.mouvements.length === 0) gmToast('Les réserves sont déjà à leur départ.', 'info');
+                                    const heros = rendreAuxHeros(gestesDuMeneur?.nouveauScenario);
+                                    direLesHeros(heros, 'Nouveau scénario');
+                                    if (r.mouvements.length === 0 && heros === 0) gmToast('Les réserves sont déjà à leur départ.', 'info');
                                 },
                                 undefined,
                                 'Remettre',

@@ -1,6 +1,6 @@
 # 🌌 Jeu — NOC
 
-> **Pilote décrit :** « NOC », exporté le 2026-10-13. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « NOC », exporté le 2026-10-16 et corrigé le jour même (gestes des Héros). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Les Héros résistent dans un monde enfermé dans l'Artefact. Trois choses rendent ce jeu différent
 dans GM-OS : les **dés de destin**, le **Fiel** qui déborde en **Menace**, et la **Cabale**, la
@@ -17,8 +17,9 @@ cellule commune à toute la table.
 | **Fiel** (0 à 5) | Une goutte par 1 sur un dé de destin. Les joueurs la voient et la font monter eux-mêmes, depuis leur tablette. **À la cinquième goutte, la jauge se vide et la Menace monte de 1** ; un message le dit, c'est le moment où la Loi applique autant d'effets du Fiel que la Menace |
 | **Menace** (sans plafond) | Aux mains de la Loi, visible des joueurs. **« Début de séance »** lui retire un point ; **« Nouveau scénario »** la remet à zéro |
 
-Les gouttes **s'ajoutent seules** quand un dé de destin fait 1, depuis le panneau de jet ; le + du
-Fiel reste là pour un 1 tiré ailleurs (au pupitre, par un Rouage).
+Les gouttes **s'ajoutent seules** quand un dé de destin fait 1, depuis le panneau de jet. Au
+pupitre, deux boutons demandent si le jet est celui d'un Héros ou d'un Rouage hostile (voir plus
+bas) ; le + et le − du Fiel restent là pour le reste.
 
 Si le Fiel est à 4 et reçoit 3 gouttes, la jauge se vide une fois et **reste à 2** : les gouttes
 se posent une à une. Les règles ne tranchent pas ce cas.
@@ -97,8 +98,8 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 
 > **Relu contre le carnet NotebookLM « NOC » le 2026-10-13** : les Domaines, les Atouts, l'Espoir,
 > le Vécu et la Singularité de la Cabale **se rechargent au début de chaque scénario**, un point
-> d'Atout donne +1 au Talent lié, **un seul par test** (sauf l'Atout Capital, que le pilote ne
-> distingue pas encore). **L'Espoir, le Vécu et la Singularité de la Cabale sont des pistes de sa
+> d'Atout donne +1 au Talent lié, **un seul par test** (sauf l'Atout Capital, sur le Talent Fortune — voir
+> plus bas). **L'Espoir, le Vécu et la Singularité de la Cabale sont des pistes de sa
 > feuille : remettez-les à leur valeur en début de scénario** — « Nouveau scénario » ne recharge que
 > les Domaines et les Atouts.
 
@@ -122,12 +123,61 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 
 ---
 
+## Le moment de calme, les effets du Fiel, le Vécu — 2026-10-16
+
+> ⚠️ **Ces gestes demandent le pilote corrigé du 16/10** : sa fiche gagne une section **États**
+> (Fatigué, Bouleversement administratif) et une section **Séquelles** (une par jauge de péril),
+> et il déclare `gestesDesHeros` et le Capital libéré. Tant qu'il n'est pas réimporté, le bandeau
+> ne les montre pas. Règles relues contre le carnet NotebookLM « NOC » le 2026-10-16.
+
+**Moment de calme** (bouton du bandeau). Un aperçu dit, Héros par Héros, ce qui va changer, puis
+**« Appliquer »** écrit les fiches, dans l'ordre du livre :
+
+1. le **Fiel** perd une goutte ;
+2. chaque Héros regagne **1 Espoir + son Extase**, sans dépasser le plafond de sa **Ferveur**
+   (−1 → 1, 0 → 3, 1 → 5, 2 → 7, 3 → 9, 4 et plus → 10) ;
+3. chaque **jauge de péril** perd un point, jamais sous ses **Séquelles** : à 8 points, un
+   point devient permanent — ajoutez-le au champ « Séquelles » de la jauge ;
+4. **Fatigué** prend fin.
+
+Le **Soupçon** (Cabale Dykovienne) ampute la récupération : à 5, 8 et 10 points, le Héros
+récupère 2, 4 ou 6 points de moins, **au choix du joueur**. L'aperçu le dit ; reprenez ces points
+à la main. Le partage de l'Extase entre Héros qui se reposent ensemble reste à la main aussi.
+
+**Effets du Fiel** (bouton du bandeau). Quand le Fiel déborde, choisissez autant d'effets que
+vaut la **Menace** — le même plusieurs fois si vous le voulez — puis appliquez :
+
+| Effet | Ce que GM-OS écrit sur chaque Héros |
+| :--- | :--- |
+| **Bouleversement administratif** | La case **Bouleversement** : −1 aux Talents du Domaine **Statut**, au panneau de jet. Décochez-la au bout du cycle (49 heures) ; pas de Faveur pendant ce temps |
+| **Intervention de l'Artefact** | +2 Noirceur, moins sa **Lumière**. L'Aura de lumière d'un allié peut encore réduire : à la main |
+| **Tension** | +2 Trauma, moins sa **Folie** (Folie −1 : +3) |
+| **Traque** | +2 Traque, moins sa **Façade** |
+| **Fatigue** | −1 Espoir ; déjà à zéro, la case **Fatigué** se coche : −1 à tous les Talents jusqu'au prochain moment de calme |
+
+Un même effet choisi deux fois **cumule ses pertes avant la résistance** : deux Tensions avec
+Folie 1 font 4 − 1 = 3 points de Trauma. Les alliés de la Loi ne sont pas touchés : à la main.
+
+**Le Vécu.** « Début de séance » rend **+1 Vécu** à chaque Héros (jusqu'à 3) ; « Nouveau
+scénario » le remet **plein**. Un Vécu agrandi par le Développement n'est jamais ramené à 3.
+
+**L'Atout Capital** se dépense **sans limite** de points sur un même test, mais seulement sur le
+Talent **Fortune** ; tous les autres Atouts restent à un point par test.
+
+**Le jet d'un Rouage, au pupitre.** Après un jet de dés de destin qui fait des 1, le pupitre
+demande **qui a lancé** : « Un Héros » verse les gouttes dans le Fiel, « Un Rouage hostile » en
+retire autant. Fiel déjà vide : un Héros désigné par la Loi gagne la Singularité qui reste — à
+reporter sur sa fiche.
+
+---
+
 ## Ce qui manque encore
 
-- **L'Atout Capital**, le seul dont on peut dépenser plusieurs points sur un test, est borné à un
-  comme les autres.
-- **L'état Fatigué** (−1 aux Talents quand l'Espoir est épuisé par un effet du Fiel) ne se suit
-  pas : ajoutez 1 à la difficulté à la main.
-- **Les Rouages** qui tirent un 1 retirent une goutte de Fiel : le − du bandeau.
-- **Le Soupçon** (Cabale Dykovienne) est sur la fiche, de 0 à 10 ; ses effets jouent sur la
-  récupération aux moments de calme, que GM-OS ne compte pas.
+- **Les Séquelles** ne se comptent pas seules : à 8 points d'une jauge, ajoutez le point permanent
+  au champ « Séquelles » ; le moment de calme le respecte ensuite.
+- Les **Blessures** passent par les dix cases de santé : le moment de calme en décoche une, comme
+  « Soins ».
+- **La Singularité** gagnée par un Rouage, l'**Aura de lumière**, le **partage de l'Extase** et
+  les **alliés** se reportent à la main.
+- **Les réserves de la Cabale** (Espoir, Vécu, Singularité) se remettent toujours à la main au
+  nouveau scénario.

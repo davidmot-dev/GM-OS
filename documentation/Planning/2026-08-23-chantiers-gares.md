@@ -26,6 +26,44 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> **16/10 — NOC : moment de calme, effets du Fiel, Fatigué, Capital, Vécu et Rouages (Claude
+> Code).** David : *« on va faire NOC »*, les quatre lots choisis. Règles relues dans le carnet
+> NotebookLM « NOC » (`nlm notebook query`, sections citées : « Capital », « Fatigue », « LES
+> MOMENTS DE CALME », « Les effets du Fiel », « Retrouver Espoir », « ROUAGES ET FORCES
+> OCCULTES »). **Code fait, non commité** : `GameDriver.gestesDesHeros` (`MouvementDeFiche`,
+> `EffetDeDebordement`) et `table/gestesDesHeros.ts` (pur) ; `FenetreDesGestesDesHeros` (aperçu
+> Héros par Héros, puis « Appliquer ») ouverte par « Moment de calme » et « Effets du … » au
+> bandeau ; « Début de séance » et « Nouveau scénario » rendent le Vécu ; `stocks[].horsPlafondSi`
+> (Capital libéré sur Fortune) ; `JaugeDePeril.seuils[].seulementSi` (Bouleversement : Domaine
+> Statut) et une case cochée vaut 1 (Fatigué) ; `dice/fielAuPupitre.ts` (« Un Héros » / « Un
+> Rouage hostile » au pupitre, une fois par jet, Singularité annoncée à Fiel vide) ; contrôles et
+> revue de la Forge ; manuel 53 et 54 NOC. Règles fixées : effet choisi deux fois = pertes
+> cumulées **avant** la résistance ; Espoir max = 2 × Ferveur + 3, au plus 10 ; Fatigué si
+> l'Espoir est déjà à 0 et doit perdre. ⛔ **Un seul écrivain pour la santé** : les Blessures
+> sont portées par les dix cases (`updateCharacterHealth` réécrit le champ) ; `ecrireLesHeros`
+> fait donc bouger les cases quand un geste touche ce champ, sinon le coup suivant le remontait.
+> **Pilote corrigé** dans `Export Dirvers/corriges/` depuis l'export du 16/10 (script hors dépôt,
+> export d'origine intact), **zéro constat** de la Forge, gestes simulés sur un Héros fictif :
+> fiche + sections **États** (`fatigue`, `bouleversement`, cases) et **Séquelles**
+> (`sequelles_<jauge>`, plancher du calme) ; péril + Fatigue et Bouleversement (`seulementSi`
+> domaine = statut) ; Capital `horsPlafondSi` talent = fortune ; `gestesDesHeros` complet. **À
+> réimporter par David** (« Remplacer »). Reste à la main : Aura de lumière, partage de l'Extase,
+> alliés, Singularité gagnée par un Rouage, pistes de la Cabale, report d'une séquelle à 8.
+
+> **16/10 — Cthulhu Hack et Blade Runner : les jauges que GM-OS ne suit pas (constat, rien codé).**
+> Question de David : *« dans Cthulhu Hack on gère bien toutes les jauges ? même chose dans Blade
+> Runner ? »* — réponse : non. Vérifié dans le code et les correspondances de fiche ; **à
+> reprendre après NOC** (choix de David). **Cthulhu Hack** : la **Fortune** (0 à 2 jetons :
+> relance ou réussite ; le corpus se contredit sur le sens, à relire au livre) absente de la
+> fiche et du jet ; le **Choc / Folie passagère** à chaque cran perdu de Santé mentale, sans
+> table proposée (`ressourcesDUsure.ts` n'a pas de suite au déclin) ; le **Hors Jeu** à 0 PV et sa
+> table d10 de Conséquences ; le **Matériel** (dés d'usure d4–d20 des objets) non suivi.
+> **Blade Runner** : les **Points d'Humanité** absents de la fiche GM-OS (la fiche HTML les a :
+> `points.humanity` dans les absents de `correspondance.json`) ; **Blessures critiques** et
+> **Stress critique** sans champ ni table ; **Protection** absente ; **Brisé par les dégâts**
+> (Santé 0 → blessure critique au moindre coup) non dit en combat. Promotion et Chinyen sont
+> sur la fiche, suffisant.
+
 > **14/10 nuit — les petits restes du forçage.** David : *« Fais les petits restes en code »*.
 > **Forcer au pupitre** : `dice/forcerAuPupitre.ts` — « Forcer le jet » sous le dernier jet Year
 > Zero du pupitre ; relance selon la règle du pilote (dé de Stress compris, refus après une
@@ -350,12 +388,19 @@ rouvre jamais quand il le faudrait »*. **Il l'a fallu huit heures plus tard.**
 | ✅ **13/10 : le jet complet de NOC.** David : *« on va traiter tous les points de NOC, si besoin regarde dans NotebookLM »* | Règles relues contre le carnet NotebookLM « NOC » (le niveau est le Talent seul ; dés de destin de zéro au Domaine ; Choqué retire au Domaine, donc aux dés ; les états graves au Talent ; un seul Vécu et un seul Atout par test ; la relance d'un 10 compte aussi ses 1 en Fiel ; **aucune difficulté par défaut** — c'est le niveau de Talent requis, −1 à 4 ; la Cabale se recharge par scénario, ses Espoir, Vécu et Singularité compris). `DescripteurDeJet.destin` (Fiel, jauges de péril) et `reservesDuPersonnage` ; `systemes/nocturne.ts` (`malusDePeril` cumulé, `resoudreLeDestin`) ; `ApportDuGroupe.effet: 'annuleLesUns'` (seuls les 1 annulés se dépensent, Singularité du Héros puis de la Cabale) et `maxParJet` ; **chaque 1 restant verse son Fiel tout seul** (débordement en Menace compris) ; le verdict suit le niveau (`reussitesRequises` à 1) ; panneau : « Provoquer le destin » de 0 au plafond, « Puiser dans ses réserves », malus nommés. Pilote NOC : le jet, les quatre jauges (Choqué à 5 pour Blessures et Trauma, Grave à 8 pour les quatre), Vécu/Espoir/Singularité du Héros, Singularité de la Cabale, Soupçon sur la fiche. **Restent** : l'Atout Capital (plusieurs points par test), l'état Fatigué, les Rouages qui retirent du Fiel (au bandeau), les effets du Soupçon sur la récupération. |
 | ✅ **13/10 : Torg, au complet — terminé le 14/10.** David : *« ensuite on regarde Torg »*, puis le Paquet d'Action, les Cartes du Destin et l'Annulation des dommages (*« je chargerai les cartes plus tard »*) | Règles relues contre le carnet NotebookLM « Torg » (`894bb0f5-…` ; le pilote visait celui de Blade Runner, corrigé). **A fait** : `systemes/torg.ts` — `DesDeTorg` (premier dé, Possibilité, Un de plus, relance), `lancerUneChaine` (sans entraînement, seul le 10 explose), `lancerLaPossibilite` (1 à 9 → 10 sans relance), `resoudreTorg` (plage critique, malus) ; `DescripteurDeJet.torg` (Blessures −1 chacune jusqu'à −3, Possibilités, Annulation) ; panneau : plage d'échec critique, malus dit, puis « Relancer (compétence favorisée) », « Dépenser une Possibilité » (décomptée sur la fiche), « Un de plus ! » — une fois chacun, rien après un échec critique. **B fait** (données) : Blessures en quatre cases (Blessé, Grièvement blessé à 3, Vaincu à 4), Choc suivi. **C fait** : « Annulation des dommages » — une Possibilité, Esprit + Réalité contre ND 10, ce qu'annule chaque niveau dit (Simple 1 Blessure, Supérieur 2, Spectaculaire tout, et tout le Choc) ; les cases se décochent par « Soins ». **Faits ensuite, à la demande de David** (*« fais le maximum du choc et le calcul des dommages »*) : `statsToTrack[].max` (formule lue sur la fiche, `maximumDeLaJauge`, aux deux jauges de `CombatCard`) — le Choc plafonne à l'Esprit, pour tous les jeux qui le déclarent ; `combat.dommages: { mecanique: 'torg', resistance, choc }` — dans `handleApplyImpact` (seul écrivain), la valeur saisie devient un total de dommages, la Table des Dommages (carnet « Torg » : −6 rien, −5 à −1 un Choc, 0 à 4 deux, puis +1 Blessure et +2 Choc par tranche de 5) coche les Blessures, ajoute le Choc plafonné (KO au-delà, surplus ignoré), le dit au journal et à l'écran ; `refleterLaFiche` porte aussi les valeurs de fiche au plateau. Sbires et hordes sans modèle à part. **Puis, sur *« le choc ne diminue pas »*** : le clic sur la jauge marchait, mais il n'était annoncé que par une infobulle — chaque jauge de `CombatCard` a désormais ses boutons − et +, et `statsToTrack[].gestes` (`{ libelle, delta | valeur, aide }`, contrôlé par la Forge) pose les gestes de la règle : pour Torg « Récupérer −2 » (le tour sacrifié, hors mêlée) et « Reprendre son souffle » (fin de combat ou de scène, Choc à 0). **Défaut trouvé au passage** : `HealthManager` recalculait le coup BRUT après `handleApplyImpact` et l'écrivait sur le combattant (29 dommages sur 10 PV → « Hors de combat » sur le plateau, 5/10 sur la fiche) — le porteur qui a une fiche n'a plus de calcul local, un seul écrivain. L'Inspiration (−2 Choc à une faction) viendra avec le Paquet d'Action. **D fait (14/10)** — le Paquet d'Action, décisions de David : la carte se décrit **à la première retourne ou d'avance** (le même `FicheDeCarteDAction`, dans Combat-OS et dans le lecteur de Deck-OS), effets **annoncés + un clic**. `DeckManifest.role` (`action` | `destin`, choisi dans la bibliothèque pour un jeu en mode `paquet`), `cardMetadata[i].action` (`CarteDAction` : lignes standard/dramatique, `premier` H/V, effets par camp, Actions approuvées) ; `logic/paquetDAction.ts` (liste fermée des huit effets, du carnet « Torg ») ; mode d'initiative `paquet` (`agirDansSonCamp` — le camp garde la main tant qu'il lui reste quelqu'un, `secondTourDuCamp` pour Vivacité, `initiativeParCamps`) ; `PanneauDuPaquetDAction` (scène Standard/Dramatique, retourner, ouvrir sans décrire, Inspiration −2 / Fatigués +2 Choc au camp via `ficheDesCombattants.ts` — désormais la seule porte d'écriture de la fiche d'un combattant, `CombatCard` compris —, Vivacité) ; le jet des Héros lit la carte (`useEffetsDuRound` : Déstabilisés −2, « Un de plus ! » mis en avant) — ⚠ pas sur tablette, l'ordre du tour n'y est pas diffusé. Sans paquet marqué, le meneur désigne le camp. **E fait (14/10)** — les Cartes du Destin : `GameDriver.cartesDuDestin: { taille }` (Forge, manuel), le paquet du jeu marqué `destin` ; `logic/cartesDuDestin.ts` (pur, `poserEnReserve`, `reprendreLesReserves`, `momentCritique` une fois par Acte via `DeckSessionState.momentsCritiques`, `completerLesMains` — l'excédent se dit, GM-OS ne défausse pas à la place du joueur —, `nouvellesMains`, `piocherPour` qui remélange la défausse sans toucher aux mains) ; `CarteEnMain.enReserve`, diffusé dans `MainDiffusee.enReserve` (publique) et `momentCritiqueJoue` ; tranche : six gestes, contrôle de propriété depuis la tablette ; deux actions de tablette `deck:poser-en-reserve` et `deck:moment-critique` (registre, `actionPolicy` + propriété, relais `useHubSync`) ; lecteur Deck-OS : `GestesDuDestin` (Fin du combat, Fin de scène, Fin d'Acte, Moment critique…) et « Poser en Réserve » ; carte de combat : `ActionsApprouvees` (une carte en main par action et par round) ; tablette : main n/4, Poser en Réserve, Moment critique, les Réserves de la table. Le don reste celui de Deck-OS (le 1 contre 1 du livre reste à la table), Désorientés annoncé. **Torg : terminé le 14/10** — les Lois des cosms, les Cartes de Cosm, les sbires et hordes sont faits (`37ed0e9d`, `e21b343e`, `69b3174c`, voir la tête du registre) ; restent à la table la capacité « Sbires » d’un vilain, la capacité « Horde » de certaines créatures et les Atouts qui touchent aux cartes. |
 
-**16/10 — horloges des autres séquences Alien, constat de lecture à éprouver.** Le journal
-HACK utilise maintenant l’heure serveur (§ 135), mais `CompteARebours`, le lecteur vidéo
-et l’alarme comparent encore des échéances serveur à l’heure locale (`vues.mjs`,
-`video-alerte.js`, `alarme.js` dans `outils/alien/`). Leur comportement sur une tablette
-dont l’heure diffère reste à tester et à raccorder séparément ; aucun correctif glissé
-dans celui du glitch HACK. Voir la reprise du 16/10 pour les quatre E2E HACK validés.
+✅ **16/10 — horloges des autres séquences Alien, raccordées le jour même (Claude Code).** Le
+journal HACK utilisait seul l’heure serveur (§ 135) ; `CompteARebours`, le lecteur vidéo et
+l’alarme comparaient des échéances serveur à l’heure locale, et le faux écho du détecteur
+aussi (quatrième lecteur, trouvé en raccordant les trois premiers). Tous reçoivent désormais
+l’`horloge()` de l’hôte (`outils/alien/modules/muthur/vues.mjs`, `useHeureStable` ;
+`modules/detecteur/vues.mjs` ; option `instant` de `detecteur.js` ; `vuesDuRegistre.tsx`).
+Film, alarme et boucle de dessin, créés une fois, lisent la dernière horloge par une
+référence — sinon chaque projection relancerait le film. Essais : tablette en avance d’une
+minute, OMEGA-10 affiche 12:56 et non 11:56, film et alarme lisent l’heure serveur et suivent
+une nouvelle projection (`verification-vues.mjs`) ; le faux écho reste visible, 3 échos sans
+horloge contre 4 avec (`detecteur.vues.test.tsx`). **Pas d’E2E du vrai Hub** pour ce raccord ;
+le transport de l’horloge est celui des quatre E2E HACK. L’atelier autonome (`app.js`,
+`server.mjs`) garde l’heure locale.
 
 ### 2 · Ce qui se décide à la table — axe N.3
 
@@ -11615,7 +11660,7 @@ Toujours non commité, appréciation du contraste sur les vrais appareils à rep
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
-| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; recette et départ HACK poussés dans `460544af`/`a23e6989` ; correctif horloge et glitch fixe en mouvements réduits validé par quatre E2E, non commité | Recharger et éprouver sur les tablettes, poursuivre la grille matérielle | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
+| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; recette et départ HACK poussés dans `460544af`/`a23e6989` ; correctif horloge HACK, glitch fixe en mouvements réduits et CRT tablette poussés dans `dc1ead2b` ; décompte, film, alarme et faux écho sur l’heure serveur le 16/10, non commité | Recharger et éprouver sur les tablettes, poursuivre la grille matérielle | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

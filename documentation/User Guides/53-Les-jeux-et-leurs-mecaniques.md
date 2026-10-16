@@ -31,7 +31,7 @@ fait.
 
 | Écran | Ce qu'on y trouve |
 | :--- | :--- |
-| **Le bandeau des réserves**, en tête de Session-OS | Les réserves de table (Impulsion, Menace, Fiel…), leurs boutons + / −, et les gestes « Fin de scène », « Début de séance », « Nouveau scénario » |
+| **Le bandeau des réserves**, en tête de Session-OS | Les réserves de table (Impulsion, Menace, Fiel…), leurs boutons + / −, et les gestes « Fin de scène », « Début de séance », « Nouveau scénario » — et, si le jeu les déclare, « Moment de calme » et « Effets du … » |
 | **Le panneau « Lancer un test »**, sur la fiche d'un personnage (formulaire, pas « Fiche du jeu ») et sur la tablette (vue synthétique) | Le jet du jeu : ce qu'on retient sur la fiche, les dés achetés, ce qu'on puise dans le groupe, le résultat |
 | **La carte de campagne**, dans le cockpit | Le bouton de la **fiche du groupe** (la Cabale), quand le jeu en a une |
 | **La tablette d'un joueur** | Les mêmes réserves et le même jet, et le bouton du groupe à côté de « Ma fiche » |
@@ -153,9 +153,41 @@ test » montre alors une section **« Puiser dans la … »**, une ligne par app
 | **Stocks** (`stocks`) | Où se lit chaque stock sur la feuille du groupe |
 | **Composante** (`composante`) | Le stock suit ce que le personnage a retenu : le Domaine du Héros choisit le Domaine de la Cabale |
 | **Par jet** (`maxParJet`) | Combien de points au plus sur un même jet — un seul point d'Atout ou de Vécu chez NOC |
+| **Stock libéré** (`horsPlafondSi`, sur un stock) | Ce stock échappe à la limite par jet quand le personnage retient un champ précis : l'**Atout Capital** de NOC se dépense sans limite, mais seulement sur le Talent **Fortune** |
 
 Rien ne se dépense avant **Lancer**, et l'on ne peut pas engager plus qu'il ne reste. Un bonus se
 dit à côté des réussites (« 3 réussites (dont +1 Cabale) »).
+
+---
+
+## Les gestes sur chaque Héros (`gestesDesHeros`)
+
+Certains gestes de table **écrivent sur la fiche de chaque Héros** de la campagne d'un seul clic.
+Le bandeau des réserves les propose au meneur ; les deux plus lourds ouvrent d'abord un **aperçu,
+Héros par Héros** (« Trauma 3 → 6 (+3, folie 1) »), puis **« Appliquer »**. Seules les fiches qui
+changent sont écrites.
+
+| Geste | Ce qu'il fait | Exemple |
+| :--- | :--- | :--- |
+| **Moment de calme** (`momentDeCalme`) | Un bouton au bandeau. Des réserves de table bougent, chaque Héros récupère dans l'ordre déclaré, des cases se décochent (`leve`). Une **récupération amputée** (`amputation`) se dit sans s'appliquer : le joueur choisit où la reprendre | NOC : −1 Fiel, Espoir +1 + Extase, −1 à chaque jauge de péril, Fatigué prend fin ; le Soupçon dit les 2, 4 ou 6 points à reprendre |
+| **Début de séance**, **Nouveau scénario** (`debutDeSeance`, `nouveauScenario`) | Les boutons existants rendent aussi quelque chose à chaque fiche ; la confirmation du scénario le nomme | NOC : Vécu +1 par séance, plein à chaque scénario |
+| **Effets du débordement** (`effetsDuDebordement`) | Un bouton « Effets du … » au bandeau. Quand la réserve déborde, la Loi choisit **autant d'effets que vaut l'autre réserve** (la Menace), le même plusieurs fois si elle veut ; le compte est rappelé, pas imposé | NOC : Bouleversement administratif, Intervention de l'Artefact, Tension, Traque, Fatigue |
+
+Ce qu'un mouvement sait dire (`MouvementDeFiche`) : un gain ou une perte, un champ **ajouté**
+(l'Extase), un Talent de **résistance** qui réduit (la Folie contre la Tension — à −1 il
+aggrave), un **plafond** fixe ou lu sur la fiche (l'Espoir : 2 × Ferveur + 3, au plus 10), un
+**plancher** de séquelles, et la case qui se **coche** quand la réserve est déjà vide (l'Espoir à
+zéro → Fatigué). **Un même effet choisi deux fois cumule ses pertes avant la résistance** : deux
+Tensions avec Folie 1 donnent 4 − 1 = 3 points de Trauma.
+
+Une case cochée compte comme **un point de jauge de péril** : Fatigué (−1 aux Talents) se déclare
+comme une jauge à un seuil. Un seuil peut ne valoir **que pour un champ retenu** (`seulementSi`) :
+le Bouleversement retire 1 aux Talents, mais seulement sur un jet du Domaine Statut.
+
+**Le jet d'un Rouage, au pupitre.** Le pupitre ne sait pas qui lance. Après un jet de d10 qui
+fait des 1, sur un jeu qui verse du Fiel, deux boutons demandent **« Un Héros »** (les gouttes
+entrent dans le Fiel) ou **« Un Rouage hostile »** (elles en sortent ; Fiel déjà vide : un Héros
+désigné par la Loi gagne la Singularité qui reste). Une seule fois par jet.
 
 ---
 

@@ -17,6 +17,8 @@ import { estUneSauvegarde, decrireLeJetDuPilote } from './lectureDuPilote';
 import { Panneau, Bouton, Etiquette, EnTeteDeModule, GabaritDeModule } from '../../components/socle';
 import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
+import { attribuerLeFielDuDernierJet, jetDeDestinAAttribuer, unsDuJetDeDestin } from './fielAuPupitre';
+import { gmToast } from '../../stores/useToastStore';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -1282,6 +1284,29 @@ const DiceBoard: React.FC = () => {
                                     </div>
                                 );
                             })()}
+                            {/*
+                              **Les 1 d'un jet de destin** — NOC, 2026-10-16. Le pupitre ne sait
+                              pas qui lance : un Héros verse le Fiel, un Rouage hostile en retire.
+                            */}
+                            {jetDeDestinAAttribuer(dernier, activeDriver?.jet) && (
+                                <div className="mt-3 flex flex-col items-center gap-1" data-fiel-au-pupitre>
+                                    <span className="text-ui-10 text-app-muted text-center">
+                                        {unsDuJetDeDestin(dernier)} × 1 : qui a lancé ?
+                                    </span>
+                                    <div className="flex gap-2">
+                                        {(['heros', 'rouage'] as const).map(qui => (
+                                            <button
+                                                key={qui}
+                                                type="button"
+                                                onClick={() => { for (const d of attribuerLeFielDuDernierJet(qui)) gmToast(d, 'info'); }}
+                                                className="px-3 py-1.5 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-colors"
+                                            >
+                                                {qui === 'heros' ? 'Un Héros' : 'Un Rouage hostile'}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </>
                     ) : (
                         <div className="text-center py-6">

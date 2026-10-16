@@ -20,8 +20,22 @@ export interface JaugeDePeril {
     champ: string;
     /** Le nom de la jauge, pour dire d'où vient un malus. */
     label: string;
-    /** À partir de quel point la jauge pénalise, et quoi : −1 aux Domaines à 5, aux Talents à 8. */
-    seuils: { aPartirDe: number; label: string; domaines?: number; talents?: number }[];
+    /**
+     * À partir de quel point la jauge pénalise, et quoi : −1 aux Domaines à 5, aux Talents à 8.
+     *
+     * Une case cochée vaut 1 : l'état **Fatigué** (−1 aux Talents) se déclare
+     * comme une jauge à un seul seuil. `seulementSi` réserve le malus aux jets
+     * qui retiennent ce champ — le **Bouleversement administratif** ne touche
+     * que les Talents du Domaine Statut (carnet « NOC », 2026-10-16).
+     */
+    seuils: { aPartirDe: number; label: string; domaines?: number; talents?: number; seulementSi?: { composante: string; champ: string } }[];
+}
+
+/** Une valeur de fiche lue comme un nombre : une case cochée vaut 1, décochée 0. */
+export function valeurDeJauge(brut: unknown): number {
+    if (brut === true || brut === 'true' || brut === 'on') return 1;
+    if (brut === false || brut === 'false' || brut === '' || brut === undefined || brut === null) return 0;
+    return typeof brut === 'number' ? brut : Number(brut);
 }
 
 export interface MalusDePeril {
@@ -39,16 +53,20 @@ export interface MalusDePeril {
  * et de Trauma, il subit deux fois l'état Choqué […] un malus total de moins
  * deux »* (`etats-et-conditions.md`).
  */
-export function malusDePeril(jauges: readonly JaugeDePeril[], valeurs: Record<string, unknown>): MalusDePeril {
+export function malusDePeril(
+    jauges: readonly JaugeDePeril[],
+    valeurs: Record<string, unknown>,
+    choixDuJet: Record<string, string> = {},
+): MalusDePeril {
     let domaines = 0;
     let talents = 0;
     const etats: string[] = [];
     for (const jauge of jauges) {
-        const brut = valeurs[jauge.champ];
-        const v = typeof brut === 'number' ? brut : Number(brut);
+        const v = valeurDeJauge(valeurs[jauge.champ]);
         if (!Number.isFinite(v)) continue;
         for (const s of jauge.seuils) {
             if (v < s.aPartirDe) continue;
+            if (s.seulementSi && choixDuJet[s.seulementSi.composante] !== s.seulementSi.champ) continue;
             domaines += Math.abs(s.domaines ?? 0);
             talents += Math.abs(s.talents ?? 0);
             etats.push(`${s.label} (${jauge.label})`);
