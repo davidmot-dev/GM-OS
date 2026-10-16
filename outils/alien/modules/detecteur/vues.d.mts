@@ -4,5 +4,6 @@ export interface PropsDetecteur {
   vue: VueDetecteur;
   envoyerCommande: (commande: CommandeDetecteur) => Promise<{ ok: true } | { ok: false; erreur?: string }>;
 }
-export function VueJoueur(props: PropsDetecteur): ReactElement;
+/** `horloge` : heure de table reçue par l'hôte ; sans elle, l'heure de l'appareil. */
+export function VueJoueur(props: PropsDetecteur & { horloge?: () => number }): ReactElement;
 export function PupitreMJ(props: PropsDetecteur): ReactElement;

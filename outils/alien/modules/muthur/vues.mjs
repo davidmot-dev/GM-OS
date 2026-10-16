@@ -44,23 +44,32 @@ function useCommandes(envoyerCommande) {
   return { envoyer, occupe, erreur };
 }
 
-function CompteARebours({ fin, alerte = false }) {
-  const [maintenant, setMaintenant] = useState(Date.now);
+/** Une fonction stable qui lit la dernière horloge reçue : le film et l'alarme, créés une fois,
+ * suivent ainsi l'heure du serveur sans être recréés à chaque projection. */
+function useHeureStable(horloge) {
+  const derniere = useRef(horloge);
+  derniere.current = horloge;
+  return useCallback(() => (derniere.current || Date.now)(), []);
+}
+
+function CompteARebours({ fin, alerte = false, horloge = Date.now }) {
+  const [maintenant, setMaintenant] = useState(horloge);
   useEffect(() => {
     if (!fin) return;
-    setMaintenant(Date.now());
-    const minuterie = setInterval(() => setMaintenant(Date.now()), 1000);
+    setMaintenant(horloge());
+    const minuterie = setInterval(() => setMaintenant(horloge()), 1000);
     return () => clearInterval(minuterie);
-  }, [fin]);
+  }, [fin, horloge]);
   if (!fin) return null;
   const secondes = Math.max(0, Math.ceil((fin - maintenant) / 1000));
   return h('div', { className: `muthur-compte${alerte ? ' muthur-compte-urgence' : ''}`, role: 'timer', 'aria-label': 'Compte à rebours fictif' },
     `${String(Math.floor(secondes / 60)).padStart(2, '0')}:${String(secondes % 60).padStart(2, '0')}`);
 }
 
-function Son({ dernierMessage, vue, envoyer, active, setActive, filmEnCours }) {
+function Son({ dernierMessage, vue, envoyer, active, setActive, filmEnCours, horloge }) {
   const [erreur, setErreur] = useState('');
   const audio = useRef(null), vivant = useRef(true), precedent = useRef(dernierMessage), alarme = useRef(null);
+  const maintenant = useHeureStable(horloge);
   useEffect(() => {
     vivant.current = true;
     return () => { vivant.current = false; alarme.current?.detruire(); alarme.current = null; if (audio.current) { void audio.current.close().catch(() => {}); audio.current = null; } };
@@ -87,7 +96,7 @@ function Son({ dernierMessage, vue, envoyer, active, setActive, filmEnCours }) {
       if (!ClasseAudio) throw new Error('Indisponible');
       if (!audio.current) {
         audio.current = new ClasseAudio();
-        alarme.current = globalThis.AlienAlarme.creer({ audio: audio.current, signaler: message => { if (vivant.current) setErreur(message); } });
+        alarme.current = globalThis.AlienAlarme.creer({ audio: audio.current, maintenant, signaler: message => { if (vivant.current) setErreur(message); } });
       }
       if (active) { alarme.current?.arreter(); await audio.current.suspend(); } else await audio.current.resume();
       if (vivant.current) { setActive(!active); setErreur(''); }
@@ -126,13 +135,14 @@ function Journal({ operateur, horloge = Date.now }) {
     sequence && h('p', { className: 'muthur-sequence', role: 'status' }, sequence.depart ? 'INTRUSION EN COURS · ATTENTE DU MJ' : sequence.success ? 'INTRUSION · ACCÈS ACCORDÉ' : 'CONTRE-MESURES · ACCÈS REFUSÉ')));
 }
 
-function VideoAlerte({ sequence, fin, avecSon, lectureChange }) {
+function VideoAlerte({ sequence, fin, avecSon, lectureChange, horloge }) {
   const element = useRef(null), lecteur = useRef(null), son = useRef(avecSon);
   const [statut, setStatut] = useState('');
+  const maintenant = useHeureStable(horloge);
   son.current = avecSon;
   useEffect(() => {
     let vivant = true;
-    const controle = globalThis.AlienVideoAlerte.creer({ element: element.current, source: videoAlerteUrl,
+    const controle = globalThis.AlienVideoAlerte.creer({ element: element.current, source: videoAlerteUrl, maintenant,
       signaler: message => { if (vivant) setStatut(message); }, lectureChange: actif => { if (vivant) lectureChange(actif); } });
     lecteur.current = controle; controle.suivre(sequence, fin, son.current);
     return () => { vivant = false; lecteur.current = null; controle.detruire(); };
@@ -144,18 +154,18 @@ function VideoAlerte({ sequence, fin, avecSon, lectureChange }) {
     statut && h('p', { role: 'status' }, statut));
 }
 
-function Cadre({ vue, titre, enfants, erreur, operateur, envoyer }) {
+function Cadre({ vue, titre, enfants, erreur, operateur, envoyer, horloge }) {
   const [sonActif, setSonActif] = useState(false), [film, setFilm] = useState({ id: null, actif: true });
   const filmEnCours = !!vue.autodestruction && (film.id !== vue.autodestruction.id || film.actif);
   const noterLecture = useCallback(actif => setFilm({ id: vue.autodestruction?.id, actif }), [vue.autodestruction?.id]);
   return h('section', { className: `gmos-muthur${vue.config.crt ? ' muthur-crt' : ''}${vue.config.glitches ? ' muthur-parasites' : ''}${vue.autodestruction ? ' muthur-autodestruction' : ''}`, 'aria-label': titre },
     h('header', { className: 'muthur-entete' }, h('div', null, h('small', null, vue.config.vessel), h('h2', null, titre)),
-      h(Son, { dernierMessage: operateur?.messages?.at(-1)?.id, vue, envoyer, active: sonActif, setActive: setSonActif, filmEnCours }),
-      !vue.autodestruction && h(CompteARebours, { fin: vue.countdown?.endAt })),
+      h(Son, { dernierMessage: operateur?.messages?.at(-1)?.id, vue, envoyer, active: sonActif, setActive: setSonActif, filmEnCours, horloge }),
+      !vue.autodestruction && h(CompteARebours, { fin: vue.countdown?.endAt, horloge })),
     vue.autodestruction && h('section', { className: 'muthur-urgence', 'aria-label': 'Alerte autodestruction' },
       h('p', { className: 'muthur-urgence-titre', role: 'status' }, 'AUTODESTRUCTION ENGAGÉE'),
-      h(CompteARebours, { fin: vue.countdown?.endAt, alerte: true }),
-      h(VideoAlerte, { key: vue.autodestruction.id, sequence: vue.autodestruction, fin: vue.countdown?.endAt, avecSon: sonActif && vue.diffusionAutorisee, lectureChange: noterLecture }),
+      h(CompteARebours, { fin: vue.countdown?.endAt, alerte: true, horloge }),
+      h(VideoAlerte, { key: vue.autodestruction.id, sequence: vue.autodestruction, fin: vue.countdown?.endAt, avecSon: sonActif && vue.diffusionAutorisee, lectureChange: noterLecture, horloge }),
       h('p', null, vue.autodestruction.message), h('p', { className: 'muthur-aide' }, 'Saisir CODE suivi du code d’annulation pour interrompre la séquence.'),
       Array.isArray(vue.protocoles) && bouton('Annuler l’autodestruction', { onClick: () => envoyer('compte-a-rebours', { minutes: null }) })),
     vue.portes !== 'inconnues' && h('p', { className: 'muthur-acces', role: 'status' }, vue.portes === 'ouvertes' ? 'Portes ouvertes' : 'Portes fermées'),
@@ -171,7 +181,7 @@ function TerminalJoueur({ vue, envoyerCommande, horloge }) {
     evenement.preventDefault();
     if (await envoyer('saisir', { texte })) setTexte('');
   }
-  return h(Cadre, { vue, titre: 'MU/TH/UR 6000', erreur, operateur: vue.player, envoyer,
+  return h(Cadre, { vue, titre: 'MU/TH/UR 6000', erreur, operateur: vue.player, envoyer, horloge,
     enfants: h('div', { className: 'muthur-terminal' },
       h('p', { className: 'muthur-acces' }, `Opérateur : ${vue.player.name} · Accès ${vue.player.access === 'admin' ? 'administrateur' : 'équipage'}`),
       h(Journal, { operateur: vue.player, horloge }),

@@ -419,6 +419,38 @@ test('le code d’autodestruction transforme le terminal et le code d’annulati
   assert.equal(vue.queryByLabelText('Séquence d’alerte du Nostromo'), null);
 });
 
+test('décompte, film et alarme suivent l’heure du serveur sur une tablette qui avance d’une minute', async t => {
+  t.mock.timers.enable({ apis: ['Date', 'setInterval', 'setTimeout'], now: 1000000 });
+  const alarmeOriginale = globalThis.AlienAlarme, videoOriginale = globalThis.AlienVideoAlerte;
+  const audioOriginal = Object.getOwnPropertyDescriptor(globalThis, 'AudioContext');
+  const recu = {};
+  globalThis.AlienAlarme = { creer: options => { recu.alarme = options.maintenant; return { suivre() {}, arreter() {}, detruire() {} }; } };
+  globalThis.AlienVideoAlerte = { ...videoOriginale, creer: options => {
+    recu.video = options.maintenant; return { suivre() {}, reprendre() {}, arreter() {}, detruire() {}, estEnLecture: () => false };
+  } };
+  class AudioFictif { state = 'suspended'; async resume() { this.state = 'running'; } async suspend() {} async close() { this.state = 'closed'; } }
+  Object.defineProperty(globalThis, 'AudioContext', { configurable: true, value: AudioFictif });
+  try {
+    // Le serveur engage la séquence à 1 000 000 ; la tablette, elle, se croit une minute plus tard.
+    const etat = agir(moteur.creerEtat(), 'saisir', { texte: 'CODE OMEGA-10' }, reyes);
+    t.mock.timers.setTime(1060000);
+    const props = horloge => ({ vue: moteur.vuePour(etat, reyes), horloge, envoyerCommande: async () => ({ ok: true }) });
+    const vue = render(h(VueJoueur, props(() => Date.now() - 60000)));
+    assert.equal(vue.getByRole('timer').textContent, '12:56');
+    await cliquer(vue.getByText('Activer le son'));
+    assert.equal(recu.alarme(), 1000000); assert.equal(recu.video(), 1000000);
+    await act(async () => t.mock.timers.tick(1000));
+    assert.equal(vue.getByRole('timer').textContent, '12:55');
+    // Une nouvelle projection apporte une nouvelle horloge : film et alarme, créés une fois, la suivent.
+    vue.rerender(h(VueJoueur, props(() => Date.now() - 30000)));
+    assert.equal(recu.alarme(), 1031000); assert.equal(recu.video(), 1031000);
+    vue.unmount();
+  } finally {
+    globalThis.AlienAlarme = alarmeOriginale; globalThis.AlienVideoAlerte = videoOriginale;
+    if (audioOriginal) Object.defineProperty(globalThis, 'AudioContext', audioOriginal); else delete globalThis.AudioContext;
+  }
+});
+
 test('le bouton de diffusion réserve cet appareil sans envoyer son identité dans la charge', async () => {
   const vue = installer(reyes);
   await cliquer(vue.getByText('Diffuser l’alarme ici'));

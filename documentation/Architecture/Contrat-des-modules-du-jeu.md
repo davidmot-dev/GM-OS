@@ -158,8 +158,11 @@ ancrée à la réception de `instantServeur` dans l'enveloppe joueur et avance a
 l'horloge monotone du navigateur, même si la vue est fermée puis rouverte.
 Cette fonction ne fait partie ni du JSON réseau ni de la sauvegarde ; sans elle,
 une vue autonome utilise son heure locale. MU/TH/UR l'utilise pour ses signaux
-de piratage. Cette référence corrige l'écart des horloges des appareils ; elle
-ne mesure pas la latence du réseau.
+de piratage, son compte à rebours, le film d'alerte et l'alarme ; le détecteur
+pour l'échéance de son faux écho (16/10). Un lecteur créé une seule fois (film,
+alarme, boucle de dessin) DOIT lire la dernière `horloge()` reçue par une
+référence, sans être recréé à chaque projection. Cette référence corrige l'écart
+des horloges des appareils ; elle ne mesure pas la latence du réseau.
 
 Les vues DOIVENT fonctionner de 360 à 1 180 px, avec commandes tactiles,
 libellés accessibles et saisie compatible avec le clavier virtuel. Le cadre

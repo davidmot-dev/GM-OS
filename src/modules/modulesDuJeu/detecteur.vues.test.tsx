@@ -113,6 +113,19 @@ describe('instrument du détecteur', () => {
         act(() => vi.advanceTimersByTime(9001));
         expect(vue.getByRole('img', { name: 'Radar : 3 échos' })).toBeTruthy();
     });
+    it('le faux écho suit l’heure du serveur sur une tablette qui avance d’une minute', () => {
+        const etat = moteur.appliquerCommande(actif(), { id: 'faux-echo', charge: {} }, { role: 'mj' });
+        vi.setSystemTime(Date.now() + 60_000);
+        const horloge = () => Date.now() - 60_000;
+        // Sans l'horloge reçue, la tablette jugerait l'écho expiré depuis 51 s.
+        const sansHorloge = render(<VueJoueur vue={etat} envoyerCommande={envoyerCommande} />);
+        expect(sansHorloge.getByRole('img', { name: 'Radar : 3 échos' })).toBeTruthy();
+        sansHorloge.unmount();
+        const vue = render(<VueJoueur vue={etat} horloge={horloge} envoyerCommande={envoyerCommande} />);
+        expect(vue.getByRole('img', { name: 'Radar : 4 échos' })).toBeTruthy();
+        act(() => vi.advanceTimersByTime(9001));
+        expect(vue.getByRole('img', { name: 'Radar : 3 échos' })).toBeTruthy();
+    });
     it('le démontage annule la boucle de dessin et ne laisse aucune minuterie', () => {
         vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
         const vue = render(<VueJoueur vue={actif()} envoyerCommande={envoyerCommande} />);

@@ -64,5 +64,7 @@ node outils/modules-du-jeu/apercu-integration.mjs --capturer
 Le banc utilise le vrai hôte, les composants réels et stockage/transport en mémoire.
 Il vérifie les points réellement dessinés, les accès indépendants, le scan partagé,
 le retrait partiel et la coupure générale à 360/768/1180 px. Les essais de composants
-vérifient le silence et le nettoyage avec audio/horloge simulés. Réseau, haut-parleurs
+vérifient le silence et le nettoyage avec audio/horloge simulés. Dans le Hub, l’échéance
+du faux écho se juge à l’`horloge()` fournie par l’hôte (heure du serveur), pas à celle de
+la tablette ; sans elle, l’atelier garde l’heure locale. Réseau, haut-parleurs
 et tablettes physiques restent à éprouver.

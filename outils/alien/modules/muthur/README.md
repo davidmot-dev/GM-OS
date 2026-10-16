@@ -283,7 +283,10 @@ Les effets CRT/parasites restent indépendants et les mouvements réduits sont r
 Dans le Tablet Hub, l’hôte fournit désormais une `horloge()` facultative ancrée à
 l’heure du serveur lors de la réception. Le journal l’utilise pour le départ et le
 résultat HACK : une tablette en avance ou en retard ne saute ni ne prolonge l’effet,
-et rouvrir une projection en cache ne le rejoue pas. Sans cette propriété, l’atelier
+et rouvrir une projection en cache ne le rejoue pas. Depuis le 16/10, la même
+horloge règle le compte à rebours, la position du film d’alerte et l’alarme (sirène,
+annonces par minute) : film et alarme, créés une fois, lisent la dernière horloge
+reçue par une référence stable. Sans cette propriété, l’atelier
 garde son horloge locale. Avec mouvements réduits, le départ montre un brouillage
 fixe (parasites et décalage chromatique), sans animation ni clignotement ; les
 interrupteurs CRT/parasites restent respectés.

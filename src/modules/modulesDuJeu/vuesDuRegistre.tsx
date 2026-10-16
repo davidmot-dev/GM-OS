@@ -16,7 +16,7 @@ const mjMuthur = lazy(async () => {
 });
 const joueurDetecteur = lazy(async () => {
     const { VueJoueur } = await import('../../../outils/alien/modules/detecteur/vues.mjs');
-    return { default: (props: Props) => <VueJoueur vue={props.vue as EtatDetecteur} envoyerCommande={props.envoyerCommande} /> };
+    return { default: (props: Props) => <VueJoueur vue={props.vue as EtatDetecteur} horloge={props.horloge} envoyerCommande={props.envoyerCommande} /> };
 });
 const mjDetecteur = lazy(async () => {
     const { PupitreMJ } = await import('../../../outils/alien/modules/detecteur/vues.mjs');

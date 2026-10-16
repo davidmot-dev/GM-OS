@@ -4,7 +4,8 @@
   function creerRendu(canvas) {
     const ctx = canvas.getContext('2d');
     let signatureContacts = '', positionsContacts = [];
-    return function dessiner(t, { parasites = true, mouvementReduit = false } = {}, temps = 0) {
+    // `instant` : l'heure de table fournie par l'hôte ; à défaut, celle de l'appareil.
+    return function dessiner(t, { parasites = true, mouvementReduit = false, instant = Date.now() } = {}, temps = 0) {
       if (!ctx) return 0;
       const rect = canvas.getBoundingClientRect(), dpr = Math.min(globalThis.devicePixelRatio || 1, 2);
       if (!rect.width || !rect.height) return 0;
@@ -29,7 +30,7 @@
         ctx.fillStyle = 'rgba(128,228,157,' + (.17 * (1 - i / 31)) + ')'; ctx.fill();
       }
       ctx.strokeStyle = '#9bddae99'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius); ctx.stroke();
-      const anomaly = t.anomalyUntil > Date.now(), signature = [t.seed, t.contacts, t.proximity, anomaly].join(':');
+      const anomaly = t.anomalyUntil > instant, signature = [t.seed, t.contacts, t.proximity, anomaly].join(':');
       if (signature !== signatureContacts) { positionsContacts = globalThis.AlienCore.positionsDuDetecteur(t, anomaly); signatureContacts = signature; }
       const count = positionsContacts.length, tone = t.intensity > 89 ? '#e7b17d' : '#b9f8c9';
       for (let i = 0; i < count; i++) {

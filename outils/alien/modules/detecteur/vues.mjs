@@ -1,5 +1,5 @@
 /** Instrument autonome : l'hôte fournit la vue et les commandes, jamais un transport. */
-import { createElement as h, useEffect, useRef, useState } from 'react';
+import { createElement as h, useCallback, useEffect, useRef, useState } from 'react';
 import '../../core.js';
 import '../../detecteur.js';
 
@@ -14,39 +14,47 @@ function useMouvementsReduits() {
   }, []);
   return reduit;
 }
-function Radar({ vue, reduit }) {
-  const canvas = useRef(null), [maintenant, actualiser] = useState(Date.now);
+/** Lit la dernière horloge reçue de l'hôte (heure du serveur) sans recréer la boucle de dessin. */
+function useHeureStable(horloge) {
+  const derniere = useRef(horloge);
+  derniere.current = horloge;
+  return useCallback(() => (derniere.current || Date.now)(), []);
+}
+function Radar({ vue, reduit, horloge }) {
+  const heure = useHeureStable(horloge);
+  const canvas = useRef(null), [maintenant, actualiser] = useState(heure);
   const t = vue.tracker;
   useEffect(() => {
-    actualiser(Date.now());
-    const restant = t.anomalyUntil - Date.now();
+    actualiser(heure());
+    const restant = t.anomalyUntil - heure();
     if (restant <= 0) return;
-    const minuterie = setTimeout(() => actualiser(Date.now()), restant + 1);
+    const minuterie = setTimeout(() => actualiser(heure()), restant + 1);
     return () => clearTimeout(minuterie);
-  }, [t.anomalyUntil]);
+  }, [t.anomalyUntil, heure]);
   const nombre = t.power ? t.contacts + (t.anomalyUntil > maintenant ? 1 : 0) : 0;
   useEffect(() => {
     const dessiner = globalThis.AlienDetecteur.creerRendu(canvas.current);
     let animation, derniere = -Infinity;
     const image = temps => {
       if (!document.hidden && temps - derniere >= 1000 / 30) {
-        dessiner(t, { parasites: vue.config.glitches, mouvementReduit: reduit }, temps); derniere = temps;
+        dessiner(t, { parasites: vue.config.glitches, mouvementReduit: reduit, instant: heure() }, temps); derniere = temps;
       }
       animation = requestAnimationFrame(image);
     };
-    const rafraichir = () => dessiner(t, { parasites: vue.config.glitches, mouvementReduit: reduit }, 0);
+    const rafraichir = () => dessiner(t, { parasites: vue.config.glitches, mouvementReduit: reduit, instant: heure() }, 0);
     rafraichir();
     if (!reduit && t.power) animation = requestAnimationFrame(image);
     globalThis.addEventListener('resize', rafraichir);
     return () => { if (animation !== undefined) cancelAnimationFrame(animation); globalThis.removeEventListener('resize', rafraichir); };
-  }, [t, vue.config.glitches, reduit, nombre]);
+  }, [t, vue.config.glitches, reduit, nombre, heure]);
   return h('div', { className: `detecteur-ecran${vue.config.crt ? ' detecteur-crt' : ''}` },
     h('div', { className: 'detecteur-bandeau' }, h('span', null, 'WEYLAND-YUTANI'), h('strong', null, t.power ? 'SCAN ACTIF' : 'VEILLE')),
     h('canvas', { ref: canvas, role: 'img', 'aria-label': `Radar : ${nombre} écho${nombre > 1 ? 's' : ''}`, className: 'detecteur-canvas' }),
     !t.power && h('p', { className: 'detecteur-veille' }, 'EN ATTENTE DU SCAN'),
     h('div', { className: 'detecteur-bandeau' }, h('span', { role: 'status' }, `ÉCHOS : ${nombre}`), h('span', null, t.power ? 'ACQUISITION' : 'LIAISON ÉTABLIE')));
 }
-function Son({ tracker: t }) {
+function Son({ tracker: t, horloge }) {
+  const heure = useHeureStable(horloge);
   const [active, activer] = useState(false), [erreur, signaler] = useState('');
   const audio = useRef(null), vivant = useRef(true), bascule = useRef(false);
   useEffect(() => {
@@ -64,7 +72,7 @@ function Son({ tracker: t }) {
     };
     const jouer = () => {
       if (document.hidden || contexte.state !== 'running') return;
-      const nombre = t.contacts + (t.anomalyUntil > Date.now() ? 1 : 0);
+      const nombre = t.contacts + (t.anomalyUntil > heure() ? 1 : 0);
       if (nombre > 0) {
         oscillateur = contexte.createOscillator(); gain = contexte.createGain();
         oscillateur.frequency.value = t.intensity > 70 ? 960 : 760;
@@ -79,7 +87,7 @@ function Son({ tracker: t }) {
     const visibilite = () => { silence(); if (!document.hidden) jouer(); };
     jouer(); document.addEventListener('visibilitychange', visibilite);
     return () => { document.removeEventListener('visibilitychange', visibilite); silence(); };
-  }, [active, t.power, t.intensity, t.volume, t.contacts, t.anomalyUntil]);
+  }, [active, t.power, t.intensity, t.volume, t.contacts, t.anomalyUntil, heure]);
   async function basculer() {
     if (bascule.current) return;
     bascule.current = true;
@@ -95,14 +103,14 @@ function Son({ tracker: t }) {
   return h('div', { className: 'detecteur-son' }, bouton(active ? 'Couper les bips' : 'Activer les bips ici', { onClick: basculer, 'aria-pressed': active }),
     h('small', null, 'Son local à cet appareil. Les bips suivent l’intensité décidée par le meneur.'), erreur && h('p', { role: 'status' }, erreur));
 }
-function Instrument({ vue, children }) {
+function Instrument({ vue, children, horloge }) {
   const reduit = useMouvementsReduits();
   return h('section', { className: 'gmos-detecteur' },
     h('header', null, h('p', { className: 'detecteur-sur-titre' }, 'INSTRUMENT PORTATIF · MODÈLE M314'),
       h('h2', null, 'Détecteur de mouvement'), h('p', null, 'Signal scénarisé · aucune distance physique mesurée.')),
-    h('div', { className: children ? 'detecteur-grille' : '' }, h('div', null, h(Radar, { vue, reduit }), h(Son, { tracker: vue.tracker })), children));
+    h('div', { className: children ? 'detecteur-grille' : '' }, h('div', null, h(Radar, { vue, reduit, horloge }), h(Son, { tracker: vue.tracker, horloge })), children));
 }
-export function VueJoueur({ vue }) { return h(Instrument, { vue }); }
+export function VueJoueur({ vue, horloge }) { return h(Instrument, { vue, horloge }); }
 
 function Reglages({ vue, envoyer, occupe }) {
   function enregistrer(e) {
