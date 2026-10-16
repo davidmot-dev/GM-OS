@@ -1,7 +1,7 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import { CanalDesModulesJoueur } from './canalJoueur';
 const vue = { campagneId: 'a', personnageId: 'alice', contexte: 1, revision: 2, modules: [{ id: 'alien-muthur', libelle: 'MÈRE', revision: 1, vue: {} }] };
-afterEach(() => vi.useRealTimers());
+afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 function preparer() {
     const envoyer = vi.fn(), afficher = vi.fn();
     const identite = { personnageId: 'alice' as string | null, campagneId: 'a' };
@@ -10,6 +10,25 @@ function preparer() {
     return { canal, envoyer, afficher, identite };
 }
 describe('canal joueur éphémère', () => {
+    it('ancre l’heure serveur à la réception, indépendamment de l’heure de la tablette', () => {
+        const { canal, afficher } = preparer();
+        const temps = vi.spyOn(performance, 'now').mockReturnValue(1200);
+        canal.recevoir({ type: 'modules:vue', payload: { ...vue, instantServeur: 100_000 } });
+        const recue = afficher.mock.lastCall![0];
+        expect(recue.horloge()).toBe(100_000);
+        // Même sans nouvelle projection, une réouverture doit retrouver le temps écoulé.
+        temps.mockReturnValue(7200);
+        vi.spyOn(Date, 'now').mockReturnValue(9_999_999);
+        expect(recue.horloge()).toBe(106_000);
+        expect(JSON.stringify(recue)).not.toContain('horloge');
+        canal.fermer();
+    });
+    it.each([undefined, NaN, Infinity, -1, '1000'])('ignore une heure serveur absente ou invalide : %s', instantServeur => {
+        const { canal, afficher } = preparer();
+        canal.recevoir({ type: 'modules:vue', payload: { ...vue, instantServeur, horloge: 'non fiable' } });
+        expect(afficher.mock.lastCall![0].horloge).toBeUndefined();
+        canal.fermer();
+    });
     it('refuse les vues d’un autre personnage, d’une ancienne campagne ou révision', () => {
         const { canal, afficher } = preparer(); afficher.mockClear();
         for (const changement of [{ personnageId: 'bob' }, { campagneId: 'autre' }, { contexte: 0 }, { revision: 1 }]) canal.recevoir({ type: 'modules:vue', payload: { ...vue, ...changement } });

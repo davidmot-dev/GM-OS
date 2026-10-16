@@ -5,10 +5,10 @@ import type { EtatDetecteur } from '../../../outils/alien/modules/detecteur/mote
 import '../../../outils/alien/modules/muthur/style.css';
 import '../../../outils/alien/modules/detecteur/style.css';
 
-type Props = { vue: unknown; envoyerCommande: (commande: CommandeDeModule) => Promise<ResultatDeModule> };
+type Props = { vue: unknown; horloge?: () => number; envoyerCommande: (commande: CommandeDeModule) => Promise<ResultatDeModule> };
 const joueurMuthur = lazy(async () => {
     const { VueJoueur } = await import('../../../outils/alien/modules/muthur/vues.mjs');
-    return { default: (props: Props) => <VueJoueur vue={props.vue as VueMuthurJoueur} envoyerCommande={props.envoyerCommande} /> };
+    return { default: (props: Props) => <VueJoueur vue={props.vue as VueMuthurJoueur} horloge={props.horloge} envoyerCommande={props.envoyerCommande} /> };
 });
 const mjMuthur = lazy(async () => {
     const { PupitreMJ } = await import('../../../outils/alien/modules/muthur/vues.mjs');

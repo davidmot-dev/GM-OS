@@ -193,7 +193,7 @@ export class ServiceDesModules {
     }
     async vueJoueur(personnageId: string | null, appareilId: string): Promise<VueDesModulesJoueur> {
         await this.pret();
-        return { campagneId: this.contexte.campagneId, personnageId, contexte: this.generation, revision: this.revision,
+        return { campagneId: this.contexte.campagneId, personnageId, contexte: this.generation, revision: this.revision, instantServeur: Date.now(),
             modules: this.erreur || !personnageId || !this.contexte.seanceId || !this.contexte.personnages.some(p => p.id === personnageId) ? []
                 : this.disponibles().filter(m => this.acces.get(m.reference.id)?.has(personnageId)).map(m => ({ id: m.reference.id, libelle: m.libelle,
                     revision: this.revision, ouverture: this.ouvertures.get(m.reference.id)!.get(personnageId)!,

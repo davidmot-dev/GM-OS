@@ -140,6 +140,69 @@ async function sansDebordement(page: Page) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 }
 
+for (const largeur of [390, 1024]) test(`HACK : animation effective dans le vrai Tablet Hub à ${largeur} px, puis expiration après cinq secondes`, async ({ browser }) => {
+    const nel = await rejoindre(browser, 'Nel Varga', largeur, true);
+    await nel.page.emulateMedia({ reducedMotion: 'no-preference' });
+    await autoriser('MU/TH/UR 6000', 'Nel Varga');
+    await instrument(nel.page, 'MU/TH/UR 6000');
+    await expect(nel.page.getByRole('log', { name: 'Dialogue MU/TH/UR' })).toBeVisible();
+    await photographier(nel.page, `crt-parasites-hub-${largeur}`);
+    await saisir(nel.page, 'HACK');
+    const depart = nel.page.locator('.muthur-piratage-depart');
+    await expect(depart).toBeVisible({ timeout: 3000 });
+    const rendu = await depart.evaluate(element => ({
+        animation: getComputedStyle(element.querySelector('.muthur-message')!).animationName,
+        neige: getComputedStyle(element, '::after').opacity,
+        mouvementsReduits: matchMedia('(prefers-reduced-motion: reduce)').matches,
+        feuilles: [...document.styleSheets].map(f => f.href),
+    }));
+    expect(rendu.animation, JSON.stringify(rendu)).toBe('muthur-intrusion');
+    expect(Number(rendu.neige)).toBeGreaterThan(.3);
+    await photographier(nel.page, `hack-tablet-hub-${largeur}`);
+    await expect(depart).toHaveCount(0, { timeout: 7000 });
+    const poste = await pupitre('MU/TH/UR 6000');
+    await expect(poste.getByText('Demandes en attente : 1', { exact: true })).toBeVisible();
+});
+
+for (const decalage of [60_000, -60_000]) test(`HACK : horloge tablette décalée de ${decalage / 1000} s, expiration et réouverture`, async ({ browser }) => {
+    const nel = await rejoindre(browser, 'Nel Varga', 390, true);
+    await nel.page.emulateMedia({ reducedMotion: 'no-preference' });
+    await nel.page.clock.setFixedTime(new Date(Date.now() + decalage));
+    await autoriser('MU/TH/UR 6000', 'Nel Varga');
+    await instrument(nel.page, 'MU/TH/UR 6000');
+    await saisir(nel.page, 'HACK');
+    await expect(nel.page.getByText(/TENTATIVE D’INTRUSION/)).toBeVisible();
+    const depart = nel.page.locator('.muthur-piratage-depart');
+    await expect(depart).toBeVisible({ timeout: 2000 });
+    await expect(depart).toHaveCount(0, { timeout: 7000 });
+    // La projection mise en cache garde son horloge ; rouvrir ne rejoue pas le signal.
+    await instrument(nel.page, 'MU/TH/UR 6000');
+    await expect(depart).toHaveCount(0);
+    await expect(nel.page.getByText('TENTATIVE D’INTRUSION…\nEn attente du résultat.', { exact: true })).toBeVisible();
+});
+
+test('HACK : brouillage fixe visible avec mouvements réduits, puis retour normal', async ({ browser }) => {
+    const nel = await rejoindre(browser, 'Nel Varga', 390, true);
+    await autoriser('MU/TH/UR 6000', 'Nel Varga');
+    await instrument(nel.page, 'MU/TH/UR 6000');
+    await saisir(nel.page, 'HACK');
+    const depart = nel.page.locator('.muthur-piratage-depart');
+    await expect(depart).toBeVisible();
+    const rendu = await depart.evaluate(element => {
+        const message = getComputedStyle(element.querySelector('.muthur-message')!);
+        return { animation: message.animationName, deformation: message.transform, couleurs: message.textShadow,
+            neige: getComputedStyle(element, '::after').opacity };
+    });
+    expect(rendu.animation).toBe('none');
+    expect(rendu.deformation).not.toBe('none');
+    expect(rendu.couleurs).not.toBe('none');
+    expect(Number(rendu.neige)).toBeGreaterThan(.2);
+    await photographier(nel.page, 'hack-tablet-hub-mouvements-reduits-390');
+    await expect(depart).toHaveCount(0, { timeout: 7000 });
+    const message = nel.page.locator('.muthur-message').first();
+    expect(await message.evaluate(element => getComputedStyle(element).transform)).toBe('none');
+});
+
 test('droits indépendants, dialogue privé et commandes MJ refusées sur le vrai WebSocket', async ({ browser }) => {
     const nel = await rejoindre(browser, 'Nel Varga', 390), idris = await rejoindre(browser, 'Idris Koa');
     await autoriser('MU/TH/UR 6000', 'Nel Varga'); await autoriser('Détecteur de mouvement', 'Idris Koa');

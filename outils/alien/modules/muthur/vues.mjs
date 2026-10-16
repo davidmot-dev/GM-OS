@@ -99,21 +99,22 @@ function Son({ dernierMessage, vue, envoyer, active, setActive, filmEnCours }) {
     erreur && h('span', { role: 'status' }, erreur));
 }
 
-function Journal({ operateur }) {
+function Journal({ operateur, horloge = Date.now }) {
   const log = useRef(null);
   const [sequence, setSequence] = useState(null);
   const messages = operateur?.messages || [], dernier = messages.at(-1)?.id;
   useEffect(() => { if (log.current) log.current.scrollTop = log.current.scrollHeight; }, [dernier, sequence?.id]);
   useEffect(() => {
     const cue = operateur?.cue;
-    const restant = cue ? cue.at + cue.duration - Date.now() : 0;
+    const maintenant = horloge();
+    const restant = cue ? cue.at + cue.duration - maintenant : 0;
     if (restant <= 0) { setSequence(null); return; }
     // Rejoindre une séquence encore en cours après changement de vue, sans rejouer ses sept secondes.
     const depart = operateur.request?.type === 'hack' && operateur.request.id === cue.id;
-    setSequence({ ...cue, depart, decalage: Math.min(0, cue.at - Date.now()) });
+    setSequence({ ...cue, depart, decalage: Math.min(0, cue.at - maintenant) });
     const minuterie = setTimeout(() => setSequence(null), restant);
     return () => clearTimeout(minuterie);
-  }, [operateur?.cue?.id, operateur?.cue?.at, operateur?.cue?.duration, operateur?.cue?.success, operateur?.request?.id]);
+  }, [operateur?.cue?.id, operateur?.cue?.at, operateur?.cue?.duration, operateur?.cue?.success, operateur?.request?.id, horloge]);
   return h('div', { key: sequence?.id || 'terminal', className: `muthur-journal${sequence ? ` muthur-piratage muthur-piratage-${sequence.depart ? 'depart' : sequence.success ? 'accorde' : 'refuse'}` : ''}`,
     style: sequence ? { '--muthur-piratage-decalage': `${sequence.decalage}ms` } : undefined,
     role: 'log', 'aria-label': 'Dialogue MU/TH/UR', 'aria-live': 'polite' },
@@ -162,7 +163,7 @@ function Cadre({ vue, titre, enfants, erreur, operateur, envoyer }) {
 }
 
 /** La vue reçue est déjà filtrée ; le composant ne décide jamais de l'identité. */
-function TerminalJoueur({ vue, envoyerCommande }) {
+function TerminalJoueur({ vue, envoyerCommande, horloge }) {
   const { envoyer, occupe, erreur } = useCommandes(envoyerCommande);
   const saisieId = useId();
   const [texte, setTexte] = useState('');
@@ -173,7 +174,7 @@ function TerminalJoueur({ vue, envoyerCommande }) {
   return h(Cadre, { vue, titre: 'MU/TH/UR 6000', erreur, operateur: vue.player, envoyer,
     enfants: h('div', { className: 'muthur-terminal' },
       h('p', { className: 'muthur-acces' }, `Opérateur : ${vue.player.name} · Accès ${vue.player.access === 'admin' ? 'administrateur' : 'équipage'}`),
-      h(Journal, { operateur: vue.player }),
+      h(Journal, { operateur: vue.player, horloge }),
       h('div', { className: 'muthur-actions', 'aria-label': 'Commandes rapides' }, ['HELP', 'STATUS', 'LIST', 'HACK', 'CLEAR'].map(commande =>
         bouton(commande, { key: commande, disabled: occupe, onClick: () => envoyer('saisir', { texte: commande }) }))),
       h('form', { onSubmit: soumettre, className: 'muthur-saisie' },

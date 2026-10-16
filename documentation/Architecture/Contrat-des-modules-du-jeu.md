@@ -152,6 +152,15 @@ Les composants NE DOIVENT PAS recevoir l'état privé brut ou un pont Electron
 généraliste. Le pupitre reçoit seulement la vue construite pour le rôle MJ.
 Les commandes communes d'autorisation appartiennent à l'hôte.
 
+Pour les séquences à échéance serveur, l'hôte peut fournir une fonction locale
+facultative `horloge()` donnant l'heure du poste MJ en millisecondes. Elle est
+ancrée à la réception de `instantServeur` dans l'enveloppe joueur et avance avec
+l'horloge monotone du navigateur, même si la vue est fermée puis rouverte.
+Cette fonction ne fait partie ni du JSON réseau ni de la sauvegarde ; sans elle,
+une vue autonome utilise son heure locale. MU/TH/UR l'utilise pour ses signaux
+de piratage. Cette référence corrige l'écart des horloges des appareils ; elle
+ne mesure pas la latence du réseau.
+
 Les vues DOIVENT fonctionner de 360 à 1 180 px, avec commandes tactiles,
 libellés accessibles et saisie compatible avec le clavier virtuel. Le cadre
 suit le thème du Hub. Un instrument PEUT avoir son propre habillage dans

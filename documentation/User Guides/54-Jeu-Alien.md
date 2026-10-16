@@ -26,7 +26,7 @@ avec données fictives. MU/TH/UR et le détecteur sont raccordés au Hub, avec d
 
 ![Le pupitre MU/TH/UR dans le cadre commun des modules](captures/jeu-alien-pupitre-module.jpg)
 
-![Le terminal reçu par le personnage autorisé](captures/jeu-alien-module-joueur.jpg)
+![Le terminal du vrai Tablet Hub à 1 024 px, avec trame CRT et parasites renforcés](captures/jeu-alien-module-joueur.jpg)
 
 ### Ranger les dossiers et traiter plusieurs demandes
 
@@ -51,6 +51,14 @@ conservées à la reprise d’une campagne ; les autres personnages ne les reço
 revient à l’affichage habituel en attendant le MJ. Une répétition pendant l’attente ne
 prolonge pas le brouillage. Ce départ ne donne aucun privilège ; seul l’arbitrage du MJ
 accorde ou refuse l’intrusion. Les réglages CRT/parasites et mouvements réduits s’appliquent.
+Avec les mouvements réduits, le départ reste visible sous forme de parasites fixes
+et de couleurs décalées, sans animation ni clignotement. Pour le brouillage animé,
+activer **Parasites visuels** dans les réglages de MU/TH/UR et autoriser les animations
+sur l’appareil. Le Hub calcule la durée depuis l’heure du PC MJ, même si la tablette
+affiche une autre heure ; rouvrir le module ne relance pas un signal expiré.
+Sur tablette et écran tactile, la trame CRT est plus large et le grain des parasites
+plus contrasté, y compris en mouvements réduits où il reste fixe. Le refus de HACK
+conserve son effet atténué pour laisser lire la réponse.
 
 ![Départ du piratage : brouillage fort de cinq secondes dans l’atelier du module](captures/jeu-alien-hack-depart.png)
 

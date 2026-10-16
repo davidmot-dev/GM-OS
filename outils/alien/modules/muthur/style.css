@@ -5,6 +5,10 @@
   --muthur-bord: #4b8055;
   --muthur-discret: #87b18f;
   --muthur-erreur: #ffb3a3;
+  --muthur-neige: .14;
+  --muthur-neige-pointe: .3;
+  --muthur-neige-retour: .2;
+  --muthur-neige-fixe: .07;
   color: var(--muthur-encre);
   background: var(--muthur-fond);
   font: 15px/1.6 Consolas, "Courier New", monospace;
@@ -81,7 +85,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h180v140H0z'/%3E%3C/svg%3E"),
     repeating-linear-gradient(0deg, transparent 0 53px, #c8ffda88 54px, transparent 56px 117px);
   background-size: 180px 140px, 100% 260px;
-  opacity: .14;
+  opacity: var(--muthur-neige);
   animation: muthur-neige .24s steps(1) infinite, muthur-interference 9s steps(1) infinite;
 }
 .gmos-muthur.muthur-parasites .muthur-message,
@@ -133,9 +137,23 @@
 }
 @keyframes muthur-balayage { from { background-position: 0 0, 0 0, 0 130%; } to { background-position: 0 0, 0 0, 0 -80%; } }
 @keyframes muthur-neige { 0% { background-position: 0 0, 0 0; } 25% { background-position: -43px 27px, 0 90px; } 50% { background-position: 31px -61px, 0 170px; } 75% { background-position: -79px -13px, 0 40px; } }
-@keyframes muthur-interference { 0%, 89%, 94%, 100% { opacity: .14; } 90%, 92% { opacity: .3; } 91%, 93% { opacity: .2; } }
+@keyframes muthur-interference { 0%, 89%, 94%, 100% { opacity: var(--muthur-neige); } 90%, 92% { opacity: var(--muthur-neige-pointe); } 91%, 93% { opacity: var(--muthur-neige-retour); } }
 @keyframes muthur-dechirure { 0%, 89%, 94%, 100% { transform: none; } 90% { transform: translateX(2px) skewX(-.3deg); } 91% { transform: translateX(-2px); } 92% { transform: translateX(1px); } }
 @media (min-width: 850px) { .gmos-muthur .muthur-reglages { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } }
+/* 16/10, retour de David : trame plus large et parasites contrastés sur tablette.
+   Le refus conserve ses opacités atténuées ; le texte et les commandes restent nets. */
+@media (max-width: 1180px), (pointer: coarse) {
+  .gmos-muthur { --muthur-neige: .24; --muthur-neige-pointe: .38; --muthur-neige-retour: .3; --muthur-neige-fixe: .2; }
+  .gmos-muthur.muthur-crt .muthur-journal {
+    background: radial-gradient(ellipse at 50% 42%, #20432b, #030906 88%);
+    box-shadow: inset 0 0 38px #000b, inset 0 0 5px #b2efb677, 0 0 22px #80e18c33;
+  }
+  .gmos-muthur.muthur-crt .muthur-journal::before {
+    background-image: repeating-linear-gradient(0deg, #0000 0 3px, #0009 3px 5px, #b2efb61a 5px 6px),
+      repeating-linear-gradient(90deg, #ff333312 0 1px, #77ff9912 1px 2px, #5577ff12 2px 3px),
+      linear-gradient(0deg, transparent 38%, #b2efb63d 49%, #b2efb615 55%, transparent 64%);
+  }
+}
 /* 16/10 : l'intrusion brouille fortement le terminal cinq secondes, avant l'arbitrage. */
 .gmos-muthur.muthur-crt .muthur-piratage-depart { animation-duration: 5s; --muthur-signal: #b2efb6; }
 .gmos-muthur.muthur-crt .muthur-piratage-depart::before { animation-duration: .8s; box-shadow: inset 0 0 90px #000b, inset 0 0 28px #b2efb64d; }
@@ -152,6 +170,14 @@
 @media (prefers-reduced-motion: reduce) {
   .gmos-muthur .muthur-sequence, .gmos-muthur .muthur-message, .gmos-muthur .muthur-demarrage,
   .gmos-muthur .muthur-journal::before, .gmos-muthur .muthur-journal::after, .gmos-muthur .muthur-piratage { animation: none !important; }
-  .gmos-muthur.muthur-parasites .muthur-journal::after { opacity: .07; }
+  .gmos-muthur.muthur-parasites .muthur-journal::after { opacity: var(--muthur-neige-fixe); }
+  /* Le signal de jeu reste visible sans mouvement ni clignotement. */
+  .gmos-muthur.muthur-parasites .muthur-piratage-depart::after { opacity: .36; }
+  .gmos-muthur.muthur-parasites .muthur-piratage-refuse::after { opacity: .1; }
+  .gmos-muthur.muthur-parasites .muthur-piratage-depart .muthur-message,
+  .gmos-muthur.muthur-parasites .muthur-piratage-depart .muthur-demarrage {
+    transform: skewX(-1deg);
+    text-shadow: -3px 0 #ffb3a3, 3px 0 #80e1ce;
+  }
 }
 .gmos-muthur .muthur-demande { white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; border: 1px solid currentColor; margin-block: 12px; }

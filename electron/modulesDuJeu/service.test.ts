@@ -17,6 +17,17 @@ async function preparer(initial: unknown = null) {
     return { service, stockage, disque: () => disque, autoriser, commander };
 }
 describe('hôte privé des modules', () => {
+    it('date chaque projection sans inscrire cette horloge dans la sauvegarde', async () => {
+        const { service, disque } = await preparer();
+        const temps = vi.spyOn(Date, 'now');
+        try {
+            temps.mockReturnValue(100_000);
+            expect((await service.vueJoueur('alice', 'a')).instantServeur).toBe(100_000);
+            temps.mockReturnValue(106_000);
+            expect((await service.vueJoueur('alice', 'a')).instantServeur).toBe(106_000);
+            expect(JSON.stringify(disque())).not.toContain('instantServeur');
+        } finally { temps.mockRestore(); }
+    });
     it('ne montre aucune carte sans ouverture explicite, même pour un ancien pilote Alien', async () => {
         const { service } = await preparer();
         expect((await service.vueMJ()).modules).toHaveLength(2);

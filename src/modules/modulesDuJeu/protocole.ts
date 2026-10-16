@@ -14,6 +14,12 @@ export interface ContexteDesModules {
 export interface CarteDeModule { id: string; libelle: string; revision: number; ouverture?: number; vue: unknown }
 export interface VueDesModulesJoueur {
     campagneId: string | null; personnageId: string | null; contexte: number; revision: number; modules: CarteDeModule[];
+    /** Heure du poste MJ au moment de la projection ; absente des anciens serveurs. */
+    instantServeur?: number;
+}
+/** Projection éphémère reçue : l'horloge locale monotone ne traverse jamais le réseau. */
+export interface VueDesModulesJoueurRecue extends VueDesModulesJoueur {
+    horloge?: () => number;
 }
 export interface VueDesModulesMJ {
     campagneId: string | null; contexte: number; revision: number;

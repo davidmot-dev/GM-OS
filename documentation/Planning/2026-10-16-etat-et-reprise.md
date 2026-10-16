@@ -167,3 +167,86 @@ et sa documentation dans `feat(alien): brouiller le terminal cinq secondes au la
 `git log` fournit leurs identifiants. Les mentions « non commité » précédentes décrivent
 l’état avant cette demande. Les hooks de validation et de synchronisation NotebookLM sont
 conservés, avec l’autorisation explicite persistante pour l’envoi des guides modifiés.
+
+## HACK absent du Tablet Hub — diagnostic du 16/10
+
+David signale : *« le glitch de hack n’apparaît pas sur la tablet hub »*.
+Base poussée : `a23e6989` (départ HACK), après `460544af` (recette).
+La première passe se limite au diagnostic, en attendant la confirmation de fermeture.
+David répond ensuite *« il est fermé »* et précise : *« Le bandeau “INTRUSION EN COURS”
+apparaît, mais sans glitch. »* Le décalage d’horloge reproduit reste donc un défaut
+distinct, pas une cause affirmée pour son appareil.
+
+Deux tests ajoutés à `e2e/modulesDuJeuAlien.spec.ts`, sur le build actuel et une campagne
+fictive isolée, sans données personnelles :
+
+- Vrai Hub tactile 390 px, mouvements actifs : demande HACK, classe de départ et animation
+  CSS `muthur-intrusion` effectives, neige visible, disparition après cinq secondes et
+  demande conservée pour le MJ. **Passe** (`scratch/hack-hub-regression.log`).
+- Même parcours avec horloge tablette en avance de 60 secondes : demande reçue, mais
+  aucun effet de départ. **Défaut reproduit** (`scratch/hack-hub-horloge.log`). Ce test
+  portait temporairement `test.fail` avec la raison explicite ; annotation retirée
+  lors du correctif ci-dessous.
+
+Cause vérifiée : `Journal` dans `outils/alien/modules/muthur/vues.mjs` calcule la durée
+restante en comparant `cue.at` du serveur à `Date.now()` du client. Une tablette en avance
+saute l’effet ; une tablette en retard peut le prolonger. Cela ne prouve pas encore que
+l’appareil de David ait ce décalage. Autres cas à distinguer : HACK déjà en attente
+(pas de nouveau signal volontairement), effets désactivés ou mouvements réduits.
+
+Après confirmation, le service ajoute `instantServeur` à chaque projection joueur.
+Le canal crée une `horloge()` locale ancrée à la réception avec `performance.now()`,
+transmise par l’hôte au journal MU/TH/UR. Cette fonction n’est ni persistée ni envoyée
+sur le réseau. Une vue en cache continue à vieillir ; aucun nouveau format de données.
+Sans référence serveur, l’atelier conserve `Date.now()`. Le raccord ne concerne ici
+que les signaux de piratage : les autres séquences vidéo/son/décompte restent inchangées.
+La latence réseau n’est pas mesurée par cette référence.
+
+Le mode mouvements réduits coupait toutes les animations et ramenait les parasites
+à une opacité très faible : cas compatible avec le bandeau seul signalé par David,
+sans prétendre avoir inspecté les réglages de son appareil. Le départ HACK y montre
+désormais des parasites fixes et une séparation chromatique pendant les cinq secondes,
+sans animation ni clignotement. Les interrupteurs CRT/parasites restent respectés.
+Contrat, guide Alien, README du module et aperçu local actualisés.
+
+Types/build, lint ciblé et **88 tests Vitest dans 12 fichiers** passent. **Quatre parcours
+HACK du vrai Hub passent (1 min 25 s)** : animation active, avance/retard de 60 s avec
+expiration et réouverture, brouillage fixe avec mouvements réduits puis retour normal.
+Deux captures du vrai Hub relues ; bandeau lisible et commandes accessibles dans les
+deux modes. Log `scratch/hack-hub-correctif-e2e.log`, sorties `scratch/hack-hub-correctif/`.
+Profils fictifs et instances de test fermés par le banc ; aucun essai sur tablette physique.
+**17 fichiers modifiés, non commités**, aucun commit demandé ici. Avant une nouvelle
+édition de `src/`/`electron/`, redemander la fermeture : les essais viennent de lancer GM-OS.
+
+## CRT et parasites trop discrets sur tablette — suite du 16/10
+
+David : *« l’effet CRT / Parasite n’est pas très visible sur la tablette »*.
+Changement limité à `outils/alien/modules/muthur/style.css`, au banc E2E et aux guides ;
+aucun nouvel accès à `src/` ou `electron/`. La copie conserve les correctifs précédents
+non commités. Aux largeurs ≤ 1 180 px ou pointeur tactile : lignes CRT de six pixels,
+fond phosphore/halo plus contrastés, grain normal à 24 % au lieu de 14 %, pointes à 38 %.
+En mouvements réduits, grain fixe à 20 % au lieu de 7 %, départ HACK fixe à 36 %.
+Refus conservé à 10 % et trame atténuée ; pas de flou ni de nouveau mouvement sur les
+commandes ou le film. Les interrupteurs restent indépendants. Le parcours animé existant
+est étendu à 390 et 1 024 px, avec captures du journal au repos et pendant HACK.
+Build/types et lint du scénario propres. **Trois parcours du vrai Hub passent** :
+390 px, 1 024 px, mouvements réduits (logs `scratch/crt-tablette-e2e.log`).
+**Onze captures de piratage hors ligne** vérifient les combinaisons indépendantes,
+le refus après changement de vue, le succès et les mouvements réduits ; deux refus
+relus, texte et bandeau lisibles (`scratch/crt-tablette-refus.log`). Les captures au repos
+avaient d’abord saisi le chargement différé du module : le banc attend désormais son
+journal, puis les deux formats sont rejoués avec succès pour produire les bonnes images
+(`scratch/crt-tablette-captures.log`). Vues au repos relues ; la capture 1 024 px du vrai
+Hub remplace celle du terminal joueur dans le manuel.
+L’aperçu HTML est régénéré. Aucun commit/push demandé ; reprendre sur les tablettes
+physiques après recharge du Hub, le contraste de leur écran reste à juger par David.
+
+## Mise en version des correctifs du Hub
+
+David demande ensuite *« commit et pousse »*. Les deux retours sur l’affichage tablette
+(durée HACK indépendante de l’horloge et rendu CRT/parasites plus présent) sont regroupés
+avec les essais, le contrat, le manuel et sa capture dans un commit dédié ; son identifiant
+se lit dans `git log`. Les mentions « non commité » précédentes décrivent l’état avant
+cette demande. Le push conserve les hooks types/lint/tests/build et la synchronisation
+NotebookLM du guide Alien, autorisée explicitement plus tôt par David. Les trois chemins
+non suivis déjà présents ne font pas partie de ce commit.

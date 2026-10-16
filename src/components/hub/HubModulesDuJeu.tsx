@@ -19,7 +19,7 @@ export function HubModulesDuJeu(props: CommandesDeConsultation) {
         compteur={modules.length ? `${modules.length} ${modules.length === 1 ? 'module ouvert' : 'modules ouverts'}` : 'Aucun module ouvert'} icone={Blocks} {...props}>
         {ouvert ? <div className="space-y-3">
             <button type="button" className="min-h-[44px] rounded border border-app-border px-4 text-app-text" onClick={() => choisir(null)}>Retour aux modules</button>
-            <VueDeModule key={cleOuverture(ouvert)} id={ouvert.id} role="joueur" vue={ouvert.vue} envoyerCommande={commande => commander(ouvert.id, commande)} />
+            <VueDeModule key={cleOuverture(ouvert)} id={ouvert.id} role="joueur" vue={ouvert.vue} horloge={vue?.horloge} envoyerCommande={commande => commander(ouvert.id, commande)} />
         </div> : modules.length ? modules.map(module => <button type="button" key={module.id}
             className="block min-h-[48px] w-full rounded-lg border border-app-border bg-app-surface p-4 text-left text-app-text"
             onClick={() => choisir(cleOuverture(module))}>Ouvrir {module.libelle}</button>)

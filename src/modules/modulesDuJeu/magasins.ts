@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import type { VueDesModulesJoueur, VueDesModulesMJ, CommandeDeModule, ResultatDeModule, SauvegardeDesModules } from './protocole';
+import type { VueDesModulesJoueurRecue, VueDesModulesMJ, CommandeDeModule, ResultatDeModule, SauvegardeDesModules } from './protocole';
 
 const horsConnexion = async (): Promise<ResultatDeModule> => ({ ok: false, erreur: 'Module déconnecté.' });
 export const useModulesDuJeuJoueur = create<{
-    vue: VueDesModulesJoueur | null;
+    vue: VueDesModulesJoueurRecue | null;
     commander: (moduleId: string, commande: CommandeDeModule) => Promise<ResultatDeModule>;
 }>(() => ({ vue: null, commander: horsConnexion }));
 export const useModulesDuJeuMJ = create<{

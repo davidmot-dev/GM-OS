@@ -1,18 +1,18 @@
 import { objetSimple } from './protocole';
-import type { CommandeDeModule, ResultatDeModule, VueDesModulesJoueur } from './protocole';
+import type { CommandeDeModule, ResultatDeModule, VueDesModulesJoueurRecue } from './protocole';
 
 /** Connexion éphémère : aucune file de commandes ou projection n'est persistée. */
 export class CanalDesModulesJoueur {
-    private vue: VueDesModulesJoueur | null = null;
+    private vue: VueDesModulesJoueurRecue | null = null;
     private vivant = true;
     private sequence = 0;
     private attentes = new Map<string, { rendre: (resultat: ResultatDeModule) => void; minuterie: ReturnType<typeof setTimeout> }>();
     private envoyer: (message: unknown) => void;
     private identite: () => { personnageId: string | null; campagneId: string | null };
-    private afficher: (vue: VueDesModulesJoueur | null) => void;
+    private afficher: (vue: VueDesModulesJoueurRecue | null) => void;
     constructor(envoyer: (message: unknown) => void,
         identite: () => { personnageId: string | null; campagneId: string | null },
-        afficher: (vue: VueDesModulesJoueur | null) => void) {
+        afficher: (vue: VueDesModulesJoueurRecue | null) => void) {
         this.envoyer = envoyer; this.identite = identite; this.afficher = afficher;
     }
     recevoir(message: unknown) {
@@ -34,7 +34,12 @@ export class CanalDesModulesJoueur {
             || !vue.modules.every(m => objetSimple(m) && typeof m.id === 'string' && typeof m.libelle === 'string' && Object.hasOwn(m, 'vue'))) return;
         if (this.vue && (Number(vue.contexte) < this.vue.contexte || Number(vue.revision) < this.vue.revision)) return;
         if (this.vue && vue.contexte !== this.vue.contexte) this.annuler();
-        this.vue = vue as unknown as VueDesModulesJoueur;
+        // Ancrer à la réception, pas à l'ouverture de l'instrument : une vue en cache
+        // doit continuer à vieillir même si la tablette a une autre heure que le MJ.
+        const instant = vue.instantServeur, reception = performance.now();
+        const horloge = typeof instant === 'number' && Number.isFinite(instant) && instant >= 0
+            ? () => instant + performance.now() - reception : undefined;
+        this.vue = { ...vue, horloge } as unknown as VueDesModulesJoueurRecue;
         this.afficher(this.vue);
     }
     commander(moduleId: string, commande: CommandeDeModule): Promise<ResultatDeModule> {

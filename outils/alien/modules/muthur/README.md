@@ -279,3 +279,17 @@ un nouvel identifiant pour son résultat. Aucun changement de format de sauvegar
 L’échéance autoritaire empêche de prolonger l’effet par une répétition de HACK ou
 un changement de vue ; restauration et arrêt des effets effacent ce signal.
 Les effets CRT/parasites restent indépendants et les mouvements réduits sont respectés.
+
+Dans le Tablet Hub, l’hôte fournit désormais une `horloge()` facultative ancrée à
+l’heure du serveur lors de la réception. Le journal l’utilise pour le départ et le
+résultat HACK : une tablette en avance ou en retard ne saute ni ne prolonge l’effet,
+et rouvrir une projection en cache ne le rejoue pas. Sans cette propriété, l’atelier
+garde son horloge locale. Avec mouvements réduits, le départ montre un brouillage
+fixe (parasites et décalage chromatique), sans animation ni clignotement ; les
+interrupteurs CRT/parasites restent respectés.
+
+Retour tablette du 16/10 : aux largeurs jusqu’à 1 180 px ou sur un écran tactile,
+la trame CRT passe à six pixels CSS avec des lignes plus contrastées, un fond phosphore
+et un halo plus présents. Le grain normal passe à 24 % (20 % fixe en mouvements réduits),
+avec des pointes à 38 % en animation. Le départ HACK fixe passe à 36 % ; le refus reste
+à 10 %, texte et bandeau lisibles. Les commandes et la vidéo ne portent pas ces effets.
