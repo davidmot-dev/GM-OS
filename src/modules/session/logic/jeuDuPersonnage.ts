@@ -122,3 +122,20 @@ export function passerAuJeu(
         perdus,
     };
 }
+
+/**
+ * **Lier un personnage à une campagne d'un autre jeu se confirme** — demandé par
+ * David le 2026-10-16. Jusque-là, le lien se faisait sans un mot, et seul le
+ * bandeau `EcartDeJeuDuPersonnage` le disait après coup. L'écart qu'aurait le
+ * personnage s'il rejoignait `campaignId` ; `null` : rien à confirmer (même jeu,
+ * campagne générique, ou déliaison).
+ */
+export function ecartAuLien(
+    personnage: PersonnageDeJeu | null | undefined,
+    campaignId: string | null,
+    campagnes: readonly CampagneDeJeu[],
+    pilotesPersonnalises: readonly GameDriver[] = [],
+): EcartDeJeu | null {
+    if (!personnage || !campaignId || personnage.campaignId === campaignId) return null;
+    return ecartDeJeu({ ...personnage, campaignId }, campagnes, pilotesPersonnalises);
+}

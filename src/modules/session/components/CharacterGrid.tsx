@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fractionDeVie, pointsDeVieApres, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { gmCustom } from '../../../stores/useModalStore';
+import { gmConfirm, gmCustom } from '../../../stores/useModalStore';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import type { PlayerCharacter, Campaign, Player } from '../useSessionOSStore';
 import { leVerrouDeLAncienJoueur } from '../logic/transfertDePersonnage';
@@ -12,9 +12,11 @@ import { Heart, UserPlus, ChevronDown, Mail, Swords, Eye, Trash2, Camera } from 
 import { useImageStore } from '../../image/useImageStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
+import { ecartAuLien } from '../logic/jeuDuPersonnage';
 
 const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCampaignFilter = false }) => {
     const { t } = useTranslation(['modules']);
+    const customGameDrivers = useSessionOSStore(s => s.customGameDrivers);
     const { players, selectedPlayerId, selectedCharacterId, campaigns, linkCharacterToCampaign, updateCharacterHP, setSelectedCharacter, sessions, activeCampaignId, addEntityToSession, removeEntityFromSession, updatePlayer, transfererLePersonnage, connectedCharacters } = useSessionOSStore();
     
     const activeSession = sessions.find(s => s.status === 'active' && String(s.campaignId) === String(activeCampaignId));
@@ -31,6 +33,31 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
       recalculé à chaque changement de la liste des clients. Le transfert ne peut
       donc pas le défaire — *tranché avec David : on le dit, on ne l'arrache pas.*
     */
+    /*
+      **Lier à une campagne d'un autre jeu se confirme** — demandé par David le
+      2026-10-16. Le lien gardait la fiche de l'ancien jeu sans un mot ; seul le
+      bandeau le disait après coup. On le dit AVANT, et on laisse lier quand même :
+      « Passer au jeu de la campagne » convertit la fiche ensuite.
+    */
+    const lier = (joueurId: string, personnage: PlayerCharacter, campaignId: string | null) => {
+        const ecart = ecartAuLien(personnage, campaignId, campaigns, customGameDrivers);
+        if (!ecart) {
+            linkCharacterToCampaign(joueurId, personnage.id, campaignId);
+            return;
+        }
+        gmConfirm(
+            t('modules:session.characters.lier_autre_jeu', {
+                name: personnage.name,
+                perso: ecart.jeuDuPersonnage?.name ?? t('modules:session.characters.ecart_sans_jeu'),
+                campagne: campaigns.find(c => c.id === campaignId)?.name ?? '',
+                jeu: ecart.jeuDeLaCampagne.name,
+            }),
+            () => linkCharacterToCampaign(joueurId, personnage.id, campaignId),
+            undefined,
+            t('modules:session.characters.lier_quand_meme'),
+        );
+    };
+
     const transferer = (personnageId: string, nom: string, versJoueurId: string) => {
         const source = players.find(p => p.id === selectedPlayerId);
         const cible = players.find(p => p.id === versJoueurId);
@@ -166,7 +193,7 @@ const CharacterGrid: React.FC<{ ignoreCampaignFilter?: boolean }> = ({ ignoreCam
                                 onTransferer={(versJoueurId) => transferer(character.id, character.name, versJoueurId)}
                                 isSelected={selectedCharacterId === character.id}
                                 onSelect={() => setSelectedCharacter(character.id)}
-                                onLink={(campaignId) => linkCharacterToCampaign(selectedPlayer.id, character.id, campaignId)}
+                                onLink={(campaignId) => lier(selectedPlayer.id, character, campaignId)}
                                 onHPChange={(delta) => { const n = pointsDeVieApres(character, delta); if (n !== null) updateCharacterHP(selectedPlayer.id, character.id, n); }}
                                 onDelete={() => {
                                     if (window.confirm(t('modules:session.characters.delete_confirm', { name: character.name }))) {

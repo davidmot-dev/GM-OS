@@ -155,6 +155,12 @@ portrait, sa campagne, ses notes et son inventaire restent ; les valeurs de l'an
 nouvelle ne connaît pas sont perdues, et **la confirmation les nomme avant d'agir**. Sa santé repart
 comme celle d'un personnage neuf de ce jeu. *Ajouté le 2026-10-13.*
 
+**Lier un personnage à une campagne d'un autre jeu se confirme** : en choisissant sa campagne sur sa
+carte, une fenêtre le dit avant de lier (« Ada suit Within ; la campagne « Le Quai Gris » joue
+NOC. Le lier quand même ? »). **Lier quand même** garde sa fiche, et le bouton ci-dessus la
+convertit ensuite ; **Annuler** ne change rien. Délier, ou lier à une campagne générique, ne demande
+rien. *Ajouté le 2026-10-16.*
+
 ### Fiches de Personnage Dynamiques
 
 Les fiches sont entièrement adaptables :

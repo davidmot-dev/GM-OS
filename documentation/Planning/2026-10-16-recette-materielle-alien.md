@@ -14,14 +14,17 @@ des quatre appareils. Les cases ci-dessous restent ouvertes jusqu’à l’essai
 **Volet logiciel validé le 16/10 : huit parcours E2E**, dont les trois parcours étendus
 rejoués après correction du banc. HTTP/WebSocket, fichier privé, vidéo et Web Audio réels ;
 horloge avancée et voix simulée pour le relais après le film. Build et lint propres.
-Le matériel ci-dessous n’a pas encore été essayé.
+✅ **Volet matériel éprouvé par David le 16/10** (*« la grille matérielle de l'étape 6 (iPad,
+iPad Air, Samsung, smartphone) » parmi « ce qui est testé »*). Aucun écart signalé. Les versions,
+orientations et sorties audio n'ont pas été relevées : la grille les laisse à « non relevé »
+plutôt que de les inventer.
 
 | Appareil | Système/version | Navigateur/version | Portrait/paysage et clavier | Wi-Fi/veille | Vidéo et son | Résultat/écart |
 | --- | --- | --- | --- | --- | --- | --- |
-| iPad | À relever | À relever | À tester | À tester | À tester | Non essayé |
-| iPad Air | À relever | À relever | À tester | À tester | À tester | Non essayé |
-| Tablette Samsung | À relever | À relever | À tester | À tester | À tester | Non essayé |
-| Smartphone (modèle à préciser) | À relever | À relever | À tester | À tester | À tester | Non essayé |
+| iPad | Non relevé | Non relevé | Éprouvé | Éprouvé | Éprouvé | Bon, aucun écart signalé |
+| iPad Air | Non relevé | Non relevé | Éprouvé | Éprouvé | Éprouvé | Bon, aucun écart signalé |
+| Tablette Samsung | Non relevé | Non relevé | Éprouvé | Éprouvé | Éprouvé | Bon, aucun écart signalé |
+| Smartphone | Non relevé | Non relevé | Éprouvé | Éprouvé | Éprouvé | Bon, aucun écart signalé |
 
 Diffuseur principal essayé : __________. Sortie audio (appareil/enceinte) : __________.
 

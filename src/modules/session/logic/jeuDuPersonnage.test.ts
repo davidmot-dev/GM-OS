@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ecartDeJeu, naissanceDansLeJeu, passerAuJeu } from './jeuDuPersonnage';
+import { ecartAuLien, ecartDeJeu, naissanceDansLeJeu, passerAuJeu } from './jeuDuPersonnage';
 import type { GameDriver } from '../../../types/drivers';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 
@@ -76,5 +76,20 @@ describe('naissanceDansLeJeu', () => {
         expect(n.hp).toBe(10);
         expect(n.healthSystem?.type).toBe('hp');
         expect(n.sheetData).toEqual({ action: 2, notes: '' });
+    });
+});
+
+describe('lier à une campagne d’un autre jeu — 2026-10-16', () => {
+    const ada = { campaignId: 'c-within', systemId: 'within', templateId: 'tpl-within' };
+    it('la campagne d’un autre jeu demande confirmation', () => {
+        expect(ecartAuLien(ada, 'c-noc', CAMPAGNES, [NOC, WITHIN])?.jeuDeLaCampagne.id).toBe('noc');
+    });
+    it('rien à confirmer : même jeu, même campagne, ou déliaison', () => {
+        expect(ecartAuLien({ ...ada, campaignId: null }, 'c-within', CAMPAGNES, [NOC, WITHIN])).toBeNull();
+        expect(ecartAuLien(ada, 'c-within', CAMPAGNES, [NOC, WITHIN])).toBeNull();
+        expect(ecartAuLien(ada, null, CAMPAGNES, [NOC, WITHIN])).toBeNull();
+    });
+    it('une campagne générique ne confirme rien', () => {
+        expect(ecartAuLien(ada, 'c-gen', [...CAMPAGNES, { id: 'c-gen', system: 'generic' }], [NOC, WITHIN])).toBeNull();
     });
 });

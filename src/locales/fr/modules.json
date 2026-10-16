@@ -3168,6 +3168,8 @@
     "characters": {
       "ecart_jeu": "Fiche {{perso}} — sa campagne joue {{campagne}}",
       "ecart_sans_jeu": "sans jeu",
+      "lier_autre_jeu": "{{name}} suit {{perso}} ; la campagne « {{campagne}} » joue {{jeu}}. Le lier quand même ? Il gardera sa fiche ; « Passer au jeu de la campagne » la convertira ensuite.",
+      "lier_quand_meme": "Lier quand même",
       "passer_au_jeu": "Passer au jeu de la campagne",
       "passer_confirm": "{{name}} prendra le jeu {{jeu}} et sa fiche. Son nom, son portrait, sa campagne, ses notes et son inventaire restent.",
       "passer_perdus": "Valeurs de l'ancienne fiche qui n'existent pas dans la nouvelle, et seront perdues ({{count}}) : {{champs}}.",

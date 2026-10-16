@@ -3168,6 +3168,8 @@
     "characters": {
       "ecart_jeu": "{{perso}} sheet — its campaign plays {{campagne}}",
       "ecart_sans_jeu": "no game",
+      "lier_autre_jeu": "{{name}} plays {{perso}}; the campaign “{{campagne}}” plays {{jeu}}. Link anyway? The sheet is kept; “Switch to the campaign's game” will convert it afterwards.",
+      "lier_quand_meme": "Link anyway",
       "passer_au_jeu": "Switch to the campaign's game",
       "passer_confirm": "{{name}} will take the game {{jeu}} and its sheet. Name, portrait, campaign, notes and inventory are kept.",
       "passer_perdus": "Values of the old sheet that do not exist in the new one will be lost ({{count}}): {{champs}}.",
