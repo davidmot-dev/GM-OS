@@ -3,7 +3,7 @@
   "id": "star-trek-lcars",
   "libelle": "LCARS — Passerelle",
   "description": "Passerelle de test à sept postes : interventions arbitrées, ordres, rapports ciblés, médias, alertes et préréglages.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "versionDonnees": 2,
   "corpusCompatibles": ["star-trek"],
   "commandes": [
@@ -26,6 +26,7 @@
     { "id": "enregistrer-prereglage", "roles": ["mj"] },
     { "id": "charger-prereglage", "roles": ["mj"] },
     { "id": "supprimer-prereglage", "roles": ["mj"] },
-    { "id": "archiver-demandes", "roles": ["mj"] }
+    { "id": "archiver-demandes", "roles": ["mj"] },
+    { "id": "importer-preparation", "roles": ["mj"] }
   ]
 }

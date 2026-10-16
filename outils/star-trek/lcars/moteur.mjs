@@ -183,6 +183,15 @@ export function appliquerCommande(etat, commande, contexte) {
     }
     case 'supprimer-prereglage': exiger(mj && champs(c, ['prereglageId']) && e.prereglages.some(p => p.id === c.prereglageId)); e.prereglages = e.prereglages.filter(p => p.id !== c.prereglageId); break;
     case 'archiver-demandes': exiger(mj && champs(c, [])); e.demandes = e.demandes.filter(d => EN_ATTENTE.includes(d.statut)); break;
+    case 'importer-preparation': {
+      exiger(mj && champs(c, ['configuration']), 'Import réservé au MJ.');
+      const v = c.configuration;
+      exiger(champs(v, ['moduleId', 'versionDonnees', 'donnees']) && v.moduleId === 'star-trek-lcars', 'Configuration LCARS attendue.');
+      const source = migrerEtat(v.donnees, v.versionDonnees);
+      e.vaisseau = source.vaisseau; e.situation = source.situation; e.cibles = source.cibles; e.prereglages = source.prereglages;
+      e.alerte = { ...source.alerte, fin: null, sequence: e.alerte.sequence + 1 };
+      e.officiers = []; e.demandes = []; e.publications = []; e.ordres = []; couper(); break;
+    }
     default: throw new Error('Commande inconnue ou interdite.');
   }
   e.revision++; validerEtat(e); return e;

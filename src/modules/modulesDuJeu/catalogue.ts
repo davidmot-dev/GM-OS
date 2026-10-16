@@ -2,12 +2,17 @@ import { resoudreCorpus } from '../../../electron/corpusSysteme';
 import { validerLeManifeste, validerLesReferences } from '../../../outils/modules-du-jeu/contrat.mjs';
 import manifesteMuthur from '../../../outils/alien/modules/muthur/manifeste.json';
 import manifesteDetecteur from '../../../outils/alien/modules/detecteur/manifeste.json';
+import manifesteLcars from '../../../outils/star-trek/lcars/manifeste.json';
 import type { ModuleDuCatalogue, ModuleDuPilote, ReferenceDeModuleDuJeu } from './types';
 
 // Registre explicite : aucun chemin, script ou URL fourni par un pilote n'est exécuté.
 if (validerLeManifeste(manifesteMuthur).length) throw new Error('Manifeste MU/TH/UR invalide.');
 if (validerLeManifeste(manifesteDetecteur).length) throw new Error('Manifeste du détecteur invalide.');
+if (validerLeManifeste(manifesteLcars).length) throw new Error('Manifeste LCARS invalide.');
 export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
+    { id: manifesteLcars.id, libelle: manifesteLcars.libelle,
+        description: 'Sept consoles de passerelle pilotées par le MJ : interventions, ordres, rapports textuels privés et alertes visuelles.',
+        corpusCompatibles: manifesteLcars.corpusCompatibles, adaptation: 'prete' },
     { id: manifesteMuthur.id, libelle: manifesteMuthur.libelle, description: manifesteMuthur.description,
         corpusCompatibles: manifesteMuthur.corpusCompatibles, adaptation: 'prete' },
     { id: manifesteDetecteur.id, libelle: manifesteDetecteur.libelle, description: manifesteDetecteur.description,

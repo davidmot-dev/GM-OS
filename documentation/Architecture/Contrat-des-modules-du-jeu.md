@@ -260,6 +260,15 @@ de GM-OS. Le [détecteur Alien](../../outils/alien/modules/detecteur/README.md) 
 avec droits indépendants, scan partagé et bips locaux. Les essais d’interface et de transport
 hors ligne ne remplacent pas l’essai sur réseau et tablettes physiques.
 
+LCARS de Star Trek rejoint le registre le 16/10 (L1–L4) : sept consoles, actions textuelles
+arbitrées, ordres/accusés et sauvegarde privée. L’adaptateur reçoit la liste des personnages
+depuis le contexte serveur ; une extension interne facultative synchronise les anciens auteurs
+et retire leurs affectations lorsqu’ils quittent la campagne. Les modules Alien n’utilisent
+pas cette extension. L’import de préparation LCARS est une commande MJ validée ; après
+écriture réussie, l’hôte ferme ses accès et invalide les commandes précédentes. Les versions
+de données futures restent conservées sans être exécutées et sont signalées au MJ.
+Les médias et le diffuseur sonore LCARS attendent L5/L6 ; le banc autonome conserve leurs essais.
+
 Un module livré DOIT documenter ses commandes, ses données, ses migrations,
 ses effets, ses limites et ses essais. Sa page de jeu et le guide des
 tablettes sont actualisés lorsque l'intégration devient disponible.

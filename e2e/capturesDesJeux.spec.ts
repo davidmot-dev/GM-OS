@@ -29,6 +29,11 @@ import type { CurrentView } from '../src/types/campaign.types';
  *
  * Les images vont dans `documentation/User Guides/captures/` (préfixe `jeu-`), en JPEG,
  * à côté de celles des autres guides : l'aide intégrée les résout depuis là.
+ *
+ * LCARS (16/10) : les captures du module dans le vrai Hub sont produites par
+ * `e2e/modulesDuJeuStarTrek.spec.ts`, sur son pilote fictif et deux navigateurs.
+ * Elles sortent dans `scratch/lcars-natif/jeu-star-trek-lcars-*.jpg`, puis sont
+ * relues et copiées dans le manuel. Ce parcours ne lit aucun pilote personnel.
  */
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));

@@ -49,6 +49,7 @@ du pilote et de campagne. Une référence absente du catalogue est signalée au 
 
 Les anciens pilotes Alien proposent **MU/TH/UR 6000** et le **Détecteur de mouvement** par défaut.
 Tout décocher enregistre une liste vide : la proposition par défaut ne revient pas à la reprise.
+Star Trek propose **LCARS — Passerelle**, à sélectionner explicitement dans son pilote.
 Les autres jeux attendent leurs modules compatibles.
 
 Dans **Cockpit › Modules du jeu**, **Ouvrir le pupitre** prépare l’outil. Pendant une séance,
@@ -62,6 +63,13 @@ un scan partagé entre les PJ choisis, des contacts aléatoires dans la proximit
 Le MJ peut classer/supprimer les dossiers MU/TH/UR et traiter plusieurs demandes privées par PJ.
 Le détecteur propose des préréglages nommés par campagne : les charger arrête le scan, qui se
 relance volontairement. Voir le [guide Alien](54-Jeu-Alien.md).
+
+LCARS propose sept consoles attribuées aux personnages réels de la campagne. Les affectations
+se préparent au pupitre ; l’accès au module s’ouvre séparément pendant la séance. Ses 19 actions
+arrivent dans une file arbitrée par le MJ, avec réponses privées, partage autorisé, publications
+ciblées et ordres avec accusés. Préparation, préréglages et échanges sont sauvegardés par campagne.
+Les alertes sont visuelles ; médias et audio attendent la suite de l’intégration. Voir le
+[guide Star Trek](54-Jeu-Star-Trek.md).
 
 Chaque joueur reçoit uniquement sa vue autorisée. Sans accès, l’onglet dit **« Aucun module
 ouvert par le meneur. »** Changer de campagne, terminer la séance ou redémarrer ferme les accès

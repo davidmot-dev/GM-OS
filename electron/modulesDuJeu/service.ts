@@ -36,7 +36,10 @@ export class ServiceDesModules {
         const copie = copier(brut);
         for (const modules of Object.values(copie.campagnes)) for (const [id, instance] of Object.entries(modules)) {
             const moteur = this.registre.get(id);
-            if (moteur) { instance.donnees = moteur.migrerEtat(instance.donnees, instance.versionDonnees); instance.versionDonnees = moteur.manifeste.versionDonnees; }
+            // Une version future traverse la sauvegarde sans être exécutée ni remplacée.
+            if (moteur && instance.versionDonnees <= moteur.manifeste.versionDonnees) {
+                instance.donnees = moteur.migrerEtat(instance.donnees, instance.versionDonnees); instance.versionDonnees = moteur.manifeste.versionDonnees;
+            }
         }
         return copie;
     }
@@ -46,7 +49,11 @@ export class ServiceDesModules {
         return suite;
     }
     async pret() { await this.file; }
-    private disponibles() { return modulesDuPilote(this.contexte.pilote, this.contexte.systemPath).modules.filter(m => m.disponibilite === 'pret' && this.registre.has(m.reference.id)); }
+    private versionFuture(id: string) {
+        const instance = this.donnees.campagnes[this.contexte.campagneId!]?.[id], moteur = this.registre.get(id);
+        return !!instance && !!moteur && instance.versionDonnees > moteur.manifeste.versionDonnees;
+    }
+    private disponibles() { return modulesDuPilote(this.contexte.pilote, this.contexte.systemPath).modules.filter(m => m.disponibilite === 'pret' && this.registre.has(m.reference.id) && !this.versionFuture(m.reference.id)); }
     private moteur(id: string) {
         exiger(this.disponibles().some(m => m.reference.id === id));
         return this.registre.get(id)!;
@@ -77,7 +84,14 @@ export class ServiceDesModules {
         if (!campagneId) return;
         for (const [id, instance] of Object.entries(donnees.campagnes[campagneId] ?? {})) {
             const moteur = this.registre.get(id);
-            if (moteur && (!modules || modules.has(id))) instance.donnees = moteur.arreterEffets(instance.donnees);
+            if (moteur && instance.versionDonnees <= moteur.manifeste.versionDonnees && (!modules || modules.has(id))) instance.donnees = moteur.arreterEffets(instance.donnees);
+        }
+    }
+    private preparerContexte(sauvegarde: SauvegardeDesModules) {
+        for (const [id, instance] of Object.entries(sauvegarde.campagnes[this.contexte.campagneId!] ?? {})) {
+            const moteur = this.registre.get(id);
+            if (moteur?.preparerContexte && instance.versionDonnees <= moteur.manifeste.versionDonnees)
+                instance.donnees = moteur.preparerContexte(instance.donnees, this.contexte.personnages);
         }
     }
     changerContexte(brut: ContexteDesModules) {
@@ -102,6 +116,7 @@ export class ServiceDesModules {
             const suivante = copier(this.donnees);
             this.arreter(suivante, ancien.campagneId, changementDeTable ? undefined : retires);
             if (this.erreur) { this.publier(); return; }
+            this.preparerContexte(suivante);
             try { if (JSON.stringify(suivante) !== JSON.stringify(this.donnees)) await this.ecrire(suivante); }
             catch (e) { this.donnees = suivante; throw e; } // La coupure des effets est immédiate même si le disque échoue.
             finally { this.publier(); }
@@ -174,20 +189,26 @@ export class ServiceDesModules {
             exiger(moteur.manifeste.commandes.some(c => c.id === commande.id && c.roles.includes(lecteur.role)));
             if (lecteur.role === 'joueur') exiger(!!lecteur.personnageId && this.contexte.personnages.some(p => p.id === lecteur.personnageId)
                 && this.acces.get(requete.moduleId)?.has(lecteur.personnageId) && !!this.contexte.seanceId);
-            const etat = moteur.appliquerCommande(this.etat(requete.moduleId), commande, lecteur);
+            const etat = moteur.appliquerCommande(this.etat(requete.moduleId), commande, lecteur, { personnages: this.contexte.personnages });
             const suivante = copier(this.donnees), campagne = this.contexte.campagneId!;
             suivante.campagnes[campagne] ??= {};
             suivante.campagnes[campagne][requete.moduleId] = { versionDonnees: moteur.manifeste.versionDonnees, donnees: etat };
-            await this.ecrire(suivante); this.publier();
+            await this.ecrire(suivante);
+            if (moteur.fermerAccesApresCommande?.(commande)) {
+                this.changerAcces(requete.moduleId, new Set()); this.generation++;
+            }
+            this.publier();
         });
     }
     async vueMJ(): Promise<VueDesModulesMJ> {
         await this.pret();
         return { campagneId: this.contexte.campagneId, contexte: this.generation, revision: this.revision, erreur: this.erreur ?? this.erreurEcriture,
+            indisponibles: modulesDuPilote(this.contexte.pilote, this.contexte.systemPath).modules.filter(m => this.versionFuture(m.reference.id))
+                .map(m => ({ id: m.reference.id, raison: 'Cette préparation provient d’une version plus récente. Elle est conservée et reste indisponible.' })),
             modules: this.erreur || !this.contexte.campagneId ? [] : this.disponibles().map(m => ({ id: m.reference.id, libelle: m.libelle,
                 revision: this.revision, acces: [...(this.acces.get(m.reference.id) ?? [])], diffusionSonore: !!this.moteur(m.reference.id).choisirDiffusion,
                 appareilDeDiffusion: this.moteur(m.reference.id).diffusionActuelle?.(this.etat(m.reference.id)),
-                vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'mj', appareilId: 'poste-mj' }) })),
+                vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'mj', appareilId: 'poste-mj' }, { personnages: this.contexte.personnages }) })),
             ...(!this.erreur ? { sauvegarde: copier(this.donnees) } : {}),
         };
     }
@@ -197,7 +218,7 @@ export class ServiceDesModules {
             modules: this.erreur || !personnageId || !this.contexte.seanceId || !this.contexte.personnages.some(p => p.id === personnageId) ? []
                 : this.disponibles().filter(m => this.acces.get(m.reference.id)?.has(personnageId)).map(m => ({ id: m.reference.id, libelle: m.libelle,
                     revision: this.revision, ouverture: this.ouvertures.get(m.reference.id)!.get(personnageId)!,
-                    vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'joueur', personnageId, appareilId }) })),
+                    vue: this.moteur(m.reference.id).vuePour(this.etat(m.reference.id), { role: 'joueur', personnageId, appareilId }, { personnages: this.contexte.personnages }) })),
         };
     }
     importer(brut: SauvegardeDesModules) {
@@ -206,6 +227,7 @@ export class ServiceDesModules {
             const suivante = copier(this.donnees);
             Object.assign(suivante.campagnes, restauree.campagnes);
             this.arreter(suivante, this.contexte.campagneId);
+            this.preparerContexte(suivante);
             await this.ecrire(suivante);
             this.acces.clear(); this.ouvertures.clear(); this.generation++; this.publier();
         });

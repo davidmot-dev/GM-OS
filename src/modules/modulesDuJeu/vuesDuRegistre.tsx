@@ -4,8 +4,18 @@ import type { VueMuthurMJ, VueMuthurJoueur } from '../../../outils/alien/modules
 import type { EtatDetecteur } from '../../../outils/alien/modules/detecteur/moteur.mjs';
 import '../../../outils/alien/modules/muthur/style.css';
 import '../../../outils/alien/modules/detecteur/style.css';
+import '../../../outils/star-trek/lcars/style.css';
+import type { VueLcarsMJ, VueLcarsJoueur } from '../../../outils/star-trek/lcars/moteur.mjs';
 
 type Props = { vue: unknown; horloge?: () => number; envoyerCommande: (commande: CommandeDeModule) => Promise<ResultatDeModule> };
+const joueurLcars = lazy(async () => {
+    const { VueJoueur } = await import('../../../outils/star-trek/lcars/vues.mjs');
+    return { default: (props: Props) => <VueJoueur {...props} vue={props.vue as VueLcarsJoueur} /> };
+});
+const mjLcars = lazy(async () => {
+    const { PupitreMJ } = await import('../../../outils/star-trek/lcars/vues.mjs');
+    return { default: (props: Props) => <PupitreMJ {...props} vue={props.vue as VueLcarsMJ} /> };
+});
 const joueurMuthur = lazy(async () => {
     const { VueJoueur } = await import('../../../outils/alien/modules/muthur/vues.mjs');
     return { default: (props: Props) => <VueJoueur vue={props.vue as VueMuthurJoueur} horloge={props.horloge} envoyerCommande={props.envoyerCommande} /> };
@@ -23,6 +33,7 @@ const mjDetecteur = lazy(async () => {
     return { default: (props: Props) => <PupitreMJ vue={props.vue as EtatDetecteur} envoyerCommande={props.envoyerCommande} /> };
 });
 const REGISTRE_DES_VUES = new Map([
+    ['star-trek-lcars', { joueur: joueurLcars, mj: mjLcars }],
     ['alien-muthur', { joueur: joueurMuthur, mj: mjMuthur }],
     ['alien-detecteur', { joueur: joueurDetecteur, mj: mjDetecteur }],
 ]);

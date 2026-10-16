@@ -87,7 +87,7 @@ les sept onglets affichent leur nom sur deux rangées en portrait, une sur grand
 | **Lieux** | L'**Atlas** de la campagne : les lieux découverts, à rouvrir quand on veut. |
 | **Inventaire** | Le sac du personnage : donner, jeter, consulter. |
 | **Cartes** | Les cartes tenues en main (Deck-OS). **Une pastille rouge compte les cartes qu'on vous tend.** |
-| **Modules du jeu** | Les outils ouverts à votre personnage par le meneur, par exemple MU/TH/UR et le détecteur pour Alien. Touchez la carte pour l’ouvrir et **Retour aux modules** pour revenir. Sans autorisation : **« Aucun module ouvert par le meneur. »** |
+| **Modules du jeu** | Les outils ouverts à votre personnage par le meneur : MU/TH/UR et le détecteur pour Alien, LCARS pour Star Trek. Touchez la carte pour l’ouvrir et **Retour aux modules** pour revenir. Sans autorisation : **« Aucun module ouvert par le meneur. »** |
 
 | Bouton | Ce qu'il ouvre |
 | :--- | :--- |
@@ -95,6 +95,13 @@ les sept onglets affichent leur nom sur deux rangées en portrait, une sur grand
 | **Notes** | Les notes privées du joueur et son feedback de séance au meneur |
 | **Messages** | La messagerie, avec le compte des non-lus |
 | **Quitter** | Libère le personnage, après confirmation |
+
+Avec **LCARS**, les consoles dépendent des postes attribués par le meneur. Sélectionnez un
+contact, système, canal, itinéraire ou dossier, puis proposez votre intervention. Le résultat
+arrive après arbitrage dans vos interventions privées. **Partager à l’équipage** n’est proposé
+que si le meneur l’autorise. Au Commandement, vous pouvez transmettre des ordres ; leurs
+destinataires peuvent **Accuser réception**. Cette première intégration utilise des rapports
+textuels et des alertes visuelles. [Parcours complet Star Trek](54-Jeu-Star-Trek.md).
 
 > 🔎 **Cette page ne décrivait aucun de ces onglets** — ni les indices, ni l'Atlas, ni les cartes en
 > main, qui sont pourtant l'essentiel de ce qu'un joueur touche. Ajoutés le 2026-09-04.
@@ -247,3 +254,5 @@ régénérées et regardées ; les essais sur les vrais appareils restent en T6.
 *Relu le 2026-10-15 : modules Alien, détecteur partagé et bips locaux vérifiés hors ligne,
 puis avec Electron et deux sessions Edge sur le même PC. Les appareils physiques restent à essayer.*
 *Ajout relu le 2026-10-16 : questions MU/TH/UR en file privée, CLEAR, préparation MJ et recette matérielle sur les quatre appareils de David.*
+
+*Complément du 2026-10-16 : LCARS dans les Modules du jeu, postes attribués, rapports textuels privés et ordres ; médias et audio à suivre.*

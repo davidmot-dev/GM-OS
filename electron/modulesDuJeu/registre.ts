@@ -5,24 +5,37 @@ import manifesteDetecteur from '../../outils/alien/modules/detecteur/manifeste.j
 import type { CommandeDetecteur } from '../../outils/alien/modules/detecteur/moteur.mjs';
 import type { CommandeMuthur, ContexteMuthur } from '../../outils/alien/modules/muthur/moteur.mjs';
 import type { CommandeDeModule } from '../../src/modules/modulesDuJeu/protocole';
+import * as lcars from '../../outils/star-trek/lcars/natif.mjs';
+import { validerEtat as validerLcars } from '../../outils/star-trek/lcars/moteur.mjs';
+import manifesteLcars from '../../outils/star-trek/lcars/manifeste.json';
 
 export type LecteurDeModule = { role: 'mj' | 'joueur'; personnageId?: string; appareilId: string };
+export type ContexteDeMoteur = { personnages: { id: string; nom: string }[] };
 export interface MoteurEnregistre {
     manifeste: { id: string; libelle: string; versionDonnees: number; commandes: { id: string; roles: string[] }[] };
     creerEtat(): unknown;
     preparerLecteur?(donnees: unknown, id: string, nom: string): unknown;
+    preparerContexte?(donnees: unknown, personnages: ContexteDeMoteur['personnages']): unknown;
+    fermerAccesApresCommande?(commande: CommandeDeModule): boolean;
     choisirDiffusion?(donnees: unknown, appareilId: string): unknown;
     diffusionActuelle?(donnees: unknown): string | null;
     migrerEtat(donnees: unknown, version: number): unknown;
     arreterEffets(donnees: unknown): unknown;
-    appliquerCommande(donnees: unknown, commande: CommandeDeModule, lecteur: LecteurDeModule): unknown;
-    vuePour(donnees: unknown, lecteur: LecteurDeModule): unknown;
+    appliquerCommande(donnees: unknown, commande: CommandeDeModule, lecteur: LecteurDeModule, contexte: ContexteDeMoteur): unknown;
+    vuePour(donnees: unknown, lecteur: LecteurDeModule, contexte: ContexteDeMoteur): unknown;
 }
 const contexte = (lecteur: LecteurDeModule): ContexteMuthur => {
     if (lecteur.role === 'joueur' && !lecteur.personnageId) throw new Error('Personnage requis.');
     return lecteur as ContexteMuthur;
 };
 export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new Map([
+    [manifesteLcars.id, {
+        manifeste: manifesteLcars, creerEtat: lcars.creerEtat, preparerLecteur: lcars.preparerLecteur,
+        preparerContexte: lcars.preparerContexte, fermerAccesApresCommande: lcars.fermerAccesApresCommande,
+        migrerEtat: lcars.migrerEtat,
+        arreterEffets(donnees) { validerLcars(donnees); return lcars.arreterEffets(donnees); },
+        appliquerCommande: lcars.appliquerCommande, vuePour: lcars.vuePour,
+    }],
     [manifeste.id, {
         manifeste, creerEtat: muthur.creerEtat, migrerEtat: muthur.migrerEtat,
         preparerLecteur(donnees, id, nom) {

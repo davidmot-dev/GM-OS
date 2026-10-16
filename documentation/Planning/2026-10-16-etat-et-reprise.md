@@ -414,3 +414,66 @@ guide local, analyse et seules entrées LCARS du registre/de cette reprise regro
 `feat(lcars): ajouter la passerelle de test et ses sept consoles` (identifiant dans `git log`).
 Les validations ci-dessus portent sur ces sources. Les autres modifications de la copie
 de travail restent hors du commit. Aucun push demandé.
+
+## LCARS — push et plan d’intégration native (Codex, suite du 16/10)
+
+Après le commit **`bfde55f1`**, David demande le push : effectué sur
+`origin/feature/tablet-hub-pwa`, avec types, lint (1 803 fichiers sans erreur/avertissement),
+**7 931 tests** et build validés par le hook. Les fichiers des autres chantiers restent hors
+de ce commit. La suite du dépôt comprend ensuite `cd2e826a` de l’autre chantier.
+
+David demande « fais moi le plan pour inclure le module Star Trek dans GM-OS ».
+[Plan L1–L7](2026-10-16-integration-lcars-gmos.md) rédigé après lecture des registres,
+du service, du transport, du protocole et des vues natives. Catalogue/raccord du moteur,
+vrais personnages et affectations, transport privé, sauvegarde/import, médias privés,
+audio/horloge, recette native et matérielle avec manuel. Points à ne pas oublier :
+`preparerLecteur` n’est aujourd’hui appelé qu’à l’autorisation, les médias base64 gonflent
+les projections et les annulations vocales globales de l’atelier doivent être coordonnées.
+
+Import de l’atelier proposé pour la préparation, sans recopier les officiers et historiques
+fictifs. Les accès et affectations restent deux contrôles distincts. Aucune intégration
+codée et aucun service lancé pour ce plan ; aucun changement de `src/`/`electron/`.
+Registre § 136 et ligne LCARS du ToDo actualisés. Reprise : **L1**, après vérification de la
+fermeture de GM-OS. Le plan et ces mises à jour ne sont pas commités ; aucun commit demandé
+pour cette rédaction.
+
+## LCARS — L1 à L4 natives réalisées (Codex, suite du 16/10)
+
+David demande « Commence les 4 première tranches », puis confirme GM-OS fermé. Version du
+module **0.4.0**, données v2 : catalogue/registres natifs et React, déclarations TypeScript,
+état initial neutre, vrai équipage de campagne, affectations avant séance et accès MJ séparés.
+`natif.mjs` vérifie les identités contre le contexte de l’hôte ; les noms ne viennent pas des
+charges. Renommer/réouvrir préserve les postes, sortir un PJ les retire en conservant les auteurs.
+Les extensions internes du registre restent facultatives pour les modules Alien.
+
+Les 19 actions, demandes privées, partage autorisé, publications ciblées et ordres/accusés
+utilisent le transport existant. Sauvegarde complète et archive de campagne incluent LCARS.
+Import de préparation depuis le pupitre : aperçu, confirmation, remplacement du vaisseau,
+éléments/préréglages, effacement des échanges/affectations LCARS et fermeture des droits après
+écriture réussie. Aucun PJ fictif importé ; les autres données de campagne ne sont pas touchées.
+Les versions futures connues restent conservées sans exécution, avec message au MJ.
+
+Validation : **127 tests Vitest ciblés**, **34 Node moteur**, manifeste conforme, types/build
+et lint ciblé propres ; **quatre E2E natifs** réussis sur profils jetables : deux LCARS
+(vrais HTTP/WebSocket, deux officiers, import confirmé, arbitrage privé/partage, ordres,
+révocation, reconnexion, redémarrage) et deux Alien (droits privés et restauration/import).
+Les 42 captures de l’atelier passent toujours. Captures natives dans `scratch/lcars-natif/`,
+deux illustrations relues pour le manuel. Aucun profil personnel utilisé, aucune installation.
+
+Pièges payés : `lireConfiguration` renvoie l’état validé, pas l’enveloppe ; la nouvelle vue
+d’import le remet dans une enveloppe avant de commander. Trois tests de vue gardent ce raccord.
+Les cases d’affectation attendent l’ACK serveur : dans la recette, cliquer puis attendre l’état,
+comme pour les droits Alien. Les affectations actives ont aussi un libellé « Attribué » et un
+fond distinct pour la lisibilité native. Les captures d’instruments sur téléphone peuvent être
+rognées par la zone défilante du Hub : ne pas les publier comme captures complètes du manuel.
+
+Documentation : page Star Trek, manuel 53, guide tablette 61, contrat, guide du module et
+plan/registre/ToDo actualisés. **L5–L7 restent à faire** : pièces jointes privées, audio natif,
+recette complète et appareils physiques. Ces commandes sont masquées/refusées au raccord L1–L4,
+et restent disponibles dans l’atelier autonome. Aucune mécanique de vaisseau automatisée.
+David demande ensuite « commit et pousse » : le raccord natif, ses tests, les trois guides,
+les deux captures et les notes sont regroupés dans `feat(lcars): integrer la passerelle native
+et sa sauvegarde par campagne` (identifiant dans `git log`). Les hooks conservent la synchronisation
+NotebookLM autorisée pour les guides et la validation complète avant push. Les fichiers des
+autres chantiers restent hors commit. Reprise : essai du parcours textuel dans GM-OS par David,
+ou L5 après vérification de fermeture avant nouvelle édition de src/electron.

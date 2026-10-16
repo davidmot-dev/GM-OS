@@ -27,6 +27,7 @@ export interface VueDesModulesMJ {
     appareils?: { id: string; libelle: string; personnageId: string }[];
     sauvegarde?: SauvegardeDesModules;
     erreur?: string;
+    indisponibles?: { id: string; raison: string }[];
 }
 export interface RequeteDeModule {
     requeteId: string; campagneId: string; moduleId: string; contexte: number; commande: CommandeDeModule;

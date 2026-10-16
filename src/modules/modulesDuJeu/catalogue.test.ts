@@ -8,6 +8,14 @@ import type { GameDriver } from '../../types/drivers';
 const alien = { id: 'custom-123456', name: 'ALIEN, le jeu de rôle' };
 
 describe('modules du pilote', () => {
+    it('propose LCARS seulement sur référence explicite et corpus Star Trek, y compris personnalisé', () => {
+        const pilote = { id: 'custom-sta', name: 'Mon vaisseau', corpusId: 'star-trek' };
+        expect(modulesDuPilote(pilote).modules).toEqual([]);
+        expect(modulesDuPilote({ ...pilote, modulesDuJeu: [] }).modules).toEqual([]);
+        expect(modulesDuPilote({ ...pilote, modulesDuJeu: [{ id: 'star-trek-lcars' }] }).modules[0].disponibilite).toBe('pret');
+        expect(modulesDuPilote({ id: 'alien', name: 'Alien', modulesDuJeu: [{ id: 'star-trek-lcars' }] }).modules[0].disponibilite).toBe('incompatible');
+        expect(SessionOSModuleSchema.parse({ customGameDrivers: [{ ...pilote, modulesDuJeu: [{ id: 'star-trek-lcars' }] }] }).customGameDrivers?.[0].modulesDuJeu).toEqual([{ id: 'star-trek-lcars' }]);
+    });
     it('retrouve Alien derrière un identifiant de pilote forgé', () => {
         const resultat = modulesDuPilote(alien);
         expect(resultat.corpusId).toBe('alien');

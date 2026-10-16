@@ -11715,9 +11715,27 @@ recette navigateur et **42 captures** sans débordement ni erreur JavaScript ; c
 tablette relus, quatre sur smartphone et deux vues grand écran. Aucun service ou GM-OS lancé.
 Le HTML embarque la fiction et ses secrets pour changer de rôle : ce n’est pas une authentification.
 Les appareils physiques, le transport ciblé et le transfert sonore distant restent à éprouver
-lors d’une intégration. Mise en version demandée par David le 16/10 : « commit tes changements ».
-Le commit LCARS inclut les sources et leur documentation ; aucun push demandé. Premier geste : ouvrir
-`scratch/lcars-v1/apercu.html`, choisir **Officier de test**, puis alterner avec le MJ.
+lors d’une intégration. Sources et documentation commitées puis poussées à la demande de David
+dans **`bfde55f1`**. Validation pré-push : types, lint, **7 931 tests** et build réussis.
+
+David demande ensuite « fais moi le plan pour inclure le module Star Trek dans GM-OS ».
+Le [plan d’intégration L1–L7](2026-10-16-integration-lcars-gmos.md) est rédigé : catalogue et
+registres, vrais personnages et affectations, transport privé, sauvegarde/import, médias,
+audio/horloge, recette et manuel. David demande « Commence les 4 première tranches » et confirme
+GM-OS fermé. **L1–L4 réalisées, version 0.4.0 / données v2** : catalogue et registres natifs,
+équipage issu du contexte de campagne, droits séparés des affectations, rapports textuels
+et ordres sur transport privé, sauvegarde/export par campagne et import confirmé de préparation.
+L’import ne recopie ni officiers ni échanges fictifs et ferme les accès après écriture réussie.
+Les versions de données futures sont conservées sans exécution et signalées au MJ.
+
+Validation : types/build, lint ciblé, **127 tests Vitest**, **34 tests Node** et **quatre
+parcours E2E natifs** (deux LCARS et deux Alien) réussis sur profils jetables. Les 42 captures
+de l’atelier restent validées ; manuel actualisé, captures natives relues. Aucune donnée
+personnelle utilisée. **Médias et audio natifs attendent L5/L6** ; les appareils physiques L7.
+Commit et push de cette tranche demandés par David le 16/10 ; commit `feat(lcars)` d’intégration
+native (identifiant dans `git log`). Prochain geste : **L5**, après vérification de
+la fermeture de GM-OS pour toute nouvelle édition native. L’atelier reste essayable
+dans `scratch/lcars-v1/apercu.html` avec **Officier de test**.
 
 ## La vue d'un coup d'œil
 
@@ -11794,7 +11812,7 @@ Le commit LCARS inclut les sources et leur documentation ; aucun push demandé. 
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
 | 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; recette et départ HACK poussés dans `460544af`/`a23e6989` ; correctif horloge HACK, glitch fixe en mouvements réduits et CRT tablette poussés dans `dc1ead2b` ; décompte, film, alarme et faux écho sur l’heure serveur le 16/10, non commité | Recharger et éprouver sur les tablettes, poursuivre la grille matérielle | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
-| 71 | **LCARS de Star Trek — sept postes en test** | § 136 ; atelier 0.3.0 autonome, sept instruments distincts, 34 tests et 42 captures validés, sauvegarde/import et médias ; mise en version demandée le 16/10 | Comparer les sept postes dans `scratch/lcars-v1/apercu.html` avec David | Raccord au vrai Hub et recette matérielle ultérieurs |
+| 71 | **LCARS de Star Trek — intégration native** | § 136 ; [L1–L4 réalisées](2026-10-16-integration-lcars-gmos.md), version 0.4.0 : personnages, rapports privés, ordres et sauvegarde/import ; 127 tests ciblés + 34 Node + 4 E2E ; commit/push demandés le 16/10 | L5 : médias privés | Audio natif en L6, recette matérielle en L7 |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

@@ -1,8 +1,38 @@
 # LCARS — passerelle complète en test
 
-Atelier **0.3.0**, données **v2**, contrat de module **v1**. LCARS classique TNG / DS9 /
+Version **0.4.0**, données **v2**, contrat de module **v1**. LCARS classique TNG / DS9 /
 Voyager, avec les sept postes et leur contrôle MJ. Il s’agit d’un module immersif : les
 conséquences et résultats sont décidés par le MJ, sans calcul automatique des règles de vaisseau.
+
+## Dans GM-OS — première intégration native (L1–L4)
+
+Le module est enregistré dans le catalogue et les registres natifs. Dans l’éditeur du pilote
+Star Trek, sélectionner **LCARS — Passerelle**, puis **Cockpit → Modules du jeu → Ouvrir le pupitre**.
+La première instance est neutre : aucun équipage, contact ou scénario fictif.
+
+**Personnage à préparer** reprend les vrais personnages de la campagne. Préparer un personnage
+et lui attribuer des postes est possible avant la séance. Ouvrir ses accès est une autre décision,
+dans **Accès des personnages**, pendant la séance. Aucun poste n’est attribué par défaut.
+Les noms sont synchronisés par l’hôte sans réinitialiser les affectations. Un ancien personnage
+conserve ses historiques, perd ses postes et ne peut plus agir. La limite reste 16 officiers,
+anciens auteurs compris ; aucune liste excédentaire n’est ouverte partiellement.
+
+Cette intégration porte les **sept consoles et 19 actions textuelles**, les réponses privées,
+le partage autorisé, les ordres/accusés, les préréglages et les alertes visuelles. Le contexte
+vient de l’hôte ; les projections passent par son transport ciblé. Le stockage privé et les
+sauvegardes/exportations GM-OS conservent les instances par campagne. Reprise/import arrêtent
+les effets et gardent les droits fermés. Une version de données future est conservée sans exécution.
+
+**Importer une préparation** lit un export de l’atelier, montre son aperçu puis attend une
+confirmation. Cela remplace le vaisseau, les éléments et préréglages ; efface les historiques
+et affectations LCARS actuels ; ferme les accès. Aucun officier ou échange fictif n’est importé.
+Les autres données de campagne restent conservées ; sauvegarder GM-OS avant un remplacement.
+
+`natif.mjs` porte cette adaptation de contexte. Le moteur reste pur et conserve son format v2.
+`importer-preparation` est une commande MJ ; l’hôte invalide les accès après son écriture réussie.
+Un import refusé ou une écriture échouée conserve la préparation précédente. Les vues natives
+n’offrent pas encore de pièce jointe ni de sélection sonore : ces raccords restent en L5/L6.
+Les sections audio et médias ci-dessous décrivent les essais de l’atelier autonome.
 
 ## Ouvrir
 
@@ -139,7 +169,7 @@ Science, contacts, rapports et partages sont migrés en v2. Une version inconnue
 Cet HTML embarque la fiction complète et donne volontairement accès au rôle MJ. Le choix
 de rôle n’authentifie personne : ne pas distribuer cet atelier avec des secrets réels.
 Les projections et permissions du moteur sont testées ; deux onglets ou appareils ne se
-synchronisent pas. L’atelier n’est pas encore enregistré dans le pilote Star Trek ni le vrai Hub.
+synchronisent pas. Dans GM-OS, utiliser le module natif décrit plus haut pour les vraies sessions.
 
 Le moteur expose les six fonctions du contrat : `creerEtat`, `validerEtat`, `migrerEtat`,
 `appliquerCommande`, `vuePour`, `arreterEffets`. Les vues React reçoivent `vue`,
@@ -180,3 +210,21 @@ instruments tablette ont été relus, ainsi que quatre instruments smartphone et
 complètes grand écran. Les animations respectent les mouvements réduits.
 La vidéo de recette est encodée sur une page sans horloge simulée, car le codec travaille
 en temps réel. Le son réel reste muet vers les enceintes et les voix sont simulées.
+
+**Intégration native L1–L4, le 16/10 :** types/build et lint ciblé propres,
+**127 tests Vitest ciblés** dont 12 scénarios de service LCARS et trois tests de vue d’import/
+équipage ; **34 tests Node** du moteur. Quatre parcours E2E réels passent : deux LCARS et
+deux de non-régression Alien (droits privés, sauvegarde/redémarrage/import). La lisibilité
+des affectations a été revue puis le parcours à deux officiers rejoué avec quatre postes
+visiblement attribués. Deux captures natives alimentent le manuel. Profils jetables uniquement.
+
+```powershell
+npx.cmd vitest run --maxWorkers=4 electron/modulesDuJeu src/modules/modulesDuJeu src/modules/system/archive/modulesDuJeuDuBundle.test.ts electron/manuelDesJeux.test.ts
+npm.cmd run build
+npx.cmd playwright test e2e/modulesDuJeuStarTrek.spec.ts --reporter=list
+```
+
+L’E2E utilise une campagne fictive de `outils/modules-du-jeu/recette-lcars.mjs`, aucun export
+de pilote personnel. Ses images sortent dans `scratch/lcars-natif/`. Les aperçus d’éléments
+plus hauts que la zone défilante d’un téléphone peuvent être rognés par le cadre : conserver
+les vues complètes de téléphone pour la recette, relire les illustrations avant publication.

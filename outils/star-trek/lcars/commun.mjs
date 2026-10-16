@@ -105,7 +105,7 @@ export function Cadre({ vue, mj = false, erreur, envoyer, horloge = Date.now, ch
       h('div', { className: 'lcars-espace' }, h('div', { className: 'lcars-titre-page' }, h('div', null, h('p', null, mj ? 'CONTRÔLE DE MISSION' : 'PASSERELLE'), h('h3', null, mj ? 'Pupitre du meneur' : vue.officier.nom)), h('span', { className: 'lcars-badge' }, mj ? 'MJ' : 'OFFICIER')),
         h('p', { className: 'lcars-situation' }, vue.situation),
         (vue.alerte.texte || secondes !== null) && carte('Consigne de passerelle', h('div', null, h('p', null, vue.alerte.texte), secondes !== null && h('p', { role: 'timer', 'aria-label': 'Compte à rebours de l’alerte', className: 'lcars-decompte' }, `${String(Math.floor(secondes / 60)).padStart(2, '0')}:${String(secondes % 60).padStart(2, '0')}`))),
-        h(Son, { vue, envoyer, horloge, active, changer }), erreur && h('p', { role: 'alert', className: 'lcars-erreur' }, erreur), children)),
+        vue.integration?.son !== false && h(Son, { vue, envoyer, horloge, active, changer }), erreur && h('p', { role: 'alert', className: 'lcars-erreur' }, erreur), children)),
     h('footer', { className: 'lcars-pied' }, h('span', null, 'FÉDÉRATION / EXPLORATION'), h('span', null, mj ? 'CONTRÔLE MJ' : 'CONSOLE DE BORD'))));
 }
 export function Capteurs({ cible, poste, scan, effetsActifs, horloge = Date.now }) {

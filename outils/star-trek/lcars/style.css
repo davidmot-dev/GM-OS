@@ -18,7 +18,7 @@
 .lcars-prototype label { display: flex; flex-direction: column; gap: 7px; margin: 16px 0 8px; color: #d9c7ef; }
 .lcars-prototype form > button { margin-top: 14px; }
 .lcars-prototype .lcars-case { flex-direction: row; align-items: center; gap: 12px; }
-.lcars-prototype input[type="checkbox"] { width: 28px; height: 28px; min-height: 28px; flex-shrink: 0; accent-color: var(--lcars-orange); margin: 8px; }
+.lcars-prototype input[type="checkbox"] { appearance: auto; background: revert; padding: 0; width: 28px; height: 28px; min-height: 28px; flex-shrink: 0; accent-color: var(--lcars-orange); margin: 8px; }
 .lcars-prototype .lcars-entete { display: flex; align-items: center; gap: 16px; padding-bottom: 20px; border-bottom: 9px solid var(--lcars-orange); }
 .lcars-prototype .lcars-coude { width: 110px; align-self: stretch; min-height: 92px; flex-shrink: 0; border-radius: 56px 0 0; background: var(--lcars-orange); color: #171018; display: flex; align-items: flex-end; justify-content: center; padding: 12px; font-weight: 800; }
 .lcars-prototype .lcars-identite { flex: 1; }
@@ -87,6 +87,8 @@
 .lcars-prototype .lcars-destinations { border: 1px solid #77688b; padding: 12px; margin: 16px 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); min-width: 0; }
 .lcars-prototype .lcars-affectations { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 6px; }
 .lcars-prototype .lcars-affectations .lcars-case { margin: 0; }
+.lcars-prototype .lcars-poste-attribue { border-left: 3px solid var(--lcars-orange); background: #252031; }
+.lcars-prototype .lcars-affectation-statut { display: block; color: var(--lcars-orange); font-size: 12px; margin: 0 12px 10px 48px; }
 .lcars-prototype .lcars-piece { border-block: 1px solid #4f445d; padding: 8px 0; margin: 14px 0; }
 .lcars-prototype .lcars-media { margin: 16px 0; }
 .lcars-prototype .lcars-media img, .lcars-prototype .lcars-media video { display: block; max-width: 100%; max-height: 420px; background: #000; }

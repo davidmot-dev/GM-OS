@@ -51,6 +51,7 @@ export function ModulesDuJeuMJ() {
         {resultat.modules.map(m => <article key={m.reference.id} className="space-y-3 rounded-lg border border-app-border bg-app-surface p-4">
             <h3 className="break-words text-lg font-bold text-app-text">{m.libelle}</h3>
             <p className="text-sm text-app-muted">{m.description}</p>
+            {courante?.indisponibles?.filter(i => i.id === m.reference.id).map(i => <p role="status" key={i.id} className="text-sm text-etat-attention">{i.raison}</p>)}
             {courante?.modules.some(module => module.id === m.reference.id) ? <>
                 <button type="button" className="min-h-[44px] rounded border border-app-border px-4 text-app-text" onClick={() => choisir(selection === m.reference.id ? null : m.reference.id)}>{selection === m.reference.id ? 'Fermer le pupitre' : 'Ouvrir le pupitre'}</button>
                 {courante.modules.find(module => module.id === m.reference.id)?.diffusionSonore && <div className="flex flex-wrap items-center gap-2">

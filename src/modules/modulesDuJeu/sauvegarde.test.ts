@@ -6,12 +6,23 @@ import { useSessionOSStore } from '../session/useSessionOSStore';
 import { nexusService } from '../system/archive/NexusService';
 import { creerEtat } from '../../../outils/alien/modules/muthur/moteur.mjs';
 import type { SauvegardeDesModules, PontDesModules } from './protocole';
+import { creerEtat as creerLcars } from '../../../outils/star-trek/lcars/natif.mjs';
 
 const original = window.appBridge;
 const sauvegarde: SauvegardeDesModules = { version: 1, campagnes: { 'camp-a': { 'alien-muthur': { versionDonnees: 3, donnees: creerEtat() } }, 'camp-b': { futur: { versionDonnees: 9, donnees: { code: 'GARDER' } } } } };
 beforeEach(() => { useModulesDuJeuMJ.setState({ vue: null, sauvegarde: undefined, erreur: null }); });
 afterEach(() => { window.appBridge = original; useModulesDuJeuMJ.setState({ sauvegarde: undefined, vue: null }); });
 describe('les modules privés dans les sauvegardes et archives', () => {
+    it('inclut LCARS dans le fichier complet et l’archive ciblée, séparé du flux public', () => {
+        const lcars = { versionDonnees: 2, donnees: creerLcars() };
+        lcars.donnees.situation = 'PRÉPARATION PRIVÉE LCARS';
+        useModulesDuJeuMJ.setState({ sauvegarde: { version: 1, campagnes: { 'camp-a': { 'star-trek-lcars': lcars } } } });
+        useSessionOSStore.setState({ campaigns: [{ id: 'camp-a', name: 'Démo', system: 'star-trek', activeLocationIds: [] }] });
+        expect(validateSession(construireLaSauvegarde()).modules.modulesDuJeu?.campagnes['camp-a']['star-trek-lcars']).toEqual(lcars);
+        const archive = nexusService.scrapeCampaignData('camp-a');
+        expect(archive.modulesDuJeu?.['star-trek-lcars']).toEqual(lcars);
+        expect(archive.campaign).not.toHaveProperty('modulesDuJeu');
+    });
     it('n’ajoute aucun défaut à une ancienne sauvegarde', () => {
         expect(construireLaSauvegarde().modules).not.toHaveProperty('modulesDuJeu');
         expect(validateSession({ modules: {} }).modules).not.toHaveProperty('modulesDuJeu');
