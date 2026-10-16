@@ -160,6 +160,11 @@ test » montre alors une section **« Puiser dans la … »**, une ligne par app
 Rien ne se dépense avant **Lancer**, et l'on ne peut pas engager plus qu'il ne reste. Un bonus se
 dit à côté des réussites (« 3 réussites (dont +1 Cabale) »).
 
+**La recharge du groupe** (`nouveauScenario`, sur la fiche du groupe) : ce que sa feuille regagne à
+**« Nouveau scénario »**, avec les mêmes mouvements que ceux des Héros — chez NOC, l'Espoir revient
+au niveau de l'Atout Credo, le Vécu aux Légendes, la Singularité à l'Observatoire. La confirmation
+du scénario le nomme.
+
 ---
 
 ## Les gestes sur chaque Héros (`gestesDesHeros`)

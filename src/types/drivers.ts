@@ -361,6 +361,14 @@ export interface FicheDeGroupe {
     gabaritDeLaFiche: string;
     /** Ce que le groupe apporte aux jets des personnages. Absent : rien. */
     apports?: ApportDuGroupe[];
+    /**
+     * **Ce que la feuille du groupe regagne à « Nouveau scénario »** — les pistes de
+     * la Cabale de NOC, 2026-10-16 : *« les réserves communes se rechargent
+     * entièrement au début de chaque scénario »*, chacune jusqu'au niveau de
+     * l'Atout qui la donne — l'Espoir au Credo, la Singularité à l'Observatoire,
+     * le Vécu aux Légendes (carnet « NOC », « Domaines et Réserves »).
+     */
+    nouveauScenario?: MouvementDeFiche[];
 }
 
 export interface GameDriver {

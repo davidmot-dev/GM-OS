@@ -1531,6 +1531,19 @@ export function controlerLePilote(
         });
     }
 
+    // Ce que la feuille du groupe regagne au nouveau scénario — les pistes de la Cabale.
+    (driver.ficheDeGroupe?.nouveauScenario ?? []).forEach((m, i) => {
+        const ou = `ficheDeGroupe.nouveauScenario[${i}]`;
+        const nom = m.label ?? m.champ;
+        if (!m.champ?.trim()) erreur(`${ou}.champ`, 'Une recharge du groupe nomme la piste qu’elle remplit.');
+        if (m.delta !== 'plein' && !(Number.isInteger(m.delta) && m.delta !== 0)) {
+            erreur(`${ou}.delta`, `« ${nom} » doit bouger d'un nombre entier non nul, ou revenir « plein ».`);
+        }
+        if (m.delta === 'plein' && m.max === undefined) {
+            erreur(`${ou}.max`, `« ${nom} » revient « plein » sans plafond : elle ne bougerait jamais.`);
+        }
+    });
+
     // ---- Les réserves de table ---------------------------------------------
     (driver.ressourcesDeTable ?? []).forEach((ressource, i) => {
         const report = ressource.reportSurEpuisement;

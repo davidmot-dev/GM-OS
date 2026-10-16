@@ -49,6 +49,8 @@ interface PanneauDesRessourcesProps {
      * rendent aux fiches — le Vécu. Réservés au meneur.
      */
     gestes?: GestesDesHeros;
+    /** Ce que la feuille du groupe regagne à « Nouveau scénario » — les pistes de la Cabale (NOC). */
+    rechargeDuGroupe?: MouvementDeFiche[];
 }
 
 const CLASSE_DU_GESTE = 'flex items-center gap-1.5 px-3 py-1 rounded-lg border border-app-border/40 text-ui-9 font-black uppercase tracking-widest text-app-text/50 hover:border-accent/40 hover:text-accent transition-colors';
@@ -61,7 +63,7 @@ function annoncer(resultat: ResultatDeMouvement) {
 }
 
 const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
-    campaignId, ressources, pourLesJoueurs = false, gestes,
+    campaignId, ressources, pourLesJoueurs = false, gestes, rechargeDuGroupe,
 }) => {
     const { etatDe, gagner, depenser, finDeScene, debutDeSeance, nouveauScenario, ajusterDepuisLaTablette } = useRessourcesDeTableStore();
     const etat = etatDe(campaignId, ressources);
@@ -69,13 +71,17 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     const updateCharacter = useSessionOSStore(s => s.updateCharacter);
     const updateCharacterHealth = useSessionOSStore(s => s.updateCharacterHealth);
     const gestesDuMeneur = pourLesJoueurs ? undefined : gestes;
+    const campagnes = useSessionOSStore(s => s.campaigns);
+    const updateCampaign = useSessionOSStore(s => s.updateCampaign);
+    const rechargeDuMeneur = pourLesJoueurs ? undefined : rechargeDuGroupe;
 
     // Les réserves de la Cabale se lisent dans le panneau de jet, là où l'on puise.
     const dansLeBandeau = ressources.filter(r => !r.horsDuBandeau);
     const montrees = pourLesJoueurs ? dansLeBandeau.filter(visiblePourUnJoueur) : dansLeBandeau;
     const erosionPossible = !pourLesJoueurs && ressources.some(r => r.erosionFinDeScene);
     const seancePossible = !pourLesJoueurs && (ressources.some(r => r.erosionDebutDeSeance) || !!gestesDuMeneur?.debutDeSeance?.length);
-    const scenarioPossible = !pourLesJoueurs && (ressources.some(r => r.remiseAuDepartParScenario) || !!gestesDuMeneur?.nouveauScenario?.length);
+    const scenarioPossible = !pourLesJoueurs && (ressources.some(r => r.remiseAuDepartParScenario)
+        || !!gestesDuMeneur?.nouveauScenario?.length || !!rechargeDuMeneur?.length);
     const calmePossible = !!gestesDuMeneur?.momentDeCalme;
     const debordement = gestesDuMeneur?.effetsDuDebordement;
     const nomDe = (id: string) => ressources.find(r => r.id === id)?.label ?? id;
@@ -87,6 +93,20 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
     const rendreAuxHeros = (mouvements: MouvementDeFiche[] | undefined): number => {
         const changements = changementsEffectifs(recuperationDesHeros(mouvements, herosDeLaCampagne(players, campaignId)));
         return ecrireLesHeros(changements, { players, updateCharacter, updateCharacterHealth });
+    };
+    /**
+     * Ce que la feuille du groupe regagne au nouveau scénario — l'Espoir, le Vécu et
+     * la Singularité de la Cabale, chacun jusqu'au niveau de son Atout. Rend ce qui
+     * a changé, dit pour le meneur.
+     */
+    const rendreAuGroupe = (): string[] => {
+        const campagne = campagnes.find(c => c.id === campaignId);
+        if (!rechargeDuMeneur?.length || !campagne?.groupe) return [];
+        const fiche = campagne.groupe.sheetData ?? {};
+        const [c] = recuperationDesHeros(rechargeDuMeneur, [{ joueurId: '', id: 'groupe', nom: '', valeurs: fiche }]);
+        if (!c || Object.keys(c.maj).length === 0) return [];
+        updateCampaign(campaignId, { groupe: { ...campagne.groupe, sheetData: { ...fiche, ...c.maj } } });
+        return c.lignes;
     };
     const direLesHeros = (n: number, quoi: string) => {
         if (n > 0) gmToast(`${quoi} : ${n} fiche${n > 1 ? 's' : ''} de Héros mise${n > 1 ? 's' : ''} à jour.`, 'info');
@@ -266,13 +286,17 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                                     ...(reservesCachees ? ['les réserves du groupe se rechargent'] : []),
                                     ...(gestesDuMeneur?.nouveauScenario?.length
                                         ? [`chaque Héros récupère : ${nomsDesMouvements(gestesDuMeneur.nouveauScenario)}`] : []),
+                                    ...(rechargeDuMeneur?.length
+                                        ? [`le groupe se recharge : ${nomsDesMouvements(rechargeDuMeneur)}`] : []),
                                 ].join(', ')}.`,
                                 () => {
                                     const r = nouveauScenario(campaignId, ressources);
                                     annoncer(r);
                                     const heros = rendreAuxHeros(gestesDuMeneur?.nouveauScenario);
                                     direLesHeros(heros, 'Nouveau scénario');
-                                    if (r.mouvements.length === 0 && heros === 0) gmToast('Les réserves sont déjà à leur départ.', 'info');
+                                    const groupe = rendreAuGroupe();
+                                    if (groupe.length) gmToast(`Le groupe se recharge : ${groupe.join(' ; ')}.`, 'info');
+                                    if (r.mouvements.length === 0 && heros === 0 && groupe.length === 0) gmToast('Les réserves sont déjà à leur départ.', 'info');
                                 },
                                 undefined,
                                 'Remettre',

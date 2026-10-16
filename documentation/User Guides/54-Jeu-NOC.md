@@ -99,9 +99,10 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
 > **Relu contre le carnet NotebookLM « NOC » le 2026-10-13** : les Domaines, les Atouts, l'Espoir,
 > le Vécu et la Singularité de la Cabale **se rechargent au début de chaque scénario**, un point
 > d'Atout donne +1 au Talent lié, **un seul par test** (sauf l'Atout Capital, sur le Talent Fortune — voir
-> plus bas). **L'Espoir, le Vécu et la Singularité de la Cabale sont des pistes de sa
-> feuille : remettez-les à leur valeur en début de scénario** — « Nouveau scénario » ne recharge que
-> les Domaines et les Atouts.
+> plus bas). **« Nouveau scénario » recharge aussi ses pistes** (2026-10-16), chacune jusqu'au
+> niveau de l'Atout qui la donne : l'**Espoir** au **Credo**, le **Vécu** aux **Légendes**, la
+> **Singularité** à l'**Observatoire**. Une piste déjà au-dessus de son Atout n'est pas ramenée. La
+> Traque, la Noirceur, la Dégradation et la Division ne bougent pas.
 
 ---
 
@@ -185,5 +186,5 @@ reporter sur sa fiche.
   « Soins ».
 - **La Singularité** gagnée par un Rouage, l'**Aura de lumière**, le **partage de l'Extase** et
   les **alliés** se reportent à la main.
-- **Les réserves de la Cabale** (Espoir, Vécu, Singularité) se remettent toujours à la main au
-  nouveau scénario.
+- **La Faveur de la Cabale** (2 points par Contact de l'Atout Réseau) n'a pas de piste sur sa feuille :
+  à la main.

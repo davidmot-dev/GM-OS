@@ -91,6 +91,7 @@ const SessionDashboard: React.FC = () => {
                     campaignId={activeCampaignId}
                     ressources={ressourcesDeLaTable(activeDriver, activeCampaign)}
                     gestes={activeDriver?.gestesDesHeros}
+                    rechargeDuGroupe={activeDriver?.ficheDeGroupe?.nouveauScenario}
                 />
             )}
 

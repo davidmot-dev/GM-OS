@@ -1696,3 +1696,19 @@ describe('Blade Runner : stress subi et relance d’une réussite — 2026-10-16
         ]);
     });
 });
+
+describe('les pistes du groupe au nouveau scénario — 2026-10-16', () => {
+    const surLaRecharge = (nouveauScenario: unknown) => controlerLePilote(
+        { ficheDeGroupe: { libelle: 'Cabale', gabaritDeLaFiche: 'noc-cabale', nouveauScenario } } as unknown as Partial<GameDriver>, fiche,
+    ).filter(c => c.ou.startsWith('ficheDeGroupe.nouveauScenario')).map(c => [c.ou, c.gravite]);
+
+    it('déclarée juste, elle passe', () => {
+        expect(surLaRecharge([{ champ: 'tracks.espoir', delta: 'plein', max: { champ: 'assets.life.creed' } }])).toEqual([]);
+    });
+    it('« plein » sans plafond, ou un mouvement nul, sont des erreurs', () => {
+        expect(surLaRecharge([{ champ: 'tracks.vecu', delta: 'plein' }, { champ: 'tracks.espoir', delta: 0 }])).toEqual([
+            ['ficheDeGroupe.nouveauScenario[0].max', 'erreur'],
+            ['ficheDeGroupe.nouveauScenario[1].delta', 'erreur'],
+        ]);
+    });
+});
