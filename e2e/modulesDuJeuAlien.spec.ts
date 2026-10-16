@@ -7,8 +7,9 @@ import { lancerGmOs, attendreLHydratation, type GmOsLance } from './lancerGmOs';
 import { creerSemenceAlien } from '../outils/modules-du-jeu/recette-alien.mjs';
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { VueDesModulesMJ, SauvegardeDesModules } from '../src/modules/modulesDuJeu/protocole';
+import type { VueMuthurMJ } from '../outils/alien/modules/muthur/moteur.mjs';
 
-/** A4 : vrai Electron, vrai HTTP/WebSocket et deux navigateurs sans pont natif.
+/** A4/A6 : vrai Electron, vrai HTTP/WebSocket et deux navigateurs sans pont natif.
  * Aucun profil personnel ni pilote exporté lu ; sorties seulement dans scratch/.
  * Le son est produit par Web Audio mais le navigateur est muet pour les enceintes.
  */
@@ -80,11 +81,14 @@ async function photographier(page: Page, nom: string) {
 async function instrument(page: Page, libelle: string) {
     const nav = page.getByRole('navigation', { name: 'Navigation Hub' });
     await nav.getByRole('button', { name: 'Modules du jeu', exact: true }).click();
+    const retour = page.getByRole('button', { name: 'Retour aux modules', exact: true });
+    if (await retour.count()) await retour.click();
     await page.getByRole('button', { name: `Ouvrir ${libelle}`, exact: true }).click();
     return page.locator(libelle === 'MU/TH/UR 6000' ? '.gmos-muthur' : '.gmos-detecteur');
 }
-async function rejoindre(browser: Browser, personnage: string, largeur = 768) {
-    const contexte = await browser.newContext({ viewport: { width: largeur, height: 1000 }, locale: 'fr-FR', timezoneId: 'Europe/Brussels', serviceWorkers: 'block', reducedMotion: 'reduce' });
+async function rejoindre(browser: Browser, personnage: string, largeur = 768, tactile = false) {
+    const contexte = await browser.newContext({ viewport: { width: largeur, height: 1000 }, isMobile: tactile, hasTouch: tactile,
+        locale: 'fr-FR', timezoneId: 'Europe/Brussels', serviceWorkers: 'block', reducedMotion: 'reduce' });
     contextes.push(contexte);
     await contexte.route('**/*', route => {
         const url = new URL(route.request().url());
@@ -241,10 +245,24 @@ test('film HTTP décodé, plages vidéo, son sur un seul appareil et annulation'
 
 test('fichier privé, redémarrage et import conservent la préparation avec droits et effets fermés', async ({ browser }) => {
     const nel = await rejoindre(browser, 'Nel Varga');
+    await autoriser('MU/TH/UR 6000', 'Nel Varga');
+    const maman = await pupitre('MU/TH/UR 6000');
+    await instrument(nel.page, 'MU/TH/UR 6000');
+    await saisir(nel.page, '/M QUESTION-A6-PERSISTANTE');
+    await maman.getByRole('button', { name: 'Dossiers', exact: true }).click();
+    await maman.getByLabel('Dossier', { exact: true }).selectOption('ordre');
+    await maman.getByRole('button', { name: 'Monter le dossier', exact: true }).click();
+    await expect(maman.getByRole('button', { name: 'Monter le dossier', exact: true })).toBeDisabled();
+    await maman.getByLabel('Confirmer la suppression du dossier', { exact: true }).check();
+    await maman.getByRole('button', { name: 'Supprimer le dossier', exact: true }).click();
+    await expect(maman.getByLabel('Dossier', { exact: true })).toHaveValue('navigation');
     await autoriser('Détecteur de mouvement', 'Nel Varga');
     const poste = await pupitre('Détecteur de mouvement');
     await poste.getByLabel('Contacts', { exact: true }).fill('8');
     await poste.getByRole('button', { name: 'Enregistrer les réglages', exact: true }).click();
+    await poste.getByLabel('Nom du préréglage', { exact: true }).fill('A6 — Coursive');
+    await poste.getByRole('button', { name: 'Enregistrer les réglages actuels', exact: true }).click();
+    await expect(poste.getByRole('button', { name: 'Charger et arrêter le scan', exact: true })).toBeVisible();
     await poste.getByRole('button', { name: 'Démarrer le scan', exact: true }).click();
     await poste.getByRole('button', { name: 'Faux écho · 9 s', exact: true }).click();
     await instrument(nel.page, 'Détecteur de mouvement');
@@ -255,12 +273,114 @@ test('fichier privé, redémarrage et import conservent la préparation avec dro
     await gmos.fermer();
     gmos = await demarrer(sauvegarde);
     const reprise = await vueMJ();
-    expect(reprise.modules.find(m => m.id === 'alien-detecteur')).toMatchObject({ acces: [], vue: { tracker: { power: false, contacts: 8, anomalyUntil: 0 } } });
+    const preparation = { acces: [], vue: { tracker: { power: false, contacts: 8, anomalyUntil: 0 }, prereglages: [{ nom: 'A6 — Coursive', reglages: { contacts: 8 } }] } };
+    expect(reprise.modules.find(m => m.id === 'alien-detecteur')).toMatchObject(preparation);
+    const terminal = reprise.modules.find(m => m.id === 'alien-muthur')!.vue as VueMuthurMJ;
+    expect(terminal.documents.map(d => d.id)).toEqual(['navigation', 'archive']);
+    expect(Object.values(terminal.players).flatMap(p => p.requests)).toMatchObject([{ content: 'QUESTION-A6-PERSISTANTE', status: 'pending' }]);
     await autoriser('Détecteur de mouvement', 'Nel Varga');
     const nouveauPoste = await pupitre('Détecteur de mouvement');
     await nouveauPoste.getByRole('button', { name: 'Démarrer le scan', exact: true }).click();
     const retour = await gmos.fenetre.evaluate(donnees => window.appBridge!.modulesDuJeu!.importer(JSON.parse(JSON.stringify(donnees))), sauvegarde);
     expect(retour).toEqual({ ok: true });
     const importee = await vueMJ();
-    expect(importee.modules.find(m => m.id === 'alien-detecteur')).toMatchObject({ acces: [], vue: { tracker: { power: false, contacts: 8, anomalyUntil: 0 } } });
+    expect(importee.modules.find(m => m.id === 'alien-detecteur')).toMatchObject(preparation);
+    expect((importee.modules.find(m => m.id === 'alien-muthur')!.vue as VueMuthurMJ).players).toEqual(terminal.players);
+});
+
+test('questions hors ordre et dossier supprimé après reconnexion, saisie tactile et rotation émulées', async ({ browser }) => {
+    const nel = await rejoindre(browser, 'Nel Varga', 390, true), idris = await rejoindre(browser, 'Idris Koa');
+    await autoriser('MU/TH/UR 6000', 'Nel Varga'); await autoriser('MU/TH/UR 6000', 'Idris Koa');
+    const poste = await pupitre('MU/TH/UR 6000');
+    await instrument(nel.page, 'MU/TH/UR 6000'); await instrument(idris.page, 'MU/TH/UR 6000');
+    const saisie = nel.page.getByLabel('Commande ou /M votre question', { exact: true });
+    await nel.page.setViewportSize({ width: 390, height: 440 });
+    await saisie.tap(); await saisie.fill('/M QUESTION-A6-UNE : où est l’équipage ?'); await saisie.press('Enter');
+    await expect(saisie).toHaveValue(''); await sansDebordement(nel.page);
+    await saisir(nel.page, 'HACK'); await saisir(nel.page, '/M QUESTION-A6-DEUX');
+    await expect(poste.getByText('Demandes en attente : 3', { exact: true })).toBeVisible();
+    const etat = (await vueMJ()).modules.find(m => m.id === 'alien-muthur')!.vue as VueMuthurMJ;
+    const operateur = Object.values(etat.players).find(p => p.name === 'Nel Varga')!;
+    await poste.getByLabel('Demande à traiter').selectOption(operateur.requests[2].id);
+    await poste.getByLabel('Réponse de Maman', { exact: true }).fill('REPONSE-A6-DEUX');
+    await poste.getByRole('button', { name: 'Transmettre la réponse', exact: true }).click();
+    await expect(nel.page.getByText('REPONSE-A6-DEUX', { exact: true })).toBeVisible();
+    await expect(poste.getByText('Demandes en attente : 2', { exact: true })).toBeVisible();
+    await nel.contexte.setOffline(true);
+    await nel.page.evaluate(() => (window as FenetreSonde).sondeAlien.sockets.forEach(s => s.close()));
+    await expect(nel.page.locator('.gmos-muthur')).toHaveCount(0);
+    await poste.getByLabel('Demande à traiter').selectOption(operateur.requests[0].id);
+    await poste.getByLabel('Réponse de Maman', { exact: true }).fill('REPONSE-A6-UNE-HORS-LIGNE');
+    await poste.getByRole('button', { name: 'Transmettre la réponse', exact: true }).click();
+    await expect(poste.getByText('Demandes en attente : 1', { exact: true })).toBeVisible();
+    await nel.contexte.setOffline(false);
+    await expect(nel.page.getByText('Connecté', { exact: true })).toBeVisible({ timeout: 20_000 });
+    const ouvrir = nel.page.getByRole('button', { name: 'Ouvrir MU/TH/UR 6000', exact: true });
+    if (await ouvrir.count()) await ouvrir.click();
+    await expect(nel.page.getByText('REPONSE-A6-UNE-HORS-LIGNE', { exact: true })).toBeVisible();
+    const paquets = await idris.page.evaluate(() => JSON.stringify((window as FenetreSonde).sondeAlien.paquets));
+    expect(paquets).not.toContain('QUESTION-A6'); expect(paquets).not.toContain('REPONSE-A6');
+    await saisir(nel.page, 'CODE 0042');
+    await poste.getByRole('button', { name: 'Dossiers', exact: true }).click();
+    await poste.getByLabel('Dossier', { exact: true }).selectOption('ordre');
+    await poste.getByLabel('Confirmer la suppression du dossier', { exact: true }).check();
+    await poste.getByRole('button', { name: 'Supprimer le dossier', exact: true }).click();
+    await expect(poste.getByLabel('Dossier', { exact: true })).toHaveValue('archive');
+    await saisir(nel.page, 'READ ordre');
+    await expect(nel.page.getByText(/DOSSIER INACCESSIBLE/)).toBeVisible();
+    await nel.page.setViewportSize({ width: 844, height: 390 }); await sansDebordement(nel.page);
+    await saisie.tap(); await saisie.fill('STATUS'); await saisie.press('Enter'); await expect(saisie).toHaveValue('');
+    await photographier(nel.page, 'terminal-tactile-paysage-a6');
+});
+
+test('fin du film : sirène réelle et annonces simulées sur le seul diffuseur, sans rattrapage', async ({ browser }) => {
+    const nel = await rejoindre(browser, 'Nel Varga'), idris = await rejoindre(browser, 'Idris Koa');
+    await autoriser('MU/TH/UR 6000', 'Nel Varga'); await autoriser('MU/TH/UR 6000', 'Idris Koa');
+    const poste = await pupitre('MU/TH/UR 6000');
+    await poste.getByRole('button', { name: 'Protocoles', exact: true }).click();
+    await poste.getByRole('combobox', { name: /^Protocole/ }).selectOption('autodestruction');
+    await poste.getByLabel('Durée de l’autodestruction en minutes', { exact: true }).fill('15');
+    await poste.getByRole('button', { name: 'Enregistrer le protocole', exact: true }).click();
+    await expect(poste.getByRole('button', { name: 'Enregistrer le protocole', exact: true })).toBeEnabled();
+    for (const appareil of [nel, idris]) {
+        await instrument(appareil.page, 'MU/TH/UR 6000');
+        // Horloge et voix simulées uniquement ; HTTP, décodeur vidéo et Web Audio réels.
+        await appareil.page.clock.install();
+        await appareil.page.evaluate(() => {
+            const annonces: string[] = [];
+            Object.assign(window, { annoncesA6: annonces });
+            Object.defineProperty(window, 'SpeechSynthesisUtterance', { configurable: true, value: class {
+                text: string;
+                constructor(text: string) { this.text = text; }
+            } });
+            Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: {
+                getVoices: () => [{ lang: 'fr-FR', localService: true }], addEventListener() {}, removeEventListener() {},
+                cancel() {}, speak: (p: SpeechSynthesisUtterance) => { annonces.push(p.text); p.onend?.(new Event('end') as SpeechSynthesisEvent); },
+            } });
+        });
+        await appareil.page.getByRole('button', { name: 'Activer le son', exact: true }).click();
+    }
+    await carte('MU/TH/UR 6000').getByRole('button', { name: 'Son : Nel Varga', exact: true }).click();
+    await saisir(nel.page, 'CODE OMEGA-10');
+    await expect.poll(() => nel.page.locator('video').evaluate((v: HTMLVideoElement) => v.readyState >= 2 && !v.muted)).toBe(true);
+    const annonces = (p: Page) => p.evaluate(() => (window as unknown as { annoncesA6: string[] }).annoncesA6);
+    expect(await annonces(nel.page)).toEqual([]); expect(await annonces(idris.page)).toEqual([]);
+    const etat = (await vueMJ()).modules.find(m => m.id === 'alien-muthur')!.vue as VueMuthurMJ;
+    const debut = etat.autodestruction!.startedAt;
+    for (const appareil of [nel, idris]) await appareil.page.clock.setFixedTime(new Date(debut + 780_000));
+    await expect.poll(() => annonces(nel.page)).toEqual(['Autodestruction. Il reste 2 minutes. Évacuation immédiate.']);
+    await expect.poll(() => nel.page.evaluate(() => (window as FenetreSonde).sondeAlien.sons.actifs)).toBe(2);
+    expect(await annonces(idris.page)).toEqual([]);
+    await carte('MU/TH/UR 6000').getByRole('button', { name: 'Son : Idris Koa', exact: true }).click();
+    await expect.poll(() => nel.page.evaluate(() => (window as FenetreSonde).sondeAlien.sons.actifs)).toBe(0);
+    await expect.poll(() => annonces(idris.page)).toHaveLength(1);
+    await idris.page.clock.setFixedTime(new Date(debut + 840_000));
+    await expect.poll(() => annonces(idris.page)).toHaveLength(2);
+    expect((await annonces(idris.page))[1]).toContain('1 minute.');
+    await photographier(idris.page, 'alarme-apres-film-a6');
+    await saisir(nel.page, 'CODE OMEGA-STOP');
+    for (const appareil of [nel, idris]) {
+        await expect(appareil.page.locator('video')).toHaveCount(0);
+        await expect.poll(() => appareil.page.evaluate(() => (window as FenetreSonde).sondeAlien.sons.actifs)).toBe(0);
+    }
 });

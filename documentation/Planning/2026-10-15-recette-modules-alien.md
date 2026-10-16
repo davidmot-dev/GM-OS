@@ -1,4 +1,8 @@
-# Recette de l’intégration Alien — étape 4
+# Recette de l’intégration Alien — étapes 4 et 6
+
+**Suite du 16/10 — étape 6 :** la [fiche matérielle adaptée aux appareils de David](2026-10-16-recette-materielle-alien.md)
+couvre iPad, iPad Air, tablette Samsung et smartphone, ainsi que les dossiers, demandes
+et préréglages de l’étape 5. Elle fournit la grille de résultats et les gestes à la table.
 
 Demande de David le 15/10/2026 : *« on fait le step 4 »*. GM-OS confirmé fermé avant
 les travaux. Cette recette distingue le réseau local éprouvé par automatisation et
@@ -7,6 +11,14 @@ les appareils physiques, qui demandent une manipulation à la table.
 **Résultat du 15/10 : six parcours E2E au vert (environ 2 min 24), cinq captures du
 vrai Hub relues, build/types et lint propres. Aucun changement applicatif nécessaire
 pendant cette recette. La partie matérielle ci-dessous reste à éprouver.**
+
+**Résultat du 16/10 — volet logiciel de l’étape 6 : huit parcours validés sur la version
+0.4 de MU/TH/UR / 0.2 du détecteur.** Cinq parcours existants passent, puis les trois parcours
+étendus passent après correction de la navigation et des sélecteurs du banc. Persistance
+des dossiers/demandes/préréglages, réponses hors ordre et pendant une déconnexion, saisie tactile
+et rotation émulées, relais film → sirène et annonces simulées sont couverts. Build et lint
+du scénario propres ; sept captures du vrai Hub disponibles dans `scratch/modules-du-jeu-e2e/`.
+Aucun code applicatif modifié. **Aucun résultat sur appareil physique annoncé.**
 
 ## Essai automatique reproductible
 
@@ -36,11 +48,18 @@ vont dans `scratch/`, sans réécrire le manuel ou les images de référence.
 | Son et reconnexion | Vrai AudioContext sur clic ; coupure de connexion ferme instrument et graphe audio ; reprise reconnue et muette. |
 | Film d’alerte | WebM décodé, plage HTTP 206, durée autoritaire ≥ 775,701 s, un seul lecteur non muet, transfert sans report d’échéance, annulation. |
 | Persistance | Fichier privé réellement écrit dans le profil jetable ; redémarrage/import conservent contacts et proximité, sans scan ni droits ouverts. |
+| Préparation de l’étape 5 | Dossiers classés/supprimés, demande en attente et préréglage nommé conservés après redémarrage/import ; accès et effets arrêtés. |
+| Questions et tactile émulé | Seconde question traitée avant la première, réponse reçue après reconnexion, HACK indépendant, confidentialité entre PJ ; saisie accentuée, validation, viewport réduit et rotation. |
+| Relais après le film | Horloge avancée après la durée du film : sirène Web Audio réelle, voix française simulée, deux puis une minute ; transfert et annulation sans son résiduel. |
 
 L’audio du navigateur et d’Electron est rendu muet vers les enceintes ; le graphe
 audio reste réel et observé. L’essai du film vérifie son chargement et son annulation,
 sans attendre treize minutes ni certifier la qualité de la bande-son. Voix et sirènes
 de secours gardent leurs essais à horloge simulée ; leur restitution se juge sur le matériel.
+Le parcours ajouté en étape 6 avance l’horloge du navigateur à treize puis quatorze minutes.
+Il éprouve la transition dans les vrais composants et le graphe audio, mais ne lit pas les
+treize minutes du fichier et ne synthétise pas une vraie voix. Le clavier système et la veille
+ne sont pas reproduits par l’émulation tactile ; ces points restent sur la fiche matérielle.
 
 ## Préparer l’essai matériel sans campagnes personnelles
 

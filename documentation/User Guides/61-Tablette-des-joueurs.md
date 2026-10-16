@@ -119,6 +119,10 @@ les entendre sur cet appareil, ou **Couper les bips** pour le garder muet. Un on
 Revenir dans l’instrument après une fermeture ou une déconnexion demande de réactiver les bips.
 Le radar respecte la préférence de mouvements réduits et n’écrit aucun Stress sur votre fiche.
 
+Avant la première séance Alien, essayer le clavier ouvert, la rotation, une coupure Wi-Fi
+et la veille sur chaque appareil. La [fiche de recette iPad/iPad Air/Samsung/smartphone](../Planning/2026-10-16-recette-materielle-alien.md)
+donne les gestes et résultats à relever avec le meneur, y compris le transfert du son d’alerte.
+
 ![Les indices révélés restent consultables dans les Archives](captures/tablette-des-joueurs-archives.jpg)
 
 ---
@@ -242,4 +246,4 @@ régénérées et regardées ; les essais sur les vrais appareils restent en T6.
 
 *Relu le 2026-10-15 : modules Alien, détecteur partagé et bips locaux vérifiés hors ligne,
 puis avec Electron et deux sessions Edge sur le même PC. Les appareils physiques restent à essayer.*
-*Ajout relu le 2026-10-16 : questions MU/TH/UR en file privée, CLEAR et préparation MJ.*
+*Ajout relu le 2026-10-16 : questions MU/TH/UR en file privée, CLEAR, préparation MJ et recette matérielle sur les quatre appareils de David.*
