@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useSessionOSStore, type HealthSystem, type PersistenceBadge } from '../../useSessionOSStore';
 import { HealthInterpreter, nombreOuRepli, listeOuVide, objetOuVide } from '../../logic/HealthInterpreter';
+import { santePrincipaleDuPersonnage } from '../../logic/santePrincipale';
+import { santeAlignee } from '../../../combat/logic/SanteDuCombattant';
+import type { PlayerCharacter } from '../../store/types';
 import { DamageCalculator } from '../../logic/DamageCalculator';
 import { HealthBarDriver } from './HealthBarDriver';
 import { ClockDriver } from './ClockDriver';
@@ -85,7 +88,9 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     updateEntityMaxHP,
     updateCharacterHealth, 
     updateEntityHealth, 
-    handleApplyImpact: storeApplyImpact
+    handleApplyImpact: storeApplyImpact,
+    campaigns,
+    customSheetTemplates,
   } = useSessionOSStore();
   
   const [internalHealth, setInternalHealth] = useState<HealthSystem | null>(null);
@@ -184,6 +189,17 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
   } else {
      health = HealthInterpreter.createDefault(defaultType, { cases: casesDuJeu });
   }
+
+  /*
+    **Les points de vie d'un PJ se lisent sur sa fiche** (2026-10-16) : la barre
+    disait 0 / 10 pendant que la fiche disait Santé 8 / 8. Pour un jeu en points
+    de vie, la santé principale de la fiche fait foi — la même lecture que celle
+    du coup porté (`santePrincipaleDuPersonnage`).
+  */
+  const principale = type === 'pc' && !internalHealth
+    ? santePrincipaleDuPersonnage(porteur as PlayerCharacter | undefined, activeDriver, campaigns, customSheetTemplates)
+    : null;
+  health = santeAlignee(health, principale) ?? health;
 
   // NOTE: We don't return null if the bearer is missing, to allow standalone combatants.
   // if (!porteur) return null; // Removed to fix standalone bug
@@ -311,7 +327,10 @@ export const HealthManager: React.FC<HealthManagerProps> = ({ id, type, initialH
     const currentIndex = engines.indexOf(health.type);
     const nextType = engines[(currentIndex + 1) % engines.length];
     
-    const nextHealth = HealthInterpreter.createDefault(nextType, { cases: casesDuJeu });
+    // Revenu aux points de vie, un PJ reprend ceux de sa fiche — jamais un 10 / 10 qui l'écraserait.
+    const nextHealth = santeAlignee(HealthInterpreter.createDefault(nextType, { cases: casesDuJeu }),
+        type === 'pc' ? santePrincipaleDuPersonnage(porteur as PlayerCharacter | undefined, activeDriver, campaigns, customSheetTemplates) : null)
+        ?? HealthInterpreter.createDefault(nextType, { cases: casesDuJeu });
 
     if (porteur) {
         if (type === 'pc') {

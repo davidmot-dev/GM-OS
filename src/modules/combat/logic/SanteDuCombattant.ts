@@ -475,3 +475,62 @@ export function maximumDeLaJauge(
     const formule = statsToTrack?.find(s => s.fieldId === fieldId)?.max;
     return santeDeDepart(formule, champ => valeurDuChamp(valeurs, champ));
 }
+
+/**
+ * **La santé principale, telle que la fiche la porte** — Blade Runner, Cthulhu
+ * Hack, 2026-10-16.
+ *
+ * Pour un jeu en points de vie, le pilote désigne le champ de santé de la fiche
+ * (`statsToTrack[].isMainHP` : la Santé, les PV). C'est **lui qui fait foi** :
+ * la santé du combat en naissait à 10 / 10 et n'y était jamais réécrite, si bien
+ * que la carte disait 0 / 10 pendant que la fiche disait 8 / 8 — et « Brisé par
+ * les dégâts » paraissait à côté d'une Santé pleine. Les cases de NOC le faisaient
+ * déjà (`casesDeSante.champ`) ; c'est la même règle pour les points de vie.
+ *
+ * Le maximum se lit, dans l'ordre : la formule de la jauge (`max` : `santeMax`),
+ * la santé de départ du pilote, `maxParDefaut` (la valeur par défaut du champ, ou
+ * le maximum connu), et à défaut la valeur courante. `null` : le jeu ne compte
+ * pas en points de vie, ou la fiche ne porte pas de nombre.
+ */
+export function santePrincipaleDeLaFiche(
+    pilote: { combat?: { defaultHealthType?: string; santeDeDepart?: string; statsToTrack?: readonly { fieldId: string; isMainHP?: boolean; max?: string }[] } } | null | undefined,
+    fiche: Record<string, unknown> | undefined | null,
+    maxParDefaut?: number,
+): { champ: string; courant: number; max: number } | null {
+    const combat = pilote?.combat;
+    if (!combat || (combat.defaultHealthType && combat.defaultHealthType !== 'hp')) return null;
+    const principale = combat.statsToTrack?.find(s => s.isMainHP);
+    if (!principale) return null;
+    const courant = valeurDuChamp(fiche, principale.fieldId);
+    if (courant === undefined) return null;
+    const max = maximumDeLaJauge(principale.fieldId, combat.statsToTrack, fiche)
+        ?? santeDeDepart(combat.santeDeDepart, champ => valeurDuChamp(fiche, champ))
+        ?? (maxParDefaut !== undefined && maxParDefaut > 0 ? maxParDefaut : null)
+        ?? courant;
+    const plafond = Math.max(1, max, courant);
+    return { champ: principale.fieldId, courant: Math.max(0, Math.min(plafond, courant)), max: plafond };
+}
+
+/**
+ * La santé du combat, **alignée sur la fiche** : mêmes points courants, même
+ * maximum, l'état recalculé. Une santé qui n'est pas en points de vie, ou une
+ * fiche muette, passent telles quelles.
+ */
+export function santeAlignee<S extends { type: string; data: Record<string, unknown>; state: string; badges?: unknown[] }>(
+    sante: S | undefined,
+    principale: { courant: number; max: number } | null,
+): S | undefined {
+    if (!principale || (sante && sante.type !== 'hp')) return sante;
+    if (sante && sante.data.current === principale.courant && sante.data.max === principale.max) return sante;
+    const lue = santeAffichee({ hp: principale.courant, maxHp: principale.max })!;
+    return { ...(sante ?? { badges: [] }), type: 'hp', data: { ...(sante?.data ?? {}), current: principale.courant, max: principale.max }, state: lue.state } as unknown as S;
+}
+
+/** Le champ de santé principale qu'un jeu en points de vie fait suivre à la fiche — `null` sinon. */
+export function champDeSantePrincipale(
+    pilote: { combat?: { defaultHealthType?: string; statsToTrack?: readonly { fieldId: string; isMainHP?: boolean }[] } } | null | undefined,
+): string | null {
+    const combat = pilote?.combat;
+    if (!combat || (combat.defaultHealthType && combat.defaultHealthType !== 'hp')) return null;
+    return combat.statsToTrack?.find(s => s.isMainHP)?.fieldId ?? null;
+}

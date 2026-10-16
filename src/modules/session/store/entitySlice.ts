@@ -17,7 +17,9 @@ import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
-import { maximumDeLaJauge, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
+import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
+import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
+import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
 import { transfererLePersonnage } from '../logic/transfertDePersonnage';
@@ -479,6 +481,19 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 if (health.type === 'hp') {
                                     updated.hp = Number(health.data.current) || 0;
                                     updated.maxHp = Number(health.data.max) || 10;
+                                    /*
+                                      **Les points de vie suivent la fiche** (2026-10-16) — la Santé de
+                                      Blade Runner, les PV de Cthulhu Hack : même règle que les cases de
+                                      NOC ci-dessous. Un champ qui porte autre chose qu'un nombre n'est
+                                      pas écrasé.
+                                    */
+                                    const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+                                    const champ = champDeSantePrincipale(piloteDuPersonnage(c, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId ?? null));
+                                    const avant = champ ? c.sheetData?.[champ] : undefined;
+                                    if (champ && (avant === undefined || avant === '' || Number.isFinite(Number(avant)))) {
+                                        updated.sheetData = { ...c.sheetData, [champ]: updated.hp };
+                                        updated.donneesModifieesLe = Date.now();
+                                    }
                                 }
                                 /*
                                   **La jauge de la fiche suit les cases** — NOC, 2026-10-13 :
@@ -796,6 +811,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         };
         const piloteOuvert = tousLesPilotes(customGameDrivers).find(d => d.id === campaigns.find(c => c.id === activeCampaignId)?.system);
 
+
         /*
           **Le coup est compté au combat en cours, s'il y en a un.**
 
@@ -861,7 +877,8 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             );
             const character = player?.characters.find((c) => c.id === targetId);
             if (!player || !character) return;
-            const regle = selonLeJeu(piloteDuPersonnage(character, campaigns, customGameDrivers, activeCampaignId), character.sheetData);
+            const piloteDuPJ = piloteDuPersonnage(character, campaigns, customGameDrivers, activeCampaignId);
+            const regle = selonLeJeu(piloteDuPJ, character.sheetData);
             const impact = regle?.impact ?? impactSaisi;
             plateauDeCombat()?.noterUnCoup?.(targetId, impact);
             if (regle && Object.keys(regle.fiche).length > 0) {
@@ -869,8 +886,17 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             }
             if (regle) gmToast(`${character.name} — ${regle.texte}`, 'info');
 
-            const baseHealth = get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId)?.healthSystem
-                || character.healthSystem || HealthInterpreter.createDefault('hp');
+            /*
+              **La santé principale part de la fiche** (2026-10-16) : pour un jeu en
+              points de vie, le coup s'applique aux PV que la fiche porte, pas à une
+              santé née à 10 / 10 et jamais relue. `updateCharacterHealth` les y
+              réécrit ensuite.
+            */
+            const actuel = get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId) ?? character;
+            const principale = santePrincipaleDuPersonnage(actuel, piloteDuPJ, campaigns,
+                (get() as unknown as { customSheetTemplates?: SheetTemplate[] }).customSheetTemplates);
+            const baseHealth = santeAlignee(actuel.healthSystem || character.healthSystem || HealthInterpreter.createDefault('hp'), principale)
+                ?? HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? character.hp;
             

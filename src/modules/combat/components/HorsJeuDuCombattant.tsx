@@ -7,7 +7,7 @@ import { DiceEngine } from '../../dice/DiceEngine';
 import { entreeDeLaTable, lancerLEffetDuBrise, noterSurLaFiche, tableDuBrise, type EtatBrise } from '../../dice/systemes/yearZero';
 import { facesDeLaTable, lancerUneFormule } from '../../dice/suitesDuJetDeFiche';
 import { pontDesTables } from '../../tables/pontDesTables';
-import { estHorsDeCombat } from '../logic/SanteDuCombattant';
+import { estHorsDeCombat, santePrincipaleDeLaFiche } from '../logic/SanteDuCombattant';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import type { GameDriver } from '../../../types/drivers';
 import type { TableEntry } from '../../tables/types';
@@ -185,8 +185,11 @@ const HorsJeuDuCombattant: React.FC<{ combatant: Combatant; valeurs?: Record<str
     const principal = pilote?.combat?.statsToTrack?.find(s => s.isMainHP)?.fieldId;
     // Le Brisé de la santé principale, c'est le Hors Jeu ; les autres (le Sang-froid) se lisent sur la fiche.
     const brises = (pilote?.jet?.brise ?? []).filter(b => b.de && b.champ !== principal && nombreDe(valeurs[b.champ]) === 0);
+    // Un PJ en points de vie tombe quand sa fiche le dit (2026-10-16) : la santé principale fait foi.
+    const principale = combatant.isPlayer ? santePrincipaleDeLaFiche(pilote, valeurs) : null;
+    const tombe = principale ? principale.courant <= 0 : estHorsDeCombat(combatant);
     // Le Hors Jeu d'un adversaire n'a de sens que si sa chute se note (Blade Runner) — pas ses Conséquences.
-    const horsJeu = !!regle && estHorsDeCombat(combatant) && (combatant.isPlayer ? !!combatant.sourcePlayerId : !!regle.noterDans);
+    const horsJeu = !!regle && tombe && (combatant.isPlayer ? !!combatant.sourcePlayerId : !!regle.noterDans);
     if (!horsJeu && brises.length === 0) return null;
     return (
         <>
