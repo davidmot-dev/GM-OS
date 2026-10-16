@@ -37,8 +37,11 @@ ses données dans le stockage de ce navigateur. Il ne synchronise pas des tablet
 
 Exemples de départ : mot de passe `PROMETHEUS`, code de dossier `0042`.
 Saisir `CODE 0042`, puis `READ ordre`. `CODE 42` est refusé.
-`HACK` crée une demande : le meneur autorise ou repousse l'intrusion, avec une
-séquence animée. HELP, STATUS, LIST, READ, LOGIN, CODE, /M et CLEAR sont disponibles.
+`HACK` lance immédiatement cinq secondes de brouillage fort du terminal, puis laisse
+la demande en attente : le meneur autorise ou repousse l'intrusion, avec sa séquence
+de résultat. Répéter HACK pendant l’attente ne relance pas ces cinq secondes.
+CRT/parasites restent réglables, et les mouvements réduits figent l’effet.
+HELP, STATUS, LIST, READ, LOGIN, CODE, /M et CLEAR sont disponibles.
 Les mots de passe saisis ne restent pas visibles dans le dialogue.
 
 Au refus d'un HACK, les contre-mesures renforcent les effets activés :

@@ -47,6 +47,13 @@ La file accepte 32 demandes en attente par personnage et garde jusqu’à 128 de
 historique. **CLEAR** nettoie le journal du joueur sans effacer les demandes. Les demandes sont
 conservées à la reprise d’une campagne ; les autres personnages ne les reçoivent pas.
 
+**HACK** brouille fortement le terminal pendant **cinq secondes dès son lancement**, puis
+revient à l’affichage habituel en attendant le MJ. Une répétition pendant l’attente ne
+prolonge pas le brouillage. Ce départ ne donne aucun privilège ; seul l’arbitrage du MJ
+accorde ou refuse l’intrusion. Les réglages CRT/parasites et mouvements réduits s’appliquent.
+
+![Départ du piratage : brouillage fort de cinq secondes dans l’atelier du module](captures/jeu-alien-hack-depart.png)
+
 ![Plusieurs demandes dans la file privée de l’opérateur](captures/jeu-alien-demandes.jpg)
 
 ### Alerte et diffusion sonore
@@ -108,10 +115,19 @@ complètes et exports de campagne incluent les dossiers, codes et dialogues ; un
 contient seulement les références aux modules. Les réglages du détecteur sont aussi conservés,
 mais la reprise et l’import laissent le scan arrêté et ses accès fermés.
 Le vrai transport HTTP/WebSocket est aussi éprouvé entre une instance Electron jetable
-et deux sessions Edge isolées sur le même PC : six parcours couvrent confidentialité,
-droits, scan, déconnexion/reprise, vidéo et redémarrage/import. Le décodage et le graphe
+et deux sessions Edge isolées sur le même PC : huit parcours couvrent confidentialité,
+droits, scan, déconnexion/reprise, vidéo et redémarrage/import, avec les dossiers, la file
+de demandes et les préréglages. Le relais sonore après le film est aussi éprouvé avec une
+horloge avancée et une voix simulée. Le décodage et le graphe
 audio sont réels, avec sortie muette vers les enceintes. L’essai sur les tablettes,
 leur Wi-Fi, le clavier virtuel et les haut-parleurs physiques reste à faire.
+
+Pour cette dernière vérification, la [fiche de recette sur les appareils de David](../Planning/2026-10-16-recette-materielle-alien.md)
+prévoit deux tours : iPad avec tablette Samsung, puis iPad Air avec smartphone. Elle détaille
+le clavier virtuel, la rotation, les coupures Wi-Fi, la veille et le transfert du son. L’alerte
+de quinze minutes permet d’écouter le film entier puis la sirène et les annonces restantes.
+Les résultats se relèvent par appareil et navigateur ; la disponibilité d’une voix française
+locale se vérifie sur chaque appareil choisi pour la diffusion.
 
 ---
 
@@ -174,4 +190,4 @@ La fiche d'Alien se relie à son personnage GM-OS (« Fiche du jeu »). Les pist
 Santé, Radiation, Expérience, Points de Récit) se comptent, et les dix lignes d'équipement forment
 l'inventaire. Voir [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md).
 
-*Relu le 2026-10-16 : étape 5, dossiers, file privée et préréglages nommés ; captures hors ligne actualisées. La recette matérielle reste à faire.*
+*Relu le 2026-10-16 : étape 5 et volet logiciel de l’étape 6, huit parcours E2E validés. Recette pour iPad, iPad Air, tablette Samsung et smartphone préparée ; résultats physiques à relever.*

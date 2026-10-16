@@ -149,7 +149,13 @@
         else ajouter(p, 'error', 'DOSSIER INACCESSIBLE.\nIdentification ou code requis.');
       } else if (command === 'HACK') {
         if (p.requests.some(d => d.type === 'hack' && d.status === 'pending')) ajouter(p, 'system', 'REQUÊTE DÉJÀ EN ATTENTE.');
-        else { demander(p, 'hack', 'HACK'); ajouter(p, 'system', 'TENTATIVE D’INTRUSION…\nEn attente du résultat.'); }
+        else {
+          demander(p, 'hack', 'HACK');
+          // 16/10, David : cinq secondes de brouillage dès HACK. Le signal porte
+          // l'id de la demande en attente ; l'arbitrage aura son propre signal.
+          p.cue = { ...p.request, type: 'hack', success: false, duration: 5000 };
+          ajouter(p, 'system', 'TENTATIVE D’INTRUSION…\nEn attente du résultat.');
+        }
       } else if (command === '/M' || command === 'MESSAGE') {
         if (arg) { demander(p, 'message', arg); ajouter(p, 'system', 'TRANSMISSION À MU/TH/UR CONFIRMÉE.'); }
       } else ajouter(p, 'error', 'COMMANDE NON RECONNUE.\nSaisir HELP pour consulter les commandes.');

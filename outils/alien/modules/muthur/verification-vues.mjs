@@ -165,6 +165,41 @@ test('les dossiers et réglages utilisent les commandes v1 et préservent les co
   assert.ok(!Object.hasOwn(vue.commandes.at(-1).charge, 'tracker'));
 });
 
+test('HACK brouille cinq secondes dès la saisie, sans résultat ni prolongation par une seconde demande', async t => {
+  t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 1000000 });
+  const vue = installer(reyes), saisie = vue.getByLabelText('Commande ou /M votre question');
+  fireEvent.change(saisie, { target: { value: 'HACK' } }); await soumettre(saisie.closest('form'));
+  const signal = vue.etat().players[reyes.personnageId].cue;
+  assert.equal(signal.duration, 5000);
+  assert.ok(vue.getByRole('log').classList.contains('muthur-piratage-depart'));
+  assert.ok(vue.getByText('INTRUSION EN COURS · ATTENTE DU MJ'));
+  assert.equal(vue.queryByText('CONTRE-MESURES · ACCÈS REFUSÉ'), null);
+  await act(async () => t.mock.timers.tick(3000));
+  fireEvent.change(saisie, { target: { value: 'HACK' } }); await soumettre(saisie.closest('form'));
+  assert.deepEqual(vue.etat().players[reyes.personnageId].cue, signal);
+  await act(async () => t.mock.timers.tick(1999));
+  assert.ok(vue.getByRole('log').classList.contains('muthur-piratage-depart'));
+  await act(async () => t.mock.timers.tick(1));
+  assert.equal(vue.getByRole('log').classList.contains('muthur-piratage'), false);
+  assert.equal(vue.etat().players[reyes.personnageId].request.type, 'hack');
+  assert.equal(vue.etat().players[reyes.personnageId].access, 'crew');
+});
+
+test('le départ rejoint son temps restant, s’arrête à la restauration et cède la place à l’arbitrage', async t => {
+  t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 1000000 });
+  const etat = agir(moteur.creerEtat(), 'saisir', { texte: 'HACK' }, reyes);
+  await act(async () => t.mock.timers.tick(2000));
+  let vue = installer(reyes, etat);
+  assert.equal(vue.getByRole('log').style.getPropertyValue('--muthur-piratage-decalage'), '-2000ms');
+  assert.ok(vue.getByRole('log').classList.contains('muthur-piratage-depart'));
+  vue.unmount(); vue = installer(reyes, moteur.migrerEtat(etat, 3));
+  assert.equal(vue.getByRole('log').classList.contains('muthur-piratage'), false);
+  vue.unmount(); vue = installer(mj, etat);
+  await cliquer(vue.getByText('Repousser l’intrusion'));
+  assert.ok(vue.getByRole('log').classList.contains('muthur-piratage-refuse'));
+  assert.equal(vue.getByRole('log').classList.contains('muthur-piratage-depart'), false);
+});
+
 test('le refus perturbe le terminal et rejoint le temps restant après changement de vue', async t => {
   t.mock.timers.enable({ apis: ['Date', 'setTimeout'], now: 1000000 });
   const etat = agir(moteur.creerEtat(), 'saisir', { texte: 'HACK' }, reyes);

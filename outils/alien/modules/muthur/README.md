@@ -271,3 +271,11 @@ l'intégration. La qualité sonore reste à juger sur le matériel de la table.
 20 composants, 10 protocoles/alarme, 6 lecteur vidéo, 3 configuration, 3 détecteur, 8 standard) ; syntaxe Node, types publics et lint ciblé propres.
 Soixante-six captures produites hors ligne, sans débordement horizontal ni erreur de
 navigateur ; vues téléphone et pupitre relus visuellement.
+
+Depuis le 16/10, HACK produit immédiatement un brouillage fort de cinq secondes,
+puis attend le MJ. Le signal `cue` garde sa forme existante : pendant le départ,
+son identifiant est celui de la demande HACK encore en attente ; l’arbitrage crée
+un nouvel identifiant pour son résultat. Aucun changement de format de sauvegarde.
+L’échéance autoritaire empêche de prolonger l’effet par une répétition de HACK ou
+un changement de vue ; restauration et arrêt des effets effacent ce signal.
+Les effets CRT/parasites restent indépendants et les mouvements réduits sont respectés.

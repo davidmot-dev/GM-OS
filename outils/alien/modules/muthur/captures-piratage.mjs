@@ -78,6 +78,7 @@ export async function verifierEffetsPiratage({ navigateur, url, autonomeUrl, sor
     await page.goto(autonomeUrl);
     await page.getByLabel('Commande du terminal', { exact: true }).fill('HACK');
     await page.getByRole('button', { name: 'Envoyer la commande', exact: true }).click();
+    await page.locator('#demandeSelect').selectOption({ index: 0 });
     await page.locator('#hackFail').click();
     await page.locator('.terminal-screen.hack-actif.hack-refuse.hack-parasites').waitFor();
     const couches = await page.locator('#terminalScreen').evaluate(element => ({

@@ -109,11 +109,12 @@ function Journal({ operateur }) {
     const restant = cue ? cue.at + cue.duration - Date.now() : 0;
     if (restant <= 0) { setSequence(null); return; }
     // Rejoindre une séquence encore en cours après changement de vue, sans rejouer ses sept secondes.
-    setSequence({ ...cue, decalage: Math.min(0, cue.at - Date.now()) });
+    const depart = operateur.request?.type === 'hack' && operateur.request.id === cue.id;
+    setSequence({ ...cue, depart, decalage: Math.min(0, cue.at - Date.now()) });
     const minuterie = setTimeout(() => setSequence(null), restant);
     return () => clearTimeout(minuterie);
-  }, [operateur?.cue?.id, operateur?.cue?.at, operateur?.cue?.duration, operateur?.cue?.success]);
-  return h('div', { key: sequence?.id || 'terminal', className: `muthur-journal${sequence ? ` muthur-piratage muthur-piratage-${sequence.success ? 'accorde' : 'refuse'}` : ''}`,
+  }, [operateur?.cue?.id, operateur?.cue?.at, operateur?.cue?.duration, operateur?.cue?.success, operateur?.request?.id]);
+  return h('div', { key: sequence?.id || 'terminal', className: `muthur-journal${sequence ? ` muthur-piratage muthur-piratage-${sequence.depart ? 'depart' : sequence.success ? 'accorde' : 'refuse'}` : ''}`,
     style: sequence ? { '--muthur-piratage-decalage': `${sequence.decalage}ms` } : undefined,
     role: 'log', 'aria-label': 'Dialogue MU/TH/UR', 'aria-live': 'polite' },
     h('div', { className: 'muthur-journal-contenu', ref: log },
@@ -121,7 +122,7 @@ function Journal({ operateur }) {
     messages.map(message => h('div', { key: message.id, className: `muthur-message muthur-message-${message.kind}` },
       h('span', { className: 'muthur-auteur' }, message.kind === 'input' ? 'OPÉRATEUR' : message.kind === 'mother' ? 'MU/TH/UR · TRANSMISSION' : 'SYSTÈME'),
       h('p', null, message.content))),
-    sequence && h('p', { className: 'muthur-sequence', role: 'status' }, sequence.success ? 'INTRUSION · ACCÈS ACCORDÉ' : 'CONTRE-MESURES · ACCÈS REFUSÉ')));
+    sequence && h('p', { className: 'muthur-sequence', role: 'status' }, sequence.depart ? 'INTRUSION EN COURS · ATTENTE DU MJ' : sequence.success ? 'INTRUSION · ACCÈS ACCORDÉ' : 'CONTRE-MESURES · ACCÈS REFUSÉ')));
 }
 
 function VideoAlerte({ sequence, fin, avecSon, lectureChange }) {

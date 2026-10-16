@@ -7,6 +7,7 @@ import path from 'node:path';
 import { cleSauvegardeConfiguration } from './configuration.mjs';
 import { verifierSauvegarde } from './captures-sauvegarde.mjs';
 import { verifierEffetsPiratage } from './captures-piratage.mjs';
+import { verifierDepartHack } from './captures-depart-hack.mjs';
 import { verifierDetecteur } from '../../captures-detecteur.mjs';
 
 const ici = path.dirname(fileURLToPath(import.meta.url));
@@ -209,6 +210,8 @@ if (process.argv.includes('--capturer')) {
     }
     captures += await verifierSauvegarde({ navigateur, url: pathToFileURL(path.join(sortie, 'apercu.html')).href, sortie });
     captures += await verifierEffetsPiratage({ navigateur, url: pathToFileURL(path.join(sortie, 'apercu.html')).href,
+      autonomeUrl: pathToFileURL(path.resolve(ici, '../../index.html')).href, sortie });
+    captures += await verifierDepartHack({ navigateur, url: pathToFileURL(path.join(sortie, 'apercu.html')).href,
       autonomeUrl: pathToFileURL(path.resolve(ici, '../../index.html')).href, sortie });
     captures += await verifierDetecteur({ navigateur, url: pathToFileURL(path.resolve(ici, '../../index.html')).href, sortie });
     if (erreurs.length) throw new Error(erreurs.join('\n'));

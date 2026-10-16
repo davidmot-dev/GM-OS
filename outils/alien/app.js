@@ -133,7 +133,11 @@
     if (changed) log.scrollTop = log.scrollHeight;
     if (p?.cue && p.cue.id !== lastCue) {
       lastCue = p.cue.id;
-      if (!firstRender && Date.now() - p.cue.at < p.cue.duration) { $('hackOverlay').dataset.until = p.cue.at + p.cue.duration; $('hackOverlay').dataset.start = p.cue.at; $('hackOverlay').classList.toggle('failure', !p.cue.success); }
+      if (!firstRender && Date.now() - p.cue.at < p.cue.duration) {
+        const depart = p.request?.type === 'hack' && p.request.id === p.cue.id;
+        $('hackOverlay').dataset.until = p.cue.at + p.cue.duration; $('hackOverlay').dataset.start = p.cue.at;
+        $('hackOverlay').dataset.depart = String(depart); $('hackOverlay').classList.toggle('failure', !depart && !p.cue.success);
+      }
     }
     firstRender = false;
   }
@@ -295,17 +299,19 @@
     const until = Number($('hackOverlay').dataset.until || 0), activeHack = Date.now() < until;
     $('hackOverlay').classList.toggle('hidden', !activeHack);
     $('terminalScreen').classList.toggle('hack-actif', activeHack);
+    const departHack = activeHack && $('hackOverlay').dataset.depart === 'true';
+    $('terminalScreen').classList.toggle('hack-depart', departHack);
     $('terminalScreen').classList.toggle('hack-refuse', activeHack && $('hackOverlay').classList.contains('failure'));
-    if (activeHack) { const elapsed = Date.now() - Number($('hackOverlay').dataset.start), progress = Math.min(100, elapsed / 70); $('hackProgress').style.width = progress + '%'; const lines = ['> INITIALISATION DU CANAL', '> ANALYSE DES AUTORISATIONS', '> RECHERCHE DE MOT DE PASSE…', '> VÉRIFICATION DES CONTRE-MESURES', '> NÉGOCIATION DES PRIVILÈGES']; $('hackText').textContent = lines.slice(0, Math.min(5, 1 + Math.floor(progress / 20))).join('\n') + '\n\n' + (progress > 80 ? ($('hackOverlay').classList.contains('failure') ? 'ACCÈS REFUSÉ.' : 'ACCÈS ACCORDÉ.') : 'TRAITEMENT ' + Math.floor(progress) + '%'); }
+    if (activeHack) { const start = Number($('hackOverlay').dataset.start), elapsed = Date.now() - start, progress = Math.min(100, elapsed / (until - start) * 100); $('hackProgress').style.width = progress + '%'; const lines = ['> INITIALISATION DU CANAL', '> ANALYSE DES AUTORISATIONS', '> RECHERCHE DE MOT DE PASSE…', '> VÉRIFICATION DES CONTRE-MESURES', '> NÉGOCIATION DES PRIVILÈGES']; $('hackText').textContent = lines.slice(0, Math.min(5, 1 + Math.floor(progress / 20))).join('\n') + '\n\n' + (departHack ? 'INTRUSION EN COURS · ATTENTE DU MJ' : progress > 80 ? ($('hackOverlay').classList.contains('failure') ? 'ACCÈS REFUSÉ.' : 'ACCÈS ACCORDÉ.') : 'TRAITEMENT ' + Math.floor(progress) + '%'); }
     const glitch = state.config.glitches && !reduceMotion;
     $('terminalScreen').classList.toggle('hack-parasites', activeHack && glitch);
     $('noiseCanvas').style.display = glitch ? 'block' : 'none';
     if (instrument === 'muthur' && glitch && time - lastNoise > 100) {
       lastNoise = time; for (let i = 0; i < noiseData.data.length; i += 4) { const v = Math.random() * 255; noiseData.data[i] = v; noiseData.data[i + 1] = v; noiseData.data[i + 2] = v; noiseData.data[i + 3] = 255; } nctx.putImageData(noiseData, 0, 0);
       const phase = Math.floor(time / 140) % 61;
-      const burst = activeHack ? Math.sin(time / 130) * 5 : phase === 55 ? 3 : phase === 56 ? -3 : phase === 57 ? 1 : 0;
+      const burst = departHack ? Math.sin(time / 45) * 18 : activeHack ? Math.sin(time / 130) * 5 : phase === 55 ? 3 : phase === 56 ? -3 : phase === 57 ? 1 : 0;
       $('terminalScreen').style.setProperty('--glitch-shift', burst + 'px');
-      $('noiseCanvas').style.opacity = activeHack ? '.12' : phase >= 55 && phase <= 57 ? '.18' : '.09';
+      $('noiseCanvas').style.opacity = departHack ? '.4' : activeHack ? '.12' : phase >= 55 && phase <= 57 ? '.18' : '.09';
     } else if (!glitch) $('terminalScreen').style.setProperty('--glitch-shift', '0px');
     drawRadar(time); const c = state.countdown; $('countdown').classList.toggle('hidden', !c || !!state.autodestruction);
     if (c) { const seconds = Math.max(0, Math.ceil((c.endAt - Date.now()) / 1000)); const valeur = String(Math.floor(seconds / 60)).padStart(2, '0') + ':' + String(seconds % 60).padStart(2, '0'); $('countdownTime').textContent = valeur; $('autoDestructionTime').textContent = valeur; }

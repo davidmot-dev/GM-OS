@@ -11490,6 +11490,33 @@ Manuel 53/54 Alien/61 et captures actualisés. [Reprise du 16/10](2026-10-16-eta
 `feat(alien): classer les dossiers et gerer les demandes et prereglages` ; `git log` donne
 l’identifiant. Reste la recette matérielle, à partager avec David pour la restitution réelle.
 
+**Étape 6, 16/10 — volet logiciel validé, matériel à faire.** David : *« ok commence 6 alors,
+GM-OS est éteint »*, puis *« Ipad, Ipad Air, Tablette Samsung et smartphone »*.
+Base `8f4b1de6`, poussée avec **7 817 tests** et trois guides synchronisés dans NotebookLM.
+Huit parcours E2E désormais éprouvés : cinq existants puis trois étendus après correction
+du banc (retour à la liste des modules, sélecteurs de listes). Les nouveautés de l’étape 5
+passent sur vrai HTTP/WebSocket/fichier privé, dont réponses hors ordre et après coupure,
+reprise/import, tactile et rotation émulés. Relais après vidéo, sirène réelle et annonces
+simulées sur le seul diffuseur ; horloge avancée, aucune écoute du film entier ou de voix
+réelle. Sept captures du vrai Hub, deux nouvelles relues ; build et lint propres.
+[Recette pour les quatre appareils](2026-10-16-recette-materielle-alien.md) avec grille de résultats,
+semence fictive générée. Profils jetables fermés, aucun code applicatif modifié. Matériel non
+validé, modifications de cette étape non commitées. Redemander la fermeture de GM-OS avant
+une future modification dans `src/`/`electron/`, puisque ces essais ont lancé l’application.
+
+**Départ HACK, suite du 16/10.** David : *« ok ca marche bien »*, puis demande un glitch
+fort de cinq secondes dès le lancement ; GM-OS confirmé fermé. Livré dans le cœur,
+la vue React et le prototype, sans changer le format des données : signal lié à la demande
+en attente, résultat MJ distinct. Brouillage fort limité à cinq secondes, répétition sans
+prolongation, mouvements réduits respectés et refus atténué conservé. **84 essais Node,
+86 tests ciblés, lint et build verts**, quinze captures hors ligne, aperçu HTML et manuel
+actualisés. Non commité avec les changements de l’étape 6 ; détails dans la reprise du jour.
+
+David demande ensuite *« ok commit et pousse, tu as mis à jour la documentation ? »*.
+Recette étendue et départ HACK sont mis en version en deux commits dédiés, avec manuels,
+captures et reprise ; `git log` en donne les identifiants. Les mentions « non commité »
+ci-dessus décrivent l’état avant cette demande. Synchronisation NotebookLM par les hooks.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11564,7 +11591,7 @@ l’identifiant. Reste la recette matérielle, à partager avec David pour la re
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
-| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 livrées : dossiers classables/supprimables, file privée et préréglages nommés ; mise en version demandée le 16/10, voir `git log` | Recette sur deux appareils physiques avec semence fictive | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
+| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; huit E2E validés, recette des quatre appareils et départ HACK cinq secondes livrés ; mise en version demandée, voir `git log` | Appliquer la grille matérielle avec David | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

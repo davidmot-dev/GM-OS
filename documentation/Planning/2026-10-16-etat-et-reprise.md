@@ -87,3 +87,83 @@ L’étape 5 est regroupée dans `feat(alien): classer les dossiers et gerer les
 Les mentions « non commité » ci-dessus décrivent l’état avant cette nouvelle demande.
 L’étape 6 se partage : l’agent peut préparer la recette et automatiser les essais logiciels ;
 David juge la restitution sur ses tablettes et enceintes (Wi-Fi, tactile, veille et son réel).
+
+## Étape 6 — volet logiciel et préparation matérielle
+
+David : *« ok commence 6 alors, GM-OS est éteint »*. Il précise le matériel :
+*« Ipad, Ipad Air, Tablette Samsung et smartphone »*. Base désormais `8f4b1de6`, commit et
+push réussis avec types/lint/build, **7 817 tests** et **3/3 guides NotebookLM** synchronisés.
+
+`e2e/modulesDuJeuAlien.spec.ts` porte maintenant huit parcours. Les cinq premiers passent ;
+les trois étendus sont ensuite validés après correction du banc (retour aux modules avant
+de changer d’instrument, sélection des listes par leur nom accessible complet/préfixé).
+Les erreurs initiales n’ont pas nécessité de correctif de GM-OS. Ne pas les diagnostiquer
+comme des pertes de données ou des problèmes de droits.
+
+- Persistance étendue sur le vrai fichier privé : dossiers classés/supprimés, demande privée
+  et préréglage nommé retrouvés après redémarrage/import, avec droits fermés et scan arrêté.
+- Deux PJ, tactile émulé à 390 px puis paysage 844 × 390, saisie accentuée et validation,
+  seconde question traitée avant la première, HACK indépendant, réponse pendant déconnexion
+  retrouvée à la reprise. Dossier déverrouillé puis supprimé inaccessible à une nouvelle lecture.
+- Relais film → sirène après treize minutes simulées, deux puis une minute annoncées avec
+  une voix française de test ; un seul diffuseur, transfert et annulation avec silence final.
+  HTTP, décodeur et Web Audio réels ; Date avancée et synthèse vocale simulée, sorties muettes.
+  Aucune écoute du film entier ni validation d’une voix système ou du clavier virtuel réel.
+- Build/types et lint du scénario propres. Sept captures du vrai Hub dans
+  `scratch/modules-du-jeu-e2e/`, deux nouvelles relues (tactile paysage, alarme après film).
+  Logs des trois exécutions dans `scratch/etape6-e2e*.log` ; résultats/traces dans `scratch/`.
+  Seuls les essais en échec ont été rejoués après correction ; les huit parcours sont validés
+  sur le même build applicatif, sans changement de source applicative entre les essais.
+
+La [fiche matérielle](2026-10-16-recette-materielle-alien.md) prépare deux paires d’appareils,
+une grille non remplie et quinze gestes concrets. Navigateurs/versions et diffuseur choisi
+restent à relever. La semence fictive `scratch/modules-du-jeu-recette/semence.json` est générée ;
+ne jamais lancer `repetition` sans cet argument explicite, son défaut cherche une sauvegarde
+personnelle. Guides 54 Alien/61, recette et registre actualisés. Pas de commit demandé pour
+cette étape, ni nouvel envoi des guides à NotebookLM. Aucun paquet installé ou donnée personnelle lue.
+
+Les instances de test sont fermées et les profils temporaires supprimés par le banc.
+**Avant toute prochaine édition de `src/` ou `electron/`, redemander si GM-OS tourne** :
+la confirmation donnée pour commencer cette étape ne couvre pas l’essai suivant.
+Reprendre avec David sur la grille matérielle ; l’étape 6 complète attend ces résultats.
+Piège Windows : les accents d’un script passé par le pipeline PowerShell à Node peuvent être
+altérés ; une substitution peut ne rien remplacer. Préférer `apply_patch` et vérifier le diff.
+
+## HACK — brouillage dès le lancement
+
+David : *« ok ca marche bien. Je voudrais que lorsque je lance un Hack, l’écran glitch
+fortement pendant 5 secondes »*, puis confirme GM-OS fermé (*« non »*). Ce retour positif
+est conservé sans inventer de résultats détaillés par appareil pour la grille matérielle.
+
+`core.js` crée un signal de cinq secondes quand une nouvelle demande HACK est enregistrée.
+Même forme de `cue` et même format de sauvegarde : son id correspond à la demande HACK
+en attente ; l’arbitrage conserve son signal distinct avec un nouvel id. Les vues React
+et le prototype reconnaissent ce départ : neige dense, déchirures et décalages chromatiques
+forts, sans faux résultat de réussite/refus. À cinq secondes, affichage normal et demande
+toujours en attente. Répéter HACK n’ajoute pas de demande ni ne prolonge l’effet. Le résultat
+du MJ remplace immédiatement le départ ; le refus atténué reste lisible. Réglages des effets
+et mouvements réduits respectés. Reprise d’une vue rejoint le temps restant ; restauration
+efface le signal comme avant. Aucun changement de droits ou de règle.
+
+Validation : **84 essais Node**, **86 tests Vitest (13 fichiers)**, lint ciblé et build/types
+verts. **15 captures ciblées hors ligne** : onze des effets de résultat existants, quatre
+du départ module/prototype avec/sans mouvements réduits, délai de cinq secondes et attente
+du MJ vérifiés par horloge contrôlée. Captures fortes et refus relus ; nouvelle capture du
+manuel et guides actualisés. Le banc ancien du prototype doit sélectionner le HACK dans
+sa file avant le bouton de refus (file livrée à l’étape 5).
+
+`scratch/muthur-v1/apercu.html` est régénéré. La première capture complète s’était arrêtée
+sur ce sélecteur ancien ; après correction, seuls les parcours de piratage concernés ont été
+rejoués avec succès (`scratch/hack-depart-visuel.log`). Aucun E2E Electron ou service réseau
+lancé pour ce changement. Aucun fichier `src/`/`electron/` modifié. Les changements non
+commités de l’étape 6 sont conservés ; cette amélioration est aussi **non commitée**.
+
+## Mise en version de la recette et du départ HACK
+
+David demande ensuite *« ok commit et pousse, tu as mis à jour la documentation ? »*.
+La recette étendue et la fiche des quatre appareils sont regroupées dans
+`test(alien): etendre la recette et preparer les appareils de table`, puis le départ HACK
+et sa documentation dans `feat(alien): brouiller le terminal cinq secondes au lancement du hack`.
+`git log` fournit leurs identifiants. Les mentions « non commité » précédentes décrivent
+l’état avant cette demande. Les hooks de validation et de synchronisation NotebookLM sont
+conservés, avec l’autorisation explicite persistante pour l’envoi des guides modifiés.
