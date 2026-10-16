@@ -1,4 +1,5 @@
 import { estObjet } from './actions/contratsSessionDistante';
+import { NOMS_DES_EFFETS } from '../combat/logic/paquetDAction';
 import type { DonneesDuHub, HorlogesDuHub, CombatDuHub, CarteDuHub, TableauDuHub, SessionDuHub, DesDuHub, JetTransmis, RegleDuHub } from './types/donneesDuHub';
 import type { ProjectedEntity } from '../image/types';
 import type { ApparenceTablettes } from '../../theme/apparenceTablettes';
@@ -78,6 +79,7 @@ const session: Regles<SessionDuHub> = {
     connectedCharacters: dictionnaire(texte), characterLocks: dictionnaire(texte),
     activeCampaignId: nullable(texte), activeCampaignName: nullable(texte), activeCampaignWallpaper: nullable(texte),
     cosmsCourants: tableau(texte),
+    effetsDuRound: tableau(choix(...NOMS_DES_EFFETS)),
     favorites: tableau(identifie), reservesDeTable: dictionnaire(nombre),
     activeDiceConfig: nullable(estObjet), desEchelonnes: booleen, jetForcable: booleen,
 };

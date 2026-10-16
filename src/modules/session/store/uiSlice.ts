@@ -44,6 +44,12 @@ export interface UiSliceState {
      * scènes. Absent chez le meneur, qui les calcule lui-même.
      */
     cosmsCourants?: string[];
+    /**
+     * **Tablettes seulement** : ce que la carte d'Action du round donne aux Héros
+     * (Torg), calculé par le meneur et reçu avec la séance — l'ordre du tour ne
+     * vit que chez lui. Absent chez le meneur.
+     */
+    effetsDuRound?: import('../../../types/deck.types').EffetDeConflit[];
     editingClueId: string | null;
     remoteNotifications: RemoteNotification[];
     hubNotifications: HubNotification[];

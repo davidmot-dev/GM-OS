@@ -28,6 +28,8 @@ import { cartesRestantesPourLaTable, mainsPourLaTable } from '../../session/logi
 import { abonnerApparenceTablettes, lireApparenceTablettes } from '../../../theme/apparenceTablettes';
 import type { DonneesDuHub } from '../types/donneesDuHub';
 import { idsDesCosmsCourants } from '../../session/logic/cosmsCourants';
+import { useOrdreDuTourStore } from '../../combat/useOrdreDuTourStore';
+import { effetsDuRound } from '../../combat/logic/paquetDAction';
 import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
 
 /**
@@ -514,6 +516,11 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
                     activeCampaignWallpaper: resolvedWallpaper,
                     // Torg : la tablette n'a pas les scènes, le meneur lui dit le cosm courant.
                     cosmsCourants: idsDesCosmsCourants(activeCampaign, freshSessionOS.scenes ?? []),
+                    // Torg : la carte du round, pour le jet des Héros sur tablette (Déstabilisés, Un de plus).
+                    effetsDuRound: (() => {
+                        const ordre = useOrdreDuTourStore.getState();
+                        return effetsDuRound(ordre, ordre.carte ? (freshSessionOS.decks ?? []).find(d => d.id === ordre.carte!.deckId) : undefined, 'joueurs');
+                    })(),
                     characterLocks: freshSessionOS.connectedCharacters,
                     favorites: resolvedFavorites,
                     /*
@@ -686,7 +693,15 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             useCombatStore.subscribe(() => handleSync()),
             useDiceStore.subscribe(() => syncFast('dice')),
             useMapStore.subscribe((s, prev) => (s.projectedMapUrl !== prev.projectedMapUrl) ? handleSync() : syncFast('map')),
-            useSessionOSStore.subscribe(() => handleSync())
+            useSessionOSStore.subscribe(() => handleSync()),
+            /*
+              **Deux magasins diffusés dans la séance, mais que rien n'écoutait**
+              (16/10) : la carte du round (Torg) et les réserves de table. Un
+              clic sur le bandeau ou une carte retournée ne partait vers les
+              tablettes qu'au prochain changement d'un autre magasin.
+            */
+            useOrdreDuTourStore.subscribe(() => handleSync()),
+            useRessourcesDeTableStore.subscribe(() => handleSync()),
         ];
 
         handleSync(true); // Initial sync

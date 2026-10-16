@@ -12,7 +12,7 @@ export type SessionDuHub = Partial<Pick<Session,
     'sessions' | 'campaigns' | 'players' | 'clues' | 'entities' | 'atlasMaps'
     | 'customSheetTemplates' | 'customGameDrivers' | 'decks' | 'mainsDesPaquets'
     | 'demandesDeCarte' | 'cartesRestantes' | 'connectedCharacters'
-    | 'activeCampaignId' | 'activeCampaignName' | 'activeCampaignWallpaper' | 'cosmsCourants'
+    | 'activeCampaignId' | 'activeCampaignName' | 'activeCampaignWallpaper' | 'cosmsCourants' | 'effetsDuRound'
 >> & {
     characterLocks?: Session['connectedCharacters'];
     favorites?: EtatsDuHub['useFavoriteStore']['favorites'];

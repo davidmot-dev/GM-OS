@@ -202,6 +202,19 @@ describe('la carte d’Action du round', () => {
         expect(screen.getByText(/accorde « Un de plus ! » aux Héros/)).toBeTruthy();
     });
 
+    it('sur la tablette, sans ordre du tour, la carte reçue avec la séance compte (16/10)', () => {
+        useOrdreDuTourStore.setState({ tour: null, carte: null });
+        useSessionOSStore.setState({ effetsDuRound: ['destabilises'] } as never);
+        try {
+            faces(13);
+            monter({ blessures: 1 });
+            retenir();
+            expect(screen.getByText(/Malus : −3 au total d'action — 1 Blessure, Déstabilisés \(carte d’Action\)/)).toBeTruthy();
+        } finally {
+            useSessionOSStore.setState({ effetsDuRound: undefined } as never);
+        }
+    });
+
     it('sans round ouvert, la carte ne compte pas', () => {
         poserLaCarte(['destabilises']);
         useOrdreDuTourStore.setState({ tour: null });

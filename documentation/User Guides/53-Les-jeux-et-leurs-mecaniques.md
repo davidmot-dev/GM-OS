@@ -207,7 +207,9 @@ qui en a trop doit défausser, GM-OS ne choisit pas pour lui) et **Fin d'Acte** 
 Une carte peut être **posée en Réserve d'Action** — publique, toute la table la voit — et le
 **Moment critique** pose toute la main en Réserve, une fois par Acte ; les deux se font aussi depuis
 la tablette du joueur. Sur la carte de combat d'un héros, **l'Action approuvée** de la carte du
-round lui fait piocher une carte. Voir [Torg](./54-Jeu-Torg.md).
+round lui fait piocher une carte. Pour les **Atouts** qui touchent aux cartes, deux gestes sous ceux
+du paquet : **piocher une à trois cartes et en garder une**, les autres défaussées, et **chercher une
+carte** dans la défausse ou la pioche, en vignettes. Voir [Torg](./54-Jeu-Torg.md).
 
 ---
 

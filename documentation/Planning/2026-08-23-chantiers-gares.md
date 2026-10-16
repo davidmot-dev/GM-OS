@@ -26,6 +26,38 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> **16/10, fin de journée — les lots reportés ici après le commit de Codex (Claude Code).** Le
+> détail est dans le [ToDo du 16/10](2026-10-16-todo.md). Un seul écrivain par fichier : ces lots
+> ont attendu que le § 136 (LCARS) soit commité.
+>
+> - ✅ **Validé à l'écran par David** : la santé en points de vie suit la fiche (`a0320ef1`) ;
+>   la fiche, la protection et le Brisé de Blade Runner ; la recette matérielle d'Alien, étape 6
+>   ([fiche](2026-10-16-recette-materielle-alien.md), versions non relevées).
+> - **Faits, à éprouver à l'écran** :
+>   - **Blade Runner** (`253c136b`) : le stress subi (`jet.stressSubi`, « Encaisser ») et la
+>     relance d'une réussite au forçage (`forcer.relancerUneReussite`). Pilote réimporté.
+>   - **NOC** (`1815ed39`) : les pistes de la Cabale se rechargent au Nouveau scénario
+>     (`ficheDeGroupe.nouveauScenario`). Le Vécu remonte aux Légendes, par choix de David. Pilote
+>     réimporté.
+>   - **Torg** (`2178871b`) : Atouts sur les cartes (« Piocher, en garder une », « Chercher une
+>     carte… »), capacité « Sbires » d'un vilain, capacité « Horde ». Pilote inchangé.
+>   - **Tous les jeux** (`c6c9d3a3`) : lier un personnage à une campagne d'un autre jeu demande
+>     confirmation.
+>   - **Tablettes** (commit de ce report) : ⛔ deux magasins envoyés avec la séance mais que le
+>     synchroniseur n'écoutait pas. La **carte du round de Torg** n'atteignait jamais la tablette,
+>     donc Déstabilisés n'y était pas retiré. Les **réserves de table** ne partaient qu'au
+>     changement suivant d'un autre magasin. Corrigé dans `useNexusSynchronizer` (deux
+>     abonnements) et par `effetsDuRound` envoyé avec la séance. Les deux essais d'envoi échouent
+>     sans la correction.
+> - **Captures du manuel** (`f3bf32ab`, `d0e15f63`, `2178871b`) : NOC, Cthulhu Hack, Blade
+>   Runner, Alien et Torg.
+> - **Le pilote Within est retiré** par David avec la purge, la première faite à l'écran.
+>   L'état de la séance a été relu après coup : plus de pilote, de fiche, de campagne ni de
+>   personnage Within. Les autres magasins sont compressés et n'ont pas pu être relus. Srd Yze
+>   reste.
+> - **Reste** : la Table des Terres Médianes, à définir avec David ; ce qui est laissé à la main
+>   par choix (liste dans le ToDo).
+
 > ✅ **16/10 — Défaut trouvé par les captures : la santé en points de vie d'un PJ ne suivait pas la
 > fiche — corrigé le jour même (David : « oui au deux propositions »).** Sur la carte de combat d'Edith (Cthulhu Hack) et de Kessler
 > (Blade Runner) tombés à zéro, la barre dit **0 / 10** pendant que la jauge de la fiche dit
@@ -95,7 +127,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > `protectionNom`, `protection`, `pointsHumanite` ; `horsJeu`, `protection`, `noterDans`), zéro
 > constat, tables présentes : **réimporté par David le 16/10**, poussé dans `998299b8`. Le forçage est **relu** : les 1 restent,
 > les réussites aussi — la relance optionnelle d'un D10/D12 à une réussite n'est pas proposée.
-> Reste à la main : facteur de stress et jet de Psychologie, sauvegardes contre la mort,
+> Reste à la main : ~~facteur de stress et jet de Psychologie~~ (fait le 16/10, `253c136b`), sauvegardes contre la mort,
 > stabilisation, guérison.
 
 > **16/10 — NOC : moment de calme, effets du Fiel, Fatigué, Capital, Vécu et Rouages (Claude
@@ -121,7 +153,7 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > domaine = statut) ; Capital `horsPlafondSi` talent = fortune ; `gestesDesHeros` complet. **Réimporté
 > par David le 16/10** ; commits `72c723c5` (horloges Alien) et `0efbc55e` (NOC), poussés (pré-push :
 > 7 860 tests verts). ✅ **Vu à l'écran par David le 16/10** (*« ok j'ai tout vu à l'écran »*). Reste à la main : Aura de lumière, partage de l'Extase,
-> alliés, Singularité gagnée par un Rouage, pistes de la Cabale, report d'une séquelle à 8.
+> alliés, Singularité gagnée par un Rouage, ~~pistes de la Cabale~~ (faites le 16/10, `1815ed39`), report d'une séquelle à 8.
 
 > ✅ **Traité le jour même — voir les deux entrées ci-dessus (Cthulhu Hack, Blade Runner).**
 > **16/10 — Cthulhu Hack et Blade Runner : les jauges que GM-OS ne suit pas (constat, rien codé).**
@@ -185,9 +217,9 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > Choc) ; `combat.limitesDeBlessures` (« Type… » sur la santé d'un adversaire, même écrivain que le
 > changement de moteur) ; `Combatant.horde` et `HordeDuCombattant` sur la carte d'un adversaire de
 > Torg (former, frapper, attaque combinée) ; « Cibles » au jet de Torg. Pilote Torg corrigé
-> (`limitesDeBlessures` en plus), zéro constat — réimporté par David le 14/10. **Torg : il reste** la capacité
-> « Sbires » d'un vilain et la capacité « Horde » de certaines créatures (à la table), les Atouts qui
-> touchent aux cartes, et le chargement des paquets de Cosm (David — ✅ fait le 16/10). **Fiche Torg corrigée** dans le
+> (`limitesDeBlessures` en plus), zéro constat — réimporté par David le 14/10. **Torg : il restait** la capacité
+> « Sbires » d'un vilain et la capacité « Horde » de certaines créatures, les Atouts qui
+> touchent aux cartes (✅ les trois faits le 16/10, `2178871b`), et le chargement des paquets de Cosm (David — ✅ fait le 16/10). **Fiche Torg corrigée** dans le
 > même pilote : `choc` s'appelait « Points de Choc Max » (formule `esprit`, départ 8) et `blessures`
 > « Blessures Max » (départ 3), alors que les dommages y écrivent les valeurs **actuelles** — devenus
 > « Choc » et « Blessures », départ 0, sans formule (le maximum du Choc vient de `statsToTrack.max`).

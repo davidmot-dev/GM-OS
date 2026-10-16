@@ -55,6 +55,10 @@ vi.mock('../../session/useSessionOSStore', () => ({
             characters: [{ id: 'pj', name: 'PJ', portraitUrl: '', campaignId: null, templateId: 'generic', sheetData: {} }],
         }],
         getActiveDriver: () => null,
+        activeCampaignId: 'camp',
+        // Torg : un Paquet d'Action dont la carte 7 déstabilise les Héros.
+        decks: [{ id: 'pa', name: 'Action', systemId: 'torg', folderPath: 'x', cardCount: 66, format: 'poker', orientation: 'portrait',
+            useDiscard: true, role: 'action', cardMetadata: { 7: { action: { standard: { premier: 'V', heros: ['destabilises'] }, dramatique: { premier: 'V' }, approuvees: [] } } } }],
     }),
 }));
 vi.mock('../../favorite/useFavoriteStore', () => ({ useFavoriteStore: storeVide() }));
@@ -75,6 +79,8 @@ vi.mock('../../map/useMapStore', () => ({
 }));
 
 const { useNexusSynchronizer } = await import('./useNexusSynchronizer');
+const { useOrdreDuTourStore } = await import('../../combat/useOrdreDuTourStore');
+const { useRessourcesDeTableStore } = await import('../../table/useRessourcesDeTableStore');
 
 afterEach(() => {
     delete (window as unknown as { appBridge?: unknown }).appBridge;
@@ -119,5 +125,44 @@ describe('useNexusSynchronizer — ce qui part est l’état du départ', () => 
         const cartes = envoisAuHub.map(p => p.map).filter(Boolean);
         expect(cartes.length).toBeGreaterThan(0);
         expect(cartes.at(-1)?.projectionTarget).toBe('hub');
+    });
+});
+
+/**
+ * **Deux magasins diffusés que rien n'écoutait** (16/10) : la carte du round de
+ * Torg n'atteignait jamais la tablette, et un clic sur une réserve de table
+ * attendait qu'un autre magasin bouge pour partir.
+ */
+describe('useNexusSynchronizer — la carte du round et les réserves partent dès qu’elles changent', () => {
+    const ecouter = () => {
+        const envois: DonneesDuHub[] = [];
+        (window as unknown as { appBridge: unknown }).appBridge = {
+            remote: { sendSync: (payload: DonneesDuHub, cible: string) => { if (cible === 'hub') envois.push(payload); } },
+        };
+        return envois;
+    };
+    afterEach(() => {
+        useOrdreDuTourStore.setState({ tour: null, carte: null, carteEnAttente: false });
+        useRessourcesDeTableStore.setState({ reserves: {} });
+    });
+
+    it('une carte retournée envoie ses effets pour les Héros', async () => {
+        const envois = ecouter();
+        renderHook(() => useNexusSynchronizer(true));
+        await vi.waitFor(() => expect(envois.length).toBeGreaterThan(0));
+        expect(envois.at(-1)?.session?.effetsDuRound).toEqual([]);
+        useOrdreDuTourStore.setState({
+            tour: { round: 1, campActif: 'adversaires', ontAgi: [], activationsConsecutives: 0, enAttenteDeDecision: false },
+            carte: { deckId: 'pa', index: 7 }, carteEnAttente: false, scene: 'standard',
+        });
+        await vi.waitFor(() => expect(envois.some(p => p.session?.effetsDuRound?.includes('destabilises'))).toBe(true), { timeout: 3000 });
+    });
+
+    it('une réserve ajustée part sans attendre un autre magasin', async () => {
+        const envois = ecouter();
+        renderHook(() => useNexusSynchronizer(true));
+        await vi.waitFor(() => expect(envois.length).toBeGreaterThan(0));
+        useRessourcesDeTableStore.setState({ reserves: { camp: { Impulsion: 3 } } });
+        await vi.waitFor(() => expect(envois.some(p => p.session?.reservesDeTable?.Impulsion === 3)).toBe(true), { timeout: 3000 });
     });
 });

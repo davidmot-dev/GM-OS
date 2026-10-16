@@ -154,8 +154,9 @@ les effets de chaque camp, l'Action approuvée — et s'en souvient. Vous pouvez
 d'avance, carte par carte, dans le lecteur de Deck-OS. Sans paquet, Combat-OS vous laisse désigner
 le camp qui commence.
 
-> Les effets se lisent dans le panneau de jet **de votre fenêtre** : une tablette ne voit pas la carte
-> du round (Déstabilisés n'y est pas retiré seul).
+> Les effets valent aussi **sur les tablettes** : la carte du round part avec la séance, et le jet
+> d'un Héros lancé depuis sa tablette retire Déstabilisés et signale « Un de plus ! », comme dans
+> votre fenêtre.
 
 ---
 

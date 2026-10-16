@@ -83,6 +83,24 @@ export function effetsDuCamp(ligne: LigneDeConflit | null | undefined, camp: Cam
     return (camp === 'joueurs' ? ligne.heros : ligne.vilains) ?? [];
 }
 
+/**
+ * **Ce que la carte du round donne à un camp** : rien tant qu'aucun round n'est
+ * ouvert sur une carte décrite. Une seule règle pour le meneur, qui la calcule,
+ * et la tablette, qui la reçoit avec la séance (`effetsDuRound`).
+ */
+export function effetsDuRound(
+    ordre: { tour: unknown; carte: { index: number } | null; carteEnAttente: boolean; scene: SceneDeConflit },
+    deck: DeckManifest | null | undefined,
+    camp: Camp,
+): EffetDeConflit[] {
+    if (!ordre.tour || !ordre.carte || ordre.carteEnAttente) return [];
+    const decrite = carteDecrite(deck, ordre.carte.index);
+    return decrite ? effetsDuCamp(ligneActive(decrite, ordre.scene), camp) : [];
+}
+
+/** Les effets de la Ligne de Conflit, pour vérifier ce que la tablette reçoit. */
+export const NOMS_DES_EFFETS = Object.keys(EFFETS_DE_CONFLIT) as EffetDeConflit[];
+
 export const nomDuCampDeTorg = (camp: Camp) => (camp === 'joueurs' ? 'Héros' : 'Vilains');
 
 /** La ligne en une phrase, pour le journal : « Héros d'abord — Héros : Inspiration ; Vilains : Fatigués ». */

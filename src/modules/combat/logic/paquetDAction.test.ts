@@ -5,6 +5,7 @@ import {
     defautsDeLaCarte,
     direLaLigne,
     effetsDuCamp,
+    effetsDuRound,
     ligneActive,
     paquetDActionDuJeu,
 } from './paquetDAction';
@@ -69,5 +70,23 @@ describe('le paquet et ses cartes', () => {
             '« elan » n’est pas un effet de la Ligne de Conflit.',
             '« danse » n’est pas une Action approuvée.',
         ]);
+    });
+});
+
+describe('les effets du round, envoyés aux tablettes (16/10)', () => {
+    const deck = paquet({ role: 'action', cardMetadata: { 3: { action: CARTE } } });
+    const ordre = { tour: { round: 1 }, carte: { index: 3 }, carteEnAttente: false, scene: 'standard' as const };
+
+    it('la ligne de la scène, pour le camp demandé', () => {
+        expect(effetsDuRound(ordre, deck, 'joueurs')).toEqual(['inspiration']);
+        expect(effetsDuRound({ ...ordre, scene: 'dramatique' }, deck, 'joueurs')).toEqual(['fatigues']);
+        expect(effetsDuRound({ ...ordre, scene: 'dramatique' }, deck, 'adversaires')).toEqual(['vivacite']);
+    });
+
+    it('rien sans round, sans carte, carte en attente ou non décrite', () => {
+        expect(effetsDuRound({ ...ordre, tour: null }, deck, 'joueurs')).toEqual([]);
+        expect(effetsDuRound({ ...ordre, carte: null }, deck, 'joueurs')).toEqual([]);
+        expect(effetsDuRound({ ...ordre, carteEnAttente: true }, deck, 'joueurs')).toEqual([]);
+        expect(effetsDuRound({ ...ordre, carte: { index: 9 } }, deck, 'joueurs')).toEqual([]);
     });
 });
