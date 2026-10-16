@@ -1,0 +1,14 @@
+/** Catalogue fonctionnel : les résultats restent arbitrés par le MJ. */
+export const POSTES = {
+  commandement: { nom: 'Commandement', code: 'CMD', description: 'Coordonner la mission et transmettre les ordres.', actions: { rapport: 'Demander un rapport de situation', 'proposer-alerte': 'Proposer un changement d’alerte' }, etats: ['en-cours', 'accompli', 'suspendu'] },
+  science: { nom: 'Science', code: 'SCI', description: 'Explorer les contacts et analyser les phénomènes.', actions: { scan: 'Scan général', analyse: 'Analyse ciblée' }, etats: ['inconnu', 'identifie', 'analyse'] },
+  ingenierie: { nom: 'Ingénierie', code: 'ING', description: 'Diagnostiquer les systèmes et proposer les interventions.', actions: { diagnostic: 'Demander un diagnostic', reparation: 'Proposer une réparation', reconfiguration: 'Proposer une reconfiguration' }, etats: ['nominal', 'perturbe', 'hors-service'] },
+  communications: { nom: 'Communications', code: 'COM', description: 'Établir les liaisons et traiter les transmissions.', actions: { 'ouvrir-canal': 'Demander l’ouverture du canal', decoder: 'Demander un décodage', transmettre: 'Envoyer une transmission' }, etats: ['ouvert', 'brouille', 'ferme'] },
+  navigation: { nom: 'Navigation', code: 'NAV', description: 'Préparer le cap et les manœuvres.', actions: { cap: 'Proposer un cap', evitement: 'Proposer une manœuvre d’évitement', distorsion: 'Demander le passage en distorsion' }, etats: ['disponible', 'risque', 'bloque'] },
+  tactique: { nom: 'Tactique / sécurité', code: 'TAC', description: 'Identifier les contacts et proposer une posture défensive.', actions: { identifier: 'Identifier la cible', verrouiller: 'Proposer un verrouillage', intervenir: 'Proposer une intervention' }, etats: ['inconnu', 'identifie', 'hostile', 'neutralise'] },
+  medecine: { nom: 'Médecine', code: 'MED', description: 'Examiner les patients et les phénomènes biologiques.', actions: { diagnostic: 'Demander un diagnostic médical', analyser: 'Analyser le phénomène biologique', soigner: 'Proposer un traitement' }, etats: ['stable', 'urgence', 'retabli'] },
+};
+export const NIVEAUX = ['normal', 'jaune', 'rouge'];
+export const ETATS = { 'en-cours': 'En cours', accompli: 'Accompli', suspendu: 'Suspendu', inconnu: 'Inconnu', identifie: 'Identifié', analyse: 'Analysé', nominal: 'Nominal', perturbe: 'Perturbé', 'hors-service': 'Hors service', ouvert: 'Ouvert', brouille: 'Brouillé', ferme: 'Fermé', disponible: 'Disponible', risque: 'Risqué', bloque: 'Bloqué', hostile: 'Hostile', neutralise: 'Neutralisé', stable: 'Stable', urgence: 'Urgence', retabli: 'Rétabli' };
+export const STATUTS = { attente: 'En attente du MJ', 'en-cours': 'Prise en charge', 'jet-requis': 'Jet demandé par le MJ', traitee: 'Rapport reçu', refusee: 'Intervention refusée', annulee: 'Demande annulée' };
+export const EN_ATTENTE = ['attente', 'en-cours', 'jet-requis'];

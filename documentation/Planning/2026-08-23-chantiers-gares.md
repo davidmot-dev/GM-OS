@@ -11660,6 +11660,33 @@ pas de nouvelle édition de `src/`/`electron/`. Build/types/lint propres, trois 
 Hub et onze captures de piratage hors ligne passent ; guide et reprise actualisés.
 Toujours non commité, appréciation du contraste sur les vrais appareils à reprendre.
 
+### 136 · LCARS Star Trek — passerelle complète en test — 16/10/2026
+
+David choisit une passerelle immersive contrôlée par le MJ et le LCARS classique
+TNG / DS9 / Voyager. Après l’analyse puis le jalon Science, il demande : « ok fait le module
+en entier avec toute les options en test ». Sources autonomes dans `outils/star-trek/lcars/`,
+[guide](../../outils/star-trek/lcars/README.md) et [analyse](2026-10-16-analyse-lcars-star-trek.md).
+
+**Disponible dans l’atelier 0.3.0 :** sept postes, 19 actions arbitrées, file MJ avec statuts,
+acceptation/refus et état résultant ; ordres et accusés ; rapports privés/partagés et médias
+ciblés ; éléments éditables et masquables ; attribution des consoles ; préréglages nommés ;
+alertes/décompte, diffuseur sonore et annonces ; sauvegarde locale automatique, export/import
+confirmé et migration v1→v2. Aucun automatisme des règles de vaisseau ni raccord au vrai Hub.
+Après le constat de David « c'est toujours le même écran », sept instruments distincts
+remplacent le panneau commun : mission, capteurs, coque/circuits, récepteur, carte de vol,
+secteurs tactiques et dossier médical. Sélections liées au formulaire, géométries et titres
+propres, figures symboliques. Source `consoles.mjs`, analyse § 18.
+
+**Validation :** manifeste v1 conforme, **34 tests moteur**, lint/compilation locale propres,
+recette navigateur et **42 captures** sans débordement ni erreur JavaScript ; contrôles de
+360 à 1 280 px, médias et Web Audio réels, sorties muettes et voix simulées. Sept instruments
+tablette relus, quatre sur smartphone et deux vues grand écran. Aucun service ou GM-OS lancé.
+Le HTML embarque la fiction et ses secrets pour changer de rôle : ce n’est pas une authentification.
+Les appareils physiques, le transport ciblé et le transfert sonore distant restent à éprouver
+lors d’une intégration. Mise en version demandée par David le 16/10 : « commit tes changements ».
+Le commit LCARS inclut les sources et leur documentation ; aucun push demandé. Premier geste : ouvrir
+`scratch/lcars-v1/apercu.html`, choisir **Officier de test**, puis alterner avec le MJ.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11735,6 +11762,7 @@ Toujours non commité, appréciation du contraste sur les vrais appareils à rep
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
 | 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; recette et départ HACK poussés dans `460544af`/`a23e6989` ; correctif horloge HACK, glitch fixe en mouvements réduits et CRT tablette poussés dans `dc1ead2b` ; décompte, film, alarme et faux écho sur l’heure serveur le 16/10, non commité | Recharger et éprouver sur les tablettes, poursuivre la grille matérielle | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
+| 71 | **LCARS de Star Trek — sept postes en test** | § 136 ; atelier 0.3.0 autonome, sept instruments distincts, 34 tests et 42 captures validés, sauvegarde/import et médias ; mise en version demandée le 16/10 | Comparer les sept postes dans `scratch/lcars-v1/apercu.html` avec David | Raccord au vrai Hub et recette matérielle ultérieurs |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

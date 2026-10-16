@@ -333,3 +333,84 @@ propre, **3 622 tests dans 317 fichiers**, lint des fichiers touchés propre. Es
 `feat(jeux): …` (les deux lots partagent `drivers.ts`, la Forge, le panneau du Hors Jeu et le
 manuel 53), puis push, comme demandé. `git log` donne l'identifiant. Hors commit : `Export Dirvers/`,
 `outils/jdr-pdf-vers-md/`, `2026-10-16-analyse-lcars-star-trek.md` (pas écrit par Claude Code).
+
+## LCARS — prototype de test isolé (Codex, 16/10)
+
+Après l’analyse seule, David demande un module de test. Le choix confirmé est une
+passerelle immersive contrôlée par le MJ, en LCARS classique TNG / DS9 / Voyager.
+Le premier jalon Science est disponible dans `outils/star-trek/lcars/` : manifeste v1,
+moteur pur, deux vues React, fiction et atelier autonome. Aucun raccord au catalogue,
+au pilote Star Trek ou au vrai Hub ; aucun changement dans `src/`/`electron/`.
+
+Ouvrir `scratch/lcars-v1/apercu.html` dans le navigateur. Le sélecteur de l’atelier passe
+entre T’Len, Mara et le MJ : scan → file MJ → réponse privée → partage volontaire autorisé.
+Contacts éditables, attribution/retrait Science, situation et alerte visuelle ; aucun son,
+vidéo ou stockage persistant. Recharger remet la fiction à zéro. L’atelier embarque les
+secrets fictifs pour changer de rôle : ne pas le traiter comme un transport authentifié.
+
+Validation : manifeste conforme, **12 essais Node**, lint ciblé propre, compilation locale
+réussie ; parcours navigateur hors ligne et **10 captures** à 360/390/1 024 px. Scan de
+2,6 s puis attente, résultat privé, partage, arrêt et mouvements réduits vérifiés. Vues
+Science smartphone, réponse MJ et alerte relues. Aucun GM-OS ni serveur réseau lancé.
+Guide de test dans `outils/star-trek/lcars/README.md`, analyse complétée au § 16.
+
+Non commité, aucun commit demandé. Le registre est déjà modifié par un autre travail :
+ne pas écraser ses changements ; raccorder le jalon à l’entrée des modules après coordination.
+Reprise : essai de l’aperçu par David puis choix du jalon suivant. Toute édition ultérieure
+de `src/`/`electron/` exige de vérifier la fermeture de GM-OS.
+
+## LCARS — sept postes et options en test (Codex, suite du 16/10)
+
+David demande ensuite « ok fait le module en entier avec toute les options en test ».
+Le premier jalon ci-dessus est étendu : **0.2.0 / données v2 / contrat v1**, dans le même
+`outils/star-trek/lcars/`, aperçu au même chemin `scratch/lcars-v1/apercu.html`.
+Sept consoles fonctionnelles, 19 actions arbitrées par le MJ, ordres ciblés avec accusés,
+rapports et médias privés/partagés, interventions acceptées/refusées avec état résultant,
+éléments par poste en CRUD, affectations multiples, préréglages nommés et alertes chronométrées.
+Son sur diffuseur choisi après activation locale, annonces vocales et coupure des effets.
+
+La préparation et les historiques sont désormais sauvegardés dans la clé propre à l’atelier,
+exportables/importables avec validation et confirmation. Reprise/import arrêtent les effets.
+Copies illisibles préservées et quota signalé ; formats v1 migrés. `heritage-v1.mjs` valide
+l’ancien format, sans être utilisé pour les commandes courantes. `postes.mjs` porte le catalogue
+fonctionnel, `commun.mjs` les contrôles partagés, `pupitre.mjs` le MJ, `configuration.mjs` le JSON.
+
+Validation finale : **34 essais Node**, manifeste conforme, lint ciblé et compilation locale
+propres ; recette complète des vues **21 captures hors ligne à 360/390/1 024 px**, aucun
+débordement ou erreur JavaScript. Décodage PNG/WAV/WebM et Web Audio réels, enceinte muette,
+voix simulées. Vues Ingénierie/Médecine/Commandement relues ; log `scratch/lcars-complet-final.log`.
+Piège payé : produire le clip MediaRecorder sur une page sans horloge simulée, sinon il peut
+ne contenir qu’un en-tête sans image. Pas de GM-OS ni de service réseau lancé, aucun changement
+de source dans `src/`/`electron/`, ni de catalogue/pilote de production ou données personnelles.
+
+Reprendre par l’essai visuel du prototype avec David. Le transport privé, le son entre appareils
+distincts et les tablettes physiques ne sont pas validés par un atelier à rôles simulés.
+Guide local et analyse § 17 actualisés ; sources non commitées, aucun commit/push demandé.
+
+## LCARS — instruments distincts par poste (Codex, suite du 16/10)
+
+David valide le début, puis constate « c'est toujours le même écran, on ne voit pas la
+différence ». L’atelier **0.3.0 / données v2** différencie maintenant les sept consoles
+dans `outils/star-trek/lcars/consoles.mjs` : mission et ordres, laboratoire Science,
+coque/circuits, canaux/récepteur, cartographie de vol, périmètre tactique, dossiers médicaux.
+Les fiches sélectionnent réellement la cible du formulaire, et réciproquement. Titres,
+géométries, accents et invitations propres à chaque poste ; les schémas restent illustratifs,
+les états qualitatifs viennent du MJ. Moteur et format de sauvegarde inchangés.
+
+Validation : manifeste conforme, **34 tests Node**, lint propre, recette complète hors ligne
+et **42 captures** à 390/1 024/1 280 px ; les sept postes ont aussi été contrôlés à 360 px.
+Sélections bidirectionnelles, mouvements réduits, parcours des 19 actions, arbitrages,
+confidentialité, médias/audio et persistance/import passent. Les sept instruments tablette,
+quatre instruments smartphone et deux vues grand écran ont été relus. Aucune erreur JS
+ou débordement. Aucun service, paquet, GM-OS ou donnée personnelle utilisé ; aucun changement
+dans `src/`/`electron/`. Stitch était facultatif ; instruments réalisés directement en SVG/CSS.
+
+Guide local, analyse § 18 et registre § 136 mis à jour. Reprise : recharger l’aperçu
+`scratch/lcars-v1/apercu.html`, choisir Officier de test et comparer les sept consoles.
+Le vrai Hub et les appareils physiques restent hors de ce jalon.
+
+**Mise en version, le 16/10 :** David demande « commit tes changements ». Sources LCARS,
+guide local, analyse et seules entrées LCARS du registre/de cette reprise regroupés dans
+`feat(lcars): ajouter la passerelle de test et ses sept consoles` (identifiant dans `git log`).
+Les validations ci-dessus portent sur ces sources. Les autres modifications de la copie
+de travail restent hors du commit. Aucun push demandé.

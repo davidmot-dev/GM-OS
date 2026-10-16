@@ -1,0 +1,31 @@
+{
+  "versionContrat": 1,
+  "id": "star-trek-lcars",
+  "libelle": "LCARS — Passerelle",
+  "description": "Passerelle de test à sept postes : interventions arbitrées, ordres, rapports ciblés, médias, alertes et préréglages.",
+  "version": "0.3.0",
+  "versionDonnees": 2,
+  "corpusCompatibles": ["star-trek"],
+  "commandes": [
+    { "id": "preparer-officier", "roles": ["mj"] },
+    { "id": "configurer-vaisseau", "roles": ["mj"] },
+    { "id": "preparer-cible", "roles": ["mj"] },
+    { "id": "supprimer-cible", "roles": ["mj"] },
+    { "id": "demander-intervention", "roles": ["joueur"] },
+    { "id": "qualifier-demande", "roles": ["mj"] },
+    { "id": "resoudre-demande", "roles": ["mj"] },
+    { "id": "partager-rapport", "roles": ["joueur"] },
+    { "id": "annuler-demande", "roles": ["joueur"] },
+    { "id": "publier-rapport", "roles": ["mj"] },
+    { "id": "retirer-publication", "roles": ["mj"] },
+    { "id": "donner-ordre", "roles": ["joueur"] },
+    { "id": "accuser-ordre", "roles": ["joueur"] },
+    { "id": "changer-alerte", "roles": ["mj"] },
+    { "id": "couper-effets", "roles": ["mj"] },
+    { "id": "choisir-diffusion", "roles": ["mj", "joueur"] },
+    { "id": "enregistrer-prereglage", "roles": ["mj"] },
+    { "id": "charger-prereglage", "roles": ["mj"] },
+    { "id": "supprimer-prereglage", "roles": ["mj"] },
+    { "id": "archiver-demandes", "roles": ["mj"] }
+  ]
+}
