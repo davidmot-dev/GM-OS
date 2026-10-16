@@ -100,8 +100,16 @@ Avec **LCARS**, les consoles dépendent des postes attribués par le meneur. Sé
 contact, système, canal, itinéraire ou dossier, puis proposez votre intervention. Le résultat
 arrive après arbitrage dans vos interventions privées. **Partager à l’équipage** n’est proposé
 que si le meneur l’autorise. Au Commandement, vous pouvez transmettre des ordres ; leurs
-destinataires peuvent **Accuser réception**. Cette première intégration utilise des rapports
-textuels et des alertes visuelles. [Parcours complet Star Trek](54-Jeu-Star-Trek.md).
+destinataires peuvent **Accuser réception**. Les rapports peuvent contenir une image, un son
+ou une vidéo privée. Les alertes et décomptes apparaissent sur les écrans concernés ; seul
+l’appareil choisi par le meneur diffuse le son après **Activer le son**. Gardez LCARS ouvert
+et réactivez le son après une veille ou une suspension. Les vidéos restent muettes ailleurs
+et se lancent volontairement ; les anciennes annonces ne sont pas rejouées au retour en ligne.
+[Parcours complet Star Trek](54-Jeu-Star-Trek.md).
+
+Sur un petit écran, faites défiler la zone centrale pour passer de l’instrument au formulaire.
+Si un module ne peut plus s’afficher, **Retour aux modules** reste disponible ; revenez à la
+liste puis rouvrez-le. Quitter la campagne ou terminer la séance retire les anciens accès.
 
 > 🔎 **Cette page ne décrivait aucun de ces onglets** — ni les indices, ni l'Atlas, ni les cartes en
 > main, qui sont pourtant l'essentiel de ce qu'un joueur touche. Ajoutés le 2026-09-04.
@@ -255,4 +263,5 @@ régénérées et regardées ; les essais sur les vrais appareils restent en T6.
 puis avec Electron et deux sessions Edge sur le même PC. Les appareils physiques restent à essayer.*
 *Ajout relu le 2026-10-16 : questions MU/TH/UR en file privée, CLEAR, préparation MJ et recette matérielle sur les quatre appareils de David.*
 
-*Complément du 2026-10-16 : LCARS dans les Modules du jeu, postes attribués, rapports textuels privés et ordres ; médias et audio à suivre.*
+*Complément du 2026-10-16 : LCARS L1–L7 logiciel, postes attribués, rapports et médias privés,
+ordres et diffuseur sonore unique. Recette automatique à six formats ; appareils réels non testés.*

@@ -42,6 +42,17 @@ describe('canal joueur éphémère', () => {
         canal.recevoir({ type: 'modules:resultat', payload: { requeteId: requete.payload.requeteId, ok: true } });
         expect(await resultat).toEqual({ ok: true }); canal.fermer();
     });
+    it.each([null, 'autre'])('ferme les anciennes vues quand le serveur passe à la campagne %s', async campagneId => {
+        const { canal, afficher } = preparer();
+        const attente = canal.commander('alien-muthur', { id: 'saisir', charge: { texte: 'HELP' } });
+        canal.recevoir({ type: 'modules:vue', payload: { ...vue, campagneId, contexte: 2, revision: 3, modules: [] } });
+        expect(afficher.mock.lastCall![0].modules).toEqual([]); expect((await attente).ok).toBe(false);
+        expect((await canal.commander('alien-muthur', { id: 'saisir', charge: {} })).ok).toBe(false);
+        // La barrière de révision doit survivre à la fermeture : un paquet
+        // autorisé mais ancien ne peut pas rouvrir le module.
+        afficher.mockClear(); canal.recevoir({ type: 'modules:vue', payload: vue });
+        expect(afficher).not.toHaveBeenCalled(); canal.fermer();
+    });
     it('annule les attentes et efface la vue au retrait et à la déconnexion', async () => {
         const { canal, afficher } = preparer();
         const resultat = canal.commander('alien-muthur', { id: 'saisir', charge: { texte: 'HELP' } });

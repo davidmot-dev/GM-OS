@@ -1,10 +1,10 @@
 # LCARS — passerelle complète en test
 
-Version **0.4.0**, données **v2**, contrat de module **v1**. LCARS classique TNG / DS9 /
+Version **0.5.0**, données **v2**, contrat de module **v1**. LCARS classique TNG / DS9 /
 Voyager, avec les sept postes et leur contrôle MJ. Il s’agit d’un module immersif : les
 conséquences et résultats sont décidés par le MJ, sans calcul automatique des règles de vaisseau.
 
-## Dans GM-OS — première intégration native (L1–L4)
+## Dans GM-OS — intégration native (L1–L6)
 
 Le module est enregistré dans le catalogue et les registres natifs. Dans l’éditeur du pilote
 Star Trek, sélectionner **LCARS — Passerelle**, puis **Cockpit → Modules du jeu → Ouvrir le pupitre**.
@@ -17,8 +17,8 @@ Les noms sont synchronisés par l’hôte sans réinitialiser les affectations. 
 conserve ses historiques, perd ses postes et ne peut plus agir. La limite reste 16 officiers,
 anciens auteurs compris ; aucune liste excédentaire n’est ouverte partiellement.
 
-Cette intégration porte les **sept consoles et 19 actions textuelles**, les réponses privées,
-le partage autorisé, les ordres/accusés, les préréglages et les alertes visuelles. Le contexte
+Cette intégration porte les **sept consoles et 19 actions**, les réponses et médias privés,
+le partage autorisé, les ordres/accusés, les préréglages et les alertes sonores/visuelles. Le contexte
 vient de l’hôte ; les projections passent par son transport ciblé. Le stockage privé et les
 sauvegardes/exportations GM-OS conservent les instances par campagne. Reprise/import arrêtent
 les effets et gardent les droits fermés. Une version de données future est conservée sans exécution.
@@ -31,8 +31,25 @@ Les autres données de campagne restent conservées ; sauvegarder GM-OS avant un
 `natif.mjs` porte cette adaptation de contexte. Le moteur reste pur et conserve son format v2.
 `importer-preparation` est une commande MJ ; l’hôte invalide les accès après son écriture réussie.
 Un import refusé ou une écriture échouée conserve la préparation précédente. Les vues natives
-n’offrent pas encore de pièce jointe ni de sélection sonore : ces raccords restent en L5/L6.
-Les sections audio et médias ci-dessous décrivent les essais de l’atelier autonome.
+n’offrent pas d’auto-désignation sonore : le MJ utilise **Son : [appareil]** dans l’hôte commun.
+L’utilisateur choisi touche **Activer le son** et garde LCARS ouvert ; il peut cocher
+**Annonces vocales**. Les autres appareils conservent les vidéos muettes. Un transfert coupe
+les lecteurs de l’ancien diffuseur ; leur relance reste volontaire. Une veille ou une suspension
+audio réclame une nouvelle activation locale. Aucune ancienne annonce n’est rejouée à la reprise.
+
+Les médias natifs sont chargés sur une route privée de l’hôte, après contrôle du personnage,
+de la campagne, du module et du rapport. Les adresses ne contiennent pas le jeton de session ;
+le lecteur l’envoie dans un en-tête, puis crée une URL blob locale détruite à la fermeture.
+Une copie de l’adresse seule ne donne pas accès au média. Aucun cache public/PWA n’en conserve
+les octets. Un retrait de rapport, d’affectation ou d’accès réévalue les droits.
+
+Le format sauvegardé **v2** reste portable : les octets base64 sont conservés dans le stockage
+privé et les exports GM-OS. Seules les projections d’affichage sont converties en références ;
+le miroir de sauvegarde du MJ conserve la copie complète. Le cache de fichiers
+`modules-du-jeu/medias-prives/` est dérivé, reconstructible et interdit à la route `/media/`.
+Il n’y a donc pas de migration de données ni de hausse des limites globales : **4 Mo par pièce**,
+**16 Mo de JSON LCARS**, **32 Mo pour l’ensemble des instances**. Les moteurs restent sans E/S.
+Les sections suivantes décrivent aussi l’atelier autonome, dont le sélecteur de rôle est réservé aux essais.
 
 ## Ouvrir
 
@@ -131,9 +148,11 @@ de 1 à 3 600 secondes. À zéro, la sirène s’arrête ; le récit n’est pas
 **Arrêter les effets** coupe les balayages, l’alarme, les annonces et le diffuseur, et retire
 le décompte actif. Le niveau d’alerte et les rapports restent conservés.
 
-Dans la vue choisie pour le son : cliquer **Activer le son**, puis **Diffuser l’alarme ici**.
-Le moteur n’autorise qu’un diffuseur à la fois. **Annonces vocales** ajoute le niveau d’alerte
-et les changements de minute via une voix française du navigateur, si disponible. Aucun son
+Dans GM-OS, le MJ choisit l’appareil avec **Son : [appareil]** ; sur celui-ci, cliquer
+**Activer le son**. Dans l’atelier seulement, utiliser aussi **Diffuser l’alarme ici**.
+Le moteur n’autorise qu’un diffuseur à la fois. **Annonces vocales** ajoute le niveau d’une nouvelle
+alerte et les changements de minute via une voix française locale du navigateur, si disponible.
+Une autre voix GM-OS est prioritaire ; LCARS ne l’annule pas et ne rattrape pas les annonces manquées. Aucun son
 n’est activé automatiquement. Les mouvements réduits conservent une visualisation fixe.
 
 Pièces jointes : images PNG/JPEG/WebP, audio MP3/OGG/WAV, vidéo MP4/WebM, jusqu’à **4 Mo par
@@ -144,7 +163,8 @@ avec son réservé au diffuseur après activation locale ; les autres vues garde
 
 Changer de rôle dans cette page démonte la console précédente et ferme son audio. Le
 sélecteur simule des appareils ; il ne maintient pas un diffuseur distant en arrière-plan.
-Le transfert sonore réel entre plusieurs appareils attend le raccordement au Hub.
+Dans le Hub natif, le transfert utilise les appareils réellement connectés, et l’instrument
+du diffuseur doit rester ouvert. La mise en arrière-plan coupe l’audio local.
 
 ## Sauvegarde et reprise
 
@@ -186,7 +206,7 @@ refusé sans remplacer l’état précédent. L’atelier reste distinct des sau
 
 ```powershell
 node outils/modules-du-jeu/valider.mjs outils/star-trek/lcars/manifeste.json
-node --test outils/star-trek/lcars/verification.mjs
+node --test outils/star-trek/lcars/verification.mjs outils/star-trek/lcars/verification-voix.mjs
 npx.cmd eslint outils/star-trek/lcars
 node outils/star-trek/lcars/apercu.mjs --capturer
 ```
@@ -228,3 +248,27 @@ L’E2E utilise une campagne fictive de `outils/modules-du-jeu/recette-lcars.mjs
 de pilote personnel. Ses images sortent dans `scratch/lcars-natif/`. Les aperçus d’éléments
 plus hauts que la zone défilante d’un téléphone peuvent être rognés par le cadre : conserver
 les vues complètes de téléphone pour la recette, relire les illustrations avant publication.
+
+**Intégration native L5/L6, le 16/10 :** types/build et lint ciblé propres, **186 tests Vitest**
+et **38 tests Node** ; **quatre parcours E2E LCARS et trois régressions Alien** réussis.
+Médias authentifiés côté MJ/PJ, PNG/WAV/WebM décodés et vidéo déplacée, mauvais destinataire
+refusé, retrait et restauration portable, média indécodable signalé sans perdre le texte.
+Horloge tablette décalée, annonces sur l’heure serveur, diffuseur transféré, audio réellement
+suspendu et arrêt à la déconnexion. Atelier complet : **42 captures**, aucune erreur JavaScript.
+La fixture vidéo est encodée **avant** les essais d’horloge accélérée, qui peuvent sinon produire
+un WebM sans images. Les sons restent muets vers les enceintes et les voix simulées.
+Cette validation L5/L6 précède le complément L7 ci-dessous.
+
+**L7 automatique :** sept parcours natifs LCARS, dont les **sept consoles et 19 actions**
+proposées puis arbitrées au vrai pupitre ; **42 captures du Hub** à six formats de 360 à
+1 440 px. Anciennes générations/affectations, sortie de campagne et fin de séance,
+panne d’affichage avec retour à la liste et réouverture sont couverts. Les sept instruments
+ont été relus dans le cadre natif, puis photographiés sans rognage pour le manuel.
+La création du cache est partagée entre lectures simultanées sur Windows. Une vue vide
+du nouveau contexte ferme l’ancienne, même avant la mise à jour publique de la campagne,
+en conservant les protections contre les vues privées étrangères et les vieux paquets.
+
+Voir la [recette L7 et sa grille matérielle](../../../documentation/Planning/2026-10-16-recette-lcars.md).
+`node outils/modules-du-jeu/recette-lcars.mjs` prépare la fiction et l’import d’atelier dans
+`scratch/lcars-recette/`, sans lancer d’application. Les vrais iPad/Safari et Android,
+leur clavier, leur veille et le son entendu restent **non testés** par le banc PC.

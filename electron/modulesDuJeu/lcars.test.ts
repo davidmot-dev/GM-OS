@@ -107,10 +107,10 @@ describe('LCARS natif : équipage, droits et persistance', () => {
         const corrompu = await preparer({ version: 1, campagnes: { a: { 'star-trek-lcars': { versionDonnees: 2, donnees: {} } } } });
         expect((await corrompu.service.vueMJ()).erreur).toContain('illisible'); expect(corrompu.stockage.ecrire).not.toHaveBeenCalled();
     });
-    it('refuse une commande déconnectée, un média ou une sélection sonore native prématurée', async () => {
+    it('refuse une commande déconnectée, un média invalide ou une auto-désignation sonore joueur', async () => {
         const t = await preparer(); await t.autoriser(['alice']);
-        await expect(t.commande('choisir-diffusion', { actif: true }, 'alice')).rejects.toThrow(/tranches/);
-        await expect(t.commande('publier-rapport', { titre: 'T', texte: 'T', destinataires: ['equipage'], media: { type: 'image' } })).rejects.toThrow(/tranches/);
+        await expect(t.commande('choisir-diffusion', { actif: true }, 'alice')).rejects.toThrow(/pupitre/);
+        await expect(t.commande('publier-rapport', { titre: 'T', texte: 'T', destinataires: ['equipage'], media: { type: 'image' } })).rejects.toThrow();
         const commande: CommandeDeModule = { id: 'configurer-vaisseau', charge: { nom: 'Refusé', immatriculation: 'R', situation: '' } };
         await expect(t.service.commander({ requeteId: 'x', campagneId: 'a', contexte: (await t.service.vueMJ()).contexte, moduleId: 'star-trek-lcars', commande }, { role: 'mj', appareilId: 'poste-mj' }, () => false)).rejects.toThrow();
     });

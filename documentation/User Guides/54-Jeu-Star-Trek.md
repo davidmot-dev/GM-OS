@@ -1,6 +1,6 @@
 # 🖖 Jeu — Star Trek
 
-> **Pilote décrit :** « Star Trek », exporté le 2026-10-14. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Star Trek », exporté le 2026-10-14 ; module LCARS 0.5.0 relu le 2026-10-16. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Star Trek Adventures, deuxième édition : le système 2d20, comme [Dune](./54-Jeu-Dune.md), avec un Attribut
 et une Fonction.
@@ -78,6 +78,26 @@ réussite, dégâts, boucliers ou soins, et ne modifie pas les réserves de la p
 
 ![Table de commandement LCARS dans le Hub : objectif de mission et ordre dont Nel Varga a accusé réception](captures/jeu-star-trek-lcars-commandement.jpg)
 
+### Reconnaître les sept instruments
+
+Chaque console a son écran. Touchez une fiche pour la sélectionner aussi dans le formulaire
+d’intervention. Sur téléphone, les parties s’empilent et défilent ; les commandes restent
+accessibles en faisant défiler la zone centrale du Hub.
+
+![Commandement : posture de passerelle, objectif et suivi des consignes](captures/jeu-star-trek-lcars-poste-commandement.jpg)
+
+![Science : capteurs, spectre illustratif et contact sélectionné](captures/jeu-star-trek-lcars-poste-science.jpg)
+
+![Ingénierie : coque du vaisseau, circuits et état du système sélectionné](captures/jeu-star-trek-lcars-poste-ingenierie.jpg)
+
+![Communications : canaux, récepteur et dernière réponse privée](captures/jeu-star-trek-lcars-poste-communications.jpg)
+
+![Navigation : carte de vol illustrative et itinéraire proposé](captures/jeu-star-trek-lcars-poste-navigation.jpg)
+
+![Tactique : secteurs de sécurité et contact sélectionné, sans verrouillage automatique](captures/jeu-star-trek-lcars-poste-tactique.jpg)
+
+![Médecine : dossiers, repère anatomique et observations, sans calcul de traitement](captures/jeu-star-trek-lcars-poste-medecine.jpg)
+
 ### Interventions et rapports
 
 Le joueur choisit une fiche dans son instrument, indique l’action et son intention, puis
@@ -88,9 +108,42 @@ commune seulement si le meneur autorise le partage et si le joueur la partage vo
 Le meneur peut aussi publier directement un rapport ciblé dans **Diffusion**.
 
 Les éléments se créent et se révèlent dans **Préparation**. **Préréglages** mémorise la
-situation et les états sans effacer les affectations et rapports. Les alertes et comptes à
-rebours sont **visuels dans cette première intégration**. Les pièces jointes et le diffuseur
-sonore attendent les tranches suivantes ; l’atelier autonome conserve ses essais audio/vidéo.
+situation et les états sans effacer les affectations et rapports.
+
+### Pièces jointes privées
+
+Dans **Demandes** ou **Diffusion**, **Pièce jointe** ajoute une image PNG/JPEG/WebP, un son
+MP3/OGG/WAV ou une vidéo MP4/WebM, jusqu’à **4 Mo par fichier**. Les destinataires du rapport
+sont aussi ceux du média. Une pièce jointe privée n’est pas accessible aux autres personnages,
+même s’ils recopient son adresse. Retirer le rapport ou l’accès ferme sa lecture dans le Hub.
+Cela n’efface pas une information déjà lue ou copiée.
+
+Les sauvegardes et exports de campagne emportent les fichiers. Leur lecture nécessite la
+connexion à GM-OS et un format décodable par le navigateur ; en cas d’échec, le texte reste
+accessible. Une vidéo se lance volontairement, avec commandes de lecture et de déplacement.
+Elle reste muette sur les appareils qui ne sont pas choisis pour le son.
+
+### Alertes et appareil sonore
+
+Dans **Alertes**, le meneur publie une alerte normale, jaune ou rouge, sa consigne et un
+compte à rebours facultatif de 1 à 3 600 secondes. Les écrans suivent l’heure du serveur.
+À zéro, la sirène s’arrête ; le récit reste à résoudre par le meneur.
+
+1. Dans les contrôles communs de **Modules du jeu**, le meneur choisit **Son : [appareil]**.
+2. Sur cet appareil, ouvrir LCARS et toucher **Activer le son**. Il doit rester sur cet écran.
+3. **Annonces vocales** ajoute le niveau d’une nouvelle alerte et les changements de minute,
+   si une voix française locale est disponible. Les annonces manquées ne sont pas rejouées.
+
+![Alerte rouge LCARS dans le Tablet Hub : compte à rebours et appareil choisi avec son et annonces activés](captures/jeu-star-trek-lcars-alerte.png)
+
+Un seul appareil diffuse la sirène, les voix et le son des pièces jointes. Un transfert coupe
+l’ancien diffuseur ; la nouvelle lecture d’un média reste volontaire. Une autre voix de GM-OS
+est prioritaire sur les annonces LCARS. La vidéo n’est pas synchronisée automatiquement entre
+les écrans. Les mouvements réduits conservent les repères visuels sans animation.
+
+La veille, le passage en arrière-plan ou la suspension audio peuvent couper le son : toucher
+de nouveau **Activer le son** au retour. **Arrêter les effets** coupe l’alarme, les annonces et
+le diffuseur ; un retrait d’accès, une déconnexion ou **Tout couper** ferme également les médias.
 
 ### Conservation et import de l’atelier
 
@@ -109,4 +162,4 @@ Retirer un poste annule ses demandes encore actives et conserve les autres conso
 Décocher un accès retire immédiatement LCARS à ce personnage. **Tout couper** ferme tous
 les modules ; une déconnexion ferme la vue jusqu’à la reprise de la liaison.
 
-*Relu le 2026-10-16 : première intégration LCARS, tranches L1–L4 ; médias et audio à suivre.*
+*Relu le 2026-10-16 : L1–L7 logiciel, sept instruments dans le vrai Hub, médias privés et diffuseur unique. Essais des appareils physiques encore à réaliser.*

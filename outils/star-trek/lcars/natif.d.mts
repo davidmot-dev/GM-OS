@@ -7,4 +7,6 @@ export function migrerEtat(v: unknown, version: number): EtatLcars;
 export function arreterEffets(v: EtatLcars): EtatLcars;
 export function appliquerCommande(v: unknown, commande: CommandeLcars, lecteur: ContexteLcars, contexte: ContexteCampagneLcars): EtatLcars;
 export function fermerAccesApresCommande(commande: CommandeLcars): boolean;
+export function choisirDiffusion(v: unknown, appareilId: string): EtatLcars;
+export function diffusionActuelle(v: unknown): string | null;
 export function vuePour(v: unknown, lecteur: ContexteLcars, contexte: ContexteCampagneLcars): VueLcarsMJ | VueLcarsJoueur;

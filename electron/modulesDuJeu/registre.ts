@@ -17,6 +17,7 @@ export interface MoteurEnregistre {
     preparerLecteur?(donnees: unknown, id: string, nom: string): unknown;
     preparerContexte?(donnees: unknown, personnages: ContexteDeMoteur['personnages']): unknown;
     fermerAccesApresCommande?(commande: CommandeDeModule): boolean;
+    mediasPrives?: boolean;
     choisirDiffusion?(donnees: unknown, appareilId: string): unknown;
     diffusionActuelle?(donnees: unknown): string | null;
     migrerEtat(donnees: unknown, version: number): unknown;
@@ -31,6 +32,7 @@ const contexte = (lecteur: LecteurDeModule): ContexteMuthur => {
 export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new Map([
     [manifesteLcars.id, {
         manifeste: manifesteLcars, creerEtat: lcars.creerEtat, preparerLecteur: lcars.preparerLecteur,
+        mediasPrives: true, choisirDiffusion: lcars.choisirDiffusion, diffusionActuelle: lcars.diffusionActuelle,
         preparerContexte: lcars.preparerContexte, fermerAccesApresCommande: lcars.fermerAccesApresCommande,
         migrerEtat: lcars.migrerEtat,
         arreterEffets(donnees) { validerLcars(donnees); return lcars.arreterEffets(donnees); },

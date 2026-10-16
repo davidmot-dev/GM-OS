@@ -52,6 +52,11 @@ const samePath = (a: string | null, b: string) => {
 };
 
 describe('mediaAccess.resolveAllowed', () => {
+    it('ne sert jamais le cache privé des modules, même si sa racine est autorisée', () => {
+        const prive = path.join(dirs.userData, 'modules-du-jeu', 'medias-prives'); fs.ensureDirSync(prive);
+        const fichier = path.join(prive, 'secret.png'); fs.writeFileSync(fichier, 'privé');
+        mediaAccess.allowDirectory(prive); expect(mediaAccess.resolveAllowed(fichier, dirs.appRoot)).toBeNull();
+    });
     it('sert un fichier situé sous une racine de base', () => {
         const target = path.join(PUBLIC_DIR, 'avatar.png');
         samePath(mediaAccess.resolveAllowed(target, dirs.appRoot), target);

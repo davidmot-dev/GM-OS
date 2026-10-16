@@ -55,7 +55,7 @@ function Alertes({ vue, envoyer, occupe }) {
     champ('Consigne d’alerte', { value: texte, onChange: e => modifier(e.target.value), rows: 3, maxLength: 1000 }),
     champ('Compte à rebours en secondes (facultatif)', { type: 'number', value: secondes, onChange: e => compter(e.target.value), min: 1, max: 3600, step: 1 }),
     h('button', { type: 'submit', disabled: occupe }, 'Publier l’alerte'), bouton('Arrêter les effets', { disabled: occupe, onClick: () => envoyer('couper-effets', {}) }),
-    h('p', { className: 'lcars-note' }, vue.integration ? 'Alerte visuelle : le décompte ne résout pas automatiquement la situation.' : 'Le décompte terminé arrête la sirène sans résoudre automatiquement la situation. Les médias se lisent volontairement.'));
+    h('p', { className: 'lcars-note' }, 'Le décompte terminé arrête la sirène sans résoudre automatiquement la situation. Les médias se lisent volontairement.'));
 }
 function Prereglages({ vue, envoyer, occupe }) {
   const [selection, choisir] = useState(''), [nom, nommer] = useState('');

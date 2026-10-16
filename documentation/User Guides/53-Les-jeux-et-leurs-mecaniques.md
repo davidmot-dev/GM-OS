@@ -68,7 +68,9 @@ LCARS propose sept consoles attribuées aux personnages réels de la campagne. L
 se préparent au pupitre ; l’accès au module s’ouvre séparément pendant la séance. Ses 19 actions
 arrivent dans une file arbitrée par le MJ, avec réponses privées, partage autorisé, publications
 ciblées et ordres avec accusés. Préparation, préréglages et échanges sont sauvegardés par campagne.
-Les alertes sont visuelles ; médias et audio attendent la suite de l’intégration. Voir le
+Les pièces jointes privées suivent les destinataires du rapport et voyagent dans les sauvegardes.
+Les alertes et décomptes suivent le serveur ; un appareil choisi par le MJ diffuse sirène,
+voix et son des médias après activation locale. Il doit garder LCARS ouvert. Voir le
 [guide Star Trek](54-Jeu-Star-Trek.md).
 
 Chaque joueur reçoit uniquement sa vue autorisée. Sans accès, l’onglet dit **« Aucun module
@@ -318,3 +320,6 @@ Un pilote **nouveau ou amélioré** se reporte ici, dans le même mouvement :
 puis six parcours sur le vrai transport Electron/Edge du PC. Appareils physiques à éprouver.*
 
 *Relu le 2026-10-16 : dossiers, file de demandes privées et préréglages nommés Alien.*
+
+*Complément LCARS : sept consoles, 19 actions arbitrées, médias privés et diffuseur unique ;
+recette automatique à six formats, appareils physiques encore à essayer.*

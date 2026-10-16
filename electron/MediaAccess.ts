@@ -20,6 +20,7 @@ class MediaAccessRegistry {
     private userRoots: string[] = [];
     private storeFile: string | null = null;
     private initialized = false;
+    private privateRoots: string[] = [];
 
     /** Normalise pour comparaison : chemin absolu, séparateurs unifiés, casse ignorée sur Windows. */
     private normalize(p: string): string {
@@ -30,6 +31,7 @@ class MediaAccessRegistry {
     public init(appRoot: string, tempMediaDir: string) {
         if (this.initialized) return;
         const userData = app.getPath('userData');
+        this.privateRoots = [path.join(userData, 'modules-du-jeu')].map(r => this.normalize(r));
 
         this.baseRoots = [
             tempMediaDir,
@@ -118,6 +120,7 @@ class MediaAccessRegistry {
             return null; // fichier inexistant ou illisible
         }
 
+        if (this.isUnder(this.normalize(real), this.privateRoots)) return null;
         if (!this.isUnder(this.normalize(real), [...this.baseRoots, ...this.userRoots])) {
             auditDenied(`Accès fichier refusé, hors racines autorisées : ${real}`);
             return null;

@@ -18,6 +18,27 @@ export async function verifierInterface({ url, sortie, parties = ['postes', 'med
   catch { navigateur = await chromium.launch({ channel: 'msedge', headless: true, args: ['--mute-audio'] }); }
   let captures = 0;
   const erreurs = [];
+  let video;
+  // Encoder avant toute installation/avance d'horloge simulée : le codec suit
+  // le temps réel du navigateur. Après les essais accélérés, il peut ne produire
+  // qu'une enveloppe WebM sans image, même sur une nouvelle page.
+  if (parties.includes('medias')) {
+    const contexteEncodage = await navigateur.newContext({ offline: true });
+    try {
+      const encodeur = await contexteEncodage.newPage();
+      video = await encodeur.evaluate(async () => {
+        const c = document.createElement('canvas'); c.width = 64; c.height = 48; document.body.append(c);
+        const g = c.getContext('2d'), flux = c.captureStream(0), r = new MediaRecorder(flux, { mimeType: 'video/webm' }), morceaux = [];
+        return await new Promise(resolve => {
+          r.ondataavailable = e => morceaux.push(e.data); r.onstop = async () => { flux.getTracks().forEach(t => t.stop()); c.remove(); resolve([...new Uint8Array(await new Blob(morceaux).arrayBuffer())]); };
+          r.start(); let n = 0; const dessiner = () => { g.fillStyle = n++ % 2 ? '#c4a6ef' : '#ffb36b'; g.fillRect(0, 0, 64, 48); flux.getVideoTracks()[0].requestFrame(); };
+          dessiner(); const intervalle = setInterval(dessiner, 100); setTimeout(() => { clearInterval(intervalle); r.stop(); }, 1200);
+        });
+      });
+      await fs.writeFile(path.join(sortie, 'clip-de-recette.webm'), Buffer.from(video));
+      console.log(`Clip de recette : ${video.length} octets.`);
+    } finally { await contexteEncodage.close(); }
+  }
   async function ouvrir() {
     const contexte = await navigateur.newContext({ offline: true, reducedMotion: 'no-preference', viewport: { width: 1024, height: 1000 }, acceptDownloads: true });
     await contexte.route(/^https?:/, route => route.abort());
@@ -33,7 +54,7 @@ export async function verifierInterface({ url, sortie, parties = ['postes', 'med
           o.stop = (...a) => { fin(...a); if (!a.length) retirer(); }; o.addEventListener('ended', retirer); return o;
         }
       };
-      Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: { speak: p => window.sondeLcars.voix.push(p.text), cancel: () => { window.sondeLcars.annulations++; } } });
+      Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: { getVoices: () => [{ lang: 'fr-FR', localService: true }], speak: p => { window.sondeLcars.voix.push(p.text); p.onend?.(); }, cancel: () => { window.sondeLcars.annulations++; } } });
       window.SpeechSynthesisUtterance = class { constructor(text) { this.text = text; } };
     });
     await page.clock.install(); await page.goto(url);
@@ -154,20 +175,6 @@ export async function verifierInterface({ url, sortie, parties = ['postes', 'med
         await p.getByLabel('Tout l’équipage', { exact: true }).check(); await p.getByLabel('Pièce jointe', { exact: true }).setInputFiles({ name: 'signal.wav', mimeType: 'audio/wav', buffer: onde() });
         await expect(p.getByText('signal.wav', { exact: true })).toBeVisible(); await p.getByRole('button', { name: 'Publier aux destinataires choisis', exact: true }).click();
         await expect.poll(() => p.locator('audio').evaluate(e => e.readyState)).toBeGreaterThan(0);
-        // Encoder sur une page sans horloge simulée : le codec travaille en temps réel.
-        const encodeur = await contexte.newPage();
-        const video = await encodeur.evaluate(async () => {
-          const c = document.createElement('canvas'); c.width = 64; c.height = 48; document.body.append(c);
-          const g = c.getContext('2d'), flux = c.captureStream(0), r = new MediaRecorder(flux, { mimeType: 'video/webm' }), morceaux = [];
-          return await new Promise(resolve => {
-            r.ondataavailable = e => morceaux.push(e.data); r.onstop = async () => { flux.getTracks().forEach(t => t.stop()); c.remove(); resolve([...new Uint8Array(await new Blob(morceaux).arrayBuffer())]); };
-            r.start(); let n = 0; const dessiner = () => { g.fillStyle = n++ % 2 ? '#c4a6ef' : '#ffb36b'; g.fillRect(0, 0, 64, 48); flux.getVideoTracks()[0].requestFrame(); };
-            dessiner(); const intervalle = setInterval(dessiner, 100); setTimeout(() => { clearInterval(intervalle); r.stop(); }, 1200);
-          });
-        });
-        await encodeur.close();
-        await fs.writeFile(path.join(sortie, 'clip-de-recette.webm'), Buffer.from(video));
-        console.log(`Clip de recette : ${video.length} octets.`);
         await p.getByLabel('Titre du rapport', { exact: true }).fill('Transmission vidéo'); await p.getByLabel('Contenu du rapport', { exact: true }).fill('Rapport visuel de navigation.');
         await p.getByLabel('Tout l’équipage', { exact: true }).uncheck(); await p.getByLabel('Navigation', { exact: true }).check();
         await p.getByLabel('Pièce jointe', { exact: true }).setInputFiles({ name: 'transmission.webm', mimeType: 'video/webm', buffer: Buffer.from(video) });

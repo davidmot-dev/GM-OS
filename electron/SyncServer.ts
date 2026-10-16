@@ -1,6 +1,8 @@
 import { ipcMain, BrowserWindow, app } from 'electron';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import { servirVideoDuModule } from './modulesDuJeu/video';
+import { ENTETE_MEDIA_PRIVE, lireFichierMedia, projeterMedias, servirMediaPrive } from './modulesDuJeu/medias';
+import type { LecteurDeModule } from './modulesDuJeu/registre';
 import { ServiceDesModules } from './modulesDuJeu/service';
 import { stockageDesModules } from './modulesDuJeu/stockage';
 import type { StockageDesModules } from './modulesDuJeu/stockage';
@@ -94,6 +96,48 @@ export class SyncServer {
         () => { void this.diffuserLesModules(); });
     }
     private reprisesDesModules = new Map<string, string>();
+    private jetonMediasMJ = randomBytes(32).toString('hex');
+    private sessionsMedia = new WeakMap<WebSocket, { identite: NonNullable<ExtendedWebSocket['identiteModules']>; jeton: string }>();
+    private sessionMedia(ws: ExtendedWebSocket, identite: NonNullable<ExtendedWebSocket['identiteModules']>) {
+        let session = this.sessionsMedia.get(ws);
+        if (session?.identite !== identite) { session = { identite, jeton: randomBytes(32).toString('hex') }; this.sessionsMedia.set(ws, session); }
+        return session;
+    }
+    private projeterRessources<T extends { campagneId: string | null; modules: { id: string; vue: unknown }[] }>(vue: T, jeton: string, mj = false): T {
+        if (!vue.campagneId) return vue;
+        return { ...vue, modules: vue.modules.map(m => this.modulesDuJeu.utiliseMediasPrives(m.id) ? { ...m,
+            vue: projeterMedias(m.vue, vue.campagneId!, m.id, { jeton, port: this.port, ...(mj ? { base: `http://127.0.0.1:${this.port}` } : {}) }) } : m) };
+    }
+    private async traiterMediaPrive(req: http.IncomingMessage, res: http.ServerResponse, url: string) {
+        // Aucun jeton dans l'URL, aucun cache partagé ou service worker.
+        res.setHeader('Cache-Control', 'no-store, private, max-age=0'); res.setHeader('Vary', 'Origin, x-gmos-module-session');
+        res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Access-Control-Allow-Headers', `${ENTETE_MEDIA_PRIVE}, Range`);
+        res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+        if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
+        if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405); res.end(); return; }
+        const jeton = req.headers[ENTETE_MEDIA_PRIVE];
+        const egal = (s: string) => typeof jeton === 'string' && /^[a-f0-9]{64}$/.test(jeton) && timingSafeEqual(Buffer.from(s), Buffer.from(jeton));
+        const identifier = (): LecteurDeModule | null => {
+            if (egal(this.jetonMediasMJ) && ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress || '') && !this.mainWindow.isDestroyed()) return { role: 'mj', appareilId: 'poste-mj' };
+            for (const client of this.wss?.clients ?? []) {
+                const ws = client as ExtendedWebSocket, session = this.sessionsMedia.get(ws);
+                if (ws.readyState === WebSocket.OPEN && ws.identiteModules?.personnageId && session?.identite === ws.identiteModules && egal(session.jeton))
+                    return { role: 'joueur', personnageId: ws.identiteModules.personnageId, appareilId: ws.identiteModules.appareilId };
+            }
+            return null;
+        };
+        try {
+            const r = /^\/modules-prives\/([^/]+)\/([a-z0-9-]+)\/([a-f0-9]{64})$/.exec(url), lecteur = identifier();
+            if (!r || !lecteur) throw new Error();
+            const campagne = decodeURIComponent(r[1]), media = await this.modulesDuJeu.mediaPour(campagne, r[2], r[3], lecteur);
+            const fichier = await lireFichierMedia(path.join(app.getPath('userData'), 'modules-du-jeu', 'medias-prives'), media);
+            const actuel = identifier();
+            if (!actuel || actuel.personnageId !== lecteur.personnageId || actuel.appareilId !== lecteur.appareilId) throw new Error();
+            // Droits revérifiés après les accès disque asynchrones.
+            await this.modulesDuJeu.mediaPour(campagne, r[2], r[3], actuel);
+            if (!res.destroyed) servirMediaPrive(req, res, fichier.octets, fichier.mime);
+        } catch { if (!res.headersSent) res.writeHead(404); res.end(); }
+    }
 
     constructor(mainWindow: BrowserWindow, port: number, tempMediaDir: string, stockage?: StockageDesModules) {
         this.mainWindow = mainWindow;
@@ -255,6 +299,7 @@ export class SyncServer {
         // Le serveur écoute sur 0.0.0.0 : tout chemin venant d'un client est hostile
         // par défaut. On coupe la query string avant décodage, sinon `?x=..` passe.
         const urlPath = req.url.split('?')[0];
+        if (urlPath.startsWith('/modules-prives/')) { void this.traiterMediaPrive(req, res, urlPath); return; }
 
         /*
           **Les trois boutons de l'afficheur, poussés par Home Assistant.**
@@ -560,12 +605,12 @@ export class SyncServer {
     private async rendreLesModules(ws: ExtendedWebSocket) {
         const identite = ws.identiteModules;
         if (!identite || ws.readyState !== WebSocket.OPEN) return;
-        const vue = await this.modulesDuJeu.vueJoueur(identite.personnageId, identite.appareilId);
+        const vue = this.projeterRessources(await this.modulesDuJeu.vueJoueur(identite.personnageId, identite.appareilId), this.sessionMedia(ws, identite).jeton);
         if (ws.identiteModules === identite && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'modules:vue', payload: vue }));
     }
 
     private async diffuserLesModules() {
-        const vueMJ = await this.modulesDuJeu.vueMJ();
+        const vueMJ = this.projeterRessources(await this.modulesDuJeu.vueMJ(), this.jetonMediasMJ, true);
         vueMJ.appareils = this.appareilsDesModules();
         if (!this.mainWindow.isDestroyed()) this.mainWindow.webContents.send('modules:changement', vueMJ);
         if (this.wss) await Promise.all([...this.wss.clients].map(ws => this.rendreLesModules(ws as ExtendedWebSocket)));
@@ -718,7 +763,7 @@ export class SyncServer {
         ipcMain.handle('modules:importer', proteger((charge: SauvegardeDesModules) => this.modulesDuJeu.importer(charge)));
         ipcMain.handle('modules:lire', async event => {
             if (this.mainWindow.isDestroyed() || event.sender !== this.mainWindow.webContents) throw new Error('Accès MJ requis.');
-            return { ...await this.modulesDuJeu.vueMJ(), appareils: this.appareilsDesModules() };
+            return { ...this.projeterRessources(await this.modulesDuJeu.vueMJ(), this.jetonMediasMJ, true), appareils: this.appareilsDesModules() };
         });
         ipcMain.on('remote:broadcast-sync', (_event, data, role?: string) => {
             if (data?.apparence && (role === 'player' || role === 'remote')) {

@@ -430,14 +430,25 @@ test('fin du film : sirène réelle et annonces simulées sur le seul diffuseur,
     expect(await annonces(nel.page)).toEqual([]); expect(await annonces(idris.page)).toEqual([]);
     const etat = (await vueMJ()).modules.find(m => m.id === 'alien-muthur')!.vue as VueMuthurMJ;
     const debut = etat.autodestruction!.startedAt;
-    for (const appareil of [nel, idris]) await appareil.page.clock.setFixedTime(new Date(debut + 780_000));
+    // Le Hub suit l'ancre monotone du serveur plutôt que le Date.now de la tablette.
+    // Avancer le serveur jetable et publier un état neutre rafraîchit les deux clients.
+    const avancerServeur = async (instant: number) => {
+        await gmos.application.evaluate((_, t) => { Date.now = () => t; }, instant);
+        const v = await vueMJ();
+        const r = await gmos.fenetre.evaluate(vue => window.appBridge!.modulesDuJeu!.commander({
+            requeteId: crypto.randomUUID(), campagneId: vue.campagneId!, moduleId: 'alien-muthur', contexte: vue.contexte,
+            commande: { id: 'configurer', charge: { statut: 'RECETTE HORLOGE SERVEUR' } },
+        }), v);
+        expect(r).toEqual({ ok: true });
+    };
+    await avancerServeur(debut + 780_000);
     await expect.poll(() => annonces(nel.page)).toEqual(['Autodestruction. Il reste 2 minutes. Évacuation immédiate.']);
     await expect.poll(() => nel.page.evaluate(() => (window as FenetreSonde).sondeAlien.sons.actifs)).toBe(2);
     expect(await annonces(idris.page)).toEqual([]);
     await carte('MU/TH/UR 6000').getByRole('button', { name: 'Son : Idris Koa', exact: true }).click();
     await expect.poll(() => nel.page.evaluate(() => (window as FenetreSonde).sondeAlien.sons.actifs)).toBe(0);
     await expect.poll(() => annonces(idris.page)).toHaveLength(1);
-    await idris.page.clock.setFixedTime(new Date(debut + 840_000));
+    await avancerServeur(debut + 840_000);
     await expect.poll(() => annonces(idris.page)).toHaveLength(2);
     expect((await annonces(idris.page))[1]).toContain('1 minute.');
     await photographier(idris.page, 'alarme-apres-film-a6');

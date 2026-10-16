@@ -29,7 +29,10 @@ export class CanalDesModulesJoueur {
         }
         if (message.type !== 'modules:vue' || !objetSimple(message.payload)) return;
         const vue = message.payload, identite = this.identite();
-        if (vue.personnageId !== identite.personnageId || vue.campagneId !== identite.campagneId
+        // Une vue vide d'un nouveau contexte retire les anciens outils, même si
+        // le flux public n'a pas encore changé la campagne de la tablette.
+        // Les vues non vides d'une autre campagne restent toujours refusées.
+        if (vue.personnageId !== identite.personnageId || vue.campagneId !== identite.campagneId && (!Array.isArray(vue.modules) || vue.modules.length !== 0)
             || !Number.isSafeInteger(vue.contexte) || !Number.isSafeInteger(vue.revision) || !Array.isArray(vue.modules)
             || !vue.modules.every(m => objetSimple(m) && typeof m.id === 'string' && typeof m.libelle === 'string' && Object.hasOwn(m, 'vue'))) return;
         if (this.vue && (Number(vue.contexte) < this.vue.contexte || Number(vue.revision) < this.vue.revision)) return;

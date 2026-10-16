@@ -9,7 +9,7 @@ export interface PrereglageLcars { id: string; nom: string; situation: string; n
 export interface EtatLcars { version: 2; revision: number; vaisseau: { nom: string; immatriculation: string }; situation: string; alerte: { niveau: 'normal' | 'jaune' | 'rouge'; texte: string; fin: number | null; sequence: number }; effetsActifs: boolean; diffusionSonore: string | null; officiers: OfficierLcars[]; cibles: CibleLcars[]; demandes: DemandeLcars[]; publications: PublicationLcars[]; ordres: OrdreLcars[]; prereglages: PrereglageLcars[] }
 export interface ContexteLcars { role: 'mj' | 'joueur'; personnageId?: string; appareilId?: string }
 export interface CommandeLcars { id: string; charge: unknown }
-export interface IntegrationLcars { origine: 'gmos'; medias: boolean; son: boolean }
+export interface IntegrationLcars { origine: 'gmos'; medias: boolean; son: boolean; ressources?: { jeton: string; port: number; base?: string } }
 export interface VueLcarsMJ extends EtatLcars { role: 'mj'; diffusionAutorisee: boolean; integration?: IntegrationLcars; personnages?: { id: string; nom: string }[] }
 export interface VueLcarsJoueur { role: 'joueur'; revision: number; vaisseau: EtatLcars['vaisseau']; situation: string; alerte: EtatLcars['alerte']; effetsActifs: boolean; diffusionAutorisee: boolean; integration?: IntegrationLcars; officier: OfficierLcars; cibles: Omit<CibleLcars, 'rapportPrepare' | 'visible'>[]; demandes: DemandeLcars[]; publications: PublicationLcars[]; ordres: OrdreLcars[] }
 export function creerEtat(): EtatLcars;

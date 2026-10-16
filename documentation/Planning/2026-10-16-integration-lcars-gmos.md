@@ -1,6 +1,6 @@
 # Intégrer LCARS dans GM-OS
 
-**Plan du 16/10/2026 — L1 à L4 réalisées le 16/10, version 0.4.0.** Demande de David :
+**Plan du 16/10/2026 — L1 à L7 logiciel réalisées, version 0.5.0.** Demande de David :
 « fais moi le plan pour inclure le module Star Trek dans GM-OS ».
 
 Base : atelier LCARS **0.3.0**, données **v2**, contrat des modules **v1**, livré et poussé
@@ -44,7 +44,8 @@ Références : [contrat](../Architecture/Contrat-des-modules-du-jeu.md),
 
 ## Les sept tranches
 
-L1 à L4 sont réalisées ; L5 à L7 restent à faire. Chaque tranche se termine par un résultat
+L1 à L7 logiciel sont réalisées ; la grille matérielle reste à renseigner sur les appareils.
+Chaque tranche se termine par un résultat
 essayable et des critères vérifiés ; on ne présente pas l’ensemble comme intégré dès L1.
 
 ### L1 — Enregistrer LCARS dans l’hôte commun
@@ -131,73 +132,103 @@ campagne conserve les vrais rapports ; importer l’atelier n’invente pas de p
 
 ### L5 — Intégrer les médias privés sans grossir les projections
 
-**Choix recommandé pour la version complète :** fichiers détenus par l’hôte et références
-de médias dans les projections. Le base64 du prototype reste un format d’entrée de l’atelier,
-pas un bloc renvoyé à toutes les modifications de la passerelle.
+**Choix réalisé :** fichiers dérivés détenus par l’hôte et références de médias dans les
+projections d’affichage. Le base64 **v2** reste la source portable dans le stockage privé,
+les exports et le miroir de sauvegarde du MJ ; il n’est plus envoyé dans les vues joueur.
+Cela conserve les sauvegardes existantes et évite une migration de schéma inutile. Le cache
+est reconstruit à partir des octets validés s’il manque ou est corrompu. Le moteur reste pur.
 
-- [ ] Examiner la réutilisation du stockage et de la diffusion média existants. La route
+- [x] Examiner la réutilisation du stockage et de la diffusion média existants. La route
   générique `/media/` et le lecteur vidéo Alien ne prouvent pas à eux seuls une autorisation
   par personnage/rapport ; ajouter le contrôle ciblé nécessaire aux pièces privées LCARS.
-- [ ] Vérifier l’accès au fichier au moment de sa lecture, selon la campagne, l’appareil,
+- [x] Vérifier l’accès au fichier au moment de sa lecture, selon la campagne, l’appareil,
   l’accès au module et les destinataires du rapport. Pas d’URL privée ouverte à toute la table
   ou conservée en cache public/service worker après révocation.
-- [ ] Conserver validation des formats et bornes, gérer lecture partielle/seek pour la vidéo,
+- [x] Conserver validation des formats et bornes, gérer lecture partielle/seek pour la vidéo,
   fichier absent, format non décodable et appareil hors ligne. Le rapport texte reste lisible.
-- [ ] Inclure les fichiers dans la sauvegarde/exportation et leur restauration. Un export
+- [x] Inclure les fichiers dans la sauvegarde/exportation et leur restauration. Un export
   JSON contenant seulement des références vers des fichiers locaux ne suffit pas.
-- [ ] Si le schéma des médias change, augmenter `versionDonnees` et migrer sur une copie.
+- [x] Si le schéma des médias change, augmenter `versionDonnees` et migrer sur une copie.
   L’extraction des fichiers appartient à l’hôte ; le moteur reste sans accès disque/réseau.
   Ne pas remplacer la préparation tant que fichiers et état ne sont pas tous validés.
-- [ ] Mesurer le coût d’un rapport partagé avec image/son/vidéo, sans augmenter globalement
+- [x] Mesurer le coût d’un rapport partagé avec image/son/vidéo, sans augmenter globalement
   les limites réseau pour contourner le problème.
 
 **Sortie :** média privé lisible uniquement par le bon destinataire, partage/retrait
 contrôlés et export/restauration réellement portable. Le texte peut être essayé avant L5,
 mais les médias ne sont annoncés comme intégrés qu’une fois cette tranche validée.
 
+**Ancres :** `electron/modulesDuJeu/medias.ts`, `ServiceDesModules.mediaPour`, route privée
+de `SyncServer`, exclusion du dossier privé dans `MediaAccess`, lecteur authentifié dans
+`commun.mjs`. Jetons éphémères dans les en-têtes, jamais dans les adresses ni les sauvegardes.
+Contrôles après E/S et à chaque lecture ; `no-store`, route PWA `NetworkOnly`, URL blob révoquée
+au démontage. Plages HTTP et seek vidéo disponibles. Un rapport test avec vidéo de **1 Mio**
+passe de plus de **1,39 million de caractères** à **moins de 600** dans sa projection minimale.
+Bornes inchangées : fichier 4 Mo, JSON LCARS 16 Mo, ensemble des instances 32 Mo.
+Le miroir privé de sauvegarde MJ conserve son volume complet ; il ne passe pas sur le flux joueur.
+
 ### L6 — Raccorder alertes, audio et horloge sur plusieurs appareils
 
-- [ ] Fournir `choisirDiffusion` et `diffusionActuelle` dans l’adaptateur pour utiliser le
+- [x] Fournir `choisirDiffusion` et `diffusionActuelle` dans l’adaptateur pour utiliser le
   choix d’appareil déjà présent au pupitre commun. Remplacer les noms « vue de test » et
   l’auto-désignation libre du prototype par ce parcours MJ ; garder l’activation locale du son.
-- [ ] Transmettre l’horloge du serveur aux scans, impulsions, décomptes et annonces.
+- [x] Transmettre l’horloge du serveur aux scans, impulsions, décomptes et annonces.
   Tester une horloge de tablette volontairement décalée, la mise en veille et la reconnexion.
-- [ ] Couper immédiatement sirène, voix et médias lors du changement de diffuseur, de la
+- [x] Couper immédiatement sirène, voix et médias lors du changement de diffuseur, de la
   révocation, de la déconnexion et de « Tout couper ». Le démontage d’une vue ferme son audio.
-- [ ] Éviter que les annonces LCARS annulent une synthèse vocale d’un autre outil GM-OS :
+- [x] Éviter que les annonces LCARS annulent une synthèse vocale d’un autre outil GM-OS :
   l’appel global `speechSynthesis.cancel()` de l’atelier doit être coordonné avant intégration.
-- [ ] Ne pas promettre un haut-parleur actif en arrière-plan : dans le premier raccord,
+- [x] Ne pas promettre un haut-parleur actif en arrière-plan : dans le premier raccord,
   l’instrument du diffuseur doit rester ouvert. Le signaler et prévoir un état « son à activer »
   lorsque le navigateur suspend l’audio. Un lecteur permanent serait un chantier distinct.
-- [ ] Vérifier vidéos muettes chez les autres, mouvements réduits et absence de répétition
+- [x] Vérifier vidéos muettes chez les autres, mouvements réduits et absence de répétition
   des anciennes annonces au retour en ligne. Les lectures vidéo de rapport restent volontaires ;
   une lecture synchronisée sur tous les écrans n’est pas incluse implicitement.
 
 **Sortie :** une alerte apparaît sur tous les écrans concernés, un seul appareil choisi sonne,
 son transfert coupe l’ancien, et une tablette revenue après déconnexion ne rejoue pas la séquence.
 
+**Ancres :** adaptateur `natif.mjs`, registre commun et `commun.mjs` ; `voix.mjs` coordonne
+la synthèse avec les autres outils. Une voix française locale est nécessaire ; une voix
+occupée reste prioritaire. Les annonces sont abandonnées si elles ne peuvent jouer au moment
+prévu. Le banc décale l’heure de la tablette de quatre heures et avance l’heure serveur pour
+éprouver les annonces ; il suspend réellement Web Audio. La veille matérielle reste en L7.
+
 ### L7 — Recette native, appareils et manuel
 
-- [ ] Créer une fiction de campagne dédiée aux tests et une recette
+- [x] Créer une fiction de campagne dédiée aux tests et une recette
   `e2e/modulesDuJeuStarTrek.spec.ts` : vrai Electron et deux navigateurs appairés, profils
   jetables, sans données personnelles ni pilote exporté de David.
-- [ ] Couvrir les sept consoles et 19 actions, l’équipage, les secrets, le retrait d’accès,
+- [x] Couvrir les sept consoles et 19 actions, l’équipage, les secrets, le retrait d’accès,
   les commandes périmées, la reprise, les médias et le transfert sonore. Vérifier aussi
   qu’une panne d’un module laisse le retour au Hub disponible.
-- [ ] Exécuter les tests ciblés du moteur, du service, de la sauvegarde et des vues, puis
+- [x] Exécuter les tests ciblés du moteur, du service, de la sauvegarde et des vues, puis
   la validation habituelle : types, lint, tests avec quatre workers, build avant les e2e.
   Ne pas lancer les suites qui lisent les campagnes personnelles.
-- [ ] Contrôler visuellement 360/390 px, portrait/paysage tablette et grand écran. Refaire
+- [x] Contrôler visuellement 360/390 px, portrait/paysage tablette et grand écran. Refaire
   les captures des sept instruments dans le vrai cadre Hub, au-delà des 42 captures de l’atelier.
-- [ ] Préparer une grille pour iPad, iPad Air, tablette Samsung et smartphone : Safari/Chrome,
+- [x] Préparer une grille pour iPad, iPad Air, tablette Samsung et smartphone : Safari/Chrome,
   clavier tactile, Wi-Fi, veille, reconnexion, vidéo et son réellement entendu. Relever les
   versions des appareils/navigateurs ; David réalise la partie matérielle inaccessible au banc.
-- [ ] Actualiser la page Star Trek, le manuel des mécaniques, le guide du Tablet Hub et les
+- [x] Actualiser la page Star Trek, le manuel des mécaniques, le guide du Tablet Hub et les
   captures des jeux. Expliquer l’activation du pilote et les deux niveaux d’accès/affectation.
   La synchronisation NotebookLM des guides suit le hook déjà autorisé lors de leur commit.
 
 **Sortie :** recette logicielle verte et manuel fidèle à la version livrée ; tableau matériel
 séparé avec résultats réels, sans déclarer une validation iPad à partir d’un test Edge sur PC.
+
+La [recette L7 et sa grille matérielle](2026-10-16-recette-lcars.md) détaille les gestes,
+les limites et la répétition sur fiction jetable. Tous les résultats matériels sont **non testés**.
+Le parcours des sept consoles produit **42 captures du vrai Hub**, aux tailles 360×800,
+390×844, 768×1024, 1024×768, 1180×820 et 1440×1000, ainsi que les sept instruments du manuel.
+Les 19 actions sont proposées par le joueur puis qualifiées et arbitrées au vrai pupitre MJ.
+Anciennes affectations/générations refusées, sortie de campagne/fin de séance et retour au Hub
+après panne d’affichage sont également couverts. `bilan-l7.json` consigne le parcours réussi.
+
+Deux défauts découverts pendant L7 sont corrigés et gardés par des tests : création concurrente
+du même cache média sous Windows (une seule écriture partagée entre lecteurs), et ancienne
+vue conservée après sortie de campagne (projection vide acceptée avant la mise à jour du flux
+public, sans accepter une vue privée d’une autre campagne ni perdre la barrière de révision).
 
 ## Ordre de travail et point de départ
 
@@ -205,7 +236,7 @@ séparé avec résultats réels, sans déclarer une validation iPad à partir d�
 Les contrôles de cycle de vie et de sauvegarde ne sont pas repoussés à la recette finale.
 L1–L4 donnent un premier parcours natif textuel ; L5–L6 complètent les médias et l’immersion.
 
-Le prochain geste est **L5 : médias privés et transport des pièces jointes**. Avant toute
+Le prochain geste est **la recette matérielle**, à partir de la grille L7. Avant toute
 modification de `src/` ou `electron/`, demander à David si GM-OS tourne et attendre sa réponse,
 conformément à `AGENTS.md`. Ce plan n’autorise pas à lancer l’application personnelle ni un service.
 Les éventuels essais natifs utilisent une instance jetable dans le cadre de la tranche demandée.
@@ -217,5 +248,16 @@ de thème global, de chargeur de plugins arbitraires ou d’automatisation des r
 **Validation L1–L4 :** types/build et lint ciblé propres, 127 tests Vitest ciblés et 34 tests
 Node du moteur au vert ; quatre parcours E2E natifs réussis, dont deux LCARS et deux de
 non-régression Alien. Reconnexion, redémarrage et import testés sur profils jetables.
-Les 42 captures de l’atelier restent validées. Médias privés, audio natif et appareils
-physiques restent en L5–L7 ; aucun résultat matériel n’est déduit des tests Edge sur PC.
+Les 42 captures de l’atelier restent validées. Cette validation initiale précède L5/L6 ;
+aucun résultat matériel n’est déduit des tests Edge sur PC.
+
+**Validation L5/L6 :** types/build et lint ciblé propres, **186 tests Vitest**, **38 tests
+Node** (34 moteur + 4 voix). **Quatre parcours E2E natifs LCARS** et **trois régressions Alien**
+réussis : droits, film HTTP et passage du film à la sirène/voix. PNG, WAV et WebM décodés,
+lecture privée refusée à l’autre PJ, retrait, export portable et restauration sans cache,
+horloge tablette décalée, transfert et suspension audio, déconnexion sans rejeu. Atelier complet
+et **42 captures** au vert. Les voix sont simulées et les sorties muettes pendant ces essais.
+Le test Alien de fin de film avance désormais l’heure serveur plutôt que seulement Date.now
+local ; aucun changement de logique Alien. Cette validation précède le complément L7 ci-dessus.
+David demande ensuite le commit et le push groupés de **L5–L7 logiciel** ; les appareils réels
+restent hors de cette validation automatique.

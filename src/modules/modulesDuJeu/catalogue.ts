@@ -11,7 +11,7 @@ if (validerLeManifeste(manifesteDetecteur).length) throw new Error('Manifeste du
 if (validerLeManifeste(manifesteLcars).length) throw new Error('Manifeste LCARS invalide.');
 export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
     { id: manifesteLcars.id, libelle: manifesteLcars.libelle,
-        description: 'Sept consoles de passerelle pilotées par le MJ : interventions, ordres, rapports textuels privés et alertes visuelles.',
+        description: 'Sept consoles de passerelle pilotées par le MJ : interventions, ordres, rapports et médias privés, alertes et diffuseur sonore.',
         corpusCompatibles: manifesteLcars.corpusCompatibles, adaptation: 'prete' },
     { id: manifesteMuthur.id, libelle: manifesteMuthur.libelle, description: manifesteMuthur.description,
         corpusCompatibles: manifesteMuthur.corpusCompatibles, adaptation: 'prete' },

@@ -477,3 +477,108 @@ et sa sauvegarde par campagne` (identifiant dans `git log`). Les hooks conserven
 NotebookLM autorisée pour les guides et la validation complète avant push. Les fichiers des
 autres chantiers restent hors commit. Reprise : essai du parcours textuel dans GM-OS par David,
 ou L5 après vérification de fermeture avant nouvelle édition de src/electron.
+
+## LCARS — médias privés et son natif L5/L6 (Codex, suite du 16/10)
+
+David demande « fait L5 et L6 » et confirme GM-OS fermé. Base poussée L1–L4 : **`0bdc0162`**.
+Version livrée dans la copie de travail : **0.5.0**, données **v2**, contrat **v1**.
+
+**L5 :** l’adaptateur accepte les médias validés du moteur. `medias.ts` transforme les pièces
+jointes des projections filtrées en références privées, sans base64 sur le WebSocket joueur.
+`ServiceDesModules.mediaPour` recontrôle les droits ; `SyncServer` sert GET/HEAD/Range sur
+`/modules-prives/`, avec jeton éphémère en en-tête lié à l’identité connectée. Après les E/S,
+identité et droits sont vérifiés à nouveau. Aucun jeton dans l’URL, aucun cache public/PWA.
+Le lecteur récupère un blob authentifié, l’interrompt et révoque son URL au démontage.
+Une erreur de lecture/décodage laisse le texte accessible. La route `/media/` refuse désormais
+le dossier privé des modules, même si son parent est autorisé.
+
+**Choix de conservation :** pas de nouveau schéma ni de migration. Les octets base64 v2
+restent la source portable dans le stockage, les exports et le miroir de sauvegarde du MJ.
+Les fichiers `modules-du-jeu/medias-prives/<empreinte>.bin` sont un cache reconstructible,
+pas une dépendance externe oubliée par les exports. Les projections d’affichage MJ et joueur
+emploient les références ; le miroir MJ conserve son volume complet. Une pièce de 1 Mio
+ramène la projection minimale de plus de 1,39 million de caractères à moins de 600.
+Bornes inchangées : 4 Mo par média, 16 Mo JSON LCARS, 32 Mo pour toutes les instances.
+
+**L6 :** `choisirDiffusion`/`diffusionActuelle` raccordent le choix commun **Son : [appareil]**
+du MJ. L’auto-désignation reste réservée à l’atelier. Activation locale obligatoire, instrument
+ouvert, vidéos muettes ailleurs et lectures volontaires. Le transfert coupe sirène, voix et
+lecteurs de l’ancien diffuseur. Visibilité/suspension Web Audio révoquent l’activation locale
+et proposent de réactiver au retour. Les annonces suivent l’ancre serveur sans rattrapage.
+Le courtier `voix.mjs` cède la priorité aux autres outils et ne les annule pas au nettoyage.
+Voix française locale nécessaire ; sinon retour explicite et décompte visuel conservé.
+
+Validation : **186 tests Vitest** (19 fichiers, service, stockage, transport, MediaAccess,
+sauvegarde/archive et manuel), **38 Node** (34 moteur + 4 voix), **types/build et lint ciblé
+propres**. **Quatre E2E natifs LCARS** : deux personnages, secrets, droits HTTP, média retiré,
+export/restauration sans cache, média indécodable signalé à l’affichage, lecture MJ/PJ,
+PNG/WAV/WebM réels et seek vidéo ; transfert, heure tablette +4 h, annonces sur l’heure serveur,
+suspension réelle Web Audio et déconnexion sans rejeu. **Trois régressions Alien** réussies :
+droits privés, vidéo HTTP/plages/annulation, passage film→sirène/voix avec transfert. Atelier
+complet : **42 captures**, aucune erreur JavaScript ; son réel muet et voix simulées.
+Captures d’alerte et médias natifs relues ; nouvelle illustration d’alerte au manuel.
+
+Pièges payés : les deux lecteurs audio ambiants du Hub imposent de cibler `.lcars-media audio`
+dans l’E2E. L’ancien test Alien de fin de film avançait seulement Date.now côté tablette,
+inefficace avec l’ancre monotone du Hub : il avance maintenant le serveur **jetable** puis
+publie un état neutre, sans modifier la logique Alien. Encoder la fixture WebM **avant** les
+essais d’horloge accélérée : après eux, même une autre page peut ne produire que 110 octets
+d’enveloppe sans images. Aucun nouvel essai matériel ni profil personnel utilisé.
+
+Guides 53/54-Star-Trek/61, README LCARS, contrat, plan, registre § 136 et ToDo actualisés.
+**Changements non commités.** Reprise : **L7**, recette native des sept consoles/toutes tailles
+et grille iPad, iPad Air, Samsung, smartphone, avec voix/veille/son réellement entendus.
+Vérifier la fermeture de GM-OS avant toute nouvelle modification native. NotebookLM suivra
+le hook déjà autorisé au prochain commit des guides ; aucun envoi manuel dans cette tranche.
+
+## LCARS — L7 automatique et livraison L5–L7 (Codex, suite)
+
+David demande « fait L7 en automatique et ensuite commit et pousse (GM-OS est éteint) ».
+La recette native compte désormais **sept parcours LCARS**, plus les **trois régressions Alien**
+retenues. Le parcours des sept consoles propose les **19 actions** depuis le vrai Hub, les
+qualifie « Jet demandé » puis les arbitre au vrai pupitre MJ. Chaque réponse reste privée.
+Les cibles ne changent pas d’état implicitement ; un refus de réparation est éprouvé.
+Anciennes affectations et générations révoquées sont refusées sur le vrai WebSocket.
+Quitter la campagne et terminer la séance ferment les outils, sans effacer la préparation.
+Une panne de projection injectée uniquement au navigateur vérifie la garde React, le retour
+à la liste et la réouverture ; l’autre client reste fonctionnel.
+
+**42 captures natives** à 360×800, 390×844, 768×1024, 1024×768, 1180×820 et 1440×1000,
+sans débordement horizontal. Les sept instruments ont été relus, ainsi que des écrans réels
+de téléphone/portrait/paysage. Les tirages du manuel gardent la largeur tablette mais utilisent
+une fenêtre plus haute : cela évite de photographier la barre de navigation au milieu d’un
+instrument. Sept JPEG propres ajoutés au guide Star Trek. `scratch/lcars-natif/bilan-l7.json`
+enregistre la réussite des 19 actions et les six formats ; les captures restent dans scratch.
+
+**Deux vrais défauts trouvés et corrigés par L7 :**
+
+- Création du même cache média demandée simultanément par le MJ et des tablettes :
+  `rename` concurrents en **EPERM sur Windows**, puis HTTP 404. Un test à douze lectures
+  simultanées a reproduit la panne. `medias.ts` partage maintenant la même écriture en cours
+  et nettoie les temporaires. Les droits de chaque requête restent revérifiés après E/S.
+- Sortie de campagne : le serveur retirait les droits, mais le canal refusait la projection
+  vide de la nouvelle campagne avant sa synchronisation publique, gardant l’ancienne vue.
+  Le canal accepte cette fermeture vide, conserve la barrière de contexte/révision et refuse
+  toujours une vue privée étrangère. Deux tests couvrent campagne nulle/autre et vieux paquet.
+
+Validation ciblée : **191 Vitest** (20 fichiers), **38 Node**, types/build et lint propres ;
+**dix parcours E2E natifs** (sept LCARS + trois Alien). La vidéo, Web Audio et les transports
+sont réels, les sorties muettes et les voix simulées. Le banc de l’atelier et ses 42 captures
+reste distinct de ces 42 captures natives. Aucun profil personnel utilisé ni paquet installé.
+
+[Recette L7 et grille matérielle](2026-10-16-recette-lcars.md) ajoutées. La commande
+`node outils/modules-du-jeu/recette-lcars.mjs` écrit seulement la fiction et la préparation
+dans `scratch/lcars-recette/`. Un essai volontaire utilise ensuite `npm.cmd run repetition --
+scratch/lcars-recette/semence.json` ; **toujours passer cette semence**, le mode sans argument
+cherche une sauvegarde personnelle. Cette répétition matérielle n’a pas été lancée.
+
+Plan L1–L7 logiciel coché, ToDo et registre § 136 actualisés ; guide Star Trek et guide tablette
+décrivent défilement, panne et retour Hub. **L5–L7 logiciel livrés dans le commit**
+`feat(lcars): livrer les medias prives et la recette native complete` (identifiant dans `git log`).
+Les hooks assurent la synchronisation NotebookLM des trois guides et la validation complète
+avant le push demandé. Les fichiers des autres chantiers restent hors livraison.
+
+**Reprise : appareils physiques uniquement pour cette recette** — iPad, iPad Air, tablette
+Samsung et smartphone, toutes les lignes encore **non testées**. Clavier système, voix
+réellement entendues, Wi-Fi et veille Safari/Android ne sont pas certifiés par le PC.
+Vérifier la fermeture de GM-OS avant toute nouvelle modification de src/electron.

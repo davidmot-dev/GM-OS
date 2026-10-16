@@ -198,6 +198,9 @@ de succès/échec, sans détail privé d'un autre lecteur. L'hôte déduplique l
 requêtes d'une même génération avant toute mutation. La vue ignore les
 révisions anciennes ; la liste des accès autorisés contrôle l'ouverture.
 Un ancien instantané NE DOIT PAS rouvrir un module révoqué.
+Une projection vide d’un nouveau contexte ferme également l’ancienne vue si le flux public
+n’a pas encore changé la campagne du joueur. La barrière de révision/contexte reste conservée ;
+une projection non vide d’une autre campagne reste refusée.
 
 Seuls les destinataires autorisés reçoivent leur vue et leurs cartes. Le
 filtre s'applique avant l'envoi, pour l'état complet, les mises à jour et la
@@ -260,14 +263,34 @@ de GM-OS. Le [détecteur Alien](../../outils/alien/modules/detecteur/README.md) 
 avec droits indépendants, scan partagé et bips locaux. Les essais d’interface et de transport
 hors ligne ne remplacent pas l’essai sur réseau et tablettes physiques.
 
-LCARS de Star Trek rejoint le registre le 16/10 (L1–L4) : sept consoles, actions textuelles
-arbitrées, ordres/accusés et sauvegarde privée. L’adaptateur reçoit la liste des personnages
+LCARS de Star Trek rejoint le registre le 16/10 (L1–L6) : sept consoles, actions
+arbitrées, rapports/médias privés, ordres/accusés et sauvegarde privée. L’adaptateur reçoit la liste des personnages
 depuis le contexte serveur ; une extension interne facultative synchronise les anciens auteurs
 et retire leurs affectations lorsqu’ils quittent la campagne. Les modules Alien n’utilisent
 pas cette extension. L’import de préparation LCARS est une commande MJ validée ; après
 écriture réussie, l’hôte ferme ses accès et invalide les commandes précédentes. Les versions
 de données futures restent conservées sans être exécutées et sont signalées au MJ.
-Les médias et le diffuseur sonore LCARS attendent L5/L6 ; le banc autonome conserve leurs essais.
+L’extension facultative `mediasPrives` du registre active la projection des pièces jointes
+en références `/modules-prives/<campagne>/<module>/<empreinte>`. Le serveur n’extrait les
+médias que de la vue déjà filtrée par le moteur. Chaque GET/HEAD exige un jeton de session
+envoyé dans `x-gmos-module-session`, lié à l’identité WebSocket encore connectée, ou au
+poste MJ local. Les droits sont revérifiés après lecture disque : campagne, séance, référence
+du pilote, personnage, accès et destinataires. Une adresse copiée ne transmet pas ce jeton.
+Les réponses sont `no-store` et la PWA exclut ce chemin de ses caches ; la vue détruit son
+URL blob et interrompt la lecture à son retrait. Les plages HTTP sont prises en charge.
+
+Les octets portables restent dans les sauvegardes privées v2 ; leur représentation persistée
+ne change pas. Le cache disque est dérivé et reconstructible, sans E/S dans le moteur.
+Le miroir de sauvegarde transmis au MJ conserve les octets complets ; les projections joueur
+et d’affichage MJ emploient les références. La route publique `/media/` refuse tout le
+dossier `modules-du-jeu`, y compris lorsqu’un parent figure dans les racines autorisées.
+Formats et quotas restent bornés par le module et l’hôte, sans relever les limites joueur.
+
+LCARS fournit aussi `choisirDiffusion`/`diffusionActuelle` : le choix appartient au pupitre
+commun MJ, l’activation locale au diffuseur. La vue ouverte possède l’audio ; suspension,
+perte de droits et démontage l’arrêtent. Les annonces suivent l’horloge serveur sans rattrapage.
+Le courtier vocal LCARS cède la priorité aux autres appels de synthèse et n’annule que sa
+propre phrase lors de son nettoyage. Les appareils physiques restent à vérifier en L7.
 
 Un module livré DOIT documenter ses commandes, ses données, ses migrations,
 ses effets, ses limites et ses essais. Sa page de jeu et le guide des

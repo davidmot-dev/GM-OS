@@ -3,7 +3,7 @@
   "id": "star-trek-lcars",
   "libelle": "LCARS — Passerelle",
   "description": "Passerelle de test à sept postes : interventions arbitrées, ordres, rapports ciblés, médias, alertes et préréglages.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "versionDonnees": 2,
   "corpusCompatibles": ["star-trek"],
   "commandes": [

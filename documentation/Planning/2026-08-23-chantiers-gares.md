@@ -11731,11 +11731,41 @@ Les versions de données futures sont conservées sans exécution et signalées 
 Validation : types/build, lint ciblé, **127 tests Vitest**, **34 tests Node** et **quatre
 parcours E2E natifs** (deux LCARS et deux Alien) réussis sur profils jetables. Les 42 captures
 de l’atelier restent validées ; manuel actualisé, captures natives relues. Aucune donnée
-personnelle utilisée. **Médias et audio natifs attendent L5/L6** ; les appareils physiques L7.
+personnelle utilisée. À ce jalon, médias et audio natifs attendaient L5/L6 ; voir la suite ci-dessous.
 Commit et push de cette tranche demandés par David le 16/10 ; commit `feat(lcars)` d’intégration
-native (identifiant dans `git log`). Prochain geste : **L5**, après vérification de
-la fermeture de GM-OS pour toute nouvelle édition native. L’atelier reste essayable
+native **`0bdc0162`**. L’atelier reste essayable
 dans `scratch/lcars-v1/apercu.html` avec **Officier de test**.
+
+David demande « fait L5 et L6 » et confirme GM-OS fermé. **L5/L6 réalisées, version 0.5.0** :
+pièces jointes privées sur une route HTTP dédiée, jeton par session sans secret dans l’URL,
+droits revérifiés après E/S, réponses sans cache, références courtes dans les vues. Les octets
+restent dans les sauvegardes portables v2 et leur miroir MJ ; le cache disque est reconstructible
+et inaccessible par `/media/`. Formats/quota conservés, plages HTTP et vidéo décodée/seek testés.
+Diffuseur choisi par le MJ dans l’hôte commun, activation locale, sirène/annonces sur l’heure
+serveur, transfert et suspension qui arrêtent les lecteurs. La synthèse LCARS cède aux autres
+voix sans les annuler ; aucun rattrapage à la reconnexion. Instrument ouvert requis pour le son.
+
+Validation L5/L6 : types/build et lint ciblé propres, **186 Vitest**, **38 Node**, **quatre E2E
+LCARS et trois régressions Alien** réussis ; atelier complet et **42 captures** sans erreur.
+Heure tablette décalée, Web Audio suspendu, droits HTTP, retrait et restauration sur profil
+neuf éprouvés. Un test Alien ancien avançait seulement Date.now local ; il avance désormais
+le serveur jetable pour respecter l’horloge monotone du Hub, sans changer le code Alien.
+Manuel/contrat/plan actualisés, capture d’alerte relue. Ces changements étaient non commités
+à la fin de L5/L6 ; ils sont inclus dans la livraison groupée demandée ensuite.
+
+David demande « fait L7 en automatique et ensuite commit et pousse (GM-OS est éteint) ».
+**L7 logiciel réalisé** : sept parcours LCARS natifs, dont 19 actions proposées puis qualifiées
+et arbitrées au vrai pupitre MJ, 42 captures du Hub à six formats de 360 à 1 440 px, anciennes
+affectations/générations, sortie de campagne/fin de séance et panne de vue avec retour à la liste.
+**Deux défauts reproduits puis corrigés** : conflit Windows de création simultanée d’un cache
+média (écriture partagée), et ancienne vue gardée après sortie de campagne (fermeture vide
+acceptée sans relâcher les contrôles de campagne ni la barrière de révision).
+191 tests ciblés, 38 Node et dix parcours natifs (sept LCARS + trois Alien) ; sept instruments
+propres relus et ajoutés au manuel. [Recette et grille matérielle](2026-10-16-recette-lcars.md),
+fiction jetable générable par CLI. La livraison **L5–L7 logiciel** est regroupée dans
+`feat(lcars): livrer les medias prives et la recette native complete` (identifiant dans `git log`),
+avec synchronisation des trois guides via le hook NotebookLM et validation complète avant push.
+**Reste : essai matériel**, toutes les lignes iPad/iPad Air/Samsung/smartphone marquées non testées.
 
 ## La vue d'un coup d'œil
 
@@ -11812,7 +11842,7 @@ dans `scratch/lcars-v1/apercu.html` avec **Officier de test**.
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
 | 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; recette et départ HACK poussés dans `460544af`/`a23e6989` ; correctif horloge HACK, glitch fixe en mouvements réduits et CRT tablette poussés dans `dc1ead2b` ; décompte, film, alarme et faux écho sur l’heure serveur le 16/10, non commité | Recharger et éprouver sur les tablettes, poursuivre la grille matérielle | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
-| 71 | **LCARS de Star Trek — intégration native** | § 136 ; [L1–L4 réalisées](2026-10-16-integration-lcars-gmos.md), version 0.4.0 : personnages, rapports privés, ordres et sauvegarde/import ; 127 tests ciblés + 34 Node + 4 E2E ; commit/push demandés le 16/10 | L5 : médias privés | Audio natif en L6, recette matérielle en L7 |
+| 71 | **LCARS de Star Trek — intégration native** | § 136 ; [L1–L7 logiciel réalisées](2026-10-16-integration-lcars-gmos.md), version 0.5.0 : médias privés, son unique, 19 actions arbitrées, 42 captures natives et deux défauts de cycle de vie corrigés ; 191 Vitest ciblés + 38 Node + 10 E2E ; livraison groupée demandée | Remplir la grille matérielle | Essais réels iPad, iPad Air, Samsung et smartphone |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

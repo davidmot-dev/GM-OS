@@ -3,6 +3,7 @@ import { identifiantDeTable, objetSimple, validerSauvegardeDesModules } from '..
 import type { ContexteDesModules, RequeteDeModule, SauvegardeDesModules, VueDesModulesMJ, VueDesModulesJoueur } from '../../src/modules/modulesDuJeu/protocole';
 import { REGISTRE_DES_MOTEURS, type MoteurEnregistre, type LecteurDeModule } from './registre';
 import type { StockageDesModules } from './stockage';
+import { mediasDeLaVue } from './medias';
 
 const copier = <T>(valeur: T): T => JSON.parse(JSON.stringify(valeur));
 const exiger = (condition: unknown, message = 'Accès au module refusé.') => { if (!condition) throw new Error(message); };
@@ -49,6 +50,16 @@ export class ServiceDesModules {
         return suite;
     }
     async pret() { await this.file; }
+    utiliseMediasPrives(id: string) { return !!this.registre.get(id)?.mediasPrives; }
+    async mediaPour(campagneId: string, moduleId: string, id: string, lecteur: LecteurDeModule) {
+        await this.pret();
+        exiger(!this.erreur && campagneId === this.contexte.campagneId && this.utiliseMediasPrives(moduleId));
+        const moteur = this.moteur(moduleId);
+        if (lecteur.role === 'joueur') exiger(!!lecteur.personnageId && !!this.contexte.seanceId
+            && this.contexte.personnages.some(p => p.id === lecteur.personnageId) && this.acces.get(moduleId)?.has(lecteur.personnageId));
+        const vue = moteur.vuePour(this.etat(moduleId), lecteur, { personnages: this.contexte.personnages });
+        const media = mediasDeLaVue(vue).get(id); exiger(media); return media!;
+    }
     private versionFuture(id: string) {
         const instance = this.donnees.campagnes[this.contexte.campagneId!]?.[id], moteur = this.registre.get(id);
         return !!instance && !!moteur && instance.versionDonnees > moteur.manifeste.versionDonnees;
