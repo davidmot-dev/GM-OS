@@ -56,6 +56,8 @@ const jetDeFiche = (payload: unknown) => {
         id: Math.random().toString(36).substring(2, 9),
         timestamp: new Date(),
         title: jet.titre,
+        // Pour que le pupitre propose la Fortune ou la suite d'un déclin, sur la bonne fiche.
+        deFiche: { joueurId: joueur.id, characterId: personnage.id, genre: demande.genre, champ: demande.champ, modificateur: demande.modificateur },
     });
 };
 

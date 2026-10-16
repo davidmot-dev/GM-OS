@@ -1,5 +1,6 @@
 import type { DieResult, RollResult } from '../DiceEngine';
 import { degreDepuisLeBooleen } from '../degresDeReussite';
+import { facesDuNiveau } from '../desEchelonnes';
 
 /**
  * **Forcer le jet, et le test de Panique** — la famille Year Zero, 2026-10-14.
@@ -274,6 +275,34 @@ export interface EtatBrise {
     table?: { univers: string; table: string; si?: { si: ConditionDeFiche; table: string }[] };
     /** Sur un 1 au dé, ce champ (le maximum) perd un point à vie. */
     perteDuMaximum?: string;
+    /** Le champ texte de la fiche où s'écrit l'effet tiré — les effets de stress critiques. */
+    noterDans?: string;
+}
+
+/**
+ * **Le dé de l'effet critique d'un Brisé**, et ce qu'il coûte : le dé échelonné
+ * lu sur la fiche (l'Empathie), et sur un 1 le maximum qui perd un point à vie.
+ * Partagé par le panneau de jet (après un forçage) et la carte de combat (le
+ * Sang-froid tombé à zéro sous le stress).
+ */
+export function lancerLEffetDuBrise(
+    brise: Pick<EtatBrise, 'de' | 'perteDuMaximum'>,
+    valeurs: Record<string, unknown>,
+    lireLeMaximum: (champ: string) => number,
+    de: (faces: number) => number,
+): { faces: number; tire: number; perte?: { champ: string; reste: number } } {
+    const faces = (brise.de ? facesDuNiveau(valeurs[brise.de]) : null) ?? 6;
+    const tire = de(faces);
+    const perte = tire === 1 && brise.perteDuMaximum
+        ? { champ: brise.perteDuMaximum, reste: Math.max(0, lireLeMaximum(brise.perteDuMaximum) - 1) }
+        : undefined;
+    return { faces, tire, perte };
+}
+
+/** Une ligne ajoutée à un champ texte de la fiche, sans effacer ce qui y est déjà. */
+export function noterSurLaFiche(existant: unknown, ligne: string): string {
+    const avant = typeof existant === 'string' ? existant.trim() : '';
+    return avant ? `${avant}\n${ligne}` : ligne;
 }
 
 /** La table de l'effet critique, selon la fiche. */

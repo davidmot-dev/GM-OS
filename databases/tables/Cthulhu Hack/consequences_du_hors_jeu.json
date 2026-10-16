@@ -1,0 +1,69 @@
+{
+    "name": "Conséquences du Hors Jeu",
+    "dice": "1d10",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Mort",
+            "description": "Le personnage n'est plus de ce monde.",
+            "effect": "Le personnage meurt."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Détruit",
+            "description": "Le corps et l'esprit ne s'en remettront pas.",
+            "effect": "Enlevez définitivement 6 points répartis entre deux Sauvegardes différentes. Récupère 1d4 PV."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Ravagé",
+            "description": "L'esprit est brisé.",
+            "effect": "Enlevez définitivement 4 points parmi Intelligence, Sagesse et Charisme. Récupère 1d4 PV."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Estropié",
+            "description": "Une blessure qui ne guérira pas.",
+            "effect": "Enlevez définitivement 2 points parmi Force, Dextérité et Constitution. Récupère 1d4 PV."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Os brisés",
+            "description": "Des fractures douloureuses.",
+            "effect": "Sauvegardes de Force, Dextérité et Constitution −4 jusqu'à la fin de la prochaine journée ou de la session. Récupère 1d4 PV."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Inconscient",
+            "description": "Il reste sans connaissance.",
+            "effect": "Inconscient jusqu'à la fin de la scène. Récupère 1d4 PV."
+        },
+        {
+            "min": 7,
+            "max": 7,
+            "title": "Commotion",
+            "description": "La tête tourne.",
+            "effect": "Désavantage à tous les tests pendant 20 minutes. Récupère 1d4 PV."
+        },
+        {
+            "min": 8,
+            "max": 8,
+            "title": "Titubant",
+            "description": "Il tient à peine debout.",
+            "effect": "Désavantage à tous les tests pendant 10 minutes. Récupère 1d4 PV."
+        },
+        {
+            "min": 9,
+            "max": 10,
+            "title": "Essoufflé",
+            "description": "Il reprend son souffle.",
+            "effect": "Désavantage à tous les tests pendant 1 minute. Récupère 1d4 PV."
+        }
+    ]
+}

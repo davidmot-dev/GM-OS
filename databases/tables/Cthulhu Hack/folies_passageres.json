@@ -1,0 +1,48 @@
+{
+    "name": "Folies passagères",
+    "dice": "1d6",
+    "entries": [
+        {
+            "min": 1,
+            "max": 1,
+            "title": "Amnésie",
+            "description": "L'investigateur peine à mémoriser ; l'événement déclencheur est toujours oublié.",
+            "effect": "Lancez 1d6 : 1-2 rétrograde (oublie le passé), 3-5 antérograde (ne forme plus de nouveaux souvenirs), 6 dissociative (tous les souvenirs se disloquent). Durée : 1d10 heures."
+        },
+        {
+            "min": 2,
+            "max": 2,
+            "title": "Évanouissement",
+            "description": "L'investigateur perd connaissance.",
+            "effect": "Sauvegarde de Constitution pour ne pas s'étouffer (−1 PV en cas d'échec). Dure 1d20 minutes (sur 20, relancer et additionner) ou jusqu'à la fin de la scène, le plus long des deux."
+        },
+        {
+            "min": 3,
+            "max": 3,
+            "title": "Paranoïa",
+            "description": "Méfiant et tendu, il croit que tout le monde complote contre lui : chaque mot a un sens caché.",
+            "effect": "1d10 heures : Avantage aux Sauvegardes de perception, mais il voit des menaces dans des choses inoffensives."
+        },
+        {
+            "min": 4,
+            "max": 4,
+            "title": "Hystérie",
+            "description": "La panique bloque des fonctions sensorielles ou motrices.",
+            "effect": "Lancez 1d8 : 1-2 lancez 1d6+2 deux fois et appliquez les deux, 3 vue, 4 équilibre, 5 ouïe, 6 voix, 7 toucher, 8 goût et odorat. 1d6 heures, Désavantage aux Sauvegardes liées au sens touché."
+        },
+        {
+            "min": 5,
+            "max": 5,
+            "title": "Paralysie",
+            "description": "Il ne réagit plus à rien, totalement figé.",
+            "effect": "1d6 minutes. Poids mort si ses alliés tentent de le porter."
+        },
+        {
+            "min": 6,
+            "max": 6,
+            "title": "Délire",
+            "description": "Il s'invente une réalité et remet tout en cause.",
+            "effect": "Lancez 1d6 : 1 il est aimé, 2 quelqu'un le jalouse, 3 il est persécuté, 4 il participe à quelque chose de grand, 5 il a des sensations bizarres, 6 tout est surnaturel. Durée : 1d20 minutes ou la fin de la scène."
+        }
+    ]
+}

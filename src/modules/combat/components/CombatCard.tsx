@@ -16,6 +16,8 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { ficheDuCombattant } from '../logic/ficheDuCombattant';
 import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import ActionsApprouvees from './ActionsApprouvees';
+import HorsJeuDuCombattant from './HorsJeuDuCombattant';
+import ProtectionDuCombattant from './ProtectionDuCombattant';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
 import { useDiceStore } from '../../../stores/useDiceStore';
@@ -193,11 +195,15 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
         const res = DiceEngine.rollUsure(de);
         const apres = res.usure!.apres;
         if (apres !== de) ecrireSurLaFiche(fieldId, ecrireLeDe(apres));
+        // Un personnage de joueur : le pupitre saura proposer la Fortune ou la suite du déclin.
+        const joueur = combatant.isPlayer ? players.find(p => p.characters.some(c => c.id === combatant.sourcePlayerId)) : undefined;
         useDiceStore.getState().setLastRoll({
             ...res,
             id: Math.random().toString(36).substring(2, 9),
             timestamp: new Date(),
             title: `${combatant.name} — ${label} d${de}`,
+            ...(joueur && combatant.sourcePlayerId
+                ? { deFiche: { joueurId: joueur.id, characterId: combatant.sourcePlayerId, genre: 'ressource' as const, champ: fieldId } } : {}),
         });
     };
 
@@ -530,6 +536,11 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     </Bouton>
                 </>}
             />
+
+            {/* À zéro : le Hors Jeu (Cthulhu Hack), Brisé par les dégâts ou par le stress (Blade Runner). */}
+            <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
+            {/* Blade Runner : la protection se lance à chaque coup subi. */}
+            <ProtectionDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
 
             {/* Torg : l'Action approuvée de la carte du round, pour un Héros. */}
             <ActionsApprouvees combatant={combatant} />

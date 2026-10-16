@@ -304,3 +304,32 @@ Forge, manuel, registre et cet état) ; `git log` donne leurs identifiants. Les 
 commité » ci-dessus décrivent l'état avant cette demande. Non suivis et hors commit :
 `Export Dirvers/`, `outils/jdr-pdf-vers-md/`, et `2026-10-16-analyse-lcars-star-trek.md`
 (pas écrit par Claude Code — laissé à son auteur).
+
+## Cthulhu Hack — Fortune, Folie passagère / Choc, Hors Jeu, Matériel — Claude Code, 16/10
+
+David : *« ok j'ai tout vu à l'écran, passe au jauge Cthulhu »* (NOC vu à l'écran), puis
+*« gm-os est fermé »* et *« c'est exporté »*. Détail, règles et restes : registre § ⭐, entrée du
+16/10. Pilote corrigé dans `Export Dirvers/corriges/CH_driver_gmos_1792138158836.gmos-driver`
+(script hors dépôt, export d'origine intact), **à réimporter**. Validation : `npx tsc -b` propre,
+**3 397 tests dans 302 fichiers** (dés, combat, session, télécommande, Forge, tables, composants,
+magasins, garde du manuel), lint des fichiers touchés propre après correction (une fonction sortie
+du composant du Hors Jeu, deux remises à zéro d'état sans effet). Essais nouveaux :
+`suitesDuJetDeFiche.test.ts` (8), `PanneauDeJet.fortune.test.tsx` (3), `HorsJeuDuCombattant.test.tsx`
+(4), Matériel dans `ressourcesDUsure.test.ts`, contrôles de la Forge. **Rien vu à l'écran.** Non commité.
+
+**Suite — Cthulhu Hack réimporté par David.**
+
+## Blade Runner — Humanité, blessures critiques, stress critique, protection, Brisé en combat — Claude Code, 16/10
+
+David : *« j'ai réimporté, on va faire blade runner et quand ce sera fait on fera le commite et
+pousse de tout »*, puis *« GM-OS est fermé et j'ai fait l'export »*. Détail, règles et restes :
+registre § ⭐, entrée du 16/10. Pilote corrigé dans
+`Export Dirvers/corriges/BR_driver_gmos_1792139496722.gmos-driver` (bestiaire conservé), **à
+réimporter**. La correspondance de la fiche HTML relie ses cinq absents. Validation : `npx tsc -b`
+propre, **3 622 tests dans 317 fichiers**, lint des fichiers touchés propre. Essais nouveaux :
+`BriseEnCombat.test.tsx` (8) et contrôles de la Forge. **Rien vu à l'écran.**
+
+**Mise en version.** Cthulhu Hack et Blade Runner regroupés dans un commit
+`feat(jeux): …` (les deux lots partagent `drivers.ts`, la Forge, le panneau du Hors Jeu et le
+manuel 53), puis push, comme demandé. `git log` donne l'identifiant. Hors commit : `Export Dirvers/`,
+`outils/jdr-pdf-vers-md/`, `2026-10-16-analyse-lcars-star-trek.md` (pas écrit par Claude Code).

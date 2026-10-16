@@ -1,4 +1,5 @@
 import { ECHELLE_D_USURE } from './desDUsure';
+import type { DeDUsureDuPilote } from '../../types/drivers';
 
 /**
  * **Les ressources à dé d'usure d'un personnage** — Cthulhu Hack, étape 4,
@@ -45,10 +46,12 @@ export interface RessourceDUsure {
     label: string;
     /** Le plus gros dé qu'elle peut atteindre. */
     plafond: number;
+    /** Ce qu'on tire quand elle descend d'un cran — voir `DeDUsureDuPilote.auDeclin`. */
+    auDeclin?: DeDUsureDuPilote['auDeclin'];
 }
 
 interface PiloteLu {
-    desDUsure?: { fieldId: string; label: string; plafond?: number }[];
+    desDUsure?: DeDUsureDuPilote[];
     combat?: { statsToTrack?: { fieldId: string; label: string; isMainHP?: boolean; isResource?: boolean }[] };
 }
 
@@ -56,7 +59,11 @@ interface PiloteLu {
 export function ressourcesDUsure(pilote: PiloteLu | null | undefined, fiche: Record<string, unknown> = {}): RessourceDUsure[] {
     if (!pilote) return [];
     if (pilote.desDUsure?.length) {
-        return pilote.desDUsure.map(r => ({ fieldId: r.fieldId, label: r.label, plafond: r.plafond ?? 12 }));
+        return pilote.desDUsure.flatMap(r => {
+            // Un emplacement de Matériel porte son nom sur la fiche ; vide, il ne se propose pas.
+            const nom = r.nomSur ? String(fiche[r.nomSur] ?? '').trim() : r.label;
+            return nom ? [{ fieldId: r.fieldId, label: nom, plafond: r.plafond ?? 12, ...(r.auDeclin?.length ? { auDeclin: r.auDeclin } : {}) }] : [];
+        });
     }
     return (pilote.combat?.statsToTrack ?? [])
         .filter(s => s.isResource && !s.isMainHP)

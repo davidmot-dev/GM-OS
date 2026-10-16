@@ -16,11 +16,10 @@ import {
     type DesDeTorg, type OptionsDeTorg,
 } from '../../../dice/systemes/torg';
 import {
-    cumulDePanique, entreeDeLaTable, forcerLeJet, pourquoiNePasForcer, prixDuForcage, tableDuBrise, testDePanique,
-    type EtatBrise, type FamilleYearZero,
+    cumulDePanique, entreeDeLaTable, forcerLeJet, lancerLEffetDuBrise, noterSurLaFiche, pourquoiNePasForcer, prixDuForcage,
+    tableDuBrise, testDePanique, type EtatBrise, type FamilleYearZero,
 } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
-import { facesDuNiveau } from '../../../dice/desEchelonnes';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
@@ -301,6 +300,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         effectif: number; precedent: number; cumule: boolean;
     } | null>(null);
     const lireLeNombre = (champ: string) => forcage.ecrits[champ] ?? (Number(valeurs[champ]) || 0);
+    /**
+     * Les jetons de Fortune déjà placés par ce panneau, datés de la valeur de la
+     * fiche qu'ils complètent : dès que la fiche les a relus (sa valeur change),
+     * c'est elle qui fait foi.
+     */
+    const [placement, setPlacement] = useState<{ depuis: unknown; jetons: number } | null>(null);
+    const valeurDeLaFortune = descripteur.fortune ? valeurs[descripteur.fortune.champ] : undefined;
+    const jetonsPlaces = placement && placement.depuis === valeurDeLaFortune ? placement.jetons : null;
+    const setJetonsPlaces = (jetons: number) => setPlacement({ depuis: valeurDeLaFortune, jetons });
+    const [reussiParLaFortune, setReussiParLaFortune] = useState(false);
 
     /*
       **Les Lois du Monde du cosm courant** (Torg, 2026-10-14) : la Loi de l'Action
@@ -419,6 +428,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setPaniqueJouee(null);
         setEffetsDuBrise({});
         setDernierLancer(null);
+        setReussiParLaFortune(false);
 
         // Le coût se prélève au moment où l'on s'engage, pas pendant qu'on
         // tourne les boutons : régler avant de lancer ferait payer les
@@ -950,12 +960,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const nomDuChamp = (id: string) => template.sections.flatMap(s => s.fields).find(c => c.id === id)?.label ?? id;
     const jouerLeBrise = (b: EtatBrise) => {
         if (!dernierLancer) return;
-        const faces = (b.de ? facesDuNiveau(valeurs[b.de]) : null) ?? 6;
-        const tire = DiceEngine.roll(faces);
+        const lance = lancerLEffetDuBrise(b, valeurs, lireLeNombre, faces => DiceEngine.roll(faces));
+        const { faces, tire } = lance;
         let perte: string | undefined;
-        if (tire === 1 && b.perteDuMaximum) {
-            const champ = b.perteDuMaximum;
-            const reste = Math.max(0, lireLeNombre(champ) - 1);
+        if (lance.perte) {
+            const { champ, reste } = lance.perte;
             setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: reste } }));
             ecrireSurLaFiche?.({ [champ]: reste });
             perte = `${nomDuChamp(champ)} −1 à vie → ${reste}${reste === 0 ? ' — le personnage quitte la partie' : ''}`;
@@ -974,6 +983,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             .then(data => {
                 const entree = data ? entreeDeLaTable(data.entries, tire) : undefined;
                 if (entree) setEffetsDuBrise(e => ({ ...e, [b.champ]: { ...effet, entree } }));
+                // L'effet tiré se garde sur la fiche, quand le jeu lui donne une place.
+                if (entree && b.noterDans) ecrireSurLaFiche?.({ [b.noterDans]: noterSurLaFiche(valeurs[b.noterDans], entree.title) });
                 dire(entree);
             })
             .catch(() => dire());
@@ -1001,6 +1012,39 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setResultat(res);
         setMouvements(m => [...m, `${label} −1 → ${reste} : un 6 ajouté`]);
         redire(`${dernierLancer.titre} · ${label}`, res);
+    };
+
+    /*
+      **La Fortune** (Cthulhu Hack, 2026-10-16) : après un jet raté, le joueur
+      PLACE des jetons sur sa fiche — un pour relancer, deux pour réussir —, sans
+      jamais dépasser le maximum. Le compte placé se garde ici, à part de
+      `forcage`, qu'une relance remet à zéro.
+    */
+    const fortune = descripteur.fortune && ecrireSurLaFiche && !torg && !destin ? descripteur.fortune : undefined;
+    const jetonsDeFortune = fortune ? Math.max(0, jetonsPlaces ?? (Number(valeurs[fortune.champ]) || 0)) : 0;
+    const fortuneOfferte = !!fortune && !!resultat && !!dernierLancer && resultat.tagSuccess === false && !reussiParLaFortune;
+    const placerLaFortune = (quoi: 'relance' | 'reussite') => {
+        if (!fortune || !fortuneOfferte || !resultat || !dernierLancer) return;
+        const cout = quoi === 'relance' ? fortune.relance : fortune.reussite;
+        const jetons = jetonsDeFortune + cout;
+        if (jetons > fortune.max) return;
+        const nom = fortune.label ?? 'Fortune';
+        setJetonsPlaces(jetons);
+        ecrireSurLaFiche?.({ [fortune.champ]: jetons });
+        const note = `${nom} : ${cout} jeton${cout > 1 ? 's' : ''} placé${cout > 1 ? 's' : ''} → ${jetons} sur la fiche`;
+        if (quoi === 'relance') {
+            lancer();
+            setMouvements(m => [...m, `${note}, jet relancé`]);
+            return;
+        }
+        const res: RollResult = {
+            ...resultat, tagSuccess: true, degre: 'reussite-normale',
+            totalDisplay: `${resultat.totalDisplay} → réussi (${nom})`,
+        };
+        setReussiParLaFortune(true);
+        setResultat(res);
+        setMouvements(m => [...m, `${note}, jet réussi`]);
+        redire(`${dernierLancer.titre} · ${nom}`, res);
     };
 
     const reussites = resultat?.successes ?? 0;
@@ -1542,6 +1586,21 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 avec sa raison — une Panique, un forçage déjà fait, un androïde —,
                 jamais en silence.
             */}
+            {/* **La Fortune** (Cthulhu Hack) : sous un jet raté, placer un jeton pour relancer, deux pour réussir. */}
+            {fortuneOfferte && fortune && (
+                <div data-fortune className="flex flex-wrap items-center gap-2">
+                    <span className="text-ui-10 text-app-text/50">{fortune.label ?? 'Fortune'} : {jetonsDeFortune} / {fortune.max}</span>
+                    <button type="button" onClick={() => placerLaFortune('relance')} disabled={jetonsDeFortune + fortune.relance > fortune.max}
+                        className="px-3 py-1 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-bold hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                        Relancer (+{fortune.relance} {fortune.label ?? 'Fortune'})
+                    </button>
+                    <button type="button" onClick={() => placerLaFortune('reussite')} disabled={jetonsDeFortune + fortune.reussite > fortune.max}
+                        className="px-3 py-1 rounded-lg border border-etat-succes/50 bg-etat-succes/10 text-etat-succes text-ui-10 font-bold hover:bg-etat-succes/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                        Réussir (+{fortune.reussite} {fortune.label ?? 'Fortune'})
+                    </button>
+                </div>
+            )}
+
             {resultat && dernierLancer && (regleDuForcage || paniqueDeclenchee || reussiteDepensee) && (
                 <div data-gestes-year-zero className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">

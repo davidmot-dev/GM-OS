@@ -1601,3 +1601,71 @@ describe('les gestes qui touchent chaque Héros — NOC, 2026-10-16', () => {
         ]);
     });
 });
+
+describe('Cthulhu Hack : Fortune, suites du déclin, Matériel et Hors Jeu — 2026-10-16', () => {
+    const ficheCh: Partial<SheetTemplate> = {
+        sections: [{ id: 'r', label: 'Ressources', fields: ['mentalHealth', 'fortune', 'materiel_1', 'materiel_1_nom'].map(id => ({ id, label: id, type: 'text' })) }] as SheetTemplate['sections'],
+    };
+    const constatsDe = (pilote: unknown) => controlerLePilote(pilote as Partial<GameDriver>, ficheCh)
+        .filter(c => /fortune|desDUsure|horsJeu/.test(c.ou)).map(c => [c.ou, c.gravite]);
+
+    it('déclarés juste, ils passent', () => {
+        expect(constatsDe({
+            jet: { sens: 'sous-ou-egal', fortune: { champ: 'fortune', max: 2, relance: 1, reussite: 2 } },
+            desDUsure: [
+                { fieldId: 'mentalHealth', label: 'Santé mentale', auDeclin: [{ label: 'Choc', table: { univers: 'Cthulhu Hack', table: 'chocs' } }] },
+                { fieldId: 'materiel_1', label: 'Matériel 1', plafond: 20, nomSur: 'materiel_1_nom' },
+            ],
+            combat: { statsToTrack: [], initiativeFormula: '', horsJeu: { table: { univers: 'Cthulhu Hack', table: 'consequences_du_hors_jeu' }, recuperation: '1d4' } },
+        })).toEqual([]);
+    });
+
+    it('ce qui ne mène nulle part est dit', () => {
+        expect(constatsDe({
+            jet: { sens: 'sous-ou-egal', fortune: { champ: 'absent', max: 2, relance: 1, reussite: 3 } },
+            desDUsure: [{ fieldId: 'materiel_1', label: 'Matériel 1', nomSur: 'nulle_part', auDeclin: [{ label: 'Choc', table: { univers: '', table: 'chocs' } }] }],
+            combat: { statsToTrack: [], initiativeFormula: '', horsJeu: { table: { univers: 'Cthulhu Hack', table: '' }, recuperation: 'un peu' } },
+        })).toEqual([
+            ['desDUsure[0].nomSur', 'avertissement'],
+            ['desDUsure[0].auDeclin[0]', 'erreur'],
+            ['combat.horsJeu.table', 'erreur'],
+            ['combat.horsJeu.recuperation', 'erreur'],
+            ['jet.fortune.champ', 'erreur'],
+            ['jet.fortune', 'avertissement'],
+        ]);
+    });
+});
+
+describe('Blade Runner : Brisé en combat et protection — 2026-10-16', () => {
+    const ficheBr: Partial<SheetTemplate> = {
+        sections: [{ id: 'f', label: 'Fiche', fields: ['sante', 'sangFroid', 'protection', 'protectionNom', 'blessuresCritiques', 'stressCritique'].map(id => ({ id, label: id, type: 'text' })) }] as SheetTemplate['sections'],
+    };
+    const constatsDe = (pilote: unknown) => controlerLePilote(pilote as Partial<GameDriver>, ficheBr)
+        .filter(c => /horsJeu|protection|brise/.test(c.ou)).map(c => [c.ou, c.gravite]);
+    const T = { univers: 'Blade Runner', table: 'percutant' };
+
+    it('déclarés juste, ils passent', () => {
+        expect(constatsDe({
+            jet: { sens: 'superieur-ou-egal', brise: [{ champ: 'sangFroid', label: 'B', rappel: 'r', noterDans: 'stressCritique' }] },
+            combat: { statsToTrack: [], initiativeFormula: '',
+                horsJeu: { tables: [{ label: 'Percutant', table: T }], desAuChoix: [6, 8, 10, 12], noterDans: 'blessuresCritiques', repetable: true },
+                protection: { champ: 'protection', des: 2, nomSur: 'protectionNom' } },
+        })).toEqual([]);
+    });
+
+    it('ce qui ne mène nulle part est dit', () => {
+        expect(constatsDe({
+            jet: { sens: 'superieur-ou-egal', brise: [{ champ: 'sangFroid', label: 'B', rappel: 'r', noterDans: 'absent' }] },
+            combat: { statsToTrack: [], initiativeFormula: '',
+                horsJeu: { tables: [{ label: '', table: T }], desAuChoix: [7], noterDans: 'nulle_part' },
+                protection: { champ: 'armure', des: 0 } },
+        })).toEqual([
+            ['combat.horsJeu.tables[0]', 'erreur'],
+            ['combat.horsJeu.desAuChoix', 'erreur'],
+            ['combat.horsJeu.noterDans', 'avertissement'],
+            ['combat.protection.champ', 'erreur'],
+            ['combat.protection.des', 'erreur'],
+            ['jet.brise[0].noterDans', 'avertissement'],
+        ]);
+    });
+});

@@ -68,3 +68,23 @@ describe('les ressources à dé d’usure d’un personnage', () => {
         expect(ressourcesDUsure(null, { torche: 'd8' })).toEqual([]);
     });
 });
+
+describe('le Matériel et la suite d’un déclin — 2026-10-16', () => {
+    const PILOTE = {
+        desDUsure: [
+            { fieldId: 'mentalHealth', label: 'Santé mentale', auDeclin: [{ label: 'Choc', table: { univers: 'Cthulhu Hack', table: 'chocs' } }] },
+            { fieldId: 'materiel_1', label: 'Matériel 1', plafond: 20, nomSur: 'materiel_1_nom' },
+            { fieldId: 'materiel_2', label: 'Matériel 2', plafond: 20, nomSur: 'materiel_2_nom' },
+        ],
+    };
+    it('un emplacement de Matériel porte son nom ; vide, il ne se propose pas', () => {
+        const liste = ressourcesDUsure(PILOTE, { mentalHealth: 'd8', materiel_1_nom: ' Lampe-torche ', materiel_1: 'd8', materiel_2: 'd6' });
+        expect(liste.map(r => [r.fieldId, r.label, r.plafond])).toEqual([
+            ['mentalHealth', 'Santé mentale', 12], ['materiel_1', 'Lampe-torche', 20],
+        ]);
+    });
+    it('la suite du déclin voyage avec la ressource', () => {
+        expect(ressourcesDUsure(PILOTE, {})[0].auDeclin?.[0].label).toBe('Choc');
+        expect(ressourcesDUsure(PILOTE, { materiel_1_nom: 'Corde' })[1].auDeclin).toBeUndefined();
+    });
+});

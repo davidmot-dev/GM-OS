@@ -323,6 +323,14 @@ export interface DescripteurDeJet {
      */
     reussiteDepensee?: { champ: string; label: string };
     /**
+     * **La Fortune** — Cthulhu Hack, 2026-10-16 (règle optionnelle du livre) :
+     * après un jet raté, le joueur **place** des jetons sur sa fiche (`champ`)
+     * — `relance` pour relancer, `reussite` pour réussir —, sans jamais en avoir
+     * plus de `max`. Le meneur les défausse ensuite pour des complications ; la
+     * fiche s'en libère. Proposée au panneau de jet et au pupitre.
+     */
+    fortune?: { champ: string; label?: string; max: number; relance: number; reussite: number };
+    /**
      * **Brisé** — Blade Runner, 2026-10-14. Quand forcer met un de ces champs à
      * zéro, le panneau le dit, et peut lancer l'effet critique : le dé `de` (un
      * champ échelonné, l'Empathie), lu dans `table` (Table-OS) ; sur un 1, le

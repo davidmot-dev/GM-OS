@@ -19,6 +19,7 @@ import { useRegimeDInterface } from '../session/hooks/useRegimeDInterface';
 import { estUnJetYearZero, forcerLeDernierJet, pourquoiNePasForcerAuPupitre } from './forcerAuPupitre';
 import { attribuerLeFielDuDernierJet, jetDeDestinAAttribuer, unsDuJetDeDestin } from './fielAuPupitre';
 import { gmToast } from '../../stores/useToastStore';
+import { placerLaFortune, suitesProposees, tirerLaSuiteDuDeclin } from './suitesDuJetDeFiche';
 
 const generateId = () => Math.random().toString(36).substring(7);
 
@@ -592,6 +593,12 @@ const DiceBoard: React.FC = () => {
         /* La fiche garde la vérité : on y réécrit le dé qu'est devenue la ressource. */
         if (mode === 'usure' && jet?.usure && lien && ressourceLiee && jet.usure.apres !== deDeLaFiche) {
             updateCharacterSheetData(lien.joueurId, lien.personnage.id, ressourceLiee.fieldId, ecrireLeDe(jet.usure.apres));
+        }
+        // La fiche du jet, pour que la Fortune et la suite d'un déclin sachent où écrire.
+        if (mode === 'usure' && jet?.usure && lien && ressourceLiee) {
+            useDiceStore.getState().annoterLeJet(jet.id, {
+                deFiche: { joueurId: lien.joueurId, characterId: lien.personnage.id, genre: 'ressource', champ: ressourceLiee.fieldId },
+            });
         }
     };
     React.useEffect(() => {
@@ -1307,6 +1314,45 @@ const DiceBoard: React.FC = () => {
                                     </div>
                                 </div>
                             )}
+                            {/*
+                              **Les suites d'un jet de fiche** — Cthulhu Hack, 2026-10-16 : la
+                              Fortune après un jet raté, la Folie passagère ou le Choc après un déclin.
+                            */}
+                            {(() => {
+                                const { fortune, declin } = suitesProposees(dernier);
+                                if (!fortune && declin.length === 0) return null;
+                                const regle = activeDriver?.jet?.fortune;
+                                const nom = regle?.label ?? 'Fortune';
+                                const classe = 'px-3 py-1.5 rounded-lg border border-accent/40 bg-accent/10 text-accent text-ui-10 font-black uppercase tracking-widest hover:bg-accent/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed';
+                                const dire = (dits: string[]) => { for (const d of dits) gmToast(d, 'info'); };
+                                return (
+                                    <div className="mt-3 flex flex-col items-center gap-1" data-suites-du-jet>
+                                        {fortune && regle && (
+                                            <>
+                                                <span className="text-ui-10 text-app-muted text-center">{nom} : {fortune.jetons} / {regle.max} jeton{regle.max > 1 ? 's' : ''} sur la fiche</span>
+                                                <div className="flex gap-2">
+                                                    <button type="button" className={classe} disabled={!fortune.relance} onClick={() => dire(placerLaFortune('relance'))}>
+                                                        Relancer (+{regle.relance})
+                                                    </button>
+                                                    <button type="button" className={classe} disabled={!fortune.reussite} onClick={() => dire(placerLaFortune('reussite'))}>
+                                                        Réussir (+{regle.reussite})
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                        {declin.length > 0 && (
+                                            <div className="flex gap-2">
+                                                {declin.map((s, i) => (
+                                                    <button key={s.label} type="button" className={classe}
+                                                        onClick={() => { void tirerLaSuiteDuDeclin(i).then(dire); }}>
+                                                        {s.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })()}
                         </>
                     ) : (
                         <div className="text-center py-6">

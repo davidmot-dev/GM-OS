@@ -89,7 +89,8 @@ choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Réserves du personnage** (`reservesDuPersonnage`) | Ce que le personnage puise dans **ses** réserves, sur **sa** fiche, au moment du jet — même forme que les apports du groupe | NOC : Vécu, Espoir, Singularité |
 | **Forcer le jet** (`forcer`) | Après avoir vu les dés — sur la fiche, ou au **pupitre** et à la **télécommande** pour le dernier jet, qui annoncent le prix au lieu de l'écrire —, le bouton **« Forcer le jet »** relance ceux qui n’ont pas réussi — les 1 restent aussi, si le jeu le dit — et **fait payer** : la seconde réserve monte avant la relance (et gagne son dé), ou chaque 1 coûte un point sur la fiche. Combien de fois, qui ne force jamais, ce qui l’interdit : le bouton grisé **dit pourquoi** | Alien : +1 Stress ; Blade Runner : un point de Santé ou de Sang-froid par 1 |
 | **Panique** (`panique`) | Un 1 sur la seconde réserve fait paraître **« Test de Panique »** : un dé, plus la valeur de cette réserve, lu dans la table du jeu (Table-OS) sur le poste du meneur ; la tablette dit le total. Avec un champ de **panique en cours**, une nouvelle panique plus basse ou égale donne la ligne **juste au-dessus** de l’ancienne | Alien : 1D6 + Niveau de Stress |
-| **Brisé** (`brise`) | Quand forcer met un champ à zéro (Santé, Sang-froid), le panneau dit l'état ; s'il a un effet critique, **« Lancer l'effet critique »** jette le dé de la fiche (l'Empathie), lu dans la table du jeu ; sur un 1, le maximum perd un point **à vie** | Blade Runner : Brisé par les dégâts, Brisé par le stress |
+| **Brisé** (`brise`) | Quand forcer met un champ à zéro (Santé, Sang-froid), le panneau dit l'état ; s'il a un effet critique, **« Lancer l'effet critique »** jette le dé de la fiche (l'Empathie), lu dans la table du jeu ; sur un 1, le maximum perd un point **à vie**. Le même geste paraît **sur la carte de combat** quand ce champ tombe à zéro sous le stress, hors forçage ; l'effet tiré peut s'écrire sur la fiche (`noterDans`) | Blade Runner : Brisé par les dégâts, Brisé par le stress |
+| **Fortune** (`fortune`) | Sous un jet **raté**, le joueur **place** des jetons sur sa fiche : un pour **relancer**, deux pour **réussir**, jamais plus que le maximum. Au panneau de jet, et au **pupitre** sur un jet venu d'une fiche (Sauvegarde, ressource — le dé perdu revient avant la relance). Le meneur défausse les jetons à la main | Cthulhu Hack : 2 jetons au plus |
 | **Réussite dépensée** (`reussiteDepensee`) | Après le lancer, un bouton dépense **un point de la fiche** pour ajouter **un dé réussi** au jet | Alien : le Point de Récit donne un 6 |
 | **Composante facultative** (`facultative`) | Un choix qu'on peut laisser vide sans bloquer le jet | Torg : la compétence, absente d'un test non entraîné |
 | **Critique, complication** (`critique`, `complication`) | Les faces qui comptent double, ou qui compliquent | 2d20 : 1 et 20 |
@@ -239,6 +240,12 @@ descendre d'un cran (d20 → d12 → d10 → … → d4 → épuisée). Le dé c
 pupitre le lit, le lance et y réécrit le dé qu'il devient. Sans déclaration, GM-OS reconnaît les
 ressources suivies en combat dont le champ contient un dé. Voir [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md).
 
+| Réglage | Ce qu'il change |
+| :--- | :--- |
+| **Plafond** (`plafond`) | Le plus gros dé que la ressource atteint : d12, ou d20 pour le Matériel |
+| **Nom sur la fiche** (`nomSur`) | Un **emplacement** dont le nom s'écrit sur la fiche (« Lampe-torche ») : c'est le Matériel. Vide, il ne se propose pas |
+| **Suite du déclin** (`auDeclin`) | Quand la ressource descend, le **pupitre** propose un bouton par table — la **Folie passagère** ou le **Choc** de la Santé mentale — tirée dans Table-OS et écrite à l'historique |
+
 ---
 
 ## L'ordre du tour, la santé, la défaite (`combat`)
@@ -253,6 +260,8 @@ ressources suivies en combat dont le champ contient un dé. Voir [Cthulhu Hack](
 | **Modèle de santé** (`defaultHealthType`) | Points de vie, horloges, anatomie, blessures ou cases — la carte du combattant change d'aspect |
 | **Santé de départ** (`santeDeDepart`) | Le maximum se lit sur la fiche (Alien : la Force) |
 | **Cases de santé** (`casesDeSante`) | Pour le modèle « cases » : leur **nombre**, leurs **seuils** nommés (« Choqué » à 5) et l'état que chacun déclenche, le **libellé** de la jauge, et le **champ** de la fiche qui la suit (NOC : dix cases Blessures). Sans elles, cinq cases (Léger, Grave, Critique) |
+| **Hors Jeu** (`horsJeu`) | À zéro de santé, un panneau sur la carte du combattant. Cthulhu Hack : **« Tirer les conséquences »** dans la table du jeu (Table-OS), puis **« S'il survit : récupérer 1d4 PV »**, qui passe par la santé comme un soin — vous choisissez le moment, la règle dit « une fois le danger écarté ». Blade Runner (**Brisé par les dégâts**) : le **rappel** de l'état, des **tables au choix** (Percutant, Perforant), le **dé au choix** (le dé de critique de l'arme, D6 à D12), chaque blessure **notée sur la fiche**, et **répétable** — chaque nouveau coup à zéro en est une autre, adversaires compris |
+| **Protection** (`protection`) | Un bouton sur la carte : **deux dés du niveau** écrit sur la fiche (A à D), chaque réussite retire un point de dégâts, des dégâts ramenés à zéro annulent la blessure critique. Vous saisissez ensuite les dégâts restants. Jamais contre les dégâts d'un forçage (Blade Runner) |
 | **Tâche de défaite** (`tacheDeDefaite`) | Vaincre un adversaire est une tâche étendue, pas une jauge qui tombe à zéro (Dune) |
 | **Ressources suivies** (`statsToTrack`) | Les jauges que Combat-OS montre sur chaque carte ; leur **maximum** peut se lire sur la fiche par une formule (`max` : le Choc de Torg plafonne à l'Esprit). Chaque jauge a ses boutons **−** et **+** ; la règle peut y ajouter ses **gestes** (`gestes` : « Récupérer −2 », « Reprendre son souffle » qui remet à 0) |
 | **Dommages selon la règle** (`dommages`) | La valeur saisie dans « Dégâts » devient un **total de dommages** : GM-OS lit la Résistance de la cible et applique la table du jeu — Blessures cochées, Choc ajouté et plafonné, KO annoncé (Torg) |

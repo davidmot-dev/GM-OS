@@ -26,6 +26,45 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> **16/10 — Cthulhu Hack : Fortune, Folie passagère / Choc, Hors Jeu, Matériel (Claude Code).**
+> David : *« passe au jauge Cthulhu »*, GM-OS fermé, pilote exporté. Règles relues dans le carnet
+> NotebookLM « Cthulhu Hack » (sections citées : « Fortune », « Folie passagère », « Chocs »,
+> « Hors Jeu », « Conséquences du Hors Jeu », « Matériel et Richesse »). **Code fait, non commité** :
+> trois tables dans `databases/tables/Cthulhu Hack/` (`folies_passageres`, `chocs`,
+> `consequences_du_hors_jeu`) ; `DeDUsureDuPilote.auDeclin` (un bouton par table au pupitre après
+> un déclin) et `.nomSur` (emplacements de Matériel nommés sur la fiche) ;
+> `DescripteurDeJet.fortune` (jetons **placés** sur la fiche : 1 relance, 2 réussite, 2 au plus ;
+> au panneau de jet et au pupitre — une ressource rattrapée retrouve son dé avant la relance) ;
+> `combat.horsJeu` (`HorsJeuDuCombattant` : table à 0 PV, puis 1d4 PV par `handleApplyImpact`) ;
+> `RollRecord.deFiche` posé par les trois chemins d'un jet de fiche (tablette `ficheActions`,
+> pupitre lié, carte de combat) et `suite` (une seule suite par jet) ; `dice/suitesDuJetDeFiche.ts` ;
+> contrôles de la Forge ; manuel 53 et 54 Cthulhu Hack. **Pilote corrigé** dans
+> `Export Dirvers/corriges/` (champ Fortune, section Matériel à quatre emplacements, `desDUsure`
+> déclarés — ils remplacent la reconnaissance par le contenu du champ —, `jet.fortune`,
+> `combat.horsJeu`), zéro constat, tables présentes : **à réimporter par David**. Reste à la main :
+> défausse de la Fortune par le meneur, variante Pulp, armure qui perd sa protection, Sauvegardes
+> perdues d'un Hors Jeu, durées des Chocs et Folies. **Réimporté par David le 16/10.**
+
+> **16/10 — Blade Runner : Humanité, blessures critiques, stress critique, protection, Brisé en
+> combat (Claude Code).** Suite demandée par David (*« on va faire blade runner »*), GM-OS fermé,
+> pilote exporté. Règles relues dans le carnet NotebookLM « Blade Runner » (« BRISÉ PAR LES
+> DÉGÂTS », « BRISÉ PAR LE STRESS », « ÉQUIPEMENT DE PROTECTION », « Blessures critiques »,
+> « Promotion et Humanité », « Forcer un jet » p. 55). **Code fait** : `combat.horsJeu` élargi
+> (`rappel`, `tables` au choix, `desAuChoix` — le dé de critique de l'arme —, `noterDans`,
+> `repetable`, adversaires compris quand la chute se note) ; `PanneauDuBrise` sur la carte : le
+> Sang-froid à zéro **hors forçage** lance l'effet critique de `jet.brise` (dé d'Empathie, table
+> humain/réplicant, un 1 → maximum −1) ; `EtatBrise.noterDans` ; `lancerLEffetDuBrise` partagé avec
+> `PanneauDeJet` ; `combat.protection` (`ProtectionDuCombattant` : deux dés du niveau, chaque
+> réussite −1 dégât ; une lettre seule — « Aucune » n'est pas un D12) ; contrôles de la Forge ;
+> manuel 53 et 54 Blade Runner. `docs/systems/blade-runner/fiche/correspondance.json` : les cinq
+> absents reliés (Humanité, blessures critiques, stress critique, protection et son niveau).
+> **Pilote corrigé** dans `Export Dirvers/corriges/` (champs `blessuresCritiques`, `stressCritique`,
+> `protectionNom`, `protection`, `pointsHumanite` ; `horsJeu`, `protection`, `noterDans`), zéro
+> constat, tables présentes : **à réimporter par David**. Le forçage est **relu** : les 1 restent,
+> les réussites aussi — la relance optionnelle d'un D10/D12 à une réussite n'est pas proposée.
+> Reste à la main : facteur de stress et jet de Psychologie, sauvegardes contre la mort,
+> stabilisation, guérison.
+
 > **16/10 — NOC : moment de calme, effets du Fiel, Fatigué, Capital, Vécu et Rouages (Claude
 > Code).** David : *« on va faire NOC »*, les quatre lots choisis. Règles relues dans le carnet
 > NotebookLM « NOC » (`nlm notebook query`, sections citées : « Capital », « Fatigue », « LES
@@ -46,10 +85,12 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > export d'origine intact), **zéro constat** de la Forge, gestes simulés sur un Héros fictif :
 > fiche + sections **États** (`fatigue`, `bouleversement`, cases) et **Séquelles**
 > (`sequelles_<jauge>`, plancher du calme) ; péril + Fatigue et Bouleversement (`seulementSi`
-> domaine = statut) ; Capital `horsPlafondSi` talent = fortune ; `gestesDesHeros` complet. **À
-> réimporter par David** (« Remplacer »). Reste à la main : Aura de lumière, partage de l'Extase,
+> domaine = statut) ; Capital `horsPlafondSi` talent = fortune ; `gestesDesHeros` complet. **Réimporté
+> par David le 16/10** ; commits `72c723c5` (horloges Alien) et `0efbc55e` (NOC), poussés (pré-push :
+> 7 860 tests verts). ✅ **Vu à l'écran par David le 16/10** (*« ok j'ai tout vu à l'écran »*). Reste à la main : Aura de lumière, partage de l'Extase,
 > alliés, Singularité gagnée par un Rouage, pistes de la Cabale, report d'une séquelle à 8.
 
+> ✅ **Traité le jour même — voir les deux entrées ci-dessus (Cthulhu Hack, Blade Runner).**
 > **16/10 — Cthulhu Hack et Blade Runner : les jauges que GM-OS ne suit pas (constat, rien codé).**
 > Question de David : *« dans Cthulhu Hack on gère bien toutes les jauges ? même chose dans Blade
 > Runner ? »* — réponse : non. Vérifié dans le code et les correspondances de fiche ; **à

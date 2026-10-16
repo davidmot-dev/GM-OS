@@ -19,6 +19,11 @@
     { "gmos": "sangFroid", "fiche": "cool.current" },
     { "gmos": "pointsPromotion", "fiche": "points.promotion" },
     { "gmos": "pointsChinyen", "fiche": "points.chinyen" },
+    { "gmos": "pointsHumanite", "fiche": "points.humanity" },
+    { "gmos": "blessuresCritiques", "fiche": "health.critical_injuries" },
+    { "gmos": "stressCritique", "fiche": "cool.critical_stress" },
+    { "gmos": "protectionNom", "fiche": "protection.name" },
+    { "gmos": "protection", "fiche": "protection.level" },
 
     {
       "gmos": "nature",
@@ -70,11 +75,5 @@
     }
   ],
 
-  "absents": [
-    { "fiche": "health.critical_injuries", "pourquoi": "GM-OS n'a pas de champ de blessure grave." },
-    { "fiche": "cool.critical_stress", "pourquoi": "GM-OS n'a pas de champ de stress critique." },
-    { "fiche": "protection.name", "pourquoi": "L'armure vit dans l'inventaire de GM-OS, pas dans la fiche." },
-    { "fiche": "protection.level", "pourquoi": "Idem protection.name." },
-    { "fiche": "points.humanity", "pourquoi": "Vrai manque du gabarit GM-OS. Il doit revenir par la Forge (etape 6) : les identifiants ne sont pas autorables a la main." }
-  ]
+  "absents": []
 }

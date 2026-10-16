@@ -339,6 +339,57 @@ export function controlerLePilote(
                 `« d${de.plafond} » n'est pas un cran de l'échelle d'usure (${ECHELLE_D_USURE.map(f => `d${f}`).join(', ')}).`,
             );
         }
+        // Le Matériel : son nom se lit sur la fiche ; un champ absent laisse l'emplacement muet.
+        if (de.nomSur && !tousLesChamps.has(de.nomSur)) {
+            avertir(`desDUsure[${i}].nomSur`, `« ${de.label} » lit son nom dans « ${de.nomSur} », absent de la fiche : l'emplacement ne se proposera jamais.`);
+        }
+        // La Folie passagère, le Choc : chaque bouton nomme une table de Table-OS.
+        (de.auDeclin ?? []).forEach((suite, j) => {
+            if (!suite.label?.trim() || !suite.table?.univers?.trim() || !suite.table?.table?.trim()) {
+                erreur(`desDUsure[${i}].auDeclin[${j}]`, `La suite du déclin de « ${de.label} » doit nommer un bouton et une table (univers et table de Table-OS).`);
+            }
+        });
+    });
+
+    // Le Hors Jeu (Cthulhu Hack) : une table à tirer, et une récupération écrite en dés.
+    const horsJeu = driver.combat?.horsJeu;
+    if (horsJeu) {
+        const tableValide = (t: { univers?: string; table?: string } | undefined) => !!t?.univers?.trim() && !!t?.table?.trim();
+        if (horsJeu.tables?.length) {
+            horsJeu.tables.forEach((t, i) => {
+                if (!t.label?.trim() || !tableValide(t.table)) erreur(`combat.horsJeu.tables[${i}]`, 'Chaque table au choix porte un nom et une table de Table-OS (univers et table).');
+            });
+        } else if (!tableValide(horsJeu.table)) {
+            erreur('combat.horsJeu.table', 'Le Hors Jeu doit nommer sa table (univers et table de Table-OS), ou des tables au choix.');
+        }
+        if ((horsJeu.desAuChoix ?? []).some(f => !(ECHELLE_D_USURE as readonly number[]).includes(f) && f !== 20)) {
+            erreur('combat.horsJeu.desAuChoix', 'Les dés au choix sont des dés ordinaires (D4, D6, D8, D10, D12, D20).');
+        }
+        if (horsJeu.noterDans && !tousLesChamps.has(horsJeu.noterDans)) {
+            avertir('combat.horsJeu.noterDans', `Les résultats se notent dans « ${horsJeu.noterDans} », absent de la fiche : ils ne se garderont pas.`);
+        }
+        if (horsJeu.recuperation !== undefined && !/^\s*\d*d\d+\s*$/i.test(horsJeu.recuperation)) {
+            erreur('combat.horsJeu.recuperation', `La récupération « ${horsJeu.recuperation} » doit s'écrire en dés (« 1d4 »).`);
+        }
+    }
+
+    // La protection de Blade Runner : un niveau lu sur la fiche, des dés en nombre entier.
+    const protection = driver.combat?.protection;
+    if (protection) {
+        if (!tousLesChamps.has(protection.champ)) {
+            erreur('combat.protection.champ', `Le niveau de protection se lit dans « ${protection.champ} », absent de la fiche : le bouton ne paraîtrait jamais.`);
+        }
+        if (protection.des !== undefined && !(Number.isInteger(protection.des) && protection.des > 0)) {
+            erreur('combat.protection.des', 'La protection lance un nombre entier positif de dés.');
+        }
+        if (protection.nomSur && !tousLesChamps.has(protection.nomSur)) {
+            avertir('combat.protection.nomSur', `Le nom de la protection se lit dans « ${protection.nomSur} », absent de la fiche.`);
+        }
+    }
+    (driver.jet?.brise ?? []).forEach((b, i) => {
+        if (b.noterDans && !tousLesChamps.has(b.noterDans)) {
+            avertir(`jet.brise[${i}].noterDans`, `« ${b.label} » note son effet dans « ${b.noterDans} », absent de la fiche.`);
+        }
     });
 
     (driver.ui_config?.gauges ?? []).forEach((jauge, i) => {
@@ -645,6 +696,20 @@ export function controlerLePilote(
     const reussiteDepensee = driver.jet?.reussiteDepensee;
     if (reussiteDepensee && !tousLesChamps.has(reussiteDepensee.champ)) {
         erreur('jet.reussiteDepensee.champ', `« ${reussiteDepensee.label} » se décompte dans « ${reussiteDepensee.champ} », absent de la fiche : le bouton n'aurait rien à dépenser.`);
+    }
+    // La Fortune de Cthulhu Hack : des jetons placés sur la fiche, jamais plus que le maximum.
+    const fortune = driver.jet?.fortune;
+    if (fortune) {
+        const nom = fortune.label ?? 'Fortune';
+        if (!tousLesChamps.has(fortune.champ)) {
+            erreur('jet.fortune.champ', `« ${nom} » se place dans « ${fortune.champ} », absent de la fiche : les boutons n'auraient rien à compter.`);
+        }
+        const entiers = [fortune.max, fortune.relance, fortune.reussite].every(n => Number.isInteger(n) && n > 0);
+        if (!entiers) {
+            erreur('jet.fortune', `« ${nom} » : le maximum, le prix de la relance et celui de la réussite sont des nombres entiers positifs.`);
+        } else if (fortune.relance > fortune.max || fortune.reussite > fortune.max) {
+            avertir('jet.fortune', `« ${nom} » coûte plus que son maximum : un des deux boutons ne s'offrira jamais.`);
+        }
     }
 
     if (driver.jet?.cible && !(driver.jet.cible.mecanique in MECANIQUES_DE_CIBLE)) {

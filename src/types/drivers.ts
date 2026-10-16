@@ -182,6 +182,19 @@ export interface DeDUsureDuPilote {
     label: string;
     /** Le plus gros dé que la ressource peut atteindre — 12, ou 20 pour le Matériel. */
     plafond?: number;
+    /**
+     * Le champ qui porte le **nom** de la ressource — un emplacement de Matériel
+     * (« Lampe-torche »). Rempli, il remplace `label` ; vide, l'emplacement ne se
+     * propose pas.
+     */
+    nomSur?: string;
+    /**
+     * **Ce qu'on tire quand la ressource descend d'un cran** — Cthulhu Hack,
+     * 2026-10-16 : un 1 ou un 2 sur la Santé mentale inflige une **Folie
+     * passagère**, ou un **Choc** si le meneur le préfère. Chaque entrée est un
+     * bouton, proposé au pupitre après le déclin ; la table est lue dans Table-OS.
+     */
+    auDeclin?: { label: string; table: { univers: string; table: string } }[];
 }
 
 /**
@@ -441,6 +454,36 @@ export interface GameDriver {
          * d'avant.
          */
         casesDeSante?: CasesDeSante;
+        /**
+         * **Le Hors Jeu** — Cthulhu Hack, 2026-10-16 : à zéro point de vie, une
+         * fois le danger écarté, on lance la **table des Conséquences** (Table-OS) ;
+         * qui survit récupère `recuperation` points de vie (`1d4`). La carte du
+         * combattant tombé propose les deux gestes, au meneur.
+         */
+        /**
+         * **La protection** — Blade Runner, 2026-10-16 (« ÉQUIPEMENT DE
+         * PROTECTION ») : à chaque coup subi, `des` dés du niveau écrit sur la
+         * fiche (`champ`, une lettre A à D) ; chaque réussite retire un point de
+         * dégâts, et des dégâts ramenés à zéro annulent la blessure critique. Un
+         * bouton sur la carte du combattant ; `nomSur` donne le nom de l'armure.
+         */
+        protection?: { champ: string; des?: number; label?: string; nomSur?: string };
+        horsJeu?: {
+            label?: string;
+            /** Ce que l'état fait, dit au meneur — Brisé par les dégâts de Blade Runner. */
+            rappel?: string;
+            /** La table, quand il n'y en a qu'une (Cthulhu Hack). */
+            table?: { univers: string; table: string };
+            /** Des tables au choix du meneur : Percutant ou Perforant (Blade Runner). */
+            tables?: { label: string; table: { univers: string; table: string } }[];
+            /** Les dés au choix du meneur — le dé de critique de l'arme, D6 à D12 — au lieu du dé de la table. */
+            desAuChoix?: number[];
+            /** Le champ texte de la fiche où s'ajoute chaque résultat : les blessures critiques. */
+            noterDans?: string;
+            /** On tire encore : à zéro, chaque nouveau coup est une blessure critique. */
+            repetable?: boolean;
+            recuperation?: string;
+        };
         /**
          * **Les dommages se calculent selon la règle du jeu** — Torg, 2026-10-13
          * (`combat/logic/dommagesDeTorg.ts`). La valeur saisie dans « Dégâts » est
