@@ -8,7 +8,7 @@ export const manifeste: {
   libelle: string;
   description: string;
   version: string;
-  versionDonnees: 2;
+  versionDonnees: 3;
   corpusCompatibles: string[];
   commandes: Array<{ id: string; roles: Array<'mj' | 'joueur'> }>;
 };

@@ -1,3 +1,7 @@
+export interface DemandeMuthur {
+  id: string; type: 'hack' | 'message'; at: number; content: string;
+  status: 'pending' | 'answered' | 'accepted' | 'refused' | 'cancelled'; response: string; resolvedAt: number | null;
+}
 export interface MessageMuthur {
   id: string;
   kind: 'input' | 'system' | 'success' | 'error' | 'mother';
@@ -10,6 +14,7 @@ export interface OperateurMuthur {
   access: 'crew' | 'code' | 'admin';
   unlocked: string[];
   messages: MessageMuthur[];
+  requests: DemandeMuthur[];
   request: { id: string; type: 'hack' | 'message'; at: number } | null;
   cue: { id: string; type: 'hack'; success: boolean; at: number; duration: number } | null;
 }
@@ -26,7 +31,7 @@ export interface ProtocoleMuthur {
   minutes: number; actif: boolean; portee: 'operateur' | 'equipage';
 }
 export interface EtatMuthur {
-  version: 2;
+  version: 3;
   system: 'alien';
   revision: number;
   config: { vessel: string; status: string; adminPassword: string; crt: boolean; glitches: boolean };
@@ -40,7 +45,7 @@ export interface EtatMuthur {
 }
 export type VueMuthurMJ = EtatMuthur & { diffusionAutorisee: boolean };
 export interface VueMuthurJoueur {
-  version: 2;
+  version: 3;
   system: 'alien';
   revision: number;
   config: Pick<EtatMuthur['config'], 'vessel' | 'crt' | 'glitches'>;
@@ -60,9 +65,11 @@ export type CommandeMuthur =
   | { id: 'preparer-operateur'; charge: { personnageId: string; nom: string } }
   | { id: 'configurer'; charge: { vaisseau?: string; statut?: string; motDePasse?: string; crt?: boolean; parasites?: boolean } }
   | { id: 'creer-dossier'; charge: { dossierId: string; titre: string; contenu: string; acces: 'equipage' | 'code' | 'administrateur'; code: string } }
+  | { id: 'supprimer-dossier'; charge: { dossierId: string } }
+  | { id: 'classer-dossiers'; charge: { dossierIds: string[] } }
   | { id: 'modifier-dossier'; charge: { dossierId: string; titre?: string; contenu?: string; acces?: 'equipage' | 'code' | 'administrateur'; code?: string } }
-  | { id: 'repondre'; charge: { personnageId: string; texte: string } }
-  | { id: 'arbitrer-piratage'; charge: { personnageId: string; reussite: boolean } }
+  | { id: 'repondre'; charge: { personnageId: string; texte: string; demandeId?: string | null } }
+  | { id: 'arbitrer-piratage'; charge: { personnageId: string; reussite: boolean; demandeId?: string } }
   | { id: 'revoquer'; charge: { personnageId: string } }
   | { id: 'compte-a-rebours'; charge: { minutes: number | null } }
   | { id: 'reinitialiser'; charge: Record<string, never> };

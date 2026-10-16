@@ -28,6 +28,27 @@ avec données fictives. MU/TH/UR et le détecteur sont raccordés au Hub, avec d
 
 ![Le terminal reçu par le personnage autorisé](captures/jeu-alien-module-joueur.jpg)
 
+### Ranger les dossiers et traiter plusieurs demandes
+
+Dans **Dossiers**, sélectionne un dossier puis **Monter le dossier** ou **Descendre le dossier**.
+Cet ordre devient celui de la commande **LIST**. Pour supprimer, coche **Confirmer la suppression
+du dossier**, puis **Supprimer le dossier**. Ses déverrouillages sont retirés ; les textes déjà
+lus restent dans les dialogues. **Nouveau dossier…** permet d’en créer un autre.
+
+![Classement et suppression d’un dossier](captures/jeu-alien-dossiers.jpg)
+
+Dans **Terminal**, choisis l’opérateur puis la **Demande à traiter**. Chaque `/M question`
+rejoint sa file privée ; plusieurs questions et un piratage peuvent attendre ensemble. Sélectionne
+une question pour lui répondre ou le piratage pour l’autoriser/le repousser. **Message libre à cet
+opérateur** transmet un message sans traiter de question. **Demandes traitées** garde le texte,
+la réponse et le résultat. La révocation annule les demandes encore en attente.
+
+La file accepte 32 demandes en attente par personnage et garde jusqu’à 128 demandes avec leur
+historique. **CLEAR** nettoie le journal du joueur sans effacer les demandes. Les demandes sont
+conservées à la reprise d’une campagne ; les autres personnages ne les reçoivent pas.
+
+![Plusieurs demandes dans la file privée de l’opérateur](captures/jeu-alien-demandes.jpg)
+
 ### Alerte et diffusion sonore
 
 Les protocoles associent des codes exacts à un message et, éventuellement, à l’ouverture/fermeture
@@ -55,6 +76,16 @@ la sirène et les annonces reprennent. La lecture automatique bloquée propose *
 ![Le pupitre du détecteur, réglages et scan dans le banc isolé](captures/jeu-alien-detecteur-mj.jpg)
 
 ![Le détecteur reçu par un personnage autorisé](captures/jeu-alien-detecteur-joueur.jpg)
+
+Pour préparer plusieurs ambiances, applique d’abord les réglages avec **Enregistrer les réglages**.
+Dans **Préréglages nommés**, choisis **Nouveau préréglage…**, donne un nom puis **Enregistrer les
+réglages actuels**. Ils mémorisent contacts, proximité, intensité, volume et parasites du radar.
+Sélectionne ensuite un nom et **Charger et arrêter le scan** : le détecteur revient en veille,
+sans faux écho. Lance le scan au moment voulu. Tu peux remplacer le préréglage choisi par les
+réglages actuels, le renommer ou le supprimer après confirmation. Jusqu’à 32 noms sont conservés
+par campagne, dans les sauvegardes et exports ; ils restent réservés au MJ.
+
+![Préréglage rappelé avec le scan arrêté](captures/jeu-alien-prereglages.jpg)
 
 **Arrêter le scan** garde les accès et les réglages. Retirer un PJ ferme uniquement son instrument,
 sans interrompre celui des autres ; le dernier retrait arrête le scan. Le détecteur est un
@@ -143,4 +174,4 @@ La fiche d'Alien se relie à son personnage GM-OS (« Fiche du jeu »). Les pist
 Santé, Radiation, Expérience, Points de Récit) se comptent, et les dix lignes d'équipement forment
 l'inventaire. Voir [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md).
 
-*Relu le 2026-10-15 : modules Alien et étape 4 ; parcours hors ligne et transport réel sur le PC vérifiés.*
+*Relu le 2026-10-16 : étape 5, dossiers, file privée et préréglages nommés ; captures hors ligne actualisées. La recette matérielle reste à faire.*

@@ -11477,6 +11477,19 @@ aucun paquet installé, aucun code applicatif modifié dans cette étape ; étap
 
 ---
 
+**Étape 5, 16/10.** David : *« commit et pousse puis faire l’étape 5 - GM-OS est fermé »*,
+puis *« continue »*. Étapes 3/4 commitées dans `8027299e`, correctif isolé `05ff9692` ;
+push réussi sur `feature/tablet-hub-pwa` après types/lint, **7 815 tests** et build verts.
+Les trois guides du commit ont été envoyés à NotebookLM par le hook autorisé.
+MU/TH/UR 0.4/données v3 : suppression confirmée et ordre des dossiers, file de demandes
+privées avec contenu/statut, questions et HACK indépendants, traitement ciblé et migration
+v1/v2. Détecteur 0.2/données v2 : préréglages nommés par campagne, rappel en veille sans
+faux écho. Prototype autonome adapté aussi ; préparation portable des dossiers conservée.
+Manuel 53/54 Alien/61 et captures actualisés. [Reprise du 16/10](2026-10-16-etat-et-reprise.md).
+Étape 5 mise en version à la demande suivante de David (« commit et pousse »), sous
+`feat(alien): classer les dossiers et gerer les demandes et prereglages` ; `git log` donne
+l’identifiant. Reste la recette matérielle, à partager avec David pour la restitution réelle.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11551,7 +11564,7 @@ aucun paquet installé, aucun code applicatif modifié dans cette étape ; étap
 | 67 | **Description des PNJ d'une séance** | ✅ **Corrigé et VALIDÉ par David le 10/10**, § 132 : casse normale, deux lignes, texte entier au survol | — | Rien |
 | 68 | **Le § 1 bis repris** | ✅ **10/10**, § 133 : en-tête et Combat-OS corrigés depuis le 30/09, vus ; storyboard descendu au § 1 ; deux suites e2e complètes sans plantage (645 chacune) ; référence `cortex-ia-personnalite` rafraîchie ; taille des écrans de référence vérifiée avant chaque capture | — | Rien |
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
-| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; G0–G2, MU/TH/UR et détecteur intégrés ; 411 tests ciblés/74 essais Node, 39 captures hors ligne puis six E2E sur vrai HTTP/WebSocket Electron/Edge et cinq captures Hub | Recette sur deux appareils physiques avec semence fictive | Wi-Fi/son/clavier/veille réels à éprouver ; dossiers/file de demandes et Table des Terres Médianes ensuite |
+| 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 livrées : dossiers classables/supprimables, file privée et préréglages nommés ; mise en version demandée le 16/10, voir `git log` | Recette sur deux appareils physiques avec semence fictive | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 

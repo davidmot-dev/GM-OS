@@ -1,6 +1,6 @@
 # Détecteur Alien — module du Tablet Hub
 
-Version 0.1.0, contrat v1, données v1. Troisième tranche du 15/10/2026.
+Version 0.2.0, contrat v1, données v2. Ergonomie du 16/10/2026.
 `alien-detecteur` réutilise `AlienCore` pour ses commandes et le tirage des contacts,
 et `detecteur.js` pour le dessin partagé avec le prototype autonome. Il est enregistré
 explicitement dans les registres natif et React, sans branche Alien dans le Hub.
@@ -36,6 +36,9 @@ Commandes réservées au MJ ; le joueur consulte et active son audio local sans 
 | `configurer` | Facultatifs : `contacts` entier 0–9 ; `proximite`, `intensite`, `volume`, `parasites` nombres 0–100 ; `crt`, `effetsParasites` booléens. |
 | `scanner` | `{ actif: boolean }` ; le passage arrêté → actif renouvelle la graine partagée. |
 | `faux-echo` | `{}` ; scan actif requis, échéance autoritaire de neuf secondes. |
+| `enregistrer-prereglage` | `{ prereglageId, nom }` ; capture contacts, proximité, intensité, volume, parasites déjà appliqués. Crée ou remplace cet identifiant ; nom unique (casse ignorée), non blanc de 80 caractères au plus, 32 entrées maximum. |
+| `rappeler-prereglage` | `{ prereglageId }` ; charge les réglages, arrête scan et faux écho ; conserve la graine jusqu’au prochain démarrage volontaire. |
+| `supprimer-prereglage` | `{ prereglageId }` ; confirmation locale au pupitre. |
 
 Charges inconnues ou mal formées refusées sans mutation. L’état contient version, système,
 révision, deux réglages visuels et radar ; aucun dossier, code, dialogue ou opérateur MU/TH/UR.
@@ -43,7 +46,10 @@ L’hôte porte les destinataires et une clé d’ouverture par PJ/module : le r
 PJ ne ferme pas les instruments dont l’accès reste valide.
 
 La préparation rejoint le stockage privé, les sauvegardes complètes et exports/imports de
-campagne. `migrerEtat` accepte les données v1 du module et coupe scan/faux écho. Pas d’import
+campagne. La v2 ajoute `prereglages` (id, nom, réglages), visible uniquement au MJ.
+Dans le pupitre, applique d’abord les réglages puis enregistre sous un nom ; le rappel revient
+en veille. Le prototype autonome propose les mêmes gestes et les conserve dans son état local.
+`migrerEtat` valide les données v1/v2, ajoute une liste vide aux v1 et coupe scan/faux écho. Pas d’import
 direct d’une table autonome entière. Redémarrage et import laissent les accès fermés.
 
 ## Vérifications

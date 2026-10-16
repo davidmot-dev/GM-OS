@@ -108,6 +108,10 @@ Dans **Modules du jeu**, un retrait d’accès ou une déconnexion ferme l’ins
 Les dialogues restent liés au personnage ; changer de PJ efface l’ancienne vue de la tablette.
 Pour MU/TH/UR, **Activer le son** autorise la lecture locale ; la bande-son d’alerte ne joue que sur
 l’appareil choisi pour la diffusion. Les autres tablettes gardent le décompte visuel.
+Vous pouvez envoyer plusieurs questions avec `/M votre question` : chacune reste en attente
+du traitement du meneur, même si vous utilisez **CLEAR**. Un piratage peut attendre en parallèle.
+Vos demandes restent privées à votre personnage et au MJ. Le classement des dossiers et les
+préréglages du détecteur se préparent depuis le pupitre MJ.
 
 Le **Détecteur de mouvement** se reçoit séparément de MU/TH/UR. Le meneur démarre et règle
 le scan ; les PJ autorisés voient les mêmes contacts. Touchez **Activer les bips ici** pour
@@ -238,3 +242,4 @@ régénérées et regardées ; les essais sur les vrais appareils restent en T6.
 
 *Relu le 2026-10-15 : modules Alien, détecteur partagé et bips locaux vérifiés hors ligne,
 puis avec Electron et deux sessions Edge sur le même PC. Les appareils physiques restent à essayer.*
+*Ajout relu le 2026-10-16 : questions MU/TH/UR en file privée, CLEAR et préparation MJ.*

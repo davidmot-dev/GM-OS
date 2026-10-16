@@ -42,6 +42,9 @@
           <div class="section-heading"><span class="index">01</span><h2>Liaison MU/TH/UR</h2></div>
           <label>Opérateur<select id="operator"></select></label>
           <div id="request" class="request"><span class="status-led"></span><span>Aucune requête en attente.</span></div>
+          <label>Demande à traiter<select id="demandeSelect"></select></label>
+          <p id="demandeContenu" class="note"></p>
+          <details><summary>Demandes traitées</summary><div id="demandesTraitees"></div></details>
           <div id="hackButtons" class="button-row hidden"><button id="hackSuccess" class="primary">Autoriser l’intrusion</button><button id="hackFail" class="danger">La repousser</button></div>
           <form id="replyForm"><label>Répondre au nom de Maman<textarea id="replyText" rows="3" placeholder="Message à transmettre…" required maxlength="4000"></textarea></label><button class="primary wide" type="submit">Transmettre la réponse <span>↗</span></button></form>
           <div class="section-heading minor"><h3>État du vaisseau</h3></div>
@@ -83,6 +86,12 @@
           <div class="range-header"><label for="volume">Volume des bips</label><output id="volumeValue">25</output></div><input id="volume" type="range" min="0" max="100" value="25">
           <button id="anomalyButton" class="wide">Injecter un faux écho · 9 s</button>
           <p class="note">Intensité : cadence des bips et agitation visuelle. Volume : niveau sonore indépendant.</p>
+          <div class="section-heading minor"><h3>Préréglages nommés</h3></div>
+          <label>Préréglage<select id="prereglageSelect"></select></label>
+          <form id="prereglageForm"><label>Nom du préréglage<input id="prereglageNom" required maxlength="80"></label><button class="wide" type="submit">Enregistrer les réglages actuels</button></form>
+          <button id="chargerPrereglage" class="wide">Charger et arrêter le scan</button>
+          <label><input id="confirmerPrereglage" type="checkbox"> Confirmer la suppression du préréglage</label>
+          <button id="supprimerPrereglage" class="danger wide" disabled>Supprimer le préréglage</button>
         </section>
 
         <section class="control-panel hidden" id="panel-access">
@@ -105,6 +114,9 @@
             <label>Contenu<textarea id="documentBody" rows="5" maxlength="10000"></textarea></label>
             <button id="documentEnregistrer" class="primary wide" type="submit">Créer le dossier</button>
           </form>
+          <div class="button-row"><button id="monterDossier">Monter le dossier</button><button id="descendreDossier">Descendre le dossier</button></div>
+          <label><input id="confirmerDossier" type="checkbox"> Confirmer la suppression du dossier</label>
+          <button id="supprimerDossier" class="danger wide" disabled>Supprimer le dossier</button>
           <button id="revokeButton" class="wide">Révoquer les accès de l’opérateur</button>
           <details class="table-links"><summary>Connexion des joueurs</summary><p id="tableCode"></p><p id="playerAddress"></p></details>
           <button id="resetButton" class="danger wide">Réinitialiser la maquette</button>

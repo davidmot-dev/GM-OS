@@ -8,6 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import { verifierDetecteur } from '../alien/captures-detecteur.mjs';
+import { verifierErgonomie } from './captures-ergonomie.mjs';
 
 const racine = fileURLToPath(new URL('../../', import.meta.url));
 const sortie = path.join(racine, 'scratch/modules-du-jeu-integration');
@@ -178,5 +179,8 @@ if (process.argv.includes('--capturer')) {
         console.log('33 captures : MU/TH/UR et détecteur, 360/768/1180 px. Accès indépendants, scan partagé, positions bornées, faux écho, retrait partiel et Tout couper vérifiés avec le vrai hôte en mémoire.');
         await contexte.close();
         await verifierDetecteur({ navigateur, url: pathToFileURL(path.join(racine, 'outils/alien/index.html')).href, sortie });
+        await verifierErgonomie({ navigateur, url: pathToFileURL(fichier).href,
+            autonomeUrl: pathToFileURL(path.join(racine, 'outils/alien/index.html')).href, sortie,
+            manuel: process.argv.includes('--manuel') ? path.join(racine, 'documentation/User Guides/captures') : undefined });
     } finally { await navigateur.close(); }
 }

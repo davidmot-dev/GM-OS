@@ -114,8 +114,38 @@ test('le pupitre répond à l’opérateur choisi et permet l’arbitrage du pir
   const saisie = vue.getByLabelText('Réponse de Maman');
   fireEvent.change(saisie, { target: { value: 'Bonjour Sato.' } });
   await soumettre(saisie.closest('form'));
-  assert.deepEqual(vue.commandes.at(-1), { id: 'repondre', charge: { personnageId: sato.personnageId, texte: 'Bonjour Sato.' } });
+  assert.deepEqual(vue.commandes.at(-1), { id: 'repondre', charge: { personnageId: sato.personnageId, texte: 'Bonjour Sato.', demandeId: null } });
   assert.ok(vue.getByText('Bonjour Sato.'));
+});
+
+test('la file permet de répondre à la seconde question sans traiter la première ni le hack', async () => {
+  let etat = agir(moteur.creerEtat(), 'saisir', { texte: '/M Première question' }, reyes);
+  etat = agir(etat, 'saisir', { texte: 'HACK' }, reyes);
+  etat = agir(etat, 'saisir', { texte: '/M Seconde question' }, reyes);
+  const seconde = etat.players[reyes.personnageId].requests[2];
+  const vue = installer(mj, etat);
+  fireEvent.change(vue.getByLabelText('Demande à traiter'), { target: { value: seconde.id } });
+  const saisie = vue.getByLabelText('Réponse de Maman');
+  fireEvent.change(saisie, { target: { value: 'Réponse ciblée' } });
+  await soumettre(saisie.closest('form'));
+  assert.equal(vue.commandes.at(-1).charge.demandeId, seconde.id);
+  assert.deepEqual(vue.etat().players[reyes.personnageId].requests.map(d => d.status), ['pending', 'pending', 'answered']);
+  assert.ok(vue.getByText('Demandes en attente : 2'));
+});
+
+test('classement et suppression de dossier passent par le moteur et une confirmation locale', async () => {
+  const vue = installer(mj);
+  await cliquer(vue.getByText('Dossiers', { selector: 'button' }));
+  assert.equal(vue.getByText('Monter le dossier').disabled, true);
+  await cliquer(vue.getByText('Descendre le dossier'));
+  assert.deepEqual(vue.etat().documents.map(d => d.id), ['ordre', 'navigation', 'archive']);
+  assert.equal(vue.getByLabelText('Dossier').value, 'navigation');
+  const supprimer = vue.getByText('Supprimer le dossier'); assert.equal(supprimer.disabled, true);
+  await cliquer(vue.getByLabelText('Confirmer la suppression du dossier'));
+  await cliquer(supprimer);
+  assert.deepEqual(vue.etat().documents.map(d => d.id), ['ordre', 'archive']);
+  assert.equal(vue.getByLabelText('Dossier').value, 'archive');
+  assert.equal(vue.getByText('Supprimer le dossier').disabled, true);
 });
 
 test('les dossiers et réglages utilisent les commandes v1 et préservent les codes exacts', async () => {

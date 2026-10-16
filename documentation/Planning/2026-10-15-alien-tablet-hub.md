@@ -157,11 +157,11 @@ retardé d'une ancienne campagne ne doit pas repeupler la vue courante.
 
 | Priorité | Amélioration | Critère concret |
 | --- | --- | --- |
-| Création livrée le 15/10 ; suppression/classement à faire | Créer, supprimer et classer les dossiers | « Nouveau dossier… » crée un dossier sans remplacer les exemples, avec protection et identifiant pour READ. Une future suppression devra retirer les déverrouillages correspondants. |
-| Première | File des demandes MU/TH/UR | Questions et piratages gardent leur contenu et leur statut jusqu'au traitement ; plusieurs questions ne se remplacent pas. |
+| Livré le 16/10, étape 5 | Créer, supprimer et classer les dossiers | Nouveau dossier, Monter/Descendre et suppression confirmée ; déverrouillages nettoyés, ordre conservé dans la préparation portable et la campagne. |
+| Livré le 16/10, étape 5 | File des demandes MU/TH/UR | Texte et statut conservés, traitement ciblé, 32 attentes et 128 entrées par opérateur ; questions et HACK indépendants, migration des anciennes demandes. |
 | Livré en troisième tranche, matériel à essayer | Accès indépendants et arrêt immédiat | MU/TH/UR et détecteur ont leurs destinataires ; retrait partiel préserve les autres vues, dernier retrait arrête le scan. Tout couper ferme tous les outils et leurs effets même si le disque échoue. |
 | Première | Reconnexion et ergonomie tactile | Reprise du même opérateur ; terminal utilisable avec le clavier virtuel ; commandes lisibles à 360–390 px et sur iPad. |
-| Ensuite | Préréglages de mise en scène nommés | Sauver/rappeler intensité, contacts, proximité et parasites ; le rappel ne démarre pas seul le radar. |
+| Livré le 16/10, étape 5 | Préréglages de mise en scène nommés | 32 noms par campagne, contacts/proximité/intensité/volume/parasites ; rappel en veille, faux écho arrêté, aucun démarrage implicite. |
 | Ensuite | Réglage des effets et du son | Choix CRT/parasites, mouvement réduit et performances ; volume local et autorisation audio par appareil. Arrêt muet sans dépendre de l'animation. |
 | Livré en 0.3, matériel à essayer | Protocoles, messages type, film complet d'autodestruction, sirène et voix de secours | Un seul appareil sonore ; durée au moins 12 min 56 selon le choix du film entier ; choix/transfert et séquence testés hors ligne. |
 
@@ -172,7 +172,7 @@ lien entre intensité et Stress. Pas de nouveaux effets de règle dans ce lot.
 
 | Lot | Contenu | Validation avant de passer au suivant |
 | --- | --- | --- |
-| A0 — moteur | Adaptateurs MU/TH/UR et détecteur, types publics, validation et ajout de dossiers livrés ; restent suppression/classement des dossiers et file de plusieurs demandes | Essais locaux de codes, secrets, droits, migration et compatibilité autonome verts. |
+| A0 — moteur | Adaptateurs MU/TH/UR et détecteur, types publics, validation, dossiers et file de demandes livrés ; complétés le 16/10 par l’étape 5 | Essais locaux de codes, secrets, droits, migration et compatibilité autonome verts. |
 | A1 — hôte et identité | État privé par campagne, persistance, association MJ/appareil/PJ et transport ciblé | Sans port ouvert : vrais gestionnaires appelés en mémoire ; deux PJ, identité falsifiée, double `deviceId`, autre campagne, écriture échouée, reconnexion. |
 | A2 — première tranche jouable | MU/TH/UR livré dans le véritable hôte depuis G2 : pupitre, cartes et droits par PJ | Parcours éprouvé avec hôte réel, puis HTTP/WebSocket réels entre Electron et Edge sur le même PC ; matériel à vérifier. |
 | A3 — détecteur et cycle de vie | Livré en troisième tranche : adaptateur v1, rendu partagé avec le prototype, accès indépendants, scan partagé, bips locaux, Tout couper et clé d’ouverture par PJ/module | Radar seulement chez les destinataires ; coupure immédiate, silence et nettoyage testés ; arrêt à la reprise/import, réglages conservés. 33 captures Hub + 6 du prototype. |

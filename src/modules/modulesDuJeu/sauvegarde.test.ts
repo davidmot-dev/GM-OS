@@ -8,7 +8,7 @@ import { creerEtat } from '../../../outils/alien/modules/muthur/moteur.mjs';
 import type { SauvegardeDesModules, PontDesModules } from './protocole';
 
 const original = window.appBridge;
-const sauvegarde: SauvegardeDesModules = { version: 1, campagnes: { 'camp-a': { 'alien-muthur': { versionDonnees: 2, donnees: creerEtat() } }, 'camp-b': { futur: { versionDonnees: 9, donnees: { code: 'GARDER' } } } } };
+const sauvegarde: SauvegardeDesModules = { version: 1, campagnes: { 'camp-a': { 'alien-muthur': { versionDonnees: 3, donnees: creerEtat() } }, 'camp-b': { futur: { versionDonnees: 9, donnees: { code: 'GARDER' } } } } };
 beforeEach(() => { useModulesDuJeuMJ.setState({ vue: null, sauvegarde: undefined, erreur: null }); });
 afterEach(() => { window.appBridge = original; useModulesDuJeuMJ.setState({ sauvegarde: undefined, vue: null }); });
 describe('les modules privés dans les sauvegardes et archives', () => {

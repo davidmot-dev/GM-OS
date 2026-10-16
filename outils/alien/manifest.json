@@ -1,7 +1,7 @@
 {
   "id": "alien-accessoires",
   "name": "Alien — Accessoires de table",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "system": "alien",
   "corpusId": "alien",
   "status": "prototype",
@@ -10,7 +10,7 @@
     { "id": "tracker", "name": "Détecteur de mouvement M314", "entry": "index.html?outil=tracker" }
   ],
   "integration": {
-    "driverBinding": "à développer dans GM-OS",
+    "driverBinding": "adaptateurs alien-muthur et alien-detecteur dans Modules du jeu",
     "transport": "HTTP local, événements serveur et commandes JSON",
     "scope": "campagne Alien, avec contrôle meneur et accès joueur"
   }

@@ -33,14 +33,14 @@
   }
   function initial() {
     return {
-      version: 2, system: 'alien', revision: 0,
+      version: 3, system: 'alien', revision: 0,
       config: { vessel: 'USCSS ORPHEUS', status: 'Navigation nominale. Liaison avec la balise interrompue. Vérification en cours.', adminPassword: 'PROMETHEUS', crt: true, glitches: true },
       documents: [
         { id: 'navigation', title: 'Rapport de navigation', access: 'crew', code: '', body: 'CAP MAINTENU.\nDernière transmission de la balise : 03:17.\nAucun accusé de réception depuis cette heure.\nInvestigation recommandée.' },
         { id: 'ordre', title: 'Directive confidentielle', access: 'code', code: '0042', body: 'DIRECTIVE OMEGA\nIsoler le compartiment de stockage.\nConserver les enregistrements de la dernière transmission.\nAttendre les instructions du commandement.' },
         { id: 'archive', title: 'Archive administrateur', access: 'admin', code: '', body: 'JOURNAL INTERNE\nUne demande d’ouverture du sas a été enregistrée pendant le cycle de sommeil.\nL’identité de l’opérateur n’a pas été confirmée.' },
       ],
-      players: {}, tracker: { power: false, intensity: 25, volume: 25, contacts: 3, proximity: 45, noise: 10, target: 'all', seed: 1, anomalyUntil: 0 },
+      players: {}, prereglagesDetecteur: [], tracker: { power: false, intensity: 25, volume: 25, contacts: 3, proximity: 45, noise: 10, target: 'all', seed: 1, anomalyUntil: 0 },
       countdown: null, portes: 'inconnues', autodestruction: null, diffusionAlarme: null,
       protocoles: [
         { id: 'ouvrir-portes', nom: 'Ouverture des portes', code: 'PORTES-OUVRIR', message: 'DÉVERROUILLAGE CONFIRMÉ.\nPortes ouvertes.', effet: 'ouvrir-portes', minutes: 10, actif: true, portee: 'equipage' },
@@ -51,11 +51,40 @@
     };
   }
   function créer(saved) {
-    let state = [1, 2].includes(saved?.version) && saved?.system === 'alien' ? copie(saved) : initial();
+    let state = [1, 2, 3].includes(saved?.version) && saved?.system === 'alien' ? copie(saved) : initial();
     // 15/10 : une ancienne table ne reçoit aucun nouveau code actif à son insu.
     if (state.version === 1) Object.assign(state, { version: 2, protocoles: [], portes: 'inconnues', autodestruction: null, diffusionAlarme: null });
+    if (state.version === 2) {
+      for (const p of Object.values(state.players)) {
+        const ancien = p.request;
+        const message = [...p.messages].reverse().find(m => m.kind === 'input' && m.at <= ancien?.at && /^(\/M|MESSAGE)\s/i.test(m.content));
+        p.requests = ancien ? [{ ...ancien, content: ancien.type === 'hack' ? 'HACK' : message?.content.replace(/^(\/M|MESSAGE)\s+/i, '') || 'Contenu de la demande ancienne indisponible.', status: 'pending', response: '', resolvedAt: null }] : [];
+      }
+      state.version = 3;
+    }
+    state.prereglagesDetecteur ??= [];
+    function actualiserDemande(p) {
+      const demande = p.requests.find(d => d.status === 'pending' && d.type === 'hack') || p.requests.find(d => d.status === 'pending');
+      p.request = demande ? { id: demande.id, type: demande.type, at: demande.at } : null;
+    }
+    function demander(p, type, content) {
+      // Une demande conserve son contenu même après CLEAR ou la rotation du journal.
+      p.requests.push({ id: identifiant(), type, content, at: Date.now(), status: 'pending', response: '', resolvedAt: null });
+      while (p.requests.length > 128) p.requests.splice(p.requests.findIndex(d => d.status !== 'pending'), 1);
+      actualiserDemande(p);
+    }
+    function demandePour(p, type, id) {
+      if (id === null && type === 'message') return undefined;
+      const demande = id === undefined ? p.requests.find(d => d.type === type && d.status === 'pending') : p.requests.find(d => d.id === id);
+      if ((id !== undefined && !demande) || (demande && (demande.type !== type || demande.status !== 'pending'))) throw new Error('Cette demande n’est plus en attente.');
+      return demande;
+    }
+    function resoudre(p, demande, status, response) {
+      if (demande) Object.assign(demande, { status, response: texte(response, 10000), resolvedAt: Date.now() });
+      actualiserDemande(p);
+    }
     function joueur(id, name) {
-      if (!state.players[id]) state.players[id] = { id, name: texte(name || 'Voyageur', 40), access: 'crew', unlocked: [], messages: [], request: null, cue: null };
+      if (!state.players[id]) state.players[id] = { id, name: texte(name || 'Voyageur', 40), access: 'crew', unlocked: [], messages: [], request: null, requests: [], cue: null };
       return state.players[id];
     }
     function ajouter(p, kind, content) {
@@ -72,7 +101,7 @@
       const tracker = state.tracker.target === 'all' || state.tracker.target === id ? state.tracker : {
         power: false, intensity: 0, volume: 0, contacts: 0, proximity: 0, noise: 0, target: id, seed: 0, anomalyUntil: 0,
       };
-      return copie({ version: 2, system: 'alien', revision: state.revision,
+      return copie({ version: 3, system: 'alien', revision: state.revision,
         config: { vessel: state.config.vessel, crt: state.config.crt, glitches: state.config.glitches },
         player: p, tracker,
         documents: state.documents.filter(doc => visible(p, doc)).map(({ code, ...doc }) => doc), countdown: state.countdown,
@@ -100,6 +129,7 @@
       const input = texte(raw, 2000).trim(); if (!input) return;
       const match = input.match(/^(\S+)(?:\s+([\s\S]*))?$/), command = match[1].toUpperCase(), arg = (match[2] || '').trim();
       if (command === 'CLEAR') { p.messages = []; return; }
+      if ((command === 'HACK' || (['/M', 'MESSAGE'].includes(command) && arg)) && p.requests.filter(d => d.status === 'pending').length >= 32) throw new Error('32 demandes en attente : attendez une réponse de Maman.');
       ajouter(p, 'input', ['LOGIN', 'CODE', 'ORDERS'].includes(command) ? command + ' ••••••••' : input);
       if (command === 'HELP') ajouter(p, 'system', 'HELP · STATUS · LIST · READ identifiant\nLOGIN mot_de_passe · CODE code · HACK\n/M message à Maman · CLEAR');
       else if (command === 'STATUS') ajouter(p, 'system', state.config.status);
@@ -118,10 +148,10 @@
         if (doc && visible(p, doc)) ajouter(p, 'system', doc.title.toUpperCase() + '\n────────────────────\n' + doc.body);
         else ajouter(p, 'error', 'DOSSIER INACCESSIBLE.\nIdentification ou code requis.');
       } else if (command === 'HACK') {
-        if (p.request) ajouter(p, 'system', 'REQUÊTE DÉJÀ EN ATTENTE.');
-        else { p.request = { id: identifiant(), type: 'hack', at: Date.now() }; ajouter(p, 'system', 'TENTATIVE D’INTRUSION…\nEn attente du résultat.'); }
+        if (p.requests.some(d => d.type === 'hack' && d.status === 'pending')) ajouter(p, 'system', 'REQUÊTE DÉJÀ EN ATTENTE.');
+        else { demander(p, 'hack', 'HACK'); ajouter(p, 'system', 'TENTATIVE D’INTRUSION…\nEn attente du résultat.'); }
       } else if (command === '/M' || command === 'MESSAGE') {
-        if (arg) { p.request = p.request?.type === 'hack' ? p.request : { id: identifiant(), type: 'message', at: Date.now() }; ajouter(p, 'system', 'TRANSMISSION À MU/TH/UR CONFIRMÉE.'); }
+        if (arg) { demander(p, 'message', arg); ajouter(p, 'system', 'TRANSMISSION À MU/TH/UR CONFIRMÉE.'); }
       } else ajouter(p, 'error', 'COMMANDE NON RECONNUE.\nSaisir HELP pour consulter les commandes.');
     }
     function agir(role, id, action, contexte = {}) {
@@ -160,6 +190,14 @@
         if (d.access === 'code' && !code) throw new Error('Indiquez le code du dossier.');
         if (code && state.protocoles.some(pr => pr.code === code)) throw new Error('Ce code est déjà réservé à un protocole.');
         state.documents.push({ id: d.id, title: d.title.trim(), access: d.access, code, body: d.body });
+      } else if (action.type === 'supprimer-document') {
+        if (!state.documents.some(d => d.id === action.id)) throw new Error('Dossier inconnu.');
+        state.documents = state.documents.filter(d => d.id !== action.id);
+        Object.values(state.players).forEach(p => p.unlocked = p.unlocked.filter(id => id !== action.id));
+      } else if (action.type === 'classer-documents') {
+        const ids = action.ids;
+        if (!Array.isArray(ids) || ids.length !== state.documents.length || new Set(ids).size !== ids.length || ids.some(id => !state.documents.some(d => d.id === id))) throw new Error('Classement des dossiers invalide.');
+        state.documents = ids.map(id => state.documents.find(d => d.id === id));
       } else if (action.type === 'document') {
         const doc = state.documents.find(d => d.id === action.id); if (!doc) throw new Error('Dossier inconnu.');
         const d = action.document || {};
@@ -196,15 +234,19 @@
       } else if (action.type === 'reply') {
         const p = state.players[action.playerId]; if (!p) throw new Error('Participant inconnu.');
         if (!String(action.text || '').trim()) throw new Error('La réponse est vide.');
-        ajouter(p, 'mother', action.text); if (p.request?.type === 'message') p.request = null;
+        const demande = demandePour(p, 'message', action.requestId);
+        ajouter(p, 'mother', action.text); resoudre(p, demande, 'answered', action.text);
       } else if (action.type === 'hack') {
-        const p = state.players[action.playerId]; if (!p || p.request?.type !== 'hack') throw new Error('Aucune tentative en attente.');
-        p.request = null; p.cue = { id: identifiant(), type: 'hack', success: !!action.success, at: Date.now(), duration: 7000 };
+        const p = state.players[action.playerId]; if (!p) throw new Error('Participant inconnu.');
+        const demande = demandePour(p, 'hack', action.requestId); if (!demande) throw new Error('Aucune tentative en attente.');
+        resoudre(p, demande, action.success ? 'accepted' : 'refused', action.success ? 'Intrusion autorisée.' : 'Intrusion repoussée.');
+        p.cue = { id: identifiant(), type: 'hack', success: !!action.success, at: Date.now(), duration: 7000 };
         if (action.success) p.access = 'admin';
         ajouter(p, action.success ? 'success' : 'error', action.success ? 'INTRUSION RÉUSSIE.\nPrivilèges administrateur obtenus.' : 'CONTRE-MESURES ACTIVES.\nIntrusion repoussée.');
       } else if (action.type === 'revoke') {
         const p = state.players[action.playerId]; if (!p) throw new Error('Participant inconnu.');
-        p.access = 'crew'; p.unlocked = []; p.request = null; p.cue = null; ajouter(p, 'system', 'SESSION RÉINITIALISÉE.\nAccès équipage restauré.');
+        p.requests.filter(d => d.status === 'pending').forEach(d => resoudre(p, d, 'cancelled', 'Accès révoqués par le meneur.'));
+        p.access = 'crew'; p.unlocked = []; p.cue = null; ajouter(p, 'system', 'SESSION RÉINITIALISÉE.\nAccès équipage restauré.');
       } else if (action.type === 'tracker') {
         const t = action.tracker || {};
         if (t.target !== undefined && t.target !== 'all' && !state.players[t.target]) throw new Error('Destinataire inconnu.');
@@ -220,6 +262,17 @@
           state.tracker.power = allume;
         }
         if (t.target !== undefined) state.tracker.target = t.target;
+      } else if (action.type === 'enregistrer-prereglage') {
+        const index = state.prereglagesDetecteur.findIndex(p => p.id === action.id);
+        const reglages = Object.fromEntries(['intensity', 'volume', 'contacts', 'proximity', 'noise'].map(cle => [cle, state.tracker[cle]]));
+        const candidat = { id: action.id, nom: typeof action.nom === 'string' ? action.nom.trim() : action.nom, reglages };
+        const liste = copie(state.prereglagesDetecteur);
+        if (index < 0) liste.push(candidat); else liste[index] = candidat;
+        validerPrereglages(liste); state.prereglagesDetecteur = liste;
+      } else if (['rappeler-prereglage', 'supprimer-prereglage'].includes(action.type)) {
+        const pr = state.prereglagesDetecteur.find(p => p.id === action.id); if (!pr) throw new Error('Préréglage inconnu.');
+        if (action.type === 'supprimer-prereglage') state.prereglagesDetecteur = state.prereglagesDetecteur.filter(p => p.id !== action.id);
+        else Object.assign(state.tracker, pr.reglages, { power: false, anomalyUntil: 0 });
       } else if (action.type === 'anomaly') {
         state.tracker.anomalyUntil = Date.now() + 9000;
       } else if (action.type === 'countdown') {
@@ -234,5 +287,16 @@
     }
     return Object.freeze({ inscrire, snapshot, agir, sauvegarde: () => copie(state) });
   }
-  globalThis.AlienCore = Object.freeze({ créer, initial, positionsDuDetecteur });
+  function validerPrereglages(liste) {
+    const ids = new Set(), noms = new Set();
+    if (!Array.isArray(liste) || liste.length > 32) throw new Error('Limite de 32 préréglages.');
+    for (const p of liste) {
+      if (!p || Object.keys(p).length !== 3 || typeof p.id !== 'string' || !/^[a-z][a-z0-9-]{0,79}$/.test(p.id)
+        || ids.has(p.id) || typeof p.nom !== 'string' || !p.nom.trim() || p.nom !== p.nom.trim() || p.nom.length > 80 || noms.has(p.nom.toLocaleLowerCase('fr'))
+        || !p.reglages || Object.keys(p.reglages).length !== 5 || !['intensity', 'volume', 'contacts', 'proximity', 'noise'].every(cle => Number.isFinite(p.reglages[cle]) && p.reglages[cle] >= 0 && p.reglages[cle] <= (cle === 'contacts' ? 9 : 100))
+        || !Number.isInteger(p.reglages.contacts)) throw new Error('Préréglage invalide ou nom déjà utilisé.');
+      ids.add(p.id); noms.add(p.nom.toLocaleLowerCase('fr'));
+    }
+  }
+  globalThis.AlienCore = Object.freeze({ créer, initial, positionsDuDetecteur, validerPrereglages });
 })();

@@ -141,3 +141,4 @@
   .gmos-muthur .muthur-journal::before, .gmos-muthur .muthur-journal::after, .gmos-muthur .muthur-piratage { animation: none !important; }
   .gmos-muthur.muthur-parasites .muthur-journal::after { opacity: .07; }
 }
+.gmos-muthur .muthur-demande { white-space: pre-wrap; overflow-wrap: anywhere; padding: 12px; border: 1px solid currentColor; margin-block: 12px; }

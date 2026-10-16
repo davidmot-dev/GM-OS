@@ -19,9 +19,9 @@ function forme(valeur, requis, facultatifs = []) {
   exiger(Object.keys(valeur).every(cle => requis.includes(cle) || facultatifs.includes(cle)));
 }
 
-export function validerEtat(etat) {
+export function validerEtat(etat, version = 3) {
   forme(etat, ['version', 'system', 'revision', 'config', 'documents', 'players', 'countdown', 'protocoles', 'portes', 'autodestruction', 'diffusionAlarme']);
-  exiger(etat.version === 2 && etat.system === 'alien' && entier(etat.revision));
+  exiger(etat.version === version && etat.system === 'alien' && entier(etat.revision));
   forme(etat.config, ['vessel', 'status', 'adminPassword', 'crt', 'glitches']);
   exiger(chaine(etat.config.vessel, 64) && chaine(etat.config.status, 2000)
     && chaine(etat.config.adminPassword, 120, false) && typeof etat.config.crt === 'boolean' && typeof etat.config.glitches === 'boolean');
@@ -35,7 +35,7 @@ export function validerEtat(etat) {
   }
   exiger(objet(etat.players) && Object.keys(etat.players).length <= 256);
   for (const [id, joueur] of Object.entries(etat.players)) {
-    forme(joueur, ['id', 'name', 'access', 'unlocked', 'messages', 'request', 'cue']);
+    forme(joueur, ['id', 'name', 'access', 'unlocked', 'messages', 'request', 'cue', ...(version === 3 ? ['requests'] : [])]);
     exiger(identite(id) && joueur.id === id && chaine(joueur.name, 40, false) && acces.includes(joueur.access));
     exiger(Array.isArray(joueur.unlocked) && joueur.unlocked.every(cle => dossiers.has(cle))
       && new Set(joueur.unlocked).size === joueur.unlocked.length);
@@ -50,6 +50,22 @@ export function validerEtat(etat) {
     if (joueur.request !== null) {
       forme(joueur.request, ['id', 'type', 'at']);
       exiger(identite(joueur.request.id) && ['message', 'hack'].includes(joueur.request.type) && date(joueur.request.at));
+    }
+    if (version === 3) {
+      exiger(Array.isArray(joueur.requests) && joueur.requests.length <= 128 && joueur.requests.filter(d => d.status === 'pending').length <= 32);
+      const ids = new Set();
+      for (const demande of joueur.requests) {
+        forme(demande, ['id', 'type', 'at', 'content', 'status', 'response', 'resolvedAt']);
+        exiger(identite(demande.id) && !ids.has(demande.id) && ['message', 'hack'].includes(demande.type) && date(demande.at)
+          && chaine(demande.content, 2000, false) && chaine(demande.response, 10000)
+          && (demande.type === 'message' ? ['pending', 'answered', 'cancelled'] : ['pending', 'accepted', 'refused', 'cancelled']).includes(demande.status)
+          && (demande.status === 'pending' ? demande.resolvedAt === null && demande.response === '' : date(demande.resolvedAt)));
+        ids.add(demande.id);
+      }
+      const attente = joueur.requests.filter(d => d.status === 'pending');
+      exiger(attente.filter(d => d.type === 'hack').length <= 1);
+      const prochaine = attente.find(d => d.type === 'hack') || attente[0];
+      exiger(prochaine ? joueur.request?.id === prochaine.id && joueur.request.type === prochaine.type && joueur.request.at === prochaine.at : joueur.request === null);
     }
     if (joueur.cue !== null) {
       forme(joueur.cue, ['id', 'type', 'success', 'at', 'duration']);
@@ -87,7 +103,7 @@ function validerProtocole(protocole) {
 }
 
 function sansRadar(etat) {
-  const { tracker: _radar, ...terminal } = etat;
+  const { tracker: _radar, prereglagesDetecteur: _prereglages, ...terminal } = etat;
   return terminal;
 }
 
@@ -101,7 +117,7 @@ export function creerEtat() {
 
 /** Accepte aussi l'état v1 du prototype, en retirant uniquement son radar. */
 export function migrerEtat(donnees, versionDonnees) {
-  if (![1, 2].includes(versionDonnees)) throw new Error('Version de données MU/TH/UR non prise en charge.');
+  if (![1, 2, 3].includes(versionDonnees)) throw new Error('Version de données MU/TH/UR non prise en charge.');
   exiger(objet(donnees));
   let terminal = sansRadar(donnees);
   exiger(terminal.version === versionDonnees);
@@ -109,7 +125,8 @@ export function migrerEtat(donnees, versionDonnees) {
     forme(terminal, ['version', 'system', 'revision', 'config', 'documents', 'players', 'countdown']);
     terminal = { ...terminal, version: 2, protocoles: [], portes: 'inconnues', autodestruction: null, diffusionAlarme: null };
   }
-  validerEtat(terminal);
+  validerEtat(terminal, terminal.version);
+  if (terminal.version === 2) terminal = sansRadar(moteurDe(terminal).sauvegarde());
   const resultat = arreterEffets(terminal);
   // Le prototype antérieur au 15/10 gardait l'alias ORDERS en clair dans le fil.
   for (const joueur of Object.values(resultat.players)) for (const message of joueur.messages) {
@@ -137,8 +154,7 @@ export function vuePour(etat, lecteur) {
   validerEtat(etat); verifierLecteur(lecteur);
   const moteur = moteurDe(etat);
   if (lecteur.role === 'mj') {
-    const { tracker: _radar, ...vue } = moteur.snapshot('gm', '', lecteur.appareilId);
-    return vue;
+    return sansRadar(moteur.snapshot('gm', '', lecteur.appareilId));
   }
   // L'ouverture ne mute pas la sauvegarde. La première commande inscrit le PJ.
   if (!Object.hasOwn(etat.players, lecteur.personnageId)) moteur.inscrire(lecteur.personnageId, 'Opérateur');
@@ -192,6 +208,12 @@ export function appliquerCommande(etat, commande, contexte) {
       id: charge.dossierId, title: charge.titre, body: charge.contenu,
       access: { equipage: 'crew', code: 'code', administrateur: 'admin' }[charge.acces], code: charge.code,
     } };
+  } else if (commande.id === 'supprimer-dossier') {
+    forme(charge, ['dossierId']); exiger(identite(charge.dossierId));
+    action = { type: 'supprimer-document', id: charge.dossierId };
+  } else if (commande.id === 'classer-dossiers') {
+    forme(charge, ['dossierIds']); exiger(Array.isArray(charge.dossierIds) && charge.dossierIds.every(identite));
+    action = { type: 'classer-documents', ids: charge.dossierIds };
   } else if (commande.id === 'modifier-dossier') {
     forme(charge, ['dossierId'], ['titre', 'contenu', 'acces', 'code']);
     exiger(identite(charge.dossierId)); const document = {};
@@ -207,11 +229,13 @@ export function appliquerCommande(etat, commande, contexte) {
     forme(charge, ['protocoleId']); exiger(identite(charge.protocoleId));
     action = { type: 'supprimer-protocole', id: charge.protocoleId };
   } else if (commande.id === 'repondre') {
-    forme(charge, ['personnageId', 'texte']); exiger(chaine(charge.texte, 10000, false));
-    action = { type: 'reply', playerId: cibler(), text: charge.texte };
+    forme(charge, ['personnageId', 'texte'], ['demandeId']); exiger(chaine(charge.texte, 10000, false));
+    if (Object.hasOwn(charge, 'demandeId')) exiger(charge.demandeId === null || identite(charge.demandeId));
+    action = { type: 'reply', playerId: cibler(), text: charge.texte, requestId: charge.demandeId };
   } else if (commande.id === 'arbitrer-piratage') {
-    forme(charge, ['personnageId', 'reussite']); exiger(typeof charge.reussite === 'boolean');
-    action = { type: 'hack', playerId: cibler(), success: charge.reussite };
+    forme(charge, ['personnageId', 'reussite'], ['demandeId']); exiger(typeof charge.reussite === 'boolean');
+    if (Object.hasOwn(charge, 'demandeId')) exiger(identite(charge.demandeId));
+    action = { type: 'hack', playerId: cibler(), success: charge.reussite, requestId: charge.demandeId };
   } else if (commande.id === 'revoquer') {
     forme(charge, ['personnageId']); action = { type: 'revoke', playerId: cibler() };
   } else if (commande.id === 'compte-a-rebours') {

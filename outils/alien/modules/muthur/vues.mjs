@@ -187,9 +187,17 @@ export function VueJoueur(props) {
   return h(TerminalJoueur, { ...props, key: props.vue.player.id });
 }
 
-function Dossier({ dossier, envoyer, occupe, enregistre }) {
+function Dossier({ dossier, documents, envoyer, occupe, enregistre }) {
   const [protection, setProtection] = useState(dossier?.access || 'crew');
+  const [confirmation, confirmer] = useState(false);
   const nouveau = !dossier;
+  const index = documents.findIndex(d => d.id === dossier?.id);
+  function deplacer(delta) {
+    enregistre(dossier.id);
+    const ids = documents.map(d => d.id);
+    [ids[index], ids[index + delta]] = [ids[index + delta], ids[index]];
+    void envoyer('classer-dossiers', { dossierIds: ids });
+  }
   async function enregistrer(evenement) {
     evenement.preventDefault(); const donnees = new FormData(evenement.currentTarget);
     const dossierId = dossier?.id || donnees.get('identifiant').trim();
@@ -208,7 +216,44 @@ function Dossier({ dossier, envoyer, occupe, enregistre }) {
       h('option', { value: 'equipage' }, 'Équipage'), h('option', { value: 'code' }, 'Code requis'), h('option', { value: 'administrateur' }, 'Administrateur'))),
     h(ChampCode, { libelle: 'Code du dossier', nom: 'code', defaultValue: dossier?.code || '', maxLength: 120, autoComplete: 'off', required: nouveau && protection === 'code', disabled: occupe || protection !== 'code' }),
     champ('Contenu', 'contenu', { defaultValue: dossier?.body || '', multiligne: true, rows: 8, maxLength: 10000, disabled: occupe }),
-    h('button', { type: 'submit', disabled: occupe }, nouveau ? 'Créer le dossier' : 'Enregistrer le dossier'));
+    h('button', { type: 'submit', disabled: occupe }, nouveau ? 'Créer le dossier' : 'Enregistrer le dossier'),
+    !nouveau && h('div', null,
+      h('div', { className: 'muthur-actions', 'aria-label': 'Classement du dossier' },
+        bouton('Monter le dossier', { disabled: occupe || index <= 0, onClick: () => deplacer(-1) }),
+        bouton('Descendre le dossier', { disabled: occupe || index >= documents.length - 1, onClick: () => deplacer(1) })),
+      h('p', { className: 'muthur-aide' }, 'Cet ordre est celui de LIST. Les textes déjà lus restent dans les dialogues.'),
+      h('label', null, h('input', { type: 'checkbox', checked: confirmation, disabled: occupe, onChange: e => confirmer(e.target.checked) }), 'Confirmer la suppression du dossier'),
+      bouton('Supprimer le dossier', { disabled: occupe || !confirmation, onClick: async () => {
+        if (await envoyer('supprimer-dossier', { dossierId: dossier.id })) enregistre(documents[index + 1]?.id || documents[index - 1]?.id || '');
+      } })));
+}
+
+function Demandes({ operateur, envoyer, occupe }) {
+  const [choisie, choisir] = useState(null);
+  const demandes = operateur.requests, attentes = demandes.filter(d => d.status === 'pending');
+  const demande = choisie === '' ? undefined : attentes.find(d => d.id === choisie) || attentes[0];
+  async function repondre(e) {
+    e.preventDefault(); const formulaire = e.currentTarget;
+    const charge = { personnageId: operateur.id, texte: new FormData(formulaire).get('texte') };
+    charge.demandeId = demande?.id ?? null;
+    if (await envoyer('repondre', charge)) formulaire.reset();
+  }
+  return h('section', { 'aria-label': 'File des demandes' },
+    h('h3', null, `Demandes en attente : ${attentes.length}`),
+    h('label', null, 'Demande à traiter', h('select', { value: demande?.id || '', disabled: occupe, onChange: e => choisir(e.target.value) },
+      h('option', { value: '' }, 'Message libre à cet opérateur'),
+      attentes.map((d, i) => h('option', { key: d.id, value: d.id }, `${i + 1}. ${d.type === 'hack' ? 'Piratage' : d.content.slice(0, 70)}`)))),
+    demande && h('p', { className: 'muthur-demande' }, demande.content),
+    demande?.type === 'hack' ? h('div', { className: 'muthur-actions', 'aria-label': 'Arbitrage du piratage' },
+      bouton('Autoriser l’intrusion', { disabled: occupe, onClick: () => envoyer('arbitrer-piratage', { personnageId: operateur.id, demandeId: demande.id, reussite: true }) }),
+      bouton('Repousser l’intrusion', { disabled: occupe, onClick: () => envoyer('arbitrer-piratage', { personnageId: operateur.id, demandeId: demande.id, reussite: false }) }))
+      : h('form', { key: demande?.id || 'libre', onSubmit: repondre, className: 'muthur-formulaire', 'aria-label': 'Répondre comme Maman' },
+        champ('Réponse de Maman', 'texte', { multiligne: true, rows: 3, maxLength: 10000, required: true, disabled: occupe }),
+        h('button', { type: 'submit', disabled: occupe }, 'Transmettre la réponse')),
+    h('details', null, h('summary', null, 'Demandes traitées'),
+      demandes.filter(d => d.status !== 'pending').map(d => h('div', { key: d.id, className: 'muthur-demande' },
+        h('strong', null, { answered: 'Répondu', accepted: 'Autorisé', refused: 'Refusé', cancelled: 'Annulé' }[d.status]),
+        h('p', null, d.content), h('p', null, d.response)))));
 }
 
 function SaisieMJ({ operateur, envoyer, occupe }) {
@@ -298,11 +343,6 @@ export function PupitreMJ({ vue, envoyerCommande }) {
   const [onglet, setOnglet] = useState('terminal'), [choisi, setChoisi] = useState(''), [dossierId, setDossierId] = useState(null);
   const operateurs = Object.values(vue.players), operateur = vue.players[choisi] || operateurs[0];
   const dossier = dossierId === '' ? undefined : vue.documents.find(element => element.id === dossierId) || vue.documents[0];
-  async function repondre(evenement) {
-    evenement.preventDefault(); const formulaire = evenement.currentTarget;
-    const texte = new FormData(formulaire).get('texte');
-    if (await envoyer('repondre', { personnageId: operateur.id, texte })) formulaire.reset();
-  }
   return h(Cadre, { vue, titre: 'MU/TH/UR · Poste meneur', erreur, operateur, envoyer,
     enfants: h('div', null,
       h('nav', { className: 'muthur-actions', 'aria-label': 'Panneaux MU/TH/UR' }, [['terminal', 'Terminal'], ['dossiers', 'Dossiers'], ['protocoles', 'Protocoles'], ['reglages', 'Réglages']].map(([id, libelle]) =>
@@ -312,18 +352,13 @@ export function PupitreMJ({ vue, envoyerCommande }) {
           h('label', null, h('span', null, 'Opérateur'), h('select', { value: operateur.id, onChange: evenement => setChoisi(evenement.target.value), disabled: occupe },
             operateurs.map(element => h('option', { value: element.id, key: element.id }, `${element.name}${element.request ? ' · Demande en attente' : ''}`)))),
           h(Journal, { key: `journal-${operateur.id}`, operateur }),
-          operateur.request?.type === 'hack' && h('div', { className: 'muthur-actions', 'aria-label': 'Arbitrage du piratage' },
-            bouton('Autoriser l’intrusion', { disabled: occupe, onClick: () => envoyer('arbitrer-piratage', { personnageId: operateur.id, reussite: true }) }),
-            bouton('Repousser l’intrusion', { disabled: occupe, onClick: () => envoyer('arbitrer-piratage', { personnageId: operateur.id, reussite: false }) })),
-          h('form', { key: `reponse-${operateur.id}`, onSubmit: repondre, className: 'muthur-formulaire', 'aria-label': 'Répondre comme Maman' },
-            champ('Réponse de Maman', 'texte', { multiligne: true, rows: 3, maxLength: 10000, required: true, disabled: occupe }),
-            h('button', { type: 'submit', disabled: occupe }, 'Transmettre la réponse')),
+          h(Demandes, { key: operateur.id, operateur, envoyer, occupe }),
           bouton('Révoquer les accès narratifs', { disabled: occupe, onClick: () => envoyer('revoquer', { personnageId: operateur.id }) }),
           h(SaisieMJ, { key: `saisie-${operateur.id}`, operateur, envoyer, occupe }))),
       onglet === 'dossiers' && h('div', null, h('label', null, h('span', null, 'Dossier'), h('select', { 'aria-label': 'Dossier', value: dossier?.id || '', onChange: evenement => setDossierId(evenement.target.value), disabled: occupe },
         h('option', { value: '' }, 'Nouveau dossier…'),
         vue.documents.map(element => h('option', { value: element.id, key: element.id }, element.title || element.id)))),
-      h(Dossier, { key: dossier ? JSON.stringify(dossier) : 'nouveau', dossier, envoyer, occupe, enregistre: setDossierId })),
+      h(Dossier, { key: dossier ? JSON.stringify(dossier) : 'nouveau', dossier, documents: vue.documents, envoyer, occupe, enregistre: setDossierId })),
       onglet === 'protocoles' && h(Protocoles, { vue, envoyer, occupe }),
       onglet === 'reglages' && h(Reglages, { vue, envoyer, occupe })) });
 }

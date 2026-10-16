@@ -59,6 +59,9 @@ effets à la fois, même si le disque est indisponible (l’erreur de sauvegarde
 MU/TH/UR et le détecteur Alien sont disponibles avec des accès indépendants. Le détecteur permet
 un scan partagé entre les PJ choisis, des contacts aléatoires dans la proximité retenue et un faux
 écho de neuf secondes. Chaque appareil active localement ses bips. Aucun Stress n’est modifié.
+Le MJ peut classer/supprimer les dossiers MU/TH/UR et traiter plusieurs demandes privées par PJ.
+Le détecteur propose des préréglages nommés par campagne : les charger arrête le scan, qui se
+relance volontairement. Voir le [guide Alien](54-Jeu-Alien.md).
 
 Chaque joueur reçoit uniquement sa vue autorisée. Sans accès, l’onglet dit **« Aucun module
 ouvert par le meneur. »** Changer de campagne, terminer la séance ou redémarrer ferme les accès
@@ -256,3 +259,5 @@ Un pilote **nouveau ou amélioré** se reporte ici, dans le même mouvement :
 
 *Relu le 2026-10-15 : les deux modules Alien, leurs accès indépendants et la coupure générale,
 puis six parcours sur le vrai transport Electron/Edge du PC. Appareils physiques à éprouver.*
+
+*Relu le 2026-10-16 : dossiers, file de demandes privées et préréglages nommés Alien.*

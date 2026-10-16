@@ -28,8 +28,8 @@ liste et la navigation habituelle du Hub toujours accessible.
 | Rêve de Dragon | Table des Terres Médianes, selon l'exemple de David |
 | Autre jeu | Les modules déclarés par son pilote et disponibles dans GM-OS |
 
-Ce tableau décrit des cibles : aucun de ces modules n'est actuellement branché
-à cet emplacement. Le comportement de la Table des Terres Médianes reste à
+Les deux modules Alien sont branchés à cet emplacement depuis G2/A3.
+Le comportement de la Table des Terres Médianes reste à
 définir avec David et les sources du jeu ; ce plan n'en invente pas les règles.
 
 Proposition pour rendre le placeholder visible : l'entrée reste présente
@@ -166,6 +166,13 @@ préserver les données antérieures et signaler l'échec au MJ.
 | A0/A2 — premier module | MU/TH/UR enregistré dans le moteur natif et les vues de l’hôte ; pupitre, terminaux, vidéo et son ciblé raccordés | Vrai hôte et vues dans le banc, 21 captures, commande joueur et vidéo décodée ; essai en séance à faire. |
 | A3/A4 — suite Alien | Détecteur enregistré, accès indépendants, scan partagé, son local, coupure générale et manuel ; étape 4 : six E2E avec Electron et deux sessions Edge sur le vrai HTTP/WebSocket | Retrait partiel, silence/déconnexion/reprise, vidéo/Range et transfert audio, fichier privé/redémarrage/import éprouvés sur le PC. Recette fictive fournie ; essai matériel encore à faire, dossiers/file de demandes ensuite. |
 | R0 — deuxième jeu | Définir le périmètre de la Table des Terres Médianes avec David | Puis livrer un module via le même contrat, sans modification spécifique de la navigation du Hub. |
+
+**Étape 5 — livrée le 16/10.** David demande *« commit et pousse puis faire l’étape 5 -
+GM-OS est fermé »*, puis *« continue »*. Étapes précédentes poussées jusqu’à `05ff9692`.
+MU/TH/UR 0.4/données v3 : classement et suppression de dossiers, file privée avec traitement
+ciblé des questions/piratages et migration v1/v2. Détecteur 0.2/données v2 : préréglages nommés
+réservés au MJ, sauvegardés par campagne, rappel en veille. Le prototype autonome reçoit les
+mêmes gestes. Le contrat commun reste v1. Voir la [reprise du 16/10](2026-10-16-etat-et-reprise.md).
 
 Le socle commun est maintenant raccordé au vrai module MU/TH/UR. Le plan Alien
 [détaille ses améliorations](2026-10-15-alien-tablet-hub.md) ; son ancien A1

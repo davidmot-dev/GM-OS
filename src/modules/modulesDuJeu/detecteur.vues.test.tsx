@@ -43,6 +43,30 @@ afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); vi.unstub
 const cliquer = async (element: HTMLElement) => { await act(async () => fireEvent.click(element)); };
 
 describe('instrument du détecteur', () => {
+    it('enregistre, rappelle en veille et supprime un préréglage après confirmation', async () => {
+        let etat = actif();
+        const commandes: moteur.CommandeDetecteur[] = [];
+        const props = () => ({ vue: etat, envoyerCommande: async (commande: moteur.CommandeDetecteur) => {
+            commandes.push(commande);
+            etat = moteur.appliquerCommande(etat, commande, { role: 'mj' });
+            vue.rerender(<PupitreMJ {...props()} />);
+            return { ok: true as const };
+        } });
+        const vue = render(<PupitreMJ {...props()} />);
+        const nom = vue.getByLabelText('Nom du préréglage');
+        fireEvent.change(nom, { target: { value: 'Couloir' } });
+        await act(async () => fireEvent.submit(nom.closest('form')!));
+        expect(etat.prereglages).toHaveLength(1);
+        expect((vue.getByLabelText('Préréglage') as HTMLSelectElement).value).toBe(etat.prereglages[0].id);
+        await cliquer(vue.getByRole('button', { name: 'Charger et arrêter le scan' }));
+        expect(etat.tracker.power).toBe(false);
+        const supprimer = vue.getByRole('button', { name: 'Supprimer le préréglage' });
+        expect((supprimer as HTMLButtonElement).disabled).toBe(true);
+        await cliquer(vue.getByLabelText('Confirmer la suppression du préréglage'));
+        await cliquer(supprimer);
+        expect(etat.prereglages).toEqual([]);
+        expect(commandes.map(c => c.id)).toEqual(['enregistrer-prereglage', 'rappeler-prereglage', 'supprimer-prereglage']);
+    });
     it('le joueur ne reçoit aucun contrôle MJ et les bips demandent un geste local', async () => {
         const vue = render(<VueJoueur vue={actif()} envoyerCommande={envoyerCommande} />);
         expect(vue.queryByRole('button', { name: 'Démarrer le scan' })).toBeNull();

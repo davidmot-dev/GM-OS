@@ -33,6 +33,28 @@
     const payload = await response.json(); if (!response.ok) throw new Error(payload.error || 'Liaison interrompue.'); return payload;
   }
   function selectedPlayer() { return role === 'gm' ? state?.players[currentOperator] : state?.player; }
+  function demandeSelectionnee() { return selectedPlayer()?.requests.find(d => d.id === $('demandeSelect').value && d.status === 'pending'); }
+  function renderDemandes() {
+    const p = selectedPlayer(), attentes = p?.requests.filter(d => d.status === 'pending') || [];
+    options($('demandeSelect'), [...attentes.map((d, i) => [d.id, `${i + 1}. ${d.type === 'hack' ? 'Piratage' : d.content.slice(0, 65)}`]), ['', 'Message libre à cet opérateur']]);
+    const demande = demandeSelectionnee();
+    $('demandeContenu').textContent = demande?.content || '';
+    $('hackButtons').classList.toggle('hidden', demande?.type !== 'hack');
+    $('replyText').disabled = !p || demande?.type === 'hack'; $('replyForm').querySelector('button').disabled = $('replyText').disabled;
+    $('demandesTraitees').replaceChildren();
+    for (const d of p?.requests.filter(d => d.status !== 'pending') || []) {
+      const ligne = document.createElement('p');
+      ligne.textContent = `${({ answered: 'Répondu', accepted: 'Autorisé', refused: 'Refusé', cancelled: 'Annulé' })[d.status]} : ${d.content}\n${d.response}`;
+      $('demandesTraitees').append(ligne);
+    }
+  }
+  function renderPrereglages(force = false) {
+    options($('prereglageSelect'), [['', 'Nouveau préréglage…'], ...state.prereglagesDetecteur.map(p => [p.id, p.nom])]);
+    const pr = state.prereglagesDetecteur.find(p => p.id === $('prereglageSelect').value);
+    if (force) { $('prereglageNom').value = pr?.nom || ''; $('confirmerPrereglage').checked = false; }
+    $('chargerPrereglage').disabled = !pr;
+    $('supprimerPrereglage').disabled = !pr || !$('confirmerPrereglage').checked;
+  }
   function trackerState() {
     const t = state?.tracker; if (!t) return null;
     if (preview && t.target !== 'all' && t.target !== currentOperator) return { ...t, power: false };
@@ -85,6 +107,10 @@
     $('afficherCodeDossier').disabled = $('documentCode').disabled;
     if (force) reglerVisibiliteCode('documentCode');
     $('documentEnregistrer').textContent = doc ? 'Enregistrer le dossier' : 'Créer le dossier';
+    const index = state.documents.findIndex(d => d.id === doc?.id);
+    $('monterDossier').disabled = index <= 0; $('descendreDossier').disabled = index < 0 || index === state.documents.length - 1;
+    $('supprimerDossier').disabled = !doc || !$('confirmerDossier').checked;
+    if (force) { $('confirmerDossier').checked = false; $('supprimerDossier').disabled = true; }
   }
   function appendMessage(message, animated) {
     const item = document.createElement('div'); item.className = 'log-message ' + message.kind; item.dataset.messageId = message.id;
@@ -143,6 +169,7 @@
       $('request').classList.toggle('pending', !!waiting); $('request').lastElementChild.textContent = waiting?.type === 'hack' ? 'Intrusion demandée. Vous décidez de son issue.' : waiting ? 'Une transmission attend votre réponse.' : players.length ? 'Aucune requête en attente.' : 'En attente d’un opérateur connecté.';
       $('hackButtons').classList.toggle('hidden', waiting?.type !== 'hack');
       $('replyText').disabled = !p; $('replyForm').querySelector('button').disabled = !p; $('revokeButton').disabled = !p;
+      renderDemandes(); renderPrereglages();
       for (const key of ['intensity', 'contacts', 'proximity', 'noise', 'volume']) { if (document.activeElement !== $(key)) $(key).value = state.tracker[key]; $(key + 'Value').textContent = state.tracker[key]; }
       $('powerButton').textContent = state.tracker.power ? 'Arrêter le détecteur' : 'Activer le détecteur'; $('powerButton').setAttribute('aria-pressed', String(state.tracker.power));
       document.querySelectorAll('[data-intensity]').forEach(b => b.classList.toggle('selected', Number(b.dataset.intensity) === state.tracker.intensity));
@@ -202,7 +229,8 @@
   $('cancelLogin').onclick = () => $('loginDialog').close();
   $('loginForm').onsubmit = event => { event.preventDefault(); const value = $('loginPassword').value; $('loginPassword').value = ''; $('loginDialog').close(); act({ type: 'command', text: 'LOGIN ' + value }); };
   for (const id of ['configForm', 'passwordForm', 'documentForm']) $(id).addEventListener('input', () => $(id).dataset.dirty = 'true');
-  $('replyForm').onsubmit = async event => { event.preventDefault(); if (await act({ type: 'reply', text: $('replyText').value })) $('replyText').value = ''; };
+  $('replyForm').onsubmit = async event => { event.preventDefault(); if (await act({ type: 'reply', text: $('replyText').value, requestId: demandeSelectionnee()?.id ?? null })) $('replyText').value = ''; };
+  $('demandeSelect').onchange = () => { $('replyText').value = ''; renderDemandes(); };
   $('configForm').onsubmit = async event => { event.preventDefault(); const c = { vessel: $('vesselInput').value, status: $('statusInput').value }; if (await act({ type: 'config', config: c })) { $('configForm').dataset.dirty = 'false'; render(); notification('État du vaisseau enregistré.'); } };
   $('passwordForm').onsubmit = async event => { event.preventDefault(); if (await act({ type: 'config', config: { adminPassword: $('adminPassword').value } })) { $('passwordForm').dataset.dirty = 'false'; reglerVisibiliteCode('adminPassword'); render(); notification('Mot de passe enregistré.'); } };
   $('documentSelect').onchange = () => { $('documentForm').dataset.dirty = 'false'; renderDocument(true); };
@@ -214,7 +242,28 @@
     if (await act(action)) { $('documentForm').dataset.dirty = 'false'; $('documentSelect').value = id; renderDocument(true); notification(nouveau ? 'Dossier créé.' : 'Dossier enregistré.'); }
   };
   $('crtToggle').onchange = () => act({ type: 'config', config: { crt: $('crtToggle').checked } }); $('glitchToggle').onchange = () => act({ type: 'config', config: { glitches: $('glitchToggle').checked } });
-  $('hackSuccess').onclick = () => act({ type: 'hack', success: true }); $('hackFail').onclick = () => act({ type: 'hack', success: false });
+  $('hackSuccess').onclick = () => act({ type: 'hack', success: true, requestId: demandeSelectionnee()?.id }); $('hackFail').onclick = () => act({ type: 'hack', success: false, requestId: demandeSelectionnee()?.id });
+  $('confirmerDossier').onchange = () => { $('supprimerDossier').disabled = !$('confirmerDossier').checked || !$('documentSelect').value; };
+  $('supprimerDossier').onclick = async () => {
+    if (!$('confirmerDossier').checked) return;
+    if (await act({ type: 'supprimer-document', id: $('documentSelect').value })) { $('documentForm').dataset.dirty = 'false'; renderDocument(true); }
+  };
+  for (const [bouton, delta] of [['monterDossier', -1], ['descendreDossier', 1]]) $(bouton).onclick = () => {
+    const ids = state.documents.map(d => d.id), index = ids.indexOf($('documentSelect').value);
+    if (index + delta < 0 || index + delta >= ids.length) return;
+    [ids[index], ids[index + delta]] = [ids[index + delta], ids[index]];
+    void act({ type: 'classer-documents', ids });
+  };
+  $('prereglageSelect').onchange = () => renderPrereglages(true);
+  $('confirmerPrereglage').onchange = () => renderPrereglages();
+  $('prereglageForm').onsubmit = async e => {
+    e.preventDefault(); const id = $('prereglageSelect').value || 'prereglage-' + crypto.randomUUID();
+    if (await act({ type: 'enregistrer-prereglage', id, nom: $('prereglageNom').value })) { $('prereglageSelect').value = id; renderPrereglages(true); }
+  };
+  $('chargerPrereglage').onclick = () => act({ type: 'rappeler-prereglage', id: $('prereglageSelect').value });
+  $('supprimerPrereglage').onclick = async () => {
+    if ($('confirmerPrereglage').checked && await act({ type: 'supprimer-prereglage', id: $('prereglageSelect').value })) renderPrereglages(true);
+  };
   $('revokeButton').onclick = () => act({ type: 'revoke' });
   $('powerButton').onclick = () => act({ type: 'tracker', tracker: { power: !state.tracker.power } });
   document.querySelectorAll('[data-intensity]').forEach(button => button.onclick = () => act({ type: 'tracker', tracker: { intensity: Number(button.dataset.intensity) } }));

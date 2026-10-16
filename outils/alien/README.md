@@ -6,7 +6,8 @@ Aucune installation de paquet nécessaire. Les effets sont produits par CSS,
 canvas et Web Audio ; la vidéo du Nostromo est le fichier fourni par David,
 conservé localement. Aucune ressource réseau externe n'est nécessaire.
 
-**Version 0.3.0 — 15/10/2026.** Protocoles à codes, messages type, alarme
+**Version 0.4.0 — 16/10/2026.** Dossiers classables/supprimables, file de demandes privées et
+préréglages nommés du détecteur. Protocoles à codes, messages type, alarme
 d'autodestruction et vidéo du Nostromo. Retour de David sur la version 0.1 du 13/10/2026 :
 *« c'est un bon début documente »*. Ce retour valide la direction de la
 première version ; les essais sur les tablettes physiques restent à faire.
@@ -105,8 +106,20 @@ lettres minuscules sans accent, chiffres ou tirets, sur 64 caractères au plus.
 L'identifiant reste fixe après création ; le titre et le contenu restent
 modifiables. Le code est obligatoire pour un nouveau dossier à code.
 Les dossiers existants sont conservés ; les identifiants en double et les
-codes réservés aux protocoles sont refusés. La suppression et le classement
-des dossiers restent à ajouter.
+codes réservés aux protocoles sont refusés. **Monter le dossier** et **Descendre le dossier**
+changent l’ordre de LIST. **Supprimer le dossier** exige sa confirmation locale et retire
+ses déverrouillages ; les textes déjà lus restent dans les dialogues.
+
+Dans **Terminal**, la **Demande à traiter** sélectionne une question ou un piratage.
+Chaque `/M` conserve son texte et son statut, même après CLEAR ; plusieurs questions et un
+HACK peuvent attendre ensemble. Une réponse traite seulement la question choisie. Le message
+libre n’en traite aucune. **Demandes traitées** conserve les résultats ; révoquer annule
+les demandes en attente. Limites : 32 attentes et 128 entrées par opérateur.
+
+Dans **Détecteur**, les **Préréglages nommés** enregistrent contacts, proximité, intensité,
+volume et parasites. Leur chargement arrête le scan et le faux écho ; démarre ensuite le
+scan volontairement. Tu peux remplacer ou supprimer un préréglage. Ces préparations restent
+dans le stockage local du prototype ou dans la sauvegarde privée de campagne du Hub.
 
 ### Piloter le détecteur
 

@@ -3,22 +3,26 @@
   "id": "alien-muthur",
   "libelle": "MU/TH/UR 6000",
   "description": "Terminal de bord Alien : dossiers protégés, dialogues privés, piratage arbitré et effets contrôlés par le meneur.",
-  "version": "0.3.0",
-  "versionDonnees": 2,
-  "corpusCompatibles": ["alien"],
+  "version": "0.4.0",
+  "versionDonnees": 3,
+  "corpusCompatibles": [
+    "alien"
+  ],
   "commandes": [
-    { "id": "saisir", "roles": ["mj", "joueur"] },
-    { "id": "choisir-diffusion", "roles": ["mj", "joueur"] },
-    { "id": "enregistrer-protocole", "roles": ["mj"] },
-    { "id": "supprimer-protocole", "roles": ["mj"] },
-    { "id": "preparer-operateur", "roles": ["mj"] },
-    { "id": "configurer", "roles": ["mj"] },
-    { "id": "creer-dossier", "roles": ["mj"] },
-    { "id": "modifier-dossier", "roles": ["mj"] },
-    { "id": "repondre", "roles": ["mj"] },
-    { "id": "arbitrer-piratage", "roles": ["mj"] },
-    { "id": "revoquer", "roles": ["mj"] },
-    { "id": "compte-a-rebours", "roles": ["mj"] },
-    { "id": "reinitialiser", "roles": ["mj"] }
+    {"id": "saisir", "roles": ["mj", "joueur"]},
+    {"id": "choisir-diffusion", "roles": ["mj", "joueur"]},
+    {"id": "enregistrer-protocole", "roles": ["mj"]},
+    {"id": "supprimer-protocole", "roles": ["mj"]},
+    {"id": "preparer-operateur", "roles": ["mj"]},
+    {"id": "configurer", "roles": ["mj"]},
+    {"id": "creer-dossier", "roles": ["mj"]},
+    {"id": "modifier-dossier", "roles": ["mj"]},
+    {"id": "repondre", "roles": ["mj"]},
+    {"id": "arbitrer-piratage", "roles": ["mj"]},
+    {"id": "revoquer", "roles": ["mj"]},
+    {"id": "compte-a-rebours", "roles": ["mj"]},
+    {"id": "reinitialiser", "roles": ["mj"]},
+    {"id": "supprimer-dossier", "roles": ["mj"]},
+    {"id": "classer-dossiers", "roles": ["mj"]}
   ]
 }

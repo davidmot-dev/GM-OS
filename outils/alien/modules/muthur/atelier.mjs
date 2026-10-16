@@ -7,7 +7,7 @@ import { cleSauvegardeConfiguration, extraireConfiguration, etatDepuisConfigurat
 
 const element = id => document.getElementById(id);
 const mj = { role: 'mj', appareilId: 'demo-mj' }, reyes = { role: 'joueur', personnageId: 'pj-reyes', appareilId: 'demo-reyes' };
-const commandesDePreparation = new Set(['configurer', 'creer-dossier', 'modifier-dossier', 'enregistrer-protocole', 'supprimer-protocole', 'reinitialiser']);
+const commandesDePreparation = new Set(['configurer', 'creer-dossier', 'modifier-dossier', 'supprimer-dossier', 'classer-dossiers', 'enregistrer-protocole', 'supprimer-protocole', 'reinitialiser']);
 let stockage, lectureBloquee = false, configurationEnAttente = null, generation = 0, numeroImport = 0;
 let etat = moteur.creerEtat(), lecteur = reyes;
 

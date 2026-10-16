@@ -22,8 +22,9 @@
 .gmos-detecteur .detecteur-reglages { margin:18px 0; }
 .gmos-detecteur fieldset { display:grid; gap:12px; border:0; padding:0; min-width:0; }
 .gmos-detecteur label { display:flex; flex-direction:column; gap:4px; }
-.gmos-detecteur input[type=number] { min-height:44px; width:100%; border:1px solid #42594b; border-radius:4px; background:#0b1710; padding:8px 12px; color:var(--detecteur-texte); font:inherit; }
+.gmos-detecteur input[type=number],.gmos-detecteur input[type=text],.gmos-detecteur input:not([type]) { min-height:44px; width:100%; border:1px solid #42594b; border-radius:4px; background:#0b1710; padding:8px 12px; color:var(--detecteur-texte); font:inherit; }
 .gmos-detecteur .detecteur-case { min-height:44px; flex-direction:row; align-items:center; gap:12px; }
 .gmos-detecteur input[type=checkbox] { width:20px; height:20px; accent-color:#b8e2c4; }
 .gmos-detecteur [role=alert] { color:#f1b9a5; }
 @media (max-width:760px) { .gmos-detecteur .detecteur-grille { grid-template-columns:minmax(0,1fr); } }
+.gmos-detecteur select { width: 100%; min-height: 44px; font: inherit; color: inherit; background: var(--detecteur-fond, #0b1711); border: 1px solid currentColor; border-radius: 4px; padding: 8px; }

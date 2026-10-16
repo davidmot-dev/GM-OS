@@ -1,6 +1,6 @@
 # MU/TH/UR 6000 — adaptateur de module GM-OS v1
 
-**15/10/2026 — version du module 0.3.0, données v2, contrat v1.**
+**16/10/2026 — version du module 0.4.0, données v3, contrat v1.**
 Conforme au format du [contrat v1](../../../../documentation/Architecture/Contrat-des-modules-du-jeu.md).
 Ce dossier fournit le manifeste, le moteur et les composants React joueur/MJ.
 **Le registre, les autorisations de table et le branchement au Tablet Hub sont livrés
@@ -8,7 +8,7 @@ dans la deuxième tranche du 15/10.** Depuis **Cockpit › Modules du jeu**, le 
 MU/TH/UR et, pendant une séance, ouvre l’accès aux personnages choisis. Le stockage
 privé natif conserve préparation et dialogues, séparément des campagnes synchronisées.
 Les sauvegardes de session et exports de campagne les emportent ; leur restauration
-ferme les accès et arrête les effets. Le détecteur attend son adaptateur.
+ferme les accès et arrête les effets. Le détecteur dispose de son adaptateur séparé.
 Le serveur et l'atelier autonome Alien
 gardent leur fonctionnement actuel et leur manifeste propre.
 
@@ -49,8 +49,10 @@ Le rôle fictif « administrateur » du terminal n'accorde aucun droit MJ.
 | `configurer` | MJ | Champs facultatifs : `vaisseau` (64), `statut` (2 000), `motDePasse` (120, non blanc), `crt` et `parasites` (booléens). |
 | `creer-dossier` | MJ | `{ dossierId, titre, contenu, acces, code }`. Identifiant unique pour READ : 1 à 64 caractères, lettre minuscule initiale, puis lettres minuscules, chiffres ou tirets. Titre non blanc ; mêmes limites et protections que la modification. Code non blanc requis pour `acces: 'code'`. |
 | `modifier-dossier` | MJ | `dossierId` requis ; `titre` (80), `contenu` (10 000), `acces` (`equipage`, `code`, `administrateur`), `code` (120) facultatifs. |
-| `repondre` | MJ | `{ personnageId, texte }`, texte non blanc de 10 000 caractères au plus. |
-| `arbitrer-piratage` | MJ | `{ personnageId, reussite }`, booléen ; exige une demande HACK en attente. |
+| `supprimer-dossier` | MJ | `{ dossierId }` ; retire le dossier et ses déverrouillages, conserve les textes déjà lus. Confirmation locale au pupitre. |
+| `classer-dossiers` | MJ | `{ dossierIds }` ; permutation exacte des identifiants actuels, sans doublon. L’ordre de LIST suit cette liste. |
+| `repondre` | MJ | `{ personnageId, texte, demandeId? }`, texte non blanc de 10 000 caractères au plus. Identifiant : question ciblée ; `null` : message libre ; absent : première question en attente, sinon message libre (compatibilité). |
+| `arbitrer-piratage` | MJ | `{ personnageId, reussite, demandeId? }`, booléen ; exige le HACK ciblé en attente, ou le premier si identifiant absent. |
 | `revoquer` | MJ | `{ personnageId }`, retire accès administrateur, déverrouillages et piratage en attente ; conserve le dialogue. |
 | `compte-a-rebours` | MJ | `{ minutes }`, nombre de 0,1 à 60 ; `null` arrête le compte. |
 | `reinitialiser` | MJ | `{}`, remet les exemples et efface dialogues/accès, en conservant les opérateurs. Confirmation locale au pupitre. |
@@ -84,9 +86,9 @@ et les dossiers auxquels il a droit, sans leurs codes. Les dossiers verrouillés
 et dialogues des autres PJ sont absents. Le MJ reçoit la vue de contrôle.
 Une vue est une copie et ne permet aucune mutation indirecte de l'état.
 
-`migrerEtat(donnees, versionDonnees)` accepte les formats 1 et 2, notamment un
+`migrerEtat(donnees, versionDonnees)` accepte les formats 1, 2 et 3, notamment un
 état **fictif ou exporté volontairement** du prototype, et en extrait le terminal.
-Une ancienne table v1 passe en v2 avec une liste de protocoles vide, sans
+Une ancienne table v1 reçoit une liste de protocoles vide avant de passer en v3, sans
 changer ses codes ou lui ajouter un déclencheur actif. Il n'accède à aucun fichier et
 ne consulte jamais `.local/`. Un état invalide ou une version future est
 refusé. Cette migration ne convertit pas les jetons du serveur autonome en
@@ -95,10 +97,20 @@ explicite entre ses opérateurs et les personnages choisis par le MJ.
 Elle masque également les anciennes saisies ORDERS qui auraient été
 conservées en clair dans un dialogue du prototype.
 
-**Le radar est exclu de cet état et des vues.** MU/TH/UR n'utilise pas de
-service partagé avec le détecteur à ce stade. Celui-ci devra disposer de
-son propre adaptateur ; une éventuelle mutualisation sera déclarée dans le
-registre, sans dupliquer les états autoritaires. Aucun jet, Stress ou champ
+La v3 ajoute `players[id].requests` : id, type, texte `content`, date `at`, statut
+`pending`/`answered`/`accepted`/`refused`/`cancelled`, réponse `response`, date `resolvedAt`.
+Jusqu’à 32 demandes en attente et 128 entrées par opérateur ; seules les anciennes entrées
+traitées sont élaguées. Un HACK en attente par opérateur, avec plusieurs questions en parallèle.
+`request` reste un pointeur de compatibilité vers le HACK ou la première question en attente,
+validé contre la file. CLEAR conserve cette file ; révoquer annule les attentes et garde leur texte.
+Un traitement déjà effectué ou visant la demande d’un autre PJ est refusé sans mutation.
+La migration récupère la demande unique survivante des v1/v2, avec son texte depuis le journal
+si disponible. Les questions déjà écrasées par l’ancien format ne peuvent pas être récupérées.
+La préparation portable reste au format v1 : ordre et suppression des dossiers y sont conservés,
+sans les demandes de séance. L’atelier HTML sauvegarde aussi ces deux nouvelles commandes.
+
+**Le radar et ses préréglages sont exclus de cet état et des vues.** Le détecteur a
+son propre adaptateur et son état autoritaire indépendant. Aucun jet, Stress ou champ
 de fiche GM-OS n'est modifié par le terminal.
 
 `arreterEffets` et la migration annulent l'autodestruction, la diffusion,
