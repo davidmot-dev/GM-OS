@@ -338,6 +338,14 @@ export interface DescripteurDeJet {
      */
     brise?: import('./systemes/yearZero').EtatBrise[];
     /**
+     * **Le stress subi** — Blade Runner, 2026-10-16 (« STRESS ET SANG-FROID ») :
+     * face à l'horreur, le meneur fixe un **facteur de stress** de 1 à 3 ; le
+     * personnage lance aussitôt, en réflexe, les dés de la fiche nommés dans `jet`
+     * (l'Empathie et la Psychologie) ; **chaque réussite retire un point** de
+     * stress, et le reste se retire de `champ` (le Sang-froid). À zéro, Brisé.
+     */
+    stressSubi?: { champ: string; label?: string; jet: string[]; facteurMax?: number };
+    /**
      * **La spécialisation élargit le critique** — 2d20, 2026-10-14. Star Trek
      * (le Focus de l'édition anglaise) : *« si une spécialisation s'applique,
      * tout dé inférieur ou égal à la fonction utilisée est aussi une réussite

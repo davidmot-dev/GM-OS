@@ -1669,3 +1669,30 @@ describe('Blade Runner : Brisé en combat et protection — 2026-10-16', () => {
         ]);
     });
 });
+
+describe('Blade Runner : stress subi et relance d’une réussite — 2026-10-16', () => {
+    const ficheBr: Partial<SheetTemplate> = {
+        sections: [{ id: 'f', label: 'F', fields: ['sangFroid', 'empathie', 'psychologie'].map(id => ({ id, label: id, type: 'text' })) }] as SheetTemplate['sections'],
+    };
+    const constatsDe = (jet: unknown) => controlerLePilote({ jet } as unknown as Partial<GameDriver>, ficheBr)
+        .filter(c => /stressSubi|relancerUneReussite/.test(c.ou)).map(c => [c.ou, c.gravite]);
+
+    it('déclarés juste, ils passent', () => {
+        expect(constatsDe({
+            sens: 'superieur-ou-egal', desEchelonnes: { echelle: 'yze-lettres', composantes: [] },
+            forcer: { garde: 'reussites-et-uns', relancerUneReussite: true },
+            stressSubi: { champ: 'sangFroid', jet: ['empathie', 'psychologie'] },
+        })).toEqual([]);
+    });
+
+    it('ce qui ne mène nulle part est dit', () => {
+        expect(constatsDe({
+            sens: 'superieur-ou-egal', forcer: { garde: 'reussites', relancerUneReussite: true },
+            stressSubi: { champ: 'absent', jet: ['nulle_part'] },
+        })).toEqual([
+            ['jet.stressSubi.champ', 'erreur'],
+            ['jet.stressSubi.jet', 'avertissement'],
+            ['jet.forcer.relancerUneReussite', 'avertissement'],
+        ]);
+    });
+});

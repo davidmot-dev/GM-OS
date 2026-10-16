@@ -18,6 +18,7 @@ import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import ActionsApprouvees from './ActionsApprouvees';
 import HorsJeuDuCombattant from './HorsJeuDuCombattant';
 import ProtectionDuCombattant from './ProtectionDuCombattant';
+import StressSubi from '../../session/components/fields/StressSubi';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
 import { useDiceStore } from '../../../stores/useDiceStore';
@@ -541,6 +542,13 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
             {/* Blade Runner : la protection se lance à chaque coup subi. */}
             <ProtectionDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
+            {/* Blade Runner : le stress subi, un facteur de 1 à 3 que la Psychologie réduit. */}
+            {combatant.isPlayer && activeDriver?.jet?.stressSubi && (
+                <div className="mx-3 my-1">
+                    <StressSubi regle={activeDriver.jet.stressSubi} valeurs={ficheLue.valeurs} nom={combatant.name}
+                        ecrire={maj => ecrireLaFicheDuCombattant(combatant, maj)} />
+                </div>
+            )}
 
             {/* Torg : l'Action approuvée de la carte du round, pour un Héros. */}
             <ActionsApprouvees combatant={combatant} />

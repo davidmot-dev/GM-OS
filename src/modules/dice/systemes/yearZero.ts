@@ -78,6 +78,22 @@ export interface RegleDuForcage {
         label?: string;
         si?: { si: ConditionDeFiche; champ: string; label?: string }[];
     };
+    /**
+     * **Relancer un dé qui n'a fait qu'une réussite** — Blade Runner, 2026-10-16
+     * (« Forcer un jet », p. 55) : *« vous pouvez relancer des D10 ou des D12 qui
+     * montrent un seul œil dans l'espoir d'obtenir davantage d'yeux, mais il s'agit
+     * d'une manœuvre risquée. Vous devez appliquer le nouveau résultat. »* Le
+     * joueur désigne ces dés avant de forcer.
+     */
+    relancerUneReussite?: boolean;
+}
+
+/**
+ * Ce dé peut-il être relancé malgré sa réussite ? Un D10 ou un D12 qui n'en
+ * montre qu'une (6 à 9) : relancé, il peut viser deux réussites — ou les perdre.
+ */
+export function relancableMalgreSaReussite(d: DieResult): boolean {
+    return !d.isDropped && (d.sides ?? 0) >= 10 && reussitesDuDe(valeurDuDe(d)) === 1;
 }
 
 /**
@@ -191,6 +207,11 @@ export function forcerLeJet(
         desEnPlus?: number;
         /** Le nom du 1 qui compte, pour le journal — « Panique », « Écueil ». */
         libelleDuUn?: string;
+        /**
+         * Les dés à relancer **malgré leur réussite** (leur rang dans le jet), quand
+         * la règle le permet : un D10 ou un D12 à une seule réussite (Blade Runner).
+         */
+        aussi?: readonly number[];
         de: (faces: number) => number;
     },
 ): RollResult {
@@ -203,8 +224,11 @@ export function forcerLeJet(
         relance: true,
     });
 
-    const rolls: DieResult[] = resultat.rolls.map(d =>
-        d.isDropped || resteSurLaTable(d, regle.garde)
+    // Un dé désigné se relance malgré sa réussite, si la règle le permet et qu'il n'en a qu'une.
+    const malgreSaReussite = (d: DieResult, i: number) =>
+        !!regle.relancerUneReussite && !!options.aussi?.includes(i) && relancableMalgreSaReussite(d);
+    const rolls: DieResult[] = resultat.rolls.map((d, i) =>
+        d.isDropped || (resteSurLaTable(d, regle.garde) && !malgreSaReussite(d, i))
             ? { ...d, relance: false }
             : marquer(d, de(d.sides ?? 6)));
     for (let i = 0; i < (options.desEnPlus ?? 0); i++) {
@@ -351,4 +375,27 @@ export function entreeDeLaTable<E extends { min: number; max: number }>(
     if (exacte || entrees.length === 0) return exacte;
     const triees = [...entrees].sort((a, b) => a.min - b.min);
     return total > triees[triees.length - 1].max ? triees[triees.length - 1] : triees[0];
+}
+
+/**
+ * **Le stress subi** (Blade Runner, « STRESS ET SANG-FROID ») : le jet réflexe
+ * des dés de la fiche (l'Empathie et la Psychologie), chaque réussite retirant un
+ * point du facteur ; ce qui reste se retire du champ, jamais sous zéro. Un champ
+ * dont la fiche ne dit pas le niveau ne lance pas de dé — on ne l'invente pas.
+ */
+export function subirLeStress(
+    facteur: number,
+    regle: { champ: string; jet: readonly string[] },
+    valeurs: Record<string, unknown>,
+    de: (faces: number) => number,
+): { des: { champ: string; faces: number; val: number }[]; reussites: number; perte: number; avant: number; apres: number } {
+    const des = regle.jet.flatMap(champ => {
+        const faces = facesDuNiveau(valeurs[champ]);
+        return faces ? [{ champ, faces, val: de(faces) }] : [];
+    });
+    const reussites = des.reduce((n, d) => n + reussitesDuDe(d.val), 0);
+    const perte = Math.max(0, Math.floor(facteur) - reussites);
+    const brut = Number(valeurs[regle.champ]);
+    const avant = Number.isFinite(brut) ? brut : 0;
+    return { des, reussites, perte, avant, apres: Math.max(0, avant - perte) };
 }

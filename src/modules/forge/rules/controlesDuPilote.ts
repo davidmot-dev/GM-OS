@@ -697,6 +697,24 @@ export function controlerLePilote(
     if (reussiteDepensee && !tousLesChamps.has(reussiteDepensee.champ)) {
         erreur('jet.reussiteDepensee.champ', `« ${reussiteDepensee.label} » se décompte dans « ${reussiteDepensee.champ} », absent de la fiche : le bouton n'aurait rien à dépenser.`);
     }
+    // Le stress subi de Blade Runner : un champ qui encaisse, et des dés lus sur la fiche.
+    const stress = driver.jet?.stressSubi;
+    if (stress) {
+        if (!tousLesChamps.has(stress.champ)) {
+            erreur('jet.stressSubi.champ', `Le stress se retire de « ${stress.champ} », absent de la fiche : le geste n'aurait rien à écrire.`);
+        }
+        if (!stress.jet?.length) {
+            erreur('jet.stressSubi.jet', 'Le stress subi nomme les dés de la fiche qui le réduisent (l’Empathie et la Psychologie).');
+        }
+        for (const champ of stress.jet ?? []) {
+            if (!tousLesChamps.has(champ)) avertir('jet.stressSubi.jet', `Le stress se réduit avec « ${champ} », absent de la fiche : ce dé ne sera pas lancé.`);
+        }
+    }
+    // Relancer un D10/D12 à une réussite n'a de sens qu'avec des dés échelonnés.
+    if (driver.jet?.forcer?.relancerUneReussite && !driver.jet.desEchelonnes) {
+        avertir('jet.forcer.relancerUneReussite', 'Relancer un dé à une seule réussite ne vaut que pour des dés échelonnés (D10, D12) : sans eux, l’option ne paraîtra jamais.');
+    }
+
     // La Fortune de Cthulhu Hack : des jetons placés sur la fiche, jamais plus que le maximum.
     const fortune = driver.jet?.fortune;
     if (fortune) {

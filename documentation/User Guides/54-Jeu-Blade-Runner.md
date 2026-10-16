@@ -55,8 +55,10 @@ initial compris**, coûte un point, décompté sur la fiche :
 
 > ✅ Relu contre le carnet NotebookLM « Blade Runner » le 2026-10-16 (« Forcer un jet », p. 55) :
 > *« relancer tous les dés à l'exception de ceux qui ont donné un résultat de 1 »* — les 1 restent, et
-> les réussites restent si vous le souhaitez. ⚠️ Le livre permet aussi de **relancer un D10 ou un D12
-> qui n'a fait qu'une réussite**, pour viser deux : GM-OS ne le propose pas, relancez-le à la main.
+> les réussites restent si vous le souhaitez. Le livre permet aussi de **relancer un D10 ou un D12
+> qui n'a fait qu'une réussite**, pour viser deux : avant de forcer, des cases **« Relancer aussi »**
+> désignent ces dés (D10 ou D12 entre 6 et 9). C'est risqué : le nouveau résultat s'applique, même
+> pire. *Ajouté le 2026-10-16.*
 
 ---
 
@@ -100,6 +102,19 @@ retire un point de **Sang-froid maximal à vie**. L'effet s'ajoute au champ **«
 critiques »**. Le même geste, au panneau de jet après un forçage, écrit lui aussi l'effet sur la
 fiche.
 
+### Le stress subi
+
+Face à l'horreur, vous fixez un **facteur de stress** : **1** (menaces violentes, un allié qui subit
+un critique mortel, une nouvelle angoissante), **2** (la mort d'un allié, un interrogatoire, une
+révélation grave), **3** (un massacre, la torture, une découverte qui bouleverse son identité).
+
+Sur la carte de combat d'un Blade Runner, et sous le panneau de jet de sa fiche : **« Stress subi »**,
+le facteur, puis **« Encaisser »**. Le bouton lance l'**Empathie** et la **Psychologie** (le jet
+réflexe du livre) ; **chaque réussite retire un point**, le reste se retire du **Sang-froid**.
+L'historique dit le calcul (« facteur 3 − 1 réussite (D10 7, D8 3) = −2 → 2 »). À zéro, le panneau
+**Brisé par le stress** paraît sur la carte. Les autres pertes du livre (tir en automatique, Quarts
+sans pause) se retirent avec le − de la carte.
+
 ### La protection
 
 Sur la fiche : **Protection** (son nom) et **Protection — niveau** (Sans protection, A à D). Une
@@ -122,7 +137,6 @@ Quart de pause : **5** (D → C), **10** (C → B), **15** (B → A). Les attrib
 
 ## Ce qui reste à la main
 
-- Le **facteur de stress** (1 à 3) et le jet de **Psychologie** qui le réduit : retirez le
-  Sang-froid avec le − de la carte.
-- La relance optionnelle d'un D10 ou D12 à une seule réussite, au forçage.
+- Au **pupitre**, le forçage ne propose pas de relancer un dé à une seule réussite : seul le panneau
+  de la fiche le fait.
 - Sauvegardes contre la mort, stabilisation, durées de guérison des blessures critiques.

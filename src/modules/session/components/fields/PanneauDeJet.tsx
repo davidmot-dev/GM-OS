@@ -17,9 +17,10 @@ import {
 } from '../../../dice/systemes/torg';
 import {
     cumulDePanique, entreeDeLaTable, forcerLeJet, lancerLEffetDuBrise, noterSurLaFiche, pourquoiNePasForcer, prixDuForcage,
-    tableDuBrise, testDePanique, type EtatBrise, type FamilleYearZero,
+    relancableMalgreSaReussite, tableDuBrise, testDePanique, type EtatBrise, type FamilleYearZero,
 } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
+import StressSubi from './StressSubi';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
@@ -291,6 +292,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         /** Le champ de la seconde réserve — le Niveau de Stress d'Alien. */
         seconde?: { champ: string; label: string };
     } | null>(null);
+    /** Les dés qu'on relancera malgré leur réussite (un D10, un D12 à une seule) — Blade Runner. */
+    const [aRelancerAussi, setARelancerAussi] = useState<number[]>([]);
     const [forcage, setForcage] = useState<{ fois: number; unsPayes: number; ecrits: Record<string, number> }>(
         { fois: 0, unsPayes: 0, ecrits: {} },
     );
@@ -429,6 +432,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setEffetsDuBrise({});
         setDernierLancer(null);
         setReussiParLaFortune(false);
+        setARelancerAussi([]);
 
         // Le coût se prélève au moment où l'on s'engage, pas pendant qu'on
         // tourne les boutons : régler avant de lancer ferait payer les
@@ -855,6 +859,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (!regleDuForcage || !resultat || !dernierLancer || raisonDeNePasForcer) return;
         const ecrits = { ...forcage.ecrits };
         const dits: string[] = [];
+        if (aRelancerAussi.length) dits.push(`Relancé${aRelancerAussi.length > 1 ? 's' : ''} malgré sa réussite : ${aRelancerAussi.length} dé${aRelancerAussi.length > 1 ? 's' : ''}`);
         const aReporter = ecrireSurLaFiche ? '' : ' (à reporter sur la fiche)';
 
         const montee = dernierLancer.seconde ? (regleDuForcage.monteeDeLaSeconde ?? 0) : 0;
@@ -866,8 +871,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
 
         const res = forcerLeJet(resultat, regleDuForcage, {
-            famille: familleYearZero, desEnPlus: montee, libelleDuUn, de: faces => DiceEngine.roll(faces),
+            famille: familleYearZero, desEnPlus: montee, libelleDuUn, aussi: aRelancerAussi,
+            de: faces => DiceEngine.roll(faces),
         });
+        setARelancerAussi([]);
 
         const prix = prixDuForcage(regleDuForcage, {
             resultat: res, valeurs, choix: dernierLancer.choix, dejaPayes: forcage.unsPayes,
@@ -1623,6 +1630,25 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             </button>
                         )}
                     </div>
+                    {/*
+                      **Relancer malgré une réussite** (Blade Runner, « Forcer un jet ») : un D10
+                      ou un D12 qui n'en montre qu'une peut viser deux — ou la perdre.
+                    */}
+                    {regleDuForcage?.relancerUneReussite && !raisonDeNePasForcer && resultat.rolls.some(relancableMalgreSaReussite) && (
+                        <div data-relancer-aussi className="flex flex-wrap items-center gap-2 text-ui-10 text-app-text/60">
+                            <span>Relancer aussi, au risque de perdre la réussite :</span>
+                            {resultat.rolls.map((d, i) => relancableMalgreSaReussite(d) && (
+                                <label key={i} className="flex items-center gap-1 rounded-md border border-app-border/40 px-2 py-0.5">
+                                    <input
+                                        type="checkbox"
+                                        checked={aRelancerAussi.includes(i)}
+                                        onChange={e => setARelancerAussi(a => e.target.checked ? [...a, i] : a.filter(x => x !== i))}
+                                    />
+                                    D{d.sides} ({d.val})
+                                </label>
+                            ))}
+                        </div>
+                    )}
                     {regleDuForcage && raisonDeNePasForcer && (
                         <p className="flex items-start gap-2 text-ui-10 text-app-text/40">
                             <Info size={11} className="mt-0.5 shrink-0" /> {raisonDeNePasForcer}
@@ -1825,6 +1851,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         </div>
                     )}
                 </div>
+            )}
+
+            {/* **Le stress subi** (Blade Runner) : au meneur, sous le jet — un geste à part, sans lancer le test. */}
+            {descripteur.stressSubi && ecrireSurLaFiche && !pourLesJoueurs && (
+                <StressSubi
+                    regle={descripteur.stressSubi}
+                    valeurs={{ ...valeurs, ...forcage.ecrits }}
+                    nom={String(valeurs.nom || valeurs.name || 'Personnage')}
+                    ecrire={maj => { setForcage(f => ({ ...f, ecrits: { ...f.ecrits, ...maj } })); ecrireSurLaFiche(maj); }}
+                />
             )}
         </div>
     );
