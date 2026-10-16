@@ -5,6 +5,7 @@ import { useRessourcesDeTableStore } from './useRessourcesDeTableStore';
 import { ressourcesDeLaTable } from './reservesDuGroupe';
 import { gmToast } from '../../stores/useToastStore';
 import { ecrireLesHeros } from './ecrireLesHeros';
+import { DEFAULT_SHEET_TEMPLATES } from '../../data/defaultSheetTemplates';
 import { BoutonPrincipal, BoutonSecondaire } from '../../components/socle/CadreDeSurcouche';
 import {
     changementsEffectifs, effetsDuDebordement, herosDeLaCampagne, momentDeCalme, nombreDEffetsAChoisir,
@@ -31,8 +32,13 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const updateCharacter = useSessionOSStore(s => s.updateCharacter);
     const updateCharacterHealth = useSessionOSStore(s => s.updateCharacterHealth);
     const pilote = useSessionOSStore(s => s.getActiveDriver());
+    const fichesPerso = useSessionOSStore(s => s.customSheetTemplates);
     const { etatDe, gagner, depenser } = useRessourcesDeTableStore();
     const [choix, setChoix] = useState<Record<string, number>>({});
+    // L'aperçu dit « Fatigué », « Extase » — les libellés de la fiche du jeu, pas les identifiants.
+    const gabarit = [...(fichesPerso ?? []), ...DEFAULT_SHEET_TEMPLATES].find(t => t.id === pilote?.templateId);
+    const libelles = new Map((gabarit?.sections ?? []).flatMap(s => s.fields.map(f => [f.id, f.label] as const)));
+    const nom = (champ: string) => libelles.get(champ) ?? champ;
 
     const campagne = campaigns.find(c => c.id === activeCampaignId);
     const ressources = ressourcesDeLaTable(pilote, campagne);
@@ -49,8 +55,8 @@ const FenetreDesGestesDesHeros: React.FC<{ geste: GesteDesHeros; onClose: () => 
     const aChoisir = debordement ? nombreDEffetsAChoisir(etat[debordement.nombreSelon]) : 0;
     const choisis = Object.values(choix).reduce((a, b) => a + b, 0);
     const apercu: { changements: ChangementDuHeros[]; aDire: string[] } = geste === 'calme'
-        ? { changements: momentDeCalme(calme!, heros), aDire: [] }
-        : effetsDuDebordement(debordement!.effets, choix, heros);
+        ? { changements: momentDeCalme(calme!, heros, nom), aDire: [] }
+        : effetsDuDebordement(debordement!.effets, choix, heros, nom);
     const effectifs = changementsEffectifs(apercu.changements);
     const tableQuiBouge = geste === 'calme' ? (calme!.table ?? []) : [];
 

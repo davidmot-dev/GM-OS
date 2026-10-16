@@ -38,6 +38,8 @@ n'en a **jamais plus de deux**.
 
 - **Sur la fiche** (panneau de jet, chez vous ou sur la tablette) : sous une Sauvegarde ratée, les
   boutons **« Relancer (+1 Fortune) »** et **« Réussir (+2 Fortune) »**.
+
+  ![Une Sauvegarde de Sagesse ratée (16 sur 15) : la Fortune, à 0 sur 2, propose de relancer pour un jeton ou de réussir pour deux](captures/jeu-cthulhu-hack-fortune.jpg)
 - **Au pupitre** : sous le dernier jet venu d'une fiche — une Sauvegarde demandée depuis la
   tablette, une ressource lancée depuis la carte de combat ou le pupitre — les mêmes deux boutons.
   Une **ressource** sauvée retrouve d'abord le dé qu'elle venait de perdre ; relancée, elle peut
@@ -69,6 +71,8 @@ Quand la **Santé mentale** descend d'un cran, le pupitre propose **« Folie pas
 Choc, plus court. Le bouton tire **1d6** dans la table et écrit le résultat à l'historique et au
 journal (« 6 — Hurlement : Attire immédiatement l'attention »). Une seule suite par jet.
 
+![Le pupitre après un jet de Santé mentale qui descend de d10 à d8 : la Fortune (relancer, réussir), puis Folie passagère ou Choc](captures/jeu-cthulhu-hack-suites-du-declin.jpg)
+
 ### Le Matériel
 
 La fiche porte **quatre emplacements** (section « Matériel ») : le **nom** de l'objet et son
@@ -88,6 +92,10 @@ pour des jumelles. Une **armure** qui descend perd aussi 1 point de protection :
   4 Estropié, 3 Ravagé, 2 Détruit, 1 Mort). La règle dit de tirer **une fois le danger écarté** :
   vous choisissez le moment. Puis **« S'il survit : récupérer 1d4 PV »**, qui passe par la santé
   comme un soin. Les pertes définitives de Sauvegardes s'écrivent à la main.
+
+  ![La carte d'Edith Marsh à 0 PV sur 12 : le Hors Jeu a tiré 7 — Commotion, et propose de récupérer 1d4 PV](captures/jeu-cthulhu-hack-hors-jeu.jpg)
+- **Les PV de la fiche font foi** (2026-10-16) : un coup porté en combat les réécrit, et la barre de
+  la carte part d'eux ; leur maximum est la valeur par défaut du champ PV de la fiche.
 - La fiche HTML de Cthulhu Hack se relie à son personnage GM-OS : voir
   [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md).
 

@@ -12,7 +12,7 @@ import type { GameDriver } from '../../types/drivers';
  * changent sont écrites.
  */
 const PILOTE = {
-    id: 'noc', name: 'NOC',
+    id: 'noc', name: 'NOC', templateId: 'tpl-noc',
     ressourcesDeTable: [
         { id: 'Fiel', label: 'Fiel', proprietaire: 'meneur', depart: 0, min: 0, max: 5, debordement: { vers: 'Menace' } },
         { id: 'Menace', label: 'Menace', proprietaire: 'meneur', depart: 0, min: 0 },
@@ -43,6 +43,8 @@ beforeEach(() => {
             { id: 'ailleurs', name: 'Ailleurs', campaignId: 'x', sheetData: { espoir: 0 } },
         ] }],
         getActiveDriver: () => PILOTE,
+        customSheetTemplates: [{ id: 'tpl-noc', name: 'Héros', emoji: '', sections: [{ id: 's', label: 'S', fields: [
+            { id: 'extase', label: 'Extase', type: 'number' }, { id: 'fatigue', label: 'Fatigué', type: 'checkbox' }] }] }],
         updateCharacter,
         updateCharacterHealth: vi.fn(),
     } as never);
@@ -54,8 +56,9 @@ describe('le moment de calme', () => {
     it('montre ce qui change, puis écrit les fiches et retire une goutte de Fiel', () => {
         const fermer = vi.fn();
         render(<FenetreDesGestesDesHeros geste="calme" onClose={fermer} />);
-        expect(screen.getByText('Espoir 1 → 3 (+2, +1 extase)')).toBeTruthy();
-        expect(screen.getByText('fatigue prend fin')).toBeTruthy();
+        expect(screen.getByText('Espoir 1 → 3 (+2, +1 Extase)')).toBeTruthy();
+        // Les libellés de la fiche, pas les identifiants.
+        expect(screen.getByText('Fatigué prend fin')).toBeTruthy();
         expect(screen.queryByText('Ailleurs')).toBeNull();
         // Bram n'a rien à récupérer : Espoir au plafond, Trauma à zéro.
         expect(screen.getByText('Rien ne change.')).toBeTruthy();

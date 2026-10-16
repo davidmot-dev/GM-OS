@@ -22,6 +22,13 @@ export interface HerosDeLaTable {
     valeurs: Record<string, unknown>;
 }
 
+/**
+ * Le nom d'un champ, dit dans l'aperçu : le libellé de la fiche (« Fatigué »)
+ * plutôt que son identifiant (`fatigue`). Sans fiche, l'identifiant.
+ */
+export type Libelle = (champ: string) => string;
+const sansLibelle: Libelle = champ => champ;
+
 /** Les Héros de la campagne : les personnages des joueurs qui y sont liés. */
 export function herosDeLaCampagne(
     joueurs: readonly { id: string; characters?: readonly { id: string; name?: string; campaignId?: string | null; sheetData?: Record<string, unknown> }[] }[],
@@ -67,9 +74,10 @@ export function appliquerLeMouvement(
     m: MouvementDeFiche,
     valeurs: Record<string, unknown>,
     fois = 1,
+    nom: Libelle = sansLibelle,
 ): { valeur: number; avant: number; coche?: string; ligne: string; retenuParSequelles?: boolean } | null {
     const avant = nombre(valeurs[m.champ]);
-    const label = m.label ?? m.champ;
+    const label = m.label ?? nom(m.champ);
     const plafond = plafondDuMouvement(m, valeurs);
     const plancher = Math.max(m.min ?? 0, m.plancher ? nombre(valeurs[m.plancher]) : 0);
 
@@ -85,12 +93,12 @@ export function appliquerLeMouvement(
     if (m.plus) {
         const bonus = nombre(valeurs[m.plus]);
         quantite += bonus;
-        if (bonus) precisions.push(`${bonus > 0 ? '+' : ''}${bonus} ${m.plus}`);
+        if (bonus) precisions.push(`${bonus > 0 ? '+' : ''}${bonus} ${nom(m.plus)}`);
     }
     if (m.resistance) {
         const resistance = nombre(valeurs[m.resistance]);
         quantite = Math.max(0, quantite - resistance);
-        if (resistance) precisions.push(`${m.resistance} ${resistance}`);
+        if (resistance) precisions.push(`${nom(m.resistance)} ${resistance}`);
     }
 
     let valeur: number;
@@ -113,19 +121,20 @@ export function appliquerLeMouvement(
 
     const signe = valeur > avant ? `+${valeur - avant}` : valeur < avant ? `${valeur - avant}` : '±0';
     const dit = `${label} ${avant} → ${valeur} (${[signe, ...precisions].join(', ')})`;
-    return { valeur, avant, coche, ligne: coche ? `${dit} — ${coche} coché` : dit, retenuParSequelles };
+    return { valeur, avant, coche, ligne: coche ? `${dit} — ${nom(coche)} coché` : dit, retenuParSequelles };
 }
 
 /** Les mouvements d'un geste, appliqués dans l'ordre à un Héros. */
 function changerUnHeros(
     heros: HerosDeLaTable,
     mouvements: { m: MouvementDeFiche; fois: number }[],
+    nom: Libelle,
 ): ChangementDuHeros {
     const valeurs = { ...heros.valeurs };
     const maj: Record<string, number | boolean> = {};
     const lignes: string[] = [];
     for (const { m, fois } of mouvements) {
-        const r = appliquerLeMouvement(m, valeurs, fois);
+        const r = appliquerLeMouvement(m, valeurs, fois, nom);
         if (!r) continue;
         // Une jauge déjà à zéro qui ne bouge pas ne se dit pas ; une séquelle qui la retient, si.
         if (r.valeur !== r.avant || r.coche || r.retenuParSequelles) lignes.push(r.ligne);
@@ -136,9 +145,9 @@ function changerUnHeros(
 }
 
 /** Une simple liste de mouvements pour chaque Héros — le Vécu d'un début de séance. */
-export function recuperationDesHeros(mouvements: MouvementDeFiche[] | undefined, heros: HerosDeLaTable[]): ChangementDuHeros[] {
+export function recuperationDesHeros(mouvements: MouvementDeFiche[] | undefined, heros: HerosDeLaTable[], nom: Libelle = sansLibelle): ChangementDuHeros[] {
     if (!mouvements?.length) return [];
-    return heros.map(h => changerUnHeros(h, mouvements.map(m => ({ m, fois: 1 }))));
+    return heros.map(h => changerUnHeros(h, mouvements.map(m => ({ m, fois: 1 })), nom));
 }
 
 /**
@@ -146,13 +155,13 @@ export function recuperationDesHeros(mouvements: MouvementDeFiche[] | undefined,
  * pilote, les états qui prennent fin, et la récupération amputée qu'il reste à
  * reprendre (le Soupçon). Les mouvements de table (le Fiel) restent au bandeau.
  */
-export function momentDeCalme(geste: NonNullable<GestesDesHeros['momentDeCalme']>, heros: HerosDeLaTable[]): ChangementDuHeros[] {
+export function momentDeCalme(geste: NonNullable<GestesDesHeros['momentDeCalme']>, heros: HerosDeLaTable[], nom: Libelle = sansLibelle): ChangementDuHeros[] {
     return heros.map(h => {
-        const c = changerUnHeros(h, geste.heros.map(m => ({ m, fois: 1 })));
+        const c = changerUnHeros(h, geste.heros.map(m => ({ m, fois: 1 })), nom);
         for (const champ of geste.leve ?? []) {
             if (valeurDeJauge(h.valeurs[champ]) >= 1) {
                 c.maj[champ] = false;
-                c.lignes.push(`${champ} prend fin`);
+                c.lignes.push(`${nom(champ)} prend fin`);
             }
         }
         const a = geste.amputation;
@@ -184,15 +193,16 @@ export function effetsDuDebordement(
     effets: EffetDeDebordement[],
     choix: Record<string, number>,
     heros: HerosDeLaTable[],
+    nom: Libelle = sansLibelle,
 ): { changements: ChangementDuHeros[]; aDire: string[] } {
     const retenus = effets.filter(e => (choix[e.id] ?? 0) > 0);
     const mouvements = retenus.flatMap(e => (e.heros ?? []).map(m => ({ m, fois: choix[e.id] })));
     const changements = heros.map(h => {
-        const c = changerUnHeros(h, mouvements);
+        const c = changerUnHeros(h, mouvements, nom);
         for (const e of retenus) {
             if (e.coche && valeurDeJauge(h.valeurs[e.coche]) < 1) {
                 c.maj[e.coche] = true;
-                c.lignes.push(`${e.label} : ${e.coche} coché`);
+                c.lignes.push(`${e.label} : ${nom(e.coche)} coché`);
             }
         }
         return c;

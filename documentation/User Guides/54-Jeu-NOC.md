@@ -140,6 +140,8 @@ Au panneau de jet, la section **« Puiser dans la Cabale »** offre quatre appor
    point devient permanent — ajoutez-le au champ « Séquelles » de la jauge ;
 4. **Fatigué** prend fin.
 
+![La fenêtre du moment de calme : le Fiel perd une goutte ; Ilya Vorn regagne 2 Espoir (1 + son Extase), perd un point de Blessures et de Trauma, n'est plus Fatigué, et son Soupçon à 6 lui retire 2 points à reprendre](captures/jeu-noc-moment-de-calme.jpg)
+
 Le **Soupçon** (Cabale Dykovienne) ampute la récupération : à 5, 8 et 10 points, le Héros
 récupère 2, 4 ou 6 points de moins, **au choix du joueur**. L'aperçu le dit ; reprenez ces points
 à la main. Le partage de l'Extase entre Héros qui se reposent ensemble reste à la main aussi.
@@ -155,6 +157,8 @@ vaut la **Menace** — le même plusieurs fois si vous le voulez — puis appliq
 | **Traque** | +2 Traque, moins sa **Façade** |
 | **Fatigue** | −1 Espoir ; déjà à zéro, la case **Fatigué** se coche : −1 à tous les Talents jusqu'au prochain moment de calme |
 
+![Les effets du Fiel : la Menace à 2 en demande deux ; Tension et Fatigue choisies, l'aperçu dit ce que chaque Héros perd — Trauma 2 → 3 (la Folie en retire un), Espoir 1 → 0](captures/jeu-noc-effets-du-fiel.jpg)
+
 Un même effet choisi deux fois **cumule ses pertes avant la résistance** : deux Tensions avec
 Folie 1 font 4 − 1 = 3 points de Trauma. Les alliés de la Loi ne sont pas touchés : à la main.
 
@@ -168,6 +172,8 @@ Talent **Fortune** ; tous les autres Atouts restent à un point par test.
 demande **qui a lancé** : « Un Héros » verse les gouttes dans le Fiel, « Un Rouage hostile » en
 retire autant. Fiel déjà vide : un Héros désigné par la Loi gagne la Singularité qui reste — à
 reporter sur sa fiche.
+
+![Le pupitre après le jet d'un agent de la PoliSec : deux 1 sur trois dés de destin, et la question « qui a lancé ? » — Un Héros, ou Un Rouage hostile](captures/jeu-noc-rouage.jpg)
 
 ---
 

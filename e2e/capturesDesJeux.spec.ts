@@ -8,6 +8,7 @@ import { lancerGmOs, attendreLHydratation, ouvrirLeModule, type GmOsLance } from
 import type { useSessionOSStore } from '../src/modules/session/useSessionOSStore';
 import type { useRessourcesDeTableStore } from '../src/modules/table/useRessourcesDeTableStore';
 import type { useCombatStore } from '../src/modules/combat/useCombatStore';
+import type { useDiceStore } from '../src/stores/useDiceStore';
 import type { CurrentView } from '../src/types/campaign.types';
 
 /**
@@ -58,12 +59,22 @@ interface MiseEnScene {
     coup?: number;
     /** La carte d'Action que le round retourne (Torg) — un Vilain entre en combat face au PJ. */
     paquetDAction?: Record<string, unknown>;
+    /**
+     * Les scènes propres à un jeu, jouées après les communes — les gestes des
+     * Héros de NOC, la Fortune de Cthulhu Hack, le Brisé de Blade Runner
+     * (2026-10-16). Chacune ne photographie que ce que le pilote déclare.
+     */
+    scenes?: (c: ContexteDeScene) => Promise<void>;
 }
+
+/** Ce qu'une scène propre à un jeu reçoit pour jouer. */
+interface ContexteDeScene { pilote: Pilote; campagne: string; personnage: string; nom: string }
 
 const MISES_EN_SCENE: MiseEnScene[] = [
     {
         corpusId: 'noc', slug: 'noc', personnage: 'Ilya Vorn',
-        sheetData: { combat: 2, action: 3, vie: 2, vecu: 2, espoir: 3, singularite: 1, trauma: 2 },
+        sheetData: { combat: 2, action: 3, vie: 2, vecu: 2, espoir: 1, singularite: 1, trauma: 2, extase: 1, ferveur: 2, folie: 1, fatigue: true, soupcon: 6 },
+        scenes: c => scenesDeNoc(c),
         composantes: ['combat', 'action'],
         reserves: { Fiel: 3, Menace: 2 },
         groupe: {
@@ -94,13 +105,18 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'blade-runner', slug: 'blade-runner', personnage: 'Agent Kessler',
-        sheetData: { vigueur: 'B', corpsACorps: 'C', sante: 8, sangFroid: 6 },
+        sheetData: {
+            vigueur: 'B', corpsACorps: 'C', sante: 8, santeMax: 8, sangFroid: 6, sangFroidMax: 6, empathie: 'B (D10)', nature: 'Humain',
+            protectionNom: 'Gilet pare-balles dissimulé', protection: 'C (D8)', pointsHumanite: 3,
+        },
         composantes: ['vigueur', 'corpsACorps'],
+        scenes: c => scenesDeBladeRunner(c),
     },
     {
         corpusId: 'cthulhu hack', slug: 'cthulhu-hack', personnage: 'Edith Marsh',
-        sheetData: { force: 13, sagesse: 15, hp: 9, torche: 'd8', bagou: 'd6', mentalHealth: 'd10', richesse: 'd4' },
+        sheetData: { force: 13, sagesse: 15, hp: 9, torche: 'd8', bagou: 'd6', mentalHealth: 'd10', richesse: 'd4', fortune: 0, materiel_1_nom: 'Lampe-torche', materiel_1: 'd8' },
         composantes: ['sagesse'],
+        scenes: c => scenesDeCthulhuHack(c),
     },
     {
         corpusId: 'reves de dragons', slug: 'reves-de-dragons', personnage: 'Aldaran le Voyageur',
@@ -202,6 +218,7 @@ type Fenetre = {
     useSessionOSStore: typeof useSessionOSStore;
     useRessourcesDeTableStore: typeof useRessourcesDeTableStore;
     useCombatStore: typeof useCombatStore;
+    useDiceStore: typeof useDiceStore;
 };
 
 let gmos: GmOsLance;
@@ -417,5 +434,136 @@ for (const { mise, pilote } of JEUX) {
             await f.waitForTimeout(3_500);
             await photographier(f.locator('body'), `jeu-${mise.slug}-destin`);
         }
+
+        // Les scènes propres au jeu.
+        await mise.scenes?.({ pilote, campagne, personnage: personnageDe(mise.slug), nom: mise.personnage });
     });
+}
+
+// ---- Les scènes propres à un jeu — 2026-10-16 ------------------------------
+
+/** Le PJ seul en combat ; `coup` le fait tomber avant la photo. */
+async function entrerEnCombat(c: ContexteDeScene, coup?: number): Promise<Locator> {
+    const f = gmos.fenetre;
+    await f.evaluate(({ id, nom, coup }) => {
+        const w = window as unknown as Fenetre;
+        const combat = w.useCombatStore.getState();
+        combat.clearCombatants();
+        combat.addCombatant({ name: nom, init: 0, isPlayer: true, faction: 'player', statuses: [], sourcePlayerId: id });
+        if (coup !== undefined) w.useSessionOSStore.getState().handleApplyImpact(id, 'pc', { value: coup, type: 'physique' });
+    }, { id: c.personnage, nom: c.nom, coup });
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    const carte = gmos.fenetre.locator('[data-combattant]').first();
+    await expect(carte).toBeVisible({ timeout: 15_000 });
+    return carte;
+}
+
+/** Un jet posé dans l'historique du pupitre, puis le pupitre ouvert. */
+async function jetAuPupitre(jet: Record<string, unknown>): Promise<void> {
+    await gmos.fenetre.evaluate(jet => {
+        (window as unknown as Fenetre).useDiceStore.getState().setLastRoll({ ...jet, timestamp: new Date() } as never);
+    }, jet);
+    await ouvrirLeModule(gmos, 'Dice-OS');
+}
+
+/** Le panneau « Dernier jet » du pupitre qui contient cet élément — sans l'historique dessous. */
+function panneauDuDernierJet(dedans: Locator): Locator {
+    // Le premier ancêtre qui porte le titre « Dernier jet » : le panneau, et lui seul.
+    return dedans.locator("xpath=ancestor::*[contains(translate(normalize-space(.), 'DERNIJT', 'dernijt'), 'dernier jet')][1]");
+}
+
+/** Un champ de la fiche du PJ, écrit comme le ferait le meneur. */
+async function ecrireLaFiche(c: ContexteDeScene, maj: Record<string, unknown>): Promise<void> {
+    await gmos.fenetre.evaluate(({ id, maj }) => {
+        const s = (window as unknown as Fenetre).useSessionOSStore.getState();
+        const joueur = s.players.find(p => p.characters.some(ch => ch.id === id))!;
+        for (const [champ, valeur] of Object.entries(maj)) s.updateCharacterSheetData(joueur.id, id, champ, valeur as never);
+    }, { id: c.personnage, maj });
+}
+
+/** NOC : le moment de calme, les effets du Fiel, le jet d'un Rouage au pupitre. */
+async function scenesDeNoc(c: ContexteDeScene): Promise<void> {
+    if (!(c.pilote.gameDriver as { gestesDesHeros?: unknown }).gestesDesHeros) return;
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'cockpit');
+    await f.getByRole('button', { name: /Moment de calme/ }).click();
+    const calme = f.locator('[data-gestes-des-heros="calme"]');
+    await expect(calme).toBeVisible();
+    await photographier(calme, 'jeu-noc-moment-de-calme');
+    await calme.getByRole('button', { name: 'Annuler', exact: true }).click();
+
+    await f.getByRole('button', { name: /Effets du Fiel/ }).click();
+    const fiel = f.locator('[data-gestes-des-heros="debordement"]');
+    await expect(fiel).toBeVisible();
+    await fiel.getByRole('button', { name: 'Une fois de plus : Tension', exact: true }).click();
+    await fiel.getByRole('button', { name: 'Une fois de plus : Fatigue', exact: true }).click();
+    await photographier(fiel, 'jeu-noc-effets-du-fiel');
+    await fiel.getByRole('button', { name: 'Annuler', exact: true }).click();
+
+    await jetAuPupitre({
+        id: 'capture-rouage', title: 'Agent de la PoliSec — Combat', total: 1, modifier: 0, successes: 1, fails: 0, tagSuccess: true,
+        totalDisplay: '1 réussite', rolls: [{ val: 1, sides: 10 }, { val: 9, sides: 10 }, { val: 1, sides: 10 }],
+    });
+    const rouage = f.locator('[data-fiel-au-pupitre]');
+    await expect(rouage).toBeVisible({ timeout: 15_000 });
+    await photographier(panneauDuDernierJet(rouage), 'jeu-noc-rouage');
+}
+
+/** Cthulhu Hack : la Fortune sous une Sauvegarde ratée, la suite d'un déclin au pupitre, le Hors Jeu. */
+async function scenesDeCthulhuHack(c: ContexteDeScene): Promise<void> {
+    const pilote = c.pilote.gameDriver as { jet?: { fortune?: unknown }; combat?: { horsJeu?: unknown } };
+    const f = gmos.fenetre;
+    if (pilote.jet?.fortune) {
+        // Une Sagesse de 1 : la Sauvegarde rate presque toujours, la Fortune paraît.
+        await ecrireLaFiche(c, { sagesse: 1 });
+        await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+        const panneau = f.locator('[data-panneau-de-jet]').first();
+        await expect(panneau).toBeVisible({ timeout: 15_000 });
+        await panneau.locator('select').first().selectOption('sagesse');
+        for (let i = 0; i < 20 && await panneau.locator('[data-fortune]').count() === 0; i++) {
+            await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        }
+        await expect(panneau.locator('[data-fortune]')).toBeVisible();
+        const fenetre = await gmos.application.browserWindow(f);
+        await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+        await photographier(panneau, 'jeu-cthulhu-hack-fortune');
+        await fenetre.evaluate(w => w.setContentSize(1440, 900));
+        await ecrireLaFiche(c, { sagesse: 15 });
+
+        // La Santé mentale qui descend, lancée depuis la tablette : Folie, Choc, et la Fortune.
+        await jetAuPupitre({
+            id: 'capture-declin', title: `${c.nom} — Santé mentale d10`, total: 2, modifier: 0, tagSuccess: false,
+            totalDisplay: '2 — d10 → d8', rolls: [{ val: 2, sides: 10 }], usure: { avant: 10, apres: 8 },
+            deFiche: { joueurId: JOUEUR, characterId: c.personnage, genre: 'ressource', champ: 'mentalHealth' },
+        });
+        const suites = f.locator('[data-suites-du-jet]');
+        await expect(suites).toBeVisible({ timeout: 15_000 });
+        await photographier(panneauDuDernierJet(suites), 'jeu-cthulhu-hack-suites-du-declin');
+    }
+    if (pilote.combat?.horsJeu) {
+        const carte = await entrerEnCombat(c, 30);
+        await carte.getByRole('button', { name: 'Tirer les conséquences', exact: true }).click();
+        await expect(carte.getByRole('button', { name: /S'il survit/ })).toBeVisible({ timeout: 15_000 });
+        await photographier(carte, 'jeu-cthulhu-hack-hors-jeu');
+    }
+}
+
+/** Blade Runner : la protection, Brisé par les dégâts et par le stress, sur la carte. */
+async function scenesDeBladeRunner(c: ContexteDeScene): Promise<void> {
+    const pilote = c.pilote.gameDriver as { combat?: { horsJeu?: unknown; protection?: unknown } };
+    if (!pilote.combat?.horsJeu && !pilote.combat?.protection) return;
+    await ecrireLaFiche(c, { sangFroid: 0 });
+    const carte = await entrerEnCombat(c, 30);
+    if (pilote.combat?.horsJeu) {
+        await carte.getByLabel('Table').selectOption({ label: 'Perforant' });
+        await carte.getByLabel('Dé de critique').selectOption({ label: 'D8' });
+        await carte.getByRole('button', { name: 'Blessure critique', exact: true }).click();
+        await expect(carte.getByRole('button', { name: 'Encore une blessure critique', exact: true })).toBeVisible({ timeout: 15_000 });
+    }
+    const stress = carte.getByRole('button', { name: "Lancer l'effet critique", exact: true });
+    if (await stress.count()) {
+        await stress.click();
+        await expect(stress).toHaveCount(0, { timeout: 15_000 });
+    }
+    await photographier(carte, 'jeu-blade-runner-brise');
 }

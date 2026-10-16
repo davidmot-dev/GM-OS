@@ -85,6 +85,8 @@ blessure critique**.
    **l'ajoute au champ « Blessures critiques »** de la fiche. Le bouton reste : **« Encore une
    blessure critique »** pour le coup suivant.
 
+![La carte d'un Blade Runner tombé : Santé 0 / 8, Brisé par les dégâts avec sa blessure critique (3 — Œil lacéré, Perforant, D8), Brisé par le stress et son effet tiré au dé d'Empathie, et le bouton de la protection (Gilet pare-balles dissimulé C : 2D8)](captures/jeu-blade-runner-brise.jpg)
+
 Une blessure critique peut aussi tomber **avant zéro**, sur une touche à deux réussites : tirez-la
 dans Table-OS. Les sauvegardes contre la mort, la stabilisation et les durées de guérison restent
 à la main.
@@ -112,6 +114,8 @@ Un champ **« Points d'Humanité »** sur la fiche, relié à la piste de la fic
 en fin de session (un par condition remplie) et servent à **améliorer une compétence** pendant un
 Quart de pause : **5** (D → C), **10** (C → B), **15** (B → A). Les attributs ne s'améliorent pas.
 
+- **La Santé de la fiche fait foi** (2026-10-16) : un coup porté en combat la réécrit, et la barre
+  de la carte part d'elle — avant, la carte pouvait dire 0 / 10 pendant que la fiche disait 8 / 8.
 - La fiche HTML de Blade Runner se relie à son personnage GM-OS : voir
   [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md). Blessures critiques, effets de
   stress critiques, protection et Humanité s'y relient désormais aussi.
