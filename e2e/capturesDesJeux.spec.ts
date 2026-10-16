@@ -102,6 +102,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         corpusId: 'alien', slug: 'alien', personnage: 'Dana Okoro',
         sheetData: { force: 4, combat_rapproche: 2, niveau_de_stress: 2, points_de_recit: 1 },
         composantes: ['force', 'combat_rapproche', 'niveau_de_stress'],
+        scenes: c => scenesDAlien(c),
     },
     {
         corpusId: 'blade-runner', slug: 'blade-runner', personnage: 'Agent Kessler',
@@ -134,6 +135,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             dramatique: { premier: 'V', vilains: ['vivacite'], heros: ['fatigues'] },
             approuvees: ['provocation'],
         },
+        scenes: c => scenesDeTorg(c),
     },
 ];
 
@@ -548,9 +550,110 @@ async function scenesDeCthulhuHack(c: ContexteDeScene): Promise<void> {
     }
 }
 
+/**
+ * Le panneau de jet du PJ, ses composantes retenues, relancé jusqu'à ce que `voulu`
+ * paraisse — un 1 sur un dé de Stress, un D10 à une seule réussite. Le hasard du
+ * jet est celui du jeu : on relance, on ne le truque pas.
+ */
+async function jeterJusqua(c: ContexteDeScene, composantes: string[], voulu: (panneau: Locator) => Locator, essais = 40): Promise<Locator> {
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    for (const [i, champ] of composantes.entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    const cible = voulu(panneau);
+    for (let i = 0; i < essais && await cible.count() === 0; i++) {
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+    }
+    await expect(cible.first()).toBeVisible();
+    return panneau;
+}
+
+/** Le panneau photographié en entier : on agrandit la fenêtre le temps de la prise. */
+async function photographierLePanneau(panneau: Locator, nom: string): Promise<void> {
+    const fenetre = await gmos.application.browserWindow(gmos.fenetre);
+    await fenetre.evaluate(w => w.setContentSize(1440, 1800));
+    await photographier(panneau, nom);
+    await fenetre.evaluate(w => w.setContentSize(1440, 900));
+}
+
+/** Alien : le test de Panique qu'un 1 de Stress déclenche, et un jet forcé. */
+async function scenesDAlien(c: ContexteDeScene): Promise<void> {
+    const jet = (c.pilote.gameDriver as { jet?: { forcer?: unknown; panique?: unknown } }).jet;
+    const composantes = ['force', 'combat_rapproche', 'niveau_de_stress'];
+    if (jet?.panique) {
+        const panneau = await jeterJusqua(c, composantes, p => p.getByRole('button', { name: 'Test de Panique', exact: true }));
+        await panneau.getByRole('button', { name: 'Test de Panique', exact: true }).click();
+        await expect(panneau.locator('[data-test-de-panique]')).toBeVisible({ timeout: 15_000 });
+        await gmos.fenetre.waitForTimeout(1_000);
+        await photographierLePanneau(panneau, 'jeu-alien-panique');
+    }
+    if (jet?.forcer) {
+        // Un jet sans Panique, qu'on force : les dés relancés se cerclent, le Stress monte.
+        const panneau = await jeterJusqua(c, composantes, p => p.locator('button:enabled', { hasText: /^Forcer le jet/ }));
+        await panneau.locator('button:enabled', { hasText: /^Forcer le jet/ }).click();
+        await expect(panneau.getByText(/Jet forcé/).first()).toBeVisible();
+        await photographierLePanneau(panneau, 'jeu-alien-force');
+    }
+}
+
+/** Torg : les Lois du cosm courant, et une horde de sbires sur la carte d'un adversaire. */
+async function scenesDeTorg(c: ContexteDeScene): Promise<void> {
+    const pilote = c.pilote.gameDriver as { cosms?: { id: string }[]; combat?: { dommages?: { mecanique?: string } } };
+    const f = gmos.fenetre;
+    if (pilote.cosms?.length) {
+        await f.evaluate(({ campagne, cosm }) => {
+            const s = (window as unknown as Fenetre).useSessionOSStore;
+            s.setState(st => ({ campaigns: st.campaigns.map(x => x.id === campagne ? { ...x, cosmsParDefaut: [cosm] } : x) }));
+        }, { campagne: c.campagne, cosm: pilote.cosms[0].id });
+    }
+    const avecHorde = pilote.combat?.dommages?.mecanique === 'torg';
+    if (avecHorde) {
+        await f.evaluate(() => {
+            const combat = (window as unknown as Fenetre).useCombatStore.getState();
+            const fiche = { esprit: 7, resistance: 9 };
+            const adversaire = combat.combatants.find(x => !x.isPlayer);
+            // Une Esprit et une Résistance pour la horde : un sbire sans fiche les dirait à zéro.
+            if (adversaire) combat.updateCombatant(adversaire.id, { sheetData: { ...(adversaire.sheetData ?? {}), ...fiche } });
+            else combat.addCombatant({ name: 'Gospog', init: 0, isPlayer: false, faction: 'enemy', statuses: [], sheetData: fiche });
+        });
+    }
+    await vue(c.campagne, 'cockpit');
+    await ouvrirLeModule(gmos, 'Combat-OS');
+    if (pilote.cosms?.length) {
+        const lois = f.locator('[data-lois-du-cosm]').first();
+        await expect(lois).toBeVisible({ timeout: 15_000 });
+        await photographier(lois, 'jeu-torg-lois-du-cosm');
+    }
+    if (avecHorde) {
+        const carte = f.locator('[data-combattant]').filter({ hasText: 'Gospog' }).first();
+        await expect(carte).toBeVisible({ timeout: 15_000 });
+        await carte.getByRole('button', { name: /En horde/ }).click();
+        await carte.getByRole('button', { name: 'Former la horde', exact: true }).click();
+        await expect(carte.locator('[data-horde]')).toBeVisible();
+        await carte.getByRole('button', { name: 'Coup sur la horde', exact: true }).click();
+        await photographier(carte, 'jeu-torg-horde');
+    }
+}
+
 /** Blade Runner : la protection, Brisé par les dégâts et par le stress, sur la carte. */
 async function scenesDeBladeRunner(c: ContexteDeScene): Promise<void> {
-    const pilote = c.pilote.gameDriver as { combat?: { horsJeu?: unknown; protection?: unknown } };
+    const pilote = c.pilote.gameDriver as { combat?: { horsJeu?: unknown; protection?: unknown }; jet?: { stressSubi?: unknown; forcer?: { relancerUneReussite?: boolean } } };
+    // Relancer un D10 à une seule réussite, au forçage.
+    if (pilote.jet?.forcer?.relancerUneReussite) {
+        const panneau = await jeterJusqua(c, ['vigueur', 'corpsACorps'], p => p.locator('[data-relancer-aussi]'));
+        await panneau.locator('[data-relancer-aussi] input[type="checkbox"]').first().check();
+        await photographierLePanneau(panneau, 'jeu-blade-runner-relance');
+    }
+    // Le stress encaissé, avant toute chute.
+    if (pilote.jet?.stressSubi) {
+        await ecrireLaFiche(c, { sangFroid: 6 });
+        const carte = await entrerEnCombat(c);
+        await carte.getByLabel('Facteur de stress').selectOption('3');
+        await carte.getByRole('button', { name: 'Encaisser', exact: true }).click();
+        await gmos.fenetre.waitForTimeout(500);
+        await photographier(carte, 'jeu-blade-runner-stress');
+    }
     if (!pilote.combat?.horsJeu && !pilote.combat?.protection) return;
     await ecrireLaFiche(c, { sangFroid: 0 });
     const carte = await entrerEnCombat(c, 30);

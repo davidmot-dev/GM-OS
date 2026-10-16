@@ -60,6 +60,8 @@ initial compris**, coûte un point, décompté sur la fiche :
 > désignent ces dés (D10 ou D12 entre 6 et 9). C'est risqué : le nouveau résultat s'applique, même
 > pire. *Ajouté le 2026-10-16.*
 
+![Vigueur (D10) et Corps à corps (D8) : le D10 n'a fait qu'une réussite (8) — la case « Relancer aussi » le désigne avant de forcer](captures/jeu-blade-runner-relance.jpg)
+
 ---
 
 ## Combat et santé
@@ -114,6 +116,8 @@ réflexe du livre) ; **chaque réussite retire un point**, le reste se retire du
 L'historique dit le calcul (« facteur 3 − 1 réussite (D10 7, D8 3) = −2 → 2 »). À zéro, le panneau
 **Brisé par le stress** paraît sur la carte. Les autres pertes du livre (tir en automatique, Quarts
 sans pause) se retirent avec le − de la carte.
+
+![La carte d'un Blade Runner : la protection, et le stress subi — facteur 3, encaissé : le Sang-froid passe de 6 à 4](captures/jeu-blade-runner-stress.jpg)
 
 ### La protection
 

@@ -1,6 +1,6 @@
 # ⚡️ Jeu — Torg Eternity
 
-> **Pilote décrit :** « Torg Eternity », exporté le 2026-10-13, corrigé le même soir ; cosms ajoutés le 2026-10-14. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Torg Eternity », exporté le 2026-10-13, corrigé le même soir ; cosms ajoutés le 2026-10-14 ; réexporté le 2026-10-16 pour les captures. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Les Chevaliers des Tempêtes contre les Seigneurs de Réalité. Les règles de cette page ont été
 relues contre le carnet NotebookLM « Torg » le 2026-10-13.
@@ -209,6 +209,8 @@ d'elles-mêmes, ou s'annoncent au bon moment (livre de base, relu contre le carn
 Les autres Lois (Gloire, Outsider, Sauvagerie, Vie, Domination, Vengeance…) restent à la table, en
 rappel.
 
+![Dans Combat-OS, le rappel compact des Lois du cosm courant — Prime Terre : Espoir, Gloire, Outsider](captures/jeu-torg-lois-du-cosm.jpg)
+
 ---
 
 ## Les Cartes de Cosm
@@ -244,6 +246,8 @@ est alors comptée comme jouée pour l'Acte. Ce qu'elle fait reste à la table.
   3 → +2, 4–5 → +3, 6–9 → +4, 10–14 → +5… En mêlée, quatre au plus contre un même défenseur.
 - **Les Cibles multiples** (p. 122) — au jet, « Cibles » : −2 par cible supplémentaire ; toutes les
   cibles touchées subissent les dommages.
+
+![Une horde de six Gospogs (Esprit 7, Résistance 9) après un coup de 10 : Choc commun 2, prochain KO à 8, et l'attaque combinée de quatre assaillants à +3](captures/jeu-torg-horde.jpg)
 
 ---
 

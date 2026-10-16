@@ -105,13 +105,13 @@ const PanneauDuHorsJeu: React.FC<{ combatant: Combatant; regle: RegleDuHorsJeu; 
                 <div className="flex flex-wrap items-center gap-2">
                     {tables.length > 1 && (
                         <select aria-label="Table" value={tableChoisie} onChange={e => setTableChoisie(Number(e.target.value))}
-                            className="rounded-lg border border-app-border/40 bg-app-bg px-2 py-1 text-ui-10">
+                            className="rounded-lg border border-app-border/40 bg-app-bg py-1 pl-2 pr-7 text-ui-10">
                             {tables.map((t, i) => <option key={t.label} value={i}>{t.label}</option>)}
                         </select>
                     )}
                     {!!regle.desAuChoix?.length && (
                         <select aria-label="Dé de critique" value={deChoisi} onChange={e => setDeChoisi(Number(e.target.value))}
-                            className="rounded-lg border border-app-border/40 bg-app-bg px-2 py-1 text-ui-10">
+                            className="rounded-lg border border-app-border/40 bg-app-bg py-1 pl-2 pr-7 text-ui-10">
                             {regle.desAuChoix.map(f => <option key={f} value={f}>D{f}</option>)}
                         </select>
                     )}

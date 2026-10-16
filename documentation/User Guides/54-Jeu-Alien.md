@@ -1,6 +1,6 @@
 # 👽 Jeu — Alien
 
-> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-14. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-16 (captures du jour). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
@@ -160,6 +160,8 @@ locale se vérifie sur chaque appareil choisi pour la diffusion.
 
 ![Après le lancer : deux réussites, et une Panique sur un dé de Stress](captures/jeu-alien-jet-lance.jpg)
 
+![Deux 1 sur les dés de Stress : « Forcer le jet » se grise et dit pourquoi, et le Test de Panique lit sa ligne dans la table — 3 + 2 = 5, Je tiens le coup](captures/jeu-alien-panique.jpg)
+
 ---
 
 ## Forcer le jet
@@ -172,6 +174,8 @@ Après le lancer, **« Forcer le jet »** :
 - **une fois par test**, ou **deux** avec le talent qui couvre l'attribut du jet (champ « Talent ») :
   Dépassement de soi et Cran (Force), Vif et Téméraire (Agilité), Ruse et Curiosité (Esprit),
   Compassion et Influence (Empathie). Le bouton se grise ensuite, et dit pourquoi.
+
+![Un jet forcé : deux dés gardés, sept relancés et cerclés, dont le nouveau dé de Stress ; le Stress monte de 2 à 3, et le bouton dit que le jet a déjà été forcé](captures/jeu-alien-force.jpg)
 
 **Au pupitre** (et depuis la télécommande), « Forcer le jet » relance le dernier jet, ajoute le dé de
 Stress et **annonce** « Stress +1 à reporter sur la fiche ».

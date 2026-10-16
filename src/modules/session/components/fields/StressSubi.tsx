@@ -46,7 +46,7 @@ const StressSubi: React.FC<{
             <Brain size={12} className="text-app-text/50" />
             <span className="font-bold text-app-text/70">{label} subi</span>
             <select aria-label={`Facteur de ${label.toLowerCase()}`} value={facteur} onChange={e => setFacteur(Number(e.target.value))}
-                className="rounded-md border border-app-border/40 bg-app-bg px-2 py-0.5">
+                className="min-w-[3.5rem] rounded-md border border-app-border/40 bg-app-bg py-0.5 pl-2 pr-7">
                 {Array.from({ length: max }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n}</option>)}
             </select>
             <button type="button" onClick={subir}
