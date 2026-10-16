@@ -23,6 +23,7 @@ import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
 import { useDiceStore } from '../../../stores/useDiceStore';
 import HordeDuCombattant from './HordeDuCombattant';
+import SbiresDuVilain from './SbiresDuVilain';
 import { useTranslation } from 'react-i18next';
 
 const PRESET_STATUSES = [
@@ -553,6 +554,8 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             {/* Torg : l'Action approuvée de la carte du round, pour un Héros. */}
             <ActionsApprouvees combatant={combatant} />
 
+            {/* Torg : un vilain touché fait passer l'attaque à un sbire (capacité « Sbires »). */}
+            <SbiresDuVilain combatant={combatant} valeurs={ficheLue.valeurs} />
             {/* Torg : une horde de sbires, au Choc commun (règle optionnelle, 2026-10-14). */}
             {!combatant.isPlayer && activeDriver?.combat?.dommages?.mecanique === 'torg' && (
                 <HordeDuCombattant

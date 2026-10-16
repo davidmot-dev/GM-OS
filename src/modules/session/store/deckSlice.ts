@@ -32,8 +32,11 @@ import {
     completerLesMains,
     momentCritique,
     nouvellesMains,
+    garderUneParmi,
     piocherPour,
     poserEnReserve,
+    prendreUneCarte,
+    regarderLesProchaines,
     reprendreLesReserves,
     type BilanDesMains,
 } from '../logic/cartesDuDestin';
@@ -145,6 +148,16 @@ export interface DeckSliceActions {
     nouvellesMainsDuDestin: (deckId: string) => void;
     /** L'Action approuvée réussie : une Carte du Destin dans la main du personnage. */
     piocherUneCarteDuDestin: (deckId: string, characterId: string) => void;
+    /**
+     * Les Atouts qui piochent plusieurs cartes et n'en gardent qu'une : les
+     * cartes du dessus, sans les sortir (la défausse remélangée si la pioche
+     * est trop courte).
+     */
+    regarderLesCartesDuDestin: (deckId: string, nombre: number) => number[];
+    /** Le choix fait : la carte gardée en main, les autres en défausse. */
+    garderUneCarteDuDestin: (deckId: string, indices: number[], garde: number, characterId: string) => void;
+    /** L'Atout Populaire : une carte cherchée dans la pioche ou la défausse, en main. */
+    prendreUneCarteDuDestin: (deckId: string, index: number, characterId: string) => void;
 
     /* ── Les Cartes de Cosm de Torg (2026-10-14) ───────────────────────────
        La règle vit dans `logic/cartesDeCosm`. `choix` : en zone mixte, le
@@ -701,6 +714,45 @@ export const createDeckSlice: CreateurDeSlice<DeckSlice> = (set, get) => ({
         }
         get().appliquerAuPaquet(deckId, () => apres);
         gmToast(`${nomDuPersonnage(get(), characterId)} pioche une Carte du Destin.`, 'success');
+    },
+
+    regarderLesCartesDuDestin: (deckId, nombre) => {
+        const etat = get().deckStates[deckId];
+        if (!etat) return [];
+        const { etat: apres, indices } = regarderLesProchaines(etat, nombre, DeckInterpreter.shuffle);
+        if (apres !== etat) get().appliquerAuPaquet(deckId, () => apres);
+        if (indices.length === 0) gmToast('Le Paquet du Destin est vide.', 'warning');
+        return indices;
+    },
+
+    garderUneCarteDuDestin: (deckId, indices, garde, characterId) => {
+        const etat = get().deckStates[deckId];
+        const deck = get().decks.find(d => d.id === deckId);
+        if (!etat || !deck) return;
+        const apres = garderUneParmi(etat, indices, garde, characterId, deck.useDiscard);
+        if (apres === etat) {
+            gmToast('Ces cartes ne sont plus sur la pioche : regardez à nouveau.', 'warning');
+            return;
+        }
+        get().appliquerAuPaquet(deckId, () => apres);
+        const nom = DeckInterpreter.getCardMetadata(deck, garde)?.name ?? `la carte ${garde}`;
+        const autres = indices.length - 1;
+        gmToast(`${nomDuPersonnage(get(), characterId)} garde « ${nom} »`
+            + (autres > 0 ? ` — ${autres} défaussée${autres > 1 ? 's' : ''}.` : '.'), 'success');
+    },
+
+    prendreUneCarteDuDestin: (deckId, index, characterId) => {
+        const etat = get().deckStates[deckId];
+        const deck = get().decks.find(d => d.id === deckId);
+        if (!etat || !deck) return;
+        const apres = prendreUneCarte(etat, index, characterId);
+        if (apres === etat) {
+            gmToast('Cette carte n’est ni dans la pioche ni dans la défausse.', 'warning');
+            return;
+        }
+        get().appliquerAuPaquet(deckId, () => apres);
+        const nom = DeckInterpreter.getCardMetadata(deck, index)?.name ?? `la carte ${index}`;
+        gmToast(`${nomDuPersonnage(get(), characterId)} prend « ${nom} » en main.`, 'success');
     },
 
     cartesDeCosmDuDebutDActe: (choix) => distribuerLesCartesDeCosm(get, set, choix, true),

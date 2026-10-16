@@ -5,6 +5,7 @@ import type { DeckManifest } from '../../../types/deck.types';
 import { useCosmsCourants } from '../hooks/useCosmsCourants';
 import { tailleDeLaMain } from '../logic/cosmsCourants';
 import { gmConfirm } from '../../../stores/useModalStore';
+import AtoutsDuDestin from './AtoutsDuDestin';
 
 /**
  * **Les gestes du meneur sur le Paquet du Destin** — Torg, 2026-10-14.
@@ -64,6 +65,7 @@ const GestesDuDestin: React.FC<{ deck: DeckManifest }> = ({ deck }) => {
                     ))}
                 </select>
             </label>
+            <AtoutsDuDestin deck={deck} personnages={personnages} />
         </div>
     );
 };

@@ -11,6 +11,9 @@ import { bonusDesActionsCombinees, coupSurLaHorde, nouvelleHorde, prochainKO, ty
  * Sur la carte d'un adversaire : « En horde… » la forme (membres, Esprit et
  * Résistance d'un membre, lus sur sa fiche quand il en a une) ; ensuite, les
  * coups se portent ici, en dommages, contre la Résistance d'un membre.
+ *
+ * La capacité spéciale « Horde » (2026-10-16) se coche : le bonus compte alors
+ * aux dommages comme à l'attaque — une seule attaque collective, p. 119.
  */
 const HordeDuCombattant: React.FC<{
     horde: Horde | undefined;
@@ -67,7 +70,13 @@ const HordeDuCombattant: React.FC<{
                 <label className="flex items-center gap-1" title="En mêlée, quatre au plus contre un même défenseur de taille humaine">
                     Assaillants <input type="number" min={1} max={horde.debout} value={engages} onChange={e => setAssaillants(Number(e.target.value) || 1)} className={champ} />
                 </label>
-                <span className="font-bold text-etat-danger" data-attaque-combinee>Attaque combinée : +{bonusDesActionsCombinees(engages)}</span>
+                <span className="font-bold text-etat-danger" data-attaque-combinee>
+                    {horde.capacite ? 'Attaque et dommages combinés' : 'Attaque combinée'} : +{bonusDesActionsCombinees(engages)}
+                </span>
+                <label className="flex items-center gap-1" title="Capacité spéciale « Horde » (infectés, daémons…) : le bonus des Actions combinées compte aussi aux dommages de l'attaque">
+                    <input type="checkbox" checked={!!horde.capacite} onChange={e => onChange({ ...horde, capacite: e.target.checked })} />
+                    Capacité Horde
+                </label>
                 <button type="button" className={`${bouton} ml-auto`} onClick={() => onChange(undefined)} title="Revenir à un combattant seul">Dissoudre</button>
             </div>
         </div>

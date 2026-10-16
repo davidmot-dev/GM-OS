@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
     completerLesMains,
+    garderUneParmi,
+    prendreUneCarte,
+    regarderLesProchaines,
     momentCritique,
     nouvellesMains,
     paquetDuDestinDuJeu,
@@ -122,5 +125,56 @@ describe('le Paquet du Destin du jeu', () => {
             ({ id, name: id, systemId, folderPath: '', cardCount: 1, format: 'poker', orientation: 'portrait', useDiscard: true, role }) as DeckManifest;
         expect(paquetDuDestinDuJeu([p('a', 'action'), p('d', 'destin'), p('x', 'destin', 'br')], 'torg')?.id).toBe('d');
         expect(paquetDuDestinDuJeu([p('a', 'action')], 'torg')).toBeNull();
+    });
+});
+
+describe('les Atouts qui touchent aux cartes (2026-10-16)', () => {
+    it('regarder ne sort aucune carte', () => {
+        const avant = etat();
+        const { etat: apres, indices } = regarderLesProchaines(avant, 3);
+        expect(indices).toEqual([1, 2, 3]);
+        expect(apres).toBe(avant);
+    });
+
+    it('pioche trop courte : la défausse remélangée passe dessous', () => {
+        const { etat: apres, indices } = regarderLesProchaines(etat({ remainingIndices: [1], discardedIndices: [4, 5] }), 3, identite);
+        expect(indices).toEqual([1, 4, 5]);
+        expect(apres.discardedIndices).toEqual([]);
+        sansDoublon(apres);
+    });
+
+    it('Aspect effrayant : deux cartes, une gardée en main, l’autre défaussée', () => {
+        const apres = garderUneParmi(etat(), [1, 2], 2, 'teo', true);
+        expect(apres.enMain?.find(c => c.index === 2)).toMatchObject({ porteur: 'teo', face: 'revelee' });
+        expect(apres.discardedIndices).toEqual([1]);
+        expect(apres.remainingIndices).toEqual([3, 4, 5, 6]);
+        sansDoublon(apres);
+    });
+
+    it('sans défausse, les cartes non gardées retournent sous la pioche', () => {
+        const apres = garderUneParmi(etat(), [1, 2, 3], 1, 'mara', false);
+        expect(apres.remainingIndices).toEqual([4, 5, 6, 2, 3]);
+        expect(apres.discardedIndices).toEqual([]);
+    });
+
+    it('le paquet a bougé entre le regard et le choix : rien ne change', () => {
+        const avant = etat({ remainingIndices: [2, 3] });
+        expect(garderUneParmi(avant, [1, 2], 2, 'mara', true)).toBe(avant);
+        expect(garderUneParmi(avant, [2, 3], 5, 'mara', true)).toBe(avant);
+    });
+
+    it('Populaire : une carte cherchée dans la défausse ou la pioche, en main', () => {
+        const deLaDefausse = prendreUneCarte(etat({ discardedIndices: [10] }), 10, 'mara');
+        expect(deLaDefausse.discardedIndices).toEqual([]);
+        expect(deLaDefausse.enMain?.find(c => c.index === 10)).toMatchObject({ porteur: 'mara', face: 'revelee' });
+        sansDoublon(deLaDefausse);
+        const deLaPioche = prendreUneCarte(etat(), 4, 'teo');
+        expect(deLaPioche.remainingIndices).toEqual([1, 2, 3, 5, 6]);
+        sansDoublon(deLaPioche);
+    });
+
+    it('une carte déjà tenue ne se cherche pas', () => {
+        const avant = etat();
+        expect(prendreUneCarte(avant, 9, 'mara')).toBe(avant);
     });
 });

@@ -184,6 +184,23 @@ chaque héros montre un bouton par action :
 Cliquez quand le héros la réussit : il pioche **une Carte du Destin en main** (pas en Réserve).
 Une fois par action et par round — deux actions sur la carte, deux cartes possibles.
 
+**Les Atouts qui touchent aux cartes.** Sous les gestes du Paquet du Destin, une ligne
+**« Atouts · pour … »** : choisissez le personnage, puis
+
+| Geste | Pour quels Atouts | Ce qu'il fait |
+| :--- | :--- | :--- |
+| **Piocher, en garder une** (1, 2 ou 3 cartes) | Aspect effrayant (deux au lieu d'une), Occultiste et Ingénieux (une à trois selon le succès) | Montre les cartes du dessus **sans les sortir** ; « Garder » sous une image la met en main du personnage, les autres partent en défausse |
+| **Chercher une carte…** | Populaire (une carte Relation, une fois par Acte) | Ouvre la défausse et la pioche en vignettes : un clic sur une carte la met en main |
+
+Les autres passent par les gestes de la main : **Conscience environnementale** (une carte en
+Réserve hors du tour) et **Occultiste** (une carte en Réserve au début du combat), c'est « Poser en
+Réserve » ; **Chef naturel** (deux cartes dans la Réserve d'un autre), c'est « Poser en Réserve »
+puis « Donner » ; **Rayonnant** et **Carnifex Princeps** (une carte de plus), c'est « Garder »
+au lecteur, pour le personnage choisi. GM-OS ne lit pas les Atouts des fiches : la Possibilité qu'un Atout coûte se
+retire sur la fiche, et c'est vous qui savez quand il joue.
+
+![Sous les gestes du Paquet du Destin, les Atouts : piocher et en garder une, chercher une carte](captures/jeu-torg-atouts.jpg)
+
 Le don de carte entre joueurs reste celui de Deck-OS (proposé, accepté ou refusé, vous arbitrez) :
 la règle du livre — **en combat, une carte contre une carte, de Réserve à Réserve** — reste à la
 table. **Désorientés** (aucune carte jouée depuis la Réserve ce round) est annoncé, pas bloqué.
@@ -244,6 +261,15 @@ est alors comptée comme jouée pour l'Acte. Ce qu'elle fait reste à la table.
   dans le bloc de la horde, en dommages.
 - **Les Actions combinées** (p. 119) — le bloc de la horde dit le bonus de ses assaillants : 2 → +1,
   3 → +2, 4–5 → +3, 6–9 → +4, 10–14 → +5… En mêlée, quatre au plus contre un même défenseur.
+- **La capacité « Horde »** de certaines créatures (infectés p. 271, daémons…) — dans le bloc de
+  la horde, cochez **« Capacité Horde »** : le bonus compte alors **aux dommages comme à l'attaque**
+  (« Attaque et dommages combinés : +3 »). Sans elle, il ne compte qu'à l'attaque.
+- **La capacité « Sbires »** d'un vilain (p. 265) — sur la carte d'un adversaire qui n'est pas
+  lui-même un sbire, **« Sbires · Réalité ND 10 »** : touché, le vilain fait son test de Réalité,
+  avec le malus de ses Blessures. Réussi, **l'attaque passe à un laquais proche**, à quelques
+  mètres. Portez alors le coup sur la carte du sbire. Échoué, ou sans sbire assez proche, le vilain
+  encaisse. Aucune action, aucune limite par round. Le bouton s'affiche sur tout vilain : c'est
+  vous qui savez lequel a la capacité.
 - **Les Cibles multiples** (p. 122) — au jet, « Cibles » : −2 par cible supplémentaire ; toutes les
   cibles touchées subissent les dommages.
 
@@ -253,7 +279,5 @@ est alors comptée comme jouée pour l'Acte. Ce qu'elle fait reste à la table.
 
 ## Ce qui manque encore
 
-- Les Atouts qui touchent aux cartes (Chef naturel…).
-- **La capacité « Sbires » d'un vilain** (transférer une attaque sur un laquais) et la capacité
-  **Horde** de certaines créatures (le bonus d'Actions combinées ajouté aux dommages) restent à la
-  table.
+- GM-OS ne lit pas les Atouts ni les capacités spéciales sur les fiches : les gestes sont offerts,
+  et c'est vous qui les déclenchez.

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     bonusDesActionsCombinees, casesPourLaLimite, coupSurLaHorde, malusDesCiblesMultiples, nouvelleHorde, prochainKO,
+    estUnSbire, issueDesSbires, malusDesCases,
 } from './sbiresEtHordes';
 import type { CasesDeSante } from '../../../types/drivers';
 
@@ -61,5 +62,27 @@ describe('une horde', () => {
         expect(coupSurLaHorde(nouvelleHorde(3, 7, 10), 3).texte).toMatch(/aucun effet/);
         const vaincue = { ...nouvelleHorde(1, 7, 10), debout: 0 };
         expect(coupSurLaHorde(vaincue, 30).horde).toBe(vaincue);
+    });
+});
+
+describe('la capacité « Sbires » (p. 265, 2026-10-16)', () => {
+    const cases = (n: number, cochees: number) => ({ type: 'boxes', data: { boxes: Array.from({ length: n }, (_, i) => ({ filled: i < cochees })) } });
+
+    it('réussi, l’attaque passe à un sbire ; échoué, le vilain encaisse', () => {
+        expect(issueDesSbires(true)).toContain('sbire proche');
+        expect(issueDesSbires(false)).toBe("le vilain encaisse l'attaque");
+    });
+
+    it('un sbire (une seule case) n’a pas de sbires à lui', () => {
+        expect(estUnSbire(cases(1, 0))).toBe(true);
+        expect(estUnSbire(cases(2, 0))).toBe(false);
+        expect(estUnSbire(undefined)).toBe(false);
+    });
+
+    it('le malus des Blessures plafonne à −3', () => {
+        expect(malusDesCases(cases(4, 0))).toBe(0);
+        expect(malusDesCases(cases(6, 2))).toBe(2);
+        expect(malusDesCases(cases(6, 5))).toBe(3);
+        expect(malusDesCases({ type: 'hp', data: {} })).toBe(0);
     });
 });

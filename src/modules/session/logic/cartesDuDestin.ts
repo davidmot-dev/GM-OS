@@ -124,3 +124,61 @@ export function nouvellesMains(
     }
     return completerLesMains(courant, porteurs, taille, melanger);
 }
+
+/**
+ * **Les cartes du dessus, pour choisir** — les Atouts qui piochent plusieurs
+ * cartes et n'en gardent qu'une (carnet « Torg », 2026-10-16) : Aspect effrayant
+ * (deux au lieu d'une, p. 105), Occultiste (une à trois selon le succès, p. 94),
+ * Ingénieux (une à trois, *« à la main de n'importe quel joueur »*, Empire du Nil
+ * p. 16). *« Il en garde une et défausse les autres. »*
+ *
+ * Regarder ne sort aucune carte : le choix se fait ensuite, par
+ * `garderUneParmi`. Pioche trop courte : la défausse remélangée passe dessous,
+ * comme à la pioche ordinaire.
+ */
+export function regarderLesProchaines(etat: DeckSessionState, nombre: number, melanger?: Melange): { etat: DeckSessionState; indices: number[] } {
+    const n = Math.max(0, Math.floor(nombre));
+    let courant = etat;
+    if (courant.remainingIndices.length < n && melanger && courant.discardedIndices.length > 0) {
+        courant = { ...courant, remainingIndices: [...courant.remainingIndices, ...melanger([...courant.discardedIndices])], discardedIndices: [] };
+    }
+    return { etat: courant, indices: courant.remainingIndices.slice(0, n) };
+}
+
+/**
+ * Le choix fait : la carte gardée va dans la main du porteur, face révélée ; les
+ * autres partent en défausse (dessous de la pioche pour un paquet sans
+ * défausse). Une carte qui n'est plus dans la pioche — le paquet a bougé entre
+ * le regard et le choix — rend l'état inchangé : *garder ne crée jamais de carte.*
+ */
+export function garderUneParmi(
+    etat: DeckSessionState,
+    indices: readonly number[],
+    garde: number,
+    porteur: string,
+    avecDefausse: boolean,
+): DeckSessionState {
+    if (!indices.includes(garde) || indices.some(i => !etat.remainingIndices.includes(i))) return etat;
+    const autres = indices.filter(i => i !== garde);
+    const tiree = piocherEnMain(etat, garde, porteur, 'revelee');
+    const restantes = tiree.remainingIndices.filter(i => !autres.includes(i));
+    return avecDefausse
+        ? { ...tiree, remainingIndices: restantes, discardedIndices: [...tiree.discardedIndices, ...autres] }
+        : { ...tiree, remainingIndices: [...restantes, ...autres] };
+}
+
+/**
+ * **Chercher une carte** — l'Atout Populaire (Empire du Nil p. 17) : *« une
+ * fois par Acte, il peut chercher dans le Paquet du Destin ou la défausse une
+ * carte Relation et l'ajouter à sa main. »* La carte vient de la pioche ou de la
+ * défausse ; tenue ou introuvable, l'état revient inchangé.
+ */
+export function prendreUneCarte(etat: DeckSessionState, index: number, porteur: string): DeckSessionState {
+    if (etat.remainingIndices.includes(index)) return piocherEnMain(etat, index, porteur, 'revelee');
+    if (!etat.discardedIndices.includes(index)) return etat;
+    return {
+        ...etat,
+        discardedIndices: etat.discardedIndices.filter(i => i !== index),
+        enMain: [...(etat.enMain ?? []), { index, porteur, face: 'revelee' }],
+    };
+}

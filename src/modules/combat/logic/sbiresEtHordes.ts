@@ -72,6 +72,13 @@ export interface Horde {
     esprit: number;
     /** La Résistance d'un membre, contre les dommages. */
     resistance: number;
+    /**
+     * **La capacité spéciale « Horde »** des créatures (infectés p. 271,
+     * daémons de la Cyberpapauté p. 161) : *« appliquez les bonus d'Actions
+     * combinées aux Dommages ainsi qu'à l'attaque elle-même »*. Sans elle — la
+     * règle optionnelle seule —, le bonus ne compte qu'à l'attaque.
+     */
+    capacite?: boolean;
 }
 
 export function nouvelleHorde(membres: number, esprit: number, resistance: number): Horde {
@@ -102,3 +109,31 @@ export function coupSurLaHorde(h: Horde, degats: number): { horde: Horde; texte:
 
 /** Le prochain KO par le Choc : à combien de Choc commun il tombera. */
 export const prochainKO = (h: Horde) => (h.koParLeChoc + 1) * (h.esprit + 1);
+
+/**
+ * **La capacité spéciale « Sbires »** d'un vilain (livre p. 265, carnet
+ * « Torg », 2026-10-16) : *« quand un vilain avec cette capacité est blessé par
+ * une attaque, il peut effectuer un test de Réalité. S'il réussit, l'attaque est
+ * transférée d'une manière ou d'une autre sur un laquais proche. S'il n'y a aucun
+ * sbire suffisamment proche (à la discrétion du MJ), la capacité n'a aucun
+ * effet. »* Une réaction, sans action ni limite par round ; échouée, le vilain
+ * encaisse.
+ */
+export const ND_DES_SBIRES = 10;
+
+export function issueDesSbires(reussi: boolean): string {
+    return reussi
+        ? "l'attaque passe à un sbire proche, à quelques mètres — sans sbire assez proche, rien ne change"
+        : "le vilain encaisse l'attaque";
+}
+
+/** Un sbire : la première Blessure l'élimine, une seule case au jeu. Il n'a pas de sbires à lui. */
+export function estUnSbire(health: { type?: string; data?: Record<string, unknown> } | undefined): boolean {
+    return health?.type === 'boxes' && Array.isArray(health.data?.boxes) && health.data.boxes.length <= 1;
+}
+
+/** Les Blessures cochées : −1 par Blessure aux tests, jusqu'à −3. */
+export function malusDesCases(health: { type?: string; data?: Record<string, unknown> } | undefined): number {
+    if (health?.type !== 'boxes' || !Array.isArray(health.data?.boxes)) return 0;
+    return Math.min(3, (health.data.boxes as { filled?: boolean }[]).filter(b => b?.filled).length);
+}

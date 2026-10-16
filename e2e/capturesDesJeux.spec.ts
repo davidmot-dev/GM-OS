@@ -632,8 +632,33 @@ async function scenesDeTorg(c: ContexteDeScene): Promise<void> {
         await carte.getByRole('button', { name: 'Former la horde', exact: true }).click();
         await expect(carte.locator('[data-horde]')).toBeVisible();
         await carte.getByRole('button', { name: 'Coup sur la horde', exact: true }).click();
+        await carte.getByLabel('Capacité Horde').check();
         await photographier(carte, 'jeu-torg-horde');
+
+        // La capacité « Sbires » : sur un vilain qui n'est pas lui-même un sbire.
+        await f.evaluate(() => {
+            (window as unknown as Fenetre).useCombatStore.getState().addCombatant({
+                name: 'Mobius', init: 0, isPlayer: false, faction: 'enemy', statuses: [],
+                sheetData: { esprit: 10, realite: 3 },
+            } as never);
+        });
+        const vilain = f.locator('[data-combattant]').filter({ hasText: 'Mobius' }).first();
+        await expect(vilain.locator('[data-sbires]')).toBeVisible({ timeout: 15_000 });
+        await vilain.locator('[data-sbires]').getByRole('button').click();
+        await photographier(vilain, 'jeu-torg-sbires');
     }
+
+    // Les Atouts qui touchent aux cartes, sous les gestes du Paquet du Destin.
+    // Le Paquet du Destin du jeu, s'il est chargé dans Deck-OS.
+    await vue(c.campagne, 'deck-player');
+    const destin = f.getByRole('button', { name: /Paquet du Destin/i }).first();
+    if (!(await destin.isVisible().catch(() => false))) return;
+    await destin.click();
+    const atouts = f.locator('[data-atouts-du-destin]');
+    await expect(atouts).toBeVisible({ timeout: 15_000 });
+    await atouts.getByLabel('Combien de cartes piocher').selectOption('2');
+    await atouts.getByRole('button', { name: /Piocher, en garder une/ }).click();
+    await photographier(f.locator('[data-gestes-du-destin]'), 'jeu-torg-atouts');
 }
 
 /** Blade Runner : la protection, Brisé par les dégâts et par le stress, sur la carte. */
