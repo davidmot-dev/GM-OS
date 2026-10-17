@@ -23,6 +23,7 @@ import { pontDesTables } from '../../../tables/pontDesTables';
 import StressSubi from './StressSubi';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
+import { LigneDuReferentiel } from './ChampDuReferentiel';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
@@ -1131,6 +1132,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                   );
                 })}
             </div>
+
+            {/*
+                **Le Vécu retenu, relié à sa liste** (Nephilim, 2026-10-17) : quand le
+                champ choisi tire son nom d'un champ relié à un référentiel, ce que le
+                corpus dit de ce nom s'affiche ici.
+            */}
+            {composantesARetenir.map(composante => {
+                const champ = template.sections.flatMap(sec => sec.fields).find(f => f.id === choix[composante.id]);
+                const nomDuChamp = champ?.libelleSur ? template.sections.flatMap(sec => sec.fields).find(f => f.id === champ.libelleSur) : undefined;
+                if (!nomDuChamp?.referentiel) return null;
+                const pilote = tousLesPilotes(pilotesPerso).find(d => d.id === campagne?.system)
+                    ?? tousLesPilotes(pilotesPerso).find(d => d.templateId === template.id);
+                return <LigneDuReferentiel key={composante.id} pilote={pilote} chemin={nomDuChamp.referentiel} nom={String(valeurs[nomDuChamp.id] ?? '')} />;
+            })}
 
             {/* Le seuil, décomposé — on doit voir d'où il sort. Un jeu à
                 réserve pure n'en compose aucun : on ne montre pas un « Seuil 0 »

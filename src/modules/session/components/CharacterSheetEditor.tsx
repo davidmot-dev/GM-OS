@@ -12,6 +12,7 @@ import {
 } from './fields/SheetFields';
 import { useCharacterEditor } from '../hooks/useCharacterEditor';
 import PanneauDeJet from './fields/PanneauDeJet';
+import ChampDuReferentiel from './fields/ChampDuReferentiel';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSheetCalculator } from '../hooks/useSheetCalculator';
@@ -497,6 +498,10 @@ const CharacterSheetEditor: React.FC = () => {
                                                 const val = getValue(field.id, field.defaultValue);
                                                 if (field.type === 'number') return (
                                                     <FieldNumber key={field.id} field={field} value={Number(val)} onChange={v => updateLocal(field.id, v)} />
+                                                );
+                                                // Un nom relié à une liste du jeu : les Vécus de Nephilim (2026-10-17).
+                                                if (field.type === 'text' && field.referentiel) return (
+                                                    <ChampDuReferentiel key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} pilote={piloteDeLaFiche} />
                                                 );
                                                 if (field.type === 'text') return (
                                                     <FieldText key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} />

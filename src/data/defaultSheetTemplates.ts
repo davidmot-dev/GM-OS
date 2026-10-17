@@ -19,6 +19,13 @@ export interface SheetField {
      * et n'offre pas le champ du nom lui-même, qui n'est pas une valeur.
      */
     libelleSur?: string;
+    /**
+     * **Un référentiel du jeu** (2026-10-17) : le chemin, dans le dossier du jeu,
+     * d'une liste nommée — `vecus/index.json` pour les Vécus de Nephilim. La
+     * fiche en propose les noms et relie un nom saisi à sa description. Voir
+     * `logic/referentiels.ts`.
+     */
+    referentiel?: string;
 }
 
 export interface SheetSection {

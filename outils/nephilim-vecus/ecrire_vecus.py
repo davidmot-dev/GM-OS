@@ -47,18 +47,21 @@ for chemin in sorted(glob.glob(os.path.join(ICI, 'bruts', '*.json'))):
     for v in sorted(vecus, key=lambda x: KA.index(x['ka'])):
         page = v.get('page') or brut['page']
         lignes += ['', f"## {propre(v['nom'])} — Ka-{v['ka']}", '', f"{propre(v['description'])} *(p. {page})*"]
-        index.append({'nom': propre(v['nom']), 'ka': v['ka'], 'ere': brut['ere'], 'epoque': brut['epoque'],
-                      'page': page, 'fichier': nom_fichier})
+        index.append({'nom': propre(v['nom']), 'fichier': nom_fichier,
+                      'details': {'Ka-élément': v['ka'], 'Ère': brut['ere'], 'Époque': brut['epoque'], 'Page': page}})
     lignes += ['', '---', '',
                'Extrait du carnet NotebookLM « Nephilim » le 2026-10-17, **non relu contre le livre**.']
     texte = '\n'.join(lignes) + '\n'
     open(os.path.join(SORTIE, nom_fichier), 'w', encoding='utf-8').write(texte)
     print(f'{nom_fichier} : {len(texte)} car.')
 
+# Un **référentiel** au sens de GM-OS (`SheetField.referentiel`) : des entrées nommées, le fichier
+# Markdown qui les décrit (une section « ## <nom> — … » chacune), et des détails à afficher.
 json.dump({
+    'referentiel': 'Vécus passés',
     'source': SOURCE + ', p. 61 à 99',
     'extrait': '2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre',
-    'vecus': index,
+    'entrees': index,
     'epoquesManquantes': manquantes,
 }, open(os.path.join(SORTIE, 'index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('Vécus :', len(index), '| époques manquantes :', [m['epoque'] for m in manquantes])

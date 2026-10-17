@@ -141,8 +141,13 @@ Vécus → D → F.
   `index.json`). **Quatre époques manquent**, absentes des sources du carnet : Salomon (p. 77),
   Syracuse (p. 79), Al-Andalus (p. 89), l'An Mil (p. 91) — à compléter depuis le livre
   ([marche à suivre](../../outils/nephilim-vecus/README.md)). Texte du carnet, **non relu contre le
-  livre**. Reste à faire : le lien d'un Vécu de la fiche à sa description, et les suggestions de
-  noms à la saisie (code).
+  livre**.
+- **Les Vécus sont reliés** (17/10, 23 h 30, éprouvé par David) : un champ de fiche désigne un
+  **référentiel** du jeu (`SheetField.referentiel`, `logic/referentiels.ts`, `useReferentiel`) ;
+  la fiche GM-OS propose les 80 noms, ⓘ ouvre détails et description, le panneau de jet rappelle le
+  Vécu retenu. Pilote corrigé (16 champs reliés), réimporté. ⚠️ Une saisie dans la fiche GM-OS ne
+  part vers la fiche HTML qu'**après « Sauvegarder »**. Le manuel attend que Codex ait commité ses
+  pages.
 - **Réimporté par David** : les valeurs se sauvent. L'Arbre de la page 4 et les Œuvres de la page 6
   ne se saisissent pas : ce sont des copies calculées de la page 2, en lecture seule. **Choix de
   David : on les laisse ainsi** (option A ; l'option B, inverser saisie et copies, est écartée).
