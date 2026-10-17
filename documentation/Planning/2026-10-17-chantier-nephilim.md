@@ -1,0 +1,123 @@
+# Chantier Nephilim — les Sciences occultes et les Vécus
+
+Ouvert le 2026-10-17. David : *« note comme chantier Nephilim, prendre en compte la Magie, la
+Cabale et l'Alchimie. Voir comment gérer les vécu (fichier MD ?) »*, puis *« fais moi
+l'analyse »*.
+
+> « Cabale » est lu comme la **Kabbale**, la troisième Science occulte de Nephilim — à ne pas
+> confondre avec la Cabale de NOC, la fiche de groupe. À confirmer avec David.
+
+**Rien n'est codé.** Cette page dit ce qui existe, ce que disent les règles (carnet NotebookLM
+« Nephilim », interrogé le 17/10, pages citées), ce que GM-OS sait déjà faire, ce qui demande du
+code, et les décisions à prendre. Elle rejoindra le registre (§ ⭐) quand Codex y aura commité ses
+changements du 17/10.
+
+---
+
+## 1 · Ce qui existe déjà (commit `ce6263a9`)
+
+- **Le jet** : (Vécu + Ka d'approche ± circonstances) × 10 sur un d100 ; réussite critique sur un
+  double réussi, maladresse sur un double raté ou 00 ; marge sur les dizaines
+  (`dice/systemes/nephilim.ts`). Le menu nomme les Vécus (`libelleSur`).
+- **La fiche** (clés de la fiche HTML `nephilim-legende-fr`, points changés en « _ ») :
+  - Magie : `occult_magic_path` (texte), `occult_magic_first`, `_second`, `_third` (+ nom) ;
+  - Kabbale : `occult_kabbalah_world` (texte), sept Sephiroth nommées, trois du troisième cercle
+    (+ noms) ;
+  - Alchimie : `occult_alchemy_path` (texte), `occult_alchemy_black`, `_white`, `_red` (+ nom) ;
+  - 24 effets magiques (`effects_N_name`, `_art`, `_summary`, `_page`), texte libre ;
+  - Stase (`stasis_degree`), Sapience (`resources_sapience`), Chutes (`falls_*`).
+- **Ce qui manque à la fiche** : le **Ka dominant**, les **Ka des constructs** alchimiques, les
+  **jauges de Materiae Primae**. Ni la fiche HTML ni la fiche GM-OS ne les portent.
+- **Ce qui ne se relie qu'aux scènes** : une note Obsidian (`Scene.noteObsidian`). Un personnage
+  n'en a pas.
+
+## 2 · Ce que disent les règles
+
+| | Magie | Kabbale | Alchimie |
+| :--- | :--- | :--- | :--- |
+| **Cible** | (Art occulte du cercle + Ka de l'élément du sort − degré du sort) × 10 | (Art de la Sephirah + Ka de la créature) × 10 ; **pacte** : opposition, marge de l'invocateur contre le degré de la créature | (Art de l'Œuvre + Ka du **construct** − degré de la formule) × 10 ; Œuvre au blanc : le plus faible des deux Ka |
+| **Dé** | d100 sous la cible | d100 sous la cible | d100 sous la cible |
+| **Vécus** | ne s'ajoutent pas | — | — |
+| **Préparation** | 1 round | 1 round par degré (2 sans pacte) ; −10 % par round gagné | transmutation au laboratoire, usage immédiat |
+| **Coût** | aucun ; **Stase** facultative : +1 degré de Ka par point dépensé | aucun ; Stase facultative, idem | **Materiae Primae** = degré de la formule (d'un élément ; deux pour l'Œuvre au blanc) |
+| **Échec** | — | pacte raté : dommages magiques = degré de la créature | — |
+| **Maladresse** | **+1 Khaïba** ; au Grand Secret, effets plus lourds | invocation : pacte rompu ; pacte : bannissement du fief et **+1 Khaïba** | MP perdue, rien produit, **Ka du construct −1**, plus d'essai du scénario |
+| **Pages** | Quintessence p. 176, 184 ; Grimoire 3ᵉ cercle p. 28–29 | Quintessence p. 124, 198 | Quintessence p. 214–220 ; Grimoire p. 107–115 |
+
+**La Stase** (Quintessence p. 113, 160, 184) : plafond = **Ka dominant** ; ne se recharge que
+dans un Plexus (+1 par jour) ou un Nexus (+5 par jour) ; vide, elle attire le Nephilim (test de
+Ka quotidien). Lancer un sort ne vide **ni le Pentacle ni la Stase** : elle ne sert qu'au bonus.
+
+**La Materiae Primae** (p. 218–219) : une jauge **par Ka-élément**, plafond = somme des Arts
+d'Alchimie + Ka de l'élément ; pleine à chaque session ; se regagne par enquête, Sapience ou
+récolte ; à défaut, 1 degré de Ka (Stase, Pentacle ou construct) remplace 1 degré de MP.
+
+**Un Vécu passé** (p. 50, 114–123, 154–155) porte : un **nom** (« Condottiere italien »), un
+**degré** (1 à 10), une **époque et un lieu**, un **Ka-élément** (+1 degré à la création s'il est
+le dominant), et ses **Effets Mnémos permanents** — une phrase : un domaine de plus, ou « +2
+degrés quand… ». Le joueur **raconte** pourquoi le Vécu s'applique, le meneur tranche ; plusieurs
+Vécus complémentaires donnent **+1 degré chacun, +2 au plus**. Refusé, le joueur prend un autre
+Vécu ou crée un Effet Mnémos (1 PS par degré). Progression : N → N+1 coûte N+1 PS jusqu'à 5, puis
+la table de l'expérience ; un Vécu nouveau naît d'un Effet Mnémos permanent (5 PS + 1 par degré).
+
+## 3 · Ce que GM-OS sait déjà faire — sans code
+
+1. **Le jet d'un sort de Magie ou d'une invocation de Kabbale** : c'est la même cible × 10 que
+   le Vécu. Il suffit que le menu « Vécu » propose aussi les **Arts occultes** — une section
+   supplémentaire de la composante (`sectionsSupplementaires`), rangée en sous-groupe. Le Ka de
+   l'élément du sort est l'« Approche » ; le **degré du sort se retire au curseur** des
+   circonstances. Seule retouche : les champs texte des sciences (voie, monde) doivent sortir de
+   cette section, pour ne pas apparaître dans le menu — un déplacement dans la fiche GM-OS, sans
+   toucher aux clés ni à la correspondance.
+2. **Le cumul de Vécus complémentaires** (+1 par Vécu, +2 au plus) : au curseur, comme les
+   circonstances.
+3. **La recharge de la Materiae Primae à chaque séance** : le geste « Début de séance » sait déjà
+   remettre un champ à son plafond (`gestesDesHeros`, fait pour NOC) — **si** le plafond se lit
+   sur la fiche, ce qui demande la question 4 ci-dessous.
+
+## 4 · Ce qui demande du code
+
+| # | Quoi | Pourquoi | Taille |
+| :--- | :--- | :--- | :--- |
+| A | **Les suites d'une maladresse** : +1 Khaïba (Magie, pacte de Kabbale), +1 Ombre (Vécu contemporain), −1 au Ka du construct (Alchimie) — selon la **section** du champ retenu au jet | GM-OS dit « maladresse » mais n'écrit rien ; le Blade Runner a déjà un modèle proche (`EtatBrise.noterDans`) | moyen |
+| B | **Dépenser au jet** : la Stase (+1 degré de Ka par point) et la Sapience (Effet Mnémos : +2 degrés pour 1 PS, ou un Vécu temporaire à 1 PS par degré) | les réserves du personnage (`reservesDuPersonnage`) ajoutent des dés ou un bonus au **résultat**, jamais des **degrés à une cible** : il faut un effet `degres` | moyen |
+| C | **Le plafond de la Stase au Ka dominant** | aucun champ ne dit quel Ka est dominant : un champ « Ka dominant », puis un plafond lu dessus | petit |
+| D | **L'Alchimie complète** : Ka des cinq constructs, cinq jauges de MP, coût au jet, recharge par séance | la fiche HTML n'a aucun de ces champs : à ajouter par **Character Sheet HTML Studio** (même boucle que la fiche), puis à relier | grand |
+| E | **Le pacte de Kabbale** en opposition | GM-OS ne compare pas deux marges ; à garder **à la main** au début | — |
+| F | **Une bibliothèque d'effets magiques** (un sort décrit une fois : art, Ka, degré, résumé, page) | les 24 lignes de texte suffisent pour jouer ; à faire seulement si David s'en sert | grand |
+
+## 5 · Les Vécus : où ranger ce que la fiche ne porte pas
+
+Le **nom** et le **degré** restent sur la fiche : c'est ce que lit le jet, et la fiche fait foi.
+Ce qui manque — l'époque, le Ka-élément, les Effets Mnémos permanents, l'histoire — tient en
+quelques lignes par Vécu, seize Vécus par personnage. Trois rangements possibles :
+
+| | Fichier Markdown dans `docs/campaigns/<campagne>/` | **Note Obsidian liée au personnage** | Zones de texte sur la fiche GM-OS |
+| :--- | :--- | :--- | :--- |
+| Écriture | éditeur de texte | **Obsidian, où David écrit déjà ses campagnes** | GM-OS |
+| L'Oracle le lit | oui | **oui : le coffre Obsidian est déjà une racine de l'Oracle** | non |
+| Secret des joueurs | ⚠ tout ce qui est dans `docs/` entre dans les réponses | idem, dans le coffre | sur la fiche, visible du joueur |
+| Code | aucun | **un champ « note » sur le personnage**, comme `Scene.noteObsidian`, et un bouton pour l'ouvrir | seize zones de plus sur deux fiches |
+| Risque | deux vérités si le degré y est recopié | idem | aucune |
+
+**Recommandation : la note Obsidian liée au personnage**, une section par Vécu (nom, époque, Ka,
+Effets Mnémos, souvenirs), **sans recopier les degrés** — la fiche les tient, une seconde copie
+finirait par mentir. C'est le rangement qui coûte le moins de code, que David édite déjà, et que
+l'Oracle lit déjà : il pourrait alors répondre « quel Vécu pour cette action ? ». Un **gabarit**
+de note (une section par Vécu) se fournit une fois.
+
+## 6 · Les décisions à prendre
+
+1. « Cabale » = Kabbale ? (§ en-tête)
+2. **Lot 1, sans code** : ajouter les Arts occultes au menu du jet (section supplémentaire) et
+   ranger leurs champs texte à part — d'accord ?
+3. **Les maladresses (A)** : Khaïba et Ombre écrits seuls, ou seulement annoncés ?
+4. **Stase et Sapience au jet (B)** : les deux, ou la Stase seulement ?
+5. **Le Ka dominant (C)** : un champ à ajouter aux deux fiches — par Character Sheet HTML Studio ?
+6. **L'Alchimie (D)** : la faire en entier (fiche HTML à régénérer), ou attendre qu'un joueur soit
+   alchimiste ?
+7. **Les Vécus** : la note Obsidian liée au personnage, comme recommandé ?
+8. **La bibliothèque d'effets (F)** : à garder pour plus tard ?
+
+**Ordre proposé**, du plus petit au plus gros : lot 1 (sans code) → C → A → B → note Obsidian des
+Vécus → D → F.
