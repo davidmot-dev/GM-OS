@@ -1,0 +1,35 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "rpg-visual-identity-builder",
+  "version": "0.1.0",
+  "description": "Définit depuis des images ou une description une identité visuelle de jeu ou de campagne, sous la forme STYLE / AVOID attendue par GM-OS.",
+  "author": {
+    "name": "David"
+  },
+  "keywords": [
+    "GM-OS",
+    "jeu de rôle",
+    "identité visuelle",
+    "style",
+    "FLUX"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "RPG Visual Identity Builder",
+        "shortDescription": "Identité visuelle pour GM-OS",
+        "longDescription": "Analyse le style commun d’une à quatre images de référence, propose une identité de jeu ou de campagne et corrige les écarts d’une génération. Échanges en français ; résultat anglais limité à 60 mots pour STYLE et 15 pour AVOID, prêt à copier dans GM-OS.",
+        "developerName": "David",
+        "category": "Productivity",
+        "capabilities": [],
+        "logo": "./assets/icon.svg",
+        "composerIcon": "./assets/icon.svg",
+        "defaultPrompt": [
+          "Voici mes images de référence : aide-moi à définir l’identité visuelle de mon jeu pour GM-OS.",
+          "Je veux compléter ou remplacer l’identité visuelle du jeu pour ma campagne.",
+          "Cette génération s’écarte de mes références : corrige mon bloc STYLE / AVOID."
+        ]
+      }
+    }
+  }
+}

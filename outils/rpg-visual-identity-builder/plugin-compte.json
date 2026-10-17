@@ -1,0 +1,16 @@
+{
+  "created": {
+    "plugin_id": "plugins_6ad3a4e128048191bf0c982432cebe9b",
+    "name": "rpg-visual-identity-builder",
+    "description": "Définit depuis des images ou une description une identité visuelle de jeu ou de campagne, sous la forme STYLE / AVOID attendue par GM-OS.",
+    "version": "0.1.0",
+    "current_release_id": "pluginrel_6ad3a4e274108191a25d11f325dc0e4c",
+    "scope": "USER",
+    "discoverability": "PRIVATE",
+    "plugin_url": "https://chatgpt.com/plugins/plugins_6ad3a4e128048191bf0c982432cebe9b",
+    "release_id": "pluginrel_6ad3a4e274108191a25d11f325dc0e4c",
+    "latest_release_id": "pluginrel_6ad3a4e274108191a25d11f325dc0e4c",
+    "status": "created"
+  },
+  "verifiedRemoteSkill": true
+}

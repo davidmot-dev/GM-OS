@@ -1,0 +1,8 @@
+interface:
+  display_name: RPG Visual Identity Builder
+  short_description: Identité visuelle pour GM-OS
+  default_prompt: Aide-moi à définir l’identité visuelle de mon jeu ou de ma
+    campagne à partir de mes références, puis fournis le bloc anglais STYLE /
+    AVOID.
+policy:
+  allow_implicit_invocation: true

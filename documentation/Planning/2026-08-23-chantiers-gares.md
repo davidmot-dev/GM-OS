@@ -11790,6 +11790,18 @@ fiction jetable générable par CLI. La livraison **L5–L7 logiciel** est regro
 avec synchronisation des trois guides via le hook NotebookLM et validation complète avant push.
 **Reste : essai matériel**, toutes les lignes iPad/iPad Air/Samsung/smartphone marquées non testées.
 
+### 137 · RPG Visual Identity Builder — plugin privé — 17/10/2026
+
+David demande un plugin à partir de `outils/rpg-visual-identity-builder/instructions.md`
+et choisit « Présentation standard ». **Créé dans son compte**, version 0.1.0 :
+[RPG Visual Identity Builder](https://chatgpt.com/plugins/plugins_6ad3a4e128048191bf0c982432cebe9b).
+Instructions reprises intégralement, un skill, exemples, icône et validateur formel des
+deux lignes anglaises STYLE / AVOID (60 / 15 mots). Modes jeu, campagne en complément ou
+remplacement et correction d’une génération ratée. Aucun serveur ni accès automatique à GM-OS.
+Archive inspectée, 14 contrôles réussis, skill distant relu ; **pas encore essayé avec les
+références de David**. [Livraison, identifiants et reprise](2026-10-17-etat-et-reprise-codex-identite-visuelle.md).
+Commit et push demandés ensuite par David ; fichiers des autres chantiers préservés.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11866,6 +11878,7 @@ avec synchronisation des trois guides via le hook NotebookLM et validation compl
 | 69 | **Compléter le thème Blade Runner** | ✅ **Paquet réalisé et validé**, § 134 : dix icônes néo-noir, papier froid, coins et séparateur approuvés par David ; intention v1.7 corrigée, une couleur d'état ajustée ; validateur accepté sans diagnostic et neuf tests verts ; deux planches relues ; livraison Git demandée le 10/10 | Juger dans GM-OS | [Note du jour](2026-10-10-etat-et-reprise.md), [rapport](../../docs/systems/blade-runner/theme/apercu/rapport-validation.md) |
 | 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; recette et départ HACK poussés dans `460544af`/`a23e6989` ; correctif horloge HACK, glitch fixe en mouvements réduits et CRT tablette poussés dans `dc1ead2b` ; décompte, film, alarme et faux écho sur l’heure serveur le 16/10, non commité | Recharger et éprouver sur les tablettes, poursuivre la grille matérielle | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
 | 71 | **LCARS de Star Trek — intégration native** | § 136 ; [L1–L7 logiciel réalisées](2026-10-16-integration-lcars-gmos.md), version 0.5.0 : médias privés, son unique, 19 actions arbitrées, 42 captures natives et deux défauts de cycle de vie corrigés ; 191 Vitest ciblés + 38 Node + 10 E2E ; livraison groupée demandée | Remplir la grille matérielle | Essais réels iPad, iPad Air, Samsung et smartphone |
+| 72 | **Plugin d’identité visuelle** | § 137 ; plugin privé 0.1.0 créé, archive et skill distant vérifiés, 14 contrôles verts | Ajouter le plugin et l’éprouver avec des références | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-identite-visuelle.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
