@@ -2,9 +2,15 @@ import { faitDescendre, deDUnCranPlusBas } from './desDUsure';
 import { lancerUneChaine, resoudreTorg, direTorg, type DesDeTorg, type OptionsDeTorg } from './systemes/torg';
 import { estUneSauvegarde, lireLaNotation } from './lectureDuPilote';
 import {
-    degreDepuisLeBooleen, degreDuDe, estUneReussite,
+    degreDepuisLeBooleen, degreDuDe, estUneReussite, margeDuJet,
     type DegreDeReussite, type EchelleDuJet,
 } from './degresDeReussite';
+
+/** « — marge 4 », quand l'échelle lit une marge (Nephilim) et que le dé réussit. */
+const direLaMarge = (de: number, echelle: EchelleDuJet | undefined, faces: number) => {
+    const marge = margeDuJet(de, echelle, faces);
+    return marge === null ? '' : ` — marge ${marge}`;
+};
 
 export interface DieResult {
     val: number | string;
@@ -213,7 +219,7 @@ export class DiceEngine {
         } else {
             res.degre = degreDepuisLeBooleen(success);
         }
-        res.totalDisplay = `${res.total} vs ${target}`;
+        res.totalDisplay = `${res.total} vs ${target}${direLaMarge(res.total, echelle, faces)}`;
         return res;
     }
 
@@ -394,7 +400,7 @@ export class DiceEngine {
             modifier,
             tagSuccess: echelle ? estUneReussite(degreDuDe(total, echelle, faces)) : success,
             degre: echelle ? degreDuDe(total, echelle, faces) : degreDepuisLeBooleen(success),
-            totalDisplay: `${total} vs ${target}`
+            totalDisplay: `${total} vs ${target}${direLaMarge(total, echelle, faces)}`
         };
     }
 

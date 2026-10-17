@@ -24,6 +24,7 @@ fait.
 | 🐙 **Cthulhu Hack** | **Sauvegardes** au d20 sous la caractéristique, **dés d'usure** (Torche, Bagou…) | [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md) |
 | 🐉 **Rêves de Dragons** | d100 sous un **pourcentage** lu dans la table de résolution, **degrés** de réussite | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
 | ⚡️ **Torg Eternity** | Un d20 qui **explose**, converti par la **Table des Bonus**, contre un **Niveau de Difficulté** ; **Possibilité**, « Un de plus ! » et relance favorisée après le premier dé ; **Annulation des dommages** | [Torg](./54-Jeu-Torg.md) |
+| ✨ **Nephilim Légende** | d100 sous une cible en **degrés × 10** (Vécu + Ka d'approche), **doubles** critiques ou maladresses, **marge** sur les dizaines ; **Traque** plafonnée au **Seuil RK** du lieu | [Nephilim](./54-Jeu-Nephilim.md) |
 
 ---
 
@@ -92,7 +93,7 @@ choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Dés achetés** (`cout`, `ressource`) | Des dés de plus, payés sur une réserve de table, à un prix qui monte | Dune : 1, 2 puis 3 points d'Impulsion |
 | **Seconde réserve** (`secondaire`) | Des dés lancés avec les autres mais **comptés à part** : un 1 y déclenche quelque chose | Alien : les dés de Stress, et la **Panique** |
 | **Dés échelonnés** (`desEchelonnes`) | **Un dé par valeur**, dont la taille se lit sur la fiche | Blade Runner : A = D12 … D = D6 |
-| **Cible en pourcentage** (`cible`) | Un d100 sous un pourcentage, lu dans la table du jeu | Rêves de Dragons |
+| **Cible en pourcentage** (`cible`) | Un d100 sous un pourcentage que le jeu **calcule** : lu dans la table de résolution (`reves-de-dragons`), ou degrés × 10 avec doubles critiques et marge sur les dizaines (`nephilim`) | Rêves de Dragons, Nephilim |
 | **Table des Bonus** (`tableDeBonus`) | Le dé se convertit en **bonus** par la table du jeu, s'ajoute au **niveau** (le seuil additionné) et se compare à la difficulté | Torg : un d20 qui explose sur 10 et 20 |
 | **Réglages de Torg** (`torg`) | Le champ des **Blessures** (−1 au total d'action chacune, jusqu'à −3), celui des **Possibilités** (dépensées après le premier dé), et le test de Réalité de l'**Annulation des dommages** | Torg |
 | **Provoquer le destin** (`destin`) | Le **niveau** (le seuil : le Talent) contre la difficulté ; on lance de zéro au **plafond** (la réserve : le Domaine) de dés à dix faces, chaque 8 et plus élève le niveau, un 10 fait lancer un dé de plus, **chaque 1 verse une goutte dans la réserve de table** déclarée. Des **jauges de péril** retirent au Domaine et au Talent selon leurs seuils, cumulés | NOC |
@@ -133,6 +134,7 @@ chaque mouvement s'inscrit au journal de séance avec ce qui l'a causé.
 | **Début de séance** (`erosionDebutDeSeance`) | Ce qu'elle perd quand vous appuyez sur **« Début de séance »** — la soirée de jeu, pas le temps du récit |
 | **Nouveau scénario** (`remiseAuDepartParScenario`) | Elle revient à son départ quand vous appuyez sur **« Nouveau scénario »** (une confirmation dit ce qui sera remis) |
 | **Report du manque** (`reportSurEpuisement`) | Ce qu'elle ne peut pas payer **alimente une autre réserve** : à zéro d'Impulsion, un dé acheté se paie en Menace |
+| **Plafond lu sur une autre réserve** (`maxSur`) | Le plafond est la valeur courante d'une autre réserve de table : la Jauge de Traque de Nephilim plafonne au **Seuil RK** du lieu, que le meneur règle au bandeau en changeant de lieu |
 | **Débordement** (`debordement`) | À son plafond, elle **se vide** et une autre réserve monte : à cinq gouttes, le Fiel passe en Menace. Le reste d'un gain continue de remplir la jauge vidée |
 
 **Rien ne devine quand une scène finit ou qu'une séance commence** : ces trois gestes sont des

@@ -87,7 +87,7 @@ describe('poser une cible calculée à la main', () => {
         render(<EditeurDuJet driver={pilote()} gabarit={GABARIT} onUpdate={vi.fn()} />);
         const menu = screen.getByTitle(/table qui calcule la cible/i) as HTMLSelectElement;
 
-        expect([...menu.options].map(o => o.value)).toEqual(['', 'reves-de-dragons']);
+        expect([...menu.options].map(o => o.value)).toEqual(['', 'reves-de-dragons', 'nephilim']);
     });
 
     it('revenir à « aucune » RETIRE la clé, au lieu de l’annuler', () => {

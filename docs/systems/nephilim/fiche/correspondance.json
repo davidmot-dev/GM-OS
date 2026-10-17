@@ -1,0 +1,965 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "nephilim-legende-fr",
+  "commentaire": "Correspondance entre la fiche de Nephilim dans GM-OS et le gabarit nephilim-legende-fr du moteur de fiches. Écrite le 2026-10-17 avec la fiche GM-OS corrigée le même jour : chaque champ GM-OS reprend la clé de la fiche, les points remplacés par des « _ » (la grammaire des formules de GM-OS ne lit pas les points). Les pistes imprimées en hotspots (Chutes, santé) sont déjà des nombres : elles se relient sans transformation.",
+  "champs": [
+    {
+      "gmos": "identity_name",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "identity_metamorph",
+      "fiche": "identity.metamorph"
+    },
+    {
+      "gmos": "identity_metamorph_degree",
+      "fiche": "identity.metamorph.degree"
+    },
+    {
+      "gmos": "metamorphoses_0_name",
+      "fiche": "metamorphoses.0.name"
+    },
+    {
+      "gmos": "metamorphoses_0_permanent",
+      "fiche": "metamorphoses.0.permanent"
+    },
+    {
+      "gmos": "metamorphoses_1_name",
+      "fiche": "metamorphoses.1.name"
+    },
+    {
+      "gmos": "metamorphoses_1_permanent",
+      "fiche": "metamorphoses.1.permanent"
+    },
+    {
+      "gmos": "metamorphoses_2_name",
+      "fiche": "metamorphoses.2.name"
+    },
+    {
+      "gmos": "metamorphoses_2_permanent",
+      "fiche": "metamorphoses.2.permanent"
+    },
+    {
+      "gmos": "metamorphoses_3_name",
+      "fiche": "metamorphoses.3.name"
+    },
+    {
+      "gmos": "metamorphoses_3_permanent",
+      "fiche": "metamorphoses.3.permanent"
+    },
+    {
+      "gmos": "metamorphoses_4_name",
+      "fiche": "metamorphoses.4.name"
+    },
+    {
+      "gmos": "metamorphoses_4_permanent",
+      "fiche": "metamorphoses.4.permanent"
+    },
+    {
+      "gmos": "metamorphoses_5_name",
+      "fiche": "metamorphoses.5.name"
+    },
+    {
+      "gmos": "metamorphoses_5_permanent",
+      "fiche": "metamorphoses.5.permanent"
+    },
+    {
+      "gmos": "metamorphoses_6_name",
+      "fiche": "metamorphoses.6.name"
+    },
+    {
+      "gmos": "metamorphoses_6_permanent",
+      "fiche": "metamorphoses.6.permanent"
+    },
+    {
+      "gmos": "metamorphoses_7_name",
+      "fiche": "metamorphoses.7.name"
+    },
+    {
+      "gmos": "metamorphoses_7_permanent",
+      "fiche": "metamorphoses.7.permanent"
+    },
+    {
+      "gmos": "metamorphoses_8_name",
+      "fiche": "metamorphoses.8.name"
+    },
+    {
+      "gmos": "metamorphoses_8_permanent",
+      "fiche": "metamorphoses.8.permanent"
+    },
+    {
+      "gmos": "metamorphoses_9_name",
+      "fiche": "metamorphoses.9.name"
+    },
+    {
+      "gmos": "metamorphoses_9_permanent",
+      "fiche": "metamorphoses.9.permanent"
+    },
+    {
+      "gmos": "quest_arcana_degree",
+      "fiche": "quest.arcana.degree"
+    },
+    {
+      "gmos": "quest_arcana_name",
+      "fiche": "quest.arcana.name"
+    },
+    {
+      "gmos": "quest_fraternity_name",
+      "fiche": "quest.fraternity.name"
+    },
+    {
+      "gmos": "quest_fraternity_degree",
+      "fiche": "quest.fraternity.degree"
+    },
+    {
+      "gmos": "ka_fire",
+      "fiche": "ka.fire"
+    },
+    {
+      "gmos": "ka_earth",
+      "fiche": "ka.earth"
+    },
+    {
+      "gmos": "ka_air",
+      "fiche": "ka.air"
+    },
+    {
+      "gmos": "ka_moon",
+      "fiche": "ka.moon"
+    },
+    {
+      "gmos": "ka_water",
+      "fiche": "ka.water"
+    },
+    {
+      "gmos": "resources_sapience",
+      "fiche": "resources.sapience"
+    },
+    {
+      "gmos": "falls_khaiba",
+      "fiche": "falls.khaiba"
+    },
+    {
+      "gmos": "falls_khaiba_notes",
+      "fiche": "falls.khaiba.notes"
+    },
+    {
+      "gmos": "falls_shadow",
+      "fiche": "falls.shadow"
+    },
+    {
+      "gmos": "falls_shadow_notes",
+      "fiche": "falls.shadow.notes"
+    },
+    {
+      "gmos": "falls_narcosis",
+      "fiche": "falls.narcosis"
+    },
+    {
+      "gmos": "falls_narcosis_notes",
+      "fiche": "falls.narcosis.notes"
+    },
+    {
+      "gmos": "stasis_degree",
+      "fiche": "stasis.degree"
+    },
+    {
+      "gmos": "stasis_name",
+      "fiche": "stasis.name"
+    },
+    {
+      "gmos": "simulacrum_ka",
+      "fiche": "simulacrum.ka"
+    },
+    {
+      "gmos": "simulacrum_name",
+      "fiche": "simulacrum.name"
+    },
+    {
+      "gmos": "simulacrum_experience",
+      "fiche": "simulacrum.experience"
+    },
+    {
+      "gmos": "simulacrum_experience_degree",
+      "fiche": "simulacrum.experience.degree"
+    },
+    {
+      "gmos": "identity_summary",
+      "fiche": "identity.summary"
+    },
+    {
+      "gmos": "incarnations_0_era",
+      "fiche": "incarnations.0.era"
+    },
+    {
+      "gmos": "pastlives_0_name",
+      "fiche": "pastlives.0.name"
+    },
+    {
+      "gmos": "pastlives_0_degree",
+      "fiche": "pastlives.0.degree"
+    },
+    {
+      "gmos": "pastlives_8_name",
+      "fiche": "pastlives.8.name"
+    },
+    {
+      "gmos": "pastlives_8_degree",
+      "fiche": "pastlives.8.degree"
+    },
+    {
+      "gmos": "incarnations_1_era",
+      "fiche": "incarnations.1.era"
+    },
+    {
+      "gmos": "pastlives_1_name",
+      "fiche": "pastlives.1.name"
+    },
+    {
+      "gmos": "pastlives_1_degree",
+      "fiche": "pastlives.1.degree"
+    },
+    {
+      "gmos": "pastlives_9_name",
+      "fiche": "pastlives.9.name"
+    },
+    {
+      "gmos": "pastlives_9_degree",
+      "fiche": "pastlives.9.degree"
+    },
+    {
+      "gmos": "incarnations_2_era",
+      "fiche": "incarnations.2.era"
+    },
+    {
+      "gmos": "pastlives_2_name",
+      "fiche": "pastlives.2.name"
+    },
+    {
+      "gmos": "pastlives_2_degree",
+      "fiche": "pastlives.2.degree"
+    },
+    {
+      "gmos": "pastlives_10_name",
+      "fiche": "pastlives.10.name"
+    },
+    {
+      "gmos": "pastlives_10_degree",
+      "fiche": "pastlives.10.degree"
+    },
+    {
+      "gmos": "incarnations_3_era",
+      "fiche": "incarnations.3.era"
+    },
+    {
+      "gmos": "pastlives_3_name",
+      "fiche": "pastlives.3.name"
+    },
+    {
+      "gmos": "pastlives_3_degree",
+      "fiche": "pastlives.3.degree"
+    },
+    {
+      "gmos": "pastlives_11_name",
+      "fiche": "pastlives.11.name"
+    },
+    {
+      "gmos": "pastlives_11_degree",
+      "fiche": "pastlives.11.degree"
+    },
+    {
+      "gmos": "incarnations_4_era",
+      "fiche": "incarnations.4.era"
+    },
+    {
+      "gmos": "pastlives_4_name",
+      "fiche": "pastlives.4.name"
+    },
+    {
+      "gmos": "pastlives_4_degree",
+      "fiche": "pastlives.4.degree"
+    },
+    {
+      "gmos": "pastlives_12_name",
+      "fiche": "pastlives.12.name"
+    },
+    {
+      "gmos": "pastlives_12_degree",
+      "fiche": "pastlives.12.degree"
+    },
+    {
+      "gmos": "incarnations_5_era",
+      "fiche": "incarnations.5.era"
+    },
+    {
+      "gmos": "pastlives_5_name",
+      "fiche": "pastlives.5.name"
+    },
+    {
+      "gmos": "pastlives_5_degree",
+      "fiche": "pastlives.5.degree"
+    },
+    {
+      "gmos": "pastlives_13_name",
+      "fiche": "pastlives.13.name"
+    },
+    {
+      "gmos": "pastlives_13_degree",
+      "fiche": "pastlives.13.degree"
+    },
+    {
+      "gmos": "incarnations_6_era",
+      "fiche": "incarnations.6.era"
+    },
+    {
+      "gmos": "pastlives_6_name",
+      "fiche": "pastlives.6.name"
+    },
+    {
+      "gmos": "pastlives_6_degree",
+      "fiche": "pastlives.6.degree"
+    },
+    {
+      "gmos": "pastlives_14_name",
+      "fiche": "pastlives.14.name"
+    },
+    {
+      "gmos": "pastlives_14_degree",
+      "fiche": "pastlives.14.degree"
+    },
+    {
+      "gmos": "incarnations_7_era",
+      "fiche": "incarnations.7.era"
+    },
+    {
+      "gmos": "pastlives_7_name",
+      "fiche": "pastlives.7.name"
+    },
+    {
+      "gmos": "pastlives_7_degree",
+      "fiche": "pastlives.7.degree"
+    },
+    {
+      "gmos": "pastlives_15_name",
+      "fiche": "pastlives.15.name"
+    },
+    {
+      "gmos": "pastlives_15_degree",
+      "fiche": "pastlives.15.degree"
+    },
+    {
+      "gmos": "quests_esoteric",
+      "fiche": "quests.esoteric"
+    },
+    {
+      "gmos": "knowledge_esoteric",
+      "fiche": "knowledge.esoteric"
+    },
+    {
+      "gmos": "occult_magic_path",
+      "fiche": "occult.magic.path"
+    },
+    {
+      "gmos": "occult_magic_first",
+      "fiche": "occult.magic.first"
+    },
+    {
+      "gmos": "occult_magic_second",
+      "fiche": "occult.magic.second"
+    },
+    {
+      "gmos": "occult_magic_third",
+      "fiche": "occult.magic.third"
+    },
+    {
+      "gmos": "occult_magic_third_name",
+      "fiche": "occult.magic.third.name"
+    },
+    {
+      "gmos": "occult_kabbalah_world",
+      "fiche": "occult.kabbalah.world"
+    },
+    {
+      "gmos": "occult_kabbalah_third_center",
+      "fiche": "occult.kabbalah.third.center"
+    },
+    {
+      "gmos": "occult_kabbalah_third_left",
+      "fiche": "occult.kabbalah.third.left"
+    },
+    {
+      "gmos": "occult_kabbalah_third_right",
+      "fiche": "occult.kabbalah.third.right"
+    },
+    {
+      "gmos": "occult_kabbalah_geburah",
+      "fiche": "occult.kabbalah.geburah"
+    },
+    {
+      "gmos": "occult_kabbalah_chesed",
+      "fiche": "occult.kabbalah.chesed"
+    },
+    {
+      "gmos": "occult_kabbalah_tiphereth",
+      "fiche": "occult.kabbalah.tiphereth"
+    },
+    {
+      "gmos": "occult_kabbalah_hod",
+      "fiche": "occult.kabbalah.hod"
+    },
+    {
+      "gmos": "occult_kabbalah_netzach",
+      "fiche": "occult.kabbalah.netzach"
+    },
+    {
+      "gmos": "occult_kabbalah_yesod",
+      "fiche": "occult.kabbalah.yesod"
+    },
+    {
+      "gmos": "occult_kabbalah_malkuth",
+      "fiche": "occult.kabbalah.malkuth"
+    },
+    {
+      "gmos": "occult_kabbalah_third_center_name",
+      "fiche": "occult.kabbalah.third.center.name"
+    },
+    {
+      "gmos": "occult_kabbalah_third_left_name",
+      "fiche": "occult.kabbalah.third.left.name"
+    },
+    {
+      "gmos": "occult_kabbalah_third_right_name",
+      "fiche": "occult.kabbalah.third.right.name"
+    },
+    {
+      "gmos": "occult_alchemy_path",
+      "fiche": "occult.alchemy.path"
+    },
+    {
+      "gmos": "occult_alchemy_black",
+      "fiche": "occult.alchemy.black"
+    },
+    {
+      "gmos": "occult_alchemy_white",
+      "fiche": "occult.alchemy.white"
+    },
+    {
+      "gmos": "occult_alchemy_red",
+      "fiche": "occult.alchemy.red"
+    },
+    {
+      "gmos": "occult_alchemy_red_name",
+      "fiche": "occult.alchemy.red.name"
+    },
+    {
+      "gmos": "actions_initiative",
+      "fiche": "actions.initiative"
+    },
+    {
+      "gmos": "actions_movement",
+      "fiche": "actions.movement"
+    },
+    {
+      "gmos": "actions_insight",
+      "fiche": "actions.insight"
+    },
+    {
+      "gmos": "actions_recovery",
+      "fiche": "actions.recovery"
+    },
+    {
+      "gmos": "actions_damagebonus",
+      "fiche": "actions.damagebonus"
+    },
+    {
+      "gmos": "actions_veil",
+      "fiche": "actions.veil"
+    },
+    {
+      "gmos": "health_physical",
+      "fiche": "health.physical"
+    },
+    {
+      "gmos": "health_magical",
+      "fiche": "health.magical"
+    },
+    {
+      "gmos": "consequences_physical_minor_active",
+      "fiche": "consequences.physical.minor.active"
+    },
+    {
+      "gmos": "consequences_physical_minor_description",
+      "fiche": "consequences.physical.minor.description"
+    },
+    {
+      "gmos": "consequences_physical_serious_active",
+      "fiche": "consequences.physical.serious.active"
+    },
+    {
+      "gmos": "consequences_physical_serious_description",
+      "fiche": "consequences.physical.serious.description"
+    },
+    {
+      "gmos": "consequences_physical_severe_active",
+      "fiche": "consequences.physical.severe.active"
+    },
+    {
+      "gmos": "consequences_physical_severe_description",
+      "fiche": "consequences.physical.severe.description"
+    },
+    {
+      "gmos": "consequences_magical_minor_active",
+      "fiche": "consequences.magical.minor.active"
+    },
+    {
+      "gmos": "consequences_magical_minor_description",
+      "fiche": "consequences.magical.minor.description"
+    },
+    {
+      "gmos": "consequences_magical_serious_active",
+      "fiche": "consequences.magical.serious.active"
+    },
+    {
+      "gmos": "consequences_magical_serious_description",
+      "fiche": "consequences.magical.serious.description"
+    },
+    {
+      "gmos": "consequences_magical_severe_active",
+      "fiche": "consequences.magical.severe.active"
+    },
+    {
+      "gmos": "consequences_magical_severe_description",
+      "fiche": "consequences.magical.severe.description"
+    },
+    {
+      "gmos": "possessions_weapons",
+      "fiche": "possessions.weapons"
+    },
+    {
+      "gmos": "effects_0_name",
+      "fiche": "effects.0.name"
+    },
+    {
+      "gmos": "effects_0_art",
+      "fiche": "effects.0.art"
+    },
+    {
+      "gmos": "effects_0_summary",
+      "fiche": "effects.0.summary"
+    },
+    {
+      "gmos": "effects_0_page",
+      "fiche": "effects.0.page"
+    },
+    {
+      "gmos": "effects_1_name",
+      "fiche": "effects.1.name"
+    },
+    {
+      "gmos": "effects_1_art",
+      "fiche": "effects.1.art"
+    },
+    {
+      "gmos": "effects_1_summary",
+      "fiche": "effects.1.summary"
+    },
+    {
+      "gmos": "effects_1_page",
+      "fiche": "effects.1.page"
+    },
+    {
+      "gmos": "effects_2_name",
+      "fiche": "effects.2.name"
+    },
+    {
+      "gmos": "effects_2_art",
+      "fiche": "effects.2.art"
+    },
+    {
+      "gmos": "effects_2_summary",
+      "fiche": "effects.2.summary"
+    },
+    {
+      "gmos": "effects_2_page",
+      "fiche": "effects.2.page"
+    },
+    {
+      "gmos": "effects_3_name",
+      "fiche": "effects.3.name"
+    },
+    {
+      "gmos": "effects_3_art",
+      "fiche": "effects.3.art"
+    },
+    {
+      "gmos": "effects_3_summary",
+      "fiche": "effects.3.summary"
+    },
+    {
+      "gmos": "effects_3_page",
+      "fiche": "effects.3.page"
+    },
+    {
+      "gmos": "effects_4_name",
+      "fiche": "effects.4.name"
+    },
+    {
+      "gmos": "effects_4_art",
+      "fiche": "effects.4.art"
+    },
+    {
+      "gmos": "effects_4_summary",
+      "fiche": "effects.4.summary"
+    },
+    {
+      "gmos": "effects_4_page",
+      "fiche": "effects.4.page"
+    },
+    {
+      "gmos": "effects_5_name",
+      "fiche": "effects.5.name"
+    },
+    {
+      "gmos": "effects_5_art",
+      "fiche": "effects.5.art"
+    },
+    {
+      "gmos": "effects_5_summary",
+      "fiche": "effects.5.summary"
+    },
+    {
+      "gmos": "effects_5_page",
+      "fiche": "effects.5.page"
+    },
+    {
+      "gmos": "effects_6_name",
+      "fiche": "effects.6.name"
+    },
+    {
+      "gmos": "effects_6_art",
+      "fiche": "effects.6.art"
+    },
+    {
+      "gmos": "effects_6_summary",
+      "fiche": "effects.6.summary"
+    },
+    {
+      "gmos": "effects_6_page",
+      "fiche": "effects.6.page"
+    },
+    {
+      "gmos": "effects_7_name",
+      "fiche": "effects.7.name"
+    },
+    {
+      "gmos": "effects_7_art",
+      "fiche": "effects.7.art"
+    },
+    {
+      "gmos": "effects_7_summary",
+      "fiche": "effects.7.summary"
+    },
+    {
+      "gmos": "effects_7_page",
+      "fiche": "effects.7.page"
+    },
+    {
+      "gmos": "effects_8_name",
+      "fiche": "effects.8.name"
+    },
+    {
+      "gmos": "effects_8_art",
+      "fiche": "effects.8.art"
+    },
+    {
+      "gmos": "effects_8_summary",
+      "fiche": "effects.8.summary"
+    },
+    {
+      "gmos": "effects_8_page",
+      "fiche": "effects.8.page"
+    },
+    {
+      "gmos": "effects_9_name",
+      "fiche": "effects.9.name"
+    },
+    {
+      "gmos": "effects_9_art",
+      "fiche": "effects.9.art"
+    },
+    {
+      "gmos": "effects_9_summary",
+      "fiche": "effects.9.summary"
+    },
+    {
+      "gmos": "effects_9_page",
+      "fiche": "effects.9.page"
+    },
+    {
+      "gmos": "effects_10_name",
+      "fiche": "effects.10.name"
+    },
+    {
+      "gmos": "effects_10_art",
+      "fiche": "effects.10.art"
+    },
+    {
+      "gmos": "effects_10_summary",
+      "fiche": "effects.10.summary"
+    },
+    {
+      "gmos": "effects_10_page",
+      "fiche": "effects.10.page"
+    },
+    {
+      "gmos": "effects_11_name",
+      "fiche": "effects.11.name"
+    },
+    {
+      "gmos": "effects_11_art",
+      "fiche": "effects.11.art"
+    },
+    {
+      "gmos": "effects_11_summary",
+      "fiche": "effects.11.summary"
+    },
+    {
+      "gmos": "effects_11_page",
+      "fiche": "effects.11.page"
+    },
+    {
+      "gmos": "effects_12_name",
+      "fiche": "effects.12.name"
+    },
+    {
+      "gmos": "effects_12_art",
+      "fiche": "effects.12.art"
+    },
+    {
+      "gmos": "effects_12_summary",
+      "fiche": "effects.12.summary"
+    },
+    {
+      "gmos": "effects_12_page",
+      "fiche": "effects.12.page"
+    },
+    {
+      "gmos": "effects_13_name",
+      "fiche": "effects.13.name"
+    },
+    {
+      "gmos": "effects_13_art",
+      "fiche": "effects.13.art"
+    },
+    {
+      "gmos": "effects_13_summary",
+      "fiche": "effects.13.summary"
+    },
+    {
+      "gmos": "effects_13_page",
+      "fiche": "effects.13.page"
+    },
+    {
+      "gmos": "effects_14_name",
+      "fiche": "effects.14.name"
+    },
+    {
+      "gmos": "effects_14_art",
+      "fiche": "effects.14.art"
+    },
+    {
+      "gmos": "effects_14_summary",
+      "fiche": "effects.14.summary"
+    },
+    {
+      "gmos": "effects_14_page",
+      "fiche": "effects.14.page"
+    },
+    {
+      "gmos": "effects_15_name",
+      "fiche": "effects.15.name"
+    },
+    {
+      "gmos": "effects_15_art",
+      "fiche": "effects.15.art"
+    },
+    {
+      "gmos": "effects_15_summary",
+      "fiche": "effects.15.summary"
+    },
+    {
+      "gmos": "effects_15_page",
+      "fiche": "effects.15.page"
+    },
+    {
+      "gmos": "effects_16_name",
+      "fiche": "effects.16.name"
+    },
+    {
+      "gmos": "effects_16_art",
+      "fiche": "effects.16.art"
+    },
+    {
+      "gmos": "effects_16_summary",
+      "fiche": "effects.16.summary"
+    },
+    {
+      "gmos": "effects_16_page",
+      "fiche": "effects.16.page"
+    },
+    {
+      "gmos": "effects_17_name",
+      "fiche": "effects.17.name"
+    },
+    {
+      "gmos": "effects_17_art",
+      "fiche": "effects.17.art"
+    },
+    {
+      "gmos": "effects_17_summary",
+      "fiche": "effects.17.summary"
+    },
+    {
+      "gmos": "effects_17_page",
+      "fiche": "effects.17.page"
+    },
+    {
+      "gmos": "effects_18_name",
+      "fiche": "effects.18.name"
+    },
+    {
+      "gmos": "effects_18_art",
+      "fiche": "effects.18.art"
+    },
+    {
+      "gmos": "effects_18_summary",
+      "fiche": "effects.18.summary"
+    },
+    {
+      "gmos": "effects_18_page",
+      "fiche": "effects.18.page"
+    },
+    {
+      "gmos": "effects_19_name",
+      "fiche": "effects.19.name"
+    },
+    {
+      "gmos": "effects_19_art",
+      "fiche": "effects.19.art"
+    },
+    {
+      "gmos": "effects_19_summary",
+      "fiche": "effects.19.summary"
+    },
+    {
+      "gmos": "effects_19_page",
+      "fiche": "effects.19.page"
+    },
+    {
+      "gmos": "effects_20_name",
+      "fiche": "effects.20.name"
+    },
+    {
+      "gmos": "effects_20_art",
+      "fiche": "effects.20.art"
+    },
+    {
+      "gmos": "effects_20_summary",
+      "fiche": "effects.20.summary"
+    },
+    {
+      "gmos": "effects_20_page",
+      "fiche": "effects.20.page"
+    },
+    {
+      "gmos": "effects_21_name",
+      "fiche": "effects.21.name"
+    },
+    {
+      "gmos": "effects_21_art",
+      "fiche": "effects.21.art"
+    },
+    {
+      "gmos": "effects_21_summary",
+      "fiche": "effects.21.summary"
+    },
+    {
+      "gmos": "effects_21_page",
+      "fiche": "effects.21.page"
+    },
+    {
+      "gmos": "effects_22_name",
+      "fiche": "effects.22.name"
+    },
+    {
+      "gmos": "effects_22_art",
+      "fiche": "effects.22.art"
+    },
+    {
+      "gmos": "effects_22_summary",
+      "fiche": "effects.22.summary"
+    },
+    {
+      "gmos": "effects_22_page",
+      "fiche": "effects.22.page"
+    },
+    {
+      "gmos": "effects_23_name",
+      "fiche": "effects.23.name"
+    },
+    {
+      "gmos": "effects_23_art",
+      "fiche": "effects.23.art"
+    },
+    {
+      "gmos": "effects_23_summary",
+      "fiche": "effects.23.summary"
+    },
+    {
+      "gmos": "effects_23_page",
+      "fiche": "effects.23.page"
+    },
+    {
+      "gmos": "simulacrum_age",
+      "fiche": "simulacrum.age"
+    },
+    {
+      "gmos": "simulacrum_gender",
+      "fiche": "simulacrum.gender"
+    },
+    {
+      "gmos": "simulacrum_resources",
+      "fiche": "simulacrum.resources"
+    },
+    {
+      "gmos": "simulacrum_description",
+      "fiche": "simulacrum.description"
+    },
+    {
+      "gmos": "simulacrum_relatives",
+      "fiche": "simulacrum.relatives"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "simulacrum.detail.ka",
+      "pourquoi": "Report de la page 1 : la valeur vit dans « Ka-Soleil du simulacre »."
+    },
+    {
+      "fiche": "simulacrum.detail.name",
+      "pourquoi": "Report de la page 1 : la valeur vit dans « Nom du simulacre »."
+    },
+    {
+      "fiche": "simulacrum.detail.experience",
+      "pourquoi": "Report de la page 1 : la valeur vit dans « Vécu du simulacre »."
+    },
+    {
+      "fiche": "simulacrum.detail.degree",
+      "pourquoi": "Report de la page 1 : la valeur vit dans « Degré de vécu du simulacre »."
+    },
+    {
+      "fiche": "simulacrum.portrait",
+      "pourquoi": "Une image : elle reste sur la fiche, GM-OS a son propre portrait du personnage."
+    }
+  ]
+}

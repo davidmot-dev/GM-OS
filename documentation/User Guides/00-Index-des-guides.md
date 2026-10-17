@@ -83,7 +83,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | [Cohésion Combat-OS ↔ Forge](./32-Combat-OS-et-la-Forge.md) | Comment le pilote d'un jeu décide du comportement du combat. |
 | [Moteur de calcul des fiches](./51-Formules-de-fiche.md) | Automatiser un score dérivé sur une fiche. |
 | [Partager règles et lore](./52-Partager-une-regle.md) | Envoyer un extrait de règle aux joueurs en pleine partie. |
-| ⭐ [**Les jeux et leurs mécaniques**](./53-Les-jeux-et-leurs-mecaniques.md) | Ce que chaque jeu change à l'écran — réserves de table, jet, fiche du groupe, ordre du tour —, une mécanique expliquée une fois, et **une page par jeu** : [NOC](./54-Jeu-NOC.md), [Dune](./54-Jeu-Dune.md), [Star Trek](./54-Jeu-Star-Trek.md), [Alien](./54-Jeu-Alien.md), [Blade Runner](./54-Jeu-Blade-Runner.md), [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md), [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md), [Torg](./54-Jeu-Torg.md). |
+| ⭐ [**Les jeux et leurs mécaniques**](./53-Les-jeux-et-leurs-mecaniques.md) | Ce que chaque jeu change à l'écran — réserves de table, jet, fiche du groupe, ordre du tour —, une mécanique expliquée une fois, et **une page par jeu** : [NOC](./54-Jeu-NOC.md), [Dune](./54-Jeu-Dune.md), [Star Trek](./54-Jeu-Star-Trek.md), [Alien](./54-Jeu-Alien.md), [Blade Runner](./54-Jeu-Blade-Runner.md), [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md), [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md), [Torg](./54-Jeu-Torg.md), [Nephilim](./54-Jeu-Nephilim.md). |
 
 ## 📱 Les tablettes
 

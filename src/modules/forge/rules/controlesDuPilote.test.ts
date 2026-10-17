@@ -566,6 +566,51 @@ describe('ce qui ne se raccorde à rien est nommé', () => {
         ]);
     });
 
+    it('Nephilim (2026-10-17) : un plafond en texte, un maxSur dans le vide ou sur soi-même', () => {
+        const constats = controlerLePilote(
+            {
+                ressourcesDeTable: [
+                    { id: 'traque', label: 'Jauge de Traque', proprietaire: 'joueurs', depart: 0, min: 0, max: 'Seuil RK' as unknown as number },
+                    { id: 'a', label: 'A', proprietaire: 'meneur', depart: 0, min: 0, maxSur: 'absente' },
+                    { id: 'b', label: 'B', proprietaire: 'meneur', depart: 0, min: 0, maxSur: 'b' },
+                ],
+            } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats.map(c => [c.ou, c.gravite])).toEqual([
+            ['ressourcesDeTable[0].max', 'erreur'],
+            ['ressourcesDeTable[1].maxSur', 'erreur'],
+            ['ressourcesDeTable[2].maxSur', 'erreur'],
+        ]);
+    });
+
+    it('Nephilim : la Traque au Seuil RK, qui déborde en Intensité, passe — le débordement a son seuil', () => {
+        const constats = controlerLePilote(
+            {
+                ressourcesDeTable: [
+                    { id: 'seuilRK', label: 'Seuil RK', proprietaire: 'meneur', depart: 5, min: 2, max: 9 },
+                    { id: 'traque', label: 'Jauge de Traque', proprietaire: 'joueurs', depart: 0, min: 0, maxSur: 'seuilRK', debordement: { vers: 'intensite' } },
+                    { id: 'intensite', label: 'Intensité', proprietaire: 'meneur', depart: 1, min: 1, max: 5 },
+                ],
+            } as Partial<GameDriver>,
+            fiche,
+        );
+        expect(constats).toEqual([]);
+    });
+
+    it('Nephilim : un nom de Vécu pris sur un champ absent de la section', () => {
+        const constats = controlerLePilote({} as Partial<GameDriver>, {
+            sections: [{ id: 'vecus', label: 'Vécus', fields: [
+                { id: 'vecu.0.name', label: 'Vécu 1', type: 'text', defaultValue: '' },
+                { id: 'vecu.0.degree', label: 'Degré 1', type: 'number', defaultValue: 0, libelleSur: 'vecu.0.name' },
+                { id: 'vecu.1.degree', label: 'Degré 2', type: 'number', defaultValue: 0, libelleSur: 'vecu.1.name' },
+            ] }],
+        });
+        expect(constats.map(c => [c.ou, c.gravite])).toEqual([
+            ['template.sections[vecus].fields[vecu.1.degree].libelleSur', 'erreur'],
+        ]);
+    });
+
     it('le Fiel et la Menace de NOC, déclarés juste, passent', () => {
         const constats = controlerLePilote(
             {

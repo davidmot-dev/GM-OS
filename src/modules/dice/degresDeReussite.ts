@@ -87,6 +87,35 @@ export interface EchelleDuJet {
     significative: number | null;
     echecParticulier: number | null;
     echecTotal: number | null;
+    /**
+     * **Les doubles décident** — Nephilim Légende, 2026-10-17 (corpus,
+     * « Résolution des jets ») : *« un double sur les dés (11, 22, 33…)
+     * inférieur ou égal à la valeur cible constitue une réussite critique ; un
+     * double au-dessus de la valeur cible ou un jet naturel de 00 constitue une
+     * maladresse. »* Les bornes de bande sont alors ignorées : réussite
+     * critique → `reussite-particuliere`, maladresse → `echec-total`.
+     */
+    doubles?: boolean;
+    /**
+     * **La marge de réussite se lit sur le dé des dizaines** (Nephilim), plus ce
+     * nombre — les degrés de la cible au-delà de dix. Présent, le résultat d'une
+     * réussite dit sa marge (`margeDuJet`).
+     */
+    bonusDeMarge?: number;
+}
+
+/** 11, 22… 99 : les deux chiffres du d100 sont égaux. Le « 00 » se lit à part. */
+const estUnDouble = (de: number) => de > 0 && de < 100 && de % 11 === 0;
+
+/**
+ * La marge d'une réussite, quand l'échelle la déclare (`bonusDeMarge`) : le
+ * chiffre des dizaines, plus les degrés au-delà de dix. `null` pour un échec,
+ * ou une échelle qui ne la lit pas.
+ */
+export function margeDuJet(de: number, echelle: EchelleDuJet | undefined, facesDuDe = 100): number | null {
+    if (!echelle || echelle.bonusDeMarge === undefined) return null;
+    if (!estUneReussite(degreDuDe(de, echelle, facesDuDe))) return null;
+    return Math.floor((de % 100) / 10) + Math.max(0, echelle.bonusDeMarge);
 }
 
 /**
@@ -110,6 +139,12 @@ export function degreDuDe(de: number, echelle: EchelleDuJet, facesDuDe = 100): D
       disent la même chose en toutes lettres.
     */
     const cestUnDoubleZero = de >= facesDuDe;
+
+    if (echelle.doubles) {
+        if (cestUnDoubleZero) return 'echec-total';
+        if (de <= chances) return estUnDouble(de) ? 'reussite-particuliere' : 'reussite-normale';
+        return estUnDouble(de) ? 'echec-total' : 'echec-normal';
+    }
 
     if (!cestUnDoubleZero && de <= chances) {
         if (particuliere !== null && de <= particuliere) return 'reussite-particuliere';

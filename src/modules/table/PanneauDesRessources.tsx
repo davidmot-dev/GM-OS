@@ -5,7 +5,7 @@ import { gmConfirm, gmCustom } from '../../stores/useModalStore';
 import { useRessourcesDeTableStore } from './useRessourcesDeTableStore';
 import { useSessionOSStore } from '../session/useSessionOSStore';
 import {
-    visiblePourUnJoueur, manipulableParUnJoueur,
+    visiblePourUnJoueur, manipulableParUnJoueur, plafondDe,
     type RessourceDeTable, type ResultatDeMouvement,
 } from './RessourcesDeTable';
 import type { GestesDesHeros, MouvementDeFiche } from '../../types/drivers';
@@ -145,7 +145,9 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
         <div data-bandeau-des-reserves className={`flex items-center border-b border-app-border/20 bg-app-bg/40 ${pourLesJoueurs ? 'flex-wrap gap-3 p-3' : 'gap-6 px-6 py-2'}`}>
             {montrees.map(r => {
                 const valeur = etat[r.id] ?? r.depart;
-                const auPlafond = r.max !== undefined && valeur >= r.max;
+                // Le plafond peut être la valeur d'une autre réserve : le Seuil RK de Nephilim.
+                const max = plafondDe(ressources, etat, r);
+                const auPlafond = max !== undefined && valeur >= max;
                 const manipulable = !pourLesJoueurs || manipulableParUnJoueur(r);
 
                 return (
@@ -177,9 +179,9 @@ const PanneauDesRessources: React.FC<PanneauDesRessourcesProps> = ({
                             une réserve sans plafond ne le peut pas — la Menace n'a
                             pas de maximum, et six carrés lui en inventeraient un.
                         */}
-                        {r.max !== undefined ? (
+                        {max !== undefined ? (
                             <div className={`flex items-center gap-1 ${pourLesJoueurs ? 'flex-wrap' : ''}`}>
-                                {Array.from({ length: r.max }, (_, i) => (
+                                {Array.from({ length: Math.max(0, max) }, (_, i) => (
                                     <span
                                         key={i}
                                         className={`w-2.5 h-4 rounded-sm border ${

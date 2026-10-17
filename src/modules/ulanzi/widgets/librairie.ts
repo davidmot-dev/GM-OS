@@ -8,7 +8,7 @@ import { composerCompteARebours } from './compteARebours';
 import { composerMinuteur, ilYAUnMinuteur, type MinuteurAAfficher } from './minuteur';
 import { composerLHeure, type TempsAAfficher } from './heureDuMonde';
 import { composerJaugeDeTable, type ReserveAAfficher } from './jaugeDeTable';
-import { visiblePourUnJoueur, type RessourceDeTable } from '../../table/RessourcesDeTable';
+import { plafondDe, visiblePourUnJoueur, type RessourceDeTable } from '../../table/RessourcesDeTable';
 import { composerVoightKampff, SIGNAL_INITIAL, type EtatDuSignal } from './voightKampff';
 import type { ChargeDeWidget } from '../UlanziService';
 import { mentionDeLaFete } from '../../clock/logic/formeDuCalendrier';
@@ -660,7 +660,8 @@ export function reservesPourLaTable(
             nom: r.label,
             valeur: valeurs?.[r.id] ?? r.depart,
             min: r.min,
-            max: r.max,
+            // Le Seuil RK de Nephilim : un plafond lu sur une autre réserve.
+            max: plafondDe([...(declarees ?? [])], valeurs ?? {}, r),
         }));
 }
 

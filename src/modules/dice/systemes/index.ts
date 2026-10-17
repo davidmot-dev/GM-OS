@@ -17,6 +17,7 @@
 
 import type { EchelleDuJet } from '../degresDeReussite';
 import { bandesDuJet, expliquerLesChances } from './revesDeDragons';
+import { cibleDeNephilim } from './nephilim';
 
 /** Ce qu'une mécanique de cible rend, quelle que soit sa table. */
 export interface CibleCalculee {
@@ -50,7 +51,7 @@ export interface CibleCalculee {
  * *Une chaîne libre laisserait passer une faute de frappe jusqu'en séance, où
  * elle se lirait comme un jet raté.*
  */
-export type NomDeMecanique = 'reves-de-dragons';
+export type NomDeMecanique = 'reves-de-dragons' | 'nephilim';
 
 export const MECANIQUES_DE_CIBLE: Readonly<Record<
     NomDeMecanique,
@@ -64,5 +65,10 @@ export const MECANIQUES_DE_CIBLE: Readonly<Record<
             remarques: bandes.remarques,
             echelle: bandes,
         };
+    },
+    // Nephilim Légende (2026-10-17) : (Vécu + Ka ± circonstances) × 10, doubles décisifs.
+    nephilim: (vecu, ajustement) => {
+        const c = cibleDeNephilim(vecu, ajustement);
+        return { chances: c.chances, explication: c.explication, remarques: c.remarques, echelle: c.echelle };
     },
 };

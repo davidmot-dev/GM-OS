@@ -1,0 +1,53 @@
+/* Nephilim Legende — contrat GM-OS v1.7.
+   Ivoire, encre et or patine ; cadre bleu petrole des pages de chapitre.
+   Polices libres d'approche, sans extraction des fontes incorporees aux PDF. */
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Grenze+Gotisch:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+:root[data-theme="nephilim"] {
+  color-scheme: light;
+
+  --rpg-bg: #e8e2ce;
+  --rpg-surface: #f8f2e1;
+  --rpg-surface-2: #ded9c4;
+  --rpg-text: #242b2a;
+  --rpg-muted: #555e57;
+  --rpg-accent: #71572a;
+  --rpg-accent-contrast: #fff9e9;
+  --rpg-border: #a08a60;
+  --rpg-border-soft: rgba(100, 83, 49, 0.26);
+
+  --rpg-success: #32665b;
+  --rpg-danger: #b5294b;
+  --rpg-warning: #a24e05;
+  --rpg-info: #245d9b;
+
+  --rpg-font-display: "Grenze Gotisch", Georgia, serif;
+  --rpg-font-body: "EB Garamond", Georgia, serif;
+  --rpg-font-mono: "Roboto Mono", Consolas, monospace;
+  --rpg-title-tracking: 0.035em;
+  --rpg-kicker-tracking: 0.12em;
+  --rpg-title-transform: none;
+
+  --rpg-radius-sm: 1px;
+  --rpg-radius-md: 2px;
+  --rpg-radius-lg: 3px;
+  --rpg-border-width: 1px;
+  --rpg-border-style: solid;
+
+  --rpg-elevation-1: 0 2px 5px rgba(39, 36, 26, 0.10);
+  --rpg-elevation-2: 0 8px 25px rgba(39, 36, 26, 0.17);
+  --rpg-elevation-3: 0 18px 48px rgba(18, 39, 46, 0.24);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(248, 242, 225, 0.95);
+  --rpg-glass-border: rgba(113, 87, 42, 0.38);
+  --rpg-glass-blur: 0px;
+
+  --rpg-frame-bg: #122e3a;
+  --rpg-frame-text: #f4ecd5;
+  --rpg-frame-accent: #ddbc76;
+
+  --rpg-texture-bg: url('matieres/velin.svg');
+  --rpg-texture-panel: url('matieres/velin.svg');
+  --rpg-texture-opacity: 0.055;
+}

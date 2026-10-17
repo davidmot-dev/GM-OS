@@ -1,0 +1,14 @@
+{
+  "tableau-de-bord": "icones/pentacle.svg",
+  "journal": "icones/journal.svg",
+  "forge": "icones/alambic.svg",
+  "nexus": "icones/arbre.svg",
+  "cortex": "icones/memoire.svg",
+  "combat": "icones/combat.svg",
+  "des": "icones/des.svg",
+  "indice": "icones/indice.svg",
+  "horloge": "icones/horloge.svg",
+  "sante": "icones/sante.svg",
+  "lieu": "icones/lieu.svg",
+  "oracle": "icones/oracle.svg"
+}

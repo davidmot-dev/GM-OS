@@ -11,6 +11,14 @@ export interface SheetField {
     formula?: string;   // Used for 'formula' type
     options?: string[]; // Used for 'select' type
     max?: number;       // Used for 'rating' or 'gauge' absolute maximum
+    /**
+     * **Le nom de ce champ est écrit sur la fiche** — Nephilim, 2026-10-17. Les
+     * Vécus sont des lignes libres : « Médecin » à 4, « Templier » à 6. Le
+     * degré est ce champ ; son nom, celui qu'on désigne ici. Le menu du jet
+     * propose alors « Médecin (4) » au lieu de « Degré du vécu passé 1 (4) »,
+     * et n'offre pas le champ du nom lui-même, qui n'est pas une valeur.
+     */
+    libelleSur?: string;
 }
 
 export interface SheetSection {

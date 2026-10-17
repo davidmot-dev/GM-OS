@@ -119,6 +119,20 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeBladeRunner(c),
     },
     {
+        // Nephilim Légende (2026-10-17) : le Vécu passé « Templier » 4 avec l'approche du Feu 5 → 90 %.
+        corpusId: 'nephilim', slug: 'nephilim', personnage: 'Aurore Delisle',
+        sheetData: {
+            identity_name: 'Aurore Delisle', identity_metamorph: 'Ailes de braise', identity_metamorph_degree: 3,
+            ka_fire: 5, ka_air: 3, ka_water: 4, ka_earth: 6, ka_moon: 2,
+            simulacrum_name: 'Claire Moreau', simulacrum_ka: 3, simulacrum_experience: 'Infirmière', simulacrum_experience_degree: 5,
+            pastlives_0_name: 'Templier', pastlives_0_degree: 4, pastlives_1_name: 'Alchimiste de Prague', pastlives_1_degree: 3,
+            falls_khaiba: 2, falls_shadow: 1, falls_narcosis: 0, resources_sapience: 7, stasis_degree: 3,
+        },
+        composantes: ['pastlives_0_degree', 'ka_fire'],
+        reserves: { seuilRK: 4, jaugeDeTraque: 3, intensiteDeTraque: 2 },
+        casesCochees: 4,
+    },
+    {
         corpusId: 'cthulhu hack', slug: 'cthulhu-hack', personnage: 'Edith Marsh',
         sheetData: { force: 13, sagesse: 15, hp: 9, torche: 'd8', bagou: 'd6', mentalHealth: 'd10', richesse: 'd4', fortune: 0, materiel_1_nom: 'Lampe-torche', materiel_1: 'd8' },
         composantes: ['sagesse'],

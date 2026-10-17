@@ -372,7 +372,8 @@ const EditeurDuJet: React.FC<EditeurDuJetProps> = ({ driver, gabarit, onUpdate }
                     <p className="text-ui-11 text-app-text/40 italic px-1 mt-1 leading-relaxed">
                         Chez Rêves de Dragons la compétence ne s’ajoute pas au pourcentage : elle déplace
                         la colonne, donc elle multiplie — Agilité 12 avec +3 vaut 78 % et non 15.
-                        Laisse « aucune » si les valeurs de la fiche s’additionnent.
+                        Chez Nephilim, les degrés du Vécu et du Ka s’additionnent puis se multiplient
+                        par dix. Laisse « aucune » si les valeurs de la fiche s’additionnent.
                     </p>
                 </div>
                 <select

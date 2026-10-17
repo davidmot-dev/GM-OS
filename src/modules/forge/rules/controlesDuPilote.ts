@@ -306,6 +306,14 @@ export function controlerLePilote(
                     `« ${champ.type} » n'est pas un type de champ connu (${TYPES_DE_CHAMP.join(', ')}).`,
                 );
             }
+            // Le nom d'un Vécu (Nephilim) : écrit dans un autre champ, de la même section.
+            if (champ.libelleSur !== undefined && !(section.fields ?? []).some(f => f.id === champ.libelleSur)) {
+                erreur(
+                    `template.sections[${section.id}].fields[${champ.id}].libelleSur`,
+                    `« ${champ.label} » prend son nom sur « ${champ.libelleSur} », qui n'est pas un champ de la même section : `
+                    + 'le menu du jet ne le proposerait jamais.',
+                );
+            }
         }
     }
 
@@ -1560,6 +1568,27 @@ export function controlerLePilote(
             );
         }
 
+        /*
+          **Un plafond est un nombre** (Nephilim, 2026-10-17) : le pilote livré
+          portait `max: "Seuil RK"`. Comparé à un nombre, un texte rend toujours
+          faux — la jauge n'aurait jamais débordé, sans un mot.
+        */
+        if (ressource.max !== undefined && !(typeof ressource.max === 'number' && Number.isFinite(ressource.max))) {
+            erreur(
+                `ressourcesDeTable[${i}].max`,
+                `Le plafond de « ${ressource.label} » vaut « ${String(ressource.max)} », qui n'est pas un nombre. `
+                + "Un plafond qui dépend d'une autre réserve se déclare par « maxSur ».",
+            );
+        }
+        // Le plafond lu sur une autre réserve — la Traque de Nephilim, au Seuil RK du lieu.
+        if (ressource.maxSur !== undefined) {
+            if (ressource.maxSur === ressource.id) {
+                erreur(`ressourcesDeTable[${i}].maxSur`, `« ${ressource.label} » prend son plafond sur elle-même.`);
+            } else if (!ressources.has(ressource.maxSur)) {
+                erreur(`ressourcesDeTable[${i}].maxSur`, `« ${ressource.label} » prend son plafond sur « ${ressource.maxSur} », qui n'est pas une réserve de table du jeu.`);
+            }
+        }
+
         // Le débordement — le Fiel de NOC qui, à cinq, se vide en Menace.
         const debordement = ressource.debordement;
         if (debordement) {
@@ -1569,7 +1598,7 @@ export function controlerLePilote(
             } else if (debordement.vers === ressource.id) {
                 erreur(ou, `« ${ressource.label} » déborde dans elle-même.`);
             }
-            if (ressource.max === undefined || ressource.max <= ressource.min) {
+            if (!ressource.maxSur && (ressource.max === undefined || ressource.max <= ressource.min)) {
                 // Ignoré à l'exécution, pas refusé : la réserve plafonne simplement.
                 avertir(
                     ou,

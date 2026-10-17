@@ -39,6 +39,13 @@ export interface RessourceDeTable {
      * aurait rendu les deux cas indistinguables.
      */
     max?: number;
+    /**
+     * **Le plafond est la valeur d'une autre réserve** — Nephilim, 2026-10-17 :
+     * la Jauge de Traque plafonne au **Seuil RK** du lieu, de 2 à 9, que le
+     * meneur change en changeant de lieu. Présent, il l'emporte sur `max` ;
+     * lu par `plafondDe`, seule lecture du plafond.
+     */
+    maxSur?: string;
     /** Ce que la réserve perd à la fin de chaque scène. L'Impulsion : un point. */
     erosionFinDeScene?: number;
     /**
@@ -185,6 +192,22 @@ export function valeurDe(
     return ressources.find(r => r.id === id)?.depart ?? 0;
 }
 
+/**
+ * **Le plafond d'une réserve**, `max` ou la valeur de la réserve `maxSur`. Une
+ * réserve désignée qui n'existe pas laisse `max` : un pilote mal écrit ne doit
+ * pas faire disparaître un plafond (la Forge le signale).
+ */
+export function plafondDe(
+    ressources: RessourceDeTable[],
+    etat: EtatDesRessources,
+    ressource: RessourceDeTable,
+): number | undefined {
+    if (ressource.maxSur && ressource.maxSur !== ressource.id && ressources.some(r => r.id === ressource.maxSur)) {
+        return valeurDe(ressources, etat, ressource.maxSur);
+    }
+    return ressource.max;
+}
+
 /** Comment une dépense se répartit — **sans rien appliquer**. */
 export interface VentilationDeDepense {
     /** Ce que la réserve elle-même peut payer. */
@@ -322,7 +345,8 @@ function gagnerEnCascade(
 
     const avant = valeurDe(ressources, etat, id);
 
-    const { debordement, max } = ressource;
+    const { debordement } = ressource;
+    const max = plafondDe(ressources, etat, ressource);
     if (debordement && max !== undefined && max > ressource.min && !traversees.includes(id)) {
         // Goutte à goutte : chaque fois que la jauge touche son seuil, elle se
         // vide, et ce qui reste du gain continue de la remplir.
@@ -361,14 +385,14 @@ function gagnerEnCascade(
         };
     }
 
-    const apres = ressource.max === undefined ? avant + demande : Math.min(ressource.max, avant + demande);
+    const apres = max === undefined ? avant + demande : Math.min(max, avant + demande);
     const gagne = apres - avant;
     const perdu = demande - gagne;
 
     const avertissements: string[] = [];
     if (perdu > 0) {
         avertissements.push(
-            `${ressource.label} plafonne à ${ressource.max} : ${perdu} point${perdu > 1 ? 's' : ''} perdu${perdu > 1 ? 's' : ''}.`,
+            `${ressource.label} plafonne à ${max} : ${perdu} point${perdu > 1 ? 's' : ''} perdu${perdu > 1 ? 's' : ''}.`,
         );
     }
 
@@ -397,7 +421,8 @@ export function fixer(
         };
     }
     const avant = valeurDe(ressources, etat, id);
-    const borne = Math.max(ressource.min, ressource.max === undefined ? valeur : Math.min(ressource.max, valeur));
+    const plafond = plafondDe(ressources, etat, ressource);
+    const borne = Math.max(ressource.min, plafond === undefined ? valeur : Math.min(plafond, valeur));
     return {
         etat: { ...etat, [id]: borne },
         mouvements: borne === avant ? [] : [{ ressourceId: id, delta: borne - avant }],

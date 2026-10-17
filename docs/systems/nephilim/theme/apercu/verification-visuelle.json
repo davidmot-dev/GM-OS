@@ -1,0 +1,10 @@
+{
+  "polices": {
+    "titre": true,
+    "corps": true,
+    "mono": true
+  },
+  "largeur": 1360,
+  "controle390": "sans debordement",
+  "portee": "planche de jetons, hors application"
+}

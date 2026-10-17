@@ -1,0 +1,262 @@
+# Table des matières — Nephilim v5 - Livre 0 - Nephilim Quintessence
+
+- Partie I — Découvrir Nephilim — 3
+- Nephilim en une phrase — 5
+- Nephilim en quelques mots — 6
+- Nephilim en un paragraphe — 7
+- Nephilim en une page — 8
+- Le contexte de Nephilim Légende — 9
+- Nephilim en dix mots — 12
+- Pour aller plus loin — 14
+- Aperçu du système de jeu — 18
+- Un peu d’histoire éditoriale — 20
+- Comment utiliser cette édition ? — 23
+- Partie II — Incarner un Nephilim — 31
+- La Nature des Nephilim — 32
+- Le Ka — 32
+- La vision-Ka — 32
+- L’incarnation — 32
+- Les Sciences occultes — 32
+- Créer un Nephilim — 33
+- Synopsis de création de personnage — 34
+- Étape 1 Ka dominant — 35
+- Table des oppositions élémentaires — 35
+- Comment lire le Pentacle ? — 35
+- Étape 2 Ka neutres et opposés et Métamorphe — 35
+- Le Pentacle — 36
+- Ka dominant — 36
+- Les Ka-éléments — 36
+- Métamorphes & métamorphoses — 37
+- Le Djinn — 38
+- Le Phénix — 39
+- Le Sylphe — 40
+- L’Ange — 41
+- Le Triton — 42
+- L’Ondine — 43
+- L’Elfe — 44
+- Le Satyre — 45
+- L’Ophidien — 46
+- Le Serpent — 47
+- Étape 3 Profil de Nephilim — 48
+- Les incarnations passées — 49
+- Étape 4 choix des époques d’incarnation et dépense de PI — 49
+- Les Ères — 49
+- Les Vécus passés — 50
+- Métamorphes — 50
+- Remise en stase — 50
+- Les Quêtes ésotériques — 52
+- Les Arcanes Majeurs — 54
+- Les Sciences occultes et les sorts — 56
+- Savoirs ésotériques — 58
+- Les fraternités — 60
+- Les époques d’incarnation — 61
+- Le Sentier d’or — 61
+- Les Guerres élémentaires — 63
+- Les Compacts secrets — 69
+- L’Hermétisme — 75
+- Les guerres secrètes — 81
+- Les nouveaux mondes — 87
+- Le grand réveil — 93
+- Étape 5 Complétez votre Nephilim — 100
+- Les Sciences occultes — 100
+- La stase — 100
+- Les Chutes — 100
+- Les Simulacres — 100
+- Les Attributs — 103
+- Votre Nephilim en une phrase — 103
+- Conversion des Points d’Incarnation — 103
+- Exemple de création d’un Nephilim — 104
+- Premiers pas en Arcadia — 106
+- Partie III — Jouer à Nephilim — 109
+- Le Ka et les Ka-éléments — 111
+- Le Pentacle — 110
+- La vision-Ka — 112
+- Énochéen — 112
+- Métamorphes — 112
+- La stase — 113
+- Les vécus — 114
+- Vécus passés — 114
+- Vécus contemporains — 115
+- Le Simulacre et les humains — 116
+- Jouer les humains — 117
+- Les Effets Mnémos — 118
+- En tant que Vécu — 118
+- En tant que bonus — 119
+- Les actions — 120
+- Situation et contexte — 120
+- Les actions des Nephilim — 120
+- L’approche — 120
+- La résolution de l’action — 122
+- Échec et maladresse — 122
+- Deuxième chance — 122
+- Qualité des actions et marge de réussite — 122
+- Les actions de combat — 123
+- Les actions des humains — 123
+- Les actions opposées — 123
+- Les situations de combat — 124
+- Le round — 125
+- L’ordre des actions — 125
+- Initiative — 125
+- Type de combat — 126
+- Combat de mêlée — 126
+- Combat à distance — 126
+- Table des actions de combat communes — 127
+- Table des attaques en combat de mêlée — 128
+- Table des bonus et malus en combat de mêlée — 128
+- Table des défenses en combat de mêlée — 129
+- Table des attaques en combat à distance — 130
+- Table des bonus et malus en combat à distance — 131
+- Table des bonus et malus aux tirs par arme à feu — 131
+- Table des dommages des armes à feu — 132
+- Table des dommage des armes courantes — 132
+- Table des armes à feu — 133
+- Table des armes non létales — 133
+- Table des armures et protection — 133
+- Le combat simplifié — 134
+- La santé et les dommages — 135
+- Détermination des dommages — 136
+- Absorption des dommages — 136
+- L’orichalque — 137
+- Soins et guérison — 138
+- L’effet Jésus — 139
+- Les enquêtes occultes — 140
+- Tableau des degrés des pistes d’enquête occulte — 141
+- L’Effet Rosenkreutz — 144
+- Seuil RK — 145
+- Jauge de Traque — 145
+- La Traque — 146
+- Les Chutes — 148
+- Le Khaïba — 150
+- La Narcose — 151
+- L’Ombre — 151
+- Mise en jeu d’une Chute — 152
+- L’expérience — 154
+- Géographie magique — 158
+- Le Graal terrestre — 158
+- Conjonctions — 158
+- Éphémérides — 158
+- Plexus et Nexus — 159
+- L’Éïdos — 161
+- L’Hadès — 161
+- Les Royaumes Selenim — 161
+- Les Akasha — 161
+- Partie IIII — Pratiquer les Sciences Occultes — 169
+- Généralités — 170
+- Les Arts occultes — 173
+- Pratiquer un Art occulte — 174
+- Art occulte et Effets Rosenkreutz — 174
+- Sorts, invocations et formules — 174
+- Les focus — 175
+- Le rituel d’apprentissage — 177
+- Le rituel de tatouage — 177
+- Le rituel de résistance — 177
+- La Magie — 178
+- Principes généraux — 178
+- Les cercles — 180
+- Maîtrise de la Magie — 180
+- Les Voies initiatiques — 180
+- Les étapes labyrinthiques — 180
+- La voie du sentier sinueux — 181
+- La voie de la spirale d’élévation — 181
+- La voie des principes égarants — 182
+- La voie du labyrinthe schématique — 182
+- La voie du dédale de l’âme — 182
+- Pratiquer la Magie — 183
+- Le rituel de sortilège — 183
+- Le rituel de Focus — 183
+- Bonus de stase — 183
+- Sacrifice — 183
+- Les sorts — 184
+- Les sorts de Basse Magie — 184
+- Les sorts de Haute Magie — 186
+- La Kabbale — 192
+- Les mondes de Kabbale — 192
+- Les Sephiroth — 195
+- Cercles — 195
+- Degrés dans les Sephiroth — 194
+- Sephiroth et mondes de Kabbale — 195
+- Les fiefs — 196
+- L’Arbre de Kabbale — 196
+- Focus et apprentissage des invocations de Kabbale — 196
+- Apprentissage des invocations de Kabbale sans focus — 196
+- L’arbre de Kabbale — 197
+- Lancer une invocation de Kabbale — 198
+- Principes et ordonnances — 198
+- Les invocations — 202
+- Les invocation des sceaux — 203
+- Les invocation des Pentacles — 207
+- L’Alchimie — 214
+- Les Arts occultes de l’Alchimie — 216
+- Laboratoire et constructs — 216
+- Les voies — 218
+- Les Materiae Primae — 218
+- Les transmutations alchimiques — 220
+- Les substances alchimiques — 220
+- Les formules — 222
+- Les formules de l’Œuvre au noir — 222
+- Les formules de l’Œuvre au blanc — 228
+- Partie V — Maîtriser Nephilim — 235
+- Les Mystères — 236
+- Mythologie et histoire — 236
+- Symbolique — 238
+- Structure — 238
+- Pouvoirs et influence — 239
+- Buts et objectifs — 239
+- Comment jouer les Mystères — 240
+- Les Templiers — 242
+- Mythologie et histoire — 242
+- Symbolique — 244
+- Structure — 244
+- Pouvoirs et influence — 245
+- Buts et objectifs — 245
+- Comment jouer les Templiers — 245
+- Les Rose+Croix — 248
+- Mythologie et histoire — 248
+- Symbolique — 250
+- Structure — 250
+- Pouvoirs et influence — 251
+- Buts et objectifs — 251
+- Comment jouer les Rose+Croix — 251
+- La Synarchie — 252
+- Mythologie et histoire — 252
+- Symbolique — 254
+- Structure — 254
+- Pouvoirs et influence — 255
+- Buts et objectifs — 255
+- Comment jouer la Synarchie — 255
+- Les adversaires — 256
+- Le 666 — 256
+- Des agences gouvernementales — 257
+- Une partie de l’Église — 257
+- Des sectes — 257
+- Les corporations — 258
+- Les curieux malveillants — 258
+- Les médias — 258
+- Les médias sociaux — 258
+- Les familles de Simulacres — 259
+- Les organisations occultistes — 259
+- Les scientifiques zélés — 259
+- Figures et alliés — 260
+- Les Selenim — 262
+- Les Ar-Kaïm — 265
+- Les Bohémiens — 268
+- Les Cousins — 271
+- Les Wowakan — 271
+- Les Loas — 272
+- Les Shen — 272
+- Les Jukurrpa — 273
+- Les alliés initiés — 274
+- Secrets d’Arcadia — 278
+- Les secrets de l’Arcane XXI — 284
+- Les premiers secrets du Troisième cercle — 292
+- Pour finir, si l’on jouait la totale ! — 296
+- Partie VI — Annexes — 299
+- Liste de Materiae Primae — 300
+- Feuille de personnages — 301
+- Feuilles de Sciences occultes — 305
+- Synopsis de la création de personnage — 309
+- Étapes de la création de personnage — 310
+- Feuille Effet Rosenkreutz — 311
+- Le Tarot des Nephilim — 312
+- Table des matières — 314
+- Crédits des contributeurs — 317

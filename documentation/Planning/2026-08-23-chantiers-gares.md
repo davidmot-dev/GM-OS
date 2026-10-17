@@ -26,6 +26,29 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 
 ## ⭐ Le registre consolidé — 2026-08-31, **tenu à jour le 2026-09-11**
 
+> ✅ **17/10 — Nephilim Légende, nouveau pilote contrôlé, corrigé et éprouvé à l'écran (Claude
+> Code).** David a créé le pilote, son thème (RPG Theme Builder) et sa fiche HTML (Character Sheet
+> HTML Studio) : *« est-ce que tu peux tout contrôler ? »*. **Thème accepté** (0 erreur, 0
+> avertissement), **fiche HTML acceptée**, corpus en ordre (20 fiches de règles, `relu: false`).
+> **Le pilote ne jouait pas juste** : jet faux d'un facteur dix (degrés additionnés, comparés au
+> d100 sans × 10), seuil lu sur des champs texte, Intensité de la Traque hors des réserves, plafond
+> de la Traque écrit « Seuil RK » en texte, santé en cases sans cases, ni initiative ni carnet ;
+> la Forge n'en voyait que deux. **Code** : mécanique de cible `nephilim`
+> (`dice/systemes/nephilim.ts` — (Vécu + Ka ± circonstances) × 10, doubles critiques ou
+> maladresses, 00 toujours maladresse, marge sur les dizaines + degrés au-delà de dix ;
+> `EchelleDuJet.doubles` et `.bonusDeMarge`, `margeDuJet`) ; `SheetField.libelleSur` (le menu du
+> jet nomme un Vécu par son nom saisi) ; `RessourceDeTable.maxSur` et `plafondDe` (la Traque
+> plafonne au Seuil RK, réserve du meneur ; bandeau, débordement et afficheur Ulanzi) ; deux
+> contrôles de la Forge (plafond non numérique, `maxSur` et `libelleSur` dans le vide). **Fiche** :
+> gabarit `nephilim-legende-fr` intégré au moteur (`BUILTIN_VERSION` 7 → 8),
+> `docs/systems/nephilim/fiche/correspondance.json` (234 champs, 5 absents motivés, les 239 clés
+> couvertes) ; la fiche GM-OS reprend les clés de la fiche HTML, points changés en « _ » (la
+> grammaire des formules ne lit pas les points). **Pilote corrigé** dans `Export Dirvers/corriges/`,
+> zéro constat, **réimporté par David le 17/10** ; *« ok ça marche »*. Manuel : page
+> `54-Jeu-Nephilim` et quatre captures, 53 et index des guides. **Reste à la main** : le choix de
+> la case de santé (valeur ≥ dommages), le malus des Conséquences au jet, les seuils des Chutes,
+> Stase, Sapience, jets de sorts ; le curseur des circonstances va de −10 à +7 (Rêves de Dragons).
+>
 > **16/10, fin de journée — les lots reportés ici après le commit de Codex (Claude Code).** Le
 > détail est dans le [ToDo du 16/10](2026-10-16-todo.md). Un seul écrivain par fichier : ces lots
 > ont attendu que le § 136 (LCARS) soit commité.

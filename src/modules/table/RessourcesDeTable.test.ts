@@ -10,6 +10,7 @@ import {
     debutDeSeance,
     nouveauScenario,
     visiblePourUnJoueur,
+    plafondDe,
     manipulableParUnJoueur,
     type RessourceDeTable,
 } from './RessourcesDeTable';
@@ -315,5 +316,44 @@ describe('les rythmes de la Menace — la séance et le scénario', () => {
 
     it('une réserve qui ne le déclare pas ne bouge pas au scénario', () => {
         expect(nouveauScenario(DUNE, { impulsion: 4, menace: 5 }).mouvements).toEqual([]);
+    });
+});
+
+/**
+ * **Le plafond lu sur une autre réserve** — Nephilim, 2026-10-17 : la Jauge de
+ * Traque plafonne au Seuil RK du lieu (2 à 9), et à ce seuil elle se vide et
+ * fait monter l'Intensité de la Traque.
+ */
+describe('maxSur — la Traque plafonne au Seuil RK du lieu', () => {
+    const SEUIL: RessourceDeTable = { id: 'seuilRK', label: 'Seuil RK', proprietaire: 'meneur', depart: 5, min: 2, max: 9 };
+    const TRAQUE: RessourceDeTable = {
+        id: 'traque', label: 'Jauge de Traque', proprietaire: 'joueurs', depart: 0, min: 0,
+        maxSur: 'seuilRK', debordement: { vers: 'intensite' },
+    };
+    const INTENSITE: RessourceDeTable = { id: 'intensite', label: 'Intensité de la Traque', proprietaire: 'meneur', depart: 1, min: 1, max: 5 };
+    const NEPHILIM = [SEUIL, TRAQUE, INTENSITE];
+
+    it('le plafond suit le Seuil RK courant', () => {
+        expect(plafondDe(NEPHILIM, { seuilRK: 3 }, TRAQUE)).toBe(3);
+        expect(plafondDe(NEPHILIM, {}, TRAQUE)).toBe(5);
+    });
+
+    it('dans une zone surveillée (RK 3), le troisième jeton fait monter l’Intensité', () => {
+        const r = gagner(NEPHILIM, { seuilRK: 3, traque: 2, intensite: 1 }, 'traque', 1);
+        expect(r.etat).toMatchObject({ traque: 0, intensite: 2 });
+        expect(r.avertissements[0]).toBe('Jauge de Traque atteint 3 : la jauge se vide, Intensité de la Traque +1 → 2.');
+    });
+
+    it('dans une zone sauvage (RK 8), le même jeton ne déborde pas', () => {
+        const r = gagner(NEPHILIM, { seuilRK: 8, traque: 2, intensite: 1 }, 'traque', 1);
+        expect(r.etat).toMatchObject({ traque: 3, intensite: 1 });
+    });
+
+    it('fixer la jauge la ramène sous le Seuil RK', () => {
+        expect(fixer(NEPHILIM, { seuilRK: 4 }, 'traque', 7).etat.traque).toBe(4);
+    });
+
+    it('une réserve désignée qui n’existe pas laisse le plafond déclaré', () => {
+        expect(plafondDe(NEPHILIM, {}, { ...TRAQUE, maxSur: 'absente', max: 6 })).toBe(6);
     });
 });

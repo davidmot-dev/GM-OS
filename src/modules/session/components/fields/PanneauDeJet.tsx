@@ -1107,11 +1107,21 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 celui de Dune.
                             */}
                             {sousGroupes.map(section => {
-                                const options = section.fields.map(f => (
-                                    <option key={f.id} value={f.id}>
-                                        {f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
-                                    </option>
-                                ));
+                                /*
+                                  **Un nom n'est pas une valeur** (Nephilim, 2026-10-17) :
+                                  le champ qu'un autre désigne par `libelleSur` le nomme,
+                                  il ne se lance pas. Et une ligne sans nom saisi —
+                                  un Vécu vide — n'a rien à proposer.
+                                */
+                                const noms = new Set(section.fields.map(f => f.libelleSur).filter(Boolean));
+                                const options = section.fields
+                                    .filter(f => !noms.has(f.id))
+                                    .filter(f => !f.libelleSur || String(valeurs[f.libelleSur] ?? '').trim() !== '')
+                                    .map(f => (
+                                        <option key={f.id} value={f.id}>
+                                            {(f.libelleSur && String(valeurs[f.libelleSur] ?? '').trim()) || f.label} ({String(valeurs[f.id] ?? f.defaultValue)})
+                                        </option>
+                                    ));
                                 return sousGroupes.length > 1
                                     ? <optgroup key={section.id} label={section.label || section.id}>{options}</optgroup>
                                     : <Fragment key={section.id}>{options}</Fragment>;
