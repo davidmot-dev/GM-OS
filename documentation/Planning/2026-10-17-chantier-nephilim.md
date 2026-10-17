@@ -154,3 +154,26 @@ Vécus → D → F.
   Dit au manuel, page 54-Jeu-Nephilim.
 - **Rien n'est commité de ce lot.** Tout part ensemble après le réimport vérifié et la liste des
   Vécus relue.
+
+## 8 · Ce qui reste — relevé le 17/10 à minuit
+
+Fait depuis le § 7 : les **époques d'incarnation** (`vecus/epoques.json` et `epoques.md`, 20
+époques), reliées aux huit champs « Incarnation » ; les **Vécus proposés selon les incarnations**
+(`SheetField.referentielSelon`) ; la **sauvegarde proposée** en passant à la fiche du jeu.
+Les échecs critiques sont **annoncés** depuis le § 1 (double réussi, double raté ou 00, marge).
+
+Reste, du plus petit au plus gros :
+
+1. **Les Arts occultes au menu du jet** — sans code, une retouche du pilote (section
+   supplémentaire de la composante ; le degré du sort au curseur).
+2. **Les suites des échecs critiques** (lot A) : maladresse → +1 Khaïba (Magie, pacte de Kabbale),
+   +1 Ombre (Vécu contemporain), −1 Ka du construct (Alchimie) ; critique magique → une Chute qui
+   baisse contre de la Sapience.
+3. **Stase et Sapience au jet** (lot B).
+4. **Le Ka dominant** (lot C) : absent des deux fiches, même à 7 pages.
+5. **L'Alchimie au jet** (lot D) : la fiche porte constructs et Materiae Primae ; rien ne débite ni
+   ne recharge.
+6. **À la main** : malus des Conséquences, seuils des Chutes, jeton de Traque des Sciences
+   occultes, pacte de Kabbale.
+7. Les **quatre époques** sans Vécus (pages 77, 79, 89, 91 à fournir) ; le **manuel** (quand Codex
+   aura commité ses pages) ; la fiche GM-OS **sur tablette**, sans suggestions de Vécus.

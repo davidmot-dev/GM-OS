@@ -150,10 +150,30 @@ export function useCharacterEditor() {
         }
     };
 
+    /*
+      **Ce qui est saisi mais pas sauvegardé** (David, 2026-10-17 : « j'avais
+      oublié de sauvegarder »). Le formulaire garde sa saisie à lui jusqu'à
+      « Sauvegarder » : la fiche du jeu ne la voit pas avant. On compare donc ce
+      qui est tapé à ce qui est enregistré, pour le dire au moment de passer à la
+      fiche du jeu.
+    */
+    const enregistre = getInitialData();
+    const aDesChangements = !!character && (
+        Object.entries(localData).some(([cle, valeur]) => {
+            const fiche = (character.sheetData ?? {}) as Record<string, unknown>;
+            return valeur !== (cle in fiche ? fiche[cle] : enregistre[cle]);
+        })
+        || description !== (character.description ?? '')
+        || gmNotes !== (character.gmNotes ?? '')
+        || playerNotes !== (character.playerNotes ?? '')
+        || inventory !== (character.inventory ?? '')
+    );
+
     return {
         character,
         template,
         selectedPlayer,
+        aDesChangements,
         
         // Form states
         localData,

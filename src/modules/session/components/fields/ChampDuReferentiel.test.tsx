@@ -65,6 +65,33 @@ describe('un nom de Vécu relié à la liste', () => {
     });
 });
 
+describe('les Vécus des époques incarnées', () => {
+    const SELON = { ...CHAMP, referentielSelon: { detail: 'Époque', champs: ['incarnations_0_era', 'incarnations_1_era'], libelle: 'incarnations' } };
+    const INDEX_EPOQUES = { referentiel: 'Vécus passés', entrees: [
+        { nom: 'Héros', fichier: '00-atlantide.md', details: { Époque: "La Chute de l'Atlantide" } },
+        { nom: 'Mercenaire', fichier: '10-carthage.md', details: { Époque: "L'empire de Carthage" } },
+    ] };
+    beforeEach(() => {
+        vi.stubGlobal('fetch', vi.fn(async (adresse: string) => (adresse.endsWith('index.json')
+            ? { ok: true, text: async () => JSON.stringify(INDEX_EPOQUES) }
+            : { ok: true, text: async () => '## Héros — Ka-Feu\n\nUn héros.\n' })));
+    });
+
+    it('la saisie ne propose que les Vécus des époques incarnées, et le dit', async () => {
+        const { container } = render(<ChampDuReferentiel field={SELON} value="" onChange={vi.fn()} pilote={PILOTE}
+            valeurs={{ incarnations_0_era: 'La Chute de l’Atlantide', incarnations_1_era: '' }} />);
+        await vi.waitFor(() => expect([...container.querySelectorAll('datalist option')].map(o => o.getAttribute('value'))).toEqual(['Héros']));
+        expect(screen.getByText('1 vécus passés proposés — incarnations : La Chute de l’Atlantide.')).toBeTruthy();
+    });
+
+    it('un Vécu hors des incarnations le signale dans ⓘ', async () => {
+        render(<ChampDuReferentiel field={SELON} value="Héros" onChange={vi.fn()} pilote={PILOTE}
+            valeurs={{ incarnations_0_era: "L'empire de Carthage" }} />);
+        fireEvent.click(await screen.findByLabelText(/Ce que dit le corpus/));
+        expect(screen.getByText("Époque « La Chute de l'Atlantide » : absente des incarnations de la fiche.")).toBeTruthy();
+    });
+});
+
 describe('le Vécu retenu au jet', () => {
     it('la ligne d’aide dit ses détails et le début de sa description', async () => {
         const { useSessionOSStore } = await import('../../useSessionOSStore');

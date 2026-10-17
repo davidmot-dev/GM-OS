@@ -65,3 +65,39 @@ json.dump({
     'epoquesManquantes': manquantes,
 }, open(os.path.join(SORTIE, 'index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('Vécus :', len(index), '| époques manquantes :', [m['epoque'] for m in manquantes])
+
+
+# ---- Les époques d'incarnation (2026-10-17) -----------------------------------------------------
+# Un second référentiel : les 20 époques, pour les champs « Incarnation » de la fiche. Le résumé vient
+# du catalogue du carnet (`catalogue-des-epoques.json`) ; les dates et les Vécus, des réponses brutes.
+catalogue = {e['epoque']: e for e in json.load(open(os.path.join(ICI, 'catalogue-des-epoques.json'), encoding='utf-8'))}
+bruts = sorted((json.load(open(c, encoding='utf-8')) for c in glob.glob(os.path.join(ICI, 'bruts', '*.json'))), key=lambda b: b['ordre'])
+lignes, entrees = ['# Les époques d’incarnation', '',
+                   f'Les vingt époques des sept ères, d’après le *{SOURCE}*, p. 61 à 99. Une section par époque.'], []
+for b in bruts:
+    donnees = lire(b['reponse']) or {}
+    vecus = donnees.get('vecus') or []
+    complete = len(vecus) == 5 and sorted(v.get('ka') for v in vecus) == sorted(KA)
+    dates = propre(donnees.get('dates_et_lieux')) if complete else ''
+    resume = catalogue.get(b['epoque'], {}).get('resume', '')
+    lignes += ['', f"## {b['epoque']} — {b['ere']}", '']
+    if resume:
+        lignes += [resume]
+    if dates:
+        lignes += ['', f'Dates et lieux : {dates}.'.replace('..', '.')]
+    if complete:
+        noms = ', '.join(f"{propre(v['nom'])} (Ka-{v['ka']})" for v in sorted(vecus, key=lambda x: KA.index(x['ka'])))
+        lignes += ['', f'Vécus : {noms}.']
+    else:
+        lignes += ['', 'Vécus : non transcrits — la page manque aux sources du carnet.']
+    lignes += ['', f"*(p. {b['page']})*"]
+    details = {'Ère': b['ere'], 'Page': b['page']}
+    if dates:
+        details['Dates et lieux'] = dates
+    entrees.append({'nom': b['epoque'], 'fichier': 'epoques.md', 'details': details})
+lignes += ['', '---', '', 'Extrait du carnet NotebookLM « Nephilim » le 2026-10-17, **non relu contre le livre**.']
+open(os.path.join(SORTIE, 'epoques.md'), 'w', encoding='utf-8').write('\n'.join(lignes) + '\n')
+json.dump({'referentiel': 'Époques d’incarnation', 'source': SOURCE + ', p. 61 à 99',
+           'extrait': '2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre', 'entrees': entrees},
+          open(os.path.join(SORTIE, 'epoques.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+print('Époques :', len(entrees))

@@ -1,0 +1,183 @@
+{
+ "referentiel": "Époques d’incarnation",
+ "source": "Nephilim5 — Livre 0 — Quintessence, chapitre « Les époques d’incarnation », p. 61 à 99",
+ "extrait": "2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre",
+ "entrees": [
+  {
+   "nom": "La Chute de l'Atlantide",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le Sentier d'or",
+    "Page": 61,
+    "Dates et lieux": "-10 000, Atlantide"
+   }
+  },
+  {
+   "nom": "Le Déluge",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Guerres élémentaires",
+    "Page": 63,
+    "Dates et lieux": "-10 000, Graal Terrestre"
+   }
+  },
+  {
+   "nom": "Les premières pierres dressées",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Guerres élémentaires",
+    "Page": 65,
+    "Dates et lieux": "-8 000, Vallée de l'Indus"
+   }
+  },
+  {
+   "nom": "Les premiers mégalithes",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Guerres élémentaires",
+    "Page": 67,
+    "Dates et lieux": "-5 000, Europe"
+   }
+  },
+  {
+   "nom": "Le sanctuaire des Tuatha Dé Danann",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Compacts secrets",
+    "Page": 69,
+    "Dates et lieux": "Tara & le Sidh"
+   }
+  },
+  {
+   "nom": "L'empire divin de Babylone",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Compacts secrets",
+    "Page": 71,
+    "Dates et lieux": "-600, Mésopotamie"
+   }
+  },
+  {
+   "nom": "Le rêve d'Akhenaton",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Compacts secrets",
+    "Page": 73,
+    "Dates et lieux": "-1355, Égypte"
+   }
+  },
+  {
+   "nom": "La Mésopotamie des prédictions",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "L'Hermétisme",
+    "Page": 75,
+    "Dates et lieux": "-550, Mésopotamie"
+   }
+  },
+  {
+   "nom": "Le règne de Salomon",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "L'Hermétisme",
+    "Page": 77
+   }
+  },
+  {
+   "nom": "La Syracuse des philosophes",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "L'Hermétisme",
+    "Page": 79
+   }
+  },
+  {
+   "nom": "L'empire de Carthage",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les guerres secrètes",
+    "Page": 81,
+    "Dates et lieux": "-200, Carthage"
+   }
+  },
+  {
+   "nom": "L'empire de Rome",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les guerres secrètes",
+    "Page": 83,
+    "Dates et lieux": "-50, Rome, l'Italie et la Gaule"
+   }
+  },
+  {
+   "nom": "L'incident Jésus",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les guerres secrètes",
+    "Page": 85,
+    "Dates et lieux": "0, Jérusalem"
+   }
+  },
+  {
+   "nom": "Les Arthuriades",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les nouveaux mondes",
+    "Page": 87,
+    "Dates et lieux": "Grande-Bretagne & Bretagne, Ve - VIe siècles"
+   }
+  },
+  {
+   "nom": "Al-Andalus",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les nouveaux mondes",
+    "Page": 89
+   }
+  },
+  {
+   "nom": "L'An Mil",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les nouveaux mondes",
+    "Page": 91
+   }
+  },
+  {
+   "nom": "Les Arcanes de la Renaissance",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 93,
+    "Dates et lieux": "1450, Florence - Pise - Milan - Venise"
+   }
+  },
+  {
+   "nom": "La cour du Roi-Soleil",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 95,
+    "Dates et lieux": "1670, Versailles"
+   }
+  },
+  {
+   "nom": "Les conspirations de la Révolution",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 97,
+    "Dates et lieux": "Nouvelle-Angleterre - Paris - Venise"
+   }
+  },
+  {
+   "nom": "Les vapeurs victoriennes",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 99,
+    "Dates et lieux": "Londres & l’empire britannique"
+   }
+  }
+ ]
+}

@@ -154,4 +154,15 @@ describe('useCharacterEditor', () => {
 
         expect(mockStore.updateCharacterHP).toHaveBeenCalledWith('player-1', 'char-1', 15);
     });
+
+    it('sait qu’une saisie n’est pas sauvegardée (2026-10-17)', () => {
+        const { result } = renderHook(() => useCharacterEditor());
+        expect(result.current.aDesChangements).toBe(false);
+        act(() => { result.current.updateLocal('str', 18); });
+        expect(result.current.aDesChangements).toBe(true);
+        act(() => { result.current.updateLocal('str', 15); });
+        expect(result.current.aDesChangements, 'revenu à la valeur enregistrée').toBe(false);
+        act(() => { result.current.setDescription('Autre texte'); });
+        expect(result.current.aDesChangements).toBe(true);
+    });
 });

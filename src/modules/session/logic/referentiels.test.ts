@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cleDuNom, direLesDetails, entreesDuNom, lireLeReferentiel, nomsDuReferentiel, sectionDuMarkdown } from './referentiels';
+import { cleDuNom, direLesDetails, entreesDuNom, entreesSelon, estPermise, lireLeReferentiel, nomsDuReferentiel, sectionDuMarkdown } from './referentiels';
 
 /** **Les référentiels d'un jeu** — les Vécus de Nephilim, 2026-10-17. */
 const INDEX = {
@@ -35,6 +35,7 @@ describe('un référentiel', () => {
         expect(entreesDuNom(r, 'Mercenaire').map(e => e.fichier)).toEqual(['07-mesopotamie.md', '10-carthage.md']);
         expect(entreesDuNom(r, 'Templier')).toEqual([]);
         expect(cleDuNom('Ère  DU  Héros')).toBe('ere du heros');
+        expect(cleDuNom('L’An Mil')).toBe(cleDuNom("L'An Mil"));
     });
 
     it('les noms se proposent une fois chacun', () => {
@@ -49,5 +50,27 @@ describe('un référentiel', () => {
         expect(sectionDuMarkdown(MARKDOWN, 'Héros')).toBe('Vous avez été un héros fondateur. *(p. 61)*');
         expect(sectionDuMarkdown(MARKDOWN, 'sage')).toBe('Vous avez enseigné.');
         expect(sectionDuMarkdown(MARKDOWN, 'Templier')).toBeNull();
+    });
+});
+
+describe('la liste restreinte par d’autres champs — les Vécus des époques incarnées', () => {
+    const VECUS = lireLeReferentiel({ entrees: [
+        { nom: 'Héros', details: { Époque: "La Chute de l'Atlantide" } },
+        { nom: 'Suffète', details: { Époque: "L'empire de Carthage" } },
+        { nom: 'Druide', details: { Époque: 'Le sanctuaire des Tuatha Dé Danann' } },
+    ] });
+
+    it('seuls les Vécus des époques saisies, apostrophes et casse comprises', () => {
+        expect(entreesSelon(VECUS, 'Époque', ['la chute de l’atlantide', '', "L'empire de Carthage"])?.map(e => e.nom)).toEqual(['Héros', 'Suffète']);
+    });
+
+    it('aucune époque saisie : toute la liste', () => {
+        expect(entreesSelon(VECUS, 'Époque', ['', undefined])).toBeNull();
+    });
+
+    it('un Vécu hors des époques saisies se reconnaît', () => {
+        expect(estPermise(VECUS!.entrees[2], 'Époque', ["L'empire de Carthage"])).toBe(false);
+        expect(estPermise(VECUS!.entrees[1], 'Époque', ["L'empire de Carthage"])).toBe(true);
+        expect(estPermise(VECUS!.entrees[2], 'Époque', [])).toBe(true);
     });
 });

@@ -5,16 +5,26 @@ import json, re, sys, os, zipfile
 
 entree, sortie = sys.argv[1:3]
 REFERENTIEL = 'vecus/index.json'
+# Les époques d'incarnation, pour les champs « Incarnation N — dates et lieux » (2026-10-17).
+EPOQUES = 'vecus/epoques.json'
 
 with zipfile.ZipFile(entree) as z:
     manifeste = json.loads(z.read('manifest.json'))
     etat = json.loads(z.read('state.json'))
+
+champs = [c for s in etat['sheetTemplate']['sections'] for c in s['fields']]
+# Un Vécu vient d'une époque incarnée : la liste proposée suit les huit champs « Incarnation ».
+incarnations = [c['id'] for c in champs if re.fullmatch(r'incarnations_\d+_era', c['id'])]
 
 relies = []
 for section in etat['sheetTemplate']['sections']:
     for champ in section['fields']:
         if re.fullmatch(r'pastlives_\d+_name', champ['id']):
             champ['referentiel'] = REFERENTIEL
+            champ['referentielSelon'] = {'detail': 'Époque', 'champs': incarnations, 'libelle': 'incarnations'}
+            relies.append(champ['id'])
+        elif re.fullmatch(r'incarnations_\d+_era', champ['id']):
+            champ['referentiel'] = EPOQUES
             relies.append(champ['id'])
 
 os.makedirs(os.path.dirname(sortie), exist_ok=True)

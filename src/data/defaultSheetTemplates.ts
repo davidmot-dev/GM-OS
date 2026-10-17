@@ -26,6 +26,14 @@ export interface SheetField {
      * `logic/referentiels.ts`.
      */
     referentiel?: string;
+    /**
+     * **La liste se restreint selon d'autres champs** (2026-10-17) : chez
+     * Nephilim, un Vécu vient d'une époque où le personnage s'est incarné. Les
+     * entrées proposées sont celles dont le détail `detail` (« Époque ») vaut
+     * l'une des valeurs des `champs` (les huit « Incarnation »). Aucun de ces
+     * champs rempli : toute la liste. Un nom saisi reste libre.
+     */
+    referentielSelon?: { detail: string; champs: string[]; /** « incarnations », pour le dire. */ libelle?: string };
 }
 
 export interface SheetSection {

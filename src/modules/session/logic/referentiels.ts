@@ -47,8 +47,12 @@ export function lireLeReferentiel(brut: unknown): Referentiel | null {
     };
 }
 
-/** Sans casse, sans accents, sans espaces superflus : « Héros » et « heros » sont le même nom. */
-export const cleDuNom = (nom: string) => nom.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+/**
+ * Sans casse, sans accents, sans espaces superflus, et une seule apostrophe :
+ * « Héros » et « heros », « L’An Mil » et « L'An Mil » sont le même nom.
+ */
+export const cleDuNom = (nom: string) => nom.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u2018\u2019\u02bc`\u00b4]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 
 /**
  * Les entrées d'un nom. **Plusieurs** : un même nom revient d'une époque à
@@ -91,4 +95,30 @@ export function sectionDuMarkdown(markdown: string, nom: string): string | null 
     const fin = suite.findIndex(l => /^#{1,2}\s+/.test(l) || /^---\s*$/.test(l));
     const texte = (fin < 0 ? suite : suite.slice(0, fin)).join('\n').trim();
     return texte || null;
+}
+
+/**
+ * **Les entrées permises par d'autres champs** — un Vécu de Nephilim vient d'une
+ * époque incarnée. `valeurs` : ce que portent ces champs (les époques saisies).
+ * Aucune valeur : `null`, la liste entière vaut.
+ */
+export function entreesSelon(
+    referentiel: Referentiel | null | undefined,
+    detail: string,
+    valeurs: readonly unknown[],
+): EntreeDeReferentiel[] | null {
+    const cles = new Set(valeurs.map(v => (typeof v === 'string' ? cleDuNom(v) : '')).filter(Boolean));
+    if (!referentiel || cles.size === 0) return null;
+    return referentiel.entrees.filter(e => {
+        const valeur = e.details?.[detail];
+        return typeof valeur === 'string' && cles.has(cleDuNom(valeur));
+    });
+}
+
+/** L'entrée vient-elle d'une des valeurs permises ? `true` quand rien ne restreint. */
+export function estPermise(entree: EntreeDeReferentiel, detail: string, valeurs: readonly unknown[]): boolean {
+    const cles = new Set(valeurs.map(v => (typeof v === 'string' ? cleDuNom(v) : '')).filter(Boolean));
+    if (cles.size === 0) return true;
+    const valeur = entree.details?.[detail];
+    return typeof valeur === 'string' && cles.has(cleDuNom(valeur));
 }

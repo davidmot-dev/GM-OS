@@ -3,7 +3,7 @@ import { Info } from 'lucide-react';
 import type { SheetField } from '../../../../data/defaultSheetTemplates';
 import type { GameDriver } from '../../../../types/drivers';
 import { useDescriptionDeLEntree, useReferentiel } from '../../hooks/useReferentiel';
-import { direLesDetails, entreesDuNom, nomsDuReferentiel, type EntreeDeReferentiel } from '../../logic/referentiels';
+import { direLesDetails, entreesDuNom, entreesSelon, estPermise, nomsDuReferentiel, type EntreeDeReferentiel } from '../../logic/referentiels';
 
 type PiloteDuJeu = Pick<GameDriver, 'id' | 'name'> & { corpusId?: string; ragPath?: string };
 
@@ -15,12 +15,13 @@ type PiloteDuJeu = Pick<GameDriver, 'id' | 'name'> & { corpusId?: string; ragPat
  * le corpus en dit — ses détails et sa description. Sans référentiel lisible, le
  * champ redevient un champ texte ordinaire.
  */
-const DescriptionDeLEntree: React.FC<{ pilote: PiloteDuJeu; chemin: string; entree: EntreeDeReferentiel }> = ({ pilote, chemin, entree }) => {
+const DescriptionDeLEntree: React.FC<{ pilote: PiloteDuJeu; chemin: string; entree: EntreeDeReferentiel; horsDeLaFiche?: string }> = ({ pilote, chemin, entree, horsDeLaFiche }) => {
     const description = useDescriptionDeLEntree(pilote, chemin, entree);
     return (
         <div className="space-y-1">
             <p className="text-ui-10 font-black uppercase tracking-widest text-accent/80">{entree.nom}</p>
             {entree.details && <p className="text-ui-10 text-app-text/50">{direLesDetails(entree)}</p>}
+            {horsDeLaFiche && <p className="text-ui-10 text-etat-alerte">{horsDeLaFiche}</p>}
             {description && <p className="text-ui-11 text-app-text/80 leading-relaxed whitespace-pre-line">{description}</p>}
         </div>
     );
@@ -31,11 +32,25 @@ const ChampDuReferentiel: React.FC<{
     value: string;
     onChange: (val: string) => void;
     pilote: PiloteDuJeu | null | undefined;
-}> = ({ field, value, onChange, pilote }) => {
+    /** Les valeurs de la fiche, pour les champs qui restreignent la liste (`referentielSelon`). */
+    valeurs?: Record<string, unknown>;
+}> = ({ field, value, onChange, pilote, valeurs = {} }) => {
     const referentiel = useReferentiel(pilote, field.referentiel);
     const liste = useId();
     const [ouvert, setOuvert] = useState(false);
     const entrees = entreesDuNom(referentiel, value);
+    /*
+      **La liste suit d'autres champs** — un Vécu de Nephilim vient d'une époque
+      incarnée : on ne propose que les entrées de ces époques, quand il y en a.
+    */
+    const selon = field.referentielSelon;
+    const valeursSelon = selon ? selon.champs.map(c => valeurs[c]) : [];
+    const permises = selon ? entreesSelon(referentiel, selon.detail, valeursSelon) : null;
+    const saisies = valeursSelon.filter((v): v is string => typeof v === 'string' && v.trim() !== '');
+    const proposees = permises && referentiel ? { ...referentiel, entrees: permises } : referentiel;
+    const horsDeLaFiche = (e: EntreeDeReferentiel) => selon && saisies.length > 0 && !estPermise(e, selon.detail, valeursSelon)
+        ? `${selon.detail} « ${e.details?.[selon.detail] ?? '?'} » : absente des ${selon.libelle ?? 'champs'} de la fiche.`
+        : undefined;
 
     return (
         <div className="p-3 bg-app-bg/40 rounded-xl border border-app-border/40 space-y-2" data-champ-du-referentiel={field.id}>
@@ -60,15 +75,20 @@ const ChampDuReferentiel: React.FC<{
             </div>
             {referentiel && (
                 <datalist id={liste}>
-                    {nomsDuReferentiel(referentiel).map(nom => <option key={nom} value={nom} />)}
+                    {nomsDuReferentiel(proposees).map(nom => <option key={nom} value={nom} />)}
                 </datalist>
+            )}
+            {permises && (
+                <p className="text-ui-10 text-app-text/40" data-liste-restreinte>
+                    {permises.length} {referentiel?.titre.toLowerCase() ?? 'entrées'} proposés — {selon?.libelle ?? 'selon la fiche'} : {saisies.join(', ')}.
+                </p>
             )}
             {ouvert && entrees.length > 0 && pilote && field.referentiel && (
                 <div className="rounded-lg border border-accent/20 bg-accent/5 p-3 space-y-3" data-description-du-referentiel>
                     {entrees.length > 1 && (
                         <p className="text-ui-10 text-app-text/50">{entrees.length} entrées portent ce nom, d’une époque à l’autre :</p>
                     )}
-                    {entrees.map((e, i) => <DescriptionDeLEntree key={i} pilote={pilote} chemin={field.referentiel!} entree={e} />)}
+                    {entrees.map((e, i) => <DescriptionDeLEntree key={i} pilote={pilote} chemin={field.referentiel!} entree={e} horsDeLaFiche={horsDeLaFiche(e)} />)}
                 </div>
             )}
         </div>

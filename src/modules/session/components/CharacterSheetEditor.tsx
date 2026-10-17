@@ -4,6 +4,7 @@ import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
+import { gmConfirm } from '../../../stores/useModalStore';
 import { MediaBrowser } from '../../../components/MediaBrowser';
 import AIPromptOverlay from '../../ai/components/AIPromptOverlay';
 import { 
@@ -95,8 +96,26 @@ const CharacterSheetEditor: React.FC = () => {
     const correspondance = useCorrespondanceDuJeu(editor.character as PlayerCharacter | null);
 
     const basculer = () => {
-        setSurLaFiche(v => !v);
-        setFicheDejaOuverte(true);
+        const ouvrir = () => {
+            setSurLaFiche(v => !v);
+            setFicheDejaOuverte(true);
+        };
+        /*
+          **Ce qui n'est pas sauvegardé ne part pas vers la fiche du jeu** (David,
+          2026-10-17). On le propose au moment d'y aller, plutôt que de laisser
+          croire à une fiche qui ne suit pas.
+        */
+        if (!surLaFiche && editor.aDesChangements) {
+            gmConfirm(
+                'Des changements de ce formulaire ne sont pas sauvegardés : la fiche du jeu ne les verra pas. Les sauvegarder avant de l’ouvrir ?',
+                () => { editor.handleSave(); ouvrir(); },
+                ouvrir,
+                'Sauvegarder et ouvrir',
+                'Ouvrir sans sauvegarder',
+            );
+            return;
+        }
+        ouvrir();
     };
 
     const lierLaFiche = (ficheId: string) => {
@@ -501,7 +520,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                 );
                                                 // Un nom relié à une liste du jeu : les Vécus de Nephilim (2026-10-17).
                                                 if (field.type === 'text' && field.referentiel) return (
-                                                    <ChampDuReferentiel key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} pilote={piloteDeLaFiche} />
+                                                    <ChampDuReferentiel key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} pilote={piloteDeLaFiche} valeurs={editor.localData} />
                                                 );
                                                 if (field.type === 'text') return (
                                                     <FieldText key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} />
