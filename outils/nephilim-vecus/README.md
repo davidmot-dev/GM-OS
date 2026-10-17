@@ -12,6 +12,10 @@ Source : *Nephilim5 — Livre 0 — Quintessence*, chapitre « Les époques d'in
 - `bruts/` — les réponses du carnet, en JSON demandé (nom, Ka, description, page).
 - `etendre_fiche_nephilim.py` — l'extension de la fiche GM-OS du pilote aux pages 3 à 7 de la
   fiche HTML (servie le 17/10 ; gardée pour une prochaine régénération).
+- `relier_vecus.py` — relie les noms des Vécus à `vecus/index.json` (liste selon les
+  incarnations) et les huit époques d'incarnation à `vecus/epoques.json`.
+- `ranger_incarnations.py` — place la section « Incarnations » juste avant « Les Vécus » :
+  on lit l'époque avant le Vécu qui en vient (18/10). Sans effet si c'est déjà fait.
 
 ## État au 17/10, 22 h 50 — terminé, sauf quatre époques
 

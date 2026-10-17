@@ -66,7 +66,8 @@ describe('un nom de Vécu relié à la liste', () => {
 });
 
 describe('les Vécus des époques incarnées', () => {
-    const SELON = { ...CHAMP, referentielSelon: { detail: 'Époque', champs: ['incarnations_0_era', 'incarnations_1_era'], libelle: 'incarnations' } };
+    /* Son propre index : la lecture est gardée par adresse, d'un essai à l'autre. */
+    const SELON = { ...CHAMP, referentiel: 'vecus-incarnes/index.json', referentielSelon: { detail: 'Époque', champs: ['incarnations_0_era', 'incarnations_1_era'], libelle: 'incarnations' } };
     const INDEX_EPOQUES = { referentiel: 'Vécus passés', entrees: [
         { nom: 'Héros', fichier: '00-atlantide.md', details: { Époque: "La Chute de l'Atlantide" } },
         { nom: 'Mercenaire', fichier: '10-carthage.md', details: { Époque: "L'empire de Carthage" } },
@@ -89,6 +90,51 @@ describe('les Vécus des époques incarnées', () => {
             valeurs={{ incarnations_0_era: "L'empire de Carthage" }} />);
         fireEvent.click(await screen.findByLabelText(/Ce que dit le corpus/));
         expect(screen.getByText("Époque « La Chute de l'Atlantide » : absente des incarnations de la fiche.")).toBeTruthy();
+    });
+
+    /* Le lien visible entre une époque et ses Vécus (2026-10-18). */
+    const INCARNATIONS = [
+        { id: 'incarnations_0_era', label: 'Incarnation 1 — dates et lieux', type: 'text' as const, defaultValue: '', referentiel: 'vecus/epoques.json' },
+        { id: 'incarnations_1_era', label: 'Incarnation 2 — dates et lieux', type: 'text' as const, defaultValue: '', referentiel: 'vecus/epoques.json' },
+    ];
+    const CHAMPS_DE_LA_FICHE = [
+        ...INCARNATIONS, SELON,
+        { id: 'pastlives_0_degree', label: 'Degré du vécu passé 1', type: 'number' as const, defaultValue: 0, libelleSur: 'pastlives_0_name' },
+        { ...SELON, id: 'pastlives_1_name', label: 'Vécu passé 2' },
+    ];
+
+    it('un Vécu porte l’incarnation dont il vient', async () => {
+        render(<ChampDuReferentiel field={SELON} value="Héros" onChange={vi.fn()} pilote={PILOTE} champsDeLaFiche={CHAMPS_DE_LA_FICHE}
+            valeurs={{ incarnations_0_era: "L'empire de Carthage", incarnations_1_era: 'La Chute de l’Atlantide' }} />);
+        const etiquette = await screen.findByText(/↳ Incarnation 2/);
+        expect(etiquette.textContent).toBe('↳ Incarnation 2 — La Chute de l’Atlantide');
+    });
+
+    it('un Vécu dont l’époque n’est pas incarnée le dit sous le champ', async () => {
+        const { container } = render(<ChampDuReferentiel field={SELON} value="Héros" onChange={vi.fn()} pilote={PILOTE} champsDeLaFiche={CHAMPS_DE_LA_FICHE}
+            valeurs={{ incarnations_0_era: "L'empire de Carthage" }} />);
+        await vi.waitFor(() => expect(container.querySelector('[data-origine-du-vecu]')?.textContent)
+            .toBe("Époque « La Chute de l'Atlantide » : absente des incarnations."));
+    });
+
+    it('une incarnation montre les Vécus de la fiche qui en viennent, et eux seuls', async () => {
+        render(<ChampDuReferentiel field={INCARNATIONS[0]} value="L'empire de Carthage" onChange={vi.fn()} pilote={PILOTE} champsDeLaFiche={CHAMPS_DE_LA_FICHE}
+            valeurs={{ incarnations_0_era: "L'empire de Carthage", pastlives_0_name: 'Héros', pastlives_0_degree: 4, pastlives_1_name: 'Mercenaire' }} />);
+        const ligne = (await screen.findByText(/Vécus de cette incarnation/)).closest('[data-vecus-de-l-incarnation]') as HTMLElement;
+        expect(ligne.textContent).toBe('Vécus de cette incarnation : Mercenaire');
+    });
+
+    it('le Vécu d’une incarnation porte son degré', async () => {
+        render(<ChampDuReferentiel field={INCARNATIONS[1]} value="La Chute de l'Atlantide" onChange={vi.fn()} pilote={PILOTE} champsDeLaFiche={CHAMPS_DE_LA_FICHE}
+            valeurs={{ pastlives_0_name: 'Héros', pastlives_0_degree: 4 }} />);
+        expect(await screen.findByText(/Vécus de cette incarnation :/)).toBeTruthy();
+        expect(screen.getByText('Héros (4)')).toBeTruthy();
+    });
+
+    it('une incarnation sans Vécu le dit', async () => {
+        render(<ChampDuReferentiel field={INCARNATIONS[0]} value="L'empire de Carthage" onChange={vi.fn()} pilote={PILOTE} champsDeLaFiche={CHAMPS_DE_LA_FICHE}
+            valeurs={{ pastlives_0_name: 'Héros' }} />);
+        expect(await screen.findByText('Aucun Vécu de la fiche ne vient encore de cette époque.')).toBeTruthy();
     });
 });
 

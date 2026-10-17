@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cleDuNom, direLesDetails, entreesDuNom, entreesSelon, estPermise, lireLeReferentiel, nomsDuReferentiel, sectionDuMarkdown } from './referentiels';
+import { cleDuNom, direLesDetails, entreesDuNom, entreesSelon, estPermise, libelleCourt, liesALaValeur, lireLeReferentiel, nomsDuReferentiel, origineDansLaFiche, sectionDuMarkdown } from './referentiels';
 
 /** **Les référentiels d'un jeu** — les Vécus de Nephilim, 2026-10-17. */
 const INDEX = {
@@ -72,5 +72,37 @@ describe('la liste restreinte par d’autres champs — les Vécus des époques 
         expect(estPermise(VECUS!.entrees[2], 'Époque', ["L'empire de Carthage"])).toBe(false);
         expect(estPermise(VECUS!.entrees[1], 'Époque', ["L'empire de Carthage"])).toBe(true);
         expect(estPermise(VECUS!.entrees[2], 'Époque', [])).toBe(true);
+    });
+});
+
+describe('le lien entre une époque et ses Vécus, dans les deux sens', () => {
+    const VECUS = lireLeReferentiel({ entrees: [
+        { nom: 'Héros', details: { Époque: "La Chute de l'Atlantide", 'Ka-élément': 'Feu' } },
+        { nom: 'Suffète', details: { Époque: "L'empire de Carthage" } },
+        { nom: 'Mercenaire', details: { Époque: "L'empire de Carthage" } },
+    ] })!;
+    const CHAMPS = ['incarnations_0_era', 'incarnations_1_era'];
+
+    it('un Vécu retrouve l’incarnation dont il vient', () => {
+        const origine = origineDansLaFiche(entreesDuNom(VECUS, 'Héros'), 'Époque', CHAMPS,
+            { incarnations_0_era: "L'empire de Carthage", incarnations_1_era: 'la chute de l’atlantide' });
+        expect(origine?.champ).toBe('incarnations_1_era');
+        expect(origine?.entree.details?.['Ka-élément']).toBe('Feu');
+    });
+
+    it('un Vécu dont l’époque n’est pas incarnée n’a pas d’origine', () => {
+        expect(origineDansLaFiche(entreesDuNom(VECUS, 'Héros'), 'Époque', CHAMPS, { incarnations_0_era: "L'empire de Carthage" })).toBeNull();
+    });
+
+    it('une incarnation retrouve les Vécus de la fiche qui en viennent', () => {
+        const lies = liesALaValeur(VECUS, 'Époque', "L'empire de Carthage",
+            [{ nom: 'Suffète', degre: 3 }, { nom: 'Héros', degre: 2 }, { nom: ' mercenaire ', degre: 1 }, { nom: '' }]);
+        expect(lies.map(v => v.nom)).toEqual(['Suffète', ' mercenaire ']);
+        expect(liesALaValeur(VECUS, 'Époque', '', [{ nom: 'Suffète' }])).toEqual([]);
+    });
+
+    it('le libellé court d’un champ', () => {
+        expect(libelleCourt('Incarnation 1 — dates et lieux')).toBe('Incarnation 1');
+        expect(libelleCourt('Vécu passé 1')).toBe('Vécu passé 1');
     });
 });

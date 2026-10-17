@@ -520,7 +520,7 @@ const CharacterSheetEditor: React.FC = () => {
                                                 );
                                                 // Un nom relié à une liste du jeu : les Vécus de Nephilim (2026-10-17).
                                                 if (field.type === 'text' && field.referentiel) return (
-                                                    <ChampDuReferentiel key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} pilote={piloteDeLaFiche} valeurs={editor.localData} />
+                                                    <ChampDuReferentiel key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} pilote={piloteDeLaFiche} valeurs={editor.localData} champsDeLaFiche={template.sections.flatMap(s => s.fields)} />
                                                 );
                                                 if (field.type === 'text') return (
                                                     <FieldText key={field.id} field={field} value={String(val)} onChange={v => updateLocal(field.id, v)} />

@@ -122,3 +122,47 @@ export function estPermise(entree: EntreeDeReferentiel, detail: string, valeurs:
     const valeur = entree.details?.[detail];
     return typeof valeur === 'string' && cles.has(cleDuNom(valeur));
 }
+
+/**
+ * **Le lien visible entre deux listes** — David, 2026-10-18 : *« il faut qu'il y
+ * ait un lien logique et visuel entre une époque et un vécu »*.
+ *
+ * Côté Vécu : de quel champ de la fiche (quelle incarnation) vient-il ? On
+ * cherche, parmi les entrées de son nom, celle dont le détail (l'Époque) est la
+ * valeur d'un des champs qui restreignent la liste. `null` : aucune incarnation
+ * ne la porte.
+ */
+export function origineDansLaFiche(
+    entrees: readonly EntreeDeReferentiel[],
+    detail: string,
+    champs: readonly string[],
+    valeurs: Record<string, unknown>,
+): { champ: string; valeur: string; entree: EntreeDeReferentiel } | null {
+    for (const champ of champs) {
+        const valeur = valeurs[champ];
+        if (typeof valeur !== 'string' || !valeur.trim()) continue;
+        const entree = entrees.find(e => typeof e.details?.[detail] === 'string' && cleDuNom(String(e.details[detail])) === cleDuNom(valeur));
+        if (entree) return { champ, valeur, entree };
+    }
+    return null;
+}
+
+/**
+ * Côté incarnation : les Vécus de la fiche qui en viennent. `vecus` : les champs
+ * de nom (et leur degré, s'il est connu) ; `referentiel` : la liste qui dit
+ * l'époque de chaque nom.
+ */
+export function liesALaValeur(
+    referentiel: Referentiel | null | undefined,
+    detail: string,
+    valeur: string,
+    vecus: readonly { nom: string; degre?: unknown }[],
+): { nom: string; degre?: unknown }[] {
+    if (!referentiel || !valeur.trim()) return [];
+    const cle = cleDuNom(valeur);
+    return vecus.filter(v => v.nom.trim() && entreesDuNom(referentiel, v.nom)
+        .some(e => typeof e.details?.[detail] === 'string' && cleDuNom(String(e.details[detail])) === cle));
+}
+
+/** « Incarnation 1 » depuis « Incarnation 1 — dates et lieux » : le libellé court d'un champ. */
+export const libelleCourt = (libelle: string) => libelle.split(/\s+[—–-]\s+/)[0].trim();

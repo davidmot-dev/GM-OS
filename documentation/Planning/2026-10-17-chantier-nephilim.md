@@ -162,6 +162,12 @@ Fait depuis le § 7 : les **époques d'incarnation** (`vecus/epoques.json` et `e
 (`SheetField.referentielSelon`) ; la **sauvegarde proposée** en passant à la fiche du jeu.
 Les échecs critiques sont **annoncés** depuis le § 1 (double réussi, double raté ou 00, marge).
 
+**Le lien visible entre une époque et ses Vécus** (18/10) : sous chaque Vécu, une étiquette
+« ↳ Incarnation 2 — La Chute de l'Atlantide · Ka-élément : Feu », ou, en alerte, l'époque absente
+des incarnations ; sous chaque incarnation, « Vécus de cette incarnation : Héros (4) · Sage (2) »,
+ou « Aucun Vécu de la fiche ne vient encore de cette époque ». La section « Incarnations » passe
+avant « Les Vécus » (`outils/nephilim-vecus/ranger_incarnations.py`, à réimporter).
+
 Reste, du plus petit au plus gros :
 
 1. **Les Arts occultes au menu du jet** — sans code, une retouche du pilote (section

@@ -3,7 +3,7 @@ import { Info } from 'lucide-react';
 import type { SheetField } from '../../../../data/defaultSheetTemplates';
 import type { GameDriver } from '../../../../types/drivers';
 import { useDescriptionDeLEntree, useReferentiel } from '../../hooks/useReferentiel';
-import { direLesDetails, entreesDuNom, entreesSelon, estPermise, nomsDuReferentiel, type EntreeDeReferentiel } from '../../logic/referentiels';
+import { direLesDetails, entreesDuNom, entreesSelon, estPermise, libelleCourt, liesALaValeur, nomsDuReferentiel, origineDansLaFiche, type EntreeDeReferentiel } from '../../logic/referentiels';
 
 type PiloteDuJeu = Pick<GameDriver, 'id' | 'name'> & { corpusId?: string; ragPath?: string };
 
@@ -34,8 +34,17 @@ const ChampDuReferentiel: React.FC<{
     pilote: PiloteDuJeu | null | undefined;
     /** Les valeurs de la fiche, pour les champs qui restreignent la liste (`referentielSelon`). */
     valeurs?: Record<string, unknown>;
-}> = ({ field, value, onChange, pilote, valeurs = {} }) => {
+    /** Tous les champs de la fiche : libellés des incarnations, Vécus qui en dépendent, degrés. */
+    champsDeLaFiche?: SheetField[];
+}> = ({ field, value, onChange, pilote, valeurs = {}, champsDeLaFiche = [] }) => {
     const referentiel = useReferentiel(pilote, field.referentiel);
+    /*
+      **Le lien dans l'autre sens** (2026-10-18) : les champs dont la liste suit
+      celui-ci — les Vécus qui suivent une incarnation. On lit leur liste pour
+      dire lesquels viennent de l'époque saisie ici.
+    */
+    const dependants = champsDeLaFiche.filter(c => c.referentielSelon?.champs.includes(field.id));
+    const referentielDesDependants = useReferentiel(pilote, dependants[0]?.referentiel);
     const liste = useId();
     const [ouvert, setOuvert] = useState(false);
     const entrees = entreesDuNom(referentiel, value);
@@ -51,6 +60,22 @@ const ChampDuReferentiel: React.FC<{
     const horsDeLaFiche = (e: EntreeDeReferentiel) => selon && saisies.length > 0 && !estPermise(e, selon.detail, valeursSelon)
         ? `${selon.detail} « ${e.details?.[selon.detail] ?? '?'} » : absente des ${selon.libelle ?? 'champs'} de la fiche.`
         : undefined;
+
+    /* L'étiquette d'un Vécu : l'incarnation dont il vient, sous le même nom que le champ. */
+    const libelleDe = (id: string) => libelleCourt(champsDeLaFiche.find(c => c.id === id)?.label ?? id);
+    const origine = selon && entrees.length > 0 ? origineDansLaFiche(entrees, selon.detail, selon.champs, valeurs) : null;
+    const autresDetails = (e: EntreeDeReferentiel) => Object.entries(e.details ?? {})
+        .filter(([cle]) => cle !== selon?.detail && cle !== 'Ère' && cle !== 'Page')
+        .map(([cle, v]) => `${cle} : ${v}`).join(' · ');
+
+    /* La ligne d'une incarnation : les Vécus de la fiche qui viennent de son époque. */
+    const detailDesDependants = dependants[0]?.referentielSelon?.detail;
+    const lies = dependants.length > 0 && detailDesDependants
+        ? liesALaValeur(referentielDesDependants, detailDesDependants, value, dependants.map(d => ({
+            nom: String(valeurs[d.id] ?? ''),
+            degre: valeurs[champsDeLaFiche.find(c => c.libelleSur === d.id)?.id ?? ''],
+        })))
+        : [];
 
     return (
         <div className="p-3 bg-app-bg/40 rounded-xl border border-app-border/40 space-y-2" data-champ-du-referentiel={field.id}>
@@ -77,6 +102,24 @@ const ChampDuReferentiel: React.FC<{
                 <datalist id={liste}>
                     {nomsDuReferentiel(proposees).map(nom => <option key={nom} value={nom} />)}
                 </datalist>
+            )}
+            {selon && entrees.length > 0 && (origine ? (
+                <p className="text-ui-10 font-bold text-accent" data-origine-du-vecu>
+                    ↳ {libelleDe(origine.champ)} — {origine.valeur}{autresDetails(origine.entree) ? ` · ${autresDetails(origine.entree)}` : ''}
+                </p>
+            ) : (
+                <p className={`text-ui-10 font-bold ${saisies.length > 0 ? 'text-etat-alerte' : 'text-app-text/50'}`} data-origine-du-vecu>
+                    {saisies.length > 0
+                        ? `${selon.detail} « ${entrees.map(e => e.details?.[selon.detail]).filter(Boolean).join(' » ou « ')} » : absente des ${selon.libelle ?? 'champs'}.`
+                        : `${selon.detail} : ${entrees.map(e => e.details?.[selon.detail]).filter(Boolean).join(' ou ')}.`}
+                </p>
+            ))}
+            {dependants.length > 0 && value.trim() !== '' && referentielDesDependants && (
+                <p className="text-ui-10 text-app-text/60" data-vecus-de-l-incarnation>
+                    {lies.length > 0
+                        ? <>Vécus de cette {libelleCourt(field.label).replace(/\s*\d+$/, '').toLowerCase()} : <strong className="text-accent">{lies.map(v => (v.degre !== undefined && v.degre !== '' ? `${v.nom.trim()} (${v.degre})` : v.nom.trim())).join(' · ')}</strong></>
+                        : 'Aucun Vécu de la fiche ne vient encore de cette époque.'}
+                </p>
             )}
             {permises && (
                 <p className="text-ui-10 text-app-text/40" data-liste-restreinte>
