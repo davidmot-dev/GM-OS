@@ -155,7 +155,8 @@ export const handleGenerateEntityPortrait = async (
     if (!entity) return;
 
     const cleanDesc = (entity.description || '').replace(/\n/g, ' ').substring(0, 300);
-    const prompt = instructions ?? `A professional fantasy RPG character portrait of ${entity.name}. ${cleanDesc}. High quality digital art, cinematic lighting, 8k.`;
+    // Le genre vient de l'identité visuelle du jeu (2026-10-17), plus d'un « fantasy » en dur.
+    const prompt = instructions ?? `A professional RPG character portrait of ${entity.name}. ${cleanDesc}. High quality digital art, cinematic lighting.`;
 
     await demanderUneImage(set, `portrait de ${entity.name}`, prompt,
         (mediaId) => get().updateEntity(entityId, { avatar: mediaId }));
@@ -171,7 +172,7 @@ export const handleGenerateAtlasMapImage = async (
     if (!map) return;
 
     const cleanDesc = (map.narrativeDescription || '').replace(/\n/g, ' ').substring(0, 300);
-    const prompt = instructions ?? `Fantasy RPG environment art: ${map.name}. ${cleanDesc}. Cinematic, epic scale, high quality.`;
+    const prompt = instructions ?? `RPG environment art: ${map.name}. ${cleanDesc}. Cinematic, epic scale, high quality.`;
 
     await demanderUneImage(set, `carte ${map.name}`, prompt,
         (mediaId) => get().updateAtlasMap(mapId, { fileUrl: mediaId, isVideo: false }));

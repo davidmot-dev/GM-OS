@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import HorsDePortee from '../../session/components/HorsDePortee';
 import { gmConfirm } from '../../../stores/useModalStore';
+import { ResolvedImage } from '../../../components/ResolvedImage';
 
 const NPCHistory: React.FC = () => {
     /**
@@ -77,8 +78,9 @@ const NPCHistory: React.FC = () => {
                     >
                         <div className="w-8 h-8 rounded-md bg-app-bg flex items-center justify-center shrink-0 border border-app-border overflow-hidden">
                             {entity.avatar ? (
-                                <img
-                                    src={entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('gmos://') || entity.avatar.startsWith('data:')
+                                // Une image générée garde son identifiant `m-…`, que le Media Hub résout (2026-10-17).
+                                <ResolvedImage
+                                    src={entity.avatar.startsWith('m-') || entity.avatar.startsWith('http') || entity.avatar.startsWith('blob:') || entity.avatar.startsWith('gmos://') || entity.avatar.startsWith('data:')
                                         ? entity.avatar
                                         : `gmos://media/${entity.avatar.replace(/^file:\/\/\//, '').replace(/\\/g, '/')}`}
                                     alt={entity.name}

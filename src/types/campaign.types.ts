@@ -163,6 +163,12 @@ export interface Campaign {
      */
     themeDuJeu?: boolean;
     /** Torg : le ou les cosms (deux en zone mixte) quand la scène n'en dit rien — `GameDriver.cosms`. */
+    /**
+     * **L'identité visuelle de la campagne** (2026-10-17) : elle **complète**
+     * celle du jeu (`mode` absent ou `complete`), ou la **remplace** — le jeu
+     * donne le défaut, la campagne surcharge, comme pour les thèmes.
+     */
+    identiteVisuelle?: import('./drivers').IdentiteVisuelle & { mode?: 'complete' | 'remplace' };
     cosmsParDefaut?: string[];
     /**
      * **Le groupe de la campagne** — la Cabale de NOC, quand le pilote déclare

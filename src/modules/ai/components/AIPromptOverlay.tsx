@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
-import { Sparkles, X, Send, Wand2, RefreshCw } from 'lucide-react';
+import { Sparkles, X, Send, Wand2, RefreshCw, Palette } from 'lucide-react';
+import { useIdentiteDeLaPartie, useIdentiteSuspendue } from '../identiteDeLaPartie';
 
 interface AIPromptOverlayProps {
     isOpen: boolean;
@@ -39,6 +40,10 @@ const InviteOuverte: React.FC<Omit<AIPromptOverlayProps, 'isOpen'>> = ({
         ...prev, valeur: typeof valeur === 'function' ? valeur(prev.valeur) : valeur,
     }));
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    // L'identité visuelle du jeu, ajoutée d'office à l'image (2026-10-17) : montrée, et suspendable.
+    const identite = useIdentiteDeLaPartie();
+    const suspendue = useIdentiteSuspendue(st => st.suspendue);
+    const suspendre = useIdentiteSuspendue(st => st.suspendre);
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -105,6 +110,19 @@ const InviteOuverte: React.FC<Omit<AIPromptOverlayProps, 'isOpen'>> = ({
                             Ctrl + Enter pour lancer
                         </div>
                     </div>
+
+                    {identite && (
+                        <div data-identite-visuelle className={`rounded-2xl border p-3 space-y-1 ${suspendue ? 'border-app-border/40 opacity-60' : 'border-accent/30 bg-accent/5'}`}>
+                            <label className="flex items-center gap-2 text-ui-10 font-black uppercase tracking-widest text-app-text/60 cursor-pointer">
+                                <input type="checkbox" checked={!suspendue} onChange={e => suspendre(!e.target.checked)} disabled={isGenerating} />
+                                <Palette size={11} className="text-accent" /> Identité visuelle ajoutée
+                            </label>
+                            <p className="text-ui-11 text-app-text/70 leading-relaxed line-clamp-3" title={identite.style}>{identite.style}</p>
+                            {identite.aEviter && (
+                                <p className="text-ui-10 text-app-text/50 line-clamp-2" title={identite.aEviter}>Jamais : {identite.aEviter}</p>
+                            )}
+                        </div>
+                    )}
 
                     {/* Suggestions */}
                     <div className="space-y-2">

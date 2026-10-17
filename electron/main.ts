@@ -84,6 +84,7 @@ import {
 import { lireUneSource, EXTENSIONS_TEXTE, EXTENSIONS_IMAGE } from './lectureDeSource'
 import { verdictDeLHote, type FournisseurReseau } from './hotesDesFournisseurs'
 import { poserLaCle } from './clesDesFournisseurs'
+import { assemblerLeMultipart, estUnCorpsMultipart } from './corpsMultipart'
 import { lireLesGuides } from './guidesDuManuel'
 import { securityManager } from './SecurityManager'
 import { installWindowRelay, relayToOthers, RELAY_PUBLISH_CHANNEL, type RelayTarget } from './WindowRelay'
@@ -1075,6 +1076,17 @@ ipcMain.handle('ai:proxy-request', async (
     }
     const urlFinale = preparee.url;
     const entetesFinaux = preparee.entetes;
+    /*
+      **Un formulaire « multipart »** (FLUX.2 de Cloudflare, 2026-10-17) :
+      l'écran le déclare, on l'assemble ici, après la clé. Son type de contenu
+      porte la frontière : il remplace celui qu'aurait annoncé l'écran.
+    */
+    const multipart = estUnCorpsMultipart(body) ? assemblerLeMultipart(body) : null;
+    if (multipart) {
+        for (const cle of Object.keys(entetesFinaux)) if (cle.toLowerCase() === 'content-type') delete entetesFinaux[cle];
+        entetesFinaux['Content-Type'] = multipart.typeDeContenu;
+        entetesFinaux['Content-Length'] = String(multipart.corps.byteLength);
+    }
 
     return new Promise((resolve, reject) => {
         try {
@@ -1133,7 +1145,9 @@ ipcMain.handle('ai:proxy-request', async (
                 reject(new Error('AI Request timed out'));
             });
 
-            if (body) {
+            if (multipart) {
+                req.write(multipart.corps);
+            } else if (body) {
                 req.write(typeof body === 'string' ? body : JSON.stringify(body));
             }
             req.end();

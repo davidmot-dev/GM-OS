@@ -13,8 +13,18 @@ import { useMediaStore } from '../stores/useMediaStore';
 export const useMediaUrl = (sourceIdOrUrl: string | undefined): string | undefined =>
     useMediaUrlAvecSource(sourceIdOrUrl).url;
 
+/**
+ * **`gmos://media/m-…` redevient `m-…`** — 2026-10-17. Jusqu'à ce jour, la
+ * carte du générateur de PNJ transformait l'identifiant d'une image générée en
+ * chemin de fichier, qui n'existe pas. Les PNJ déjà envoyés à la galerie, au
+ * combat ou aux favoris ont gardé cette adresse : on la répare à la lecture.
+ */
+export const reparerLAdresse = (source: string | undefined) =>
+    typeof source === 'string' && /^gmos:\/\/media\/m-[\w-]+$/.test(source) ? source.slice('gmos://media/'.length) : source;
+
 /** Le projecteur doit savoir à quel média appartient une adresse encore en mémoire. */
-export const useMediaUrlAvecSource = (sourceIdOrUrl: string | undefined) => {
+export const useMediaUrlAvecSource = (adresse: string | undefined) => {
+    const sourceIdOrUrl = reparerLAdresse(adresse);
     const [resolution, setResolution] = useState<{ source: string | undefined; url: string | undefined }>({
         source: undefined, url: undefined,
     });

@@ -19,7 +19,44 @@ import { useAIStore, type ConfigDImage } from '../../stores/useAIStore';
  * identifiant de compte erroné sont trois problèmes différents, et les
  * confondre ferait chercher au mauvais endroit.
  */
-export async function genererViaCloudflare(prompt: string, config: ConfigDImage): Promise<string> {
+/** Les générateurs FLUX.2 (dev, klein 4B, klein 9B) : formulaire multipart, images de référence. */
+export const estUnFlux2 = (modele: string) => /^@cf\/black-forest-labs\/flux-2/.test(modele);
+
+/**
+ * **La requête d'un FLUX.2** — 2026-10-17 (blog et journal de Cloudflare) :
+ * un formulaire `multipart`, l'invite, la taille, et jusqu'à quatre images de
+ * référence `input_image_0…3`, chacune de 512 pixels au plus. Le nombre de pas
+ * ne se règle que sur `flux-2-dev` (les klein sont distillés) : vingt.
+ *
+ * Les images ne servent que de **guide de style** — on le dit au modèle, sans
+ * quoi il recopie leurs sujets.
+ */
+export function requeteFlux2(prompt: string, modele: string, references: readonly string[] = [], format = '1:1') {
+    const images = references.filter(r => /^data:image\/[a-z]+;base64,/.test(r)).slice(0, 4);
+    const [largeur, hauteur] = format === '16:9' ? [1024, 576] : format === '9:16' ? [576, 1024] : [768, 768];
+    const guide = images.length
+        ? ` Use reference image${images.length > 1 ? `s 0 to ${images.length - 1}` : ' 0'} only as a style guide: `
+          + 'copy their palette, medium, texture and lighting, never their subjects or composition.'
+        : '';
+    const champs: Record<string, string> = { prompt: `${prompt}${guide}`, width: String(largeur), height: String(hauteur) };
+    if (/flux-2-dev/.test(modele)) champs.steps = '20';
+    return {
+        multipart: {
+            champs,
+            fichiers: images.map((r, i) => ({
+                nom: `input_image_${i}`,
+                type: r.slice(5, r.indexOf(';')),
+                base64: r.slice(r.indexOf(',') + 1),
+            })),
+        },
+    };
+}
+
+export async function genererViaCloudflare(
+    prompt: string,
+    config: ConfigDImage,
+    options: { references?: readonly string[]; format?: string } = {},
+): Promise<string> {
     /* Le jeton n'est plus ici : il vit au coffre, sous `ai-key-image`, et le
        processus principal le pose sur la requête. Reste à vérifier qu'il existe
        — un appel sans jeton reviendrait avec un 401 que rien n'expliquerait. */
@@ -41,9 +78,9 @@ export async function genererViaCloudflare(prompt: string, config: ConfigDImage)
         /* `Authorization` est posé par le processus principal, depuis l'entrée
            `ai-key-image` du coffre — voir `electron/clesDesFournisseurs.ts`. */
         { 'Content-Type': 'application/json' },
-        // Quatre pas : le régime pour lequel schnell est entraîné, et le plafond
-        // du modèle est de huit.
-        { prompt, steps: 4 },
+        // FLUX.2 : un formulaire, avec les images de référence. FLUX.1 schnell :
+        // du JSON, et quatre pas — le régime pour lequel il est entraîné.
+        estUnFlux2(modele) ? requeteFlux2(prompt, modele, options.references, options.format) : { prompt, steps: 4 },
         'image-cloudflare',
     );
 

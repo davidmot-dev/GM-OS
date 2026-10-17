@@ -13,6 +13,8 @@ import { ragService } from './RAGService';
 import { attenteAnnoncee, budgetDuMoment } from './budgetsDeTemps';
 import { tenterLaDiffusionLocale } from './modeDeContexte';
 import { genererViaCloudflare, octetsDeLImage } from './cloudflareImage';
+import { inviteAvecLIdentite } from './identiteVisuelle';
+import { identiteAAppliquer } from './identiteDeLaPartie';
 import type { AIResponse, AIProvider, ProgressionDuFluxIA } from './types';
 import type { JournalEvent } from '../journal/types';
 import { contexteEstVide, type ContexteDeCampagne } from '../journal/contexteDeCampagne';
@@ -735,6 +737,14 @@ Use the names above verbatim. Do not invent a setting title.
    * @returns URL de l'image (Locale via bridge, Data URI ou Placeholder Dicebear).
    */
   public async generateImage(prompt: string, aspectRatio?: string): Promise<string> {
+    /*
+      **L'identité visuelle de la partie s'ajoute ici, et seulement ici**
+      (2026-10-17) : les cinq générateurs et la médiathèque passent tous par
+      cette porte. La poser chez chacun aurait fait six copies d'une règle,
+      et la septième, un jour, l'aurait oubliée.
+    */
+    const identite = identiteAAppliquer();
+    prompt = inviteAvecLIdentite(prompt, identite);
     const { activeProvider, configs } = useAIStore.getState();
     const config = configs[activeProvider];
 
@@ -877,7 +887,8 @@ Use the names above verbatim. Do not invent a setting title.
           // L'appel vit dans `cloudflareImage.ts`, partagé avec le bouton
           // « Tester » des réglages : un test qui emprunterait un autre chemin
           // ne testerait pas ce qui tourne en séance.
-          const base64 = await genererViaCloudflare(prompt, image);
+          // FLUX.2 reçoit aussi les images d'exemple de l'identité (2026-10-17).
+          const base64 = await genererViaCloudflare(prompt, image, { references: identite?.references, format: aspectRatio });
           const octets = octetsDeLImage(base64);
 
           if (octets.byteLength > 1000) {

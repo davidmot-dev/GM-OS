@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
 import { useSessionStore } from '../../../store/useSessionStore';
-import { useModalStore } from '../../../stores/useModalStore';
+import { useModalStore, gmCustom } from '../../../stores/useModalStore';
 import { AlertTriangle, BookOpen, Palette, Pause, LayoutDashboard, Swords, Users, Users2, Map as MapIcon, Archive, PlusCircle, Library, FileText, ExternalLink, File, StickyNote, Play, RefreshCw, Eye, Zap, Layers, MessageSquare } from 'lucide-react';
 import SessionChecklist from './SessionChecklist';
 import TradeRequestPanel from './TradeRequestPanel';
@@ -224,6 +224,15 @@ const CampaignCockpit: React.FC = () => {
                             libelleVide="— cosm de la campagne —"
                         />
                     </div>
+                )}
+                {/* L'identité visuelle des images de la campagne (2026-10-17) : elle complète ou remplace celle du jeu. */}
+                {activeCampaign && (
+                    <button type="button"
+                        onClick={e => { e.stopPropagation(); gmCustom('identite-visuelle', { cible: { type: 'campagne', id: activeCampaign.id } }); }}
+                        className="mt-2 w-full flex items-center gap-2 rounded-lg border border-app-border/40 px-2 py-1.5 text-left text-ui-10 font-black uppercase tracking-widest text-app-text/60 hover:border-accent/40 hover:text-accent transition-colors"
+                        title={activeCampaign.identiteVisuelle?.style || 'Le style des images générées pour cette campagne'}>
+                        <Palette size={13} className="shrink-0" /> Identité visuelle{activeCampaign.identiteVisuelle?.style ? ' ✓' : '…'}
+                    </button>
                 )}
                 {/*
                     **La fiche du groupe** — la Cabale de NOC (2026-10-13). Sur la

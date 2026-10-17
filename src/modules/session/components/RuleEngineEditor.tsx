@@ -2,7 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Etiquette } from '../../../components/socle';
 import { MOTEURS_DU_JET, moteurDuPilote } from './rules/moteursDuJet';
-import { Wrench, ExternalLink, Blocks } from 'lucide-react';
+import { Wrench, ExternalLink, Blocks, Palette } from 'lucide-react';
+import { gmCustom } from '../../../stores/useModalStore';
 import { EditeurDesModules } from '../../modulesDuJeu/EditeurDesModules';
 import { modulesDuPilote } from '../../modulesDuJeu/catalogue';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -134,6 +135,12 @@ export const RuleEngineEditor: React.FC = () => {
                 */}
                 <div className="flex items-center gap-4">
                     <ChoixDeLaBanniere pilote={driver} onChange={banniere => handleUpdate({ banniere })} />
+                    {/* L'identité visuelle des images générées pour ce jeu (2026-10-17). */}
+                    <button type="button" onClick={() => gmCustom('identite-visuelle', { cible: { type: 'pilote', id: driver.id } })}
+                        className="flex items-center gap-2 rounded-lg border border-app-border px-3 py-1.5 text-ui-9 font-black uppercase tracking-widest text-app-muted hover:border-accent/50 hover:text-accent"
+                        title={driver.identiteVisuelle?.style || 'Le style ajouté à chaque image générée pour ce jeu'}>
+                        <Palette size={12} className="text-accent" /> Identité visuelle{driver.identiteVisuelle?.style ? ' ✓' : '…'}
+                    </button>
                     <Etiquette ton="succes">{t('modules:session.rule_engine_editor.agencement.enregistre')}</Etiquette>
                 </div>
             </div>

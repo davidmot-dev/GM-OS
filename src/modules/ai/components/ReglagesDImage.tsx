@@ -1,7 +1,20 @@
 import React from 'react';
 import { ImagePlus, Eye, EyeOff, ExternalLink, Beaker, Loader2 } from 'lucide-react';
 import { useAIStore } from '../../../stores/useAIStore';
-import { genererViaCloudflare, octetsDeLImage } from '../cloudflareImage';
+import { estUnFlux2, genererViaCloudflare, octetsDeLImage } from '../cloudflareImage';
+import { identiteDeLaPartie } from '../identiteDeLaPartie';
+
+/**
+ * **Les modèles d'image de Cloudflare, et ce qu'ils coûtent** (tarifs relevés le
+ * 2026-10-17, pour une image de 512×512) : la liste se propose, la saisie reste
+ * libre — le catalogue change plus vite que GM-OS.
+ */
+const MODELES_D_IMAGE: { id: string; dit: string }[] = [
+    { id: '@cf/black-forest-labs/flux-1-schnell', dit: 'FLUX.1 schnell — rapide, ~43 Neurons, sans image de référence' },
+    { id: '@cf/black-forest-labs/flux-2-klein-4b', dit: 'FLUX.2 klein 4B — ~40 Neurons, images de référence à éprouver' },
+    { id: '@cf/black-forest-labs/flux-2-klein-9b', dit: 'FLUX.2 klein 9B — ~1 500 Neurons, jusqu’à 4 images de référence' },
+    { id: '@cf/black-forest-labs/flux-2-dev', dit: 'FLUX.2 dev — ~1 900 Neurons, jusqu’à 4 images de référence' },
+];
 
 /**
  * Le service qui fabrique les images — **séparé de celui qui répond aux
@@ -44,7 +57,7 @@ const ReglagesDImage: React.FC = () => {
      * la vignette, c'est vérifier ; lire « succès », c'est faire confiance.
      */
     const [essai, setEssai] = React.useState<
-        { etat: 'encours' } | { etat: 'ok'; apercu: string; octets: number } | { etat: 'echec'; dit: string } | null
+        { etat: 'encours' } | { etat: 'ok'; apercu: string; octets: number; references: number } | { etat: 'echec'; dit: string } | null
     >(null);
 
     const pret = !!image.accountId && aUneCle('image');
@@ -68,11 +81,18 @@ const ReglagesDImage: React.FC = () => {
         try {
             // Le MÊME chemin que la génération réelle — un test qui emprunterait
             // une autre route ne testerait pas ce qui tourne en séance.
+            /*
+              Un FLUX.2 reçoit les images d'exemple de la campagne ouverte : c'est
+              ainsi qu'on éprouve, sur son propre compte, qu'un modèle les accepte
+              (klein 4B, 2026-10-17).
+            */
+            const references = estUnFlux2(image.modelId) ? identiteDeLaPartie()?.references ?? [] : [];
             const base64 = await genererViaCloudflare(
                 'a lone astronaut helmet resting on red desert sand, cinematic lighting',
                 image,
+                { references },
             );
-            setEssai({ etat: 'ok', apercu: `data:image/jpeg;base64,${base64}`, octets: octetsDeLImage(base64).byteLength });
+            setEssai({ etat: 'ok', apercu: `data:image/jpeg;base64,${base64}`, octets: octetsDeLImage(base64).byteLength, references: references.length });
         } catch (err) {
             setEssai({ etat: 'echec', dit: err instanceof Error ? err.message : String(err) });
         }
@@ -136,6 +156,7 @@ const ReglagesDImage: React.FC = () => {
                         <p className="text-ui-11 font-black uppercase tracking-widest text-etat-succes">Cloudflare répond</p>
                         <p className="text-ui-11 text-app-text/50 mt-1">
                             {Math.round(essai.octets / 1024)} Ko reçus. La génération d'image passera par lui.
+                            {essai.references > 0 && ` Avec ${essai.references} image${essai.references > 1 ? 's' : ''} d’exemple de l’identité visuelle : le modèle les accepte.`}
                         </p>
                     </div>
                 </div>
@@ -226,10 +247,19 @@ const ReglagesDImage: React.FC = () => {
                 <input
                     id="cf-model"
                     type="text"
+                    list="cf-modeles"
                     value={image.modelId}
                     onChange={e => updateImageConfig({ modelId: e.target.value.trim() })}
                     className="w-full bg-app-bg/40 px-4 py-3 rounded-xl border border-app-border/20 font-mono text-xs text-app-text focus:border-accent/50 outline-none"
                 />
+                <datalist id="cf-modeles">
+                    {MODELES_D_IMAGE.map(m => <option key={m.id} value={m.id}>{m.dit}</option>)}
+                </datalist>
+                <p className="text-ui-10 text-app-text/40 px-1">
+                    {MODELES_D_IMAGE.find(m => m.id === image.modelId)?.dit
+                        ?? 'Modèle saisi à la main.'}{' '}
+                    10 000 Neurons gratuits par jour ; avec un FLUX.2, « Tester » envoie les images d’exemple de la campagne ouverte.
+                </p>
             </div>
 
             {/*

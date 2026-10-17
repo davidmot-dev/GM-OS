@@ -235,8 +235,9 @@ export const useNPCStore = create<NPCState>()(
                     const fieldsText = Object.values(currentEntity.fields).join(', ').replace(/\n/g, ' ').substring(0, 300);
                     
                     const basePrompt = currentEntity.category === 'places' 
-                        ? `Fantasy RPG environment art: ${currentEntity.name}. ${fieldsText}. Cinematic, epic scale, high quality.`
-                        : `A professional fantasy RPG character portrait of ${currentEntity.name}. ${fieldsText}. High quality digital art, cinematic lighting, 8k.`;
+                        // Le genre vient de l'identité visuelle du jeu (2026-10-17), plus d'un « fantasy » en dur.
+                        ? `RPG environment art: ${currentEntity.name}. ${fieldsText}. Cinematic, epic scale, high quality.`
+                        : `A professional RPG character portrait of ${currentEntity.name}. ${fieldsText}. High quality digital art, cinematic lighting.`;
                         
                     const prompt = instructions ? instructions : basePrompt;
                     const aspect = currentEntity.category === 'places' ? '16:9' : '1:1';

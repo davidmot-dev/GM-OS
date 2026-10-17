@@ -371,6 +371,31 @@ export interface FicheDeGroupe {
     nouveauScenario?: MouvementDeFiche[];
 }
 
+/**
+ * **L'identité visuelle d'un jeu** — David, 2026-10-17 : *« définir par drivers
+ * ou campagne une identité visuelle avec des instructions précises que je
+ * pourrais donner au générateur d'image intégré […] afin de garantir une unité
+ * et une identité dans les images générées. »*
+ *
+ * Ajoutée **d'office** à chaque image que GM-OS génère (`aiService.generateImage`,
+ * par où passent les cinq générateurs et la médiathèque) : rien à rappeler.
+ * **En anglais** : les modèles de diffusion d'ici le comprennent nettement mieux.
+ */
+export interface IdentiteVisuelle {
+    /** Le style : médium, palette, lumière, matière, époque. */
+    style: string;
+    /** Ce que les images ne doivent pas montrer. */
+    aEviter?: string;
+    /**
+     * **Une à quatre images d'exemple**, réduites à 512 pixels (JPEG en
+     * `data:`) : elles accompagnent chaque génération par un modèle FLUX.2, qui
+     * en reprend le style, et le bouton « Proposer depuis ces images » les lit
+     * pour rédiger `style`. Celles de la campagne, s'il y en a, remplacent celles
+     * du jeu.
+     */
+    references?: string[];
+}
+
 export interface GameDriver {
     id: string;
     name: string;
@@ -384,6 +409,8 @@ export interface GameDriver {
      * voir `banniereDuPilote.ts`. Absent : l'en-tête reste nu.
      */
     banniere?: string;
+    /** L'identité visuelle des images générées pour ce jeu — voir `IdentiteVisuelle`. */
+    identiteVisuelle?: IdentiteVisuelle;
     
     // Mechanics
     dice: DiceConfig;

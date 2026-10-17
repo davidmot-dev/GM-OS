@@ -16,6 +16,7 @@ import { RecipientSelector } from '../../session/components/RecipientSelector';
 import { useTranslation } from 'react-i18next';
 import { useRegimeDInterface } from '../../session/hooks/useRegimeDInterface';
 import { HealthInterpreter } from '../../session/logic/HealthInterpreter';
+import { ResolvedImage } from '../../../components/ResolvedImage';
 
 const NPCCard: React.FC = () => {
     const { t } = useTranslation(['modules', 'common']);
@@ -68,9 +69,18 @@ const NPCCard: React.FC = () => {
         );
     }
 
-    // Ensure we handle local file paths via gmos:// protocol for Electron security
+    /*
+      **Un identifiant de média reste un identifiant** (David, 2026-10-17 :
+      « voici quand je génère une image » — un cadre vide). Une image générée est
+      rangée au Media Hub et le portrait reçoit son identifiant `m-…` ; on en
+      faisait un chemin de fichier `gmos://media/m-…`, qui n'existe pas
+      (`ERR_UNEXPECTED`). L'import, lui, rend un chemin : il marchait. Partout
+      ailleurs dans GM-OS, `m-…` est l'adresse d'une image générée, que
+      `useMediaUrl` résout — et ce même `avatarSrc` part au combat, à la carte,
+      aux favoris, au journal et à la galerie : les six usages étaient cassés.
+    */
     const avatarSrc = currentEntity.avatar
-        ? (currentEntity.avatar.startsWith('http') || currentEntity.avatar.startsWith('blob:') || currentEntity.avatar.startsWith('gmos://') || currentEntity.avatar.startsWith('data:')
+        ? (currentEntity.avatar.startsWith('m-') || currentEntity.avatar.startsWith('http') || currentEntity.avatar.startsWith('blob:') || currentEntity.avatar.startsWith('gmos://') || currentEntity.avatar.startsWith('data:')
             ? currentEntity.avatar
             : `gmos://media/${currentEntity.avatar.replace(/^file:\/\/\//, '').replace(/\\/g, '/')}`)
         : null;
@@ -322,12 +332,13 @@ const NPCCard: React.FC = () => {
                 >
                     {avatarSrc ? (
                         <>
-                            <img
+                            {/* Résolu comme la fiche d'un PNJ de campagne : un `m-…` se lit dans le Media Hub. */}
+                            <ResolvedImage
                                 src={avatarSrc}
                                 alt=""
                                 className={`absolute inset-0 w-full h-full object-cover blur-xl opacity-30 scale-110 ${currentEntity?.isDead ? 'grayscale brightness-50' : ''}`}
                             />
-                            <img
+                            <ResolvedImage
                                 src={avatarSrc}
                                 alt={currentEntity.name}
                                 className={`relative z-10 w-full h-full object-cover ${currentEntity?.isDead ? 'grayscale contrast-125 brightness-75' : ''}`}

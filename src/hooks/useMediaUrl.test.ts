@@ -99,3 +99,12 @@ describe('useMediaUrl — le média qui arrive après la tuile', () => {
         expect(result.current).toEqual({ source: 'https://exemple.org/apres.png', url: 'https://exemple.org/apres.png' });
     });
 });
+
+describe('l’adresse cassée du générateur de PNJ (2026-10-17)', () => {
+    it('gmos://media/m-… redevient l’identifiant du média ; un vrai chemin ne bouge pas', async () => {
+        const { reparerLAdresse } = await import('./useMediaUrl');
+        expect(reparerLAdresse('gmos://media/m-2e6fc58b-f4a1-4bd6-b717-286c09014e52')).toBe('m-2e6fc58b-f4a1-4bd6-b717-286c09014e52');
+        expect(reparerLAdresse('gmos://media/C:/portraits/lina.png')).toBe('gmos://media/C:/portraits/lina.png');
+        expect(reparerLAdresse(undefined)).toBeUndefined();
+    });
+});

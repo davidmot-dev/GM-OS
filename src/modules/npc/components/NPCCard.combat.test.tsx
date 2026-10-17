@@ -41,3 +41,34 @@ describe('NPCCard — Ajouter au combat', () => {
         expect(c.faction).toBe('enemy');
     });
 });
+
+/*
+  2026-10-17, David : « voici quand je génère une image » — un cadre vide. Une
+  image générée est rangée au Media Hub sous un identifiant `m-…` ; la carte en
+  faisait un chemin de fichier `gmos://media/m-…`, qui n'existe pas. L'import,
+  qui rend un chemin, marchait.
+*/
+describe('NPCCard — un portrait généré', () => {
+    it('garde son identifiant de média, au combat comme à l’écran', async () => {
+        const { useMediaStore } = await import('../../../stores/useMediaStore');
+        const getMediaBlob = useMediaStore.getState().getMediaBlob;
+        useMediaStore.setState({ getMediaBlob: async () => new Blob(['x'], { type: 'image/jpeg' }) });
+        useNPCStore.setState({ currentEntity: { id: 'n-2', category: 'npcs', name: 'Marco', gmNotes: '', fields: {}, timestamp: 1, avatar: 'm-2e6fc58b' } });
+        try {
+            render(<NPCCard />);
+            fireEvent.click(screen.getByText(/combat_add|Ajouter au Combat OS/));
+            expect(useCombatStore.getState().combatants[0].avatar).toBe('m-2e6fc58b');
+            const portrait = await screen.findByAltText('Marco');
+            await expect.poll(() => portrait.getAttribute('src') ?? '').toMatch(/^data:image\/jpeg;base64,/);
+        } finally {
+            useMediaStore.setState({ getMediaBlob });
+        }
+    });
+
+    it('un chemin de fichier importé passe toujours par gmos://', () => {
+        useNPCStore.setState({ currentEntity: { id: 'n-3', category: 'npcs', name: 'Lina', gmNotes: '', fields: {}, timestamp: 1, avatar: 'file:///C:/portraits/lina.png' } });
+        render(<NPCCard />);
+        fireEvent.click(screen.getByText(/combat_add|Ajouter au Combat OS/));
+        expect(useCombatStore.getState().combatants[0].avatar).toBe('gmos://media/C:/portraits/lina.png');
+    });
+});

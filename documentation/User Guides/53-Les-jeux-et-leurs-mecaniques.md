@@ -298,6 +298,7 @@ Le détail est dans [Combat-OS](./30-Combat-OS.md) et
 | :--- | :--- |
 | **Portées** (`tactical`) | Les bandes de distance de Map-OS, en mètres ou en zones |
 | **Butin** (`lootTables`, `vocabulaireDuButin`) | Les tables de butin du jeu et ses mots (monnaie, rareté) — voir [Loot-OS](./42-Butin-ecrire-les-tables.md) |
+| **Identité visuelle** (`identiteVisuelle`) | Le style des **images générées** pour ce jeu (médium, palette, lumière, à éviter), en anglais, **ajouté d'office** à chaque génération. Une campagne le complète ou le remplace. Se règle par « Identité visuelle… » dans l'éditeur du pilote et sur la carte de la campagne ; la fenêtre d'invite le montre et peut le suspendre. **Une à quatre images d'exemple** (réduites à 512 pixels) : « Proposer depuis ces images » en fait rédiger le style par un modèle de vision de Cloudflare (Llama 3.2 Vision, licence de Meta à accepter une fois), et un modèle **FLUX.2** (Réglages IA → Génération d'image) les reçoit avec chaque image comme guide de style. Pour en discuter : le GPT `outils/rpg-visual-identity-builder/` |
 | **Thème** (`ui_config`) | La couleur et les jauges de l'interface ; la peau complète vient du thème du jeu — voir [Créer un thème](./95-Creer-un-theme-de-jeu.md) |
 | **Personnalités de l'IA** (`aiPersonas`, `aiInstructions`) | Ce que l'Oracle et les assistants savent du ton du jeu |
 | **Fiche HTML** (`templateId`) | Le gabarit de fiche du jeu — voir [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md) |

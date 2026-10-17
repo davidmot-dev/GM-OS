@@ -35,6 +35,7 @@ import LootOS from '../modules/session/components/LootOS';
 import { NetworkQRCodeModal } from './NetworkQRCodeModal';
 import VitrineDuSocle from './socle/VitrineDuSocle';
 import FenetreDesGestesDesHeros, { type GesteDesHeros } from '../modules/table/FenetreDesGestesDesHeros';
+import EditeurDIdentiteVisuelle, { type CibleDeLIdentite } from '../modules/ai/components/EditeurDIdentiteVisuelle';
 import { CadreDeSurcouche, BoutonPrincipal, BoutonSecondaire } from './socle/CadreDeSurcouche';
 import { CoinsOrnes } from './socle/Ornement';
 
@@ -223,6 +224,7 @@ const ModalProvider: React.FC = () => {
                                         {customVariant === 'fiche-combattant' && <ScrollText size={18} />}
                                         {customVariant === 'vitrine-du-socle' && <Shapes size={18} />}
                                         {customVariant === 'gestes-des-heros' && <Users size={18} />}
+                                        {customVariant === 'identite-visuelle' && <Sparkles size={18} />}
                                     </div>
                                     <h3 className="font-display font-bold text-app-text uppercase tracking-wider text-sm">
                                         {customVariant === 'player-add' && t('common:modals.player_add')}
@@ -259,6 +261,8 @@ const ModalProvider: React.FC = () => {
                                         {/* Littéral : deux gestes de NOC, pour un seul lecteur. */}
                                         {customVariant === 'gestes-des-heros' && ((defaultValue as { geste?: GesteDesHeros } | undefined)?.geste === 'calme'
                                             ? 'Moment de calme' : 'Effets du débordement')}
+                                        {/* Littéral : un écran pour un seul lecteur, le meneur. */}
+                                        {customVariant === 'identite-visuelle' && 'Identité visuelle'}
                                     </h3>
                                 </div>
                                 <button
@@ -329,6 +333,9 @@ const ModalProvider: React.FC = () => {
                                     geste={(defaultValue as { geste?: GesteDesHeros } | undefined)?.geste ?? 'calme'}
                                     onClose={closeModal}
                                 />
+                            )}
+                            {customVariant === 'identite-visuelle' && (defaultValue as { cible?: CibleDeLIdentite } | undefined)?.cible && (
+                                <EditeurDIdentiteVisuelle cible={(defaultValue as { cible: CibleDeLIdentite }).cible} onClose={closeModal} />
                             )}
                             {customVariant === 'global-settings' && <GlobalSettingsModal onClose={closeModal} />}
                         </div>
