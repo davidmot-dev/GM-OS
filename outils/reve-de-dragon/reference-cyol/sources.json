@@ -1,0 +1,222 @@
+{
+  "titre": "Les Terres Médianes du Rêve : Outils",
+  "auteurs": [
+    "Cyol",
+    "Kroc (corrections créditées par le site)"
+  ],
+  "versionAnnoncee": "21, 04/01/2017 - corrigée par Kroc",
+  "dateRecuperation": "2026-10-18",
+  "url": "https://scriptarium.org/RdD/tmr/",
+  "licenceAnnoncee": {
+    "nom": "CC BY 3.0 France",
+    "url": "https://creativecommons.org/licenses/by/3.0/fr/"
+  },
+  "archive": {
+    "url": "https://scriptarium.org/RdD/tmr/tmr.zip",
+    "fichierLocalIgnore": "scratch/reve-de-dragon-sources/tmr.zip",
+    "octets": 1008828,
+    "sha256": "a748bdf7a28049467a9b5a08903a92efd45f756dde822f4773527736fe3b8e9e"
+  },
+  "fichiers": [
+    {
+      "fichier": "originaux/tmr.js",
+      "url": "https://scriptarium.org/RdD/tmr/js/tmr.js",
+      "octets": 97267,
+      "sha256": "7371102badb6eba0637bf9405543fdf1f322e9c3739c30b760c485d58fa3e5dc",
+      "sha256Archive": "7371102badb6eba0637bf9405543fdf1f322e9c3739c30b760c485d58fa3e5dc",
+      "identiqueArchive": true
+    },
+    {
+      "fichier": "originaux/tmrHexagon.js",
+      "url": "https://scriptarium.org/RdD/tmr/js/tmrHexagon.js",
+      "octets": 7542,
+      "sha256": "aab6dc0ceb40fec22969f20b2d9dff3f92c3ee83b35c28657682aa8888e52860",
+      "sha256Archive": "aab6dc0ceb40fec22969f20b2d9dff3f92c3ee83b35c28657682aa8888e52860",
+      "identiqueArchive": true
+    },
+    {
+      "fichier": "originaux/tmr.css",
+      "url": "https://scriptarium.org/RdD/tmr/css/tmr.css",
+      "octets": 13044,
+      "sha256": "7b7f48ceeafe48148288089c45395ce68eb98c06d1adf1d9517f7bfe430f8d00",
+      "sha256Archive": "7b7f48ceeafe48148288089c45395ce68eb98c06d1adf1d9517f7bfe430f8d00",
+      "identiqueArchive": true
+    },
+    {
+      "fichier": "originaux/index-en-ligne.html",
+      "url": "https://scriptarium.org/RdD/tmr/",
+      "octets": 24546,
+      "sha256": "a2c070afac02cad96e45cfff3ec5aa6fb28f19c63513a63a63c63d7cbe2e6957",
+      "sha256Archive": "7828965a4c0a36e79629fd4358d1d1b295d4b7e1b2cdc4d3e372bc5beb2be87c",
+      "identiqueArchive": false
+    },
+    {
+      "fichier": "originaux/index-archive.html",
+      "entreeArchive": "tmr/index.html",
+      "octets": 30115,
+      "sha256": "7828965a4c0a36e79629fd4358d1d1b295d4b7e1b2cdc4d3e372bc5beb2be87c"
+    }
+  ],
+  "extraits": [
+    {
+      "fichier": "extraits/des.js",
+      "sha256": "89a5e57e3bed728a95578395126b705085a91bc9fed96cc6c708802d50f83641",
+      "fonctions": [
+        {
+          "nom": "diceRoll",
+          "ligneDebut": 595,
+          "ligneFin": 604
+        },
+        {
+          "nom": "lanceD",
+          "ligneDebut": 613,
+          "ligneFin": 630
+        },
+        {
+          "nom": "dDr",
+          "ligneDebut": 635,
+          "ligneFin": 645
+        }
+      ]
+    },
+    {
+      "fichier": "extraits/resolution.js",
+      "sha256": "94043e11ba1577bb3ad9a1e190fd8bead6cb66a31d623427cd4f4ec77040b45d",
+      "fonctions": [
+        {
+          "nom": "getPourcentageChance",
+          "ligneDebut": 650,
+          "ligneFin": 661
+        },
+        {
+          "nom": "getReussiteParticuliereSeuil",
+          "ligneDebut": 663,
+          "ligneFin": 670
+        },
+        {
+          "nom": "getReussiteSignificativeSeuil",
+          "ligneDebut": 672,
+          "ligneFin": 679
+        },
+        {
+          "nom": "getEchecParticulierSeuil",
+          "ligneDebut": 681,
+          "ligneFin": 692
+        },
+        {
+          "nom": "getEchecTotalSeuil",
+          "ligneDebut": 694,
+          "ligneFin": 724
+        }
+      ]
+    },
+    {
+      "fichier": "extraits/stress.js",
+      "sha256": "52e5a5e48223d0a3936511fb059a8950fcaae3f7780d204b547ab262ec09f6cc",
+      "fonctions": [
+        {
+          "nom": "gainXp",
+          "ligneDebut": 801,
+          "ligneFin": 835
+        }
+      ]
+    },
+    {
+      "fichier": "extraits/astrologie.js",
+      "sha256": "d17a62e283c0aca628dd549a9c9228bc7830ba75db77c6b6e65fbd9a7bda905b",
+      "fonctions": [
+        {
+          "nom": "lanceNbAstral",
+          "ligneDebut": 912,
+          "ligneFin": 919
+        },
+        {
+          "nom": "calculAstrologie",
+          "ligneDebut": 921,
+          "ligneFin": 931
+        },
+        {
+          "nom": "dessineRoueAstrologique",
+          "ligneDebut": 933,
+          "ligneFin": 967
+        },
+        {
+          "nom": "positionneAffichage",
+          "ligneDebut": 969,
+          "ligneFin": 974
+        },
+        {
+          "nom": "reinitialisationPointOrigine",
+          "ligneDebut": 976,
+          "ligneFin": 982
+        },
+        {
+          "nom": "positionneHeures",
+          "ligneDebut": 984,
+          "ligneFin": 1055
+        }
+      ]
+    },
+    {
+      "fichier": "extraits/geometrie.js",
+      "sha256": "295de55909643c5bea9a212432881361cd497873b4d765668516da156424da69",
+      "fonctions": [
+        {
+          "nom": "Hex",
+          "ligneDebut": 481,
+          "ligneFin": 483
+        },
+        {
+          "nom": "OffsetCoord",
+          "ligneDebut": 484,
+          "ligneFin": 486
+        },
+        {
+          "nom": "qoffset_from_cube",
+          "ligneDebut": 488,
+          "ligneFin": 493
+        },
+        {
+          "nom": "qoffset_to_cube",
+          "ligneDebut": 495,
+          "ligneFin": 501
+        },
+        {
+          "nom": "hex_length",
+          "ligneDebut": 503,
+          "ligneFin": 506
+        },
+        {
+          "nom": "hex_add",
+          "ligneDebut": 508,
+          "ligneFin": 511
+        },
+        {
+          "nom": "hex_subtract",
+          "ligneDebut": 513,
+          "ligneFin": 516
+        },
+        {
+          "nom": "hex_distance",
+          "ligneDebut": 517,
+          "ligneFin": 520
+        },
+        {
+          "nom": "offset_distance",
+          "ligneDebut": 522,
+          "ligneFin": 527
+        },
+        {
+          "nom": "hex_hexaAPortee",
+          "ligneDebut": 529,
+          "ligneFin": 546
+        },
+        {
+          "nom": "offset_hexaAPortee",
+          "ligneDebut": 548,
+          "ligneFin": 558
+        }
+      ]
+    }
+  ]
+}

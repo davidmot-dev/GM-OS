@@ -11849,6 +11849,14 @@ confronter au pilote actuel et au livre de l’édition utilisée. Aucun code ni
 R8, module externe TMR et intégration, sera réalisé par Codex.** Claude Code peut reprendre
 l’analyse des lots R0–R7 ; leur développement et leur ordre restent à choisir avec David.
 
+**18/10 — sources récupérées par Codex**, à la demande « est-ce que tu peux récupérer une
+partie du code ? », après étude de l’aide TMR de Cyol/Kroc hébergée par Scriptarium.
+[Paquet d’étude](../../outils/reve-de-dragon/reference-cyol/README.md) : cinq originaux, cinq
+extraits (26 fonctions), provenance SHA-256 et index des 74 fonctions ; corps, empreintes et
+syntaxe vérifiés. **Aucune intégration ni règle activée.** Outils annexes et architecture mécanique
+proposée consignés dans la [reprise du 18/10](2026-10-18-etat-et-reprise-codex-tmr-sources.md).
+Écart de seuil à vérifier contre le livre ; fonctions queues/souffles/têtes encore `TODO`.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |

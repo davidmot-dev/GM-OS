@@ -1,0 +1,372 @@
+[
+  {
+    "nom": "$oHexagone",
+    "ligneDebut": 394,
+    "ligneFin": 474
+  },
+  {
+    "nom": "Hex",
+    "ligneDebut": 481,
+    "ligneFin": 483
+  },
+  {
+    "nom": "OffsetCoord",
+    "ligneDebut": 484,
+    "ligneFin": 486
+  },
+  {
+    "nom": "qoffset_from_cube",
+    "ligneDebut": 488,
+    "ligneFin": 493
+  },
+  {
+    "nom": "qoffset_to_cube",
+    "ligneDebut": 495,
+    "ligneFin": 501
+  },
+  {
+    "nom": "hex_length",
+    "ligneDebut": 503,
+    "ligneFin": 506
+  },
+  {
+    "nom": "hex_add",
+    "ligneDebut": 508,
+    "ligneFin": 511
+  },
+  {
+    "nom": "hex_subtract",
+    "ligneDebut": 513,
+    "ligneFin": 516
+  },
+  {
+    "nom": "hex_distance",
+    "ligneDebut": 517,
+    "ligneFin": 520
+  },
+  {
+    "nom": "offset_distance",
+    "ligneDebut": 522,
+    "ligneFin": 527
+  },
+  {
+    "nom": "hex_hexaAPortee",
+    "ligneDebut": 529,
+    "ligneFin": 546
+  },
+  {
+    "nom": "offset_hexaAPortee",
+    "ligneDebut": 548,
+    "ligneFin": 558
+  },
+  {
+    "nom": "caseTMRAleatoire",
+    "ligneDebut": 560,
+    "ligneFin": 572
+  },
+  {
+    "nom": "getHexagoneIdParCoordonnees",
+    "ligneDebut": 574,
+    "ligneFin": 587
+  },
+  {
+    "nom": "diceRoll",
+    "ligneDebut": 595,
+    "ligneFin": 604
+  },
+  {
+    "nom": "lanceD",
+    "ligneDebut": 613,
+    "ligneFin": 630
+  },
+  {
+    "nom": "dDr",
+    "ligneDebut": 635,
+    "ligneFin": 645
+  },
+  {
+    "nom": "getPourcentageChance",
+    "ligneDebut": 650,
+    "ligneFin": 661
+  },
+  {
+    "nom": "getReussiteParticuliereSeuil",
+    "ligneDebut": 663,
+    "ligneFin": 670
+  },
+  {
+    "nom": "getReussiteSignificativeSeuil",
+    "ligneDebut": 672,
+    "ligneFin": 679
+  },
+  {
+    "nom": "getEchecParticulierSeuil",
+    "ligneDebut": 681,
+    "ligneFin": 692
+  },
+  {
+    "nom": "getEchecTotalSeuil",
+    "ligneDebut": 694,
+    "ligneFin": 724
+  },
+  {
+    "nom": "calculPourcentage",
+    "ligneDebut": 726,
+    "ligneFin": 779
+  },
+  {
+    "nom": "demireveAleatoire",
+    "ligneDebut": 781,
+    "ligneFin": 787
+  },
+  {
+    "nom": "lanceJetStress",
+    "ligneDebut": 789,
+    "ligneFin": 799
+  },
+  {
+    "nom": "gainXp",
+    "ligneDebut": 801,
+    "ligneFin": 835
+  },
+  {
+    "nom": "lanceD100",
+    "ligneDebut": 837,
+    "ligneFin": 894
+  },
+  {
+    "nom": "lanceDdr",
+    "ligneDebut": 897,
+    "ligneFin": 902
+  },
+  {
+    "nom": "lanceDSelect",
+    "ligneDebut": 904,
+    "ligneFin": 910
+  },
+  {
+    "nom": "lanceNbAstral",
+    "ligneDebut": 912,
+    "ligneFin": 919
+  },
+  {
+    "nom": "calculAstrologie",
+    "ligneDebut": 921,
+    "ligneFin": 931
+  },
+  {
+    "nom": "dessineRoueAstrologique",
+    "ligneDebut": 933,
+    "ligneFin": 967
+  },
+  {
+    "nom": "positionneAffichage",
+    "ligneDebut": 969,
+    "ligneFin": 974
+  },
+  {
+    "nom": "reinitialisationPointOrigine",
+    "ligneDebut": 976,
+    "ligneFin": 982
+  },
+  {
+    "nom": "positionneHeures",
+    "ligneDebut": 984,
+    "ligneFin": 1055
+  },
+  {
+    "nom": "shuffle",
+    "ligneDebut": 1063,
+    "ligneFin": 1077
+  },
+  {
+    "nom": "accordPluriel",
+    "ligneDebut": 1083,
+    "ligneFin": 1093
+  },
+  {
+    "nom": "defineTMR",
+    "ligneDebut": 1098,
+    "ligneFin": 1118
+  },
+  {
+    "nom": "getListeCasesType",
+    "ligneDebut": 1123,
+    "ligneFin": 1137
+  },
+  {
+    "nom": "dessineTMR",
+    "ligneDebut": 1142,
+    "ligneFin": 1150
+  },
+  {
+    "nom": "positionneJoueur",
+    "ligneDebut": 1152,
+    "ligneFin": 1158
+  },
+  {
+    "nom": "majPlateauTMR",
+    "ligneDebut": 1160,
+    "ligneFin": 1175
+  },
+  {
+    "nom": "estDansTMR",
+    "ligneDebut": 1182,
+    "ligneFin": 1190
+  },
+  {
+    "nom": "clickCanvasTMR",
+    "ligneDebut": 1192,
+    "ligneFin": 1198
+  },
+  {
+    "nom": "clickCanvasPerdu",
+    "ligneDebut": 1200,
+    "ligneFin": 1203
+  },
+  {
+    "nom": "clickCanvasMaitrise",
+    "ligneDebut": 1205,
+    "ligneFin": 1218
+  },
+  {
+    "nom": "clickDeplaceJoueur",
+    "ligneDebut": 1220,
+    "ligneFin": 1278
+  },
+  {
+    "nom": "clickTMR",
+    "ligneDebut": 1280,
+    "ligneFin": 1293
+  },
+  {
+    "nom": "clickMaitrise",
+    "ligneDebut": 1295,
+    "ligneFin": 1321
+  },
+  {
+    "nom": "clickPerdu",
+    "ligneDebut": 1323,
+    "ligneFin": 1384
+  },
+  {
+    "nom": "monteTMR",
+    "ligneDebut": 1386,
+    "ligneFin": 1422
+  },
+  {
+    "nom": "infoDemireve",
+    "ligneDebut": 1424,
+    "ligneFin": 1450
+  },
+  {
+    "nom": "deplaceJoueur",
+    "ligneDebut": 1452,
+    "ligneFin": 1464
+  },
+  {
+    "nom": "arriveNouvelleCase",
+    "ligneDebut": 1466,
+    "ligneFin": 1481
+  },
+  {
+    "nom": "rencontreNouvelleCase",
+    "ligneDebut": 1483,
+    "ligneFin": 1528
+  },
+  {
+    "nom": "maitriseNouvelleCase",
+    "ligneDebut": 1530,
+    "ligneFin": 1572
+  },
+  {
+    "nom": "suiteVoyage",
+    "ligneDebut": 1574,
+    "ligneFin": 1595
+  },
+  {
+    "nom": "augmentationFatigue",
+    "ligneDebut": 1597,
+    "ligneFin": 1681
+  },
+  {
+    "nom": "ajustementReve",
+    "ligneDebut": 1683,
+    "ligneFin": 1712
+  },
+  {
+    "nom": "refoulement",
+    "ligneDebut": 1714,
+    "ligneFin": 1742
+  },
+  {
+    "nom": "rencontreNature",
+    "ligneDebut": 1744,
+    "ligneFin": 1796
+  },
+  {
+    "nom": "maitriseBrouillard",
+    "ligneDebut": 1798,
+    "ligneFin": 1833
+  },
+  {
+    "nom": "actionRencontre",
+    "ligneDebut": 1835,
+    "ligneFin": 1932
+  },
+  {
+    "nom": "rencontreMaitrisee",
+    "ligneDebut": 1934,
+    "ligneFin": 2134
+  },
+  {
+    "nom": "choixDestination",
+    "ligneDebut": 2136,
+    "ligneFin": 2148
+  },
+  {
+    "nom": "rencontreNonMaitrisee",
+    "ligneDebut": 2150,
+    "ligneFin": 2371
+  },
+  {
+    "nom": "souffleDragon",
+    "ligneDebut": 2373,
+    "ligneFin": 2377
+  },
+  {
+    "nom": "queueDragon",
+    "ligneDebut": 2379,
+    "ligneFin": 2383
+  },
+  {
+    "nom": "teteDragon",
+    "ligneDebut": 2385,
+    "ligneFin": 2389
+  },
+  {
+    "nom": "quitteTMR",
+    "ligneDebut": 2391,
+    "ligneFin": 2421
+  },
+  {
+    "nom": "logVoyage",
+    "ligneDebut": 2423,
+    "ligneFin": 2451
+  },
+  {
+    "nom": "initGame",
+    "ligneDebut": 2456,
+    "ligneFin": 2463
+  },
+  {
+    "nom": "demarrerPartie",
+    "ligneDebut": 2465,
+    "ligneFin": 2487
+  },
+  {
+    "nom": "defineObjetsDom",
+    "ligneDebut": 2489,
+    "ligneFin": 2506
+  }
+]
