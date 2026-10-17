@@ -11835,6 +11835,20 @@ L’intégration a ensuite été réalisée par Claude Code dans `6be8ff1a` : HT
 au livrable, moteur version 9, correspondance complète. **Validateur complet : zéro erreur et
 zéro avertissement**, revérifié avant le commit demandé par David pour les ajouts du Studio.
 
+### 141 · Rêve de Dragon — propositions d’évolution — 17/10/2026
+
+David demande une analyse du pilote, puis : « je voudrais que tu consignes les propositions
+pour pouvoir les partager avec Claude Code ». **Analyse uniquement, aucun développement
+autorisé à ce stade.** [Propositions et passation](2026-10-17-reve-de-dragon-propositions.md) :
+audit des fondations, fatigue, encaissement/blessures/états, points de tâche, repos,
+stress/Archétype, chance/destinée/moral, astrologie et module externe TMR. Ordre recommandé,
+pas encore choisi par David : fondations → fatigue/santé → tâches/repos, puis les autres lots.
+Export RdD absent lors de l’analyse ; écarts du manuel et synthèses de règles non relues à
+confronter au pilote actuel et au livre de l’édition utilisée. Aucun code ni donnée modifié.
+**Attribution explicite de David le 17/10 : « le module externe sera fait par toi » :
+R8, module externe TMR et intégration, sera réalisé par Codex.** Claude Code peut reprendre
+l’analyse des lots R0–R7 ; leur développement et leur ordre restent à choisir avec David.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11915,6 +11929,7 @@ zéro avertissement**, revérifié avant le commit demandé par David pour les a
 | 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
 | 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
 | 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
+| 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; analyse consignée ; module externe TMR (R8) attribué à Codex par David, aucun développement engagé | Claude : analyse R0–R7 et premier lot à choisir ; Codex : module TMR à cadrer | Export RdD absent à l’analyse ; édition et barèmes à vérifier ; [passation](2026-10-17-reve-de-dragon-propositions.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
