@@ -1,0 +1,5 @@
+interface:
+  display_name: "Extraction de cartes"
+  short_description: "Extraire les dos et faces de cartes en images"
+  default_prompt: "Utilise $extract-cards pour extraire les cartes de ce fichier, identifier les dos, demander le numéro de départ de chaque série, exporter les cartes en JPEG et les orienter correctement."
+

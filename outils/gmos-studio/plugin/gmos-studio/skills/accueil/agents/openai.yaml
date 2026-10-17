@@ -1,0 +1,6 @@
+interface:
+  display_name: GM-OS Studio — accueil
+  short_description: Choisir parmi les six ateliers
+  default_prompt: Affiche le menu GM-OS Studio et demande-moi ce que je veux préparer.
+policy:
+  allow_implicit_invocation: true

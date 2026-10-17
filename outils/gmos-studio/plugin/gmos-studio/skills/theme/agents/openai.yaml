@@ -1,0 +1,7 @@
+interface:
+  display_name: RPG Theme Builder
+  short_description: Atelier theme de GM-OS Studio
+  default_prompt: Dans GM-OS Studio, utilise l’atelier RPG Theme Builder pour ma
+    demande et ses fichiers.
+policy:
+  allow_implicit_invocation: true

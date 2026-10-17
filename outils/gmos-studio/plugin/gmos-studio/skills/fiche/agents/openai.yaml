@@ -1,0 +1,7 @@
+interface:
+  display_name: Character Sheet HTML Studio
+  short_description: Atelier fiche de GM-OS Studio
+  default_prompt: Dans GM-OS Studio, utilise l’atelier Character Sheet HTML Studio
+    pour ma demande et ses fichiers.
+policy:
+  allow_implicit_invocation: true

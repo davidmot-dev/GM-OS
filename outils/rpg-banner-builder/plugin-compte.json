@@ -1,0 +1,16 @@
+{
+  "created": {
+    "plugin_id": "plugins_6ad3aca67494819191711cbb7b5c2703",
+    "name": "rpg-banner-builder",
+    "description": "Crée les bannières panoramiques des jeux et campagnes GM-OS, prépare leur invite et contrôle leur cadrage et leur export JPG/WebP.",
+    "version": "0.1.0",
+    "current_release_id": "pluginrel_6ad3aca7c1b88191bf8610a999051ecd",
+    "scope": "USER",
+    "discoverability": "PRIVATE",
+    "plugin_url": "https://chatgpt.com/plugins/plugins_6ad3aca67494819191711cbb7b5c2703",
+    "release_id": "pluginrel_6ad3aca7c1b88191bf8610a999051ecd",
+    "latest_release_id": "pluginrel_6ad3aca7c1b88191bf8610a999051ecd",
+    "status": "created"
+  },
+  "verifiedRemoteSkillAndTool": true
+}

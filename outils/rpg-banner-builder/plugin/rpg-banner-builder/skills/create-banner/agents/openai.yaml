@@ -1,0 +1,7 @@
+interface:
+  display_name: RPG Banner Builder
+  short_description: Bannières de jeux pour GM-OS
+  default_prompt: Crée la bannière de mon jeu ou de ma campagne pour GM-OS, avec
+    son fichier image, son invite et un cadrage central vérifié.
+policy:
+  allow_implicit_invocation: true

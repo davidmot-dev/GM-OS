@@ -1,0 +1,7 @@
+interface:
+  display_name: RPG Banner Builder
+  short_description: Atelier banniere de GM-OS Studio
+  default_prompt: Dans GM-OS Studio, utilise l’atelier RPG Banner Builder pour ma
+    demande et ses fichiers.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: TOC Extractor
+  short_description: Atelier sommaire de GM-OS Studio
+  default_prompt: Dans GM-OS Studio, utilise l’atelier TOC Extractor pour ma
+    demande et ses fichiers.
+policy:
+  allow_implicit_invocation: true

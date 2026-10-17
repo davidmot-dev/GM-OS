@@ -1,0 +1,37 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "gmos-studio",
+  "version": "0.1.0",
+  "description": "Un accueil et six ateliers pour préparer un jeu dans GM-OS : thème, fiche interactive, identité visuelle, bannière, table des matières et extraction de cartes.",
+  "author": {
+    "name": "David"
+  },
+  "keywords": [
+    "GM-OS",
+    "jeu de rôle",
+    "thème",
+    "fiche",
+    "bannière",
+    "sommaire",
+    "cartes"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "GM-OS Studio",
+        "shortDescription": "Six ateliers pour vos jeux",
+        "longDescription": "Choisissez votre travail dans un menu conversationnel ou formulez directement votre demande. Réunit RPG Theme Builder, Character Sheet HTML Studio, RPG Visual Identity Builder, RPG Banner Builder, TOC Extractor et Extracteur de cartes, avec leurs contrats, références et outils. Parcours Préparer un nouveau jeu, sans intégration automatique aux campagnes.",
+        "developerName": "David",
+        "category": "Productivity",
+        "capabilities": [],
+        "logo": "./assets/icon.svg",
+        "composerIcon": "./assets/icon.svg",
+        "defaultPrompt": [
+          "Affiche le menu GM-OS Studio et demande-moi ce que je veux préparer.",
+          "Je veux préparer un nouveau jeu : aide-moi à choisir les ateliers utiles.",
+          "Voici mes fichiers et mon objectif : utilise directement le bon atelier."
+        ]
+      }
+    }
+  }
+}

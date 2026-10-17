@@ -1,0 +1,3 @@
+# Le paquet vérifié doit rester identique à l’archive enregistrée dans le compte.
+plugin/** -text
+preparer-banniere.html -text

@@ -1,0 +1,7 @@
+interface:
+  display_name: RPG Visual Identity Builder
+  short_description: Atelier identite de GM-OS Studio
+  default_prompt: Dans GM-OS Studio, utilise l’atelier RPG Visual Identity Builder
+    pour ma demande et ses fichiers.
+policy:
+  allow_implicit_invocation: true

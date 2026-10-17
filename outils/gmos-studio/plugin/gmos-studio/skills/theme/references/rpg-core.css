@@ -1,0 +1,480 @@
+/* ==========================================================================
+   RPG THEME SDK — CORE
+   --------------------------------------------------------------------------
+   Ce fichier contient UNIQUEMENT le contrat commun de l'application.
+   Il ne doit contenir aucune identité visuelle propre à un jeu.
+   ========================================================================== */
+
+:root {
+  /* Couleurs sémantiques par défaut */
+  --rpg-bg: #111111;
+  --rpg-surface: #1b1b1b;
+  --rpg-surface-2: #252525;
+  --rpg-paper: #ffffff;
+
+  --rpg-ink: #171717;
+  --rpg-text: #ffffff;
+  --rpg-muted: #888888;
+
+  --rpg-accent: #777777;
+  --rpg-accent-2: #555555;
+  --rpg-accent-contrast: #ffffff;
+
+  --rpg-border: #a0a0a0;
+  --rpg-border-soft: #d6d6d6;
+
+  /* Typographies */
+  --rpg-font-display: Arial, sans-serif;
+  --rpg-font-body: Arial, sans-serif;
+  --rpg-font-ui: Arial, sans-serif;
+  --rpg-font-mono: monospace;
+
+  /* Formes */
+  --rpg-radius-sm: 6px;
+  --rpg-radius-md: 12px;
+  --rpg-radius-lg: 20px;
+
+  --rpg-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+
+  /* Rythme typographique */
+  --rpg-title-tracking: 0.04em;
+  --rpg-kicker-tracking: 0.12em;
+
+  /* Layout */
+  --rpg-content-width: 1120px;
+  --rpg-gutter: clamp(22px, 4.5vw, 58px);
+
+  /* Transitions */
+  --rpg-transition: 120ms ease;
+}
+
+/* ==========================================================================
+   RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+/* ==========================================================================
+   APP / PAGE
+   ========================================================================== */
+
+.rpg-app {
+  min-height: 100vh;
+  color: var(--rpg-text);
+  background: var(--rpg-bg);
+  font-family: var(--rpg-font-body);
+  transition:
+    background-color var(--rpg-transition),
+    color var(--rpg-transition);
+}
+
+.rpg-shell {
+  width: min(calc(100% - 28px), var(--rpg-content-width));
+  margin: 0 auto;
+  padding: 34px 0 72px;
+}
+
+.rpg-page {
+  position: relative;
+  overflow: hidden;
+  min-height: 720px;
+  color: var(--rpg-ink);
+  background: var(--rpg-paper);
+  box-shadow: var(--rpg-shadow);
+  transition:
+    background-color var(--rpg-transition),
+    color var(--rpg-transition),
+    border-color var(--rpg-transition);
+}
+
+.rpg-header {
+  position: relative;
+  padding: 54px var(--rpg-gutter) 28px;
+}
+
+.rpg-content {
+  position: relative;
+  padding: 34px var(--rpg-gutter) 64px;
+}
+
+.rpg-footer {
+  position: relative;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 10px var(--rpg-gutter);
+  color: var(--rpg-muted);
+}
+
+/* ==========================================================================
+   TYPOGRAPHIE
+   ========================================================================== */
+
+.rpg-kicker {
+  margin: 0 0 8px;
+  color: var(--rpg-accent);
+  font-family: var(--rpg-font-ui);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: var(--rpg-kicker-tracking);
+  text-transform: uppercase;
+}
+
+.rpg-title {
+  margin: 0;
+  color: inherit;
+  font-family: var(--rpg-font-display);
+  font-size: clamp(2.8rem, 7vw, 6.2rem);
+  line-height: 0.96;
+  font-weight: 700;
+  letter-spacing: var(--rpg-title-tracking);
+  text-transform: uppercase;
+}
+
+.rpg-section-title {
+  margin: 0 0 14px;
+  color: var(--rpg-accent);
+  font-family: var(--rpg-font-display);
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.rpg-subtitle {
+  margin: 0 0 8px;
+  color: var(--rpg-accent);
+  font-family: var(--rpg-font-ui);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.rpg-body {
+  margin: 0 0 1em;
+  color: inherit;
+  font-family: var(--rpg-font-body);
+  font-size: 1rem;
+  line-height: 1.48;
+}
+
+.rpg-body strong {
+  font-weight: 700;
+}
+
+.rpg-body em {
+  font-style: italic;
+}
+
+.rpg-mono {
+  margin: 0;
+  color: var(--rpg-accent);
+  font-family: var(--rpg-font-mono);
+  line-height: 1.52;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+
+.rpg-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(26px, 4vw, 52px);
+}
+
+.rpg-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rpg-stack {
+  display: grid;
+  gap: 28px;
+}
+
+.rpg-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   PANELS / CALLOUTS
+   ========================================================================== */
+
+.rpg-panel {
+  position: relative;
+  padding: clamp(24px, 4vw, 38px);
+  color: var(--rpg-ink);
+  background: var(--rpg-paper);
+  border: 1px solid var(--rpg-border);
+  border-radius: var(--rpg-radius-md);
+  box-shadow: var(--rpg-shadow);
+}
+
+.rpg-panel--flat {
+  box-shadow: none;
+}
+
+.rpg-callout {
+  position: relative;
+  overflow: visible;
+  padding: 26px 28px;
+  color: var(--rpg-text);
+  background: var(--rpg-surface);
+  border: 1px solid var(--rpg-border);
+  border-radius: var(--rpg-radius-md);
+}
+
+.rpg-callout__cap {
+  margin: -26px -28px 22px;
+  padding: 11px 20px;
+  color: var(--rpg-accent-contrast);
+  background: var(--rpg-accent);
+  font-family: var(--rpg-font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+}
+
+/* ==========================================================================
+   FORMULAIRES
+   ========================================================================== */
+
+.rpg-field {
+  display: grid;
+  gap: 7px;
+}
+
+.rpg-input,
+.rpg-select,
+.rpg-textarea {
+  width: 100%;
+  border: 1px solid var(--rpg-border);
+  border-radius: var(--rpg-radius-sm);
+  outline: 0;
+  padding: 11px 13px;
+  color: var(--rpg-ink);
+  background: var(--rpg-paper);
+  font-family: var(--rpg-font-body);
+  font-size: 1rem;
+  transition:
+    background-color var(--rpg-transition),
+    border-color var(--rpg-transition),
+    box-shadow var(--rpg-transition);
+}
+
+.rpg-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.rpg-input:focus,
+.rpg-select:focus,
+.rpg-textarea:focus {
+  border-color: var(--rpg-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rpg-accent) 14%, transparent);
+}
+
+.rpg-button {
+  appearance: none;
+  border: 1px solid var(--rpg-accent);
+  border-radius: var(--rpg-radius-sm);
+  padding: 10px 18px;
+  color: var(--rpg-accent);
+  background: transparent;
+  font-family: var(--rpg-font-ui);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color var(--rpg-transition),
+    color var(--rpg-transition),
+    border-color var(--rpg-transition),
+    transform var(--rpg-transition);
+}
+
+.rpg-button:hover {
+  color: var(--rpg-accent-contrast);
+  background: var(--rpg-accent);
+}
+
+.rpg-button:active {
+  transform: translateY(1px);
+}
+
+.rpg-button:focus-visible {
+  outline: 2px solid var(--rpg-accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   LISTES / SEPARATEURS
+   ========================================================================== */
+
+.rpg-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rpg-list li {
+  position: relative;
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.rpg-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 7px;
+  height: 7px;
+  background: var(--rpg-accent);
+}
+
+.rpg-rule {
+  height: 1px;
+  margin: 22px 0;
+  border: 0;
+  background: var(--rpg-border);
+}
+
+/* ==========================================================================
+   COMPOSANTS DE FICHE
+   ========================================================================== */
+
+.rpg-stat {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--rpg-border);
+  border-radius: var(--rpg-radius-sm);
+  background: var(--rpg-surface-2);
+}
+
+.rpg-stat__label {
+  color: var(--rpg-accent);
+  font-family: var(--rpg-font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.rpg-stat__value {
+  color: var(--rpg-text);
+  font-family: var(--rpg-font-display);
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.rpg-meter {
+  position: relative;
+  height: 12px;
+  overflow: hidden;
+  border: 1px solid var(--rpg-border);
+  border-radius: var(--rpg-radius-sm);
+  background: var(--rpg-surface-2);
+}
+
+.rpg-meter__fill {
+  height: 100%;
+  width: var(--rpg-meter-value, 50%);
+  background: var(--rpg-accent);
+}
+
+.rpg-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.rpg-check input {
+  accent-color: var(--rpg-accent);
+}
+
+.rpg-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rpg-table th,
+.rpg-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rpg-border-soft);
+  text-align: left;
+}
+
+.rpg-table th {
+  color: var(--rpg-accent);
+  font-family: var(--rpg-font-ui);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.rpg-page-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--rpg-border);
+  border-radius: var(--rpg-radius-lg);
+  color: var(--rpg-accent);
+  font-family: var(--rpg-font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 780px) {
+  .rpg-grid,
+  .rpg-grid--3 {
+    grid-template-columns: 1fr;
+  }
+
+  .rpg-shell {
+    width: min(calc(100% - 18px), var(--rpg-content-width));
+  }
+
+  .rpg-content,
+  .rpg-header,
+  .rpg-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rpg-transition: 0ms linear;
+  }
+}

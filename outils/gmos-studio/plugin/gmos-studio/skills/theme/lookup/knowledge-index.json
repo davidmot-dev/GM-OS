@@ -1,0 +1,44 @@
+{
+  "files": [
+    {
+      "name": "Cahier-des-charges-fiche-de-personnage.md",
+      "path": "references/Cahier-des-charges-fiche-de-personnage.md"
+    },
+    {
+      "name": "Cahier-des-charges-theme-de-jeu.md",
+      "path": "references/Cahier-des-charges-theme-de-jeu.md"
+    },
+    {
+      "name": "Flux-des-constructeurs.md",
+      "path": "references/Flux-des-constructeurs.md"
+    },
+    {
+      "name": "Pipeline-des-fiches.md",
+      "path": "references/Pipeline-des-fiches.md"
+    },
+    {
+      "name": "Pipeline-des-themes.md",
+      "path": "references/Pipeline-des-themes.md"
+    },
+    {
+      "name": "README.md",
+      "path": "references/README.md"
+    },
+    {
+      "name": "RPG_Theme_Builder_Methodologie.md",
+      "path": "references/RPG_Theme_Builder_Methodologie.md"
+    },
+    {
+      "name": "alien.css",
+      "path": "references/alien.css"
+    },
+    {
+      "name": "blade-runner.css",
+      "path": "references/blade-runner.css"
+    },
+    {
+      "name": "rpg-core.css",
+      "path": "references/rpg-core.css"
+    }
+  ]
+}

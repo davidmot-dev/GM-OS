@@ -1,0 +1,7 @@
+interface:
+  display_name: Extracteur de cartes
+  short_description: Atelier cartes de GM-OS Studio
+  default_prompt: Dans GM-OS Studio, utilise l’atelier Extracteur de cartes pour
+    ma demande et ses fichiers.
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,61 @@
+{
+  "created": {
+    "plugin_id": "plugins_6ad3afde7bb08191a3f1ac5155fc9748",
+    "name": "gmos-studio",
+    "description": "Un accueil et six ateliers pour préparer un jeu dans GM-OS : thème, fiche interactive, identité visuelle, bannière, table des matières et extraction de cartes.",
+    "version": "0.1.0",
+    "current_release_id": "pluginrel_6ad3afe06b448191bf51d518ccb1e0df",
+    "scope": "USER",
+    "discoverability": "PRIVATE",
+    "plugin_url": "https://chatgpt.com/plugins/plugins_6ad3afde7bb08191a3f1ac5155fc9748",
+    "release_id": "pluginrel_6ad3afe06b448191bf51d518ccb1e0df",
+    "latest_release_id": "pluginrel_6ad3afe06b448191bf51d518ccb1e0df",
+    "status": "created"
+  },
+  "verifiedRemoteFiles": [
+    {
+      "path": "plugin.json",
+      "verified": true,
+      "byteIdentical": false
+    },
+    {
+      "path": "skills/accueil/SKILL.md",
+      "verified": true,
+      "byteIdentical": true
+    },
+    {
+      "path": "skills/theme/SKILL.md",
+      "verified": true,
+      "byteIdentical": false
+    },
+    {
+      "path": "skills/fiche/SKILL.md",
+      "verified": true,
+      "byteIdentical": true
+    },
+    {
+      "path": "skills/identite/SKILL.md",
+      "verified": true,
+      "byteIdentical": true
+    },
+    {
+      "path": "skills/banniere/SKILL.md",
+      "verified": true,
+      "byteIdentical": true
+    },
+    {
+      "path": "skills/sommaire/SKILL.md",
+      "verified": true,
+      "byteIdentical": true
+    },
+    {
+      "path": "skills/cartes/SKILL.md",
+      "verified": true,
+      "byteIdentical": true
+    }
+  ],
+  "normalizations": [
+    "Le backend applique les informations du créateur connecté dans les métadonnées du manifeste.",
+    "Les fins de ligne CRLF résiduelles du skill thème sont normalisées en LF ; son contenu est identique."
+  ]
+}

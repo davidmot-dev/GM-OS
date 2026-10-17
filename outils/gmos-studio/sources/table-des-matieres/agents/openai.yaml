@@ -1,0 +1,4 @@
+interface:
+  default_prompt: Extrais la table des matières de ce fichier en Markdown plat et fournis le fichier .md.
+  display_name: TOC Extractor
+  short_description: Extraction fidèle de tables des matières en Markdown plat

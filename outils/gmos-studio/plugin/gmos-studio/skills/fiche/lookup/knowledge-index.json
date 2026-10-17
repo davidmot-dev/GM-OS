@@ -1,0 +1,48 @@
+{
+  "files": [
+    {
+      "name": "AL-Fiche-de-personnage_pf.pdf",
+      "path": "references/AL-Fiche-de-personnage_pf.pdf"
+    },
+    {
+      "name": "Cahier-des-charges-fiche-de-personnage.md",
+      "path": "references/Cahier-des-charges-fiche-de-personnage.md"
+    },
+    {
+      "name": "Cahier-des-charges-theme-de-jeu.md",
+      "path": "references/Cahier-des-charges-theme-de-jeu.md"
+    },
+    {
+      "name": "Flux-des-constructeurs.md",
+      "path": "references/Flux-des-constructeurs.md"
+    },
+    {
+      "name": "GUIDE_TECHNIQUE_MODELISATION_FICHES_JDR.md",
+      "path": "references/GUIDE_TECHNIQUE_MODELISATION_FICHES_JDR.md"
+    },
+    {
+      "name": "HTML_MANIFEST_SPEC.md",
+      "path": "references/HTML_MANIFEST_SPEC.md"
+    },
+    {
+      "name": "L'Appel de Cthulhu 7 - Fiche de personnage classique.pdf",
+      "path": "references/L'Appel de Cthulhu 7 - Fiche de personnage classique.pdf"
+    },
+    {
+      "name": "Pipeline-des-fiches.md",
+      "path": "references/Pipeline-des-fiches.md"
+    },
+    {
+      "name": "Pipeline-des-themes.md",
+      "path": "references/Pipeline-des-themes.md"
+    },
+    {
+      "name": "alien_character_sheet_v2.html",
+      "path": "references/alien_character_sheet_v2.html"
+    },
+    {
+      "name": "cthulhu_7_fiche_classique_interactive.html",
+      "path": "references/cthulhu_7_fiche_classique_interactive.html"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "rpg-banner-builder",
+  "version": "0.1.0",
+  "description": "Crée les bannières panoramiques des jeux et campagnes GM-OS, prépare leur invite et contrôle leur cadrage et leur export JPG/WebP.",
+  "author": {
+    "name": "David"
+  },
+  "keywords": [
+    "GM-OS",
+    "bannière",
+    "jeu de rôle",
+    "panorama",
+    "image"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "RPG Banner Builder",
+        "shortDescription": "Bannières de jeux pour GM-OS",
+        "longDescription": "Prépare et génère les bannières avec l’outil d’images disponible : composition 4:1, détails dans le ruban central, bords calmes, cohérence avec l’identité visuelle. Inclut un outil hors ligne de recadrage, aperçu d’en-tête et export JPG/WebP 2400 × 600 sous 500 Ko. Sans serveur ni connexion automatique à GM-OS.",
+        "developerName": "David",
+        "category": "Productivity",
+        "capabilities": [],
+        "logo": "./assets/icon.svg",
+        "composerIcon": "./assets/icon.svg",
+        "defaultPrompt": [
+          "Crée une bannière GM-OS pour mon jeu à partir de son univers et de son identité visuelle.",
+          "Voici mes références : génère une bannière 4:1 dont la bande centrale reste lisible dans GM-OS.",
+          "Adapte cette bannière à ma campagne et vérifie son cadrage dans un en-tête de 54 px."
+        ]
+      }
+    }
+  }
+}

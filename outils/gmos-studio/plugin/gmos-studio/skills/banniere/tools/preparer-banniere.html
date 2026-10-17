@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Préparer une bannière GM-OS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#152930;color:#f4eedf;font:16px/1.5 system-ui,sans-serif}main{max-width:1280px;margin:auto;padding:24px}h1{font-size:24px}label{display:block;margin:14px 0}input,select,button{font:inherit;padding:7px}input[type=text]{max-width:100%;width:360px}button,a.download{background:#dfc384;color:#172c34;border:0;border-radius:4px;padding:10px 16px;cursor:pointer}button:disabled{opacity:.5;cursor:default}a.download{display:inline-block;margin:10px 0}a[hidden]{display:none}canvas{display:block;width:100%;height:auto;border:1px solid #7f999d}.header{height:54px;position:relative;overflow:hidden;background:#0e1c22;background-size:cover;background-position:center;margin:16px 0;border:1px solid #789096}.shade{position:absolute;inset:0;background:linear-gradient(90deg,#0b1723cc,#0b172355 45%,#0b1723cc)}.title,.buttons{position:absolute;top:50%;transform:translateY(-50%);font-size:13px;font-weight:bold;text-shadow:0 1px 3px black}.title{left:14px}.buttons{right:14px}.narrow{max-width:390px}#status{padding:12px;border-left:3px solid #d5b86e;white-space:pre-wrap}.note{font-size:13px;color:#bfcdd0}input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #f0d276;outline-offset:3px}
+input[type=file]{display:block;width:100%;max-width:100%;min-width:0}
+</style></head><body><main>
+<h1>Préparer une bannière GM-OS</h1>
+<p>Outil autonome hors ligne. L’image reste sur votre appareil. Il recadre au centre en 4:1 et exporte à 2400 × 600 px, sous 500 000 octets.</p>
+<label>Image source <input id="source" type="file" accept="image/png,image/jpeg,image/webp"></label>
+<label>Nom de sortie <input id="filename" type="text" value="Banniere Band" maxlength="120"></label>
+<label>Format <select id="format"><option value="image/webp">WebP</option><option value="image/jpeg">JPG</option></select></label>
+<label><input id="upscale" type="checkbox"> Autoriser l’agrandissement si la source est trop petite (sans détail supplémentaire)</label>
+<button id="export" disabled>Préparer le fichier</button>
+<p id="status" role="status" aria-live="polite">Choisissez une image pour commencer.</p>
+<a id="download" class="download" hidden>Télécharger la bannière</a>
+<h2>Recadrage 4:1</h2><canvas id="canvas" width="2400" height="600" aria-label="Bannière recadrée 4:1"></canvas>
+<h2>Aperçu d’en-tête</h2><p class="note">Simulation de 54 px de haut, fond centré et voile sombre de démonstration. Vérifiez le rendu dans votre thème GM-OS.</p>
+<div class="header" id="wide"><div class="shade"></div><span class="title">TITRE DE LA SESSION</span><span class="buttons">Session · Outils · Réglages</span></div>
+<div class="header narrow" id="narrow"><div class="shade"></div><span class="title">SESSION</span><span class="buttons">Outils · Menu</span></div>
+<p class="note">Déposez le fichier dans le dossier réel du jeu, puis sélectionnez-le dans l’éditeur du pilote → Bannière de l’en-tête. L’outil n’installe et ne remplace rien dans GM-OS.</p>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
+let image=null,downloadUrl=null,generation=0;
+function clearDownload(){if(downloadUrl)URL.revokeObjectURL(downloadUrl);downloadUrl=null;$('download').hidden=true;$('download').removeAttribute('href');}
+function message(text){$('status').textContent=text;}
+function paint(){
+ clearDownload();if(!image){$('export').disabled=true;return;}
+ const ratio=image.naturalWidth/image.naturalHeight;
+ const sw=ratio>4?image.naturalHeight*4:image.naturalWidth,sh=sw/4;
+ const sx=(image.naturalWidth-sw)/2,sy=(image.naturalHeight-sh)/2;
+ ctx.fillStyle='#152930';ctx.fillRect(0,0,2400,600);ctx.drawImage(image,sx,sy,sw,sh,0,0,2400,600);
+ const preview=canvas.toDataURL('image/jpeg',.75);for(const id of ['wide','narrow'])$(id).style.backgroundImage=`url("${preview}")`;
+ const small=sw<2400||sh<600;$('export').disabled=small&&!$('upscale').checked;
+ message(`Source : ${image.naturalWidth} × ${image.naturalHeight} px. Recadrage central : ${Math.round(sw)} × ${Math.round(sh)} px.`+(small?'\nSource trop petite pour 2400 × 600 sans agrandissement. Régénérez plus grand ou autorisez explicitement l’agrandissement.':'\nSource suffisante pour un export sans agrandissement.'));
+}
+$('source').onchange=async()=>{
+ const current=++generation;clearDownload();image=null;$('export').disabled=true;ctx.clearRect(0,0,2400,600);for(const id of ['wide','narrow'])$(id).style.backgroundImage='none';
+ const file=$('source').files[0];if(!file){message('Choisissez une image pour commencer.');return;}
+ if(!['image/png','image/jpeg','image/webp'].includes(file.type)){message('Format source attendu : PNG, JPEG ou WebP.');return;}
+ const url=URL.createObjectURL(file),next=new Image();
+ try{next.src=url;await next.decode();if(current!==generation)return;image=next;paint();}catch{if(current===generation)message('Impossible de lire cette image.');}finally{URL.revokeObjectURL(url);}
+};
+$('upscale').onchange=()=>{generation++;paint();};$('format').onchange=()=>{generation++;paint();};$('filename').oninput=()=>{generation++;paint();};
+$('export').onclick=async()=>{
+ if(!image||$('export').disabled)return;const current=++generation;$('export').disabled=true;clearDownload();
+ try{
+  const type=$('format').value;let blob=null,quality=0;
+  for(const q of [.94,.88,.8,.72,.64,.56,.48,.4,.32,.24]){
+   const candidate=await new Promise(resolve=>canvas.toBlob(resolve,type,q));if(current!==generation)return;
+   if(!candidate||candidate.type!==type)throw Error('Ce navigateur ne prend pas en charge le format demandé.');
+   if(candidate.size<=500000){blob=candidate;quality=q;break;}
+  }
+  if(!blob)throw Error('Impossible de passer sous 500 Ko. Choisissez un autre format ou simplifiez l’image.');
+  const ext=type==='image/webp'?'webp':'jpg',base=$('filename').value.replace(/[<>:"/\\|?*\x00-\x1f]/g,'-').replace(/[. ]+$/g,'').trim()||'Banniere Band';
+  downloadUrl=URL.createObjectURL(blob);$('download').href=downloadUrl;$('download').download=base+'.'+ext;$('download').hidden=false;
+  message(`Prête : 2400 × 600 px · ${blob.size} octets · ${ext.toUpperCase()} · qualité d’encodage ${Math.round(quality*100)} %. Vérifiez l’aspect avant de télécharger.`);
+ }catch(error){if(current===generation)message(error.message);}finally{if(current===generation)$('export').disabled=false;}
+};
+</script></body></html>

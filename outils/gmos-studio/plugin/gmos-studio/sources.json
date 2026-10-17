@@ -1,0 +1,228 @@
+{
+  "date": "2026-10-17",
+  "sources": [
+    {
+      "atelier": "theme",
+      "plugin": "RPG Theme Builder",
+      "versionSource": "0.9.0",
+      "source": "../rpg-theme-builder/skills/instructions",
+      "originalSkillSha256": "870488a64309b30e20f62470c635031a51e5ca3ed2213dcbf8004fee6b1c5118",
+      "bodySha256": "6d2cef61382b5e2aca03e3bcf2f7c1951eaa8635906a32b60aff2683fb5c110a",
+      "overlays": [
+        {
+          "file": "references/Cahier-des-charges-theme-de-jeu.md",
+          "source": "documentation/Architecture/Cahier-des-charges-theme-de-jeu.md"
+        },
+        {
+          "file": "references/Cahier-des-charges-fiche-de-personnage.md",
+          "source": "documentation/Architecture/Cahier-des-charges-fiche-de-personnage.md"
+        },
+        {
+          "file": "references/Pipeline-des-themes.md",
+          "source": "documentation/Architecture/Pipeline-des-themes.md"
+        },
+        {
+          "file": "references/Pipeline-des-fiches.md",
+          "source": "documentation/Architecture/Pipeline-des-fiches.md"
+        },
+        {
+          "file": "references/Flux-des-constructeurs.md",
+          "source": "documentation/Architecture/Flux-des-constructeurs.md"
+        },
+        {
+          "file": "references/rpg-core.css",
+          "source": "docs/ui/rpg-theme-sdk/rpg-core.css"
+        }
+      ],
+      "files": [
+        {
+          "path": "references/alien.css",
+          "sha256": "fa76694c8a3699d79287bdd9094444226675ce65fbaf6fbc25906983c4136b51"
+        },
+        {
+          "path": "references/blade-runner.css",
+          "sha256": "878bcfd617fd191623dd231d57e14256e0b7d44365f708402d7f81e17f2763a8"
+        },
+        {
+          "path": "references/Cahier-des-charges-theme-de-jeu.md",
+          "sha256": "324ca9f08f01419f7be983536e78bf69a3cd6bb85b860b86b47226a4d5b57bd7"
+        },
+        {
+          "path": "references/README.md",
+          "sha256": "06b89dd5e4a3b472f7b280708e2e477d648703dcbe61d262306b732dc5ad8922"
+        },
+        {
+          "path": "references/RPG_Theme_Builder_Methodologie.md",
+          "sha256": "60efa3f7d3e2908d3e241d84136fc1996ad729cd6676c1b1a7cef2048021a566"
+        },
+        {
+          "path": "references/rpg-core.css",
+          "sha256": "a879051a885e718dcf6221f11475906f866f27b42c01ea1e55d04c54d40089ef"
+        },
+        {
+          "path": "references/Cahier-des-charges-fiche-de-personnage.md",
+          "sha256": "3ffc7b6c8a5925f3595fb30be0ef7cd3ec4baf15512b662d2b569843e1b26ace"
+        },
+        {
+          "path": "references/Pipeline-des-themes.md",
+          "sha256": "d2b67ff85105c6e179f7cf19a34a098af9b6d91fc0b869068dc1bf6fe428b1a2"
+        },
+        {
+          "path": "references/Pipeline-des-fiches.md",
+          "sha256": "9cdd5d88883f369dd881d77d9ae9b26a0dafabbdc34995390dfcc2c2ecfeb68c"
+        },
+        {
+          "path": "references/Flux-des-constructeurs.md",
+          "sha256": "a49bd54149d9d3e4abe3fcbf8484b51cc3627d8b218af60038cb837be8fe9422"
+        }
+      ]
+    },
+    {
+      "atelier": "fiche",
+      "plugin": "Character Sheet HTML Studio",
+      "versionSource": "0.2.2",
+      "source": "../rpg-sheet-builder/skills/instructions",
+      "originalSkillSha256": "69e7bd84dad76a61d80e22ab3ed65e32da3eeaf79d60c9d8fccb75b4204a1527",
+      "bodySha256": "05c420b5e46ccc0304bed31a82b836d918a513125eba96e735ccaa8084f3cd2f",
+      "overlays": [
+        {
+          "file": "references/Cahier-des-charges-theme-de-jeu.md",
+          "source": "documentation/Architecture/Cahier-des-charges-theme-de-jeu.md"
+        },
+        {
+          "file": "references/Cahier-des-charges-fiche-de-personnage.md",
+          "source": "documentation/Architecture/Cahier-des-charges-fiche-de-personnage.md"
+        },
+        {
+          "file": "references/Pipeline-des-themes.md",
+          "source": "documentation/Architecture/Pipeline-des-themes.md"
+        },
+        {
+          "file": "references/Pipeline-des-fiches.md",
+          "source": "documentation/Architecture/Pipeline-des-fiches.md"
+        },
+        {
+          "file": "references/Flux-des-constructeurs.md",
+          "source": "documentation/Architecture/Flux-des-constructeurs.md"
+        }
+      ],
+      "files": [
+        {
+          "path": "references/AL-Fiche-de-personnage_pf.pdf",
+          "sha256": "42d2e93c296624b4dbbee86b66beb5014f10588807e4375f4d9519785a8d3253"
+        },
+        {
+          "path": "references/alien_character_sheet_v2.html",
+          "sha256": "27b5288d9648a91343fdee4965991b5620d1befc2ca109bf227a79a0fb3cbd6c"
+        },
+        {
+          "path": "references/Cahier-des-charges-fiche-de-personnage.md",
+          "sha256": "3ffc7b6c8a5925f3595fb30be0ef7cd3ec4baf15512b662d2b569843e1b26ace"
+        },
+        {
+          "path": "references/cthulhu_7_fiche_classique_interactive.html",
+          "sha256": "2af15158c7022b8691c9a3b9ba69157859a18a0a06cd286408d60cbdfa67ed0f"
+        },
+        {
+          "path": "references/GUIDE_TECHNIQUE_MODELISATION_FICHES_JDR.md",
+          "sha256": "b258288b5e3c78757c14b521becfae5170929729c31468d102b571e1d94a1a22"
+        },
+        {
+          "path": "references/HTML_MANIFEST_SPEC.md",
+          "sha256": "56fcbd0e606ed36e6939883043937c01dc7853712fe9c83fce0c5065fad4be7b"
+        },
+        {
+          "path": "references/L'Appel de Cthulhu 7 - Fiche de personnage classique.pdf",
+          "sha256": "e05472b466ba4053717f6e3e94025388802e59b426cb5699f9963ae1b7b7cc12"
+        },
+        {
+          "path": "references/Cahier-des-charges-theme-de-jeu.md",
+          "sha256": "324ca9f08f01419f7be983536e78bf69a3cd6bb85b860b86b47226a4d5b57bd7"
+        },
+        {
+          "path": "references/Pipeline-des-themes.md",
+          "sha256": "d2b67ff85105c6e179f7cf19a34a098af9b6d91fc0b869068dc1bf6fe428b1a2"
+        },
+        {
+          "path": "references/Pipeline-des-fiches.md",
+          "sha256": "9cdd5d88883f369dd881d77d9ae9b26a0dafabbdc34995390dfcc2c2ecfeb68c"
+        },
+        {
+          "path": "references/Flux-des-constructeurs.md",
+          "sha256": "a49bd54149d9d3e4abe3fcbf8484b51cc3627d8b218af60038cb837be8fe9422"
+        }
+      ]
+    },
+    {
+      "atelier": "identite",
+      "plugin": "RPG Visual Identity Builder",
+      "versionSource": "0.1.0",
+      "source": "../rpg-visual-identity-builder/plugin/rpg-visual-identity-builder/skills/visual-identity",
+      "originalSkillSha256": "878036cdb8df15efc295da20e8369f787de80b25c6f063762b3b157380426009",
+      "bodySha256": "2cc6b39d0a01a4612eca0a382006cab83beca8a82c1a945d013cd540eeb52102",
+      "overlays": [],
+      "files": [
+        {
+          "path": "references/exemples.md",
+          "sha256": "8fc8eaa2c5e60971ea71d3a60ee044017ec2596967f52ca1821f43b2885fa1dc"
+        },
+        {
+          "path": "scripts/valider-identite.mjs",
+          "sha256": "4628c58f55361a670766cf997e45cd9ed00799cd820d21a6a8fa3eb869adc5b9"
+        }
+      ]
+    },
+    {
+      "atelier": "banniere",
+      "plugin": "RPG Banner Builder",
+      "versionSource": "0.1.0",
+      "source": "../rpg-banner-builder/plugin/rpg-banner-builder/skills/create-banner",
+      "originalSkillSha256": "b66af8ecba1df71c1c08029272483730eaf7a0204121522c66287beb8eab5bba",
+      "bodySha256": "46d97c60d3f8eeeb43c627156194c97eed2dde24a960f2e08be8cf37495e568e",
+      "overlays": [],
+      "files": [
+        {
+          "path": "references/contrat-bannieres.md",
+          "sha256": "7fcae5dbaf255b0ffbf5e8b1048e4a1da302a099e12cae533f963df3aa1ba0c2"
+        },
+        {
+          "path": "references/prompts-historiques.md",
+          "sha256": "a58a7d5532b5ef5a4ed5077e109c6cbfc28caf95295ffd76c4fea46da341055a"
+        },
+        {
+          "path": "tools/preparer-banniere.html",
+          "sha256": "7ed44e87d7370428777ac7f86ccf5762873fdc7d13d31c09ece2901d11a83204"
+        }
+      ]
+    },
+    {
+      "atelier": "sommaire",
+      "plugin": "TOC Extractor",
+      "versionSource": "1.0.0",
+      "source": "sources/table-des-matieres",
+      "originalSkillSha256": "6fc1a83c9755cb280672ff29813eb27ec94b3d0454fa6954a3d1e535ce6167ec",
+      "bodySha256": "2b8d8998bd422534bff0f884e1a7f898d512955125e1591a8c60ab60a63c07a0",
+      "overlays": [],
+      "files": []
+    },
+    {
+      "atelier": "cartes",
+      "plugin": "Extracteur de cartes",
+      "versionSource": "1.1.0",
+      "source": "sources/cartes",
+      "originalSkillSha256": "28219072d0435f6ac13ad23f93db1eeb9747b06089e0156783892c6851a92c42",
+      "bodySha256": "03b449d02a0b4dc34484426860891516075707445ef29369b5da65854ddb720e",
+      "overlays": [],
+      "files": [
+        {
+          "path": "references/recipe.md",
+          "sha256": "61d6e52ef5116634f0fd2cbf13cb296bf8230fc06059f3f4d05bbd1f3048ece4"
+        },
+        {
+          "path": "scripts/cards.py",
+          "sha256": "132f32f7a609d528d38c8f322d143a322cc28d612b2aebc225a46b1d9fcfac45"
+        }
+      ]
+    }
+  ]
+}

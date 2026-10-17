@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "name": "contrat-bannieres.md",
+      "path": "references/contrat-bannieres.md"
+    },
+    {
+      "name": "prompts-historiques.md",
+      "path": "references/prompts-historiques.md"
+    }
+  ]
+}

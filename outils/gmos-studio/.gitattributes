@@ -1,0 +1,4 @@
+# Conserver les octets des références et livraisons contrôlées par SHA-256.
+plugin/** -text
+sources/** -text
+livraisons/**/*.html -text

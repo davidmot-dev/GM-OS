@@ -11802,6 +11802,39 @@ Archive inspectée, 14 contrôles réussis, skill distant relu ; **pas encore es
 références de David**. [Livraison, identifiants et reprise](2026-10-17-etat-et-reprise-codex-identite-visuelle.md).
 Commit et push demandés ensuite par David ; fichiers des autres chantiers préservés.
 
+### 138 · RPG Banner Builder — plugin privé — 17/10/2026
+
+David : « fais moi la même chose (un plugin) pour créer les bannières ». **Créé dans son compte**,
+version 0.1.0 : [RPG Banner Builder](https://chatgpt.com/plugins/plugins_6ad3aca67494819191711cbb7b5c2703).
+Skill de création/retouche avec l’outil d’images disponible, contraintes 4:1 et ruban central,
+palette cohérente avec le jeu, références historiques incluses. Outil hors ligne de recadrage,
+aperçu d’en-tête et export JPG/WebP 2400 × 600 sous 500 Ko. **11 contrôles réussis** sur images
+synthétiques ; archive et skill/outil distants relus. Aucun essai de génération artistique.
+[Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md). Commit et push demandés par David.
+
+### 139 · GM-OS Studio — six ateliers réunis — 17/10/2026
+
+David veut réunir six plugins avec un accueil qui demande le travail souhaité, puis valide
+« ok vas-y ». **[GM-OS Studio](https://chatgpt.com/plugins/plugins_6ad3afde7bb08191a3f1ac5155fc9748)**
+créé dans son compte, privé, version 0.1.0 : accueil + thème, fiche HTML, identité, bannière,
+sommaire et cartes. Menu conversationnel, accès direct et parcours nouveau jeu ; méthodes,
+contrats et références conservés, outils inclus. **12 contrôles du paquet et des outils réussis**,
+sept skills distants relus. Les anciens plugins restent disponibles ; pas d’essai conversationnel
+complet des six productions. [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md).
+Commit et push demandés par David.
+
+### 140 · Fiche Nephilim — sept pages de personnage et Sciences occultes — 17/10/2026
+
+Premier travail réel dans GM-OS Studio : David demande d’enrichir le gabarit existant, puis
+confirme cinq Ka par construct et deux nombres (MP actuelles/MP Max) par élément.
+**[HTML livré](../../outils/gmos-studio/livraisons/nephilim/nephilim-legende-interactive.html)** :
+7 pages, 1 019 zones, 747 clés ajoutées, 239 clés anciennes conservées. Pages 1 et 2 identiques,
+contrôlées jusqu’au rendu rempli pixel par pixel. **17 contrôles réussis**, hors ligne, JSON,
+reports, tactile et moteur jetable. [Liste exacte des clés, choix et intégration](2026-10-17-nephilim-7-pages-livraison.md).
+L’intégration a ensuite été réalisée par Claude Code dans `6be8ff1a` : HTML installé identique
+au livrable, moteur version 9, correspondance complète. **Validateur complet : zéro erreur et
+zéro avertissement**, revérifié avant le commit demandé par David pour les ajouts du Studio.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11879,6 +11912,9 @@ Commit et push demandés ensuite par David ; fichiers des autres chantiers prés
 | 70 | **Modules du jeu dans le Tablet Hub ; premier jeu Alien** | § 135 ; étapes 1–5 dans `8f4b1de6` ; recette et départ HACK poussés dans `460544af`/`a23e6989` ; correctif horloge HACK, glitch fixe en mouvements réduits et CRT tablette poussés dans `dc1ead2b` ; décompte, film, alarme et faux écho sur l’heure serveur le 16/10, non commité | Recharger et éprouver sur les tablettes, poursuivre la grille matérielle | Wi-Fi/son/clavier/veille réels à éprouver ; Table des Terres Médianes à définir ensuite |
 | 71 | **LCARS de Star Trek — intégration native** | § 136 ; [L1–L7 logiciel réalisées](2026-10-16-integration-lcars-gmos.md), version 0.5.0 : médias privés, son unique, 19 actions arbitrées, 42 captures natives et deux défauts de cycle de vie corrigés ; 191 Vitest ciblés + 38 Node + 10 E2E ; livraison groupée demandée | Remplir la grille matérielle | Essais réels iPad, iPad Air, Samsung et smartphone |
 | 72 | **Plugin d’identité visuelle** | § 137 ; plugin privé 0.1.0 créé, archive et skill distant vérifiés, 14 contrôles verts | Ajouter le plugin et l’éprouver avec des références | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-identite-visuelle.md) |
+| 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
+| 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
+| 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
