@@ -86,6 +86,15 @@ reports de la page 2, qui recopient la page 1.
 Les Vécus se remplissent en deux colonnes : le **nom** (« Templier ») et le **degré** (4). C'est le
 nom qui apparaît au jet.
 
+**Sept pages depuis le 2026-10-17** : la fiche principale, les effets et le Simulacre, puis la
+**Magie** (page 3), la **Kabbale** (l'Arbre en page 4, les invocations en page 5) et l'**Alchimie**
+(les constructs et la Materiae Primae en page 6, les formules en page 7).
+
+⚠️ **Les degrés des Sephiroth, le Monde, la voie et les trois Œuvres se saisissent en page 2.**
+L'Arbre de la page 4 et les Œuvres de la page 6 en sont des **copies calculées**, en lecture seule :
+elles affichent ce que dit la page 2. Une même valeur n'a qu'un seul endroit où l'écrire (choix de
+David, 2026-10-17).
+
 ---
 
 ## Ce qui reste à la main

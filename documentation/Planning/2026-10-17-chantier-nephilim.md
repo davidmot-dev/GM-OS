@@ -121,3 +121,31 @@ de note (une section par Vécu) se fournit une fois.
 
 **Ordre proposé**, du plus petit au plus gros : lot 1 (sans code) → C → A → B → note Obsidian des
 Vécus → D → F.
+
+---
+
+## 7 · Où on en est — le 17/10 au soir (à reprendre)
+
+- **Fiche HTML à 7 pages** (Magie, Kabbale ×2, Alchimie ×2) livrée par Character Sheet HTML Studio
+  d'après la [consigne](2026-10-17-consigne-studio-nephilim.md) : **acceptée** (0 erreur), les 239
+  anciennes clés intactes, 747 nouvelles ; intégrée au moteur (`BUILTIN_VERSION` 9) ;
+  correspondance complétée (966 liens, 20 absents motivés, dont 15 copies calculées par la fiche).
+  **Non commité.**
+- **Pilote corrigé** (`Export Dirvers/corriges/Nephilim_driver_gmos_corrige.gmos-driver`) : fiche
+  GM-OS de 234 à 966 champs, identité visuelle remise en deux champs, zéro constat de la Forge.
+  **À réimporter par David**, puis vérifier qu'une valeur saisie en page 3 à 7 remonte.
+- **L'éditeur d'identité visuelle** range seul un bloc « STYLE: … AVOID: … » collé ; une identité
+  déjà enregistrée avec le bloc se lit rangée. Essais verts. **Non commité.**
+- **La liste des Vécus — faite à 22 h 50** : **80 Vécus, 16 époques**, dans
+  `docs/systems/nephilim/vecus/` (un Markdown par époque, lu en entier par l'Oracle, et
+  `index.json`). **Quatre époques manquent**, absentes des sources du carnet : Salomon (p. 77),
+  Syracuse (p. 79), Al-Andalus (p. 89), l'An Mil (p. 91) — à compléter depuis le livre
+  ([marche à suivre](../../outils/nephilim-vecus/README.md)). Texte du carnet, **non relu contre le
+  livre**. Reste à faire : le lien d'un Vécu de la fiche à sa description, et les suggestions de
+  noms à la saisie (code).
+- **Réimporté par David** : les valeurs se sauvent. L'Arbre de la page 4 et les Œuvres de la page 6
+  ne se saisissent pas : ce sont des copies calculées de la page 2, en lecture seule. **Choix de
+  David : on les laisse ainsi** (option A ; l'option B, inverser saisie et copies, est écartée).
+  Dit au manuel, page 54-Jeu-Nephilim.
+- **Rien n'est commité de ce lot.** Tout part ensemble après le réimport vérifié et la liste des
+  Vécus relue.

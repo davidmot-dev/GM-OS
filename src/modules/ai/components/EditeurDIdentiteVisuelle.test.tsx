@@ -53,6 +53,13 @@ describe('l’éditeur de l’identité visuelle', () => {
         expect(campagne().identiteVisuelle).toEqual({ style: 'Los Angeles 2019', aEviter: undefined, mode: 'remplace' });
     });
 
+    it('le bloc STYLE / AVOID du GPT, collé dans le style, se range dans les deux champs', () => {
+        render(<EditeurDIdentiteVisuelle cible={{ type: 'pilote', id: 'br' }} onClose={vi.fn()} />);
+        fireEvent.change(screen.getByPlaceholderText(/neo-noir illustration/), { target: { value: 'STYLE: ink and wash\nAVOID: neon' } });
+        expect(screen.getByDisplayValue('ink and wash')).toBeTruthy();
+        expect(screen.getByDisplayValue('neon')).toBeTruthy();
+    });
+
     it('tout effacer retire l’identité', () => {
         render(<EditeurDIdentiteVisuelle cible={{ type: 'pilote', id: 'br' }} onClose={vi.fn()} />);
         fireEvent.change(screen.getByPlaceholderText(/neo-noir illustration/), { target: { value: '' } });

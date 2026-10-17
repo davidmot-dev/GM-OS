@@ -1,7 +1,7 @@
 {
   "version": 1,
   "gabaritDeLaFiche": "nephilim-legende-fr",
-  "commentaire": "Correspondance entre la fiche de Nephilim dans GM-OS et le gabarit nephilim-legende-fr du moteur de fiches. Écrite le 2026-10-17 avec la fiche GM-OS corrigée le même jour : chaque champ GM-OS reprend la clé de la fiche, les points remplacés par des « _ » (la grammaire des formules de GM-OS ne lit pas les points). Les pistes imprimées en hotspots (Chutes, santé) sont déjà des nombres : elles se relient sans transformation.",
+  "commentaire": "Correspondance entre la fiche de Nephilim dans GM-OS et le gabarit nephilim-legende-fr du moteur de fiches. Écrite le 2026-10-17 avec la fiche GM-OS corrigée le même jour : chaque champ GM-OS reprend la clé de la fiche, les points remplacés par des « _ » (la grammaire des formules de GM-OS ne lit pas les points). Les pistes imprimées en hotspots (Chutes, santé) sont déjà des nombres : elles se relient sans transformation. Complétée le 2026-10-17 pour les pages 3 à 7 (Magie, Kabbale, Alchimie) livrées par Character Sheet HTML Studio : les nouvelles clés suivent la même règle, et les copies calculées par la fiche (monde et Sephiroth de la Kabbale, voie et Œuvres de l'Alchimie) sont des absents motivés.",
   "champs": [
     {
       "gmos": "identity_name",
@@ -938,6 +938,2934 @@
     {
       "gmos": "simulacrum_relatives",
       "fiche": "simulacrum.relatives"
+    },
+    {
+      "gmos": "magic_spells_0_name",
+      "fiche": "magic.spells.0.name"
+    },
+    {
+      "gmos": "magic_spells_0_circle",
+      "fiche": "magic.spells.0.circle"
+    },
+    {
+      "gmos": "magic_spells_0_art",
+      "fiche": "magic.spells.0.art"
+    },
+    {
+      "gmos": "magic_spells_0_element",
+      "fiche": "magic.spells.0.element"
+    },
+    {
+      "gmos": "magic_spells_0_degree",
+      "fiche": "magic.spells.0.degree"
+    },
+    {
+      "gmos": "magic_spells_0_range",
+      "fiche": "magic.spells.0.range"
+    },
+    {
+      "gmos": "magic_spells_0_duration",
+      "fiche": "magic.spells.0.duration"
+    },
+    {
+      "gmos": "magic_spells_0_effect",
+      "fiche": "magic.spells.0.effect"
+    },
+    {
+      "gmos": "magic_spells_0_memorization",
+      "fiche": "magic.spells.0.memorization"
+    },
+    {
+      "gmos": "magic_spells_0_page",
+      "fiche": "magic.spells.0.page"
+    },
+    {
+      "gmos": "magic_spells_1_name",
+      "fiche": "magic.spells.1.name"
+    },
+    {
+      "gmos": "magic_spells_1_circle",
+      "fiche": "magic.spells.1.circle"
+    },
+    {
+      "gmos": "magic_spells_1_art",
+      "fiche": "magic.spells.1.art"
+    },
+    {
+      "gmos": "magic_spells_1_element",
+      "fiche": "magic.spells.1.element"
+    },
+    {
+      "gmos": "magic_spells_1_degree",
+      "fiche": "magic.spells.1.degree"
+    },
+    {
+      "gmos": "magic_spells_1_range",
+      "fiche": "magic.spells.1.range"
+    },
+    {
+      "gmos": "magic_spells_1_duration",
+      "fiche": "magic.spells.1.duration"
+    },
+    {
+      "gmos": "magic_spells_1_effect",
+      "fiche": "magic.spells.1.effect"
+    },
+    {
+      "gmos": "magic_spells_1_memorization",
+      "fiche": "magic.spells.1.memorization"
+    },
+    {
+      "gmos": "magic_spells_1_page",
+      "fiche": "magic.spells.1.page"
+    },
+    {
+      "gmos": "magic_spells_2_name",
+      "fiche": "magic.spells.2.name"
+    },
+    {
+      "gmos": "magic_spells_2_circle",
+      "fiche": "magic.spells.2.circle"
+    },
+    {
+      "gmos": "magic_spells_2_art",
+      "fiche": "magic.spells.2.art"
+    },
+    {
+      "gmos": "magic_spells_2_element",
+      "fiche": "magic.spells.2.element"
+    },
+    {
+      "gmos": "magic_spells_2_degree",
+      "fiche": "magic.spells.2.degree"
+    },
+    {
+      "gmos": "magic_spells_2_range",
+      "fiche": "magic.spells.2.range"
+    },
+    {
+      "gmos": "magic_spells_2_duration",
+      "fiche": "magic.spells.2.duration"
+    },
+    {
+      "gmos": "magic_spells_2_effect",
+      "fiche": "magic.spells.2.effect"
+    },
+    {
+      "gmos": "magic_spells_2_memorization",
+      "fiche": "magic.spells.2.memorization"
+    },
+    {
+      "gmos": "magic_spells_2_page",
+      "fiche": "magic.spells.2.page"
+    },
+    {
+      "gmos": "magic_spells_3_name",
+      "fiche": "magic.spells.3.name"
+    },
+    {
+      "gmos": "magic_spells_3_circle",
+      "fiche": "magic.spells.3.circle"
+    },
+    {
+      "gmos": "magic_spells_3_art",
+      "fiche": "magic.spells.3.art"
+    },
+    {
+      "gmos": "magic_spells_3_element",
+      "fiche": "magic.spells.3.element"
+    },
+    {
+      "gmos": "magic_spells_3_degree",
+      "fiche": "magic.spells.3.degree"
+    },
+    {
+      "gmos": "magic_spells_3_range",
+      "fiche": "magic.spells.3.range"
+    },
+    {
+      "gmos": "magic_spells_3_duration",
+      "fiche": "magic.spells.3.duration"
+    },
+    {
+      "gmos": "magic_spells_3_effect",
+      "fiche": "magic.spells.3.effect"
+    },
+    {
+      "gmos": "magic_spells_3_memorization",
+      "fiche": "magic.spells.3.memorization"
+    },
+    {
+      "gmos": "magic_spells_3_page",
+      "fiche": "magic.spells.3.page"
+    },
+    {
+      "gmos": "magic_spells_4_name",
+      "fiche": "magic.spells.4.name"
+    },
+    {
+      "gmos": "magic_spells_4_circle",
+      "fiche": "magic.spells.4.circle"
+    },
+    {
+      "gmos": "magic_spells_4_art",
+      "fiche": "magic.spells.4.art"
+    },
+    {
+      "gmos": "magic_spells_4_element",
+      "fiche": "magic.spells.4.element"
+    },
+    {
+      "gmos": "magic_spells_4_degree",
+      "fiche": "magic.spells.4.degree"
+    },
+    {
+      "gmos": "magic_spells_4_range",
+      "fiche": "magic.spells.4.range"
+    },
+    {
+      "gmos": "magic_spells_4_duration",
+      "fiche": "magic.spells.4.duration"
+    },
+    {
+      "gmos": "magic_spells_4_effect",
+      "fiche": "magic.spells.4.effect"
+    },
+    {
+      "gmos": "magic_spells_4_memorization",
+      "fiche": "magic.spells.4.memorization"
+    },
+    {
+      "gmos": "magic_spells_4_page",
+      "fiche": "magic.spells.4.page"
+    },
+    {
+      "gmos": "magic_spells_5_name",
+      "fiche": "magic.spells.5.name"
+    },
+    {
+      "gmos": "magic_spells_5_circle",
+      "fiche": "magic.spells.5.circle"
+    },
+    {
+      "gmos": "magic_spells_5_art",
+      "fiche": "magic.spells.5.art"
+    },
+    {
+      "gmos": "magic_spells_5_element",
+      "fiche": "magic.spells.5.element"
+    },
+    {
+      "gmos": "magic_spells_5_degree",
+      "fiche": "magic.spells.5.degree"
+    },
+    {
+      "gmos": "magic_spells_5_range",
+      "fiche": "magic.spells.5.range"
+    },
+    {
+      "gmos": "magic_spells_5_duration",
+      "fiche": "magic.spells.5.duration"
+    },
+    {
+      "gmos": "magic_spells_5_effect",
+      "fiche": "magic.spells.5.effect"
+    },
+    {
+      "gmos": "magic_spells_5_memorization",
+      "fiche": "magic.spells.5.memorization"
+    },
+    {
+      "gmos": "magic_spells_5_page",
+      "fiche": "magic.spells.5.page"
+    },
+    {
+      "gmos": "magic_spells_6_name",
+      "fiche": "magic.spells.6.name"
+    },
+    {
+      "gmos": "magic_spells_6_circle",
+      "fiche": "magic.spells.6.circle"
+    },
+    {
+      "gmos": "magic_spells_6_art",
+      "fiche": "magic.spells.6.art"
+    },
+    {
+      "gmos": "magic_spells_6_element",
+      "fiche": "magic.spells.6.element"
+    },
+    {
+      "gmos": "magic_spells_6_degree",
+      "fiche": "magic.spells.6.degree"
+    },
+    {
+      "gmos": "magic_spells_6_range",
+      "fiche": "magic.spells.6.range"
+    },
+    {
+      "gmos": "magic_spells_6_duration",
+      "fiche": "magic.spells.6.duration"
+    },
+    {
+      "gmos": "magic_spells_6_effect",
+      "fiche": "magic.spells.6.effect"
+    },
+    {
+      "gmos": "magic_spells_6_memorization",
+      "fiche": "magic.spells.6.memorization"
+    },
+    {
+      "gmos": "magic_spells_6_page",
+      "fiche": "magic.spells.6.page"
+    },
+    {
+      "gmos": "magic_spells_7_name",
+      "fiche": "magic.spells.7.name"
+    },
+    {
+      "gmos": "magic_spells_7_circle",
+      "fiche": "magic.spells.7.circle"
+    },
+    {
+      "gmos": "magic_spells_7_art",
+      "fiche": "magic.spells.7.art"
+    },
+    {
+      "gmos": "magic_spells_7_element",
+      "fiche": "magic.spells.7.element"
+    },
+    {
+      "gmos": "magic_spells_7_degree",
+      "fiche": "magic.spells.7.degree"
+    },
+    {
+      "gmos": "magic_spells_7_range",
+      "fiche": "magic.spells.7.range"
+    },
+    {
+      "gmos": "magic_spells_7_duration",
+      "fiche": "magic.spells.7.duration"
+    },
+    {
+      "gmos": "magic_spells_7_effect",
+      "fiche": "magic.spells.7.effect"
+    },
+    {
+      "gmos": "magic_spells_7_memorization",
+      "fiche": "magic.spells.7.memorization"
+    },
+    {
+      "gmos": "magic_spells_7_page",
+      "fiche": "magic.spells.7.page"
+    },
+    {
+      "gmos": "magic_spells_8_name",
+      "fiche": "magic.spells.8.name"
+    },
+    {
+      "gmos": "magic_spells_8_circle",
+      "fiche": "magic.spells.8.circle"
+    },
+    {
+      "gmos": "magic_spells_8_art",
+      "fiche": "magic.spells.8.art"
+    },
+    {
+      "gmos": "magic_spells_8_element",
+      "fiche": "magic.spells.8.element"
+    },
+    {
+      "gmos": "magic_spells_8_degree",
+      "fiche": "magic.spells.8.degree"
+    },
+    {
+      "gmos": "magic_spells_8_range",
+      "fiche": "magic.spells.8.range"
+    },
+    {
+      "gmos": "magic_spells_8_duration",
+      "fiche": "magic.spells.8.duration"
+    },
+    {
+      "gmos": "magic_spells_8_effect",
+      "fiche": "magic.spells.8.effect"
+    },
+    {
+      "gmos": "magic_spells_8_memorization",
+      "fiche": "magic.spells.8.memorization"
+    },
+    {
+      "gmos": "magic_spells_8_page",
+      "fiche": "magic.spells.8.page"
+    },
+    {
+      "gmos": "magic_spells_9_name",
+      "fiche": "magic.spells.9.name"
+    },
+    {
+      "gmos": "magic_spells_9_circle",
+      "fiche": "magic.spells.9.circle"
+    },
+    {
+      "gmos": "magic_spells_9_art",
+      "fiche": "magic.spells.9.art"
+    },
+    {
+      "gmos": "magic_spells_9_element",
+      "fiche": "magic.spells.9.element"
+    },
+    {
+      "gmos": "magic_spells_9_degree",
+      "fiche": "magic.spells.9.degree"
+    },
+    {
+      "gmos": "magic_spells_9_range",
+      "fiche": "magic.spells.9.range"
+    },
+    {
+      "gmos": "magic_spells_9_duration",
+      "fiche": "magic.spells.9.duration"
+    },
+    {
+      "gmos": "magic_spells_9_effect",
+      "fiche": "magic.spells.9.effect"
+    },
+    {
+      "gmos": "magic_spells_9_memorization",
+      "fiche": "magic.spells.9.memorization"
+    },
+    {
+      "gmos": "magic_spells_9_page",
+      "fiche": "magic.spells.9.page"
+    },
+    {
+      "gmos": "magic_spells_10_name",
+      "fiche": "magic.spells.10.name"
+    },
+    {
+      "gmos": "magic_spells_10_circle",
+      "fiche": "magic.spells.10.circle"
+    },
+    {
+      "gmos": "magic_spells_10_art",
+      "fiche": "magic.spells.10.art"
+    },
+    {
+      "gmos": "magic_spells_10_element",
+      "fiche": "magic.spells.10.element"
+    },
+    {
+      "gmos": "magic_spells_10_degree",
+      "fiche": "magic.spells.10.degree"
+    },
+    {
+      "gmos": "magic_spells_10_range",
+      "fiche": "magic.spells.10.range"
+    },
+    {
+      "gmos": "magic_spells_10_duration",
+      "fiche": "magic.spells.10.duration"
+    },
+    {
+      "gmos": "magic_spells_10_effect",
+      "fiche": "magic.spells.10.effect"
+    },
+    {
+      "gmos": "magic_spells_10_memorization",
+      "fiche": "magic.spells.10.memorization"
+    },
+    {
+      "gmos": "magic_spells_10_page",
+      "fiche": "magic.spells.10.page"
+    },
+    {
+      "gmos": "magic_spells_11_name",
+      "fiche": "magic.spells.11.name"
+    },
+    {
+      "gmos": "magic_spells_11_circle",
+      "fiche": "magic.spells.11.circle"
+    },
+    {
+      "gmos": "magic_spells_11_art",
+      "fiche": "magic.spells.11.art"
+    },
+    {
+      "gmos": "magic_spells_11_element",
+      "fiche": "magic.spells.11.element"
+    },
+    {
+      "gmos": "magic_spells_11_degree",
+      "fiche": "magic.spells.11.degree"
+    },
+    {
+      "gmos": "magic_spells_11_range",
+      "fiche": "magic.spells.11.range"
+    },
+    {
+      "gmos": "magic_spells_11_duration",
+      "fiche": "magic.spells.11.duration"
+    },
+    {
+      "gmos": "magic_spells_11_effect",
+      "fiche": "magic.spells.11.effect"
+    },
+    {
+      "gmos": "magic_spells_11_memorization",
+      "fiche": "magic.spells.11.memorization"
+    },
+    {
+      "gmos": "magic_spells_11_page",
+      "fiche": "magic.spells.11.page"
+    },
+    {
+      "gmos": "magic_spells_12_name",
+      "fiche": "magic.spells.12.name"
+    },
+    {
+      "gmos": "magic_spells_12_circle",
+      "fiche": "magic.spells.12.circle"
+    },
+    {
+      "gmos": "magic_spells_12_art",
+      "fiche": "magic.spells.12.art"
+    },
+    {
+      "gmos": "magic_spells_12_element",
+      "fiche": "magic.spells.12.element"
+    },
+    {
+      "gmos": "magic_spells_12_degree",
+      "fiche": "magic.spells.12.degree"
+    },
+    {
+      "gmos": "magic_spells_12_range",
+      "fiche": "magic.spells.12.range"
+    },
+    {
+      "gmos": "magic_spells_12_duration",
+      "fiche": "magic.spells.12.duration"
+    },
+    {
+      "gmos": "magic_spells_12_effect",
+      "fiche": "magic.spells.12.effect"
+    },
+    {
+      "gmos": "magic_spells_12_memorization",
+      "fiche": "magic.spells.12.memorization"
+    },
+    {
+      "gmos": "magic_spells_12_page",
+      "fiche": "magic.spells.12.page"
+    },
+    {
+      "gmos": "magic_spells_13_name",
+      "fiche": "magic.spells.13.name"
+    },
+    {
+      "gmos": "magic_spells_13_circle",
+      "fiche": "magic.spells.13.circle"
+    },
+    {
+      "gmos": "magic_spells_13_art",
+      "fiche": "magic.spells.13.art"
+    },
+    {
+      "gmos": "magic_spells_13_element",
+      "fiche": "magic.spells.13.element"
+    },
+    {
+      "gmos": "magic_spells_13_degree",
+      "fiche": "magic.spells.13.degree"
+    },
+    {
+      "gmos": "magic_spells_13_range",
+      "fiche": "magic.spells.13.range"
+    },
+    {
+      "gmos": "magic_spells_13_duration",
+      "fiche": "magic.spells.13.duration"
+    },
+    {
+      "gmos": "magic_spells_13_effect",
+      "fiche": "magic.spells.13.effect"
+    },
+    {
+      "gmos": "magic_spells_13_memorization",
+      "fiche": "magic.spells.13.memorization"
+    },
+    {
+      "gmos": "magic_spells_13_page",
+      "fiche": "magic.spells.13.page"
+    },
+    {
+      "gmos": "magic_spells_14_name",
+      "fiche": "magic.spells.14.name"
+    },
+    {
+      "gmos": "magic_spells_14_circle",
+      "fiche": "magic.spells.14.circle"
+    },
+    {
+      "gmos": "magic_spells_14_art",
+      "fiche": "magic.spells.14.art"
+    },
+    {
+      "gmos": "magic_spells_14_element",
+      "fiche": "magic.spells.14.element"
+    },
+    {
+      "gmos": "magic_spells_14_degree",
+      "fiche": "magic.spells.14.degree"
+    },
+    {
+      "gmos": "magic_spells_14_range",
+      "fiche": "magic.spells.14.range"
+    },
+    {
+      "gmos": "magic_spells_14_duration",
+      "fiche": "magic.spells.14.duration"
+    },
+    {
+      "gmos": "magic_spells_14_effect",
+      "fiche": "magic.spells.14.effect"
+    },
+    {
+      "gmos": "magic_spells_14_memorization",
+      "fiche": "magic.spells.14.memorization"
+    },
+    {
+      "gmos": "magic_spells_14_page",
+      "fiche": "magic.spells.14.page"
+    },
+    {
+      "gmos": "magic_spells_15_name",
+      "fiche": "magic.spells.15.name"
+    },
+    {
+      "gmos": "magic_spells_15_circle",
+      "fiche": "magic.spells.15.circle"
+    },
+    {
+      "gmos": "magic_spells_15_art",
+      "fiche": "magic.spells.15.art"
+    },
+    {
+      "gmos": "magic_spells_15_element",
+      "fiche": "magic.spells.15.element"
+    },
+    {
+      "gmos": "magic_spells_15_degree",
+      "fiche": "magic.spells.15.degree"
+    },
+    {
+      "gmos": "magic_spells_15_range",
+      "fiche": "magic.spells.15.range"
+    },
+    {
+      "gmos": "magic_spells_15_duration",
+      "fiche": "magic.spells.15.duration"
+    },
+    {
+      "gmos": "magic_spells_15_effect",
+      "fiche": "magic.spells.15.effect"
+    },
+    {
+      "gmos": "magic_spells_15_memorization",
+      "fiche": "magic.spells.15.memorization"
+    },
+    {
+      "gmos": "magic_spells_15_page",
+      "fiche": "magic.spells.15.page"
+    },
+    {
+      "gmos": "magic_spells_16_name",
+      "fiche": "magic.spells.16.name"
+    },
+    {
+      "gmos": "magic_spells_16_circle",
+      "fiche": "magic.spells.16.circle"
+    },
+    {
+      "gmos": "magic_spells_16_art",
+      "fiche": "magic.spells.16.art"
+    },
+    {
+      "gmos": "magic_spells_16_element",
+      "fiche": "magic.spells.16.element"
+    },
+    {
+      "gmos": "magic_spells_16_degree",
+      "fiche": "magic.spells.16.degree"
+    },
+    {
+      "gmos": "magic_spells_16_range",
+      "fiche": "magic.spells.16.range"
+    },
+    {
+      "gmos": "magic_spells_16_duration",
+      "fiche": "magic.spells.16.duration"
+    },
+    {
+      "gmos": "magic_spells_16_effect",
+      "fiche": "magic.spells.16.effect"
+    },
+    {
+      "gmos": "magic_spells_16_memorization",
+      "fiche": "magic.spells.16.memorization"
+    },
+    {
+      "gmos": "magic_spells_16_page",
+      "fiche": "magic.spells.16.page"
+    },
+    {
+      "gmos": "magic_spells_17_name",
+      "fiche": "magic.spells.17.name"
+    },
+    {
+      "gmos": "magic_spells_17_circle",
+      "fiche": "magic.spells.17.circle"
+    },
+    {
+      "gmos": "magic_spells_17_art",
+      "fiche": "magic.spells.17.art"
+    },
+    {
+      "gmos": "magic_spells_17_element",
+      "fiche": "magic.spells.17.element"
+    },
+    {
+      "gmos": "magic_spells_17_degree",
+      "fiche": "magic.spells.17.degree"
+    },
+    {
+      "gmos": "magic_spells_17_range",
+      "fiche": "magic.spells.17.range"
+    },
+    {
+      "gmos": "magic_spells_17_duration",
+      "fiche": "magic.spells.17.duration"
+    },
+    {
+      "gmos": "magic_spells_17_effect",
+      "fiche": "magic.spells.17.effect"
+    },
+    {
+      "gmos": "magic_spells_17_memorization",
+      "fiche": "magic.spells.17.memorization"
+    },
+    {
+      "gmos": "magic_spells_17_page",
+      "fiche": "magic.spells.17.page"
+    },
+    {
+      "gmos": "magic_spells_18_name",
+      "fiche": "magic.spells.18.name"
+    },
+    {
+      "gmos": "magic_spells_18_circle",
+      "fiche": "magic.spells.18.circle"
+    },
+    {
+      "gmos": "magic_spells_18_art",
+      "fiche": "magic.spells.18.art"
+    },
+    {
+      "gmos": "magic_spells_18_element",
+      "fiche": "magic.spells.18.element"
+    },
+    {
+      "gmos": "magic_spells_18_degree",
+      "fiche": "magic.spells.18.degree"
+    },
+    {
+      "gmos": "magic_spells_18_range",
+      "fiche": "magic.spells.18.range"
+    },
+    {
+      "gmos": "magic_spells_18_duration",
+      "fiche": "magic.spells.18.duration"
+    },
+    {
+      "gmos": "magic_spells_18_effect",
+      "fiche": "magic.spells.18.effect"
+    },
+    {
+      "gmos": "magic_spells_18_memorization",
+      "fiche": "magic.spells.18.memorization"
+    },
+    {
+      "gmos": "magic_spells_18_page",
+      "fiche": "magic.spells.18.page"
+    },
+    {
+      "gmos": "magic_spells_19_name",
+      "fiche": "magic.spells.19.name"
+    },
+    {
+      "gmos": "magic_spells_19_circle",
+      "fiche": "magic.spells.19.circle"
+    },
+    {
+      "gmos": "magic_spells_19_art",
+      "fiche": "magic.spells.19.art"
+    },
+    {
+      "gmos": "magic_spells_19_element",
+      "fiche": "magic.spells.19.element"
+    },
+    {
+      "gmos": "magic_spells_19_degree",
+      "fiche": "magic.spells.19.degree"
+    },
+    {
+      "gmos": "magic_spells_19_range",
+      "fiche": "magic.spells.19.range"
+    },
+    {
+      "gmos": "magic_spells_19_duration",
+      "fiche": "magic.spells.19.duration"
+    },
+    {
+      "gmos": "magic_spells_19_effect",
+      "fiche": "magic.spells.19.effect"
+    },
+    {
+      "gmos": "magic_spells_19_memorization",
+      "fiche": "magic.spells.19.memorization"
+    },
+    {
+      "gmos": "magic_spells_19_page",
+      "fiche": "magic.spells.19.page"
+    },
+    {
+      "gmos": "magic_spells_20_name",
+      "fiche": "magic.spells.20.name"
+    },
+    {
+      "gmos": "magic_spells_20_circle",
+      "fiche": "magic.spells.20.circle"
+    },
+    {
+      "gmos": "magic_spells_20_art",
+      "fiche": "magic.spells.20.art"
+    },
+    {
+      "gmos": "magic_spells_20_element",
+      "fiche": "magic.spells.20.element"
+    },
+    {
+      "gmos": "magic_spells_20_degree",
+      "fiche": "magic.spells.20.degree"
+    },
+    {
+      "gmos": "magic_spells_20_range",
+      "fiche": "magic.spells.20.range"
+    },
+    {
+      "gmos": "magic_spells_20_duration",
+      "fiche": "magic.spells.20.duration"
+    },
+    {
+      "gmos": "magic_spells_20_effect",
+      "fiche": "magic.spells.20.effect"
+    },
+    {
+      "gmos": "magic_spells_20_memorization",
+      "fiche": "magic.spells.20.memorization"
+    },
+    {
+      "gmos": "magic_spells_20_page",
+      "fiche": "magic.spells.20.page"
+    },
+    {
+      "gmos": "magic_spells_21_name",
+      "fiche": "magic.spells.21.name"
+    },
+    {
+      "gmos": "magic_spells_21_circle",
+      "fiche": "magic.spells.21.circle"
+    },
+    {
+      "gmos": "magic_spells_21_art",
+      "fiche": "magic.spells.21.art"
+    },
+    {
+      "gmos": "magic_spells_21_element",
+      "fiche": "magic.spells.21.element"
+    },
+    {
+      "gmos": "magic_spells_21_degree",
+      "fiche": "magic.spells.21.degree"
+    },
+    {
+      "gmos": "magic_spells_21_range",
+      "fiche": "magic.spells.21.range"
+    },
+    {
+      "gmos": "magic_spells_21_duration",
+      "fiche": "magic.spells.21.duration"
+    },
+    {
+      "gmos": "magic_spells_21_effect",
+      "fiche": "magic.spells.21.effect"
+    },
+    {
+      "gmos": "magic_spells_21_memorization",
+      "fiche": "magic.spells.21.memorization"
+    },
+    {
+      "gmos": "magic_spells_21_page",
+      "fiche": "magic.spells.21.page"
+    },
+    {
+      "gmos": "magic_spells_22_name",
+      "fiche": "magic.spells.22.name"
+    },
+    {
+      "gmos": "magic_spells_22_circle",
+      "fiche": "magic.spells.22.circle"
+    },
+    {
+      "gmos": "magic_spells_22_art",
+      "fiche": "magic.spells.22.art"
+    },
+    {
+      "gmos": "magic_spells_22_element",
+      "fiche": "magic.spells.22.element"
+    },
+    {
+      "gmos": "magic_spells_22_degree",
+      "fiche": "magic.spells.22.degree"
+    },
+    {
+      "gmos": "magic_spells_22_range",
+      "fiche": "magic.spells.22.range"
+    },
+    {
+      "gmos": "magic_spells_22_duration",
+      "fiche": "magic.spells.22.duration"
+    },
+    {
+      "gmos": "magic_spells_22_effect",
+      "fiche": "magic.spells.22.effect"
+    },
+    {
+      "gmos": "magic_spells_22_memorization",
+      "fiche": "magic.spells.22.memorization"
+    },
+    {
+      "gmos": "magic_spells_22_page",
+      "fiche": "magic.spells.22.page"
+    },
+    {
+      "gmos": "magic_spells_23_name",
+      "fiche": "magic.spells.23.name"
+    },
+    {
+      "gmos": "magic_spells_23_circle",
+      "fiche": "magic.spells.23.circle"
+    },
+    {
+      "gmos": "magic_spells_23_art",
+      "fiche": "magic.spells.23.art"
+    },
+    {
+      "gmos": "magic_spells_23_element",
+      "fiche": "magic.spells.23.element"
+    },
+    {
+      "gmos": "magic_spells_23_degree",
+      "fiche": "magic.spells.23.degree"
+    },
+    {
+      "gmos": "magic_spells_23_range",
+      "fiche": "magic.spells.23.range"
+    },
+    {
+      "gmos": "magic_spells_23_duration",
+      "fiche": "magic.spells.23.duration"
+    },
+    {
+      "gmos": "magic_spells_23_effect",
+      "fiche": "magic.spells.23.effect"
+    },
+    {
+      "gmos": "magic_spells_23_memorization",
+      "fiche": "magic.spells.23.memorization"
+    },
+    {
+      "gmos": "magic_spells_23_page",
+      "fiche": "magic.spells.23.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_name",
+      "fiche": "kabbalah.invocations.0.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_sephirah",
+      "fiche": "kabbalah.invocations.0.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_world",
+      "fiche": "kabbalah.invocations.0.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_element",
+      "fiche": "kabbalah.invocations.0.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_degree",
+      "fiche": "kabbalah.invocations.0.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_range",
+      "fiche": "kabbalah.invocations.0.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_duration",
+      "fiche": "kabbalah.invocations.0.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_visibility",
+      "fiche": "kabbalah.invocations.0.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_notes",
+      "fiche": "kabbalah.invocations.0.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_memorization",
+      "fiche": "kabbalah.invocations.0.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_0_page",
+      "fiche": "kabbalah.invocations.0.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_name",
+      "fiche": "kabbalah.invocations.1.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_sephirah",
+      "fiche": "kabbalah.invocations.1.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_world",
+      "fiche": "kabbalah.invocations.1.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_element",
+      "fiche": "kabbalah.invocations.1.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_degree",
+      "fiche": "kabbalah.invocations.1.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_range",
+      "fiche": "kabbalah.invocations.1.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_duration",
+      "fiche": "kabbalah.invocations.1.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_visibility",
+      "fiche": "kabbalah.invocations.1.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_notes",
+      "fiche": "kabbalah.invocations.1.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_memorization",
+      "fiche": "kabbalah.invocations.1.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_1_page",
+      "fiche": "kabbalah.invocations.1.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_name",
+      "fiche": "kabbalah.invocations.2.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_sephirah",
+      "fiche": "kabbalah.invocations.2.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_world",
+      "fiche": "kabbalah.invocations.2.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_element",
+      "fiche": "kabbalah.invocations.2.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_degree",
+      "fiche": "kabbalah.invocations.2.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_range",
+      "fiche": "kabbalah.invocations.2.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_duration",
+      "fiche": "kabbalah.invocations.2.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_visibility",
+      "fiche": "kabbalah.invocations.2.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_notes",
+      "fiche": "kabbalah.invocations.2.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_memorization",
+      "fiche": "kabbalah.invocations.2.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_2_page",
+      "fiche": "kabbalah.invocations.2.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_name",
+      "fiche": "kabbalah.invocations.3.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_sephirah",
+      "fiche": "kabbalah.invocations.3.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_world",
+      "fiche": "kabbalah.invocations.3.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_element",
+      "fiche": "kabbalah.invocations.3.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_degree",
+      "fiche": "kabbalah.invocations.3.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_range",
+      "fiche": "kabbalah.invocations.3.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_duration",
+      "fiche": "kabbalah.invocations.3.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_visibility",
+      "fiche": "kabbalah.invocations.3.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_notes",
+      "fiche": "kabbalah.invocations.3.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_memorization",
+      "fiche": "kabbalah.invocations.3.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_3_page",
+      "fiche": "kabbalah.invocations.3.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_name",
+      "fiche": "kabbalah.invocations.4.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_sephirah",
+      "fiche": "kabbalah.invocations.4.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_world",
+      "fiche": "kabbalah.invocations.4.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_element",
+      "fiche": "kabbalah.invocations.4.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_degree",
+      "fiche": "kabbalah.invocations.4.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_range",
+      "fiche": "kabbalah.invocations.4.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_duration",
+      "fiche": "kabbalah.invocations.4.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_visibility",
+      "fiche": "kabbalah.invocations.4.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_notes",
+      "fiche": "kabbalah.invocations.4.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_memorization",
+      "fiche": "kabbalah.invocations.4.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_4_page",
+      "fiche": "kabbalah.invocations.4.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_name",
+      "fiche": "kabbalah.invocations.5.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_sephirah",
+      "fiche": "kabbalah.invocations.5.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_world",
+      "fiche": "kabbalah.invocations.5.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_element",
+      "fiche": "kabbalah.invocations.5.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_degree",
+      "fiche": "kabbalah.invocations.5.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_range",
+      "fiche": "kabbalah.invocations.5.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_duration",
+      "fiche": "kabbalah.invocations.5.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_visibility",
+      "fiche": "kabbalah.invocations.5.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_notes",
+      "fiche": "kabbalah.invocations.5.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_memorization",
+      "fiche": "kabbalah.invocations.5.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_5_page",
+      "fiche": "kabbalah.invocations.5.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_name",
+      "fiche": "kabbalah.invocations.6.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_sephirah",
+      "fiche": "kabbalah.invocations.6.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_world",
+      "fiche": "kabbalah.invocations.6.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_element",
+      "fiche": "kabbalah.invocations.6.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_degree",
+      "fiche": "kabbalah.invocations.6.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_range",
+      "fiche": "kabbalah.invocations.6.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_duration",
+      "fiche": "kabbalah.invocations.6.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_visibility",
+      "fiche": "kabbalah.invocations.6.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_notes",
+      "fiche": "kabbalah.invocations.6.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_memorization",
+      "fiche": "kabbalah.invocations.6.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_6_page",
+      "fiche": "kabbalah.invocations.6.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_name",
+      "fiche": "kabbalah.invocations.7.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_sephirah",
+      "fiche": "kabbalah.invocations.7.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_world",
+      "fiche": "kabbalah.invocations.7.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_element",
+      "fiche": "kabbalah.invocations.7.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_degree",
+      "fiche": "kabbalah.invocations.7.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_range",
+      "fiche": "kabbalah.invocations.7.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_duration",
+      "fiche": "kabbalah.invocations.7.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_visibility",
+      "fiche": "kabbalah.invocations.7.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_notes",
+      "fiche": "kabbalah.invocations.7.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_memorization",
+      "fiche": "kabbalah.invocations.7.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_7_page",
+      "fiche": "kabbalah.invocations.7.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_name",
+      "fiche": "kabbalah.invocations.8.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_sephirah",
+      "fiche": "kabbalah.invocations.8.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_world",
+      "fiche": "kabbalah.invocations.8.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_element",
+      "fiche": "kabbalah.invocations.8.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_degree",
+      "fiche": "kabbalah.invocations.8.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_range",
+      "fiche": "kabbalah.invocations.8.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_duration",
+      "fiche": "kabbalah.invocations.8.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_visibility",
+      "fiche": "kabbalah.invocations.8.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_notes",
+      "fiche": "kabbalah.invocations.8.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_memorization",
+      "fiche": "kabbalah.invocations.8.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_8_page",
+      "fiche": "kabbalah.invocations.8.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_name",
+      "fiche": "kabbalah.invocations.9.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_sephirah",
+      "fiche": "kabbalah.invocations.9.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_world",
+      "fiche": "kabbalah.invocations.9.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_element",
+      "fiche": "kabbalah.invocations.9.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_degree",
+      "fiche": "kabbalah.invocations.9.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_range",
+      "fiche": "kabbalah.invocations.9.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_duration",
+      "fiche": "kabbalah.invocations.9.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_visibility",
+      "fiche": "kabbalah.invocations.9.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_notes",
+      "fiche": "kabbalah.invocations.9.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_memorization",
+      "fiche": "kabbalah.invocations.9.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_9_page",
+      "fiche": "kabbalah.invocations.9.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_name",
+      "fiche": "kabbalah.invocations.10.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_sephirah",
+      "fiche": "kabbalah.invocations.10.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_world",
+      "fiche": "kabbalah.invocations.10.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_element",
+      "fiche": "kabbalah.invocations.10.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_degree",
+      "fiche": "kabbalah.invocations.10.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_range",
+      "fiche": "kabbalah.invocations.10.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_duration",
+      "fiche": "kabbalah.invocations.10.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_visibility",
+      "fiche": "kabbalah.invocations.10.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_notes",
+      "fiche": "kabbalah.invocations.10.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_memorization",
+      "fiche": "kabbalah.invocations.10.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_10_page",
+      "fiche": "kabbalah.invocations.10.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_name",
+      "fiche": "kabbalah.invocations.11.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_sephirah",
+      "fiche": "kabbalah.invocations.11.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_world",
+      "fiche": "kabbalah.invocations.11.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_element",
+      "fiche": "kabbalah.invocations.11.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_degree",
+      "fiche": "kabbalah.invocations.11.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_range",
+      "fiche": "kabbalah.invocations.11.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_duration",
+      "fiche": "kabbalah.invocations.11.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_visibility",
+      "fiche": "kabbalah.invocations.11.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_notes",
+      "fiche": "kabbalah.invocations.11.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_memorization",
+      "fiche": "kabbalah.invocations.11.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_11_page",
+      "fiche": "kabbalah.invocations.11.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_name",
+      "fiche": "kabbalah.invocations.12.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_sephirah",
+      "fiche": "kabbalah.invocations.12.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_world",
+      "fiche": "kabbalah.invocations.12.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_element",
+      "fiche": "kabbalah.invocations.12.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_degree",
+      "fiche": "kabbalah.invocations.12.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_range",
+      "fiche": "kabbalah.invocations.12.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_duration",
+      "fiche": "kabbalah.invocations.12.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_visibility",
+      "fiche": "kabbalah.invocations.12.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_notes",
+      "fiche": "kabbalah.invocations.12.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_memorization",
+      "fiche": "kabbalah.invocations.12.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_12_page",
+      "fiche": "kabbalah.invocations.12.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_name",
+      "fiche": "kabbalah.invocations.13.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_sephirah",
+      "fiche": "kabbalah.invocations.13.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_world",
+      "fiche": "kabbalah.invocations.13.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_element",
+      "fiche": "kabbalah.invocations.13.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_degree",
+      "fiche": "kabbalah.invocations.13.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_range",
+      "fiche": "kabbalah.invocations.13.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_duration",
+      "fiche": "kabbalah.invocations.13.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_visibility",
+      "fiche": "kabbalah.invocations.13.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_notes",
+      "fiche": "kabbalah.invocations.13.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_memorization",
+      "fiche": "kabbalah.invocations.13.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_13_page",
+      "fiche": "kabbalah.invocations.13.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_name",
+      "fiche": "kabbalah.invocations.14.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_sephirah",
+      "fiche": "kabbalah.invocations.14.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_world",
+      "fiche": "kabbalah.invocations.14.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_element",
+      "fiche": "kabbalah.invocations.14.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_degree",
+      "fiche": "kabbalah.invocations.14.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_range",
+      "fiche": "kabbalah.invocations.14.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_duration",
+      "fiche": "kabbalah.invocations.14.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_visibility",
+      "fiche": "kabbalah.invocations.14.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_notes",
+      "fiche": "kabbalah.invocations.14.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_memorization",
+      "fiche": "kabbalah.invocations.14.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_14_page",
+      "fiche": "kabbalah.invocations.14.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_name",
+      "fiche": "kabbalah.invocations.15.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_sephirah",
+      "fiche": "kabbalah.invocations.15.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_world",
+      "fiche": "kabbalah.invocations.15.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_element",
+      "fiche": "kabbalah.invocations.15.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_degree",
+      "fiche": "kabbalah.invocations.15.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_range",
+      "fiche": "kabbalah.invocations.15.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_duration",
+      "fiche": "kabbalah.invocations.15.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_visibility",
+      "fiche": "kabbalah.invocations.15.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_notes",
+      "fiche": "kabbalah.invocations.15.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_memorization",
+      "fiche": "kabbalah.invocations.15.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_15_page",
+      "fiche": "kabbalah.invocations.15.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_name",
+      "fiche": "kabbalah.invocations.16.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_sephirah",
+      "fiche": "kabbalah.invocations.16.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_world",
+      "fiche": "kabbalah.invocations.16.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_element",
+      "fiche": "kabbalah.invocations.16.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_degree",
+      "fiche": "kabbalah.invocations.16.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_range",
+      "fiche": "kabbalah.invocations.16.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_duration",
+      "fiche": "kabbalah.invocations.16.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_visibility",
+      "fiche": "kabbalah.invocations.16.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_notes",
+      "fiche": "kabbalah.invocations.16.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_memorization",
+      "fiche": "kabbalah.invocations.16.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_16_page",
+      "fiche": "kabbalah.invocations.16.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_name",
+      "fiche": "kabbalah.invocations.17.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_sephirah",
+      "fiche": "kabbalah.invocations.17.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_world",
+      "fiche": "kabbalah.invocations.17.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_element",
+      "fiche": "kabbalah.invocations.17.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_degree",
+      "fiche": "kabbalah.invocations.17.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_range",
+      "fiche": "kabbalah.invocations.17.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_duration",
+      "fiche": "kabbalah.invocations.17.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_visibility",
+      "fiche": "kabbalah.invocations.17.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_notes",
+      "fiche": "kabbalah.invocations.17.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_memorization",
+      "fiche": "kabbalah.invocations.17.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_17_page",
+      "fiche": "kabbalah.invocations.17.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_name",
+      "fiche": "kabbalah.invocations.18.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_sephirah",
+      "fiche": "kabbalah.invocations.18.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_world",
+      "fiche": "kabbalah.invocations.18.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_element",
+      "fiche": "kabbalah.invocations.18.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_degree",
+      "fiche": "kabbalah.invocations.18.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_range",
+      "fiche": "kabbalah.invocations.18.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_duration",
+      "fiche": "kabbalah.invocations.18.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_visibility",
+      "fiche": "kabbalah.invocations.18.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_notes",
+      "fiche": "kabbalah.invocations.18.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_memorization",
+      "fiche": "kabbalah.invocations.18.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_18_page",
+      "fiche": "kabbalah.invocations.18.page"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_name",
+      "fiche": "kabbalah.invocations.19.name"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_sephirah",
+      "fiche": "kabbalah.invocations.19.sephirah"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_world",
+      "fiche": "kabbalah.invocations.19.world"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_element",
+      "fiche": "kabbalah.invocations.19.element"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_degree",
+      "fiche": "kabbalah.invocations.19.degree"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_range",
+      "fiche": "kabbalah.invocations.19.range"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_duration",
+      "fiche": "kabbalah.invocations.19.duration"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_visibility",
+      "fiche": "kabbalah.invocations.19.visibility"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_notes",
+      "fiche": "kabbalah.invocations.19.notes"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_memorization",
+      "fiche": "kabbalah.invocations.19.memorization"
+    },
+    {
+      "gmos": "kabbalah_invocations_19_page",
+      "fiche": "kabbalah.invocations.19.page"
+    },
+    {
+      "gmos": "kabbalah_ordinances_degree",
+      "fiche": "kabbalah.ordinances.degree"
+    },
+    {
+      "gmos": "kabbalah_ordinances_0_type",
+      "fiche": "kabbalah.ordinances.0.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_0_broken",
+      "fiche": "kabbalah.ordinances.0.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_1_type",
+      "fiche": "kabbalah.ordinances.1.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_1_broken",
+      "fiche": "kabbalah.ordinances.1.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_2_type",
+      "fiche": "kabbalah.ordinances.2.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_2_broken",
+      "fiche": "kabbalah.ordinances.2.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_3_type",
+      "fiche": "kabbalah.ordinances.3.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_3_broken",
+      "fiche": "kabbalah.ordinances.3.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_4_type",
+      "fiche": "kabbalah.ordinances.4.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_4_broken",
+      "fiche": "kabbalah.ordinances.4.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_5_type",
+      "fiche": "kabbalah.ordinances.5.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_5_broken",
+      "fiche": "kabbalah.ordinances.5.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_6_type",
+      "fiche": "kabbalah.ordinances.6.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_6_broken",
+      "fiche": "kabbalah.ordinances.6.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_7_type",
+      "fiche": "kabbalah.ordinances.7.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_7_broken",
+      "fiche": "kabbalah.ordinances.7.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_8_type",
+      "fiche": "kabbalah.ordinances.8.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_8_broken",
+      "fiche": "kabbalah.ordinances.8.broken"
+    },
+    {
+      "gmos": "kabbalah_ordinances_9_type",
+      "fiche": "kabbalah.ordinances.9.type"
+    },
+    {
+      "gmos": "kabbalah_ordinances_9_broken",
+      "fiche": "kabbalah.ordinances.9.broken"
+    },
+    {
+      "gmos": "alchemy_constructs_retort_fire",
+      "fiche": "alchemy.constructs.retort.fire"
+    },
+    {
+      "gmos": "alchemy_constructs_retort_earth",
+      "fiche": "alchemy.constructs.retort.earth"
+    },
+    {
+      "gmos": "alchemy_constructs_retort_air",
+      "fiche": "alchemy.constructs.retort.air"
+    },
+    {
+      "gmos": "alchemy_constructs_retort_moon",
+      "fiche": "alchemy.constructs.retort.moon"
+    },
+    {
+      "gmos": "alchemy_constructs_retort_water",
+      "fiche": "alchemy.constructs.retort.water"
+    },
+    {
+      "gmos": "alchemy_constructs_aludel_fire",
+      "fiche": "alchemy.constructs.aludel.fire"
+    },
+    {
+      "gmos": "alchemy_constructs_aludel_earth",
+      "fiche": "alchemy.constructs.aludel.earth"
+    },
+    {
+      "gmos": "alchemy_constructs_aludel_air",
+      "fiche": "alchemy.constructs.aludel.air"
+    },
+    {
+      "gmos": "alchemy_constructs_aludel_moon",
+      "fiche": "alchemy.constructs.aludel.moon"
+    },
+    {
+      "gmos": "alchemy_constructs_aludel_water",
+      "fiche": "alchemy.constructs.aludel.water"
+    },
+    {
+      "gmos": "alchemy_constructs_athanor_fire",
+      "fiche": "alchemy.constructs.athanor.fire"
+    },
+    {
+      "gmos": "alchemy_constructs_athanor_earth",
+      "fiche": "alchemy.constructs.athanor.earth"
+    },
+    {
+      "gmos": "alchemy_constructs_athanor_air",
+      "fiche": "alchemy.constructs.athanor.air"
+    },
+    {
+      "gmos": "alchemy_constructs_athanor_moon",
+      "fiche": "alchemy.constructs.athanor.moon"
+    },
+    {
+      "gmos": "alchemy_constructs_athanor_water",
+      "fiche": "alchemy.constructs.athanor.water"
+    },
+    {
+      "gmos": "alchemy_constructs_crucible_fire",
+      "fiche": "alchemy.constructs.crucible.fire"
+    },
+    {
+      "gmos": "alchemy_constructs_crucible_earth",
+      "fiche": "alchemy.constructs.crucible.earth"
+    },
+    {
+      "gmos": "alchemy_constructs_crucible_air",
+      "fiche": "alchemy.constructs.crucible.air"
+    },
+    {
+      "gmos": "alchemy_constructs_crucible_moon",
+      "fiche": "alchemy.constructs.crucible.moon"
+    },
+    {
+      "gmos": "alchemy_constructs_crucible_water",
+      "fiche": "alchemy.constructs.crucible.water"
+    },
+    {
+      "gmos": "alchemy_constructs_alembic_fire",
+      "fiche": "alchemy.constructs.alembic.fire"
+    },
+    {
+      "gmos": "alchemy_constructs_alembic_earth",
+      "fiche": "alchemy.constructs.alembic.earth"
+    },
+    {
+      "gmos": "alchemy_constructs_alembic_air",
+      "fiche": "alchemy.constructs.alembic.air"
+    },
+    {
+      "gmos": "alchemy_constructs_alembic_moon",
+      "fiche": "alchemy.constructs.alembic.moon"
+    },
+    {
+      "gmos": "alchemy_constructs_alembic_water",
+      "fiche": "alchemy.constructs.alembic.water"
+    },
+    {
+      "gmos": "alchemy_materia_fire_max",
+      "fiche": "alchemy.materia.fire.max"
+    },
+    {
+      "gmos": "alchemy_materia_fire",
+      "fiche": "alchemy.materia.fire"
+    },
+    {
+      "gmos": "alchemy_materia_air_max",
+      "fiche": "alchemy.materia.air.max"
+    },
+    {
+      "gmos": "alchemy_materia_air",
+      "fiche": "alchemy.materia.air"
+    },
+    {
+      "gmos": "alchemy_materia_water_max",
+      "fiche": "alchemy.materia.water.max"
+    },
+    {
+      "gmos": "alchemy_materia_water",
+      "fiche": "alchemy.materia.water"
+    },
+    {
+      "gmos": "alchemy_materia_earth_max",
+      "fiche": "alchemy.materia.earth.max"
+    },
+    {
+      "gmos": "alchemy_materia_earth",
+      "fiche": "alchemy.materia.earth"
+    },
+    {
+      "gmos": "alchemy_materia_moon_max",
+      "fiche": "alchemy.materia.moon.max"
+    },
+    {
+      "gmos": "alchemy_materia_moon",
+      "fiche": "alchemy.materia.moon"
+    },
+    {
+      "gmos": "alchemy_formulas_0_name",
+      "fiche": "alchemy.formulas.0.name"
+    },
+    {
+      "gmos": "alchemy_formulas_0_substance",
+      "fiche": "alchemy.formulas.0.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_0_element",
+      "fiche": "alchemy.formulas.0.element"
+    },
+    {
+      "gmos": "alchemy_formulas_0_degree",
+      "fiche": "alchemy.formulas.0.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_0_area",
+      "fiche": "alchemy.formulas.0.area"
+    },
+    {
+      "gmos": "alchemy_formulas_0_duration",
+      "fiche": "alchemy.formulas.0.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_0_effect",
+      "fiche": "alchemy.formulas.0.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_0_memorization",
+      "fiche": "alchemy.formulas.0.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_0_page",
+      "fiche": "alchemy.formulas.0.page"
+    },
+    {
+      "gmos": "alchemy_formulas_1_name",
+      "fiche": "alchemy.formulas.1.name"
+    },
+    {
+      "gmos": "alchemy_formulas_1_substance",
+      "fiche": "alchemy.formulas.1.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_1_element",
+      "fiche": "alchemy.formulas.1.element"
+    },
+    {
+      "gmos": "alchemy_formulas_1_degree",
+      "fiche": "alchemy.formulas.1.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_1_area",
+      "fiche": "alchemy.formulas.1.area"
+    },
+    {
+      "gmos": "alchemy_formulas_1_duration",
+      "fiche": "alchemy.formulas.1.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_1_effect",
+      "fiche": "alchemy.formulas.1.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_1_memorization",
+      "fiche": "alchemy.formulas.1.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_1_page",
+      "fiche": "alchemy.formulas.1.page"
+    },
+    {
+      "gmos": "alchemy_formulas_2_name",
+      "fiche": "alchemy.formulas.2.name"
+    },
+    {
+      "gmos": "alchemy_formulas_2_substance",
+      "fiche": "alchemy.formulas.2.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_2_element",
+      "fiche": "alchemy.formulas.2.element"
+    },
+    {
+      "gmos": "alchemy_formulas_2_degree",
+      "fiche": "alchemy.formulas.2.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_2_area",
+      "fiche": "alchemy.formulas.2.area"
+    },
+    {
+      "gmos": "alchemy_formulas_2_duration",
+      "fiche": "alchemy.formulas.2.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_2_effect",
+      "fiche": "alchemy.formulas.2.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_2_memorization",
+      "fiche": "alchemy.formulas.2.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_2_page",
+      "fiche": "alchemy.formulas.2.page"
+    },
+    {
+      "gmos": "alchemy_formulas_3_name",
+      "fiche": "alchemy.formulas.3.name"
+    },
+    {
+      "gmos": "alchemy_formulas_3_substance",
+      "fiche": "alchemy.formulas.3.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_3_element",
+      "fiche": "alchemy.formulas.3.element"
+    },
+    {
+      "gmos": "alchemy_formulas_3_degree",
+      "fiche": "alchemy.formulas.3.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_3_area",
+      "fiche": "alchemy.formulas.3.area"
+    },
+    {
+      "gmos": "alchemy_formulas_3_duration",
+      "fiche": "alchemy.formulas.3.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_3_effect",
+      "fiche": "alchemy.formulas.3.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_3_memorization",
+      "fiche": "alchemy.formulas.3.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_3_page",
+      "fiche": "alchemy.formulas.3.page"
+    },
+    {
+      "gmos": "alchemy_formulas_4_name",
+      "fiche": "alchemy.formulas.4.name"
+    },
+    {
+      "gmos": "alchemy_formulas_4_substance",
+      "fiche": "alchemy.formulas.4.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_4_element",
+      "fiche": "alchemy.formulas.4.element"
+    },
+    {
+      "gmos": "alchemy_formulas_4_degree",
+      "fiche": "alchemy.formulas.4.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_4_area",
+      "fiche": "alchemy.formulas.4.area"
+    },
+    {
+      "gmos": "alchemy_formulas_4_duration",
+      "fiche": "alchemy.formulas.4.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_4_effect",
+      "fiche": "alchemy.formulas.4.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_4_memorization",
+      "fiche": "alchemy.formulas.4.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_4_page",
+      "fiche": "alchemy.formulas.4.page"
+    },
+    {
+      "gmos": "alchemy_formulas_5_name",
+      "fiche": "alchemy.formulas.5.name"
+    },
+    {
+      "gmos": "alchemy_formulas_5_substance",
+      "fiche": "alchemy.formulas.5.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_5_element",
+      "fiche": "alchemy.formulas.5.element"
+    },
+    {
+      "gmos": "alchemy_formulas_5_degree",
+      "fiche": "alchemy.formulas.5.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_5_area",
+      "fiche": "alchemy.formulas.5.area"
+    },
+    {
+      "gmos": "alchemy_formulas_5_duration",
+      "fiche": "alchemy.formulas.5.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_5_effect",
+      "fiche": "alchemy.formulas.5.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_5_memorization",
+      "fiche": "alchemy.formulas.5.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_5_page",
+      "fiche": "alchemy.formulas.5.page"
+    },
+    {
+      "gmos": "alchemy_formulas_6_name",
+      "fiche": "alchemy.formulas.6.name"
+    },
+    {
+      "gmos": "alchemy_formulas_6_substance",
+      "fiche": "alchemy.formulas.6.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_6_element",
+      "fiche": "alchemy.formulas.6.element"
+    },
+    {
+      "gmos": "alchemy_formulas_6_degree",
+      "fiche": "alchemy.formulas.6.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_6_area",
+      "fiche": "alchemy.formulas.6.area"
+    },
+    {
+      "gmos": "alchemy_formulas_6_duration",
+      "fiche": "alchemy.formulas.6.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_6_effect",
+      "fiche": "alchemy.formulas.6.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_6_memorization",
+      "fiche": "alchemy.formulas.6.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_6_page",
+      "fiche": "alchemy.formulas.6.page"
+    },
+    {
+      "gmos": "alchemy_formulas_7_name",
+      "fiche": "alchemy.formulas.7.name"
+    },
+    {
+      "gmos": "alchemy_formulas_7_substance",
+      "fiche": "alchemy.formulas.7.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_7_element",
+      "fiche": "alchemy.formulas.7.element"
+    },
+    {
+      "gmos": "alchemy_formulas_7_degree",
+      "fiche": "alchemy.formulas.7.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_7_area",
+      "fiche": "alchemy.formulas.7.area"
+    },
+    {
+      "gmos": "alchemy_formulas_7_duration",
+      "fiche": "alchemy.formulas.7.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_7_effect",
+      "fiche": "alchemy.formulas.7.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_7_memorization",
+      "fiche": "alchemy.formulas.7.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_7_page",
+      "fiche": "alchemy.formulas.7.page"
+    },
+    {
+      "gmos": "alchemy_formulas_8_name",
+      "fiche": "alchemy.formulas.8.name"
+    },
+    {
+      "gmos": "alchemy_formulas_8_substance",
+      "fiche": "alchemy.formulas.8.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_8_element",
+      "fiche": "alchemy.formulas.8.element"
+    },
+    {
+      "gmos": "alchemy_formulas_8_degree",
+      "fiche": "alchemy.formulas.8.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_8_area",
+      "fiche": "alchemy.formulas.8.area"
+    },
+    {
+      "gmos": "alchemy_formulas_8_duration",
+      "fiche": "alchemy.formulas.8.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_8_effect",
+      "fiche": "alchemy.formulas.8.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_8_memorization",
+      "fiche": "alchemy.formulas.8.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_8_page",
+      "fiche": "alchemy.formulas.8.page"
+    },
+    {
+      "gmos": "alchemy_formulas_9_name",
+      "fiche": "alchemy.formulas.9.name"
+    },
+    {
+      "gmos": "alchemy_formulas_9_substance",
+      "fiche": "alchemy.formulas.9.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_9_element",
+      "fiche": "alchemy.formulas.9.element"
+    },
+    {
+      "gmos": "alchemy_formulas_9_degree",
+      "fiche": "alchemy.formulas.9.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_9_area",
+      "fiche": "alchemy.formulas.9.area"
+    },
+    {
+      "gmos": "alchemy_formulas_9_duration",
+      "fiche": "alchemy.formulas.9.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_9_effect",
+      "fiche": "alchemy.formulas.9.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_9_memorization",
+      "fiche": "alchemy.formulas.9.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_9_page",
+      "fiche": "alchemy.formulas.9.page"
+    },
+    {
+      "gmos": "alchemy_formulas_10_name",
+      "fiche": "alchemy.formulas.10.name"
+    },
+    {
+      "gmos": "alchemy_formulas_10_substance",
+      "fiche": "alchemy.formulas.10.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_10_element",
+      "fiche": "alchemy.formulas.10.element"
+    },
+    {
+      "gmos": "alchemy_formulas_10_degree",
+      "fiche": "alchemy.formulas.10.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_10_area",
+      "fiche": "alchemy.formulas.10.area"
+    },
+    {
+      "gmos": "alchemy_formulas_10_duration",
+      "fiche": "alchemy.formulas.10.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_10_effect",
+      "fiche": "alchemy.formulas.10.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_10_memorization",
+      "fiche": "alchemy.formulas.10.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_10_page",
+      "fiche": "alchemy.formulas.10.page"
+    },
+    {
+      "gmos": "alchemy_formulas_11_name",
+      "fiche": "alchemy.formulas.11.name"
+    },
+    {
+      "gmos": "alchemy_formulas_11_substance",
+      "fiche": "alchemy.formulas.11.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_11_element",
+      "fiche": "alchemy.formulas.11.element"
+    },
+    {
+      "gmos": "alchemy_formulas_11_degree",
+      "fiche": "alchemy.formulas.11.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_11_area",
+      "fiche": "alchemy.formulas.11.area"
+    },
+    {
+      "gmos": "alchemy_formulas_11_duration",
+      "fiche": "alchemy.formulas.11.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_11_effect",
+      "fiche": "alchemy.formulas.11.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_11_memorization",
+      "fiche": "alchemy.formulas.11.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_11_page",
+      "fiche": "alchemy.formulas.11.page"
+    },
+    {
+      "gmos": "alchemy_formulas_12_name",
+      "fiche": "alchemy.formulas.12.name"
+    },
+    {
+      "gmos": "alchemy_formulas_12_substance",
+      "fiche": "alchemy.formulas.12.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_12_element",
+      "fiche": "alchemy.formulas.12.element"
+    },
+    {
+      "gmos": "alchemy_formulas_12_degree",
+      "fiche": "alchemy.formulas.12.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_12_area",
+      "fiche": "alchemy.formulas.12.area"
+    },
+    {
+      "gmos": "alchemy_formulas_12_duration",
+      "fiche": "alchemy.formulas.12.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_12_effect",
+      "fiche": "alchemy.formulas.12.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_12_memorization",
+      "fiche": "alchemy.formulas.12.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_12_page",
+      "fiche": "alchemy.formulas.12.page"
+    },
+    {
+      "gmos": "alchemy_formulas_13_name",
+      "fiche": "alchemy.formulas.13.name"
+    },
+    {
+      "gmos": "alchemy_formulas_13_substance",
+      "fiche": "alchemy.formulas.13.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_13_element",
+      "fiche": "alchemy.formulas.13.element"
+    },
+    {
+      "gmos": "alchemy_formulas_13_degree",
+      "fiche": "alchemy.formulas.13.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_13_area",
+      "fiche": "alchemy.formulas.13.area"
+    },
+    {
+      "gmos": "alchemy_formulas_13_duration",
+      "fiche": "alchemy.formulas.13.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_13_effect",
+      "fiche": "alchemy.formulas.13.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_13_memorization",
+      "fiche": "alchemy.formulas.13.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_13_page",
+      "fiche": "alchemy.formulas.13.page"
+    },
+    {
+      "gmos": "alchemy_formulas_14_name",
+      "fiche": "alchemy.formulas.14.name"
+    },
+    {
+      "gmos": "alchemy_formulas_14_substance",
+      "fiche": "alchemy.formulas.14.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_14_element",
+      "fiche": "alchemy.formulas.14.element"
+    },
+    {
+      "gmos": "alchemy_formulas_14_degree",
+      "fiche": "alchemy.formulas.14.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_14_area",
+      "fiche": "alchemy.formulas.14.area"
+    },
+    {
+      "gmos": "alchemy_formulas_14_duration",
+      "fiche": "alchemy.formulas.14.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_14_effect",
+      "fiche": "alchemy.formulas.14.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_14_memorization",
+      "fiche": "alchemy.formulas.14.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_14_page",
+      "fiche": "alchemy.formulas.14.page"
+    },
+    {
+      "gmos": "alchemy_formulas_15_name",
+      "fiche": "alchemy.formulas.15.name"
+    },
+    {
+      "gmos": "alchemy_formulas_15_substance",
+      "fiche": "alchemy.formulas.15.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_15_element",
+      "fiche": "alchemy.formulas.15.element"
+    },
+    {
+      "gmos": "alchemy_formulas_15_degree",
+      "fiche": "alchemy.formulas.15.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_15_area",
+      "fiche": "alchemy.formulas.15.area"
+    },
+    {
+      "gmos": "alchemy_formulas_15_duration",
+      "fiche": "alchemy.formulas.15.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_15_effect",
+      "fiche": "alchemy.formulas.15.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_15_memorization",
+      "fiche": "alchemy.formulas.15.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_15_page",
+      "fiche": "alchemy.formulas.15.page"
+    },
+    {
+      "gmos": "alchemy_formulas_16_name",
+      "fiche": "alchemy.formulas.16.name"
+    },
+    {
+      "gmos": "alchemy_formulas_16_substance",
+      "fiche": "alchemy.formulas.16.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_16_element",
+      "fiche": "alchemy.formulas.16.element"
+    },
+    {
+      "gmos": "alchemy_formulas_16_degree",
+      "fiche": "alchemy.formulas.16.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_16_area",
+      "fiche": "alchemy.formulas.16.area"
+    },
+    {
+      "gmos": "alchemy_formulas_16_duration",
+      "fiche": "alchemy.formulas.16.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_16_effect",
+      "fiche": "alchemy.formulas.16.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_16_memorization",
+      "fiche": "alchemy.formulas.16.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_16_page",
+      "fiche": "alchemy.formulas.16.page"
+    },
+    {
+      "gmos": "alchemy_formulas_17_name",
+      "fiche": "alchemy.formulas.17.name"
+    },
+    {
+      "gmos": "alchemy_formulas_17_substance",
+      "fiche": "alchemy.formulas.17.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_17_element",
+      "fiche": "alchemy.formulas.17.element"
+    },
+    {
+      "gmos": "alchemy_formulas_17_degree",
+      "fiche": "alchemy.formulas.17.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_17_area",
+      "fiche": "alchemy.formulas.17.area"
+    },
+    {
+      "gmos": "alchemy_formulas_17_duration",
+      "fiche": "alchemy.formulas.17.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_17_effect",
+      "fiche": "alchemy.formulas.17.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_17_memorization",
+      "fiche": "alchemy.formulas.17.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_17_page",
+      "fiche": "alchemy.formulas.17.page"
+    },
+    {
+      "gmos": "alchemy_formulas_18_name",
+      "fiche": "alchemy.formulas.18.name"
+    },
+    {
+      "gmos": "alchemy_formulas_18_substance",
+      "fiche": "alchemy.formulas.18.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_18_element",
+      "fiche": "alchemy.formulas.18.element"
+    },
+    {
+      "gmos": "alchemy_formulas_18_degree",
+      "fiche": "alchemy.formulas.18.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_18_area",
+      "fiche": "alchemy.formulas.18.area"
+    },
+    {
+      "gmos": "alchemy_formulas_18_duration",
+      "fiche": "alchemy.formulas.18.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_18_effect",
+      "fiche": "alchemy.formulas.18.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_18_memorization",
+      "fiche": "alchemy.formulas.18.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_18_page",
+      "fiche": "alchemy.formulas.18.page"
+    },
+    {
+      "gmos": "alchemy_formulas_19_name",
+      "fiche": "alchemy.formulas.19.name"
+    },
+    {
+      "gmos": "alchemy_formulas_19_substance",
+      "fiche": "alchemy.formulas.19.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_19_element",
+      "fiche": "alchemy.formulas.19.element"
+    },
+    {
+      "gmos": "alchemy_formulas_19_degree",
+      "fiche": "alchemy.formulas.19.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_19_area",
+      "fiche": "alchemy.formulas.19.area"
+    },
+    {
+      "gmos": "alchemy_formulas_19_duration",
+      "fiche": "alchemy.formulas.19.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_19_effect",
+      "fiche": "alchemy.formulas.19.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_19_memorization",
+      "fiche": "alchemy.formulas.19.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_19_page",
+      "fiche": "alchemy.formulas.19.page"
+    },
+    {
+      "gmos": "alchemy_formulas_20_name",
+      "fiche": "alchemy.formulas.20.name"
+    },
+    {
+      "gmos": "alchemy_formulas_20_substance",
+      "fiche": "alchemy.formulas.20.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_20_element",
+      "fiche": "alchemy.formulas.20.element"
+    },
+    {
+      "gmos": "alchemy_formulas_20_degree",
+      "fiche": "alchemy.formulas.20.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_20_area",
+      "fiche": "alchemy.formulas.20.area"
+    },
+    {
+      "gmos": "alchemy_formulas_20_duration",
+      "fiche": "alchemy.formulas.20.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_20_effect",
+      "fiche": "alchemy.formulas.20.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_20_memorization",
+      "fiche": "alchemy.formulas.20.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_20_page",
+      "fiche": "alchemy.formulas.20.page"
+    },
+    {
+      "gmos": "alchemy_formulas_21_name",
+      "fiche": "alchemy.formulas.21.name"
+    },
+    {
+      "gmos": "alchemy_formulas_21_substance",
+      "fiche": "alchemy.formulas.21.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_21_element",
+      "fiche": "alchemy.formulas.21.element"
+    },
+    {
+      "gmos": "alchemy_formulas_21_degree",
+      "fiche": "alchemy.formulas.21.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_21_area",
+      "fiche": "alchemy.formulas.21.area"
+    },
+    {
+      "gmos": "alchemy_formulas_21_duration",
+      "fiche": "alchemy.formulas.21.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_21_effect",
+      "fiche": "alchemy.formulas.21.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_21_memorization",
+      "fiche": "alchemy.formulas.21.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_21_page",
+      "fiche": "alchemy.formulas.21.page"
+    },
+    {
+      "gmos": "alchemy_formulas_22_name",
+      "fiche": "alchemy.formulas.22.name"
+    },
+    {
+      "gmos": "alchemy_formulas_22_substance",
+      "fiche": "alchemy.formulas.22.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_22_element",
+      "fiche": "alchemy.formulas.22.element"
+    },
+    {
+      "gmos": "alchemy_formulas_22_degree",
+      "fiche": "alchemy.formulas.22.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_22_area",
+      "fiche": "alchemy.formulas.22.area"
+    },
+    {
+      "gmos": "alchemy_formulas_22_duration",
+      "fiche": "alchemy.formulas.22.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_22_effect",
+      "fiche": "alchemy.formulas.22.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_22_memorization",
+      "fiche": "alchemy.formulas.22.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_22_page",
+      "fiche": "alchemy.formulas.22.page"
+    },
+    {
+      "gmos": "alchemy_formulas_23_name",
+      "fiche": "alchemy.formulas.23.name"
+    },
+    {
+      "gmos": "alchemy_formulas_23_substance",
+      "fiche": "alchemy.formulas.23.substance"
+    },
+    {
+      "gmos": "alchemy_formulas_23_element",
+      "fiche": "alchemy.formulas.23.element"
+    },
+    {
+      "gmos": "alchemy_formulas_23_degree",
+      "fiche": "alchemy.formulas.23.degree"
+    },
+    {
+      "gmos": "alchemy_formulas_23_area",
+      "fiche": "alchemy.formulas.23.area"
+    },
+    {
+      "gmos": "alchemy_formulas_23_duration",
+      "fiche": "alchemy.formulas.23.duration"
+    },
+    {
+      "gmos": "alchemy_formulas_23_effect",
+      "fiche": "alchemy.formulas.23.effect"
+    },
+    {
+      "gmos": "alchemy_formulas_23_memorization",
+      "fiche": "alchemy.formulas.23.memorization"
+    },
+    {
+      "gmos": "alchemy_formulas_23_page",
+      "fiche": "alchemy.formulas.23.page"
     }
   ],
   "absents": [
@@ -960,6 +3888,66 @@
     {
       "fiche": "simulacrum.portrait",
       "pourquoi": "Une image : elle reste sur la fiche, GM-OS a son propre portrait du personnage."
+    },
+    {
+      "fiche": "kabbalah.world",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.world » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.kether.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.third.center » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.binah.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.third.left » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.chokmah.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.third.right » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.geburah.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.geburah » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.chesed.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.chesed » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.tiphereth.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.tiphereth » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.hod.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.hod » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.netzach.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.netzach » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.yesod.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.yesod » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "kabbalah.sephiroth.malkuth.degree",
+      "pourquoi": "Copie calculée par la fiche de « occult.kabbalah.malkuth » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "alchemy.path",
+      "pourquoi": "Copie calculée par la fiche de « occult.alchemy.path » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "alchemy.works.black",
+      "pourquoi": "Copie calculée par la fiche de « occult.alchemy.black » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "alchemy.works.white",
+      "pourquoi": "Copie calculée par la fiche de « occult.alchemy.white » : la valeur vit dans ce champ, déjà relié."
+    },
+    {
+      "fiche": "alchemy.works.red",
+      "pourquoi": "Copie calculée par la fiche de « occult.alchemy.red » : la valeur vit dans ce champ, déjà relié."
     }
   ]
 }

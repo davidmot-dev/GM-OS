@@ -5,7 +5,7 @@ import { reduireLImage, REFERENCES_MAX } from '../imagesDeReference';
 import { accepterLaLicenceMeta, ErreurDeLicence, proposerUneIdentite } from '../analyseDeStyle';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { tousLesPilotes } from '../../session/store/tousLesPilotes';
-import { identiteEnVigueur } from '../identiteVisuelle';
+import { identiteEnVigueur, separerLeBloc } from '../identiteVisuelle';
 import { gmToast } from '../../../stores/useToastStore';
 import type { Campaign } from '../../../types/campaign.types';
 
@@ -159,7 +159,14 @@ const EditeurDIdentiteVisuelle: React.FC<{ cible: CibleDeLIdentite; onClose: () 
 
             <label className="space-y-1">
                 <span className={titre}>Style — médium, palette, lumière, matière, époque</span>
-                <textarea value={style} onChange={e => setStyle(e.target.value)} rows={4} className={zone}
+                <textarea value={style} rows={4} className={zone}
+                    onChange={e => {
+                        // Le bloc « STYLE: … AVOID: … » du GPT, collé d'un tenant, se range en deux champs.
+                        const bloc = separerLeBloc(e.target.value);
+                        if (!bloc) { setStyle(e.target.value); return; }
+                        setStyle(bloc.style);
+                        if (bloc.aEviter) setAEviter(bloc.aEviter);
+                    }}
                     placeholder="e.g. 1980s neo-noir illustration, rain-soaked neon, teal and amber palette, grainy film texture, heavy shadows" />
             </label>
             <label className="space-y-1">

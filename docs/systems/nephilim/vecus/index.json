@@ -1,0 +1,668 @@
+{
+ "source": "Nephilim5 — Livre 0 — Quintessence, chapitre « Les époques d’incarnation », p. 61 à 99",
+ "extrait": "2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre",
+ "vecus": [
+  {
+   "nom": "Héros",
+   "ka": "Feu",
+   "ere": "Le Sentier d'or",
+   "epoque": "La Chute de l'Atlantide",
+   "page": 61,
+   "fichier": "00-la-chute-de-l-atlantide.md"
+  },
+  {
+   "nom": "Sage",
+   "ka": "Air",
+   "ere": "Le Sentier d'or",
+   "epoque": "La Chute de l'Atlantide",
+   "page": 61,
+   "fichier": "00-la-chute-de-l-atlantide.md"
+  },
+  {
+   "nom": "Messagère",
+   "ka": "Eau",
+   "ere": "Le Sentier d'or",
+   "epoque": "La Chute de l'Atlantide",
+   "page": 61,
+   "fichier": "00-la-chute-de-l-atlantide.md"
+  },
+  {
+   "nom": "Soigneur",
+   "ka": "Terre",
+   "ere": "Le Sentier d'or",
+   "epoque": "La Chute de l'Atlantide",
+   "page": 61,
+   "fichier": "00-la-chute-de-l-atlantide.md"
+  },
+  {
+   "nom": "Décepteur",
+   "ka": "Lune",
+   "ere": "Le Sentier d'or",
+   "epoque": "La Chute de l'Atlantide",
+   "page": 61,
+   "fichier": "00-la-chute-de-l-atlantide.md"
+  },
+  {
+   "nom": "Oracle",
+   "ka": "Feu",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Le Déluge",
+   "page": 63,
+   "fichier": "01-le-deluge.md"
+  },
+  {
+   "nom": "Matriarche",
+   "ka": "Air",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Le Déluge",
+   "page": 63,
+   "fichier": "01-le-deluge.md"
+  },
+  {
+   "nom": "Navigateur",
+   "ka": "Eau",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Le Déluge",
+   "page": 63,
+   "fichier": "01-le-deluge.md"
+  },
+  {
+   "nom": "Charpentier",
+   "ka": "Terre",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Le Déluge",
+   "page": 63,
+   "fichier": "01-le-deluge.md"
+  },
+  {
+   "nom": "Meurtrier",
+   "ka": "Lune",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Le Déluge",
+   "page": 63,
+   "fichier": "01-le-deluge.md"
+  },
+  {
+   "nom": "Conteur",
+   "ka": "Feu",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premières pierres dressées",
+   "page": 65,
+   "fichier": "02-les-premieres-pierres-dressees.md"
+  },
+  {
+   "nom": "Ancien",
+   "ka": "Air",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premières pierres dressées",
+   "page": 65,
+   "fichier": "02-les-premieres-pierres-dressees.md"
+  },
+  {
+   "nom": "Cultivatrice",
+   "ka": "Eau",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premières pierres dressées",
+   "page": 65,
+   "fichier": "02-les-premieres-pierres-dressees.md"
+  },
+  {
+   "nom": "Potier",
+   "ka": "Terre",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premières pierres dressées",
+   "page": 65,
+   "fichier": "02-les-premieres-pierres-dressees.md"
+  },
+  {
+   "nom": "Princesse aveugle",
+   "ka": "Lune",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premières pierres dressées",
+   "page": 65,
+   "fichier": "02-les-premieres-pierres-dressees.md"
+  },
+  {
+   "nom": "Orfèvre",
+   "ka": "Feu",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premiers mégalithes",
+   "page": 67,
+   "fichier": "03-les-premiers-megalithes.md"
+  },
+  {
+   "nom": "Cheffe de clan",
+   "ka": "Air",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premiers mégalithes",
+   "page": 67,
+   "fichier": "03-les-premiers-megalithes.md"
+  },
+  {
+   "nom": "Ambassadeur",
+   "ka": "Eau",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premiers mégalithes",
+   "page": 67,
+   "fichier": "03-les-premiers-megalithes.md"
+  },
+  {
+   "nom": "Chasseur",
+   "ka": "Terre",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premiers mégalithes",
+   "page": 67,
+   "fichier": "03-les-premiers-megalithes.md"
+  },
+  {
+   "nom": "Astrologue",
+   "ka": "Lune",
+   "ere": "Les Guerres élémentaires",
+   "epoque": "Les premiers mégalithes",
+   "page": 67,
+   "fichier": "03-les-premiers-megalithes.md"
+  },
+  {
+   "nom": "Champion de clan",
+   "ka": "Feu",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le sanctuaire des Tuatha Dé Danann",
+   "page": 69,
+   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md"
+  },
+  {
+   "nom": "Barde",
+   "ka": "Air",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le sanctuaire des Tuatha Dé Danann",
+   "page": 69,
+   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md"
+  },
+  {
+   "nom": "Forgeron",
+   "ka": "Eau",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le sanctuaire des Tuatha Dé Danann",
+   "page": 69,
+   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md"
+  },
+  {
+   "nom": "Druide",
+   "ka": "Terre",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le sanctuaire des Tuatha Dé Danann",
+   "page": 69,
+   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md"
+  },
+  {
+   "nom": "Magicienne",
+   "ka": "Lune",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le sanctuaire des Tuatha Dé Danann",
+   "page": 69,
+   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md"
+  },
+  {
+   "nom": "Soldat chaldéen",
+   "ka": "Feu",
+   "ere": "Les Compacts secrets",
+   "epoque": "L'empire divin de Babylone",
+   "page": 71,
+   "fichier": "05-l-empire-divin-de-babylone.md"
+  },
+  {
+   "nom": "Devin (Barû)",
+   "ka": "Air",
+   "ere": "Les Compacts secrets",
+   "epoque": "L'empire divin de Babylone",
+   "page": 71,
+   "fichier": "05-l-empire-divin-de-babylone.md"
+  },
+  {
+   "nom": "Archer royal",
+   "ka": "Eau",
+   "ere": "Les Compacts secrets",
+   "epoque": "L'empire divin de Babylone",
+   "page": 71,
+   "fichier": "05-l-empire-divin-de-babylone.md"
+  },
+  {
+   "nom": "Guide judéen",
+   "ka": "Terre",
+   "ere": "Les Compacts secrets",
+   "epoque": "L'empire divin de Babylone",
+   "page": 71,
+   "fichier": "05-l-empire-divin-de-babylone.md"
+  },
+  {
+   "nom": "Lamentateur (kalû)",
+   "ka": "Lune",
+   "ere": "Les Compacts secrets",
+   "epoque": "L'empire divin de Babylone",
+   "page": 71,
+   "fichier": "05-l-empire-divin-de-babylone.md"
+  },
+  {
+   "nom": "Prêtre d’Aton",
+   "ka": "Feu",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le rêve d'Akhenaton",
+   "page": 73,
+   "fichier": "06-le-reve-d-akhenaton.md"
+  },
+  {
+   "nom": "Scribe",
+   "ka": "Air",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le rêve d'Akhenaton",
+   "page": 73,
+   "fichier": "06-le-reve-d-akhenaton.md"
+  },
+  {
+   "nom": "Danseuse",
+   "ka": "Eau",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le rêve d'Akhenaton",
+   "page": 73,
+   "fichier": "06-le-reve-d-akhenaton.md"
+  },
+  {
+   "nom": "Intendant",
+   "ka": "Terre",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le rêve d'Akhenaton",
+   "page": 73,
+   "fichier": "06-le-reve-d-akhenaton.md"
+  },
+  {
+   "nom": "Embaumeur",
+   "ka": "Lune",
+   "ere": "Les Compacts secrets",
+   "epoque": "Le rêve d'Akhenaton",
+   "page": 73,
+   "fichier": "06-le-reve-d-akhenaton.md"
+  },
+  {
+   "nom": "Immortel",
+   "ka": "Feu",
+   "ere": "L'Hermétisme",
+   "epoque": "La Mésopotamie des prédictions",
+   "page": 75,
+   "fichier": "07-la-mesopotamie-des-predictions.md"
+  },
+  {
+   "nom": "Adorateur zoroastrien",
+   "ka": "Air",
+   "ere": "L'Hermétisme",
+   "epoque": "La Mésopotamie des prédictions",
+   "page": 75,
+   "fichier": "07-la-mesopotamie-des-predictions.md"
+  },
+  {
+   "nom": "Mercenaire",
+   "ka": "Eau",
+   "ere": "L'Hermétisme",
+   "epoque": "La Mésopotamie des prédictions",
+   "page": 75,
+   "fichier": "07-la-mesopotamie-des-predictions.md"
+  },
+  {
+   "nom": "Satrape",
+   "ka": "Terre",
+   "ere": "L'Hermétisme",
+   "epoque": "La Mésopotamie des prédictions",
+   "page": 75,
+   "fichier": "07-la-mesopotamie-des-predictions.md"
+  },
+  {
+   "nom": "Astrologue mage",
+   "ka": "Lune",
+   "ere": "L'Hermétisme",
+   "epoque": "La Mésopotamie des prédictions",
+   "page": 75,
+   "fichier": "07-la-mesopotamie-des-predictions.md"
+  },
+  {
+   "nom": "Mercenaire",
+   "ka": "Feu",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Carthage",
+   "page": 81,
+   "fichier": "10-l-empire-de-carthage.md"
+  },
+  {
+   "nom": "Suffète",
+   "ka": "Air",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Carthage",
+   "page": 81,
+   "fichier": "10-l-empire-de-carthage.md"
+  },
+  {
+   "nom": "Capitaine de navire",
+   "ka": "Eau",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Carthage",
+   "page": 81,
+   "fichier": "10-l-empire-de-carthage.md"
+  },
+  {
+   "nom": "Marchand",
+   "ka": "Terre",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Carthage",
+   "page": 81,
+   "fichier": "10-l-empire-de-carthage.md"
+  },
+  {
+   "nom": "Prêtresse de Tanit",
+   "ka": "Lune",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Carthage",
+   "page": 81,
+   "fichier": "10-l-empire-de-carthage.md"
+  },
+  {
+   "nom": "Gladiateur",
+   "ka": "Feu",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Rome",
+   "page": 83,
+   "fichier": "11-l-empire-de-rome.md"
+  },
+  {
+   "nom": "Sénateur",
+   "ka": "Air",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Rome",
+   "page": 83,
+   "fichier": "11-l-empire-de-rome.md"
+  },
+  {
+   "nom": "Légionnaire",
+   "ka": "Eau",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Rome",
+   "page": 83,
+   "fichier": "11-l-empire-de-rome.md"
+  },
+  {
+   "nom": "Vate",
+   "ka": "Terre",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Rome",
+   "page": 83,
+   "fichier": "11-l-empire-de-rome.md"
+  },
+  {
+   "nom": "Chevalier gaulois",
+   "ka": "Lune",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'empire de Rome",
+   "page": 83,
+   "fichier": "11-l-empire-de-rome.md"
+  },
+  {
+   "nom": "Prêcheur",
+   "ka": "Feu",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'incident Jésus",
+   "page": 85,
+   "fichier": "12-l-incident-jesus.md"
+  },
+  {
+   "nom": "Moine essénien",
+   "ka": "Air",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'incident Jésus",
+   "page": 85,
+   "fichier": "12-l-incident-jesus.md"
+  },
+  {
+   "nom": "Diplomate polyglotte",
+   "ka": "Eau",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'incident Jésus",
+   "page": 85,
+   "fichier": "12-l-incident-jesus.md"
+  },
+  {
+   "nom": "Proconsul",
+   "ka": "Terre",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'incident Jésus",
+   "page": 85,
+   "fichier": "12-l-incident-jesus.md"
+  },
+  {
+   "nom": "Sicaire zélote",
+   "ka": "Lune",
+   "ere": "Les guerres secrètes",
+   "epoque": "L'incident Jésus",
+   "page": 85,
+   "fichier": "12-l-incident-jesus.md"
+  },
+  {
+   "nom": "Reine picte",
+   "ka": "Feu",
+   "ere": "Les nouveaux mondes",
+   "epoque": "Les Arthuriades",
+   "page": 87,
+   "fichier": "13-les-arthuriades.md"
+  },
+  {
+   "nom": "Chevalier mystique",
+   "ka": "Air",
+   "ere": "Les nouveaux mondes",
+   "epoque": "Les Arthuriades",
+   "page": 87,
+   "fichier": "13-les-arthuriades.md"
+  },
+  {
+   "nom": "Moine évangéliste",
+   "ka": "Eau",
+   "ere": "Les nouveaux mondes",
+   "epoque": "Les Arthuriades",
+   "page": 87,
+   "fichier": "13-les-arthuriades.md"
+  },
+  {
+   "nom": "Marchand romain",
+   "ka": "Terre",
+   "ere": "Les nouveaux mondes",
+   "epoque": "Les Arthuriades",
+   "page": 87,
+   "fichier": "13-les-arthuriades.md"
+  },
+  {
+   "nom": "Chevalier errant",
+   "ka": "Lune",
+   "ere": "Les nouveaux mondes",
+   "epoque": "Les Arthuriades",
+   "page": 87,
+   "fichier": "13-les-arthuriades.md"
+  },
+  {
+   "nom": "Condottiere",
+   "ka": "Feu",
+   "ere": "Le grand réveil",
+   "epoque": "Les Arcanes de la Renaissance",
+   "page": 93,
+   "fichier": "16-les-arcanes-de-la-renaissance.md"
+  },
+  {
+   "nom": "Maestro",
+   "ka": "Air",
+   "ere": "Le grand réveil",
+   "epoque": "Les Arcanes de la Renaissance",
+   "page": 93,
+   "fichier": "16-les-arcanes-de-la-renaissance.md"
+  },
+  {
+   "nom": "Explorateur",
+   "ka": "Eau",
+   "ere": "Le grand réveil",
+   "epoque": "Les Arcanes de la Renaissance",
+   "page": 93,
+   "fichier": "16-les-arcanes-de-la-renaissance.md"
+  },
+  {
+   "nom": "Dame marchande",
+   "ka": "Terre",
+   "ere": "Le grand réveil",
+   "epoque": "Les Arcanes de la Renaissance",
+   "page": 93,
+   "fichier": "16-les-arcanes-de-la-renaissance.md"
+  },
+  {
+   "nom": "Évêque défroqué",
+   "ka": "Lune",
+   "ere": "Le grand réveil",
+   "epoque": "Les Arcanes de la Renaissance",
+   "page": 93,
+   "fichier": "16-les-arcanes-de-la-renaissance.md"
+  },
+  {
+   "nom": "Mousquetaire",
+   "ka": "Feu",
+   "ere": "Le grand réveil",
+   "epoque": "La cour du Roi-Soleil",
+   "page": 95,
+   "fichier": "17-la-cour-du-roi-soleil.md"
+  },
+  {
+   "nom": "Comédienne",
+   "ka": "Air",
+   "ere": "Le grand réveil",
+   "epoque": "La cour du Roi-Soleil",
+   "page": 95,
+   "fichier": "17-la-cour-du-roi-soleil.md"
+  },
+  {
+   "nom": "Malandrin",
+   "ka": "Eau",
+   "ere": "Le grand réveil",
+   "epoque": "La cour du Roi-Soleil",
+   "page": 95,
+   "fichier": "17-la-cour-du-roi-soleil.md"
+  },
+  {
+   "nom": "Jardinier",
+   "ka": "Terre",
+   "ere": "Le grand réveil",
+   "epoque": "La cour du Roi-Soleil",
+   "page": 95,
+   "fichier": "17-la-cour-du-roi-soleil.md"
+  },
+  {
+   "nom": "Confesseur",
+   "ka": "Lune",
+   "ere": "Le grand réveil",
+   "epoque": "La cour du Roi-Soleil",
+   "page": 95,
+   "fichier": "17-la-cour-du-roi-soleil.md"
+  },
+  {
+   "nom": "Député",
+   "ka": "Feu",
+   "ere": "Le grand réveil",
+   "epoque": "Les conspirations de la Révolution",
+   "page": 97,
+   "fichier": "18-les-conspirations-de-la-revolution.md"
+  },
+  {
+   "nom": "Mathématicienne",
+   "ka": "Air",
+   "ere": "Le grand réveil",
+   "epoque": "Les conspirations de la Révolution",
+   "page": 97,
+   "fichier": "18-les-conspirations-de-la-revolution.md"
+  },
+  {
+   "nom": "Voltigeur",
+   "ka": "Eau",
+   "ere": "Le grand réveil",
+   "epoque": "Les conspirations de la Révolution",
+   "page": 97,
+   "fichier": "18-les-conspirations-de-la-revolution.md"
+  },
+  {
+   "nom": "Fermier",
+   "ka": "Terre",
+   "ere": "Le grand réveil",
+   "epoque": "Les conspirations de la Révolution",
+   "page": 97,
+   "fichier": "18-les-conspirations-de-la-revolution.md"
+  },
+  {
+   "nom": "Conjuré",
+   "ka": "Lune",
+   "ere": "Le grand réveil",
+   "epoque": "Les conspirations de la Révolution",
+   "page": 97,
+   "fichier": "18-les-conspirations-de-la-revolution.md"
+  },
+  {
+   "nom": "Explorateur",
+   "ka": "Feu",
+   "ere": "Le grand réveil",
+   "epoque": "Les vapeurs victoriennes",
+   "page": 99,
+   "fichier": "19-les-vapeurs-victoriennes.md"
+  },
+  {
+   "nom": "Aliéniste",
+   "ka": "Air",
+   "ere": "Le grand réveil",
+   "epoque": "Les vapeurs victoriennes",
+   "page": 99,
+   "fichier": "19-les-vapeurs-victoriennes.md"
+  },
+  {
+   "nom": "Inventeur",
+   "ka": "Eau",
+   "ere": "Le grand réveil",
+   "epoque": "Les vapeurs victoriennes",
+   "page": 99,
+   "fichier": "19-les-vapeurs-victoriennes.md"
+  },
+  {
+   "nom": "Ouvrier syndicaliste",
+   "ka": "Terre",
+   "ere": "Le grand réveil",
+   "epoque": "Les vapeurs victoriennes",
+   "page": 99,
+   "fichier": "19-les-vapeurs-victoriennes.md"
+  },
+  {
+   "nom": "Écrivain maudit",
+   "ka": "Lune",
+   "ere": "Le grand réveil",
+   "epoque": "Les vapeurs victoriennes",
+   "page": 99,
+   "fichier": "19-les-vapeurs-victoriennes.md"
+  }
+ ],
+ "epoquesManquantes": [
+  {
+   "ere": "L'Hermétisme",
+   "epoque": "Le règne de Salomon",
+   "page": 77
+  },
+  {
+   "ere": "L'Hermétisme",
+   "epoque": "La Syracuse des philosophes",
+   "page": 79
+  },
+  {
+   "ere": "Les nouveaux mondes",
+   "epoque": "Al-Andalus",
+   "page": 89
+  },
+  {
+   "ere": "Les nouveaux mondes",
+   "epoque": "L'An Mil",
+   "page": 91
+  }
+ ]
+}

@@ -74,3 +74,19 @@ describe('l’identité de la partie, appliquée à la génération', () => {
         expect(modules.identiteAAppliquer()).toBeNull();
     });
 });
+
+describe('le bloc du GPT collé d’un seul tenant (2026-10-17)', () => {
+    const BLOC = 'STYLE: fine ink linework, watercolor washes\nAVOID: photography, neon colors';
+
+    it('se range en deux champs', async () => {
+        const { separerLeBloc } = await import('./identiteVisuelle');
+        expect(separerLeBloc(BLOC)).toEqual({ style: 'fine ink linework, watercolor washes', aEviter: 'photography, neon colors' });
+        expect(separerLeBloc('STYLE: ink only')).toEqual({ style: 'ink only' });
+        expect(separerLeBloc('fine ink linework')).toBeNull();
+    });
+
+    it('une identité déjà enregistrée avec le bloc entier se lit rangée', () => {
+        expect(identiteEnVigueur({ identiteVisuelle: { style: BLOC } }, null))
+            .toEqual({ style: 'fine ink linework, watercolor washes', aEviter: 'photography, neon colors' });
+    });
+});
