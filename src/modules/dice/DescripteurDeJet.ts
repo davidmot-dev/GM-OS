@@ -323,6 +323,13 @@ export interface DescripteurDeJet {
      */
     reussiteDepensee?: { champ: string; label: string };
     /**
+     * **Les suites d'une maladresse ou d'un critique** — Nephilim, 2026-10-18 :
+     * +1 Khaïba sur un Art occulte, +1 Ombre sur le Vécu contemporain, +1 Point
+     * de Sapience sur un critique de Science occulte. Selon ce qui a été lancé ;
+     * proposées au meneur par un bouton, jamais écrites seules.
+     */
+    suitesDesCritiques?: import('./suitesDesCritiques').SuiteDUnCritique[];
+    /**
      * **La Fortune** — Cthulhu Hack, 2026-10-16 (règle optionnelle du livre) :
      * après un jet raté, le joueur **place** des jetons sur sa fiche (`champ`)
      * — `relance` pour relancer, `reussite` pour réussir —, sans jamais en avoir

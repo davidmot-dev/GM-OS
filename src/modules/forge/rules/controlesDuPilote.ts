@@ -705,6 +705,22 @@ export function controlerLePilote(
     if (reussiteDepensee && !tousLesChamps.has(reussiteDepensee.champ)) {
         erreur('jet.reussiteDepensee.champ', `« ${reussiteDepensee.label} » se décompte dans « ${reussiteDepensee.champ} », absent de la fiche : le bouton n'aurait rien à dépenser.`);
     }
+    // Les suites d'une maladresse ou d'un critique (Nephilim) : la jauge à monter, et ce qui la déclenche.
+    (driver.jet?.suitesDesCritiques ?? []).forEach((suite, i) => {
+        const ou = `jet.suitesDesCritiques[${i}]`;
+        if (suite.quand !== 'maladresse' && suite.quand !== 'critique') {
+            erreur(`${ou}.quand`, `« ${suite.label} » se déclenche sur « ${suite.quand} » : seules « maladresse » et « critique » existent.`);
+        }
+        if (suite.ajouter && !tousLesChamps.has(suite.ajouter.champ)) {
+            erreur(`${ou}.ajouter.champ`, `« ${suite.label} » s'inscrit dans « ${suite.ajouter.champ} », absent de la fiche : le bouton n'aurait rien à écrire.`);
+        }
+        for (const section of suite.sections ?? []) {
+            if (!idsDeSections.has(section)) avertir(`${ou}.sections`, `« ${suite.label} » vise la section « ${section} », absente de la fiche : aucun jet n'en viendra.`);
+        }
+        for (const champ of suite.champs ?? []) {
+            if (!tousLesChamps.has(champ)) avertir(`${ou}.champs`, `« ${suite.label} » vise le champ « ${champ} », absent de la fiche : aucun jet n'en viendra.`);
+        }
+    });
     // Le stress subi de Blade Runner : un champ qui encaisse, et des dés lus sur la fiche.
     const stress = driver.jet?.stressSubi;
     if (stress) {

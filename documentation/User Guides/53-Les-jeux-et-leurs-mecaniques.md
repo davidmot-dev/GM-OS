@@ -24,7 +24,7 @@ fait.
 | 🐙 **Cthulhu Hack** | **Sauvegardes** au d20 sous la caractéristique, **dés d'usure** (Torche, Bagou…) | [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md) |
 | 🐉 **Rêves de Dragons** | d100 sous un **pourcentage** lu dans la table de résolution, **degrés** de réussite | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
 | ⚡️ **Torg Eternity** | Un d20 qui **explose**, converti par la **Table des Bonus**, contre un **Niveau de Difficulté** ; **Possibilité**, « Un de plus ! » et relance favorisée après le premier dé ; **Annulation des dommages** | [Torg](./54-Jeu-Torg.md) |
-| ✨ **Nephilim Légende** | d100 sous une cible en **degrés × 10** (Vécu + Ka d'approche), **doubles** critiques ou maladresses, **marge** sur les dizaines ; **Traque** plafonnée au **Seuil RK** du lieu | [Nephilim](./54-Jeu-Nephilim.md) |
+| ✨ **Nephilim Légende** | d100 sous une cible en **degrés × 10** (Vécu ou Art occulte + Ka d'approche), **doubles** critiques ou maladresses et leurs **suites** (Khaïba, Ombre, Sapience), **marge** sur les dizaines ; **Traque** plafonnée au **Seuil RK** du lieu ; **155 Vécus** et **31 époques** reliés à la fiche | [Nephilim](./54-Jeu-Nephilim.md) |
 
 ---
 
@@ -104,6 +104,7 @@ choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Stress subi** (`stressSubi`) | Un geste **« Encaisser »**, au meneur, sur la carte de combat et sous le panneau de jet : il choisit le **facteur** (1 à 3), le bouton lance les dés de la fiche nommés (l'Empathie et la Psychologie), **chaque réussite retire un point**, le reste se retire du champ (le Sang-froid). À zéro, Brisé par le stress | Blade Runner |
 | **Fortune** (`fortune`) | Sous un jet **raté**, le joueur **place** des jetons sur sa fiche : un pour **relancer**, deux pour **réussir**, jamais plus que le maximum. Au panneau de jet, et au **pupitre** sur un jet venu d'une fiche (Sauvegarde, ressource — le dé perdu revient avant la relance). Le meneur défausse les jetons à la main | Cthulhu Hack : 2 jetons au plus |
 | **Réussite dépensée** (`reussiteDepensee`) | Après le lancer, un bouton dépense **un point de la fiche** pour ajouter **un dé réussi** au jet | Alien : le Point de Récit donne un 6 |
+| **Suites des critiques** (`suitesDesCritiques`) | Sur une **maladresse** ou un **critique**, selon ce qui a été lancé (section ou champ de la fiche), une carte rappelle la règle et propose **un bouton** qui ajoute un degré à une jauge de la fiche — jamais écrit sans le meneur | Nephilim : +1 Khaïba (Art occulte), +1 Ombre (Vécu contemporain), +1 Sapience (critique en Science occulte) |
 | **Composante facultative** (`facultative`) | Un choix qu'on peut laisser vide sans bloquer le jet | Torg : la compétence, absente d'un test non entraîné |
 | **Critique, complication** (`critique`, `complication`) | Les faces qui comptent double, ou qui compliquent | 2d20 : 1 et 20 |
 | **Spécialisation** (`specialisation`) | Une case au jet : cochée, **chaque dé inférieur ou égal** à la composante nommée (la Fonction) compte double, comme le critique. C’est le joueur qui sait si la tâche entre dans une de ses spécialisations | Star Trek : le Focus de l’édition anglaise |

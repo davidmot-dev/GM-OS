@@ -70,3 +70,62 @@ describe('le jet de Nephilim au panneau', () => {
         lancer.mockRestore();
     });
 });
+
+/**
+ * **Les suites d'une maladresse ou d'un critique** — 2026-10-18 : la jauge qui
+ * monte dépend de ce qui a été lancé, et le meneur la note d'un clic.
+ */
+describe('les suites des critiques au panneau', () => {
+    const SUITES: DescripteurDeJet = {
+        ...JET,
+        cible: { ...JET.cible!, caracteristique: { ...JET.cible!.caracteristique, sectionsSupplementaires: ['arts'] } },
+        suitesDesCritiques: [
+            { quand: 'maladresse', label: 'Maladresse du Vécu contemporain', rappel: '+1 degré d’Ombre.', champs: ['simulacrum.experience.degree'], ajouter: { champ: 'falls.shadow' } },
+            { quand: 'critique', label: 'Critique de Magie', sections: ['arts'], ajouter: { champ: 'resources.sapience' } },
+        ],
+    };
+    const AVEC_CHUTES = {
+        ...FICHE,
+        sections: [
+            ...FICHE.sections,
+            { id: 'arts', label: 'Magie', fields: [{ id: 'occult.magic.first', label: 'Basse Magie', type: 'number', defaultValue: 0 }] },
+            { id: 'chutes', label: 'Chutes', fields: [
+                { id: 'falls.shadow', label: 'Ombre', type: 'gauge', defaultValue: 0, max: 10 },
+                { id: 'resources.sapience', label: 'Sapience', type: 'number', defaultValue: 0 },
+            ] },
+        ],
+    } as unknown as SheetTemplate;
+    const AVEC_VALEURS = { ...VALEURS, 'occult.magic.first': 5, 'falls.shadow': 2, 'resources.sapience': 1 };
+
+    /** Un d100 en deux d10 : dizaines puis unités. */
+    const lancerAvec = (choix: string, dizaines: number, unites: number) => {
+        const ecrire = vi.fn();
+        const de = vi.spyOn(Math, 'random');
+        de.mockReturnValueOnce(dizaines / 10 + 0.05).mockReturnValueOnce(unites / 10 + 0.05);
+        render(<PanneauDeJet descripteur={SUITES} dice={DICE} template={AVEC_CHUTES} valeurs={AVEC_VALEURS} ecrireSurLaFiche={ecrire} />);
+        fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: choix } });
+        fireEvent.click(screen.getByText('Lancer', { exact: true }));
+        de.mockRestore();
+        return ecrire;
+    };
+
+    it('une maladresse sur le Vécu contemporain propose +1 Ombre, et la note d’un clic', () => {
+        const ecrire = lancerAvec('simulacrum.experience.degree', 7, 7);
+        expect(screen.getByText('Maladresse du Vécu contemporain')).toBeTruthy();
+        fireEvent.click(screen.getByText('Noter +1 Ombre'));
+        expect(ecrire).toHaveBeenCalledWith({ 'falls.shadow': 3 });
+        expect(screen.getByText('Ombre : 2 → 3')).toBeTruthy();
+        expect(screen.queryByText('Noter +1 Ombre')).toBeNull();
+    });
+
+    it('une maladresse sur un Vécu passé ne propose rien', () => {
+        lancerAvec('pastlives.0.degree', 7, 7);
+        expect(screen.queryByText(/Noter/)).toBeNull();
+    });
+
+    it('un critique en Magie propose le Point de Sapience', () => {
+        const ecrire = lancerAvec('occult.magic.first', 2, 2);
+        fireEvent.click(screen.getByText('Noter +1 Sapience'));
+        expect(ecrire).toHaveBeenCalledWith({ 'resources.sapience': 2 });
+    });
+});

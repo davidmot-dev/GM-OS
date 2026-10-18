@@ -24,6 +24,7 @@ import StressSubi from './StressSubi';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { LigneDuReferentiel } from './ChampDuReferentiel';
+import { suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
@@ -431,6 +432,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setForcage({ fois: 0, unsPayes: 0, ecrits: {} });
         setPaniqueJouee(null);
         setEffetsDuBrise({});
+        setSuitesNotees({});
         setDernierLancer(null);
         setReussiParLaFortune(false);
         setARelancerAussi([]);
@@ -996,6 +998,27 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 dire(entree);
             })
             .catch(() => dire());
+    };
+
+    /*
+      **Les suites d'une maladresse ou d'un critique** (Nephilim, 2026-10-18) :
+      la jauge à monter dépend de ce qui a été lancé — Khaïba sur un Art occulte,
+      Ombre sur le Vécu contemporain. Un bouton, jamais une écriture seule : le
+      meneur tranche (une invocation ratée rompt le pacte sans Khaïba).
+    */
+    const suites = resultat && dernierLancer
+        ? suitesDuJet(descripteur.suitesDesCritiques, resultat.degre, Object.values(dernierLancer.choix).filter(Boolean), template.sections)
+        : [];
+    const [suitesNotees, setSuitesNotees] = useState<Record<string, string>>({});
+    const noterLaSuite = (suite: SuiteDUnCritique) => {
+        if (!suite.ajouter || suitesNotees[suite.label]) return;
+        const { champ, pas = 1 } = suite.ajouter;
+        const max = template.sections.flatMap(s => s.fields).find(f => f.id === champ)?.max;
+        const avant = lireLeNombre(champ);
+        const apres = valeurApresLaSuite(avant, pas, max);
+        setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: apres } }));
+        ecrireSurLaFiche?.({ [champ]: apres });
+        setSuitesNotees(n => ({ ...n, [suite.label]: `${nomDuChamp(champ)} : ${avant} → ${apres}` }));
     };
 
     const reussiteDepensee = descripteur.reussiteDepensee && ecrireSurLaFiche && !torg && !destin
@@ -1875,6 +1898,28 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             )}
                         </div>
                     )}
+
+                    {suites.map(suite => {
+                        const maladresse = suite.quand === 'maladresse';
+                        const notee = suitesNotees[suite.label];
+                        const pas = suite.ajouter?.pas ?? 1;
+                        return (
+                            <div key={suite.label} data-suite-du-critique={suite.quand}
+                                className={`rounded-lg border p-2 space-y-1 ${maladresse ? 'border-etat-danger/40 bg-etat-danger/10' : 'border-etat-succes/40 bg-etat-succes/10'}`}>
+                                <p className={`text-ui-11 font-black uppercase tracking-widest ${maladresse ? 'text-etat-danger' : 'text-etat-succes'}`}>{suite.label}</p>
+                                {suite.rappel && <p className="text-ui-11 text-app-text/70">{suite.rappel}</p>}
+                                {suite.ajouter && ecrireSurLaFiche && !notee && (
+                                    <button type="button" onClick={() => noterLaSuite(suite)}
+                                        className={`px-3 py-1 rounded-lg border text-ui-10 font-bold transition-colors ${maladresse
+                                            ? 'border-etat-danger/60 text-etat-danger hover:bg-etat-danger/20'
+                                            : 'border-etat-succes/60 text-etat-succes hover:bg-etat-succes/20'}`}>
+                                        Noter {pas > 0 ? '+' : '−'}{Math.abs(pas)} {nomDuChamp(suite.ajouter.champ)}
+                                    </button>
+                                )}
+                                {notee && <p className={`text-ui-11 font-bold ${maladresse ? 'text-etat-danger' : 'text-etat-succes'}`}>{notee}</p>}
+                            </div>
+                        );
+                    })}
                 </div>
             )}
 
