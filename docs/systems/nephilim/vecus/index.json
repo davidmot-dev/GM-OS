@@ -1,16 +1,16 @@
 {
  "referentiel": "Vécus passés",
- "source": "Nephilim5 — Livre 0 — Quintessence, chapitre « Les époques d’incarnation », p. 61 à 99",
- "extrait": "2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre",
+ "source": "Nephilim5 — Livre 0 — Quintessence, chapitre « Les époques d’incarnation », p. 62 à 98",
+ "extrait": "2026-10-18, texte du PDF du livre (pypdf et pdftotext), titres et Ka relus sur la mise en page",
  "entrees": [
   {
    "nom": "Héros",
    "fichier": "00-la-chute-de-l-atlantide.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Le Sentier d'or",
-    "Époque": "La Chute de l'Atlantide",
-    "Page": 61
+    "Ère": "Le Sentier d’or",
+    "Époque": "La Chute de l’Atlantide",
+    "Page": 62
    }
   },
   {
@@ -18,9 +18,9 @@
    "fichier": "00-la-chute-de-l-atlantide.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Le Sentier d'or",
-    "Époque": "La Chute de l'Atlantide",
-    "Page": 61
+    "Ère": "Le Sentier d’or",
+    "Époque": "La Chute de l’Atlantide",
+    "Page": 62
    }
   },
   {
@@ -28,19 +28,9 @@
    "fichier": "00-la-chute-de-l-atlantide.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Le Sentier d'or",
-    "Époque": "La Chute de l'Atlantide",
-    "Page": 61
-   }
-  },
-  {
-   "nom": "Soigneur",
-   "fichier": "00-la-chute-de-l-atlantide.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Le Sentier d'or",
-    "Époque": "La Chute de l'Atlantide",
-    "Page": 61
+    "Ère": "Le Sentier d’or",
+    "Époque": "La Chute de l’Atlantide",
+    "Page": 62
    }
   },
   {
@@ -48,9 +38,19 @@
    "fichier": "00-la-chute-de-l-atlantide.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "Le Sentier d'or",
-    "Époque": "La Chute de l'Atlantide",
-    "Page": 61
+    "Ère": "Le Sentier d’or",
+    "Époque": "La Chute de l’Atlantide",
+    "Page": 62
+   }
+  },
+  {
+   "nom": "Soigneur",
+   "fichier": "00-la-chute-de-l-atlantide.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Le Sentier d’or",
+    "Époque": "La Chute de l’Atlantide",
+    "Page": 62
    }
   },
   {
@@ -60,7 +60,7 @@
     "Ka-élément": "Feu",
     "Ère": "Les Guerres élémentaires",
     "Époque": "Le Déluge",
-    "Page": 63
+    "Page": 64
    }
   },
   {
@@ -70,7 +70,7 @@
     "Ka-élément": "Air",
     "Ère": "Les Guerres élémentaires",
     "Époque": "Le Déluge",
-    "Page": 63
+    "Page": 64
    }
   },
   {
@@ -80,17 +80,7 @@
     "Ka-élément": "Eau",
     "Ère": "Les Guerres élémentaires",
     "Époque": "Le Déluge",
-    "Page": 63
-   }
-  },
-  {
-   "nom": "Charpentier",
-   "fichier": "01-le-deluge.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Le Déluge",
-    "Page": 63
+    "Page": 64
    }
   },
   {
@@ -100,730 +90,1468 @@
     "Ka-élément": "Lune",
     "Ère": "Les Guerres élémentaires",
     "Époque": "Le Déluge",
-    "Page": 63
+    "Page": 64
    }
   },
   {
-   "nom": "Conteur",
-   "fichier": "02-les-premieres-pierres-dressees.md",
-   "details": {
-    "Ka-élément": "Feu",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premières pierres dressées",
-    "Page": 65
-   }
-  },
-  {
-   "nom": "Ancien",
-   "fichier": "02-les-premieres-pierres-dressees.md",
-   "details": {
-    "Ka-élément": "Air",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premières pierres dressées",
-    "Page": 65
-   }
-  },
-  {
-   "nom": "Cultivatrice",
-   "fichier": "02-les-premieres-pierres-dressees.md",
-   "details": {
-    "Ka-élément": "Eau",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premières pierres dressées",
-    "Page": 65
-   }
-  },
-  {
-   "nom": "Potier",
-   "fichier": "02-les-premieres-pierres-dressees.md",
+   "nom": "Charpentier",
+   "fichier": "01-le-deluge.md",
    "details": {
     "Ka-élément": "Terre",
     "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premières pierres dressées",
-    "Page": 65
-   }
-  },
-  {
-   "nom": "Princesse aveugle",
-   "fichier": "02-les-premieres-pierres-dressees.md",
-   "details": {
-    "Ka-élément": "Lune",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premières pierres dressées",
-    "Page": 65
-   }
-  },
-  {
-   "nom": "Orfèvre",
-   "fichier": "03-les-premiers-megalithes.md",
-   "details": {
-    "Ka-élément": "Feu",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premiers mégalithes",
-    "Page": 67
-   }
-  },
-  {
-   "nom": "Cheffe de clan",
-   "fichier": "03-les-premiers-megalithes.md",
-   "details": {
-    "Ka-élément": "Air",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premiers mégalithes",
-    "Page": 67
-   }
-  },
-  {
-   "nom": "Ambassadeur",
-   "fichier": "03-les-premiers-megalithes.md",
-   "details": {
-    "Ka-élément": "Eau",
-    "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premiers mégalithes",
-    "Page": 67
+    "Époque": "Le Déluge",
+    "Page": 64
    }
   },
   {
    "nom": "Chasseur",
-   "fichier": "03-les-premiers-megalithes.md",
+   "fichier": "02-les-premiers-dieux.md",
    "details": {
-    "Ka-élément": "Terre",
+    "Ka-élément": "Feu",
     "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premiers mégalithes",
-    "Page": 67
+    "Époque": "Les premiers dieux",
+    "Page": 65
    }
   },
   {
    "nom": "Astrologue",
-   "fichier": "03-les-premiers-megalithes.md",
+   "fichier": "02-les-premiers-dieux.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers dieux",
+    "Page": 65
+   }
+  },
+  {
+   "nom": "Pêcheur",
+   "fichier": "02-les-premiers-dieux.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers dieux",
+    "Page": 65
+   }
+  },
+  {
+   "nom": "Psychopompe",
+   "fichier": "02-les-premiers-dieux.md",
    "details": {
     "Ka-élément": "Lune",
     "Ère": "Les Guerres élémentaires",
-    "Époque": "Les premiers mégalithes",
+    "Époque": "Les premiers dieux",
+    "Page": 65
+   }
+  },
+  {
+   "nom": "Chamane",
+   "fichier": "02-les-premiers-dieux.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers dieux",
+    "Page": 65
+   }
+  },
+  {
+   "nom": "Conteur",
+   "fichier": "03-le-premier-peuple.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Le premier peuple",
+    "Page": 66
+   }
+  },
+  {
+   "nom": "Ancien",
+   "fichier": "03-le-premier-peuple.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Le premier peuple",
+    "Page": 66
+   }
+  },
+  {
+   "nom": "Cultivatrice",
+   "fichier": "03-le-premier-peuple.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Le premier peuple",
+    "Page": 66
+   }
+  },
+  {
+   "nom": "Princesse aveugle",
+   "fichier": "03-le-premier-peuple.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Le premier peuple",
+    "Page": 66
+   }
+  },
+  {
+   "nom": "Potier",
+   "fichier": "03-le-premier-peuple.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Le premier peuple",
+    "Page": 66
+   }
+  },
+  {
+   "nom": "Métallurgiste",
+   "fichier": "04-la-premiere-cite.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "La première cité",
     "Page": 67
    }
   },
   {
+   "nom": "Juge",
+   "fichier": "04-la-premiere-cite.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "La première cité",
+    "Page": 67
+   }
+  },
+  {
+   "nom": "Marchand",
+   "fichier": "04-la-premiere-cite.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "La première cité",
+    "Page": 67
+   }
+  },
+  {
+   "nom": "Perceur de mur",
+   "fichier": "04-la-premiere-cite.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "La première cité",
+    "Page": 67
+   }
+  },
+  {
+   "nom": "Architecte",
+   "fichier": "04-la-premiere-cite.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "La première cité",
+    "Page": 67
+   }
+  },
+  {
+   "nom": "Orfèvre",
+   "fichier": "05-les-premiers-megalithes.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers mégalithes",
+    "Page": 68
+   }
+  },
+  {
+   "nom": "Cheffe de clan",
+   "fichier": "05-les-premiers-megalithes.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers mégalithes",
+    "Page": 68
+   }
+  },
+  {
+   "nom": "Ambassadeur",
+   "fichier": "05-les-premiers-megalithes.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers mégalithes",
+    "Page": 68
+   }
+  },
+  {
+   "nom": "Astrologue",
+   "fichier": "05-les-premiers-megalithes.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers mégalithes",
+    "Page": 68
+   }
+  },
+  {
+   "nom": "Chasseur",
+   "fichier": "05-les-premiers-megalithes.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Guerres élémentaires",
+    "Époque": "Les premiers mégalithes",
+    "Page": 68
+   }
+  },
+  {
    "nom": "Champion de clan",
-   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md",
+   "fichier": "06-le-sanctuaire-des-tuatha-de-danann.md",
    "details": {
     "Ka-élément": "Feu",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le sanctuaire des Tuatha Dé Danann",
-    "Page": 69
+    "Époque": "Le sanctuaire des Tuatha de Danann",
+    "Page": 70
    }
   },
   {
    "nom": "Barde",
-   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md",
+   "fichier": "06-le-sanctuaire-des-tuatha-de-danann.md",
    "details": {
     "Ka-élément": "Air",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le sanctuaire des Tuatha Dé Danann",
-    "Page": 69
+    "Époque": "Le sanctuaire des Tuatha de Danann",
+    "Page": 70
    }
   },
   {
    "nom": "Forgeron",
-   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md",
+   "fichier": "06-le-sanctuaire-des-tuatha-de-danann.md",
    "details": {
     "Ka-élément": "Eau",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le sanctuaire des Tuatha Dé Danann",
-    "Page": 69
-   }
-  },
-  {
-   "nom": "Druide",
-   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Les Compacts secrets",
-    "Époque": "Le sanctuaire des Tuatha Dé Danann",
-    "Page": 69
+    "Époque": "Le sanctuaire des Tuatha de Danann",
+    "Page": 70
    }
   },
   {
    "nom": "Magicienne",
-   "fichier": "04-le-sanctuaire-des-tuatha-de-danann.md",
+   "fichier": "06-le-sanctuaire-des-tuatha-de-danann.md",
    "details": {
     "Ka-élément": "Lune",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le sanctuaire des Tuatha Dé Danann",
-    "Page": 69
+    "Époque": "Le sanctuaire des Tuatha de Danann",
+    "Page": 70
    }
   },
   {
-   "nom": "Soldat chaldéen",
-   "fichier": "05-l-empire-divin-de-babylone.md",
-   "details": {
-    "Ka-élément": "Feu",
-    "Ère": "Les Compacts secrets",
-    "Époque": "L'empire divin de Babylone",
-    "Page": 71
-   }
-  },
-  {
-   "nom": "Devin (Barû)",
-   "fichier": "05-l-empire-divin-de-babylone.md",
-   "details": {
-    "Ka-élément": "Air",
-    "Ère": "Les Compacts secrets",
-    "Époque": "L'empire divin de Babylone",
-    "Page": 71
-   }
-  },
-  {
-   "nom": "Archer royal",
-   "fichier": "05-l-empire-divin-de-babylone.md",
-   "details": {
-    "Ka-élément": "Eau",
-    "Ère": "Les Compacts secrets",
-    "Époque": "L'empire divin de Babylone",
-    "Page": 71
-   }
-  },
-  {
-   "nom": "Guide judéen",
-   "fichier": "05-l-empire-divin-de-babylone.md",
+   "nom": "Druide",
+   "fichier": "06-le-sanctuaire-des-tuatha-de-danann.md",
    "details": {
     "Ka-élément": "Terre",
     "Ère": "Les Compacts secrets",
-    "Époque": "L'empire divin de Babylone",
+    "Époque": "Le sanctuaire des Tuatha de Danann",
+    "Page": 70
+   }
+  },
+  {
+   "nom": "Kashtriya",
+   "fichier": "07-le-mahabharata.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le Mahabharata",
     "Page": 71
    }
   },
   {
-   "nom": "Lamentateur (kalû)",
-   "fichier": "05-l-empire-divin-de-babylone.md",
+   "nom": "Brahmane",
+   "fichier": "07-le-mahabharata.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le Mahabharata",
+    "Page": 71
+   }
+  },
+  {
+   "nom": "Cocher",
+   "fichier": "07-le-mahabharata.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le Mahabharata",
+    "Page": 71
+   }
+  },
+  {
+   "nom": "Sadhu",
+   "fichier": "07-le-mahabharata.md",
    "details": {
     "Ka-élément": "Lune",
     "Ère": "Les Compacts secrets",
-    "Époque": "L'empire divin de Babylone",
+    "Époque": "Le Mahabharata",
     "Page": 71
+   }
+  },
+  {
+   "nom": "Avatar de la Grande Déesse",
+   "fichier": "07-le-mahabharata.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le Mahabharata",
+    "Page": 71
+   }
+  },
+  {
+   "nom": "Gouverneur",
+   "fichier": "08-le-labyrinthe-de-minos.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le labyrinthe de Minos",
+    "Page": 72
+   }
+  },
+  {
+   "nom": "Architecte",
+   "fichier": "08-le-labyrinthe-de-minos.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le labyrinthe de Minos",
+    "Page": 72
+   }
+  },
+  {
+   "nom": "Navigateur",
+   "fichier": "08-le-labyrinthe-de-minos.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le labyrinthe de Minos",
+    "Page": 72
+   }
+  },
+  {
+   "nom": "Prêtresse",
+   "fichier": "08-le-labyrinthe-de-minos.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le labyrinthe de Minos",
+    "Page": 72
+   }
+  },
+  {
+   "nom": "Sculpteur",
+   "fichier": "08-le-labyrinthe-de-minos.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le labyrinthe de Minos",
+    "Page": 72
    }
   },
   {
    "nom": "Prêtre d’Aton",
-   "fichier": "06-le-reve-d-akhenaton.md",
+   "fichier": "09-le-reve-d-akhenaton.md",
    "details": {
     "Ka-élément": "Feu",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le rêve d'Akhenaton",
+    "Époque": "Le rêve d’Akhénaton",
     "Page": 73
    }
   },
   {
    "nom": "Scribe",
-   "fichier": "06-le-reve-d-akhenaton.md",
+   "fichier": "09-le-reve-d-akhenaton.md",
    "details": {
     "Ka-élément": "Air",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le rêve d'Akhenaton",
+    "Époque": "Le rêve d’Akhénaton",
     "Page": 73
    }
   },
   {
    "nom": "Danseuse",
-   "fichier": "06-le-reve-d-akhenaton.md",
+   "fichier": "09-le-reve-d-akhenaton.md",
    "details": {
     "Ka-élément": "Eau",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le rêve d'Akhenaton",
-    "Page": 73
-   }
-  },
-  {
-   "nom": "Intendant",
-   "fichier": "06-le-reve-d-akhenaton.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Les Compacts secrets",
-    "Époque": "Le rêve d'Akhenaton",
+    "Époque": "Le rêve d’Akhénaton",
     "Page": 73
    }
   },
   {
    "nom": "Embaumeur",
-   "fichier": "06-le-reve-d-akhenaton.md",
+   "fichier": "09-le-reve-d-akhenaton.md",
    "details": {
     "Ka-élément": "Lune",
     "Ère": "Les Compacts secrets",
-    "Époque": "Le rêve d'Akhenaton",
+    "Époque": "Le rêve d’Akhénaton",
     "Page": 73
    }
   },
   {
-   "nom": "Immortel",
-   "fichier": "07-la-mesopotamie-des-predictions.md",
+   "nom": "Intendant",
+   "fichier": "09-le-reve-d-akhenaton.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Compacts secrets",
+    "Époque": "Le rêve d’Akhénaton",
+    "Page": 73
+   }
+  },
+  {
+   "nom": "Guerrier achéen",
+   "fichier": "10-la-chute-de-troie.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "L'Hermétisme",
-    "Époque": "La Mésopotamie des prédictions",
-    "Page": 75
+    "Ère": "Les Compacts secrets",
+    "Époque": "La Chute de Troie",
+    "Page": 74
+   }
+  },
+  {
+   "nom": "Aède",
+   "fichier": "10-la-chute-de-troie.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les Compacts secrets",
+    "Époque": "La Chute de Troie",
+    "Page": 74
+   }
+  },
+  {
+   "nom": "Pilote",
+   "fichier": "10-la-chute-de-troie.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les Compacts secrets",
+    "Époque": "La Chute de Troie",
+    "Page": 74
+   }
+  },
+  {
+   "nom": "Amazone",
+   "fichier": "10-la-chute-de-troie.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les Compacts secrets",
+    "Époque": "La Chute de Troie",
+    "Page": 74
+   }
+  },
+  {
+   "nom": "Pâtre",
+   "fichier": "10-la-chute-de-troie.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les Compacts secrets",
+    "Époque": "La Chute de Troie",
+    "Page": 74
+   }
+  },
+  {
+   "nom": "Immortel",
+   "fichier": "11-l-empire-magique-des-perses.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire magique des Perses",
+    "Page": 76
    }
   },
   {
    "nom": "Adorateur zoroastrien",
-   "fichier": "07-la-mesopotamie-des-predictions.md",
+   "fichier": "11-l-empire-magique-des-perses.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "L'Hermétisme",
-    "Époque": "La Mésopotamie des prédictions",
-    "Page": 75
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire magique des Perses",
+    "Page": 76
    }
   },
   {
    "nom": "Mercenaire",
-   "fichier": "07-la-mesopotamie-des-predictions.md",
+   "fichier": "11-l-empire-magique-des-perses.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "L'Hermétisme",
-    "Époque": "La Mésopotamie des prédictions",
-    "Page": 75
-   }
-  },
-  {
-   "nom": "Satrape",
-   "fichier": "07-la-mesopotamie-des-predictions.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "L'Hermétisme",
-    "Époque": "La Mésopotamie des prédictions",
-    "Page": 75
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire magique des Perses",
+    "Page": 76
    }
   },
   {
    "nom": "Astrologue mage",
-   "fichier": "07-la-mesopotamie-des-predictions.md",
+   "fichier": "11-l-empire-magique-des-perses.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "L'Hermétisme",
-    "Époque": "La Mésopotamie des prédictions",
-    "Page": 75
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire magique des Perses",
+    "Page": 76
+   }
+  },
+  {
+   "nom": "Satrape",
+   "fichier": "11-l-empire-magique-des-perses.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire magique des Perses",
+    "Page": 76
+   }
+  },
+  {
+   "nom": "Soldat chaldéen",
+   "fichier": "12-l-empire-divin-de-babylone.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire divin de Babylone",
+    "Page": 77
+   }
+  },
+  {
+   "nom": "Devin (Barû)",
+   "fichier": "12-l-empire-divin-de-babylone.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire divin de Babylone",
+    "Page": 77
+   }
+  },
+  {
+   "nom": "Archer royal",
+   "fichier": "12-l-empire-divin-de-babylone.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire divin de Babylone",
+    "Page": 77
+   }
+  },
+  {
+   "nom": "Lamentateur (kalû)",
+   "fichier": "12-l-empire-divin-de-babylone.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire divin de Babylone",
+    "Page": 77
+   }
+  },
+  {
+   "nom": "Guide judéen",
+   "fichier": "12-l-empire-divin-de-babylone.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire divin de Babylone",
+    "Page": 77
+   }
+  },
+  {
+   "nom": "Prêtresse orientale du soleil",
+   "fichier": "13-l-empire-solaire-d-alexandre.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire solaire d’Alexandre",
+    "Page": 78
+   }
+  },
+  {
+   "nom": "Mage bactrien",
+   "fichier": "13-l-empire-solaire-d-alexandre.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire solaire d’Alexandre",
+    "Page": 78
+   }
+  },
+  {
+   "nom": "Hetâiroï",
+   "fichier": "13-l-empire-solaire-d-alexandre.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire solaire d’Alexandre",
+    "Page": 78
+   }
+  },
+  {
+   "nom": "Amant",
+   "fichier": "13-l-empire-solaire-d-alexandre.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire solaire d’Alexandre",
+    "Page": 78
+   }
+  },
+  {
+   "nom": "Stratège",
+   "fichier": "13-l-empire-solaire-d-alexandre.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire solaire d’Alexandre",
+    "Page": 78
    }
   },
   {
    "nom": "Mercenaire",
-   "fichier": "10-l-empire-de-carthage.md",
+   "fichier": "14-l-empire-lunaire-de-carthage.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Carthage",
-    "Page": 81
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire lunaire de Carthage",
+    "Page": 79
    }
   },
   {
    "nom": "Suffète",
-   "fichier": "10-l-empire-de-carthage.md",
+   "fichier": "14-l-empire-lunaire-de-carthage.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Carthage",
-    "Page": 81
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire lunaire de Carthage",
+    "Page": 79
    }
   },
   {
    "nom": "Capitaine de navire",
-   "fichier": "10-l-empire-de-carthage.md",
+   "fichier": "14-l-empire-lunaire-de-carthage.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Carthage",
-    "Page": 81
-   }
-  },
-  {
-   "nom": "Marchand",
-   "fichier": "10-l-empire-de-carthage.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Carthage",
-    "Page": 81
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire lunaire de Carthage",
+    "Page": 79
    }
   },
   {
    "nom": "Prêtresse de Tanit",
-   "fichier": "10-l-empire-de-carthage.md",
+   "fichier": "14-l-empire-lunaire-de-carthage.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Carthage",
-    "Page": 81
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire lunaire de Carthage",
+    "Page": 79
+   }
+  },
+  {
+   "nom": "Marchand",
+   "fichier": "14-l-empire-lunaire-de-carthage.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire lunaire de Carthage",
+    "Page": 79
    }
   },
   {
    "nom": "Gladiateur",
-   "fichier": "11-l-empire-de-rome.md",
+   "fichier": "15-l-empire-profane-de-rome.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Rome",
-    "Page": 83
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire profane de Rome",
+    "Page": 80
    }
   },
   {
    "nom": "Sénateur",
-   "fichier": "11-l-empire-de-rome.md",
+   "fichier": "15-l-empire-profane-de-rome.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Rome",
-    "Page": 83
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire profane de Rome",
+    "Page": 80
    }
   },
   {
    "nom": "Légionnaire",
-   "fichier": "11-l-empire-de-rome.md",
+   "fichier": "15-l-empire-profane-de-rome.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Rome",
-    "Page": 83
-   }
-  },
-  {
-   "nom": "Vate",
-   "fichier": "11-l-empire-de-rome.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Rome",
-    "Page": 83
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire profane de Rome",
+    "Page": 80
    }
   },
   {
    "nom": "Chevalier gaulois",
-   "fichier": "11-l-empire-de-rome.md",
+   "fichier": "15-l-empire-profane-de-rome.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'empire de Rome",
-    "Page": 83
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire profane de Rome",
+    "Page": 80
+   }
+  },
+  {
+   "nom": "Vate",
+   "fichier": "15-l-empire-profane-de-rome.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "L’Hermétisme",
+    "Époque": "L’empire profane de Rome",
+    "Page": 80
    }
   },
   {
    "nom": "Prêcheur",
-   "fichier": "12-l-incident-jesus.md",
+   "fichier": "16-l-incident-jesus.md",
    "details": {
     "Ka-élément": "Feu",
     "Ère": "Les guerres secrètes",
-    "Époque": "L'incident Jésus",
-    "Page": 85
+    "Époque": "L’incident Jésus",
+    "Page": 82
    }
   },
   {
    "nom": "Moine essénien",
-   "fichier": "12-l-incident-jesus.md",
+   "fichier": "16-l-incident-jesus.md",
    "details": {
     "Ka-élément": "Air",
     "Ère": "Les guerres secrètes",
-    "Époque": "L'incident Jésus",
-    "Page": 85
+    "Époque": "L’incident Jésus",
+    "Page": 82
    }
   },
   {
    "nom": "Diplomate polyglotte",
-   "fichier": "12-l-incident-jesus.md",
+   "fichier": "16-l-incident-jesus.md",
    "details": {
     "Ka-élément": "Eau",
     "Ère": "Les guerres secrètes",
-    "Époque": "L'incident Jésus",
-    "Page": 85
-   }
-  },
-  {
-   "nom": "Proconsul",
-   "fichier": "12-l-incident-jesus.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Les guerres secrètes",
-    "Époque": "L'incident Jésus",
-    "Page": 85
+    "Époque": "L’incident Jésus",
+    "Page": 82
    }
   },
   {
    "nom": "Sicaire zélote",
-   "fichier": "12-l-incident-jesus.md",
+   "fichier": "16-l-incident-jesus.md",
    "details": {
     "Ka-élément": "Lune",
     "Ère": "Les guerres secrètes",
-    "Époque": "L'incident Jésus",
-    "Page": 85
+    "Époque": "L’incident Jésus",
+    "Page": 82
+   }
+  },
+  {
+   "nom": "Proconsul",
+   "fichier": "16-l-incident-jesus.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les guerres secrètes",
+    "Époque": "L’incident Jésus",
+    "Page": 82
    }
   },
   {
    "nom": "Reine picte",
-   "fichier": "13-les-arthuriades.md",
+   "fichier": "17-les-arthuriades.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Les nouveaux mondes",
-    "Époque": "Les Arthuriades",
-    "Page": 87
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les arthuriades",
+    "Page": 83
    }
   },
   {
    "nom": "Chevalier mystique",
-   "fichier": "13-les-arthuriades.md",
+   "fichier": "17-les-arthuriades.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Les nouveaux mondes",
-    "Époque": "Les Arthuriades",
-    "Page": 87
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les arthuriades",
+    "Page": 83
    }
   },
   {
    "nom": "Moine évangéliste",
-   "fichier": "13-les-arthuriades.md",
+   "fichier": "17-les-arthuriades.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Les nouveaux mondes",
-    "Époque": "Les Arthuriades",
-    "Page": 87
-   }
-  },
-  {
-   "nom": "Marchand romain",
-   "fichier": "13-les-arthuriades.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Les nouveaux mondes",
-    "Époque": "Les Arthuriades",
-    "Page": 87
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les arthuriades",
+    "Page": 83
    }
   },
   {
    "nom": "Chevalier errant",
-   "fichier": "13-les-arthuriades.md",
+   "fichier": "17-les-arthuriades.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "Les nouveaux mondes",
-    "Époque": "Les Arthuriades",
-    "Page": 87
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les arthuriades",
+    "Page": 83
+   }
+  },
+  {
+   "nom": "Marchand romain",
+   "fichier": "17-les-arthuriades.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les arthuriades",
+    "Page": 83
+   }
+  },
+  {
+   "nom": "Chevalier arabe",
+   "fichier": "18-les-croisades.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les croisades",
+    "Page": 84
+   }
+  },
+  {
+   "nom": "Moine mémorialiste",
+   "fichier": "18-les-croisades.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les croisades",
+    "Page": 84
+   }
+  },
+  {
+   "nom": "Plénipotentiaire byzantin",
+   "fichier": "18-les-croisades.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les croisades",
+    "Page": 84
+   }
+  },
+  {
+   "nom": "Assassin",
+   "fichier": "18-les-croisades.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les croisades",
+    "Page": 84
+   }
+  },
+  {
+   "nom": "Noble exilée",
+   "fichier": "18-les-croisades.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les croisades",
+    "Page": 84
+   }
+  },
+  {
+   "nom": "Inquisiteur",
+   "fichier": "19-les-buchers-cathares.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les bûchers cathares",
+    "Page": 85
+   }
+  },
+  {
+   "nom": "Docte",
+   "fichier": "19-les-buchers-cathares.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les bûchers cathares",
+    "Page": 85
+   }
+  },
+  {
+   "nom": "Troubadour",
+   "fichier": "19-les-buchers-cathares.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les bûchers cathares",
+    "Page": 85
+   }
+  },
+  {
+   "nom": "Apostat",
+   "fichier": "19-les-buchers-cathares.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les bûchers cathares",
+    "Page": 85
+   }
+  },
+  {
+   "nom": "Noble parfait",
+   "fichier": "19-les-buchers-cathares.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les guerres secrètes",
+    "Époque": "Les bûchers cathares",
+    "Page": 85
+   }
+  },
+  {
+   "nom": "Routier",
+   "fichier": "20-la-chute-du-temple.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les guerres secrètes",
+    "Époque": "La chute du Temple",
+    "Page": 86
+   }
+  },
+  {
+   "nom": "Moniale",
+   "fichier": "20-la-chute-du-temple.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les guerres secrètes",
+    "Époque": "La chute du Temple",
+    "Page": 86
+   }
+  },
+  {
+   "nom": "Alleutier du Temple",
+   "fichier": "20-la-chute-du-temple.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les guerres secrètes",
+    "Époque": "La chute du Temple",
+    "Page": 86
+   }
+  },
+  {
+   "nom": "Chevalier mercenaire",
+   "fichier": "20-la-chute-du-temple.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les guerres secrètes",
+    "Époque": "La chute du Temple",
+    "Page": 86
+   }
+  },
+  {
+   "nom": "Bourgeois de Paris",
+   "fichier": "20-la-chute-du-temple.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les guerres secrètes",
+    "Époque": "La chute du Temple",
+    "Page": 86
    }
   },
   {
    "nom": "Condottiere",
-   "fichier": "16-les-arcanes-de-la-renaissance.md",
+   "fichier": "21-les-arcanes-de-la-renaissance.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Le grand réveil",
-    "Époque": "Les Arcanes de la Renaissance",
-    "Page": 93
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les arcanes de la Renaissance",
+    "Page": 88
    }
   },
   {
    "nom": "Maestro",
-   "fichier": "16-les-arcanes-de-la-renaissance.md",
+   "fichier": "21-les-arcanes-de-la-renaissance.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Le grand réveil",
-    "Époque": "Les Arcanes de la Renaissance",
-    "Page": 93
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les arcanes de la Renaissance",
+    "Page": 88
    }
   },
   {
    "nom": "Explorateur",
-   "fichier": "16-les-arcanes-de-la-renaissance.md",
+   "fichier": "21-les-arcanes-de-la-renaissance.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Le grand réveil",
-    "Époque": "Les Arcanes de la Renaissance",
-    "Page": 93
-   }
-  },
-  {
-   "nom": "Dame marchande",
-   "fichier": "16-les-arcanes-de-la-renaissance.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Le grand réveil",
-    "Époque": "Les Arcanes de la Renaissance",
-    "Page": 93
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les arcanes de la Renaissance",
+    "Page": 88
    }
   },
   {
    "nom": "Évêque défroqué",
-   "fichier": "16-les-arcanes-de-la-renaissance.md",
+   "fichier": "21-les-arcanes-de-la-renaissance.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "Le grand réveil",
-    "Époque": "Les Arcanes de la Renaissance",
-    "Page": 93
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les arcanes de la Renaissance",
+    "Page": 88
+   }
+  },
+  {
+   "nom": "Dame marchande",
+   "fichier": "21-les-arcanes-de-la-renaissance.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les arcanes de la Renaissance",
+    "Page": 88
+   }
+  },
+  {
+   "nom": "Bourreau",
+   "fichier": "22-les-secrets-de-la-sublime-porte.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les secrets de la Sublime Porte",
+    "Page": 89
+   }
+  },
+  {
+   "nom": "Odalisque",
+   "fichier": "22-les-secrets-de-la-sublime-porte.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les secrets de la Sublime Porte",
+    "Page": 89
+   }
+  },
+  {
+   "nom": "Janissaire",
+   "fichier": "22-les-secrets-de-la-sublime-porte.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les secrets de la Sublime Porte",
+    "Page": 89
+   }
+  },
+  {
+   "nom": "Poète",
+   "fichier": "22-les-secrets-de-la-sublime-porte.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les secrets de la Sublime Porte",
+    "Page": 89
+   }
+  },
+  {
+   "nom": "Vizir",
+   "fichier": "22-les-secrets-de-la-sublime-porte.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les secrets de la Sublime Porte",
+    "Page": 89
    }
   },
   {
    "nom": "Mousquetaire",
-   "fichier": "17-la-cour-du-roi-soleil.md",
+   "fichier": "23-la-cour-du-roi-soleil.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "La cour du Roi-Soleil",
-    "Page": 95
+    "Page": 90
    }
   },
   {
    "nom": "Comédienne",
-   "fichier": "17-la-cour-du-roi-soleil.md",
+   "fichier": "23-la-cour-du-roi-soleil.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "La cour du Roi-Soleil",
-    "Page": 95
+    "Page": 90
    }
   },
   {
    "nom": "Malandrin",
-   "fichier": "17-la-cour-du-roi-soleil.md",
+   "fichier": "23-la-cour-du-roi-soleil.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "La cour du Roi-Soleil",
-    "Page": 95
-   }
-  },
-  {
-   "nom": "Jardinier",
-   "fichier": "17-la-cour-du-roi-soleil.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Le grand réveil",
-    "Époque": "La cour du Roi-Soleil",
-    "Page": 95
+    "Page": 90
    }
   },
   {
    "nom": "Confesseur",
-   "fichier": "17-la-cour-du-roi-soleil.md",
+   "fichier": "23-la-cour-du-roi-soleil.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "La cour du Roi-Soleil",
-    "Page": 95
+    "Page": 90
+   }
+  },
+  {
+   "nom": "Jardinier",
+   "fichier": "23-la-cour-du-roi-soleil.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "La cour du Roi-Soleil",
+    "Page": 90
    }
   },
   {
    "nom": "Député",
-   "fichier": "18-les-conspirations-de-la-revolution.md",
+   "fichier": "24-les-conspirations-de-la-revolution.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "Les conspirations de la Révolution",
-    "Page": 97
+    "Page": 91
    }
   },
   {
    "nom": "Mathématicienne",
-   "fichier": "18-les-conspirations-de-la-revolution.md",
+   "fichier": "24-les-conspirations-de-la-revolution.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "Les conspirations de la Révolution",
-    "Page": 97
+    "Page": 91
    }
   },
   {
    "nom": "Voltigeur",
-   "fichier": "18-les-conspirations-de-la-revolution.md",
+   "fichier": "24-les-conspirations-de-la-revolution.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "Les conspirations de la Révolution",
-    "Page": 97
-   }
-  },
-  {
-   "nom": "Fermier",
-   "fichier": "18-les-conspirations-de-la-revolution.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Le grand réveil",
-    "Époque": "Les conspirations de la Révolution",
-    "Page": 97
+    "Page": 91
    }
   },
   {
    "nom": "Conjuré",
-   "fichier": "18-les-conspirations-de-la-revolution.md",
+   "fichier": "24-les-conspirations-de-la-revolution.md",
    "details": {
     "Ka-élément": "Lune",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "Les conspirations de la Révolution",
-    "Page": 97
+    "Page": 91
+   }
+  },
+  {
+   "nom": "Fermier",
+   "fichier": "24-les-conspirations-de-la-revolution.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les conspirations de la Révolution",
+    "Page": 91
    }
   },
   {
    "nom": "Explorateur",
-   "fichier": "19-les-vapeurs-victoriennes.md",
+   "fichier": "25-les-vapeurs-victoriennes.md",
    "details": {
     "Ka-élément": "Feu",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "Les vapeurs victoriennes",
-    "Page": 99
+    "Page": 92
    }
   },
   {
    "nom": "Aliéniste",
-   "fichier": "19-les-vapeurs-victoriennes.md",
+   "fichier": "25-les-vapeurs-victoriennes.md",
    "details": {
     "Ka-élément": "Air",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "Les vapeurs victoriennes",
-    "Page": 99
+    "Page": 92
    }
   },
   {
    "nom": "Inventeur",
-   "fichier": "19-les-vapeurs-victoriennes.md",
+   "fichier": "25-les-vapeurs-victoriennes.md",
    "details": {
     "Ka-élément": "Eau",
-    "Ère": "Le grand réveil",
+    "Ère": "Les nouveaux mondes",
     "Époque": "Les vapeurs victoriennes",
-    "Page": 99
-   }
-  },
-  {
-   "nom": "Ouvrier syndicaliste",
-   "fichier": "19-les-vapeurs-victoriennes.md",
-   "details": {
-    "Ka-élément": "Terre",
-    "Ère": "Le grand réveil",
-    "Époque": "Les vapeurs victoriennes",
-    "Page": 99
+    "Page": 92
    }
   },
   {
    "nom": "Écrivain maudit",
-   "fichier": "19-les-vapeurs-victoriennes.md",
+   "fichier": "25-les-vapeurs-victoriennes.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les vapeurs victoriennes",
+    "Page": 92
+   }
+  },
+  {
+   "nom": "Ouvrier syndicaliste",
+   "fichier": "25-les-vapeurs-victoriennes.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Les nouveaux mondes",
+    "Époque": "Les vapeurs victoriennes",
+    "Page": 92
+   }
+  },
+  {
+   "nom": "Artiste",
+   "fichier": "26-la-secession-viennoise.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Le grand réveil",
+    "Époque": "La Sécession viennoise",
+    "Page": 94
+   }
+  },
+  {
+   "nom": "Psychanalyste",
+   "fichier": "26-la-secession-viennoise.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Le grand réveil",
+    "Époque": "La Sécession viennoise",
+    "Page": 94
+   }
+  },
+  {
+   "nom": "Anarchiste",
+   "fichier": "26-la-secession-viennoise.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Le grand réveil",
+    "Époque": "La Sécession viennoise",
+    "Page": 94
+   }
+  },
+  {
+   "nom": "Théosophe",
+   "fichier": "26-la-secession-viennoise.md",
    "details": {
     "Ka-élément": "Lune",
     "Ère": "Le grand réveil",
-    "Époque": "Les vapeurs victoriennes",
-    "Page": 99
+    "Époque": "La Sécession viennoise",
+    "Page": 94
    }
-  }
- ],
- "epoquesManquantes": [
-  {
-   "ere": "L'Hermétisme",
-   "epoque": "Le règne de Salomon",
-   "page": 77
   },
   {
-   "ere": "L'Hermétisme",
-   "epoque": "La Syracuse des philosophes",
-   "page": 79
+   "nom": "Aristocrate rentière",
+   "fichier": "26-la-secession-viennoise.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Le grand réveil",
+    "Époque": "La Sécession viennoise",
+    "Page": 94
+   }
   },
   {
-   "ere": "Les nouveaux mondes",
-   "epoque": "Al-Andalus",
-   "page": 89
+   "nom": "Aventurier casse-cou",
+   "fichier": "27-les-annees-folles.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années folles",
+    "Page": 95
+   }
   },
   {
-   "ere": "Les nouveaux mondes",
-   "epoque": "L'An Mil",
-   "page": 91
+   "nom": "Jazzman",
+   "fichier": "27-les-annees-folles.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années folles",
+    "Page": 95
+   }
+  },
+  {
+   "nom": "Aviatrice",
+   "fichier": "27-les-annees-folles.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années folles",
+    "Page": 95
+   }
+  },
+  {
+   "nom": "Écrivain fêtard",
+   "fichier": "27-les-annees-folles.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années folles",
+    "Page": 95
+   }
+  },
+  {
+   "nom": "Banquière",
+   "fichier": "27-les-annees-folles.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années folles",
+    "Page": 95
+   }
+  },
+  {
+   "nom": "Résistante",
+   "fichier": "28-les-annees-noires.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années noires",
+    "Page": 96
+   }
+  },
+  {
+   "nom": "Espion",
+   "fichier": "28-les-annees-noires.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années noires",
+    "Page": 96
+   }
+  },
+  {
+   "nom": "Physicien nucléaire",
+   "fichier": "28-les-annees-noires.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années noires",
+    "Page": 96
+   }
+  },
+  {
+   "nom": "Propagandiste",
+   "fichier": "28-les-annees-noires.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années noires",
+    "Page": 96
+   }
+  },
+  {
+   "nom": "Officier",
+   "fichier": "28-les-annees-noires.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Années noires",
+    "Page": 96
+   }
+  },
+  {
+   "nom": "Policière",
+   "fichier": "29-l-eveil.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Le grand réveil",
+    "Époque": "L’Éveil",
+    "Page": 97
+   }
+  },
+  {
+   "nom": "Journaliste",
+   "fichier": "29-l-eveil.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Le grand réveil",
+    "Époque": "L’Éveil",
+    "Page": 97
+   }
+  },
+  {
+   "nom": "Sportif professionnel",
+   "fichier": "29-l-eveil.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Le grand réveil",
+    "Époque": "L’Éveil",
+    "Page": 97
+   }
+  },
+  {
+   "nom": "DJ",
+   "fichier": "29-l-eveil.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Le grand réveil",
+    "Époque": "L’Éveil",
+    "Page": 97
+   }
+  },
+  {
+   "nom": "Médecin urgentiste",
+   "fichier": "29-l-eveil.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Le grand réveil",
+    "Époque": "L’Éveil",
+    "Page": 97
+   }
+  },
+  {
+   "nom": "Publicitaire",
+   "fichier": "30-les-chroniques-de-l-apocalypse.md",
+   "details": {
+    "Ka-élément": "Feu",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Chroniques de l’Apocalypse",
+    "Page": 98
+   }
+  },
+  {
+   "nom": "Prof",
+   "fichier": "30-les-chroniques-de-l-apocalypse.md",
+   "details": {
+    "Ka-élément": "Air",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Chroniques de l’Apocalypse",
+    "Page": 98
+   }
+  },
+  {
+   "nom": "Informaticien",
+   "fichier": "30-les-chroniques-de-l-apocalypse.md",
+   "details": {
+    "Ka-élément": "Eau",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Chroniques de l’Apocalypse",
+    "Page": 98
+   }
+  },
+  {
+   "nom": "Étudiant",
+   "fichier": "30-les-chroniques-de-l-apocalypse.md",
+   "details": {
+    "Ka-élément": "Lune",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Chroniques de l’Apocalypse",
+    "Page": 98
+   }
+  },
+  {
+   "nom": "Militant écolo",
+   "fichier": "30-les-chroniques-de-l-apocalypse.md",
+   "details": {
+    "Ka-élément": "Terre",
+    "Ère": "Le grand réveil",
+    "Époque": "Les Chroniques de l’Apocalypse",
+    "Page": 98
+   }
   }
  ]
 }

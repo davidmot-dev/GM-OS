@@ -1,0 +1,1465 @@
+[
+ {
+  "ere": "Le Sentier d’or",
+  "epoque": "La Chute de l’Atlantide",
+  "page": 62,
+  "date": "Jadis",
+  "lieux": "L’Atlantide",
+  "cout": 0,
+  "introduction": "Vous vous souvenez encore aujourd’hui de la beauté perdue de ce premier paradis que fut l’Atlantide, avant que l’orichalque ne s’abattit sur ces terres bénies, avant que les premiers hommes conduits par le Nephilim renégat Prométhée forgèrent les premières armes et massacrèrent vos frères au prix de leur liberté, avant que vous vous perdiez à tout jamais le Sentier d’or, la voie ésotérique et mystique qui vous conduisait alors vers l’union parfaite et harmonieuse avec le monde, son corps, son âme et son esprit. Vous vous souvenez des premiers jours comme Nephilim, lorsqu’advint le Déluge, lorsque vous avez compris qu’il vous fallait exister à travers la prison d’un corps mortel de chair et de sang, lorsque vous avez découvert votre nature de Déchu. Pourtant, vos pouvoirs étaient encore puissants car même si la terre sacrée avait été détruite, vous pouviez encore en sentir la magie à la fois grandiose et humble, celle que vous aviez évoquée pendant des cycles et des cycles à la recherche de l’harmonie totale. La Chute de l’Atlantide ne fut pas seulement la fin de votre civilisation magique mais l’extermination d’une espèce à part entière, la vôtre : les Kaïm. Vous en êtes désormais les lointains héritiers et vous savez que même l’Agartha atteinte, vous ne pourrez plus vous comparer à ce que vous étiez alors. Lors de la Chute, vous avez exercé, parmi les premières lignées humaines, des fonctions utiles qui ont souvent permis à ceux-ci de partir à la conquête de la terre et la mer et, à vous, de survivre. Vous étiez alors comme aveugle à la sapience désormais fragmentée, uniquement concentré sur l’apprentissage de votre Pentacle élémentaire, toujours à la recherche du Sentier d’or, ce chemin d’harmonie ésotérique avec le cosmos.",
+  "apports": [
+   "Les quêtes ésotériques : Le Sentier d’or 1",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 2",
+   "Effets magiques : 2 sorts",
+   "Savoirs ésotériques : Kaïm 2 / Champs magiques 2 /Nephilim 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Héros",
+    "ka": "Feu",
+    "description": "Vous avez été un héros fondateur parmi les humains, tentant de nouer un pacte entre ces êtres de chair et de passion. Vous avez sacrifié vos talents et ce qui restait de votre connaissance magique du monde à la survie et au développement de la tribu humaine qui vous a accueilli, ou pire, vous a emprisonné. Vous avez combattu les monstruosités produites par l’orichalque, détruit les aberrations élémentaires que les humains nommèrent les Effets-Dragons. Vous avez aussi enseigné aux hommes la guerre, l’honneur et l’héroïsme. Vous avez appris à forger et manier les armes et vous avez survécu aux pires déchaînements des éléments naturels, vous avez accompli des exploits à nuls autres semblables. Vous avez été l’archétype de ce que les humains appelleront un héros."
+   },
+   {
+    "nom": "Sage",
+    "ka": "Air",
+    "description": "Au sein des premiers clans humains, vous avez tenté d’enseigner la beauté perdue du monde magique qu’ était la terre sous votre règne, lorsque vous étiez un Kaïm. Mais vous vous êtes vite rendu compte que les humains restaient imperméables aux subtilités des champs magiques et à la nature cachée des Ka-éléments. Pire, vous avez découvert que certains d’entre eux utilisaient vos savoirs pour mieux détruire ou emprisonner des Kaïm blessés. Vous avez alors décidé de quitter ce monde naissant et vous avez cherché un asile parmi les endroits les plus éloignés du monde. Vous êtes devenu une légende."
+   },
+   {
+    "nom": "Messagère",
+    "ka": "Eau",
+    "description": "Persuadée que l’Atlantide pouvait se reformer après sa destruction, vous n’avez eu de cesse que de tenter d’unir de nouveau les tout nouveaux Nephilim et les humains révoltés. À la fois diplomate magique, exploratrice infatigable du monde naissant, première connaisseuse des nouvelles mœurs des humains, vous êtes devenue la porteuse de lumière, celle qui tient la torche de l’espoir."
+   },
+   {
+    "nom": "Décepteur",
+    "ka": "Lune",
+    "description": "Prométhée n’ était pas seul parmi les Kaïm ! Vous avez été l’un de ses compagnons et vous avez aidé les humains à se rebeller. Mais comme la plupart de vos frères, vous avez été touché vous aussi par l’orichalque et vous avez connu la chute élémentaire. Alors, pour vous venger, vous avez décidé de devenir celui qui trompe et déçoit, celui qui vole et assassine, celui qui illusionne et ridiculise. Vous avez été le Trickster, banni des nouveaux Nephilim, paria parmi les humains."
+   },
+   {
+    "nom": "Soigneur",
+    "ka": "Terre",
+    "description": "L’orichalque a détruit l’Atlantide, blessé mortellement l’utopie magique et initiatique des Kaïm, a permis l’élaboration des premières armes et bouleversé l’ordonnancement parfait des champs magiques. Vous avez été ces nouveaux Nephilim qui ont tenté de guérir le monde et ses nouveaux habitants de leurs blessures physiques comme magiques. Vous avez appris à pratiquer des soins magiques et physiques, d’abord sur vous même puis sur les autres, qu’ils soient humains ou Nephilim. Vous avez aussi essayé de mieux comprendre les champs magiques et de réparer leurs brisures, leurs chasmes et leurs failles."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Guerres élémentaires",
+  "epoque": "Le Déluge",
+  "page": 64,
+  "date": "-10 000",
+  "lieux": "",
+  "cout": 2,
+  "introduction": "Ce fut le temps maudit des catastrophes du Déluge. Celles-ci furent si importantes qu’elles imprégnèrent l’ensemble des mythes de tous les peuples humains de la Terre. C’est à ce moment que vous avez pleinement compris votre nature de Nephilim, d’être magique et élémentaire, déchu, condamné à errer à travers l’histoire des hommes, d’époque en époque, en quête de l’Agartha, ce lointain but occulte vous permettant de quitter vos prisons de chair, les Simulacres humains et matérielle, votre stase. C’est durant le Déluge que les Guerres élémentaires s’amorcèrent, envoyant Nephilim du Feu contre Nephilim de l’Eau ou de la Lune, Nephilim de la Terre contre Nephilim de l’Air et bien d’autres oppositions qui laisseront des cicatrices profondes jusqu’à nos jours. C’est aussi durant ce temps que les humains fondèrent la première société secrète : les Mystères, qui, les premiers, enfermèrent les Nephilim dans leurs stases, qui, les premiers, chassèrent les Nephilim avec les armes en orichalque.",
+  "apports": [
+   "Les quêtes ésotériques : Le Sentier d’or 2 / Hyperborée 1",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 3",
+   "Effets magiques : 3 sorts",
+   "Savoirs ésotériques : Kaïm 1 / Champs magiques 1 / Nephilim 2 / Orichalque 2 / Mystères 2 / Histoire invisible 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Oracle",
+    "ka": "Feu",
+    "description": "Grâce au feu magique qui vous habite, vous avez été un oracle reconnu, consulté par de nombreux acteurs des guerres élémentaires, qu’ils soient humains ou Nephilim. En ces temps dits bibliques, vous avez été un orateur hors-pair, vous avez allumé les âmes et les Pentacles. Vous avez donné les visions souvent terrifiantes d’un futur sombre pour les êtres magiques. Vous avez pu être banni pour cela mais vous avez été aussi un arbitre et un juge des toutes premières sociétés. Vos sentences et vos prophéties ont été des flammes dans les ténèbres de ces temps premiers."
+   },
+   {
+    "nom": "Matriarche",
+    "ka": "Air",
+    "description": "Vous avez été à la tête des premières grandes familles humaines. On vous a prêté une longévité extrême, un talent pour la conduite des tribus et de leur affaire. Vous avez été souvent à l’origine d’un art, d’un artisanat ou d’un savoir humain. Mais l’orgueil et la volonté de vaincre lors des Guerres élémentaires vous ont mené quelques fois vers la tyrannie ou même la folie."
+   },
+   {
+    "nom": "Navigateur",
+    "ka": "Eau",
+    "description": "Vous avez été parmi les premiers êtres à traverser les mers et les océans tumultueux du Déluge. À la recherche des traces de vos frères déchus, des sages exilés, de cette nouvelle cité cachée baptisée Aggartha, vous avez ouvert des voies aussi bien maritimes qu’ occultes. Certains d’entre vous ont été les pilotes qui ont conduit vers les nouvelles terres des vaisseaux-arches contenant les dernières forces vives humaines, animales comme Nephilim menacées par l’engloutissement. Vous avez appris à lire les cartes du ciel étoilé comme les signes de la mer toujours verte et vineuse."
+   },
+   {
+    "nom": "Meurtrier",
+    "ka": "Lune",
+    "description": "Quel a été votre mobile ? Cela a été oublié sous l’épaisse couche de mythes qui entoure votre geste primordial. Vous avez été le premier à commettre un meurtre ! Vous avez été le premier assassin… Quelle a été la victime ? Vous-même, vous n’ en savez plus rien. Un humain ? Votre frère déchu ? Un savoir ésotérique précieux ? Le dernier Kaïm qui aurait pu indiquer l’ultime piste encore ouverte vers le Sentier d’or ? Depuis, vous avez été rongé par une culpabilité multimillénaire et l’on murmure que vous n’ êtes pas pour rien dans le sacrifice ultime que certains Nephilim firent pour devenir Selenim et ainsi échapper à l’orichalque et aux cycles de la réincarnation."
+   },
+   {
+    "nom": "Charpentier",
+    "ka": "Terre",
+    "description": "Grâce à vous, les Nephilim et les humains ont pu échapper aux terribles conséquences du Déluge car vous avez été le premier à inventer les vaisseaux-arches. Vous les avez habilement bâties. Vous avez inventé nombre d’outils et enseigné votre artisanat et votre connaissance de l’architecture comme des matériaux à des disciples humains et Nephilim. Vous avez été un leader, un maître bienveillant, solide comme le tronc d’un cèdre géant."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Guerres élémentaires",
+  "epoque": "Les premiers dieux",
+  "page": 65,
+  "date": "-9000",
+  "lieux": "Steppe pontique",
+  "cout": 1,
+  "introduction": "Avant les pierres et les idoles, les dieux étaient partout : au cœur du vent, de la nuit, de la foudre... Trop préoccupés par leur survie, les premiers hommes leurs vouaient des cultes silencieux, sans prières et sans offrandes. Mais ils croyaient néanmoins. Vous avez parcouru les steppes algides en leur compagnie, sans qu’ils se doutent un instant qu’un des leurs appartiennent aux divinités de leur rude quotidien. Eparpillés à travers les étendues eurasiennes, les clans nomades menaient une vie à la simplicité brutale. Les périls abondaient à chaque traversée des plaines, à chaque chasse, à chaque migration en quête de nourriture. Mais cette existence fragile était aussi source de merveilles, de beauté primordiale et d’une spiritualité omniprésente. Après la chute de l’Atlantide, certains Nephilim errants ont profi tés des caravanes humaines pour partir à la recherche de l’Hyperborée, dans les régions les plus australes. Peut-être avez-vous fait partie de ces expéditions ?",
+  "apports": [
+   "Les quêtes ésotériques : Le Sentier d’or 1 / Hyperborée 2",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Kaïm 1 / Champs magiques 1 / Nephilim 1 / Mystères 1 / Akasha 2 / Drakaon 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Chasseur",
+    "ka": "Feu",
+    "description": "Endurant et brave, vous avez chassé pour nourrir votre clan. Pour assurer leur survie, vous avez appris à pister et traquer le gibier dans les environnements les plus inhospitaliers. Vos armes blanches étaient peut-être rudimentaires mais mortelles entre vos mains. Vous maniez également les arcs avec une redoutable dextérité. Toujours à votre aise en milieu sauvage, vous savez tendre des pièges, poser des collets et vous camoufler avec peu de moyens. Votre détermination est votre plus grande force."
+   },
+   {
+    "nom": "Astrologue",
+    "ka": "Air",
+    "description": "En quête de réponses cosmiques, votre incarnation a porté le regard vers les cieux. Vous avez appris à lire les étoiles, ainsi que les auspices dans les changements du climat. Par votre perspicacité et votre sens de l’observation, vous avez été le conseiller le plus respecté du chef de votre clan. Attirées par votre réputation, des caravanes étrangères sont mêmes venues jusqu’à vous pour vous prêter hommage en échange d’haruspices et de bénédictions. Votre curiosité pour le monde occulte a affuté votre esprit, et ainsi guidé chaque seconde de votre existence."
+   },
+   {
+    "nom": "Pêcheur",
+    "ka": "Eau",
+    "description": "Votre incarnation a été un astucieux pêcheur de rivières. Vous êtes aussi doué pour la navigation que pour l’artisanat : rapiécer un filet ou une voile, colmater une barque abîmée ou tailler un nouveau mât dans un tronc sont des tâches que vous avez maintes fois réitérées. Vous savez manier le harpon avec adresse et ramer à contrecourant pour mener votre barque vous a aussi doté d’une force physique impressionnante. Quand vous ne cuisiniez pas vous-même vos prises du jour, vos talents de conteur ont souvent régalé le clan de vos exploits."
+   },
+   {
+    "nom": "Psychopompe",
+    "ka": "Lune",
+    "description": "Votre incarnation a eu la tâche peu enviable mais hautement sacrée de guider les âmes des morts vers l’autre monde. Reclus et mystérieux, vous avez empli le reste du clan d’une crainte respectueuse à l’égard de votre charge. Certains proches des défunts sont tout de même venus chercher conseils auprès de vous. En effet, votre existence solitaire et quasi ascétique vous a permis de vous élever spirituellement. Vous savez philosopher et débattre avec les interlocuteurs les plus obtus. Préparer les cadavres vous a aussi enseigné des notions élémentaires de biologie."
+   },
+   {
+    "nom": "Chamane",
+    "ka": "Terre",
+    "description": "Mystique débonnaire, vous avez été choisi pour apaiser les esprits et dompter le monde spirituel. Le clan vous a accordé sa confiance infinie. En retour, vous avez béni les unions, chassé les démons élémentaires et organisé des sacrifices rituels. Vos pouvoirs occultes se sont développés à travers vos transes et vos méditations. De façon plus pratique, vous avez utilisé vos connaissances des herbes opiacées et des cataplasmes pour assurer les premiers soins ou guérir des afflictions plus graves chez le bétail et les membres du clan. Vous êtes un orateur charismatique, capable de toucher l’âme d’un groupe entier par vos prophéties."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Guerres élémentaires",
+  "epoque": "Le premier peuple",
+  "page": 66,
+  "date": "-8000",
+  "lieux": "Harrapa - Mohenjo Daro",
+  "cout": 1,
+  "introduction": "Las de leurs voyages incessants, les premiers hommes finirent par abandonner leur vie nomade pour trouver un répit bienvenu dans le nombre et la sédentarisation. Établi dans la vallée de l’Indus, le peuple Mehrgarh fut le premier à développer l’agriculture. Libérés de sa quête perpétuelle de nourriture, il put enfin développer les bases d’une civilisation : travail du bronze, poterie, écriture, architecture… Les villes de Harrapa et Mohenjo-Daro, le Mont des Morts, accueillirent ce premier peuple, ses mythes et ses cultes. Les Nephilim tels que vous ont pu y retrouver un semblant de culture qu’ils n’avaient plus connu depuis la chute de l’Atlantide. Vous avez vu de vos propres yeux s’élever les maisons de torchis et les temples, travaillé de vos propres mains les fours en briques et les silos à grain. Du point de vue spirituel, le premier peuple attendait des guides capables de modeler sa future mythologie comme l’argile de ses bâtisses. Peut-être avez-vous participé à la construction de leur panthéon ? À moins que vous n’ayez rallié certains habitants à la recherche de votre héritage atlante ?",
+  "apports": [
+   "Les quêtes ésotériques : Le Sentier d’or 1/ Hyperborée 1 / Atalante fugitive 2 / Champs Polemoka 2",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Nephilim 1/ Mystères 2 / Histoire invisible 1 / Effets-Dragons 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Conteur",
+    "ka": "Feu",
+    "description": "Vous vous êtes incarné sous les traits d’un conteur itinérant. Habitué à voyager le long du fleuve Indus, vous avez maintes fois partagé vos histoires en échange d’un bol de soupe ou de quelques kilomètres en barque. Vos récits enflammés sont capables de captiver n’importe quel auditoire, et particulièrement les enfants. Pour accompagner vos contes, vous pratiquez le tambour et le chant. Vous aimez jouer de votre charisme pour attirer l’attention, mais lorsque vos représentations se font un peu trop exubérantes pour votre propre bien, vous êtes capable de vous faire très discret en quelques secondes, surtout dans la foule."
+   },
+   {
+    "nom": "Ancien",
+    "ka": "Air",
+    "description": "Vous avez été un ancien d’âge vénérable et vécu dans la citadelle de Mohenjo-Daro. Pilier de la communauté, votre expérience inspire le respect. Les habitants viennent vous consulter en toute occasion : litiges, mariages, cérémonies mystiques… Vous êtes un fin connaisseur de l’âme humaine et de ses méandres. Votre patience fait de vous un confident très apprécié. Lorsque le besoin s’ en fait sentir, vous savez aussi calmer les esprits et trouver les mots justes pour convaincre les individus les plus hostiles."
+   },
+   {
+    "nom": "Cultivatrice",
+    "ka": "Eau",
+    "description": "Votre incarnation a été une cultivatrice de Harrapa. Le travail dans les champs vous a donné une carrure athlétique et une poigne de fer. Même si vous n’avez jamais réellement besoin d’utiliser votre faux pour autre chose que les récoltes, vous êtes capable de manier les armes d’hast avec une efficacité presque militaire. Vous savez monter à cheval et vous occuper du bétail vous a donné quelques connaissances en premiers soins. En charge d’une famille nombreuse, vous savez également cuisiner. Votre nature très pragmatique ne vous empêche pas de faire preuve de compassion à l’égard des moins fortunés."
+   },
+   {
+    "nom": "Princesse aveugle",
+    "ka": "Lune",
+    "description": "Vous avez appartenu à la famille régnante de Mohenjo- Daro. Aveugle de naissance, vous êtes considérée comme une figure sacrée par la population. Vos autres sens ont pris un ascendant incroyable pour pallier votre infirmité : vous êtes ainsi capable de percevoir les émotions les plus profondes dans un simple filet de voix et votre empathie paraît sans limite. Même en l’absence de prétendants officiels, vous avez toujours entendu vos proches louer votre beauté. Gracieuse et agile, vous êtes une danseuse exceptionnelle. Vous en faites la démonstration lors des festivals traditionnels et autres rituels saisonniers. D’un tempérament effacé, vous cachez une incroyable force de caractère."
+   },
+   {
+    "nom": "Potier",
+    "ka": "Terre",
+    "description": "Artisan honorable, vous avez embrassé la carrière humble mais indispensable de potier. Votre savoir-faire avec un tour vous a assuré une existence paisible entre les murs de Harrapa. Parmi vos clients, de nombreux temples de la ville. À force de décorer ces lieux mystiques de vos vases, pots et sculptures, vous en avez retenu quelques connaissances sur le monde spirituel. D’un tempérament artistique certain, vous pratiquez également la peinture. La chaleur des fours à brique vous a endurci et il en faut beaucoup pour vous incommoder physiquement. Votre personnalité avenante vous attire la bienveillance de vos pairs."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Guerres élémentaires",
+  "epoque": "La première cité",
+  "page": 67,
+  "date": "-7000",
+  "lieux": "Hénoch - Nod - Damas - Jéricho",
+  "cout": 1,
+  "introduction": "Lorsque les premières villes humaines s’élevèrent, l’ordre du monde en fut changé à tout jamais. Les empereurs, les castes, les lois, l’écriture, les entrepôts, les pauvres, et bien d’autres choses naquirent en même temps, appelées bien plus tard la civilisation, probablement par des sages oublieux de la beauté primordiale du monde. Pourtant, en tant que Nephilim, la fondation de la ville fut surtout le moyen à la fois de mieux survivre aux épreuves de la réincarnation et surtout de commencer à étudier la métaphore de la cité comme lieu magique et réceptacle possible de la mythique Atlantide céleste ou de la citadelle des Vertiges, là où vous pourriez trouver les portes vers l’Agartha. Vous avez participé à ces fondations antiques et vous avez pu y apporter les symboles magiques et ésotériques encore aujourd’hui à l’œuvre dans les plans des villes.",
+  "apports": [
+   "Les quêtes ésotériques : Le Sentier d’or 1 / Hyperborée 1 / Atalante fugitive 1 / Cité des vertiges 2",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Champs magiques 1 / Nephilim 1 / Orichalque 1 / Mystères 1 / Histoire invisible 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Métallurgiste",
+    "ka": "Feu",
+    "description": "Grâce à votre savoir du feu, vous avez été un brillant artisan du métal. Vous avez forgé des armes, travaillé les métaux et alliages précieux pour parer les puissants des premières cités. Vous avez aussi mis au point les fours nécessaires à ces chefsd’œuvre. Vous avez aussi su avec votre fougue habituelle imposer votre art et son commerce à vos clients. Votre profession a été à cette époque entourée de mystères, voire de tabous dont vous avez su profiter pour étendre votre connaissance du Kaélément Feu et de l’ensemble des champs magiques du feu."
+   },
+   {
+    "nom": "Juge",
+    "ka": "Air",
+    "description": "Votre sagesse et votre esprit aiguisé comme une épée ont été vos atouts lorsque vous avez forgé les premières lois des sociétés urbaines. Tout était à inventer, au milieu des Guerres élémentaires. Il fallait codifier et donc limiter l’hubris des puissants, la soif de meurtre des vendettas, l’équilibre entre les possédants et les pauvres, le statut de chacun et surtout la place des dieux dans le monde. Vous avez beaucoup appris des sociétés, des hommes et des femmes qui les composent. La Loi n’a plus de secret pour vous. Que vous ayez été dur et sans pitié ou au contraire compatissant, votre parole et vos décisions ont porté."
+   },
+   {
+    "nom": "Marchand",
+    "ka": "Eau",
+    "description": "Les premières cités ont été, avant même que la première ziggourat, des places de marché. Vous avez été en fait le véritable fondateur de ces villes. Vous en connaissez tous les aspects, les rouages, les aspects les plus clairs comme les plus sombres ainsi que les différentes formes de richesses qui l’irriguent. Habile négociateur, vous avez financé les empereurs et fait fructifier vos biens. Vous avez aussi fait partie de ceux qui inventèrent l’écriture, probablement pour mieux gérer les entrepôts. Mais vous cherchiez surtout un médium pour pouvoir inscrire dans la durée les sorts de Magie. Vous avez ainsi créé les premiers focus écrits."
+   },
+   {
+    "nom": "Perceur de mur",
+    "ka": "Lune",
+    "description": "Grâce à vos talents de discrétion, votre art du camouflage et du déguisement, vous avez pu vivre dans les marges et les ombres des premières cités. Perceur de mur, grimpeurs de toit mais aussi redresseur de tort et profiteur de la vie, vous avez été un voleur. Vous avez dérobé aux temples, dans les entrepôts royaux ou marchands quantités de biens. Mais ce n’ était pas pour votre enrichissement personnel dont vous savez bien la vanité mais plutôt pour découvrir les artefacts et les stases de vos frères élémentaires."
+   },
+   {
+    "nom": "Architecte",
+    "ka": "Terre",
+    "description": "Toute cité s’ élabore à partir d’un plan. Vous avez conçu celui de la première cité, par votre maîtrise de l’élément Terre, vous avez su creuser le premier sillon, délimiter la surface qui serait habitée. Vous avez aussi élevé les premiers temples et les premières pyramides. Vous avez pu élaborer un langage secret et magique qui met en correspondance la ville, ses principaux bâtiments avec les champs magiques et les éthers du cosmos. Ainsi, il fut plus aisé de cacher les stases, de nourrir les nœuds où se croisent les champs magiques (les Plexus et les Nexus). Mais, ces secrets disposés dans les formes des bâtiments et de la ville ont pu être étudiés et quelque fois dévoilés par vos ennemis."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Guerres élémentaires",
+  "epoque": "Les premiers mégalithes",
+  "page": 68,
+  "date": "-5000",
+  "lieux": "Europe",
+  "cout": 1,
+  "introduction": "Alors que les premières cités s’érigent à travers l’Asie et le Moyen- Orient, que le travail du bronze s’y développe, le néolithique européen accuse un grand retard sur ses voisins. Des progrès se manifestent pourtant au cœur de cette rude période : les communautés s’agrandissent, l’agriculture se fait plus intensive et l’exploitation des ressources minérales devient primordiale. Véritables prouesses techniques, d’impressionnants monuments de pierre sont dressés par les hommes à travers toute l’Europe. De Carnac à Stonehenge, les mégalithes s’élèvent pour joindre terre et cieux, vivants et morts, matériel et spirituel. Comme bien d’autres Nephilim de l’époque, vous avez compris que le culte de la pierre dressée marque un tournant mystique : à travers les dolmens, les cromlechs et les menhirs, l’adoration des hommes pour le soleil et autres forces de la nature peut enfin se manifester de visu. Peut-être avez-vous profité de ces sanctuaires primitifs pour poursuivre vos recherches sur l’inaccessible Cité des Vertiges, Aggartha ?",
+  "apports": [
+   "Les quêtes ésotériques : Cité des Vertiges 1 / Rex Mundi 1 / Exode sidéral 2",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Champs magiques 1 / Mystères 1 / Drakaon 1 / Effets-Dragons 1 / Selenim 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Orfèvre",
+    "ka": "Feu",
+    "description": "Même si la pierre polie demeurait l’usage pour la plupart des outils du néolithique, le travail du métal – particulièrement des métaux précieux – existait déjà chez certains artisans. Votre incarnation a été l’un de ces orfèvres. Patient et dextre, vous savez travailler l’argent et l’or avec un savoir-faire exceptionnel. Les arcanes de la forge ne vous sont pas non plus inconnus. Les alliages rares soumis à votre expertise ont souvent attiré la convoitise et vous avez dû apprendre à défendre vos parures et vos bijoux par les poings ou en utilisant vos outils les plus contondants."
+   },
+   {
+    "nom": "Cheffe de clan",
+    "ka": "Air",
+    "description": "Puissante et respectée, vous avez été en charge d’un vaste clan chasséen. Vous avez toujours fait passer les intérêts du plus grand nombre avant les vôtres et vous avez gagné la confiance de vos sujets. Lors des affrontements frontaliers avec d’autres tribus, votre hache de pierre s’ est abattue la première sur l’ennemi. Vous êtes également une excellente cavalière et redoutable avec les armes de jet comme les lances. Guerrière habile et charismatique, vos commandements ont été exécutés sans récrimination par vos sujets, que ce soit sur le champ de bataille ou en dehors. Diriger le clan vous a aussi appris les bases de l’intendance."
+   },
+   {
+    "nom": "Ambassadeur",
+    "ka": "Eau",
+    "description": "Votre incarnation a été l’ambassadeur d’une tribu vinča, basée en Europe de l’est. Votre langue de velours vous a permis d’exercer la diplomatie avec succès, en trouvant des compromis dans les situations les plus intenables. Vous avez toujours un don pour communiquer et vous avez appris avec aisance les dialectes compliqués de la région. Rusé et observateur, vous avez vite compris qu’ obtenir la paix demandait une certaine souplesse morale. Vous n’hésitez pas à manipuler les autres par vos discours pour parvenir à vos fins."
+   },
+   {
+    "nom": "Astrologue",
+    "ka": "Lune",
+    "description": "Alors que les pierres s’ élèvent vers les étoiles, l’astrologie devient l’une des croyances essentielles du mysticisme primitif. Vous avez vous aussi cherché à percer le voile divinatoire de cette pratique. Curieux et perspicace, vous avez observé les correspondances entre les configurations célestes et les affaires humaines. Ermite reclus, vous avez survécu grâce aux offrandes des voyageurs de passage, venus profiter de vos dons occultes. À la demande de certains chefs de clan, vous avez parfois quitté votre solitude pour superviser la construction d’hypogées – tertres funéraires creusés en sous-sol ou à flanc de colline. Vos prédictions ont été craintes et respectées de tous."
+   },
+   {
+    "nom": "Chasseur",
+    "ka": "Terre",
+    "description": "Vous vous êtes incarné sous les traits d’un chasseur d’un clan de Diana, culture du néolithique italien. Vos armes d’obsidienne ont percé le flanc de maintes bêtes. Pisteur implacable, vous êtes capable de survivre pendant des jours en milieu naturel. Pour ne pas effrayer le gibier, vous savez vous fondre dans l’environnement avec la plus grande discrétion. Vos connaissances en cataplasmes et autres herbes médicinales vous ont aussi souvent été utiles pour vous administrer les premiers soins au cours de chasses tumultueuses."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Compacts secrets",
+  "epoque": "Le sanctuaire des Tuatha de Danann",
+  "page": 70,
+  "date": "-4000",
+  "lieux": "Tara & le Sidh",
+  "cout": 1,
+  "introduction": "Avec la bataille de Mag Tuired, les Nephilim connus sous le nom de « Tuatha de Danan » chassèrent d’Irlande leurs anciens alliés, les Selenim du clan Fomor. Ils scellèrent leur victoire en fondant, au confluent des énergies mystiques de l’île, la prodigieuse cité de Tara. Ce sanctuaire allait devenir le symbole d’un accord précaire entre Nephilim et humains. Lorsque les premiers celtes débarquèrent sur les côtes d’Irlande, la plupart des Tuatha de Danan leur abandonnèrent Tara et se retirèrent dans le royaume chimérique du Sidh. La cité devint alors le siège des haut-rois d’Irlande. Cons eillés par les druides, ils continuèrent à préserver les traditions et les rituels sacrés. Mais le souvenir des Tuatha de Danan en exil disparut finalement des mémoires humaines pour se transformer en mythes et superstitions... Héros de ces légendes ou simple serviteur des humains, vous avez connu cette époque pleine de conflits et de magie. Peut-être avez-vous profité du foisonnement des énergies pour chercher à rejoindre l’Hyperborée ? À moins que vous n’ayez décidé qu’elle serait plus aisément accessible depuis l’Autre Monde et gagné le Sidh avec vos frères en exil ?",
+  "apports": [
+   "Les quêtes ésotériques : Sentier d’or 1 / Hyperborée 2",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Nephilim 1 / Histoire invisible 1 / Akasha 1 / Effets-Dragons 2 / Selenim 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Champion de clan",
+    "ka": "Feu",
+    "description": "Guerrier exceptionnel, vous avez porté l’honneur de tout un clan. Malgré bien des duels et bien des champs de bataille, votre sens du combat n’a jamais trouvé d’égal. Entre vos mains, n’importe quelle arme blanche sème la mort et récolte la victoire. Même si vos actes de bravoure vous ont auréolé de gloire, vous n’avait jamais cédé à la paresse ni à la vanité. Toujours prêt à enrichir votre technique, à développer vos attributs athlétiques, vous avez accepté une existence solitaire pour demeurer le meilleur d’entre tous."
+   },
+   {
+    "nom": "Barde",
+    "ka": "Air",
+    "description": "Votre incarnation a été un barde impénitent. Conteur exceptionnel, musicien talentueux mais surtout fieffé menteur, vous utilisez votre éloquence et votre sens de la représentation pour parvenir à vos fins. Généralement, vos fins consistent en un pichet de cidre, un bon feu ou les bras accueillants d’une jouvencelle… Vous appréciez autant les jeux de séduction que ceux d’argent. Pour ces derniers, votre chance insolente tient en réalité davantage à vos talents pour le passe-passe. Colporteur de légendes, vos voyages vous ont donnés de bonnes notions de géographie."
+   },
+   {
+    "nom": "Forgeron",
+    "ka": "Eau",
+    "description": "Fier et rude artisan, vous avez mené une existence de forgeron et de maréchalferrant. Votre savoir-faire englobe le bronze sous toutes ses formes : socs et ustensiles agricoles, outils divers, marteaux, haches, épées… Vous mettez un point d’honneur à savoir vous servir de chaque objet sorti de votre forge. Vous savez aussi monter à cheval, même si vous n’ en avez jamais possédé un. Vous êtes donc un guerrier tout à fait décent au sein de votre clan. Heureusement, vous avez rarement besoin d’étaler vos prouesses martiales : votre sang-froid constitue votre plus grande qualité."
+   },
+   {
+    "nom": "Magicienne",
+    "ka": "Lune",
+    "description": "Vous vous êtes incarnée à la cour royale de Tara, sous les traits d’une fantasque magicienne. On a souvent fait appel à vous pour des augures ou des rituels de protection face au petit peuple. Vous avez toujours répondu présente… pour un prix. Conseillère des puissants, vous trafiquez autant dans les secrets et les rumeurs que dans les prédictions. Même si vous abusez souvent de votre charme, votre caractère frivole masque un tempérament froid et calculateur. Vos pouvoirs magiques sont cependant aussi réels que vos connaissances du monde occulte."
+   },
+   {
+    "nom": "Druide",
+    "ka": "Terre",
+    "description": "Le livre (p. 70) imprime ici, par erreur, la description du Chasseur des premiers mégalithes (p. 68). Le Druide n’a pas de description propre : au meneur et au joueur de la raconter.",
+    "erratum": true
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Compacts secrets",
+  "epoque": "Le Mahabharata",
+  "page": 71,
+  "date": "-3000",
+  "lieux": "Hastinapur",
+  "cout": 1,
+  "introduction": "Vous avez vécu à Hastinapur, la capitale du grand empire des puissants Bharata, les premiers d’entre les hommes, immense ville de faste et de cour, aux mille palais flamboyants et aux mille jardins enivrants. Une tragédie à la dimension de l’espèce humaine s’est jouée dans ce royaume. Vous en avez été l’une des pièces maîtresses. Vous avez participé à l’immense conflit qui opposa les deux clans royaux des Pandava et des Kaurava. De nombreux champions, rois et reines, sages, princesses, conteurs, guerriers, maîtres d’armes, ermites connurent la gloire comme les défaites. Ce fut un temps béni comme maudit pour les Nephilim. À la fois considéré comme un dieu (et certains humains donnèrent tout pour devenir votre avatar-Simulacre) mais aussi chassé comme démon et créature infernale aux mille bras, vous avez forgé une part de cette immense légende. Le conflit connut son apogée lors de la bataille épique de Kurukshetra, au cours de laquelle se joua une nouvelle fois le sort du monde occulte et des alliances entre les Nephilim et les humains. Plus secrètement, armé de votre sapience et des armes des dieux, vous avez peut-être participé à la quête de la Cité des Vertiges, censée être la nouvelle Atlantide de ces temps, localisée au cœur des sommets sauvages de la mère des montagnes, au côté de celui qui se fera connaître plus tard sous le nom du Lion Vert. Vous y avez connu les affres des grands froids et de l’altitude comme les ivresses des épiphanies divines et de la méditation.",
+  "apports": [
+   "Les quêtes ésotériques : Sentier d’or 1 / Cité des Vertiges 2",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Nephilim 1 / Orichalque 1 / Mystères 1 / Histoire invisible 1 / Drakaon 2 / Effets-Dragons 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Kashtriya",
+    "ka": "Feu",
+    "description": "Vous vous êtes incarné dans l’un des combattants nobles de la grande guerre du Mahabharata. Vous avez dirigé les hommes à la guerre, exercé vos talents de diplomate et de courtisan. Vous avez aimé les jeux de dés et les amours passionnément. Vous avez appris à manier les armes blanches et de jet les plus mortelles de votre temps. Votre honneur et votre gloire ont été ce qui a compté le plus pour vous."
+   },
+   {
+    "nom": "Brahmane",
+    "ka": "Air",
+    "description": "Vous avez été un des prêtres sacrificateurs qui guident, conseillent les castes et surtout sacrifient aux dieux. Princes comme manants vous ont dû le respect et l’offrande. Ils cherchent auprès de vous conseils, pardon et mission. Vous êtes à la fois un juge et un prêtre. Votre connaissance de l’âme humaine est grande comme celle des secrets des dieux. Vous savez parler en public et accomplir des rituels impressionnants."
+   },
+   {
+    "nom": "Cocher",
+    "ka": "Eau",
+    "description": "Virevoltant, débordant d’énergie, vous avez été le messager des nobles et des puissants. Vous avez manié avec habilité l’artefact le plus avancé de votre époque : le char à deux roues tout comme leurs chevaux. On dit d’ailleurs que la figure des centaures aurait été inspirée par vos exploits. Vous savez parler les nombreuses langues de votre temps. Vous connaissez la tactique et la stratégie des champs de bataille et vos discours savent donner le moral à vos maîtres comme à leurs serviteurs. Plein de charme et de prestance, vous savez plaire."
+   },
+   {
+    "nom": "Sadhu",
+    "ka": "Lune",
+    "description": "Vous avez été un de ces ermites qui ont renoncé à toutes les richesses et les honneurs matériels pour conquérir la fortune spirituelle. Réfugié dans les terrains les plus arides, les déserts, les forêts, les montagnes, vous pratiquez quotidiennement les exercices de méditation et de sainteté. Vos recherches vous ont permis d’atteindre un stade de compréhension et d’illumination réputé jusqu’à la cour des rois à qui vous donnez conseils et puissance magique. Vous êtes considéré comme sacré et comme puissant par la pensée et les pouvoirs spirituels."
+   },
+   {
+    "nom": "Avatar de la Grande Déesse",
+    "ka": "Terre",
+    "description": "Vous avez été choisie pour être le réceptacle de l’une des divinités innombrables de l’Inde mythique. Entourée par vos proches et par le peuple, vous êtes considérée comme une mère nourricière, prompte à donner le réconfort, à soigner les plus démunis. En ces temps de grands troubles, votre dignité et votre charisme ont su apporter repère et protection. Tout le monde vous a aimé."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Compacts secrets",
+  "epoque": "Le labyrinthe de Minos",
+  "page": 72,
+  "date": "-2000",
+  "lieux": "Cnossos - Méditerranée",
+  "cout": 1,
+  "introduction": "À l’instar du Compact celte, un accord entre humains et Nephilim est formé dans les îles méditerranéennes : l’Aïon. La civilisation cycladique décide de vouer un culte aux Immortels. Un palais mythique est érigé à Cnossos, la capitale de la Crête, pour les accueillir. Chargé de sa construction, l’architecte Dédale s’inspire des sites ésotériques tels que les alignements mégalithiques et les pyramides pour créer un véritable labyrinthe baignant dans les flux magiques. Malheureusement, ses connaissances occultes lui vaudront d’être sacrifié par le roi de Crète, Minos, afin de préserver les secrets du palais. Ce sanctuaire fut complété par de nombreux temples à travers l’archipel des Cyclades. Une ère de légendes émerge alors sur les côtes de la Méditerranée. Vous avez connu cette époque de cohabitation mystique, cette atmosphère fébrile où les Nephilim pouvaient se consacrer corps et âme à leurs recherches en subsistant sur les offrandes des humains. Peut-être avez-vous participé à la quête de la Toison d’or, en cherchant à construire une boussole capable de suivre les traces des Argonautes euxmêmes ? Vous avez peut-être préféré consacrer votre temps à trouver un moyen de ralentir l’Atalante fugitive, pour parvenir à la capturer un jour ?",
+  "apports": [
+   "Les quêtes ésotériques : Atalante fugitive 2 / Toison d’or 2",
+   "Quêtes d’Arcanes : aucune",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Champs magiques 2 / Mystères 1 / Histoire invisible 1 / Akasha 1 / Effets-Dragons 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Gouverneur",
+    "ka": "Feu",
+    "description": "Votre incarnation a gouverné l’une des îles des Cyclades. Homme d’autorité, votre diligence à régler les problèmes vous a valu l’admiration de la population. Pour assurer l’intendance de votre territoire, vous avez développé vos connaissances en droit et en politique. Vous avez aussi souvent négocié des accords commerciaux et des traités militaires avec les gouverneurs des îles environnantes. Charismatique, vos discours sont capables de convaincre les groupes comme les individus. Doué pour le subterfuge et la manipulation, vous aimez dissimuler votre intellect brillant derrière une façade de bon vivant."
+   },
+   {
+    "nom": "Architecte",
+    "ka": "Air",
+    "description": "Mathématicien et ingénieur de renom, votre goût pour le bâti vous a conduit à exercer la profession d’architecte. Votre savoir-faire ne se cantonne pas à l’architecture : d’un coup d’équerre et de quelques traits fusain, vous savez reproduire en dessin les visions grandioses qui jaillissent de votre esprit. Touche-à-tout, vos plans complexes s’inspirent souvent des principes ésotériques que vous maîtrisez. Par quelques mots bien choisis, vous savez rallier les contremaîtres et redonner du cœur à l’ouvrage aux ouvriers qui travaillent sur vos imposants chantiers. Et vous savez écrire."
+   },
+   {
+    "nom": "Navigateur",
+    "ka": "Eau",
+    "description": "Audacieux navigateur crétois, vous avez fait voiles à travers toute la méditerranée. Vos connaissances en géographie et astronomie vous permettent de vous repérer même sans boussole. Adroit avec un harpon, vous savez pêcher pour survivre. Votre don pour les langues vous a souvent été utile dans vos périples nautiques. Considéré comme un capitaine honorable par vos marins, vous savez commander aux hommes avec calme et détermination. De toute façon, vous nagez comme un poisson ; aucune tempête ou aucun ouragan ne semble capable de vous noyer…"
+   },
+   {
+    "nom": "Prêtresse",
+    "ka": "Lune",
+    "description": "Orpheline, vous avez été élevée dans un temple depuis le plus jeune âge. Les préceptes mystiques de votre éducation vous ont conduit à poursuivre une existence des plus spirituelles. De nature généreuse et empathique, vous êtes considérée par la population comme une figure presque aussi divine que le panthéon de votre culte. Même si vous maîtrisez les rituels de pouvoir, vous privilégiez la modération dans leur exercice. Vous préférez ainsi vous en remettre à l’herboristerie pour soigner les corps et la philosophie pour guérir les âmes. Vos humbles paroles apaisent les esprits."
+   },
+   {
+    "nom": "Sculpteur",
+    "ka": "Terre",
+    "description": "Vous vous êtes incarné en la personne d’un sculpteur talentueux. Vos marbres sublimes décorent les couloirs labyrinthiques de Cnossos. Votre sens artistique s’ étend aussi à la peinture de fresques. Athlétique et séduisant, votre physique n’a rien à envier à vos meilleures œuvres. Vos admirateurs sont légion et la rumeur vous dit un favori des Muses. Habitué à dénicher la beauté et le détail marquant au premier coup d’œil, vos capacités d’observation sont impeccables."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Compacts secrets",
+  "epoque": "Le rêve d’Akhénaton",
+  "page": 73,
+  "date": "-1350",
+  "lieux": "Thèbes - Akhétaton",
+  "cout": 2,
+  "introduction": "Le Rêve d’Akhenaton a été peut-être l’une des époques d’incarnation les plus importantes pour les Nephilim. Intronisé aux alentours de - 1355 avant J. C. le Nephilim pharaon hérétique se lança dans la quête des vingtdeux Lames qui donnera naissance aux Arcanes Majeurs. Pour ceci, il rompit à peu près tous les codes du Compact secret égyptien. Celui-ci établissait que quelques Nephilim, triés sur le volet, pouvaient s’incarner dans l’élite égyptienne jusqu’à la famille du pharaon en échange de leur sapience et surtout leur magie pour protéger le double-pays. Certains autres pouvaient s’incarner temporairement dans des artefacts (statues, animaux) afin de donner corps aux divinités pour influencer la population et beaucoup de Déchus n’obtenaient que la garde de leurs stases dans lesquelles ils restaient enfermés. Akhenaton sentit que ce Compact secret n’était qu’une impasse pour la quête de l’Agartha. Certes, il permettait aux Nephilim de survivre mais ceux-ci, bloqués par les innombrables rituels des prêtres d’Amon ne pouvaient progresser. Il créa le culte d’Aton, le disque solaire, considéré comme le premier monothéisme de l’histoire pour concentrer le plus possible d’énergie vers lui et sa ville magique, qu’il espérait transformer en une nouvelle Atlantide. Il put ainsi entreprendre ses vingt-deux voyages initiatiques. Mais face à ces bouleversements, les prêtres d’Amon et de Thèbes, alliés aux terribles guerriers qui deviendront juste après les fondateurs des Templiers rassemblèrent leurs forces et mirent à bas le Nephilim pharaon devenu trop isolé. Mais ils ne purent le trouver, celui-ci avait peut-être rejoint Aggartha. Son héritage fut immense puisqu’il légua aux Nephilim vingtdeux Arcanes Majeurs, vingt-deux familles initiatiques qui permirent aux Nephilim de reprendre le chemin de l’Agartha et de se doter d’un voile ésotérique pouvant les dissimuler en partie aux yeux des humains profanes et de leurs ennemis.",
+  "apports": [
+   "Les quêtes ésotériques : Sentier d’or 1 / Cité des Vertiges 2 / Rex Mundi 2",
+   "Quêtes d’Arcanes : Un Arcane au choix 2",
+   "Arts occultes : Magie 3",
+   "Effets magiques : 3 Sorts",
+   "Savoirs ésotériques : Nephilim 2 / Mystères 2 / Histoire invisible 2 / Sciences occultes 2 / Arcanes Majeurs 2 / Templiers 2 / Bohémiens 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Prêtre d’Aton",
+    "ka": "Feu",
+    "description": "Vous avez été au côté d’Akhenaton lui-même. Vous avez participé à la création de la religion d’Aton, le disque solaire et pour ceci vous avez su convaincre de nombreuses foules par la parole et les actes. Vous avez aussi œuvré à la construction d’Aket- Aton, la nouvelle cité sainte voulue par le pharaon Nephilim, en tant que contremaître et architecte. Vous avez élaboré de nouveaux rituels en prise directe avec le soleil et sa magie et plus encore vous avez aidé Akhenaton dans ses vingt-deux quêtes arcaniques."
+   },
+   {
+    "nom": "Scribe",
+    "ka": "Air",
+    "description": "Vous avez été l’un des rares membres de la caste immensément respectée et jalousée de ceux qui savent lire et écrire les hiéroglyphes. Nommé auprès de l’un des nombreux temples qui quadrillaient la longue terre noire égyptienne, vous avez exercé un poste de pouvoir et d’influence. Vous avez emmagasiné un savoir très impressionnant, à la fois profane et occulte, en particulier lié aux connaissances secrètes de l’aspect magique de cette écriture. Vous avez aussi développé d’habiles talents artistiques liés à la peinture et au dessin."
+   },
+   {
+    "nom": "Danseuse",
+    "ka": "Eau",
+    "description": "Bien que votre Simulacre fût issu des classes les plus populaires de l’Égypte, vous êtes devenue l’une des plus célèbres danseuses de votre temps. Vous avez été remarquée par Akhenaton pour votre art, votre agilité mais aussi pour votre sapience vive et vos qualités de diplomate. Avec votre art, vous avez su convaincre de nombreux membres du clergé et de la noblesse tout comme certains Nephilim de l’importance de la quête du pharaon Nephilim."
+   },
+   {
+    "nom": "Embaumeur",
+    "ka": "Lune",
+    "description": "Vous avez été l’un de ces embaumeurs en charge des soins apportés aux défunts. Vous connaissez toutes les particularités des corps humains ainsi que les mythes et les rituels les plus secrets liés à la mort et à la vie dans l’au-delà. Votre proximité avec la mort, la momification, vous a donné un sang-froid à toute épreuve ainsi qu’une sagesse morbide que vous savez exercer dans nombreuses situations."
+   },
+   {
+    "nom": "Intendant",
+    "ka": "Terre",
+    "description": "Vous avez conduit les affaires matérielles du domaine d’un temple égyptien. En lien avec les paysans, vous avez approvisionné en biens et en victuailles les serviteurs des dieux et les nombreux rituels. Vous savez commander les hommes, classer et compter les choses matérielles. Avec l’esprit pratique appris, vous savez prévoir, planifier et vous adapter en cas de besoin."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les Compacts secrets",
+  "epoque": "La Chute de Troie",
+  "page": 74,
+  "date": "-1200",
+  "lieux": "Mycènes - Troie",
+  "cout": 1,
+  "introduction": "La destruction du sanctuaire de Cnossos précipita une guerre fratricide pour les Nephilim comme les humains. Dispersés entre la Méditerranée et l’Asie mineure, les Immortels se regroupent en factions. L’affrontement larvé entre les Atrides de Mycènes et les Podarcides de Troie, deux de ces lignées opposées, conduira à l’enlèvement de la naïade Hélène. Lorsqu’ Agamemnon et tous les rois de Grèce répondirent à l’appel de Ménélas pour restaurer son honneur, l’incident prit des proportions aussi inimaginables qu’épiques. Les humains furent convaincus que les dieux eux-mêmes choisissaient leurs camps respectifs, s’affrontant à travers des champions et des héros pendant un siège mythique. Pour vous qui avez connu le conflit de l’intérieur, vous savez que les légendes ne sont pas si éloignées de la vérité… Lorsque les forces achéennes prennent enfin la capitale, la chute de Troie marquera la fin du Compact d’Aïon. En dépit de votre participation plus ou moins directe à la guerre, vous avez réussi à survivre à son issue sanglante. Et peut-être même à poursuivre vos propres objectifs occultes, en profitant par exemple du voyage jusqu’à Troie pour en apprendre plus sur les mythes profanes concernant la recherche de la fabuleuse Toison d’or ?",
+  "apports": [
+   "Les quêtes ésotériques : Toison d’or 2",
+   "Quêtes d’Arcanes : Arcane V / Arcane XI",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Mystères 1 / Histoire invisible 1 / Effets-Dragons 2 / Sciences occultes 1 / Arcanes Majeurs 1 / Templiers 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Guerrier achéen",
+    "ka": "Feu",
+    "description": "Même si vos exploits n’ ont pas été aussi mémorables que ceux d’Achille, vous avez été un guerrier achéen de renom. Votre prouesse avec les armes blanches, de trait et de jet est presque inégalable. Impénétrable, votre esprit s’ érige en forteresse aussi solide que votre corps. Vos capacités athlétiques sont dignes des Spartiates et vos camarades ne tarissent pas d’éloge : vous seriez capable de courir un marathon en armes et armure, de traverser la Mer Égée à la nage ou d’escalader les murailles de Troie à mains nues… Sur le champ de bataille, il est également impossible d’échapper à votre vigilance."
+   },
+   {
+    "nom": "Aède",
+    "ka": "Air",
+    "description": "Vous vous êtes incarné sous les traits d’un aède : artiste chanteur, conteur et poète. Vous avez composé des strophes dignes d’Homère pour vos épopées. Talentueux musicien, les accords de votre phorminx sont capables d’arracher des larmes aux guerriers les plus endurcis. Pourtant, ils sont encore loin d’égaler l’intensité de votre chant. Humble érudit, vous semblez connaître toutes les légendes, tous les mythes du monde spirituel et n’hésitez pas à partager ce savoir avec votre auditoire captivé. C’ est pourquoi vos admirateurs estiment que les exploits des héros qui vous sont inconnus n’ ont sans doute jamais existé..."
+   },
+   {
+    "nom": "Pilote",
+    "ka": "Eau",
+    "description": "Accompagnant les forces achéennes à l’aller et au retour de Troie, vous avez été le pilote d’une des 1200 triacontères de la flotte d’Agamemnon. Excellent cartographe, vous êtes aussi capable de naviguer aux étoiles même dans les conditions les plus extrêmes. Votre vue perçante et votre vigilance vous permettent de repérer dès le premier signe les orages, les côtes et les fonds hasardeux. Comme le reste des soldats, vous avez été entraîné à manier l’épée, le bouclier et la lance. Escalader les mâts et prendre parfois les rames vous a endurci physiquement. Présent aux conseils de l’état-major grec, vous connaissez les usages et l’étiquette."
+   },
+   {
+    "nom": "Amazone",
+    "ka": "Lune",
+    "description": "Élevée pour combattre, formée dès l’enfance à la rudesse de la guerre, votre incarnation a été une noble amazone. Héroïne implacable, vous avez servi Troie aux côtés de vos sœurs. Votre beauté rivalise presque avec celle d’Hélène, et votre charme a transpercé le cœur de bien des combattants avant même votre javelot. Redoutable cavalière, l’arc reste votre arme de prédilection. Non contente d’être simplement leur égal, vos capacités physiques dépassent celles de la plupart des hommes de l’Antiquité. Vous êtes également une tacticienne redoutable et charismatique, capable de mener vos sœurs à la victoire en dépit des rapports de force."
+   },
+   {
+    "nom": "Pâtre",
+    "ka": "Terre",
+    "description": "Désirant mener une existence aussi pacifique que possible, vous avez été un berger de la campagne troyenne. Patriarche d’une famille nombreuse, la guerre vous a pourtant poussé à protéger vos proches avec la même dévotion que vos troupeaux. Vous n’avez pas renié vos idéaux pour le faire, préférant vous attirer les faveurs des deux camps en soignant les blessés grâce à vos connaissances vétérinaires plutôt que de manier une arme. Négociateur habile, vous auriez pu être un homme très riche si votre honnêteté n’avait pas harnaché votre langue."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "L’Hermétisme",
+  "epoque": "L’empire magique des Perses",
+  "page": 76,
+  "date": "-700",
+  "lieux": "Ecbatane - Persépolis",
+  "cout": 1,
+  "introduction": "Vous avez connu l’empire mythique des glorieux Achéménides. Après la défaite de l’empire assyrien, Cyrus le Grand unifie Perses et Mèdes puis conquiert une vaste partie du Moyen-Orient. Son règne, et ceux des « Grands Rois » qui lui succèdent, feront la part belle au mysti cisme. La magie est partout : l’occulte déborde des complots des courtisans jusqu’à la vie publique, comme lorsque Darius Ier doit arracher la succession de Cyrus à un magus usurpateur. Les mages peuplent des cités entières, telles qu’Ecbatane, l’ancienne capitale des Mèdes. Pendant que les démons chuchotent dans les vents du désert, les prodiges du zoroastrisme sont quotidiens à Persépolis, la nouvelle capitale, et les rituels alchimiques aident à répandre l’usage d’une monnaie unique à travers l’empire. Certains soldats d’élite sont même considérés comme immortels… Tel un feu d’artifice grandiose et outrancier, cette période sera annonciatrice de la fin de toute unité entre Nephilim et humains par les Compacts. Elle se caractérise par le repli des immortels vers l’Hermétisme, une conception beaucoup plus secrète des connaissances occultes et de leur partage. Avant votre retrait en coulisses des affaires humaines, peut-être avez-vous profité de cette apogée spirituelle pour mener à bien certains de vos projets ? Ainsi, il est possible que vous ayez aidé à déchiffrer la Table d’émeraude, dont les formules mystérieuses sont considérées comme le fondement de l’Alchimie.",
+  "apports": [
+   "Les quêtes ésotériques : Table d’émeraude 2",
+   "Quêtes d’Arcanes : Arcane I",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Champs magiques 1 / Nephilim 1 / Orichalque 1 / Mystères 1 / Histoire invisible 1 / Sciences occultes 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Immortel",
+    "ka": "Feu",
+    "description": "Invaincu, inflexible, vous avez appartenu aux Mélophores, la garde rapprochée des Grands Rois. Ce corps d’élite comportait dix mille soldats – pas un de plus, pas un de moins – et était aussi connu sous le nom d’» Immortels », car chaque décès était immédiatement remplacé par un nouveau membre. Vos prouesses martiales à l’épée, la lance, la fronde et l’arc vous ont permis d’accéder à cette position glorieuse et enviée. Vos ennemis vous ont craint autant qu’ils vous ont admiré. Vous avez partagé le quotidien des empereurs et appris à leur contact les préceptes de l’étiquette et de la diplomatie. Les campagnes étouffantes en Inde et en Egypte vous ont endurci physiquement et moralement."
+   },
+   {
+    "nom": "Adorateur zoroastrien",
+    "ka": "Air",
+    "description": "Vous avez suivi les préceptes mystiques de Zarathoustra. Zélote dévoué, vous avez officié aux rituels d’Ahura Mazda, le dieu du chaos primaire, créateur de toutes choses. Sage et perspicace, vous êtes capable de percevoir, dans les âmes égarées qui viennent chercher votre conseil, la dualité entre bien et mal, le combat éternel entre lumière et ténèbres. Les éléments primaires – air, feu, eau, terre – restent au centre du dogme Zoroastre et vos connaissances spirituelles sont donc immenses. Grand philosophe du « bien » et du « bon », votre droiture est inébranlable."
+   },
+   {
+    "nom": "Mercenaire",
+    "ka": "Eau",
+    "description": "Votre incarnation a été un mercenaire au service des empereurs achéménides. Combattant efficace mais peu scrupuleux, vous savez monter à cheval et vous battre avec n’importe quelle arme blanche qui vous tombe sous la main. Voyages et longues campagnes vous ont appris à parler la plupart des langues connues – un savoir utile quand il s’agit de négocier votre part du butin. Vous avez quelques connaissances en navigation, même si vous préférez votre selle aux navires. En période de trêve, vous aimez dépenser vos soldes en jeu et en boisson. Votre charme canaille ne laisse pas indifférent."
+   },
+   {
+    "nom": "Astrologue mage",
+    "ka": "Lune",
+    "description": "Vous avez été un puissant mage d’Ecbatane. Aristocrate éduqué par les meilleurs mentors de la cité, vos connaissances ésotériques sont inégalées : philosophie mazdéiste, rituels médicaux, démonologie, alchimie… Vous êtes capable de déchiffrer les cieux aussi aisément que les vélins et les textes occultes qui parsèment votre bibliothèque. Confrontés au surnaturel, plusieurs satrapes ont réclamé votre aide en diverses occasions. Respecté par les puissants et adulé par la populace, une aura de mystère entoure votre existence… pour votre plus grande satisfaction."
+   },
+   {
+    "nom": "Satrape",
+    "ka": "Terre",
+    "description": "Votre incarnation a été le gouverneur d’une satrapie, une division administrative de l’empire achéménide. Extension directe du pouvoir du Grand Roi, vous avez pour mission de faire régner l’ordre sur la province que vous contrôlez et d’agrandir les frontières de l’empire. Politicien aguerri et charismatique, vous êtes aussi bon stratège dans l’intendance de votre satrapie que pour les campagnes militaires relatives à son extension. Vos discours savent toucher le cœur de vos troupes, l’âme de vos sujets. À la fois juge et général, votre autorité est immense et incontestée."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "L’Hermétisme",
+  "epoque": "L’empire divin de Babylone",
+  "page": 77,
+  "date": "-580",
+  "lieux": "Babylone - Ur - Uruk - Nippur",
+  "cout": 1,
+  "introduction": "Parallèlement à l’empire perse, un autre empire assaille les rois assyriens et s’élève sur leurs cendres. Emmené par Nabopolassar puis son fils Nabuchodonosor II, l’empire divin de Babylone domine la Mésopotamie pendant près d’un siècle, mais finira par céder à son tour à la puissance des Achéménides perses. Dans cet entretemps, la glorieuse Babylone connaîtra une période de grande prospérité économique, culturelle et mystique. Pour s’imposer à ses nombreux voisins, l’empire babylonien s’appuie sur sa brutalité militaire. Les campagnes d’expansion de Nabuchodonosor II sont régulières et souvent couronnées de succès. Vous avez connu cette apogée, même si la condition des Nephilim n’y fut pas très enviable en comparaison de celles des humains. Derrière les murailles de Babylone, tapis dans ses palais et ses ziggurats, les Immortels sont divisés en de trop nombreuses factions. Pour résister aux complots, certaines forment des alliances secrètes avec des organisations ésotériques humaines. Ainsi, les cultes dominants Babylone – Shemeth, Marduk ou encore Ishtar – accueillent des Immortels et leurs recherches mystiques. Peut-être avez-vous profité de ce contexte pour continuer vos propres quêtes spirituelles, en participant par exemple à l’invasion babylonienne de Jérusalem dans le but de récupérer l’Arche d’alliance ?",
+  "apports": [
+   "Les quêtes ésotériques : Arche d’Alliance 2",
+   "Quêtes d’Arcanes : Arcane II / Arcane IX",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Mystères 1 / Histoire invisible 1 / Selenim 2 / Sciences occultes 1 / Arcanes Majeurs 1 / Lune Noire 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Soldat chaldéen",
+    "ka": "Feu",
+    "description": "Vous vous êtes incarné dans un soldat chaldéen. Sans peur et sans pitié, vous avez combattu dans plusieurs campagnes frontalières pour la gloire de la Babylonie. Fantassin discipliné, vos armes de prédilection sont la pique et le bouclier. Vous avez servi comme éclaireur du fait de votre sens aigu de l’observation. Vous êtes doué pour le camouflage et particulièrement discret dans les missions d’infiltration qui vous sont confiées. Les rudes conditions des marches forcées jusqu’à la Judée vous ont endurci et appris à survivre dans les zones les plus désertiques."
+   },
+   {
+    "nom": "Devin (Barû)",
+    "ka": "Air",
+    "description": "Mystique au service du culte de Marduk, vous avez occupé la position de devin ou Barû. Intelligent et perspicace, vous avez été en charge d’interpréter les signes des dieux. Les habitants de Babylone sont venus maintes fois quémander vos prédictions, tâche dont vous vous êtes acquitté grâce à vos connaissances des rituels divins. Erudit complet, vous maîtrisez aussi bien les mathématiques et la loi babylonienne que l’astrologie, l’oniromancie ou la lecture d’haruspices. En dépit de votre spiritualité, vous conservez un profond esprit critique. Vos prédictions, même les plus néfastes, n’ ont d’ailleurs jamais été inéluctables : vous avez toujours collaboré avec les exorcistes et les lamentateurs pour changer le destin de vos ouailles…"
+   },
+   {
+    "nom": "Archer royal",
+    "ka": "Eau",
+    "description": "Votre incarnation a appartenu aux archers royaux de Nabuchodonosor II, corps militaire assigné à la protection rapprochée du souverain. Plus fortuné que le soldat moyen, vous possédez un cheval que vous savez monter ainsi qu’une demeure privée dans la haute ville de Babylone. Vigie redoutable, vous êtes capable de repérer une ombre en pleine nuit et de la cribler de flèches sans ciller. Vous êtes également létal avec une épée ou une lance. Grâce à votre rôle de garde-du-corps, vous connaissez les usages de la cour et l’étiquette, ainsi que certaines manœuvres politiques."
+   },
+   {
+    "nom": "Lamentateur (kalû)",
+    "ka": "Lune",
+    "description": "En tant que lamentateur, ou kalû, vous avez eu la tâche sacrée d’apaiser le cœur des dieux par votre voix. Chanteur divin, vos services de purification interviennent après les devins et les exorcistes. Néanmoins, vous maîtrisez aussi bien les présages et les rituels qu’ eux. Du fait de votre talent artistique étroitement lié au religieux, la population vous a souvent apprécié davantage que les autres maîtres des arts ésotériques car vous jugeant plus accessible, plus humain. Très empathique, il est vrai que vous savez captiver les auditoires et le cœur des individus par vos mots réconfortants."
+   },
+   {
+    "nom": "Guide judéen",
+    "ka": "Terre",
+    "description": "Votre incarnation a été un juif exilé à Babylone suite à la défaite du royaume de Judée contre Nabuchodonosor II. Issu de la noblesse de Jérusalem, vous avez été déporté avec toute votre famille lorsque la ville a été rasée par les armées chaldéennes. Pilier de votre communauté, vous avez vite su améliorer les conditions des exilés grâce à votre charisme et votre haut sens pratique. Vos connaissances administratives, politiques et historiques vous ont permis de venir en aide à vos ressortissants alors que vous étiez otage du palais. Lors de la chute de Babylone, vous avez été libéré par l’empereur perse Cyrus le Grand. Il vous a confié la tâche de retourner en Judée pour y reconstruire le Temple de Jérusalem, ce dont vous vous êtes acquitté avec diligence."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "L’Hermétisme",
+  "epoque": "L’empire solaire d’Alexandre",
+  "page": 78,
+  "date": "-330",
+  "lieux": "Pella - Alexandrie - Suse - Sogdiane - Indus",
+  "cout": 1,
+  "introduction": "Fils de Philippe II, roi de Macédoine, Alexandre devint en quelques années l’un des plus grands conquérants que la Terre ait connus. Bien qu’il fût éduqué en partie par des Nephilim particulièrement avisés, tout comme par des membres haut-placés de la première société secrète humaine, les Mystères, il échappa rapidement à tout contrôle et se révolta même contre ses précepteurs. Il avait été prévu pour cet enfant précoce, au Ka-Soleil particulièrement développé, qu’il soit initié afin de devenir le porteur d’un nouveau grand Compact secret. Mais celui-ci, dans sa rébellion, décida de trouver dans la réalité les symboles qui lui avaient été enseignés. Sa puissance solaire devenue presque illimitée, il partit ainsi à la conquête du monde, l’esprit et les yeux aveuglés par une sapience trop forte. D’abord en quête de la Toison d’or, cette carte mythique sur laquelle on trouverait le chemin vers l’Agartha, il fit bâtir la bibliothèque d’Alexandrie où il fit réunir l’ensemble des textes ésotériques, ruinant ainsi des siècles de dissimulation entreprise par les Nephilim comme par les sociétés secrètes. Il s’attaqua aux Arcanes Majeurs qui lui barraient la route comme Le Pape, La Papesse ou encore l’Ermite. Il conquit Babylone la décadente pour impressionner le monde mais aussi pour dévorer toute la magie antique de cette cité-monde. Il se perdit en Inde, lui et son armée, à la recherche d’Agartha qu’il confondit avec le royaume akashique de Gandhara, bâti à l’origine par un très ancien Nephilim, héros et vétéran des Guerres élémentaires. Devant tant d’aveuglement, devant cette figure occulte ratée et perdue dans ses songes et le labyrinthe d’un savoir ésotérique trop mal acquis qui entraînait beaucoup de Déchus vers le dévoilement, plusieurs Nephilim, dont le Lion Vert, alliés aux Mystères, décidèrent d’assassiner le plus grand conquérant de tous les temps.",
+  "apports": [
+   "Les quêtes ésotériques : Sentier d’or 1 / Toison d’or 2 / Arcane XXI 1",
+   "Quêtes d’Arcanes : Arcane II / Arcane V / Arcane XIX",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Mystères 1 / Histoire invisible 1 / Drakaon 1 / Arcanes Majeurs 1 / Templiers 1 / Rose+Croix 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Prêtresse orientale du soleil",
+    "ka": "Feu",
+    "description": "Vous avez été l’une de ces femmes influentes, prêtresses du soleil, qui ont transformé à tout jamais la vie d’Alexandre. Entre deux cultures, l’orientale et la grecque, vous avez su insuffler au conquérant et à ses généraux courage et spiritualité. Votre connaissance approfondie des mystères et des secrets des religions solaires vous donne une sagesse et une compréhension du monde inégalée. Vous savez inspirer la dévotion, l’amour et le respect. Vous pouvez être quelquefois autoritaire ou même dictatoriale. Vous savez déterminer le vrai du faux, dans les paroles des humains comme dans les illusions de la nature."
+   },
+   {
+    "nom": "Mage bactrien",
+    "ka": "Air",
+    "description": "Dans la cour comme au sein des armées d’Alexandre, devant l’immensité parcourue et les merveilles rencontrées, la magie a toujours été présente. Vous avez été l’un de ces mages qui ont vendu leurs sortilèges aux soldats conquérants comme aux peuples vaincus. Vous connaissez toutes les formes de magies humaines, blanches comme noires, bénédictions, évocations, malédictions, nécromancie, ainsi que toutes les formes de charlatanerie qui peuvent faire croire à l’existence de la magie, etc. Vous êtes devenu un maître de l’illusion, vous savez faire croire à vos discours et vous pouvez inspirer la peur comme le courage."
+   },
+   {
+    "nom": "Hetâiroï",
+    "ka": "Eau",
+    "description": "Vous avez accompagné Alexandre en tant que cavalier émérite et compagnon du conquérant au sein de ce qui a été la meilleure cavalerie de l’époque. Vous étiez particulièrement agile au dressage et à la monte des chevaux, au maniement des armes de jet comme de l’épée, à cheval et à pied. Vous avez survécu dans les endroits arides, résisté à la fatigue, réjoui le cœur de vos compagnons par vos chants et vos danses. Vos nombreux voyages ont fait de vous un expert des cultures étrangères et des règles de politesse et de bonne manière. Vous savez vous adapter aux coutumes des autres avec grâce."
+   },
+   {
+    "nom": "Amant",
+    "ka": "Lune",
+    "description": "Compagnon de débauche, homme comme femme, vous vous êtes plongé avec délice dans les plaisirs et les orgies régulièrement organisées par la cour d’Alexandre. Vous êtes devenu l’amant, aimé de toutes et de tous, charmeur et expert des techniques amoureuses. Vous avez beaucoup séduit et votre sens de la fête a fait beaucoup à la réussite de ces bacchanales. Vous avez été un esthète, quelquefois cynique, pratiquant sophisme, poésie, danse et musique."
+   },
+   {
+    "nom": "Stratège",
+    "ka": "Terre",
+    "description": "L’art de la guerre a été votre métier. Tactique comme stratégie n’ ont plus de secrets pour vous. Bien sûr vous avez appris à monter à cheval, à manier la lance, l’épée et le lourd bouclier des hoplites mais votre véritable expérience a été dans la conduite de la guerre. Votre principale préoccupation a été de prendre en considération toutes les données de la guerre comme l’intendance, le voyage, les ressources des combattants. Vous êtes devenu un organisateur hors-pair, alliant rapidité et clairvoyance dans la décision."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "L’Hermétisme",
+  "epoque": "L’empire lunaire de Carthage",
+  "page": 79,
+  "date": "-150",
+  "lieux": "Carthage",
+  "cout": 2,
+  "introduction": "Carthage est le siège de l’Arcane XIII, où le Sombre Souverain Baal a posé les bases d’une alliance avec les Nephilim. Aidés par la Tempérance, Nephilim et Maudits unirent leurs savoirs autour des mystérieuses Portes Noires. Composé de Lune Noire pure, ce passage devait mener la mystérieuse Nef d’Apophis vers un Agartha Selenim. Sans raison, l’embarcation disparut dans le néant, mettant un terme violent à cette belle alliance, chacun accusant les autres factions de trahison. Pendant ce temps, Hannibal, puissant Selenim, traversa les Pyrénées et les Alpes pour fondre sur l’Empire romain, alors sous le joug de l’Arcane de l’Epée. Votre Pentacle a-t-il effleuré les sombres champs magiques de Lune Noire en se rapprochant des Selenim pour étudier les Portes Noires ? Ou votre regard était-il dirigé vers le ciel, autour du Phare cosmique érigé de consort par la Roue de Fortune et l’Étoile ? À moins que vous ayez eu le courage de prendre les armes contre les Mystes et leur volonté de s’étendre ?",
+  "apports": [
+   "Les quêtes ésotériques : Exode sidéral 2 / Porte Noire 2",
+   "Quêtes d’Arcanes : Arcane III / Arcane XIII / Arcane XVII",
+   "Arts occultes : Magie 3",
+   "Effets magiques : 3 sorts",
+   "Savoirs ésotériques : Champs magiques 1 / Nephilim 1 / Orichalque 2 / Mystères 2 / Akasha 2 / Selenim 2 / Lune Noire 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Mercenaire",
+    "ka": "Feu",
+    "description": "Issue d’une des nombreuses ethnies appartenant à l’Empire de Carthage, votre incarnation à très vite utilisé son affinité avec les armes et le combat à mains nues pour survivre. Engagé dans une compagnie de mercenaire, envoyé en première ligne, vous avez toujours survécu. Maniant indifféremment n’importe quelle arme blanche, vous savez défendre votre vie mieux que quiconque. Sans aucune pitié pour vos adversaires, votre courage et votre volonté sont inébranlables."
+   },
+   {
+    "nom": "Suffète",
+    "ka": "Air",
+    "description": "Premier magistrat de Carthage, votre incarnation était l’un des rouages les plus importants de l’empire. Votre influence est telle que vous avez une bonne compréhension des lois, des textes administratifs et de la gestion des finances. Très doué en arithmétique, en calcul mental et en comptabilité, vous estimez rapidement la valeur des choses et des gens. Orateur talentueux, vous savez également étendre et entretenir votre influence et votre réseau de courtisans."
+   },
+   {
+    "nom": "Capitaine de navire",
+    "ka": "Eau",
+    "description": "Connaissant parfaitement la Méditerranée, ses écueils et ses vents favorables, votre incarnation n’a eu de cesse de repousser les limites de ses cartes. Capable de vous orienter simplement avec les astres et d’avoir une connaissance intuitive du changement de temps, la nature est votre alliée. Mais vous savez également manier les lames courtes et vous défendre contre les pillards et les mutins. Vous avez bien évidemment des connaissances en charpenterie, en nœuds et en cordages."
+   },
+   {
+    "nom": "Prêtresse de Tanit",
+    "ka": "Lune",
+    "description": "Voix de la déesse lunaire, votre incarnation était vénérée et respectée. Capable de percevoir l’avenir au cours de transes mystiques, vous êtes experte en rituels, prières et chants. Capable de mener des sacrifices comme de donner la vie, il est très difficile de lire en vous. A l’inverse, l’âme humaine n’a que peu de secrets pour vous et vous aimez jouer de cet ascendant sur les autres. Connaissant aussi bien les onguents que les poisons, les plantes n’ ont pas de mystères pour vous."
+   },
+   {
+    "nom": "Marchand",
+    "ka": "Terre",
+    "description": "Au croisement des cultures et des civilisations du grand marché de Carthage, votre incarnation a toujours évalué avec précision la valeur de n’importe quel bien et su en négocier le meilleur prix. Polyglotte et empathique, vous êtes capable de vous faire comprendre de n’importe qui. À l’aise avec les ragots et les rumeurs, vous savez les utiliser au mieux pour influer sur vos affaires et en tirer des bénéfices. Le chantage et la corruption sont également des armes que vous maîtrisez à la perfection."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "L’Hermétisme",
+  "epoque": "L’empire profane de Rome",
+  "page": 80,
+  "date": "-50",
+  "lieux": "Rome, l’Italie et la Gaule",
+  "cout": 1,
+  "introduction": "Les Nephilim assistent tels des spectateurs impuissants aux conflits qui opposent le Temple et les Mystères pour le contrôle de l’Empire romain. Tribuns, sénateurs et militaires sont les pions d’une Chapelle ou d’une obédience pour la conquête du pouvoir. L’Arcane du Pape voit ses Temples disparaître les uns après les autres. Celui de l’Empereur défend son pouvoir depuis la lointaine Perse, tout en tentant d’infiltrer l’Empire. La Maison- Dieu quant à elle tente de résister à Rome depuis l’Égypte. En Europe, la chute du sanctuaire celte face à l’Aigle romain ébranle le Bateleur. D’abord la Gaule est obligée de se rendre, mais les légions ne s’arrêteront pas là et iront jusqu’en Brittania. Votre Nephilim a-t-il sacrifié sa quête personnelle de sapience pour participer à la lutte contre le Bâton et l’Épée ? Ou a-t-il défendu les derniers vestiges des cultes du Pape ou du sanctuaire celte ?",
+  "apports": [
+   "Les quêtes ésotériques : Atalante fugitive 2 / Cité des Vertiges 1 / Rex Mundi 1",
+   "Quêtes d’Arcanes : Arcane I / Arcane IV",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Mystères 1 / Histoire invisible 1 / Sciences occultes 1 / Arcanes Majeurs 1 / Templiers 1 / 666 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Gladiateur",
+    "ka": "Feu",
+    "description": "Ancien esclave, votre incarnation a su se faire connaître par sa force et sa ténacité. Maîtrisant les armes blanches et l’utilisation des armures, vous savez rapidement déceler le point faible de vos adversaires. Également capable d’attirer l’attention sur vous, vos prouesses athlétiques sont hors normes, même si elles vous obligent à puiser dans vos réserves. Résistant à la douleur et à toutes formes de torture, votre volonté est également très forte."
+   },
+   {
+    "nom": "Sénateur",
+    "ka": "Air",
+    "description": "Membre de l’une des grandes familles de Rome, votre incarnation était l’un des piliers du Sénat. Votre influence s’ étendait sur tous les domaines de la vie publique : religieux, législatif, financier et surtout politique, intérieure comme extérieure. Grand orateur, mais aussi complotiste, vous avez toujours un coup d’avance sur vos adversaires, certainement vos amis d’hier. Doué pour l’intrigue et la manipulation, vous savez également utiliser le poignard et le poison pour faire avancer les choses plus vite à votre avantage."
+   },
+   {
+    "nom": "Légionnaire",
+    "ka": "Eau",
+    "description": "Membre d’une compagnie, votre incarnation est capable de s’adapter au mieux dans n’importe quelle situation militaire. Vous savez naturellement diriger un groupe afin d’optimiser les capacités de chacun et de les coordonner pour agir comme un seul homme. Maîtrisant le glaive à la perfection, vous êtes capable de vous battre pendant des heures. Endurant, vous avez également l’habitude de porter de lourdes charges sur de longues distances sans vous fatiguer."
+   },
+   {
+    "nom": "Chevalier gaulois",
+    "ka": "Lune",
+    "description": "Cavalier émérite et guerrier farouche, votre incarnation n’a eu de cesse de lutter contre l’invasion romaine. Capable de chevaucher pendant des jours, vous ne faisiez qu’un avec votre monture. Armé de votre lance et de votre bouclier ovale, votre frappe était rapide et précise, ne laissant que peu de chance de riposte à vos adversaires. Également discret, vous étiez souvent utilisé comme éclaireur pour approcher au plus près les lignes ennemies. Capable de survivre des jours dans la nature, vous êtes également un bon limier."
+   },
+   {
+    "nom": "Vate",
+    "ka": "Terre",
+    "description": "Devin gaulois, votre incarnation était réputée pour ses dons de divination et de médecine. Capable de voir l’avenir, grâce aux plantes vous faisant entrer en transe, vous transmettiez la parole des dieux par le chant. Vous pratiquiez la médecine, à la fois magique, sanglante et végétale. Mystérieux et respecté, vous avez un talent pour conter les légendes et prêcher ce que vos fidèles veulent entendre. D’une autorité naturelle, vous savez imposer votre vision des choses et galvaniser les hommes avant le combat et les rites sacrés."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les guerres secrètes",
+  "epoque": "L’incident Jésus",
+  "page": 82,
+  "date": "30",
+  "lieux": "Jérusalem",
+  "cout": 2,
+  "introduction": "Bien qu’ayant libéré peu de temps auparavant Jérusalem, le peuple juif, désuni et en proie à de nombreux conflits politiques et religieux perd tout espoir quand Pompée entre dans la capitale et la soumet à l’autorité impériale. Malgré cela, la région est en proie à l’agitation et à la violence qui menacent jusqu’à la stabilité des provinces orientales de l’empire. C’est dans ce contexte que l’Incident Jésus se produit. Plusieurs Arcanes Majeurs, profitant d’une grande conjonction unique des champs magiques, se lancent dans le projet occulte le plus important depuis le Sentier d’or et l’Atlantide : la fusion entre un fœtus humain et un Nephilim. Le résultat dépasse toutes les attentes des initiateurs du projet. Non seulement, l’être créé se révèle exceptionnel mais il s’émancipe des rets des Arcanes Majeurs pour à la fois fonder une religion humaine majeure et ouvrir à tous les Nephilim la deuxième Science occulte : la Kabbale. Le bouleversement est si grand que des Nephilim et des Arcanes Mineurs préférèrent s’allier pour mettre un terme funeste à ce qui est désormais connu dans l’histoire occulte comme l’Incident Jésus. En tant que Nephilim vous avez participé de près ou de loin, soit en partisan, soit en opposant au projet Jésus.",
+  "apports": [
+   "Les quêtes ésotériques : Champs Polemoka 1 / Rex Mundi 2 / Jérusalem céleste 2 / Graal 2",
+   "Quêtes d’Arcanes : Arcane VIII / Arcane X",
+   "Arts occultes : Magie 1 / Kabbale 6",
+   "Effets magiques : 1 sort, 3 invocations",
+   "Savoirs ésotériques : Champs magiques 2 / Nephilim 1 / Histoire invisible 2 / Sciences occultes 2 / Arcanes Majeurs 2 / Templiers 1 / Bohémiens 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Prêcheur",
+    "ka": "Feu",
+    "description": "C’ était le temps de la rédemption et du message. Vous avez été l’un de ces prêcheurs, nombreux à cette époque, à répandre autour de vous la bonne parole. Par vos prêches brillants, vos discours enflammés, vos actes courageux, vous avez participé aux révoltes contre l’occupant romain. Mais il ne s’agissait pas que de politique. Comme beaucoup, vous avez aussi participé au basculement d’un monde vers un autre, du paganisme au monothéisme. Vous avez planté les graines d’un espoir plus grand que les misères de la vie d’en bas, par la parole, les prophéties et les paraboles, par les sermons et les dictons."
+   },
+   {
+    "nom": "Moine essénien",
+    "ka": "Air",
+    "description": "Vous vous êtes retiré du monde, dans la petite communauté d’ermites hommes et femmes afin d’écrire le testament du monde. Vous avez pu acquérir alors par la pratique du jeûne, du chant et de la prière, la gnose la plus profonde de votre temps. La Bible, la mythologie, les subtilités théologiques n’ ont plus eu de secrets pour vous. Vous avez étudié les audaces de la toute jeune Kabbale. Côtoyer aussi ces ermites vous a donné une bonne connaissance de l’âme humaine, de sa lumière comme de sa noirceur."
+   },
+   {
+    "nom": "Diplomate polyglotte",
+    "ka": "Eau",
+    "description": "Vous avez été partisane de composer avec la puissance romaine. Douée pour les langues, vous avez appris à parler, à lire et à écrire tous les idiomes majeurs de votre temps, l’araméen, le grec, le latin, l’égyptien, le perse, etc. Vous avez été l’historienne des événements de votre temps. Vous avez tenté de mettre au service de la paix ce don et vous avez été ambassadrice entre les différents camps, vous permettant ainsi de comprendre les différents clans et peuples que vous avez visités. Cela vous a mis souvent en danger mais vous avez pu vous en sortir grâce à votre souplesse morale."
+   },
+   {
+    "nom": "Sicaire zélote",
+    "ka": "Lune",
+    "description": "Maniant aussi bien les versets de la Bible que la sica, le poignard caché dans la manche de la tunique, vous avez résisté violemment à Rome. Vous avez perpétré des meurtres. Vous avez effectué des opérations discrètes nocturnes, grimpé le long des murs des casernes et du Temple afin de mettre à bas l’aigle romain. Par vos discours enflammés et morbides, vous avez entraîné de nombreux compatriotes dans la résistance. Plus que tout, vous avez appris à endurer la souffrance et la torture à la seule force de la volonté."
+   },
+   {
+    "nom": "Proconsul",
+    "ka": "Terre",
+    "description": "Jérusalem (la ville de la paix) était un véritable chaudron. Membre de l’aristocratie lettrée et fortunée de l’empire, partisan de négociations pacifiques, fin connaisseur des rouages politiques compliqués de votre temps, dépêché par l’empereur luimême pour ramener le calme et sceller des pactes, votre tâche s’ est avérée rapidement impossible. Vous avez dû, malgré vous, ordonner des mesures drastiques comme la torture systématique et la crucifixion des rebelles. Cela n’a fait qu’attiser le vent de la révolte."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les guerres secrètes",
+  "epoque": "Les arthuriades",
+  "page": 83,
+  "date": "450",
+  "lieux": "Camelot",
+  "cout": 1,
+  "introduction": "Pour protéger le cœur de leur empire menacé, les romains quittent précipitamment la Grande-Bretagne aux alentours de 410. Leur départ va créer un vide politique majeur dans la région : les lignées humaines s’affrontent pour le contrôle des îles britanniques, influencées secrètement par plusieurs factions occultes de Nephilim. Deux en particulier, l’Arcane de la Force, mené par Merlin et le culte du Dragon, dirigé par Morgane vont se disputer violemment le pouvoir. Leurs machinations plongent la Grande- Bretagne dans le chaos, accentué par les invasions régulières des Saxons. Finalement, un monarque lié à ces deux factions vient tirer le pays de sa tourmente : Arthur Pendragon. Sitôt installés à Camelot, le roi et ses chevaliers de la Table Ronde vont d’exploits en exploits. À tel point que le voile entre l’occulte et le profane se scinde, transformant cette ère en véritable légende. Vous avez connu ce dernier règne mythique en personne. Peut-être avez-vous-même rejoint les chevaliers d’Arthur dans leur quête du Graal, en suivant le même parcours d’errance et de souffrance que le Christ ? À moins que votre attrait pour l’Alchimie ne vous ait plutôt conduit à étudier la mystérieuse « Table d’émeraude » en compagnie des prêtresses du culte du Dragon ?",
+  "apports": [
+   "Les quêtes ésotériques : Table d’émeraude 1 / Graal 2",
+   "Quêtes d’Arcanes : Arcane XI",
+   "Arts occultes : Magie 1 / Kabbale 3",
+   "Effets magiques : 1 sort, 1 invocation",
+   "Savoirs ésotériques : Champs magiques 1 / Histoire invisible 1 / Akasha 1 / Drakaon 1 / Sciences occultes 1 / Templiers 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Reine picte",
+    "ka": "Feu",
+    "description": "Farouche guerrière et souveraine incontestée, vous avez régné sur une tribu Picte établie au nord de l’Écosse. Grâce à votre sens stratégique d’exception, votre clan a toujours conservé son indépendance face aux envahisseurs, mêmes romains. Athlétique, vous êtes capable de survivre dans les forêts les plus profondes et les montagnes les plus inhospitalières. Vos tatouages intimident l’ennemi autant que vos cris de guerre. Les fous qui refusent de se débander devant votre fureur ne peuvent résister à votre maîtrise de la hache. Vous maîtrisez aussi les rituels du culte du Dragon, seule entité à laquelle vous n’ayez jamais prêté allégeance."
+   },
+   {
+    "nom": "Chevalier mystique",
+    "ka": "Air",
+    "description": "Votre incarnation a appartenu aux dévoués chevaliers de Camelot. Noble combattant, vous chevauchez votre destrier à la bataille, fendant vos ennemis d’un coup de lance ou d’un revers de votre épée. Vous maîtrisez l’art de la guerre sous toutes ses formes, que ce soit pour mener des hommes, lever des forteresses ou établir des sièges. En dépit de vos capacités athlétiques et martiales, vous êtes cependant loin de n’ être qu’une brute sans cervelle : vous connaissez les mythes et les légendes de votre temps comme le meilleur des bardes. Vos sages conseils vous ont valu l’estime de la cour d’Arthur."
+   },
+   {
+    "nom": "Moine évangéliste",
+    "ka": "Eau",
+    "description": "Éloquent érudit, vous avez porté le christianisme depuis Rome jusqu’aux rives bretonnes. Vos sermons touchent les esprits ; vos cantiques transportent les âmes. Orateur charismatique et fin psychologue, vous avez toujours su débattre de la supériorité de Dieu avec les païens les plus entêtés. Vos connaissances du monde spirituel sont liées à vos études des textes sacrés tels que les évangiles. Elles n’ en restent pas moins impressionnantes pour les profanes et vous avez toujours été traité par ceux que vous cherchiez à évangéliser avec une déférence presque craintive."
+   },
+   {
+    "nom": "Chevalier errant",
+    "ka": "Lune",
+    "description": "Chevalier sans terre, vous devez votre titre mais à vos exploits personnels. Motivé par la gloire, vous préférez partir à l’aventure à la première occasion. Votre cheval et votre épée sont vos seuls compagnons. Votre maîtrise du combat, particulièrement du duel, vous permet de vaincre tous les périls et défendre toutes les causes valables que vous rencontrez sur la route. Vigilant, athlétique, mais surtout débrouillard, vous avez appris à survivre en pleine nature, soignant vos blessures et réparant votre équipement avec le talent des meilleurs maréchaux-ferrants. Incar nation de l’idéal chevaleresque, vous êtes considéré comme une légende vivante par le peuple."
+   },
+   {
+    "nom": "Marchand romain",
+    "ka": "Terre",
+    "description": "Alors que vos frères romains s’ en sont retournés vers l’empire continental, vous avez décidé de rester dans les îles britanniques pour y poursuivre votre commerce. Baratineur né, vos talents en négoce vous permettent d’acquérir les riches ressources des barbares à vil prix. Vos connaissances en géographie et en navigation vous permettent aussi de profiter des meilleures voies commerciales de la région. Éduqué à Rome, vous parlez plusieurs langues et maîtrisez les mathématiques bien mieux que la plupart des Bretons avec qui vous faites affaire."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les guerres secrètes",
+  "epoque": "Les croisades",
+  "page": 84,
+  "date": "XIIe",
+  "lieux": "Byzance - Royaume de Jérusalem",
+  "cout": 1,
+  "introduction": "Dès le XIIe siècle, l’Arcane Mineur du Bâton connaît une montée en puissance considérable sur le monde occulte comme profane. Les chevaliers de l’Ordre du Temple profitent des croisades pour asseoir leur autorité à travers l’Europe, l’Afrique et le Moyen-Orient. Même les autres Arcanes et les Nephilim ne parviennent à enrayer la formidable machine économique et militaire mise en place par les Templiers. Sous l’influence de l’empire byzantin, la première croisade permet la prise de Jérusalem. L’échec de la seconde croisade et la reprise de la ville sainte par Saladin, appuyé par l’empire byzantin, échauffe alors les esprits des occidentaux. D’autres croisades plus ou moins fructueuses se succèdent. À leur apogée, les croisés finiront par frapper Constantinople elle-même, assiégeant la ville. Attaqué sur tous les fronts, miné de l’intérieur par ses perfidies et ses conspirations, l’empire s’effondre et Byzance est prise. Les monastères et les bibliothèques occultes sont saccagés par les Templiers ; un empire latin est créé, le Bâton s’assurant ainsi d’obtenir une place-forte au Moyen-Orient. Face à l’étau inflexible qui se resserre sur eux, les Nephilim doivent se draper encore davantage dans le secret pour poursuivre leurs projets mystiques. Vous avez connu cette période très précaire pour les Immortels, pleine de trahisons et de condamnations. Peut-être avez néanmoins réussi à tirer votre épingle de ce jeu hasardeux, en partant justement en quête des origines du Trésor des Templiers ? A moins que vous n’ayez retrouvé les traces de l’Atalante fugitive parmi les grimoires byzantins sauvés du saccage ?",
+  "apports": [
+   "Les quêtes ésotériques : Atalante fugitive 1 / Champs Polemoka 1 / Arcane XXI 1 / Trésor des Templiers 1",
+   "Quêtes d’Arcanes : Arcane VIII / Arcane XVI",
+   "Arts occultes : Magie 1 / Kabbale 3",
+   "Effets magiques : 1 sort, 1 invocation",
+   "Savoirs ésotériques : Nephilim 1 / Orichalque 1 / Histoire invisible 1 / Effets-Dragons 1 / Sciences occultes 1 / Templiers 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Chevalier arabe",
+    "ka": "Feu",
+    "description": "Chargé de défendre la sainte Jérusalem contre les croisés, vous avez été l’un des preux chevaliers de Saladin. Guerrier érudit, vous maîtrisez aussi bien le combat à l’épée et l’équitation que les sciences naturelles et les mathématiques. Vous êtes également un poète talentueux à vos heures. Leader né, vous commandez plusieurs garnisons de soldats qui vous obéissent au doigt et à l’œil. Votre connaissance profonde de l’Islam et votre foi vous rendent inébranlable face aux assauts barbares des croisés."
+   },
+   {
+    "nom": "Moine mémorialiste",
+    "ka": "Air",
+    "description": "Moine formé au Saint- Siège lui-même, vous avez accompagné les croisades pour mieux les chroniquer. Même si votre érudition est loin d’égaler celle des savants arabes de l’époque, vous maîtrisez l’histoire et la philosophie, ainsi que quelques bases de médecine. A ce titre, les croisés viennent parfois profiter de vos soins pendant le long voyage jusqu’à la Terre sainte. Votre calme et votre rhétorique tranquille vous permettent aussi de rehausser le moral de vos frères chrétiens par des débats théologiques et de leur mettre du baume au cœur lorsque point le mal du pays."
+   },
+   {
+    "nom": "Plénipotentiaire byzantin",
+    "ka": "Eau",
+    "description": "Votre incarnation a représenté le roi des Francs, Philippe 1er, à la cour de Byzance à l’époque de la première croisade. Ambassadeur émérite, votre sens de l’étiquette et votre langue de velours vous permettent de négocier avec succès différents accords politiques ou économiques. Vos connaissances de toutes les humanités de l’époque, et particulièrement l’histoire et la philosophie, font de vous un compagnon de table très apprécié. Plusieurs tentatives d’assassinat à votre encontre vous ont conduit à vous perfectionner à l’escrime avec vos loyaux gardes du corps. Vous êtes maintenant un bretteur redoutable et votre vigilance égale celle des oiseaux de proie."
+   },
+   {
+    "nom": "Assassin",
+    "ka": "Lune",
+    "description": "Cachée sous les traits d’une séduisante courtisane grecque, vous avez travaillé comme assassin à gages pour les maisons nobles de Byzance. Bien des aristocrates ont connu une fin presque agréable entre vos bras, poignardés ou empoisonnés par leur vin. Même sans arme blanche ou sans poison, votre pratique des arts martiaux vous rend tout à fait capable de briser une nuque récalcitrante. Vos capacités athlétiques et votre discrétion vous rendent plus furtive qu’une ombre dans les palais. Pour parfaire vos multiples déguisements, vous chantez et dansez à merveille."
+   },
+   {
+    "nom": "Noble exilée",
+    "ka": "Terre",
+    "description": "Votre incarnation a été un noble Franc, en exil à Jérusalem après la reprise de la ville par les croisées. Débordante de courtoisie, vous dissimulez sous vos manières un intellect redoutable. Malgré la disgrâce de votre époux chevalier venu se racheter au combat, et que vous avez dû suivre, votre ingéniosité politique vous a permis de gagner bien des faveurs auprès des acteurs influents de la ville sainte. Votre maîtrise des usages et votre éloquence vous ouvrent les portes de tous les salons et tous les conciles. Marchande de secrets, vous vous intéressez également de près aux savoirs ésotériques, en particulier ceux qui touchent à la théologie occidentale ou orientale."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les guerres secrètes",
+  "epoque": "Les bûchers cathares",
+  "page": 85,
+  "date": "XIIIe",
+  "lieux": "Toulouse - Albi - Les Corbières",
+  "cout": 2,
+  "introduction": "Le règne de Philippe Auguste voit la montée en puissance du Temple que rien ne semble pouvoir arrêter. L’Arcane du Bateleur est le seul à tenter de s’y opposer, en lançant le projet Occitanie. Ralliant les grands domaines d’Aquitaine et du Languedoc, les Cathares se dressent contre les idées du Bâton. Celui-ci riposte violemment lors de la croisade albigeoise, faisant tomber les places fortes et dressant des bûchers pour faire taire les hérétiques. Le Pagad, Prince de l’Arcane I, réussit à s’enfuir avec l’aide de la Maison-Dieu et de la Tempérance. Votre Nephilim était-il de ces Parfaits, proches des occitans et les éveillant aux découvertes des mondes de Kabbale, d’après les enseignements issus de Jérusalem ? A-t-il plutôt fondé une chapelle ésotérique pour défricher les bases de la toute jeune Alchimie ?",
+  "apports": [
+   "Les quêtes ésotériques : Table d’émeraude 2 / Jérusalem céleste 2 / Graal 2 / Trésor des Templiers 2",
+   "Quêtes d’Arcanes : Arcane I / Arcane VI / Arcane XIV / Arcane XV / Arcane XVI",
+   "Arts occultes : Kabbale 3 / Alchimie 2",
+   "Effets magiques : 1 invocation, 3 formules",
+   "Savoirs ésotériques : Orichalque 1 / Histoire invisible 2 / Arcanes Majeurs 2 / Templiers 2 / Bohémiens 1 / 666 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Inquisiteur",
+    "ka": "Feu",
+    "description": "Capable de faire trembler rien qu’à l’évocation de son nom, votre incarnation est l’une des personnes les plus craintes de sa région. Inflexible, incorruptible et insensible, la mission qu’il a reçue de Dieu ne saurait s’ encombrer de sentiment. Doué pour faire avouer leurs péchés au gens, par la parole ou la torture, vous savez déceler le mensonge de vos interlocuteurs. Connaissant par cœur la Bible et les autres textes saints, vous êtes également très au fait des rites chrétiens, de l’hagiographie et de l’histoire du christianisme."
+   },
+   {
+    "nom": "Docte",
+    "ka": "Air",
+    "description": "À la fois philosophe, savant, médecin, linguiste, historien et astrologue, votre incarnation est un véritable érudit. Son savoir est sans limite et exhaustif. Capable de relier toutes ces disciplines avec aisance, vous êtes également capable de les transmettre avec beaucoup de pédagogie. Compilant de nombreux ouvrages, arpentant les bibliothèques et les scriptorium, vous savez rapidement trouver ce que vous cherchez et le mettre en lien avec d’autres connaissances."
+   },
+   {
+    "nom": "Troubadour",
+    "ka": "Eau",
+    "description": "Talentueux en chant et en musique, les mélodies de votre incarnation sont capables de toucher le cœur de son auditoire. Maîtrisant de nombreux instruments, capable d’écrire sur n’importe quel sujet, vos textes sont souvent justes et poignants. Véritable référence sur les légendes et les histoires épiques de son époque, vous savez également flatter les puissants et vous attirer la sympathie des humbles. Séducteur, rares sont ceux qui peuvent rester de marbre face à vos avances."
+   },
+   {
+    "nom": "Apostat",
+    "ka": "Lune",
+    "description": "Ayant renié la foi chrétienne pour suivre celle des Cathares, votre incarnation accorde beaucoup d’importance à la spiritualité. Capable de débattre et de discuter sur Dieu avec beaucoup de finesse, vous savez patiemment ébranler les certitudes de votre auditoire. Traqué et pourchassé, vous avez l’habitude de fuir, de vous dissimuler et de ne pas laisser de traces. Votre volonté est telle qu’il vous est capable de résister à la torture et aux pressions psychologiques."
+   },
+   {
+    "nom": "Noble parfait",
+    "ka": "Terre",
+    "description": "Vous avez vécu en cathare, en « Parfait ». Ayant reçu une bonne éducation, votre incarnation maîtrise la courtoisie et l’étiquette avec beaucoup de facilité. Vous connaissez bien l’histoire de votre région, sa géographie, les autres familles nobles et leurs blasons. Véritable meneur d’homme, votre charisme et vos discours vous assurent la fidélité de vos gens. Maniant également l’épée, vous êtes passé maître dans l’art du duel, connaissant de nombreuses bottes et ouvertures souvent mortelles."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les guerres secrètes",
+  "epoque": "La chute du Temple",
+  "page": 86,
+  "date": "XIVe",
+  "lieux": "Paris",
+  "cout": 2,
+  "introduction": "Proche de réaliser son Grand Plan, influent à Jérusalem comme à Paris, le Temple semble invincible. Regroupés autour de Philippe le Bel, les membres de l’Empereur et de la Maison-Dieu trouvent les moyens de discréditer le Temple sous de fausses accusations. Après le procès de Jacques de Molay, les Templiers sont traqués dans toutes l’Europe. Les Nephilim découvrent avec horreur l’existence des homoncules mais se rendent rapidement compte que le trésor des Templiers a disparu. Parallèlement, des confréries alchimiques voient le jour dans les grandes villes et doivent lutter contre l’influence des Mystères du Midi, déjà bien implantés. Dans le Palais des Papes d’Avignon, le Concile regroupe des occultistes tentant d’interpréter les messages kabbalistiques du Christ. Votre Nephilim a-t-il aidé à ourdir la Chute du Temple ou à traquer les fugitifs du Bâton ? S’est-il tenu à l’écart de cette lutte pour mener ses propres recherches sur les Sciences occultes, bénéficiant des nouvelles découvertes de l’époque ?",
+  "apports": [
+   "Les quêtes ésotériques : Toison d’or 1 / Trésor des Templiers 2",
+   "Quêtes d’Arcanes : Arcane IV / Arcane XIV / Arcane XVI",
+   "Arts occultes : Magie 1 / Kabbale 6 / Alchimie 2",
+   "Effets magiques : 1 sort, 1 invocation, 2 formules",
+   "Savoirs ésotériques : Orichalque 2 / Histoire invisible 1 / Sciences occultes 1 / Templiers 2 / Bohémiens 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Routier",
+    "ka": "Feu",
+    "description": "Membre d’une grande compagnie de mercenaires, votre incarnation a terrorisé de nombreux villages, sans aucune compassion. Capable du pire pour instaurer la terreur, vous ne faite preuves d’aucune clémence. Grande gueule, vous intimidez facilement ceux qui ne vous connaissent pas. Aguerri au métier des armes, habitué à vivre sur les routes avec peu de moyen, vous savez toujours où trouver ce dont vous avez besoin. Vous savez aussi bien organiser une troupe avant l’assaut que vous battre seul."
+   },
+   {
+    "nom": "Moniale",
+    "ka": "Air",
+    "description": "Depuis son cloître, votre incarnation a connu une vie de contemplation et de silence. Vous connaissez par cœur les textes sacrés et votre voix est si pure qu’il est difficile de ne pas être subjugué lorsque vous chantez les psaumes. Vous savez apaiser les âmes et recevoir les confidences des gens qui vous entourent, sans les y forcer. Vous avez également un don pour attirer la sympathie et la pitié, rares sont les personnes capables de vous faire du mal directement."
+   },
+   {
+    "nom": "Alleutier du Temple",
+    "ka": "Eau",
+    "description": "Paysan sur les terres d’une commanderie, votre incarnation a toujours travaillé la terre de manière naturelle et instinctive. Connaissant le cycle des saisons, celui des plantes et des animaux, vous êtes capable d’optimiser votre rendement. Maîtrisant de nombreux savoir-faire artisanaux, comme la poterie, la vannerie ou la forge, vous savez également utiliser le four et le moulin seigneurial. Humble, vous savez vous faire apprécier de vos semblables et de votre seigneur."
+   },
+   {
+    "nom": "Chevalier mercenaire",
+    "ka": "Lune",
+    "description": "Votre incarnation a perdu les terres de sa famille, usurpées par le seigneur voisin, plus puissant et corrompu. Votre sens de l’honneur ne vous a pas permis de vous venger et vous louez votre maîtrise des combats aux plus offrants. Courtois et valeureux, vous êtes un cavalier émérite, efficace et consciencieux. Votre sincérité et votre diplomatie vous sont également utiles dans certaines situations."
+   },
+   {
+    "nom": "Bourgeois de Paris",
+    "ka": "Terre",
+    "description": "Située aux abords de la Seine, votre incarnation a très vite su s’ enrichir. À l’origine marchand ou artisan, vous avez rapidement mis en place des ateliers pour produire toujours plus. Habitant une riche demeure, jalousée des autres, vous avez su vous rendre indispensable dans votre quartier. Influent, à la tête d’un important réseau, vous savez rapidement à qui vous fier et confier les missions importantes. À l’aise avec l’argent, le marchandage et le négoce sont votre seconde nature."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les nouveaux mondes",
+  "epoque": "Les arcanes de la Renaissance",
+  "page": 88,
+  "date": "XVIe",
+  "lieux": "Florence - Pise - Milan - Venise",
+  "cout": 2,
+  "introduction": "Les nouveaux mondes n’auront jamais aussi bien porté leurs noms qu’à la Renaissance. Avancées et découvertes de tout ordre ont accompagné votre quotidien, car vous avez vécu dans le berceau de ce prodigieux mouvement : l’Italie. Redécouvrant son passé, l’Humanité a porté le regard non pas vers les dieux mais en elle-même. Placée au centre du monde, elle a cherché à en percer les derniers mystères. Des progrès scientifiques, des courants artistiques et des doctrines philosophiques immuables sont nés de ce questionnement. Grâce à cette effervescence humaniste, les Nephilim ont pu mener leurs projets occultes à travers la protection de mécènes ou en influençant plus directement leurs illustres contemporains. De précieux manuscrits ramenés par des érudits après la chute de Constantinople vous ont peut-être orienté vers la Cité des Vertiges, prémices à Arcadia ? À moins que vous ne soyez allés la chercher en bravant les océans pour atteindre les nouvelles frontières du monde connu ?",
+  "apports": [
+   "Les quêtes ésotériques : Cité des Vertiges 1 / Arcane XXI 2 / Arcadia 1",
+   "Quêtes d’Arcanes : Arcane II / Arcane VII / Arcane X",
+   "Arts occultes : Magie 2 / Kabbale 6 / Alchimie 2",
+   "Effets magiques : 1 sort, 1 invocation, 3 formules",
+   "Savoirs ésotériques : Mystères 1 / Arcanes Majeurs 1 / Bohémiens 2 / Rose+Croix 2 / Cousins 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Condottiere",
+    "ka": "Feu",
+    "description": "Votre incarnation a été un fameux condottiere, un chef d’une troupe de mercenaires. Vous et vos lames à louer avez parcouru les champs de bataille opposant les grandes familles italiennes, de Milan à Rome. Votre leadership ne vous a jamais fait défaut : vos hommes ont toujours été prêts à suivre vos stratégies, même les plus bravaches. Vous savez aussi pallier les crises avec flegme et une efficacité toute militaire, que ce soit dans votre intendance civile des bourgades occupées ou la gestion des finances de votre troupe. Les négociations et les échanges d’otage vous ont aussi enseigné les principes de la diplomatie."
+   },
+   {
+    "nom": "Maestro",
+    "ka": "Air",
+    "description": "Les formidables dons artistiques de votre incarnation vous ont valu le titre de « Maestro ». Génie touche-à-tout, vous avez été formé dans un atelier renommé de Florence. Votre dextérité transfigure chacune de vos œuvres que ce soit en sculpture, peinture ou musique. D’un seul coup d’œil, vous êtes capable de discerner les contours du « beau », de percevoir le détail important dans la masse brute. Votre sens des proportions révèle votre aptitude pour les mathématiques, de même que les mécanismes complexes que vous employez dans votre atelier pour le transport de vos œuvres. De nombreuses discussions en compagnie de mécènes vous ont permis de maîtriser l’étiquette."
+   },
+   {
+    "nom": "Explorateur",
+    "ka": "Eau",
+    "description": "Vous avez suivi les traces de Colomb, Vespucci et autres grands explorateurs de l’époque jusqu’au Nouveau Monde. Navigateur audacieux, vous avez commandé galions, caravelles et frégates plus modestes. Vous savez également braver les conditions de survie les plus extrêmes grâce à vos connaissances exhaustives en faune et en flore, même les plus exotiques. Armé de vos cartes et compas, les astres sont vos fidèles compagnons de route. Vous parlez aussi plusieurs langues et, lorsque les dialectes autochtones ne suffisent plus, vous vous débrouillez plutôt bien avec les pistolets."
+   },
+   {
+    "nom": "Évêque défroqué",
+    "ka": "Lune",
+    "description": "Hérésies et grandes réformes religieuses, vous ont poussé à abandonner l’état ecclésiastique pour vivre d’errance dans la rase-campagne de Milan. Vous vous êtes particulièrement intéressé aux sciences, vous attirant les foudres du clergé. La médecine et la chimie sont vos domaines de prédilection et vous n’hésitez pas à venir en aide aux plus démunis. En retour, ils vous considèrent comme une figure sainte et vous protègent comme un des leurs. Curieux et ouvert d’esprit, vous appréciez la lecture par-dessus tout : précis scientifiques, dialogues philosophiques et littérature en tout genre. Vous savez tirer les informations qu’il vous faut de n’importe quel ouvrage en quelques instants."
+   },
+   {
+    "nom": "Dame marchande",
+    "ka": "Terre",
+    "description": "Votre incarnation a appartenu à une riche famille marchande vénitienne. À votre aise dans les réceptions comme dans les salons de négoce, votre sens des affaires est redoutable : bien peu d’orateurs sont capables de s’ opposer à vos argumentaires commerciaux. Affable mais calculatrice, il est également très ardu de vous mentir. Cela fait de vous une adversaire coriace aux tables de jeu. On cherche souvent votre compagnie, même si les démarches sont loin d’être désintéressées. Pour assurer le bon fonctionnement de vos manufactures, vous avez dû apprendre à effectuer des démarches administratives en un temps record et tenir des discours galvanisants à vos employés."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les nouveaux mondes",
+  "epoque": "Les secrets de la Sublime Porte",
+  "page": 89,
+  "date": "XVIe",
+  "lieux": "Istanbul & empire turc",
+  "cout": 1,
+  "introduction": "En 1453, lors de la prise de Constantinople par les Turcs, débute une période faste pour les Nephilim dans ce vaste empire. Protégée par Soliman le magnifique, Istanbul connaît un véritable âge d’or et renoue alors avec son héritage occulte. Des Nephilim s’intéressent aux constructions magnifiques de Sinan et ses disciples. De puissants kabbalistes s’opposent aux Rose+Croix pour la domination de la Mosquée bleue. En plus d’être une hermétèque foisonnante, cette construction est une porte ouverte vers les Akasha. Dans le même temps, Soliman se lance dans une guerre d’usure contre les Templiers de Rhodes. Après leur reddition, le pillage de leur salle du trésor, contenant homoncules et armes d’orichalque, porte un coup fatal au Bâton. Peut-être avez-vous été de ceux qui ont traqué les derniers Templiers ? A moins que votre soif de sapience ne vous ait perdu dans les méandres de la ville, dans celle des Akasha ou dans Meborack, le monde de Kabbale ? Ou alors étiez-vous de ceux qui noyautaient le jeune pouvoir en place ?",
+  "apports": [
+   "Les quêtes ésotériques : Arche d’Alliance 2 / Jérusalem céleste 2",
+   "Quêtes d’Arcanes : Arcane VIII / Arcane IX",
+   "Arts occultes : Magie 1 / Kabbale 3",
+   "Effets magiques : 1 sort, 1 invocation",
+   "Savoirs ésotériques : Akasha 1 / Selenim 1 / Templiers 1 / Lune Noire 1 / Synarchie 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Bourreau",
+    "ka": "Feu",
+    "description": "Implacable et sans états d’âme, votre incarnation possède une haute estime de votre fonction. Votre fidélité et votre sens du devoir sont aussi froids et inflexibles que votre lame. Chaque exécution est pour vous une cérémonie sacrée, de la lecture de la sentence au nettoyage de l’épée dans l’eau claire de la fontaine. Votre frappe est précise, vous êtes aussi très observateur et savez lire avec froideur dans l’âme humaine. Vous avez également une bonne connaissance de l’anatomie humaine."
+   },
+   {
+    "nom": "Odalisque",
+    "ka": "Air",
+    "description": "Sous l’apparence d’une simple esclave du Sultan, vous avez su étendre votre influence bien au-delà du harem. Courtisane et manipulatrice, vous avez tissé une toile d’intrigue, sur laquelle vous aimez jouer avec les humains. En plus de vos talents en chant et en danse, votre intrigante beauté attire à vous les puissants comme les plus humbles. Maîtresse en séduction et en éloquence, vous savez tenir une discussion en flattant votre interlocuteur, sans qu’il ne s’ en aperçoive."
+   },
+   {
+    "nom": "Janissaire",
+    "ka": "Eau",
+    "description": "Soldat d’élite de l’empire Ottoman, votre incarnation est celle d’un combattant aguerri, maîtrisant plusieurs armes de corps à corps mais aussi à distance, comme les mousquets à poudre. Discipliné, obéissant aux ordres et habitué à combattre avec les autres, vous avez un sens aiguisé de la stratégie. Vos réflexes éclairs et vos sens aiguisés vous ont de nombreuses fois sauvé la vie. Capable de survivre pendant de longues campagnes militaires, votre instinct de survie est votre plus fidèle allié."
+   },
+   {
+    "nom": "Poète",
+    "ka": "Lune",
+    "description": "Gardien de la tradition orale turque, témoin de la puissance du sultanat, votre incarnation a toujours voulu laisser des traces de son passage dans l’histoire. Que ce soit à la cour du Sultan, sur les routes ou simplement sur la place des marchés, votre voix a toujours été envoûtante. Capable de faire passer des émotions, de susciter des agitations ou de les tempérer, vous êtes une personne sage et respectée. Excellent en calligraphie, vous êtes également capable de dessiner ce que votre parole ne peut décrire avec des mots."
+   },
+   {
+    "nom": "Vizir",
+    "ka": "Terre",
+    "description": "À la fois fonctionnaire, conseiller et ministre, votre incarnation a su se rendre indispensable auprès du pouvoir en place. Maîtrisant à la fois le droit, l’économie et la politique, vous êtes capable d’optimiser et de rentabiliser l’organisation d’une société. Vous arrivez logiquement à comprendre les dysfonctionnements matériels d’une organisation. Loin des intrigues de cours et des choses occultes, vous agissez directement et sans fard. Cette attitude vous attire le respect de tous et nombreux sont ceux qui viennent quémander vos conseils."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les nouveaux mondes",
+  "epoque": "La cour du Roi-Soleil",
+  "page": 90,
+  "date": "1650 – 1715",
+  "lieux": "Versailles",
+  "cout": 1,
+  "introduction": "Vous avez connu le règne lumineux du Roi-Soleil et son cœur éclatant : le palais de Versailles. Vous avez vu ce berceau de l’absolutisme rayonner sur l’Europe dans bien des domaines tels que l’architecture, la culture ou la diplomatie… La période n’était pourtant pas dépourvue d’ombres : sous le faste du palais, la crasse ; sous les bons mots des courtisans, les complots. Peut-être avez-vous servi le roi directement, comme personnalité éminente de la Cour ? Ou peut-être aviez-vous un rôle plus discret, mais tout aussi important, dans les bas-fonds de Paris ? Le monde occulte n’a pas échappé à la dualité de ce règne. Rejeté, conspué, publiquement honni par un Louis XIV désirant asseoir le droit divin de sa monarchie, l’occulte a néanmoins prospéré dans les alcôves du pouvoir, grâce à certains courtisans prêts à tout pour obtenir les faveurs du roi. L’Affaire des Poisons, par exemple, aura rudement secoué les sphères dorées de Versailles, tandis que les Nephilim manœuvraient en sous-main entre la noblesse et la populace. Déterminé à accroître votre sapience pour atteindre l’Agartha, vous avez peut-être profité des conflits militaires avec les Habsbourg ou du tracé des nouvelles voies commerciales entre la France et le Moyen-Orient pour parcourir l’Europe en quête de l’Atalante fugitive ainsi que de la mystérieuse Toison d’or.",
+  "apports": [
+   "Les quêtes ésotériques : Atalante fugitive 1 / Toison d’or 1",
+   "Quêtes d’Arcanes : Arcane XV / Arcane XVIII",
+   "Arts occultes : Alchimie 2",
+   "Effets magiques : 2 formules",
+   "Savoirs ésotériques : Sciences occultes 1 / Arcanes Majeurs 1 / Templiers 1 / Bohémiens 1 / Cousins 1 / 666 1 / Synarchie 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Mousquetaire",
+    "ka": "Feu",
+    "description": "Vous avez appartenu à la fameuse compagnie des mousquetaires. Gentilhomme au service du cardinal puis du roi, votre abnégation vous a permis de grimper les rangs avec panache. Athlétique, vous êtes aussi à l’aise à pied que sur une selle, aussi redoutable à l’épée qu’au mousquet ou au pistolet. Vous savez mener les hommes au combat et trouver les mots justes pour rallier les esprits. Assigné à la protection rapprochée de sa Majesté, vous avez acquis certaines techniques d’interrogation, moins glorieuses mais tout aussi efficaces, pour tirer les vers du nez des comploteurs arrêtés par vos hommes."
+   },
+   {
+    "nom": "Comédienne",
+    "ka": "Air",
+    "description": "Vous vous êtes incarné dans une comédienne de renom, dont la troupe a donné plusieurs représentations acclamées à Versailles. Hors de la scène, votre éloquence et votre charme vous ont ouvert bien des salons. Parfois même, des boudoirs. Votre talent au clavecin et votre voix d’ange sont capables de captiver les esprits les plus récalcitrants. Fine analyste de la nature humaine, vous savez lire les visages et les cœurs, tout en sachant voiler les vôtres grâce à vos dons d’actrice, pour mieux satisfaire votre hédonisme."
+   },
+   {
+    "nom": "Malandrin",
+    "ka": "Eau",
+    "description": "Votre incarnation passée n’a pas connu la radieuse cour de Versailles mais celle, bien plus obscure, des Miracles. Dans les bas-fonds de Paris, vous avez vécu de mauvais coups et d’expédients. Escroc notoire, vous savez déguiser votre apparence pour vous fondre dans la foule et maquiller vos traits pour attirer la sympathie ou générer le plus profond dégoût. Votre don pour l’argot s’ étend même aux langues étrangères. Vos poignards ont sectionné de nombreuses bourses pleines d’écus, et parfois pris des vies. Les bagarres vous ont endurci le corps comme le cœur : malgré les avanies, vous ne trahissez jamais votre « honneur des voleurs »."
+   },
+   {
+    "nom": "Confesseur",
+    "ka": "Lune",
+    "description": "Vous avez troqué le luxe tapageur de la Cour pour le noir sévère de l’Église. Figure d’autorité religieuse, vous avez indirectement aidé le Roi-Soleil et son gallicanisme, l’unification d’une France catholique indépendante de l’autorité du Pape. Jamais éloigné du siège réel du pouvoir, les confessions que vos pairs vous ont livrées vous ont permis de faire avancer votre agenda occulte en toute subtilité. Érudit reconnu, vos lectures philosophiques et votre sagesse manifeste vous ont toujours assuré le respect de la noblesse comme du baspeuple. Votre empathie n’a d’égal que votre ingéniosité."
+   },
+   {
+    "nom": "Jardinier",
+    "ka": "Terre",
+    "description": "Vous avez été au service d’André Le Nôtre, père des jardins à la française et courtisan émérite. Assigné à l’entretien des parterres de Versailles, vos connaissances en botanique sont aussi aiguisées que votre sens de l’esthétique. Humble et besogneux, vous avez su vous faire apprécier de vos pairs en prodiguant premiers soins et cataplasmes lors des fréquents accidents liés aux travaux de rénovation du palais. Certains nobles ont également profité de votre discrétion pour transmettre des missives à l’intention de rendez-vous galants au cœur des jardins. Vous avez été le meilleur des intermédiaires."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les nouveaux mondes",
+  "epoque": "Les conspirations de la Révolution",
+  "page": 91,
+  "date": "1770 – 1850",
+  "lieux": "Nouvelle-Angleterre - Paris - Venise",
+  "cout": 1,
+  "introduction": "Avec l’éclairage des idées des Lumières, les profanes se mettent à développer leurs propres complots. Si la Révolution est le temps de l’Homme, de nombreuses figures tentent d’en profiter pour déstabiliser leurs adversaires occultes. On assiste à l’émergence du Denier, qui est lui-même rapidement débordé par les événements et voit sa base voler en éclat. La chute de la monarchie porte un coup dur aux Templiers, qui y voient là la perte d’un de leurs alliés les plus anciens. Les Arcanes Majeurs observent, mi- amusés mi-perplexes, cette Révolution. Mais c’est surtout l’Europe entière qui tremble devant ce vent du changement, apportant son flot d’idées nouvelles, de découvertes scientifiques et de liberté de pensée. Votre esprit curieux a-t-il participé à l’expédition de Champollion où à la compilation du projet Encyclopédie ? Avez-vous harangué les foules, défendu des idées ou profité des bains de sang qui entachent la Révolution ?",
+  "apports": [
+   "Les quêtes ésotériques : Exode sidéral 1 / Table d’émeraude 1",
+   "Quêtes d’Arcanes : Arcane II / Arcane III / Arcane XVII",
+   "Arts occultes : Magie 1 / Alchimie 1",
+   "Effets magiques : 1 sort, 1 formule",
+   "Savoirs ésotériques : Sciences occultes 1 / Bohémiens 1 / Lune Noire 1 / Rose+Croix 1 / 666 1 / Synarchie 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Député",
+    "ka": "Feu",
+    "description": "Votre incarnation est celle de la Révolution. Vos discours sont enflammés et sans fin. Vous êtes capable de convaincre, d’argumenter, de réfuter pour défendre vos idées. D’un charisme naturel, vos prises de parole ont souvent mis à mal vos adversaires politiques. Passé maître dans la joute orale, vous respectez une sorte de code d’honneur et appréciez de vous battre à la loyale, idée contre idée. Mais vous avez dû apprendre à vivre discrètement et parfois à vous cacher pour ne pas être assassiné."
+   },
+   {
+    "nom": "Mathématicienne",
+    "ka": "Air",
+    "description": "Votre incarnation est née de l’esprit des Lumières. Active au sein des Académies des Sciences ou œuvrant seule dans le grenier de votre demeure, vous n’avez eu de cesse d’expérimenter, de démontrer et de réfuter théorèmes et théories. Vous appartenez à un réseau très étendu de savants et d’enseignants à travers toute l’Europe. Parlant le langage de l’arithmétique, de la géométrie et l’algèbre vous repoussez sans cesse les limites de cette nouvelle science, apportant un nouvel éclairage sur le monde."
+   },
+   {
+    "nom": "Voltigeur",
+    "ka": "Eau",
+    "description": "Membre de l’infanterie légère, votre compagnie de tirailleurs d’élite était envoyée en première ligne pour préparer la venue du bataillon. Votre incarnation s’ est faite connaître par sa maîtrise à l’arme à feu plus que par ses compétences de combat au corps à corps. Capable en un instant de faire feu, vous arrivez également à avoir une vision générale de la situation. Attentif et très bon observateur, vos sens sont toujours en alerte, vous savez également pister et analyser les traces laissées par vos ennemis."
+   },
+   {
+    "nom": "Conjuré",
+    "ka": "Lune",
+    "description": "Votre incarnation est passée maître dans l’art complot. A la tête d’un petit groupe, vous avez soufflé sur les braises des conflits, organisé des réseaux de sabotage et des réunions secrètes. Maîtrisant quelque peu la poudre, vous savez défendre à mains nues vos idées. Discret mais influent, vous êtes manipulateur et vous vous souciez peu des pertes engendrées par vos décisions. Votre sang-froid et votre sens tactique vous aident à échapper à ceux qui veulent vous faire taire."
+   },
+   {
+    "nom": "Fermier",
+    "ka": "Terre",
+    "description": "Votre incarnation sait utiliser les nombreuses ressources de la nature pour survivre elle et sa famille, même dans les périodes les plus difficiles. Sans vraiment savoir pourquoi, vous avez développé une connaissance intuitive de l’agriculture et de l’élevage. Conscient du cycle des saisons, capable de prévoir les changements du climat et les besoins des animaux, vous êtes à votre place en pleine nature. Grâce à cette empathie, rien ne vous échappe, le moindre détail artificiel vous apparaît clairement."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Les nouveaux mondes",
+  "epoque": "Les vapeurs victoriennes",
+  "page": 92,
+  "date": "1837 – 1901",
+  "lieux": "Londres & l’empire britannique",
+  "cout": 1,
+  "introduction": "Perdu sous le smog des cheminées d’usines et des locomotives, égaré dans la lumière diffuse des becs de gaz ou les volutes des fumoirs d’opium, vous avez vécu l’ère victorienne à la façon d’un dernier rêve vaporeux avant le Grand Réveil... L’empire britannique est le centre d’un monde en pleine révolution industrielle et Londres, son cœur erratique. Magnifique mais sordide, perverse mais prude, la capitale anglaise incarne tous les paradoxes et les transgressions de l’époque. Le romantisme est encensé, exacerbé, fustigé à l’humeur ; la nuit n’a jamais été aussi lumineuse qu’avec le gaz et l’électricité, mais l’âme humaine n’a jamais été plus sombre. Certains londoniens s’émerveillent au Crystal Palace de l’Exposition universelle pendant que d’autres s’éventrent dans le brouillard de White Chapel… Le monde occulte n’échappe pas non plus à la folie ambiante : l’égyptomanie contamine les soirées mondaines, le spiritisme devient le dernier hobby à la mode, les sociétés secrètes les plus grotesques et les plus menaçantes se multiplient… Parmi elles, l’Ordre Hermétique de l’Aube Dorée et son leader, Aleister Crowley, allaient rudement ébranler les Nephilim et cet univers qu’ils croyaient connaître. Avant que votre monde s’effondre, peutêtre avez-vous persévéré dans votre quête d’un sanctuaire digne d’accueillir le Graal ? À moins que vous ayez préféré vous tourner du côté de l’Hyperborée ?",
+  "apports": [
+   "Les quêtes ésotériques : Hyperborée 2 / Graal 2",
+   "Quêtes d’Arcanes : Arcane VI / Arcane VII",
+   "Arts occultes : Magie 1",
+   "Effets magiques : 1 sort",
+   "Savoirs ésotériques : Histoire invisible 1 / Akasha 1 / Selenim 1 / Sciences occultes 1 / Bohémiens 1 / Rose+Croix 2 / Cousins 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Explorateur",
+    "ka": "Feu",
+    "description": "Des rives du Gange aux sables d’Égypte, vous avez parcouru les régions les plus exotiques du globe en quête de fortune et de gloire. Tête brûlée, vous avez été renvoyé de l’armée de sa Majesté pour insubordination. Votre passé de soldat vous a au moins appris à manier les armes à feu, la baïonnette et à survivre en milieu difficile par vos propres moyens. À force de bourlinguer dans les ports et les tripots louches, vous parlez plusieurs langues. Suffisamment pour négocier avec l’autochtone, du moins. Malgré vos airs de baratineur, vos connaissances en histoire, géographie, archéologie et anthropologie n’ ont rien à envier aux meilleurs universitaires."
+   },
+   {
+    "nom": "Aliéniste",
+    "ka": "Air",
+    "description": "Votre incarnation a été un aliéniste réputé au Bethlem Royal Hospital de Londres. Chirurgien aguerri, vous croyez fermement aux techniques modernes pour soigner les esprits malades : drogues expérimentales, électrochocs, trépanations… Par conséquent, vos connaissances en médicine et physique-chimie dépassent largement celles des docteurs plus rétrogrades. Votre ouverture d’esprit vous vaut parfois l’inimitié de vos collègues, mais vous vous intéressez avant tout au bien-être de vos patients. Psychologue perspicace, Scotland Yard a souvent fait appel à vous pour participer aux interrogatoires de criminels déments ou autopsier leurs victimes."
+   },
+   {
+    "nom": "Inventeur",
+    "ka": "Eau",
+    "description": "Vous vous êtes incarné en la personne d’un fameux inventeur du « panthéon technologique anglais ». D’un intellect brillant, vous vous êtes passionné pour la mécanique et l’ingénierie. télégraphe, locomotive, électricité… Formé par les meilleurs professeurs de Cambridge, vos connaissances scientifiques sont impeccables, en particulier en mathématiques et physique-chimie. Rigoureux dans votre atelier, vous cultivez une image de dandy fantasque au sein de la haute société londonienne, dont vous connaissez les usages sur le bout des doigts pour mieux vous en moquer. Votre excentricité ne vous empêche pas d’être un orateur captivant et vos conférences font toujours salle comble."
+   },
+   {
+    "nom": "Écrivain maudit",
+    "ka": "Lune",
+    "description": "Figure emblématique du romantisme victorien, vous avez été un écrivain à l’existence tragique. D’un talent littéraire certain, votre prose a souvent été acclamée par les critiques. Mais vous avez à chaque fois perdu les gains de votre labeur sur les tables de jeu ou dans les mystérieux incidents qui émaillent votre existence. Grâce à votre physique avenant (quoique d’une pâleur phtisique), vous savez séduire d’une tirade. Vos amours se terminent cependant de façon dramatique, notamment dans des duels que vous avez le malheur de toujours remporter par votre habileté au fleuret et au pistolet… Noyer vos tourments dans le laudanum a ouvert votre esprit au spirituel."
+   },
+   {
+    "nom": "Ouvrier syndicaliste",
+    "ka": "Terre",
+    "description": "Votre incarnation a été un syndicaliste zélé de la banlieue industrielle de Liverpool. Dévoué à la cause anarcho-communiste, vous organisez des grèves et des manifestations pour les droits du prolétariat anglais. Grande gueule et visionnaire, vous êtes un pilier charismatique de ce mouvement. Ouvrier plus instruit que la moyenne, vos discours politiques, économiques et philosophique déplacent les foules. Les affrontements musclés avec la police ont développé vos talents naturels pour la castagne et votre habileté à lancer des explosifs… Vous avez été considéré par vos camarades comme un leader visionnaire et digne d’éloges."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Le grand réveil",
+  "epoque": "La Sécession viennoise",
+  "page": 94,
+  "date": "1890 – 1910",
+  "lieux": "Munich - Vienne",
+  "cout": 1,
+  "introduction": "Ce vaste courant artistique qui s’épanouit en Autriche à la fin du xxe siècle a favorisé l’émergence de nombreux projets occultes. Les recherches picturales et psychanalytiques, guidées par l’Arcane de l’Impératrice, laissent libre cours au Ka-Soleil des humains. Ces adoptés tentent alors de déchiffrer les œuvres de Klimt et de ses pairs et d’y déceler un message occulte. Certaines recherches architecturales sont les premières bases de ce qui allait devenir Arcadia : des bâtiments aux courbes complexes, dissimulés par les champs magiques. Tirées des vestiges de Carthage, les Portes Noires furent amenées à Vienne pour être étudiées sous un prisme solaire. Avez-vous exploré l’inconscient des humains, dans l’espoir de com prendre le lien qu’il entretient avec les Akasha ? Vous êtes-vous perdu dans Vienne guidé par son architecture magique ? Ou avez-vous tendu la main aux Selenim, en étudiant les Portes Noires pour leur permettre d’atteindre l’Agartha à vos côtés ?",
+  "apports": [
+   "Les quêtes ésotériques : Porte Noire 1 / Arcadia 1",
+   "Quêtes d’Arcanes : Arcane III / Arcane XIII / Arcane XX",
+   "Arts occultes : Magie 1 / Kabbale 3",
+   "Effets magiques : 1 sort, 2 invocations",
+   "Savoirs ésotériques : Champs magiques 1 / Mystères 1 / Histoire invisible 1 / Akasha 1 / Selenim 1 / Sciences occultes 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Artiste",
+    "ka": "Feu",
+    "description": "Votre incarnation s’ est plongée corps et Pentacle dans l’émulsion picturale portée par les figures emblématiques comme Klimt. Votre talent s’ exprime de multiples façons et vous êtes capable d’utiliser de nombreux support pour le sublimer. Vous avez une bonne conscience des symboles, des allégories et des représentations artistiques de l’esprit. Vous êtes capable de susciter une large palette d’émotions à l’aide de vos œuvres. Sans être un mondain, vous avez l’habitude de vivre dans la bonne société, sans commettre d’impairs."
+   },
+   {
+    "nom": "Psychanalyste",
+    "ka": "Air",
+    "description": "Votre incarnation s’ est passionnée pour cartographier la psyché humaine, découvrant par là-même une nouvelle facette du Ka-Soleil. Vous êtes un observateur patient et organisé de ceux qui vous entourent, essayant de comprendre les motivations de chacun. Le moindre détail, la moindre hésitation est pour vous la manifestation d’une émotion dissimulée, d’un désir refoulé ou d’un acte avorté. Mais vous êtes également un manipulateur, capable de toucher la corde sensible de votre interlocuteur pour le faire plier à votre envie."
+   },
+   {
+    "nom": "Anarchiste",
+    "ka": "Eau",
+    "description": "Votre incarnation est adepte du mouvement, elle est persuadée que tout doit être détruit pour ensuite être mieux reconstruit. Vous n’avez eu de cesse de parler aux gens de vos idées avec une énergie rare, faisant de vous un orateur populaire connu et reconnu. Capable de tout, même de mettre votre vie en danger pour un coup d’éclat, ou un attentat, rien ne vous faire peur. Vous avez même les connaissances suffisantes pour saboter tout ce qui peut vous permettre vous faire entendre."
+   },
+   {
+    "nom": "Théosophe",
+    "ka": "Lune",
+    "description": "Votre incarnation a noué de nombreux contacts internationaux au sein de la société théosophique. Sa devise est : « il n’y pas de religion supérieure à la vérité ». Vous savez débattre et philosopher avec grand talent et vos connaissances en spiritualité vous ont aidé à comprendre la fonction des sociétés humaines, notamment l’hindouisme. Habitué des cercles mondains, vos bonnes manières et votre art de la conversation charment à coup sûr votre auditoire."
+   },
+   {
+    "nom": "Aristocrate rentière",
+    "ka": "Terre",
+    "description": "Votre incarnation a su gérer une fortune transmise de longue date dans sa famille. Avec un sens inné pour l’investissement, vous avez su faire fructifier cet argent, bien au-delà du raisonnable. Influente au conseil d’administration de votre banque, avide des révélations de vos amis ambassadeurs, vous avez le chic pour placer votre argent au bon moment, toujours avec un coup d’avance. Derrière vos bonnes manières et vos frasques, vous avez dissimulé aux yeux des hommes votre véritable personnalité.",
+    "errata": "V1.3, p. 94"
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Le grand réveil",
+  "epoque": "Les Années folles",
+  "page": 95,
+  "date": "1918 – 1930",
+  "lieux": "Paris - Berlin - New York",
+  "cout": 1,
+  "introduction": "Pour oublier les horreurs de la Grande Guerre, la France a plongé tout entière dans l’euphorie des années folles. Sans même attendre la fin du conflit, le beau monde de Paris s’inspire des divertissements venus droit de New York, et vice-versa : le jazz s’invite dans les revues, les comédies musicales enflamment les cabarets, certains grands écrivains américains investissent les cafés parisiens, la mode « à la garçonne » devient le style « flap per » en traversant l’atlantique... Porté par une croissance dorée, un vent d’optimisme souffle sur le globe. Les femmes s’émancipent et la technologie s’invite dans les foyers : radio, automobile, électroménager… Vous avez connu cette période d’insouciance jusqu’à son réveil brutal, lors du crash économique de 1929. Aidées par les progrès philosophiques et technologiques, les recherches occultes s’intensifient dans l’entre-deux guerres. Peut-être avez-vous participé aux débats animés entre intellectuels Nephilim sur l’immanente Cité des Vertiges, au sein d’un atelier d’artistes parisien ? À moins que vous n’ayez préféré suivre les préceptes de Salomon ? Et cherché des financements à New York pour monter une expédition en quête de l’Arche d’Alliance ?",
+  "apports": [
+   "Les quêtes ésotériques : Cité des Vertiges 1 / Arche d’Alliance 2",
+   "Quêtes d’Arcanes : Arcane IV / Arcane VII",
+   "Arts occultes : Magie 1 / Kabbale 3",
+   "Effets magiques : 1 sort, 1 invocation",
+   "Savoirs ésotériques : Histoire invisible 1 / Selenim 1 / Lune Noire 1 / Cousins 1 / Synarchie 1 / Révélation 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Aventurier casse-cou",
+    "ka": "Feu",
+    "description": "Homme d’action et de bagout, vous avez utilisé votre héritage familial pour embrasser une carrière d’aventurier. Vos expéditions vous ont conduit des jungles du Panama jusqu’aux confins de l’Indochine française, en passant par les sables de l’Égypte. Lors de ces périples, vos connaissances en ethnologie et en archéologie ont autant été mises à contribution que vos aptitudes de survie. Quand votre charme canaille ne suffit plus, vous savez faire parler vos poings ou vos colts. Sur terre ou en mer, vous êtes également un pilote confirmé. Excaver des ruines ou des diamants vous a également appris à manier des bâtons de dynamite et autres explosifs."
+   },
+   {
+    "nom": "Jazzman",
+    "ka": "Air",
+    "description": "Votre incarnation a été un humble mais talentueux jazzman. Swinguant de New York à Paris, vous avez déchaîné les passions dans les night-clubs et animé les cafés les plus branchés grâce à vos dons musicaux. Oiseau de nuit, vous connaissez les usages de la pègre à force de fréquenter les bars louches et les tauliers peu scrupuleux. L’habitude de la scène vous a donné le sens de l’improvisation et une capacité certaine à garder les idées froides en toutes circonstances. Votre dextérité assure le succès de vos représentations, mais en période de vaches maigres, vous utilisez vos doigts agiles pour bricoler."
+   },
+   {
+    "nom": "Aviatrice",
+    "ka": "Eau",
+    "description": "Inspirée par les exploits des grandes dames des airs telles qu’ Adrienne Bolland ou Amelia Earhart, votre incarnation a été une intrépide aviatrice. Pilote accomplie, vous êtes capable de conduire n’importe quel véhicule à moteur : planeur, dirigeable, voiture, moto, hélicoptère… Vos vols en solitaire vous ont appris à vous débrouiller avec les incidents mécaniques comme le meilleur des mécanos. Et lorsque que cela n’ est pas suffisant, les sauts en parachute ne vous sont pas étrangers... Face à un monde encore trop masculin, vous avez pris les devants et vous voilà rompue à la pratique des arts martiaux, de l’escrime et du tir. Enfin, vous savez vous orienter aux étoiles et vos connaissances géographiques sont hors pairs."
+   },
+   {
+    "nom": "Écrivain fêtard",
+    "ka": "Lune",
+    "description": "Vous vous êtes incarné dans un jeune intellectuel parisien, arraché à la vie étudiante par la Grande Guerre. Survivant désabusé, vous avez pris la plume après votre retour. Vos souvenirs dans l’alcool et les narcotiques. Pour vous en procurer, vous connaissez d’ailleurs les endroits et les personnes les moins recommandables. Face aux regards extérieurs, vous maintenez une façade festive et vous savez voiler vos véritables intentions. On peut constamment vous trouver dans les cafés les plus populaires et les soirées branchées. Même si vous n’avez jamais osé retoucher à une arme à feu, vous êtes capable de manier une mitraillette avec autant de brio que votre machine à écrire."
+   },
+   {
+    "nom": "Banquière",
+    "ka": "Terre",
+    "description": "Avant le crash boursier de 1929, votre incarnation a pratiqué la profession lucrative de banquière à New York. Vos talents bureaucratiques et vos connaissances extensives en droit et en économie font de vous l’une des dix meilleures conseillères financières de Manhattan. Beaucoup d’entreprises, de familles fortunées viennent payer cher vos avis éclairés sur leurs investissements. Très obser-vatrice, votre instinct pour les affaires repose sur un intellect aiguisé. Il vous permet de remarquer dans les conversations ou les documents, même les plus anodins, des détails que d’autres survoleraient et dont vous savez tirer profit."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Le grand réveil",
+  "epoque": "Les Années noires",
+  "page": 96,
+  "date": "1933 – 1945",
+  "lieux": "Berlin - Lyon - L’Europe en guerre",
+  "cout": 1,
+  "introduction": "Alors que l’Europe est encore secouée par les remous de la crise, une nouvelle tourmente allait la frapper de plein fouet. Profitant de circons tances politiques troubles, Hitler entame en Allemagne son ascension vers le pouvoir absolu. Une fois le Führer parvenu à ses fins, le Troisième Reich déferle sur une Europe prise de court. Bien des pays tombent face à la blitzkrieg jusqu’à ce que les forces Alliées soient enfin prêtes à contre-attaquer. Longue et meurtrière, cette guerre totale laissera le monde exsangue entrer immédiatement dans l’affrontement Est-Ouest. À l’ombre du conflit armé, une course occulte oppose l’Axe et les Alliés sur bien des enjeux ésotériques : les Nephilim doivent choisir leur camp. Peut-être avez-vous infiltré les laboratoires secrets des nazis pour saboter leurs recherches de l’Arche d’Alliance ? À moins que vous ayez profité du front africain pour pousser plus avant votre quête du Rex Mundi en suivant les traces d’Akhenaton, le pharaon solaire ? Il est également possible que vous ayez négocié avec les occultistes de la W ehrmacht pour retrouver ensemble le trésor disparu des Templiers ou au contraire lutté de toute votre force contre la folie hitlérienne dont les élites occultes antisémites pourchassèrent les Nephilim parce qu’ils les voyaient comme engendrés par la Bible.",
+  "apports": [
+   "Les quêtes ésotériques : Rex Mundi 1 / Graal 1 / Trésor des Templiers 1",
+   "Quêtes d’Arcanes : Arcane XVI",
+   "Arts occultes : Magie 1 / Kabbale 3",
+   "Effets magiques : 1 sort, 3 invocations",
+   "Savoirs ésotériques : Sciences occultes 1 / Templiers 1 / 666 1 / Synarchie 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Résistante",
+    "ka": "Feu",
+    "description": "Vous vous êtes incarnée sous les traits d’une courageuse résistante française. Après avoir vu votre famille arrêtée par la Gestapo et vos amis fusillés, vous n’avez pas hésité à rejoindre le maquis. Formée sur le terrain, vous visez juste avec n’importe quelle arme à feu. Quand vous n’avez pas une mitraillette entre les mains, vous savez aussi piloter les motos et les automobiles. Les attentats contre les voies ferrées vous ont appris à fabriquer et manier les explosifs. Pour éviter les raids allemands, vous connaissez le camouflage et comment survivre à la rude. Née de votre patriotisme, votre détermination est inébranlable : vous ne cèderez jamais à l’intimidation ou la torture."
+   },
+   {
+    "nom": "Espion",
+    "ka": "Air",
+    "description": "Sous couverture diplomatique suisse, vous avez travaillé comme espion pour le compte des Alliés. Parcourant l’Europe en guerre, vous avez collecté des informations capitales pour les services du renseignement. Fin psychologue, diplomate aux bonnes manières, élégant et beau parleur, votre tact incite vos cibles à vous livrer leurs secrets sans même s’ en rendre compte. Assumant parfois de fausses identités, vous parlez plusieurs langues et vous savez vous intégrer à votre milieu comme le meilleur des acteurs. Lorsque la situation l’exige, votre pratique des arts martiaux et du tir ne vous font jamais défaut. Vous êtes également un bon pickpocket, doué pour le crochetage."
+   },
+   {
+    "nom": "Physicien nucléaire",
+    "ka": "Eau",
+    "description": "Scientifique autrichien, vous avez participé à la course au nucléaire dans le cadre du Uranprojekt, l’équivalent allemand du Manhattan Project. D’un intellect exceptionnel, vos connaissances en physique, chimie et mathématiques vous ont permis de concevoir avec votre équipe plusieurs piles atomiques expérimentales. Par votre travail acharné, vous cachez cependant à vos collègues votre désaveu de l’idéologie nazie que vous jugez bien peu scientifique. Votre passion pour l’architecture et la musique vous permettent de trouver un réconfort précaire dans ce quotidien en demiteinte."
+   },
+   {
+    "nom": "Propagandiste",
+    "ka": "Lune",
+    "description": "Fonctionnaire berlinois haut gradé, vous avez travaillé pour le ministère du Reich à l’Éducation du Peuple et à la Propagande. Vous avez été un spécialiste de la psychologie des foules et un pionnier dans le marketing. Spécialisé dans les photographies de guerre, vous avez aussi participé à la réalisation de plusieurs films d’État. Votre travail derrière l’objectif ou la caméra vous a donné un « œil » tout particulier pour percevoir les détails d’importance. Les différents fronts couverts vous ont permis d’acquérir de solides connaissances en géographie. Orateur né, vous êtes capable d’exprimer vos idées avec clarté et de convaincre les comités avec la même efficacité que les foules."
+   },
+   {
+    "nom": "Officier",
+    "ka": "Terre",
+    "description": "Militaire de carrière dans l’armée de terre britannique, vous avez participé à la guerre au grade de capitaine puis de major. Vous avez reçu un entraînement des plus rigoureux : escalade, natation, arts martiaux, armes de poing, explosifs, conduite de véhicules à deux ou quatre roues… Discipliné et méthodique, vous savez garder la tête froide dans les conditions les plus difficiles. Promu pour votre leadership et votre sens stratégique, vous avez mené votre régiment à de nombreux succès pendant les campagnes d’Afrique de l’Est et du Moyen-Orient. Vos hommes sont prêts à mourir pour vous et vous pour eux."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Le grand réveil",
+  "epoque": "L’Éveil",
+  "page": 97,
+  "date": "1992 – 1998",
+  "lieux": "France",
+  "cout": 2,
+  "introduction": "Les raisons de l’Éveil sont encore obscures. Pour préparer les Guerres de l’Apocalypse à venir ? À cause de la fin d’un cycle astrologique ? Toujours est-il que le réveil des Déchus a provoqué une renaissance de la société Nephilim. Les Arcanes Majeurs ont renforcé leurs rangs, préparant sans le savoir le Grand Conclave à venir et la Révélation d’Akhenaton sur l’origine céleste des Kaïm. Parallèlement, les Arcanes Mineurs y voyaient aussi là l’occasion de faire triompher leurs idéaux. L’apparition des Ar-Kaïm laissa perplexe tout l’échiquier occulte. Les complots du 666 firent voler en éclat le Grand Plan templier, avant de se dissoudre lui-même. Tous ont compris que l’Éveil n’était qu’une prémisse et que tout va se jouer maintenant. Étiez-vous l’un de ceux qui attendait avec impatience le retour de Pharaon pour entendre sa Révélation ? Avez-vous lutté contre les plans d’un Arcane Mineur visant à profiter de l’Éveil pour son propre compte ?",
+  "apports": [
+   "Les quêtes ésotériques : Atalante fugitive 1/ Arcane XXI 2 / Trésor des Templiers 2",
+   "Quêtes d’Arcanes : un Arcane au choix 2",
+   "Arts occultes : Magie 3 / Kabbale 9 / Alchimie 3",
+   "Effets magiques : 1 sort, 1 invocation, 1 formule",
+   "Savoirs ésotériques : Orichalque 1 / Mystères 1 / Selenim 1 / Arcanes Majeurs 2 / Templiers 2 / Bohémiens 1 / Lune Noire 1 / Rose+Croix 1 / Cousins 2 / Synarchie 1"
+  ],
+  "vecus": [
+   {
+    "nom": "Policière",
+    "ka": "Feu",
+    "description": "Par conviction et patriotisme, vous avez embrassé une carrière dans la police nationale française. Tout juste sortie de l’école nationale, vous avez étudié principalement du droit civil et pénal, ainsi que toutes les tâches administratives internes d’un commissariat. L’entraînement vous a également formée à l’utilisation d’armes à feu de petits calibres, ainsi qu’à des techniques d’arts martiaux et de self-défense. Vous êtes capable de conduire voitures et motos de patrouille. Travailleuse dévouée, vous avez l’ambition de devenir inspectrice pour mettre à profit votre sens de l’observation et votre vigilance.",
+    "errata": "V1.3, p. 97–98"
+   },
+   {
+    "nom": "Journaliste",
+    "ka": "Air",
+    "description": "Votre incarnation a été une fameuse journaliste canadienne. Spécialisée dans les reportages de guerre, votre connaissance en histoire, économie et géopolitique sont impeccables. Vous parlez plusieurs langues et lorsque votre carte de presse ne suffit pas, votre charme et votre bagout vous permettent de négocier vos entrées dans les zones « chaudes » du globe. Habituée des conflits, vous êtes capable de piloter les jeeps et les hélicoptères dans des conditions difficiles, mais vous préférez votre caméra ou votre appareil photo aux armes à feu. Considérée comme une des dernières voix intègres dans un monde médiatique de plus en plus corrompu, des milliers de lecteurs suivent vos articles en ligne ou papier avec assiduité.",
+    "errata": "V1.3, p. 97–98"
+   },
+   {
+    "nom": "Sportif professionnel",
+    "ka": "Eau",
+    "description": "Votre physique et votre mental ont permis à votre Incarnation de se hisser parmi les meilleurs de son sport. Vous connaissez votre corps et ses limites à l’extrême et pouvez en tirer le maximum. Vous êtes capable de juger d’un coup d’œil vos adversaires et d’en discerner les points faibles. Vous savez également gérer votre notoriété et en tirer profit pendant qu’il est encore temps."
+   },
+   {
+    "nom": "DJ",
+    "ka": "Lune",
+    "description": "Votre incarnation est passée maître dans l’art de faire danser les foules. Très attentif aux autres, vous savez comment les toucher et les faire vibrer. Votre oreille musicale vous permet de composer et d’improviser avec n’importe quel son. Vous êtes également très physionomiste et à l’aise au milieu des humains. Là, rien ne vous échappe, vous avez une compréhension intuitive des foules et êtes capable de détecter rapidement des anomalies ou des intrus."
+   },
+   {
+    "nom": "Médecin urgentiste",
+    "ka": "Terre",
+    "description": "Parcourant le monde pour aider les autres, votre incarnation a toujours été altruiste. Très doué en médecine pratique, capable d’intervenir et d’opérer avec les moyens du bord, vous avez sauvé de milliers de vie. Vous avez également une bonne connaissance des maladies, des virus et des drogues. Très empathique, vous êtes capable de comprendre rapidement les besoins de vos patients. Habitué à gérer le stress, vous savez garder votre sang-froid et prioriser vos actions."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ },
+ {
+  "ere": "Le grand réveil",
+  "epoque": "Les Chroniques de l’Apocalypse",
+  "page": 98,
+  "date": "1999 – 2012",
+  "lieux": "France - Monde",
+  "cout": 2,
+  "introduction": "À la fin du xx e siècle, les événements occultes se précipitent. Initié des millénaires plus tôt, le Grand Réveil se réalise : le Conclave Majeur de l’an 2000, à Saint-Pétersbourg, marque le retour triomphal d’Akhenaton. Chaos et crises successives ont précédé le Conclave ; l’Apocalypse lui succède. Pour les Nephilim, les révélations d’Akhenaton sur la nature profonde des Immortels conduisent à une perte de repères et un profond désœuvrement. Pourtant le monde occulte n’a jamais été aussi illimité, aussi effervescent. Tous les Arcanes, Majeurs et Mineurs, se restructurent et revoient leurs objectifs à l’aube de ce changement de paradigme. Les anciennes alliances se défont, des pactes sont reforgés : de vieux ennemis deviennent de nouveaux camarades tandis que d’autres, à l’instar des Sauriens, ressurgissent des entrailles du temps. Le monde profane connaît lui aussi des bouleversements majeurs : crises politiques et financières, bouleversements écologiques et bonds technologiques… Face aux menaces humaines ou élémentaires, les Immortels tels que vous sont précipités dans différentes guerres qui déchirent ce début du xxi e siècle. Cependant, le pessimisme ne s’impose pas forcément à ce nouvel âge et ses remises en question : peut-être avez-vous trouvé votre salut spirituel dans l’Exode sidéral, ambitieux projet d’un voyage vers les étoiles pour en revenir à vos origines ? À moins que les révélations du Rex Mundi lors du Conclave Majeur ne vous aient lancé sur les traces des Cavaliers de l’Apocalypse ?",
+  "apports": [
+   "Les quêtes ésotériques : Rex Mundi 2 / Exode sidéral 2",
+   "Quêtes d’Arcanes : Un Arcane au choix 1",
+   "Arts occultes : Magie 3 / Kabbale 9 / Alchimie 3",
+   "Effets magiques : 1 sort, 1 invocation, 1 formule",
+   "Savoirs ésotériques : Templiers 2 / Lune Noire 1 / Rose+Croix 2 / 666 1 / Synarchie 2 / Révélation 2 / Ar-Kaïm 2"
+  ],
+  "vecus": [
+   {
+    "nom": "Publicitaire",
+    "ka": "Feu",
+    "description": "Votre incarnation a une très bonne connaissance de la psychologie humaine, de ses envies et de ses besoins. Très doué en graphisme, en informatique et en capture d’image, vous maîtrisez à la perfection le merchandising sensoriel. À l’aise avec les réseaux sociaux, vous savez également où trouver les informations utiles et futiles qui font vibrer le monde profane. Vous êtes également à votre place dans les soirées événementielles.",
+    "errata": "V1.3, p. 97–98"
+   },
+   {
+    "nom": "Prof",
+    "ka": "Air",
+    "description": "Le savoir a toujours été une chose importante pour votre incarnation. L’époque est pleine de fake news et le savoir acquis trop facilement est souvent vérolé. Très pédagogue, vous mettez en place de nouvelles méthodes d’apprentissage, utilisant les ressources du net, apprenant à vos élèves à en extraire “la substantifique moelle”. Vous possédez une connaissance étendue de votre domaine de prédilection, qui vous a toujours passionné.",
+    "errata": "V1.3, p. 97–98"
+   },
+   {
+    "nom": "Informaticien",
+    "ka": "Eau",
+    "description": "Employé discret et sans histoire, vous travaillez comme informaticien pour un conglomérat financier basé à New York. Ingénieur de formation, votre intellect brillant vous a toujours permis d’exceller en sciences dures, particulièrement en mathématiques et électronique. Derrière votre quotidien tranquille, vous dissimulez cependant une identité de hacker. Lanceur d’alertes, vous êtes spécialisé dans les fuites corporatistes et la recherche d’informations compromettantes sur les réseaux internes d’entreprises. Votre présence sur le « deep web » vous a amené à rencontrer des personnages peu recommandables et à mieux comprendre les usages en vigueur chez les criminels."
+   },
+   {
+    "nom": "Étudiant",
+    "ka": "Lune",
+    "description": "Jeune étudiant japonais en année d’échange, vous suivez un cursus à la faculté d’histoire de l’université de Saint-Pétersbourg. Passionné par la littérature russe, vous connaissez également tous les classiques asiatiques et européens contemporains. Lorsque vous n’ êtes pas en cours, on peut vous trouver sur le campus à profiter des installations sportives, notamment les murs d’escalade et les pistes d’escrime. Musicien talentueux, vous jouez aussi de la contrebasse dans un groupe « d’acid jazz ». Vos amis vous considèrent comme un personnage attachant, quoi qu’un peu excentrique, et se confient volontiers à vous."
+   },
+   {
+    "nom": "Militant écolo",
+    "ka": "Terre",
+    "description": "Vous vous êtes incarné sous les traits d’un militant écologiste norvégien. Votre diplôme de biologie en poche, vous avez commencé en bas de l’échelle de votre parti, à coller des affiches et distribuer des tracts. Votre ambition et votre talent politique vous ont cependant mené vers de plus hautes sphères. Grâce à votre charisme naturel, les autres militants vous envisagent même comme le candidat le plus crédible pour de futures élections. Créatif, vous êtes doué pour trouver les meilleurs plans médiatiques et rallier les réseaux sociaux à votre cause. Bien que vous ne participiez plus aussi souvent aux actions sur le terrain, elles vous ont appris à encaisser – et parfois rendre – les coups des forces de l’ordre."
+   }
+  ],
+  "controle": {
+   "noms": 5,
+   "colonnes": 5
+  }
+ }
+]

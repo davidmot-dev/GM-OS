@@ -1,37 +1,49 @@
-# Les Vécus de Nephilim — extraction depuis le carnet NotebookLM
+# Les Vécus de Nephilim — extraction depuis le livre
 
 Ouvert le 2026-10-17 (chantier : `documentation/Planning/2026-10-17-chantier-nephilim.md`).
-Source : *Nephilim5 — Livre 0 — Quintessence*, chapitre « Les époques d'incarnation », p. 61 à
-99 : **7 ères, 20 époques, 5 Vécus par époque** (un par Ka-élément), soit 100 Vécus.
+Source : *Nephilim5 — Livre 0 — Quintessence*, chapitre « Les époques d'incarnation », p. 62 à
+98 : **7 ères, 31 époques, 5 Vécus par époque** (un par Ka-élément), soit 155 Vécus, corrigés par
+l'errata officiel V1.3.
 
 ## Contenu
 
-- `extraire_vecus.py` — interroge le carnet « Nephilim »
-  (`9389872e-c46b-4cf1-bd6c-18bfccae13b8`) époque par époque et range chaque réponse brute
-  dans `bruts/NN.json`. **Il saute les fichiers déjà présents.**
-- `bruts/` — les réponses du carnet, en JSON demandé (nom, Ka, description, page).
+- `extraire_du_livre.py <quintessence.pdf>` — lit le PDF du livre (pypdf, et `pdftotext -layout`
+  pour les noms) et écrit `livre/epoques.json` : titre, ère, page, date, lieux, coût en PI,
+  introduction, apports, et les cinq Vécus. Applique l'errata V1.3 (p. 94, 97–98) et signale
+  l'erreur du livre sur le Druide (p. 70). Le PDF et l'errata sont chez David :
+  `Z:\Jeux de Rôle\02. Contemporain\2. Ambiance\Nephilim\Nephilim 5\`.
+- `ecrire_vecus.py` — met `livre/epoques.json` en forme dans `docs/systems/nephilim/vecus/` : un
+  Markdown par époque (2 600 à 4 000 caractères), `index.json` (les Vécus), `epoques.json` et
+  `epoques.md` (les époques). **Remplace** les Markdown d'époque existants.
+- `extraire_vecus.py`, `bruts/`, `hors-sujet/`, `catalogue-des-epoques.json` — la première
+  extraction, par le carnet NotebookLM (17/10). **Ne servent plus** : le carnet donnait vingt
+  époques dont quatre inventées (Salomon, Syracuse, Al-Andalus, l'An Mil) et des titres approchés.
 - `etendre_fiche_nephilim.py` — l'extension de la fiche GM-OS du pilote aux pages 3 à 7 de la
   fiche HTML (servie le 17/10 ; gardée pour une prochaine régénération).
 - `relier_vecus.py` — relie les noms des Vécus à `vecus/index.json` (liste selon les
   incarnations) et les huit époques d'incarnation à `vecus/epoques.json`.
 - `ranger_incarnations.py` — place la section « Incarnations » juste avant « Les Vécus » :
   on lit l'époque avant le Vécu qui en vient (18/10). Sans effet si c'est déjà fait.
+- `sections_des_arts.py` — découpe « Sciences occultes » en trois sections d'Arts (Magie, Kabbale,
+  Alchimie) que le menu « Vécu ou Art occulte » propose en sous-groupes, et une section des voies,
+  en texte, hors du menu. Les clés ne bougent pas (18/10). Refuse si c'est déjà fait.
+- `suites_des_critiques.py` — pose `jet.suitesDesCritiques` : +1 Khaïba sur une maladresse
+  d'Art occulte, +1 Ombre sur le Vécu contemporain, +1 Sapience sur un critique de Science
+  occulte, proposés d'un bouton au panneau de jet (18/10). À passer après `sections_des_arts.py` ;
+  le repasser remplace les suites.
 
-## État au 17/10, 22 h 50 — terminé, sauf quatre époques
+## État au 18/10 — complet
 
-- **80 Vécus, 16 époques**, écrits par `ecrire_vecus.py` dans `docs/systems/nephilim/vecus/` :
-  un Markdown par époque (2 600 à 4 000 caractères) et `index.json` (nom, Ka, ère, époque, page,
-  fichier). Chaque époque est vérifiée : cinq Vécus, un par Ka-élément.
-- **4 époques absentes des sources du carnet** — il le dit lui-même, sans rien inventer :
-  *Le règne de Salomon* (p. 77), *La Syracuse des philosophes* (p. 79), *Al-Andalus* (p. 89),
-  *L'An Mil* (p. 91). Elles figurent dans `index.json` sous `epoquesManquantes`.
-- `hors-sujet/` garde les réponses où le carnet a décrit des lieux au lieu des Vécus (redemandées).
+- **155 Vécus, 31 époques**, extraits du livre. Contrôle : les 80 Vécus de la première extraction
+  ont gardé leur nom et leur Ka ; trois descriptions du carnet étaient fausses (Marchand romain,
+  Voltigeur, Druide).
+- **Titres renommés** par rapport au 17/10 (une incarnation déjà saisie sous l'ancien nom est à
+  choisir de nouveau) : *Les premières pierres dressées* → *Le premier peuple* ; *La Mésopotamie
+  des prédictions* → *L'empire magique des Perses* ; *L'empire de Carthage* → *L'empire lunaire de
+  Carthage* ; *L'empire de Rome* → *L'empire profane de Rome*. Accents et apostrophes ne comptent
+  pas (`cleDuNom`).
 
-## Compléter les quatre époques manquantes
-
-Le carnet n'a pas ces pages. Il faut leur texte — le PDF, ou une saisie — puis un fichier
-`bruts/NN.json` de la même forme que les autres (`reponse` contenant le JSON des cinq Vécus), et :
-
-```
+```sh
+python -I -X utf8 outils/nephilim-vecus/extraire_du_livre.py "<chemin du PDF>"
 python -I -X utf8 outils/nephilim-vecus/ecrire_vecus.py
 ```

@@ -1,15 +1,16 @@
 {
  "referentiel": "Époques d’incarnation",
- "source": "Nephilim5 — Livre 0 — Quintessence, chapitre « Les époques d’incarnation », p. 61 à 99",
- "extrait": "2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre",
+ "source": "Nephilim5 — Livre 0 — Quintessence, chapitre « Les époques d’incarnation », p. 62 à 98",
+ "extrait": "2026-10-18, texte du PDF du livre (pypdf et pdftotext), titres et Ka relus sur la mise en page",
  "entrees": [
   {
-   "nom": "La Chute de l'Atlantide",
+   "nom": "La Chute de l’Atlantide",
    "fichier": "epoques.md",
    "details": {
-    "Ère": "Le Sentier d'or",
-    "Page": 61,
-    "Dates et lieux": "-10 000, Atlantide"
+    "Ère": "Le Sentier d’or",
+    "Page": 62,
+    "Dates et lieux": "Jadis, L’Atlantide",
+    "Coût": "0 PI"
    }
   },
   {
@@ -17,17 +18,39 @@
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les Guerres élémentaires",
-    "Page": 63,
-    "Dates et lieux": "-10 000, Graal Terrestre"
+    "Page": 64,
+    "Dates et lieux": "-10 000",
+    "Coût": "2 PI"
    }
   },
   {
-   "nom": "Les premières pierres dressées",
+   "nom": "Les premiers dieux",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les Guerres élémentaires",
     "Page": 65,
-    "Dates et lieux": "-8 000, Vallée de l'Indus"
+    "Dates et lieux": "-9000, Steppe pontique",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "Le premier peuple",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Guerres élémentaires",
+    "Page": 66,
+    "Dates et lieux": "-8000, Harrapa - Mohenjo Daro",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "La première cité",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Guerres élémentaires",
+    "Page": 67,
+    "Dates et lieux": "-7000, Hénoch - Nod - Damas - Jéricho",
+    "Coût": "1 PI"
    }
   },
   {
@@ -35,148 +58,259 @@
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les Guerres élémentaires",
-    "Page": 67,
-    "Dates et lieux": "-5 000, Europe"
+    "Page": 68,
+    "Dates et lieux": "-5000, Europe",
+    "Coût": "1 PI"
    }
   },
   {
-   "nom": "Le sanctuaire des Tuatha Dé Danann",
+   "nom": "Le sanctuaire des Tuatha de Danann",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les Compacts secrets",
-    "Page": 69,
-    "Dates et lieux": "Tara & le Sidh"
+    "Page": 70,
+    "Dates et lieux": "-4000, Tara & le Sidh",
+    "Coût": "1 PI"
    }
   },
   {
-   "nom": "L'empire divin de Babylone",
+   "nom": "Le Mahabharata",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les Compacts secrets",
     "Page": 71,
-    "Dates et lieux": "-600, Mésopotamie"
+    "Dates et lieux": "-3000, Hastinapur",
+    "Coût": "1 PI"
    }
   },
   {
-   "nom": "Le rêve d'Akhenaton",
+   "nom": "Le labyrinthe de Minos",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les Compacts secrets",
+    "Page": 72,
+    "Dates et lieux": "-2000, Cnossos - Méditerranée",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "Le rêve d’Akhénaton",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les Compacts secrets",
     "Page": 73,
-    "Dates et lieux": "-1355, Égypte"
+    "Dates et lieux": "-1350, Thèbes - Akhétaton",
+    "Coût": "2 PI"
    }
   },
   {
-   "nom": "La Mésopotamie des prédictions",
+   "nom": "La Chute de Troie",
    "fichier": "epoques.md",
    "details": {
-    "Ère": "L'Hermétisme",
-    "Page": 75,
-    "Dates et lieux": "-550, Mésopotamie"
+    "Ère": "Les Compacts secrets",
+    "Page": 74,
+    "Dates et lieux": "-1200, Mycènes - Troie",
+    "Coût": "1 PI"
    }
   },
   {
-   "nom": "Le règne de Salomon",
+   "nom": "L’empire magique des Perses",
    "fichier": "epoques.md",
    "details": {
-    "Ère": "L'Hermétisme",
-    "Page": 77
+    "Ère": "L’Hermétisme",
+    "Page": 76,
+    "Dates et lieux": "-700, Ecbatane - Persépolis",
+    "Coût": "1 PI"
    }
   },
   {
-   "nom": "La Syracuse des philosophes",
+   "nom": "L’empire divin de Babylone",
    "fichier": "epoques.md",
    "details": {
-    "Ère": "L'Hermétisme",
-    "Page": 79
+    "Ère": "L’Hermétisme",
+    "Page": 77,
+    "Dates et lieux": "-580, Babylone - Ur - Uruk - Nippur",
+    "Coût": "1 PI"
    }
   },
   {
-   "nom": "L'empire de Carthage",
+   "nom": "L’empire solaire d’Alexandre",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "L’Hermétisme",
+    "Page": 78,
+    "Dates et lieux": "-330, Pella - Alexandrie - Suse - Sogdiane - Indus",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "L’empire lunaire de Carthage",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "L’Hermétisme",
+    "Page": 79,
+    "Dates et lieux": "-150, Carthage",
+    "Coût": "2 PI"
+   }
+  },
+  {
+   "nom": "L’empire profane de Rome",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "L’Hermétisme",
+    "Page": 80,
+    "Dates et lieux": "-50, Rome, l’Italie et la Gaule",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "L’incident Jésus",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les guerres secrètes",
-    "Page": 81,
-    "Dates et lieux": "-200, Carthage"
+    "Page": 82,
+    "Dates et lieux": "30, Jérusalem",
+    "Coût": "2 PI"
    }
   },
   {
-   "nom": "L'empire de Rome",
+   "nom": "Les arthuriades",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les guerres secrètes",
     "Page": 83,
-    "Dates et lieux": "-50, Rome, l'Italie et la Gaule"
+    "Dates et lieux": "450, Camelot",
+    "Coût": "1 PI"
    }
   },
   {
-   "nom": "L'incident Jésus",
+   "nom": "Les croisades",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les guerres secrètes",
+    "Page": 84,
+    "Dates et lieux": "XIIe, Byzance - Royaume de Jérusalem",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "Les bûchers cathares",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les guerres secrètes",
     "Page": 85,
-    "Dates et lieux": "0, Jérusalem"
+    "Dates et lieux": "XIIIe, Toulouse - Albi - Les Corbières",
+    "Coût": "2 PI"
    }
   },
   {
-   "nom": "Les Arthuriades",
+   "nom": "La chute du Temple",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Les guerres secrètes",
+    "Page": 86,
+    "Dates et lieux": "XIVe, Paris",
+    "Coût": "2 PI"
+   }
+  },
+  {
+   "nom": "Les arcanes de la Renaissance",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les nouveaux mondes",
-    "Page": 87,
-    "Dates et lieux": "Grande-Bretagne & Bretagne, Ve - VIe siècles"
+    "Page": 88,
+    "Dates et lieux": "XVIe, Florence - Pise - Milan - Venise",
+    "Coût": "2 PI"
    }
   },
   {
-   "nom": "Al-Andalus",
+   "nom": "Les secrets de la Sublime Porte",
    "fichier": "epoques.md",
    "details": {
     "Ère": "Les nouveaux mondes",
-    "Page": 89
-   }
-  },
-  {
-   "nom": "L'An Mil",
-   "fichier": "epoques.md",
-   "details": {
-    "Ère": "Les nouveaux mondes",
-    "Page": 91
-   }
-  },
-  {
-   "nom": "Les Arcanes de la Renaissance",
-   "fichier": "epoques.md",
-   "details": {
-    "Ère": "Le grand réveil",
-    "Page": 93,
-    "Dates et lieux": "1450, Florence - Pise - Milan - Venise"
+    "Page": 89,
+    "Dates et lieux": "XVIe, Istanbul & empire turc",
+    "Coût": "1 PI"
    }
   },
   {
    "nom": "La cour du Roi-Soleil",
    "fichier": "epoques.md",
    "details": {
-    "Ère": "Le grand réveil",
-    "Page": 95,
-    "Dates et lieux": "1670, Versailles"
+    "Ère": "Les nouveaux mondes",
+    "Page": 90,
+    "Dates et lieux": "1650 – 1715, Versailles",
+    "Coût": "1 PI"
    }
   },
   {
    "nom": "Les conspirations de la Révolution",
    "fichier": "epoques.md",
    "details": {
-    "Ère": "Le grand réveil",
-    "Page": 97,
-    "Dates et lieux": "Nouvelle-Angleterre - Paris - Venise"
+    "Ère": "Les nouveaux mondes",
+    "Page": 91,
+    "Dates et lieux": "1770 – 1850, Nouvelle-Angleterre - Paris - Venise",
+    "Coût": "1 PI"
    }
   },
   {
    "nom": "Les vapeurs victoriennes",
    "fichier": "epoques.md",
    "details": {
+    "Ère": "Les nouveaux mondes",
+    "Page": 92,
+    "Dates et lieux": "1837 – 1901, Londres & l’empire britannique",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "La Sécession viennoise",
+   "fichier": "epoques.md",
+   "details": {
     "Ère": "Le grand réveil",
-    "Page": 99,
-    "Dates et lieux": "Londres & l’empire britannique"
+    "Page": 94,
+    "Dates et lieux": "1890 – 1910, Munich - Vienne",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "Les Années folles",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 95,
+    "Dates et lieux": "1918 – 1930, Paris - Berlin - New York",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "Les Années noires",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 96,
+    "Dates et lieux": "1933 – 1945, Berlin - Lyon - L’Europe en guerre",
+    "Coût": "1 PI"
+   }
+  },
+  {
+   "nom": "L’Éveil",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 97,
+    "Dates et lieux": "1992 – 1998, France",
+    "Coût": "2 PI"
+   }
+  },
+  {
+   "nom": "Les Chroniques de l’Apocalypse",
+   "fichier": "epoques.md",
+   "details": {
+    "Ère": "Le grand réveil",
+    "Page": 98,
+    "Dates et lieux": "1999 – 2012, France - Monde",
+    "Coût": "2 PI"
    }
   }
  ]

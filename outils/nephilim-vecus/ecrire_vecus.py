@@ -1,103 +1,86 @@
-# Écrit la liste des Vécus de Nephilim dans le corpus du jeu, depuis les réponses brutes du carnet.
+# Écrit les époques d'incarnation et les Vécus passés de Nephilim dans le corpus du jeu, depuis le
+# LIVRE (`livre/epoques.json`, produit par `extraire_du_livre.py`) — 2026-10-18.
+# Le 17/10, ces fichiers venaient du carnet NotebookLM : vingt époques dont quatre inventées, des
+# titres approchés, trois descriptions fausses. Les réponses du carnet restent dans `bruts/`, pour
+# mémoire ; elles ne servent plus.
 # Usage (racine du dépôt) : python -I -X utf8 outils/nephilim-vecus/ecrire_vecus.py
 import json, glob, os, re, unicodedata
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 SORTIE = os.path.join(ICI, '..', '..', 'docs', 'systems', 'nephilim', 'vecus')
-KA = ['Feu', 'Air', 'Eau', 'Terre', 'Lune']
 SOURCE = 'Nephilim5 — Livre 0 — Quintessence, chapitre « Les époques d’incarnation »'
+EXTRAIT = '2026-10-18, texte du PDF du livre (pypdf et pdftotext), titres et Ka relus sur la mise en page'
 
 def slug(texte):
-    t = unicodedata.normalize('NFKD', texte).encode('ascii', 'ignore').decode().lower()
+    t = unicodedata.normalize('NFKD', texte.replace('’', ' ').replace("'", ' ')).encode('ascii', 'ignore').decode().lower()
     return re.sub(r'[^a-z0-9]+', '-', t).strip('-')
 
-def propre(texte):
-    # Les renvois du carnet « [2] », « [2, 3] » ne veulent rien dire hors de lui.
-    return re.sub(r'\s*\[\d+(?:\s*[,–-]\s*\d+)*\]', '', str(texte or '')).replace(' ', ' ').strip()
+def premieres_phrases(texte, plafond=360):
+    """Le début de l'introduction, coupé à une fin de phrase : de quoi reconnaître l'époque."""
+    phrases, total = [], 0
+    for p in re.split(r'(?<=[.!?…])\s+', texte):
+        if phrases and total + len(p) > plafond:
+            break
+        phrases.append(p)
+        total += len(p) + 1
+    return ' '.join(phrases)
 
-def lire(reponse):
-    m = re.search(r'\{[\s\S]*\}', reponse)
-    if not m:
-        return None
-    try:
-        return json.loads(m.group(0))
-    except json.JSONDecodeError:
-        return None
+def dates_et_lieux(e):
+    return ', '.join(x for x in (e['date'], e['lieux']) if x)
 
-os.makedirs(SORTIE, exist_ok=True)
-index, manquantes = [], []
-for chemin in sorted(glob.glob(os.path.join(ICI, 'bruts', '*.json'))):
-    brut = json.load(open(chemin, encoding='utf-8'))
-    donnees = lire(brut['reponse'])
-    vecus = (donnees or {}).get('vecus') or []
-    nom_fichier = f"{brut['ordre']:02d}-{slug(brut['epoque'])}.md"
-    if len(vecus) != 5 or sorted(v.get('ka') for v in vecus) != sorted(KA):
-        manquantes.append({'ere': brut['ere'], 'epoque': brut['epoque'], 'page': brut['page']})
-        continue
-    dates = propre(donnees.get('dates_et_lieux'))
+epoques = json.load(open(os.path.join(ICI, 'livre', 'epoques.json'), encoding='utf-8'))
+assert len(epoques) == 31 and all(len(e['vecus']) == 5 for e in epoques), 'Le livre a 31 époques de cinq Vécus.'
+
+# Les fichiers d'hier portent d'autres titres : on les retire avant d'écrire, pour ne rien laisser de faux.
+for ancien in glob.glob(os.path.join(SORTIE, '[0-9][0-9]-*.md')):
+    os.remove(ancien)
+
+index = []
+for ordre, e in enumerate(epoques):
+    nom_fichier = f"{ordre:02d}-{slug(e['epoque'])}.md"
     lignes = [
-        f"# Les Vécus de l’époque « {brut['epoque']} »",
+        f"# Les Vécus de l’époque « {e['epoque']} »",
         '',
-        f"Ère : **{brut['ere']}**. Page {brut['page']} du *{SOURCE}*.",
+        f"Ère : **{e['ere']}**. Page {e['page']} du *{SOURCE}*.",
+        '',
+        f"Dates et lieux : {dates_et_lieux(e)}.",
+        '',
+        'Un Vécu passé par Ka-élément. Le nom et le degré se portent sur la fiche du personnage ;',
+        'ce qui suit décrit le Vécu, pour choisir et raconter.',
     ]
-    if dates:
-        lignes += ['', f'Dates et lieux : {dates}.'.replace('..', '.')]
-    lignes += ['', 'Un Vécu passé par Ka-élément. Le nom et le degré se portent sur la fiche du personnage ;',
-               'ce qui suit décrit le Vécu, pour choisir et raconter.']
-    for v in sorted(vecus, key=lambda x: KA.index(x['ka'])):
-        page = v.get('page') or brut['page']
-        lignes += ['', f"## {propre(v['nom'])} — Ka-{v['ka']}", '', f"{propre(v['description'])} *(p. {page})*"]
-        index.append({'nom': propre(v['nom']), 'fichier': nom_fichier,
-                      'details': {'Ka-élément': v['ka'], 'Ère': brut['ere'], 'Époque': brut['epoque'], 'Page': page}})
-    lignes += ['', '---', '',
-               'Extrait du carnet NotebookLM « Nephilim » le 2026-10-17, **non relu contre le livre**.']
+    for v in e['vecus']:
+        renvoi = f"p. {e['page']}" + (f", corrigé par l’errata {v['errata']}" if v.get('errata') else '')
+        lignes += ['', f"## {v['nom']} — Ka-{v['ka']}", '', f"{v['description']} *({renvoi})*"]
+        index.append({'nom': v['nom'], 'fichier': nom_fichier,
+                      'details': {'Ka-élément': v['ka'], 'Ère': e['ere'], 'Époque': e['epoque'], 'Page': e['page']}})
+    lignes += ['', '---', '', f'Extrait du livre le {EXTRAIT}.']
     texte = '\n'.join(lignes) + '\n'
     open(os.path.join(SORTIE, nom_fichier), 'w', encoding='utf-8').write(texte)
     print(f'{nom_fichier} : {len(texte)} car.')
 
 # Un **référentiel** au sens de GM-OS (`SheetField.referentiel`) : des entrées nommées, le fichier
 # Markdown qui les décrit (une section « ## <nom> — … » chacune), et des détails à afficher.
-json.dump({
-    'referentiel': 'Vécus passés',
-    'source': SOURCE + ', p. 61 à 99',
-    'extrait': '2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre',
-    'entrees': index,
-    'epoquesManquantes': manquantes,
-}, open(os.path.join(SORTIE, 'index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-print('Vécus :', len(index), '| époques manquantes :', [m['epoque'] for m in manquantes])
+json.dump({'referentiel': 'Vécus passés', 'source': SOURCE + ', p. 62 à 98', 'extrait': EXTRAIT, 'entrees': index},
+          open(os.path.join(SORTIE, 'index.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+print('Vécus :', len(index))
 
-
-# ---- Les époques d'incarnation (2026-10-17) -----------------------------------------------------
-# Un second référentiel : les 20 époques, pour les champs « Incarnation » de la fiche. Le résumé vient
-# du catalogue du carnet (`catalogue-des-epoques.json`) ; les dates et les Vécus, des réponses brutes.
-catalogue = {e['epoque']: e for e in json.load(open(os.path.join(ICI, 'catalogue-des-epoques.json'), encoding='utf-8'))}
-bruts = sorted((json.load(open(c, encoding='utf-8')) for c in glob.glob(os.path.join(ICI, 'bruts', '*.json'))), key=lambda b: b['ordre'])
-lignes, entrees = ['# Les époques d’incarnation', '',
-                   f'Les vingt époques des sept ères, d’après le *{SOURCE}*, p. 61 à 99. Une section par époque.'], []
-for b in bruts:
-    donnees = lire(b['reponse']) or {}
-    vecus = donnees.get('vecus') or []
-    complete = len(vecus) == 5 and sorted(v.get('ka') for v in vecus) == sorted(KA)
-    dates = propre(donnees.get('dates_et_lieux')) if complete else ''
-    resume = catalogue.get(b['epoque'], {}).get('resume', '')
-    lignes += ['', f"## {b['epoque']} — {b['ere']}", '']
-    if resume:
-        lignes += [resume]
-    if dates:
-        lignes += ['', f'Dates et lieux : {dates}.'.replace('..', '.')]
-    if complete:
-        noms = ', '.join(f"{propre(v['nom'])} (Ka-{v['ka']})" for v in sorted(vecus, key=lambda x: KA.index(x['ka'])))
-        lignes += ['', f'Vécus : {noms}.']
-    else:
-        lignes += ['', 'Vécus : non transcrits — la page manque aux sources du carnet.']
-    lignes += ['', f"*(p. {b['page']})*"]
-    details = {'Ère': b['ere'], 'Page': b['page']}
-    if dates:
-        details['Dates et lieux'] = dates
-    entrees.append({'nom': b['epoque'], 'fichier': 'epoques.md', 'details': details})
-lignes += ['', '---', '', 'Extrait du carnet NotebookLM « Nephilim » le 2026-10-17, **non relu contre le livre**.']
+# ---- Les époques d'incarnation : un second référentiel, pour les champs « Incarnation » de la fiche.
+lignes = ['# Les époques d’incarnation', '',
+          f'Les trente et une époques des sept ères, d’après le *{SOURCE}*, p. 62 à 98. Une section par',
+          'époque : son début, ce que l’incarnation apporte au Nephilim, et ses cinq Vécus passés.']
+entrees = []
+for e in epoques:
+    noms = ', '.join(f"{v['nom']} (Ka-{v['ka']})" for v in e['vecus'])
+    lignes += ['', f"## {e['epoque']} — {e['ere']}", '', premieres_phrases(e['introduction']), '',
+               f"Dates et lieux : {dates_et_lieux(e)}." + (f" Coût : {e['cout']} PI." if e['cout'] is not None else '')]
+    lignes += [''] + [f'- {a}' for a in e['apports']]
+    lignes += ['', f'Vécus : {noms}.', '', f"*(p. {e['page']})*"]
+    details = {'Ère': e['ere'], 'Page': e['page'], 'Dates et lieux': dates_et_lieux(e)}
+    if e['cout'] is not None:
+        details['Coût'] = f"{e['cout']} PI"
+    entrees.append({'nom': e['epoque'], 'fichier': 'epoques.md', 'details': details})
+lignes += ['', '---', '', f'Extrait du livre le {EXTRAIT}.']
 open(os.path.join(SORTIE, 'epoques.md'), 'w', encoding='utf-8').write('\n'.join(lignes) + '\n')
-json.dump({'referentiel': 'Époques d’incarnation', 'source': SOURCE + ', p. 61 à 99',
-           'extrait': '2026-10-17, carnet NotebookLM « Nephilim », non relu contre le livre', 'entrees': entrees},
+json.dump({'referentiel': 'Époques d’incarnation', 'source': SOURCE + ', p. 62 à 98', 'extrait': EXTRAIT, 'entrees': entrees},
           open(os.path.join(SORTIE, 'epoques.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('Époques :', len(entrees))
