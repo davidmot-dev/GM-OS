@@ -328,3 +328,20 @@ Choix de David : **Effet Mnémos de bonus seulement** ; **Ka dominant sur la fic
   pas un nombre garde son texte ; un plafond nul ne borne plus (Ka dominant pas encore choisi). Essai
   ajouté au calculateur ; 8 108 essais verts.
 
+## 14 · Lot D — l'Alchimie au jet, 18/10, fin d'après-midi
+
+Commit des lots B et C : `57acb176`. **Décision de David sur la Traque : GM-OS garde la montée
+immédiate** de l'Intensité (le manuel le dit, l'errata la place à l'aube).
+
+Lot D, **option A choisie par David : pilote seul** (`outils/nephilim-vecus/alchimie_au_jet.py`) :
+- « Alchimie — constructs et Materiae Primae » découpée en deux sections, clés intactes ;
+- le menu « Approche (Ka) ou construct » propose les vingt-cinq Ka des constructs : une
+  transmutation se lance Œuvre + Ka du construct − degré de la formule (curseur), p. 220 ;
+- « Début de séance » remplit les cinq jauges de MP à leur maximum (`delta: 'plein'`, plafond lu
+  sur « MP Max »), p. 219 — vérifié par un essai pur sur `recuperationDesHeros`.
+- À la main : les MP consommées, le Ka du construct −1 sur une maladresse, l'Œuvre au blanc (deux
+  éléments, la fiche n'en porte qu'un par formule). L'option B (composante « Formule » soustraite et
+  débit automatique) est écartée pour l'instant.
+
+Pilote construit sur celui des lots B et C, zéro constat. **À réimporter et éprouver, puis commiter.**
+

@@ -2,7 +2,7 @@
 
 > **Pilote décrit :** « Nephilim », exporté le 2026-10-18 et corrigé le jour même (Arts occultes au
 > menu du jet, suites des maladresses et des critiques, rappels d'après l'errata V1.3, Stase et Effet
-> Mnémos au jet, Ka dominant). Retour à
+> Mnémos au jet, Ka dominant, Alchimie au jet et Materiae Primae à « Début de séance »). Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un **d100 sous une cible en degrés** : le Vécu — ou l'Art occulte —, plus le Ka de l'approche,
@@ -31,12 +31,24 @@ passés** reliés aux **époques d'incarnation** du livre.
 
   Un Art du troisième cercle **sans nom saisi** n'apparaît pas, comme un Vécu vide : écrivez son nom
   sur la fiche.
-- **Approche (Ka)** : facultative. Le Ka-élément s'ajoute au Vécu ou à l'Art. Pour un sort ou une
-  invocation, c'est le **Ka de l'élément du sort**.
+- **Approche (Ka) ou construct** : facultative. Le Ka-élément s'ajoute au Vécu ou à l'Art. Pour un
+  sort ou une invocation, c'est le **Ka de l'élément du sort** ; pour une **transmutation**, le Ka
+  du **construct** dans l'élément de la formule (sous-groupe « Alchimie — constructs » :
+  « Cornue — Ka-Eau (3) »).
 - **Les chances** : (Vécu + Ka) × 10, dites sous les menus — `(4 + 5) × 10 = 90 %`.
 - **Difficulté** : les **circonstances, en degrés**. Le livre va de −5 (difficulté extrême) à +5
   (facilité extrême). Pour un **sort** ou une **formule**, retirez-y aussi le **degré du sort** :
   Art + Ka − degré. Le curseur descend jusqu'à −10 pour cela.
+
+### Une transmutation d'Alchimie
+
+Ka-élément du construct + Art de l'Œuvre − degré de la formule (p. 220) : choisissez l'**Œuvre** au
+premier menu, le **Ka du construct** au second, et retirez le **degré de la formule** au curseur.
+Pour une formule de l'Œuvre au blanc, prenez le moins développé des deux Ka du construct.
+
+Les **Materiae Primae** de l'élément — autant que le degré de la formule — sont consommées sur une
+réussite, un échec ou une maladresse, conservées sur un critique : **retirez-les sur la fiche**. La
+maladresse a sa carte (+1 Khaïba ; le Ka du construct perd 1, à noter sur sa ligne).
 
 ### Puiser dans ses réserves : la Stase et l'Effet Mnémos
 
@@ -104,9 +116,13 @@ au-delà du Seuil RK : c'est vous qui l'ajoutez, GM-OS ne devine pas une scène.
 dépassement, ajoutez à l'approche ou au Vécu les degrés de métamorphe visibles, et ceux de Khaïba et
 de Narcose **au-delà de 4** (errata p. 146).
 
-⚠️ **L'errata V1.3 (p. 146) fait monter l'Intensité à l'aube** suivante, et non dès que le palier
-est plein ; GM-OS, lui, la fait monter tout de suite. En attendant, à la table : quand la jauge
-atteint le seuil en cours de journée, reportez la montée à l'aube.
+L'errata V1.3 (p. 146) fait monter l'Intensité **à l'aube** suivante, et non dès que le palier est
+plein. GM-OS la fait monter **tout de suite** — choix de David (2026-10-18) : le rappel vaut mieux
+qu'un oubli. Si la scène l'exige, reportez la montée à l'aube à la main.
+
+**Début de séance** (au bandeau, meneur) : chaque jauge de **Materiae Primae** revient à son
+maximum, lu sur la fiche (« MP Max ») — elles « reviennent à leur maximum entre chaque session de
+jeu » (p. 219). L'aperçu dit, personnage par personnage, ce qui change avant d'écrire.
 
 ---
 
@@ -182,11 +198,10 @@ le **Druide** (*Le sanctuaire des Tuatha de Danann*) la description du Chasseur 
 - Les **Points de Sapience** hors de l'Effet Mnémos de bonus : priorité d'initiative, Effet Mnémos
   **en tant que Vécu** (1 PS par degré, quand aucun Vécu ne s'applique), **Sacrifice** (5 PS, un sort
   réussi d'office), Effets Mnémos permanents (+5 PS).
-- La **recharge** de la Stase — pleine en la quittant, puis un degré par jour en Plexus ou Nexus —
-  et les **Materiae Primae** : la fiche les porte, rien ne les recharge ni ne les débite.
-- Le **Ka du construct** qui baisse sur une maladresse d'Alchimie : le jet ne sait pas quel
-  construct a servi.
+- La **recharge** de la Stase — pleine en la quittant, puis un degré par jour en Plexus ou Nexus.
+- Les **Materiae Primae consommées** par une transmutation, et le **Ka du construct** qui baisse sur
+  une maladresse ; l'assemblage et l'activation des constructs (p. 216–217).
 - Le **pacte de Kabbale** : un test en opposition, Art de la Sephirah + Ka contre le degré de
   l'invocation, que GM-OS ne compare pas.
-- Les seuils des Chutes, les malus des Conséquences, et la montée de la Traque **à l'aube**.
+- Les seuils des Chutes, les malus des Conséquences.
 - Sur **tablette**, la fiche n'a pas les suggestions de Vécus et d'époques.

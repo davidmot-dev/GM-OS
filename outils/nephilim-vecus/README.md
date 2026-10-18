@@ -35,6 +35,9 @@ l'errata officiel V1.3.
   l'élément et son degré calculé) après le Pentacle, la Stase plafonnée dessus (`maxSur`), et deux
   réserves au jet qui ajoutent des degrés à la cible — la Stase sur un sort de Magie, l'Effet Mnémos
   (1 PS : +2) sur un test de Vécu. À passer après `sections_des_arts.py`.
+- `alchimie_au_jet.py` — lot D (18/10, sans code) : les Ka des constructs dans une section à part,
+  proposés par le menu « Approche (Ka) ou construct » ; les jauges de Materiae Primae à part ; et
+  « Début de séance » qui remplit chaque jauge à son maximum (`gestesDesHeros.debutDeSeance`).
 
 ## État au 18/10 — complet
 
