@@ -395,8 +395,10 @@ dit à l'aube, le manuel le signale) ; Alchimie option A (MP consommées à la m
 
 **Reste**, du plus simple au plus gros :
 1. ~~Le registre~~ — fait le 18/10 au soir : § 142, lignes 75 et 77.
-2. **Les captures** du manuel : menu des Arts, carte des suites, réserves, constructs, Ka dominant
-   (`e2e/capturesDesJeux.spec.ts`).
+2. ~~Les captures du manuel~~ — faites le 18/10 au soir : `scenesDeNephilim` dans
+   `e2e/capturesDesJeux.spec.ts` (sort et Stase, transmutation, maladresse, Ka dominant, Stase
+   plafonnée), cinq images nouvelles et quatre refaites. Le scénario lit `Export Dirvers/` à plat :
+   pointer `GMOS_PILOTES_DES_JEUX` sur un dossier qui ne contient que le pilote corrigé.
 3. **La fiche sur tablette**, sans suggestions de Vécus ni d'époques.
 4. **Lot D, option B** si David le veut : composante « Formule » soustraite, MP débitées seules.
 5. À la main, sans projet : pacte de Kabbale en opposition, seuils des Chutes, malus des

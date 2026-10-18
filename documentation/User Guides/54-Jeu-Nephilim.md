@@ -1,6 +1,6 @@
 # ✨ Jeu — Nephilim Légende
 
-> **Pilote décrit :** « Nephilim », exporté le 2026-10-18 et corrigé le jour même (Arts occultes au
+> **Pilote décrit :** « Nephilim », exporté le 2026-10-18 et corrigé le jour même — captures du 2026-10-18 (Arts occultes au
 > menu du jet, suites des maladresses et des critiques, rappels d'après l'errata V1.3, Stase et Effet
 > Mnémos au jet, Ka dominant, Alchimie au jet et Materiae Primae à « Début de séance »). Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
@@ -46,6 +46,8 @@ Ka-élément du construct + Art de l'Œuvre − degré de la formule (p. 220) : 
 premier menu, le **Ka du construct** au second, et retirez le **degré de la formule** au curseur.
 Pour une formule de l'Œuvre au blanc, prenez le moins développé des deux Ka du construct.
 
+![Une transmutation : l'Œuvre au noir 5 et le Ka-Eau de la cornue 3, soit 80 % avant le degré de la formule](captures/jeu-nephilim-transmutation.jpg)
+
 Les **Materiae Primae** de l'élément — autant que le degré de la formule — sont consommées sur une
 réussite, un échec ou une maladresse, conservées sur un critique : **retirez-les sur la fiche**. La
 maladresse a sa carte (+1 Khaïba ; le Ka du construct perd 1, à noter sur sa ligne).
@@ -59,11 +61,13 @@ Sous les menus, « Puiser dans ses réserves » propose ce qui convient **au jet
 | **Stase (sort de Magie)** | un cercle de **Magie** est retenu | **+1 degré** de Ka par degré de stase (p. 183) | les degrés engagés, sur la fiche |
 | **Effet Mnémos (1 PS : +2 degrés)** | un **Vécu** est retenu | **+2 degrés**, une fois par test (p. 119) | 1 Point de Sapience |
 
-Les degrés s'ajoutent à la cible, et les chances le disent : `(3 + 2) × 10 = 50 %`. La réserve se
+![Un sort de Basse Magie 4 avec le Ka-Feu 5 et deux degrés de Stase puisés : (4 + 7) × 10 = 110 %](captures/jeu-nephilim-sort-et-stase.jpg)
+
+Les degrés s'ajoutent à la cible, et les chances le disent : `(4 + 7) × 10 = 110 %`. La réserve se
 débite **au lancer, quel que soit le résultat**. Racontez l'Effet Mnémos : de quel Vécu passé vient
 ce souvenir ?
 
-![Après le lancer : 86 contre 90, une réussite de marge 8](captures/jeu-nephilim-jet-lance.jpg)
+![Après le lancer : 82 contre 90, une réussite de marge 8 ; l'Effet Mnémos est proposé sur un Vécu](captures/jeu-nephilim-jet-lance.jpg)
 
 Après le lancer :
 
@@ -84,6 +88,8 @@ marge**, et GM-OS le dit sous les chances.
 Une maladresse ou un critique n'a pas la même suite selon **ce qui a été lancé**. Sous le résultat,
 une carte rappelle la règle, avec sa page, et propose **un bouton** : rien ne s'écrit sur la fiche
 sans vous.
+
+![88 contre 10 sur la Basse Magie : une maladresse, et sa carte « Noter +1 Khaïba »](captures/jeu-nephilim-maladresse.jpg)
 
 | Ce qui a été lancé | Résultat | La carte | Le bouton |
 | :--- | :--- | :--- | :--- |
@@ -122,7 +128,8 @@ qu'un oubli. Si la scène l'exige, reportez la montée à l'aube à la main.
 
 **Début de séance** (au bandeau, meneur) : chaque jauge de **Materiae Primae** revient à son
 maximum, lu sur la fiche (« MP Max ») — elles « reviennent à leur maximum entre chaque session de
-jeu » (p. 219). L'aperçu dit, personnage par personnage, ce qui change avant d'écrire.
+jeu » (p. 219). Le geste s'applique **aussitôt**, sans aperçu ; un message dit combien de fiches
+ont été mises à jour.
 
 ---
 
@@ -160,10 +167,16 @@ Une même valeur n'a qu'un seul endroit où l'écrire (choix de David, 2026-10-1
 
 ### Le Ka dominant et la Stase
 
+![La section Ka dominant : Terre, et son degré calculé, 6](captures/jeu-nephilim-ka-dominant.jpg)
+
 La section **Ka dominant**, sous le Pentacle, porte le **choix** de l'élément dominant (Feu, Air,
 Eau, Lune, Terre) et son **degré**, calculé sur le Pentacle. La **Stase** ne peut pas le dépasser :
 la saisie s'arrête au plafond, affiché à côté (« / 5 ») ; une Stase restée au-dessus (le Ka a baissé)
-s'affiche en rouge. Sur la **fiche HTML** (page 1), le Ka dominant se marque d'un clic **sous le
+s'affiche en rouge.
+
+![La Réserve de Stase à 3, plafonnée à 6 par le Ka dominant](captures/jeu-nephilim-stase-plafonnee.jpg)
+
+Sur la **fiche HTML** (page 1), le Ka dominant se marque d'un clic **sous le
 nom de l'élément**, sur le Pentacle : seul l'élément choisi s'allume, et le choix passe d'une fiche
 à l'autre (après « Sauvegarder »). Le degré et le plafond, eux, ne se calculent que dans GM-OS.
 

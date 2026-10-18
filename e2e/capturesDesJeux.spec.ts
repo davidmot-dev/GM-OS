@@ -127,10 +127,14 @@ const MISES_EN_SCENE: MiseEnScene[] = [
             simulacrum_name: 'Claire Moreau', simulacrum_ka: 3, simulacrum_experience: 'Infirmière', simulacrum_experience_degree: 5,
             pastlives_0_name: 'Templier', pastlives_0_degree: 4, pastlives_1_name: 'Alchimiste de Prague', pastlives_1_degree: 3,
             falls_khaiba: 2, falls_shadow: 1, falls_narcosis: 0, resources_sapience: 7, stasis_degree: 3,
+            // Le 18/10 : l'Art de Magie, le Ka dominant (Terre 6 : la Stase plafonne à 6), un construct.
+            occult_magic_first: 4, ka_dominant: 'Terre', occult_alchemy_black: 5, alchemy_constructs_retort_water: 3,
+            alchemy_materia_water_max: 9, alchemy_materia_water: 4,
         },
         composantes: ['pastlives_0_degree', 'ka_fire'],
         reserves: { seuilRK: 4, jaugeDeTraque: 3, intensiteDeTraque: 2 },
         casesCochees: 4,
+        scenes: c => scenesDeNephilim(c),
     },
     {
         corpusId: 'cthulhu hack', slug: 'cthulhu-hack', personnage: 'Edith Marsh',
@@ -528,6 +532,58 @@ async function scenesDeNoc(c: ContexteDeScene): Promise<void> {
     const rouage = f.locator('[data-fiel-au-pupitre]');
     await expect(rouage).toBeVisible({ timeout: 15_000 });
     await photographier(panneauDuDernierJet(rouage), 'jeu-noc-rouage');
+}
+
+/**
+ * Nephilim (2026-10-18) : un sort de Magie avec la Stase puisée, la carte d'une
+ * maladresse, une transmutation au Ka d'un construct, le Ka dominant et la
+ * Stase plafonnée. Chaque prise suppose ce que le pilote déclare.
+ */
+async function scenesDeNephilim(c: ContexteDeScene): Promise<void> {
+    const jet = (c.pilote.gameDriver as { jet?: { reservesDuPersonnage?: unknown[]; suitesDesCritiques?: unknown[] } }).jet;
+    const f = gmos.fenetre;
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau).toBeVisible({ timeout: 15_000 });
+    const [premier, second] = [panneau.locator('select').nth(0), panneau.locator('select').nth(1)];
+
+    // Un sort de Basse Magie, deux degrés de Stase puisés — rien n'est lancé.
+    if (jet?.reservesDuPersonnage?.length) {
+        await premier.selectOption('occult_magic_first');
+        await second.selectOption('ka_fire');
+        const stase = panneau.getByRole('button', { name: /^Un point de plus : Stase/ });
+        await stase.click();
+        await stase.click();
+        await photographierLePanneau(panneau, 'jeu-nephilim-sort-et-stase');
+        // Relâchés : les relances de la maladresse ne doivent pas les dépenser.
+        const moins = panneau.getByRole('button', { name: /^Un point de moins : Stase/ });
+        await moins.click();
+        await moins.click();
+    }
+
+    // La transmutation : l'Œuvre au noir et le Ka-Eau de la cornue, la formule au curseur. Avant tout lancer.
+    if (await premier.locator('option[value="occult_alchemy_black"]').count() > 0
+        && await second.locator('option[value="alchemy_constructs_retort_water"]').count() > 0) {
+        await premier.selectOption('occult_alchemy_black');
+        await second.selectOption('alchemy_constructs_retort_water');
+        await photographierLePanneau(panneau, 'jeu-nephilim-transmutation');
+    }
+
+    // Une maladresse de Magie et sa carte. Un Art à 1 sans approche : 10 % ; on relance, on ne truque pas.
+    if (jet?.suitesDesCritiques?.length) {
+        await ecrireLaFiche(c, { occult_magic_first: 1 });
+        const lance = await jeterJusqua(c, ['occult_magic_first', ''], p => p.locator('[data-suite-du-critique="maladresse"]'), 80);
+        await photographierLePanneau(lance, 'jeu-nephilim-maladresse');
+        await ecrireLaFiche(c, { occult_magic_first: 4 });
+    }
+
+    // Le Ka dominant et la Stase plafonnée, sur la fiche GM-OS.
+    const section = (titre: string) => f.locator('h3', { hasText: new RegExp(`^${titre}$`) }).first().locator('xpath=..');
+    if (await section('Ka dominant').count() > 0) {
+        await photographier(section('Ka dominant'), 'jeu-nephilim-ka-dominant');
+        await expect(section('Stase et Sapience').locator('[data-plafond]')).toBeVisible();
+        await photographier(section('Stase et Sapience'), 'jeu-nephilim-stase-plafonnee');
+    }
 }
 
 /** Cthulhu Hack : la Fortune sous une Sauvegarde ratée, la suite d'un déclin au pupitre, le Hors Jeu. */
