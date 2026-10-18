@@ -7066,7 +7066,6 @@ Coût du seul `JSON.stringify`, **par mouvement de souris**, sur un tableau blan
 | --- | --- | --- | --- |
 | 10 | 600 | 0,08 ms | 15 Ko |
 | 40 | 3 200 | 0,38 ms | 77 Ko |
-| 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ⏸ Garé pour plus tard (18/10) ; à la reprise : E0 (Obsidian filtré), puis E1, E3 | Rien — décisions prises le 18/10 ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 | 100 | 12 000 | **1,75 ms** | 285 Ko |
 | 200 | 30 000 | **4,18 ms** | 710 Ko |
 
@@ -11965,6 +11964,7 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
 | 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic. **18/10** : `ka.dominant` ajouté (`68a05e73`, Codex), raccordé au moteur v10 et à la correspondance (`dd7e3b67`), éprouvé par David | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
 | 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; tout le volet RdD (R0–R8) attribué à Codex le 18/10 ; sources récupérées et créditées, aucun développement intégré | Codex : audit du pilote et cadrage du premier lot, coordination avec Claude | Export RdD absent à l’analyse ; édition et barèmes à vérifier ; [reprise](2026-10-18-etat-et-reprise-codex-tmr-sources.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette | Éprouver la tablette | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
+| 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ⏸ Garé pour plus tard (18/10) ; à la reprise : E0 (Obsidian filtré), puis E1, E3 | Rien — décisions prises le 18/10 ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
