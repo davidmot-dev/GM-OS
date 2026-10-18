@@ -7,10 +7,14 @@ l'analyse »*.
 > « Cabale » est lu comme la **Kabbale**, la troisième Science occulte de Nephilim — à ne pas
 > confondre avec la Cabale de NOC, la fiche de groupe. À confirmer avec David.
 
-**Rien n'est codé.** Cette page dit ce qui existe, ce que disent les règles (carnet NotebookLM
-« Nephilim », interrogé le 17/10, pages citées), ce que GM-OS sait déjà faire, ce qui demande du
-code, et les décisions à prendre. Elle rejoindra le registre (§ ⭐) quand Codex y aura commité ses
-changements du 17/10.
+> ⭐ **Point de reprise : le § 15**, en fin de page. Les §§ 1 à 6 sont l'analyse du 17/10 ; les §§ 7
+> à 14, le journal. Plusieurs de leurs affirmations ont été corrigées depuis par le livre et
+> l'errata V1.3 (§§ 11–12) : la Stase ne sert qu'à la Magie, le Nexus recharge un degré par jour,
+> une maladresse coûte **un** degré de Khaïba.
+
+*Analyse d'origine, le 17/10 : rien n'était codé. Cette page disait ce qui existe, ce que disent les
+règles (carnet NotebookLM « Nephilim », pages citées), ce que GM-OS sait déjà faire, ce qui demande
+du code, et les décisions à prendre.*
 
 ---
 
@@ -189,6 +193,8 @@ Reste, du plus petit au plus gros :
 
 ## 9 · Reprise — le 18/10, 0 h 30
 
+> *Historique* : remplacé par le § 15.
+
 **Tout est commité et poussé** sur `feature/tablet-hub-pwa`, dernier commit `ed722368` (le lien
 visible époque ↔ Vécus, éprouvé par David). Commits du chantier : `ac1feccf` (analyse),
 `6be8ff1a` (fiche à 7 pages, liste des Vécus, bloc STYLE/AVOID), `80c3f825` (ateliers RPG, fiche
@@ -354,3 +360,45 @@ le plafond de la Stase restent calculés par GM-OS. **Livrée le 18/10** : cinq 
 `ka.dominant` ; 8 108 essais verts. À éprouver par David : un choix fait sur une fiche se retrouve
 sur l'autre.
 
+## 15 · Reprise — le 18/10 au soir
+
+**Tout est commité, rien n'est poussé** (`feature/tablet-hub-pwa`). Commits du 18/10 : `4f8be52f`
+(Arts au jet, suites des critiques), `14bb539a` (31 époques, 155 Vécus du livre), `3c499c02`
+(errata dans les règles, manuel), `57acb176` (Stase et Effet Mnémos, Ka dominant), `b0352550`
+(Alchimie au jet, MP en début de séance), `57c9fd73` (consigne au Studio), `68a05e73` (fiche HTML,
+par Codex), `dd7e3b67` (Ka dominant raccordé au moteur). **Éprouvé par David** à chaque étape.
+
+**Ce que fait GM-OS pour Nephilim**
+- Jet « Vécu ou Art occulte » (Vécus, cercles de Magie, Sephiroth, Œuvres) + « Approche (Ka) ou
+  construct » (Pentacle, Ka des vingt-cinq constructs) ± curseur ; Stase (sorts de Magie) et Effet
+  Mnémos (1 PS : +2, Vécus) puisés au jet ; maladresse et critique proposent leur suite (Khaïba,
+  Ombre, Sapience) par un bouton.
+- Fiche : 31 époques et 155 Vécus du livre reliés, avec l'errata ; Ka dominant (choix + degré
+  calculé) sur les deux fiches, Stase plafonnée dessus ; « Début de séance » remplit les MP.
+- Corpus : `docs/systems/nephilim/rules/` corrigé par l'errata V1.3, fiche
+  `errata-quintessence-v1-3.md` ; `docs/systems/nephilim/vecus/`.
+
+**Décisions de David** (ne pas re-débattre) : suites proposées par un bouton, jamais écrites
+seules ; Effet Mnémos de bonus seulement ; Traque qui monte **tout de suite** au Seuil RK (l'errata
+dit à l'aube, le manuel le signale) ; Alchimie option A (MP consommées à la main).
+
+**Pièges appris**
+- Le carnet NotebookLM **invente** : vingt époques dont quatre fausses, « un à trois degrés » de
+  Khaïba. Le livre et l'errata sont chez David, `Z:\Jeux de Rôle\02. Contemporain\2. Ambiance\Nephilim\Nephilim 5\` ;
+  `nlm source content <id>` rend le texte brut d'une source du carnet.
+- Le calculateur de fiche (`useSheetCalculator`) convertissait tout en nombres : un choix garde
+  désormais son texte. **Éprouver une formule par le calculateur réel**, pas par le moteur seul.
+- Le menu d'une composante propose **tous** les champs de ses sections : un champ de texte ou de
+  choix n'a rien à faire dans la section du Pentacle ou des Vécus.
+- Le groupe d'invite « Dés et composition du jet » de la Forge est à 250 caractères de son budget :
+  toute fiche de règles allongée peut le faire déborder (`corpusDerivable.test.ts`).
+
+**Reste**, du plus simple au plus gros :
+1. **Le registre** (`2026-08-23-chantiers-gares.md`, ligne 75 et § 140) : à mettre à jour quand
+   Codex aura commité ses lignes de Rêve de Dragon (un seul écrivain par fichier).
+2. **Les captures** du manuel : menu des Arts, carte des suites, réserves, constructs, Ka dominant
+   (`e2e/capturesDesJeux.spec.ts`).
+3. **La fiche sur tablette**, sans suggestions de Vécus ni d'époques.
+4. **Lot D, option B** si David le veut : composante « Formule » soustraite, MP débitées seules.
+5. À la main, sans projet : pacte de Kabbale en opposition, seuils des Chutes, malus des
+   Conséquences, Effet Mnémos « en tant que Vécu », Sacrifice, recharge de la Stase.
