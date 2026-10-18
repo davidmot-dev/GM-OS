@@ -399,7 +399,13 @@ dit à l'aube, le manuel le signale) ; Alchimie option A (MP consommées à la m
    `e2e/capturesDesJeux.spec.ts` (sort et Stase, transmutation, maladresse, Ka dominant, Stase
    plafonnée), cinq images nouvelles et quatre refaites. Le scénario lit `Export Dirvers/` à plat :
    pointer `GMOS_PILOTES_DES_JEUX` sur un dossier qui ne contient que le pilote corrigé.
-3. **La fiche sur tablette**, sans suggestions de Vécus ni d'époques.
+3. ~~La fiche sur tablette~~ — faite le 18/10 au soir (choix de David : « consulter et choisir »).
+   La vue synthétique de `HubCharacterSheet` rend les champs reliés par `ChampDuReferentiel`, en
+   brouillon envoyé après une pause (`useSaisieDifferee`), calcule les formules et montre les
+   plafonds. Sur tablette le corpus se lit par le **serveur des fiches** (`origineDesFiches`), qui
+   sert les `.json` de `systems/` mais jamais les `.md` : les descriptions sont donc **aussi dans
+   `index.json` et `epoques.json`** (`EntreeDeReferentiel.description`, écrites par
+   `ecrire_vecus.py`). Rien de changé dans `electron/`. À éprouver par David sur une tablette.
 4. **Lot D, option B** si David le veut : composante « Formule » soustraite, MP débitées seules.
 5. À la main, sans projet : pacte de Kabbale en opposition, seuils des Chutes, malus des
    Conséquences, Effet Mnémos « en tant que Vécu », Sacrifice, recharge de la Stase.

@@ -50,9 +50,12 @@ for ordre, e in enumerate(epoques):
     ]
     for v in e['vecus']:
         renvoi = f"p. {e['page']}" + (f", corrigé par l’errata {v['errata']}" if v.get('errata') else '')
-        lignes += ['', f"## {v['nom']} — Ka-{v['ka']}", '', f"{v['description']} *({renvoi})*"]
+        texte_du_vecu = f"{v['description']} *({renvoi})*"
+        lignes += ['', f"## {v['nom']} — Ka-{v['ka']}", '', texte_du_vecu]
+        # La description aussi dans l'index : la tablette lit les .json du corpus, jamais les .md (18/10).
         index.append({'nom': v['nom'], 'fichier': nom_fichier,
-                      'details': {'Ka-élément': v['ka'], 'Ère': e['ere'], 'Époque': e['epoque'], 'Page': e['page']}})
+                      'details': {'Ka-élément': v['ka'], 'Ère': e['ere'], 'Époque': e['epoque'], 'Page': e['page']},
+                      'description': texte_du_vecu})
     lignes += ['', '---', '', f'Extrait du livre le {EXTRAIT}.']
     texte = '\n'.join(lignes) + '\n'
     open(os.path.join(SORTIE, nom_fichier), 'w', encoding='utf-8').write(texte)
@@ -71,14 +74,15 @@ lignes = ['# Les époques d’incarnation', '',
 entrees = []
 for e in epoques:
     noms = ', '.join(f"{v['nom']} (Ka-{v['ka']})" for v in e['vecus'])
-    lignes += ['', f"## {e['epoque']} — {e['ere']}", '', premieres_phrases(e['introduction']), '',
-               f"Dates et lieux : {dates_et_lieux(e)}." + (f" Coût : {e['cout']} PI." if e['cout'] is not None else '')]
-    lignes += [''] + [f'- {a}' for a in e['apports']]
-    lignes += ['', f'Vécus : {noms}.', '', f"*(p. {e['page']})*"]
+    corps = [premieres_phrases(e['introduction']), '',
+             f"Dates et lieux : {dates_et_lieux(e)}." + (f" Coût : {e['cout']} PI." if e['cout'] is not None else '')]
+    corps += [''] + [f'- {a}' for a in e['apports']]
+    corps += ['', f'Vécus : {noms}.', '', f"*(p. {e['page']})*"]
+    lignes += ['', f"## {e['epoque']} — {e['ere']}", ''] + corps
     details = {'Ère': e['ere'], 'Page': e['page'], 'Dates et lieux': dates_et_lieux(e)}
     if e['cout'] is not None:
         details['Coût'] = f"{e['cout']} PI"
-    entrees.append({'nom': e['epoque'], 'fichier': 'epoques.md', 'details': details})
+    entrees.append({'nom': e['epoque'], 'fichier': 'epoques.md', 'details': details, 'description': '\n'.join(corps).strip()})
 lignes += ['', '---', '', f'Extrait du livre le {EXTRAIT}.']
 open(os.path.join(SORTIE, 'epoques.md'), 'w', encoding='utf-8').write('\n'.join(lignes) + '\n')
 json.dump({'referentiel': 'Époques d’incarnation', 'source': SOURCE + ', p. 62 à 98', 'extrait': EXTRAIT, 'entrees': entrees},

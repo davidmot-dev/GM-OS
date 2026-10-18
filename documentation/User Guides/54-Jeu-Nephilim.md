@@ -195,6 +195,10 @@ Vécus qui en viennent.
   de l'Atlantide · Ka-élément : Feu »), ou **alerte** si son époque n'est pas parmi les incarnations.
   Sous chaque incarnation : « Vécus de cette incarnation : Héros (4) · Sage (2) ».
 - On peut toujours écrire un Vécu hors de la liste : la liste propose, elle n'interdit pas.
+- **Sur la tablette**, dans la vue synthétique : les Incarnations et les Vécus se choisissent de
+  même, avec les suggestions, ⓘ (description du livre comprise) et les étiquettes d'incarnation.
+  Le choix part au meneur une fraction de seconde après la dernière frappe, ou en fermant la
+  fiche. La vue calcule aussi le degré du Ka dominant et montre la Stase « / plafond ».
 
 Les noms et descriptions suivent le livre **et l'errata V1.3** : à *L'Éveil*, la Policière et la
 Journaliste ; aux *Chroniques de l'Apocalypse*, le Publicitaire et le Prof. Le livre imprime sous
@@ -218,4 +222,3 @@ le **Druide** (*Le sanctuaire des Tuatha de Danann*) la description du Chasseur 
 - Le **pacte de Kabbale** : un test en opposition, Art de la Sephirah + Ka contre le degré de
   l'invocation, que GM-OS ne compare pas.
 - Les seuils des Chutes, les malus des Conséquences.
-- Sur **tablette**, la fiche n'a pas les suggestions de Vécus et d'époques.

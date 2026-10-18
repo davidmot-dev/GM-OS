@@ -19,6 +19,12 @@ export interface EntreeDeReferentiel {
     fichier?: string;
     /** Ce qui se montre à côté du nom : « Ka-élément : Feu », « Époque : … ». */
     details?: Record<string, string | number>;
+    /**
+     * **La description, déjà dans l'index** (2026-10-18). La tablette lit les
+     * `.json` du corpus par le serveur des fiches, jamais les `.md` : sans elle,
+     * ⓘ n'y montrerait que les détails. Présente, elle l'emporte sur le fichier.
+     */
+    description?: string;
 }
 
 export interface Referentiel {
@@ -39,6 +45,7 @@ export function lireLeReferentiel(brut: unknown): Referentiel | null {
             nom: e.nom.trim(),
             fichier: typeof e.fichier === 'string' ? e.fichier : undefined,
             details: e.details && typeof e.details === 'object' ? e.details : undefined,
+            description: typeof e.description === 'string' && e.description.trim() !== '' ? e.description : undefined,
         }));
     return {
         titre: typeof objet.referentiel === 'string' ? objet.referentiel : 'Référentiel',

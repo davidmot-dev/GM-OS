@@ -23,6 +23,10 @@ import type { GameDriver } from '../../types/drivers';
 import JetsDeLaFiche from './JetsDeLaFiche';
 import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
 import { estUneSauvegarde, decrireLeJetDuPilote } from '../../modules/dice/lectureDuPilote';
+import ChampDuReferentiel from '../../modules/session/components/fields/ChampDuReferentiel';
+import { useSheetCalculator } from '../../modules/session/hooks/useSheetCalculator';
+import { plafondDuChamp } from '../../modules/session/logic/plafondDuChamp';
+import { useSaisieDifferee } from './useSaisieDifferee';
 
 interface HubCharacterSheetProps {
     onClose: () => void;
@@ -98,6 +102,25 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
      * retombait sur le gabarit « Generic ».
      */
     const pilote = piloteDuPersonnage(character, campaigns, customGameDrivers);
+
+    /*
+      **Les champs reliés à une liste du jeu, saisis sur la tablette** — Nephilim,
+      2026-10-18 (choix de David : « consulter et choisir »). Les Incarnations et
+      les Vécus proposent les époques et les Vécus du livre, comme chez le meneur.
+
+      La saisie reste en **brouillon** sur la tablette et part au meneur après une
+      pause de frappe (ou à la fermeture) : une écriture réseau par lettre
+      inonderait la table. Le brouillon s'efface quand la fiche revenue du meneur
+      porte la même valeur — c'est elle qui fait foi.
+    */
+    const { brouillons, saisir } = useSaisieDifferee(
+        (champ, valeur) => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: { [champ]: valeur } }),
+        character.sheetData,
+    );
+    const valeursVues: Record<string, unknown> = { ...(character.sheetData ?? {}), ...brouillons };
+    /* Les champs calculés (le degré du Ka dominant) et les plafonds lus sur un autre champ (la Stase). */
+    const { evaluateFormula } = useSheetCalculator(character, template, valeursVues as PlayerCharacter['sheetData']);
+    const champsDuGabarit = template.sections.flatMap(sec => sec.fields);
 
     const hubOptions = character.hubOptions ?? { showHP: true, showMP: true, showAP: true, showInventory: true, showRelations: true };
 
@@ -390,7 +413,16 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     {section.fields.map((field: SheetField) => {
-                                        const value = character.sheetData?.[field.id] ?? field.defaultValue;
+                                        const value = valeursVues[field.id] ?? field.defaultValue;
+                                        if (field.type === 'text' && field.referentiel) return (
+                                            <div key={field.id} className="col-span-2 md:col-span-3">
+                                                <ChampDuReferentiel field={field} value={String(value ?? '')}
+                                                    onChange={v => saisir(field.id, v)} pilote={pilote}
+                                                    valeurs={valeursVues} champsDeLaFiche={champsDuGabarit} />
+                                            </div>
+                                        );
+                                        const plafond = plafondDuChamp(field, champsDuGabarit, id => valeursVues[id], f => evaluateFormula(f));
+                                        const affiche = field.type === 'formula' ? evaluateFormula(field.formula || '') : value;
                                         return (
                                             <Panneau as="div" habillage="libre" key={field.id} className="p-4 bg-app-surface/40 border border-app-border/10 rounded-2xl">
                                                 <span className="text-ui-9 font-black text-app-text/30 uppercase tracking-widest">{field.label}</span>
@@ -406,7 +438,10 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                                         {value ? 'OUI' : 'NON'}
                                                     </span>
                                                 ) : (
-                                                    <span className="text-sm font-black text-app-text block mt-1 truncate">{String(value)}</span>
+                                                    <span className="text-sm font-black text-app-text block mt-1 truncate">
+                                                        {String(affiche)}
+                                                        {plafond !== undefined && <span className={`ml-1 font-mono text-ui-10 ${Number(affiche) > plafond ? 'text-etat-danger' : 'text-app-text/40'}`}>/ {plafond}</span>}
+                                                    </span>
                                                 )}
                                             </Panneau>
                                         );

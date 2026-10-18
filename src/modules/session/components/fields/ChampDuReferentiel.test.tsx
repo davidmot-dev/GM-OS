@@ -30,11 +30,13 @@ const PILOTE = { id: 'neph', name: 'Nephilim', corpusId: 'nephilim' };
 const CHAMP = { id: 'pastlives_0_name', label: 'Vécu passé 1', type: 'text' as const, defaultValue: '', referentiel: 'vecus/index.json' };
 
 beforeEach(() => {
+    // L'écran du meneur : dans Electron, le corpus se lit par `gmos://media/docs`.
+    (window as { appBridge?: unknown }).appBridge = {};
     vi.stubGlobal('fetch', vi.fn(async (adresse: string) => (adresse in FICHIERS
         ? { ok: true, text: async () => FICHIERS[adresse] }
         : { ok: false, text: async () => '' })));
 });
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); delete (window as { appBridge?: unknown }).appBridge; });
 
 describe('un nom de Vécu relié à la liste', () => {
     it('la saisie propose les noms de la liste', async () => {
@@ -156,5 +158,33 @@ describe('le Vécu retenu au jet', () => {
         const ligne = await screen.findByText(/Ka-élément : Feu/);
         expect(ligne.closest('[data-ligne-du-referentiel]')).toBeTruthy();
         expect(await screen.findByText('Vous avez été un héros fondateur.')).toBeTruthy();
+    });
+});
+
+/**
+ * **Sur la tablette** — 2026-10-18 : pas de `gmos://`, le corpus se lit par le
+ * serveur des fiches, qui sert les `.json` et jamais les `.md`. La description
+ * vient alors de l'index. (Un chemin à lui : les lectures se gardent par adresse.)
+ */
+describe('sur la tablette', () => {
+    it('la liste se lit par le serveur des fiches, et ⓘ montre la description de l’index', async () => {
+        delete (window as { appBridge?: unknown }).appBridge;
+        const { origineDesFiches } = await import('../../../fiches/pontDeLaFiche');
+        const lues: string[] = [];
+        const index = { referentiel: 'Vécus passés', entrees: [
+            { nom: 'Aède', fichier: '10-troie.md', details: { 'Ka-élément': 'Air' }, description: 'Vous vous êtes incarné sous les traits d’un aède.' },
+        ] };
+        vi.stubGlobal('fetch', vi.fn(async (adresse: string) => {
+            lues.push(adresse);
+            return adresse === `${origineDesFiches()}/systems/nephilim/tablette/index.json`
+                ? { ok: true, text: async () => JSON.stringify(index) }
+                : { ok: false, text: async () => '' };
+        }));
+        const champ = { ...CHAMP, referentiel: 'tablette/index.json' };
+        const { container } = render(<ChampDuReferentiel field={champ} value="Aède" onChange={vi.fn()} pilote={PILOTE} />);
+        await vi.waitFor(() => expect(container.querySelectorAll('datalist option')).toHaveLength(1));
+        fireEvent.click(screen.getByRole('button', { name: /Ce que dit le corpus/ }));
+        expect(await screen.findByText('Vous vous êtes incarné sous les traits d’un aède.')).toBeTruthy();
+        expect(lues.every(a => a.startsWith('http://') && !a.endsWith('.md'))).toBe(true);
     });
 });
