@@ -32,10 +32,16 @@ export interface VueDesModulesMJ {
 export interface RequeteDeModule {
     requeteId: string; campagneId: string; moduleId: string; contexte: number; commande: CommandeDeModule;
 }
+/** Réservé au raccord des fiches du poste MJ ; aucune route WebSocket joueur. */
+export interface AccuseFicheDeModule {
+    campagneId: string; moduleId: string; contexte: number; personnageId: string; transactionId: string;
+    appliquee: boolean; sortieForcee: boolean; detail: string;
+}
 export interface PontDesModules {
     contexte: (contexte: ContexteDesModules) => Promise<ResultatDeModule>;
     lire: () => Promise<VueDesModulesMJ>;
     commander: (requete: RequeteDeModule) => Promise<ResultatDeModule>;
+    acquitterFiche: (accuse: AccuseFicheDeModule) => Promise<ResultatDeModule>;
     autoriser: (demande: { campagneId: string; moduleId: string; personnages: string[]; contexte: number }) => Promise<ResultatDeModule>;
     toutCouper: (demande: { campagneId: string; contexte: number }) => Promise<ResultatDeModule>;
     choisirDiffusion: (demande: { campagneId: string; moduleId: string; appareilId: string; contexte: number }) => Promise<ResultatDeModule>;

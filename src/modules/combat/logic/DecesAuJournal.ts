@@ -1,4 +1,4 @@
-import { estTombe } from './RecitDuCombat';
+import { estTombe, porteLEtiquetteDeMort } from './RecitDuCombat';
 import type { Combatant } from '../types';
 
 /**
@@ -46,8 +46,13 @@ export function chutesEntre(
     avant: ChuteObservable[],
     apres: ChuteObservable[],
 ): ChuteObservable[] {
-    const etatAvant = new Map(avant.map(c => [c.id, estTombe(c)]));
-    return apres.filter(c => etatAvant.get(c.id) === false && estTombe(c));
+    // RdD distingue une chute non mortelle (coma, inconscience) d'un décès.
+    const mort = (c: ChuteObservable) => {
+        const rdd = c.healthSystem?.data?.rdd as {mort?: boolean} | undefined;
+        return typeof rdd?.mort === 'boolean' ? rdd.mort || porteLEtiquetteDeMort(c) : estTombe(c);
+    };
+    const etatAvant = new Map(avant.map(c => [c.id, mort(c)]));
+    return apres.filter(c => etatAvant.get(c.id) === false && mort(c));
 }
 
 /** Comment le journal nomme et raconte un décès. */

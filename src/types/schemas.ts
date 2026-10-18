@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DonneesDeFicheSchema } from './donneesDeFiche';
 import { validerSauvegardeDesModules, type SauvegardeDesModules } from '../modules/modulesDuJeu/protocole';
 import { validerLesReferences } from '../../outils/modules-du-jeu/contrat.mjs';
 
@@ -30,7 +31,7 @@ export const PlayerCharacterSchema = z.object({
     maxHp: z.number().default(0),
     campaignId: z.string().nullable().default(null),
     templateId: z.string().default('generic'),
-    sheetData: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).default({}),
+    sheetData: DonneesDeFicheSchema.default({}),
 }).passthrough();
 
 export const PlayerSchema = z.object({

@@ -1,11 +1,11 @@
-import { CATALOGUE_DES_MODULES, modulesDuPilote } from './catalogue';
+import { CATALOGUE_DES_MODULES, moduleCompatible, modulesDuPilote } from './catalogue';
 import type { GameDriver } from '../../types/drivers';
 
 export function EditeurDesModules({ pilote, onChange }: {
     pilote: GameDriver; onChange: (modules: NonNullable<GameDriver['modulesDuJeu']>) => void;
 }) {
     const resultat = modulesDuPilote(pilote);
-    const compatibles = CATALOGUE_DES_MODULES.filter(m => m.corpusCompatibles.includes(resultat.corpusId || ''));
+    const compatibles = CATALOGUE_DES_MODULES.filter(m => moduleCompatible(m, resultat.corpusId));
     return <section className="space-y-6" aria-label="Modules du jeu">
         <header className="space-y-2">
             <h2 className="text-2xl font-bold text-app-text">Modules du jeu</h2>

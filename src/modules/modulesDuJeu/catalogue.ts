@@ -1,15 +1,19 @@
-import { resoudreCorpus } from '../../../electron/corpusSysteme';
+import { resoudreCorpus, slug } from '../../../electron/corpusSysteme';
 import { validerLeManifeste, validerLesReferences } from '../../../outils/modules-du-jeu/contrat.mjs';
 import manifesteMuthur from '../../../outils/alien/modules/muthur/manifeste.json';
 import manifesteDetecteur from '../../../outils/alien/modules/detecteur/manifeste.json';
 import manifesteLcars from '../../../outils/star-trek/lcars/manifeste.json';
+import manifesteTmr from '../../../outils/reve-de-dragon/tmr/manifeste.json';
 import type { ModuleDuCatalogue, ModuleDuPilote, ReferenceDeModuleDuJeu } from './types';
 
 // Registre explicite : aucun chemin, script ou URL fourni par un pilote n'est exécuté.
 if (validerLeManifeste(manifesteMuthur).length) throw new Error('Manifeste MU/TH/UR invalide.');
 if (validerLeManifeste(manifesteDetecteur).length) throw new Error('Manifeste du détecteur invalide.');
 if (validerLeManifeste(manifesteLcars).length) throw new Error('Manifeste LCARS invalide.');
+if (validerLeManifeste(manifesteTmr).length) throw new Error('Manifeste TMR invalide.');
 export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
+    { id: manifesteTmr.id, libelle: manifesteTmr.libelle, description: manifesteTmr.description,
+        corpusCompatibles: manifesteTmr.corpusCompatibles, adaptation: 'prete' },
     { id: manifesteLcars.id, libelle: manifesteLcars.libelle,
         description: 'Sept consoles de passerelle pilotées par le MJ : interventions, ordres, rapports et médias privés, alertes et diffuseur sonore.',
         corpusCompatibles: manifesteLcars.corpusCompatibles, adaptation: 'prete' },
@@ -20,6 +24,8 @@ export const CATALOGUE_DES_MODULES: readonly ModuleDuCatalogue[] = [
 ];
 
 export { validerLesReferences };
+/** Les anciens noms de dossiers restent tels quels ; seul le rapprochement emploie leur slug. */
+export const moduleCompatible = (module: ModuleDuCatalogue, corpus: string | null) => !!corpus && module.corpusCompatibles.includes(slug(corpus));
 export function exigerReferencesDeModules(references: unknown): void {
     const erreurs = validerLesReferences(references);
     if (erreurs.length) throw new Error(`Modules du jeu invalides : ${erreurs.join(' ')}`);
@@ -39,7 +45,9 @@ export function modulesDuPilote(pilote: IdentiteDuPilote | null | undefined, sys
         const connu = CATALOGUE_DES_MODULES.find(m => m.id === reference.id);
         return { reference, libelle: reference.libelle || connu?.libelle || reference.id,
             description: connu?.description || 'Ce module est absent du catalogue de cette version.',
-            disponibilite: !connu ? 'inconnu' : !connu.corpusCompatibles.includes(corpusId) ? 'incompatible'
+            // Le manifeste utilise des identifiants ; les anciens dossiers peuvent porter des espaces.
+            // Comparer leur slug ne renomme ni le corpus ni son chemin (RdD, 18/10/2026).
+            disponibilite: !connu ? 'inconnu' : !moduleCompatible(connu, corpusId) ? 'incompatible'
                 : connu.adaptation === 'prete' ? 'pret' : 'a-adapter' };
     });
     return { corpusId, implicite, references, modules, erreurs };

@@ -53,6 +53,8 @@ export interface SheetTemplate {
     id: string;
     name: string;
     emoji: string;
+    /** Lecture et reprise explicites du Voyageur, règles 2.3.1 (R0, 18/10/2026). */
+    reglesDeFiche?: 'rdd-231';
     isBuiltin?: boolean; // Built-in templates cannot be deleted
     sections: SheetSection[];
     defaultNotebookUrl?: string; // Default NotebookLM for this system

@@ -10,6 +10,8 @@
 import type { CreateurDeSlice } from './contratDesSlices';
 import type { Scene } from '../../../types/trame.types';
 import { premiereFoisVu } from '../logic/ecranDeScene';
+import { actualiserPersonnageDeVoyageur } from '../logic/ficheDeVoyageur';
+import { projeterSanteVoyageur } from '../logic/santeDuVoyageur';
 import i18next from 'i18next';
 import { gmToast } from '../../../stores/useToastStore';
 // import { useJournalStore } from '../../journal/useJournalStore'; // Broken by circular dependency
@@ -238,12 +240,15 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== id) return e;
-                const newEntity = { ...e, ...updates };
+                const base = { ...e, ...updates };
+                const newEntity = base.sheetData?.__rddSante231 ? actualiserPersonnageDeVoyageur(base,
+                    (get() as unknown as {customSheetTemplates?: SheetTemplate[]}).customSheetTemplates ?? [],e) : base;
 
                 // Auto-sync HealthSystem
                 const currentVal = updates.hp !== undefined ? updates.hp : newEntity.hp;
                 const maxVal = updates.maxHp !== undefined ? updates.maxHp : newEntity.maxHp;
-                newEntity.healthSystem = syncHealthSystem(currentVal, maxVal, newEntity.healthSystem);
+                newEntity.healthSystem = projeterSanteVoyageur(newEntity.sheetData ?? {},syncHealthSystem(currentVal, maxVal, newEntity.healthSystem));
+                if (newEntity.healthSystem?.data.rdd) newEntity.status = (newEntity.healthSystem.data.rdd as {mort:boolean}).mort ? 'dead' : newEntity.healthSystem.state === 'healthy' ? 'alive' : 'injured';
 
                 return newEntity;
             }),
@@ -261,14 +266,16 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 if (e.id !== entityId) return e;
                 
                 // Calcul du nouvel état de santé
-                const nextHp = Math.max(0, hp);
+                const nextHp = e.sheetData?.__rddSante231 ? hp : Math.max(0, hp);
                 const status = nextHp <= 0 ? 'dead' : nextHp < e.maxHp * 0.25 ? 'injured' : 'alive';
                 
                 // Préparation de la mise à jour
                 const updated = { ...e, hp: nextHp, status } as Entity;
+                if (e.sheetData?.__rddSante231) updated.sheetData = {...e.sheetData,vie:nextHp};
 
                 // Synchronisation forcée du HealthSystem
-                updated.healthSystem = syncHealthSystem(nextHp, e.maxHp, e.healthSystem);
+                updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {},syncHealthSystem(nextHp, e.maxHp, e.healthSystem));
+                if (updated.healthSystem?.data.rdd) updated.status = (updated.healthSystem.data.rdd as {mort:boolean}).mort ? 'dead' : updated.healthSystem.state === 'healthy' ? 'alive' : 'injured';
                 
                 return updated;
             }),
@@ -328,12 +335,17 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             return { entities: state.entities.map(e => e.id === entityId ? { ...e, vuParLesJoueurs: vu } : e) };
         }),
 
-    updateEntitySheetData: (id, fieldId, value) =>
+    updateEntitySheetData: (id, fieldId, value) => {
+        const entite = get().entities.find(e => e.id === id);
+        if (entite?.sheetData?.__rddSante231) {
+            get().updateEntity(id,{sheetData:{...entite.sheetData,[fieldId]:value}});return;
+        }
         set((state) => ({
             entities: state.entities.map((e) =>
                 e.id === id ? { ...e, sheetData: { ...e.sheetData, [fieldId]: value } } : e
             ),
-        })),
+        }));
+    },
 
     autoSelectFirstEntity: () => {
         // Implémentée dans le root store (dépend de activeCampaignId du campaignSlice)
@@ -436,11 +448,12 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                           ...p,
                           characters: p.characters.map((c) => {
                                 if (c.id !== characterId) return c;
-                                const nextHp = Math.max(0, hp);
+                                const nextHp = c.sheetData?.__rddSante231 ? hp : Math.max(0, hp);
                                 const updated = { ...c, hp: nextHp } as PlayerCharacter;
+                                if (c.sheetData?.__rddSante231) updated.sheetData = {...c.sheetData,vie:nextHp};
                                 
                                 // Synchronisation forcée du HealthSystem
-                                updated.healthSystem = syncHealthSystem(nextHp, c.maxHp, c.healthSystem);
+                                updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {},syncHealthSystem(nextHp, c.maxHp, c.healthSystem));
                                 return updated;
                           }),
                       }
@@ -522,14 +535,15 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                           ...p,
                           characters: p.characters.map((c) => {
                                 if (c.id !== characterId) return c;
-                                const updated = { ...c, ...updates };
+                                const updated = actualiserPersonnageDeVoyageur({ ...c, ...updates },
+                                    (get() as unknown as { customSheetTemplates?: SheetTemplate[] }).customSheetTemplates ?? [], c);
                                 // La date de la dernière écriture des données — l'arbitre face à la fiche (`pousseeVersLaFiche.ts`).
                                 if (toucheLesDonnees(updates) && updates.donneesModifieesLe === undefined) updated.donneesModifieesLe = Date.now();
 
                                 // Auto-sync HealthSystem
-                                const currentVal = updates.hp !== undefined ? updates.hp : updated.hp;
-                                const maxVal = updates.maxHp !== undefined ? updates.maxHp : updated.maxHp;
-                                updated.healthSystem = syncHealthSystem(currentVal, maxVal, updated.healthSystem);
+                                const currentVal = updated.hp;
+                                const maxVal = updated.maxHp;
+                                updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {}, syncHealthSystem(currentVal, maxVal, updated.healthSystem));
                                 return updated;
                           }),
                       }
@@ -543,11 +557,13 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 p.id === playerId
                     ? {
                           ...p,
-                          characters: p.characters.map((c) =>
-                              c.id === characterId
-                                  ? { ...c, sheetData: { ...c.sheetData, [fieldId]: value }, donneesModifieesLe: Date.now() }
-                                  : c
-                          ),
+                          characters: p.characters.map((c) => {
+                              if (c.id !== characterId) return c;
+                              const updated = actualiserPersonnageDeVoyageur({ ...c, sheetData: { ...c.sheetData, [fieldId]: value }, donneesModifieesLe: Date.now() },
+                                  (get() as unknown as { customSheetTemplates?: SheetTemplate[] }).customSheetTemplates ?? [], c);
+                              if (updated.hp !== c.hp || updated.maxHp !== c.maxHp || updated.sheetData?.__rddSante231) updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {}, syncHealthSystem(updated.hp, updated.maxHp, updated.healthSystem));
+                              return updated;
+                          }),
                       }
                     : p
             ),

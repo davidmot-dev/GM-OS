@@ -8,6 +8,14 @@ import '../../../outils/star-trek/lcars/style.css';
 import type { VueLcarsMJ, VueLcarsJoueur } from '../../../outils/star-trek/lcars/moteur.mjs';
 
 type Props = { vue: unknown; horloge?: () => number; envoyerCommande: (commande: CommandeDeModule) => Promise<ResultatDeModule> };
+const vueTmr = lazy(async () => {
+    const { VuesTMR } = await import('./tmr/VuesTMR');
+    return { default: (props: Props) => <VuesTMR {...props} vue={props.vue as import('../../../outils/reve-de-dragon/tmr/moteur.mjs').VueTMRMJ | import('../../../outils/reve-de-dragon/tmr/moteur.mjs').VueTMRJoueur} /> };
+});
+const mjTmr = lazy(async () => {
+    const { PupitreTMR } = await import('./tmr/PupitreTMR');
+    return { default: (props: Props) => <PupitreTMR {...props} vue={props.vue as import('../../../outils/reve-de-dragon/tmr/moteur.mjs').VueTMRMJ} /> };
+});
 const joueurLcars = lazy(async () => {
     const { VueJoueur } = await import('../../../outils/star-trek/lcars/vues.mjs');
     return { default: (props: Props) => <VueJoueur {...props} vue={props.vue as VueLcarsJoueur} /> };
@@ -33,6 +41,7 @@ const mjDetecteur = lazy(async () => {
     return { default: (props: Props) => <PupitreMJ vue={props.vue as EtatDetecteur} envoyerCommande={props.envoyerCommande} /> };
 });
 const REGISTRE_DES_VUES = new Map([
+    ['rdd-tmr', { joueur: vueTmr, mj: mjTmr }],
     ['star-trek-lcars', { joueur: joueurLcars, mj: mjLcars }],
     ['alien-muthur', { joueur: joueurMuthur, mj: mjMuthur }],
     ['alien-detecteur', { joueur: joueurDetecteur, mj: mjDetecteur }],

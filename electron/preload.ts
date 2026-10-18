@@ -73,6 +73,7 @@ contextBridge.exposeInMainWorld('appBridge', {
         contexte: (contexte: import('../src/modules/modulesDuJeu/protocole').ContexteDesModules) => ipcRenderer.invoke('modules:contexte', contexte),
         lire: () => ipcRenderer.invoke('modules:lire'),
         commander: (requete: import('../src/modules/modulesDuJeu/protocole').RequeteDeModule) => ipcRenderer.invoke('modules:commander', requete),
+        acquitterFiche: (accuse: import('../src/modules/modulesDuJeu/protocole').AccuseFicheDeModule) => ipcRenderer.invoke('modules:acquitter-fiche', accuse),
         autoriser: (demande: { campagneId: string; moduleId: string; personnages: string[]; contexte: number }) => ipcRenderer.invoke('modules:autoriser', demande),
         toutCouper: (demande: { campagneId: string; contexte: number }) => ipcRenderer.invoke('modules:tout-couper', demande),
         choisirDiffusion: (demande: { campagneId: string; moduleId: string; appareilId: string; contexte: number }) => ipcRenderer.invoke('modules:diffusion', demande),

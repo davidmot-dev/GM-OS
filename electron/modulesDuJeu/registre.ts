@@ -8,6 +8,8 @@ import type { CommandeDeModule } from '../../src/modules/modulesDuJeu/protocole'
 import * as lcars from '../../outils/star-trek/lcars/natif.mjs';
 import { validerEtat as validerLcars } from '../../outils/star-trek/lcars/moteur.mjs';
 import manifesteLcars from '../../outils/star-trek/lcars/manifeste.json';
+import * as tmr from '../../outils/reve-de-dragon/tmr/moteur.mjs';
+import manifesteTmr from '../../outils/reve-de-dragon/tmr/manifeste.json';
 
 export type LecteurDeModule = { role: 'mj' | 'joueur'; personnageId?: string; appareilId: string };
 export type ContexteDeMoteur = { personnages: { id: string; nom: string }[] };
@@ -20,6 +22,7 @@ export interface MoteurEnregistre {
     mediasPrives?: boolean;
     choisirDiffusion?(donnees: unknown, appareilId: string): unknown;
     diffusionActuelle?(donnees: unknown): string | null;
+    terminerEcriture?(donnees: unknown, personnageId: string, transactionId: string, appliquee: boolean, sortieForcee: boolean, detail: string): unknown;
     migrerEtat(donnees: unknown, version: number): unknown;
     arreterEffets(donnees: unknown): unknown;
     appliquerCommande(donnees: unknown, commande: CommandeDeModule, lecteur: LecteurDeModule, contexte: ContexteDeMoteur): unknown;
@@ -29,7 +32,11 @@ const contexte = (lecteur: LecteurDeModule): ContexteMuthur => {
     if (lecteur.role === 'joueur' && !lecteur.personnageId) throw new Error('Personnage requis.');
     return lecteur as ContexteMuthur;
 };
-export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new Map([
+export const REGISTRE_DES_MOTEURS: ReadonlyMap<string, MoteurEnregistre> = new Map<string, MoteurEnregistre>([
+    [manifesteTmr.id, { manifeste: manifesteTmr, creerEtat: tmr.creerEtat, preparerLecteur: tmr.preparerLecteur,
+        terminerEcriture: tmr.terminerEcriture,
+        preparerContexte: tmr.preparerContexte, migrerEtat: tmr.migrerEtat, arreterEffets: tmr.arreterEffets,
+        appliquerCommande: tmr.appliquerCommande, vuePour: tmr.vuePour }],
     [manifesteLcars.id, {
         manifeste: manifesteLcars, creerEtat: lcars.creerEtat, preparerLecteur: lcars.preparerLecteur,
         mediasPrives: true, choisirDiffusion: lcars.choisirDiffusion, diffusionActuelle: lcars.diffusionActuelle,

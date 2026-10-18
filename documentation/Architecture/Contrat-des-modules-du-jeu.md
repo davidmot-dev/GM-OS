@@ -29,8 +29,8 @@ version référence des implémentations livrées avec GM-OS. Le registre associ
 explicitement leurs manifestes à leur code ; la déclaration d'un pilote
 ne déclenche aucun chargement de script, chemin ou URL.
 
-MU/TH/UR et le détecteur Alien sont les premiers modules réels. La Table
-des Terres Médianes de Rêve de Dragon est une deuxième cible à spécifier.
+MU/TH/UR et le détecteur Alien sont les premiers modules réels. Le module des
+Terres Médianes de Rêve de Dragon les rejoint en mode assisté le 18/10/2026.
 Ce contrat n'en définit aucune règle de jeu.
 
 ## 2 · Manifeste v1
@@ -291,6 +291,21 @@ commun MJ, l’activation locale au diffuseur. La vue ouverte possède l’audio
 perte de droits et démontage l’arrêtent. Les annonces suivent l’horloge serveur sans rattrapage.
 Le courtier vocal LCARS cède la priorité aux autres appels de synthèse et n’annule que sa
 propre phrase lors de son nettoyage. Les appareils physiques restent à vérifier en L7.
+
+Le module [`rdd-tmr`](../../outils/reve-de-dragon/tmr/README.md) rejoint le registre le
+18/10/2026 : carte individuelle, demandes de déplacement arbitrées, rencontres privées
+et notes de réserves/effets. Cette première tranche utilise les mêmes droits, projections
+et sauvegardes que les autres modules. La version 0.2.0 ajoute un raccord natif spécifique aux coûts
+de rêve/fatigue : intention persistée dans le module, ressources et reçu dans une écriture de fiche,
+relecture durable, puis acquittement de la position. L'extension facultative `terminerEcriture`
+du registre est appelée par un IPC réservé au poste MJ, jamais par une commande du manifeste
+ou du WebSocket joueur. Le moteur externe reste sans accès aux magasins. Une interruption
+conserve l'intention à rapprocher ; reçu présent, terminer sans repayer ; reçu absent, annuler
+sans nouveau débit. Ce protocole récupérable ne constitue pas une transaction atomique entre
+les deux stockages. L'arbitrage manuel demeure pour les exceptions et les jets. Aucune écriture
+générique dans SessionOS n'est accordée aux modules.
+La compatibilité compare les slugs des corpus afin de conserver les dossiers historiques
+avec espaces sans les renommer. La référence de pilote reste explicite.
 
 Un module livré DOIT documenter ses commandes, ses données, ses migrations,
 ses effets, ses limites et ses essais. Sa page de jeu et le guide des

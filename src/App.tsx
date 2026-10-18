@@ -32,6 +32,7 @@ import { crossWindowSync } from './services/CrossWindowEventService';
 import { dispatchRemoteAction } from './modules/remote/actions';
 import { useThemeDuJeu } from './theme/useThemeDuJeu';
 import { isMainWindow } from './utils/windowRole';
+import { useSuiviSanteVoyageur } from './modules/session/hooks/useSuiviSanteVoyageur';
 import type { SessionMessage } from './types/session.types';
 import { filDuLecteur, lecteurDuRole } from '../electron/destinatairesDesMessages';
 
@@ -126,6 +127,7 @@ function App() {
   // Le système est "prêt" si hydraté et (si Main PC) si le bootstrap est fini
   const isAppReady = isHydrated && (isMainPC ? isSystemReady : true);
   useHoteDesModules(isMainPC && isAppReady);
+  useSuiviSanteVoyageur(isMainPC && isAppReady);
   /* De quoi peupler l'écran d'attente — voir la garde plus bas. */
   const etapeDeDemarrage = useDemarrageStore(state => state.etapeEnCours);
   const etapesRendues = useDemarrageStore(state => state.rendus);

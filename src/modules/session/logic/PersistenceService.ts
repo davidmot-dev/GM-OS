@@ -61,6 +61,7 @@ export const SESSION_STORE_KEY = 'gmos-v5-session-os-storage';
  */
 let laLectureAReussi = false;
 let laBaseAEteRelue = false;
+const ecrituresEnCours = new Set<Promise<unknown>>();
 
 /** L'écriture est-elle ouverte ? Réservé aux tests et au diagnostic. */
 export const lEcritureEstOuverte = () => laBaseAEteRelue;
@@ -92,7 +93,9 @@ const gmOnlyStateStorage: StateStorage = {
     setItem: async (name, value) => {
         if (!isMainWindow()) return;
         if (!laBaseAEteRelue) return;
-        await idbStateStorage.setItem(name, value);
+        const ecriture = Promise.resolve(idbStateStorage.setItem(name, value));
+        ecrituresEnCours.add(ecriture);
+        try { await ecriture; } finally { ecrituresEnCours.delete(ecriture); }
     },
 
     removeItem: async (name) => {
@@ -122,6 +125,18 @@ const stockageDeSession = inscrireUnStockageDiffere(
         { autorise: () => isMainWindow() && laBaseAEteRelue },
     ),
 );
+
+/** Barrière de reçu R8 : vider le tampon ne prouve pas une écriture IndexedDB.
+ * Attendre les écritures, puis relire le disque : idbStorage peut signaler un échec
+ * sans rejeter sa promesse. Aucun accusé de débit n'est émis sur la seule mémoire.
+ * Les gardes historiques (MJ + hydratation réussie) restent impératives. */
+export async function confirmerEcritureDeSession(verifier: (etat: unknown) => boolean): Promise<void> {
+    if (!isMainWindow() || !laBaseAEteRelue) throw new Error('La persistance de la session n’est pas disponible. Aucun trajet ne peut être acquitté.');
+    stockageDeSession.viderMaintenant();
+    while (ecrituresEnCours.size) await Promise.all([...ecrituresEnCours]);
+    const brut = await idbStateStorage.getItem(SESSION_STORE_KEY);
+    if (!brut || !verifier(JSON.parse(brut).state)) throw new Error('Le reçu du trajet n’a pas été relu dans la fiche persistée. Réessaie la confirmation sans refaire de dépense.');
+}
 
 /**
  * PersistenceService handles Zustand persistence configuration.

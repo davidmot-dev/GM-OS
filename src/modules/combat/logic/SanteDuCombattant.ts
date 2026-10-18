@@ -120,7 +120,8 @@ export function abregerLaSante(
 export function decrireLaSante(c: PorteurDeSante): string | null {
     const sys = c.healthSystem;
     if (sys) {
-        const etat = ETATS[sys.state] ?? sys.state;
+        const rdd = sys.data?.rdd as {libelle?: string} | undefined;
+        const etat = rdd?.libelle ?? ETATS[sys.state] ?? sys.state;
         const d = sys.data ?? {};
         switch (sys.type) {
             case 'hp':
@@ -417,6 +418,8 @@ export function fractionDeVie(c: PorteurDeSante): number | null {
  * déclare pas mort un combattant faute d'information.
  */
 export function estHorsDeCombat(c: PorteurDeSante): boolean {
+    const rdd = c.healthSystem?.data?.rdd as {horsCombat?: boolean} | undefined;
+    if (typeof rdd?.horsCombat === 'boolean') return rdd.horsCombat;
     if (c.healthSystem) return c.healthSystem.state === 'dead';
     if (aUneJaugeDeVie(c)) return c.hp! <= 0;
     return false;

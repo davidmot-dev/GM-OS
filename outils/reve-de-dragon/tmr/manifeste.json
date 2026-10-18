@@ -1,0 +1,21 @@
+{
+  "versionContrat": 1,
+  "id": "rdd-tmr",
+  "libelle": "Terres Médianes du Rêve",
+  "description": "Carte privée de chaque demi-rêve, trajets arbitrés par le MJ, rencontres et réserves. Raccord aux coûts de rêve/fatigue des fiches ; arbitrage manuel pour les exceptions et les jets.",
+  "version": "0.2.0",
+  "versionDonnees": 2,
+  "corpusCompatibles": ["reves-de-dragons", "reve-de-dragon"],
+  "commandes": [
+    {"id": "positionner", "roles": ["mj"]},
+    {"id": "proposer", "roles": ["mj", "joueur"]},
+    {"id": "annuler", "roles": ["mj", "joueur"]},
+    {"id": "arbitrer", "roles": ["mj"]},
+    {"id": "engager-trajet", "roles": ["mj"]},
+    {"id": "preparer-rencontre", "roles": ["mj"]},
+    {"id": "publier-rencontre", "roles": ["mj"]},
+    {"id": "terminer-rencontre", "roles": ["mj"]},
+    {"id": "noter", "roles": ["mj"]},
+    {"id": "retirer-note", "roles": ["mj"]}
+  ]
+}

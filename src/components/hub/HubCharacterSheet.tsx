@@ -18,7 +18,11 @@ import type { PlayerCharacter, Campaign, SheetTemplate, InventoryItem } from '..
 import { resolveSheetTemplate } from '../../modules/session/logic/templateResolver';
 import { piloteDuPersonnage } from '../../modules/session/logic/piloteDuPersonnage';
 import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
-import PanneauDeJet from '../../modules/session/components/fields/PanneauDeJet';
+import PanneauDeJet from '../../modules/session/components/PanneauJetDeFiche';
+import { PanneauFatigueVoyageur } from '../../modules/session/components/PanneauFatigueVoyageur';
+import { PanneauSanteVoyageur } from '../../modules/session/components/PanneauSanteVoyageur';
+import { PanneauRepriseVoyageur } from '../../modules/session/components/PanneauRepriseVoyageur';
+import { estUneFicheDeVoyageur, lireFicheDeVoyageur, CLE_REPRISE } from '../../modules/session/logic/ficheDeVoyageur';
 import type { GameDriver } from '../../types/drivers';
 import JetsDeLaFiche from './JetsDeLaFiche';
 import { Bouton, EnTeteDeModule, Etiquette, Panneau } from '../socle';
@@ -117,7 +121,8 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
         (champ, valeur) => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: { [champ]: valeur } }),
         character.sheetData,
     );
-    const valeursVues: Record<string, unknown> = { ...(character.sheetData ?? {}), ...brouillons };
+    const valeursBrutes: Record<string, unknown> = { ...(character.sheetData ?? {}), ...brouillons };
+    const valeursVues = estUneFicheDeVoyageur(template) ? lireFicheDeVoyageur(template, valeursBrutes).valeurs : valeursBrutes;
     /* Les champs calculés (le degré du Ka dominant) et les plafonds lus sur un autre champ (la Stase). */
     const { evaluateFormula } = useSheetCalculator(character, template, valeursVues as PlayerCharacter['sheetData']);
     const champsDuGabarit = template.sections.flatMap(sec => sec.fields);
@@ -351,6 +356,11 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
 
                     {/* Stats & Notes */}
                     <div className="lg:col-span-8 space-y-8">
+                        {estUneFicheDeVoyageur(template) && (
+                            <PanneauRepriseVoyageur key={character.id} fiche={template} donnees={character.sheetData ?? {}}
+                                vieCombat={character.hp} maxVieCombat={character.maxHp}
+                                appliquer={donnees => remoteUpdateCharacterSheetData(playerId, character.id, { sheetData: donnees })} />
+                        )}
 
                         {/*
                             **Lancer depuis sa propre fiche**, à côté des
@@ -390,12 +400,20 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             lancer la même Sauvegarde, dont une invisible pour
                             la table, ce serait pire qu'une seule.
                         */}
-                        {pilote?.jet && !estUneSauvegarde(decrireLeJetDuPilote(pilote)) && (
+                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
+                            <PanneauFatigueVoyageur key={`fatigue-${character.id}`} donnees={valeursVues}
+                                appliquer={maj => remoteUpdateCharacterSheetData(playerId, character.id, {sheetData: maj})} />
+                        )}
+                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
+                            <PanneauSanteVoyageur key={`sante-${character.id}`} donnees={valeursVues}
+                                appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
+                        )}
+                        {pilote?.jet && !estUneSauvegarde(decrireLeJetDuPilote(pilote)) && (!estUneFicheDeVoyageur(template) || character.sheetData?.[CLE_REPRISE] === 1) && (
                             <PanneauDeJet
                                 descripteur={pilote.jet}
                                 dice={pilote.dice}
                                 template={template}
-                                valeurs={character.sheetData ?? {}}
+                                valeurs={valeursVues}
                                 campaignId={campaignId ?? undefined}
                                 ressourcesDeTable={ressourcesDeLaTable(pilote, campagneDeLaTable)}
                                 // La réserve dépensée remonte au meneur, comme ce que la fiche HTML impose.

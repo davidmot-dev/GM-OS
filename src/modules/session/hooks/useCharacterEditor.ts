@@ -5,12 +5,15 @@ import { useMediaStore } from '../../../stores/useMediaStore';
 import { resolveSheetTemplate } from '../logic/templateResolver';
 import { useMediaUrl } from '../../../hooks/useMediaUrl';
 import { santeDeDepart, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
+import { estUneFicheDeVoyageur, lireFicheDeVoyageur, CLE_REPRISE } from '../logic/ficheDeVoyageur';
+import { gmToast } from '../../../stores/useToastStore';
 import type { Player, PlayerCharacter } from '../store/types';
+import { suivrePerteDEndurance } from '../logic/fatigueDuVoyageur';
 
 export function useCharacterEditor() {
     const {
         players, selectedPlayerId, selectedCharacterId,
-        customSheetTemplates, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
+        customSheetTemplates, updateCharacter, updateCharacterSheetData, updateCharacterVisuals, updateCharacterNarrative,
         generatePlayerPortrait, isGeneratingAIImage,
         updateCharacterHP, updateCharacterMaxHP,
         updateCharacterHubOptions,
@@ -29,12 +32,17 @@ export function useCharacterEditor() {
     // Computes default data by reading from template schema and overlaying saved data
     const getInitialData = useCallback((): Record<string, string | number | boolean> => {
         if (!character || !template) return {};
+        const lues = estUneFicheDeVoyageur(template)
+            ? lireFicheDeVoyageur(template, character.sheetData).valeurs : character.sheetData;
         const out: Record<string, string | number | boolean> = {};
         for (const section of template.sections) {
             for (const field of section.fields) {
-                const val = character.sheetData?.[field.id];
+                const val = lues?.[field.id];
                 out[field.id] = (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') ? val : field.defaultValue;
             }
+        }
+        if (estUneFicheDeVoyageur(template)) for (const [cle, valeur] of Object.entries(character.sheetData ?? {})) {
+            if (!(cle in out) && ['string', 'number', 'boolean'].includes(typeof valeur)) out[cle] = valeur as string | number | boolean;
         }
         return out;
     }, [character, template]);
@@ -67,14 +75,26 @@ export function useCharacterEditor() {
 
     const updateLocal = (fieldId: string, value: string | number | boolean) => {
         setSaved(false);
-        setLocalData(prev => ({ ...prev, [fieldId]: value }));
+        setLocalData(prev => {
+            const suivant = { ...prev, [fieldId]: value };
+            if (!template || !estUneFicheDeVoyageur(template)) return suivant;
+            const lue = lireFicheDeVoyageur(template, suivrePerteDEndurance(prev, { ...suivant, [CLE_REPRISE]: 1 }));
+            return { ...suivant, ...lue.valeurs } as typeof suivant;
+        });
     };
 
     const handleSave = () => {
         if (!selectedPlayer || !character) return;
-        for (const [fieldId, value] of Object.entries(localData)) {
-            updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
+        if (template && estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] !== 1) {
+            gmToast('Appliquez d’abord la reprise du Voyageur : les anciennes saisies demandent une confirmation.', 'warning');
+            return;
         }
+        // R1 : une seule écriture pour endurance et fatigue, sinon le dernier
+        // champ du formulaire écraserait la fatigue ajoutée par le premier.
+        if (estUneFicheDeVoyageur(template)) updateCharacter(selectedPlayer.id, character.id, {
+            sheetData: {...character.sheetData, ...localData},
+        });
+        else for (const [fieldId, value] of Object.entries(localData)) updateCharacterSheetData(selectedPlayer.id, character.id, fieldId, value);
         updateCharacterNarrative(selectedPlayer.id, character.id, { description, gmNotes, playerNotes, inventory });
 
         /*
@@ -93,7 +113,9 @@ export function useCharacterEditor() {
           réglage manuel.
         */
         const pilote = getActiveDriver?.();
-        const formule = pilote?.combat?.santeDeDepart;
+        // Le Voyageur est déjà recalculé atomiquement par l'écriture du magasin,
+        // avec le gabarit de CE personnage, même si une autre campagne est ouverte.
+        const formule = estUneFicheDeVoyageur(template) ? undefined : pilote?.combat?.santeDeDepart;
         if (formule) {
             // Lecture unique : cet écran lisait AVEC la casse quand le combat
             // lisait sans, de sorte que « Taille » y valait undefined et la
@@ -160,6 +182,9 @@ export function useCharacterEditor() {
     const enregistre = getInitialData();
     const aDesChangements = !!character && (
         Object.entries(localData).some(([cle, valeur]) => {
+            // Les dérivées projetées à l'ouverture ne sont pas des saisies.
+            // Sinon R1 réclame « Sauvegarder » alors que rien n'a été touché.
+            if (estUneFicheDeVoyageur(template)) return valeur !== enregistre[cle];
             const fiche = (character.sheetData ?? {}) as Record<string, unknown>;
             return valeur !== (cle in fiche ? fiche[cle] : enregistre[cle]);
         })

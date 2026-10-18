@@ -13,7 +13,9 @@ import {
     FieldCheckbox, FieldSelect, FieldTextarea, FieldRating 
 } from './fields/SheetFields';
 import { useCharacterEditor } from '../hooks/useCharacterEditor';
-import PanneauDeJet from './fields/PanneauDeJet';
+import PanneauDeJet from './PanneauJetDeFiche';
+import { PanneauFatigueVoyageur } from './PanneauFatigueVoyageur';
+import { PanneauSanteVoyageur } from './PanneauSanteVoyageur';
 import ChampDuReferentiel from './fields/ChampDuReferentiel';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -25,6 +27,8 @@ import { ressourcesDeLaTable } from '../../table/reservesDuGroupe';
 import type { Rapprochement } from '../../fiches/rapprochementDeLaFiche';
 import type { SheetField } from '../../../data/defaultSheetTemplates';
 import type { PlayerCharacter } from '../store/types';
+import { PanneauRepriseVoyageur } from './PanneauRepriseVoyageur';
+import { estUneFicheDeVoyageur, lireFicheDeVoyageur, calculDeVoyageurHorsTable, CALCULS_DU_VOYAGEUR, CLE_REPRISE } from '../logic/ficheDeVoyageur';
 
 // --- Sub-components ---
 const FieldFormula: React.FC<{
@@ -166,6 +170,9 @@ const CharacterSheetEditor: React.FC = () => {
         : undefined;
 
     // Separate gauge fields from other fields for layout
+    const projectionVoyageur = estUneFicheDeVoyageur(template) ? lireFicheDeVoyageur(template, character.sheetData).valeurs : {};
+    const modificationsVoyageur = Object.fromEntries(Object.entries(editor.localData)
+        .filter(([cle, valeur]) => !CALCULS_DU_VOYAGEUR[cle] && valeur !== projectionVoyageur[cle]));
     const gaugeFields = (section: typeof template.sections[0]) => section.fields.filter(f => f.type === 'gauge');
     const otherFields = (section: typeof template.sections[0]) => section.fields.filter(f => f.type !== 'gauge');
 
@@ -465,9 +472,38 @@ const CharacterSheetEditor: React.FC = () => {
 
                     {/* Right Col: Sheet Sections */}
                     <div className="col-span-9 space-y-6">
+                        {estUneFicheDeVoyageur(template) && editor.character && editor.selectedPlayer && (
+                            <PanneauRepriseVoyageur key={editor.character.id} fiche={template}
+                                donnees={editor.character.sheetData ?? {}}
+                                vieCombat={editor.character.hp} maxVieCombat={editor.character.maxHp}
+                                brouillon={modificationsVoyageur}
+                                appliquer={donnees => updateCharacter(editor.selectedPlayer!.id, editor.character!.id, {
+                                    sheetData: donnees, description: editor.description, gmNotes: editor.gmNotes,
+                                    playerNotes: editor.playerNotes, inventory: editor.inventory,
+                                })} />
+                        )}
                         {/* Le jeu du personnage, quand ce n'est pas celui de sa campagne (2026-10-13). */}
+                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
+                            <PanneauFatigueVoyageur key={`fatigue-${character.id}`} donnees={{...character.sheetData, ...editor.localData}}
+                                avantOperation={() => {
+                                    if (!editor.aDesChangements) return true;
+                                    gmToast('Sauvegardez les saisies de la fiche avant d’appliquer un mouvement de fatigue.', 'warning');
+                                    return false;
+                                }}
+                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id, character.id, {
+                                    sheetData: {...character.sheetData, ...maj},
+                                })} />
+                        )}
                         {editor.character && editor.selectedPlayer && (
                             <EcartDeJeuDuPersonnage playerId={editor.selectedPlayer.id} personnage={editor.character as PlayerCharacter} />
+                        )}
+                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && (
+                            <PanneauSanteVoyageur key={`sante-${character.id}`} donnees={{...character.sheetData, ...editor.localData}}
+                                avantOperation={() => {
+                                    if (!editor.aDesChangements) return true;
+                                    gmToast('Sauvegardez la fiche avant une opération de santé.', 'warning');return false;
+                                }}
+                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:{...character.sheetData,...maj}})} />
                         )}
                         {/*
                             Lancer depuis la fiche, à côté des valeurs qui font
@@ -476,12 +512,13 @@ const CharacterSheetEditor: React.FC = () => {
                             place du joueur, et il fallait tout reporter à la
                             main dans Dice OS.
                         */}
-                        {piloteDeLaFiche?.jet && (
+                        {piloteDeLaFiche?.jet && (!estUneFicheDeVoyageur(template) || character.sheetData?.[CLE_REPRISE] === 1) && (
                             <PanneauDeJet
                                 descripteur={piloteDeLaFiche.jet}
                                 dice={piloteDeLaFiche.dice}
                                 template={template}
-                                valeurs={editor.localData}
+                                personnageId={character.id}
+                                valeurs={{...character.sheetData, ...editor.localData}}
                                 campaignId={activeCampaignId ?? undefined}
                                 ressourcesDeTable={ressourcesDeLaTable(piloteDeLaFiche, campaigns.find(c => c.id === activeCampaignId))}
                                 // Le Vécu, l'Espoir, la Singularité dépensés au jet se décomptent sur la fiche.
@@ -542,6 +579,9 @@ const CharacterSheetEditor: React.FC = () => {
                                                 );
                                                 if (field.type === 'rating') return (
                                                     <FieldRating key={field.id} field={field} value={Number(val)} onChange={v => updateLocal(field.id, v)} />
+                                                );
+                                                if (field.type === 'formula' && estUneFicheDeVoyageur(template) && calculDeVoyageurHorsTable(field.id, editor.localData)) return (
+                                                    <FieldNumber key={field.id} field={field} value={Number(val)} onChange={v => updateLocal(field.id, v)} />
                                                 );
                                                 if (field.type === 'formula') return (
                                                     <FieldFormula key={field.id} field={field} value={evaluateFormula(field.formula || '')} />

@@ -19,7 +19,7 @@ vi.mock('../../../utils/windowRole', () => ({
 const setItemSpy = vi.hoisted(() => vi.fn());
 const removeItemSpy = vi.hoisted(() => vi.fn());
 const backing = vi.hoisted(() => new Map<string, string>());
-const panne = vi.hoisted(() => ({ enLecture: false }));
+const panne = vi.hoisted(() => ({ enLecture: false, enEcriture: false, attente: null as Promise<void> | null }));
 
 vi.mock('./idbStorage', () => ({
     idbStateStorage: {
@@ -29,6 +29,8 @@ vi.mock('./idbStorage', () => ({
         },
         setItem: async (name: string, value: string) => {
             setItemSpy(name, value);
+            if (panne.attente) await panne.attente;
+            if (panne.enEcriture) return; // idbStorage réel signale sa panne sans rejeter
             backing.set(name, value);
         },
         removeItem: async (name: string) => {
@@ -39,7 +41,7 @@ vi.mock('./idbStorage', () => ({
     onPersistedStateChanged: () => () => { /* pas d'abonnement en test */ },
 }));
 
-const { PersistenceService, SESSION_STORE_KEY, lEcritureEstOuverte, __refermerLEcriturePourTests } =
+const { PersistenceService, SESSION_STORE_KEY, lEcritureEstOuverte, __refermerLEcriturePourTests, confirmerEcritureDeSession } =
     await import('./PersistenceService');
 const { viderLesEcrituresDifferees } = await import('../../../utils/ecritureReserveeAuMJ');
 
@@ -67,6 +69,7 @@ async function relire(): Promise<void> {
 beforeEach(async () => {
     role.current = 'gm';
     panne.enLecture = false;
+    panne.enEcriture = false; panne.attente = null;
     /*
       ⚠️ **Le tampon d'écriture différée est un singleton de module** : ce qu'un
       essai y laisse en attente, le suivant le **relit** — `getItem` sert ce qui
@@ -84,6 +87,25 @@ beforeEach(async () => {
 });
 
 describe('PersistenceService — seule la fenêtre MJ écrit', () => {
+    it('R8 attend la vraie fin de l’écriture puis relit le reçu, pas le tampon', async () => {
+        let finir!: () => void; panne.attente = new Promise<void>(r => { finir = r; });
+        await storage.setItem(SESSION_STORE_KEY, { state: { recu: 'trajet' }, version: 10 });
+        const verifier = vi.fn((etat: unknown) => (etat as { recu: string }).recu === 'trajet');
+        const confirmation = confirmerEcritureDeSession(verifier);
+        await Promise.resolve(); expect(verifier).not.toHaveBeenCalled(); expect(backing.has(SESSION_STORE_KEY)).toBe(false);
+        finir(); await confirmation; expect(verifier).toHaveBeenCalledOnce();
+    });
+    it('R8 refuse une écriture avalée par IndexedDB, une lecture ratée et une fenêtre secondaire', async () => {
+        panne.enEcriture = true;
+        await storage.setItem(SESSION_STORE_KEY, { state: { recu: 'non persisté' }, version: 10 });
+        await expect(confirmerEcritureDeSession(() => true)).rejects.toThrow(/reçu/);
+        panne.enEcriture = false; panne.enLecture = true;
+        await expect(confirmerEcritureDeSession(() => true)).rejects.toThrow(/IndexedDB/);
+        panne.enLecture = false; role.current = 'hub';
+        await expect(confirmerEcritureDeSession(() => true)).rejects.toThrow(/persistance/);
+        role.current = 'gm'; __refermerLEcriturePourTests();
+        await expect(confirmerEcritureDeSession(() => true)).rejects.toThrow(/persistance/);
+    });
     it('la fenêtre MJ écrit', async () => {
         await storage.setItem(SESSION_STORE_KEY, { state: { campaigns: [] }, version: 10 });
         /* L'écriture est différée de 250 ms depuis le 2026-09-18 : un essai qui

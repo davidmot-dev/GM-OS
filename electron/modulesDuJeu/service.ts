@@ -1,6 +1,6 @@
 import { modulesDuPilote } from '../../src/modules/modulesDuJeu/catalogue';
 import { identifiantDeTable, objetSimple, validerSauvegardeDesModules } from '../../src/modules/modulesDuJeu/protocole';
-import type { ContexteDesModules, RequeteDeModule, SauvegardeDesModules, VueDesModulesMJ, VueDesModulesJoueur } from '../../src/modules/modulesDuJeu/protocole';
+import type { AccuseFicheDeModule, ContexteDesModules, RequeteDeModule, SauvegardeDesModules, VueDesModulesMJ, VueDesModulesJoueur } from '../../src/modules/modulesDuJeu/protocole';
 import { REGISTRE_DES_MOTEURS, type MoteurEnregistre, type LecteurDeModule } from './registre';
 import type { StockageDesModules } from './stockage';
 import { mediasDeLaVue } from './medias';
@@ -209,6 +209,18 @@ export class ServiceDesModules {
                 this.changerAcces(requete.moduleId, new Set()); this.generation++;
             }
             this.publier();
+        });
+    }
+    acquitterFiche(accuse: AccuseFicheDeModule) {
+        return this.serialiser(async () => {
+            exiger(objetSimple(accuse)); this.verifierContexte(accuse);
+            exiger(Object.keys(accuse).length === 8 && identifiantDeTable(accuse.personnageId) && identifiantDeTable(accuse.transactionId)
+                && typeof accuse.appliquee === 'boolean' && typeof accuse.sortieForcee === 'boolean' && typeof accuse.detail === 'string' && accuse.detail.length <= 300);
+            const moteur = this.moteur(accuse.moduleId); exiger(moteur.terminerEcriture, 'Ce module ne possède aucun raccord aux fiches.');
+            const donnees = moteur.terminerEcriture!(this.etat(accuse.moduleId), accuse.personnageId, accuse.transactionId, accuse.appliquee, accuse.sortieForcee, accuse.detail);
+            const suivante = copier(this.donnees);
+            suivante.campagnes[accuse.campagneId][accuse.moduleId] = { versionDonnees: moteur.manifeste.versionDonnees, donnees };
+            await this.ecrire(suivante); this.publier();
         });
     }
     async vueMJ(): Promise<VueDesModulesMJ> {

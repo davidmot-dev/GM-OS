@@ -11,6 +11,8 @@ import { champsAMontrer, ficheDuCombattant } from '../logic/ficheDuCombattant';
 import { decrireLaSante, santeDeDepart, valeurDuChamp } from '../logic/SanteDuCombattant';
 import { nomDeGabarit, origineOuDefaut } from '../logic/promotionDuCombattant';
 import { archetypeParId } from '../logic/archetypes';
+import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
+import { SanteDuCombattantVoyageur } from './SanteDuCombattantVoyageur';
 
 /**
  * **La fiche d'un combattant, en lecture.**
@@ -163,6 +165,8 @@ export const FicheDuCombattant: React.FC = () => {
                         : 'Aucun gabarit de fiche : le système de jeu actif n’en déclare pas.'}
                 </p>
             )}
+
+            {gabarit && estUneFicheDeVoyageur(gabarit) && <SanteDuCombattantVoyageur combattant={combattant} fiche={gabarit} donnees={valeurs} />}
 
             {blocs.map(bloc => (
                 <section key={bloc.section} className="space-y-2">

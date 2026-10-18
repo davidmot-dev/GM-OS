@@ -144,7 +144,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'reves de dragons', slug: 'reves-de-dragons', personnage: 'Aldaran le Voyageur',
-        sheetData: { force: 12, agilite: 13, discretion: 2, vie: 12 },
+        sheetData: { force: 12, agilite: 13, taille: 11, constitution: 13, discretion: 2, vie: 12 },
         composantes: ['agilite', 'discretion'],
     },
     {
@@ -168,7 +168,7 @@ interface Pilote {
         id: string; name: string; corpusId?: string; templateId: string; ressourcesDeTable?: unknown[]; ficheDeGroupe?: unknown;
         combat?: { casesDeSante?: { nombre: number; seuils?: Seuil[]; libelle?: string; champ?: string }; initiative?: { mode?: string } };
     };
-    sheetTemplate?: { id: string };
+    sheetTemplate?: { id: string; reglesDeFiche?: 'rdd-231' };
 }
 
 /**
@@ -229,6 +229,7 @@ function ecrireLaSemence(): string {
                 id: personnageDe(mise.slug), name: mise.personnage, portraitUrl: '',
                 campaignId: campagneDe(mise.slug), templateId: pilote.gameDriver.templateId,
                 systemId: pilote.gameDriver.id,
+                ...(mise.corpusId === 'reves de dragons' ? { hp: 12, maxHp: 12 } : {}),
                 sheetData: avecCases && cases.champ ? { ...mise.sheetData, [cases.champ]: mise.casesCochees } : mise.sheetData,
                 ...(avecCases ? { healthSystem: santeEnCases(cases, mise.casesCochees!) } : {}),
             };
@@ -355,6 +356,13 @@ for (const { mise, pilote } of JEUX) {
         // Le panneau de jet de la fiche, composantes retenues.
         if (!mise.composantes) return;
         await vue(campagne, 'players', { joueur: JOUEUR, personnage: personnageDe(mise.slug) });
+        if (pilote.sheetTemplate?.reglesDeFiche === 'rdd-231') {
+            const reprise = f.getByRole('region', { name: 'Reprise de la fiche Voyageur' });
+            await expect(reprise).toBeVisible();
+            // Personnage fictif sans valeurs contradictoires : la reprise reste un geste explicite.
+            await reprise.getByRole('button', { name: 'Appliquer la reprise et les calculs' }).click();
+            await expect(reprise).toHaveCount(0);
+        }
         const panneau = f.locator('[data-panneau-de-jet]').first();
         await expect(panneau).toBeVisible({ timeout: 15_000 });
         for (const [i, champ] of mise.composantes.entries()) {

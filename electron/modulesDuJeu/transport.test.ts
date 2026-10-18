@@ -58,6 +58,7 @@ describe('transport privé des modules sans ouvrir de port', () => {
         expect(await invoquer('modules:contexte', {}, { send: vi.fn() })).toMatchObject({ ok: false });
         await expect(invoquer('modules:lire', undefined, { send: vi.fn() })).rejects.toThrow(/MJ/);
         expect(await invoquer('modules:tout-couper', {}, { send: vi.fn() })).toMatchObject({ ok: false });
+        expect(await invoquer('modules:acquitter-fiche', {}, { send: vi.fn() })).toMatchObject({ ok: false });
     });
     it('ne transmet jamais les secrets ou le dialogue d’un autre dans la projection réseau', async () => {
         inscrire(alice, 'a', 'alice'); inscrire(bob, 'b', 'bob'); await ouvrir();

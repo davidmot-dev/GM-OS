@@ -25,6 +25,7 @@ import { useDiceStore } from '../../../stores/useDiceStore';
 import HordeDuCombattant from './HordeDuCombattant';
 import SbiresDuVilain from './SbiresDuVilain';
 import { useTranslation } from 'react-i18next';
+import { estUneFicheDeVoyageur } from '../../session/logic/ficheDeVoyageur';
 
 const PRESET_STATUSES = [
     { name: 'poison', icon: '🤢', duration: 3 },
@@ -479,7 +480,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             )}
 
             {/* ── 2. Sa santé, puis les gestes : dégâts, soins, fiche, calculer ── */}
-            <HealthManager
+            {estUneFicheDeVoyageur(ficheLue.gabarit) ? <div className="p-3 space-y-2">
+                <p className="text-sm">{String((combatant.healthSystem?.data.rdd as {libelle?:string} | undefined)?.libelle ?? 'Santé RdD')} · {combatant.hp}/{combatant.hpMax}</p>
+                <Bouton aLaTable={regime.aLaTable} onClick={() => gmCustom('fiche-combattant',{combatantId:combatant.id})}>Encaisser / soins RdD</Bouton>
+            </div> : <HealthManager
                 id={combatant.isPlayer ? combatant.sourcePlayerId! : combatant.sourceEntityId!}
                 type={combatant.isPlayer ? 'pc' : 'npc'}
                 initialHealthSystem={santeAffichee(combatant) as HealthSystem | undefined}
@@ -537,7 +541,7 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                         {t('combat.card.calculate')}
                     </Bouton>
                 </>}
-            />
+            />}
 
             {/* À zéro : le Hors Jeu (Cthulhu Hack), Brisé par les dégâts ou par le stress (Blade Runner). */}
             <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />

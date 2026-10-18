@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { calculationEngine, type ContexteDeCalcul } from '../logic/CalculationEngine';
 import type { PlayerCharacter, Entity } from '../store/types';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
+import { estUneFicheDeVoyageur, lireFicheDeVoyageur } from '../logic/ficheDeVoyageur';
 
 /**
  * useSheetCalculator
@@ -29,10 +30,12 @@ export function useSheetCalculator(
 
         // Enrich and initialize EVERY field from the template
         if (template) {
+            const voyageur = estUneFicheDeVoyageur(template)
+                ? lireFicheDeVoyageur(template, { ...character.sheetData, ...overrideData }).valeurs : null;
             template.sections.forEach(section => {
                 section.fields.forEach(field => {
                     // Resolve value priority: 1. override (local), 2. saved, 3. default
-                    const rawValue = (overrideData && overrideData[field.id] !== undefined) 
+                    const rawValue = voyageur ? voyageur[field.id] : (overrideData && overrideData[field.id] !== undefined)
                         ? overrideData[field.id] 
                         : (character.sheetData && character.sheetData[field.id] !== undefined)
                             ? character.sheetData[field.id]
