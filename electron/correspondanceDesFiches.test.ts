@@ -139,7 +139,7 @@ describe('les gabarits intégrés du moteur', () => {
         const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
-            version: 9,
+            version: 10,
             ids: ['alien-v2-normalise', 'blade-runner-fr', 'cthulhu-hack', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'star-trek-adventures-2e-dossier-personnel-fr'],
         });
     });

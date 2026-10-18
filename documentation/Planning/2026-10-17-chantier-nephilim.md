@@ -348,5 +348,9 @@ Pilote construit sur celui des lots B et C, zéro constat. **À réimporter et �
 Lot D commité (`b0352550`) après l'essai de David. **Consigne au Studio** pour le Ka dominant sur la
 fiche HTML : [2026-10-18-consigne-studio-nephilim-ka-dominant.md](2026-10-18-consigne-studio-nephilim-ka-dominant.md)
 — une piste de choix `ka.dominant` sur le Pentacle (ou un `select`), le choix seulement : le degré et
-le plafond de la Stase restent calculés par GM-OS. **En attente de la livraison du Studio.**
+le plafond de la Stase restent calculés par GM-OS. **Livrée le 18/10** : cinq hotspots `ka.dominant`
+(valeurs Feu, Air, Eau, Terre, Lune) sous les cases de degré du Pentacle, aucune clé touchée (965 →
+966) ; validateur **ACCEPTÉE** ; moteur `BUILTIN_VERSION` 10 ; correspondance `ka_dominant` ↔
+`ka.dominant` ; 8 108 essais verts. À éprouver par David : un choix fait sur une fiche se retrouve
+sur l'autre.
 

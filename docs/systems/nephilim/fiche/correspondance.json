@@ -132,6 +132,10 @@
       "fiche": "ka.water"
     },
     {
+      "gmos": "ka_dominant",
+      "fiche": "ka.dominant"
+    },
+    {
       "gmos": "resources_sapience",
       "fiche": "resources.sapience"
     },

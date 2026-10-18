@@ -163,8 +163,9 @@ Une même valeur n'a qu'un seul endroit où l'écrire (choix de David, 2026-10-1
 La section **Ka dominant**, sous le Pentacle, porte le **choix** de l'élément dominant (Feu, Air,
 Eau, Lune, Terre) et son **degré**, calculé sur le Pentacle. La **Stase** ne peut pas le dépasser :
 la saisie s'arrête au plafond, affiché à côté (« / 5 ») ; une Stase restée au-dessus (le Ka a baissé)
-s'affiche en rouge. Le Ka dominant n'existe que sur la fiche GM-OS : la fiche HTML ne le porte pas
-encore, et passer par elle ne l'efface pas.
+s'affiche en rouge. Sur la **fiche HTML** (page 1), le Ka dominant se marque d'un clic **sous le
+nom de l'élément**, sur le Pentacle : seul l'élément choisi s'allume, et le choix passe d'une fiche
+à l'autre (après « Sauvegarder »). Le degré et le plafond, eux, ne se calculent que dans GM-OS.
 
 ### Incarnations et Vécus
 
