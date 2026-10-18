@@ -7066,6 +7066,7 @@ Coût du seul `JSON.stringify`, **par mouvement de souris**, sur un tableau blan
 | --- | --- | --- | --- |
 | 10 | 600 | 0,08 ms | 15 Ko |
 | 40 | 3 200 | 0,38 ms | 77 Ko |
+| 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ⏸ Garé pour plus tard (18/10) ; à la reprise : E0 (Obsidian filtré), puis E1, E3 | Rien — décisions prises le 18/10 ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 | 100 | 12 000 | **1,75 ms** | 285 Ko |
 | 200 | 30 000 | **4,18 ms** | 710 Ko |
 
