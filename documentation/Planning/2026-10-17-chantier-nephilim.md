@@ -406,6 +406,10 @@ dit à l'aube, le manuel le signale) ; Alchimie option A (MP consommées à la m
    sert les `.json` de `systems/` mais jamais les `.md` : les descriptions sont donc **aussi dans
    `index.json` et `epoques.json`** (`EntreeDeReferentiel.description`, écrites par
    `ecrire_vecus.py`). Rien de changé dans `electron/`. À éprouver par David sur une tablette.
-4. **Lot D, option B** si David le veut : composante « Formule » soustraite, MP débitées seules.
+4. ~~Lot D, option B~~ — fait le 18/10 au soir (choix de David : MP retirées **seules, au lancer**).
+   `ComposanteDeJet.soustraire` et `motif`, `jet.consommation` (`dice/consommationAuJet.ts`), suite
+   qui vise le champ retenu (`ajouter.composante`, `champDeLaSuite`) ; pilote par
+   `materiae_au_jet.py`. ⚠️ Écrire les expressions **sans antislash** (`[.]`, `[0-9]`) : le shell
+   les mange en route. À éprouver par David.
 5. À la main, sans projet : pacte de Kabbale en opposition, seuils des Chutes, malus des
    Conséquences, Effet Mnémos « en tant que Vécu », Sacrifice, recharge de la Stase.

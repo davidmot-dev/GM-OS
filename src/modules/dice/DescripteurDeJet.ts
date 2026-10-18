@@ -67,6 +67,17 @@ export interface ComposanteDeJet {
      * elle ne compte pour rien et ne bloque pas le bouton.
      */
     facultative?: boolean;
+    /**
+     * **Elle se retire au lieu de s'ajouter** — Nephilim, 2026-10-18 : le degré
+     * d'une formule d'Alchimie (Ka du construct + Œuvre − degré de la formule).
+     */
+    soustraire?: boolean;
+    /**
+     * **Seuls les champs dont l'identifiant répond à ce motif** (une expression
+     * régulière) sont proposés — Nephilim, 2026-10-18 : dans la section des
+     * formules, le degré de chaque formule, pas son aire ni sa durée.
+     */
+    motif?: string;
 }
 
 export type SensDuJet = 'sous-ou-egal' | 'superieur-ou-egal';
@@ -322,6 +333,12 @@ export interface DescripteurDeJet {
      * Après le lancer, un point de `champ` ajoute un dé réussi au jet.
      */
     reussiteDepensee?: { champ: string; label: string };
+    /**
+     * **Ce que le jet consomme sur la fiche** — Nephilim, 2026-10-18 : les
+     * Materiae Primae d'une transmutation, retirées au lancer, conservées sur un
+     * critique (`dice/consommationAuJet.ts`).
+     */
+    consommation?: import('./consommationAuJet').ConsommationAuJet;
     /**
      * **Les suites d'une maladresse ou d'un critique** — Nephilim, 2026-10-18 :
      * +1 Khaïba sur un Art occulte, +1 Ombre sur le Vécu contemporain, +1 Point
@@ -840,8 +857,10 @@ export function preparerLeJet(
                 }
                 continue;
             }
-            total += lu.valeur;
-            retenues.push({ label: composante.label, champ, valeur: lu.valeur });
+            // Le degré d'une formule se retire (Nephilim) : la valeur entre avec son signe.
+            const valeur = composante.soustraire ? -lu.valeur : lu.valeur;
+            total += valeur;
+            retenues.push({ label: composante.label, champ, valeur });
         }
 
         return { total, retenues };

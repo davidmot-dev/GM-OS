@@ -29,8 +29,27 @@ export interface SuiteDUnCritique {
     sections?: string[];
     /** …ou est l'un de ces champs. Sans l'un ni l'autre, tout jet compte. */
     champs?: string[];
-    /** Le geste proposé : `pas` (1 par défaut, négatif pour retirer) ajouté à `champ`. */
-    ajouter?: { champ: string; pas?: number };
+    /**
+     * Le geste proposé : `pas` (1 par défaut, négatif pour retirer) ajouté à
+     * `champ` — ou au champ que le jet a retenu pour la `composante` (le Ka du
+     * construct d'une transmutation ratée), s'il vient de `dansLesSections`.
+     */
+    ajouter?: { champ?: string; composante?: string; dansLesSections?: string[]; pas?: number };
+}
+
+/** Le champ que touche le geste d'une suite, pour ce jet ; `undefined` s'il n'y en a pas. */
+export function champDeLaSuite(
+    suite: Pick<SuiteDUnCritique, 'ajouter'>,
+    retenus: Record<string, string>,
+    sections: readonly SectionLue[],
+): string | undefined {
+    const a = suite.ajouter;
+    if (!a) return undefined;
+    if (a.champ) return a.champ;
+    const retenu = a.composante ? retenus[a.composante] : undefined;
+    if (!retenu) return undefined;
+    if (a.dansLesSections?.length && !jetVientDe({ sections: a.dansLesSections }, [retenu], sections)) return undefined;
+    return retenu;
 }
 
 const DEGRE_DU_CRITIQUE: Record<SuiteDUnCritique['quand'], DegreDeReussite> = {

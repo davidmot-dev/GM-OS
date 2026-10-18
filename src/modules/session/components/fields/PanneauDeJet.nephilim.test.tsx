@@ -179,3 +179,89 @@ describe('puiser des degrés : la Stase sur un sort, l’Effet Mnémos sur un V�
         expect(ecrire).toHaveBeenCalledWith({ 'stasis.degree': 2 });
     });
 });
+
+/**
+ * **Une transmutation d'Alchimie** — lot D, option B, 2026-10-18 : le degré de
+ * la formule se retire, les Materiae Primae de son élément partent au lancer
+ * (conservées sur un critique), et une maladresse abîme le construct retenu.
+ */
+describe('une transmutation et ses Materiae Primae', () => {
+    const TRANSMUTATION: DescripteurDeJet = {
+        sens: 'sous-ou-egal',
+        cible: {
+            mecanique: 'nephilim',
+            caracteristique: { id: 'vecu', label: 'Vécu ou Art occulte', sectionId: 'arts' },
+            ajustement: [
+                { id: 'approche', label: 'Approche (Ka) ou construct', sectionId: 'constructs', facultative: true },
+                { id: 'formule', label: 'Formule', sectionId: 'formules', facultative: true, soustraire: true, motif: '^formulas[.][0-9]+[.]degree$' },
+            ],
+        },
+        reserve: { base: 1, max: 1, faces: 100 },
+        consommation: {
+            label: 'Materiae Primae', composante: 'formule',
+            elementSur: { remplacer: '[.]degree$', par: '.element' },
+            champs: { Eau: 'mp.water' }, conserveeSur: ['critique'],
+        },
+        suitesDesCritiques: [
+            { quand: 'maladresse', label: 'Construct abîmé', sections: ['arts'], ajouter: { composante: 'approche', dansLesSections: ['constructs'], pas: -1 } },
+        ],
+    };
+    const FICHE_ALCHIMIE = {
+        id: 'tpl-alchimie', name: 'Nephilim', emoji: '✨',
+        sections: [
+            { id: 'arts', label: 'Œuvres', fields: [{ id: 'alchemy.black', label: 'Œuvre au noir', type: 'number', defaultValue: 0 }] },
+            { id: 'constructs', label: 'Constructs', fields: [{ id: 'retort.water', label: 'Cornue — Ka-Eau', type: 'number', defaultValue: 0 }] },
+            { id: 'formules', label: 'Formules', fields: [
+                { id: 'formulas.0.name', label: 'Formule 1 — nom', type: 'textarea', defaultValue: '' },
+                { id: 'formulas.0.element', label: 'Formule 1 — Ka-élément', type: 'select', options: ['Eau'], defaultValue: '' },
+                { id: 'formulas.0.degree', label: 'Formule 1 — degré', type: 'number', defaultValue: 0, libelleSur: 'formulas.0.name' },
+                { id: 'formulas.0.area', label: 'Formule 1 — aire', type: 'text', defaultValue: '' },
+            ] },
+            { id: 'materiae', label: 'Materiae Primae', fields: [{ id: 'mp.water', label: 'MP Eau', type: 'number', defaultValue: 0 }] },
+        ],
+    } as unknown as SheetTemplate;
+    const VALEURS_ALCHIMIE = {
+        'alchemy.black': 5, 'retort.water': 3,
+        'formulas.0.name': 'Brume du Léthé', 'formulas.0.element': 'Eau', 'formulas.0.degree': 4, 'formulas.0.area': '10 m',
+        'mp.water': 6,
+    };
+    const transmuter = (dizaines: number, unites: number) => {
+        const ecrire = vi.fn();
+        const de = vi.spyOn(Math, 'random');
+        de.mockReturnValueOnce(dizaines / 10 + 0.05).mockReturnValueOnce(unites / 10 + 0.05);
+        render(<PanneauDeJet descripteur={TRANSMUTATION} dice={DICE} template={FICHE_ALCHIMIE} valeurs={VALEURS_ALCHIMIE} ecrireSurLaFiche={ecrire} />);
+        const [oeuvre, construct, formule] = screen.getAllByRole('combobox');
+        fireEvent.change(oeuvre, { target: { value: 'alchemy.black' } });
+        fireEvent.change(construct, { target: { value: 'retort.water' } });
+        fireEvent.change(formule, { target: { value: 'formulas.0.degree' } });
+        fireEvent.click(screen.getByText('Lancer', { exact: true }));
+        de.mockRestore();
+        return ecrire;
+    };
+
+    it('le menu des formules ne porte que leurs degrés, sous leur nom', () => {
+        render(<PanneauDeJet descripteur={TRANSMUTATION} dice={DICE} template={FICHE_ALCHIMIE} valeurs={VALEURS_ALCHIMIE} />);
+        const formule = screen.getAllByRole('combobox')[2];
+        expect(within(formule).getAllByRole('option').map(o => o.textContent)).toEqual(['— aucune —', 'Brume du Léthé (4)']);
+    });
+
+    it('Œuvre 5 + cornue 3 − formule 4 : 40 % ; une réussite consomme quatre MP d’Eau', () => {
+        const ecrire = transmuter(3, 5);
+        expect(screen.getAllByText(/\(5 − 1\) × 10 = 40 %/).length).toBeGreaterThan(0);
+        expect(ecrire).toHaveBeenCalledWith({ 'mp.water': 2 });
+        expect(screen.getByText('Materiae Primae Eau −4 → 2')).toBeTruthy();
+    });
+
+    it('un critique conserve les Materiae Primae', () => {
+        const ecrire = transmuter(3, 3);
+        expect(ecrire).not.toHaveBeenCalledWith(expect.objectContaining({ 'mp.water': expect.anything() }));
+        expect(screen.getByText(/conservées \(critique\)/)).toBeTruthy();
+    });
+
+    it('une maladresse consomme, et propose −1 au Ka du construct retenu', () => {
+        const ecrire = transmuter(7, 7);
+        expect(ecrire).toHaveBeenCalledWith({ 'mp.water': 2 });
+        fireEvent.click(screen.getByText('Noter −1 Cornue — Ka-Eau'));
+        expect(ecrire).toHaveBeenCalledWith({ 'retort.water': 2 });
+    });
+});

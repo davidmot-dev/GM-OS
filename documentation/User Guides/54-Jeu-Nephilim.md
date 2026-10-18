@@ -2,7 +2,8 @@
 
 > **Pilote décrit :** « Nephilim », exporté le 2026-10-18 et corrigé le jour même — captures du 2026-10-18 (Arts occultes au
 > menu du jet, suites des maladresses et des critiques, rappels d'après l'errata V1.3, Stase et Effet
-> Mnémos au jet, Ka dominant, Alchimie au jet et Materiae Primae à « Début de séance »). Retour à
+> Mnémos au jet, Ka dominant, Alchimie au jet, Materiae Primae consommées au lancer et remplies à
+> « Début de séance »). Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un **d100 sous une cible en degrés** : le Vécu — ou l'Art occulte —, plus le Ka de l'approche,
@@ -43,14 +44,20 @@ passés** reliés aux **époques d'incarnation** du livre.
 ### Une transmutation d'Alchimie
 
 Ka-élément du construct + Art de l'Œuvre − degré de la formule (p. 220) : choisissez l'**Œuvre** au
-premier menu, le **Ka du construct** au second, et retirez le **degré de la formule** au curseur.
-Pour une formule de l'Œuvre au blanc, prenez le moins développé des deux Ka du construct.
+premier menu, le **Ka du construct** au second, et la **formule** au troisième, « Formule
+(Alchimie) » — elle s'y présente sous son nom, « Brume du Léthé (4) », et son degré **se retire**
+de la cible. Pour une formule de l'Œuvre au blanc, prenez le moins développé des deux Ka du
+construct.
 
 ![Une transmutation : l'Œuvre au noir 5 et le Ka-Eau de la cornue 3, soit 80 % avant le degré de la formule](captures/jeu-nephilim-transmutation.jpg)
 
-Les **Materiae Primae** de l'élément — autant que le degré de la formule — sont consommées sur une
-réussite, un échec ou une maladresse, conservées sur un critique : **retirez-les sur la fiche**. La
-maladresse a sa carte (+1 Khaïba ; le Ka du construct perd 1, à noter sur sa ligne).
+Les **Materiae Primae** de l'élément de la formule — autant que son degré — **se retirent seules
+au lancer** sur une réussite, un échec ou une maladresse (« Materiae Primae Eau −4 → 2 » sous le
+résultat), et sont **conservées sur un critique**. Une jauge trop courte s'arrête à zéro, et GM-OS
+dit ce qui manquait : à prendre sur le Ka du construct, du Pentacle ou de la stase (p. 218). La
+maladresse a deux cartes : +1 Khaïba, et « Construct abîmé » — **Noter −1** au Ka du construct
+retenu. Une formule de l'Œuvre au blanc, qui mêle deux éléments, se débite à la main : la fiche ne
+porte qu'un élément par formule.
 
 ### Puiser dans ses réserves : la Stase et l'Effet Mnémos
 
@@ -217,8 +224,8 @@ le **Druide** (*Le sanctuaire des Tuatha de Danann*) la description du Chasseur 
   **en tant que Vécu** (1 PS par degré, quand aucun Vécu ne s'applique), **Sacrifice** (5 PS, un sort
   réussi d'office), Effets Mnémos permanents (+5 PS).
 - La **recharge** de la Stase — pleine en la quittant, puis un degré par jour en Plexus ou Nexus.
-- Les **Materiae Primae consommées** par une transmutation, et le **Ka du construct** qui baisse sur
-  une maladresse ; l'assemblage et l'activation des constructs (p. 216–217).
+- Le second élément d'une formule de l'**Œuvre au blanc** ; l'assemblage et l'activation des
+  constructs (p. 216–217).
 - Le **pacte de Kabbale** : un test en opposition, Art de la Sephirah + Ka contre le degré de
   l'invocation, que GM-OS ne compare pas.
 - Les seuils des Chutes, les malus des Conséquences.

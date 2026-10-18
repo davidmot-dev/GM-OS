@@ -38,6 +38,9 @@ l'errata officiel V1.3.
 - `alchimie_au_jet.py` — lot D (18/10, sans code) : les Ka des constructs dans une section à part,
   proposés par le menu « Approche (Ka) ou construct » ; les jauges de Materiae Primae à part ; et
   « Début de séance » qui remplit chaque jauge à son maximum (`gestesDesHeros.debutDeSeance`).
+- `materiae_au_jet.py` — lot D, option B (18/10) : la composante « Formule (Alchimie) », soustraite et
+  filtrée par motif, les formules nommées, `jet.consommation` (MP retirées au lancer, conservées sur
+  un critique) et la suite « Construct abîmé ». À passer après `alchimie_au_jet.py`.
 
 ## État au 18/10 — complet
 

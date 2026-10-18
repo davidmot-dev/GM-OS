@@ -722,14 +722,25 @@ export function controlerLePilote(
     if (reussiteDepensee && !tousLesChamps.has(reussiteDepensee.champ)) {
         erreur('jet.reussiteDepensee.champ', `« ${reussiteDepensee.label} » se décompte dans « ${reussiteDepensee.champ} », absent de la fiche : le bouton n'aurait rien à dépenser.`);
     }
+    const composantesDuDescripteur = new Set([
+        ...(driver.jet?.seuil ?? []),
+        ...(driver.jet?.reserve?.composantes ?? []),
+        ...(driver.jet?.cible ? [driver.jet.cible.caracteristique, ...(driver.jet.cible.ajustement ?? [])] : []),
+    ].filter(Boolean).map(c => c.id));
     // Les suites d'une maladresse ou d'un critique (Nephilim) : la jauge à monter, et ce qui la déclenche.
     (driver.jet?.suitesDesCritiques ?? []).forEach((suite, i) => {
         const ou = `jet.suitesDesCritiques[${i}]`;
         if (suite.quand !== 'maladresse' && suite.quand !== 'critique') {
             erreur(`${ou}.quand`, `« ${suite.label} » se déclenche sur « ${suite.quand} » : seules « maladresse » et « critique » existent.`);
         }
-        if (suite.ajouter && !tousLesChamps.has(suite.ajouter.champ)) {
+        if (suite.ajouter?.champ !== undefined && !tousLesChamps.has(suite.ajouter.champ)) {
             erreur(`${ou}.ajouter.champ`, `« ${suite.label} » s'inscrit dans « ${suite.ajouter.champ} », absent de la fiche : le bouton n'aurait rien à écrire.`);
+        }
+        if (suite.ajouter && suite.ajouter.champ === undefined && !suite.ajouter.composante) {
+            erreur(`${ou}.ajouter`, `« ${suite.label} » ne dit ni le champ à écrire, ni la composante du jet qui le désigne.`);
+        }
+        if (suite.ajouter?.composante && !composantesDuDescripteur.has(suite.ajouter.composante)) {
+            erreur(`${ou}.ajouter.composante`, `« ${suite.label} » écrit dans le champ retenu pour « ${suite.ajouter.composante} », que le jet ne déclare pas : le bouton ne paraîtra jamais.`);
         }
         for (const section of suite.sections ?? []) {
             if (!idsDeSections.has(section)) avertir(`${ou}.sections`, `« ${suite.label} » vise la section « ${section} », absente de la fiche : aucun jet n'en viendra.`);
@@ -738,6 +749,26 @@ export function controlerLePilote(
             if (!tousLesChamps.has(champ)) avertir(`${ou}.champs`, `« ${suite.label} » vise le champ « ${champ} », absent de la fiche : aucun jet n'en viendra.`);
         }
     });
+    // Ce que le jet consomme (les Materiae Primae de Nephilim) : une composante, une jauge par élément.
+    const consommation = driver.jet?.consommation;
+    if (consommation) {
+        if (!composantesDuDescripteur.has(consommation.composante)) {
+            erreur('jet.consommation.composante', `« ${consommation.label} » se mesure sur la composante « ${consommation.composante} », que le jet ne déclare pas : rien ne sera consommé.`);
+        }
+        try { new RegExp(consommation.elementSur?.remplacer ?? ''); } catch {
+            erreur('jet.consommation.elementSur', `« ${consommation.label} » : « ${consommation.elementSur?.remplacer} » n'est pas une expression valable.`);
+        }
+        for (const [element, champ] of Object.entries(consommation.champs ?? {})) {
+            if (!tousLesChamps.has(champ)) erreur('jet.consommation.champs', `« ${consommation.label} » ${element} se retire de « ${champ} », absent de la fiche.`);
+        }
+    }
+    // Une composante filtrée par un motif : il doit être une expression valable.
+    for (const composante of [...(driver.jet?.seuil ?? []), ...(driver.jet?.cible ? [driver.jet.cible.caracteristique, ...(driver.jet.cible.ajustement ?? [])] : [])]) {
+        if (!composante?.motif) continue;
+        try { new RegExp(composante.motif); } catch {
+            erreur(`jet.${composante.id}.motif`, `« ${composante.label} » : le motif « ${composante.motif} » n'est pas une expression valable — le menu resterait vide.`);
+        }
+    }
     // Le stress subi de Blade Runner : un champ qui encaisse, et des dés lus sur la fiche.
     const stress = driver.jet?.stressSubi;
     if (stress) {

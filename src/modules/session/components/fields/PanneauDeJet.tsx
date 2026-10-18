@@ -24,7 +24,8 @@ import StressSubi from './StressSubi';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { LigneDuReferentiel } from './ChampDuReferentiel';
-import { jetVientDe, suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
+import { champDeLaSuite, jetVientDe, suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
+import { consommationDuJet, direLaConsommation } from '../../../dice/consommationAuJet';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
@@ -768,6 +769,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             }
         }
 
+        /*
+          **Ce que le jet consomme sur la fiche** (Nephilim, 2026-10-18) : les
+          Materiae Primae d'une transmutation, retirées au lancer — la règle ne
+          laisse pas de choix (Quintessence p. 220) —, conservées sur un critique.
+        */
+        const consomme = ecrireSurLaFiche ? consommationDuJet(descripteur.consommation, choix, valeurs, res.degre) : null;
+        if (consomme) {
+            if (!consomme.conservee) ecrireSurLaFiche?.({ [consomme.champ]: consomme.apres });
+            dits.push(direLaConsommation(consomme));
+        }
+
         setMouvements(dits);
     };
 
@@ -1020,9 +1032,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ? suitesDuJet(descripteur.suitesDesCritiques, resultat.degre, Object.values(dernierLancer.choix).filter(Boolean), template.sections)
         : [];
     const [suitesNotees, setSuitesNotees] = useState<Record<string, string>>({});
+    const champDuGeste = (suite: SuiteDUnCritique) =>
+        dernierLancer ? champDeLaSuite(suite, dernierLancer.choix, template.sections) : undefined;
     const noterLaSuite = (suite: SuiteDUnCritique) => {
-        if (!suite.ajouter || suitesNotees[suite.label]) return;
-        const { champ, pas = 1 } = suite.ajouter;
+        const champ = champDuGeste(suite);
+        if (!suite.ajouter || !champ || suitesNotees[suite.label]) return;
+        const pas = suite.ajouter.pas ?? 1;
         const max = template.sections.flatMap(s => s.fields).find(f => f.id === champ)?.max;
         const avant = lireLeNombre(champ);
         const apres = valeurApresLaSuite(avant, pas, max);
@@ -1148,8 +1163,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                   un Vécu vide — n'a rien à proposer.
                                 */
                                 const noms = new Set(section.fields.map(f => f.libelleSur).filter(Boolean));
+                                // Le motif de la composante : le degré d'une formule, pas son aire (Nephilim).
+                                const motif = (() => { try { return composante.motif ? new RegExp(composante.motif) : null; } catch { return null; } })();
                                 const options = section.fields
                                     .filter(f => !noms.has(f.id))
+                                    .filter(f => !motif || motif.test(f.id))
                                     .filter(f => !f.libelleSur || String(valeurs[f.libelleSur] ?? '').trim() !== '')
                                     .map(f => (
                                         <option key={f.id} value={f.id}>
@@ -1918,12 +1936,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 className={`rounded-lg border p-2 space-y-1 ${maladresse ? 'border-etat-danger/40 bg-etat-danger/10' : 'border-etat-succes/40 bg-etat-succes/10'}`}>
                                 <p className={`text-ui-11 font-black uppercase tracking-widest ${maladresse ? 'text-etat-danger' : 'text-etat-succes'}`}>{suite.label}</p>
                                 {suite.rappel && <p className="text-ui-11 text-app-text/70">{suite.rappel}</p>}
-                                {suite.ajouter && ecrireSurLaFiche && !notee && (
+                                {suite.ajouter && champDuGeste(suite) && ecrireSurLaFiche && !notee && (
                                     <button type="button" onClick={() => noterLaSuite(suite)}
                                         className={`px-3 py-1 rounded-lg border text-ui-10 font-bold transition-colors ${maladresse
                                             ? 'border-etat-danger/60 text-etat-danger hover:bg-etat-danger/20'
                                             : 'border-etat-succes/60 text-etat-succes hover:bg-etat-succes/20'}`}>
-                                        Noter {pas > 0 ? '+' : '−'}{Math.abs(pas)} {nomDuChamp(suite.ajouter.champ)}
+                                        Noter {pas > 0 ? '+' : '−'}{Math.abs(pas)} {nomDuChamp(champDuGeste(suite)!)}
                                     </button>
                                 )}
                                 {notee && <p className={`text-ui-11 font-bold ${maladresse ? 'text-etat-danger' : 'text-etat-succes'}`}>{notee}</p>}
