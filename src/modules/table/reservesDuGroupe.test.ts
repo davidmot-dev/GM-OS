@@ -84,7 +84,14 @@ describe('ce que les points rapportent', () => {
     it('des dés, ou un bonus', () => {
         expect(effetDesApports([
             { apport: DES, points: 2 }, { apport: ESPOIR, points: 1 }, { apport: ATOUT, points: 1 },
-        ])).toEqual({ des: 5, bonus: 1, annule: 0 });
+        ])).toEqual({ des: 5, bonus: 1, annule: 0, degres: 0 });
+    });
+
+    it('des degrés ajoutés à la cible — la Stase et l’Effet Mnémos de Nephilim', () => {
+        const stase = { effet: 'degres' as const, parPoint: 1 };
+        const mnemos = { effet: 'degres' as const, parPoint: 2 };
+        expect(effetDesApports([{ apport: stase, points: 3 }, { apport: mnemos, points: 1 }]))
+            .toEqual({ des: 0, bonus: 0, annule: 0, degres: 5 });
     });
 
     it("l'engagement est ramené à ce qui reste", () => {

@@ -44,13 +44,24 @@ export function useSheetCalculator(
                         .replace(/[^a-zA-Z0-9]/g, '');
                     
                     const numValue = (typeof rawValue === 'number') ? rawValue : parseFloat(String(rawValue)) || 0;
+                    /*
+                      **Un choix garde son texte** (Nephilim, 2026-10-18). Tout était
+                      converti en nombre : « Feu » devenait 0, et la formule du Ka
+                      dominant (`ka_dominant == "Feu" ? ka_fire : …`) rendait toujours
+                      0 — la Stase plafonnée à zéro, vu par David à l'écran. Un choix
+                      dont la valeur EST un nombre reste un nombre : les formules des
+                      autres jeux ne changent pas.
+                    */
+                    const texteDuChoix = field.type === 'select' && typeof rawValue === 'string'
+                        && rawValue.trim() !== '' && !Number.isFinite(Number(rawValue));
+                    const valeur = texteDuChoix ? rawValue : numValue;
 
                     if (sanitizedLabel) {
-                        ctx[sanitizedLabel] = numValue;
+                        ctx[sanitizedLabel] = valeur;
                     }
                     
                     // Also ensure the ID-based mapping is a number for the engine
-                    ctx[field.id] = numValue;
+                    ctx[field.id] = valeur;
                 });
             });
         }

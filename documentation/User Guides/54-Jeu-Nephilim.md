@@ -1,7 +1,8 @@
 # ✨ Jeu — Nephilim Légende
 
 > **Pilote décrit :** « Nephilim », exporté le 2026-10-18 et corrigé le jour même (Arts occultes au
-> menu du jet, suites des maladresses et des critiques, rappels d'après l'errata V1.3). Retour à
+> menu du jet, suites des maladresses et des critiques, rappels d'après l'errata V1.3, Stase et Effet
+> Mnémos au jet, Ka dominant). Retour à
 > [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un **d100 sous une cible en degrés** : le Vécu — ou l'Art occulte —, plus le Ka de l'approche,
@@ -36,6 +37,19 @@ passés** reliés aux **époques d'incarnation** du livre.
 - **Difficulté** : les **circonstances, en degrés**. Le livre va de −5 (difficulté extrême) à +5
   (facilité extrême). Pour un **sort** ou une **formule**, retirez-y aussi le **degré du sort** :
   Art + Ka − degré. Le curseur descend jusqu'à −10 pour cela.
+
+### Puiser dans ses réserves : la Stase et l'Effet Mnémos
+
+Sous les menus, « Puiser dans ses réserves » propose ce qui convient **au jet retenu** :
+
+| Réserve | Quand | Ce qu'elle donne | Ce qu'elle coûte |
+| :--- | :--- | :--- | :--- |
+| **Stase (sort de Magie)** | un cercle de **Magie** est retenu | **+1 degré** de Ka par degré de stase (p. 183) | les degrés engagés, sur la fiche |
+| **Effet Mnémos (1 PS : +2 degrés)** | un **Vécu** est retenu | **+2 degrés**, une fois par test (p. 119) | 1 Point de Sapience |
+
+Les degrés s'ajoutent à la cible, et les chances le disent : `(3 + 2) × 10 = 50 %`. La réserve se
+débite **au lancer, quel que soit le résultat**. Racontez l'Effet Mnémos : de quel Vécu passé vient
+ce souvenir ?
 
 ![Après le lancer : 86 contre 90, une réussite de marge 8](captures/jeu-nephilim-jet-lance.jpg)
 
@@ -128,6 +142,14 @@ Materiae Primae en page 6, les formules en page 7).
 L'Arbre de la page 4 et les Œuvres de la page 6 en sont des **copies calculées**, en lecture seule.
 Une même valeur n'a qu'un seul endroit où l'écrire (choix de David, 2026-10-17).
 
+### Le Ka dominant et la Stase
+
+La section **Ka dominant**, sous le Pentacle, porte le **choix** de l'élément dominant (Feu, Air,
+Eau, Lune, Terre) et son **degré**, calculé sur le Pentacle. La **Stase** ne peut pas le dépasser :
+la saisie s'arrête au plafond, affiché à côté (« / 5 ») ; une Stase restée au-dessus (le Ka a baissé)
+s'affiche en rouge. Le Ka dominant n'existe que sur la fiche GM-OS : la fiche HTML ne le porte pas
+encore, et passer par elle ne l'efface pas.
+
 ### Incarnations et Vécus
 
 La section **Incarnations** vient avant **Les Vécus** : on choisit d'abord les époques, puis les
@@ -157,9 +179,11 @@ le **Druide** (*Le sanctuaire des Tuatha de Danann*) la description du Chasseur 
 
 ## Ce qui reste à la main
 
-- Les **Points de Sapience** (priorité d'initiative, Effets Mnémos), la **Stase** — pleine en la
-  quittant, plafonnée au Ka dominant, rechargée d'un degré par jour en Plexus ou Nexus — et les
-  **Materiae Primae** : la fiche les porte, rien ne les débite ni ne les recharge.
+- Les **Points de Sapience** hors de l'Effet Mnémos de bonus : priorité d'initiative, Effet Mnémos
+  **en tant que Vécu** (1 PS par degré, quand aucun Vécu ne s'applique), **Sacrifice** (5 PS, un sort
+  réussi d'office), Effets Mnémos permanents (+5 PS).
+- La **recharge** de la Stase — pleine en la quittant, puis un degré par jour en Plexus ou Nexus —
+  et les **Materiae Primae** : la fiche les porte, rien ne les recharge ni ne les débite.
 - Le **Ka du construct** qui baisse sur une maladresse d'Alchimie : le jet ne sait pas quel
   construct a servi.
 - Le **pacte de Kabbale** : un test en opposition, Art de la Sephirah + Ka contre le degré de

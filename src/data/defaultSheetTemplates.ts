@@ -12,6 +12,13 @@ export interface SheetField {
     options?: string[]; // Used for 'select' type
     max?: number;       // Used for 'rating' or 'gauge' absolute maximum
     /**
+     * **Le plafond se lit sur un autre champ** (Nephilim, 2026-10-18) : la Stase
+     * ne dépasse pas le Ka dominant. L'identifiant d'un champ de la fiche — un
+     * nombre, ou une formule (le degré du Ka dominant se calcule). La saisie s'y
+     * arrête ; une valeur déjà au-delà (le Ka a baissé) s'affiche en alerte.
+     */
+    maxSur?: string;
+    /**
      * **Le nom de ce champ est écrit sur la fiche** — Nephilim, 2026-10-17. Les
      * Vécus sont des lignes libres : « Médecin » à 4, « Templier » à 6. Le
      * degré est ce champ ; son nom, celui qu'on désigne ici. Le menu du jet

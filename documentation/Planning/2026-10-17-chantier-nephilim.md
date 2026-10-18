@@ -301,3 +301,30 @@ carte des suites n'en ont pas). Suite complète : **8 098 essais verts** ; `tsc 
 **Écart ouvert** : la Jauge de Traque du pilote déborde **aussitôt** (`debordement` vers
 l'Intensité) ; l'errata (p. 146) fait monter l'Intensité **à l'aube**. Dit au manuel ; à trancher
 par David.
+
+## 13 · Lots B et C — 18/10, après-midi
+
+David : *« commite puis fais le lot B et lot C »* (commits `4f8be52f`, `14bb539a`, `3c499c02`).
+Choix de David : **Effet Mnémos de bonus seulement** ; **Ka dominant sur la fiche GM-OS d'abord**.
+
+- **Lot B** — un effet `degres` pour les réserves (des degrés ajoutés à la cible avant le ×10) et une
+  condition `si` (sections ou champs du jet retenu, `jetVientDe` partagé avec les suites des
+  critiques). Pilote : **Stase** (+1 par degré, sorts de Magie seulement — le livre ne la donne qu'au
+  « lancer du sort », p. 183 ; le « idem pour la Kabbale » du § 2 venait du carnet) et **Effet
+  Mnémos** (1 PS : +2 degrés, une fois par test de Vécu, p. 119). Débités au lancer, quel que soit le
+  résultat. À la main : Mnémos « en tant que Vécu », Sacrifice (5 PS), effets permanents.
+- **Lot C** — `SheetField.maxSur` (le plafond lu sur un autre champ, nombre ou formule ;
+  `plafondDuChamp`), borné à la saisie et affiché « / N », en rouge au-delà. Pilote : section
+  « Ka dominant » (choix + degré calculé par une formule expr-eval) **hors du Pentacle** — le menu
+  « Approche (Ka) » propose tous les champs du Pentacle —, et `stasis_degree.maxSur`. La fiche HTML
+  n'a pas le Ka dominant : à demander au Studio à la prochaine livraison.
+- Forge : contrôles de `degres` (exige `jet.cible`), `si`, `maxSur`. Manuel 53 (`degres`, `si`) et
+  54 à jour. Suite complète : **8 105 essais verts**, `tsc -b` propre.
+- Pilote construit sur le pilote corrigé que David avait réimporté (`Export Dirvers/corriges/`), zéro
+  constat. **À réimporter et éprouver, puis commiter.**
+- **Défaut vu par David à l'écran** : « Réserve de Stase 2 / 0 ». `useSheetCalculator` convertissait
+  toute valeur en nombre — « Air » devenait 0 et la formule du Ka dominant rendait toujours 0 (mon
+  essai appelait le moteur directement, sans ce calculateur). Corrigé : un choix dont la valeur n'est
+  pas un nombre garde son texte ; un plafond nul ne borne plus (Ka dominant pas encore choisi). Essai
+  ajouté au calculateur ; 8 108 essais verts.
+

@@ -37,7 +37,9 @@ const ApportsDuGroupe: React.FC<ApportsDuGroupeProps> = ({
                 ? `${apport.parPoint} dé${apport.parPoint > 1 ? 's' : ''} par point`
                 : apport.effet === 'annuleLesUns'
                     ? 'chaque point annule un 1 — seuls ceux qui servent sont dépensés'
-                    : `+${apport.parPoint} par point`)
+                    : apport.effet === 'degres'
+                        ? `+${apport.parPoint} degré${apport.parPoint > 1 ? 's' : ''} par point, dépensé quel que soit le résultat`
+                        : `+${apport.parPoint} par point`)
                 + (apport.maxParJet !== undefined ? ` · ${apport.maxParJet} par jet au plus` : '');
             return (
                 <div key={apport.id} className="flex flex-wrap items-center gap-2 text-xs">
@@ -86,6 +88,7 @@ const ApportsDuGroupe: React.FC<ApportsDuGroupeProps> = ({
                                     <span className="ml-2 font-bold text-accent">
                                         {apport.effet === 'des' ? `+${points * apport.parPoint} dés`
                                             : apport.effet === 'annuleLesUns' ? `annule jusqu'à ${points * apport.parPoint} « 1 »`
+                                            : apport.effet === 'degres' ? `+${points * apport.parPoint} degré${points * apport.parPoint > 1 ? 's' : ''}`
                                             : `+${points * apport.parPoint}`}
                                     </span>
                                 )}

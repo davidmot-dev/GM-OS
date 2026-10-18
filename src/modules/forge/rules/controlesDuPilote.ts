@@ -314,6 +314,13 @@ export function controlerLePilote(
                     + 'le menu du jet ne le proposerait jamais.',
                 );
             }
+            // Un plafond lu sur un autre champ (la Stase au Ka dominant) : ce champ doit exister.
+            if (champ.maxSur !== undefined && !tousLesChamps.has(champ.maxSur)) {
+                avertir(
+                    `template.sections[${section.id}].fields[${champ.id}].maxSur`,
+                    `« ${champ.label} » prend son plafond sur « ${champ.maxSur} », absent de la fiche : il ne sera pas borné.`,
+                );
+            }
         }
     }
 
@@ -629,6 +636,16 @@ export function controlerLePilote(
             if (!tousLesChamps.has(stock.champ)) {
                 avertir(`jet.reservesDuPersonnage[${i}]`, `La réserve « ${reserve.label} » se lit dans « ${stock.champ} », absent de la fiche : elle restera à zéro.`);
             }
+        }
+        // Des degrés ajoutés à une cible que le jeu ne calcule pas : ils ne compteraient pour rien.
+        if (reserve.effet === 'degres' && !driver.jet?.cible) {
+            erreur(`jet.reservesDuPersonnage[${i}].effet`, `« ${reserve.label} » ajoute des degrés à la cible, mais le jet n'en calcule pas (« jet.cible ») : ils ne compteraient pour rien.`);
+        }
+        for (const section of reserve.si?.sections ?? []) {
+            if (!idsDeSections.has(section)) avertir(`jet.reservesDuPersonnage[${i}].si.sections`, `« ${reserve.label} » ne sert qu'aux jets de la section « ${section} », absente de la fiche : elle ne sera jamais proposée.`);
+        }
+        for (const champ of reserve.si?.champs ?? []) {
+            if (!tousLesChamps.has(champ)) avertir(`jet.reservesDuPersonnage[${i}].si.champs`, `« ${reserve.label} » ne sert qu'aux jets du champ « ${champ} », absent de la fiche : elle ne sera jamais proposée.`);
         }
     });
 
@@ -1518,8 +1535,8 @@ export function controlerLePilote(
         (groupe.apports ?? []).forEach((apport, i) => {
             const ou = `ficheDeGroupe.apports[${i}]`;
             const nom = apport.label || apport.id || `n° ${i + 1}`;
-            if (apport.effet !== 'des' && apport.effet !== 'bonus' && apport.effet !== 'annuleLesUns') {
-                erreur(`${ou}.effet`, `« ${nom} » doit donner des dés (« des »), un bonus (« bonus ») ou annuler des 1 (« annuleLesUns »).`);
+            if (apport.effet !== 'des' && apport.effet !== 'bonus' && apport.effet !== 'annuleLesUns' && apport.effet !== 'degres') {
+                erreur(`${ou}.effet`, `« ${nom} » doit donner des dés (« des »), un bonus (« bonus »), des degrés à la cible (« degres ») ou annuler des 1 (« annuleLesUns »).`);
             }
             if (!(Number.isInteger(apport.parPoint) && apport.parPoint > 0)) {
                 erreur(`${ou}.parPoint`, `« ${nom} » doit rapporter un nombre entier positif par point.`);

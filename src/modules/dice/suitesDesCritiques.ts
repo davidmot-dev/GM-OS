@@ -43,6 +43,24 @@ interface SectionLue {
     fields: readonly { id: string }[];
 }
 
+/**
+ * **Ce jet vient-il de là ?** — un des champs retenus est l'un des `champs`, ou
+ * vient de l'une des `sections`. Sans l'un ni l'autre, tout jet compte.
+ * Partagé avec les réserves du personnage (`ApportDuGroupe.si`) : la Stase ne
+ * sert qu'au lancer d'un sort.
+ */
+export function jetVientDe(
+    cible: { sections?: readonly string[]; champs?: readonly string[] } | undefined,
+    retenus: readonly string[],
+    sections: readonly SectionLue[],
+): boolean {
+    if (!cible || (!cible.sections?.length && !cible.champs?.length)) return true;
+    const sectionDuChamp = new Map(sections.flatMap(s => s.fields.map(f => [f.id, s.id] as const)));
+    return retenus.some(champ =>
+        (cible.champs ?? []).includes(champ)
+        || (cible.sections ?? []).includes(sectionDuChamp.get(champ) ?? ''));
+}
+
 /** Les suites que ce jet déclenche, dans l'ordre du pilote. */
 export function suitesDuJet(
     suites: readonly SuiteDUnCritique[] | undefined,
@@ -51,14 +69,7 @@ export function suitesDuJet(
     sections: readonly SectionLue[],
 ): SuiteDUnCritique[] {
     if (!suites?.length || !degre) return [];
-    const sectionDuChamp = new Map(sections.flatMap(s => s.fields.map(f => [f.id, s.id] as const)));
-    return suites.filter(suite => {
-        if (DEGRE_DU_CRITIQUE[suite.quand] !== degre) return false;
-        if (!suite.sections?.length && !suite.champs?.length) return true;
-        return retenus.some(champ =>
-            (suite.champs ?? []).includes(champ)
-            || (suite.sections ?? []).includes(sectionDuChamp.get(champ) ?? ''));
-    });
+    return suites.filter(suite => DEGRE_DU_CRITIQUE[suite.quand] === degre && jetVientDe(suite, retenus, sections));
 }
 
 /** La valeur après le geste : jamais sous zéro, jamais au-dessus du maximum du champ. */

@@ -99,20 +99,23 @@ export function stockRetenu(
  *
  * `annule` : combien de 1 peuvent être annulés après le lancer (la Singularité).
  * Il ne s'ajoute ni aux dés ni au résultat — d'où son compte à part.
+ * `degres` : ce qui s'ajoute à la cible avant le ×10 (la Stase de Nephilim).
  */
 export function effetDesApports(
     engagements: { apport: Pick<ApportDuGroupe, 'effet' | 'parPoint'>; points: number }[],
-): { des: number; bonus: number; annule: number } {
+): { des: number; bonus: number; annule: number; degres: number } {
     let des = 0;
     let bonus = 0;
     let annule = 0;
+    let degres = 0;
     for (const { apport, points } of engagements) {
         const n = Math.max(0, Math.floor(points)) * Math.max(0, apport.parPoint);
         if (apport.effet === 'des') des += n;
         else if (apport.effet === 'annuleLesUns') annule += n;
+        else if (apport.effet === 'degres') degres += n;
         else bonus += n;
     }
-    return { des, bonus, annule };
+    return { des, bonus, annule, degres };
 }
 
 /** Un apport tel que le panneau de jet le présente : son stock, ce qui reste, ce qu'on engage. */

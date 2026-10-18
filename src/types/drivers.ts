@@ -217,7 +217,19 @@ export interface ApportDuGroupe {
      * annulés après le lancer (la Singularité de NOC : chaque point empêche une
      * goutte de Fiel ; seul ce qui sert est dépensé).
      */
-    effet: 'des' | 'bonus' | 'annuleLesUns';
+    effet: 'des' | 'bonus' | 'annuleLesUns' | 'degres';
+    /*
+      `degres` (Nephilim, 2026-10-18) : des degrés ajoutés à la **cible** avant le
+      ×10 — la Stase (+1 Ka par point) et l'Effet Mnémos (1 PS, +2 degrés). Un
+      bonus au résultat ne vaudrait rien sur un d100 qu'on lance SOUS la cible.
+    */
+    /**
+     * **Seulement pour certains jets** (Nephilim, 2026-10-18) : la réserve ne se
+     * propose que si un champ retenu au jet vient de l'une des `sections`, ou est
+     * l'un des `champs`. La Stase ne sert qu'au lancer d'un sort (Quintessence
+     * p. 183) ; l'Effet Mnémos, qu'à un test de Vécu.
+     */
+    si?: { sections?: string[]; champs?: string[] };
     /** Ce que rapporte un point : trois dés pour un point d'Espoir. */
     parPoint: number;
     /**

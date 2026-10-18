@@ -31,6 +31,10 @@ l'errata officiel V1.3.
   d'Art occulte, +1 Ombre sur le Vécu contemporain, +1 Sapience sur un critique de Science
   occulte, proposés d'un bouton au panneau de jet (18/10). À passer après `sections_des_arts.py` ;
   le repasser remplace les suites.
+- `stase_et_ka_dominant.py` — lots B et C (18/10) : une section « Ka dominant » (le choix de
+  l'élément et son degré calculé) après le Pentacle, la Stase plafonnée dessus (`maxSur`), et deux
+  réserves au jet qui ajoutent des degrés à la cible — la Stase sur un sort de Magie, l'Effet Mnémos
+  (1 PS : +2) sur un test de Vécu. À passer après `sections_des_arts.py`.
 
 ## État au 18/10 — complet
 

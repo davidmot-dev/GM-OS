@@ -2,6 +2,7 @@ import React from 'react';
 import { Save, FolderOpen, Layers, FileText, Trash2, Lock, BookOpen, Eye, Heart, Sparkles, Package, Tablet, PenTool, Plus, Check, X } from 'lucide-react';
 import { fractionDeVie } from '../../combat/logic/SanteDuCombattant';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
+import { plafondDuChamp } from '../logic/plafondDuChamp';
 import { useImageStore } from '../../image/useImageStore';
 import { gmToast } from '../../../stores/useToastStore';
 import { gmConfirm } from '../../../stores/useModalStore';
@@ -158,6 +159,11 @@ const CharacterSheetEditor: React.FC = () => {
         updateCharacterHP, updateCharacterMaxHP, updateCharacterHubOptions,
         addInventoryItem, removeInventoryItem
     } = editor;
+
+    /** Le plafond lu sur un autre champ (`maxSur`) : la Stase de Nephilim au Ka dominant. */
+    const plafondDe = (field: SheetField) => template
+        ? plafondDuChamp(field, template.sections.flatMap(s => s.fields), id => getValue(id, ''), f => evaluateFormula(f))
+        : undefined;
 
     // Separate gauge fields from other fields for layout
     const gaugeFields = (section: typeof template.sections[0]) => section.fields.filter(f => f.type === 'gauge');
@@ -516,7 +522,7 @@ const CharacterSheetEditor: React.FC = () => {
                                             {others.map(field => {
                                                 const val = getValue(field.id, field.defaultValue);
                                                 if (field.type === 'number') return (
-                                                    <FieldNumber key={field.id} field={field} value={Number(val)} onChange={v => updateLocal(field.id, v)} />
+                                                    <FieldNumber key={field.id} field={field} value={Number(val)} onChange={v => updateLocal(field.id, v)} plafond={plafondDe(field)} />
                                                 );
                                                 // Un nom relié à une liste du jeu : les Vécus de Nephilim (2026-10-17).
                                                 if (field.type === 'text' && field.referentiel) return (

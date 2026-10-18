@@ -87,19 +87,35 @@ export const FieldNumber: React.FC<{
     field: SheetField;
     value: number;
     onChange: (val: number) => void;
-}> = ({ field, value, onChange }) => (
-    <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
-        <label htmlFor={field.id} className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
-        <input
-            id={field.id}
-            type="number"
-            value={value}
-            onChange={e => onChange(Number(e.target.value))}
-            title={field.label}
-            className="w-16 bg-app-surface text-app-text text-center font-mono text-sm font-bold rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-accent/40"
-        />
-    </div>
-);
+    /** Le plafond lu sur un autre champ (`maxSur`) : la Stase au Ka dominant. */
+    plafond?: number;
+}> = ({ field, value, onChange, plafond }) => {
+    const auDela = plafond !== undefined && value > plafond;
+    return (
+        <div className="flex items-center justify-between p-3 bg-app-bg/40 rounded-xl border border-app-border/40">
+            <label htmlFor={field.id} className="text-ui-10 font-black uppercase tracking-widest text-app-text/40">{field.label}</label>
+            <span className="flex items-center gap-2">
+                <input
+                    id={field.id}
+                    type="number"
+                    value={value}
+                    max={plafond}
+                    onChange={e => {
+                        const saisi = Number(e.target.value);
+                        onChange(plafond !== undefined ? Math.min(saisi, plafond) : saisi);
+                    }}
+                    title={plafond !== undefined ? `${field.label} — au plus ${plafond}` : field.label}
+                    className={`w-16 bg-app-surface text-center font-mono text-sm font-bold rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-accent/40 ${auDela ? 'text-etat-danger' : 'text-app-text'}`}
+                />
+                {plafond !== undefined && (
+                    <span data-plafond className={`font-mono text-ui-10 ${auDela ? 'text-etat-danger font-bold' : 'text-app-text/40'}`}>
+                        / {plafond}
+                    </span>
+                )}
+            </span>
+        </div>
+    );
+};
 
 export const FieldText: React.FC<{
     field: SheetField;

@@ -24,7 +24,7 @@ import StressSubi from './StressSubi';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { LigneDuReferentiel } from './ChampDuReferentiel';
-import { suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
+import { jetVientDe, suitesDuJet, valeurApresLaSuite, type SuiteDUnCritique } from '../../../dice/suitesDesCritiques';
 import { useCosmsCourants } from '../../hooks/useCosmsCourants';
 import { malusDesCiblesMultiples } from '../../../combat/logic/sbiresEtHordes';
 import { loiEnVigueur } from '../../logic/cosmsCourants';
@@ -33,7 +33,7 @@ import { tousLesPilotes } from '../../store/tousLesPilotes';
 import { appliquerAuGroupe } from '../../logic/groupeDeLaCampagne';
 import ApportsDuGroupe from './ApportsDuGroupe';
 import type { SheetTemplate } from '../../../../data/defaultSheetTemplates';
-import type { DiceConfig } from '../../../../types/drivers';
+import type { ApportDuGroupe, DiceConfig } from '../../../../types/drivers';
 
 /**
  * Lancer depuis la fiche de personnage.
@@ -150,10 +150,17 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const [bonusDuLancer, setBonusDuLancer] = useState(0);
     const [choixDesApports, setChoixDesApports] = useState<Record<string, string>>({});
     const etatDesReserves = monnaie ? etatDe(monnaie.campaignId, monnaie.ressourcesDeTable) : {};
+    /*
+      **Une réserve qui ne sert qu'à certains jets** (`si`, Nephilim, 2026-10-18) :
+      la Stase au lancer d'un sort, l'Effet Mnémos à un test de Vécu. Écartée du
+      panneau, elle n'est ni proposée ni débitée.
+    */
+    const retenusDuJet = Object.values(choix).filter(Boolean);
+    const applicable = (a: ApportDuGroupe) => jetVientDe(a.si, retenusDuJet, template.sections);
     const disponibles = apportsDisponibles(
-        apports, choix, choixDesApports, engages, campagne?.groupe?.sheetData, etatDesReserves,
+        apports.filter(applicable), choix, choixDesApports, engages, campagne?.groupe?.sheetData, etatDesReserves,
     );
-    const { des: desDuGroupe, bonus: bonusDuGroupe, annule: annuleDuGroupe } = effetDesApports(disponibles);
+    const { des: desDuGroupe, bonus: bonusDuGroupe, annule: annuleDuGroupe, degres: degresDuGroupe } = effetDesApports(disponibles);
 
     /*
       **Les réserves du personnage** — le Vécu, l'Espoir, la Singularité d'un Héros
@@ -162,8 +169,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     */
     const reservesPerso = ecrireSurLaFiche && !descripteur.desEchelonnes ? (descripteur.reservesDuPersonnage ?? []) : [];
     const [engagesPerso, setEngagesPerso] = useState<Record<string, number>>({});
-    const disponiblesPerso = apportsDisponibles(reservesPerso, choix, {}, engagesPerso, valeurs, {});
-    const { des: desPerso, bonus: bonusPerso, annule: annulePerso } = effetDesApports(disponiblesPerso);
+    const disponiblesPerso = apportsDisponibles(reservesPerso.filter(applicable), choix, {}, engagesPerso, valeurs, {});
+    const { des: desPerso, bonus: bonusPerso, annule: annulePerso, degres: degresPerso } = effetDesApports(disponiblesPerso);
+    /** Les degrés puisés s'ajoutent à la cible avant le ×10 : seulement là où le jeu en calcule une. */
+    const degresPuises = descripteur.cible ? degresDuGroupe + degresPerso : 0;
 
     /** Ce qui reste dans un stock précis — pour proposer les Atouts encore garnis. */
     const resteDe = (apportId: string, champ: string) => {
@@ -217,7 +226,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         () => preparerLeJet(
             descripteur, valeurs,
             {
-                champs: choix, desSupplementaires: desAchetes, difficulte, ajustementDeDifficulte, specialisation,
+                champs: choix, desSupplementaires: desAchetes, difficulte,
+                ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
                 /*
                   Sur un jeu à dés échelonnés, avantage et désavantage ajoutent
                   ou retirent un DÉ : c'est `preparerLeJet` qui les applique à la
@@ -228,7 +238,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             },
             template.sections,
         ),
-        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, modificateur, specialisation, template.sections],
+        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, degresPuises, modificateur, specialisation, template.sections],
     );
 
     /*
@@ -1399,7 +1409,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 </div>
             )}
 
-            {reservesPerso.length > 0 && (
+            {disponiblesPerso.length > 0 && (
                 <ApportsDuGroupe
                     titre="Puiser dans ses réserves"
                     disponibles={disponiblesPerso}

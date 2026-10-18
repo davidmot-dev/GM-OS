@@ -129,3 +129,53 @@ describe('les suites des critiques au panneau', () => {
         expect(ecrire).toHaveBeenCalledWith({ 'resources.sapience': 2 });
     });
 });
+
+/**
+ * **La Stase et l'Effet Mnémos au jet** — lot B, 2026-10-18 : des degrés
+ * ajoutés à la cible avant le ×10, puisés sur la fiche, chacun pour ses jets.
+ */
+describe('puiser des degrés : la Stase sur un sort, l’Effet Mnémos sur un Vécu', () => {
+    const AVEC_RESERVES: DescripteurDeJet = {
+        ...JET,
+        cible: { ...JET.cible!, caracteristique: { ...JET.cible!.caracteristique, sectionsSupplementaires: ['arts'] } },
+        reservesDuPersonnage: [
+            { id: 'stase', label: 'Stase', effet: 'degres', parPoint: 1, epuisement: 'piste', stocks: [{ champ: 'stasis.degree', label: 'Stase' }], si: { sections: ['arts'] } },
+            { id: 'mnemos', label: 'Effet Mnémos', effet: 'degres', parPoint: 2, maxParJet: 1, epuisement: 'piste', stocks: [{ champ: 'resources.sapience', label: 'Sapience' }], si: { sections: ['vecus'] } },
+        ],
+    };
+    const FICHE_RESERVES = {
+        ...FICHE,
+        sections: [
+            ...FICHE.sections,
+            { id: 'arts', label: 'Magie', fields: [{ id: 'occult.magic.first', label: 'Basse Magie', type: 'number', defaultValue: 0 }] },
+            { id: 'stase', label: 'Stase', fields: [
+                { id: 'stasis.degree', label: 'Stase', type: 'number', defaultValue: 0 },
+                { id: 'resources.sapience', label: 'Sapience', type: 'number', defaultValue: 0 },
+            ] },
+        ],
+    } as unknown as SheetTemplate;
+    const VALEURS_RESERVES = { ...VALEURS, 'occult.magic.first': 3, 'stasis.degree': 4, 'resources.sapience': 2 };
+
+    it('sur un Vécu, l’Effet Mnémos est proposé, la Stase non', () => {
+        render(<PanneauDeJet descripteur={AVEC_RESERVES} dice={DICE} template={FICHE_RESERVES} valeurs={VALEURS_RESERVES} ecrireSurLaFiche={vi.fn()} />);
+        fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'pastlives.0.degree' } });
+        expect(screen.getByText('Effet Mnémos')).toBeTruthy();
+        expect(screen.queryByText('Stase')).toBeNull();
+    });
+
+    it('sur un sort, deux degrés de Stase portent la cible de 30 à 50 %, et se débitent au lancer', () => {
+        const ecrire = vi.fn();
+        const de = vi.spyOn(Math, 'random');
+        de.mockReturnValueOnce(0.45).mockReturnValueOnce(0.15);
+        render(<PanneauDeJet descripteur={AVEC_RESERVES} dice={DICE} template={FICHE_RESERVES} valeurs={VALEURS_RESERVES} ecrireSurLaFiche={ecrire} />);
+        fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: 'occult.magic.first' } });
+        expect(screen.queryByText('Effet Mnémos')).toBeNull();
+        const plus = screen.getByLabelText('Un point de plus : Stase');
+        fireEvent.click(plus);
+        fireEvent.click(plus);
+        expect(screen.getAllByText(/\(3 \+ 2\) × 10 = 50 %/).length).toBeGreaterThan(0);
+        fireEvent.click(screen.getByText('Lancer', { exact: true }));
+        de.mockRestore();
+        expect(ecrire).toHaveBeenCalledWith({ 'stasis.degree': 2 });
+    });
+});

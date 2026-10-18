@@ -68,3 +68,32 @@ describe('calculs depuis la vraie fiche', () => {
         expect(hasard).toHaveBeenCalledTimes(3);
     });
 });
+
+/**
+ * **Un choix garde son texte** — Nephilim, 2026-10-18 : le degré du Ka dominant
+ * se calcule en comparant le choix (« Air ») ; converti en nombre, il valait 0,
+ * et la Stase se trouvait plafonnée à zéro (vu par David à l'écran).
+ */
+describe('un champ de choix dans une formule', () => {
+    const FORMULE = 'ka_dominant == "Feu" ? ka_fire : (ka_dominant == "Air" ? ka_air : 0)';
+    const nephilim: SheetTemplate = {
+        id: 'fiche-neph', name: 'Nephilim', emoji: '', sections: [{ id: 'ka', label: 'Ka', fields: [
+            { id: 'ka_dominant', label: 'Ka dominant', type: 'select', options: ['Feu', 'Air'], defaultValue: '' },
+            { id: 'ka_fire', label: 'Ka-Feu', type: 'number', defaultValue: 0 },
+            { id: 'ka_air', label: 'Ka-Air', type: 'number', defaultValue: 0 },
+            { id: 'niveau', label: 'Niveau', type: 'select', options: ['1', '2', '3'], defaultValue: '1' },
+        ] }],
+    };
+    const pj: PlayerCharacter = { ...personnage, id: 'pj-neph', templateId: 'fiche-neph', sheetData: { ka_fire: 4, ka_air: '2' } };
+
+    it('le texte du choix se compare : Air donne le Ka-Air', () => {
+        const { result } = renderHook(() => useSheetCalculator(pj, nephilim, { ka_dominant: 'Air' }));
+        expect(result.current.evaluateFormula(FORMULE)).toBe(2);
+    });
+
+    it('sans choix, la formule rend 0 ; un choix fait de nombres reste un nombre', () => {
+        const { result } = renderHook(() => useSheetCalculator(pj, nephilim, { niveau: '3' }));
+        expect(result.current.evaluateFormula(FORMULE)).toBe(0);
+        expect(result.current.evaluateFormula('niveau + 1')).toBe(4);
+    });
+});
