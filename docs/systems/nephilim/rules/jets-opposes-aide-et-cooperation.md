@@ -3,7 +3,7 @@ sujet: Jets opposés, aide et coopération
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« Les actions opposées » ; « Faire baisser le temps de recherche » ; « Jauge de Traque » ; « Les fraternités »"
 genere_par: notebooklm
 gabarit: v3
@@ -21,7 +21,7 @@ L'entraide s'applique notamment lors des actions collectives et des enquêtes oc
 ## Valeurs
 - Dés utilisés: deux dés à dix faces (D100) pour chaque camp.
 - Hiérarchie d'opposition (du meilleur au pire): Réussite critique, Succès, Échec, Maladresse.
-- Départage en cas d'égalité de succès: plus haut tirage en degrés.
+- Départage en cas d'égalité de succès: plus haut tirage en degrés. Avec une valeur supérieure à 10, chaque degré au-delà de 10 augmente de 1 la marge de réussite du tirage (errata V1.3, p. 123).
 - Double échec ou double maladresse: aucun gagnant.
 - Traque pour action de groupe: 1 jeton au maximum par scène pour le groupe.
 - Réduction du temps de recherche par l'aide d'un Nephilim: -1 degré d'unité de temps.

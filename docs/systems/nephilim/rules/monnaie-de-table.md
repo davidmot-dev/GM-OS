@@ -3,7 +3,7 @@ sujet: Monnaie de table
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« L’Effet Rosenkreutz » ; « Seuil RK » ; « Jauge de Traque » ; « La Traque » ; « Effets de la Traque » ; « Le reflet d’Arcadia »"
 genere_par: notebooklm
 gabarit: v3
@@ -18,7 +18,7 @@ La ressource commune partagée au centre de la table est la jauge de Traque, qui
 
 Chaque zone possède un Seuil Rosenkreutz (Seuil RK) mesurant son niveau de surveillance (section « Seuil RK »). Lorsque des actions magiques, approches ou Vécus passés dépassent ce seuil au cours d'une scène, des jetons sont ajoutés à la jauge au milieu de la table (section « Jauge de Traque »).
 
-La jauge s'accumule et ne se dépense pas. Quand les jetons atteignent le Seuil RK, la jauge retombe à zéro et l'Intensité de la Traque monte d'un niveau pour le groupe (de 1 à 5) (section « La Traque »). Chaque palier d'Intensité impose des restrictions collectives (section « Effets de la Traque »). La Traque diminue en faisant profil bas, par le Voile ou via les reflets d'Arcadia (section « Le reflet d’Arcadia »).
+La jauge s'accumule et ne se dépense pas. Quand les jetons ont atteint le Seuil RK, à l'aube suivante la jauge retombe à zéro et l'Intensité de la Traque monte d'un niveau pour le groupe (de 1 à 5) (section « La Traque » ; errata V1.3, p. 146). Chaque palier d'Intensité impose des restrictions collectives (section « Effets de la Traque »). La Traque diminue en faisant profil bas, par le Voile ou via les reflets d'Arcadia (section « Le reflet d’Arcadia »).
 
 ## Valeurs
 - Jauge de Traque (ressource commune partagée au milieu de la table):
@@ -26,7 +26,7 @@ La jauge s'accumule et ne se dépense pas. Quand les jetons atteignent le Seuil 
   - Départ: 0 jeton (Intensité 1); Min: 0; Max: égal au Seuil RK de la zone (2 à 9).
   - Variation: monte quand la situation empire (s'accumule par les événements).
   - Hausse: +1 jeton par scène avec approche, Science occulte, Vécu passé ou recherche occulte dépassant le Seuil RK; +1 jeton par jour si métamorphe visible > Seuil RK.
-  - Seuil atteint: jauge remise à zéro, Intensité de Traque augmente de 1 niveau.
+  - Seuil atteint: à l'aube suivante, jauge remise à zéro et Intensité de Traque augmentée de 1 niveau (errata V1.3, p. 146).
   - Échelle d'Intensité (du meilleur au pire):
     - Intensité 1: aucun effet.
     - Intensité 2: 1 Vécu/approche sacrifié sous peine de doubler les jetons.

@@ -3,7 +3,7 @@ sujet: Les Chutes (Khaïba, Ombre, Narcose)
 systeme: nephilim
 couverture: complète
 hors_canevas: true
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« Les Chutes » ; « Degrés et paliers de Chutes » ; « Le Khaïba » ; « La Narcose » ; « L’Ombre » ; « Mise en jeu d’une Chute »"
 genere_par: notebooklm
 gabarit: v3
@@ -43,7 +43,7 @@ Ces jauges s'accumulent et ne se dépensent pas. Leur hausse restreint les capac
 ## À la table
 En cours de partie, les trois jauges de Chutes (Khaïba, Ombre et Narcose) progressent lorsque le Nephilim subit un choc magique, commet une maladresse ou affronte une montée d'Intensité de la Traque (section « Les Chutes », section « Effets de la Traque »).
 
-Lorsqu'une maladresse survient sur un test d'Art occulte ou de Science occulte, le joueur ajoute immédiatement un à trois degrés à sa jauge de Khaïba (section « Le Khaïba »). Si la maladresse se produit lors de l'utilisation d'un Vécu contemporain, c'est la jauge d'Ombre qui augmente (section « L’Ombre »). Enfin, un traumatisme lié à la destruction du Simulacre sans réserve de stase fait grimper la jauge de Narcose (section « La Narcose »).
+Lorsqu'une maladresse survient sur un test d'Art occulte ou de Science occulte, le joueur ajoute immédiatement un degré à sa jauge de Khaïba (section « Le Khaïba ») — un seul, comme le disent le livre (p. 150, 183) et l’errata V1.3 (p. 198, 220). Si la maladresse se produit lors de l'utilisation d'un Vécu contemporain, c'est la jauge d'Ombre qui augmente (section « L’Ombre »). Enfin, un traumatisme lié à la destruction du Simulacre sans réserve de stase fait grimper la jauge de Narcose (section « La Narcose »).
 
 À chaque franchissement de palier, le joueur applique immédiatement les effets restrictifs du niveau atteint (section « Degrés et paliers de Chutes »). Pour réduire un degré de Chute, le Nephilim peut obtenir une réussite critique sur un jet de Science occulte, accomplir une recherche dans une enquête occulte dédiée, se purifier dans un Nexus ou dépenser un Point de Sapience (section « Les Chutes », section « L’expérience »).
 

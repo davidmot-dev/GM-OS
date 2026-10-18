@@ -3,7 +3,7 @@ sujet: Santé et blessures
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« La santé et les dommages » ; « Détermination des dommages » ; « Absorption des dommages » ; « L’orichalque » ; « Soins et guérison » ; « L’effet Jésus »"
 genere_par: notebooklm
 gabarit: v3
@@ -44,7 +44,7 @@ Le joueur choisit d'absorber les dommages sur la jauge physique ou magique (sect
 ## Cas limites
 Lorsqu'un personnage ne peut plus absorber de dommages physiques, il est mis hors de combat (section « Mise hors de combat »). Le Simulacre meurt si les ennemis l'exécutent ou sur une maladresse de soin d'une conséquence grave, déclenchant l'Effet Jésus (section « Mort du Simulacre », section « L’effet Jésus »). L'incapacité d'absorber des dommages magiques ajoute un degré de Chute (section « Conséquences des dommages magiques »).
 
-Quand les malus de blessure dépassent le Vécu, un Nephilim peut continuer d'agir via une approche élémentaire, mais chaque geste physique lui inflige alors un degré de dommages magiques (section « Conséquences des dommages physiques »).
+Quand les malus de blessure dépassent le Vécu, un Nephilim peut continuer d'agir via une approche élémentaire, mais chaque geste physique lui inflige alors un degré de dommages magiques (section « Conséquences des dommages physiques »). En contrepartie, il est susceptible de générer un jeton de Traque (errata V1.3, p. 137).
 
 Touché par de l'orichalque, le Nephilim encaisse les dommages physiques puis oppose son Ka dominant au degré d'orichalque: un échec réduit son Ka dominant d'un degré définitif, le transformant en Cruxim si ce Ka tombe à zéro (section « L’orichalque »).
 

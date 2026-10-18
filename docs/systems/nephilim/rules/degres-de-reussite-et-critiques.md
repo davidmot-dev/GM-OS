@@ -3,7 +3,7 @@ sujet: Degrés de réussite et critiques
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« D100 » ; « La marge de réussite » ; « Qualité des actions et marge de réussite » ; « Échec et maladresse » ; « Détermination des dommages » ; « L’expérience » ; « Le Khaïba » ; « Maladresse avec un Vécu contemporain »"
 genere_par: notebooklm
 gabarit: v3
@@ -32,9 +32,9 @@ Un résultat supérieur à la valeur cible est un échec. Un échec formant un d
 - Marge supérieure à 10 en combat offensif: +1 degré de dommages ou -1 à la défense adverse par degré au-delà de 10.
 - Marge supérieure à 10 en combat défensif: -1 degré de dommages reçus ou -1 à l'attaque adverse par degré au-delà de 10.
 - Maladresse: tirage échoué d'un double ou jet de 00.
-- Jet de 00: toujours un échec et toujours une maladresse.
+- Jet de 00: un 00 lu sur les dés, avant tout modificateur, est toujours une maladresse ; un résultat de 00 après modificateur est toujours un échec (errata V1.3, p. 19 et 122).
 - Effet de maladresse sur Vécu contemporain: +1 degré d'Ombre.
-- Effet de maladresse sur Art occulte: +1 degré de Khaïba.
+- Effet de maladresse sur Art occulte: +1 degré de Khaïba, un seul. Le premier degré de Khaïba prend une forme selon la Science : Nanisme ou Gigantisme en Magie (p. 183), forme élémentaire en Kabbale, forme éthérale en Alchimie (errata V1.3, p. 198 et 220).
 
 ## À la table
 Lorsqu'un jet de D100 est demandé, le joueur lance deux dés à dix faces. Si le résultat est inférieur ou égal au seuil calculé, l'action réussit et la qualité de la réussite est immédiatement déterminée en lisant le dé des dizaines (section « La marge de réussite »).

@@ -3,7 +3,7 @@ sujet: Composition de la fiche de personnage
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« Le Pentacle » ; « Les vécus » ; « Le Simulacre » ; « Les Chutes » ; « Les Attributs » ; « Les Sciences occultes » ; « Feuille de personnages »"
 genere_par: notebooklm
 gabarit: v3
@@ -51,6 +51,8 @@ Bien que la fiche soit divisée entre éléments du Nephilim et éléments du Si
 En cas de changement de Simulacre suite à la mort du corps hôte, la section du Simulacre (Ka-Soleil, Vécu contemporain) et les blessures physiques sont entièrement réinitialisées sur une nouvelle fiche, tandis que le Pentacle, les Vécus passés, les Sciences occultes et les jauges de Chutes sont conservés par le Nephilim (section « Le Simulacre », section « La stase »).
 
 Les valeurs dérivées comme l'Initiative, le Mouvement ou la Récupération ne sont pas des caractéristiques indépendantes: elles évoluent automatiquement si le niveau du Ka-élément associé (Ka-Eau, Ka-Terre, Ka-Air) varie au cours du jeu (section « Les Attributs »).
+
+Le profil **Révélé** est le profil par défaut des personnages de Nephilim Légende ; l’Éveillé convient au débutant ou à qui veut un Nephilim plus puissant, l’Immortel au vétéran qui veut plus de savoirs (errata V1.3, p. 33). Le Voile permet, une fois par session, de retirer des jetons de la jauge de Traque (p. 103).
 
 ## Non couvert
 rien

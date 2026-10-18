@@ -3,7 +3,7 @@ sujet: Initiative et déroulement du tour
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« Le round » ; « Ordre des actions » ; « Initiative » ; « Initiative variable » ; « Les actions de combat » ; « Lancement des sorts, invocations et formules »"
 genere_par: notebooklm
 gabarit: v3
@@ -37,7 +37,7 @@ L'initiative dépend de la nature du combattant (section « Initiative »). En c
 - Priorité PNJ: sacrifice de 1 Ka-Soleil (1 fois par combat).
 - Initiative variable: valeur de base + 1D6 (un dé à six faces).
 - Préparation sort de Magie: 1 round.
-- Préparation invocation de Kabbale: degré de l'invocation en rounds.
+- Préparation invocation de Kabbale: degré de la créature en rounds, sauf Invocation rapide. Aucune action pendant la préparation (errata V1.3, p. 127).
 - Visée: +2 au tir par round visé (maximum +6; sans autre action ni défense).
 - Déplacement de base: capacité de Mouvement (MV) en mètres.
 - Deuxième déplacement: possible sans attaque ni défense ce round.

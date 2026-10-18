@@ -3,7 +3,7 @@ sujet: Environnement et dangers
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« La santé et les dommages » ; « Poisons et dommages récurrents » ; « L’orichalque » ; « Géographie magique » ; « L’Hadès » ; « Les Akasha »"
 genere_par: notebooklm
 gabarit: v3
@@ -45,6 +45,10 @@ Dans un milieu saturé d'orichalque comme l'Hadès, le Nephilim subit des dommag
 L'influence astrologique du samedi, placée sous le signe de Saturne, modifie les conditions environnementales occultes: elle accélère la destruction des traces de Ka, abaisse l'intensité des Plexus et accentue la réactivité des périls magiques (section « Géographie magique »).
 
 Si les dommages physiques causés par un danger environnemental (comme la noyade ou l'immersion dans un milieu toxique) dépassent la capacité d'absorption du Simulacre, le personnage bascule en mise hors de combat, risquant la mort de son enveloppe charnelle et le déclenchement de l'Effet Jésus (section « Mise hors de combat », section « L’effet Jésus »).
+
+**Plexus et Nexus, d’après l’errata V1.3** (p. 160). Un Plexus recharge un point de stase **par jour** ; il donne +1 au Ka-élément du Plexus et −1 aux Ka opposés pour les Sciences occultes et les approches. Un Nexus recharge aussi un point de stase par jour, et donne +3 aux Ka-éléments pour les Sciences occultes et les approches.
+
+**Akasha** (errata V1.3, p. 166). L’ancre d’un Akasha est défendue par sa « chimère », l’habitant qui incarne son âme. Comparable à un Effet-Dragon sans en être un, elle est dotée d’un Ka-Soleil égal à la Prégnance de l’Akasha et peut infliger des dommages magiques aux intrus.
 
 ## Non couvert
 rien

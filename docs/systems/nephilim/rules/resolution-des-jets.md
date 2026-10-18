@@ -3,7 +3,7 @@ sujet: Résolution des jets
 systeme: nephilim
 couverture: complète
 hors_canevas: false
-sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf"
+sources: "Nephilim Légende - Système de règles, Nephilim5 - Livre 0 - Nephilim Quintessence.pdf, Errata Quintessence V1.3 (Les Héritiers de Babel, approuvé par Mnémos)"
 sections: "« D100 » ; « La marge de réussite » ; « Les degrés » ; « Les actions » ; « L’approche » ; « La résolution de l’action » ; « Échec et Maladresse » ; « Deuxième chance » ; « Qualité des actions et marge de réussite » ; « Les actions opposées »"
 genere_par: notebooklm
 gabarit: v3
