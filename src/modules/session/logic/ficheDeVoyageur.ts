@@ -4,6 +4,7 @@ import type { PlayerCharacter } from '../../../types/player.types';
 import { suivrePerteDEndurance } from './fatigueDuVoyageur';
 import { suivreSanteVoyageur } from './santeDuVoyageur';
 import { conserverRecusDesTMR } from './recusDesTMR';
+import { conserverOperationsDeVoyageur } from './operationsDeVoyageur';
 
 /** R0, demandé par David le 18/10/2026. Livre 2.3.1, p. 19–20, 42, 44–45, 206–208.
  * Les valeurs enregistrées restent intactes jusqu'à la reprise explicite par le meneur.
@@ -131,7 +132,7 @@ export function calculDeVoyageurHorsTable(champ: string, valeurs: ValeursDeVoyag
 export function actualiserPersonnageDeVoyageur<T extends Pick<PlayerCharacter, 'hp' | 'maxHp'> & Partial<Pick<PlayerCharacter, 'templateId' | 'sheetData'>>>(
     personnage: T, fiches: readonly SheetTemplate[], precedent?: T,
 ): T {
-    if (precedent?.sheetData) personnage = { ...personnage, sheetData: conserverRecusDesTMR(precedent.sheetData, personnage.sheetData ?? {}) };
+    if (precedent?.sheetData) personnage = { ...personnage, sheetData: conserverOperationsDeVoyageur(precedent.sheetData,conserverRecusDesTMR(precedent.sheetData, personnage.sheetData ?? {})) };
     const fiche = fiches.find(f => f.id === personnage.templateId);
     if (!fiche || !estUneFicheDeVoyageur(fiche) || personnage.sheetData?.[CLE_REPRISE] !== 1) return personnage;
     const lecture = lireFicheDeVoyageur(fiche, personnage.sheetData);

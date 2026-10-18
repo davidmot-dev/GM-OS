@@ -21,6 +21,8 @@ import PanneauDesRessources from '../../modules/table/PanneauDesRessources';
 import PanneauDeJet from '../../modules/session/components/PanneauJetDeFiche';
 import { PanneauFatigueVoyageur } from '../../modules/session/components/PanneauFatigueVoyageur';
 import { PanneauSanteVoyageur } from '../../modules/session/components/PanneauSanteVoyageur';
+import { PanneauTachesVoyageur } from '../../modules/session/components/PanneauTachesVoyageur';
+import { PanneauReposVoyageur } from '../../modules/session/components/PanneauReposVoyageur';
 import { PanneauRepriseVoyageur } from '../../modules/session/components/PanneauRepriseVoyageur';
 import { estUneFicheDeVoyageur, lireFicheDeVoyageur, CLE_REPRISE } from '../../modules/session/logic/ficheDeVoyageur';
 import type { GameDriver } from '../../types/drivers';
@@ -408,6 +410,11 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                             <PanneauSanteVoyageur key={`sante-${character.id}`} donnees={valeursVues}
                                 appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
                         )}
+                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && <>
+                            <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={valeursVues}
+                                appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
+                            <PanneauReposVoyageur key={`repos-${character.id}`} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation du repos réservée au MJ. */ }} />
+                        </>}
                         {pilote?.jet && !estUneSauvegarde(decrireLeJetDuPilote(pilote)) && (!estUneFicheDeVoyageur(template) || character.sheetData?.[CLE_REPRISE] === 1) && (
                             <PanneauDeJet
                                 descripteur={pilote.jet}

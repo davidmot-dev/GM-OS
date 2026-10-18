@@ -13,15 +13,16 @@ import { estUneReussite } from '../../dice/degresDeReussite';
 /** Panneau spécialisé R1 ; le panneau commun est en cours de travail Nephilim.
  * Les calculs, dés, degrés et transport des résultats restent ceux du socle.
  */
-export function PanneauJetVoyageur({descripteur, dice, template, valeurs, personnageId, pourLesJoueurs = false}: {
+export function PanneauJetVoyageur({descripteur, dice, template, valeurs, personnageId, pourLesJoueurs = false,ecrireSurLaFiche}: {
     descripteur: DescripteurDeJet; dice: DiceConfig; template: SheetTemplate; valeurs: Record<string, unknown>;
     personnageId: string; pourLesJoueurs?: boolean;
+    ecrireSurLaFiche?: (maj:Record<string,unknown>) => void;
 }) {
     const [champs, setChamps] = useState<Record<string, string>>({});
     const [nature, setNature] = useState<NatureDeJetVoyageur>('action');
     const [difficulte, setDifficulte] = useState(0);
     const [offensif,setOffensif] = useState(false);
-    const [dernier, setDernier] = useState<{resultat: RollResult; seuil: number; titre: string} | null>(null);
+    const [dernier, setDernier] = useState<{id:string; resultat: RollResult; seuil: number; titre: string} | null>(null);
     let preparation;
     try {preparation = preparerJetDuVoyageur(descripteur, template, valeurs, champs, difficulte, nature);}
     catch (e) {return <p role="alert" className="text-etat-alerte text-sm">{(e as Error).message}</p>;}
@@ -81,7 +82,7 @@ export function PanneauJetVoyageur({descripteur, dice, template, valeurs, person
                 const noms = jet.composantes.filter(c => c.champ !== '__rddEtatDuJet')
                     .map(c => template.sections.flatMap(s => s.fields).find(f => f.id === c.champ)?.label ?? c.champ);
                 const titre = `${noms.join(' + ')} · état ${malus}, difficulté ${difficulte} (${nature})${sante?.sonne ? ` · sonné${offensif ? ', offensif' : ''}, brut ${brut.degre}` : ''}`;
-                setDernier({resultat, seuil: jet.seuil, titre});
+                setDernier({id:crypto.randomUUID(), resultat, seuil: jet.seuil, titre});
                 if (pourLesJoueurs) window.dispatchEvent(new CustomEvent('fiche:resultat', {detail: {
                     characterId: personnageId, titre, total: resultat.total, modifier: resultat.modifier,
                     totalDisplay: `${resultat.totalDisplay} (seuil ${jet.seuil})`, rolls: resultat.rolls,
@@ -93,6 +94,8 @@ export function PanneauJetVoyageur({descripteur, dice, template, valeurs, person
             <p className="text-xs">{dernier.titre} · seuil {dernier.seuil} %</p>
             <p className="text-xl font-bold">{dernier.resultat.totalDisplay}</p>
             <EtiquetteDuDegre resultat={dernier.resultat} classes={reussi => reussi ? 'text-etat-succes font-bold' : 'text-etat-danger font-bold'} />
+            {ecrireSurLaFiche && dernier.resultat.degre && <button type="button" className={classe}
+                onClick={() => ecrireSurLaFiche({__rddJetPourTache231:{id:dernier.id,degre:dernier.resultat.degre,titre:dernier.titre}})}>Conserver ce résultat pour une tâche</button>}
         </div>}
     </section>;
 }

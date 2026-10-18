@@ -11863,6 +11863,24 @@ TMR)**, en coordination avec Claude pour les fichiers communs. Cette décision r
 répartition précédente ; l’ordre et le périmètre détaillé restent à préciser. Reprise dans la
 [note du 18/10](2026-10-18-etat-et-reprise-codex-tmr-sources.md).
 
+**18/10 — Codex : R0, R1, R2 et première boucle R8 intégrés et poussés dans `94e0aaed`.**
+Fiches consolidées 2.3.1, fatigue/état, blessures/soins et module externe TMR privé raccordé
+aux ressources de la seule fiche. Carte officielle en couleur embarquée ; crédits Cyol/Kroc
+et Scriptarium. Validation pré-push : **8 233 tests réussis, 4 ignorés**, types, lint et build.
+R8 conserve des rencontres, maîtrises et sorts à arbitrer ; le module n'est pas un moteur
+complet de magie. [Reprise du raccord](2026-10-18-etat-et-reprise-codex-rdd-r8-raccord.md).
+
+**Suite autorisée par David : « Commence R3 et R4 », GM-OS confirmé fermé.** Carnet de tâches
+collectives et assistant de repos/Château Dormant développés ; six recettes PC/tablette réussies,
+suite globale de 8 249 tests puis contrôles ciblés verts. Tranche PJ utilisable, étapes nocturnes
+R5/R6/R7 et maîtrise du Rêve de Dragon encore arbitrées. Non commité/non poussé.
+[Périmètre, sources et état](2026-10-18-etat-et-reprise-codex-rdd-r3-r4.md).
+Pas d'installation, de données personnelles ouvertes ni de nouvelle publication automatique.
+
+**Essai de David, 18/10 : « ok ca marche commit » après activation du module TMR.**
+TMR fonctionne à l'écran chez David. Commit local du lot R3/R4 demandé ; pas de nouveau
+push demandé. Les essais détaillés R3/R4 restent à éprouver en partie.
+
 ### 142 · Chantier Nephilim — Sciences occultes au jet, Vécus du livre, errata — 18/10/2026
 
 Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim »*. Tout est
@@ -11962,7 +11980,7 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
 | 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
 | 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
 | 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic. **18/10** : `ka.dominant` ajouté (`68a05e73`, Codex), raccordé au moteur v10 et à la correspondance (`dd7e3b67`), éprouvé par David | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
-| 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; tout le volet RdD (R0–R8) attribué à Codex le 18/10 ; sources récupérées et créditées, aucun développement intégré | Codex : audit du pilote et cadrage du premier lot, coordination avec Claude | Export RdD absent à l’analyse ; édition et barèmes à vérifier ; [reprise](2026-10-18-etat-et-reprise-codex-tmr-sources.md) |
+| 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; R0/R1/R2 et première boucle R8 poussés (`94e0aaed`), carte officielle en couleur ; première tranche R3/R4 validée par les tests, non publiée | David : éprouver les ouvrages et le repos ; puis poursuivre R8 ou R5–R7 | Rien ; [reprise R3/R4](2026-10-18-etat-et-reprise-codex-rdd-r3-r4.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ⏸ Garé pour plus tard (18/10) ; à la reprise : E0 (Obsidian filtré), puis E1, E3 | Rien — décisions prises le 18/10 ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 

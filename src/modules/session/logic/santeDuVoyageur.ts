@@ -17,6 +17,8 @@ export interface BlessureVoyageur {
     premiersSoins: boolean; soinsComplets: boolean; repitJusqua: number | null;
     prochainJetVie: number | null; soigneeAuRound: number | null;
     dernierJetSoinsRound?: number;
+    /** R4 : échéance sur les journées explicitement suivies, bonus valable une fois. */
+    guerison?: {prochainJour: number; bonusHerbe: number};
 }
 export interface SanteVoyageur {
     version: 1; round: number; secondes: number; blessures: BlessureVoyageur[];
@@ -44,6 +46,7 @@ export function lireSanteVoyageur(d: DonneesDeSante): SanteVoyageur | null {
         || v.blessures.some(b => !b || !CLEFS_DE_SOINS[b.gravite] || typeof b.id !== 'string' || typeof b.localisation !== 'string'
             || !Number.isInteger(b.pointsSoins) || !Number.isInteger(b.malusSoins) || !entierPositif(b.excedentSoins) || !entierPositif(b.bonusGuerison)
             || typeof b.premiersSoins !== 'boolean' || typeof b.soinsComplets !== 'boolean'
+            || b.guerison !== undefined && (!b.guerison || !entierPositif(b.guerison.prochainJour) || !entierPositif(b.guerison.bonusHerbe) || b.guerison.bonusHerbe > 10)
             || ![b.repitJusqua,b.prochainJetVie,b.soigneeAuRound].every(x => x === null || entierPositif(x)))) {
         throw new Error('Suivi des blessures invalide : conserver les données et vérifier la fiche.');
     }
@@ -269,10 +272,15 @@ export function proposerSoins(d: DonneesDeSante, blessureId: string, complets: b
         if (degre === 'echec-total') {
             b.premiersSoins = false;b.soinsComplets = false;b.pointsSoins = 0;b.malusSoins--;b.excedentSoins = 0;
             b.repitJusqua = null;b.prochainJetVie = null;b.bonusGuerison = 0;b.soigneeAuRound = null;
+            delete b.guerison;
             details.push('Hémorragie relancée, premiers soins à reprendre à −1 supplémentaire ; pansements et eau à dépenser de nouveau.');
         } else {
             b.soinsComplets = true;b.prochainJetVie = null;b.repitJusqua = null;
             b.bonusGuerison = degre === 'reussite-particuliere' ? 3 : degre === 'reussite-significative' ? 2 : degre === 'reussite-normale' ? 1 : 0;
+            const repos = d.__rddRepos231 as {version?:number;jour?:number} | undefined;
+            if (!b.guerison && repos?.version === 1 && Number.isSafeInteger(repos.jour) && repos.jour! >= 0) {
+                b.guerison = {prochainJour:repos.jour!+cle,bonusHerbe:0};
+            }
             details.push(`Soins complets ; bonus ${b.bonusGuerison} au prochain test de guérison, à partir de ${cle} jours (R4).`);
         }
     } else {

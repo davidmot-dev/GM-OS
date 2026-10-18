@@ -16,6 +16,8 @@ import { useCharacterEditor } from '../hooks/useCharacterEditor';
 import PanneauDeJet from './PanneauJetDeFiche';
 import { PanneauFatigueVoyageur } from './PanneauFatigueVoyageur';
 import { PanneauSanteVoyageur } from './PanneauSanteVoyageur';
+import { PanneauTachesVoyageur } from './PanneauTachesVoyageur';
+import { PanneauReposVoyageur } from './PanneauReposVoyageur';
 import ChampDuReferentiel from './fields/ChampDuReferentiel';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -494,6 +496,14 @@ const CharacterSheetEditor: React.FC = () => {
                                     sheetData: {...character.sheetData, ...maj},
                                 })} />
                         )}
+                        {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && <>
+                            <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={{...character.sheetData,...editor.localData}}
+                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un ouvrage.','warning');return false;}}
+                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            <PanneauReposVoyageur key={`repos-${character.id}`} donnees={{...character.sheetData,...editor.localData}}
+                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un repos.','warning');return false;}}
+                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                        </>}
                         {editor.character && editor.selectedPlayer && (
                             <EcartDeJeuDuPersonnage playerId={editor.selectedPlayer.id} personnage={editor.character as PlayerCharacter} />
                         )}

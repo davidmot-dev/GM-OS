@@ -1,6 +1,6 @@
 # 🐉 Jeu — Rêves de Dragons
 
-> **Pilote décrit :** « Rêve de Dragon », exporté le 2026-10-18, version R0 consolidée selon le livre 2.3.1, avec suivis R1 fatigue, R2 blessures et module TMR raccordé aux fiches dans GM-OS. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Rêve de Dragon », exporté le 2026-10-18, version R0 consolidée selon le livre 2.3.1, avec suivis R1 fatigue, R2 blessures, R3 ouvrages, R4 repos et module TMR raccordé aux fiches dans GM-OS. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un d100 sous un **pourcentage**, lu dans la **table de résolution** du jeu, qui croise une
 caractéristique et un ajustement.
@@ -85,8 +85,8 @@ nouvelle perte d’alcool au degré 4 ou plus inscrit aussi le reliquat.
 
 Le choix **Sommeil : fatigue seule** propose la récupération par heures de **120 minutes**.
 Il tient compte du segment partiel et ne descend pas sous les cases bloquées par l’endurance
-actuellement manquante. Il ne remonte pas l’endurance : le repos complet et les limites dues aux
-blessures relèvent des lots suivants. À piste pleine, le personnage est signalé assommé de fatigue ;
+actuellement manquante. Il ne remonte pas l’endurance : utilisez **Repos et Château Dormant**
+pour une récupération complète tenant compte des blessures. À piste pleine, le personnage est signalé assommé de fatigue ;
 le signal persiste jusqu’à récupération d’au moins un segment.
 
 L’état général détaille **fatigue + vie manquante + éthylisme + surencombrement**. Le degré
@@ -170,7 +170,7 @@ l’hémorragie sur un échec total. Eau, pansements et durée des soins restent
 
 Un blessé grave ranimé par les premiers soins reste alité avec un point d’endurance ; les soins
 complets permettent de reprendre une activité modérée. Un critique reste alité jusqu’à guérison.
-Les récupérations et tests de guérison après plusieurs jours relèvent du lot repos **R4**.
+Les récupérations et tests de guérison après plusieurs jours se traitent dans **Repos et Château Dormant**.
 
 Dans **Combat-OS**, le bouton **Encaisser / soins RdD** de la carte ouvre ce même suivi, pour un
 PJ, un PNJ de campagne ou un adversaire autonome. Les tablettes utilisent les mêmes calculs ;
@@ -187,8 +187,77 @@ les conséquences et leur trace remontent au meneur. Un rechargement ne répète
 - **Endurance maximale :** le plus grand de Taille + Constitution et Vie maximale + Volonté.
 - **Ressources suivies :** Endurance et Points de Rêve, distincts de leurs valeurs de référence.
 
-La récupération complète d’endurance et la guérison différée feront l’objet du lot repos.
 Les sept phases et l’initiative par arme restent à réaliser ; R2 traite la santé du combat.
+
+## Ouvrages et points de tâche
+
+Après la reprise R0, **Ouvrages et points de tâche → Nouvel ouvrage** permet de fixer nom,
+participants, objectif, difficulté, durée d'une période et, si nécessaire, temps limite ou seuil
+éliminatoire négatif. Suivez un ouvrage collectif dans un seul carnet ; chaque participant
+apporte son résultat au même fonds à la fin d'une période. Le temps n'est compté qu'une fois.
+
+![Le carnet collectif conserve la progression et les ajustements de difficulté](captures/jeu-reves-de-dragons-taches.jpg)
+
+Jouez les jets avec les caractéristiques et compétences de chacun et la difficulté indiquée,
+puis renseignez chaque résultat, ou **Ne participe pas à cette période** pour un absent.
+Depuis **Jet du Voyageur**, **Conserver ce résultat pour une
+tâche** permet de le retrouver dans le carnet avec **Utiliser le jet conservé pour…**.
+Un même jet ne contribue qu'une fois. **Préparer la période** montre les conséquences ;
+**Valider cette opération** les enregistre et efface les sélections pour la période suivante.
+
+Les réussites particulière, significative et normale donnent respectivement +3, +2 et +1 point.
+L'échec normal donne zéro, le particulier −2, le total −4. Chaque échec total ajoute aussi −1
+aux jets suivants. Les scores négatifs restent conservés. Une **pause** garde le fonds et les
+malus ; **Laisser passer une période sans travail** fait avancer le délai sans contribution.
+Le temps de pause n'est pas ajouté automatiquement. Le gardien peut **Déclarer l'ouvrage perdu**
+si une maladresse a ruiné le travail. Une échéance expirée ou un seuil négatif atteint arrête
+l'ouvrage ; l'objectif atteint le termine. Le carnet fonctionne aussi sur la tablette du porteur.
+
+## Repos et Château Dormant
+
+Le MJ active le suivi après celui des blessures. Pour chaque ancienne blessure ayant reçu des
+soins complets, il déclare les jours restant jusqu'au prochain test : **0 signifie ce soir**.
+Il précise si les PV sont déjà éligibles à récupération ce soir ; une blessure ou maladie qui
+vient de disparaître aujourd'hui impose d'attendre le lendemain. L'activation ne remonte aucun
+compteur. Aucun nouveau pilote n'est à importer.
+
+**Préparer un repos** distingue le repos éveillé, par multiples de cinq minutes, et une heure
+complète de sommeil de **120 minutes**. Le plafond d'endurance tient compte des PV manquants,
+des graves et des critiques ; un personnage déjà au-dessus de ce plafond ne perd pas cet excédent.
+Le sommeil récupère d'abord l'endurance, puis la fatigue, sans effacer les cases encore bloquées.
+Procédez heure par heure. Une hémorragie ou un jet de santé exigible interrompt le repos.
+
+![L’heure de sommeil validée par le meneur](captures/jeu-reves-de-dragons-repos.jpg)
+
+Quittez les TMR avant de déclarer le sommeil. Si la récupération de rêve est autorisée et que
+les points actuels sont sous le seuil, tirez le DDR ou reportez les dés physiques, sous la forme
+de valeurs 0 à 7. Chaque 7 est relancé et ajouté. Pour un Rêve de Dragon, résolvez sa maîtrise à
+la table avant l'aperçu, avec l'état après repos. À zéro rêve, c'est un échec total automatique.
+L'excédent de rêve est conservé ; queues, têtes et souffles éventuels restent visibles jusqu'à
+ce que leurs conséquences aient été traitées et marquées résolues par le gardien.
+
+**Bilan de fin du Château Dormant** traite une journée à la fois. Donnez à chaque nuit un nom
+ou une date unique. Résolvez d'abord stress et famine ; vérifiez moral du matin, chance et
+enchantements selon l'ordre rappelé. Ces opérations restent manuelles. L'assistant prépare
+les tests de guérison exigibles, la récupération éventuelle des PV et la perte d'un point de
+rêve s'il reste supérieur au seuil, après le stress. Il n'avance pas Clock-OS.
+
+![L’aperçu du bilan de nuit avant son application](captures/jeu-reves-de-dragons-chateau-dormant.jpg)
+
+Le jour des soins ne compte pas. Les premiers tests ont lieu après 2, 4 ou 6 jours pour une
+légère, grave ou critique. Une réussite rétrograde la blessure et fixe le délai de la nouvelle
+gravité ; un échec normal ou particulier reporte au lendemain ; un échec total retire un PV et
+impose à nouveau le délai entier. Les bonus de soin et d'herbe sont consommés par ce test.
+
+Aucun PV ne se récupère tant qu'il reste une blessure, maladie ou poison actif, ni le jour où
+disparaît la dernière atteinte. Le lendemain, CONSTITUTION ajustée aux PV manquants, avec la
+meilleure décoction autorisée, donne deux PV sur particulière, un sur normale/significative,
+zéro sur échec et −1 sur échec total. L'état général est exclu. Les points d'endurance et de
+fatigue associés à la vie récupérée sont traités dans le même aperçu.
+
+Chaque opération exige une validation et garde son reçu. Un aperçu périmé est refusé, le
+rechargement n'applique rien une deuxième fois. La tablette du joueur lit le suivi et les
+échéances ; le MJ valide repos et bilans. Les opérations sont consignées au journal du meneur.
 
 ## Terres Médianes du Rêve — carte et coûts sur la fiche
 
@@ -247,4 +316,5 @@ supprimée, restaurez-la avant de rapprocher l'opération.
 
 *Relu le 2026-10-18 — R0, R1 et R2 : consolidation, fatigue, encaissement, états et soins vérifiés
 dans le Livre des Voyageurs 2.3.1, p. 42–45, 50–51, 78, 88–99, 120 et 162 ; rêve, p. 206–208.
+R3 et R4 : tâches et repos, p. 84–94 et 98–102 ; bilans, p. 87 ; rêve, p. 187 et 206–208.
 R8 : carte, déplacements et raccord aux fiches, Livre du Haut-Rêve 2.3.1, p. 178–183 et 208.*
