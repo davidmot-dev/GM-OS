@@ -394,8 +394,7 @@ dit à l'aube, le manuel le signale) ; Alchimie option A (MP consommées à la m
   toute fiche de règles allongée peut le faire déborder (`corpusDerivable.test.ts`).
 
 **Reste**, du plus simple au plus gros :
-1. **Le registre** (`2026-08-23-chantiers-gares.md`, ligne 75 et § 140) : à mettre à jour quand
-   Codex aura commité ses lignes de Rêve de Dragon (un seul écrivain par fichier).
+1. ~~Le registre~~ — fait le 18/10 au soir : § 142, lignes 75 et 77.
 2. **Les captures** du manuel : menu des Arts, carte des suites, réserves, constructs, Ka dominant
    (`e2e/capturesDesJeux.spec.ts`).
 3. **La fiche sur tablette**, sans suggestions de Vécus ni d'époques.

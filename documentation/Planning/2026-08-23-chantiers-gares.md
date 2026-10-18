@@ -11863,6 +11863,25 @@ TMR)**, en coordination avec Claude pour les fichiers communs. Cette décision r
 répartition précédente ; l’ordre et le périmètre détaillé restent à préciser. Reprise dans la
 [note du 18/10](2026-10-18-etat-et-reprise-codex-tmr-sources.md).
 
+### 142 · Chantier Nephilim — Sciences occultes au jet, Vécus du livre, errata — 18/10/2026
+
+Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim »*. Tout est
+**éprouvé par David** et commité (`4f8be52f` à `03f12382`, et `68a05e73` de Codex pour la fiche).
+[Chantier, § 15 = point de reprise](2026-10-17-chantier-nephilim.md).
+
+- **Le jet** : « Vécu ou Art occulte » (Vécus, cercles de Magie, Sephiroth, Œuvres) et « Approche
+  (Ka) ou construct » ; la **Stase** (sorts de Magie) et l'**Effet Mnémos** (1 PS : +2) puisés au
+  jet — effet `degres` et condition `si` des réserves ; maladresse et critique proposent leur
+  **suite** par un bouton (`jet.suitesDesCritiques` : Khaïba, Ombre, Sapience).
+- **La fiche** : **31 époques et 155 Vécus extraits du livre** — le carnet en donnait vingt, dont
+  quatre inventées ; **Ka dominant** sur les deux fiches (`SheetField.maxSur` : la Stase plafonnée
+  au degré calculé) ; « Début de séance » remplit les Materiae Primae.
+- **Le corpus** : l'**errata officiel V1.3** reporté dans treize fiches de règles, plus une fiche
+  récapitulative ; une maladresse coûte **un** degré de Khaïba, pas « un à trois ».
+- Décisions de David : suites proposées, jamais écrites seules ; Traque qui monte aussitôt au
+  Seuil RK (l'errata dit à l'aube) ; Alchimie sans débit automatique des MP.
+- Reste : captures du manuel, fiche sur tablette sans suggestions, débit des MP (option B).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11942,8 +11961,9 @@ répartition précédente ; l’ordre et le périmètre détaillé restent à pr
 | 72 | **Plugin d’identité visuelle** | § 137 ; plugin privé 0.1.0 créé, archive et skill distant vérifiés, 14 contrôles verts | Ajouter le plugin et l’éprouver avec des références | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-identite-visuelle.md) |
 | 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
 | 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
-| 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
+| 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic. **18/10** : `ka.dominant` ajouté (`68a05e73`, Codex), raccordé au moteur v10 et à la correspondance (`dd7e3b67`), éprouvé par David | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
 | 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; tout le volet RdD (R0–R8) attribué à Codex le 18/10 ; sources récupérées et créditées, aucun développement intégré | Codex : audit du pilote et cadrage du premier lot, coordination avec Claude | Export RdD absent à l’analyse ; édition et barèmes à vérifier ; [reprise](2026-10-18-etat-et-reprise-codex-tmr-sources.md) |
+| 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 | Captures du manuel (`e2e/capturesDesJeux.spec.ts`) | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
