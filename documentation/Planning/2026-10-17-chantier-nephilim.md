@@ -345,3 +345,8 @@ Lot D, **option A choisie par David : pilote seul** (`outils/nephilim-vecus/alch
 
 Pilote construit sur celui des lots B et C, zéro constat. **À réimporter et éprouver, puis commiter.**
 
+Lot D commité (`b0352550`) après l'essai de David. **Consigne au Studio** pour le Ka dominant sur la
+fiche HTML : [2026-10-18-consigne-studio-nephilim-ka-dominant.md](2026-10-18-consigne-studio-nephilim-ka-dominant.md)
+— une piste de choix `ka.dominant` sur le Pentacle (ou un `select`), le choix seulement : le degré et
+le plafond de la Stase restent calculés par GM-OS. **En attente de la livraison du Studio.**
+
