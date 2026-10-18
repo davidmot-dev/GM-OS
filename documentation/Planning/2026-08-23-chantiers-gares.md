@@ -11857,6 +11857,12 @@ syntaxe vérifiés. **Aucune intégration ni règle activée.** Outils annexes e
 proposée consignés dans la [reprise du 18/10](2026-10-18-etat-et-reprise-codex-tmr-sources.md).
 Écart de seuil à vérifier contre le livre ; fonctions queues/souffles/têtes encore `TODO`.
 
+**18/10, clôture — nouvelle attribution de David : « bonne nuit, tu t’occuperas de la partie
+Rêve de Dragons ». Codex prend désormais tout le volet RdD (R0–R8 : pilote, règles et module
+TMR)**, en coordination avec Claude pour les fichiers communs. Cette décision remplace la
+répartition précédente ; l’ordre et le périmètre détaillé restent à préciser. Reprise dans la
+[note du 18/10](2026-10-18-etat-et-reprise-codex-tmr-sources.md).
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -11937,7 +11943,7 @@ proposée consignés dans la [reprise du 18/10](2026-10-18-etat-et-reprise-codex
 | 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
 | 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
 | 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
-| 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; analyse consignée ; module externe TMR (R8) attribué à Codex par David, aucun développement engagé | Claude : analyse R0–R7 et premier lot à choisir ; Codex : module TMR à cadrer | Export RdD absent à l’analyse ; édition et barèmes à vérifier ; [passation](2026-10-17-reve-de-dragon-propositions.md) |
+| 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; tout le volet RdD (R0–R8) attribué à Codex le 18/10 ; sources récupérées et créditées, aucun développement intégré | Codex : audit du pilote et cadrage du premier lot, coordination avec Claude | Export RdD absent à l’analyse ; édition et barèmes à vérifier ; [reprise](2026-10-18-etat-et-reprise-codex-tmr-sources.md) |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
