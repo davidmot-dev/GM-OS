@@ -9,7 +9,9 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 
 > ▶ **Repris le 19/10** (Codex ayant fini). **E0 fait** : l'export Obsidian ne prend plus que les
 > PNJ, lieux et entrées du wiki de la campagne exportée (`ObsidianExportService.exportCampaign`,
-> essai à deux campagnes). Suite : E1, puis E3 (§ 6).
+> essai à deux campagnes). **E1 fait** : Sound et Light-OS entrent au registre des détenteurs
+> (`services/purge/detenteursDeLaCampagne.ts`) — ambiances rendues communes ; tuiles réglées
+> rendues communes, cases vides du râtelier retirées. Suite : E3, puis E2 (§ 6).
 
 **Rien n'est codé ; les décisions du § 7 sont prises.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de

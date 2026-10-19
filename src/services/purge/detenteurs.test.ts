@@ -4,6 +4,7 @@ import type { Journal } from '../../modules/journal/types';
 import type { StoryboardMoment } from '../../modules/storyboard/useStoryboardStore';
 import type { FavoriteEntity } from '../../modules/favorite/useFavoriteStore';
 import type { Playlist } from '../../modules/music/useMusicStore';
+import type { Atmosphere } from '../../modules/sound/useSoundStore';
 import type { GabaritDAdversaire } from '../../modules/combat/useBestiaireStore';
 import type { GemDefinition } from '../../stores/useGemStore';
 import type { QuestionNotee } from '../../modules/ai/lacunes/useJournalDesLacunes';
@@ -78,6 +79,8 @@ const ressources = magasin(() => ({ reserves: {} as Record<string, unknown> }));
 const favoris = magasin(() => ({ favorites: [] as FavoriteEntity[] }));
 const musique = magasin(() => ({ playlists: [] as Pick<Playlist, 'id' | 'name' | 'campagneId'>[] }));
 const combat = magasin(() => ({ combatsGares: {} as Record<string, unknown> }));
+const son = magasin(() => ({ atmospheres: [] as Pick<Atmosphere, 'id' | 'name' | 'campagneId'>[] }));
+const lumiere = magasin(() => ({ scenes: {} as Record<string, { id: string; campagneId?: string | null; lightStates?: Record<string, unknown> | null }> }));
 const bestiaire = magasin(() => ({
     gabarits: [] as Pick<GabaritDAdversaire, 'id' | 'jeuId'>[],
     repartitions: {} as Record<string, unknown>,
@@ -93,6 +96,8 @@ vi.mock('../../modules/table/useRessourcesDeTableStore', () => ({ useRessourcesD
 vi.mock('../../modules/favorite/useFavoriteStore', () => ({ useFavoriteStore: favoris }));
 vi.mock('../../modules/music/useMusicStore', () => ({ useMusicStore: musique }));
 vi.mock('../../modules/combat/useCombatStore', () => ({ useCombatStore: combat }));
+vi.mock('../../modules/sound/useSoundStore', () => ({ useSoundStore: son }));
+vi.mock('../../modules/light/useLightStore', () => ({ useLightStore: lumiere }));
 vi.mock('../../modules/combat/useBestiaireStore', () => ({ useBestiaireStore: bestiaire }));
 vi.mock('../../stores/useGemStore', () => ({ useGemStore: gemmes }));
 vi.mock('../../modules/ulanzi/useUlanziStore', () => ({ useUlanziStore: ulanzi }));
@@ -112,7 +117,7 @@ const {
 } = await import('./detenteursDuPilote');
 const { recenserLesDetenteurs, purgerLesDetenteurs } = await import('./typesDeLaPurge');
 
-const tous = [session, journal, storyboard, ressources, favoris, musique, combat,
+const tous = [session, journal, storyboard, ressources, favoris, musique, combat, son, lumiere,
     bestiaire, gemmes, ulanzi, lacunes];
 
 beforeEach(() => {
@@ -175,6 +180,36 @@ describe('les résidus d’une campagne', () => {
         d.purger(cible);
         expect(musique.lire().playlists).toHaveLength(2);
         expect(musique.lire().playlists[0].campagneId).toBeNull();
+    });
+
+    it('Sound DÉTACHE l’ambiance, comme Music-OS', () => {
+        son.setState({ atmospheres: [
+            { id: 'a1', name: 'Pluie de néon', campagneId: 'c1' },
+            { id: 'a2', name: 'Taverne', campagneId: null },
+        ] });
+        const d = detenteur(LES_DETENTEURS_DE_CAMPAGNE, 'Sound');
+        expect(d.recenser(cible)).toEqual([{ sujet: 'ambiances étiquetées', compte: 1 }]);
+        d.purger(cible);
+        expect(son.lire().atmospheres.map(a => a.campagneId)).toEqual([null, null]);
+    });
+
+    it('Light-OS rend communes ses tuiles réglées et retire les cases vides de son râtelier', () => {
+        lumiere.setState({ scenes: {
+            t1: { id: 't1', campagneId: 'c1', lightStates: { lampe: { on: true } } },
+            t2: { id: 't2', campagneId: 'c1', lightStates: {} },
+            t3: { id: 't3', campagneId: 'cAutre', lightStates: {} },
+            t4: { id: 't4', campagneId: null, lightStates: { lampe: { on: false } } },
+        } });
+        const d = detenteur(LES_DETENTEURS_DE_CAMPAGNE, 'Light-OS');
+        expect(d.recenser(cible)).toEqual([
+            { sujet: 'tuiles réglées (rendues communes)', compte: 1 },
+            { sujet: 'cases vides de son râtelier', compte: 1 },
+        ]);
+        d.purger(cible);
+        const apres = lumiere.lire().scenes;
+        expect(Object.keys(apres).sort()).toEqual(['t1', 't3', 't4']);
+        expect(apres.t1.campagneId).toBeNull();
+        expect(apres.t3.campagneId).toBe('cAutre');
     });
 
     it('le journal ne part que s’il porte l’identifiant, jamais sur un nom qui se ressemble', () => {

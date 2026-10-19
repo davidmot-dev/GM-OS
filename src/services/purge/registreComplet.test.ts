@@ -89,14 +89,14 @@ const HORS_PERIMETRE: Record<string, string> = {
     useRaccourcisStore: 'Les raccourcis clavier du meneur.',
     useClientStore: 'Les tablettes connectées à l’instant présent.',
     useVoiceStore: 'Le réglage du micro du meneur.',
-    useLightStore: 'Le pont Hue et les scènes de lumière — elles servent tous les jeux.',
+    useLightStore: 'Déclaré dans le registre de campagne (tuiles réglées rendues communes, cases vides retirées).',
     useWebStore: 'Les liens web du meneur.',
     useObsidianStore: 'Le chemin de son coffre Obsidian.',
     useAIStore: 'Les réglages des fournisseurs d’IA, communs à tous les jeux.',
     'store/index': 'Le magasin de session — déclaré dans les DEUX registres, sous le nom Session-OS.',
 
     // ── Bibliothèques sonores et visuelles : un travail réutilisable, jamais un résidu.
-    useSoundStore: 'Les ambiances de pads — une bibliothèque, pas de la donnée de campagne.',
+    useSoundStore: 'Déclaré dans le registre de campagne (il détache).',
     useAmbientStore: 'Les nappes d’ambiance, communes à toutes les tables.',
     useImageStore: 'La médiathèque — c’est `MediaCleanupService` qui décide du sort d’une image.',
     useMapStore: 'La carte du plateau et ses configurations, réutilisables.',

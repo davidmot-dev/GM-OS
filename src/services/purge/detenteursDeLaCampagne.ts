@@ -5,6 +5,9 @@ import { useRessourcesDeTableStore } from '../../modules/table/useRessourcesDeTa
 import { useFavoriteStore } from '../../modules/favorite/useFavoriteStore';
 import { useMusicStore } from '../../modules/music/useMusicStore';
 import { useCombatStore } from '../../modules/combat/useCombatStore';
+import { useSoundStore } from '../../modules/sound/useSoundStore';
+import { useLightStore } from '../../modules/light/useLightStore';
+import { tuilePorteUnEtat } from '../../modules/light/logic/tuilePorteUnEtat';
 import type { Detenteur } from './typesDeLaPurge';
 
 /**
@@ -185,6 +188,50 @@ export const LES_DETENTEURS_DE_CAMPAGNE: Detenteur<CibleCampagne>[] = [
         purger: (cible) => useMusicStore.setState(etat => ({
             playlists: etat.playlists.map(p => (p.campagneId === cible.id ? { ...p, campagneId: null } : p)),
         })),
+    },
+    /*
+      **Sound et Light-OS** — lot E1 du chantier des archives (2026-10-19). Ils
+      portent `campagneId` depuis septembre, et cette liste les ignorait : une
+      campagne supprimée laissait ses ambiances et ses tuiles étiquetées à un
+      nom mort. *Une seule liste de ce qui appartient à une campagne* — pour la
+      purge, et demain pour l'archive.
+    */
+    {
+        module: 'Sound',
+        // La règle de Music-OS : une ambiance est un travail réutilisable, elle redevient commune.
+        note: 'Les ambiances ne sont pas supprimées : elles redeviennent communes.',
+        recenser: (cible) => [compte(
+            'ambiances étiquetées',
+            useSoundStore.getState().atmospheres.filter(a => a.campagneId === cible.id).length,
+        )],
+        purger: (cible) => useSoundStore.setState(etat => ({
+            atmospheres: etat.atmospheres.map(a => (a.campagneId === cible.id ? { ...a, campagneId: null } : a)),
+        })),
+    },
+    {
+        module: 'Light-OS',
+        /*
+          Chaque campagne a son râtelier de dix-huit cases. Une tuile qui porte un
+          éclairage est un travail : elle redevient commune. Une case **vide** du
+          râtelier n'est qu'un emplacement : la rendre commune ajouterait une case
+          vide au pot commun à chaque campagne supprimée — elle part.
+        */
+        note: 'Les tuiles réglées redeviennent communes ; les cases vides de son râtelier sont retirées.',
+        recenser: (cible) => {
+            const siennes = Object.values(useLightStore.getState().scenes).filter(t => t.campagneId === cible.id);
+            return [
+                compte('tuiles réglées (rendues communes)', siennes.filter(tuilePorteUnEtat).length),
+                compte('cases vides de son râtelier', siennes.filter(t => !tuilePorteUnEtat(t)).length),
+            ];
+        },
+        purger: (cible) => useLightStore.setState(etat => {
+            const scenes: typeof etat.scenes = {};
+            for (const [id, tuile] of Object.entries(etat.scenes)) {
+                if (tuile.campagneId !== cible.id) scenes[id] = tuile;
+                else if (tuilePorteUnEtat(tuile)) scenes[id] = { ...tuile, campagneId: null };
+            }
+            return { scenes };
+        }),
     },
 ];
 
