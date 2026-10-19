@@ -71,17 +71,55 @@ Trois boutons ouvrent **le même sélecteur**, qui accepte aussi bien un `.gmos`
 > le nom de sa campagne : l'importer depuis le panneau d'une *autre* campagne ne l'y verse pas, il
 > restaure la campagne du fichier. Il n'y a donc aucun risque à se tromper de bouton.
 
-### Si une campagne du même nom existe déjà
+### GM-OS vous demande comment l'importer
 
-Le **résolveur de conflits** s'affiche et vous laisse trois issues :
+Depuis le 2026-10-19, **toute campagne qui arrive pose la question**, qu'elle existe déjà ou non.
+*Rejouer se fait le plus souvent sans conflit : la campagne a été purgée, ou l'archive vient d'un
+autre poste.* Le choix se fait **avant que rien n'entre** : annuler ne laisse plus aucun média
+orphelin dans le Media Hub.
+
+**Si la campagne n'est pas sur ce poste :**
+
+| Choix | Effet |
+| :--- | :--- |
+| **Importer telle quelle** | La campagne revient comme elle était, séances et parcours compris |
+| **Rejouer** | Une **nouvelle partie** (voir ci-dessous) |
+| **Annuler** | Rien n'est touché |
+
+**Si une campagne du même identifiant existe déjà**, le **résolveur de conflits** montre les deux
+versions côte à côte et propose :
 
 | Choix | Effet |
 | :--- | :--- |
 | **Remplacer** | Les données de la campagne existante sont écrasées par celles de l'archive |
 | **Cloner** | L'archive entre comme une **nouvelle campagne indépendante**, « (Copie) » : tout reçoit un nouvel identifiant, et **tous les liens suivent** — la trame et son graphe, les relations, les rencontres, les journaux, le storyboard, les tuiles de lumière. Les personnages de la campagne sont **copiés pour la copie** : le joueur garde aussi les siens dans l'original |
+| **Rejouer** | Une **nouvelle partie**, « (Nouvelle partie) », à côté de l'original, qui ne bouge pas |
 | **Annuler** | Rien n'est touché |
 
+Les médias de l'archive sont étiquetés pour la campagne **qui entre** : une copie ou une nouvelle
+partie a les siens dans le Media Hub, pas ceux de l'original.
+
 À la fin, GM-OS **bascule sur la campagne importée** et vous dépose dans le cockpit.
+
+### 🔁 Rejouer une campagne
+
+Pour refaire jouer une campagne, à d'autres joueurs ou aux mêmes. **Rejouer**, c'est cloner (tout
+reçoit un nouvel identifiant, tous les liens suivent), puis remettre la partie au début :
+
+| Ce qui reste — la préparation | Ce qui part — la première partie |
+| :--- | :--- |
+| Actes, scènes, enchaînements, graphe de la trame | Les **séances** et les **journaux** |
+| PNJ, lieux, wiki, rencontres et combats préparés | Les passages dans les scènes, les scènes terminées, les actes achevés, la clôture de la campagne |
+| Les **indices**, de nouveau **cachés** | La date à laquelle chacun avait été révélé |
+| Storyboard, favoris, butin à distribuer, tuiles de lumière | Les messages entre tablettes, l'historique du butin distribué |
+| Les **personnages**, tels qu'ils étaient | Les événements de chronologie écrits pendant une séance |
+| La chronologie préparée | L'état des paquets de cartes (les cartes tenues étaient celles de la première partie) |
+
+Les **réserves de table** (Traque, Impulsion, Menace…) reviennent **toutes** à leur valeur de
+départ.
+
+> ℹ️ Les personnages restent tels quels, avec leur expérience et leur équipement. Pour de
+> nouveaux joueurs, créez-leur des personnages comme d'habitude.
 
 ---
 

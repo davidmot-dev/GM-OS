@@ -11,7 +11,7 @@ import { gmToast } from '../../../stores/useToastStore';
 import { useModalStore, gmCustom } from '../../../stores/useModalStore';
 import type { GameDriver } from '../../../types/drivers';
 import { nexusService } from '../../system/archive/NexusService';
-import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
+import type { NexusProgress, NexusConflict, NexusConflictResolution, ChoixDImport, ArriveeDUneCampagne } from '../../system/archive/nexus.types';
 import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 import DialogueDePurge from '../../../components/purge/DialogueDePurge';
@@ -120,7 +120,7 @@ const TemplateDashboard: React.FC = () => {
     // ── Nexus-OS State ──────────────────────────────────────────────
     const [nexusProgress, setNexusProgress] = useState<NexusProgress | null>(null);
     const isNexusAvailable = typeof window !== 'undefined' && !!window.appBridge?.nexus;
-    const [conflictState, setConflictState] = useState<NexusConflict[] | null>(null);
+    const [conflictState, setConflictState] = useState<ChoixDImport | null>(null);
     const resolverRef = useRef<((resolution: NexusConflictResolution) => void) | null>(null);
 
     const handleExportDriver = async (driverId: string) => {
@@ -135,8 +135,8 @@ const TemplateDashboard: React.FC = () => {
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'importing', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_import_select') });
 
-        const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
-            setConflictState(conflicts);
+        const onConflict = (conflicts: NexusConflict[], arrivee?: ArriveeDUneCampagne): Promise<NexusConflictResolution> => {
+            setConflictState({ conflicts, arrivee });
             return new Promise<NexusConflictResolution>((resolve) => {
                 resolverRef.current = resolve;
             });
@@ -680,7 +680,8 @@ const TemplateDashboard: React.FC = () => {
         {/* Nexus Conflict Resolver — modal décision utilisateur */}
         {conflictState && (
             <NexusConflictResolver
-                conflicts={conflictState}
+                conflicts={conflictState.conflicts}
+                arrivee={conflictState.arrivee}
                 onResolve={handleConflictResolve}
             />
         )}

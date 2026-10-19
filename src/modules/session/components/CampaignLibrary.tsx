@@ -11,7 +11,7 @@ import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { nexusService } from '../../system/archive/NexusService';
 import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
-import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
+import type { NexusProgress, NexusConflict, NexusConflictResolution, ChoixDImport, ArriveeDUneCampagne } from '../../system/archive/nexus.types';
 import DialogueDePurge from '../../../components/purge/DialogueDePurge';
 // Nexus-OS State
 const CampaignLibrary: React.FC = () => {
@@ -70,15 +70,15 @@ const CampaignLibrary: React.FC = () => {
 
     // ── Nexus-OS State ────────────────────────────────────────────────────
     const [nexusProgress, setNexusProgress] = useState<NexusProgress | null>(null);
-    const [conflictState, setConflictState] = useState<NexusConflict[] | null>(null);
+    const [conflictState, setConflictState] = useState<ChoixDImport | null>(null);
     const resolverRef = useRef<((resolution: NexusConflictResolution) => void) | null>(null);
 
     const handleImport = async () => {
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'importing', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_import_select') });
 
-        const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
-            setConflictState(conflicts);
+        const onConflict = (conflicts: NexusConflict[], arrivee?: ArriveeDUneCampagne): Promise<NexusConflictResolution> => {
+            setConflictState({ conflicts, arrivee });
             return new Promise<NexusConflictResolution>((resolve) => {
                 resolverRef.current = resolve;
             });
@@ -328,7 +328,8 @@ const CampaignLibrary: React.FC = () => {
 
             {conflictState && (
                 <NexusConflictResolver
-                    conflicts={conflictState}
+                    conflicts={conflictState.conflicts}
+                arrivee={conflictState.arrivee}
                     onResolve={handleConflictResolve}
                 />
             )}

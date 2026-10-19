@@ -7,7 +7,7 @@ import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
 import { DEFAULT_SHEET_TEMPLATES } from '../../../data/defaultSheetTemplates';
 import { nexusService } from '../../system/archive/NexusService';
-import type { NexusProgress, NexusConflict, NexusConflictResolution } from '../../system/archive/nexus.types';
+import type { NexusProgress, NexusConflict, NexusConflictResolution, ChoixDImport, ArriveeDUneCampagne } from '../../system/archive/nexus.types';
 import { NexusHUD } from '../../system/archive/NexusHUD';
 import { NexusConflictResolver } from '../../system/archive/NexusConflictResolver';
 
@@ -26,7 +26,7 @@ const CampaignDetails: React.FC = () => {
     const isNexusAvailable = typeof window !== 'undefined' && !!window.appBridge?.nexus;
 
     // ── Conflict Resolver State ───────────────────────────────────────────
-    const [conflictState, setConflictState] = useState<NexusConflict[] | null>(null);
+    const [conflictState, setConflictState] = useState<ChoixDImport | null>(null);
     // Ref vers la fonction de résolution — permet au callback onConflict
     // de retourner une Promise résolue par l'interaction utilisateur
     const resolverRef = useRef<((resolution: NexusConflictResolution) => void) | null>(null);
@@ -58,8 +58,8 @@ const CampaignDetails: React.FC = () => {
 
         // Callback onConflict : affiche le modal et suspend l'import
         // jusqu'à ce que l'utilisateur clique sur une stratégie
-        const onConflict = (conflicts: NexusConflict[]): Promise<NexusConflictResolution> => {
-            setConflictState(conflicts);
+        const onConflict = (conflicts: NexusConflict[], arrivee?: ArriveeDUneCampagne): Promise<NexusConflictResolution> => {
+            setConflictState({ conflicts, arrivee });
             return new Promise<NexusConflictResolution>((resolve) => {
                 resolverRef.current = resolve;
             });
@@ -426,7 +426,8 @@ const CampaignDetails: React.FC = () => {
         {/* Nexus Conflict Resolver — modal décision utilisateur */}
         {conflictState && (
             <NexusConflictResolver
-                conflicts={conflictState}
+                conflicts={conflictState.conflicts}
+                arrivee={conflictState.arrivee}
                 onResolve={handleConflictResolve}
             />
         )}

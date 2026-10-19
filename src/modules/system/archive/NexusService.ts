@@ -21,7 +21,8 @@
  * @module system/archive/NexusService
  */
 
-import { clonerLaCampagne } from './clonerLaCampagne';
+import { clonerLaCampagne, type Fabrique } from './clonerLaCampagne';
+import { rejouerLaCampagne } from './rejouerLaCampagne';
 import { extraireLesSatellites, injecterLesSatellites } from './satellitesDeLaCampagne';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useBestiaireStore } from '../../combat/useBestiaireStore';
@@ -45,6 +46,7 @@ import type {
     NexusDriverState,
     NexusConflictResolution,
     OnConflictCallback,
+    ArriveeDUneCampagne,
 } from './nexus.types';
 import {
     NEXUS_SCHEMA_VERSION,
@@ -1404,15 +1406,19 @@ export class NexusService {
      */
     public applyResolutionToState(
         state: NexusCampaignState,
-        resolution: NexusConflictResolution
+        resolution: NexusConflictResolution,
+        existeDeja = true,
+        nouvelId?: Fabrique,
     ): NexusCampaignState {
+        // Lot E4 : rejouer, c'est cloner et effacer le parcours. Voir `rejouerLaCampagne.ts`.
+        if (resolution.strategy === 'rejouer') return rejouerLaCampagne(state, { existeDeja, nouvelId });
         if (resolution.strategy !== 'clone') return state;
         /*
           **Le clonage juste** — lot E3 du chantier des archives (2026-10-19).
           Il ne réécrivait, dans la trame, que `acteId` : une copie pointait vers
           l'original par tous ses autres liens. Voir `clonerLaCampagne.ts`.
         */
-        return clonerLaCampagne(state);
+        return clonerLaCampagne(state, nouvelId);
     }
 
     /**
@@ -1528,7 +1534,66 @@ export class NexusService {
                 return { success: false, failedAssets: [], warnings: [], error: errMsg };
             }
 
-            // Phase 5 : Remappage des assets (campagnes uniquement)
+            /*
+              **Phase 5 : le choix AVANT les médias** — lot E4 (2026-10-19).
+
+              Les médias de l'archive entraient avant qu'on ait choisi quoi
+              faire : « Annuler » laissait des orphelins dans le Media Hub,
+              « Remplacer » retirait ensuite l'étiquette de la campagne aux
+              médias qu'on venait d'importer, et une copie recevait des médias
+              étiquetés pour l'original. On choisit d'abord, on écrit ensuite.
+
+              Et une campagne qui arrive **demande toujours** : rejouer se fait
+              le plus souvent sans conflit — la campagne a été purgée, ou
+              l'archive vient d'un autre poste.
+            */
+            const conflicts = this.detectConflicts(manifest, isDriver ? driverState : campaignState);
+            const arrivee: ArriveeDUneCampagne | undefined = !isDriver && campaignState ? {
+                nom: manifest.campaignName ?? campaignState.campaign.name,
+                exporteeLe: manifest.exportedAt,
+                entites: manifest.stats?.entityCount ?? campaignState.entities.length,
+                seances: manifest.stats?.sessionCount ?? campaignState.sessions.length,
+            } : undefined;
+            let resolution: NexusConflictResolution = { strategy: 'replace' };
+
+            if (conflicts.length > 0 || arrivee) {
+                if (onConflict) {
+                    // Suspendre la progression HUD le temps de l'interaction utilisateur
+                    this.emitProgress('remapping', 50, i18next.t('modules:system.nexus.messages.waiting_user'));
+                    resolution = await onConflict(conflicts, arrivee);
+                } else if (conflicts.length > 0) {
+                    // Pas de callback : fallback silencieux vers "replace"
+                    console.warn('[NexusService] Conflit détecté, aucun callback défini — stratégie "replace" appliquée.');
+                }
+            }
+
+            // Annulation demandée par l'utilisateur — rien n'a encore été écrit.
+            if (resolution.strategy === 'cancel') {
+                this.emitProgress('idle', 0, '');
+                gmToast(i18next.t('modules:system.nexus.messages.import_cancelled'), 'info');
+                return { success: false, failedAssets: [], warnings: [], error: i18next.t('modules:system.nexus.messages.import_cancelled') };
+            }
+
+            // Si stratégie 'replace' et qu'un ID de campagne est présent, on nettoie les anciennes références média
+            // pour éviter de saturer le Media Hub avec des imports orphelins.
+            if (conflicts.length > 0 && resolution.strategy === 'replace' && manifest.campaignId) {
+                await useMediaStore.getState().removeCampaignReference(manifest.campaignId);
+            }
+
+            /*
+              L'identifiant sous lequel la campagne entrera, fixé AVANT les
+              médias pour qu'ils soient étiquetés pour elle — une copie ou une
+              reprise en reçoit un neuf. La copie elle-même se fait après la
+              réécriture des chemins (phase 6), comme avant : un chemin de média
+              peut contenir l'identifiant de la campagne, et la copie le
+              réécrirait.
+            */
+            const enCopie = resolution.strategy === 'clone' || resolution.strategy === 'rejouer';
+            const idQuiEntre = campaignState
+                ? (enCopie ? `camp-${crypto.randomUUID()}` : campaignState.campaign.id)
+                : undefined;
+
+            // Phase 5b : Remappage des assets (campagnes uniquement)
             this.emitProgress('remapping', 60, i18next.t('modules:system.nexus.messages.remap_media'));
             const failedAssets: string[] = [];
             const assetMap: Record<string, string> = {};
@@ -1552,7 +1617,7 @@ export class NexusService {
                         );
                         const originalRef = assetEntry?.originalRef;
 
-                        const campaignId = manifest.campaignId ?? (isDriver ? null : campaignState?.campaign.id);
+                        const campaignId = isDriver ? (manifest.campaignId ?? null) : (idQuiEntre ?? manifest.campaignId);
                         const newMediaId = await mediaStore.addMedia(
                             new File([blob], fileName, { type: blob.type }),
                             ['nexus-import'],
@@ -1567,34 +1632,6 @@ export class NexusService {
                         failedAssets.push(relativePath);
                     }
                 }
-            }
-
-            // Phase 5b : Détection et résolution des conflits
-            const conflicts = this.detectConflicts(manifest, isDriver ? driverState : campaignState);
-            let resolution: NexusConflictResolution = { strategy: 'replace' };
-
-            if (conflicts.length > 0) {
-                if (onConflict) {
-                    // Suspendre la progression HUD le temps de l'interaction utilisateur
-                    this.emitProgress('remapping', 75, i18next.t('modules:system.nexus.messages.waiting_user'));
-                    resolution = await onConflict(conflicts);
-                } else {
-                    // Pas de callback : fallback silencieux vers "replace"
-                    console.warn('[NexusService] Conflit détecté, aucun callback défini — stratégie "replace" appliquée.');
-                }
-
-                // Si stratégie 'replace' et qu'un ID de campagne est présent, on nettoie les anciennes références média
-                // pour éviter de saturer le Media Hub avec des imports orphelins.
-                if (resolution.strategy === 'replace' && manifest.campaignId) {
-                    await useMediaStore.getState().removeCampaignReference(manifest.campaignId);
-                }
-            }
-
-            // Annulation demandée par l'utilisateur
-            if (resolution.strategy === 'cancel') {
-                this.emitProgress('idle', 0, '');
-                gmToast(i18next.t('modules:system.nexus.messages.import_cancelled'), 'info');
-                return { success: false, failedAssets: [], warnings: [], error: i18next.t('modules:system.nexus.messages.import_cancelled') };
             }
 
             // Phrase 6 & 7 & 8 séparées par type
@@ -1624,10 +1661,11 @@ export class NexusService {
                 // Phase 6 : Remappage des chemins dans l'état
                 const remappedState = this.remapPaths(campaignState, assetMap);
 
-                // Phrase 6 & 7 & 8 : Sync & Landing
-                const finalState = resolution.strategy === 'clone'
-                    ? this.applyResolutionToState(remappedState, resolution)
-                    : remappedState;
+                // Phrase 6 & 7 & 8 : Sync & Landing — copie ou reprise sous l'identifiant fixé en phase 5
+                const finalState = this.applyResolutionToState(
+                    remappedState, resolution, conflicts.length > 0,
+                    prefixe => prefixe === 'camp' && idQuiEntre ? idQuiEntre : `${prefixe}-${crypto.randomUUID()}`,
+                );
 
                 const store = useSessionOSStore.getState();
                 

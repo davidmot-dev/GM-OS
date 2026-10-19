@@ -2,11 +2,14 @@
  * Nexus Conflict Resolver — Modal de gestion des conflits d'import
  *
  * Affiché lorsqu'un bundle `.gmos` importé contient une campagne
- * dont l'ID existe déjà dans le store local.
+ * dont l'ID existe déjà dans le store local — et, depuis le lot E4 du chantier
+ * des archives (2026-10-19), pour **toute** campagne qui arrive : rejouer se
+ * fait le plus souvent sans conflit (campagne purgée, autre poste).
  *
  * L'utilisateur choisit :
- *  - Remplacer : écrase les données existantes
+ *  - Remplacer : écrase les données existantes (sans conflit : « Importer telle quelle »)
  *  - Cloner    : importe la campagne avec de nouveaux UUIDs (coexistence)
+ *  - Rejouer   : une copie dont le parcours est effacé (campagnes seulement)
  *  - Annuler   : abandonne l'import, aucun changement
  *
  * Design : "Glass Terminal" — cohérent avec NexusHUD.
@@ -21,21 +24,25 @@ import {
     RefreshCw,
     Copy,
     X,
+    RotateCcw,
+    Download,
     Users,
     BookOpen,
     Calendar,
     Zap,
     Shield,
 } from 'lucide-react';
-import type { NexusConflict, NexusConflictResolution, NexusConflictStrategy } from './nexus.types';
+import type { ArriveeDUneCampagne, NexusConflict, NexusConflictResolution, NexusConflictStrategy } from './nexus.types';
 
 // ─────────────────────────────────────────────
 // PROPS
 // ─────────────────────────────────────────────
 
 interface NexusConflictResolverProps {
-    /** Liste des conflits détectés (toujours au moins 1 si le composant est affiché) */
+    /** Liste des conflits détectés — vide quand une campagne arrive sans en écraser aucune */
     conflicts: NexusConflict[];
+    /** La campagne de l'archive, quand c'en est une : elle seule peut se rejouer */
+    arrivee?: ArriveeDUneCampagne;
     /** Appelé avec la stratégie choisie par l'utilisateur */
     onResolve: (resolution: NexusConflictResolution) => void;
 }
@@ -69,6 +76,14 @@ const STRATEGY_CONFIG: Record<Exclude<NexusConflictStrategy, 'cancel'>, Strategy
         buttonClass: 'bg-etat-info/10 border-etat-info/30 text-etat-info hover:bg-etat-info/20 hover:border-etat-info/50',
         iconClass: 'text-etat-info',
         badgeClass: 'bg-etat-info/10 text-etat-info border-etat-info/20',
+    },
+    rejouer: {
+        label: 'Rejouer',
+        description: 'Une nouvelle partie : préparation et personnages gardés ; séances, journaux et parcours effacés ; réserves de table au départ.',
+        icon: RotateCcw,
+        buttonClass: 'bg-etat-succes/10 border-etat-succes/30 text-etat-succes hover:bg-etat-succes/20 hover:border-etat-succes/50',
+        iconClass: 'text-etat-succes',
+        badgeClass: 'bg-etat-succes/10 text-etat-succes border-etat-succes/20',
     },
 };
 
@@ -158,8 +173,10 @@ const ConflictCard: React.FC<{ conflict: NexusConflict }> = ({ conflict }) => {
 
 export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
     conflicts,
+    arrivee,
     onResolve,
 }) => {
+    const sansConflit = conflicts.length === 0;
     const handleStrategy = (strategy: NexusConflictStrategy) => {
         onResolve({ strategy });
     };
@@ -198,12 +215,14 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                                 </span>
                             </div>
                             <h2 className="text-base font-black text-etat-danger leading-tight">
-                                Conflit de données détecté
+                                {sansConflit ? 'Importer une campagne' : 'Conflit de données détecté'}
                             </h2>
                         </div>
                     </div>
                     <p className="text-ui-11 text-app-text/40 leading-relaxed mt-2">
-                        {conflicts.length === 1
+                        {sansConflit
+                            ? `« ${arrivee?.nom ?? 'Campagne'} » — ${arrivee?.entites ?? 0} entités, ${arrivee?.seances ?? 0} séances. Comment l'importer ?`
+                            : conflicts.length === 1
                             ? 'Une campagne dans ce bundle possède le même identifiant qu\'une campagne déjà présente dans votre bibliothèque.'
                             : `${conflicts.length} campagnes en conflit ont été détectées. Choisissez comment procéder.`}
                     </p>
@@ -222,8 +241,27 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         Choisir une action
                     </p>
 
+                    {/* Sans conflit : importer telle quelle (la stratégie `replace` n'écrase rien) */}
+                    {sansConflit && (
+                        <button
+                            id="nexus-import-tel-quel"
+                            onClick={() => handleStrategy('replace')}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200 ${STRATEGY_CONFIG.clone.buttonClass}`}
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-etat-info/10 border border-etat-info/20 flex items-center justify-center flex-shrink-0">
+                                <Download size={14} className={STRATEGY_CONFIG.clone.iconClass} />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <p className="text-xs font-bold">Importer telle quelle</p>
+                                <p className="text-ui-10 text-app-text/40 mt-0.5 leading-tight">
+                                    La campagne revient comme elle était, séances et parcours compris.
+                                </p>
+                            </div>
+                        </button>
+                    )}
+
                     {/* Remplacer */}
-                    <button
+                    {!sansConflit && <button
                         id="nexus-conflict-replace"
                         onClick={() => handleStrategy('replace')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200 ${STRATEGY_CONFIG.replace.buttonClass}`}
@@ -240,10 +278,10 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         <span className={`text-ui-9 font-bold px-2 py-0.5 rounded-full border ${STRATEGY_CONFIG.replace.badgeClass}`}>
                             Écraser
                         </span>
-                    </button>
+                    </button>}
 
                     {/* Cloner */}
-                    <button
+                    {!sansConflit && <button
                         id="nexus-conflict-clone"
                         onClick={() => handleStrategy('clone')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200 ${STRATEGY_CONFIG.clone.buttonClass}`}
@@ -260,7 +298,29 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         <span className={`text-ui-9 font-bold px-2 py-0.5 rounded-full border ${STRATEGY_CONFIG.clone.badgeClass}`}>
                             Sûr
                         </span>
-                    </button>
+                    </button>}
+
+                    {/* Rejouer — une campagne seulement (lot E4) */}
+                    {arrivee && (
+                        <button
+                            id="nexus-conflict-rejouer"
+                            onClick={() => handleStrategy('rejouer')}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200 ${STRATEGY_CONFIG.rejouer.buttonClass}`}
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-etat-succes/10 border border-etat-succes/20 flex items-center justify-center flex-shrink-0">
+                                <RotateCcw size={14} className={STRATEGY_CONFIG.rejouer.iconClass} />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <p className="text-xs font-bold">{STRATEGY_CONFIG.rejouer.label}</p>
+                                <p className="text-ui-10 text-app-text/40 mt-0.5 leading-tight">
+                                    {STRATEGY_CONFIG.rejouer.description}
+                                </p>
+                            </div>
+                            <span className={`text-ui-9 font-bold px-2 py-0.5 rounded-full border ${STRATEGY_CONFIG.rejouer.badgeClass}`}>
+                                Copie
+                            </span>
+                        </button>
+                    )}
 
                     {/* Annuler */}
                     <button

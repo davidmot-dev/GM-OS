@@ -346,9 +346,13 @@ export interface NexusProgress {
  * Stratégie de résolution choisie par l'utilisateur.
  * - `replace` : Écrase la campagne existante avec le contenu du bundle
  * - `clone`   : Importe la campagne avec de nouveaux UUIDs (coexistence)
+ * - `rejouer` : Comme `clone`, et le parcours est effacé — séances, journaux,
+ *               passages, scènes terminées, indices révélés ; les réserves de
+ *               table reviennent au départ. Lot E4 du chantier des archives
+ *               (2026-10-19), voir `rejouerLaCampagne.ts`.
  * - `cancel`  : Abandonne l'import sans modification
  */
-export type NexusConflictStrategy = 'replace' | 'clone' | 'cancel';
+export type NexusConflictStrategy = 'replace' | 'clone' | 'rejouer' | 'cancel';
 
 /**
  * Description d'un conflit détecté lors de l'import.
@@ -379,12 +383,38 @@ export interface NexusConflictResolution {
 }
 
 /**
+ * **La campagne qui arrive**, décrite à celui qui choisit comment l'importer.
+ *
+ * Lot E4 (2026-10-19) : le choix n'était proposé qu'en cas de conflit. Or on
+ * rejoue le plus souvent une campagne qui n'est plus là — purgée, ou emportée
+ * sur un autre poste : il n'y a pas de conflit, et il faut pourtant pouvoir
+ * choisir « rejouer ». Une campagne qui arrive demande donc toujours.
+ */
+export interface ArriveeDUneCampagne {
+    nom: string;
+    exporteeLe: string;
+    entites: number;
+    seances: number;
+}
+
+/** Ce que l'écran présente : les conflits (peut-être aucun) et la campagne qui arrive. */
+export interface ChoixDImport {
+    conflicts: NexusConflict[];
+    arrivee?: ArriveeDUneCampagne;
+}
+
+/**
  * Callback que le composant UI doit implémenter pour permettre
  * à l'utilisateur de résoudre les conflits avant l'injection.
  *
+ * Appelé pour un pilote en conflit, et pour **toute** campagne qui arrive
+ * (avec `arrivee`, conflits éventuellement vides).
+ *
  * @param conflicts - Liste des conflits détectés
+ * @param arrivee - La campagne de l'archive, quand c'en est une
  * @returns Une Promise résolue quand l'utilisateur a choisi sa stratégie
  */
 export type OnConflictCallback = (
-    conflicts: NexusConflict[]
+    conflicts: NexusConflict[],
+    arrivee?: ArriveeDUneCampagne,
 ) => Promise<NexusConflictResolution>;

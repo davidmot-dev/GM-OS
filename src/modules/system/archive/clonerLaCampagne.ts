@@ -46,7 +46,7 @@ const COLLECTIONS = [
     ['lootReserve', 'loot'],
 ] as const satisfies readonly (readonly [keyof NexusCampaignState, string])[];
 
-type Fabrique = (prefixe: string) => string;
+export type Fabrique = (prefixe: string) => string;
 const auHasard: Fabrique = prefixe => `${prefixe}-${crypto.randomUUID()}`;
 
 const echapper = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -103,12 +103,15 @@ export function reecrireLesIdentifiants<T>(valeur: T, table: Map<string, string>
     return parcourir(valeur) as T;
 }
 
-/** La copie d'une campagne : tout ce qu'elle emporte, réécrit vers ses nouveaux identifiants. */
-export function clonerLaCampagne(state: NexusCampaignState, nouvelId: Fabrique = auHasard): NexusCampaignState {
+/**
+ * La copie d'une campagne : tout ce qu'elle emporte, réécrit vers ses nouveaux identifiants.
+ * `suffixe` s'ajoute au nom (« (Copie) » par défaut, « (Nouvelle partie) » pour rejouer).
+ */
+export function clonerLaCampagne(state: NexusCampaignState, nouvelId: Fabrique = auHasard, suffixe = ' (Copie)'): NexusCampaignState {
     const table = tableDuClonage(state, nouvelId);
     const r = <T>(v: T) => reecrireLesIdentifiants(v, table);
     const copie: NexusCampaignState = { ...state };
-    copie.campaign = { ...r(state.campaign), name: `${state.campaign.name} (Copie)` };
+    copie.campaign = { ...r(state.campaign), name: `${state.campaign.name}${suffixe}` };
     for (const [cle] of COLLECTIONS) {
         if (state[cle] !== undefined) (copie as unknown as Record<string, unknown>)[cle] = r(state[cle]);
     }

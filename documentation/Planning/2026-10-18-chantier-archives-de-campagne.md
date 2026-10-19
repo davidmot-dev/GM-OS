@@ -22,9 +22,18 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > campagnes ; une archive ancienne qui n'en parle pas ne vide rien). Ambiances et playlists : seules
 > celles de la campagne ; état des paquets : seuls les siens. Les PNJ d'autres campagnes ne partent
 > plus, la relation vers eux est retirée de la copie (décision 2 du § 7). Le clonage suit (tuiles
-> `SCENE_<campagne>_NN` renommées). Manuel 90 mis à jour. Suite : E4 (rejouer), puis E6, puis E5.
+> `SCENE_<campagne>_NN` renommées). Manuel 90 mis à jour. **E4 fait** : la stratégie `rejouer`
+> (`system/archive/rejouerLaCampagne.ts`) clone puis efface le parcours (décision 1 du § 7) :
+> séances, journaux, passages, scènes terminées, actes achevés, clôture, révélation des indices,
+> messages, historique du butin, événements de chronologie nés d'une séance, état des paquets ;
+> réserves de table à `{}`, donc **toutes** au départ. Toute campagne qui arrive demande désormais
+> comment l'importer (« Importer telle quelle / Rejouer / Annuler », ou le résolveur en conflit) ;
+> le choix se fait **avant** l'entrée des médias, qui sont étiquetés pour la campagne qui entre
+> (défaut corrigé : annuler laissait des orphelins, remplacer désétiquetait les médias tout juste
+> importés, une copie recevait ceux de l'original). Essais : `rejouerLaCampagne.test.ts`,
+> `choixDeLImport.test.ts`. Suite : E6 (aperçu, sauvegarde avant écriture, journal), puis E5.
 
-**Les décisions du § 7 sont prises ; E0, E1, E3 et E2 sont codés.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
+**Les décisions du § 7 sont prises ; E0, E1, E3, E2 et E4 sont codés.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de
 coder : le code bouge).
 
