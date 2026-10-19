@@ -243,6 +243,16 @@ Ordre proposé : E0 → E1 → E3 (le plus fragile, le plus utile pour rejouer) 
 5. **Deux boutons** à l'export.
 6. L'archive des médias s'appelle **`.gmos-medias`**.
 
+### Les décisions de David — 19/10
+
+7. **Image-OS** entre dans l'archive des médias : ce que la campagne **utilise** (option 2).
+8. **Le reste ne s'archive pas** — cartes (réglages, brouillard), tables, calendriers, ambiances et
+   playlists sans étiquette : *pas liés à une campagne*.
+9. **Deck-OS appartient au système** : ses paquets partent avec le pilote, plus avec la campagne.
+10. **Rejouer**, deux choix confirmés tels que codés : **toutes** les réserves de table reviennent
+    au départ (pas seulement celles que « Nouveau scénario » remet) ; les **combats préparés** et
+    l'**état des modules du jeu** sont gardés tels quels.
+
 ## 8 · Garde-fous
 
 - ⛔ Jamais éprouvé sur les données de David : **instance jetable** (`npm run repetition`, profils
