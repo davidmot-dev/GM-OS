@@ -129,11 +129,52 @@ describe('le clonage refait les liens de la trame', () => {
     });
 });
 
-describe("ce que l'archive emporte pour Deck-OS et le pilote", () => {
-    it('prend les paquets du système de la campagne', () => {
+describe("Deck-OS appartient au jeu, pas à la campagne (décision de David, 2026-10-19)", () => {
+    it("l'archive de campagne n'emporte plus ni paquets ni leur état", () => {
         const paquet = nexusService.scrapeCampaignData(CAMPAGNE);
-        expect(paquet.deckManifests.map(d => d.id)).toEqual(['d1']);
-        expect(paquet.deckSessionStates).toHaveLength(1);
+        expect(paquet).not.toHaveProperty('deckManifests');
+        expect(paquet).not.toHaveProperty('deckSessionStates');
+    });
+
+    it("une archive ancienne qui en porte ne touche pas aux paquets du poste", () => {
+        const miseAJour = injecter({
+            ...nexusService.scrapeCampaignData(CAMPAGNE),
+            deckManifests: [{ id: 'd1', systemId: 'cyberpunk-perso', name: 'Complications (archive)' }],
+            deckSessionStates: [{ deckId: 'd1', remainingIndices: [], discardedIndices: [], currentCardIndex: null }],
+        } as unknown as NexusCampaignState);
+        expect(miseAJour).not.toHaveProperty('decks');
+        expect(miseAJour).not.toHaveProperty('deckStates');
+    });
+
+    it("l'archive du pilote emporte les paquets de SON jeu, sans leur état", () => {
+        const pilote = nexusService.scrapeDriverData('cyberpunk-perso');
+        expect(pilote.paquets?.map(d => d.id)).toEqual(['d1']);
+        expect(pilote).not.toHaveProperty('deckStates');
+    });
+
+    it("à l'import du pilote, un paquet s'ajoute et ne remplace jamais celui du poste", () => {
+        (nexusService as unknown as { injectDriverState: (s: unknown) => void }).injectDriverState({
+            gameDriver: { id: 'cyberpunk-perso', name: 'Cyberpunk maison' },
+            paquets: [
+                { id: 'd1', systemId: 'cyberpunk-perso', name: 'Complications (archive)' },
+                { id: 'd2', systemId: 'cyberpunk-perso', name: 'Rencontres' },
+            ],
+        });
+        const maj = vi.mocked(useSessionOSStore.setState).mock.calls[0]?.[0];
+        if (typeof maj !== 'function') throw new Error('Injection par fonction attendue');
+        const resultat = maj(etat as never) as { decks?: { id: string; name: string }[] };
+        expect(resultat.decks?.map(d => [d.id, d.name])).toEqual([['d1', 'Complications'], ['d2', 'Rencontres']]);
+    });
+
+    it('cloner un pilote garde son bestiaire et rattache ses paquets à la copie', () => {
+        const copie = nexusService.applyResolutionToDriver({
+            gameDriver: { id: 'cyberpunk-perso', name: 'Cyberpunk maison' },
+            bestiaire: [{ nom: 'Garde' }],
+            paquets: [{ id: 'd1', systemId: 'cyberpunk-perso', name: 'Complications' }],
+        } as never, { strategy: 'clone' });
+        expect(copie.bestiaire).toHaveLength(1);
+        expect(copie.paquets![0].id).not.toBe('d1');
+        expect(copie.paquets![0].systemId).toBe(copie.gameDriver.id);
     });
 
     it('prend le pilote personnalisé et son gabarit', () => {

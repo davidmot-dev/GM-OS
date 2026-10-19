@@ -131,7 +131,7 @@ reçoit un nouvel identifiant, tous les liens suivent), puis remettre la partie 
 | Les **indices**, de nouveau **cachés** | La date à laquelle chacun avait été révélé |
 | Storyboard, favoris, butin à distribuer, tuiles de lumière | Les messages entre tablettes, l'historique du butin distribué |
 | Les **personnages**, tels qu'ils étaient | Les événements de chronologie écrits pendant une séance |
-| La chronologie préparée | L'état des paquets de cartes (les cartes tenues étaient celles de la première partie) |
+| La chronologie préparée | |
 
 Les **réserves de table** (Traque, Impulsion, Menace…) reviennent **toutes** à leur valeur de
 départ.
@@ -178,9 +178,10 @@ puis prend une sauvegarde automatique, comme pour une campagne.
   version de ce poste est la plus récente.
 
 > 📌 **Ce qui ne part dans aucune archive, et c'est voulu** (décision du 2026-10-19) : les
-> réglages et le brouillard des cartes, les paquets de cartes, les tables aléatoires, les
-> calendriers, et les ambiances et playlists **sans étiquette**. *Ils n'appartiennent pas à une
-> campagne* : ils restent sur ce poste, au service de toutes.
+> réglages et le brouillard des cartes, les tables aléatoires, les calendriers, et les ambiances
+> et playlists **sans étiquette**. *Ils n'appartiennent pas à une campagne* : ils restent sur ce
+> poste, au service de toutes. Les **paquets de cartes**, eux, appartiennent au jeu : ils partent
+> avec le pilote (voir ci-dessous).
 
 > ⚠️ **Une archive lourde se lit d'un bloc.** Comme pour le `.gmos`, l'import charge tous les
 > fichiers en mémoire avant de les ranger : une archive de plusieurs centaines de mégaoctets de
@@ -194,6 +195,17 @@ Un `.gmos-driver` contient un **système**, sans aucune campagne : les règles, 
 consignes d'IA, le gabarit de fiche associé, et — depuis le 2026-09-03 — **le bestiaire du jeu**,
 c'est-à-dire les gabarits d'adversaires que vous avez rangés. *Partager un jeu sans ses adversaires
 reviendrait à partager un livre de règles sans son bestiaire.*
+
+**Depuis le 2026-10-19, les paquets de cartes du jeu (Deck-OS) partent aussi avec lui**, et plus
+avec les campagnes : *Deck-OS appartient au système, pas à une campagne*. Ce sont leurs
+**définitions** qui voyagent (nom, nombre de cartes, rôle, descriptions) ; les images des cartes
+sont livrées avec GM-OS. L'**état** d'un paquet — la pioche, la défausse, les cartes en main — ne
+voyage pas : c'est l'état d'une table à un instant. Les paquets **universels**, qui ne relèvent
+d'aucun jeu, restent sur le poste.
+
+À l'import, un paquet **s'ajoute** et ne remplace jamais un paquet déjà présent sous le même
+identifiant. Le bilan dit combien sont entrés. Cloner le pilote donne à la copie ses propres
+paquets, et garde son bestiaire.
 
 **Exporter** : Bibliothèque des fiches et règles → onglet **Règles (drivers)** → sélectionnez-en un → **Exporter** dans le
 panneau d'aperçu.
@@ -236,9 +248,8 @@ pour une migration.
 
 La campagne · ses **PNJ** · ses **joueurs et leurs personnages** · l'historique des **séances** ·
 les **cartes de l'Atlas** · le **wiki** · la **chronologie** · les **indices** · **la trame**, actes
-et scènes · les **rencontres préparées** (depuis le 12/10) · les **journaux de séance** · les
-**paquets de cartes** et l'état de **ses** paquets · le **système de jeu forgé** et son gabarit de
-fiche · et, depuis le 19/10 : les **moments de storyboard**, les **réserves de table** (Traque,
+et scènes · les **rencontres préparées** (depuis le 12/10) · les **journaux de séance** · le
+**système de jeu forgé** et son gabarit de fiche · et, depuis le 19/10 : les **moments de storyboard**, les **réserves de table** (Traque,
 Impulsion…), les **combats préparés** de ses scènes, les **favoris**, le **butin**, les
 **messages** entre tablettes, les **tuiles de Light-OS** de son râtelier, et les **ambiances
 sonores** et **playlists** étiquetées pour elle — et, côté médias, toutes les images moissonnées
@@ -270,7 +281,9 @@ Deux règles revues le 2026-10-19 (chantier des archives de campagne) :
 
 > ✅ **Quatre manques comblés le 2026-09-04.** Jusqu'à cette date, l'archive **laissait la trame**
 > — actes et scènes — sur la machine d'origine, et **mettait dedans sans jamais reposer** les
-> paquets de cartes et le système de jeu forgé. Les quatre voyagent désormais.
+> paquets de cartes et le système de jeu forgé. Les quatre voyagent désormais. *(Depuis le
+> 2026-10-19, les paquets de cartes ne partent plus avec la campagne mais avec le pilote, et
+> l'import d'une campagne ne touche plus jamais aux paquets du poste.)*
 >
 > Deux précautions accompagnent le retour : **le pilote s'ajoute, il ne remplace jamais** un
 > système du même identifiant déjà présent — l'import d'une campagne n'a pas à détruire votre

@@ -20,8 +20,8 @@ import { clonerLaCampagne, type Fabrique } from './clonerLaCampagne';
  *
  * Ce qui relève du **jeu** part avec les séances : les messages entre
  * tablettes, l'historique du butin distribué, les événements de chronologie
- * nés d'une séance, l'état des paquets de cartes (les cartes tenues désignent
- * des mains de la première partie).
+ * nés d'une séance. (Les paquets de cartes ne sont plus dans l'archive de
+ * campagne depuis le 19/10 : Deck-OS appartient au jeu.)
  */
 export function effacerLeParcours(state: NexusCampaignState): NexusCampaignState {
     const { activeSessionId: _seance, clotureeLe: _cloture, ...campaign } = state.campaign;
@@ -36,7 +36,6 @@ export function effacerLeParcours(state: NexusCampaignState): NexusCampaignState
         timelineEvents: state.timelineEvents.filter(e => !e.sessionId && e.type !== 'session'),
         messages: state.messages === undefined ? undefined : [],
         lootHistory: state.lootHistory === undefined ? undefined : [],
-        deckSessionStates: [],
         /*
           Un état VIDE et non absent : absent, l'import ne toucherait pas aux
           réserves (« l'archive n'en parle pas ») ; vide, chaque réserve se lit

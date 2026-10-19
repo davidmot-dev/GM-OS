@@ -78,7 +78,7 @@ import type {
     TimelineEvent,
     Clue,
 } from '../../session/store/types';
-import type { DeckManifest, DeckSessionState } from '../../session/store/types';
+import type { DeckManifest } from '../../session/store/types';
 
 // ─────────────────────────────────────────────
 // CONSTANTES INTERNES
@@ -270,15 +270,11 @@ export class NexusService {
             : e));
         const relatedEntities: Entity[] = [];
 
-        // Niveau 3 : Decks de cartes (liés via deckSlice)
-        // Le DeckSlice utilise `decks` (manifestes) et `deckStates` (états de session)
-        const deckManifests: DeckManifest[] = (store.decks ?? []).filter(
-            (d: DeckManifest) => d.systemId === campaign.system
-        );
-        // L'état de SES paquets seulement (lot E2) : les autres campagnes jouent les leurs.
-        const deckIds = new Set(deckManifests.map(d => d.id));
-        const deckSessionStates: DeckSessionState[] = Object.values(store.deckStates ?? {})
-            .filter((etat: DeckSessionState) => deckIds.has(etat?.deckId));
+        /*
+          ⛔ **Deck-OS ne part plus avec la campagne** (2026-10-19, décision de
+          David) : les paquets appartiennent au jeu et voyagent avec le pilote
+          (`scrapeDriverData`). Leur état ne voyage nulle part.
+        */
 
         // Niveau 4 : Snapshot des GameDrivers et SheetTemplates requis (manifeste uniquement)
         // Permet à l'importateur de vérifier la disponibilité des dépendances.
@@ -340,8 +336,6 @@ export class NexusService {
             scenes,
             rencontres,
             journaux,
-            deckManifests,
-            deckSessionStates,
             relatedEntities,       // Méta : entités cross-campagne (pour info)
             requiredDriverData,    // Snapshot des drivers personnalisés requis
             ...(useModulesDuJeuMJ.getState().sauvegarde?.campagnes[campaignId] ? { modulesDuJeu: useModulesDuJeuMJ.getState().sauvegarde!.campagnes[campaignId] } : {}),
@@ -386,10 +380,19 @@ export class NexusService {
         */
         const bestiaire = useBestiaireStore.getState().gabaritsDuJeu(driverId);
 
+        /*
+          **Les paquets de cartes du jeu partent avec lui** (2026-10-19, décision
+          de David) : Deck-OS appartient au système, pas à la campagne. Les
+          définitions seulement — les images sont livrées avec l'application.
+          Les paquets universels n'appartiennent à aucun jeu : ils restent.
+        */
+        const paquets = (store.decks ?? []).filter((d: DeckManifest) => d.systemId === driverId);
+
         return {
             gameDriver,
             sheetTemplate,
             ...(bestiaire.length ? { bestiaire } : {}),
+            ...(paquets.length ? { paquets } : {}),
         };
     }
 
@@ -444,12 +447,7 @@ export class NexusService {
             addRef(cl.mediaUrl);
         });
 
-        // Deck-OS : dossiers complets (référencés par folderPath)
-        // Note: les decks sont copiés en tant que répertoires complets
-        // Le bridge IPC gère la copie récursive via folderPath
-        state.deckManifests.forEach((d) => {
-            if (d.folderPath) addRef(d.folderPath);
-        });
+        // Deck-OS : plus emporté avec la campagne (2026-10-19). Ses images sont livrées avec l'application.
 
         // Sound-OS : fichiers audio liés aux Sound Pads (filePath absolu)
         // On n'exporte que les chemins absolus valides (pas les chemins réseaux)
@@ -1463,27 +1461,13 @@ export class NexusService {
         }
 
         /*
-          **Les paquets de cartes étaient mis dans l'archive et jamais reposés.**
-
-          Deck-OS repartait donc vide à l'arrivée, alors que le poids voyageait.
-          Les manifestes se remplacent par identifiant ; les états de session
-          se fusionnent, parce que ce sont ceux de **toutes** les campagnes et
-          qu'écraser le dictionnaire perdrait ceux des autres.
+          ⛔ **Les paquets d'une archive de campagne sont IGNORÉS** (2026-10-19,
+          décision de David). Deck-OS appartient au jeu : ses paquets arrivent
+          avec le pilote (`.gmos-driver`). Une archive d'avant cette date en
+          porte encore, et les reposer remplaçait des paquets que le meneur
+          avait pu modifier depuis — importer une campagne ne touche plus jamais
+          aux paquets du poste.
         */
-        if (state.deckManifests?.length) {
-            const importes = new Set(state.deckManifests.map(d => d.id));
-            nextPartialState.decks = [
-                ...(store.decks ?? []).filter((d: { id: string }) => !importes.has(d.id)),
-                ...state.deckManifests,
-            ];
-        }
-        if (state.deckSessionStates?.length) {
-            const parDeck = { ...(store.deckStates ?? {}) };
-            for (const etat of state.deckSessionStates) {
-                if (etat?.deckId) parDeck[etat.deckId] = etat;
-            }
-            nextPartialState.deckStates = parDeck;
-        }
 
         /*
           **Le pilote personnalisé, et son gabarit de fiche.**
@@ -1555,6 +1539,7 @@ export class NexusService {
             /* Le bestiaire entre dans le rollback comme le reste : une injection
                qui echoue a mi-chemin ne doit pas laisser la moitie d'un jeu. */
             gabarits: [...useBestiaireStore.getState().gabarits],
+            decks: store.decks ? [...store.decks] : [],
         };
 
         try {
@@ -1576,9 +1561,17 @@ export class NexusService {
                     ];
                 }
 
+                /* Les paquets du jeu s'AJOUTENT : un paquet déjà là (même
+                   identifiant) n'est jamais remplacé — la version du poste est
+                   la plus récente (2026-10-19). */
+                const decks = s.decks ?? [];
+                const dejaLa = new Set(decks.map((d: DeckManifest) => d.id));
+                const paquetsNeufs = (state.paquets ?? []).filter(p => !dejaLa.has(p.id));
+
                 return {
                     customGameDrivers: updatedDrivers,
                     customSheetTemplates: updatedTemplates,
+                    ...(paquetsNeufs.length ? { decks: [...decks, ...paquetsNeufs] } : {}),
                 };
             });
             /*
@@ -1611,6 +1604,7 @@ export class NexusService {
             useSessionOSStore.setState({
                 customGameDrivers: previousState.customGameDrivers,
                 customSheetTemplates: previousState.customSheetTemplates,
+                decks: previousState.decks,
             });
             useBestiaireStore.setState({ gabarits: previousState.gabarits });
             throw err;
@@ -1717,6 +1711,17 @@ export class NexusService {
                 id: newDriverId,
                 name: `${state.sheetTemplate.name} (Copie)`,
             };
+        }
+
+        /*
+          La copie d'un jeu garde son bestiaire — il se perdait au clonage, la
+          copie ne reprenant que le pilote et sa fiche — et ses paquets, qui
+          deviennent les siens : nouvel identifiant, rattachés au nouveau pilote
+          (2026-10-19).
+        */
+        if (state.bestiaire?.length) newState.bestiaire = state.bestiaire;
+        if (state.paquets?.length) {
+            newState.paquets = state.paquets.map(p => ({ ...p, id: `deck-${crypto.randomUUID()}`, systemId: newDriverId }));
         }
 
         return newState;
@@ -1952,6 +1957,7 @@ export class NexusService {
                 }
 
                 this.emitProgress('injecting', 85, 'Injection dans la base de données système...');
+                const decksAvant = new Set((useSessionOSStore.getState().decks ?? []).map((d: DeckManifest) => d.id));
                 this.injectDriverState(finalState);
 
                 // Fin Driver
@@ -1960,6 +1966,11 @@ export class NexusService {
                     : conflicts.length > 0
                         ? `Pilote « ${finalState.gameDriver.name} » importé : la version locale « ${conflicts[0].existingName} » a été remplacée.`
                         : `Pilote « ${finalState.gameDriver.name} » importé.`);
+                if (finalState.paquets?.length) {
+                    const neufs = finalState.paquets.filter(p => !decksAvant.has(p.id)).length;
+                    bilan.push(`Paquets de cartes du jeu : ${neufs} ajouté(s)`
+                        + (finalState.paquets.length > neufs ? `, ${finalState.paquets.length - neufs} déjà présent(s), laissé(s) tels quels.` : '.'));
+                }
                 this.consignerLeBilan(bilan);
                 this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'), { bilan });
                 gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${manifest.driverName}`, 'success');

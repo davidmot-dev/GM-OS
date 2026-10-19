@@ -175,10 +175,17 @@ export interface NexusCampaignState extends SatellitesDeLaCampagne {
      * rien perdre ni rien inventer.
      */
     journaux?: unknown[];
-    /** Paquets de cartes (manifestes uniquement) */
-    deckManifests: DeckManifest[];
-    /** États de session des decks */
-    deckSessionStates: DeckSessionState[];
+    /**
+     * ⛔ **Plus emportés depuis le 2026-10-19** — décision de David : Deck-OS
+     * appartient au jeu, pas à la campagne. Les paquets voyagent avec le pilote
+     * (`NexusDriverState.paquets`) ; leur état — pioche, défausse, cartes
+     * tenues — ne voyage nulle part : c'est l'état d'une table à un instant.
+     *
+     * Une archive plus ancienne en porte encore : l'import les **ignore**, pour
+     * qu'importer une campagne ne touche jamais aux paquets du poste.
+     */
+    deckManifests?: DeckManifest[];
+    deckSessionStates?: DeckSessionState[];
     /**
      * Niveau 3 — Entités référencées par des relations sociales mais appartenant
      * à d'autres campagnes. Incluses pour préserver la cohérence du réseau social.
@@ -236,6 +243,18 @@ export interface NexusDriverState {
      * un `.gmos-driver` d'hier s'importe sans rien perdre ni rien inventer.
      */
     bestiaire?: import('../../combat/useBestiaireStore').GabaritDAdversaire[];
+    /**
+     * **Les paquets de cartes du jeu** (Deck-OS) — depuis le 2026-10-19, sur
+     * décision de David : ils appartiennent au système, pas à une campagne, et
+     * voyagent donc avec lui comme le bestiaire. Les **définitions** seulement :
+     * les images sont livrées avec l'application (`public/assets/decks/<jeu>/`),
+     * et l'état d'un paquet ne voyage pas. Les paquets universels, qui
+     * n'appartiennent à aucun jeu, restent sur le poste.
+     *
+     * À l'import, un paquet **s'ajoute** et ne remplace jamais un paquet du même
+     * identifiant : la version du poste est la plus récente.
+     */
+    paquets?: DeckManifest[];
 }
 
 // ─────────────────────────────────────────────

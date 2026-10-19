@@ -81,10 +81,6 @@ describe('effacer le parcours', () => {
         expect(r.reservesDeTable).toEqual({});
     });
 
-    it('l’état des paquets n’est pas réimporté : les cartes tenues sont celles de la première partie', () => {
-        expect(r.deckSessionStates).toEqual([]);
-    });
-
     it('une archive ancienne sans journaux ni messages n’en reçoit pas', () => {
         const ancienne = effacerLeParcours({ ...ETAT, journaux: undefined, messages: undefined, lootHistory: undefined });
         expect(ancienne.journaux).toBeUndefined();

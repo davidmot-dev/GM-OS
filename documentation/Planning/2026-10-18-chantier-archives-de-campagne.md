@@ -57,7 +57,15 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > **⛔ Décision de David, 19/10 — le reste ne s'archive pas** : réglages et brouillard des cartes,
 > paquets de cartes, tables aléatoires, calendriers, ambiances et playlists sans étiquette.
 > *« Tout le reste n'est pas vraiment lié à une campagne et donc doit rester et ne pas être
-> archivé. »* Le § 5 B est clos sur ce point. ⚠️ Limite connue, héritée du `.gmos` : l'import
+> archivé. »* Le § 5 B est clos sur ce point.
+>
+> **⛔ Deck-OS, décision de David, 19/10** : *« ne fait pas partie de la campagne mais plus du
+> système/driver »*. Il partait avec le `.gmos` (définitions, état, et un essai de copie des
+> images que le pont écartait : chemins relatifs) et **remplaçait** les paquets du poste à
+> l'import. Désormais : retiré du `.gmos`, ignoré à l'import d'une archive ancienne, et emporté
+> par le `.gmos-driver` (`NexusDriverState.paquets`, définitions du jeu seulement ; à l'import il
+> s'ajoute sans remplacer). L'état des paquets ne voyage plus nulle part. Au passage : cloner un
+> pilote perdait son bestiaire — corrigé. ⚠️ Limite connue, héritée du `.gmos` : l'import
 > charge toute l'archive en base64 dans un seul message IPC — une archive de centaines de Mo de
 > musique pèsera en mémoire.
 
