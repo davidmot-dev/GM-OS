@@ -269,7 +269,11 @@ déjà servi à tout récupérer après un incident.
 
 **Nexus-OS — export et import**
 Emporter une campagne ou un système de jeu dans un seul fichier, et le rouvrir ailleurs. L'import
-**fusionne** au lieu de remplacer : recevoir l'archive d'un ami n'efface pas votre bibliothèque.
+**fusionne** au lieu de remplacer : recevoir l'archive d'un ami n'efface pas votre bibliothèque. Une
+campagne s'importe **telle quelle** ou **à rejouer** (séances et parcours effacés, préparation
+gardée) ; ses **médias** (`.gmos-medias`) se réimportent dans une autre campagne du même univers ;
+un **pilote** emporte ses paquets de cartes et son bestiaire. Une sauvegarde automatique est écrite
+avant chaque import, et un bilan dit ce qui est entré.
 
 **La recherche universelle** (`Ctrl+K`)
 Retrouver n'importe quoi d'une frappe : une entité, une carte, un son, une règle. C'est souvent plus

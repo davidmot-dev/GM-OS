@@ -89,6 +89,15 @@ Pour ajouter vos propres decks ou modifier les chemins d'accès :
 3.  Modifiez le chemin du dossier (ex: `assets/decks/votre-nom-de-deck`).
 4.  Ajustez le format (**Poker** ou **Tarot**) pour une dimension d'affichage optimale.
 
+### Partager ses paquets
+
+Les paquets appartiennent **au jeu**, pas à une campagne : ils partent avec l'archive du **pilote**
+(`.gmos-driver`), comme le bestiaire, et plus avec celle d'une campagne (depuis le 2026-10-19).
+Voyagent leurs **définitions** — nom, nombre de cartes, rôle, descriptions ; les images des cartes
+sont livrées avec GM-OS. L'**état** d'un paquet (pioche, défausse, cartes en main) ne voyage pas.
+À l'import, un paquet **s'ajoute** et ne remplace jamais celui qui est déjà là. Voir
+[Nexus-OS](./90-Nexus-OS-emporter-une-campagne.md), § « Partager un système de jeu ».
+
 ---
 
 ## 💡 Conseils & Astuces
