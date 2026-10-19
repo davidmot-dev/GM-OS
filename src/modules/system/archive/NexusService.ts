@@ -21,6 +21,7 @@
  * @module system/archive/NexusService
  */
 
+import { clonerLaCampagne } from './clonerLaCampagne';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useBestiaireStore } from '../../combat/useBestiaireStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -1391,75 +1392,12 @@ export class NexusService {
         resolution: NexusConflictResolution
     ): NexusCampaignState {
         if (resolution.strategy !== 'clone') return state;
-
-        // Générer un nouvel ID pour la campagne
-        const newCampaignId = `camp-${crypto.randomUUID()}`;
-        const oldCampaignId = state.campaign.id;
-
-        // Remap de tous les campaignId dans les sous-entités
-        const remapId = (id: string) => (id === oldCampaignId ? newCampaignId : id);
-
-        return {
-            ...state,
-            campaign: {
-                ...state.campaign,
-                id: newCampaignId,
-                name: `${state.campaign.name} (Copie)`,
-            },
-            entities: state.entities.map((e) => ({
-                ...e,
-                id: `npc-${crypto.randomUUID()}`,
-                campaignId: newCampaignId,
-            })),
-            sessions: state.sessions.map((s) => ({
-                ...s,
-                id: `sess-${crypto.randomUUID()}`,
-                campaignId: remapId(s.campaignId),
-            })),
-            atlasMaps: state.atlasMaps.map((m) => ({
-                ...m,
-                id: `map-${crypto.randomUUID()}`,
-                campaignId: remapId(m.campaignId),
-            })),
-            wikiEntries: state.wikiEntries.map((w) => ({
-                ...w,
-                id: `wiki-${crypto.randomUUID()}`,
-                campaignId: remapId(w.campaignId),
-            })),
-            timelineEvents: state.timelineEvents.map((t) => ({
-                ...t,
-                id: `te-${crypto.randomUUID()}`,
-                campaignId: remapId(t.campaignId),
-            })),
-            clues: state.clues.map((cl) => ({
-                ...cl,
-                id: `clue-${crypto.randomUUID()}`,
-                campaignId: remapId(cl.campaignId),
-            })),
-            /*
-              **La trame se clone en deux temps**, parce qu'une scène pointe son
-              acte. On fabrique d'abord la correspondance ancien → nouvel acte,
-              puis on la relit pour les scènes : sans elle, les scènes de la
-              copie désigneraient les actes de l'original, et deux campagnes se
-              partageraient une trame.
-            */
-            ...(() => {
-                if (!state.actes && !state.scenes) return {};
-                const nouvelActe = new Map<string, string>();
-                const actes = (state.actes ?? []).map((a) => {
-                    const id = `acte-${crypto.randomUUID()}`;
-                    nouvelActe.set(a.id, id);
-                    return { ...a, id, campaignId: newCampaignId };
-                });
-                const scenes = (state.scenes ?? []).map((sc) => ({
-                    ...sc,
-                    id: `scene-${crypto.randomUUID()}`,
-                    campaignId: newCampaignId,
-                    acteId: nouvelActe.get(sc.acteId) ?? sc.acteId,
-                }));
-                return { actes, scenes };
-            })(),
-        };
+        /*
+          **Le clonage juste** — lot E3 du chantier des archives (2026-10-19).
+          Il ne réécrivait, dans la trame, que `acteId` : une copie pointait vers
+          l'original par tous ses autres liens. Voir `clonerLaCampagne.ts`.
+        */
+        return clonerLaCampagne(state);
     }
 
     /**

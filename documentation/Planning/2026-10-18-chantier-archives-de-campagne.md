@@ -11,7 +11,12 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > PNJ, lieux et entrées du wiki de la campagne exportée (`ObsidianExportService.exportCampaign`,
 > essai à deux campagnes). **E1 fait** : Sound et Light-OS entrent au registre des détenteurs
 > (`services/purge/detenteursDeLaCampagne.ts`) — ambiances rendues communes ; tuiles réglées
-> rendues communes, cases vides du râtelier retirées. Suite : E3, puis E2 (§ 6).
+> rendues communes, cases vides du râtelier retirées. **E3 fait** : le clonage réécrit
+> **tous** les identifiants de ce que la copie emporte, dans les valeurs et dans les clés
+> (`system/archive/clonerLaCampagne.ts`) — trame, graphe, relations, personnages (copiés pour la
+> copie), rencontres, journaux, modules du jeu ; bibliothèques et PNJ d'ailleurs intacts. Un essai
+> parcourt toute la copie : aucun identifiant de l'original n'y reste. ⚠️ Quand E2 ajoutera les
+> moments de storyboard à l'archive, les ajouter à `COLLECTIONS`. Suite : E2 (§ 6).
 
 **Rien n'est codé ; les décisions du § 7 sont prises.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de
