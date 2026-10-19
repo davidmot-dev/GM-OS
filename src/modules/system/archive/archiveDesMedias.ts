@@ -2,6 +2,8 @@ import type { MediaItem } from '../../../stores/useMediaStore';
 import type { Atmosphere } from '../../sound/useSoundStore';
 import type { Playlist } from '../../music/useMusicStore';
 import type { LightScene } from '../../light/useLightStore';
+import type { ImageMedia, ImageFolder, Diaporama } from '../../image/types';
+import type { StoryboardMoment } from '../../storyboard/useStoryboardStore';
 import { idDeCase, numeroDeCase } from '../../light/logic/ratelierDeLaCampagne';
 import { tuilePorteUnEtat } from '../../light/logic/tuilePorteUnEtat';
 import { reecrireLesIdentifiants, type Fabrique } from './clonerLaCampagne';
@@ -36,6 +38,21 @@ import type { LigneDuRecensement } from './recensementDeLArchive';
  *    quel ») : alors on garde les identifiants, et la fusion remplace.
  * 3. **Une tuile ne s'écrase jamais.** Elle prend la case de même numéro dans
  *    le râtelier de la cible si elle est libre ou vide, sinon la suivante.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * IMAGE-OS, ET RIEN D'AUTRE — décision de David, 2026-10-19
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * Image-OS n'a pas d'étiquette de campagne : on emporte **ce que la campagne
+ * utilise** — les images et diaporamas appelés par ses moments de storyboard,
+ * et les images dont le média est étiqueté pour elle — avec leurs dossiers. À
+ * l'import, ce qui est déjà là **n'est pas remplacé** : la bibliothèque d'Image-OS
+ * est commune, la version du poste est la plus récente.
+ *
+ * ⛔ **Le reste ne s'archive pas, et c'est voulu** : réglages et brouillard des
+ * cartes, paquets de cartes, tables aléatoires, calendriers, ambiances et
+ * playlists sans étiquette. *Ils n'appartiennent pas à une campagne* (David) :
+ * ils restent sur le poste.
  */
 
 export const NEXUS_MEDIAS_EXTENSION = '.gmos-medias';
@@ -48,6 +65,49 @@ export interface NexusMediasState {
     atmospheres: Atmosphere[];
     playlists: Playlist[];
     tuilesDeLumiere: LightScene[];
+    /** Ce qu'Image-OS tient pour la campagne (2026-10-19). Facultatif : rien n'oblige une archive à en porter. */
+    imageOs?: { images: ImageMedia[]; dossiers: ImageFolder[]; diaporamas: Diaporama[] };
+}
+
+/** La bibliothèque d'Image-OS, telle que l'archive la lit. */
+export interface BibliothequeDImageOs {
+    mediaList: readonly ImageMedia[];
+    folders: readonly ImageFolder[];
+    diaporamas: readonly Diaporama[];
+}
+
+/**
+ * **Ce qu'Image-OS tient pour une campagne** : les images et diaporamas que ses
+ * moments appellent, les images dont le média est étiqueté pour elle (`etiquetes`,
+ * des identifiants du Media Hub), et les dossiers qui les rangent — parents
+ * compris, pour que le rangement revienne entier.
+ */
+export function ceQuImageOsTientPourLaCampagne(
+    campaignId: string,
+    moments: readonly StoryboardMoment[],
+    bibliotheque: BibliothequeDImageOs,
+    etiquetes: ReadonlySet<string>,
+): { images: ImageMedia[]; dossiers: ImageFolder[]; diaporamas: Diaporama[] } {
+    const siens = moments.filter(m => m.campaignId === campaignId);
+    const diaporamasAppeles = new Set(siens.map(m => m.diaporamaId).filter((id): id is string => !!id));
+    const diaporamas = bibliotheque.diaporamas.filter(d => diaporamasAppeles.has(d.id));
+    const appelees = new Set<string>([
+        ...siens.map(m => m.imageMediaId).filter((id): id is string => !!id),
+        ...diaporamas.flatMap(d => d.imageIds),
+    ]);
+    const images = bibliotheque.mediaList.filter(i => appelees.has(i.id) || etiquetes.has(i.path));
+
+    const parId = new Map(bibliotheque.folders.map(f => [f.id, f]));
+    const dossiers = new Map<string, ImageFolder>();
+    for (const image of images) {
+        let id = image.folderId ?? null;
+        while (id && !dossiers.has(id) && parId.has(id)) {
+            const dossier = parId.get(id)!;
+            dossiers.set(id, dossier);
+            id = dossier.parentId ?? null;
+        }
+    }
+    return { images, dossiers: [...dossiers.values()], diaporamas };
 }
 
 const estUnMedia = (ref: string | null | undefined): ref is string => !!ref && ref.startsWith('m-');
@@ -74,20 +134,30 @@ function referencesDesSons(atmospheres: readonly Atmosphere[], playlists: readon
  */
 export function rassemblerLesMedias(
     campagne: { id: string; name: string; system?: string },
-    magasins: { mediaList: readonly MediaItem[]; atmospheres: readonly Atmosphere[]; playlists: readonly Playlist[]; scenes: Record<string, LightScene> },
+    magasins: {
+        mediaList: readonly MediaItem[]; atmospheres: readonly Atmosphere[]; playlists: readonly Playlist[]; scenes: Record<string, LightScene>;
+        /** Image-OS et les moments qui l'appellent (2026-10-19). Absents : l'archive n'en porte pas. */
+        imageOs?: BibliothequeDImageOs; moments?: readonly StoryboardMoment[];
+    },
 ): { state: NexusMediasState; fichiers: string[] } {
     const atmospheres = magasins.atmospheres.filter(a => a.campagneId === campagne.id);
     const playlists = magasins.playlists.filter(p => p.campagneId === campagne.id);
     const tuilesDeLumiere = Object.values(magasins.scenes).filter(t => t.campagneId === campagne.id);
-    const sons = referencesDesSons(atmospheres, playlists);
-    const designes = new Set(sons.filter(estUnMedia));
-    const medias = magasins.mediaList.filter(m => (m.campaignIds ?? []).includes(campagne.id) || designes.has(m.id));
+    const etiquetes = new Set(magasins.mediaList.filter(m => (m.campaignIds ?? []).includes(campagne.id)).map(m => m.id));
+    const imageOs = magasins.imageOs
+        ? ceQuImageOsTientPourLaCampagne(campagne.id, magasins.moments ?? [], magasins.imageOs, etiquetes)
+        : undefined;
+    // Ce que les pads ET Image-OS désignent : un média du hub part, un fichier du disque est copié.
+    const references = [...referencesDesSons(atmospheres, playlists), ...(imageOs?.images ?? []).map(i => i.path)];
+    const designes = new Set(references.filter(estUnMedia));
+    const medias = magasins.mediaList.filter(m => etiquetes.has(m.id) || designes.has(m.id));
     return {
         state: {
             origine: { campaignId: campagne.id, campaignName: campagne.name, system: campagne.system },
             medias, atmospheres, playlists, tuilesDeLumiere,
+            ...(imageOs ? { imageOs } : {}),
         },
-        fichiers: [...new Set(sons.filter(estUnFichier))],
+        fichiers: [...new Set(references.filter(estUnFichier))],
     };
 }
 
@@ -102,6 +172,8 @@ export function recenserLesMedias(state: NexusMediasState): LigneDuRecensement[]
         ['ambiances sonores', state.atmospheres.length],
         ['playlists', state.playlists.length],
         ['tuiles de lumière', state.tuilesDeLumiere.length],
+        ["images d'Image-OS", state.imageOs?.images.length ?? 0],
+        ['diaporamas', state.imageOs?.diaporamas.length ?? 0],
     ];
     return lignes.filter(([, n]) => n > 0).map(([libelle, nombre]) => ({ libelle, nombre }));
 }
@@ -119,7 +191,7 @@ export function planifierLImportDesMedias(
     cible: string,
     casesLocales: Record<string, LightScene>,
     nouvelId: Fabrique = auHasard,
-): { atmospheres: Atmosphere[]; playlists: Playlist[]; tuilesDeLumiere: LightScene[]; telQuel: boolean } {
+): { atmospheres: Atmosphere[]; playlists: Playlist[]; tuilesDeLumiere: LightScene[]; telQuel: boolean; imageOs?: NexusMediasState['imageOs'] } {
     const telQuel = cible === archive.origine.campaignId;
     const table = new Map<string, string>();
 
@@ -160,6 +232,8 @@ export function planifierLImportDesMedias(
     const r = <T>(v: T) => reecrireLesIdentifiants(v, table);
     return {
         telQuel,
+        // Image-OS est commun : ses identifiants restent, et l'import n'ajoute que ce qui manque.
+        imageOs: archive.imageOs,
         atmospheres: archive.atmospheres.map(a => ({ ...r(a), campagneId: cible })),
         playlists: archive.playlists.map(pl => ({ ...r(pl), campagneId: cible })),
         tuilesDeLumiere: archive.tuilesDeLumiere.map(t => ({ ...r(t), campagneId: cible })),
@@ -171,12 +245,13 @@ export function planifierLImportDesMedias(
  * un identifiant neuf : on y fait pointer les pads. `entres` : chemin d'origine
  * → identifiant du Media Hub.
  */
-export function pointerVersLesMediasEntres<T extends { atmospheres: Atmosphere[]; playlists: Playlist[] }>(
+export function pointerVersLesMediasEntres<T extends { atmospheres: Atmosphere[]; playlists: Playlist[]; imageOs?: NexusMediasState['imageOs'] }>(
     plan: T, entres: Record<string, string>,
 ): T {
     const nouveau = (ref: string | null) => (ref && entres[ref]) || ref;
     return {
         ...plan,
+        ...(plan.imageOs ? { imageOs: { ...plan.imageOs, images: plan.imageOs.images.map(i => ({ ...i, path: nouveau(i.path) ?? i.path })) } } : {}),
         atmospheres: plan.atmospheres.map(a => ({
             ...a,
             pads: Object.fromEntries(Object.entries(a.pads ?? {}).map(([k, p]) => [k, { ...p, filePath: nouveau(p.filePath) }])),
@@ -185,5 +260,29 @@ export function pointerVersLesMediasEntres<T extends { atmospheres: Atmosphere[]
             ...pl,
             pads: (pl.pads ?? []).map(p => (p.type === 'local' ? { ...p, url: nouveau(p.url) ?? p.url } : p)),
         })),
+    };
+}
+
+/**
+ * **Ce qu'Image-OS reçoit** : ce qui manque, et rien d'autre. Une image, un
+ * dossier ou un diaporama déjà là (même identifiant) reste tel qu'il est — la
+ * version du poste est la plus récente, et Image-OS est commun à toutes les
+ * campagnes. Rend les listes complétées et le nombre de chaque ajout.
+ */
+export function completerImageOs(
+    local: BibliothequeDImageOs,
+    arrivee: NonNullable<NexusMediasState['imageOs']>,
+): { mediaList: ImageMedia[]; folders: ImageFolder[]; diaporamas: Diaporama[]; ajouts: { images: number; dossiers: number; diaporamas: number } } {
+    const ajouter = <T extends { id: string }>(la: readonly T[], venus: readonly T[]) => {
+        const deja = new Set(la.map(x => x.id));
+        const nouveaux = venus.filter(x => !deja.has(x.id));
+        return { liste: [...la, ...nouveaux], n: nouveaux.length };
+    };
+    const images = ajouter(local.mediaList, arrivee.images);
+    const dossiers = ajouter(local.folders, arrivee.dossiers);
+    const diaporamas = ajouter(local.diaporamas, arrivee.diaporamas);
+    return {
+        mediaList: images.liste, folders: dossiers.liste, diaporamas: diaporamas.liste,
+        ajouts: { images: images.n, dossiers: dossiers.n, diaporamas: diaporamas.n },
     };
 }

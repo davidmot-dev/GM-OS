@@ -49,11 +49,17 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > audio commune (le `.gmos` rendait l'audio en `application/octet-stream`). Bouton dans le
 > panneau de la campagne. Essais : `archiveDesMedias.test.ts`, `importDesMedias.test.ts`.
 >
-> **Pas dans E5, à décider** : Image-OS (images, dossiers, diaporamas), réglages et brouillard des
-> cartes, paquets de cartes du système, tables aléatoires et calendriers (§ 5 B). Et la
-> **bibliothèque commune** (ambiances et playlists sans étiquette) ne voyage dans aucune des deux
-> archives. ⚠️ Limite connue, héritée du `.gmos` : l'import charge toute l'archive en base64 dans
-> un seul message IPC — une archive de centaines de Mo de musique pèsera en mémoire.
+> **Image-OS ajouté le 19/10** (décision de David, option 2) : ce que la campagne **utilise** —
+> images et diaporamas appelés par ses moments, images dont le média est étiqueté pour elle,
+> dossiers qui les rangent (parents compris). À l'import, Image-OS reçoit ce qui manque et **rien
+> n'y est remplacé** (`completerImageOs`) : sa bibliothèque est commune.
+>
+> **⛔ Décision de David, 19/10 — le reste ne s'archive pas** : réglages et brouillard des cartes,
+> paquets de cartes, tables aléatoires, calendriers, ambiances et playlists sans étiquette.
+> *« Tout le reste n'est pas vraiment lié à une campagne et donc doit rester et ne pas être
+> archivé. »* Le § 5 B est clos sur ce point. ⚠️ Limite connue, héritée du `.gmos` : l'import
+> charge toute l'archive en base64 dans un seul message IPC — une archive de centaines de Mo de
+> musique pèsera en mémoire.
 
 **Les décisions du § 7 sont prises ; E0 à E6 sont codés (19/10), rien n'est encore essayé à
 l'écran.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions

@@ -157,6 +157,7 @@ autre campagne du même univers** pour y retrouver ses images, ses sons, ses mus
 | Les médias que ses ambiances et playlists **utilisent** sans les porter | un son du hub glissé dans un pad n'est pas étiqueté pour autant : sans lui, le pad serait muet |
 | Ses **ambiances sonores** et ses **playlists**, avec leurs **fichiers audio** copiés depuis le disque | les liens distants (YouTube, Spotify…) restent des liens |
 | Ses **tuiles de Light-OS** | réglages des lampes compris |
+| Ce qu'**Image-OS** tient pour elle | les images et diaporamas appelés par ses moments de storyboard, les images dont le média est étiqueté pour elle, et les dossiers qui les rangent |
 
 **Importer** : le bouton d'import habituel. GM-OS demande **dans quelle campagne** ranger les médias
 — il propose d'abord la campagne d'origine si elle est sur ce poste, sinon la campagne active —,
@@ -171,10 +172,14 @@ puis prend une sauvegarde automatique, comme pour une campagne.
   le même identifiant.
 - **Une tuile réglée n'est jamais écrasée.** Chaque tuile prend la case de même numéro dans le
   râtelier de la campagne choisie si elle est libre ou vide, sinon la première case libre.
+- **Image-OS reçoit ce qui lui manque, et rien n'y est remplacé.** Sa bibliothèque est commune à
+  toutes les campagnes : une image, un diaporama ou un dossier déjà là reste tel quel, puisque la
+  version de ce poste est la plus récente.
 
-> ℹ️ **Pas encore dans l'archive des médias** : Image-OS (images, dossiers, diaporamas), les
-> réglages et le brouillard des cartes, les paquets de cartes, les tables aléatoires et les
-> calendriers. Ils restent sur ce poste.
+> 📌 **Ce qui ne part dans aucune archive, et c'est voulu** (décision du 2026-10-19) : les
+> réglages et le brouillard des cartes, les paquets de cartes, les tables aléatoires, les
+> calendriers, et les ambiances et playlists **sans étiquette**. *Ils n'appartiennent pas à une
+> campagne* : ils restent sur ce poste, au service de toutes.
 
 > ⚠️ **Une archive lourde se lit d'un bloc.** Comme pour le `.gmos`, l'import charge tous les
 > fichiers en mémoire avant de les ranger : une archive de plusieurs centaines de mégaoctets de

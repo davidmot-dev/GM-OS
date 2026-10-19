@@ -25,10 +25,12 @@ import { clonerLaCampagne, type Fabrique } from './clonerLaCampagne';
 import { rejouerLaCampagne } from './rejouerLaCampagne';
 import { recenserLArchive, enUneLigne } from './recensementDeLArchive';
 import {
-    rassemblerLesMedias, recenserLesMedias, planifierLImportDesMedias, pointerVersLesMediasEntres,
+    rassemblerLesMedias, recenserLesMedias, planifierLImportDesMedias, pointerVersLesMediasEntres, completerImageOs,
     NEXUS_MEDIAS_EXTENSION, type NexusMediasState,
 } from './archiveDesMedias';
 import { useLightStore } from '../../light/useLightStore';
+import { useImageStore } from '../../image/useImageStore';
+import { useStoryboardStore } from '../../storyboard/useStoryboardStore';
 import { instantaneAvant } from '../../session/logic/SessionBackupManager';
 import { Logger } from '../../../utils/logger';
 import { extraireLesSatellites, injecterLesSatellites } from './satellitesDeLaCampagne';
@@ -900,6 +902,13 @@ export class NexusService {
                 atmospheres: useSoundStore.getState().atmospheres ?? [],
                 playlists: useMusicStore.getState().playlists ?? [],
                 scenes: useLightStore.getState().scenes ?? {},
+                // Image-OS : ce que la campagne utilise (décision de David, 19/10).
+                imageOs: {
+                    mediaList: useImageStore.getState().mediaList ?? [],
+                    folders: useImageStore.getState().folders ?? [],
+                    diaporamas: useImageStore.getState().diaporamas ?? [],
+                },
+                moments: useStoryboardStore.getState().moments ?? [],
             });
 
             this.emitProgress('harvesting', 30, i18next.t('modules:system.nexus.messages.media_transfer', { count: state.medias.length }));
@@ -1103,6 +1112,17 @@ export class NexusService {
                 return { scenes };
             });
         }
+        // Image-OS est commun : on ajoute ce qui manque, on ne remplace rien.
+        let ajoutsImageOs: { images: number; dossiers: number; diaporamas: number } | undefined;
+        if (plan.imageOs) {
+            const image = useImageStore.getState();
+            const complete = completerImageOs(
+                { mediaList: image.mediaList ?? [], folders: image.folders ?? [], diaporamas: image.diaporamas ?? [] },
+                plan.imageOs,
+            );
+            ajoutsImageOs = complete.ajouts;
+            useImageStore.setState({ mediaList: complete.mediaList, folders: complete.folders, diaporamas: complete.diaporamas });
+        }
 
         bilan.push(
             `Médias de « ${archive.origine.campaignName} » importés dans « ${cible.name} »`
@@ -1110,6 +1130,7 @@ export class NexusService {
             `Entré : ${enUneLigne(recenserLesMedias({ ...archive, ...plan }))}.`,
             `Media Hub : ${restaures} média(s) ajouté(s), ${etiquetes} déjà présent(s) étiqueté(s) pour « ${cible.name} »`
                 + (echecs.length ? `, ${echecs.length} en échec (${echecs.join(', ')}).` : '.'),
+            ...(ajoutsImageOs ? [`Image-OS : ${ajoutsImageOs.images} image(s), ${ajoutsImageOs.diaporamas} diaporama(s) et ${ajoutsImageOs.dossiers} dossier(s) ajoutés ; ce qui y était déjà n'a pas été touché.`] : []),
         );
         this.consignerLeBilan(bilan);
         this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'), { bilan });

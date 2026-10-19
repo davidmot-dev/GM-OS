@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { rassemblerLesMedias, recenserLesMedias, planifierLImportDesMedias, pointerVersLesMediasEntres, type NexusMediasState } from './archiveDesMedias';
+import { rassemblerLesMedias, recenserLesMedias, planifierLImportDesMedias, pointerVersLesMediasEntres, ceQuImageOsTientPourLaCampagne, completerImageOs, type NexusMediasState } from './archiveDesMedias';
+import type { StoryboardMoment } from '../../storyboard/useStoryboardStore';
+import type { ImageMedia, ImageFolder, Diaporama } from '../../image/types';
 import type { MediaItem } from '../../../stores/useMediaStore';
 import type { Atmosphere } from '../../sound/useSoundStore';
 import type { Playlist } from '../../music/useMusicStore';
@@ -111,5 +113,73 @@ describe('planifier l’import dans une autre campagne', () => {
     it('l’archive n’est pas modifiée', () => {
         planifierLImportDesMedias(state, 'c-2049', MAGASINS.scenes, neuf);
         expect((state as NexusMediasState).atmospheres[0].id).toBe('atm-1');
+    });
+});
+
+describe('Image-OS : ce que la campagne utilise, et rien d’autre (décision de David, 19/10)', () => {
+    const img = (id: string, path: string, folderId: string | null = null) => ({ id, name: id, path, folderId }) as ImageMedia;
+    const BIBLIOTHEQUE = {
+        mediaList: [
+            img('io-tyrell', 'm-tyrell', 'dos-br'),
+            img('io-rue', 'D:/Images/rue.png', 'dos-villes'),
+            img('io-pluie', 'm-pluie'),
+            img('io-loge', 'm-loge'),
+            img('io-nephilim', 'm-ailleurs', 'dos-nephilim'),
+        ],
+        folders: [
+            { id: 'dos-br', name: 'Blade Runner', parentId: null },
+            { id: 'dos-villes', name: 'Villes', parentId: 'dos-br' },
+            { id: 'dos-nephilim', name: 'Nephilim', parentId: null },
+        ] as ImageFolder[],
+        diaporamas: [
+            { id: 'dia-ville', nom: 'La ville', imageIds: ['io-rue', 'io-tyrell'], dureeParImageMs: 6000 },
+            { id: 'dia-autre', nom: 'Ailleurs', imageIds: ['io-nephilim'], dureeParImageMs: 6000 },
+        ] as Diaporama[],
+    };
+    const MOMENTS = [
+        { id: 'mo-1', campaignId: 'c-br', name: 'Arrivée', diaporamaId: 'dia-ville' },
+        { id: 'mo-2', campaignId: 'c-br', name: 'Bureau', imageMediaId: 'io-loge' },
+        { id: 'mo-3', campaignId: 'c-nephilim', name: 'Ailleurs', diaporamaId: 'dia-autre' },
+    ] as unknown as StoryboardMoment[];
+
+    const tenu = ceQuImageOsTientPourLaCampagne('c-br', MOMENTS, BIBLIOTHEQUE, new Set(['m-pluie']));
+
+    it('les images que ses moments appellent, celles de ses diaporamas, et celles dont le média est étiqueté pour elle', () => {
+        expect(tenu.images.map(i => i.id)).toEqual(['io-tyrell', 'io-rue', 'io-pluie', 'io-loge']);
+        expect(tenu.diaporamas.map(d => d.id)).toEqual(['dia-ville']);
+    });
+
+    it('les dossiers qui les rangent, parents compris — pas ceux d’une autre campagne', () => {
+        expect(tenu.dossiers.map(d => d.id).sort()).toEqual(['dos-br', 'dos-villes']);
+    });
+
+    it('dans l’archive : les médias du hub qu’Image-OS désigne partent, le fichier du disque est copié', () => {
+        const { state, fichiers } = rassemblerLesMedias(BR, {
+            ...MAGASINS,
+            mediaList: [...MAGASINS.mediaList, media('m-tyrell', []), media('m-loge', [])],
+            imageOs: BIBLIOTHEQUE, moments: MOMENTS,
+        });
+        expect(state.medias.map(m => m.id)).toEqual(['m-pluie', 'm-orage', 'm-tyrell', 'm-loge']);
+        expect(fichiers).toContain('D:/Images/rue.png');
+        expect(recenserLesMedias(state)).toContainEqual({ libelle: "images d'Image-OS", nombre: 4 });
+        expect(recenserLesMedias(state)).toContainEqual({ libelle: 'diaporamas', nombre: 1 });
+    });
+
+    it('à l’import, l’image venue du disque pointe vers son média entré', () => {
+        const { state } = rassemblerLesMedias(BR, { ...MAGASINS, imageOs: BIBLIOTHEQUE, moments: MOMENTS });
+        const plan = pointerVersLesMediasEntres(planifierLImportDesMedias(state, 'c-2049', {}), { 'D:/Images/rue.png': 'm-rue' });
+        expect(plan.imageOs!.images.find(i => i.id === 'io-rue')!.path).toBe('m-rue');
+    });
+
+    it('Image-OS reçoit ce qui manque, et ne remplace rien de ce qui est déjà là', () => {
+        const local = {
+            mediaList: [img('io-tyrell', 'm-tyrell-retouche')],
+            folders: [] as ImageFolder[],
+            diaporamas: [{ id: 'dia-ville', nom: 'La ville (version du poste)', imageIds: ['io-tyrell'], dureeParImageMs: 4000 }] as Diaporama[],
+        };
+        const r = completerImageOs(local, tenu);
+        expect(r.mediaList.find(i => i.id === 'io-tyrell')!.path).toBe('m-tyrell-retouche');
+        expect(r.diaporamas.find(d => d.id === 'dia-ville')!.nom).toBe('La ville (version du poste)');
+        expect(r.ajouts).toEqual({ images: 3, dossiers: 2, diaporamas: 0 });
     });
 });

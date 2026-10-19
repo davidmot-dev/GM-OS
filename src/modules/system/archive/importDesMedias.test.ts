@@ -45,6 +45,7 @@ vi.mock('../../session/logic/SessionBackupManager', async (original) => ({
 const { nexusService } = await import('./NexusService');
 const { useSessionOSStore } = await import('../../session/useSessionOSStore');
 const { NEXUS_SCHEMA_VERSION } = await import('./nexus.types');
+const { useImageStore } = await import('../../image/useImageStore');
 type Arrivee = import('./nexus.types').ArriveeDUneCampagne;
 
 const ARCHIVE = {
@@ -150,6 +151,41 @@ describe('importer une archive des médias', () => {
         await importerDans('c-br');
         expect(son.getState().atmospheres.map(a => a.id)).toEqual(['atm-1']);
         expect(lumiere.getState().scenes['SCENE_c-br_02']).toBeDefined();
+    });
+});
+
+describe('importer Image-OS (décision de David, 19/10)', () => {
+    it('ce qui manque entre, ce qui est là ne bouge pas, et l’image du disque pointe vers son média', async () => {
+        useImageStore.setState({
+            mediaList: [{ id: 'io-tyrell', name: 'Tyrell (poste)', path: 'm-tyrell' }],
+            folders: [],
+            diaporamas: [],
+        } as never);
+        const archive = {
+            ...ARCHIVE,
+            imageOs: {
+                images: [
+                    { id: 'io-tyrell', name: 'Tyrell (archive)', path: 'm-tyrell' },
+                    { id: 'io-rue', name: 'Rue', path: 'D:/Images/rue.png', folderId: 'dos-br' },
+                ],
+                dossiers: [{ id: 'dos-br', name: 'Blade Runner', parentId: null }],
+                diaporamas: [{ id: 'dia-ville', nom: 'La ville', imageIds: ['io-rue', 'io-tyrell'], dureeParImageMs: 6000 }],
+            },
+        };
+        const manifeste = { ...MANIFESTE, assetMap: [...MANIFESTE.assetMap, { originalRef: 'D:/Images/rue.png', relativePath: 'assets/maps/rue.png' }] };
+        (window.appBridge!.nexus!.importBundle as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+            success: true, manifestJson: JSON.stringify(manifeste), stateJson: JSON.stringify(archive),
+            assetData: { 'assets/profiles/m-pluie.png': OCTETS, 'assets/profiles/m-orage.mp3': OCTETS, 'assets/audio/sirene.mp3': OCTETS, 'assets/maps/rue.png': OCTETS },
+        });
+        actions.addMedia.mockImplementation(async (f: File) => (f.name === 'rue.png' ? 'm-rue-neuf' : 'm-sirene-neuf'));
+
+        const { r } = await importerDans('c-2049');
+        const image = useImageStore.getState();
+        expect(image.mediaList.find(i => i.id === 'io-tyrell')!.name).toBe('Tyrell (poste)');
+        expect(image.mediaList.find(i => i.id === 'io-rue')).toMatchObject({ path: 'm-rue-neuf', folderId: 'dos-br' });
+        expect(image.folders.map(f => f.id)).toEqual(['dos-br']);
+        expect(image.diaporamas.map(d => d.id)).toEqual(['dia-ville']);
+        expect(r.bilan).toContain("Image-OS : 1 image(s), 1 diaporama(s) et 1 dossier(s) ajoutés ; ce qui y était déjà n'a pas été touché.");
     });
 });
 
