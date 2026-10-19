@@ -11916,6 +11916,16 @@ ensuite commit tout ce qu'il reste (les fichiers locaux déjà présent) et pous
 53, 54 RdD, 63 et leur index décrivent le raccord ; les exports et autres fichiers locaux sont
 exceptionnellement inclus à sa demande. [Passation du raccord](2026-10-19-raccord-fiche-rdd-claude.md).
 
+**19/10 — retouche des champs numériques reprise par Codex après interruption.** David :
+« Oui, reprends cette retouche », puis « Non, GM-OS est fermé ». La CSS transmise au moteur
+masque les flèches natives ; padding nul et chiffres alignés. **168 champs élargis**, aucune
+clé, aucun type, aucune position ni aucun calcul changé. Gabarit intégré au moteur **v12** ;
+correspondance et pilote inchangés. Contrôle des 483 champs numériques et des gestes de saisie
+sur les cinq pages ; migration fictive v11 → v12 sans perte, 81 tests ciblés, types et lint
+ciblé verts. Captures du moteur isolé relues ; rendu dans la fenêtre GM-OS à juger par David
+après relance. **Non commité, non poussé**.
+[Reprise et liste des largeurs](2026-10-19-etat-et-reprise-codex-rdd-champs-numeriques.md).
+
 ### 142 · Chantier Nephilim — Sciences occultes au jet, Vécus du livre, errata — 18/10/2026
 
 Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim »*. Tout est
@@ -12015,7 +12025,7 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
 | 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
 | 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
 | 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic. **18/10** : `ka.dominant` ajouté (`68a05e73`, Codex), raccordé au moteur v10 et à la correspondance (`dd7e3b67`), éprouvé par David | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
-| 76 | **Rêve de Dragon — règles, module TMR et fiche HTML** | § 141 ; R0/R1/R2/R8 (`94e0aaed`), R3/R4 (`ef659f35`), R5–R7 (`9e7df47a`) ; livret HTML (`5426215f`) et raccord au pilote étendu (`fef92b06`), manuels actualisés | Réimporter le pilote relié et éprouver les échanges ; R8 garde les maîtrises et sorts à arbitrer ; potentiel R5 à reporter explicitement depuis la page Archétype | [Reprise de la fiche](2026-10-19-etat-et-reprise-codex-rdd-fiche-html.md), [raccord](2026-10-19-raccord-fiche-rdd-claude.md) |
+| 76 | **Rêve de Dragon — règles, module TMR et fiche HTML** | § 141 ; R0/R1/R2/R8 (`94e0aaed`), R3/R4 (`ef659f35`), R5–R7 (`9e7df47a`) ; livret HTML (`5426215f`) et raccord au pilote étendu (`fef92b06`) ; retouche numérique intégrée v12, non commitée | Relancer pour recevoir le gabarit v12 et juger les chiffres ; réimporter le pilote relié si nécessaire ; R8 garde les maîtrises et sorts à arbitrer ; potentiel R5 à reporter explicitement depuis la page Archétype | [Retouche numérique](2026-10-19-etat-et-reprise-codex-rdd-champs-numeriques.md), [raccord](2026-10-19-raccord-fiche-rdd-claude.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ✅ **Codé et poussé le 19/10, lots E0 à E6** (`11cf56f1`…`934874b2`) : Obsidian filtré, registre des détenteurs complété, clonage juste, archive complète, « Rejouer », aperçu + sauvegarde avant import + bilan, archive des médias `.gmos-medias` avec Image-OS (ce que la campagne utilise). **Essayé par David le 19/10 sur l'instance de test, export et import : *« ok ça fonctionne »*** ; bilan d'export ajouté après le premier essai. ⛔ Décisions de David : cartes, tables, calendriers et bibliothèque commune **ne s'archivent pas** (pas liés à une campagne) ; **Deck-OS part avec le pilote** (`.gmos-driver`), plus avec la campagne ; Rejouer : toutes les réserves au départ, combats préparés et modules gardés | **David** : dire si l'archive des médias doit aussi prendre les médias que la campagne **utilise** sans les étiqueter (portraits, cartes…) ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 

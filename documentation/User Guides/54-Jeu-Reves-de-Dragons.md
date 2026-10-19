@@ -48,6 +48,12 @@ Dans la fiche du personnage, **Fiche du jeu** ouvre le modèle **Rêve de Dragon
 voyageur**. Créez ou reliez la fiche proposée. **Formulaire** ramène aux champs GM-OS et aux
 panneaux du Voyageur. Sur la tablette, la fiche du jeu reprend le même gabarit.
 
+Les champs numériques gardent toute leur largeur pour les chiffres : les petites flèches
+natives ont été retirées. Tapez la valeur, utilisez **↑ / ↓**, ou la molette quand le champ
+a le focus. Les colonnes d'expérience, de ressources et de monnaie acceptent trois chiffres.
+Après cette correction, relancez GM-OS pour recevoir le gabarit mis à jour ; aucun nouvel
+import du pilote n'est nécessaire si le livret est déjà relié.
+
 Le livret conserve les cinq pages du PDF : **Personnage**, **Équipement**, **Sorts et rituels**,
 **Feuille de route** et **Archétype**. Les zones de saisie, les lignes libres et les pistes sont
 reliées au formulaire GM-OS. Les autres compétences apparaissent au jet sous leur nom saisi.
@@ -473,4 +479,5 @@ R3 et R4 : tâches et repos, p. 84–94 et 98–102 ; bilans, p. 87 ; rêve, p. 
 R5–R7 : Archétype et expérience, p. 143–148 ; chance, destinée et astrologie, p. 150–157 ; moral, p. 158–161.
 R8 : carte, déplacements et raccord aux fiches, Livre du Haut-Rêve 2.3.1, p. 178–183 et 208.
 Livret du voyageur : cinq pages et raccord du pilote étendu, commit `fef92b06` ; distinction entre
-Archétype du livret et potentiel déclaré dans le carnet R5.*
+Archétype du livret et potentiel déclaré dans le carnet R5. Champs numériques du livret :
+flèches masquées, saisie et largeurs vérifiées dans le moteur intégré v12.*

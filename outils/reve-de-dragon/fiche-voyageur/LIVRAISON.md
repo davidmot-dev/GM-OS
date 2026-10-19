@@ -4,6 +4,12 @@
 > couvrant les 813 clés. Pilote étendu `Export Dirvers/corriges/RDD_driver_gmos_relie.gmos-driver`.
 > La section « Intégration ultérieure » conserve le périmètre de la livraison initiale `5426215f`.
 > Le manuel 54 RdD décrit l'import et le report explicite du potentiel dans le carnet R5.
+>
+> **Retouche numérique du 19/10/2026, reprise par Codex après interruption** : moteur **v12**,
+> flèches natives masquées dans `template.customCss`, chiffres alignés, padding nul, **168 champs
+> élargis** (60 page 1, 106 page 2, deux page 4). Les **813 clés** et leurs types restent identiques.
+> [Liste complète des largeurs avant/après](elargissements-numeriques.json).
+> La migration d'une bibliothèque v11 vers v12 conserve intégralement le personnage de contrôle.
 
 Fiche créée le 19 octobre 2026 avec GM-OS Studio, atelier fiche, depuis le PDF fourni par David :
 `Livret du voyageur - 2.0.pdf`.
@@ -56,6 +62,21 @@ utilise Edge sans interface, un contexte isolé et aucune connexion réseau. Il 
 copies, sauvegarde/rechargement, pistes et choix, export/import avec conservation des extensions,
 rejet des imports invalides sans perte, remise à zéro, zoom, aide, navigation, Zones, absence de
 chevauchements, barre mobile et impression de cinq pages au format natif.
+
+La retouche numérique est reproductible sans refaire les fonds :
+
+```powershell
+node outils/reve-de-dragon/retoucher-champs-numeriques.mjs
+node outils/reve-de-dragon/fiche-voyageur/verifier-champs-numeriques.mjs
+```
+
+Le générateur principal applique également cette correction. Le second contrôle vérifie les
+483 champs numériques sur cinq pages dans le **gabarit intégré**, sans importer la fiche pour
+masquer une intégration manquante. Il prépare une bibliothèque fictive v11 puis la recharge :
+gabarit v12 reçu, données du personnage intactes. Saisie, ↑ / ↓ et molette avec focus fonctionnent
+dans le moteur et la fiche autonome. Il bloque tout accès HTTP et ne lance pas GM-OS.
+Sorties : `scratch/reve-de-dragon-fiche/numeriques/`, dont `moteur-page-1.png` à
+`moteur-page-5.png`, `moteur-survol-focus.png` et `verification-numeriques.json`.
 
 Contrôle visuel effectué sur les cinq fonds, les cinq pages avec Zones et les cinq pages remplies.
 Le validateur accepte la fiche sans erreur. Ses deux avertissements sont attendus : nouveau

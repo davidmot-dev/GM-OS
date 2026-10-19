@@ -1,0 +1,1010 @@
+[
+  {
+    "key": "skills.craft.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.sing.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.run.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.cook.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.dance.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.draw.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.stealth.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.climb.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.jump.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.seduce.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.awareness.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.carpentry.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.act.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.trade.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.ride.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.masonry.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.music.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.pickpocket.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalCity.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalOutdoors.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalDesert.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalForest.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalIce.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalSwamp.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalMountain.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.survivalUnderground.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.disguise.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.acrobatics.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.surgery.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.gaming.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.juggle.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.leatherwork.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.metalwork.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.swim.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.navigation.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.goldsmith.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.locksmith.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.alchemy.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.astrology.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.botany.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.writing.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.legends.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.medicine.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "skills.zoology.experience",
+    "page": 1,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "draconic.oniros.pathExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "draconic.oniros.spellExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "draconic.hypnos.pathExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "draconic.hypnos.spellExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "draconic.narcos.pathExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "draconic.narcos.spellExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "draconic.thanatos.pathExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "draconic.thanatos.spellExperience",
+    "page": 1,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.0.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.4.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.1.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.5.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.2.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.6.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.3.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "skills.custom.7.experience",
+    "page": 1,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.4.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.5.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.6.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.7.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.8.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.9.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.10.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.11.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.12.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.13.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.14.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.15.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.16.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.17.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.18.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.19.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.0.items.20.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.4.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.5.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.6.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.7.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.8.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.containers.1.items.9.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.money.gold",
+    "page": 2,
+    "avant": 15,
+    "apres": 16
+  },
+  {
+    "key": "equipment.money.silver",
+    "page": 2,
+    "avant": 15,
+    "apres": 16
+  },
+  {
+    "key": "equipment.money.bronze",
+    "page": 2,
+    "avant": 15,
+    "apres": 16
+  },
+  {
+    "key": "equipment.money.tin",
+    "page": 2,
+    "avant": 15,
+    "apres": 16
+  },
+  {
+    "key": "equipment.money.other.0.amount",
+    "page": 2,
+    "avant": 15,
+    "apres": 16
+  },
+  {
+    "key": "equipment.money.other.1.amount",
+    "page": 2,
+    "avant": 15,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.0.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.0.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.0.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.0.items.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.1.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.1.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.1.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.1.items.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.1.items.4.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.1.items.5.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.items.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.items.4.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.items.5.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.2.items.6.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.3.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.3.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.3.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.4.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.4.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.4.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.4.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.5.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.5.items.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.5.items.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.5.items.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.pouches.5.items.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.encumbrance",
+    "page": 2,
+    "avant": 12,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.0.damage",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.0.resistance",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.0.encumbrance",
+    "page": 2,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.1.damage",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.1.resistance",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.1.encumbrance",
+    "page": 2,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.2.damage",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.2.resistance",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.2.encumbrance",
+    "page": 2,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.3.damage",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.3.resistance",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.3.encumbrance",
+    "page": 2,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.4.damage",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.4.resistance",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.4.encumbrance",
+    "page": 2,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.5.damage",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.5.resistance",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.5.encumbrance",
+    "page": 2,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.weapons.6.damage",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.6.resistance",
+    "page": 2,
+    "avant": 10,
+    "apres": 11
+  },
+  {
+    "key": "equipment.weapons.6.encumbrance",
+    "page": 2,
+    "avant": 11,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.0.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.1.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.2.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.3.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.4.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.5.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.6.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.7.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.8.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.9.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.10.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "equipment.boxes.11.encumbrance",
+    "page": 2,
+    "avant": 14,
+    "apres": 16
+  },
+  {
+    "key": "resources.dream.recoveryThreshold",
+    "page": 4,
+    "avant": 10,
+    "apres": 16
+  },
+  {
+    "key": "resources.luck.current",
+    "page": 4,
+    "avant": 13,
+    "apres": 16
+  }
+]
