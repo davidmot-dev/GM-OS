@@ -1,6 +1,6 @@
 # 🐉 Jeu — Rêves de Dragons
 
-> **Pilote décrit :** « Rêve de Dragon », exporté le 2026-10-18, version R0 consolidée selon le livre 2.3.1, avec suivis R1–R7 et module TMR raccordé aux fiches dans GM-OS ; intégration R5–R7 du 2026-10-19. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Rêve de Dragon », exporté le 2026-10-19, version R0 consolidée selon le livre 2.3.1, avec suivis R1–R7, module TMR et fiche HTML du Livret du voyageur raccordés dans GM-OS. Pilote étendu : `RDD_driver_gmos_relie.gmos-driver`. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un d100 sous un **pourcentage**, lu dans la **table de résolution** du jeu, qui croise une
 caractéristique et un ajustement.
@@ -35,6 +35,46 @@ Trois valeurs distinctes apparaissent pour le rêve :
 Le repère **« Éclatement du rêve au-delà de »** vaut trois fois ce seuil. Il n'applique aucun
 éclatement automatiquement. **Chance** et **Points de chance** restent également distincts.
 L'heure de naissance propose les douze heures draconiques.
+
+### Le Livret du voyageur en fiche HTML
+
+Réimportez **`Export Dirvers/corriges/RDD_driver_gmos_relie.gmos-driver`** avec **Remplacer**,
+puis relancez GM-OS pour recevoir le gabarit. Les identifiants du pilote et de la fiche restent
+les mêmes : cette mise à jour ajoute les champs du livret aux personnages existants.
+Les exports R0 antérieurs restent utilisables pour les suivis R1–R7 ; ils ne contiennent pas
+tous les champs nécessaires au nouveau livret.
+
+Dans la fiche du personnage, **Fiche du jeu** ouvre le modèle **Rêve de Dragon — Livret du
+voyageur**. Créez ou reliez la fiche proposée. **Formulaire** ramène aux champs GM-OS et aux
+panneaux du Voyageur. Sur la tablette, la fiche du jeu reprend le même gabarit.
+
+Le livret conserve les cinq pages du PDF : **Personnage**, **Équipement**, **Sorts et rituels**,
+**Feuille de route** et **Archétype**. Les zones de saisie, les lignes libres et les pistes sont
+reliées au formulaire GM-OS. Les autres compétences apparaissent au jet sous leur nom saisi.
+Les quatre armes historiques occupent les lignes 4 à 7 du tableau Combat : **Dague de jet**,
+**Bouclier**, **Épée à une main**, **Arc**. Les trois premières lignes restent Corps à corps,
+Dague de mêlée et Esquive.
+
+![La page Archétype du Livret du voyageur, remplie avec des données de démonstration](captures/jeu-reves-de-dragons-livret-archetype.jpg)
+
+Les valeurs que **GM-OS calcule** — Mêlée, Tir, Lancer, Dérobée, vie et endurance de départ,
+SUST, SC, ENC et bonus dommages — ne remontent pas des saisies HTML. Modifiez leurs
+caractéristiques sources dans GM-OS, puis sauvegardez pour recalculer. Les copies du nom et du
+SC sont en lecture seule dans le livret. Les points actuels de vie, d'endurance, de rêve et de
+chance restent des compteurs distincts des valeurs de départ.
+
+La piste papier de fatigue reproduit les **60 cases imprimées** ; elle n'adapte pas son dessin
+à l'Endurance. Pour les coûts, la récupération et le malus, utilisez le **suivi de fatigue R1**
+décrit ci-dessous. Les lignes de blessures et les colonnes d'XP du livret ne remplacent pas les
+opérations des panneaux de santé et de progression. Les nombres astraux du calendrier sont
+ceux que vous décidez d'y reporter ; gardez les nombres réels secrets dans le panneau
+**Astrologie du Voyageur**.
+
+Le [HTML autonome](../../docs/fiches/R%C3%AAve%20de%20Dragon/reve-de-dragon-livret-voyageur-interactif.html)
+peut aussi s'ouvrir seul dans un navigateur : zoom, Zones, sauvegarde locale, export/import JSON
+et impression des cinq pages. Cette sauvegarde autonome ne rejoint pas GM-OS automatiquement ;
+la synchronisation avec le personnage concerne la fiche ouverte **dans GM-OS**. Voir le
+[guide de la fiche HTML](63-Fiche-de-personnage-HTML.md).
 
 ---
 
@@ -275,7 +315,18 @@ Une particulière demande un second jet pour vérifier la double particulière. 
 la perte d'un point de stress restant et l'exaltation/dissolution sont compris dans l'aperçu.
 
 Dans **Répartir et progresser**, reportez le potentiel de chaque compétence depuis votre véritable
-feuille d'Archétype. Il n'est pas déduit du niveau actuel. Allouez ensuite les XP de stress à une
+feuille d'Archétype : choisissez la compétence, saisissez **Potentiel de l'Archétype reporté**,
+puis **Reporter le potentiel** et **Valider cette opération**. Les valeurs se consultent dans
+**Carnet d'expérience et potentiel**. Le potentiel n'est pas déduit du niveau actuel.
+
+Avec le pilote étendu, le formulaire comporte aussi **Archétype — niveaux**, relié à la page 5
+du livret HTML. Cette page et le carnet de progression sont deux suivis distincts : saisir un
+niveau dans **Archétype — niveaux** ne déclare pas automatiquement le potentiel au panneau R5.
+Reportez-le explicitement avant de répartir l'expérience.
+
+![Les premiers champs Archétype — niveaux du formulaire GM-OS](captures/jeu-reves-de-dragons-archetype-formulaire.jpg)
+
+Allouez ensuite les XP de stress à une
 compétence inférieure à ce potentiel. Le niveau reste inchangé jusqu'à **Préparer l'augmentation
 d'un niveau**, dont l'aperçu montre le coût. Le carnet distingue XP de stress et XP d'exercice ;
 ces dernières permettent de progresser au-delà de l'Archétype. TAILLE et les dérivées ne
@@ -420,4 +471,6 @@ supprimée, restaurez-la avant de rapprocher l'opération.
 dans le Livre des Voyageurs 2.3.1, p. 42–45, 50–51, 78, 88–99, 120 et 162 ; rêve, p. 206–208.
 R3 et R4 : tâches et repos, p. 84–94 et 98–102 ; bilans, p. 87 ; rêve, p. 187 et 206–208.
 R5–R7 : Archétype et expérience, p. 143–148 ; chance, destinée et astrologie, p. 150–157 ; moral, p. 158–161.
-R8 : carte, déplacements et raccord aux fiches, Livre du Haut-Rêve 2.3.1, p. 178–183 et 208.*
+R8 : carte, déplacements et raccord aux fiches, Livre du Haut-Rêve 2.3.1, p. 178–183 et 208.
+Livret du voyageur : cinq pages et raccord du pilote étendu, commit `fef92b06` ; distinction entre
+Archétype du livret et potentiel déclaré dans le carnet R5.*

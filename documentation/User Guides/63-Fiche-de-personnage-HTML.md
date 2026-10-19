@@ -73,12 +73,32 @@ projetée ne laisse pas un écran noir : le décor reprend sa place.
 ⚠️ **Enregistrer une retouche coupait la projection** — c'est réparé par une option qui force le
 maintien. Si vous voyez une fiche projetée disparaître en l'éditant, c'est là qu'il faut regarder.
 
+## 6. Le Livret du voyageur de Rêve de Dragon
+
+Le modèle **Rêve de Dragon — Livret du voyageur** contient cinq pages : personnage,
+équipement, sorts et rituels, feuille de route et Archétype. Il est intégré à GM-OS depuis
+le 2026-10-19. Réimportez le pilote étendu **`RDD_driver_gmos_relie.gmos-driver`** avec
+**Remplacer**, puis relancez GM-OS. Dans le personnage, **Fiche du jeu** ouvre le livret ;
+**Formulaire** retrouve les champs GM-OS et les panneaux du Voyageur.
+
+La page **Archétype** est reliée aux champs **Archétype — niveaux** du formulaire. Pour utiliser
+ces niveaux comme potentiels de progression, reportez-les aussi dans **Stress, expérience et
+Archétype → Répartir et progresser → Reporter le potentiel**. Ce report reste explicite.
+Les caractéristiques calculées par GM-OS gardent leurs formules : leur saisie dans le livret
+ne remplace pas le calcul. Les compteurs et les noms des compétences libres sont reliés.
+Le [guide Rêve de Dragon](54-Jeu-Reves-de-Dragons.md) détaille les champs, les armes et les suivis.
+
+Le fichier HTML peut également s'ouvrir **seul**, hors ligne, avec sauvegarde dans le navigateur,
+import/export JSON, zoom et impression. Ces sauvegardes autonomes sont séparées des données du
+personnage dans GM-OS. Pour modifier le personnage pendant la partie, utilisez sa fiche reliée
+dans l'application ou sur la tablette.
+
 ---
 
 ## 💡 Ce qu'il faut retenir
 
-- **La fiche gagne** — mais le vide n'efface pas, et tout écrasement est tracé dans `main.log`.
-- **GM-OS ne pousse qu'une fois**, à la création.
+- **La dernière écriture gagne** entre GM-OS et la fiche ; le vide n'efface pas une valeur connue.
+- **La synchronisation fonctionne dans les deux sens**, à l'ouverture et pendant la saisie.
 - **La bibliothèque est locale à l'appareil** : ce que le joueur voit sur sa tablette lui appartient.
 - Pour les scores **calculés**, voir le [moteur de calcul des
   fiches](./51-Formules-de-fiche.md) ; pour le détail technique, le
@@ -91,3 +111,6 @@ maintien. Si vous voyez une fiche projetée disparaître en l'éditant, c'est l�
 
 *Relu le 2026-10-03 : la règle « la fiche fait foi » est remplacée par **la dernière écriture gagne**
 (commit du même jour).*
+
+*Relu le 2026-10-19 : Livret du voyageur RdD intégré, Archétype du formulaire et carnet de
+progression distingués ; rappel final aligné sur la synchronisation décrite au § 2.*

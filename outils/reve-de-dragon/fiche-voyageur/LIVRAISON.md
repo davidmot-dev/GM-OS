@@ -1,5 +1,10 @@
 # Rêve de Dragon — Livret du voyageur interactif
 
+> **Raccord intégré le 19/10/2026 par Claude, commit `fef92b06`** : gabarit moteur v11 et table
+> couvrant les 813 clés. Pilote étendu `Export Dirvers/corriges/RDD_driver_gmos_relie.gmos-driver`.
+> La section « Intégration ultérieure » conserve le périmètre de la livraison initiale `5426215f`.
+> Le manuel 54 RdD décrit l'import et le report explicite du potentiel dans le carnet R5.
+
 Fiche créée le 19 octobre 2026 avec GM-OS Studio, atelier fiche, depuis le PDF fourni par David :
 `Livret du voyageur - 2.0.pdf`.
 

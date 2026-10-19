@@ -16,10 +16,11 @@ import type { CurrentView } from '../src/types/campaign.types';
  * manuel utilisateur avec les différentes options propres à certains drivers
  * (Cabale, Fiel… pour NOC), Impulsion, Menace dans Dune ou Star Trek »*.
  *
- * ⛔ **Les pilotes de David n'entrent jamais dans le dépôt.** Ils sont lus là où
- * il les exporte (`Export Dirvers/`, ou `GMOS_PILOTES_DES_JEUX`), chargés dans
+ * Les pilotes sont lus là où David les exporte (`Export Dirvers/`, ou
+ * `GMOS_PILOTES_DES_JEUX`), chargés dans
  * une instance JETABLE avec des campagnes et des personnages **fictifs**, et
- * seules les images sortent. Sans pilote exporté, le scénario s'arrête : il n'y
+ * seules les images sortent du profil de test. Certains exports sont versionnés
+ * à sa demande explicite du 19/10/2026. Sans pilote exporté, le scénario s'arrête : il n'y
  * a rien d'honnête à photographier.
  *
  * Régénérer, après un pilote nouveau ou amélioré (construction à jour d'abord) :
@@ -146,6 +147,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         corpusId: 'reves de dragons', slug: 'reves-de-dragons', personnage: 'Aldaran le Voyageur',
         sheetData: { force: 12, agilite: 13, taille: 11, constitution: 13, discretion: 2, vie: 12 },
         composantes: ['agilite', 'discretion'],
+        scenes: c => sceneArchetypeRdd(c),
     },
     {
         corpusId: 'torg', slug: 'torg', personnage: 'Mara Quill',
@@ -474,6 +476,20 @@ for (const { mise, pilote } of JEUX) {
 }
 
 // ---- Les scènes propres à un jeu — 2026-10-16 ------------------------------
+
+/** Le pilote étendu du livret : ses niveaux d'Archétype sont des champs propres. */
+async function sceneArchetypeRdd(c: ContexteDeScene): Promise<void> {
+    const etendue = c.pilote.sheetTemplate as { sections?: { id: string }[] } | undefined;
+    if (!etendue?.sections?.some(s => s.id === 'archetype_niveaux')) return;
+    const f = gmos.fenetre;
+    await ecrireLaFiche(c, { archetype_general_craft: 3, archetype_general_sing: 5,
+        archetype_general_run: 7, archetype_general_cook: 2, archetype_general_dance: 4 });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    const titre = f.getByRole('heading', { name: 'Archétype — niveaux', exact: true });
+    await expect(titre).toBeVisible();
+    await titre.evaluate(e => e.scrollIntoView({ block: 'start' }));
+    await photographier(f.locator('body'), 'jeu-reves-de-dragons-archetype-formulaire');
+}
 
 /** Le PJ seul en combat ; `coup` le fait tomber avant la photo. */
 async function entrerEnCombat(c: ContexteDeScene, coup?: number): Promise<Locator> {

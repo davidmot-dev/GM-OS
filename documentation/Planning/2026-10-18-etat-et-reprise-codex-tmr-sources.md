@@ -45,7 +45,12 @@ désormais la référence. Prévoir une entrée « Crédits et licences » dans 
 conserver les notices avec les sources distribuées et documenter les modifications de chaque
 contribution tierce. Aucun écran du module n’existe encore dans cette livraison.
 
-Codex conserve R8 (module externe TMR), Claude peut reprendre les règles/pilote R0–R7.
+**Répartition actualisée par David le 18/10, en fin d’échange : « bonne nuit, tu t’occuperas
+de la partie Rêve de Dragons ». Codex prend en charge l’ensemble du volet RdD : pilote,
+règles communes et module TMR (R0–R8).** Cette consigne remplace la répartition précédente
+qui laissait R0–R7 à Claude. Coordonner les fichiers partagés avec Claude ; l’ordre et le
+périmètre détaillé des lots restent à préciser. Aucun développement n’est lancé pendant cet
+échange de clôture.
 Les règles communes vivent côté GM-OS ; le module fournit la carte et transmet les choix ; la
 fiche porte les ressources. Une commande doit traiter ensemble position et conséquences, avec
 reprise sans double dépense et filtrage des secrets. **Ce pont mécanique reste à concevoir.**

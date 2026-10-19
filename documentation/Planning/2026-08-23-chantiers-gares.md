@@ -11906,6 +11906,16 @@ avec le pilote encore à faire** ; fatigue selon Endurance manuelle. Aucun code 
 module TMR modifié. David demande ensuite **« commit et pousse »** pour cette livraison.
 [Reprise de la fiche](2026-10-19-etat-et-reprise-codex-rdd-fiche-html.md).
 
+**19/10 — raccord de Claude dans `fef92b06`, après choix de David : « Tout, comme Nephilim ».**
+Gabarit intégré au moteur v11 ; 813 clés couvertes (84 champs historiques, 714 nouveaux,
+15 absents motivés). Pilote étendu de 36 sections et 813 champs :
+`Export Dirvers/corriges/RDD_driver_gmos_relie.gmos-driver`. Le validateur ne signale plus
+aucun avertissement. **Archétype — niveaux** est relié à la page 5 ; le potentiel du carnet R5
+reste à reporter explicitement. David demande ensuite à Codex : **« met à jour les manuel,
+ensuite commit tout ce qu'il reste (les fichiers locaux déjà présent) et pousse »**. Les guides
+53, 54 RdD, 63 et leur index décrivent le raccord ; les exports et autres fichiers locaux sont
+exceptionnellement inclus à sa demande. [Passation du raccord](2026-10-19-raccord-fiche-rdd-claude.md).
+
 ### 142 · Chantier Nephilim — Sciences occultes au jet, Vécus du livre, errata — 18/10/2026
 
 Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim »*. Tout est
@@ -12005,7 +12015,7 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
 | 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
 | 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
 | 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic. **18/10** : `ka.dominant` ajouté (`68a05e73`, Codex), raccordé au moteur v10 et à la correspondance (`dd7e3b67`), éprouvé par David | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
-| 76 | **Rêve de Dragon — règles, module TMR et fiche HTML** | § 141 ; R0/R1/R2/R8 (`94e0aaed`), R3/R4 (`ef659f35`) et R5–R7 (`9e7df47a`) poussés ; fiche HTML de cinq pages créée et vérifiée | Éprouver progression, recours et astrologie ; intégrer le nouveau gabarit HTML et sa correspondance ; R8 garde les maîtrises et sorts à arbitrer | Rien ; [reprise de la fiche](2026-10-19-etat-et-reprise-codex-rdd-fiche-html.md) |
+| 76 | **Rêve de Dragon — règles, module TMR et fiche HTML** | § 141 ; R0/R1/R2/R8 (`94e0aaed`), R3/R4 (`ef659f35`), R5–R7 (`9e7df47a`) ; livret HTML (`5426215f`) et raccord au pilote étendu (`fef92b06`), manuels actualisés | Réimporter le pilote relié et éprouver les échanges ; R8 garde les maîtrises et sorts à arbitrer ; potentiel R5 à reporter explicitement depuis la page Archétype | [Reprise de la fiche](2026-10-19-etat-et-reprise-codex-rdd-fiche-html.md), [raccord](2026-10-19-raccord-fiche-rdd-claude.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ⏸ Garé pour plus tard (18/10) ; à la reprise : E0 (Obsidian filtré), puis E1, E3 | Rien — décisions prises le 18/10 ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 

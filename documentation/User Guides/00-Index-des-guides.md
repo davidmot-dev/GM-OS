@@ -103,7 +103,7 @@ question la page répond — de quoi choisir sans ouvrir.
 | :--- | :--- |
 | [Tablet Hub](./61-Tablette-des-joueurs.md) | L'écran du joueur : fiche, inventaire, cartes, messages. **Commencez par celui-ci.** |
 | [Tablet Hub — usages avancés](./62-Tablette-des-joueurs-reglages-fins.md) | Les réglages fins de ce même écran. |
-| [La fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md) | La vraie fiche du jeu, branchée sur les données — et qui gagne quand les deux divergent. |
+| [La fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md) | La vraie fiche du jeu, branchée sur les données ; dernière écriture gagnante. Livret du voyageur RdD de cinq pages et page Archétype reliée au formulaire. |
 
 ## 🎧 L'ambiance
 
@@ -185,3 +185,6 @@ automatique, l'afficheur Ulanzi et la fiche HTML.*
 
 *Relu le 2026-10-03 : les guides sont illustrés par des captures réelles, régénérables ; les deux
 « Oracle » et les deux « Cortex » sont distingués.*
+
+*Relu le 2026-10-19 : guide de la fiche HTML et manuel RdD actualisés pour le Livret du voyageur
+relié au pilote étendu.*

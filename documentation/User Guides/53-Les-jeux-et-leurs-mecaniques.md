@@ -22,7 +22,7 @@ fait.
 | 👽 **Alien** | Réserve de d6 et **dés de Stress**, qui déclenchent la **Panique** | [Alien](./54-Jeu-Alien.md) |
 | 🌃 **Blade Runner** | **Dés échelonnés** : un dé par attribut et par compétence, de D6 à D12 | [Blade Runner](./54-Jeu-Blade-Runner.md) |
 | 🐙 **Cthulhu Hack** | **Sauvegardes** au d20 sous la caractéristique, **dés d'usure** (Torche, Bagou…) | [Cthulhu Hack](./54-Jeu-Cthulhu-Hack.md) |
-| 🐉 **Rêves de Dragons** | d100 sous un **pourcentage**, degrés ; fatigue, blessures, ouvrages, repos et Château Dormant ; **stress/XP/Archétype**, **chance/destinée/moral**, **astrologie privée liée à Clock-OS** ; carte TMR | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
+| 🐉 **Rêves de Dragons** | d100 sous un **pourcentage**, degrés ; **Livret du voyageur HTML de cinq pages**, dont l'Archétype, relié au formulaire ; fatigue, blessures, ouvrages, repos et Château Dormant ; **stress/XP/Archétype**, **chance/destinée/moral**, **astrologie privée liée à Clock-OS** ; carte TMR | [Rêves de Dragons](./54-Jeu-Reves-de-Dragons.md) |
 | ⚡️ **Torg Eternity** | Un d20 qui **explose**, converti par la **Table des Bonus**, contre un **Niveau de Difficulté** ; **Possibilité**, « Un de plus ! » et relance favorisée après le premier dé ; **Annulation des dommages** | [Torg](./54-Jeu-Torg.md) |
 | ✨ **Nephilim Légende** | d100 sous une cible en **degrés × 10** (Vécu ou Art occulte + Ka d'approche), **doubles** critiques ou maladresses et leurs **suites** (Khaïba, Ombre, Sapience), **marge** sur les dizaines ; **Traque** plafonnée au **Seuil RK** du lieu ; **155 Vécus** et **31 époques** reliés à la fiche | [Nephilim](./54-Jeu-Nephilim.md) |
 
@@ -51,6 +51,10 @@ du pilote et de campagne. Une référence absente du catalogue est signalée au 
 Les anciens pilotes Alien proposent **MU/TH/UR 6000** et le **Détecteur de mouvement** par défaut.
 Tout décocher enregistre une liste vide : la proposition par défaut ne revient pas à la reprise.
 Star Trek propose **LCARS — Passerelle**, à sélectionner explicitement dans son pilote.
+
+Rêve de Dragon propose **Terres Médianes du Rêve**, à sélectionner dans son pilote. Sa carte
+officielle en couleur et son carnet restent dans le module ; rêve et fatigue se dépensent sur
+la fiche après validation du MJ. Voir le [guide Rêves de Dragons](54-Jeu-Reves-de-Dragons.md).
 Les autres jeux attendent leurs modules compatibles.
 
 Dans **Cockpit › Modules du jeu**, **Ouvrir le pupitre** prépare l’outil. Pendant une séance,
@@ -313,7 +317,8 @@ Le détail est dans [Combat-OS](./30-Combat-OS.md) et
 
 Un pilote **nouveau ou amélioré** se reporte ici, dans le même mouvement :
 
-1. **Exporter** le pilote depuis la Forge dans `Export Dirvers/` (jamais commité).
+1. **Exporter** le pilote depuis la Forge dans `Export Dirvers/` (hors commit, sauf demande
+   explicite du meneur ; David demande le 19/10 de versionner les exports locaux déjà présents).
 2. **Reprendre la page du jeu** (`54-Jeu-….md`) — ou en créer une, sur le modèle des autres — et
    mettre à jour sa ligne « Pilote décrit ».
 3. **Reprendre les captures** : `npm run build`, puis `npx playwright test e2e/capturesDesJeux.spec.ts`.
@@ -330,3 +335,6 @@ puis six parcours sur le vrai transport Electron/Edge du PC. Appareils physiques
 
 *Complément LCARS : sept consoles, 19 actions arbitrées, médias privés et diffuseur unique ;
 recette automatique à six formats, appareils physiques encore à essayer.*
+
+*Relu le 2026-10-19 : livret HTML RdD relié au pilote étendu, page Archétype et module TMR ;
+les niveaux du livret restent distincts du potentiel déclaré au carnet R5.*

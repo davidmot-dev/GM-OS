@@ -1,5 +1,10 @@
 # RdD — fiche HTML du Livret du voyageur, 19/10/2026
 
+> **Actualisation après livraison :** le raccord a été commité par Claude dans `fef92b06`.
+> Le gabarit et la correspondance sont désormais intégrés (moteur v11, 813 clés couvertes).
+> Le pilote à réimporter est `Export Dirvers/corriges/RDD_driver_gmos_relie.gmos-driver`.
+> Les indications « pas intégrés » ci-dessous décrivent l'état à la livraison `5426215f`.
+
 David invoque **GM-OS Studio** : « crée la fiche de personnage HTML pour Reve de dragon »,
 avec `C:/Users/david/Downloads/Livret du voyageur - 2.0.pdf`, puis demande **« commit et pousse »**.
 La sélection Nephilim affichée dans l'IDE ne concerne pas cette demande.
@@ -43,3 +48,28 @@ Le commit demandé porte uniquement sur cette fiche, ses outils, cette note et l
 registre. Les changements étrangers déjà présents (note TMR-sources, autres guides, exports,
 campagne Nouvelle Ys, bannière Nephilim, outil PDF-vers-MD, réglage Claude local) restent exclus.
 Les hooks de commit/push habituels sont conservés. Le journal Git fait foi pour la publication.
+
+## Manuel et fichiers locaux — demande suivante du 19/10
+
+David demande : « met à jour les manuel, ensuite commit tout ce qu'il reste (les fichiers locaux
+déjà présent) et pousse ». Les quatre guides concernés sont l'index, 53, 54 RdD et 63 ; le dernier
+rappel du guide 63 est aligné sur la dernière écriture gagnante, déjà décrite dans son § 2.
+Les nouvelles captures montrent la page Archétype et les champs du formulaire étendu.
+
+Le raccord du livret ne fusionne pas son Archétype et ses colonnes d'XP avec les métadonnées
+des opérations R5 : **Reporter le potentiel** reste nécessaire avant l'allocation d'XP.
+Les calculs par formule ne remontent pas des saisies HTML. Les réserves restent sur la fiche ;
+le module externe TMR ne reçoit pas un second jeu de compteurs.
+
+À sa demande explicite, les fichiers locaux préexistants entrent désormais dans Git : note
+TMR-sources, trois exports d'origine et pilote RdD relié avec son JSON, quinze fiches de
+Nouvelle Ys, bannière Nephilim, convertisseur PDF-vers-MD et réglage Claude local. Les guides
+dont seules les fins de ligne diffèrent ne portent pas de changement de contenu.
+Les archives d'export contiennent uniquement manifeste et état du pilote ; aucun profil
+personnel de GM-OS n'a été ouvert. Aucun paquet installé. Le journal Git indique les commits
+et la publication effective ; conserver les hooks de synchronisation des guides et pré-push.
+
+Vérifications de cette mise à jour : reconstruction réussie, validateur de fiche sans diagnostic,
+capture du formulaire avec le pilote étendu réussie dans `capturesDesJeux.spec.ts` (profil jetable,
+pilote isolé dans `scratch/`, données fictives), deux nouvelles images relues avant copie au manuel.
+L'autotest du convertisseur PDF-vers-MD réussit sans installer Marker ni convertir de livre.
