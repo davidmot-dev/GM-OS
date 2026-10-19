@@ -122,6 +122,15 @@ const ForgeDashboard: React.FC = () => {
   const [logs, setLogs] = useState<string[]>([]);
   const logEndRef = useRef<HTMLDivElement>(null);
 
+  /*
+    « + Créer un nouveau système » ne faisait que vider le nom : le menu, qui
+    affiche le pilote de même nom, retombait sur « Choisir un Driver » et le
+    choix semblait sans effet (David, 19/10). Le menu garde désormais ce choix,
+    et le curseur va au champ du nom.
+  */
+  const [nouveauSysteme, setNouveauSysteme] = useState(false);
+  const champDuNomRef = useRef<HTMLInputElement>(null);
+
   /**
    * Ce que la dernière lecture du corpus a trouvé.
    *
@@ -969,11 +978,20 @@ const ForgeDashboard: React.FC = () => {
                 <div className="flex flex-col gap-3">
                   <div className="relative group">
                     <select 
-                      value={allDrivers.find(d => d.name === forgeStore.targetSystemName)?.id || ''} 
+                      value={
+                        allDrivers.find(d => d.name === forgeStore.targetSystemName)?.id
+                        || (nouveauSysteme || forgeStore.targetSystemName.trim() ? 'NEW' : '')
+                      }
                       onChange={(e) => {
                         const driver = allDrivers.find(d => d.id === e.target.value);
-                        if (driver) forgeStore.setTargetName(driver.name);
-                        else if (e.target.value === 'NEW') forgeStore.setTargetName('');
+                        if (driver) {
+                          setNouveauSysteme(false);
+                          forgeStore.setTargetName(driver.name);
+                        } else if (e.target.value === 'NEW') {
+                          setNouveauSysteme(true);
+                          forgeStore.setTargetName('');
+                          champDuNomRef.current?.focus();
+                        }
                       }}
                       className="w-full bg-app-text/5 border border-app-text/10 rounded-xl p-3 text-xs font-bold text-app-text/80 focus:outline-none focus:border-accent/50 appearance-none cursor-pointer transition-all hover:bg-app-text/10"
                     >
@@ -991,9 +1009,10 @@ const ForgeDashboard: React.FC = () => {
                   </div>
 
                   <div className="relative">
-                    <input 
+                    <input
+                      ref={champDuNomRef}
                       type="text"
-                      value={forgeStore.targetSystemName} 
+                      value={forgeStore.targetSystemName}
                       onChange={(e) => forgeStore.setTargetName(e.target.value)} 
                       placeholder={t('modules:session.forge_module.destination_placeholder')} 
                       className="w-full bg-app-text/2 border-b border-app-text/10 p-2 text-sm text-app-text/80 focus:outline-none focus:border-accent/50 transition-all placeholder:text-app-text/10 font-sans italic" 
