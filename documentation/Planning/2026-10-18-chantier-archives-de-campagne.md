@@ -175,8 +175,8 @@ Ordre proposé : E0 → E1 → E3 (le plus fragile, le plus utile pour rejouer) 
 ### Les décisions de David — 18/10
 
 1. **Rejouer** : on **efface les séances et les journaux** (et donc le parcours : passages, scènes
-   terminées) ; on **garde les personnages**. *Non tranché* : les réserves de table — proposé :
-   remises à leur départ, comme à « Nouveau scénario ».
+   terminées) ; on **garde les personnages** ; les **réserves de table reviennent à leur valeur
+   de départ**, comme à « Nouveau scénario » (réponse de David, 19/10).
 2. **PNJ d'autres campagnes** liés par relation : **on coupe le lien** — ils ne partent plus.
 3. **Archive des médias** : **tous ceux de la campagne**.
 4. **Fichiers audio** : **copiés dans l'archive**.
