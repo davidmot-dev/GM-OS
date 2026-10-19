@@ -177,6 +177,8 @@ plan confondu, tient dans la section ⭐ ci-dessous. **Commencer par elle.**
 > par David le 16/10** ; commits `72c723c5` (horloges Alien) et `0efbc55e` (NOC), poussés (pré-push :
 > 7 860 tests verts). ✅ **Vu à l'écran par David le 16/10** (*« ok j'ai tout vu à l'écran »*). Reste à la main : Aura de lumière, partage de l'Extase,
 > alliés, Singularité gagnée par un Rouage, ~~pistes de la Cabale~~ (faites le 16/10, `1815ed39`), report d'une séquelle à 8.
+> **19/10 : ces restes, la Faveur de la Cabale et les 78 cases de la fiche du Héros sont détaillés,
+> revérifiés dans le code, dans [Améliorations possibles de NOC](2026-10-19-ameliorations-noc.md).**
 
 > ✅ **Traité le jour même — voir les deux entrées ci-dessus (Cthulhu Hack, Blade Runner).**
 > **16/10 — Cthulhu Hack et Blade Runner : les jauges que GM-OS ne suit pas (constat, rien codé).**
