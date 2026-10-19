@@ -772,53 +772,12 @@ describe('splitAssetRefs (via service privé exposé par cast)', () => {
 // ─────────────────────────────────────────────
 
 describe('scrapeCampaignData — niveau 3 (relations cross-campagne)', () => {
-    it('inclut les entités liées par des relations sociales (cross-campagne)', async () => {
-        // Arrange : ajouter une relation de e-001 (camp A) vers e-002 (camp B)
-        const entityWithRelation: Entity = {
-            ...mockEntity,
-            id: 'e-001',
-            campaignId: CAMPAIGN_ID,
-            relations: [
-                {
-                    targetId: 'e-002',
-                    targetType: 'npc',
-                    type: 'rival',
-                    description: 'Ennemi juré',
-                },
-            ],
-        };
-
-        const { useSessionOSStore } = await import('../../session/useSessionOSStore');
-        vi.mocked(useSessionOSStore.getState).mockReturnValue({
-            ...mockStoreState,
-            entities: [entityWithRelation, mockEntityOtherCampaign],
-            customGameDrivers: [],
-            customSheetTemplates: [],
-            decks: [],
-            deckStates: {},
-        } as never);
-
-        const result = service.scrapeCampaignData(CAMPAIGN_ID);
-
-        // entities inclut e-001 (campagne cible) + e-002 (cross-campagne via relation)
-        const entityIds = result.entities.map((e) => e.id);
-        expect(entityIds).toContain('e-001');
-        expect(entityIds).toContain('e-002');
-        // relatedEntities liste séparément les entités cross-campagne
-        expect(result.relatedEntities).toHaveLength(1);
-        expect(result.relatedEntities?.[0].id).toBe('e-002');
-    });
-
     /**
-     * **Une fiche empruntée part sans les notes du meneur.**
-     *
-     * Point N5 du § 12, tranché par David le 2026-09-04. Le niveau 3 est voulu
-     * — il garde le réseau social lisible chez le destinataire —, mais il
-     * donnait ces fiches **entières**, `gmSecretInfo` compris : les secrets
-     * d'une campagne qu'on n'a jamais eu l'intention de partager voyageaient
-     * dans l'archive d'une autre.
+     * **Le lien vers un PNJ d'une autre campagne est coupé** — décision de David
+     * du 2026-10-18, lot E2 du chantier des archives. Ces PNJ partaient caviardés
+     * (point N5) pour garder le réseau social entier ; ils ne partent plus.
      */
-    it('CAVIARDE les notes de MJ des fiches empruntées — le point N5', async () => {
+    it('un PNJ d’une autre campagne ne part plus, et la relation vers lui est retirée', async () => {
         const entityWithRelation: Entity = {
             ...mockEntity,
             id: 'e-001',
@@ -827,37 +786,23 @@ describe('scrapeCampaignData — niveau 3 (relations cross-campagne)', () => {
                 { targetId: 'e-002', targetType: 'npc', type: 'rival', description: 'Ennemi juré' },
             ],
         };
-        const voisineBavarde: Entity = {
-            ...mockEntityOtherCampaign,
-            id: 'e-002',
-            gmSecretInfo: 'Elle est la vraie commanditaire du meurtre.',
-            roleplayingNotes: 'Bégaie dès qu’on parle de son frère.',
-        };
-
         const { useSessionOSStore } = await import('../../session/useSessionOSStore');
         vi.mocked(useSessionOSStore.getState).mockReturnValue({
             ...mockStoreState,
-            entities: [entityWithRelation, voisineBavarde],
+            entities: [entityWithRelation, mockEntityOtherCampaign],
             customGameDrivers: [], customSheetTemplates: [], decks: [], deckStates: {},
         } as never);
 
         const result = service.scrapeCampaignData(CAMPAIGN_ID);
 
-        const empruntee = result.relatedEntities?.[0];
-        expect(empruntee?.id).toBe('e-002');
-        expect(empruntee?.gmSecretInfo).toBe('');
-        expect(empruntee?.roleplayingNotes).toBe('');
-        /* Ce qui fait le réseau reste : sans le nom, la relation ne pointe nulle part. */
-        expect(empruntee?.name).toBe(voisineBavarde.name);
-        expect(empruntee?.avatar).toBe(voisineBavarde.avatar);
+        expect(result.entities.map((e) => e.id)).toEqual(['e-001']);
+        expect(result.relatedEntities).toEqual([]);
+        expect(result.entities[0].relations).toEqual([]);
+        // La fiche du meneur, elle, n'est pas touchée : seule la copie emportée perd le lien.
+        expect(entityWithRelation.relations).toHaveLength(1);
     });
 
-    it('caviarde AUSSI la copie rangée dans `entities` — les deux sorties, une seule liste', async () => {
-        /*
-          Le bundle porte la fiche empruntée à deux endroits : `relatedEntities`
-          pour information, et `entities` où elle est concaténée. *Caviarder une
-          des deux serait ne rien caviarder du tout.*
-        */
+    it('aucun secret d’une autre campagne ne voyage dans l’archive', async () => {
         const entityWithRelation: Entity = {
             ...mockEntity, id: 'e-001', campaignId: CAMPAIGN_ID,
             relations: [{ targetId: 'e-002', targetType: 'npc', type: 'rival', description: '' }],
@@ -865,13 +810,13 @@ describe('scrapeCampaignData — niveau 3 (relations cross-campagne)', () => {
         const { useSessionOSStore } = await import('../../session/useSessionOSStore');
         vi.mocked(useSessionOSStore.getState).mockReturnValue({
             ...mockStoreState,
-            entities: [entityWithRelation, { ...mockEntityOtherCampaign, id: 'e-002', gmSecretInfo: 'Un secret' }],
+            entities: [entityWithRelation, { ...mockEntityOtherCampaign, id: 'e-002', gmSecretInfo: 'Elle est la vraie commanditaire.' }],
             customGameDrivers: [], customSheetTemplates: [], decks: [], deckStates: {},
         } as never);
 
         const result = service.scrapeCampaignData(CAMPAIGN_ID);
 
-        expect(result.entities.find((e) => e.id === 'e-002')?.gmSecretInfo).toBe('');
+        expect(JSON.stringify(result)).not.toContain('Elle est la vraie commanditaire.');
     });
 
     it('ne caviarde PAS les PNJ de la campagne exportée — se caviarder soi-même n’a aucun sens', async () => {

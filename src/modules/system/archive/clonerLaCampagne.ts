@@ -37,6 +37,13 @@ const COLLECTIONS = [
     ['scenes', 'scene'],
     ['rencontres', 'renc'],
     ['journaux', 'jour'],
+    // Lot E2 (2026-10-19) : ce que l'archive emporte désormais hors de la trame.
+    ['moments', 'moment'],
+    ['favoris', 'fav'],
+    ['messages', 'msg'],
+    ['lootPool', 'loot'],
+    ['lootHistory', 'lh'],
+    ['lootReserve', 'loot'],
 ] as const satisfies readonly (readonly [keyof NexusCampaignState, string])[];
 
 type Fabrique = (prefixe: string) => string;
@@ -53,6 +60,17 @@ export function tableDuClonage(state: NexusCampaignState, nouvelId: Fabrique = a
     noter(state.campaign.id, 'camp');
     for (const [cle, prefixe] of COLLECTIONS) {
         for (const x of (state[cle] as { id?: unknown }[] | undefined) ?? []) noter(x?.id, prefixe);
+    }
+    /*
+      Les tuiles de Light-OS de la campagne portent son identifiant DANS le leur
+      (`SCENE_<campagne>_NN`, `ratelierDeLaCampagne.idDeCase`), collé à un tiret
+      bas : le remplacement par identifiant entier ne les verrait pas. On les
+      renomme ici, pour que le râtelier de la copie soit le sien — et qu'un moment
+      de storyboard qui désigne une tuile désigne la tuile de la copie.
+    */
+    const ancienne = state.campaign.id, nouvelle = table.get(ancienne)!;
+    for (const tuile of state.tuilesDeLumiere ?? []) {
+        if (tuile.id.startsWith(`SCENE_${ancienne}_`)) table.set(tuile.id, `SCENE_${nouvelle}_${tuile.id.slice(`SCENE_${ancienne}_`.length)}`);
     }
     // Les personnages de CETTE campagne : la copie a les siens.
     for (const joueur of state.players ?? []) {
@@ -97,5 +115,9 @@ export function clonerLaCampagne(state: NexusCampaignState, nouvelId: Fabrique =
     // Les joueurs gardent leur identifiant ; seuls leurs personnages de cette campagne changent.
     copie.players = r(state.players);
     if (state.modulesDuJeu !== undefined) copie.modulesDuJeu = r(state.modulesDuJeu);
+    // Lot E2 : les combats préparés suivent leurs scènes (rangés par identifiant de scène), les tuiles leur râtelier.
+    if (state.combatsGares !== undefined) copie.combatsGares = r(state.combatsGares);
+    if (state.tuilesDeLumiere !== undefined) copie.tuilesDeLumiere = r(state.tuilesDeLumiere);
+    if (state.reservesDeTable !== undefined) copie.reservesDeTable = r(state.reservesDeTable);
     return copie;
 }

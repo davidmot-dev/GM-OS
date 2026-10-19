@@ -78,7 +78,7 @@ Le **résolveur de conflits** s'affiche et vous laisse trois issues :
 | Choix | Effet |
 | :--- | :--- |
 | **Remplacer** | Les données de la campagne existante sont écrasées par celles de l'archive |
-| **Cloner** | L'archive entre comme une **nouvelle campagne indépendante**, avec de nouveaux identifiants |
+| **Cloner** | L'archive entre comme une **nouvelle campagne indépendante**, « (Copie) » : tout reçoit un nouvel identifiant, et **tous les liens suivent** — la trame et son graphe, les relations, les rencontres, les journaux, le storyboard, les tuiles de lumière. Les personnages de la campagne sont **copiés pour la copie** : le joueur garde aussi les siens dans l'original |
 | **Annuler** | Rien n'est touché |
 
 À la fin, GM-OS **bascule sur la campagne importée** et vous dépose dans le cockpit.
@@ -133,33 +133,29 @@ pour une migration.
 
 La campagne · ses **PNJ** · ses **joueurs et leurs personnages** · l'historique des **séances** ·
 les **cartes de l'Atlas** · le **wiki** · la **chronologie** · les **indices** · **la trame**, actes
-et scènes · les **rencontres préparées** (depuis le 12/10) · les **paquets de cartes** · le **système de jeu forgé** et son gabarit de fiche · et,
-côté médias, toutes les images moissonnées avec leur empreinte de contrôle.
+et scènes · les **rencontres préparées** (depuis le 12/10) · les **journaux de séance** · les
+**paquets de cartes** et l'état de **ses** paquets · le **système de jeu forgé** et son gabarit de
+fiche · et, depuis le 19/10 : les **moments de storyboard**, les **réserves de table** (Traque,
+Impulsion…), les **combats préparés** de ses scènes, les **favoris**, le **butin**, les
+**messages** entre tablettes, les **tuiles de Light-OS** de son râtelier, et les **ambiances
+sonores** et **playlists** étiquetées pour elle — et, côté médias, toutes les images moissonnées
+avec leur empreinte de contrôle.
 
-Deux inclusions qui surprennent :
+Deux règles revues le 2026-10-19 (chantier des archives de campagne) :
 
-> ⚠️ **L'archive emporte des PNJ d'autres campagnes.** Si un de vos PNJ a une **relation sociale**
-> vers un personnage d'une autre campagne, ce personnage est inclus pour que le réseau reste
-> cohérent. C'est voulu.
->
-> ✅ **Mais depuis le 2026-09-04, ces fiches-là partent caviardées** : le nom, le portrait, le rôle
-> et les relations voyagent — c'est ce qui fait le réseau —, tandis que les **Notes de MJ** et les
-> **Informations secrètes** sont vidées. *Les secrets d'une campagne que vous n'avez jamais eu
-> l'intention de partager n'ont pas à voyager dans l'archive d'une autre.*
->
-> **Les PNJ de la campagne exportée, eux, partent complets.** C'est la campagne qu'on emporte : se
-> caviarder soi-même n'aurait aucun sens.
+> ✂️ **Les PNJ d'autres campagnes ne partent plus.** Si un de vos PNJ a une **relation sociale**
+> vers un personnage d'une autre campagne, ce lien est **retiré de la copie emportée** — votre
+> fiche, elle, ne change pas. Avant, ces personnages partaient caviardés pour garder le réseau
+> entier ; désormais, *l'archive d'une campagne n'emporte que la campagne*, et aucun secret d'une
+> autre ne peut y voyager.
 
 <!-- -->
 
-> ⚠️ **L'archive emporte TOUTES vos ambiances sonores et TOUTES vos playlists**, pas seulement
-> celles de la campagne — le même orage sert dans trois campagnes, et elles sont l'environnement de
-> jeu du meneur plus que celui d'une partie.
->
-> **Revu le 2026-09-05 et laissé large**, pour une raison qui n'existait pas quand ce code a été
-> écrit : depuis le 04/09, **l'import fusionne au lieu de remplacer**. Une bibliothèque large qui
-> arrive chez quelqu'un ne détruit donc plus la sienne, elle s'y ajoute. C'était le danger, il est
-> fermé — reste de l'encombrement, ce qui n'est pas la même chose qu'une perte.
+> 🎵 **Seules les ambiances et playlists de la campagne partent** — celles qui portent son
+> étiquette. La **bibliothèque commune** (le même orage sert dans trois campagnes) voyagera dans
+> l'**archive des médias** (`.gmos-medias`), en préparation. À l'import, rien ne change : ce qui
+> porte le même identifiant est remplacé, ce qui est nouveau s'ajoute, ce qui n'est pas dans
+> l'archive reste.
 
 ### ⛔ Ce qui ne part pas, ou ne revient pas
 
@@ -167,7 +163,6 @@ Deux inclusions qui surprennent :
 | :--- | :--- |
 | **Le plateau tactique (Map-OS)** | Brouillard et pions ne voyagent pas. Voir le [guide de Map-OS](./22-Map-OS-le-plateau.md). |
 | **Les sons distants** | Un pad ou une piste qui pointe vers Spotify, SoundCloud ou une URL quelconque reste un lien. |
-| **Les messages entre tablettes** | Ce qui s'est dit à la table ne fait pas partie d'une campagne qu'on partage. Ils restent dans la sauvegarde automatique. |
 | **Le bestiaire du jeu** | Une rencontre qui désigne un adversaire du bestiaire arrive sans lui : à l'invocation, il est **refabriqué depuis son archétype**, et GM-OS le dit. |
 
 > ✅ **Quatre manques comblés le 2026-09-04.** Jusqu'à cette date, l'archive **laissait la trame**

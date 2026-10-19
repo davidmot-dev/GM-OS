@@ -15,10 +15,16 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > **tous** les identifiants de ce que la copie emporte, dans les valeurs et dans les clés
 > (`system/archive/clonerLaCampagne.ts`) — trame, graphe, relations, personnages (copiés pour la
 > copie), rencontres, journaux, modules du jeu ; bibliothèques et PNJ d'ailleurs intacts. Un essai
-> parcourt toute la copie : aucun identifiant de l'original n'y reste. ⚠️ Quand E2 ajoutera les
-> moments de storyboard à l'archive, les ajouter à `COLLECTIONS`. Suite : E2 (§ 6).
+> parcourt toute la copie : aucun identifiant de l'original n'y reste. **E2 fait** : l'archive
+> `.gmos` emporte aussi les moments de storyboard, les réserves de table, les combats préparés de
+> ses scènes, les favoris, le butin, les messages et les tuiles de Light-OS de son râtelier
+> (`system/archive/satellitesDeLaCampagne.ts`, extraits et réinjectés sans toucher aux autres
+> campagnes ; une archive ancienne qui n'en parle pas ne vide rien). Ambiances et playlists : seules
+> celles de la campagne ; état des paquets : seuls les siens. Les PNJ d'autres campagnes ne partent
+> plus, la relation vers eux est retirée de la copie (décision 2 du § 7). Le clonage suit (tuiles
+> `SCENE_<campagne>_NN` renommées). Manuel 90 mis à jour. Suite : E4 (rejouer), puis E6, puis E5.
 
-**Rien n'est codé ; les décisions du § 7 sont prises.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
+**Les décisions du § 7 sont prises ; E0, E1, E3 et E2 sont codés.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de
 coder : le code bouge).
 

@@ -22,6 +22,7 @@
  */
 
 import { clonerLaCampagne } from './clonerLaCampagne';
+import { extraireLesSatellites, injecterLesSatellites } from './satellitesDeLaCampagne';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useBestiaireStore } from '../../combat/useBestiaireStore';
 import { useMediaStore } from '../../../stores/useMediaStore';
@@ -132,29 +133,11 @@ function fusionnerParIdentifiant<T extends { id: string }>(
     ecrire([...remplaces, ...nouveaux]);
 }
 
-/**
- * **Une fiche empruntée part sans les notes du meneur.**
- *
- * Point N5 du § 12, tranché par David le 2026-09-04. Le niveau 3 ramasse les
- * PNJ **d'autres campagnes** liés par une relation sociale, pour que le réseau
- * reste lisible chez le destinataire. C'est voulu — mais envoyer un bundle
- * donnait alors ces fiches **entières**, `gmSecretInfo` compris : les secrets
- * d'une campagne qu'on n'a jamais eu l'intention de partager voyageaient dans
- * l'archive d'une autre.
- *
- * On garde ce qui fait le réseau — le nom, le portrait, le rôle, les relations —
- * et on vide les deux champs de texte libre qui n'appartiennent qu'au meneur.
- *
- * ⚠️ **Ne s'applique QU'aux pièces rapportées.** Les PNJ de la campagne
- * exportée partent complets : c'est la campagne qu'on emporte, et se caviarder
- * soi-même n'aurait aucun sens.
- *
- * *Le caviardage se fait à la source, à l'extraction : ce qui n'est pas entré
- * dans l'archive ne peut pas en sortir.*
+/*
+ * Les PNJ d'autres campagnes partaient caviardés (secrets du meneur vidés) pour
+ * garder le réseau social entier. Depuis le lot E2 (2026-10-19, décision de
+ * David), ils ne partent plus du tout : le lien est coupé à l'extraction.
  */
-function caviarderUnePieceRapportee(entite: Entity): Entity {
-    return { ...entite, gmSecretInfo: '', roleplayingNotes: '' };
-}
 
 export class NexusService {
     private static instance: NexusService;
@@ -262,27 +245,28 @@ export class NexusService {
             }))
             .filter((p: Player) => p.characters.length > 0);
 
-        // Niveau 3 : Entités liées par les relations sociales (cross-campagne)
-        // Une entité de la campagne A peut avoir une relation vers une entité de la campagne B.
-        // On inclut ces entités pour préserver la cohérence du réseau social.
-        const relatedEntityIds = new Set<string>();
-        entities.forEach((e) => {
-            e.relations?.forEach((r) => {
-                if (r.targetId) relatedEntityIds.add(r.targetId);
-            });
-        });
-        // Exclure les entités déjà capturées au niveau 2 (même campaignId)
+        /*
+          **Les PNJ d'autres campagnes ne partent plus : le lien est coupé** —
+          décision de David du 2026-10-18 (lot E2 du chantier des archives). Ils
+          partaient caviardés pour garder le réseau social entier ; une archive
+          de campagne n'emporte désormais que la campagne, et une relation vers
+          un PNJ qui n'y est pas est retirée de la copie emportée.
+        */
         const entityIds = new Set(entities.map((e: Entity) => e.id));
-        const relatedEntities: Entity[] = store.entities
-            .filter((e: Entity) => relatedEntityIds.has(e.id) && !entityIds.has(e.id))
-            .map(caviarderUnePieceRapportee);
+        const entitiesEmportees = entities.map((e: Entity) => (e.relations?.some(r => r.targetId && !entityIds.has(r.targetId))
+            ? { ...e, relations: e.relations.filter(r => !r.targetId || entityIds.has(r.targetId)) }
+            : e));
+        const relatedEntities: Entity[] = [];
 
         // Niveau 3 : Decks de cartes (liés via deckSlice)
         // Le DeckSlice utilise `decks` (manifestes) et `deckStates` (états de session)
         const deckManifests: DeckManifest[] = (store.decks ?? []).filter(
             (d: DeckManifest) => d.systemId === campaign.system
         );
-        const deckSessionStates: DeckSessionState[] = Object.values(store.deckStates ?? {});
+        // L'état de SES paquets seulement (lot E2) : les autres campagnes jouent les leurs.
+        const deckIds = new Set(deckManifests.map(d => d.id));
+        const deckSessionStates: DeckSessionState[] = Object.values(store.deckStates ?? {})
+            .filter((etat: DeckSessionState) => deckIds.has(etat?.deckId));
 
         // Niveau 4 : Snapshot des GameDrivers et SheetTemplates requis (manifeste uniquement)
         // Permet à l'importateur de vérifier la disponibilité des dépendances.
@@ -317,12 +301,23 @@ export class NexusService {
           ⚠️ Ce qui reste vrai, et que le guide dit : envoyer un bundle envoie
           **toute** sa sonothèque. C'est de l'encombrement, plus une perte.
         */
-        const atmospheres = useSoundStore.getState().atmospheres;
-        const playlists = useMusicStore.getState().playlists;
+        /*
+          ⚠️ **Revu le 2026-10-19 (lot E2)** : seules celles **de cette campagne**
+          partent. La bibliothèque commune voyagera dans l'archive des médias
+          (`.gmos-medias`, lot E5), faite pour elle.
+        */
+        const atmospheres = (useSoundStore.getState().atmospheres ?? []).filter(a => a.campagneId === campaignId);
+        const playlists = (useMusicStore.getState().playlists ?? []).filter(p => p.campagneId === campaignId);
 
         return {
             campaign,
-            entities: [...entities, ...relatedEntities],
+            entities: entitiesEmportees,
+            // Lot E2 : le butin, les messages, et ce qui vit dans les autres magasins.
+            lootPool: (store.lootPool ?? []).filter(i => i.campaignId === campaignId),
+            lootHistory: (store.lootHistory ?? []).filter(e => e.campaignId === campaignId),
+            lootReserve: (store.lootReserve ?? []).filter(i => i.campaignId === campaignId),
+            messages: (store.messages ?? []).filter(m => m.campaignId === campaignId),
+            ...extraireLesSatellites(campaignId, scenes.map((sc: { id: string }) => sc.id)),
             players,
             sessions,
             atlasMaps,
@@ -1246,9 +1241,29 @@ export class NexusService {
             }
         }
 
+        /*
+          **Le butin et les messages** (lot E2) : même règle que la trame — on
+          remplace ce qui portait cette campagne, et une archive qui n'en parle
+          pas ne vide rien.
+        */
+        const deCetteCampagne = <T extends { campaignId?: string }>(existants: T[] | undefined, importes: T[] | undefined) =>
+            importes === undefined ? undefined : [...(existants ?? []).filter(x => x.campaignId !== campaignId), ...importes];
+        const butin = {
+            lootPool: deCetteCampagne(store.lootPool, state.lootPool),
+            lootHistory: deCetteCampagne(store.lootHistory, state.lootHistory),
+            lootReserve: deCetteCampagne(store.lootReserve, state.lootReserve),
+            messages: deCetteCampagne(store.messages, state.messages),
+        };
+        for (const [cle, valeur] of Object.entries(butin)) {
+            if (valeur !== undefined) (nextPartialState as Record<string, unknown>)[cle] = valeur;
+        }
+
         // Injection atomique
         useSessionOSStore.setState(nextPartialState);
         console.log(`[NexusService] Atomic injection complete for: ${campaignId}`);
+
+        // Lot E2 : storyboard, réserves, combats préparés, favoris, tuiles — chacun dans son magasin.
+        injecterLesSatellites(campaignId, (state.scenes ?? []).map(sc => sc.id), state);
     }
 
     /**

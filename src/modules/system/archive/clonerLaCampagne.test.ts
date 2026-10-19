@@ -52,6 +52,14 @@ const ETAT = {
     deckSessionStates: [],
     playlists: [{ id: 'pl-1', campagneId: C, name: 'Pluie' }],
     atmospheres: [{ id: 'atm-1', campagneId: C, name: 'Néon' }],
+    // Lot E2 : ce que l'archive emporte hors de la trame.
+    moments: [{ id: 'moment-1', campaignId: C, lightSceneId: `SCENE_${C}_03`, musicPadId: 'pad-9' }],
+    tuilesDeLumiere: [{ id: `SCENE_${C}_03`, campagneId: C, name: 'Orage', lightStates: { l1: { on: true } } }],
+    combatsGares: { 'scene-1': { combatants: [{ id: 'cb-1', sourceId: 'npc-1' }], currentTurnIdx: 0, round: 1 } },
+    favoris: [{ id: 'fav-1', campaignId: C, type: 'npc', name: 'Deckard', entityId: 'npc-1' }],
+    messages: [{ id: 'msg-1', campaignId: C, fromId: 'pj-1', toId: 'GM', content: 'Je suis un réplicant ?' }],
+    lootPool: [{ id: 'loot-1', campaignId: C, name: 'Licorne en origami' }],
+    reservesDeTable: { traque: 2 },
 } as unknown as NexusCampaignState;
 
 let compteur = 0;
@@ -116,13 +124,39 @@ describe('cloner une campagne', () => {
         expect(copie.atmospheres).toEqual(ETAT.atmospheres);
         expect(copie.relatedEntities).toEqual(ETAT.relatedEntities);
         expect(copie.scenes![0].morceauxIds).toEqual(['track-7']);
-        expect(copie.scenes![0].momentDeStoryboardId).toBe('moment-1');
         expect(copie.entities[0].relations).toContainEqual({ targetId: 'npc-ailleurs' });
     });
 
     it('l’original n’est pas modifié', () => {
         expect(ETAT.campaign.id).toBe(C);
         expect(ETAT.scenes![0].lieuId).toBe('map-1');
+    });
+});
+
+describe('cloner ce que l’archive emporte hors de la trame (lot E2)', () => {
+    const copie = clonerLaCampagne(ETAT, neuf);
+
+    it('la tuile de Light-OS change de râtelier, et le moment qui la désigne la suit', () => {
+        const [tuile] = copie.tuilesDeLumiere!;
+        expect(tuile.id).toBe(`SCENE_${copie.campaign.id}_03`);
+        expect(tuile.campagneId).toBe(copie.campaign.id);
+        expect(copie.moments![0].lightSceneId).toBe(tuile.id);
+        expect(copie.moments![0].musicPadId).toBe('pad-9');
+        // Le moment de la scène est celui de la copie.
+        expect(copie.scenes![0].momentDeStoryboardId).toBe(copie.moments![0].id);
+    });
+
+    it('le combat préparé est rangé sous la scène de la copie, et désigne son PNJ', () => {
+        expect(Object.keys(copie.combatsGares!)).toEqual([copie.scenes![0].id]);
+        expect(copie.combatsGares![copie.scenes![0].id].combatants[0]).toMatchObject({ sourceId: copie.entities[0].id });
+    });
+
+    it('favoris, messages et butin sont ceux de la copie', () => {
+        expect(copie.favoris![0]).toMatchObject({ campaignId: copie.campaign.id, entityId: copie.entities[0].id });
+        expect(copie.messages![0]).toMatchObject({ campaignId: copie.campaign.id, fromId: copie.players[0].characters[0].id, toId: 'GM' });
+        expect(copie.lootPool![0].campaignId).toBe(copie.campaign.id);
+        expect(copie.lootPool![0].id).not.toBe('loot-1');
+        expect(copie.reservesDeTable).toEqual({ traque: 2 });
     });
 });
 

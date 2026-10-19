@@ -22,6 +22,10 @@ import type { RencontrePreparee } from '../../../types/rencontres.types';
 import type { Atmosphere } from '../../sound/useSoundStore';
 import type { Playlist } from '../../music/useMusicStore';
 import type { DeckManifest, DeckSessionState } from '../../session/store/types';
+import type { SatellitesDeLaCampagne } from './satellitesDeLaCampagne';
+import type { ObjetDuButin } from '../../session/store/lootSlice';
+import type { LootHistoryEntry } from '../../../types/player.types';
+import type { SessionMessage } from '../../../types/session.types';
 
 // ─────────────────────────────────────────────
 // CONSTANTES
@@ -112,7 +116,13 @@ export interface NexusManifest {
  * Représentation sérialisée des slices de store liés à la campagne.
  * Exclut les préférences locales et les données non-portables.
  */
-export interface NexusCampaignState {
+/**
+ * **L'archive d'une campagne.** Depuis le lot E2 (2026-10-19), elle emporte aussi
+ * ce qui vit hors du magasin de session (`SatellitesDeLaCampagne` : storyboard,
+ * réserves de table, combats préparés, favoris, tuiles de Light-OS), le butin et
+ * les messages. Tous facultatifs : une archive d'avant s'importe sans rien perdre.
+ */
+export interface NexusCampaignState extends SatellitesDeLaCampagne {
     /** La campagne elle-même */
     campaign: Campaign;
     /** Entités (PNJ, Monstres) appartenant à cette campagne + entités cross-campagne liées par relations */
@@ -197,6 +207,12 @@ export interface NexusCampaignState {
      * Chaque Playlist contient ses MusicPads avec leur url.
      */
     playlists?: Playlist[];
+    /** Lot E2 : le butin de la campagne — disponible, distribué, mis de côté. */
+    lootPool?: ObjetDuButin[];
+    lootHistory?: LootHistoryEntry[];
+    lootReserve?: ObjetDuButin[];
+    /** Lot E2 : les messages échangés à la table. */
+    messages?: SessionMessage[];
 }
 
 /**
