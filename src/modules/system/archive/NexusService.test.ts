@@ -80,6 +80,11 @@ vi.mock('../../sound/useSoundStore', () => ({
 }));
 
 // Mock i18next
+// L'instantané avant import (lot E6) vit dans la sauvegarde automatique, qui tire tout l'état de session.
+vi.mock('../../session/logic/SessionBackupManager', () => ({
+    instantaneAvant: vi.fn(async () => ({ statut: 'ecrit' })),
+}));
+
 vi.mock('i18next', () => ({
     default: {
         t: (key: string, options?: Record<string, unknown>) => {

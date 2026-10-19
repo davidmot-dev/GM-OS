@@ -3,7 +3,7 @@ import { resoudreCorpusDeCampagne } from '../../../electron/corpusDeCampagne';
 import type { GroupeDuCorpus } from '../../../electron/groupesDuCorpus';
 import { useSessionOSStore } from '../../modules/session/useSessionOSStore';
 import { tousLesPilotes } from '../../modules/session/store/tousLesPilotes';
-import { sessionBackupManager, fautIlSauvegarder } from '../../modules/session/logic/SessionBackupManager';
+import { instantaneAvant } from '../../modules/session/logic/SessionBackupManager';
 import {
     recenserLesDetenteurs, purgerLesDetenteurs,
     type RecensementDesDetenteurs,
@@ -280,27 +280,18 @@ export async function apercuDuPilote(driverId: string): Promise<ApercuDePurge | 
 async function instantanePrealable(
     genre: GenrePurge, nom: string,
 ): Promise<{ refus?: string; sansInstantane?: string }> {
-    const verdict = fautIlSauvegarder(useSessionOSStore.getState());
-
-    if (!verdict.ecrire) {
-        if (verdict.raison === 'aucune-campagne' || verdict.raison === 'pont-absent') {
-            return { sansInstantane: `Aucun instantané préalable (${verdict.details})` };
-        }
-        return { refus: `Sauvegarde préalable impossible — ${verdict.details} Rien n'a été purgé.` };
-    }
-
-    const avant = useSessionOSStore.getState().lastBackupAt;
-    await sessionBackupManager.sauvegarderMaintenant(
+    // La garde vit dans `SessionBackupManager.instantaneAvant` depuis le 2026-10-19 : l'import d'une archive la partage.
+    const issue = await instantaneAvant(
         `avant la purge ${genre === 'pilote' ? 'du pilote' : 'de la campagne'} « ${nom} »`,
         /* Une purge FAIT baisser la taille du fichier, et c'est voulu — sans ce
            drapeau, la garde anti-écrasement refuserait précisément la sauvegarde
            dont on a le plus besoin. */
         { baisseAttendue: true },
     );
+    if (issue.statut === 'sans-objet') return { sansInstantane: `Aucun instantané préalable (${issue.details})` };
+    if (issue.statut === 'refuse') return { refus: `Sauvegarde préalable impossible — ${issue.details} Rien n'a été purgé.` };
 
-    if (useSessionOSStore.getState().lastBackupAt === avant) {
-        return { refus: "La sauvegarde préalable n'a pas abouti : rien n'a été purgé." };
-    }
+    if (issue.statut === 'non-abouti') return { refus: "La sauvegarde préalable n'a pas abouti : rien n'a été purgé." };
     return {};
 }
 

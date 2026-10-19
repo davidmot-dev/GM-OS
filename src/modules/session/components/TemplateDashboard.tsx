@@ -142,9 +142,10 @@ const TemplateDashboard: React.FC = () => {
             });
         };
 
-        await nexusService.importBundle(onConflict);
+        const resultat = await nexusService.importBundle(onConflict);
         setConflictState(null);
-        setTimeout(() => setNexusProgress(null), 3000);
+        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer » (lot E6).
+        if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
     const handleConflictResolve = (resolution: NexusConflictResolution) => {
@@ -675,7 +676,8 @@ const TemplateDashboard: React.FC = () => {
         {/* Nexus HUD v2 — overlay glassmorphism plein écran */}
         <NexusHUD 
             progress={nexusProgress} 
-            onResolveInteraction={(choice) => nexusService.resolveInteraction(choice)} 
+            onResolveInteraction={(choice) => nexusService.resolveInteraction(choice)}
+            onClose={() => setNexusProgress(null)} 
         />
         {/* Nexus Conflict Resolver — modal décision utilisateur */}
         {conflictState && (

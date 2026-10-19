@@ -174,6 +174,46 @@ class SessionBackupManager {
 
 export const sessionBackupManager = SessionBackupManager.getInstance();
 
+/** Ce qu'a donné l'instantané pris avant un geste qui écrit beaucoup. */
+export type IssueDeLInstantane =
+    | { statut: 'ecrit' }
+    /** Rien à sauver (aucune campagne) : on avance, et on le dit. */
+    | { statut: 'sans-objet'; details: string }
+    /** L'état n'est pas digne de confiance (fenêtre secondaire, base pas relue, démonstration) : on ne touche à rien. */
+    | { statut: 'refuse'; details: string }
+    /** Le juge disait oui, et pourtant rien n'a été écrit. */
+    | { statut: 'non-abouti' };
+
+/**
+ * **Un instantané AVANT un geste qui écrit beaucoup** — une purge, un import.
+ *
+ * Né dans la purge (`PurgeService`, 2026-09), mis en commun le 2026-10-19 pour
+ * l'import d'une archive (lot E6 du chantier des archives) : *deux copies d'une
+ * même garde finissent par ne plus dire pareil.*
+ *
+ * ⛔ `sauvegarderMaintenant` **ne lève jamais** et ne rend rien : un refus comme
+ * un échec y rendent le même `undefined` qu'une réussite. On demande donc son
+ * verdict au juge **avant**, et on vérifie **après** que la date de dernière
+ * sauvegarde a bougé — ce que seule une écriture réussie fait. *Un filet qu'on
+ * ne vérifie pas n'est pas un filet, c'est une intention.*
+ */
+export async function instantaneAvant(
+    motif: string,
+    options: { baisseAttendue?: boolean } = {},
+): Promise<IssueDeLInstantane> {
+    const verdict = fautIlSauvegarder(useSessionOSStore.getState());
+    if (!verdict.ecrire) {
+        if (verdict.raison === 'aucune-campagne' || verdict.raison === 'pont-absent') {
+            return { statut: 'sans-objet', details: verdict.details };
+        }
+        return { statut: 'refuse', details: verdict.details };
+    }
+
+    const avant = useSessionOSStore.getState().lastBackupAt;
+    await sessionBackupManager.sauvegarderMaintenant(motif, options);
+    return useSessionOSStore.getState().lastBackupAt === avant ? { statut: 'non-abouti' } : { statut: 'ecrit' };
+}
+
 /*
   Branché au module et non dans un composant : la sauvegarde de sortie ne doit
   pas dépendre du fait qu'un écran soit monté. Et on répond **toujours**, même

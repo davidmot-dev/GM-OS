@@ -107,6 +107,8 @@ interface NexusHUDProps {
     progress: NexusProgress | null;
     /** Callback pour résoudre une interaction demandée par le service */
     onResolveInteraction?: (choice: 'localize' | 'ignore') => void;
+    /** Ferme l'écran — offert quand un import laisse un bilan à lire (lot E6). */
+    onClose?: () => void;
 }
 
 // ─────────────────────────────────────────────
@@ -212,7 +214,7 @@ const PhaseTimeline: React.FC<{ currentPhase: NexusOperationPhase; isImport: boo
 // COMPOSANT PRINCIPAL
 // ─────────────────────────────────────────────
 
-export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteraction }) => {
+export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteraction, onClose }) => {
     const { t, i18n } = useTranslation();
     const [visible, setVisible] = useState(false);
     const [logs, setLogs] = useState<string[]>([]);
@@ -485,9 +487,32 @@ export const NexusHUD: React.FC<NexusHUDProps> = ({ progress, onResolveInteracti
                             )}
                             <span className="text-xs font-bold">
                                 {isDone
-                                    ? t('modules:system.nexus.hud.auto_close')
+                                    ? (progress?.bilan?.length ? t('modules:system.nexus.hud.bilan_title') : t('modules:system.nexus.hud.auto_close'))
                                     : `${t('modules:system.nexus.hud.error_prefix')}${progress?.message ?? t('modules:system.nexus.messages.unknown_error')}`}
                             </span>
+                        </div>
+                    )}
+
+                    {/* Lot E6 : le bilan de ce qui est entré — l'écran reste ouvert pour qu'on le lise. */}
+                    {isDone && !!progress?.bilan?.length && (
+                        <div className="mx-6 mb-6 space-y-3">
+                            <ul className="space-y-1.5 text-ui-11 text-app-text/70 leading-relaxed">
+                                {progress.bilan.map((ligne, i) => (
+                                    <li key={i} className="flex gap-2">
+                                        <span className="text-etat-succes/60">•</span>
+                                        <span>{ligne}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                            {onClose && (
+                                <button
+                                    id="nexus-bilan-fermer"
+                                    onClick={onClose}
+                                    className="w-full py-2 px-4 bg-app-text/5 hover:bg-app-text/10 text-app-text/70 text-ui-11 font-bold rounded-lg transition-colors border border-app-text/10"
+                                >
+                                    {t('modules:system.nexus.hud.close')}
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>

@@ -78,6 +78,24 @@ Depuis le 2026-10-19, **toute campagne qui arrive pose la question**, qu'elle ex
 autre poste.* Le choix se fait **avant que rien n'entre** : annuler ne laisse plus aucun média
 orphelin dans le Media Hub.
 
+La fenêtre montre d'abord **ce que l'archive apporte**, compté : PNJ, personnages, lieux, actes,
+scènes, indices, séances, journaux, storyboard, tuiles de lumière, médias… Ce qui vaut zéro n'est
+pas listé.
+
+Puis, une fois votre choix fait :
+
+1. **Une sauvegarde automatique est écrite avant que rien n'entre** — la même garde que la purge.
+   Si GM-OS ne peut pas l'écrire (base pas encore relue, données de démonstration), **l'import
+   s'arrête sans rien toucher** et dit pourquoi. Sur un poste sans aucune campagne, il n'y a rien à
+   sauver : l'import passe, et le bilan le dit.
+2. Les médias entrent, puis la campagne.
+3. **Le bilan s'affiche et reste à l'écran jusqu'à « Fermer »** : la sauvegarde préalable, ce que
+   vous avez choisi (et, en cas de remplacement, le nom de la version écrasée), ce qui est entré
+   compté, et les médias entrés ou en échec. Il est aussi écrit dans le journal de l'application,
+   pour être relu plus tard.
+
+Un **pilote** (`.gmos-driver`) passe par la même sauvegarde préalable et le même bilan.
+
 **Si la campagne n'est pas sur ce poste :**
 
 | Choix | Effet |

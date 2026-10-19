@@ -31,9 +31,15 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > le choix se fait **avant** l'entrée des médias, qui sont étiquetés pour la campagne qui entre
 > (défaut corrigé : annuler laissait des orphelins, remplacer désétiquetait les médias tout juste
 > importés, une copie recevait ceux de l'original). Essais : `rejouerLaCampagne.test.ts`,
-> `choixDeLImport.test.ts`. Suite : E6 (aperçu, sauvegarde avant écriture, journal), puis E5.
+> `choixDeLImport.test.ts`. **E6 fait** : l'**aperçu** (`recensementDeLArchive.ts`, la même liste
+> pour l'aperçu et le bilan) s'affiche dans la fenêtre de choix ; un **instantané** est écrit après
+> le choix et avant toute écriture — garde mise en commun avec la purge
+> (`SessionBackupManager.instantaneAvant`) : refusé ou non abouti, **rien n'entre** ; sans objet
+> (aucune campagne), on avance et on le dit ; le **bilan** (sauvegarde, choix, version écrasée,
+> décomptes, médias) part au journal de l'application et reste à l'écran de progression jusqu'à
+> « Fermer ». Pilotes compris. Suite : E5 (`.gmos-medias`).
 
-**Les décisions du § 7 sont prises ; E0, E1, E3, E2 et E4 sont codés.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
+**Les décisions du § 7 sont prises ; E0 à E4 et E6 sont codés. Reste E5.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de
 coder : le code bouge).
 

@@ -3474,6 +3474,8 @@
         "log_title": "nexus.log",
         "initialization": "Initialization...",
         "auto_close": "Automatic closing in 3 seconds...",
+        "bilan_title": "What came in",
+        "close": "Close",
         "error_prefix": "Error: ",
         "interaction": {
           "title": "Portability Optimization",

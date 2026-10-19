@@ -23,6 +23,9 @@
 
 import { clonerLaCampagne, type Fabrique } from './clonerLaCampagne';
 import { rejouerLaCampagne } from './rejouerLaCampagne';
+import { recenserLArchive, enUneLigne } from './recensementDeLArchive';
+import { instantaneAvant } from '../../session/logic/SessionBackupManager';
+import { Logger } from '../../../utils/logger';
 import { extraireLesSatellites, injecterLesSatellites } from './satellitesDeLaCampagne';
 import { useSessionOSStore } from '../../session/useSessionOSStore';
 import { useBestiaireStore } from '../../combat/useBestiaireStore';
@@ -1467,6 +1470,15 @@ export class NexusService {
      *                     Si absent, la stratégie "replace" est appliquée par défaut.
      * @returns Résultat de l'opération d'import
      */
+    /**
+     * **Le journal de ce qui est entré** — lot E6 (2026-10-19). Le bilan part au
+     * journal de l'application (le fichier de log, relisible après coup) et à
+     * l'écran de progression, qui reste ouvert tant qu'on ne l'a pas lu.
+     */
+    private consignerLeBilan(bilan: readonly string[]): void {
+        for (const ligne of bilan) Logger.info(`[Nexus] Import — ${ligne}`);
+    }
+
     public async importBundle(onConflict?: OnConflictCallback): Promise<NexusImportResult> {
         // Guard : vérification du pont IPC
         if (!window.appBridge?.nexus) {
@@ -1553,6 +1565,9 @@ export class NexusService {
                 exporteeLe: manifest.exportedAt,
                 entites: manifest.stats?.entityCount ?? campaignState.entities.length,
                 seances: manifest.stats?.sessionCount ?? campaignState.sessions.length,
+                // Lot E6 : l'aperçu de ce qui va entrer, compté comme le bilan le comptera.
+                contenu: recenserLArchive(campaignState),
+                medias: Object.keys(raw.assetData ?? {}).length,
             } : undefined;
             let resolution: NexusConflictResolution = { strategy: 'replace' };
 
@@ -1573,6 +1588,29 @@ export class NexusService {
                 gmToast(i18next.t('modules:system.nexus.messages.import_cancelled'), 'info');
                 return { success: false, failedAssets: [], warnings: [], error: i18next.t('modules:system.nexus.messages.import_cancelled') };
             }
+
+            /*
+              **Un instantané avant d'écrire** — lot E6 (2026-10-19). Un import
+              qui remplace écrase une campagne ou un pilote ; même une copie
+              écrit dans une dizaine de magasins. La garde est celle de la
+              purge (`instantaneAvant`) : si l'état n'est pas digne de confiance,
+              ou si la sauvegarde n'a pas abouti, **rien n'entre**.
+            */
+            const nomQuiArrive = isDriver ? (manifest.driverName ?? '?') : (manifest.campaignName ?? '?');
+            this.emitProgress('importing', 55, 'Sauvegarde avant import…');
+            const instantane = await instantaneAvant(`avant l'import ${isDriver ? 'du pilote' : 'de la campagne'} « ${nomQuiArrive} »`);
+            const bilan: string[] = [];
+            if (instantane.statut === 'refuse' || instantane.statut === 'non-abouti') {
+                const errMsg = instantane.statut === 'refuse'
+                    ? `Sauvegarde préalable impossible — ${instantane.details} Rien n'a été importé.`
+                    : "La sauvegarde préalable n'a pas abouti : rien n'a été importé.";
+                this.emitProgress('error', 0, errMsg);
+                gmToast(errMsg, 'error');
+                return { success: false, failedAssets: [], warnings: [], error: errMsg };
+            }
+            bilan.push(instantane.statut === 'ecrit'
+                ? `Sauvegarde automatique écrite juste avant l'import, à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}.`
+                : `Aucune sauvegarde préalable : ${instantane.details}`);
 
             // Si stratégie 'replace' et qu'un ID de campagne est présent, on nettoie les anciennes références média
             // pour éviter de saturer le Media Hub avec des imports orphelins.
@@ -1647,7 +1685,13 @@ export class NexusService {
                 this.injectDriverState(finalState);
 
                 // Fin Driver
-                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'));
+                bilan.push(resolution.strategy === 'clone'
+                    ? `Pilote « ${finalState.gameDriver.name} » importé en copie.`
+                    : conflicts.length > 0
+                        ? `Pilote « ${finalState.gameDriver.name} » importé : la version locale « ${conflicts[0].existingName} » a été remplacée.`
+                        : `Pilote « ${finalState.gameDriver.name} » importé.`);
+                this.consignerLeBilan(bilan);
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'), { bilan });
                 gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${manifest.driverName}`, 'success');
 
                 return {
@@ -1655,6 +1699,7 @@ export class NexusService {
                     campaignName: manifest.driverName,
                     failedAssets: [],
                     warnings: [],
+                    bilan,
                 };
             } else if (campaignState) {
                 // CAMPAIGN IMPORT
@@ -1711,8 +1756,19 @@ export class NexusService {
                     store.setActiveCampaign(finalState.campaign.id);
                     store.setCurrentView('cockpit');
 
-                    // Phase 8 : Succès
-                    this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'));
+                    // Phase 8 : Succès — et le bilan de ce qui est entré (lot E6)
+                    const nom = finalState.campaign.name;
+                    bilan.push(
+                        resolution.strategy === 'rejouer' ? `« ${nom} » importée en nouvelle partie : séances, journaux et parcours effacés, réserves au départ.`
+                        : resolution.strategy === 'clone' ? `« ${nom} » importée en copie, à côté de l'original.`
+                        : conflicts.length > 0 ? `« ${nom} » importée : la version locale « ${conflicts[0].existingName} » a été remplacée.`
+                        : `« ${nom} » importée telle quelle.`,
+                        `Entré : ${enUneLigne(recenserLArchive(finalState))}.`,
+                        `Médias : ${Object.keys(assetMap).length} entré(s)`
+                            + (failedAssets.length ? `, ${failedAssets.length} en échec (${failedAssets.join(', ')}).` : '.'),
+                    );
+                    this.consignerLeBilan(bilan);
+                    this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'), { bilan });
                     gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${manifest.campaignName}`, 'success');
 
                     return {
@@ -1720,6 +1776,7 @@ export class NexusService {
                         campaignName: manifest.campaignName,
                         failedAssets,
                         warnings: [],
+                        bilan,
                     };
                 } finally {
                     // Désactiver le mode Sync

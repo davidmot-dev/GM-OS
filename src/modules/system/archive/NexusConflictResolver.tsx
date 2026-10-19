@@ -235,6 +235,30 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                     ))}
                 </div>
 
+                {/* Lot E6 : l'aperçu — ce que l'archive apporte, compté comme le bilan le comptera. */}
+                {!!arrivee?.contenu?.length && (
+                    <div className="px-6 pb-4">
+                        <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-widest mb-2">
+                            Ce que l'archive apporte
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                            {arrivee.contenu.map(l => (
+                                <span key={l.libelle} className="text-ui-10 text-app-text/60 bg-app-text/5 border border-app-text/10 rounded-full px-2 py-0.5">
+                                    {l.nombre} {l.libelle}
+                                </span>
+                            ))}
+                            {!!arrivee.medias && (
+                                <span className="text-ui-10 text-app-text/60 bg-app-text/5 border border-app-text/10 rounded-full px-2 py-0.5">
+                                    {arrivee.medias} médias
+                                </span>
+                            )}
+                        </div>
+                        <p className="text-ui-10 text-app-text/30 mt-2 leading-snug">
+                            Une sauvegarde automatique est écrite avant que rien n'entre.
+                        </p>
+                    </div>
+                )}
+
                 {/* Actions */}
                 <div className="px-6 pb-6 space-y-2.5">
                     <p className="text-ui-10 text-app-text/30 font-bold uppercase tracking-widest mb-3">

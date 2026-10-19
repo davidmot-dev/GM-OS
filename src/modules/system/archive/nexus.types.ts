@@ -306,6 +306,8 @@ export interface NexusImportResult {
     /** Avertissements non-bloquants */
     warnings: string[];
     error?: string;
+    /** Ce qui est entré, ligne à ligne — la sauvegarde préalable, le choix, les décomptes (lot E6). */
+    bilan?: string[];
 }
 
 // ─────────────────────────────────────────────
@@ -336,6 +338,8 @@ export interface NexusProgress {
     /** Nombre d'URLs distantes détectées */
     remoteUrlCount?: number;
     error?: string;
+    /** À la fin d'un import : ce qui est entré. L'écran reste ouvert pour qu'on le lise (lot E6). */
+    bilan?: string[];
 }
 
 // ─────────────────────────────────────────────
@@ -395,6 +399,10 @@ export interface ArriveeDUneCampagne {
     exporteeLe: string;
     entites: number;
     seances: number;
+    /** L'aperçu : ce que l'archive porte, compté (lot E6, `recensementDeLArchive.ts`). */
+    contenu?: import('./recensementDeLArchive').LigneDuRecensement[];
+    /** Le nombre de médias embarqués. */
+    medias?: number;
 }
 
 /** Ce que l'écran présente : les conflits (peut-être aucun) et la campagne qui arrive. */

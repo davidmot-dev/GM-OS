@@ -84,9 +84,10 @@ const CampaignLibrary: React.FC = () => {
             });
         };
 
-        await nexusService.importBundle(onConflict);
+        const resultat = await nexusService.importBundle(onConflict);
         setConflictState(null);
-        setTimeout(() => setNexusProgress(null), 3000);
+        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer » (lot E6).
+        if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
     const handleConflictResolve = (resolution: NexusConflictResolution) => {
@@ -323,6 +324,7 @@ const CampaignLibrary: React.FC = () => {
                 <NexusHUD
                     progress={nexusProgress}
                     onResolveInteraction={(choice) => nexusService.resolveInteraction(choice)}
+            onClose={() => setNexusProgress(null)}
                 />
             )}
 
