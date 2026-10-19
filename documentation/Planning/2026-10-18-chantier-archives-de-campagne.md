@@ -76,8 +76,16 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > (`direLesIntrouvables`, `collectAssetPaths(state, usages)`), et seules les **tuiles réglées**
 > partent dans l'archive des médias.
 
-**Les décisions du § 7 sont prises ; E0 à E6 sont codés (19/10). Export essayé à vide le 19/10 ;
-l'import reste à essayer.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
+> **Second essai de David, 19/10 au soir**, sur l'instance de test garnie de quelques médias
+> (« À la claire fontaine ») : le `.gmos` emporte ses 4 médias (deux portraits de PNJ, le portrait
+> d'un personnage, une musique reconnue `audio/mpeg`), rien d'introuvable ; le `.gmos-medias` ses 4
+> médias étiquetés et sa playlist. Import fait ensuite — David : *« ok ça fonctionne »*.
+> **Question ouverte** : l'archive des médias ne prend que les médias **étiquetés** (et ceux des
+> sons et d'Image-OS) ; un portrait de PNJ non étiqueté part dans le `.gmos` mais pas dans le
+> `.gmos-medias`. Proposé : y ajouter tout ce que la campagne **utilise**.
+
+**Les décisions du § 7 sont prises ; E0 à E6 sont codés et essayés par David le 19/10 (instance de
+test).** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de
 coder : le code bouge).
 
