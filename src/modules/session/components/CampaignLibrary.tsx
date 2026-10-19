@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, Trash2, ArrowRight, Settings, Package, Upload, Power, Archive, ArchiveRestore, Eraser, ImagePlus, PenLine } from 'lucide-react';
+import { Plus, Search, Trash2, ArrowRight, Settings, Package, Upload, Power, Archive, ArchiveRestore, Eraser, ImagePlus, PenLine, Images } from 'lucide-react';
 import { ResolvedImage } from '../../../components/ResolvedImage';
 import { Etiquette } from '../../../components/socle';
 import { ceQueLaClotureVaFaire } from '../logic/trame';
@@ -114,6 +114,15 @@ const CampaignLibrary: React.FC = () => {
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
         await nexusService.exportBundle(id, { includeAssets: true });
         setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    /** La seconde archive — les médias, à réimporter dans une autre campagne (lot E5, 2026-10-19). */
+    const exporterLesMedias = async (id: string) => {
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
+        const resultat = await nexusService.exportMediasBundle(id);
+        // Réussi, l'export laisse un bilan à lire : l'écran reste ouvert jusqu'à « Fermer ».
+        if (!resultat.success) setTimeout(() => setNexusProgress(null), 3000);
     };
 
     const cloturerOuRouvrir = (campaign: (typeof campaigns)[number]) => {
@@ -266,6 +275,13 @@ const CampaignLibrary: React.FC = () => {
                                                 : t('modules:session.campaign_library.status.nexus_lite_tooltip')}
                                         >
                                             <Package size={12} />{t('modules:session.campaign_library.agencement.exporter', { count: medias })}
+                                        </button>
+                                        <button
+                                            onClick={() => void exporterLesMedias(campaign.id)}
+                                            className={`${geste} text-app-muted hover:text-accent`}
+                                            title={t('modules:session.campaign_details.actions.nexus_export_medias_tip')}
+                                        >
+                                            <Images size={12} />{t('modules:session.campaign_library.agencement.exporter_medias')}
                                         </button>
                                         <button onClick={() => gmCustom('campaign-edit', campaign)} className={`${geste} text-app-muted hover:text-accent`}>
                                             <Settings size={12} />{t('common:actions.edit')}

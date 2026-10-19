@@ -180,6 +180,17 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
     // Lot E5 : une archive des médias demande seulement la campagne qui les reçoit.
     const pourMedias = arrivee?.genre === 'medias';
     const [cible, setCible] = useState(arrivee?.campagneParDefaut ?? '');
+    /*
+      **Le rouge est réservé au conflit** (2026-10-19). Depuis que toute campagne
+      qui arrive demande comment l'importer, la fenêtre s'ouvre le plus souvent
+      sans rien écraser : un titre « danger » y criait au loup. Sans conflit, elle
+      prend la teinte d'information. Des classes écrites en entier : Tailwind ne
+      voit pas les noms fabriqués.
+    */
+    const ton = sansConflit
+        ? { halo: 'bg-etat-info/10', bord: 'border-etat-info/20', ligne: 'via-etat-info/40', pastille: 'bg-etat-info/10 border-etat-info/30', icone: 'text-etat-info', discret: 'text-etat-info/50', titre: 'text-etat-info' }
+        : { halo: 'bg-etat-danger/10', bord: 'border-etat-danger/20', ligne: 'via-etat-danger/40', pastille: 'bg-etat-danger/10 border-etat-danger/30', icone: 'text-etat-danger', discret: 'text-etat-danger/50', titre: 'text-etat-danger' };
+    const IconeDuTitre = sansConflit ? Download : Shield;
     const handleStrategy = (strategy: NexusConflictStrategy) => {
         onResolve(pourMedias ? { strategy, campagneCible: cible } : { strategy });
     };
@@ -196,28 +207,28 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
         /* Backdrop overlay */
         <div className="fixed inset-0 z-[210] flex items-center justify-center bg-app-bg/70 backdrop-blur-sm animate-[fadeIn_200ms_ease-out]">
             {/* Glow ambiant */}
-            <div className="absolute w-96 h-96 bg-etat-danger/10 rounded-full blur-3xl pointer-events-none" />
+            <div className={`absolute w-96 h-96 ${ton.halo} rounded-full blur-3xl pointer-events-none`} />
 
             {/* Panneau principal */}
-            <div className="relative w-[480px] max-w-[95vw] bg-app-bg/85 backdrop-blur-2xl border border-etat-danger/20 rounded-2xl overflow-hidden shadow-2xl animate-[slideUp_250ms_ease-out]">
+            <div className={`relative w-[480px] max-w-[95vw] bg-app-bg/85 backdrop-blur-2xl border ${ton.bord} rounded-2xl overflow-hidden shadow-2xl animate-[slideUp_250ms_ease-out]`}>
 
                 {/* Scanline déco */}
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-etat-danger/40 to-transparent" />
+                <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent ${ton.ligne} to-transparent`} />
 
                 {/* Header */}
                 <div className="px-6 pt-6 pb-4 border-b border-app-text/5">
                     <div className="flex items-center gap-3 mb-1">
-                        <div className="w-10 h-10 rounded-xl bg-etat-danger/10 border border-etat-danger/30 flex items-center justify-center">
-                            <Shield size={18} className="text-etat-danger" />
+                        <div className={`w-10 h-10 rounded-xl border ${ton.pastille} flex items-center justify-center`}>
+                            <IconeDuTitre size={18} className={ton.icone} />
                         </div>
                         <div>
                             <div className="flex items-center gap-1.5 mb-0.5">
-                                <Zap size={9} className="text-etat-danger/50" />
-                                <span className="text-ui-9 text-etat-danger/50 font-bold uppercase tracking-[0.2em]">
+                                <Zap size={9} className={ton.discret} />
+                                <span className={`text-ui-9 ${ton.discret} font-bold uppercase tracking-[0.2em]`}>
                                     Nexus-OS · Import
                                 </span>
                             </div>
-                            <h2 className="text-base font-black text-etat-danger leading-tight">
+                            <h2 className={`text-base font-black ${ton.titre} leading-tight`}>
                                 {pourMedias ? 'Importer des médias' : sansConflit ? 'Importer une campagne' : 'Conflit de données détecté'}
                             </h2>
                         </div>

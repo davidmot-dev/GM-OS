@@ -149,7 +149,8 @@ autre campagne du même univers** pour y retrouver ses images, ses sons, ses mus
 éclairages.
 
 **Exporter** : panneau de la campagne → encadré **Nexus-OS** → **Exporter les médias
-(.gmos-medias)**. Le bilan dit ce qui est parti, et ce qui était introuvable.
+(.gmos-medias)**, ou, dans la **bibliothèque des campagnes**, **Exporter les médias** sous la carte
+de la campagne. Le bilan dit ce qui est parti, et ce qui était introuvable.
 
 | Ce qui part | |
 | :--- | :--- |

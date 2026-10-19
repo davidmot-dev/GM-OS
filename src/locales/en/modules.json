@@ -2503,6 +2503,7 @@
         "cloturee": "Closed",
         "ecrire_synopsis": "Write a synopsis",
         "exporter": "Export ({{count}} media)",
+        "exporter_medias": "Export media",
         "cloturer": "Close",
         "rouvrir": "Reopen",
         "gerer_active": "Manage the campaign",
