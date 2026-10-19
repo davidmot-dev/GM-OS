@@ -66,12 +66,14 @@ test('R3/R4 : ouvrage collectif, jet tablette, repos, guérisons et rechargement
         await repos.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-repos.jpg'),type:'jpeg',quality:85});
         await repos.getByText('Bilan de fin du Château Dormant',{exact:true}).click();
         await repos.getByLabel('Nuit ou date de jeu (unique)',{exact:true}).fill('5 Dragon');
-        await repos.getByLabel('Stress et famine traités ou sans objet ; moral, chance et enchantements vérifiés pour ce bilan',{exact:true}).check();
+        await repos.getByLabel('Famine traitée ou sans objet ; enchantements non permanents vérifiés',{exact:true}).check();
+        await repos.getByLabel('d20 de moral au matin',{exact:true}).fill('11');
         await repos.getByLabel('d100 de guérison — reprise-legere-0',{exact:true}).fill('30');
         await repos.getByRole('button',{name:'Prévisualiser le bilan de nuit',exact:true}).click();await valider(repos);
         expect(await lire()).toMatchObject({vie:8,reve_pts:15});
         await repos.getByLabel('Nuit ou date de jeu (unique)',{exact:true}).fill('6 Dragon');
-        await repos.getByLabel('Stress et famine traités ou sans objet ; moral, chance et enchantements vérifiés pour ce bilan',{exact:true}).check();
+        await repos.getByLabel('Famine traitée ou sans objet ; enchantements non permanents vérifiés',{exact:true}).check();
+        await repos.getByLabel('d20 de moral au matin',{exact:true}).fill('11');
         await repos.getByLabel('d100 de récupération de vie, si exigible',{exact:true}).fill('30');
         await repos.getByRole('button',{name:'Prévisualiser le bilan de nuit',exact:true}).click();
         await repos.screenshot({path:path.join(sortie,'jeu-reves-de-dragons-chateau-dormant.jpg'),type:'jpeg',quality:85});
@@ -88,6 +90,7 @@ test('R3/R4 : ouvrage collectif, jet tablette, repos, guérisons et rechargement
         await jet.locator('select').nth(0).selectOption('agilite');await jet.locator('select').nth(1).selectOption('discretion');
         await jet.getByRole('button',{name:'Lancer',exact:true}).click();
         await jet.getByRole('button',{name:'Conserver ce résultat pour une tâche',exact:true}).click();
+        await valider(jet);
         await expect.poll(async()=>!!(await lire())!.__rddJetPourTache231).toBe(true);
         const dernier=(await lire())!.__rddJetPourTache231 as unknown as {id:string;degre:DegreDeReussite};
         const tachesPJ=pj.getByRole('region',{name:'Points de tâche RdD'});

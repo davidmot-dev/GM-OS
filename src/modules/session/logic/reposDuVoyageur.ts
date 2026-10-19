@@ -3,6 +3,8 @@ import { bandesDuJet } from '../../dice/systemes/revesDeDragons';
 import { proposerFatigue } from './fatigueDuVoyageur';
 import { CLEFS_DE_SOINS, CLE_SANTE_VOYAGEUR, etatsDeSanteVoyageur, lireSanteVoyageur, nombreDeSante, proposerTempsSante, type BlessureVoyageur } from './santeDuVoyageur';
 import { operationDeVoyageur, type DonneesDeVoyage } from './operationsDeVoyageur';
+import { convertirStress } from './progressionDuVoyageur';
+import { entierVoyageur, lireMoral, majMoral, resultatMoral, type SituationDeMoral } from './moralDuVoyageur';
 
 /** R4 : Livre 2.3.1, p. 87–94, 98–102, 187 et 206–208.
  * `jour` désigne la journée en cours, non celle qui commence après Château Dormant.
@@ -105,6 +107,8 @@ export interface BilanDeNuit {
     nom: string; controlesManuels: boolean; maladieOuPoison: boolean;
     jetsBlessures: Record<string,number>; herbes: Record<string,number>;
     deVie?: number; bonusDecoction: number;
+    etapesVoyageur?: {stressDe?:number;stressSecond?:number;moralDe:number;situation:SituationDeMoral;chanceDepensee:boolean};
+    destineeBlessures?:string[];destineeVie?:boolean;
 }
 export function proposerChateauDormant(d: DonneesDeVoyage, choix: BilanDeNuit, id: string) {
     const {r,s} = exiger(d);
@@ -115,6 +119,18 @@ export function proposerChateauDormant(d: DonneesDeVoyage, choix: BilanDeNuit, i
     if (!Number.isInteger(choix.bonusDecoction) || choix.bonusDecoction < 0 || choix.bonusDecoction > 10) throw new Error('Bonus de décoction : de 0 à 10.');
     const de = (v: number | undefined) => {if (!Number.isInteger(v) || v! < 1 || v! > 100) throw new Error('Renseigner chaque jet d100 exigible (1 à 100).');return v!;};
     const details: string[] = [];
+    let complement:DonneesDeVoyage = {};
+    if (choix.etapesVoyageur && Number(d.stress ?? 0) > 0 && r.heuresDormies > 0) {
+        const c = convertirStress(d,`jour-${r.jour}`,choix.etapesVoyageur.stressDe!,choix.etapesVoyageur.stressSecond);
+        complement = c.maj;details.push(...c.details);
+    } else if (choix.etapesVoyageur) details.push('Aucune conversion de stress : pas de stress ou pas d’heure de sommeil.');
+    let destinee = Number(d.points_de_destinee ?? 0);
+    const sauverConstitution = (degre:DegreDeReussite,choisi:boolean) => {
+        if (!choisi) return degre;
+        entierVoyageur(Math.round(destinee*10),10,70);destinee = Math.round((destinee-1)*10)/10;
+        const resultat:DegreDeReussite = degre === 'echec-total' ? 'echec-normal' : 'reussite-particuliere';
+        details.push(`Un point de destinée : CONSTITUTION ${degre} → ${resultat}.`);return resultat;
+    };
     let vie = nombreDeSante(d,'vie'), endurance = nombreDeSante(d,'endurance',0), fatigue = nombreDeSante(d,'fatigue',0);
     const avaitDesBlessures = s.blessures.length > 0;
     const maladieAvant = r.maladieOuPoison;
@@ -125,7 +141,7 @@ export function proposerChateauDormant(d: DonneesDeVoyage, choix: BilanDeNuit, i
         if (b.guerison.prochainJour > r.jour) continue;
         const herbe = choix.herbes[b.id] ?? 0;
         if (!Number.isInteger(herbe) || herbe < 0 || herbe > 10) throw new Error('Bonus effectif d’herbe : de 0 à 10, après brins manquants.');
-        const jet = preparerGuerison({...d,vie},b,herbe), tirage = de(choix.jetsBlessures[b.id]), degre = degreDuDe(tirage,jet.echelle);
+        const jet = preparerGuerison({...d,vie},b,herbe), tirage = de(choix.jetsBlessures[b.id]), degre = sauverConstitution(degreDuDe(tirage,jet.echelle),choix.destineeBlessures?.includes(b.id) ?? false);
         b.bonusGuerison = 0;b.guerison.bonusHerbe = 0;
         if (estUneReussite(degre)) {
             if (b.gravite === 'legere') s.blessures = s.blessures.filter(x => x.id !== b.id);
@@ -137,18 +153,28 @@ export function proposerChateauDormant(d: DonneesDeVoyage, choix: BilanDeNuit, i
     if (avaitDesBlessures && !s.blessures.length || maladieAvant && !choix.maladieOuPoison) r.vieApresJour = r.jour+1;
     if (!avaitDesBlessures && !maladieAvant && !choix.maladieOuPoison && r.jour >= r.vieApresJour && vie < nombreDeSante(d,'vie_max',1)) {
         const ajustement = -(nombreDeSante(d,'vie_max',1)-vie)+choix.bonusDecoction;
-        const echelle = bandesDuJet(nombreDeSante(d,'constitution',1),ajustement), seuil = echelle.chances, tirage = de(choix.deVie), degre = degreDuDe(tirage,echelle);
+        const echelle = bandesDuJet(nombreDeSante(d,'constitution',1),ajustement), seuil = echelle.chances, tirage = de(choix.deVie), degre = sauverConstitution(degreDuDe(tirage,echelle),choix.destineeVie ?? false);
         const gain = degre === 'reussite-particuliere' ? 2 : estUneReussite(degre) ? 1 : degre === 'echec-total' ? -1 : 0;
         const effective = Math.min(gain,nombreDeSante(d,'vie_max',1)-vie);vie += effective;
         if (effective > 0) {endurance = Math.max(endurance,Math.min(plafondEnduranceAuRepos({...d,vie,[CLE_SANTE_VOYAGEUR]:s},true),endurance+2*effective));fatigue = Math.max(0,fatigue-2*effective,nombreDeSante(d,'endurance_max',1)-endurance);}
         details.push(`Récupération de vie : CONSTITUTION à ${ajustement}, ${seuil} %, d100 ${tirage}, ${degre} ; ${effective} PV. Ajustement général exclu.`);
     } else details.push('Pas de récupération de vie ce soir (blessure, maladie/poison, délai ou vie complète).');
+    if (choix.etapesVoyageur) {
+        const e = choix.etapesVoyageur, m = lireMoral({...d,...complement}), apres = resultatMoral(m,e.situation,e.moralDe);
+        complement = {...complement,...majMoral(apres)};
+        details.push(`Moral du matin ${e.situation} : d20 ${e.moralDe} / ${10+m.moral}, moral ${m.moral} → ${apres.moral}.`);
+        const courant = entierVoyageur(d.points_de_chance), maximum = entierVoyageur(d.chance);
+        const depensee = d.__rddChanceDepensee231 === true || e.chanceDepensee;
+        complement.points_de_chance = depensee ? courant : Math.max(courant,Math.min(maximum,courant+1));
+        complement.__rddChanceDepensee231 = false;
+        details.push(depensee ? 'Chance dépensée aujourd’hui : aucune récupération.' : `Journée sans dépense : chance ${courant} → ${complement.points_de_chance}.`);
+    }
     let reve = nombreDeSante(d,'reve_pts',0);
     if (reve > nombreDeSante(d,'reve_seuil',0)) {reve--;details.push('Après le stress : rêve supérieur au seuil, −1 point.');}
     s.alite = s.blessures.some(b => b.gravite === 'critique' || b.gravite === 'grave' && !b.soinsComplets);
     if (vie < -nombreDeSante(d,'sc',1)) s.mort = true;
     if (endurance > 0 && vie > 0) s.inconscient = false;
     s.derniereOperation = id;r.dernierBilan = choix.nom;r.bilans.push(choix.nom);r.jour++;r.heuresDormies = 0;
-    const maj = {vie,endurance,fatigue,reve_pts:reve,[CLE_SANTE_VOYAGEUR]:s,__rddRepos231:r,__rddOperationFatigue:id};
+    const maj = {...complement,...(destinee !== Number(d.points_de_destinee ?? 0) ? {points_de_destinee:destinee} : {}),vie,endurance,fatigue,reve_pts:reve,[CLE_SANTE_VOYAGEUR]:s,__rddRepos231:r,__rddOperationFatigue:id};
     return operationDeVoyageur(d,id,maj,`Château Dormant — ${choix.nom}`,details);
 }

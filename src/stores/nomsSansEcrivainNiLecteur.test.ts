@@ -184,7 +184,7 @@ const TOLERES: Record<string, string> = {
     'resetCombat': "⚠️ useCombatStore : implémentée, aucun appelant",
     'setAnalysisResult': "⚠️ useForgeStore : implémentée, aucun appelant",
     'clearPlaylistPads': "⚠️ useMusicStore : implémentée, aucun appelant",
-    'addTime': "⚠️ useClockStore : implémentée, aucun appelant — le temps ne s'avance pas par cette porte",
+    // 19/10/2026 : R7 appelle addTime depuis l'observation astrologique (vingt minutes).
     'resetTensionClock': "⚠️ useClockStore : implémentée, aucun appelant — une horloge de tension ne se remet pas à zéro",
     'setActiveCalendar': "⚠️ useClockStore : implémentée, aucun appelant — le calendrier actif ne se choisit pas",
     'setGems': "⚠️ useGemStore : implémentée, aucun appelant",

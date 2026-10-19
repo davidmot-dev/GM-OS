@@ -7,6 +7,9 @@ import { initialiserRepos, lireRepos, preparerGuerison, proposerChateauDormant, 
 import { operationDeVoyageur, type DonneesDeVoyage } from '../logic/operationsDeVoyageur';
 import { useOperationDeVoyageur } from '../hooks/useOperationDeVoyageur';
 import { CLASSE_OPERATION as classe, ValidationOperationVoyageur } from './ValidationOperationVoyageur';
+import { bandesDuJet } from '../../dice/systemes/revesDeDragons';
+import { degreDuDe } from '../../dice/degresDeReussite';
+import type { SituationDeMoral } from '../logic/moralDuVoyageur';
 
 export function PanneauReposVoyageur({donnees,appliquer,avantOperation,lectureSeule = false}: {
     donnees: DonneesDeVoyage; appliquer: (d:DonneesDeVoyage) => void; avantOperation?: () => boolean; lectureSeule?: boolean;
@@ -19,7 +22,10 @@ export function PanneauReposVoyageur({donnees,appliquer,avantOperation,lectureSe
     const [jets,setJets] = useState<Record<string,string>>({}), [herbes,setHerbes] = useState<Record<string,string>>({});
     const [deVie,setDeVie] = useState(''), [decoction,setDecoction] = useState('0');
     const [vieEligible,setVieEligible] = useState(false);
-    const op = useOperationDeVoyageur(donnees,d => {appliquer(d);setDdr('');setMaitrise('');setJets({});setHerbes({});setDeVie('');setNomNuit('');setControles(false);setDecoction('0');},avantOperation);
+    const [stressDe,setStressDe]=useState(''),[stressSecond,setStressSecond]=useState(''),[moralDe,setMoralDe]=useState('');
+    const [situationMoral,setSituationMoral]=useState<SituationDeMoral>('neutre'),[chanceDepensee,setChanceDepensee]=useState(false);
+    const [destineeBlessures,setDestineeBlessures]=useState<Record<string,boolean>>({}),[destineeVie,setDestineeVie]=useState(false);
+    const op = useOperationDeVoyageur(donnees,d => {appliquer(d);setDdr('');setMaitrise('');setJets({});setHerbes({});setDeVie('');setNomNuit('');setControles(false);setDecoction('0');setStressDe('');setStressSecond('');setMoralDe('');setChanceDepensee(false);setDestineeBlessures({});setDestineeVie(false);},avantOperation);
     let r,s;try {r = lireRepos(donnees);s = lireSanteVoyageur(donnees);} catch(e) {return <p role="alert">{(e as Error).message}</p>;}
     if (!s) return null;
     const maladieActuelle = maladie ?? r?.maladieOuPoison ?? false;
@@ -67,22 +73,39 @@ export function PanneauReposVoyageur({donnees,appliquer,avantOperation,lectureSe
                 <div className="space-y-3 my-3">
                     <label className="text-sm flex flex-col">Nuit ou date de jeu (unique)<input className={classe} maxLength={120} placeholder="Ex. 5 Dragon" value={nomNuit} onChange={e => {setNomNuit(e.target.value);op.annuler();}} /></label>
                     <label className="text-sm block"><input type="checkbox" checked={maladieActuelle} onChange={e => {setMaladie(e.target.checked);op.annuler();}} /> Maladie ou empoisonnement encore actif</label>
-                    <p className="text-sm">À résoudre dans l’ordre : stress si le personnage a dormi au moins une heure ; famine ; guérisons et vie ; moral du matin ; éventuel point de chance ; rêve au-dessus du seuil ; enchantements non permanents. Stress, famine, moral, chance et enchantements se traitent manuellement.</p>
-                    <p className="text-sm">Avant l’aperçu, faites le stress et la famine ; contrôlez les autres opérations manuelles après la validation. La perte éventuelle de rêve intervient après le stress.</p>
-                    <label className="text-sm block"><input type="checkbox" checked={controles} onChange={e => setControles(e.target.checked)} /> Stress et famine traités ou sans objet ; moral, chance et enchantements vérifiés pour ce bilan</label>
+                    <p className="text-sm">Ordre : stress après une heure de sommeil ; famine ; guérisons et vie ; moral ; chance ; rêve au-dessus du seuil ; enchantements non permanents. Le stress utilise les points de rêve avant leur perte nocturne.</p>
+                    <label className="text-sm block"><input type="checkbox" checked={controles} onChange={e => setControles(e.target.checked)} /> Famine traitée ou sans objet ; enchantements non permanents vérifiés</label>
+                    {Number(donnees.stress ?? 0)>0&&r.heuresDormies>0&&<>
+                        <p className="text-xs">Stress : rêve actuel {String(donnees.reve_pts)} à zéro, sans état ni astrologie.</p>
+                        <label className="flex flex-col text-sm">d100 de stress<input aria-label="d100 de stress" type="number" min={1} max={100} className={classe} value={stressDe} onChange={e=>setStressDe(e.target.value)} /></label>
+                        <button type="button" className={classe} onClick={()=>{setStressDe(String(DiceEngine.roll(100)));setStressSecond('');}}>Tirer le stress</button>
+                        {stressDe&&degreDuDe(Number(stressDe),bandesDuJet(Number(donnees.reve_pts),0))==='reussite-particuliere'&&<>
+                            <label className="flex flex-col text-sm">Second d100 de stress<input aria-label="Second d100 de stress" type="number" min={1} max={100} className={classe} value={stressSecond} onChange={e=>setStressSecond(e.target.value)} /></label>
+                            <button type="button" className={classe} onClick={()=>setStressSecond(String(DiceEngine.roll(100)))}>Tirer la double particulière</button>
+                        </>}
+                    </>}
+                    <label className="flex flex-col text-sm">Situation du moral au matin<select aria-label="Moral au matin" className={classe} value={situationMoral} onChange={e=>setSituationMoral(e.target.value as SituationDeMoral)}>
+                        <option value="neutre">Neutre</option><option value="heureuse">Heureuse</option><option value="malheureuse">Malheureuse</option></select></label>
+                    <label className="flex flex-col text-sm">d20 de moral au matin<input aria-label="d20 de moral au matin" type="number" min={1} max={20} className={classe} value={moralDe} onChange={e=>setMoralDe(e.target.value)} /></label>
+                    <button type="button" className={classe} onClick={()=>setMoralDe(String(DiceEngine.roll(20)))}>Tirer le moral au matin</button>
+                    <label className="text-sm block"><input type="checkbox" checked={chanceDepensee} onChange={e=>setChanceDepensee(e.target.checked)} /> Chance dépensée aujourd’hui hors du suivi automatique</label>
                     {exigibles.map(b => <div key={b.id} className="rounded border border-app-border p-2 space-y-2">
                         <strong>Guérison — {b.gravite} {b.localisation || b.id}</strong>
                         <p className="text-xs">CONSTITUTION à {preparerGuerison(donnees,b,Number(herbes[b.id] || 0)).ajustement} ; {preparerGuerison(donnees,b,Number(herbes[b.id] || 0)).seuil} %. Bonus de soin +{b.bonusGuerison}, consommé après ce test.</p>
                         <label className="text-sm flex flex-col">Bonus d’herbe effectif — {b.id}<input type="number" className={classe} min={0} max={10} value={herbes[b.id] ?? '0'} onChange={e => {setHerbes(v=>({...v,[b.id]:e.target.value}));op.annuler();}} /></label>
                         <label className="text-sm flex flex-col">d100 de guérison — {b.id}<input type="number" className={classe} min={1} max={100} value={jets[b.id] ?? ''} onChange={e => {setJets(v=>({...v,[b.id]:e.target.value}));op.annuler();}} /></label>
                         <button type="button" className={classe} disabled={!!op.apercu} onClick={() => setJets(v=>({...v,[b.id]:String(DiceEngine.roll(100))}))}>Tirer le d100 de {b.id}</button>
+                        <label className="text-sm block"><input type="checkbox" checked={!!destineeBlessures[b.id]} onChange={e=>setDestineeBlessures(v=>({...v,[b.id]:e.target.checked}))} /> Dépenser une destinée sur la CONSTITUTION de {b.id}</label>
                     </div>)}
                     <p className="text-xs">PV : aucun test tant qu’il reste une blessure, maladie ou poison ; attendre le lendemain de leur disparition. Pas de malus général ; seule la vie manquante et la meilleure décoction autorisée ajustent le jet.</p>
                     <label className="text-sm flex flex-col">d100 de récupération de vie, si exigible<input type="number" className={classe} min={1} max={100} value={deVie} onChange={e => {setDeVie(e.target.value);op.annuler();}} /></label>
                     <button type="button" className={classe} disabled={!!op.apercu} onClick={() => setDeVie(String(DiceEngine.roll(100)))}>Tirer le d100 de vie</button>
+                    <label className="text-sm block"><input type="checkbox" checked={destineeVie} onChange={e=>setDestineeVie(e.target.checked)} /> Dépenser une destinée sur la CONSTITUTION de récupération de vie</label>
                     <label className="text-sm flex flex-col">Bonus de la meilleure décoction (Lyre à Araignée)<input type="number" className={classe} min={0} max={10} value={decoction} onChange={e => {setDecoction(e.target.value);op.annuler();}} /></label>
                     <button type="button" className={classe} disabled={!!op.apercu} onClick={() => op.proposer(id => proposerChateauDormant(donnees,
-                        {nom:nomNuit.trim(),controlesManuels:controles,maladieOuPoison:maladieActuelle,jetsBlessures:manuscrits(jets),herbes:manuscrits(herbes),deVie:deVie.trim() ? Number(deVie) : undefined,bonusDecoction:Number(decoction)},id))}>Prévisualiser le bilan de nuit</button>
+                        {nom:nomNuit.trim(),controlesManuels:controles,maladieOuPoison:maladieActuelle,jetsBlessures:manuscrits(jets),herbes:manuscrits(herbes),deVie:deVie.trim() ? Number(deVie) : undefined,bonusDecoction:Number(decoction),
+                            destineeBlessures:Object.keys(destineeBlessures).filter(k=>destineeBlessures[k]),destineeVie,
+                            etapesVoyageur:{stressDe:stressDe ? Number(stressDe):undefined,stressSecond:stressSecond ? Number(stressSecond):undefined,moralDe:Number(moralDe),situation:situationMoral,chanceDepensee}},id))}>Prévisualiser le bilan de nuit</button>
                 </div>
             </details>
         </>}

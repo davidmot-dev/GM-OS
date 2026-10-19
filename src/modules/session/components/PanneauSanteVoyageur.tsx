@@ -133,6 +133,9 @@ export function PanneauSanteVoyageur({donnees, appliquer, avantOperation, roundC
                 {apercu.p.des.length > 0 && <p className="text-sm">Dés : {apercu.p.des.map((d,i) => <span key={i}>d{d.faces}={d.valeur}{' '}</span>)}</p>}
                 {apercu.p.details.map((v,i) => <p key={i} className="text-sm">{v}</p>)}
                 <p className="text-sm">État proposé : {etatsDeSanteVoyageur({...donnees,...apercu.p.maj})?.libelle}.</p>
+                {apercu.p.jetVie&&!apercu.p.jetVie.destinee&&apercu.p.jetVie.tirage!==1&&Number(donnees.points_de_destinee)>=1&&<button type="button" className={classe} onClick={()=>{
+                    const j=apercu.p.jetVie!;proposer(id=>proposerJetVie(donnees,j.blessureId,()=>j.tirage,id,true));
+                }}>Dépenser une destinée sur ce même jet de vie</button>}
                 <div className="flex flex-wrap gap-2"><button type="button" className="px-3 py-2 rounded bg-accent text-app-bg font-bold" onClick={() => {
                     if (verrou.current) return;
                     if (JSON.stringify(donnees) !== apercu.empreinte) {setErreur('La fiche a changé : refaire l’aperçu.');setApercu(null);return;}

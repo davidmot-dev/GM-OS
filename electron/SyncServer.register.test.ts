@@ -232,3 +232,25 @@ describe('handleRegister — après rotation du secret', () => {
         expect(errorsSentTo(ws)[0]?.payload?.code).toBe('pairing_required');
     });
 });
+
+describe('R7 — le serveur projette l’astrologie par socket identifié',()=>{
+    it('retire les nombres réels et les prédictions des autres PJ, même dans un différentiel',()=>{
+        const a={...makeSocket(),readyState:1},b={...makeSocket(),readyState:1},sans={...makeSocket(),readyState:1};
+        register(a,{deviceId:'astro-a',role:'player',characterId:'pj-a'});
+        register(b,{deviceId:'astro-b',role:'player',characterId:'pj-b'});
+        register(sans,{deviceId:'astro-sans',role:'player'});
+        for(const c of [a,b,sans])c.send.mockClear();
+        const astres={version:1,origine:0,nombres:{0:12},observations:[{secret:'dé du MJ'}],predictions:{'pj-a':[{jour:0,nombre:3}],'pj-b':[{jour:0,nombre:8}]}};
+        const interne=server as unknown as {wss:unknown;broadcastAction:(a:unknown,s?:unknown,r?:string)=>void};
+        const ancienne=interne.wss;interne.wss={clients:new Set([a,b,sans])};
+        try{
+            interne.broadcastAction({type:'sync',payload:{session:{campaigns:[{id:'campagne',rddAstrologie:astres}]}}},undefined,'player');
+            for(const c of [a,b,sans]){
+                const brut=c.send.mock.calls[0][0],r=JSON.parse(brut).payload.session.campaigns[0].rddAstrologie;
+                expect(r.nombres).toBeUndefined();expect(r.observations).toBeUndefined();
+                expect(Object.keys(r.predictions)).toEqual(c===a?['pj-a']:c===b?['pj-b']:[]);
+                expect(brut).not.toContain('dé du MJ');
+            }
+        }finally{interne.wss=ancienne;}
+    });
+});

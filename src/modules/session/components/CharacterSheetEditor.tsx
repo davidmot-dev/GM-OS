@@ -18,6 +18,9 @@ import { PanneauFatigueVoyageur } from './PanneauFatigueVoyageur';
 import { PanneauSanteVoyageur } from './PanneauSanteVoyageur';
 import { PanneauTachesVoyageur } from './PanneauTachesVoyageur';
 import { PanneauReposVoyageur } from './PanneauReposVoyageur';
+import { PanneauProgressionVoyageur } from './PanneauProgressionVoyageur';
+import { PanneauRecoursVoyageur } from './PanneauRecoursVoyageur';
+import { PanneauAstrologieVoyageur } from './PanneauAstrologieVoyageur';
 import ChampDuReferentiel from './fields/ChampDuReferentiel';
 import { EcartDeJeuDuPersonnage } from './EcartDeJeuDuPersonnage';
 import { useSessionOSStore } from '../useSessionOSStore';
@@ -497,6 +500,15 @@ const CharacterSheetEditor: React.FC = () => {
                                 })} />
                         )}
                         {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && <>
+                            <PanneauProgressionVoyageur key={`progression-${character.id}`} fiche={template} donnees={{...character.sheetData,...editor.localData}}
+                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant la progression.','warning');return false;}}
+                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            <PanneauRecoursVoyageur key={`recours-${character.id}`} campagneId={character.campaignId} donnees={{...character.sheetData,...editor.localData}}
+                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant un recours.','warning');return false;}}
+                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />
+                            <PanneauAstrologieVoyageur key={`astrologie-${character.id}`} campagneId={character.campaignId} personnageId={character.id} donnees={{...character.sheetData,...editor.localData}}
+                                appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})}
+                                avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant une observation.','warning');return false;}} />
                             <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={{...character.sheetData,...editor.localData}}
                                 avantOperation={() => {if (!editor.aDesChangements) return true;gmToast('Sauvegardez la fiche avant de traiter un ouvrage.','warning');return false;}}
                                 appliquer={maj => updateCharacter(editor.selectedPlayer!.id,character.id,{sheetData:maj})} />

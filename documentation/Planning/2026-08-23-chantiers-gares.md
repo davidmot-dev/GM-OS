@@ -11881,6 +11881,20 @@ Pas d'installation, de données personnelles ouvertes ni de nouvelle publication
 TMR fonctionne à l'écran chez David. Commit local du lot R3/R4 demandé ; pas de nouveau
 push demandé. Les essais détaillés R3/R4 restent à éprouver en partie.
 
+**19/10 — suite demandée par David : « maintenant on va finir R5, R6, R7 », puis
+« gm-os est fermé ».** Codex intègre stress/XP/Archétype, recours chance/destinée/moral,
+étapes nocturnes correspondantes et astrologie privée liée à Clock-OS. Le nombre réel et
+les dés d'observation restent au MJ ; le serveur filtre les prédictions par personnage avant
+envoi. Le module TMR conserve sa frontière avec les fiches. R3/R4 est commité dans
+`ef659f35` ; **R5–R7 est vérifié : 8 319 tests réussis, sept E2E isolés réussis, types,
+construction et lint sans erreur.** Guides et cinq captures actualisés ; tranche PJ validée
+par le MJ, tablettes en consultation des compteurs et de leurs prédictions. Non commité/non
+poussé, sans nouvelle demande de publication. Les essais en partie restent à David.
+[Reprise R5–R7](2026-10-19-etat-et-reprise-codex-rdd-r5-r6-r7.md).
+**Demande suivante de David : « commit et pousse » (19/10).** Publication du lot sur la branche
+actuelle autorisée, après les contrôles du hook ; les modifications locales étrangères au lot
+restent exclues du commit. Le journal Git fait foi pour la publication effective.
+
 ### 142 · Chantier Nephilim — Sciences occultes au jet, Vécus du livre, errata — 18/10/2026
 
 Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim »*. Tout est
@@ -11980,7 +11994,7 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
 | 73 | **Plugin de bannières** | § 138 ; plugin privé 0.1.0 créé, archive vérifiée et outil hors ligne éprouvé, 11 contrôles verts | Ajouter le plugin et créer une première bannière | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-bannieres.md) |
 | 74 | **GM-OS Studio** | § 139 ; six ateliers et un accueil dans un plugin privé 0.1.0, 12 contrôles verts et sept skills distants vérifiés | Ajouter le plugin et envoyer « Affiche le menu » | [Livraison et reprise](2026-10-17-etat-et-reprise-codex-gmos-studio.md) |
 | 75 | **Fiche Nephilim — Sciences occultes** | § 140 ; HTML sept pages livré puis intégré dans `6be8ff1a`, 239 clés conservées, 747 nouvelles ; validateur complet sans diagnostic. **18/10** : `ka.dominant` ajouté (`68a05e73`, Codex), raccordé au moteur v10 et à la correspondance (`dd7e3b67`), éprouvé par David | Éprouver en partie | [Livraison et clés exactes](2026-10-17-nephilim-7-pages-livraison.md) |
-| 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; R0/R1/R2 et première boucle R8 poussés (`94e0aaed`), carte officielle en couleur ; première tranche R3/R4 validée par les tests, non publiée | David : éprouver les ouvrages et le repos ; puis poursuivre R8 ou R5–R7 | Rien ; [reprise R3/R4](2026-10-18-etat-et-reprise-codex-rdd-r3-r4.md) |
+| 76 | **Rêve de Dragon — règles et module TMR** | § 141 ; R0/R1/R2 et première boucle R8 poussés (`94e0aaed`), R3/R4 commité (`ef659f35`) ; R5–R7 PJ vérifiés (8 319 tests, sept E2E), non commités | David : éprouver progression, recours et astrologie ; R8 garde les maîtrises et sorts à arbitrer | Rien ; [reprise R5–R7](2026-10-19-etat-et-reprise-codex-rdd-r5-r6-r7.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ⏸ Garé pour plus tard (18/10) ; à la reprise : E0 (Obsidian filtré), puis E1, E3 | Rien — décisions prises le 18/10 ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
 

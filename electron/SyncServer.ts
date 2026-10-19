@@ -14,6 +14,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import path from 'node:path';
 import fs from 'fs-extra';
 import { sessionManager } from './SessionManager';
+import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrologiePartagee';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
 import { evaluateAction } from './actionPolicy';
@@ -732,7 +733,11 @@ export class SyncServer {
         this.wss.clients.forEach((client: ExtendedWebSocket) => {
             if (client !== sender && client.readyState === WebSocket.OPEN) {
                 if (!targetRole || client.role === targetRole) {
-                    client.send(message);
+                    const a = action as {type?:string;payload?:unknown};
+                    if (a?.type === 'sync' && (client.role === 'player' || client.role === 'hub')) {
+                        const personnage = client.deviceId ? sessionManager.getClient(client.deviceId)?.characterId ?? null : null;
+                        client.send(JSON.stringify({...a,payload:filtrerAstrologieDistante(a.payload,personnage)}));
+                    } else client.send(message);
                 }
             }
         });

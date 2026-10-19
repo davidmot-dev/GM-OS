@@ -104,6 +104,8 @@ export interface GroupeDeCampagne {
 }
 
 export interface Campaign {
+    /** R7 : secrets MJ et prédictions personnelles, filtrés avant chaque diffusion joueur. */
+    rddAstrologie?: import('../modules/session/logic/astrologieDuVoyageur').AstrologieVoyageur;
     id: string;
     name: string;
     system: string;

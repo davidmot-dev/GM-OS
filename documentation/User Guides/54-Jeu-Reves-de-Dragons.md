@@ -1,6 +1,6 @@
 # 🐉 Jeu — Rêves de Dragons
 
-> **Pilote décrit :** « Rêve de Dragon », exporté le 2026-10-18, version R0 consolidée selon le livre 2.3.1, avec suivis R1 fatigue, R2 blessures, R3 ouvrages, R4 repos et module TMR raccordé aux fiches dans GM-OS. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « Rêve de Dragon », exporté le 2026-10-18, version R0 consolidée selon le livre 2.3.1, avec suivis R1–R7 et module TMR raccordé aux fiches dans GM-OS ; intégration R5–R7 du 2026-10-19. Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Un d100 sous un **pourcentage**, lu dans la **table de résolution** du jeu, qui croise une
 caractéristique et un ajustement.
@@ -237,10 +237,12 @@ L'excédent de rêve est conservé ; queues, têtes et souffles éventuels reste
 ce que leurs conséquences aient été traitées et marquées résolues par le gardien.
 
 **Bilan de fin du Château Dormant** traite une journée à la fois. Donnez à chaque nuit un nom
-ou une date unique. Résolvez d'abord stress et famine ; vérifiez moral du matin, chance et
-enchantements selon l'ordre rappelé. Ces opérations restent manuelles. L'assistant prépare
-les tests de guérison exigibles, la récupération éventuelle des PV et la perte d'un point de
-rêve s'il reste supérieur au seuil, après le stress. Il n'avance pas Clock-OS.
+ou une date unique. S'il y a du stress et au moins une heure de sommeil déclarée, renseignez
+son d100, puis le second dé en cas de particulière. Choisissez la situation du moral au matin
+et son d20. Signalez une éventuelle dépense de chance effectuée hors du suivi.
+L'assistant traite dans l'ordre stress, guérisons, vie, moral, chance et excédent de rêve.
+**La famine et les enchantements non permanents restent à résoudre à la table** et à confirmer.
+Le bilan n'avance pas Clock-OS.
 
 ![L’aperçu du bilan de nuit avant son application](captures/jeu-reves-de-dragons-chateau-dormant.jpg)
 
@@ -258,6 +260,106 @@ fatigue associés à la vie récupérée sont traités dans le même aperçu.
 Chaque opération exige une validation et garde son reçu. Un aperçu périmé est refusé, le
 rechargement n'applique rien une deuxième fois. La tablette du joueur lit le suivi et les
 échéances ; le MJ valide repos et bilans. Les opérations sont consignées au journal du meneur.
+
+## Stress, expérience et Archétype — R5
+
+![Un niveau de Navigation augmenté après allocation des XP de stress](captures/jeu-reves-de-dragons-progression.jpg)
+
+Le pilote R0 déjà importé convient. Dans une fiche PJ reprise, **Stress, expérience et Archétype**
+montre le stress accumulé et les XP de stress restant à répartir. Le MJ attribue de 1 à 20 points
+par situation, avec son motif ; le compteur total peut dépasser vingt.
+
+La conversion se fait **dans le bilan de Château Dormant**, sur les points de rêve actuels à zéro,
+sans compétence, état général ni astrologie, avant la perte nocturne éventuelle de rêve.
+Une particulière demande un second jet pour vérifier la double particulière. Les arrondis,
+la perte d'un point de stress restant et l'exaltation/dissolution sont compris dans l'aperçu.
+
+Dans **Répartir et progresser**, reportez le potentiel de chaque compétence depuis votre véritable
+feuille d'Archétype. Il n'est pas déduit du niveau actuel. Allouez ensuite les XP de stress à une
+compétence inférieure à ce potentiel. Le niveau reste inchangé jusqu'à **Préparer l'augmentation
+d'un niveau**, dont l'aperçu montre le coût. Le carnet distingue XP de stress et XP d'exercice ;
+ces dernières permettent de progresser au-delà de l'Archétype. TAILLE et les dérivées ne
+s'augmentent pas directement ; les caractéristiques physiques humaines ne dépassent pas vingt.
+Une caractéristique augmentée fait recalculer ses valeurs dérivées, sans remplir les réserves.
+
+Pour l'exercice, conservez le résultat définitif du jet, puis utilisez **Expérience du dernier
+résultat définitif**. Une particulière à ajustement final négatif peut rapporter des XP, une fois
+seulement. Confirmez les dommages d'une attaque ou le simple test de mémoire si nécessaire ;
+choisissez la composante recevant un reliquat de dérivée. L'expérience du Draconic va en voie.
+Les XP d'un ancien carnet, d'un maître ou d'un livre peuvent être reportées avec leur provenance ;
+le calendrier d'apprentissage et les conditions de l'entraînement restent arbitrés par le MJ.
+Les XP de stress non réparties peuvent aussi acheter des points de voyage, à raison de deux XP
+pour un point. La tablette du joueur consulte le carnet ; le MJ valide les modifications.
+
+## Chance, destinée et moral — R6
+
+![Le point de moral est conservé après la relance réussie, avec un seul point de chance dépensé](captures/jeu-reves-de-dragons-recours.jpg)
+
+Le panneau **Chance, destinée et moral** distingue la caractéristique CHANCE de ses points
+dépensables. Les dixièmes de destinée sont les points de voyage : dix font une destinée,
+avec un maximum de sept destinées.
+
+Après un jet, **Conserver ce résultat pour les recours**, puis **Valider cette opération**
+le conserve dans la fiche. Sur un échec admissible, le MJ peut préparer un appel à la chance :
+le test utilise les points restants, avec l'astrologie applicable. Réussite : un point payé et
+une seule relance de cette même action ; échec : aucun point payé, aucune nouvelle chance
+ni destinée pour cette action. Un rechargement conserve ce choix. La relance garde les
+paramètres et le bonus de moral du jet initial.
+
+La destinée peut remplacer directement un échec admissible par une significative, sans dé
+ni perte de chance ; elle est refusée à ajustement final −11 ou inférieur. Les restrictions
+portent notamment sur les actions physiques et les perceptions actives, déclarées comme telles.
+Les jets de rêve, stress, moral, initiative, santé et les perceptions passives ne bénéficient pas
+de l'appel à la chance. La destinée possède ses exceptions propres : CONSTITUTION, jet de vie,
+ou récupération de tous les points de chance. Un jet de vie R2 propose son recours **sur le même
+dé déjà tiré**, avant validation des conséquences ; les jets de CONSTITUTION du bilan de nuit
+ont leur propre choix de destinée.
+
+**Engager le moral avant cette action admissible** ajoute un point à l'ajustement du jet.
+Si le moral est nul ou négatif, renseignez d'abord le d20 de l'énergie du désespoir. L'aperçu
+décompte les conséquences : le point engagé n'est perdu que si l'action échoue ; une relance
+réussie annule cette perte, sans coût supplémentaire. Acceptez ensuite le résultat définitif
+avant de le faire servir à une tâche ou à l'expérience. Le choix **Conserver ce résultat pour
+une tâche** clôture directement les recours, après son aperçu et sa validation.
+
+Le moral s'applique aussi à tous les jets de VOLONTÉ. Les jets de moral heureux, neutres et
+malheureux traitent les bornes −3/+3, l'exaltation et la dissolution. Ces deux compteurs
+s'annulent mutuellement et interviennent lors de la conversion du stress. À Château Dormant,
+un point de chance est rendu seulement si la journée n'a connu aucune dépense.
+Les recours se valident côté MJ ; la tablette suit le résultat et les compteurs.
+
+## Astrologie et heures draconiques — R7
+
+![Le carnet astrologique de la tablette ne montre que le nombre annoncé au personnage](captures/jeu-reves-de-dragons-astrologie.jpg)
+
+Dans Clock-OS, utilisez le temps **statique ou fantastique**. Dans **Astrologie et heures
+draconiques**, déclarez l'heure qui commence à l'instant affiché puis validez le repère.
+Cet instant devient le début de l'heure choisie au jour de jeu zéro. Le Vaisseau commence
+la journée et l'Araignée correspond à minuit, dix-huit heures après ce début.
+Ce raccord n'impose pas de calendrier ni d'heure à votre campagne existante.
+
+Dans **Préparation astrologique du MJ**, choisissez un jour de jeu et fixez son nombre réel
+de 1 à 12, choisi ou tiré au d12. Une fois fixé, il est conservé. Pour l'observation d'un
+personnage, confirmez que les étoiles sont visibles et que vingt minutes ont été jouées,
+renseignez la visibilité et le d100 secret. L'observation exige la nuit, du Serpent au
+Château Dormant ; les vingt minutes peuvent être avancées explicitement dans Clock-OS.
+Le même personnage ne peut pas observer deux fois le même jour depuis une même nuit,
+ni enchaîner deux observations à moins de vingt minutes de temps de jeu.
+
+Une réussite communique le nombre réel ; un échec le nombre erroné choisi par le MJ.
+Les XP d'une particulière restent secrètes jusqu'au choix explicite de les communiquer,
+avec un contrôle qui empêche leur double attribution.
+
+**Chaque tablette ne reçoit que les prédictions annoncées à son personnage**, sans nombre réel,
+dé secret ni indication de validité. Le carnet présente les heures favorables d'après cette
+prédiction, qui peut être fausse. Le MJ résout les jets de CHANCE, appels à la chance et rituels
+avec le véritable ajustement. Quand l'astrologie est active, ces jets sont donc réservés au
+MJ ; les actions ordinaires restent accessibles au joueur.
+Les heures n'accordent aucun bonus global aux actions ni aux sorts ordinaires.
+
+Les panneaux R5–R7 sont accessibles depuis les fiches PJ. Leur commande n'est pas ajoutée
+aux PNJ et combattants autonomes dans cette livraison. Le module externe TMR garde sa carte
+et son carnet ; les ressources, la progression et les règles restent dans GM-OS.
 
 ## Terres Médianes du Rêve — carte et coûts sur la fiche
 
@@ -314,7 +416,8 @@ confirmation** réessaie l'enregistrement du même reçu. **Annuler si aucun dé
 ne rembourse pas une opération déjà payée : elle termine sa confirmation. Si la fiche a été
 supprimée, restaurez-la avant de rapprocher l'opération.
 
-*Relu le 2026-10-18 — R0, R1 et R2 : consolidation, fatigue, encaissement, états et soins vérifiés
+*Relu le 2026-10-19 — R0, R1 et R2 : consolidation, fatigue, encaissement, états et soins vérifiés
 dans le Livre des Voyageurs 2.3.1, p. 42–45, 50–51, 78, 88–99, 120 et 162 ; rêve, p. 206–208.
 R3 et R4 : tâches et repos, p. 84–94 et 98–102 ; bilans, p. 87 ; rêve, p. 187 et 206–208.
+R5–R7 : Archétype et expérience, p. 143–148 ; chance, destinée et astrologie, p. 150–157 ; moral, p. 158–161.
 R8 : carte, déplacements et raccord aux fiches, Livre du Haut-Rêve 2.3.1, p. 178–183 et 208.*

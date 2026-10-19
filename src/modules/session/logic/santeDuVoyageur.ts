@@ -27,6 +27,7 @@ export interface SanteVoyageur {
     derniereOperation: string;
 }
 export interface PropositionSante {
+    jetVie?:{blessureId:string;tirage:number;destinee:boolean};
     maj: DonneesDeSante; motif: string; details: string[]; des: {faces: number; valeur: number}[];
 }
 export const CLEFS_DE_SOINS: Record<GraviteVoyageur, number> = {legere: 2, grave: 4, critique: 6};
@@ -217,10 +218,14 @@ export function proposerJetEndurance(d: DonneesDeSante, tirer: TirerDuVoyageur, 
     if (de === 1) s.experienceConstitution++;
     return enregistrer(d,s,{},id,'Jet d’endurance',[`${de} / ${d.endurance} : ${reussi ? 'réussi' : `sonné jusqu’à la fin du round ${s.sonneJusqua}`}${de === 1 ? ' ; 1 XP Constitution à reporter' : ''}.`],des);
 }
-export function proposerJetVie(d: DonneesDeSante, blessureId: string, tirer: TirerDuVoyageur, id: string): PropositionSante {
+export function proposerJetVie(d: DonneesDeSante, blessureId: string, tirer: TirerDuVoyageur, id: string, avecDestinee = false): PropositionSante {
     if (!jetsDeVieRequis(d).some(b => b.id === blessureId)) throw new Error('Ce jet de vie n’est pas encore exigible.');
     const s = exigerSuivi(d), b = s.blessures.find(b => b.id === blessureId)!, des: PropositionSante['des'] = [];
-    const de = tirage(tirer,20,des), avant = nombreDeSante(d,'vie');
+    const brut = tirage(tirer,20,des), avant = nombreDeSante(d,'vie');
+    const depenser = avecDestinee && brut !== 1;
+    const destinee = Number(d.points_de_destinee ?? 0);
+    if (depenser && (!Number.isFinite(destinee) || destinee < 1 || destinee > 7)) throw new Error('Un point de destinée est requis.');
+    const de = depenser ? brut === 20 ? 19 : 1 : brut;
     const reussi = de === 1 || de !== 20 && de <= avant;
     if (de === 20) s.mort = true;
     const vie = avant-(reussi ? 0 : 1);
@@ -230,7 +235,8 @@ export function proposerJetVie(d: DonneesDeSante, blessureId: string, tirer: Tir
     for (const autre of s.blessures) if (autre.id !== b.id && hemorragieActive(autre,s.secondes) && autre.prochainJetVie !== null) {
         autre.prochainJetVie = s.secondes+(autre.gravite === 'critique' ? 6 : nombreDeSante(d,'sc',1)*60)*facteur;
     }
-    return enregistrer(d,s,{vie},id,'Jet de vie',[`${de} / ${avant} : ${de === 20 ? 'mort immédiate' : reussi ? 'réussi' : 'perte de 1 point de vie'}.`],des);
+    return {...enregistrer(d,s,{vie,...(depenser ? {points_de_destinee:Math.round((destinee-1)*10)/10} : {})},id,'Jet de vie',
+        [...(depenser ? [`Destinée −1 : dé ${brut} transformé en ${de}.`] : []),`${de} / ${avant} : ${de === 20 ? 'mort immédiate' : reussi ? 'réussi' : 'perte de 1 point de vie'}.`],des),jetVie:{blessureId,tirage:brut,destinee:avecDestinee}};
 }
 export function proposerFinRound(d: DonneesDeSante, id: string, tirer?: TirerDuVoyageur): PropositionSante {
     const s = exigerSuivi(d);

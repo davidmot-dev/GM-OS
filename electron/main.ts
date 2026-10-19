@@ -7,6 +7,7 @@ import http from 'node:http'
 import https from 'node:https'
 import os from 'node:os';
 import dns from 'node:dns';
+import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrologiePartagee';
 
 // Fix pour les échecs de fetch sur Windows vers 127.0.0.1
 if (os.platform() === 'win32') {
@@ -838,12 +839,14 @@ ipcMain.on('image:sync-hub-data', (_event, type: string, imagePath: string) => {
 });
 
 ipcMain.on('remote:broadcast-sync', (_event, data) => {
+    // R7 : les fenêtres projetées n'ont pas de personnage identifié.
+    const publicData = filtrerAstrologieDistante(data, null);
     if (hubWindow && !hubWindow.isDestroyed()) {
-        hubWindow.webContents.send('remote:broadcast-sync', data);
+        hubWindow.webContents.send('remote:broadcast-sync', publicData);
     }
     for (const [, projWin] of projectorWindows) {
         if (!projWin.isDestroyed()) {
-            projWin.webContents.send('remote:broadcast-sync', data);
+            projWin.webContents.send('remote:broadcast-sync', publicData);
         }
     }
 });

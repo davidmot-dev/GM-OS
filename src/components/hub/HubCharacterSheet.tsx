@@ -23,6 +23,9 @@ import { PanneauFatigueVoyageur } from '../../modules/session/components/Panneau
 import { PanneauSanteVoyageur } from '../../modules/session/components/PanneauSanteVoyageur';
 import { PanneauTachesVoyageur } from '../../modules/session/components/PanneauTachesVoyageur';
 import { PanneauReposVoyageur } from '../../modules/session/components/PanneauReposVoyageur';
+import { PanneauProgressionVoyageur } from '../../modules/session/components/PanneauProgressionVoyageur';
+import { PanneauRecoursVoyageur } from '../../modules/session/components/PanneauRecoursVoyageur';
+import { PanneauAstrologieVoyageur } from '../../modules/session/components/PanneauAstrologieVoyageur';
 import { PanneauRepriseVoyageur } from '../../modules/session/components/PanneauRepriseVoyageur';
 import { estUneFicheDeVoyageur, lireFicheDeVoyageur, CLE_REPRISE } from '../../modules/session/logic/ficheDeVoyageur';
 import type { GameDriver } from '../../types/drivers';
@@ -411,6 +414,9 @@ const HubCharacterSheetContent: React.FC<ContentProps> = ({
                                 appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
                         )}
                         {estUneFicheDeVoyageur(template) && character.sheetData?.[CLE_REPRISE] === 1 && <>
+                            <PanneauProgressionVoyageur fiche={template} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation MJ. */ }} />
+                            <PanneauRecoursVoyageur donnees={valeursVues} lectureSeule appliquer={() => { /* Validation MJ. */ }} />
+                            <PanneauAstrologieVoyageur campagneId={campaignId} personnageId={character.id} donnees={valeursVues} lectureSeule />
                             <PanneauTachesVoyageur key={`taches-${character.id}`} nom={character.name} donnees={valeursVues}
                                 appliquer={maj => remoteUpdateCharacterSheetData(playerId,character.id,{sheetData:maj})} />
                             <PanneauReposVoyageur key={`repos-${character.id}`} donnees={valeursVues} lectureSeule appliquer={() => { /* Validation du repos réservée au MJ. */ }} />

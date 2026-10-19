@@ -65,7 +65,7 @@ export function etatDuVoyageur(d: DonneesDeFatigue): EtatDuVoyageur {
         assomme: fatigue >= debut || (typeof d.__rddFatigueReveil === 'number' && fatigue > d.__rddFatigueReveil), avertissements};
 }
 
-export type NatureDeJetVoyageur = 'action' | 'chance' | 'guerison' | 'stress' | 'resistance' | 'ethylisme';
+export type NatureDeJetVoyageur = 'action' | 'rituel' | 'chance' | 'guerison' | 'stress' | 'resistance' | 'ethylisme';
 export function malusDuJetVoyageur(etat: EtatDuVoyageur, nature: NatureDeJetVoyageur, champ: string): number {
     if (champ === 'chance' || ['chance','guerison','stress','resistance'].includes(nature)) return 0;
     return nature === 'ethylisme' ? etat.fatigueMalus + etat.vieMalus : etat.total;
