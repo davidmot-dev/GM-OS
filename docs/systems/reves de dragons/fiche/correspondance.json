@@ -1,0 +1,3261 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "reve-de-dragon-voyageur-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Rêve de Dragon et le gabarit reve-de-dragon-voyageur-fr (Livret du voyageur 2.0, livré par Codex le 2026-10-19). Écrite par outils/reve-de-dragon/relier_fiche_voyageur.py : les 99 champs historiques gardent leur identifiant, les autres reprennent la clé de la fiche, points changés en « _ ».",
+  "champs": [
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "age",
+      "fiche": "identity.age"
+    },
+    {
+      "gmos": "sexe",
+      "fiche": "identity.gender"
+    },
+    {
+      "gmos": "taille_cm",
+      "fiche": "identity.height"
+    },
+    {
+      "gmos": "poids_kg",
+      "fiche": "identity.weight"
+    },
+    {
+      "gmos": "cheveux",
+      "fiche": "identity.hair"
+    },
+    {
+      "gmos": "yeux",
+      "fiche": "identity.eyes"
+    },
+    {
+      "gmos": "beaute",
+      "fiche": "identity.beauty"
+    },
+    {
+      "gmos": "heure_naissance",
+      "fiche": "identity.birthHour"
+    },
+    {
+      "gmos": "taille",
+      "fiche": "attributes.size.value"
+    },
+    {
+      "gmos": "apparence",
+      "fiche": "attributes.appearance.value"
+    },
+    {
+      "gmos": "constitution",
+      "fiche": "attributes.constitution.value"
+    },
+    {
+      "gmos": "force",
+      "fiche": "attributes.strength.value"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "attributes.agility.value"
+    },
+    {
+      "gmos": "dexterite",
+      "fiche": "attributes.dexterity.value"
+    },
+    {
+      "gmos": "vue",
+      "fiche": "attributes.sight.value"
+    },
+    {
+      "gmos": "ouie",
+      "fiche": "attributes.hearing.value"
+    },
+    {
+      "gmos": "odorat_gout",
+      "fiche": "attributes.smellTaste.value"
+    },
+    {
+      "gmos": "volonte",
+      "fiche": "attributes.will.value"
+    },
+    {
+      "gmos": "intellect",
+      "fiche": "attributes.intellect.value"
+    },
+    {
+      "gmos": "empathie",
+      "fiche": "attributes.empathy.value"
+    },
+    {
+      "gmos": "reve",
+      "fiche": "attributes.dream.value"
+    },
+    {
+      "gmos": "chance",
+      "fiche": "attributes.luck.value"
+    },
+    {
+      "gmos": "vie",
+      "fiche": "resources.life.current"
+    },
+    {
+      "gmos": "endurance",
+      "fiche": "resources.endurance.current"
+    },
+    {
+      "gmos": "malus_armure",
+      "fiche": "resources.armorPenalty"
+    },
+    {
+      "gmos": "reve_pts",
+      "fiche": "resources.dream.current"
+    },
+    {
+      "gmos": "reve_seuil",
+      "fiche": "resources.dream.recoveryThreshold"
+    },
+    {
+      "gmos": "bricolage",
+      "fiche": "skills.craft.level"
+    },
+    {
+      "gmos": "chant",
+      "fiche": "skills.sing.level"
+    },
+    {
+      "gmos": "course",
+      "fiche": "skills.run.level"
+    },
+    {
+      "gmos": "cuisine",
+      "fiche": "skills.cook.level"
+    },
+    {
+      "gmos": "danse",
+      "fiche": "skills.dance.level"
+    },
+    {
+      "gmos": "dessin",
+      "fiche": "skills.draw.level"
+    },
+    {
+      "gmos": "discretion",
+      "fiche": "skills.stealth.level"
+    },
+    {
+      "gmos": "escalade",
+      "fiche": "skills.climb.level"
+    },
+    {
+      "gmos": "saut",
+      "fiche": "skills.jump.level"
+    },
+    {
+      "gmos": "seduction",
+      "fiche": "skills.seduce.level"
+    },
+    {
+      "gmos": "vigilance",
+      "fiche": "skills.awareness.level"
+    },
+    {
+      "gmos": "charpenterie",
+      "fiche": "skills.carpentry.level"
+    },
+    {
+      "gmos": "comedie",
+      "fiche": "skills.act.level"
+    },
+    {
+      "gmos": "commerce",
+      "fiche": "skills.trade.level"
+    },
+    {
+      "gmos": "equitation",
+      "fiche": "skills.ride.level"
+    },
+    {
+      "gmos": "maconnerie",
+      "fiche": "skills.masonry.level"
+    },
+    {
+      "gmos": "musique",
+      "fiche": "skills.music.level"
+    },
+    {
+      "gmos": "pickpocket",
+      "fiche": "skills.pickpocket.level"
+    },
+    {
+      "gmos": "survie_cite",
+      "fiche": "skills.survivalCity.level"
+    },
+    {
+      "gmos": "survie_exterieur",
+      "fiche": "skills.survivalOutdoors.level"
+    },
+    {
+      "gmos": "survie_foret",
+      "fiche": "skills.survivalForest.level"
+    },
+    {
+      "gmos": "travestissement",
+      "fiche": "skills.disguise.level"
+    },
+    {
+      "gmos": "acrobatie",
+      "fiche": "skills.acrobatics.level"
+    },
+    {
+      "gmos": "chirurgie",
+      "fiche": "skills.surgery.level"
+    },
+    {
+      "gmos": "jeu",
+      "fiche": "skills.gaming.level"
+    },
+    {
+      "gmos": "jonglerie",
+      "fiche": "skills.juggle.level"
+    },
+    {
+      "gmos": "maroquinerie",
+      "fiche": "skills.leatherwork.level"
+    },
+    {
+      "gmos": "metallurgie",
+      "fiche": "skills.metalwork.level"
+    },
+    {
+      "gmos": "natation",
+      "fiche": "skills.swim.level"
+    },
+    {
+      "gmos": "navigation",
+      "fiche": "skills.navigation.level"
+    },
+    {
+      "gmos": "orfevrerie",
+      "fiche": "skills.goldsmith.level"
+    },
+    {
+      "gmos": "serrurerie",
+      "fiche": "skills.locksmith.level"
+    },
+    {
+      "gmos": "alchimie",
+      "fiche": "skills.alchemy.level"
+    },
+    {
+      "gmos": "astrologie",
+      "fiche": "skills.astrology.level"
+    },
+    {
+      "gmos": "botanique",
+      "fiche": "skills.botany.level"
+    },
+    {
+      "gmos": "ecriture",
+      "fiche": "skills.writing.level"
+    },
+    {
+      "gmos": "legendes",
+      "fiche": "skills.legends.level"
+    },
+    {
+      "gmos": "medecine",
+      "fiche": "skills.medicine.level"
+    },
+    {
+      "gmos": "zoologie",
+      "fiche": "skills.zoology.level"
+    },
+    {
+      "gmos": "corps_a_corps",
+      "fiche": "combat.0.level"
+    },
+    {
+      "gmos": "dague_melee",
+      "fiche": "combat.1.level"
+    },
+    {
+      "gmos": "esquive",
+      "fiche": "combat.2.level"
+    },
+    {
+      "gmos": "dague_jet",
+      "fiche": "combat.3.level"
+    },
+    {
+      "gmos": "bouclier",
+      "fiche": "combat.4.level"
+    },
+    {
+      "gmos": "epee_1m",
+      "fiche": "combat.5.level"
+    },
+    {
+      "gmos": "arc",
+      "fiche": "combat.6.level"
+    },
+    {
+      "gmos": "onrios",
+      "fiche": "draconic.oniros.level"
+    },
+    {
+      "gmos": "hypnos",
+      "fiche": "draconic.hypnos.level"
+    },
+    {
+      "gmos": "narcos",
+      "fiche": "draconic.narcos.level"
+    },
+    {
+      "gmos": "thanatos",
+      "fiche": "draconic.thanatos.level"
+    },
+    {
+      "gmos": "fatigue",
+      "fiche": "tracks.fatigue"
+    },
+    {
+      "gmos": "charge_totale",
+      "fiche": "equipment.totalEncumbrance"
+    },
+    {
+      "gmos": "stress",
+      "fiche": "resources.stress"
+    },
+    {
+      "gmos": "points_de_chance",
+      "fiche": "resources.luck.current"
+    },
+    {
+      "gmos": "points_de_destinee",
+      "fiche": "resources.destiny"
+    },
+    {
+      "gmos": "moral",
+      "fiche": "route.morale"
+    },
+    {
+      "gmos": "identity_birthHourNumber",
+      "fiche": "identity.birthHourNumber"
+    },
+    {
+      "gmos": "identity_distinctive_first",
+      "fiche": "identity.distinctive.first"
+    },
+    {
+      "gmos": "identity_distinctive_second",
+      "fiche": "identity.distinctive.second"
+    },
+    {
+      "gmos": "attributes_appearance_experience",
+      "fiche": "attributes.appearance.experience"
+    },
+    {
+      "gmos": "attributes_constitution_experience",
+      "fiche": "attributes.constitution.experience"
+    },
+    {
+      "gmos": "attributes_strength_experience",
+      "fiche": "attributes.strength.experience"
+    },
+    {
+      "gmos": "attributes_agility_experience",
+      "fiche": "attributes.agility.experience"
+    },
+    {
+      "gmos": "attributes_dexterity_experience",
+      "fiche": "attributes.dexterity.experience"
+    },
+    {
+      "gmos": "attributes_sight_experience",
+      "fiche": "attributes.sight.experience"
+    },
+    {
+      "gmos": "attributes_hearing_experience",
+      "fiche": "attributes.hearing.experience"
+    },
+    {
+      "gmos": "attributes_smellTaste_experience",
+      "fiche": "attributes.smellTaste.experience"
+    },
+    {
+      "gmos": "attributes_will_experience",
+      "fiche": "attributes.will.experience"
+    },
+    {
+      "gmos": "attributes_intellect_experience",
+      "fiche": "attributes.intellect.experience"
+    },
+    {
+      "gmos": "attributes_empathy_experience",
+      "fiche": "attributes.empathy.experience"
+    },
+    {
+      "gmos": "attributes_dream_experience",
+      "fiche": "attributes.dream.experience"
+    },
+    {
+      "gmos": "attributes_luck_experience",
+      "fiche": "attributes.luck.experience"
+    },
+    {
+      "gmos": "skills_craft_experience",
+      "fiche": "skills.craft.experience"
+    },
+    {
+      "gmos": "skills_sing_experience",
+      "fiche": "skills.sing.experience"
+    },
+    {
+      "gmos": "skills_run_experience",
+      "fiche": "skills.run.experience"
+    },
+    {
+      "gmos": "skills_cook_experience",
+      "fiche": "skills.cook.experience"
+    },
+    {
+      "gmos": "skills_dance_experience",
+      "fiche": "skills.dance.experience"
+    },
+    {
+      "gmos": "skills_draw_experience",
+      "fiche": "skills.draw.experience"
+    },
+    {
+      "gmos": "skills_stealth_experience",
+      "fiche": "skills.stealth.experience"
+    },
+    {
+      "gmos": "skills_climb_experience",
+      "fiche": "skills.climb.experience"
+    },
+    {
+      "gmos": "skills_jump_experience",
+      "fiche": "skills.jump.experience"
+    },
+    {
+      "gmos": "skills_seduce_experience",
+      "fiche": "skills.seduce.experience"
+    },
+    {
+      "gmos": "skills_awareness_experience",
+      "fiche": "skills.awareness.experience"
+    },
+    {
+      "gmos": "skills_carpentry_experience",
+      "fiche": "skills.carpentry.experience"
+    },
+    {
+      "gmos": "skills_act_experience",
+      "fiche": "skills.act.experience"
+    },
+    {
+      "gmos": "skills_trade_experience",
+      "fiche": "skills.trade.experience"
+    },
+    {
+      "gmos": "skills_ride_experience",
+      "fiche": "skills.ride.experience"
+    },
+    {
+      "gmos": "skills_masonry_experience",
+      "fiche": "skills.masonry.experience"
+    },
+    {
+      "gmos": "skills_music_experience",
+      "fiche": "skills.music.experience"
+    },
+    {
+      "gmos": "skills_pickpocket_experience",
+      "fiche": "skills.pickpocket.experience"
+    },
+    {
+      "gmos": "skills_survivalCity_experience",
+      "fiche": "skills.survivalCity.experience"
+    },
+    {
+      "gmos": "skills_survivalOutdoors_experience",
+      "fiche": "skills.survivalOutdoors.experience"
+    },
+    {
+      "gmos": "skills_survivalDesert_level",
+      "fiche": "skills.survivalDesert.level"
+    },
+    {
+      "gmos": "skills_survivalDesert_experience",
+      "fiche": "skills.survivalDesert.experience"
+    },
+    {
+      "gmos": "skills_survivalForest_experience",
+      "fiche": "skills.survivalForest.experience"
+    },
+    {
+      "gmos": "skills_survivalIce_level",
+      "fiche": "skills.survivalIce.level"
+    },
+    {
+      "gmos": "skills_survivalIce_experience",
+      "fiche": "skills.survivalIce.experience"
+    },
+    {
+      "gmos": "skills_survivalSwamp_level",
+      "fiche": "skills.survivalSwamp.level"
+    },
+    {
+      "gmos": "skills_survivalSwamp_experience",
+      "fiche": "skills.survivalSwamp.experience"
+    },
+    {
+      "gmos": "skills_survivalMountain_level",
+      "fiche": "skills.survivalMountain.level"
+    },
+    {
+      "gmos": "skills_survivalMountain_experience",
+      "fiche": "skills.survivalMountain.experience"
+    },
+    {
+      "gmos": "skills_survivalUnderground_level",
+      "fiche": "skills.survivalUnderground.level"
+    },
+    {
+      "gmos": "skills_survivalUnderground_experience",
+      "fiche": "skills.survivalUnderground.experience"
+    },
+    {
+      "gmos": "skills_disguise_experience",
+      "fiche": "skills.disguise.experience"
+    },
+    {
+      "gmos": "skills_acrobatics_experience",
+      "fiche": "skills.acrobatics.experience"
+    },
+    {
+      "gmos": "skills_surgery_experience",
+      "fiche": "skills.surgery.experience"
+    },
+    {
+      "gmos": "skills_gaming_experience",
+      "fiche": "skills.gaming.experience"
+    },
+    {
+      "gmos": "skills_juggle_experience",
+      "fiche": "skills.juggle.experience"
+    },
+    {
+      "gmos": "skills_leatherwork_experience",
+      "fiche": "skills.leatherwork.experience"
+    },
+    {
+      "gmos": "skills_metalwork_experience",
+      "fiche": "skills.metalwork.experience"
+    },
+    {
+      "gmos": "skills_swim_experience",
+      "fiche": "skills.swim.experience"
+    },
+    {
+      "gmos": "skills_navigation_experience",
+      "fiche": "skills.navigation.experience"
+    },
+    {
+      "gmos": "skills_goldsmith_experience",
+      "fiche": "skills.goldsmith.experience"
+    },
+    {
+      "gmos": "skills_locksmith_experience",
+      "fiche": "skills.locksmith.experience"
+    },
+    {
+      "gmos": "skills_alchemy_experience",
+      "fiche": "skills.alchemy.experience"
+    },
+    {
+      "gmos": "skills_astrology_experience",
+      "fiche": "skills.astrology.experience"
+    },
+    {
+      "gmos": "skills_botany_experience",
+      "fiche": "skills.botany.experience"
+    },
+    {
+      "gmos": "skills_writing_experience",
+      "fiche": "skills.writing.experience"
+    },
+    {
+      "gmos": "skills_legends_experience",
+      "fiche": "skills.legends.experience"
+    },
+    {
+      "gmos": "skills_medicine_experience",
+      "fiche": "skills.medicine.experience"
+    },
+    {
+      "gmos": "skills_zoology_experience",
+      "fiche": "skills.zoology.experience"
+    },
+    {
+      "gmos": "draconic_oniros_pathExperience",
+      "fiche": "draconic.oniros.pathExperience"
+    },
+    {
+      "gmos": "draconic_oniros_spellExperience",
+      "fiche": "draconic.oniros.spellExperience"
+    },
+    {
+      "gmos": "draconic_hypnos_pathExperience",
+      "fiche": "draconic.hypnos.pathExperience"
+    },
+    {
+      "gmos": "draconic_hypnos_spellExperience",
+      "fiche": "draconic.hypnos.spellExperience"
+    },
+    {
+      "gmos": "draconic_narcos_pathExperience",
+      "fiche": "draconic.narcos.pathExperience"
+    },
+    {
+      "gmos": "draconic_narcos_spellExperience",
+      "fiche": "draconic.narcos.spellExperience"
+    },
+    {
+      "gmos": "draconic_thanatos_pathExperience",
+      "fiche": "draconic.thanatos.pathExperience"
+    },
+    {
+      "gmos": "draconic_thanatos_spellExperience",
+      "fiche": "draconic.thanatos.spellExperience"
+    },
+    {
+      "gmos": "combat_0_initiative",
+      "fiche": "combat.0.initiative"
+    },
+    {
+      "gmos": "combat_0_damage",
+      "fiche": "combat.0.damage"
+    },
+    {
+      "gmos": "combat_0_experience",
+      "fiche": "combat.0.experience"
+    },
+    {
+      "gmos": "combat_1_initiative",
+      "fiche": "combat.1.initiative"
+    },
+    {
+      "gmos": "combat_1_damage",
+      "fiche": "combat.1.damage"
+    },
+    {
+      "gmos": "combat_1_experience",
+      "fiche": "combat.1.experience"
+    },
+    {
+      "gmos": "combat_2_initiative",
+      "fiche": "combat.2.initiative"
+    },
+    {
+      "gmos": "combat_2_damage",
+      "fiche": "combat.2.damage"
+    },
+    {
+      "gmos": "combat_2_experience",
+      "fiche": "combat.2.experience"
+    },
+    {
+      "gmos": "combat_3_name",
+      "fiche": "combat.3.name"
+    },
+    {
+      "gmos": "combat_3_initiative",
+      "fiche": "combat.3.initiative"
+    },
+    {
+      "gmos": "combat_3_damage",
+      "fiche": "combat.3.damage"
+    },
+    {
+      "gmos": "combat_3_experience",
+      "fiche": "combat.3.experience"
+    },
+    {
+      "gmos": "combat_4_name",
+      "fiche": "combat.4.name"
+    },
+    {
+      "gmos": "combat_4_initiative",
+      "fiche": "combat.4.initiative"
+    },
+    {
+      "gmos": "combat_4_damage",
+      "fiche": "combat.4.damage"
+    },
+    {
+      "gmos": "combat_4_experience",
+      "fiche": "combat.4.experience"
+    },
+    {
+      "gmos": "combat_5_name",
+      "fiche": "combat.5.name"
+    },
+    {
+      "gmos": "combat_5_initiative",
+      "fiche": "combat.5.initiative"
+    },
+    {
+      "gmos": "combat_5_damage",
+      "fiche": "combat.5.damage"
+    },
+    {
+      "gmos": "combat_5_experience",
+      "fiche": "combat.5.experience"
+    },
+    {
+      "gmos": "combat_6_name",
+      "fiche": "combat.6.name"
+    },
+    {
+      "gmos": "combat_6_initiative",
+      "fiche": "combat.6.initiative"
+    },
+    {
+      "gmos": "combat_6_damage",
+      "fiche": "combat.6.damage"
+    },
+    {
+      "gmos": "combat_6_experience",
+      "fiche": "combat.6.experience"
+    },
+    {
+      "gmos": "skills_custom_0_name",
+      "fiche": "skills.custom.0.name"
+    },
+    {
+      "gmos": "skills_custom_0_level",
+      "fiche": "skills.custom.0.level"
+    },
+    {
+      "gmos": "skills_custom_0_experience",
+      "fiche": "skills.custom.0.experience"
+    },
+    {
+      "gmos": "skills_custom_4_name",
+      "fiche": "skills.custom.4.name"
+    },
+    {
+      "gmos": "skills_custom_4_level",
+      "fiche": "skills.custom.4.level"
+    },
+    {
+      "gmos": "skills_custom_4_experience",
+      "fiche": "skills.custom.4.experience"
+    },
+    {
+      "gmos": "skills_custom_1_name",
+      "fiche": "skills.custom.1.name"
+    },
+    {
+      "gmos": "skills_custom_1_level",
+      "fiche": "skills.custom.1.level"
+    },
+    {
+      "gmos": "skills_custom_1_experience",
+      "fiche": "skills.custom.1.experience"
+    },
+    {
+      "gmos": "skills_custom_5_name",
+      "fiche": "skills.custom.5.name"
+    },
+    {
+      "gmos": "skills_custom_5_level",
+      "fiche": "skills.custom.5.level"
+    },
+    {
+      "gmos": "skills_custom_5_experience",
+      "fiche": "skills.custom.5.experience"
+    },
+    {
+      "gmos": "skills_custom_2_name",
+      "fiche": "skills.custom.2.name"
+    },
+    {
+      "gmos": "skills_custom_2_level",
+      "fiche": "skills.custom.2.level"
+    },
+    {
+      "gmos": "skills_custom_2_experience",
+      "fiche": "skills.custom.2.experience"
+    },
+    {
+      "gmos": "skills_custom_6_name",
+      "fiche": "skills.custom.6.name"
+    },
+    {
+      "gmos": "skills_custom_6_level",
+      "fiche": "skills.custom.6.level"
+    },
+    {
+      "gmos": "skills_custom_6_experience",
+      "fiche": "skills.custom.6.experience"
+    },
+    {
+      "gmos": "skills_custom_3_name",
+      "fiche": "skills.custom.3.name"
+    },
+    {
+      "gmos": "skills_custom_3_level",
+      "fiche": "skills.custom.3.level"
+    },
+    {
+      "gmos": "skills_custom_3_experience",
+      "fiche": "skills.custom.3.experience"
+    },
+    {
+      "gmos": "skills_custom_7_name",
+      "fiche": "skills.custom.7.name"
+    },
+    {
+      "gmos": "skills_custom_7_level",
+      "fiche": "skills.custom.7.level"
+    },
+    {
+      "gmos": "skills_custom_7_experience",
+      "fiche": "skills.custom.7.experience"
+    },
+    {
+      "gmos": "equipment_worn_encumbrance",
+      "fiche": "equipment.worn.encumbrance"
+    },
+    {
+      "gmos": "equipment_worn_0",
+      "fiche": "equipment.worn.0"
+    },
+    {
+      "gmos": "equipment_worn_1",
+      "fiche": "equipment.worn.1"
+    },
+    {
+      "gmos": "equipment_worn_2",
+      "fiche": "equipment.worn.2"
+    },
+    {
+      "gmos": "equipment_worn_3",
+      "fiche": "equipment.worn.3"
+    },
+    {
+      "gmos": "equipment_worn_4",
+      "fiche": "equipment.worn.4"
+    },
+    {
+      "gmos": "equipment_worn_5",
+      "fiche": "equipment.worn.5"
+    },
+    {
+      "gmos": "equipment_worn_6",
+      "fiche": "equipment.worn.6"
+    },
+    {
+      "gmos": "equipment_worn_7",
+      "fiche": "equipment.worn.7"
+    },
+    {
+      "gmos": "equipment_worn_8",
+      "fiche": "equipment.worn.8"
+    },
+    {
+      "gmos": "equipment_worn_9",
+      "fiche": "equipment.worn.9"
+    },
+    {
+      "gmos": "equipment_worn_10",
+      "fiche": "equipment.worn.10"
+    },
+    {
+      "gmos": "equipment_worn_11",
+      "fiche": "equipment.worn.11"
+    },
+    {
+      "gmos": "equipment_containers_0_name",
+      "fiche": "equipment.containers.0.name"
+    },
+    {
+      "gmos": "equipment_containers_0_encumbrance",
+      "fiche": "equipment.containers.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_0_name",
+      "fiche": "equipment.containers.0.items.0.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_0_encumbrance",
+      "fiche": "equipment.containers.0.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_1_name",
+      "fiche": "equipment.containers.0.items.1.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_1_encumbrance",
+      "fiche": "equipment.containers.0.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_2_name",
+      "fiche": "equipment.containers.0.items.2.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_2_encumbrance",
+      "fiche": "equipment.containers.0.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_3_name",
+      "fiche": "equipment.containers.0.items.3.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_3_encumbrance",
+      "fiche": "equipment.containers.0.items.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_4_name",
+      "fiche": "equipment.containers.0.items.4.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_4_encumbrance",
+      "fiche": "equipment.containers.0.items.4.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_5_name",
+      "fiche": "equipment.containers.0.items.5.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_5_encumbrance",
+      "fiche": "equipment.containers.0.items.5.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_6_name",
+      "fiche": "equipment.containers.0.items.6.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_6_encumbrance",
+      "fiche": "equipment.containers.0.items.6.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_7_name",
+      "fiche": "equipment.containers.0.items.7.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_7_encumbrance",
+      "fiche": "equipment.containers.0.items.7.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_8_name",
+      "fiche": "equipment.containers.0.items.8.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_8_encumbrance",
+      "fiche": "equipment.containers.0.items.8.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_9_name",
+      "fiche": "equipment.containers.0.items.9.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_9_encumbrance",
+      "fiche": "equipment.containers.0.items.9.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_10_name",
+      "fiche": "equipment.containers.0.items.10.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_10_encumbrance",
+      "fiche": "equipment.containers.0.items.10.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_11_name",
+      "fiche": "equipment.containers.0.items.11.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_11_encumbrance",
+      "fiche": "equipment.containers.0.items.11.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_12_name",
+      "fiche": "equipment.containers.0.items.12.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_12_encumbrance",
+      "fiche": "equipment.containers.0.items.12.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_13_name",
+      "fiche": "equipment.containers.0.items.13.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_13_encumbrance",
+      "fiche": "equipment.containers.0.items.13.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_14_name",
+      "fiche": "equipment.containers.0.items.14.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_14_encumbrance",
+      "fiche": "equipment.containers.0.items.14.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_15_name",
+      "fiche": "equipment.containers.0.items.15.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_15_encumbrance",
+      "fiche": "equipment.containers.0.items.15.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_16_name",
+      "fiche": "equipment.containers.0.items.16.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_16_encumbrance",
+      "fiche": "equipment.containers.0.items.16.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_17_name",
+      "fiche": "equipment.containers.0.items.17.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_17_encumbrance",
+      "fiche": "equipment.containers.0.items.17.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_18_name",
+      "fiche": "equipment.containers.0.items.18.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_18_encumbrance",
+      "fiche": "equipment.containers.0.items.18.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_19_name",
+      "fiche": "equipment.containers.0.items.19.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_19_encumbrance",
+      "fiche": "equipment.containers.0.items.19.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_0_items_20_name",
+      "fiche": "equipment.containers.0.items.20.name"
+    },
+    {
+      "gmos": "equipment_containers_0_items_20_encumbrance",
+      "fiche": "equipment.containers.0.items.20.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_name",
+      "fiche": "equipment.containers.1.name"
+    },
+    {
+      "gmos": "equipment_containers_1_encumbrance",
+      "fiche": "equipment.containers.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_0_name",
+      "fiche": "equipment.containers.1.items.0.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_0_encumbrance",
+      "fiche": "equipment.containers.1.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_1_name",
+      "fiche": "equipment.containers.1.items.1.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_1_encumbrance",
+      "fiche": "equipment.containers.1.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_2_name",
+      "fiche": "equipment.containers.1.items.2.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_2_encumbrance",
+      "fiche": "equipment.containers.1.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_3_name",
+      "fiche": "equipment.containers.1.items.3.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_3_encumbrance",
+      "fiche": "equipment.containers.1.items.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_4_name",
+      "fiche": "equipment.containers.1.items.4.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_4_encumbrance",
+      "fiche": "equipment.containers.1.items.4.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_5_name",
+      "fiche": "equipment.containers.1.items.5.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_5_encumbrance",
+      "fiche": "equipment.containers.1.items.5.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_6_name",
+      "fiche": "equipment.containers.1.items.6.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_6_encumbrance",
+      "fiche": "equipment.containers.1.items.6.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_7_name",
+      "fiche": "equipment.containers.1.items.7.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_7_encumbrance",
+      "fiche": "equipment.containers.1.items.7.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_8_name",
+      "fiche": "equipment.containers.1.items.8.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_8_encumbrance",
+      "fiche": "equipment.containers.1.items.8.encumbrance"
+    },
+    {
+      "gmos": "equipment_containers_1_items_9_name",
+      "fiche": "equipment.containers.1.items.9.name"
+    },
+    {
+      "gmos": "equipment_containers_1_items_9_encumbrance",
+      "fiche": "equipment.containers.1.items.9.encumbrance"
+    },
+    {
+      "gmos": "equipment_money_gold",
+      "fiche": "equipment.money.gold"
+    },
+    {
+      "gmos": "equipment_money_silver",
+      "fiche": "equipment.money.silver"
+    },
+    {
+      "gmos": "equipment_money_bronze",
+      "fiche": "equipment.money.bronze"
+    },
+    {
+      "gmos": "equipment_money_tin",
+      "fiche": "equipment.money.tin"
+    },
+    {
+      "gmos": "equipment_money_other_0_name",
+      "fiche": "equipment.money.other.0.name"
+    },
+    {
+      "gmos": "equipment_money_other_0_amount",
+      "fiche": "equipment.money.other.0.amount"
+    },
+    {
+      "gmos": "equipment_money_other_1_name",
+      "fiche": "equipment.money.other.1.name"
+    },
+    {
+      "gmos": "equipment_money_other_1_amount",
+      "fiche": "equipment.money.other.1.amount"
+    },
+    {
+      "gmos": "equipment_pouches_0_name",
+      "fiche": "equipment.pouches.0.name"
+    },
+    {
+      "gmos": "equipment_pouches_0_encumbrance",
+      "fiche": "equipment.pouches.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_0_name",
+      "fiche": "equipment.pouches.0.items.0.name"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_0_encumbrance",
+      "fiche": "equipment.pouches.0.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_1_name",
+      "fiche": "equipment.pouches.0.items.1.name"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_1_encumbrance",
+      "fiche": "equipment.pouches.0.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_2_name",
+      "fiche": "equipment.pouches.0.items.2.name"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_2_encumbrance",
+      "fiche": "equipment.pouches.0.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_3_name",
+      "fiche": "equipment.pouches.0.items.3.name"
+    },
+    {
+      "gmos": "equipment_pouches_0_items_3_encumbrance",
+      "fiche": "equipment.pouches.0.items.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_1_name",
+      "fiche": "equipment.pouches.1.name"
+    },
+    {
+      "gmos": "equipment_pouches_1_encumbrance",
+      "fiche": "equipment.pouches.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_0_name",
+      "fiche": "equipment.pouches.1.items.0.name"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_0_encumbrance",
+      "fiche": "equipment.pouches.1.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_1_name",
+      "fiche": "equipment.pouches.1.items.1.name"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_1_encumbrance",
+      "fiche": "equipment.pouches.1.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_2_name",
+      "fiche": "equipment.pouches.1.items.2.name"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_2_encumbrance",
+      "fiche": "equipment.pouches.1.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_3_name",
+      "fiche": "equipment.pouches.1.items.3.name"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_3_encumbrance",
+      "fiche": "equipment.pouches.1.items.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_4_name",
+      "fiche": "equipment.pouches.1.items.4.name"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_4_encumbrance",
+      "fiche": "equipment.pouches.1.items.4.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_5_name",
+      "fiche": "equipment.pouches.1.items.5.name"
+    },
+    {
+      "gmos": "equipment_pouches_1_items_5_encumbrance",
+      "fiche": "equipment.pouches.1.items.5.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_name",
+      "fiche": "equipment.pouches.2.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_encumbrance",
+      "fiche": "equipment.pouches.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_0_name",
+      "fiche": "equipment.pouches.2.items.0.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_0_encumbrance",
+      "fiche": "equipment.pouches.2.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_1_name",
+      "fiche": "equipment.pouches.2.items.1.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_1_encumbrance",
+      "fiche": "equipment.pouches.2.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_2_name",
+      "fiche": "equipment.pouches.2.items.2.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_2_encumbrance",
+      "fiche": "equipment.pouches.2.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_3_name",
+      "fiche": "equipment.pouches.2.items.3.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_3_encumbrance",
+      "fiche": "equipment.pouches.2.items.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_4_name",
+      "fiche": "equipment.pouches.2.items.4.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_4_encumbrance",
+      "fiche": "equipment.pouches.2.items.4.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_5_name",
+      "fiche": "equipment.pouches.2.items.5.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_5_encumbrance",
+      "fiche": "equipment.pouches.2.items.5.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_6_name",
+      "fiche": "equipment.pouches.2.items.6.name"
+    },
+    {
+      "gmos": "equipment_pouches_2_items_6_encumbrance",
+      "fiche": "equipment.pouches.2.items.6.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_3_name",
+      "fiche": "equipment.pouches.3.name"
+    },
+    {
+      "gmos": "equipment_pouches_3_encumbrance",
+      "fiche": "equipment.pouches.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_3_items_0_name",
+      "fiche": "equipment.pouches.3.items.0.name"
+    },
+    {
+      "gmos": "equipment_pouches_3_items_0_encumbrance",
+      "fiche": "equipment.pouches.3.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_3_items_1_name",
+      "fiche": "equipment.pouches.3.items.1.name"
+    },
+    {
+      "gmos": "equipment_pouches_3_items_1_encumbrance",
+      "fiche": "equipment.pouches.3.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_3_items_2_name",
+      "fiche": "equipment.pouches.3.items.2.name"
+    },
+    {
+      "gmos": "equipment_pouches_3_items_2_encumbrance",
+      "fiche": "equipment.pouches.3.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_4_name",
+      "fiche": "equipment.pouches.4.name"
+    },
+    {
+      "gmos": "equipment_pouches_4_encumbrance",
+      "fiche": "equipment.pouches.4.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_4_items_0_name",
+      "fiche": "equipment.pouches.4.items.0.name"
+    },
+    {
+      "gmos": "equipment_pouches_4_items_0_encumbrance",
+      "fiche": "equipment.pouches.4.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_4_items_1_name",
+      "fiche": "equipment.pouches.4.items.1.name"
+    },
+    {
+      "gmos": "equipment_pouches_4_items_1_encumbrance",
+      "fiche": "equipment.pouches.4.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_4_items_2_name",
+      "fiche": "equipment.pouches.4.items.2.name"
+    },
+    {
+      "gmos": "equipment_pouches_4_items_2_encumbrance",
+      "fiche": "equipment.pouches.4.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_5_name",
+      "fiche": "equipment.pouches.5.name"
+    },
+    {
+      "gmos": "equipment_pouches_5_encumbrance",
+      "fiche": "equipment.pouches.5.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_0_name",
+      "fiche": "equipment.pouches.5.items.0.name"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_0_encumbrance",
+      "fiche": "equipment.pouches.5.items.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_1_name",
+      "fiche": "equipment.pouches.5.items.1.name"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_1_encumbrance",
+      "fiche": "equipment.pouches.5.items.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_2_name",
+      "fiche": "equipment.pouches.5.items.2.name"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_2_encumbrance",
+      "fiche": "equipment.pouches.5.items.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_3_name",
+      "fiche": "equipment.pouches.5.items.3.name"
+    },
+    {
+      "gmos": "equipment_pouches_5_items_3_encumbrance",
+      "fiche": "equipment.pouches.5.items.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_encumbrance",
+      "fiche": "equipment.weapons.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_0_name",
+      "fiche": "equipment.weapons.0.name"
+    },
+    {
+      "gmos": "equipment_weapons_0_damage",
+      "fiche": "equipment.weapons.0.damage"
+    },
+    {
+      "gmos": "equipment_weapons_0_resistance",
+      "fiche": "equipment.weapons.0.resistance"
+    },
+    {
+      "gmos": "equipment_weapons_0_encumbrance",
+      "fiche": "equipment.weapons.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_1_name",
+      "fiche": "equipment.weapons.1.name"
+    },
+    {
+      "gmos": "equipment_weapons_1_damage",
+      "fiche": "equipment.weapons.1.damage"
+    },
+    {
+      "gmos": "equipment_weapons_1_resistance",
+      "fiche": "equipment.weapons.1.resistance"
+    },
+    {
+      "gmos": "equipment_weapons_1_encumbrance",
+      "fiche": "equipment.weapons.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_2_name",
+      "fiche": "equipment.weapons.2.name"
+    },
+    {
+      "gmos": "equipment_weapons_2_damage",
+      "fiche": "equipment.weapons.2.damage"
+    },
+    {
+      "gmos": "equipment_weapons_2_resistance",
+      "fiche": "equipment.weapons.2.resistance"
+    },
+    {
+      "gmos": "equipment_weapons_2_encumbrance",
+      "fiche": "equipment.weapons.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_3_name",
+      "fiche": "equipment.weapons.3.name"
+    },
+    {
+      "gmos": "equipment_weapons_3_damage",
+      "fiche": "equipment.weapons.3.damage"
+    },
+    {
+      "gmos": "equipment_weapons_3_resistance",
+      "fiche": "equipment.weapons.3.resistance"
+    },
+    {
+      "gmos": "equipment_weapons_3_encumbrance",
+      "fiche": "equipment.weapons.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_4_name",
+      "fiche": "equipment.weapons.4.name"
+    },
+    {
+      "gmos": "equipment_weapons_4_damage",
+      "fiche": "equipment.weapons.4.damage"
+    },
+    {
+      "gmos": "equipment_weapons_4_resistance",
+      "fiche": "equipment.weapons.4.resistance"
+    },
+    {
+      "gmos": "equipment_weapons_4_encumbrance",
+      "fiche": "equipment.weapons.4.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_5_name",
+      "fiche": "equipment.weapons.5.name"
+    },
+    {
+      "gmos": "equipment_weapons_5_damage",
+      "fiche": "equipment.weapons.5.damage"
+    },
+    {
+      "gmos": "equipment_weapons_5_resistance",
+      "fiche": "equipment.weapons.5.resistance"
+    },
+    {
+      "gmos": "equipment_weapons_5_encumbrance",
+      "fiche": "equipment.weapons.5.encumbrance"
+    },
+    {
+      "gmos": "equipment_weapons_6_name",
+      "fiche": "equipment.weapons.6.name"
+    },
+    {
+      "gmos": "equipment_weapons_6_damage",
+      "fiche": "equipment.weapons.6.damage"
+    },
+    {
+      "gmos": "equipment_weapons_6_resistance",
+      "fiche": "equipment.weapons.6.resistance"
+    },
+    {
+      "gmos": "equipment_weapons_6_encumbrance",
+      "fiche": "equipment.weapons.6.encumbrance"
+    },
+    {
+      "gmos": "equipment_armor_0_name",
+      "fiche": "equipment.armor.0.name"
+    },
+    {
+      "gmos": "equipment_armor_0_protection",
+      "fiche": "equipment.armor.0.protection"
+    },
+    {
+      "gmos": "equipment_armor_0_penalty",
+      "fiche": "equipment.armor.0.penalty"
+    },
+    {
+      "gmos": "equipment_armor_1_name",
+      "fiche": "equipment.armor.1.name"
+    },
+    {
+      "gmos": "equipment_armor_1_protection",
+      "fiche": "equipment.armor.1.protection"
+    },
+    {
+      "gmos": "equipment_armor_1_penalty",
+      "fiche": "equipment.armor.1.penalty"
+    },
+    {
+      "gmos": "equipment_armor_2_name",
+      "fiche": "equipment.armor.2.name"
+    },
+    {
+      "gmos": "equipment_armor_2_protection",
+      "fiche": "equipment.armor.2.protection"
+    },
+    {
+      "gmos": "equipment_armor_2_penalty",
+      "fiche": "equipment.armor.2.penalty"
+    },
+    {
+      "gmos": "equipment_boxes_0_name",
+      "fiche": "equipment.boxes.0.name"
+    },
+    {
+      "gmos": "equipment_boxes_0_encumbrance",
+      "fiche": "equipment.boxes.0.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_0_items_0",
+      "fiche": "equipment.boxes.0.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_0_items_1",
+      "fiche": "equipment.boxes.0.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_0_items_2",
+      "fiche": "equipment.boxes.0.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_1_name",
+      "fiche": "equipment.boxes.1.name"
+    },
+    {
+      "gmos": "equipment_boxes_1_encumbrance",
+      "fiche": "equipment.boxes.1.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_1_items_0",
+      "fiche": "equipment.boxes.1.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_1_items_1",
+      "fiche": "equipment.boxes.1.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_1_items_2",
+      "fiche": "equipment.boxes.1.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_2_name",
+      "fiche": "equipment.boxes.2.name"
+    },
+    {
+      "gmos": "equipment_boxes_2_encumbrance",
+      "fiche": "equipment.boxes.2.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_2_items_0",
+      "fiche": "equipment.boxes.2.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_2_items_1",
+      "fiche": "equipment.boxes.2.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_2_items_2",
+      "fiche": "equipment.boxes.2.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_3_name",
+      "fiche": "equipment.boxes.3.name"
+    },
+    {
+      "gmos": "equipment_boxes_3_encumbrance",
+      "fiche": "equipment.boxes.3.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_3_items_0",
+      "fiche": "equipment.boxes.3.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_3_items_1",
+      "fiche": "equipment.boxes.3.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_3_items_2",
+      "fiche": "equipment.boxes.3.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_4_name",
+      "fiche": "equipment.boxes.4.name"
+    },
+    {
+      "gmos": "equipment_boxes_4_encumbrance",
+      "fiche": "equipment.boxes.4.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_4_items_0",
+      "fiche": "equipment.boxes.4.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_4_items_1",
+      "fiche": "equipment.boxes.4.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_4_items_2",
+      "fiche": "equipment.boxes.4.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_5_name",
+      "fiche": "equipment.boxes.5.name"
+    },
+    {
+      "gmos": "equipment_boxes_5_encumbrance",
+      "fiche": "equipment.boxes.5.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_5_items_0",
+      "fiche": "equipment.boxes.5.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_5_items_1",
+      "fiche": "equipment.boxes.5.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_5_items_2",
+      "fiche": "equipment.boxes.5.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_6_name",
+      "fiche": "equipment.boxes.6.name"
+    },
+    {
+      "gmos": "equipment_boxes_6_encumbrance",
+      "fiche": "equipment.boxes.6.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_6_items_0",
+      "fiche": "equipment.boxes.6.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_6_items_1",
+      "fiche": "equipment.boxes.6.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_6_items_2",
+      "fiche": "equipment.boxes.6.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_7_name",
+      "fiche": "equipment.boxes.7.name"
+    },
+    {
+      "gmos": "equipment_boxes_7_encumbrance",
+      "fiche": "equipment.boxes.7.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_7_items_0",
+      "fiche": "equipment.boxes.7.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_7_items_1",
+      "fiche": "equipment.boxes.7.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_7_items_2",
+      "fiche": "equipment.boxes.7.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_8_name",
+      "fiche": "equipment.boxes.8.name"
+    },
+    {
+      "gmos": "equipment_boxes_8_encumbrance",
+      "fiche": "equipment.boxes.8.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_8_items_0",
+      "fiche": "equipment.boxes.8.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_8_items_1",
+      "fiche": "equipment.boxes.8.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_8_items_2",
+      "fiche": "equipment.boxes.8.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_9_name",
+      "fiche": "equipment.boxes.9.name"
+    },
+    {
+      "gmos": "equipment_boxes_9_encumbrance",
+      "fiche": "equipment.boxes.9.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_9_items_0",
+      "fiche": "equipment.boxes.9.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_9_items_1",
+      "fiche": "equipment.boxes.9.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_9_items_2",
+      "fiche": "equipment.boxes.9.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_10_name",
+      "fiche": "equipment.boxes.10.name"
+    },
+    {
+      "gmos": "equipment_boxes_10_encumbrance",
+      "fiche": "equipment.boxes.10.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_10_items_0",
+      "fiche": "equipment.boxes.10.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_10_items_1",
+      "fiche": "equipment.boxes.10.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_10_items_2",
+      "fiche": "equipment.boxes.10.items.2"
+    },
+    {
+      "gmos": "equipment_boxes_11_name",
+      "fiche": "equipment.boxes.11.name"
+    },
+    {
+      "gmos": "equipment_boxes_11_encumbrance",
+      "fiche": "equipment.boxes.11.encumbrance"
+    },
+    {
+      "gmos": "equipment_boxes_11_items_0",
+      "fiche": "equipment.boxes.11.items.0"
+    },
+    {
+      "gmos": "equipment_boxes_11_items_1",
+      "fiche": "equipment.boxes.11.items.1"
+    },
+    {
+      "gmos": "equipment_boxes_11_items_2",
+      "fiche": "equipment.boxes.11.items.2"
+    },
+    {
+      "gmos": "spells_0_path",
+      "fiche": "spells.0.path"
+    },
+    {
+      "gmos": "spells_0_name",
+      "fiche": "spells.0.name"
+    },
+    {
+      "gmos": "spells_0_tmr",
+      "fiche": "spells.0.tmr"
+    },
+    {
+      "gmos": "spells_0_difficulty",
+      "fiche": "spells.0.difficulty"
+    },
+    {
+      "gmos": "spells_0_dreamCost",
+      "fiche": "spells.0.dreamCost"
+    },
+    {
+      "gmos": "spells_0_cellBonus",
+      "fiche": "spells.0.cellBonus"
+    },
+    {
+      "gmos": "spells_1_path",
+      "fiche": "spells.1.path"
+    },
+    {
+      "gmos": "spells_1_name",
+      "fiche": "spells.1.name"
+    },
+    {
+      "gmos": "spells_1_tmr",
+      "fiche": "spells.1.tmr"
+    },
+    {
+      "gmos": "spells_1_difficulty",
+      "fiche": "spells.1.difficulty"
+    },
+    {
+      "gmos": "spells_1_dreamCost",
+      "fiche": "spells.1.dreamCost"
+    },
+    {
+      "gmos": "spells_1_cellBonus",
+      "fiche": "spells.1.cellBonus"
+    },
+    {
+      "gmos": "spells_2_path",
+      "fiche": "spells.2.path"
+    },
+    {
+      "gmos": "spells_2_name",
+      "fiche": "spells.2.name"
+    },
+    {
+      "gmos": "spells_2_tmr",
+      "fiche": "spells.2.tmr"
+    },
+    {
+      "gmos": "spells_2_difficulty",
+      "fiche": "spells.2.difficulty"
+    },
+    {
+      "gmos": "spells_2_dreamCost",
+      "fiche": "spells.2.dreamCost"
+    },
+    {
+      "gmos": "spells_2_cellBonus",
+      "fiche": "spells.2.cellBonus"
+    },
+    {
+      "gmos": "spells_3_path",
+      "fiche": "spells.3.path"
+    },
+    {
+      "gmos": "spells_3_name",
+      "fiche": "spells.3.name"
+    },
+    {
+      "gmos": "spells_3_tmr",
+      "fiche": "spells.3.tmr"
+    },
+    {
+      "gmos": "spells_3_difficulty",
+      "fiche": "spells.3.difficulty"
+    },
+    {
+      "gmos": "spells_3_dreamCost",
+      "fiche": "spells.3.dreamCost"
+    },
+    {
+      "gmos": "spells_3_cellBonus",
+      "fiche": "spells.3.cellBonus"
+    },
+    {
+      "gmos": "spells_4_path",
+      "fiche": "spells.4.path"
+    },
+    {
+      "gmos": "spells_4_name",
+      "fiche": "spells.4.name"
+    },
+    {
+      "gmos": "spells_4_tmr",
+      "fiche": "spells.4.tmr"
+    },
+    {
+      "gmos": "spells_4_difficulty",
+      "fiche": "spells.4.difficulty"
+    },
+    {
+      "gmos": "spells_4_dreamCost",
+      "fiche": "spells.4.dreamCost"
+    },
+    {
+      "gmos": "spells_4_cellBonus",
+      "fiche": "spells.4.cellBonus"
+    },
+    {
+      "gmos": "spells_5_path",
+      "fiche": "spells.5.path"
+    },
+    {
+      "gmos": "spells_5_name",
+      "fiche": "spells.5.name"
+    },
+    {
+      "gmos": "spells_5_tmr",
+      "fiche": "spells.5.tmr"
+    },
+    {
+      "gmos": "spells_5_difficulty",
+      "fiche": "spells.5.difficulty"
+    },
+    {
+      "gmos": "spells_5_dreamCost",
+      "fiche": "spells.5.dreamCost"
+    },
+    {
+      "gmos": "spells_5_cellBonus",
+      "fiche": "spells.5.cellBonus"
+    },
+    {
+      "gmos": "spells_6_path",
+      "fiche": "spells.6.path"
+    },
+    {
+      "gmos": "spells_6_name",
+      "fiche": "spells.6.name"
+    },
+    {
+      "gmos": "spells_6_tmr",
+      "fiche": "spells.6.tmr"
+    },
+    {
+      "gmos": "spells_6_difficulty",
+      "fiche": "spells.6.difficulty"
+    },
+    {
+      "gmos": "spells_6_dreamCost",
+      "fiche": "spells.6.dreamCost"
+    },
+    {
+      "gmos": "spells_6_cellBonus",
+      "fiche": "spells.6.cellBonus"
+    },
+    {
+      "gmos": "spells_7_path",
+      "fiche": "spells.7.path"
+    },
+    {
+      "gmos": "spells_7_name",
+      "fiche": "spells.7.name"
+    },
+    {
+      "gmos": "spells_7_tmr",
+      "fiche": "spells.7.tmr"
+    },
+    {
+      "gmos": "spells_7_difficulty",
+      "fiche": "spells.7.difficulty"
+    },
+    {
+      "gmos": "spells_7_dreamCost",
+      "fiche": "spells.7.dreamCost"
+    },
+    {
+      "gmos": "spells_7_cellBonus",
+      "fiche": "spells.7.cellBonus"
+    },
+    {
+      "gmos": "spells_8_path",
+      "fiche": "spells.8.path"
+    },
+    {
+      "gmos": "spells_8_name",
+      "fiche": "spells.8.name"
+    },
+    {
+      "gmos": "spells_8_tmr",
+      "fiche": "spells.8.tmr"
+    },
+    {
+      "gmos": "spells_8_difficulty",
+      "fiche": "spells.8.difficulty"
+    },
+    {
+      "gmos": "spells_8_dreamCost",
+      "fiche": "spells.8.dreamCost"
+    },
+    {
+      "gmos": "spells_8_cellBonus",
+      "fiche": "spells.8.cellBonus"
+    },
+    {
+      "gmos": "spells_9_path",
+      "fiche": "spells.9.path"
+    },
+    {
+      "gmos": "spells_9_name",
+      "fiche": "spells.9.name"
+    },
+    {
+      "gmos": "spells_9_tmr",
+      "fiche": "spells.9.tmr"
+    },
+    {
+      "gmos": "spells_9_difficulty",
+      "fiche": "spells.9.difficulty"
+    },
+    {
+      "gmos": "spells_9_dreamCost",
+      "fiche": "spells.9.dreamCost"
+    },
+    {
+      "gmos": "spells_9_cellBonus",
+      "fiche": "spells.9.cellBonus"
+    },
+    {
+      "gmos": "spells_10_path",
+      "fiche": "spells.10.path"
+    },
+    {
+      "gmos": "spells_10_name",
+      "fiche": "spells.10.name"
+    },
+    {
+      "gmos": "spells_10_tmr",
+      "fiche": "spells.10.tmr"
+    },
+    {
+      "gmos": "spells_10_difficulty",
+      "fiche": "spells.10.difficulty"
+    },
+    {
+      "gmos": "spells_10_dreamCost",
+      "fiche": "spells.10.dreamCost"
+    },
+    {
+      "gmos": "spells_10_cellBonus",
+      "fiche": "spells.10.cellBonus"
+    },
+    {
+      "gmos": "spells_11_path",
+      "fiche": "spells.11.path"
+    },
+    {
+      "gmos": "spells_11_name",
+      "fiche": "spells.11.name"
+    },
+    {
+      "gmos": "spells_11_tmr",
+      "fiche": "spells.11.tmr"
+    },
+    {
+      "gmos": "spells_11_difficulty",
+      "fiche": "spells.11.difficulty"
+    },
+    {
+      "gmos": "spells_11_dreamCost",
+      "fiche": "spells.11.dreamCost"
+    },
+    {
+      "gmos": "spells_11_cellBonus",
+      "fiche": "spells.11.cellBonus"
+    },
+    {
+      "gmos": "spells_12_path",
+      "fiche": "spells.12.path"
+    },
+    {
+      "gmos": "spells_12_name",
+      "fiche": "spells.12.name"
+    },
+    {
+      "gmos": "spells_12_tmr",
+      "fiche": "spells.12.tmr"
+    },
+    {
+      "gmos": "spells_12_difficulty",
+      "fiche": "spells.12.difficulty"
+    },
+    {
+      "gmos": "spells_12_dreamCost",
+      "fiche": "spells.12.dreamCost"
+    },
+    {
+      "gmos": "spells_12_cellBonus",
+      "fiche": "spells.12.cellBonus"
+    },
+    {
+      "gmos": "spells_13_path",
+      "fiche": "spells.13.path"
+    },
+    {
+      "gmos": "spells_13_name",
+      "fiche": "spells.13.name"
+    },
+    {
+      "gmos": "spells_13_tmr",
+      "fiche": "spells.13.tmr"
+    },
+    {
+      "gmos": "spells_13_difficulty",
+      "fiche": "spells.13.difficulty"
+    },
+    {
+      "gmos": "spells_13_dreamCost",
+      "fiche": "spells.13.dreamCost"
+    },
+    {
+      "gmos": "spells_13_cellBonus",
+      "fiche": "spells.13.cellBonus"
+    },
+    {
+      "gmos": "spells_14_path",
+      "fiche": "spells.14.path"
+    },
+    {
+      "gmos": "spells_14_name",
+      "fiche": "spells.14.name"
+    },
+    {
+      "gmos": "spells_14_tmr",
+      "fiche": "spells.14.tmr"
+    },
+    {
+      "gmos": "spells_14_difficulty",
+      "fiche": "spells.14.difficulty"
+    },
+    {
+      "gmos": "spells_14_dreamCost",
+      "fiche": "spells.14.dreamCost"
+    },
+    {
+      "gmos": "spells_14_cellBonus",
+      "fiche": "spells.14.cellBonus"
+    },
+    {
+      "gmos": "spells_15_path",
+      "fiche": "spells.15.path"
+    },
+    {
+      "gmos": "spells_15_name",
+      "fiche": "spells.15.name"
+    },
+    {
+      "gmos": "spells_15_tmr",
+      "fiche": "spells.15.tmr"
+    },
+    {
+      "gmos": "spells_15_difficulty",
+      "fiche": "spells.15.difficulty"
+    },
+    {
+      "gmos": "spells_15_dreamCost",
+      "fiche": "spells.15.dreamCost"
+    },
+    {
+      "gmos": "spells_15_cellBonus",
+      "fiche": "spells.15.cellBonus"
+    },
+    {
+      "gmos": "spells_16_path",
+      "fiche": "spells.16.path"
+    },
+    {
+      "gmos": "spells_16_name",
+      "fiche": "spells.16.name"
+    },
+    {
+      "gmos": "spells_16_tmr",
+      "fiche": "spells.16.tmr"
+    },
+    {
+      "gmos": "spells_16_difficulty",
+      "fiche": "spells.16.difficulty"
+    },
+    {
+      "gmos": "spells_16_dreamCost",
+      "fiche": "spells.16.dreamCost"
+    },
+    {
+      "gmos": "spells_16_cellBonus",
+      "fiche": "spells.16.cellBonus"
+    },
+    {
+      "gmos": "spells_17_path",
+      "fiche": "spells.17.path"
+    },
+    {
+      "gmos": "spells_17_name",
+      "fiche": "spells.17.name"
+    },
+    {
+      "gmos": "spells_17_tmr",
+      "fiche": "spells.17.tmr"
+    },
+    {
+      "gmos": "spells_17_difficulty",
+      "fiche": "spells.17.difficulty"
+    },
+    {
+      "gmos": "spells_17_dreamCost",
+      "fiche": "spells.17.dreamCost"
+    },
+    {
+      "gmos": "spells_17_cellBonus",
+      "fiche": "spells.17.cellBonus"
+    },
+    {
+      "gmos": "spells_18_path",
+      "fiche": "spells.18.path"
+    },
+    {
+      "gmos": "spells_18_name",
+      "fiche": "spells.18.name"
+    },
+    {
+      "gmos": "spells_18_tmr",
+      "fiche": "spells.18.tmr"
+    },
+    {
+      "gmos": "spells_18_difficulty",
+      "fiche": "spells.18.difficulty"
+    },
+    {
+      "gmos": "spells_18_dreamCost",
+      "fiche": "spells.18.dreamCost"
+    },
+    {
+      "gmos": "spells_18_cellBonus",
+      "fiche": "spells.18.cellBonus"
+    },
+    {
+      "gmos": "spells_19_path",
+      "fiche": "spells.19.path"
+    },
+    {
+      "gmos": "spells_19_name",
+      "fiche": "spells.19.name"
+    },
+    {
+      "gmos": "spells_19_tmr",
+      "fiche": "spells.19.tmr"
+    },
+    {
+      "gmos": "spells_19_difficulty",
+      "fiche": "spells.19.difficulty"
+    },
+    {
+      "gmos": "spells_19_dreamCost",
+      "fiche": "spells.19.dreamCost"
+    },
+    {
+      "gmos": "spells_19_cellBonus",
+      "fiche": "spells.19.cellBonus"
+    },
+    {
+      "gmos": "spells_20_path",
+      "fiche": "spells.20.path"
+    },
+    {
+      "gmos": "spells_20_name",
+      "fiche": "spells.20.name"
+    },
+    {
+      "gmos": "spells_20_tmr",
+      "fiche": "spells.20.tmr"
+    },
+    {
+      "gmos": "spells_20_difficulty",
+      "fiche": "spells.20.difficulty"
+    },
+    {
+      "gmos": "spells_20_dreamCost",
+      "fiche": "spells.20.dreamCost"
+    },
+    {
+      "gmos": "spells_20_cellBonus",
+      "fiche": "spells.20.cellBonus"
+    },
+    {
+      "gmos": "magic_notes_first",
+      "fiche": "magic.notes.first"
+    },
+    {
+      "gmos": "magic_notes_rest",
+      "fiche": "magic.notes.rest"
+    },
+    {
+      "gmos": "astrology_referenceHour",
+      "fiche": "astrology.referenceHour"
+    },
+    {
+      "gmos": "resources_dream_history_first",
+      "fiche": "resources.dream.history.first"
+    },
+    {
+      "gmos": "resources_dream_history_second",
+      "fiche": "resources.dream.history.second"
+    },
+    {
+      "gmos": "resources_endurance_history",
+      "fiche": "resources.endurance.history"
+    },
+    {
+      "gmos": "resources_life_history",
+      "fiche": "resources.life.history"
+    },
+    {
+      "gmos": "magic_halfDream",
+      "fiche": "magic.halfDream"
+    },
+    {
+      "gmos": "reservedSpells_0_path",
+      "fiche": "reservedSpells.0.path"
+    },
+    {
+      "gmos": "reservedSpells_0_name",
+      "fiche": "reservedSpells.0.name"
+    },
+    {
+      "gmos": "reservedSpells_0_tmr",
+      "fiche": "reservedSpells.0.tmr"
+    },
+    {
+      "gmos": "reservedSpells_0_birthHour",
+      "fiche": "reservedSpells.0.birthHour"
+    },
+    {
+      "gmos": "reservedSpells_0_dream",
+      "fiche": "reservedSpells.0.dream"
+    },
+    {
+      "gmos": "reservedSpells_1_path",
+      "fiche": "reservedSpells.1.path"
+    },
+    {
+      "gmos": "reservedSpells_1_name",
+      "fiche": "reservedSpells.1.name"
+    },
+    {
+      "gmos": "reservedSpells_1_tmr",
+      "fiche": "reservedSpells.1.tmr"
+    },
+    {
+      "gmos": "reservedSpells_1_birthHour",
+      "fiche": "reservedSpells.1.birthHour"
+    },
+    {
+      "gmos": "reservedSpells_1_dream",
+      "fiche": "reservedSpells.1.dream"
+    },
+    {
+      "gmos": "reservedSpells_2_path",
+      "fiche": "reservedSpells.2.path"
+    },
+    {
+      "gmos": "reservedSpells_2_name",
+      "fiche": "reservedSpells.2.name"
+    },
+    {
+      "gmos": "reservedSpells_2_tmr",
+      "fiche": "reservedSpells.2.tmr"
+    },
+    {
+      "gmos": "reservedSpells_2_birthHour",
+      "fiche": "reservedSpells.2.birthHour"
+    },
+    {
+      "gmos": "reservedSpells_2_dream",
+      "fiche": "reservedSpells.2.dream"
+    },
+    {
+      "gmos": "reservedSpells_3_path",
+      "fiche": "reservedSpells.3.path"
+    },
+    {
+      "gmos": "reservedSpells_3_name",
+      "fiche": "reservedSpells.3.name"
+    },
+    {
+      "gmos": "reservedSpells_3_tmr",
+      "fiche": "reservedSpells.3.tmr"
+    },
+    {
+      "gmos": "reservedSpells_3_birthHour",
+      "fiche": "reservedSpells.3.birthHour"
+    },
+    {
+      "gmos": "reservedSpells_3_dream",
+      "fiche": "reservedSpells.3.dream"
+    },
+    {
+      "gmos": "reservedSpells_4_path",
+      "fiche": "reservedSpells.4.path"
+    },
+    {
+      "gmos": "reservedSpells_4_name",
+      "fiche": "reservedSpells.4.name"
+    },
+    {
+      "gmos": "reservedSpells_4_tmr",
+      "fiche": "reservedSpells.4.tmr"
+    },
+    {
+      "gmos": "reservedSpells_4_birthHour",
+      "fiche": "reservedSpells.4.birthHour"
+    },
+    {
+      "gmos": "reservedSpells_4_dream",
+      "fiche": "reservedSpells.4.dream"
+    },
+    {
+      "gmos": "reservedSpells_5_path",
+      "fiche": "reservedSpells.5.path"
+    },
+    {
+      "gmos": "reservedSpells_5_name",
+      "fiche": "reservedSpells.5.name"
+    },
+    {
+      "gmos": "reservedSpells_5_tmr",
+      "fiche": "reservedSpells.5.tmr"
+    },
+    {
+      "gmos": "reservedSpells_5_birthHour",
+      "fiche": "reservedSpells.5.birthHour"
+    },
+    {
+      "gmos": "reservedSpells_5_dream",
+      "fiche": "reservedSpells.5.dream"
+    },
+    {
+      "gmos": "reservedSpells_6_path",
+      "fiche": "reservedSpells.6.path"
+    },
+    {
+      "gmos": "reservedSpells_6_name",
+      "fiche": "reservedSpells.6.name"
+    },
+    {
+      "gmos": "reservedSpells_6_tmr",
+      "fiche": "reservedSpells.6.tmr"
+    },
+    {
+      "gmos": "reservedSpells_6_birthHour",
+      "fiche": "reservedSpells.6.birthHour"
+    },
+    {
+      "gmos": "reservedSpells_6_dream",
+      "fiche": "reservedSpells.6.dream"
+    },
+    {
+      "gmos": "magic_dragonEffects",
+      "fiche": "magic.dragonEffects"
+    },
+    {
+      "gmos": "magic_repression",
+      "fiche": "magic.repression"
+    },
+    {
+      "gmos": "route_food",
+      "fiche": "route.food"
+    },
+    {
+      "gmos": "route_water",
+      "fiche": "route.water"
+    },
+    {
+      "gmos": "route_dissolution",
+      "fiche": "route.dissolution"
+    },
+    {
+      "gmos": "route_exaltation",
+      "fiche": "route.exaltation"
+    },
+    {
+      "gmos": "resources_luck_history",
+      "fiche": "resources.luck.history"
+    },
+    {
+      "gmos": "calendar_month",
+      "fiche": "calendar.month"
+    },
+    {
+      "gmos": "route_generalState",
+      "fiche": "route.generalState"
+    },
+    {
+      "gmos": "injuries_light_count",
+      "fiche": "injuries.light.count"
+    },
+    {
+      "gmos": "injuries_light_0_notes",
+      "fiche": "injuries.light.0.notes"
+    },
+    {
+      "gmos": "injuries_light_1_notes",
+      "fiche": "injuries.light.1.notes"
+    },
+    {
+      "gmos": "injuries_light_2_notes",
+      "fiche": "injuries.light.2.notes"
+    },
+    {
+      "gmos": "injuries_light_3_notes",
+      "fiche": "injuries.light.3.notes"
+    },
+    {
+      "gmos": "injuries_light_4_notes",
+      "fiche": "injuries.light.4.notes"
+    },
+    {
+      "gmos": "injuries_serious_count",
+      "fiche": "injuries.serious.count"
+    },
+    {
+      "gmos": "injuries_serious_0_notes",
+      "fiche": "injuries.serious.0.notes"
+    },
+    {
+      "gmos": "injuries_serious_1_notes",
+      "fiche": "injuries.serious.1.notes"
+    },
+    {
+      "gmos": "injuries_critical_count",
+      "fiche": "injuries.critical.count"
+    },
+    {
+      "gmos": "injuries_critical_0_notes",
+      "fiche": "injuries.critical.0.notes"
+    },
+    {
+      "gmos": "tracks_inebriation",
+      "fiche": "tracks.inebriation"
+    },
+    {
+      "gmos": "route_hazards",
+      "fiche": "route.hazards"
+    },
+    {
+      "gmos": "calendar_day",
+      "fiche": "calendar.day"
+    },
+    {
+      "gmos": "calendar_astral_1",
+      "fiche": "calendar.astral.1"
+    },
+    {
+      "gmos": "calendar_astral_2",
+      "fiche": "calendar.astral.2"
+    },
+    {
+      "gmos": "calendar_astral_3",
+      "fiche": "calendar.astral.3"
+    },
+    {
+      "gmos": "calendar_astral_4",
+      "fiche": "calendar.astral.4"
+    },
+    {
+      "gmos": "calendar_astral_5",
+      "fiche": "calendar.astral.5"
+    },
+    {
+      "gmos": "calendar_astral_6",
+      "fiche": "calendar.astral.6"
+    },
+    {
+      "gmos": "calendar_astral_7",
+      "fiche": "calendar.astral.7"
+    },
+    {
+      "gmos": "calendar_astral_8",
+      "fiche": "calendar.astral.8"
+    },
+    {
+      "gmos": "calendar_astral_9",
+      "fiche": "calendar.astral.9"
+    },
+    {
+      "gmos": "calendar_astral_10",
+      "fiche": "calendar.astral.10"
+    },
+    {
+      "gmos": "calendar_astral_11",
+      "fiche": "calendar.astral.11"
+    },
+    {
+      "gmos": "calendar_astral_12",
+      "fiche": "calendar.astral.12"
+    },
+    {
+      "gmos": "calendar_astral_13",
+      "fiche": "calendar.astral.13"
+    },
+    {
+      "gmos": "calendar_astral_14",
+      "fiche": "calendar.astral.14"
+    },
+    {
+      "gmos": "calendar_astral_15",
+      "fiche": "calendar.astral.15"
+    },
+    {
+      "gmos": "calendar_astral_16",
+      "fiche": "calendar.astral.16"
+    },
+    {
+      "gmos": "calendar_astral_17",
+      "fiche": "calendar.astral.17"
+    },
+    {
+      "gmos": "calendar_astral_18",
+      "fiche": "calendar.astral.18"
+    },
+    {
+      "gmos": "calendar_astral_19",
+      "fiche": "calendar.astral.19"
+    },
+    {
+      "gmos": "calendar_astral_20",
+      "fiche": "calendar.astral.20"
+    },
+    {
+      "gmos": "calendar_astral_21",
+      "fiche": "calendar.astral.21"
+    },
+    {
+      "gmos": "calendar_astral_22",
+      "fiche": "calendar.astral.22"
+    },
+    {
+      "gmos": "calendar_astral_23",
+      "fiche": "calendar.astral.23"
+    },
+    {
+      "gmos": "calendar_astral_24",
+      "fiche": "calendar.astral.24"
+    },
+    {
+      "gmos": "calendar_astral_25",
+      "fiche": "calendar.astral.25"
+    },
+    {
+      "gmos": "calendar_astral_26",
+      "fiche": "calendar.astral.26"
+    },
+    {
+      "gmos": "calendar_astral_27",
+      "fiche": "calendar.astral.27"
+    },
+    {
+      "gmos": "calendar_astral_28",
+      "fiche": "calendar.astral.28"
+    },
+    {
+      "gmos": "archetype_general_craft",
+      "fiche": "archetype.general.craft"
+    },
+    {
+      "gmos": "archetype_general_sing",
+      "fiche": "archetype.general.sing"
+    },
+    {
+      "gmos": "archetype_general_run",
+      "fiche": "archetype.general.run"
+    },
+    {
+      "gmos": "archetype_general_cook",
+      "fiche": "archetype.general.cook"
+    },
+    {
+      "gmos": "archetype_general_dance",
+      "fiche": "archetype.general.dance"
+    },
+    {
+      "gmos": "archetype_general_draw",
+      "fiche": "archetype.general.draw"
+    },
+    {
+      "gmos": "archetype_general_stealth",
+      "fiche": "archetype.general.stealth"
+    },
+    {
+      "gmos": "archetype_general_climb",
+      "fiche": "archetype.general.climb"
+    },
+    {
+      "gmos": "archetype_general_jump",
+      "fiche": "archetype.general.jump"
+    },
+    {
+      "gmos": "archetype_general_seduce",
+      "fiche": "archetype.general.seduce"
+    },
+    {
+      "gmos": "archetype_general_awareness",
+      "fiche": "archetype.general.awareness"
+    },
+    {
+      "gmos": "archetype_general_custom_0_name",
+      "fiche": "archetype.general.custom.0.name"
+    },
+    {
+      "gmos": "archetype_general_custom_0_level",
+      "fiche": "archetype.general.custom.0.level"
+    },
+    {
+      "gmos": "archetype_general_custom_1_name",
+      "fiche": "archetype.general.custom.1.name"
+    },
+    {
+      "gmos": "archetype_general_custom_1_level",
+      "fiche": "archetype.general.custom.1.level"
+    },
+    {
+      "gmos": "archetype_general_custom_2_name",
+      "fiche": "archetype.general.custom.2.name"
+    },
+    {
+      "gmos": "archetype_general_custom_2_level",
+      "fiche": "archetype.general.custom.2.level"
+    },
+    {
+      "gmos": "archetype_particular_carpentry",
+      "fiche": "archetype.particular.carpentry"
+    },
+    {
+      "gmos": "archetype_particular_act",
+      "fiche": "archetype.particular.act"
+    },
+    {
+      "gmos": "archetype_particular_trade",
+      "fiche": "archetype.particular.trade"
+    },
+    {
+      "gmos": "archetype_particular_ride",
+      "fiche": "archetype.particular.ride"
+    },
+    {
+      "gmos": "archetype_particular_masonry",
+      "fiche": "archetype.particular.masonry"
+    },
+    {
+      "gmos": "archetype_particular_music",
+      "fiche": "archetype.particular.music"
+    },
+    {
+      "gmos": "archetype_particular_pickpocket",
+      "fiche": "archetype.particular.pickpocket"
+    },
+    {
+      "gmos": "archetype_particular_survivalCity",
+      "fiche": "archetype.particular.survivalCity"
+    },
+    {
+      "gmos": "archetype_particular_survivalOutdoors",
+      "fiche": "archetype.particular.survivalOutdoors"
+    },
+    {
+      "gmos": "archetype_particular_survivalDesert",
+      "fiche": "archetype.particular.survivalDesert"
+    },
+    {
+      "gmos": "archetype_particular_survivalForest",
+      "fiche": "archetype.particular.survivalForest"
+    },
+    {
+      "gmos": "archetype_particular_survivalIce",
+      "fiche": "archetype.particular.survivalIce"
+    },
+    {
+      "gmos": "archetype_particular_survivalSwamp",
+      "fiche": "archetype.particular.survivalSwamp"
+    },
+    {
+      "gmos": "archetype_particular_survivalMountain",
+      "fiche": "archetype.particular.survivalMountain"
+    },
+    {
+      "gmos": "archetype_particular_survivalUnderground",
+      "fiche": "archetype.particular.survivalUnderground"
+    },
+    {
+      "gmos": "archetype_particular_disguise",
+      "fiche": "archetype.particular.disguise"
+    },
+    {
+      "gmos": "archetype_particular_custom_0_name",
+      "fiche": "archetype.particular.custom.0.name"
+    },
+    {
+      "gmos": "archetype_particular_custom_0_level",
+      "fiche": "archetype.particular.custom.0.level"
+    },
+    {
+      "gmos": "archetype_particular_custom_1_name",
+      "fiche": "archetype.particular.custom.1.name"
+    },
+    {
+      "gmos": "archetype_particular_custom_1_level",
+      "fiche": "archetype.particular.custom.1.level"
+    },
+    {
+      "gmos": "archetype_particular_custom_2_name",
+      "fiche": "archetype.particular.custom.2.name"
+    },
+    {
+      "gmos": "archetype_particular_custom_2_level",
+      "fiche": "archetype.particular.custom.2.level"
+    },
+    {
+      "gmos": "archetype_melee_polearm",
+      "fiche": "archetype.melee.polearm"
+    },
+    {
+      "gmos": "archetype_melee_shield",
+      "fiche": "archetype.melee.shield"
+    },
+    {
+      "gmos": "archetype_melee_unarmed",
+      "fiche": "archetype.melee.unarmed"
+    },
+    {
+      "gmos": "archetype_melee_dagger",
+      "fiche": "archetype.melee.dagger"
+    },
+    {
+      "gmos": "archetype_melee_sword1h",
+      "fiche": "archetype.melee.sword1h"
+    },
+    {
+      "gmos": "archetype_melee_sword2h",
+      "fiche": "archetype.melee.sword2h"
+    },
+    {
+      "gmos": "archetype_melee_dodge",
+      "fiche": "archetype.melee.dodge"
+    },
+    {
+      "gmos": "archetype_melee_flail",
+      "fiche": "archetype.melee.flail"
+    },
+    {
+      "gmos": "archetype_melee_axe1h",
+      "fiche": "archetype.melee.axe1h"
+    },
+    {
+      "gmos": "archetype_melee_axe2h",
+      "fiche": "archetype.melee.axe2h"
+    },
+    {
+      "gmos": "archetype_melee_spear",
+      "fiche": "archetype.melee.spear"
+    },
+    {
+      "gmos": "archetype_melee_mace1h",
+      "fiche": "archetype.melee.mace1h"
+    },
+    {
+      "gmos": "archetype_melee_mace2h",
+      "fiche": "archetype.melee.mace2h"
+    },
+    {
+      "gmos": "archetype_melee_custom_0_name",
+      "fiche": "archetype.melee.custom.0.name"
+    },
+    {
+      "gmos": "archetype_melee_custom_0_level",
+      "fiche": "archetype.melee.custom.0.level"
+    },
+    {
+      "gmos": "archetype_melee_custom_1_name",
+      "fiche": "archetype.melee.custom.1.name"
+    },
+    {
+      "gmos": "archetype_melee_custom_1_level",
+      "fiche": "archetype.melee.custom.1.level"
+    },
+    {
+      "gmos": "archetype_melee_custom_2_name",
+      "fiche": "archetype.melee.custom.2.name"
+    },
+    {
+      "gmos": "archetype_melee_custom_2_level",
+      "fiche": "archetype.melee.custom.2.level"
+    },
+    {
+      "gmos": "archetype_ranged_crossbow",
+      "fiche": "archetype.ranged.crossbow"
+    },
+    {
+      "gmos": "archetype_ranged_bow",
+      "fiche": "archetype.ranged.bow"
+    },
+    {
+      "gmos": "archetype_ranged_dagger",
+      "fiche": "archetype.ranged.dagger"
+    },
+    {
+      "gmos": "archetype_ranged_whip",
+      "fiche": "archetype.ranged.whip"
+    },
+    {
+      "gmos": "archetype_ranged_sling",
+      "fiche": "archetype.ranged.sling"
+    },
+    {
+      "gmos": "archetype_ranged_javelin",
+      "fiche": "archetype.ranged.javelin"
+    },
+    {
+      "gmos": "archetype_ranged_custom_0_name",
+      "fiche": "archetype.ranged.custom.0.name"
+    },
+    {
+      "gmos": "archetype_ranged_custom_0_level",
+      "fiche": "archetype.ranged.custom.0.level"
+    },
+    {
+      "gmos": "archetype_ranged_custom_1_name",
+      "fiche": "archetype.ranged.custom.1.name"
+    },
+    {
+      "gmos": "archetype_ranged_custom_1_level",
+      "fiche": "archetype.ranged.custom.1.level"
+    },
+    {
+      "gmos": "archetype_ranged_custom_2_name",
+      "fiche": "archetype.ranged.custom.2.name"
+    },
+    {
+      "gmos": "archetype_ranged_custom_2_level",
+      "fiche": "archetype.ranged.custom.2.level"
+    },
+    {
+      "gmos": "archetype_ranged_custom_3_name",
+      "fiche": "archetype.ranged.custom.3.name"
+    },
+    {
+      "gmos": "archetype_ranged_custom_3_level",
+      "fiche": "archetype.ranged.custom.3.level"
+    },
+    {
+      "gmos": "archetype_specialized_acrobatics",
+      "fiche": "archetype.specialized.acrobatics"
+    },
+    {
+      "gmos": "archetype_specialized_surgery",
+      "fiche": "archetype.specialized.surgery"
+    },
+    {
+      "gmos": "archetype_specialized_gaming",
+      "fiche": "archetype.specialized.gaming"
+    },
+    {
+      "gmos": "archetype_specialized_juggle",
+      "fiche": "archetype.specialized.juggle"
+    },
+    {
+      "gmos": "archetype_specialized_leatherwork",
+      "fiche": "archetype.specialized.leatherwork"
+    },
+    {
+      "gmos": "archetype_specialized_metalwork",
+      "fiche": "archetype.specialized.metalwork"
+    },
+    {
+      "gmos": "archetype_specialized_swim",
+      "fiche": "archetype.specialized.swim"
+    },
+    {
+      "gmos": "archetype_specialized_navigation",
+      "fiche": "archetype.specialized.navigation"
+    },
+    {
+      "gmos": "archetype_specialized_goldsmith",
+      "fiche": "archetype.specialized.goldsmith"
+    },
+    {
+      "gmos": "archetype_specialized_locksmith",
+      "fiche": "archetype.specialized.locksmith"
+    },
+    {
+      "gmos": "archetype_specialized_custom_0_name",
+      "fiche": "archetype.specialized.custom.0.name"
+    },
+    {
+      "gmos": "archetype_specialized_custom_0_level",
+      "fiche": "archetype.specialized.custom.0.level"
+    },
+    {
+      "gmos": "archetype_specialized_custom_1_name",
+      "fiche": "archetype.specialized.custom.1.name"
+    },
+    {
+      "gmos": "archetype_specialized_custom_1_level",
+      "fiche": "archetype.specialized.custom.1.level"
+    },
+    {
+      "gmos": "archetype_knowledge_alchemy",
+      "fiche": "archetype.knowledge.alchemy"
+    },
+    {
+      "gmos": "archetype_knowledge_astrology",
+      "fiche": "archetype.knowledge.astrology"
+    },
+    {
+      "gmos": "archetype_knowledge_botany",
+      "fiche": "archetype.knowledge.botany"
+    },
+    {
+      "gmos": "archetype_knowledge_writing",
+      "fiche": "archetype.knowledge.writing"
+    },
+    {
+      "gmos": "archetype_knowledge_legends",
+      "fiche": "archetype.knowledge.legends"
+    },
+    {
+      "gmos": "archetype_knowledge_medicine",
+      "fiche": "archetype.knowledge.medicine"
+    },
+    {
+      "gmos": "archetype_knowledge_zoology",
+      "fiche": "archetype.knowledge.zoology"
+    },
+    {
+      "gmos": "archetype_knowledge_custom_0_name",
+      "fiche": "archetype.knowledge.custom.0.name"
+    },
+    {
+      "gmos": "archetype_knowledge_custom_0_level",
+      "fiche": "archetype.knowledge.custom.0.level"
+    },
+    {
+      "gmos": "archetype_knowledge_custom_1_name",
+      "fiche": "archetype.knowledge.custom.1.name"
+    },
+    {
+      "gmos": "archetype_knowledge_custom_1_level",
+      "fiche": "archetype.knowledge.custom.1.level"
+    },
+    {
+      "gmos": "archetype_knowledge_custom_2_name",
+      "fiche": "archetype.knowledge.custom.2.name"
+    },
+    {
+      "gmos": "archetype_knowledge_custom_2_level",
+      "fiche": "archetype.knowledge.custom.2.level"
+    },
+    {
+      "gmos": "archetype_draconic_oniros",
+      "fiche": "archetype.draconic.oniros"
+    },
+    {
+      "gmos": "archetype_draconic_hypnos",
+      "fiche": "archetype.draconic.hypnos"
+    },
+    {
+      "gmos": "archetype_draconic_narcos",
+      "fiche": "archetype.draconic.narcos"
+    },
+    {
+      "gmos": "archetype_draconic_thanatos",
+      "fiche": "archetype.draconic.thanatos"
+    },
+    {
+      "gmos": "archetype_other_0_name",
+      "fiche": "archetype.other.0.name"
+    },
+    {
+      "gmos": "archetype_other_0_level",
+      "fiche": "archetype.other.0.level"
+    },
+    {
+      "gmos": "archetype_other_1_name",
+      "fiche": "archetype.other.1.name"
+    },
+    {
+      "gmos": "archetype_other_1_level",
+      "fiche": "archetype.other.1.level"
+    },
+    {
+      "gmos": "archetype_other_2_name",
+      "fiche": "archetype.other.2.name"
+    },
+    {
+      "gmos": "archetype_other_2_level",
+      "fiche": "archetype.other.2.level"
+    },
+    {
+      "gmos": "archetype_other_3_name",
+      "fiche": "archetype.other.3.name"
+    },
+    {
+      "gmos": "archetype_other_3_level",
+      "fiche": "archetype.other.3.level"
+    },
+    {
+      "gmos": "archetype_other_4_name",
+      "fiche": "archetype.other.4.name"
+    },
+    {
+      "gmos": "archetype_other_4_level",
+      "fiche": "archetype.other.4.level"
+    },
+    {
+      "gmos": "archetype_other_5_name",
+      "fiche": "archetype.other.5.name"
+    },
+    {
+      "gmos": "archetype_other_5_level",
+      "fiche": "archetype.other.5.level"
+    },
+    {
+      "gmos": "archetype_other_6_name",
+      "fiche": "archetype.other.6.name"
+    },
+    {
+      "gmos": "archetype_other_6_level",
+      "fiche": "archetype.other.6.level"
+    },
+    {
+      "gmos": "archetype_other_7_name",
+      "fiche": "archetype.other.7.name"
+    },
+    {
+      "gmos": "archetype_other_7_level",
+      "fiche": "archetype.other.7.level"
+    },
+    {
+      "gmos": "archetype_other_8_name",
+      "fiche": "archetype.other.8.name"
+    },
+    {
+      "gmos": "archetype_other_8_level",
+      "fiche": "archetype.other.8.level"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "derived.melee",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "derived.shoot",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "derived.throw",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "derived.dodge",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "resources.life.base",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "resources.endurance.base",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "resources.sustenance",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "resources.constitutionThreshold",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "resources.encumbrance",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "resources.damageBonus",
+      "pourquoi": "GM-OS le calcule (formule de la fiche GM-OS) : saisi sur la fiche HTML, il n’y remonte pas, pour ne pas faire deux vérités."
+    },
+    {
+      "fiche": "headers.2.name",
+      "pourquoi": "Copie calculée par la fiche (« identity.name ») : en lecture seule, la source est reliée."
+    },
+    {
+      "fiche": "headers.3.name",
+      "pourquoi": "Copie calculée par la fiche (« identity.name ») : en lecture seule, la source est reliée."
+    },
+    {
+      "fiche": "headers.4.name",
+      "pourquoi": "Copie calculée par la fiche (« identity.name ») : en lecture seule, la source est reliée."
+    },
+    {
+      "fiche": "route.constitutionThreshold",
+      "pourquoi": "Copie calculée par la fiche (« resources.constitutionThreshold ») : en lecture seule, la source est reliée."
+    },
+    {
+      "fiche": "headers.5.name",
+      "pourquoi": "Copie calculée par la fiche (« identity.name ») : en lecture seule, la source est reliée."
+    }
+  ]
+}
