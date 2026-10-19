@@ -48,8 +48,9 @@ const CampaignDetails: React.FC = () => {
         if (!activeCampaignId) return;
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
-        await nexusService.exportBundle(activeCampaignId, { includeAssets: emporterLesMedias });
-        setTimeout(() => setNexusProgress(null), 3000);
+        const resultat = await nexusService.exportBundle(activeCampaignId, { includeAssets: emporterLesMedias });
+        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer ».
+        if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
     /** Lot E5 (2026-10-19) : la seconde archive — les médias, à réimporter dans une autre campagne. */

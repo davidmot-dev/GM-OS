@@ -28,9 +28,16 @@ Une fenêtre plein écran, le **Nexus HUD**, suit le travail. Il traverse ces é
 | **Vérification des liens distants** | Les images qui vivent sur le web sont repérées — **le HUD s'arrête ici s'il en trouve** |
 | **Moissonnage des médias** | Les fichiers sont récupérés depuis le Media Hub |
 | **Compression du bundle** | L'archive `.gmos` est écrite |
-| **Opération terminée** | Le HUD se referme au bout de trois secondes |
+| **Opération terminée** | Le **bilan** s'affiche et reste jusqu'à « Fermer » |
 
 Un sélecteur vous demande où poser le fichier.
+
+**Le bilan de l'export** (depuis le 2026-10-19) dit ce qui est parti, compté, combien de médias
+sont emportés, et surtout **ce qui manquait** : un média que la campagne désigne mais dont le Media
+Hub de ce poste n'a pas le contenu, ou un fichier du disque disparu, part sans lui. Le bilan le dit
+par usage — « ⚠️ 30 portraits de PNJ, 15 sons introuvables sur ce poste » — au lieu de livrer une
+archive incomplète qui se croit complète. *C'est le premier export d'essai, fait depuis une instance
+sans médias, qui l'a montré : deux archives vides de médias, et aucun mot.*
 
 > ✅ **Une case « archive légère » est offerte depuis le 2026-09-05**, juste au-dessus des deux
 > boutons. Cochée, l'archive part **sans les images ni les sons** : le JSON seul, quelques centaines
@@ -150,14 +157,15 @@ autre campagne du même univers** pour y retrouver ses images, ses sons, ses mus
 
 **Exporter** : panneau de la campagne → encadré **Nexus-OS** → **Exporter les médias
 (.gmos-medias)**, ou, dans la **bibliothèque des campagnes**, **Exporter les médias** sous la carte
-de la campagne. Le bilan dit ce qui est parti, et ce qui était introuvable.
+de la campagne. Le bilan dit ce qui est parti, et ce qui était introuvable — y compris un son qu'un
+pad désigne et que le Media Hub de ce poste n'a pas.
 
 | Ce qui part | |
 | :--- | :--- |
 | Les médias du **Media Hub** étiquetés pour la campagne | images, sons, vidéos, documents |
 | Les médias que ses ambiances et playlists **utilisent** sans les porter | un son du hub glissé dans un pad n'est pas étiqueté pour autant : sans lui, le pad serait muet |
 | Ses **ambiances sonores** et ses **playlists**, avec leurs **fichiers audio** copiés depuis le disque | les liens distants (YouTube, Spotify…) restent des liens |
-| Ses **tuiles de Light-OS** | réglages des lampes compris |
+| Ses **tuiles de Light-OS réglées** | réglages des lampes compris ; les cases vides de son râtelier restent |
 | Ce qu'**Image-OS** tient pour elle | les images et diaporamas appelés par ses moments de storyboard, les images dont le média est étiqueté pour elle, et les dossiers qui les rangent |
 
 **Importer** : le bouton d'import habituel. GM-OS demande **dans quelle campagne** ranger les médias

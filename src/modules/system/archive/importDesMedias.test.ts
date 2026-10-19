@@ -217,3 +217,36 @@ describe('exporter les médias d’une campagne', () => {
         expect(exporte!.fichiers).toEqual(['D:/Sons/sirene.mp3']);
     });
 });
+
+describe('le bilan des exports dit ce qui manque (essai de David, 19/10)', () => {
+    const pontDExport = () => {
+        const sortie: { stateJson?: string } = {};
+        window.appBridge = { ...pontInitial, nexus: {
+            selectExportPath: vi.fn(async () => 'sortie'),
+            clearAssets: vi.fn(async () => ({ ok: true })),
+            registerAsset: vi.fn(async () => ({ ok: true })),
+            exportBundle: vi.fn(async (_id: string, _c: string, stateJson: string) => { sortie.stateJson = stateJson; return { success: true, missingAssets: [] }; }),
+        } } as unknown as Window['appBridge'];
+        return sortie;
+    };
+
+    it('archive des médias : les sons que les pads désignent sans que le hub les ait sont comptés', async () => {
+        son.setState({ atmospheres: ARCHIVE.atmospheres as never });
+        mediaHub.setState({ mediaList: [ARCHIVE.medias[0]] as never });
+        pontDExport();
+        const r = await nexusService.exportMediasBundle('c-br');
+        expect(r.bilan).toContainEqual(expect.stringMatching(/^⚠️ 1 média\(s\) désigné\(s\) introuvable\(s\) sur ce poste, partis sans leur contenu : 1 sons\.$/));
+    });
+
+    it('archive de campagne : les portraits sans contenu sur ce poste sont comptés, par usage', async () => {
+        useSessionOSStore.setState({ entities: [
+            { id: 'npc-1', campaignId: 'c-br', name: 'Deckard', avatar: 'm-absent-1', relations: [] },
+            { id: 'npc-2', campaignId: 'c-br', name: 'Rachael', avatar: 'm-absent-2', relations: [] },
+        ] } as never);
+        actions.getMediaBlob.mockResolvedValue(undefined as never);
+        pontDExport();
+        const r = await nexusService.exportBundle('c-br', { includeAssets: true });
+        expect(r.bilan).toContainEqual('⚠️ 2 média(s) désigné(s) par la campagne introuvable(s) sur ce poste, partis sans leur contenu : 2 portraits de PNJ.');
+        expect(r.bilan![0]).toMatch(/^« Blade Runner » exportée : 2 PNJ/);
+    });
+});

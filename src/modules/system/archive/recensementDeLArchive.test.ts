@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { recenserLArchive, enUneLigne } from './recensementDeLArchive';
+import { recenserLArchive, enUneLigne, direLesIntrouvables } from './recensementDeLArchive';
 import type { NexusCampaignState } from './nexus.types';
 
 /** L'aperçu et le bilan d'un import comptent avec la même liste — lot E6, 2026-10-19. */
@@ -33,5 +33,11 @@ describe('recenser une archive de campagne', () => {
     it('en une ligne, pour le bilan et le journal', () => {
         expect(enUneLigne(recenserLArchive(etat))).toBe('2 PNJ · 1 personnages · 3 scènes · 1 indices · 1 combats préparés');
         expect(enUneLigne([])).toBe('rien');
+    });
+});
+
+describe('dire ce qui manque', () => {
+    it('par usage, dans l’ordre où on les rencontre', () => {
+        expect(direLesIntrouvables(['portraits de PNJ', 'sons', 'portraits de PNJ'])).toBe('2 portraits de PNJ, 1 sons');
     });
 });

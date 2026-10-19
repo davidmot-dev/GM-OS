@@ -296,6 +296,8 @@ export interface NexusExportResult {
     /** Assets qui n'ont pas pu être moissonnés (fichiers introuvables) */
     missingAssets: string[];
     error?: string;
+    /** Ce qui est parti, et ce qui manquait (2026-10-19). L'écran reste ouvert pour qu'on le lise. */
+    bilan?: string[];
 }
 
 /**

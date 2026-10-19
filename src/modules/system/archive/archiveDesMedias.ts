@@ -139,10 +139,12 @@ export function rassemblerLesMedias(
         /** Image-OS et les moments qui l'appellent (2026-10-19). Absents : l'archive n'en porte pas. */
         imageOs?: BibliothequeDImageOs; moments?: readonly StoryboardMoment[];
     },
-): { state: NexusMediasState; fichiers: string[] } {
+): { state: NexusMediasState; fichiers: string[]; introuvables: { ref: string; usage: string }[] } {
     const atmospheres = magasins.atmospheres.filter(a => a.campagneId === campagne.id);
     const playlists = magasins.playlists.filter(p => p.campagneId === campagne.id);
-    const tuilesDeLumiere = Object.values(magasins.scenes).filter(t => t.campagneId === campagne.id);
+    /* Les tuiles RÉGLÉES seulement (2026-10-19) : une case vide du râtelier
+       n'a rien à transporter — le premier essai en emportait 4 sur 18. */
+    const tuilesDeLumiere = Object.values(magasins.scenes).filter(t => t.campagneId === campagne.id && tuilePorteUnEtat(t));
     const etiquetes = new Set(magasins.mediaList.filter(m => (m.campaignIds ?? []).includes(campagne.id)).map(m => m.id));
     const imageOs = magasins.imageOs
         ? ceQuImageOsTientPourLaCampagne(campagne.id, magasins.moments ?? [], magasins.imageOs, etiquetes)
@@ -151,7 +153,16 @@ export function rassemblerLesMedias(
     const references = [...referencesDesSons(atmospheres, playlists), ...(imageOs?.images ?? []).map(i => i.path)];
     const designes = new Set(references.filter(estUnMedia));
     const medias = magasins.mediaList.filter(m => etiquetes.has(m.id) || designes.has(m.id));
+    /* Ce que les pads et Image-OS désignent, et que le Media Hub n'a pas : ces
+       références partiraient sans contenu. On les rend pour que le bilan le dise. */
+    const presents = new Set(magasins.mediaList.map(m => m.id));
+    const usageDe = new Map<string, string>();
+    for (const a of atmospheres) for (const p of Object.values(a.pads ?? {})) if (p.filePath) usageDe.set(p.filePath, 'sons');
+    for (const pl of playlists) for (const p of pl.pads ?? []) if (p.type === 'local' && p.url && !usageDe.has(p.url)) usageDe.set(p.url, 'musiques');
+    for (const i of imageOs?.images ?? []) if (!usageDe.has(i.path)) usageDe.set(i.path, "images d'Image-OS");
+    const introuvables = [...designes].filter(ref => !presents.has(ref)).map(ref => ({ ref, usage: usageDe.get(ref) ?? 'médias' }));
     return {
+        introuvables,
         state: {
             origine: { campaignId: campagne.id, campaignName: campagne.name, system: campagne.system },
             medias, atmospheres, playlists, tuilesDeLumiere,

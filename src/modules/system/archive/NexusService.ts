@@ -23,7 +23,7 @@
 
 import { clonerLaCampagne, type Fabrique } from './clonerLaCampagne';
 import { rejouerLaCampagne } from './rejouerLaCampagne';
-import { recenserLArchive, enUneLigne } from './recensementDeLArchive';
+import { recenserLArchive, enUneLigne, direLesIntrouvables } from './recensementDeLArchive';
 import {
     rassemblerLesMedias, recenserLesMedias, planifierLImportDesMedias, pointerVersLesMediasEntres, completerImageOs,
     NEXUS_MEDIAS_EXTENSION, type NexusMediasState,
@@ -408,43 +408,47 @@ export class NexusService {
      * @param state - Données de campagne extraites par scrapeCampaignData
      * @returns Set des refs d'assets uniques (m-xxx IDs ou chemins locaux)
      */
-    public collectAssetPaths(state: NexusCampaignState): Set<string> {
+    public collectAssetPaths(state: NexusCampaignState, usages?: Map<string, string>): Set<string> {
         const assets = new Set<string>();
 
-        const addRef = (ref: string | undefined | null): void => {
+        /* `usages` (2026-10-19) : à quoi sert chaque référence — pour que le
+           bilan de l'export dise « 30 portraits de PNJ introuvables » plutôt
+           qu'un nombre. La première trouvée l'emporte. */
+        const addRef = (ref: string | undefined | null, usage = 'médias'): void => {
             if (!ref || !this.isValidAssetRef(ref)) return;
             assets.add(ref);
+            if (usages && !usages.has(ref)) usages.set(ref, usage);
         };
 
         // Campaign-OS
-        addRef(state.campaign.wallpaperUrl);
+        addRef(state.campaign.wallpaperUrl, 'fond de campagne');
         // ragPath est un dossier local — exclure (il peut être très volumineux)
 
         // NPC/PC-OS : avatars, portraits, tokens
         state.entities.forEach((e) => {
-            addRef(e.avatar);
+            addRef(e.avatar, 'portraits de PNJ');
         });
 
         state.players.forEach((p) => {
             p.characters.forEach((c) => {
-                addRef(c.portraitUrl);
-                addRef(c.tokenUrl);
+                addRef(c.portraitUrl, 'portraits de personnages');
+                addRef(c.tokenUrl, 'jetons de personnages');
             });
         });
 
         // Map-OS : fichiers de carte (Image ou Vidéo)
         state.atlasMaps.forEach((m) => {
-            addRef(m.fileUrl);
+            addRef(m.fileUrl, "cartes de l'Atlas");
         });
 
         // Wiki-OS : galeries d'images
         state.wikiEntries.forEach((w) => {
-            w.imageUrls?.forEach((url) => addRef(url));
+            w.imageUrls?.forEach((url) => addRef(url, 'images du wiki'));
         });
 
         // Clues-OS : médias d'indices
         state.clues.forEach((cl) => {
-            addRef(cl.mediaUrl);
+            addRef(cl.mediaUrl, "médias d'indices");
         });
 
         // Deck-OS : plus emporté avec la campagne (2026-10-19). Ses images sont livrées avec l'application.
@@ -453,7 +457,7 @@ export class NexusService {
         // On n'exporte que les chemins absolus valides (pas les chemins réseaux)
         state.atmospheres?.forEach((atmos) => {
             Object.values(atmos.pads).forEach((pad) => {
-                if (pad.filePath) addRef(pad.filePath);
+                if (pad.filePath) addRef(pad.filePath, 'sons');
             });
         });
 
@@ -461,7 +465,7 @@ export class NexusService {
         // Les URLs 'link' (YouTube, Spotify, etc.) sont des liens distants — non-exportables
         state.playlists?.forEach((playlist) => {
             playlist.pads.forEach((pad) => {
-                if (pad.type === 'local' && pad.url) addRef(pad.url);
+                if (pad.type === 'local' && pad.url) addRef(pad.url, 'musiques');
             });
         });
 
@@ -801,8 +805,9 @@ export class NexusService {
 
             // Phase 2 : Harvesting — collecte et séparation des refs d'assets locaux
             this.emitProgress('harvesting', 40, i18next.t('modules:system.nexus.phases.harvesting'));
+            const usages = new Map<string, string>();
             const assetRefs = options.includeAssets
-                ? this.collectAssetPaths(state)
+                ? this.collectAssetPaths(state, usages)
                 : new Set<string>();
 
             // Phase 2b : Résolution des Media Hub IDs (IDB → base64)
@@ -859,8 +864,30 @@ export class NexusService {
             );
 
             if (result.success) {
-                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.export_success'));
+                /*
+                  **Le bilan de l'export** (2026-10-19) : ce qui est parti, et
+                  ce qui manquait. Un média du Media Hub sans contenu sur ce
+                  poste, ou un fichier du disque disparu, partait en silence.
+                */
+                const introuvables = [
+                    ...mediaHubIds.filter(id => !(id in inlineAssets)),
+                    ...result.missingAssets.filter(ref => !/^m-/.test(ref)),
+                ];
+                const emportes = Object.keys(inlineAssets).length + absolutePaths.length - result.missingAssets.filter(ref => !/^m-/.test(ref)).length;
+                const bilan = [
+                    `« ${state.campaign.name} » exportée : ${enUneLigne(recenserLArchive(state))}.`,
+                    options.includeAssets
+                        ? `Médias : ${emportes} emporté(s).`
+                        : 'Archive légère : aucun média emporté.',
+                    ...(introuvables.length ? [
+                        `⚠️ ${introuvables.length} média(s) désigné(s) par la campagne introuvable(s) sur ce poste, partis sans leur contenu : `
+                            + `${direLesIntrouvables(introuvables.map(ref => usages.get(ref) ?? 'médias'))}.`,
+                    ] : []),
+                ];
+                this.consignerLeBilan(bilan);
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.export_success'), { bilan });
                 gmToast(`${i18next.t('modules:system.nexus.messages.export_success')} : ${state.campaign.name}${NEXUS_EXTENSION}`, 'success');
+                return { ...result, bilan };
             } else {
                 this.emitProgress('error', 0, result.error ?? i18next.t('modules:system.nexus.messages.unknown_error'));
                 gmToast(i18next.t('modules:system.nexus.messages.export_error'), 'error');
@@ -895,7 +922,7 @@ export class NexusService {
             this.emitProgress('scraping', 10, i18next.t('modules:system.nexus.messages.export_scraping'));
             const mediaStore = useMediaStore.getState();
             if (!mediaStore.isInitialized) await mediaStore.initDB();
-            const { state, fichiers } = rassemblerLesMedias(campagne, {
+            const { state, fichiers, introuvables } = rassemblerLesMedias(campagne, {
                 mediaList: useMediaStore.getState().mediaList,
                 atmospheres: useSoundStore.getState().atmospheres ?? [],
                 playlists: useMusicStore.getState().playlists ?? [],
@@ -947,19 +974,27 @@ export class NexusService {
             );
 
             if (result.success) {
-                const manquants = result.missingAssets.length + (state.medias.length - total);
-                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.export_success'), {
-                    bilan: [
-                        `Médias de « ${campagne.name} » exportés : ${enUneLigne(recenserLesMedias(state))}.`,
-                        `${total + fichiers.length - result.missingAssets.length} fichier(s) dans l'archive`
-                            + (manquants > 0 ? `, ${manquants} introuvable(s) : ${result.missingAssets.join(', ') || 'médias du hub sans contenu'}.` : '.'),
-                    ],
-                });
+                /* Ce qui manque : les références que rien ne trouve dans le Media
+                   Hub, les médias sans contenu, et les fichiers du disque disparus. */
+                const usagesManquants = [
+                    ...introuvables.map(i => i.usage),
+                    ...state.medias.filter(m => !(m.id in inlineAssets)).map(() => 'médias du hub sans contenu'),
+                    ...result.missingAssets.map(() => 'fichiers du disque'),
+                ];
+                const bilan = [
+                    `Médias de « ${campagne.name} » exportés : ${enUneLigne(recenserLesMedias(state))}.`,
+                    `${total + fichiers.length - result.missingAssets.length} fichier(s) dans l'archive.`,
+                    ...(usagesManquants.length ? [
+                        `⚠️ ${usagesManquants.length} média(s) désigné(s) introuvable(s) sur ce poste, partis sans leur contenu : ${direLesIntrouvables(usagesManquants)}.`,
+                    ] : []),
+                ];
+                this.consignerLeBilan(bilan);
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.export_success'), { bilan });
                 gmToast(`${i18next.t('modules:system.nexus.messages.export_success')} : ${campagne.name}${NEXUS_MEDIAS_EXTENSION}`, 'success');
-            } else {
-                this.emitProgress('error', 0, result.error ?? i18next.t('modules:system.nexus.messages.unknown_error'));
-                gmToast(i18next.t('modules:system.nexus.messages.export_error'), 'error');
+                return { ...result, bilan };
             }
+            this.emitProgress('error', 0, result.error ?? i18next.t('modules:system.nexus.messages.unknown_error'));
+            gmToast(i18next.t('modules:system.nexus.messages.export_error'), 'error');
             return result;
         } catch (err) {
             const message = err instanceof Error ? err.message : 'Erreur inconnue';

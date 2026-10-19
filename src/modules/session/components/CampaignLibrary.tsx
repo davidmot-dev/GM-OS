@@ -112,8 +112,9 @@ const CampaignLibrary: React.FC = () => {
     const exporter = async (id: string) => {
         nexusService.onProgress(setNexusProgress);
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
-        await nexusService.exportBundle(id, { includeAssets: true });
-        setTimeout(() => setNexusProgress(null), 3000);
+        const resultat = await nexusService.exportBundle(id, { includeAssets: true });
+        // Un bilan se lit : l'écran reste ouvert jusqu'à « Fermer ».
+        if (!resultat.bilan?.length) setTimeout(() => setNexusProgress(null), 3000);
     };
 
     /** La seconde archive — les médias, à réimporter dans une autre campagne (lot E5, 2026-10-19). */

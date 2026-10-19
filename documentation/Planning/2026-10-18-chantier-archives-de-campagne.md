@@ -69,8 +69,15 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > charge toute l'archive en base64 dans un seul message IPC — une archive de centaines de Mo de
 > musique pèsera en mémoire.
 
-**Les décisions du § 7 sont prises ; E0 à E6 sont codés (19/10), rien n'est encore essayé à
-l'écran.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
+> **Premier essai de David, 19/10 au soir** (export depuis l'instance de test, sans médias) : les
+> deux archives sont bien formées, Deck-OS absent comme voulu — mais **aucun des deux exports n'a
+> dit** que 125 médias désignés manquaient, et 4 cases vides de Light-OS partaient. Corrigé : un
+> **bilan à l'export** (`.gmos` et `.gmos-medias`) compte les introuvables par usage
+> (`direLesIntrouvables`, `collectAssetPaths(state, usages)`), et seules les **tuiles réglées**
+> partent dans l'archive des médias.
+
+**Les décisions du § 7 sont prises ; E0 à E6 sont codés (19/10). Export essayé à vide le 19/10 ;
+l'import reste à essayer.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de
 coder : le code bouge).
 

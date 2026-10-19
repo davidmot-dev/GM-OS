@@ -183,3 +183,22 @@ describe('Image-OS : ce que la campagne utilise, et rien d’autre (décision de
         expect(r.ajouts).toEqual({ images: 3, dossiers: 2, diaporamas: 0 });
     });
 });
+
+describe('ce qui manque se dit, ce qui est vide ne part pas (essai de David, 19/10)', () => {
+    it('une case vide du râtelier ne part pas ; une tuile réglée, si', () => {
+        const { state } = rassemblerLesMedias(BR, {
+            ...MAGASINS,
+            scenes: { ...MAGASINS.scenes, 'SCENE_c-br_09': tuile('SCENE_c-br_09', 'c-br', false) },
+        });
+        expect(state.tuilesDeLumiere.map(t => t.id)).toEqual(['SCENE_c-br_02', 'SCENE_c-br_03']);
+    });
+
+    it('un média que les pads désignent et que le Media Hub n’a pas est rendu comme introuvable, avec son usage', () => {
+        const { introuvables } = rassemblerLesMedias(BR, { ...MAGASINS, mediaList: [media('m-pluie', ['c-br'])] });
+        expect(introuvables).toEqual([{ ref: 'm-orage', usage: 'sons' }]);
+    });
+
+    it('rien d’introuvable quand tout est là', () => {
+        expect(rassemblerLesMedias(BR, MAGASINS).introuvables).toEqual([]);
+    });
+});

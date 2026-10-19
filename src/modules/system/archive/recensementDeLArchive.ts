@@ -52,3 +52,18 @@ export function recenserLArchive(state: NexusCampaignState): LigneDuRecensement[
 export function enUneLigne(lignes: readonly LigneDuRecensement[]): string {
     return lignes.length ? lignes.map(l => `${l.nombre} ${l.libelle}`).join(' · ') : 'rien';
 }
+
+/**
+ * **Ce qui manque, dit par usage** — « 30 portraits de PNJ, 15 sons » —
+ * 2026-10-19, après le premier export d'essai de David : une instance sans
+ * médias a produit deux archives qui n'en contenaient aucun, et **aucun des deux
+ * exports ne l'a dit.** *Une archive incomplète qui se croit complète est le
+ * pire résultat, parce qu'il a l'air d'une réussite.*
+ *
+ * @param usages l'usage de chaque référence introuvable, une entrée par référence
+ */
+export function direLesIntrouvables(usages: readonly string[]): string {
+    const parUsage = new Map<string, number>();
+    for (const u of usages) parUsage.set(u, (parUsage.get(u) ?? 0) + 1);
+    return [...parUsage].map(([usage, n]) => `${n} ${usage}`).join(', ');
+}
