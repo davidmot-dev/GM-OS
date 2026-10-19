@@ -7,8 +7,9 @@ veux pouvoir tout réimporter tel quel si je veux refaire jouer la campagne, ou 
 média si je veux créer une nouvelle campagne dans le même univers et retrouver les media
 réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 
-> ⏸ **Garé le 18/10 à la demande de David** (« note le chantier pour plus tard »). Rien n'est
-> commencé ; les décisions du § 7 sont prises. Reprendre par E0, puis E1 et E3 (§ 6).
+> ▶ **Repris le 19/10** (Codex ayant fini). **E0 fait** : l'export Obsidian ne prend plus que les
+> PNJ, lieux et entrées du wiki de la campagne exportée (`ObsidianExportService.exportCampaign`,
+> essai à deux campagnes). Suite : E1, puis E3 (§ 6).
 
 **Rien n'est codé ; les décisions du § 7 sont prises.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de

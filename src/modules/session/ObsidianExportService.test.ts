@@ -167,3 +167,36 @@ describe('le coffre où l’export écrit', () => {
         expect((await obsidianExportService.exportCampaign(campagne, [], [], [])).success).toBe(true);
     });
 });
+
+/**
+ * **Seulement la campagne exportée** — lot E0 du chantier des archives, 2026-10-19 :
+ * exporter Blade Runner versait aussi dans son dossier les PNJ, lieux et entrées
+ * du wiki de Nephilim.
+ */
+describe('l’export ne prend que la campagne exportée', () => {
+    beforeEach(() => {
+        (window as unknown as { appBridge: unknown }).appBridge = {
+            obsidian: { writeNote: vi.fn().mockResolvedValue(true), ensureDirectory: vi.fn() },
+        };
+    });
+
+    it('les PNJ, lieux et entrées du wiki d’une autre campagne restent dehors', async () => {
+        const blade = { id: 'c-blade', name: 'Blade Runner', system: 'br', description: '', activeLocationIds: [] } as unknown as Campaign;
+        const pnj = (id: string, name: string, campaignId: string) => ({ id, name, type: 'npc', role: 'neutral', campaignId }) as unknown as Entity;
+        const lieu = (id: string, name: string, campaignId: string) => ({ id, name, type: 'city', campaignId }) as never;
+        const wiki = (id: string, title: string, campaignId: string) => ({ id, title, category: 'Lore', content: '', campaignId }) as never;
+        await obsidianExportService.exportCampaign(
+            blade,
+            [pnj('e-1', 'Deckard', 'c-blade'), pnj('e-2', 'Aurore Delisle', 'c-neph')],
+            [lieu('m-1', 'Los Angeles', 'c-blade'), lieu('m-2', 'Atlantide', 'c-neph')],
+            [wiki('w-1', 'Tyrell', 'c-blade'), wiki('w-2', 'Les Vécus', 'c-neph')],
+        );
+        const chemins = (window.appBridge?.obsidian?.writeNote as unknown as { mock: { calls: string[][] } }).mock.calls.map(c => c[0]);
+        expect(chemins).toEqual([
+            'Blade Runner/Scenario.md',
+            'Blade Runner/PNJs/Deckard.md',
+            'Blade Runner/Lieux/Los Angeles.md',
+            'Blade Runner/Lore/Lore/Tyrell.md',
+        ]);
+    });
+});

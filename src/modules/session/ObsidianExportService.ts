@@ -73,6 +73,18 @@ export class ObsidianExportService {
 
         const rootDir = campaign.name.replace(/[<>:"/\\|?*]/g, ''); // Basic sanitization
 
+        /*
+          **Seulement ce qui appartient à CETTE campagne** — lot E0 du chantier des
+          archives (2026-10-19). L'appelant passait tous les PNJ, lieux et entrées
+          du wiki de GM-OS : exporter Blade Runner y versait aussi ceux de
+          Nephilim. Le tri se fait ici, pour qu'aucun appelant ne puisse l'oublier.
+        */
+        const deLaCampagne = <T extends { campaignId?: string | null }>(liste: T[]) =>
+            liste.filter(x => x.campaignId === campaign.id);
+        entities = deLaCampagne(entities);
+        locations = deLaCampagne(locations);
+        lore = deLaCampagne(lore);
+
         try {
             // 1. Export Global Scenario / Campaign Note
             const campaignContent = this.formatCampaignNote(campaign);
