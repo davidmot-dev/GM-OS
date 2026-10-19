@@ -1,0 +1,17 @@
+{
+  "tableau-de-bord": "icones/registre.svg",
+  "journal": "icones/plume.svg",
+  "nexus": "icones/classeur.svg",
+  "combat": "icones/lames.svg",
+  "des": "icones/de.svg",
+  "pnj": "icones/chapeau.svg",
+  "carte": "icones/plan.svg",
+  "horloge": "icones/montre.svg",
+  "pj": "icones/portrait.svg",
+  "sante": "icones/coeur.svg",
+  "indice": "icones/loupe.svg",
+  "butin": "icones/bourse.svg",
+  "lieu": "icones/reverbere.svg",
+  "scene": "icones/photographie.svg",
+  "oracle": "icones/oeil.svg"
+}

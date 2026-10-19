@@ -1,0 +1,56 @@
+/* CRIMES — dossier d'enquête Belle Époque. Contrat GM-OS v1.7.
+   Les polices libres sont des approximations, pas les originales. */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@500;600;700&family=Courier+Prime:wght@400;700&family=Source+Serif+4:wght@400;600;700&display=swap');
+
+:root[data-theme="crime"] {
+  color-scheme: light;
+
+  /* Papier grisé de la fiche, ivoire des pages et encre vert noir. */
+  --rpg-bg: #e7e5dc;
+  --rpg-surface: #f5f3eb;
+  --rpg-surface-2: #dddcd2;
+  --rpg-text: #202824;
+  --rpg-muted: #59605a;
+  --rpg-accent: #31564a;
+  --rpg-accent-contrast: #faf8ef;
+  --rpg-border: rgba(32, 40, 36, 0.64);
+  --rpg-border-soft: rgba(32, 40, 36, 0.23);
+
+  /* Le rouge de l'illustration désigne le danger ; l'action reste verte. */
+  --rpg-success: #39750e;
+  --rpg-danger: #a02636;
+  --rpg-warning: #87540c;
+  --rpg-info: #285b91;
+
+  --rpg-font-display: "Bodoni Moda", Georgia, serif;
+  --rpg-font-body: "Source Serif 4", Georgia, serif;
+  --rpg-font-mono: "Courier Prime", "Courier New", monospace;
+  --rpg-title-tracking: 0.015em;
+  --rpg-kicker-tracking: 0.09em;
+  --rpg-title-transform: none;
+
+  /* Filets d'imprimerie, cartouches presque carrés, feuilles superposées. */
+  --rpg-radius-sm: 1px;
+  --rpg-radius-md: 2px;
+  --rpg-radius-lg: 3px;
+  --rpg-border-width: 3px;
+  --rpg-border-style: double;
+  --rpg-elevation-1: 1px 2px 3px rgba(20, 30, 24, 0.14);
+  --rpg-elevation-2: 0 7px 18px rgba(20, 30, 24, 0.20);
+  --rpg-elevation-3: 0 15px 38px rgba(12, 23, 18, 0.30);
+  --rpg-shadow: 0 7px 18px rgba(20, 30, 24, 0.20);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(245, 243, 235, 0.95);
+  --rpg-glass-border: rgba(32, 40, 36, 0.45);
+  --rpg-glass-blur: 0px;
+
+  /* Le cadre reprend les vêtements sombres et les brumes de Crime2.jpg. */
+  --rpg-frame-bg: #142721;
+  --rpg-frame-text: #edece2;
+  --rpg-frame-accent: #abd0bf;
+
+  --rpg-texture-bg: url('matieres/papier-fibre.svg');
+  --rpg-texture-panel: url('matieres/papier-fibre.svg');
+  --rpg-texture-opacity: 0.08;
+}

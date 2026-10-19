@@ -1,0 +1,809 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "crimes-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Crimes et le gabarit crimes-fr (fiche de personnage, livrée par Codex le 2026-10-19). Écrite par outils/crime/relier_fiche_crimes.py : les champs du pilote gardent leur identifiant, compétences et styles prennent un identifiant français, les autres reprennent la clé de la fiche, points changés en « _ ».",
+  "champs": [
+    {
+      "gmos": "concept",
+      "fiche": "identity.concept"
+    },
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "prenom",
+      "fiche": "identity.first"
+    },
+    {
+      "gmos": "sexe_age",
+      "fiche": "identity.sexage"
+    },
+    {
+      "gmos": "role",
+      "fiche": "identity.role"
+    },
+    {
+      "gmos": "origines",
+      "fiche": "identity.origin"
+    },
+    {
+      "gmos": "origine_sociale",
+      "fiche": "identity.social"
+    },
+    {
+      "gmos": "bande",
+      "fiche": "identity.gang"
+    },
+    {
+      "gmos": "refuge",
+      "fiche": "profile.refuge"
+    },
+    {
+      "gmos": "description",
+      "fiche": "profile.description"
+    },
+    {
+      "gmos": "fortune",
+      "fiche": "fortune.level"
+    },
+    {
+      "gmos": "fortune_piste",
+      "fiche": "fortune.points"
+    },
+    {
+      "gmos": "equipement",
+      "fiche": "equipment.notes"
+    },
+    {
+      "gmos": "physique",
+      "fiche": "attributes.physical"
+    },
+    {
+      "gmos": "mental",
+      "fiche": "attributes.mental"
+    },
+    {
+      "gmos": "social",
+      "fiche": "attributes.social"
+    },
+    {
+      "gmos": "combat",
+      "fiche": "skills.combat.level"
+    },
+    {
+      "gmos": "sport",
+      "fiche": "skills.sport.level"
+    },
+    {
+      "gmos": "cirque",
+      "fiche": "skills.circus.level"
+    },
+    {
+      "gmos": "traque",
+      "fiche": "skills.tracking.level"
+    },
+    {
+      "gmos": "larcin",
+      "fiche": "skills.larceny.level"
+    },
+    {
+      "gmos": "sciences_abstraites",
+      "fiche": "skills.abstract.level"
+    },
+    {
+      "gmos": "sciences_du_vivant",
+      "fiche": "skills.life.level"
+    },
+    {
+      "gmos": "sciences_de_l_homme",
+      "fiche": "skills.humanities.level"
+    },
+    {
+      "gmos": "occultisme",
+      "fiche": "skills.occultism.level"
+    },
+    {
+      "gmos": "pratique",
+      "fiche": "skills.practical.level"
+    },
+    {
+      "gmos": "intrigues",
+      "fiche": "skills.intrigue.level"
+    },
+    {
+      "gmos": "societe",
+      "fiche": "skills.society.level"
+    },
+    {
+      "gmos": "compteur_combat",
+      "fiche": "skills.combat.counter"
+    },
+    {
+      "gmos": "compteur_sport",
+      "fiche": "skills.sport.counter"
+    },
+    {
+      "gmos": "compteur_cirque",
+      "fiche": "skills.circus.counter"
+    },
+    {
+      "gmos": "compteur_traque",
+      "fiche": "skills.tracking.counter"
+    },
+    {
+      "gmos": "compteur_larcin",
+      "fiche": "skills.larceny.counter"
+    },
+    {
+      "gmos": "compteur_sciences_abstraites",
+      "fiche": "skills.abstract.counter"
+    },
+    {
+      "gmos": "compteur_sciences_du_vivant",
+      "fiche": "skills.life.counter"
+    },
+    {
+      "gmos": "compteur_sciences_de_l_homme",
+      "fiche": "skills.humanities.counter"
+    },
+    {
+      "gmos": "compteur_occultisme",
+      "fiche": "skills.occultism.counter"
+    },
+    {
+      "gmos": "compteur_pratique",
+      "fiche": "skills.practical.counter"
+    },
+    {
+      "gmos": "compteur_intrigues",
+      "fiche": "skills.intrigue.counter"
+    },
+    {
+      "gmos": "compteur_societe",
+      "fiche": "skills.society.counter"
+    },
+    {
+      "gmos": "specialties_combat_unarmed",
+      "fiche": "specialties.combat.unarmed"
+    },
+    {
+      "gmos": "specialties_combat_blades",
+      "fiche": "specialties.combat.blades"
+    },
+    {
+      "gmos": "specialties_combat_firearms",
+      "fiche": "specialties.combat.firearms"
+    },
+    {
+      "gmos": "specialties_combat_bravado",
+      "fiche": "specialties.combat.bravado"
+    },
+    {
+      "gmos": "specialties_sport_riding",
+      "fiche": "specialties.sport.riding"
+    },
+    {
+      "gmos": "specialties_sport_climbing",
+      "fiche": "specialties.sport.climbing"
+    },
+    {
+      "gmos": "specialties_sport_swimming",
+      "fiche": "specialties.sport.swimming"
+    },
+    {
+      "gmos": "specialties_sport_crowds",
+      "fiche": "specialties.sport.crowds"
+    },
+    {
+      "gmos": "specialties_circus_acrobatics",
+      "fiche": "specialties.circus.acrobatics"
+    },
+    {
+      "gmos": "specialties_circus_juggling",
+      "fiche": "specialties.circus.juggling"
+    },
+    {
+      "gmos": "specialties_circus_tightrope",
+      "fiche": "specialties.circus.tightrope"
+    },
+    {
+      "gmos": "specialties_circus_escape",
+      "fiche": "specialties.circus.escape"
+    },
+    {
+      "gmos": "specialties_circus_begging",
+      "fiche": "specialties.circus.begging"
+    },
+    {
+      "gmos": "specialties_tracking_hunting",
+      "fiche": "specialties.tracking.hunting"
+    },
+    {
+      "gmos": "specialties_tracking_survival",
+      "fiche": "specialties.tracking.survival"
+    },
+    {
+      "gmos": "specialties_tracking_tracking",
+      "fiche": "specialties.tracking.tracking"
+    },
+    {
+      "gmos": "specialties_tracking_trapping",
+      "fiche": "specialties.tracking.trapping"
+    },
+    {
+      "gmos": "specialties_tracking_scavenging",
+      "fiche": "specialties.tracking.scavenging"
+    },
+    {
+      "gmos": "specialties_tracking_smallgame",
+      "fiche": "specialties.tracking.smallgame"
+    },
+    {
+      "gmos": "specialties_larceny_camouflage",
+      "fiche": "specialties.larceny.camouflage"
+    },
+    {
+      "gmos": "specialties_larceny_lockpicking",
+      "fiche": "specialties.larceny.lockpicking"
+    },
+    {
+      "gmos": "specialties_larceny_stealth",
+      "fiche": "specialties.larceny.stealth"
+    },
+    {
+      "gmos": "specialties_larceny_mimicry",
+      "fiche": "specialties.larceny.mimicry"
+    },
+    {
+      "gmos": "specialties_larceny_burglary",
+      "fiche": "specialties.larceny.burglary"
+    },
+    {
+      "gmos": "specialties_abstract_mathematics",
+      "fiche": "specialties.abstract.mathematics"
+    },
+    {
+      "gmos": "specialties_abstract_cryptography",
+      "fiche": "specialties.abstract.cryptography"
+    },
+    {
+      "gmos": "specialties_abstract_astronomy",
+      "fiche": "specialties.abstract.astronomy"
+    },
+    {
+      "gmos": "specialties_life_nature",
+      "fiche": "specialties.life.nature"
+    },
+    {
+      "gmos": "specialties_life_medicine",
+      "fiche": "specialties.life.medicine"
+    },
+    {
+      "gmos": "specialties_life_pharmacy",
+      "fiche": "specialties.life.pharmacy"
+    },
+    {
+      "gmos": "specialties_life_psychiatry",
+      "fiche": "specialties.life.psychiatry"
+    },
+    {
+      "gmos": "specialties_humanities_administration",
+      "fiche": "specialties.humanities.administration"
+    },
+    {
+      "gmos": "specialties_humanities_anthropology",
+      "fiche": "specialties.humanities.anthropology"
+    },
+    {
+      "gmos": "specialties_humanities_history",
+      "fiche": "specialties.humanities.history"
+    },
+    {
+      "gmos": "specialties_humanities_theology",
+      "fiche": "specialties.humanities.theology"
+    },
+    {
+      "gmos": "specialties_occultism_magnetism",
+      "fiche": "specialties.occultism.magnetism"
+    },
+    {
+      "gmos": "specialties_occultism_spiritism",
+      "fiche": "specialties.occultism.spiritism"
+    },
+    {
+      "gmos": "specialties_occultism_divination",
+      "fiche": "specialties.occultism.divination"
+    },
+    {
+      "gmos": "specialties_occultism_languages",
+      "fiche": "specialties.occultism.languages"
+    },
+    {
+      "gmos": "specialties_practical_art",
+      "fiche": "specialties.practical.art"
+    },
+    {
+      "gmos": "specialties_practical_driving",
+      "fiche": "specialties.practical.driving"
+    },
+    {
+      "gmos": "specialties_practical_photography",
+      "fiche": "specialties.practical.photography"
+    },
+    {
+      "gmos": "specialties_practical_forgery",
+      "fiche": "specialties.practical.forgery"
+    },
+    {
+      "gmos": "specialties_intrigue_milieu",
+      "fiche": "specialties.intrigue.milieu"
+    },
+    {
+      "gmos": "specialties_intrigue_journalism",
+      "fiche": "specialties.intrigue.journalism"
+    },
+    {
+      "gmos": "specialties_intrigue_criminology",
+      "fiche": "specialties.intrigue.criminology"
+    },
+    {
+      "gmos": "specialties_intrigue_police",
+      "fiche": "specialties.intrigue.police"
+    },
+    {
+      "gmos": "specialties_intrigue_district",
+      "fiche": "specialties.intrigue.district"
+    },
+    {
+      "gmos": "specialties_society_diplomacy",
+      "fiche": "specialties.society.diplomacy"
+    },
+    {
+      "gmos": "specialties_society_politics",
+      "fiche": "specialties.society.politics"
+    },
+    {
+      "gmos": "specialties_society_rhetoric",
+      "fiche": "specialties.society.rhetoric"
+    },
+    {
+      "gmos": "specialties_society_seduction",
+      "fiche": "specialties.society.seduction"
+    },
+    {
+      "gmos": "specialties_society_blackmarket",
+      "fiche": "specialties.society.blackmarket"
+    },
+    {
+      "gmos": "specialties_society_begging",
+      "fiche": "specialties.society.begging"
+    },
+    {
+      "gmos": "specialties_society_storytelling",
+      "fiche": "specialties.society.storytelling"
+    },
+    {
+      "gmos": "psychology_emotivity",
+      "fiche": "psychology.emotivity",
+      "valeurs": {
+        "yes": "Oui",
+        "no": "Non"
+      }
+    },
+    {
+      "gmos": "psychology_activity",
+      "fiche": "psychology.activity",
+      "valeurs": {
+        "yes": "Oui",
+        "no": "Non"
+      }
+    },
+    {
+      "gmos": "psychology_reactivity",
+      "fiche": "psychology.reactivity",
+      "valeurs": {
+        "primary": "Primaire",
+        "secondary": "Secondaire"
+      }
+    },
+    {
+      "gmos": "tempérament",
+      "fiche": "psychology.temperament"
+    },
+    {
+      "gmos": "passion_primaire",
+      "fiche": "psychology.passions.primary"
+    },
+    {
+      "gmos": "passion_secondaire",
+      "fiche": "psychology.passions.secondary"
+    },
+    {
+      "gmos": "psychology_needs_primary",
+      "fiche": "psychology.needs.primary"
+    },
+    {
+      "gmos": "psychology_needs_secondary",
+      "fiche": "psychology.needs.secondary"
+    },
+    {
+      "gmos": "psychology_needs_internal",
+      "fiche": "psychology.needs.internal"
+    },
+    {
+      "gmos": "inclinaison_psychotique",
+      "fiche": "psychology.inclination"
+    },
+    {
+      "gmos": "tabous",
+      "fiche": "psychology.taboo"
+    },
+    {
+      "gmos": "folies",
+      "fiche": "psychology.madness"
+    },
+    {
+      "gmos": "decheances",
+      "fiche": "psychology.decline"
+    },
+    {
+      "gmos": "angoisse",
+      "fiche": "tracks.anxiety"
+    },
+    {
+      "gmos": "nevrose",
+      "fiche": "tracks.neurosis"
+    },
+    {
+      "gmos": "seuil_nevrose",
+      "fiche": "psychology.neurosis.threshold"
+    },
+    {
+      "gmos": "psychose",
+      "fiche": "tracks.psychosis"
+    },
+    {
+      "gmos": "base_psychose",
+      "fiche": "psychology.psychosis.base"
+    },
+    {
+      "gmos": "innocence",
+      "fiche": "tracks.innocence"
+    },
+    {
+      "gmos": "seuil_innocence",
+      "fiche": "psychology.innocence.threshold"
+    },
+    {
+      "gmos": "conde",
+      "fiche": "investigation.styles.constable.level"
+    },
+    {
+      "gmos": "compteur_conde",
+      "fiche": "investigation.styles.constable.counter"
+    },
+    {
+      "gmos": "limier",
+      "fiche": "investigation.styles.hound.level"
+    },
+    {
+      "gmos": "compteur_limier",
+      "fiche": "investigation.styles.hound.counter"
+    },
+    {
+      "gmos": "illumine",
+      "fiche": "investigation.styles.visionary.level"
+    },
+    {
+      "gmos": "compteur_illumine",
+      "fiche": "investigation.styles.visionary.counter"
+    },
+    {
+      "gmos": "mentaliste",
+      "fiche": "investigation.styles.mentalist.level"
+    },
+    {
+      "gmos": "compteur_mentaliste",
+      "fiche": "investigation.styles.mentalist.counter"
+    },
+    {
+      "gmos": "fouineur",
+      "fiche": "investigation.styles.snoop.level"
+    },
+    {
+      "gmos": "compteur_fouineur",
+      "fiche": "investigation.styles.snoop.counter"
+    },
+    {
+      "gmos": "contacts_0_name",
+      "fiche": "contacts.0.name"
+    },
+    {
+      "gmos": "contacts_0_rating",
+      "fiche": "contacts.0.rating"
+    },
+    {
+      "gmos": "contacts_1_name",
+      "fiche": "contacts.1.name"
+    },
+    {
+      "gmos": "contacts_1_rating",
+      "fiche": "contacts.1.rating"
+    },
+    {
+      "gmos": "contacts_2_name",
+      "fiche": "contacts.2.name"
+    },
+    {
+      "gmos": "contacts_2_rating",
+      "fiche": "contacts.2.rating"
+    },
+    {
+      "gmos": "contacts_3_name",
+      "fiche": "contacts.3.name"
+    },
+    {
+      "gmos": "contacts_3_rating",
+      "fiche": "contacts.3.rating"
+    },
+    {
+      "gmos": "contacts_4_name",
+      "fiche": "contacts.4.name"
+    },
+    {
+      "gmos": "contacts_4_rating",
+      "fiche": "contacts.4.rating"
+    },
+    {
+      "gmos": "contacts_5_name",
+      "fiche": "contacts.5.name"
+    },
+    {
+      "gmos": "contacts_5_rating",
+      "fiche": "contacts.5.rating"
+    },
+    {
+      "gmos": "contacts_6_name",
+      "fiche": "contacts.6.name"
+    },
+    {
+      "gmos": "contacts_6_rating",
+      "fiche": "contacts.6.rating"
+    },
+    {
+      "gmos": "contacts_7_name",
+      "fiche": "contacts.7.name"
+    },
+    {
+      "gmos": "contacts_7_rating",
+      "fiche": "contacts.7.rating"
+    },
+    {
+      "gmos": "clues_0_text",
+      "fiche": "clues.0.text"
+    },
+    {
+      "gmos": "clues_0_points_constable",
+      "fiche": "clues.0.points.constable"
+    },
+    {
+      "gmos": "clues_0_points_hound",
+      "fiche": "clues.0.points.hound"
+    },
+    {
+      "gmos": "clues_0_points_visionary",
+      "fiche": "clues.0.points.visionary"
+    },
+    {
+      "gmos": "clues_0_points_mentalist",
+      "fiche": "clues.0.points.mentalist"
+    },
+    {
+      "gmos": "clues_0_points_snoop",
+      "fiche": "clues.0.points.snoop"
+    },
+    {
+      "gmos": "clues_1_text",
+      "fiche": "clues.1.text"
+    },
+    {
+      "gmos": "clues_1_points_constable",
+      "fiche": "clues.1.points.constable"
+    },
+    {
+      "gmos": "clues_1_points_hound",
+      "fiche": "clues.1.points.hound"
+    },
+    {
+      "gmos": "clues_1_points_visionary",
+      "fiche": "clues.1.points.visionary"
+    },
+    {
+      "gmos": "clues_1_points_mentalist",
+      "fiche": "clues.1.points.mentalist"
+    },
+    {
+      "gmos": "clues_1_points_snoop",
+      "fiche": "clues.1.points.snoop"
+    },
+    {
+      "gmos": "clues_2_text",
+      "fiche": "clues.2.text"
+    },
+    {
+      "gmos": "clues_2_points_constable",
+      "fiche": "clues.2.points.constable"
+    },
+    {
+      "gmos": "clues_2_points_hound",
+      "fiche": "clues.2.points.hound"
+    },
+    {
+      "gmos": "clues_2_points_visionary",
+      "fiche": "clues.2.points.visionary"
+    },
+    {
+      "gmos": "clues_2_points_mentalist",
+      "fiche": "clues.2.points.mentalist"
+    },
+    {
+      "gmos": "clues_2_points_snoop",
+      "fiche": "clues.2.points.snoop"
+    },
+    {
+      "gmos": "clues_3_text",
+      "fiche": "clues.3.text"
+    },
+    {
+      "gmos": "clues_3_points_constable",
+      "fiche": "clues.3.points.constable"
+    },
+    {
+      "gmos": "clues_3_points_hound",
+      "fiche": "clues.3.points.hound"
+    },
+    {
+      "gmos": "clues_3_points_visionary",
+      "fiche": "clues.3.points.visionary"
+    },
+    {
+      "gmos": "clues_3_points_mentalist",
+      "fiche": "clues.3.points.mentalist"
+    },
+    {
+      "gmos": "clues_3_points_snoop",
+      "fiche": "clues.3.points.snoop"
+    },
+    {
+      "gmos": "clues_4_text",
+      "fiche": "clues.4.text"
+    },
+    {
+      "gmos": "clues_4_points_constable",
+      "fiche": "clues.4.points.constable"
+    },
+    {
+      "gmos": "clues_4_points_hound",
+      "fiche": "clues.4.points.hound"
+    },
+    {
+      "gmos": "clues_4_points_visionary",
+      "fiche": "clues.4.points.visionary"
+    },
+    {
+      "gmos": "clues_4_points_mentalist",
+      "fiche": "clues.4.points.mentalist"
+    },
+    {
+      "gmos": "clues_4_points_snoop",
+      "fiche": "clues.4.points.snoop"
+    },
+    {
+      "gmos": "clues_5_text",
+      "fiche": "clues.5.text"
+    },
+    {
+      "gmos": "clues_5_points_constable",
+      "fiche": "clues.5.points.constable"
+    },
+    {
+      "gmos": "clues_5_points_hound",
+      "fiche": "clues.5.points.hound"
+    },
+    {
+      "gmos": "clues_5_points_visionary",
+      "fiche": "clues.5.points.visionary"
+    },
+    {
+      "gmos": "clues_5_points_mentalist",
+      "fiche": "clues.5.points.mentalist"
+    },
+    {
+      "gmos": "clues_5_points_snoop",
+      "fiche": "clues.5.points.snoop"
+    },
+    {
+      "gmos": "clues_6_text",
+      "fiche": "clues.6.text"
+    },
+    {
+      "gmos": "clues_6_points_constable",
+      "fiche": "clues.6.points.constable"
+    },
+    {
+      "gmos": "clues_6_points_hound",
+      "fiche": "clues.6.points.hound"
+    },
+    {
+      "gmos": "clues_6_points_visionary",
+      "fiche": "clues.6.points.visionary"
+    },
+    {
+      "gmos": "clues_6_points_mentalist",
+      "fiche": "clues.6.points.mentalist"
+    },
+    {
+      "gmos": "clues_6_points_snoop",
+      "fiche": "clues.6.points.snoop"
+    },
+    {
+      "gmos": "clues_7_text",
+      "fiche": "clues.7.text"
+    },
+    {
+      "gmos": "clues_7_points_constable",
+      "fiche": "clues.7.points.constable"
+    },
+    {
+      "gmos": "clues_7_points_hound",
+      "fiche": "clues.7.points.hound"
+    },
+    {
+      "gmos": "clues_7_points_visionary",
+      "fiche": "clues.7.points.visionary"
+    },
+    {
+      "gmos": "clues_7_points_mentalist",
+      "fiche": "clues.7.points.mentalist"
+    },
+    {
+      "gmos": "clues_7_points_snoop",
+      "fiche": "clues.7.points.snoop"
+    },
+    {
+      "gmos": "nom_equipe",
+      "fiche": "team.name"
+    },
+    {
+      "gmos": "reputation_equipe",
+      "fiche": "team.reputation"
+    },
+    {
+      "gmos": "team_objectives",
+      "fiche": "team.objectives"
+    },
+    {
+      "gmos": "plots",
+      "fiche": "team.committed"
+    },
+    {
+      "gmos": "team_track",
+      "fiche": "team.track"
+    },
+    {
+      "gmos": "team_contact_name",
+      "fiche": "team.contact.name"
+    },
+    {
+      "gmos": "team_contact_rating",
+      "fiche": "team.contact.rating"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "portrait",
+      "pourquoi": "Une image : elle reste sur la fiche, GM-OS a son propre portrait du personnage."
+    }
+  ]
+}

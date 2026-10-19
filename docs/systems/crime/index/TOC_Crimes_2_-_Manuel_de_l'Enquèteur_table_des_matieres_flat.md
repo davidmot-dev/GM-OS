@@ -1,0 +1,306 @@
+# Table des matières — Crimes 2 - Manuel de l'Enquèteur
+
+- Préface de Maxime Chattam — 8
+- Chapitre 1 — Préambule — 9
+- QU’EST-CE QU’UN JEU DE RÔLE ? — 9
+- Les bases fondamentales — 9
+- Le rôle du meneur — 10
+- Quels buts pour les joueurs ? — 11
+- Un exemple de partie — 11
+- RECOMMANDATIONS MATÉRIELLES — 14
+- Accessoires — 14
+- Abréviations — 17
+- Chapitre 2 — La Belle Époque — 18
+- FRAGILE RÉPUBLIQUE — 21
+- Police et criminels — 21
+- La guerre entre les polices — 22
+- Tu sèmes le vent... — 23
+- Une pomme rutilante... et véreuse ? — 24
+- Liste des présidents de la Belle Époque — 26
+- Petite revue des forces politiques françaises — 27
+- L’affaire Dreyfus et la plaie antisémite — 28
+- Les enjeux de la laïcité — 29
+- Chronologie de la fragile république — 30
+- LES MAMELLES DU PROGRÈS ET DE L’INDUSTRIE — 32
+- Une confiance aveugle dans le progrès — 32
+- Petit répertoire des inventions de la Révolution Industrielle — 34
+- L’aventure industrielle — 36
+- LA QUESTION SOCIALE — 39
+- Les élites — 39
+- Hommes, femmes et familles — 40
+- Classes laborieuses, classes dangereuses ? — 43
+- Les spectres de la commune — 46
+- Le péril vient de la gauche... — 47
+- Chronologie des révoltes populaires — 48
+- DIEU ET L’HOMME — 51
+- La foi en Dieu — 51
+- L’intégrisme religieux — 52
+- Le Pape aux abois ? — 52
+- L’ESPRIT FIN DE SIÈCLE — 54
+- Le spleen des élites — 54
+- Apocalypses — 55
+- LA BOUE DE L’OCCULTISME — 57
+- Le supermarché du mysticisme — 57
+- Le fleuve de boue — 58
+- Une passion souveraine — 58
+- LE ROYAUME-UNI — 60
+- La société victorienne — 60
+- Londres — 61
+- La condition ouvrière — 63
+- Bas-fonds victoriens — 63
+- La question irlandaise — 66
+- Repères — 67
+- LA PRUSSE — 69
+- Une jeune nation — 69
+- Chancelier de fer — 69
+- Âmes allemandes — 70
+- Dérives nationalistes — 70
+- Ambition mondiale — 71
+- Face-à-face avec la France — 71
+- Repères — 72
+- MODERNITÉ ET DÉCADENCE VIENNOISE — 74
+- Chant du cygne de la civilisation — 74
+- Un empire moribond et vide de sens — 74
+- Magique Prague — 75
+- Légendes Pragoises — 76
+- Les aigles foudroyés — 77
+- Repères — 77
+- LES ÉTATS-UNIS, TERRE PROMISE ? — 78
+- Un « nouveau » monde — 78
+- Relents de la guerre de sécession — 79
+- Wild wild west — 80
+- La fin du problème indien — 80
+- Odyssée des migrants — 80
+- Gangs and bombs of New York — 80
+- Fortunately, wealthy people — 83
+- America rules the world — 83
+- Repères — 84
+- LE JAPON — 85
+- La coquille d’huitre : fermeture, puis ouverture — 85
+- L’empereur inviolable — 86
+- Vivre au Japon — 86
+- La tentation impérialiste — 86
+- Repères — 87
+- LES ENJEUX INTERNATIONAUX — 88
+- La fin des grandes migrations ? — 88
+- La question coloniale — 89
+- Le racisme ordinaire — 92
+- Nationalisme, patriotisme — 95
+- Le concert cacophonique des nations — 95
+- Apocalypse — 97
+- Repères — 98
+- Chapitre 3 — Le contexte Paris — 100
+- PARTI-PRIS — 102
+- Le pourquoi du comment — 102
+- Paris, mais pourquoi Paris ? — 102
+- Les dossiers — 103
+- Liste des dossiers de police — 103
+- LA VIE QUOTIDIENNE DU PARISIEN — 107
+- Bienvenu chez vous ! — 107
+- État des lieux des transports — 115
+- Quelques péripéties à prévoir pour l’usager dérouté — 119
+- Les bonnes adresses — 122
+- Prix des consommations courantes dans les cabarets — 125
+- Trouver un nid douillet à Paris — 126
+- Créez votre biotope — 128
+- LA GUERRE DES POLICES — 130
+- Dossiers de police à l’usage des enquêteurs — 130
+- Groupes — 131
+- Liste des commissariats de police — 136
+- Personnages — 145
+- Lieux — 153
+- LA PRESSE — 156
+- Dossiers de police à l’usage des enquêteurs — 156
+- Principaux journaux parisiens — 158
+- Groupes — 164
+- Personnages — 165
+- Lieux — 166
+- LA MENACE ANARCHISTE — 169
+- Dossiers de police à l’usage des enquêteurs — 169
+- Groupes — 171
+- Personnages — 172
+- Lieux — 176
+- LA RÉPUBLIQUE DES SCANDALES — 178
+- Dossiers de police à l’usage des enquêteurs — 178
+- Groupes — 182
+- Personnages — 183
+- Lieux — 192
+- LA PLAIE ANTISÉMITE — 196
+- Dossiers de police à l’usage des enquêteurs — 196
+- Groupes — 199
+- Personnages — 200
+- Lieux — 205
+- LA GUERRE DU CRIME — 208
+- Dossiers de police à l’usage des enquêteurs — 208
+- Groupes — 212
+- Personnages — 217
+- Lieux — 225
+- L’ÉGLISE EN PÉRIL — 243
+- Dossiers de police à l’usage des enquêteurs — 243
+- Groupes — 245
+- Personnages — 246
+- Lieux — 250
+- LA BOUE DE L’OCCULTISME — 256
+- Dossiers de police à l’usage des enquêteurs — 256
+- Groupes — 261
+- Personnages — 263
+- LES APÔTRES DE LA MÉDECINE — 268
+- Dossiers de police à l’usage des enquêteurs — 268
+- Groupes — 274
+- Personnages — 275
+- Lieux — 284
+- Chapitre 4 — Création des personnages — 290
+- PHILOSOPHIE GÉNÉRALE — 292
+- CONSEILS AVANT TOUTE CRÉATION — 292
+- À quoi faut-il penser avant de créer son PJ — 292
+- Incarner des PJ différents — 295
+- Comment approfondir son personnage — 295
+- Conseils sur la création d’une équipe viable — 296
+- L’IDENTITÉ — 298
+- Premiers pas : le genre — 298
+- Le concept — 298
+- Liste des concepts disponibles — 299
+- Sexe et âge du personnage — 302
+- Des intrigues pour enrichir la vie d’une femme — 304
+- Les origines du personnage — 305
+- Le nom — 307
+- PROFESSION ET COMPÉTENCES — 312
+- La profession — 312
+- DEUX MESURES : POTENTIEL ET COMPÉTENCES — 323
+- Les potentiels comme sommes de possibilités — 323
+- Les compétences — 323
+- PSYCHOLOGIE DE SURFACE — 328
+- Le tempérament, seuil de la psychologie — 328
+- La passion principale — 329
+- Les passions secondaires — 330
+- Les convictions — 331
+- PSYCHOLOGIE PROFONDE — 333
+- Angoisse, névrose et psychose — 334
+- Les soupapes psychotiques — 334
+- Les jeux d’enfants — 334
+- Les tabous — 336
+- L’inclinaison psychotique — 337
+- Les Déchéances — 338
+- L’ÉQUIPEMENT — 339
+- Le dandy mondain — 339
+- La fille de bonne famille — 340
+- Le chasseur en Afrique — 340
+- L’ouvrier — 341
+- L’enquêteur en mission — 341
+- Le prêtre — 341
+- Le monte-en-l’air — 342
+- Le médecin — 342
+- Liste de prix complémentaire — 343
+- Quelques indices de richesses — 343
+- Les armes de la Belle Époque — 344
+- DÉTERMINER LES CONTACTS DE BASE — 349
+- Principes de la création des contacts — 349
+- Contacts universels — 349
+- Contacts professionnels — 350
+- LES STYLES D’ENQUÊTE — 352
+- Octroi des points d’enquête de base — 352
+- Les cinq styles d’enquêteur — 352
+- ÉQUIPES TYPES D’ENQUÊTEURS — 354
+- Les experts de la préfecture — 354
+- L’agence de Mme Cornelia — 361
+- Les anges de la médecine — 366
+- Les repentis — 371
+- Chapitre 5 — Système et règles — 378
+- À QUOI SERVENT LES RÈGLES ? — 380
+- Des règles de natures différentes — 381
+- Un système modulable — 381
+- Tentation du néant et prise de risques — 382
+- ENTREPRENDRE UNE ACTION — 384
+- Les tests simples — 384
+- Se dépasser — 385
+- Les tests en opposition — 385
+- Actions de groupe — 386
+- Tests prolongés, réussites retardées — 386
+- GÉRER LES COMBATS — 388
+- L’initiative — 388
+- Le combat à distance — 389
+- Résolution des mêlées — 390
+- Combat entre groupes — 391
+- ATTEINTES À LA SANTÉ PHYSIQUE — 395
+- La fatigue — 395
+- L’épuisement — 395
+- Les blessures — 395
+- Autres sources d’affliction — 396
+- Liste des maladies les plus courantes — 398
+- Liste des poisons les plus courants — 400
+- Quelques drogues d’usage courant — 403
+- DÉVELOPPEMENT DES PERSONNAGES — 404
+- Gains de points de développement — 404
+- Dépenser ses points pour améliorer le personnage — 404
+- INTERPRÉTER LES PASSIONS ET LES CONVICTIONS — 406
+- Les passions — 406
+- Les convictions — 407
+- Gérer les interactions sociales — 408
+- LES DÉSORDRES PSYCHOLOGIQUES — 408
+- Névrose — 409
+- Psychose — 409
+- Angoisse — 410
+- PSYCHOLOGIE PROFONDE — 412
+- Les soupapes psychotiques — 412
+- Les tabous — 414
+- L’innocence — 414
+- Inclinaison psychotique — 418
+- États de folie — 418
+- Inventaire alphabétique des folies — 420
+- GESTION DES CONTACTS — 425
+- Philosophie du système — 425
+- Acquisition des contacts — 425
+- Gestion des contacts — 426
+- Évolution des contacts existants — 430
+- GESTION DE LA FORTUNE — 430
+- Niveau de fortune — 431
+- Principe de la jauge de fortune — 431
+- Dépasser ses limites financières — 431
+- INTERPRÉTER SON PERSONNAGE — 432
+- Fondation — 432
+- Composition — 432
+- Évolution — 433
+- Révolution — 433
+- Chapitre 6 — Comment mener une enquête — 434
+- GESTION ALTERNATIVE DES ENQUÊTES — 436
+- Raison d’être de cet ajout — 436
+- Gains et pertes de points d’enquête — 436
+- Usage des points d’enquête — 437
+- Quête d’indices — 438
+- Les scènes emblématiques — 439
+- MÉTHODES POLICIÈRES — 446
+- Pourquoi un manuel de police scientifique ? — 446
+- Mener l’enquête — 446
+- Les lieux du crime — 446
+- Examen rapide du corps — 451
+- Lieux d’incendie et d’explosions — 454
+- Interrogatoires — 456
+- La contrefaçon — 457
+- Expertises légistes — 458
+- Les auxiliaires de l’enquêteur — 459
+- Communiquer — 459
+- Rechercher des renseignements à Paris — 460
+- QUELQUES ÉLÉMENTS DE CRIMINOLOGIE — 462
+- Les grandes théories sur la criminalité — 462
+- Éléments d’étude sur les criminels — 464
+- Chapitre 7 — Annexes — 476
+- INDEX — 478
+- Mécanismes de règles — 478
+- Contexte historique — 478
+- Type de personnages — 479
+- PNJ — 479
+- Groupes et Factions — 480
+- Lieux — 480
+- Dossiers de police et intrigues — 481
+- Procédés d’enquête — 481
+- INDEX CROISÉ — 482
+- Mécanismes de règles — 482
+- Contexte historique — 483
+- Type de personnages — 483
+- PNJ — 483
+- Groupes et Factions — 484
+- Lieux — 485
+- Dossiers de police et intrigues — 486
+- Procédés d’enquête — 486
+- BULLETIN DE POLICE CRIMINELLE — 487
+- FICHES DE PERSONNAGES — 492

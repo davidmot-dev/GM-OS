@@ -1,0 +1,456 @@
+# Index croisé — Crimes 2 - Manuel de l'Enquèteur
+
+Les numéros en italique renvoient au *Manuel du Criminel*, comme les numéros gris en italique du PDF. Les autres renvoient au *Manuel de l’Enquêteur*.
+
+## MÉCANISMES DE RÈGLES
+
+- Abréviations — 17
+- Accessoires — 14
+- Ambiguïté — *214*
+- Angoisse — 334, 410
+- Armes — 344, 389, 446
+- Blessures — 395
+- Cadres des scénarios — *252*
+- Campagne de scénarios — 102, *251*
+- Combat — 388, 392
+- Compétences — 323, 405
+- Compétences hermétiques — 324
+- Concept — 298, *28*
+- Contacts — 349, 405, 425
+- Contradiction (principe de) — 414
+- Conventions — *18*
+- Convictions — 331, 405, 406
+- Création de personnages — 292
+- Création de scénario — 339, *280*, *295*
+- Déchéances — 338, 459, *212*, *216*, *221*
+- Décors et ambiances — *28*, *40*, *48*, *64*, *256*, *259*
+- Dépassement — 385
+- Dossier de police — 103, 120
+- Drogues — 397, 413, 470
+- Epuisement — 395
+- Equipement — 339
+- Equipes de PJ — 296
+- Evolution des personnages — *210*
+- Fatigue — 395
+- Folies — 418, *63*
+- Fortune — 430
+- Genre — *16*
+- Groupes et factions — 105, 428, *21*, *65*
+- Incapacité — 395
+- Inclinaison psychotique — 337, 418
+- Indice — 438
+- Influence — 426
+- Initiative — 388
+- Innocence — 414, *42*
+- Interrogatoires — *259*
+- Intrigues — 297
+- Jauge — 416, 431, *48*, *49*, *325*
+- Jeux d’enfants — 334, 417
+- Joueur — 11
+- Localisation des dégâts — 391
+- Loyauté — 426
+- Maladies — 398
+- Meneur — 10, *8*
+- Mort des PJ — *268*
+- Nature du groupe — 296
+- Névrose — 334, 409
+- Occultisme — *57*, *169*, *172*
+- Passions — 329, 405, 406
+- Personnage enfantin — 305, 324, 338, 373, *41*
+- PNJ — 104, *269*
+- Points de développement — 404
+- Points d’enquête — 436
+- Points de compression — *270*
+- Poisons — 397
+- Potentiels — 323, 405
+- Prix — 343
+- Profession — 312
+- Psychose — 334, 409
+- Réputation — 296
+- Rythme du scénario — *253*
+- Santé — 395
+- Scènes clés — *254*, *257*
+- Secrets — 427
+- Sociétés occultes — 260
+- Soupapes psychotiques — 334, 412
+- Spécialisations — 324
+- Statut social — 297
+- Styles d’enquête — 352
+- Sublimation — 413
+- Tabous — 336, 405, 414
+- Tempérament — 328
+- Tests — 384
+- Transports — 119
+
+## CONTEXTE HISTORIQUE
+
+- Affaire Dreyfus — 26, 28, 196, *122*
+- Anarchisme — 47
+- Antisémitisme — 28, 197, *117*, *125*
+- Apocalypse — 55, 97, 74, 97, *70*, *150*, *157*, *176*
+- Belle époque — 20
+- Classes sociales — 43, 250
+- Colonialisme — 71, 80, 89, *278*
+- Condition féminine — 40, 302, 360, 92
+- Exposition universelle — 96, 110
+- Franc-maçonnerie — 191
+- Industrie — 32, 36, 188, 241, 315, 320
+- Journaux — 156, *102*
+- Laïcité — 29, 51, 103, 189, 248, 280, *158*, *190*
+- Loisirs — 34
+- Nationalisme — 70, 86, 95, 103, 179, 181, 191, 277
+- Occultisme — 57, 76, 256, 365, *28*, *54*, *151*, *157*, *167*, *288*, *334*
+- Mouvements ouvriers — 43, 102, 147, 165, 170, 186, 227, 228, *152*, *263*
+- Monarchie — 183, 189
+- Papauté — 29, 52, 256
+- Partis politiques — 27
+- Présidents — 26
+- Racisme — 79, 92
+- République — 26
+- Santé — 33, 154, 395, 398, *152*, *197*
+- Scandales — 156, 180, 187, *116*, *122*
+- Scandale de Panama — 26, 188, *122*
+- Sexualité et prostitution — 41, 65<br>133, 141, 211, 336, 349, 359, 374, 465
+- Transports — 33, 115, 235, 238, *228*, *263*, *341*
+
+## TYPE DE PERSONNAGES
+
+- Clergé — 108, 109, 319, 341, 369, *30*
+- Criminels — 22, 46, 112, 130, 210, 230, 152, 181, 460, *22*, *228*
+- Etre déchu — *33*
+- Indics — 315, 453
+- Journalistes — 313
+- Juges — 313
+- Médecins — 268, 316, 342, 366
+- Militaires — 109, 191
+- Pauvreté — 108, 111, 236, 306, 320, 341
+- Paysans — 112, 306, 322
+- Policiers — 23, 313, 314, 341
+- La Haute société — 39, 54, 83, 108, 113, 306, 318, 336, *266*
+
+## PNJ
+
+- Andrews, Lucile — 266, *179*
+- Affener, Peter — 276, *189*
+- Arloing, Saturnin — 282
+- Atlas — 217, *140*
+- Barlet, Joseph — 152, *89*, *282*
+- Barrès, Maurice — 191, 201, *191*
+- Beaurepaire, Quesnay de — *88*
+- Belgrand, Anthelme — 223, *141*
+- Bérillon, Edgar — 277, *191*
+- Bertillon, Alphonse — 135, 146, *86*, *312*
+- Bête — *197*
+- Bierhoff, Gerard — 281, *193*
+- Binet-Sanglé, Charles — 276, *190*
+- Bismarck — 69
+- Blanc, Hervé — 201, *190*
+- Blanquart, Adeline — 173, *98*
+- Blavatsky, Eva Petrovna — 263, *176*
+- Bossu — *144*
+- Boutroux, Prudent — 147, *86*
+- Capitans — *100*
+- Cavaignac, Godefroy de — 191, *120*
+- Charcot, Jean-Martin — 275
+- Clemenceau, Georges — 103, 185, *116*
+- Cocher — 153, *90*
+- Combes, Emile — 103, 185, *116*
+- Corsilly, Yves — 222, *141*
+- Courrière, Berthe de — 264, *178*
+- Dame blanche — *100*
+- Danzas, Wadleck — *144*
+- Deibler, Anatole — 152, *90*
+- Delarche, Alexandre — *198*
+- Déroulède, Paul — 190, *120*, *283*, *310*
+- Doyen, Eugène — 279, *191*
+- Droxler, Joseph Nicolas — 264, *177*
+- Drumont, Edouard — 200, *130*
+- Dupuy, Jean — 165, *103*
+- Égrégore communarde — *101*
+- Eiffel, Gustave — 188, *119*
+- Emile — 188, *118*
+- Faure Félix — 26, 103, 180
+- François, Louis-Marie — *121*
+- Freud, Sigmund — 280, *192*
+- Gardien du Pletzl (golem) — *126*, *133*
+- Gélo, Véra — *325*
+- Gentil, Armand — 103, *116*
+- Golovinski, Mathieu — *192*
+- Gorgias — 175, *95*
+- Goron, Marie-François — 152, *90*, *283*
+- Guérin, Jules — 194, *120*
+- Grayssac, Ferdinand de — 138, 151, *88*, *278*
+- Grison, George — 186, *117*
+- Gruberg, Maximilien — 174, *89*, *98*
+- Guasco, Marcel — 151, *88*
+- Gueslin, Joseph — 148, *87*
+- Guillaume, Félicien — 166, *103*
+- Guillot, Adolphe — 149, *83*
+- Halphen, Marianne — 187, *110*, *117*
+- Hatshepsout-Menetre — *181*
+- Herzl, Théodore — 204, *132*
+- Homoncules — *293*, *298*
+- Huysmans, Joris-Karl — 151, *88*, *89*, *174*
+- Jaurès, Jean — 103, 186, 240, *117*
+- Joanovici, Ekatarina — 224, *141*
+- Juif errant — *134*
+- Kann, Maurice-Edouard — 103, 184, *116*
+- Klein, Eleazar — *133*
+- Kosky, Igor — 173, *97*
+- Lacassagne, Alexandre — 278, *87*, *191*
+- Lasies, Joseph — 191, *120*
+- Lautrec, Henri Toulouse — 175, *99*, *142*
+- Lemoine, Charles — 218, *139*
+- Lenestour, Toussaint — 249, *162*
+- Lenoir, Valentine — *285*
+- Léon XIII — 52
+- Lépine, Louis — 130, 145, *85*, *96*
+- Lerne, Wolfgang — 194
+- Liubov, Julia — *328*
+- Lombroso, Cesare — 279, *191*
+- Lopez, Jacques — 266, *180*
+- Louis II de Bavière — 55
+- Mackau, Armand de — 189, *119*
+- Marcilly, Nicolas-Antoine de — 103, 181, *145*
+- Marenko, Jésus — 282, *193*
+- Meister, Joseph — *197*
+- Méténier, Oscar — 147, *86*
+- Michel, Louise — 172, *97*
+- Moine bourru — *146*
+- Montfort, Louis de — 264, *177*
+- Morbus, Nicolas — *146*, *195*
+- Mortuis, Abbé Jacques — 248, *161*
+- Mortuis, Frère Xavier — 249, *161*
+- Morville, André — 166, *103*
+- Namadie, Juliette — *312*
+- Noir animal — *145*
+- Northborne, William — 265, *178*, *283*
+- Octobre — 219, *142*
+- Ogresse — 173, *98*
+- Papus — 256, 263, *176*
+- Péguy, Jeanne — 249, *155*, *162*, *190*
+- Petit, Octave — 264, *177*
+- Petitcolin, Eugène — 281, *193*
+- Picquart, Marie-Georges — 205
+- Pie X — 53
+- Plzen, Janos — *182*
+- Prostituées de Carter — *87*, *196*
+- Raspoutine — *337*
+- Richard, Mgr François-Marie-Benjamin — 246, 250, *160*
+- Royer, Michel — 103, 184, *116*
+- Saint-Yves, capitaine — 192, *120*
+- Sissi — 54
+- Schreber, Daniel — 202, *130*
+- Soeur Marie-Vincent — 247, *161*
+- Soubière, Rosalie — 176, *99*, *120*
+- Souffrice, Paul — 219, *141*
+- Staline, Joseph — *135*
+- Steinheil, Marguerite — 187, *119*
+- Stoppes, Martin — 275, *189*
+- Stranozy, Martin — 282, *194*
+- Tailhade, Laurent — 203, *131*
+- Tourmenteur — *163*
+- Turini, comte de — 174, *98*
+- Vaillant, Maurice — 222, *141*
+- Valneuse, Jannolle de — 188, *118*
+- Vérole — 218, *141*
+- Viau, Raphaël — 201, *130*
+- Wanloo, Auguste — 221, *141*
+- Winship — 220, *144*
+- Zola, Emile — 203, *131*
+
+## GROUPES ET FACTIONS
+
+- Agence Goron — 143, *84*
+- Agence Havas — 103
+- Anticléricaux — 246, *159*
+- Bande de Winship — 216, 224, *139*
+- Bazarov — *95*, *99*, *109*, *149*
+- Cercle sabbatique — *120*, *125*, *128*, *130*, *132*, *166*
+- Communauté de Babylone — 171, *94*
+- Chevaliers de la Hotte — *139*
+- Chiffonniers — 212, *139*
+- Cirque des freaks — 274, *188*
+- Club Saint Blaise — 261, *161*, *174*
+- Club fin de siècle — *94*, *98*
+- Coeurs d’Acier de Saint-Ouen — 215, *139*
+- Comité des Sept — *112*, *120*
+- Détectives de Pinkerton — 144, *85*
+- Filles en carte — 212
+- Forts des Halles — 214, 222, *139*
+- Gavroches — 213
+- Hydre — *119*, *140*, *178*
+- Intransigeants — 245, *158*
+- Ligue antisémite — 199, *126*
+- Ligue des droits de l’homme — 199, *128*
+- Maison du peuple — 172
+- Modernistes — 145, *158*
+- Monarchistes — 103, 183, *110*
+- Nationalistes — 103, 183
+- Observateurs — *103*, *161*
+- Ordre de St Michel — *106*, *113*, *120*, *121*
+- Okhrana — *89*, *90*, *109*, *127*, *166*, *327*
+- Ordre Hermétique de l’Aube Dorée — 261, *174*
+- Petit Parisien — 162, *103*
+- Police des chemins de fer — 142, *85*
+- Polices militaires — 143
+- Préfecture de police — 130, *83*
+- Républicains — 103, *110*
+- Romanis — 218, *139*
+- Saint-Office — *160*
+- Salon de mme Halphen — *109*, *110*
+- Sang du Prince — *114*, *121*
+- Section des quinze-vingt — 219
+- Sicaires juifs — *129*
+- Société Gobineau — 274, *187*
+- Soldats du Christ — *159*
+- Sûreté générale — 140, *83*, *144*, *305*
+- Surineurs — 220, *139*
+- Syndicat des mendiants — 216, *138*, *143*
+- Théosophes — 265, *173*
+- Théurgistes Ré-Optimates — *145*, *173*
+
+## LIEUX
+
+- Abbaye de Saint-Denis — 257, *165*
+- Académie de médecine — 285, *201*
+- Afrique — 90, 310
+- Allemagne — 69, 309
+- Ambassade d’Allemagne — 197, *122*
+- Ambassade de Russie — 197, *121*
+- Ambassade du Saint-Siège — 257
+- Amphithéâtre d’anatomie — 290
+- Angleterre — 57, 90, 232, 276, 309
+- Archives de la Seine — 169
+- Archives nationales — 168
+- Asile de Bicêtre — 286, *202*
+- Asile de La Salpêtrière — 286, *202*
+- Autriche-Hongrie — 310
+- Bibliothèque de l’Arsenal — 168
+- Bibliothèque Sainte-Geneviève — 170
+- Le Bodéga — 232
+- Bourse — 197
+- Brasserie Lipp — 197, *122*
+- Cathédrale Notre Dame de Paris — *165*
+- Clinique vétérinaire Fragonard — 286, *202*
+- Commission du Vieux Paris — 170
+- Conciergerie — *91*
+- Église russe — 258, *166*
+- Église Saint-Philippe-du-Roule — 257, *164*
+- Église Saint-Julien-le-Pauvre — 258, *166*
+- Église Saint-Séverin — 258, *166*
+- Église Sainte-Clotilde — 258, *165*
+- Egypte — *167*
+- Etats-Unis — 78
+- Fort-Chabrol — *124*, *209*
+- Fumerie d’opium de Saint-Ouen — 232, *147*
+- Havas, agence — 168
+- Halles — 229, *147*, *262*
+- Hôtel Carnavalet — 169
+- Hôtel Continental — 197
+- Hôtel-Dieu — 284, *198*
+- Italie — 81, 309, 371
+- Irlande — 66, 309
+- Japon — 85, 311
+- Liberty’s bar — 178
+- Librairie d’Isaac Lanquedom — 210
+- Londres — 61
+- Maison Philibert — 178, 237, *101*, *147*
+- Maxim’s — *121*
+- Morgue — 284, *200*
+- Moulin Rouge — 233
+- Musée Dupuytren — 289
+- New York — 81
+- Notre-Dame de Paris — 257
+- Océanie — 88
+- Opéra — 198, *118*, *122*
+- Paris (quartiers) — 107
+- Prague — 75
+- Prison — *91*
+- Quartier juif de Paris — 210
+- Quartier Saint Merri — 231, *147*
+- Quartier des quinze-vingt — 231, *139*, *147*
+- Quartier La Folie Méricourt — 231, *147*
+- Quartier Montmartre — 236
+- Restaurant le Maxim’s — 196
+- Restaurant Le Bofinger — 197
+- Restaurant le Prunier — 197
+- Route de la Révolte — 232, *147*
+- Russie — 310, 362, *324*, *334*
+- Sacré Cœur — 254, *164*
+- Sénat — 197
+- Synagogue Notre-Dame-de-Nazareth — *170*
+- Souterrains — 227, 238, *147*
+- Temple protestant — 258
+- Théâtre du Grand-Guignol — 155, *91*
+- Tivoli-Vauxhall — 210
+- Usine Souffrice — 237
+- Val de Bièvre — 241, *147*
+
+## DOSSIERS DE POLICE ET INTRIGUES
+
+- Affaire Dreyfus — *125*, *284*
+- Affaire Lucille Andrews — 263, *98*, *171*, *174*, *179*
+- Boue de l’occultisme — 104, 185, *298*
+- Dégénérescence — 273, *184*, *221*
+- Dérives de la médecine — 104
+- Dieu est parmi nous — 248, 276, *155*, *185*
+- Duels à la médiévale — 103, 183, *106*
+- Eglise en péril — 104, 243, *155*
+- Guerre des polices — 121, 130, *82*, *153*, *278*, *226*
+- Guerre du crime — 104, 208, *103*, *117*, *137*, *141*, *145*
+- Menace anarchiste — 103, 171, *98*, *305*
+- Menace nationaliste — 103, 181
+- Momies imports — 213, 262, *137*, *167*, *181*
+- Mort de Félix Faure — 103, 182, *103*, *105*, *117*, *119*
+- Nettoyage dans la pègre — 212
+- Octobre — 173, 223, *87*, *88*, *92*, *98*, *103*
+- Peau du tsar — 172, *92*, *117*, *122*
+- Perversions — 214, *138*, *140*, *149*
+- Plaie antisémite — 104
+- Pourfendeurs du Christ — 248
+- Presse — 103, 158
+- Programmes Prométhéens — 277, *182*
+- République des scandales — 103
+- Revanche contre l’Allemagne — 103, 183
+- Risques épidémiques — 277, *186*
+- Syndicat au Cercle Sabbatique — 201
+- Trafic des morts — 275
+- Triple meurtre de la rue Chaptal — 163, *102*
+
+## PROCÉDÉS D’ENQUÊTE
+
+- Agences de voyages — 123
+- Anthropométrie — 456
+- Barrières d’octroi — 122
+- Boire et manger — 124
+- Contrefaçon — 451
+- Dessins et photographie — 447
+- Dormir — 128
+- Echantillons — 448
+- Empreintes — 448
+- Expertise légiste — 452
+- Filature — 442
+- Fusillade — 443
+- Homicide — 473
+- Identité judiciaire — 136
+- Incendie et explosion — 448
+- Infiltration — 441
+- Interrogatoire — 441, 450
+- Mœurs — 135, 143
+- Morgue — 136
+- Objets perdus dans les transports — 122
+- Navigation sur la Seine — 123
+- Planque — 442
+- Poursuite — 443
+- Procès — 444, *289*
+- Renseignements — 454
+- Renseignements généraux — 135
+- Scène de crime — 439
+- Surveillance (espions, anarchistes) — 143, 144
+- Tâches — 450
+- Tatouages — 463
+- Téléphone et télégraphe — 453
+- Témoins — 441
+- Transports — 455
+- Vols — 466

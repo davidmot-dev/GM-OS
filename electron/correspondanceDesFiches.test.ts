@@ -139,16 +139,20 @@ describe('les gabarits intégrés du moteur', () => {
         const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
-            version: 12,
-            ids: ['alien-v2-normalise', 'blade-runner-fr', 'cthulhu-hack', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr'],
+            version: 13,
+            ids: ['alien-v2-normalise', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr'],
         });
     });
 });
 
-// 19/10/2026 : la CSS autonome masquait les flèches, celle du moteur les gardait.
-it('le Livret du voyageur intégré reprend la fiche livrée, CSS et largeurs comprises', () => {
-    const fiche = fs.readFileSync(path.join(RACINE, 'docs/fiches/Rêve de Dragon/reve-de-dragon-livret-voyageur-interactif.html'), 'utf8');
-    const manifeste = JSON.parse(fiche.match(/<script type="application\/json" id="character-sheet-template">([\s\S]*?)<\/script>/)![1]);
+// 19/10/2026 : la CSS autonome masquait les flèches, celle du moteur les gardait. Crimes, intégré
+// le même soir, suit la même règle : le gabarit du moteur est la fiche livrée, rien d'autre.
+it.each([
+    'docs/fiches/Rêve de Dragon/reve-de-dragon-livret-voyageur-interactif.html',
+    'docs/fiches/Crimes/crimes-fiche-personnage-interactive.html',
+])('%s : le gabarit intégré reprend la fiche livrée, CSS et largeurs comprises', (chemin) => {
+    const fiche = fs.readFileSync(path.join(RACINE, chemin), 'utf8');
+    const manifeste = JSON.parse(fiche.match(/<script\b[^>]*\bid="character-sheet-template"[^>]*>([\s\S]*?)<\/script>/)![1]);
     const { _builtin, ...integre } = MOTEURS.find(g => g.id === manifeste.template.id)! as GabaritDuMoteur & { _builtin?: boolean };
     expect(_builtin).toBe(true);
     expect(integre).toEqual(manifeste.template);

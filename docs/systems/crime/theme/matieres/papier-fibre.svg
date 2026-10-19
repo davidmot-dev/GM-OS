@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" fill="none">
+  <g stroke="currentColor" stroke-width="0.65" opacity="0.55" stroke-linecap="round">
+    <path d="M6 13l5-1M34 6l2 4M71 17l8 1M111 9l4-2M146 22l6-1M18 42l7 2M52 33l3-1M89 45l6-2M130 39l5 1M7 75l6-2M37 61l4 1M69 76l6-1M109 65l4 2M145 78l5-2M22 101l4 1M51 93l6-1M83 111l4-2M119 97l7 1M151 115l3-2M8 139l5 1M39 124l6-2M72 145l6 1M107 131l3-1M135 149l7-2M31 151l3-1M94 27l2 3M157 52l-3 1M59 117l2 3M21 25l2 1"/>
+  </g>
+  <g fill="currentColor" opacity="0.38">
+    <circle cx="16" cy="7" r="0.65"/><circle cx="59" cy="18" r="0.8"/><circle cx="124" cy="25" r="0.5"/><circle cx="153" cy="9" r="0.6"/><circle cx="9" cy="53" r="0.7"/><circle cx="42" cy="48" r="0.6"/><circle cx="77" cy="60" r="0.65"/><circle cx="106" cy="38" r="0.7"/><circle cx="138" cy="56" r="0.5"/><circle cx="25" cy="85" r="0.5"/><circle cx="57" cy="72" r="0.8"/><circle cx="94" cy="86" r="0.6"/><circle cx="123" cy="77" r="0.55"/><circle cx="152" cy="99" r="0.6"/><circle cx="11" cy="117" r="0.7"/><circle cx="40" cy="107" r="0.5"/><circle cx="74" cy="127" r="0.6"/><circle cx="104" cy="116" r="0.75"/><circle cx="139" cy="129" r="0.65"/><circle cx="18" cy="154" r="0.55"/><circle cx="55" cy="146" r="0.65"/><circle cx="118" cy="155" r="0.7"/>
+  </g>
+</svg>

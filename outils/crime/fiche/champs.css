@@ -1,0 +1,12 @@
+.sheet[data-template="crimes-fr"] .crime-field{position:absolute;box-sizing:border-box;margin:0;min-width:0;min-height:0;border:0;border-radius:0;background:transparent;color:#142c26;font:9px/1.13 Georgia,serif;padding:0 1px;resize:none;outline:0}
+.sheet[data-template="crimes-fr"] .crime-textarea{padding:1px;line-height:1.2;overflow:auto}
+.sheet[data-template="crimes-fr"] .crime-number{text-align:center;font:9px/1 "Courier New",monospace;padding:0;appearance:textfield}
+.sheet[data-template="crimes-fr"] .crime-counter{font-weight:bold}
+.sheet[data-template="crimes-fr"] .crime-counter:not(:placeholder-shown),.sheet[data-template="crimes-fr"] .crime-clue:not(:placeholder-shown){background:rgba(255,255,255,.86)}
+.sheet[data-template="crimes-fr"] .crime-field:focus{outline:0.6px solid #31564a;background:#fffcdfeb}
+.sheet[data-template="crimes-fr"] .crime-hotspot{cursor:pointer;padding:0;touch-action:manipulation}
+.sheet[data-template="crimes-fr"] .crime-hotspot.active{background:rgba(49,86,74,.38);box-shadow:inset 0 0 0 .7px #173d32}
+.sheet[data-template="crimes-fr"] .crime-checkbox{appearance:none;cursor:pointer;padding:0;touch-action:manipulation}
+.sheet[data-template="crimes-fr"] .crime-checkbox:checked{background:#173d32b3;box-shadow:inset 0 0 0 1.3px #f5f3eb}
+.sheet[data-template="crimes-fr"] .crime-portrait{cursor:pointer;overflow:hidden;padding:0;display:block}
+.sheet[data-template="crimes-fr"] .crime-portrait img{width:100%;height:100%;object-fit:contain;display:block}

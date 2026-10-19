@@ -11947,6 +11947,38 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
   Seuil RK (l'errata dit à l'aube) ; Alchimie sans débit automatique des MP.
 - Reste : captures du manuel, fiche sur tablette sans suggestions, débit des MP (option B).
 
+### 144 · Crimes — fiche HTML raccordée au pilote — 19/10/2026
+
+David a créé le pilote **Crimes** dans la Forge (corpus `docs/systems/crime/`, 19 fiches de
+règles, `relu: false`) et la fiche HTML avec le Studio (Codex, gabarit `crimes-fr`, 197 clés,
+[reprise](2026-10-19-etat-et-reprise-codex-crimes-fiche-html.md)) : *« peux-tu faire le
+raccord »* (Claude Code).
+
+- **La fiche GM-OS du pilote était générique** : « Compétence 1 » à « Compétence 12 », un seul
+  style d'enquête, contacts en texte libre, sexe en `select` sans options. Aucun personnage
+  n'existait (David) : elle est **refaite sur la fiche HTML**, 12 sections, 203 champs. Les
+  champs existants gardent leur identifiant ; compétences (`combat`… `societe`) et styles
+  (`conde`… `fouineur`) prennent un identifiant français, nombres de 0 à 3 ; le reste reprend la
+  clé de la fiche, points changés en « _ ». Retirés : `sexe`/`age` (une ligne « Sexe et âge »
+  sur la fiche), `passions` (deux lignes), `style_enquete`, `contacts`, `competence_1…12`.
+  Initiative : `physique + combat - angoisse` (règle du corpus, elle citait `competence_1`).
+- **Script** `outils/crime/relier_fiche_crimes.py` (export → `Export Dirvers/corriges/
+  Crime_driver_gmos_relie.gmos-driver` + `docs/systems/crime/fiche/correspondance.json`,
+  196 clés reliées, portrait absent motivé). Contrôles de la Forge : un seul constat, le jet.
+- **Moteur** : `crimes-fr` intégré tel que livré (`outils/crime/integrer_au_moteur.mjs`),
+  **`BUILTIN_VERSION` 12 → 13** ; le test de correspondance exige l'égalité gabarit intégré =
+  fiche livrée pour Crimes comme pour RdD. Validateur : **0 erreur, 0 avertissement**.
+- ✅ **Pilote corrigé réimporté par David le 19/10** (« Modèles de fiches » → « RÈGLES
+  (DRIVERS) » → « IMPORTER DRIVER », « Remplacer ») : *« c'est bon la fiche fonctionne »*.
+- 🅿️ **Chantier séparé, choisi par David** : **le jet « Potentiel GARDE Compétence »** — lancer
+  autant de d10 que le Potentiel, garder 1 à 3 dés selon la Compétence, les 1 gardés d'office,
+  seuil 9 / 8 compétent / 7 spécialisé, cinq issues. Le moteur de dés ne sait pas « garder » ; le
+  pilote a une réserve de 0 à 0 dé (rien à lancer). Code dans `src/`.
+- **À trancher** : la fiche HTML dessine **10 cases** par Potentiel, le corpus dit **0 à 5** (le
+  pilote garde 5) ; la piste « Fortune » à 10 cases et la piste d'équipe à 5 cases n'ont pas de
+  règle relue (`fortune_piste`, `team_track`) ; les compteurs des compétences et des styles non
+  plus. Manuel des jeux : pas encore de page `54-Jeu-Crimes`.
+
 ## La vue d'un coup d'œil
 
 | # | Chantier | État | Le premier geste | Bloqué par |
@@ -12030,6 +12062,7 @@ Claude Code, à la demande de David : *« on va reprendre les dév sur Nephilim 
 | 76 | **Rêve de Dragon — règles, module TMR et fiche HTML** | § 141 ; R0/R1/R2/R8 (`94e0aaed`), R3/R4 (`ef659f35`), R5–R7 (`9e7df47a`) ; livret HTML (`5426215f`) et raccord au pilote étendu (`fef92b06`) ; retouche numérique intégrée v12, non commitée | Relancer pour recevoir le gabarit v12 et juger les chiffres ; réimporter le pilote relié si nécessaire ; R8 garde les maîtrises et sorts à arbitrer ; potentiel R5 à reporter explicitement depuis la page Archétype | [Retouche numérique](2026-10-19-etat-et-reprise-codex-rdd-champs-numeriques.md), [raccord](2026-10-19-raccord-fiche-rdd-claude.md) |
 | 77 | **Nephilim — le jeu à la table** | § 142 ; Arts occultes et suites des critiques au jet, Stase et Effet Mnémos, Ka dominant, Alchimie au jet, 31 époques et 155 Vécus du livre, errata V1.3 dans les règles — commité et éprouvé le 18/10 ; captures du manuel refaites ; Vécus et époques saisis sur tablette ; MP consommées au lancer | Éprouver la tablette et la transmutation | Rien ; [reprise au § 15](2026-10-17-chantier-nephilim.md) |
 | 78 | **Archives de campagne — la campagne, et ses médias** | Analyse du 18/10 : l'archive Nexus `.gmos` existe (trame comprise) ; manquent storyboard, réserves, Light-OS, combats préparés ; le clonage ne réécrit que `acteId` dans la trame ; l'export Obsidian ne filtre pas par campagne ; archive des médias d'un univers à créer | ✅ **Codé et poussé le 19/10, lots E0 à E6** (`11cf56f1`…`934874b2`) : Obsidian filtré, registre des détenteurs complété, clonage juste, archive complète, « Rejouer », aperçu + sauvegarde avant import + bilan, archive des médias `.gmos-medias` avec Image-OS (ce que la campagne utilise). **Essayé par David le 19/10 sur l'instance de test, export et import : *« ok ça fonctionne »*** ; bilan d'export ajouté après le premier essai. ⛔ Décisions de David : cartes, tables, calendriers et bibliothèque commune **ne s'archivent pas** (pas liés à une campagne) ; **Deck-OS part avec le pilote** (`.gmos-driver`), plus avec la campagne ; Rejouer : toutes les réserves au départ, combats préparés et modules gardés | **David** : dire si l'archive des médias doit aussi prendre les médias que la campagne **utilise** sans les étiqueter (portraits, cartes…) ; [chantier](2026-10-18-chantier-archives-de-campagne.md) |
+| 80 | **Crimes — pilote et fiche HTML** | § 144 ; fiche `crimes-fr` intégrée au moteur v13, fiche GM-OS refaite sur la fiche HTML, correspondance complète ; pilote corrigé réimporté, fiche validée par David le 19/10 | Le jet « Potentiel GARDE Compétence » ; trancher les Potentiels (10 cases ou 0 à 5) et les pistes sans règle | Le moteur de dés ne sait pas « garder » des dés |
 
 ### Ce que la soirée du 2026-08-23 a fermé
 
