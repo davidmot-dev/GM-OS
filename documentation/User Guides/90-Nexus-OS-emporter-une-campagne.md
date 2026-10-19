@@ -58,8 +58,8 @@ l'export**.
 
 ## 📥 Importer
 
-Trois boutons ouvrent **le même sélecteur**, qui accepte aussi bien un `.gmos` qu'un
-`.gmos-driver` :
+Trois boutons ouvrent **le même sélecteur**, qui accepte un `.gmos`, un `.gmos-driver` ou un
+`.gmos-medias` :
 
 | Où | Bouton |
 | :--- | :--- |
@@ -141,6 +141,47 @@ départ.
 
 ---
 
+## 🖼️ L'archive des médias (`.gmos-medias`)
+
+*Depuis le 2026-10-19.* La seconde archive d'une campagne : non pas **ce qui fait la campagne**,
+mais **ce qui se réutilise**. On l'exporte d'une campagne finie, et on la réimporte **dans une
+autre campagne du même univers** pour y retrouver ses images, ses sons, ses musiques et ses
+éclairages.
+
+**Exporter** : panneau de la campagne → encadré **Nexus-OS** → **Exporter les médias
+(.gmos-medias)**. Le bilan dit ce qui est parti, et ce qui était introuvable.
+
+| Ce qui part | |
+| :--- | :--- |
+| Les médias du **Media Hub** étiquetés pour la campagne | images, sons, vidéos, documents |
+| Les médias que ses ambiances et playlists **utilisent** sans les porter | un son du hub glissé dans un pad n'est pas étiqueté pour autant : sans lui, le pad serait muet |
+| Ses **ambiances sonores** et ses **playlists**, avec leurs **fichiers audio** copiés depuis le disque | les liens distants (YouTube, Spotify…) restent des liens |
+| Ses **tuiles de Light-OS** | réglages des lampes compris |
+
+**Importer** : le bouton d'import habituel. GM-OS demande **dans quelle campagne** ranger les médias
+— il propose d'abord la campagne d'origine si elle est sur ce poste, sinon la campagne active —,
+puis prend une sauvegarde automatique, comme pour une campagne.
+
+- **Un média garde son identifiant.** S'il est déjà dans votre Media Hub, il reçoit simplement
+  l'étiquette de la campagne choisie : pas de doublon. Sinon, il revient tel qu'il était.
+- **Les sons venus du disque** entrent dans le Media Hub, et les pads pointent vers eux. Le même
+  fichier (même nom, même taille) n'entre pas deux fois.
+- **Ambiances, playlists et tuiles sont copiées** pour la campagne choisie : la campagne d'origine
+  garde les siennes. Réimportées **dans** la campagne d'origine, elles remplacent celles qui portent
+  le même identifiant.
+- **Une tuile réglée n'est jamais écrasée.** Chaque tuile prend la case de même numéro dans le
+  râtelier de la campagne choisie si elle est libre ou vide, sinon la première case libre.
+
+> ℹ️ **Pas encore dans l'archive des médias** : Image-OS (images, dossiers, diaporamas), les
+> réglages et le brouillard des cartes, les paquets de cartes, les tables aléatoires et les
+> calendriers. Ils restent sur ce poste.
+
+> ⚠️ **Une archive lourde se lit d'un bloc.** Comme pour le `.gmos`, l'import charge tous les
+> fichiers en mémoire avant de les ranger : une archive de plusieurs centaines de mégaoctets de
+> musique peut prendre du temps et de la mémoire.
+
+---
+
 ## 🎲 Partager un système de jeu
 
 Un `.gmos-driver` contient un **système**, sans aucune campagne : les règles, le moteur de dés, les
@@ -208,10 +249,10 @@ Deux règles revues le 2026-10-19 (chantier des archives de campagne) :
 <!-- -->
 
 > 🎵 **Seules les ambiances et playlists de la campagne partent** — celles qui portent son
-> étiquette. La **bibliothèque commune** (le même orage sert dans trois campagnes) voyagera dans
-> l'**archive des médias** (`.gmos-medias`), en préparation. À l'import, rien ne change : ce qui
-> porte le même identifiant est remplacé, ce qui est nouveau s'ajoute, ce qui n'est pas dans
-> l'archive reste.
+> étiquette. La **bibliothèque commune** (le même orage sert dans trois campagnes, sans étiquette)
+> reste sur ce poste : ni le `.gmos` ni le `.gmos-medias` ne l'emportent. Pour qu'une ambiance
+> commune voyage, rattachez-la à la campagne. À l'import, rien ne change : ce qui porte le même
+> identifiant est remplacé, ce qui est nouveau s'ajoute, ce qui n'est pas dans l'archive reste.
 
 ### ⛔ Ce qui ne part pas, ou ne revient pas
 

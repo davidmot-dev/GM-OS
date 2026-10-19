@@ -17,7 +17,7 @@
  * @module system/archive/NexusConflictResolver
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useFermetureParEchap } from '../../../hooks/useFermetureParEchap';
 import {
     AlertTriangle,
@@ -177,8 +177,11 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
     onResolve,
 }) => {
     const sansConflit = conflicts.length === 0;
+    // Lot E5 : une archive des médias demande seulement la campagne qui les reçoit.
+    const pourMedias = arrivee?.genre === 'medias';
+    const [cible, setCible] = useState(arrivee?.campagneParDefaut ?? '');
     const handleStrategy = (strategy: NexusConflictStrategy) => {
-        onResolve({ strategy });
+        onResolve(pourMedias ? { strategy, campagneCible: cible } : { strategy });
     };
 
     /*
@@ -215,12 +218,14 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                                 </span>
                             </div>
                             <h2 className="text-base font-black text-etat-danger leading-tight">
-                                {sansConflit ? 'Importer une campagne' : 'Conflit de données détecté'}
+                                {pourMedias ? 'Importer des médias' : sansConflit ? 'Importer une campagne' : 'Conflit de données détecté'}
                             </h2>
                         </div>
                     </div>
                     <p className="text-ui-11 text-app-text/40 leading-relaxed mt-2">
-                        {sansConflit
+                        {pourMedias
+                            ? `Les médias de « ${arrivee?.nom ?? 'Campagne'} ». Dans quelle campagne les ranger ? Ambiances, playlists et tuiles y sont copiées ; un média déjà présent reçoit seulement son étiquette.`
+                            : sansConflit
                             ? `« ${arrivee?.nom ?? 'Campagne'} » — ${arrivee?.entites ?? 0} entités, ${arrivee?.seances ?? 0} séances. Comment l'importer ?`
                             : conflicts.length === 1
                             ? 'Une campagne dans ce bundle possède le même identifiant qu\'une campagne déjà présente dans votre bibliothèque.'
@@ -249,7 +254,7 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                             ))}
                             {!!arrivee.medias && (
                                 <span className="text-ui-10 text-app-text/60 bg-app-text/5 border border-app-text/10 rounded-full px-2 py-0.5">
-                                    {arrivee.medias} médias
+                                    {arrivee.medias} {pourMedias ? 'fichiers' : 'médias'}
                                 </span>
                             )}
                         </div>
@@ -265,8 +270,38 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                         Choisir une action
                     </p>
 
+                    {/* Archive des médias : la campagne qui les reçoit (lot E5) */}
+                    {pourMedias && (
+                        <div className="space-y-2.5">
+                            <select
+                                id="nexus-medias-cible"
+                                value={cible}
+                                onChange={e => setCible(e.target.value)}
+                                className="w-full rounded-xl border border-app-text/10 bg-app-bg/60 px-3 py-2 text-xs text-app-text"
+                            >
+                                {(arrivee?.campagnes ?? []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                            </select>
+                            <button
+                                id="nexus-import-medias"
+                                onClick={() => handleStrategy('replace')}
+                                disabled={!cible}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all duration-200 disabled:opacity-30 ${STRATEGY_CONFIG.clone.buttonClass}`}
+                            >
+                                <div className="w-8 h-8 rounded-lg bg-etat-info/10 border border-etat-info/20 flex items-center justify-center flex-shrink-0">
+                                    <Download size={14} className={STRATEGY_CONFIG.clone.iconClass} />
+                                </div>
+                                <div className="flex-1 text-left">
+                                    <p className="text-xs font-bold">Importer dans cette campagne</p>
+                                    <p className="text-ui-10 text-app-text/40 mt-0.5 leading-tight">
+                                        {(arrivee?.campagnes ?? []).length === 0 ? 'Aucune campagne sur ce poste : créez-en une d\'abord.' : 'Rien n\'est retiré à une autre campagne.'}
+                                    </p>
+                                </div>
+                            </button>
+                        </div>
+                    )}
+
                     {/* Sans conflit : importer telle quelle (la stratégie `replace` n'écrase rien) */}
-                    {sansConflit && (
+                    {sansConflit && !pourMedias && (
                         <button
                             id="nexus-import-tel-quel"
                             onClick={() => handleStrategy('replace')}
@@ -325,7 +360,7 @@ export const NexusConflictResolver: React.FC<NexusConflictResolverProps> = ({
                     </button>}
 
                     {/* Rejouer — une campagne seulement (lot E4) */}
-                    {arrivee && (
+                    {arrivee && !pourMedias && (
                         <button
                             id="nexus-conflict-rejouer"
                             onClick={() => handleStrategy('rejouer')}

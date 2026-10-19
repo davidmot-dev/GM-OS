@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSessionOSStore } from '../useSessionOSStore';
-import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2, Package, Upload, DownloadCloud } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Info, Calendar, Users, MapPin, Edit3, Sparkles, Share2, Package, Upload, DownloadCloud, Images } from 'lucide-react';
 import { Panneau, Etiquette } from '../../../components/socle';
 import { useModalStore } from '../../../stores/useModalStore';
 import { ResolvedAsset } from '../../../components/ResolvedAsset';
@@ -50,6 +50,15 @@ const CampaignDetails: React.FC = () => {
         setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
         await nexusService.exportBundle(activeCampaignId, { includeAssets: emporterLesMedias });
         setTimeout(() => setNexusProgress(null), 3000);
+    };
+
+    /** Lot E5 (2026-10-19) : la seconde archive — les médias, à réimporter dans une autre campagne. */
+    const handleExportMedias = async () => {
+        if (!activeCampaignId) return;
+        nexusService.onProgress(setNexusProgress);
+        setNexusProgress({ phase: 'scraping', progress: 0, message: t('modules:session.campaign_details.toasts.nexus_export_start') });
+        const resultat = await nexusService.exportMediasBundle(activeCampaignId);
+        if (!resultat.success) setTimeout(() => setNexusProgress(null), 3000);
     };
 
     const handleImport = async () => {
@@ -415,6 +424,15 @@ const CampaignDetails: React.FC = () => {
                             <Upload size={14} />{t('modules:session.campaign_details.actions.nexus_import')}
                         </button>
                     </div>
+                    <button
+                        id="nexus-export-medias-btn"
+                        onClick={handleExportMedias}
+                        disabled={!isNexusAvailable || !!nexusProgress}
+                        className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-app-border px-3 py-2 text-xs font-bold text-app-text transition-all hover:border-etat-alerte/50 disabled:cursor-not-allowed disabled:opacity-30"
+                        title={!isNexusAvailable ? t('modules:session.campaign_details.tooltips.no_electron') : t('modules:session.campaign_details.actions.nexus_export_medias_tip')}
+                    >
+                        <Images size={14} />{t('modules:session.campaign_details.actions.nexus_export_medias')}
+                    </button>
                     <p className="mt-2 text-ui-9 leading-relaxed text-app-subtle">{t('modules:session.campaign_details.descriptions.nexus_detailed')}</p>
                 </Panneau>
             </div>

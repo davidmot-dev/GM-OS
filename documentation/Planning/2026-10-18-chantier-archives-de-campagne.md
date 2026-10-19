@@ -37,9 +37,26 @@ réutilisables »*, puis : *« rédige le chantier et n'oublie pas la trame »*.
 > (`SessionBackupManager.instantaneAvant`) : refusé ou non abouti, **rien n'entre** ; sans objet
 > (aucune campagne), on avance et on le dit ; le **bilan** (sauvegarde, choix, version écrasée,
 > décomptes, médias) part au journal de l'application et reste à l'écran de progression jusqu'à
-> « Fermer ». Pilotes compris. Suite : E5 (`.gmos-medias`).
+> « Fermer ». Pilotes compris. **E5 fait** : l'archive des médias `.gmos-medias`
+> (`system/archive/archiveDesMedias.ts`, pur ; `NexusService.exportMediasBundle` et
+> `importerLArchiveDesMedias`) — médias du Media Hub de la campagne **et** ceux que ses pads
+> désignent, ses ambiances et playlists **avec leurs fichiers audio**, ses tuiles Light-OS. Import
+> dans une **campagne choisie** : un média garde son identifiant (étiqueté s'il est là, restauré
+> sinon), les sons du disque entrent au hub (sans doublon nom + taille), ambiances, playlists et
+> tuiles **copiées** pour la cible (identifiants gardés si la cible est l'origine), tuiles posées
+> au même numéro ou à la première case libre, jamais sur une tuile réglée. Même garde que l'import
+> d'une campagne (choix, instantané, bilan). Pont Electron : extension, sélecteurs, table des types
+> audio commune (le `.gmos` rendait l'audio en `application/octet-stream`). Bouton dans le
+> panneau de la campagne. Essais : `archiveDesMedias.test.ts`, `importDesMedias.test.ts`.
+>
+> **Pas dans E5, à décider** : Image-OS (images, dossiers, diaporamas), réglages et brouillard des
+> cartes, paquets de cartes du système, tables aléatoires et calendriers (§ 5 B). Et la
+> **bibliothèque commune** (ambiances et playlists sans étiquette) ne voyage dans aucune des deux
+> archives. ⚠️ Limite connue, héritée du `.gmos` : l'import charge toute l'archive en base64 dans
+> un seul message IPC — une archive de centaines de Mo de musique pèsera en mémoire.
 
-**Les décisions du § 7 sont prises ; E0 à E4 et E6 sont codés. Reste E5.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
+**Les décisions du § 7 sont prises ; E0 à E6 sont codés (19/10), rien n'est encore essayé à
+l'écran.** Cette page dit ce qui existe, ce qui manque, ce que je propose, et les décisions
 à prendre. Inventaire fait dans le code le 18/10 (chemins et lignes cités, à revérifier avant de
 coder : le code bouge).
 

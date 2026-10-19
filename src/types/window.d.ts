@@ -569,7 +569,7 @@ declare global {
              */
             importBundle: (filePath: string) => Promise<import('../modules/system/archive/nexus.types').NexusImportRaw>;
             /** Ouvre un sélecteur de fichier pour choisir le chemin d'export. */
-            selectExportPath: (bundleType?: 'campaign' | 'driver') => Promise<string | null>;
+            selectExportPath: (bundleType?: 'campaign' | 'driver' | 'medias') => Promise<string | null>;
             /** Ouvre un sélecteur de fichier pour choisir un bundle .gmos à importer. */
             selectImportFile: () => Promise<string | null>;
         };

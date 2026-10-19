@@ -2474,7 +2474,9 @@
         "open_npcs": "NPC Gallery",
         "nexus_light": "Light archive - no images or sounds",
         "nexus_export": "Export (.gmos)",
-        "nexus_import": "Import (.gmos)"
+        "nexus_import": "Import (.gmos, .gmos-medias)",
+        "nexus_export_medias": "Export media (.gmos-medias)",
+        "nexus_export_medias_tip": "Images, sounds, music and lighting of the campaign, to re-import into another campaign of the same universe"
       },
       "status": {
         "driver_active": "DRIVER ACTIVE",

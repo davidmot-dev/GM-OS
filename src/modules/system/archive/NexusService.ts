@@ -24,6 +24,11 @@
 import { clonerLaCampagne, type Fabrique } from './clonerLaCampagne';
 import { rejouerLaCampagne } from './rejouerLaCampagne';
 import { recenserLArchive, enUneLigne } from './recensementDeLArchive';
+import {
+    rassemblerLesMedias, recenserLesMedias, planifierLImportDesMedias, pointerVersLesMediasEntres,
+    NEXUS_MEDIAS_EXTENSION, type NexusMediasState,
+} from './archiveDesMedias';
+import { useLightStore } from '../../light/useLightStore';
 import { instantaneAvant } from '../../session/logic/SessionBackupManager';
 import { Logger } from '../../../utils/logger';
 import { extraireLesSatellites, injecterLesSatellites } from './satellitesDeLaCampagne';
@@ -872,6 +877,247 @@ export class NexusService {
     }
 
     /**
+     * **Exporte les médias d'une campagne** dans une archive `.gmos-medias` —
+     * lot E5 du chantier des archives (2026-10-19). Voir `archiveDesMedias.ts`
+     * pour ce qui part : les médias du Media Hub de la campagne (et ceux que ses
+     * pads désignent), ses ambiances et playlists **avec leurs fichiers audio**,
+     * ses tuiles de lumière.
+     */
+    public async exportMediasBundle(campaignId: string): Promise<NexusExportResult> {
+        if (!window.appBridge?.nexus) {
+            gmToast(i18next.t('modules:session.campaign_details.status.no_electron'), 'error');
+            return { success: false, missingAssets: [], error: i18next.t('modules:system.nexus.messages.bridge_unavailable') };
+        }
+        const campagne = useSessionOSStore.getState().campaigns.find(c => c.id === campaignId);
+        if (!campagne) return { success: false, missingAssets: [], error: `Campagne introuvable : ${campaignId}` };
+
+        try {
+            this.emitProgress('scraping', 10, i18next.t('modules:system.nexus.messages.export_scraping'));
+            const mediaStore = useMediaStore.getState();
+            if (!mediaStore.isInitialized) await mediaStore.initDB();
+            const { state, fichiers } = rassemblerLesMedias(campagne, {
+                mediaList: useMediaStore.getState().mediaList,
+                atmospheres: useSoundStore.getState().atmospheres ?? [],
+                playlists: useMusicStore.getState().playlists ?? [],
+                scenes: useLightStore.getState().scenes ?? {},
+            });
+
+            this.emitProgress('harvesting', 30, i18next.t('modules:system.nexus.messages.media_transfer', { count: state.medias.length }));
+            const inlineAssets = await this.resolveMediaHubAssets(state.medias.map(m => m.id), (done, total) => {
+                this.emitProgress('harvesting', 30 + Math.round((done / total) * 25), i18next.t('modules:system.nexus.messages.media_transferred', { current: done, total }));
+            });
+
+            const outputPath = await window.appBridge.nexus.selectExportPath('medias');
+            if (!outputPath) {
+                this.emitProgress('idle', 0, '');
+                return { success: false, missingAssets: [], error: i18next.t('modules:system.nexus.messages.export_cancelled') };
+            }
+
+            await window.appBridge.nexus.clearAssets();
+            const total = Object.keys(inlineAssets).length;
+            let envoyes = 0;
+            for (const [id, dataUrl] of Object.entries(inlineAssets)) {
+                await window.appBridge.nexus.registerAsset(id, dataUrl);
+                envoyes++;
+                this.emitProgress('packaging', 60 + Math.round((envoyes / Math.max(total, 1)) * 20), i18next.t('modules:system.nexus.messages.media_transferred', { current: envoyes, total }));
+            }
+
+            this.emitProgress('packaging', 85, i18next.t('modules:system.nexus.messages.bundle_compression'));
+            const manifeste = {
+                schemaVersion: NEXUS_SCHEMA_VERSION,
+                bundleId: `nexus-medias-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                bundleType: 'medias' as const,
+                campaignId: campagne.id,
+                campaignName: campagne.name,
+                exportedAt: new Date().toISOString(),
+                gmosVersion: GMOS_VERSION,
+                requiredDriverIds: [],
+                requiredTemplateIds: [],
+                assetRefList: [...state.medias.map(m => m.id), ...fichiers],
+            };
+            const result = await window.appBridge.nexus.exportBundle(
+                campaignId, outputPath, JSON.stringify(state), JSON.stringify(manifeste), fichiers,
+            );
+
+            if (result.success) {
+                const manquants = result.missingAssets.length + (state.medias.length - total);
+                this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.export_success'), {
+                    bilan: [
+                        `Médias de « ${campagne.name} » exportés : ${enUneLigne(recenserLesMedias(state))}.`,
+                        `${total + fichiers.length - result.missingAssets.length} fichier(s) dans l'archive`
+                            + (manquants > 0 ? `, ${manquants} introuvable(s) : ${result.missingAssets.join(', ') || 'médias du hub sans contenu'}.` : '.'),
+                    ],
+                });
+                gmToast(`${i18next.t('modules:system.nexus.messages.export_success')} : ${campagne.name}${NEXUS_MEDIAS_EXTENSION}`, 'success');
+            } else {
+                this.emitProgress('error', 0, result.error ?? i18next.t('modules:system.nexus.messages.unknown_error'));
+                gmToast(i18next.t('modules:system.nexus.messages.export_error'), 'error');
+            }
+            return result;
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Erreur inconnue';
+            console.error('[NexusService] Export des médias échoué:', err);
+            this.emitProgress('error', 0, message);
+            gmToast(`Export échoué : ${message}`, 'error');
+            return { success: false, missingAssets: [], error: message };
+        }
+    }
+
+    /**
+     * **Importe une archive des médias** dans la campagne que le meneur choisit
+     * — lot E5 (2026-10-19). Les trois règles sont dans `archiveDesMedias.ts` :
+     * un média garde son identifiant, ambiances, playlists et tuiles sont copiées
+     * pour la cible, une tuile ne s'écrase jamais. Même garde que l'import d'une
+     * campagne : choix, instantané, puis écriture, puis bilan.
+     */
+    private async importerLArchiveDesMedias(
+        manifest: NexusManifest,
+        raw: NexusImportRaw,
+        onConflict?: OnConflictCallback,
+    ): Promise<NexusImportResult> {
+        let archive: NexusMediasState;
+        try {
+            archive = JSON.parse(raw.stateJson!) as NexusMediasState;
+            if (!archive?.origine || !Array.isArray(archive.medias)) throw new Error('forme');
+        } catch {
+            const errMsg = i18next.t('modules:system.nexus.messages.state_corrupted');
+            this.emitProgress('error', 0, errMsg);
+            gmToast(errMsg, 'error');
+            return { success: false, failedAssets: [], warnings: [], error: errMsg };
+        }
+
+        const session = useSessionOSStore.getState();
+        const campagnes = session.campaigns.map(c => ({ id: c.id, name: c.name }));
+        const parDefaut = campagnes.some(c => c.id === archive.origine.campaignId)
+            ? archive.origine.campaignId
+            : (session.activeCampaignId ?? campagnes[0]?.id);
+        const arrivee: ArriveeDUneCampagne = {
+            genre: 'medias',
+            nom: archive.origine.campaignName,
+            exporteeLe: manifest.exportedAt,
+            entites: 0,
+            seances: 0,
+            contenu: recenserLesMedias(archive),
+            medias: Object.keys(raw.assetData ?? {}).length,
+            campagnes,
+            campagneParDefaut: parDefaut,
+        };
+
+        this.emitProgress('remapping', 50, i18next.t('modules:system.nexus.messages.waiting_user'));
+        const resolution: NexusConflictResolution = onConflict
+            ? await onConflict([], arrivee)
+            : { strategy: 'replace', campagneCible: parDefaut };
+        if (resolution.strategy === 'cancel') {
+            this.emitProgress('idle', 0, '');
+            gmToast(i18next.t('modules:system.nexus.messages.import_cancelled'), 'info');
+            return { success: false, failedAssets: [], warnings: [], error: i18next.t('modules:system.nexus.messages.import_cancelled') };
+        }
+        const cible = campagnes.find(c => c.id === (resolution.campagneCible ?? parDefaut));
+        if (!cible) {
+            const errMsg = 'Aucune campagne pour recevoir les médias : créez-en une d\'abord. Rien n\'a été importé.';
+            this.emitProgress('error', 0, errMsg);
+            gmToast(errMsg, 'error');
+            return { success: false, failedAssets: [], warnings: [], error: errMsg };
+        }
+
+        const instantane = await instantaneAvant(`avant l'import des médias de « ${archive.origine.campaignName} » dans « ${cible.name} »`);
+        if (instantane.statut === 'refuse' || instantane.statut === 'non-abouti') {
+            const errMsg = instantane.statut === 'refuse'
+                ? `Sauvegarde préalable impossible — ${instantane.details} Rien n'a été importé.`
+                : "La sauvegarde préalable n'a pas abouti : rien n'a été importé.";
+            this.emitProgress('error', 0, errMsg);
+            gmToast(errMsg, 'error');
+            return { success: false, failedAssets: [], warnings: [], error: errMsg };
+        }
+        const bilan: string[] = [instantane.statut === 'ecrit'
+            ? `Sauvegarde automatique écrite juste avant l'import, à ${new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}.`
+            : `Aucune sauvegarde préalable : ${instantane.details}`];
+
+        // ── Les médias : chacun garde son identifiant ───────────────────────
+        this.emitProgress('remapping', 60, i18next.t('modules:system.nexus.messages.remap_media'));
+        const mediaStore = useMediaStore.getState();
+        if (!mediaStore.isInitialized) await mediaStore.initDB();
+        const cheminDe = new Map((manifest.assetMap ?? []).map(a => [a.originalRef, a.relativePath]));
+        const blobDe = async (ref: string): Promise<Blob | undefined> => {
+            const chemin = cheminDe.get(ref);
+            const dataUrl = chemin ? raw.assetData?.[chemin] : undefined;
+            if (!chemin || !dataUrl || this.isDangerousPath(chemin)) return undefined;
+            return (await fetch(dataUrl)).blob();
+        };
+        let etiquetes = 0, restaures = 0;
+        const echecs: string[] = [];
+        for (const media of archive.medias) {
+            try {
+                const local = useMediaStore.getState().mediaList.find(m => m.id === media.id);
+                if (local) {
+                    if (!local.campaignIds.includes(cible.id)) await useMediaStore.getState().updateMediaCampaigns(local.id, [...local.campaignIds, cible.id]);
+                    etiquetes++;
+                    continue;
+                }
+                const blob = await blobDe(media.id);
+                if (!blob) { echecs.push(media.name); continue; }
+                const ok = await useMediaStore.getState().restaurerUnMedia({ ...media, campaignIds: [cible.id] }, blob);
+                if (ok) restaures++;
+                else { await useMediaStore.getState().updateMediaCampaigns(media.id, [cible.id]); etiquetes++; }
+            } catch (err) {
+                console.error(`[NexusService] Média non importé : ${media.name}`, err);
+                echecs.push(media.name);
+            }
+        }
+
+        // ── Les sons venus du disque : au Media Hub, sous un identifiant neuf ──
+        const entres: Record<string, string> = {};
+        const fichiers = (manifest.assetMap ?? []).filter(a => !a.originalRef.startsWith('m-'));
+        for (const fichier of fichiers) {
+            try {
+                const blob = await blobDe(fichier.originalRef);
+                if (!blob) { echecs.push(fichier.relativePath); continue; }
+                const nom = fichier.originalRef.split(/[\\/]/).pop() ?? 'son';
+                // Le même fichier déjà entré (même nom, même taille) n'entre pas deux fois.
+                const deja = useMediaStore.getState().mediaList.find(m => m.name === nom && m.size === blob.size);
+                if (deja) {
+                    if (!deja.campaignIds.includes(cible.id)) await useMediaStore.getState().updateMediaCampaigns(deja.id, [...deja.campaignIds, cible.id]);
+                    entres[fichier.originalRef] = deja.id;
+                    continue;
+                }
+                const id = await useMediaStore.getState().addMedia(new File([blob], nom, { type: blob.type }), ['nexus-import'], [cible.id]);
+                if (id) { entres[fichier.originalRef] = id; restaures++; } else echecs.push(nom);
+            } catch (err) {
+                console.error(`[NexusService] Fichier non importé : ${fichier.relativePath}`, err);
+                echecs.push(fichier.relativePath);
+            }
+        }
+
+        // ── Ambiances, playlists, tuiles : copiées pour la cible ──────────────
+        this.emitProgress('injecting', 85, i18next.t('modules:system.nexus.messages.injecting_campaign'));
+        const plan = pointerVersLesMediasEntres(
+            planifierLImportDesMedias(archive, cible.id, useLightStore.getState().scenes ?? {}),
+            entres,
+        );
+        fusionnerParIdentifiant(plan.atmospheres, () => useSoundStore.getState().atmospheres ?? [], atmospheres => useSoundStore.setState({ atmospheres }));
+        fusionnerParIdentifiant(plan.playlists, () => useMusicStore.getState().playlists ?? [], playlists => useMusicStore.setState({ playlists }));
+        if (plan.tuilesDeLumiere.length) {
+            useLightStore.setState(etat => {
+                const scenes = { ...(etat.scenes ?? {}) };
+                for (const tuile of plan.tuilesDeLumiere) scenes[tuile.id] = tuile;
+                return { scenes };
+            });
+        }
+
+        bilan.push(
+            `Médias de « ${archive.origine.campaignName} » importés dans « ${cible.name} »`
+                + (plan.telQuel ? ' (sa campagne d\'origine : ambiances, playlists et tuiles remplacées par identifiant).' : ' (ambiances, playlists et tuiles copiées pour elle).'),
+            `Entré : ${enUneLigne(recenserLesMedias({ ...archive, ...plan }))}.`,
+            `Media Hub : ${restaures} média(s) ajouté(s), ${etiquetes} déjà présent(s) étiqueté(s) pour « ${cible.name} »`
+                + (echecs.length ? `, ${echecs.length} en échec (${echecs.join(', ')}).` : '.'),
+        );
+        this.consignerLeBilan(bilan);
+        this.emitProgress('done', 100, i18next.t('modules:system.nexus.messages.import_success'), { bilan });
+        gmToast(`${i18next.t('modules:system.nexus.messages.import_success')} : ${archive.origine.campaignName}`, 'success');
+        return { success: true, campaignName: cible.name, failedAssets: echecs, warnings: [], bilan };
+    }
+
+    /**
      * Exporte un GameDriver dans un bundle `.gmos-driver`.
      */
     public async exportDriverBundle(
@@ -1524,6 +1770,9 @@ export class NexusService {
                 gmToast(errMsg, 'error');
                 return { success: false, failedAssets: [], warnings: [], error: errMsg };
             }
+
+            // Lot E5 : l'archive des médias suit son propre chemin, vers une campagne choisie.
+            if (manifest.bundleType === 'medias') return await this.importerLArchiveDesMedias(manifest, raw, onConflict);
 
             // Phase 4 : Parsing de l'état
             let campaignState: NexusCampaignState | undefined;

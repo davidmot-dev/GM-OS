@@ -31,6 +31,31 @@ import { createWriteStream } from 'node:fs';
 
 const NEXUS_EXTENSION = '.gmos';
 const NEXUS_DRIVER_EXTENSION = '.gmos-driver';
+/** L'archive des médias d'une campagne — lot E5 du chantier des archives (2026-10-19). */
+const NEXUS_MEDIAS_EXTENSION = '.gmos-medias';
+type GenreDeBundle = 'campaign' | 'driver' | 'medias';
+const EXTENSION_DU_GENRE: Record<GenreDeBundle, string> = {
+    campaign: NEXUS_EXTENSION,
+    driver: NEXUS_DRIVER_EXTENSION,
+    medias: NEXUS_MEDIAS_EXTENSION,
+};
+
+/**
+ * Le type d'un fichier d'archive, d'après son extension.
+ *
+ * ⚠️ L'audio manquait (2026-10-19) : un son du disque emporté dans un `.gmos`
+ * revenait en `application/octet-stream`. Le moteur le décodait quand même,
+ * mais le Media Hub le rangeait hors des sons. L'archive des médias en porte
+ * beaucoup : la table est complète, et commune à l'export et à l'import.
+ */
+const MIME_DES_ASSETS: Record<string, string> = {
+    png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
+    webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml',
+    mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime',
+    mp3: 'audio/mpeg', ogg: 'audio/ogg', wav: 'audio/wav',
+    flac: 'audio/flac', m4a: 'audio/mp4', aac: 'audio/aac', opus: 'audio/ogg',
+    pdf: 'application/pdf', json: 'application/json',
+};
 const SCHEMA_VERSION = 1;
 
 /** Types d'assets reconnus comme "Media Hub IDs" (format m-xxx) */
@@ -52,7 +77,7 @@ interface AssetEntry {
 interface NexusManifestFull {
     schemaVersion: number;
     bundleId: string;
-    bundleType?: 'campaign' | 'driver';
+    bundleType?: GenreDeBundle;
     campaignId?: string;
     campaignName?: string;
     driverId?: string;
@@ -123,21 +148,7 @@ async function computeFileChecksum(filePath: string): Promise<string> {
  */
 function inferMimeType(filePath: string): string {
     const ext = path.extname(filePath).toLowerCase().slice(1);
-    const mimeMap: Record<string, string> = {
-        png: 'image/png',
-        jpg: 'image/jpeg',
-        jpeg: 'image/jpeg',
-        webp: 'image/webp',
-        gif: 'image/gif',
-        svg: 'image/svg+xml',
-        mp4: 'video/mp4',
-        webm: 'video/webm',
-        mp3: 'audio/mpeg',
-        ogg: 'audio/ogg',
-        wav: 'audio/wav',
-        json: 'application/json',
-    };
-    return mimeMap[ext] ?? 'application/octet-stream';
+    return MIME_DES_ASSETS[ext] ?? 'application/octet-stream';
 }
 
 /**
@@ -288,8 +299,10 @@ async function handleExportBundle(
                     const mimeToExt: Record<string, string> = {
                         'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp',
                         'image/gif': 'gif', 'image/svg+xml': 'svg',
-                        'video/mp4': 'mp4', 'video/webm': 'webm',
-                        'audio/mpeg': 'mp3', 'audio/ogg': 'ogg', 'audio/wav': 'wav',
+                        'video/mp4': 'mp4', 'video/webm': 'webm', 'video/quicktime': 'mov',
+                        'audio/mpeg': 'mp3', 'audio/ogg': 'ogg', 'audio/wav': 'wav', 'audio/x-wav': 'wav',
+                        'audio/flac': 'flac', 'audio/mp4': 'm4a', 'audio/aac': 'aac',
+                        'application/pdf': 'pdf',
                     };
                     const ext = mimeToExt[mime] ?? 'bin';
                     const fileName = `${mediaHubId}.${ext}`;
@@ -353,7 +366,7 @@ async function handleExportBundle(
             await fs.writeFile(path.join(tempDir, 'state.json'), stateJson, 'utf-8');
 
             // ── Phase 3 : Compression ZIP ────────────────────────────────────
-            const extension = partialManifest.bundleType === 'driver' ? NEXUS_DRIVER_EXTENSION : NEXUS_EXTENSION;
+            const extension = EXTENSION_DU_GENRE[partialManifest.bundleType ?? 'campaign'] ?? NEXUS_EXTENSION;
             const finalOutputPath = outputPath.endsWith(extension)
                 ? outputPath
                 : `${outputPath}${extension}`;
@@ -455,12 +468,7 @@ async function handleImportBundle(filePath: string): Promise<ImportRaw> {
                 if (!buffer) continue;
 
                 const ext = path.extname(entryName).toLowerCase().slice(1);
-                const mimeMap: Record<string, string> = {
-                    png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
-                    webp: 'image/webp', gif: 'image/gif', svg: 'image/svg+xml',
-                    mp4: 'video/mp4', webm: 'video/webm',
-                };
-                const mime = mimeMap[ext] ?? 'application/octet-stream';
+                const mime = MIME_DES_ASSETS[ext] ?? 'application/octet-stream';
                 const base64 = buffer.toString('base64');
                 assetData[entryName] = `data:${mime};base64,${base64}`;
             }
@@ -553,16 +561,23 @@ export function registerNexusHandlers() {
     });
 
     // ── Sélecteur de chemin d'export ─────────────────────────────────────
-    ipcMain.handle('nexus:select-export-path', async (_event, bundleType?: 'campaign' | 'driver') => {
-        const ext = bundleType === 'driver' ? NEXUS_DRIVER_EXTENSION : NEXUS_EXTENSION;
-        const defaultName = bundleType === 'driver' 
-            ? `driver_gmos_${Date.now()}${ext}` 
-            : `campagne_gmos_${Date.now()}${ext}`;
-        const filterName = bundleType === 'driver' ? 'GM-OS Driver' : 'GM-OS Bundle';
+    ipcMain.handle('nexus:select-export-path', async (_event, bundleType?: GenreDeBundle) => {
+        const genre: GenreDeBundle = bundleType === 'driver' || bundleType === 'medias' ? bundleType : 'campaign';
+        const ext = EXTENSION_DU_GENRE[genre];
+        const defaultName = {
+            campaign: `campagne_gmos_${Date.now()}${ext}`,
+            driver: `driver_gmos_${Date.now()}${ext}`,
+            medias: `medias_gmos_${Date.now()}${ext}`,
+        }[genre];
+        const filterName = { campaign: 'GM-OS Bundle', driver: 'GM-OS Driver', medias: 'GM-OS Médias' }[genre];
         const filterExt = ext.replace('.', '');
 
         const { filePath } = await dialog.showSaveDialog({
-            title: bundleType === 'driver' ? 'Exporter le GameDriver GM-OS' : 'Exporter la Campagne GM-OS',
+            title: {
+                campaign: 'Exporter la Campagne GM-OS',
+                driver: 'Exporter le GameDriver GM-OS',
+                medias: 'Exporter les médias de la campagne',
+            }[genre],
             defaultPath: defaultName,
             filters: [
                 { name: filterName, extensions: [filterExt] },
@@ -575,9 +590,9 @@ export function registerNexusHandlers() {
     // ── Sélecteur de fichier d'import ─────────────────────────────────────
     ipcMain.handle('nexus:select-import-file', async () => {
         const { filePaths } = await dialog.showOpenDialog({
-            title: 'Importer une Archive GM-OS (.gmos / .gmos-driver)',
+            title: 'Importer une Archive GM-OS (.gmos / .gmos-driver / .gmos-medias)',
             filters: [
-                { name: 'GM-OS Archive', extensions: ['gmos', 'gmos-driver'] },
+                { name: 'GM-OS Archive', extensions: ['gmos', 'gmos-driver', 'gmos-medias'] },
             ],
             properties: ['openFile'],
         });

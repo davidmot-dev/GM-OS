@@ -41,7 +41,8 @@ export const NEXUS_EXTENSION = '.gmos';
 export const NEXUS_DRIVER_EXTENSION = '.gmos-driver';
 
 /** Type de bundle Nexus-OS */
-export type NexusBundleType = 'campaign' | 'driver';
+/** `medias` : l'archive des médias d'une campagne (`.gmos-medias`), lot E5 du 2026-10-19. */
+export type NexusBundleType = 'campaign' | 'driver' | 'medias';
 
 // ─────────────────────────────────────────────
 // MANIFEST
@@ -384,6 +385,8 @@ export interface NexusConflict {
  */
 export interface NexusConflictResolution {
     strategy: NexusConflictStrategy;
+    /** Archive des médias : la campagne qui les reçoit (lot E5). */
+    campagneCible?: string;
 }
 
 /**
@@ -403,6 +406,15 @@ export interface ArriveeDUneCampagne {
     contenu?: import('./recensementDeLArchive').LigneDuRecensement[];
     /** Le nombre de médias embarqués. */
     medias?: number;
+    /**
+     * `medias` : une archive des médias (`.gmos-medias`, lot E5). L'écran ne
+     * propose alors ni remplacer ni rejouer, mais **la campagne qui les reçoit**.
+     */
+    genre?: 'campagne' | 'medias';
+    /** Archive des médias : les campagnes du poste, au choix. */
+    campagnes?: { id: string; name: string }[];
+    /** Archive des médias : la campagne proposée d'abord (celle d'origine si elle est là, sinon l'active). */
+    campagneParDefaut?: string;
 }
 
 /** Ce que l'écran présente : les conflits (peut-être aucun) et la campagne qui arrive. */

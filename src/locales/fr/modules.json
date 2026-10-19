@@ -2474,7 +2474,9 @@
         "open_npcs": "Galerie des PNJs",
         "nexus_light": "Archive légère — sans les images ni les sons",
         "nexus_export": "Exporter (.gmos)",
-        "nexus_import": "Importer (.gmos)"
+        "nexus_import": "Importer (.gmos, .gmos-medias)",
+        "nexus_export_medias": "Exporter les médias (.gmos-medias)",
+        "nexus_export_medias_tip": "Images, sons, musiques et éclairages de la campagne, à réimporter dans une autre campagne du même univers"
       },
       "status": {
         "driver_active": "DRIVER ACTIF",

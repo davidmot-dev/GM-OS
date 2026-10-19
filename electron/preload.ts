@@ -629,7 +629,7 @@ contextBridge.exposeInMainWorld('appBridge', {
             ipcRenderer.invoke('miroir:lire-media', id),
     },
     nexus: {
-        selectExportPath: (bundleType?: 'campaign' | 'driver') => ipcRenderer.invoke('nexus:select-export-path', bundleType),
+        selectExportPath: (bundleType?: 'campaign' | 'driver' | 'medias') => ipcRenderer.invoke('nexus:select-export-path', bundleType),
         selectImportFile: () => ipcRenderer.invoke('nexus:select-import-file'),
         // Streaming d'un seul asset vers le main process (évite la limite de taille IPC)
         registerAsset: (mediaHubId: string, dataUrl: string) =>
