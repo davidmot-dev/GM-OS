@@ -287,6 +287,10 @@ d'où vous veniez.
 Deux places fixes, hors des neuf que vous assignez. `Ctrl+²` — la touche à gauche du 1 — ouvre
 Session-OS **sur le Cockpit**, même si vous l'aviez quitté sur la galerie de PNJ ou la trame.
 
+**Revenir à la scène en cours** (`Ctrl+E`)
+Rouvre en plein écran l'écran « Scène en cours », d'où que l'on soit ; une seconde frappe le
+referme. Sans scène en cours, un message le dit. → [L'écran « Scène en cours »](./15-Scene-en-cours.md)
+
 **Refermer ce qui est ouvert** (`Échap`)
 N'importe quelle boîte, n'importe quelle surcouche : les Paramètres, la Médiathèque, l'Oracle, une
 fiche, un aperçu plein écran, une demande de confirmation. **Une seule frappe, et seulement celle

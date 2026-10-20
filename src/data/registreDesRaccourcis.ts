@@ -15,7 +15,9 @@
  *
  * ⚠️ La garde `electron/registreDesRaccourcis.test.ts` relit
  * `useRaccourcisDeNavigation.ts` : une touche de navigation ajoutée là sans
- * être inscrite ici fait échouer les essais. *Une page d'aide recopiée à la
+ * être inscrite ici fait échouer les essais. Elle parcourt aussi tout `src/`
+ * pour les raccourcis Ctrl écoutés ailleurs (Ctrl+K, Ctrl+E, Ctrl+Entrée) ;
+ * leur `ou` doit citer le fichier qui les écoute. *Une page d'aide recopiée à la
  * main est une page d'aide qui ment au bout de trois mois.*
  */
 
@@ -42,6 +44,7 @@ export const GROUPES_DE_RACCOURCIS: readonly GroupeDeRaccourcis[] = [
             { touches: [['Ctrl', 'K']], titre: 'Ouvrir ou fermer la palette', detail: 'Chercher un module, un PNJ, un lieu, une règle, une action.', ou: 'hooks/useSpotlight.ts' },
             { touches: [['Ctrl', '1…9']], titre: 'Ouvrir le module de cette place', detail: 'Neuf places, assignées dans Paramètres → Matériel.', ou: 'hooks/useRaccourcisDeNavigation.ts' },
             { touches: [['Ctrl', '²']], titre: 'Revenir au cockpit de séance', detail: "D'où que l'on vienne.", ou: 'hooks/useRaccourcisDeNavigation.ts' },
+            { touches: [['Ctrl', 'E']], titre: 'Ouvrir ou fermer la scène en cours', detail: 'En plein écran, d’où que l’on soit. Sans scène en cours, un message le dit.', ou: 'modules/session/components/EcranDeLaSceneEnCours.tsx' },
             { touches: [['Ctrl', 'T']], titre: 'Ouvrir les tables aléatoires', ou: 'hooks/useRaccourcisDeNavigation.ts' },
             { touches: [['Ctrl', 'H']], titre: "Ouvrir l'aide, et revenir d'où l'on vient", ou: 'hooks/useRaccourcisDeNavigation.ts' },
         ],

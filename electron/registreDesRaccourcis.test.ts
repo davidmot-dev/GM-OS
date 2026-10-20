@@ -42,3 +42,53 @@ describe('le registre des raccourcis', () => {
         for (const g of GROUPES_DE_RACCOURCIS) for (const r of g.raccourcis) expect(r.ou.length, r.titre).toBeGreaterThan(5);
     });
 });
+
+/*
+  **Les raccourcis Ctrl posés hors du crochet de navigation** (2026-10-20).
+  Ctrl+E, qui rouvre la scène en cours, est écouté par
+  `EcranDeLaSceneEnCours.tsx` : la garde ci-dessus ne le voyait pas, et l'aide
+  l'a oublié une semaine. Celle-ci parcourt tout `src/` et retient chaque ligne
+  qui **exige** Ctrl (`!(e.ctrlKey`, `ctrlKey) &&`, `&& e.ctrlKey`) en lisant une
+  touche. Une ligne qui **écarte** Ctrl (`|| e.ctrlKey ||`, comme l'Espace des
+  tables) n'est pas un raccourci Ctrl.
+*/
+const RACINE_SRC = path.resolve(__dirname, '..', 'src');
+
+/** Ce que l'aide écrit pour chaque touche lue par `code` ou par `key`. */
+const LIBELLES_HORS_NAVIGATION: Record<string, string> = {
+    KeyE: 'E', k: 'K', Enter: 'Entrée',
+};
+
+function fichiersSources(dossier: string): string[] {
+    return fs.readdirSync(dossier, { withFileTypes: true }).flatMap(entree => {
+        const chemin = path.join(dossier, entree.name);
+        if (entree.isDirectory()) return fichiersSources(chemin);
+        return /\.tsx?$/.test(entree.name) && !/\.test\.tsx?$/.test(entree.name) ? [chemin] : [];
+    });
+}
+
+const EXIGE_CTRL = /!\(\w+\.ctrlKey|\.ctrlKey\)?\s*&&|&&\s*\w+\.ctrlKey/;
+const TOUCHE_LUE = /\.(?:code\s*[!=]==\s*'(\w+)'|key\s*===\s*'(\w+)')/g;
+
+const ecoutesCtrl = fichiersSources(RACINE_SRC)
+    .filter(f => !f.endsWith('useRaccourcisDeNavigation.ts'))
+    .flatMap(fichier => fs.readFileSync(fichier, 'utf-8').split('\n')
+        .filter(ligne => ligne.includes('ctrlKey') && EXIGE_CTRL.test(ligne))
+        .flatMap(ligne => [...ligne.matchAll(TOUCHE_LUE)].map(m => ({
+            fichier: path.basename(fichier).replace(/\.tsx?$/, ''),
+            touche: m[1] ?? m[2],
+        }))));
+
+describe('les raccourcis Ctrl posés ailleurs', () => {
+    it('la garde trouve bien des écoutes (Ctrl+K, Ctrl+E, Ctrl+Entrée…)', () => {
+        expect(ecoutesCtrl.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it.each(ecoutesCtrl.map(e => [`${e.fichier} : ${e.touche}`, e] as const))('%s est inscrit au registre', (_, { fichier, touche }) => {
+        const libelle = LIBELLES_HORS_NAVIGATION[touche];
+        expect(libelle, `${touche} : donner son libellé à LIBELLES_HORS_NAVIGATION, puis l'inscrire au registre`).toBeDefined();
+        const inscrit = GROUPES_DE_RACCOURCIS.some(g => g.raccourcis.some(r =>
+            r.ou.includes(fichier) && r.touches.some(t => t[0] === 'Ctrl' && t[t.length - 1] === libelle)));
+        expect(inscrit, `Ctrl+${libelle} (${fichier}) manque au registre, ou son « ou » ne cite pas ${fichier}`).toBe(true);
+    });
+});
