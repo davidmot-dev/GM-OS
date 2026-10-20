@@ -139,17 +139,19 @@ describe('les gabarits intégrés du moteur', () => {
         const version = Number(source.match(/const BUILTIN_VERSION=(\d+);/)?.[1]);
         const ids = MOTEURS.map(g => g.id).sort();
         expect({ version, ids }, 'liste changée : montez BUILTIN_VERSION dans le moteur, puis cette attente').toEqual({
-            version: 13,
-            ids: ['alien-v2-normalise', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr'],
+            version: 14,
+            ids: ['alien-v2-normalise', 'blade-runner-fr', 'crimes-fr', 'cthulhu-hack', 'nephilim-legende-fr', 'noc-cabale', 'noc-reference', 'reve-de-dragon-voyageur-fr', 'star-trek-adventures-2e-dossier-personnel-fr', 'symbaroum-fr'],
         });
     });
 });
 
 // 19/10/2026 : la CSS autonome masquait les flèches, celle du moteur les gardait. Crimes, intégré
 // le même soir, suit la même règle : le gabarit du moteur est la fiche livrée, rien d'autre.
+// Symbaroum aussi (20/10).
 it.each([
     'docs/fiches/Rêve de Dragon/reve-de-dragon-livret-voyageur-interactif.html',
     'docs/fiches/Crimes/crimes-fiche-personnage-interactive.html',
+    'docs/fiches/Symbaroum/symbaroum-fiche-personnage-interactive.html',
 ])('%s : le gabarit intégré reprend la fiche livrée, CSS et largeurs comprises', (chemin) => {
     const fiche = fs.readFileSync(path.join(RACINE, chemin), 'utf8');
     const manifeste = JSON.parse(fiche.match(/<script\b[^>]*\bid="character-sheet-template"[^>]*>([\s\S]*?)<\/script>/)![1]);

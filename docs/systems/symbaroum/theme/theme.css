@@ -1,0 +1,62 @@
+/*
+ * SYMBAROUM — Contrat GM-OS v1.7
+ * Parchemin ivoire, encre sombre, terre rouge et cadre de forêt ancienne.
+ * Cinzel et Source Serif 4 sont des approximations, pas les polices du livre.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap');
+
+:root[data-theme="symbaroum"] {
+  color-scheme: light;
+
+  /* Papier et encres — lisibles directement sur le fond de GM-OS. */
+  --rpg-bg: #e9dfc5;
+  --rpg-surface: #f2ead7;
+  --rpg-surface-2: #ded3b8;
+  --rpg-text: #26281f;
+  --rpg-muted: #5b594c;
+  --rpg-accent: #91462f;
+  --rpg-accent-contrast: #fff8e8;
+  --rpg-border: #73734f;
+  --rpg-border-soft: rgba(80, 82, 57, 0.28);
+
+  /* États distincts de la terre rouge des titres. */
+  --rpg-success: #42603e;
+  --rpg-danger: #a32168;
+  --rpg-warning: #7d6800;
+  --rpg-info: #245f8b;
+
+  /* Capitales gravées ; corps éditorial à empattements. */
+  --rpg-font-display: "Cinzel", Georgia, serif;
+  --rpg-font-body: "Source Serif 4", Georgia, serif;
+  --rpg-font-mono: "IBM Plex Mono", "Courier New", monospace;
+  --rpg-title-tracking: 0.04em;
+  --rpg-kicker-tracking: 0.16em;
+  --rpg-title-transform: uppercase;
+
+  /* Doubles filets et angles droits des cartouches du livre. */
+  --rpg-radius-sm: 0px;
+  --rpg-radius-md: 0px;
+  --rpg-radius-lg: 0px;
+  --rpg-border-width: 3px;
+  --rpg-border-style: double;
+
+  /* Papier mat, ombre courte, aucun halo. */
+  --rpg-elevation-1: 0 1px 3px rgba(38, 40, 31, 0.12);
+  --rpg-elevation-2: 0 5px 18px rgba(38, 40, 31, 0.18);
+  --rpg-elevation-3: 0 12px 36px rgba(20, 25, 19, 0.26);
+  --rpg-glow: none;
+  --rpg-glow-strength: 0;
+  --rpg-glass-bg: rgba(242, 234, 215, 0.95);
+  --rpg-glass-border: rgba(80, 82, 57, 0.48);
+  --rpg-glass-blur: 0px;
+
+  /* Lisière sombre : couverture et bandes de la fiche de personnage. */
+  --rpg-frame-bg: #242922;
+  --rpg-frame-text: #e9e0c9;
+  --rpg-frame-accent: #d7bd7d;
+
+  /* Grain teinté par le fond : le SVG n'apporte pas de couleur autonome. */
+  --rpg-texture-bg: url('matieres/parchemin.svg');
+  --rpg-texture-panel: url('matieres/parchemin.svg');
+  --rpg-texture-opacity: 0.09;
+}

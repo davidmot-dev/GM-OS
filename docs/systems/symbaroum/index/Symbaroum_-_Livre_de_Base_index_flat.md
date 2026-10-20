@@ -1,0 +1,341 @@
+# Index — Symbaroum — Livre de Base
+
+- Abomination — 233
+- Abominations, catégorie — 202
+- Acrobatie — 116
+- Action de combat — 162
+- Action de mouvement — 162
+- Adversaires humains — 216
+- Agilité — 102
+- Ailes — 204
+- Alchimie — 116
+- Analyser des artéfacts — 192
+- Anathème — 134
+- Apparition corporelle — 204
+- Appliquer un élixir — 165
+- Arachnides — 224
+- Aranéa — 225
+- Archétype — 84
+- Argent — 190
+- Arme à une main — 154
+- Arme courte — 154
+- Arme de trait — 154
+- Arme longue — 152
+- Arme lourde — 152
+- Arme naturelle — 205
+- Armes — 152
+- Armes de jet — 154
+- Armure — 155
+- Armure légère — 155
+- Armure lourde — 156
+- Armure moyenne — 155
+- Armure naturelle — 205
+- Art de la survie — 110
+- Artéfacts — 192
+- Asservissement — 142
+- Astuce — 102
+- Attaque acide — 205
+- Attaque corruptrice — 205
+- Attaque gratuite — 163
+- Attaques sans armes — 154
+- Attaques parfaites — 184
+- Attribut exceptionnel — 116
+- Attributs — 102
+- Attributs secondaires — 103
+- Aura impie — 134
+- Aura sacrée — 134
+- Avantage — 166
+- Aventure Classique — 194
+- Aventures — 13, 194
+- Baïaga — 30
+- Baïagorn — 226
+- Berserker, archétype — 85
+- Berserker, talent — 116
+- Bête primitive corrompue — 235
+- Bêtes, catégorie — 202
+- Blessure partagée — 134
+- Bouclier — 154
+- Bouclier sanctifié — 134
+- Brigand — 218
+- Capitaine, archétype — 87
+- Cascade de soufre — 135
+- Catégories de monstres — 202
+- Cavalier — 117
+- Cercle de magie — 143
+- Cercle de sorcières — 143
+- Changelin — 107
+- Changement d’Ombre — 180
+- Charlatan — 99
+- Chasse à l’hérétique — 144
+- Chasseur de sorcières, archétype — 98
+- Chasseur de sorcières, ennemi — 221
+- Chasseur de trésors, archétype — 100
+- Chasseur de trésors, ennemi — 221
+- Chevalier, archétype — 89
+- Choc climatique — 144
+- Chronologie — 20
+- Clairvoyance — 144
+- Combat à l’aveugle — 165
+- Confession forcée — 144
+- Conflits sociaux — 176
+- Confusion — 135
+- Conjuration, talent — 117
+- Conjuration, tradition — 128
+- Conjureur, archétype — 92
+- Connaissance des bêtes — 117
+- Contacts — 110
+- Corrompu — 233
+- Corruption — 179
+- Corruption permanente — 180
+- Corruption temporaire — 180
+- Coup en traître — 118
+- Court — 156
+- Courte vie — 110
+- Créatures civilisées, catégorie — 204
+- Croissance accélérée — 144
+- Davokar — 35
+- Défense — 103, 162
+- Dégainement rapide — 118
+- Dégâts — 164
+- Dégâts alternatifs — 205
+- Dégâts d’acide — 182
+- Dégâts de chute — 183
+- Dégâts de poison — 182
+- Degrés de réussite — 103
+- Disciple de culte — 216
+- Discrétion — 102
+- Divination — 145
+- Domaine de Prios — 28
+- Domination — 118
+- Double attaque — 118
+- Dragoul — 236
+- Duelliste, archétype — 86
+- Échange d’Ombre — 145
+- Échec critique en Défense — 184
+- Éclaireur, archétype — 101
+- Elfe — 208
+- Elfe d’automne — 211
+- Elfe de printemps — 210
+- Elfelin — 211
+- Élixir — 157
+- Élixirs alchimiques — 157
+- Élori, émissaire elfe — 33
+- Empoisonneur — 119
+- Encerclement — 165
+- Enchevêtrement — 136
+- Encombrant — 156
+- Endurance — 164
+- Énoaï — 29
+- Envoûtement — 205
+- Épreuves — 198
+- Équilibré — 156
+- Équipement — 152
+- Érudit — 119
+- Étrangleur — 120
+- Étreinte de la nature — 136
+- Éventreur — 156
+- Exorcisme — 146
+- Expérience — 166, 184, 187
+- Familier — 146
+- Fée — 210
+- Feinte — 120
+- Félispectre — 226
+- Feu purificateur — 146
+- Flexible — 156
+- Force — 102
+- Forme éthérée — 206
+- Forme révélée — 136
+- Frappe du revenant — 136
+- Froid d’outre-tombe — 206
+- Froideflamme — 236
+- Fumée révélatrice — 146
+- Gaoia — 29
+- Garde du corps — 120
+- Gênant — 156
+- Gobelin — 109
+- Godinja — 29
+- Guérison — 164
+- Guerriers — 84
+- Guerrier clanique — 222
+- Guerrier né — 121
+- Haut troll — 214
+- Homme d’armes — 121
+- Humains — 104
+- Humains, adversaires — 216
+- Illusion — 147
+- Imperceptible — 137
+- Imposition des mains — 137
+- Inébranlable — 121
+- Instinct de survie — 110
+- Interlude — 201
+- Interrogatoire télépathique — 147
+- Invocation — 147
+- Jécibégaï, Premier père — 30
+- Kanaran — 228
+- Karohar — 30
+- Kasandrien — 28
+- Lancer puissant — 121
+- Lévitation — 138
+- Libellule vorace — 231
+- Licence d’exploration — 36
+- Lien du sang — 147
+- Liens du jugement — 147
+- Lier des artéfacts — 192
+- Ligne de tir — 165
+- Lindaros — 56, 57
+- Long — 156
+- Longévité — 111
+- Mage, archétype — 94
+- Magie pure — 129
+- Magie, talent — 122
+- Magie, tradition — 129
+- Maîtrise des armes d’hast — 122
+- Maîtrise du bouclier — 122
+- Malédiction — 138
+- Malfrat, archétype — 99
+- Marqué par la Corruption — 179
+- Marteau à sorcière — 138
+- Medicus — 123
+- Mélodie de la nature — 147
+- Mémoire des cendres — 148
+- Meneur né — 124
+- Mercenaire, archétype — 88
+- Mervidun — 28
+- Métamorphe — 111
+- Métamorphose — 136
+- Monde inférieur — 235
+- Monstres — 204
+- Mort subite — 185
+- Mort-vivant, catégorie — 204
+- Mort-vivant, ennemi — 238
+- Mort-vivant, trait — 206
+- Mur de flammes — 139
+- Mystiques — 90
+- Mystique autodidacte — 95
+- Mystiques indépendants — 131
+- Narugor — 28
+- Nécromage — 238
+- Nécromancie — 148
+- Nouvelle Bérendoria — 28
+- Nouvelle Bérétor — 28
+- Nuée — 206
+- Objectif de vie — 184
+- Odaïova — 30
+- Ogre — 109
+- Ombre — 179
+- Oracle — 148
+- Ordre des tours — 161
+- Ortegs — 191
+- Panorama — 196
+- Paria — 113
+- Personnages mourants — 164
+- Persuasion — 102
+- Pierre d’âme — 148
+- Pluie de flèches — 139
+- Poigne de fer — 124
+- Possession — 148
+- Possession d’animal — 148
+- Pots-de-vin — 191
+- Pouvoir mystique — 132
+- Pratique — 156
+- Précis — 156
+- Précision — 102
+- Prédateurs — 226
+- Premiers soins — 165
+- Privilégié — 113
+- Problèmes étendus — 176
+- Problèmes simples — 175
+- Profusion de larves — 141
+- Projection de venin — 206
+- Promesse de part — 191
+- Prophétie de Sarkomal — 24
+- Psychokinésie — 141
+- Puissance à deux mains — 124
+- Qualités — 156
+- Race — 104
+- Patrouilleur, ennemi — 218
+- Réactions — 163
+- Réalité altérée — 141
+- Récompense — 198
+- Reconnaissance de dette — 191
+- Récupération — 125
+- Refaire un jet contre de l’Expérience — 184
+- Refaire un jet contre de la Corruption — 184
+- Régénération — 207
+- Règles optionnelles — 183
+- Reine Korinthia — 27
+- Rencontres — 189
+- Reptiles — 228
+- Résistance à la douleur — 164
+- Résolution de problèmes — 166
+- Rite de profanation — 149
+- Rite de sanctification — 149
+- Ritualiste — 125
+- Robuste — 207
+- Rôdeur des cryptes — 239
+- Roublards — 96
+- Rupture du lien — 149
+- Saar-Kahn — 30
+- Saint patron — 149
+- Sanctuaire — 149
+- Sang acide — 207
+- Saut des sept lieues — 150
+- Scène — 196
+- Scrofar — 227
+- Se désengager — 165
+- Se relever — 165
+- Seigneur troll — 213
+- Seldonio, Grand Maître — 31
+- Séragon — 28
+- Serviteur de flammes — 150
+- Seuil de Corruption — 103, 179
+- Shillings — 191
+- Sixième sens — 125
+- Sorcellerie, talent — 126
+- Sorcellerie, tradition — 129
+- Sorcière, archétype — 90
+- Soumission — 141
+- Stigmates — 179
+- Stigmatisation — 180
+- Suinte-crocs — 225
+- Surprise — 166
+- Symbar — 39
+- Tacticien — 126
+- Talents — 114
+- Temps — 178
+- Terrain trompeur — 150
+- Terrifiant — 207
+- Test — 103
+- Test de mort — 164
+- Thalers — 191
+- Tharaban, Haut Chef — 29
+- Théurge, archétype — 93
+- Théurgie, talent — 126
+- Théurgie, tradition — 130
+- Tireur d’élite — 126
+- Toile — 207
+- Touché par la Corruption — 179
+- Tours — 178
+- Tradition mystique — 128
+- Traits — 110
+- Traits monstrueux — 204
+- Transformation dégénérative — 142
+- Troll — 213
+- Troll enragé — 213
+- Utiliser un artéfact — 192
+- Utiliser un élixir — 157
+- Vajvod — 30
+- Varakko — 30
+- Venimeux — 207
+- Verre ardent de Prios — 142
+- Vigilance — 103
+- Vigoureux — 113
+- Violenteur — 230
+- Vision de l’Ombre — 127
+- Volonté — 103
+- Vouivre — 228
+- Voyages — 189
+- Yédésa — 30
+- Yéléta, la Huldra — 28
+- Yndarien — 28
+- Zarek — 30

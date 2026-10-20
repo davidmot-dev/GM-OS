@@ -1,0 +1,645 @@
+{
+  "version": 1,
+  "gabaritDeLaFiche": "symbaroum-fr",
+  "commentaire": "Correspondance entre la fiche GM-OS de Symbaroum et le gabarit symbaroum-fr (fiche de personnage livrée le 2026-10-20). Écrite par outils/symbaroum/relier_fiche_symbaroum.py : les champs du pilote gardent leur identifiant, les cadres de la fiche (talents, armes, protections, artéfacts, compagnons) prennent un identifiant français.",
+  "champs": [
+    {
+      "gmos": "joueur",
+      "fiche": "identity.player"
+    },
+    {
+      "gmos": "nom",
+      "fiche": "identity.name"
+    },
+    {
+      "gmos": "race",
+      "fiche": "identity.race"
+    },
+    {
+      "gmos": "carriere",
+      "fiche": "identity.career"
+    },
+    {
+      "gmos": "citation",
+      "fiche": "identity.quote"
+    },
+    {
+      "gmos": "age",
+      "fiche": "profile.age"
+    },
+    {
+      "gmos": "taille",
+      "fiche": "profile.height"
+    },
+    {
+      "gmos": "poids",
+      "fiche": "profile.weight"
+    },
+    {
+      "gmos": "historique",
+      "fiche": "profile.history"
+    },
+    {
+      "gmos": "objectif_personnel",
+      "fiche": "profile.goals"
+    },
+    {
+      "gmos": "agilite",
+      "fiche": "attributes.quick"
+    },
+    {
+      "gmos": "astuce",
+      "fiche": "attributes.cunning"
+    },
+    {
+      "gmos": "discretion",
+      "fiche": "attributes.discreet"
+    },
+    {
+      "gmos": "force",
+      "fiche": "attributes.strong"
+    },
+    {
+      "gmos": "persuasion",
+      "fiche": "attributes.persuasive"
+    },
+    {
+      "gmos": "precision",
+      "fiche": "attributes.accurate"
+    },
+    {
+      "gmos": "vigilance",
+      "fiche": "attributes.vigilant"
+    },
+    {
+      "gmos": "volonte",
+      "fiche": "attributes.resolute"
+    },
+    {
+      "gmos": "endurance",
+      "fiche": "health.maximum"
+    },
+    {
+      "gmos": "endurance_actuelle",
+      "fiche": "health.current"
+    },
+    {
+      "gmos": "resistance_douleur",
+      "fiche": "health.pain_threshold"
+    },
+    {
+      "gmos": "defense",
+      "fiche": "armors.0.defense"
+    },
+    {
+      "gmos": "defense_2",
+      "fiche": "armors.1.defense"
+    },
+    {
+      "gmos": "seuil_corruption",
+      "fiche": "corruption.threshold"
+    },
+    {
+      "gmos": "aura_spirituelle",
+      "fiche": "identity.shadow"
+    },
+    {
+      "gmos": "corruption_temporaire",
+      "fiche": "corruption.current"
+    },
+    {
+      "gmos": "corruption_permanente",
+      "fiche": "corruption.permanent"
+    },
+    {
+      "gmos": "talent_1",
+      "fiche": "talents.0.name"
+    },
+    {
+      "gmos": "talent_1_type",
+      "fiche": "talents.0.type"
+    },
+    {
+      "gmos": "talent_1_niveau",
+      "fiche": "talents.0.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_1_effet",
+      "fiche": "talents.0.effect"
+    },
+    {
+      "gmos": "talent_2",
+      "fiche": "talents.1.name"
+    },
+    {
+      "gmos": "talent_2_type",
+      "fiche": "talents.1.type"
+    },
+    {
+      "gmos": "talent_2_niveau",
+      "fiche": "talents.1.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_2_effet",
+      "fiche": "talents.1.effect"
+    },
+    {
+      "gmos": "talent_3",
+      "fiche": "talents.2.name"
+    },
+    {
+      "gmos": "talent_3_type",
+      "fiche": "talents.2.type"
+    },
+    {
+      "gmos": "talent_3_niveau",
+      "fiche": "talents.2.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_3_effet",
+      "fiche": "talents.2.effect"
+    },
+    {
+      "gmos": "talent_4",
+      "fiche": "talents.3.name"
+    },
+    {
+      "gmos": "talent_4_type",
+      "fiche": "talents.3.type"
+    },
+    {
+      "gmos": "talent_4_niveau",
+      "fiche": "talents.3.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_4_effet",
+      "fiche": "talents.3.effect"
+    },
+    {
+      "gmos": "talent_5",
+      "fiche": "talents.4.name"
+    },
+    {
+      "gmos": "talent_5_type",
+      "fiche": "talents.4.type"
+    },
+    {
+      "gmos": "talent_5_niveau",
+      "fiche": "talents.4.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_5_effet",
+      "fiche": "talents.4.effect"
+    },
+    {
+      "gmos": "talent_6",
+      "fiche": "talents.5.name"
+    },
+    {
+      "gmos": "talent_6_type",
+      "fiche": "talents.5.type"
+    },
+    {
+      "gmos": "talent_6_niveau",
+      "fiche": "talents.5.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_6_effet",
+      "fiche": "talents.5.effect"
+    },
+    {
+      "gmos": "talent_7",
+      "fiche": "talents.6.name"
+    },
+    {
+      "gmos": "talent_7_type",
+      "fiche": "talents.6.type"
+    },
+    {
+      "gmos": "talent_7_niveau",
+      "fiche": "talents.6.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_7_effet",
+      "fiche": "talents.6.effect"
+    },
+    {
+      "gmos": "talent_8",
+      "fiche": "talents.7.name"
+    },
+    {
+      "gmos": "talent_8_type",
+      "fiche": "talents.7.type"
+    },
+    {
+      "gmos": "talent_8_niveau",
+      "fiche": "talents.7.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_8_effet",
+      "fiche": "talents.7.effect"
+    },
+    {
+      "gmos": "talent_9",
+      "fiche": "talents.8.name"
+    },
+    {
+      "gmos": "talent_9_type",
+      "fiche": "talents.8.type"
+    },
+    {
+      "gmos": "talent_9_niveau",
+      "fiche": "talents.8.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_9_effet",
+      "fiche": "talents.8.effect"
+    },
+    {
+      "gmos": "talent_10",
+      "fiche": "talents.9.name"
+    },
+    {
+      "gmos": "talent_10_type",
+      "fiche": "talents.9.type"
+    },
+    {
+      "gmos": "talent_10_niveau",
+      "fiche": "talents.9.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_10_effet",
+      "fiche": "talents.9.effect"
+    },
+    {
+      "gmos": "talent_11",
+      "fiche": "talents.10.name"
+    },
+    {
+      "gmos": "talent_11_type",
+      "fiche": "talents.10.type"
+    },
+    {
+      "gmos": "talent_11_niveau",
+      "fiche": "talents.10.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_11_effet",
+      "fiche": "talents.10.effect"
+    },
+    {
+      "gmos": "talent_12",
+      "fiche": "talents.11.name"
+    },
+    {
+      "gmos": "talent_12_type",
+      "fiche": "talents.11.type"
+    },
+    {
+      "gmos": "talent_12_niveau",
+      "fiche": "talents.11.rank",
+      "valeurs": {
+        "novice": "Novice",
+        "adept": "Adepte",
+        "master": "Maître"
+      }
+    },
+    {
+      "gmos": "talent_12_effet",
+      "fiche": "talents.11.effect"
+    },
+    {
+      "gmos": "arme_1",
+      "fiche": "weapons.0.name"
+    },
+    {
+      "gmos": "arme_1_degats",
+      "fiche": "weapons.0.damage"
+    },
+    {
+      "gmos": "arme_1_qualites",
+      "fiche": "weapons.0.qualities"
+    },
+    {
+      "gmos": "arme_1_attribut",
+      "fiche": "weapons.0.attribute"
+    },
+    {
+      "gmos": "arme_2",
+      "fiche": "weapons.1.name"
+    },
+    {
+      "gmos": "arme_2_degats",
+      "fiche": "weapons.1.damage"
+    },
+    {
+      "gmos": "arme_2_qualites",
+      "fiche": "weapons.1.qualities"
+    },
+    {
+      "gmos": "arme_2_attribut",
+      "fiche": "weapons.1.attribute"
+    },
+    {
+      "gmos": "arme_3",
+      "fiche": "weapons.2.name"
+    },
+    {
+      "gmos": "arme_3_degats",
+      "fiche": "weapons.2.damage"
+    },
+    {
+      "gmos": "arme_3_qualites",
+      "fiche": "weapons.2.qualities"
+    },
+    {
+      "gmos": "arme_3_attribut",
+      "fiche": "weapons.2.attribute"
+    },
+    {
+      "gmos": "arme_4",
+      "fiche": "weapons.3.name"
+    },
+    {
+      "gmos": "arme_4_degats",
+      "fiche": "weapons.3.damage"
+    },
+    {
+      "gmos": "arme_4_qualites",
+      "fiche": "weapons.3.qualities"
+    },
+    {
+      "gmos": "arme_4_attribut",
+      "fiche": "weapons.3.attribute"
+    },
+    {
+      "gmos": "armure_1",
+      "fiche": "armors.0.name"
+    },
+    {
+      "gmos": "armure_1_protection",
+      "fiche": "armors.0.protection"
+    },
+    {
+      "gmos": "armure_1_qualites",
+      "fiche": "armors.0.qualities"
+    },
+    {
+      "gmos": "armure_2",
+      "fiche": "armors.1.name"
+    },
+    {
+      "gmos": "armure_2_protection",
+      "fiche": "armors.1.protection"
+    },
+    {
+      "gmos": "armure_2_qualites",
+      "fiche": "armors.1.qualities"
+    },
+    {
+      "gmos": "equipement",
+      "fiche": [
+        "equipment.0.name",
+        "equipment.1.name",
+        "equipment.2.name",
+        "equipment.3.name",
+        "equipment.4.name",
+        "equipment.5.name",
+        "equipment.6.name",
+        "equipment.7.name",
+        "equipment.8.name",
+        "equipment.9.name",
+        "equipment.10.name",
+        "equipment.11.name",
+        "equipment.12.name",
+        "equipment.13.name",
+        "equipment.14.name",
+        "equipment.15.name",
+        "equipment.16.name",
+        "equipment.17.name",
+        "equipment.18.name",
+        "equipment.19.name",
+        "equipment.20.name"
+      ],
+      "transforme": "lignes"
+    },
+    {
+      "gmos": "bourse",
+      "fiche": "possessions.money"
+    },
+    {
+      "gmos": "autres_biens",
+      "fiche": "possessions.other"
+    },
+    {
+      "gmos": "experience",
+      "fiche": "experience.total"
+    },
+    {
+      "gmos": "experience_non_depensee",
+      "fiche": "experience.unspent"
+    },
+    {
+      "gmos": "artefact_1",
+      "fiche": "artifacts.0.name"
+    },
+    {
+      "gmos": "artefact_1_pouvoirs",
+      "fiche": "artifacts.0.powers"
+    },
+    {
+      "gmos": "artefact_1_corruption",
+      "fiche": "artifacts.0.corruption"
+    },
+    {
+      "gmos": "artefact_2",
+      "fiche": "artifacts.1.name"
+    },
+    {
+      "gmos": "artefact_2_pouvoirs",
+      "fiche": "artifacts.1.powers"
+    },
+    {
+      "gmos": "artefact_2_corruption",
+      "fiche": "artifacts.1.corruption"
+    },
+    {
+      "gmos": "artefact_3",
+      "fiche": "artifacts.2.name"
+    },
+    {
+      "gmos": "artefact_3_pouvoirs",
+      "fiche": "artifacts.2.powers"
+    },
+    {
+      "gmos": "artefact_3_corruption",
+      "fiche": "artifacts.2.corruption"
+    },
+    {
+      "gmos": "artefact_4",
+      "fiche": "artifacts.3.name"
+    },
+    {
+      "gmos": "artefact_4_pouvoirs",
+      "fiche": "artifacts.3.powers"
+    },
+    {
+      "gmos": "artefact_4_corruption",
+      "fiche": "artifacts.3.corruption"
+    },
+    {
+      "gmos": "compagnon_1",
+      "fiche": "companions.0.name"
+    },
+    {
+      "gmos": "compagnon_1_race",
+      "fiche": "companions.0.race"
+    },
+    {
+      "gmos": "compagnon_1_carriere",
+      "fiche": "companions.0.career"
+    },
+    {
+      "gmos": "compagnon_1_joueur",
+      "fiche": "companions.0.player"
+    },
+    {
+      "gmos": "compagnon_2",
+      "fiche": "companions.1.name"
+    },
+    {
+      "gmos": "compagnon_2_race",
+      "fiche": "companions.1.race"
+    },
+    {
+      "gmos": "compagnon_2_carriere",
+      "fiche": "companions.1.career"
+    },
+    {
+      "gmos": "compagnon_2_joueur",
+      "fiche": "companions.1.player"
+    },
+    {
+      "gmos": "compagnon_3",
+      "fiche": "companions.2.name"
+    },
+    {
+      "gmos": "compagnon_3_race",
+      "fiche": "companions.2.race"
+    },
+    {
+      "gmos": "compagnon_3_carriere",
+      "fiche": "companions.2.career"
+    },
+    {
+      "gmos": "compagnon_3_joueur",
+      "fiche": "companions.2.player"
+    },
+    {
+      "gmos": "compagnon_4",
+      "fiche": "companions.3.name"
+    },
+    {
+      "gmos": "compagnon_4_race",
+      "fiche": "companions.3.race"
+    },
+    {
+      "gmos": "compagnon_4_carriere",
+      "fiche": "companions.3.career"
+    },
+    {
+      "gmos": "compagnon_4_joueur",
+      "fiche": "companions.3.player"
+    },
+    {
+      "gmos": "compagnon_5",
+      "fiche": "companions.4.name"
+    },
+    {
+      "gmos": "compagnon_5_race",
+      "fiche": "companions.4.race"
+    },
+    {
+      "gmos": "compagnon_5_carriere",
+      "fiche": "companions.4.career"
+    },
+    {
+      "gmos": "compagnon_5_joueur",
+      "fiche": "companions.4.player"
+    },
+    {
+      "gmos": "nom_groupe",
+      "fiche": "group.name"
+    },
+    {
+      "gmos": "objectif_groupe",
+      "fiche": "group.goals"
+    },
+    {
+      "gmos": "description",
+      "fiche": "profile.appearance",
+      "destination": "personnage"
+    }
+  ],
+  "absents": [
+    {
+      "fiche": "portrait",
+      "pourquoi": "Une image : elle reste sur la fiche, GM-OS a son propre portrait du personnage."
+    }
+  ]
+}
