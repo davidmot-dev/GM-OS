@@ -193,6 +193,10 @@ pilote['combat']['santeDeDepart'] = 'endurance'
 # Le jet citait les huit attributs en huit composantes, qui s'additionnent (avertissement du contrôle
 # de la Forge). Le livre : 1d20 sous UN attribut. Une seule composante, la section offre le choix.
 pilote['jet']['seuil'] = [{'id': 'attribut', 'label': 'Attribut', 'sectionId': 'attributs_primaires'}]
+# La Forge avait mis le modificateur du livre (−5 à +5) dans `difficulte` — qui, dans GM-OS, est un
+# NOMBRE DE RÉUSSITES à obtenir (Dune). À 0, chaque jet réussissait, un 20 compris (2026-10-21).
+# Sans `difficulte`, il en faut une : 1d20 sous l'attribut. Le modificateur se compte à la main.
+pilote['jet'].pop('difficulte', None)
 
 os.makedirs(os.path.dirname(sortie) or '.', exist_ok=True)
 with zipfile.ZipFile(sortie, 'w', zipfile.ZIP_DEFLATED) as z:

@@ -144,6 +144,15 @@ const MISES_EN_SCENE: MiseEnScene[] = [
         scenes: c => scenesDeCthulhuHack(c),
     },
     {
+        corpusId: 'symbaroum', slug: 'symbaroum', personnage: 'Éléna des Brumes',
+        sheetData: {
+            precision: 15, agilite: 13, vigilance: 11, volonte: 10, astuce: 10, discretion: 9, force: 7, persuasion: 5,
+            endurance: 10, endurance_actuelle: 10, resistance_douleur: 4, defense: 12, seuil_corruption: 5,
+            corruption_temporaire: 2, corruption_permanente: 1, argent: 5,
+        },
+        composantes: ['precision'],
+    },
+    {
         corpusId: 'reves de dragons', slug: 'reves-de-dragons', personnage: 'Aldaran le Voyageur',
         sheetData: { force: 12, agilite: 13, taille: 11, constitution: 13, discretion: 2, vie: 12 },
         composantes: ['agilite', 'discretion'],
