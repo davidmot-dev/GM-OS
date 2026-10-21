@@ -5,15 +5,24 @@ import { CLE_COMBAT_ALIEN, ajouterUneBlessure, avancerLeTempsAlien, demanderUnCr
 import { entreeDeLaTable } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
 import { useSessionOSStore } from '../../useSessionOSStore';
+import { estUnAndroide } from '../../../dice/systemes/paniqueAlien';
+import { immuniteSynthetique, systemeArrete } from '../../../dice/systemes/synthetiquesAlien';
+import SynthetiquesAlien from './SynthetiquesAlien';
+import SurvieAlien from './SurvieAlien';
+import XenomorpheAlien from './XenomorpheAlien';
+import AcideAlien from './AcideAlien';
+import { apresImpactXeno, xenoViergeAlien } from '../../../dice/systemes/xenomorphesAlien';
+import { apresLeTempsDeSurvie, refusDeRecuperationAlien } from '../../../dice/systemes/survieAlien';
 
 const bouton = 'rounded border border-app-border px-2 py-1 text-xs hover:bg-app-text/5 disabled:opacity-40';
 const champ = 'block w-full min-w-0 rounded border border-app-border bg-app-bg p-1';
-interface Props { regle: RegleDeCombatAlien; valeurs: Record<string, unknown>; ecrire: (maj: Record<string, unknown>) => void; personnageId?: string;
-    sourceEntityId?: string; pnj?: boolean; pourLesJoueurs: boolean; consigner: (titre: string, resultat: RollResult) => void }
+interface Props { regle: RegleDeCombatAlien; valeurs: Record<string, unknown>; ecrire: (maj: Record<string, unknown>) => void; personnageId?: string; campaignId?:string;
+    sourceEntityId?: string; combattantId?:string; pnj?: boolean; pourLesJoueurs: boolean; consigner: (titre: string, resultat: RollResult) => void }
 /** Une seule procédure humaine pour la fiche et le combat. Les échéances sont du temps de jeu validé par Maman. */
-export default function SanteAlien({ regle, valeurs, ecrire, personnageId, sourceEntityId, pnj = false, pourLesJoueurs, consigner }: Props) {
+export default function SanteAlien({ regle, valeurs, ecrire, personnageId, campaignId, sourceEntityId, combattantId, pnj = false, pourLesJoueurs, consigner }: Props) {
     const [degats, setDegats] = useState(1), [couvert, setCouvert] = useState(0), [distance, setDistance] = useState(true);
     const [attaque, setAttaque] = useState(true);
+    const [origine, setOrigine] = useState('ordinaire');
     const [type, setType] = useState<ArmureAlien>('normale');
     const [reussites, setReussites] = useState(0), [soignant, setSoignant] = useState(''), [materiel, setMateriel] = useState(0), [autoSoins, setAutoSoins] = useState(false);
     const [message, setMessage] = useState('');
@@ -21,20 +30,24 @@ export default function SanteAlien({ regle, valeurs, ecrire, personnageId, sourc
     const pjActuel = () => useSessionOSStore.getState().players.flatMap(p => p.characters).find(c => c.id === personnageId);
     const actuel = () => pjActuel()?.sheetData ?? useSessionOSStore.getState().entities?.find(e => e.id === sourceEntityId)?.sheetData ?? ref.current;
     const suivi = lireLeCombatAlien(valeurs), sante = Number(valeurs[regle.sante]) || 0;
-    const androide = valeurs[regle.androide] === true || valeurs[regle.androide] === 'true';
+    const androide = estUnAndroide(regle, valeurs);
     const talents = String(valeurs[regle.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const noter = (s: CombatAlien, maj: Record<string, unknown> = {}) => {
         const tout = { ...actuel(), ...maj, [CLE_COMBAT_ALIEN]: s }; ref.current = tout; ecrire(tout);
     };
     const dire = (texte: string, res?: RollResult) => { setMessage(texte); consigner('Santé Alien', res ? { ...res, totalDisplay: `${texte} — ${res.totalDisplay}` } : { total: 0, modifier: 0, rolls: [], totalDisplay: texte }); };
-    const impact = (n: number, soin = false) => {
+    const impact = (n: number, soin = false, procedure?:'survie'|'suffocation'|'acide', cause=origine) => {
+        const refus=soin?refusDeRecuperationAlien(regle,actuel(),'sante'):undefined;
+        if(refus){dire(refus);return;}
         const s = useSessionOSStore.getState();
-        if (pjActuel()) s.handleApplyImpact(personnageId!, 'pc', { value: n, isRecovery: soin, type: 'combat' });
-        else if (sourceEntityId) s.handleApplyImpact(sourceEntityId,'npc',{value:n,isRecovery:soin,type:'combat'});
+        if (pjActuel()) s.handleApplyImpact(personnageId!, 'pc', { value: n, isRecovery: soin, type: cause,procedureAlien:procedure });
+        else if (sourceEntityId) s.handleApplyImpact(sourceEntityId,'npc',{value:n,isRecovery:soin,type:cause,procedureAlien:procedure});
         else { // Hôte autonome : l'appelant porte la fiche (tests ou préparation).
-            const f = actuel(), hp = Math.max(0, Math.min(Number(f[regle.force]) || 0, (Number(f[regle.sante]) || 0) + (soin ? n : -n)));
+            const f = actuel(), hp = Math.max(0, Math.min(lireLeCombatAlien(f).xenomorphe?.maximum??(Number(f[regle.force]) || 0), (Number(f[regle.sante]) || 0) + (soin ? n : -n)));
             const suivi = lireLeCombatAlien(f);
-            ref.current = { ...f, [regle.sante]: hp, [CLE_COMBAT_ALIEN]: !soin && n > 0 && hp === 0 && !androide ? demanderUnCritique(suivi,crypto.randomUUID()) : suivi }; ecrire(ref.current);
+            ref.current = { ...f, [regle.sante]: hp,
+                ...(!soin&&n>0&&procedure==='survie'&&!androide?{[regle.stress]:(Number(f[regle.stress])||0)+1}:{}),
+                [CLE_COMBAT_ALIEN]: suivi.xenomorphe?apresImpactXeno(suivi,hp,soin?0:n,cause,crypto.randomUUID()):!soin && n > 0 && hp === 0 && (!procedure||androide) ? demanderUnCritique(suivi,crypto.randomUUID()) : suivi }; ecrire(ref.current);
         }
     };
     const proteger = () => {
@@ -47,8 +60,9 @@ export default function SanteAlien({ regle, valeurs, ecrire, personnageId, sourc
     const appliquer = () => {
         const s = lireLeCombatAlien(actuel()), c = s.coup;
         if (!c || c.applique || c.annules === undefined || s.mort) return;
+        if (androide && immuniteSynthetique(c.origine ?? '')) { noter({ ...s, coup: { ...c, applique: true } }); dire('Synthétique immunisé : aucun dégât, critique ou Stress.'); return; }
         const n = Math.max(0, c.degats - c.annules);
-        impact(n);
+        impact(n,false,undefined,c.origine);
         // Relire après l'impact : celui-ci a pu ajouter Stress et demande de critique.
         noter({ ...lireLeCombatAlien(actuel()), coup: { ...c, applique: true } });
         dire(`Coup : ${c.degats} − ${c.annules} = ${n} dégât(s) appliqué(s).`);
@@ -67,28 +81,32 @@ export default function SanteAlien({ regle, valeurs, ecrire, personnageId, sourc
             dire(`Critique D66 ${res.total} : ${entree.title}${nouveau.mort ? ' — mort instantanée' : ''}`, res);
         } finally { enCours.current = false; }
     };
-    const avancer = (unite: UniteAlien) => { noter(avancerLeTempsAlien(lireLeCombatAlien(actuel()), unite)); dire(`Temps de jeu : un ${unite} validé par Maman.`); };
+    const avancer = (unite: UniteAlien) => { const f=actuel(),s=avancerLeTempsAlien(lireLeCombatAlien(f),unite);noter(s,apresLeTempsDeSurvie(regle,f,s,unite)); dire(`Temps de jeu : un ${unite} validé par Maman.`); };
     const soinDeBlessure = (id: string, mode: 'stabiliser' | 'guerison' | 'effet') => {
         if (autoSoins && (Number(actuel()[regle.sante]) || 0) <= 0) return;
         const s = lireLeCombatAlien(actuel()), nouveau = soignerUneBlessure(s, id, mode, reussites, soignant.trim(), materiel);
         noter(nouveau); dire(`Soins ${mode} : ${reussites} réussite(s) validée(s), soignant ${soignant}.`);
     };
-    if (pnj && !suivi.humain) return <section data-sante-alien className="p-2 text-xs"><button type="button" className={bouton} onClick={() => noter({ ...suivi, humain:true })}>Déclarer ce PNJ humain pour le suivi des blessures</button></section>;
+    if (pnj && !suivi.humain && !androide && !suivi.xenomorphe) return <section data-sante-alien className="p-2 text-xs"><button type="button" className={bouton} onClick={() => noter({ ...suivi, humain:true })}>Déclarer ce PNJ humain pour le suivi des blessures</button><button type="button" className={bouton} onClick={() => noter(suivi, { [regle.androide]: true })}>Déclarer ce PNJ synthétique</button>{regle.actions&&<button type="button" className={bouton} onClick={()=>noter({...suivi,xenomorphe:{...xenoViergeAlien(),maximum:Math.max(1,Number(valeurs[regle.force])||sante),protection:Math.max(0,Number(valeurs[regle.protection])||0)}})}>Déclarer cette créature xénomorphe</button>}</section>;
     return <section data-sante-alien className="space-y-2 rounded-lg border border-app-border p-3 text-xs text-app-text">
         <h4 className="font-bold">Blessures et soins Alien</h4>
-        <p>{suivi.mort ? 'Mort : aucun test ni récupération.' : sante <= 0 ? 'Brisé : aucun test de compétence ordinaire ; ramper et grogner seulement.' : `Santé : ${sante}. Les blessures critiques persistent après récupération.`}</p>
+        <p>{suivi.xenomorphe?`Santé xénomorphe : ${sante}/${suivi.xenomorphe.maximum} ; ${suivi.xenomorphe.etat}. Aucun Brisé humain.`:androide ? `Santé synthétique : ${sante}. ${systemeArrete(suivi) ? 'Système arrêté.' : 'Actions selon les avaries.'}` : suivi.mort ? 'Mort : aucun test ni récupération.' : sante <= 0 ? 'Brisé : aucun test de compétence ordinaire ; ramper et grogner seulement.' : `Santé : ${sante}. Les blessures critiques persistent après récupération.`}</p>
         {!pourLesJoueurs && !suivi.mort && <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <label>Dégâts entrants<input className={champ} type="number" min="0" value={degats} onChange={e => setDegats(Math.max(0, Math.trunc(Number(e.target.value) || 0)))} /></label>
+                {suivi.xenomorphe&&<label>Origine du coup<select className={champ} value={origine} onChange={e=>setOrigine(e.target.value)}><option value="ordinaire">Coup faisant couler le sang</option><option value="feu">Feu — aucune éclaboussure</option></select></label>}
+                {androide && <label>Origine des dégâts<select className={champ} value={origine} onChange={e => setOrigine(e.target.value)}><option value="ordinaire">Attaque ou autre péril</option><option value="vide">Vide (immunité)</option><option value="froid">Froid (immunité)</option><option value="maladie">Maladie (immunité)</option><option value="pathogene">Pathogène alien — exception confirmée par Maman</option></select></label>}
                 <label>Protection d’un abri préalable<input className={champ} type="number" min="0" value={couvert} onChange={e => setCouvert(Math.max(0, Math.trunc(Number(e.target.value) || 0)))} /></label>
                 <label>Propriété contre la protection<select className={champ} value={type} onChange={e => setType(e.target.value as ArmureAlien)}><option value="normale">Normale</option><option value="perce-armure">Perce-armure : moitié, arrondi supérieur</option><option value="doublee">Protection doublée</option></select></label>
                 <label><input type="checkbox" checked={distance} onChange={e => setDistance(e.target.checked)} /> Attaque à distance (abri applicable)</label>
                 <label><input type="checkbox" checked={attaque} onChange={e => setAttaque(e.target.checked)} /> Dégâts d’une attaque (armure applicable)</label>
             </div>
             <button type="button" className={bouton} disabled={!!suivi.coup && !suivi.coup.applique} onClick={() => {
-                const protection = attaque ? Number(actuel()[regle.protection] ?? 0) : 0;
+                const protection = attaque ? lireLeCombatAlien(actuel()).xenomorphe?.protection??Number(actuel()[regle.protection] ?? 0) : 0;
                 if (!Number.isFinite(protection) || protection < 0) { setMessage('Saisir la Protection comme un nombre de dés, zéro si aucune.'); return; }
-                noter({ ...lireLeCombatAlien(actuel()), coup: { id: crypto.randomUUID(), degats, protection: protection + (attaque && distance ? couvert : 0), type } });
+                const immunise = androide && immuniteSynthetique(origine);
+                noter({ ...lireLeCombatAlien(actuel()), coup: { id: crypto.randomUUID(), degats: immunise ? 0 : degats, protection: protection + (attaque && distance ? couvert : 0), type, origine: androide||suivi.xenomorphe ? origine : undefined, ...(immunise ? { annules: 0, des: [] } : {}) } });
+                if (immunise) dire('Synthétique immunisé à ce péril : zéro dégât, aucun jet requis.');
             }}>Préparer ce coup</button>
             {suivi.coup && <div data-coup-alien className="space-y-1"><p>Coup préparé : {suivi.coup.degats} dégâts ; Protection {desDeProtection(suivi.coup.protection, suivi.coup.type)}D6.</p>
                 <button type="button" className={bouton} disabled={suivi.coup.applique || suivi.coup.annules !== undefined} onClick={proteger}>Lancer la Protection</button>{' '}
@@ -97,7 +115,12 @@ export default function SanteAlien({ regle, valeurs, ecrire, personnageId, sourc
                 {suivi.coup.annules !== undefined && <p>Protection : [{suivi.coup.des?.join(', ')}], {suivi.coup.annules} six ; reste {Math.max(0, suivi.coup.degats - suivi.coup.annules)}. {suivi.coup.applique ? 'Coup déjà appliqué.' : ''}</p>}
             </div>}
         </>}
-        {androide ? <p>Synthétique : les critiques et soins humains ne s’appliquent pas.</p> : <>
+        {androide ? <SynthetiquesAlien suivi={suivi} actuel={() => lireLeCombatAlien(actuel())} joueur={pourLesJoueurs} avancer={avancer} dire={dire} refusReparation={refusDeRecuperationAlien(regle,valeurs,'sante')} noter={(s, restaure) => {
+            const refus=restaure?refusDeRecuperationAlien(regle,actuel(),'sante'):undefined;
+            if(refus){dire(refus);return false;}
+            if (restaure) impact(Math.max(0, (Number(actuel()[regle.force]) || 0) - (Number(actuel()[regle.sante]) || 0)), true);
+            noter(s);return true;
+        }} /> : suivi.xenomorphe?<XenomorpheAlien regle={regle} suivi={suivi} actuel={()=>lireLeCombatAlien(actuel())} noter={noter} dire={dire} joueur={pourLesJoueurs} sourceEntityId={sourceEntityId} combattantId={combattantId}/>:<>
             {suivi.critiques.map(id => <div key={id}><p>Blessure critique à résoudre — demande conservée.</p>{!pourLesJoueurs && <button type="button" className={bouton} onClick={() => void critique(id)}>Tirer ce critique humain (D66)</button>}</div>)}
             {!pourLesJoueurs && !suivi.mort && <>
                 <div className="flex flex-wrap gap-2">{(['round','tour','quart','jour'] as const).map(u => <button className={bouton} type="button" key={u} onClick={() => avancer(u)}>Valider un {u}</button>)}</div>
@@ -107,8 +130,8 @@ export default function SanteAlien({ regle, valeurs, ecrire, personnageId, sourc
                 <label>Qualité du matériel (augmenter seulement si amélioré)<input type="number" min="0" className={champ} value={materiel} onChange={e => setMateriel(Math.max(0, Math.trunc(Number(e.target.value) || 0)))} /></label>
                 <label><input type="checkbox" checked={autoSoins} onChange={e => setAutoSoins(e.target.checked)} /> Auto-soins après s’être relevé : malus −2 au test de stabilisation</label>
                 <div className="flex flex-wrap gap-2">
-                    <button type="button" className={bouton} disabled={sante > 0 || reussites < 1 || !soignant.trim() || autoSoins} onClick={() => { if ((Number(actuel()[regle.sante]) || 0) > 0) return; impact(reussites, true); dire(`Premiers soins pour relever : ${reussites} Santé, action lente ; stabilisation séparée.`); }}>Relever par premiers soins</button>
-                    <button type="button" className={bouton} disabled={suivi.reposLe === suivi.temps.tour} onClick={() => {
+                    <button type="button" className={bouton} disabled={!!refusDeRecuperationAlien(regle,valeurs,'sante')||sante > 0 || reussites < 1 || !soignant.trim() || autoSoins} onClick={() => { if ((Number(actuel()[regle.sante]) || 0) > 0) return; impact(reussites, true); dire(`Premiers soins pour relever : ${reussites} Santé, action lente ; stabilisation séparée.`); }}>Relever par premiers soins</button>
+                    <button type="button" className={bouton} disabled={!!refusDeRecuperationAlien(regle,valeurs,'sante')||suivi.reposLe === suivi.temps.tour} onClick={() => {
                         const s = lireLeCombatAlien(actuel()); if (s.reposLe === s.temps.tour) return;
                         impact(1, true); noter({ ...lireLeCombatAlien(actuel()), reposLe: s.temps.tour });
                         dire('Un Tour de repos confirmé : +1 Santé. Les critiques et délais restent actifs.');
@@ -129,6 +152,9 @@ export default function SanteAlien({ regle, valeurs, ecrire, personnageId, sourc
                 </div>}
             </article>)}
         </>}
+        {refusDeRecuperationAlien(regle,valeurs,'sante')&&<p>{refusDeRecuperationAlien(regle,valeurs,'sante')}</p>}
+        {regle.survie&&<SurvieAlien regle={regle} valeurs={valeurs} actuel={actuel} combat={()=>lireLeCombatAlien(actuel())} ecrire={maj=>noter(lireLeCombatAlien(actuel()),maj)} noterCombat={noter} impact={impact} avancer={avancer} joueur={pourLesJoueurs} campaignId={campaignId} dire={dire}/>}
+        {suivi.acide&&<AcideAlien regle={regle} suivi={suivi} actuel={actuel} noter={noter} impact={impact} joueur={pourLesJoueurs} dire={dire}/>}
         {message && <p role="status">{message}</p>}
     </section>;
 }

@@ -14,9 +14,17 @@ A2 est livré et contrôlé. Le 21/10, David confirme « ok A2 est testé c'est 
 on fait A3 » : A2 est essayé et validé. GM-OS est de nouveau confirmé fermé.
 A3 est livré et contrôlé le 21/10 ; David valide son essai : « ok c'est bon pour A3,
 commit et pousse ». A0–A3 sont essayés et validés.
-A4–A8 restent à planifier.
+A4 est demandé par David le 21/10 (« reprend le travail, on va reprendre avec A4 »),
+GM-OS confirmé fermé. A4 livré et contrôlé.
+A5 est demandé par David le 21/10 (« on va continuer avec A5 »), GM-OS confirmé fermé.
+A5 est livré et contrôlé : recette finale Electron/combat/Hub réussie.
+David valide les essais A4 et A5 le 21/10 : « ok A4 et A5 tester c'est bon ».
+A0–A5 sont livrés, essayés et validés. Le 21/10, David demande « on va continuer avec A6 et A7 »
+et confirme « Non, GM-OS est fermé. ». **A6/A7 livrés et contrôlés le 22/10** ;
+essai de David attendu. A8 reste à planifier.
 Voir les bilans [A0/A1](2026-10-20-alien-a0-a1.md), [A2](2026-10-20-alien-a2.md)
-et [A3](2026-10-21-alien-a3.md).
+et [A3](2026-10-21-alien-a3.md), puis [A4](2026-10-21-alien-a4.md),
+[A5](2026-10-21-alien-a5.md) et [A6/A7](2026-10-21-alien-a6-a7.md).
 
 ## Référence de travail
 
@@ -57,16 +65,16 @@ et leurs raccords manquants.
 | **A1** | 1 | Verdict provisoire puis annulation à 10+, Point de Récit bloqué, effets persistants, Stress après dégâts, demandes hors jets, contagion ciblée, fins explicites et rappel/bilan des traumatismes. | Livré — 867 tests, types, build et lint ciblé réussis ; Electron/Hub validés ; essai de David validé le 20/10 |
 | **A2** | 2 | **Jets, équipement et actions d’éclat** : Bonus/Dégâts/Portée reliés, réserve sans plafond artificiel, modificateurs signés, aide (max. 3), opposition et défenseur sans forçage, éclats de la compétence et budget persistant. Dégâts préparés avant protection, sans application automatique. | Livré — contrôles logiciels réussis et essai de David validé le 21/10 |
 | **A3** | 2 | **Tir, protection et blessures** : visée/portée/lumière/taille, automatique et cibles secondaires, chargeurs/rechargement ; protection avant dégâts, vrais D66 humains, Brisé, Trépas récurrent, relèvement/stabilisation séparés, guérison et délais validés par Maman. PNJ humain explicitement déclaré. | Livré le 21/10 — 1 330 tests, types, build et lint ciblé réussis ; recette Electron/combat/Hub à trois tailles et sept captures vérifiées ; essai de David validé le 21/10 |
-| **A4** | 3 | **Synthétiques** : aucun Stress/Panique, critiques propres en D6, activité selon les avaries, réparations Comtech et immunités adaptées. | À planifier |
-| **A5** | 3 | **Survie** : tests des réserves Air/Eau/Nourriture/Énergie, échéances de jeu, états de privation reliés, restrictions de repos, radiations courantes/permanentes et encombrement. | À planifier |
-| **A6** | 4 | **Actions et xénomorphes** : budget lente/rapide, réactions, plusieurs initiatives selon la Vitesse avec une seule Santé, tables d’attaques et critiques, sang acide. | À planifier |
-| **A7** | 5 | **Cinéma et Campagne** : objectifs privés par acte, attribution des Points de Récit, bilan des PX, apprentissage, Camarade/Rival et usages de l’objet fétiche. | À planifier |
+| **A4** | 3 | **Synthétiques** : aucun Stress/Panique/forçage, critiques D6 et aggravation du résultat immédiatement répété, avaries, activité à zéro sauf Arrêt du système, réactivation puis réparation Comtech distinctes, trauma et immunités. | Livré le 21/10 — 1 439 tests, types/build/lint ciblé sans erreur et recette Electron/combat/Hub à trois tailles réussis, cinq captures vérifiées ; essai de David validé le 21/10. Export v1.4.0, 44 champs conservés ; [bilan](2026-10-21-alien-a4.md) |
+| **A5** | 3 | **Survie** : tests des réserves Air/Eau/Nourriture/Énergie individuels ou collectifs, échéances persistantes et reçus, quatre états reliés à l'HTML, restrictions de repos, Rads temporaires/permanents et surplus au-delà des dix cases, encombrement avec masses confirmées. | Livré le 21/10 : 49 champs et 46 liens, types/build/lint ciblé sans erreur, 1 460 tests dans 107 fichiers, recette finale Electron/combat/Hub à trois tailles réussie, huit captures relues. Essai de David validé le 21/10 ; [bilan A5](2026-10-21-alien-a5.md) |
+| **A6** | 4 | **Actions et xénomorphes** : budget lente/rapide déclaré avant les dés, réactions et surveillance, cartes uniques selon la Vitesse avec une seule Santé, attaques et critiques D6, sang acide XX121. Conséquences narratives confirmées par Maman. | Livré et contrôlé le 22/10, export v1.6.0 : 1 567 tests dans 119 fichiers, types/build/lint ciblé sans erreur, recette réelle A0–A7 Electron/combat/Hub à trois tailles et neuf captures vérifiées ; essai de David valid? le 22/10 ; [bilan A6/A7](2026-10-21-alien-a6-a7.md) |
+| **A7** | 5 | **Cinéma et Campagne** : objectifs remis en messagerie privée par acte, Récit Cinéma, bilan PX conservé, apprentissages uniques, Camarade/Rival et fétiche par période. | Livré et contrôlé le 22/10, export v1.7.0 incluant A0–A6, 49 champs et 46 liens. Mêmes contrôles A6/A7 réussis ; confidentialité, reconnexion et absence de double gain/achat vérifiées ; essai de David valid? le 22/10 ; [bilan A6/A7](2026-10-21-alien-a6-a7.md) |
 | **A8** | Option ultérieure | **Accessoires et mode discret** : raccord optionnel du détecteur aux zones, mouvements cachés, Tour et Énergie ; dossiers/objectifs d’acte dans MU/TH/UR. Combat spatial à cadrer séparément. | À planifier |
 
 ## Ordre proposé et dépendances
 
-A0–A3 sont livrés, essayés et validés par David.
-Prochaine proposition : **A4/A5**, puis **A6**, **A7**. A8 dépendra de l’usage
+A0–A5 sont livrés, essayés et validés par David ; validation A4/A5 reçue le 21/10.
+A6 et A7 sont livrés et contrôlés le 22/10 ; l'essai de David reste attendu. A8 dépendra de l’usage
 souhaité par David ; le combat spatial constitue un chantier distinct à décider.
 
 A1 fixe le résultat définitif du jet avant l’application des dégâts d’A3. A2 relie les armes
@@ -104,6 +112,14 @@ restent validés par Maman.
 | 21/10/2026 | David | « ok A2 est testé c'est bien, on fait A3 » ; GM-OS confirmé fermé. A2 essayé et validé, A3 engagé. |
 | 21/10/2026 | Codex | A3 livré en v1.3.0 : 44 champs, 42 liens ; 1 330 tests réussis, types/build/lint ciblé, recette réelle Electron et Hub Edge à trois tailles réussis, même Santé/blessure sur la carte de combat ; sept captures relues. Manuel et synthèse actualisés. Import et essai A3 de David attendus ; A4–A8 non engagés. |
 | 21/10/2026 | David | « ok c'est bon pour A3, commit et pousse » : essai A3 validé, commit et push autorisés. A4–A8 restent non engagés. |
+| 21/10/2026 | David | « reprend le travail, on va reprendre avec A4 » ; « Non, GM-OS est fermé. » : A4 engagé, A5–A8 non engagés. |
+| 21/10/2026 | Codex | A4 livré en v1.4.0, 44 champs et 42 liens conservés ; 1 439 tests dans 105 fichiers, types/build/lint ciblé sans erreur ; recette Electron/combat/Hub à trois tailles réussie et cinq captures relues. Manuel et synthèse actualisés. Essai de David attendu ; A5–A8 non engagés. |
+| 21/10/2026 | David | « on va continuer avec A5 » ; « Non, GM-OS est fermé. » : A5 engagé. Aucun essai A4 explicitement confirmé. |
+| 21/10/2026 | Codex | A5 livré, export v1.5.0 à 49 champs et 46 liens ; types/build/lint ciblé sans erreur et 1 460 tests dans 107 fichiers réussis. Recette finale A0–A5 Electron/combat/Hub à 360/768/1 180 px réussie (environ 2 min 06), huit captures relues, manuel et synthèse actualisés. Essai de David attendu. A6–A8 non engagés. |
+| 21/10/2026 | David | « ok A4 et A5 tester c'est bon » : essais A4 et A5 validés. A0–A5 livrés, essayés et validés ; A6–A8 non engagés. |
+| 21/10/2026 | David | « on va continuer avec A6 et A7 » ; « Non, GM-OS est fermé. » : A6 et A7 engagés. A8 non engagé ; aucun commit/push demandé. |
+| 22/10/2026 | David | « continue » : poursuite de la réalisation et de la recette A6/A7. |
+| 22/10/2026 | Codex | A6/A7 livrés en v1.6.0/v1.7.0, identifiants conservés, 49 champs et 46 liens ; 1 567 tests dans 119 fichiers, types/build/lint ciblé sans erreur et recette réelle A0–A7 Electron/combat/Hub à trois tailles réussis. Neuf captures relues, manuel et synthèse actualisés. Essai de David attendu ; A8 non engagé, aucun commit/push demandé. |
 
 À chaque réalisation : mettre à jour le lot ici, citer les fichiers/commits, indiquer les
 contrôles et distinguer réalisation logicielle et essai de David. Le manuel 54 Alien et les

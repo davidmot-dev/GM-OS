@@ -2,6 +2,7 @@ import React from 'react';
 import { ResolvedImage } from '../ResolvedImage';
 import type { Combatant } from '../../modules/combat/useCombatStore';
 import { abregerLaSante } from '../../modules/combat/logic/SanteDuCombattant';
+import { fileDesInitiativesAlien } from '../../modules/dice/systemes/actionsAlien';
 
 interface HubCombatTrackerProps {
     combatants: Combatant[];
@@ -42,6 +43,7 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
             </div>
 
             <div className="flex flex-col gap-3">
+                {visibleCombatants.some(c=>c.alien)&&<p data-initiatives-alien className="text-xs text-app-text">{fileDesInitiativesAlien(visibleCombatants).map(e=>`${e.carte} : ${visibleCombatants.find(c=>c.id===e.id)?.name}`).join(' · ')}</p>}
                 {/* Active Turn */}
                 {activeCombatant && (
                     <div className="flex flex-col gap-4 px-4 py-4 rounded-xl bg-etat-danger/10 ring-1 ring-etat-danger/40 shadow-glow-crimson relative overflow-hidden transition-all duration-700">
@@ -49,7 +51,7 @@ export const HubCombatTracker: React.FC<HubCombatTrackerProps> = ({
                             <ResolvedImage className="size-10 rounded-full border-2 border-etat-danger" src={activeCombatant.avatar} alt={activeCombatant.name} fallback={activeCombatant.name.charAt(0)} />
                             <div className="flex flex-col">
                                 <p className="text-app-text text-sm font-bold leading-none">{activeCombatant.name}</p>
-                                <p className="text-etat-danger text-ui-10 font-bold uppercase mt-1">Tour Actif</p>
+                                <p className="text-etat-danger text-ui-10 font-bold uppercase mt-1">Tour Actif{activeCombatant.alien?` — carte ${activeCombatant.alien.carteActive??activeCombatant.init}`:''}</p>
                             </div>
                             <div className="ml-auto text-etat-danger material-symbols-outlined">double_arrow</div>
                         </div>

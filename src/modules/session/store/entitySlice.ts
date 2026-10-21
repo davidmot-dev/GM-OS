@@ -25,6 +25,10 @@ import { CLE_PANIQUE_ALIEN, arreterLaPaniqueAlien, changerLeStressAlien } from '
 import { CLE_JET_ALIEN } from '../../dice/systemes/jetsAlien';
 import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 import { estUnAndroide } from '../../dice/systemes/paniqueAlien';
+import { immuniteSynthetique, projeterLaSanteSynthetique } from '../../dice/systemes/synthetiquesAlien';
+import { apresImpactXeno, projeterSanteXeno } from '../../dice/systemes/xenomorphesAlien';
+import { CLE_PROGRESSION_ALIEN } from '../../dice/systemes/progressionAlien';
+import { CLE_SURVIE_ALIEN, refusDeRecuperationAlien } from '../../dice/systemes/survieAlien';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
@@ -58,7 +62,7 @@ const plateauDeCombat = () => (window as unknown as {
             noterUnCoup?: (cibleId: string, impact: DamageImpact) => void;
             refleterLaFiche?: (
                 cibleId: string,
-                sante: { hp?: number; healthSystem?: HealthSystem; sheetData?: Record<string, string | number | boolean> },
+                sante: { hp?: number; healthSystem?: HealthSystem; sheetData?: Record<string, unknown> },
             ) => void;
         };
     };
@@ -86,6 +90,17 @@ export function syncHealthSystem(currentHp: number | undefined, maxHp: number | 
         data: { ...health.data, current: currentHp, max: maxHp },
         state: currentHp <= 0 ? 'dead' : (currentHp / maxHp) <= 0.25 ? 'critical' : (currentHp / maxHp) <= 0.5 ? 'wounded' : 'healthy'
     };
+}
+
+/** Une édition administrative de la jauge xéno doit aussi suivre sa fiche, sans inventer un coup. */
+function alignerJaugeXeno(e:Entity,etat:unknown):Entity {
+    const suivi=lireLeCombatAlien(e.sheetData??{});if(!suivi.xenomorphe)return e;
+    const s=etat as {campaigns?:Campaign[];customGameDrivers?:GameDriver[];activeCampaignId?:string|null};
+    const r=piloteDuPersonnage(e,s.campaigns??[],s.customGameDrivers??[],s.activeCampaignId)?.combat.alien;
+    if(!r)return e;
+    const sheetData={...e.sheetData,[r.sante]:e.hp};
+    return {...e,sheetData,maxHp:suivi.xenomorphe.maximum,status:suivi.mort?'dead':e.hp>0?'alive':'injured',
+        healthSystem:projeterSanteXeno(r,sheetData,suivi,syncHealthSystem(e.hp,suivi.xenomorphe.maximum,e.healthSystem))};
 }
 
 // ─────────────────────────────────────────────
@@ -240,12 +255,12 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         gmToast(i18next.t('modules:session.toasts.entity_created', { name: newEntity.name }), 'success');
     },
 
-    updateEntity: (id, updates) =>
+    updateEntity: (id, updates) => {
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== id) return e;
-                const sheetData = updates.sheetData && e.sheetData?.[CLE_COMBAT_ALIEN] && !Object.hasOwn(updates.sheetData,CLE_COMBAT_ALIEN)
-                    ? { ...updates.sheetData, [CLE_COMBAT_ALIEN]:e.sheetData[CLE_COMBAT_ALIEN] } : updates.sheetData;
+                const conserves=Object.fromEntries([CLE_COMBAT_ALIEN,CLE_SURVIE_ALIEN].filter(cle=>e.sheetData?.[cle]&&updates.sheetData&&!Object.hasOwn(updates.sheetData,cle)).map(cle=>[cle,e.sheetData![cle]]));
+                const sheetData = updates.sheetData ? {...updates.sheetData,...conserves}:undefined;
                 const base = { ...e, ...updates, ...(sheetData ? {sheetData} : {}) };
                 const newEntity = base.sheetData?.__rddSante231 ? actualiserPersonnageDeVoyageur(base,
                     (get() as unknown as {customSheetTemplates?: SheetTemplate[]}).customSheetTemplates ?? [],e) : base;
@@ -254,11 +269,25 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 const currentVal = updates.hp !== undefined ? updates.hp : newEntity.hp;
                 const maxVal = updates.maxHp !== undefined ? updates.maxHp : newEntity.maxHp;
                 newEntity.healthSystem = projeterSanteVoyageur(newEntity.sheetData ?? {},syncHealthSystem(currentVal, maxVal, newEntity.healthSystem));
+                const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+                const pilote = piloteDuPersonnage(newEntity, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
+                if(pilote?.combat.alien&&lireLeCombatAlien(newEntity.sheetData??{}).xenomorphe){
+                    const x=lireLeCombatAlien(newEntity.sheetData??{}).xenomorphe!;
+                    newEntity.hp=updates.sheetData?Math.max(0,Number(newEntity.sheetData?.[pilote.combat.alien.sante])||0):Math.max(0,newEntity.hp);newEntity.maxHp=x.maximum;
+                    newEntity.sheetData={...newEntity.sheetData,[pilote.combat.alien.sante]:newEntity.hp};
+                    newEntity.healthSystem=syncHealthSystem(newEntity.hp,newEntity.maxHp,newEntity.healthSystem);
+                }
+                newEntity.healthSystem = projeterLaSanteSynthetique(pilote?.combat.alien, newEntity.sheetData ?? {}, lireLeCombatAlien(newEntity.sheetData ?? {}), newEntity.healthSystem);
+                newEntity.healthSystem = projeterSanteXeno(pilote?.combat.alien,newEntity.sheetData??{},lireLeCombatAlien(newEntity.sheetData??{}),newEntity.healthSystem);
+                if (newEntity.healthSystem?.data.alienSynthetique) newEntity.status = newEntity.hp > 0 ? 'alive' : 'injured';
                 if (newEntity.healthSystem?.data.rdd) newEntity.status = (newEntity.healthSystem.data.rdd as {mort:boolean}).mort ? 'dead' : newEntity.healthSystem.state === 'healthy' ? 'alive' : 'injured';
 
                 return newEntity;
             }),
-        })),
+        }));
+        const e = get().entities.find(e => e.id === id);
+        if (e?.healthSystem?.data.alienSynthetique || e?.healthSystem?.data.alienXenomorphe) plateauDeCombat()?.refleterLaFiche?.(id, { hp: e.hp, healthSystem: e.healthSystem, sheetData: e.sheetData });
+    },
 
     deleteEntity: (id) => {
         const entity = get().entities.find((e) => e.id === id);
@@ -266,7 +295,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         if (entity) gmToast(i18next.t('modules:session.toasts.entity_deleted', { name: entity.name }), 'info');
     },
 
-    updateEntityHP: (entityId: string, hp: number) =>
+    updateEntityHP: (entityId: string, hp: number) => {
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== entityId) return e;
@@ -283,9 +312,12 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {},syncHealthSystem(nextHp, e.maxHp, e.healthSystem));
                 if (updated.healthSystem?.data.rdd) updated.status = (updated.healthSystem.data.rdd as {mort:boolean}).mort ? 'dead' : updated.healthSystem.state === 'healthy' ? 'alive' : 'injured';
                 
-                return updated;
+                return alignerJaugeXeno(updated,get());
             }),
-        })),
+        }));
+        const e=get().entities.find(e=>e.id===entityId);
+        if(e?.healthSystem?.data.alienXenomorphe)plateauDeCombat()?.refleterLaFiche?.(e.id,{hp:e.hp,healthSystem:e.healthSystem,sheetData:e.sheetData});
+    },
 
     updateEntityMaxHP: (entityId: string, maxHp: number) =>
         set((state) => ({
@@ -301,7 +333,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             }),
         })),
 
-    updateEntityHealth: (entityId: string, health) =>
+    updateEntityHealth: (entityId: string, health) => {
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== entityId) return e;
@@ -312,9 +344,12 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                     updated.maxHp = Number(health.data.max) || 10;
                     updated.status = updated.hp <= 0 ? 'dead' : updated.hp < updated.maxHp * 0.25 ? 'injured' : 'alive';
                 }
-                return updated;
+                return alignerJaugeXeno(updated,get());
             }),
-        })),
+        }));
+        const e=get().entities.find(e=>e.id===entityId);
+        if(e?.healthSystem?.data.alienXenomorphe)plateauDeCombat()?.refleterLaFiche?.(e.id,{hp:e.hp,healthSystem:e.healthSystem,sheetData:e.sheetData});
+    },
 
     toggleEntityVisibility: (entityId, sceneId) =>
         set((state) => ({
@@ -343,6 +378,11 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
 
     updateEntitySheetData: (id, fieldId, value) => {
         const entite = get().entities.find(e => e.id === id);
+        const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+        const pilote = piloteDuPersonnage(entite, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
+        if (entite && fieldId === pilote?.combat.alien?.androide) {
+            get().updateEntity(id, { sheetData: { ...entite.sheetData, [fieldId]: value } }); return;
+        }
         if (entite?.sheetData?.__rddSante231) {
             get().updateEntity(id,{sheetData:{...entite.sheetData,[fieldId]:value}});return;
         }
@@ -533,7 +573,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             ),
         })),
 
-    updateCharacter: (playerId, characterId, updates) =>
+    updateCharacter: (playerId, characterId, updates) => {
         set((state) => ({
             players: state.players.map((p) =>
                 p.id === playerId
@@ -543,7 +583,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 if (c.id !== characterId) return c;
                                 // Une fiche HTML ancienne ne connaît pas le suivi de Panique :
                                 // son écriture ne doit effacer ni les reçus ni les demandes.
-                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN]
+                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN, CLE_SURVIE_ALIEN, CLE_PROGRESSION_ALIEN]
                                     .filter(cle => c.sheetData?.[cle] && updates.sheetData && !Object.hasOwn(updates.sheetData, cle))
                                     .map(cle => [cle, c.sheetData![cle]]));
                                 const sheetData = updates.sheetData ? { ...updates.sheetData, ...suivis } : undefined;
@@ -556,14 +596,26 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                                 const currentVal = updated.hp;
                                 const maxVal = updated.maxHp;
                                 updated.healthSystem = projeterSanteVoyageur(updated.sheetData ?? {}, syncHealthSystem(currentVal, maxVal, updated.healthSystem));
+                                const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+                                const pilote = piloteDuPersonnage(updated, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
+                                updated.healthSystem = projeterLaSanteSynthetique(pilote?.combat.alien, updated.sheetData ?? {}, lireLeCombatAlien(updated.sheetData ?? {}), updated.healthSystem);
                                 return updated;
                           }),
                       }
                     : p
             ),
-        })),
+        }));
+        const c = get().players.find(p => p.id === playerId)?.characters.find(c => c.id === characterId);
+        if (c?.healthSystem?.data.alienSynthetique) plateauDeCombat()?.refleterLaFiche?.(characterId, { hp: c.hp, healthSystem: c.healthSystem, sheetData: c.sheetData });
+    },
 
-    updateCharacterSheetData: (playerId, characterId, fieldId, value) =>
+    updateCharacterSheetData: (playerId, characterId, fieldId, value) => {
+        const personnage = get().players.find(p => p.id === playerId)?.characters.find(c => c.id === characterId);
+        const etat = get() as unknown as { campaigns?: Campaign[]; customGameDrivers?: GameDriver[]; activeCampaignId?: string | null };
+        const pilote = piloteDuPersonnage(personnage, etat.campaigns ?? [], etat.customGameDrivers ?? [], etat.activeCampaignId);
+        if (personnage && fieldId === pilote?.combat.alien?.androide) {
+            get().updateCharacter(playerId, characterId, { sheetData: { ...personnage.sheetData, [fieldId]: value } }); return;
+        }
         set((state) => ({
             players: state.players.map((p) =>
                 p.id === playerId
@@ -579,7 +631,8 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                       }
                     : p
             ),
-        })),
+        }));
+    },
 
     updateCharacterVisuals: (playerId, characterId, updates) =>
         set((state) => ({
@@ -812,6 +865,11 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
           la fiche, plafonné). Le journal et l'écran disent le calcul.
         */
         const selonLeJeu = (pilote: GameDriver | null | undefined, fiche: Record<string, unknown> | undefined) => {
+            const refus=impactSaisi.isRecovery?refusDeRecuperationAlien(pilote?.combat.alien,fiche??{},'sante'):undefined;
+            if(refus)return {impact:{...impactSaisi,value:0},fiche:{},texte:refus};
+            if (pilote?.combat.alien && estUnAndroide(pilote.combat.alien, fiche ?? {}) && !impactSaisi.isRecovery && immuniteSynthetique(impactSaisi.type ?? '')) {
+                return { impact: { ...impactSaisi, value: 0 }, fiche: {}, texte: 'Synthétique immunisé à ce péril : aucun dégât.' };
+            }
             const regle = pilote?.combat?.dommages;
             if (!regle || regle.mecanique !== 'torg' || impactSaisi.isRecovery) return null;
             const resistance = valeurDuChamp(fiche, regle.resistance) ?? 0;
@@ -861,8 +919,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             }
             if (regle) gmToast(`${entity.name} — ${regle.texte}`, 'info');
 
-            const humainAlien = !!piloteOuvert?.combat.alien && lireLeCombatAlien(entity.sheetData ?? {}).humain;
-            const baseHealth = humainAlien ? santeAlignee(entity.healthSystem || HealthInterpreter.createDefault('hp'),santePrincipaleDeLaFiche(piloteOuvert,entity.sheetData)) ?? HealthInterpreter.createDefault('hp') : entity.healthSystem || HealthInterpreter.createDefault('hp');
+            const xeno=piloteOuvert?.combat.alien?lireLeCombatAlien(entity.sheetData??{}).xenomorphe:undefined;
+            const humainAlien = !!piloteOuvert?.combat.alien && (!!xeno || lireLeCombatAlien(entity.sheetData ?? {}).humain || estUnAndroide(piloteOuvert.combat.alien, entity.sheetData ?? {}));
+            const baseHealth = humainAlien ? santeAlignee(entity.healthSystem || HealthInterpreter.createDefault('hp'),santePrincipaleDeLaFiche(piloteOuvert,xeno?.etat==='ruse'?{...entity.sheetData,[piloteOuvert!.combat.alien!.sante]:1}:entity.sheetData)) ?? HealthInterpreter.createDefault('hp') : entity.healthSystem || HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? entity.hp;
             
@@ -871,7 +930,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             if (humainAlien && piloteOuvert?.combat.alien) {
                 const f = get().entities.find(e => e.id === targetId)?.sheetData ?? {};
                 const suivi = lireLeCombatAlien(f), a = piloteOuvert.combat.alien;
-                const nouveau = !impact.isRecovery && impact.value > 0 && newHp === 0 && !estUnAndroide({ mecanique:'alien',stress:a.stress,androide:a.androide,agilite:'',empathie:'' },f)
+                const nouveau = xeno ? apresImpactXeno(suivi,newHp,impact.isRecovery?0:impact.value,impact.type??'ordinaire',`alien-xeno-${crypto.randomUUID()}`) : !impact.isRecovery && impact.value > 0 && newHp === 0 && (!impact.procedureAlien||estUnAndroide(a,f))
                     ? demanderUnCritique(suivi,`alien-pnj-${crypto.randomUUID()}`) : suivi;
                 get().updateEntity(targetId,{sheetData:{...f,[a.sante]:newHp,[CLE_COMBAT_ALIEN]:nouveau},status:nouveau.mort?'dead':newHp<=0?'injured':'alive'});
             }
@@ -886,7 +945,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
               c'est ainsi qu'un soin disparaissait sans laisser de trace.
             */
             plateauDeCombat()?.refleterLaFiche?.(targetId, {
-                hp: newHp, healthSystem: updatedHealth, ...(regle ? { sheetData: regle.fiche } : {}),
+                hp: newHp, healthSystem: get().entities.find(e => e.id === targetId)?.healthSystem ?? updatedHealth, ...(regle ? { sheetData: regle.fiche } : {}),
             });
 
             if (typeof window !== 'undefined' && window.useJournalStore) {
@@ -948,19 +1007,19 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 const courant = get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId);
                 if (courant) {
                     const fiche = courant.sheetData ?? {};
-                    const maj = changerLeStressAlien(alien, fiche, `alien-degat-${crypto.randomUUID()}`, 1);
-                    const fin = newHp === 0 ? arreterLaPaniqueAlien({ ...fiche, ...maj }, piloteDuPJ?.jet?.panique?.champ) : {};
-                    const critique = piloteDuPJ?.combat.alien && newHp === 0 && !estUnAndroide(alien, fiche)
+                    const maj = impact.procedureAlien==='suffocation'?{}:changerLeStressAlien(alien, fiche, `alien-degat-${crypto.randomUUID()}`, 1);
+                    const fin = newHp === 0 && !estUnAndroide(alien, fiche) ? arreterLaPaniqueAlien({ ...fiche, ...maj }, piloteDuPJ?.jet?.panique?.champ) : {};
+                    const critique = piloteDuPJ?.combat.alien && newHp === 0 && (!impact.procedureAlien||estUnAndroide(alien,fiche))
                         ? { [CLE_COMBAT_ALIEN]: demanderUnCritique(lireLeCombatAlien(fiche), `alien-critique-${crypto.randomUUID()}`) } : {};
                     get().updateCharacter(player.id, targetId, { sheetData: { ...fiche, ...maj, ...fin, ...critique } });
                     if (typeof maj[alien.stress] === 'number') suiteDeStress = `Stress ${Number(fiche[alien.stress]) || 0} → ${maj[alien.stress]} (dégâts subis).\n`;
-                    if (newHp === 0) suiteDeStress += 'Brisé : la panique prend fin.\n';
+                    if (newHp === 0) suiteDeStress += estUnAndroide(alien, fiche) ? 'Critique synthétique à résoudre ; activité selon les avaries.\n' : 'Brisé : la panique prend fin.\n';
                 }
             }
 
             // Même retour que pour une entité : voir la branche ci-dessus.
             plateauDeCombat()?.refleterLaFiche?.(targetId, {
-                hp: newHp, healthSystem: updatedHealth,
+                hp: newHp, healthSystem: get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId)?.healthSystem ?? updatedHealth,
             });
 
             if (typeof window !== 'undefined' && window.useJournalStore) {

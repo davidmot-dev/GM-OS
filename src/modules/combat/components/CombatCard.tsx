@@ -19,7 +19,11 @@ import ActionsApprouvees from './ActionsApprouvees';
 import HorsJeuDuCombattant from './HorsJeuDuCombattant';
 import ProtectionDuCombattant from './ProtectionDuCombattant';
 import SanteAlien from '../../session/components/fields/SanteAlien';
+import ActionsAlien from './ActionsAlien';
 import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
+import { refusDeRecuperationAlien } from '../../dice/systemes/survieAlien';
+import { projeterSanteXeno } from '../../dice/systemes/xenomorphesAlien';
+import { gmToast } from '../../../stores/useToastStore';
 import StressSubi from '../../session/components/fields/StressSubi';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
@@ -145,6 +149,10 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
           de ressource se LANCE (voir `lancerLaRessource`), il ne se compte pas.
         */
         if (!Number.isFinite(currentVal)) return;
+        if (fieldId===activeDriver?.combat.alien?.stress&&(delta<0||valeur!==undefined&&valeur<currentVal)) {
+            const refus=refusDeRecuperationAlien(activeDriver.combat.alien,ficheLue.valeurs,'stress');
+            if(refus){gmToast(refus,'info');return;}
+        }
         ecrireSurLaFiche(fieldId, Math.max(0, valeur ?? currentVal + delta));
     };
 
@@ -549,10 +557,11 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
             {/* Blade Runner : la protection se lance à chaque coup subi. */}
             <ProtectionDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
+            {activeDriver?.combat.alien?.actions&&<div className="mx-3 my-2"><ActionsAlien id={combatant.id}/></div>}
             {activeDriver?.combat.alien && <div className="mx-3 my-2"><SanteAlien regle={activeDriver.combat.alien}
                 valeurs={{ ...ficheLue.valeurs, [activeDriver.combat.alien.sante]: ficheLue.valeurs[activeDriver.combat.alien.sante] ?? combatant.hp ?? 0,
                     [activeDriver.combat.alien.force]: ficheLue.valeurs[activeDriver.combat.alien.force] ?? combatant.hpMax ?? 0 }}
-                personnageId={combatant.sourcePlayerId} sourceEntityId={combatant.sourceEntityId} pnj={!combatant.isPlayer} pourLesJoueurs={false}
+                personnageId={combatant.sourcePlayerId} sourceEntityId={combatant.sourceEntityId} combattantId={combatant.id} campaignId={sourceCharacter?.campaignId??useSessionOSStore.getState().activeCampaignId??undefined} pnj={!combatant.isPlayer} pourLesJoueurs={false}
                 ecrire={maj => {
                     const s = useSessionOSStore.getState(), joueur = s.players.find(p => p.characters.some(c => c.id === combatant.sourcePlayerId));
                     const pc = joueur?.characters.find(c => c.id === combatant.sourcePlayerId);
@@ -560,7 +569,12 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
                     else if (combatant.sourceEntityId) {
                         const e = s.entities.find(e => e.id === combatant.sourceEntityId);
                         if (e) s.updateEntity(e.id,{ sheetData:{ ...e.sheetData,...maj }, status:lireLeCombatAlien(maj).mort ? 'dead' : Number(maj[activeDriver.combat.alien!.sante]) <= 0 ? 'injured' : 'alive' });
-                    } else useCombatStore.getState().updateCombatant(combatant.id,{ sheetData:{...combatant.sheetData,...maj},hp:Number(maj[activeDriver.combat.alien!.sante])||0 });
+                    } else {
+                        const sheetData={...combatant.sheetData,...maj},suivi=lireLeCombatAlien(sheetData),hp=Number(sheetData[activeDriver.combat.alien!.sante])||0;
+                        useCombatStore.getState().updateCombatant(combatant.id,{sheetData,hp,
+                            hpMax:suivi.xenomorphe?.maximum??combatant.hpMax,
+                            healthSystem:projeterSanteXeno(activeDriver.combat.alien,sheetData,suivi,combatant.healthSystem?{...combatant.healthSystem,data:{...combatant.healthSystem.data,current:hp,max:suivi.xenomorphe?.maximum??combatant.hpMax}}:undefined)});
+                    }
                 }} consigner={(titre, res) => useDiceStore.getState().setLastRoll({ ...res, id: crypto.randomUUID(), timestamp: new Date(), title: `${combatant.name} — ${titre}` })} /></div>}
             {/* Blade Runner : le stress subi, un facteur de 1 à 3 que la Psychologie réduit. */}
             {combatant.isPlayer && activeDriver?.jet?.stressSubi && (

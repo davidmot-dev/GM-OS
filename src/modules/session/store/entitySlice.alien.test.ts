@@ -7,6 +7,9 @@ import type { PlayerCharacter } from '../../../types/player.types';
 import { CLE_PANIQUE_ALIEN, appliquerLaPaniqueAlien, lireLaPaniqueAlien, type RegleDePaniqueAlien } from '../../dice/systemes/paniqueAlien';
 import { CLE_COMBAT_ALIEN, combatAlienVierge, lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 import type { Entity } from '../../../types/entity.types';
+import { estHorsDeCombat, decrireLaSante } from '../../combat/logic/SanteDuCombattant';
+import { synthetiqueVierge } from '../../dice/systemes/synthetiquesAlien';
+import { CLE_SURVIE_ALIEN, lireLaSurvieAlien } from '../../dice/systemes/survieAlien';
 
 const regle: RegleDePaniqueAlien = { mecanique: 'alien', stress: 'stress', agilite: 'agilite', empathie: 'empathie', androide: 'androide' };
 function magasin(androide = false, a3 = false) {
@@ -61,6 +64,30 @@ describe('A1 : Stress après dégâts effectifs, par la vraie écriture de sant�
 });
 
 describe('A3 : critiques au raccord réel de Santé', () => {
+    it('A5 : dégâts de survie sans critique humain, avec un seul Stress ; suffocation sans critique ni Stress', () => {
+        const s=magasin(false,true);
+        s.getState().handleApplyImpact('pj','pc',{value:4,procedureAlien:'survie'});
+        let fiche=s.getState().players[0].characters[0].sheetData!;
+        expect(fiche).toMatchObject({sante:0,stress:3});expect(lireLeCombatAlien(fiche).critiques).toHaveLength(0);
+        const autre=magasin(false,true);autre.getState().handleApplyImpact('pj','pc',{value:4,procedureAlien:'suffocation'});
+        fiche=autre.getState().players[0].characters[0].sheetData!;
+        expect(fiche).toMatchObject({sante:0,stress:2});expect(lireLeCombatAlien(fiche).critiques).toHaveLength(0);
+    });
+    it('A5 : une ancienne fiche HTML conserve échéances, reçus et surplus de radiations', () => {
+        const s=magasin(false,true),suivi={...lireLaSurvieAlien({}),radsEnPlus:3,traites:['tour:1']};
+        s.getState().updateCharacter('j','pj',{sheetData:{sante:4,[CLE_SURVIE_ALIEN]:suivi}});
+        s.getState().updateCharacter('j','pj',{sheetData:{sante:4}});
+        expect(s.getState().players[0].characters[0].sheetData?.[CLE_SURVIE_ALIEN]).toEqual(suivi);
+    });
+    it('A5 : une privation refuse les premiers soins et le retour de Santé par le magasin', () => {
+        const s=magasin(false,true),pilote=s.getState().customGameDrivers[0];
+        pilote.combat.alien!.survie={air:'air',eau:'eau',nourriture:'nourriture',energie:'energie',radiations:'rads',permanents:'permanents',affame:'affame',dehydrate:'dehydrate',epuise:'epuise',gele:'gele',inventaire:'inventaire',armes:'armes',encombrement:'charge'};
+        s.getState().handleApplyImpact('pj','pc',{value:2});
+        const c=s.getState().players[0].characters[0];
+        s.getState().updateCharacter('j','pj',{sheetData:{...c.sheetData,dehydrate:true}});
+        s.getState().handleApplyImpact('pj','pc',{value:2,isRecovery:true});
+        expect(s.getState().players[0].characters[0].sheetData?.sante).toBe(2);
+    });
     it('un PNJ déclaré humain devient Brisé, pas automatiquement mort, et ne gagne pas de Stress', () => {
         const s = magasin(false,true);
         s.setState({ entities:[{id:'pnj',name:'Humain fictif',hp:3,maxHp:3,status:'alive',type:'npc',role:'neutral',avatar:'',ac:0,speed:0,initiative:0,
@@ -82,9 +109,29 @@ describe('A3 : critiques au raccord réel de Santé', () => {
         s.getState().updateCharacter('j','pj',{sheetData:{sante:1,force:4}});
         expect(lire()[CLE_COMBAT_ALIEN]).toEqual(suivi);
     });
-    it('ne tire pas de critique humain pour un synthétique', () => {
+    it('conserve la demande pour la table synthétique, sans blessure humaine ni Stress', () => {
         const s = magasin(true,true);
         s.getState().handleApplyImpact('pj','pc',{value:4});
-        expect(lireLeCombatAlien(s.getState().players[0].characters[0].sheetData!).critiques).toHaveLength(0);
+        const fiche = s.getState().players[0].characters[0].sheetData!;
+        expect(lireLeCombatAlien(fiche).critiques).toHaveLength(1);
+        expect(lireLeCombatAlien(fiche).blessures).toHaveLength(0);
+        expect(fiche.stress).toBe(2);
+        expect(estHorsDeCombat(s.getState().players[0].characters[0])).toBe(false);
+        expect(decrireLaSante(s.getState().players[0].characters[0])).toContain('synthétique actif');
+        s.getState().handleApplyImpact('pj','pc',{value:1});
+        expect(lireLeCombatAlien(s.getState().players[0].characters[0].sheetData!).critiques).toHaveLength(2);
+        const c = s.getState().players[0].characters[0];
+        s.getState().updateCharacter('j','pj',{sheetData:{...c.sheetData,[CLE_COMBAT_ALIEN]:{...lireLeCombatAlien(c.sheetData!),synthetique:{...synthetiqueVierge(),arret:true}}}});
+        expect(estHorsDeCombat(s.getState().players[0].characters[0])).toBe(true);
+        expect(decrireLaSante(s.getState().players[0].characters[0])).toContain('Arrêt du système');
+    });
+    it('A4 : le PNJ synthétique utilise sa Santé, sans déclaration humaine ni mort automatique', () => {
+        const s = magasin(false,true);
+        s.setState({entities:[{id:'pnj',name:'Synthétique fictif',hp:8,maxHp:8,status:'alive',type:'npc',role:'neutral',avatar:'',ac:0,speed:0,initiative:0,
+            description:'',roleplayingNotes:'',gmSecretInfo:'',linkedMapIds:[],campaignId:'c',sheetData:{sante:3,force:3,androide:true}} satisfies Entity]});
+        s.getState().handleApplyImpact('pnj','npc',{value:3});
+        const e = s.getState().entities[0];
+        expect(e.hp).toBe(0); expect(e.status).toBe('injured');
+        expect(lireLeCombatAlien(e.sheetData!).critiques).toHaveLength(1); expect(estHorsDeCombat(e)).toBe(false);
     });
 });

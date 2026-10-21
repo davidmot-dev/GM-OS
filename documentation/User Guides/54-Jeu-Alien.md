@@ -1,6 +1,6 @@
 # 👽 Jeu — Alien
 
-> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A3 le 2026-10-21 (version 1.3.0, conserve A0–A2). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
+> **Pilote décrit :** « ALIEN, le jeu de rôle », exporté le 2026-10-20, corrigé A7 le 2026-10-22 (version 1.7.0, conserve A0–A6). Retour à [Les jeux et leurs mécaniques](./53-Les-jeux-et-leurs-mecaniques.md).
 
 Le moteur Year Zero : une réserve de d6, et des **dés de Stress** qui font monter la peur.
 
@@ -193,15 +193,15 @@ se joue de même, avec le Stress déjà monté.
 
 ## Combat et santé
 
-- **Initiative :** des **cartes numérotées de 1 à 10**, une par combattant, dans l'ordre croissant.
-- **Santé :** points de vie, dont le **maximum se lit sur la Force**.
+- **Initiative :** des **cartes numérotées de 1 à 10**, dans l'ordre croissant ; une par humain ou synthétique, une par point de Vitesse pour une créature xénomorphe.
+- **Santé :** points de vie, dont le **maximum se lit sur la Force** pour les humains et synthétiques ; le maximum de l'espèce est confirmé pour un xénomorphe.
 - L'export A0/A1 désigne explicitement **Santé** comme jauge principale : le combat suit la
   valeur courante de la fiche. Un coup qui fait effectivement perdre de la Santé ajoute
   **un** point de Stress, quel que soit le nombre de points perdus. Soins et dégâts nuls
   n'en ajoutent pas ; un androïde n'en reçoit pas. À zéro Santé, l'effet de Panique cesse.
 - **Ressources suivies :** Niveau de Stress, Points de Récit, Air, Eau, Nourriture, Énergie.
 - **Le Stress hors du jet**, sur la carte du combattant : − et +, puis **« Repos −1 »** (un Tour en
-  lieu sûr) et **« Objet fétiche −1 »** (une fois par acte ou par séance).
+  lieu sûr). Depuis A7, le fétiche se joue dans **Cinéma et Campagne Alien**, avec suivi de l'usage.
 
 ---
 
@@ -335,8 +335,8 @@ dégâts préparés. Maman ouvre le suivi de santé de chaque victime pour appli
 
 Au poste MJ, **Blessures et soins Alien** est disponible sur la fiche et sur la carte de
 combat. Pour un PNJ, confirmer explicitement qu'il est humain pour activer ce suivi ;
-les monstres ne deviennent pas humains par défaut. Les critiques humains sont écartés
-pour les synthétiques, dont les avaries et réparations complètes relèvent d'A4.
+les monstres ne deviennent pas humains par défaut. **Déclarer ce PNJ synthétique**
+coche la case Androïde et active directement le suivi A4 décrit plus bas.
 
 Saisir les **Dégâts entrants**, l'éventuel abri déjà occupé et la propriété de l'attaque,
 puis **Préparer ce coup**. L'abri s'ajoute seulement à distance. Décocher **Dégâts d'une
@@ -392,13 +392,310 @@ conservés ; ne pas réordonner leurs lignes sans revérifier l'état des charge
 
 ![Blessure reçue dans le vrai Hub à 360 px, sans commandes de santé réservées à Maman](captures/jeu-alien-a3-tablette-360.jpg)
 
+## Synthétiques — suivi A4
+
+Cocher **Androïde** sur la fiche active les règles synthétiques du livre français,
+p. 111. Une ancienne saisie de Stress reste conservée, mais **aucun dé de Stress**
+n'est lancé. Le synthétique ne gagne ni Stress ni Panique, ne force pas et ne subit
+pas les effets d'une ancienne panique humaine. Le tir automatique garde ses bonus
+sans Stress ; un 1 ordinaire ne vide pas son chargeur. Les armes à tir unique
+restent dépensées après utilisation.
+
+À **zéro Santé**, le synthétique continue d'agir selon ses avaries. Il reste dans la
+liste des combattants actifs. Chaque nouveau coup dommageable à zéro conserve une
+demande de critique. **Tirer le prochain critique synthétique (D6)** traite les coups
+dans leur ordre. Un résultat égal au **critique immédiatement précédent** augmente
+d'un cran : 4 puis 4 donnent 4 puis 5. Le résultat et son effet restent conservés après
+fermeture ou reconnexion ; un critique traité ne se retire pas une seconde fois.
+
+La pompe à fluide fait perdre la prochaine action lente : **Confirmer l'action lente
+perdue** acquitte cette conséquence. Les autres avaries rappellent les limites des
+jambes, du bras, de la tête et du châssis. Maman applique ces restrictions aux actions
+et aux équipements choisis ; le budget complet d'actions appartient au lot A6.
+**Arrêt du système** bloque les tests ordinaires et retire le synthétique de la liste
+des combattants actifs. Aucun critique humain ni test de Trépas n'est proposé.
+
+![Deux avaries synthétiques, le second résultat identique aggravé](captures/jeu-alien-a4-avaries.jpg)
+
+### Réparer ou réactiver
+
+Les synthétiques ne guérissent pas par repos ou Soins médicaux. Dans leur suivi de santé :
+
+1. Avec un système en fonctionnement, **Commencer la réparation (un Quart)** conserve
+   l'échéance. Maman valide un Quart réellement passé à travailler, résout le test de
+   **Comtech**, puis reporte ses réussites. Une réussite restaure **toute la Santé** et
+   élimine **toutes les avaries**. L'auto-réparation est possible si les avaries permettent
+   le travail. Les horloges Tour et Quart restent indépendantes.
+2. Après un **Arrêt du système**, une autre personne confirme une **Source d'énergie
+   disponible**, puis commence la **réactivation (un Tour)**. Après ce Tour et un Comtech
+   réussi, le synthétique peut communiquer. Maman choisit et consigne son **trauma mental
+   permanent** ; ses conséquences restent narratives et ne lui ajoutent aucun Stress.
+3. La communication rétablie ne permet pas encore d'agir : **une réparation distincte**,
+   avec un Quart et un nouveau Comtech, reste nécessaire. Elle conserve le trauma permanent.
+
+Un échec termine l'intervention sans récupération. Une nouvelle tentative exige une
+nouvelle durée de travail ; le même résultat confirmé ne s'applique pas deux fois.
+**Abandonner cette intervention** l'arrête sans récupération, par décision de Maman.
+Une intervention commencée et son échéance survivent à la fermeture du panneau.
+
+![Après réactivation pour communiquer, la réparation complète reste en cours](captures/jeu-alien-a4-reactivation.jpg)
+
+### Ressources et immunités
+
+Un synthétique n'a besoin ni d'Air, d'Eau, de Nourriture ni de sommeil. Il est immunisé
+au **vide**, au **froid** et à la **maladie**. Dans la préparation d'un coup, le choix
+**Origine des dégâts** annule ces périls sans lancer de protection ni demander de critique.
+Les impacts typés vide/vacuum, froid/cold et maladie/disease suivent aussi ces immunités.
+Les pathogènes aliens sont **généralement** sans effet ; choisir leur exception demande
+l'arbitrage de Maman. Aucune immunité générale n'est accordée au feu, à l'acide ou aux
+radiations. Les consommables et échéances de survie complets appartiennent au lot A5.
+
+Sur tablette, le joueur retrouve ses avaries, l'intervention en cours et ses traumatismes.
+Les commandes de résolution, de temps et de réparation restent au poste MJ.
+
+![Suivi synthétique reçu dans le vrai Hub à 360 px](captures/jeu-alien-a4-tablette-360.jpg)
+
+## Survie — suivi A5
+
+Dans **Blessures et soins Alien**, déplier **Survie Alien**. Les quatre états
+**Affamé, Déshydraté, Épuisé, Gelé** sont maintenant reliés aux cases de la fiche HTML.
+Les commandes de résolution et de temps restent au poste MJ ; le joueur consulte le
+même suivi sur sa tablette.
+
+### Tester les réserves
+
+Cocher **Suivre les consommables en pénurie** seulement lorsque Maman demande de les
+compter. Renseigner les quantités réelles, puis demander les tests : **Air** par Tour,
+**Eau** et **Nourriture** par jour ; **Effort terminé : Air et Eau** propose les tests
+supplémentaires après un combat ou une activité éprouvante. **Énergie** se teste selon
+l'appareil et son utilisation, sur demande de Maman.
+
+Un test lance autant de d6 que la réserve, **six au maximum** ; chaque **1** retire un
+point. Ces dés ne provoquent **aucune Panique**, même s'ils utilisent les faces de Stress.
+Une réserve d'Air à 8 peut ainsi lancer six dés et passer à 6 avec deux 1.
+Les réserves ne sont pas plafonnées à six : seul le nombre de dés l'est.
+
+**Réserves communes à la campagne** utilise quatre stocks réellement partagés, distincts
+des quantités personnelles. Maman choisit **une seule fiche** pour suivre les échéances
+du groupe. Sur les autres fiches, cocher les réserves communes et laisser le suivi de
+pénurie inactif pour consulter les mêmes stocks sans multiplier leurs échéances.
+Changer de mode conserve les quantités individuelles ; traiter ou annuler les demandes
+de réserve en attente avant ce changement.
+
+Les boutons **Valider round/tour/quart/jour — survie** avancent les mêmes compteurs que
+le suivi des blessures. Les unités sont indépendantes : valider celles effectivement
+écoulées dans le récit. Une horloge réelle ou une alarme MU/TH/UR n'enlève aucune réserve.
+Chaque échéance crée une demande conservée. Son résultat ne s'applique qu'une fois ;
+Maman peut aussi l'annuler explicitement si la situation ne la justifie plus.
+
+![Air à 8 testé avec six dés : deux 1 laissent une réserve de 6](captures/jeu-alien-a5-reserves.jpg)
+
+![Une demande de test d'Air retrouvée après fermeture du panneau](captures/jeu-alien-a5-echeances.jpg)
+
+### Privations, repos et suffocation
+
+Maman confirme **Affamé**, **Déshydraté** ou **Épuisé** après une journée sans alimentation,
+boisson ou sommeil suffisant ; **Gelé** correspond à une protection insuffisante contre
+le froid. Les cases de la fiche HTML ont le même effet que celles du panneau.
+
+| État | Échéance et effet | Fin de l'état |
+| --- | --- | --- |
+| Affamé | Endurance quotidienne ; échec : un dégât et Stress +1. À zéro Santé : Trépas quotidien | Un Quart après un repas suffisant |
+| Déshydraté | Chaque Quart : un dégât et Stress +1 ; à zéro Santé : Trépas à chaque Quart sans boire | Un Quart après avoir bu |
+| Épuisé | Endurance quotidienne, malus égal aux jours sans sommeil ; échec : effondrement et sommeil d'un Quart | Un Quart de sommeil |
+| Gelé | Endurance par jour au-dessus de 0 °C, par Quart sous 0 °C, par Tour dans le vide ; échec : un dégât et Stress +1. À zéro : Trépas à l'échéance suivante | Dès le retour au chaud |
+
+**Affamé, Déshydraté et Gelé** empêchent de récupérer de la Santé et de soulager le
+Stress. **Épuisé** empêche seulement de soulager le Stress. Le repos, les premiers soins,
+les impacts de soin et les gestes de baisse du Stress sur la carte respectent ces
+restrictions. Un soin médical ne retire pas les tests de Trépas dus à une privation.
+
+Pour les tests de compétence, jouer **Endurance** dans le panneau de jet, avec le malus
+indiqué, le Stress et les suites éventuelles de Panique/forçage. Reporter ensuite les
+**Réussites finales d'Endurance validées** dans la demande correspondante. La soif
+inflige ses dégâts sans test d'Endurance préalable. Les tests de **Trépas** sont lancés
+par le suivi sans Stress ni forçage. Les dégâts de ces périls ne tirent pas de critique
+humain et n'ajoutent pas deux fois le même point de Stress.
+
+À court d'Air, le suivi propose la **suffocation** : Endurance sans malus au premier test,
+puis −1, −2… aux suivants, par Tour ou après effort. L'échec fait tomber à zéro Santé
+sans critique humain ni Stress de dégâts ajouté ; un Trépas est ensuite demandé à chaque
+Round. **Environnement respirable retrouvé** met fin à cette cause. Les synthétiques
+ignorent ces privations biologiques et gardent la gestion de leurs appareils à Énergie.
+
+![Déshydraté : récupération bloquée jusqu'au Quart suivant la boisson](captures/jeu-alien-a5-privations.jpg)
+
+### Radiations
+
+Le **total de Rads comprend les permanents**. La case **Rads permanents** est un champ
+numérique distinct. La fiche HTML dispose de dix cases : les Rads au-delà de dix restent
+conservés dans le suivi et sont comptés dans les tests, sans perdre le surplus lors de
+la synchronisation.
+
+Choisir **Zone irradiée** : faible = un Rad par Quart, forte = un Rad par Tour,
+extrême = un Rad par Round. Chaque nouveau Rad reçu lance autant de dés que le
+**nouveau total**, sans plafond à six ; chaque 1 inflige un dégât, sans Panique.
+Si ces dégâts Brisent le personnage, les nouveaux Rads demandent aussi le Trépas
+tant qu'il reste dans la zone. La récupération de Santé y est interdite.
+
+Hors zone, chaque Quart propose l'élimination d'**un Rad temporaire** : sur 1, il reste
+dans le total et devient permanent ; sur les autres faces, le total baisse d'un point.
+Les Rads permanents ne sont jamais éliminés par cette récupération. Corriger une saisie
+où les permanents dépassent le total avant de reprendre les tests. Aucune immunité
+générale aux radiations n'est accordée aux synthétiques.
+Une réparation synthétique ne peut pas être validée tant que la zone interdit la
+récupération de Santé : l'intervention et les avaries restent conservées jusqu'à la sortie.
+
+![Deux Rads au total, dont un permanent, après exposition et récupération](captures/jeu-alien-a5-radiations.jpg)
+
+### Encombrement
+
+Déplier **Encombrement** et renseigner les masses de chaque ligne d'inventaire et d'arme :
+¼, ½, un ou plusieurs objets ordinaires ; un objet minuscule vaut zéro. Renseigner aussi
+les autres charges réellement portées (armure, bouteilles, batteries) si elles ne figurent
+pas déjà dans les listes. Aucun poids n'est deviné depuis le nom d'un objet. Une masse
+manquante empêche de reporter un total incomplet.
+
+Eau et Nourriture ajoutent chacune un objet par tranche de quatre points de réserve.
+En mode collectif, les champs **personnellement portée** indiquent seulement la part
+transportée par le personnage, indépendamment du stock commun. Le résultat peut être
+reporté dans le champ **Encombrement** de la fiche HTML.
+Si une ligne d'inventaire décrit déjà la même réserve d'Eau ou de Nourriture comptée
+automatiquement, lui attribuer zéro pour éviter de compter deux fois cette charge.
+
+La charge ordinaire vaut **Force ×2**, le maximum temporaire **Force ×4**. Entre les deux,
+le suivi rappelle le test de Mobilité pour courir ou ramper : en cas d'échec, lâcher la
+charge ou rester immobile. Maman résout ce test et les restrictions des avaries ; aucun
+bonus ou malus arbitraire n'est appliqué à tous les jets.
+
+![Charge confirmée : 5,75 objets, au-delà de Force ×2 mais sous Force ×4](captures/jeu-alien-a5-encombrement.jpg)
+
+![Les mêmes privations dans le vrai Hub à 360 px, sans commandes du meneur](captures/jeu-alien-a5-tablette-360.jpg)
+
+## Actions et xénomorphes — A6
+
+Dans **Combat-OS**, ouvre **Actions Alien** sur la carte du combattant. Maman déclare
+et paie les actions **avant de lancer les dés** : une lente et une rapide, ou deux
+rapides. Le panneau de dés ne les paie pas une seconde fois. **Bloquer** dépense une
+rapide, même avant son initiative ; elle reste dépensée quand la carte arrive.
+L'aide consomme également le type d'action de la personne aidée.
+
+![Budget d'actions du Round : une lente et une rapide déjà payées](captures/jeu-alien-a6-actions.jpg)
+
+Pour la **Surveillance**, confirme l'arme prête et l'absence d'ennemi au Contact, puis
+indique la direction. La rapide est payée, la lente conservée pour le tir hors tour.
+Une autre action ou des dégâts interrompent la posture. Une attaque au contact qui
+ne blesse pas se signale par **Interrompre**. La surveillance demeure jusqu'à la
+prochaine initiative, même si le numéro du Round a changé.
+
+Au début du Round, deux PJ capables de se parler peuvent échanger leurs cartes.
+Le tirage ne remet aucune carte : si plus de dix sont nécessaires, Maman regroupe
+d'abord les PNJ identiques. **Réinitialiser** prépare un nouveau tirage ; ce geste
+ne sert pas à retrouver des actions pendant le même combat.
+
+Sur une nouvelle créature, clique **Déclarer cette créature xénomorphe**, puis règle
+Vitesse, Santé maximale, Protection naturelle et table des attaques de son espèce.
+Ces valeurs viennent de sa description dans le livre. Les compétences propres se
+mémorisent comme des réserves de dés, sans attribut humain, Stress ni forçage.
+
+**Vitesse 2 donne deux cartes et deux créneaux, pour une seule fiche de Santé.** La
+file d'initiative montre tous les créneaux ; **Suivant** les visite dans l'ordre.
+Chaque carte donne une lente et une rapide. Maman tire une attaque spéciale D6,
+ou la choisit, puis résout ses victimes et effets comme indiqué par la table.
+Les attaques spéciales demandent généralement une arme ou un outil robuste pour être bloquées.
+
+À zéro, la créature demande un **critique xénomorphe D6**, sans blessure humaine :
+
+- **Indemne** : elle feint la mort ; sa prochaine initiative la relève à 1 Santé.
+  Si elle est attaquée avant, Maman utilise le geste de relèvement et résout l'attaque.
+- **Blessé** : elle reprend 1 Santé ; Vitesse baisse de un, minimum un, et la carte
+  la plus basse est retirée. Maman teste sa tentative de fuite à chaque début de Round.
+- **Réflexe désespéré** : une lente et une rapide immédiates hors tour. Le D6 indique
+  fuite ou attaque ; Maman confirme ensuite fuite réussie ou dégâts effectivement infligés.
+- **Dernier souffle** : attaque à la prochaine initiative, puis Maman confirme sa mort.
+  Un nouveau dégât entretemps la tue directement. **En pièces** signifie la mort immédiate.
+
+![Une créature Blessée : Vitesse réduite, Santé et attaque propres à l'espèce](captures/jeu-alien-a6-xenomorphe.jpg)
+
+Le sang acide ne s'applique qu'aux espèces **XX121** déclarées, avec l'intensité de
+leur description. Un coup qui les blesse crée une demande : intensité + dégâts subis.
+Le **feu** ne la crée pas. Maman choisit les seules victimes **au Contact**, puis résout
+l'attaque d'acide sur chacune ; les aspersions distinctes restent distinctes.
+Les six de Protection absorbent les dégâts et rongent chacun un point d'armure.
+
+Si l'attaque blesse, l'acide attaque encore au début du Round suivant avec moitié
+moins de dés, arrondie à l'inférieur. Une attaque sans dégâts arrête cette aspersion.
+L'acide qui Brise un humain entraîne un **Trépas par Round**, sans Stress ni forçage,
+jusqu'aux Soins médicaux réussis. Un synthétique garde ses critiques propres.
+Maman arbitre les effets sur les grenades, le sol et le décor.
+
+![Un humain Brisé par l'acide reste soumis au Trépas jusqu'aux soins réussis](captures/jeu-alien-a6-acide.jpg)
+
+## Cinéma et Campagne — A7
+
+Dans le formulaire de personnage, sous les dés, ouvre **Cinéma et Campagne Alien**.
+Choisis le mode, puis renseigne un scénario, son acte et une séance. Garde les mêmes
+noms en reprenant une partie : ils permettent de reconnaître les gains et usages déjà validés.
+
+En **Cinéma**, prépare l'objectif secret de chaque acte dans ce panneau MJ,
+puis **Remettre au seul personnage**. Il arrive dans la **messagerie privée du Hub**,
+y compris après reconnexion. Les brouillons des autres actes restent au MJ.
+Ne reporte pas cet objectif dans le champ imprimé **Objectif personnel**, qui sert
+à la Campagne. Aucun objectif ni motif d'attribution n'est publié au journal ou aux projections.
+
+À la fin de l'acte, Maman confirme les risques ou sacrifices consentis et valide :
+**un Point de Récit** si mérité, **trois au maximum**. Une fin d'acte, avec ou sans gain,
+ne se valide qu'une fois. La dépense de Récit dans les dés est proposée en mode Cinéma.
+
+![Objectif fictif remis au seul personnage et fin d'acte déjà validée au poste MJ](captures/jeu-alien-a7-objectifs.jpg)
+
+En **Campagne**, coche les réponses aux **neuf questions de fin de séance**, après
+discussion avec le groupe. Chaque oui rapporte un PX ; Maman tranche les désaccords.
+**Attribuer les PX de la séance** conserve le bilan et empêche une deuxième attribution.
+Les réponses validées restent cochées et verrouillées après rechargement, comme le
+mérite déjà confirmé d'une fin d'acte.
+
+![Bilan de séance validé : les réponses restent consultables sans deuxième attribution](captures/jeu-alien-a7-px.jpg)
+
+Entre deux séances, ouvre **Achats et apprentissage**, confirme cette période et
+prépare un nouvel apprentissage. Chaque achat coûte **5 PX** :
+
+- **Compétence +1**, maximum 5. À zéro, il faut un test réussi sans niveau pendant
+  la partie, ou un enseignant de niveau 1+ pendant un Quart, confirmé par Maman.
+- **Talent** : une journée d'entraînement et un test d'Esprit seul, sans Stress ni
+  forçage ; avec un enseignant qui le possède, la réussite est automatique.
+  Une tentative par jour de jeu ; l'échec ne dépense pas de PX. Le Jour se valide dans
+  Blessures et soins. Un achat terminé ne se répète pas en recliquant ou en rechargeant.
+
+Les achats sont bloqués pendant une séance active. Les PX conservent leur champ
+historique, désormais numérique ; leur total peut dépasser les dix cases de l'HTML.
+Le surplus reste conservé pour les dépenses suivantes.
+
+![Apprentissage préparé puis validé entre deux séances](captures/jeu-alien-a7-apprentissage.jpg)
+
+Après le bilan Campagne, choisis au plus un **Camarade** et un **Rival**, parmi les
+autres PJ de la campagne. Les blessures et traumatismes demeurent ; le bilan de
+Panique 13+ reste dans **Stress et Panique**.
+
+Le bouton **Utiliser le fétiche — Stress −1** garde l'usage : une fois par **acte**
+en Cinéma, une fois par **séance** en Campagne. Il paie une lente si le personnage
+est au combat. Les immunités synthétiques et interdictions de récupération A5 restent
+respectées. La tablette consulte le suivi ; Maman conserve les commandes de validation.
+
+![Suivi de Campagne dans le vrai Hub à 360 px, sans commandes de validation du MJ](captures/jeu-alien-a7-tablette-360.jpg)
+
+Le même suivi est vérifié à [768 px](captures/jeu-alien-a7-tablette-768.jpg) et
+[1 180 px](captures/jeu-alien-a7-tablette-1180.jpg).
+
 ## La fiche HTML
 
 La fiche d'Alien se relie à son personnage GM-OS (« Fiche du jeu »). Les pistes en cases (Stress,
 Santé, Radiation, Expérience, Points de Récit) se comptent, et les dix lignes d'équipement forment
 l'inventaire. Voir [Fiche de personnage HTML](./63-Fiche-de-personnage-HTML.md).
 
-*Relu le 2026-10-21 pour A3 : recette Electron, carte de combat et vrai Hub Edge à 360,
-768 et 1 180 px réussie ; sept nouvelles captures vérifiées.
-David a validé son essai A0/A1 le 20/10, A2 et A3 le 21/10.
+*Relu le 2026-10-22 pour A6/A7 : recette Electron A0–A7, carte de combat et vrai Hub Edge à
+360, 768 et 1 180 px réussie ; neuf nouvelles captures A6/A7 vérifiées.
+David a validé son essai A0/A1 le 20/10, A2 à A5 le 21/10.
+Validation A4/A5 : « ok A4 et A5 tester c'est bon ».
+David a validé A6/A7 le 22/10 : « ca marche pour A6 et A7 ».
 Les huit parcours des accessoires du 16/10 ne sont pas rejoués par cette recette mécanique.*

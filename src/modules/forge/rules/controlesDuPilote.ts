@@ -707,7 +707,9 @@ export function controlerLePilote(
             if (!tousLesChamps.has(champ)) erreur('jet.alien', `Les jets Alien lisent « ${champ} », absent de la fiche.`);
         }
         if (alien.combat) {
-            for (const champ of Object.values(alien.combat)) if (!tousLesChamps.has(champ)) erreur('jet.alien.combat', `Le combat Alien lit « ${champ} », absent de la fiche.`);
+            const champsCombat=Object.entries(alien.combat).flatMap(([cle,v])=>cle==='actions'?[]:v&&typeof v==='object'?Object.values(v).flat():[v]);
+            for (const champ of champsCombat) if (typeof champ!=='string'||!tousLesChamps.has(champ)) erreur('jet.alien.combat', `Le combat Alien lit « ${champ} », absent de la fiche.`);
+            if(alien.combat.survie)for(const reserve of ['air','eau','nourriture','energie'])if(!driver.ressourcesDeTable?.some(r=>r.id===`alien-survie-${reserve}`))erreur('combat.alien.survie',`Réserve collective Alien absente : ${reserve}.`);
             if (JSON.stringify(alien.combat) !== JSON.stringify(driver.combat?.alien)) erreur('combat.alien', 'La fiche et le combat doivent partager la même configuration Alien.');
         }
     }

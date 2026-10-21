@@ -1,0 +1,24 @@
+// Usage : node outils/alien/ameliorer-pilote-a5.mjs "Export Dirvers/corriges/Alien_driver_gmos_a4.gmos-driver"
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import AdmZip from 'adm-zip';
+const source=process.argv[2];assert.ok(source,'Indiquer l’export A4 à conserver.');
+const original=fs.readFileSync(source),archive=new AdmZip(original),state=JSON.parse(archive.readAsText('state.json'));
+const p=state.gameDriver,fiche=state.sheetTemplate;assert.equal(p.corpusId,'alien');assert.ok(p.combat.alien);
+const ids=[p.id,fiche.id],avant=fiche.sections.flatMap(s=>s.fields.map(f=>f.id));
+const section=fiche.sections.find(s=>s.id==='jauges_individuelles');assert.ok(section);
+for(const[id,label]of[['affame','Affamé — journée sans alimentation suffisante'],['dehydrate','Déshydraté — journée sans eau suffisante'],['epuise','Épuisé — journée sans sommeil suffisant'],['gele','Gelé — protection insuffisante contre le froid']])if(!section.fields.some(f=>f.id===id))section.fields.push({id,label,type:'checkbox',defaultValue:false});
+if(!section.fields.some(f=>f.id==='rads_permanents'))section.fields.push({id:'rads_permanents',label:'Rads permanents (inclus dans le total)',type:'number',defaultValue:0});
+const survie={air:'air',eau:'eau',nourriture:'nourriture',energie:'energie',radiations:'field-1786782860390',permanents:'rads_permanents',affame:'affame',dehydrate:'dehydrate',epuise:'epuise',gele:'gele',inventaire:'inventaire',armes:'field-1786783108730',encombrement:'field-1786783213114'};
+p.combat.alien.survie=survie;p.jet.alien.combat=p.combat.alien;p.version='1.5.0';
+p.ressourcesDeTable??=[];
+for(const[id,label]of[['air','Air'],['eau','Eau'],['nourriture','Nourriture'],['energie','Énergie']])if(!p.ressourcesDeTable.some(r=>r.id===`alien-survie-${id}`))p.ressourcesDeTable.push({id:`alien-survie-${id}`,label:`${label} du groupe`,proprietaire:'meneur',depart:0,min:0,horsDuBandeau:true,visibleAuxJoueurs:true});
+assert.deepEqual([p.id,fiche.id],ids);assert.ok(avant.every(id=>fiche.sections.some(s=>s.fields.some(f=>f.id===id))));
+const manifest=JSON.parse(archive.readAsText('manifest.json'));manifest.exportedAt=new Date().toISOString();manifest.bundleId+='-a5';
+const zip=new AdmZip();for(const e of archive.getEntries())if(!['state.json','manifest.json'].includes(e.entryName))zip.addFile(e.entryName,e.getData());
+zip.addFile('state.json',Buffer.from(JSON.stringify(state,null,2)));zip.addFile('manifest.json',Buffer.from(JSON.stringify(manifest,null,2)));
+const sortie='Export Dirvers/corriges/Alien_driver_gmos_a5.gmos-driver';zip.writeZip(sortie);assert.deepEqual(JSON.parse(new AdmZip(sortie).readAsText('state.json')),state);assert.deepEqual(fs.readFileSync(source),original);
+fs.writeFileSync('Export Dirvers/corriges/alien_state_a5.json',JSON.stringify(state,null,2)+'\n');fs.mkdirSync('scratch/alien-a5/pilotes',{recursive:true});fs.copyFileSync(sortie,'scratch/alien-a5/pilotes/Alien.gmos-driver');
+const rapport={source,sortie,sha256Source:crypto.createHash('sha256').update(original).digest('hex'),champsAvant:avant.length,champsApres:fiche.sections.flatMap(s=>s.fields).length,ids,originalInchange:true};
+fs.writeFileSync('scratch/alien-a5/export.json',JSON.stringify(rapport,null,2));console.log(JSON.stringify(rapport));

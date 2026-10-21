@@ -48,6 +48,13 @@ beforeEach(() => { de = vi.spyOn(DiceEngine, 'roll'); });
 afterEach(() => { cleanup(); de.mockRestore(); useSessionOSStore.setState({ players: [] }); });
 
 describe('A1 : le jet Alien conserve son verdict et ses conséquences', () => {
+    it('A4 : ignore aussi l’ancien Tremblement d’un synthétique', () => {
+        render(<Hote a3 donnees={{ androide: true, sante: 0, panique: 8, ...appliquerLaPaniqueAlien(regle, 'panique', { stress: 4 }, 'ancien', 8) }} />);
+        const selects = screen.getAllByRole('combobox');
+        ['agilite', 'mobilite', 'stress'].forEach((v, i) => fireEvent.change(selects[i], { target: { value: v } }));
+        expect(screen.getByText(/→ 2 dés de base, 0 de Stress/)).toBeTruthy();
+        expect(fiche.stress).toBe(4);
+    });
     it('des six sont provisoires puis annulés à 10 ; le Point de Récit reste indisponible', () => {
         render(<Hote />);
         faces(6, 6, 1, 2, 2, 2); lancer();
@@ -129,6 +136,22 @@ describe('A1 : le jet Alien conserve son verdict et ses conséquences', () => {
 });
 
 describe('A3 : tir et chargeur sur le vrai panneau', () => {
+    it('A4 : tire en automatique à zéro Santé, sans Stress, Panique, forçage ni chargeur vidé', () => {
+        render(<Hote a3 donnees={{androide:true,sante:0,stress:5,armes:'Fusil',bonus:'+1',degats:'2',portees:'Longue',proprietes:'munitions, mode auto',
+            [CLE_COMBAT_ALIEN]:{...combatAlienVierge(),armes:{'0':{vide:false,chargeurs:1}}}}} />);
+        fireEvent.change(screen.getByLabelText('Arme de la fiche'), {target:{value:'0'}});
+        const selects = screen.getAllByRole('combobox'); ['agilite','mobilite','stress'].forEach((v,i)=>fireEvent.change(selects[i],{target:{value:v}}));
+        fireEvent.click(screen.getByLabelText(/Mode automatique/));
+        faces(1,2,2,2,2); fireEvent.click(screen.getByRole('button',{name:'Lancer'}));
+        expect(de).toHaveBeenCalledTimes(5); expect(fiche.stress).toBe(5);
+        expect(lireLeCombatAlien(fiche).armes['0'].vide).toBe(false);
+        expect(screen.queryByRole('button',{name:'Test de Panique'})).toBeNull();
+        expect((screen.getByRole('button',{name:/Forcer le jet/}) as HTMLButtonElement).disabled).toBe(true);
+    });
+    it('A4 : Arrêt du système, même réactivé pour communiquer, interdit les tests ordinaires', () => {
+        render(<Hote a3 donnees={{androide:true,sante:0,[CLE_COMBAT_ALIEN]:{...combatAlienVierge(),synthetique:{avaries:[],arret:true,reactive:true,traumatismes:['Mémoire'],interventionsTraitees:[]}}}} />);
+        expect((screen.getByRole('button',{name:'Lancer'}) as HTMLButtonElement).disabled).toBe(true);
+    });
     it('monte le Stress avant le tir auto, attend la Panique puis vide et recharge une seule fois', () => {
         render(<Hote a3 donnees={{sante:2,stress:0,armes:'Fusil',bonus:'+1',degats:'2',portees:'Longue',proprietes:'munitions, mode auto',
             [CLE_COMBAT_ALIEN]:{...combatAlienVierge(),armes:{'0':{vide:false,chargeurs:1}}}}} />);

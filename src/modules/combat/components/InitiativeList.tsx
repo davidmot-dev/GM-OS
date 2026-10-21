@@ -23,6 +23,7 @@ import { Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Etiquette, Ornement } from '../../../components/socle';
 import { estHorsDeCombat } from '../logic/SanteDuCombattant';
+import { fileDesInitiativesAlien } from '../../dice/systemes/actionsAlien';
 
 interface SortableCombatCardProps {
     combatant: Combatant;
@@ -112,6 +113,11 @@ const InitiativeList: React.FC = () => {
                 <Etiquette ton="succes">{t('modules:combat.agencement.enLice', { count: enLice.length })}</Etiquette>
                 {tombes.length > 0 && <Etiquette ton="danger">{t('modules:combat.agencement.horsDeCombat', { count: tombes.length })}</Etiquette>}
             </div>
+            {activeDriver?.combat.alien?.actions&&<div data-file-initiatives-alien className="mb-3 flex flex-wrap gap-2 text-xs text-app-text">
+                {fileDesInitiativesAlien(combatants).map(e=>{const c=combatants.find(c=>c.id===e.id)!;return <button type="button" className={`rounded border border-app-border px-2 py-1 ${estActif(c)&&(c.alien?.carteActive??c.init)===e.carte?'bg-accent/20 font-bold':''}`} key={`${e.id}:${e.carte}`} onClick={()=>{
+                    const s=useCombatStore.getState();s.setCurrentTurnTo(c.id);s.updateCombatant(c.id,{alien:{cartes:c.alien?.cartes??[c.init],budgets:c.alien?.budgets??{},carteActive:e.carte}});
+                }}>Carte {e.carte} — {c.name}</button>;})}
+            </div>}
 
             <DndContext
                 sensors={sensors}

@@ -19,6 +19,7 @@ export interface StatusEffect {
  * Peut être liée à un personnage joueur (PC) ou un PNJ (NPC).
  */
 export interface Combatant {
+    alien?: import('../dice/systemes/actionsAlien').ActionsDuCombattantAlien;
     id: string;
     name: string;
     /** Valeur d'initiative pour l'ordre de passage */

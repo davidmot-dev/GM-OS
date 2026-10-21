@@ -24,7 +24,11 @@ import StressSubi from './StressSubi';
 import PaniqueAlien from './PaniqueAlien';
 import SanteAlien from './SanteAlien';
 import MunitionsAlien from './MunitionsAlien';
+import ActionsAlien from '../../../combat/components/ActionsAlien';
+import ProgressionAlien from './ProgressionAlien';
+import { lireProgressionAlien } from '../../../dice/systemes/progressionAlien';
 import { CLE_COMBAT_ALIEN, lireLeCombatAlien, malusDesBlessures, preparerLeTir, rechargerUneArme } from '../../../dice/systemes/combatAlien';
+import { systemeArrete } from '../../../dice/systemes/synthetiquesAlien';
 import { PreparationAlien, SuitesDuJetAlien } from './JetsAlien';
 import { CLE_JET_ALIEN, REGLAGES_ALIEN, actualiserLeJetAlien, composerLesDesAlien, equipementsAlien, lireLeJetAlien, resultatDuJetAlien, type JetAlien } from '../../../dice/systemes/jetsAlien';
 import {
@@ -145,6 +149,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const equipementAlien = equipements.find(a => a.id === reglagesAlien.equipement);
     const suiviJetAlien = regleJetAlien ? lireLeJetAlien(valeursAlien) : undefined;
     const combatAlien = regleJetAlien?.combat;
+    const synthetiqueAlien = !!suitesAlien && estUnAndroide(suitesAlien, valeursAlien);
     const etatCombatAlien = lireLeCombatAlien(valeursAlien);
     const tirAlien = !!combatAlien && !!regleJetAlien && regleJetAlien.competences[choix[regleJetAlien.competence]] === 'distance';
     const tirPrepareAlien = tirAlien ? preparerLeTir(reglagesAlien,equipementAlien) : undefined;
@@ -154,7 +159,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         let suivi = actualiserLeJetAlien(recu?.id === dernierJetAlien.current.id ? recu : dernierJetAlien.current, res, enAttente, annule);
         const equipementDuJet = suivi.equipement;
         if (combatAlien && suivi.competence === 'distance' && equipementDuJet?.proprietes?.munitions) {
-            const aVider = suivi.chargeurAVider || equipementDuJet.proprietes.unique || res.rolls.some(d => d.source === 'gear' && d.val === 1);
+            const aVider = suivi.chargeurAVider || equipementDuJet.proprietes.unique || (!synthetiqueAlien && res.rolls.some(d => d.source === 'gear' && d.val === 1));
             suivi = { ...suivi, chargeurAVider: aVider };
             if (aVider && !enAttente && !suivi.resolu) {
                 const s = lireLeCombatAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
@@ -301,10 +306,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             if (!suitesAlien) return prepare;
             const stress = estUnAndroide(suitesAlien, valeursAlien) ? 0 : prepare.desSecondaires;
             const effet = lireLaPaniqueAlien(valeursAlien).effet;
-            const enPanique = !descripteur.panique?.champ || Number(valeursAlien[descripteur.panique.champ]) >= 7;
+            const enPanique = !estUnAndroide(suitesAlien, valeursAlien) && (!descripteur.panique?.champ || Number(valeursAlien[descripteur.panique.champ]) >= 7);
             const tremblement = effet?.malusAgilite && enPanique && Object.values(choix).includes(suitesAlien.agilite) ? effet.malusAgilite : 0;
             if (regleJetAlien) {
-                const blessure = combatAlien ? malusDesBlessures(lireLeCombatAlien(valeursAlien),regleJetAlien.competences[choix[regleJetAlien.competence]]) : 0;
+                const blessure = combatAlien && !estUnAndroide(suitesAlien, valeursAlien) ? malusDesBlessures(lireLeCombatAlien(valeursAlien),regleJetAlien.competences[choix[regleJetAlien.competence]]) : 0;
                 const tir = combatAlien && regleJetAlien.competences[choix[regleJetAlien.competence]] === 'distance' ? preparerLeTir(reglagesAlien,equipementAlien) : undefined;
                 const apres = composerLesDesAlien(prepare.nombreDeDes, stress + (estUnAndroide(suitesAlien,valeursAlien) ? 0 : tir?.stress ?? 0), reglagesAlien, equipementAlien?.bonus, tremblement + blessure + (tir?.bonus ?? 0));
                 const arme = lireLeCombatAlien(valeursAlien).armes[equipementAlien?.id ?? ''];
@@ -505,8 +510,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const pret = composantesARetenir.every(c => c.facultative || choix[c.id]) && jet.avertissements.length === 0
         && !(suitesAlien && resultat?.rolls.some(d => d.source === 'gear' && d.val === 1) && !paniqueJouee)
         && !(suitesAlien && jet.nombreDeDes + jet.desSecondaires === 0);
-    const briseAlien = !!combatAlien && !!suitesAlien && !estUnAndroide(suitesAlien,valeursAlien)
-        && (etatCombatAlien.mort || Number(valeursAlien[combatAlien.sante]) <= 0);
+    const briseAlien = !!combatAlien && !!suitesAlien && (synthetiqueAlien ? systemeArrete(etatCombatAlien)
+        : etatCombatAlien.mort || Number(valeursAlien[combatAlien.sante]) <= 0);
 
     /**
      * D'où sortiront les points, **avant** de lancer.
@@ -976,7 +981,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
     };
 
-    const raisonDeNePasForcer = briseAlien ? 'Brisé ou mort : aucun test ordinaire ni forçage.'
+    const raisonDeNePasForcer = synthetiqueAlien ? 'Un androïde ne force jamais.'
+        : briseAlien ? 'Brisé ou mort : aucun test ordinaire ni forçage.'
         : regleJetAlien && dernierLancer && suiviJetAlien?.role === 'defenseur'
         ? 'Le défenseur ne peut pas forcer un test opposé.'
         : regleJetAlien && dernierLancer && (suiviJetAlien?.eclats.length ?? 0) > 0
@@ -1053,13 +1059,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
       table vit dans Table-OS, que seul le poste du meneur atteint : la tablette
       dit le total, et c'est le meneur qui lit la ligne.
     */
-    const paniqueDeclenchee = !!descripteur.panique
+    const paniqueDeclenchee = !!descripteur.panique && !synthetiqueAlien
         && !!resultat?.rolls.some(d => d.source === 'gear' && d.val === 1);
     const paniqueEnAttente = !!suitesAlien && paniqueDeclenchee && !paniqueJouee;
     const actionAnnulee = !!suitesAlien && !!paniqueJouee && paniqueJouee.effectif >= 10;
     const jouerLaPanique = () => {
         const regle = descripteur.panique;
-        if (!regle || !dernierLancer || paniqueDejaJouee.current) return;
+        if (!regle || !dernierLancer || paniqueDejaJouee.current || synthetiqueAlien) return;
         paniqueDejaJouee.current = true;
         const niveau = dernierLancer.seconde ? lireLeNombre(dernierLancer.seconde.champ) : 0;
         const tire = testDePanique(niveau, regle.faces, faces => DiceEngine.roll(faces));
@@ -1180,7 +1186,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         setSuitesNotees(n => ({ ...n, [suite.label]: `${nomDuChamp(champ)} : ${avant} → ${apres}` }));
     };
 
-    const reussiteDepensee = descripteur.reussiteDepensee && ecrireSurLaFiche && !torg && !destin
+    const reussiteDepensee = descripteur.reussiteDepensee && ecrireSurLaFiche && !torg && !destin && (!combatAlien?.progression||lireProgressionAlien(valeursAlien).mode==='cinema')
         ? descripteur.reussiteDepensee : undefined;
     const pointsDisponibles = reussiteDepensee ? lireLeNombre(reussiteDepensee.champ) : 0;
     const depenserUneReussite = () => {
@@ -1602,7 +1608,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     else if (action === 'reserve' && a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { ...a, chargeurs: nombre } } } });
                     else if (action === 'initialiser' && !a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { vide, chargeurs: nombre } } } });
                 }} />}
-            {briseAlien && <p className="text-xs text-etat-danger">{etatCombatAlien.mort ? 'Mort' : 'Brisé'} : aucun test de compétence ordinaire. Les premiers soins et le Trépas ont leurs gestes séparés.</p>}
+            {briseAlien && <p className="text-xs text-etat-danger">{synthetiqueAlien ? 'Arrêt du système : aucun test ordinaire ; réactivation et réparation par Comtech.' : `${etatCombatAlien.mort ? 'Mort' : 'Brisé'} : aucun test de compétence ordinaire. Les premiers soins et le Trépas ont leurs gestes séparés.`}</p>}
             <div className="flex items-center gap-6">
                 {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
                 <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien ? 'hidden' : ''}`}>
@@ -2119,8 +2125,10 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 if (resultat) setResultat(res);
                 redire(`Alien — ${suite.nomCompetence}`, { ...res, totalDisplay: `${res.totalDisplay} — ${texte}` });
             }} />}
+            {combatAlien?.actions&&<ActionsAlien personnageId={personnageId} joueur={pourLesJoueurs}/>}
+            {combatAlien?.progression&&ecrireSurLaFiche&&<ProgressionAlien regle={combatAlien} valeurs={valeursAlien} ecrire={ecrireAlien} personnageId={personnageId} campaignId={campaignId} joueur={pourLesJoueurs}/>}
             {combatAlien && ecrireSurLaFiche && <SanteAlien regle={combatAlien} valeurs={valeursAlien} ecrire={ecrireAlien}
-                personnageId={personnageId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />}
+                personnageId={personnageId} campaignId={campaignId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />}
             {suitesAlien && ecrireSurLaFiche && (
                 <PaniqueAlien regle={suitesAlien} champPanique={descripteur.panique?.champ}
                     valeurs={valeursAlien} ecrire={ecrireAlien} personnageId={personnageId}

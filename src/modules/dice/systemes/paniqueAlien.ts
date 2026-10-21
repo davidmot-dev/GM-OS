@@ -46,9 +46,9 @@ export function lireLaPaniqueAlien(fiche: Record<string, unknown>): SuiviDePaniq
     };
 }
 
-export function estUnAndroide(regle: RegleDePaniqueAlien, fiche: Record<string, unknown>): boolean {
+export function estUnAndroide(regle: { androide?: string }, fiche: Record<string, unknown>): boolean {
     const v = regle.androide ? fiche[regle.androide] : undefined;
-    return v === true || v === 1 || v === 'true';
+    return v === true || v === 1 || ['true', '1', 'on', 'oui'].includes(String(v).toLowerCase());
 }
 
 const EFFETS = [

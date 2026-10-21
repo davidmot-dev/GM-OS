@@ -3,6 +3,10 @@
   "gabaritDeLaFiche": "alien-v2-normalise",
   "commentaire": "Correspondance entre la fiche d'Alien dans GM-OS et le gabarit alien-v2-normalise du moteur de fiches. Écrite le 2026-10-13. Les pistes imprimées en cases (Stress, Santé, Radiation, Expérience, Points de Récit) se comptent par la transformation « serie » ; les dix lignes d'équipement forment l'inventaire. Les champs « field-… » sont ceux que David a ajoutés à la main dans la fiche GM-OS. Elle compte deux « Points de Récit » : celui que suit le pilote (points_de_recit) est relié. A2 (20/10/2026) : Bonus, Dégâts et Portée des armes sont reliés, une ligne par arme. Les colonnes absentes des anciennes données ne sont pas effacées lors de la première poussée HTML.",
   "champs": [
+    { "gmos": "affame", "fiche": "states.hungry", "siPresent": true },
+    { "gmos": "dehydrate", "fiche": "states.dehydrated", "siPresent": true },
+    { "gmos": "epuise", "fiche": "states.exhausted", "siPresent": true },
+    { "gmos": "gele", "fiche": "states.freezing", "siPresent": true },
     {
       "gmos": "nom",
       "fiche": "identity.name"
@@ -245,22 +249,6 @@
     {
       "fiche": "protection.name",
       "pourquoi": "GM-OS ne garde que le niveau de protection, qui compte au jet ; le nom de la protection reste sur la fiche."
-    },
-    {
-      "fiche": "states.hungry",
-      "pourquoi": "L'état « Affamé » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
-    },
-    {
-      "fiche": "states.dehydrated",
-      "pourquoi": "L'état « Déshydraté » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
-    },
-    {
-      "fiche": "states.exhausted",
-      "pourquoi": "L'état « Épuisé » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
-    },
-    {
-      "fiche": "states.freezing",
-      "pourquoi": "L'état « Gelé » se coche sur la fiche ; GM-OS n'a pas de champ d'état pour lui."
     }
   ]
 }

@@ -106,7 +106,8 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'alien', slug: 'alien', personnage: 'Dana Okoro',
-        sheetData: { force: 4, sante: 4, empathie: 2, combat_rapproche: 2, niveau_de_stress: 2, points_de_recit: 1 },
+        sheetData: { force: 4, sante: 4, empathie: 2, combat_rapproche: 2, niveau_de_stress: 2, points_de_recit: 1,
+            _gmos_progression_alien:{version:1,mode:'cinema',scenario:'demo',acte:1,seance:'demo-1',objectifs:{},remis:{},finsActe:[],bilans:[],fetiches:[],achats:[],essaisTalents:[]} },
         composantes: ['force', 'combat_rapproche', 'niveau_de_stress'],
         scenes: c => scenesDAlien(c),
     },
@@ -312,7 +313,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
-        if (mise.corpusId === 'alien') test.setTimeout(180_000);
+        if (mise.corpusId === 'alien') test.setTimeout(240_000);
         const f = gmos.fenetre;
         const campagne = campagneDe(mise.slug);
 
@@ -326,7 +327,7 @@ for (const { mise, pilote } of JEUX) {
 
         // Le bandeau des réserves, en tête du cockpit.
         await vue(campagne, 'cockpit');
-        if ((pilote.gameDriver.ressourcesDeTable?.length ?? 0) > 0) {
+        if (pilote.gameDriver.ressourcesDeTable?.some(r=>!r.horsDuBandeau)) {
             await photographier(f.locator('[data-bandeau-des-reserves]').first(), `jeu-${mise.slug}-reserves`);
         }
 
@@ -720,6 +721,205 @@ async function scenesDAlien(c: ContexteDeScene): Promise<void> {
     }
     if (jet?.alien) await sceneDesJetsAlien(c);
     if (jet?.alien?.combat) await sceneDuCombatAlien(c);
+    if (jet?.alien?.combat) await sceneDuSynthetiqueAlien(c);
+    if ((jet?.alien?.combat as {survie?:unknown}|undefined)?.survie) await sceneDeSurvieAlien(c);
+    if ((jet?.alien?.combat as {actions?:boolean}|undefined)?.actions) await sceneDesActionsXenoAlien(c);
+    if ((jet?.alien?.combat as {progression?:unknown}|undefined)?.progression) await sceneDeProgressionAlien(c);
+}
+
+/** A6 : plusieurs cartes, une Santé, critique particulier et vraie aspersion sur le PJ. */
+async function sceneDesActionsXenoAlien(c:ContexteDeScene):Promise<void>{
+    const f=gmos.fenetre;
+    await ecrireLaFiche(c,{androide:false,force:4,endurance:2,sante:4,niveau_de_stress:0,dehydrate:false,affame:false,gele:false,epuise:false,'field-1786783170092':0,
+        _gmos_combat_alien:{version:1,temps:{round:0,tour:0,quart:0,jour:0},critiques:[],blessureTraitee:[],blessures:[],mort:false,armes:{}}});
+    await entrerEnCombat(c);
+    const ids=await f.evaluate(({campagne})=>{
+        const w=window as unknown as Fenetre,s=w.useSessionOSStore.getState(),p=w.useCombatStore.getState();
+        s.addEntity({name:'Spécimen XX121',type:'monster',role:'hostile',status:'alive',avatar:'',hp:6,maxHp:6,ac:0,speed:0,initiative:0,description:'Recette jetable',roleplayingNotes:'',gmSecretInfo:'',linkedMapIds:[],campaignId:campagne,sheetData:{sante:6,force:6,'field-1786783170092':0}});
+        const e=w.useSessionOSStore.getState().entities.find(e=>e.name==='Spécimen XX121')!;
+        p.addCombatant({name:e.name,init:0,isPlayer:false,sourceEntityId:e.id,faction:'enemy',statuses:[]});
+        return {creature:w.useCombatStore.getState().combatants.find(c=>c.sourceEntityId===e.id)!.id,entity:e.id,marine:w.useCombatStore.getState().combatants.find(c=>c.isPlayer)!.id};
+    },{campagne:c.campagne});
+    const creature=f.locator(`[data-combattant="${ids.creature}"]`),marine=f.locator(`[data-combattant="${ids.marine}"]`);
+    await creature.getByRole('button',{name:'Déclarer cette créature xénomorphe',exact:true}).click();
+    const x=creature.locator('[data-xenomorphe-alien]');await x.locator('summary').first().click();
+    await x.getByLabel('Vitesse',{exact:true}).fill('2');await x.getByLabel('Espèce XX121 avec sang acide').check();await x.getByLabel('Éclaboussure d’acide de l’espèce').fill('8');
+    await f.evaluate(()=>{(window as unknown as Fenetre).useCombatStore.getState().rollAutoInitiative({cards:10,sortOrder:'asc'});});
+    const cartes=await f.evaluate(()=>{const s=(window as unknown as Fenetre).useCombatStore.getState();return s.combatants.flatMap(c=>c.alien?.cartes??[]);});
+    expect(cartes).toHaveLength(3);expect(new Set(cartes).size).toBe(3);
+    const actions=marine.locator('[data-actions-alien]');await actions.locator('summary').click();
+    await actions.getByRole('button',{name:'Bloquer — rapide hors tour',exact:true}).click();await actions.getByRole('button',{name:'Payer une lente',exact:true}).click();
+    await expect(actions.getByText(/1 lente, 1 rapide/)).toBeVisible();await photographier(actions,'jeu-alien-a6-actions');
+    const hasard=async(n:number,action:()=>Promise<void>)=>{await f.evaluate(n=>{const w=window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;Math.random=()=>n;},n);try{await action();}finally{await f.evaluate(()=>{Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;});}};
+    const sante=creature.locator('[data-sante-alien]');await sante.getByLabel('Dégâts entrants').fill('6');await sante.getByLabel('Dégâts d’une attaque (armure applicable)').uncheck();
+    await sante.getByRole('button',{name:'Préparer ce coup',exact:true}).click();await sante.getByRole('button',{name:'Lancer la Protection',exact:true}).click();await sante.getByRole('button',{name:'Appliquer les dégâts restants',exact:true}).click();
+    await hasard(0.2,async()=>{await x.getByRole('button',{name:'Résoudre le critique xénomorphe D6',exact:true}).click();await expect(x.getByText(/2 — Blessé/)).toBeVisible();});
+    expect(await f.evaluate(id=>{const s=(window as unknown as Fenetre).useCombatStore.getState();return s.combatants.find(c=>c.id===id)!.alien?.cartes.length;},ids.creature)).toBe(1);
+    await x.getByLabel('Dana Okoro au Contact',{exact:true}).check();await x.getByRole('button',{name:'Confirmer les victimes de cette aspersion',exact:true}).click();
+    await hasard(0.4,()=>x.getByRole('button',{name:'Tirer une attaque spéciale D6',exact:true}).click());await expect(x.locator('[data-attaque-speciale-alien]')).toBeVisible();
+    await photographier(x,'jeu-alien-a6-xenomorphe');
+    const acide=marine.locator('[data-acide-alien]');await hasard(0.99,()=>acide.getByRole('button',{name:'Résoudre l’attaque d’acide 1 de ce Round',exact:true}).click());
+    await expect(acide.getByRole('button',{name:'Résoudre l’attaque d’acide 1 de ce Round',exact:true})).toBeDisabled();
+    await hasard(0.99,()=>acide.getByRole('button',{name:'Trépas acide — Endurance sans Stress',exact:true}).click());await photographier(acide,'jeu-alien-a6-acide');
+    await f.waitForTimeout(750);await f.reload();await attendreLHydratation(gmos);await ouvrirLeModule(gmos,'Combat-OS');
+    expect(await f.evaluate(id=>{const s=(window as unknown as Fenetre).useSessionOSStore.getState();return s.entities.find(e=>e.id===id)!.hp;},ids.entity)).toBe(1);
+}
+
+/** A7 : remise privée, plafonds, reçus de gains/achats et lecture du Hub à trois tailles. */
+async function sceneDeProgressionAlien(c:ContexteDeScene):Promise<void>{
+    const f=gmos.fenetre;
+    await f.evaluate(()=>{(window as unknown as Fenetre).useCombatStore.getState().clearCombatants();});
+    await ecrireLaFiche(c,{sante:4,niveau_de_stress:4,points_de_recit:2,objet_fetiche:'Photo de famille',comtech:1,'field-1786782929062':10,
+        _gmos_progression_alien:{version:1,mode:'cinema',scenario:'Dernier départ',acte:1,seance:'Alien-recette-1',objectifs:{},remis:{},finsActe:[],bilans:[],fetiches:[],achats:[],essaisTalents:[]}});
+    await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});let p=f.locator('[data-progression-alien]').first();await p.locator('summary').first().click();
+    const secret='Sauver les prélèvements avant l’évacuation.';
+    await p.getByLabel('Objectif secret de cet acte (MJ uniquement)',{exact:true}).fill(secret);await p.getByRole('button',{name:'Remettre au seul personnage',exact:true}).click();
+    await p.getByLabel('Maman confirme risques ou sacrifices pour cet objectif').check();await p.getByRole('button',{name:'Valider la fin d’acte',exact:true}).click();await expect(p.getByRole('button',{name:'Valider la fin d’acte',exact:true})).toBeDisabled();
+    await p.getByRole('button',{name:'Utiliser le fétiche — Stress −1',exact:true}).click();await expect(p.getByRole('button',{name:'Utiliser le fétiche — Stress −1',exact:true})).toBeDisabled();await photographier(p.locator('[data-objectifs-alien]'),'jeu-alien-a7-objectifs');
+    const lire=()=>f.evaluate(id=>(window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===id)!.sheetData!,c.personnage);
+    expect((await lire()).points_de_recit).toBe(3);expect((await lire()).niveau_de_stress).toBe(3);
+    await p.getByLabel('Mode de jeu',{exact:true}).selectOption('campagne');
+    await p.getByLabel('Présence à la séance',{exact:true}).check();await p.getByLabel('Test de Panique effectué',{exact:true}).check();await p.getByRole('button',{name:'Attribuer les PX de la séance',exact:true}).click();expect((await lire())['field-1786782929062']).toBe(12);
+    await photographier(p.locator('[data-px-alien]'),'jeu-alien-a7-px');
+    await f.evaluate(id=>{const s=(window as unknown as Fenetre).useSessionOSStore;s.setState(etat=>({sessions:etat.sessions.map(x=>x.campaignId===id?{...x,status:'done' as const}:x)}));},c.campagne);
+    await p.locator('[data-apprentissage-alien] summary').click();await p.getByLabel('Entre deux séances, hors séance active').check();await p.getByLabel('Compétence à améliorer').selectOption('comtech');
+    await p.getByRole('button',{name:'Préparer un nouvel apprentissage',exact:true}).click();await p.getByRole('button',{name:'Valider cet apprentissage',exact:true}).click();expect((await lire()).comtech).toBe(2);expect((await lire())['field-1786782929062']).toBe(7);await expect(p.getByRole('button',{name:'Valider cet apprentissage',exact:true})).toBeDisabled();
+    await photographier(p.locator('[data-apprentissage-alien]'),'jeu-alien-a7-apprentissage');
+    await f.waitForTimeout(750);await f.reload();await attendreLHydratation(gmos);await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});p=f.locator('[data-progression-alien]').first();await p.locator('summary').first().click();await expect(p.getByRole('button',{name:'Attribuer les PX de la séance',exact:true})).toBeDisabled();
+    await expect(p.getByLabel('Présence à la séance',{exact:true})).toBeChecked();await expect(p.getByLabel('Présence à la séance',{exact:true})).toBeDisabled();
+    // Le Hub veille hors séance : l'achat est terminé entre les deux, puis la suivante s'ouvre.
+    await f.evaluate(campagne=>{const s=(window as unknown as Fenetre).useSessionOSStore;
+        s.setState(etat=>{const precedente=etat.sessions.find(x=>x.campaignId===campagne)!;const id='alien-a7-seance-suivante';return {
+            sessions:[...etat.sessions,{...precedente,id,status:'active' as const}],
+            campaigns:etat.campaigns.map(c=>c.id===campagne?{...c,activeSessionId:id}:c),
+        };});
+    },c.campagne);
+    const nav=await chromium.launch({channel:'msedge',args:['--mute-audio']});
+    try{
+        const ctx=await nav.newContext({viewport:{width:360,height:1200},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce',storageState:stockageTabletteAlien});
+        await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
+        const t=await ctx.newPage(),charges:string[]=[];t.on('websocket',ws=>ws.on('framereceived',evt=>charges.push(String(evt.payload))));
+        await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();
+        const progression=t.locator('[data-progression-alien]');await progression.locator('summary').first().click();await expect(progression.getByText(/PX 7 ; Récit 3\/3/)).toBeVisible();await expect(progression.getByRole('button')).toHaveCount(0);
+        for(const largeur of [360,768,1180]){await t.setViewportSize({width:largeur,height:1200});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(progression,`jeu-alien-a7-tablette-${largeur}`);}
+        const publics=charges.filter(x=>{try{return JSON.parse(x).type==='sync';}catch{return false;}});expect(publics.length).toBeGreaterThan(0);expect(publics.join('')).not.toContain(secret);
+        // Le fil privé à la reconnexion contient bien la remise à ce seul PJ.
+        expect(charges.some(x=>x.includes(secret))).toBe(true);
+    }finally{await nav.close();}
+}
+
+/** A5 : réserves réelles, privations, radiations, charge et reprise dans le vrai Hub. */
+async function sceneDeSurvieAlien(c:ContexteDeScene):Promise<void>{
+    const f=gmos.fenetre;
+    await ecrireLaFiche(c,{androide:false,force:2,endurance:2,sante:2,niveau_de_stress:3,air:8,eau:5,nourriture:1,energie:2,affame:false,dehydrate:false,epuise:false,gele:false,
+        'field-1786782860390':0,rads_permanents:0,inventaire:'Lampe\nOutil','field-1786783108730':'',
+        _gmos_combat_alien:{version:1,temps:{round:0,tour:0,quart:0,jour:0},critiques:[],blessureTraitee:[],blessures:[],mort:false,armes:{}},
+        _gmos_survie_alien:{version:1,actif:false,collectif:false,taches:[],traites:[],sorties:{},joursSansSommeil:1,froid:'quart',zone:false,manqueAir:0,dangerAir:false,dangerRadiations:false,poids:{}}});
+    const ouvrir=async()=>{await f.waitForTimeout(750);await f.reload();await attendreLHydratation(gmos);await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});const p=f.locator('[data-survie-alien]').first();await p.getByText('Survie Alien',{exact:true}).click();return p;};
+    let survie=await ouvrir();
+    const lire=()=>f.evaluate(id=>(window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===id)!.sheetData!,c.personnage);
+    const hasard=async(des:number[],action:()=>Promise<void>)=>{await f.evaluate(ds=>{const w=window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;Math.random=()=>ds.shift()??0.2;},des);try{await action();}finally{await f.evaluate(()=>{Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;});}};
+    await survie.getByLabel('Suivre les consommables en pénurie').check();
+    await survie.getByRole('button',{name:'Demander le test — Air',exact:true}).click();
+    await hasard([0,0,0.2,0.2,0.99,0.2],()=>survie.getByRole('button',{name:'Résoudre : Air : utilisation confirmée par Maman',exact:true}).click());
+    expect((await lire()).air).toBe(6);expect((await lire()).niveau_de_stress).toBe(3);
+    const fenetre=await gmos.application.browserWindow(f);await fenetre.evaluate(w=>w.setContentSize(2160,1800));
+    await photographier(survie.locator('[data-reserves-alien]'),'jeu-alien-a5-reserves');
+    await survie.getByLabel('Déshydraté',{exact:true}).check();await survie.getByRole('button',{name:'Valider quart — survie',exact:true}).click();
+    await survie.getByRole('button',{name:'Résoudre : Déshydratation : échéance par Quart',exact:true}).click();expect((await lire()).sante).toBe(1);expect((await lire()).niveau_de_stress).toBe(4);
+    const sante=f.locator('[data-sante-alien]').first();await expect(sante.getByRole('button',{name:'Un Tour de repos écoulé : Santé +1',exact:true})).toBeDisabled();
+    await photographier(survie.locator('[data-etats-survie]'),'jeu-alien-a5-privations');
+    await survie.getByRole('button',{name:'Boisson prise : commencer le Quart de récupération',exact:true}).click();expect((await lire()).dehydrate).toBe(true);
+    await survie.getByRole('button',{name:'Valider quart — survie',exact:true}).click();expect((await lire()).dehydrate).toBe(false);
+    await sante.getByRole('button',{name:'Un Tour de repos écoulé : Santé +1',exact:true}).click();expect((await lire()).sante).toBe(2);
+    await survie.getByLabel('Réserves communes à la campagne').check();await survie.getByLabel('Quantité confirmée — Eau',{exact:true}).fill('8');await survie.getByRole('button',{name:'Renseigner Eau',exact:true}).click();
+    await survie.getByRole('button',{name:'Demander le test — Eau',exact:true}).click();await hasard([0,0.2,0.2,0.2,0.2,0.2],()=>survie.getByRole('button',{name:'Résoudre : Eau : utilisation confirmée par Maman',exact:true}).click());
+    expect((await lire()).eau).toBe(5);await expect(survie.getByText('Eau : 7',{exact:true})).toBeVisible();
+    await survie.locator('[data-encombrement-alien]').locator('summary').click();await survie.getByLabel('Lampe — masse',{exact:true}).fill('0.5');await survie.getByLabel('Outil — masse',{exact:true}).fill('2');
+    await survie.getByLabel('Autres charges portées (armure, bouteilles, batteries ; zéro si aucune)',{exact:true}).fill('0.25');
+    await survie.getByRole('button',{name:'Reporter la charge sur la fiche',exact:true}).click();expect((await lire())['field-1786783213114']).toBe(5.75);
+    await photographier(survie.locator('[data-encombrement-alien]'),'jeu-alien-a5-encombrement');
+    await survie.getByLabel('Réserves communes à la campagne').uncheck();
+    await ecrireLaFiche(c,{'field-1786782860390':2});survie=await ouvrir();
+    await survie.getByRole('button',{name:'Demander un Rad reçu',exact:true}).click();await hasard([0,0.2,0.2],()=>survie.getByRole('button',{name:'Résoudre : Un Rad reçu, confirmé par Maman',exact:true}).click());
+    expect((await lire()).sante).toBe(1);expect(((await lire())._gmos_combat_alien as {critiques:unknown[]}).critiques).toHaveLength(0);
+    await survie.getByRole('button',{name:'Valider quart — survie',exact:true}).click();await hasard([0],()=>survie.getByRole('button',{name:'Résoudre : Hors zone : élimination possible d’un Rad',exact:true}).click());
+    expect((await lire()).rads_permanents).toBe(1);expect((await lire())['field-1786782860390']).toBe(3);
+    await survie.getByRole('button',{name:'Valider quart — survie',exact:true}).click();await hasard([0.99],()=>survie.getByRole('button',{name:'Résoudre : Hors zone : élimination possible d’un Rad',exact:true}).click());
+    expect((await lire())['field-1786782860390']).toBe(2);await photographier(survie.locator('[data-radiations-alien]'),'jeu-alien-a5-radiations');
+    await survie.getByLabel('Zone irradiée').selectOption('round');await expect(f.locator('[data-sante-alien]').first().getByRole('button',{name:'Un Tour de repos écoulé : Santé +1',exact:true})).toBeDisabled();await survie.getByLabel('Zone irradiée').selectOption('non');
+    await survie.getByRole('button',{name:'Valider tour — survie',exact:true}).click();survie=await ouvrir();
+    await expect(survie.getByRole('button',{name:'Résoudre : Air : tour 1',exact:true})).toBeVisible();await photographier(survie.locator('[data-echeances-survie]'),'jeu-alien-a5-echeances');
+    await hasard([0.2,0.2,0.2,0.2,0.2,0.2],()=>survie.getByRole('button',{name:'Résoudre : Air : tour 1',exact:true}).click());expect((await lire()).air).toBe(6);
+    await survie.getByLabel('Déshydraté',{exact:true}).check();
+    const nav=await chromium.launch({channel:'msedge',args:['--mute-audio']});
+    try{
+        const ctx=await nav.newContext({viewport:{width:360,height:1200},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce',storageState:stockageTabletteAlien});
+        await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
+        const t=await ctx.newPage();await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();
+        const suivi=t.locator('[data-survie-alien]');await suivi.getByText('Survie Alien',{exact:true}).click();await expect(suivi.getByLabel('Déshydraté',{exact:true})).toBeChecked();await expect(suivi.getByText(/Total : 2 Rads, dont 1 permanents/)).toBeVisible();await expect(suivi.getByRole('button')).toHaveCount(0);
+        for(const largeur of [360,768,1180]){await t.setViewportSize({width:largeur,height:1200});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(suivi.locator('[data-etats-survie]'),`jeu-alien-a5-tablette-${largeur}`);}
+    }finally{await nav.close();}
+    await fenetre.evaluate(w=>w.setContentSize(1440,900));const carte=await entrerEnCombat(c);await expect(carte.getByText(/Récupération de Santé interdite : Déshydraté/).first()).toBeVisible();await expect(carte.locator('[data-survie-alien]')).toBeVisible();
+}
+
+/** A4 : ancien Stress ignoré, D6 aggravé, Arrêt puis deux interventions distinctes. */
+async function sceneDuSynthetiqueAlien(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await ecrireLaFiche(c, { androide: true, force: 4, agilite: 4, combat_rapproche: 2, sante: 4, niveau_de_stress: 5, panique_en_cours: 0,
+        _gmos_combat_alien: { version: 1, temps: {round:0,tour:0,quart:0,jour:0}, critiques: [], blessureTraitee: [], blessures: [], mort: false, armes: {} } });
+    await vue(c.campagne, 'players', {joueur:JOUEUR,personnage:c.personnage});
+    let panneau = f.locator('[data-panneau-de-jet]').first(), sante = panneau.locator('[data-sante-alien]');
+    for (const [i, champ] of ['force','combat_rapproche','niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    const hasard = async (n: number, action: () => Promise<void>) => {
+        await f.evaluate(n => {const w=window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;Math.random=()=>n;},n);
+        try { await action(); } finally { await f.evaluate(()=>{Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;}); }
+    };
+    const lire = () => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===id)!.sheetData!, c.personnage);
+    await hasard(0,()=>panneau.getByRole('button',{name:'Lancer',exact:true}).click());
+    expect((await lire()).niveau_de_stress).toBe(5);
+    await expect(panneau.getByText(/0 de Stress/).first()).toBeVisible();
+    await expect(panneau.getByRole('button',{name:'Test de Panique',exact:true})).toHaveCount(0);
+    await expect(panneau.getByRole('button',{name:/Forcer le jet/})).toBeDisabled();
+    await sante.getByLabel('Dégâts entrants').fill('4'); await sante.getByLabel('Dégâts d’une attaque (armure applicable)').uncheck();
+    await sante.getByRole('button',{name:'Préparer ce coup'}).click();
+    await sante.getByRole('button',{name:'Lancer la Protection'}).click(); await sante.getByRole('button',{name:'Appliquer les dégâts restants'}).click();
+    await expect(panneau.getByRole('button',{name:'Lancer',exact:true})).toBeEnabled();
+    await hasard(0.55, async()=>{await sante.getByRole('button',{name:'Tirer le prochain critique synthétique (D6)'}).click();await expect(sante.getByText('4 — Dislocation de la tête')).toBeVisible();});
+    // Deuxième coup à zéro, même D6 : 4 devient 5, sans détruire le premier reçu.
+    await sante.getByLabel('Dégâts entrants').fill('1'); await sante.getByRole('button',{name:'Préparer ce coup'}).click();
+    await sante.getByRole('button',{name:'Lancer la Protection'}).click(); await sante.getByRole('button',{name:'Appliquer les dégâts restants'}).click();
+    await hasard(0.55, async()=>{await sante.getByRole('button',{name:'Tirer le prochain critique synthétique (D6)'}).click();await expect(sante.getByText('5 — Grave rupture du châssis')).toBeVisible();});
+    await photographier(sante.locator('[data-synthetique-alien]'),'jeu-alien-a4-avaries');
+    // Un troisième coup provoque l'Arrêt du système.
+    await sante.getByRole('button',{name:'Préparer ce coup'}).click();await sante.getByRole('button',{name:'Lancer la Protection'}).click();await sante.getByRole('button',{name:'Appliquer les dégâts restants'}).click();
+    await hasard(0.99,async()=>{await sante.getByRole('button',{name:'Tirer le prochain critique synthétique (D6)'}).click();await expect(sante.getByText('6 — Arrêt du système')).toBeVisible();});
+    await expect(panneau.getByRole('button',{name:'Lancer',exact:true})).toBeDisabled();
+    await sante.getByLabel('Source d’énergie disponible').check();await sante.getByRole('button',{name:'Commencer la réactivation (un Tour)'}).click();
+    await sante.getByLabel('Réussites de Comtech validées').fill('1');await sante.getByLabel('Trauma mental permanent choisi avec Maman').fill('Mémoire fragmentée — validée par Maman');
+    await expect(sante.getByRole('button',{name:'Appliquer le résultat de Comtech'})).toBeDisabled();
+    await sante.getByRole('button',{name:'Valider un tour',exact:true}).click();await sante.getByRole('button',{name:'Appliquer le résultat de Comtech'}).click();expect((await lire()).sante).toBe(0);
+    await sante.getByRole('button',{name:'Commencer la réparation (un Quart)'}).click();
+    await f.waitForTimeout(750);await f.reload();await attendreLHydratation(gmos);await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});
+    panneau=f.locator('[data-panneau-de-jet]').first();sante=panneau.locator('[data-sante-alien]');
+    await expect(sante.getByText(/Réparation en cours/)).toBeVisible();
+    // Les réglages du prochain jet sont locaux au panneau et se choisissent à nouveau après fermeture.
+    for (const [i, champ] of ['force','combat_rapproche','niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    await photographier(sante.locator('[data-synthetique-alien]'),'jeu-alien-a4-reactivation');
+    const nav=await chromium.launch({channel:'msedge',args:['--mute-audio']});
+    try {
+        const ctx=await nav.newContext({viewport:{width:360,height:1200},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce',storageState:stockageTabletteAlien});
+        await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
+        const t=await ctx.newPage();await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);await expect(t.getByText('Connecté',{exact:true})).toBeVisible();await t.getByTitle('Fiche Personnage',{exact:true}).click();
+        const suivi=t.locator('[data-synthetique-alien]'); await expect(suivi.getByText(/Réparation en cours/)).toBeVisible();
+        await expect(suivi.getByText('6 — Arrêt du système')).toBeVisible();await expect(suivi.getByRole('button')).toHaveCount(0);
+        for(const largeur of [360,768,1180]) {await t.setViewportSize({width:largeur,height:1200});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(suivi,`jeu-alien-a4-tablette-${largeur}`);}
+        await sante.getByRole('button',{name:'Valider un quart',exact:true}).click();await sante.getByLabel('Réussites de Comtech validées').fill('1');await sante.getByRole('button',{name:'Appliquer le résultat de Comtech'}).click();
+        expect((await lire()).sante).toBe(4);expect((await lire()).niveau_de_stress).toBe(5);
+        await expect(suivi.getByText('6 — Arrêt du système')).toHaveCount(0);await expect(suivi.getByText(/Trauma mental permanent : Mémoire fragmentée/)).toBeVisible();
+        await expect(panneau.getByRole('button',{name:'Lancer',exact:true})).toBeEnabled();
+    } finally {await nav.close();}
+    const carte=await entrerEnCombat(c);await expect(carte.locator('[data-sante-alien]').getByText(/Santé synthétique : 4/)).toBeVisible();
 }
 
 /** A3 : tir auto, vraie protection puis critique humain et soins séparés, sur profil jetable. */
@@ -976,7 +1176,7 @@ async function scenesDePaniqueAlien(c: ContexteDeScene): Promise<void> {
         await panneau.getByRole('button', { name: 'Test de Panique', exact: true }).click();
         await expect(panneau.getByText(/Action annulée :/)).toBeVisible();
         await expect(panneau.getByText('Figé (10)', { exact: true })).toBeVisible();
-        await panneau.getByLabel('Lambert — amie de test').check();
+        await panneau.getByRole('checkbox',{name:'Lambert — amie de test',exact:true}).check();
         await panneau.getByRole('button', { name: 'Appliquer la contagion de Figé' }).click();
         await expect.poll(() => f.evaluate(() => (window as unknown as Fenetre).useSessionOSStore.getState().players
             .flatMap(p => p.characters).find(x => x.id === 'alien-ami-a1')?.sheetData?.niveau_de_stress)).toBe(3);

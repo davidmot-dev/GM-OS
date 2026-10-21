@@ -1,4 +1,5 @@
 import { seuilAtteint } from '../../session/logic/HealthInterpreter';
+import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 
 /**
  * Une seule réponse à « comment va ce combattant ».
@@ -121,7 +122,8 @@ export function decrireLaSante(c: PorteurDeSante): string | null {
     const sys = c.healthSystem;
     if (sys) {
         const rdd = sys.data?.rdd as {libelle?: string} | undefined;
-        const etat = rdd?.libelle ?? ETATS[sys.state] ?? sys.state;
+        const synthetique = sys.data?.alienSynthetique as { arret?: boolean } | undefined;
+        const etat = synthetique ? synthetique.arret ? 'Arrêt du système' : 'synthétique actif selon les avaries' : rdd?.libelle ?? ETATS[sys.state] ?? sys.state;
         const d = sys.data ?? {};
         switch (sys.type) {
             case 'hp':
@@ -418,6 +420,10 @@ export function fractionDeVie(c: PorteurDeSante): number | null {
  * déclare pas mort un combattant faute d'information.
  */
 export function estHorsDeCombat(c: PorteurDeSante): boolean {
+    const xeno=c.healthSystem?.data?.alienXenomorphe as {etat?:string}|undefined;
+    if(xeno)return xeno.etat==='mort';
+    const synthetique = c.healthSystem?.data?.alienSynthetique as { arret?: boolean } | undefined;
+    if (typeof synthetique?.arret === 'boolean') return synthetique.arret;
     const rdd = c.healthSystem?.data?.rdd as {horsCombat?: boolean} | undefined;
     if (typeof rdd?.horsCombat === 'boolean') return rdd.horsCombat;
     if (c.healthSystem) return c.healthSystem.state === 'dead';
@@ -506,7 +512,7 @@ export function santePrincipaleDeLaFiche(
     if (!principale) return null;
     const courant = valeurDuChamp(fiche, principale.fieldId);
     if (courant === undefined) return null;
-    const max = maximumDeLaJauge(principale.fieldId, combat.statsToTrack, fiche)
+    const max = lireLeCombatAlien(fiche??{}).xenomorphe?.maximum ?? maximumDeLaJauge(principale.fieldId, combat.statsToTrack, fiche)
         ?? santeDeDepart(combat.santeDeDepart, champ => valeurDuChamp(fiche, champ))
         ?? (maxParDefaut !== undefined && maxParDefaut > 0 ? maxParDefaut : null)
         ?? courant;

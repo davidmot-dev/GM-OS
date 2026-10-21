@@ -31,6 +31,7 @@ import { idsDesCosmsCourants } from '../../session/logic/cosmsCourants';
 import { useOrdreDuTourStore } from '../../combat/useOrdreDuTourStore';
 import { effetsDuRound } from '../../combat/logic/paquetDAction';
 import { filDuLecteur } from '../../../../electron/destinatairesDesMessages';
+import { caviarderObjectifsAlien } from '../../dice/systemes/progressionAlien';
 
 /**
  * Intervalle minimal entre deux synchronisations **forcées**.
@@ -125,8 +126,8 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
             if (Object.keys(payload).length > 0 && window.appBridge) {
                 window.appBridge.remote?.sendSync?.(payload, 'remote');
                 window.appBridge.remote?.sendSync?.(payload, 'gm');
-                window.appBridge.remote?.sendSync?.(payload, 'player');
-                window.appBridge.remote?.sendSync?.(payload, 'hub');
+                window.appBridge.remote?.sendSync?.(caviarderObjectifsAlien(payload), 'player');
+                window.appBridge.remote?.sendSync?.(caviarderObjectifsAlien(payload), 'hub');
             }
         } catch (e) {
             console.error(`[NexusSync] Fast-Sync Error (${segmentName}):`, e);
@@ -623,7 +624,7 @@ export const useNexusSynchronizer = (isMainPC: boolean) => {
 
                 // Copie de notre propre message typé, pas une entrée distante.
                 // JetTransmis accepte la chaîne produite par JSON pour Date.
-                const playerDiff = JSON.parse(JSON.stringify(diffPayload)) as DonneesDuHub;
+                const playerDiff = caviarderObjectifsAlien(JSON.parse(JSON.stringify(diffPayload))) as DonneesDuHub;
                 
                 // Sanitization for Player Role
                 if (playerDiff.notes) playerDiff.notes.private = '•••••';

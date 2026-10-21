@@ -21,6 +21,7 @@
 
 import type { SheetSection } from '../../data/defaultSheetTemplates';
 import type { RegleDesJetsAlien } from './systemes/jetsAlien';
+import { estUnAndroide } from './systemes/paniqueAlien';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
@@ -1071,7 +1072,8 @@ export function preparerLeJet(
           stress s'ajoute par-dessus, et le borner effacerait la pression que le
           jeu met précisément là.
         */
-        desSecondaires: Math.max(0, (descripteur.reserve?.secondaire?.base ?? 0) + deLaSeconde.total),
+        desSecondaires: descripteur.panique?.suites && estUnAndroide(descripteur.panique.suites, valeursDeLaFiche) ? 0
+            : Math.max(0, (descripteur.reserve?.secondaire?.base ?? 0) + deLaSeconde.total),
         composantesDeLaSecondeReserve: deLaSeconde.retenues,
         desAchetes: Math.max(0, desAchetes),
         cout: { total, ressource: reserve?.ressource },

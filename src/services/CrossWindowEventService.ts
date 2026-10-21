@@ -1,4 +1,5 @@
 import { useMapStore } from '../modules/map/useMapStore';
+import { caviarderObjectifsAlien } from '../modules/dice/systemes/progressionAlien';
 import { useMapUIStore } from '../modules/map/useMapUIStore';
 import { useWhiteboardStore, type DrawingPath } from '../modules/whiteboard/useWhiteboardStore';
 import { useClockStore } from '../store/useClockStore';
@@ -585,7 +586,7 @@ class CrossWindowEventService {
         // deux fois pendant les premières secondes d'une fenêtre.
         if (!this.isMainInstance && !this.hasReceivedSharedState && !GATE_EXEMPT_TYPES.has(type)) return false;
 
-        this.transport.publish({ type, payload, senderId: this.instanceId });
+        this.transport.publish({ type, payload:type==='combat'?caviarderObjectifsAlien(payload):payload, senderId: this.instanceId });
         return true;
     }
 

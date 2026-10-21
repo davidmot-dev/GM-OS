@@ -35,7 +35,7 @@ conformément à la décision de David du 19/10.
 
 | Pilote | État de la connaissance | Première amélioration ou prochaine étape proposée |
 | --- | --- | --- |
-| [Alien](#alien) | A0–A3 livrés, essayés et validés par David | Choisir A4/A5 ; A3 validé le 21/10 |
+| [Alien](#alien) | A0–A5 validés par David ; A6/A7 livrés et contrôlés le 22/10 | Essai A6/A7 de David attendu ; A8 non engagé |
 | [Blade Runner](#blade-runner) | Limites documentées ; audit complet à faire | Même choix de forçage au pupitre et sur la fiche ; suivi des blessures |
 | [Crimes](#crimes) | Audit du manuel et de l'export corrigé | Corpus puis résolution « Potentiel GARDE Compétence » |
 | [Cthulhu Hack](#cthulhu-hack) | Limites documentées ; audit complet à faire | Effets du Hors Jeu et usure reliés aux valeurs de la fiche |
@@ -72,7 +72,37 @@ Le champ `armes_proprietes` porte le total à 44 ; les 42 liens HTML sont conser
 **1 330 tests**, types, construction et lint ciblé réussis ; recette Electron,
 carte de combat et vrai Hub à trois tailles réussie, sept captures relues.
 Voir le [bilan A3](2026-10-21-alien-a3.md). **Essai A3 de David validé le 21/10** :
-« ok c'est bon pour A3, commit et pousse ». A4–A8 non engagés.
+« ok c'est bon pour A3, commit et pousse ».
+
+**21/10, reprise A4 :** David demande « reprend le travail, on va reprendre avec A4 »
+et confirme GM-OS fermé. A4 est réalisé : synthétiques sans Stress/Panique/forçage,
+critiques D6 persistants, aggravation du résultat immédiatement répété, activité selon
+les avaries, Arrêt du système, réactivation et réparation Comtech distinctes,
+trauma permanent conservé et immunités. Export v1.4.0, mêmes 44 champs et liens HTML.
+**1 439 tests**, types, construction et lint ciblé sans erreur ; recette Electron,
+carte de combat et vrai Hub Edge à trois tailles réussie, cinq captures relues et
+ajoutées au manuel. Essai de David validé le 21/10. Voir le [bilan A4](2026-10-21-alien-a4.md).
+A5 est demandé ensuite par David le 21/10 (« on va continuer avec A5 »), GM-OS confirmé
+fermé : réserves individuelles/collectives, échéances, quatre états reliés à l'HTML,
+restrictions de récupération, radiations temporaires/permanentes et encombrement réalisés.
+Export **1.5.0**, **49 champs et 46 liens** ; types, build, lint ciblé et **1 460 tests**
+réussis. Recette finale Electron/combat/Hub à trois tailles réussie, huit captures A5
+relues et ajoutées au manuel. Voir le [bilan A5](2026-10-21-alien-a5.md).
+**Essais A4 et A5 validés par David le 21/10** : « ok A4 et A5 tester c'est bon ».
+David demande ensuite « on va continuer avec A6 et A7 » et confirme GM-OS fermé :
+**A6/A7 livrés et contrôlés le 22/10**, après sa reprise « continue ».
+A6 suit les actions/réactions, les cartes multiples d'une seule créature, ses critiques
+et le sang acide XX121. A7 suit objectifs privés, fins d'acte, bilans PX, apprentissage,
+Camarade/Rival et fétiche par période. Les circonstances et conséquences narratives
+restent confirmées par Maman.
+Exports **1.6.0 et 1.7.0**, ce dernier incluant A0–A6, **49 champs et 46 liens HTML**.
+**1 567 tests dans 119 fichiers**, types/build et lint ciblé sans erreur ; recette réelle
+A0–A7 Electron/combat/Hub à trois tailles réussie, neuf captures relues et intégrées.
+Objectifs absents du flux public, remise privée retrouvée à la reconnexion ; réponses
+du bilan et achats conservés sans double attribution. Voir le
+[bilan A6/A7](2026-10-21-alien-a6-a7.md) et la
+[passation du 22/10](2026-10-22-etat-et-reprise-codex-alien-a6-a7.md).
+**Essai A6/A7 de David attendu.** A8 non engagé.
 
 **Déjà disponible :** réserve de base et Stress, forçage, test et cumul des paniques,
 Points de Récit, gestes de repos/objet fétiche, santé raccordée, initiative par cartes,
@@ -84,13 +114,13 @@ fiche HTML, MU/TH/UR et détecteur de mouvement. Ces outils ne sont pas à recon
 | A1 | Livré et essayé | Verdict, effets, contagion, Stress après dégâts et bilan de traumatisme vérifiés ; durées et conséquences narratives validées par Maman. Essai de David validé le 20/10 |
 | A2 | Livré et essayé | Bonus/Dégâts/Portée reliés ; modificateurs signés et aide (max. 3), bonus conservés au-delà de dix dés ; opposition, défenseur sans forçage et budget des actions d'éclat conservés. Essai de David validé le 21/10 |
 | A3 | Livré et essayé | Tir automatique et cibles secondaires, chargeurs/rechargement, protection avant dégâts, vrais D66 humains, Brisé, échéances de Trépas et soins séparés. Temps de jeu et résultats médicaux confirmés par Maman ; PNJ humain déclaré explicitement. Contrôlé et essai de David validé le 21/10 |
-| A4 | P1 | Distinguer complètement les synthétiques : pas de Stress/Panique, critiques propres, avaries, réparations et immunités |
-| A5 | P2 | Consommables et échéances, privations et repos, radiations courantes/permanentes, encombrement |
-| A6 | P2 | Actions lentes/rapides et réactions ; plusieurs initiatives de xénomorphe avec une seule santé ; attaques spéciales et acide |
-| A7 | P2 | Objectifs privés par acte, Points de Récit, bilan des PX et apprentissage, Camarade/Rival |
+| A4 | Livré et essayé | Aucun Stress/Panique/forçage ; D6 synthétiques persistants, avaries et activité, réactivation puis réparation Comtech, immunités et trauma conservé. 1 439 tests et recette Electron/Hub réussis le 21/10 ; essai de David validé le 21/10 |
+| A5 | Livré et essayé | Tests de Réserve sans Panique, stocks individuels/collectifs, échéances et reçus ; états HTML et restrictions, Rads permanents et surplus, charge sur masses confirmées. 1 460 tests et recette Electron/combat/Hub réussis le 21/10 ; huit captures relues ; essai de David validé le 21/10 |
+| A6 | Livré, essai attendu | Actions lentes/rapides, réactions et surveillance ; cartes selon la Vitesse avec une seule Santé ; attaques, critiques D6 et acide XX121. Contrôlé le 22/10 ; arbitrage narratif par Maman |
+| A7 | Livré, essai attendu | Objectifs remis en privé par acte, Récit Cinéma, bilan PX conservé, achats et apprentissage uniques, Camarade/Rival et fétiche par période. Contrôlé le 22/10 |
 | A8 | P3 | Raccord optionnel du détecteur aux zones, déplacements, Tour et Énergie ; dossiers d'acte dans MU/TH/UR. Combat spatial à cadrer séparément |
 
-**Suite proposée :** A4/A5 → A6/A7 ; A8 selon l'usage.
+**Suite :** commit/push A4?A7, puis A8 demand? par David ; combat spatial s?par?.
 **Cas témoin :** des six suivis d'une Panique effective de 10 annulent l'action ; un Point
 de Récit ne doit pas contourner cette conséquence. L'export réel a été vérifié le 20/10.
 

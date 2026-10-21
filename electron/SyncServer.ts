@@ -15,6 +15,7 @@ import path from 'node:path';
 import fs from 'fs-extra';
 import { sessionManager } from './SessionManager';
 import { filtrerAstrologieDistante } from '../src/modules/session/logic/astrologiePartagee';
+import { caviarderObjectifsAlien } from '../src/modules/dice/systemes/progressionAlien';
 import { mediaAccess } from './MediaAccess';
 import { pairingManager } from './PairingManager';
 import { evaluateAction } from './actionPolicy';
@@ -736,7 +737,7 @@ export class SyncServer {
                     const a = action as {type?:string;payload?:unknown};
                     if (a?.type === 'sync' && (client.role === 'player' || client.role === 'hub')) {
                         const personnage = client.deviceId ? sessionManager.getClient(client.deviceId)?.characterId ?? null : null;
-                        client.send(JSON.stringify({...a,payload:filtrerAstrologieDistante(a.payload,personnage)}));
+                        client.send(JSON.stringify({...a,payload:caviarderObjectifsAlien(filtrerAstrologieDistante(a.payload,personnage))}));
                     } else client.send(message);
                 }
             }

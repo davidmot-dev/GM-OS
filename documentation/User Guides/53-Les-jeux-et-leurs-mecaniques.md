@@ -96,7 +96,7 @@ choix est fait. Un pilote décrit son jet avec une ou plusieurs de ces pièces :
 | **Seuil** (`seuil`) | Des valeurs de la fiche **additionnées** : chaque dé sous le seuil (ou au-dessus, selon le `sens`) réussit | Dune : Compétence + Principe |
 | **Réserve** (`reserve`) | Un nombre de dés : une base, plus des valeurs de la fiche, jusqu'à un plafond ; `sansPlafond` conserve les bonus lorsque le système ne fixe aucune limite au jet équipé | Alien : Attribut + Compétence ; NOC : le Domaine |
 | **Jets Alien** (`alien`) | Bonus de l'arme reliée à la fiche HTML, outil/talent, situation signée et aide (maximum trois) ; le malus épuise la base puis le Stress. Opposition par annulation des réussites, défenseur sans forçage, actions d'éclat de la compétence avec budget et choix conservés | Alien A2 : préparer le test, résoudre l'opposition, dépenser les excédents ; les conséquences et les dégâts sont validés par Maman |
-| **Combat Alien** (`combat.alien`, `jet.alien.combat`) | Tir : visée, portée, lumière, taille, mode automatique (+2 et Stress +1 avant le lancer), chargeur vidé après l'attaque et rechargement ; protection en d6, abri et propriétés d'arme ; vrais D66 humains, critiques persistants, Brisé sans tests ordinaires, soins distincts et échéances récurrentes de Trépas sans Stress ni forçage | Alien A3 : Maman valide les cibles, les résultats de soins et le temps de jeu ; suivi humain explicite pour les PNJ |
+| **Combat Alien** (`combat.alien`, `jet.alien.combat`) | Tir, protection, soins et Trépas humains ; avaries et réparations synthétiques ; `survie` : réserves, privations, Rads et charge ; `actions` : lente/rapide, réactions, cartes multiples et Santé commune des xénomorphes, attaques et critiques propres, sang acide XX121 ; `progression` : objectifs remis par messagerie privée, Récit Cinéma, neuf questions de PX Campagne, achats, Camarade/Rival et fétiche par période | Alien A3–A7 : Maman valide les circonstances, résultats et temps de jeu ; les échéances et reçus survivent à la fermeture. Les objectifs secrets sont retirés des flux publics |
 | **Dés achetés** (`cout`, `ressource`) | Des dés de plus, payés sur une réserve de table, à un prix qui monte | Dune : 1, 2 puis 3 points d'Impulsion |
 | **Seconde réserve** (`secondaire`) | Des dés lancés avec les autres mais **comptés à part** : un 1 y déclenche quelque chose | Alien : les dés de Stress, et la **Panique** |
 | **Dés échelonnés** (`desEchelonnes`) | **Un dé par valeur**, dont la taille se lit sur la fiche | Blade Runner : A = D12 … D = D6 |
@@ -342,5 +342,6 @@ recette automatique à six formats, appareils physiques encore à essayer.*
 *Relu le 2026-10-19 : livret HTML RdD relié au pilote étendu, page Archétype et module TMR ;
 les niveaux du livret restent distincts du potentiel déclaré au carnet R5.*
 
-*Complété le 2026-10-21 : Alien A3, tir et chargeurs, protection, critiques humains,
-Brisé, soins et échéances de Trépas, avec validation des circonstances et du temps par Maman.*
+*Complété le 2026-10-22 : Alien A3–A7, tir, protection, critiques, soins, avaries,
+survie ; actions, xénomorphes et acide ; objectifs privés, Récit, PX et apprentissage,
+avec validation des circonstances, résultats et temps de jeu par Maman.*

@@ -25,12 +25,19 @@ import {
 } from './logic/CombatRules';
 import { HealthInterpreter } from '../session/logic/HealthInterpreter';
 import { horlogeDeDefaite } from './logic/TacheDeDefaite';
-import { santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
+import { estHorsDeCombat, santeDeDepart, valeurDuChamp } from './logic/SanteDuCombattant';
 // `logic/trame` ne connaît que des types : l'importer ne ferme aucun cycle,
 // contrairement au store de séance qui reste atteint par le global.
 import { etatDeLaScene } from '../session/logic/trame';
 import type { Scene } from '../../types/trame.types';
 import type { HealthSystem } from '../../types/entity.types';
+import { estUnAndroide } from '../dice/systemes/paniqueAlien';
+import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien } from '../dice/systemes/combatAlien';
+import { immuniteSynthetique, projeterLaSanteSynthetique } from '../dice/systemes/synthetiquesAlien';
+import { refusDeRecuperationAlien } from '../dice/systemes/survieAlien';
+import { budgetDuCombattantAlien, distribuerCartesAlien, fileDesInitiativesAlien, payerActionAlien, type ActionAlien } from '../dice/systemes/actionsAlien';
+import { apresImpactXeno, projeterSanteXeno } from '../dice/systemes/xenomorphesAlien';
+import { caviarderObjectifsAlien } from '../dice/systemes/progressionAlien';
 
 /**
  * L'horloge de défaite d'un nouveau combattant, quand le système en veut une.
@@ -63,10 +70,10 @@ function santeSelonLeSysteme(sheetData?: Record<string, unknown>): HealthSystem 
 }
 
 /** Le pilote actif, lu par le global — un import direct fermerait un cycle. */
-function piloteActif(): { combat?: { santeDeDepart?: string } } | undefined {
+function piloteActif(): { combat?: { santeDeDepart?: string; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien } } | undefined {
     try {
         return (window as unknown as {
-            useSessionOSStore?: { getState: () => { getActiveDriver?: () => { combat?: { santeDeDepart?: string } } | undefined } };
+            useSessionOSStore?: { getState: () => { getActiveDriver?: () => { combat?: { santeDeDepart?: string; alien?: import('../dice/systemes/combatAlien').RegleDeCombatAlien } } | undefined } };
         }).useSessionOSStore?.getState()?.getActiveDriver?.() ?? undefined;
     } catch {
         return undefined;
@@ -404,6 +411,7 @@ interface CombatState {
     isRemoteSyncing?: boolean;
 
     // --- Actions --- //
+    agirAlien: (id: string, action: ActionAlien, recu: string, carte?: number, direction?: string) => boolean;
 
     // CRUD
     /** Ajoute un nouveau participant au combat */
@@ -495,7 +503,7 @@ interface CombatState {
      */
     refleterLaFiche: (
         cibleId: string,
-        sante: { hp?: number; healthSystem?: HealthSystem; sheetData?: Record<string, string | number | boolean> },
+        sante: { hp?: number; healthSystem?: HealthSystem; sheetData?: Record<string, unknown> },
     ) => void;
 
     // Initiative
@@ -610,6 +618,10 @@ export const useCombatStore = create<CombatState>()(
                 const cible = get().combatants.find(c =>
                     c.id === cibleId || c.sourceEntityId === cibleId || c.sourcePlayerId === cibleId);
                 if (!cible) return;
+
+                if(impact.value>0&&!impact.isRecovery&&cible.alien){
+                    set({combatants:get().combatants.map(c=>c.id===cible.id?{...c,alien:{...c.alien!,budgets:Object.fromEntries(Object.entries(c.alien!.budgets).map(([k,b])=>[k,{...b,surveillance:undefined}]))}}:c)});
+                }
 
                 set((state) => ({
                     faitsDArmes: {
@@ -756,9 +768,9 @@ export const useCombatStore = create<CombatState>()(
                     return n === 'invisible' || n === 'invisibilité' || n === 'caché' || n === 'hidden';
                 }));
                 
-                bridge.remote.sendSync({
+                bridge.remote.sendSync(caviarderObjectifsAlien({
                     combat: { combatants: resolvedCombatants, currentTurnIdx, round, isCombatProjected }
-                });
+                }));
             },
 
             addCombatant: (combatant) => {
@@ -856,6 +868,18 @@ export const useCombatStore = create<CombatState>()(
                 }));
                 get().syncCombatantToSession(id);
                 get().broadcastSync();
+            },
+
+            agirAlien: (id, action, recu, carte, direction) => {
+                if (!piloteActif()?.combat?.alien?.actions) return true;
+                const c=get().combatants.find(c=>c.id===id); if(!c)return true;
+                const choisie=carte??c.alien?.carteActive??c.init;
+                if(estHorsDeCombat(c)||!(c.alien?.cartes??[c.init]).includes(choisie))return false;
+                const b=budgetDuCombattantAlien(c,get().round,choisie),apres=payerActionAlien(b,action,recu,direction);
+                if(apres===b)return false;
+                get().updateCombatant(id,{alien:{cartes:c.alien?.cartes??[c.init],carteActive:c.alien?.carteActive,
+                    budgets:{...c.alien?.budgets,[`${get().round}:${choisie}`]:apres}}});
+                return true;
             },
 
             /*
@@ -1001,6 +1025,17 @@ export const useCombatStore = create<CombatState>()(
                 // le combat puis annonce l'initiative.
                 get().consignerLOuvertureDuCombat();
 
+                if(piloteActif()?.combat?.alien?.actions){
+                    if(get().combatants.some(c=>c.alien?.cartes.some(n=>n>0))){gmToast('Alien : les cartes sont conservées pendant le combat. Réinitialiser le combat pour un nouveau tirage.','info');return;}
+                    const session=(window as unknown as {useSessionOSStore?:{getState:()=>SessionOSState}}).useSessionOSStore?.getState();
+                    const distribues=distribuerCartesAlien(get().combatants,c=>{
+                        const source=c.isPlayer?session?.players.flatMap(p=>p.characters).find(p=>p.id===c.sourcePlayerId):session?.entities.find(e=>e.id===c.sourceEntityId);
+                        return lireLeCombatAlien(source?.sheetData??c.sheetData??{}).xenomorphe?.vitesse??1;
+                    });
+                    if(!distribues){gmToast('Plus de dix cartes nécessaires : grouper les PNJ identiques avant le tirage.','warning');return;}
+                    set({combatants:distribues,currentTurnIdx:0,round:1});get().broadcastSync();return;
+                }
+
                 set((state) => {
                     const combatants = state.combatants;
                     if (combatants.length === 0) {
@@ -1064,6 +1099,30 @@ export const useCombatStore = create<CombatState>()(
             },
 
             nextTurn: () => {
+                if(piloteActif()?.combat?.alien?.actions){
+                    const s=get(),courant=s.combatants[s.currentTurnIdx],file=fileDesInitiativesAlien(s.combatants);
+                    if(!courant||!file.length)return;
+                    const carte=courant.alien?.carteActive??courant.init;
+                    let i=file.findIndex(e=>e.id===courant.id&&e.carte===carte)+1;
+                    if(!file.some(e=>e.id===courant.id&&e.carte===carte))i=file.findIndex(e=>e.carte>carte);
+                    const round=s.round+(i<0||i>=file.length?1:0);if(i<0||i>=file.length)i=0;
+                    const prochain=file[i];
+                    set({round,currentTurnIdx:s.combatants.findIndex(c=>c.id===prochain.id),combatants:s.combatants.map(c=>{
+                        const a=c.alien??{cartes:[c.init],budgets:{}};
+                        const budgets={...a.budgets};
+                        if(c.id===prochain.id){const cle=`${round}:${prochain.carte}`;const b=budgets[cle];budgets[cle]=b&&!b.herite?{...b,surveillance:undefined}:{lentes:0,rapides:0,recus:[]};}
+                        return {...c,alien:{...a,budgets,carteActive:c.id===prochain.id?prochain.carte:a.carteActive},
+                            statuses:c.id===prochain.id&&prochain.carte===Math.min(...a.cartes)?processStatusDurations(c.statuses):c.statuses};
+                    })});
+                    const session=(window as unknown as {useSessionOSStore?:{getState:()=>SessionOSState}}).useSessionOSStore?.getState(),c=get().combatants.find(c=>c.id===prochain.id);
+                    const source=c?.sourceEntityId?session?.entities.find(e=>e.id===c.sourceEntityId):undefined;
+                    const fiche=source?.sheetData??c?.sheetData??{},suivi=lireLeCombatAlien(fiche),r=piloteActif()?.combat?.alien;
+                    if(c&&r&&suivi.xenomorphe?.etat==='ruse'){
+                        const sheetData={...fiche,[r.sante]:1,[CLE_COMBAT_ALIEN]:{...suivi,xenomorphe:{...suivi.xenomorphe,etat:'actif' as const}}};
+                        if(source)session?.updateEntity(source.id,{sheetData});else get().updateCombatant(c.id,{sheetData,hp:1,healthSystem:projeterSanteXeno(r,sheetData,lireLeCombatAlien(sheetData),c.healthSystem)});
+                    }
+                    get().broadcastSync();return;
+                }
                 set((state) => {
                     if (state.combatants.length === 0) return state;
                     let nextIdx = state.currentTurnIdx + 1;
@@ -1106,6 +1165,7 @@ export const useCombatStore = create<CombatState>()(
             },
 
             setCurrentTurnTo: (combatantId) => {
+                if(piloteActif()?.combat?.alien?.actions){const i=get().combatants.findIndex(c=>c.id===combatantId);if(i>=0)set({currentTurnIdx:i});get().broadcastSync();return;}
                 set((state) => {
                     const idx = state.combatants.findIndex(c => c.id === combatantId);
                     if (idx < 0) return state;
@@ -1123,6 +1183,7 @@ export const useCombatStore = create<CombatState>()(
             },
 
             prevTurn: () => {
+                if(piloteActif()?.combat?.alien?.actions){gmToast('Alien : revenir par la carte souhaitée ; les actions déjà payées sont conservées.','info');return;}
                 set((state) => {
                     if (state.combatants.length === 0) return state;
                     let prevIdx = state.currentTurnIdx - 1;
@@ -1141,7 +1202,7 @@ export const useCombatStore = create<CombatState>()(
                 set((state) => ({
                     currentTurnIdx: 0,
                     round: 1,
-                    combatants: state.combatants.map(c => ({ ...c, init: 0 }))
+                    combatants: state.combatants.map(c => ({ ...c, init: 0, alien:undefined }))
                 }));
                 get().broadcastSync();
             },
@@ -1254,13 +1315,30 @@ export const useCombatStore = create<CombatState>()(
                 // l'inverse.
                 get().consignerLOuvertureDuCombat();
 
+                const session = (window as unknown as { useSessionOSStore?: { getState: () => SessionOSState } }).useSessionOSStore?.getState();
+                const alien = session?.getActiveDriver?.()?.combat.alien;
+                const transmis = new Set<string>();
+                if (alien && session) for (const c of get().combatants.filter(c => targetIds.includes(c.id))) {
+                    const source = c.isPlayer ? session.players.flatMap(p => p.characters).find(p => p.id === c.sourcePlayerId) : session.entities.find(e => e.id === c.sourceEntityId);
+                    const refus=amount<0?refusDeRecuperationAlien(alien,source?.sheetData??c.sheetData??{},'sante'):undefined;
+                    if(refus){gmToast(refus,'info');transmis.add(c.id);continue;}
+                    if (!source || !(estUnAndroide(alien, source.sheetData ?? {}) || lireLeCombatAlien(source.sheetData??{}).xenomorphe)) continue;
+                    const { finalAmount } = calculateDamageImpact({ amount, type, target: c });
+                    // Les résistances ont déjà été calculées ; l'immunité biologique précède le raccord.
+                    const valeur = finalAmount > 0 && immuniteSynthetique(type) ? 0 : finalAmount;
+                    session.handleApplyImpact(source.id, c.isPlayer ? 'pc' : 'npc', { value: Math.abs(valeur), isRecovery: valeur < 0 });
+                    transmis.add(c.id);
+                }
+                targetIds = targetIds.filter(id => !transmis.has(id));
+
                 const coupsPortes: [string, number][] = [];
                 set((state) => {
                     const newCombatants = state.combatants.map(c => {
                         if (!targetIds.includes(c.id)) return c;
 
                         // Calcul pur des conséquences (Moteur de règles)
-                        const { finalAmount, newHp, statusToAdd } = calculateDamageImpact({ amount, type, target: c });
+                        const synthetique = !!alien && estUnAndroide(alien, c.sheetData ?? {});
+                        const { finalAmount, newHp, statusToAdd } = calculateDamageImpact({ amount: synthetique && amount > 0 && immuniteSynthetique(type) ? 0 : amount, type, target: c });
 
                         let newStatuses = [...c.statuses];
                         if (statusToAdd) {
@@ -1298,6 +1376,16 @@ export const useCombatStore = create<CombatState>()(
                         */
                         coupsPortes.push([c.id, finalAmount]);
 
+                        if (synthetique && alien) {
+                            const suivi = lireLeCombatAlien(c.sheetData ?? {});
+                            const fiche = { ...c.sheetData, [alien.sante]: newHp, [CLE_COMBAT_ALIEN]: finalAmount > 0 && newHp === 0 ? demanderUnCritique(suivi, crypto.randomUUID()) : suivi };
+                            return { ...c, sheetData: fiche, hp: newHp, healthSystem: projeterLaSanteSynthetique(alien, fiche, lireLeCombatAlien(fiche), healthSystem), statuses: newStatuses };
+                        }
+                        if(alien&&lireLeCombatAlien(c.sheetData??{}).xenomorphe){
+                            const suivi=apresImpactXeno(lireLeCombatAlien(c.sheetData??{}),newHp??0,Math.max(0,finalAmount),type,crypto.randomUUID());
+                            const fiche={...c.sheetData,[alien.sante]:newHp,[CLE_COMBAT_ALIEN]:suivi};
+                            return {...c,hp:newHp,sheetData:fiche,healthSystem:projeterSanteXeno(alien,fiche,suivi,healthSystem),statuses:newStatuses};
+                        }
                         return { ...c, hp: newHp, healthSystem, statuses: newStatuses };
                     });
                     return { combatants: newCombatants };

@@ -12,6 +12,8 @@
 // ─────────────────────────────────────────────
 
 export interface DamageImpact {
+    /** Les périls Alien ne tirent pas les critiques humains ; suffoquer n'est pas subir des dégâts. */
+    procedureAlien?: 'survie' | 'suffocation' | 'acide';
     value: number;
     type?: string;
     location?: string;

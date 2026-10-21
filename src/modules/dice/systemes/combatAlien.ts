@@ -1,7 +1,12 @@
 import type { CompetenceAlien, EquipementAlien, ReglagesDuJetAlien } from './jetsAlien';
 import type { TableEntry } from '../../tables/types';
+import type { SynthetiqueAlien } from './synthetiquesAlien';
+import type { RegleDeSurvieAlien } from './survieAlien';
 
 export interface RegleDeCombatAlien {
+    actions?: boolean;
+    progression?: import('./progressionAlien').RegleDeProgressionAlien;
+    survie?: RegleDeSurvieAlien;
     sante: string; force: string; endurance: string; protection: string; talents: string;
     proprietesArmes: string; stress: string; androide: string;
 }
@@ -13,8 +18,11 @@ export interface BlessureAlien {
     unite?: UniteAlien; echeance?: number; malusSoins: number; jours?: number; permanente: boolean;
     guerie: boolean; soigne56?: boolean; reductionLe?: number; tentatives: Record<string, number>;
 }
-export interface CoupAlien { id: string; degats: number; protection: number; type: ArmureAlien; annules?: number; des?: number[]; applique?: boolean }
+export interface CoupAlien { id: string; degats: number; protection: number; type: ArmureAlien; origine?: string; annules?: number; des?: number[]; applique?: boolean }
 export interface CombatAlien {
+    xenomorphe?: import('./xenomorphesAlien').XenomorpheAlien;
+    acide?: import('./xenomorphesAlien').AcideAlien;
+    synthetique?: SynthetiqueAlien;
     humain?: boolean;
     version: 1; temps: Record<UniteAlien, number>; critiques: string[]; blessureTraitee: string[];
     blessures: BlessureAlien[]; mort: boolean; armes: Record<string, { vide: boolean; chargeurs: number }>;
