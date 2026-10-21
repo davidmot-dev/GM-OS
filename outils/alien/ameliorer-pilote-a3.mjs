@@ -1,0 +1,24 @@
+// Usage : node outils/alien/ameliorer-pilote-a3.mjs "Export Dirvers/corriges/Alien_driver_gmos_a2.gmos-driver"
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import AdmZip from 'adm-zip';
+const source = process.argv[2]; assert.ok(source,'Indiquer l’export A2 à conserver.');
+const original = fs.readFileSync(source), archive = new AdmZip(original);
+const state = JSON.parse(archive.readAsText('state.json')), p = state.gameDriver, fiche = state.sheetTemplate;
+assert.equal(p.corpusId,'alien'); assert.ok(p.jet.alien); const ids = [p.id,fiche.id];
+const avant = fiche.sections.flatMap(s => s.fields.map(f => f.id));
+const section = fiche.sections.find(s => s.fields.some(f => f.id === 'armes_bonus')); assert.ok(section);
+if (!section.fields.some(f => f.id === 'armes_proprietes')) section.fields.push({ id:'armes_proprietes', label:'Propriétés des armes — une ligne par arme : munitions, mode auto, perce-armure, protection doublée ou tir unique', type:'textarea', defaultValue:'' });
+const regle = { sante:'sante', force:'force', endurance:'endurance', protection:'field-1786783170092', talents:'talent', proprietesArmes:'armes_proprietes', stress:'niveau_de_stress', androide:'androide' };
+p.combat.alien = regle; p.jet.alien.combat = regle; p.version = '1.3.0';
+assert.deepEqual([p.id,fiche.id],ids); assert.ok(avant.every(id => fiche.sections.some(s => s.fields.some(f => f.id === id))));
+const manifest = JSON.parse(archive.readAsText('manifest.json')); manifest.exportedAt = new Date().toISOString(); manifest.bundleId += '-a3';
+const zip = new AdmZip(); for (const e of archive.getEntries()) if (!['state.json','manifest.json'].includes(e.entryName)) zip.addFile(e.entryName,e.getData());
+zip.addFile('state.json',Buffer.from(JSON.stringify(state,null,2))); zip.addFile('manifest.json',Buffer.from(JSON.stringify(manifest,null,2)));
+const sortie = 'Export Dirvers/corriges/Alien_driver_gmos_a3.gmos-driver'; zip.writeZip(sortie);
+assert.deepEqual(JSON.parse(new AdmZip(sortie).readAsText('state.json')),state); assert.deepEqual(fs.readFileSync(source),original);
+fs.writeFileSync('Export Dirvers/corriges/alien_state_a3.json',JSON.stringify(state,null,2)+'\n');
+fs.mkdirSync('scratch/alien-a3',{recursive:true});
+const rapport = { source,sha256Source:crypto.createHash('sha256').update(original).digest('hex'),sortie,ids,champsAvant:avant.length,champsApres:fiche.sections.flatMap(s=>s.fields).length,originalInchange:true };
+fs.writeFileSync('scratch/alien-a3/export.json',JSON.stringify(rapport,null,2)); console.log(JSON.stringify(rapport));

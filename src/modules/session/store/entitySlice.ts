@@ -19,8 +19,12 @@ import { HealthInterpreter, listeOuVide } from '../logic/HealthInterpreter';
 import { raconterLImpact } from '../../combat/logic/RecitDeLImpact';
 import { dommagesDeTorg, ajouterLeChoc, direLesDommages } from '../../combat/logic/dommagesDeTorg';
 import { cosmsDesIds, idsDesCosmsCourants, loiEnVigueur } from '../logic/cosmsCourants';
-import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
+import { champDeSantePrincipale, maximumDeLaJauge, santeAlignee, santePrincipaleDeLaFiche, valeurDuChamp } from '../../combat/logic/SanteDuCombattant';
 import { santePrincipaleDuPersonnage } from '../logic/santePrincipale';
+import { CLE_PANIQUE_ALIEN, arreterLaPaniqueAlien, changerLeStressAlien } from '../../dice/systemes/paniqueAlien';
+import { CLE_JET_ALIEN } from '../../dice/systemes/jetsAlien';
+import { CLE_COMBAT_ALIEN, demanderUnCritique, lireLeCombatAlien } from '../../dice/systemes/combatAlien';
+import { estUnAndroide } from '../../dice/systemes/paniqueAlien';
 import type { SheetTemplate } from '../../../data/defaultSheetTemplates';
 import { piloteDuPersonnage } from '../logic/piloteDuPersonnage';
 import { santeSelonLeJeu } from '../logic/santeDesAdversaires';
@@ -240,7 +244,9 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
         set((state) => ({
             entities: state.entities.map((e) => {
                 if (e.id !== id) return e;
-                const base = { ...e, ...updates };
+                const sheetData = updates.sheetData && e.sheetData?.[CLE_COMBAT_ALIEN] && !Object.hasOwn(updates.sheetData,CLE_COMBAT_ALIEN)
+                    ? { ...updates.sheetData, [CLE_COMBAT_ALIEN]:e.sheetData[CLE_COMBAT_ALIEN] } : updates.sheetData;
+                const base = { ...e, ...updates, ...(sheetData ? {sheetData} : {}) };
                 const newEntity = base.sheetData?.__rddSante231 ? actualiserPersonnageDeVoyageur(base,
                     (get() as unknown as {customSheetTemplates?: SheetTemplate[]}).customSheetTemplates ?? [],e) : base;
 
@@ -535,7 +541,13 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                           ...p,
                           characters: p.characters.map((c) => {
                                 if (c.id !== characterId) return c;
-                                const updated = actualiserPersonnageDeVoyageur({ ...c, ...updates },
+                                // Une fiche HTML ancienne ne connaît pas le suivi de Panique :
+                                // son écriture ne doit effacer ni les reçus ni les demandes.
+                                const suivis = Object.fromEntries([CLE_PANIQUE_ALIEN, CLE_JET_ALIEN, CLE_COMBAT_ALIEN]
+                                    .filter(cle => c.sheetData?.[cle] && updates.sheetData && !Object.hasOwn(updates.sheetData, cle))
+                                    .map(cle => [cle, c.sheetData![cle]]));
+                                const sheetData = updates.sheetData ? { ...updates.sheetData, ...suivis } : undefined;
+                                const updated = actualiserPersonnageDeVoyageur({ ...c, ...updates, ...(sheetData ? { sheetData } : {}) },
                                     (get() as unknown as { customSheetTemplates?: SheetTemplate[] }).customSheetTemplates ?? [], c);
                                 // La date de la dernière écriture des données — l'arbitre face à la fiche (`pousseeVersLaFiche.ts`).
                                 if (toucheLesDonnees(updates) && updates.donneesModifieesLe === undefined) updated.donneesModifieesLe = Date.now();
@@ -849,12 +861,20 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             }
             if (regle) gmToast(`${entity.name} — ${regle.texte}`, 'info');
 
-            const baseHealth = entity.healthSystem || HealthInterpreter.createDefault('hp');
+            const humainAlien = !!piloteOuvert?.combat.alien && lireLeCombatAlien(entity.sheetData ?? {}).humain;
+            const baseHealth = humainAlien ? santeAlignee(entity.healthSystem || HealthInterpreter.createDefault('hp'),santePrincipaleDeLaFiche(piloteOuvert,entity.sheetData)) ?? HealthInterpreter.createDefault('hp') : entity.healthSystem || HealthInterpreter.createDefault('hp');
             const updatedHealth = HealthInterpreter.calculateNextState(baseHealth, impact);
             const newHp = (updatedHealth.data.current as number) ?? entity.hp;
             
             get().updateEntityHealth(targetId, updatedHealth);
             get().updateEntityHP(targetId, newHp);
+            if (humainAlien && piloteOuvert?.combat.alien) {
+                const f = get().entities.find(e => e.id === targetId)?.sheetData ?? {};
+                const suivi = lireLeCombatAlien(f), a = piloteOuvert.combat.alien;
+                const nouveau = !impact.isRecovery && impact.value > 0 && newHp === 0 && !estUnAndroide({ mecanique:'alien',stress:a.stress,androide:a.androide,agilite:'',empathie:'' },f)
+                    ? demanderUnCritique(suivi,`alien-pnj-${crypto.randomUUID()}`) : suivi;
+                get().updateEntity(targetId,{sheetData:{...f,[a.sante]:newHp,[CLE_COMBAT_ALIEN]:nouveau},status:nouveau.mort?'dead':newHp<=0?'injured':'alive'});
+            }
 
             /*
               **Le plateau doit l'apprendre, sinon il l'écrasera.**
@@ -919,6 +939,25 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
             get().updateCharacterHealth(player.id, targetId, updatedHealth);
             get().updateCharacterHP(player.id, targetId, newHp);
 
+            // Alien p. 103 : un coup qui fait effectivement perdre de la Santé
+            // augmente le Stress une seule fois, pas d'un point par dégât.
+            const alien = piloteDuPJ?.jet?.panique?.suites;
+            let suiteDeStress = '';
+            if (alien?.mecanique === 'alien' && !impact.isRecovery
+                && (newHp < Number(baseHealth.data.current) || (piloteDuPJ?.combat.alien && Number(baseHealth.data.current) === 0 && impact.value > 0))) {
+                const courant = get().players.find(p => p.id === player.id)?.characters.find(c => c.id === targetId);
+                if (courant) {
+                    const fiche = courant.sheetData ?? {};
+                    const maj = changerLeStressAlien(alien, fiche, `alien-degat-${crypto.randomUUID()}`, 1);
+                    const fin = newHp === 0 ? arreterLaPaniqueAlien({ ...fiche, ...maj }, piloteDuPJ?.jet?.panique?.champ) : {};
+                    const critique = piloteDuPJ?.combat.alien && newHp === 0 && !estUnAndroide(alien, fiche)
+                        ? { [CLE_COMBAT_ALIEN]: demanderUnCritique(lireLeCombatAlien(fiche), `alien-critique-${crypto.randomUUID()}`) } : {};
+                    get().updateCharacter(player.id, targetId, { sheetData: { ...fiche, ...maj, ...fin, ...critique } });
+                    if (typeof maj[alien.stress] === 'number') suiteDeStress = `Stress ${Number(fiche[alien.stress]) || 0} → ${maj[alien.stress]} (dégâts subis).\n`;
+                    if (newHp === 0) suiteDeStress += 'Brisé : la panique prend fin.\n';
+                }
+            }
+
             // Même retour que pour une entité : voir la branche ci-dessus.
             plateauDeCombat()?.refleterLaFiche?.(targetId, {
                 hp: newHp, healthSystem: updatedHealth,
@@ -928,7 +967,7 @@ export const createEntitySlice: CreateurDeSlice<EntitySlice> = (set, get) => ({
                 window.useJournalStore.getState().addEvent({
                     type: 'COMBAT',
                     title: i18next.t('modules:session.events.impact_title', { name: character.name }),
-                    content: (regle ? `${regle.texte}\n` : '') + raconterLImpact(impact, {
+                    content: (regle ? `${regle.texte}\n` : '') + suiteDeStress + raconterLImpact(impact, {
                         hp: newHp, maxHp: character.maxHp, healthSystem: updatedHealth,
                     }),
                     // Même rattachement que pour une entité : voir la branche ci-dessus.

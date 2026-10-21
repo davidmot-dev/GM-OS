@@ -18,6 +18,8 @@ import { ecrireLaFicheDuCombattant } from '../ficheDesCombattants';
 import ActionsApprouvees from './ActionsApprouvees';
 import HorsJeuDuCombattant from './HorsJeuDuCombattant';
 import ProtectionDuCombattant from './ProtectionDuCombattant';
+import SanteAlien from '../../session/components/fields/SanteAlien';
+import { lireLeCombatAlien } from '../../dice/systemes/combatAlien';
 import StressSubi from '../../session/components/fields/StressSubi';
 import { DiceEngine } from '../../dice/DiceEngine';
 import { deCourant, ecrireLeDe } from '../../dice/ressourcesDUsure';
@@ -547,6 +549,19 @@ const CombatCard: React.FC<CombatCardProps> = ({ combatant, isActive }) => {
             <HorsJeuDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
             {/* Blade Runner : la protection se lance à chaque coup subi. */}
             <ProtectionDuCombattant combatant={combatant} valeurs={ficheLue.valeurs} />
+            {activeDriver?.combat.alien && <div className="mx-3 my-2"><SanteAlien regle={activeDriver.combat.alien}
+                valeurs={{ ...ficheLue.valeurs, [activeDriver.combat.alien.sante]: ficheLue.valeurs[activeDriver.combat.alien.sante] ?? combatant.hp ?? 0,
+                    [activeDriver.combat.alien.force]: ficheLue.valeurs[activeDriver.combat.alien.force] ?? combatant.hpMax ?? 0 }}
+                personnageId={combatant.sourcePlayerId} sourceEntityId={combatant.sourceEntityId} pnj={!combatant.isPlayer} pourLesJoueurs={false}
+                ecrire={maj => {
+                    const s = useSessionOSStore.getState(), joueur = s.players.find(p => p.characters.some(c => c.id === combatant.sourcePlayerId));
+                    const pc = joueur?.characters.find(c => c.id === combatant.sourcePlayerId);
+                    if (joueur && pc) s.updateCharacter(joueur.id,pc.id,{ sheetData: { ...pc.sheetData, ...maj } });
+                    else if (combatant.sourceEntityId) {
+                        const e = s.entities.find(e => e.id === combatant.sourceEntityId);
+                        if (e) s.updateEntity(e.id,{ sheetData:{ ...e.sheetData,...maj }, status:lireLeCombatAlien(maj).mort ? 'dead' : Number(maj[activeDriver.combat.alien!.sante]) <= 0 ? 'injured' : 'alive' });
+                    } else useCombatStore.getState().updateCombatant(combatant.id,{ sheetData:{...combatant.sheetData,...maj},hp:Number(maj[activeDriver.combat.alien!.sante])||0 });
+                }} consigner={(titre, res) => useDiceStore.getState().setLastRoll({ ...res, id: crypto.randomUUID(), timestamp: new Date(), title: `${combatant.name} — ${titre}` })} /></div>}
             {/* Blade Runner : le stress subi, un facteur de 1 à 3 que la Psychologie réduit. */}
             {combatant.isPlayer && activeDriver?.jet?.stressSubi && (
                 <div className="mx-3 my-1">

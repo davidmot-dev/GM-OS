@@ -124,6 +124,11 @@ export async function lancerGmOs(options: OptionsDeLancement = {}): Promise<GmOs
     }
 
     const profil = fs.mkdtempSync(path.join(os.tmpdir(), 'gmos-e2e-'));
+    // USERPROFILE est isolé aussi : Electron exige que ses deux AppData existent.
+    const roaming = path.join(profil, 'AppData', 'Roaming');
+    const local = path.join(profil, 'AppData', 'Local');
+    fs.mkdirSync(roaming, { recursive: true });
+    fs.mkdirSync(local, { recursive: true });
     options.preparerLeProfil?.(profil);
     const ports = portsDeCeWorker();
 
@@ -137,6 +142,11 @@ export async function lancerGmOs(options: OptionsDeLancement = {}): Promise<GmOs
         env: {
             ...environnementPropre(),
             ...ports.variables,
+            // Le pont MCP écrit son journal sous USERPROFILE, hors userData.
+            // Cette variable appartient seulement au processus Electron jetable.
+            USERPROFILE: profil,
+            APPDATA: roaming,
+            LOCALAPPDATA: local,
             /*
               ⛔ **Les sauvegardes automatiques ne vivent PAS sous `userData`.**
 
@@ -177,7 +187,26 @@ export async function lancerGmOs(options: OptionsDeLancement = {}): Promise<GmOs
         },
     });
 
-    const fenetre = await fenetreDuMeneur(application);
+    const sorties: string[] = [];
+    const relever = (chunk: Buffer) => { sorties.push(chunk.toString()); };
+    const processus = application.process();
+    processus.stdout?.on('data', relever);
+    processus.stderr?.on('data', relever);
+    let fenetre: Page;
+    try {
+        fenetre = await fenetreDuMeneur(application);
+    } catch (erreur) {
+        // Un lancement raté doit laisser un diagnostic et fermer son instance jetable.
+        const etat = await application.evaluate(({ app, BrowserWindow }) => ({
+            pret: app.isReady(), fenetres: BrowserWindow.getAllWindows().map(w => w.webContents.getURL()),
+        })).catch(() => null);
+        console.error('[E2E] Démarrage impossible', { profil, etat, sorties: sorties.join('').slice(-12_000) });
+        await application.close().catch(() => {});
+        throw erreur;
+    } finally {
+        processus.stdout?.off('data', relever);
+        processus.stderr?.off('data', relever);
+    }
     await verifierLIsolation(application, profil);
 
     return {

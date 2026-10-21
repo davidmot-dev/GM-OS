@@ -698,6 +698,19 @@ export function controlerLePilote(
     if (specialisation && !(driver.jet?.seuil ?? []).some(c => c.id === specialisation.composante)) {
         erreur('jet.specialisation.composante', `La spécialisation lit la composante « ${specialisation.composante} », qui n'est pas dans « jet.seuil » : la case ne changerait aucun dé.`);
     }
+    if (driver.jet?.alien) {
+        const alien = driver.jet.alien;
+        if (!driver.jet.panique?.suites || driver.dice?.engine !== 'yze') erreur('jet.alien', 'Les jets Alien exigent le moteur YZE et les suites de Panique A1.');
+        if (!driver.jet.reserve?.sansPlafond) erreur('jet.reserve.sansPlafond', 'Les bonus Alien ne doivent pas être perdus dans le plafond de la réserve.');
+        if (!driver.jet.reserve?.composantes?.some(c => c.id === alien.competence)) erreur('jet.alien.competence', 'La composante de compétence est absente de la réserve.');
+        for (const champ of [...Object.keys(alien.competences), ...Object.values(alien.equipement)]) {
+            if (!tousLesChamps.has(champ)) erreur('jet.alien', `Les jets Alien lisent « ${champ} », absent de la fiche.`);
+        }
+        if (alien.combat) {
+            for (const champ of Object.values(alien.combat)) if (!tousLesChamps.has(champ)) erreur('jet.alien.combat', `Le combat Alien lit « ${champ} », absent de la fiche.`);
+            if (JSON.stringify(alien.combat) !== JSON.stringify(driver.combat?.alien)) erreur('combat.alien', 'La fiche et le combat doivent partager la même configuration Alien.');
+        }
+    }
     if (driver.jet?.panique) {
         if (!driver.jet.reserve?.secondaire) {
             erreur('jet.panique', 'La Panique se déclenche sur un 1 de la seconde réserve, que le jet ne déclare pas.');
@@ -708,6 +721,14 @@ export function controlerLePilote(
         const champ = driver.jet.panique.champ;
         if (champ && !tousLesChamps.has(champ)) {
             erreur('jet.panique.champ', `La panique en cours se garde dans « ${champ} », absent de la fiche : le cumul ne se ferait jamais.`);
+        }
+        const suites = driver.jet.panique.suites;
+        if (suites) {
+            if (suites.mecanique !== 'alien') erreur('jet.panique.suites.mecanique', 'Mécanique de conséquences de Panique inconnue.');
+            for (const [nom, field] of Object.entries(suites)) {
+                if (nom !== 'mecanique' && field && !tousLesChamps.has(field)) erreur(`jet.panique.suites.${nom}`, `Le suivi de Panique lit « ${field} », absent de la fiche.`);
+            }
+            if (!champ) erreur('jet.panique.champ', 'Les conséquences de Panique exigent le champ qui garde la panique en cours.');
         }
     }
     /* Brisé (Blade Runner) : les champs qu'il lit et écrit doivent exister. */

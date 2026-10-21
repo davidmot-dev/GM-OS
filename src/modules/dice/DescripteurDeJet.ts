@@ -20,6 +20,7 @@
  */
 
 import type { SheetSection } from '../../data/defaultSheetTemplates';
+import type { RegleDesJetsAlien } from './systemes/jetsAlien';
 import { MECANIQUES_DE_CIBLE, type NomDeMecanique } from './systemes';
 import type { EchelleDuJet } from './degresDeReussite';
 import {
@@ -97,6 +98,8 @@ export type SensDuJet = 'sous-ou-egal' | 'superieur-ou-egal';
  * que le jeu n'a pas.
  */
 export interface DescripteurDeJet {
+    /** Réserves signées, équipement et actions d'éclat du livre français d'Alien. */
+    alien?: RegleDesJetsAlien;
     /**
      * Composantes additionnées pour former le seuil. Chez Dune : une compétence
      * et un principe. Chez un jeu à compétence seule : une seule composante.
@@ -148,6 +151,8 @@ export interface DescripteurDeJet {
      * rien.
      */
     reserve?: {
+        /** La limite d'un attribut + compétence n'est pas celle d'un jet équipé (Alien). */
+        sansPlafond?: boolean;
         /** Dés lancés d'office, avant toute composante et tout achat. */
         base: number;
         /**
@@ -326,6 +331,8 @@ export interface DescripteurDeJet {
         champ?: string;
         /** Le premier total qui est une panique : 7 chez Alien (de 1 à 6, on tient le coup). */
         seuil?: number;
+        /** Conséquences persistantes, contagion ciblée et traumatismes du livre français. */
+        suites?: import('./systemes/paniqueAlien').RegleDePaniqueAlien;
     };
     /**
      * **Une réussite qui se paie** — le Point de Récit d'Alien, 2026-10-14 :
@@ -966,8 +973,8 @@ export function preparerLeJet(
     // Les dés achetés ne franchissent pas le plafond du système : chez Dune,
     // cinq dés au total, quoi qu'on dépense.
     const demandes = reserveDeDepart + Math.max(0, choix.desSupplementaires ?? 0);
-    const nombreDeDes = Math.min(demandes, reserve?.max ?? 0);
-    if (reserve && demandes > reserve.max) {
+    const nombreDeDes = reserve?.sansPlafond ? demandes : Math.min(demandes, reserve?.max ?? 0);
+    if (reserve && !reserve.sansPlafond && demandes > reserve.max) {
         avertissements.push(`Réserve plafonnée à ${reserve.max} dés.`);
     }
 

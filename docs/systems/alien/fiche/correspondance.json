@@ -1,7 +1,7 @@
 {
   "version": 1,
   "gabaritDeLaFiche": "alien-v2-normalise",
-  "commentaire": "Correspondance entre la fiche d'Alien dans GM-OS et le gabarit alien-v2-normalise du moteur de fiches. Écrite le 2026-10-13. Les pistes imprimées en cases (Stress, Santé, Radiation, Expérience, Points de Récit) se comptent par la transformation « serie » ; les dix lignes d'équipement forment l'inventaire. Les champs « field-… » sont ceux que David a ajoutés à la main dans la fiche GM-OS. Elle compte deux « Points de Récit » : celui que suit le pilote (points_de_recit) est relié.",
+  "commentaire": "Correspondance entre la fiche d'Alien dans GM-OS et le gabarit alien-v2-normalise du moteur de fiches. Écrite le 2026-10-13. Les pistes imprimées en cases (Stress, Santé, Radiation, Expérience, Points de Récit) se comptent par la transformation « serie » ; les dix lignes d'équipement forment l'inventaire. Les champs « field-… » sont ceux que David a ajoutés à la main dans la fiche GM-OS. Elle compte deux « Points de Récit » : celui que suit le pilote (points_de_recit) est relié. A2 (20/10/2026) : Bonus, Dégâts et Portée des armes sont reliés, une ligne par arme. Les colonnes absentes des anciennes données ne sont pas effacées lors de la première poussée HTML.",
   "champs": [
     {
       "gmos": "nom",
@@ -224,24 +224,27 @@
         "trackers.story_points.3"
       ],
       "transforme": "serie"
+    },
+    {
+      "gmos": "armes_bonus",
+      "fiche": "weapons.bonus",
+      "siPresent": true
+    },
+    {
+      "gmos": "armes_degats",
+      "fiche": "weapons.damage",
+      "siPresent": true
+    },
+    {
+      "gmos": "armes_portees",
+      "fiche": "weapons.range",
+      "siPresent": true
     }
   ],
   "absents": [
     {
       "fiche": "protection.name",
       "pourquoi": "GM-OS ne garde que le niveau de protection, qui compte au jet ; le nom de la protection reste sur la fiche."
-    },
-    {
-      "fiche": "weapons.bonus",
-      "pourquoi": "GM-OS tient les armes en un seul texte, relié aux noms : la colonne Bonus reste sur la fiche."
-    },
-    {
-      "fiche": "weapons.damage",
-      "pourquoi": "GM-OS tient les armes en un seul texte, relié aux noms : la colonne Dégâts reste sur la fiche."
-    },
-    {
-      "fiche": "weapons.range",
-      "pourquoi": "GM-OS tient les armes en un seul texte, relié aux noms : la colonne Portée reste sur la fiche."
     },
     {
       "fiche": "states.hungry",

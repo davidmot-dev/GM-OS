@@ -1,0 +1,619 @@
+{
+  "gameDriver": {
+    "name": "ALIEN, le jeu de rôle",
+    "description": "Un jeu de science-fiction d'action et d'horreur spatiale dans un univers rétro-futuriste et analogique.",
+    "emoji": "👽",
+    "dice": {
+      "defaultDice": "d6",
+      "logic": "count-success",
+      "engine": "yze",
+      "successThreshold": 6
+    },
+    "jet": {
+      "sens": "superieur-ou-egal",
+      "reserve": {
+        "base": 0,
+        "max": 10,
+        "faces": 6,
+        "composantes": [
+          {
+            "id": "attribut",
+            "label": "Attribut",
+            "sectionId": "attributs"
+          },
+          {
+            "id": "compétence",
+            "label": "Compétence",
+            "sectionId": "competences"
+          }
+        ],
+        "secondaire": {
+          "label": "Stress",
+          "libelleDuUn": "Panique",
+          "composantes": [
+            {
+              "id": "stress",
+              "label": "Stress",
+              "sectionId": "jauges_individuelles",
+              "motif": "^niveau_de_stress$"
+            }
+          ]
+        },
+        "sansPlafond": true
+      },
+      "seuil": [],
+      "forcer": {
+        "garde": "reussites",
+        "bloqueParLaSeconde": true,
+        "monteeDeLaSeconde": 1,
+        "interdit": [
+          {
+            "si": {
+              "champ": "androide",
+              "coche": true
+            },
+            "raison": "Un androïde ne ressent pas le stress : il ne force jamais ses jets."
+          }
+        ],
+        "foisSi": [
+          {
+            "si": {
+              "champ": "talent",
+              "contient": [
+                "Dépassement de soi",
+                "Cran"
+              ],
+              "composante": "attribut",
+              "parmi": [
+                "force"
+              ]
+            },
+            "fois": 2
+          },
+          {
+            "si": {
+              "champ": "talent",
+              "contient": [
+                "Vif",
+                "Téméraire"
+              ],
+              "composante": "attribut",
+              "parmi": [
+                "agilite"
+              ]
+            },
+            "fois": 2
+          },
+          {
+            "si": {
+              "champ": "talent",
+              "contient": [
+                "Ruse",
+                "Curiosité"
+              ],
+              "composante": "attribut",
+              "parmi": [
+                "esprit"
+              ]
+            },
+            "fois": 2
+          },
+          {
+            "si": {
+              "champ": "talent",
+              "contient": [
+                "Compassion",
+                "Influence"
+              ],
+              "composante": "attribut",
+              "parmi": [
+                "empathie"
+              ]
+            },
+            "fois": 2
+          }
+        ]
+      },
+      "panique": {
+        "faces": 6,
+        "table": {
+          "univers": "Alien",
+          "table": "test_de_panique"
+        },
+        "champ": "panique_en_cours",
+        "seuil": 7,
+        "suites": {
+          "mecanique": "alien",
+          "stress": "niveau_de_stress",
+          "agilite": "agilite",
+          "empathie": "empathie",
+          "talents": "talent",
+          "androide": "androide"
+        }
+      },
+      "reussiteDepensee": {
+        "champ": "points_de_recit",
+        "label": "Point de Récit"
+      },
+      "alien": {
+        "competence": "compétence",
+        "competences": {
+          "machines_lourdes": "machines",
+          "endurance": "endurance",
+          "combat_rapproche": "rapproche",
+          "mobilite": "mobilite",
+          "combat_a_distance": "distance",
+          "pilotage": "pilotage",
+          "observation": "observation",
+          "comtech": "comtech",
+          "survie": "survie",
+          "commandement": "commandement",
+          "manipulation": "manipulation",
+          "soins_medicaux": "soins"
+        },
+        "equipement": {
+          "noms": "field-1786783108730",
+          "bonus": "armes_bonus",
+          "degats": "armes_degats",
+          "portees": "armes_portees"
+        }
+      }
+    },
+    "tactical": {
+      "ranges": {
+        "contact": {
+          "label": "juste à côté",
+          "maxUnits": 1,
+          "modifier": -3
+        },
+        "courte": {
+          "label": "à quelques mètres, dans la même zone",
+          "maxUnits": 2,
+          "modifier": 0
+        },
+        "moyenne": {
+          "label": "jusqu'à vingt-cinq mètres, zone adjacente",
+          "maxUnits": 3,
+          "modifier": -1
+        },
+        "longue": {
+          "label": "jusqu'à cent mètres, soit quatre zones",
+          "maxUnits": 4,
+          "modifier": -2
+        },
+        "extreme": {
+          "label": "jusqu'à un kilomètre",
+          "maxUnits": 5,
+          "modifier": -3
+        }
+      },
+      "useTacticalAI": true
+    },
+    "combat": {
+      "initiativeFormula": "",
+      "initiativeSort": "asc",
+      "defaultHealthType": "hp",
+      "damageTypes": [
+        "combat",
+        "chute",
+        "explosions",
+        "feu",
+        "sang_acide",
+        "radiations",
+        "maladie",
+        "noyade",
+        "asphyxie",
+        "vide"
+      ],
+      "statsToTrack": [
+        {
+          "fieldId": "sante",
+          "label": "Santé",
+          "isMainHP": true,
+          "isResource": false,
+          "max": "force"
+        },
+        {
+          "fieldId": "niveau_de_stress",
+          "label": "Niveau de Stress",
+          "isMainHP": false,
+          "isResource": true,
+          "gestes": [
+            {
+              "libelle": "Repos −1",
+              "delta": -1,
+              "aide": "Un Tour de repos en lieu sûr : −1 Stress (pas en combat spatial)."
+            },
+            {
+              "libelle": "Objet fétiche −1",
+              "delta": -1,
+              "aide": "L'objet fétiche : −1 Stress, une fois par acte ou par séance."
+            }
+          ]
+        },
+        {
+          "fieldId": "panique_en_cours",
+          "label": "Panique en cours",
+          "isMainHP": false,
+          "isResource": true,
+          "gestes": [
+            {
+              "libelle": "Calmé",
+              "valeur": 0,
+              "aide": "La panique cesse : Commandement d'un allié (action lente), un Tour écoulé, ou Brisé."
+            }
+          ]
+        },
+        {
+          "fieldId": "points_de_recit",
+          "label": "Points de Récit",
+          "isMainHP": false,
+          "isResource": true
+        },
+        {
+          "fieldId": "air",
+          "label": "Air",
+          "isMainHP": false,
+          "isResource": true
+        },
+        {
+          "fieldId": "eau",
+          "label": "Eau",
+          "isMainHP": false,
+          "isResource": true
+        },
+        {
+          "fieldId": "nourriture",
+          "label": "Nourriture",
+          "isMainHP": false,
+          "isResource": true
+        },
+        {
+          "fieldId": "energie",
+          "label": "Énergie",
+          "isMainHP": false,
+          "isResource": true
+        }
+      ],
+      "initiativeCards": 10,
+      "santeDeDepart": "force"
+    },
+    "ui_config": {
+      "themeColor": "#4b0082",
+      "gauges": [
+        {
+          "fieldId": "niveau_de_stress",
+          "label": "Niveau de Stress",
+          "color": "#d97706",
+          "style": "segmented"
+        },
+        {
+          "fieldId": "points_de_recit",
+          "label": "Points de Récit",
+          "color": "#d97706",
+          "style": "segmented"
+        },
+        {
+          "fieldId": "air",
+          "label": "Air",
+          "color": "#d97706",
+          "style": "segmented"
+        },
+        {
+          "fieldId": "eau",
+          "label": "Eau",
+          "color": "#d97706",
+          "style": "segmented"
+        },
+        {
+          "fieldId": "nourriture",
+          "label": "Nourriture",
+          "color": "#d97706",
+          "style": "segmented"
+        },
+        {
+          "fieldId": "energie",
+          "label": "Énergie",
+          "color": "#d97706",
+          "style": "segmented"
+        }
+      ]
+    },
+    "id": "custom-1786696751491",
+    "templateId": "tpl-1786696751497",
+    "author": "User",
+    "version": "1.2.0",
+    "corpusId": "alien",
+    "ragPath": "systems/alien/rules",
+    "defaultNotebookUrl": "https://notebooklm.google.com/notebook/c24fbd5e-116f-4b38-9a22-c95bc8f40bf5",
+    "banniere": "Alien Band.jpg"
+  },
+  "sheetTemplate": {
+    "name": "Fiche de personnage Alien",
+    "emoji": "📜",
+    "sections": [
+      {
+        "id": "identite",
+        "label": "Identité",
+        "fields": [
+          {
+            "id": "nom",
+            "label": "Nom",
+            "type": "text"
+          },
+          {
+            "id": "type_personnage",
+            "label": "Marine, Marshall, Gamin, Camionneur de l'Espace, Colon",
+            "type": "select"
+          },
+          {
+            "id": "androide",
+            "label": "Androïde",
+            "type": "checkbox",
+            "defaultValue": false
+          },
+          {
+            "id": "talent",
+            "label": "Talent",
+            "type": "textarea"
+          }
+        ]
+      },
+      {
+        "id": "attributs",
+        "label": "Attributs",
+        "fields": [
+          {
+            "id": "force",
+            "label": "Force",
+            "type": "number"
+          },
+          {
+            "id": "agilite",
+            "label": "Agilité",
+            "type": "number"
+          },
+          {
+            "id": "esprit",
+            "label": "Esprit",
+            "type": "number"
+          },
+          {
+            "id": "empathie",
+            "label": "Empathie",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "competences",
+        "label": "Compétences",
+        "fields": [
+          {
+            "id": "machines_lourdes",
+            "label": "Fo_Machines lourdes",
+            "type": "number"
+          },
+          {
+            "id": "endurance",
+            "label": "Fo_Endurance",
+            "type": "number"
+          },
+          {
+            "id": "combat_rapproche",
+            "label": "Fo_Combat rapproché",
+            "type": "number"
+          },
+          {
+            "id": "mobilite",
+            "label": "Ag_Mobilité",
+            "type": "number"
+          },
+          {
+            "id": "combat_a_distance",
+            "label": "Ag_Combat à distance",
+            "type": "number"
+          },
+          {
+            "id": "pilotage",
+            "label": "Ag_Pilotage",
+            "type": "number"
+          },
+          {
+            "id": "observation",
+            "label": "Es_Observation",
+            "type": "number"
+          },
+          {
+            "id": "comtech",
+            "label": "Es_Comtech",
+            "type": "number"
+          },
+          {
+            "id": "survie",
+            "label": "Es_Survie",
+            "type": "number"
+          },
+          {
+            "id": "commandement",
+            "label": "Em_Commandement",
+            "type": "number"
+          },
+          {
+            "id": "manipulation",
+            "label": "Em_Manipulation",
+            "type": "number"
+          },
+          {
+            "id": "soins_medicaux",
+            "label": "Em_Soins médicaux",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "id": "jauges_individuelles",
+        "label": "Jauges et ressources",
+        "fields": [
+          {
+            "id": "niveau_de_stress",
+            "label": "Niveau de Stress",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "panique_en_cours",
+            "label": "Panique en cours",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "sante",
+            "label": "Santé",
+            "type": "rating",
+            "defaultValue": 0,
+            "max": 10
+          },
+          {
+            "id": "air",
+            "label": "Air",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "eau",
+            "label": "Eau",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "nourriture",
+            "label": "Nourriture",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "energie",
+            "label": "Énergie",
+            "type": "number",
+            "defaultValue": 0
+          },
+          {
+            "id": "field-1786782860390",
+            "label": "Radiation",
+            "type": "rating",
+            "defaultValue": 0,
+            "max": 10
+          },
+          {
+            "id": "field-1786782929062",
+            "label": "Point d'expérience ",
+            "type": "rating",
+            "defaultValue": 0,
+            "max": 10
+          },
+          {
+            "id": "field-1786783025666",
+            "label": "Blessures Critiques",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "points_de_recit",
+            "label": "Points de Récit",
+            "type": "number",
+            "defaultValue": 0
+          }
+        ]
+      },
+      {
+        "id": "equipement",
+        "label": "Équipement",
+        "fields": [
+          {
+            "id": "inventaire",
+            "label": "Inventaire",
+            "type": "textarea"
+          },
+          {
+            "id": "objet_fetiche",
+            "label": "Objet fétiche",
+            "type": "text"
+          },
+          {
+            "id": "field-1786782975662",
+            "label": "Objets Minuscules",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "field-1786783213114",
+            "label": "Encombrement",
+            "type": "number",
+            "defaultValue": 0
+          }
+        ]
+      },
+      {
+        "id": "relations",
+        "label": "Relations",
+        "fields": [
+          {
+            "id": "camarade",
+            "label": "Camarade",
+            "type": "text"
+          },
+          {
+            "id": "rival",
+            "label": "Rival",
+            "type": "text"
+          },
+          {
+            "id": "field-1786783062962",
+            "label": "Objectif Personnel",
+            "type": "textarea",
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "section-1786783098518",
+        "label": "Armes & Protections",
+        "fields": [
+          {
+            "id": "field-1786783108730",
+            "label": "Armes — un nom par ligne (ancien texte conservé)",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "field-1786783170092",
+            "label": "Protection - Niveau",
+            "type": "text",
+            "defaultValue": ""
+          },
+          {
+            "id": "armes_bonus",
+            "label": "Bonus des armes — un entier signé par ligne",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "armes_degats",
+            "label": "Dégâts des armes — une valeur par ligne",
+            "type": "textarea",
+            "defaultValue": ""
+          },
+          {
+            "id": "armes_portees",
+            "label": "Portée des armes — une portée par ligne",
+            "type": "textarea",
+            "defaultValue": ""
+          }
+        ]
+      }
+    ],
+    "id": "tpl-1786696751497",
+    "isBuiltin": false
+  }
+}

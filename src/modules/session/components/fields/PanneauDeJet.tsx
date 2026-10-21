@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useRef, useState } from 'react';
 import { Dices, AlertTriangle, Info, Plus, Minus, Coins } from 'lucide-react';
 import { EtiquetteDuDegre } from '../../../dice/EtiquetteDuDegre';
 import { consignerLeJet } from '../../../journal/consignerLeJet';
@@ -21,6 +21,16 @@ import {
 } from '../../../dice/systemes/yearZero';
 import { pontDesTables } from '../../../tables/pontDesTables';
 import StressSubi from './StressSubi';
+import PaniqueAlien from './PaniqueAlien';
+import SanteAlien from './SanteAlien';
+import MunitionsAlien from './MunitionsAlien';
+import { CLE_COMBAT_ALIEN, lireLeCombatAlien, malusDesBlessures, preparerLeTir, rechargerUneArme } from '../../../dice/systemes/combatAlien';
+import { PreparationAlien, SuitesDuJetAlien } from './JetsAlien';
+import { CLE_JET_ALIEN, REGLAGES_ALIEN, actualiserLeJetAlien, composerLesDesAlien, equipementsAlien, lireLeJetAlien, resultatDuJetAlien, type JetAlien } from '../../../dice/systemes/jetsAlien';
+import {
+    appliquerLaPaniqueAlien, cumulAlien, desApresTremblement, estUnAndroide,
+    lireLaPaniqueAlien, modifierDePanique, resultatAvecPanique,
+} from '../../../dice/systemes/paniqueAlien';
 import type { TableEntry } from '../../../tables/types';
 import { useEffetsDuRound } from '../../../combat/useEffetsDuRound';
 import { LigneDuReferentiel } from './ChampDuReferentiel';
@@ -109,6 +119,54 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
      */
     const [ajustementDeDifficulte, setAjustementDeDifficulte] = useState(0);
     const [resultat, setResultat] = useState<RollResult | null>(null);
+    const [avantPanique, setAvantPanique] = useState<RollResult | null>(null);
+    const [folieMeurtriere, setFolieMeurtriere] = useState(false);
+    const [ecritsAlien, setEcritsAlien] = useState({ base: valeurs, personnageId, maj: {} as Record<string, unknown> });
+    const refAlien = useRef(ecritsAlien);
+    const paniqueDejaJouee = useRef(false);
+    const evenementPanique = useRef('');
+    const suitesAlien = descripteur.panique?.suites;
+    const regleJetAlien = descripteur.alien;
+    const [reglagesAlien, setReglagesAlien] = useState(REGLAGES_ALIEN);
+    const dernierJetAlien = useRef<JetAlien | undefined>(undefined);
+    // Les écritures locales ne complètent que la version de fiche qui les a
+    // produites ; une nouvelle fiche reçue fait autorité sans effet de remise à zéro.
+    const valeursAlien = useMemo(() => ({ ...valeurs,
+        ...(ecritsAlien.base === valeurs && ecritsAlien.personnageId === personnageId ? ecritsAlien.maj : {}),
+    }), [valeurs, ecritsAlien, personnageId]);
+    const ecrireAlien = (maj: Record<string, unknown>) => {
+        if (!Object.keys(maj).length) return;
+        const precedent = refAlien.current.base === valeurs && refAlien.current.personnageId === personnageId ? refAlien.current.maj : {};
+        refAlien.current = { base: valeurs, personnageId, maj: { ...precedent, ...maj } };
+        setEcritsAlien(refAlien.current);
+        ecrireSurLaFiche?.(refAlien.current.maj);
+    };
+    const equipements = regleJetAlien ? equipementsAlien(regleJetAlien, valeursAlien) : [];
+    const equipementAlien = equipements.find(a => a.id === reglagesAlien.equipement);
+    const suiviJetAlien = regleJetAlien ? lireLeJetAlien(valeursAlien) : undefined;
+    const combatAlien = regleJetAlien?.combat;
+    const etatCombatAlien = lireLeCombatAlien(valeursAlien);
+    const tirAlien = !!combatAlien && !!regleJetAlien && regleJetAlien.competences[choix[regleJetAlien.competence]] === 'distance';
+    const tirPrepareAlien = tirAlien ? preparerLeTir(reglagesAlien,equipementAlien) : undefined;
+    const enregistrerLeResultatAlien = (res: RollResult, enAttente = false, annule = false) => {
+        if (!regleJetAlien || !dernierJetAlien.current) return res;
+        const recu = lireLeJetAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
+        let suivi = actualiserLeJetAlien(recu?.id === dernierJetAlien.current.id ? recu : dernierJetAlien.current, res, enAttente, annule);
+        const equipementDuJet = suivi.equipement;
+        if (combatAlien && suivi.competence === 'distance' && equipementDuJet?.proprietes?.munitions) {
+            const aVider = suivi.chargeurAVider || equipementDuJet.proprietes.unique || res.rolls.some(d => d.source === 'gear' && d.val === 1);
+            suivi = { ...suivi, chargeurAVider: aVider };
+            if (aVider && !enAttente && !suivi.resolu) {
+                const s = lireLeCombatAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
+                const arme = s.armes[equipementDuJet.id];
+                ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [equipementDuJet.id]: { chargeurs: arme?.chargeurs ?? 0, vide: true } } } });
+                suivi = { ...suivi, resolu: true };
+            }
+        }
+        dernierJetAlien.current = suivi;
+        ecrireAlien({ [CLE_JET_ALIEN]: suivi });
+        return resultatDuJetAlien(res, suivi);
+    };
     const [seuilDuLancer, setSeuilDuLancer] = useState(0);
     /**
      * Avantage, désavantage, ou rien — **la règle de Dice OS**, et c'est
@@ -224,8 +282,9 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         sectionsDeLaComposante(template.sections, composante).sections;
 
     const jet = useMemo(
-        () => preparerLeJet(
-            descripteur, valeurs,
+        () => {
+            const prepare = preparerLeJet(
+            descripteur, suitesAlien ? valeursAlien : valeurs,
             {
                 champs: choix, desSupplementaires: desAchetes, difficulte,
                 ajustementDeDifficulte: ajustementDeDifficulte + degresPuises, specialisation,
@@ -238,8 +297,30 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 modificateurDeDes: descripteur.desEchelonnes ? modificateur : 'aucun',
             },
             template.sections,
-        ),
-        [descripteur, valeurs, choix, desAchetes, difficulte, ajustementDeDifficulte, degresPuises, modificateur, specialisation, template.sections],
+            );
+            if (!suitesAlien) return prepare;
+            const stress = estUnAndroide(suitesAlien, valeursAlien) ? 0 : prepare.desSecondaires;
+            const effet = lireLaPaniqueAlien(valeursAlien).effet;
+            const enPanique = !descripteur.panique?.champ || Number(valeursAlien[descripteur.panique.champ]) >= 7;
+            const tremblement = effet?.malusAgilite && enPanique && Object.values(choix).includes(suitesAlien.agilite) ? effet.malusAgilite : 0;
+            if (regleJetAlien) {
+                const blessure = combatAlien ? malusDesBlessures(lireLeCombatAlien(valeursAlien),regleJetAlien.competences[choix[regleJetAlien.competence]]) : 0;
+                const tir = combatAlien && regleJetAlien.competences[choix[regleJetAlien.competence]] === 'distance' ? preparerLeTir(reglagesAlien,equipementAlien) : undefined;
+                const apres = composerLesDesAlien(prepare.nombreDeDes, stress + (estUnAndroide(suitesAlien,valeursAlien) ? 0 : tir?.stress ?? 0), reglagesAlien, equipementAlien?.bonus, tremblement + blessure + (tir?.bonus ?? 0));
+                const arme = lireLeCombatAlien(valeursAlien).armes[equipementAlien?.id ?? ''];
+                const erreurMunition = tir && equipementAlien?.proprietes?.munitions && (!arme || arme.vide) ? 'Arme vide ou chargeur non confirmé : préparer les munitions avant de tirer.' : undefined;
+                return { ...prepare, nombreDeDes: apres.base, desSecondaires: apres.stress,
+                    avertissements: [...prepare.avertissements, ...[equipementAlien?.erreur,tir?.erreur,erreurMunition].filter((x): x is string => !!x)],
+                    remarques: [...prepare.remarques, `Base ${prepare.nombreDeDes} + arme ${equipementAlien?.bonus ?? 0} + outil/talent ${reglagesAlien.outil} + situation ${reglagesAlien.situation} + aide ${apres.aide}${tremblement ? ` −2 Tremblement` : ''}${tir ? ` ; tir ${tir.bonus >= 0 ? '+' : ''}${tir.bonus}, Stress préalable +${estUnAndroide(suitesAlien,valeursAlien) ? 0 : tir.stress}` : ''}${blessure ? ` ; blessures ${blessure}` : ''} → ${apres.base} dés de base, ${apres.stress} de Stress.`, ...(apres.base + apres.stress === 0 ? ['Aucun dé ne reste : ce test est impossible. Changez de stratégie.'] : [])] };
+            }
+            if (effet?.malusAgilite && enPanique && Object.values(choix).includes(suitesAlien.agilite)) {
+                const apres = desApresTremblement(prepare.nombreDeDes, prepare.desSecondaires, effet.malusAgilite);
+                return { ...prepare, nombreDeDes: apres.base, desSecondaires: apres.stress,
+                    remarques: [...prepare.remarques, 'Tremblement : −2 dés (base, puis Stress).'] };
+            }
+            return { ...prepare, desSecondaires: stress };
+        },
+        [descripteur, valeurs, suitesAlien, valeursAlien, choix, desAchetes, difficulte, ajustementDeDifficulte, degresPuises, modificateur, specialisation, template.sections, regleJetAlien, reglagesAlien, equipementAlien, combatAlien],
     );
 
     /*
@@ -311,11 +392,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         { fois: 0, unsPayes: 0, ecrits: {} },
     );
     const [paniqueJouee, setPaniqueJouee] = useState<{
-        de: number; niveau: number; total: number; entree?: TableEntry;
+        de: number; niveau: number; total: number; entree?: TableEntry; modificateur?: number;
         /** Le total qui s'applique, après le cumul avec une panique en cours. */
         effectif: number; precedent: number; cumule: boolean;
     } | null>(null);
-    const lireLeNombre = (champ: string) => forcage.ecrits[champ] ?? (Number(valeurs[champ]) || 0);
+    const lireLeNombre = (champ: string) => suitesAlien
+        ? Number(valeursAlien[champ]) || 0
+        : forcage.ecrits[champ] ?? (Number(valeurs[champ]) || 0);
     /**
      * Les jetons de Fortune déjà placés par ce panneau, datés de la valeur de la
      * fiche qu'ils complètent : dès que la fiche les a relus (sa valeur change),
@@ -419,7 +502,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     // Un jeu qui ne compose rien depuis la fiche est prêt d'emblée. Les
     // composantes de la réserve comptent autant que celles du seuil : lancer
     // sans attribut ni compétence donnerait une poignée de dés arbitraire.
-    const pret = composantesARetenir.every(c => c.facultative || choix[c.id]) && jet.avertissements.length === 0;
+    const pret = composantesARetenir.every(c => c.facultative || choix[c.id]) && jet.avertissements.length === 0
+        && !(suitesAlien && resultat?.rolls.some(d => d.source === 'gear' && d.val === 1) && !paniqueJouee)
+        && !(suitesAlien && jet.nombreDeDes + jet.desSecondaires === 0);
+    const briseAlien = !!combatAlien && !!suitesAlien && !estUnAndroide(suitesAlien,valeursAlien)
+        && (etatCombatAlien.mort || Number(valeursAlien[combatAlien.sante]) <= 0);
 
     /**
      * D'où sortiront les points, **avant** de lancer.
@@ -438,10 +525,26 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         ressourcesDeTable?.find(r => r.id === id)?.label ?? id ?? '';
 
     const lancer = () => {
+        if (!pret || briseAlien) return;
         const dits: string[] = [];
         // Un nouveau jet : rien n'est encore forcé, aucune Panique n'est jouée.
         setForcage({ fois: 0, unsPayes: 0, ecrits: {} });
         setPaniqueJouee(null);
+        setFolieMeurtriere(false);
+        paniqueDejaJouee.current = false;
+        evenementPanique.current = `alien-jet-${crypto.randomUUID()}`;
+        if (regleJetAlien) {
+            const champ = choix[regleJetAlien.competence];
+            dernierJetAlien.current = { version: 1, id: evenementPanique.current,
+                competence: regleJetAlien.competences[champ], nomCompetence: template.sections.flatMap(s => s.fields).find(f => f.id === champ)?.label ?? champ,
+                composition: jet.remarques.join(' '), equipement: equipementAlien ? { ...equipementAlien } : undefined,
+                role: reglagesAlien.role, reussites: 0, paniqueEnAttente: false, annule: false, eclats: [] };
+            if (tirAlien) {
+                dernierJetAlien.current.automatique = !!reglagesAlien.automatique;
+                if (tirPrepareAlien?.stress && suitesAlien && !estUnAndroide(suitesAlien,valeursAlien)) ecrireAlien({ [suitesAlien.stress]: (Number(valeursAlien[suitesAlien.stress]) || 0) + 1 });
+                setReglagesAlien(r => ({ ...r, viser: false }));
+            }
+        }
         setEffetsDuBrise({});
         setSuitesNotees({});
         setDernierLancer(null);
@@ -682,9 +785,13 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
           chaque réussite élève le niveau d'un point, comme lui.
         */
         const bonusTotal = bonusDuGroupe + bonusPerso;
-        const res: RollResult = bonusTotal > 0
+        const resBrut: RollResult = bonusTotal > 0
             ? { ...brut, successes: (brut.successes ?? 0) + bonusTotal, totalDisplay: `${brut.totalDisplay} (+${bonusTotal})` }
             : brut;
+        setAvantPanique(resBrut);
+        const enAttente = !!suitesAlien && resBrut.rolls.some(d => d.source === 'gear' && d.val === 1);
+        const res = regleJetAlien ? enregistrerLeResultatAlien(resBrut, enAttente)
+            : enAttente ? resultatAvecPanique(resBrut) : resBrut;
         setSeuilDuLancer(jet.seuil);
         setBonusDuLancer(bonusDuGroupe + bonusPerso);
         setResultat(res);
@@ -869,7 +976,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         }
     };
 
-    const raisonDeNePasForcer = regleDuForcage && resultat && dernierLancer
+    const raisonDeNePasForcer = briseAlien ? 'Brisé ou mort : aucun test ordinaire ni forçage.'
+        : regleJetAlien && dernierLancer && suiviJetAlien?.role === 'defenseur'
+        ? 'Le défenseur ne peut pas forcer un test opposé.'
+        : regleJetAlien && dernierLancer && (suiviJetAlien?.eclats.length ?? 0) > 0
+        ? 'Des actions d’éclat sont déjà dépensées : ce test est clos.'
+        : regleDuForcage && resultat && dernierLancer
         ? pourquoiNePasForcer(regleDuForcage, {
             resultat, valeurs, choix: dernierLancer.choix, dejaForce: forcage.fois, libelleDuUn,
         })
@@ -891,7 +1003,8 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         if (montee > 0 && dernierLancer.seconde) {
             const { champ, label } = dernierLancer.seconde;
             ecrits[champ] = lireLeNombre(champ) + montee;
-            ecrireSurLaFiche?.({ [champ]: ecrits[champ] });
+            if (suitesAlien) ecrireAlien({ [champ]: ecrits[champ] });
+            else ecrireSurLaFiche?.({ [champ]: ecrits[champ] });
             dits.push(`${label} +${montee} → ${ecrits[champ]}${aReporter}`);
         }
 
@@ -919,13 +1032,19 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         const relances = res.rolls.length - gardes;
         setForcage({ fois: forcage.fois + 1, unsPayes: forcage.unsPayes + (prix?.points ?? 0), ecrits });
         setPaniqueJouee(null);
-        setResultat(res);
+        paniqueDejaJouee.current = false;
+        evenementPanique.current = `alien-forcage-${crypto.randomUUID()}`;
+        setAvantPanique(res);
+        const enAttente = !!suitesAlien && res.rolls.some(d => d.source === 'gear' && d.val === 1);
+        const definitif = regleJetAlien ? enregistrerLeResultatAlien(res, enAttente)
+            : enAttente ? resultatAvecPanique(res) : res;
+        setResultat(definitif);
         setMouvements(m => [
             ...m,
             `Jet forcé : ${gardes} dé${gardes > 1 ? 's' : ''} gardé${gardes > 1 ? 's' : ''}, ${relances} relancé${relances > 1 ? 's' : ''}`,
             ...dits,
         ]);
-        redire(`${dernierLancer.titre} · forcé`, res);
+        redire(`${dernierLancer.titre} · forcé`, definitif);
     };
 
     /*
@@ -936,11 +1055,16 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     */
     const paniqueDeclenchee = !!descripteur.panique
         && !!resultat?.rolls.some(d => d.source === 'gear' && d.val === 1);
+    const paniqueEnAttente = !!suitesAlien && paniqueDeclenchee && !paniqueJouee;
+    const actionAnnulee = !!suitesAlien && !!paniqueJouee && paniqueJouee.effectif >= 10;
     const jouerLaPanique = () => {
         const regle = descripteur.panique;
-        if (!regle || !dernierLancer) return;
+        if (!regle || !dernierLancer || paniqueDejaJouee.current) return;
+        paniqueDejaJouee.current = true;
         const niveau = dernierLancer.seconde ? lireLeNombre(dernierLancer.seconde.champ) : 0;
         const tire = testDePanique(niveau, regle.faces, faces => DiceEngine.roll(faces));
+        const modificateur = suitesAlien ? modifierDePanique(suitesAlien, valeursAlien) : 0;
+        tire.total += modificateur;
         /*
           **Le cumul** : déjà en panique, un total plus bas ou égal donne la ligne
           juste au-dessus de la panique en cours. Celle-ci se garde sur la fiche,
@@ -948,16 +1072,26 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
         */
         const seuil = regle.seuil ?? 1;
         const precedent = regle.champ ? lireLeNombre(regle.champ) : 0;
-        const { effectif, cumule } = cumulDePanique(tire.total, precedent, seuil);
-        const joue = { ...tire, effectif, precedent, cumule };
+        const { effectif, cumule } = suitesAlien ? cumulAlien(tire.total, precedent) : cumulDePanique(tire.total, precedent, seuil);
+        const joue = { ...tire, effectif, precedent, cumule, modificateur };
         setPaniqueJouee(joue);
-        if (regle.champ && effectif >= seuil) {
+        if (suitesAlien) {
+            const talentMeurtrier = suitesAlien.talents && String(valeursAlien[suitesAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes('folie meurtriere');
+            const maj = appliquerLaPaniqueAlien(suitesAlien, regle.champ, valeursAlien, evenementPanique.current, effectif, folieMeurtriere && !!talentMeurtrier);
+            ecrireAlien(maj);
+            setForcage(f => ({ ...f, ecrits: { ...f.ecrits, ...(regle.champ ? { [regle.champ]: effectif >= 7 ? effectif : 0 } : {}),
+                ...(typeof maj[suitesAlien.stress] === 'number' ? { [suitesAlien.stress]: maj[suitesAlien.stress] as number } : {}) } }));
+            const final = avantPanique ? regleJetAlien ? enregistrerLeResultatAlien(avantPanique, false, effectif >= 10)
+                : resultatAvecPanique(avantPanique, effectif) : null;
+            if (final) { setResultat(final); redire(`${dernierLancer.titre} · après Panique`, final); }
+        } else if (regle.champ && effectif >= seuil) {
             const champ = regle.champ;
             setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: effectif } }));
             ecrireSurLaFiche?.({ [champ]: effectif });
         }
         const nom = libelleDuUn ?? 'Panique';
-        const calcul = `1d${regle.faces} (${tire.de}) + ${dernierLancer.seconde?.label ?? 'Stress'} ${niveau} = ${tire.total}`
+        const calcul = `1d${regle.faces} (${tire.de}) + ${dernierLancer.seconde?.label ?? 'Stress'} ${niveau}`
+            + (modificateur ? ' −2 (Nerfs d’acier)' : '') + ` = ${tire.total}`
             + (cumule ? ` ; déjà en panique (${precedent}) : ${effectif}` : '');
         const dire = (entree?: TableEntry) => redire(`Test de ${nom}`, {
             total: effectif, modifier: niveau, rolls: [{ val: tire.de, sides: regle.faces }],
@@ -1051,11 +1185,15 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
     const pointsDisponibles = reussiteDepensee ? lireLeNombre(reussiteDepensee.champ) : 0;
     const depenserUneReussite = () => {
         if (!reussiteDepensee || !resultat || !dernierLancer || pointsDisponibles <= 0) return;
+        if (briseAlien) return;
+        if (regleJetAlien && (suiviJetAlien?.eclats.length ?? 0) > 0) return;
+        if (suitesAlien && paniqueDeclenchee && (!paniqueJouee || paniqueJouee.effectif >= 10)) return;
         const { champ, label } = reussiteDepensee;
         const reste = pointsDisponibles - 1;
         setForcage(f => ({ ...f, ecrits: { ...f.ecrits, [champ]: reste } }));
-        ecrireSurLaFiche?.({ [champ]: reste });
-        const successes = (resultat.successes ?? 0) + 1;
+        if (suitesAlien) ecrireAlien({ [champ]: reste });
+        else ecrireSurLaFiche?.({ [champ]: reste });
+        const successes = (regleJetAlien ? suiviJetAlien?.reussites ?? resultat.successes ?? 0 : resultat.successes ?? 0) + 1;
         const res: RollResult = {
             ...resultat,
             rolls: [...resultat.rolls, { val: 6, sides: 6, source: 'base', isCritMax: true, cssClass: 'reussite-depensee' }],
@@ -1065,9 +1203,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             degre: 'reussite-normale',
             totalDisplay: `${resultat.totalDisplay} (+1 ${label})`,
         };
-        setResultat(res);
+        setAvantPanique(res);
+        const affiche = enregistrerLeResultatAlien(res);
+        setResultat(affiche);
         setMouvements(m => [...m, `${label} −1 → ${reste} : un 6 ajouté`]);
-        redire(`${dernierLancer.titre} · ${label}`, res);
+        redire(`${dernierLancer.titre} · ${label}`, affiche);
     };
 
     /*
@@ -1310,7 +1450,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 <div className="flex items-baseline gap-2 text-xs">
                     <span className="text-app-text/40 font-bold uppercase tracking-widest text-ui-9">{destin ? 'Domaine' : 'Réserve'}</span>
                     <span className="font-mono text-lg font-black text-accent">{jet.nombreDeDes}</span>
-                    <span className="text-app-text/30 font-mono">
+                    {regleJetAlien ? <span className="text-app-text/50">dés de base + {jet.desSecondaires} dés de Stress, après modificateurs</span> : <span className="text-app-text/30 font-mono">
                         = {[
                             ...(descripteur.reserve?.base ? [`${descripteur.reserve.base}`] : []),
                             ...jet.composantesDeLaReserve.map(c => `${c.valeur}`),
@@ -1323,7 +1463,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 ...(jet.desAchetes > 0 ? ['achetés'] : []),
                             ].join(' + ')})
                         </span>
-                    </span>
+                    </span>}
                 </div>
             )}
 
@@ -1452,9 +1592,20 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                 />
             )}
 
+            {regleJetAlien && <PreparationAlien reglages={reglagesAlien} changer={setReglagesAlien} equipements={equipements} tir={tirAlien} />}
+            {combatAlien && equipementAlien?.proprietes?.munitions && <MunitionsAlien arme={equipementAlien} suivi={etatCombatAlien}
+                rapide={String(valeursAlien[combatAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes('rechargement rapide')}
+                agir={(action,nombre,vide) => {
+                    const s = lireLeCombatAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
+                    const id = equipementAlien.id, a = s.armes[id];
+                    if (action === 'recharger') { const apres = rechargerUneArme(s,id); if (apres !== s) { ecrireAlien({ [CLE_COMBAT_ALIEN]: apres }); redire('Rechargement', { total: 0, modifier: 0, rolls: [], totalDisplay: `${equipementAlien.nom} rechargée : un chargeur complet consommé ; action ${String(valeursAlien[combatAlien.talents] ?? '').toLowerCase().includes('rechargement rapide') ? 'rapide' : 'lente'}.` }); } }
+                    else if (action === 'reserve' && a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { ...a, chargeurs: nombre } } } });
+                    else if (action === 'initialiser' && !a) ecrireAlien({ [CLE_COMBAT_ALIEN]: { ...s, armes: { ...s.armes, [id]: { vide, chargeurs: nombre } } } });
+                }} />}
+            {briseAlien && <p className="text-xs text-etat-danger">{etatCombatAlien.mort ? 'Mort' : 'Brisé'} : aucun test de compétence ordinaire. Les premiers soins et le Trépas ont leurs gestes séparés.</p>}
             <div className="flex items-center gap-6">
                 {/* Réserve : les dés supplémentaires s'achètent, jusqu'au plafond du système. */}
-                <div className={`flex items-center gap-2 ${destin || torg ? 'hidden' : ''}`}>
+                <div className={`flex items-center gap-2 ${destin || torg || regleJetAlien ? 'hidden' : ''}`}>
                     <span className="text-ui-9 font-black uppercase tracking-widest text-app-text/40">Dés</span>
                     <button
                         onClick={() => setDesAchetes(d => Math.max(0, d - 1))}
@@ -1586,7 +1737,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
 
                 <button
                     onClick={lancer}
-                    disabled={!pret}
+                    disabled={!pret || briseAlien}
                     className={`ml-auto px-6 py-2 rounded-xl text-ui-10 font-black uppercase tracking-widest transition-all ${
                         pret
                             ? 'bg-accent text-app-on-accent hover:scale-105 active:scale-95'
@@ -1694,7 +1845,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             </button>
                         )}
                         {reussiteDepensee && compteDeReussites && (
-                            <button type="button" onClick={depenserUneReussite} disabled={pointsDisponibles <= 0}
+                            <button type="button" onClick={depenserUneReussite} disabled={briseAlien || pointsDisponibles <= 0 || paniqueEnAttente || actionAnnulee || (regleJetAlien && (suiviJetAlien?.eclats.length ?? 0) > 0)}
                                 className="px-3 py-1 rounded-lg border border-etat-succes/50 bg-etat-succes/10 text-etat-succes text-ui-10 font-bold hover:bg-etat-succes/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
                                 Dépenser un {reussiteDepensee.label} ({pointsDisponibles})
                             </button>
@@ -1705,6 +1856,12 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                                 Test de {libelleDuUn ?? 'Panique'}
                             </button>
                         )}
+                        {paniqueEnAttente && suitesAlien?.talents && String(valeursAlien[suitesAlien.talents] ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes('folie meurtriere') && (
+                            <label className="text-xs flex gap-2"><input type="checkbox" checked={folieMeurtriere} onChange={e => setFolieMeurtriere(e.target.checked)} />Ennemis en vue : Folie meurtrière remplace 11+</label>
+                        )}
+                        {(paniqueEnAttente || actionAnnulee) && <p className="text-etat-alerte">
+                            {paniqueEnAttente ? 'Résultat provisoire : résoudre la Panique avant les effets du test.' : 'Action annulée : les réussites et le Point de Récit ne contournent pas la Panique.'}
+                        </p>}
                     </div>
                     {/*
                       **Relancer malgré une réussite** (Blade Runner, « Forcer un jet ») : un D10
@@ -1822,11 +1979,11 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                             gradue ; sinon c'est le verdict du compte de
                             réussites, qui reste l'autorité sur une réserve.
                         */}
-                        <EtiquetteDuDegre
+                        {!paniqueEnAttente && !(regleJetAlien && (suiviJetAlien?.role === 'defenseur' || (suiviJetAlien?.role === 'attaquant' && suiviJetAlien.defense === undefined))) && <EtiquetteDuDegre
                             resultat={{ degre: resultat.degre, tagSuccess: v.reussi }}
                             classes={reussi => 'font-black uppercase tracking-widest '
                                 + (reussi ? 'text-etat-succes' : 'text-etat-danger')}
-                        />
+                        />}
                         {/* « difficulté 0 » ne voulait rien dire sur un jeu qui
                             n'en gradue aucune : il en faut une, et c'est ça
                             qu'on annonce. */}
@@ -1870,7 +2027,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                         )}
                         {/* L'excédent alimente la monnaie de table — et depuis
                             le mur n° 4, il y est réellement versé. */}
-                        {v.excedent > 0 && (
+                        {v.excedent > 0 && !regleJetAlien && (
                             <span className="text-etat-alerte/80 font-mono">
                                 +{v.excedent}{monnaie && jet.cout.ressource ? ` ${nomDe(jet.cout.ressource)}` : ' excédent'}
                             </span>
@@ -1906,7 +2063,7 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
                     {paniqueJouee && (
                         <div data-test-de-panique className="rounded-lg border border-etat-alerte/40 bg-etat-alerte/10 p-2 space-y-1">
                             <p className="text-ui-11 font-black uppercase tracking-widest text-etat-alerte">
-                                Test de {libelleDuUn ?? 'Panique'} : {paniqueJouee.de} + {paniqueJouee.niveau} = {paniqueJouee.total}
+                                Test de {libelleDuUn ?? 'Panique'} : {paniqueJouee.de} + {paniqueJouee.niveau}{paniqueJouee.modificateur ? ' −2 (Nerfs d’acier)' : ''} = {paniqueJouee.total}
                                 {paniqueJouee.cumule ? ` ; déjà en panique (${paniqueJouee.precedent}) : ${paniqueJouee.effectif}` : ''}
                                 {paniqueJouee.entree ? ` — ${paniqueJouee.entree.title}` : ''}
                             </p>
@@ -1952,6 +2109,23 @@ const PanneauDeJet: React.FC<PanneauDeJetProps> = ({
             )}
 
             {/* **Le stress subi** (Blade Runner) : au meneur, sous le jet — un geste à part, sans lancer le test. */}
+            {regleJetAlien && suiviJetAlien && ecrireSurLaFiche && <SuitesDuJetAlien jet={suiviJetAlien} ecrire={(suite, texte) => {
+                // Une ancienne fermeture de rendu ne doit pas dépenser deux fois le même budget.
+                const actuel = lireLeJetAlien({ ...valeursAlien, ...(refAlien.current.base === valeurs ? refAlien.current.maj : {}) });
+                if (!actuel || actuel.id !== suite.id || actuel.eclats.length !== suiviJetAlien.eclats.length) return;
+                dernierJetAlien.current = suite;
+                ecrireAlien({ [CLE_JET_ALIEN]: suite });
+                const res = resultatDuJetAlien(resultat ?? { total: 0, modifier: 0, rolls: [], totalDisplay: '' }, suite);
+                if (resultat) setResultat(res);
+                redire(`Alien — ${suite.nomCompetence}`, { ...res, totalDisplay: `${res.totalDisplay} — ${texte}` });
+            }} />}
+            {combatAlien && ecrireSurLaFiche && <SanteAlien regle={combatAlien} valeurs={valeursAlien} ecrire={ecrireAlien}
+                personnageId={personnageId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />}
+            {suitesAlien && ecrireSurLaFiche && (
+                <PaniqueAlien regle={suitesAlien} champPanique={descripteur.panique?.champ}
+                    valeurs={valeursAlien} ecrire={ecrireAlien} personnageId={personnageId}
+                    campaignId={campaignId} pourLesJoueurs={pourLesJoueurs} consigner={redire} />
+            )}
             {descripteur.stressSubi && ecrireSurLaFiche && !pourLesJoueurs && (
                 <StressSubi
                     regle={descripteur.stressSubi}

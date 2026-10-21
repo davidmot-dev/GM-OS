@@ -159,9 +159,9 @@
         {
             "min": 55,
             "max": 55,
-            "title": "Avarie Mineure Aléatoire",
-            "description": "Relancez sur cette table (entrée générique pour combler le trou D66).",
-            "effect": "Aucun effet mécanique."
+              "title": "Unité de réfrigération endommagée",
+              "description": "Errata français du livre de base, 04/11/2021, p. 199 : ligne 55 manquante.",
+              "effect": "Toutes les réserves de nourriture réfrigérées du vaisseau sont perdues au bout d’une journée. Réparation : MACHINES LOURDES."
         },
         {
             "min": 56,

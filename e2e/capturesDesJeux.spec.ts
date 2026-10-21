@@ -1,4 +1,4 @@
-import { test, expect, type Locator } from '@playwright/test';
+import { test, expect, chromium, type Locator, type BrowserContext } from '@playwright/test';
 import AdmZip from 'adm-zip';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -106,7 +106,7 @@ const MISES_EN_SCENE: MiseEnScene[] = [
     },
     {
         corpusId: 'alien', slug: 'alien', personnage: 'Dana Okoro',
-        sheetData: { force: 4, combat_rapproche: 2, niveau_de_stress: 2, points_de_recit: 1 },
+        sheetData: { force: 4, sante: 4, empathie: 2, combat_rapproche: 2, niveau_de_stress: 2, points_de_recit: 1 },
         composantes: ['force', 'combat_rapproche', 'niveau_de_stress'],
         scenes: c => scenesDAlien(c),
     },
@@ -250,11 +250,13 @@ type Fenetre = {
 };
 
 let gmos: GmOsLance;
+let stockageTabletteAlien: Awaited<ReturnType<BrowserContext['storageState']>> | undefined;
 
 test.describe.configure({ mode: 'serial' });
 test.skip(JEUX.length === 0, `aucun pilote exporté dans « ${PILOTES} » — rien d'honnête à photographier`);
 
 test.beforeAll(async () => {
+    test.setTimeout(60_000);
     fs.mkdirSync(SORTIE, { recursive: true });
     gmos = await lancerGmOs({
         semence: ecrireLaSemence(),
@@ -301,6 +303,7 @@ async function vue(campagne: string, v: CurrentView, selection?: { joueur: strin
 
 for (const { mise, pilote } of JEUX) {
     test(`${pilote.gameDriver.name}`, async () => {
+        if (mise.corpusId === 'alien') test.setTimeout(180_000);
         const f = gmos.fenetre;
         const campagne = campagneDe(mise.slug);
 
@@ -662,7 +665,13 @@ async function jeterJusqua(c: ContexteDeScene, composantes: string[], voulu: (pa
     for (const [i, champ] of composantes.entries()) await panneau.locator('select').nth(i).selectOption(champ);
     const cible = voulu(panneau);
     for (let i = 0; i < essais && await cible.count() === 0; i++) {
-        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        // A1 : un résultat avec Panique ne s'abandonne pas pour relancer.
+        const lancer = panneau.getByRole('button', { name: 'Lancer', exact: true });
+        if (await lancer.isDisabled()) {
+            const panique = panneau.getByRole('button', { name: 'Test de Panique', exact: true });
+            if (await panique.count()) await panique.click();
+        }
+        await lancer.click();
     }
     await expect(cible.first()).toBeVisible();
     return panneau;
@@ -678,7 +687,7 @@ async function photographierLePanneau(panneau: Locator, nom: string): Promise<vo
 
 /** Alien : le test de Panique qu'un 1 de Stress déclenche, et un jet forcé. */
 async function scenesDAlien(c: ContexteDeScene): Promise<void> {
-    const jet = (c.pilote.gameDriver as { jet?: { forcer?: unknown; panique?: unknown } }).jet;
+    const jet = (c.pilote.gameDriver as { jet?: { alien?: { combat?: unknown }; forcer?: unknown; panique?: { suites?: unknown } } }).jet;
     const composantes = ['force', 'combat_rapproche', 'niveau_de_stress'];
     if (jet?.panique) {
         const panneau = await jeterJusqua(c, composantes, p => p.getByRole('button', { name: 'Test de Panique', exact: true }));
@@ -693,7 +702,298 @@ async function scenesDAlien(c: ContexteDeScene): Promise<void> {
         await panneau.locator('button:enabled', { hasText: /^Forcer le jet/ }).click();
         await expect(panneau.getByText(/Jet forcé/).first()).toBeVisible();
         await photographierLePanneau(panneau, 'jeu-alien-force');
+        const panique = panneau.getByRole('button', { name: 'Test de Panique', exact: true });
+        if (await panique.isVisible()) await panique.click();
     }
+    if (jet?.panique?.suites) {
+        await scenesDePaniqueAlien(c);
+        await sceneDePaniqueAlienTablette(c);
+    }
+    if (jet?.alien) await sceneDesJetsAlien(c);
+    if (jet?.alien?.combat) await sceneDuCombatAlien(c);
+}
+
+/** A3 : tir auto, vraie protection puis critique humain et soins séparés, sur profil jetable. */
+async function sceneDuCombatAlien(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await ecrireLaFiche(c,{force:4,agilite:4,endurance:2,combat_a_distance:2,sante:4,niveau_de_stress:0,panique_en_cours:0,talent:'Rechargement rapide',
+        'field-1786783108730':'Fusil de démonstration',armes_bonus:'+1',armes_degats:'2',armes_portees:'Longue',armes_proprietes:'Munitions, mode auto, perce-armure',
+        'field-1786783170092':'5',_gmos_combat_alien:{version:1,temps:{round:0,tour:0,quart:0,jour:0},critiques:[],blessureTraitee:[],blessures:[],mort:false,armes:{}}});
+    await f.waitForTimeout(750); await f.reload(); await attendreLHydratation(gmos); await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});
+    let panneau = f.locator('[data-panneau-de-jet]').first();
+    for (const [i,champ] of ['agilite','combat_a_distance','niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    await panneau.getByLabel('Arme de la fiche').selectOption('0');
+    await panneau.getByLabel('Chargeurs complets réellement portés').fill('2');
+    await panneau.getByRole('button',{name:'Confirmer l’état initial du chargeur'}).click();
+    await panneau.getByLabel(/Visée préalable/).check(); await panneau.getByLabel(/Mode automatique/).check();
+    await f.evaluate(() => { const w = window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;
+        const d=[0.99,0.99,0.99,0.99,...Array(7).fill(0.2),0];Math.random=()=>d.shift()??0.2; });
+    try { await panneau.getByRole('button',{name:'Lancer',exact:true}).click(); }
+    finally { await f.evaluate(() => {Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;}); }
+    const lire = () => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState().players.flatMap(p=>p.characters).find(c=>c.id===id)!.sheetData!,c.personnage);
+    expect((await lire()).niveau_de_stress).toBe(1);
+    expect(((await lire())._gmos_combat_alien as {armes:Record<string,{vide:boolean}>}).armes['0'].vide).toBe(false);
+    await f.evaluate(() => { const w=window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;Math.random=()=>0; });
+    try { await panneau.getByRole('button',{name:'Test de Panique',exact:true}).click(); }
+    finally { await f.evaluate(() => {Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;}); }
+    expect(((await lire())._gmos_combat_alien as {armes:Record<string,{vide:boolean}>}).armes['0'].vide).toBe(true);
+    await panneau.getByLabel(/Cible secondaire à Courte portée/).fill('Adversaire B');
+    await panneau.getByRole('button',{name:'Affecter un six à cette cible'}).click();
+    await panneau.getByLabel('Cible des prochains éclats').selectOption('Adversaire B');
+    await panneau.getByRole('button',{name:'Dégâts +1',exact:true}).click();
+    await expect(panneau.getByText('Adversaire B : 3 dégâts préparés avant protection.')).toBeVisible();
+    await photographier(panneau.locator('[data-suites-alien]'),'jeu-alien-a3-rafale');
+    await panneau.getByRole('button',{name:'Recharger — action rapide'}).click();
+    await expect(panneau.getByRole('button',{name:'Recharger — action rapide'})).toBeDisabled();
+    await photographier(panneau.locator('[data-munitions-alien]'),'jeu-alien-a3-chargeurs');
+    let sante = panneau.locator('[data-sante-alien]');
+    await sante.getByLabel('Dégâts entrants').fill('5'); await sante.getByLabel('Protection d’un abri préalable').fill('2');
+    await sante.getByLabel('Propriété contre la protection').selectOption('perce-armure');
+    await sante.getByRole('button',{name:'Préparer ce coup'}).click();
+    await f.evaluate(() => { const w=window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;const d=[0.99,0.2,0.2,0.2];Math.random=()=>d.shift()??0.2; });
+    try { await sante.getByRole('button',{name:'Lancer la Protection'}).click(); }
+    finally { await f.evaluate(() => {Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;}); }
+    await sante.getByRole('button',{name:'Appliquer les dégâts restants'}).click();
+    expect((await lire()).sante).toBe(0); expect((await lire()).niveau_de_stress).toBe(2);
+    await expect(panneau.getByRole('button',{name:'Lancer',exact:true})).toBeDisabled();
+    await photographier(sante.locator('[data-coup-alien]'),'jeu-alien-a3-protection');
+    await f.waitForTimeout(750); await f.reload(); await attendreLHydratation(gmos); await vue(c.campagne,'players',{joueur:JOUEUR,personnage:c.personnage});
+    panneau=f.locator('[data-panneau-de-jet]').first();sante=panneau.locator('[data-sante-alien]');
+    await expect(sante.getByRole('button',{name:'Appliquer les dégâts restants'})).toBeDisabled();
+    await f.evaluate(() => {const w=window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;Math.random=()=>0.55;});
+    try { await sante.getByRole('button',{name:'Tirer ce critique humain (D66)'}).click(); await expect(sante.getByText('44 — Poumon perforé')).toBeVisible(); }
+    finally { await f.evaluate(() => {Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;}); }
+    await sante.getByLabel('Réussites de Soins médicaux validées').fill('2'); await sante.getByLabel(/Soignant \(/).fill('Lambert');
+    await sante.getByRole('button',{name:'Relever par premiers soins'}).click(); expect((await lire()).sante).toBe(2);
+    await sante.getByRole('button',{name:'Valider un jour',exact:true}).click();
+    await f.evaluate(() => {const w=window as unknown as {hasardAlien?:()=>number};w.hasardAlien=Math.random;Math.random=()=>0.99;});
+    try { await sante.getByRole('button',{name:'Tester le Trépas (sans Stress)'}).click(); }
+    finally { await f.evaluate(() => {Math.random=(window as unknown as {hasardAlien:()=>number}).hasardAlien;}); }
+    await expect(sante.getByRole('button',{name:'Tester le Trépas (sans Stress)'})).toHaveCount(0);
+    await sante.getByLabel('Réussites de Soins médicaux validées').fill('0');
+    await sante.getByRole('button',{name:/Stabiliser — malus 0/}).click();
+    await expect(sante.getByRole('button',{name:/Stabiliser — malus 0/})).toBeDisabled();
+    await sante.getByLabel(/Qualité du matériel/).fill('1'); await sante.getByLabel('Réussites de Soins médicaux validées').fill('1');
+    await sante.getByRole('button',{name:/Stabiliser — malus 0/}).click();
+    await sante.getByRole('button',{name:'Soins quotidiens réussis : durée ÷2'}).click();
+    await expect(sante.getByRole('button',{name:'Soins quotidiens réussis : durée ÷2'})).toBeDisabled();
+    await sante.getByRole('button',{name:'Un Tour de repos écoulé : Santé +1'}).click(); expect((await lire()).sante).toBe(3);
+    await expect(sante.getByText(/Guérison restante : 1.5 jour/)).toBeVisible();
+    await photographier(sante.locator('[data-blessure-alien]'),'jeu-alien-a3-soins');
+    const carte = await entrerEnCombat(c);
+    await expect(carte.locator('[data-sante-alien]').getByText('44 — Poumon perforé')).toBeVisible();
+    await expect(carte.locator('[data-sante-alien]').getByText(/Santé : 3\./)).toBeVisible();
+    await expect(carte.getByRole('button',{name:'Tirer ce critique humain (D66)'})).toHaveCount(0);
+    expect(stockageTabletteAlien).toBeDefined();
+    const nav=await chromium.launch({channel:'msedge',args:['--mute-audio']});
+    try {
+        const ctx=await nav.newContext({viewport:{width:360,height:1000},isMobile:true,hasTouch:true,serviceWorkers:'block',reducedMotion:'reduce',storageState:stockageTabletteAlien});
+        await ctx.route('**/*',route=>{const u=new URL(route.request().url());return u.hostname==='127.0.0.1'||['data:','blob:'].includes(u.protocol)?route.continue():route.abort();});
+        // Reprendre l'identité ET son secret local de la scène A1, comme le même navigateur rouvert.
+        const t=await ctx.newPage(); await t.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
+        await expect(t.getByText('Connecté',{exact:true})).toBeVisible();
+        await t.getByTitle('Fiche Personnage',{exact:true}).click(); const suivi=t.locator('[data-sante-alien]');
+        await expect(suivi.getByText('44 — Poumon perforé')).toBeVisible(); await expect(suivi.getByRole('button')).toHaveCount(0);
+        for(const largeur of [360,768,1180]) {await t.setViewportSize({width:largeur,height:1000});expect(await t.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await photographier(suivi,`jeu-alien-a3-tablette-${largeur}`);}
+    } finally {await nav.close();}
+}
+
+/** A2 : équipement réel, opposition, dépenses persistantes et malus sur le Stress. */
+async function sceneDesJetsAlien(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await ecrireLaFiche(c, { force: 5, combat_rapproche: 5, niveau_de_stress: 3, panique_en_cours: 0,
+        'field-1786783108730': 'Fusil de démonstration', armes_bonus: '+2', armes_degats: '2', armes_portees: 'Longue' });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    let panneau = f.locator('[data-panneau-de-jet]').first();
+    const fermerContagion = panneau.getByRole('button', { name: 'Aucun autre personnage concerné' });
+    while (await fermerContagion.count()) await fermerContagion.first().click();
+    for (const [i, champ] of ['force', 'combat_rapproche', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    await panneau.getByLabel('Arme de la fiche').selectOption('0');
+    await panneau.getByLabel('Personnes qui aident').selectOption('3');
+    await panneau.getByLabel('Rôle dans le test').selectOption('attaquant');
+    await f.evaluate(() => { const w = window as unknown as { hasardAlien?: () => number }; w.hasardAlien = Math.random;
+        const d = [0.99, 0.99, 0.99, 0.99]; Math.random = () => d.shift() ?? 0.2; });
+    try { await panneau.getByRole('button', { name: 'Lancer', exact: true }).click(); }
+    finally { await f.evaluate(() => { Math.random = (window as unknown as { hasardAlien: () => number }).hasardAlien; }); }
+    await expect(panneau.getByText(/→ 15 dés de base, 3 de Stress/).first()).toBeVisible();
+    await expect(panneau.getByRole('button', { name: 'Dégâts +1', exact: true })).toBeDisabled();
+    await panneau.getByLabel('Réussites du défenseur').fill('1');
+    await panneau.getByRole('button', { name: 'Résoudre l’opposition' }).click();
+    await expect(panneau.getByText('Actions d’éclat disponibles : 2.')).toBeVisible();
+    await panneau.getByRole('button', { name: 'Dégâts +1', exact: true }).click();
+    await expect(panneau.getByText(/Dégâts préparés : 2 \+ 1 = 3/)).toBeVisible();
+    await expect(panneau.getByRole('button', { name: /Forcer le jet/ })).toBeDisabled();
+    await photographier(panneau.locator('[data-preparation-alien]'), 'jeu-alien-a2-preparation');
+    await photographier(panneau.locator('[data-suites-alien]'), 'jeu-alien-a2-opposition');
+    await f.waitForTimeout(750); await f.reload(); await attendreLHydratation(gmos);
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau.getByText('Actions d’éclat disponibles : 1.')).toBeVisible();
+    await panneau.getByRole('button', { name: 'Désarmer', exact: true }).click();
+    await expect(panneau.getByText('Actions d’éclat disponibles : 0.')).toBeVisible();
+    await expect(panneau.getByRole('button', { name: 'Dégâts +1', exact: true })).toBeDisabled();
+    await photographier(panneau.locator('[data-suites-alien]'), 'jeu-alien-a2-reprise');
+    await ecrireLaFiche(c, { force: 2, combat_rapproche: 0, niveau_de_stress: 3 });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    panneau = f.locator('[data-panneau-de-jet]').first();
+    for (const [i, champ] of ['force', 'combat_rapproche', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    await panneau.getByLabel('Modificateur de situation').fill('-4');
+    await expect(panneau.getByText(/→ 0 dés de base, 1 de Stress/).first()).toBeVisible();
+    await panneau.getByLabel('Modificateur de situation').fill('-5');
+    await expect(panneau.getByRole('button', { name: 'Lancer', exact: true })).toBeDisabled();
+    await expect(panneau.getByText(/Aucun dé ne reste/)).toBeVisible();
+    await photographier(panneau.locator('[data-preparation-alien]'), 'jeu-alien-a2-malus');
+}
+
+/** Le vrai Hub et son transport : verdict, écriture de fiche et reprise à trois tailles. */
+async function sceneDePaniqueAlienTablette(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await f.evaluate(({ campagne, personnage }) => {
+        const s = (window as unknown as Fenetre).useSessionOSStore;
+        s.setState(etat => ({ sessions: [{ ...etat.sessions[0], id: 'alien-seance-a1', campaignId: campagne,
+            status: 'active', sessionEntityIds: [personnage, 'alien-ami-a1'], publicSummary: '' }] }));
+        const joueur = s.getState().players.find(p => p.characters.some(x => x.id === personnage))!;
+        const pj = joueur.characters.find(x => x.id === personnage)!;
+        s.getState().updateCharacter(joueur.id, personnage, { sheetData: { ...pj.sheetData, niveau_de_stress: 4,
+            panique_en_cours: 0, _gmos_panique_alien: { version: 1, traites: [], demandes: [], historique: [], traumaEnAttente: false, traumatismes: [] } } });
+    }, { campagne: c.campagne, personnage: c.personnage });
+    const navigateur = await chromium.launch({ channel: 'msedge', args: ['--mute-audio'] });
+    try {
+        const contexte = await navigateur.newContext({ viewport: { width: 360, height: 1000 }, hasTouch: true,
+            isMobile: true, locale: 'fr-FR', serviceWorkers: 'block', reducedMotion: 'reduce' });
+        await contexte.addInitScript(() => localStorage.setItem('gmos-tablet-uuid', 'alien-a1-tablette'));
+        await contexte.route('**/*', route => {
+            const url = new URL(route.request().url());
+            return url.hostname === '127.0.0.1' || ['data:', 'blob:'].includes(url.protocol) ? route.continue() : route.abort();
+        });
+        const tablette = await contexte.newPage();
+        await tablette.goto(`http://127.0.0.1:${gmos.ports.sync}/?window=tablet&sync=${gmos.ports.sync}`);
+        await tablette.getByRole('button', { name: new RegExp(c.nom) }).click();
+        await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
+        await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+        let panneau = tablette.locator('[data-panneau-de-jet]').first();
+        for (const [i, champ] of ['force', 'combat_rapproche', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+        await tablette.evaluate(() => {
+            const w = window as unknown as { hasardAlien?: () => number }; w.hasardAlien = Math.random;
+            const tirages = [0.99, 0.99, 0.2, 0.2, 0.2, 0.2, 0, 0.2, 0.2, 0.2];
+            Math.random = () => tirages.shift() ?? 0.2;
+        });
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        await expect(panneau.getByText(/Résultat provisoire/)).toBeVisible();
+        await tablette.evaluate(() => { Math.random = () => 0.99; });
+        await panneau.getByRole('button', { name: 'Test de Panique', exact: true }).click();
+        await tablette.evaluate(() => { Math.random = (window as unknown as { hasardAlien: () => number }).hasardAlien; });
+        await expect(panneau.getByText('Figé (10)', { exact: true })).toBeVisible();
+        await expect(panneau.getByText(/Action annulée :/)).toBeVisible();
+        await expect(panneau.getByRole('button', { name: /Dépenser un Point de Récit/ })).toBeDisabled();
+        await expect(panneau.getByText(/Contagion : choisir/)).toHaveCount(0);
+        const lire = () => f.evaluate(id => (window as unknown as Fenetre).useSessionOSStore.getState().players
+            .flatMap(p => p.characters).find(x => x.id === id)!.sheetData!, c.personnage);
+        await expect.poll(async () => (await lire()).niveau_de_stress).toBe(5);
+        await expect.poll(async () => (await lire()).panique_en_cours).toBe(10);
+        for (const largeur of [360, 768, 1180]) {
+            await tablette.setViewportSize({ width: largeur, height: 1000 });
+            await expect.poll(() => tablette.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+            await panneau.screenshot({ path: path.join(SORTIE, `jeu-alien-panique-tablette-${largeur}.jpg`), type: 'jpeg', quality: 82 });
+        }
+        await tablette.reload();
+        await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
+        await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+        panneau = tablette.locator('[data-panneau-de-jet]').first();
+        await expect(panneau.getByText('Figé (10)', { exact: true })).toBeVisible();
+        expect((await lire()).niveau_de_stress).toBe(5);
+        if ((c.pilote.gameDriver as { jet?: { alien?: unknown } }).jet?.alien) {
+            await ecrireLaFiche(c, { niveau_de_stress: 0, panique_en_cours: 0, 'field-1786783108730': 'Pistolet de test', armes_bonus: '+2', armes_degats: '2', armes_portees: 'Moyenne' });
+            await tablette.reload(); await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
+            await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+            panneau = tablette.locator('[data-panneau-de-jet]').first();
+            for (const [i, champ] of ['force', 'combat_rapproche', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+            await tablette.setViewportSize({ width: 360, height: 1000 });
+            await panneau.getByLabel('Arme de la fiche').selectOption('0');
+            await tablette.evaluate(() => { const w = window as unknown as { hasardAlien?: () => number }; w.hasardAlien = Math.random;
+                const d = [0.99, 0.99]; Math.random = () => d.shift() ?? 0.2; });
+            try { await panneau.getByRole('button', { name: 'Lancer', exact: true }).click(); }
+            finally { await tablette.evaluate(() => { Math.random = (window as unknown as { hasardAlien: () => number }).hasardAlien; }); }
+            await panneau.getByRole('button', { name: 'Dégâts +1', exact: true }).click();
+            await expect.poll(async () => ((await lire())._gmos_jet_alien as { eclats: unknown[] })?.eclats.length).toBe(1);
+            for (const largeur of [360, 768, 1180]) {
+                await tablette.setViewportSize({ width: largeur, height: 1000 });
+                expect(await tablette.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+                const suites = panneau.locator('[data-suites-alien]');
+                await suites.scrollIntoViewIfNeeded();
+                await suites.screenshot({ path: path.join(SORTIE, `jeu-alien-a2-tablette-${largeur}.jpg`), type: 'jpeg', quality: 82 });
+            }
+            await tablette.reload(); await expect(tablette.getByText('Connecté', { exact: true })).toBeVisible();
+            await tablette.getByTitle('Fiche Personnage', { exact: true }).click();
+            panneau = tablette.locator('[data-panneau-de-jet]').first();
+            await expect(panneau.getByText('Actions d’éclat disponibles : 0.')).toBeVisible();
+            await expect(panneau.getByRole('button', { name: 'Dégâts +1', exact: true })).toBeDisabled();
+        }
+        stockageTabletteAlien = await contexte.storageState();
+    } finally { await navigateur.close(); }
+}
+
+/** A0/A1 : vrais composants, export de David, personnages et profil jetables. */
+async function scenesDePaniqueAlien(c: ContexteDeScene): Promise<void> {
+    const f = gmos.fenetre;
+    await f.evaluate(({ personnage, campagne }) => {
+        const s = (window as unknown as Fenetre).useSessionOSStore;
+        const joueur = s.getState().players.find(p => p.characters.some(x => x.id === personnage))!;
+        const pj = joueur.characters.find(x => x.id === personnage)!;
+        s.getState().updateCharacter(joueur.id, personnage, { sheetData: { ...pj.sheetData,
+            force: 4, sante: 4, empathie: 2, niveau_de_stress: 4, panique_en_cours: 0,
+            _gmos_panique_alien: { version: 1, traites: [], demandes: [], historique: [], traumaEnAttente: false, traumatismes: [] },
+        } });
+        s.setState(etat => ({ players: etat.players.map(p => p.id === joueur.id ? { ...p, characters: [...p.characters, {
+            id: 'alien-ami-a1', name: 'Lambert — amie de test', portraitUrl: '', campaignId: campagne,
+            templateId: pj.templateId, sheetData: { niveau_de_stress: 2, force: 3, sante: 3 },
+        }] } : p) }));
+    }, { personnage: c.personnage, campagne: c.campagne });
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    let panneau = f.locator('[data-panneau-de-jet]').first();
+    for (const [i, champ] of ['force', 'combat_rapproche', 'niveau_de_stress'].entries()) await panneau.locator('select').nth(i).selectOption(champ);
+    await f.evaluate(() => {
+        const w = window as unknown as { hasardAlien?: () => number };
+        w.hasardAlien = Math.random;
+        const tirages = [0.99, 0.99, 0.2, 0.2, 0.2, 0.2, 0, 0.2, 0.2, 0.2];
+        Math.random = () => tirages.shift() ?? 0.2;
+    });
+    try {
+        await panneau.getByRole('button', { name: 'Lancer', exact: true }).click();
+        await expect(panneau.getByText(/Résultat provisoire/)).toBeVisible();
+        await expect(panneau.getByRole('button', { name: /Dépenser un Point de Récit/ })).toBeDisabled();
+        await photographierLePanneau(panneau, 'jeu-alien-provisoire');
+        await f.evaluate(() => { Math.random = () => 0.99; });
+        await panneau.getByRole('button', { name: 'Test de Panique', exact: true }).click();
+        await expect(panneau.getByText(/Action annulée :/)).toBeVisible();
+        await expect(panneau.getByText('Figé (10)', { exact: true })).toBeVisible();
+        await panneau.getByLabel('Lambert — amie de test').check();
+        await panneau.getByRole('button', { name: 'Appliquer la contagion de Figé' }).click();
+        await expect.poll(() => f.evaluate(() => (window as unknown as Fenetre).useSessionOSStore.getState().players
+            .flatMap(p => p.characters).find(x => x.id === 'alien-ami-a1')?.sheetData?.niveau_de_stress)).toBe(3);
+        await photographierLePanneau(panneau, 'jeu-alien-action-annulee');
+    } finally {
+        await f.evaluate(() => { const w = window as unknown as { hasardAlien?: () => number }; if (w.hasardAlien) Math.random = w.hasardAlien; });
+    }
+    await f.waitForTimeout(750); // Laisser se terminer la persistance asynchrone du profil jetable.
+    await f.reload();
+    await attendreLHydratation(gmos);
+    await vue(c.campagne, 'players', { joueur: JOUEUR, personnage: c.personnage });
+    panneau = f.locator('[data-panneau-de-jet]').first();
+    await expect(panneau.getByText('Figé (10)', { exact: true })).toBeVisible();
+    const lireStress = () => f.evaluate(({ id }) => (window as unknown as Fenetre).useSessionOSStore.getState().players
+        .flatMap(p => p.characters).find(x => x.id === id)?.sheetData?.niveau_de_stress, { id: c.personnage });
+    expect(await lireStress()).toBe(5);
+    await expect(panneau.getByRole('button', { name: 'Appliquer la contagion de Figé' })).toHaveCount(0);
+    await panneau.getByRole('button', { name: 'Round et action résolus' }).click();
+    expect(await lireStress()).toBe(5);
+    await panneau.getByRole('button', { name: 'Demander un test de Panique' }).click();
+    // Stress 5 + un dé de 1 = 6 ; précédent terminé, donc pas de cumul.
+    await f.evaluate(() => { const w = window as unknown as { hasardAlien?: () => number }; w.hasardAlien = Math.random; Math.random = () => 0; });
+    try { await panneau.getByRole('button', { name: 'Résoudre cette Panique' }).click(); }
+    finally { await f.evaluate(() => { const w = window as unknown as { hasardAlien?: () => number }; if (w.hasardAlien) Math.random = w.hasardAlien; }); }
+    await expect(panneau.getByRole('button', { name: 'Résoudre cette Panique' })).toHaveCount(0);
+    await photographierLePanneau(panneau, 'jeu-alien-suivi-panique');
 }
 
 /** Torg : les Lois du cosm courant, et une horde de sbires sur la carte d'un adversaire. */

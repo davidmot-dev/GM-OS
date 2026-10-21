@@ -33,6 +33,13 @@ const TABLE: CorrespondanceDeFiche = {
     absents: [{ fiche: 'points.humanity', pourquoi: 'Doit revenir par la Forge.' }],
 };
 
+it('une nouvelle colonne facultative préserve l’HTML ancien ; une valeur explicitement vide l’efface', () => {
+    const table: CorrespondanceDeFiche = { version: 1, gabaritDeLaFiche: 'alien', champs: [{ gmos: 'bonus', fiche: 'weapons.bonus', siPresent: true }] };
+    expect(versLaFiche({ sheetData: {} }, table)).toEqual({});
+    expect(versLaFiche({ sheetData: { bonus: '' } }, table)).toEqual({ 'weapons.bonus': '' });
+    expect(versGmOs({ 'weapons.bonus': '+2\n+1' }, table).sheetData).toEqual({ bonus: '+2\n+1' });
+});
+
 const CLES_DE_LA_FICHE = [
     'identity.name', 'identity.type',
     'attributes.vigor.level', 'attributes.vigor.base_die',

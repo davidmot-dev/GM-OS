@@ -24,6 +24,14 @@ cas de doute, demande à David avant d'agir.**
 > et une page `54-Jeu-….md` par jeu. **Un pilote nouveau ou amélioré s'y reporte**, captures
 > comprises (`e2e/capturesDesJeux.spec.ts`) — voir la passation, § 4.
 
+> **Synthèse des améliorations des pilotes — document vivant :**
+> [`documentation/Planning/2026-10-20-ameliorations-tous-les-pilotes.md`](documentation/Planning/2026-10-20-ameliorations-tous-les-pilotes.md).
+> **À chaque amélioration mise en place, actualiser la section du pilote et la vue d'ensemble
+> dans la même livraison** : acquis, travaux restants, date, références et vérifications ;
+> distinguer réalisation et essai restant à faire. **À chaque nouveau pilote, ajouter sa
+> section et sa ligne de synthèse**, avec ses acquis, améliorations possibles et sujets à
+> auditer. Tenir aussi à jour les registres détaillés liés. Consigne de David du 20/10/2026.
+
 ## Ce qui est interdit, et pourquoi
 
 - ⛔ **Aucune commande git qui écrit** (`commit`, `push`, `stash`, `checkout`, `reset`, `rebase`,

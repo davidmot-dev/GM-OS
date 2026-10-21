@@ -194,6 +194,8 @@ export type DestinationGmOs = 'sheetData' | 'personnage';
 
 /** Une correspondance de champ à champ. */
 export interface ChampCorrespondu {
+    /** Extension de fiche : ne pas effacer l'HTML tant que cette clé n'existe pas dans sheetData. */
+    siPresent?: boolean;
     /** L'identifiant du champ dans le gabarit de GM-OS. */
     gmos: string;
     /** La clé de la fiche, ou **plusieurs** clés quand une transformation les compose. */
@@ -410,7 +412,7 @@ export function verifierLaCorrespondance(
     if (idsGmOsConnus) {
         const dansGmOs = new Set(idsGmOsConnus);
         for (const champ of table.champs) {
-            if (!dansGmOs.has(champ.gmos)) {
+            if (!dansGmOs.has(champ.gmos) && !champ.siPresent) {
                 avertir(`le gabarit de GM-OS n'a pas de champ « ${champ.gmos} » ; la table le cite.`);
             }
         }
@@ -459,6 +461,7 @@ export function versLaFiche(personnage: CotesGmOs, table: CorrespondanceDeFiche)
 
     for (const champ of table.champs) {
         const source = champ.destination === 'personnage' ? personnage.narratif : personnage.sheetData;
+        if (champ.siPresent && !Object.hasOwn(source ?? {}, champ.gmos)) continue;
         let valeur = source?.[champ.gmos];
         if (champ.valeurs) valeur = versLaValeurDeLaFiche(champ.valeurs, valeur);
 

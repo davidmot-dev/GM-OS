@@ -2,6 +2,8 @@ import { useJournalStore } from './useJournalStore';
 import { relevePourLaSuite } from './compteRendu';
 import type { SessionSnapshot } from './types';
 import type { Acte, Scene } from '../../types/trame.types';
+import { lireLaPaniqueAlien } from '../dice/systemes/paniqueAlien';
+import { gmToast } from '../../stores/useToastStore';
 
 /**
  * Clore le journal quand une séance se termine.
@@ -28,6 +30,12 @@ export function cloturerLeJournalDeLaSeance(
 ): void {
     try {
         const journal = useJournalStore.getState();
+        const risques = magasinDeSeance()?.players?.flatMap(p => p.characters ?? [])
+            .filter(c => c.campaignId === campaignId && lireLaPaniqueAlien(c.sheetData ?? {}).traumaEnAttente)
+            .map(c => c.name) ?? [];
+        if (risques.length) {
+            gmToast(`Alien — bilan de fin de séance : test d’Empathie seul à résoudre pour ${risques.join(', ')} (Panique 13+). Le rappel reste sur leur fiche.`, 'warning');
+        }
         // Rien à clore : la séance n'enregistrait pas.
         if (!journal.isRecording) return;
 
@@ -163,7 +171,7 @@ function magasinDeSeance() {
     return (window as unknown as {
         useSessionOSStore?: { getState: () => {
             sessions?: SeanceSortante[];
-            players?: { characters?: { name: string; campaignId?: string | null; hp?: number; maxHp?: number }[] }[];
+            players?: { characters?: { name: string; campaignId?: string | null; hp?: number; maxHp?: number; sheetData?: Record<string, unknown> }[] }[];
             entities?: { id: string; name: string; campaignId: string; hp?: number; status?: string }[];
             clues?: { campaignId: string; title: string; isRevealed: boolean }[];
             actes?: Acte[];

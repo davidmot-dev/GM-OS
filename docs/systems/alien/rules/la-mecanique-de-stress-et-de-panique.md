@@ -1,62 +1,87 @@
 ---
-sujet: La mécanique de Stress et de Panique
+sujet: Stress et Panique
 systeme: alien
 couverture: complète
-hors_canevas: true
-sources: ALIEN, le jeu de rôle (p. 29, 30, 120, 121, 191, 192, 198, 201, 234, 240, 241, 243, 251, 254, 255, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 356)
-pages_fiables: false
-genere_par: notebooklm
-relu: false
+sources: "ALIEN_le_jeu_de_rôle.pdf, édition française, p. 62 et 103–105 ; errata 2021"
+sections: "Niveau de Stress ; Test de Panique ; Arrêter la Panique ; Soulager le Stress ; Trauma permanent"
+relu: true
+date_relecture: 2026-10-20
 ---
 
-# La mécanique de Stress et de Panique
-## Règle
-Dans ALIEN, la tension est mesurée par une jauge individuelle : le Niveau de Stress (p. 121, 323). Ce mécanisme simule l'état d'alerte accru d'un personnage soumis à une pression extrême, mais également le risque de crises de Panique (p. 192, 324, 325).
+# Stress et Panique — livre de base français
 
-La jauge de Niveau de Stress :
-- Mesure : Quantifie l'angoisse et la fatigue physique du personnage face au danger (p. 121, 323).
-- Départ/bornes : Commence à zéro (p. 121, 323). Limite minimale de zéro (p. 121, 323). Pas de borne maximale.
-- Dynamique : Monte avec le danger et descend avec le repos (p. 121, 323, 328).
-- Hausses : Augmente de un point par test forcé (p. 323), tir automatique (p. 323), dégât (p. 323), privation (p. 323), coup de grâce (p. 323), Analyse ratée par un coéquipier (p. 323), agression alliée (p. 324) ou apparition d'androïdes (p. 324).
-- Baisses : Moins un point par Tour de repos en lieu sûr (p. 328), par usage de l'objet fétiche (p. 329), par alcool (p. 438) ou par certains effets de panique (p. 331, 332).
-- Seuils : Chaque point ajoute un dé de stress à la réserve de test (p. 192, 324). Obtenir un symbole de panique (un) sur un dé de stress interdit de forcer le test et déclenche un test de Panique (p. 190, 325).
-- Type : S'accumule passivement, mais se provoque par choix en forçant les jets (p. 191, 323).
+## Stress et déclencheurs
 
-## Valeurs
-- Seuil de panique : un symbole de panique (un) obtenu sur un dé de stress lors d'un test (p. 190, 325).
-- Échelle de Panique (1D6 + Niveau de Stress) (p. 326) :
-  - 1-6 : Je tiens le coup (p. 330).
-  - 7 : Tressaillement. Stress du personnage et des alliés à portée Courte augmenté de un (p. 330).
-  - 8 : Tremblement. Malus de moins de deux à tous les tests d'Agilité (p. 330).
-  - 9 : Objet lâché. Le personnage lâche un objet. Stress augmenté de un (p. 330).
-  - 10 : Figé. Paralysie de un Round, perte de la prochaine action lente (p. 331).
-  - 11 : Tous aux abris ! Doit fuir. Stress réduit de un, alliés proches augmentés de un (p. 331).
-  - 12 : Hurlement. Crie pendant un Round, perte de l'action lente. Stress réduit de un, alliés proches doivent tester la Panique (p. 332).
-  - 13 : Fuite. Fuit. Stress réduit de un, alliés témoins doivent tester la Panique (p. 332).
-  - 14 : Psychose. Attaque la cible la plus proche. Témoins effectuent un test de Panique (p. 333).
-  - 15+ : Catatonie. Effondrement complet, incapable de bouger ou de parler (p. 333).
-- Récupération : moins un point de Stress par Tour de repos en lieu sûr (p. 267, 328).
-- Objet fétiche : moins un point de stress, utilisable une fois par acte ou séance (p. 329).
-- Modificateurs : moins deux points au test de Panique avec le talent Nerfs d'acier (p. 255).
-- Déclencheurs directs : blessure critique, témoin de panique, cloué sur place, face à une créature étrange (p. 325, 326).
+Le Niveau de Stress ajoute autant de dés de Stress au test de compétence. Un six compte
+comme réussite ; au moins un un sur les dés de Stress impose un test de Panique et interdit
+de forcer ce test (p. 103–104).
 
-## À la table
-La résolution des tests se joue concrètement selon les étapes suivantes :
-1. Le joueur réunit sa réserve : dés de base et dés de stress égaux à son Niveau de Stress actuel (p. 192, 324).
-2. Le joueur lance la totalité des dés (p. 181, 192).
-3. Si un symbole de panique (un) apparaît sur au moins un dé de stress, le test est interrompu et impossible à forcer (p. 190, 325).
-4. Le joueur effectue son test de Panique en lançant un dé à six faces et en y ajoutant son Niveau de Stress actuel (p. 326).
-5. Maman applique le résultat de la table de Panique (p. 326). Un résultat de dix ou plus remplace l'action initiale par la panique obligatoire (p. 326).
-6. L'état de panique persistant dure jusqu'à l'intervention d'un allié via Commandement (action lente), jusqu'à être Brisé ou qu'un Tour s'écoule (p. 328).
+Le Stress augmente d'un point lors d'un forçage, d'une rafale automatique, d'au moins un
+point de dégâts effectivement subi, des privations décrites par le livre, d'un coup de
+grâce, de certains événements d'équipe et des horreurs désignées par Maman (p. 103).
+Un coup ne donne pas un point de Stress par point de dégâts. La piste imprimée de dix
+cases ne constitue pas un plafond de règle.
 
-## Cas limites
-- Synthétiques (Androïdes) : Ils sont immunisés contre le stress et la panique. Ils n'ont pas de jauge de Niveau de Stress, ne forcent pas de tests, n'ont pas d'objet fétiche et ne testent jamais la Panique (p. 120, 356).
-- Personnages non joueurs (PNJ) : On ne suit pas leur Niveau de Stress. Ils ne font pas de test de Panique réglementaire mais s'affolent uniquement lorsque Maman le décide (p. 198, 333).
-- Cumul de paniques : Si un personnage déjà paniqué subit un nouveau test de Panique, le nouvel effet remplace le précédent s'il est plus élevé. S'il est plus bas, on applique l'effet situé exactement un cran au-dessus de la panique précédente (p. 327).
-- Combat spatial : Le test de Panique utilise une table de panique spécifique. On ne peut pas soulager son stress au cours d'un combat spatial (p. 201, 605, 629).
-- Tirs automatiques : Augmentent automatiquement le Niveau de Stress de un (p. 302). Si un symbole de panique (un) apparaît lors de ce tir, l'arme se retrouve vide (p. 191, 301).
+Un malus retire d'abord les dés de base puis les dés de Stress si la base ne suffit pas
+(p. 62). Il ne faut pas inventer un dé de base quand il n'en reste aucun.
 
-## Non couvert
-- Le livre ne précise pas si un personnage subissant plusieurs événements terrifiants au cours d'un même round (par exemple, subir une blessure critique tout en voyant un xénomorphe pour la première fois) doit accumuler ou non plusieurs tests de Panique distincts.
-- Il n'existe pas de mécanique de dégradation progressive des objets fétiches lorsqu'ils sont manipulés régulièrement sous stress extrême.
-- Le jeu n'explique pas comment la panique d'un personnage affecte les animaux de compagnie non synthétiques présents à portée Courte.
+## Test et résultat de l'action
+
+Le test de Panique est **1D6 + Niveau de Stress** (p. 104). Nerfs d'acier réduit le résultat
+de deux points. Les dés de compétence restent provisoires tant que ce test obligatoire
+n'est pas résolu.
+
+À **10+**, si la Panique découle d'un test de compétence, l'action initiale est annulée et
+remplacée par l'action de Panique obligatoire, même avec des six (p. 104). Un Point de Récit
+ne dispense pas de cette action. À 1–9, appliquer l'effet sans annuler par cette règle
+l'action initiale.
+
+Si un effet 7+ est encore subi, le nouveau résultat le remplace. Pour un résultat
+**inférieur**, le texte français p. 104 prescrit l'effet un cran au-dessus de l'ancien.
+Il ne dit pas « inférieur ou égal » : une égalité conserve donc l'effet du résultat égal
+dans cette lecture française. L'errata 2021 ne modifie pas ce passage.
+
+## Table des effets — p. 105
+
+| Total | Effet | Conséquences |
+| --- | --- | --- |
+| 1–6 | Je tiens le coup | Pas d'effet |
+| 7 | Tressaillement nerveux | Stress +1 pour le personnage et les PJ amicaux à Courte portée |
+| 8 | Tremblement | −2 aux tests utilisant Agilité jusqu'à la fin de la Panique |
+| 9 | Objet lâché | Maman choisit l'arme ou l'objet important lâché ; Stress +1 |
+| 10 | Figé | Paralysé un Round ; prochaine action lente perdue ; Stress +1 pour le personnage et les PJ amicaux à Courte portée |
+| 11 | Tous aux abris ! | Prochaine action pour se mettre à l'abri ; Mobilité autorisée pour la retraite au Contact ; Stress −1 ; Stress +1 pour les PJ amicaux à Courte portée ; agit normalement après un Round |
+| 12 | Hurlement | Hurle un Round ; prochaine action lente perdue ; Stress −1 ; les personnages amicaux qui l'entendent testent la Panique |
+| 13 | Fuite | Fuit et reste à l'abri sans action dangereuse ; pas de Mobilité pour la retraite au Contact ; Stress −1 ; les personnages amicaux qui le voient fuir testent la Panique |
+| 14 | Psychose | Attaque la cible la plus proche jusqu'à être Brisé ou jusqu'à ce que la cible le soit ; les personnages amicaux témoins testent la Panique |
+| 15+ | Catatonie | Ne peut plus bouger ni parler |
+
+La contagion vise les personnes répondant au critère de l'effet, pas toute la campagne.
+Maman détermine amitié, portée, audition, visibilité et choix de cible.
+
+Folie meurtrière peut remplacer un effet 11+ si le personnage possède ce talent et voit des
+ennemis. Il les attaque jusqu'à être Brisé ou jusqu'à ce qu'ils soient tous Brisés ; les
+autres PJ à Courte portée testent la Panique (p. 104).
+
+## Fin d'effet et récupération
+
+Certains effets sont immédiats ou durent un Round. Les effets persistants cessent après
+Commandement réussi d'un allié (action lente), lorsque le personnage est Brisé ou après un
+Tour entier ; respecter les conditions particulières de l'effet, notamment Psychose (p. 104).
+La fin de la Panique ne retire pas à elle seule du Stress.
+
+Un Tour entier de repos en lieu sûr réduit le Stress d'un point ; une interruption ou un
+test de compétence empêche ce repos de compter. L'objet fétiche enlève un point une fois
+par acte en Cinéma ou par séance en Campagne, généralement avec une action lente. Certains
+états empêchent de soulager le Stress (p. 104 et 106).
+
+## Traumatisme et exceptions
+
+Après au moins un résultat 13+ pendant la séance, tester **Empathie seule** en fin de partie,
+sans compétence ni dés de Stress. Une **réussite** donne un traumatisme : tirer 1D6 dans la
+table p. 101 (p. 104).
+
+Les synthétiques ne subissent ni Stress ni Panique. Les PNJ ne suivent pas de Niveau de
+Stress et ne font pas ces tests ; Maman décide de leur affolement et de ses conséquences
+éventuelles sur les PJ (p. 105 et physiologie des synthétiques). Le combat spatial possède
+sa table spécifique : ne pas lui appliquer automatiquement la table p. 105.

@@ -69,7 +69,8 @@ const PanneauDuHorsJeu: React.FC<{ combatant: Combatant; regle: RegleDuHorsJeu; 
             gmToast(`${nom} : la table « ${choix ? `${choix.table.univers} / ${choix.table.table}` : '?'} » est introuvable — tirez à la main.`, 'warning');
             return;
         }
-        const de = DiceEngine.roll(faces);
+        // D66 : deux d6 ordonnés, jamais un entier uniforme de 1 à 66.
+        const de = faces === 66 ? DiceEngine.rollStandard(66, 1).total : DiceEngine.roll(faces);
         const entree = entreeDeLaTable(data.entries, de);
         const precision = regle.desAuChoix?.length ? ` (D${faces}${tables.length > 1 ? `, ${choix.label}` : ''})` : '';
         setTirages(t => [...t, { de, entree, table: tables.length > 1 ? choix.label : undefined }]);

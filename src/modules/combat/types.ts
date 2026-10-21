@@ -78,7 +78,8 @@ export interface Combatant {
     /** Système de santé spécifique (ex: D&D 5e, Savage Worlds) */
     healthSystem?: HealthSystem;
     /** Données de fiche locales (force, santé, sang-froid, etc.) */
-    sheetData?: Record<string, string | number | boolean>;
+    // Même fiche que le personnage source, suivis persistants structurés compris.
+    sheetData?: Record<string, unknown>;
     /**
      * **Une horde** — Torg, règle optionnelle (2026-10-14) : un combattant qui en
      * représente plusieurs, au Choc commun. Voir `logic/sbiresEtHordes.ts`.

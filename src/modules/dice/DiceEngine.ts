@@ -896,7 +896,9 @@ export class DiceEngine {
              */
             const gear = options?.gearCount ?? 0;
             const mod = options?.modifier ?? 0;
-            return this.rollYZE(Math.max(1, count + mod), gear);
+            // Un malus peut épuiser la base tout en laissant du Stress :
+            // inventer un dé de base rendrait le Tremblement d'Alien trop faible.
+            return this.rollYZE(Math.max(0, count + mod), gear);
         }
 
         if (config.engine === 'd100' || config.engine === 'rolemaster') {

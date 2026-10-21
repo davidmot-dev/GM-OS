@@ -1,5 +1,6 @@
 // src/types/drivers.ts
 import type { InventoryItem } from './player.types';
+import type { RegleDeCombatAlien } from '../modules/dice/systemes/combatAlien';
 import type { ReferenceDeModuleDuJeu } from '../modules/modulesDuJeu/types';
 
 export type DiceRollLogic = 'sum' | 'highest' | 'lowest' | 'count-success' | 'd100-low' | 'd100-high';
@@ -432,6 +433,8 @@ export interface GameDriver {
 
     // Combat configuration
     combat: {
+        /** Livre français Alien : munitions, protection, critiques et soins. */
+        alien?: RegleDeCombatAlien;
         statsToTrack: CombatStatMapping[];
         initiativeFormula: string; // e.g. "dex", "dex + int", "1d10"
         initiativeSort?: 'asc' | 'desc'; // Default: 'desc'
